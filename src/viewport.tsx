@@ -7,8 +7,6 @@
 
 import React, {useState, useRef, useEffect, useMemo, useCallback} from 'react'
 
-import { GenericObject } from '../../../services/interfaces'
-
 export const ViewportContext = React.createContext(null)
 
 // control constants

@@ -1,0 +1,42 @@
+{
+  "name": "react-infinite-scroll-by-grid",
+  "version": "1.0.0-beta",
+  "description": "infinite vertical or horizontal scroll using css grid layout",
+  "main": "src/infinitescrollbygrid.tsx",
+  "scripts": {
+    "dev": "webpack --mode development --config config/webpack.config.js",
+    "build": "webpack --mode production --config config/webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HenrikBechmann/react-infinite-scroll-by-grid.git"
+  },
+  "author": "Henrik Bechmann",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HenrikBechmann/react-infinite-scroll-by-grid/issues"
+  },
+  "homepage": "https://github.com/HenrikBechmann/react-infinite-scroll-by-grid#readme",
+  "dependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.9.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/polyfill": "^7.8.7",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-react": "^7.9.4",
+    "@types/react": "^16.9.26",
+    "@types/react-dom": "^16.9.5",
+    "babel-loader": "^8.1.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-is-mounted-hook": "^1.0.3",
+    "requestidlecallback": "^0.3.0",
+    "ts-loader": "^6.2.2",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.1",
+    "webpack-sources": "^1.4.3"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.3.11"
+  }
+}
