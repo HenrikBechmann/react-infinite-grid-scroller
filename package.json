@@ -2,10 +2,11 @@
   "name": "react-infinite-scroll-by-grid",
   "version": "1.0.0-beta",
   "description": "infinite vertical or horizontal scroll using css grid layout",
-  "main": "src/infinitescrollbygrid.tsx",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "webpack --mode development --config config/webpack.config.js",
-    "build": "webpack --mode production --config config/webpack.config.js"
+    "build": "webpack --mode production --config config/webpack.config.js",
+    "test": "echo \"No test specified\""
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
     "requestidlecallback": "^0.3.0"
   },
   "devDependencies": {
+    "np": "^6.2.0",
     "ts-loader": "^6.2.2",
     "typescript": "^3.8.3",
     "webpack": "^4.42.1",

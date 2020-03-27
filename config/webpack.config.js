@@ -13,7 +13,7 @@ module.exports = {
   ],
   // Output the bundled JS to dist/app.js
   output: {
-    filename: '[name].bundle.js',
+    filename: 'index.js',
     // chunkFilename: '[name].bundle.js',
     // path: path.resolve('dist')
   },
