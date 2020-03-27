@@ -14,7 +14,7 @@ module.exports = {
   // Output the bundled JS to dist/app.js
   output: {
     filename: '[name].bundle.js',
-    chunkFilename: '[name].bundle.js',
+    // chunkFilename: '[name].bundle.js',
     // path: path.resolve('dist')
   },
   resolve: {
@@ -44,11 +44,11 @@ module.exports = {
       }
     ]
   },
-   optimization: {
-     splitChunks: {
-       chunks: 'all'
-     }
-   },
+   // optimization: {
+   //   splitChunks: {
+   //     chunks: 'all'
+   //   }
+   // },
 
   plugins: [
     // Set up the notifier plugin - you can remove this (or set alwaysNotify false) if desired

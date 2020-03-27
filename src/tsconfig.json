@@ -11,7 +11,13 @@
         "experimentalDecorators":true,
         "moduleResolution": "node",
         "alwaysStrict":true,
-        "lib": ["es6", "dom", "es2017"]
+        "lib": ["es6", "dom", "es2017"],
+        "paths": {
+            "*": [
+                "../node_modules/@types/*",
+                "*"
+            ]
+        }
     },
       "exclude": [
         "node_modules"

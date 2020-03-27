@@ -577,12 +577,12 @@
 	],
 	"file_history":
 	[
+		"/Users/henrikbechmann/Projects/react-infinite-scroll-by-grid/src/viewport.tsx",
 		"/Users/henrikbechmann/Projects/react-infinite-scroll-by-grid/package-lock.json",
 		"/Users/henrikbechmann/Projects/react-infinite-scroll-by-grid/package.json",
 		"/Users/henrikbechmann/Projects/react-infinite-scroll-by-grid/src/infinitescrollbygrid.tsx",
 		"/Users/henrikbechmann/Projects/react-infinite-scroll-by-grid/src/tsconfig.json",
 		"/Users/henrikbechmann/Projects/tribalopolis.com/src/tsconfig.json",
-		"/Users/henrikbechmann/Projects/react-infinite-scroll-by-grid/src/viewport.tsx",
 		"/Users/henrikbechmann/Projects/react-infinite-scroll-by-grid/src/scrolltracker.tsx",
 		"/Users/henrikbechmann/Projects/react-infinite-scroll-by-grid/src/scrollblock.tsx",
 		"/Users/henrikbechmann/Projects/react-infinite-scroll-by-grid/src/placeholder.tsx",
@@ -708,20 +708,24 @@
 	],
 	"find":
 	{
-		"height": 24.0
+		"height": 39.0
 	},
 	"find_in_files":
 	{
 		"height": 101.0,
 		"where_history":
 		[
+			"/Users/henrikbechmann/Projects/react-infinite-scroll-by-grid/src"
 		]
 	},
 	"find_state":
 	{
-		"case_sensitive": true,
+		"case_sensitive": false,
 		"find_history":
 		[
+			"generic",
+			"interfaces",
+			"interface"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -733,7 +737,7 @@
 		"reverse": false,
 		"show_context": true,
 		"use_buffer2": true,
-		"whole_word": true,
+		"whole_word": false,
 		"wrap": true
 	},
 	"groups":
