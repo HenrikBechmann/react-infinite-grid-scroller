@@ -9,7 +9,7 @@ module.exports = {
   // This will be our app's entry point (webpack will look for it in the 'src' directory due to the modulesDirectory setting below). Feel free to change as desired.
   entry: [
     // '@babel/polyfill',
-    './src/infinitescrollbygrid.tsx'
+    './src/infinitegridscroller.tsx'
   ],
   // Output the bundled JS to dist/app.js
   output: {
@@ -26,6 +26,10 @@ module.exports = {
   module: {
     rules: [
       // .ts(x) files should first pass through the Typescript loader, and then through babel
+      // { 
+      //     test: /\.jsx?$/, 
+      //     use:['babel-loader','ts-loader']
+      // },
       { 
           test: /\.tsx?$/, 
           use:['babel-loader','ts-loader']

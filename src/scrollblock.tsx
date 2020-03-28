@@ -20,15 +20,18 @@ const Scrollblock = ({
     const viewportData = useContext(ViewportContext)
     const [blockstate,setBlockState] = useState('prepare')
     const scrollBlockLengthRef = useRef(null)
-    const divlinerstyleRef = useRef(Object.assign({
+    const divlinerstyleRef = useRef(
+        Object.assign(
+        {
 
-        backgroundColor:'green',
-        position:'relative',
-        
-    } as React.CSSProperties, styles?.cradle))
+            backgroundColor:'white',
+            position:'relative',
+            
+        } as React.CSSProperties, styles?.cradle)
+
+    )
+
     const [divlinerstyle,saveDivlinerstyle] = useState(divlinerstyleRef.current)
-
-    // console.log('running SCROLLBLOCK with state', blockstate)
 
     const scrollblockRef = useRef(null)
 
@@ -83,7 +86,9 @@ const Scrollblock = ({
          ]
     )
 
-    return (blockstate != 'prepare')?<div ref = {scrollblockRef} style={divlinerstyleRef.current}>{children}</div>:null
+    return (blockstate != 'prepare')
+        ?<div ref = {scrollblockRef} style={divlinerstyleRef.current}>{children}</div>
+        :null
 
 } // Scrollblock
 

@@ -9,29 +9,15 @@ import {
     setCradleStyles, 
     getUIContentList, 
     calcVisibleItems, 
-    // getVisibleTargetData, 
     getReferenceIndexData,
     getContentListRequirements,
     setCradleStyleRevisionsForDrop,
     setCradleStyleRevisionsForAdd,
     normalizeCradleAnchors,
-    // isCradleInView,
+
 } from './cradlefunctions'
 
 import ScrollTracker from './scrolltracker'
-
-/*
-
-    2: tasks
-    code maintenance
-
-    1 add examples 1, 2, 3 to control page: 
-        - images, scroll and pivot
-        - nested lists, scroll and pivot
-
-    0 qa
-
-*/
 
 const Cradle = ({ 
         gap, 
@@ -71,13 +57,10 @@ const Cradle = ({
 
         isResizingRef.current = viewportData.isResizing
 
-        // console.log('changing isResizingRef to ',viewportData.isResizing)
-
         if (isResizingRef.current) {
 
             callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
 
-            // console.log('setting callingReferenceIndexDataRef from isResizing with referenceIndexDataRef', callingReferenceIndexDataRef.current)
             pauseObserversRef.current = true
             saveCradleState('resizing')
 
@@ -137,12 +120,9 @@ const Cradle = ({
 
     const [addentries, saveAddentries] = useState(null)
 
-    // const [contentlist,saveContentlist] = useState([])
     const contentlistRef = useRef([])
 
     const isScrollingRef = useRef(false)
-
-    // console.log('==>> RUNNING Cradle with state', cradlestate)
 
     const itemobserverRef = useRef(null)
 
@@ -155,8 +135,6 @@ const Cradle = ({
     },[cellWidth,cellHeight,gap, padding])
     const cellSpecsRef = useRef(null)
     cellSpecsRef.current = cellSpecs
-
-    // const mainConfigDatasetRef = useRef({setup:true})
 
     const divlinerStylesRef = useRef(Object.assign({
         position: 'absolute',
@@ -200,7 +178,7 @@ const Cradle = ({
         viewportheight, 
         viewportwidth,
     ])
-    // console.log('crosscount value',crosscount)
+
     // ==============================================================================================
     // ----------------------------------[ config management ]--------------------------------
 
@@ -208,11 +186,6 @@ const Cradle = ({
     const previousCrosscountRef = useRef() // available for resize logic
     previousCrosscountRef.current = crosscountRef.current // available for resize logic
     crosscountRef.current = crosscount // available for observer closure
-
-    // capture previous versions for reconfigure calculations above
-    // const configDataRef:any = useRef({})
-    // const previousConfigDataRef:any = useRef({})
-    // const visibleListRef = useRef([])
 
     divlinerStylesRef.current = useMemo(()=> {
 
@@ -296,7 +269,7 @@ const Cradle = ({
             There are exceptions for setup and edge cases.
     */
 
-    // the async callback from IntersectionObserver. this is a closure
+    // the async callback from IntersectionObserver.
     const itemobservercallback = useCallback((entries)=>{
 
         if (pauseObserversRef.current) {
@@ -427,7 +400,6 @@ const Cradle = ({
         // synchronization
         divlinerStyleRevisionsRef.current = styles 
 
-        // saveContentlist(localContentList) // delete entries
         contentlistRef.current = localContentList
         saveDropentries(null)
         saveAddentries({count:newcontentcount,scrollforward,contentoffset:pendingcontentoffset})
@@ -498,7 +470,6 @@ const Cradle = ({
         // synchronization
         divlinerStyleRevisionsRef.current = styles
 
-        // saveContentlist(localContentList)
         contentlistRef.current = localContentList
         saveAddentries(null)
 
@@ -513,10 +484,6 @@ const Cradle = ({
 
         let { index: visibletargetindexoffset, 
             scrolloffset: visibletargetscrolloffset } = referenceIndexData
-
-        // console.log('setCradleContent cradleState, referenceIndexData', cradleState, referenceIndexData)
-
-        // console.log('visibletargetindexoffset, visibletargetscrolloffset',visibletargetindexoffset, visibletargetscrolloffset)
 
         if (cradleState == 'reposition') visibletargetscrolloffset = 0
 
@@ -547,9 +514,6 @@ const Cradle = ({
 
         saveReferenceindex(referenceIndexDataRef.current)
 
-        // console.log('xxx===>> x1. indexoffset, referenceoffset, contentCount, scrollblockoffset, cradleoffset, referenceIndexDataRef',
-        //     indexoffset, referenceoffset, contentCount, scrollblockoffset, cradleoffset, {...referenceIndexDataRef.current})
-
         let childlist = getUIContentList({
             indexoffset, 
             headindexcount:0, 
@@ -566,14 +530,12 @@ const Cradle = ({
             placeholder,
         })
 
-        // contentlistRef.current = []
         contentDataRef.current = childlist
 
-        // let elementstyle = cradleElementRef.current.style
         let elementstyle = cradleElementRef.current.style
 
         let styles:React.CSSProperties = {}
-        // let cradleoffset
+
         if (orientation == 'vertical') {
 
             styles.top = cradleoffset + 'px'
@@ -594,10 +556,7 @@ const Cradle = ({
 
         }
 
-        // console.log('styles',styles)
         layoutDataRef.current = styles
-        // console.log('x2. styles, referenceIndexDataRef.current, scrollTop', 
-        //     styles, referenceIndexDataRef.current,viewportData.elementref.current.scrollTop)
 
     },[
         cellHeight,
@@ -612,37 +571,12 @@ const Cradle = ({
       ]
     )
 
-    // maintain a list of visible items (visibleList) 
-    // on shift of state to ready, or trigger next state after repositioning
-    // when scroll ends.
-    // useEffect(() => {
-
-    //     if (isScrollingRef.current || isResizingRef.current) return
-
-    //     // console.log('finish scrolling', cradlestate)
-
-    //     if (cradlestate == 'ready') {
-
-    //         // console.log('calculating visible item list')
-    //         // update visible list
-    //         // let itemlist = Array.from(itemElementsRef.current)
-
-    //         // visibleListRef.current = calcVisibleItems(
-    //         //     itemlist,viewportData.elementref.current,cradleElementRef.current, orientation
-    //         // )
-
-    //     }
-
-    // },[cradlestate, isScrollingRef.current, isResizingRef.current])
-
     // =====================================================================================
     // ----------------------------------[ state management ]-------------------------------
 
     // callback for scroll
     const onScroll = useCallback(() => {
 
-        // console.log('scrolling to, isScrolling, isResizing, cradleState ',
-        //     viewportData.elementref.current.scrollTop,isScrollingRef.current,isResizingRef.current, cradlestateRef.current)
         if (!isScrollingRef.current)  {
 
             isScrollingRef.current = true
@@ -651,13 +585,11 @@ const Cradle = ({
 
         clearTimeout(scrollTimeridRef.current)
         scrollTimeridRef.current = setTimeout(() => {
-            // console.log('scrolling TIMEOUT with cradleState', cradlestateRef.current)
+
             isScrollingRef.current = false;
             let cradleState = cradlestateRef.current
             if ((!isResizingRef.current) && (!viewportDataRef.current.isResizing)) {
 
-                // console.log('normalizing anchors from scroll')
-    
                 (cradleState != 'repositioning') && normalizeCradleAnchors(cradleElementRef.current, orientationRef.current)
 
                 saveReferenceindex({...referenceIndexDataRef.current}) // trigger re-run to capture end of scroll session values
@@ -670,7 +602,7 @@ const Cradle = ({
 
                     pauseObserversRef.current = true
                     callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
-                    // console.log('setting callingReferenceIndexDataRef from referenceIndexDataRef for repositioning',callingReferenceIndexDataRef.current)
+
                     saveCradleState('reposition')
                     break
                 } 
@@ -679,7 +611,6 @@ const Cradle = ({
 
         },200)
 
-        // console.log('in onScroll:isResizingRef, viewportData.isResizing',isResizingRef.current,viewportData.isResizing)
         if ((!isResizingRef.current) && (!viewportDataRef.current.isResizing)) {
 
             let cradleState = cradlestateRef.current
@@ -694,15 +625,11 @@ const Cradle = ({
                 })
                 reportReferenceIndexRef.current && reportReferenceIndexRef.current(referenceIndexDataRef.current.index)
 
-                // console.log('calling getReferenceIndexDate for referenceIndexDateRef from onScroll', referenceIndexDataRef.current)
                 saveReferenceindex(referenceIndexDataRef.current)
 
             }
 
         }
-
-        // console.log('repositioning controls: isCradleInViewRef, pauseObserversRef, isResizingRef, cradlestateRef',
-        //     isCradleInViewRef.current, pauseObserversRef.current, isResizingRef.current, cradlestateRef.current)
 
         if (
             !isCradleInViewRef.current && 
@@ -749,7 +676,6 @@ const Cradle = ({
     },[orientation])
 
     // this is the core state engine
-    // triggering next state phase: states = setup, pivot, resize, reposition (was run)
     const callingCradleState = useRef(cradlestateRef.current)
     const callingReferenceIndexDataRef = useRef(referenceIndexDataRef.current)
 
@@ -793,7 +719,7 @@ const Cradle = ({
     },[cradlestate])
 
     useEffect(()=> {
-        // console.log('calling state machine with ',cradlestate)
+
         switch (cradlestate) {
             case 'setup': 
             case 'resize':
@@ -809,9 +735,8 @@ const Cradle = ({
 
                 setCradleContent(callingCradleState.current, callingReferenceIndexDataRef.current)
 
-                // console.log('setting ready from ', cradlestate)
                 saveCradleState('position')
-                // console.log('callingReferenceIndexDataRef.current',{...callingReferenceIndexDataRef.current})
+
                 break
             }
             case 'normalize': {
@@ -824,9 +749,9 @@ const Cradle = ({
                     normalizeCradleAnchors(cradleElementRef.current, orientationRef.current)
 
                     lastReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
-                    // console.log('referenceIndexData after settle', {...referenceIndexDataRef.current})
-                    // console.log('cancelling pauseObserversRef', pauseObserversRef.current)
+
                     pauseObserversRef.current  && (pauseObserversRef.current = false)
+
                 },250)
                 saveCradleState('ready')
                 break 

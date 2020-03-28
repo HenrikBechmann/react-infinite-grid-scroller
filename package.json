@@ -1,8 +1,8 @@
 {
-  "name": "react-infinite-scroll-by-grid",
+  "name": "react-infinite-grid-scroll",
   "version": "1.0.0-beta",
   "description": "infinite vertical or horizontal scroll using css grid layout",
-  "main": "dist/index.js",
+  "main": "js/infinitescrollbygrid.jsx",
   "scripts": {
     "dev": "webpack --mode development --config config/webpack.config.js",
     "build": "webpack --mode production --config config/webpack.config.js",

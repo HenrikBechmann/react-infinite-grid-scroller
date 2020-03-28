@@ -27,9 +27,6 @@ const Viewport = ({
 
     const [portstate,setPortState] = useState('prepare')
 
-    // console.log('running VIEWPORT with portstate',portstate)
-
-    const sizegenerationcounterRef = useRef(0)
     const timeoutidRef = useRef(null)
     const viewportdivRef = useRef(undefined)
     const resizeScrollPosRef = useRef({top:0,left:0})
@@ -64,7 +61,6 @@ const Viewport = ({
                 top:viewportdivRef.current.scrollTop,
                 left:viewportdivRef.current.scrollLeft
             }
-            // pauseObserversRef.current = true
             setPortState('resizing')
         }
 
@@ -81,8 +77,6 @@ const Viewport = ({
     useEffect(()=>{
         switch (portstate) {
             case 'prepare':
-                // setPortState('render')
-                // break
             case 'resize': {
                 setPortState('render')
                 break
@@ -129,8 +123,6 @@ const Viewport = ({
                     top:resizeScrollPosRef.current.top,
                 }
             }
-            // console.log('recalculating viewport data: localViewportData',
-            //     localViewportData)
         }
         return localViewportData
 

@@ -12,8 +12,6 @@ import Placeholder from './placeholder'
 const ItemShell = (props) => {
     const {orientation, cellHeight, cellWidth, index, observer, callbacks, getItem, listsize, placeholder} = props
     
-    // console.log('item index, placeholder',index, placeholder)
-    
     const [content, saveContent] = useState(null)
     const [error, saveError] = useState(null)
     const [styles,saveStyles] = useState({
@@ -65,11 +63,10 @@ const ItemShell = (props) => {
     useEffect(() => {
 
         let localcalls = callbacks.current
-        // console.log('calling register itemshell: index, callbacks',index, localcalls)
+
         localcalls.getElementData && localcalls.getElementData(getElementData(),'register')
         return (()=>{
 
-            // console.log('calling unregister itemshell',index, localcalls)
             localcalls.getElementData && localcalls.getElementData(getElementData(),'unregister')
 
         })

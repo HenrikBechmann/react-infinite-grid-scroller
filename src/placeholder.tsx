@@ -5,8 +5,6 @@ import React, {useRef, useEffect, useState, useCallback } from 'react'
 
 const Placeholder = ({index, listsize, error}) => {
 
-    // console.log('running Placeholder',props)
-
     const stylesRef = useRef({
         position:'relative',
         boxSizing:'border-box',

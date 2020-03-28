@@ -9,7 +9,6 @@ import React from 'react'
 
 import ItemShell from './itemshell'
 
-// triggered by transition to ready state (from resize modtly; also setup), and by cancellation of isScrolling mode
 export const calcVisibleItems = (itemsArray, viewportElement, cradleElement, orientation) => {
     let list = []
     let cradleTop = cradleElement.offsetTop, 
@@ -136,50 +135,6 @@ export const calcVisibleItems = (itemsArray, viewportElement, cradleElement, ori
     return list
 }
 
-// export const getVisibleTargetData = (mainConfigDatasetRef) => {
-//     let { current:targetConfigData } = mainConfigDatasetRef
-
-//     if (targetConfigData.setup) return [undefined, undefined]
-
-//     let { previousvisible:previousvisiblelist, orientation } = targetConfigData
-
-//     let targetindex, targetoffset
-//     for (let i = 0; i < previousvisiblelist.length; i++) {
-//         let item = previousvisiblelist[i]
-//         let previousitem
-//         if (orientation == 'vertical') {
-//             if ( item.verticalRatio  == 1) {
-
-//                 targetindex = item.index
-//                 if (i !== 0) {
-//                     let { topPortion, bottomPortion } = previousvisiblelist[i-1]
-//                     targetoffset = (topPortion >=0)?topPortion:bottomPortion
-//                 } else {
-//                     targetoffset = 0
-//                 }
-//                 break
-
-//             }
-//         } else {
-//             if ( item.horizontalRatio  == 1) {
-
-//                 targetindex = item.index
-//                 if (i !== 0) {
-//                     let { leftPortion, rightPortion } = previousvisiblelist[i-1]
-//                     targetoffset = (leftPortion >=0)?leftPortion:rightPortion
-//                 } else {
-//                     targetoffset = 0
-//                 }
-//                 break
-
-//             }
-//         }
-//     }
-
-//     return [targetindex, targetoffset]
-
-// }
-
 export const getReferenceIndexData = (
     {
         orientation,
@@ -191,21 +146,17 @@ export const getReferenceIndexData = (
 
     let scrollPos, cellLength
     if (orientation == 'vertical') {
-        // if (viewportData.isResizing) {
-            // console.log('viewportDat in getReferenceIndexData with isResizing true',viewportData)
-            // scrollPos = viewportData.scrollPos.top
-        // } else {
-            scrollPos = viewportData.elementref.current.scrollTop
-        // }
+
+        scrollPos = viewportData.elementref.current.scrollTop
         cellLength = cellSpecsRef.current.cellHeight + cellSpecsRef.current.gap
+
     } else {
-        // if (viewportData.isResizing) {
-            // scrollPos = viewportData.scrollPos.left
-        // } else {
-            scrollPos = viewportData.elementref.current.scrollLeft
-        // }
+
+        scrollPos = viewportData.elementref.current.scrollLeft
         cellLength = cellSpecsRef.current.cellWidth + cellSpecsRef.current.gap
+
     }
+
     let referencerowindex = Math.ceil(scrollPos/cellLength)
     let referencescrolloffset = cellLength - (scrollPos % cellLength)
     if (referencescrolloffset == cellLength) referencescrolloffset = 0
@@ -215,8 +166,6 @@ export const getReferenceIndexData = (
         index:Math.min(referenceindex,listsize - 1),
         scrolloffset:referencescrolloffset
     }
-
-    // console.log('returning referenceIndexData',referenceIndexData)
 
     return referenceIndexData
 }
@@ -237,9 +186,7 @@ export const getContentListRequirements = ({
         listsize,
     }) => {
 
-    // -------------[ calc basic inputs: cradleLength, cellLength, rowcount, contentCount ]----------
-
-    // console.log('==> 1. visibletargetindexoffset,targetScrollOffset',visibletargetindexoffset,targetScrollOffset)
+    // -------------[ calc basic inputs: cellLength, contentCount. ]----------
 
     let cradleContentLength, cellLength, viewportlength
     if (orientation == 'vertical') {
@@ -249,24 +196,21 @@ export const getContentListRequirements = ({
         cellLength = cellWidth + gap
         viewportlength = viewportwidth
     }
-    // cradleLength = (viewportlength + (padding * 2) - gap) + (runwaylength * 2) // assumes at least one item
+
     cradleContentLength = viewportlength + (runwaylength * 2)
     let cradlerowcount = Math.floor(cradleContentLength/cellLength)
     let contentCount = cradlerowcount * crosscount
     if (contentCount > listsize) contentCount = listsize
 
-    // -----------------------[ calc leadingitemcount ]-----------------------
+    // -----------------------[ calc leadingitemcount, referenceoffset ]-----------------------
 
     let cradleleadingrowcount = Math.floor(runwaylength/cellLength)
     let leadingitemcount = cradleleadingrowcount * crosscount
     let targetdiff = visibletargetindexoffset % crosscount
-    let referenceoffset = visibletargetindexoffset - targetdiff
+    let referenceoffset = visibletargetindexoffset - targetdiff // part of return message
 
     leadingitemcount += targetdiff
     leadingitemcount = Math.min(leadingitemcount, visibletargetindexoffset) // for list head
-
-    // console.log('2. contentCount, cradleleadingitemcount, targetdiff, cradleleadingrowcount, crosscount', 
-    //     contentCount, leadingitemcount, targetdiff, cradleleadingrowcount, crosscount)
 
     // -----------------------[ calc indexoffset ]------------------------
 
@@ -275,11 +219,8 @@ export const getContentListRequirements = ({
     let diff = indexoffset % crosscount
     indexoffset -= diff
 
-    // console.log('3. indexoffset, diff, visibletargetindexoffset, leadingitemcount',
-    //     indexoffset, diff, visibletargetindexoffset, leadingitemcount)
-
     // ------------[ adjust indexoffset and contentCount for listsize ]------------
-    // include referenceoffset in return message
+
     diff = 0
     let shift = 0
     if ((indexoffset + contentCount) > listsize) {
@@ -301,9 +242,6 @@ export const getContentListRequirements = ({
 
     let rowscrollblockoffset = targetrowoffset * cellLength
     let scrollblockoffset = Math.max(0,rowscrollblockoffset - targetScrollOffset)
-
-    // console.log('4. scrollblockoffset, cradleoffset, rowscrollblockoffset, targetScrollOffset',
-    //     scrollblockoffset, cradleoffset, rowscrollblockoffset, targetScrollOffset)
 
     return {indexoffset, referenceoffset, contentCount, scrollblockoffset, cradleoffset} // summarize requirements message
 
@@ -339,8 +277,6 @@ export const normalizeCradleAnchors = (cradleElement, orientation) => {
         cradleElement.style[style] = styles[style]
     }
 
-    // console.log('assigning styles to cradleElement',styles)
-
 }
 
 // update content
@@ -363,8 +299,6 @@ export const getUIContentList = (props) => {
         listsize,
         placeholder,
     } = props
-
-    // console.log('getUIContentList getItem',getItem)
 
     let localContentlist = [...contentlist]
     let tailindexoffset = indexoffset + contentlist.length
@@ -611,4 +545,3 @@ export const setCradleStyleRevisionsForAdd = ({
     return styles
 
 }
-
