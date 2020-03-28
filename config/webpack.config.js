@@ -15,7 +15,7 @@ module.exports = {
   output: {
     filename: 'index.js',
     // chunkFilename: '[name].bundle.js',
-    // path: path.resolve('dist')
+    path: path.resolve('dist')
   },
   resolve: {
     // Look for modules in .ts(x) files first, then .js(x)

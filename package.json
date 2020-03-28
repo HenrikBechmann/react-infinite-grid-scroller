@@ -1,8 +1,8 @@
 {
-  "name": "react-infinite-grid-scroll",
+  "name": "react-infinite-grid-scroller",
   "version": "1.0.0-beta",
   "description": "infinite vertical or horizontal scroll using css grid layout",
-  "main": "js/infinitescrollbygrid.jsx",
+  "main": "js/infinitegridscroller.jsx",
   "scripts": {
     "dev": "webpack --mode development --config config/webpack.config.js",
     "build": "webpack --mode production --config config/webpack.config.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HenrikBechmann/react-infinite-scroll-by-grid.git"
+    "url": "git+https://github.com/HenrikBechmann/react-infinite-grid-scroller.git"
   },
   "author": "Henrik Bechmann",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/HenrikBechmann/react-infinite-scroll-by-grid/issues"
+    "url": "https://github.com/HenrikBechmann/react-infinite-grid-scroller/issues"
   },
-  "homepage": "https://github.com/HenrikBechmann/react-infinite-scroll-by-grid#readme",
+  "homepage": "https://github.com/HenrikBechmann/react-infinite-grid-scroller#readme",
   "dependencies": {
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
