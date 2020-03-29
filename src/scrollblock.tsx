@@ -17,9 +17,13 @@ const Scrollblock = ({
     styles 
 }) => {
 
+    // -------------------------[ context and state ]-------------------------
     const viewportData = useContext(ViewportContext)
     const [blockstate,setBlockState] = useState('prepare')
+
+    // -----------------------------------[ data heap ]-------------------------
     const scrollBlockLengthRef = useRef(null)
+    const scrollblockRef = useRef(null)
     const divlinerstyleRef = useRef(
         Object.assign(
         {
@@ -30,15 +34,12 @@ const Scrollblock = ({
         } as React.CSSProperties, styles?.cradle)
 
     )
-
-    const [divlinerstyle,saveDivlinerstyle] = useState(divlinerstyleRef.current)
-
-    const scrollblockRef = useRef(null)
+    const [divlinerstyle,saveDivlinerstyle] = useState(divlinerstyleRef.current) // to trigger render
 
     let { viewportDimensions, itemobserver, isResizing } = viewportData
-
     let { top, right, bottom, left, width, height } = viewportDimensions
 
+    // state engine
     useEffect(()=>{
         switch (blockstate) {
             case 'prepare': {

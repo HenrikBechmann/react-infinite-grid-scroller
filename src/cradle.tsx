@@ -19,6 +19,8 @@ import {
 
 import ScrollTracker from './scrolltracker'
 
+const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 200
+
 const Cradle = ({ 
         gap, 
         padding, 
@@ -37,14 +39,14 @@ const Cradle = ({
     // =============================================================================================
     // --------------------------------------[ initialization ]-------------------------------------
 
-    const listsizeRef = useRef(null)
-    listsizeRef.current = listsize
-
+    const viewportData = useContext(ViewportContext)
     const [cradlestate, saveCradleState] = useState('setup')
     const cradlestateRef = useRef(null) // access by closures
     cradlestateRef.current = cradlestate
 
-    const viewportData = useContext(ViewportContext)
+    // -----------------------------[ data heap ]-----------------------
+    const listsizeRef = useRef(null)
+    listsizeRef.current = listsize
 
     const viewportDataRef = useRef(null)
     viewportDataRef.current = viewportData
@@ -53,29 +55,11 @@ const Cradle = ({
 
     const pauseObserversRef = useRef(false)
 
-    useEffect(()=>{
-
-        isResizingRef.current = viewportData.isResizing
-
-        if (isResizingRef.current) {
-
-            callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
-
-            pauseObserversRef.current = true
-            saveCradleState('resizing')
-
-        }
-        if (!isResizingRef.current && (cradlestateRef.current == 'resizing')) {
-
-            saveCradleState('resize')
-
-        }
-
-    },[viewportData.isResizing])
-
     const reportReferenceIndexRef = useRef(component?.reportReferenceIndex)
 
-    // initialize window listener
+    // -----------------------[ effects ]-------------------------
+
+    // initialize window listener, and component elements
     useEffect(() => {
 
         viewportData.elementref.current.addEventListener('scroll',onScroll)
@@ -104,7 +88,28 @@ const Cradle = ({
 
     },[])
 
-    // main control
+    // triger resizing based on viewport state
+    useEffect(()=>{
+
+        isResizingRef.current = viewportData.isResizing
+
+        if (isResizingRef.current) {
+
+            callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
+
+            pauseObserversRef.current = true
+            saveCradleState('resizing')
+
+        }
+        if (!isResizingRef.current && (cradlestateRef.current == 'resizing')) {
+
+            saveCradleState('resize')
+
+        }
+
+    },[viewportData.isResizing])
+
+    // ------------------------[ session data ]-----------------------
     // current location
     const [referenceindexdata, saveReferenceindex] = useState({
         index:Math.min(offset,(listsize - 1)) || 0,
@@ -116,9 +121,9 @@ const Cradle = ({
 
     const isCradleInViewRef = useRef(true)
 
-    const [dropentries, saveDropentries] = useState(null)
+    const [dropentries, saveDropentries] = useState(null) // trigger add entries
 
-    const [addentries, saveAddentries] = useState(null)
+    const [addentries, saveAddentries] = useState(null) // add entries
 
     const contentlistRef = useRef([])
 
@@ -609,7 +614,7 @@ const Cradle = ({
 
             }
 
-        },200)
+        },SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
 
         if ((!isResizingRef.current) && (!viewportDataRef.current.isResizing)) {
 
@@ -675,16 +680,15 @@ const Cradle = ({
 
     },[orientation])
 
-    // this is the core state engine
+    // data for state processing
     const callingCradleState = useRef(cradlestateRef.current)
     const callingReferenceIndexDataRef = useRef(referenceIndexDataRef.current)
-
     const layoutDataRef = useRef(null)
-
     const positionDataRef = useRef(null)
-
     const contentDataRef = useRef(null)
 
+    // this is the core state engine
+    // useLayout for suppressing flashes
     useLayoutEffect(()=>{
 
         switch (cradlestate) {
@@ -718,6 +722,7 @@ const Cradle = ({
 
     },[cradlestate])
 
+    // standard processing stages
     useEffect(()=> {
 
         switch (cradlestate) {
@@ -765,6 +770,7 @@ const Cradle = ({
     // =============================================================================
     // ------------------------------[ callbacks ]----------------------------------
 
+    // on host demand
     const getVisibleList = useCallback(() => {
 
         let itemlist = Array.from(itemElementsRef.current)
@@ -789,6 +795,7 @@ const Cradle = ({
         saveCradleState('reposition')
     },[])
 
+    // content item registration
     const getItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
 
         const [index, shellref] = itemElementData

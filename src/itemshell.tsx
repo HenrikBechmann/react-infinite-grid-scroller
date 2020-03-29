@@ -21,6 +21,7 @@ const ItemShell = (props) => {
 
     const isMounted = useIsMounted()
 
+    // initialize
     useEffect(() => {
         let itemrequest = {current:null}
         let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
@@ -90,10 +91,12 @@ const ItemShell = (props) => {
 
     },[orientation,cellHeight,cellWidth])
 
+    // cradle ondemand callback parameter value
     const getElementData = useCallback(()=>{
         return [index, shellRef]
     },[])
 
+    // placeholder handling
     const customholderRef = useRef(placeholder?React.createElement(placeholder, {index, listsize}):null)
 
     return <div ref = { shellRef } data-index = {index} style = {styles}>
