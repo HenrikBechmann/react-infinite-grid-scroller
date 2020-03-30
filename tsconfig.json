@@ -10,7 +10,7 @@
         "jsx":"react",
         "rootDir":"src",
         "baseUrl":"src",
-        "declaration":true,
+        "declaration":false,
         "allowSyntheticDefaultImports": true,
         "noImplicitAny": false,
         "esModuleInterop":true,
