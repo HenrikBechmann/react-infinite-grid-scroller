@@ -23,8 +23,8 @@ module.exports = {
     // Look for modules in .ts(x) files first, then .js(x)
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     // Add 'src' to our modulesDirectories, as all our app code will live in there, so Webpack should look in there for modules
-    modules: ['src', 'node_modules'],
-    // alias: { // EXPERIMENT (failes)
+    modules: ['src', 'node_modules']
+    // alias: { // EXPERIMENT (fails)
     // // Needed when you are link your library via `npm link` to the app.
     // // react-dom should be only installed in app.
     // react: path.resolve("./node_modules/react")

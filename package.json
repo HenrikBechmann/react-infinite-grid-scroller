@@ -1,6 +1,6 @@
 {
   "name": "react-infinite-grid-scroller",
-  "version": "1.0.0-beta",
+  "version": "1.0.0-beta1",
   "description": "infinite vertical or horizontal scroll using css grid layout",
   "main": "index.js",
   "types": "lib/build.d.ts",
