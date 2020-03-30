@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "outDir":"lib",
+        "module": "commonjs",
+        "target": "es5",
+        "moduleResolution":"node",
+        "lib":["es2015","dom"],
+        "sourceMap":true,
+        "allowJs":false,
+        "jsx":"react",
+        "rootDir":"src",
+        "baseUrl":"src",
+        "declaration":false,
+        "allowSyntheticDefaultImports": true,
+        "noImplicitAny": false,
+        "esModuleInterop":true,
+        "alwaysStrict":true,
+    },
+      "exclude": [
+        "node_modules"
+      ],
+      "include": [
+        "src"
+      ]
+}
