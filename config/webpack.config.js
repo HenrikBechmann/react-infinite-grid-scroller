@@ -6,22 +6,29 @@ var path = require('path');
 
 module.exports = {
   devtool: 'eval-source-map',
-  // This will be our app's entry point (webpack will look for it in the 'src' directory due to the modulesDirectory setting below). Feel free to change as desired.
-  entry: [
-    // '@babel/polyfill',
-    './src/infinitegridscroller.tsx'
-  ],
+  // This will be our app's entry point 
+  // (webpack will look for it in the 'src' directory due to the modulesDirectory setting below). Feel free to change as desired.
+  entry: {
+    main:'./src/infinitegridscroller.tsx'
+  },
   // Output the bundled JS to dist/app.js
   output: {
-    filename: 'index.js',
+    filename: 'build.js',
     // chunkFilename: '[name].bundle.js',
-    path: path.resolve('lib')
+    path: path.resolve('lib'),
+    library:'Scroller',
+    libraryTarget:'umd'
   },
   resolve: {
     // Look for modules in .ts(x) files first, then .js(x)
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     // Add 'src' to our modulesDirectories, as all our app code will live in there, so Webpack should look in there for modules
     modules: ['src', 'node_modules'],
+    // alias: { // EXPERIMENT (failes)
+    // // Needed when you are link your library via `npm link` to the app.
+    // // react-dom should be only installed in app.
+    // react: path.resolve("./node_modules/react")
+    // }
   },
   module: {
     rules: [
@@ -47,6 +54,10 @@ module.exports = {
           use:'html-loader'
       }
     ]
+  },
+  externals: {
+      "react": "React",
+      "react-dom": "ReactDOM"
   },
    // optimization: {
    //   splitChunks: {
