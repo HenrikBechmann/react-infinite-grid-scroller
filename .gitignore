@@ -1,7 +1,0 @@
-.vscode
-node_modules/
-**/.DS_Store
-.babelrc
-.gitignore
-.npmignore
-config/
