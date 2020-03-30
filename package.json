@@ -3,7 +3,6 @@
   "version": "1.0.0-beta1",
   "description": "infinite vertical or horizontal scroll using css grid layout",
   "main": "index.js",
-  "types": "lib/build.d.ts",
   "scripts": {
     "dev": "webpack --mode development --config config/webpack.config.js",
     "build": "webpack --mode production --config config/webpack.config.js",
@@ -32,11 +31,6 @@
     "react-dom": "^16.13.1"
   },
   "devDependencies": {
-    "np": "^6.2.0",
-    "ts-loader": "^6.2.2",
-    "typescript": "^3.8.3",
-    "webpack": "^4.42.1",
-    "webpack-sources": "^1.4.3",
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.9.0",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
@@ -46,6 +40,10 @@
     "@types/react": "^16.9.26",
     "@types/react-dom": "^16.9.5",
     "babel-loader": "^8.1.0",
-    "webpack-cli": "^3.3.11"
+    "ts-loader": "^6.2.2",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-sources": "^1.4.3"
   }
 }
