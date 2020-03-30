@@ -17,7 +17,6 @@
         "alwaysStrict":true,
     },
       "exclude": [
-        "lib",
         "node_modules"
       ],
       "include": [
