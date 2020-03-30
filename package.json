@@ -22,7 +22,6 @@
   },
   "homepage": "https://github.com/HenrikBechmann/react-infinite-grid-scroller#readme",
   "dependencies": {
-    "@types/node": "^13.9.5",
     "react-is-mounted-hook": "^1.0.3",
     "requestidlecallback": "^0.3.0"
   },
@@ -31,6 +30,7 @@
     "react-dom": "^16.13.1"
   },
   "devDependencies": {
+    "@types/node": "^13.9.5",
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.9.0",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
