@@ -55,7 +55,16 @@ const Scrollblock = ({
         divlinerstyleRef.current = updateScrollblockStyles(orientation,divlinerstyleRef,scrollBlockLengthRef)
         saveDivlinerstyle(divlinerstyleRef.current)
 
-    },[orientation,height,width])
+    },[
+        orientation,
+        height,
+        width,
+        listsize,
+        cellHeight,
+        cellWidth,
+        gap,
+        padding,
+    ])
 
     const updateBlockLength = useCallback(
         () => {

@@ -222,6 +222,18 @@ const Cradle = ({
         divlinerStyleRevisionsRef.current
       ])
 
+    useEffect(()=>{
+        pauseObserversRef.current = true
+        callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
+        saveCradleState('reload')
+    },[
+        listsize,
+        cellHeight,
+        cellWidth,
+        gap,
+        padding,
+    ])
+
     const itemElementsRef = useRef(new Map())
     const scrollTimeridRef = useRef(null)
 
