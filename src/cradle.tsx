@@ -690,7 +690,14 @@ const Cradle = ({
             saveCradleState('pivot')
         }
 
-    },[orientation])
+    },[
+        orientation,
+        listsize,
+        cellHeight,
+        cellWidth,
+        gap,
+        padding,
+    ])
 
     // data for state processing
     const callingCradleState = useRef(cradlestateRef.current)
