@@ -3,6 +3,8 @@
 
 import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, useLayoutEffect } from 'react'
 
+import useIsMounted from 'react-is-mounted-hook'
+
 import { ViewportContext } from './viewport'
 
 import { 
@@ -38,6 +40,8 @@ const Cradle = ({
 
     // =============================================================================================
     // --------------------------------------[ initialization ]-------------------------------------
+
+    const isMounted = useIsMounted()
 
     const viewportData = useContext(ViewportContext)
     const [cradlestate, saveCradleState] = useState('setup')
@@ -82,7 +86,7 @@ const Cradle = ({
 
         return () => {
 
-            viewportData.elementref.current.removeEventListener('scroll',onScroll)
+            viewportData.elementref.current && viewportData.elementref.current.removeEventListener('scroll',onScroll)
 
         }
 
