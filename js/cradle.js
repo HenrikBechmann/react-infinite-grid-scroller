@@ -24,7 +24,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importStar(require("react"));
-var react_is_mounted_hook_1 = __importDefault(require("react-is-mounted-hook"));
 var viewport_1 = require("./viewport");
 var cradlefunctions_1 = require("./cradlefunctions");
 var scrolltracker_1 = __importDefault(require("./scrolltracker"));
@@ -33,11 +32,11 @@ var Cradle = function (_a) {
     // =============================================================================================
     // --------------------------------------[ initialization ]-------------------------------------
     var gap = _a.gap, padding = _a.padding, runwaylength = _a.runwaylength, listsize = _a.listsize, offset = _a.offset, orientation = _a.orientation, cellHeight = _a.cellHeight, cellWidth = _a.cellWidth, getItem = _a.getItem, placeholder = _a.placeholder, component = _a.component, styles = _a.styles;
-    var isMounted = react_is_mounted_hook_1.default();
     var viewportData = react_1.useContext(viewport_1.ViewportContext);
     var _b = react_1.useState('setup'), cradlestate = _b[0], saveCradleState = _b[1];
     var cradlestateRef = react_1.useRef(null); // access by closures
     cradlestateRef.current = cradlestate;
+    // console.log('running cradle with cradlestate', cradlestateRef)
     // -----------------------------[ data heap ]-----------------------
     var listsizeRef = react_1.useRef(null);
     listsizeRef.current = listsize;
@@ -121,8 +120,10 @@ var Cradle = function (_a) {
         var crosscount;
         var size = (orientation == 'horizontal') ? viewportheight : viewportwidth;
         var crossLength = (orientation == 'horizontal') ? cellHeight : cellWidth;
-        var lengthforcalc = size - (padding * 2) + gap;
-        crosscount = Math.floor(lengthforcalc / (crossLength + gap));
+        var lengthforcalc = size - (padding * 2) + gap; // length of viewport
+        var tilelengthforcalc = crossLength + gap;
+        tilelengthforcalc = Math.min(tilelengthforcalc, lengthforcalc); // result cannot be less than 1
+        crosscount = Math.floor(lengthforcalc / (tilelengthforcalc));
         return crosscount;
     }, [
         orientation,
@@ -564,11 +565,13 @@ var Cradle = function (_a) {
             case 'normalize': {
                 setTimeout(function () {
                     // redundant scroll position to avoid accidental positioning at tail end of reposition
-                    viewportData.elementref.current[positionDataRef.current.property] =
-                        positionDataRef.current.value;
-                    cradlefunctions_1.normalizeCradleAnchors(cradleElementRef.current, orientationRef.current);
-                    lastReferenceIndexDataRef.current = __assign({}, referenceIndexDataRef.current);
-                    pauseObserversRef.current && (pauseObserversRef.current = false);
+                    if (viewportData.elementref.current) { // already unmounted if fails
+                        viewportData.elementref.current[positionDataRef.current.property] =
+                            positionDataRef.current.value;
+                        cradlefunctions_1.normalizeCradleAnchors(cradleElementRef.current, orientationRef.current);
+                        lastReferenceIndexDataRef.current = __assign({}, referenceIndexDataRef.current);
+                        pauseObserversRef.current && (pauseObserversRef.current = false);
+                    }
                 }, 250);
                 saveCradleState('ready');
                 break;

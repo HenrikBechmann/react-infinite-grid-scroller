@@ -3,8 +3,6 @@
 
 import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, useLayoutEffect } from 'react'
 
-import useIsMounted from 'react-is-mounted-hook'
-
 import { ViewportContext } from './viewport'
 
 import { 
@@ -41,12 +39,12 @@ const Cradle = ({
     // =============================================================================================
     // --------------------------------------[ initialization ]-------------------------------------
 
-    const isMounted = useIsMounted()
-
     const viewportData = useContext(ViewportContext)
     const [cradlestate, saveCradleState] = useState('setup')
     const cradlestateRef = useRef(null) // access by closures
     cradlestateRef.current = cradlestate
+
+    // console.log('running cradle with cradlestate', cradlestateRef)
 
     // -----------------------------[ data heap ]-----------------------
     const listsizeRef = useRef(null)
@@ -174,8 +172,10 @@ const Cradle = ({
         let size = (orientation == 'horizontal')?viewportheight:viewportwidth
         let crossLength = (orientation == 'horizontal')?cellHeight:cellWidth
 
-        let lengthforcalc = size - (padding * 2) + gap
-        crosscount = Math.floor(lengthforcalc/(crossLength + gap))
+        let lengthforcalc = size - (padding * 2) + gap // length of viewport
+        let tilelengthforcalc = crossLength + gap
+        tilelengthforcalc = Math.min(tilelengthforcalc,lengthforcalc) // result cannot be less than 1
+        crosscount = Math.floor(lengthforcalc/(tilelengthforcalc))
         return crosscount
 
     },[
@@ -771,14 +771,16 @@ const Cradle = ({
                 setTimeout(()=> {
 
                     // redundant scroll position to avoid accidental positioning at tail end of reposition
-                    viewportData.elementref.current[positionDataRef.current.property] =
-                        positionDataRef.current.value
+                    if (viewportData.elementref.current) { // already unmounted if fails
+                        viewportData.elementref.current[positionDataRef.current.property] =
+                            positionDataRef.current.value
 
-                    normalizeCradleAnchors(cradleElementRef.current, orientationRef.current)
+                        normalizeCradleAnchors(cradleElementRef.current, orientationRef.current)
 
-                    lastReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
+                        lastReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
 
-                    pauseObserversRef.current  && (pauseObserversRef.current = false)
+                        pauseObserversRef.current  && (pauseObserversRef.current = false)
+                    }
 
                 },250)
                 saveCradleState('ready')
