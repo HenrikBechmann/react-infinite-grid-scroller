@@ -87,7 +87,9 @@ const ItemShell = (props) => {
     useEffect(()=>{
 
         let newStyles = getShellStyles(orientation, cellHeight, cellWidth, styles)
-        saveStyles(newStyles)
+        if (isMounted()) {
+            saveStyles(newStyles)
+        }
 
     },[orientation,cellHeight,cellWidth])
 
