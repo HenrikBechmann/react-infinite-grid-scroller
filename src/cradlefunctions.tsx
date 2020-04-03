@@ -439,9 +439,24 @@ export const setCradleStyleRevisionsForDrop = ({
     // set styles revisions
     if (orientation == 'vertical') {
 
-        let offsetTop = cradleElement.offsetTop
+        // console.log('for DROP top, bottom',cradleElement.style.top,cradleElement.style.bottom)
+
         let offsetHeight = cradleElement.offsetHeight
         let parentHeight = parentElement.offsetHeight
+
+        let offsetTop = cradleElement.offsetTop
+        // let csstop = parseInt(cradleElement.style.top)
+        // let cssbottom = parseInt(cradleElement.style.bottom)
+        // let offsetTop
+        // if (isNaN(csstop)) {
+        //     offsetTop = (parentHeight - cssbottom) - offsetHeight 
+        // } else {
+        //     offsetTop = csstop
+        // }
+        // let directoffsetTop = cradleElement.offsetTop
+        // console.log('DROP offsetHeight, parentHeight, csstop, cssbottom, calcoffsetTop, offsetTop',
+        //     offsetHeight, parentHeight, csstop, cssbottom, calcoffsetTop, offsetTop)
+
         styles.left = 'auto'
         styles.right = 'auto'
 
@@ -464,6 +479,14 @@ export const setCradleStyleRevisionsForDrop = ({
         let offsetLeft = cradleElement.offsetLeft
         let offsetWidth = cradleElement.offsetWidth
         let parentWidth = parentElement.offsetWidth
+        let cssleft = parseInt(cradleElement.style.left)
+        let cssright = parseInt(cradleElement.style.bottom)
+        // let offsetLeft
+        // if (isNaN(cssleft)) {
+        //     offsetLeft = cssright - parentWidth - offsetWidth
+        // } else {
+        //     offsetLeft = cssleft
+        // }
         styles.top = 'auto'
         styles.bottom = 'auto'
 
@@ -498,9 +521,23 @@ export const setCradleStyleRevisionsForAdd = ({
     // set style revisions
     if (orientation == 'vertical') {
 
-        let offsetTop = cradleElement.offsetTop
+        // console.log('for ADD top, bottom',cradleElement.style.top,cradleElement.style.bottom)
+        // let offsetTop
         let offsetHeight = cradleElement.offsetHeight
         let parentHeight = parentElement.offsetHeight
+        let csstop = parseInt(cradleElement.style.top)
+        let cssbottom = parseInt(cradleElement.style.bottom)
+        let offsetTop = cradleElement.offsetTop
+        // let calcoffsetTop
+        // if (isNaN(csstop)) {
+        //     calcoffsetTop = parentHeight - cssbottom  - offsetHeight
+        // } else {
+        //     calcoffsetTop = csstop
+        // }
+        // console.log('ADD cssbottom, csstop, parentHeight, offsetHeight',
+        //     cssbottom,csstop, cradleElement.style.bottom, cradleElement.style.top, parentHeight, offsetHeight)
+        // let directoffsetTop = cradleElement.offsetTop
+        // console.log('ADD calcoffsetTop, offsetTop',calcoffsetTop,offsetTop)
         styles.left = 'auto'
         styles.right = 'auto'
 
@@ -523,6 +560,16 @@ export const setCradleStyleRevisionsForAdd = ({
         let offsetLeft = cradleElement.offsetLeft
         let offsetWidth = cradleElement.offsetWidth
         let parentWidth = parentElement.offsetWidth
+
+        let cssleft = parseInt(cradleElement.style.left)
+        let cssright = parseInt(cradleElement.style.bottom)
+        // let offsetLeft
+        // if (isNaN(cssleft)) {
+        //     offsetLeft = cssright - parentWidth - offsetWidth
+        // } else {
+        //     offsetLeft = cssleft
+        // }
+
         styles.top = 'auto'
         styles.bottom = 'auto'
 
