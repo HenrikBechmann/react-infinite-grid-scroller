@@ -481,6 +481,8 @@ const Cradle = ({
 
         })
 
+        // console.log('styles, cradle offsetHeight, offsetTop',styles, cradleElement.offsetHeight, cradleElement.offsetTop)
+
         // immediate change for modification
         let elementstyle = cradleElementRef.current.style
         elementstyle.top = styles.top
@@ -492,6 +494,7 @@ const Cradle = ({
         divlinerStyleRevisionsRef.current = styles
 
         contentlistRef.current = localContentList
+        // console.log('addentries',addentries)
         saveAddentries(null)
 
     },[addentries])
