@@ -330,6 +330,7 @@ const Cradle = ({
     // drop scroll content
     useEffect(()=>{
         if (scrollstate != 'dropcontent') return
+
         let dropentries = dropcontentRef.current
         dropcontentRef.current = null
         // if (dropentries === null) return
@@ -436,22 +437,22 @@ const Cradle = ({
 
         // immediate change for modification, but an anti-pattern
         let elementstyle = cradleElementRef.current.style
-        elementstyle.top = styles.top
-        elementstyle.bottom = styles.bottom
-        elementstyle.left = styles.left
-        elementstyle.right = styles.right
+        // elementstyle.top = styles.top
+        // elementstyle.bottom = styles.bottom
+        // elementstyle.left = styles.left
+        // elementstyle.right = styles.right
 
         // divlinerStyleRevisionsRef.current = styles 
 
         // contentlistRef.current = localContentList
         dropcontentlistRef.current = localContentList
-        // dropstylesRef.current = styles
+        dropstylesRef.current = styles
 
 
         // saveDropentries(null)
         addcontentRef.current = {count:newcontentcount,scrollforward,contentoffset:pendingcontentoffset}
         // saveAddentries({count:newcontentcount,scrollforward,contentoffset:pendingcontentoffset})
-        saveScrollState('applydropcontent') // -> applydropcontent -> addcontent
+        saveScrollState('applydropstyles') // -> applydropcontent -> addcontent
 
 
     },[scrollstate])
@@ -520,13 +521,13 @@ const Cradle = ({
         // console.log('styles, cradle offsetHeight, offsetTop',styles, cradleElement.offsetHeight, cradleElement.offsetTop)
 
         // immediate change for modification
-        let elementstyle = cradleElementRef.current.style
-        elementstyle.top = styles.top
-        elementstyle.bottom = styles.bottom
-        elementstyle.left = styles.left
-        elementstyle.right = styles.right
+        // let elementstyle = cradleElementRef.current.style
+        // elementstyle.top = styles.top
+        // elementstyle.bottom = styles.bottom
+        // elementstyle.left = styles.left
+        // elementstyle.right = styles.right
 
-        // addstylesRef.current = styles
+        addstylesRef.current = styles
         // divlinerStyleRevisionsRef.current = styles
 
         addcontentlistRef.current = localContentList
@@ -535,7 +536,7 @@ const Cradle = ({
         // saveScrollState('applyaddstyles') // -> applyaddcontent -> ready
 
         // console.log('addentries',addentries)
-        saveScrollState('applyaddcontent')
+        saveScrollState('applyaddstyles')
         // saveAddentries(null)
 
     },[scrollstate])
