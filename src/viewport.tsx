@@ -10,6 +10,8 @@ import React, {useState, useRef, useEffect, useMemo, useCallback} from 'react'
 
 export const ViewportContext = React.createContext(null)
 
+import useIsMounted from 'react-is-mounted-hook'
+
 // control constant
 const RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = 250
 
@@ -28,6 +30,7 @@ const Viewport = ({
 
     // processing state
     const [portstate,setPortState] = useState('prepare')
+    const isMounted = useIsMounted()
     // data heap
     const timeoutidRef = useRef(null)
     const viewportdivRef = useRef(undefined)
@@ -68,14 +71,14 @@ const Viewport = ({
                 top:viewportdivRef.current.scrollTop,
                 left:viewportdivRef.current.scrollLeft
             }
-            setPortState('resizing')
+            if (isMounted()) setPortState('resizing')
         }
 
         clearTimeout(resizeTimeridRef.current)
         resizeTimeridRef.current = setTimeout(() => {
 
             isResizingRef.current = false
-            setPortState('resize')
+            if (isMounted()) setPortState('resize')
 
         },RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE)
 
