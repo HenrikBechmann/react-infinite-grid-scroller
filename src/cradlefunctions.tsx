@@ -160,7 +160,7 @@ export const getReferenceIndexData = (
 
     }
 
-    let referencescrolloffset = cellLength - (scrollPos % cellLength) + cellSpecs.padding
+    let referencescrolloffset = cellLength - (scrollPos % cellLength) // + cellSpecs.padding
     if (referencescrolloffset == cellLength + cellSpecs.padding) referencescrolloffset = 0
 
     let referencerowindex = Math.ceil((scrollPos - cellSpecs.padding)/cellLength)
