@@ -125,7 +125,7 @@ const Cradle = ({
 
     const isCradleInViewRef = useRef(true)
 
-    const [dropentries, saveDropentries] = useState(null) // trigger add entries
+    // const [dropentries, saveDropentries] = useState(null) // trigger add entries
 
     const [addentries, saveAddentries] = useState(null) // add entries
 
@@ -292,6 +292,8 @@ const Cradle = ({
             There are exceptions for setup and edge cases.
     */
 
+    const dropcontentRef = useRef(null)
+
     // the async callback from IntersectionObserver.
     const itemobservercallback = useCallback((entries)=>{
 
@@ -307,8 +309,9 @@ const Cradle = ({
 
             if (dropentries.length) {
 
+                dropcontentRef.current = dropentries
                 saveScrollState('dropcontent')
-                saveDropentries(dropentries)
+                // saveDropentries(dropentries)
 
             }
         }
@@ -317,7 +320,10 @@ const Cradle = ({
 
     // drop scroll content
     useEffect(()=>{
-        if (dropentries === null) return
+        if (scrollstate != 'dropcontent') return
+        let dropentries = dropcontentRef.current
+        dropcontentRef.current = null
+        // if (dropentries === null) return
 
         let sampleEntry = dropentries[0]
 
@@ -428,10 +434,10 @@ const Cradle = ({
 
         saveScrollState('applydropstyles') // -> applydropcontent -> addcontent
 
-        saveDropentries(null)
+        // saveDropentries(null)
         saveAddentries({count:newcontentcount,scrollforward,contentoffset:pendingcontentoffset})
 
-    },[dropentries])
+    },[scrollstate])
 
     // add scroll content
     useEffect(()=>{
