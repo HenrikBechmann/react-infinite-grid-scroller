@@ -44,7 +44,9 @@ const Cradle = ({
     const cradlestateRef = useRef(null) // access by closures
     cradlestateRef.current = cradlestate
 
-    // console.log('running cradle with cradlestate', cradlestateRef)
+    const [scrollstate, saveScrollState] = useState('ready')
+
+    console.log('running cradle with cradlestate, scrollstate', cradlestate, scrollstate)
 
     // -----------------------------[ data heap ]-----------------------
     const listsizeRef = useRef(null)
@@ -305,6 +307,7 @@ const Cradle = ({
 
             if (dropentries.length) {
 
+                saveScrollState('dropcontent')
                 saveDropentries(dropentries)
 
             }
@@ -422,6 +425,9 @@ const Cradle = ({
         divlinerStyleRevisionsRef.current = styles 
 
         contentlistRef.current = localContentList
+
+        saveScrollState('applydropstyles') // -> applydropcontent -> addcontent
+
         saveDropentries(null)
         saveAddentries({count:newcontentcount,scrollforward,contentoffset:pendingcontentoffset})
 
@@ -494,6 +500,9 @@ const Cradle = ({
         divlinerStyleRevisionsRef.current = styles
 
         contentlistRef.current = localContentList
+
+        saveScrollState('applyaddstyles') // -> applyaddcontent -> ready
+
         // console.log('addentries',addentries)
         saveAddentries(null)
 
@@ -705,6 +714,28 @@ const Cradle = ({
         gap,
         padding,
     ])
+
+    useLayoutEffect(()=>{
+        console.log('processing scrollstate',scrollstate)
+        switch (scrollstate) {
+            case 'applydropstyles':{
+                saveScrollState('applydropcontent')
+                break
+            }
+            case 'applydropcontent':{
+                saveScrollState('addcontent')
+                break
+            }
+            case 'applyaddstyles':{
+                saveScrollState('applyaddcontent')
+                break
+            }
+            case 'applyaddcontent': {
+                saveScrollState('ready')
+                break
+            }
+        }
+    },[scrollstate])
 
     // data for state processing
     const callingCradleState = useRef(cradlestateRef.current)
