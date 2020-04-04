@@ -144,28 +144,34 @@ export const getReferenceIndexData = (
         listsize,
     }) => {
 
+    let cellSpecs = cellSpecsRef.current
+    let viewportElement = viewportData.elementref.current
+
     let scrollPos, cellLength
     if (orientation == 'vertical') {
 
-        scrollPos = viewportData.elementref.current.scrollTop
-        cellLength = cellSpecsRef.current.cellHeight + cellSpecsRef.current.gap
+        scrollPos = viewportElement.scrollTop
+        cellLength = cellSpecs.cellHeight + cellSpecs.gap
 
     } else {
 
-        scrollPos = viewportData.elementref.current.scrollLeft
-        cellLength = cellSpecsRef.current.cellWidth + cellSpecsRef.current.gap
+        scrollPos = viewportElement.scrollLeft
+        cellLength = cellSpecs.cellWidth + cellSpecs.gap
 
     }
 
-    let referencerowindex = Math.ceil(scrollPos/cellLength)
-    let referencescrolloffset = cellLength - (scrollPos % cellLength)
-    if (referencescrolloffset == cellLength) referencescrolloffset = 0
+    let referencescrolloffset = cellLength - (scrollPos % cellLength) + cellSpecs.padding
+    if (referencescrolloffset == cellLength + cellSpecs.padding) referencescrolloffset = 0
+
+    let referencerowindex = Math.ceil((scrollPos - cellSpecs.padding)/cellLength)
     let referenceindex = referencerowindex * crosscountRef.current
 
     let referenceIndexData = {
         index:Math.min(referenceindex,listsize - 1),
         scrolloffset:referencescrolloffset
     }
+
+    if (referenceIndexData.index == 0) referenceIndexData.scrolloffset = 0 // defensive
 
     return referenceIndexData
 }

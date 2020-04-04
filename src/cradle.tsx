@@ -5,6 +5,8 @@ import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, u
 
 import { ViewportContext } from './viewport'
 
+import useIsMounted from 'react-is-mounted-hook'
+
 import { 
     setCradleStyles, 
     getUIContentList, 
@@ -38,6 +40,8 @@ const Cradle = ({
 
     // =============================================================================================
     // --------------------------------------[ initialization ]-------------------------------------
+
+    const isMounted = useIsMounted()
 
     const viewportData = useContext(ViewportContext)
     const [cradlestate, saveCradleState] = useState('setup')
@@ -315,7 +319,7 @@ const Cradle = ({
             if (dropentries.length) {
 
                 dropcontentRef.current = dropentries
-                saveScrollState('dropcontent')
+                isMounted() && saveScrollState('dropcontent')
                 // saveDropentries(dropentries)
 
             }
@@ -430,14 +434,13 @@ const Cradle = ({
 
         })
 
-        // immediate change for modification
+        // immediate change for modification, but an anti-pattern
         let elementstyle = cradleElementRef.current.style
         elementstyle.top = styles.top
         elementstyle.bottom = styles.bottom
         elementstyle.left = styles.left
         elementstyle.right = styles.right
 
-        // synchronization
         // divlinerStyleRevisionsRef.current = styles 
 
         // contentlistRef.current = localContentList
@@ -523,7 +526,6 @@ const Cradle = ({
         elementstyle.left = styles.left
         elementstyle.right = styles.right
 
-        // synchronization
         // addstylesRef.current = styles
         // divlinerStyleRevisionsRef.current = styles
 

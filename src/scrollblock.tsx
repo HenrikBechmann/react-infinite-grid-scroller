@@ -135,6 +135,7 @@ const calcScrollblockLength = ({
     viewportcrosslength -= (padding * 2)
     viewportcrosslength += gap
 
+    if (viewportcrosslength < crosslength) viewportcrosslength = crosslength // must be at least one
     let crosscount = Math.floor(viewportcrosslength/crosslength)
 
     let listlength = Math.ceil(listsize/crosscount)
@@ -148,13 +149,18 @@ const calcScrollblockLength = ({
 const updateScrollblockStyles = (orientation,stylesRef,scrollblocklengthRef) => {
 
     let localstyles = Object.assign({},stylesRef.current) as React.CSSProperties
+    let height 
+    let width
     if (orientation == 'horizontal') {
-        localstyles.height = '100%'
-        localstyles.width = scrollblocklengthRef.current + 'px'
+        height = '100%'
+        width = scrollblocklengthRef.current + 'px'
     } else if (orientation == 'vertical') {
-        localstyles.height = scrollblocklengthRef.current + 'px'
-        localstyles.width = '100%'
+        height = scrollblocklengthRef.current + 'px'
+        width = '100%'
     }
+    localstyles.height = height
+    localstyles.width = width
+
     return localstyles
 }
 
