@@ -307,6 +307,8 @@ const Cradle = ({
     // the async callback from IntersectionObserver.
     const itemobservercallback = useCallback((entries)=>{
 
+        console.log('pauseObserversRef.current, cradlestateRef.current',pauseObserversRef.current, cradlestateRef.current)
+
         if (pauseObserversRef.current) {
 
             return
@@ -316,6 +318,8 @@ const Cradle = ({
         if (cradlestateRef.current == 'ready') {
 
             let dropentries = entries.filter(entry => (!entry.isIntersecting))
+
+            // console.log('dropentries',dropentries)
 
             if (dropentries.length) {
 
@@ -735,14 +739,10 @@ const Cradle = ({
         } else {
             rootMargin = `${runwaylength}px 0px ${runwaylength}px 0px`
         }
-        let options = {
-            rootMargin,
-            threshold:0
-        }
         // console.log('rootMargin',options)
         itemobserverRef.current = new IntersectionObserver(
             itemobservercallback,
-            {root:viewportData.elementref.current, rootMargin,} 
+            {root:viewportData.elementref.current, rootMargin,threshold:1} 
         )
 
         contentlistRef.current = []
