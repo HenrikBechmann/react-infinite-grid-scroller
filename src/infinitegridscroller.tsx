@@ -66,6 +66,7 @@ const InfiniteGridScroller = (props) => {
     }
     // convert to pixels
     let runwaylength = (orientation == 'vertical')?(runway * (cellHeight + gap)):(runway * (cellWidth + gap))
+    runwaylength && (runwaylength += (padding * 2))
 
     return <Viewport 
 

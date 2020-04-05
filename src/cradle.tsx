@@ -129,7 +129,7 @@ const Cradle = ({
 
     const isCradleInViewRef = useRef(true)
 
-    // const [dropentries, saveDropentries] = useState(null) // trigger add entries
+    const [dropentries, saveDropentries] = useState(null) // trigger add entries
 
     const [addentries, saveAddentries] = useState(null) // add entries
 
@@ -272,6 +272,7 @@ const Cradle = ({
     const cradleobservercallback = useCallback((entries) => {
 
         isCradleInViewRef.current = entries[0].isIntersecting
+        // console.log('isCradleInViewRef.current',isCradleInViewRef.current)
 
     },[])
 
@@ -319,8 +320,9 @@ const Cradle = ({
             if (dropentries.length) {
 
                 dropcontentRef.current = dropentries
-                isMounted() && saveScrollState('dropcontent')
-                // saveDropentries(dropentries)
+                // isMounted() && saveScrollState('dropcontent')
+                isMounted() && saveDropentries(dropentries)
+                // console.log('dropentries', dropentries)
 
             }
         }
@@ -329,11 +331,11 @@ const Cradle = ({
 
     // drop scroll content
     useEffect(()=>{
-        if (scrollstate != 'dropcontent') return
+        if (dropentries === null) return
+        // if (scrollstate != 'dropcontent') return
 
-        let dropentries = dropcontentRef.current
+        // let dropentries = dropcontentRef.current
         dropcontentRef.current = null
-        // if (dropentries === null) return
 
         let sampleEntry = dropentries[0]
 
@@ -369,7 +371,7 @@ const Cradle = ({
 
         let netshift = forwardcount - backwardcount
         if (netshift == 0) {
-            saveScrollState('ready')
+            // saveScrollState('ready')
             return
         }
 
@@ -390,7 +392,7 @@ const Cradle = ({
             if ((proposedtailoffset) > (listsize -1) ) {
                 newcontentcount -= (proposedtailoffset - (listsize -1))
                 if (newcontentcount <=0) { // defensive
-                    saveScrollState('ready')
+                    // saveScrollState('ready')
                     return
                 }
             }
@@ -406,7 +408,7 @@ const Cradle = ({
                 proposedindexoffset = -proposedindexoffset
                 newcontentcount = newcontentcount - proposedindexoffset
                 if (newcontentcount <= 0) {
-                    saveScrollState('ready')
+                    // saveScrollState('ready')
                     return 
                 }
             }
@@ -435,37 +437,43 @@ const Cradle = ({
 
         })
 
+        // console.log('drop styles',{...styles})
+
         // immediate change for modification, but an anti-pattern
         let elementstyle = cradleElementRef.current.style
-        // elementstyle.top = styles.top
-        // elementstyle.bottom = styles.bottom
-        // elementstyle.left = styles.left
-        // elementstyle.right = styles.right
+        elementstyle.top = styles.top
+        elementstyle.bottom = styles.bottom
+        elementstyle.left = styles.left
+        elementstyle.right = styles.right
 
-        // divlinerStyleRevisionsRef.current = styles 
+        // console.log('drop styles',styles)
 
-        // contentlistRef.current = localContentList
-        dropcontentlistRef.current = localContentList
-        dropstylesRef.current = styles
+        divlinerStyleRevisionsRef.current = styles 
+
+        contentlistRef.current = localContentList
+        // dropcontentlistRef.current = localContentList
+        // dropstylesRef.current = styles
 
 
         // saveDropentries(null)
-        addcontentRef.current = {count:newcontentcount,scrollforward,contentoffset:pendingcontentoffset}
-        // saveAddentries({count:newcontentcount,scrollforward,contentoffset:pendingcontentoffset})
-        saveScrollState('applydropstyles') // -> applydropcontent -> addcontent
+        // addcontentRef.current = {count:newcontentcount,scrollforward,contentoffset:pendingcontentoffset}
+        saveAddentries({count:newcontentcount,scrollforward,contentoffset:pendingcontentoffset})
+        // saveScrollState('addcontent') // -> applydropcontent -> addcontent
 
 
-    },[scrollstate])
+    },[dropentries])
 
     // add scroll content
     useEffect(()=>{
-        if (scrollstate != 'addcontent') return
+        // saveAddentries(null)
+        // return
+        if (addentries === null) return
+        // if (scrollstate != 'addcontent') return
 
         // console.log('ADDING scroll content')
 
-        // if (addentries === null) return
 
-        let addentries = addcontentRef.current
+        // let addentries = addcontentRef.current
         addcontentRef.current = null
 
         let cradleElement = cradleElementRef.current
@@ -518,28 +526,30 @@ const Cradle = ({
 
         })
 
+        // console.log('add styles',{...styles})
+
         // console.log('styles, cradle offsetHeight, offsetTop',styles, cradleElement.offsetHeight, cradleElement.offsetTop)
 
         // immediate change for modification
-        // let elementstyle = cradleElementRef.current.style
-        // elementstyle.top = styles.top
-        // elementstyle.bottom = styles.bottom
-        // elementstyle.left = styles.left
-        // elementstyle.right = styles.right
+        let elementstyle = cradleElementRef.current.style
+        elementstyle.top = styles.top
+        elementstyle.bottom = styles.bottom
+        elementstyle.left = styles.left
+        elementstyle.right = styles.right
 
-        addstylesRef.current = styles
-        // divlinerStyleRevisionsRef.current = styles
+        // addstylesRef.current = styles
+        divlinerStyleRevisionsRef.current = styles
 
-        addcontentlistRef.current = localContentList
-        // contentlistRef.current = localContentList
+        // addcontentlistRef.current = localContentList
+        contentlistRef.current = localContentList
 
         // saveScrollState('applyaddstyles') // -> applyaddcontent -> ready
 
         // console.log('addentries',addentries)
-        saveScrollState('applyaddstyles')
-        // saveAddentries(null)
+        // saveScrollState('ready')
+        saveAddentries(null)
 
-    },[scrollstate])
+    },[addentries])
     // End of IntersectionObserver support
 
     // ========================================================================================
@@ -725,6 +735,11 @@ const Cradle = ({
         } else {
             rootMargin = `${runwaylength}px 0px ${runwaylength}px 0px`
         }
+        let options = {
+            rootMargin,
+            threshold:0
+        }
+        // console.log('rootMargin',options)
         itemobserverRef.current = new IntersectionObserver(
             itemobservercallback,
             {root:viewportData.elementref.current, rootMargin,} 

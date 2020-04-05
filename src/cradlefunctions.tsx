@@ -32,8 +32,7 @@ export const calcVisibleItems = (itemsArray, viewportElement, cradleElement, ori
             right = left + width,
             bottom = top + height
 
-        let 
-            itemTopOffset = scrollblockTopOffset + cradleTop + top, // offset from top of viewport
+        let itemTopOffset = scrollblockTopOffset + cradleTop + top, // offset from top of viewport
             itemBottomOffset = scrollblockTopOffset + cradleTop + bottom, // offset from top of viewport
             itemLeftOffset = scrollblockLeftOffset + cradleLeft + left, 
             itemRightOffset = scrollblockLeftOffset + cradleLeft + right 
@@ -204,7 +203,7 @@ export const getContentListRequirements = ({
     }
 
     cradleContentLength = viewportlength + (runwaylength * 2)
-    let cradlerowcount = Math.floor(cradleContentLength/cellLength)
+    let cradlerowcount = Math.ceil(cradleContentLength/cellLength)
     let contentCount = cradlerowcount * crosscount
     if (contentCount > listsize) contentCount = listsize
 
@@ -416,8 +415,8 @@ export const setCradleStyles = ({
             //     sets length of horiz cradle items in one line (row), not multi-row config
             styles.gridTemplateRows = cellHeight?`repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:'auto'
             styles.gridTemplateColumns = 'none'
-            styles.minWidth = viewportwidth + 'px'
-            styles.minHeight = 0
+            // styles.minWidth = viewportwidth + 'px'
+            // styles.minHeight = 0
         } else if (orientation == 'vertical') {
             styles.width = '100%'
             styles.height = 'auto'
@@ -425,8 +424,8 @@ export const setCradleStyles = ({
             
             styles.gridTemplateRows = 'none'
             styles.gridTemplateColumns = cellWidth?`repeat(auto-fit, minmax(${cellWidth}px, 1fr))`:'auto'
-            styles.minWidth = 0
-            styles.minHeight = viewportheight + 'px'
+            // styles.minWidth = 0
+            // styles.minHeight = viewportheight + 'px'
         }
 
         return styles
@@ -534,11 +533,11 @@ export const setCradleStyleRevisionsForAdd = ({
         let csstop = parseInt(cradleElement.style.top)
         let cssbottom = parseInt(cradleElement.style.bottom)
         let offsetTop = cradleElement.offsetTop
-        // let calcoffsetTop
+        // let offsetTop
         // if (isNaN(csstop)) {
-        //     calcoffsetTop = parentHeight - cssbottom  - offsetHeight
+        //     offsetTop = parentHeight - cssbottom  - offsetHeight
         // } else {
-        //     calcoffsetTop = csstop
+        //     offsetTop = csstop
         // }
         // console.log('ADD cssbottom, csstop, parentHeight, offsetHeight',
         //     cssbottom,csstop, cradleElement.style.bottom, cradleElement.style.top, parentHeight, offsetHeight)
