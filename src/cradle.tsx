@@ -382,49 +382,54 @@ const Cradle = ({
 
         scrollforward = (forwardcount > backwardcount)
 
-        netshift = Math.abs(netshift) // = number of rows to shift * crosscount
+        netshift = Math.abs(netshift) // should be coerced same as number of rows to shift * crosscount
 
         // set pendingcontentoffset
         let indexoffset = contentlistcopy[0].props.index
         let pendingcontentoffset
         let addcontentcount = Math.ceil(netshift/crosscountRef.current) * crosscountRef.current // adjust in full row increments
 
-        console.log('starting addcontentcount in drop:netshift, indexoffset, addcontentcount, contentlistcopy.length',
-            netshift, indexoffset, addcontentcount, contentlistcopy.length)
+        // console.log('starting addcontentcount in drop:netshift, indexoffset, addcontentcount, contentlistcopy.length',
+        //     netshift, indexoffset, addcontentcount, contentlistcopy.length)
         // console.log('addcontentcount in drop',addcontentcount)
 
         let headindexcount, tailindexcount
 
-        if (scrollforward) {
+        if (scrollforward) { // delete from head; add to tail
+
             pendingcontentoffset = indexoffset + netshift
             let proposedtailoffset = pendingcontentoffset + addcontentcount + ((contentlistcopy.length - netshift ) - 1)
 
             if ((proposedtailoffset) > (listsize -1) ) {
-                let diffitemcount = (proposedtailoffset - (listsize -1))
-                addcontentcount -= diffitemcount
-                let diffrows = Math.floor(diffitemcount/crosscountRef.current)
-                let diffrowitems = (diffrows * crosscountRef.current) 
-                let netshiftadjustment = diffrowitems
-                netshift -= netshiftadjustment
-                pendingcontentoffset -= netshiftadjustment
-                if (addcontentcount <=0) {
+                let diffitemcount = (proposedtailoffset - (listsize -1)) // items outside range
+                addcontentcount -= diffitemcount // adjust the addcontent accordingly
+                let diffrows = Math.floor(diffitemcount/crosscountRef.current) // number of full rows to leave in place
+                let diffrowitems = (diffrows * crosscountRef.current)  // derived number of items to leave in palce
+                let netshiftadjustment = diffrowitems // recognize net shift adjustment
+                netshift -= netshiftadjustment // apply adjustment to netshift
+                pendingcontentoffset -= netshiftadjustment // apply adjustment to new offset for add
+
+                if (addcontentcount <=0) { // nothing to do
                     // saveScrollState('ready')
                     return
+
                 }
             }
 
+            // instructions for cradle content
             headindexcount = -netshift
             tailindexcount = 0
 
-        } else {
+        } else { // delete from tail; add to head
 
-            pendingcontentoffset = indexoffset
+            pendingcontentoffset = indexoffset // deleting from tail, offset will remain the same
             let proposedindexoffset = pendingcontentoffset - addcontentcount
             if (proposedindexoffset < 0) {
+                // console.log('back scrolling adjustment, proposedindexoffset', proposedindexoffset)
                 let diffitemcount = -proposedindexoffset
-                let diffrows = Math.floor(diffitemcount/crosscountRef.current) 
+                let diffrows = Math.floor(diffitemcount/crosscountRef.current) // number of full rows to leave in place
                 let netshiftadjustment = (diffrows * crosscountRef.current)
-                addcontentcount -= netshiftadjustment
+                addcontentcount -= diffitemcount // netshiftadjustment
                 netshift -= netshiftadjustment
                 if (addcontentcount <= 0) {
                     // saveScrollState('ready')
@@ -448,7 +453,7 @@ const Cradle = ({
 
         })
 
-        console.log('ending content count in drop',localContentList.length)
+        // console.log('ending content count in drop',localContentList.length)
         // console.log('DROP localContentList',localContentList.length, indexoffset, contentlistRef.current, headindexcount, tailindexcount)
 
         let styles = setCradleStyleRevisionsForDrop({ 
@@ -546,7 +551,7 @@ const Cradle = ({
 
         })
 
-        console.log('ending content count in add',localContentList.length)
+        // console.log('ending content count in add',localContentList.length)
 
         // console.log('Add localContentList:,localContentList.length, contentoffset, headindexcount, tailindexcount',
         //     localContentList.length, contentoffset, headindexcount, tailindexcount)
