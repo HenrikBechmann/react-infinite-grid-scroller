@@ -406,13 +406,9 @@ const Cradle = ({
                 let diffrowitems = (diffrows * crosscountRef.current) 
                 let netshiftadjustment = diffrowitems
                 netshift -= netshiftadjustment
-                console.log('drop vars ,indexoffset, netshift, pendingcontentoffset, proposedtailoffset, diffitemcount, \
-                    diffrows, diffitems, netshiftadjustment, addcontentcount, netshift',
-                    indexoffset, netshift, pendingcontentoffset, proposedtailoffset, diffitemcount, 
-                    diffrows, diffrowitems, netshiftadjustment, addcontentcount, netshift)
+                pendingcontentoffset -= netshiftadjustment
                 if (addcontentcount <=0) {
                     // saveScrollState('ready')
-                    // console.log('exiting scrollforward drop with addcontentcount',addcontentcount)
                     return
                 }
             }
@@ -431,7 +427,6 @@ const Cradle = ({
                 addcontentcount -= netshiftadjustment
                 netshift -= netshiftadjustment
                 if (addcontentcount <= 0) {
-                    // console.log('exiting scrollbackward drop with addcontentcount',addcontentcount)
                     // saveScrollState('ready')
                     return 
                 }
@@ -490,6 +485,11 @@ const Cradle = ({
 
 
     },[dropentries])
+
+    // console.log('drop vars ,indexoffset, netshift, pendingcontentoffset, proposedtailoffset, diffitemcount, \
+    //     diffrows, diffitems, netshiftadjustment, addcontentcount, netshift',
+    //     indexoffset, netshift, pendingcontentoffset, proposedtailoffset, diffitemcount, 
+    //     diffrows, diffrowitems, netshiftadjustment, addcontentcount, netshift)
 
     // add scroll content
     useEffect(()=>{
