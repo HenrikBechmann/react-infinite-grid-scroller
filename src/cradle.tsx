@@ -307,7 +307,7 @@ const Cradle = ({
     // the async callback from IntersectionObserver.
     const itemobservercallback = useCallback((entries)=>{
 
-        console.log('pauseObserversRef.current, cradlestateRef.current',pauseObserversRef.current, cradlestateRef.current)
+        // console.log('pauseObserversRef.current, cradlestateRef.current',pauseObserversRef.current, cradlestateRef.current)
 
         if (pauseObserversRef.current) {
 
@@ -337,11 +337,12 @@ const Cradle = ({
     useEffect(()=>{
         if (dropentries === null) return
         // if (scrollstate != 'dropcontent') return
-
+        let localdropentries = [...dropentries]
+        let contentlistcopy = [...contentlistRef.current]
         // let dropentries = dropcontentRef.current
         dropcontentRef.current = null
 
-        let sampleEntry = dropentries[0]
+        let sampleEntry = localdropentries[0]
 
         let cradleElement = cradleElementRef.current
         let parentElement = cradleElement.parentElement
@@ -353,7 +354,7 @@ const Cradle = ({
         // -- isolate forward and backward lists
         //  then set scrollforward
         let forwardcount = 0, backwardcount = 0
-        for (let droprecordindex = 0; droprecordindex <dropentries.length; droprecordindex++ ) {
+        for (let droprecordindex = 0; droprecordindex <localdropentries.length; droprecordindex++ ) {
             if (orientation == 'vertical') {
 
                 if (sampleEntry.boundingClientRect.y - sampleEntry.rootBounds.y < 0) {
@@ -384,14 +385,14 @@ const Cradle = ({
         netshift = Math.abs(netshift)
 
         // set localContentList
-        let indexoffset = contentlistRef.current[0].props.index
+        let indexoffset = contentlistcopy[0].props.index
         let pendingcontentoffset
         let newcontentcount = Math.ceil(netshift/crosscountRef.current)*crosscountRef.current
         let headindexcount, tailindexcount
 
         if (scrollforward) {
             pendingcontentoffset = indexoffset + netshift
-            let proposedtailoffset = pendingcontentoffset + newcontentcount + ((contentlistRef.current.length - netshift ) - 1)
+            let proposedtailoffset = pendingcontentoffset + newcontentcount + ((contentlistcopy.length - netshift ) - 1)
 
             if ((proposedtailoffset) > (listsize -1) ) {
                 newcontentcount -= (proposedtailoffset - (listsize -1))
@@ -431,6 +432,8 @@ const Cradle = ({
             callbacksRef,
 
         })
+
+        // console.log('DROP localContentList',localContentList.length, indexoffset, contentlistRef.current, headindexcount, tailindexcount)
 
         let styles = setCradleStyleRevisionsForDrop({ 
 
@@ -473,22 +476,23 @@ const Cradle = ({
         // return
         if (addentries === null) return
         // if (scrollstate != 'addcontent') return
+        let localaddentries:any = {...addentries}
+        let localContentList = [...contentlistRef.current]
 
         // console.log('ADDING scroll content')
 
 
         // let addentries = addcontentRef.current
-        addcontentRef.current = null
+        // addcontentRef.current = null
 
         let cradleElement = cradleElementRef.current
         let parentElement = cradleElement.parentElement
         let viewportElement = viewportData.elementref.current
 
-        let { scrollforward } = addentries
-        let localContentList
+        let { scrollforward } = localaddentries
 
         // set localContentList
-        let { contentoffset, count:newcontentcount } = addentries
+        let { contentoffset, count:newcontentcount } = localaddentries
 
         let headindexcount, tailindexcount
         if (scrollforward) {
@@ -505,7 +509,7 @@ const Cradle = ({
 
         localContentList = getUIContentList({
 
-            localContentList: contentlistRef.current,
+            localContentList,
             headindexcount,
             tailindexcount,
             indexoffset: contentoffset,
@@ -520,6 +524,9 @@ const Cradle = ({
             placeholder,
 
         })
+
+        console.log('Add localContentList:,localContentList.length, contentoffset, headindexcount, tailindexcount',
+            localContentList.length, contentoffset, headindexcount, tailindexcount)
 
         let styles = setCradleStyleRevisionsForAdd({
 
@@ -742,7 +749,7 @@ const Cradle = ({
         // console.log('rootMargin',options)
         itemobserverRef.current = new IntersectionObserver(
             itemobservercallback,
-            {root:viewportData.elementref.current, rootMargin,threshold:1} 
+            {root:viewportData.elementref.current, rootMargin,threshold:0} 
         )
 
         contentlistRef.current = []

@@ -290,6 +290,7 @@ export const normalizeCradleAnchors = (cradleElement, orientation) => {
 export const getUIContentList = (props) => {
 
     let { 
+
         indexoffset, 
         headindexcount, 
         tailindexcount, 
@@ -297,13 +298,28 @@ export const getUIContentList = (props) => {
         cellHeight, 
         cellWidth, 
         localContentList:contentlist,
-        observer,
         crosscount,
+        listsize,
+
         callbacksRef,
         getItem,
-        listsize,
         placeholder,
+        observer,
     } = props
+
+    console.log('getUIContentList: indexoffset, headindexcount, tailindexcount, \
+        orientation, cellHeight, cellWidth, \
+        crosscount, listsize, contentlist',
+        indexoffset, 
+        headindexcount, 
+        tailindexcount, 
+        orientation, 
+        cellHeight, 
+        cellWidth, 
+        crosscount,
+        listsize,
+        contentlist,
+    )
 
     let localContentlist = [...contentlist]
     let tailindexoffset = indexoffset + contentlist.length
@@ -369,6 +385,8 @@ export const getUIContentList = (props) => {
     }
 
     returnContentlist = headContentlist.concat(localContentlist,tailContentlist)
+
+    console.log('returnContentlist',returnContentlist)
 
     return returnContentlist
 }
