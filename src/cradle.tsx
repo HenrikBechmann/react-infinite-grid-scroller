@@ -261,7 +261,7 @@ const Cradle = ({
         cradleobserverRef.current = new IntersectionObserver(
 
             cradleobservercallback,
-            {root:viewportData.elementref.current}
+            {root:viewportData.elementref.current, threshold:0}
 
         )
 
