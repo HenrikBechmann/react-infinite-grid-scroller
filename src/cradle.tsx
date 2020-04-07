@@ -764,7 +764,7 @@ const Cradle = ({
         switch (cradlestate) {
             case 'reload':
                 contentlistRef.current = []
-                saveCradleState('reposition')
+                saveCradleState('setreload')
                 break;
             case 'position': {
 
@@ -799,6 +799,7 @@ const Cradle = ({
             case 'setup': 
             case 'resize':
             case 'pivot':
+            case 'setreload':
             case 'reposition':
 
                 callingCradleState.current = cradlestate
@@ -858,6 +859,7 @@ const Cradle = ({
     },[])
 
     const reload = useCallback(() => {
+        callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
         saveCradleState('reload')
     },[])
 
