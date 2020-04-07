@@ -68,6 +68,10 @@ const Cradle = ({
 
     useEffect(()=>{
 
+        if (component?.hasOwnProperty('scrollToItem')) {
+            component.scrollToItem = scrollToItem
+        } 
+
         if (component?.hasOwnProperty('getVisibleList')) {
             component.getVisibleList = getVisibleList
         } 
@@ -76,13 +80,11 @@ const Cradle = ({
             component.getContentList = getContentList
         } 
 
-        if (component?.hasOwnProperty('scrollToItem')) {
-            component.scrollToItem = scrollToItem
-        } 
-
         if (component?.hasOwnProperty('reload')) {
             component.reload = reload
         }
+
+        reportReferenceIndexRef.current = component?.reportReferenceIndex
 
     },[component])
 
