@@ -66,10 +66,7 @@ const Cradle = ({
 
     // -----------------------[ effects ]-------------------------
 
-    // initialize window listener, and component elements
-    useEffect(() => {
-
-        viewportData.elementref.current.addEventListener('scroll',onScroll)
+    useEffect(()=>{
 
         if (component?.hasOwnProperty('getVisibleList')) {
             component.getVisibleList = getVisibleList
@@ -86,6 +83,13 @@ const Cradle = ({
         if (component?.hasOwnProperty('reload')) {
             component.reload = reload
         }
+
+    },[component])
+
+    // initialize window listener, and component elements
+    useEffect(() => {
+
+        viewportData.elementref.current.addEventListener('scroll',onScroll)
 
         return () => {
 
@@ -855,10 +859,11 @@ const Cradle = ({
         saveCradleState('reload')
     },[])
 
-    const scrollToItem = useCallback((index, alignment = 'nearest') => {
-        console.log('requested scrollToItem',index, alignment)
-        callingReferenceIndexDataRef.current = {index:0, scrolloffset:0}
+    const scrollToItem = useCallback((index) => { // , alignment = 'start') => {
+
+        callingReferenceIndexDataRef.current = {index, scrolloffset:0}
         saveCradleState('reposition')
+
     },[])
 
     // content item registration
