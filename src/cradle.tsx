@@ -462,7 +462,7 @@ const Cradle = ({
 
         })
 
-        // immediate change for modification, but an anti-pattern
+        // immediate change for modification (an anti-pattern but performant)
         let elementstyle = cradleElementRef.current.style
         elementstyle.top = styles.top
         elementstyle.bottom = styles.bottom
@@ -535,7 +535,7 @@ const Cradle = ({
 
         })
 
-        // immediate change for modification
+        // immediate change for modification (an anti-pattern but performant)
         let elementstyle = cradleElementRef.current.style
         elementstyle.top = styles.top
         elementstyle.bottom = styles.bottom
