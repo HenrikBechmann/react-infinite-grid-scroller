@@ -307,20 +307,6 @@ export const getUIContentList = (props) => {
         observer,
     } = props
 
-    // console.log('getUIContentList: indexoffset, headindexcount, tailindexcount, \
-    //     orientation, cellHeight, cellWidth, \
-    //     crosscount, listsize, contentlist',
-    //     indexoffset, 
-    //     headindexcount, 
-    //     tailindexcount, 
-    //     orientation, 
-    //     cellHeight, 
-    //     cellWidth, 
-    //     crosscount,
-    //     listsize,
-    //     contentlist,
-    // )
-
     let localContentlist = [...contentlist]
     let tailindexoffset = indexoffset + contentlist.length
     let returnContentlist
@@ -386,8 +372,6 @@ export const getUIContentList = (props) => {
 
     returnContentlist = headContentlist.concat(localContentlist,tailContentlist)
 
-    // console.log('returnContentlist',returnContentlist)
-
     return returnContentlist
 }
 
@@ -425,7 +409,9 @@ export const setCradleStyles = ({
 }) => {
 
         let styles = Object.assign({},stylesobject) as React.CSSProperties
+
         if (orientation == 'horizontal') {
+
             styles.width = 'auto'
             styles.height = '100%'
             styles.gridAutoFlow = 'column'
@@ -433,17 +419,15 @@ export const setCradleStyles = ({
             //     sets length of horiz cradle items in one line (row), not multi-row config
             styles.gridTemplateRows = cellHeight?`repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:'auto'
             styles.gridTemplateColumns = 'none'
-            // styles.minWidth = viewportwidth + 'px'
-            // styles.minHeight = 0
+
         } else if (orientation == 'vertical') {
+
             styles.width = '100%'
             styles.height = 'auto'
             styles.gridAutoFlow = 'row'
             
             styles.gridTemplateRows = 'none'
             styles.gridTemplateColumns = cellWidth?`repeat(auto-fit, minmax(${cellWidth}px, 1fr))`:'auto'
-            // styles.minWidth = 0
-            // styles.minHeight = viewportheight + 'px'
         }
 
         return styles
@@ -462,23 +446,10 @@ export const setCradleStyleRevisionsForDrop = ({
     // set styles revisions
     if (orientation == 'vertical') {
 
-        // console.log('for DROP top, bottom',cradleElement.style.top,cradleElement.style.bottom)
-
         let offsetHeight = cradleElement.offsetHeight
         let parentHeight = parentElement.offsetHeight
 
         let offsetTop = cradleElement.offsetTop
-        // let csstop = parseInt(cradleElement.style.top)
-        // let cssbottom = parseInt(cradleElement.style.bottom)
-        // let offsetTop
-        // if (isNaN(csstop)) {
-        //     offsetTop = (parentHeight - cssbottom) - offsetHeight 
-        // } else {
-        //     offsetTop = csstop
-        // }
-        // let directoffsetTop = cradleElement.offsetTop
-        // console.log('DROP offsetHeight, parentHeight, csstop, cssbottom, calcoffsetTop, offsetTop',
-        //     offsetHeight, parentHeight, csstop, cssbottom, calcoffsetTop, offsetTop)
 
         styles.left = 'auto'
         styles.right = 'auto'
@@ -504,12 +475,7 @@ export const setCradleStyleRevisionsForDrop = ({
         let parentWidth = parentElement.offsetWidth
         let cssleft = parseInt(cradleElement.style.left)
         let cssright = parseInt(cradleElement.style.bottom)
-        // let offsetLeft
-        // if (isNaN(cssleft)) {
-        //     offsetLeft = cssright - parentWidth - offsetWidth
-        // } else {
-        //     offsetLeft = cssleft
-        // }
+
         styles.top = 'auto'
         styles.bottom = 'auto'
 
@@ -544,23 +510,13 @@ export const setCradleStyleRevisionsForAdd = ({
     // set style revisions
     if (orientation == 'vertical') {
 
-        // console.log('for ADD top, bottom',cradleElement.style.top,cradleElement.style.bottom)
         // let offsetTop
         let offsetHeight = cradleElement.offsetHeight
         let parentHeight = parentElement.offsetHeight
         let csstop = parseInt(cradleElement.style.top)
         let cssbottom = parseInt(cradleElement.style.bottom)
         let offsetTop = cradleElement.offsetTop
-        // let offsetTop
-        // if (isNaN(csstop)) {
-        //     offsetTop = parentHeight - cssbottom  - offsetHeight
-        // } else {
-        //     offsetTop = csstop
-        // }
-        // console.log('ADD cssbottom, csstop, parentHeight, offsetHeight',
-        //     cssbottom,csstop, cradleElement.style.bottom, cradleElement.style.top, parentHeight, offsetHeight)
-        // let directoffsetTop = cradleElement.offsetTop
-        // console.log('ADD calcoffsetTop, offsetTop',calcoffsetTop,offsetTop)
+
         styles.left = 'auto'
         styles.right = 'auto'
 
@@ -586,12 +542,6 @@ export const setCradleStyleRevisionsForAdd = ({
 
         let cssleft = parseInt(cradleElement.style.left)
         let cssright = parseInt(cradleElement.style.bottom)
-        // let offsetLeft
-        // if (isNaN(cssleft)) {
-        //     offsetLeft = cssright - parentWidth - offsetWidth
-        // } else {
-        //     offsetLeft = cssleft
-        // }
 
         styles.top = 'auto'
         styles.bottom = 'auto'

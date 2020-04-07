@@ -410,7 +410,7 @@ const Cradle = ({
                 pendingcontentoffset -= netshiftadjustment // apply adjustment to new offset for add
 
                 if (addcontentcount <=0) { // nothing to do
-                    // saveScrollState('ready')
+
                     return
 
                 }
@@ -425,14 +425,14 @@ const Cradle = ({
             pendingcontentoffset = indexoffset // adding to tail (opposite end of scroll direction), offset will remain the same
             let proposedindexoffset = pendingcontentoffset - addcontentcount
             if (proposedindexoffset < 0) {
-                // console.log('back scrolling adjustment, proposedindexoffset', proposedindexoffset)
+
                 let diffitemcount = -proposedindexoffset
                 let diffrows = Math.floor(diffitemcount/crosscountRef.current) // number of full rows to leave in place
                 let netshiftadjustment = (diffrows * crosscountRef.current)
                 addcontentcount -= diffitemcount // netshiftadjustment
                 netshift -= netshiftadjustment
                 if (addcontentcount <= 0) {
-                    // saveScrollState('ready')
+
                     return 
                 }
             }
@@ -441,7 +441,6 @@ const Cradle = ({
             tailindexcount = -netshift
 
         }
-        // console.log('revised addcontentcount in drop',addcontentcount)
 
         localContentList = getUIContentList({
 
@@ -453,8 +452,6 @@ const Cradle = ({
 
         })
 
-        // console.log('ending content count in drop',localContentList.length)
-        // console.log('DROP localContentList',localContentList.length, indexoffset, contentlistRef.current, headindexcount, tailindexcount)
 
         let styles = setCradleStyleRevisionsForDrop({ 
 
@@ -465,8 +462,6 @@ const Cradle = ({
 
         })
 
-        // console.log('drop styles',{...styles})
-
         // immediate change for modification, but an anti-pattern
         let elementstyle = cradleElementRef.current.style
         elementstyle.top = styles.top
@@ -474,42 +469,22 @@ const Cradle = ({
         elementstyle.left = styles.left
         elementstyle.right = styles.right
 
-        // console.log('drop styles',styles)
-
         divlinerStyleRevisionsRef.current = styles 
 
         contentlistRef.current = localContentList
-        // dropcontentlistRef.current = localContentList
-        // dropstylesRef.current = styles
 
 
-        // saveDropentries(null)
-        // addcontentRef.current = {count:addcontentcount,scrollforward,contentoffset:pendingcontentoffset}
         saveAddentries({count:addcontentcount,scrollforward,contentoffset:pendingcontentoffset})
-        // saveScrollState('addcontent') // -> applydropcontent -> addcontent
-
 
     },[dropentries])
 
-    // console.log('drop vars ,indexoffset, netshift, pendingcontentoffset, proposedtailoffset, diffitemcount, \
-    //     diffrows, diffitems, netshiftadjustment, addcontentcount, netshift',
-    //     indexoffset, netshift, pendingcontentoffset, proposedtailoffset, diffitemcount, 
-    //     diffrows, diffrowitems, netshiftadjustment, addcontentcount, netshift)
-
     // add scroll content
     useEffect(()=>{
-        // saveAddentries(null)
-        // return
+
         if (addentries === null) return
-        // if (scrollstate != 'addcontent') return
+
         let localaddentries:any = {...addentries}
         let localContentList = [...contentlistRef.current]
-
-        // console.log('ADDING scroll content')
-
-
-        // let addentries = addcontentRef.current
-        // addcontentRef.current = null
 
         let cradleElement = cradleElementRef.current
         let parentElement = cradleElement.parentElement
@@ -551,11 +526,6 @@ const Cradle = ({
 
         })
 
-        // console.log('ending content count in add',localContentList.length)
-
-        // console.log('Add localContentList:,localContentList.length, contentoffset, headindexcount, tailindexcount',
-        //     localContentList.length, contentoffset, headindexcount, tailindexcount)
-
         let styles = setCradleStyleRevisionsForAdd({
 
             cradleElement,
@@ -565,10 +535,6 @@ const Cradle = ({
 
         })
 
-        // console.log('add styles',{...styles})
-
-        // console.log('styles, cradle offsetHeight, offsetTop',styles, cradleElement.offsetHeight, cradleElement.offsetTop)
-
         // immediate change for modification
         let elementstyle = cradleElementRef.current.style
         elementstyle.top = styles.top
@@ -576,16 +542,10 @@ const Cradle = ({
         elementstyle.left = styles.left
         elementstyle.right = styles.right
 
-        // addstylesRef.current = styles
         divlinerStyleRevisionsRef.current = styles
 
-        // addcontentlistRef.current = localContentList
         contentlistRef.current = localContentList
 
-        // saveScrollState('applyaddstyles') // -> applyaddcontent -> ready
-
-        // console.log('addentries',addentries)
-        // saveScrollState('ready')
         saveAddentries(null)
 
     },[addentries])
@@ -797,36 +757,6 @@ const Cradle = ({
         gap,
         padding,
     ])
-
-    useLayoutEffect(()=>{
-        // console.log('processing scrollstate',scrollstate)
-        switch (scrollstate) {
-            case 'applydropstyles':{
-                // console.log('APPLYING drop styles')
-                divlinerStyleRevisionsRef.current = dropstylesRef.current
-                saveScrollState('applydropcontent')
-                break
-            }
-            case 'applydropcontent':{
-                // console.log('APPLYING drop content')
-                contentlistRef.current = dropcontentlistRef.current
-                saveScrollState('addcontent')
-                break
-            }
-            case 'applyaddstyles':{
-                // console.log('APPLYING add styles')
-                divlinerStyleRevisionsRef.current = addstylesRef.current
-                saveScrollState('applyaddcontent')
-                break
-            }
-            case 'applyaddcontent': {
-                // console.log('APPLYING add content')
-                contentlistRef.current = addcontentlistRef.current
-                saveScrollState('ready')
-                break
-            }
-        }
-    },[scrollstate])
 
     // data for state processing
     const callingCradleState = useRef(cradlestateRef.current)
