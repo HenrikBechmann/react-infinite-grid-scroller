@@ -395,7 +395,7 @@ const Cradle = ({
 
         let headindexcount, tailindexcount
 
-        if (scrollforward) { // delete from head; add to tail
+        if (scrollforward) { // add to tail; delete from to head; head is direction of stroll
 
             pendingcontentoffset = indexoffset + netshift
             let proposedtailoffset = pendingcontentoffset + addcontentcount + ((contentlistcopy.length - netshift ) - 1)
@@ -420,9 +420,9 @@ const Cradle = ({
             headindexcount = -netshift
             tailindexcount = 0
 
-        } else { // delete from tail; add to head
+        } else {
 
-            pendingcontentoffset = indexoffset // deleting from tail, offset will remain the same
+            pendingcontentoffset = indexoffset // adding to tail (opposite end of scroll direction), offset will remain the same
             let proposedindexoffset = pendingcontentoffset - addcontentcount
             if (proposedindexoffset < 0) {
                 // console.log('back scrolling adjustment, proposedindexoffset', proposedindexoffset)
