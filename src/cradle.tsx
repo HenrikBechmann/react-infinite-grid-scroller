@@ -50,9 +50,8 @@ const Cradle = ({
 
     const [scrollstate, saveScrollState] = useState('ready')
 
-    // console.log('running cradle with cradlestate, scrollstate', cradlestate, scrollstate)
-
     // -----------------------------[ data heap ]-----------------------
+
     const listsizeRef = useRef(null)
     listsizeRef.current = listsize
 
@@ -297,13 +296,6 @@ const Cradle = ({
             There are exceptions for setup and edge cases.
     */
 
-    const dropcontentRef = useRef(null)
-    const dropstylesRef = useRef(null)
-    const dropcontentlistRef = useRef(null)
-    const addcontentRef = useRef(null)
-    const addstylesRef = useRef(null)
-    const addcontentlistRef = useRef(null)
-
     // the async callback from IntersectionObserver.
     const itemobservercallback = useCallback((entries)=>{
 
@@ -323,7 +315,7 @@ const Cradle = ({
 
             if (dropentries.length) {
 
-                dropcontentRef.current = dropentries
+                // dropcontentRef.current = dropentries
                 // isMounted() && saveScrollState('dropcontent')
                 isMounted() && saveDropentries(dropentries)
                 // console.log('dropentries', dropentries)
@@ -336,11 +328,9 @@ const Cradle = ({
     // drop scroll content
     useEffect(()=>{
         if (dropentries === null) return
-        // if (scrollstate != 'dropcontent') return
+
         let localdropentries = [...dropentries]
         let contentlistcopy = [...contentlistRef.current]
-        // let dropentries = dropcontentRef.current
-        dropcontentRef.current = null
 
         let sampleEntry = localdropentries[0]
 
@@ -376,7 +366,7 @@ const Cradle = ({
 
         let netshift = forwardcount - backwardcount
         if (netshift == 0) {
-            // saveScrollState('ready')
+
             return
         }
 
@@ -388,10 +378,6 @@ const Cradle = ({
         let indexoffset = contentlistcopy[0].props.index
         let pendingcontentoffset
         let addcontentcount = Math.ceil(netshift/crosscountRef.current) * crosscountRef.current // adjust in full row increments
-
-        // console.log('starting addcontentcount in drop:netshift, indexoffset, addcontentcount, contentlistcopy.length',
-        //     netshift, indexoffset, addcontentcount, contentlistcopy.length)
-        // console.log('addcontentcount in drop',addcontentcount)
 
         let headindexcount, tailindexcount
 

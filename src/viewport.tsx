@@ -102,7 +102,7 @@ const Viewport = ({
 
         return styles
 
-    },[orientation, cellWidth, cellHeight, padding])
+    },[orientation, cellWidth, cellHeight, padding]) // TODO: gap?
 
     let viewportClientRect
     if (viewportdivRef.current) {
@@ -126,7 +126,7 @@ const Viewport = ({
         }
         return localViewportData
 
-    },[orientation, top, right, bottom, left,isResizingRef.current])
+    },[orientation, top, right, bottom, left, isResizingRef.current])
 
     // --------------------[ state processing ]---------------------------
     useEffect(()=>{
