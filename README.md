@@ -58,7 +58,7 @@ The scroller's highest level component, the viewport, is a `div` with `position:
 | property | options | notes |
 |---|---|---|
 |orientation|string:"vertical" (default) or "horizontal"||
-|gap|integer: number of pixels between cells|there is no gap at either end of a row; default = 0|
+|gap|integer: number of pixels between cells|there is no gap at either end of a row or column; default = 0|
 |padding|integer:number of pixels padding the "cradle"|the "cradle" holds the rolling content; default = 0|
 |cellHeight|integer: number of pixels for cell height|required. literal for "vertical"; approximate for "horizontal"|
 |cellWidth|integer: number of pixels for cell width|required. literal for "horizontal"; approximate for "vertical"|
