@@ -1,0 +1,7 @@
+# Backlog
+*A list of features or issues under consideration for future versions*
+
+- some form of viewport resize event: currently just responds to page resize event, sort of waiting for ResizeOvserver
+- scroll snap: scollblock item migrates to start edge after scrolling
+- cache: none, preload, keepload
+- dense: grid dense; preload, or keepload with offset 0 (start of list) required
