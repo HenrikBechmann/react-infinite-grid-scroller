@@ -7,8 +7,8 @@ Vertical or horizontal infinite scroll using css grid layout
 
 - Rapid scroll, horizontal or vertical
 - single or multiple rows or columns
-- rapid repositioning (through scroll thumb or programmatically)
-- dynamic pivot (horizontal/vertical back and fort)
+- rapid repositioning in large lists (through scroll thumb or programmatically)
+- dynamic pivot (horizontal/vertical back and forth)
 - automatic reconfiguration with page resize
 
 This utility does not support variable length fields. Doesn't really make sense for a grid layout. I **may** produce a flexbox-based scroller for that -- one column, vertical, variable size.
