@@ -31,6 +31,24 @@ Therefore it is best suited for modern browsers.
 ```JSX
 import Scroller from 'react-infinite-grid-scroller'
 
+// ...
+
+<div style = {uistyles.container}>
+  <Scroller 
+      orientation = { orientation } 
+      gap = { gap }
+      padding = { padding }
+      cellHeight = { cellHeight }
+      cellWidth = { cellWidth }
+      runway = { runway }
+      offset = { offset }
+      listsize = { listsize }
+      getItem = { getItem }
+      placeholder = { placeholder }
+      styles = { styles }
+      component = { component }
+  />
+</div>
 ```
 
 # Options
