@@ -66,7 +66,7 @@ const Cradle = ({
 
     // -----------------------[ effects ]-------------------------
 
-    //initialize host component propertie
+    //initialize host component properties
     useEffect(()=>{
 
         if (component?.hasOwnProperty('scrollToItem')) {
@@ -278,7 +278,6 @@ const Cradle = ({
     const cradleobservercallback = useCallback((entries) => {
 
         isCradleInViewRef.current = entries[0].isIntersecting
-        // console.log('isCradleInViewRef.current',isCradleInViewRef.current)
 
     },[])
 
@@ -322,10 +321,7 @@ const Cradle = ({
 
             if (dropentries.length) {
 
-                // dropcontentRef.current = dropentries
-                // isMounted() && saveScrollState('dropcontent')
                 isMounted() && saveDropentries(dropentries)
-                // console.log('dropentries', dropentries)
 
             }
         }
@@ -388,7 +384,7 @@ const Cradle = ({
 
         let headindexcount, tailindexcount
 
-        if (scrollforward) { // add to tail; delete from to head; head is direction of stroll
+        if (scrollforward) { // delete from head; add to tail; head is direction of stroll
 
             pendingcontentoffset = indexoffset + netshift
             let proposedtailoffset = pendingcontentoffset + addcontentcount + ((contentlistcopy.length - netshift ) - 1)
@@ -415,18 +411,19 @@ const Cradle = ({
 
         } else {
 
-            pendingcontentoffset = indexoffset // adding to tail (opposite end of scroll direction), offset will remain the same
+            pendingcontentoffset = indexoffset // add to tail (opposite end of scroll direction), offset will remain the same
             let proposedindexoffset = pendingcontentoffset - addcontentcount
             if (proposedindexoffset < 0) {
 
                 let diffitemcount = -proposedindexoffset
                 let diffrows = Math.floor(diffitemcount/crosscountRef.current) // number of full rows to leave in place
                 let netshiftadjustment = (diffrows * crosscountRef.current)
-                addcontentcount -= diffitemcount // netshiftadjustment
+                addcontentcount -= diffitemcount
                 netshift -= netshiftadjustment
                 if (addcontentcount <= 0) {
 
-                    return 
+                    return
+                    
                 }
             }
 
@@ -630,7 +627,7 @@ const Cradle = ({
 
         }
 
-        layoutDataRef.current = styles
+        layoutDataRef.current = styles // for 'layout' state
 
     },[
         cellHeight,
@@ -903,6 +900,7 @@ const Cradle = ({
 
     let divlinerstyles = divlinerStylesRef.current
 
+    // TODO: move scrolltracker values to memo
     return <>
 
         { cradlestateRef.current == 'repositioning'
