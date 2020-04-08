@@ -17,11 +17,11 @@ This utility does not support variable length fields. Doesn't really make sense 
 
 This scroller uses leading edge technology:
 - [css grid layout](https://css-tricks.com/snippets/css/complete-guide-grid/)
-- react hooks
-- IntersectionObserver
-- requestIdleCallback
+- [react hooks](https://reactjs.org/docs/hooks-intro.html)
+- [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
+- [requestIdleCallback](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback)
 
-Therefore it is suitable for modern browsers.
+Therefore it is best suited for modern browsers.
 
 # Animated gif
 
