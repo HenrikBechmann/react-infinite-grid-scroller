@@ -42,7 +42,7 @@ const InfiniteGridScroller = (props) => {
         offset, // the 0-based starting index of the list, when first loaded
         getItem, // function provided by host - parameter is index number, set by system; return value is 
             // host-selected component or promise of a component
-        component, // properties with direct access to some component utilites, optional
+        functions, // properties with direct access to some component utilites, optional
         placeholder, // a sparse component to stand in for content until the content arrives; 
             // optional, replaces default
         styles, // passive style over-rides (eg. color, opacity) for viewport, scrollblock, cradle, or scrolltracker
@@ -52,7 +52,7 @@ const InfiniteGridScroller = (props) => {
     } = props
 
     // defaults
-    component !?? (component = {})
+    functions !?? (functions = {})
     gap !?? (gap = 0)
     padding !?? (padding = 0)
     runway !?? (runway = 3)
@@ -75,7 +75,7 @@ const InfiniteGridScroller = (props) => {
         cellHeight = { cellHeight }
         gap = { gap }
         padding = { padding }
-        component = { component }
+        functions = { functions }
         styles = { styles }
     >
     
@@ -87,7 +87,7 @@ const InfiniteGridScroller = (props) => {
             gap = { gap}
             padding = { padding }
             orientation = { orientation }
-            component = { component }
+            functions = { functions }
             styles = { styles }
 
         >
@@ -103,7 +103,7 @@ const InfiniteGridScroller = (props) => {
                 orientation = { orientation }
                 runwaylength = { runwaylength } 
                 getItem = { getItem }
-                component = { component }
+                functions = { functions }
                 placeholder = { placeholder }
                 styles = { styles }
 

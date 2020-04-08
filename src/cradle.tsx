@@ -34,7 +34,7 @@ const Cradle = ({
         cellWidth, 
         getItem, 
         placeholder, 
-        component,
+        functions,
         styles,
     }) => {
 
@@ -60,34 +60,35 @@ const Cradle = ({
 
     const isResizingRef = useRef(false)
 
-    const pauseObserversRef = useRef(false)
+    const pauseItemObserverRef = useRef(false)
+    const pauseCradleObserverRef = useRef(false)
 
-    const reportReferenceIndexRef = useRef(component?.reportReferenceIndex)
+    const reportReferenceIndexRef = useRef(functions?.reportReferenceIndex)
 
     // -----------------------[ effects ]-------------------------
 
-    //initialize host component properties
+    //initialize host functions properties
     useEffect(()=>{
 
-        if (component?.hasOwnProperty('scrollToItem')) {
-            component.scrollToItem = scrollToItem
+        if (functions?.hasOwnProperty('scrollToItem')) {
+            functions.scrollToItem = scrollToItem
         } 
 
-        if (component?.hasOwnProperty('getVisibleList')) {
-            component.getVisibleList = getVisibleList
+        if (functions?.hasOwnProperty('getVisibleList')) {
+            functions.getVisibleList = getVisibleList
         } 
 
-        if (component?.hasOwnProperty('getContentList')) {
-            component.getContentList = getContentList
+        if (functions?.hasOwnProperty('getContentList')) {
+            functions.getContentList = getContentList
         } 
 
-        if (component?.hasOwnProperty('reload')) {
-            component.reload = reload
+        if (functions?.hasOwnProperty('reload')) {
+            functions.reload = reload
         }
 
-        reportReferenceIndexRef.current = component?.reportReferenceIndex
+        reportReferenceIndexRef.current = functions?.reportReferenceIndex
 
-    },[component])
+    },[functions])
 
     // initialize window listener
     useEffect(() => {
@@ -111,7 +112,7 @@ const Cradle = ({
 
             callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
 
-            pauseObserversRef.current = true
+            pauseItemObserverRef.current = true
             saveCradleState('resizing')
 
         }
@@ -239,7 +240,8 @@ const Cradle = ({
       ])
 
     useEffect(()=>{
-        pauseObserversRef.current = true
+        pauseItemObserverRef.current = true
+        pauseCradleObserverRef.current = true
         callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
         saveCradleState('reload')
     },[
@@ -277,6 +279,8 @@ const Cradle = ({
 
     const cradleobservercallback = useCallback((entries) => {
 
+        if (pauseCradleObserverRef.current) return
+
         isCradleInViewRef.current = entries[0].isIntersecting
 
     },[])
@@ -305,13 +309,9 @@ const Cradle = ({
     // the async callback from IntersectionObserver.
     const itemobservercallback = useCallback((entries)=>{
 
-        // console.log('pauseObserversRef.current, cradlestateRef.current',pauseObserversRef.current, cradlestateRef.current)
+        // console.log('pauseItemObserverRef.current, cradlestateRef.current',pauseItemObserverRef.current, cradlestateRef.current)
 
-        if (pauseObserversRef.current) {
-
-            return
-
-        }
+        if (pauseItemObserverRef.current) return
 
         if (cradlestateRef.current == 'ready') {
 
@@ -672,7 +672,7 @@ const Cradle = ({
 
                 case 'repositioning': {
 
-                    pauseObserversRef.current = true
+                    pauseItemObserverRef.current = true
                     callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
 
                     saveCradleState('reposition')
@@ -705,7 +705,7 @@ const Cradle = ({
 
         if (
             !isCradleInViewRef.current && 
-            !pauseObserversRef.current && 
+            !pauseItemObserverRef.current && 
             !isResizingRef.current &&
             !(cradlestateRef.current == 'resize') &&
             !(cradlestateRef.current == 'repositioning') && 
@@ -740,7 +740,7 @@ const Cradle = ({
         contentlistRef.current = []
 
         if (cradlestate != 'setup') {
-            pauseObserversRef.current = true
+            pauseItemObserverRef.current = true
             callingReferenceIndexDataRef.current = {...lastReferenceIndexDataRef.current}
 
             saveCradleState('pivot')
@@ -832,7 +832,9 @@ const Cradle = ({
 
                         lastReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
 
-                        pauseObserversRef.current  && (pauseObserversRef.current = false)
+                        pauseItemObserverRef.current  && (pauseItemObserverRef.current = false)
+                        pauseCradleObserverRef.current  && (pauseCradleObserverRef.current = false)
+
                     }
 
                 },66)
@@ -864,6 +866,9 @@ const Cradle = ({
     },[])
 
     const reload = useCallback(() => {
+        pauseItemObserverRef.current = true
+        pauseCradleObserverRef.current = true
+
         callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
         saveCradleState('reload')
     },[])

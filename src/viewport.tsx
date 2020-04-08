@@ -22,7 +22,7 @@ const Viewport = ({
     cellHeight, 
     gap, 
     padding, 
-    component, 
+    functions, 
     styles,
 }) => {
 
