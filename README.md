@@ -180,6 +180,8 @@ Contains ItemShells.
 
 ### ItemShell
 
+This implements the cell components of the grid. It manages its own contents: a placeholder on initialization, replaced by a user component as fetched by `getItem`. The `getItem` function must be provided by the host. It is given an index number, and returns either a component or a promise of a component.
+
 ### ScrollTracker
 
 ### Placeholder
