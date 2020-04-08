@@ -68,7 +68,7 @@ The scroller's highest level component, the viewport, is a `div` with `position:
 |getItem|function: parameter = index number (0 based)|must return a component or promise of a component|
 |placeholder|sparse component for the cell to load while waiting for the intended cell component|optional|
 |styles|simple object:collection of styles for scroller components|these should be "passive" styles like backgroundColor|
-|functions|function: direct interactions with scroller components||
+|functions|simple object: collection of functions for interactions with scroller components|functions for which properties are not included in the object are ignored|
 # Design
 
 # Licence
