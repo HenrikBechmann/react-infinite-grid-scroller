@@ -84,7 +84,17 @@ styles = {
 ~~~
 The scrolltracker is the small rectangular component that appears at the top left of the viewport when the list is being rapidly repositioned. The scrolltracker gives the user the current index and total listsize during the repositioning process.
 ### `functions` details
+Functions provide utility interactions with the scroller (specifically with the `cradle`). The following are available:
+~~~javascript
+functions: {
+    scrollToItem:null, // provided by scroller
+    getContentList:null, // provided by scroller
+    getVisibleList:null, // provided by scroller
+    reload:null, // provided by scroller
+    reportReferenceIndex:null // provided by host
+}
 
+~~~
 ### Notes
 # Design
 
