@@ -5,7 +5,7 @@ Vertical or horizontal infinite scroll using css grid layout
 
 # Features
 
-- Rapid infinite scroll, horizontal or vertical
+- rapid infinite scroll, horizontal or vertical
 - single or multiple rows or columns
 - rapid repositioning in large lists (through scroll thumb or programmatically)
 - dynamic pivot (horizontal/vertical back and forth) while maintaining position in list
