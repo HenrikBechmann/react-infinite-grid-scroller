@@ -581,8 +581,13 @@ const Cradle = ({
             scrolloffset:visibletargetscrolloffset,
         }
 
-        reportReferenceIndexRef.current && reportReferenceIndexRef.current(
+        if (reportReferenceIndexRef.current) {
+            let cstate = cradleState
+            if (cstate == 'setreload') cstate = 'reload'
+            reportReferenceIndexRef.current(
             referenceIndexDataRef.current.index, 'setCradleContent:' + cradleState)
+
+        }
 
         saveReferenceindex(referenceIndexDataRef.current)
 
