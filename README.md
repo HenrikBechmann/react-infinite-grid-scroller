@@ -16,7 +16,7 @@ This utility does not support variable length fields. Doesn't really make sense 
 # Technology
 
 This scroller uses leading edge technology:
-- css grid layout
+- [css grid layout](https://css-tricks.com/snippets/css/complete-guide-grid/)
 - react hooks
 - IntersectionObserver
 - requestIdleCallback
