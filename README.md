@@ -116,7 +116,7 @@ Here are details about the functions:
 |getContentList|functions.getContentList()|returns an array of current content data, where the content includes both visible items and items that are invisible in the *runways* at the head and tail of lists|
 |getVisibleList|functions.getVisibleList()|returns an array of current content data, where the content includes items that are fully or partially visible to the user|
 |reload|functions.reload()|causes a reload of all cradle content items (visible or invisible). Useful if you want content of those items to be reset on the fly -- this re-triggers `getItem` for each of those cells |
-|reportReferenceIndex|assign your callback function to this property|called by scroller (with `index`, `reason` parameters) whenever the reference item index changes -- that's the item at the top left of all lists|
+|reportReferenceIndex|assign your callback function to this property|called by scroller (with `index`, `reason` parameters) whenever the reference item index changes -- that's the item visible at the top left of the viewport|
 
 `getContentList` returns an array of items currently in the cradle. Each array item is an array of two items:
 
@@ -155,6 +155,22 @@ The `index` corresponds to the `index` sent to the host with `getItem`. the `HTM
 the ItemShell for each grid cell is a `div`, controlled by the grid layout, with `position:relative`. Your content can be anything that works in this context. Your content should be slightly liquid to accommodate adjustments that the grid will make to fit cells into the crosslength of the viewport. These adjustments can be slightly variable width for 'vertical' orientation and slightly variable height for 'horizontal' orientation.
 
 # Design
+
+The scroller consists of the following components:
+
+### InfiniteGridScroller
+
+### Viewport
+
+### Scrollblock
+
+### Cradle
+
+### ItemShell
+
+### ScrollTracker
+
+### Placeholder
 
 # Licence
 
