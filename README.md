@@ -33,7 +33,7 @@ import Scroller from 'react-infinite-grid-scroller'
 
 // ...
 
-<div style = {containerstyles}>
+<div style = {containerstyle}>
   <Scroller 
       orientation = { orientation } 
       gap = { gap }
