@@ -48,7 +48,7 @@ import Scroller from 'react-infinite-grid-scroller'
       getItem = { getItem }
       placeholder = { placeholder }
       styles = { styles }
-      component = { component }
+      functions = { functions }
   />
 </div>
 ```
