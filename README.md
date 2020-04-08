@@ -93,8 +93,21 @@ functions: {
     reload:null, // provided by scroller
     reportReferenceIndex:null // provided by host
 }
-
 ~~~
+To get access to the first four functions, include the property for each in the functions object, set to null. The scroller will instantiate these properties with the appropriate functions on initialization. If the properties are absent the functions are not set.
+
+For reportReferenceIndex, the host must provide the function, like so:
+~~~
+const reportReferenceIndex = (index,reason) => {
+
+    console.log('reporting reference index', index, reason)
+
+}
+~~~
+
+The reference index is the calculated item index (0-based) at the top left of the viewport. The reason can be 'scrolling' or 'setCradleContent:<cradlestate>', where <cradlestate> is the triggered state that causes a reset of the cradle's contents. The triggering state can be 'setup', 'resize', 'pivot', 'setreload' or 'reposition'. Note that `reportReferenceIndex` returns a *firehose* of data, particularly with scrolling.
+
+Here are details about the functions:
 ### Notes
 # Design
 
