@@ -160,7 +160,11 @@ The scroller consists of the following components:
 
 ### InfiniteGridScroller
 
+The API. Distributes parameters to Viewport, Scrollblock, and Cradle.
+
 ### Viewport
+
+The top level component. `position:absolute`; `top`, `right`, `bottom`, `left` all set to 0. Responds to page `onResize`, but not to its container resize (waiting for wider deployment of [ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver))
 
 ### Scrollblock
 
