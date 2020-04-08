@@ -585,7 +585,7 @@ const Cradle = ({
             let cstate = cradleState
             if (cstate == 'setreload') cstate = 'reload'
             reportReferenceIndexRef.current(
-            referenceIndexDataRef.current.index, 'setCradleContent:' + cradleState)
+            referenceIndexDataRef.current.index, 'setCradleContent', cstate)
 
         }
 
@@ -700,7 +700,7 @@ const Cradle = ({
                     crosscountRef,
                     listsize:listsizeRef.current,
                 })
-                reportReferenceIndexRef.current && reportReferenceIndexRef.current(referenceIndexDataRef.current.index,'scrolling')
+                reportReferenceIndexRef.current && reportReferenceIndexRef.current(referenceIndexDataRef.current.index,'scrolling', cradleState)
 
                 saveReferenceindex(referenceIndexDataRef.current)
 
