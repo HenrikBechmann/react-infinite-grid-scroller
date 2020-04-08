@@ -97,7 +97,7 @@ functions: {
 To get access to the first four functions, include the property for each in the functions object, set to null. The scroller will instantiate these properties with the appropriate functions on initialization. If the properties are absent the functions are not set.
 
 For reportReferenceIndex, the host must provide the function, like so:
-~~~
+~~~javascript
 const reportReferenceIndex = (index, reason, cradlestate) => {
 
     console.log('reporting reference index', index, reason, cradlestate)
