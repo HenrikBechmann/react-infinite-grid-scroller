@@ -106,7 +106,7 @@ const reportReferenceIndex = (index, reason, cradlestate) => {
 ~~~
 Then assign your function to `functions.reportReferenceIndex`.
 
-The reference `index` is the calculated item index (0-based) at the top left of the viewport. The `reason` can be 'scrolling' or 'setCradleContent'. The `cradlestate` for scrolling can be 'ready' (normal) or 'repositioning' for rapid repositioning. For 'setCradleContent' `cradlestate` is the triggered state that causes a reset of the cradle's contents. The triggering state in this case can be 'setup', 'resize', 'pivot', 'reload' or 'reposition'. Note that `reportReferenceIndex` returns a *firehose* of data with scrolling.
+The reference `index` is the calculated item index (0-based) at the top left of the viewport. The `reason` can be 'scrolling' or 'setCradleContent'. The `cradlestate` for scrolling can be 'ready' (normal) or 'repositioning' for rapid repositioning. For 'setCradleContent' `cradlestate` is the triggered state that causes a reset of the cradle's contents. The triggering state can be 'setup', 'resize', 'pivot', 'reload' or 'reposition'. Note that `reportReferenceIndex` returns a *firehose* of data with scrolling.
 
 Here are details about the functions:
 
