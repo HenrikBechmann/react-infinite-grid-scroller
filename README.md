@@ -26,6 +26,8 @@ Therefore it is best suited for modern browsers.
 
 # Animated gif
 
+![demo](demo/scroller.gif)
+
 # Usage
 
 ```JSX
@@ -46,7 +48,7 @@ import Scroller from 'react-infinite-grid-scroller'
       getItem = { getItem }
       placeholder = { placeholder }
       styles = { styles }
-      component = { component }
+      functions = { functions }
   />
 </div>
 ```
