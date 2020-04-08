@@ -66,6 +66,7 @@ const Cradle = ({
 
     // -----------------------[ effects ]-------------------------
 
+    //initialize host component propertie
     useEffect(()=>{
 
         if (component?.hasOwnProperty('scrollToItem')) {
@@ -88,7 +89,7 @@ const Cradle = ({
 
     },[component])
 
-    // initialize window listener, and component elements
+    // initialize window listener
     useEffect(() => {
 
         viewportData.elementref.current.addEventListener('scroll',onScroll)
