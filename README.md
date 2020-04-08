@@ -11,7 +11,7 @@ Vertical or horizontal infinite scroll using css grid layout
 - dynamic pivot (horizontal/vertical back and forth) while maintaining position in list
 - automatic reconfiguration with page resize
 
-This utility does not support variable length cells. That wouldn't really make sense for a grid layout. I **may** produce a flexbox-based scroller for that -- one column, vertical, variable size. Or not.
+This utility does not support variable length cells. That wouldn't really make sense for a grid layout. I ***may*** produce a flexbox-based scroller for that -- one column, vertical, variable size. Or not.
 
 # Technology
 
