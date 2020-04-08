@@ -118,7 +118,7 @@ Here are details about the functions:
 |reload|functions.reload()|causes a reload of all cradle content items (visible or invisible). Useful if you want content of those items to be reset on the fly -- this re-triggers `getItem` for each of those cells |
 |reportReferenceIndex|assign your callback function to this property|called by scroller (with `index`, `reason` parameters) whenever the reference item index changes -- that's the item at the top left of all lists|
 
-`getContentList` returns an array of items in the cradle. Each array item is an array of two items:
+`getContentList` returns an array of items currently in the cradle. Each array item is an array of two items:
 
 ```javascript
 0:<index>
@@ -126,7 +126,7 @@ Here are details about the functions:
 ```
 The `index` corresponds to the `index` sent to the host with `getItem`. the `HTMLElement` is the scroller `ItemShell` DOM element (set by the `ref` attribute). Your content would be children of this element.
 
-`getVisibleList` returns an array of data about fully or partially visible items in the cradle, which are items fully or partially within the boundaries of the viewport of the scroller. Each array item is an object with the following properties (shows example data):
+`getVisibleList` returns an array of data about fully or partially visible items currently in the cradle, which are items fully or partially within the boundaries of the viewport of the scroller. Each array item is an object with the following properties (shows example data):
 
 ```javascript
 {
