@@ -152,7 +152,7 @@ The `index` corresponds to the `index` sent to the host with `getItem`. the `HTM
 ```
 ### Notes
 
-the ItemShell for each grid cell is a `div`, controlled by the grid layout, with `position:relative`. Your content can be anything that works in this context. Your content should be slightly liquid to accommodate adjustments that the grid will make to fit cells into the crosslength of the viewport. These adjustments can be slightly variable width for 'vertical' orientation and slightly variable height for 'horizontal' orientation.
+The ItemShell for each grid cell is a `div`, controlled by the grid layout, with `position:relative`. Your content can be anything that works in this context. Your content should be slightly liquid to accommodate adjustments that the grid will make to fit cells into the crosslength of the viewport. These adjustments can be slightly variable width for 'vertical' orientation and slightly variable height for 'horizontal' orientation.
 
 # Design
 
@@ -184,7 +184,11 @@ This implements the cell components of the grid. It manages its own contents: a 
 
 ### ScrollTracker
 
+This is the small rectangle that appears when the user rapidly repositions, using the thumb of the scrollbar or very rapid swipes. The scrolltracker shows the user the item number (at top left = index + 1) against the size of the list. It only appears during rapid scrolling.
+
 ### Placeholder
+
+The default placeholder, showing the item number (index + 1) and the length of the list.
 
 # Licence
 
