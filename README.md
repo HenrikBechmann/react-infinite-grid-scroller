@@ -28,6 +28,11 @@ Therefore it is best suited for modern browsers.
 
 # Usage
 
+```react
+import Scroller from 'react-infinite-grid-scroller'
+
+```
+
 # Options
 
 # Design
