@@ -126,7 +126,7 @@ Here are details about the functions:
 ```
 The `index` corresponds to the `index` sent to the host with `getItem`. the `HTMLElement` is the scroller `ItemShell` DOM element (set by the `ref` attribute). Your content would be children of this element.
 
-`getVisibleList` returns an array of fully or partially visible items in the cradle, that is items within the boundaries of the viewport of the scroller. Each array item is an object with the following properties (example):
+`getVisibleList` returns an array of fully or partially visible items in the cradle, which are items fully or partially within the boundaries of the viewport of the scroller. Each array item is an object with the following properties (shows example data):
 
 ```javascript
 {
