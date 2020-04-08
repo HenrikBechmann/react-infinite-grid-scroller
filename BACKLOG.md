@@ -7,3 +7,4 @@
 - dense: grid dense; preload, or keepload with offset 0 (start of list) required
 - border color animation for reset contents
 - find a way to specify a cell focus before reload, and carry forward
+- add cradlestate to 'sccrolling' reason returned with reportReferenceIndex function
