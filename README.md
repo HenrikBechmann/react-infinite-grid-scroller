@@ -57,18 +57,18 @@ The scroller's highest level component, the viewport, is a `div` with `position:
 # Options
 | property | options | notes |
 |---|---|---|
-|orientation|||
-|gap|||
-|padding|||
-|cellHeight|||
-|cellWidth|||
-|runway|||
-|offset|||
-|listsize|||
-|getItem|||
-|placeholder|||
-|styles|||
-|functions|||
+|orientation|string:"vertical" (default) or "horizontal"||
+|gap|integer: number of pixels between cells|there is no gap at either end of a row; default = 0|
+|padding|integer:number of pixels padding the "cradle"|the "cradle" holds the rolling content; default = 0|
+|cellHeight|integer: number of pixels for cell height|required. literal for "vertical"; approximate for "horizontal"|
+|cellWidth|integer: number of pixels for cell width|required. literal for "horizontal"; approximate for "vertical"|
+|runway|integer: number of cells just out of view at head and tail of list|default = 0 (not recommended)|
+|offset|integer: starting index when the scroller loads|default = 0|
+|listsize|integer: number of items in list|required|
+|getItem|function: parameter = index number (0 based)|must return a component or promise of a component|
+|placeholder|sparse component for the cell to load while waiting for the intended cell component|optional|
+|styles|simple object:collection of styles for scroller components|these should be "passive" styles like backgroundColor|
+|functions|function: direct interactions with scroller components||
 # Design
 
 # Licence
