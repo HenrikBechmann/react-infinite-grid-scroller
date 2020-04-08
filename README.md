@@ -65,7 +65,7 @@ The scroller's highest level component, the viewport, is a `div` with `position:
 |runway|integer: number of cells just out of view at head and tail of list|default = 0 (not recommended)|
 |offset|integer: starting index when the scroller loads|default = 0|
 |listsize|integer: number of items in list|required|
-|getItem|host provided function: parameter = index number (0 based)|must return a component or promise of a component for the calling grid item|
+|getItem|host-provided function: parameter = index number (0 based)|must return a component or promise of a component for the calling grid item|
 |placeholder|sparse component for the cell to load while waiting for the intended cell component|optional. parameters are index, listsize, error string|
 |styles|simple object:collection of styles for scroller components|these should be "passive" styles like backgroundColor|
 |functions|simple object: collection of functions for interactions with scroller components|functions for which properties are not included in the object are ignored|
