@@ -34,4 +34,4 @@ Therefore it is best suited for modern browsers.
 
 # Licence
 
-MIT &copy; [Henrik Bechmann](https://twitter.com/HenrikBechmann)
+MIT &copy; 2020 [Henrik Bechmann](https://twitter.com/HenrikBechmann)
