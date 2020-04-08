@@ -111,9 +111,10 @@ const ItemShell = (props) => {
 
 } // ItemShell
 
+// TODO: memoize this
 const getShellStyles = (orientation, cellHeight, cellWidth, styles) => {
 
-    let styleset = Object.assign({},styles)
+    let styleset = Object.assign({position:'relative'},styles)
     if (orientation == 'horizontal') {
         styleset.width = cellWidth?(cellWidth + 'px'):'auto'
         styleset.height = 'auto'
