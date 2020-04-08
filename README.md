@@ -23,7 +23,7 @@ This scroller uses leading edge technology:
 
 Therefore it is suitable for modern browsers.
 
-# Animaged gif
+# Animated gif
 
 # Usage
 
