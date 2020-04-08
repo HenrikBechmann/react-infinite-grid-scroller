@@ -26,6 +26,8 @@ Therefore it is best suited for modern browsers.
 
 # Animated gif
 
+![demo](demo/scroller.gif)
+
 # Usage
 
 ```JSX
