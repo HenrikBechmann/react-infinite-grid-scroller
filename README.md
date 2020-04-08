@@ -66,7 +66,6 @@ The scroller's highest level component, the viewport, is a `div` with `position:
 |offset|||
 |listsize|||
 |getItem|||
-|getItem|||
 |placeholder|||
 |styles|||
 |functions|||
