@@ -28,7 +28,7 @@ Therefore it is best suited for modern browsers.
 
 # Usage
 
-```react
+```JSX
 import Scroller from 'react-infinite-grid-scroller'
 
 ```
