@@ -141,7 +141,7 @@ The `index` corresponds to the `index` sent to the host with `getItem`. the `HTM
   itemTopOffset: -15, // offset from the top of the viewport
   itemBottomOffset: 25, // offset of the bottom from the top of the viewport
   topPortion: -15, // location of the top portion of the cell (negative is invisible)
-  bottomPortion: 25, location of the bottom portion of the cell (negative is invisible)
+  bottomPortion: 25, // location of the bottom portion of the cell (negative is invisible)
   itemLeftOffset: 5, // offset from the left of the viewport
   itemRightOffset: 198, // offset of the right from the left of the viewport
   leftPortion: 193, // location of the left portion of the cell (negative is invisible)
