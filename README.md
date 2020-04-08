@@ -1,7 +1,7 @@
 # react-infinite-grid-scroller
 Vertical or horizontal infinite scroll using css grid layout
 
-![version](https://img.shields.io/badge/version-1.0.0--Beta--1-blue)
+![version](https://img.shields.io/badge/version-1.0.0--Beta--1-blue) ![licence](https://img.shields.io/badge/licence-MIT-green)
 
 # Features
 
