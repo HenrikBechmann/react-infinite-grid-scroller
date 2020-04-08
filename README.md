@@ -105,7 +105,7 @@ const reportReferenceIndex = (index,reason) => {
 }
 ~~~
 
-The reference index is the calculated item index (0-based) at the top left of the viewport. The reason can be 'scrolling' or 'setCradleContent:\<cradlestate\>', where \<cradlestate\> is the triggered state that causes a reset of the cradle's contents. The triggering state can be 'setup', 'resize', 'pivot', 'setreload' or 'reposition'. Note that `reportReferenceIndex` returns a *firehose* of data, particularly with scrolling.
+The reference index is the calculated item index (0-based) at the top left of the viewport. The reason can be 'scrolling' or 'setCradleContent:\<cradlestate\>', where \<cradlestate\> is the triggered state that causes a reset of the cradle's contents. The triggering state can be 'setup', 'resize', 'pivot', 'reload' or 'reposition'. Note that `reportReferenceIndex` returns a *firehose* of data, particularly with scrolling.
 
 Here are details about the functions:
 ### Notes
