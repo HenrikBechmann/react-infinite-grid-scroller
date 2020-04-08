@@ -140,12 +140,12 @@ The `index` corresponds to the `index` sent to the host with `getItem`. the `HTM
   height: 40, // actual height
   itemTopOffset: -15, // offset from the top of the viewport
   itemBottomOffset: 25, // offset of the bottom from the top of the viewport
-  topPortion: -15, // location of the top portion of the cell (negative is invisible)
-  bottomPortion: 25, // location of the bottom portion of the cell (negative is invisible)
+  topPortion: -15, // measure of the top portion of the cell (negative is invisible)
+  bottomPortion: 25, // measure of the bottom portion of the cell (negative is invisible)
   itemLeftOffset: 5, // offset from the left of the viewport
   itemRightOffset: 198, // offset of the right from the left of the viewport
-  leftPortion: 193, // location of the left portion of the cell (negative is invisible)
-  rightPortion: 0, // location of the right portion of the cell (negative is invisible)
+  leftPortion: 193, // measure of the left portion of the cell (negative is invisible)
+  rightPortion: 0, // measure of the right portion of the cell (negative is invisible)
   verticalRatio: 0.625, // the portion of the cell that is visible vertically
   horizontalRatio: 1, // the portion of the cell that is visible horizontally
 }
