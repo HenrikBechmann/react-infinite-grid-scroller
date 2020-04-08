@@ -72,6 +72,17 @@ The scroller's highest level component, the viewport, is a `div` with `position:
 
 ### `styles` details
 
+Create a style object for each of the components you want to modify. Be careful to only include passive styles (like color, backgroundColor) so as not to confuse the scroller. Do not add structural items like borders, padding etc.
+
+~~~
+styles = {
+  viewport:{}, 
+  scrollblock:{}, 
+  cradle:{},
+  scrolltracker:{}
+}
+~~~
+The scrolltracker is the small rectangular component that appears at the top left of the viewport when the list is being rapidly repositioned. The scrolltracker gives the user the current index and total listsize during the repositioning process.
 ### `functions` details
 
 ### Notes
