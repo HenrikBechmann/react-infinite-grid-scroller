@@ -74,7 +74,7 @@ The scroller's highest level component, the viewport, is a `div` with `position:
 
 Create a style object for each of the components you want to modify. Be careful to only include passive styles (like color, backgroundColor) so as not to confuse the scroller. Do not add structural items like borders, padding etc.
 
-~~~
+~~~javascript
 styles = {
   viewport:{}, 
   scrollblock:{}, 
