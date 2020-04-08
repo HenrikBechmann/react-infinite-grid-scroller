@@ -50,7 +50,8 @@ import Scroller from 'react-infinite-grid-scroller'
   />
 </div>
 ```
-The scroller's hightest level component, the viewport, is a `div` with `position:absolute`, and `top`, `right`, `bottom`, `left` set to 0 (zero). Therefore the host container should be a block element with `position:absolute` or `position:relative`
+The scroller's hightest level component, the viewport, is a `div` with `position:absolute`, and `top`, `right`, `bottom`, `left` set to 0 (zero). Therefore the host container should be a block element with `position:absolute` or `position:relative`.
+
 # Options
 
 # Design
