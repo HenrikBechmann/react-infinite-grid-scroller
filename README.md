@@ -118,6 +118,38 @@ Here are details about the functions:
 |reload|functions.reload()|causes a reload of all cradle content items (visible or invisible). Useful if you want content of those items to be reset on the fly -- this re-triggers `getItem` for each of those cells |
 |reportReferenceIndex|assign your callback function to this property|called by scroller (with `index`, `reason` parameters) whenever the reference item index changes -- that's the item at the top left of all lists|
 
+`getContentList` returns an array of items in the cradle. Each array item is an array of two items:
+
+```javascript
+0:<index>
+1:{current:<HTMLElement>}
+```
+The `index` corresponds to the `index` sent to the host with `getItem`. the `HTMLElement` is the scroller `ItemShell` DOM element (set by the `ref` attribute). Your content would be children of this element.
+
+`getVisibleList` returns an array of fully or partially visible items in the cradle, that is items within the boundaries of the viewport of the scroller. Each array item is an object with the following properties (example):
+
+```javascript
+{
+  index: 150, // the index used to request the item
+  isVisible: true, // always true
+  top: 185, // offset from head of the cradle
+  right: 198, // offset from the right of the cradle
+  bottom: 225, // offset from the bottom of the cradle
+  left: 5, // offset from the left of the cradle
+  width: 193, // actual width
+  height: 40, // actual height
+  itemTopOffset: -15, // offset from the top of the viewport
+  itemBottomOffset: 25, // offset of the bottom from the top of the viewport
+  topPortion: -15, // location of the top portion of the cell (negative is invisible)
+  bottomPortion: 25, location of the bottom portion of the cell (negative is invisible)
+  itemLeftOffset: 5, // offset from the left of the viewport
+  itemRightOffset: 198, // offset of the right from the left of the viewport
+  leftPortion: 193, // location of the left portion of the cell (negative is invisible)
+  rightPortion: 0, // location of the right portion of the cell (negative is invisible)
+  verticalRatio: 0.625, // the portion of the cell that is visible vertically
+  horizontalRatio: 1, // the portion of the cell that is visible horizontally
+}
+```
 ### Notes
 # Design
 
