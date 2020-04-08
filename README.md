@@ -28,3 +28,7 @@ Therefore it is best suited for modern browsers.
 # Usage
 
 # Options
+
+# Licence
+
+MIT &copy; [Henrik Bechmann](https://twitter.com/HenrikBechmann)
