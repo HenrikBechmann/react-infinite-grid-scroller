@@ -8,3 +8,5 @@ node_modules/
 .npmignore
 tsconfig.json
 js/
+BACKLOG.md
+CHANGELOG.md
