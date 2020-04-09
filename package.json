@@ -1,6 +1,6 @@
 {
   "name": "react-infinite-grid-scroller",
-  "version": "1.0.0-Beta-1.0.1",
+  "version": "1.0.0-Beta-1.0.2",
   "description": "infinite vertical or horizontal scroll using css grid layout",
   "main": "index.js",
   "scripts": {
@@ -11,6 +11,18 @@
   "publishConfig": {
     "access": "public"
   },
+  "keywords": [
+    "scroller",
+    "scrolling",
+    "react",
+    "infinite",
+    "grid",
+    "horizontal",
+    "vertical",
+    "list",
+    "virtual",
+    "IntersectionObserver"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/HenrikBechmann/react-infinite-grid-scroller.git"
@@ -37,7 +49,7 @@
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-react": "^7.9.4",
     "@types/node": "^13.11.1",
-    "@types/react": "^16.9.33",
+    "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.6",
     "babel-loader": "^8.1.0",
     "ts-loader": "^6.2.2",
