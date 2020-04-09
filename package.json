@@ -1,6 +1,6 @@
 {
   "name": "react-infinite-grid-scroller",
-  "version": "1.0.0-Beta-1",
+  "version": "1.0.0-Beta-1.0.1",
   "description": "infinite vertical or horizontal scroll using css grid layout",
   "main": "index.js",
   "scripts": {
@@ -36,8 +36,8 @@
     "@babel/polyfill": "^7.8.7",
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-react": "^7.9.4",
-    "@types/node": "^13.11.0",
-    "@types/react": "^16.9.32",
+    "@types/node": "^13.11.1",
+    "@types/react": "^16.9.33",
     "@types/react-dom": "^16.9.6",
     "babel-loader": "^8.1.0",
     "ts-loader": "^6.2.2",
