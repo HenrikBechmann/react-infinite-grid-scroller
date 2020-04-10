@@ -28,6 +28,8 @@ Therefore it is best suited for modern browsers.
 
 ![demo](demo/scroller.gif)
 
+# Dynamic layout gif
+
 # Usage
 
 ```JSX
