@@ -398,7 +398,7 @@ const emitItem = ({index, orientation, cellHeight, cellWidth, observer, callback
 export const setCradleStyles = ({
 
     orientation, 
-    divlinerStyles:stylesobject, 
+    cradleStyles:stylesobject, 
     cellHeight, 
     cellWidth, 
     gap, 

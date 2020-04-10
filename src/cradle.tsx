@@ -41,31 +41,46 @@ const Cradle = ({
     // =============================================================================================
     // --------------------------------------[ initialization ]-------------------------------------
 
+    // -----------------------------------------------------------------------
+    // -----------------------------------[ utilites ]------------------------
+
     const isMounted = useIsMounted()
+    const reportReferenceIndexRef = useRef(functions?.reportReferenceIndex)
+    const itemobserverRef = useRef(null)
+    const cradleobserverRef = useRef(null)
+
+    // -----------------------------------------------------------------------
+    // ---------------------------[ context data ]----------------------------
 
     const viewportData = useContext(ViewportContext)
+    const viewportDataRef = useRef(null)
+    viewportDataRef.current = viewportData
+
     const [cradlestate, saveCradleState] = useState('setup')
     const cradlestateRef = useRef(null) // access by closures
     cradlestateRef.current = cradlestate
 
     const [scrollstate, saveScrollState] = useState('ready')
 
-    // -----------------------------[ data heap ]-----------------------
+    // -----------------------------------------------------------------------
+    // -----------------------------[ persistent data ]-----------------------
 
     const listsizeRef = useRef(null)
     listsizeRef.current = listsize
 
-    const viewportDataRef = useRef(null)
-    viewportDataRef.current = viewportData
-
+    // -----------------------------------------------------------------------
+    // -------------------------[ control variables ]-----------------
     const isResizingRef = useRef(false)
 
     const pauseItemObserverRef = useRef(false)
     const pauseCradleObserverRef = useRef(false)
 
-    const reportReferenceIndexRef = useRef(functions?.reportReferenceIndex)
+    const isCradleInViewRef = useRef(true)
 
-    // -----------------------[ effects ]-------------------------
+    const isScrollingRef = useRef(false)
+
+    // -----------------------------------------------------------------------
+    // --------------------------------[ init effects ]-----------------------
 
     //initialize host functions properties
     useEffect(()=>{
@@ -90,7 +105,7 @@ const Cradle = ({
 
     },[functions])
 
-    // initialize window listener
+    // initialize window scroll listener
     useEffect(() => {
 
         viewportData.elementref.current.addEventListener('scroll',onScroll)
@@ -103,7 +118,10 @@ const Cradle = ({
 
     },[])
 
-    // triger resizing based on viewport state
+    // -----------------------------------------------------------------------
+    // -----------------------[ reconfiguration effects ]---------------------
+
+    // trigger resizing based on viewport state
     useEffect(()=>{
 
         isResizingRef.current = viewportData.isResizing
@@ -124,29 +142,70 @@ const Cradle = ({
 
     },[viewportData.isResizing])
 
+    // reload conditions
+    useEffect(()=>{
+        pauseItemObserverRef.current = true
+        pauseCradleObserverRef.current = true
+        callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
+        saveCradleState('reload')
+    },[
+        listsize,
+        cellHeight,
+        cellWidth,
+        gap,
+        padding,
+    ])
+
+    // trigger pivot on change in orientation
+    useEffect(()=> {
+
+        let rootMargin
+        if (orientation == 'horizontal') {
+            rootMargin = `0px ${runwaylength}px 0px ${runwaylength}px`
+        } else {
+            rootMargin = `${runwaylength}px 0px ${runwaylength}px 0px`
+        }
+        // console.log('rootMargin',options)
+        itemobserverRef.current = new IntersectionObserver(
+            itemobservercallback,
+            {root:viewportData.elementref.current, rootMargin,threshold:0} 
+        )
+
+        contentlistRef.current = []
+
+        if (cradlestate != 'setup') {
+            pauseItemObserverRef.current = true
+            callingReferenceIndexDataRef.current = {...lastReferenceIndexDataRef.current}
+
+            saveCradleState('pivot')
+        }
+
+    },[
+        orientation,
+        listsize,
+        cellHeight,
+        cellWidth,
+        gap,
+        padding,
+    ])
+
+    // -----------------------------------------------------------------------
     // ------------------------[ session data ]-----------------------
-    // current location
+
+    // current location location -- first visible item
     const [referenceindexdata, saveReferenceindex] = useState({
         index:Math.min(offset,(listsize - 1)) || 0,
         scrolloffset:0
     })
     const referenceIndexDataRef = useRef(null) // access by closures
     referenceIndexDataRef.current = referenceindexdata
-    const lastReferenceIndexDataRef = useRef(null)
-
-    const isCradleInViewRef = useRef(true)
+    const lastReferenceIndexDataRef = useRef(null) // capture for state resetContent operations
 
     const [dropentries, saveDropentries] = useState(null) // trigger add entries
 
     const [addentries, saveAddentries] = useState(null) // add entries
 
     const contentlistRef = useRef([])
-
-    const isScrollingRef = useRef(false)
-
-    const itemobserverRef = useRef(null)
-
-    const cradleobserverRef = useRef(null)
 
     const cellSpecs = useMemo(() => {
         return {
@@ -156,7 +215,7 @@ const Cradle = ({
     const cellSpecsRef = useRef(null)
     cellSpecsRef.current = cellSpecs
 
-    const divlinerStylesRef = useRef(Object.assign({
+    const cradleStylesRef = useRef(Object.assign({
         position: 'absolute',
         backgroundColor: 'blue',
         display: 'grid',
@@ -171,7 +230,7 @@ const Cradle = ({
     const orientationRef = useRef(orientation)
     orientationRef.current = orientation // availability in closures
 
-    const divlinerStyleRevisionsRef = useRef(null) // for modifications by observer actions
+    const cradleStyleRevisionsRef = useRef(null) // for modifications by observer actions
 
     const cradleElementRef = useRef(null)
 
@@ -201,22 +260,19 @@ const Cradle = ({
         viewportwidth,
     ])
 
-    // ==============================================================================================
-    // ----------------------------------[ config management ]--------------------------------
-
     const crosscountRef = useRef(crosscount) // for easy reference by observer
     // const previousCrosscountRef = useRef() // available for resize logic
     // previousCrosscountRef.current = crosscountRef.current // available for resize logic
     crosscountRef.current = crosscount // available for observer closure
 
-    divlinerStylesRef.current = useMemo(()=> {
+    cradleStylesRef.current = useMemo(()=> {
 
         // merge base style and revisions (by observer)
-        let divlinerStyles:React.CSSProperties = Object.assign({...divlinerStylesRef.current},divlinerStyleRevisionsRef.current)
+        let cradleStyles:React.CSSProperties = Object.assign({...cradleStylesRef.current},cradleStyleRevisionsRef.current)
         let styles = setCradleStyles({
 
             orientation, 
-            divlinerStyles, 
+            cradleStyles, 
             cellHeight, 
             cellWidth, 
             gap,
@@ -236,21 +292,8 @@ const Cradle = ({
         viewportheight,
         viewportwidth,
         crosscount,
-        divlinerStyleRevisionsRef.current
+        cradleStyleRevisionsRef.current
       ])
-
-    useEffect(()=>{
-        pauseItemObserverRef.current = true
-        pauseCradleObserverRef.current = true
-        callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
-        saveCradleState('reload')
-    },[
-        listsize,
-        cellHeight,
-        cellWidth,
-        gap,
-        padding,
-    ])
 
     const itemElementsRef = useRef(new Map())
     const scrollTimeridRef = useRef(null)
@@ -462,7 +505,7 @@ const Cradle = ({
         elementstyle.right = styles.right
 
         // synchronize
-        divlinerStyleRevisionsRef.current = styles 
+        cradleStyleRevisionsRef.current = styles 
 
         contentlistRef.current = localContentList
 
@@ -538,7 +581,7 @@ const Cradle = ({
         elementstyle.right = styles.right
 
         // synchronize
-        divlinerStyleRevisionsRef.current = styles
+        cradleStyleRevisionsRef.current = styles
 
         contentlistRef.current = localContentList
 
@@ -727,39 +770,6 @@ const Cradle = ({
 
     },[])
 
-    // trigger pivot on change in orientation
-    useEffect(()=> {
-
-        let rootMargin
-        if (orientation == 'horizontal') {
-            rootMargin = `0px ${runwaylength}px 0px ${runwaylength}px`
-        } else {
-            rootMargin = `${runwaylength}px 0px ${runwaylength}px 0px`
-        }
-        // console.log('rootMargin',options)
-        itemobserverRef.current = new IntersectionObserver(
-            itemobservercallback,
-            {root:viewportData.elementref.current, rootMargin,threshold:0} 
-        )
-
-        contentlistRef.current = []
-
-        if (cradlestate != 'setup') {
-            pauseItemObserverRef.current = true
-            callingReferenceIndexDataRef.current = {...lastReferenceIndexDataRef.current}
-
-            saveCradleState('pivot')
-        }
-
-    },[
-        orientation,
-        listsize,
-        cellHeight,
-        cellWidth,
-        gap,
-        padding,
-    ])
-
     // data for state processing
     const callingCradleState = useRef(cradlestateRef.current)
     const callingReferenceIndexDataRef = useRef(referenceIndexDataRef.current)
@@ -787,7 +797,7 @@ const Cradle = ({
             }
             case 'layout': {
 
-                divlinerStyleRevisionsRef.current = layoutDataRef.current
+                cradleStyleRevisionsRef.current = layoutDataRef.current
 
                 saveCradleState('content')
 
@@ -909,7 +919,7 @@ const Cradle = ({
     // =============================================================================
     // ------------------------------[ render... ]----------------------------------
 
-    let divlinerstyles = divlinerStylesRef.current
+    let divlinerstyles = cradleStylesRef.current
 
     // TODO: move scrolltracker values to memo
     return <>
