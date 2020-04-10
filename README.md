@@ -24,7 +24,7 @@ This scroller uses leading edge technologies:
 
 Therefore it is best suited for modern browsers.
 
-# Animated gif
+# Uniform layout gif
 
 ![demo](demo/scroller.gif)
 
