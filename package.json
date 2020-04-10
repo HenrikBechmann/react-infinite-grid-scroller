@@ -35,7 +35,8 @@
   "homepage": "https://github.com/HenrikBechmann/react-infinite-grid-scroller#readme",
   "dependencies": {
     "react-is-mounted-hook": "^1.0.3",
-    "requestidlecallback": "^0.3.0"
+    "requestidlecallback": "^0.3.0",
+    "resize-observer-polyfill": "^1.5.1"
   },
   "peerDependencies": {
     "react": "^16.13.1",
