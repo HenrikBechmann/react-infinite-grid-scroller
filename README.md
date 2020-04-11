@@ -20,6 +20,7 @@ This scroller uses leading edge technologies:
 - [css grid layout](https://css-tricks.com/snippets/css/complete-guide-grid/)
 - [react hooks](https://reactjs.org/docs/hooks-intro.html)
 - [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
+- [ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver)
 - [requestIdleCallback](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback)
 
 Therefore it is best suited for modern browsers.
@@ -164,7 +165,7 @@ The API. Distributes parameters to Viewport, Scrollblock, and Cradle. Contains V
 
 ### Viewport
 
-The top level component. `position:absolute`; `top`, `right`, `bottom`, `left` all set to 0. Requires a container. Responds to page `onResize`, but not to its container resize (waiting for wider deployment of [ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver)). Contains Scrollblock.
+The top level component. `position:absolute`; `top`, `right`, `bottom`, `left` all set to 0. Requires a container. Responds to component resize based on [ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver). Contains Scrollblock.
 
 ### Scrollblock
 
