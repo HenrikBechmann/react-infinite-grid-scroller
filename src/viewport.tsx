@@ -12,6 +12,10 @@ export const ViewportContext = React.createContext(null)
 
 import useIsMounted from 'react-is-mounted-hook'
 
+import ResizeObserverPolyfill from 'resize-observer-polyfill'
+
+const LocalResizeObserver = window['ResizeObserver']?window['ResizeObserver']:ResizeObserverPolyfill
+
 // control constant
 const RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = 250
 
@@ -30,6 +34,8 @@ const Viewport = ({
 
     // processing state
     const [portstate,setPortState] = useState('prepare')
+    const portstateRef = useRef(null)
+    portstateRef.current = portstate
     const isMounted = useIsMounted()
     // data heap
     const timeoutidRef = useRef(null)
@@ -49,19 +55,24 @@ const Viewport = ({
     const isResizingRef = useRef(false)
     const viewportDataRef = useRef(null)
 
+    const resizeObserverRef = useRef(null)
+
     // initialize
     useEffect(()=>{
 
-        window.addEventListener('resize',onResize)
+        // window.addEventListener('resize',onResize)
+        resizeObserverRef.current = new LocalResizeObserver(resizeCallback)
+        resizeObserverRef.current.observe(viewportdivRef.current)
 
         return () => {
-            window.removeEventListener('resize',onResize)
+            // window.removeEventListener('resize',onResize)
+            resizeObserverRef.current.disconnect()
         }
 
     },[])
 
-    // event listener callback
-    const onResize = useCallback(() => {
+    const resizeCallback = useCallback((entries)=>{
+        if (portstateRef.current == 'prepare') return
 
         if (!isResizingRef.current) {
             isResizingRef.current = true 
@@ -85,6 +96,31 @@ const Viewport = ({
         },RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE)
 
     },[])
+    // event listener callback
+    // const onResize = useCallback(() => {
+    //     // console.log('onResize')
+    //     if (!isResizingRef.current) {
+    //         isResizingRef.current = true 
+    //             // below is a realtime message to cradle.onScroll
+    //             // to stop updating the referenceIndexData, and to the item observer to stop
+    //             // triggering responses (anticipating reset of cradle content based on resize)
+    //         viewportDataRef.current.isResizing = true
+    //         resizeScrollPosRef.current = {
+    //             top:viewportdivRef.current.scrollTop,
+    //             left:viewportdivRef.current.scrollLeft
+    //         }
+    //         if (isMounted()) setPortState('resizing')
+    //     }
+
+    //     clearTimeout(resizeTimeridRef.current)
+    //     resizeTimeridRef.current = setTimeout(() => {
+
+    //         isResizingRef.current = false
+    //         if (isMounted()) setPortState('resize')
+
+    //     },RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE)
+
+    // },[])
 
     // ----------------------------------[ calculate ]--------------------------------
 
