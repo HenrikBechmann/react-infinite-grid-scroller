@@ -401,7 +401,8 @@ export const setCradleStyles = ({
     cradleStyles:stylesobject, 
     cellHeight, 
     cellWidth, 
-    gap, 
+    gap,
+    padding, 
     crosscount, 
     viewportheight, 
     viewportwidth
@@ -409,6 +410,9 @@ export const setCradleStyles = ({
 }) => {
 
         let styles = Object.assign({},stylesobject) as React.CSSProperties
+
+        styles.gridGap = gap + 'px'
+        styles.padding = padding + 'px'
 
         if (orientation == 'horizontal') {
 

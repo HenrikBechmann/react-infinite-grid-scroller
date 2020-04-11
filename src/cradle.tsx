@@ -279,6 +279,7 @@ const Cradle = ({
             cellHeight, 
             cellWidth, 
             gap,
+            padding,
             crosscount, 
             viewportheight, 
             viewportwidth, 
