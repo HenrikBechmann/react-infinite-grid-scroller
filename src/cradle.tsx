@@ -128,7 +128,7 @@ const Cradle = ({
 
         if (isResizingRef.current) {
 
-            callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
+            callingReferenceIndexDataRef.current = {...lastReferenceIndexDataRef.current}
 
             pauseItemObserverRef.current = true
             saveCradleState('resizing')
@@ -202,7 +202,7 @@ const Cradle = ({
     })
     const referenceIndexDataRef = useRef(null) // access by closures
     referenceIndexDataRef.current = referenceindexdata
-    const lastReferenceIndexDataRef = useRef(null) // capture for state resetContent operations
+    const lastReferenceIndexDataRef = useRef(referenceindexdata) // capture for state resetContent operations
 
     const [dropentries, saveDropentries] = useState(null) // trigger add entries
 
@@ -843,10 +843,12 @@ const Cradle = ({
 
                     // redundant scroll position to avoid accidental positioning at tail end of reposition
                     if (viewportData.elementref.current) { // already unmounted if fails
+                        // setTimeout(()=>{
+                        normalizeCradleAnchors(cradleElementRef.current, orientationRef.current)
+
                         viewportData.elementref.current[positionDataRef.current.property] =
                             positionDataRef.current.value
-
-                        normalizeCradleAnchors(cradleElementRef.current, orientationRef.current)
+                        // })
 
                         lastReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
 
@@ -855,7 +857,7 @@ const Cradle = ({
 
                     }
 
-                },66)
+                },100)
                 saveCradleState('ready')
                 break 
             }          

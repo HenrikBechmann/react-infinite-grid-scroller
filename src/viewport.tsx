@@ -40,7 +40,6 @@ const Viewport = ({
     // data heap
     const timeoutidRef = useRef(null)
     const viewportdivRef = useRef(undefined)
-    const resizeScrollPosRef = useRef({top:0,left:0})
     const divlinerstyleRef = useRef(
         Object.assign({
         position:'absolute',
@@ -65,8 +64,9 @@ const Viewport = ({
         resizeObserverRef.current.observe(viewportdivRef.current)
 
         return () => {
-            // window.removeEventListener('resize',onResize)
+
             resizeObserverRef.current.disconnect()
+
         }
 
     },[])
@@ -80,10 +80,6 @@ const Viewport = ({
                 // to stop updating the referenceIndexData, and to the item observer to stop
                 // triggering responses (anticipating reset of cradle content based on resize)
             viewportDataRef.current.isResizing = true
-            resizeScrollPosRef.current = {
-                top:viewportdivRef.current.scrollTop,
-                left:viewportdivRef.current.scrollLeft
-            }
             if (isMounted()) setPortState('resizing')
         }
 
@@ -96,31 +92,6 @@ const Viewport = ({
         },RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE)
 
     },[])
-    // event listener callback
-    // const onResize = useCallback(() => {
-    //     // console.log('onResize')
-    //     if (!isResizingRef.current) {
-    //         isResizingRef.current = true 
-    //             // below is a realtime message to cradle.onScroll
-    //             // to stop updating the referenceIndexData, and to the item observer to stop
-    //             // triggering responses (anticipating reset of cradle content based on resize)
-    //         viewportDataRef.current.isResizing = true
-    //         resizeScrollPosRef.current = {
-    //             top:viewportdivRef.current.scrollTop,
-    //             left:viewportdivRef.current.scrollLeft
-    //         }
-    //         if (isMounted()) setPortState('resizing')
-    //     }
-
-    //     clearTimeout(resizeTimeridRef.current)
-    //     resizeTimeridRef.current = setTimeout(() => {
-
-    //         isResizingRef.current = false
-    //         if (isMounted()) setPortState('resize')
-
-    //     },RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE)
-
-    // },[])
 
     // ----------------------------------[ calculate ]--------------------------------
 
