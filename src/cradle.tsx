@@ -128,7 +128,7 @@ const Cradle = ({
 
         if (isResizingRef.current) {
 
-            callingReferenceIndexDataRef.current = {...lastReferenceIndexDataRef.current}
+            callingReferenceIndexDataRef.current = {...masterReferenceIndexDataRef.current}
 
             pauseItemObserverRef.current = true
             saveCradleState('resizing')
@@ -175,7 +175,7 @@ const Cradle = ({
 
         if (cradlestate != 'setup') {
             pauseItemObserverRef.current = true
-            callingReferenceIndexDataRef.current = {...lastReferenceIndexDataRef.current}
+            callingReferenceIndexDataRef.current = {...masterReferenceIndexDataRef.current}
 
             saveCradleState('pivot')
         }
@@ -202,7 +202,7 @@ const Cradle = ({
     })
     const referenceIndexDataRef = useRef(null) // access by closures
     referenceIndexDataRef.current = referenceindexdata
-    const lastReferenceIndexDataRef = useRef(referenceindexdata) // capture for state resetContent operations
+    const masterReferenceIndexDataRef = useRef(referenceindexdata) // capture for state resetContent operations
 
     const [dropentries, saveDropentries] = useState(null) // trigger add entries
 
@@ -717,7 +717,7 @@ const Cradle = ({
                 (cradleState != 'repositioning') && normalizeCradleAnchors(cradleElementRef.current, orientationRef.current)
 
                 saveReferenceindex({...referenceIndexDataRef.current}) // trigger re-run to capture end of scroll session values
-                lastReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
+                masterReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
 
             }
             switch (cradleState) {
@@ -851,7 +851,7 @@ const Cradle = ({
                             positionDataRef.current.value
                         // })
 
-                        lastReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
+                        masterReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
 
                         pauseItemObserverRef.current  && (pauseItemObserverRef.current = false)
                         pauseCradleObserverRef.current  && (pauseCradleObserverRef.current = false)
