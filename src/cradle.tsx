@@ -218,7 +218,7 @@ const Cradle = ({
     const cellSpecsRef = useRef(null)
     cellSpecsRef.current = cellSpecs
 
-    const cradleStylesRef = useRef(Object.assign({
+    const cradleStylesRef = useRef({...{
         position: 'absolute',
         backgroundColor: 'blue',
         display: 'grid',
@@ -228,7 +228,7 @@ const Cradle = ({
         alignContent:'start',
         boxSizing:'border-box',
 
-    } as React.CSSProperties,styles?.cradle))
+    } as React.CSSProperties,...styles?.cradle})
 
     const orientationRef = useRef(orientation)
     orientationRef.current = orientation // availability in closures
@@ -271,7 +271,7 @@ const Cradle = ({
     cradleStylesRef.current = useMemo(()=> {
 
         // merge base style and revisions (by observer)
-        let cradleStyles:React.CSSProperties = Object.assign({...cradleStylesRef.current},cradleStyleRevisionsRef.current)
+        let cradleStyles:React.CSSProperties = {...cradleStylesRef.current,...cradleStyleRevisionsRef.current}
         let styles = setCradleStyles({
 
             orientation, 
@@ -925,7 +925,7 @@ const Cradle = ({
     // =============================================================================
     // ------------------------------[ render... ]----------------------------------
 
-    let divlinerstyles = cradleStylesRef.current
+    let cradlestyles = cradleStylesRef.current
 
     // TODO: move scrolltracker values to memo
     return <>
@@ -943,7 +943,7 @@ const Cradle = ({
         <div 
         
             ref = {cradleElementRef} 
-            style = {divlinerstyles}
+            style = {cradlestyles}
         
         >
         
