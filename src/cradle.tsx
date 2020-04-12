@@ -7,8 +7,6 @@ import { ViewportContext } from './viewport'
 
 import useIsMounted from 'react-is-mounted-hook'
 
-import Basecradle from './basecradle'
-
 import { 
     setCradleStyles, 
     getUIContentList, 
@@ -214,9 +212,9 @@ const Cradle = ({
 
     const cellSpecs = useMemo(() => {
         return {
-            cellWidth,cellHeight,gap, padding
+            cellWidth, cellHeight, gap, padding
         }
-    },[cellWidth,cellHeight,gap, padding])
+    },[ cellWidth, cellHeight, gap, padding ])
     const cellSpecsRef = useRef(null)
     cellSpecsRef.current = cellSpecs
 
@@ -893,7 +891,7 @@ const Cradle = ({
         pauseItemObserverRef.current = true
         pauseCradleObserverRef.current = true
 
-        callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
+        callingReferenceIndexDataRef.current = {...masterReferenceIndexDataRef.current}
         saveCradleState('reload')
 
     },[])
