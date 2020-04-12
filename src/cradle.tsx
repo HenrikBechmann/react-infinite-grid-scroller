@@ -957,7 +957,6 @@ const Cradle = ({
             {(cradlestateRef.current != 'setup')?contentlistRef.current:null}
         
         </div>
-        <Basecradle cradlestyles = { cradlestyles } />
         
     </>
 
