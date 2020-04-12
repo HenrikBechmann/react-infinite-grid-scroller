@@ -7,6 +7,8 @@ import { ViewportContext } from './viewport'
 
 import useIsMounted from 'react-is-mounted-hook'
 
+import Basecradle from './basecradle'
+
 import { 
     setCradleStyles, 
     getUIContentList, 
@@ -950,6 +952,7 @@ const Cradle = ({
             {(cradlestateRef.current != 'setup')?contentlistRef.current:null}
         
         </div>
+        <Basecradle cradlestyles = { cradlestyles } />
         
     </>
 
