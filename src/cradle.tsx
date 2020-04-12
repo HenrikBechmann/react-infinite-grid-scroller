@@ -891,7 +891,7 @@ const Cradle = ({
         pauseItemObserverRef.current = true
         pauseCradleObserverRef.current = true
 
-        callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
+        callingReferenceIndexDataRef.current = {...masterReferenceIndexDataRef.current}
         saveCradleState('reload')
 
     },[])
