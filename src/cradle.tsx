@@ -26,7 +26,8 @@ const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 200
 const Cradle = ({ 
         gap, 
         padding, 
-        runwaylength, 
+        runwaylength,
+        runway, 
         listsize, 
         offset, 
         orientation, 
@@ -267,6 +268,37 @@ const Cradle = ({
     // const previousCrosscountRef = useRef() // available for resize logic
     // previousCrosscountRef.current = crosscountRef.current // available for resize logic
     crosscountRef.current = crosscount // available for observer closure
+
+    const rowcount = useMemo(()=> {
+
+        let viewportLength, cellLength
+        if (orientation == 'vertical') {
+            viewportLength = viewportheight
+            cellLength = cellHeight
+        } else {
+            viewportLength = viewportwidth
+            cellLength = cellWidth
+        }
+
+        cellLength += gap
+
+        let rcount = Math.ceil(viewportLength/cellLength)
+        rcount += (runway * 2)
+        return rcount
+
+    },[
+        orientation, 
+        cellWidth, 
+        cellHeight, 
+        gap, 
+        // padding,
+        viewportheight, 
+        viewportwidth,
+        runway,
+    ])
+
+    const rowcountRef = useRef(null)
+    rowcountRef.current = rowcount
 
     cradleStylesRef.current = useMemo(()=> {
 
