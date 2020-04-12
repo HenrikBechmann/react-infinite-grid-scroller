@@ -7,6 +7,9 @@ const shadowoffset = 0
 
 const Basecradle = (props) => {
     let {cradlestyles} = props
+
+    console.log('cradlestyles in Basecradle',cradlestyles)
+
     let {
         top,
         right,
@@ -24,21 +27,24 @@ const Basecradle = (props) => {
             right: '-100px',
             bottom: '-100px',
             left: '-100px',
+            zIndex:-10,
         },
         wrapper:{
             position:'absolute',
-            top:shadowoffset + top,
+            top,
             right,
             bottom,
             left,
             height,
             width,
+            zIndex:-100,
         }
     }
 
     return <>
-        <div style = {styles.curtain as React.CSSProperties} ></div>
-        <div style = {styles.wrapper as React.CSSProperties} ></div>
+        <div style = {styles.curtain as React.CSSProperties} >
+            <div style = {styles.wrapper as React.CSSProperties} ></div>
+        </div>
     </>
 }
 
