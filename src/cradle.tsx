@@ -300,6 +300,39 @@ const Cradle = ({
     const rowcountRef = useRef(null)
     rowcountRef.current = rowcount
 
+    const basecradlelengths = useMemo(()=>{
+
+        let headLength, tailLength
+
+        let viewportLength, cellLength
+        if (orientation == 'vertical') {
+            viewportLength = viewportheight
+            cellLength = cellHeight
+        } else {
+            viewportLength = viewportwidth
+            cellLength = cellWidth
+        }
+
+        cellLength += gap
+
+        headLength = (runway * cellLength) - gap + padding
+        tailLength = ((rowcount - runway) * cellLength) - gap + padding
+
+        return [headLength, tailLength]
+
+    },[
+        orientation, 
+        cellWidth, 
+        cellHeight, 
+        gap, 
+        padding,
+        rowcount,
+        runway,
+    ])
+
+    const basecradlelengthsRef = useRef(null)
+    basecradlelengthsRef.current = basecradlelengths
+
     cradleStylesRef.current = useMemo(()=> {
 
         // merge base style and revisions (by observer)
