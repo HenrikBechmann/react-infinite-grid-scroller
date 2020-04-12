@@ -887,14 +887,19 @@ const Cradle = ({
     },[])
 
     const reload = useCallback(() => {
+
         pauseItemObserverRef.current = true
         pauseCradleObserverRef.current = true
 
         callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
         saveCradleState('reload')
+
     },[])
 
     const scrollToItem = useCallback((index) => { // , alignment = 'start') => {
+
+        pauseItemObserverRef.current = true
+        pauseCradleObserverRef.current = true
 
         callingReferenceIndexDataRef.current = {index, scrolloffset:0}
         saveCradleState('reposition')
