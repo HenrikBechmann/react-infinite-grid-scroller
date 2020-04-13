@@ -236,7 +236,8 @@ const Cradle = ({
 
     } as React.CSSProperties,...styles?.cradle})
 
-    const tailCradleStylesRef = useRef({})
+    const tailCradleStylesRef = useRef({
+    } as React.CSSProperties)
 
     const orientationRef = useRef(orientation)
     orientationRef.current = orientation // availability in closures
@@ -1020,6 +1021,7 @@ const Cradle = ({
 
         <div 
         
+            data-name = 'head'
             ref = {headCradleElementRef} 
             style = {headCradlestyles}
         
@@ -1030,6 +1032,7 @@ const Cradle = ({
         </div>
         <div 
         
+            data-name = 'tail'
             ref = {tailCradleElementRef} 
             style = {tailCradlestyles}
         
