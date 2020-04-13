@@ -48,7 +48,7 @@ const Cradle = ({
     const isMounted = useIsMounted()
     const reportReferenceIndexRef = useRef(functions?.reportReferenceIndex)
     const itemobserverRef = useRef(null)
-    const cradleobserverRef = useRef(null)
+    const tailcradleobserverRef = useRef(null)
 
     // -----------------------------------------------------------------------
     // ---------------------------[ context data ]----------------------------
@@ -76,7 +76,7 @@ const Cradle = ({
     const pauseItemObserverRef = useRef(false)
     const pauseCradleObserverRef = useRef(false)
 
-    const isCradleInViewRef = useRef(true)
+    const isTailCradleInViewRef = useRef(true)
 
     const isScrollingRef = useRef(false)
 
@@ -168,17 +168,21 @@ const Cradle = ({
         }
         // console.log('rootMargin',options)
         itemobserverRef.current = new IntersectionObserver(
+
             itemobservercallback,
             {root:viewportData.elementref.current, rootMargin,threshold:0} 
+
         )
 
         headContentlistRef.current = []
 
         if (cradlestate != 'setup') {
+
             pauseItemObserverRef.current = true
             callingReferenceIndexDataRef.current = {...masterReferenceIndexDataRef.current}
 
             saveCradleState('pivot')
+
         }
 
     },[
@@ -382,22 +386,22 @@ const Cradle = ({
     // cradle goes out of the observer scope, the "repositioning" cradle state is triggerd.
     useEffect(() => {
 
-        cradleobserverRef.current = new IntersectionObserver(
+        tailcradleobserverRef.current = new IntersectionObserver(
 
-            cradleobservercallback,
+            tailcradleobservercallback,
             {root:viewportData.elementref.current, threshold:0}
 
         )
 
-        cradleobserverRef.current.observe(headCradleElementRef.current)
+        tailcradleobserverRef.current.observe(headCradleElementRef.current)
 
     },[])
 
-    const cradleobservercallback = useCallback((entries) => {
+    const tailcradleobservercallback = useCallback((entries) => {
 
         if (pauseCradleObserverRef.current) return
 
-        isCradleInViewRef.current = entries[0].isIntersecting
+        isTailCradleInViewRef.current = entries[0].isIntersecting
 
     },[])
 
@@ -825,7 +829,7 @@ const Cradle = ({
         }
 
         if (
-            !isCradleInViewRef.current && 
+            !isTailCradleInViewRef.current && 
             !pauseItemObserverRef.current && 
             !isResizingRef.current &&
             !(cradlestateRef.current == 'resize') &&
@@ -913,12 +917,11 @@ const Cradle = ({
 
                     // redundant scroll position to avoid accidental positioning at tail end of reposition
                     if (viewportData.elementref.current) { // already unmounted if fails
-                        // setTimeout(()=>{
+
                         normalizeCradleAnchors(headCradleElementRef.current, orientationRef.current)
 
                         viewportData.elementref.current[positionDataRef.current.property] =
                             positionDataRef.current.value
-                        // })
 
                         masterReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
 
@@ -1005,7 +1008,7 @@ const Cradle = ({
     // TODO: move scrolltracker values to memo
     return <>
 
-        { cradlestateRef.current == 'repositioning'
+        { (cradlestateRef.current == 'repositioning')
             ?<ScrollTracker 
                 top = {viewportDimensions.top + 3} 
                 left = {viewportDimensions.left + 3} 
