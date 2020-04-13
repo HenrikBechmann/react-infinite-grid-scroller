@@ -438,7 +438,7 @@ export const setCradleStyles = ({
 }
 
 export const setCradleStyleRevisionsForDrop = ({ 
-    cradleElement, 
+    headCradleElement, 
     parentElement, 
     scrollforward, 
     orientation 
@@ -450,10 +450,10 @@ export const setCradleStyleRevisionsForDrop = ({
     // set styles revisions
     if (orientation == 'vertical') {
 
-        let offsetHeight = cradleElement.offsetHeight
+        let offsetHeight = headCradleElement.offsetHeight
         let parentHeight = parentElement.offsetHeight
 
-        let offsetTop = cradleElement.offsetTop
+        let offsetTop = headCradleElement.offsetTop
 
         styles.left = 'auto'
         styles.right = 'auto'
@@ -474,11 +474,11 @@ export const setCradleStyleRevisionsForDrop = ({
 
     } else {
 
-        let offsetLeft = cradleElement.offsetLeft
-        let offsetWidth = cradleElement.offsetWidth
+        let offsetLeft = headCradleElement.offsetLeft
+        let offsetWidth = headCradleElement.offsetWidth
         let parentWidth = parentElement.offsetWidth
-        let cssleft = parseInt(cradleElement.style.left)
-        let cssright = parseInt(cradleElement.style.bottom)
+        let cssleft = parseInt(headCradleElement.style.left)
+        let cssright = parseInt(headCradleElement.style.bottom)
 
         styles.top = 'auto'
         styles.bottom = 'auto'
@@ -503,7 +503,7 @@ export const setCradleStyleRevisionsForDrop = ({
 }
 
 export const setCradleStyleRevisionsForAdd = ({
-    cradleElement,
+    headCradleElement,
     parentElement,
     scrollforward,
     orientation,
@@ -515,11 +515,11 @@ export const setCradleStyleRevisionsForAdd = ({
     if (orientation == 'vertical') {
 
         // let offsetTop
-        let offsetHeight = cradleElement.offsetHeight
+        let offsetHeight = headCradleElement.offsetHeight
         let parentHeight = parentElement.offsetHeight
-        let csstop = parseInt(cradleElement.style.top)
-        let cssbottom = parseInt(cradleElement.style.bottom)
-        let offsetTop = cradleElement.offsetTop
+        let csstop = parseInt(headCradleElement.style.top)
+        let cssbottom = parseInt(headCradleElement.style.bottom)
+        let offsetTop = headCradleElement.offsetTop
 
         styles.left = 'auto'
         styles.right = 'auto'
@@ -540,12 +540,12 @@ export const setCradleStyleRevisionsForAdd = ({
 
     } else {
 
-        let offsetLeft = cradleElement.offsetLeft
-        let offsetWidth = cradleElement.offsetWidth
+        let offsetLeft = headCradleElement.offsetLeft
+        let offsetWidth = headCradleElement.offsetWidth
         let parentWidth = parentElement.offsetWidth
 
-        let cssleft = parseInt(cradleElement.style.left)
-        let cssright = parseInt(cradleElement.style.bottom)
+        let cssleft = parseInt(headCradleElement.style.left)
+        let cssright = parseInt(headCradleElement.style.bottom)
 
         styles.top = 'auto'
         styles.bottom = 'auto'
