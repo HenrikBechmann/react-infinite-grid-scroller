@@ -49,6 +49,7 @@ const InfiniteGridScroller = (props) => {
         // to come...
         // cache = "preload", "keepload", "none"
         // dense, // boolean (only with preload)
+        layout, // uniform, variable
     } = props
 
     // defaults
@@ -58,6 +59,7 @@ const InfiniteGridScroller = (props) => {
     runway !?? (runway = 3)
     offset !?? (offset = 0)
     listsize !?? (listsize = 0)
+    layout !?? (layout = 'uniform')
     // constraints
     offset = Math.max(0,offset) // non-negative
     offset = Math.min(listsize, offset) // not larger than list
