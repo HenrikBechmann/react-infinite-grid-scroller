@@ -395,14 +395,23 @@ const Cradle = ({
         )
 
         tailcradleobserverRef.current.observe(headCradleElementRef.current)
+        tailcradleobserverRef.current.observe(tailCradleElementRef.current)
 
     },[])
 
     const tailcradleobservercallback = useCallback((entries) => {
 
+        let localentries = entries.filter((entry) => {
+            return (entry.target.dataset.name == 'head')
+        })
+
+        console.log('cradle entries',entries, localentries)
+
+        if (!localentries.length) return
+
         if (pauseCradleObserverRef.current) return
 
-        isTailCradleInViewRef.current = entries[0].isIntersecting
+        isTailCradleInViewRef.current = localentries[0].isIntersecting
 
     },[])
 
