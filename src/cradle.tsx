@@ -295,6 +295,11 @@ const Cradle = ({
 
         let rcount = Math.ceil(viewportLength/cellLength)
         rcount += (runway * 2)
+        let itemcount = rcount * crosscount
+        if (itemcount > listsize) {
+            itemcount = listsize
+            rcount = Math.ceil(itemcount/crosscount)
+        }
         return rcount
 
     },[
@@ -302,10 +307,12 @@ const Cradle = ({
         cellWidth, 
         cellHeight, 
         gap, 
+        listsize,
         // padding,
         viewportheight, 
         viewportwidth,
         runway,
+        crosscount,
     ])
 
     const rowcountRef = useRef(null)
