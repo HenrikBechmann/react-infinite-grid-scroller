@@ -244,7 +244,7 @@ const Cradle = ({
     const orientationRef = useRef(orientation)
     orientationRef.current = orientation // availability in closures
 
-    const cradleStyleRevisionsRef = useRef(null) // for modifications by observer actions
+    const headCradleStyleRevisionsRef = useRef(null) // for modifications by observer actions
 
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
@@ -354,7 +354,7 @@ const Cradle = ({
     headCradleStylesRef.current = useMemo(()=> {
 
         // merge base style and revisions (by observer)
-        let cradleStyles:React.CSSProperties = {...headCradleStylesRef.current,...cradleStyleRevisionsRef.current}
+        let cradleStyles:React.CSSProperties = {...headCradleStylesRef.current,...headCradleStyleRevisionsRef.current}
         let styles = setCradleStyles({
 
             orientation, 
@@ -379,7 +379,7 @@ const Cradle = ({
         viewportheight,
         viewportwidth,
         crosscount,
-        cradleStyleRevisionsRef.current
+        headCradleStyleRevisionsRef.current
       ])
 
     const itemElementsRef = useRef(new Map())
@@ -410,8 +410,6 @@ const Cradle = ({
 
     const tailcradleobservercallback = useCallback((entries) => {
 
-        // console.log('entries',entries)
-
         if (pauseCradleObserverRef.current) return
 
         for (let i = 0; i < entries.length; i++ ) {
@@ -424,8 +422,6 @@ const Cradle = ({
         }
 
         isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
-
-        // console.log('calculations',isHeadCradleInViewRef.current, isTailCradleInViewRef.current, isCradleInViewRef.current)
 
     },[])
 
@@ -606,7 +602,7 @@ const Cradle = ({
         elementstyle.right = styles.right
 
         // synchronize
-        cradleStyleRevisionsRef.current = styles 
+        headCradleStyleRevisionsRef.current = styles 
 
         headContentlistRef.current = localContentList
 
@@ -682,7 +678,7 @@ const Cradle = ({
         elementstyle.right = styles.right
 
         // synchronize
-        cradleStyleRevisionsRef.current = styles
+        headCradleStyleRevisionsRef.current = styles
 
         headContentlistRef.current = localContentList
 
@@ -898,7 +894,7 @@ const Cradle = ({
             }
             case 'layout': {
 
-                cradleStyleRevisionsRef.current = layoutDataRef.current
+                headCradleStyleRevisionsRef.current = layoutDataRef.current
 
                 saveCradleState('content')
 
