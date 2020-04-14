@@ -77,6 +77,8 @@ const Cradle = ({
     const pauseCradleObserverRef = useRef(false)
 
     const isTailCradleInViewRef = useRef(true)
+    const isHeadCradleInViewRef = useRef(true)
+    const isCradleInViewRef = useRef(true)
 
     const isScrollingRef = useRef(false)
 
@@ -401,17 +403,18 @@ const Cradle = ({
 
     const tailcradleobservercallback = useCallback((entries) => {
 
-        let localentries = entries.filter((entry) => {
-            return (entry.target.dataset.name == 'head')
-        })
-
-        console.log('cradle entries',entries, localentries)
-
-        if (!localentries.length) return
-
         if (pauseCradleObserverRef.current) return
 
-        isTailCradleInViewRef.current = localentries[0].isIntersecting
+        for (let i = 0; i < entries.length; i++ ) {
+            let entry = entries[i]
+            if (entry.target.dataset.name == 'head') {
+                isHeadCradleInViewRef.current = entry.isIntersecting
+            } else {
+                isTailCradleInViewRef.current = entry.isIntersecting
+            }
+        }
+
+        isCradleInViewRef.current = (isHeadCradleInViewRef.current && isTailCradleInViewRef.current)
 
     },[])
 
@@ -839,7 +842,7 @@ const Cradle = ({
         }
 
         if (
-            !isTailCradleInViewRef.current && 
+            !isCradleInViewRef.current && 
             !pauseItemObserverRef.current && 
             !isResizingRef.current &&
             !(cradlestateRef.current == 'resize') &&
