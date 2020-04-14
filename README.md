@@ -12,7 +12,7 @@ Vertical or horizontal infinite scroll using css grid layout
 - automatic reconfiguration with page resize
 - nested lists
 
-This utility does not currently support variable length cells.
+This utility supports both uniform and variable length cells.
 
 # Technology
 
