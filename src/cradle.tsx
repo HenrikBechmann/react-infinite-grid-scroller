@@ -410,6 +410,8 @@ const Cradle = ({
 
     const tailcradleobservercallback = useCallback((entries) => {
 
+        // console.log('entries',entries)
+
         if (pauseCradleObserverRef.current) return
 
         for (let i = 0; i < entries.length; i++ ) {
@@ -421,7 +423,9 @@ const Cradle = ({
             }
         }
 
-        isCradleInViewRef.current = (isHeadCradleInViewRef.current && isTailCradleInViewRef.current)
+        isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
+
+        // console.log('calculations',isHeadCradleInViewRef.current, isTailCradleInViewRef.current, isCradleInViewRef.current)
 
     },[])
 
