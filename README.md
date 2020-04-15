@@ -165,15 +165,21 @@ The scroller consists of the following components:
 
 ### InfiniteGridScroller
 
-The API. Distributes parameters to Viewport, Scrollblock, and Cradle. Contains Viewport.
+The API. Distributes parameters to Viewport, Scrollblock, and Cradle. 
+
+Contains Viewport.
 
 ### Viewport
 
-The top level component. `position:absolute`; `top`, `right`, `bottom`, `left` all set to 0. Requires a container. Responds to component resize based on [ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver). Contains Scrollblock.
+The top level component. `position:absolute`; `top`, `right`, `bottom`, `left` all set to 0. Requires a container. Responds to component resize based on [ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver). 
+
+Contains Scrollblock.
 
 ### Scrollblock
 
-Scrolled by viewport. Length is set by item medial length (`CellHeight` for 'vertical' orientation and `CellWdith` for 'horizontal' orientation x number of items (adjusted for gap and padding). Contains Cradle.
+Scrolled by viewport. Length is set by item medial length (`CellHeight` for 'vertical' orientation and `CellWdith` for 'horizontal' orientation x number of items (adjusted for gap and padding). 
+
+Contains Cradle.
 
 ### Cradle
 
