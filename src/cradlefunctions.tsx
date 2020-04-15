@@ -444,13 +444,15 @@ export const setCradleStyles = ({
 }
 
 export const setCradleStyleRevisionsForDrop = ({ 
-    headCradleElement, 
+    headCradleElement,
+    tailCradleElement, 
     parentElement, 
     scrollforward, 
     orientation 
 }) => {
 
     let styles = {} as React.CSSProperties
+    let tailstyles = {} as React.CSSProperties
     let headpos, tailpos
 
     // set styles revisions
@@ -504,17 +506,19 @@ export const setCradleStyleRevisionsForDrop = ({
         }
     }
 
-    return styles
+    return [styles,tailstyles]
 
 }
 
 export const setCradleStyleRevisionsForAdd = ({
     headCradleElement,
+    tailCradleElement,
     parentElement,
     scrollforward,
     orientation,
 }) => {
     let styles = {} as React.CSSProperties
+    let tailstyles = {} as React.CSSProperties
     let headpos, tailpos
 
     // set style revisions
@@ -572,6 +576,6 @@ export const setCradleStyleRevisionsForAdd = ({
 
     }
 
-    return styles
+    return [styles, tailstyles]
 
 }

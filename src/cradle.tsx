@@ -369,7 +369,7 @@ const Cradle = ({
     const basecradlelengthsRef = useRef(null)
     basecradlelengthsRef.current = basecradlelengths
 
-    headCradleStylesRef.current = useMemo(()=> {
+    let [thead, ttail] = useMemo(()=> {
 
         // merge base style and revisions (by observer)
         let headCradleStyles:React.CSSProperties = {...headCradleStylesRef.current,...headCradleStyleRevisionsRef.current}
@@ -389,7 +389,7 @@ const Cradle = ({
 
         })
 
-        return styles
+        return [styles, tailstyles]
     },[
         orientation,
         cellHeight,
@@ -402,6 +402,9 @@ const Cradle = ({
         headCradleStyleRevisionsRef.current,
         tailCradleStyleRevisionsRef.current
       ])
+
+    headCradleStylesRef.current = thead
+    tailCradleStylesRef.current = ttail
 
     const itemElementsRef = useRef(new Map())
     const scrollTimeridRef = useRef(null)
@@ -499,6 +502,7 @@ const Cradle = ({
         let sampleEntry = localdropentries[0]
 
         let headCradleElement = headCradleElementRef.current
+        let tailCradleElement = tailCradleElementRef.current
         let parentElement = headCradleElement.parentElement
         let viewportElement = viewportData.elementref.current
 
@@ -603,9 +607,10 @@ const Cradle = ({
 
         })
 
-        let styles = setCradleStyleRevisionsForDrop({ 
+        let [styles, tailstyles] = setCradleStyleRevisionsForDrop({ 
 
             headCradleElement, 
+            tailCradleElement,
             parentElement, 
             scrollforward, 
             orientation 
@@ -640,6 +645,7 @@ const Cradle = ({
         let localContentList = [...headContentlistRef.current]
 
         let headCradleElement = headCradleElementRef.current
+        let tailCradleElement = tailCradleElementRef.current
         let parentElement = headCradleElement.parentElement
         let viewportElement = viewportData.elementref.current
 
@@ -679,9 +685,10 @@ const Cradle = ({
 
         })
 
-        let styles = setCradleStyleRevisionsForAdd({
+        let [styles,tailstyles] = setCradleStyleRevisionsForAdd({
 
             headCradleElement,
+            tailCradleElement,
             parentElement,
             scrollforward,
             orientation,
