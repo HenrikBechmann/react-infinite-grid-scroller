@@ -16,6 +16,7 @@ import {
     setCradleStyleRevisionsForDrop,
     setCradleStyleRevisionsForAdd,
     normalizeCradleAnchors,
+    allocateContentList,
 
 } from './cradlefunctions'
 
@@ -215,9 +216,6 @@ const Cradle = ({
 
     const [addentries, saveAddentries] = useState(null) // add entries
 
-    const headContentlistRef = useRef([])
-    const tailContentlistRef = useRef([])
-
     const cellSpecs = useMemo(() => {
         return {
             cellWidth, cellHeight, gap, padding
@@ -252,6 +250,16 @@ const Cradle = ({
 
     const orientationRef = useRef(orientation)
     orientationRef.current = orientation // availability in closures
+
+
+    // cradle data
+    // data model
+    const contentDataRef = useRef(null)
+    const headContentDataRef = useRef(null)
+    const tailContentDataRef = useRef(null)
+    // view model
+    const headContentlistRef = useRef([])
+    const tailContentlistRef = useRef([])
 
     const headCradleStyleRevisionsRef = useRef(null) // for modifications by observer actions
     const tailCradleStyleRevisionsRef = useRef(null) // for modifications by observer actions
@@ -391,7 +399,8 @@ const Cradle = ({
         viewportheight,
         viewportwidth,
         crosscount,
-        headCradleStyleRevisionsRef.current
+        headCradleStyleRevisionsRef.current,
+        tailCradleStyleRevisionsRef.current
       ])
 
     const itemElementsRef = useRef(new Map())
@@ -594,7 +603,6 @@ const Cradle = ({
 
         })
 
-
         let styles = setCradleStyleRevisionsForDrop({ 
 
             headCradleElement, 
@@ -702,7 +710,7 @@ const Cradle = ({
     // ========================================================================================
     // -------------------------------[ Assembly of content]-----------------------------------
     
-    // reset cradle
+    // reset cradle, including allocation between head and tail parts of the cradle
     const setCradleContent = useCallback((cradleState, referenceIndexData) => {
 
         let { index: visibletargetindexoffset, 
@@ -759,7 +767,11 @@ const Cradle = ({
             placeholder,
         })
 
+        let [headcontentlist, tailcontentlist] = allocateContentList({contentlist:childlist})
+
         contentDataRef.current = childlist
+        headContentDataRef.current = headcontentlist
+        tailContentDataRef.current = tailcontentlist
 
         let elementstyle = headCradleElementRef.current.style
 
@@ -884,7 +896,6 @@ const Cradle = ({
     const callingReferenceIndexDataRef = useRef(referenceIndexDataRef.current)
     const layoutDataRef = useRef(null)
     const positionDataRef = useRef(null)
-    const contentDataRef = useRef(null)
 
     // this is the core state engine
     // useLayout for suppressing flashes

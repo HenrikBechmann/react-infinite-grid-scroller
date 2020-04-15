@@ -375,6 +375,10 @@ export const getUIContentList = (props) => {
     return returnContentlist
 }
 
+export const allocateContentList = ({contentlist}) => {
+    return [,]
+}
+
 const emitItem = ({index, orientation, cellHeight, cellWidth, observer, callbacksRef, getItem, listsize, placeholder}) => {
 
     return <ItemShell
