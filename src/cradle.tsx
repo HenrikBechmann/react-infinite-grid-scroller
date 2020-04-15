@@ -508,6 +508,8 @@ const Cradle = ({
 
         let scrollforward
         let localContentList
+        let headcontentlist = headContentlistRef.current
+        let tailcontentlist = tailContentlistRef.current
 
         // -- isolate forward and backward lists
         //  then set scrollforward
@@ -609,6 +611,8 @@ const Cradle = ({
 
         let [styles, tailstyles] = setCradleStyleRevisionsForDrop({ 
 
+            headcontentlist,
+            tailcontentlist,
             headCradleElement, 
             tailCradleElement,
             parentElement, 
@@ -643,6 +647,8 @@ const Cradle = ({
 
         let localaddentries:any = {...addentries}
         let localContentList = [...headContentlistRef.current]
+        let headcontentlist = headContentlistRef.current
+        let tailcontentlist = tailContentlistRef.current
 
         let headCradleElement = headCradleElementRef.current
         let tailCradleElement = tailCradleElementRef.current
@@ -687,6 +693,8 @@ const Cradle = ({
 
         let [styles,tailstyles] = setCradleStyleRevisionsForAdd({
 
+            headcontentlist,
+            tailcontentlist,
             headCradleElement,
             tailCradleElement,
             parentElement,

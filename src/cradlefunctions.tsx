@@ -376,7 +376,7 @@ export const getUIContentList = (props) => {
 }
 
 export const allocateContentList = ({contentlist}) => {
-    return [,]
+    return [contentlist,]
 }
 
 const emitItem = ({index, orientation, cellHeight, cellWidth, observer, callbacksRef, getItem, listsize, placeholder}) => {
@@ -444,6 +444,8 @@ export const setCradleStyles = ({
 }
 
 export const setCradleStyleRevisionsForDrop = ({ 
+    headcontentlist,
+    tailcontentlist,
     headCradleElement,
     tailCradleElement, 
     parentElement, 
@@ -511,6 +513,8 @@ export const setCradleStyleRevisionsForDrop = ({
 }
 
 export const setCradleStyleRevisionsForAdd = ({
+    headcontentlist,
+    tailcontentlist,
     headCradleElement,
     tailCradleElement,
     parentElement,
