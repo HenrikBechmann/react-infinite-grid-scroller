@@ -227,6 +227,7 @@ const Cradle = ({
     cellSpecsRef.current = cellSpecs
 
     const headCradleStylesRef = useRef({...{
+
         position: 'absolute',
         backgroundColor: 'blue',
         display: 'grid',
@@ -239,12 +240,21 @@ const Cradle = ({
     } as React.CSSProperties,...styles?.cradle})
 
     const tailCradleStylesRef = useRef({
+        position: 'absolute',
+        backgroundColor: 'blue',
+        display: 'grid',
+        gridGap: gap + 'px',
+        padding: padding + 'px',
+        justifyContent:'start',
+        alignContent:'start',
+        boxSizing:'border-box',
     } as React.CSSProperties)
 
     const orientationRef = useRef(orientation)
     orientationRef.current = orientation // availability in closures
 
     const headCradleStyleRevisionsRef = useRef(null) // for modifications by observer actions
+    const tailCradleStyleRevisionsRef = useRef(null) // for modifications by observer actions
 
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
@@ -354,11 +364,13 @@ const Cradle = ({
     headCradleStylesRef.current = useMemo(()=> {
 
         // merge base style and revisions (by observer)
-        let cradleStyles:React.CSSProperties = {...headCradleStylesRef.current,...headCradleStyleRevisionsRef.current}
-        let styles = setCradleStyles({
+        let headCradleStyles:React.CSSProperties = {...headCradleStylesRef.current,...headCradleStyleRevisionsRef.current}
+        let tailCradleStyles:React.CSSProperties = {...tailCradleStylesRef.current,...tailCradleStyleRevisionsRef.current}
+        let [styles, tailstyles] = setCradleStyles({
 
             orientation, 
-            cradleStyles, 
+            headCradleStyles, 
+            tailCradleStyles, 
             cellHeight, 
             cellWidth, 
             gap,
