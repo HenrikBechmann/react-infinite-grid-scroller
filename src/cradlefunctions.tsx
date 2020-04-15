@@ -414,13 +414,16 @@ export const setCradleStyles = ({
 
 }) => {
 
-        let headstyles = Object.assign({},headstylesobject) as React.CSSProperties
-        let tailstyles = {} // Object.assign({},headstylesobject) as React.CSSProperties
+        let headstyles = {...headstylesobject} as React.CSSProperties
+        let tailstyles = {...tailstylesobject} as React.CSSProperties
 
         headstyles.gridGap = gap + 'px'
-        headstyles.padding = padding + 'px'
+
+        tailstyles.gridGap = gap + 'px'
 
         if (orientation == 'horizontal') {
+
+            headstyles.padding = padding + 'px'
 
             headstyles.width = 'auto'
             headstyles.height = '100%'
@@ -430,7 +433,19 @@ export const setCradleStyles = ({
             headstyles.gridTemplateRows = cellHeight?`repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:'auto'
             headstyles.gridTemplateColumns = 'none'
 
+            tailstyles.padding = `${padding}px ${padding}px ${padding}px 0`
+
+            tailstyles.width = 'auto'
+            tailstyles.height = '100%'
+            tailstyles.gridAutoFlow = 'column'
+            // explict crosscount next line as workaround for FF problem - 
+            //     sets length of horiz cradle items in one line (row), not multi-row config
+            tailstyles.gridTemplateRows = cellHeight?`repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:'auto'
+            tailstyles.gridTemplateColumns = 'none'
+
         } else if (orientation == 'vertical') {
+
+            headstyles.padding = padding + 'px'
 
             headstyles.width = '100%'
             headstyles.height = 'auto'
@@ -438,6 +453,15 @@ export const setCradleStyles = ({
             
             headstyles.gridTemplateRows = 'none'
             headstyles.gridTemplateColumns = cellWidth?`repeat(auto-fit, minmax(${cellWidth}px, 1fr))`:'auto'
+
+            tailstyles.padding = `0 ${padding}px ${padding}px ${padding}px`
+
+            tailstyles.width = '100%'
+            tailstyles.height = 'auto'
+            tailstyles.gridAutoFlow = 'row'
+            
+            tailstyles.gridTemplateRows = 'none'
+            tailstyles.gridTemplateColumns = cellWidth?`repeat(auto-fit, minmax(${cellWidth}px, 1fr))`:'auto'
         }
 
         return [headstyles,tailstyles]

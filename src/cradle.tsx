@@ -237,7 +237,7 @@ const Cradle = ({
 
     } as React.CSSProperties,...styles?.cradle})
 
-    const tailCradleStylesRef = useRef({
+    const tailCradleStylesRef = useRef({...{
         position: 'absolute',
         backgroundColor: 'blue',
         display: 'grid',
@@ -246,7 +246,7 @@ const Cradle = ({
         justifyContent:'start',
         alignContent:'start',
         boxSizing:'border-box',
-    } as React.CSSProperties)
+    } as React.CSSProperties,...styles?.cradle})
 
     const orientationRef = useRef(orientation)
     orientationRef.current = orientation // availability in closures
