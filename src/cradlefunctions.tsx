@@ -423,7 +423,7 @@ export const setCradleStyles = ({
 
         if (orientation == 'horizontal') {
 
-            headstyles.padding = padding + 'px'
+            headstyles.padding = `${padding}px 0 ${padding}px ${padding}px`
 
             headstyles.width = 'auto'
             headstyles.height = '100%'
@@ -445,7 +445,7 @@ export const setCradleStyles = ({
 
         } else if (orientation == 'vertical') {
 
-            headstyles.padding = padding + 'px'
+            headstyles.padding = `${padding}px ${padding}px 0 ${padding}px`
 
             headstyles.width = '100%'
             headstyles.height = 'auto'

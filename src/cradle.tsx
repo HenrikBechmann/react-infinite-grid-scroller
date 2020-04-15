@@ -790,29 +790,29 @@ const Cradle = ({
 
         let elementstyle = headCradleElementRef.current.style
 
-        let styles:React.CSSProperties = {}
+        let headstyles:React.CSSProperties = {}
 
         if (orientation == 'vertical') {
 
-            styles.top = cradleoffset + 'px'
-            styles.bottom = 'auto'
-            styles.left = 'auto'
-            styles.right = 'auto'
+            headstyles.top = cradleoffset + 'px'
+            headstyles.bottom = 'auto'
+            headstyles.left = 'auto'
+            headstyles.right = 'auto'
 
             positionDataRef.current = {property:'scrollTop',value:scrollblockoffset}
 
         } else { // orientation = 'horizontal'
 
-            styles.top = 'auto'
-            styles.bottom = styles.bottom = 'auto'
-            styles.left = cradleoffset + 'px'
-            styles.right = 'auto'
+            headstyles.top = 'auto'
+            headstyles.bottom = styles.bottom = 'auto'
+            headstyles.left = cradleoffset + 'px'
+            headstyles.right = 'auto'
 
             positionDataRef.current = {property:'scrollLeft',value:scrollblockoffset}
 
         }
 
-        layoutDataRef.current = styles // for 'layout' state
+        headlayoutDataRef.current = headstyles // for 'layout' state
 
     },[
         cellHeight,
@@ -909,7 +909,7 @@ const Cradle = ({
     // data for state processing
     const callingCradleState = useRef(cradlestateRef.current)
     const callingReferenceIndexDataRef = useRef(referenceIndexDataRef.current)
-    const layoutDataRef = useRef(null)
+    const headlayoutDataRef = useRef(null)
     const positionDataRef = useRef(null)
 
     // this is the core state engine
@@ -932,7 +932,7 @@ const Cradle = ({
             }
             case 'layout': {
 
-                headCradleStyleRevisionsRef.current = layoutDataRef.current
+                headCradleStyleRevisionsRef.current = headlayoutDataRef.current
 
                 saveCradleState('content')
 
