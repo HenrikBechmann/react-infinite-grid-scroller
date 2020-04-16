@@ -425,11 +425,13 @@ const Cradle = ({
     // cradle goes out of the observer scope, the "repositioning" cradle state is triggerd.
     useEffect(() => {
 
+        // ResizeObserver
         cradleresizeobserverRef.current = new LocalResizeObserver(cradleresizeobservercallback)
 
         cradleresizeobserverRef.current.observe(headCradleElementRef.current)
         cradleresizeobserverRef.current.observe(tailCradleElementRef.current)
 
+        // IntersectionObserver
         cradleintersectionobserverRef.current = new IntersectionObserver(
 
             cradleintersectionobservercallback,
@@ -449,6 +451,8 @@ const Cradle = ({
     },[])
 
     const cradleresizeobservercallback = useCallback((entries) => {
+
+        if (pauseCradleObserverRef.current) return
 
         console.log('cradle entries',entries)
 
