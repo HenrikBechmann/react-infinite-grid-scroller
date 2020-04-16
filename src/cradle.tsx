@@ -9,7 +9,7 @@ import useIsMounted from 'react-is-mounted-hook'
 
 import ResizeObserverPolyfill from 'resize-observer-polyfill'
 
-const LocalResizeObserver = window['ResizeObserver']?window['ResizeObserver']:ResizeObserverPolyfill
+const LocalResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
 
 import { 
     setCradleStyles, 
