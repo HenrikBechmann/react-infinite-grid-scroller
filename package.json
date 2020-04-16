@@ -19,9 +19,14 @@
     "grid",
     "horizontal",
     "vertical",
+    "uniform",
+    "fixed",
+    "variable",
+    "dynamic",
     "list",
     "virtual",
-    "IntersectionObserver"
+    "IntersectionObserver",
+    "ResizeObserver"
   ],
   "repository": {
     "type": "git",
