@@ -7,6 +7,10 @@ import { ViewportContext } from './viewport'
 
 import useIsMounted from 'react-is-mounted-hook'
 
+import ResizeObserverPolyfill from 'resize-observer-polyfill'
+
+const LocalResizeObserver = window['ResizeObserver']?window['ResizeObserver']:ResizeObserverPolyfill
+
 import { 
     setCradleStyles, 
     getUIContentList, 
@@ -49,7 +53,8 @@ const Cradle = ({
     const isMounted = useIsMounted()
     const reportReferenceIndexRef = useRef(functions?.reportReferenceIndex)
     const itemobserverRef = useRef(null)
-    const tailcradleobserverRef = useRef(null)
+    const cradleintersectionobserverRef = useRef(null)
+    const cradleresizeobserverRef = useRef(null)
 
     // -----------------------------------------------------------------------
     // ---------------------------[ context data ]----------------------------
@@ -420,19 +425,36 @@ const Cradle = ({
     // cradle goes out of the observer scope, the "repositioning" cradle state is triggerd.
     useEffect(() => {
 
-        tailcradleobserverRef.current = new IntersectionObserver(
+        cradleresizeobserverRef.current = new LocalResizeObserver(cradleresizeobservercallback)
 
-            tailcradleobservercallback,
+        cradleresizeobserverRef.current.observe(headCradleElementRef.current)
+        cradleresizeobserverRef.current.observe(tailCradleElementRef.current)
+
+        cradleintersectionobserverRef.current = new IntersectionObserver(
+
+            cradleintersectionobservercallback,
             {root:viewportData.elementref.current, threshold:0}
 
         )
 
-        tailcradleobserverRef.current.observe(headCradleElementRef.current)
-        tailcradleobserverRef.current.observe(tailCradleElementRef.current)
+        cradleintersectionobserverRef.current.observe(headCradleElementRef.current)
+        cradleintersectionobserverRef.current.observe(tailCradleElementRef.current)
+
+        return () => {
+
+            cradleresizeobserverRef.current.disconnect()
+
+        }
 
     },[])
 
-    const tailcradleobservercallback = useCallback((entries) => {
+    const cradleresizeobservercallback = useCallback((entries) => {
+
+        console.log('cradle entries',entries)
+
+    },[])
+
+    const cradleintersectionobservercallback = useCallback((entries) => {
 
         if (pauseCradleObserverRef.current) return
 
@@ -788,9 +810,10 @@ const Cradle = ({
         headContentDataRef.current = headcontentlist
         tailContentDataRef.current = tailcontentlist
 
-        let elementstyle = headCradleElementRef.current.style
+        // let elementstyle = headCradleElementRef.current.style
 
         let headstyles:React.CSSProperties = {}
+        let tailstyles:React.CSSProperties = {}
 
         if (orientation == 'vertical') {
 

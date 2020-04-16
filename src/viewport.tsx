@@ -59,7 +59,6 @@ const Viewport = ({
     // initialize
     useEffect(()=>{
 
-        // window.addEventListener('resize',onResize)
         resizeObserverRef.current = new LocalResizeObserver(resizeCallback)
         resizeObserverRef.current.observe(viewportdivRef.current)
 
