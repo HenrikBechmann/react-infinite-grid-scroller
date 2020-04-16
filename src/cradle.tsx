@@ -239,6 +239,7 @@ const Cradle = ({
         justifyContent:'start',
         alignContent:'start',
         boxSizing:'border-box',
+        bottom:0,
 
     } as React.CSSProperties,...styles?.cradle})
 
@@ -251,7 +252,13 @@ const Cradle = ({
         justifyContent:'start',
         alignContent:'start',
         boxSizing:'border-box',
+        top:0,
     } as React.CSSProperties,...styles?.cradle})
+
+    const cradleReferenceBlockStylesRef = useRef({
+        position: 'relative',
+        transform:'translate(0px,0px)'
+    } as React.CSSProperties)
 
     const orientationRef = useRef(orientation)
     orientationRef.current = orientation // availability in closures
@@ -374,42 +381,42 @@ const Cradle = ({
     const basecradlelengthsRef = useRef(null)
     basecradlelengthsRef.current = basecradlelengths
 
-    let [thead, ttail] = useMemo(()=> {
+    // let [thead, ttail] = useMemo(()=> {
 
-        // merge base style and revisions (by observer)
-        let headCradleStyles:React.CSSProperties = {...headCradleStylesRef.current,...headCradleStyleRevisionsRef.current}
-        let tailCradleStyles:React.CSSProperties = {...tailCradleStylesRef.current,...tailCradleStyleRevisionsRef.current}
-        let [styles, tailstyles] = setCradleStyles({
+    //     // merge base style and revisions (by observer)
+    //     let headCradleStyles:React.CSSProperties = {...headCradleStylesRef.current,...headCradleStyleRevisionsRef.current}
+    //     let tailCradleStyles:React.CSSProperties = {...tailCradleStylesRef.current,...tailCradleStyleRevisionsRef.current}
+    //     let [styles, tailstyles] = setCradleStyles({
 
-            orientation, 
-            headCradleStyles, 
-            tailCradleStyles, 
-            cellHeight, 
-            cellWidth, 
-            gap,
-            padding,
-            crosscount, 
-            viewportheight, 
-            viewportwidth, 
+    //         orientation, 
+    //         headCradleStyles, 
+    //         tailCradleStyles, 
+    //         cellHeight, 
+    //         cellWidth, 
+    //         gap,
+    //         padding,
+    //         crosscount, 
+    //         viewportheight, 
+    //         viewportwidth, 
 
-        })
+    //     })
 
-        return [styles, tailstyles]
-    },[
-        orientation,
-        cellHeight,
-        cellWidth,
-        gap,
-        padding,
-        viewportheight,
-        viewportwidth,
-        crosscount,
-        headCradleStyleRevisionsRef.current,
-        tailCradleStyleRevisionsRef.current
-      ])
+    //     return [styles, tailstyles]
+    // },[
+    //     orientation,
+    //     cellHeight,
+    //     cellWidth,
+    //     gap,
+    //     padding,
+    //     viewportheight,
+    //     viewportwidth,
+    //     crosscount,
+    //     headCradleStyleRevisionsRef.current,
+    //     tailCradleStyleRevisionsRef.current
+    //   ])
 
-    headCradleStylesRef.current = thead
-    tailCradleStylesRef.current = ttail
+    // headCradleStylesRef.current = thead
+    // tailCradleStylesRef.current = ttail
 
     const itemElementsRef = useRef(new Map())
     const scrollTimeridRef = useRef(null)
@@ -961,6 +968,7 @@ const Cradle = ({
         switch (cradlestate) {
             case 'reload':
                 headContentlistRef.current = []
+                tailContentlistRef.current = []
                 saveCradleState('setreload')
                 break;
             case 'position': {
@@ -1119,28 +1127,29 @@ const Cradle = ({
                 styles = { styles }
             />
             :null}
-
-        <div 
-        
-            data-name = 'head'
-            ref = {headCradleElementRef} 
-            style = {headCradlestyles}
-        
-        >
-        
-            {(cradlestateRef.current != 'setup')?headContentlistRef.current:null}
-        
-        </div>
-        <div 
-        
-            data-name = 'tail'
-            ref = {tailCradleElementRef} 
-            style = {tailCradlestyles}
-        
-        >
-        
-            {(cradlestateRef.current != 'setup')?tailContentlistRef.current:null}
-        
+        <div style = {cradleReferenceBlockStylesRef.current} >
+            <div 
+            
+                data-name = 'head'
+                ref = {headCradleElementRef} 
+                style = {headCradlestyles}
+            
+            >
+            
+                {(cradlestateRef.current != 'setup')?headContentlistRef.current:null}
+            
+            </div>
+            <div 
+            
+                data-name = 'tail'
+                ref = {tailCradleElementRef} 
+                style = {tailCradlestyles}
+            
+            >
+            
+                {(cradlestateRef.current != 'setup')?tailContentlistRef.current:null}
+            
+            </div>
         </div>
         
     </>
