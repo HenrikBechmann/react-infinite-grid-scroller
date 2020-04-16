@@ -523,7 +523,7 @@ const Cradle = ({
         if (dropentries === null) return
 
         let localdropentries = [...dropentries]
-        let contentlistcopy = [...headContentlistRef.current]
+        let contentlistcopy = [...contentDataRef.current]
 
         let sampleEntry = localdropentries[0]
 
@@ -808,7 +808,20 @@ const Cradle = ({
             placeholder,
         })
 
-        let [headcontentlist, tailcontentlist] = allocateContentList({contentlist:childlist,runwaycount,crosscount})
+        let [headcontentlist, tailcontentlist] = allocateContentList(
+            {
+                orientation,
+                contentlist:childlist,
+                runwaycount,
+                crosscount,
+                viewportElement:viewportDataRef.current.elementref.current,
+                cellHeight,
+                cellWidth,
+                padding,
+                gap, 
+                rowcount,
+            }
+        )
 
         contentDataRef.current = childlist
         headContentDataRef.current = headcontentlist
@@ -852,6 +865,7 @@ const Cradle = ({
         gap,
         padding,
         crosscount,
+        rowcount,
       ]
     )
 

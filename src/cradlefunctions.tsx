@@ -375,8 +375,44 @@ export const getUIContentList = (props) => {
     return returnContentlist
 }
 
-export const allocateContentList = ({contentlist, runwaycount, crosscount}) => {
-    let runwayitemcount = runwaycount * crosscount
+// place up to runwaycount rows outside visible viewport
+export const allocateContentList = (
+    {
+        contentlist, 
+        runwaycount, 
+        crosscount, 
+        viewportElement, 
+        cellHeight,
+        cellWidth,
+        gap,
+        padding,
+        orientation,
+        rowcount,
+    }
+) => {
+    let cellLength, scrolloffset, scrollblocklength, viewportlength
+    let scrollblock = viewportElement.children[0]
+    if (orientation == 'vertical') {
+        scrolloffset = viewportElement.scrollTop
+        cellLength = cellHeight + gap
+        scrollblocklength = scrollblock.offsetHeight
+        viewportlength = viewportElement.offsetHeight
+    } else {
+        scrolloffset = viewportElement.scrollLeft
+        cellLength = cellWidth + gap
+        scrollblocklength = scrollblock.offsetWidth
+        viewportlength = viewportElement.offsetWidth
+    }
+    let runwayheadrowroom = Math.floor((scrolloffset - padding)/cellLength)
+    let runwaycountroom = Math.min(runwayheadrowroom, runwaycount)
+
+    let remainingroom = Math.ceil((scrollblocklength - scrolloffset)/cellLength)
+    let rowdiff = rowcount - remainingroom
+    if (rowdiff < runwaycountroom) {
+        runwaycountroom += (runwaycountroom - rowdiff)
+    }
+    let runwayitemcount = runwaycountroom * crosscount
+
     let headlist = contentlist.slice(0,runwayitemcount)
     let taillist = contentlist.slice(runwayitemcount)
     console.log('contentlist, headlist, taillist',contentlist, headlist, taillist)
