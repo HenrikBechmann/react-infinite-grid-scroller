@@ -804,7 +804,7 @@ const Cradle = ({
             placeholder,
         })
 
-        let [headcontentlist, tailcontentlist] = allocateContentList({contentlist:childlist})
+        let [headcontentlist, tailcontentlist] = allocateContentList({contentlist:childlist,runwaycount,crosscount})
 
         contentDataRef.current = childlist
         headContentDataRef.current = headcontentlist
@@ -844,6 +844,7 @@ const Cradle = ({
         viewportheight,
         viewportwidth,
         runwaylength,
+        runwaycount,
         gap,
         padding,
         crosscount,
@@ -962,7 +963,8 @@ const Cradle = ({
                 break
             }
             case 'content': {
-                headContentlistRef.current = contentDataRef.current
+                headContentlistRef.current = headContentDataRef.current // contentDataRef.current
+                tailContentlistRef.current = tailContentDataRef.current
                 saveCradleState('normalize')
                 break
             }

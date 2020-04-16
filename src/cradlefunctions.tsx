@@ -375,8 +375,12 @@ export const getUIContentList = (props) => {
     return returnContentlist
 }
 
-export const allocateContentList = ({contentlist}) => {
-    return [contentlist,]
+export const allocateContentList = ({contentlist, runwaycount, crosscount}) => {
+    let runwayitemcount = runwaycount * crosscount
+    let headlist = contentlist.slice(0,runwayitemcount)
+    let taillist = contentlist.slice(runwayitemcount)
+    console.log('contentlist, headlist, taillist',contentlist, headlist, taillist)
+    return [headlist,taillist]
 }
 
 const emitItem = ({index, orientation, cellHeight, cellWidth, observer, callbacksRef, getItem, listsize, placeholder}) => {
