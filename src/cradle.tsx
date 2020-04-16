@@ -32,7 +32,7 @@ const Cradle = ({
         gap, 
         padding, 
         runwaylength,
-        runway, 
+        runwaycount, 
         listsize, 
         offset, 
         orientation, 
@@ -317,7 +317,7 @@ const Cradle = ({
         cellLength += gap
 
         let rcount = Math.ceil(viewportLength/cellLength)
-        rcount += (runway * 2)
+        rcount += (runwaycount * 2)
         let itemcount = rcount * crosscount
         if (itemcount > listsize) {
             itemcount = listsize
@@ -334,7 +334,7 @@ const Cradle = ({
         // padding,
         viewportheight, 
         viewportwidth,
-        runway,
+        runwaycount,
         crosscount,
     ])
 
@@ -356,8 +356,8 @@ const Cradle = ({
 
         cellLength += gap
 
-        headLength = (runway * cellLength) - gap + padding
-        tailLength = ((rowcount - runway) * cellLength) - gap + padding
+        headLength = (runwaycount * cellLength) - gap + padding
+        tailLength = ((rowcount - runwaycount) * cellLength) - gap + padding
 
         return [headLength, tailLength]
 
@@ -368,7 +368,7 @@ const Cradle = ({
         gap, 
         padding,
         rowcount,
-        runway,
+        runwaycount,
     ])
 
     const basecradlelengthsRef = useRef(null)
@@ -475,7 +475,7 @@ const Cradle = ({
 
     /*
         The cradle content is driven by notifications from the IntersectionObserver.
-        - as the user scrolls the cradle, which has a runway at both the leading
+        - as the user scrolls the cradle, which has a runwaycount at both the leading
             and trailing edges, itemShells scroll into or out of the scope of the observer 
             (defined by the width/height of the viewport + the lengths of the runways). The observer
             notifies the app (through itemobservercallback() below) at the crossings of the itemshells 
@@ -1087,6 +1087,7 @@ const Cradle = ({
     let tailCradlestyles = tailCradleStylesRef.current
 
     // TODO: move scrolltracker values to memo
+    // console.log('rendering cradle')
     return <>
 
         { (cradlestateRef.current == 'repositioning')

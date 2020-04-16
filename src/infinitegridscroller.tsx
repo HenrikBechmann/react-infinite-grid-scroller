@@ -108,7 +108,7 @@ const InfiniteGridScroller = (props) => {
                 functions = { functions }
                 placeholder = { placeholder }
                 styles = { styles }
-                runway = { runway }
+                runwaycount = { runway }
 
             />
 
