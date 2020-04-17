@@ -403,11 +403,13 @@ export const allocateContentList = (
         scrollblocklength = scrollblock.offsetWidth
         viewportlength = viewportElement.offsetWidth
     }
-    let runwayheadrowroom = Math.floor((scrolloffset - padding)/cellLength)
+    let runwayheadrowroom = Math.max(0,Math.floor((scrolloffset - padding)/cellLength))
     let runwaycountroom = Math.min(runwayheadrowroom, runwaycount)
 
-    let remainingroom = Math.ceil((scrollblocklength - scrolloffset)/cellLength)
-    let rowdiff = rowcount - remainingroom
+    console.log('runwayheadrowroom,runwaycountroom',runwayheadrowroom,runwaycountroom)
+
+    let remainingroomrows = Math.ceil((scrollblocklength - scrolloffset)/cellLength)
+    let rowdiff = remainingroomrows - rowcount
     if (rowdiff < runwaycountroom) {
         runwaycountroom += (runwaycountroom - rowdiff)
     }
