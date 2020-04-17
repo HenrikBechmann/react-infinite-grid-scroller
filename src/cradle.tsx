@@ -169,16 +169,16 @@ const Cradle = ({
     useEffect(()=> {
 
         let rootMargin
-        if (orientation == 'horizontal') {
-            rootMargin = `0px ${runwaylength}px 0px ${runwaylength}px`
-        } else {
-            rootMargin = `${runwaylength}px 0px ${runwaylength}px 0px`
-        }
+        // if (orientation == 'horizontal') {
+        //     rootMargin = `0px ${runwaylength}px 0px ${runwaylength}px`
+        // } else {
+        //     rootMargin = `${runwaylength}px 0px ${runwaylength}px 0px`
+        // }
         // console.log('rootMargin',options)
         itemobserverRef.current = new IntersectionObserver(
 
             itemobservercallback,
-            {root:viewportData.elementref.current, rootMargin,threshold:0} 
+            {root:viewportData.elementref.current, rootMargin, threshold:0} 
 
         )
 
