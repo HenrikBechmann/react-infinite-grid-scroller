@@ -310,6 +310,7 @@ export const getUIContentList = (props) => {
     let localContentlist = [...contentlist]
     let tailindexoffset = indexoffset + contentlist.length
     let returnContentlist
+
     let headContentlist = []
 
     if (headindexcount >= 0) {
@@ -375,21 +376,23 @@ export const getUIContentList = (props) => {
     return returnContentlist
 }
 
-// place up to runwaycount rows outside visible viewport
+// butterfly model. Leading (head) all or partially hidden; tail, visible plus following hidden
 export const allocateContentList = (
     {
-        contentlist, 
-        runwaycount, 
+        contentlist, // of cradle, in items (React components)
+        runwaycount, // in rows
         crosscount, 
+        rowcount, // in cradle
         viewportElement, 
+        orientation,
+        // measurements
         cellHeight,
         cellWidth,
         gap,
         padding,
-        orientation,
-        rowcount,
     }
 ) => {
+    // basic data
     let cellLength, scrolloffset, scrollblocklength, viewportlength
     let scrollblock = viewportElement.children[0]
     if (orientation == 'vertical') {
@@ -403,11 +406,13 @@ export const allocateContentList = (
         scrollblocklength = scrollblock.offsetWidth
         viewportlength = viewportElement.offsetWidth
     }
+    // calculate head configuration
     let runwayheadrowroom = Math.max(0,Math.floor((scrolloffset - padding)/cellLength))
     let runwaycountroom = Math.min(runwayheadrowroom, runwaycount)
 
     console.log('runwayheadrowroom,runwaycountroom',runwayheadrowroom,runwaycountroom)
 
+    // calculate tail configuration
     let remainingroomrows = Math.ceil((scrollblocklength - scrolloffset)/cellLength)
     let rowdiff = remainingroomrows - rowcount
     if (rowdiff < runwaycountroom) {
@@ -415,10 +420,14 @@ export const allocateContentList = (
     }
     let runwayitemcount = runwaycountroom * crosscount
 
+    // allocate the contentlist to head and tail
     let headlist = contentlist.slice(0,runwayitemcount)
     let taillist = contentlist.slice(runwayitemcount)
+
     console.log('contentlist, headlist, taillist',contentlist, headlist, taillist)
+
     return [headlist,taillist]
+
 }
 
 const emitItem = ({index, orientation, cellHeight, cellWidth, observer, callbacksRef, getItem, listsize, placeholder}) => {
