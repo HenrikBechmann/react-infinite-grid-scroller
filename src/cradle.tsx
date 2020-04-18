@@ -5,11 +5,13 @@
     Description
     -----------
 
-    This module has two main design patterns: the butterfuly pattarn and the toothpaste pattern (my names)
+    This module has one main design pattern: the butterfuly pattarn (my name)
 
     the butterfly pattern:
-
-    the toothpaste pattern:
+        two containers for items, joined by a 0-length div (the "spine"). The containers are fixed to the spine
+        through the bottom/right position style on one side, and top/left on the other. Thus additions or deletions
+        effect the distant end (from the spine) on each end. All three together comprise the "cradle" of items. After
+        a change of content, the only adjustment required is the position of the spine in relation to the viewport.
 
 */
 
