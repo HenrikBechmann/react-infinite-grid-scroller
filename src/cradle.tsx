@@ -1,6 +1,18 @@
 // cradle.tsx
 // copyright (c) 2020 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+    Description
+    -----------
+
+    This module has two main design patterns: the butterfuly pattarn and the toothpaste pattern (my names)
+
+    the butterfly pattern:
+
+    the toothpaste pattern
+
+*/
+
 import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, useLayoutEffect } from 'react'
 
 import { ViewportContext } from './viewport'
@@ -173,24 +185,6 @@ const Cradle = ({
     // trigger pivot on change in orientation
     useEffect(()=> {
 
-        // let rootMargin
-        // if (orientation == 'horizontal') {
-        //     rootMargin = `0px ${runwaylength}px 0px ${runwaylength}px`
-        // } else {
-        //     rootMargin = `${runwaylength}px 0px ${runwaylength}px 0px`
-        // }
-        // console.log('rootMargin',options)
-        itemobserverRef.current = new IntersectionObserver(
-
-            itemobservercallback,
-            {
-                root:viewportData.elementref.current, 
-                // rootMargin, 
-                threshold:0
-            } 
-
-        )
-
         headContentlistRef.current = []
 
         if (cradlestateRef.current != 'setup') {
@@ -247,6 +241,7 @@ const Cradle = ({
     // cradle html components
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
+    const cradleReferenceBlockRef = useRef(null)
 
     // data model
     const contentDataRef = useRef(null)
@@ -356,7 +351,9 @@ const Cradle = ({
     const basecradlelengthsRef = useRef(null)
     basecradlelengthsRef.current = basecradlelengths
 
-    // --------------------------------[ css styles]---------------------------------
+    // --------------------------------[ css styles ]---------------------------------
+
+    // base styles
     const headCradleStylesRef = useRef({...{
 
         position: 'absolute',
@@ -392,9 +389,11 @@ const Cradle = ({
         transform:`translate(0px,${padding}px)`
     } as React.CSSProperties)
 
+    // style revisions
     const headCradleStyleRevisionsRef = useRef(null) // for modifications by observer actions
     const tailCradleStyleRevisionsRef = useRef(null) // for modifications by observer actions
 
+    // style consolidations
     let [thead, ttail] = useMemo(()=> {
 
         // merge base style and revisions (by observer)
@@ -445,9 +444,9 @@ const Cradle = ({
     const [dropentries, saveDropentries] = useState(null) // trigger add entries
     const [addentries, saveAddentries] = useState(null) // add entries
 
-    // --------------------------[ cradle observer ]-----------------------------------
-    // this sets up an IntersectionObserver of the cradle against the viewport. When the
-    // cradle goes out of the observer scope, the "repositioning" cradle state is triggerd.
+    // --------------------------[ cradle observers ]-----------------------------------
+
+    // set up resizeobserver
     useEffect(() => {
 
         // ResizeObserver
@@ -455,17 +454,6 @@ const Cradle = ({
 
         cradleresizeobserverRef.current.observe(headCradleElementRef.current)
         cradleresizeobserverRef.current.observe(tailCradleElementRef.current)
-
-        // IntersectionObserver
-        cradleintersectionobserverRef.current = new IntersectionObserver(
-
-            cradleintersectionobservercallback,
-            {root:viewportData.elementref.current, threshold:0}
-
-        )
-
-        cradleintersectionobserverRef.current.observe(headCradleElementRef.current)
-        cradleintersectionobserverRef.current.observe(tailCradleElementRef.current)
 
         return () => {
 
@@ -480,6 +468,29 @@ const Cradle = ({
         if (pauseCradleObserverRef.current) return
 
         console.log('cradle entries',entries)
+
+    },[])
+
+    // this sets up an IntersectionObserver of the cradle against the viewport. When the
+    // cradle goes out of the observer scope, the "repositioning" cradle state is triggerd.
+    useEffect(() => {
+
+        // IntersectionObserver
+        cradleintersectionobserverRef.current = new IntersectionObserver(
+
+            cradleintersectionobservercallback,
+            {root:viewportData.elementref.current, threshold:0}
+
+        )
+
+        cradleintersectionobserverRef.current.observe(headCradleElementRef.current)
+        cradleintersectionobserverRef.current.observe(tailCradleElementRef.current)
+
+        return () => {
+
+            cradleintersectionobserverRef.current.disconnect()
+
+        }
 
     },[])
 
@@ -520,6 +531,32 @@ const Cradle = ({
 
             There are exceptions for setup and edge cases.
     */
+
+    useEffect(() => {
+        // let rootMargin
+        // if (orientation == 'horizontal') {
+        //     rootMargin = `0px ${runwaylength}px 0px ${runwaylength}px`
+        // } else {
+        //     rootMargin = `${runwaylength}px 0px ${runwaylength}px 0px`
+        // }
+        // console.log('rootMargin',options)
+        itemobserverRef.current = new IntersectionObserver(
+
+            itemobservercallback,
+            {
+                root:viewportData.elementref.current, 
+                // rootMargin, 
+                threshold:0
+            } 
+
+        )
+
+        return () => {
+
+            itemobserverRef.current.disconnect()
+
+        }
+    },[orientation])
 
     // the async callback from IntersectionObserver.
     const itemobservercallback = useCallback((entries)=>{
@@ -1144,7 +1181,10 @@ const Cradle = ({
                 styles = { styles }
             />
             :null}
-        <div style = {cradleReferenceBlockStylesRef.current} >
+        <div 
+            style = {cradleReferenceBlockStylesRef.current} 
+            ref = {cradleReferenceBlockRef}
+        >
             <div 
             
                 data-name = 'head'
