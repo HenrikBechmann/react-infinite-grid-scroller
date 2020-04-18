@@ -52,6 +52,7 @@ const Cradle = ({
 
     const isMounted = useIsMounted()
     const reportReferenceIndexRef = useRef(functions?.reportReferenceIndex)
+
     const itemobserverRef = useRef(null)
     const cradleintersectionobserverRef = useRef(null)
     const cradleresizeobserverRef = useRef(null)
@@ -67,7 +68,7 @@ const Cradle = ({
     const cradlestateRef = useRef(null) // access by closures
     cradlestateRef.current = cradlestate
 
-    const [scrollstate, saveScrollState] = useState('ready')
+    // const [scrollstate, saveScrollState] = useState('ready')
 
     // -----------------------------------------------------------------------
     // -----------------------------[ persistent data ]-----------------------
@@ -88,8 +89,8 @@ const Cradle = ({
 
     const isScrollingRef = useRef(false)
 
-    // -----------------------------------------------------------------------
-    // --------------------------------[ init effects ]-----------------------
+    // ------------------------------------------------------------------------
+    // -----------------------[ initialization effects ]-----------------------
 
     //initialize host functions properties
     useEffect(()=>{
@@ -153,10 +154,14 @@ const Cradle = ({
 
     // reload conditions
     useEffect(()=>{
+        console.log('triggering reload as config side effect')
+        if (cradlestateRef.current == 'setup') return
+
         pauseItemObserverRef.current = true
         pauseCradleObserverRef.current = true
         callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
         saveCradleState('reload')
+
     },[
         listsize,
         cellHeight,
@@ -168,7 +173,7 @@ const Cradle = ({
     // trigger pivot on change in orientation
     useEffect(()=> {
 
-        let rootMargin
+        // let rootMargin
         // if (orientation == 'horizontal') {
         //     rootMargin = `0px ${runwaylength}px 0px ${runwaylength}px`
         // } else {
@@ -178,13 +183,17 @@ const Cradle = ({
         itemobserverRef.current = new IntersectionObserver(
 
             itemobservercallback,
-            {root:viewportData.elementref.current, rootMargin, threshold:0} 
+            {
+                root:viewportData.elementref.current, 
+                // rootMargin, 
+                threshold:0
+            } 
 
         )
 
         headContentlistRef.current = []
 
-        if (cradlestate != 'setup') {
+        if (cradlestateRef.current != 'setup') {
 
             pauseItemObserverRef.current = true
             callingReferenceIndexDataRef.current = {...masterReferenceIndexDataRef.current}
@@ -195,11 +204,11 @@ const Cradle = ({
 
     },[
         orientation,
-        listsize,
-        cellHeight,
-        cellWidth,
-        gap,
-        padding,
+        // listsize,
+        // cellHeight,
+        // cellWidth,
+        // gap,
+        // padding,
     ])
 
     // =======================================================================
@@ -208,7 +217,7 @@ const Cradle = ({
     // -----------------------------------------------------------------------
     // ------------------------[ session data ]-------------------------------
 
-    // current location location -- first visible item
+    // ------------------ current location -- first visible item -------------
     const [referenceindexdata, saveReferenceindex] = useState({
         index:Math.min(offset,(listsize - 1)) || 0,
         scrolloffset:0
@@ -217,10 +226,7 @@ const Cradle = ({
     referenceIndexDataRef.current = referenceindexdata
     const masterReferenceIndexDataRef = useRef(referenceindexdata) // capture for state resetContent operations
 
-    const [dropentries, saveDropentries] = useState(null) // trigger add entries
-
-    const [addentries, saveAddentries] = useState(null) // add entries
-
+    // --------------------[ cell specs for reference by functions ]----------------
     const cellSpecs = useMemo(() => {
         return {
             cellWidth, cellHeight, gap, padding
@@ -229,46 +235,19 @@ const Cradle = ({
     const cellSpecsRef = useRef(null)
     cellSpecsRef.current = cellSpecs
 
-    const headCradleStylesRef = useRef({...{
-
-        position: 'absolute',
-        backgroundColor: 'blue',
-        display: 'grid',
-        gridGap: gap + 'px',
-        padding: padding + 'px',
-        justifyContent:'start',
-        alignContent:'start',
-        boxSizing:'border-box',
-        bottom:0,
-        left:0,
-        right:0,
-
-    } as React.CSSProperties,...styles?.cradle})
-
-    const tailCradleStylesRef = useRef({...{
-        position: 'absolute',
-        backgroundColor: 'blue',
-        display: 'grid',
-        gridGap: gap + 'px',
-        padding: padding + 'px',
-        justifyContent:'start',
-        alignContent:'start',
-        boxSizing:'border-box',
-        top:0,
-        left:0,
-        right:0,
-    } as React.CSSProperties,...styles?.cradle})
-
-    const cradleReferenceBlockStylesRef = useRef({
-        position: 'relative',
-        transform:`translate(0px,${padding}px)`
-    } as React.CSSProperties)
-
+    // ------------------------------[ orientation ]--------------------------------
     const orientationRef = useRef(orientation)
     orientationRef.current = orientation // availability in closures
 
+    // -------------------------------[ cradle data ]-------------------------------------
+    const { viewportDimensions } = viewportData
 
-    // cradle data
+    let { height:viewportheight,width:viewportwidth } = viewportDimensions
+
+    // cradle html components
+    const headCradleElementRef = useRef(null)
+    const tailCradleElementRef = useRef(null)
+
     // data model
     const contentDataRef = useRef(null)
     const headContentDataRef = useRef(null)
@@ -277,16 +256,9 @@ const Cradle = ({
     const headContentlistRef = useRef([])
     const tailContentlistRef = useRef([])
 
-    const headCradleStyleRevisionsRef = useRef(null) // for modifications by observer actions
-    const tailCradleStyleRevisionsRef = useRef(null) // for modifications by observer actions
+    const itemElementsRef = useRef(new Map())
 
-    const headCradleElementRef = useRef(null)
-    const tailCradleElementRef = useRef(null)
-
-    const { viewportDimensions } = viewportData
-
-    let { height:viewportheight,width:viewportwidth } = viewportDimensions
-
+    // ------------------------------[ content dimensions ]---------------------------
     const crosscount = useMemo(() => {
 
         let crosscount
@@ -348,7 +320,6 @@ const Cradle = ({
         runwaycount,
         crosscount,
     ])
-
     const rowcountRef = useRef(null)
     rowcountRef.current = rowcount
 
@@ -384,6 +355,45 @@ const Cradle = ({
 
     const basecradlelengthsRef = useRef(null)
     basecradlelengthsRef.current = basecradlelengths
+
+    // --------------------------------[ css styles]---------------------------------
+    const headCradleStylesRef = useRef({...{
+
+        position: 'absolute',
+        backgroundColor: 'blue',
+        display: 'grid',
+        gridGap: gap + 'px',
+        padding: padding + 'px',
+        justifyContent:'start',
+        alignContent:'start',
+        boxSizing:'border-box',
+        bottom:0,
+        left:0,
+        right:0,
+
+    } as React.CSSProperties,...styles?.cradle})
+
+    const tailCradleStylesRef = useRef({...{
+        position: 'absolute',
+        backgroundColor: 'blue',
+        display: 'grid',
+        gridGap: gap + 'px',
+        padding: padding + 'px',
+        justifyContent:'start',
+        alignContent:'start',
+        boxSizing:'border-box',
+        top:0,
+        left:0,
+        right:0,
+    } as React.CSSProperties,...styles?.cradle})
+
+    const cradleReferenceBlockStylesRef = useRef({
+        position: 'relative',
+        transform:`translate(0px,${padding}px)`
+    } as React.CSSProperties)
+
+    const headCradleStyleRevisionsRef = useRef(null) // for modifications by observer actions
+    const tailCradleStyleRevisionsRef = useRef(null) // for modifications by observer actions
 
     let [thead, ttail] = useMemo(()=> {
 
@@ -422,7 +432,7 @@ const Cradle = ({
     headCradleStylesRef.current = thead
     tailCradleStylesRef.current = ttail
 
-    const itemElementsRef = useRef(new Map())
+    // --------------------------------[ utilities ]----------------------------------
     const scrollTimeridRef = useRef(null)
 
     // =================================================================================
@@ -430,6 +440,10 @@ const Cradle = ({
 
     // There are two observers, one for the cradle, and another for itemShells; both against
     // the viewport.
+
+    // --------------------[ intersection observer data ]---------------------------
+    const [dropentries, saveDropentries] = useState(null) // trigger add entries
+    const [addentries, saveAddentries] = useState(null) // add entries
 
     // --------------------------[ cradle observer ]-----------------------------------
     // this sets up an IntersectionObserver of the cradle against the viewport. When the
