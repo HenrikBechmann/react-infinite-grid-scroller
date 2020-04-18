@@ -9,7 +9,7 @@
 
     the butterfly pattern:
 
-    the toothpaste pattern
+    the toothpaste pattern:
 
 */
 
@@ -79,8 +79,6 @@ const Cradle = ({
     const [cradlestate, saveCradleState] = useState('setup')
     const cradlestateRef = useRef(null) // access by closures
     cradlestateRef.current = cradlestate
-
-    // const [scrollstate, saveScrollState] = useState('ready')
 
     // -----------------------------------------------------------------------
     // -----------------------------[ persistent data ]-----------------------
@@ -198,11 +196,6 @@ const Cradle = ({
 
     },[
         orientation,
-        // listsize,
-        // cellHeight,
-        // cellWidth,
-        // gap,
-        // padding,
     ])
 
     // =======================================================================
