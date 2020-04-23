@@ -2,6 +2,11 @@
 // copyright (c) 2020 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
+    TODO:
+    - check listsize and other parameter availability inside closures using useRef
+*/
+
+/*
     Description
     -----------
 
@@ -57,6 +62,23 @@ const Cradle = ({
         functions,
         styles,
     }) => {
+
+    const cradlepropsRef = useRef(null)
+    cradlepropsRef.current = { 
+        gap, 
+        padding, 
+        runwaylength,
+        runwaycount, 
+        listsize, 
+        offset, 
+        orientation, 
+        cellHeight, 
+        cellWidth, 
+        getItem, 
+        placeholder, 
+        // functions,
+        // styles,
+    }
 
     // =============================================================================================
     // --------------------------------------[ initialization ]-------------------------------------
@@ -236,7 +258,7 @@ const Cradle = ({
     // cradle html components
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
-    const cradleReferenceBlockRef = useRef(null)
+    const cradleSpineElementRef = useRef(null)
 
     // data model
     const contentDataRef = useRef(null)
@@ -584,9 +606,11 @@ const Cradle = ({
 
         let sampleEntry = localdropentries[0]
 
+        let listsize = listsizeRef.current
+
         let headCradleElement = headCradleElementRef.current
         let tailCradleElement = tailCradleElementRef.current
-        let parentElement = headCradleElement.parentElement
+        let scrollElement = cradleSpineElementRef.current.parentElement
         let viewportElement = viewportData.elementref.current
 
         let scrollforward
@@ -700,7 +724,7 @@ const Cradle = ({
         //     tailcontentlist,
         //     headCradleElement, 
         //     tailCradleElement,
-        //     parentElement, 
+        //     scrollElement, 
         //     scrollforward, 
         //     orientation 
 
@@ -734,7 +758,7 @@ const Cradle = ({
 
         let headCradleElement = headCradleElementRef.current
         let tailCradleElement = tailCradleElementRef.current
-        let parentElement = headCradleElement.parentElement
+        let scrollElement = cradleSpineElementRef.current.parentElement
         let viewportElement = viewportData.elementref.current
 
         let { scrollforward } = localaddentries
@@ -755,6 +779,7 @@ const Cradle = ({
 
         }
 
+        // TODO check for closure availability
         localContentList = getUIContentList({
 
             localContentList,
@@ -781,7 +806,7 @@ const Cradle = ({
         //     tailcontentlist,
         //     headCradleElement,
         //     tailCradleElement,
-        //     parentElement,
+        //     scrollElement,
         //     scrollforward,
         //     orientation,
 
@@ -1178,7 +1203,7 @@ const Cradle = ({
             :null}
         <div 
             style = {cradleReferenceBlockStylesRef.current} 
-            ref = {cradleReferenceBlockRef}
+            ref = {cradleSpineElementRef}
         >
             <div 
             
