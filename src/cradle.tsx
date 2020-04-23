@@ -13,10 +13,11 @@
     This module has one main design pattern: the butterfuly pattarn (my name)
 
     the butterfly pattern:
-        two containers for items, joined by a 0-length div (the "spine"). The containers are fixed to the spine
-        through the bottom/right position style on one side, and top/left on the other. Thus additions or deletions
-        effect the distant end (from the spine) on each end. All three together comprise the "cradle" of items. After
-        a change of content, the only adjustment required is the position of the spine in relation to the viewport.
+        this pattern consists of two containers for items, joined by a 0-length div (the "spine"). 
+        The containers are fixed to the spine through the bottom/right position style on one side, and top/left 
+        on the other. Thus additions or deletions effect the distant end from the spine on each end. All three 
+        together comprise the "cradle" of items. After a change of content, the only adjustment required is the 
+        change of position of the spine in relation to the viewport.
 
 */
 
@@ -63,8 +64,21 @@ const Cradle = ({
         styles,
     }) => {
 
-    const cradlePropsRef = useRef(null)
-    cradlePropsRef.current = { 
+    const cradlePropsRef = useRef(null) // access by closures
+    cradlePropsRef.current = useMemo(() => {
+        return { 
+            gap, 
+            padding, 
+            runwaylength,
+            runwaycount, 
+            listsize, 
+            offset, 
+            orientation, 
+            cellHeight, 
+            cellWidth, 
+            getItem, 
+            placeholder, 
+    }},[
         gap, 
         padding, 
         runwaylength,
@@ -76,12 +90,11 @@ const Cradle = ({
         cellWidth, 
         getItem, 
         placeholder, 
-        // functions,
-        // styles,
-    }
+    ])
 
     // =============================================================================================
-    // --------------------------------------[ initialization ]-------------------------------------
+    // --------------------------------------[ INITIALIZATION ]-------------------------------------
+    // =============================================================================================
 
     // -----------------------------------------------------------------------
     // -----------------------------------[ utilites ]------------------------
@@ -217,7 +230,8 @@ const Cradle = ({
     ])
 
     // =======================================================================
-    // -------------------------[ operation ]---------------------------------
+    // -------------------------[ OPERATION ]---------------------------------
+    // =======================================================================
 
     // -----------------------------------------------------------------------
     // ------------------------[ session data ]-------------------------------
@@ -448,6 +462,7 @@ const Cradle = ({
 
     // =================================================================================
     // -------------------------[ IntersectionObserver support]-------------------------
+    // =================================================================================
 
     // There are two observers, one for the cradle, and another for itemShells; both against
     // the viewport.
@@ -827,6 +842,7 @@ const Cradle = ({
 
     // ========================================================================================
     // -------------------------------[ Assembly of content]-----------------------------------
+    // ========================================================================================
     
     // reset cradle, including allocation between head and tail parts of the cradle
     const setCradleContent = useCallback((cradleState, referenceIndexData) => {
@@ -951,6 +967,7 @@ const Cradle = ({
 
     // =====================================================================================
     // ----------------------------------[ state management ]-------------------------------
+    // =====================================================================================
 
     // callback for scroll
     const onScroll = useCallback(() => {
@@ -1124,6 +1141,7 @@ const Cradle = ({
 
     // =============================================================================
     // ------------------------------[ callbacks ]----------------------------------
+    // =============================================================================
 
     // on host demand
     const getVisibleList = useCallback(() => {
@@ -1160,7 +1178,7 @@ const Cradle = ({
 
     },[])
 
-    // content item registration
+    // content item registration callback; called from item
     const getItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
 
         const [index, shellref] = itemElementData
@@ -1182,22 +1200,31 @@ const Cradle = ({
     })
 
     // =============================================================================
-    // ------------------------------[ render... ]----------------------------------
+    // ------------------------------[ RENDER... ]----------------------------------
+    // =============================================================================
 
     let headCradlestyles = headCradleStylesRef.current
     let tailCradlestyles = tailCradleStylesRef.current
 
-    // TODO: move scrolltracker values to memo
-    // console.log('rendering cradle')
+    const trackerArgs = useMemo(() => {
+        return {
+            top:viewportDimensions.top + 3,
+            left:viewportDimensions.left + 3,
+            offset:referenceIndexDataRef.current.index,
+            listsize:cradlePropsRef.current.listsize,
+            styles:cradlePropsRef.current.styles,
+        }
+    },[viewportDimensions, referenceIndexDataRef, cradlePropsRef])
+
     return <>
 
         { (cradlestateRef.current == 'repositioning')
             ?<ScrollTracker 
-                top = {viewportDimensions.top + 3} 
-                left = {viewportDimensions.left + 3} 
-                offset = {referenceIndexDataRef.current.index} 
-                listsize = {listsize}
-                styles = { styles }
+                top = {trackerArgs.top} 
+                left = {trackerArgs.left} 
+                offset = {trackerArgs.offset} 
+                listsize = {trackerArgs.listsize}
+                styles = {trackerArgs.styles}
             />
             :null}
         <div 
