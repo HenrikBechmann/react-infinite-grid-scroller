@@ -63,8 +63,8 @@ const Cradle = ({
         styles,
     }) => {
 
-    const cradlepropsRef = useRef(null)
-    cradlepropsRef.current = { 
+    const cradlePropsRef = useRef(null)
+    cradlePropsRef.current = { 
         gap, 
         padding, 
         runwaylength,
@@ -87,11 +87,11 @@ const Cradle = ({
     // -----------------------------------[ utilites ]------------------------
 
     const isMounted = useIsMounted()
-    const reportReferenceIndexRef = useRef(functions?.reportReferenceIndex)
+    const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
 
-    const itemobserverRef = useRef(null)
-    const cradleintersectionobserverRef = useRef(null)
-    const cradleresizeobserverRef = useRef(null)
+    const itemObserverRef = useRef(null)
+    const cradleIntersectionObserverRef = useRef(null)
+    const cradleResizeObserverRef = useRef(null)
 
     // -----------------------------------------------------------------------
     // ---------------------------[ context data ]----------------------------
@@ -103,12 +103,6 @@ const Cradle = ({
     const [cradlestate, saveCradleState] = useState('setup')
     const cradlestateRef = useRef(null) // access by closures
     cradlestateRef.current = cradlestate
-
-    // -----------------------------------------------------------------------
-    // -----------------------------[ persistent data ]-----------------------
-
-    const listsizeRef = useRef(null)
-    listsizeRef.current = listsize
 
     // -----------------------------------------------------------------------
     // -------------------------[ control variables ]-----------------
@@ -145,7 +139,7 @@ const Cradle = ({
             functions.reload = reload
         }
 
-        reportReferenceIndexRef.current = functions?.reportReferenceIndex
+        referenceIndexCallbackRef.current = functions?.referenceIndexCallback
 
     },[functions])
 
@@ -332,6 +326,7 @@ const Cradle = ({
         runwaycount,
         crosscount,
     ])
+
     const rowcountRef = useRef(null)
     rowcountRef.current = rowcount
 
@@ -467,14 +462,14 @@ const Cradle = ({
     useEffect(() => {
 
         // ResizeObserver
-        cradleresizeobserverRef.current = new LocalResizeObserver(cradleresizeobservercallback)
+        cradleResizeObserverRef.current = new LocalResizeObserver(cradleresizeobservercallback)
 
-        cradleresizeobserverRef.current.observe(headCradleElementRef.current)
-        cradleresizeobserverRef.current.observe(tailCradleElementRef.current)
+        cradleResizeObserverRef.current.observe(headCradleElementRef.current)
+        cradleResizeObserverRef.current.observe(tailCradleElementRef.current)
 
         return () => {
 
-            cradleresizeobserverRef.current.disconnect()
+            cradleResizeObserverRef.current.disconnect()
 
         }
 
@@ -493,19 +488,19 @@ const Cradle = ({
     useEffect(() => {
 
         // IntersectionObserver
-        cradleintersectionobserverRef.current = new IntersectionObserver(
+        cradleIntersectionObserverRef.current = new IntersectionObserver(
 
             cradleintersectionobservercallback,
             {root:viewportData.elementref.current, threshold:0}
 
         )
 
-        cradleintersectionobserverRef.current.observe(headCradleElementRef.current)
-        cradleintersectionobserverRef.current.observe(tailCradleElementRef.current)
+        cradleIntersectionObserverRef.current.observe(headCradleElementRef.current)
+        cradleIntersectionObserverRef.current.observe(tailCradleElementRef.current)
 
         return () => {
 
-            cradleintersectionobserverRef.current.disconnect()
+            cradleIntersectionObserverRef.current.disconnect()
 
         }
 
@@ -557,7 +552,7 @@ const Cradle = ({
         //     rootMargin = `${runwaylength}px 0px ${runwaylength}px 0px`
         // }
         // console.log('rootMargin',options)
-        itemobserverRef.current = new IntersectionObserver(
+        itemObserverRef.current = new IntersectionObserver(
 
             itemobservercallback,
             {
@@ -570,7 +565,7 @@ const Cradle = ({
 
         return () => {
 
-            itemobserverRef.current.disconnect()
+            itemObserverRef.current.disconnect()
 
         }
     },[orientation])
@@ -606,7 +601,7 @@ const Cradle = ({
 
         let sampleEntry = localdropentries[0]
 
-        let listsize = listsizeRef.current
+        let listsize = cradlePropsRef.current.listsize
 
         let headCradleElement = headCradleElementRef.current
         let tailCradleElement = tailCradleElementRef.current
@@ -779,6 +774,7 @@ const Cradle = ({
 
         }
 
+        let cradleProps = cradlePropsRef.current
         // TODO check for closure availability
         localContentList = getUIContentList({
 
@@ -786,15 +782,15 @@ const Cradle = ({
             headindexcount,
             tailindexcount,
             indexoffset: contentoffset,
-            orientation,
-            cellHeight,
-            cellWidth,
-            observer: itemobserverRef.current,
-            crosscount,
+            orientation:cradleProps.orientation,
+            cellHeight:cradleProps.cellHeight,
+            cellWidth:cradleProps.cellWidth,
+            observer: itemObserverRef.current,
+            crosscount:crosscountRef.current,
             callbacksRef,
-            getItem,
-            listsize,
-            placeholder,
+            getItem:cradleProps.getItem,
+            listsize:cradleProps.listsize,
+            placeholder:cradleProps.placeholder,
 
         })
 
@@ -863,10 +859,10 @@ const Cradle = ({
             scrolloffset:visibletargetscrolloffset,
         }
 
-        if (reportReferenceIndexRef.current) {
+        if (referenceIndexCallbackRef.current) {
             let cstate = cradleState
             if (cstate == 'setreload') cstate = 'reload'
-            reportReferenceIndexRef.current(
+            referenceIndexCallbackRef.current(
             referenceIndexDataRef.current.index, 'setCradleContent', cstate)
 
         }
@@ -881,7 +877,7 @@ const Cradle = ({
             cellHeight, 
             cellWidth, 
             localContentList,
-            observer:itemobserverRef.current,
+            observer:itemObserverRef.current,
             crosscount,
             callbacksRef,
             getItem,
@@ -936,6 +932,9 @@ const Cradle = ({
         headlayoutDataRef.current = headstyles // for 'layout' state
 
     },[
+        getItem,
+        listsize,
+        placeholder,
         cellHeight,
         cellWidth,
         orientation,
@@ -1000,9 +999,9 @@ const Cradle = ({
                     viewportData:viewportDataRef.current,
                     cellSpecsRef,
                     crosscountRef,
-                    listsize:listsizeRef.current,
+                    listsize:cradlePropsRef.current.listsize,
                 })
-                reportReferenceIndexRef.current && reportReferenceIndexRef.current(referenceIndexDataRef.current.index,'scrolling', cradleState)
+                referenceIndexCallbackRef.current && referenceIndexCallbackRef.current(referenceIndexDataRef.current.index,'scrolling', cradleState)
 
                 saveReferenceindex(referenceIndexDataRef.current)
 
