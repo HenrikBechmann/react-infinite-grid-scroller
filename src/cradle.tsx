@@ -119,7 +119,6 @@ const Cradle = ({
 
     // -----------------------------------------------------------------------
     // -------------------------[ control variables ]-----------------
-    // const isResizingRef = useRef(false)
 
     const pauseItemObserverRef = useRef(false)
     const pauseCradleObserverRef = useRef(false)
@@ -128,8 +127,6 @@ const Cradle = ({
     const isTailCradleInViewRef = useRef(true)
     const isHeadCradleInViewRef = useRef(true)
     const isCradleInViewRef = useRef(true)
-
-    // const isScrollingRef = useRef(false)
 
     // ------------------------------------------------------------------------
     // -----------------------[ initialization effects ]-----------------------
@@ -252,21 +249,10 @@ const Cradle = ({
     const referenceIndexDataRef = useRef(null) // access by closures
     referenceIndexDataRef.current = referenceindexdata
     const masterReferenceIndexDataRef = useRef(referenceindexdata) // capture for state resetContent operations
-
-    // --------------------[ cell specs for reference by functions ]----------------
-    const cellSpecs = useMemo(() => {
-        return {
-            cellWidth, cellHeight, gap, padding
-        }
-    },[ cellWidth, cellHeight, gap, padding ])
-    const cellSpecsRef = useRef(null)
-    cellSpecsRef.current = cellSpecs
-
-    // ------------------------------[ orientation ]--------------------------------
-    const orientationRef = useRef(orientation)
-    orientationRef.current = orientation // availability in closures
+    const callingReferenceIndexDataRef = useRef(referenceindexdata) // anticipate reposition
 
     // -------------------------------[ cradle data ]-------------------------------------
+
     const { viewportDimensions } = viewportData
 
     let { height:viewportheight,width:viewportwidth } = viewportDimensions
@@ -287,6 +273,7 @@ const Cradle = ({
     const itemElementsRef = useRef(new Map())
 
     // ------------------------------[ content dimensions ]---------------------------
+    
     const crosscount = useMemo(() => {
 
         let crosscount
@@ -310,8 +297,6 @@ const Cradle = ({
     ])
 
     const crosscountRef = useRef(crosscount) // for easy reference by observer
-    // const previousCrosscountRef = useRef() // available for resize logic
-    // previousCrosscountRef.current = crosscountRef.current // available for resize logic
     crosscountRef.current = crosscount // available for observer closure
 
     const rowcount = useMemo(()=> {
@@ -1000,7 +985,7 @@ const Cradle = ({
             let cradleState = cradlestateRef.current
             if (!viewportDataRef.current.isResizing) {
 
-                (cradleState != 'repositioning') && normalizeCradleAnchors(headCradleElementRef.current, orientationRef.current)
+                (cradleState != 'repositioning') && normalizeCradleAnchors(headCradleElementRef.current, cradlePropsRef.current.orientation)
 
                 saveReferenceindex({...referenceIndexDataRef.current}) // trigger re-run to capture end of scroll session values
                 masterReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
@@ -1028,13 +1013,12 @@ const Cradle = ({
             if (cradleState == 'ready' || cradleState == 'repositioning') {
 
                 referenceIndexDataRef.current = getReferenceIndexData({
-                    orientation:orientationRef.current,
                     viewportData:viewportDataRef.current,
-                    cellSpecsRef,
+                    cradlePropsRef,
                     crosscountRef,
-                    listsize:cradlePropsRef.current.listsize,
                 })
-                referenceIndexCallbackRef.current && referenceIndexCallbackRef.current(referenceIndexDataRef.current.index,'scrolling', cradleState)
+                referenceIndexCallbackRef.current && 
+                    referenceIndexCallbackRef.current(referenceIndexDataRef.current.index,'scrolling', cradleState)
 
                 saveReferenceindex(referenceIndexDataRef.current)
 
@@ -1063,7 +1047,6 @@ const Cradle = ({
 
     // data for state processing
     const callingCradleState = useRef(cradlestateRef.current)
-    const callingReferenceIndexDataRef = useRef(referenceIndexDataRef.current)
     const headlayoutDataRef = useRef(null)
     const positionDataRef = useRef(null)
 
@@ -1135,7 +1118,7 @@ const Cradle = ({
                     // redundant scroll position to avoid accidental positioning at tail end of reposition
                     if (viewportData.elementref.current) { // already unmounted if fails
 
-                        normalizeCradleAnchors(headCradleElementRef.current, orientationRef.current)
+                        normalizeCradleAnchors(headCradleElementRef.current, cradlePropsRef.current.orientation)
 
                         viewportData.elementref.current[positionDataRef.current.property] =
                             positionDataRef.current.value
@@ -1168,7 +1151,10 @@ const Cradle = ({
         let itemlist = Array.from(itemElementsRef.current)
 
         return calcVisibleItems(
-            itemlist,viewportDataRef.current.elementref.current,headCradleElementRef.current, orientationRef.current
+            itemlist,
+            viewportDataRef.current.elementref.current,
+            headCradleElementRef.current, 
+            cradlePropsRef.current.orientation
         )
 
     },[])

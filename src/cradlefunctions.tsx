@@ -136,33 +136,31 @@ export const calcVisibleItems = (itemsArray, viewportElement, cradleElement, ori
 
 export const getReferenceIndexData = (
     {
-        orientation,
         viewportData,
-        cellSpecsRef,
+        cradlePropsRef,
         crosscountRef,
-        listsize,
     }) => {
 
-    let cellSpecs = cellSpecsRef.current
+    let cradleProps = cradlePropsRef.current
     let viewportElement = viewportData.elementref.current
-
+    let {orientation, listsize} = cradleProps
     let scrollPos, cellLength
     if (orientation == 'vertical') {
 
         scrollPos = viewportElement.scrollTop
-        cellLength = cellSpecs.cellHeight + cellSpecs.gap
+        cellLength = cradleProps.cellHeight + cradleProps.gap
 
     } else {
 
         scrollPos = viewportElement.scrollLeft
-        cellLength = cellSpecs.cellWidth + cellSpecs.gap
+        cellLength = cradleProps.cellWidth + cradleProps.gap
 
     }
 
     let referencescrolloffset = cellLength - (scrollPos % cellLength) // + cellSpecs.padding
-    if (referencescrolloffset == cellLength + cellSpecs.padding) referencescrolloffset = 0
+    if (referencescrolloffset == cellLength + cradleProps.padding) referencescrolloffset = 0
 
-    let referencerowindex = Math.ceil((scrollPos - cellSpecs.padding)/cellLength)
+    let referencerowindex = Math.ceil((scrollPos - cradleProps.padding)/cellLength)
     let referenceindex = referencerowindex * crosscountRef.current
 
     let referenceIndexData = {
