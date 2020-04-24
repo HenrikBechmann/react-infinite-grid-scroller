@@ -123,6 +123,7 @@ const Cradle = ({
 
     const pauseItemObserverRef = useRef(false)
     const pauseCradleObserverRef = useRef(false)
+    const pauseScrollingEffectsRef = useRef(false)
 
     const isTailCradleInViewRef = useRef(true)
     const isHeadCradleInViewRef = useRef(true)
@@ -182,6 +183,8 @@ const Cradle = ({
             callingReferenceIndexDataRef.current = {...masterReferenceIndexDataRef.current}
 
             pauseItemObserverRef.current = true
+            pauseCradleObserverRef.current = true
+            pauseScrollingEffectsRef.current = true
             saveCradleState('resizing')
 
         }
@@ -198,9 +201,11 @@ const Cradle = ({
         console.log('triggering reload as config side effect')
         if (cradlestateRef.current == 'setup') return
 
+        callingReferenceIndexDataRef.current = {...masterReferenceIndexDataRef.current}
+
         pauseItemObserverRef.current = true
         pauseCradleObserverRef.current = true
-        callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
+        pauseScrollingEffectsRef.current = true
         saveCradleState('reload')
 
     },[
@@ -218,8 +223,11 @@ const Cradle = ({
 
         if (cradlestateRef.current != 'setup') {
 
-            pauseItemObserverRef.current = true
             callingReferenceIndexDataRef.current = {...masterReferenceIndexDataRef.current}
+
+            pauseItemObserverRef.current = true
+            pauseCradleObserverRef.current = true
+            pauseScrollingEffectsRef.current = true
 
             saveCradleState('pivot')
 
@@ -983,6 +991,9 @@ const Cradle = ({
         // }
 
         clearTimeout(scrollTimeridRef.current)
+        
+        if (pauseScrollingEffectsRef.current) return
+
         scrollTimeridRef.current = setTimeout(() => {
 
             // isScrollingRef.current = false;
@@ -999,8 +1010,9 @@ const Cradle = ({
 
                 case 'repositioning': {
 
+                    callingReferenceIndexDataRef.current = {...masterReferenceIndexDataRef.current}
+
                     pauseItemObserverRef.current = true
-                    callingReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
 
                     saveCradleState('reposition')
                     break
@@ -1132,6 +1144,7 @@ const Cradle = ({
 
                         pauseItemObserverRef.current  && (pauseItemObserverRef.current = false)
                         pauseCradleObserverRef.current  && (pauseCradleObserverRef.current = false)
+                        pauseScrollingEffectsRef.current && (pauseScrollingEffectsRef.current = false)
 
                     }
 
@@ -1168,7 +1181,7 @@ const Cradle = ({
 
         pauseItemObserverRef.current = true
         pauseCradleObserverRef.current = true
-
+        pauseScrollingEffectsRef.current = true
         callingReferenceIndexDataRef.current = {...masterReferenceIndexDataRef.current}
         saveCradleState('reload')
 
