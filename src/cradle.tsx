@@ -119,7 +119,7 @@ const Cradle = ({
 
     // -----------------------------------------------------------------------
     // -------------------------[ control variables ]-----------------
-    const isResizingRef = useRef(false)
+    // const isResizingRef = useRef(false)
 
     const pauseItemObserverRef = useRef(false)
     const pauseCradleObserverRef = useRef(false)
@@ -128,7 +128,7 @@ const Cradle = ({
     const isHeadCradleInViewRef = useRef(true)
     const isCradleInViewRef = useRef(true)
 
-    const isScrollingRef = useRef(false)
+    // const isScrollingRef = useRef(false)
 
     // ------------------------------------------------------------------------
     // -----------------------[ initialization effects ]-----------------------
@@ -158,7 +158,7 @@ const Cradle = ({
 
     // initialize window scroll listener
     useEffect(() => {
-
+        let viewportData = viewportDataRef.current
         viewportData.elementref.current.addEventListener('scroll',onScroll)
 
         return () => {
@@ -175,9 +175,9 @@ const Cradle = ({
     // trigger resizing based on viewport state
     useEffect(()=>{
 
-        isResizingRef.current = viewportData.isResizing
+        // isResizingRef.current = viewportData.isResizing
 
-        if (isResizingRef.current) {
+        if (viewportData.isResizing) {
 
             callingReferenceIndexDataRef.current = {...masterReferenceIndexDataRef.current}
 
@@ -185,7 +185,7 @@ const Cradle = ({
             saveCradleState('resizing')
 
         }
-        if (!isResizingRef.current && (cradlestateRef.current == 'resizing')) {
+        if (!viewportData.isResizing && (cradlestateRef.current == 'resizing')) {
 
             saveCradleState('resize')
 
@@ -502,6 +502,7 @@ const Cradle = ({
     // cradle goes out of the observer scope, the "repositioning" cradle state is triggerd.
     useEffect(() => {
 
+        let viewportData = viewportDataRef.current
         // IntersectionObserver
         cradleIntersectionObserverRef.current = new IntersectionObserver(
 
@@ -571,7 +572,7 @@ const Cradle = ({
 
             itemobservercallback,
             {
-                root:viewportData.elementref.current, 
+                root:viewportDataRef.current.elementref.current, 
                 // rootMargin, 
                 threshold:0
             } 
@@ -611,6 +612,7 @@ const Cradle = ({
     useEffect(()=>{
         if (dropentries === null) return
 
+        let viewportData = viewportDataRef.current
         let localdropentries = [...dropentries]
         let contentlistcopy = [...contentDataRef.current]
 
@@ -760,6 +762,8 @@ const Cradle = ({
     useEffect(()=>{
 
         if (addentries === null) return
+
+        let viewportData = viewportDataRef.current
 
         let localaddentries:any = {...addentries}
         let localContentList = [...headContentlistRef.current]
@@ -972,18 +976,18 @@ const Cradle = ({
     // callback for scroll
     const onScroll = useCallback(() => {
 
-        if (!isScrollingRef.current)  {
+        // if (!isScrollingRef.current)  {
 
-            isScrollingRef.current = true
+        //     isScrollingRef.current = true
 
-        }
+        // }
 
         clearTimeout(scrollTimeridRef.current)
         scrollTimeridRef.current = setTimeout(() => {
 
-            isScrollingRef.current = false;
+            // isScrollingRef.current = false;
             let cradleState = cradlestateRef.current
-            if ((!isResizingRef.current) && (!viewportDataRef.current.isResizing)) {
+            if (!viewportDataRef.current.isResizing) {
 
                 (cradleState != 'repositioning') && normalizeCradleAnchors(headCradleElementRef.current, orientationRef.current)
 
@@ -1006,7 +1010,7 @@ const Cradle = ({
 
         },SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
 
-        if ((!isResizingRef.current) && (!viewportDataRef.current.isResizing)) {
+        if (!viewportDataRef.current.isResizing) {
 
             let cradleState = cradlestateRef.current
             if (cradleState == 'ready' || cradleState == 'repositioning') {
@@ -1029,7 +1033,7 @@ const Cradle = ({
         if (
             !isCradleInViewRef.current && 
             !pauseItemObserverRef.current && 
-            !isResizingRef.current &&
+            !viewportDataRef.current.isResizing &&
             !(cradlestateRef.current == 'resize') &&
             !(cradlestateRef.current == 'repositioning') && 
             !(cradlestateRef.current == 'reposition')) {
@@ -1055,6 +1059,7 @@ const Cradle = ({
     // useLayout for suppressing flashes
     useLayoutEffect(()=>{
 
+        let viewportData = viewportDataRef.current
         switch (cradlestate) {
             case 'reload':
                 headContentlistRef.current = []
@@ -1091,6 +1096,7 @@ const Cradle = ({
     // standard processing stages
     useEffect(()=> {
 
+        let viewportData = viewportDataRef.current
         switch (cradlestate) {
             case 'setup': 
             case 'resize':
@@ -1149,7 +1155,7 @@ const Cradle = ({
         let itemlist = Array.from(itemElementsRef.current)
 
         return calcVisibleItems(
-            itemlist,viewportData.elementref.current,headCradleElementRef.current, orientationRef.current
+            itemlist,viewportDataRef.current.elementref.current,headCradleElementRef.current, orientationRef.current
         )
 
     },[])
