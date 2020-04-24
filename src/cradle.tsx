@@ -176,8 +176,6 @@ const Cradle = ({
     // trigger resizing based on viewport state
     useEffect(()=>{
 
-        // isResizingRef.current = viewportData.isResizing
-
         if (viewportData.isResizing) {
 
             callingReferenceIndexDataRef.current = {...masterReferenceIndexDataRef.current}
@@ -196,9 +194,9 @@ const Cradle = ({
 
     },[viewportData.isResizing])
 
-    // reload conditions
+    // reload for changed parameters
     useEffect(()=>{
-        console.log('triggering reload as config side effect')
+
         if (cradlestateRef.current == 'setup') return
 
         callingReferenceIndexDataRef.current = {...masterReferenceIndexDataRef.current}
@@ -206,6 +204,7 @@ const Cradle = ({
         pauseItemObserverRef.current = true
         pauseCradleObserverRef.current = true
         pauseScrollingEffectsRef.current = true
+
         saveCradleState('reload')
 
     },[
@@ -245,6 +244,7 @@ const Cradle = ({
     // ------------------------[ session data ]-------------------------------
 
     // ------------------ current location -- first visible item -------------
+
     const [referenceindexdata, saveReferenceindex] = useState({
         index:Math.min(offset,(listsize - 1)) || 0,
         scrolloffset:0
@@ -895,7 +895,7 @@ const Cradle = ({
 
         }
 
-        saveReferenceindex(referenceIndexDataRef.current)
+        saveReferenceindex(referenceIndexDataRef.current) // TODO: ??
 
         let childlist = getUIContentList({
             indexoffset, 
@@ -991,7 +991,7 @@ const Cradle = ({
         // }
 
         clearTimeout(scrollTimeridRef.current)
-        
+
         if (pauseScrollingEffectsRef.current) return
 
         scrollTimeridRef.current = setTimeout(() => {
