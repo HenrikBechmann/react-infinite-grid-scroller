@@ -276,6 +276,8 @@ const Cradle = ({
 
     // ------------------------------[ cradle configuration ]---------------------------
 
+    // viewportDimensions, crosscount, rowcount
+
     const { viewportDimensions } = viewportData
 
     let { height:viewportheight,width:viewportwidth } = viewportDimensions
@@ -343,38 +345,38 @@ const Cradle = ({
     const rowcountRef = useRef(null)
     rowcountRef.current = rowcount
 
-    const basecradlelengths = useMemo(()=>{
+    // const basecradlelengths = useMemo(()=>{
 
-        let headLength, tailLength
+    //     let headLength, tailLength
 
-        let viewportLength, cellLength
-        if (orientation == 'vertical') {
-            viewportLength = viewportheight
-            cellLength = cellHeight
-        } else {
-            viewportLength = viewportwidth
-            cellLength = cellWidth
-        }
+    //     let viewportLength, cellLength
+    //     if (orientation == 'vertical') {
+    //         viewportLength = viewportheight
+    //         cellLength = cellHeight
+    //     } else {
+    //         viewportLength = viewportwidth
+    //         cellLength = cellWidth
+    //     }
 
-        cellLength += gap
+    //     cellLength += gap
 
-        headLength = (runwaycount * cellLength) - gap + padding
-        tailLength = ((rowcount - runwaycount) * cellLength) - gap + padding
+    //     headLength = (runwaycount * cellLength) - gap + padding
+    //     tailLength = ((rowcount - runwaycount) * cellLength) - gap + padding
 
-        return [headLength, tailLength]
+    //     return [headLength, tailLength]
 
-    },[
-        orientation, 
-        cellWidth, 
-        cellHeight, 
-        gap, 
-        padding,
-        rowcount,
-        runwaycount,
-    ])
+    // },[
+    //     orientation, 
+    //     cellWidth, 
+    //     cellHeight, 
+    //     gap, 
+    //     padding,
+    //     rowcount,
+    //     runwaycount,
+    // ])
 
-    const basecradlelengthsRef = useRef(null)
-    basecradlelengthsRef.current = basecradlelengths
+    // const basecradlelengthsRef = useRef(null)
+    // basecradlelengthsRef.current = basecradlelengths
 
     // --------------------------------[ css styles ]---------------------------------
 
