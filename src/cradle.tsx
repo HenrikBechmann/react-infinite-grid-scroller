@@ -220,8 +220,8 @@ const Cradle = ({
     // trigger pivot on change in orientation
     useEffect(()=> {
 
-        headContentlistRef.current = []
-        tailContentlistRef.current = []
+        headModelContentRef.current = []
+        tailModelContentRef.current = []
 
         if (cradlestateRef.current != 'setup') {
 
@@ -259,26 +259,26 @@ const Cradle = ({
 
     // -------------------------------[ cradle data ]-------------------------------------
 
-    const { viewportDimensions } = viewportData
-
-    let { height:viewportheight,width:viewportwidth } = viewportDimensions
-
     // cradle butterfly html components
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const cradleSpineElementRef = useRef(null)
 
     // data model
-    const contentDataRef = useRef(null)
-    const headContentDataRef = useRef(null)
-    const tailContentDataRef = useRef(null)
+    const modelContentRef = useRef(null)
+    const headModelContentRef = useRef(null)
+    const tailModelContentRef = useRef(null)
     // view model
-    const headContentlistRef = useRef([])
-    const tailContentlistRef = useRef([])
+    const headViewContentRef = useRef([])
+    const tailViewContentRef = useRef([])
 
     const itemElementsRef = useRef(new Map())
 
-    // ------------------------------[ content dimensions ]---------------------------
+    // ------------------------------[ cradle configuration ]---------------------------
+
+    const { viewportDimensions } = viewportData
+
+    let { height:viewportheight,width:viewportwidth } = viewportDimensions
     
     const crosscount = useMemo(() => {
 
@@ -613,7 +613,7 @@ const Cradle = ({
 
         let viewportData = viewportDataRef.current
         let localdropentries = [...dropentries]
-        let contentlistcopy = [...contentDataRef.current]
+        let contentlistcopy = [...modelContentRef.current]
 
         let sampleEntry = localdropentries[0]
 
@@ -626,8 +626,8 @@ const Cradle = ({
 
         let scrollforward
         let localContentList
-        let headcontentlist = headContentlistRef.current
-        let tailcontentlist = tailContentlistRef.current
+        let headcontentlist = headModelContentRef.current
+        let tailcontentlist = tailModelContentRef.current
 
         // -- isolate forward and backward lists
         //  then set scrollforward
@@ -727,7 +727,7 @@ const Cradle = ({
 
         })
 
-        headContentlistRef.current = localContentList
+        headModelContentRef.current = localContentList
 
         // let [styles, tailstyles] = setCradleStyleRevisionsForDrop({ 
 
@@ -765,9 +765,9 @@ const Cradle = ({
         let viewportData = viewportDataRef.current
 
         let localaddentries:any = {...addentries}
-        let localContentList = [...headContentlistRef.current]
-        let headcontentlist = headContentlistRef.current
-        let tailcontentlist = tailContentlistRef.current
+        let localContentList = [...modelContentRef.current]
+        let headcontentlist = headModelContentRef.current
+        let tailcontentlist = tailModelContentRef.current
 
         let headCradleElement = headCradleElementRef.current
         let tailCradleElement = tailCradleElementRef.current
@@ -812,7 +812,7 @@ const Cradle = ({
 
         })
 
-        headContentlistRef.current = localContentList
+        headModelContentRef.current = localContentList
 
         // let [styles,tailstyles] = setCradleStyleRevisionsForAdd({
 
@@ -919,9 +919,9 @@ const Cradle = ({
             }
         )
 
-        contentDataRef.current = childlist
-        headContentDataRef.current = headcontentlist
-        tailContentDataRef.current = tailcontentlist
+        modelContentRef.current = childlist
+        headModelContentRef.current = headcontentlist
+        tailModelContentRef.current = tailcontentlist
 
         // let elementstyle = headCradleElementRef.current.style
 
@@ -1061,8 +1061,8 @@ const Cradle = ({
         let viewportData = viewportDataRef.current
         switch (cradlestate) {
             case 'reload':
-                headContentlistRef.current = []
-                tailContentlistRef.current = []
+                headModelContentRef.current = []
+                tailModelContentRef.current = []
                 saveCradleState('setreload')
                 break;
             case 'scrollposition': {
@@ -1083,8 +1083,8 @@ const Cradle = ({
                 break
             }
             case 'content': {
-                headContentlistRef.current = headContentDataRef.current // contentDataRef.current
-                tailContentlistRef.current = tailContentDataRef.current
+                headViewContentRef.current = headModelContentRef.current // contentDataRef.current
+                tailViewContentRef.current = tailModelContentRef.current
                 saveCradleState('normalize')
                 break
             }
@@ -1127,6 +1127,7 @@ const Cradle = ({
                         viewportData.elementref.current[scrollPositionDataRef.current.property] =
                             scrollPositionDataRef.current.value
 
+                        // pick up position from setContent
                         masterReferenceIndexDataRef.current = {...immediateReferenceIndexDataRef.current}
 
                         pauseItemObserverRef.current  && (pauseItemObserverRef.current = false)
@@ -1251,7 +1252,7 @@ const Cradle = ({
             
             >
             
-                {(cradlestateRef.current != 'setup')?headContentlistRef.current:null}
+                {(cradlestateRef.current != 'setup')?headViewContentRef.current:null}
             
             </div>
             <div 
@@ -1262,7 +1263,7 @@ const Cradle = ({
             
             >
             
-                {(cradlestateRef.current != 'setup')?tailContentlistRef.current:null}
+                {(cradlestateRef.current != 'setup')?tailViewContentRef.current:null}
             
             </div>
         </div>
