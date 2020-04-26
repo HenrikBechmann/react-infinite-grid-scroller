@@ -248,14 +248,14 @@ const Cradle = ({
 
     // ------------------ current location -- first head visible item -------------
 
-    const [referenceindexdata, saveReferenceindex] = useState({
+    const [immediateReferenceIndexData, saveImmediateReferenceIndexData] = useState({
         index:Math.min(offset,(listsize - 1)) || 0,
         scrolloffset:0
     })
-    const referenceIndexDataRef = useRef(null) // access by closures
-    referenceIndexDataRef.current = referenceindexdata
-    const masterReferenceIndexDataRef = useRef(referenceindexdata) // capture for state resetContent operations
-    const callingReferenceIndexDataRef = useRef(referenceindexdata) // anticipate reposition
+    const immediateReferenceIndexDataRef = useRef(null) // access by closures
+    immediateReferenceIndexDataRef.current = immediateReferenceIndexData
+    const masterReferenceIndexDataRef = useRef(immediateReferenceIndexData) // capture for state resetContent operations
+    const callingReferenceIndexDataRef = useRef(immediateReferenceIndexData) // anticipate reposition
 
     // -------------------------------[ cradle data ]-------------------------------------
 
@@ -873,7 +873,7 @@ const Cradle = ({
                 listsize,
             })
 
-        referenceIndexDataRef.current = {
+        immediateReferenceIndexDataRef.current = {
             index:referenceoffset,
             scrolloffset:visibletargetscrolloffset,
         }
@@ -882,11 +882,11 @@ const Cradle = ({
             let cstate = cradleState
             if (cstate == 'setreload') cstate = 'reload'
             referenceIndexCallbackRef.current(
-            referenceIndexDataRef.current.index, 'setCradleContent', cstate)
+            immediateReferenceIndexDataRef.current.index, 'setCradleContent', cstate)
 
         }
 
-        saveReferenceindex(referenceIndexDataRef.current) // consistent with onScroll
+        saveImmediateReferenceIndexData(immediateReferenceIndexDataRef.current) // consistent with onScroll
 
         let childlist = getUIContentList({
             indexoffset, 
@@ -985,15 +985,15 @@ const Cradle = ({
 
             if (cradleState == 'ready' || cradleState == 'repositioning') {
 
-                referenceIndexDataRef.current = getReferenceIndexData({
+                immediateReferenceIndexDataRef.current = getReferenceIndexData({
                     viewportData:viewportDataRef.current,
                     cradlePropsRef,
                     crosscountRef,
                 })
                 referenceIndexCallbackRef.current && 
-                    referenceIndexCallbackRef.current(referenceIndexDataRef.current.index,'scrolling', cradleState)
+                    referenceIndexCallbackRef.current(immediateReferenceIndexDataRef.current.index,'scrolling', cradleState)
 
-                saveReferenceindex(referenceIndexDataRef.current)
+                saveImmediateReferenceIndexData(immediateReferenceIndexDataRef.current)
 
             }
 
@@ -1024,8 +1024,8 @@ const Cradle = ({
 
                 (cradleState != 'repositioning') && 
                     normalizeCradleAnchors(headCradleElementRef.current, cradlePropsRef.current.orientation)
-                let localrefdata = {...referenceIndexDataRef.current}
-                saveReferenceindex(localrefdata) // trigger re-run to capture end of scroll session values
+                let localrefdata = {...immediateReferenceIndexDataRef.current}
+                saveImmediateReferenceIndexData(localrefdata) // trigger re-run to capture end of scroll session values
                 masterReferenceIndexDataRef.current = localrefdata
 
             }
@@ -1127,7 +1127,7 @@ const Cradle = ({
                         viewportData.elementref.current[scrollPositionDataRef.current.property] =
                             scrollPositionDataRef.current.value
 
-                        masterReferenceIndexDataRef.current = {...referenceIndexDataRef.current}
+                        masterReferenceIndexDataRef.current = {...immediateReferenceIndexDataRef.current}
 
                         pauseItemObserverRef.current  && (pauseItemObserverRef.current = false)
                         pauseCradleObserverRef.current  && (pauseCradleObserverRef.current = false)
@@ -1140,7 +1140,7 @@ const Cradle = ({
                 saveCradleState('ready')
 
                 break 
-                
+
             }          
 
             case 'ready':
@@ -1218,25 +1218,25 @@ const Cradle = ({
     let headCradlestyles = headCradleStylesRef.current
     let tailCradlestyles = tailCradleStylesRef.current
 
-    const trackerArgs = useMemo(() => {
+    const scrollTrackerArgs = useMemo(() => {
         return {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
-            offset:referenceIndexDataRef.current.index,
+            offset:immediateReferenceIndexDataRef.current.index,
             listsize:cradlePropsRef.current.listsize,
             styles:cradlePropsRef.current.styles,
         }
-    },[viewportDimensions, referenceIndexDataRef, cradlePropsRef])
+    },[viewportDimensions, immediateReferenceIndexDataRef, cradlePropsRef])
 
     return <>
 
         { (cradlestateRef.current == 'repositioning')
             ?<ScrollTracker 
-                top = {trackerArgs.top} 
-                left = {trackerArgs.left} 
-                offset = {trackerArgs.offset} 
-                listsize = {trackerArgs.listsize}
-                styles = {trackerArgs.styles}
+                top = {scrollTrackerArgs.top} 
+                left = {scrollTrackerArgs.left} 
+                offset = {scrollTrackerArgs.offset} 
+                listsize = {scrollTrackerArgs.listsize}
+                styles = {scrollTrackerArgs.styles}
             />
             :null}
         <div 
