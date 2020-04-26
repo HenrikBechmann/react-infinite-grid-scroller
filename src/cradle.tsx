@@ -10,14 +10,14 @@
     Description
     -----------
 
-    This module has one main design pattern: the butterfuly pattarn (my name)
+    This module has one main design pattern: the butterfuly pattern (my name)
 
     the butterfly pattern:
-        this pattern consists of two containers for items, joined by a 0-length div (the "spine"). 
-        The containers are fixed to the spine through the bottom/right position style on one side, and top/left 
-        on the other. Thus additions or deletions effect the distant end from the spine on each end. All three 
-        together comprise the "cradle" of items. After a change of content, the only adjustment required is the 
-        change of position of the spine in relation to the viewport.
+        This pattern consists of two containers for items (the "wings"), joined by a 0-length div (the "spine"). 
+        The wings are fixed to the spine through the bottom/right position style on one side, and top/left 
+        on the other. Thus additions or deletions effect the distant ends of the wings from the spine on each end. 
+        All three together comprise the "cradle" of items. After a change of content, the only compensating 
+        adjustment required is the change of position of the spine in relation to the viewport.
 
 */
 
@@ -64,6 +64,7 @@ const Cradle = ({
         styles,
     }) => {
 
+    // functions and styles handled separately
     const cradlePropsRef = useRef(null) // access by closures
     cradlePropsRef.current = useMemo(() => {
         return { 
@@ -102,7 +103,7 @@ const Cradle = ({
     const isMounted = useIsMounted()
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
 
-    const itemObserverRef = useRef(null)
+    const itemObserverRef = useRef(null) // IntersectionObserver
     const cradleIntersectionObserverRef = useRef(null)
     const cradleResizeObserverRef = useRef(null)
 
@@ -124,6 +125,7 @@ const Cradle = ({
     const pauseCradleObserverRef = useRef(false)
     const pauseScrollingEffectsRef = useRef(false)
 
+    // to control appearance of repositioning mode
     const isTailCradleInViewRef = useRef(true)
     const isHeadCradleInViewRef = useRef(true)
     const isCradleInViewRef = useRef(true)
@@ -175,6 +177,7 @@ const Cradle = ({
 
         if (viewportData.isResizing) {
 
+            // enter resizing mode
             callingReferenceIndexDataRef.current = {...masterReferenceIndexDataRef.current}
 
             pauseItemObserverRef.current = true
@@ -183,6 +186,8 @@ const Cradle = ({
             saveCradleState('resizing')
 
         }
+
+        // complete resizing mode
         if (!viewportData.isResizing && (cradlestateRef.current == 'resizing')) {
 
             saveCradleState('resize')
@@ -216,6 +221,7 @@ const Cradle = ({
     useEffect(()=> {
 
         headContentlistRef.current = []
+        tailContentlistRef.current = []
 
         if (cradlestateRef.current != 'setup') {
 
