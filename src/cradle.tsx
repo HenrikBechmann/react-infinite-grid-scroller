@@ -417,16 +417,16 @@ const Cradle = ({
     } as React.CSSProperties)
 
     // style revisions
-    const headCradleStyleRevisionsRef = useRef(null) // for modifications by observer actions
-    const tailCradleStyleRevisionsRef = useRef(null) // for modifications by observer actions
+    const cradleHeadStyleRevisionsRef = useRef(null) // for modifications by observer actions
+    const cradleTailStyleRevisionsRef = useRef(null) // for modifications by observer actions
 
     // style consolidations
-    let [thead, ttail] = useMemo(()=> {
+    let [headstyles, tailstyles] = useMemo(()=> {
 
         // merge base style and revisions (by observer)
         let headCradleStyles:React.CSSProperties = {...cradleHeadStyleRef.current}//,...headCradleStyleRevisionsRef.current}
         let tailCradleStyles:React.CSSProperties = {...cradleTailStyleRef.current}//,...tailCradleStyleRevisionsRef.current}
-        let [styles, tailstyles] = setCradleStyles({
+        let [headstyles, tailstyles] = setCradleStyles({
 
             orientation, 
             headCradleStyles, 
@@ -441,7 +441,7 @@ const Cradle = ({
 
         })
 
-        return [styles, tailstyles]
+        return [headstyles, tailstyles]
     },[
         orientation,
         cellHeight,
@@ -451,12 +451,12 @@ const Cradle = ({
         viewportheight,
         viewportwidth,
         crosscount,
-        headCradleStyleRevisionsRef.current,
-        tailCradleStyleRevisionsRef.current
+        cradleHeadStyleRevisionsRef.current,
+        cradleTailStyleRevisionsRef.current
       ])
 
-    cradleHeadStyleRef.current = thead
-    cradleTailStyleRef.current = ttail
+    cradleHeadStyleRef.current = headstyles
+    cradleTailStyleRef.current = tailstyles
 
     // =================================================================================
     // -------------------------[ IntersectionObserver support]-------------------------
@@ -1077,7 +1077,7 @@ const Cradle = ({
             }
             case 'layout': {
 
-                headCradleStyleRevisionsRef.current = headlayoutDataRef.current
+                cradleHeadStyleRevisionsRef.current = headlayoutDataRef.current
 
                 saveCradleState('content')
 
