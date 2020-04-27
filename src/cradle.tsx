@@ -382,51 +382,73 @@ const Cradle = ({
 
     // TODO: add conditional for orientation
     // base styles
-    const cradleHeadStyleRef = useRef({...{
+    let cradleHeadStyle = useMemo(() => {
 
-        position: 'absolute',
-        backgroundColor: 'blue',
-        display: 'grid',
-        gridGap: gap + 'px',
-        padding: padding + 'px',
-        justifyContent:'start',
-        alignContent:'start',
-        boxSizing:'border-box',
-        bottom:0,
-        left:0,
-        right:0,
+        return {...{
 
-    } as React.CSSProperties,...styles?.cradle})
+            position: 'absolute',
+            backgroundColor: 'blue',
+            display: 'grid',
+            gridGap: gap + 'px',
+            padding: padding + 'px',
+            justifyContent:'start',
+            alignContent:'start',
+            boxSizing:'border-box',
+            bottom:0,
+            left:0,
+            right:0,
 
-    const cradleTailStyleRef = useRef({...{
-        position: 'absolute',
-        backgroundColor: 'blue',
-        display: 'grid',
-        gridGap: gap + 'px',
-        padding: padding + 'px',
-        justifyContent:'start',
-        alignContent:'start',
-        boxSizing:'border-box',
-        top:0,
-        left:0,
-        right:0,
-    } as React.CSSProperties,...styles?.cradle})
+        } as React.CSSProperties,...styles?.cradle}
 
-    const cradleSpineStyleRef = useRef({
-        position: 'relative',
-        transform:`translate(0px,${padding}px)`
-    } as React.CSSProperties)
+    },[
+        gap,
+        padding,
+        styles,
+    ])
 
-    // style revisions
-    // const cradleHeadStyleRevisionsRef = useRef(null) // for modifications by observer actions
-    // const cradleTailStyleRevisionsRef = useRef(null) // for modifications by observer actions
+    let cradleTailStyle = useMemo(() => {
 
-    // style consolidations
+        return {...{
+
+            position: 'absolute',
+            backgroundColor: 'blue',
+            display: 'grid',
+            gridGap: gap + 'px',
+            padding: padding + 'px',
+            justifyContent:'start',
+            alignContent:'start',
+            boxSizing:'border-box',
+            top:0,
+            left:0,
+            right:0,
+
+        } as React.CSSProperties,...styles?.cradle}
+
+    },[
+        gap,
+        padding,
+        styles,
+    ])
+
+    let cradleSpineStyle = useMemo(() => {
+
+        return {
+
+            position: 'relative',
+            transform:`translate(0px,${padding}px)`
+
+        } as React.CSSProperties
+
+    },[
+        padding,
+    ])
+
+    // enhance styles
     let [headstyle, tailstyle, spinestyle] = useMemo(()=> {
 
         // merge base style and revisions (by observer)
-        let headCradleStyles:React.CSSProperties = {...cradleHeadStyleRef.current}//,...headCradleStyleRevisionsRef.current}
-        let tailCradleStyles:React.CSSProperties = {...cradleTailStyleRef.current}//,...tailCradleStyleRevisionsRef.current}
+        let headCradleStyles:React.CSSProperties = {...cradleHeadStyle}
+        let tailCradleStyles:React.CSSProperties = {...cradleTailStyle}
         let [headstyles, tailstyles] = setCradleStyles({
 
             orientation, 
@@ -441,13 +463,16 @@ const Cradle = ({
             viewportwidth, 
 
         })
+
         let spinestyles = {
             position: 'relative',
             transform:`translate(0px,${padding}px)`
         } as React.CSSProperties
 
         return [headstyles, tailstyles, spinestyles]
+
     },[
+
         orientation,
         cellHeight,
         cellWidth,
@@ -456,13 +481,16 @@ const Cradle = ({
         viewportheight,
         viewportwidth,
         crosscount,
-        // cradleHeadStyleRevisionsRef.current,
-        // cradleTailStyleRevisionsRef.current
+
+        cradleHeadStyle,
+        cradleTailStyle,
+        cradleSpineStyle
+
       ])
 
-    cradleHeadStyleRef.current = headstyle
-    cradleTailStyleRef.current = tailstyle
-    cradleSpineStyleRef.current = spinestyle
+    cradleHeadStyle = headstyle
+    cradleTailStyle = tailstyle
+    cradleSpineStyle = spinestyle
 
     // =================================================================================
     // -------------------------[ IntersectionObserver support]-------------------------
@@ -1223,9 +1251,9 @@ const Cradle = ({
     // ------------------------------[ RENDER... ]----------------------------------
     // =============================================================================
 
-    let cradleHeadStyle = cradleHeadStyleRef.current
-    let cradleTailStyle = cradleTailStyleRef.current
-    let cradleSpineStyle = cradleSpineStyleRef.current
+    // let cradleHeadStyle = cradleHeadStyleRef.current
+    // let cradleTailStyle = cradleTailStyleRef.current
+    // let cradleSpineStyle = cradleSpineStyleRef.current
 
     const scrollTrackerArgs = useMemo(() => {
         return {
