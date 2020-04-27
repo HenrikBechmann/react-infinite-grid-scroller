@@ -514,6 +514,7 @@ export const setCradleGridStyles = ({
         }
 
         return [headstyles,tailstyles]
+        
 }
 
 export const setCradleStyleRevisionsForDrop = ({ 
