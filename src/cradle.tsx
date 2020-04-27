@@ -381,7 +381,7 @@ const Cradle = ({
     // --------------------------------[ css styles ]---------------------------------
 
     // base styles
-    const headCradleStylesRef = useRef({...{
+    const cradleHeadStyleRef = useRef({...{
 
         position: 'absolute',
         backgroundColor: 'blue',
@@ -397,7 +397,7 @@ const Cradle = ({
 
     } as React.CSSProperties,...styles?.cradle})
 
-    const tailCradleStylesRef = useRef({...{
+    const cradleTailStyleRef = useRef({...{
         position: 'absolute',
         backgroundColor: 'blue',
         display: 'grid',
@@ -411,7 +411,7 @@ const Cradle = ({
         right:0,
     } as React.CSSProperties,...styles?.cradle})
 
-    const cradleReferenceBlockStylesRef = useRef({
+    const cradleSpineStyleRef = useRef({
         position: 'relative',
         transform:`translate(0px,${padding}px)`
     } as React.CSSProperties)
@@ -424,8 +424,8 @@ const Cradle = ({
     let [thead, ttail] = useMemo(()=> {
 
         // merge base style and revisions (by observer)
-        let headCradleStyles:React.CSSProperties = {...headCradleStylesRef.current}//,...headCradleStyleRevisionsRef.current}
-        let tailCradleStyles:React.CSSProperties = {...tailCradleStylesRef.current}//,...tailCradleStyleRevisionsRef.current}
+        let headCradleStyles:React.CSSProperties = {...cradleHeadStyleRef.current}//,...headCradleStyleRevisionsRef.current}
+        let tailCradleStyles:React.CSSProperties = {...cradleTailStyleRef.current}//,...tailCradleStyleRevisionsRef.current}
         let [styles, tailstyles] = setCradleStyles({
 
             orientation, 
@@ -455,8 +455,8 @@ const Cradle = ({
         tailCradleStyleRevisionsRef.current
       ])
 
-    headCradleStylesRef.current = thead
-    tailCradleStylesRef.current = ttail
+    cradleHeadStyleRef.current = thead
+    cradleTailStyleRef.current = ttail
 
     // =================================================================================
     // -------------------------[ IntersectionObserver support]-------------------------
@@ -1217,8 +1217,9 @@ const Cradle = ({
     // ------------------------------[ RENDER... ]----------------------------------
     // =============================================================================
 
-    let headCradlestyles = headCradleStylesRef.current
-    let tailCradlestyles = tailCradleStylesRef.current
+    let cradleHeadStyle = cradleHeadStyleRef.current
+    let cradleTailStyle = cradleTailStyleRef.current
+    let cradleSpineStyle = cradleSpineStyleRef.current
 
     const scrollTrackerArgs = useMemo(() => {
         return {
@@ -1242,14 +1243,14 @@ const Cradle = ({
             />
             :null}
         <div 
-            style = {cradleReferenceBlockStylesRef.current} 
+            style = {cradleSpineStyle} 
             ref = {cradleSpineElementRef}
         >
             <div 
             
                 data-name = 'head'
                 ref = {headCradleElementRef} 
-                style = {headCradlestyles}
+                style = {cradleHeadStyle}
             
             >
             
@@ -1260,7 +1261,7 @@ const Cradle = ({
             
                 data-name = 'tail'
                 ref = {tailCradleElementRef} 
-                style = {tailCradlestyles}
+                style = {cradleTailStyle}
             
             >
             
