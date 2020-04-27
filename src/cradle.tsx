@@ -380,6 +380,7 @@ const Cradle = ({
 
     // --------------------------------[ css styles ]---------------------------------
 
+    // TODO: add conditional for orientation
     // base styles
     const cradleHeadStyleRef = useRef({...{
 
@@ -417,11 +418,11 @@ const Cradle = ({
     } as React.CSSProperties)
 
     // style revisions
-    const cradleHeadStyleRevisionsRef = useRef(null) // for modifications by observer actions
-    const cradleTailStyleRevisionsRef = useRef(null) // for modifications by observer actions
+    // const cradleHeadStyleRevisionsRef = useRef(null) // for modifications by observer actions
+    // const cradleTailStyleRevisionsRef = useRef(null) // for modifications by observer actions
 
     // style consolidations
-    let [headstyles, tailstyles] = useMemo(()=> {
+    let [headstyles, tailstyles, spinestyles] = useMemo(()=> {
 
         // merge base style and revisions (by observer)
         let headCradleStyles:React.CSSProperties = {...cradleHeadStyleRef.current}//,...headCradleStyleRevisionsRef.current}
@@ -440,8 +441,12 @@ const Cradle = ({
             viewportwidth, 
 
         })
+        let spinestyles = {
+            position: 'relative',
+            transform:`translate(0px,${padding}px)`
+        } as React.CSSProperties
 
-        return [headstyles, tailstyles]
+        return [headstyles, tailstyles, spinestyles]
     },[
         orientation,
         cellHeight,
@@ -451,8 +456,8 @@ const Cradle = ({
         viewportheight,
         viewportwidth,
         crosscount,
-        cradleHeadStyleRevisionsRef.current,
-        cradleTailStyleRevisionsRef.current
+        // cradleHeadStyleRevisionsRef.current,
+        // cradleTailStyleRevisionsRef.current
       ])
 
     cradleHeadStyleRef.current = headstyles
@@ -1071,18 +1076,18 @@ const Cradle = ({
                 viewportData.elementref.current[scrollPositionDataRef.current.property] =
                     scrollPositionDataRef.current.value
 
-                saveCradleState('layout')
-
-                break
-            }
-            case 'layout': {
-
-                cradleHeadStyleRevisionsRef.current = headlayoutDataRef.current
-
                 saveCradleState('content')
 
                 break
             }
+            // case 'layout': {
+
+            //     cradleHeadStyleRevisionsRef.current = headlayoutDataRef.current
+
+            //     saveCradleState('content')
+
+            //     break
+            // }
             case 'content': {
                 headViewContentRef.current = headModelContentRef.current // contentDataRef.current
                 tailViewContentRef.current = tailModelContentRef.current
