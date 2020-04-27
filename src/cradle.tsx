@@ -384,6 +384,20 @@ const Cradle = ({
     // base styles
     let cradleHeadStyle = useMemo(() => {
 
+        let bottom, left, top, right
+
+        if (orientation == 'vertical') {
+            bottom = 0
+            left = 0
+            right = 0
+            top = 'auto'
+        } else {
+            bottom = 0
+            left = 'auto'
+            right = 0
+            top = 0
+        }
+
         return {...{
 
             position: 'absolute',
@@ -394,9 +408,10 @@ const Cradle = ({
             justifyContent:'start',
             alignContent:'start',
             boxSizing:'border-box',
-            bottom:0,
-            left:0,
-            right:0,
+            bottom,
+            left,
+            right,
+            top,
 
         } as React.CSSProperties,...styles?.cradle}
 
@@ -404,10 +419,25 @@ const Cradle = ({
         gap,
         padding,
         styles,
+        orientation,
     ])
 
     let cradleTailStyle = useMemo(() => {
 
+        let bottom, left, top, right
+
+        if (orientation == 'vertical') {
+            bottom = 'auto'
+            left = 0
+            right = 0
+            top = 0
+        } else {
+            bottom = 0
+            left = 0
+            right = 'right'
+            top = 0
+        }
+
         return {...{
 
             position: 'absolute',
@@ -418,9 +448,10 @@ const Cradle = ({
             justifyContent:'start',
             alignContent:'start',
             boxSizing:'border-box',
-            top:0,
-            left:0,
-            right:0,
+            top,
+            left,
+            right,
+            bottom,
 
         } as React.CSSProperties,...styles?.cradle}
 
@@ -428,23 +459,40 @@ const Cradle = ({
         gap,
         padding,
         styles,
+        orientation,
     ])
 
     let cradleSpineStyle = useMemo(() => {
 
+        let paddingx, paddingy
+        if (orientation == 'vertical') {
+
+            paddingx = 0
+            paddingy = padding
+
+        } else {
+
+            paddingx = padding
+            paddingy = 0
+
+        }
+
         return {
 
             position: 'relative',
-            transform:`translate(0px,${padding}px)`
+            transform:`translate(${paddingx}px,${paddingy}px)`
 
         } as React.CSSProperties
 
     },[
+
         padding,
+        orientation,
+
     ])
 
-    // enhance styles
-    let [headstyle, tailstyle, spinestyle] = useMemo(()=> {
+    // enhanced styles
+    const [headstyle, tailstyle, spinestyle] = useMemo(()=> {
 
         // merge base style and revisions (by observer)
         let headCradleStyles:React.CSSProperties = {...cradleHeadStyle}
