@@ -32,7 +32,7 @@ import ResizeObserverPolyfill from 'resize-observer-polyfill'
 const LocalResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
 
 import { 
-    setCradleStyles, 
+    setCradleGridStyles, 
     getUIContentList, 
     calcVisibleItems, 
     getReferenceIndexData,
@@ -491,13 +491,13 @@ const Cradle = ({
 
     ])
 
-    // enhanced styles
+    // enhanced styles for grid
     const [headstyle, tailstyle, spinestyle] = useMemo(()=> {
 
         // merge base style and revisions (by observer)
         let headCradleStyles:React.CSSProperties = {...cradleHeadStyle}
         let tailCradleStyles:React.CSSProperties = {...cradleTailStyle}
-        let [headstyles, tailstyles] = setCradleStyles({
+        let [headstyles, tailstyles] = setCradleGridStyles({
 
             orientation, 
             headCradleStyles, 

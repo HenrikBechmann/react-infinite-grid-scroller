@@ -448,7 +448,7 @@ const emitItem = ({index, orientation, cellHeight, cellWidth, observer, callback
 // ------------------------------------[ styles ]------------------------------------------
 // ========================================================================================
 
-export const setCradleStyles = ({
+export const setCradleGridStyles = ({
 
     orientation, 
     headCradleStyles:headstylesobject, 
