@@ -422,7 +422,7 @@ const Cradle = ({
     // const cradleTailStyleRevisionsRef = useRef(null) // for modifications by observer actions
 
     // style consolidations
-    let [headstyles, tailstyles, spinestyles] = useMemo(()=> {
+    let [headstyle, tailstyle, spinestyle] = useMemo(()=> {
 
         // merge base style and revisions (by observer)
         let headCradleStyles:React.CSSProperties = {...cradleHeadStyleRef.current}//,...headCradleStyleRevisionsRef.current}
@@ -460,8 +460,9 @@ const Cradle = ({
         // cradleTailStyleRevisionsRef.current
       ])
 
-    cradleHeadStyleRef.current = headstyles
-    cradleTailStyleRef.current = tailstyles
+    cradleHeadStyleRef.current = headstyle
+    cradleTailStyleRef.current = tailstyle
+    cradleSpineStyleRef.current = spinestyle
 
     // =================================================================================
     // -------------------------[ IntersectionObserver support]-------------------------
