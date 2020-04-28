@@ -517,143 +517,143 @@ export const setCradleGridStyles = ({
         
 }
 
-export const setCradleStyleRevisionsForDrop = ({ 
-    headcontentlist,
-    tailcontentlist,
-    headCradleElement,
-    tailCradleElement, 
-    parentElement, 
-    scrollforward, 
-    orientation 
-}) => {
+// export const setCradleStyleRevisionsForDrop = ({ 
+//     headcontentlist,
+//     tailcontentlist,
+//     headCradleElement,
+//     tailCradleElement, 
+//     parentElement, 
+//     scrollforward, 
+//     orientation 
+// }) => {
 
-    let styles = {} as React.CSSProperties
-    let tailstyles = {} as React.CSSProperties
-    let headpos, tailpos
+//     let styles = {} as React.CSSProperties
+//     let tailstyles = {} as React.CSSProperties
+//     let headpos, tailpos
 
-    // set styles revisions
-    if (orientation == 'vertical') {
+//     // set styles revisions
+//     if (orientation == 'vertical') {
 
-        let offsetHeight = headCradleElement.offsetHeight
-        let parentHeight = parentElement.offsetHeight
+//         let offsetHeight = headCradleElement.offsetHeight
+//         let parentHeight = parentElement.offsetHeight
 
-        let offsetTop = headCradleElement.offsetTop
+//         let offsetTop = headCradleElement.offsetTop
 
-        styles.left = 'auto'
-        styles.right = 'auto'
+//         styles.left = 'auto'
+//         styles.right = 'auto'
 
-        if (scrollforward) {
+//         if (scrollforward) {
 
-            tailpos = offsetTop + offsetHeight
-            styles.top = 'auto'
-            styles.bottom = (parentHeight - tailpos) + 'px'
+//             tailpos = offsetTop + offsetHeight
+//             styles.top = 'auto'
+//             styles.bottom = (parentHeight - tailpos) + 'px'
 
-        } else {
+//         } else {
 
-            headpos = offsetTop
-            styles.top = headpos + 'px'
-            styles.bottom = 'auto'
+//             headpos = offsetTop
+//             styles.top = headpos + 'px'
+//             styles.bottom = 'auto'
 
-        }
+//         }
 
-    } else {
+//     } else {
 
-        let offsetLeft = headCradleElement.offsetLeft
-        let offsetWidth = headCradleElement.offsetWidth
-        let parentWidth = parentElement.offsetWidth
-        let cssleft = parseInt(headCradleElement.style.left)
-        let cssright = parseInt(headCradleElement.style.bottom)
+//         let offsetLeft = headCradleElement.offsetLeft
+//         let offsetWidth = headCradleElement.offsetWidth
+//         let parentWidth = parentElement.offsetWidth
+//         let cssleft = parseInt(headCradleElement.style.left)
+//         let cssright = parseInt(headCradleElement.style.bottom)
 
-        styles.top = 'auto'
-        styles.bottom = 'auto'
+//         styles.top = 'auto'
+//         styles.bottom = 'auto'
 
-        if (scrollforward) {
+//         if (scrollforward) {
 
-            tailpos = offsetLeft + offsetWidth
-            styles.left = 'auto'
-            styles.right = (parentWidth - tailpos) + 'px'
+//             tailpos = offsetLeft + offsetWidth
+//             styles.left = 'auto'
+//             styles.right = (parentWidth - tailpos) + 'px'
 
-        } else {
+//         } else {
 
-            headpos = offsetLeft
-            styles.left = headpos + 'px'
-            styles.right = 'auto'
+//             headpos = offsetLeft
+//             styles.left = headpos + 'px'
+//             styles.right = 'auto'
 
-        }
-    }
+//         }
+//     }
 
-    return [styles,tailstyles]
+//     return [styles,tailstyles]
 
-}
+// }
 
-export const setCradleStyleRevisionsForAdd = ({
-    headcontentlist,
-    tailcontentlist,
-    headCradleElement,
-    tailCradleElement,
-    parentElement,
-    scrollforward,
-    orientation,
-}) => {
-    let styles = {} as React.CSSProperties
-    let tailstyles = {} as React.CSSProperties
-    let headpos, tailpos
+// export const setCradleStyleRevisionsForAdd = ({
+//     headcontentlist,
+//     tailcontentlist,
+//     headCradleElement,
+//     tailCradleElement,
+//     parentElement,
+//     scrollforward,
+//     orientation,
+// }) => {
+//     let styles = {} as React.CSSProperties
+//     let tailstyles = {} as React.CSSProperties
+//     let headpos, tailpos
 
-    // set style revisions
-    if (orientation == 'vertical') {
+//     // set style revisions
+//     if (orientation == 'vertical') {
 
-        // let offsetTop
-        let offsetHeight = headCradleElement.offsetHeight
-        let parentHeight = parentElement.offsetHeight
-        let csstop = parseInt(headCradleElement.style.top)
-        let cssbottom = parseInt(headCradleElement.style.bottom)
-        let offsetTop = headCradleElement.offsetTop
+//         // let offsetTop
+//         let offsetHeight = headCradleElement.offsetHeight
+//         let parentHeight = parentElement.offsetHeight
+//         let csstop = parseInt(headCradleElement.style.top)
+//         let cssbottom = parseInt(headCradleElement.style.bottom)
+//         let offsetTop = headCradleElement.offsetTop
 
-        styles.left = 'auto'
-        styles.right = 'auto'
+//         styles.left = 'auto'
+//         styles.right = 'auto'
 
-        if (scrollforward) {
+//         if (scrollforward) {
 
-            headpos = offsetTop
-            styles.top = headpos + 'px'
-            styles.bottom = 'auto'
+//             headpos = offsetTop
+//             styles.top = headpos + 'px'
+//             styles.bottom = 'auto'
 
-        } else { // scroll backward
+//         } else { // scroll backward
 
-            tailpos = offsetTop + offsetHeight
-            styles.top = 'auto'
-            styles.bottom = (parentHeight - tailpos) + 'px'
+//             tailpos = offsetTop + offsetHeight
+//             styles.top = 'auto'
+//             styles.bottom = (parentHeight - tailpos) + 'px'
 
-        }
+//         }
 
-    } else {
+//     } else {
 
-        let offsetLeft = headCradleElement.offsetLeft
-        let offsetWidth = headCradleElement.offsetWidth
-        let parentWidth = parentElement.offsetWidth
+//         let offsetLeft = headCradleElement.offsetLeft
+//         let offsetWidth = headCradleElement.offsetWidth
+//         let parentWidth = parentElement.offsetWidth
 
-        let cssleft = parseInt(headCradleElement.style.left)
-        let cssright = parseInt(headCradleElement.style.bottom)
+//         let cssleft = parseInt(headCradleElement.style.left)
+//         let cssright = parseInt(headCradleElement.style.bottom)
 
-        styles.top = 'auto'
-        styles.bottom = 'auto'
+//         styles.top = 'auto'
+//         styles.bottom = 'auto'
 
-        if (scrollforward) {
+//         if (scrollforward) {
 
-            headpos = offsetLeft
-            styles.left = headpos + 'px'
-            styles.right = 'auto'
+//             headpos = offsetLeft
+//             styles.left = headpos + 'px'
+//             styles.right = 'auto'
 
-        } else { // scroll backward
+//         } else { // scroll backward
 
-            tailpos = offsetLeft + offsetWidth
-            styles.left = 'auto'
-            styles.right = (parentWidth - tailpos) + 'px'
+//             tailpos = offsetLeft + offsetWidth
+//             styles.left = 'auto'
+//             styles.right = (parentWidth - tailpos) + 'px'
 
-        }
+//         }
 
-    }
+//     }
 
-    return [styles, tailstyles]
+//     return [styles, tailstyles]
 
-}
+// }
