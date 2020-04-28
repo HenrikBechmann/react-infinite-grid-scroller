@@ -708,7 +708,6 @@ const dropcradleentries = useCallback((dropentries)=>{
         let viewportElement = viewportData.elementref.current
 
         let scrollforward
-        let localContentList
         let headcontentlist = headModelContentRef.current
         let tailcontentlist = tailModelContentRef.current
 
@@ -775,7 +774,7 @@ const dropcradleentries = useCallback((dropentries)=>{
 
             // instructions for cradle content
             headindexcount = -netshift
-            tailindexcount = 0
+            tailindexcount = addcontentcount//0
 
         } else {
 
@@ -795,70 +794,25 @@ const dropcradleentries = useCallback((dropentries)=>{
                 }
             }
 
-            headindexcount = 0
+            headindexcount = addcontentcount//0
             tailindexcount = -netshift
 
         }
-
-        localContentList = getUIContentList({
-
-            indexoffset,
-            localContentList:[...contentlistcopy],
-            headindexcount,
-            tailindexcount,
-            callbacksRef,
-
-        })
-
-        headModelContentRef.current = localContentList
-
-        saveAddentries({count:addcontentcount,scrollforward,contentoffset:pendingcontentoffset})
-
-    },[])
-
-    // add scroll content
-    useEffect(()=>{
-
-        if (addentries === null) return
-
-        let viewportData = viewportDataRef.current
-
-        let localaddentries:any = {...addentries}
         let localContentList = [...modelContentRef.current]
-        let headcontentlist = headModelContentRef.current
-        let tailcontentlist = tailModelContentRef.current
-
-        let headCradleElement = headCradleElementRef.current
-        let tailCradleElement = tailCradleElementRef.current
-        let scrollElement = cradleSpineElementRef.current.parentElement
-        let viewportElement = viewportData.elementref.current
-
-        let { scrollforward } = localaddentries
-
-        // set localContentList
-        let { contentoffset, count:addcontentcount } = localaddentries
-
-        let headindexcount, tailindexcount
-        if (scrollforward) {
-
-            headindexcount = 0,
-            tailindexcount =  addcontentcount
-
-        } else {
-
-            headindexcount = addcontentcount
-            tailindexcount = 0
-
-        }
-
         let cradleProps = cradlePropsRef.current
-        // TODO check for closure availability
+
         localContentList = getUIContentList({
+
+            // indexoffset,
+            // localContentList:[...contentlistcopy],
+            // headindexcount,
+            // tailindexcount,
+            // callbacksRef,
 
             localContentList,
             headindexcount,
             tailindexcount,
-            indexoffset: contentoffset,
+            indexoffset: pendingcontentoffset,
             orientation:cradleProps.orientation,
             cellHeight:cradleProps.cellHeight,
             cellWidth:cradleProps.cellWidth,
@@ -871,11 +825,90 @@ const dropcradleentries = useCallback((dropentries)=>{
 
         })
 
-        headModelContentRef.current = localContentList
+        // headModelContentRef.current = localContentList
 
-        saveAddentries(null)
+        let [headcontent, tailcontent] = allocateContentList(
+            {
+                orientation,
+                contentlist:localContentList,
+                runwaycount,
+                crosscount,
+                viewportElement:viewportDataRef.current.elementref.current,
+                cellHeight,
+                cellWidth,
+                padding,
+                gap, 
+                rowcount,
+            }
+        )
 
-    },[addentries])
+        modelContentRef.current = localContentList
+        headModelContentRef.current = headcontent
+        tailModelContentRef.current = tailcontent
+        // saveAddentries({count:addcontentcount,scrollforward,contentoffset:pendingcontentoffset})
+
+    },[orientation, runwaycount, crosscount,cellHeight,cellWidth,padding,gap,rowcount])
+
+    // // add scroll content
+    // useEffect(()=>{
+
+    //     if (addentries === null) return
+
+    //     let viewportData = viewportDataRef.current
+
+    //     let localaddentries:any = {...addentries}
+    //     let localContentList = [...modelContentRef.current]
+    //     let headcontentlist = headModelContentRef.current
+    //     let tailcontentlist = tailModelContentRef.current
+
+    //     let headCradleElement = headCradleElementRef.current
+    //     let tailCradleElement = tailCradleElementRef.current
+    //     let scrollElement = cradleSpineElementRef.current.parentElement
+    //     let viewportElement = viewportData.elementref.current
+
+    //     let { scrollforward } = localaddentries
+
+    //     // set localContentList
+    //     let { contentoffset, count:addcontentcount } = localaddentries
+
+    //     let headindexcount, tailindexcount
+    //     if (scrollforward) {
+
+    //         headindexcount = 0,
+    //         tailindexcount =  addcontentcount
+
+    //     } else {
+
+    //         headindexcount = addcontentcount
+    //         tailindexcount = 0
+
+    //     }
+
+    //     let cradleProps = cradlePropsRef.current
+    //     // TODO check for closure availability
+    //     localContentList = getUIContentList({
+
+    //         localContentList,
+    //         headindexcount,
+    //         tailindexcount,
+    //         indexoffset: contentoffset,
+    //         orientation:cradleProps.orientation,
+    //         cellHeight:cradleProps.cellHeight,
+    //         cellWidth:cradleProps.cellWidth,
+    //         observer: itemObserverRef.current,
+    //         crosscount:crosscountRef.current,
+    //         callbacksRef,
+    //         getItem:cradleProps.getItem,
+    //         listsize:cradleProps.listsize,
+    //         placeholder:cradleProps.placeholder,
+
+    //     })
+
+    //     headModelContentRef.current = localContentList
+
+    //     saveAddentries(null)
+
+    // },[addentries])
     // End of IntersectionObserver support
 
     // ========================================================================================
