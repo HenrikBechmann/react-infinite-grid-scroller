@@ -843,8 +843,10 @@ const dropcradleentries = useCallback((dropentries)=>{
         )
 
         modelContentRef.current = localContentList
-        headModelContentRef.current = headcontent
-        tailModelContentRef.current = tailcontent
+        headViewContentRef.current = headModelContentRef.current = headcontent
+        tailViewContentRef.current = tailModelContentRef.current = tailcontent
+
+        saveCradleState('ready')
         // saveAddentries({count:addcontentcount,scrollforward,contentoffset:pendingcontentoffset})
 
     },[orientation, runwaycount, crosscount,cellHeight,cellWidth,padding,gap,rowcount])
@@ -1192,7 +1194,7 @@ const dropcradleentries = useCallback((dropentries)=>{
                     // redundant scroll position to avoid accidental positioning at tail end of reposition
                     if (viewportData.elementref.current) { // already unmounted if fails
 
-                        normalizeCradleAnchors(headCradleElementRef.current, cradlePropsRef.current.orientation)
+                        // normalizeCradleAnchors(headCradleElementRef.current, cradlePropsRef.current.orientation)
 
                         viewportData.elementref.current[scrollPositionDataRef.current.property] =
                             scrollPositionDataRef.current.value
