@@ -390,6 +390,28 @@ export const allocateContentList = (
         padding,
     }
 ) => {
+
+    console.log(`allocate args contentlist, // of cradle, in items (React components)
+        runwaycount, // in rows
+        crosscount, 
+        rowcount, // in cradle
+        viewportElement, 
+        orientation,
+        // measurements
+        cellHeight,
+        cellWidth,
+        gap,
+        padding`,contentlist, // of cradle, in items (React components)
+        runwaycount, // in rows
+        crosscount, 
+        rowcount, // in cradle
+        viewportElement, 
+        orientation,
+        // measurements
+        cellHeight,
+        cellWidth,
+        gap,
+        padding)
     // basic data
     let cellLength, scrolloffset, scrollblocklength, viewportlength
     let scrollblock = viewportElement.children[0]

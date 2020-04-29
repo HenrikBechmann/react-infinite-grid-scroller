@@ -295,6 +295,7 @@ const Cradle = ({
         let tilelengthforcalc = crossLength + gap
         tilelengthforcalc = Math.min(tilelengthforcalc,lengthforcalc) // result cannot be less than 1
         crosscount = Math.floor(lengthforcalc/(tilelengthforcalc))
+        console.log('new crosscount, viewportheight, viewportwidth',crosscount, viewportheight, viewportwidth)
         return crosscount
 
     },[
@@ -659,7 +660,7 @@ const Cradle = ({
             {
                 root:viewportDataRef.current.elementref.current, 
                 // rootMargin, 
-                threshold:1
+                threshold:.9
             } 
 
         )
@@ -833,19 +834,18 @@ const dropcradleentries = useCallback((dropentries)=>{
         })
 
         // headModelContentRef.current = localContentList
-
         let [headcontent, tailcontent] = allocateContentList(
             {
-                orientation,
+                orientation:cradleProps.orientation,
                 contentlist:localContentList,
-                runwaycount,
-                crosscount,
+                runwaycount:cradleProps.runwaycount,
+                crosscount:cradleProps.crosscount,
                 viewportElement:viewportDataRef.current.elementref.current,
-                cellHeight,
-                cellWidth,
-                padding,
-                gap, 
-                rowcount,
+                cellHeight:cradleProps.cellHeight,
+                cellWidth:cradleProps.cellWidth,
+                padding:cradleProps.padding,
+                gap:cradleProps.gap, 
+                rowcount:rowcountRef.current,
             }
         )
 
@@ -856,7 +856,7 @@ const dropcradleentries = useCallback((dropentries)=>{
         saveCradleState('updatescroll')
         // saveAddentries({count:addcontentcount,scrollforward,contentoffset:pendingcontentoffset})
 
-    },[orientation, runwaycount, crosscount,cellHeight,cellWidth,padding,gap,rowcount])
+    },[])
 
     // // add scroll content
     // useEffect(()=>{
