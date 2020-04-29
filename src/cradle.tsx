@@ -118,6 +118,8 @@ const Cradle = ({
     const cradlestateRef = useRef(null) // access by closures
     cradlestateRef.current = cradlestate
 
+    console.log('running cradle with state',cradlestate)
+
     // -----------------------------------------------------------------------
     // -------------------------[ control variables ]-----------------
 
@@ -575,7 +577,7 @@ const Cradle = ({
 
         if (pauseCradleResizeObserverRef.current) return
 
-        console.log('cradle resize entries',entries)
+        // console.log('cradle resize entries',entries)
 
     },[])
 
@@ -692,7 +694,7 @@ const Cradle = ({
 
     // drop scroll content
 const dropcradleentries = useCallback((dropentries)=>{
-        if (dropentries === null) return
+        // if (dropentries === null) return
 
         let viewportData = viewportDataRef.current
         let localdropentries = [...dropentries]
@@ -798,6 +800,9 @@ const dropcradleentries = useCallback((dropentries)=>{
             tailindexcount = -netshift
 
         }
+
+        pauseItemObserverRef.current = true
+
         let localContentList = [...modelContentRef.current]
         let cradleProps = cradlePropsRef.current
 
@@ -846,7 +851,7 @@ const dropcradleentries = useCallback((dropentries)=>{
         headViewContentRef.current = headModelContentRef.current = headcontent
         tailViewContentRef.current = tailModelContentRef.current = tailcontent
 
-        saveCradleState('ready')
+        saveCradleState('updatescroll')
         // saveAddentries({count:addcontentcount,scrollforward,contentoffset:pendingcontentoffset})
 
     },[orientation, runwaycount, crosscount,cellHeight,cellWidth,padding,gap,rowcount])
@@ -1144,6 +1149,11 @@ const dropcradleentries = useCallback((dropentries)=>{
 
                 saveCradleState('content')
 
+                break
+            }
+            case 'updatescroll': { // scroll
+                pauseItemObserverRef.current = false
+                saveCradleState('ready')
                 break
             }
             // case 'layout': {

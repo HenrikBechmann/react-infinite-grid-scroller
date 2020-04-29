@@ -408,8 +408,6 @@ export const allocateContentList = (
     let runwayheadrowroom = Math.max(0,Math.floor((scrolloffset - padding)/cellLength))
     let runwaycountroom = Math.min(runwayheadrowroom, runwaycount)
 
-    console.log('runwayheadrowroom,runwaycountroom',runwayheadrowroom,runwaycountroom)
-
     // calculate tail configuration
     let remainingroomrows = Math.ceil((scrollblocklength - scrolloffset)/cellLength)
     let rowdiff = remainingroomrows - rowcount
@@ -418,11 +416,13 @@ export const allocateContentList = (
     }
     let runwayitemcount = runwaycountroom * crosscount
 
+    console.log('runwayheadrowroom,runwaycountroom,rowdiff, runwayitemcount',runwayheadrowroom,runwaycountroom, rowdiff, runwayitemcount)
+
     // allocate the contentlist to head and tail
     let headlist = contentlist.slice(0,runwayitemcount)
     let taillist = contentlist.slice(runwayitemcount)
 
-    console.log('contentlist, headlist, taillist',contentlist, headlist, taillist)
+    console.log('headlist, taillist', headlist, taillist)
 
     return [headlist,taillist]
 
