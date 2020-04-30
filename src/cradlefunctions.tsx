@@ -430,18 +430,18 @@ export const allocateContentList = (
         viewportlength = viewportElement.offsetWidth
     }
     // calculate head configuration
-    let runwayheadrowroom = Math.max(0,Math.floor((scrolloffset - padding)/cellLength))
-    let runwaycountroom = Math.min(runwayheadrowroom, runwaycount)
+    let headvirtualrows = Math.max(0,Math.ceil((scrolloffset - padding)/cellLength))
+    let headrows = Math.min(headvirtualrows, runwaycount)
 
     // calculate tail configuration
-    let remainingroomrows = Math.ceil((scrollblocklength - scrolloffset)/cellLength)
-    let rowdiff = remainingroomrows - rowcount
-    if (rowdiff < runwaycountroom) {
-        runwaycountroom += (runwaycountroom - rowdiff)
+    let tailvirtualrows = Math.ceil((scrollblocklength - scrolloffset)/cellLength)
+    let rowdiff = tailvirtualrows - rowcount
+    if (rowdiff < headrows) {
+        headrows += (headrows - rowdiff)
     }
-    let runwayitemcount = runwaycountroom * crosscount
+    let runwayitemcount = headrows * crosscount
 
-    console.log('runwayheadrowroom,runwaycountroom,rowdiff, runwayitemcount',runwayheadrowroom,runwaycountroom, rowdiff, runwayitemcount)
+    console.log('headvirtualrows,headrows,rowdiff, runwayitemcount',headvirtualrows,headrows, rowdiff, runwayitemcount)
 
     // allocate the contentlist to head and tail
     let headlist = contentlist.slice(0,runwayitemcount)
