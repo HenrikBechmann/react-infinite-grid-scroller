@@ -383,7 +383,7 @@ export const allocateContentList = (
         contentlist, // of cradle, in items (React components)
         runwaycount, // in rows
         crosscount, 
-        rowcount, // in cradle
+        rowcount:cradlerowcount, // in cradle
         viewportElement, 
         orientation,
         // measurements
@@ -435,7 +435,7 @@ export const allocateContentList = (
 
     // calculate tail configuration
     let tailvirtualrows = Math.ceil((scrollblocklength - scrolloffset)/cellLength)
-    let rowdiff = tailvirtualrows - rowcount
+    let rowdiff = tailvirtualrows - cradlerowcount
     if (rowdiff < headcradlerows) {
         headcradlerows += (headcradlerows - rowdiff)
     }
