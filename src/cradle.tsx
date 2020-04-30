@@ -295,7 +295,6 @@ const Cradle = ({
         let tilelengthforcalc = crossLength + gap
         tilelengthforcalc = Math.min(tilelengthforcalc,lengthforcalc) // result cannot be less than 1
         crosscount = Math.floor(lengthforcalc/(tilelengthforcalc))
-        console.log('new crosscount, viewportheight, viewportwidth',crosscount, viewportheight, viewportwidth)
         return crosscount
 
     },[
@@ -939,11 +938,13 @@ const dropcradleentries = useCallback((dropentries)=>{
                 cellHeight, 
                 cellWidth, 
                 orientation, 
-                viewportheight, 
-                viewportwidth, 
-                runwaylength, 
+                // viewportheight, 
+                // viewportwidth, 
+                // runwaylength, 
+                runwaycount,
+                rowcount,
                 gap,
-                padding,
+                // padding,
                 visibletargetindexoffset,
                 targetScrollOffset:visibletargetscrolloffset,
                 crosscount,

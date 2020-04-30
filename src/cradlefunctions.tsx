@@ -178,11 +178,13 @@ export const getContentListRequirements = ({
         orientation, 
         cellHeight, 
         cellWidth, 
-        viewportheight, 
-        viewportwidth, 
-        runwaylength, 
+        // viewportheight, 
+        // viewportwidth, 
+        // runwaylength, 
+        rowcount,
+        runwaycount,
         gap,
-        padding, 
+        // padding, 
         visibletargetindexoffset,
         targetScrollOffset,
         crosscount,
@@ -191,24 +193,25 @@ export const getContentListRequirements = ({
 
     // -------------[ calc basic inputs: cellLength, contentCount. ]----------
 
-    let cradleContentLength, cellLength, viewportlength
+    // let cradleContentLength, cellLength, viewportlength
+    let cellLength,viewportlength
     if (orientation == 'vertical') {
         cellLength = cellHeight + gap
-        viewportlength = viewportheight
+        // viewportlength = viewportheight
     } else {
         cellLength = cellWidth + gap
-        viewportlength = viewportwidth
+        // viewportlength = viewportwidth
     }
 
-    cradleContentLength = viewportlength + (runwaylength * 2)
-    let cradlerowcount = Math.ceil(cradleContentLength/cellLength)
-    let contentCount = cradlerowcount * crosscount
+    // cradleContentLength = viewportlength + (runwaylength * 2)
+    // let cradlerowcount = Math.ceil(cradleContentLength/cellLength)
+    let contentCount = rowcount * crosscount // cradlerowcount * crosscount
     if (contentCount > listsize) contentCount = listsize
 
     // -----------------------[ calc leadingitemcount, referenceoffset ]-----------------------
 
-    let cradleleadingrowcount = Math.floor(runwaylength/cellLength)
-    let leadingitemcount = cradleleadingrowcount * crosscount
+    // let cradleleadingrowcount = runwaycount // Math.floor(runwaylength/cellLength)
+    let leadingitemcount = runwaycount * crosscount
     let targetdiff = visibletargetindexoffset % crosscount
     let referenceoffset = visibletargetindexoffset - targetdiff // part of return message
 
@@ -391,27 +394,27 @@ export const allocateContentList = (
     }
 ) => {
 
-    console.log(`allocate args contentlist, // of cradle, in items (React components)
-        runwaycount, // in rows
-        crosscount, 
-        rowcount, // in cradle
-        viewportElement, 
-        orientation,
-        // measurements
-        cellHeight,
-        cellWidth,
-        gap,
-        padding`,contentlist, // of cradle, in items (React components)
-        runwaycount, // in rows
-        crosscount, 
-        rowcount, // in cradle
-        viewportElement, 
-        orientation,
-        // measurements
-        cellHeight,
-        cellWidth,
-        gap,
-        padding)
+    // console.log(`allocate args contentlist, // of cradle, in items (React components)
+    //     runwaycount, // in rows
+    //     crosscount, 
+    //     rowcount, // in cradle
+    //     viewportElement, 
+    //     orientation,
+    //     // measurements
+    //     cellHeight,
+    //     cellWidth,
+    //     gap,
+    //     padding`,contentlist, // of cradle, in items (React components)
+    //     runwaycount, // in rows
+    //     crosscount, 
+    //     rowcount, // in cradle
+    //     viewportElement, 
+    //     orientation,
+    //     // measurements
+    //     cellHeight,
+    //     cellWidth,
+    //     gap,
+    //     padding)
     // basic data
     let cellLength, scrolloffset, scrollblocklength, viewportlength
     let scrollblock = viewportElement.children[0]
