@@ -439,13 +439,14 @@ export const allocateContentList = (
     if (rowdiff < headrows) {
         headrows += (headrows - rowdiff)
     }
-    let runwayitemcount = headrows * crosscount
+    let headitemcount = headrows * crosscount
 
-    console.log('headvirtualrows,headrows,rowdiff, runwayitemcount',headvirtualrows,headrows, rowdiff, runwayitemcount)
+    console.log('headvirtualrows,headrows,rowdiff, headitemcount, headrows, crosscount',
+        headvirtualrows,headrows, rowdiff, headitemcount, headrows, crosscount)
 
     // allocate the contentlist to head and tail
-    let headlist = contentlist.slice(0,runwayitemcount)
-    let taillist = contentlist.slice(runwayitemcount)
+    let headlist = contentlist.slice(0,headitemcount)
+    let taillist = contentlist.slice(headitemcount)
 
     console.log('headlist, taillist', headlist, taillist)
 

@@ -838,7 +838,7 @@ const dropcradleentries = useCallback((dropentries)=>{
                 orientation:cradleProps.orientation,
                 contentlist:localContentList,
                 runwaycount:cradleProps.runwaycount,
-                crosscount:cradleProps.crosscount,
+                crosscount:crosscountRef.current,
                 viewportElement:viewportDataRef.current.elementref.current,
                 cellHeight:cradleProps.cellHeight,
                 cellWidth:cradleProps.cellWidth,
