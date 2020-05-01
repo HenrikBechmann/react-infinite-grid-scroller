@@ -37,8 +37,7 @@ import {
     calcVisibleItems, 
     getReferenceIndexData,
     getContentListRequirements,
-    // setCradleStyleRevisionsForDrop,
-    // setCradleStyleRevisionsForAdd,
+    getSpineReferences,
     normalizeCradleAnchors,
     allocateContentList,
 
@@ -271,11 +270,12 @@ const Cradle = ({
     const modelContentRef = useRef(null)
     const headModelContentRef = useRef(null)
     const tailModelContentRef = useRef(null)
+
     // view model
     const headViewContentRef = useRef([])
     const tailViewContentRef = useRef([])
 
-    const itemElementsRef = useRef(new Map())
+    const itemElementsRef = useRef(new Map()) // items register their element
 
     // ------------------------------[ cradle configuration ]---------------------------
 
@@ -348,42 +348,6 @@ const Cradle = ({
     const rowcountRef = useRef(null)
     rowcountRef.current = rowcount
 
-    // const basecradlelengths = useMemo(()=>{
-
-    //     let headLength, tailLength
-
-    //     let viewportLength, cellLength
-    //     if (orientation == 'vertical') {
-    //         viewportLength = viewportheight
-    //         cellLength = cellHeight
-    //     } else {
-    //         viewportLength = viewportwidth
-    //         cellLength = cellWidth
-    //     }
-
-    //     cellLength += gap
-
-    //     headLength = (runwaycount * cellLength) - gap + padding
-    //     tailLength = ((rowcount - runwaycount) * cellLength) - gap + padding
-
-    //     return [headLength, tailLength]
-
-    // },[
-    //     orientation, 
-    //     cellWidth, 
-    //     cellHeight, 
-    //     gap, 
-    //     padding,
-    //     rowcount,
-    //     runwaycount,
-    // ])
-
-    // const basecradlelengthsRef = useRef(null)
-    // basecradlelengthsRef.current = basecradlelengths
-
-    // --------------------------------[ css styles ]---------------------------------
-
-    // TODO: add conditional for orientation
     // base styles
     let cradleHeadStyle = useMemo(() => {
 
@@ -551,12 +515,13 @@ const Cradle = ({
     // the viewport.
 
     // --------------------[ intersection observer data ]---------------------------
+
     const [dropentries, saveDropentries] = useState(null) // trigger add entries
     const [addentries, saveAddentries] = useState(null) // add entries
 
     // --------------------------[ cradle observers ]-----------------------------------
 
-    // set up resizeobserver
+    // set up cradle resizeobserver
     useEffect(() => {
 
         // ResizeObserver
@@ -645,20 +610,11 @@ const Cradle = ({
 
     useEffect(() => {
 
-        // let rootMargin
-        // if (orientation == 'horizontal') {
-        //     rootMargin = `0px ${runwaylength}px 0px ${runwaylength}px`
-        // } else {
-        //     rootMargin = `${runwaylength}px 0px ${runwaylength}px 0px`
-        // }
-        // console.log('rootMargin',options)
-
         itemObserverRef.current = new IntersectionObserver(
 
             itemobservercallback,
             {
                 root:viewportDataRef.current.elementref.current, 
-                // rootMargin, 
                 threshold:.9
             } 
 
@@ -686,7 +642,7 @@ const Cradle = ({
 
             if (dropentries.length) {
 
-                console.log('calling dropcradleentries',dropentries)
+                // console.log('calling dropcradleentries',dropentries)
                 isMounted() && dropcradleentries(dropentries)// saveDropentries(dropentries) // TODO: use direct call?
 
             }
@@ -695,14 +651,11 @@ const Cradle = ({
     },[])
 
     // drop scroll content
-const dropcradleentries = useCallback((dropentries)=>{
-        // if (dropentries === null) return
+    const dropcradleentries = useCallback((dropentries)=>{
 
         let viewportData = viewportDataRef.current
         let localdropentries = [...dropentries]
         let contentlistcopy = [...modelContentRef.current]
-
-        let sampleEntry = localdropentries[0]
 
         let listsize = cradlePropsRef.current.listsize
 
@@ -719,6 +672,7 @@ const dropcradleentries = useCallback((dropentries)=>{
         //  then set scrollforward
         let forwardcount = 0, backwardcount = 0
         for (let droprecordindex = 0; droprecordindex <localdropentries.length; droprecordindex++ ) {
+            let sampleEntry = localdropentries[droprecordindex]
             if (orientation == 'vertical') {
 
                 if (sampleEntry.boundingClientRect.y - sampleEntry.rootBounds.y < 0) {
@@ -742,6 +696,7 @@ const dropcradleentries = useCallback((dropentries)=>{
         if (netshift == 0) {
 
             return
+
         }
 
         scrollforward = (forwardcount > backwardcount)
@@ -810,12 +765,6 @@ const dropcradleentries = useCallback((dropentries)=>{
 
         localContentList = getUIContentList({
 
-            // indexoffset,
-            // localContentList:[...contentlistcopy],
-            // headindexcount,
-            // tailindexcount,
-            // callbacksRef,
-
             localContentList,
             headindexcount,
             tailindexcount,
@@ -852,71 +801,19 @@ const dropcradleentries = useCallback((dropentries)=>{
         headViewContentRef.current = headModelContentRef.current = headcontent
         tailViewContentRef.current = tailModelContentRef.current = tailcontent
 
+        let [headposref,tailposref] = getSpineReferences(
+            {
+                headcontent,
+                tailcontent,
+                itemelements:itemElementsRef.current,
+                orientation:cradleProps.orientation
+            }
+        )
+
         saveCradleState('updatescroll')
-        // saveAddentries({count:addcontentcount,scrollforward,contentoffset:pendingcontentoffset})
 
     },[])
 
-    // // add scroll content
-    // useEffect(()=>{
-
-    //     if (addentries === null) return
-
-    //     let viewportData = viewportDataRef.current
-
-    //     let localaddentries:any = {...addentries}
-    //     let localContentList = [...modelContentRef.current]
-    //     let headcontentlist = headModelContentRef.current
-    //     let tailcontentlist = tailModelContentRef.current
-
-    //     let headCradleElement = headCradleElementRef.current
-    //     let tailCradleElement = tailCradleElementRef.current
-    //     let scrollElement = cradleSpineElementRef.current.parentElement
-    //     let viewportElement = viewportData.elementref.current
-
-    //     let { scrollforward } = localaddentries
-
-    //     // set localContentList
-    //     let { contentoffset, count:addcontentcount } = localaddentries
-
-    //     let headindexcount, tailindexcount
-    //     if (scrollforward) {
-
-    //         headindexcount = 0,
-    //         tailindexcount =  addcontentcount
-
-    //     } else {
-
-    //         headindexcount = addcontentcount
-    //         tailindexcount = 0
-
-    //     }
-
-    //     let cradleProps = cradlePropsRef.current
-    //     // TODO check for closure availability
-    //     localContentList = getUIContentList({
-
-    //         localContentList,
-    //         headindexcount,
-    //         tailindexcount,
-    //         indexoffset: contentoffset,
-    //         orientation:cradleProps.orientation,
-    //         cellHeight:cradleProps.cellHeight,
-    //         cellWidth:cradleProps.cellWidth,
-    //         observer: itemObserverRef.current,
-    //         crosscount:crosscountRef.current,
-    //         callbacksRef,
-    //         getItem:cradleProps.getItem,
-    //         listsize:cradleProps.listsize,
-    //         placeholder:cradleProps.placeholder,
-
-    //     })
-
-    //     headModelContentRef.current = localContentList
-
-    //     saveAddentries(null)
-
-    // },[addentries])
     // End of IntersectionObserver support
 
     // ========================================================================================
@@ -938,13 +835,9 @@ const dropcradleentries = useCallback((dropentries)=>{
                 cellHeight, 
                 cellWidth, 
                 orientation, 
-                // viewportheight, 
-                // viewportwidth, 
-                // runwaylength, 
                 runwaycount,
                 rowcount,
                 gap,
-                // padding,
                 visibletargetindexoffset,
                 targetScrollOffset:visibletargetscrolloffset,
                 crosscount,
@@ -1003,30 +896,30 @@ const dropcradleentries = useCallback((dropentries)=>{
 
         // let elementstyle = headCradleElementRef.current.style
 
-        let headstyles:React.CSSProperties = {}
-        let tailstyles:React.CSSProperties = {}
+        // let headstyles:React.CSSProperties = {}
+        // let tailstyles:React.CSSProperties = {}
 
         if (orientation == 'vertical') {
 
-            headstyles.top = cradleoffset + 'px'
-            headstyles.bottom = 'auto'
-            headstyles.left = 'auto'
-            headstyles.right = 'auto'
+        //     headstyles.top = cradleoffset + 'px'
+        //     headstyles.bottom = 'auto'
+        //     headstyles.left = 'auto'
+        //     headstyles.right = 'auto'
 
             scrollPositionDataRef.current = {property:'scrollTop',value:scrollblockoffset}
 
         } else { // orientation = 'horizontal'
 
-            headstyles.top = 'auto'
-            headstyles.bottom = styles.bottom = 'auto'
-            headstyles.left = cradleoffset + 'px'
-            headstyles.right = 'auto'
+        //     headstyles.top = 'auto'
+        //     headstyles.bottom = styles.bottom = 'auto'
+        //     headstyles.left = cradleoffset + 'px'
+        //     headstyles.right = 'auto'
 
             scrollPositionDataRef.current = {property:'scrollLeft',value:scrollblockoffset}
 
         }
 
-        headlayoutDataRef.current = headstyles // for 'layout' state
+        // headlayoutDataRef.current = headstyles // for 'layout' state
 
     },[
         getItem,
@@ -1329,6 +1222,7 @@ const dropcradleentries = useCallback((dropentries)=>{
         <div 
             style = {cradleSpineStyle} 
             ref = {cradleSpineElementRef}
+            data-name = 'spine'
         >
             <div 
             

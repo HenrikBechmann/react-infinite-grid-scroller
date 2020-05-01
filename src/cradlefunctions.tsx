@@ -178,13 +178,9 @@ export const getContentListRequirements = ({
         orientation, 
         cellHeight, 
         cellWidth, 
-        // viewportheight, 
-        // viewportwidth, 
-        // runwaylength, 
         rowcount,
         runwaycount,
         gap,
-        // padding, 
         visibletargetindexoffset,
         targetScrollOffset,
         crosscount,
@@ -394,27 +390,6 @@ export const allocateContentList = (
     }
 ) => {
 
-    // console.log(`allocate args contentlist, // of cradle, in items (React components)
-    //     runwaycount, // in rows
-    //     crosscount, 
-    //     rowcount, // in cradle
-    //     viewportElement, 
-    //     orientation,
-    //     // measurements
-    //     cellHeight,
-    //     cellWidth,
-    //     gap,
-    //     padding`,contentlist, // of cradle, in items (React components)
-    //     runwaycount, // in rows
-    //     crosscount, 
-    //     rowcount, // in cradle
-    //     viewportElement, 
-    //     orientation,
-    //     // measurements
-    //     cellHeight,
-    //     cellWidth,
-    //     gap,
-    //     padding)
     // basic data
     let cellLength, scrolloffset, scrollblocklength, viewportlength
     let scrollblock = viewportElement.children[0]
@@ -452,6 +427,46 @@ export const allocateContentList = (
 
     return [headlist,taillist]
 
+}
+
+export const getSpineReferences = ({headcontent, tailcontent, itemelements,orientation}) => {
+    let headcomponent, headindex, headobject, headelement, headposref, 
+        tailcomponent, tailindex, tailobject, tailelement, tailposref
+
+    if (headcontent.length) {
+        headcomponent = headcontent[headcontent.length - 1]
+        headindex = headcomponent.props.index
+        headobject = itemelements.get(headindex)
+        if (headobject) {
+            headelement = headobject.current
+            if (headelement) {
+                if (orientation == 'vertical') {
+                    headposref = headelement.offsetTop + headelement.offsetHeight
+                } else {
+                    headposref = headelement.offsetLeft + headelement.offsetWidth
+                }
+            }
+        }
+    }
+    if (tailcontent.length) {
+        tailcomponent = tailcontent[0]
+        tailindex = tailcomponent.props.index
+        tailobject = itemelements.get(tailindex)
+        if (tailobject) {
+            tailelement = tailobject.current
+            if (tailelement) {
+                if (orientation == 'vertical') {
+                    tailposref = tailelement.offsetTop
+                } else {
+                    tailposref = tailelement.offsetLeft
+                }
+            }
+        }
+    }
+
+    console.log('spine headposref, tailposref',headposref,tailposref)
+
+    return [headposref,tailposref]
 }
 
 const emitItem = ({index, orientation, cellHeight, cellWidth, observer, callbacksRef, getItem, listsize, placeholder}) => {
