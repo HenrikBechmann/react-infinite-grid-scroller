@@ -801,30 +801,25 @@ const Cradle = ({
         headViewContentRef.current = headModelContentRef.current = headcontent
         tailViewContentRef.current = tailModelContentRef.current = tailcontent
 
-        let [headposref,tailposref] = getSpineReferences(
+        let spineposref = getSpineReferences(
             {
                 headcontent,
                 tailcontent,
                 itemelements:itemElementsRef.current,
                 orientation:cradleProps.orientation,
                 gap:cradleProps.gap,
+                spineElement:cradleSpineElementRef.current
             }
         )
 
-        let spineposref
-        if (tailposref !== undefined) {
-            spineposref = tailposref
-        } else if (headposref !== undefined) {
-            headposref = headposref
-        } else {
-            spineposref = 0
-        }
-        if (cradleProps.orientation == 'vertical') {
-            cradleSpineElementRef.current.style.
-                transform = `translate(0px,${spineposref}px)`
-        } else {
-            cradleSpineElementRef.current.style.
-                transform = `translate(${spineposref}px,0px)`
+        if (spineposref !== undefined) {
+            if (cradleProps.orientation == 'vertical') {
+                cradleSpineElementRef.current.style.
+                    transform = `translate(0px,${spineposref}px)`
+            } else {
+                cradleSpineElementRef.current.style.
+                    transform = `translate(${spineposref}px,0px)`
+            }
         }
         saveCradleState('updatescroll')
 

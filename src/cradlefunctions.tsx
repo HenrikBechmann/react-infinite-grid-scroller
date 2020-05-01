@@ -405,34 +405,49 @@ export const allocateContentList = (
         viewportlength = viewportElement.offsetWidth
     }
     // calculate head configuration
+    let virtualrows = Math.ceil((scrollblocklength - (padding *2) + gap)/cellLength)
     let headvirtualrows = Math.max(0,Math.ceil((scrolloffset - padding)/cellLength))
     let headcradlerows = Math.min(headvirtualrows, runwaycount)
 
     // calculate tail configuration
-    let tailvirtualrows = Math.ceil((scrollblocklength - scrolloffset)/cellLength)
+    let tailvirtualrows = virtualrows - headvirtualrows // Math.ceil((scrollblocklength - scrolloffset - padding)/cellLength)
     let rowdiff = tailvirtualrows - cradlerowcount
     if (rowdiff < headcradlerows) {
         headcradlerows += (headcradlerows - rowdiff)
     }
     let headitemcount = headcradlerows * crosscount
 
-    console.log('headvirtualrows,headcradlerows,rowdiff, headitemcount, crosscount',
-        headvirtualrows,headcradlerows, rowdiff, headitemcount, crosscount)
+    console.log('contentlist,headvirtualrows,headcradlerows,tailvirtualrows,rowdiff, headitemcount, crosscount',
+        [...contentlist],headvirtualrows,headcradlerows, tailvirtualrows,rowdiff, headitemcount, crosscount)
 
     // allocate the contentlist to head and tail
     let headlist = contentlist.slice(0,headitemcount)
     let taillist = contentlist.slice(headitemcount)
 
-    console.log('headlist, taillist', headlist, taillist)
+    console.log('headlist, taillist', [...headlist], [...taillist])
 
     return [headlist,taillist]
 
 }
 
-export const getSpineReferences = ({headcontent, tailcontent, itemelements,orientation, gap}) => {
+export const getSpineReferences = (
+    {
+        headcontent, 
+        tailcontent, 
+        itemelements, 
+        orientation, 
+        gap,
+        spineElement,
+    }) => {
     let headcomponent, headindex, headobject, headelement, headposref, 
-        tailcomponent, tailindex, tailobject, tailelement, tailposref
+        tailcomponent, tailindex, tailobject, tailelement, tailposref,
+        spineposbase,spineposref
 
+    if (orientation == 'vertical') {
+        spineposbase = spineElement.offsetTop
+    } else {
+        spineposbase = spineElement.offsetLeft
+    }
     if (headcontent.length) {
         headcomponent = headcontent[headcontent.length - 1]
         headindex = headcomponent.props.index
@@ -440,6 +455,7 @@ export const getSpineReferences = ({headcontent, tailcontent, itemelements,orien
         if (headobject) {
             headelement = headobject.current
             if (headelement) {
+                console.log('headindex, headelement.offsetTop',headindex,headelement.offsetTop)
                 if (orientation == 'vertical') {
                     headposref = headelement.offsetTop + headelement.offsetHeight + gap
                 } else {
@@ -464,9 +480,15 @@ export const getSpineReferences = ({headcontent, tailcontent, itemelements,orien
         }
     }
 
-    console.log('spine headposref, tailposref',headposref,tailposref)
+    if (tailposref) {
+        spineposref = tailposref + spineposbase
+    } else if (headposref) {
+        spineposref = headposref + spineposbase
+    }
 
-    return [headposref,tailposref]
+    console.log('spineposref, headposref, tailposref', spineposref, headposref, tailposref)
+
+    return spineposref
 }
 
 const emitItem = ({index, orientation, cellHeight, cellWidth, observer, callbacksRef, getItem, listsize, placeholder}) => {
