@@ -250,36 +250,36 @@ export const getContentListRequirements = ({
 }
 
 // this makes ui resize less visually jarring
-export const normalizeCradleAnchors = (cradleElement, orientation) => {
+// export const normalizeCradleAnchors = (cradleElement, orientation) => {
 
-    let styles:React.CSSProperties = {}
+//     let styles:React.CSSProperties = {}
 
-    let stylerevisions:React.CSSProperties = {}
-    if (orientation == 'vertical') {
-        if (cradleElement.style.top == 'auto') {
+//     let stylerevisions:React.CSSProperties = {}
+//     if (orientation == 'vertical') {
+//         if (cradleElement.style.top == 'auto') {
 
-            styles.top = cradleElement.offsetTop + 'px'
-            styles.bottom = 'auto'
-            styles.left = 'auto'
-            styles.right = 'auto'
+//             styles.top = cradleElement.offsetTop + 'px'
+//             styles.bottom = 'auto'
+//             styles.left = 'auto'
+//             styles.right = 'auto'
 
-        }
-    } else {
-        if (cradleElement.style.left == 'auto') {
+//         }
+//     } else {
+//         if (cradleElement.style.left == 'auto') {
 
-            styles.left = cradleElement.offsetLeft + 'px'
-            styles.right = 'auto'
-            styles.top = 'auto'
-            styles.bottom = 'auto'
+//             styles.left = cradleElement.offsetLeft + 'px'
+//             styles.right = 'auto'
+//             styles.top = 'auto'
+//             styles.bottom = 'auto'
 
-        }
-    }
+//         }
+//     }
 
-    for (let style in styles) {
-        cradleElement.style[style] = styles[style]
-    }
+//     for (let style in styles) {
+//         cradleElement.style[style] = styles[style]
+//     }
 
-}
+// }
 
 // update content
 // adds itemshells at end of contentlist according to headindexcount and tailindescount,

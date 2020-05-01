@@ -38,7 +38,7 @@ import {
     getReferenceIndexData,
     getContentListRequirements,
     getSpineReferences,
-    normalizeCradleAnchors,
+    // normalizeCradleAnchors,
     allocateContentList,
 
 } from './cradlefunctions'
