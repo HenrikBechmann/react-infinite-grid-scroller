@@ -429,7 +429,7 @@ export const allocateContentList = (
 
 }
 
-export const getSpineReferences = ({headcontent, tailcontent, itemelements,orientation}) => {
+export const getSpineReferences = ({headcontent, tailcontent, itemelements,orientation, gap}) => {
     let headcomponent, headindex, headobject, headelement, headposref, 
         tailcomponent, tailindex, tailobject, tailelement, tailposref
 
@@ -441,9 +441,9 @@ export const getSpineReferences = ({headcontent, tailcontent, itemelements,orien
             headelement = headobject.current
             if (headelement) {
                 if (orientation == 'vertical') {
-                    headposref = headelement.offsetTop + headelement.offsetHeight
+                    headposref = headelement.offsetTop + headelement.offsetHeight + gap
                 } else {
-                    headposref = headelement.offsetLeft + headelement.offsetWidth
+                    headposref = headelement.offsetLeft + headelement.offsetWidth + gap
                 }
             }
         }
