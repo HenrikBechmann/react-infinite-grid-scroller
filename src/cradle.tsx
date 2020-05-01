@@ -1011,8 +1011,8 @@ const Cradle = ({
             let cradleState = cradlestateRef.current
             if (!viewportDataRef.current.isResizing) {
 
-                (cradleState != 'repositioning') && 
-                    normalizeCradleAnchors(headCradleElementRef.current, cradlePropsRef.current.orientation)
+                // (cradleState != 'repositioning') && 
+                //     normalizeCradleAnchors(headCradleElementRef.current, cradlePropsRef.current.orientation)
                 let localrefdata = {...immediateReferenceIndexDataRef.current}
                 saveImmediateReferenceIndexData(localrefdata) // trigger re-run to capture end of scroll session values
                 masterReferenceIndexDataRef.current = localrefdata
