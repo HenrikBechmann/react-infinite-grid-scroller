@@ -511,13 +511,12 @@ const Cradle = ({
     // -------------------------[ IntersectionObserver support]-------------------------
     // =================================================================================
 
-    // There are two observers, one for the cradle, and another for itemShells; both against
-    // the viewport.
-
-    // --------------------[ intersection observer data ]---------------------------
-
-    const [dropentries, saveDropentries] = useState(null) // trigger add entries
-    const [addentries, saveAddentries] = useState(null) // add entries
+    /*
+        There are two interection observers, one for the cradle, and another for itemShells; 
+            both against the viewport.
+        There is also a resize observer for the cradle wings, to respond to size changes of 
+            variable cells.
+    */    
 
     // --------------------------[ cradle observers ]-----------------------------------
 
@@ -642,8 +641,8 @@ const Cradle = ({
 
             if (dropentries.length) {
 
-                // console.log('calling dropcradleentries',dropentries)
-                isMounted() && dropcradleentries(dropentries)// saveDropentries(dropentries) // TODO: use direct call?
+                // console.log('calling adjustcradleentries',dropentries)
+                isMounted() && adjustcradleentries(dropentries)
 
             }
         }
@@ -651,7 +650,7 @@ const Cradle = ({
     },[])
 
     // drop scroll content
-    const dropcradleentries = useCallback((dropentries)=>{
+    const adjustcradleentries = useCallback((dropentries)=>{
 
         let viewportData = viewportDataRef.current
         let localdropentries = [...dropentries]
