@@ -635,14 +635,14 @@ const Cradle = ({
 
         if (cradlestateRef.current == 'ready') {
 
-            let dropentries = entries.filter(entry => (!entry.isIntersecting))
+            let intersectentries = entries.filter(entry => (!entry.isIntersecting))
 
             // console.log('dropentries',dropentries)
 
-            if (dropentries.length) {
+            if (intersectentries.length) {
 
                 // console.log('calling adjustcradleentries',dropentries)
-                isMounted() && adjustcradleentries(dropentries)
+                isMounted() && adjustcradleentries(intersectentries)
 
             }
         }
@@ -650,13 +650,15 @@ const Cradle = ({
     },[])
 
     // drop scroll content
-    const adjustcradleentries = useCallback((dropentries)=>{
+    const adjustcradleentries = useCallback((intersectentries)=>{
 
         let viewportData = viewportDataRef.current
-        let localdropentries = [...dropentries]
+        let localintersectentries = [...intersectentries]
         let contentlistcopy = [...modelContentRef.current]
 
-        let listsize = cradlePropsRef.current.listsize
+        let cradleProps = cradlePropsRef.current
+
+        let listsize = cradleProps.listsize
 
         let headCradleElement = headCradleElementRef.current
         let tailCradleElement = tailCradleElementRef.current
@@ -670,8 +672,8 @@ const Cradle = ({
         // -- isolate forward and backward lists
         //  then set scrollforward
         let forwardcount = 0, backwardcount = 0
-        for (let droprecordindex = 0; droprecordindex <localdropentries.length; droprecordindex++ ) {
-            let sampleEntry = localdropentries[droprecordindex]
+        for (let intersectrecordindex = 0; intersectrecordindex <localintersectentries.length; intersectrecordindex++ ) {
+            let sampleEntry = localintersectentries[intersectrecordindex]
             if (orientation == 'vertical') {
 
                 if (sampleEntry.boundingClientRect.y - sampleEntry.rootBounds.y < 0) {
@@ -708,10 +710,17 @@ const Cradle = ({
         let pendingcontentoffset
         let addcontentcount = shiftrowcount * crosscountRef.current // adjust in full row increments
 
+        // next, verify number of rows to delete
         let headindexchangecount, headrowcount, viewportrowcount, tailindexchangecount, tailrowcount
 
         if (scrollforward) { // delete from head; add to tail; head is direction of stroll
 
+            headrowcount = Math.ceil(headModelContentRef.current.length/crosscountRef.current)
+            if (headrowcount <= cradleProps.runwaycount) {
+                let rowdiff = (cradleProps.runwaycount) - headrowcount + 1
+                shiftrowcount -= rowdiff
+                shiftitemcount -= (rowdiff * crosscountRef.current)
+            }
             pendingcontentoffset = indexoffset + shiftitemcount
             let proposedtailoffset = pendingcontentoffset + addcontentcount + ((contentlistcopy.length - shiftitemcount ) - 1)
 
@@ -762,7 +771,6 @@ const Cradle = ({
         pauseItemObserverRef.current = true
 
         let localContentList = [...modelContentRef.current]
-        let cradleProps = cradlePropsRef.current
 
         localContentList = getUIContentList({
 
