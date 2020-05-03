@@ -38,6 +38,7 @@ import {
     getReferenceIndexData,
     getContentListRequirements,
     getSpinePosRef,
+    trimRunwaysFromIntersections,
     // normalizeCradleAnchors,
     allocateContentList,
 
@@ -686,7 +687,17 @@ const Cradle = ({
         let headcontentlist = headModelContentRef.current
         let tailcontentlist = tailModelContentRef.current
 
-        // -- isolate forward and backward lists
+        localintersectentries = trimRunwaysFromIntersections({
+            intersectentries:localintersectentries, 
+            headcontent:headModelContentRef.current, 
+            tailcontent:tailModelContentRef.current,
+            runwaycount:cradleProps.runwaycount,
+            cradlerowcount:cradlerowcountRef.current,
+            viewportrowcount:viewportrowcountRef.current,
+            crosscount:crosscountRef.current,
+        })
+
+        // -- isolate forward and backward lists (happens with rapid scrolling changes)
         //  then set scrollforward
         let forwardcount = 0, backwardcount = 0
         for (let intersectrecordindex = 0; intersectrecordindex <localintersectentries.length; intersectrecordindex++ ) {
@@ -806,11 +817,11 @@ const Cradle = ({
 
         // pauseItemObserverRef.current = true
 
-        let localContentList = [...modelContentRef.current]
+        // let localContentList = [...modelContentRef.current]
 
-        localContentList = getUIContentList({
+        let localContentList = getUIContentList({
 
-            localContentList,
+            localContentList:contentlistcopy,
             headindexcount:headindexchangecount,
             tailindexcount:tailindexchangecount,
             indexoffset: pendingcontentoffset,
@@ -857,7 +868,7 @@ const Cradle = ({
             }
         )
 
-        console.log('spineposref,headcontent, tailcontent',spineposref,headcontent, tailcontent)
+        // console.log('spineposref,headcontent, tailcontent',spineposref,headcontent, tailcontent)
 
         if (spineposref !== undefined) {
             if (cradleProps.orientation == 'vertical') {

@@ -249,6 +249,43 @@ export const getContentListRequirements = ({
 
 }
 
+// filter out items that are already in runways
+export const trimRunwaysFromIntersections = ({
+    intersectentries, 
+    headcontent, 
+    tailcontent,
+    runwaycount,
+    cradlerowcount,
+    viewportrowcount,
+    crosscount,
+}) => {
+    console.log('intersectentries, headcontent, tailcontent',intersectentries, headcontent, tailcontent)
+    let intersectindexes = [], 
+        headrunwayindexes = [], 
+        tailrunwaycontent = [], 
+        tailrunwayindexes = [], 
+        filteredintersections = []
+
+    for (let entry of intersectentries) {
+        intersectindexes.push(entry.target.dataset.index)
+    }
+    for (let item of headcontent) {
+        headrunwayindexes.push(item.props.index)
+    }
+    let viewportrowitemcount = viewportrowcount * crosscount
+    let tailcount = tailcontent.length - viewportrowitemcount
+    tailrunwaycontent = tailcontent.slice(-tailcount)
+    for (let item of tailrunwaycontent) {
+        tailrunwayindexes.push(item.props.index)
+    }
+    filteredintersections = intersectentries.filter((entry)=> {
+        return !headrunwayindexes.includes(entry.target.dataset.index)
+    })
+    console.log('intersectindexes,headrunwayindexes,tailrunwayindexes',filteredintersections,intersectindexes,headrunwayindexes,tailrunwayindexes)
+    return filteredintersections
+
+}
+
 // this makes ui resize less visually jarring
 // export const normalizeCradleAnchors = (cradleElement, orientation) => {
 
