@@ -1251,6 +1251,8 @@ const Cradle = ({
 
         } else if (reportType == 'unregister') {
 
+            console.log('UNREGISTERING',index)
+
             itemElementsRef.current.delete(index)
 
         }
