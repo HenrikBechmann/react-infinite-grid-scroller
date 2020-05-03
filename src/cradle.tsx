@@ -807,7 +807,7 @@ const Cradle = ({
 
         }
 
-        pauseItemObserverRef.current = true
+        // pauseItemObserverRef.current = true
 
         let localContentList = [...modelContentRef.current]
 
@@ -1013,6 +1013,8 @@ const Cradle = ({
 
         if (pauseScrollingEffectsRef.current) return
 
+        console.log('SCROLLING')
+
         let cradleState = cradlestateRef.current
 
         if (!viewportDataRef.current.isResizing) {
@@ -1109,15 +1111,18 @@ const Cradle = ({
                 break
             }
             case 'updatescroll': { // scroll
-                pauseItemObserverRef.current = false
+
+                saveCradleState('updatescrollrender')
+                break
+
+            }
+            case 'updatescrollrender': {
+
                 saveCradleState('ready')
                 break
+
             }
 
-            // case 'updatescrollrender': {
-            //     saveCradleState('ready')
-            //     break
-            // }
             // case 'layout': {
 
             //     cradleHeadStyleRevisionsRef.current = headlayoutDataRef.current
