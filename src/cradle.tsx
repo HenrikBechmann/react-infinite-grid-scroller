@@ -37,7 +37,7 @@ import {
     calcVisibleItems, 
     getReferenceIndexData,
     getContentListRequirements,
-    getSpineReferences,
+    getSpinePosRef,
     // normalizeCradleAnchors,
     allocateContentList,
 
@@ -648,9 +648,6 @@ const Cradle = ({
     // the async callback from IntersectionObserver.
     const itemobservercallback = useCallback((entries)=>{
 
-        console.log('ITEMOBSERVER cradlestateRef.current, pauseItemObserverRef.current, entries',
-            cradlestateRef.current, pauseItemObserverRef.current, entries)
-
         if (pauseItemObserverRef.current) return
 
         if (cradlestateRef.current == 'ready') {
@@ -849,7 +846,7 @@ const Cradle = ({
         headViewContentRef.current = headModelContentRef.current = headcontent
         tailViewContentRef.current = tailModelContentRef.current = tailcontent
 
-        let spineposref = getSpineReferences(
+        let spineposref = getSpinePosRef(
             {
                 headcontent,
                 tailcontent,
@@ -859,6 +856,8 @@ const Cradle = ({
                 spineElement:cradleSpineElementRef.current
             }
         )
+
+        console.log('spineposref,headcontent, tailcontent',spineposref,headcontent, tailcontent)
 
         if (spineposref !== undefined) {
             if (cradleProps.orientation == 'vertical') {
@@ -1012,8 +1011,6 @@ const Cradle = ({
         clearTimeout(scrollTimeridRef.current)
 
         if (pauseScrollingEffectsRef.current) return
-
-        console.log('SCROLLING')
 
         let cradleState = cradlestateRef.current
 

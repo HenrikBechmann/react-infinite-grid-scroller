@@ -430,7 +430,7 @@ export const allocateContentList = (
 
 }
 
-export const getSpineReferences = (
+export const getSpinePosRef = (
     {
         headcontent, 
         tailcontent, 
@@ -481,9 +481,9 @@ export const getSpineReferences = (
     }
 
     if (headposref) {
-        spineposref = headposref + spineposbase
+        spineposref = headposref
     } else if (tailposref) {
-        spineposref = tailposref + spineposbase
+        spineposref = tailposref
     }
 
     // console.log('spineposref, headposref, tailposref', spineposref, headposref, tailposref)
