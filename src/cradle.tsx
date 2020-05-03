@@ -655,7 +655,7 @@ const Cradle = ({
 
             let intersectentries = entries.filter(entry => (!entry.isIntersecting))
 
-            console.log('intersectentries',intersectentries)
+            // console.log('intersectentries',intersectentries)
 
             if (intersectentries.length) {
 

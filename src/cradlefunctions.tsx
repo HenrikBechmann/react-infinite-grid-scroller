@@ -259,12 +259,13 @@ export const trimRunwaysFromIntersections = ({
     viewportrowcount,
     crosscount,
 }) => {
-    console.log('intersectentries, headcontent, tailcontent',intersectentries, headcontent, tailcontent)
+    // console.log('intersectentries, headcontent, tailcontent',intersectentries, headcontent, tailcontent)
     let intersectindexes = [], 
         headrunwayindexes = [], 
         tailrunwaycontent = [], 
         tailrunwayindexes = [], 
-        filteredintersections = []
+        filteredintersections = [],
+        filteredindexes = []
 
     for (let entry of intersectentries) {
         intersectindexes.push(entry.target.dataset.index)
@@ -279,9 +280,16 @@ export const trimRunwaysFromIntersections = ({
         tailrunwayindexes.push(item.props.index)
     }
     filteredintersections = intersectentries.filter((entry)=> {
-        return !headrunwayindexes.includes(entry.target.dataset.index)
+        let comparenumber = parseInt(entry.target.dataset.index)
+        console.log('comparenumber',comparenumber,entry.target.dataset.index)
+
+        return !headrunwayindexes.includes(parseInt(entry.target.dataset.index))
     })
-    console.log('intersectindexes,headrunwayindexes,tailrunwayindexes',filteredintersections,intersectindexes,headrunwayindexes,tailrunwayindexes)
+    for (let entry of filteredintersections) {
+        filteredindexes.push(entry.target.dataset.index)
+    }
+    console.log('intersectindexes, headrunwayindexes, tailrunwayindexes, filteredindexes', 
+        intersectindexes,headrunwayindexes,tailrunwayindexes,filteredindexes)
     return filteredintersections
 
 }
