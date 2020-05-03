@@ -356,14 +356,14 @@ const Cradle = ({
         let bottom, left, top, right
 
         if (orientation == 'vertical') {
-            bottom = 0
+            bottom = gap + 'px'
             left = 0
             right = 0
             top = 'auto'
         } else {
             bottom = 0
             left = 'auto'
-            right = 0
+            right = gap + 'px'
             top = 0
         }
 

@@ -480,10 +480,10 @@ export const getSpineReferences = (
         }
     }
 
-    if (tailposref) {
-        spineposref = tailposref + spineposbase
-    } else if (headposref) {
+    if (headposref) {
         spineposref = headposref + spineposbase
+    } else if (tailposref) {
+        spineposref = tailposref + spineposbase
     }
 
     // console.log('spineposref, headposref, tailposref', spineposref, headposref, tailposref)
