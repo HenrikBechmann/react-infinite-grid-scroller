@@ -648,7 +648,8 @@ const Cradle = ({
     // the async callback from IntersectionObserver.
     const itemobservercallback = useCallback((entries)=>{
 
-        console.log('itemobserver entries',entries)
+        console.log('ITEMOBSERVER cradlestateRef.current, pauseItemObserverRef.current, entries',
+            cradlestateRef.current, pauseItemObserverRef.current, entries)
 
         if (pauseItemObserverRef.current) return
 
@@ -861,11 +862,13 @@ const Cradle = ({
 
         if (spineposref !== undefined) {
             if (cradleProps.orientation == 'vertical') {
-                cradleSpineElementRef.current.style.
-                    transform = `translate(0px,${spineposref}px)`
+                // cradleSpineElementRef.current.style.transform = `translate(0px,${spineposref}px)`
+                cradleSpineElementRef.current.style.top = spineposref + 'px'
+                cradleSpineElementRef.current.style.left = 'auto'
             } else {
-                cradleSpineElementRef.current.style.
-                    transform = `translate(${spineposref}px,0px)`
+                // cradleSpineElementRef.current.style.transform = `translate(${spineposref}px,0px)`
+                cradleSpineElementRef.current.style.left = spineposref + 'px'
+                cradleSpineElementRef.current.style.top = 'auto'
             }
         }
         saveCradleState('updatescroll')
@@ -1106,7 +1109,7 @@ const Cradle = ({
                 break
             }
             case 'updatescroll': { // scroll
-                // pauseItemObserverRef.current = false
+                pauseItemObserverRef.current = false
                 saveCradleState('ready')
                 break
             }
@@ -1186,8 +1189,6 @@ const Cradle = ({
             }          
 
             case 'ready':
-
-                pauseItemObserverRef.current && (pauseItemObserverRef.current = false)
 
                 break
 
