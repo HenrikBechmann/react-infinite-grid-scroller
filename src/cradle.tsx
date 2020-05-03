@@ -631,7 +631,7 @@ const Cradle = ({
     // the async callback from IntersectionObserver.
     const itemobservercallback = useCallback((entries)=>{
 
-        // console.log('pauseItemObserverRef.current, cradlestateRef.current',pauseItemObserverRef.current, cradlestateRef.current)
+        console.log('itemobserver entries',entries)
 
         if (pauseItemObserverRef.current) return
 
@@ -639,7 +639,7 @@ const Cradle = ({
 
             let intersectentries = entries.filter(entry => (!entry.isIntersecting))
 
-            // console.log('dropentries',dropentries)
+            console.log('intersectentries',intersectentries)
 
             if (intersectentries.length) {
 
@@ -651,7 +651,7 @@ const Cradle = ({
 
     },[])
 
-    // drop scroll content
+    // adjust scroll content
     const adjustcradleentries = useCallback((intersectentries)=>{
 
         let viewportData = viewportDataRef.current
