@@ -417,14 +417,14 @@ export const allocateContentList = (
     }
     let headitemcount = headcradlerows * crosscount
 
-    console.log('contentlist,headvirtualrows,headcradlerows,tailvirtualrows,rowdiff, headitemcount, crosscount',
-        [...contentlist],headvirtualrows,headcradlerows, tailvirtualrows,rowdiff, headitemcount, crosscount)
+    // console.log('contentlist,headvirtualrows,headcradlerows,tailvirtualrows,rowdiff, headitemcount, crosscount',
+    //     [...contentlist],headvirtualrows,headcradlerows, tailvirtualrows,rowdiff, headitemcount, crosscount)
 
     // allocate the contentlist to head and tail
     let headlist = contentlist.slice(0,headitemcount)
     let taillist = contentlist.slice(headitemcount)
 
-    console.log('headlist, taillist', [...headlist], [...taillist])
+    // console.log('headlist, taillist', [...headlist], [...taillist])
 
     return [headlist,taillist]
 
@@ -455,7 +455,7 @@ export const getSpineReferences = (
         if (headobject) {
             headelement = headobject.current
             if (headelement) {
-                console.log('headindex, headelement.offsetTop',headindex,headelement.offsetTop)
+                // console.log('headindex, headelement.offsetTop',headindex,headelement.offsetTop)
                 if (orientation == 'vertical') {
                     headposref = headelement.offsetTop + headelement.offsetHeight + gap
                 } else {
@@ -486,7 +486,7 @@ export const getSpineReferences = (
         spineposref = headposref + spineposbase
     }
 
-    console.log('spineposref, headposref, tailposref', spineposref, headposref, tailposref)
+    // console.log('spineposref, headposref, tailposref', spineposref, headposref, tailposref)
 
     return spineposref
 }

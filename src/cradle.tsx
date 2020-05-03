@@ -310,7 +310,7 @@ const Cradle = ({
     const crosscountRef = useRef(crosscount) // for easy reference by observer
     crosscountRef.current = crosscount // available for observer closure
 
-    const rowcount = useMemo(()=> {
+    const [cradlerowcount,viewportrowcount] = useMemo(()=> {
 
         let viewportLength, cellLength
         if (orientation == 'vertical') {
@@ -323,14 +323,14 @@ const Cradle = ({
 
         cellLength += gap
 
-        let rcount = Math.ceil(viewportLength/cellLength)
-        rcount += (runwaycount * 2)
-        let itemcount = rcount * crosscount
+        let viewportrowcount = Math.ceil(viewportLength/cellLength)
+        let cradlerowcount = viewportrowcount + (runwaycount * 2)
+        let itemcount = cradlerowcount * crosscount
         if (itemcount > listsize) {
             itemcount = listsize
-            rcount = Math.ceil(itemcount/crosscount)
+            cradlerowcount = Math.ceil(itemcount/crosscount)
         }
-        return rcount
+        return [cradlerowcount, viewportrowcount]
 
     },[
         orientation, 
@@ -345,8 +345,10 @@ const Cradle = ({
         crosscount,
     ])
 
-    const rowcountRef = useRef(null)
-    rowcountRef.current = rowcount
+    const cradlerowcountRef = useRef(null)
+    cradlerowcountRef.current = cradlerowcount
+    const viewportrowcountRef = useRef(null)
+    viewportrowcountRef.current = viewportrowcount
 
     // base styles
     let cradleHeadStyle = useMemo(() => {
@@ -708,19 +710,23 @@ const Cradle = ({
         // set pendingcontentoffset
         let indexoffset = contentlistcopy[0].props.index
         let pendingcontentoffset
-        let addcontentcount = shiftrowcount * crosscountRef.current // adjust in full row increments
+        let addcontentcount
 
         // next, verify number of rows to delete
         let headindexchangecount, headrowcount, viewportrowcount, tailindexchangecount, tailrowcount
 
+        headrowcount = Math.ceil(headModelContentRef.current.length/crosscountRef.current)
         if (scrollforward) { // delete from head; add to tail; head is direction of stroll
 
-            headrowcount = Math.ceil(headModelContentRef.current.length/crosscountRef.current)
             if (headrowcount <= cradleProps.runwaycount) {
                 let rowdiff = (cradleProps.runwaycount) - headrowcount + 1
                 shiftrowcount -= rowdiff
+                shiftrowcount = Math.max(0,shiftrowcount)
                 shiftitemcount -= (rowdiff * crosscountRef.current)
             }
+
+            addcontentcount = shiftrowcount * crosscountRef.current // adjust in full row increments
+
             pendingcontentoffset = indexoffset + shiftitemcount
             let proposedtailoffset = pendingcontentoffset + addcontentcount + ((contentlistcopy.length - shiftitemcount ) - 1)
 
@@ -746,6 +752,15 @@ const Cradle = ({
             tailindexchangecount = addcontentcount
 
         } else {
+            tailrowcount = cradlerowcountRef.current - headrowcount - viewportrowcountRef.current
+            if (tailrowcount <= cradleProps.runwaycount) {
+                let rowdiff = (cradleProps.runwaycount) - tailrowcount + 1
+                shiftrowcount -= rowdiff
+                shiftrowcount = Math.max(0,shiftrowcount)
+                shiftitemcount -= (rowdiff * crosscountRef.current)
+            }
+
+            addcontentcount = shiftrowcount * crosscountRef.current // adjust in full row increments
 
             pendingcontentoffset = indexoffset // add to tail (opposite end of scroll direction), offset will remain the same
             let proposedindexoffset = pendingcontentoffset - addcontentcount
@@ -802,7 +817,7 @@ const Cradle = ({
                 cellWidth:cradleProps.cellWidth,
                 padding:cradleProps.padding,
                 gap:cradleProps.gap, 
-                rowcount:rowcountRef.current,
+                rowcount:cradlerowcountRef.current,
             }
         )
 
@@ -856,7 +871,7 @@ const Cradle = ({
                 cellWidth, 
                 orientation, 
                 runwaycount,
-                rowcount,
+                rowcount:cradlerowcount,
                 gap,
                 visibletargetindexoffset,
                 targetScrollOffset:visibletargetscrolloffset,
@@ -906,7 +921,7 @@ const Cradle = ({
                 cellWidth,
                 padding,
                 gap, 
-                rowcount,
+                rowcount:cradlerowcount,
             }
         )
 
@@ -955,7 +970,7 @@ const Cradle = ({
         gap,
         padding,
         crosscount,
-        rowcount,
+        cradlerowcount,
       ]
     )
 
