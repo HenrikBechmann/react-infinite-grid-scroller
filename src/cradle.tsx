@@ -433,23 +433,29 @@ const Cradle = ({
 
     let cradleSpineStyle = useMemo(() => {
 
-        let paddingx, paddingy
+        let paddingx, paddingy, top, left
         if (orientation == 'vertical') {
 
             paddingx = 0
             paddingy = padding
+            top = padding + 'px',
+            left = 'auto'
 
         } else {
 
             paddingx = padding
             paddingy = 0
+            left = padding + 'px'
+            top = 'auto'
 
         }
 
         return {
 
             position: 'relative',
-            transform:`translate(${paddingx}px,${paddingy}px)`
+            top,
+            left,
+            // transform:`translate(${paddingx}px,${paddingy}px)`
 
         } as React.CSSProperties
 
@@ -481,12 +487,23 @@ const Cradle = ({
 
         })
 
-        let spinestyles = {
+        let top, left
+        if (orientation == 'vertical') {
+            top = padding + 'px'
+            left = 'auto'
+        } else {
+            top = 'auto'
+            left = 'padding' + 'px'
+        }
+
+        let spinestyle = {
             position: 'relative',
-            transform:`translate(0px,${padding}px)`
+            top,
+            left,
+            // transform:`translate(0px,${padding}px)`
         } as React.CSSProperties
 
-        return [headstyles, tailstyles, spinestyles]
+        return [headstyles, tailstyles, spinestyle]
 
     },[
 
