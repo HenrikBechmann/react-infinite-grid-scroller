@@ -691,8 +691,8 @@ const Cradle = ({
             }
         }
 
-        let netshift = forwardcount - backwardcount
-        if (netshift == 0) {
+        let shiftitemcount = forwardcount - backwardcount
+        if (shiftitemcount == 0) {
 
             return
 
@@ -700,19 +700,20 @@ const Cradle = ({
 
         scrollforward = (forwardcount > backwardcount)
 
-        netshift = Math.abs(netshift) // should be coerced same as number of rows to shift * crosscount
+        shiftitemcount = Math.abs(shiftitemcount) 
+        let shiftrowcount = Math.ceil(shiftitemcount/crosscountRef.current)
 
         // set pendingcontentoffset
         let indexoffset = contentlistcopy[0].props.index
         let pendingcontentoffset
-        let addcontentcount = Math.ceil(netshift/crosscountRef.current) * crosscountRef.current // adjust in full row increments
+        let addcontentcount = shiftrowcount * crosscountRef.current // adjust in full row increments
 
-        let headindexcount, tailindexcount
+        let headindexchangecount, headrowcount, viewportrowcount, tailindexchangecount, tailrowcount
 
         if (scrollforward) { // delete from head; add to tail; head is direction of stroll
 
-            pendingcontentoffset = indexoffset + netshift
-            let proposedtailoffset = pendingcontentoffset + addcontentcount + ((contentlistcopy.length - netshift ) - 1)
+            pendingcontentoffset = indexoffset + shiftitemcount
+            let proposedtailoffset = pendingcontentoffset + addcontentcount + ((contentlistcopy.length - shiftitemcount ) - 1)
 
             if ((proposedtailoffset) > (listsize -1) ) {
                 let diffitemcount = (proposedtailoffset - (listsize -1)) // items outside range
@@ -720,7 +721,7 @@ const Cradle = ({
                 let diffrows = Math.floor(diffitemcount/crosscountRef.current) // number of full rows to leave in place
                 let diffrowitems = (diffrows * crosscountRef.current)  // derived number of items to leave in place
                 let netshiftadjustment = diffrowitems // recognize net shift adjustment
-                netshift -= netshiftadjustment // apply adjustment to netshift
+                shiftitemcount -= netshiftadjustment // apply adjustment to netshift
                 pendingcontentoffset -= netshiftadjustment // apply adjustment to new offset for add
 
                 if (addcontentcount <=0) { // nothing to do
@@ -731,8 +732,9 @@ const Cradle = ({
             }
 
             // instructions for cradle content
-            headindexcount = -netshift
-            tailindexcount = addcontentcount//0
+            if (shiftrowcount )
+            headindexchangecount = -shiftitemcount
+            tailindexchangecount = addcontentcount
 
         } else {
 
@@ -744,7 +746,7 @@ const Cradle = ({
                 let diffrows = Math.floor(diffitemcount/crosscountRef.current) // number of full rows to leave in place
                 let netshiftadjustment = (diffrows * crosscountRef.current)
                 addcontentcount -= diffitemcount
-                netshift -= netshiftadjustment
+                shiftitemcount -= netshiftadjustment
                 if (addcontentcount <= 0) {
 
                     return
@@ -752,8 +754,8 @@ const Cradle = ({
                 }
             }
 
-            headindexcount = addcontentcount//0
-            tailindexcount = -netshift
+            headindexchangecount = addcontentcount//0
+            tailindexchangecount = -shiftitemcount
 
         }
 
@@ -765,8 +767,8 @@ const Cradle = ({
         localContentList = getUIContentList({
 
             localContentList,
-            headindexcount,
-            tailindexcount,
+            headindexcount:headindexchangecount,
+            tailindexcount:tailindexchangecount,
             indexoffset: pendingcontentoffset,
             orientation:cradleProps.orientation,
             cellHeight:cradleProps.cellHeight,
