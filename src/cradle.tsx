@@ -728,10 +728,12 @@ const Cradle = ({
             addcontentcount = shiftrowcount * crosscountRef.current // adjust in full row increments
 
             pendingcontentoffset = indexoffset + shiftitemcount
-            let proposedtailoffset = pendingcontentoffset + addcontentcount + ((contentlistcopy.length - shiftitemcount ) - 1)
 
-            if ((proposedtailoffset) > (listsize -1) ) {
-                let diffitemcount = (proposedtailoffset - (listsize -1)) // items outside range
+            let proposedtailindex = pendingcontentoffset + addcontentcount + 
+                ((contentlistcopy.length - shiftitemcount ) - 1)
+
+            if ((proposedtailindex) > (listsize -1) ) {
+                let diffitemcount = (proposedtailindex - (listsize -1)) // items outside range
                 addcontentcount -= diffitemcount // adjust the addcontent accordingly
                 let diffrows = Math.floor(diffitemcount/crosscountRef.current) // number of full rows to leave in place
                 let diffrowitems = (diffrows * crosscountRef.current)  // derived number of items to leave in place
@@ -747,8 +749,12 @@ const Cradle = ({
             }
 
             // instructions for cradle content
-            if (shiftrowcount )
-            headindexchangecount = -shiftitemcount
+            if (shiftrowcount ) {
+
+                headindexchangecount = -shiftitemcount
+
+            }
+
             tailindexchangecount = addcontentcount
 
         } else {
@@ -1087,6 +1093,11 @@ const Cradle = ({
                 saveCradleState('ready')
                 break
             }
+
+            // case 'updatescrollrender': {
+            //     saveCradleState('ready')
+            //     break
+            // }
             // case 'layout': {
 
             //     cradleHeadStyleRevisionsRef.current = headlayoutDataRef.current
