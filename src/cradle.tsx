@@ -727,29 +727,34 @@ const Cradle = ({
             return
 
         }
-
+        console.log('forwardcount, backwardcount, shiftitemcount',forwardcount, backwardcount, shiftitemcount)
         scrollforward = (forwardcount > backwardcount)
 
         shiftitemcount = Math.abs(shiftitemcount) 
         let shiftrowcount = Math.ceil(shiftitemcount/crosscountRef.current)
-
+        let transferrowcount = shiftrowcount
+        let transferitemcount = shiftitemcount
+        console.log('OPENING shiftrowcount, shiftitemcount',shiftrowcount, shiftitemcount)
         // set pendingcontentoffset
         let indexoffset = contentlistcopy[0].props.index
         let pendingcontentoffset
         let addcontentcount
 
         // next, verify number of rows to delete
-        let headindexchangecount, headrowcount, viewportrowcount, tailindexchangecount, tailrowcount
+        let headindexchangecount, currentheadrowcount, viewportrowcount, tailindexchangecount, tailrowcount
 
-        headrowcount = Math.ceil(headModelContentRef.current.length/crosscountRef.current)
+        currentheadrowcount = Math.ceil(headModelContentRef.current.length/crosscountRef.current)
+
         if (scrollforward) { // delete from head; add to tail; head is direction of stroll
-
-            if (headrowcount <= cradleProps.runwaycount) {
-                let rowdiff = (cradleProps.runwaycount) - headrowcount + 1
+            // differentiate transfer vs delete/add
+            if (currentheadrowcount <= cradleProps.runwaycount) {
+                let rowdiff = (cradleProps.runwaycount) - currentheadrowcount + 1
                 shiftrowcount -= rowdiff
                 shiftrowcount = Math.max(0,shiftrowcount)
-                shiftitemcount -= (rowdiff * crosscountRef.current)
+                shiftitemcount -= (shiftrowcount * crosscountRef.current)
             }
+
+
 
             addcontentcount = shiftrowcount * crosscountRef.current // adjust in full row increments
 
@@ -774,8 +779,10 @@ const Cradle = ({
                 }
             }
 
+            console.log('scrollforward,currentheadrowcount,shiftrowcount,shiftitemcount,addcontentcount',
+                scrollforward,currentheadrowcount,shiftrowcount,shiftitemcount,addcontentcount)
             // instructions for cradle content
-            if (shiftrowcount ) {
+            if (shiftitemcount) {
 
                 headindexchangecount = -shiftitemcount
 
@@ -784,7 +791,7 @@ const Cradle = ({
             tailindexchangecount = addcontentcount
 
         } else {
-            tailrowcount = cradlerowcountRef.current - headrowcount - viewportrowcountRef.current
+            tailrowcount = cradlerowcountRef.current - currentheadrowcount - viewportrowcountRef.current
             if (tailrowcount <= cradleProps.runwaycount) {
                 let rowdiff = (cradleProps.runwaycount) - tailrowcount + 1
                 shiftrowcount -= rowdiff
@@ -815,10 +822,6 @@ const Cradle = ({
 
         }
 
-        // pauseItemObserverRef.current = true
-
-        // let localContentList = [...modelContentRef.current]
-
         let localContentList = getUIContentList({
 
             localContentList:contentlistcopy,
@@ -836,10 +839,6 @@ const Cradle = ({
             placeholder:cradleProps.placeholder,
 
         })
-
-        // let scrolltop = viewportElement.scrollTop
-
-        // console.log('viewport scrolltop BEFORE ALLOCATION', scrolltop, viewportElement.scrollTop)
 
         // headModelContentRef.current = localContentList
         let [headcontent, tailcontent] = allocateContentList(
