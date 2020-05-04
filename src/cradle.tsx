@@ -837,6 +837,10 @@ const Cradle = ({
 
         })
 
+        // let scrolltop = viewportElement.scrollTop
+
+        // console.log('viewport scrolltop BEFORE ALLOCATION', scrolltop, viewportElement.scrollTop)
+
         // headModelContentRef.current = localContentList
         let [headcontent, tailcontent] = allocateContentList(
             {
@@ -844,7 +848,7 @@ const Cradle = ({
                 contentlist:localContentList,
                 runwaycount:cradleProps.runwaycount,
                 crosscount:crosscountRef.current,
-                viewportElement:viewportDataRef.current.elementref.current,
+                viewportElement,
                 cellHeight:cradleProps.cellHeight,
                 cellWidth:cradleProps.cellWidth,
                 padding:cradleProps.padding,
@@ -857,6 +861,10 @@ const Cradle = ({
         headViewContentRef.current = headModelContentRef.current = headcontent
         tailViewContentRef.current = tailModelContentRef.current = tailcontent
 
+        // scrolltop = viewportElement.scrollTop
+
+        // console.log('viewport scrolltop BEFORE GETSPINEPOSREF', scrolltop, viewportElement.scrollTop)
+
         let spineposref = getSpinePosRef(
             {
                 headcontent,
@@ -867,6 +875,8 @@ const Cradle = ({
                 spineElement:cradleSpineElementRef.current
             }
         )
+
+        console.log('spineposref',spineposref)
 
         // console.log('spineposref,headcontent, tailcontent',spineposref,headcontent, tailcontent)
 
@@ -881,6 +891,10 @@ const Cradle = ({
                 cradleSpineElementRef.current.style.top = 'auto'
             }
         }
+        // scrolltop = viewportElement.scrollTop
+
+        // console.log('viewport scrolltop BEFORE CALLING updatescroll', scrolltop, viewportElement.scrollTop)
+
         saveCradleState('updatescroll')
 
     },[])
@@ -1019,6 +1033,8 @@ const Cradle = ({
     // callback for scroll
     const onScroll = useCallback(() => {
 
+        // console.log('onScroll scrollTop',viewportDataRef.current.elementref.current.scrollTop)
+
         clearTimeout(scrollTimeridRef.current)
 
         if (pauseScrollingEffectsRef.current) return
@@ -1120,16 +1136,16 @@ const Cradle = ({
             }
             case 'updatescroll': { // scroll
 
-                saveCradleState('updatescrollrender')
-                break
-
-            }
-            case 'updatescrollrender': {
-
                 saveCradleState('ready')
                 break
 
             }
+            // case 'updatescrollrender': {
+
+            //     saveCradleState('ready')
+            //     break
+
+            // }
 
             // case 'layout': {
 

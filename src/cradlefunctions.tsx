@@ -288,8 +288,8 @@ export const trimRunwaysFromIntersections = ({
     for (let entry of filteredintersections) {
         filteredindexes.push(entry.target.dataset.index)
     }
-    console.log('intersectindexes, headrunwayindexes, tailrunwayindexes, filteredindexes', 
-        intersectindexes,headrunwayindexes,tailrunwayindexes,filteredindexes)
+    // console.log('intersectindexes, headrunwayindexes, tailrunwayindexes, filteredindexes', 
+        // intersectindexes,headrunwayindexes,tailrunwayindexes,filteredindexes)
     return filteredintersections
 
 }
@@ -455,7 +455,11 @@ export const allocateContentList = (
     let headcradlerows = Math.min(headvirtualrows, runwaycount)
 
     // calculate tail configuration
-    let tailvirtualrows = virtualrows - headvirtualrows // Math.ceil((scrollblocklength - scrolloffset - padding)/cellLength)
+    let tailvirtualrows = virtualrows - headvirtualrows
+
+    // console.log('scrolloffset, virtualrows, headvirtualrows, headcradlerows, tailvirtualrows',
+    //     scrolloffset, virtualrows, headvirtualrows, headcradlerows, tailvirtualrows)
+
     let rowdiff = tailvirtualrows - cradlerowcount
     if (rowdiff < headcradlerows) {
         headcradlerows += (headcradlerows - rowdiff)
@@ -484,8 +488,7 @@ export const getSpinePosRef = (
         gap,
         spineElement,
     }) => {
-    let headcomponent, headindex, headobject, headelement, headposref, 
-        tailcomponent, tailindex, tailobject, tailelement, tailposref,
+    let headcomponent, headindex, headobject, headelement, headposshift, 
         spineposbase,spineposref
 
     if (orientation == 'vertical') {
@@ -502,36 +505,40 @@ export const getSpinePosRef = (
             if (headelement) {
                 // console.log('headindex, headelement.offsetTop',headindex,headelement.offsetTop)
                 if (orientation == 'vertical') {
-                    headposref = headelement.offsetTop + headelement.offsetHeight + gap
+                    headposshift = headelement.offsetHeight + gap
                 } else {
-                    headposref = headelement.offsetLeft + headelement.offsetWidth + gap
+                    headposshift = headelement.offsetWidth + gap
                 }
             }
+        } else {
+            headposshift = 0
         }
     }
-    if (tailcontent.length) {
-        tailcomponent = tailcontent[0]
-        tailindex = tailcomponent.props.index
-        tailobject = itemelements.get(tailindex)
-        if (tailobject) {
-            tailelement = tailobject.current
-            if (tailelement) {
-                if (orientation == 'vertical') {
-                    tailposref = tailelement.offsetTop
-                } else {
-                    tailposref = tailelement.offsetLeft
-                }
-            }
-        }
-    }
+    // if (tailcontent.length) {
+    //     tailcomponent = tailcontent[0]
+    //     tailindex = tailcomponent.props.index
+    //     tailobject = itemelements.get(tailindex)
+    //     if (tailobject) {
+    //         tailelement = tailobject.current
+    //         if (tailelement) {
+    //             if (orientation == 'vertical') {
+    //                 tailposref = tailelement.offsetTop
+    //             } else {
+    //                 tailposref = tailelement.offsetLeft
+    //             }
+    //         }
+    //     }
+    // }
 
-    if (headposref) {
-        spineposref = headposref
-    } else if (tailposref) {
-        spineposref = tailposref
-    }
+    // if (headposref) {
+    //     spineposref = headposref
+    // } else if (tailposref) {
+    //     spineposref = tailposref
+    // }
 
     // console.log('spineposref, headposref, tailposref', spineposref, headposref, tailposref)
+
+    spineposref = spineposbase + headposshift
 
     return spineposref
 }
