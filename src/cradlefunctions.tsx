@@ -280,10 +280,10 @@ export const trimRunwaysFromIntersections = ({
         tailrunwayindexes.push(item.props.index)
     }
     filteredintersections = intersectentries.filter((entry)=> {
-        let comparenumber = parseInt(entry.target.dataset.index)
-        console.log('comparenumber',comparenumber,entry.target.dataset.index)
 
-        return !headrunwayindexes.includes(parseInt(entry.target.dataset.index))
+        return !headrunwayindexes.includes(parseInt(entry.target.dataset.index)) && 
+            !tailrunwayindexes.includes(parseInt(entry.target.dataset.index))
+
     })
     for (let entry of filteredintersections) {
         filteredindexes.push(entry.target.dataset.index)

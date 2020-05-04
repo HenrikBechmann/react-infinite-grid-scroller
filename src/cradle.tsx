@@ -634,7 +634,7 @@ const Cradle = ({
             itemobservercallback,
             {
                 root:viewportDataRef.current.elementref.current, 
-                threshold:.9
+                threshold:0
             } 
 
         )
