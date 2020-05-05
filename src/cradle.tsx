@@ -667,7 +667,8 @@ const Cradle = ({
 
     },[])
 
-    // adjust scroll content
+    // adjust scroll content:
+    // 1.transfer, 2.clip, and 3.add clip amount at other end
     const adjustcradleentries = useCallback((intersectentries)=>{
 
         let viewportData = viewportDataRef.current
