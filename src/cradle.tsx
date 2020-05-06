@@ -265,7 +265,7 @@ const Cradle = ({
     // cradle butterfly html components
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
-    const cradleSpineElementRef = useRef(null)
+    const spineCradleElementRef = useRef(null)
 
     // data model
     const modelContentRef = useRef(null)
@@ -681,21 +681,25 @@ const Cradle = ({
 
         let headCradleElement = headCradleElementRef.current
         let tailCradleElement = tailCradleElementRef.current
-        let scrollElement = cradleSpineElementRef.current.parentElement
+        let spineCradleElement = spineCradleElementRef.current
+        let scrollElement = spineCradleElement.parentElement
         let viewportElement = viewportData.elementref.current
 
-        let scrollforward
         let headcontentlist = headModelContentRef.current
         let tailcontentlist = tailModelContentRef.current
 
+        let scrollforward
+
         localintersectentries = trimRunwaysFromIntersections({
+
             intersectentries:localintersectentries, 
-            headcontent:headModelContentRef.current, 
-            tailcontent:tailModelContentRef.current,
+            headcontent:headcontentlist, 
+            tailcontent:tailcontentlist,
             runwaycount:cradleProps.runwaycount,
             cradlerowcount:cradlerowcountRef.current,
             viewportrowcount:viewportrowcountRef.current,
             crosscount:crosscountRef.current,
+
         })
 
         // -- isolate forward and backward lists (happens with rapid scrolling changes)
@@ -722,7 +726,7 @@ const Cradle = ({
             }
         }
         let shiftitemcount = forwardcount - backwardcount
-        let referenceindex = tailcontentlist[shiftitemcount]?.props.index || 0
+        let referenceindex = tailcontentlist[shiftitemcount]?.props.index || 0 // first time
         // console.log('forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries',
         //     forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries, tailcontentlist)
         if (shiftitemcount == 0) {
@@ -893,7 +897,7 @@ const Cradle = ({
                 itemelements:itemElementsRef.current,
                 orientation:cradleProps.orientation,
                 gap:cradleProps.gap,
-                spineElement:cradleSpineElementRef.current
+                spineElement:spineCradleElementRef.current
             }
         )
 
@@ -903,13 +907,13 @@ const Cradle = ({
 
         if (spineposref !== undefined) {
             if (cradleProps.orientation == 'vertical') {
-                // cradleSpineElementRef.current.style.transform = `translate(0px,${spineposref}px)`
-                cradleSpineElementRef.current.style.top = spineposref + 'px'
-                cradleSpineElementRef.current.style.left = 'auto'
+                // spineCradleElementRef.current.style.transform = `translate(0px,${spineposref}px)`
+                spineCradleElementRef.current.style.top = spineposref + 'px'
+                spineCradleElementRef.current.style.left = 'auto'
             } else {
-                // cradleSpineElementRef.current.style.transform = `translate(${spineposref}px,0px)`
-                cradleSpineElementRef.current.style.left = spineposref + 'px'
-                cradleSpineElementRef.current.style.top = 'auto'
+                // spineCradleElementRef.current.style.transform = `translate(${spineposref}px,0px)`
+                spineCradleElementRef.current.style.left = spineposref + 'px'
+                spineCradleElementRef.current.style.top = 'auto'
             }
         }
         // scrolltop = viewportElement.scrollTop
@@ -1347,7 +1351,7 @@ const Cradle = ({
             :null}
         <div 
             style = {cradleSpineStyle} 
-            ref = {cradleSpineElementRef}
+            ref = {spineCradleElementRef}
             data-name = 'spine'
         >
             <div 
