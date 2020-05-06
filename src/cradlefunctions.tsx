@@ -423,51 +423,61 @@ export const allocateContentList = (
     {
         contentlist, // of cradle, in items (React components)
         runwaycount, // in rows
-        crosscount, 
-        rowcount:cradlerowcount, // in cradle
-        viewportElement, 
-        orientation,
-        // measurements
-        cellHeight,
-        cellWidth,
-        gap,
-        padding,
+        referenceindex, // first tail item
+        crosscount,
+        // crosscount, 
+        // rowcount:cradlerowcount, // in cradle
+        // viewportElement, 
+        // orientation,
+        // // measurements
+        // cellHeight,
+        // cellWidth,
+        // gap,
+        // padding,
     }
 ) => {
 
-    // basic data
-    let cellLength, scrolloffset, scrollblocklength, viewportlength
-    let scrollblock = viewportElement.children[0]
-    if (orientation == 'vertical') {
-        scrolloffset = viewportElement.scrollTop
-        cellLength = cellHeight + gap
-        scrollblocklength = scrollblock.offsetHeight
-        viewportlength = viewportElement.offsetHeight
+    let offsetindex = contentlist[0].props.index
+    let runwaytailindex = contentlist[(runwaycount * crosscount)].props.index
+    let headitemcount
+    if (referenceindex < runwaytailindex) {
+        headitemcount = (referenceindex - offsetindex)
     } else {
-        scrolloffset = viewportElement.scrollLeft
-        cellLength = cellWidth + gap
-        scrollblocklength = scrollblock.offsetWidth
-        viewportlength = viewportElement.offsetWidth
+        headitemcount = (runwaycount * crosscount)
     }
-    // calculate head configuration
-    let virtualrows = Math.ceil((scrollblocklength - (padding *2) + gap)/cellLength)
-    let headvirtualrows = Math.max(0,Math.ceil((scrolloffset - padding)/cellLength))
-    let headcradlerows = Math.min(headvirtualrows, runwaycount)
+    // basic data
+    // let cellLength, scrolloffset, scrollblocklength, viewportlength
+    // let scrollblock = viewportElement.children[0]
+    // if (orientation == 'vertical') {
+    //     scrolloffset = viewportElement.scrollTop
+    //     cellLength = cellHeight + gap
+    //     scrollblocklength = scrollblock.offsetHeight
+    //     viewportlength = viewportElement.offsetHeight
+    // } else {
+    //     scrolloffset = viewportElement.scrollLeft
+    //     cellLength = cellWidth + gap
+    //     scrollblocklength = scrollblock.offsetWidth
+    //     viewportlength = viewportElement.offsetWidth
+    // }
+    // // calculate head configuration
+    // let virtualrows = Math.ceil((scrollblocklength - (padding *2) + gap)/cellLength)
+    // let headvirtualrows = Math.max(0,Math.ceil((scrolloffset - padding)/cellLength))
+    // let headcradlerows = Math.min(headvirtualrows, runwaycount)
 
-    // calculate tail configuration
-    let tailvirtualrows = virtualrows - headvirtualrows
+    // // calculate tail configuration
+    // let tailvirtualrows = virtualrows - headvirtualrows
 
-    // console.log('scrolloffset, virtualrows, headvirtualrows, headcradlerows, tailvirtualrows',
-    //     scrolloffset, virtualrows, headvirtualrows, headcradlerows, tailvirtualrows)
+    // // console.log('scrolloffset, virtualrows, headvirtualrows, headcradlerows, tailvirtualrows',
+    // //     scrolloffset, virtualrows, headvirtualrows, headcradlerows, tailvirtualrows)
 
-    let rowdiff = tailvirtualrows - cradlerowcount
-    if (rowdiff < headcradlerows) {
-        headcradlerows += (headcradlerows - rowdiff)
-    }
-    let headitemcount = headcradlerows * crosscount
+    // let rowdiff = tailvirtualrows - cradlerowcount
+    // if (rowdiff < headcradlerows) {
+    //     headcradlerows += (headcradlerows - rowdiff)
+    // }
+    // let headitemcount = headcradlerows * crosscount
 
-    // console.log('contentlist,headvirtualrows,headcradlerows,tailvirtualrows,rowdiff, headitemcount, crosscount',
-    //     [...contentlist],headvirtualrows,headcradlerows, tailvirtualrows,rowdiff, headitemcount, crosscount)
+    // // console.log('contentlist,headvirtualrows,headcradlerows,tailvirtualrows,rowdiff, headitemcount, crosscount',
+    // //     [...contentlist],headvirtualrows,headcradlerows, tailvirtualrows,rowdiff, headitemcount, crosscount)
 
     // allocate the contentlist to head and tail
     let headlist = contentlist.slice(0,headitemcount)

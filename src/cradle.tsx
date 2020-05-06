@@ -721,10 +721,10 @@ const Cradle = ({
             
             }
         }
-
         let shiftitemcount = forwardcount - backwardcount
-        console.log('forwardcount, backwardcount, shiftitemcount, localintersectentries',
-            forwardcount, backwardcount, shiftitemcount, localintersectentries)
+        let referenceindex = tailcontentlist[shiftitemcount]?.props.index || 0
+        console.log('forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries',
+            forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries, tailcontentlist)
         if (shiftitemcount == 0) {
 
             return
@@ -734,7 +734,6 @@ const Cradle = ({
 
         shiftitemcount = Math.abs(shiftitemcount) 
         let shiftrowcount = Math.ceil(shiftitemcount/crosscountRef.current)
-
         console.log('OPENING shiftrowcount, shiftitemcount',shiftrowcount, shiftitemcount)
 
         // set pendingcontentoffset
@@ -851,18 +850,25 @@ const Cradle = ({
         // headModelContentRef.current = localContentList
         let [headcontent, tailcontent] = allocateContentList(
             {
-                orientation:cradleProps.orientation,
                 contentlist:localContentList,
                 runwaycount:cradleProps.runwaycount,
                 crosscount:crosscountRef.current,
-                viewportElement,
-                cellHeight:cradleProps.cellHeight,
-                cellWidth:cradleProps.cellWidth,
-                padding:cradleProps.padding,
-                gap:cradleProps.gap, 
-                rowcount:cradlerowcountRef.current,
+                referenceindex,
+                // crosscount:crosscountRef.current,
+                // rowcount:cradlerowcountRef.current,
+
+                // orientation:cradleProps.orientation,
+
+                // viewportElement,
+                // cellHeight:cradleProps.cellHeight,
+                // cellWidth:cradleProps.cellWidth,
+                // padding:cradleProps.padding,
+                // gap:cradleProps.gap, 
             }
         )
+
+        console.log('SPLIT headcontent count, tailcontent count, referenceindex, headcontent, tailcontent',
+            headcontent.length, tailcontent.length, referenceindex, headcontent, tailcontent)
 
         modelContentRef.current = localContentList
         headViewContentRef.current = headModelContentRef.current = headcontent
@@ -969,16 +975,21 @@ const Cradle = ({
 
         let [headcontentlist, tailcontentlist] = allocateContentList(
             {
-                orientation,
                 contentlist:childlist,
-                runwaycount,
+                runwaycount:cradlePropsRef.current.runwaycount,
                 crosscount,
-                viewportElement:viewportDataRef.current.elementref.current,
-                cellHeight,
-                cellWidth,
-                padding,
-                gap, 
-                rowcount:cradlerowcount,
+                referenceindex:0,
+
+                // orientation,
+                // contentlist:childlist,
+                // runwaycount,
+                // crosscount,
+                // viewportElement:viewportDataRef.current.elementref.current,
+                // cellHeight,
+                // cellWidth,
+                // padding,
+                // gap, 
+                // rowcount:cradlerowcount,
             }
         )
 
