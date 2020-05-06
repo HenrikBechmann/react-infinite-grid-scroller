@@ -674,7 +674,6 @@ const Cradle = ({
         let viewportData = viewportDataRef.current
         let localintersectentries = [...intersectentries]
         let contentlistcopy = [...modelContentRef.current]
-
         let cradleProps = cradlePropsRef.current
 
         let listsize = cradleProps.listsize
@@ -847,9 +846,9 @@ const Cradle = ({
                 cellWidth:cradleProps.cellWidth,
                 observer: itemObserverRef.current,
                 crosscount:crosscountRef.current,
-                callbacksRef,
+                callbacks:callbacksRef.current,
                 getItem:cradleProps.getItem,
-                listsize:cradleProps.listsize,
+                listsize,
                 placeholder:cradleProps.placeholder,
 
             })
@@ -979,7 +978,7 @@ const Cradle = ({
             localContentList,
             observer:itemObserverRef.current,
             crosscount,
-            callbacksRef,
+            callbacks:callbacksRef.current,
             getItem,
             listsize,
             placeholder,

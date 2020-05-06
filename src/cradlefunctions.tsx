@@ -343,7 +343,7 @@ export const getUIContentList = (props) => {
         crosscount,
         listsize,
 
-        callbacksRef,
+        callbacks,
         getItem,
         placeholder,
         observer,
@@ -367,7 +367,7 @@ export const getUIContentList = (props) => {
                         cellHeight, 
                         cellWidth, 
                         observer, 
-                        callbacksRef, 
+                        callbacks, 
                         getItem, 
                         listsize, 
                         placeholder
@@ -397,7 +397,7 @@ export const getUIContentList = (props) => {
                         cellHeight, 
                         cellWidth, 
                         observer, 
-                        callbacksRef, 
+                        callbacks, 
                         getItem, 
                         listsize, 
                         placeholder
@@ -553,7 +553,7 @@ export const getSpinePosRef = (
     return spineposref
 }
 
-const emitItem = ({index, orientation, cellHeight, cellWidth, observer, callbacksRef, getItem, listsize, placeholder}) => {
+const emitItem = ({index, orientation, cellHeight, cellWidth, observer, callbacks, getItem, listsize, placeholder}) => {
 
     return <ItemShell
         key = {index} 
@@ -562,7 +562,7 @@ const emitItem = ({index, orientation, cellHeight, cellWidth, observer, callback
         cellWidth = { cellWidth }
         index = {index}
         observer = {observer}
-        callbacks = {callbacksRef}
+        callbacks = {callbacks}
         getItem = {getItem}
         listsize = {listsize}
         placeholder = { placeholder }

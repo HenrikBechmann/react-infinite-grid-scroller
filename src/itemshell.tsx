@@ -63,7 +63,7 @@ const ItemShell = (props) => {
     // initialize
     useEffect(() => {
 
-        let localcalls = callbacks.current
+        let localcalls = callbacks
 
         localcalls.getElementData && localcalls.getElementData(getElementData(),'register')
         return (()=>{
