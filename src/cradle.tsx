@@ -701,7 +701,7 @@ const Cradle = ({
         // -- isolate forward and backward lists (happens with rapid scrolling changes)
         //  then set scrollforward
         let forwardcount = 0, backwardcount = 0
-        for (let intersectrecordindex = 0; intersectrecordindex <localintersectentries.length; intersectrecordindex++ ) {
+        for (let intersectrecordindex = 0; intersectrecordindex < localintersectentries.length; intersectrecordindex++ ) {
             let sampleEntry = localintersectentries[intersectrecordindex]
             if (orientation == 'vertical') {
 
@@ -723,43 +723,44 @@ const Cradle = ({
         }
 
         let shiftitemcount = forwardcount - backwardcount
+        console.log('forwardcount, backwardcount, shiftitemcount, localintersectentries',
+            forwardcount, backwardcount, shiftitemcount, localintersectentries)
         if (shiftitemcount == 0) {
 
             return
 
         }
-        console.log('forwardcount, backwardcount, shiftitemcount',forwardcount, backwardcount, shiftitemcount)
         scrollforward = (forwardcount > backwardcount)
 
         shiftitemcount = Math.abs(shiftitemcount) 
         let shiftrowcount = Math.ceil(shiftitemcount/crosscountRef.current)
-        let transferrowcount = shiftrowcount
-        let transferitemcount = shiftitemcount
+
         console.log('OPENING shiftrowcount, shiftitemcount',shiftrowcount, shiftitemcount)
+
         // set pendingcontentoffset
         let indexoffset = contentlistcopy[0].props.index
         let pendingcontentoffset
-        let addcontentcount
+        let addcontentcount = 0
 
         // next, verify number of rows to delete
-        let headindexchangecount, currentheadrowcount, viewportrowcount, tailindexchangecount, tailrowcount
+        let headindexchangecount = 0, currentheadrowcount, viewportrowcount, tailindexchangecount = 0, tailrowcount
 
         currentheadrowcount = Math.ceil(headModelContentRef.current.length/crosscountRef.current)
 
+        let cliprowcount = 0, clipitemcount = 0
         if (scrollforward) { // delete from head; add to tail; head is direction of stroll
             // differentiate transfer vs delete/add
-            if (currentheadrowcount <= cradleProps.runwaycount) {
-                let rowdiff = (cradleProps.runwaycount) - currentheadrowcount + 1
-                shiftrowcount -= rowdiff
-                shiftrowcount = Math.max(0,shiftrowcount)
-                shiftitemcount -= (shiftrowcount * crosscountRef.current)
+            if ((currentheadrowcount + shiftrowcount) > (cradleProps.runwaycount)) {
+                let rowdiff = (currentheadrowcount + shiftrowcount) - (cradleProps.runwaycount)
+                cliprowcount = rowdiff
+                clipitemcount = (cliprowcount * crosscountRef.current)
             }
+            console.log('SCROLLFORWARD cliprowcount, clipitemcount, currentheadrowcount, shiftrowcount, cradleProps.runwaycount',
+                cliprowcount, clipitemcount, currentheadrowcount, shiftrowcount, cradleProps.runwaycount)
 
+            addcontentcount = clipitemcount // adjust in full row increments
 
-
-            addcontentcount = shiftrowcount * crosscountRef.current // adjust in full row increments
-
-            pendingcontentoffset = indexoffset + shiftitemcount
+            pendingcontentoffset = indexoffset + clipitemcount
 
             let proposedtailindex = pendingcontentoffset + addcontentcount + 
                 ((contentlistcopy.length - shiftitemcount ) - 1)
@@ -770,9 +771,8 @@ const Cradle = ({
                 let diffrows = Math.floor(diffitemcount/crosscountRef.current) // number of full rows to leave in place
                 let diffrowitems = (diffrows * crosscountRef.current)  // derived number of items to leave in place
                 let netshiftadjustment = diffrowitems // recognize net shift adjustment
-                shiftitemcount -= netshiftadjustment // apply adjustment to netshift
+                clipitemcount -= netshiftadjustment // apply adjustment to netshift
                 pendingcontentoffset -= netshiftadjustment // apply adjustment to new offset for add
-
                 if (addcontentcount <=0) { // nothing to do
 
                     return
@@ -780,16 +780,16 @@ const Cradle = ({
                 }
             }
 
-            console.log('scrollforward,currentheadrowcount,shiftrowcount,shiftitemcount,addcontentcount',
-                scrollforward,currentheadrowcount,shiftrowcount,shiftitemcount,addcontentcount)
             // instructions for cradle content
-            if (shiftitemcount) {
+            if (clipitemcount) {
 
-                headindexchangecount = -shiftitemcount
+                headindexchangecount = -clipitemcount
+                tailindexchangecount = addcontentcount
 
             }
 
-            tailindexchangecount = addcontentcount
+            console.log('clipitemcount, headindexchangecount, tailindexchangecount',
+                clipitemcount, headindexchangecount, tailindexchangecount)
 
         } else {
             tailrowcount = cradlerowcountRef.current - currentheadrowcount - viewportrowcountRef.current
@@ -818,28 +818,35 @@ const Cradle = ({
                 }
             }
 
-            headindexchangecount = addcontentcount//0
+            headindexchangecount = addcontentcount
             tailindexchangecount = -shiftitemcount
 
         }
 
-        let localContentList = getUIContentList({
+        let localContentList 
+        if (headindexchangecount || tailindexchangecount) {
+            localContentList = getUIContentList({
 
-            localContentList:contentlistcopy,
-            headindexcount:headindexchangecount,
-            tailindexcount:tailindexchangecount,
-            indexoffset: pendingcontentoffset,
-            orientation:cradleProps.orientation,
-            cellHeight:cradleProps.cellHeight,
-            cellWidth:cradleProps.cellWidth,
-            observer: itemObserverRef.current,
-            crosscount:crosscountRef.current,
-            callbacksRef,
-            getItem:cradleProps.getItem,
-            listsize:cradleProps.listsize,
-            placeholder:cradleProps.placeholder,
+                localContentList:contentlistcopy,
+                headindexcount:headindexchangecount,
+                tailindexcount:tailindexchangecount,
+                indexoffset: pendingcontentoffset,
+                orientation:cradleProps.orientation,
+                cellHeight:cradleProps.cellHeight,
+                cellWidth:cradleProps.cellWidth,
+                observer: itemObserverRef.current,
+                crosscount:crosscountRef.current,
+                callbacksRef,
+                getItem:cradleProps.getItem,
+                listsize:cradleProps.listsize,
+                placeholder:cradleProps.placeholder,
 
-        })
+            })
+        } else {
+
+            localContentList = contentlistcopy
+
+        }
 
         // headModelContentRef.current = localContentList
         let [headcontent, tailcontent] = allocateContentList(
@@ -1278,7 +1285,7 @@ const Cradle = ({
 
         } else if (reportType == 'unregister') {
 
-            console.log('UNREGISTERING',index)
+            // console.log('UNREGISTERING',index)
 
             itemElementsRef.current.delete(index)
 
