@@ -421,65 +421,26 @@ export const getUIContentList = (props) => {
 // butterfly model. Leading (head) all or partially hidden; tail, visible plus following hidden
 export const allocateContentList = (
     {
+
         contentlist, // of cradle, in items (React components)
         runwaycount, // in rows
         referenceindex, // first tail item
         crosscount,
-        // crosscount, 
-        // rowcount:cradlerowcount, // in cradle
-        // viewportElement, 
-        // orientation,
-        // // measurements
-        // cellHeight,
-        // cellWidth,
-        // gap,
-        // padding,
+
     }
 ) => {
 
     let offsetindex = contentlist[0].props.index
-    let runwaytailindex = contentlist[(runwaycount * crosscount)].props.index
+    let runwaytailindex = contentlist[(runwaycount * crosscount) - 1].props.index
     let headitemcount
-    if (referenceindex < runwaytailindex) {
-        headitemcount = (referenceindex - offsetindex)
-    } else {
-        headitemcount = (runwaycount * crosscount)
-    }
-    // basic data
-    // let cellLength, scrolloffset, scrollblocklength, viewportlength
-    // let scrollblock = viewportElement.children[0]
-    // if (orientation == 'vertical') {
-    //     scrolloffset = viewportElement.scrollTop
-    //     cellLength = cellHeight + gap
-    //     scrollblocklength = scrollblock.offsetHeight
-    //     viewportlength = viewportElement.offsetHeight
+
+    // if (referenceindex <= runwaytailindex) {
+    //     headitemcount = (referenceindex - offsetindex)
     // } else {
-    //     scrolloffset = viewportElement.scrollLeft
-    //     cellLength = cellWidth + gap
-    //     scrollblocklength = scrollblock.offsetWidth
-    //     viewportlength = viewportElement.offsetWidth
+    //     headitemcount = (runwaycount * crosscount)
     // }
-    // // calculate head configuration
-    // let virtualrows = Math.ceil((scrollblocklength - (padding *2) + gap)/cellLength)
-    // let headvirtualrows = Math.max(0,Math.ceil((scrolloffset - padding)/cellLength))
-    // let headcradlerows = Math.min(headvirtualrows, runwaycount)
+    headitemcount = (referenceindex - offsetindex)
 
-    // // calculate tail configuration
-    // let tailvirtualrows = virtualrows - headvirtualrows
-
-    // // console.log('scrolloffset, virtualrows, headvirtualrows, headcradlerows, tailvirtualrows',
-    // //     scrolloffset, virtualrows, headvirtualrows, headcradlerows, tailvirtualrows)
-
-    // let rowdiff = tailvirtualrows - cradlerowcount
-    // if (rowdiff < headcradlerows) {
-    //     headcradlerows += (headcradlerows - rowdiff)
-    // }
-    // let headitemcount = headcradlerows * crosscount
-
-    // // console.log('contentlist,headvirtualrows,headcradlerows,tailvirtualrows,rowdiff, headitemcount, crosscount',
-    // //     [...contentlist],headvirtualrows,headcradlerows, tailvirtualrows,rowdiff, headitemcount, crosscount)
-
-    // allocate the contentlist to head and tail
     let headlist = contentlist.slice(0,headitemcount)
     let taillist = contentlist.slice(headitemcount)
 
@@ -491,11 +452,11 @@ export const allocateContentList = (
 
 export const getSpinePosRef = (
     {
-        headcontent, 
-        tailcontent, 
+        // headcontent, 
+        // tailcontent, 
         itemelements, 
         orientation, 
-        gap,
+        // gap,
         spineElement,
         referenceindex,
     }) => {

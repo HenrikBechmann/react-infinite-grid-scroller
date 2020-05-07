@@ -725,11 +725,15 @@ const Cradle = ({
             }
         }
         let shiftitemcount = forwardcount - backwardcount
-        let referenceindex = tailcontentlist[shiftitemcount]?.props.index || 0 // first time
+        let referenceshift = Math.ceil(shiftitemcount/crosscountRef.current) * crosscountRef.current
+        let referenceindex = tailcontentlist[referenceshift]?.props.index || 0 // first time
+        if (referenceindex > (listsize -1)) {
+            referenceindex = listsize -1
+        }
         // console.log('forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries',
         //     forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries, tailcontentlist)
-        console.log('forwardcount, backwardcount, shiftitemcount, localintersectentries',
-            forwardcount, backwardcount, shiftitemcount, localintersectentries)
+        // console.log('forwardcount, backwardcount, shiftitemcount, referenceindex',
+        //     forwardcount, backwardcount, shiftitemcount, referenceindex)
         if (shiftitemcount == 0) {
 
             return
@@ -784,13 +788,17 @@ const Cradle = ({
 
                 if (addcontentcount <=0) { // nothing to do
 
-                    return
+                    // return
+                    clipitemcount = addcontentcount = 0
 
                 }
             }
 
             // instructions for cradle content
             // if (clipitemcount) {
+
+            // console.log('scrollforward,shiftitemcount,referenceindex,clipitemcount,addcontentcount',
+            //     scrollforward,shiftitemcount,referenceindex,clipitemcount,addcontentcount)
 
             headindexchangecount = -clipitemcount
             tailindexchangecount = addcontentcount
@@ -893,17 +901,17 @@ const Cradle = ({
 
         let spineposref = getSpinePosRef(
             {
-                headcontent,
-                tailcontent,
+                // headcontent,
+                // tailcontent,
                 itemelements:itemElementsRef.current,
                 orientation:cradleProps.orientation,
-                gap:cradleProps.gap,
+                // gap:cradleProps.gap,
                 spineElement:spineCradleElementRef.current,
                 referenceindex,
             }
         )
 
-        console.log('spineposref',spineposref)
+        // console.log('spineposref',spineposref)
 
         // console.log('spineposref,headcontent, tailcontent',spineposref,headcontent, tailcontent)
 
