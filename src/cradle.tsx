@@ -794,16 +794,11 @@ const Cradle = ({
                 }
             }
 
-            // instructions for cradle content
-            // if (clipitemcount) {
-
             // console.log('scrollforward,shiftitemcount,referenceindex,clipitemcount,addcontentcount',
             //     scrollforward,shiftitemcount,referenceindex,clipitemcount,addcontentcount)
 
             headindexchangecount = -clipitemcount
             tailindexchangecount = addcontentcount
-
-            // }
 
             // console.log('clipitemcount, headindexchangecount, tailindexchangecount',
             //     clipitemcount, headindexchangecount, tailindexchangecount)
@@ -875,16 +870,6 @@ const Cradle = ({
                 runwaycount:cradleProps.runwaycount,
                 crosscount:crosscountRef.current,
                 referenceindex,
-                // crosscount:crosscountRef.current,
-                // rowcount:cradlerowcountRef.current,
-
-                // orientation:cradleProps.orientation,
-
-                // viewportElement,
-                // cellHeight:cradleProps.cellHeight,
-                // cellWidth:cradleProps.cellWidth,
-                // padding:cradleProps.padding,
-                // gap:cradleProps.gap, 
             }
         )
 
@@ -894,8 +879,6 @@ const Cradle = ({
         modelContentRef.current = localContentList
         headViewContentRef.current = headModelContentRef.current = headcontent
         tailViewContentRef.current = tailModelContentRef.current = tailcontent
-
-        // scrolltop = viewportElement.scrollTop
 
         // console.log('viewport scrolltop BEFORE GETSPINEPOSREF', scrolltop, viewportElement.scrollTop)
 
@@ -926,7 +909,6 @@ const Cradle = ({
                 spineCradleElementRef.current.style.top = 'auto'
             }
         }
-        // scrolltop = viewportElement.scrollTop
 
         // console.log('viewport scrolltop BEFORE CALLING updatescroll', scrolltop, viewportElement.scrollTop)
 
@@ -1001,17 +983,6 @@ const Cradle = ({
                 runwaycount:cradlePropsRef.current.runwaycount,
                 crosscount,
                 referenceindex:0,
-
-                // orientation,
-                // contentlist:childlist,
-                // runwaycount,
-                // crosscount,
-                // viewportElement:viewportDataRef.current.elementref.current,
-                // cellHeight,
-                // cellWidth,
-                // padding,
-                // gap, 
-                // rowcount:cradlerowcount,
             }
         )
 
@@ -1019,32 +990,15 @@ const Cradle = ({
         headModelContentRef.current = headcontentlist
         tailModelContentRef.current = tailcontentlist
 
-        // let elementstyle = headCradleElementRef.current.style
-
-        // let headstyles:React.CSSProperties = {}
-        // let tailstyles:React.CSSProperties = {}
-
         if (orientation == 'vertical') {
-
-        //     headstyles.top = cradleoffset + 'px'
-        //     headstyles.bottom = 'auto'
-        //     headstyles.left = 'auto'
-        //     headstyles.right = 'auto'
 
             scrollPositionDataRef.current = {property:'scrollTop',value:scrollblockoffset}
 
         } else { // orientation = 'horizontal'
 
-        //     headstyles.top = 'auto'
-        //     headstyles.bottom = styles.bottom = 'auto'
-        //     headstyles.left = cradleoffset + 'px'
-        //     headstyles.right = 'auto'
-
             scrollPositionDataRef.current = {property:'scrollLeft',value:scrollblockoffset}
 
         }
-
-        // headlayoutDataRef.current = headstyles // for 'layout' state
 
     },[
         getItem,
@@ -1180,21 +1134,6 @@ const Cradle = ({
                 break
 
             }
-            // case 'updatescrollrender': {
-
-            //     saveCradleState('ready')
-            //     break
-
-            // }
-
-            // case 'layout': {
-
-            //     cradleHeadStyleRevisionsRef.current = headlayoutDataRef.current
-
-            //     saveCradleState('content')
-
-            //     break
-            // }
             case 'content': {
                 headViewContentRef.current = headModelContentRef.current // contentDataRef.current
                 tailViewContentRef.current = tailModelContentRef.current
@@ -1234,8 +1173,6 @@ const Cradle = ({
 
                     // redundant scroll position to avoid accidental positioning at tail end of reposition
                     if (viewportData.elementref.current) { // already unmounted if fails
-
-                        // normalizeCradleAnchors(headCradleElementRef.current, cradlePropsRef.current.orientation)
 
                         viewportData.elementref.current[scrollPositionDataRef.current.property] =
                             scrollPositionDataRef.current.value
