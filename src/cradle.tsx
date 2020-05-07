@@ -728,6 +728,8 @@ const Cradle = ({
         let referenceindex = tailcontentlist[shiftitemcount]?.props.index || 0 // first time
         // console.log('forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries',
         //     forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries, tailcontentlist)
+        console.log('forwardcount, backwardcount, shiftitemcount, localintersectentries',
+            forwardcount, backwardcount, shiftitemcount, localintersectentries)
         if (shiftitemcount == 0) {
 
             return
@@ -766,8 +768,8 @@ const Cradle = ({
 
             let proposedtailindex = pendingcontentoffset + contentlistcopy.length - 1
 
-            console.log('OPEN indexoffset, listsize, proposedtailindex, proposedtailindex, clipitemcount, pendingcontentoffset, addcontentcount, contentlistcopy',
-                indexoffset, listsize, proposedtailindex, proposedtailindex, clipitemcount, pendingcontentoffset, addcontentcount, contentlistcopy)
+            // console.log('OPEN indexoffset, listsize, proposedtailindex, proposedtailindex, clipitemcount, pendingcontentoffset, addcontentcount, contentlistcopy',
+            //     indexoffset, listsize, proposedtailindex, proposedtailindex, clipitemcount, pendingcontentoffset, addcontentcount, contentlistcopy)
             if ((proposedtailindex) > (listsize -1) ) {
                 let diffitemcount = (proposedtailindex - (listsize -1)) // items outside range
                 addcontentcount -= diffitemcount // adjust the addcontent accordingly
@@ -777,8 +779,8 @@ const Cradle = ({
                 clipitemcount -= diffrowitems // apply adjustment to netshift
                 pendingcontentoffset -= diffrowitems // apply adjustment to new offset for add
 
-                console.log('proposedtailindex, diffitemcount, addcontentcount, diffrows, diffrowitems, clipitemcount, pendingcontentoffset',
-                    proposedtailindex, diffitemcount, addcontentcount, diffrows, diffrowitems, clipitemcount, pendingcontentoffset)
+                // console.log('proposedtailindex, diffitemcount, addcontentcount, diffrows, diffrowitems, clipitemcount, pendingcontentoffset',
+                //     proposedtailindex, diffitemcount, addcontentcount, diffrows, diffrowitems, clipitemcount, pendingcontentoffset)
 
                 if (addcontentcount <=0) { // nothing to do
 
@@ -830,8 +832,8 @@ const Cradle = ({
 
         }
 
-        console.log('getUIContentList headindexchangecount, tailindexchangecount, indexoffset',
-            headindexchangecount, tailindexchangecount, indexoffset)
+        // console.log('getUIContentList headindexchangecount, tailindexchangecount, indexoffset',
+        //     headindexchangecount, tailindexchangecount, indexoffset)
         let localContentList 
         if (headindexchangecount || tailindexchangecount) {
             localContentList = getUIContentList({
@@ -896,11 +898,12 @@ const Cradle = ({
                 itemelements:itemElementsRef.current,
                 orientation:cradleProps.orientation,
                 gap:cradleProps.gap,
-                spineElement:spineCradleElementRef.current
+                spineElement:spineCradleElementRef.current,
+                referenceindex,
             }
         )
 
-        // console.log('spineposref',spineposref)
+        console.log('spineposref',spineposref)
 
         // console.log('spineposref,headcontent, tailcontent',spineposref,headcontent, tailcontent)
 

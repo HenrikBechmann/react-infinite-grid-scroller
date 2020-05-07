@@ -497,33 +497,56 @@ export const getSpinePosRef = (
         orientation, 
         gap,
         spineElement,
+        referenceindex,
     }) => {
-    let headcomponent, headindex, headobject, headelement, headposshift, 
-        spineposbase,spineposref
+    // let headcomponent, headindex, headobject, headelement, headposshift, 
+    let spineposbase,spineposref
+
+    let referenceobject = itemelements.get(referenceindex)
+    let referenceposshift
 
     if (orientation == 'vertical') {
         spineposbase = spineElement.offsetTop
     } else {
         spineposbase = spineElement.offsetLeft
     }
-    if (headcontent.length) {
-        headcomponent = headcontent[headcontent.length - 1]
-        headindex = headcomponent.props.index
-        headobject = itemelements.get(headindex)
-        if (headobject) {
-            headelement = headobject.current
-            if (headelement) {
-                // console.log('headindex, headelement.offsetTop',headindex,headelement.offsetTop)
-                if (orientation == 'vertical') {
-                    headposshift = headelement.offsetHeight + gap
-                } else {
-                    headposshift = headelement.offsetWidth + gap
-                }
+    if (referenceobject) {
+        let referenceelement = referenceobject.current
+        if (referenceelement) {
+            // console.log('headindex, headelement.offsetTop',headindex,headelement.offsetTop)
+            if (orientation == 'vertical') {
+                referenceposshift =referenceelement.offsetTop
+            } else {
+                referenceposshift = referenceelement.offsetWidth
             }
-        } else {
-            headposshift = 0
         }
+    } else {
+        referenceposshift = 0
     }
+
+    // if (orientation == 'vertical') {
+    //     spineposbase = spineElement.offsetTop
+    // } else {
+    //     spineposbase = spineElement.offsetLeft
+    // }
+    // if (headcontent.length) {
+    //     headcomponent = headcontent[headcontent.length - 1]
+    //     headindex = headcomponent.props.index
+    //     headobject = itemelements.get(headindex)
+    //     if (headobject) {
+    //         headelement = headobject.current
+    //         if (headelement) {
+    //             // console.log('headindex, headelement.offsetTop',headindex,headelement.offsetTop)
+    //             if (orientation == 'vertical') {
+    //                 headposshift = headelement.offsetHeight + gap
+    //             } else {
+    //                 headposshift = headelement.offsetWidth + gap
+    //             }
+    //         }
+    //     } else {
+    //         headposshift = 0
+    //     }
+    // }
     // if (tailcontent.length) {
     //     tailcomponent = tailcontent[0]
     //     tailindex = tailcomponent.props.index
@@ -548,7 +571,7 @@ export const getSpinePosRef = (
 
     // console.log('spineposref, headposref, tailposref', spineposref, headposref, tailposref)
 
-    spineposref = spineposbase + headposshift
+    spineposref = spineposbase + referenceposshift
 
     return spineposref
 }
