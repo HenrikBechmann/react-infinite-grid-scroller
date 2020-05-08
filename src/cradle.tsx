@@ -735,8 +735,8 @@ const Cradle = ({
         }
         // console.log('forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries',
         //     forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries, tailcontentlist)
-        // console.log('forwardcount, backwardcount, shiftitemcount, referenceindex',
-        //     forwardcount, backwardcount, shiftitemcount, referenceindex)
+        console.log('forwardcount, backwardcount, shiftitemcount, referenceindex,localintersectentries',
+            forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries)
         if (shiftitemcount == 0) {
 
             return
@@ -838,6 +838,10 @@ const Cradle = ({
 
             headindexchangecount = addcontentcount
             tailindexchangecount = -shiftitemcount
+
+            console.log('scrollforward,referenceindex,headindexchangecount, tailindexchangecount',
+                scrollforward,referenceindex,headindexchangecount, tailindexchangecount)
+
 
         }
 
