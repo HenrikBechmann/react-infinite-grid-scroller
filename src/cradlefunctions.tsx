@@ -259,8 +259,8 @@ export const trimRunwaysFromIntersections = ({
     // viewportrowcount,
     crosscount,
 }) => {
-    console.log('trimRunwaysFromIntersections intersectentries, headcontent, tailcontent',
-        [...intersectentries],[...headcontent], [...tailcontent])
+    // console.log('trimRunwaysFromIntersections intersectentries, headcontent, tailcontent',
+    //     [...intersectentries],[...headcontent], [...tailcontent])
     let intersectindexes = [], 
         headindexes = [], 
         tailindexes = [],
@@ -320,10 +320,10 @@ export const trimRunwaysFromIntersections = ({
         viewportindexes.push(item.props.index)
     }
 
-    console.log('intersectindexes, headindexes, viewportindexes, tailrunwayindexes, \
-        headrowcount, headrowcountadjustment, viewportrowcount, tailrowcount, tailrunwayitemcount',
-        intersectindexes, headindexes, viewportindexes, tailrunwayindexes, 
-        headrowcount, headrowcountadjustment, viewportrowcount, tailrowcount,tailrunwayitemcount)
+    // console.log('intersectindexes, headindexes, viewportindexes, tailrunwayindexes, \
+    //     headrowcount, headrowcountadjustment, viewportrowcount, tailrowcount, tailrunwayitemcount',
+    //     intersectindexes, headindexes, viewportindexes, tailrunwayindexes, 
+    //     headrowcount, headrowcountadjustment, viewportrowcount, tailrowcount,tailrunwayitemcount)
 
     // isolate viewport indexes
     filteredintersections = intersectentries.filter((entry)=> {

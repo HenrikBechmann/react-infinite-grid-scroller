@@ -653,6 +653,29 @@ const Cradle = ({
 
         if (cradlestateRef.current == 'ready') {
 
+            // console.log('entries',entries)
+
+            let orientation = cradlePropsRef.current.orientation
+            let groups = {intersecting:[],notintersecting:[]}
+            let forwardcount = 0, backwardcount = 0
+            for (let entry of entries) {
+
+                if (entry.boundingClientRect.y - entry.rootBounds.y < 0) {
+                    forwardcount++
+                } else {
+                    backwardcount++
+                }
+
+                if (entry.isIntersecting) {
+                    groups.intersecting.push(entry)
+                } else {
+                    groups.notintersecting.push(entry)
+                }
+
+            }
+
+            console.log('intersection groups, forwardcount, backwardcount',groups, forwardcount, backwardcount)
+
             let intersectentries = entries.filter(entry => (!entry.isIntersecting))
 
             // console.log('intersectentries',intersectentries)
@@ -735,8 +758,8 @@ const Cradle = ({
         }
         // console.log('forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries',
         //     forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries, tailcontentlist)
-        console.log('forwardcount, backwardcount, shiftitemcount, referenceindex,localintersectentries',
-            forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries)
+        // console.log('forwardcount, backwardcount, shiftitemcount, referenceindex,localintersectentries',
+        //     forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries)
         if (shiftitemcount == 0) {
 
             return
@@ -839,9 +862,8 @@ const Cradle = ({
             headindexchangecount = addcontentcount
             tailindexchangecount = -shiftitemcount
 
-            console.log('scrollforward,referenceindex,headindexchangecount, tailindexchangecount',
-                scrollforward,referenceindex,headindexchangecount, tailindexchangecount)
-
+            // console.log('scrollforward,referenceindex,headindexchangecount, tailindexchangecount',
+            //     scrollforward,referenceindex,headindexchangecount, tailindexchangecount)
 
         }
 
