@@ -653,49 +653,35 @@ const Cradle = ({
 
         if (cradlestateRef.current == 'ready') {
 
-            // console.log('entries',entries)
-
             let orientation = cradlePropsRef.current.orientation
-            let groups = {intersecting:[],notintersecting:[]}
-            let forwardcount = 0, backwardcount = 0
-            for (let entry of entries) {
 
-                if (entry.boundingClientRect.y - entry.rootBounds.y < 0) {
-                    forwardcount++
+            let spinesideintersections = entries.filter(entry => {
+
+                if (orientation == 'vertical') {
+
+                    (entry.boundingClientRect.y - entry.rootBounds.y < 0)
+
                 } else {
-                    backwardcount++
+
+                    (entry.boundingClientRect.x - entry.rootBounds.x < 0)
+
                 }
+            })
 
-                if (entry.isIntersecting) {
-                    groups.intersecting.push(entry)
-                } else {
-                    groups.notintersecting.push(entry)
-                }
+            let incomingintersections = entries.filter(entry => (entry.isIntersecting))
 
-            }
+            isMounted() && adjustcradleentries(spinesideintersections)
 
-            console.log('intersection groups, forwardcount, backwardcount',groups, forwardcount, backwardcount)
-
-            let intersectentries = entries.filter(entry => (!entry.isIntersecting))
-
-            // console.log('intersectentries',intersectentries)
-
-            if (intersectentries.length) {
-
-                // console.log('calling adjustcradleentries',dropentries)
-                isMounted() && adjustcradleentries(intersectentries)
-
-            }
         }
 
     },[])
 
     // adjust scroll content:
     // 1.transfer, 2.clip, and 3.add clip amount at other end
-    const adjustcradleentries = useCallback((intersectentries)=>{
+    const adjustcradleentries = useCallback((spinesideintersections)=>{
 
         let viewportData = viewportDataRef.current
-        let localintersectentries = [...intersectentries]
+        let localintersections = [...spinesideintersections]
         let contentlistcopy = [...modelContentRef.current]
         let cradleProps = cradlePropsRef.current
 
@@ -712,9 +698,9 @@ const Cradle = ({
 
         let scrollforward
 
-        localintersectentries = trimRunwaysFromIntersections({
+        localintersections = trimRunwaysFromIntersections({
 
-            intersectentries:localintersectentries, 
+            intersections:localintersections,
             headcontent:headcontentlist, 
             tailcontent:tailcontentlist,
             runwaycount:cradleProps.runwaycount,
@@ -727,25 +713,17 @@ const Cradle = ({
         // -- isolate forward and backward lists (happens with rapid scrolling changes)
         //  then set scrollforward
         let forwardcount = 0, backwardcount = 0
-        for (let intersectrecordindex = 0; intersectrecordindex < localintersectentries.length; intersectrecordindex++ ) {
-            let sampleEntry = localintersectentries[intersectrecordindex]
+        for (let intersectrecordindex = 0; intersectrecordindex < localintersections.length; intersectrecordindex++ ) {
+            let sampleEntry = localintersections[intersectrecordindex]
             if (orientation == 'vertical') {
 
-                if (sampleEntry.boundingClientRect.y - sampleEntry.rootBounds.y < 0) {
+                if (!sampleEntry.isIntersecting) {
                     forwardcount++
                 } else {
                     backwardcount++
                 }
             
-            } else {
-            
-                if (sampleEntry.boundingClientRect.x - sampleEntry.rootBounds.x < 0) {
-                    forwardcount++
-                } else {
-                    backwardcount++
-                }
-            
-            }
+            } 
         }
         let shiftitemcount = forwardcount - backwardcount
         let referenceshift = Math.ceil(shiftitemcount/crosscountRef.current) * crosscountRef.current

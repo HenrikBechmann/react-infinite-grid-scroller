@@ -251,7 +251,7 @@ export const getContentListRequirements = ({
 
 // filter out items that are already in runways
 export const trimRunwaysFromIntersections = ({
-    intersectentries, 
+    intersections,
     headcontent, 
     tailcontent,
     runwaycount,
@@ -261,7 +261,7 @@ export const trimRunwaysFromIntersections = ({
 }) => {
     // console.log('trimRunwaysFromIntersections intersectentries, headcontent, tailcontent',
     //     [...intersectentries],[...headcontent], [...tailcontent])
-    let intersectindexes = [], 
+    let intersectionindexes = [], 
         headindexes = [], 
         tailindexes = [],
         viewportindexes = [],
@@ -273,9 +273,11 @@ export const trimRunwaysFromIntersections = ({
 
     let cradleitemcount = headcontent.length + tailcontent.length
     // collect intersectindexes
-    for (let entry of intersectentries) {
-        intersectindexes.push(entry.target.dataset.index)
+    for (let entry of intersections) {
+        intersectionindexes.push(entry.target.dataset.index)
     }
+
+    console.log('intersectionindexes',intersectionindexes)
     // collect headcontent indexes
     for (let item of headcontent) {
         headindexes.push(item.props.index)
@@ -326,7 +328,7 @@ export const trimRunwaysFromIntersections = ({
     //     headrowcount, headrowcountadjustment, viewportrowcount, tailrowcount,tailrunwayitemcount)
 
     // isolate viewport indexes
-    filteredintersections = intersectentries.filter((entry)=> {
+    filteredintersections = intersections.filter((entry)=> {
 
         return !headindexes.includes(parseInt(entry.target.dataset.index)) && 
             !tailrunwayindexes.includes(parseInt(entry.target.dataset.index))
