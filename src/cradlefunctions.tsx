@@ -256,32 +256,41 @@ export const trimRunwaysFromIntersections = ({
     tailcontent,
     runwaycount,
     cradlerowcount,
-    viewportrowcount,
+    // viewportrowcount,
     crosscount,
 }) => {
     console.log('trimRunwaysFromIntersections intersectentries, headcontent, tailcontent',
         [...intersectentries],[...headcontent], [...tailcontent])
     let intersectindexes = [], 
-        headrunwayindexes = [], 
+        headindexes = [], 
+        tailindexes = [],
+        viewportindexes = [],
+        tailrunwayindexes = [],
+        filteredindexes = [],
+        viewportcontent = [],
         tailrunwaycontent = [], 
-        tailrunwayindexes = [], 
-        filteredintersections = [],
-        filteredindexes = []
+        filteredintersections = []
 
+    let cradleitemcount = headcontent.length + tailcontent.length
     // collect intersectindexes
     for (let entry of intersectentries) {
         intersectindexes.push(entry.target.dataset.index)
     }
     // collect headcontent indexes
     for (let item of headcontent) {
-        headrunwayindexes.push(item.props.index)
+        headindexes.push(item.props.index)
     }
 
     // calculate tail runway content
-    let headrowcountadjustment = Math.ceil(headcontent.length/crosscount) - runwaycount
+    let headrowcount = Math.ceil(headcontent.length/crosscount)
+    let headrowcountadjustment = headrowcount - runwaycount
     let tailrunwayitemcount
+    let viewportitemcount
+    let viewportrowcount
     let tailrowcount = runwaycount - headrowcountadjustment
-    if (tailrowcount !== 0) {
+    if (tailrowcount < 0) tailrowcount = 0
+
+    if (tailrowcount != 0) {
 
         let tailrowitemcount = (headcontent.length + tailcontent.length) % crosscount
         if (tailrowitemcount == 0) tailrowitemcount = crosscount
@@ -295,22 +304,31 @@ export const trimRunwaysFromIntersections = ({
 
     if (tailrunwayitemcount == 0) {
         tailrunwaycontent = []
+        viewportcontent = tailcontent
     } else {
         tailrunwaycontent = tailcontent.slice(-tailrunwayitemcount)
+        viewportcontent = tailcontent.slice(0,tailrunwayitemcount)
     }
-
+    viewportitemcount = viewportcontent.length
+    viewportrowcount = Math.ceil(viewportitemcount/crosscount)
     // collect tail runway indexes
     for (let item of tailrunwaycontent) {
         tailrunwayindexes.push(item.props.index)
     }
 
-    console.log('headrowcountadjustment,tailrowcount,tailrunwayitemcount, headrunwayindexes,tailrunwayindexes',
-        headrowcountadjustment,tailrowcount,tailrunwayitemcount, tailrunwaycontent, headrunwayindexes, tailrunwayindexes)
+    for (let item of viewportcontent) {
+        viewportindexes.push(item.props.index)
+    }
+
+    console.log('intersectindexes, headindexes, viewportindexes, tailrunwayindexes, \
+        headrowcount, headrowcountadjustment, viewportrowcount, tailrowcount, tailrunwayitemcount',
+        intersectindexes, headindexes, viewportindexes, tailrunwayindexes, 
+        headrowcount, headrowcountadjustment, viewportrowcount, tailrowcount,tailrunwayitemcount)
 
     // isolate viewport indexes
     filteredintersections = intersectentries.filter((entry)=> {
 
-        return !headrunwayindexes.includes(parseInt(entry.target.dataset.index)) && 
+        return !headindexes.includes(parseInt(entry.target.dataset.index)) && 
             !tailrunwayindexes.includes(parseInt(entry.target.dataset.index))
 
     })

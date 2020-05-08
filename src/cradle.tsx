@@ -696,7 +696,7 @@ const Cradle = ({
             tailcontent:tailcontentlist,
             runwaycount:cradleProps.runwaycount,
             cradlerowcount:cradlerowcountRef.current,
-            viewportrowcount:viewportrowcountRef.current,
+            // viewportrowcount:viewportrowcountRef.current,
             crosscount:crosscountRef.current,
 
         })
