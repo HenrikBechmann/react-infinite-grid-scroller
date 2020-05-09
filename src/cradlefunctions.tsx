@@ -441,18 +441,20 @@ export const allocateContentList = (
 
 export const getSpinePosRef = (
     {
-        // headcontent, 
-        // tailcontent, 
+        scrollforward,
         itemelements, 
         orientation, 
-        // gap,
         spineElement,
         referenceindex,
+        crosscount,
     }) => {
     // let headcomponent, headindex, headobject, headelement, headposshift, 
     let spineposbase,spineposref
-
-    let referenceobject = itemelements.get(referenceindex)
+    var localrefindex = referenceindex
+    if (!scrollforward) {
+        localrefindex += crosscount
+    }
+    let referenceobject = itemelements.get(localrefindex)
     let referenceposshift
 
     if (orientation == 'vertical') {
@@ -467,66 +469,29 @@ export const getSpinePosRef = (
             if (orientation == 'vertical') {
                 referenceposshift =referenceelement.offsetTop
             } else {
-                referenceposshift = referenceelement.offsetWidth
+                referenceposshift = referenceelement.offsetLeft
             }
         }
     } else {
         referenceposshift = 0
     }
 
-    // if (orientation == 'vertical') {
-    //     spineposbase = spineElement.offsetTop
-    // } else {
-    //     spineposbase = spineElement.offsetLeft
-    // }
-    // if (headcontent.length) {
-    //     headcomponent = headcontent[headcontent.length - 1]
-    //     headindex = headcomponent.props.index
-    //     headobject = itemelements.get(headindex)
-    //     if (headobject) {
-    //         headelement = headobject.current
-    //         if (headelement) {
-    //             // console.log('headindex, headelement.offsetTop',headindex,headelement.offsetTop)
-    //             if (orientation == 'vertical') {
-    //                 headposshift = headelement.offsetHeight + gap
-    //             } else {
-    //                 headposshift = headelement.offsetWidth + gap
-    //             }
-    //         }
-    //     } else {
-    //         headposshift = 0
-    //     }
-    // }
-    // if (tailcontent.length) {
-    //     tailcomponent = tailcontent[0]
-    //     tailindex = tailcomponent.props.index
-    //     tailobject = itemelements.get(tailindex)
-    //     if (tailobject) {
-    //         tailelement = tailobject.current
-    //         if (tailelement) {
-    //             if (orientation == 'vertical') {
-    //                 tailposref = tailelement.offsetTop
-    //             } else {
-    //                 tailposref = tailelement.offsetLeft
-    //             }
-    //         }
-    //     }
-    // }
-
-    // if (headposref) {
-    //     spineposref = headposref
-    // } else if (tailposref) {
-    //     spineposref = tailposref
-    // }
-
-    // console.log('spineposref, headposref, tailposref', spineposref, headposref, tailposref)
-
     spineposref = spineposbase + referenceposshift
 
     return spineposref
 }
 
-const emitItem = ({index, orientation, cellHeight, cellWidth, observer, callbacks, getItem, listsize, placeholder}) => {
+const emitItem = ({
+    index, 
+    orientation, 
+    cellHeight, 
+    cellWidth, 
+    observer, 
+    callbacks, 
+    getItem, 
+    listsize, 
+    placeholder
+}) => {
 
     return <ItemShell
         key = {index} 

@@ -3,7 +3,6 @@
 
 /*
     TODO:
-    - check listsize and other parameter availability inside closures using useRef
 */
 
 /*
@@ -674,6 +673,7 @@ const Cradle = ({
 
     },[])
 
+    // TODO: investigate case where both forward and backward scroll
     // adjust scroll content:
     // 1.transfer, 2.clip, and 3.add clip amount at other end
     const adjustcradleentries = useCallback((spinesideintersections)=>{
@@ -723,9 +723,16 @@ const Cradle = ({
             
             } 
         }
+        scrollforward = (forwardcount > backwardcount)
         let shiftitemcount = forwardcount - backwardcount
         let referenceshift = Math.ceil(shiftitemcount/crosscountRef.current) * crosscountRef.current
-        let referenceindex = tailcontentlist[referenceshift]?.props.index || 0 // first time
+
+        let referenceindex
+        if (scrollforward) {
+            referenceindex = tailcontentlist[referenceshift]?.props.index || 0 // first time
+        } else {
+            referenceindex = headcontentlist[headcontentlist.length + referenceshift]?.props.index || 0 // first time
+        }
         if (referenceindex > (listsize -1)) {
             referenceindex = listsize -1
         }
@@ -741,7 +748,6 @@ const Cradle = ({
             return
 
         }
-        scrollforward = (forwardcount > backwardcount)
 
         shiftitemcount = Math.abs(shiftitemcount) 
         let shiftrowcount = Math.ceil(shiftitemcount/crosscountRef.current)
@@ -844,6 +850,7 @@ const Cradle = ({
         //     headindexchangecount, tailindexchangecount, indexoffset)
         let localContentList 
         if (headindexchangecount || tailindexchangecount) {
+            console.log('getUIContentList')
             localContentList = getUIContentList({
 
                 localContentList:contentlistcopy,
@@ -878,8 +885,8 @@ const Cradle = ({
             }
         )
 
-        // console.log('SPLIT headcontent count, tailcontent count, referenceindex, headcontent, tailcontent',
-        //     headcontent.length, tailcontent.length, referenceindex, headcontent, tailcontent)
+        console.log('SPLIT headcontent count, tailcontent count, referenceindex, headcontent, tailcontent',
+            headcontent.length, tailcontent.length, referenceindex, headcontent, tailcontent)
 
         modelContentRef.current = localContentList
         headViewContentRef.current = headModelContentRef.current = headcontent
@@ -889,17 +896,16 @@ const Cradle = ({
 
         let spineposref = getSpinePosRef(
             {
-                // headcontent,
-                // tailcontent,
+                scrollforward,
                 itemelements:itemElementsRef.current,
                 orientation:cradleProps.orientation,
-                // gap:cradleProps.gap,
                 spineElement:spineCradleElementRef.current,
                 referenceindex,
+                crosscount:crosscountRef.current
             }
         )
 
-        // console.log('spineposref',spineposref)
+        console.log('spineposref',spineposref)
 
         // console.log('spineposref,headcontent, tailcontent',spineposref,headcontent, tailcontent)
 
