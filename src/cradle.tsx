@@ -655,13 +655,10 @@ const Cradle = ({
 
             let orientation = cradlePropsRef.current.orientation
 
-            // console.log('entries', orientation, entries)
-
             let spinesideintersections = entries.filter(entry => {
 
-                // console.log('entry',entry)
                 if (orientation == 'vertical') {
-                   // console.log('entry.rootBounds.y,entry.boundingClientRect.y',entry.rootBounds.y,entry.boundingClientRect.y)
+
                    return (( entry.rootBounds.y - entry.boundingClientRect.y ) > 0)
 
                 } else {
@@ -670,10 +667,6 @@ const Cradle = ({
 
                 }
             })
-
-            // let incomingintersections = entries.filter(entry => (entry.isIntersecting))
-
-            // console.log('spinesideintersections', spinesideintersections)
 
             isMounted() && adjustcradleentries(spinesideintersections)
 
@@ -739,10 +732,10 @@ const Cradle = ({
         if (referenceindex < 0) {
             referenceindex = 0
         }
-        // console.log('forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries',
-        //     forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries, tailcontentlist)
+
         console.log('forwardcount, backwardcount, shiftitemcount, referenceindex,localintersections',
             forwardcount, backwardcount, shiftitemcount, referenceindex, localintersections)
+
         if (shiftitemcount == 0) {
 
             return
@@ -766,24 +759,21 @@ const Cradle = ({
 
         let cliprowcount = 0, clipitemcount = 0
 
-        if ((currentheadrowcount + shiftrowcount) > (cradleProps.runwaycount)) {
-            let rowdiff = (currentheadrowcount + shiftrowcount) - (cradleProps.runwaycount)
-            cliprowcount = rowdiff
-            clipitemcount = (cliprowcount * crosscountRef.current)
-        }
-        // console.log('SCROLLFORWARD cliprowcount, clipitemcount, currentheadrowcount, shiftrowcount, cradleProps.runwaycount',
-        //     cliprowcount, clipitemcount, currentheadrowcount, shiftrowcount, cradleProps.runwaycount)
-
-        addcontentcount = clipitemcount // adjust in full row increments
 
         if (scrollforward) { // delete from head; add to tail; head is direction of stroll
-            // differentiate transfer vs delete/add
+
+            if ((currentheadrowcount + shiftrowcount) > (cradleProps.runwaycount)) {
+                let rowdiff = (currentheadrowcount + shiftrowcount) - (cradleProps.runwaycount)
+                cliprowcount = rowdiff
+                clipitemcount = (cliprowcount * crosscountRef.current)
+            }
+
+            addcontentcount = clipitemcount
+
             pendingcontentoffset = indexoffset + clipitemcount
 
             let proposedtailindex = pendingcontentoffset + contentlistcopy.length - 1
 
-            // console.log('OPEN indexoffset, listsize, proposedtailindex, proposedtailindex, clipitemcount, pendingcontentoffset, addcontentcount, contentlistcopy',
-            //     indexoffset, listsize, proposedtailindex, proposedtailindex, clipitemcount, pendingcontentoffset, addcontentcount, contentlistcopy)
             if ((proposedtailindex) > (listsize -1) ) {
 
                 let diffitemcount = (proposedtailindex - (listsize -1)) // items outside range
@@ -794,9 +784,6 @@ const Cradle = ({
                 clipitemcount -= diffrowitems // apply adjustment to netshift
                 pendingcontentoffset -= diffrowitems // apply adjustment to new offset for add
 
-                // console.log('proposedtailindex, diffitemcount, addcontentcount, diffrows, diffrowitems, clipitemcount, pendingcontentoffset',
-                //     proposedtailindex, diffitemcount, addcontentcount, diffrows, diffrowitems, clipitemcount, pendingcontentoffset)
-
                 if (addcontentcount <=0) { // nothing to do
 
                     clipitemcount = addcontentcount = 0
@@ -804,24 +791,18 @@ const Cradle = ({
                 }
             }
 
-            // console.log('scrollforward,shiftitemcount,referenceindex,clipitemcount,addcontentcount',
-            //     scrollforward,shiftitemcount,referenceindex,clipitemcount,addcontentcount)
-
             headindexchangecount = -clipitemcount
             tailindexchangecount = addcontentcount
 
-            // console.log('clipitemcount, headindexchangecount, tailindexchangecount',
-            //     clipitemcount, headindexchangecount, tailindexchangecount)
-
         } else {
 
-            // tailrowcount = cradlerowcountRef.current - currentheadrowcount - viewportrowcountRef.current
-            // if (tailrowcount <= cradleProps.runwaycount) {
-            //     let rowdiff = (cradleProps.runwaycount) - tailrowcount + 1
-            //     shiftrowcount -= rowdiff
-            //     shiftrowcount = Math.max(0,shiftrowcount)
-            //     shiftitemcount -= (rowdiff * crosscountRef.current)
-            // }
+            if ((currentheadrowcount + shiftrowcount) > (cradleProps.runwaycount)) {
+                let rowdiff = (currentheadrowcount + shiftrowcount) - (cradleProps.runwaycount)
+                cliprowcount = rowdiff
+                clipitemcount = (cliprowcount * crosscountRef.current)
+            }
+
+            addcontentcount = clipitemcount // adjust in full row increments
 
             addcontentcount = shiftrowcount * crosscountRef.current // adjust in full row increments
 
