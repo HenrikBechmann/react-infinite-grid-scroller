@@ -655,20 +655,25 @@ const Cradle = ({
 
             let orientation = cradlePropsRef.current.orientation
 
+            // console.log('entries', orientation, entries)
+
             let spinesideintersections = entries.filter(entry => {
 
+                // console.log('entry',entry)
                 if (orientation == 'vertical') {
-
-                    (entry.boundingClientRect.y - entry.rootBounds.y < 0)
+                   // console.log('entry.rootBounds.y,entry.boundingClientRect.y',entry.rootBounds.y,entry.boundingClientRect.y)
+                   return (( entry.rootBounds.y - entry.boundingClientRect.y ) > 0)
 
                 } else {
 
-                    (entry.boundingClientRect.x - entry.rootBounds.x < 0)
+                    return (( entry.rootBounds.x - entry.boundingClientRect.x ) > 0)
 
                 }
             })
 
-            let incomingintersections = entries.filter(entry => (entry.isIntersecting))
+            // let incomingintersections = entries.filter(entry => (entry.isIntersecting))
+
+            // console.log('spinesideintersections', spinesideintersections)
 
             isMounted() && adjustcradleentries(spinesideintersections)
 
@@ -679,6 +684,8 @@ const Cradle = ({
     // adjust scroll content:
     // 1.transfer, 2.clip, and 3.add clip amount at other end
     const adjustcradleentries = useCallback((spinesideintersections)=>{
+
+        if (spinesideintersections.length == 0) return
 
         let viewportData = viewportDataRef.current
         let localintersections = [...spinesideintersections]
@@ -703,12 +710,10 @@ const Cradle = ({
             intersections:localintersections,
             headcontent:headcontentlist, 
             tailcontent:tailcontentlist,
-            runwaycount:cradleProps.runwaycount,
-            cradlerowcount:cradlerowcountRef.current,
-            // viewportrowcount:viewportrowcountRef.current,
-            crosscount:crosscountRef.current,
 
         })
+
+        if (localintersections.length == 0) return
 
         // -- isolate forward and backward lists (happens with rapid scrolling changes)
         //  then set scrollforward
@@ -736,8 +741,8 @@ const Cradle = ({
         }
         // console.log('forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries',
         //     forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries, tailcontentlist)
-        // console.log('forwardcount, backwardcount, shiftitemcount, referenceindex,localintersectentries',
-        //     forwardcount, backwardcount, shiftitemcount, referenceindex, localintersectentries)
+        console.log('forwardcount, backwardcount, shiftitemcount, referenceindex,localintersections',
+            forwardcount, backwardcount, shiftitemcount, referenceindex, localintersections)
         if (shiftitemcount == 0) {
 
             return
