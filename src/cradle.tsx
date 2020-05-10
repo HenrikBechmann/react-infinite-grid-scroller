@@ -675,7 +675,7 @@ const Cradle = ({
 
     // TODO: investigate case where both forward and backward scroll
     // adjust scroll content:
-    // 1.transfer, 2.clip, and 3.add clip amount at other end
+    // 1.shift, 2.clip, and 3.add clip amount at other end
     const adjustcradleentries = useCallback((spinesideintersections)=>{
 
         if (spinesideintersections.length == 0) return
@@ -725,14 +725,25 @@ const Cradle = ({
         }
         scrollforward = (forwardcount > backwardcount)
         let shiftitemcount = forwardcount - backwardcount
-        let referenceshift = Math.ceil(shiftitemcount/crosscountRef.current) * crosscountRef.current
+        let referencerowshift = Math.abs(Math.ceil(shiftitemcount/crosscountRef.current))
+        let referenceshift
 
         let referenceindex
         if (scrollforward) {
+            referenceshift = referencerowshift * crosscountRef.current
             referenceindex = tailcontentlist[referenceshift]?.props.index || 0 // first time
         } else {
-            referenceindex = headcontentlist[headcontentlist.length + referenceshift]?.props.index || 0 // first time
+            referenceshift = referencerowshift * crosscountRef.current
+            // let headcontentindex = (headcontentlist.length) - referenceshift
+            // if ((headcontentindex) > (headcontentlist.length + 1)) {
+            //     referenceindex = tailcontentlist[0]?.props.index || 0
+            // } else {
+                referenceindex = headcontentlist[(headcontentlist.length - referenceshift)]?.props.index || 0 // first time
+            // }
+            // console.log('calculated scrollbackward referencerowshift, referenceshift, headcontentindex, referenceindex, headcontentlist',
+            //     referencerowshift, referenceshift, headcontentindex, referenceindex, [...headcontentlist])
         }
+
         if (referenceindex > (listsize -1)) {
             referenceindex = listsize -1
         }
@@ -740,8 +751,8 @@ const Cradle = ({
             referenceindex = 0
         }
 
-        console.log('forwardcount, backwardcount, shiftitemcount, referenceindex,localintersections',
-            forwardcount, backwardcount, shiftitemcount, referenceindex, localintersections)
+        // console.log('forwardcount, backwardcount, shiftitemcount, referencerowshift, referenceshift, referenceindex,localintersections',
+        //     forwardcount, backwardcount, shiftitemcount, referencerowshift, referenceshift, referenceindex, localintersections)
 
         if (shiftitemcount == 0) {
 
@@ -764,7 +775,6 @@ const Cradle = ({
         currentheadrowcount = Math.ceil(headModelContentRef.current.length/crosscountRef.current)
 
         let cliprowcount = 0, clipitemcount = 0
-
 
         if (scrollforward) { // delete from head; add to tail; head is direction of stroll
 
@@ -803,12 +813,16 @@ const Cradle = ({
 
         } else {
 
+            // debugger
+
             if ((currentheadrowcount - shiftrowcount) < (cradleProps.runwaycount)) {
+                addcontentcount = (shiftrowcount * crosscountRef.current)
+                // console.log('scrollback adjust for RUNWAY UNDERFLOW')
                 let rowdiff = (cradleProps.runwaycount) - (currentheadrowcount - shiftrowcount)
                 cliprowcount = rowdiff
-                let tailrowcount = (listsize % crosscountRef.current)
+                let tailrowitemcount = (listsize % crosscountRef.current)
                 if (tailrowcount) {
-                    clipitemcount = tailrowcount
+                    clipitemcount = tailrowitemcount
                     if (cliprowcount > 1) {
                         clipitemcount += ((cliprowcount -1) * crosscountRef.current)
                     }
@@ -817,13 +831,13 @@ const Cradle = ({
                 }
             }
 
-            addcontentcount = clipitemcount // adjust in full row increments
-
-            // pendingcontentoffset = indexoffset // add to tail (opposite end of scroll direction), offset will remain the same
+            pendingcontentoffset = indexoffset // add to tail (opposite end of scroll direction), offset will remain the same
 
             let proposedindexoffset = pendingcontentoffset - clipitemcount
 
             if (proposedindexoffset < 0) {
+
+                // console.log('scrollback adjust for TOP UNDERFLOW')
 
                 let diffitemcount = -proposedindexoffset
                 let diffrows = Math.floor(diffitemcount/crosscountRef.current) // number of full rows to leave in place
@@ -831,6 +845,9 @@ const Cradle = ({
 
                 addcontentcount -= diffitemcount
                 clipitemcount -= diffrowitems
+
+                // console.log('addcontentcount, clipitemcount, diffitemcount, diffrowitems',
+                //     addcontentcount, clipitemcount, diffitemcount, diffrowitems)
                 if (addcontentcount <= 0) {
 
                     clipitemcount = addcontentcount = 0
@@ -841,8 +858,8 @@ const Cradle = ({
             headindexchangecount = addcontentcount
             tailindexchangecount = -clipitemcount
 
-            console.log('scrollforward,referenceindex,headindexchangecount, tailindexchangecount',
-                scrollforward,referenceindex,headindexchangecount, tailindexchangecount)
+            // console.log('SCROLLBACK scrollforward,referenceindex,headindexchangecount, tailindexchangecount',
+            //     scrollforward,referenceindex,headindexchangecount, tailindexchangecount)
 
         }
 
@@ -850,7 +867,7 @@ const Cradle = ({
         //     headindexchangecount, tailindexchangecount, indexoffset)
         let localContentList 
         if (headindexchangecount || tailindexchangecount) {
-            console.log('getUIContentList')
+            // console.log('getUIContentList')
             localContentList = getUIContentList({
 
                 localContentList:contentlistcopy,
@@ -885,8 +902,8 @@ const Cradle = ({
             }
         )
 
-        console.log('SPLIT headcontent count, tailcontent count, referenceindex, headcontent, tailcontent',
-            headcontent.length, tailcontent.length, referenceindex, headcontent, tailcontent)
+        // console.log('SPLIT headcontent count, tailcontent count, referenceindex, headcontent, tailcontent',
+        //     headcontent.length, tailcontent.length, referenceindex, headcontent, tailcontent)
 
         modelContentRef.current = localContentList
         headViewContentRef.current = headModelContentRef.current = headcontent
@@ -901,7 +918,8 @@ const Cradle = ({
                 orientation:cradleProps.orientation,
                 spineElement:spineCradleElementRef.current,
                 referenceindex,
-                crosscount:crosscountRef.current
+                crosscount:crosscountRef.current,
+                gap:cradleProps.gap
             }
         )
 

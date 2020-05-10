@@ -258,7 +258,12 @@ export const trimRunwaysFromIntersections = ({
 
     let headindexes = [], 
         tailindexes = [],
-        filteredintersections = []
+        filteredintersections = [],
+        intersectionindexes = []
+
+    for (let item of intersections) {
+        intersectionindexes.push(item.target.dataset.index)
+    }
 
     // collect headcontent indexes
     for (let item of headcontent) {
@@ -278,6 +283,9 @@ export const trimRunwaysFromIntersections = ({
         }
 
     })
+
+    // console.log('intersectionindexes, headindexes, tailindexes, filteredintersections',
+    //     intersectionindexes, headindexes, tailindexes,filteredintersections)
 
     return filteredintersections
 
@@ -447,6 +455,7 @@ export const getSpinePosRef = (
         spineElement,
         referenceindex,
         crosscount,
+        gap,
     }) => {
     // let headcomponent, headindex, headobject, headelement, headposshift, 
     let spineposbase,spineposref
@@ -467,16 +476,27 @@ export const getSpinePosRef = (
         if (referenceelement) {
             // console.log('headindex, headelement.offsetTop',headindex,headelement.offsetTop)
             if (orientation == 'vertical') {
-                referenceposshift =referenceelement.offsetTop
+                if (scrollforward) {
+                    referenceposshift = referenceelement.offsetTop
+                } else {
+                    referenceposshift = referenceelement.offsetHeight + gap
+                }
             } else {
-                referenceposshift = referenceelement.offsetLeft
+                referenceposshift = referenceelement.offsetWidth
             }
         }
     } else {
         referenceposshift = 0
     }
 
-    spineposref = spineposbase + referenceposshift
+    if (scrollforward) {
+        spineposref = spineposbase + referenceposshift
+    } else {
+        spineposref = spineposbase - referenceposshift
+    }
+
+    console.log('in getSpinePosRef referenceobject, scrollforward, spineposbase, localrefindex, referenceposshift, spineposref',
+        referenceobject, scrollforward, spineposbase, localrefindex, referenceposshift, spineposref)
 
     return spineposref
 }
