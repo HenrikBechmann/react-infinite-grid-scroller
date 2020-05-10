@@ -495,8 +495,8 @@ export const getSpinePosRef = (
         spineposref = spineposbase - referenceposshift
     }
 
-    console.log('in getSpinePosRef referenceobject, scrollforward, spineposbase, localrefindex, referenceposshift, spineposref',
-        referenceobject, scrollforward, spineposbase, localrefindex, referenceposshift, spineposref)
+    // console.log('in getSpinePosRef referenceobject, scrollforward, spineposbase, localrefindex, referenceposshift, spineposref',
+    //     referenceobject, scrollforward, spineposbase, localrefindex, referenceposshift, spineposref)
 
     return spineposref
 }

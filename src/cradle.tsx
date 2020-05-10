@@ -923,7 +923,7 @@ const Cradle = ({
             }
         )
 
-        console.log('spineposref',spineposref)
+        // console.log('spineposref',spineposref)
 
         // console.log('spineposref,headcontent, tailcontent',spineposref,headcontent, tailcontent)
 
