@@ -633,8 +633,8 @@ const Cradle = ({
             itemobservercallback,
             {
                 root:viewportDataRef.current.elementref.current, 
-                threshold:0,
-                rootMargin:'50px'
+                threshold:.9,
+                // rootMargin:'50px'
             } 
 
         )
@@ -654,13 +654,27 @@ const Cradle = ({
             return
         }
 
+        setTimeout(()=> {
+            isMounted() && adjustcradleentries(entries)
+        })
+
+
+    },[])
+
+    // TODO: investigate case where both forward and backward scroll
+    // adjust scroll content:
+    // 1.shift, 2.clip, and 3.add clip amount at other end
+    const adjustcradleentries = useCallback((entries)=>{
+
+        let spinesideintersections
+
         if (cradlestateRef.current == 'ready' || cradlestateRef.current == 'updatescroll') {
 
             let orientation = cradlePropsRef.current.orientation
 
             console.log('OBSERVER entries',entries)
 
-            let spinesideintersections = entries.filter(entry => {
+            spinesideintersections = entries.filter(entry => {
 
                 if (orientation == 'vertical') {
 
@@ -673,16 +687,11 @@ const Cradle = ({
                 }
             })
 
-            isMounted() && adjustcradleentries(spinesideintersections)
+        } else {
 
+            return
+        
         }
-
-    },[])
-
-    // TODO: investigate case where both forward and backward scroll
-    // adjust scroll content:
-    // 1.shift, 2.clip, and 3.add clip amount at other end
-    const adjustcradleentries = useCallback((spinesideintersections)=>{
 
         console.log('spinesideintersections.length',spinesideintersections.length,spinesideintersections)
 
