@@ -117,7 +117,7 @@ const Cradle = ({
     const cradlestateRef = useRef(null) // access by closures
     cradlestateRef.current = cradlestate
 
-    console.log('running cradle with state',cradlestate)
+    // console.log('running cradle with state',cradlestate)
 
     // -----------------------------------------------------------------------
     // -------------------------[ control variables ]-----------------
@@ -650,13 +650,13 @@ const Cradle = ({
     const itemobservercallback = useCallback((entries)=>{
 
         if (pauseItemObserverRef.current) {
-            console.log('returning with pauseItemObserverRef.current',pauseItemObserverRef.current)
+            // console.log('returning with pauseItemObserverRef.current',pauseItemObserverRef.current)
             return
         }
 
-        // setTimeout(()=> {
+        setTimeout(()=> {
             isMounted() && adjustcradleentries(entries)
-        // })
+        })
 
 
     },[])
@@ -678,31 +678,17 @@ const Cradle = ({
 
                 if (orientation == 'vertical') {
 
-                   // console.log('entry.target.dataset.index',entry.target.dataset.index,
-                   //     // '\nentry.rootBounds.left',entry.rootBounds.left,
-                   //     '\nentry.rootBounds.top',entry.rootBounds.top,
-                   //     // '\nentry.rootBounds.right',entry.rootBounds.right,
-                   //     '\nentry.rootBounds.bottom',entry.rootBounds.bottom,
-                   //     // '\nentry.boundingClientRect.left',entry.boundingClientRect.left,
-                   //     '\nentry.boundingClientRect.top',entry.boundingClientRect.top,
-                   //     // '\nentry.boundingClientRect.right',entry.boundingClientRect.right,
-                   //     '\nentry.boundingClientRect.bottom',entry.boundingClientRect.bottom,
-                   //     // '\nentry.intersectionRect.left',entry.intersectionRect.left,
-                   //     '\nentry.intersectionRect.top',entry.intersectionRect.top,
-                   //     // '\nentry.intersectionRect.right',entry.intersectionRect.right,
-                   //     '\nentry.intersectionRect.bottom',entry.intersectionRect.bottom,
-                   //     '\nentry.isIntersecting',entry.isIntersecting,
-                   //     // '\nentry.intersectionRatio',entry.intersectionRatio,
-                   //     '\nentry.rootBounds.top - entry.intersectionRect.bottom',Math.abs(entry.rootBounds.top - entry.intersectionRect.bottom),
-                   //     '\nentry.rootBounds.bottom - entry.intersectionRect.bottom',Math.abs(entry.rootBounds.bottom - entry.intersectionRect.bottom)
-                   //     )
-                   // console.log('\n------------------------------------')
+                   // TODO: be sure this works in narrow viewport
+                   // for closer to the spine, bottom is closer to the top than to the bottom of the viewport
                    return (Math.abs( entry.rootBounds.top - entry.intersectionRect.bottom ) < 
-                       Math.abs(entry.rootBounds.bottom - entry.intersectionRect.bottom))
+                       Math.abs(entry.rootBounds.bottom - entry.intersectionRect.bottom)) // &&
+                       // entry.intersectionRatio != 0
 
                 } else {
 
-                    return (( entry.rootBounds.x - entry.boundingClientRect.x ) > 0)
+                   return (Math.abs( entry.rootBounds.left - entry.intersectionRect.right ) < 
+                       Math.abs(entry.rootBounds.right - entry.intersectionRect.right)) //&&
+                       // entry.intersectionRatio != 0
 
                 }
             })
@@ -732,6 +718,7 @@ const Cradle = ({
 
         let headcontentlist = headModelContentRef.current
         let tailcontentlist = tailModelContentRef.current
+        let crosscount = crosscountRef.current
 
         let indexoffset = contentlistcopy[0].props.index
 
@@ -767,23 +754,31 @@ const Cradle = ({
             
             } 
         }
+        // console.log('forwardcount, backwardcount, localintersections',forwardcount, backwardcount, localintersections)
         scrollforward = (forwardcount > backwardcount)
         let shiftitemcount = forwardcount - backwardcount
-        let referencerowshift = Math.abs(Math.ceil(shiftitemcount/crosscountRef.current))
+        let referencerowshift = Math.abs(Math.ceil(shiftitemcount/crosscount))
         let referenceshift
 
         let referenceindex
-        referenceshift = referencerowshift * crosscountRef.current
+        referenceshift = referencerowshift * crosscount
         if (scrollforward) {
 
             referenceindex = tailcontentlist[referenceshift]?.props.index || 0 // first time
 
         } else {
 
-            referenceindex = headcontentlist[(headcontentlist.length - referenceshift)]?.props.index || 0 // first time
+            referenceindex = headcontentlist[(headcontentlist.length - crosscount)]?.props.index || 0 // 0 = first time
+            referenceindex -= referenceshift - crosscount
 
         }
 
+        let entryindexes = []
+        for (let entry of localintersections) {
+            entryindexes.push(entry.target.dataset.index)
+        } 
+
+        console.log('referenceindex, entryindexes',referenceindex, ...entryindexes)
         // console.log('referenceindex, indexoffset',referenceindex, indexoffset)
 
         if (referenceindex > (listsize -1)) {
@@ -804,7 +799,7 @@ const Cradle = ({
         }
 
         shiftitemcount = Math.abs(shiftitemcount) 
-        let shiftrowcount = Math.ceil(shiftitemcount/crosscountRef.current)
+        let shiftrowcount = Math.ceil(shiftitemcount/crosscount)
         // console.log('OPENING shiftrowcount, shiftitemcount',shiftrowcount, shiftitemcount)
 
         // set pendingcontentoffset
@@ -814,7 +809,7 @@ const Cradle = ({
         // next, verify number of rows to delete
         let headindexchangecount, currentheadrowcount, viewportrowcount, tailindexchangecount, tailrowcount
 
-        currentheadrowcount = Math.ceil(headModelContentRef.current.length/crosscountRef.current)
+        currentheadrowcount = Math.ceil(headModelContentRef.current.length/crosscount)
 
         let cliprowcount = 0, clipitemcount = 0
 
@@ -823,7 +818,7 @@ const Cradle = ({
             if ((currentheadrowcount + shiftrowcount) > (cradleProps.runwaycount)) {
                 let rowdiff = (currentheadrowcount + shiftrowcount) - (cradleProps.runwaycount)
                 cliprowcount = rowdiff
-                clipitemcount = (cliprowcount * crosscountRef.current)
+                clipitemcount = (cliprowcount * crosscount)
             }
 
             addcontentcount = clipitemcount
@@ -837,8 +832,8 @@ const Cradle = ({
                 let diffitemcount = (proposedtailindex - (listsize -1)) // items outside range
                 addcontentcount -= diffitemcount // adjust the addcontent accordingly
                 
-                let diffrows = Math.floor(diffitemcount/crosscountRef.current) // number of full rows to leave in place
-                let diffrowitems = (diffrows * crosscountRef.current)  // derived number of items to leave in place
+                let diffrows = Math.floor(diffitemcount/crosscount) // number of full rows to leave in place
+                let diffrowitems = (diffrows * crosscount)  // derived number of items to leave in place
 
                 clipitemcount -= diffrowitems // apply adjustment to netshift
                 // pendingcontentoffset -= diffrowitems // apply adjustment to new offset for add
@@ -856,18 +851,18 @@ const Cradle = ({
         } else {
 
             if ((currentheadrowcount - shiftrowcount) < (cradleProps.runwaycount)) {
-                addcontentcount = (shiftrowcount * crosscountRef.current)
+                addcontentcount = (shiftrowcount * crosscount)
                 // console.log('scrollback adjust for RUNWAY UNDERFLOW')
                 let rowdiff = (cradleProps.runwaycount) - (currentheadrowcount - shiftrowcount)
                 cliprowcount = rowdiff
-                let tailrowitemcount = (listsize % crosscountRef.current)
+                let tailrowitemcount = (listsize % crosscount)
                 if (tailrowcount) {
                     clipitemcount = tailrowitemcount
                     if (cliprowcount > 1) {
-                        clipitemcount += ((cliprowcount -1) * crosscountRef.current)
+                        clipitemcount += ((cliprowcount -1) * crosscount)
                     }
                 } else {
-                    clipitemcount = (cliprowcount * crosscountRef.current)
+                    clipitemcount = (cliprowcount * crosscount)
                 }
             }
 
@@ -880,8 +875,8 @@ const Cradle = ({
                 // console.log('scrollback adjust for TOP UNDERFLOW')
 
                 let diffitemcount = -proposedindexoffset
-                let diffrows = Math.floor(diffitemcount/crosscountRef.current) // number of full rows to leave in place
-                let diffrowitems = (diffrows * crosscountRef.current)
+                let diffrows = Math.floor(diffitemcount/crosscount) // number of full rows to leave in place
+                let diffrowitems = (diffrows * crosscount)
 
                 addcontentcount -= diffitemcount
                 clipitemcount -= diffrowitems
@@ -919,7 +914,7 @@ const Cradle = ({
                 cellHeight:cradleProps.cellHeight,
                 cellWidth:cradleProps.cellWidth,
                 observer: itemObserverRef.current,
-                crosscount:crosscountRef.current,
+                crosscount,
                 callbacks:callbacksRef.current,
                 getItem:cradleProps.getItem,
                 listsize,
@@ -937,7 +932,7 @@ const Cradle = ({
             {
                 contentlist:localContentList,
                 runwaycount:cradleProps.runwaycount,
-                crosscount:crosscountRef.current,
+                crosscount,
                 referenceindex,
             }
         )
@@ -958,7 +953,7 @@ const Cradle = ({
                 orientation:cradleProps.orientation,
                 spineElement:spineCradleElementRef.current,
                 referenceindex,
-                crosscount:crosscountRef.current,
+                crosscount,
                 gap:cradleProps.gap,
                 referenceshift,
             }
@@ -1136,6 +1131,7 @@ const Cradle = ({
             let width = right - left, height = bottom - top
             viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
 
+            console.log('REPOSITIONING')
             saveCradleState('repositioning')
 
         }
