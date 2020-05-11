@@ -654,9 +654,9 @@ const Cradle = ({
             return
         }
 
-        setTimeout(()=> {
+        // setTimeout(()=> {
             isMounted() && adjustcradleentries(entries)
-        })
+        // })
 
 
     },[])
@@ -672,13 +672,33 @@ const Cradle = ({
 
             let orientation = cradlePropsRef.current.orientation
 
-            console.log('OBSERVER entries',entries)
+            // console.log('OBSERVER entries',entries)
 
             spinesideintersections = entries.filter(entry => {
 
                 if (orientation == 'vertical') {
 
-                   return (( entry.rootBounds.y - entry.boundingClientRect.y ) > 0)
+                   // console.log('entry.target.dataset.index',entry.target.dataset.index,
+                   //     // '\nentry.rootBounds.left',entry.rootBounds.left,
+                   //     '\nentry.rootBounds.top',entry.rootBounds.top,
+                   //     // '\nentry.rootBounds.right',entry.rootBounds.right,
+                   //     '\nentry.rootBounds.bottom',entry.rootBounds.bottom,
+                   //     // '\nentry.boundingClientRect.left',entry.boundingClientRect.left,
+                   //     '\nentry.boundingClientRect.top',entry.boundingClientRect.top,
+                   //     // '\nentry.boundingClientRect.right',entry.boundingClientRect.right,
+                   //     '\nentry.boundingClientRect.bottom',entry.boundingClientRect.bottom,
+                   //     // '\nentry.intersectionRect.left',entry.intersectionRect.left,
+                   //     '\nentry.intersectionRect.top',entry.intersectionRect.top,
+                   //     // '\nentry.intersectionRect.right',entry.intersectionRect.right,
+                   //     '\nentry.intersectionRect.bottom',entry.intersectionRect.bottom,
+                   //     '\nentry.isIntersecting',entry.isIntersecting,
+                   //     // '\nentry.intersectionRatio',entry.intersectionRatio,
+                   //     '\nentry.rootBounds.top - entry.intersectionRect.bottom',Math.abs(entry.rootBounds.top - entry.intersectionRect.bottom),
+                   //     '\nentry.rootBounds.bottom - entry.intersectionRect.bottom',Math.abs(entry.rootBounds.bottom - entry.intersectionRect.bottom)
+                   //     )
+                   // console.log('\n------------------------------------')
+                   return (Math.abs( entry.rootBounds.top - entry.intersectionRect.bottom ) < 
+                       Math.abs(entry.rootBounds.bottom - entry.intersectionRect.bottom))
 
                 } else {
 
@@ -693,7 +713,7 @@ const Cradle = ({
         
         }
 
-        console.log('spinesideintersections.length',spinesideintersections.length,spinesideintersections)
+        // console.log('spinesideintersections.length',spinesideintersections.length,spinesideintersections)
 
         if (spinesideintersections.length == 0) return
 
@@ -764,7 +784,7 @@ const Cradle = ({
 
         }
 
-        console.log('referenceindex, indexoffset',referenceindex, indexoffset)
+        // console.log('referenceindex, indexoffset',referenceindex, indexoffset)
 
         if (referenceindex > (listsize -1)) {
             referenceindex = listsize -1
@@ -778,7 +798,7 @@ const Cradle = ({
 
         if (shiftitemcount == 0) {
 
-            console.log('EXIT shiftitemcount',shiftitemcount)
+            // console.log('EXIT shiftitemcount',shiftitemcount)
             return
 
         }
@@ -878,8 +898,8 @@ const Cradle = ({
             headindexchangecount = addcontentcount
             tailindexchangecount = -clipitemcount
 
-            console.log('SCROLLBACK scrollforward,referenceindex,headindexchangecount, tailindexchangecount',
-                scrollforward,referenceindex,headindexchangecount, tailindexchangecount)
+            // console.log('SCROLLBACK scrollforward,referenceindex,headindexchangecount, tailindexchangecount',
+            //     scrollforward,referenceindex,headindexchangecount, tailindexchangecount)
 
         }
 

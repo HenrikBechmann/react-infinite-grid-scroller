@@ -459,7 +459,7 @@ export const getSpinePosRef = (
         referenceshift,
     }) => {
 
-    console.log('referenceindex, referenceshift',referenceindex, referenceshift)
+    // console.log('referenceindex, referenceshift',referenceindex, referenceshift)
 
     let spineposbase,spineposref
     var localrefindex = referenceindex
@@ -514,7 +514,7 @@ export const getSpinePosRef = (
     // console.log('in getSpinePosRef referenceobject, scrollforward, spineposbase, localrefindex, referenceposshift, spineposref',
     //     referenceobject, scrollforward, spineposbase, localrefindex, referenceposshift, spineposref)
 
-    console.log('spineposref', spineposref)
+    // console.log('spineposref', spineposref)
 
     return spineposref
 }
