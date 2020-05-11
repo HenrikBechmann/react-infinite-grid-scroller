@@ -668,13 +668,15 @@ const Cradle = ({
 
         let spinesideintersections
 
+        let localentries = [...entries]
+
         if (cradlestateRef.current == 'ready' || cradlestateRef.current == 'updatescroll') {
 
             let orientation = cradlePropsRef.current.orientation
 
             // console.log('OBSERVER entries',entries)
 
-            spinesideintersections = entries.filter(entry => {
+            spinesideintersections = localentries.filter(entry => {
 
                 if (orientation == 'vertical') {
 
