@@ -456,14 +456,25 @@ export const getSpinePosRef = (
         referenceindex,
         crosscount,
         gap,
+        referenceshift,
     }) => {
-    // let headcomponent, headindex, headobject, headelement, headposshift, 
+
+    console.log('referenceindex, referenceshift',referenceindex, referenceshift)
+
     let spineposbase,spineposref
     var localrefindex = referenceindex
     if (!scrollforward) {
-        localrefindex += crosscount
+        // localrefindex += crosscount
+        localrefindex += referenceshift
     }
-    let referenceobject = itemelements.get(localrefindex)
+    let referenceobjects = []
+    if (scrollforward) {
+        referenceobjects.push(itemelements.get(localrefindex))
+    } else {
+        for (let index = localrefindex; index > referenceindex; index -= crosscount ) {
+            referenceobjects.push(itemelements.get(index))
+        }
+    }
     let referenceposshift
 
     if (orientation == 'vertical') {
@@ -471,23 +482,28 @@ export const getSpinePosRef = (
     } else {
         spineposbase = spineElement.offsetLeft
     }
-    if (referenceobject) {
-        let referenceelement = referenceobject.current
+    if (scrollforward) {
+        let referenceelement = referenceobjects[0].current
         if (referenceelement) {
             // console.log('headindex, headelement.offsetTop',headindex,headelement.offsetTop)
             if (orientation == 'vertical') {
-                if (scrollforward) {
-                    referenceposshift = referenceelement.offsetTop
-                } else {
-                    referenceposshift = referenceelement.offsetHeight + gap
-                }
+                referenceposshift = referenceelement.offsetTop
             } else {
-                referenceposshift = referenceelement.offsetWidth
+                referenceposshift = referenceelement.offsetLeft
             }
         }
     } else {
         referenceposshift = 0
+        for (let refobj of referenceobjects) {
+            if (orientation == 'vertical') {
+                referenceposshift += refobj.current.offsetHeight + gap
+            } else {
+                referenceposshift += refobj.current.offsetWidth + gap
+            }
+        }
     }
+    // console.log('referenceindex, localrefindex, scrollforward,referenceshift, referenceposshift, referenceelement.offsetTop, referenceelement.offsetHeight, gap, referenceelement',
+    //     referenceindex, localrefindex, scrollforward,referenceshift, referenceposshift, referenceelement.offsetTop, referenceelement.offsetHeight, gap, referenceelement)
 
     if (scrollforward) {
         spineposref = spineposbase + referenceposshift
@@ -497,6 +513,8 @@ export const getSpinePosRef = (
 
     // console.log('in getSpinePosRef referenceobject, scrollforward, spineposbase, localrefindex, referenceposshift, spineposref',
     //     referenceobject, scrollforward, spineposbase, localrefindex, referenceposshift, spineposref)
+
+    console.log('spineposref', spineposref)
 
     return spineposref
 }

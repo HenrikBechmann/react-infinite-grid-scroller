@@ -633,7 +633,8 @@ const Cradle = ({
             itemobservercallback,
             {
                 root:viewportDataRef.current.elementref.current, 
-                threshold:.9
+                threshold:0,
+                rootMargin:'50px'
             } 
 
         )
@@ -648,11 +649,16 @@ const Cradle = ({
     // the async callback from IntersectionObserver.
     const itemobservercallback = useCallback((entries)=>{
 
-        if (pauseItemObserverRef.current) return
+        if (pauseItemObserverRef.current) {
+            console.log('returning with pauseItemObserverRef.current',pauseItemObserverRef.current)
+            return
+        }
 
-        if (cradlestateRef.current == 'ready') {
+        if (cradlestateRef.current == 'ready' || cradlestateRef.current == 'updatescroll') {
 
             let orientation = cradlePropsRef.current.orientation
+
+            console.log('OBSERVER entries',entries)
 
             let spinesideintersections = entries.filter(entry => {
 
@@ -678,6 +684,8 @@ const Cradle = ({
     // 1.shift, 2.clip, and 3.add clip amount at other end
     const adjustcradleentries = useCallback((spinesideintersections)=>{
 
+        console.log('spinesideintersections.length',spinesideintersections.length,spinesideintersections)
+
         if (spinesideintersections.length == 0) return
 
         let viewportData = viewportDataRef.current
@@ -696,6 +704,8 @@ const Cradle = ({
         let headcontentlist = headModelContentRef.current
         let tailcontentlist = tailModelContentRef.current
 
+        let indexoffset = contentlistcopy[0].props.index
+
         let scrollforward
 
         localintersections = trimRunwaysFromIntersections({
@@ -706,7 +716,12 @@ const Cradle = ({
 
         })
 
-        if (localintersections.length == 0) return
+        if (localintersections.length == 0) {
+
+            // console.log('returning with localintersections.length == 0',localintersections.length)
+            return
+            
+        }
 
         // -- isolate forward and backward lists (happens with rapid scrolling changes)
         //  then set scrollforward
@@ -729,20 +744,18 @@ const Cradle = ({
         let referenceshift
 
         let referenceindex
+        referenceshift = referencerowshift * crosscountRef.current
         if (scrollforward) {
-            referenceshift = referencerowshift * crosscountRef.current
+
             referenceindex = tailcontentlist[referenceshift]?.props.index || 0 // first time
+
         } else {
-            referenceshift = referencerowshift * crosscountRef.current
-            // let headcontentindex = (headcontentlist.length) - referenceshift
-            // if ((headcontentindex) > (headcontentlist.length + 1)) {
-            //     referenceindex = tailcontentlist[0]?.props.index || 0
-            // } else {
-                referenceindex = headcontentlist[(headcontentlist.length - referenceshift)]?.props.index || 0 // first time
-            // }
-            // console.log('calculated scrollbackward referencerowshift, referenceshift, headcontentindex, referenceindex, headcontentlist',
-            //     referencerowshift, referenceshift, headcontentindex, referenceindex, [...headcontentlist])
+
+            referenceindex = headcontentlist[(headcontentlist.length - referenceshift)]?.props.index || 0 // first time
+
         }
+
+        console.log('referenceindex, indexoffset',referenceindex, indexoffset)
 
         if (referenceindex > (listsize -1)) {
             referenceindex = listsize -1
@@ -756,6 +769,7 @@ const Cradle = ({
 
         if (shiftitemcount == 0) {
 
+            console.log('EXIT shiftitemcount',shiftitemcount)
             return
 
         }
@@ -765,7 +779,6 @@ const Cradle = ({
         // console.log('OPENING shiftrowcount, shiftitemcount',shiftrowcount, shiftitemcount)
 
         // set pendingcontentoffset
-        let indexoffset = contentlistcopy[0].props.index
         let pendingcontentoffset
         let addcontentcount = 0
 
@@ -813,8 +826,6 @@ const Cradle = ({
 
         } else {
 
-            // debugger
-
             if ((currentheadrowcount - shiftrowcount) < (cradleProps.runwaycount)) {
                 addcontentcount = (shiftrowcount * crosscountRef.current)
                 // console.log('scrollback adjust for RUNWAY UNDERFLOW')
@@ -858,8 +869,8 @@ const Cradle = ({
             headindexchangecount = addcontentcount
             tailindexchangecount = -clipitemcount
 
-            // console.log('SCROLLBACK scrollforward,referenceindex,headindexchangecount, tailindexchangecount',
-            //     scrollforward,referenceindex,headindexchangecount, tailindexchangecount)
+            console.log('SCROLLBACK scrollforward,referenceindex,headindexchangecount, tailindexchangecount',
+                scrollforward,referenceindex,headindexchangecount, tailindexchangecount)
 
         }
 
@@ -919,7 +930,8 @@ const Cradle = ({
                 spineElement:spineCradleElementRef.current,
                 referenceindex,
                 crosscount:crosscountRef.current,
-                gap:cradleProps.gap
+                gap:cradleProps.gap,
+                referenceshift,
             }
         )
 
