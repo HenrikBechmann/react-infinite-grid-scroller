@@ -259,10 +259,13 @@ export const trimRunwaysFromIntersections = ({
     let headindexes = [], 
         tailindexes = [],
         filteredintersections = [],
-        intersectionindexes = []
+        intersectionindexes = [],
+        intersectioncontrols:any = {}
 
     for (let item of intersections) {
-        intersectionindexes.push(item.target.dataset.index)
+        let index = item.target.dataset.index
+        intersectionindexes.push(parseInt(index))
+        intersectioncontrols[index] = item.isIntersecting
     }
 
     // collect headcontent indexes
@@ -274,15 +277,52 @@ export const trimRunwaysFromIntersections = ({
         tailindexes.push(item.props.index)
     }
 
-    filteredintersections = intersections.filter((entry)=> {
+    let intersectionheadindexes = []
+    let intersectiontailindexes = []
+    let intersectionnewindexes = []
 
-        if (!entry.isIntersecting) {
-            return !headindexes.includes(parseInt(entry.target.dataset.index))
+    for (let index of intersectionindexes) {
+        if (headindexes.includes(index)) {
+            intersectionheadindexes.push(index)
+        } else if (tailindexes.includes(index)) {
+            intersectiontailindexes.push(index)
         } else {
-            return !tailindexes.includes(parseInt(entry.target.dataset.index))
+            intersectionnewindexes.push(index)
+        }
+    }
+
+    console.log('TRIMRunwaysFromIntersections intersectionindexes, intersecting, intersectionheadindexes, \n\
+        intersectiontailindexes, headindexes, tailindexes, intersections\n',
+        intersectionindexes, intersectioncontrols, intersectionheadindexes, intersectiontailindexes, '\nsources------\n',
+        headindexes, tailindexes, intersections)
+
+    // console.log('TRIMRunwaysFromIntersections intersectionindexes, intersecting',
+    //     intersectionindexes, intersecting)
+
+    let notintersectingrejected = 0
+    let intersectingrejected = 0
+    filteredintersections = intersections.filter((entry)=> {
+        let retval
+        let index = parseInt(entry.target.dataset.index)
+        if (!entry.isIntersecting) { // if item moved out of scope and is in tail, then move to head
+            retval = !headindexes.includes(index) // re-sent after being moved to head
+            if (!retval) {
+                notintersectingrejected++
+            }
+            return retval
+        } else {
+            retval = (!tailindexes.includes(index))
+            if (!retval) {
+                intersectingrejected++
+            }
+            return retval
         }
 
     })
+
+    if (notintersectingrejected > 0) {
+        filteredintersections = []
+    }
 
     // console.log('intersectionindexes, headindexes, tailindexes, filteredintersections',
     //     intersectionindexes, headindexes, tailindexes,filteredintersections)

@@ -670,40 +670,42 @@ const Cradle = ({
 
         let localentries = [...entries]
 
-        if (cradlestateRef.current == 'ready' || cradlestateRef.current == 'updatescroll') {
+        // if (cradlestateRef.current == 'ready' || cradlestateRef.current == 'updatescroll') {
 
-            let orientation = cradlePropsRef.current.orientation
+        //     let orientation = cradlePropsRef.current.orientation
 
-            // console.log('OBSERVER entries',entries)
+        //     // console.log('OBSERVER entries',entries)
 
-            spinesideintersections = localentries.filter(entry => {
+        //     spinesideintersections = localentries.filter(entry => {
 
-                if (orientation == 'vertical') {
+        //         if (orientation == 'vertical') {
 
-                   // TODO: be sure this works in narrow viewport
-                   // for closer to the spine, bottom is closer to the top than to the bottom of the viewport
-                   return (Math.abs( entry.rootBounds.top - entry.intersectionRect.bottom ) < 
-                       Math.abs(entry.rootBounds.bottom - entry.intersectionRect.bottom)) // &&
-                       // entry.intersectionRatio != 0
+        //            // TODO: be sure this works in narrow viewport
+        //            // for closer to the spine, bottom is closer to the top than to the bottom of the viewport
+        //            return (Math.abs( entry.rootBounds.top - entry.intersectionRect.bottom ) < 
+        //                Math.abs(entry.rootBounds.bottom - entry.intersectionRect.bottom)) // &&
+        //                // entry.intersectionRatio != 0
 
-                } else {
+        //         } else {
 
-                   return (Math.abs( entry.rootBounds.left - entry.intersectionRect.right ) < 
-                       Math.abs(entry.rootBounds.right - entry.intersectionRect.right)) //&&
-                       // entry.intersectionRatio != 0
+        //            return (Math.abs( entry.rootBounds.left - entry.intersectionRect.right ) < 
+        //                Math.abs(entry.rootBounds.right - entry.intersectionRect.right)) //&&
+        //                // entry.intersectionRatio != 0
 
-                }
-            })
+        //         }
+        //     })
 
-        } else {
+        // } else {
 
-            return
+        //     return
         
-        }
+        // }
 
         // console.log('spinesideintersections.length',spinesideintersections.length,spinesideintersections)
 
-        if (spinesideintersections.length == 0) return
+        spinesideintersections = localentries
+
+        // if (spinesideintersections.length == 0) return
 
         let viewportData = viewportDataRef.current
         let localintersections = [...spinesideintersections]
