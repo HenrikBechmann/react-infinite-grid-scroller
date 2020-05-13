@@ -250,7 +250,7 @@ export const getContentListRequirements = ({
 }
 
 // filter out items that are already in runways
-export const trimRunwaysFromIntersections = ({
+export const isolateRelevantIntersections = ({
     intersections,
     headcontent, 
     tailcontent,
@@ -258,17 +258,13 @@ export const trimRunwaysFromIntersections = ({
 
     let headindexes = [], 
         tailindexes = [],
-        filteredintersections = [],
-        intersectionindexes = [],
-        intersectioncontrols:any = {}
+        headintersectindexes = [],
+        headintersections = [],
+        tailintersectindexes = [],
+        tailintersections = [],
+        intersecting:any = {},
+        filteredintersections = []
 
-    for (let item of intersections) {
-        let index = item.target.dataset.index
-        intersectionindexes.push(parseInt(index))
-        intersectioncontrols[index] = item.isIntersecting
-    }
-
-    // collect headcontent indexes
     for (let item of headcontent) {
         headindexes.push(item.props.index)
     }
@@ -277,91 +273,65 @@ export const trimRunwaysFromIntersections = ({
         tailindexes.push(item.props.index)
     }
 
-    let intersectionheadindexes = []
-    let intersectiontailindexes = []
-    let intersectionnewindexes = []
-
-    for (let index of intersectionindexes) {
-        if (headindexes.includes(index)) {
-            intersectionheadindexes.push(index)
-        } else if (tailindexes.includes(index)) {
-            intersectiontailindexes.push(index)
-        } else {
-            intersectionnewindexes.push(index)
-        }
-    }
-
-    console.log('TRIMRunwaysFromIntersections intersectionindexes, intersecting, intersectionheadindexes, \n\
-        intersectiontailindexes, headindexes, tailindexes, intersections\n',
-        intersectionindexes, intersectioncontrols, intersectionheadindexes, intersectiontailindexes, '\nsources------\n',
-        headindexes, tailindexes, intersections)
-
-    // console.log('TRIMRunwaysFromIntersections intersectionindexes, intersecting',
-    //     intersectionindexes, intersecting)
-
-    let notintersectingrejected = 0
-    let intersectingrejected = 0
-    filteredintersections = intersections.filter((entry)=> {
-        let retval
+    for (let entry of intersections) {
         let index = parseInt(entry.target.dataset.index)
-        if (!entry.isIntersecting) { // if item moved out of scope and is in tail, then move to head
-            retval = !headindexes.includes(index) // re-sent after being moved to head
-            if (!retval) {
-                notintersectingrejected++
-            }
-            return retval
+        if (tailindexes.includes(index)) {
+            tailintersectindexes.push(index)
+            tailintersections.push(entry)
         } else {
-            retval = (!tailindexes.includes(index))
-            if (!retval) {
-                intersectingrejected++
-            }
-            return retval
+            headintersectindexes.push(index)
+            headintersections.push(entry)
         }
-
-    })
-
-    if (notintersectingrejected > 0) {
-        filteredintersections = []
+        intersecting[index] = entry.isIntersecting
     }
 
-    // console.log('intersectionindexes, headindexes, tailindexes, filteredintersections',
-    //     intersectionindexes, headindexes, tailindexes,filteredintersections)
+    // collect headcontent indexes
+    let headpos = headintersectindexes.indexOf(headindexes[headindexes.length - 1])
+    let tailpos = tailintersectindexes.indexOf(tailindexes[0])
+    console.log('headpos, tailpos',headpos, tailpos)
+
+    if (headpos >= 0) {
+        let refindex = headpos + 1
+        let refintersecting = intersecting[headpos]
+        console.log('HEAD refindex, refintersecting',refindex,refintersecting)
+        for (let index = headpos; index >= 0; index--) {
+            console.log('index + 1, refindex, intersecting[index],refintersecting',
+                index + 1, refindex, intersecting[index],refintersecting)
+            if (((index + 1) == refindex) && (intersecting[index] == refintersecting)) {
+                console.log('adding entry to index,filteredintersections',index,headintersections[index])
+                filteredintersections.push(headintersections[index])
+            } else {
+                break
+            }
+            refindex = index
+            refintersecting = intersecting[refindex]
+        }
+    }
+     
+    if (tailpos >= 0) {
+        let refindex = tailpos - 1
+        let refintersecting = intersecting[tailpos]
+        console.log('TAIL refindex, refintersecting',refindex,refintersecting)
+        for (let index = tailpos; index < tailintersections.length; index++) {
+            console.log('index - 1, refindex, intersecting[index],refintersecting',
+                index - 1, refindex, intersecting[index],refintersecting)
+            if (((index - 1) == refindex) && (intersecting[index] == refintersecting)) {
+                console.log('adding entry to index,filteredintersections',index,tailintersections[index])
+                filteredintersections.push(tailintersections[index])
+            } else {
+                break
+            }
+            refindex = index
+            refintersecting = intersecting[refindex]
+        }
+    }
+
+    console.log('headindexes, tailindexes, headintersectindexes,tailintersectindexes, intersecting, filteredintersections',
+        headindexes, tailindexes, headintersectindexes,tailintersectindexes, intersecting, filteredintersections)
 
     return filteredintersections
 
 }
-
-// this makes ui resize less visually jarring
-// export const normalizeCradleAnchors = (cradleElement, orientation) => {
-
-//     let styles:React.CSSProperties = {}
-
-//     let stylerevisions:React.CSSProperties = {}
-//     if (orientation == 'vertical') {
-//         if (cradleElement.style.top == 'auto') {
-
-//             styles.top = cradleElement.offsetTop + 'px'
-//             styles.bottom = 'auto'
-//             styles.left = 'auto'
-//             styles.right = 'auto'
-
-//         }
-//     } else {
-//         if (cradleElement.style.left == 'auto') {
-
-//             styles.left = cradleElement.offsetLeft + 'px'
-//             styles.right = 'auto'
-//             styles.top = 'auto'
-//             styles.bottom = 'auto'
-
-//         }
-//     }
-
-//     for (let style in styles) {
-//         cradleElement.style[style] = styles[style]
-//     }
-
-// }
 
 // update content
 // adds itemshells at end of contentlist according to headindexcount and tailindescount,

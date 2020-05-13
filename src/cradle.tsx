@@ -37,7 +37,7 @@ import {
     getReferenceIndexData,
     getContentListRequirements,
     getSpinePosRef,
-    trimRunwaysFromIntersections,
+    isolateRelevantIntersections,
     // normalizeCradleAnchors,
     allocateContentList,
 
@@ -728,7 +728,7 @@ const Cradle = ({
 
         let scrollforward
 
-        localintersections = trimRunwaysFromIntersections({
+        localintersections = isolateRelevantIntersections({
 
             intersections:localintersections,
             headcontent:headcontentlist, 
