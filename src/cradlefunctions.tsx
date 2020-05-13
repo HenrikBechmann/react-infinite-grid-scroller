@@ -288,17 +288,17 @@ export const isolateRelevantIntersections = ({
     // collect headcontent indexes
     let headpos = headintersectindexes.indexOf(headindexes[headindexes.length - 1])
     let tailpos = tailintersectindexes.indexOf(tailindexes[0])
-    console.log('headpos, tailpos',headpos, tailpos)
+    // console.log('headpos, tailpos',headpos, tailpos)
 
     if (headpos >= 0) {
         let refindex = headpos + 1
         let refintersecting = intersecting[headpos]
-        console.log('HEAD refindex, refintersecting',refindex,refintersecting)
+        // console.log('HEAD refindex, refintersecting',refindex,refintersecting)
         for (let index = headpos; index >= 0; index--) {
-            console.log('index + 1, refindex, intersecting[index],refintersecting',
-                index + 1, refindex, intersecting[index],refintersecting)
+            // console.log('index + 1, refindex, intersecting[index],refintersecting',
+            //     index + 1, refindex, intersecting[index],refintersecting)
             if (((index + 1) == refindex) && (intersecting[index] == refintersecting)) {
-                console.log('adding entry to index,filteredintersections',index,headintersections[index])
+                // console.log('adding entry to index,filteredintersections',index,headintersections[index])
                 filteredintersections.push(headintersections[index])
             } else {
                 break
@@ -311,12 +311,12 @@ export const isolateRelevantIntersections = ({
     if (tailpos >= 0) {
         let refindex = tailpos - 1
         let refintersecting = intersecting[tailpos]
-        console.log('TAIL refindex, refintersecting',refindex,refintersecting)
+        // console.log('TAIL refindex, refintersecting',refindex,refintersecting)
         for (let index = tailpos; index < tailintersections.length; index++) {
-            console.log('index - 1, refindex, intersecting[index],refintersecting',
-                index - 1, refindex, intersecting[index],refintersecting)
+            // console.log('index - 1, refindex, intersecting[index],refintersecting',
+            //     index - 1, refindex, intersecting[index],refintersecting)
             if (((index - 1) == refindex) && (intersecting[index] == refintersecting)) {
-                console.log('adding entry to index,filteredintersections',index,tailintersections[index])
+                // console.log('adding entry to index,filteredintersections',index,tailintersections[index])
                 filteredintersections.push(tailintersections[index])
             } else {
                 break
@@ -326,8 +326,8 @@ export const isolateRelevantIntersections = ({
         }
     }
 
-    console.log('headindexes, tailindexes, headintersectindexes,tailintersectindexes, intersecting, filteredintersections',
-        headindexes, tailindexes, headintersectindexes,tailintersectindexes, intersecting, filteredintersections)
+    // console.log('headindexes, tailindexes, headintersectindexes,tailintersectindexes, intersecting, filteredintersections',
+    //     headindexes, tailindexes, headintersectindexes,tailintersectindexes, intersecting, filteredintersections)
 
     return filteredintersections
 
