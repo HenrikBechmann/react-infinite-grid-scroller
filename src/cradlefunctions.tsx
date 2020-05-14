@@ -254,6 +254,7 @@ export const isolateRelevantIntersections = ({
     intersections,
     headcontent, 
     tailcontent,
+    ITEM_OBSERVER_THRESHOLD,
 }) => {
 
     let headindexes = [], 
@@ -293,7 +294,12 @@ export const isolateRelevantIntersections = ({
             return // shouldn't happen; give up
         }
 
-        intersecting[index] = entry.isIntersecting
+        let ratio = Math.round(entry.intersectionRatio * 100)/100
+        intersecting[index] = {
+            intersecting:ratio >= ITEM_OBSERVER_THRESHOLD,  // to accommodate FF
+            isIntersecting:entry.isIntersecting,
+            ratio
+        }
 
     }
 
@@ -313,7 +319,8 @@ export const isolateRelevantIntersections = ({
     headintersections.sort(entrycompare)
     tailintersections.sort(entrycompare)
 
-    // console.log('INPUT headintersectionindexes, tailintersectionindexes, intersecting',headintersectionindexes, tailintersectionindexes, intersecting)
+    // console.log('INPUT headintersectionindexes, tailintersectionindexes, intersecting',
+    //     headintersectionindexes, tailintersectionindexes, intersecting)
 
     // set reference points in relation to the spine
     let headindex = headindexes[headindexes.length - 1]
@@ -321,12 +328,14 @@ export const isolateRelevantIntersections = ({
     let headptr = headintersectionindexes.indexOf(headindex)
     let tailptr = tailintersectionindexes.indexOf(tailindex)
 
+    // console.log('headindex, tailindex, headptr,tailptr',
+    //     headindex, tailindex, headptr,tailptr)
     // filter out items that register only because they have just been moved
-    if ((headptr >=0) && !intersecting[headindex]) {
+    if ((headptr >=0) && !intersecting[headindex].intersecting) {
         headptr = -1
     }
 
-    if ((tailptr >=0) && intersecting[tailindex]) {
+    if ((tailptr >=0) && intersecting[tailindex].intersecting) {
         tailptr = -1
     }
     // -----------------------------------------------
@@ -335,14 +344,14 @@ export const isolateRelevantIntersections = ({
     if (headptr >= 0) {
 
         let refindex = headintersectionindexes[headptr] + 1
-        let refintersecting = intersecting[refindex - 1]
+        let refintersecting = intersecting[refindex - 1].intersecting
 
         for (let ptr = headptr; ptr >= 0; ptr--) {
 
             let index = headintersectionindexes[ptr]
 
             // test for continuity and consistency
-            if (((index + 1) == refindex) && (intersecting[index] == refintersecting)) {
+            if (((index + 1) == refindex) && (intersecting[index].intersecting == refintersecting)) {
 
                 filteredintersections.push(headintersections[ptr])
 
@@ -353,7 +362,7 @@ export const isolateRelevantIntersections = ({
             }
 
             refindex = index
-            refintersecting = intersecting[refindex]
+            refintersecting = intersecting[refindex].intersecting
 
         }
     }
@@ -361,14 +370,16 @@ export const isolateRelevantIntersections = ({
     if (tailptr >= 0) {
 
         let refindex = tailintersectionindexes[tailptr] - 1
-        let refintersecting = intersecting[refindex + 1]
+        let refintersecting = intersecting[refindex + 1].intersecting
 
         for (let ptr = tailptr; ptr < tailintersectionindexes.length; ptr++) {
 
             let index = tailintersectionindexes[ptr]
 
             // test for continuity and consistency
-            if (((index - 1) == refindex) && (intersecting[index] == refintersecting)) {
+            // console.log('tail continuity: index -1, refindex, intersecting[index].intersecting,refintersecting',
+            //     index -1, refindex, intersecting[index],refintersecting)
+            if (((index - 1) == refindex) && (intersecting[index].intersecting == refintersecting)) {
 
                 filteredintersections.push(tailintersections[ptr])
 
@@ -379,7 +390,7 @@ export const isolateRelevantIntersections = ({
             }
 
             refindex = index
-            refintersecting = intersecting[index]
+            refintersecting = intersecting[index].intersecting
 
         }
     }

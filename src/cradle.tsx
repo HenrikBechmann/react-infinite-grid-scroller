@@ -30,6 +30,8 @@ import ResizeObserverPolyfill from 'resize-observer-polyfill'
 
 const LocalResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
 
+const ITEM_OBSERVER_THRESHOLD = .9
+
 import { 
     setCradleGridStyles, 
     getUIContentList, 
@@ -634,7 +636,7 @@ const Cradle = ({
             itemobservercallback,
             {
                 root:viewportDataRef.current.elementref.current, 
-                threshold:.9,
+                threshold:ITEM_OBSERVER_THRESHOLD,
                 // rootMargin:'50px'
             } 
 
@@ -692,6 +694,7 @@ const Cradle = ({
             intersections:intersections,
             headcontent:headcontentlist, 
             tailcontent:tailcontentlist,
+            ITEM_OBSERVER_THRESHOLD,
 
         })
 
@@ -706,16 +709,21 @@ const Cradle = ({
         //  then set scrollforward
         let forwardcount = 0, backwardcount = 0
         for (let intersectrecordindex = 0; intersectrecordindex < intersections.length; intersectrecordindex++ ) {
+        // let ratio = Math.round(entry.intersectionRatio * 100)/100
+        // intersecting[index] = {
+        //     intersecting:ratio >= ITEM_OBSERVER_THRESHOLD,
             let sampleEntry = intersections[intersectrecordindex]
-            if (orientation == 'vertical') {
-
-                if (!sampleEntry.isIntersecting) {
-                    forwardcount++
-                } else {
-                    backwardcount++
-                }
+            let ratio = Math.round(sampleEntry.intersectionRatio * 100)/100
+            // if (orientation == 'vertical') {
+            let isintersecting = ratio >= ITEM_OBSERVER_THRESHOLD // to accommodate FF
+            // if (!sampleEntry.isIntersecting) {
+            if (!isintersecting) {
+                forwardcount++
+            } else {
+                backwardcount++
+            }
             
-            } 
+            // } 
         }
 
         // calculate referenceindex
