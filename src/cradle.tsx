@@ -664,58 +664,14 @@ const Cradle = ({
     // 1.shift, 2.clip, and 3.add clip amount at other end
     const adjustcradleentries = useCallback((entries)=>{
 
-        let spinesideintersections
-
-        let localentries = [...entries]
-
-        // if (cradlestateRef.current == 'ready' || cradlestateRef.current == 'updatescroll') {
-
-        //     let orientation = cradlePropsRef.current.orientation
-
-        //     // console.log('OBSERVER entries',entries)
-
-        //     spinesideintersections = localentries.filter(entry => {
-
-        //         if (orientation == 'vertical') {
-
-        //            // TODO: be sure this works in narrow viewport
-        //            // for closer to the spine, bottom is closer to the top than to the bottom of the viewport
-        //            return (Math.abs( entry.rootBounds.top - entry.intersectionRect.bottom ) < 
-        //                Math.abs(entry.rootBounds.bottom - entry.intersectionRect.bottom)) // &&
-        //                // entry.intersectionRatio != 0
-
-        //         } else {
-
-        //            return (Math.abs( entry.rootBounds.left - entry.intersectionRect.right ) < 
-        //                Math.abs(entry.rootBounds.right - entry.intersectionRect.right)) //&&
-        //                // entry.intersectionRatio != 0
-
-        //         }
-        //     })
-
-        // } else {
-
-        //     return
-        
-        // }
-
-        // console.log('spinesideintersections.length',spinesideintersections.length,spinesideintersections)
-
-        spinesideintersections = localentries
-
-        // if (spinesideintersections.length == 0) return
+        let localintersections = [...entries]
 
         let viewportData = viewportDataRef.current
-        let localintersections = [...spinesideintersections]
         let contentlistcopy = [...modelContentRef.current]
         let cradleProps = cradlePropsRef.current
 
         let listsize = cradleProps.listsize
 
-        let headCradleElement = headCradleElementRef.current
-        let tailCradleElement = tailCradleElementRef.current
-        let spineCradleElement = spineCradleElementRef.current
-        let scrollElement = spineCradleElement.parentElement
         let viewportElement = viewportData.elementref.current
 
         let headcontentlist = headModelContentRef.current
@@ -726,6 +682,8 @@ const Cradle = ({
 
         let scrollforward
 
+        // filter out inapplicable intersection entries
+        // we're only interested in intersections proximal to the spine
         localintersections = isolateRelevantIntersections({
 
             intersections:localintersections,
@@ -736,7 +694,6 @@ const Cradle = ({
 
         if (localintersections.length == 0) {
 
-            // console.log('returning with localintersections.length == 0',localintersections.length)
             return
             
         }
@@ -756,9 +713,17 @@ const Cradle = ({
             
             } 
         }
-        // console.log('forwardcount, backwardcount, localintersections',forwardcount, backwardcount, localintersections)
+
+        // calculate referenceindex
         scrollforward = (forwardcount > backwardcount)
         let shiftitemcount = forwardcount - backwardcount
+
+        if (shiftitemcount == 0) {
+
+            return
+
+        }
+
         let referencerowshift = Math.abs(Math.ceil(shiftitemcount/crosscount))
         let referenceshift
 
@@ -780,9 +745,6 @@ const Cradle = ({
             entryindexes.push(entry.target.dataset.index)
         } 
 
-        console.log('referenceindex, entryindexes',referenceindex, ...entryindexes)
-        // console.log('referenceindex, indexoffset',referenceindex, indexoffset)
-
         if (referenceindex > (listsize -1)) {
             referenceindex = listsize -1
         }
@@ -790,19 +752,11 @@ const Cradle = ({
             referenceindex = 0
         }
 
-        // console.log('forwardcount, backwardcount, shiftitemcount, referencerowshift, referenceshift, referenceindex,localintersections',
-        //     forwardcount, backwardcount, shiftitemcount, referencerowshift, referenceshift, referenceindex, localintersections)
+        console.log('referenceindex, entryindexes',referenceindex, ...entryindexes)
 
-        if (shiftitemcount == 0) {
-
-            // console.log('EXIT shiftitemcount',shiftitemcount)
-            return
-
-        }
-
+        // generate modified content instructions
         shiftitemcount = Math.abs(shiftitemcount) 
         let shiftrowcount = Math.ceil(shiftitemcount/crosscount)
-        // console.log('OPENING shiftrowcount, shiftitemcount',shiftrowcount, shiftitemcount)
 
         // set pendingcontentoffset
         let pendingcontentoffset
@@ -838,7 +792,6 @@ const Cradle = ({
                 let diffrowitems = (diffrows * crosscount)  // derived number of items to leave in place
 
                 clipitemcount -= diffrowitems // apply adjustment to netshift
-                // pendingcontentoffset -= diffrowitems // apply adjustment to new offset for add
 
                 if (addcontentcount <=0) { // nothing to do
 
@@ -854,7 +807,7 @@ const Cradle = ({
 
             if ((currentheadrowcount - shiftrowcount) < (cradleProps.runwaycount)) {
                 addcontentcount = (shiftrowcount * crosscount)
-                // console.log('scrollback adjust for RUNWAY UNDERFLOW')
+
                 let rowdiff = (cradleProps.runwaycount) - (currentheadrowcount - shiftrowcount)
                 cliprowcount = rowdiff
                 let tailrowitemcount = (listsize % crosscount)
@@ -874,8 +827,6 @@ const Cradle = ({
 
             if (proposedindexoffset < 0) {
 
-                // console.log('scrollback adjust for TOP UNDERFLOW')
-
                 let diffitemcount = -proposedindexoffset
                 let diffrows = Math.floor(diffitemcount/crosscount) // number of full rows to leave in place
                 let diffrowitems = (diffrows * crosscount)
@@ -883,8 +834,6 @@ const Cradle = ({
                 addcontentcount -= diffitemcount
                 clipitemcount -= diffrowitems
 
-                // console.log('addcontentcount, clipitemcount, diffitemcount, diffrowitems',
-                //     addcontentcount, clipitemcount, diffitemcount, diffrowitems)
                 if (addcontentcount <= 0) {
 
                     clipitemcount = addcontentcount = 0
@@ -895,16 +844,12 @@ const Cradle = ({
             headindexchangecount = addcontentcount
             tailindexchangecount = -clipitemcount
 
-            // console.log('SCROLLBACK scrollforward,referenceindex,headindexchangecount, tailindexchangecount',
-            //     scrollforward,referenceindex,headindexchangecount, tailindexchangecount)
-
         }
 
-        // console.log('getUIContentList headindexchangecount, tailindexchangecount, indexoffset',
-        //     headindexchangecount, tailindexchangecount, indexoffset)
+        // collect modified content
         let localContentList 
         if (headindexchangecount || tailindexchangecount) {
-            // console.log('getUIContentList')
+
             localContentList = getUIContentList({
 
                 localContentList:contentlistcopy,
@@ -939,15 +884,11 @@ const Cradle = ({
             }
         )
 
-        // console.log('SPLIT headcontent count, tailcontent count, referenceindex, headcontent, tailcontent',
-        //     headcontent.length, tailcontent.length, referenceindex, headcontent, tailcontent)
-
         modelContentRef.current = localContentList
         headViewContentRef.current = headModelContentRef.current = headcontent
         tailViewContentRef.current = tailModelContentRef.current = tailcontent
 
-        // console.log('viewport scrolltop BEFORE GETSPINEPOSREF', scrolltop, viewportElement.scrollTop)
-
+        // place the spine in the scrollblock
         let spineposref = getSpinePosRef(
             {
                 scrollforward,
@@ -961,23 +902,20 @@ const Cradle = ({
             }
         )
 
-        // console.log('spineposref',spineposref)
-
-        // console.log('spineposref,headcontent, tailcontent',spineposref,headcontent, tailcontent)
-
         if (spineposref !== undefined) {
             if (cradleProps.orientation == 'vertical') {
-                // spineCradleElementRef.current.style.transform = `translate(0px,${spineposref}px)`
+
                 spineCradleElementRef.current.style.top = spineposref + 'px'
                 spineCradleElementRef.current.style.left = 'auto'
+
             } else {
-                // spineCradleElementRef.current.style.transform = `translate(${spineposref}px,0px)`
+
                 spineCradleElementRef.current.style.left = spineposref + 'px'
                 spineCradleElementRef.current.style.top = 'auto'
-            }
-        }
 
-        // console.log('viewport scrolltop BEFORE CALLING updatescroll', scrolltop, viewportElement.scrollTop)
+            }
+
+        }
 
         saveCradleState('updatescroll')
 
