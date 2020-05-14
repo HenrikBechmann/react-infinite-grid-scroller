@@ -297,6 +297,24 @@ export const isolateRelevantIntersections = ({
 
     }
 
+    let indexcompare = (a,b) => {
+        let retval = (a < b)?-1:1
+        return retval
+    }
+
+    let entrycompare = (a,b) => {
+        let retval = (parseInt(a.target.dataset.index) < parseInt(b.target.dataset.index))? -1:1
+        return retval
+    }
+
+    headintersectionindexes.sort(indexcompare)
+    tailintersectionindexes.sort(indexcompare)
+
+    headintersections.sort(entrycompare)
+    tailintersections.sort(entrycompare)
+
+    // console.log('INPUT headintersectionindexes, tailintersectionindexes, intersecting',headintersectionindexes, tailintersectionindexes, intersecting)
+
     // set reference points in relation to the spine
     let headindex = headindexes[headindexes.length - 1]
     let tailindex = tailindexes[0]

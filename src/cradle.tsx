@@ -600,8 +600,8 @@ const Cradle = ({
                 isTailCradleInViewRef.current = entry.isIntersecting
             }
         }
-        console.log('isHeadCradleInViewRef.current,isTailCradleInViewRef.current',
-            isHeadCradleInViewRef.current,isTailCradleInViewRef.current)
+        // console.log('isHeadCradleInViewRef.current,isTailCradleInViewRef.current',
+        //     isHeadCradleInViewRef.current,isTailCradleInViewRef.current)
         isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
 
     },[])
@@ -655,6 +655,8 @@ const Cradle = ({
             return
         }
 
+        // console.log('ENTRIES', entries)
+
         isMounted() && adjustcradleentries(entries)
 
 
@@ -665,7 +667,7 @@ const Cradle = ({
     // 1.shift, 2.clip, and 3.add clip amount at other end
     const adjustcradleentries = useCallback((entries)=>{
 
-        let localintersections = [...entries]
+        let intersections = [...entries]
 
         let viewportData = viewportDataRef.current
         let contentlistcopy = [...modelContentRef.current]
@@ -685,15 +687,16 @@ const Cradle = ({
 
         // filter out inapplicable intersection entries
         // we're only interested in intersections proximal to the spine
-        localintersections = isolateRelevantIntersections({
+        intersections = isolateRelevantIntersections({
 
-            intersections:localintersections,
+            intersections:intersections,
             headcontent:headcontentlist, 
             tailcontent:tailcontentlist,
 
         })
 
-        if (localintersections.length == 0) {
+        // console.log('FILTERED intersections',intersections)
+        if (intersections.length == 0) {
 
             return
             
@@ -702,8 +705,8 @@ const Cradle = ({
         // -- isolate forward and backward lists (happens with rapid scrolling changes)
         //  then set scrollforward
         let forwardcount = 0, backwardcount = 0
-        for (let intersectrecordindex = 0; intersectrecordindex < localintersections.length; intersectrecordindex++ ) {
-            let sampleEntry = localintersections[intersectrecordindex]
+        for (let intersectrecordindex = 0; intersectrecordindex < intersections.length; intersectrecordindex++ ) {
+            let sampleEntry = intersections[intersectrecordindex]
             if (orientation == 'vertical') {
 
                 if (!sampleEntry.isIntersecting) {
@@ -718,7 +721,8 @@ const Cradle = ({
         // calculate referenceindex
         scrollforward = (forwardcount > backwardcount)
         let shiftitemcount = forwardcount - backwardcount
-
+        // console.log('SHIFT ITEM COUNT forwardcount, backwardcount, shiftitemcount',
+        //     forwardcount, backwardcount, shiftitemcount)
         if (shiftitemcount == 0) {
 
             return
@@ -742,7 +746,7 @@ const Cradle = ({
         }
 
         let entryindexes = []
-        for (let entry of localintersections) {
+        for (let entry of intersections) {
             entryindexes.push(entry.target.dataset.index)
         } 
 
@@ -753,7 +757,7 @@ const Cradle = ({
             referenceindex = 0
         }
 
-        console.log('referenceindex, entryindexes',referenceindex, ...entryindexes)
+        // console.log('referenceindex, entryindexes',referenceindex, ...entryindexes)
 
         // generate modified content instructions
         shiftitemcount = Math.abs(shiftitemcount) 
@@ -849,6 +853,7 @@ const Cradle = ({
 
         // collect modified content
         let localContentList 
+        // console.log('SHIFT headindexchangecount,tailindexchangecount',headindexchangecount,tailindexchangecount)
         if (headindexchangecount || tailindexchangecount) {
 
             localContentList = getUIContentList({
@@ -1037,7 +1042,10 @@ const Cradle = ({
 
         clearTimeout(scrollTimeridRef.current)
 
-        if (pauseScrollingEffectsRef.current) return
+        if (pauseScrollingEffectsRef.current) {
+            console.log('returning with pauseScrollingEffect',pauseScrollingEffectsRef.current)
+            return
+        }
 
         let cradleState = cradlestateRef.current
 

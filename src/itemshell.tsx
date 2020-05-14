@@ -77,8 +77,10 @@ const ItemShell = (props) => {
     useEffect(()=>{
 
         observer.observe(shellRef.current)
+        // console.log('OBSERVE index',index)
 
         return () => {
+            // console.log('UNOBSERVE index',index)
             observer.unobserve(shellRef.current)
         }
 
