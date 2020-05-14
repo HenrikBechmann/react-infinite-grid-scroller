@@ -249,7 +249,7 @@ export const getContentListRequirements = ({
 
 }
 
-// filter out items that are already in runways
+// filter out items that not proximate to the spine
 export const isolateRelevantIntersections = ({
     intersections,
     headcontent, 
@@ -265,6 +265,7 @@ export const isolateRelevantIntersections = ({
         intersecting:any = {},
         filteredintersections = []
 
+    // collect lists of indexes
     for (let item of headcontent) {
         headindexes.push(item.props.index)
     }
@@ -274,25 +275,35 @@ export const isolateRelevantIntersections = ({
     }
 
     for (let entry of intersections) {
+
         let index = parseInt(entry.target.dataset.index)
+
         if (tailindexes.includes(index)) {
+
             tailintersectionindexes.push(index)
             tailintersections.push(entry)
+
         } else if (headindexes.includes(index)) {
+
             headintersectionindexes.push(index)
             headintersections.push(entry)
+
         } else {
-            return // shouldn't happen
+            console.log('warning: unknown intersection element',entry)
+            return // shouldn't happen; give up
         }
+
         intersecting[index] = entry.isIntersecting
+
     }
 
-    // collect headcontent indexes
+    // set reference points in relation to the spine
     let headindex = headindexes[headindexes.length - 1]
     let tailindex = tailindexes[0]
     let headptr = headintersectionindexes.indexOf(headindex)
     let tailptr = tailintersectionindexes.indexOf(tailindex)
-    // console.log('headpos, tailpos',headpos, tailpos)
+
+    // filter out items that register only because they have just been moved
     if ((headptr >=0) && !intersecting[headindex]) {
         headptr = -1
     }
@@ -300,47 +311,60 @@ export const isolateRelevantIntersections = ({
     if ((tailptr >=0) && intersecting[tailindex]) {
         tailptr = -1
     }
+    // -----------------------------------------------
 
+    // collect notifications to main thread (filtered intersections)
     if (headptr >= 0) {
+
         let refindex = headintersectionindexes[headptr] + 1
         let refintersecting = intersecting[refindex - 1]
-        // console.log('HEAD refindex, refintersecting',refindex,refintersecting)
+
         for (let ptr = headptr; ptr >= 0; ptr--) {
+
             let index = headintersectionindexes[ptr]
-            // console.log('index + 1, refindex, intersecting[index],refintersecting',
-            //     index + 1, refindex, intersecting[index],refintersecting)
+
+            // test for continuity and consistency
             if (((index + 1) == refindex) && (intersecting[index] == refintersecting)) {
-                // console.log('adding entry to index,filteredintersections',index,headintersections[ptr])
+
                 filteredintersections.push(headintersections[ptr])
+
             } else {
+
                 break
+
             }
+
             refindex = index
             refintersecting = intersecting[refindex]
+
         }
     }
      
     if (tailptr >= 0) {
+
         let refindex = tailintersectionindexes[tailptr] - 1
         let refintersecting = intersecting[refindex + 1]
-        // console.log('TAIL refindex, refintersecting',refindex,refintersecting, intersecting)
+
         for (let ptr = tailptr; ptr < tailintersectionindexes.length; ptr++) {
+
             let index = tailintersectionindexes[ptr]
-            // console.log('index - 1, refindex, intersecting[index],refintersecting',
-            //     index - 1, refindex, intersecting[index],refintersecting)
+
+            // test for continuity and consistency
             if (((index - 1) == refindex) && (intersecting[index] == refintersecting)) {
-                // console.log('adding entry to index,filteredintersections',index,tailintersections[ptr])
+
                 filteredintersections.push(tailintersections[ptr])
+
             } else {
+
                 break
+
             }
+
             refindex = index
             refintersecting = intersecting[index]
+
         }
     }
-
-    // console.log('headindexes, tailindexes, headintersectionindexes,tailintersectionindexes, intersecting, filteredintersections',
-    //     headindexes, tailindexes, headintersectionindexes,tailintersectionindexes, intersecting, filteredintersections)
 
     return filteredintersections
 

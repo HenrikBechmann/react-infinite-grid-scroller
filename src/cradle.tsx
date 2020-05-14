@@ -654,9 +654,7 @@ const Cradle = ({
             return
         }
 
-        setTimeout(()=> {
-            isMounted() && adjustcradleentries(entries)
-        })
+        isMounted() && adjustcradleentries(entries)
 
 
     },[])
