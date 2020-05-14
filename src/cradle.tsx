@@ -600,7 +600,8 @@ const Cradle = ({
                 isTailCradleInViewRef.current = entry.isIntersecting
             }
         }
-
+        console.log('isHeadCradleInViewRef.current,isTailCradleInViewRef.current',
+            isHeadCradleInViewRef.current,isTailCradleInViewRef.current)
         isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
 
     },[])
