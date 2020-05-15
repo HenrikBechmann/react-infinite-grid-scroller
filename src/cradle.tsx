@@ -28,6 +28,10 @@ import useIsMounted from 'react-is-mounted-hook'
 
 import ResizeObserverPolyfill from 'resize-observer-polyfill'
 
+import { detect } from 'detect-browser'
+
+const browser = detect()
+
 const LocalResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
 
 const ITEM_OBSERVER_THRESHOLD = .9
@@ -713,7 +717,13 @@ const Cradle = ({
         // intersecting[index] = {
         //     intersecting:ratio >= ITEM_OBSERVER_THRESHOLD,
             let sampleEntry = intersections[intersectrecordindex]
-            let ratio = Math.round(sampleEntry.intersectionRatio * 100)/100
+            let ratio
+            if (browser && browser.name == 'safari') {
+                ratio = sampleEntry.intersectionRatio
+            } else {
+                ratio = Math.round(sampleEntry.intersectionRatio * 1000)/1000
+            }
+            let index = sampleEntry.target.dataset.index
             // if (orientation == 'vertical') {
             let isintersecting = ratio >= ITEM_OBSERVER_THRESHOLD // to accommodate FF
             // if (!sampleEntry.isIntersecting) {

@@ -9,6 +9,10 @@ import React from 'react'
 
 import ItemShell from './itemshell'
 
+import { detect } from 'detect-browser'
+
+const browser = detect()
+
 export const calcVisibleItems = (itemsArray, viewportElement, cradleElement, orientation) => {
     let list = []
     let cradleTop = cradleElement.offsetTop, 
@@ -294,12 +298,21 @@ export const isolateRelevantIntersections = ({
             return // shouldn't happen; give up
         }
 
-        let ratio = Math.round(entry.intersectionRatio * 100)/100
+        let calcintersecting
+        let ratio = Math.round(entry.intersectionRatio * 1000)/1000
+        if (browser && browser.name == 'safari') {
+            calcintersecting = entry.intersectionRatio >= ITEM_OBSERVER_THRESHOLD
+        } else {
+            calcintersecting = ratio >= ITEM_OBSERVER_THRESHOLD
+         }
         intersecting[index] = {
-            intersecting:ratio >= ITEM_OBSERVER_THRESHOLD,  // to accommodate FF
+            intersecting:calcintersecting,  // to accommodate FF
             isIntersecting:entry.isIntersecting,
-            ratio
+            ratio,
+            originalratio:entry.intersectionRatio
         }
+        // console.log('isolate: index, ratio, originalRatio, calcintersecting, nativeintersecting',
+        //     index,ratio, entry.intersectionRatio,calcintersecting, entry.isIntersecting)
 
     }
 
@@ -318,6 +331,8 @@ export const isolateRelevantIntersections = ({
 
     headintersections.sort(entrycompare)
     tailintersections.sort(entrycompare)
+
+    // console.log('isolate intersecting',intersecting)
 
     // console.log('INPUT headintersectionindexes, tailintersectionindexes, intersecting',
     //     headintersectionindexes, tailintersectionindexes, intersecting)
