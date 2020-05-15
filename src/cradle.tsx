@@ -123,8 +123,6 @@ const Cradle = ({
     const cradlestateRef = useRef(null) // access by closures
     cradlestateRef.current = cradlestate
 
-    // console.log('running cradle with state',cradlestate)
-
     // -----------------------------------------------------------------------
     // -------------------------[ control variables ]-----------------
 
@@ -461,7 +459,6 @@ const Cradle = ({
             position: 'relative',
             top,
             left,
-            // transform:`translate(${paddingx}px,${paddingy}px)`
 
         } as React.CSSProperties
 
@@ -506,7 +503,6 @@ const Cradle = ({
             position: 'relative',
             top,
             left,
-            // transform:`translate(0px,${padding}px)`
         } as React.CSSProperties
 
         return [headstyles, tailstyles, spinestyle]
@@ -606,8 +602,6 @@ const Cradle = ({
                 isTailCradleInViewRef.current = entry.isIntersecting
             }
         }
-        // console.log('isHeadCradleInViewRef.current,isTailCradleInViewRef.current',
-        //     isHeadCradleInViewRef.current,isTailCradleInViewRef.current)
         isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
 
     },[])
@@ -641,7 +635,6 @@ const Cradle = ({
             {
                 root:viewportDataRef.current.elementref.current, 
                 threshold:ITEM_OBSERVER_THRESHOLD,
-                // rootMargin:'50px'
             } 
 
         )
@@ -657,7 +650,7 @@ const Cradle = ({
     const itemobservercallback = useCallback((entries)=>{
 
         if (pauseItemObserverRef.current) {
-            // console.log('returning with pauseItemObserverRef.current',pauseItemObserverRef.current)
+
             return
         }
 
@@ -702,7 +695,6 @@ const Cradle = ({
 
         })
 
-        // console.log('FILTERED intersections',intersections)
         if (intersections.length == 0) {
 
             return
@@ -713,9 +705,7 @@ const Cradle = ({
         //  then set scrollforward
         let forwardcount = 0, backwardcount = 0
         for (let intersectrecordindex = 0; intersectrecordindex < intersections.length; intersectrecordindex++ ) {
-        // let ratio = Math.round(entry.intersectionRatio * 100)/100
-        // intersecting[index] = {
-        //     intersecting:ratio >= ITEM_OBSERVER_THRESHOLD,
+
             let sampleEntry = intersections[intersectrecordindex]
             let ratio
             if (browser && browser.name == 'safari') {
@@ -724,23 +714,20 @@ const Cradle = ({
                 ratio = Math.round(sampleEntry.intersectionRatio * 1000)/1000
             }
             let index = sampleEntry.target.dataset.index
-            // if (orientation == 'vertical') {
+
             let isintersecting = ratio >= ITEM_OBSERVER_THRESHOLD // to accommodate FF
-            // if (!sampleEntry.isIntersecting) {
+
             if (!isintersecting) {
                 forwardcount++
             } else {
                 backwardcount++
             }
-            
-            // } 
         }
 
         // calculate referenceindex
         scrollforward = (forwardcount > backwardcount)
         let shiftitemcount = forwardcount - backwardcount
-        // console.log('SHIFT ITEM COUNT forwardcount, backwardcount, shiftitemcount',
-        //     forwardcount, backwardcount, shiftitemcount)
+
         if (shiftitemcount == 0) {
 
             return
@@ -774,8 +761,6 @@ const Cradle = ({
         if (referenceindex < 0) {
             referenceindex = 0
         }
-
-        // console.log('referenceindex, entryindexes',referenceindex, ...entryindexes)
 
         // generate modified content instructions
         shiftitemcount = Math.abs(shiftitemcount) 
@@ -871,7 +856,7 @@ const Cradle = ({
 
         // collect modified content
         let localContentList 
-        // console.log('SHIFT headindexchangecount,tailindexchangecount',headindexchangecount,tailindexchangecount)
+
         if (headindexchangecount || tailindexchangecount) {
 
             localContentList = getUIContentList({
@@ -1055,8 +1040,6 @@ const Cradle = ({
 
     // callback for scroll
     const onScroll = useCallback(() => {
-
-        // console.log('onScroll scrollTop',viewportDataRef.current.elementref.current.scrollTop)
 
         clearTimeout(scrollTimeridRef.current)
 
@@ -1303,10 +1286,6 @@ const Cradle = ({
     // =============================================================================
     // ------------------------------[ RENDER... ]----------------------------------
     // =============================================================================
-
-    // let cradleHeadStyle = cradleHeadStyleRef.current
-    // let cradleTailStyle = cradleTailStyleRef.current
-    // let cradleSpineStyle = cradleSpineStyleRef.current
 
     const scrollTrackerArgs = useMemo(() => {
         return {

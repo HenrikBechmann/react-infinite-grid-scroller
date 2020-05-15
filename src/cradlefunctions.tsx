@@ -203,14 +203,11 @@ export const getContentListRequirements = ({
         // viewportlength = viewportwidth
     }
 
-    // cradleContentLength = viewportlength + (runwaylength * 2)
-    // let cradlerowcount = Math.ceil(cradleContentLength/cellLength)
-    let contentCount = rowcount * crosscount // cradlerowcount * crosscount
+    let contentCount = rowcount * crosscount 
     if (contentCount > listsize) contentCount = listsize
 
     // -----------------------[ calc leadingitemcount, referenceoffset ]-----------------------
 
-    // let cradleleadingrowcount = runwaycount // Math.floor(runwaylength/cellLength)
     let leadingitemcount = runwaycount * crosscount
     let targetdiff = visibletargetindexoffset % crosscount
     let referenceoffset = visibletargetindexoffset - targetdiff // part of return message
@@ -311,8 +308,6 @@ export const isolateRelevantIntersections = ({
             ratio,
             originalratio:entry.intersectionRatio
         }
-        // console.log('isolate: index, ratio, originalRatio, calcintersecting, nativeintersecting',
-        //     index,ratio, entry.intersectionRatio,calcintersecting, entry.isIntersecting)
 
     }
 
@@ -332,19 +327,12 @@ export const isolateRelevantIntersections = ({
     headintersections.sort(entrycompare)
     tailintersections.sort(entrycompare)
 
-    // console.log('isolate intersecting',intersecting)
-
-    // console.log('INPUT headintersectionindexes, tailintersectionindexes, intersecting',
-    //     headintersectionindexes, tailintersectionindexes, intersecting)
-
     // set reference points in relation to the spine
     let headindex = headindexes[headindexes.length - 1]
     let tailindex = tailindexes[0]
     let headptr = headintersectionindexes.indexOf(headindex)
     let tailptr = tailintersectionindexes.indexOf(tailindex)
 
-    // console.log('headindex, tailindex, headptr,tailptr',
-    //     headindex, tailindex, headptr,tailptr)
     // filter out items that register only because they have just been moved
     if ((headptr >=0) && !intersecting[headindex].intersecting) {
         headptr = -1
@@ -392,8 +380,6 @@ export const isolateRelevantIntersections = ({
             let index = tailintersectionindexes[ptr]
 
             // test for continuity and consistency
-            // console.log('tail continuity: index -1, refindex, intersecting[index].intersecting,refintersecting',
-            //     index -1, refindex, intersecting[index],refintersecting)
             if (((index - 1) == refindex) && (intersecting[index].intersecting == refintersecting)) {
 
                 filteredintersections.push(tailintersections[ptr])
@@ -522,17 +508,10 @@ export const allocateContentList = (
     let runwaytailindex = contentlist[(runwaycount * crosscount) - 1].props.index
     let headitemcount
 
-    // if (referenceindex <= runwaytailindex) {
-    //     headitemcount = (referenceindex - offsetindex)
-    // } else {
-    //     headitemcount = (runwaycount * crosscount)
-    // }
     headitemcount = (referenceindex - offsetindex)
 
     let headlist = contentlist.slice(0,headitemcount)
     let taillist = contentlist.slice(headitemcount)
-
-    // console.log('headlist, taillist', [...headlist], [...taillist])
 
     return [headlist,taillist]
 
@@ -549,8 +528,6 @@ export const getSpinePosRef = (
         gap,
         referenceshift,
     }) => {
-
-    // console.log('referenceindex, referenceshift',referenceindex, referenceshift)
 
     let spineposbase,spineposref
     var localrefindex = referenceindex
@@ -576,12 +553,13 @@ export const getSpinePosRef = (
     if (scrollforward) {
         let referenceelement = referenceobjects[0].current
         if (referenceelement) {
-            // console.log('headindex, headelement.offsetTop',headindex,headelement.offsetTop)
+
             if (orientation == 'vertical') {
                 referenceposshift = referenceelement.offsetTop
             } else {
                 referenceposshift = referenceelement.offsetLeft
             }
+
         }
     } else {
         referenceposshift = 0
@@ -593,19 +571,12 @@ export const getSpinePosRef = (
             }
         }
     }
-    // console.log('referenceindex, localrefindex, scrollforward,referenceshift, referenceposshift, referenceelement.offsetTop, referenceelement.offsetHeight, gap, referenceelement',
-    //     referenceindex, localrefindex, scrollforward,referenceshift, referenceposshift, referenceelement.offsetTop, referenceelement.offsetHeight, gap, referenceelement)
 
     if (scrollforward) {
         spineposref = spineposbase + referenceposshift
     } else {
         spineposref = spineposbase - referenceposshift
     }
-
-    // console.log('in getSpinePosRef referenceobject, scrollforward, spineposbase, localrefindex, referenceposshift, spineposref',
-    //     referenceobject, scrollforward, spineposbase, localrefindex, referenceposshift, spineposref)
-
-    // console.log('spineposref', spineposref)
 
     return spineposref
 }
@@ -708,144 +679,3 @@ export const setCradleGridStyles = ({
         return [headstyles,tailstyles]
         
 }
-
-// export const setCradleStyleRevisionsForDrop = ({ 
-//     headcontentlist,
-//     tailcontentlist,
-//     headCradleElement,
-//     tailCradleElement, 
-//     parentElement, 
-//     scrollforward, 
-//     orientation 
-// }) => {
-
-//     let styles = {} as React.CSSProperties
-//     let tailstyles = {} as React.CSSProperties
-//     let headpos, tailpos
-
-//     // set styles revisions
-//     if (orientation == 'vertical') {
-
-//         let offsetHeight = headCradleElement.offsetHeight
-//         let parentHeight = parentElement.offsetHeight
-
-//         let offsetTop = headCradleElement.offsetTop
-
-//         styles.left = 'auto'
-//         styles.right = 'auto'
-
-//         if (scrollforward) {
-
-//             tailpos = offsetTop + offsetHeight
-//             styles.top = 'auto'
-//             styles.bottom = (parentHeight - tailpos) + 'px'
-
-//         } else {
-
-//             headpos = offsetTop
-//             styles.top = headpos + 'px'
-//             styles.bottom = 'auto'
-
-//         }
-
-//     } else {
-
-//         let offsetLeft = headCradleElement.offsetLeft
-//         let offsetWidth = headCradleElement.offsetWidth
-//         let parentWidth = parentElement.offsetWidth
-//         let cssleft = parseInt(headCradleElement.style.left)
-//         let cssright = parseInt(headCradleElement.style.bottom)
-
-//         styles.top = 'auto'
-//         styles.bottom = 'auto'
-
-//         if (scrollforward) {
-
-//             tailpos = offsetLeft + offsetWidth
-//             styles.left = 'auto'
-//             styles.right = (parentWidth - tailpos) + 'px'
-
-//         } else {
-
-//             headpos = offsetLeft
-//             styles.left = headpos + 'px'
-//             styles.right = 'auto'
-
-//         }
-//     }
-
-//     return [styles,tailstyles]
-
-// }
-
-// export const setCradleStyleRevisionsForAdd = ({
-//     headcontentlist,
-//     tailcontentlist,
-//     headCradleElement,
-//     tailCradleElement,
-//     parentElement,
-//     scrollforward,
-//     orientation,
-// }) => {
-//     let styles = {} as React.CSSProperties
-//     let tailstyles = {} as React.CSSProperties
-//     let headpos, tailpos
-
-//     // set style revisions
-//     if (orientation == 'vertical') {
-
-//         // let offsetTop
-//         let offsetHeight = headCradleElement.offsetHeight
-//         let parentHeight = parentElement.offsetHeight
-//         let csstop = parseInt(headCradleElement.style.top)
-//         let cssbottom = parseInt(headCradleElement.style.bottom)
-//         let offsetTop = headCradleElement.offsetTop
-
-//         styles.left = 'auto'
-//         styles.right = 'auto'
-
-//         if (scrollforward) {
-
-//             headpos = offsetTop
-//             styles.top = headpos + 'px'
-//             styles.bottom = 'auto'
-
-//         } else { // scroll backward
-
-//             tailpos = offsetTop + offsetHeight
-//             styles.top = 'auto'
-//             styles.bottom = (parentHeight - tailpos) + 'px'
-
-//         }
-
-//     } else {
-
-//         let offsetLeft = headCradleElement.offsetLeft
-//         let offsetWidth = headCradleElement.offsetWidth
-//         let parentWidth = parentElement.offsetWidth
-
-//         let cssleft = parseInt(headCradleElement.style.left)
-//         let cssright = parseInt(headCradleElement.style.bottom)
-
-//         styles.top = 'auto'
-//         styles.bottom = 'auto'
-
-//         if (scrollforward) {
-
-//             headpos = offsetLeft
-//             styles.left = headpos + 'px'
-//             styles.right = 'auto'
-
-//         } else { // scroll backward
-
-//             tailpos = offsetLeft + offsetWidth
-//             styles.left = 'auto'
-//             styles.right = (parentWidth - tailpos) + 'px'
-
-//         }
-
-//     }
-
-//     return [styles, tailstyles]
-
-// }
