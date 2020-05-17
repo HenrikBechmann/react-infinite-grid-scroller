@@ -986,7 +986,7 @@ const Cradle = ({
                 rowcount:cradlerowcount,
                 gap,
                 visibletargetindexoffset,
-                targetScrollOffset:visibletargetscrolloffset,
+                targetViewportOffset:visibletargetscrolloffset,
                 crosscount,
                 listsize,
             })
@@ -1041,13 +1041,13 @@ const Cradle = ({
         if (orientation == 'vertical') {
 
             scrollPositionDataRef.current = {property:'scrollTop',value:scrollblockoffset}
-            spineCradleElementRef.current.style.top = spineoffset + 'px'
+            spineCradleElementRef.current.style.top = (scrollblockoffset + spineoffset) + 'px'
             spineCradleElementRef.current.style.left = 'auto'
 
         } else { // orientation = 'horizontal'
 
             scrollPositionDataRef.current = {property:'scrollLeft',value:scrollblockoffset}
-            spineCradleElementRef.current.style.left = spineoffset + 'px'
+            spineCradleElementRef.current.style.left = (scrollblockoffset + spineoffset) + 'px'
             spineCradleElementRef.current.style.top = 'auto'
 
         }

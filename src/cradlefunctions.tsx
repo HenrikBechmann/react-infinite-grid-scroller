@@ -186,7 +186,7 @@ export const getContentListRequirements = ({
         runwaycount,
         gap,
         visibletargetindexoffset,
-        targetScrollOffset,
+        targetViewportOffset,
         crosscount,
         listsize,
     }) => {
@@ -210,7 +210,7 @@ export const getContentListRequirements = ({
         runwaycount,
         gap,
         visibletargetindexoffset,
-        targetScrollOffset,
+        targetViewportOffset,
         crosscount,
         listsize
 )
@@ -267,8 +267,8 @@ export const getContentListRequirements = ({
     let targetrowoffset = Math.floor(visibletargetindexoffset/crosscount)
 
     let rowscrollblockoffset = targetrowoffset * cellLength
-    let scrollblockoffset = Math.max(0,rowscrollblockoffset - targetScrollOffset)
-    let spineoffset = scrollblockoffset + visibletargetindexoffset// indexrowoffset * cellLength
+    let scrollblockoffset = Math.max(0,rowscrollblockoffset)
+    let spineoffset = targetViewportOffset
 
     return {indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset} // summarize requirements message
 
