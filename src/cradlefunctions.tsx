@@ -189,6 +189,7 @@ export const getContentListRequirements = ({
         targetViewportOffset,
         crosscount,
         listsize,
+        viewportElement,
     }) => {
 
     console.log('getContentListRequirements props',
@@ -221,10 +222,10 @@ export const getContentListRequirements = ({
     let cellLength,viewportlength
     if (orientation == 'vertical') {
         cellLength = cellHeight + gap
-        // viewportlength = viewportheight
+        viewportlength = viewportElement.offsetHeight
     } else {
         cellLength = cellWidth + gap
-        // viewportlength = viewportwidth
+        viewportlength = viewportElement.offsetWidth
     }
 
     let contentCount = rowcount * crosscount 

@@ -989,6 +989,7 @@ const Cradle = ({
                 targetViewportOffset:visibletargetscrolloffset,
                 crosscount,
                 listsize,
+                viewportElement:viewportDataRef.current.elementref.current
             })
 
        console.log('CONTENTLISTREQUIREMENTS: indexoffset,referenceoffset,contentCount, scrollblockoffset,cradleoffset',
