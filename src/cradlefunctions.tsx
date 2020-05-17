@@ -227,6 +227,7 @@ export const getContentListRequirements = ({
         cellLength = cellWidth + gap
         viewportlength = viewportElement.offsetWidth
     }
+    let viewportrows = Math.floor(viewportlength / cellLength)
 
     let contentCount = rowcount * crosscount 
     if (contentCount > listsize) contentCount = listsize
