@@ -195,6 +195,8 @@ const Cradle = ({
                 index:tailModelContentRef.current[0]?.props.index || 0,
                 scrolloffset,
             }
+
+            console.log('setting callingReferenceIndexDataRef for resizing',{...callingReferenceIndexDataRef.current})
             // callingReferenceIndexDataRef.current = {...masterReferenceIndexDataRef.current}
 
             pauseItemObserverRef.current = true
@@ -973,6 +975,9 @@ const Cradle = ({
         let { index: visibletargetindexoffset, 
             scrolloffset: visibletargetscrolloffset } = referenceIndexData
 
+        console.log('setCradleContent: visibletargetindexoffset, visibletargetscrolloffset',
+            visibletargetindexoffset, visibletargetscrolloffset)
+
         if (cradleState == 'reposition') visibletargetscrolloffset = 0
 
         let localContentList = [] // any duplicated items will be re-used by react
@@ -983,7 +988,7 @@ const Cradle = ({
                 cellWidth, 
                 orientation, 
                 runwaycount,
-                rowcount:cradlerowcount,
+                cradlerowcount,
                 gap,
                 visibletargetindexoffset,
                 targetViewportOffset:visibletargetscrolloffset,
@@ -992,7 +997,7 @@ const Cradle = ({
                 viewportElement:viewportDataRef.current.elementref.current
             })
 
-       console.log('CONTENTLISTREQUIREMENTS: indexoffset,referenceoffset,contentCount, scrollblockoffset,cradleoffset',
+       console.log('CONTENTLISTREQUIREMENTS: indexoffset,referenceoffset,contentCount, scrollblockoffset,spineoffset',
            indexoffset,referenceoffset,contentCount, scrollblockoffset,spineoffset)
 
         immediateReferenceIndexDataRef.current = {

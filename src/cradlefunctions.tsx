@@ -182,7 +182,7 @@ export const getContentListRequirements = ({
         orientation, 
         cellHeight, 
         cellWidth, 
-        rowcount,
+        cradlerowcount,
         runwaycount,
         gap,
         visibletargetindexoffset,
@@ -192,29 +192,29 @@ export const getContentListRequirements = ({
         viewportElement,
     }) => {
 
-    console.log('getContentListRequirements props',
-        `orientation, 
-        cellHeight, 
-        cellWidth, 
-        rowcount,
-        runwaycount,
-        gap,
-        visibletargetindexoffset,
-        targetScrollOffset,
-        crosscount,
-        listsize`,
+    // console.log('getContentListRequirements props',
+    //     `orientation, 
+    //     cellHeight, 
+    //     cellWidth, 
+    //     rowcount,
+    //     runwaycount,
+    //     gap,
+    //     visibletargetindexoffset,
+    //     targetScrollOffset,
+    //     crosscount,
+    //     listsize`,
 
-        orientation, 
-        cellHeight, 
-        cellWidth, 
-        rowcount,
-        runwaycount,
-        gap,
-        visibletargetindexoffset,
-        targetViewportOffset,
-        crosscount,
-        listsize
-)
+    //     orientation, 
+    //     cellHeight, 
+    //     cellWidth, 
+    //     cradlerowcount,
+    //     runwaycount,
+    //     gap,
+    //     visibletargetindexoffset,
+    //     targetViewportOffset,
+    //     crosscount,
+    //     listsize
+    // )
 
     // -------------[ calc basic inputs: cellLength, contentCount. ]----------
 
@@ -229,7 +229,7 @@ export const getContentListRequirements = ({
     }
     let viewportrows = Math.floor(viewportlength / cellLength)
 
-    let contentCount = rowcount * crosscount 
+    let contentCount = cradlerowcount * crosscount 
     if (contentCount > listsize) contentCount = listsize
 
     // -----------------------[ calc leadingitemcount, referenceoffset ]-----------------------
@@ -267,10 +267,22 @@ export const getContentListRequirements = ({
     let indexrowoffset = Math.floor(indexoffset/crosscount)
 
     let targetrowoffset = Math.floor(referenceoffset/crosscount)
-
+    let maxrowoffset = Math.ceil(listsize/crosscount)
     let rowscrollblockoffset = targetrowoffset * cellLength
     let scrollblockoffset = Math.max(0,rowscrollblockoffset)
+
     let spineoffset = targetViewportOffset
+
+    if (maxrowoffset < (targetrowoffset + viewportrows)) {
+        let rowdiff = (targetrowoffset + viewportrows) - maxrowoffset
+        let itemdiff = rowdiff * crosscount
+        // indexoffset += itemdiff
+        referenceoffset -= itemdiff
+        spineoffset = viewportlength - (viewportrows * cellLength)
+        // scrollblockoffset += rowdiff * (cellLength + gap)
+        console.log('requirements fit: rowdiff, itemdiff, referenceoffset, spineoffset',
+            rowdiff, itemdiff, referenceoffset, spineoffset)
+    }
 
     return {indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset} // summarize requirements message
 
@@ -530,11 +542,11 @@ export const allocateContentList = (
     }
 ) => {
 
-    console.log('allocateContentList: contentlist, runwaycount, referenceindex, crosscount',
-        contentlist, runwaycount, referenceindex, crosscount)
+    // console.log('allocateContentList: contentlist, runwaycount, referenceindex, crosscount',
+    //     contentlist, runwaycount, referenceindex, crosscount)
 
     let offsetindex = contentlist[0].props.index
-    let runwaytailindex = contentlist[(runwaycount * crosscount) - 1].props.index
+    // let runwaytailindex = contentlist[(runwaycount * crosscount) - 1].props.index
     let headitemcount
 
     headitemcount = (referenceindex - offsetindex)
