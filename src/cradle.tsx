@@ -197,7 +197,7 @@ const Cradle = ({
             // }
 
             callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
-            console.log('setting callingReferenceIndexDataRef for resizing',{...callingReferenceIndexDataRef.current})
+            // console.log('setting callingReferenceIndexDataRef for resizing',{...callingReferenceIndexDataRef.current})
 
             pauseItemObserverRef.current = true
             pauseCradleIntersectionObserverRef.current = true
@@ -995,8 +995,8 @@ const Cradle = ({
                 viewportElement:viewportDataRef.current.elementref.current
             })
 
-        console.log('CONTENTLISTREQUIREMENTS:indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset',
-            indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset)
+        // console.log('CONTENTLISTREQUIREMENTS:indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset',
+        //     indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset)
 
         let childlist = getUIContentList({
             indexoffset, 
@@ -1155,7 +1155,7 @@ const Cradle = ({
             let cradleState = cradlestateRef.current
             if (!viewportDataRef.current.isResizing) {
                 let localrefdata = {...scrollReferenceIndexDataRef.current}
-                console.log('saving end of scroll to stableReferenceIndexDataRef', localrefdata)
+                // console.log('saving end of scroll to stableReferenceIndexDataRef', localrefdata)
                 stableReferenceIndexDataRef.current = localrefdata
                 saveScrollReferenceIndexData(localrefdata) // trigger re-run to capture end of scroll session values
 
