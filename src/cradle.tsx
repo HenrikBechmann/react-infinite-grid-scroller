@@ -783,8 +783,6 @@ const Cradle = ({
 
         }
 
-        console.log('TARGET REFERENCEINDEX in adjustcradleentries', referenceindex)
-
         let entryindexes = []
         for (let entry of intersections) {
             entryindexes.push(entry.target.dataset.index)
@@ -952,26 +950,15 @@ const Cradle = ({
 
                 spineCradleElementRef.current.style.top = spineposref + 'px'
                 spineCradleElementRef.current.style.left = 'auto'
-                // scrolloffset = spineposref - viewportElement.scrollTop
 
             } else {
 
                 spineCradleElementRef.current.style.left = spineposref + 'px'
                 spineCradleElementRef.current.style.top = 'auto'
-                // scrolloffset = spineposref - viewportElement.scrollLeft
 
             }
 
         }
-
-        // scrollReferenceIndexDataRef.current = {
-        //     index:tailcontent[0].props.index,
-        //     scrolloffset
-        // }
-
-        // saveScrollReferenceIndexData(scrollReferenceIndexDataRef.current)
-
-        // console.log('ADJUSTCRADLEENTRIES: scrollReferenceIndexDataRef.current',scrollReferenceIndexDataRef.current)
 
         saveCradleState('updatescroll')
 
@@ -988,9 +975,6 @@ const Cradle = ({
 
         let { index: visibletargetindexoffset, 
             scrolloffset: visibletargetscrolloffset } = referenceIndexData
-
-        console.log('setCradleContent: visibletargetindexoffset, visibletargetscrolloffset',
-            visibletargetindexoffset, visibletargetscrolloffset)
 
         if (cradleState == 'reposition') visibletargetscrolloffset = 0
 
@@ -1011,13 +995,8 @@ const Cradle = ({
                 viewportElement:viewportDataRef.current.elementref.current
             })
 
-       console.log('CONTENTLISTREQUIREMENTS: indexoffset,referenceoffset,contentCount, scrollblockoffset,spineoffset',
-           indexoffset,referenceoffset,contentCount, scrollblockoffset,spineoffset)
-
-        // stableReferenceIndexDataRef.current = {
-        //     index:referenceoffset,
-        //     scrolloffset:visibletargetscrolloffset,
-        // }
+        console.log('CONTENTLISTREQUIREMENTS:indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset',
+            indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset)
 
         let childlist = getUIContentList({
             indexoffset, 
@@ -1119,19 +1098,20 @@ const Cradle = ({
                     let itemindex = tailModelContentRef.current[0].props.index
                     let scrolloffset
                     if (cradlePropsRef.current.orientation == 'vertical') {
-                        scrolloffset = viewportDataRef.current.elementref.current.scrollTop - 
-                            spineCradleElementRef.current.offsetTop
+                        scrolloffset = spineCradleElementRef.current.offsetTop - 
+                            viewportDataRef.current.elementref.current.scrollTop
+                            
                             
                     } else {
-                        scrolloffset = viewportDataRef.current.elementref.current.scrollLeft - 
-                            spineCradleElementRef.current.offsetLeft
+                        scrolloffset = spineCradleElementRef.current.offsetLeft - 
+                            viewportDataRef.current.elementref.current.scrollLeft
+                            
                             
                     }
                     scrollReferenceIndexDataRef.current = {
                         index:itemindex,
                         scrolloffset,
                     }
-                    console.log('SCROLLTO scrollReferenceIndexDataRef.current',scrollReferenceIndexDataRef.current)
                 } else {
 
                     scrollReferenceIndexDataRef.current = getReferenceIndexData({
@@ -1174,12 +1154,10 @@ const Cradle = ({
             // isScrollingRef.current = false;
             let cradleState = cradlestateRef.current
             if (!viewportDataRef.current.isResizing) {
-
-                // (cradleState != 'repositioning') && 
-                //     normalizeCradleAnchors(headCradleElementRef.current, cradlePropsRef.current.orientation)
                 let localrefdata = {...scrollReferenceIndexDataRef.current}
-                saveScrollReferenceIndexData(localrefdata) // trigger re-run to capture end of scroll session values
+                console.log('saving end of scroll to stableReferenceIndexDataRef', localrefdata)
                 stableReferenceIndexDataRef.current = localrefdata
+                saveScrollReferenceIndexData(localrefdata) // trigger re-run to capture end of scroll session values
 
             }
             switch (cradleState) {
@@ -1275,9 +1253,6 @@ const Cradle = ({
 
                         viewportData.elementref.current[scrollPositionDataRef.current.property] =
                             scrollPositionDataRef.current.value
-
-                        // pick up position from setContent
-                        // stableReferenceIndexDataRef.current = {...scrollReferenceIndexDataRef.current}
 
                         pauseItemObserverRef.current  && (pauseItemObserverRef.current = false)
                         pauseCradleIntersectionObserverRef.current  && (pauseCradleIntersectionObserverRef.current = false)
