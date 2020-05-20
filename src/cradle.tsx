@@ -1029,7 +1029,7 @@ const Cradle = ({
 
         stableReferenceIndexDataRef.current = {
             index:tailcontentlist[0]?.props.index,
-            scrolloffset:spineoffset + padding,
+            scrolloffset:spineoffset,
         }
 
         if (referenceIndexCallbackRef.current) {
@@ -1043,13 +1043,13 @@ const Cradle = ({
         if (orientation == 'vertical') {
 
             scrollPositionDataRef.current = {property:'scrollTop',value:scrollblockoffset}
-            spineCradleElementRef.current.style.top = (scrollblockoffset + spineoffset + padding) + 'px'
+            spineCradleElementRef.current.style.top = (scrollblockoffset + spineoffset) + 'px'
             spineCradleElementRef.current.style.left = 'auto'
 
         } else { // orientation = 'horizontal'
 
             scrollPositionDataRef.current = {property:'scrollLeft',value:scrollblockoffset}
-            spineCradleElementRef.current.style.left = (scrollblockoffset + spineoffset + padding) + 'px'
+            spineCradleElementRef.current.style.left = (scrollblockoffset + spineoffset) + 'px'
             spineCradleElementRef.current.style.top = 'auto'
 
         }
