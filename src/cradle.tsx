@@ -191,13 +191,13 @@ const Cradle = ({
             } else {
                 scrolloffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
             }
-            callingReferenceIndexDataRef.current = {
-                index:tailModelContentRef.current[0]?.props.index || 0,
-                scrolloffset,
-            }
+            // callingReferenceIndexDataRef.current = {
+            //     index:tailModelContentRef.current[0]?.props.index || 0,
+            //     scrolloffset,
+            // }
 
             console.log('setting callingReferenceIndexDataRef for resizing',{...callingReferenceIndexDataRef.current})
-            // callingReferenceIndexDataRef.current = {...masterReferenceIndexDataRef.current}
+            callingReferenceIndexDataRef.current = {...masterReferenceIndexDataRef.current}
 
             pauseItemObserverRef.current = true
             pauseCradleIntersectionObserverRef.current = true
@@ -944,19 +944,27 @@ const Cradle = ({
             }
         )
 
+        let scrolloffset = 0
         if (spineposref !== undefined) {
             if (cradleProps.orientation == 'vertical') {
 
                 spineCradleElementRef.current.style.top = spineposref + 'px'
                 spineCradleElementRef.current.style.left = 'auto'
+                scrolloffset = spineposref - viewportElement.scrollTop
 
             } else {
 
                 spineCradleElementRef.current.style.left = spineposref + 'px'
                 spineCradleElementRef.current.style.top = 'auto'
+                scrolloffset = spineposref - viewportElement.scrollLeft
 
             }
 
+        }
+
+        masterReferenceIndexDataRef.current = immediateReferenceIndexDataRef.current = {
+            index:tailcontent[0]?.props.index,
+            scrolloffset
         }
 
         saveCradleState('updatescroll')
@@ -1000,10 +1008,10 @@ const Cradle = ({
        console.log('CONTENTLISTREQUIREMENTS: indexoffset,referenceoffset,contentCount, scrollblockoffset,spineoffset',
            indexoffset,referenceoffset,contentCount, scrollblockoffset,spineoffset)
 
-        immediateReferenceIndexDataRef.current = {
-            index:referenceoffset,
-            scrolloffset:visibletargetscrolloffset,
-        }
+        // immediateReferenceIndexDataRef.current = {
+        //     index:referenceoffset,
+        //     scrolloffset:visibletargetscrolloffset,
+        // }
 
         if (referenceIndexCallbackRef.current) {
             let cstate = cradleState
@@ -1013,7 +1021,7 @@ const Cradle = ({
 
         }
 
-        saveImmediateReferenceIndexData(immediateReferenceIndexDataRef.current) // consistent with onScroll
+        // saveImmediateReferenceIndexData(immediateReferenceIndexDataRef.current) // consistent with onScroll
 
         let childlist = getUIContentList({
             indexoffset, 
@@ -1043,6 +1051,11 @@ const Cradle = ({
         modelContentRef.current = childlist
         headModelContentRef.current = headcontentlist
         tailModelContentRef.current = tailcontentlist
+
+        masterReferenceIndexDataRef.current = immediateReferenceIndexDataRef.current = {
+            index:tailcontentlist[0]?.props.index,
+            scrolloffset:spineoffset,
+        }
 
         if (orientation == 'vertical') {
 
@@ -1098,11 +1111,21 @@ const Cradle = ({
 
             if (cradleState == 'ready' || cradleState == 'repositioning') {
 
-                immediateReferenceIndexDataRef.current = getReferenceIndexData({
-                    viewportData:viewportDataRef.current,
-                    cradlePropsRef,
-                    crosscountRef,
-                })
+                if (cradleState == 'ready') {
+                    immediateReferenceIndexDataRef.current = {
+                        index:tailModelContentRef.current[0]?.props.index || 0,
+                        scrolloffset:undefined,
+                    }
+                } else {
+
+                    immediateReferenceIndexDataRef.current = getReferenceIndexData({
+                        viewportData:viewportDataRef.current,
+                        cradlePropsRef,
+                        crosscountRef,
+                    })
+
+                }
+
                 referenceIndexCallbackRef.current && 
                     referenceIndexCallbackRef.current(immediateReferenceIndexDataRef.current.index,'scrolling', cradleState)
 
