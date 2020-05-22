@@ -185,12 +185,12 @@ const Cradle = ({
         if (viewportData.isResizing) {
 
             // enter resizing mode
-            let scrolloffset
-            if (cradlePropsRef.current.orientation == 'vertical') {
-                scrolloffset = spineCradleElementRef.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
-            } else {
-                scrolloffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
-            }
+            // let scrolloffset
+            // if (cradlePropsRef.current.orientation == 'vertical') {
+            //     scrolloffset = spineCradleElementRef.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
+            // } else {
+            //     scrolloffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
+            // }
             // callingReferenceIndexDataRef.current = {
             //     index:tailModelContentRef.current[0]?.props.index || 0,
             //     scrolloffset,
@@ -289,7 +289,7 @@ const Cradle = ({
 
     const [scrollReferenceIndexData, saveScrollReferenceIndexData] = useState({
         index:Math.min(offset,(listsize - 1)) || 0,
-        scrolloffset:0
+        scrolloffset:padding
     })
     const scrollReferenceIndexDataRef = useRef(null) // access by closures
     scrollReferenceIndexDataRef.current = scrollReferenceIndexData
@@ -988,6 +988,7 @@ const Cradle = ({
                 runwaycount,
                 cradlerowcount,
                 gap,
+                padding,
                 visibletargetindexoffset,
                 targetViewportOffset:visibletargetscrolloffset,
                 crosscount,

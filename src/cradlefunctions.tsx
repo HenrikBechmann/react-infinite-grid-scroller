@@ -185,6 +185,7 @@ export const getContentListRequirements = ({
         cradlerowcount,
         runwaycount,
         gap,
+        padding,
         visibletargetindexoffset,
         targetViewportOffset,
         crosscount,
@@ -278,7 +279,7 @@ export const getContentListRequirements = ({
         let itemdiff = rowdiff * crosscount
         // indexoffset += itemdiff
         referenceoffset -= itemdiff
-        spineoffset = viewportlength - (viewportrows * cellLength)
+        spineoffset = viewportlength - (viewportrows * cellLength) + padding
         // scrollblockoffset += rowdiff * (cellLength + gap)
         console.log('requirements fit: rowdiff, itemdiff, referenceoffset, spineoffset',
             rowdiff, itemdiff, referenceoffset, spineoffset)
