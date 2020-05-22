@@ -734,6 +734,8 @@ const Cradle = ({
             
         }
 
+        // console.log('adjustcradleentries intersections.length',intersections.length)
+
         // -- isolate forward and backward lists (happens with rapid scrolling changes)
         //  then set scrollforward
         let forwardcount = 0, backwardcount = 0
