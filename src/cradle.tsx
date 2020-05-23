@@ -393,14 +393,14 @@ const Cradle = ({
         let bottom, left, top, right
 
         if (orientation == 'vertical') {
-            bottom = gap + 'px'
+            bottom = 0
             left = 0
             right = 0
             top = 'auto'
         } else {
             bottom = 0
             left = 'auto'
-            right = gap + 'px'
+            right = 0
             top = 0
         }
 
@@ -748,7 +748,6 @@ const Cradle = ({
             } else {
                 ratio = Math.round(sampleEntry.intersectionRatio * 1000)/1000
             }
-            // let index = sampleEntry.target.dataset.index
 
             let isintersecting = ratio >= ITEM_OBSERVER_THRESHOLD // to accommodate FF
 
@@ -946,15 +945,19 @@ const Cradle = ({
             }
         )
 
-        let scrolloffset = 0
+        console.log('spineposref',spineposref)
+
+        // let scrolloffset = 0
         if (spineposref !== undefined) {
             if (cradleProps.orientation == 'vertical') {
 
+                headCradleElementRef.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
                 spineCradleElementRef.current.style.top = spineposref + 'px'
                 spineCradleElementRef.current.style.left = 'auto'
 
             } else {
 
+                headCradleElementRef.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
                 spineCradleElementRef.current.style.left = spineposref + 'px'
                 spineCradleElementRef.current.style.top = 'auto'
 
