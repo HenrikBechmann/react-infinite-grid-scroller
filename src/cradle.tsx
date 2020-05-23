@@ -1034,6 +1034,10 @@ const Cradle = ({
             }
         )
 
+        if (headcontentlist.length == 0) {
+            spineoffset = padding
+        }
+
         modelContentRef.current = childlist
         headModelContentRef.current = headcontentlist
         tailModelContentRef.current = tailcontentlist
