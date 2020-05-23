@@ -197,7 +197,7 @@ const Cradle = ({
             // }
 
             callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
-            // console.log('setting callingReferenceIndexDataRef for resizing',{...callingReferenceIndexDataRef.current})
+            console.log('setting callingReferenceIndexDataRef for resizing',{...callingReferenceIndexDataRef.current})
 
             pauseItemObserverRef.current = true
             pauseCradleIntersectionObserverRef.current = true
@@ -978,7 +978,7 @@ const Cradle = ({
         let { index: visibletargetindexoffset, 
             scrolloffset: visibletargetscrolloffset } = referenceIndexData
 
-        if (cradleState == 'reposition') visibletargetscrolloffset = 0
+        if (cradleState == 'reposition') visibletargetscrolloffset = padding
 
         let localContentList = [] // any duplicated items will be re-used by react
 
