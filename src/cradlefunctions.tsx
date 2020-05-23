@@ -339,9 +339,12 @@ export const isolateRelevantIntersections = ({
             calcintersecting = entry.intersectionRatio >= ITEM_OBSERVER_THRESHOLD
         } else {
             calcintersecting = ratio >= ITEM_OBSERVER_THRESHOLD
-         }
+        }
+        if (intersecting[index]) {
+            console.log('WARNING: duplicate entry:',index)
+        }
         intersecting[index] = {
-            intersecting:calcintersecting,  // to accommodate FF
+            intersecting:calcintersecting,  // to accommodate browser differences
             isIntersecting:entry.isIntersecting,
             ratio,
             originalratio:entry.intersectionRatio
