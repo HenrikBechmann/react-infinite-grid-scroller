@@ -34,7 +34,7 @@ const browser = detect()
 
 const LocalResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
 
-const ITEM_OBSERVER_THRESHOLD = .4
+const ITEM_OBSERVER_THRESHOLD = .6
 
 import { 
     setCradleGridStyles, 
