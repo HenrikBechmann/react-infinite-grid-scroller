@@ -934,6 +934,8 @@ const Cradle = ({
         // place the spine in the scrollblock
         let spineposref = getSpinePosRef(
             {
+                headcontent,
+                viewportElement:viewportDataRef.current.elementref.current,
                 scrollforward,
                 itemelements:itemElementsRef.current,
                 orientation:cradleProps.orientation,
@@ -941,16 +943,19 @@ const Cradle = ({
                 referenceindex,
                 crosscount,
                 gap:cradleProps.gap,
+                padding:cradleProps.padding,
                 referenceshift,
             }
         )
 
-        console.log('spineposref',spineposref)
+        // console.log('spineposref',spineposref)
 
         // let scrolloffset = 0
+        // let scrollLength
         if (spineposref !== undefined) {
             if (cradleProps.orientation == 'vertical') {
-
+                // scrollLength = viewportDataRef.current.elementref.current.scrollTop
+                // spineposref = Math.min(scrollLength + cradleProps.padding, spineposref)
                 headCradleElementRef.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
                 spineCradleElementRef.current.style.top = spineposref + 'px'
                 spineCradleElementRef.current.style.left = 'auto'
@@ -1001,8 +1006,8 @@ const Cradle = ({
                 viewportElement:viewportDataRef.current.elementref.current
             })
 
-        console.log('CONTENTLISTREQUIREMENTS:indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset',
-            indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset)
+        // console.log('CONTENTLISTREQUIREMENTS:indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset',
+        //     indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset)
 
         let childlist = getUIContentList({
             indexoffset, 

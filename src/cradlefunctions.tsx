@@ -270,7 +270,6 @@ export const getContentListRequirements = ({
     let targetrowoffset = Math.floor(referenceoffset/crosscount)
     let maxrowoffset = Math.ceil(listsize/crosscount)
     let scrollblockoffset = (targetrowoffset * cellLength)
-    // let scrollblockoffset = Math.max(0,rowscrollblockoffset)
 
     let spineoffset = targetViewportOffset
 
@@ -561,6 +560,8 @@ export const allocateContentList = (
 
 export const getSpinePosRef = (
     {
+        headcontent,
+        viewportElement,
         scrollforward,
         itemelements, 
         orientation, 
@@ -568,6 +569,7 @@ export const getSpinePosRef = (
         referenceindex,
         crosscount,
         gap,
+        padding,
         referenceshift,
     }) => {
 
@@ -618,6 +620,20 @@ export const getSpinePosRef = (
         spineposref = spineposbase + referenceposshift
     } else {
         spineposref = spineposbase - referenceposshift
+    }
+
+    if (headcontent.length == 0) {
+        spineposref = padding
+        // let scrollLength
+        // if (orientation == 'vertical') {
+        //     scrollLength = viewportElement.scrollTop
+        // } else {
+        //     scrollLength = viewportElement.scrollLength
+        // }
+        // console.log('top spineposref,scrollLength,spineposref,padding',scrollLength,spineposref,padding)
+        // if (spineposref > (scrollLength + padding)) {
+        //     spineposref = scrollLength + padding
+        // }
     }
 
     return spineposref
