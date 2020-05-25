@@ -314,19 +314,22 @@ export const isolateRelevantIntersections = ({
         tailindexes.push(item.props.index)
     }
 
+    let duplicates:any = {}
     for (let entry of intersections) {
 
         let index = parseInt(entry.target.dataset.index)
-
+        let headptr, tailptr
         if (tailindexes.includes(index)) {
 
             tailintersectionindexes.push(index)
             tailintersections.push(entry)
+            tailptr = tailintersections.length - 1
 
         } else if (headindexes.includes(index)) {
 
             headintersectionindexes.push(index)
             headintersections.push(entry)
+            headptr = headintersections.length - 1
 
         } else {
             console.log('warning: unknown intersection element',entry)
@@ -340,16 +343,69 @@ export const isolateRelevantIntersections = ({
         } else {
             calcintersecting = ratio >= ITEM_OBSERVER_THRESHOLD
         }
-        if (intersecting[index]) {
-            console.log('WARNING: duplicate entry:',index)
-        }
-        intersecting[index] = {
+        // if (intersecting[index]) {
+        //     console.log('WARNING: duplicate entry:',index)
+        // }
+        let iobj = {
+            index,
             intersecting:calcintersecting,  // to accommodate browser differences
             isIntersecting:entry.isIntersecting,
             ratio,
-            originalratio:entry.intersectionRatio
+            originalratio:entry.intersectionRatio,
+            time:entry.time,
+            headptr,
+            tailptr,
+        }
+        if (!intersecting[index]) {
+            intersecting[index] = iobj
+        } else {
+            if (!Array.isArray(intersecting[index])) {
+                let arr = [intersecting[index]]
+                intersecting[index] = arr
+            }
+            intersecting[index].push(iobj)
+            if (!duplicates[index]) {
+                duplicates[index] = []
+                duplicates[index].push(intersecting[index][0])
+            }
+            duplicates[index].push(iobj)
         }
 
+    }
+    // resolve duplicates. For uneven number, keep the most recent
+    // otherwise delete them, they cancel each other out.
+    let duplicatecompare = (a,b) => {
+        let retval = (a.time < b.time)?-1:1
+    }
+    if (Object.keys(duplicates).length > 0) {
+        console.log('duplicates found',duplicates)
+        // console.log('UNresolved intersecting',{...intersecting})
+        for (let duplicateindex in duplicates) {
+
+            let duplicate = duplicates[duplicateindex]
+
+            if (duplicate.length % 2) {
+                duplicate.sort(duplicatecompare)
+                let entry = duplicate.slice(duplicate.length -1,1)
+                intersecting[entry.index] = entry
+            } else {
+                // console.log('deleting intersecting',duplicate[0].index)
+                delete intersecting[duplicate[0].index]
+            }
+            for (let entryobj of duplicate) {
+                let headptr = entryobj.headptr
+                let tailptr = entryobj.tailptr
+                if (headptr !== undefined) {
+                    delete headintersectionindexes[headptr]
+                    delete headintersections[headptr]
+                }
+                if (tailptr !== undefined) {
+                    delete tailintersectionindexes[tailptr]
+                    delete headintersections[tailptr]
+                }
+            }
+        }
+        // console.log('resolved intersecting',{...intersecting})
     }
 
     let indexcompare = (a,b) => {
@@ -436,6 +492,8 @@ export const isolateRelevantIntersections = ({
 
         }
     }
+
+    // console.log('filteredintersections',filteredintersections)
 
     return filteredintersections
 
