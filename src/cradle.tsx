@@ -694,34 +694,35 @@ const Cradle = ({
 
     },[])
 
-    // TODO: investigate case where both forward and backward scroll
     // adjust scroll content:
     // 1.shift, 2.clip, and 3.add clip amount at other end
     const adjustcradleentries = useCallback((entries)=>{
 
+        // ----------------------------[ 1. initialization ]----------------------------
+
         let intersections = [...entries]
 
         let viewportData = viewportDataRef.current
-        let contentlistcopy = [...modelContentRef.current]
         let cradleProps = cradlePropsRef.current
-
-        let listsize = cradleProps.listsize
 
         let viewportElement = viewportData.elementref.current
 
+        let modelcontentlist = [...modelContentRef.current]
         let headcontentlist = headModelContentRef.current
         let tailcontentlist = tailModelContentRef.current
+
+        let listsize = cradleProps.listsize
         let crosscount = crosscountRef.current
 
-        let indexoffset = contentlistcopy[0].props.index
+        let indexoffset = modelcontentlist[0].props.index
 
-        let scrollforward
+        // --------------------[ 2. prepare intersections list ]-----------------------
 
         // filter out inapplicable intersection entries
         // we're only interested in intersections proximal to the spine
         intersections = isolateRelevantIntersections({
 
-            intersections:intersections,
+            intersections,
             headcontent:headcontentlist, 
             tailcontent:tailcontentlist,
             ITEM_OBSERVER_THRESHOLD,
@@ -735,6 +736,9 @@ const Cradle = ({
         }
 
         // console.log('adjustcradleentries intersections.length',intersections.length)
+
+        // --------------------------[ 3. calculate shiftitemcount ]----------------------------
+        // shift item count is the number of items the virtual cradle shifts, according to observer notices
 
         // -- isolate forward and backward lists (happens with rapid scrolling changes)
         //  then set scrollforward
@@ -759,8 +763,11 @@ const Cradle = ({
         }
 
         // calculate referenceindex
-        scrollforward = (forwardcount > backwardcount)
+        let scrollforward = (forwardcount > backwardcount)
         let shiftitemcount = forwardcount - backwardcount
+
+        console.log('forwardcount, backwardcount, scrollforward, shiftitemcount',
+            forwardcount, backwardcount, scrollforward, shiftitemcount)
 
         if (shiftitemcount == 0) {
 
@@ -768,14 +775,17 @@ const Cradle = ({
 
         }
 
+        // -------------------[ 4. calculate new referenceindex ]---------------------
+
         let referencerowshift = Math.abs(Math.ceil(shiftitemcount/crosscount))
-        let referenceshift
+
+        let referenceshift = referencerowshift * crosscount
 
         let referenceindex
-        referenceshift = referencerowshift * crosscount
+
         if (scrollforward) {
 
-            referenceindex = tailcontentlist[referenceshift]?.props.index || 0 // first time
+            referenceindex = tailcontentlist[referenceshift]?.props.index || 0 // 0 = first time
 
         } else {
 
@@ -784,10 +794,10 @@ const Cradle = ({
 
         }
 
-        let entryindexes = []
-        for (let entry of intersections) {
-            entryindexes.push(entry.target.dataset.index)
-        } 
+        // let entryindexes = []
+        // for (let entry of intersections) {
+        //     entryindexes.push(entry.target.dataset.index)
+        // } 
 
         if (referenceindex > (listsize -1)) {
             referenceindex = listsize -1
@@ -795,6 +805,8 @@ const Cradle = ({
         if (referenceindex < 0) {
             referenceindex = 0
         }
+
+        // ------------------[ 5. calculate head and tail consolidated cradle content changes ]-----------------
 
         // generate modified content instructions
         shiftitemcount = Math.abs(shiftitemcount) 
@@ -805,7 +817,7 @@ const Cradle = ({
         let addcontentcount = 0
 
         // next, verify number of rows to delete
-        let headindexchangecount, currentheadrowcount, viewportrowcount, tailindexchangecount, tailrowcount
+        let headchangecount, currentheadrowcount, viewportrowcount, tailchangecount, tailrowcount
 
         currentheadrowcount = Math.ceil(headModelContentRef.current.length/crosscount)
 
@@ -813,18 +825,22 @@ const Cradle = ({
 
         if (scrollforward) { // delete from head; add to tail; head is direction of stroll
 
+            // adjust clipitemcount
             if ((currentheadrowcount + shiftrowcount) > (cradleProps.runwaycount)) {
+
                 let rowdiff = (currentheadrowcount + shiftrowcount) - (cradleProps.runwaycount)
                 cliprowcount = rowdiff
                 clipitemcount = (cliprowcount * crosscount)
+
             }
 
             addcontentcount = clipitemcount
 
             pendingcontentoffset = indexoffset + clipitemcount
 
-            let proposedtailindex = pendingcontentoffset + contentlistcopy.length - 1
+            let proposedtailindex = pendingcontentoffset + modelcontentlist.length - 1
 
+            // adkjust changes for list boundaries
             if ((proposedtailindex) > (listsize -1) ) {
 
                 let diffitemcount = (proposedtailindex - (listsize -1)) // items outside range
@@ -842,13 +858,13 @@ const Cradle = ({
                 }
             }
 
-            headindexchangecount = -clipitemcount
-            tailindexchangecount = addcontentcount
+            headchangecount = -clipitemcount
+            tailchangecount = addcontentcount
 
-        } else {
+        } else { // scroll backward
 
+            // reconcile shift with runway count
             if ((currentheadrowcount - shiftrowcount) < (cradleProps.runwaycount)) {
-                addcontentcount = (shiftrowcount * crosscount)
 
                 let rowdiff = (cradleProps.runwaycount) - (currentheadrowcount - shiftrowcount)
                 cliprowcount = rowdiff
@@ -861,6 +877,9 @@ const Cradle = ({
                 } else {
                     clipitemcount = (cliprowcount * crosscount)
                 }
+
+                addcontentcount = (shiftrowcount * crosscount)
+
             }
 
             pendingcontentoffset = indexoffset // add to tail (opposite end of scroll direction), offset will remain the same
@@ -883,21 +902,25 @@ const Cradle = ({
                 }
             }
 
-            headindexchangecount = addcontentcount
-            tailindexchangecount = -clipitemcount
+            headchangecount = addcontentcount
+            tailchangecount = -clipitemcount
 
         }
+
+        // ----------------------------------[ 6. configure cradle content ]--------------------------
 
         // collect modified content
         let localContentList 
 
-        if (headindexchangecount || tailindexchangecount) {
+        console.log('headindexchangecount, tailindexchangecount',headchangecount, tailchangecount)
+
+        if (headchangecount || tailchangecount) {
 
             localContentList = getUIContentList({
 
-                localContentList:contentlistcopy,
-                headindexcount:headindexchangecount,
-                tailindexcount:tailindexchangecount,
+                localContentList:modelcontentlist,
+                headindexcount:headchangecount,
+                tailindexcount:tailchangecount,
                 indexoffset,//,: pendingcontentoffset,
 
                 orientation:cradleProps.orientation,
@@ -913,7 +936,7 @@ const Cradle = ({
             })
         } else {
 
-            localContentList = contentlistcopy
+            localContentList = modelcontentlist
 
         }
 
@@ -930,6 +953,8 @@ const Cradle = ({
         modelContentRef.current = localContentList
         headViewContentRef.current = headModelContentRef.current = headcontent
         tailViewContentRef.current = tailModelContentRef.current = tailcontent
+
+        // -------------------------------[ 7. set css changes ]-------------------------
 
         // place the spine in the scrollblock
         let spineposref = getSpinePosRef(
