@@ -700,7 +700,7 @@ const Cradle = ({
 
         // ----------------------------[ 1. initialization ]----------------------------
 
-        let intersections = [...entries]
+        let intersections = entries // replaced below
 
         let viewportData = viewportDataRef.current
         let cradleProps = cradlePropsRef.current
@@ -729,7 +729,7 @@ const Cradle = ({
 
         })
 
-        if (intersections.length == 0) {
+        if (intersections.length == 0) { // nothing to do
 
             return
             
@@ -745,15 +745,15 @@ const Cradle = ({
         let forwardcount = 0, backwardcount = 0
         for (let intersectrecordindex = 0; intersectrecordindex < intersections.length; intersectrecordindex++ ) {
 
-            let sampleEntry = intersections[intersectrecordindex]
+            let entry = intersections[intersectrecordindex]
             let ratio
             if (browser && browser.name == 'safari') {
-                ratio = sampleEntry.intersectionRatio
+                ratio = entry.intersectionRatio
             } else {
-                ratio = Math.round(sampleEntry.intersectionRatio * 1000)/1000
+                ratio = Math.round(entry.intersectionRatio * 1000)/1000
             }
 
-            let isintersecting = ratio >= ITEM_OBSERVER_THRESHOLD // to accommodate FF
+            let isintersecting = (ratio >= ITEM_OBSERVER_THRESHOLD)
 
             if (!isintersecting) {
                 forwardcount++
@@ -764,12 +764,12 @@ const Cradle = ({
 
         // calculate referenceindex
         let scrollforward = (forwardcount > backwardcount)
-        let shiftitemcount = forwardcount - backwardcount
+        let itemshiftcount = forwardcount - backwardcount
 
         console.log('forwardcount, backwardcount, scrollforward, shiftitemcount',
-            forwardcount, backwardcount, scrollforward, shiftitemcount)
+            forwardcount, backwardcount, scrollforward, itemshiftcount)
 
-        if (shiftitemcount == 0) {
+        if (itemshiftcount == 0) {  // nothing to do
 
             return
 
@@ -777,20 +777,26 @@ const Cradle = ({
 
         // -------------------[ 4. calculate new referenceindex ]---------------------
 
-        let referencerowshift = Math.abs(Math.ceil(shiftitemcount/crosscount))
+        let referencerowshift = Math.abs(Math.ceil(itemshiftcount/crosscount))
 
-        let referenceshift = referencerowshift * crosscount
+        let referenceitemshift = referencerowshift * crosscount
 
         let referenceindex
 
         if (scrollforward) {
 
-            referenceindex = tailcontentlist[referenceshift]?.props.index || 0 // 0 = first time
+            // could be undefined with overshoot
+            referenceindex = tailcontentlist[referenceitemshift]?.props.index
+            if (referenceindex === undefined) {
+                let lastindex = tailcontentlist[tailcontentlist.length - 1].props.index
+                let overshoot = referenceitemshift - tailcontentlist.length
+                referenceindex += overshoot
+            }
 
         } else {
 
-            referenceindex = headcontentlist[(headcontentlist.length - crosscount)]?.props.index || 0 // 0 = first time
-            referenceindex -= referenceshift - crosscount
+            referenceindex = headcontentlist[(headcontentlist.length - crosscount)].props.index
+            referenceindex -= referenceitemshift - crosscount
 
         }
 
@@ -809,8 +815,8 @@ const Cradle = ({
         // ------------------[ 5. calculate head and tail consolidated cradle content changes ]-----------------
 
         // generate modified content instructions
-        shiftitemcount = Math.abs(shiftitemcount) 
-        let shiftrowcount = Math.ceil(shiftitemcount/crosscount)
+        itemshiftcount = Math.abs(itemshiftcount) 
+        let rowshiftcount = Math.ceil(itemshiftcount/crosscount)
 
         // set pendingcontentoffset
         let pendingcontentoffset
@@ -826,9 +832,9 @@ const Cradle = ({
         if (scrollforward) { // delete from head; add to tail; head is direction of stroll
 
             // adjust clipitemcount
-            if ((currentheadrowcount + shiftrowcount) > (cradleProps.runwaycount)) {
+            if ((currentheadrowcount + rowshiftcount) > (cradleProps.runwaycount)) {
 
-                let rowdiff = (currentheadrowcount + shiftrowcount) - (cradleProps.runwaycount)
+                let rowdiff = (currentheadrowcount + rowshiftcount) - (cradleProps.runwaycount)
                 cliprowcount = rowdiff
                 clipitemcount = (cliprowcount * crosscount)
 
@@ -864,9 +870,9 @@ const Cradle = ({
         } else { // scroll backward
 
             // reconcile shift with runway count
-            if ((currentheadrowcount - shiftrowcount) < (cradleProps.runwaycount)) {
+            if ((currentheadrowcount - rowshiftcount) < (cradleProps.runwaycount)) {
 
-                let rowdiff = (cradleProps.runwaycount) - (currentheadrowcount - shiftrowcount)
+                let rowdiff = (cradleProps.runwaycount) - (currentheadrowcount - rowshiftcount)
                 cliprowcount = rowdiff
                 let tailrowitemcount = (listsize % crosscount)
                 if (tailrowcount) {
@@ -878,7 +884,7 @@ const Cradle = ({
                     clipitemcount = (cliprowcount * crosscount)
                 }
 
-                addcontentcount = (shiftrowcount * crosscount)
+                addcontentcount = (rowshiftcount * crosscount)
 
             }
 
@@ -969,7 +975,7 @@ const Cradle = ({
                 crosscount,
                 gap:cradleProps.gap,
                 padding:cradleProps.padding,
-                referenceshift,
+                referenceshift:referenceitemshift,
             }
         )
 
