@@ -815,64 +815,73 @@ const Cradle = ({
         // ------------------[ 5. calculate head and tail consolidated cradle content changes ]-----------------
 
         // generate modified content instructions
+
+        // initialize data required for calculations
         itemshiftcount = Math.abs(itemshiftcount) 
         let rowshiftcount = Math.ceil(itemshiftcount/crosscount)
 
-        // set pendingcontentoffset
-        let pendingcontentoffset
-        let addcontentcount = 0
+        let headrowcount, tailrowcount
+        headrowcount = Math.ceil(headModelContentRef.current.length/crosscount)
+        tailrowcount = Math.ceil(tailModelContentRef.current.length/crosscount)
 
-        // next, verify number of rows to delete
-        let headchangecount, currentheadrowcount, viewportrowcount, tailchangecount, tailrowcount
+        let pendingcontentoffset // lookahead to new indexoffset
 
-        currentheadrowcount = Math.ceil(headModelContentRef.current.length/crosscount)
+        let headchangecount, tailchangecount // the output instructions for getUIContentList
 
+        // anticipaate add to one end, clip from the other        
+        let additemcount = 0
         let cliprowcount = 0, clipitemcount = 0
 
         if (scrollforward) { // delete from head; add to tail; head is direction of stroll
 
             // adjust clipitemcount
-            if ((currentheadrowcount + rowshiftcount) > (cradleProps.runwaycount)) {
+            if ((headrowcount + rowshiftcount) > (cradleProps.runwaycount)) {
 
-                let rowdiff = (currentheadrowcount + rowshiftcount) - (cradleProps.runwaycount)
+                let rowdiff = (headrowcount + rowshiftcount) - (cradleProps.runwaycount)
                 cliprowcount = rowdiff
                 clipitemcount = (cliprowcount * crosscount)
 
             }
 
-            addcontentcount = clipitemcount
+            additemcount = clipitemcount // maintain constant cradle count
 
-            pendingcontentoffset = indexoffset + clipitemcount
+            pendingcontentoffset = indexoffset + clipitemcount // after clip
 
-            let proposedtailindex = pendingcontentoffset + modelcontentlist.length - 1
+            let proposedtailindex = pendingcontentoffset + (cradlerowcountRef.current * crosscount) - 1 // modelcontentlist.length - 1
 
             // adkjust changes for list boundaries
             if ((proposedtailindex) > (listsize -1) ) {
 
                 let diffitemcount = (proposedtailindex - (listsize -1)) // items outside range
-                addcontentcount -= diffitemcount // adjust the addcontent accordingly
+                additemcount -= diffitemcount // adjust the addcontent accordingly
                 
                 let diffrows = Math.floor(diffitemcount/crosscount) // number of full rows to leave in place
                 let diffrowitems = (diffrows * crosscount)  // derived number of items to leave in place
 
                 clipitemcount -= diffrowitems // apply adjustment to netshift
 
-                if (addcontentcount <=0) { // nothing to do
+                if (additemcount <=0) { // nothing to do
 
-                    clipitemcount = addcontentcount = 0
+                    // clipitemcount = additemcount = 0
+                    additemcount = 0
 
+                }
+                if (clipitemcount <=0 ) {
+
+                    clipitemcount = 0
+                    
                 }
             }
 
             headchangecount = -clipitemcount
-            tailchangecount = addcontentcount
+            tailchangecount = additemcount
 
-        } else { // scroll backward
+        } else { // scroll backward; delete from tail, add to head
 
             // reconcile shift with runway count
-            if ((currentheadrowcount - rowshiftcount) < (cradleProps.runwaycount)) {
+            if ((headrowcount - rowshiftcount) < (cradleProps.runwaycount)) {
 
-                let rowdiff = (cradleProps.runwaycount) - (currentheadrowcount - rowshiftcount)
+                let rowdiff = (cradleProps.runwaycount) - (headrowcount - rowshiftcount)
                 cliprowcount = rowdiff
                 let tailrowitemcount = (listsize % crosscount)
                 if (tailrowcount) {
@@ -884,7 +893,7 @@ const Cradle = ({
                     clipitemcount = (cliprowcount * crosscount)
                 }
 
-                addcontentcount = (rowshiftcount * crosscount)
+                additemcount = (rowshiftcount * crosscount)
 
             }
 
@@ -898,17 +907,17 @@ const Cradle = ({
                 let diffrows = Math.floor(diffitemcount/crosscount) // number of full rows to leave in place
                 let diffrowitems = (diffrows * crosscount)
 
-                addcontentcount -= diffitemcount
+                additemcount -= diffitemcount
                 clipitemcount -= diffrowitems
 
-                if (addcontentcount <= 0) {
+                if (additemcount <= 0) {
 
-                    clipitemcount = addcontentcount = 0
+                    clipitemcount = additemcount = 0
                     
                 }
             }
 
-            headchangecount = addcontentcount
+            headchangecount = additemcount
             tailchangecount = -clipitemcount
 
         }
