@@ -877,13 +877,17 @@ const Cradle = ({
 
         } else { // scroll backward, in direction of tail; clip from tail, add to head
 
-            // if within heacount, then shift existing rows out and in
-            if ((headrowcount - rowshiftcount) > 0) { // < (cradleProps.runwaycount)) {
+            // headcount will be less than minimum (runwaycount), so a shift is required
+            console.log('headrowcount, rowshiftcount, cradleProps.runwaycount',
+                headrowcount, rowshiftcount, cradleProps.runwaycount)
+            if ((headrowcount - rowshiftcount) < (cradleProps.runwaycount)) {
 
-                let rowdiff = (headrowcount - rowshiftcount)
-                console.log('rowdiff',rowdiff)
-                cliprowcount = rowdiff
+                // calculate clip for tail
+                let rowshortfall = (cradleProps.runwaycount) - (headrowcount - rowshiftcount)
+                console.log('rowshortfall',rowshortfall)
+                cliprowcount = rowshortfall
                 let tailrowitemcount = (tailModelContentRef.current.length % crosscount)
+                if (tailrowitemcount == 0) tailrowitemcount = crosscount
                 clipitemcount = tailrowitemcount
                 if (tailrowcount > 1) {
 
@@ -897,9 +901,10 @@ const Cradle = ({
 
                 }
 
+                // compenstate with additemcount
                 additemcount = (cliprowcount * crosscount)
 
-                console.log('clipitemcount, additemcount', clipitemcount, additemcount)
+                console.log('rowshiftcount, clipitemcount, additemcount', rowshiftcount, clipitemcount, additemcount)
 
             } else { // calculate virtual rows
 
@@ -935,6 +940,8 @@ const Cradle = ({
 
             headchangecount = additemcount
             tailchangecount = -clipitemcount
+
+            console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
 
         }
 
