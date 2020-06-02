@@ -656,7 +656,7 @@ export const getSpinePosRef = (
         spineposbase = spineElement.offsetLeft
     }
     if (scrollforward) {
-        let referenceelement = referenceobjects[0].current
+        let referenceelement = referenceobjects[0]?.current
         if (referenceelement) {
 
             if (orientation == 'vertical') {

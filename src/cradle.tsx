@@ -636,6 +636,9 @@ const Cradle = ({
             }
         }
         isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
+        if (!isCradleInViewRef.current) {
+            saveCradleState('updatescroll')
+        }
 
     },[])
 
@@ -686,8 +689,6 @@ const Cradle = ({
 
             return
         }
-
-        // console.log('ENTRIES', entries)
 
         isMounted() && adjustcradleentries(entries)
 
@@ -878,13 +879,13 @@ const Cradle = ({
         } else { // scroll backward, in direction of tail; clip from tail, add to head
 
             // headcount will be less than minimum (runwaycount), so a shift is required
-            console.log('headrowcount, rowshiftcount, cradleProps.runwaycount',
-                headrowcount, rowshiftcount, cradleProps.runwaycount)
+            // console.log('headrowcount, rowshiftcount, cradleProps.runwaycount',
+            //     headrowcount, rowshiftcount, cradleProps.runwaycount)
             if ((headrowcount - rowshiftcount) < (cradleProps.runwaycount)) {
 
                 // calculate clip for tail
                 let rowshortfall = (cradleProps.runwaycount) - (headrowcount - rowshiftcount)
-                console.log('rowshortfall',rowshortfall)
+                // console.log('rowshortfall',rowshortfall)
                 cliprowcount = rowshortfall
                 let tailrowitemcount = (tailModelContentRef.current.length % crosscount)
                 if (tailrowitemcount == 0) tailrowitemcount = crosscount
@@ -904,7 +905,7 @@ const Cradle = ({
                 // compenstate with additemcount
                 additemcount = (cliprowcount * crosscount)
 
-                console.log('rowshiftcount, clipitemcount, additemcount', rowshiftcount, clipitemcount, additemcount)
+                // console.log('rowshiftcount, clipitemcount, additemcount', rowshiftcount, clipitemcount, additemcount)
 
             } else { // calculate virtual rows
 
@@ -941,7 +942,7 @@ const Cradle = ({
             headchangecount = additemcount
             tailchangecount = -clipitemcount
 
-            console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
+            // console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
 
         }
 
