@@ -34,7 +34,7 @@ const browser = detect()
 
 const LocalResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
 
-const ITEM_OBSERVER_THRESHOLD = .6
+const ITEM_OBSERVER_THRESHOLD = .9
 
 import { 
     setCradleGridStyles, 
@@ -636,9 +636,10 @@ const Cradle = ({
             }
         }
         isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
-        if (!isCradleInViewRef.current) {
-            saveCradleState('updatescroll')
-        }
+        // if (!isCradleInViewRef.current) {
+            
+        //     saveCradleState('updatescroll')
+        // }
 
     },[])
 
@@ -801,14 +802,10 @@ const Cradle = ({
 
         }
 
-        // let entryindexes = []
-        // for (let entry of intersections) {
-        //     entryindexes.push(entry.target.dataset.index)
-        // } 
-
         if (referenceindex > (listsize -1)) {
             referenceindex = listsize -1
         }
+
         if (referenceindex < 0) {
             referenceindex = 0
         }
@@ -878,17 +875,16 @@ const Cradle = ({
 
         } else { // scroll backward, in direction of tail; clip from tail, add to head
 
-            // headcount will be less than minimum (runwaycount), so a shift is required
-            // console.log('headrowcount, rowshiftcount, cradleProps.runwaycount',
-            //     headrowcount, rowshiftcount, cradleProps.runwaycount)
+            // headcount will be less than minimum (runwaycount), so a shift is required[]
             if ((headrowcount - rowshiftcount) < (cradleProps.runwaycount)) {
-
                 // calculate clip for tail
                 let rowshortfall = (cradleProps.runwaycount) - (headrowcount - rowshiftcount)
-                // console.log('rowshortfall',rowshortfall)
+
                 cliprowcount = rowshortfall
                 let tailrowitemcount = (tailModelContentRef.current.length % crosscount)
+
                 if (tailrowitemcount == 0) tailrowitemcount = crosscount
+
                 clipitemcount = tailrowitemcount
                 if (tailrowcount > 1) {
 
@@ -904,14 +900,6 @@ const Cradle = ({
 
                 // compenstate with additemcount
                 additemcount = (cliprowcount * crosscount)
-
-                // console.log('rowshiftcount, clipitemcount, additemcount', rowshiftcount, clipitemcount, additemcount)
-
-            } else { // calculate virtual rows
-
-            //     cliprowcount = rowshiftcount
-            //     clipitemcount = (cliprowcount * crosscount)
-            //     additemcount = clipitemcount
 
             }
 
@@ -941,8 +929,6 @@ const Cradle = ({
 
             headchangecount = additemcount
             tailchangecount = -clipitemcount
-
-            // console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
 
         }
 
