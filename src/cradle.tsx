@@ -766,8 +766,8 @@ const Cradle = ({
         let scrollforward = (forwardcount > backwardcount)
         let itemshiftcount = forwardcount - backwardcount
 
-        console.log('forwardcount, backwardcount, scrollforward, shiftitemcount',
-            forwardcount, backwardcount, scrollforward, itemshiftcount)
+        // console.log('forwardcount, backwardcount, scrollforward, shiftitemcount',
+        //     forwardcount, backwardcount, scrollforward, itemshiftcount)
 
         if (itemshiftcount == 0) {  // nothing to do
 
@@ -832,7 +832,7 @@ const Cradle = ({
         let additemcount = 0
         let cliprowcount = 0, clipitemcount = 0
 
-        if (scrollforward) { // delete from head; add to tail; head is direction of stroll
+        if (scrollforward) { // clip from head; add to tail; scroll forward head is direction of scroll
 
             // adjust clipitemcount
             if ((headrowcount + rowshiftcount) > (cradleProps.runwaycount)) {
@@ -862,7 +862,6 @@ const Cradle = ({
 
                 if (additemcount <=0) { // nothing to do
 
-                    // clipitemcount = additemcount = 0
                     additemcount = 0
 
                 }
@@ -876,35 +875,46 @@ const Cradle = ({
             headchangecount = -clipitemcount
             tailchangecount = additemcount
 
-        } else { // scroll backward; delete from tail, add to head
+        } else { // scroll backward, in direction of tail; clip from tail, add to head
 
-            // reconcile shift with runway count
-            if ((headrowcount - rowshiftcount) < (cradleProps.runwaycount)) {
+            // if within heacount, then shift existing rows out and in
+            if ((headrowcount - rowshiftcount) > 0) { // < (cradleProps.runwaycount)) {
 
-                let rowdiff = (cradleProps.runwaycount) - (headrowcount - rowshiftcount)
+                let rowdiff = (headrowcount - rowshiftcount)
+                console.log('rowdiff',rowdiff)
                 cliprowcount = rowdiff
-                let tailrowitemcount = (listsize % crosscount)
-                if (tailrowcount) {
-                    clipitemcount = tailrowitemcount
+                let tailrowitemcount = (tailModelContentRef.current.length % crosscount)
+                clipitemcount = tailrowitemcount
+                if (tailrowcount > 1) {
+
+                    if (cliprowcount > tailrowcount) {
+                        cliprowcount = tailrowcount
+                    }
+
                     if (cliprowcount > 1) {
                         clipitemcount += ((cliprowcount -1) * crosscount)
                     }
-                } else {
-                    clipitemcount = (cliprowcount * crosscount)
+
                 }
 
-                additemcount = (rowshiftcount * crosscount)
+                additemcount = (cliprowcount * crosscount)
+
+                console.log('clipitemcount, additemcount', clipitemcount, additemcount)
+
+            } else { // calculate virtual rows
+
+            //     cliprowcount = rowshiftcount
+            //     clipitemcount = (cliprowcount * crosscount)
+            //     additemcount = clipitemcount
 
             }
 
-            pendingcontentoffset = indexoffset // add to tail (opposite end of scroll direction), offset will remain the same
-
-            let proposedindexoffset = pendingcontentoffset - clipitemcount
+            let proposedindexoffset = indexoffset - additemcount
 
             if (proposedindexoffset < 0) {
 
                 let diffitemcount = -proposedindexoffset
-                let diffrows = Math.floor(diffitemcount/crosscount) // number of full rows to leave in place
+                let diffrows = Math.ceil(diffitemcount/crosscount) // number of full rows to leave in place
                 let diffrowitems = (diffrows * crosscount)
 
                 additemcount -= diffitemcount
@@ -912,8 +922,14 @@ const Cradle = ({
 
                 if (additemcount <= 0) {
 
-                    clipitemcount = additemcount = 0
+                    additemcount = 0
                     
+                }
+
+                if (clipitemcount <= 0) {
+
+                    clipitemcount = 0
+
                 }
             }
 
@@ -927,7 +943,7 @@ const Cradle = ({
         // collect modified content
         let localContentList 
 
-        console.log('headindexchangecount, tailindexchangecount',headchangecount, tailchangecount)
+        // console.log('headindexchangecount, tailindexchangecount',headchangecount, tailchangecount)
 
         if (headchangecount || tailchangecount) {
 
