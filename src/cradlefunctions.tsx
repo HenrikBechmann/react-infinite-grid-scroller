@@ -435,6 +435,11 @@ export const isolateRelevantIntersections = ({
     if ((tailptr >=0) && intersecting[tailindex].intersecting) {
         tailptr = -1
     }
+    // console.log('headptr, tailptr',headptr, tailptr)
+    let scrollforward = (tailptr > -1)?true:(headptr > -1)?false:undefined
+    if ((headptr > -1) && (tailptr > -1)) {
+        console.log('ERROR: filtered observer entries are bidirectional')
+    }
     // -----------------------------------------------
 
     // collect notifications to main thread (filtered intersections)
@@ -492,7 +497,7 @@ export const isolateRelevantIntersections = ({
 
     // console.log('filteredintersections',filteredintersections)
 
-    return filteredintersections
+    return {filteredintersections,scrollforward}
 
 }
 

@@ -706,7 +706,7 @@ const Cradle = ({
 
         // ----------------------------[ 1. initialization ]----------------------------
 
-        let intersections = entries // replaced below
+        // let intersections = entries // replaced below
 
         let viewportData = viewportDataRef.current
         let cradleProps = cradlePropsRef.current
@@ -726,29 +726,29 @@ const Cradle = ({
 
         // filter out inapplicable intersection entries
         // we're only interested in intersections proximal to the spine
-        intersections = isolateRelevantIntersections({
+        let {filteredintersections:intersections,scrollforward} = isolateRelevantIntersections({
 
-            intersections,
+            intersections:entries,
             headcontent:headcontentlist, 
             tailcontent:tailcontentlist,
             ITEM_OBSERVER_THRESHOLD,
 
         })
 
-        console.log('isolated intersections',intersections)
+        // console.log('isolated intersections',intersections)
 
-        let intersectionindexes = []
+        // let intersectionindexes = []
 
-        for (let entry of intersections) {
-            intersectionindexes.push(
-                {
-                    index:entry.target.dataset.index,
-                    ratio:entry.intersectionRatio,
-                }
-            )
-        }
+        // for (let entry of intersections) {
+        //     intersectionindexes.push(
+        //         {
+        //             index:entry.target.dataset.index,
+        //             ratio:entry.intersectionRatio,
+        //         }
+        //     )
+        // }
 
-        console.log('intersectionindexes',intersectionindexes)
+        // console.log('intersectionindexes',intersectionindexes)
 
         if (intersections.length == 0) { // nothing to do
 
@@ -764,31 +764,36 @@ const Cradle = ({
         // -- isolate forward and backward lists (happens with rapid scrolling changes)
         //  then set scrollforward
         let forwardcount = 0, backwardcount = 0
-        for (let intersectrecordindex = 0; intersectrecordindex < intersections.length; intersectrecordindex++ ) {
-
-            let entry = intersections[intersectrecordindex]
-            let ratio
-            if (browser && browser.name == 'safari') {
-                ratio = entry.intersectionRatio
-            } else {
-                ratio = Math.round(entry.intersectionRatio * 1000)/1000
-            }
-
-            let isintersecting = (ratio >= ITEM_OBSERVER_THRESHOLD)
-
-            if (!isintersecting) {
-                forwardcount++
-            } else {
-                backwardcount++
-            }
+        if (scrollforward) {
+            forwardcount = intersections.length
+        } else {
+            backwardcount = intersections.length
         }
+        // for (let intersectrecordindex = 0; intersectrecordindex < intersections.length; intersectrecordindex++ ) {
+
+        //     let entry = intersections[intersectrecordindex]
+        //     let ratio
+        //     if (browser && browser.name == 'safari') {
+        //         ratio = entry.intersectionRatio
+        //     } else {
+        //         ratio = Math.round(entry.intersectionRatio * 1000)/1000
+        //     }
+
+        //     let isintersecting = (ratio >= ITEM_OBSERVER_THRESHOLD)
+
+        //     if (!isintersecting) {
+        //         forwardcount++
+        //     } else {
+        //         backwardcount++
+        //     }
+        // }
 
         // calculate referenceindex
-        let scrollforward = (forwardcount > backwardcount)
+        // let scrollforward = (forwardcount > backwardcount)
         let itemshiftcount = forwardcount - backwardcount
 
-        console.log('forwardcount, backwardcount, scrollforward, itemshiftcount',
-            forwardcount, backwardcount, scrollforward, itemshiftcount)
+        // console.log('forwardcount, backwardcount, scrollforward, itemshiftcount',
+        //     forwardcount, backwardcount, scrollforward, itemshiftcount)
 
         if (itemshiftcount == 0) {  // nothing to do
 
@@ -922,7 +927,7 @@ const Cradle = ({
 
             } else {
 
-                console.log('net rowshift',headrowcount, rowshiftcount )
+                console.log('scrollbackward net rowshift: headrowcount, rowshiftcount',headrowcount, rowshiftcount )
 
             }
 
