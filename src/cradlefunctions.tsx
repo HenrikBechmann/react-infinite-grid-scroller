@@ -336,16 +336,13 @@ export const isolateRelevantIntersections = ({
             return // shouldn't happen; give up
         }
 
-        let calcintersecting
-        let ratio = Math.round(entry.intersectionRatio * 1000)/1000
+        let ratio
         if (browser && browser.name == 'safari') {
-            calcintersecting = entry.intersectionRatio >= ITEM_OBSERVER_THRESHOLD
+            ratio = entry.intersectionRatio
         } else {
-            calcintersecting = ratio >= ITEM_OBSERVER_THRESHOLD
+            ratio = Math.round(entry.intersectionRatio * 1000)/1000
         }
-        // if (intersecting[index]) {
-        //     console.log('WARNING: duplicate entry:',index)
-        // }
+        let calcintersecting = ratio >= ITEM_OBSERVER_THRESHOLD
         let iobj = {
             index,
             intersecting:calcintersecting,  // to accommodate browser differences

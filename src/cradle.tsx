@@ -691,7 +691,11 @@ const Cradle = ({
             return
         }
 
-        isMounted() && adjustcradleentries(entries)
+        setTimeout(()=>{
+
+            isMounted() && adjustcradleentries([...entries])
+
+        },0)
 
 
     },[])
@@ -710,8 +714,8 @@ const Cradle = ({
         let viewportElement = viewportData.elementref.current
 
         let modelcontentlist = [...modelContentRef.current]
-        let headcontentlist = headModelContentRef.current
-        let tailcontentlist = tailModelContentRef.current
+        let headcontentlist = [...headModelContentRef.current]
+        let tailcontentlist = [...tailModelContentRef.current]
 
         let listsize = cradleProps.listsize
         let crosscount = crosscountRef.current
@@ -736,7 +740,12 @@ const Cradle = ({
         let intersectionindexes = []
 
         for (let entry of intersections) {
-            intersectionindexes.push(entry.target.dataset.index)
+            intersectionindexes.push(
+                {
+                    index:entry.target.dataset.index,
+                    ratio:entry.intersectionRatio,
+                }
+            )
         }
 
         console.log('intersectionindexes',intersectionindexes)
