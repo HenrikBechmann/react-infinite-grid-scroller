@@ -691,11 +691,11 @@ const Cradle = ({
             return
         }
 
-        setTimeout(()=>{
+        // setTimeout(()=>{
 
             isMounted() && adjustcradleentries([...entries])
 
-        },0)
+        // },0)
 
 
     },[])
@@ -767,7 +767,7 @@ const Cradle = ({
         if (scrollforward) {
             backwardcount = intersections.length
         } else {
-            forwardcount = intersections.length
+            // forwardcount = intersections.length
         }
         // for (let intersectrecordindex = 0; intersectrecordindex < intersections.length; intersectrecordindex++ ) {
 
