@@ -765,9 +765,9 @@ const Cradle = ({
         //  then set scrollforward
         let forwardcount = 0, backwardcount = 0
         if (scrollforward) {
-            forwardcount = intersections.length
-        } else {
             backwardcount = intersections.length
+        } else {
+            forwardcount = intersections.length
         }
         // for (let intersectrecordindex = 0; intersectrecordindex < intersections.length; intersectrecordindex++ ) {
 
