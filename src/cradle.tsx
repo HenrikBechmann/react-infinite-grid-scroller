@@ -731,6 +731,16 @@ const Cradle = ({
 
         })
 
+        console.log('isolated intersections',intersections)
+
+        let intersectionindexes = []
+
+        for (let entry of intersections) {
+            intersectionindexes.push(entry.target.dataset.index)
+        }
+
+        console.log('intersectionindexes',intersectionindexes)
+
         if (intersections.length == 0) { // nothing to do
 
             return
@@ -768,8 +778,8 @@ const Cradle = ({
         let scrollforward = (forwardcount > backwardcount)
         let itemshiftcount = forwardcount - backwardcount
 
-        // console.log('forwardcount, backwardcount, scrollforward, shiftitemcount',
-        //     forwardcount, backwardcount, scrollforward, itemshiftcount)
+        console.log('forwardcount, backwardcount, scrollforward, itemshiftcount',
+            forwardcount, backwardcount, scrollforward, itemshiftcount)
 
         if (itemshiftcount == 0) {  // nothing to do
 
@@ -875,7 +885,7 @@ const Cradle = ({
 
         } else { // scroll backward, in direction of tail; clip from tail, add to head
 
-            // headcount will be less than minimum (runwaycount), so a shift is required[]
+            // headcount will be less than minimum (runwaycount), so a shift can be accomplished[]
             if ((headrowcount - rowshiftcount) < (cradleProps.runwaycount)) {
                 // calculate clip for tail
                 let rowshortfall = (cradleProps.runwaycount) - (headrowcount - rowshiftcount)
@@ -900,6 +910,10 @@ const Cradle = ({
 
                 // compenstate with additemcount
                 additemcount = (cliprowcount * crosscount)
+
+            } else {
+
+                console.log('net rowshift',headrowcount, rowshiftcount )
 
             }
 
