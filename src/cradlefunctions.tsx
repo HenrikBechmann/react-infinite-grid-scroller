@@ -306,12 +306,12 @@ export const isolateRelevantIntersections = ({
         filteredintersections = []
 
     // collect lists of indexes
-    for (let item of headcontent) {
-        headindexes.push(item.props.index)
+    for (let component of headcontent) {
+        headindexes.push(component.props.index)
     }
 
-    for (let item of tailcontent) {
-        tailindexes.push(item.props.index)
+    for (let component of tailcontent) {
+        tailindexes.push(component.props.index)
     }
 
     let duplicates:any = {}
@@ -332,7 +332,7 @@ export const isolateRelevantIntersections = ({
             headptr = headintersections.length - 1
 
         } else {
-            console.log('warning: unknown intersection element',entry)
+            console.log('error: unknown intersection element, aborting isolateRelevantIntersections',entry)
             return // shouldn't happen; give up
         }
 
@@ -342,7 +342,7 @@ export const isolateRelevantIntersections = ({
         } else {
             ratio = Math.round(entry.intersectionRatio * 1000)/1000
         }
-        let calcintersecting = ratio >= ITEM_OBSERVER_THRESHOLD
+        let calcintersecting = (ratio >= ITEM_OBSERVER_THRESHOLD)
         let iobj = {
             index,
             intersecting:calcintersecting,  // to accommodate browser differences
@@ -353,9 +353,9 @@ export const isolateRelevantIntersections = ({
             headptr,
             tailptr,
         }
-        if (!intersecting[index]) {
+        if (!intersecting[index]) { // new item
             intersecting[index] = iobj
-        } else {
+        } else { // duplicate item
             if (!Array.isArray(intersecting[index])) {
                 let arr = [intersecting[index]]
                 intersecting[index] = arr
