@@ -732,6 +732,7 @@ const Cradle = ({
             headcontent:headcontentlist, 
             tailcontent:tailcontentlist,
             ITEM_OBSERVER_THRESHOLD,
+            orientation:cradleProps.orientation,
 
         })
 

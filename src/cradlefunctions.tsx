@@ -294,6 +294,7 @@ export const isolateRelevantIntersections = ({
     headcontent, 
     tailcontent,
     ITEM_OBSERVER_THRESHOLD,
+    orientation,
 }) => {
 
     let headindexes = [], 
@@ -315,6 +316,7 @@ export const isolateRelevantIntersections = ({
     }
 
     let duplicates:any = {}
+    let intersectionsptr = 0
     for (let entry of intersections) {
 
         let index = parseInt(entry.target.dataset.index)
@@ -352,6 +354,7 @@ export const isolateRelevantIntersections = ({
             time:entry.time,
             headptr,
             tailptr,
+            intersectionsptr,
         }
         if (!intersecting[index]) { // new item
             intersecting[index] = iobj
@@ -367,6 +370,7 @@ export const isolateRelevantIntersections = ({
             }
             duplicates[index].push(iobj)
         }
+        intersectionsptr++
 
     }
     // resolve duplicates. For uneven number, keep the most recent
@@ -437,10 +441,31 @@ export const isolateRelevantIntersections = ({
     }
     // console.log('headptr, tailptr',headptr, tailptr)
     let scrollforward = (tailptr > -1)?true:(headptr > -1)?false:undefined
-    if ((headptr > -1) && (tailptr > -1)) {
-        console.log('ERROR: filtered observer entries are bidirectional:\
-            headptr, tailptr, headindexes, tailindexes, intersecting',
-            headptr, tailptr, headindexes, tailindexes, intersecting)
+    if ((headptr > -1) && (tailptr > -1)) { // edge case
+        console.log('Warning: filtered observer entries are bidirectional')
+            // :\
+            // headptr, headindex, headintersectionsentry, tailptr, tailindex, tailintersectionsentry, headindexes, tailindexes, intersecting',
+            // headptr, headindex, intersections[intersecting[headindex].intersectionsptr],
+            // tailptr, tailindex, intersections[intersecting[tailindex].intersectionsptr],
+            // headindexes, tailindexes, intersecting)
+        // let headentry = intersections[intersecting[headindex].intersectionsptr]
+        let tailentry = intersections[intersecting[tailindex].intersectionsptr]
+        let tailentryoffset, rootoffset
+        if (orientation == 'vertical') {
+            // headentryoffset = headentry.boundingClientRect.top
+            tailentryoffset = tailentry.boundingClientRect.top
+            rootoffset = tailentry.rootBounds.top
+        } else {
+            // headentryoffset = headentry.boundingClientRect.left
+            tailentryoffset = tailentry.boundingClientRect.left
+            rootoffset = tailentry.rootBounds.left
+        }
+
+        if (tailentryoffset > rootoffset) { // rapid scroll edge case
+            tailptr = -1
+        } else {
+            headptr = -1
+        }
     }
     // -----------------------------------------------
 
