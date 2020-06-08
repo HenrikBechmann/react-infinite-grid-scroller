@@ -432,40 +432,40 @@ export const isolateRelevantIntersections = ({
     let tailptr = tailintersectionindexes.indexOf(tailindex)
 
     // filter out items that register only because they have just been moved
-    if ((headptr >=0) && !intersecting[headindex].intersecting) {
+    if (headptr !== (headintersectionindexes.length - 1)) { // && !intersecting[headindex].intersecting) {
         headptr = -1
     }
 
-    if ((tailptr >=0) && intersecting[tailindex].intersecting) {
+    if (tailptr !==0) { // && intersecting[tailindex].intersecting) {
         tailptr = -1
     }
     // console.log('headptr, tailptr',headptr, tailptr)
     let scrollforward = (tailptr > -1)?true:(headptr > -1)?false:undefined
     if ((headptr > -1) && (tailptr > -1)) { // edge case
-        console.log('Warning: filtered observer entries are bidirectional')
+        console.log('Error: filtered observer entries are bidirectional')
             // :\
             // headptr, headindex, headintersectionsentry, tailptr, tailindex, tailintersectionsentry, headindexes, tailindexes, intersecting',
             // headptr, headindex, intersections[intersecting[headindex].intersectionsptr],
             // tailptr, tailindex, intersections[intersecting[tailindex].intersectionsptr],
             // headindexes, tailindexes, intersecting)
         // let headentry = intersections[intersecting[headindex].intersectionsptr]
-        let tailentry = intersections[intersecting[tailindex].intersectionsptr]
-        let tailentryoffset, rootoffset
-        if (orientation == 'vertical') {
-            // headentryoffset = headentry.boundingClientRect.top
-            tailentryoffset = tailentry.boundingClientRect.top
-            rootoffset = tailentry.rootBounds.top
-        } else {
-            // headentryoffset = headentry.boundingClientRect.left
-            tailentryoffset = tailentry.boundingClientRect.left
-            rootoffset = tailentry.rootBounds.left
-        }
+        // let tailentry = intersections[intersecting[tailindex].intersectionsptr]
+        // let tailentryoffset, rootoffset
+        // if (orientation == 'vertical') {
+        //     // headentryoffset = headentry.boundingClientRect.top
+        //     tailentryoffset = tailentry.boundingClientRect.top
+        //     rootoffset = tailentry.rootBounds.top
+        // } else {
+        //     // headentryoffset = headentry.boundingClientRect.left
+        //     tailentryoffset = tailentry.boundingClientRect.left
+        //     rootoffset = tailentry.rootBounds.left
+        // }
 
-        if (tailentryoffset > rootoffset) { // rapid scroll edge case
-            tailptr = -1
-        } else {
-            headptr = -1
-        }
+        // if (tailentryoffset > rootoffset) { // rapid scroll edge case
+        //     tailptr = -1
+        // } else {
+        //     headptr = -1
+        // }
     }
     // -----------------------------------------------
 

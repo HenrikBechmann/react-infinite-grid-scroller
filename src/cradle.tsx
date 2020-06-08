@@ -700,7 +700,7 @@ const Cradle = ({
             return
         }
 
-        console.log('new entries filtered out',entries.length - movedentries.length)
+        // console.log('new entries filtered out',entries.length - movedentries.length)
 
         isMounted() && adjustcradleentries(movedentries)
 
@@ -725,7 +725,7 @@ const Cradle = ({
             )
         }
 
-        console.log('entries.length, entryindexes',entries.length, entryindexes)
+        // console.log('entries.length, entryindexes',entries.length, entryindexes)
 
         // let intersections = entries // replaced below
 
