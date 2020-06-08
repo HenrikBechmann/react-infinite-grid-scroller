@@ -515,7 +515,7 @@ export const isolateRelevantIntersections = ({
 
     // console.log('filteredintersections',filteredintersections)
 
-    return {filteredintersections, scrollforward, headrefindex, tailrefindex}
+    return {filteredintersections, scrollforward} //, headrefindex, tailrefindex}
 
 }
 

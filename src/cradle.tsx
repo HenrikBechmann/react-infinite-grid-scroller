@@ -747,7 +747,7 @@ const Cradle = ({
 
         // filter out inapplicable intersection entries
         // we're only interested in intersections proximal to the spine
-        let {filteredintersections:intersections, scrollforward, headrefindex, tailrefindex} = isolateRelevantIntersections({
+        let {filteredintersections:intersections, scrollforward} = isolateRelevantIntersections({
 
             intersections:entries,
             headcontent:headcontentlist, 
@@ -756,6 +756,35 @@ const Cradle = ({
             orientation:cradleProps.orientation,
 
         })
+
+        // calculate overshootlength
+        let outlierindex, outlierelement, outlierfrontierpos 
+
+        if (cradleProps.orientation == 'vertical') {
+            if (!scrollforward) {
+                outlierindex = headcontentlist[0].props.index
+                outlierelement = itemElementsRef.current.get(outlierindex).current
+                outlierfrontierpos = outlierelement.offsetTop
+            } else {
+                outlierindex = tailcontentlist[tailcontentlist.length -1].props.index
+                outlierelement = itemElementsRef.current.get(outlierindex).current
+                outlierfrontierpos = outlierelement.offsetTop +
+                    outlierelement.offsetHeight
+            }
+        } else {
+            if (!scrollforward) {
+                outlierindex = headcontentlist[0].props.index
+                outlierelement = itemElementsRef.current.get(outlierindex).current
+                outlierfrontierpos = outlierelement.offsetLeft
+            } else {
+                outlierindex = tailcontentlist[tailcontentlist.length -1].props.index
+                outlierelement = itemElementsRef.current.get(outlierindex).current
+                outlierfrontierpos = outlierelement.offsetLeft +
+                    outlierelement.offsetWidth
+            }
+        }
+
+        console.log('outlierindex, outlierfrontierpos',outlierindex, outlierfrontierpos)
 
         // let filteredindexes = []
 
@@ -1255,7 +1284,7 @@ const Cradle = ({
             let {top, right, bottom, left} = rect
             let width = right - left, height = bottom - top
             viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
-
+            pauseItemObserverRef.current = true
             console.log('REPOSITIONING')
             saveCradleState('repositioning')
 
