@@ -686,17 +686,23 @@ const Cradle = ({
     // the async callback from IntersectionObserver.
     const itemobservercallback = useCallback((entries)=>{
 
+        let movedentries = []
+        for (let entry of entries) {
+            if (entry.target.dataset.moved) {
+                movedentries.push(entry)
+            } else {
+                entry.target.dataset.moved = 'moved'
+            }
+        }
+
         if (pauseItemObserverRef.current) {
 
             return
         }
 
-        // setTimeout(()=>{
+        console.log('new entries filtered out',entries.length - movedentries.length)
 
-            isMounted() && adjustcradleentries([...entries])
-
-        // },0)
-
+        isMounted() && adjustcradleentries(movedentries)
 
     },[])
 
@@ -706,6 +712,21 @@ const Cradle = ({
 
         // ----------------------------[ 1. initialization ]----------------------------
 
+        let entryindexes = []
+
+        for (let entry of entries) {
+            entryindexes.push(
+                {
+                    index:entry.target.dataset.index,
+                    moved:entry.target.dataset.moved,
+                    ratio:entry.intersectionRatio,
+                    top:entry.boundingClientRect.top
+                }
+            )
+        }
+
+        console.log('entries.length, entryindexes',entries.length, entryindexes)
+
         // let intersections = entries // replaced below
 
         let viewportData = viewportDataRef.current
@@ -713,9 +734,9 @@ const Cradle = ({
 
         let viewportElement = viewportData.elementref.current
 
-        let modelcontentlist = [...modelContentRef.current]
-        let headcontentlist = [...headModelContentRef.current]
-        let tailcontentlist = [...tailModelContentRef.current]
+        let modelcontentlist = modelContentRef.current
+        let headcontentlist = headModelContentRef.current
+        let tailcontentlist = tailModelContentRef.current
 
         let listsize = cradleProps.listsize
         let crosscount = crosscountRef.current
@@ -736,20 +757,19 @@ const Cradle = ({
 
         })
 
-        // console.log('isolated intersections',intersections)
-
-        // let intersectionindexes = []
+        // let filteredindexes = []
 
         // for (let entry of intersections) {
-        //     intersectionindexes.push(
+        //     filteredindexes.push(
         //         {
         //             index:entry.target.dataset.index,
         //             ratio:entry.intersectionRatio,
+        //             top:entry.boundingClientRect.top
         //         }
         //     )
         // }
 
-        // console.log('intersectionindexes',intersectionindexes)
+        // console.log('filtered indexes',filteredindexes)
 
         if (intersections.length == 0) { // nothing to do
 
@@ -770,27 +790,7 @@ const Cradle = ({
         } else {
             forwardcount = intersections.length
         }
-        // for (let intersectrecordindex = 0; intersectrecordindex < intersections.length; intersectrecordindex++ ) {
 
-        //     let entry = intersections[intersectrecordindex]
-        //     let ratio
-        //     if (browser && browser.name == 'safari') {
-        //         ratio = entry.intersectionRatio
-        //     } else {
-        //         ratio = Math.round(entry.intersectionRatio * 1000)/1000
-        //     }
-
-        //     let isintersecting = (ratio >= ITEM_OBSERVER_THRESHOLD)
-
-        //     if (!isintersecting) {
-        //         forwardcount++
-        //     } else {
-        //         backwardcount++
-        //     }
-        // }
-
-        // calculate referenceindex
-        // let scrollforward = (forwardcount > backwardcount)
         let itemshiftcount = forwardcount - backwardcount
 
         // console.log('forwardcount, backwardcount, scrollforward, itemshiftcount',
@@ -900,6 +900,26 @@ const Cradle = ({
 
         } else { // scroll backward, in direction of tail; clip from tail, add to head
 
+            let intersectionindexes = []
+
+            // for (let entry of intersections) {
+            //     intersectionindexes.push(
+            //         {
+            //             index:entry.target.dataset.index,
+            //             ratio:entry.intersectionRatio,
+            //             top:entry.boundingClientRect.top
+            //         }
+            //     )
+            // }
+
+            // // console.log('intersectionindexes',intersectionindexes)
+
+            // console.log('1. headrowcount, rowshiftcount, itemshiftcount, intersections, intersectionindexes',
+            //     headrowcount, rowshiftcount, itemshiftcount, intersections, intersectionindexes)
+
+            // console.log('2. viewportElement.scrollTop,spineCradleElement.offsetTop,headCradleElementRef.offsetTop',
+            //     viewportElement.scrollTop,spineCradleElementRef.current.offsetTop,headCradleElementRef.current.offsetTop,
+            //     spineCradleElementRef.current.offsetTop - viewportElement.scrollTop + headCradleElementRef.current.offsetTop)
             // headcount will be less than minimum (runwaycount), so a shift can be accomplished[]
             if ((headrowcount - rowshiftcount) < (cradleProps.runwaycount)) {
                 // calculate clip for tail
@@ -925,10 +945,6 @@ const Cradle = ({
 
                 // compenstate with additemcount
                 additemcount = (cliprowcount * crosscount)
-
-            } else {
-
-                console.log('scrollbackward net rowshift: headrowcount, rowshiftcount',headrowcount, rowshiftcount )
 
             }
 
@@ -958,6 +974,8 @@ const Cradle = ({
 
             headchangecount = additemcount
             tailchangecount = -clipitemcount
+
+            // console.log('headchangecount, tailchangecount', headchangecount, tailchangecount)
 
         }
 

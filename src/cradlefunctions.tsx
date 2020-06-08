@@ -644,6 +644,8 @@ export const allocateContentList = (
     let headlist = contentlist.slice(0,headitemcount)
     let taillist = contentlist.slice(headitemcount)
 
+    // console.log('headlist, taillist', headlist, taillist)
+
     return [headlist,taillist]
 
 }
