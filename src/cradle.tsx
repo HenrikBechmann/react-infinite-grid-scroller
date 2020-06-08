@@ -747,7 +747,7 @@ const Cradle = ({
 
         // filter out inapplicable intersection entries
         // we're only interested in intersections proximal to the spine
-        let {filteredintersections:intersections,scrollforward} = isolateRelevantIntersections({
+        let {filteredintersections:intersections, scrollforward, headrefindex, tailrefindex} = isolateRelevantIntersections({
 
             intersections:entries,
             headcontent:headcontentlist, 

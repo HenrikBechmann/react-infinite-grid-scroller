@@ -325,13 +325,13 @@ export const isolateRelevantIntersections = ({
 
             tailintersectionindexes.push(index)
             tailintersections.push(entry)
-            tailptr = tailintersections.length - 1
+            tailptr = tailintersections.length - 1 // used for duplicate resolution
 
         } else if (headindexes.includes(index)) {
 
             headintersectionindexes.push(index)
             headintersections.push(entry)
-            headptr = headintersections.length - 1
+            headptr = headintersections.length - 1 // used for duplicate resolution
 
         } else {
             console.log('error: unknown intersection element, aborting isolateRelevantIntersections',entry)
@@ -409,16 +409,6 @@ export const isolateRelevantIntersections = ({
         // console.log('resolved intersecting',{...intersecting})
     }
 
-    let indexcompare = (a,b) => {
-        let retval = (a < b)?-1:1
-        return retval
-    }
-
-    let entrycompare = (a,b) => {
-        let retval = (parseInt(a.target.dataset.index) < parseInt(b.target.dataset.index))? -1:1
-        return retval
-    }
-
     headintersectionindexes.sort(indexcompare)
     tailintersectionindexes.sort(indexcompare)
 
@@ -432,11 +422,11 @@ export const isolateRelevantIntersections = ({
     let tailptr = tailintersectionindexes.indexOf(tailindex)
 
     // filter out items that register only because they have just been moved
-    if (headptr !== (headintersectionindexes.length - 1)) { // && !intersecting[headindex].intersecting) {
+    if (headptr !== (headintersectionindexes.length - 1)) { 
         headptr = -1
     }
 
-    if (tailptr !==0) { // && intersecting[tailindex].intersecting) {
+    if (tailptr !==0) { 
         tailptr = -1
     }
     // console.log('headptr, tailptr',headptr, tailptr)
@@ -470,9 +460,10 @@ export const isolateRelevantIntersections = ({
     // -----------------------------------------------
 
     // collect notifications to main thread (filtered intersections)
+    let headrefindex, tailrefindex // for return
     if (headptr >= 0) {
-
-        let refindex = headintersectionindexes[headptr] + 1
+        headrefindex = headintersectionindexes[headptr]
+        let refindex = headrefindex + 1
         let refintersecting = intersecting[refindex - 1].intersecting
 
         for (let ptr = headptr; ptr >= 0; ptr--) {
@@ -497,8 +488,8 @@ export const isolateRelevantIntersections = ({
     }
      
     if (tailptr >= 0) {
-
-        let refindex = tailintersectionindexes[tailptr] - 1
+        tailrefindex = tailintersectionindexes[tailptr]
+        let refindex = tailrefindex - 1
         let refintersecting = intersecting[refindex + 1].intersecting
 
         for (let ptr = tailptr; ptr < tailintersectionindexes.length; ptr++) {
@@ -524,9 +515,20 @@ export const isolateRelevantIntersections = ({
 
     // console.log('filteredintersections',filteredintersections)
 
-    return {filteredintersections,scrollforward}
+    return {filteredintersections, scrollforward, headrefindex, tailrefindex}
 
 }
+
+let indexcompare = (a,b) => {
+    let retval = (a < b)?-1:1
+    return retval
+}
+
+let entrycompare = (a,b) => {
+    let retval = (parseInt(a.target.dataset.index) < parseInt(b.target.dataset.index))? -1:1
+    return retval
+}
+
 
 // update content
 // adds itemshells at end of contentlist according to headindexcount and tailindescount,
