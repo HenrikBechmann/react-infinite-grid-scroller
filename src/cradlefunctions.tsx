@@ -415,6 +415,9 @@ export const isolateRelevantIntersections = ({
     headintersections.sort(entrycompare)
     tailintersections.sort(entrycompare)
 
+    // console.log('sorted headintersectionindexes, tailintersectionindexes, headintersections, tailintersections',
+    //     headintersectionindexes, tailintersectionindexes, headintersections, tailintersections)
+
     // set reference points in relation to the spine
     let headindex = headindexes[headindexes.length - 1]
     let tailindex = tailindexes[0]
@@ -433,29 +436,7 @@ export const isolateRelevantIntersections = ({
     let scrollforward = (tailptr > -1)?true:(headptr > -1)?false:undefined
     if ((headptr > -1) && (tailptr > -1)) { // edge case
         console.log('Error: filtered observer entries are bidirectional')
-            // :\
-            // headptr, headindex, headintersectionsentry, tailptr, tailindex, tailintersectionsentry, headindexes, tailindexes, intersecting',
-            // headptr, headindex, intersections[intersecting[headindex].intersectionsptr],
-            // tailptr, tailindex, intersections[intersecting[tailindex].intersectionsptr],
-            // headindexes, tailindexes, intersecting)
-        // let headentry = intersections[intersecting[headindex].intersectionsptr]
-        // let tailentry = intersections[intersecting[tailindex].intersectionsptr]
-        // let tailentryoffset, rootoffset
-        // if (orientation == 'vertical') {
-        //     // headentryoffset = headentry.boundingClientRect.top
-        //     tailentryoffset = tailentry.boundingClientRect.top
-        //     rootoffset = tailentry.rootBounds.top
-        // } else {
-        //     // headentryoffset = headentry.boundingClientRect.left
-        //     tailentryoffset = tailentry.boundingClientRect.left
-        //     rootoffset = tailentry.rootBounds.left
-        // }
-
-        // if (tailentryoffset > rootoffset) { // rapid scroll edge case
-        //     tailptr = -1
-        // } else {
-        //     headptr = -1
-        // }
+        return
     }
     // -----------------------------------------------
 
@@ -514,6 +495,8 @@ export const isolateRelevantIntersections = ({
     }
 
     // console.log('filteredintersections',filteredintersections)
+
+    filteredintersections.sort(entrycompare)
 
     return {filteredintersections, scrollforward} //, headrefindex, tailrefindex}
 

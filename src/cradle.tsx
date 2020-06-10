@@ -710,7 +710,7 @@ const Cradle = ({
     // 1.shift, 2.clip, and 3.add clip amount at other end
     const adjustcradleentries = useCallback((entries)=>{
 
-        // ----------------------------[ 1. initialization ]----------------------------
+        // ----------------------------[ 1. initialize ]----------------------------
 
         let entryindexes = []
 
@@ -743,7 +743,7 @@ const Cradle = ({
 
         let indexoffset = modelcontentlist[0].props.index
 
-        // --------------------[ 2. prepare intersections list ]-----------------------
+        // --------------------[ 2. filter intersections list ]-----------------------
 
         // filter out inapplicable intersection entries
         // we're only interested in intersections proximal to the spine
@@ -758,33 +758,33 @@ const Cradle = ({
         })
 
         // calculate overshootlength
-        let outlierindex, outlierelement, outlierfrontierpos 
+        // let outlierindex, outlierelement, outlierfrontierpos 
 
-        if (cradleProps.orientation == 'vertical') {
-            if (!scrollforward) {
-                outlierindex = headcontentlist[0].props.index
-                outlierelement = itemElementsRef.current.get(outlierindex).current
-                outlierfrontierpos = outlierelement.offsetTop
-            } else {
-                outlierindex = tailcontentlist[tailcontentlist.length -1].props.index
-                outlierelement = itemElementsRef.current.get(outlierindex).current
-                outlierfrontierpos = outlierelement.offsetTop +
-                    outlierelement.offsetHeight
-            }
-        } else {
-            if (!scrollforward) {
-                outlierindex = headcontentlist[0].props.index
-                outlierelement = itemElementsRef.current.get(outlierindex).current
-                outlierfrontierpos = outlierelement.offsetLeft
-            } else {
-                outlierindex = tailcontentlist[tailcontentlist.length -1].props.index
-                outlierelement = itemElementsRef.current.get(outlierindex).current
-                outlierfrontierpos = outlierelement.offsetLeft +
-                    outlierelement.offsetWidth
-            }
-        }
+        // if (cradleProps.orientation == 'vertical') {
+        //     if (scrollforward) {
+        //         outlierindex = tailcontentlist[tailcontentlist.length -1].props.index
+        //         outlierelement = itemElementsRef.current.get(outlierindex).current
+        //         outlierfrontierpos = outlierelement.offsetTop +
+        //             outlierelement.offsetHeight
+        //     } else {
+        //         outlierindex = headcontentlist[0].props.index
+        //         outlierelement = itemElementsRef.current.get(outlierindex).current
+        //         outlierfrontierpos = outlierelement.offsetTop
+        //     }
+        // } else { // horizontal
+        //     if (scrollforward) {
+        //         outlierindex = tailcontentlist[tailcontentlist.length -1].props.index
+        //         outlierelement = itemElementsRef.current.get(outlierindex).current
+        //         outlierfrontierpos = outlierelement.offsetLeft +
+        //             outlierelement.offsetWidth
+        //     } else {
+        //         outlierindex = headcontentlist[0].props.index
+        //         outlierelement = itemElementsRef.current.get(outlierindex).current
+        //         outlierfrontierpos = outlierelement.offsetLeft
+        //     }
+        // }
 
-        console.log('outlierindex, outlierfrontierpos',outlierindex, outlierfrontierpos)
+        // console.log('outlierindex, outlierfrontierpos',outlierindex, outlierfrontierpos)
 
         // let filteredindexes = []
 
@@ -831,40 +831,7 @@ const Cradle = ({
 
         }
 
-        // -------------------[ 4. calculate new referenceindex ]---------------------
-
-        let referencerowshift = Math.abs(Math.ceil(itemshiftcount/crosscount))
-
-        let referenceitemshift = referencerowshift * crosscount
-
-        let referenceindex
-
-        if (scrollforward) {
-
-            // could be undefined with overshoot
-            referenceindex = tailcontentlist[referenceitemshift]?.props.index
-            if (referenceindex === undefined) {
-                let lastindex = tailcontentlist[tailcontentlist.length - 1].props.index
-                let overshoot = referenceitemshift - tailcontentlist.length
-                referenceindex += overshoot
-            }
-
-        } else {
-
-            referenceindex = headcontentlist[(headcontentlist.length - crosscount)].props.index
-            referenceindex -= referenceitemshift - crosscount
-
-        }
-
-        if (referenceindex > (listsize -1)) {
-            referenceindex = listsize -1
-        }
-
-        if (referenceindex < 0) {
-            referenceindex = 0
-        }
-
-        // ------------------[ 5. calculate head and tail consolidated cradle content changes ]-----------------
+        // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
         // generate modified content instructions
 
@@ -1008,6 +975,39 @@ const Cradle = ({
 
         }
 
+        // -------------------[ 5. calculate new referenceindex ]---------------------
+
+        let referencerowshift = Math.abs(Math.ceil(itemshiftcount/crosscount))
+
+        let referenceitemshift = referencerowshift * crosscount
+
+        let referenceindex
+
+        if (scrollforward) {
+
+            // could be undefined with overshoot
+            referenceindex = tailcontentlist[referenceitemshift]?.props.index
+            if (referenceindex === undefined) {
+                let lastindex = tailcontentlist[tailcontentlist.length - 1].props.index
+                let overshoot = referenceitemshift - tailcontentlist.length
+                referenceindex += overshoot
+            }
+
+        } else {
+
+            referenceindex = headcontentlist[(headcontentlist.length - crosscount)].props.index
+            referenceindex -= referenceitemshift - crosscount
+
+        }
+
+        if (referenceindex > (listsize -1)) {
+            referenceindex = listsize -1
+        }
+
+        if (referenceindex < 0) {
+            referenceindex = 0
+        }
+
         // ----------------------------------[ 6. configure cradle content ]--------------------------
 
         // collect modified content
@@ -1041,6 +1041,8 @@ const Cradle = ({
 
         }
 
+        // ----------------------------------[ 7. allocaate cradle content ]--------------------------
+
         // headModelContentRef.current = localContentList
         let [headcontent, tailcontent] = allocateContentList(
             {
@@ -1055,7 +1057,7 @@ const Cradle = ({
         headViewContentRef.current = headModelContentRef.current = headcontent
         tailViewContentRef.current = tailModelContentRef.current = tailcontent
 
-        // -------------------------------[ 7. set css changes ]-------------------------
+        // -------------------------------[ 8. set css changes ]-------------------------
 
         // place the spine in the scrollblock
         let spineposref = getSpinePosRef(
