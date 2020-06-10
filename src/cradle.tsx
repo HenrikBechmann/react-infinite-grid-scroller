@@ -786,19 +786,19 @@ const Cradle = ({
 
         // console.log('outlierindex, outlierfrontierpos',outlierindex, outlierfrontierpos)
 
-        // let filteredindexes = []
+        let filteredindexes = []
 
-        // for (let entry of intersections) {
-        //     filteredindexes.push(
-        //         {
-        //             index:entry.target.dataset.index,
-        //             ratio:entry.intersectionRatio,
-        //             top:entry.boundingClientRect.top
-        //         }
-        //     )
-        // }
+        for (let entry of intersections) {
+            filteredindexes.push(
+                {
+                    index:entry.target.dataset.index,
+                    ratio:entry.intersectionRatio,
+                    top:entry.boundingClientRect.top
+                }
+            )
+        }
 
-        // console.log('filtered indexes',filteredindexes)
+        console.log('filtered indexes',filteredindexes)
 
         if (intersections.length == 0) { // nothing to do
 
