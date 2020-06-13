@@ -733,6 +733,9 @@ const Cradle = ({
         let cradleProps = cradlePropsRef.current
 
         let viewportElement = viewportData.elementref.current
+        let spineElement = spineCradleElementRef.current
+        let headElement = headCradleElementRef.current
+        let tailElement = tailCradleElementRef.current
 
         let modelcontentlist = modelContentRef.current
         let headcontentlist = headModelContentRef.current
@@ -753,38 +756,58 @@ const Cradle = ({
             headcontent:headcontentlist, 
             tailcontent:tailcontentlist,
             ITEM_OBSERVER_THRESHOLD,
-            orientation:cradleProps.orientation,
+            // orientation:cradleProps.orientation,
 
         })
 
+        if (intersections.length == 0) { // nothing to do
+
+            return
+            
+        }
+
         // calculate overshootlength
-        // let outlierindex, outlierelement, outlierfrontierpos 
+        let outlierindex, outlierelement, outlierspineoffset 
 
-        // if (cradleProps.orientation == 'vertical') {
-        //     if (scrollforward) {
-        //         outlierindex = tailcontentlist[tailcontentlist.length -1].props.index
-        //         outlierelement = itemElementsRef.current.get(outlierindex).current
-        //         outlierfrontierpos = outlierelement.offsetTop +
-        //             outlierelement.offsetHeight
-        //     } else {
-        //         outlierindex = headcontentlist[0].props.index
-        //         outlierelement = itemElementsRef.current.get(outlierindex).current
-        //         outlierfrontierpos = outlierelement.offsetTop
-        //     }
-        // } else { // horizontal
-        //     if (scrollforward) {
-        //         outlierindex = tailcontentlist[tailcontentlist.length -1].props.index
-        //         outlierelement = itemElementsRef.current.get(outlierindex).current
-        //         outlierfrontierpos = outlierelement.offsetLeft +
-        //             outlierelement.offsetWidth
-        //     } else {
-        //         outlierindex = headcontentlist[0].props.index
-        //         outlierelement = itemElementsRef.current.get(outlierindex).current
-        //         outlierfrontierpos = outlierelement.offsetLeft
-        //     }
-        // }
+        let spineviewportoffset, headspineoffset, tailspineoffset
+        if (cradleProps.orientation == 'vertical') {
+            spineviewportoffset = spineElement.offsetTop - viewportElement.scrollTop
+            headspineoffset = headElement.offsetTop
+            tailspineoffset = tailElement.offsetTop
+            if (scrollforward) {
+                outlierindex = tailcontentlist[tailcontentlist.length -1].props.index
+                outlierelement = itemElementsRef.current.get(outlierindex).current
+                outlierspineoffset = outlierelement.offsetTop +
+                    outlierelement.offsetHeight
+            } else {
+                outlierindex = headcontentlist[0]?.props.index
+                if (outlierindex === undefined) {
+                    outlierindex = tailcontentlist[0].props.index
+                }
+                outlierelement = itemElementsRef.current.get(outlierindex).current
+                outlierspineoffset = outlierelement.offsetTop
+            }
+        } else { // horizontal
+            spineviewportoffset = spineElement.offsetLeft - viewportElement.scrollLeft
+            headspineoffset = headElement.offsetLeft
+            tailspineoffset = tailElement.offsetLeft
+            if (scrollforward) {
+                outlierindex = tailcontentlist[tailcontentlist.length -1].props.index
+                outlierelement = itemElementsRef.current.get(outlierindex).current
+                outlierspineoffset = outlierelement.offsetLeft +
+                    outlierelement.offsetWidth
+            } else {
+                outlierindex = headcontentlist[0]?.props.index
+                if (outlierindex === undefined) {
+                    outlierindex = tailcontentlist[0].props.index
+                }
+                outlierelement = itemElementsRef.current.get(outlierindex).current
+                outlierspineoffset = outlierelement.offsetLeft
+            }
+        }
 
-        // console.log('outlierindex, outlierfrontierpos',outlierindex, outlierfrontierpos)
+        console.log('outlierindex, outlierspineoffset, spineviewportoffset, headspineoffset, tailspineoffset', 
+            outlierindex, outlierspineoffset, spineviewportoffset, headspineoffset, tailspineoffset)
 
         let filteredindexes = []
 
@@ -799,12 +822,6 @@ const Cradle = ({
         }
 
         console.log('filtered indexes',filteredindexes)
-
-        if (intersections.length == 0) { // nothing to do
-
-            return
-            
-        }
 
         // console.log('adjustcradleentries intersections.length',intersections.length)
 
