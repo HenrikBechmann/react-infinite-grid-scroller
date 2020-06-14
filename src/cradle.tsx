@@ -767,7 +767,7 @@ const Cradle = ({
         }
 
         // calculate overshootlength
-        let outlierindex, outlierelement, outlierspineoffset 
+        let outlierindex, outlierelement, outlierspineoffset, outlierboundarypos 
 
         let spineviewportoffset, headspineoffset, tailspineoffset
         if (cradleProps.orientation == 'vertical') {
@@ -779,6 +779,7 @@ const Cradle = ({
                 outlierelement = itemElementsRef.current.get(outlierindex).current
                 outlierspineoffset = outlierelement.offsetTop +
                     outlierelement.offsetHeight
+                outlierboundarypos = spineviewportoffset - headspineoffset + outlierspineoffset
             } else {
                 outlierindex = headcontentlist[0]?.props.index
                 if (outlierindex === undefined) {
@@ -786,6 +787,10 @@ const Cradle = ({
                 }
                 outlierelement = itemElementsRef.current.get(outlierindex).current
                 outlierspineoffset = outlierelement.offsetTop
+                outlierboundarypos = 
+                    spineviewportoffset + tailspineoffset + 
+                    tailElement.offsetHeight + outlierelement.offsetHeight + outlierspineoffset
+                outlierboundarypos = viewportElement.offsetHeight - outlierboundarypos
             }
         } else { // horizontal
             spineviewportoffset = spineElement.offsetLeft - viewportElement.scrollLeft
@@ -796,6 +801,7 @@ const Cradle = ({
                 outlierelement = itemElementsRef.current.get(outlierindex).current
                 outlierspineoffset = outlierelement.offsetLeft +
                     outlierelement.offsetWidth
+                outlierboundarypos = spineviewportoffset - headspineoffset + outlierspineoffset
             } else {
                 outlierindex = headcontentlist[0]?.props.index
                 if (outlierindex === undefined) {
@@ -803,11 +809,15 @@ const Cradle = ({
                 }
                 outlierelement = itemElementsRef.current.get(outlierindex).current
                 outlierspineoffset = outlierelement.offsetLeft
+                outlierboundarypos = 
+                    spineviewportoffset + tailspineoffset + 
+                    tailElement.offsetWidth + outlierelement.offsetWidth + outlierspineoffset
+                outlierboundarypos = viewportElement.offsetWidth - outlierboundarypos
             }
         }
 
-        console.log('outlierindex, outlierspineoffset, spineviewportoffset, headspineoffset, tailspineoffset', 
-            outlierindex, outlierspineoffset, spineviewportoffset, headspineoffset, tailspineoffset)
+        console.log('outlierindex, outlierspineoffset, spineviewportoffset, headspineoffset, tailspineoffset, outlierboundarypos', 
+            outlierindex, outlierspineoffset, spineviewportoffset, headspineoffset, tailspineoffset, outlierboundarypos)
 
         let filteredindexes = []
 

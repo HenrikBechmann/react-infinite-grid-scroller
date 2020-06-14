@@ -435,8 +435,8 @@ export const isolateRelevantIntersections = ({
     // console.log('headptr, tailptr',headptr, tailptr)
     let scrollforward = (tailptr > -1)?true:(headptr > -1)?false:undefined
     if ((headptr > -1) && (tailptr > -1)) { // edge case
-        console.log('Error: filtered observer entries are bidirectional:headptr, tailptr, headintersectionindexes, tailintersectionindexes',
-            headptr, tailptr, headintersectionindexes, tailintersectionindexes)
+        console.log('Error: filtered observer entries are bidirectional:headptr, tailptr, headintersectionindexes, tailintersectionindexes, headindexes, tailindexes',
+            headptr, tailptr, headintersectionindexes, tailintersectionindexes, headindexes, tailindexes)
         return
     }
     // -----------------------------------------------
