@@ -815,20 +815,22 @@ const Cradle = ({
             if (scrollforward) {
                 outlierindex = tailcontentlist[tailcontentlist.length -1].props.index
                 outlierelement = itemElementsRef.current.get(outlierindex).current
-                outlierwingoffset = outlierelement.offsetLeft +
-                    outlierelement.offsetWidth
+                outlierwingoffset = outlierelement.offsetLeft
+                    // outlierelement.offsetHeight
                 outlierboundarypos = 
                     spineviewportoffset + tailspineoffset + 
-                    tailElement.offsetWidth + outlierelement.offsetWidth + outlierwingoffset
-                outlierboundarypos = viewportElement.offsetWidth - outlierboundarypos
+                    outlierwingoffset + outlierelement.offsetWidth
+                outlierboundarypos = viewportElement.offsetWidth - outlierboundarypos // negative is outside viewport bounds
             } else {
                 outlierindex = headcontentlist[0]?.props.index
-                if (outlierindex === undefined) {
-                    outlierindex = tailcontentlist[0].props.index
+                if (outlierindex !== undefined) {
+                    // outlierindex = tailcontentlist[0].props.index
+                    outlierelement = itemElementsRef.current.get(outlierindex).current
+                    outlierwingoffset = outlierelement.offsetLeft
+                } else {
+                    outlierwingoffset = 0
                 }
-                outlierelement = itemElementsRef.current.get(outlierindex).current
-                outlierwingoffset = outlierelement.offsetLeft
-                outlierboundarypos = spineviewportoffset - headspineoffset + outlierwingoffset
+                outlierboundarypos = spineviewportoffset + headspineoffset + outlierwingoffset
             }
         }
 
