@@ -766,6 +766,20 @@ const Cradle = ({
             
         }
 
+        let filteredindexes = []
+
+        for (let entry of intersections) {
+            filteredindexes.push(
+                {
+                    index:entry.target.dataset.index,
+                    ratio:entry.intersectionRatio,
+                    top:entry.boundingClientRect.top
+                }
+            )
+        }
+
+        console.log('filtered indexes',filteredindexes)
+
         // calculate overshootlength
         let outlierindex, outlierelement, outlierwingoffset, outlierboundarypos 
 
@@ -820,20 +834,6 @@ const Cradle = ({
 
         console.log('outlierindex, outlierwingoffset, spineviewportoffset, headspineoffset, tailspineoffset, outlierboundarypos', 
             outlierindex, outlierwingoffset, spineviewportoffset, headspineoffset, tailspineoffset, outlierboundarypos)
-
-        let filteredindexes = []
-
-        for (let entry of intersections) {
-            filteredindexes.push(
-                {
-                    index:entry.target.dataset.index,
-                    ratio:entry.intersectionRatio,
-                    top:entry.boundingClientRect.top
-                }
-            )
-        }
-
-        console.log('filtered indexes',filteredindexes)
 
         // console.log('adjustcradleentries intersections.length',intersections.length)
 
@@ -927,24 +927,6 @@ const Cradle = ({
 
             let intersectionindexes = []
 
-            // for (let entry of intersections) {
-            //     intersectionindexes.push(
-            //         {
-            //             index:entry.target.dataset.index,
-            //             ratio:entry.intersectionRatio,
-            //             top:entry.boundingClientRect.top
-            //         }
-            //     )
-            // }
-
-            // // console.log('intersectionindexes',intersectionindexes)
-
-            // console.log('1. headrowcount, rowshiftcount, itemshiftcount, intersections, intersectionindexes',
-            //     headrowcount, rowshiftcount, itemshiftcount, intersections, intersectionindexes)
-
-            // console.log('2. viewportElement.scrollTop,spineCradleElement.offsetTop,headCradleElementRef.offsetTop',
-            //     viewportElement.scrollTop,spineCradleElementRef.current.offsetTop,headCradleElementRef.current.offsetTop,
-            //     spineCradleElementRef.current.offsetTop - viewportElement.scrollTop + headCradleElementRef.current.offsetTop)
             // headcount will be less than minimum (runwaycount), so a shift can be accomplished[]
             if ((headrowcount - rowshiftcount) < (cradleProps.runwaycount)) {
                 // calculate clip for tail
@@ -1004,7 +986,40 @@ const Cradle = ({
 
         }
 
-        // -------------------[ 5. calculate new referenceindex ]---------------------
+        // ----------------------------------[ 5. configure cradle content ]--------------------------
+
+        // collect modified content
+        let localContentList 
+
+        // console.log('headindexchangecount, tailindexchangecount',headchangecount, tailchangecount)
+
+        if (headchangecount || tailchangecount) {
+
+            localContentList = getUIContentList({
+
+                localContentList:modelcontentlist,
+                headindexcount:headchangecount,
+                tailindexcount:tailchangecount,
+                indexoffset,//,: pendingcontentoffset,
+
+                orientation:cradleProps.orientation,
+                cellHeight:cradleProps.cellHeight,
+                cellWidth:cradleProps.cellWidth,
+                observer: itemObserverRef.current,
+                crosscount,
+                callbacks:callbacksRef.current,
+                getItem:cradleProps.getItem,
+                listsize,
+                placeholder:cradleProps.placeholder,
+
+            })
+        } else {
+
+            localContentList = modelcontentlist
+
+        }
+
+        // -------------------[ 6. calculate new referenceindex ]---------------------
 
         let referencerowshift = Math.abs(Math.ceil(itemshiftcount/crosscount))
 
@@ -1037,38 +1052,6 @@ const Cradle = ({
             referenceindex = 0
         }
 
-        // ----------------------------------[ 6. configure cradle content ]--------------------------
-
-        // collect modified content
-        let localContentList 
-
-        // console.log('headindexchangecount, tailindexchangecount',headchangecount, tailchangecount)
-
-        if (headchangecount || tailchangecount) {
-
-            localContentList = getUIContentList({
-
-                localContentList:modelcontentlist,
-                headindexcount:headchangecount,
-                tailindexcount:tailchangecount,
-                indexoffset,//,: pendingcontentoffset,
-
-                orientation:cradleProps.orientation,
-                cellHeight:cradleProps.cellHeight,
-                cellWidth:cradleProps.cellWidth,
-                observer: itemObserverRef.current,
-                crosscount,
-                callbacks:callbacksRef.current,
-                getItem:cradleProps.getItem,
-                listsize,
-                placeholder:cradleProps.placeholder,
-
-            })
-        } else {
-
-            localContentList = modelcontentlist
-
-        }
 
         // ----------------------------------[ 7. allocaate cradle content ]--------------------------
 
