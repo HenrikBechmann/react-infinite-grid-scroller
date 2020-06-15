@@ -824,6 +824,7 @@ const Cradle = ({
                     spineviewportoffset + tailspineoffset + 
                     outlierwingoffset + outlierelement.offsetWidth
                 outlierboundarypos = viewportElement.offsetWidth - outlierboundarypos // negative is outside viewport bounds
+                boundary = viewportElement.offsetWidth - (spineviewportoffset + tailspineoffset + tailElement.offsetWidth)
             } else {
                 outlierindex = headcontentlist[0]?.props.index
                 if (outlierindex !== undefined) {
@@ -834,6 +835,7 @@ const Cradle = ({
                     outlierwingoffset = 0
                 }
                 outlierboundarypos = spineviewportoffset + headspineoffset + outlierwingoffset
+                boundary = spineviewportoffset + headspineoffset
             }
         }
 
