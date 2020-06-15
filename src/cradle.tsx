@@ -784,6 +784,7 @@ const Cradle = ({
         let outlierindex, outlierelement, outlierwingoffset, outlierboundarypos 
 
         let spineviewportoffset, headspineoffset, tailspineoffset
+        let boundary
         if (cradleProps.orientation == 'vertical') {
             spineviewportoffset = spineElement.offsetTop - viewportElement.scrollTop
             headspineoffset = headElement.offsetTop
@@ -797,6 +798,7 @@ const Cradle = ({
                     spineviewportoffset + tailspineoffset + 
                     outlierwingoffset + outlierelement.offsetHeight
                 outlierboundarypos = viewportElement.offsetHeight - outlierboundarypos // negative is outside viewport bounds
+                boundary = viewportElement.offsetHeight - (spineviewportoffset + tailspineoffset + tailElement.offsetHeight)
             } else {
                 outlierindex = headcontentlist[0]?.props.index
                 if (outlierindex !== undefined) {
@@ -807,6 +809,7 @@ const Cradle = ({
                     outlierwingoffset = 0
                 }
                 outlierboundarypos = spineviewportoffset + headspineoffset + outlierwingoffset
+                boundary = spineviewportoffset + headspineoffset
             }
         } else { // horizontal
             spineviewportoffset = spineElement.offsetLeft - viewportElement.scrollLeft
@@ -834,8 +837,11 @@ const Cradle = ({
             }
         }
 
-        console.log('outlierindex, outlierwingoffset, spineviewportoffset, headspineoffset, tailspineoffset, outlierboundarypos', 
-            outlierindex, outlierwingoffset, spineviewportoffset, headspineoffset, tailspineoffset, outlierboundarypos)
+        // console.log('outlierindex, outlierwingoffset, spineviewportoffset, headspineoffset, tailspineoffset, outlierboundarypos', 
+        //     outlierindex, outlierwingoffset, spineviewportoffset, headspineoffset, tailspineoffset, outlierboundarypos)
+
+        console.log('boundary, spineviewportoffset, headspineoffset',
+            boundary, spineviewportoffset, headspineoffset)
 
         // console.log('adjustcradleentries intersections.length',intersections.length)
 
