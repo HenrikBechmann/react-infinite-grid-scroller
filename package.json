@@ -39,7 +39,7 @@
   },
   "homepage": "https://github.com/HenrikBechmann/react-infinite-grid-scroller#readme",
   "dependencies": {
-    "detect-browser": "^5.1.0",
+    "detect-browser": "^5.1.1",
     "react-is-mounted-hook": "^1.0.3",
     "requestidlecallback": "^0.3.0",
     "resize-observer-polyfill": "^1.5.1"
@@ -62,7 +62,7 @@
     "ts-loader": "^7.0.4",
     "typescript": "^3.9.2",
     "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11",
+    "webpack-cli": "^3.3.12",
     "webpack-sources": "^1.4.3"
   }
 }
