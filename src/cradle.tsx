@@ -710,6 +710,11 @@ const Cradle = ({
     // 1.shift, 2.clip, and 3.add clip amount at other end
     const adjustcradleentries = useCallback((entries)=>{
 
+        let scrollPositions = scrollPositionsRef.current
+        if (scrollPositions.current == scrollPositions.previous) return
+
+        let scrollforward = scrollPositions.current > scrollPositions.previous
+
         // ----------------------------[ 1. initialize ]----------------------------
 
         // let entryindexes = []
@@ -750,8 +755,8 @@ const Cradle = ({
 
         // filter out inapplicable intersection entries
         // we're only interested in intersections proximal to the spine
-        let {filteredintersections:intersections, scrollforward} = isolateRelevantIntersections({
-
+        let {filteredintersections:intersections} = isolateRelevantIntersections({
+            scrollforward,
             intersections:entries,
             headcontent:headcontentlist, 
             tailcontent:tailcontentlist,
@@ -810,7 +815,7 @@ const Cradle = ({
                 // }
                 // outlierboundarypos = spineviewportoffset + headspineoffset + outlierwingoffset
                 boundary = spineviewportoffset + headspineoffset
-                console.log('BACKWARD boundary, spineviewportoffset, headspineoffset',boundary, spineviewportoffset, headspineoffset)
+                // console.log('BACKWARD boundary, spineviewportoffset, headspineoffset',boundary, spineviewportoffset, headspineoffset)
             }
         } else { // horizontal
             spineviewportoffset = spineElement.offsetLeft - viewportElement.scrollLeft
@@ -1251,8 +1256,19 @@ const Cradle = ({
 
     const scrollTimeridRef = useRef(null)
 
+    //TODO: reset scrollpositions with orientation and reset change
+    const scrollPositionsRef = useRef({current:0,previous:0})
+
     // callback for scroll
     const onScroll = useCallback(() => {
+
+        let viewportElement = viewportDataRef.current.elementref.current
+        let scrollPositions = scrollPositionsRef.current
+        scrollPositions.previous = scrollPositions.current
+        scrollPositions.current = 
+            cradlePropsRef.current.orientation == 'vertical'
+            ?viewportElement.scrollTop
+            :viewportElement.scrollLeft
 
         clearTimeout(scrollTimeridRef.current)
 

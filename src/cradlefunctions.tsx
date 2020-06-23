@@ -294,6 +294,7 @@ export const isolateRelevantIntersections = ({
     headcontent, 
     tailcontent,
     ITEM_OBSERVER_THRESHOLD,
+    scrollforward,
     // orientation,
 }) => {
 
@@ -434,16 +435,21 @@ export const isolateRelevantIntersections = ({
     }
     // console.log('headptr, tailptr',headptr, tailptr)
     if ((headptr > -1) && (tailptr > -1)) { // edge case
-        console.log('Error: filtered observer entries are bidirectional:headptr, tailptr, headintersectionindexes, tailintersectionindexes, headindexes, tailindexes',
+        console.log('Warning: filtered observer entries are bidirectional:headptr, tailptr, headintersectionindexes, tailintersectionindexes, headindexes, tailindexes',
             headptr, tailptr, headintersectionindexes, tailintersectionindexes, headindexes, tailindexes)
+        if (scrollforward) {
+            headptr = -1
+        } else {
+            tailptr = -1
+        }
         return
     }
-    let scrollforward = (tailptr > -1)?true:(headptr > -1)?false:undefined
+    // let scrollforward = (tailptr > -1)?true:(headptr > -1)?false:undefined
     // -----------------------------------------------
 
     // collect notifications to main thread (filtered intersections)
     let headrefindex, tailrefindex // for return
-    if (headptr >= 0) {
+    if (!scrollforward && (headptr >= 0)) {
         headrefindex = headintersectionindexes[headptr]
         let refindex = headrefindex + 1
         let refintersecting = intersecting[refindex - 1].intersecting
@@ -469,7 +475,7 @@ export const isolateRelevantIntersections = ({
         }
     }
      
-    if (tailptr >= 0) {
+    if (scrollforward && (tailptr >= 0)) {
         tailrefindex = tailintersectionindexes[tailptr]
         let refindex = tailrefindex - 1
         let refintersecting = intersecting[refindex + 1].intersecting
@@ -499,7 +505,7 @@ export const isolateRelevantIntersections = ({
 
     filteredintersections.sort(entrycompare) // TODO this should be integrated into the code above
 
-    return {filteredintersections, scrollforward} //, headrefindex, tailrefindex}
+    return {filteredintersections} //, headrefindex, tailrefindex}
 
 }
 
