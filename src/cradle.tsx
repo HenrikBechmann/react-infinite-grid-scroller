@@ -711,12 +711,11 @@ const Cradle = ({
     const adjustcradleentries = useCallback((entries)=>{
 
         let scrollPositions = scrollPositionsRef.current
-        if (scrollPositions.current == scrollPositions.previous) return
+        if (scrollPositions.current == scrollPositions.previous) return // nothing to do
 
         let scrollforward = scrollPositions.current > scrollPositions.previous
 
-        // ----------------------------[ 1. initialize ]----------------------------
-
+        // DEBUG:
         // let entryindexes = []
 
         // for (let entry of entries) {
@@ -732,7 +731,7 @@ const Cradle = ({
 
         // console.log('entries.length, entryindexes',entries.length, entryindexes)
 
-        // let intersections = entries // replaced below
+        // ----------------------------[ 1. initialize ]----------------------------
 
         let viewportData = viewportDataRef.current
         let cradleProps = cradlePropsRef.current
@@ -771,6 +770,7 @@ const Cradle = ({
             
         }
 
+        // DEBUG:
         let filteredindexes = []
 
         for (let entry of intersections) {
@@ -785,6 +785,8 @@ const Cradle = ({
 
         // console.log('filtered indexes:',filteredindexes,'\nrows:', Math.ceil(filteredindexes.length/crosscount))
 
+        // --------------------------------------[ 3. Calculate overshoot ]-------------------------------------
+
         // calculate overshootlength
         let outlierindex, outlierelement, outlierwingoffset, outlierboundarypos 
 
@@ -794,56 +796,36 @@ const Cradle = ({
             spineviewportoffset = spineElement.offsetTop - viewportElement.scrollTop
             headspineoffset = headElement.offsetTop
             tailspineoffset = tailElement.offsetTop
+
             if (scrollforward) {
-                // outlierindex = tailcontentlist[tailcontentlist.length -1].props.index
-                // outlierelement = itemElementsRef.current.get(outlierindex).current
-                // outlierwingoffset = outlierelement.offsetTop
-                //     // outlierelement.offsetHeight
-                // outlierboundarypos = 
-                //     spineviewportoffset + tailspineoffset + 
-                //     outlierwingoffset + outlierelement.offsetHeight
-                // outlierboundarypos = viewportElement.offsetHeight - outlierboundarypos // negative is outside viewport bounds
+
                 boundary = viewportElement.offsetHeight - (spineviewportoffset + tailspineoffset + tailElement.offsetHeight)
+
             } else {
-                // outlierindex = headcontentlist[0]?.props.index
-                // if (outlierindex !== undefined) {
-                //     // outlierindex = tailcontentlist[0].props.index
-                //     outlierelement = itemElementsRef.current.get(outlierindex).current
-                //     outlierwingoffset = outlierelement.offsetTop
-                // } else {
-                //     outlierwingoffset = 0
-                // }
-                // outlierboundarypos = spineviewportoffset + headspineoffset + outlierwingoffset
+
                 boundary = spineviewportoffset + headspineoffset
-                // console.log('BACKWARD boundary, spineviewportoffset, headspineoffset',boundary, spineviewportoffset, headspineoffset)
+
             }
         } else { // horizontal
             spineviewportoffset = spineElement.offsetLeft - viewportElement.scrollLeft
             headspineoffset = headElement.offsetLeft
             tailspineoffset = tailElement.offsetLeft
+
             if (scrollforward) {
-                // outlierindex = tailcontentlist[tailcontentlist.length -1].props.index
-                // outlierelement = itemElementsRef.current.get(outlierindex).current
-                // outlierwingoffset = outlierelement.offsetLeft
-                //     // outlierelement.offsetHeight
-                // outlierboundarypos = 
-                //     spineviewportoffset + tailspineoffset + 
-                //     outlierwingoffset + outlierelement.offsetWidth
-                // outlierboundarypos = viewportElement.offsetWidth - outlierboundarypos // negative is outside viewport bounds
+
                 boundary = viewportElement.offsetWidth - (spineviewportoffset + tailspineoffset + tailElement.offsetWidth)
             } else {
-                // outlierindex = headcontentlist[0]?.props.index
-                // if (outlierindex !== undefined) {
-                //     // outlierindex = tailcontentlist[0].props.index
-                //     outlierelement = itemElementsRef.current.get(outlierindex).current
-                //     outlierwingoffset = outlierelement.offsetLeft
-                // } else {
-                //     outlierwingoffset = 0
-                // }
-                // outlierboundarypos = spineviewportoffset + headspineoffset + outlierwingoffset
+
                 boundary = spineviewportoffset + headspineoffset
+
             }
         }
+
+        if (boundary < 0) boundary = 0
+        let cellLength = cradleProps.orientation == 'vertical'?cradleProps.cellHeight:cradleProps.cellWitdh
+        let boundaryrowcount = (boundary == 0)?0:Math.ceil(boundary/(cellLength + cradleProps.gap))
+        let boundaryitemcount = boundaryrowcount * crosscount
+        if (scrollforward) boundaryitemcount = -boundaryitemcount
 
         // console.log('outlierindex, outlierwingoffset, spineviewportoffset, headspineoffset, tailspineoffset, outlierboundarypos', 
         //     outlierindex, outlierwingoffset, spineviewportoffset, headspineoffset, tailspineoffset, outlierboundarypos)
@@ -855,7 +837,7 @@ const Cradle = ({
 
         console.log('cradleset boundary, scrollforward', boundary, scrollforward)
 
-        // --------------------------[ 3. calculate shiftitemcount ]----------------------------
+        // --------------------------[ 4. calculate shiftitemcount ]----------------------------
         // shift item count is the number of items the virtual cradle shifts, according to observer notices
 
         // -- isolate forward and backward lists (happens with rapid scrolling changes)
@@ -867,7 +849,7 @@ const Cradle = ({
             forwardcount = intersections.length
         }
 
-        let itemshiftcount = forwardcount - backwardcount
+        let itemshiftcount = forwardcount - backwardcount + boundaryitemcount
 
         // console.log('forwardcount, backwardcount, scrollforward, itemshiftcount',
         //     forwardcount, backwardcount, scrollforward, itemshiftcount)
@@ -878,10 +860,7 @@ const Cradle = ({
 
         }
 
-        // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
-        // if (boundary < 0) boundary = 0
-        // let cellLength = cradleProps.orientation == 'vertical'?cradleProps.cellHeight:cradleProps.cellWitdh
-        // let boundaryrowcount = (boundary == 0)?0:Math.ceil(boundary/(cellLength + cradleProps.gap))
+        // ------------------[ 5. calculate head and tail consolidated cradle content changes ]-----------------
         // generate modified content instructions
 
         // initialize data required for calculations
@@ -1009,7 +988,7 @@ const Cradle = ({
 
         }
 
-        // ----------------------------------[ 5. configure cradle content ]--------------------------
+        // ----------------------------------[ 6. configure cradle content ]--------------------------
 
         // collect modified content
         let localContentList 
@@ -1042,7 +1021,7 @@ const Cradle = ({
 
         }
 
-        // -------------------[ 6. calculate new referenceindex ]---------------------
+        // -------------------[ 7. calculate new referenceindex ]---------------------
 
         let referencerowshift = Math.abs(Math.ceil(itemshiftcount/crosscount))
 
@@ -1076,7 +1055,7 @@ const Cradle = ({
         }
 
 
-        // ----------------------------------[ 7. allocaate cradle content ]--------------------------
+        // ----------------------------------[ 8. allocaate cradle content ]--------------------------
 
         // headModelContentRef.current = localContentList
         let [headcontent, tailcontent] = allocateContentList(
@@ -1092,7 +1071,7 @@ const Cradle = ({
         headViewContentRef.current = headModelContentRef.current = headcontent
         tailViewContentRef.current = tailModelContentRef.current = tailcontent
 
-        // -------------------------------[ 8. set css changes ]-------------------------
+        // -------------------------------[ 9. set css changes ]-------------------------
 
         // place the spine in the scrollblock
         let spineposref = getSpinePosRef(

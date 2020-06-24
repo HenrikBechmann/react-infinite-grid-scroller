@@ -435,14 +435,14 @@ export const isolateRelevantIntersections = ({
     }
     // console.log('headptr, tailptr',headptr, tailptr)
     if ((headptr > -1) && (tailptr > -1)) { // edge case
-        console.log('Warning: filtered observer entries are bidirectional:headptr, tailptr, headintersectionindexes, tailintersectionindexes, headindexes, tailindexes',
-            headptr, tailptr, headintersectionindexes, tailintersectionindexes, headindexes, tailindexes)
+        // console.log('Warning: filtered observer entries are bidirectional:headptr, tailptr, headintersectionindexes, tailintersectionindexes, headindexes, tailindexes',
+        //     headptr, tailptr, headintersectionindexes, tailintersectionindexes, headindexes, tailindexes)
         if (scrollforward) {
             headptr = -1
         } else {
             tailptr = -1
         }
-        return
+        // return
     }
     // let scrollforward = (tailptr > -1)?true:(headptr > -1)?false:undefined
     // -----------------------------------------------
