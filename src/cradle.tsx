@@ -711,6 +711,7 @@ const Cradle = ({
     const adjustcradleentries = useCallback((entries)=>{
 
         let scrollPositions = scrollPositionsRef.current
+
         if (scrollPositions.current == scrollPositions.previous) return // nothing to do
 
         let scrollforward = scrollPositions.current > scrollPositions.previous
@@ -771,17 +772,17 @@ const Cradle = ({
         }
 
         // DEBUG:
-        let filteredindexes = []
+        // let filteredindexes = []
 
-        for (let entry of intersections) {
-            filteredindexes.push(
-                {
-                    index:entry.target.dataset.index,
-                    ratio:entry.intersectionRatio,
-                    top:entry.boundingClientRect.top
-                }
-            )
-        }
+        // for (let entry of intersections) {
+        //     filteredindexes.push(
+        //         {
+        //             index:entry.target.dataset.index,
+        //             ratio:entry.intersectionRatio,
+        //             top:entry.boundingClientRect.top
+        //         }
+        //     )
+        // }
 
         // console.log('filtered indexes:',filteredindexes,'\nrows:', Math.ceil(filteredindexes.length/crosscount))
 
@@ -822,10 +823,11 @@ const Cradle = ({
         }
 
         if (boundary < 0) boundary = 0
+
         let cellLength = cradleProps.orientation == 'vertical'?cradleProps.cellHeight:cradleProps.cellWitdh
         let boundaryrowcount = (boundary == 0)?0:Math.ceil(boundary/(cellLength + cradleProps.gap))
         let boundaryitemcount = boundaryrowcount * crosscount
-        if (scrollforward) boundaryitemcount = -boundaryitemcount
+        if (scrollforward && (boundaryitemcount != 0)) boundaryitemcount = -boundaryitemcount
 
         // console.log('outlierindex, outlierwingoffset, spineviewportoffset, headspineoffset, tailspineoffset, outlierboundarypos', 
         //     outlierindex, outlierwingoffset, spineviewportoffset, headspineoffset, tailspineoffset, outlierboundarypos)
@@ -835,9 +837,9 @@ const Cradle = ({
 
         // console.log('adjustcradleentries intersections.length',intersections.length)
 
-        console.log('cradleset boundary, scrollforward', boundary, scrollforward)
+        // console.log('cradleset boundaryitemcount, boundary, scrollforward', boundaryitemcount, boundary, scrollforward)
 
-        // --------------------------[ 4. calculate shiftitemcount ]----------------------------
+        // --------------------------[ 4. calculate itemshiftcount ]----------------------------
         // shift item count is the number of items the virtual cradle shifts, according to observer notices
 
         // -- isolate forward and backward lists (happens with rapid scrolling changes)
@@ -1033,11 +1035,16 @@ const Cradle = ({
 
             // could be undefined with overshoot
             referenceindex = tailcontentlist[referenceitemshift]?.props.index
+            console.log('referenceindex from tailcontentlist', referenceindex)
             if (referenceindex === undefined) {
-                let lastindex = tailcontentlist[tailcontentlist.length - 1].props.index
+                // let lastindex = tailcontentlist[tailcontentlist.length - 1].props.index
                 let overshoot = referenceitemshift - tailcontentlist.length
+                referenceindex = tailcontentlist[tailcontentlist.length -1].props.index
                 referenceindex += overshoot
+                console.log('referenceindex from adjustment;referenceindex, overshoot, referenceitemshift, tailcontentlist.length, itemshiftcount,referencerowhift',
+                    referenceindex, overshoot, referenceitemshift, tailcontentlist.length, itemshiftcount, referencerowshift)
             }
+
 
         } else {
 
@@ -1054,6 +1061,7 @@ const Cradle = ({
             referenceindex = 0
         }
 
+        console.log('referenceindex',referenceindex)
 
         // ----------------------------------[ 8. allocaate cradle content ]--------------------------
 
@@ -1066,6 +1074,8 @@ const Cradle = ({
                 referenceindex,
             }
         )
+
+        console.log('headcontent, tailcontent',headcontent, tailcontent)
 
         modelContentRef.current = localContentList
         headViewContentRef.current = headModelContentRef.current = headcontent
