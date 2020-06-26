@@ -505,7 +505,7 @@ export const isolateRelevantIntersections = ({
 
     filteredintersections.sort(entrycompare) // TODO this should be integrated into the code above
 
-    return {filteredintersections} //, headrefindex, tailrefindex}
+    return filteredintersections //, headrefindex, tailrefindex}
 
 }
 
@@ -519,12 +519,13 @@ let entrycompare = (a,b) => {
     return retval
 }
 
-export const calcBoundaryItemCount = ({
+export const calcItemshiftcount = ({
     cradleProps,
     spineElement,
     viewportElement,
     headElement,
     tailElement,
+    intersections,
     scrollforward,
     crosscount,
 }) => {
@@ -568,7 +569,24 @@ export const calcBoundaryItemCount = ({
     let boundaryitemcount = boundaryrowcount * crosscount
     if (scrollforward && (boundaryitemcount != 0)) boundaryitemcount = -boundaryitemcount
 
-    return boundaryitemcount
+    // ----------------------[  calculate itemshiftcount includng overshoot ]------------------------
+    // shift item count is the number of items the virtual cradle shifts, according to observer notices
+
+    // -- isolate forward and backward lists (happens with rapid scrolling changes)
+    //  then set scrollforward
+    let forwardcount = 0, backwardcount = 0
+    if (scrollforward) {
+        backwardcount = intersections.length
+    } else {
+        forwardcount = intersections.length
+    }
+
+    let itemshiftcount = forwardcount - backwardcount + boundaryitemcount
+
+    // console.log('forwardcount, backwardcount, scrollforward, itemshiftcount',
+    //     forwardcount, backwardcount, scrollforward, itemshiftcount)
+
+    return itemshiftcount
 
 }
 
@@ -721,18 +739,19 @@ export const getUIContentList = (props) => {
         indexoffset, 
         headindexcount, 
         tailindexcount, 
-        orientation, 
-        cellHeight, 
-        cellWidth, 
+        cradleProps,
         localContentList:contentlist,
         crosscount,
         listsize,
-
         callbacks,
-        getItem,
-        placeholder,
         observer,
     } = props
+
+    let orientation = cradleProps.orientation,
+        cellHeight = cradleProps.cellHeight,
+        cellWidth = cradleProps.cellWidth,
+        getItem = cradleProps.getItem,
+        placeholder = cradleProps.placeholder
 
     let localContentlist = [...contentlist]
     let tailindexoffset = indexoffset + contentlist.length
@@ -801,6 +820,55 @@ export const getUIContentList = (props) => {
     returnContentlist = headContentlist.concat(localContentlist,tailContentlist)
 
     return returnContentlist
+}
+
+export const getReferenceindex = ({
+    itemshiftcount,
+    crosscount,
+    listsize,
+    headcontentlist,
+    tailcontentlist,
+    scrollforward,
+}) => {
+
+    let referenceindex
+
+    let referencerowshift = Math.abs(Math.ceil(itemshiftcount/crosscount))
+
+    let referenceitemshift = referencerowshift * crosscount
+
+    let previousreferenceindex = tailcontentlist[0]
+
+    if (scrollforward) {
+
+        // could be undefined with overshoot
+        referenceindex = tailcontentlist[referenceitemshift]?.props.index
+        // console.log('referenceindex from tailcontentlist', referenceindex)
+        if (referenceindex === undefined) {
+            // let lastindex = tailcontentlist[tailcontentlist.length - 1].props.index
+            let overshoot = referenceitemshift - tailcontentlist.length
+            referenceindex = tailcontentlist[tailcontentlist.length -1].props.index
+            referenceindex += overshoot
+            // console.log('referenceindex from adjustment;referenceindex, overshoot, referenceitemshift, tailcontentlist.length, itemshiftcount,referencerowhift',
+            //     referenceindex, overshoot, referenceitemshift, tailcontentlist.length, itemshiftcount, referencerowshift)
+        }
+
+
+    } else {
+
+        referenceindex = headcontentlist[(headcontentlist.length - crosscount)].props.index
+        referenceindex -= referenceitemshift - crosscount
+
+    }
+
+    if (referenceindex > (listsize -1)) {
+        referenceindex = listsize -1
+    }
+
+    if (referenceindex < 0) {
+        referenceindex = 0
+    }
+    return [referenceindex, referenceitemshift]
 }
 
 // butterfly model. Leading (head) all or partially hidden; tail, visible plus following hidden

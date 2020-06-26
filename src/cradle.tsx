@@ -39,8 +39,9 @@ const ITEM_OBSERVER_THRESHOLD = .9
 import { 
     setCradleGridStyles, 
     getUIContentList, 
+    getReferenceindex,
     calcHeadAndTailChanges,
-    calcBoundaryItemCount,
+    calcItemshiftcount,
     calcVisibleItems, 
     getReferenceIndexData,
     getContentListRequirements,
@@ -704,13 +705,13 @@ const Cradle = ({
 
         // console.log('new entries filtered out',entries.length - movedentries.length)
 
-        isMounted() && adjustcradleentries(movedentries)
+        isMounted() && updateCradleContent(movedentries)
 
     },[])
 
     // adjust scroll content:
     // 1.shift, 2.clip, and 3.add clip amount at other end
-    const adjustcradleentries = useCallback((entries)=>{
+    const updateCradleContent = useCallback((entries)=>{
 
         let scrollPositions = scrollPositionsRef.current
 
@@ -757,7 +758,7 @@ const Cradle = ({
 
         // filter out inapplicable intersection entries
         // we're only interested in intersections proximal to the spine
-        let {filteredintersections:intersections} = isolateRelevantIntersections({
+        let intersections = isolateRelevantIntersections({
             scrollforward,
             intersections:entries,
             headcontent:headcontentlist, 
@@ -790,34 +791,18 @@ const Cradle = ({
 
         // --------------------------------[ 3. Calculate boundary item overshoot ]-------------------------------
 
-        let boundaryitemcount = calcBoundaryItemCount({
+        let itemshiftcount = calcItemshiftcount({
 
             cradleProps,
             spineElement,
             viewportElement,
             headElement,
             tailElement,
+            intersections,
             scrollforward,
             crosscount,
 
         })
-
-        // --------------------------[ 4. calculate itemshiftcount ]----------------------------
-        // shift item count is the number of items the virtual cradle shifts, according to observer notices
-
-        // -- isolate forward and backward lists (happens with rapid scrolling changes)
-        //  then set scrollforward
-        let forwardcount = 0, backwardcount = 0
-        if (scrollforward) {
-            backwardcount = intersections.length
-        } else {
-            forwardcount = intersections.length
-        }
-
-        let itemshiftcount = forwardcount - backwardcount + boundaryitemcount
-
-        // console.log('forwardcount, backwardcount, scrollforward, itemshiftcount',
-        //     forwardcount, backwardcount, scrollforward, itemshiftcount)
 
         if (itemshiftcount == 0) {  // nothing to do
 
@@ -825,7 +810,7 @@ const Cradle = ({
 
         }
 
-        // ------------------[ 5. calculate head and tail consolidated cradle content changes ]-----------------
+        // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
         let [headchangecount,tailchangecount] = calcHeadAndTailChanges({
 
@@ -841,12 +826,13 @@ const Cradle = ({
 
         })
 
-        // ----------------------------------[ 6. reconfigure cradle content ]--------------------------
+        // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
         // collect modified content
         let localContentList 
 
         // console.log('headindexchangecount, tailindexchangecount',headchangecount, tailchangecount)
+        // console.log('cradleProps',cradleProps)
 
         if (headchangecount || tailchangecount) {
 
@@ -855,17 +841,12 @@ const Cradle = ({
                 localContentList:modelcontentlist,
                 headindexcount:headchangecount,
                 tailindexcount:tailchangecount,
-                indexoffset,//,: pendingcontentoffset,
-
-                orientation:cradleProps.orientation,
-                cellHeight:cradleProps.cellHeight,
-                cellWidth:cradleProps.cellWidth,
+                indexoffset,
+                cradleProps,
                 observer: itemObserverRef.current,
                 crosscount,
                 callbacks:callbacksRef.current,
-                getItem:cradleProps.getItem,
                 listsize,
-                placeholder:cradleProps.placeholder,
 
             })
         } else {
@@ -874,48 +855,20 @@ const Cradle = ({
 
         }
 
-        // -------------------[ 7. calculate new referenceindex ]---------------------
+        // -------------------[ 6. calculate new referenceindex ]---------------------
 
-        let referencerowshift = Math.abs(Math.ceil(itemshiftcount/crosscount))
-
-        let referenceitemshift = referencerowshift * crosscount
-
-        let previousreferenceindex = tailcontentlist[0]
-        let referenceindex
-
-        if (scrollforward) {
-
-            // could be undefined with overshoot
-            referenceindex = tailcontentlist[referenceitemshift]?.props.index
-            // console.log('referenceindex from tailcontentlist', referenceindex)
-            if (referenceindex === undefined) {
-                // let lastindex = tailcontentlist[tailcontentlist.length - 1].props.index
-                let overshoot = referenceitemshift - tailcontentlist.length
-                referenceindex = tailcontentlist[tailcontentlist.length -1].props.index
-                referenceindex += overshoot
-                // console.log('referenceindex from adjustment;referenceindex, overshoot, referenceitemshift, tailcontentlist.length, itemshiftcount,referencerowhift',
-                //     referenceindex, overshoot, referenceitemshift, tailcontentlist.length, itemshiftcount, referencerowshift)
-            }
-
-
-        } else {
-
-            referenceindex = headcontentlist[(headcontentlist.length - crosscount)].props.index
-            referenceindex -= referenceitemshift - crosscount
-
-        }
-
-        if (referenceindex > (listsize -1)) {
-            referenceindex = listsize -1
-        }
-
-        if (referenceindex < 0) {
-            referenceindex = 0
-        }
+        let [referenceindex, referenceitemshift] = getReferenceindex({
+            itemshiftcount,
+            crosscount,
+            listsize,
+            headcontentlist,
+            tailcontentlist,
+            scrollforward,
+        })
 
         console.log('referenceindex',referenceindex)
 
-        // ----------------------------------[ 8. allocaate cradle content ]--------------------------
+        // ----------------------------------[ 7. allocaate cradle content ]--------------------------
 
         // headModelContentRef.current = localContentList
         let [headcontent, tailcontent] = allocateContentList(
@@ -933,7 +886,7 @@ const Cradle = ({
         headViewContentRef.current = headModelContentRef.current = headcontent
         tailViewContentRef.current = tailModelContentRef.current = tailcontent
 
-        // -------------------------------[ 9. set css changes ]-------------------------
+        // -------------------------------[ 8. set css changes ]-------------------------
 
         // place the spine in the scrollblock
         let spineposref = getSpinePosRef(
@@ -1012,19 +965,28 @@ const Cradle = ({
         //     indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset)
 
         let childlist = getUIContentList({
-            indexoffset, 
-            headindexcount:0, 
-            tailindexcount:contentCount, 
-            orientation, 
-            cellHeight, 
-            cellWidth, 
+            // indexoffset, 
+            // headindexcount:0, 
+            // tailindexcount:contentCount, 
+            // orientation, 
+            // cellHeight, 
+            // cellWidth, 
+            // localContentList,
+            // observer:itemObserverRef.current,
+            // crosscount,
+            // callbacks:callbacksRef.current,
+            // getItem,
+            // listsize,
+            // placeholder,
             localContentList,
-            observer:itemObserverRef.current,
+            headindexcount:0,
+            tailindexcount:contentCount,
+            indexoffset,
+            cradleProps:cradlePropsRef.current,
+            observer: itemObserverRef.current,
             crosscount,
             callbacks:callbacksRef.current,
-            getItem,
             listsize,
-            placeholder,
         })
 
         let [headcontentlist, tailcontentlist] = allocateContentList(
