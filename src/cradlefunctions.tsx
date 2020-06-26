@@ -519,7 +519,145 @@ let entrycompare = (a,b) => {
     return retval
 }
 
+export const calcHeadAndTailChanges = (
+    {
+        itemshiftcount,
+        crosscount,
+        headcontent,
+        tailcontent,
+        scrollforward,
+        cradleProps,
+        indexoffset,
+        cradlerowcount,
+        listsize,
+    }) => {
 
+        itemshiftcount = Math.abs(itemshiftcount) 
+        let rowshiftcount = Math.ceil(itemshiftcount/crosscount) //+ boundaryrowcount
+
+        // if (boundary > 0) console.log('BOUNDARY, boundaryrowcount, rowshiftcount',
+        //     boundary, boundaryrowcount, rowshiftcount)
+
+        let headrowcount, tailrowcount
+        headrowcount = Math.ceil(headcontent.length/crosscount)
+        tailrowcount = Math.ceil(tailcontent.length/crosscount)
+
+        let pendingcontentoffset // lookahead to new indexoffset
+
+        let headchangecount, tailchangecount // the output instructions for getUIContentList
+
+        // anticipaate add to one end, clip from the other        
+        let additemcount = 0
+        let cliprowcount = 0, clipitemcount = 0
+
+        if (scrollforward) { // clip from head; add to tail; scroll forward head is direction of scroll
+
+            // adjust clipitemcount
+            if ((headrowcount + rowshiftcount) > (cradleProps.runwaycount)) {
+
+                let rowdiff = (headrowcount + rowshiftcount) - (cradleProps.runwaycount)
+                cliprowcount = rowdiff
+                clipitemcount = (cliprowcount * crosscount)
+
+            }
+
+            additemcount = clipitemcount // maintain constant cradle count
+
+            pendingcontentoffset = indexoffset + clipitemcount // after clip
+
+            let proposedtailindex = pendingcontentoffset + (cradlerowcount * crosscount) - 1 // modelcontentlist.length - 1
+
+            // adkjust changes for list boundaries
+            if ((proposedtailindex) > (listsize -1) ) {
+
+                let diffitemcount = (proposedtailindex - (listsize -1)) // items outside range
+                additemcount -= diffitemcount // adjust the addcontent accordingly
+                
+                let diffrows = Math.floor(diffitemcount/crosscount) // number of full rows to leave in place
+                let diffrowitems = (diffrows * crosscount)  // derived number of items to leave in place
+
+                clipitemcount -= diffrowitems // apply adjustment to netshift
+
+                if (additemcount <=0) { // nothing to do
+
+                    additemcount = 0
+
+                }
+                if (clipitemcount <=0 ) {
+
+                    clipitemcount = 0
+                    
+                }
+            }
+
+            headchangecount = -clipitemcount
+            tailchangecount = additemcount
+
+        } else { // scroll backward, in direction of tail; clip from tail, add to head
+
+            let intersectionindexes = []
+
+            // headcount will be less than minimum (runwaycount), so a shift can be accomplished[]
+            if ((headrowcount - rowshiftcount) < (cradleProps.runwaycount)) {
+                // calculate clip for tail
+                let rowshortfall = (cradleProps.runwaycount) - (headrowcount - rowshiftcount)
+
+                cliprowcount = rowshortfall
+                let tailrowitemcount = (tailcontent.length % crosscount)
+
+                if (tailrowitemcount == 0) tailrowitemcount = crosscount
+
+                clipitemcount = tailrowitemcount
+                if (tailrowcount > 1) {
+
+                    if (cliprowcount > tailrowcount) {
+                        cliprowcount = tailrowcount
+                    }
+
+                    if (cliprowcount > 1) {
+                        clipitemcount += ((cliprowcount -1) * crosscount)
+                    }
+
+                }
+
+                // compenstate with additemcount
+                additemcount = (cliprowcount * crosscount)
+
+            }
+
+            let proposedindexoffset = indexoffset - additemcount
+
+            if (proposedindexoffset < 0) {
+
+                let diffitemcount = -proposedindexoffset
+                let diffrows = Math.ceil(diffitemcount/crosscount) // number of full rows to leave in place
+                let diffrowitems = (diffrows * crosscount)
+
+                additemcount -= diffitemcount
+                clipitemcount -= diffrowitems
+
+                if (additemcount <= 0) {
+
+                    additemcount = 0
+                    
+                }
+
+                if (clipitemcount <= 0) {
+
+                    clipitemcount = 0
+
+                }
+            }
+
+            headchangecount = additemcount
+            tailchangecount = -clipitemcount
+
+            // console.log('headchangecount, tailchangecount', headchangecount, tailchangecount)
+
+        }
+    return [headchangecount,tailchangecount]
+
+}
 // update content
 // adds itemshells at end of contentlist according to headindexcount and tailindescount,
 // or if indexcount values are <0 removes them.
@@ -648,14 +786,23 @@ export const getSpinePosRef = (
         viewportElement,
         scrollforward,
         itemelements, 
-        orientation, 
+        cradleProps,
         spineElement,
         referenceindex,
         crosscount,
-        gap,
-        padding,
         referenceshift,
     }) => {
+
+    let orientation = cradleProps.orientation, 
+        padding = cradleProps.padding,
+        gap = cradleProps.gap
+
+    let cellLength
+    if (orientation == 'vertical') {
+        cellLength = cradleProps.cellHeight + gap
+    } else {
+        cellLength = cradleProps.cellWidth + gap
+    }
 
     let spineposbase,spineposref
     var localrefindex = referenceindex
@@ -692,11 +839,13 @@ export const getSpinePosRef = (
     } else {
         referenceposshift = 0
         for (let refobj of referenceobjects) {
+
             if (orientation == 'vertical') {
                 referenceposshift += refobj.current.offsetHeight + gap
             } else {
                 referenceposshift += refobj.current.offsetWidth + gap
             }
+
         }
     }
 
@@ -708,16 +857,6 @@ export const getSpinePosRef = (
 
     if (headcontent.length == 0) {
         spineposref = padding
-        // let scrollLength
-        // if (orientation == 'vertical') {
-        //     scrollLength = viewportElement.scrollTop
-        // } else {
-        //     scrollLength = viewportElement.scrollLength
-        // }
-        // console.log('top spineposref,scrollLength,spineposref,padding',scrollLength,spineposref,padding)
-        // if (spineposref > (scrollLength + padding)) {
-        //     spineposref = scrollLength + padding
-        // }
     }
 
     return spineposref

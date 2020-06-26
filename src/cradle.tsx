@@ -39,6 +39,7 @@ const ITEM_OBSERVER_THRESHOLD = .9
 import { 
     setCradleGridStyles, 
     getUIContentList, 
+    calcHeadAndTailChanges,
     calcVisibleItems, 
     getReferenceIndexData,
     getContentListRequirements,
@@ -789,7 +790,6 @@ const Cradle = ({
         // --------------------------------------[ 3. Calculate overshoot ]-------------------------------------
 
         // calculate overshootlength
-        let outlierindex, outlierelement, outlierwingoffset, outlierboundarypos 
 
         let spineviewportoffset, headspineoffset, tailspineoffset
         let boundary // = 0
@@ -826,18 +826,9 @@ const Cradle = ({
 
         let cellLength = cradleProps.orientation == 'vertical'?cradleProps.cellHeight:cradleProps.cellWitdh
         let boundaryrowcount = (boundary == 0)?0:Math.ceil(boundary/(cellLength + cradleProps.gap))
+
         let boundaryitemcount = boundaryrowcount * crosscount
         if (scrollforward && (boundaryitemcount != 0)) boundaryitemcount = -boundaryitemcount
-
-        // console.log('outlierindex, outlierwingoffset, spineviewportoffset, headspineoffset, tailspineoffset, outlierboundarypos', 
-        //     outlierindex, outlierwingoffset, spineviewportoffset, headspineoffset, tailspineoffset, outlierboundarypos)
-
-        // console.log('boundary, spineviewportoffset, headspineoffset',
-        //     boundary, spineviewportoffset, headspineoffset)
-
-        // console.log('adjustcradleentries intersections.length',intersections.length)
-
-        // console.log('cradleset boundaryitemcount, boundary, scrollforward', boundaryitemcount, boundary, scrollforward)
 
         // --------------------------[ 4. calculate itemshiftcount ]----------------------------
         // shift item count is the number of items the virtual cradle shifts, according to observer notices
@@ -863,132 +854,20 @@ const Cradle = ({
         }
 
         // ------------------[ 5. calculate head and tail consolidated cradle content changes ]-----------------
-        // generate modified content instructions
 
-        // initialize data required for calculations
-        itemshiftcount = Math.abs(itemshiftcount) 
-        let rowshiftcount = Math.ceil(itemshiftcount/crosscount) //+ boundaryrowcount
+        let [headchangecount,tailchangecount] = calcHeadAndTailChanges({
 
-        // if (boundary > 0) console.log('BOUNDARY, boundaryrowcount, rowshiftcount',
-        //     boundary, boundaryrowcount, rowshiftcount)
+            itemshiftcount,
+            crosscount,
+            headcontent:headModelContentRef.current,
+            tailcontent:tailModelContentRef.current,
+            scrollforward,
+            cradleProps,
+            indexoffset,
+            cradlerowcount:cradlerowcountRef.current,
+            listsize,
 
-        let headrowcount, tailrowcount
-        headrowcount = Math.ceil(headModelContentRef.current.length/crosscount)
-        tailrowcount = Math.ceil(tailModelContentRef.current.length/crosscount)
-
-        let pendingcontentoffset // lookahead to new indexoffset
-
-        let headchangecount, tailchangecount // the output instructions for getUIContentList
-
-        // anticipaate add to one end, clip from the other        
-        let additemcount = 0
-        let cliprowcount = 0, clipitemcount = 0
-
-        if (scrollforward) { // clip from head; add to tail; scroll forward head is direction of scroll
-
-            // adjust clipitemcount
-            if ((headrowcount + rowshiftcount) > (cradleProps.runwaycount)) {
-
-                let rowdiff = (headrowcount + rowshiftcount) - (cradleProps.runwaycount)
-                cliprowcount = rowdiff
-                clipitemcount = (cliprowcount * crosscount)
-
-            }
-
-            additemcount = clipitemcount // maintain constant cradle count
-
-            pendingcontentoffset = indexoffset + clipitemcount // after clip
-
-            let proposedtailindex = pendingcontentoffset + (cradlerowcountRef.current * crosscount) - 1 // modelcontentlist.length - 1
-
-            // adkjust changes for list boundaries
-            if ((proposedtailindex) > (listsize -1) ) {
-
-                let diffitemcount = (proposedtailindex - (listsize -1)) // items outside range
-                additemcount -= diffitemcount // adjust the addcontent accordingly
-                
-                let diffrows = Math.floor(diffitemcount/crosscount) // number of full rows to leave in place
-                let diffrowitems = (diffrows * crosscount)  // derived number of items to leave in place
-
-                clipitemcount -= diffrowitems // apply adjustment to netshift
-
-                if (additemcount <=0) { // nothing to do
-
-                    additemcount = 0
-
-                }
-                if (clipitemcount <=0 ) {
-
-                    clipitemcount = 0
-                    
-                }
-            }
-
-            headchangecount = -clipitemcount
-            tailchangecount = additemcount
-
-        } else { // scroll backward, in direction of tail; clip from tail, add to head
-
-            let intersectionindexes = []
-
-            // headcount will be less than minimum (runwaycount), so a shift can be accomplished[]
-            if ((headrowcount - rowshiftcount) < (cradleProps.runwaycount)) {
-                // calculate clip for tail
-                let rowshortfall = (cradleProps.runwaycount) - (headrowcount - rowshiftcount)
-
-                cliprowcount = rowshortfall
-                let tailrowitemcount = (tailModelContentRef.current.length % crosscount)
-
-                if (tailrowitemcount == 0) tailrowitemcount = crosscount
-
-                clipitemcount = tailrowitemcount
-                if (tailrowcount > 1) {
-
-                    if (cliprowcount > tailrowcount) {
-                        cliprowcount = tailrowcount
-                    }
-
-                    if (cliprowcount > 1) {
-                        clipitemcount += ((cliprowcount -1) * crosscount)
-                    }
-
-                }
-
-                // compenstate with additemcount
-                additemcount = (cliprowcount * crosscount)
-
-            }
-
-            let proposedindexoffset = indexoffset - additemcount
-
-            if (proposedindexoffset < 0) {
-
-                let diffitemcount = -proposedindexoffset
-                let diffrows = Math.ceil(diffitemcount/crosscount) // number of full rows to leave in place
-                let diffrowitems = (diffrows * crosscount)
-
-                additemcount -= diffitemcount
-                clipitemcount -= diffrowitems
-
-                if (additemcount <= 0) {
-
-                    additemcount = 0
-                    
-                }
-
-                if (clipitemcount <= 0) {
-
-                    clipitemcount = 0
-
-                }
-            }
-
-            headchangecount = additemcount
-            tailchangecount = -clipitemcount
-
-            // console.log('headchangecount, tailchangecount', headchangecount, tailchangecount)
-
-        }
+        })
 
         // ----------------------------------[ 6. configure cradle content ]--------------------------
 
@@ -1029,20 +908,21 @@ const Cradle = ({
 
         let referenceitemshift = referencerowshift * crosscount
 
+        let previousreferenceindex = tailcontentlist[0]
         let referenceindex
 
         if (scrollforward) {
 
             // could be undefined with overshoot
             referenceindex = tailcontentlist[referenceitemshift]?.props.index
-            console.log('referenceindex from tailcontentlist', referenceindex)
+            // console.log('referenceindex from tailcontentlist', referenceindex)
             if (referenceindex === undefined) {
                 // let lastindex = tailcontentlist[tailcontentlist.length - 1].props.index
                 let overshoot = referenceitemshift - tailcontentlist.length
                 referenceindex = tailcontentlist[tailcontentlist.length -1].props.index
                 referenceindex += overshoot
-                console.log('referenceindex from adjustment;referenceindex, overshoot, referenceitemshift, tailcontentlist.length, itemshiftcount,referencerowhift',
-                    referenceindex, overshoot, referenceitemshift, tailcontentlist.length, itemshiftcount, referencerowshift)
+                // console.log('referenceindex from adjustment;referenceindex, overshoot, referenceitemshift, tailcontentlist.length, itemshiftcount,referencerowhift',
+                //     referenceindex, overshoot, referenceitemshift, tailcontentlist.length, itemshiftcount, referencerowshift)
             }
 
 
@@ -1090,12 +970,10 @@ const Cradle = ({
                 viewportElement:viewportDataRef.current.elementref.current,
                 scrollforward,
                 itemelements:itemElementsRef.current,
-                orientation:cradleProps.orientation,
+                cradleProps,
                 spineElement:spineCradleElementRef.current,
                 referenceindex,
                 crosscount,
-                gap:cradleProps.gap,
-                padding:cradleProps.padding,
                 referenceshift:referenceitemshift,
             }
         )
