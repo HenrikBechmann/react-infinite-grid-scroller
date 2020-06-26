@@ -40,6 +40,7 @@ import {
     setCradleGridStyles, 
     getUIContentList, 
     calcHeadAndTailChanges,
+    calcBoundaryItemCount,
     calcVisibleItems, 
     getReferenceIndexData,
     getContentListRequirements,
@@ -787,48 +788,19 @@ const Cradle = ({
 
         // console.log('filtered indexes:',filteredindexes,'\nrows:', Math.ceil(filteredindexes.length/crosscount))
 
-        // --------------------------------------[ 3. Calculate overshoot ]-------------------------------------
+        // --------------------------------[ 3. Calculate boundary item overshoot ]-------------------------------
 
-        // calculate overshootlength
+        let boundaryitemcount = calcBoundaryItemCount({
 
-        let spineviewportoffset, headspineoffset, tailspineoffset
-        let boundary // = 0
-        if (cradleProps.orientation == 'vertical') {
-            spineviewportoffset = spineElement.offsetTop - viewportElement.scrollTop
-            headspineoffset = headElement.offsetTop
-            tailspineoffset = tailElement.offsetTop
+            cradleProps,
+            spineElement,
+            viewportElement,
+            headElement,
+            tailElement,
+            scrollforward,
+            crosscount,
 
-            if (scrollforward) {
-
-                boundary = viewportElement.offsetHeight - (spineviewportoffset + tailspineoffset + tailElement.offsetHeight)
-
-            } else {
-
-                boundary = spineviewportoffset + headspineoffset
-
-            }
-        } else { // horizontal
-            spineviewportoffset = spineElement.offsetLeft - viewportElement.scrollLeft
-            headspineoffset = headElement.offsetLeft
-            tailspineoffset = tailElement.offsetLeft
-
-            if (scrollforward) {
-
-                boundary = viewportElement.offsetWidth - (spineviewportoffset + tailspineoffset + tailElement.offsetWidth)
-            } else {
-
-                boundary = spineviewportoffset + headspineoffset
-
-            }
-        }
-
-        if (boundary < 0) boundary = 0
-
-        let cellLength = cradleProps.orientation == 'vertical'?cradleProps.cellHeight:cradleProps.cellWitdh
-        let boundaryrowcount = (boundary == 0)?0:Math.ceil(boundary/(cellLength + cradleProps.gap))
-
-        let boundaryitemcount = boundaryrowcount * crosscount
-        if (scrollforward && (boundaryitemcount != 0)) boundaryitemcount = -boundaryitemcount
+        })
 
         // --------------------------[ 4. calculate itemshiftcount ]----------------------------
         // shift item count is the number of items the virtual cradle shifts, according to observer notices
@@ -869,7 +841,7 @@ const Cradle = ({
 
         })
 
-        // ----------------------------------[ 6. configure cradle content ]--------------------------
+        // ----------------------------------[ 6. reconfigure cradle content ]--------------------------
 
         // collect modified content
         let localContentList 
