@@ -903,15 +903,15 @@ export const allocateContentList = (
 
 export const getSpinePosRef = (
     {
-        headcontent,
-        viewportElement,
-        scrollforward,
-        itemelements, 
         cradleProps,
-        spineElement,
-        referenceindex,
         crosscount,
+        scrollforward,
+        headcontent,
+        itemelements, 
+        referenceindex,
         referenceshift,
+        viewportElement,
+        spineElement,
     }) => {
 
     let orientation = cradleProps.orientation, 
@@ -926,7 +926,7 @@ export const getSpinePosRef = (
     }
 
     let spineposbase,spineposref
-    var localrefindex = referenceindex
+    var localrefindex = referenceindex // changed by function
     if (!scrollforward) {
         // localrefindex += crosscount
         localrefindex += referenceshift

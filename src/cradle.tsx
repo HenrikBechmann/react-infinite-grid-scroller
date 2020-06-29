@@ -880,7 +880,7 @@ const Cradle = ({
             }
         )
 
-        console.log('headcontent, tailcontent',headcontent, tailcontent)
+        console.log('headrows, headcontent, tailcontent', headcontent.length/crosscount, headcontent, tailcontent)
 
         modelContentRef.current = localContentList
         headViewContentRef.current = headModelContentRef.current = headcontent
@@ -891,15 +891,15 @@ const Cradle = ({
         // place the spine in the scrollblock
         let spineposref = getSpinePosRef(
             {
-                headcontent,
-                viewportElement:viewportDataRef.current.elementref.current,
-                scrollforward,
-                itemelements:itemElementsRef.current,
                 cradleProps,
-                spineElement:spineCradleElementRef.current,
-                referenceindex,
                 crosscount,
+                scrollforward,
+                headcontent,
+                itemelements:itemElementsRef.current,
+                referenceindex,
                 referenceshift:referenceitemshift,
+                viewportElement:viewportDataRef.current.elementref.current,
+                spineElement:spineCradleElementRef.current,
             }
         )
 
