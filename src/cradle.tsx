@@ -855,6 +855,8 @@ const Cradle = ({
 
         }
 
+        console.log('cradle rows:', Math.ceil(localContentList.length/crosscount),'\nreferencerows:',cradlerowcountRef.current)
+
         // -------------------[ 6. calculate new referenceindex ]---------------------
 
         let [referenceindex, referenceitemshift] = getReferenceindex({
@@ -903,7 +905,7 @@ const Cradle = ({
             }
         )
 
-        // console.log('spineposref',spineposref)
+        console.log('spineposref',spineposref)
 
         // let scrolloffset = 0
         // let scrollLength

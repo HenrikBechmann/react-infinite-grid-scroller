@@ -907,6 +907,7 @@ export const getSpinePosRef = (
         crosscount,
         scrollforward,
         headcontent,
+        tailcontent,
         itemelements, 
         referenceindex,
         referenceshift,
