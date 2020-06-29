@@ -897,6 +897,7 @@ const Cradle = ({
                 crosscount,
                 scrollforward,
                 headcontent,
+                tailcontent,
                 itemelements:itemElementsRef.current,
                 referenceindex,
                 referenceshift:referenceitemshift,

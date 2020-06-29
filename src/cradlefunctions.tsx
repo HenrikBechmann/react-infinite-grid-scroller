@@ -915,6 +915,8 @@ export const getSpinePosRef = (
         spineElement,
     }) => {
 
+    //------------[ calculate cell length by orientation ]-------------
+
     let orientation = cradleProps.orientation, 
         padding = cradleProps.padding,
         gap = cradleProps.gap
@@ -926,27 +928,40 @@ export const getSpinePosRef = (
         cellLength = cradleProps.cellWidth + gap
     }
 
-    let spineposbase,spineposref
-    var localrefindex = referenceindex // changed by function
+    // --------[ modify referenceindex for local use]-----------
+
+    var localrefindex = referenceindex // preserve immutability
     if (!scrollforward) {
-        // localrefindex += crosscount
+
         localrefindex += referenceshift
+
     }
+
+    // ----------[ collect reference objects to relocate spine [-----------
+
     let referenceobjects = []
     if (scrollforward) {
         referenceobjects.push(itemelements.get(localrefindex))
     } else {
+
         for (let index = localrefindex; index > referenceindex; index -= crosscount ) {
             referenceobjects.push(itemelements.get(index))
         }
-    }
-    let referenceposshift
 
+    }
+
+    // ----------[ calculate spine base position ]----------------
+
+    let spineposbase
     if (orientation == 'vertical') {
         spineposbase = spineElement.offsetTop
     } else {
         spineposbase = spineElement.offsetLeft
     }
+
+    // -------------[ calculate spine position shift ]------------
+
+    let referenceposshift
     if (scrollforward) {
         let referenceelement = referenceobjects[0]?.current
         if (referenceelement) {
@@ -958,7 +973,7 @@ export const getSpinePosRef = (
             }
 
         }
-    } else {
+    } else { // scroll backward
         referenceposshift = 0
         for (let refobj of referenceobjects) {
 
@@ -971,6 +986,9 @@ export const getSpinePosRef = (
         }
     }
 
+    // ------------------[ calculate spine position ]---------------
+
+    let spineposref
     if (scrollforward) {
         spineposref = spineposbase + referenceposshift
     } else {
@@ -982,6 +1000,7 @@ export const getSpinePosRef = (
     }
 
     return spineposref
+    
 }
 
 const emitItem = ({
