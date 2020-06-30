@@ -855,7 +855,7 @@ const Cradle = ({
 
         }
 
-        console.log('cradle rows:', Math.ceil(localContentList.length/crosscount),'\nreferencerows:',cradlerowcountRef.current)
+        // console.log('cradle rows:', Math.ceil(localContentList.length/crosscount),'\nreferencerows:',cradlerowcountRef.current)
 
         // -------------------[ 6. calculate new referenceindex ]---------------------
 
@@ -863,12 +863,12 @@ const Cradle = ({
             itemshiftcount,
             crosscount,
             listsize,
-            headcontentlist,
+            // headcontentlist,
             tailcontentlist,
             scrollforward,
         })
 
-        console.log('referenceindex',referenceindex)
+        // console.log('referenceindex',referenceindex)
 
         // ----------------------------------[ 7. allocaate cradle content ]--------------------------
 
@@ -882,7 +882,7 @@ const Cradle = ({
             }
         )
 
-        console.log('headrows, headcontent, tailcontent', headcontent.length/crosscount, headcontent, tailcontent)
+        // console.log('headrows, tailrows, headcontent, tailcontent', headcontent.length/crosscount, tailcontent.length/crosscount, headcontent, tailcontent)
 
         modelContentRef.current = localContentList
         headViewContentRef.current = headModelContentRef.current = headcontent
@@ -906,7 +906,7 @@ const Cradle = ({
             }
         )
 
-        console.log('spineposref',spineposref)
+        // console.log('spineposref',spineposref)
 
         // let scrolloffset = 0
         // let scrollLength

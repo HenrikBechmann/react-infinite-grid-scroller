@@ -280,8 +280,8 @@ export const getContentListRequirements = ({
         referenceoffset -= itemdiff
         spineoffset = viewportlength - (viewportrows * cellLength) + padding
         // scrollblockoffset += rowdiff * (cellLength + gap)
-        console.log('requirements fit: rowdiff, itemdiff, referenceoffset, spineoffset',
-            rowdiff, itemdiff, referenceoffset, spineoffset)
+        // console.log('requirements fit: rowdiff, itemdiff, referenceoffset, spineoffset',
+        //     rowdiff, itemdiff, referenceoffset, spineoffset)
     }
 
     return {indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset} // summarize requirements message
@@ -531,40 +531,45 @@ export const calcItemshiftcount = ({
 }) => {
 
     let spineviewportoffset, headspineoffset, tailspineoffset
-    let boundary // = 0
+    let cradleboundary
     if (cradleProps.orientation == 'vertical') {
         spineviewportoffset = spineElement.offsetTop - viewportElement.scrollTop
         headspineoffset = headElement.offsetTop
-        tailspineoffset = tailElement.offsetTop
+        tailspineoffset = tailElement.offsetTop // always 0
 
         if (scrollforward) {
 
-            boundary = viewportElement.offsetHeight - (spineviewportoffset + tailspineoffset + tailElement.offsetHeight)
+            cradleboundary = viewportElement.offsetHeight - (spineviewportoffset + tailspineoffset + tailElement.offsetHeight)
 
         } else {
 
-            boundary = spineviewportoffset + headspineoffset
+            cradleboundary = spineviewportoffset + headspineoffset
 
         }
+
+        // console.log('spineviewportoffset,headspineoffset,tailspineoffset,viewportElement.offsetHeight,tailElement.offsetHeight,cradleboundary',
+        //     spineviewportoffset,headspineoffset,tailspineoffset,viewportElement.offsetHeight,tailElement.offsetHeight,cradleboundary)
+
     } else { // horizontal
         spineviewportoffset = spineElement.offsetLeft - viewportElement.scrollLeft
         headspineoffset = headElement.offsetLeft
-        tailspineoffset = tailElement.offsetLeft
+        tailspineoffset = tailElement.offsetLeft // always 0
 
         if (scrollforward) {
 
-            boundary = viewportElement.offsetWidth - (spineviewportoffset + tailspineoffset + tailElement.offsetWidth)
+            cradleboundary = viewportElement.offsetWidth - (spineviewportoffset + tailspineoffset + tailElement.offsetWidth)
+
         } else {
 
-            boundary = spineviewportoffset + headspineoffset
+            cradleboundary = spineviewportoffset + headspineoffset
 
         }
     }
 
-    if (boundary < 0) boundary = 0
+    if (cradleboundary < 0) cradleboundary = 0 // not relevant
 
     let cellLength = cradleProps.orientation == 'vertical'?cradleProps.cellHeight:cradleProps.cellWitdh
-    let boundaryrowcount = (boundary == 0)?0:Math.ceil(boundary/(cellLength + cradleProps.gap))
+    let boundaryrowcount = (cradleboundary == 0)?0:Math.ceil(cradleboundary/(cellLength + cradleProps.gap))
 
     let boundaryitemcount = boundaryrowcount * crosscount
     if (scrollforward && (boundaryitemcount != 0)) boundaryitemcount = -boundaryitemcount
@@ -572,8 +577,6 @@ export const calcItemshiftcount = ({
     // ----------------------[  calculate itemshiftcount includng overshoot ]------------------------
     // shift item count is the number of items the virtual cradle shifts, according to observer notices
 
-    // -- isolate forward and backward lists (happens with rapid scrolling changes)
-    //  then set scrollforward
     let forwardcount = 0, backwardcount = 0
     if (scrollforward) {
         backwardcount = intersections.length
@@ -583,10 +586,10 @@ export const calcItemshiftcount = ({
 
     let itemshiftcount = forwardcount - backwardcount + boundaryitemcount
 
-    // console.log('forwardcount, backwardcount, scrollforward, itemshiftcount',
-    //     forwardcount, backwardcount, scrollforward, itemshiftcount)
+    // console.log('forwardcount, backwardcount, scrollforward, boundaryitemcount, itemshiftcount',
+    //     forwardcount, backwardcount, scrollforward, boundaryitemcount, itemshiftcount)
 
-    return itemshiftcount
+    return itemshiftcount // positive = roll toward top/left; negative = roll toward bottom/right
 
 }
 
@@ -826,40 +829,48 @@ export const getReferenceindex = ({
     itemshiftcount,
     crosscount,
     listsize,
-    headcontentlist,
+    // headcontentlist,
     tailcontentlist,
     scrollforward,
 }) => {
 
+    itemshiftcount = Math.abs(itemshiftcount)
+    // console.log('itemshiftcount', itemshiftcount)
+
     let referenceindex
 
-    let referencerowshift = Math.abs(Math.ceil(itemshiftcount/crosscount))
+    let referencerowshift = Math.ceil(itemshiftcount/crosscount)
 
     let referenceitemshift = referencerowshift * crosscount
 
-    let previousreferenceindex = tailcontentlist[0]
+    let previousreferenceindex = tailcontentlist[0].props.index
 
     if (scrollforward) {
 
+        referenceindex = previousreferenceindex + referenceitemshift
         // could be undefined with overshoot
-        referenceindex = tailcontentlist[referenceitemshift]?.props.index
-        // console.log('referenceindex from tailcontentlist', referenceindex)
-        if (referenceindex === undefined) {
-            // let lastindex = tailcontentlist[tailcontentlist.length - 1].props.index
-            let overshoot = referenceitemshift - tailcontentlist.length
-            referenceindex = tailcontentlist[tailcontentlist.length -1].props.index
-            referenceindex += overshoot
-            // console.log('referenceindex from adjustment;referenceindex, overshoot, referenceitemshift, tailcontentlist.length, itemshiftcount,referencerowhift',
-            //     referenceindex, overshoot, referenceitemshift, tailcontentlist.length, itemshiftcount, referencerowshift)
-        }
+        // referenceindex = tailcontentlist[referenceitemshift]?.props.index
+        // // console.log('referenceindex from tailcontentlist', referenceindex)
+        // if (referenceindex === undefined) {
+        //     // let lastindex = tailcontentlist[tailcontentlist.length - 1].props.index
+        //     let overshoot = referenceitemshift - tailcontentlist.length
+        //     referenceindex = tailcontentlist[tailcontentlist.length -1].props.index
+        //     referenceindex += overshoot
+        //     // console.log('referenceindex from adjustment;referenceindex, overshoot, referenceitemshift, tailcontentlist.length, itemshiftcount,referencerowhift',
+        //     //     referenceindex, overshoot, referenceitemshift, tailcontentlist.length, itemshiftcount, referencerowshift)
+        // }
 
 
     } else {
 
-        referenceindex = headcontentlist[(headcontentlist.length - crosscount)].props.index
-        referenceindex -= referenceitemshift - crosscount
+        referenceindex = previousreferenceindex - referenceitemshift
+        // referenceindex = headcontentlist[(headcontentlist.length - crosscount)].props.index
+        // referenceindex -= referenceitemshift - crosscount
+        // referenceindex += referenceitemshift
 
     }
+
+    // console.log('referenceindex, referenceitemshift',referenceindex, referenceitemshift)
 
     if (referenceindex > (listsize -1)) {
         referenceindex = listsize -1
@@ -868,6 +879,7 @@ export const getReferenceindex = ({
     if (referenceindex < 0) {
         referenceindex = 0
     }
+
     return [referenceindex, referenceitemshift]
 }
 
