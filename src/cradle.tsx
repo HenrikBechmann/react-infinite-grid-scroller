@@ -859,7 +859,7 @@ const Cradle = ({
 
         // -------------------[ 6. calculate new referenceindex ]---------------------
 
-        let [referenceindex, referenceitemshift] = getReferenceindex({
+        let [referenceindex, referenceitemshift, previousreferenceindex] = getReferenceindex({
             itemshiftcount,
             crosscount,
             listsize,
@@ -900,6 +900,7 @@ const Cradle = ({
                 tailcontent,
                 itemelements:itemElementsRef.current,
                 referenceindex,
+                previousreferenceindex,
                 referenceshift:referenceitemshift,
                 viewportElement:viewportDataRef.current.elementref.current,
                 spineElement:spineCradleElementRef.current,

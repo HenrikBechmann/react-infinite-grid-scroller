@@ -848,29 +848,12 @@ export const getReferenceindex = ({
     if (scrollforward) {
 
         referenceindex = previousreferenceindex + referenceitemshift
-        // could be undefined with overshoot
-        // referenceindex = tailcontentlist[referenceitemshift]?.props.index
-        // // console.log('referenceindex from tailcontentlist', referenceindex)
-        // if (referenceindex === undefined) {
-        //     // let lastindex = tailcontentlist[tailcontentlist.length - 1].props.index
-        //     let overshoot = referenceitemshift - tailcontentlist.length
-        //     referenceindex = tailcontentlist[tailcontentlist.length -1].props.index
-        //     referenceindex += overshoot
-        //     // console.log('referenceindex from adjustment;referenceindex, overshoot, referenceitemshift, tailcontentlist.length, itemshiftcount,referencerowhift',
-        //     //     referenceindex, overshoot, referenceitemshift, tailcontentlist.length, itemshiftcount, referencerowshift)
-        // }
-
 
     } else {
 
         referenceindex = previousreferenceindex - referenceitemshift
-        // referenceindex = headcontentlist[(headcontentlist.length - crosscount)].props.index
-        // referenceindex -= referenceitemshift - crosscount
-        // referenceindex += referenceitemshift
 
     }
-
-    // console.log('referenceindex, referenceitemshift',referenceindex, referenceitemshift)
 
     if (referenceindex > (listsize -1)) {
         referenceindex = listsize -1
@@ -880,7 +863,7 @@ export const getReferenceindex = ({
         referenceindex = 0
     }
 
-    return [referenceindex, referenceitemshift]
+    return [referenceindex, referenceitemshift, previousreferenceindex]
 }
 
 // butterfly model. Leading (head) all or partially hidden; tail, visible plus following hidden
@@ -922,96 +905,117 @@ export const getSpinePosRef = (
         tailcontent,
         itemelements, 
         referenceindex,
+        previousreferenceindex,
         referenceshift,
         viewportElement,
         spineElement,
     }) => {
 
-    //------------[ calculate cell length by orientation ]-------------
+    // ----------[ calculate spine base position ]----------------
 
-    let orientation = cradleProps.orientation, 
+    let orientation = cradleProps.orientation,
         padding = cradleProps.padding,
         gap = cradleProps.gap
 
-    let cellLength
+    let referenceElement = itemelements.has(referenceindex)?itemelements.get(referenceindex):undefined
+
+    let spineposbase, cellLength
     if (orientation == 'vertical') {
-        cellLength = cradleProps.cellHeight + gap
-    } else {
-        cellLength = cradleProps.cellWidth + gap
-    }
 
-    // --------[ modify referenceindex for local use]-----------
-
-    var localrefindex = referenceindex 
-    if (!scrollforward) {
-
-        localrefindex += referenceshift
-
-    }
-
-    // ----------[ collect reference objects to relocate spine [-----------
-
-    let referenceobjects = []
-    if (scrollforward) {
-        referenceobjects.push(itemelements.get(localrefindex))
-    } else {
-
-        for (let index = localrefindex; index > referenceindex; index -= crosscount ) {
-            referenceobjects.push(itemelements.get(index))
-        }
-
-    }
-
-    // ----------[ calculate spine base position ]----------------
-
-    let spineposbase
-    if (orientation == 'vertical') {
         spineposbase = spineElement.offsetTop
+        cellLength = cradleProps.cellHeight + gap
+
     } else {
+
         spineposbase = spineElement.offsetLeft
+        cellLength = cradleProps.cellWidth + gap
+
     }
 
-    // -------------[ calculate spine position shift ]------------
-
-    let referenceposshift
-    if (scrollforward) {
-        let referenceelement = referenceobjects[0]?.current
-        if (referenceelement) {
-
-            if (orientation == 'vertical') {
-                referenceposshift = referenceelement.offsetTop
-            } else {
-                referenceposshift = referenceelement.offsetLeft
-            }
-
-        }
-    } else { // scroll backward
-        referenceposshift = 0
-        for (let refobj of referenceobjects) {
-
-            if (orientation == 'vertical') {
-                referenceposshift += refobj.current.offsetHeight + gap
-            } else {
-                referenceposshift += refobj.current.offsetWidth + gap
-            }
-
-        }
-    }
+    console.log('spineposbase',spineposbase)
 
     // ------------------[ calculate spine position ]---------------
 
+    let referenceposshift = cellLength
     let spineposref
-    if (scrollforward) {
-        spineposref = spineposbase + referenceposshift
-    } else {
-        spineposref = spineposbase - referenceposshift
-    }
-
     if (headcontent.length == 0) {
+
         spineposref = padding
+
+    } else { 
+
+        if (scrollforward) {
+
+            spineposref = spineposbase + referenceposshift
+
+        } else {
+
+            spineposref = spineposbase - referenceposshift
+
+        }
+
     }
 
     return spineposref
+
+    // //------------[ calculate cell length by orientation ]-------------
+
+    // let padding = cradleProps.padding,
+    //     gap = cradleProps.gap
+
+    // let cellLength
+    // if (orientation == 'vertical') {
+    //     cellLength = cradleProps.cellHeight + gap
+    // } else {
+    //     cellLength = cradleProps.cellWidth + gap
+    // }
+
+    // // var localrefindex = referenceindex 
+    // // if (!scrollforward) {
+
+    // //     localrefindex += referenceshift
+
+    // // }
+
+    // // ----------[ collect reference objects to relocate spine [-----------
+
+    // let referenceobjects = []
+    // if (scrollforward) {
+    //     referenceobjects.push(itemelements.get(referenceindex))
+    // } else {
+
+    //     for (let index = referenceindex; index > referenceindex; index -= crosscount ) {
+    //         referenceobjects.push(itemelements.get(index))
+    //     }
+
+    // }
+
+    // // -------------[ calculate spine position shift ]------------
+
+    // let referenceposshift
+    // if (scrollforward) {
+    //     let referenceelement = referenceobjects[0]?.current
+    //     if (referenceelement) {
+
+    //         if (orientation == 'vertical') {
+    //             referenceposshift = referenceelement.offsetTop
+    //         } else {
+    //             referenceposshift = referenceelement.offsetLeft
+    //         }
+
+    //     }
+    // } else { // scroll backward
+    //     referenceposshift = 0
+    //     for (let refobj of referenceobjects) {
+
+    //         if (orientation == 'vertical') {
+    //             referenceposshift += refobj.current.offsetHeight + gap
+    //         } else {
+    //             referenceposshift += refobj.current.offsetWidth + gap
+    //         }
+
+    //     }
+    // }
     
 }
 
