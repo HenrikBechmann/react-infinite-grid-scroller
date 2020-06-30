@@ -942,7 +942,7 @@ export const getSpinePosRef = (
 
     // --------[ modify referenceindex for local use]-----------
 
-    var localrefindex = referenceindex // preserve immutability
+    var localrefindex = referenceindex 
     if (!scrollforward) {
 
         localrefindex += referenceshift
