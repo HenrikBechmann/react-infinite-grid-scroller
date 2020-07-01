@@ -917,8 +917,6 @@ export const getSpinePosRef = (
         padding = cradleProps.padding,
         gap = cradleProps.gap
 
-    let referenceElement = itemelements.has(referenceindex)?itemelements.get(referenceindex):undefined
-
     let spineposbase, cellLength
     if (orientation == 'vertical') {
 
@@ -932,11 +930,13 @@ export const getSpinePosRef = (
 
     }
 
-    console.log('spineposbase',spineposbase)
+    let referencerowshift = Math.ceil(referenceshift/crosscount)
+
+    console.log('==>spineposbase, referenceshift, cellLength',spineposbase, referenceshift, cellLength)
 
     // ------------------[ calculate spine position ]---------------
 
-    let referenceposshift = cellLength
+    let referenceposshift = 0
     let spineposref
     if (headcontent.length == 0) {
 
@@ -945,10 +945,37 @@ export const getSpinePosRef = (
     } else { 
 
         if (scrollforward) {
+            for (let rowindex = previousreferenceindex;
+                rowindex < previousreferenceindex + referenceshift; 
+                rowindex += crosscount ) {
+
+                let iterationshift = itemelements.has(referenceindex)
+                    ?itemelements.get(referenceindex).current.offsetHeight + gap
+                    :cellLength
+                referenceposshift += iterationshift
+                console.log('rowindex, iterationshift',rowindex, iterationshift)
+
+            }
+
+            console.log('referenceposshift',referenceposshift)
 
             spineposref = spineposbase + referenceposshift
 
         } else {
+
+            for (let rowindex = previousreferenceindex;
+                rowindex > previousreferenceindex - referenceshift; 
+                rowindex -= crosscount ) {
+
+                let iterationshift = itemelements.has(referenceindex)
+                    ?itemelements.get(referenceindex).current.offsetHeight + gap
+                    :cellLength
+                referenceposshift += iterationshift
+                console.log('rowindex, iterationshift',rowindex, iterationshift)
+
+            }
+
+            console.log('referenceposshift',referenceposshift)
 
             spineposref = spineposbase - referenceposshift
 
