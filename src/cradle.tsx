@@ -744,7 +744,7 @@ const Cradle = ({
         let spineElement = spineCradleElementRef.current
         let headElement = headCradleElementRef.current
         let tailElement = tailCradleElementRef.current
-
+        let itemelements = itemElementsRef.current
         let modelcontentlist = modelContentRef.current
         let headcontentlist = headModelContentRef.current
         let tailcontentlist = tailModelContentRef.current
@@ -801,6 +801,9 @@ const Cradle = ({
             intersections,
             scrollforward,
             crosscount,
+            tailcontentlist,
+            headcontentlist,
+            itemelements,
 
         })
 
@@ -898,7 +901,7 @@ const Cradle = ({
                 scrollforward,
                 headcontent,
                 tailcontent,
-                itemelements:itemElementsRef.current,
+                itemelements,
                 referenceindex,
                 previousreferenceindex,
                 referenceshift:referenceitemshift,

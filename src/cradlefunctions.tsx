@@ -519,6 +519,11 @@ let entrycompare = (a,b) => {
     return retval
 }
 
+/*
+    Algorithm
+    The shiftcount must result in correct spine placement,
+    ... and must take into account the bounds of the list for positioning
+*/
 export const calcItemshiftcount = ({
     cradleProps,
     spineElement,
@@ -528,6 +533,9 @@ export const calcItemshiftcount = ({
     intersections,
     scrollforward,
     crosscount,
+    tailcontentlist,
+    headcontentlist,
+    itemelements,
 }) => {
 
     let spineviewportoffset, headspineoffset, tailspineoffset
