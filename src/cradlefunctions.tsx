@@ -932,7 +932,8 @@ export const getSpinePosRef = (
 
     let referencerowshift = Math.ceil(referenceshift/crosscount)
 
-    console.log('==>spineposbase, referenceshift, cellLength',spineposbase, referenceshift, cellLength)
+    console.log('==>spineposbase, referenceindex, referenceshift, cellLength',
+        spineposbase, referenceindex, referenceshift, cellLength)
 
     // ------------------[ calculate spine position ]---------------
 
