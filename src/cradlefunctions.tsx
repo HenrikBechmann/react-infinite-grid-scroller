@@ -533,6 +533,7 @@ export const calcItemshiftcount = ({
     // itemelements,
 }) => {
 
+    let forwardcount = 0, backwardcount = 0
     let spineviewportoffset, headspineoffset, tailspineoffset
     let cradleboundary
     if (cradleProps.orientation == 'vertical') {
@@ -544,6 +545,7 @@ export const calcItemshiftcount = ({
 
             // cradleboundary = viewportElement.offsetHeight - (spineviewportoffset + tailspineoffset + tailElement.offsetHeight)
             cradleboundary = 0
+            return -intersections.length
 
         } else {
 
@@ -581,7 +583,7 @@ export const calcItemshiftcount = ({
     // ----------------------[  calculate itemshiftcount includng overshoot ]------------------------
     // shift item count is the number of items the virtual cradle shifts, according to observer notices
 
-    let forwardcount = 0, backwardcount = 0
+    // let forwardcount = 0, backwardcount = 0
     if (scrollforward) {
         backwardcount = intersections.length
     } else {
