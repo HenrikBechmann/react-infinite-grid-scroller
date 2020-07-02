@@ -864,8 +864,7 @@ const Cradle = ({
 
         // -------------------[ 6. calculate new referenceindex ]---------------------
 
-        // let [referenceindex, referenceitemshift, previousreferenceindex] = getReferenceindex({
-        let referenceindex = getReferenceindex({
+        let [referenceindex, referenceitemshift, previousreferenceindex] = getReferenceindex({
             itemshiftcount,
             crosscount,
             listsize,
@@ -877,7 +876,8 @@ const Cradle = ({
             intersections,
         })
 
-        // console.log('referenceindex',referenceindex)
+        console.log('referenceindex, referenceitemshift, previousreferenceindex', 
+            referenceindex, referenceitemshift, previousreferenceindex)
 
         // ----------------------------------[ 7. allocaate cradle content ]--------------------------
 
@@ -909,8 +909,8 @@ const Cradle = ({
                 tailcontent,
                 itemelements,
                 referenceindex,
-                // previousreferenceindex,
-                referenceshift: 0, // referenceitemshift,
+                previousreferenceindex,
+                referenceshift:referenceitemshift,
                 viewportElement,
                 spineElement,
                 headElement,
