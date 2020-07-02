@@ -639,10 +639,12 @@ const Cradle = ({
             }
         }
         isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
-        // if (!isCradleInViewRef.current) {
+        if (!isCradleInViewRef.current) {
+
+            console.log('CRADLE OUT OF VIEW')
             
-        //     saveCradleState('updatescroll')
-        // }
+            // saveCradleState('updatescroll')
+        }
 
     },[])
 
@@ -949,6 +951,8 @@ const Cradle = ({
     
     // reset cradle, including allocation between head and tail parts of the cradle
     const setCradleContent = useCallback((cradleState, referenceIndexData) => { //
+
+        console.log('SETTING CRADLE CONTENT')
 
         let { index: visibletargetindexoffset, 
             scrolloffset: visibletargetscrolloffset } = referenceIndexData

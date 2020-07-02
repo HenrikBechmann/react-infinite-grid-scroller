@@ -855,7 +855,7 @@ export const getReferenceindex = ({
 
         referenceindex = parseInt(intersections[0].target.dataset.index)
         if (referenceindex < 0) referenceindex = 0
-        console.log('referenceindex, intersections',referenceindex, intersections)
+        // console.log('referenceindex, intersections',referenceindex, intersections)
 
     }
 
