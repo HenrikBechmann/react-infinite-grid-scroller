@@ -535,7 +535,7 @@ export const calcItemshiftcount = ({
 
     let forwardcount = 0, backwardcount = 0
     let spineviewportoffset, headspineoffset, tailspineoffset
-    let cradleboundary
+    let cradleboundary, itemshiftcount
     if (cradleProps.orientation == 'vertical') {
         spineviewportoffset = spineElement.offsetTop - viewportElement.scrollTop
         headspineoffset = headElement.offsetTop
@@ -543,9 +543,10 @@ export const calcItemshiftcount = ({
 
         if (scrollforward) {
 
-            // cradleboundary = viewportElement.offsetHeight - (spineviewportoffset + tailspineoffset + tailElement.offsetHeight)
-            // cradleboundary = 0
-            return -intersections.length
+            cradleboundary = viewportElement.offsetHeight - (spineviewportoffset + tailspineoffset + tailElement.offsetHeight)
+            // itemshiftcount = intersections.length
+            // if (itemshiftcount !== 0) itemshiftcount = -itemshiftcount
+            // return itemshiftcount
 
         } else {
 
@@ -590,7 +591,7 @@ export const calcItemshiftcount = ({
         forwardcount = intersections.length
     }
 
-    let itemshiftcount = forwardcount - backwardcount // + boundaryitemcount
+    itemshiftcount = forwardcount - backwardcount // + boundaryitemcount
 
     // console.log('forwardcount, backwardcount, scrollforward, boundaryitemcount, itemshiftcount',
     //     forwardcount, backwardcount, scrollforward, boundaryitemcount, itemshiftcount)

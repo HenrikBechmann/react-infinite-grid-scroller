@@ -695,11 +695,19 @@ const Cradle = ({
     const itemobservercallback = useCallback((entries)=>{
 
         let movedentries = []
+        let movedentryindexes = []
+        let newentryindexes = []
         for (let entry of entries) {
             if (entry.target.dataset.moved) {
                 movedentries.push(entry)
+                movedentryindexes.push({
+                    index:entry.target.dataset.index,
+                })
             } else {
                 entry.target.dataset.moved = 'moved'
+                newentryindexes.push({
+                    index:entry.target.dataset.index,
+                })
             }
         }
 
@@ -708,7 +716,7 @@ const Cradle = ({
             return
         }
 
-        console.log('moved entries',movedentries)
+        console.log('newentries, moved entries', [...newentryindexes], [...movedentryindexes])
 
         isMounted() && updateCradleContent(movedentries)
 
@@ -788,17 +796,17 @@ const Cradle = ({
         // }
 
         // DEBUG:
-        // let filteredindexes = []
+        let filteredindexes = []
 
-        // for (let entry of intersections) {
-        //     filteredindexes.push(
-        //         {
-        //             index:entry.target.dataset.index,
-        //             ratio:entry.intersectionRatio,
-        //             top:entry.boundingClientRect.top
-        //         }
-        //     )
-        // }
+        for (let entry of intersections) {
+            filteredindexes.push(
+                {
+                    index:entry.target.dataset.index,
+                    ratio:entry.intersectionRatio,
+                    top:entry.boundingClientRect.top
+                }
+            )
+        }
 
         // console.log('filtered indexes:',filteredindexes,'\nrows:', Math.ceil(filteredindexes.length/crosscount))
 
@@ -820,7 +828,7 @@ const Cradle = ({
 
         })
 
-        console.log('itemshiftcount, intersections, scrollforward',itemshiftcount, intersections, scrollforward)
+        console.log('itemshiftcount, filteredindexes, rows, scrollforward',itemshiftcount, filteredindexes, Math.ceil(filteredindexes.length/crosscount), scrollforward)
 
         if (itemshiftcount == 0) {  // nothing to do
 
