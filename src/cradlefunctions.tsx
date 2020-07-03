@@ -544,7 +544,7 @@ export const calcItemshiftcount = ({
         if (scrollforward) {
 
             // cradleboundary = viewportElement.offsetHeight - (spineviewportoffset + tailspineoffset + tailElement.offsetHeight)
-            cradleboundary = 0
+            // cradleboundary = 0
             return -intersections.length
 
         } else {

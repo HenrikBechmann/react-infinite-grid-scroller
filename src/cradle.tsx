@@ -628,7 +628,10 @@ const Cradle = ({
 
     const cradleintersectionobservercallback = useCallback((entries) => {
 
-        if (pauseCradleIntersectionObserverRef.current) return
+        if (pauseCradleIntersectionObserverRef.current) {
+            console.log('returning from cradleintersection callback owing to pause')
+            return
+        }
 
         for (let i = 0; i < entries.length; i++ ) {
             let entry = entries[i]
@@ -808,6 +811,8 @@ const Cradle = ({
             // itemelements,
 
         })
+
+        console.log('itemshiftcount',itemshiftcount)
 
         if (itemshiftcount == 0) {  // nothing to do
 
