@@ -704,25 +704,33 @@ const Cradle = ({
         }
 
         if (pauseItemObserverRef.current) {
-
+            console.log('returning from itemobservercallback for pause')
             return
         }
 
-        // console.log('new entries filtered out',entries.length - movedentries.length)
+        console.log('moved entries',movedentries)
 
         isMounted() && updateCradleContent(movedentries)
 
     },[])
 
+    const previousScrollForwardRef = useRef(undefined)
     // adjust scroll content:
     // 1.shift, 2.clip, and 3.add clip amount at other end
     const updateCradleContent = useCallback((entries)=>{
 
         let scrollPositions = scrollPositionsRef.current
 
-        if (scrollPositions.current == scrollPositions.previous) return // nothing to do
+        let scrollforward
+        if (scrollPositions.current == scrollPositions.previous) {
+            scrollforward = previousScrollForwardRef.current
+            // return // nothing to do
+        } else {
 
-        let scrollforward = scrollPositions.current > scrollPositions.previous
+            scrollforward = scrollPositions.current > scrollPositions.previous
+            previousScrollForwardRef.current = scrollforward
+
+        }
 
         // DEBUG:
         // let entryindexes = []
@@ -773,11 +781,11 @@ const Cradle = ({
 
         })
 
-        if (intersections.length == 0) { // nothing to do
+        // if (intersections.length == 0) { // nothing to do
 
-            return
+        //     return
             
-        }
+        // }
 
         // DEBUG:
         // let filteredindexes = []
@@ -812,7 +820,7 @@ const Cradle = ({
 
         })
 
-        console.log('itemshiftcount',itemshiftcount)
+        console.log('itemshiftcount, intersections, scrollforward',itemshiftcount, intersections, scrollforward)
 
         if (itemshiftcount == 0) {  // nothing to do
 

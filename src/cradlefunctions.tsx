@@ -852,6 +852,7 @@ export const getReferenceindex = ({
     if (scrollforward) {
 
         referenceindex = parseInt(intersections[intersections.length - 1].target.dataset.index) + 1
+        console.log('returning referenceindex for scrollforward',referenceindex)
         return [referenceindex,undefined, undefined]
 
     // } else {
