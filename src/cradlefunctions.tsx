@@ -573,6 +573,8 @@ export const calcItemshiftcount = ({
         }
     }
 
+    console.log('-->cradleboundary', cradleboundary)
+
     if (cradleboundary < 0) cradleboundary = 0 // not relevant
 
     let cellLength = cradleProps.orientation == 'vertical'?cradleProps.cellHeight:cradleProps.cellWitdh
@@ -586,12 +588,16 @@ export const calcItemshiftcount = ({
 
     // let forwardcount = 0, backwardcount = 0
     if (scrollforward) {
+
         backwardcount = intersections.length
+
     } else {
+
         forwardcount = intersections.length
+
     }
 
-    itemshiftcount = forwardcount - backwardcount // + boundaryitemcount
+    itemshiftcount = forwardcount - backwardcount + boundaryitemcount
 
     // console.log('forwardcount, backwardcount, scrollforward, boundaryitemcount, itemshiftcount',
     //     forwardcount, backwardcount, scrollforward, boundaryitemcount, itemshiftcount)
@@ -852,7 +858,7 @@ export const getReferenceindex = ({
     let referenceindex
     if (scrollforward) {
 
-        referenceindex = parseInt(intersections[intersections.length - 1].target.dataset.index) + 1
+        referenceindex = parseInt(intersections[intersections.length - 1]?.target.dataset.index) + 1
         console.log('returning referenceindex for scrollforward',referenceindex)
         return [referenceindex,undefined, undefined]
 
@@ -950,7 +956,7 @@ export const getSpinePosRef = (
     if (scrollforward) {
 
         console.log('referenceindex, itemelements.get(referenceindex)',referenceindex, itemelements.get(referenceindex))
-        spineposref = spineElement.offsetTop + itemelements.get(referenceindex).current.offsetTop
+        spineposref = spineElement.offsetTop + itemelements.get(referenceindex)?.current.offsetTop
         return spineposref
 
     // else {

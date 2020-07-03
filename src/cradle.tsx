@@ -881,7 +881,7 @@ const Cradle = ({
 
         }
 
-        // console.log('cradle rows:', Math.ceil(localContentList.length/crosscount),'\nreferencerows:',cradlerowcountRef.current)
+        console.log('cradle rows:', Math.ceil(localContentList.length/crosscount),'\nreferencerows:',cradlerowcountRef.current)
 
         // -------------------[ 6. calculate new referenceindex ]---------------------
 
