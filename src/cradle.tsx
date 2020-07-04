@@ -716,7 +716,7 @@ const Cradle = ({
             return
         }
 
-        console.log('newentries, moved entries', [...newentryindexes], [...movedentryindexes])
+        console.log('==>> newentries, moved entries', [...newentryindexes], [...movedentryindexes])
 
         isMounted() && updateCradleContent(movedentries)
 
@@ -795,6 +795,24 @@ const Cradle = ({
             
         // }
 
+        // --------------------------------[ 3. Calculate boundary item overshoot ]-------------------------------
+
+        let itemshiftcount = calcItemshiftcount({
+
+            cradleProps,
+            spineElement,
+            viewportElement,
+            headElement,
+            tailElement,
+            intersections,
+            scrollforward,
+            crosscount,
+            cradlecontentlist:modelcontentlist,
+            // headcontentlist,
+            // itemelements,
+
+        })
+
         // DEBUG:
         let filteredindexes = []
 
@@ -809,24 +827,6 @@ const Cradle = ({
         }
 
         // console.log('filtered indexes:',filteredindexes,'\nrows:', Math.ceil(filteredindexes.length/crosscount))
-
-        // --------------------------------[ 3. Calculate boundary item overshoot ]-------------------------------
-
-        let itemshiftcount = calcItemshiftcount({
-
-            cradleProps,
-            spineElement,
-            viewportElement,
-            headElement,
-            tailElement,
-            intersections,
-            scrollforward,
-            crosscount,
-            // tailcontentlist,
-            // headcontentlist,
-            // itemelements,
-
-        })
 
         console.log('itemshiftcount, filteredindexes, rows, scrollforward',itemshiftcount, filteredindexes, Math.ceil(filteredindexes.length/crosscount), scrollforward)
 

@@ -531,6 +531,7 @@ export const calcItemshiftcount = ({
     // tailcontentlist,
     // headcontentlist,
     // itemelements,
+    cradlecontentlist,
 }) => {
 
     let forwardcount = 0, backwardcount = 0
@@ -581,6 +582,10 @@ export const calcItemshiftcount = ({
     let boundaryrowcount = (cradleboundary == 0)?0:Math.ceil(cradleboundary/(cellLength + cradleProps.gap))
 
     let boundaryitemcount = boundaryrowcount * crosscount
+    if (boundaryitemcount) {
+        boundaryitemcount += (cradleProps.runwaycount * crosscount)
+    }
+    // TOTO add runway items
     if (scrollforward && (boundaryitemcount != 0)) boundaryitemcount = -boundaryitemcount
 
     // ----------------------[  calculate itemshiftcount includng overshoot ]------------------------
@@ -599,6 +604,18 @@ export const calcItemshiftcount = ({
 
     itemshiftcount = forwardcount - backwardcount + boundaryitemcount
 
+    let previousindex = cradlecontentlist[0].props.index
+
+    let proposedindex = previousindex + itemshiftcount
+    let listsize = cradleProps.listsize
+    if (proposedindex > listsize) {
+        let diff = listsize - proposedindex
+        itemshiftcount -= diff
+    } 
+
+    if (proposedindex < 0) {
+        itemshiftcount += proposedindex
+    } 
     // console.log('forwardcount, backwardcount, scrollforward, boundaryitemcount, itemshiftcount',
     //     forwardcount, backwardcount, scrollforward, boundaryitemcount, itemshiftcount)
 
@@ -858,9 +875,15 @@ export const getReferenceindex = ({
     let referenceindex
     if (scrollforward) {
 
-        referenceindex = parseInt(intersections[intersections.length - 1]?.target.dataset.index) + 1
-        console.log('returning referenceindex for scrollforward',referenceindex)
-        return [referenceindex,undefined, undefined]
+        let referenceindexbase = parseInt(intersections[intersections.length - 1]?.target.dataset.index)
+        referenceindex += referenceindexbase + 1
+        if (referenceindexbase === undefined) {
+            // let referenceindexbase = parseInt(intersections[intersections.length - 1]?.target.dataset.index)
+            referenceindex = referenceindexbase - (( crosscount * 2 ) - 2) + 1
+
+        }
+        // console.log('returning referenceindex for scrollforward',referenceindex)
+        // return [referenceindex,undefined, undefined]
 
     // } else {
 
@@ -881,15 +904,15 @@ export const getReferenceindex = ({
 
     let previousreferenceindex = tailcontentlist[0].props.index
 
-    // if (scrollforward) {
+    if (scrollforward) {
 
-    //     referenceindex = previousreferenceindex + referenceitemshift
+        referenceindex = previousreferenceindex + referenceitemshift
 
-    // } else {
+    } else {
 
         referenceindex = previousreferenceindex - referenceitemshift
 
-    // }
+    }
 
     if (referenceindex > (listsize -1)) {
         referenceindex = listsize -1
