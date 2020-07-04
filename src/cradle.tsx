@@ -255,9 +255,6 @@ const Cradle = ({
     // trigger pivot on change in orientation
     useEffect(()=> {
 
-        headModelContentRef.current = []
-        tailModelContentRef.current = []
-
         if (cradlestateRef.current != 'setup') {
 
             let scrolloffset
@@ -279,6 +276,9 @@ const Cradle = ({
             saveCradleState('pivot')
 
         }
+
+        headModelContentRef.current = []
+        tailModelContentRef.current = []
 
     },[
         orientation,
