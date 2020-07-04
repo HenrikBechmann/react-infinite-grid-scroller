@@ -9,6 +9,9 @@
     Description
     -----------
 
+    QA defend against butterfly getting intersections from opposite scroll direction
+        as the result of a short viewport
+
     This module has one main design pattern: the butterfuly pattern (my name)
 
     the butterfly pattern:
