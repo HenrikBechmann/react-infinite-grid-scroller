@@ -632,7 +632,7 @@ const Cradle = ({
     const cradleintersectionobservercallback = useCallback((entries) => {
 
         if (pauseCradleIntersectionObserverRef.current) {
-            console.log('returning from cradleintersection callback owing to pause')
+            // console.log('returning from cradleintersection callback owing to pause')
             return
         }
 
@@ -698,28 +698,28 @@ const Cradle = ({
     const itemobservercallback = useCallback((entries)=>{
 
         let movedentries = []
-        let movedentryindexes = []
-        let newentryindexes = []
+        // let movedentryindexes = []
+        // let newentryindexes = []
         for (let entry of entries) {
             if (entry.target.dataset.moved) {
                 movedentries.push(entry)
-                movedentryindexes.push({
-                    index:entry.target.dataset.index,
-                })
+                // movedentryindexes.push({
+                //     index:entry.target.dataset.index,
+                // })
             } else {
                 entry.target.dataset.moved = 'moved'
-                newentryindexes.push({
-                    index:entry.target.dataset.index,
-                })
+                // newentryindexes.push({
+                //     index:entry.target.dataset.index,
+                // })
             }
         }
 
         if (pauseItemObserverRef.current) {
-            console.log('returning from itemobservercallback for pause')
+            // console.log('returning from itemobservercallback for pause')
             return
         }
 
-        console.log('==>> newentries, moved entries', [...newentryindexes], [...movedentryindexes])
+        // console.log('==>> newentries, moved entries', [...newentryindexes], [...movedentryindexes])
 
         isMounted() && updateCradleContent(movedentries)
 
@@ -819,19 +819,19 @@ const Cradle = ({
         // DEBUG:
         let filteredindexes = []
 
-        for (let entry of intersections) {
-            filteredindexes.push(
-                {
-                    index:entry.target.dataset.index,
-                    ratio:entry.intersectionRatio,
-                    top:entry.boundingClientRect.top
-                }
-            )
-        }
+        // for (let entry of intersections) {
+        //     filteredindexes.push(
+        //         {
+        //             index:entry.target.dataset.index,
+        //             ratio:entry.intersectionRatio,
+        //             top:entry.boundingClientRect.top
+        //         }
+        //     )
+        // }
 
         // console.log('filtered indexes:',filteredindexes,'\nrows:', Math.ceil(filteredindexes.length/crosscount))
 
-        console.log('itemshiftcount, filteredindexes, rows, scrollforward',itemshiftcount, filteredindexes, Math.ceil(filteredindexes.length/crosscount), scrollforward)
+        // console.log('itemshiftcount, filteredindexes, rows, scrollforward',itemshiftcount, filteredindexes, Math.ceil(filteredindexes.length/crosscount), scrollforward)
 
         if (itemshiftcount == 0) {  // nothing to do
 
@@ -884,7 +884,7 @@ const Cradle = ({
 
         }
 
-        console.log('cradle rows:', Math.ceil(localContentList.length/crosscount),'\nreferencerows:',cradlerowcountRef.current)
+        // console.log('cradle rows:', Math.ceil(localContentList.length/crosscount),'\nreferencerows:',cradlerowcountRef.current)
 
         // -------------------[ 6. calculate new referenceindex ]---------------------
 
@@ -900,8 +900,8 @@ const Cradle = ({
             intersections,
         })
 
-        console.log('referenceindex, referenceitemshift, previousreferenceindex', 
-            referenceindex, referenceitemshift, previousreferenceindex)
+        // console.log('referenceindex, referenceitemshift, previousreferenceindex', 
+        //     referenceindex, referenceitemshift, previousreferenceindex)
 
         // ----------------------------------[ 7. allocaate cradle content ]--------------------------
 
@@ -976,7 +976,7 @@ const Cradle = ({
     // reset cradle, including allocation between head and tail parts of the cradle
     const setCradleContent = useCallback((cradleState, referenceIndexData) => { //
 
-        console.log('SETTING CRADLE CONTENT')
+        // console.log('SETTING CRADLE CONTENT')
 
         let { index: visibletargetindexoffset, 
             scrolloffset: visibletargetscrolloffset } = referenceIndexData
