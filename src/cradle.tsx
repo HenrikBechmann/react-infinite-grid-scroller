@@ -203,7 +203,7 @@ const Cradle = ({
             // }
 
             callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
-            console.log('setting callingReferenceIndexDataRef for resizing',{...callingReferenceIndexDataRef.current})
+            // console.log('setting callingReferenceIndexDataRef for resizing',{...callingReferenceIndexDataRef.current})
 
             pauseItemObserverRef.current = true
             pauseCradleIntersectionObserverRef.current = true
