@@ -725,7 +725,7 @@ export const getUIContentList = (props) => {
         tailindexcount, 
         cradleProps,
         localContentList:contentlist,
-        crosscount,
+        // crosscount,
         listsize,
         callbacks,
         observer,
@@ -816,10 +816,10 @@ export const getReferenceindex = ({
     listsize,
     scrollforward,
     itemshiftcount,
-    localcontentlist,
-    headcontentlist,
+    // localcontentlist,
+    // headcontentlist,
     tailcontentlist,
-    itemelements,
+    // itemelements,
     intersections,
 }) => {
 
@@ -870,9 +870,9 @@ export const allocateContentList = (
     {
 
         contentlist, // of cradle, in items (React components)
-        runwaycount, // in rows
+        // runwaycount, // in rows
         referenceindex, // first tail item
-        crosscount,
+        // crosscount,
 
     }
 ) => {
@@ -896,14 +896,14 @@ export const getSpinePosRef = (
         crosscount,
         scrollforward,
         headcontent,
-        tailcontent,
+        // tailcontent,
         itemelements, 
         referenceindex,
         previousreferenceindex,
         referenceshift,
-        viewportElement,
+        // viewportElement,
         spineElement,
-        headElement,
+        // headElement,
     }) => {
 
     // ----------[ calculate spine base position ]----------------

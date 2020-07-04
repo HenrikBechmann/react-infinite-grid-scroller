@@ -827,7 +827,7 @@ const Cradle = ({
                 indexoffset,
                 cradleProps,
                 observer: itemObserverRef.current,
-                crosscount,
+                // crosscount,
                 callbacks:callbacksRef.current,
                 listsize,
 
@@ -845,10 +845,10 @@ const Cradle = ({
             crosscount,
             listsize,
             scrollforward,
-            localcontentlist:localContentList,
-            headcontentlist,
+            // localcontentlist:localContentList,
+            // headcontentlist,
             tailcontentlist,
-            itemelements,
+            // itemelements,
             intersections,
         })
 
@@ -857,8 +857,8 @@ const Cradle = ({
         let [headcontent, tailcontent] = allocateContentList(
             {
                 contentlist:localContentList,
-                runwaycount:cradleProps.runwaycount,
-                crosscount,
+                // runwaycount:cradleProps.runwaycount,
+                // crosscount,
                 referenceindex,
             }
         )
@@ -876,14 +876,14 @@ const Cradle = ({
                 crosscount,
                 scrollforward,
                 headcontent,
-                tailcontent,
+                // tailcontent,
                 itemelements,
                 referenceindex,
                 previousreferenceindex,
                 referenceshift:referenceitemshift,
-                viewportElement,
+                // viewportElement,
                 spineElement,
-                headElement,
+                // headElement,
             }
         )
 
@@ -949,7 +949,7 @@ const Cradle = ({
             indexoffset,
             cradleProps:cradlePropsRef.current,
             observer: itemObserverRef.current,
-            crosscount,
+            // crosscount,
             callbacks:callbacksRef.current,
             listsize,
 
@@ -958,8 +958,8 @@ const Cradle = ({
         let [headcontentlist, tailcontentlist] = allocateContentList({
 
             contentlist:childlist,
-            runwaycount:cradlePropsRef.current.runwaycount,
-            crosscount,
+            // runwaycount:cradlePropsRef.current.runwaycount,
+            // crosscount,
             referenceindex:referenceoffset,
     
         })
