@@ -1059,6 +1059,7 @@ export const setCradleGridStyles = ({
             
             tailstyles.gridTemplateRows = 'none'
             tailstyles.gridTemplateColumns = cellWidth?`repeat(auto-fit, minmax(${cellWidth}px, 1fr))`:'auto'
+            // console.log('setCradleGridStyles vertical, headstyles, tailstyles',headstyles, tailstyles)
         }
 
         return [headstyles,tailstyles]

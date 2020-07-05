@@ -475,7 +475,7 @@ const Cradle = ({
     // redundant
     let cradleSpineStyle = useMemo(() => {
 
-        console.log('setting cradle css',orientation)
+        // console.log('setting cradle css',orientation)
         // let top, left, width
         // if (orientation == 'vertical') {
 
@@ -555,7 +555,7 @@ const Cradle = ({
             height,
         } as React.CSSProperties
 
-        console.log('resetting styles', spinestyle)
+        // console.log('resetting styles', spinestyle)
 
         return [headstyles, tailstyles, spinestyle]
 
@@ -928,6 +928,7 @@ const Cradle = ({
     // reset cradle, including allocation between head and tail parts of the cradle
     const setCradleContent = useCallback((cradleState, referenceIndexData) => { //
 
+        let cradleProps = cradlePropsRef.current
         let { index: visibletargetindexoffset, 
             scrolloffset: visibletargetscrolloffset } = referenceIndexData
 
@@ -1004,12 +1005,14 @@ const Cradle = ({
             scrollPositionDataRef.current = {property:'scrollTop',value:scrollblockoffset}
             spineCradleElementRef.current.style.top = (scrollblockoffset + spineoffset) + 'px'
             spineCradleElementRef.current.style.left = 'auto'
+            headCradleElementRef.current.style.paddingBottom = headcontentlist.length?cradleProps.gap + 'px':0
 
         } else { // orientation = 'horizontal'
 
             scrollPositionDataRef.current = {property:'scrollLeft',value:scrollblockoffset}
             spineCradleElementRef.current.style.left = (scrollblockoffset + spineoffset) + 'px'
             spineCradleElementRef.current.style.top = 'auto'
+            headCradleElementRef.current.style.paddingRight = headcontentlist.length?cradleProps.gap + 'px':0
 
         }
 
