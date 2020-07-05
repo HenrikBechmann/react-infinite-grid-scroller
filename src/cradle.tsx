@@ -280,9 +280,7 @@ const Cradle = ({
         headModelContentRef.current = []
         tailModelContentRef.current = []
 
-    },[
-        orientation,
-    ])
+    },[orientation])
 
     // =======================================================================
     // -------------------------[ OPERATION ]---------------------------------
@@ -474,32 +472,40 @@ const Cradle = ({
         orientation,
     ])
 
+    // redundant
     let cradleSpineStyle = useMemo(() => {
 
-        let paddingx, paddingy, top, left
-        if (orientation == 'vertical') {
+        console.log('setting cradle css',orientation)
+        // let top, left, width
+        // if (orientation == 'vertical') {
 
-            paddingx = 0
-            paddingy = padding
-            top = padding + 'px',
-            left = 'auto'
+        //     // paddingx = 0
+        //     // paddingy = padding
+        //     top = padding + 'px'
+        //     left = 'auto'
+        //     width = 'auto'
+        // } else {
 
-        } else {
+        //     // paddingx = padding
+        //     // paddingy = 0
+        //     left = padding + 'px'
+        //     top = 'auto'
+        //     width = 0
 
-            paddingx = padding
-            paddingy = 0
-            left = padding + 'px'
-            top = 'auto'
+        // }
+
+        let styleobj:React.CSSProperties = {
+
+            position: 'relative',
+            // paddingTop:paddingx,
+            // paddingLeft:paddingy,
+            // top,
+            // left,
+            // width,
 
         }
 
-        return {
-
-            position: 'relative',
-            top,
-            left,
-
-        } as React.CSSProperties
+        return styleobj
 
     },[
 
@@ -510,7 +516,6 @@ const Cradle = ({
 
     // enhanced styles for grid
     const [headstyle, tailstyle, spinestyle] = useMemo(()=> {
-
         // merge base style and revisions (by observer)
         let headCradleStyles:React.CSSProperties = {...cradleHeadStyle}
         let tailCradleStyles:React.CSSProperties = {...cradleTailStyle}
@@ -529,20 +534,25 @@ const Cradle = ({
 
         })
 
-        let top, left
+        let top, left, width
         if (orientation == 'vertical') {
             top = padding + 'px'
             left = 'auto'
+            width = 'auto'
         } else {
             top = 'auto'
-            left = 'padding' + 'px'
+            left = padding + 'px'
+            width = 0
         }
 
         let spinestyle = {
             position: 'relative',
             top,
             left,
+            width,
         } as React.CSSProperties
+
+        console.log('resetting styles', spinestyle)
 
         return [headstyles, tailstyles, spinestyle]
 
@@ -557,9 +567,9 @@ const Cradle = ({
         viewportwidth,
         crosscount,
 
-        cradleHeadStyle,
-        cradleTailStyle,
-        cradleSpineStyle
+        // cradleHeadStyle,
+        // cradleTailStyle,
+        // cradleSpineStyle
 
       ])
 
@@ -1326,6 +1336,8 @@ const Cradle = ({
             styles:cradlePropsRef.current.styles,
         }
     },[viewportDimensions, scrollReferenceIndexDataRef, cradlePropsRef])
+
+    // console.log('cradleSpineStyle before render',cradleSpineStyle)
 
     return <>
 
