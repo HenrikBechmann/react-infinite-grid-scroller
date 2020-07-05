@@ -444,7 +444,7 @@ const Cradle = ({
         } else {
             bottom = 0
             left = 0
-            right = 'right'
+            right = 'auto'
             top = 0
         }
 
@@ -534,15 +534,17 @@ const Cradle = ({
 
         })
 
-        let top, left, width
+        let top, left, width, height
         if (orientation == 'vertical') {
             top = padding + 'px'
             left = 'auto'
-            width = 'auto'
+            width = '100%'
+            height = 'auto'
         } else {
             top = 'auto'
             left = padding + 'px'
             width = 0
+            height = '100%'
         }
 
         let spinestyle = {
@@ -550,6 +552,7 @@ const Cradle = ({
             top,
             left,
             width,
+            height,
         } as React.CSSProperties
 
         console.log('resetting styles', spinestyle)
@@ -610,8 +613,6 @@ const Cradle = ({
     const cradleresizeobservercallback = useCallback((entries) => {
 
         if (pauseCradleResizeObserverRef.current) return
-
-        // console.log('cradle resize entries',entries)
 
     },[])
 
