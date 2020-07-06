@@ -255,19 +255,25 @@ const Cradle = ({
     // trigger pivot on change in orientation
     useEffect(()=> {
 
+        // console.log('calling pivot effect, orientaton, cradlestate',orientation, cradlestateRef.current)
         if (cradlestateRef.current != 'setup') {
 
-            let scrolloffset
-            if (cradlePropsRef.current.orientation == 'vertical') {
-                scrolloffset = spineCradleElementRef.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
-            } else {
-                scrolloffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
-            }
-            callingReferenceIndexDataRef.current = {
-                index:tailModelContentRef.current[0].props.index || 0,
-                scrolloffset,
-            }
-            // callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
+            // let scrolloffset
+            // if (orientation == 'vertical') {
+            //     scrolloffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
+            // } else {
+            //     scrolloffset = spineCradleElementRef.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
+            // }
+            // callingReferenceIndexDataRef.current = {
+            //     index:tailModelContentRef.current[0].props.index || 0,
+            //     scrolloffset,
+            // }
+            callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
+            // console.log('pivot to orientation, callingReferenceIndexDataRef',orientation, callingReferenceIndexDataRef,
+            //     '\nviewport scrollTop, spine offsetTop',
+            //     viewportDataRef.current.elementref.current.scrollTop,spineCradleElementRef.current.offsetTop,
+            //     '\nviewport scrollLeft, spine offsetLeft',
+            //     viewportDataRef.current.elementref.current.scrollLeft,spineCradleElementRef.current.offsetLeft)
 
             pauseItemObserverRef.current = true
             pauseCradleIntersectionObserverRef.current = true
