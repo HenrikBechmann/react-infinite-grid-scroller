@@ -222,6 +222,7 @@ const Cradle = ({
     },[viewportData.isResizing])
 
     // reload for changed parameters
+    // TODO: treat like pivot effect below
     useEffect(()=>{
 
         if (cradlestateRef.current == 'setup') return
@@ -694,6 +695,7 @@ const Cradle = ({
 
     useEffect(() => {
 
+        if (itemObserverRef.current) itemObserverRef.current.disconnect()
         itemObserverRef.current = new IntersectionObserver(
 
             itemobservercallback,

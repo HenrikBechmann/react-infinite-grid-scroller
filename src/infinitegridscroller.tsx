@@ -64,7 +64,7 @@ const InfiniteGridScroller = (props) => {
     offset = Math.max(0,offset) // non-negative
     offset = Math.min(listsize, offset) // not larger than list
     if (!['horizontal','vertical'].includes(orientation)) {
-        orientation = 'horizontal'
+        orientation = 'vertical'
     }
     // convert to pixels
     let runwaylength = (orientation == 'vertical')?(runway * (cellHeight + gap)):(runway * (cellWidth + gap))
