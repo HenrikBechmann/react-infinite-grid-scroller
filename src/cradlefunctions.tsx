@@ -534,6 +534,8 @@ export const calcItemshiftcount = ({
         }
     }
 
+    // console.log('cradleboundary',cradleboundary)
+
     if (cradleboundary < 0) cradleboundary = 0 // not relevant
 
     let cellLength = cradleProps.orientation == 'vertical'?cradleProps.cellHeight:cradleProps.cellWitdh
@@ -545,6 +547,8 @@ export const calcItemshiftcount = ({
     }
 
     if (scrollforward && (boundaryitemcount != 0)) boundaryitemcount = -boundaryitemcount
+
+    // console.log('boundaryitemcount',boundaryitemcount)
 
     // ----------------------[  calculate itemshiftcount includng overshoot ]------------------------
     // shift item count is the number of items the virtual cradle shifts, according to observer notices
@@ -561,17 +565,20 @@ export const calcItemshiftcount = ({
 
     itemshiftcount = forwardcount - backwardcount + boundaryitemcount
 
-    let previousindex = cradlecontentlist[0].props.index
+    // console.log('internal itemshiftcount',itemshiftcount)
 
-    let proposedindex = previousindex + itemshiftcount
+    let previousindex = cradlecontentlist[0].props.index,
+        testshift = -itemshiftcount
+
+    let proposedindex = previousindex + testshift
     let listsize = cradleProps.listsize
     if (proposedindex > listsize) {
-        let diff = listsize - proposedindex
+        let diff = listsize - (proposedindex + 1)
         itemshiftcount -= diff
     } 
 
     if (proposedindex < 0) {
-        itemshiftcount += proposedindex
+        itemshiftcount += (proposedindex + 1)
     } 
 
     return itemshiftcount // positive = roll toward top/left; negative = roll toward bottom/right
@@ -910,17 +917,25 @@ export const getSpinePosRef = (
 
     let spineposref 
 
-    if (scrollforward) {
-
-        // console.log('referenceindex, itemelements.get(referenceindex)',referenceindex, itemelements.get(referenceindex))
-        spineposref = spineElement.offsetTop + itemelements.get(referenceindex)?.current.offsetTop
-        return spineposref
-
-    }
-
     let orientation = cradleProps.orientation,
         padding = cradleProps.padding,
         gap = cradleProps.gap
+
+    if (scrollforward) {
+
+        if (orientation == 'vertical') {
+            // console.log('referenceindex, itemelements.get(referenceindex)',referenceindex, itemelements.get(referenceindex))
+            spineposref = spineElement.offsetTop + itemelements.get(referenceindex)?.current.offsetTop
+            return spineposref
+
+        } else {
+
+            spineposref = spineElement.offsetTop + itemelements.get(referenceindex)?.current.offsetLeft
+            return spineposref
+
+        }
+
+    }
 
     let spineposbase, cellLength
     if (orientation == 'vertical') {
@@ -951,8 +966,9 @@ export const getSpinePosRef = (
             rowindex > previousreferenceindex - referenceshift; 
             rowindex -= crosscount ) {
 
+            let propname = (cradleProps.orientation == 'vertical')?'offsetHeight':'offsetWidth'
             let iterationshift = itemelements.has(referenceindex)
-                ?itemelements.get(referenceindex).current.offsetHeight + gap
+                ?itemelements.get(referenceindex).current[propname] + gap
                 :cellLength
             referenceposshift += iterationshift
 

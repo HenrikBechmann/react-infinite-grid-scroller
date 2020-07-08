@@ -764,7 +764,7 @@ const Cradle = ({
 
         }
 
-        console.log('scrollforward, scrollPositions', scrollforward, scrollPositions )
+        console.log('==>> scrollforward, scrollPositions', scrollforward, scrollPositions )
 
         let viewportData = viewportDataRef.current
         let cradleProps = cradlePropsRef.current
@@ -803,6 +803,10 @@ const Cradle = ({
         }
 
         console.log('filteredindexes',filteredindexes)
+
+        // if (intersections.length == 0) {
+        //     return
+        // }
 
         // --------------------------------[ 3. Calculate item shift count ]-------------------------------
 
@@ -886,6 +890,9 @@ const Cradle = ({
             intersections,
         })
 
+        console.log('referenceindex, referenceitemshift, previousreferenceindex',
+            referenceindex, referenceitemshift, previousreferenceindex)
+
         // ----------------------------------[ 7. allocaate cradle content ]--------------------------
 
         let [headcontent, tailcontent] = allocateContentList(
@@ -920,6 +927,8 @@ const Cradle = ({
                 // headElement,
             }
         )
+
+        console.log('spineposref, crosscount',spineposref, crosscount)
 
         if (spineposref !== undefined) {
             if (cradleProps.orientation == 'vertical') {
