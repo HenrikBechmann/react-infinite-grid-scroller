@@ -746,6 +746,8 @@ const Cradle = ({
     // 1.shift, 2.clip, and 3.add clip amount at other end
     const updateCradleContent = useCallback((entries)=>{
 
+        // console.log('updateCradleContent entries',entries)
+
         // ----------------------------[ 1. initialize ]----------------------------
 
         let scrollPositions = scrollPositionsRef.current
@@ -761,6 +763,8 @@ const Cradle = ({
             previousScrollForwardRef.current = scrollforward
 
         }
+
+        console.log('scrollforward, scrollPositions', scrollforward, scrollPositions )
 
         let viewportData = viewportDataRef.current
         let cradleProps = cradlePropsRef.current
@@ -793,6 +797,13 @@ const Cradle = ({
 
         })
 
+        let filteredindexes = []
+        for (let entry of intersections) {
+            filteredindexes.push({index:entry.target.dataset.index})
+        }
+
+        console.log('filteredindexes',filteredindexes)
+
         // --------------------------------[ 3. Calculate item shift count ]-------------------------------
 
         let itemshiftcount = calcItemshiftcount({
@@ -808,6 +819,8 @@ const Cradle = ({
             cradlecontentlist:modelcontentlist,
 
         })
+
+        console.log('itemshiftcount',itemshiftcount)
 
         if (itemshiftcount == 0) {  // nothing to do
 
@@ -830,6 +843,8 @@ const Cradle = ({
             listsize,
 
         })
+
+        console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
 
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
