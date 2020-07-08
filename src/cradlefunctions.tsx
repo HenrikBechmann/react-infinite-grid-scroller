@@ -962,7 +962,7 @@ export const getSpinePosRef = (
 
     } else { 
 
-        console.log('inside getSpinePosRef', previousreferenceindex, referenceshift, crosscount)
+        // console.log('inside getSpinePosRef', previousreferenceindex, referenceshift, crosscount)
         for (let rowindex = previousreferenceindex;
             rowindex > previousreferenceindex - referenceshift; 
             rowindex -= crosscount ) {
