@@ -51,7 +51,7 @@ const ItemShell = (props) => {
                         }
                     }
                 }
-            },{timeout:2000})
+            },{timeout:200})
         }
 
         return () => {

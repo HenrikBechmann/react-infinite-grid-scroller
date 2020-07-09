@@ -187,7 +187,7 @@ const Cradle = ({
     // trigger resizing based on viewport state
     useEffect(()=>{
 
-        if (cradlestateRef.current != 'setup')
+        if (cradlestateRef.current == 'setup') return
         if (viewportData.isResizing) {
 
             // enter resizing mode
