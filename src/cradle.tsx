@@ -693,6 +693,7 @@ const Cradle = ({
             There are exceptions for setup and edge cases.
     */
 
+    // change orientation
     useEffect(() => {
 
         if (itemObserverRef.current) itemObserverRef.current.disconnect()
@@ -711,6 +712,7 @@ const Cradle = ({
             itemObserverRef.current.disconnect()
 
         }
+
     },[orientation])
 
     // the async callback from IntersectionObserver.
