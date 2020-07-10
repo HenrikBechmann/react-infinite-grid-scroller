@@ -966,6 +966,11 @@ const Cradle = ({
         let { index: visibletargetindexoffset, 
             scrolloffset: visibletargetscrolloffset } = referenceIndexData
 
+        let {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
+
+        let cradlerowcount = cradlerowcountRef.current,
+            crosscount = crosscountRef.current
+
         if (cradleState == 'reposition') visibletargetscrolloffset = padding
 
         let localContentList = [] // any duplicated items will be re-used by react
