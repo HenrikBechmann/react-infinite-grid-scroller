@@ -746,7 +746,7 @@ const Cradle = ({
 
     // adjust scroll content:
     // 1.shift, 2.clip, and 3.add clip amount at other end
-    const updateCradleContent = useCallback((entries)=>{
+    const updateCradleContent = (entries) => {
 
         // console.log('updateCradleContent entries',entries)
 
@@ -951,7 +951,7 @@ const Cradle = ({
 
         saveCradleState('updatescroll')
 
-    },[])
+    }
 
     // End of IntersectionObserver support
 
@@ -960,7 +960,7 @@ const Cradle = ({
     // ========================================================================================
     
     // reset cradle, including allocation between head and tail parts of the cradle
-    const setCradleContent = useCallback((cradleState, referenceIndexData) => { //
+    const setCradleContent = (cradleState, referenceIndexData) => { //
 
         let cradleProps = cradlePropsRef.current
         let { index: visibletargetindexoffset, 
@@ -1050,7 +1050,7 @@ const Cradle = ({
 
         }
 
-    },[
+    }/*,[
         getItem,
         listsize,
         placeholder,
@@ -1066,7 +1066,7 @@ const Cradle = ({
         crosscount,
         cradlerowcount,
       ]
-    )
+    )*/
 
     // =====================================================================================
     // ----------------------------------[ state management ]-------------------------------
