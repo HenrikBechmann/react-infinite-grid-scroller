@@ -13,10 +13,22 @@ import { detect } from 'detect-browser'
 
 const browser = detect()
 
-export const calcVisibleItems = (itemsArray, viewportElement, cradleElement, orientation) => {
+export const calcVisibleItems = (
+        {itemElementMap, viewportElement, spineElement, headElement, orientation, headlist}
+    ) => {
+
+    let itemlistindexes = Array.from(itemElementMap.keys())
+    itemlistindexes.sort((a,b)=>{
+        return (a < b)?-1:1
+    })
+    let headlistindexes = []
+    for (let item of headlist) {
+        headlistindexes.push(parseInt(item.props.index))
+    }
+    // console.log('itemlistindexes, headlistindexes',itemlistindexes, headlistindexes)
     let list = []
-    let cradleTop = cradleElement.offsetTop, 
-        cradleLeft = cradleElement.offsetLeft
+    let cradleTop = headElement.offsetTop + spineElement.offsetTop, 
+        cradleLeft = headElement.offsetLeft + spineElement.offsetLeft
     let scrollblockTopOffset = -viewportElement.scrollTop, 
         scrollblockLeftOffset = -viewportElement.scrollLeft,
         viewportHeight = viewportElement.offsetHeight,
@@ -24,13 +36,12 @@ export const calcVisibleItems = (itemsArray, viewportElement, cradleElement, ori
         viewportTopOffset = -scrollblockTopOffset,
         viewportBottomOffset = -scrollblockTopOffset + viewportHeight
 
-    for (let i = 0; i < itemsArray.length; i++) {
+    for (let index of itemlistindexes) {
 
-        let [index, elementRef] = itemsArray[i]
-        let element = elementRef.current
-
-        let top = element.offsetTop, 
-            left = element.offsetLeft, 
+        let element = itemElementMap.get(index).current
+        let inheadlist = headlistindexes.includes(index)
+        let top = inheadlist?(element.offsetTop):(((orientation == 'vertical')?headElement.offsetHeight:0) + element.offsetTop), 
+            left = inheadlist?(element.offsetLeft):(((orientation == 'horizontal')?headElement.offsetWidth:0) + element.offsetLeft), 
             width = element.offsetWidth, 
             height = element.offsetHeight,
             right = left + width,
@@ -131,9 +142,9 @@ export const calcVisibleItems = (itemsArray, viewportElement, cradleElement, ori
 
     }
 
-    list.sort((a,b) => {
-        return (a.index - b.index)
-    })
+    // list.sort((a,b) => {
+    //     return (a.index - b.index)
+    // })
 
     return list
 }
@@ -141,11 +152,10 @@ export const calcVisibleItems = (itemsArray, viewportElement, cradleElement, ori
 export const getReferenceIndexData = (
     {
         viewportData,
-        cradlePropsRef,
-        crosscountRef,
+        cradleProps,
+        crosscount,
     }) => {
 
-    let cradleProps = cradlePropsRef.current
     let viewportElement = viewportData.elementref.current
     let {orientation, listsize} = cradleProps
     let scrollPos, cellLength
@@ -161,11 +171,11 @@ export const getReferenceIndexData = (
 
     }
 
-    let referencescrolloffset = cellLength - (scrollPos % cellLength) // + cellSpecs.padding
+    let referencescrolloffset = cellLength - (scrollPos % cellLength)
     if (referencescrolloffset == cellLength + cradleProps.padding) referencescrolloffset = 0
 
     let referencerowindex = Math.ceil((scrollPos - cradleProps.padding)/cellLength)
-    let referenceindex = referencerowindex * crosscountRef.current
+    let referenceindex = referencerowindex * crosscount
 
     let referenceIndexData = {
         index:Math.min(referenceindex,listsize - 1),

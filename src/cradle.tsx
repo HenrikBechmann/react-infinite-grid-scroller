@@ -895,7 +895,7 @@ const Cradle = ({
         // console.log('referenceindex, referenceitemshift, previousreferenceindex',
         //     referenceindex, referenceitemshift, previousreferenceindex)
 
-        // ----------------------------------[ 7. allocaate cradle content ]--------------------------
+        // ----------------------------------[ 7. allocate cradle content ]--------------------------
 
         let [headcontent, tailcontent] = allocateContentList(
             {
@@ -1130,8 +1130,8 @@ const Cradle = ({
 
                     scrollReferenceIndexDataRef.current = getReferenceIndexData({
                         viewportData:viewportDataRef.current,
-                        cradlePropsRef,
-                        crosscountRef,
+                        cradleProps:cradlePropsRef.current,
+                        crosscount:crosscountRef.current,
                     })
 
                 }
@@ -1297,14 +1297,16 @@ const Cradle = ({
     // on host demand
     const getVisibleList = useCallback(() => {
 
-        let itemlist = Array.from(itemElementsRef.current)
 
-        return calcVisibleItems(
-            itemlist,
-            viewportDataRef.current.elementref.current,
-            headCradleElementRef.current, 
-            cradlePropsRef.current.orientation
-        )
+        return calcVisibleItems({
+            itemElementMap:itemElementsRef.current,
+            viewportElement:viewportDataRef.current.elementref.current,
+            headElement:headCradleElementRef.current, 
+            // tailElement:cradlePropsRef.current.orientation,
+            spineElement:spineCradleElementRef.current,
+            orientation:cradlePropsRef.current.orientation,
+            headlist:headViewContentRef.current,
+        })
 
     },[])
 
