@@ -1103,47 +1103,47 @@ const Cradle = ({
 
         let cradleState = cradlestateRef.current
 
-        // if (!viewportDataRef.current.isResizing) {
+        if (!viewportDataRef.current.isResizing) {
 
-        //     if (cradleState == 'ready' || cradleState == 'repositioning') {
+            if (cradleState == 'ready' || cradleState == 'repositioning') {
 
-        //         if (cradleState == 'ready') {
-        //             let itemindex = tailModelContentRef.current[0].props.index
-        //             let scrolloffset
-        //             if (cradlePropsRef.current.orientation == 'vertical') {
-        //                 scrolloffset = spineCradleElementRef.current.offsetTop - 
-        //                     viewportDataRef.current.elementref.current.scrollTop
+                if (cradleState == 'ready') {
+                    let itemindex = tailModelContentRef.current[0].props.index
+                    let scrolloffset
+                    if (cradlePropsRef.current.orientation == 'vertical') {
+                        scrolloffset = spineCradleElementRef.current.offsetTop - 
+                            viewportDataRef.current.elementref.current.scrollTop
                             
                             
-        //             } else {
+                    } else {
 
-        //                 scrolloffset = spineCradleElementRef.current.offsetLeft - 
-        //                     viewportDataRef.current.elementref.current.scrollLeft
+                        scrolloffset = spineCradleElementRef.current.offsetLeft - 
+                            viewportDataRef.current.elementref.current.scrollLeft
                             
                             
-        //             }
-        //             // scrollReferenceIndexDataRef.current = {
-        //             //     index:itemindex,
-        //             //     scrolloffset,
-        //             // }
-        //         } else {
+                    }
+                    scrollReferenceIndexDataRef.current = {
+                        index:itemindex,
+                        scrolloffset,
+                    }
+                } else {
 
-        //             scrollReferenceIndexDataRef.current = getReferenceIndexData({
-        //                 viewportData:viewportDataRef.current,
-        //                 cradleProps:cradlePropsRef.current,
-        //                 crosscount:crosscountRef.current,
-        //             })
+                    scrollReferenceIndexDataRef.current = getReferenceIndexData({
+                        viewportData:viewportDataRef.current,
+                        cradleProps:cradlePropsRef.current,
+                        crosscount:crosscountRef.current,
+                    })
 
-        //         }
+                }
 
-        //         // referenceIndexCallbackRef.current && 
-        //         //     referenceIndexCallbackRef.current(scrollReferenceIndexDataRef.current.index,'scrolling', cradleState)
+                referenceIndexCallbackRef.current && 
+                    referenceIndexCallbackRef.current(scrollReferenceIndexDataRef.current.index,'scrolling', cradleState)
 
-        //         // saveScrollReferenceIndexData(scrollReferenceIndexDataRef.current)
+                saveScrollReferenceIndexData(scrollReferenceIndexDataRef.current)
 
-        //     }
+            }
 
-        // }
+        }
 
         if (
             !isCradleInViewRef.current && 
@@ -1167,13 +1167,13 @@ const Cradle = ({
 
             // isScrollingRef.current = false;
             let cradleState = cradlestateRef.current
-            // if (!viewportDataRef.current.isResizing) {
-            //     let localrefdata = {...scrollReferenceIndexDataRef.current}
-            //     // console.log('saving end of scroll to stableReferenceIndexDataRef', localrefdata)
-            //     stableReferenceIndexDataRef.current = localrefdata
-            //     saveScrollReferenceIndexData(localrefdata) // trigger re-run to capture end of scroll session values
+            if (!viewportDataRef.current.isResizing) {
+                let localrefdata = {...scrollReferenceIndexDataRef.current}
+                // console.log('saving end of scroll to stableReferenceIndexDataRef', localrefdata)
+                stableReferenceIndexDataRef.current = localrefdata
+                saveScrollReferenceIndexData(localrefdata) // trigger re-run to capture end of scroll session values
 
-            // }
+            }
             switch (cradleState) {
 
                 case 'repositioning': {
