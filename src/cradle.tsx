@@ -191,18 +191,18 @@ const Cradle = ({
         if (viewportData.isResizing) {
 
             // enter resizing mode
-            // let scrolloffset
-            // if (cradlePropsRef.current.orientation == 'vertical') {
-            //     scrolloffset = spineCradleElementRef.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
-            // } else {
-            //     scrolloffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
-            // }
-            // callingReferenceIndexDataRef.current = {
-            //     index:tailModelContentRef.current[0]?.props.index || 0,
-            //     scrolloffset,
-            // }
+            let scrolloffset
+            if (cradlePropsRef.current.orientation == 'vertical') {
+                scrolloffset = spineCradleElementRef.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
+            } else {
+                scrolloffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
+            }
+            callingReferenceIndexDataRef.current = {
+                index:parseInt(tailModelContentRef.current[0]?.props.index || 0),
+                scrolloffset,
+            }
 
-            callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
+            // callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
             // console.log('setting callingReferenceIndexDataRef for resizing',{...callingReferenceIndexDataRef.current})
 
             pauseItemObserverRef.current = true
@@ -970,6 +970,12 @@ const Cradle = ({
 
         let cradlerowcount = cradlerowcountRef.current,
             crosscount = crosscountRef.current
+
+        console.log('setCradleContent index, crosscount',visibletargetindexoffset,crosscount)
+
+        let diff = visibletargetindexoffset % crosscount
+
+        visibletargetindexoffset -= diff
 
         if (cradleState == 'reposition') visibletargetscrolloffset = (visibletargetindexoffset == 0)?padding:gap
 

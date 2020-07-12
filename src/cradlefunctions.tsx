@@ -238,6 +238,9 @@ export const getContentListRequirements = ({
     let diff = indexoffset % crosscount
     indexoffset -= diff
 
+    // let targetdiff = visibletargetindexoffset % crosscount
+    // let referenceoffset = visibletargetindexoffset - targetdiff // part of return message
+
     // ------------[ adjust indexoffset and contentCount for listsize ]------------
 
     diff = 0
