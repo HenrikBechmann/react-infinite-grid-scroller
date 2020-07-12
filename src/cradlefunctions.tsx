@@ -149,11 +149,12 @@ export const calcVisibleItems = (
     return list
 }
 
-export const getContextReferenceIndexData = (
-    {
+export const getContextReferenceIndexData = ({
+
         viewportData,
         cradleProps,
         crosscount,
+
     }) => {
 
     let viewportElement = viewportData.elementref.current
@@ -176,9 +177,12 @@ export const getContextReferenceIndexData = (
 
     let referencerowindex = Math.ceil((scrollPos - cradleProps.padding)/cellLength)
     let referenceindex = referencerowindex * crosscount
+    referenceindex = Math.min(referenceindex,listsize - 1)
+    let diff = referenceindex % crosscount
+    referenceindex -= diff
 
     let referenceIndexData = {
-        index:Math.min(referenceindex,listsize - 1),
+        index:referenceindex,
         scrolloffset:referencescrolloffset
     }
 

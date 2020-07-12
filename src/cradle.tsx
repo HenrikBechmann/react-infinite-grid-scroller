@@ -1346,11 +1346,17 @@ const Cradle = ({
 
     const scrollToItem = useCallback((index) => { // , alignment = 'start') => {
 
+        let referenceindex = index
+
         pauseItemObserverRef.current = true
         pauseCradleIntersectionObserverRef.current = true
         pauseScrollingEffectsRef.current = true
 
-        callingReferenceIndexDataRef.current = {index, scrolloffset:0}
+        let crosscount = crosscountRef.current
+        let diff = referenceindex % crosscount
+        referenceindex -= diff
+
+        callingReferenceIndexDataRef.current = {index:referenceindex, scrolloffset:0}
         saveCradleState('reposition')
 
     },[])
@@ -1390,7 +1396,7 @@ const Cradle = ({
             listsize:cradlePropsRef.current.listsize,
             styles:cradlePropsRef.current.styles,
         }
-    },[viewportDimensions, scrollReferenceIndexDataRef, cradlePropsRef])
+    },[viewportDimensions, scrollReferenceIndexDataRef.current, cradlePropsRef])
 
     // console.log('cradleSpineStyle before render',cradleSpineStyle)
 
