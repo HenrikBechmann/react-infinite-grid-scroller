@@ -1208,6 +1208,8 @@ const Cradle = ({
             case 'reload':
                 headModelContentRef.current = []
                 tailModelContentRef.current = []
+                headViewContentRef.current = []
+                tailViewContentRef.current = []
                 saveCradleState('setreload')
                 break;
             case 'scrollposition': {
@@ -1336,6 +1338,7 @@ const Cradle = ({
             scrolloffset,
         }
 
+        console.log('reload',callingReferenceIndexDataRef)
         // callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
         saveCradleState('reload')
 
