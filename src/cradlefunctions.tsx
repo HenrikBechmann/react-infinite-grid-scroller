@@ -149,7 +149,7 @@ export const calcVisibleItems = (
     return list
 }
 
-export const getReferenceIndexData = (
+export const getContextReferenceIndexData = (
     {
         viewportData,
         cradleProps,
