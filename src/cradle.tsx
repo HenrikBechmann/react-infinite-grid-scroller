@@ -1311,7 +1311,13 @@ const Cradle = ({
     },[])
 
     const getContentList = useCallback(() => {
-        return Array.from(itemElementsRef.current)
+        let contentlist = Array.from(itemElementsRef.current)
+
+        contentlist.sort((a,b)=>{
+            return (a[0] < b[0])?-1:1
+        })
+
+        return contentlist
     },[])
 
     const reload = useCallback(() => {
