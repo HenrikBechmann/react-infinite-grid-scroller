@@ -971,7 +971,7 @@ const Cradle = ({
         let cradlerowcount = cradlerowcountRef.current,
             crosscount = crosscountRef.current
 
-        if (cradleState == 'reposition') visibletargetscrolloffset = padding
+        if (cradleState == 'reposition') visibletargetscrolloffset = (visibletargetindexoffset == 0)?padding:gap
 
         let localContentList = [] // any duplicated items will be re-used by react
 
@@ -1348,6 +1348,7 @@ const Cradle = ({
 
         pauseItemObserverRef.current = true
         pauseCradleIntersectionObserverRef.current = true
+        pauseScrollingEffectsRef.current = true
 
         callingReferenceIndexDataRef.current = {index, scrolloffset:0}
         saveCradleState('reposition')
