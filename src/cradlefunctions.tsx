@@ -279,9 +279,6 @@ export const getContentListRequirements = ({
 
     }
 
-    console.log('in getContentListRequirements: indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset',
-        indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset)
-
     return {indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset} // summarize requirements message
 
 }
