@@ -971,11 +971,7 @@ const Cradle = ({
         let cradlerowcount = cradlerowcountRef.current,
             crosscount = crosscountRef.current
 
-        console.log('setCradleContent index, crosscount',visibletargetindexoffset,crosscount)
-
-        let diff = visibletargetindexoffset % crosscount
-
-        visibletargetindexoffset -= diff
+        // console.log('setCradleContent index, crosscount',visibletargetindexoffset,crosscount)
 
         if (cradleState == 'reposition') visibletargetscrolloffset = (visibletargetindexoffset == 0)?padding:gap
 

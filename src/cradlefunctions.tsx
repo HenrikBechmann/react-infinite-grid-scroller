@@ -207,6 +207,10 @@ export const getContentListRequirements = ({
         viewportElement,
     }) => {
 
+    // reconcile referenceindex to crosscount context
+    let diff = visibletargetindexoffset % crosscount
+    visibletargetindexoffset -= diff
+
     // -------------[ calc basic inputs: cellLength, contentCount. ]----------
 
     let cellLength,viewportlength
@@ -225,17 +229,17 @@ export const getContentListRequirements = ({
     // -----------------------[ calc leadingitemcount, referenceoffset ]-----------------------
 
     let leadingitemcount = runwaycount * crosscount
-    let targetdiff = visibletargetindexoffset % crosscount
-    let referenceoffset = visibletargetindexoffset - targetdiff // part of return message
+    // let targetdiff = visibletargetindexoffset % crosscount
+    let referenceoffset = visibletargetindexoffset // part of return message
 
-    leadingitemcount += targetdiff
+    // leadingitemcount += diff
     leadingitemcount = Math.min(leadingitemcount, visibletargetindexoffset) // for list head
 
     // -----------------------[ calc indexoffset ]------------------------
 
     // leading edge
     let indexoffset = visibletargetindexoffset - leadingitemcount
-    let diff = indexoffset % crosscount
+    diff = indexoffset % crosscount
     indexoffset -= diff
 
     // let targetdiff = visibletargetindexoffset % crosscount
@@ -247,12 +251,12 @@ export const getContentListRequirements = ({
     let shift = 0
     if ((indexoffset + contentCount) > listsize) {
         diff = (indexoffset + contentCount) - listsize
-        shift = diff % crosscount
+        shift = Math.floor(diff / crosscount) * crosscount
     }
 
     if (diff) {
-        indexoffset -= (diff - shift)
-        contentCount -= shift
+        indexoffset -= shift
+        contentCount -= (diff % crosscount)
     }
     
     // --------------------[ calc css positioning ]-----------------------
@@ -274,6 +278,9 @@ export const getContentListRequirements = ({
         spineoffset = viewportlength - (viewportrows * cellLength) + padding
 
     }
+
+    console.log('in getContentListRequirements: indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset',
+        indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset)
 
     return {indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset} // summarize requirements message
 
