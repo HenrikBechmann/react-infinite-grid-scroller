@@ -994,8 +994,8 @@ const Cradle = ({
                 viewportElement:viewportDataRef.current.elementref.current
             })
 
-        console.log('from getContentListRequirements: indexoffset, referenceoffset, headspan, contentCount, scrollblockoffset, spineoffset',
-            indexoffset, referenceoffset, (referenceoffset - indexoffset)/crosscount,contentCount, scrollblockoffset, spineoffset)
+        // console.log('from getContentListRequirements: indexoffset, referenceoffset, headspan, contentCount, scrollblockoffset, spineoffset',
+        //     indexoffset, referenceoffset, (referenceoffset - indexoffset)/crosscount,contentCount, scrollblockoffset, spineoffset)
 
 
         let childlist = getUIContentList({

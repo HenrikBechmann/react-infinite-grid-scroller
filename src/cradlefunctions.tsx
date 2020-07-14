@@ -259,25 +259,30 @@ export const getContentListRequirements = ({
         contentCount -= (diff % crosscount)
     }
     
+    console.log('inside getContentListRequirements: indexoffset, virtual indexrow, referenceoffset, virtualreferencerow, contentCount, contentrows', 
+        indexoffset, (indexoffset/crosscount) , referenceoffset, (referenceoffset/crosscount), contentCount, (contentCount/crosscount))
+
     // --------------------[ calc css positioning ]-----------------------
 
     let indexrowoffset = Math.floor(indexoffset/crosscount)
-
     let targetrowoffset = Math.floor(referenceoffset/crosscount)
-    let maxrowoffset = Math.ceil(listsize/crosscount)
-    let scrollblockoffset = (targetrowoffset * cellLength)
+    let maxrowcount = Math.ceil(listsize/crosscount)
+
+    let scrollblockoffset = (targetrowoffset * cellLength) + padding
 
     let spineoffset = targetViewportOffset
 
-    if (maxrowoffset < (targetrowoffset + viewportrows)) {
+    if (maxrowcount < (targetrowoffset + viewportrows)) {
 
-        let rowdiff = (targetrowoffset + viewportrows) - maxrowoffset
+        let rowdiff = (targetrowoffset + viewportrows) - maxrowcount
         let itemdiff = rowdiff * crosscount
         // indexoffset += itemdiff
-        referenceoffset -= itemdiff
-        spineoffset = viewportlength - (viewportrows * cellLength) + padding
+        referenceoffset += itemdiff
+        spineoffset = viewportlength - ((viewportrows * cellLength) + padding)
 
     }
+
+    console.log('inside getContentListRequirements: spineoffset', spineoffset)
 
     return {indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset} // summarize requirements message
 
