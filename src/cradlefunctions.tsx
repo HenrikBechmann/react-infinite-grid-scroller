@@ -242,13 +242,23 @@ export const getContentListRequirements = ({
     diff = indexoffset % crosscount
     indexoffset -= diff
 
-    // let targetdiff = visibletargetindexoffset % crosscount
-    // let referenceoffset = visibletargetindexoffset - targetdiff // part of return message
-
-    // ------------[ adjust indexoffset and contentCount for listsize ]------------
+    // ------------[ adjust indexoffset for underflow ]------------
 
     diff = 0
     let shift = 0
+    if (indexoffset < 0) {
+        diff = indexoffset
+        shift = Math.floor(diff / crosscount) * crosscount
+    }
+
+    if (diff) {
+        indexoffset += shift
+    }
+
+    // ------------[ adjust indexoffset and contentCount for listsize overflow ]------------
+
+    diff = 0
+    shift = 0
     if ((indexoffset + contentCount) > listsize) {
         diff = (indexoffset + contentCount) - listsize
         shift = Math.floor(diff / crosscount) * crosscount
@@ -259,8 +269,8 @@ export const getContentListRequirements = ({
         contentCount -= (diff % crosscount)
     }
     
-    console.log('inside getContentListRequirements: indexoffset, virtual indexrow, referenceoffset, virtualreferencerow, contentCount, contentrows', 
-        indexoffset, (indexoffset/crosscount) , referenceoffset, (referenceoffset/crosscount), contentCount, (contentCount/crosscount))
+    // console.log('inside getContentListRequirements: indexoffset, virtual indexrow, referenceoffset, virtualreferencerow, contentCount, contentrows', 
+    //     indexoffset, (indexoffset/crosscount) , referenceoffset, (referenceoffset/crosscount), contentCount, (contentCount/crosscount))
 
     // --------------------[ calc css positioning ]-----------------------
 
@@ -282,7 +292,11 @@ export const getContentListRequirements = ({
 
     }
 
-    console.log('inside getContentListRequirements: spineoffset', spineoffset)
+    if (targetrowoffset = 0) {
+        spineoffset = padding
+    }
+
+    // console.log('inside getContentListRequirements: spineoffset', spineoffset)
 
     return {indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset} // summarize requirements message
 
