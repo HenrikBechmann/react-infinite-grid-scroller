@@ -3,6 +3,9 @@
 
 /*
     TODO:
+    setContent at start leaves too much space
+    review rotate referenceindex settings
+    BUG: track down how spine can end up at bottom of headlist with no items in tail list
 */
 
 /*
@@ -1114,7 +1117,7 @@ const Cradle = ({
             if (cradleState == 'ready' || cradleState == 'repositioning') {
 
                 if (cradleState == 'ready') {
-                    let itemindex = tailModelContentRef.current[0].props.index
+                    let itemindex = tailModelContentRef.current[0]?.props.index // TODO: resolve if index == umdefined
                     let scrolloffset
                     if (cradlePropsRef.current.orientation == 'vertical') {
                         scrolloffset = spineCradleElementRef.current.offsetTop - 

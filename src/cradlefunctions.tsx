@@ -292,11 +292,11 @@ export const getContentListRequirements = ({
 
     }
 
-    if (targetrowoffset = 0) {
-        spineoffset = padding
+    if (targetrowoffset == 0) {
+        spineoffset = 0
     }
 
-    // console.log('inside getContentListRequirements: spineoffset', spineoffset)
+    console.log('inside getContentListRequirements: targetrowoffset, spineoffset', targetrowoffset, spineoffset)
 
     return {indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset} // summarize requirements message
 
@@ -889,7 +889,7 @@ export const getReferenceindex = ({
     let referencerowshift = Math.ceil(itemshiftcount/crosscount)
     let referenceitemshift = referencerowshift * crosscount
 
-    let previousreferenceindex = tailcontentlist[0].props.index
+    let previousreferenceindex = tailcontentlist[0]?.props.index // TODO resolve if previous == undefined
 
     if (scrollforward) {
 
