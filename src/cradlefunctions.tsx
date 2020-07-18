@@ -296,7 +296,7 @@ export const getContentListRequirements = ({
         spineoffset = 0
     }
 
-    // console.log('inside getContentListRequirements: targetrowoffset, spineoffset', targetrowoffset, spineoffset)
+    console.log('inside getContentListRequirements: targetrowoffset, scrollblockoffset, spineoffset', targetrowoffset, scrollblockoffset, spineoffset)
 
     return {indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset} // summarize requirements message
 
@@ -395,7 +395,11 @@ export const isolateRelevantIntersections = ({
     // resolve duplicates. For uneven number, keep the most recent
     // otherwise delete them, they cancel each other out.
 
-    if (Object.keys(duplicates).length > 0) {
+    let duplicateslength = Object.keys(duplicates).length
+    if (duplicateslength > 0) {
+        console.log('DUPLICATES found', duplicateslength, duplicates)
+        let headintersectionsdelete = [],
+            tailintersectionsdelete = []
 
         for (let duplicateindex in duplicates) {
 
@@ -407,19 +411,34 @@ export const isolateRelevantIntersections = ({
                 intersecting[entry.index] = entry
             } else {
                 delete intersecting[duplicate[0].index]
+                // intersectingdelete.push(duplicate[0].index)
             }
             for (let entryobj of duplicate) {
                 let headptr = entryobj.headptr
                 let tailptr = entryobj.tailptr
                 if (headptr !== undefined) {
-                    delete headintersectionindexes[headptr]
-                    delete headintersections[headptr]
+                    headintersectionsdelete.push(headptr)
                 }
                 if (tailptr !== undefined) {
-                    delete tailintersectionindexes[tailptr]
-                    delete headintersections[tailptr]
+                    tailintersectionsdelete.push(tailptr)
                 }
             }
+        }
+        if (headintersectionsdelete.length) {
+            headintersectionindexes = headintersectionindexes.filter((value, index) => {
+                return !headintersectionsdelete.includes(index)
+            })
+            headintersections = headintersections.filter((value, index) => {
+                return !headintersectionsdelete.includes(index)
+            })
+        }
+        if (tailintersectionsdelete.length) {
+            tailintersectionindexes = tailintersectionindexes.filter((value, index) => {
+                return !tailintersectionsdelete.includes(index)
+            })
+            tailintersections = tailintersections.filter((value, index) => {
+                return !tailintersectionsdelete.includes(index)
+            })
         }
     }
 

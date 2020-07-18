@@ -3,17 +3,19 @@
 
 /*
     TODO:
-    setContent at start leaves too much space
     review rotate referenceindex settings
     BUG: track down how spine can end up at bottom of headlist with no items in tail list
+    investigate cascading calls to out of scope cradle, in relation to itemshift
+    investigate scrollblockoffset return from getContentListRequirements, causing double padding top when repositionoing
+
+    QA defend against butterfly getting intersections from opposite scroll direction
+        as the result of a short viewport
+
 */
 
 /*
     Description
     -----------
-
-    QA defend against butterfly getting intersections from opposite scroll direction
-        as the result of a short viewport
 
     This module has one main design pattern: the butterfuly pattern (my name)
 
@@ -952,6 +954,11 @@ const Cradle = ({
 
         }
 
+        scrollReferenceIndexDataRef.current = {
+            index:referenceindex,
+            spineoffset: spineposref
+        }
+
         saveCradleState('updatescroll')
 
     }
@@ -1032,7 +1039,7 @@ const Cradle = ({
         headModelContentRef.current = headcontentlist
         tailModelContentRef.current = tailcontentlist
 
-        stableReferenceIndexDataRef.current = {
+        scrollReferenceIndexDataRef.current = stableReferenceIndexDataRef.current = {
 
             index:tailcontentlist[0]?.props.index,
             scrolloffset:spineoffset,
