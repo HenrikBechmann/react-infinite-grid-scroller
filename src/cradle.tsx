@@ -1216,6 +1216,8 @@ const Cradle = ({
                     callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
 
                     pauseItemObserverRef.current = true
+                    // pauseCradleIntersectionObserverRef.current = true
+                    // pauseScrollingEffectsRef.current = true
 
                     saveCradleState('reposition')
 
