@@ -293,7 +293,7 @@ export const getContentListRequirements = ({
     }
 
     if (targetrowoffset == 0) {
-        scrollblockoffset = 0
+        // scrollblockoffset = 0
         spineoffset = padding
     }
 

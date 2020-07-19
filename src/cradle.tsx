@@ -671,7 +671,24 @@ const Cradle = ({
         if (!isCradleInViewRef.current) {
 
             console.log('CRADLE OUT OF VIEW')
-            
+            let cradleState = cradlestateRef.current        
+            if (
+                !isCradleInViewRef.current && 
+                !pauseItemObserverRef.current && 
+                !viewportDataRef.current.isResizing &&
+                !(cradleState == 'resize') &&
+                !(cradleState == 'repositioning') && 
+                !(cradleState == 'reposition')) {
+
+                let rect = viewportDataRef.current.elementref.current.getBoundingClientRect()
+                let {top, right, bottom, left} = rect
+                let width = right - left, height = bottom - top
+                viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
+                pauseItemObserverRef.current = true
+                console.log('REPOSITIONING')
+                saveCradleState('repositioning')
+
+            }
             // saveCradleState('updatescroll')
         }
 
@@ -1161,7 +1178,7 @@ const Cradle = ({
 
         }
 
-        if (
+        if ( 
             !isCradleInViewRef.current && 
             !pauseItemObserverRef.current && 
             !viewportDataRef.current.isResizing &&
