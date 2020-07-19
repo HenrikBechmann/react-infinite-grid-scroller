@@ -1041,7 +1041,7 @@ const Cradle = ({
 
         scrollReferenceIndexDataRef.current = stableReferenceIndexDataRef.current = {
 
-            index:tailcontentlist[0]?.props.index,
+            index: referenceoffset,// tailcontentlist[0]?.props.index,
             scrolloffset:spineoffset,
 
         }
