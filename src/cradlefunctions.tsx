@@ -297,7 +297,8 @@ export const getContentListRequirements = ({
         spineoffset = padding
     }
 
-    console.log('inside getContentListRequirements: targetrowoffset, scrollblockoffset, spineoffset', targetrowoffset, scrollblockoffset, spineoffset)
+    console.log('inside getContentListRequirements: referenceoffset, targetrowoffset, scrollblockoffset, spineoffset', 
+        referenceoffset, targetrowoffset, scrollblockoffset, spineoffset)
 
     return {indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset} // summarize requirements message
 
