@@ -293,7 +293,7 @@ export const getContentListRequirements = ({
     }
 
     if (targetrowoffset == 0) {
-        // scrollblockoffset = 0
+        scrollblockoffset = 0
         spineoffset = padding
     }
 
@@ -562,15 +562,15 @@ export const calcItemshiftcount = ({
 
     let forwardcount = 0, backwardcount = 0
     let spineviewportoffset, headspineoffset, tailspineoffset
-    let cradleboundary, itemshiftcount
+    let cradleboundary, itemshiftcount, viewportlength
     if (cradleProps.orientation == 'vertical') {
         spineviewportoffset = spineElement.offsetTop - viewportElement.scrollTop
         headspineoffset = headElement.offsetTop
         tailspineoffset = tailElement.offsetTop // always 0
-
+        viewportlength = viewportElement.offsetHeight
         if (scrollforward) {
 
-            cradleboundary = viewportElement.offsetHeight - (spineviewportoffset + tailspineoffset + tailElement.offsetHeight)
+            cradleboundary = viewportlength - (spineviewportoffset + tailspineoffset + tailElement.offsetHeight)
 
         } else {
 
@@ -582,10 +582,11 @@ export const calcItemshiftcount = ({
         spineviewportoffset = spineElement.offsetLeft - viewportElement.scrollLeft
         headspineoffset = headElement.offsetLeft
         tailspineoffset = tailElement.offsetLeft // always 0
+        viewportlength = viewportElement.offsetWidth
 
         if (scrollforward) {
 
-            cradleboundary = viewportElement.offsetWidth - (spineviewportoffset + tailspineoffset + tailElement.offsetWidth)
+            cradleboundary = viewportlength - (spineviewportoffset + tailspineoffset + tailElement.offsetWidth)
 
         } else {
 
@@ -597,6 +598,7 @@ export const calcItemshiftcount = ({
     // console.log('cradleboundary',cradleboundary)
 
     if (cradleboundary < 0) cradleboundary = 0 // not relevant
+    if (cradleboundary > viewportlength) cradleboundary = viewportlength
 
     let cellLength = cradleProps.orientation == 'vertical'?cradleProps.cellHeight:cradleProps.cellWitdh
     let boundaryrowcount = (cradleboundary == 0)?0:Math.ceil(cradleboundary/(cellLength + cradleProps.gap))
