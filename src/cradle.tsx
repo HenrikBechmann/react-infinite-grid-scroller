@@ -11,6 +11,8 @@
     QA defend against butterfly getting intersections from opposite scroll direction
         as the result of a short viewport
 
+    minimize use of shift scroll offset
+
 */
 
 /*
@@ -1300,8 +1302,8 @@ const Cradle = ({
                     // redundant scroll position to avoid accidental positioning at tail end of reposition
                     if (viewportData.elementref.current) { // already unmounted if fails
 
-                        viewportData.elementref.current[scrollPositionDataRef.current.property] =
-                            scrollPositionDataRef.current.value
+                        // viewportData.elementref.current[scrollPositionDataRef.current.property] =
+                        //     scrollPositionDataRef.current.value
 
                         pauseItemObserverRef.current  && (pauseItemObserverRef.current = false)
                         pauseCradleIntersectionObserverRef.current  && (pauseCradleIntersectionObserverRef.current = false)
