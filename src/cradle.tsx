@@ -1192,8 +1192,11 @@ const Cradle = ({
             let {top, right, bottom, left} = rect
             let width = right - left, height = bottom - top
             viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
-            pauseItemObserverRef.current = true
             console.log('REPOSITIONING')
+            pauseItemObserverRef.current = true
+            pauseCradleIntersectionObserverRef.current = true
+            pauseScrollingEffectsRef.current = true
+            // stableReferenceIndexDataRef.current = scrollReferenceIndexDataRef.current
             saveCradleState('repositioning')
 
         }
@@ -1214,10 +1217,6 @@ const Cradle = ({
                 case 'repositioning': {
 
                     callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
-
-                    pauseItemObserverRef.current = true
-                    // pauseCradleIntersectionObserverRef.current = true
-                    // pauseScrollingEffectsRef.current = true
 
                     saveCradleState('reposition')
 
