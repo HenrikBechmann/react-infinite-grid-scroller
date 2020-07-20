@@ -204,13 +204,13 @@ const Cradle = ({
             } else {
                 scrolloffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
             }
-            callingReferenceIndexDataRef.current = {
-                index:parseInt(tailModelContentRef.current[0]?.props.index || 0),
-                scrolloffset,
-            }
+            // callingReferenceIndexDataRef.current = {
+            //     index:parseInt(tailModelContentRef.current[0]?.props.index || 0),
+            //     scrolloffset,
+            // }
 
-            // callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
-            // console.log('setting callingReferenceIndexDataRef for resizing',{...callingReferenceIndexDataRef.current})
+            callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
+            console.log('setting callingReferenceIndexDataRef for resizing',{...callingReferenceIndexDataRef.current})
 
             pauseItemObserverRef.current = true
             pauseCradleIntersectionObserverRef.current = true
@@ -240,11 +240,11 @@ const Cradle = ({
         } else {
             scrolloffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
         }
-        callingReferenceIndexDataRef.current = {
-            index:tailModelContentRef.current[0].props.index || 0,
-            scrolloffset,
-        }
-        // callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
+        // callingReferenceIndexDataRef.current = {
+        //     index:tailModelContentRef.current[0].props.index || 0,
+        //     scrolloffset,
+        // }
+        callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
 
         pauseItemObserverRef.current = true
         pauseCradleIntersectionObserverRef.current = true
@@ -1370,13 +1370,13 @@ const Cradle = ({
         } else {
             scrolloffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
         }
-        callingReferenceIndexDataRef.current = {
-            index:tailModelContentRef.current[0].props.index || 0,
-            scrolloffset,
-        }
+        // callingReferenceIndexDataRef.current = {
+        //     index:tailModelContentRef.current[0].props.index || 0,
+        //     scrolloffset,
+        // }
 
         console.log('reload',callingReferenceIndexDataRef)
-        // callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
+        callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
         saveCradleState('reload')
 
     },[])
