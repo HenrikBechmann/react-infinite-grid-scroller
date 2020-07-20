@@ -850,7 +850,7 @@ const Cradle = ({
 
         })
 
-        // console.log('itemshiftcount',itemshiftcount)
+        console.log('itemshiftcount, itemshiftrows',itemshiftcount, itemshiftcount / crosscount)
 
         if (itemshiftcount == 0) {  // nothing to do
 
@@ -1143,7 +1143,10 @@ const Cradle = ({
             if (cradleState == 'ready' || cradleState == 'repositioning') {
 
                 if (cradleState == 'ready') {
-                    let itemindex = tailModelContentRef.current[0]?.props.index // TODO: resolve if index == umdefined
+                    let itemindex = tailModelContentRef.current[0]?.props.index 
+                    if (itemindex === undefined) {
+                        console.log('ERROR: scroll encountered undefined tailcontent lead')
+                    }
                     let scrolloffset
                     if (cradlePropsRef.current.orientation == 'vertical') {
                         scrolloffset = spineCradleElementRef.current.offsetTop - 
@@ -1161,6 +1164,7 @@ const Cradle = ({
                         index:itemindex,
                         scrolloffset,
                     }
+                    console.log('scrolling referenceindex for READY',{...scrollReferenceIndexDataRef.current})
                 } else {
 
                     scrollReferenceIndexDataRef.current = getContextReferenceIndexData({
@@ -1169,6 +1173,7 @@ const Cradle = ({
                         crosscount:crosscountRef.current,
                     })
 
+                    console.log('scrolling referenceindex for REPOSITIONING',{...scrollReferenceIndexDataRef.current})
                 }
 
                 referenceIndexCallbackRef.current && 
@@ -1193,9 +1198,9 @@ const Cradle = ({
             let width = right - left, height = bottom - top
             viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
             console.log('REPOSITIONING')
+            cradlestateRef.current = 'repositioning'
             pauseItemObserverRef.current = true
             pauseCradleIntersectionObserverRef.current = true
-            pauseScrollingEffectsRef.current = true
             // stableReferenceIndexDataRef.current = scrollReferenceIndexDataRef.current
             saveCradleState('repositioning')
 
@@ -1219,6 +1224,8 @@ const Cradle = ({
                     callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
 
                     saveCradleState('reposition')
+
+                    pauseScrollingEffectsRef.current = true
 
                     break
                     
@@ -1309,6 +1316,7 @@ const Cradle = ({
                         pauseItemObserverRef.current  && (pauseItemObserverRef.current = false)
                         pauseCradleIntersectionObserverRef.current  && (pauseCradleIntersectionObserverRef.current = false)
                         pauseScrollingEffectsRef.current && (pauseScrollingEffectsRef.current = false)
+                        console.log('normalized!')
 
                     }
 
@@ -1321,7 +1329,6 @@ const Cradle = ({
             }          
 
             case 'ready':
-
                 break
 
         }

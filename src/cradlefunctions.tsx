@@ -638,10 +638,12 @@ export const calcItemshiftcount = ({
     if (proposedindex > listsize) {
         let diff = listsize - (proposedindex + 1)
         itemshiftcount -= diff
+        console.log('itemshiftcount adjusted down, by', itemshiftcount, diff)
     } 
 
     if (proposedindex < 0) {
         itemshiftcount += (proposedindex + 1)
+        console.log('itemshiftcount adjusted up, by', itemshiftcount, proposedindex + 1)
     } 
 
     return itemshiftcount // positive = roll toward top/left; negative = roll toward bottom/right
