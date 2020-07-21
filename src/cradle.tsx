@@ -790,7 +790,7 @@ const Cradle = ({
 
         }
 
-        console.log('==>> scrollforward, scrollPositions', scrollforward, scrollPositions )
+        // console.log('==>> scrollforward, scrollPositions', scrollforward, scrollPositions )
 
         let viewportData = viewportDataRef.current
         let cradleProps = cradlePropsRef.current
@@ -828,7 +828,7 @@ const Cradle = ({
             filteredindexes.push({index:entry.target.dataset.index})
         }
 
-        console.log('filteredindexes',filteredindexes)
+        // console.log('filteredindexes',filteredindexes)
 
         // if (intersections.length == 0) {
         //     return
@@ -850,7 +850,7 @@ const Cradle = ({
 
         })
 
-        console.log('itemshiftcount, itemshiftrows',itemshiftcount, itemshiftcount / crosscount)
+        // console.log('itemshiftcount, itemshiftrows',itemshiftcount, itemshiftcount / crosscount)
 
         if (itemshiftcount == 0) {  // nothing to do
 
@@ -874,7 +874,7 @@ const Cradle = ({
 
         })
 
-        console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
+        // console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
 
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
@@ -916,8 +916,8 @@ const Cradle = ({
             intersections,
         })
 
-        console.log('referenceindex, referenceitemshift, previousreferenceindex',
-            referenceindex, referenceitemshift, previousreferenceindex)
+        // console.log('referenceindex, referenceitemshift, previousreferenceindex',
+        //     referenceindex, referenceitemshift, previousreferenceindex)
 
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 

@@ -986,22 +986,6 @@ export const getSpinePosRef = (
         padding = cradleProps.padding,
         gap = cradleProps.gap
 
-    if (scrollforward) {
-
-        if (orientation == 'vertical') {
-            // console.log('referenceindex, itemelements.get(referenceindex)',referenceindex, itemelements.get(referenceindex))
-            spineposref = spineElement.offsetTop + itemelements.get(referenceindex)?.current.offsetTop
-            return spineposref
-
-        } else {
-
-            spineposref = spineElement.offsetLeft + itemelements.get(referenceindex)?.current.offsetLeft
-            return spineposref
-
-        }
-
-    }
-
     let spineposbase, cellLength
     if (orientation == 'vertical') {
 
@@ -1015,19 +999,67 @@ export const getSpinePosRef = (
 
     }
 
+    let referenceposshift = 0
+
+    if (scrollforward) {
+
+        if (orientation == 'vertical') {
+            // console.log('referenceindex, itemelements.get(referenceindex)',referenceindex, itemelements.get(referenceindex))
+            if (itemelements.has(referenceindex)) {
+                spineposref = spineElement.offsetTop + itemelements.get(referenceindex).current.offsetTop
+            }
+            // return spineposref
+
+        } else {
+
+            if (itemelements.has(referenceindex)) {
+                spineposref = spineElement.offsetLeft + itemelements.get(referenceindex).current.offsetLeft
+            }
+            // return spineposref
+
+        }
+
+        console.log('spineposref LOOKUP', spineposref)
+        if ( spineposref === undefined ) {
+
+            for (let rowindex = previousreferenceindex;
+                rowindex < previousreferenceindex + referenceshift; 
+                rowindex += crosscount ) {
+
+                let propname = (cradleProps.orientation == 'vertical')?'offsetHeight':'offsetWidth'
+                let iterationshift = itemelements.has(rowindex)
+                    ?itemelements.get(rowindex).current[propname] + gap
+                    :cellLength
+                referenceposshift += iterationshift
+
+            }
+
+            spineposref = spineposbase - referenceposshift
+
+        }
+
+        console.log('inside getSpinePosRef SCROLLFORWARD: \
+            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spinposref', 
+            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineposref)
+
+        return spineposref
+
+    }
+
     let referencerowshift = Math.ceil(referenceshift/crosscount)
 
     // ------------------[ calculate spine position ]---------------
 
-    let referenceposshift = 0
     // let spineposref
     if (headcontent.length == 0) {
+
+        console.log('spineposref, padding',spineposref, padding)
 
         spineposref = padding
 
     } else { 
 
-        // console.log('inside getSpinePosRef', previousreferenceindex, referenceshift, crosscount)
+        console.log('inside getSpinePosRef', previousreferenceindex, referenceshift, crosscount)
         for (let rowindex = previousreferenceindex;
             rowindex > previousreferenceindex - referenceshift; 
             rowindex -= crosscount ) {
@@ -1041,6 +1073,8 @@ export const getSpinePosRef = (
         }
 
         spineposref = spineposbase - referenceposshift
+        console.log('inside getSpinePosRef SCROLLBACKWARD: previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift', 
+            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift)
 
     }
 
