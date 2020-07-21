@@ -883,7 +883,7 @@ export const getUIContentList = (props) => {
     The referenceindex must result in correct spine placement,
     ... and must take into account the bounds of the list for positioning
 */
-export const getReferenceindex = ({
+export const getNewReferenceindex = ({
     crosscount,
     listsize,
     scrollforward,
@@ -892,32 +892,33 @@ export const getReferenceindex = ({
     // headcontentlist,
     tailcontentlist,
     // itemelements,
-    intersections,
+    // intersections,
 }) => {
 
+    let previousreferenceindex = tailcontentlist[0].props.index
+
     let referenceindex
-    if (scrollforward) {
+    // if (scrollforward) {
 
-        let referenceindexbase = parseInt(intersections[intersections.length - 1]?.target.dataset.index)
-        if (referenceindexbase === undefined) {
-            // let referenceindexbase = parseInt(intersections[intersections.length - 1]?.target.dataset.index)
-            referenceindex = referenceindexbase - (( crosscount * 2 ) - 2) + 1
+    //     let referenceindexbase = parseInt(intersections[intersections.length - 1]?.target.dataset.index)
+    //     if (referenceindexbase === undefined) {
+    //         referenceindexbase = previousreferenceindex
+    //         // let referenceindexbase = parseInt(intersections[intersections.length - 1]?.target.dataset.index)
+    //         // referenceindex = referenceindexbase - (( crosscount * 2 ) - 2) + 1
 
-        } else {
+    //     } else {
 
-            referenceindex += referenceindexbase + 1
+    //         referenceindex = referenceindexbase + 1
 
-        }
+    //     }
 
-    }
+    // }
 
 
     itemshiftcount = Math.abs(itemshiftcount)
 
     let referencerowshift = Math.ceil(itemshiftcount/crosscount)
     let referenceitemshift = referencerowshift * crosscount
-
-    let previousreferenceindex = tailcontentlist[0].props.index
 
     if (scrollforward) {
 

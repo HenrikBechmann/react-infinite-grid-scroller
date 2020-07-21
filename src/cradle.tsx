@@ -49,7 +49,7 @@ const ITEM_OBSERVER_THRESHOLD = .9
 import { 
     setCradleGridStyles, 
     getUIContentList, 
-    getReferenceindex,
+    getNewReferenceindex,
     calcHeadAndTailChanges,
     calcItemshiftcount,
     calcVisibleItems, 
@@ -904,7 +904,7 @@ const Cradle = ({
 
         // -------------------[ 6. calculate new referenceindex ]---------------------
 
-        let [referenceindex, referenceitemshift, previousreferenceindex] = getReferenceindex({
+        let [referenceindex, referenceitemshift, previousreferenceindex] = getNewReferenceindex({
             itemshiftcount,
             crosscount,
             listsize,
@@ -913,7 +913,7 @@ const Cradle = ({
             // headcontentlist,
             tailcontentlist,
             // itemelements,
-            intersections,
+            // intersections,
         })
 
         console.log('referenceindex, referenceitemshift, previousreferenceindex',
