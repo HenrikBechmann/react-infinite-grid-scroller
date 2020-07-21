@@ -1023,7 +1023,8 @@ export const getSpinePosRef = (
 
         }
 
-        console.log('spineposref LOOKUP: spineposref, referenceindex, referenceshift', spineposref, referenceindex, referenceshift)
+        console.log('spineposref LOOKUP: spineposref, referenceindex, referenceshift', 
+            spineposref, referenceindex, referenceshift)
         if ( spineposref === undefined ) {
             console.log('calculating spineposref SCROLLFORWARD: previousreferenceindex, referenceshift, crosscount', 
                 previousreferenceindex, referenceshift, crosscount)
@@ -1080,8 +1081,9 @@ export const getSpinePosRef = (
         }
 
         spineposref = spineposbase - referenceposshift
-        console.log('inside getSpinePosRef SCROLLBACKWARD: previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift', 
-            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift)
+        console.log('inside getSpinePosRef SCROLLBACKWARD: \
+            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineposref', 
+            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineposref)
 
     }
 
