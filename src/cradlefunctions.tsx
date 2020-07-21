@@ -899,10 +899,13 @@ export const getReferenceindex = ({
     if (scrollforward) {
 
         let referenceindexbase = parseInt(intersections[intersections.length - 1]?.target.dataset.index)
-        referenceindex += referenceindexbase + 1
         if (referenceindexbase === undefined) {
             // let referenceindexbase = parseInt(intersections[intersections.length - 1]?.target.dataset.index)
             referenceindex = referenceindexbase - (( crosscount * 2 ) - 2) + 1
+
+        } else {
+
+            referenceindex += referenceindexbase + 1
 
         }
 
@@ -914,7 +917,7 @@ export const getReferenceindex = ({
     let referencerowshift = Math.ceil(itemshiftcount/crosscount)
     let referenceitemshift = referencerowshift * crosscount
 
-    let previousreferenceindex = tailcontentlist[0]?.props.index // TODO resolve if previous == undefined
+    let previousreferenceindex = tailcontentlist[0].props.index
 
     if (scrollforward) {
 
@@ -1019,9 +1022,10 @@ export const getSpinePosRef = (
 
         }
 
-        console.log('spineposref LOOKUP', spineposref)
+        console.log('spineposref LOOKUP: spineposref, referenceindex, referenceshift', spineposref, referenceindex, referenceshift)
         if ( spineposref === undefined ) {
-
+            console.log('calculating spineposref SCROLLFORWARD: previousreferenceindex, referenceshift, crosscount', 
+                previousreferenceindex, referenceshift, crosscount)
             for (let rowindex = previousreferenceindex;
                 rowindex < previousreferenceindex + referenceshift; 
                 rowindex += crosscount ) {
@@ -1039,7 +1043,7 @@ export const getSpinePosRef = (
         }
 
         console.log('inside getSpinePosRef SCROLLFORWARD: \
-            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spinposref', 
+            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineposref', 
             previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineposref)
 
         return spineposref
@@ -1058,6 +1062,8 @@ export const getSpinePosRef = (
         spineposref = padding
 
     } else { 
+
+        console.log('calculating spineposref SCROLLBACKWARD')
 
         console.log('inside getSpinePosRef', previousreferenceindex, referenceshift, crosscount)
         for (let rowindex = previousreferenceindex;

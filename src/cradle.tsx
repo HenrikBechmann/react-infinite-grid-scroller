@@ -916,8 +916,8 @@ const Cradle = ({
             intersections,
         })
 
-        // console.log('referenceindex, referenceitemshift, previousreferenceindex',
-        //     referenceindex, referenceitemshift, previousreferenceindex)
+        console.log('referenceindex, referenceitemshift, previousreferenceindex',
+            referenceindex, referenceitemshift, previousreferenceindex)
 
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 
