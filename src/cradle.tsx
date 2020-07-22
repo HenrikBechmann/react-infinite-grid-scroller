@@ -55,7 +55,7 @@ import {
     calcVisibleItems, 
     getScrollReferenceIndexData,
     getContentListRequirements,
-    getSpinePosRef,
+    getSpineOffsetRef,
     isolateRelevantIntersections,
     // normalizeCradleAnchors,
     allocateContentList,
@@ -687,6 +687,7 @@ const Cradle = ({
                 let width = right - left, height = bottom - top
                 viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
                 pauseItemObserverRef.current = true
+                pauseCradleIntersectionObserverRef.current = true
                 console.log('REPOSITIONING')
                 saveCradleState('repositioning')
 
@@ -937,7 +938,7 @@ const Cradle = ({
         // -------------------------------[ 8. set css changes ]-------------------------
 
         // place the spine in the scrollblock
-        let spineposref = getSpinePosRef(
+        let spineoffsetref = getSpineOffsetRef(
             {
                 cradleProps,
                 crosscount,
@@ -954,28 +955,41 @@ const Cradle = ({
             }
         )
 
-        console.log('spineposref, crosscount',spineposref, crosscount)
-
-        if (spineposref !== undefined) {
+        if (spineoffsetref !== undefined) {
             if (cradleProps.orientation == 'vertical') {
 
                 headCradleElementRef.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
-                spineCradleElementRef.current.style.top = spineposref + 'px'
+                spineCradleElementRef.current.style.top = spineoffsetref + 'px'
                 spineCradleElementRef.current.style.left = 'auto'
 
             } else {
 
                 headCradleElementRef.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
-                spineCradleElementRef.current.style.left = spineposref + 'px'
+                spineCradleElementRef.current.style.left = spineoffsetref + 'px'
                 spineCradleElementRef.current.style.top = 'auto'
 
             }
 
         }
 
+        let scrolloffset
+        if (cradlePropsRef.current.orientation == 'vertical') {
+            scrolloffset = spineoffsetref - 
+                viewportDataRef.current.elementref.current.scrollTop
+                
+                
+        } else {
+
+            scrolloffset = spineoffsetref - 
+                viewportDataRef.current.elementref.current.scrollLeft
+                
+        }
+
+        console.log('scrolloffset, spineoffsetref, crosscount', scrolloffset, spineoffsetref, crosscount)
+
         scrollReferenceIndexDataRef.current = {
             index:referenceindex,
-            spineoffset: spineposref
+            spineoffset:scrolloffset
         }
 
         saveCradleState('updatescroll')
@@ -1164,7 +1178,7 @@ const Cradle = ({
                         index:itemindex,
                         scrolloffset,
                     }
-                    console.log('scrolling referenceindex for READY',{...scrollReferenceIndexDataRef.current})
+                    // console.log('scrolling referenceindex for READY',{...scrollReferenceIndexDataRef.current})
                 } else {
 
                     scrollReferenceIndexDataRef.current = getScrollReferenceIndexData({
@@ -1173,7 +1187,7 @@ const Cradle = ({
                         crosscount:crosscountRef.current,
                     })
 
-                    console.log('scrolling referenceindex for REPOSITIONING',{...scrollReferenceIndexDataRef.current})
+                    // console.log('scrolling referenceindex for REPOSITIONING',{...scrollReferenceIndexDataRef.current})
                 }
 
                 referenceIndexCallbackRef.current && 
@@ -1185,26 +1199,26 @@ const Cradle = ({
 
         }
 
-        if ( 
-            !isCradleInViewRef.current && 
-            !pauseItemObserverRef.current && 
-            !viewportDataRef.current.isResizing &&
-            !(cradleState == 'resize') &&
-            !(cradleState == 'repositioning') && 
-            !(cradleState == 'reposition')) {
+        // if ( 
+        //     !isCradleInViewRef.current && 
+        //     !pauseItemObserverRef.current && 
+        //     !viewportDataRef.current.isResizing &&
+        //     !(cradleState == 'resize') &&
+        //     !(cradleState == 'repositioning') && 
+        //     !(cradleState == 'reposition')) {
 
-            let rect = viewportDataRef.current.elementref.current.getBoundingClientRect()
-            let {top, right, bottom, left} = rect
-            let width = right - left, height = bottom - top
-            viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
-            console.log('REPOSITIONING')
-            cradlestateRef.current = 'repositioning'
-            pauseItemObserverRef.current = true
-            pauseCradleIntersectionObserverRef.current = true
-            // stableReferenceIndexDataRef.current = scrollReferenceIndexDataRef.current
-            saveCradleState('repositioning')
+        //     let rect = viewportDataRef.current.elementref.current.getBoundingClientRect()
+        //     let {top, right, bottom, left} = rect
+        //     let width = right - left, height = bottom - top
+        //     viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
+        //     console.log('REPOSITIONING')
+        //     cradlestateRef.current = 'repositioning'
+        //     pauseItemObserverRef.current = true
+        //     pauseCradleIntersectionObserverRef.current = true
+        //     // stableReferenceIndexDataRef.current = scrollReferenceIndexDataRef.current
+        //     saveCradleState('repositioning')
 
-        }
+        // }
 
         scrollTimeridRef.current = setTimeout(() => {
 
