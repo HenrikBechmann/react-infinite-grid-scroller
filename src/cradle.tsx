@@ -53,7 +53,7 @@ import {
     calcHeadAndTailChanges,
     calcItemshiftcount,
     calcVisibleItems, 
-    getContextReferenceIndexData,
+    getScrollReferenceIndexData,
     getContentListRequirements,
     getSpinePosRef,
     isolateRelevantIntersections,
@@ -1167,7 +1167,7 @@ const Cradle = ({
                     console.log('scrolling referenceindex for READY',{...scrollReferenceIndexDataRef.current})
                 } else {
 
-                    scrollReferenceIndexDataRef.current = getContextReferenceIndexData({
+                    scrollReferenceIndexDataRef.current = getScrollReferenceIndexData({
                         viewportData:viewportDataRef.current,
                         cradleProps:cradlePropsRef.current,
                         crosscount:crosscountRef.current,
