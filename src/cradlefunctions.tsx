@@ -173,7 +173,9 @@ export const getScrollReferenceIndexData = ({
     }
 
     let referencescrolloffset = cellLength - (scrollPos % cellLength)
-    if (referencescrolloffset == cellLength + cradleProps.padding) referencescrolloffset = 0
+    if (referencescrolloffset == cellLength + cradleProps.padding) {
+        referencescrolloffset = 0
+    }
 
     let referencerowindex = Math.ceil((scrollPos - cradleProps.padding)/cellLength)
     let referenceindex = referencerowindex * crosscount

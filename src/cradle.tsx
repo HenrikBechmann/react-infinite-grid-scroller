@@ -13,6 +13,8 @@
 
     minimize use of shift scroll offset
 
+    implement sessionid scheme for cell content
+
 */
 
 /*
@@ -666,10 +668,39 @@ const Cradle = ({
         }
         isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
         
-        // if (pauseCradleIntersectionObserverRef.current) {
-        //     // console.log('returning from cradleintersection callback owing to pause')
-        //     return
-        // }
+        if (pauseCradleIntersectionObserverRef.current) {
+            // console.log('returning from cradleintersection callback owing to pause')
+            return
+        }
+
+        if (!isCradleInViewRef.current) 
+
+        {
+
+            // console.log('CRADLE OUT OF VIEW')
+            let cradleState = cradlestateRef.current        
+            if (
+                !isCradleInViewRef.current && 
+                !pauseCradleIntersectionObserverRef.current //&&
+                // !pauseItemObserverRef.current && 
+                // !viewportDataRef.current.isResizing &&
+                // !(cradleState == 'resize') &&
+                // !(cradleState == 'repositioning') && 
+                // !(cradleState == 'reposition')
+                ) 
+            {
+
+                let rect = viewportDataRef.current.elementref.current.getBoundingClientRect()
+                let {top, right, bottom, left} = rect
+                let width = right - left, height = bottom - top
+                viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
+                pauseItemObserverRef.current = true
+                pauseCradleIntersectionObserverRef.current = true
+                console.log('REPOSITIONING')
+                saveCradleState('repositioning')
+
+            }
+        }
 
     },[])
 
@@ -995,6 +1026,8 @@ const Cradle = ({
     // reset cradle, including allocation between head and tail parts of the cradle
     const setCradleContent = (cradleState, referenceIndexData) => { //
 
+        console.log('entering setCradleContent', cradleState, referenceIndexData)
+
         let cradleProps = cradlePropsRef.current
         let { index: visibletargetindexoffset, 
             scrolloffset: visibletargetscrolloffset } = referenceIndexData
@@ -1078,7 +1111,6 @@ const Cradle = ({
 
         }
 
-        console.log('setting inside set Content')
         if (orientation == 'vertical') {
 
             scrollPositionDataRef.current = {property:'scrollTop',value:scrollblockoffset}
@@ -1157,7 +1189,6 @@ const Cradle = ({
                         scrolloffset = spineCradleElementRef.current.offsetTop - 
                             viewportDataRef.current.elementref.current.scrollTop
                             
-                            
                     } else {
 
                         scrolloffset = spineCradleElementRef.current.offsetLeft - 
@@ -1178,7 +1209,7 @@ const Cradle = ({
                         crosscount:crosscountRef.current,
                     })
 
-                    console.log('scrolling referenceindex for REPOSITIONING',{...scrollReferenceIndexDataRef.current})
+                    // console.log('scrolling referenceindex for REPOSITIONING',{...scrollReferenceIndexDataRef.current})
                 }
 
                 referenceIndexCallbackRef.current && 
@@ -1190,29 +1221,29 @@ const Cradle = ({
 
         }
 
-        if (!isCradleInViewRef.current) {
+        // if (!isCradleInViewRef.current) {
 
-            // console.log('CRADLE OUT OF VIEW')
-            let cradleState = cradlestateRef.current        
-            if (
-                !isCradleInViewRef.current && 
-                !pauseItemObserverRef.current && 
-                !viewportDataRef.current.isResizing &&
-                !(cradleState == 'resize') &&
-                !(cradleState == 'repositioning') && 
-                !(cradleState == 'reposition')) {
+        //     // console.log('CRADLE OUT OF VIEW')
+        //     let cradleState = cradlestateRef.current        
+        //     if (
+        //         !isCradleInViewRef.current && 
+        //         !pauseItemObserverRef.current && 
+        //         !viewportDataRef.current.isResizing &&
+        //         !(cradleState == 'resize') &&
+        //         !(cradleState == 'repositioning') && 
+        //         !(cradleState == 'reposition')) {
 
-                let rect = viewportDataRef.current.elementref.current.getBoundingClientRect()
-                let {top, right, bottom, left} = rect
-                let width = right - left, height = bottom - top
-                viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
-                pauseItemObserverRef.current = true
-                pauseCradleIntersectionObserverRef.current = true
-                console.log('REPOSITIONING')
-                saveCradleState('repositioning')
+        //         let rect = viewportDataRef.current.elementref.current.getBoundingClientRect()
+        //         let {top, right, bottom, left} = rect
+        //         let width = right - left, height = bottom - top
+        //         viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
+        //         pauseItemObserverRef.current = true
+        //         pauseCradleIntersectionObserverRef.current = true
+        //         console.log('REPOSITIONING')
+        //         saveCradleState('repositioning')
 
-            }
-        }
+        //     }
+        // }
 
         // if ( 
         //     !isCradleInViewRef.current && 
@@ -1251,10 +1282,9 @@ const Cradle = ({
                 case 'repositioning': {
 
                     callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
+                    pauseScrollingEffectsRef.current = true
 
                     saveCradleState('reposition')
-
-                    pauseScrollingEffectsRef.current = true
 
                     break
                     
@@ -1286,6 +1316,14 @@ const Cradle = ({
                 tailViewContentRef.current = []
                 saveCradleState('setreload')
                 break;
+
+            case 'repositioning':
+                headModelContentRef.current = []
+                tailModelContentRef.current = []
+                headViewContentRef.current = []
+                tailViewContentRef.current = []
+                break;
+
             case 'scrollposition': {
 
                 // console.log('within SCROLLPOSITION',scrollPositionDataRef.current)
