@@ -859,7 +859,7 @@ const Cradle = ({
 
         })
 
-        // console.log('itemshiftcount, itemshiftrows',itemshiftcount, itemshiftcount / crosscount)
+        // console.log('updateCradleContent: itemshiftcount, itemshiftrows',itemshiftcount, itemshiftcount / crosscount)
 
         if (itemshiftcount == 0) {  // nothing to do
 
@@ -1097,11 +1097,11 @@ const Cradle = ({
 
         scrollReferenceIndexDataRef.current = stableReferenceIndexDataRef.current = {
 
-            index: referenceoffset,// tailcontentlist[0]?.props.index,
+            index: referenceoffset,
             scrolloffset:spineoffset,
 
         }
-
+        console.log('setCradleContent stableReferenceIndexDataRef.current', stableReferenceIndexDataRef.current)
         if (referenceIndexCallbackRef.current) {
 
             let cstate = cradleState

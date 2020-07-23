@@ -202,7 +202,7 @@ export const getContentListRequirements = ({
         runwaycount,
         gap,
         padding,
-        visibletargetindexoffset,
+        visibletargetindexoffset:referenceoffset,
         targetViewportOffset,
         crosscount,
         listsize,
@@ -210,8 +210,8 @@ export const getContentListRequirements = ({
     }) => {
 
     // reconcile referenceindex to crosscount context
-    let diff = visibletargetindexoffset % crosscount
-    visibletargetindexoffset -= diff
+    let diff = referenceoffset % crosscount
+    referenceoffset -= diff
 
     // -------------[ calc basic inputs: cellLength, contentCount. ]----------
 
@@ -232,10 +232,9 @@ export const getContentListRequirements = ({
 
     let leadingitemcount = runwaycount * crosscount
     // let targetdiff = visibletargetindexoffset % crosscount
-    let referenceoffset = visibletargetindexoffset // part of return message
 
     // leadingitemcount += diff
-    leadingitemcount = Math.min(leadingitemcount, visibletargetindexoffset) // for list head
+    leadingitemcount = Math.min(leadingitemcount, referenceoffset) // for list head
 
     // -----------------------[ calc indexoffset ]------------------------
 
@@ -270,7 +269,7 @@ export const getContentListRequirements = ({
 
     if (diff) {
         spineoffset = viewportlength - ((viewportrows * cellLength) + padding)
-        indexoffset -= shift
+        referenceoffset -= shift
         contentCount -= (diff % crosscount)
     }
     
@@ -283,22 +282,23 @@ export const getContentListRequirements = ({
     let targetrowoffset = Math.floor(referenceoffset/crosscount)
     let maxrowcount = Math.ceil(listsize/crosscount)
 
-    let scrollblockoffset = (indexrowoffset * cellLength) + padding
-
     // console.log('requirements adjustment: maxrowcount, targetrowoffset, cradlerowcount, targetrowoffset + cradlerowcount, referenceoffset, spineoffset',
     //     maxrowcount, targetrowoffset, cradlerowcount, targetrowoffset + cradlerowcount, referenceoffset, spineoffset)
-    // if (maxrowcount < (targetrowoffset + cradlerowcount)) {
+    if (maxrowcount < (indexrowoffset + cradlerowcount)) {
 
-    //     let rowdiff = (targetrowoffset + cradlerowcount) - maxrowcount
-    //     let itemdiff = rowdiff * crosscount
-    //     // indexoffset += itemdiff
-    //     referenceoffset += itemdiff
-    //     spineoffset = viewportlength - ((viewportrows * cellLength) + padding)
+        let rowdiff = (indexrowoffset + cradlerowcount) - maxrowcount
+        let itemdiff = rowdiff * crosscount
+        targetrowoffset += rowdiff
+        indexoffset -= itemdiff
+        referenceoffset += itemdiff
+        // spineoffset = viewportlength - ((viewportrows * cellLength) + padding)
 
-    //     console.log('adjusting cradle:maxrowcount, targetrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset',
-    //         maxrowcount, targetrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset)
+        console.log('adjusting cradle:maxrowcount, targetrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset',
+            maxrowcount, targetrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset)
 
-    // }
+    }
+
+    let scrollblockoffset = (targetrowoffset * cellLength) + padding
 
     if (targetrowoffset == 0) {
         scrollblockoffset = 0
