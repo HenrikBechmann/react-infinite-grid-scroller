@@ -303,8 +303,8 @@ export const getContentListRequirements = ({
         spineoffset = padding
     }
 
-    console.log('inside getContentListRequirements: referenceoffset, targetrowoffset, scrollblockoffset, spineoffset', 
-        referenceoffset, targetrowoffset, scrollblockoffset, spineoffset)
+    // console.log('inside getContentListRequirements: referenceoffset, targetrowoffset, scrollblockoffset, spineoffset', 
+    //     referenceoffset, targetrowoffset, scrollblockoffset, spineoffset)
 
     return {indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset} // summarize requirements message
 
@@ -983,14 +983,14 @@ export const getSpineOffsetRef = (
         referenceindex,
         previousreferenceindex,
         referenceshift,
-        // viewportElement,
+        viewportElement,
         spineElement,
         // headElement,
     }) => {
 
     // ----------[ calculate spine base position ]----------------
 
-    let spineposref 
+    let spineoffsetref 
 
     let orientation = cradleProps.orientation,
         padding = cradleProps.padding,
@@ -1014,24 +1014,24 @@ export const getSpineOffsetRef = (
     if (scrollforward) {
 
         if (orientation == 'vertical') {
-            // console.log('referenceindex, itemelements.get(referenceindex)',referenceindex, itemelements.get(referenceindex))
+            console.log('viewportElement.scrollTop,referenceindex, itemelements.get(referenceindex)',
+                viewportElement.scrollTop,referenceindex, itemelements.get(referenceindex))
             if (itemelements.has(referenceindex)) {
-                spineposref = spineElement.offsetTop + itemelements.get(referenceindex).current.offsetTop
+                spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
+                console.log('calculating spine offset; spineElement.offsetTop  + itemelements.get(referenceindex).current.offsetTop', spineoffsetref,spineElement.offsetTop, itemelements.get(referenceindex).current.offsetTop)
             }
-            // return spineposref
 
         } else {
 
-            if (itemelements.has(referenceindex)) {
-                spineposref = spineElement.offsetLeft + itemelements.get(referenceindex).current.offsetLeft
+            if (itemelements.has(referenceindex - crosscount)) {
+                spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetLeft
             }
-            // return spineposref
 
         }
 
-        console.log('spineposref LOOKUP: spineposref, referenceindex, referenceshift', 
-            spineposref, referenceindex, referenceshift)
-        if ( spineposref === undefined ) {
+        console.log('spineoffsetref LOOKUP: spineposref, referenceindex, referenceshift', 
+            spineoffsetref, referenceindex, referenceshift)
+        if ( spineoffsetref === undefined ) {
             console.log('calculating spineposref SCROLLFORWARD: previousreferenceindex, referenceshift, crosscount', 
                 previousreferenceindex, referenceshift, crosscount)
             for (let rowindex = previousreferenceindex;
@@ -1046,15 +1046,15 @@ export const getSpineOffsetRef = (
 
             }
 
-            spineposref = spineposbase - referenceposshift
+            spineoffsetref = spineposbase - referenceposshift
 
         }
 
         console.log('inside getSpinePosRef SCROLLFORWARD: \
-            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineposref', 
-            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineposref)
+            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineoffsetref', 
+            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineoffsetref)
 
-        return spineposref
+        return spineoffsetref
 
     }
 
@@ -1065,9 +1065,9 @@ export const getSpineOffsetRef = (
     // let spineposref
     if (headcontent.length == 0) {
 
-        console.log('spineposref, padding',spineposref, padding)
+        console.log('spineposref, padding',spineoffsetref, padding)
 
-        spineposref = padding
+        spineoffsetref = padding
 
     } else { 
 
@@ -1086,14 +1086,14 @@ export const getSpineOffsetRef = (
 
         }
 
-        spineposref = spineposbase - referenceposshift
+        spineoffsetref = spineposbase - referenceposshift
         console.log('inside getSpinePosRef SCROLLBACKWARD: \
-            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineposref', 
-            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineposref)
+            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineoffsetref', 
+            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineoffsetref)
 
     }
 
-    return spineposref
+    return spineoffsetref
     
 }
 

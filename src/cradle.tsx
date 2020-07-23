@@ -656,11 +656,6 @@ const Cradle = ({
 
     const cradleintersectionobservercallback = useCallback((entries) => {
 
-        if (pauseCradleIntersectionObserverRef.current) {
-            // console.log('returning from cradleintersection callback owing to pause')
-            return
-        }
-
         for (let i = 0; i < entries.length; i++ ) {
             let entry = entries[i]
             if (entry.target.dataset.name == 'head') {
@@ -670,30 +665,11 @@ const Cradle = ({
             }
         }
         isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
-        if (!isCradleInViewRef.current) {
-
-            console.log('CRADLE OUT OF VIEW')
-            let cradleState = cradlestateRef.current        
-            if (
-                !isCradleInViewRef.current && 
-                !pauseItemObserverRef.current && 
-                !viewportDataRef.current.isResizing &&
-                !(cradleState == 'resize') &&
-                !(cradleState == 'repositioning') && 
-                !(cradleState == 'reposition')) {
-
-                let rect = viewportDataRef.current.elementref.current.getBoundingClientRect()
-                let {top, right, bottom, left} = rect
-                let width = right - left, height = bottom - top
-                viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
-                pauseItemObserverRef.current = true
-                pauseCradleIntersectionObserverRef.current = true
-                console.log('REPOSITIONING')
-                saveCradleState('repositioning')
-
-            }
-            // saveCradleState('updatescroll')
-        }
+        
+        // if (pauseCradleIntersectionObserverRef.current) {
+        //     // console.log('returning from cradleintersection callback owing to pause')
+        //     return
+        // }
 
     },[])
 
@@ -824,10 +800,10 @@ const Cradle = ({
 
         })
 
-        let filteredindexes = []
-        for (let entry of intersections) {
-            filteredindexes.push({index:entry.target.dataset.index})
-        }
+        // let filteredindexes = []
+        // for (let entry of intersections) {
+        //     filteredindexes.push({index:entry.target.dataset.index})
+        // }
 
         // console.log('filteredindexes',filteredindexes)
 
@@ -917,8 +893,8 @@ const Cradle = ({
             // intersections,
         })
 
-        console.log('referenceindex, referenceitemshift, previousreferenceindex',
-            referenceindex, referenceitemshift, previousreferenceindex)
+        // console.log('referenceindex, referenceitemshift, previousreferenceindex',
+        //     referenceindex, referenceitemshift, previousreferenceindex)
 
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 
@@ -949,26 +925,31 @@ const Cradle = ({
                 referenceindex,
                 previousreferenceindex,
                 referenceshift:referenceitemshift,
-                // viewportElement,
+                viewportElement,
                 spineElement,
                 // headElement,
             }
         )
 
         if (spineoffsetref !== undefined) {
+            
+            console.log('viewportElement.scrollTop BEFORE', viewportElement.scrollTop)
+
             if (cradleProps.orientation == 'vertical') {
 
-                headCradleElementRef.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
                 spineCradleElementRef.current.style.top = spineoffsetref + 'px'
                 spineCradleElementRef.current.style.left = 'auto'
+                headCradleElementRef.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
 
             } else {
 
-                headCradleElementRef.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
                 spineCradleElementRef.current.style.left = spineoffsetref + 'px'
                 spineCradleElementRef.current.style.top = 'auto'
+                headCradleElementRef.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
 
             }
+
+            console.log('viewportElement.scrollTop AFTER', viewportElement.scrollTop)
 
         }
 
@@ -992,7 +973,11 @@ const Cradle = ({
             spineoffset:scrolloffset
         }
 
+        console.log('viewportElement.scrollTop CALLING updatescroll updateCradleContent', viewportElement.scrollTop)
+
         saveCradleState('updatescroll')
+
+        console.log('viewportElement.scrollTop END OF updateCradleContent', viewportElement.scrollTop)
 
     }
 
@@ -1199,6 +1184,30 @@ const Cradle = ({
 
         }
 
+        if (!isCradleInViewRef.current) {
+
+            console.log('CRADLE OUT OF VIEW')
+            let cradleState = cradlestateRef.current        
+            if (
+                !isCradleInViewRef.current && 
+                !pauseItemObserverRef.current && 
+                !viewportDataRef.current.isResizing &&
+                !(cradleState == 'resize') &&
+                !(cradleState == 'repositioning') && 
+                !(cradleState == 'reposition')) {
+
+                let rect = viewportDataRef.current.elementref.current.getBoundingClientRect()
+                let {top, right, bottom, left} = rect
+                let width = right - left, height = bottom - top
+                viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
+                pauseItemObserverRef.current = true
+                pauseCradleIntersectionObserverRef.current = true
+                console.log('REPOSITIONING')
+                saveCradleState('repositioning')
+
+            }
+        }
+
         // if ( 
         //     !isCradleInViewRef.current && 
         //     !pauseItemObserverRef.current && 
@@ -1249,6 +1258,8 @@ const Cradle = ({
 
         },SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
 
+        saveCradleState('updatescroll')
+
     },[])
 
     // data for state processing
@@ -1271,6 +1282,7 @@ const Cradle = ({
                 break;
             case 'scrollposition': {
 
+                console.log('within SCROLLPOSITION',scrollPositionDataRef.current)
                 viewportData.elementref.current[scrollPositionDataRef.current.property] =
                     scrollPositionDataRef.current.value
 
@@ -1279,6 +1291,10 @@ const Cradle = ({
                 break
             }
             case 'updatescroll': { // scroll
+
+                console.log('WITHIN updatescroll',viewportData.elementref.current.scrollTop)
+                // viewportData.elementref.current[scrollPositionDataRef.current.property] =
+                //     scrollPositionDataRef.current.value
 
                 saveCradleState('ready')
                 break
@@ -1330,7 +1346,7 @@ const Cradle = ({
                         pauseItemObserverRef.current  && (pauseItemObserverRef.current = false)
                         pauseCradleIntersectionObserverRef.current  && (pauseCradleIntersectionObserverRef.current = false)
                         pauseScrollingEffectsRef.current && (pauseScrollingEffectsRef.current = false)
-                        console.log('normalized!')
+                        // console.log('normalized!')
 
                     }
 
@@ -1455,7 +1471,7 @@ const Cradle = ({
         }
     },[viewportDimensions, scrollReferenceIndexDataRef.current, cradlePropsRef])
 
-    // console.log('cradleSpineStyle before render',cradleSpineStyle)
+    console.log('viewport scrollTop before render',viewportDataRef.current.elementref.current.scrollTop)
 
     return <>
 
