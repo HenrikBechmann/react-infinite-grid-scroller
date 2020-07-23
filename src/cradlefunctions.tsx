@@ -649,7 +649,7 @@ export const calcItemshiftcount = ({
 
     if (proposedindex < 0) {
         itemshiftcount += (proposedindex + 1)
-        console.log('itemshiftcount adjusted up, by', itemshiftcount, proposedindex + 1)
+        console.log('itemshiftcount adjusted up, by', itemshiftcount, proposedindex)
     } 
 
     return itemshiftcount // positive = roll toward top/left; negative = roll toward bottom/right
@@ -972,7 +972,7 @@ export const allocateContentList = (
 
 }
 
-export const getSpineOffsetRef = (
+export const getSpinePosRef = (
     {
         cradleProps,
         crosscount,
@@ -1014,11 +1014,11 @@ export const getSpineOffsetRef = (
     if (scrollforward) {
 
         if (orientation == 'vertical') {
-            console.log('viewportElement.scrollTop,referenceindex, itemelements.get(referenceindex)',
-                viewportElement.scrollTop,referenceindex, itemelements.get(referenceindex))
+            // console.log('viewportElement.scrollTop,referenceindex, itemelements.get(referenceindex)',
+            //     viewportElement.scrollTop,referenceindex, itemelements.get(referenceindex))
             if (itemelements.has(referenceindex)) {
                 spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
-                console.log('calculating spine offset; spineElement.offsetTop  + itemelements.get(referenceindex).current.offsetTop', spineoffsetref,spineElement.offsetTop, itemelements.get(referenceindex).current.offsetTop)
+                // console.log('calculating spine offset; spineElement.offsetTop  + itemelements.get(referenceindex).current.offsetTop', spineoffsetref,spineElement.offsetTop, itemelements.get(referenceindex).current.offsetTop)
             }
 
         } else {
@@ -1029,8 +1029,8 @@ export const getSpineOffsetRef = (
 
         }
 
-        console.log('spineoffsetref LOOKUP: spineposref, referenceindex, referenceshift', 
-            spineoffsetref, referenceindex, referenceshift)
+        // console.log('spineoffsetref LOOKUP: spineposref, referenceindex, referenceshift', 
+            // spineoffsetref, referenceindex, referenceshift)
         if ( spineoffsetref === undefined ) {
             console.log('calculating spineposref SCROLLFORWARD: previousreferenceindex, referenceshift, crosscount', 
                 previousreferenceindex, referenceshift, crosscount)
@@ -1050,11 +1050,24 @@ export const getSpineOffsetRef = (
 
         }
 
-        console.log('inside getSpinePosRef SCROLLFORWARD: \
-            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineoffsetref', 
-            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineoffsetref)
+        let scrolloffset
+        if (cradleProps.orientation == 'vertical') {
+            scrolloffset = spineoffsetref - 
+                viewportElement.scrollTop
+                
+                
+        } else {
 
-        return spineoffsetref
+            scrolloffset = spineoffsetref - 
+                viewportElement.scrollLeft
+                
+        }
+
+        // console.log('inside getSpinePosRef SCROLLFORWARD: \
+        //     previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineoffsetref', 
+        //     previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineoffsetref)
+
+        return scrolloffset
 
     }
 
@@ -1065,15 +1078,15 @@ export const getSpineOffsetRef = (
     // let spineposref
     if (headcontent.length == 0) {
 
-        console.log('spineposref, padding',spineoffsetref, padding)
+        // console.log('spineposref, padding',spineoffsetref, padding)
 
         spineoffsetref = padding
 
     } else { 
 
-        console.log('calculating spineposref SCROLLBACKWARD')
+        // console.log('calculating spineposref SCROLLBACKWARD')
 
-        console.log('inside getSpinePosRef', previousreferenceindex, referenceshift, crosscount)
+        // console.log('inside getSpinePosRef', previousreferenceindex, referenceshift, crosscount)
         for (let rowindex = previousreferenceindex;
             rowindex > previousreferenceindex - referenceshift; 
             rowindex -= crosscount ) {
@@ -1087,13 +1100,26 @@ export const getSpineOffsetRef = (
         }
 
         spineoffsetref = spineposbase - referenceposshift
-        console.log('inside getSpinePosRef SCROLLBACKWARD: \
-            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineoffsetref', 
-            previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineoffsetref)
+        // console.log('inside getSpinePosRef SCROLLBACKWARD: \
+        //     previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineoffsetref', 
+        //     previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineoffsetref)
 
     }
 
-    return spineoffsetref
+    let scrolloffset
+    if (cradleProps.orientation == 'vertical') {
+        scrolloffset = spineoffsetref - 
+            viewportElement.scrollTop
+            
+            
+    } else {
+
+        scrolloffset = spineoffsetref - 
+            viewportElement.scrollLeft
+            
+    }
+
+    return scrolloffset
     
 }
 
