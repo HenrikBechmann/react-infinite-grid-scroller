@@ -258,23 +258,7 @@ export const getContentListRequirements = ({
 
     // ------------[ adjust indexoffset and contentCount for listsize overflow ]------------
 
-    // diff = 0
-    // shift = 0
-    // if ((indexoffset + contentCount) > listsize) {
-    //     diff = (indexoffset + contentCount) - listsize
-    //     shift = Math.floor(diff / crosscount) * crosscount
-    // }
-
     let spineoffset = targetViewportOffset
-
-    // if (diff) {
-    //     spineoffset = viewportlength - ((viewportrows * cellLength) + padding)
-    //     referenceoffset -= shift
-    //     contentCount -= (diff % crosscount)
-    // }
-    
-    // console.log('inside getContentListRequirements: indexoffset, virtual indexrow, referenceoffset, virtualreferencerow, contentCount, contentrows', 
-    //     indexoffset, (indexoffset/crosscount) , referenceoffset, (referenceoffset/crosscount), contentCount, (contentCount/crosscount))
 
     // --------------------[ calc css positioning ]-----------------------
 
@@ -292,7 +276,6 @@ export const getContentListRequirements = ({
         indexoffset -= itemdiff
         referenceoffset -= itemdiff
         spineoffset = viewportlength - (viewportrows * cellLength)
-        // contentCount -= (itemdiff % crosscount)
 
         console.log('adjusting cradle:maxrowcount, targetrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset',
             maxrowcount, targetrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset)
@@ -617,7 +600,7 @@ export const calcItemshiftcount = ({
     if (cradleboundary < 0) cradleboundary = 0 // not relevant
     if (cradleboundary > viewportlength) cradleboundary = viewportlength
 
-    let cellLength = cradleProps.orientation == 'vertical'?cradleProps.cellHeight:cradleProps.cellWitdh
+    let cellLength = (cradleProps.orientation == 'vertical')?cradleProps.cellHeight:cradleProps.cellWidth
     let boundaryrowcount = (cradleboundary == 0)?0:Math.ceil(cradleboundary/(cellLength + cradleProps.gap))
 
     let boundaryitemcount = boundaryrowcount * crosscount
@@ -644,12 +627,14 @@ export const calcItemshiftcount = ({
 
     itemshiftcount = forwardcount - backwardcount + boundaryitemcount
 
-    // console.log('internal itemshiftcount',itemshiftcount)
-
     let previousindex = cradlecontentlist[0].props.index,
         testshift = -itemshiftcount
 
     let proposedindex = previousindex + testshift
+
+    console.log('internal calcItemshiftcount: itemshiftcount, proposedindex, previousindex, forwardcount, backwardcount, cradleboundary, boundaryitemcount',
+        itemshiftcount, proposedindex, previousindex, forwardcount, backwardcount, cradleboundary, boundaryitemcount)
+
     let listsize = cradleProps.listsize
     if (proposedindex > listsize) {
         let diff = listsize - (proposedindex + 1)

@@ -963,7 +963,7 @@ const Cradle = ({
             }
         )
 
-        // console.log('spineposref',spineposref)
+        console.log('update content: spineposref, referenceindex, itemshiftcount',spineposref, referenceindex, itemshiftcount)
 
         if (spineposref !== undefined) {
             
