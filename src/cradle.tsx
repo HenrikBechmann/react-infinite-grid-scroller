@@ -1167,11 +1167,11 @@ const Cradle = ({
 
         clearTimeout(scrollTimeridRef.current)
 
-        if (pauseScrollingEffectsRef.current) {
+        // if (pauseScrollingEffectsRef.current) {
 
-            return
+        //     return
 
-        }
+        // }
 
         let cradleState = cradlestateRef.current
 
