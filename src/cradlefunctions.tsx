@@ -291,7 +291,7 @@ export const getContentListRequirements = ({
         targetrowoffset -= rowdiff
         indexoffset -= itemdiff
         referenceoffset -= itemdiff
-        spineoffset = viewportlength - ((viewportrows * cellLength) + padding)
+        spineoffset = viewportlength - (viewportrows * cellLength)
         // contentCount -= (itemdiff % crosscount)
 
         console.log('adjusting cradle:maxrowcount, targetrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset',
@@ -306,10 +306,10 @@ export const getContentListRequirements = ({
         contentCount -= diff
     }
 
-    let scrollblockoffset = (targetrowoffset * cellLength) + padding
+    let scrollblockoffset = (targetrowoffset * cellLength)
 
     if (targetrowoffset == 0) {
-        scrollblockoffset = 0
+        // scrollblockoffset = 0
         spineoffset = padding
     }
 
