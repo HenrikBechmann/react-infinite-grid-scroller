@@ -277,8 +277,8 @@ export const getContentListRequirements = ({
         referenceoffset -= itemdiff
         spineoffset = viewportlength - (viewportrows * cellLength)
 
-        console.log('adjusting cradle:maxrowcount, targetrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset',
-            maxrowcount, targetrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset)
+        // console.log('adjusting cradle:maxrowcount, targetrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset',
+        //     maxrowcount, targetrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset)
 
     }
 
@@ -289,10 +289,10 @@ export const getContentListRequirements = ({
         contentCount -= diff
     }
 
-    let scrollblockoffset = (targetrowoffset * cellLength)
+    let scrollblockoffset = (targetrowoffset * cellLength) + gap
 
     if (targetrowoffset == 0) {
-        // scrollblockoffset = 0
+        scrollblockoffset = 0
         spineoffset = padding
     }
 
@@ -632,8 +632,8 @@ export const calcItemshiftcount = ({
 
     let proposedindex = previousindex + testshift
 
-    console.log('internal calcItemshiftcount: itemshiftcount, proposedindex, previousindex, forwardcount, backwardcount, cradleboundary, boundaryitemcount',
-        itemshiftcount, proposedindex, previousindex, forwardcount, backwardcount, cradleboundary, boundaryitemcount)
+    // console.log('internal calcItemshiftcount: itemshiftcount, proposedindex, previousindex, forwardcount, backwardcount, cradleboundary, boundaryitemcount',
+    //     itemshiftcount, proposedindex, previousindex, forwardcount, backwardcount, cradleboundary, boundaryitemcount)
 
     let listsize = cradleProps.listsize
     if (proposedindex > listsize) {
@@ -644,7 +644,7 @@ export const calcItemshiftcount = ({
 
     if (proposedindex < 0) {
         itemshiftcount += (proposedindex + 1)
-        console.log('itemshiftcount adjusted up, by', itemshiftcount, proposedindex)
+        // console.log('itemshiftcount adjusted up, by', itemshiftcount, proposedindex)
     } 
 
     return itemshiftcount // positive = roll toward top/left; negative = roll toward bottom/right
@@ -1027,8 +1027,8 @@ export const getSpinePosRef = (
         // console.log('spineoffsetref LOOKUP: spineposref, referenceindex, referenceshift', 
             // spineoffsetref, referenceindex, referenceshift)
         if ( spineoffsetref === undefined ) {
-            console.log('calculating spineposref SCROLLFORWARD: previousreferenceindex, referenceshift, crosscount', 
-                previousreferenceindex, referenceshift, crosscount)
+            // console.log('calculating spineposref SCROLLFORWARD: previousreferenceindex, referenceshift, crosscount', 
+            //     previousreferenceindex, referenceshift, crosscount)
             for (let rowindex = previousreferenceindex;
                 rowindex < previousreferenceindex + referenceshift; 
                 rowindex += crosscount ) {

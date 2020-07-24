@@ -963,7 +963,7 @@ const Cradle = ({
             }
         )
 
-        console.log('update content: spineposref, referenceindex, itemshiftcount',spineposref, referenceindex, itemshiftcount)
+        // console.log('update content: spineposref, referenceindex, itemshiftcount',spineposref, referenceindex, itemshiftcount)
 
         if (spineposref !== undefined) {
             
@@ -1026,7 +1026,7 @@ const Cradle = ({
     // reset cradle, including allocation between head and tail parts of the cradle
     const setCradleContent = (cradleState, referenceIndexData) => { //
 
-        console.log('entering setCradleContent', cradleState, referenceIndexData)
+        // console.log('entering setCradleContent', cradleState, referenceIndexData)
 
         let cradleProps = cradlePropsRef.current
         let { index: visibletargetindexoffset, 
@@ -1039,7 +1039,31 @@ const Cradle = ({
 
         // console.log('setCradleContent index, crosscount',visibletargetindexoffset,crosscount)
 
-        if (cradleState == 'reposition') visibletargetscrolloffset = (visibletargetindexoffset == 0)?padding:gap
+        if (cradleState == 'reposition') {
+
+            /*
+319 reposition:
+    spine.top = 2390
+    scrollbox.scrollTop = 2385
+
+319 scrollTo:
+    spine.top = 2395
+    scrollbox.scrollTop = 2390
+
+367 reposition:
+    spine.top = 2750
+    scrollbox.scrollTop = 2745
+
+367 scrollTo:
+    spine.top = 2755
+    scrollbox.scrollTop = 2750
+
+            */
+
+            visibletargetscrolloffset = (visibletargetindexoffset == 0)?padding:gap
+            // console.log('for REPOSITION: visibletargetscrolloffset, visibletargetindexoffset',
+            //     visibletargetscrolloffset, visibletargetindexoffset)
+        }
 
         let localContentList = [] // any duplicated items will be re-used by react
 
@@ -1101,7 +1125,7 @@ const Cradle = ({
             scrolloffset:spineoffset,
 
         }
-        console.log('setCradleContent stableReferenceIndexDataRef.current', stableReferenceIndexDataRef.current)
+        // console.log('setCradleContent stableReferenceIndexDataRef.current', stableReferenceIndexDataRef.current)
         if (referenceIndexCallbackRef.current) {
 
             let cstate = cradleState
