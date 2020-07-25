@@ -4,9 +4,7 @@
 /*
     TODO:
     review rotate referenceindex settings
-    BUG: track down how spine can end up at bottom of headlist with no items in tail list
     investigate cascading calls to out of scope cradle, in relation to itemshift
-    investigate scrollblockoffset return from getContentListRequirements, causing double padding top when repositionoing
 
     QA defend against butterfly getting intersections from opposite scroll direction
         as the result of a short viewport
@@ -14,6 +12,8 @@
     minimize use of shift scroll offset
 
     implement sessionid scheme for cell content
+
+    sometimes scrollforward calculate overflow amount triggers reposition as a side effect
 
 */
 
