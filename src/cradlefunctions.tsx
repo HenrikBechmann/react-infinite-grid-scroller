@@ -274,7 +274,7 @@ export const getContentListRequirements = ({
         let itemdiff = rowdiff * crosscount
         // targetrowoffset += rowdiff
         indexoffset -= itemdiff
-        // referenceoffset += itemdiff
+        // referenceoffset -= itemdiff
         spineoffset = viewportlength - (viewportrows * cellLength)
 
         // console.log('adjusting cradle:maxrowcount, targetrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset',

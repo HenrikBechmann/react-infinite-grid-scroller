@@ -142,6 +142,8 @@ const Cradle = ({
     const cradlestateRef = useRef(null) // access by closures
     cradlestateRef.current = cradlestate
 
+    console.log('cradlestate',cradlestate)
+
     // -----------------------------------------------------------------------
     // -------------------------[ control variables ]-----------------
 
@@ -162,7 +164,7 @@ const Cradle = ({
     useEffect(()=>{
 
         if (functions?.hasOwnProperty('scrollToItem')) {
-            functions.scrollToItem = scrollToItem
+            // functions.scrollToItem = scrollToItem
         } 
 
         if (functions?.hasOwnProperty('getVisibleList')) {
@@ -671,6 +673,8 @@ const Cradle = ({
             }
         }
         isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
+
+        console.log('isCradleInViewRef.current',isCradleInViewRef.current)
         
         // if (pauseCradleIntersectionObserverRef.current) {
         //     console.log('returning from cradleintersection callback owing to pause')
@@ -681,6 +685,7 @@ const Cradle = ({
 
         {
 
+            console.log('NOT isCradleInViewRef')
             // console.log('CRADLE OUT OF VIEW')
             let cradleState = cradlestateRef.current        
             if (
@@ -1041,13 +1046,13 @@ const Cradle = ({
         let cradlerowcount = cradlerowcountRef.current,
             crosscount = crosscountRef.current
 
-        // console.log('setCradleContent cradleState, index', cradleState, visibletargetindexoffset)
+        console.log('setCradleContent cradleState, index', cradleState, visibletargetindexoffset)
 
         if (cradleState == 'reposition') {
 
             visibletargetscrolloffset = (visibletargetindexoffset == 0)?padding:gap
-            console.log('for REPOSITION: visibletargetindexoffset',
-                visibletargetindexoffset)
+            // console.log('for REPOSITION: visibletargetindexoffset',
+            //     visibletargetindexoffset)
         }
 
         let localContentList = [] // any duplicated items will be re-used by react
@@ -1218,7 +1223,7 @@ const Cradle = ({
                         crosscount:crosscountRef.current,
                     })
 
-                    // console.log('scrolling referenceindex for REPOSITIONING',{...scrollReferenceIndexDataRef.current})
+                    console.log('scrolling referenceindex for REPOSITIONING',{...scrollReferenceIndexDataRef.current})
                 }
 
                 referenceIndexCallbackRef.current && 
@@ -1277,6 +1282,7 @@ const Cradle = ({
 
         scrollTimeridRef.current = setTimeout(() => {
 
+            console.log('scroll timer')
             // isScrollingRef.current = false;
             let cradleState = cradlestateRef.current
             if (!viewportDataRef.current.isResizing) {
@@ -1292,6 +1298,8 @@ const Cradle = ({
 
                     callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
                     pauseScrollingEffectsRef.current = true
+
+                    console.log('switching to REPOSITION')
 
                     saveCradleState('reposition')
 
@@ -1389,7 +1397,7 @@ const Cradle = ({
                 // if (pauseCradleIntersectionObserverRef.current)  {
 
                 //     pauseCradleIntersectionObserverRef.current = false
-                    
+
                 // }
 
                 break
@@ -1476,22 +1484,22 @@ const Cradle = ({
 
     },[])
 
-    const scrollToItem = useCallback((index) => { // , alignment = 'start') => {
+    // const scrollToItem = useCallback((index) => { // , alignment = 'start') => {
 
-        let referenceindex = index
+    //     let referenceindex = index
 
-        pauseItemObserverRef.current = true
-        // pauseCradleIntersectionObserverRef.current = true
-        pauseScrollingEffectsRef.current = true
+    //     pauseItemObserverRef.current = true
+    //     // pauseCradleIntersectionObserverRef.current = true
+    //     pauseScrollingEffectsRef.current = true
 
-        let crosscount = crosscountRef.current
-        let diff = referenceindex % crosscount
-        referenceindex -= diff
+    //     let crosscount = crosscountRef.current
+    //     let diff = referenceindex % crosscount
+    //     referenceindex -= diff
 
-        callingReferenceIndexDataRef.current = {index:referenceindex, scrolloffset:0}
-        saveCradleState('reposition')
+    //     callingReferenceIndexDataRef.current = {index:referenceindex, scrolloffset:0}
+    //     saveCradleState('reposition')
 
-    },[])
+    // },[])
 
     // content item registration callback; called from item
     const getItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
