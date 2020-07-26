@@ -146,7 +146,7 @@ const Cradle = ({
     // -------------------------[ control variables ]-----------------
 
     const pauseItemObserverRef = useRef(false)
-    const pauseCradleIntersectionObserverRef = useRef(false)
+    // const pauseCradleIntersectionObserverRef = useRef(false)
     const pauseCradleResizeObserverRef = useRef(false)
     const pauseScrollingEffectsRef = useRef(false)
 
@@ -219,7 +219,7 @@ const Cradle = ({
             console.log('setting callingReferenceIndexDataRef for resizing',{...callingReferenceIndexDataRef.current})
 
             pauseItemObserverRef.current = true
-            pauseCradleIntersectionObserverRef.current = true
+            // pauseCradleIntersectionObserverRef.current = true
             pauseScrollingEffectsRef.current = true
             saveCradleState('resizing')
 
@@ -253,7 +253,7 @@ const Cradle = ({
         callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
 
         pauseItemObserverRef.current = true
-        pauseCradleIntersectionObserverRef.current = true
+        // pauseCradleIntersectionObserverRef.current = true
         pauseScrollingEffectsRef.current = true
 
         saveCradleState('reload')
@@ -290,7 +290,7 @@ const Cradle = ({
             //     viewportDataRef.current.elementref.current.scrollLeft,spineCradleElementRef.current.offsetLeft)
 
             pauseItemObserverRef.current = true
-            pauseCradleIntersectionObserverRef.current = true
+            // pauseCradleIntersectionObserverRef.current = true
             pauseScrollingEffectsRef.current = true
 
             saveCradleState('pivot')
@@ -672,10 +672,10 @@ const Cradle = ({
         }
         isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
         
-        if (pauseCradleIntersectionObserverRef.current) {
-            console.log('returning from cradleintersection callback owing to pause')
-            return
-        }
+        // if (pauseCradleIntersectionObserverRef.current) {
+        //     console.log('returning from cradleintersection callback owing to pause')
+        //     return
+        // }
 
         if (!isCradleInViewRef.current) 
 
@@ -684,9 +684,9 @@ const Cradle = ({
             // console.log('CRADLE OUT OF VIEW')
             let cradleState = cradlestateRef.current        
             if (
-            //     !isCradleInViewRef.current && 
-            //     !pauseCradleIntersectionObserverRef.current //&&
-            //     // !pauseItemObserverRef.current && 
+                // !isCradleInViewRef.current && 
+                // !pauseCradleIntersectionObserverRef.current //&&
+                // !pauseItemObserverRef.current && 
                 !viewportDataRef.current.isResizing &&
                 !(cradleState == 'resize') &&
                 !(cradleState == 'repositioning') && 
@@ -699,7 +699,7 @@ const Cradle = ({
                 let width = right - left, height = bottom - top
                 viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
                 pauseItemObserverRef.current = true
-                pauseCradleIntersectionObserverRef.current = true
+                // pauseCradleIntersectionObserverRef.current = true
                 console.log('REPOSITIONING')
                 saveCradleState('repositioning')
 
@@ -1041,32 +1041,13 @@ const Cradle = ({
         let cradlerowcount = cradlerowcountRef.current,
             crosscount = crosscountRef.current
 
-        // console.log('setCradleContent index, crosscount',visibletargetindexoffset,crosscount)
+        // console.log('setCradleContent cradleState, index', cradleState, visibletargetindexoffset)
 
         if (cradleState == 'reposition') {
 
-            /*
-319 reposition:
-    spine.top = 2390
-    scrollbox.scrollTop = 2385
-
-319 scrollTo:
-    spine.top = 2395
-    scrollbox.scrollTop = 2390
-
-367 reposition:
-    spine.top = 2750
-    scrollbox.scrollTop = 2745
-
-367 scrollTo:
-    spine.top = 2755
-    scrollbox.scrollTop = 2750
-
-            */
-
             visibletargetscrolloffset = (visibletargetindexoffset == 0)?padding:gap
-            // console.log('for REPOSITION: visibletargetscrolloffset, visibletargetindexoffset',
-            //     visibletargetscrolloffset, visibletargetindexoffset)
+            console.log('for REPOSITION: visibletargetindexoffset',
+                visibletargetindexoffset)
         }
 
         let localContentList = [] // any duplicated items will be re-used by react
@@ -1405,6 +1386,12 @@ const Cradle = ({
 
                 saveCradleState('scrollposition')
 
+                // if (pauseCradleIntersectionObserverRef.current)  {
+
+                //     pauseCradleIntersectionObserverRef.current = false
+                    
+                // }
+
                 break
             }
             case 'normalize': {
@@ -1417,7 +1404,6 @@ const Cradle = ({
                         //     scrollPositionDataRef.current.value
 
                         pauseItemObserverRef.current  && (pauseItemObserverRef.current = false)
-                        pauseCradleIntersectionObserverRef.current  && (pauseCradleIntersectionObserverRef.current = false)
                         pauseScrollingEffectsRef.current && (pauseScrollingEffectsRef.current = false)
                         // console.log('normalized!')
 
@@ -1471,7 +1457,7 @@ const Cradle = ({
     const reload = useCallback(() => {
 
         pauseItemObserverRef.current = true
-        pauseCradleIntersectionObserverRef.current = true
+        // pauseCradleIntersectionObserverRef.current = true
         pauseScrollingEffectsRef.current = true
         let scrolloffset
         if (cradlePropsRef.current.orientation == 'vertical') {
@@ -1495,7 +1481,7 @@ const Cradle = ({
         let referenceindex = index
 
         pauseItemObserverRef.current = true
-        pauseCradleIntersectionObserverRef.current = true
+        // pauseCradleIntersectionObserverRef.current = true
         pauseScrollingEffectsRef.current = true
 
         let crosscount = crosscountRef.current
