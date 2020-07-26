@@ -11,9 +11,13 @@
 
     minimize use of shift scroll offset
 
+    reposition fails with back and forth
+
     implement sessionid scheme for cell content
 
     sometimes scrollforward calculate overflow amount triggers reposition as a side effect
+
+    rapid scrolling immediately after load prevents cradlehidden behavuour
 
 */
 
@@ -149,7 +153,7 @@ const Cradle = ({
     // to control appearance of repositioning mode
     const isTailCradleInViewRef = useRef(true)
     const isHeadCradleInViewRef = useRef(true)
-    const isCradleInViewRef = useRef(true)
+    const isCradleInViewRef = useRef(false)
 
     // ------------------------------------------------------------------------
     // -----------------------[ initialization effects ]-----------------------
@@ -669,7 +673,7 @@ const Cradle = ({
         isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
         
         if (pauseCradleIntersectionObserverRef.current) {
-            // console.log('returning from cradleintersection callback owing to pause')
+            console.log('returning from cradleintersection callback owing to pause')
             return
         }
 
@@ -680,13 +684,13 @@ const Cradle = ({
             // console.log('CRADLE OUT OF VIEW')
             let cradleState = cradlestateRef.current        
             if (
-                !isCradleInViewRef.current && 
-                !pauseCradleIntersectionObserverRef.current //&&
-                // !pauseItemObserverRef.current && 
-                // !viewportDataRef.current.isResizing &&
-                // !(cradleState == 'resize') &&
-                // !(cradleState == 'repositioning') && 
-                // !(cradleState == 'reposition')
+            //     !isCradleInViewRef.current && 
+            //     !pauseCradleIntersectionObserverRef.current //&&
+            //     // !pauseItemObserverRef.current && 
+                !viewportDataRef.current.isResizing &&
+                !(cradleState == 'resize') &&
+                !(cradleState == 'repositioning') && 
+                !(cradleState == 'reposition')
                 ) 
             {
 
@@ -1544,7 +1548,7 @@ const Cradle = ({
 
     return <>
 
-        { (cradlestateRef.current == 'repositioning')
+        {(cradlestateRef.current == 'repositioning')
             ?<ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 
