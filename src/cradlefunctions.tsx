@@ -280,8 +280,8 @@ export const getContentListRequirements = ({
         // referenceoffset -= itemdiff
         spineoffset = viewportlength - (viewportrows * cellLength)
 
-        console.log('adjusting cradle:maxrowcount, indexrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset',
-            maxrowcount, indexrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset)
+        // console.log('adjusting cradle:maxrowcount, indexrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset',
+        //     maxrowcount, indexrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset)
 
     }
 
@@ -334,7 +334,7 @@ const adjustSpineOffsetForMaxRefindex = ({
     if (targetrowoffset >= maxrefindexrow) {
         spineoffset = viewportlength - ((viewportrows * cellLength) + padding)
     }
-    console.log('recalculated spineoffset: input, output',inputspineoffset, spineoffset)
+    // console.log('recalculated spineoffset: input, output',inputspineoffset, spineoffset)
     return spineoffset
 }
 

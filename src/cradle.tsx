@@ -1302,7 +1302,7 @@ const Cradle = ({
                     callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
                     pauseScrollingEffectsRef.current = true
 
-                    console.log('switching to REPOSITION')
+                    // console.log('switching to REPOSITION')
 
                     saveCradleState('reposition')
 
@@ -1563,6 +1563,7 @@ const Cradle = ({
             ref = {spineCradleElementRef}
             data-name = 'spine'
         >
+            <div style = {{zIndex:1, position:'absolute',width:'100%',height:'100%',boxShadow:'0 0 5px 3px red'}}></div>
             <div 
             
                 data-name = 'head'
