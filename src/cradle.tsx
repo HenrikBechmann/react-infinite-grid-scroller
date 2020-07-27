@@ -674,7 +674,8 @@ const Cradle = ({
         }
         isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
 
-        console.log('isCradleInViewRef.current',isCradleInViewRef.current)
+        console.log('isCradleInViewRef.current, scrollTop, scrollReferenceIndexDataRef.current',
+            isCradleInViewRef.current, viewportDataRef.current.elementref.current.scrollTop,scrollReferenceIndexDataRef.current)
         
         // if (pauseCradleIntersectionObserverRef.current) {
         //     console.log('returning from cradleintersection callback owing to pause')
@@ -1046,7 +1047,7 @@ const Cradle = ({
         let cradlerowcount = cradlerowcountRef.current,
             crosscount = crosscountRef.current
 
-        console.log('setCradleContent cradleState, index', cradleState, visibletargetindexoffset)
+        console.log('setCradleContent cradleState, index, scrolloffset', cradleState, visibletargetindexoffset, visibletargetscrolloffset)
 
         if (cradleState == 'reposition') {
 

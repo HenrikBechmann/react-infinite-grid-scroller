@@ -194,6 +194,9 @@ export const getScrollReferenceIndexData = ({
 }
 
 // evaluate content for requirements
+/*
+    TODO: correct positions related to referenceindex = > max
+*/
 export const getContentListRequirements = ({
         orientation, 
         cellHeight, 
@@ -272,13 +275,13 @@ export const getContentListRequirements = ({
 
         let rowdiff = (indexrowoffset + cradlerowcount) - maxrowcount
         let itemdiff = rowdiff * crosscount
-        // targetrowoffset += rowdiff
+        // targetrowoffset -= rowdiff
         indexoffset -= itemdiff
         // referenceoffset -= itemdiff
         spineoffset = viewportlength - (viewportrows * cellLength)
 
-        // console.log('adjusting cradle:maxrowcount, targetrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset',
-        //     maxrowcount, targetrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset)
+        console.log('adjusting cradle:maxrowcount, indexrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset',
+            maxrowcount, indexrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset)
 
     }
 
