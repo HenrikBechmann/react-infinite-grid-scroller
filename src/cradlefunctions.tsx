@@ -142,10 +142,6 @@ export const calcVisibleItems = (
 
     }
 
-    // list.sort((a,b) => {
-    //     return (a.index - b.index)
-    // })
-
     return list
 }
 
@@ -193,10 +189,6 @@ export const getScrollReferenceIndexData = ({
     return referenceIndexData
 }
 
-// evaluate content for requirements
-/*
-    TODO: correct positions related to referenceindex = > max
-*/
 export const getContentListRequirements = ({
         orientation, 
         cellHeight, 
@@ -234,9 +226,6 @@ export const getContentListRequirements = ({
     // -----------------------[ calc leadingitemcount, referenceoffset ]-----------------------
 
     let leadingitemcount = runwaycount * crosscount
-    // let targetdiff = visibletargetindexoffset % crosscount
-
-    // leadingitemcount += diff
     leadingitemcount = Math.min(leadingitemcount, referenceoffset) // for list head
 
     // -----------------------[ calc indexoffset ]------------------------
@@ -269,8 +258,6 @@ export const getContentListRequirements = ({
     let targetrowoffset = Math.floor(referenceoffset/crosscount)
     let maxrowcount = Math.ceil(listsize/crosscount)
 
-    // console.log('requirements adjustment: maxrowcount, targetrowoffset, cradlerowcount, targetrowoffset + cradlerowcount, referenceoffset, spineoffset',
-    //     maxrowcount, targetrowoffset, cradlerowcount, targetrowoffset + cradlerowcount, referenceoffset, spineoffset)
     if (maxrowcount < (indexrowoffset + cradlerowcount)) {
 
         let rowdiff = (indexrowoffset + cradlerowcount) - maxrowcount
@@ -279,9 +266,6 @@ export const getContentListRequirements = ({
         indexoffset -= itemdiff
         // referenceoffset -= itemdiff
         spineoffset = viewportlength - (viewportrows * cellLength)
-
-        // console.log('adjusting cradle:maxrowcount, indexrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset',
-        //     maxrowcount, indexrowoffset, cradlerowcount, rowdiff, itemdiff, referenceoffset, spineoffset)
 
     }
 
@@ -311,9 +295,6 @@ export const getContentListRequirements = ({
         })
     }
 
-    // console.log('inside getContentListRequirements: referenceoffset, targetrowoffset, scrollblockoffset, spineoffset', 
-    //     referenceoffset, targetrowoffset, scrollblockoffset, spineoffset)
-
     return {indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset} // summarize requirements message
 
 }
@@ -334,7 +315,6 @@ const adjustSpineOffsetForMaxRefindex = ({
     if (targetrowoffset >= maxrefindexrow) {
         spineoffset = viewportlength - ((viewportrows * cellLength) + padding)
     }
-    // console.log('recalculated spineoffset: input, output',inputspineoffset, spineoffset)
     return spineoffset
 }
 
@@ -645,8 +625,6 @@ export const calcItemshiftcount = ({
 
     if (scrollforward && (boundaryitemcount != 0)) boundaryitemcount = -boundaryitemcount
 
-    // console.log('boundaryitemcount',boundaryitemcount)
-
     // ----------------------[  calculate itemshiftcount includng overshoot ]------------------------
     // shift item count is the number of items the virtual cradle shifts, according to observer notices
 
@@ -667,9 +645,6 @@ export const calcItemshiftcount = ({
 
     let proposedindex = previousindex + testshift
 
-    // console.log('internal calcItemshiftcount: itemshiftcount, proposedindex, previousindex, forwardcount, backwardcount, cradleboundary, boundaryitemcount',
-    //     itemshiftcount, proposedindex, previousindex, forwardcount, backwardcount, cradleboundary, boundaryitemcount)
-
     let listsize = cradleProps.listsize
     if (proposedindex > listsize) {
         let diff = listsize - (proposedindex + 1)
@@ -679,7 +654,6 @@ export const calcItemshiftcount = ({
 
     if (proposedindex < 0) {
         itemshiftcount += (proposedindex + 1)
-        // console.log('itemshiftcount adjusted up, by', itemshiftcount, proposedindex)
     } 
 
     return itemshiftcount // positive = roll toward top/left; negative = roll toward bottom/right
@@ -934,22 +908,6 @@ export const getNewReferenceindex = ({
     let previousreferenceindex = tailcontentlist[0].props.index
 
     let referenceindex
-    // if (scrollforward) {
-
-    //     let referenceindexbase = parseInt(intersections[intersections.length - 1]?.target.dataset.index)
-    //     if (referenceindexbase === undefined) {
-    //         referenceindexbase = previousreferenceindex
-    //         // let referenceindexbase = parseInt(intersections[intersections.length - 1]?.target.dataset.index)
-    //         // referenceindex = referenceindexbase - (( crosscount * 2 ) - 2) + 1
-
-    //     } else {
-
-    //         referenceindex = referenceindexbase + 1
-
-    //     }
-
-    // }
-
 
     itemshiftcount = Math.abs(itemshiftcount)
 
@@ -970,10 +928,6 @@ export const getNewReferenceindex = ({
         referenceindex = listsize -1
     }
 
-    // if (referenceindex < 0) {
-    //     referenceindex = 0
-    // }
-
     return [referenceindex, referenceitemshift, previousreferenceindex]
 }
 
@@ -982,9 +936,7 @@ export const allocateContentList = (
     {
 
         contentlist, // of cradle, in items (React components)
-        // runwaycount, // in rows
         referenceindex, // first tail item
-        // crosscount,
 
     }
 ) => {
@@ -1008,14 +960,12 @@ export const getSpinePosRef = (
         crosscount,
         scrollforward,
         headcontent,
-        // tailcontent,
         itemelements, 
         referenceindex,
         previousreferenceindex,
         referenceshift,
         viewportElement,
         spineElement,
-        // headElement,
     }) => {
 
     // ----------[ calculate spine base position ]----------------
@@ -1044,11 +994,8 @@ export const getSpinePosRef = (
     if (scrollforward) {
 
         if (orientation == 'vertical') {
-            // console.log('viewportElement.scrollTop,referenceindex, itemelements.get(referenceindex)',
-            //     viewportElement.scrollTop,referenceindex, itemelements.get(referenceindex))
             if (itemelements.has(referenceindex)) {
                 spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
-                // console.log('calculating spine offset; spineElement.offsetTop  + itemelements.get(referenceindex).current.offsetTop', spineoffsetref,spineElement.offsetTop, itemelements.get(referenceindex).current.offsetTop)
             }
 
         } else {
@@ -1059,11 +1006,7 @@ export const getSpinePosRef = (
 
         }
 
-        // console.log('spineoffsetref LOOKUP: spineposref, referenceindex, referenceshift', 
-            // spineoffsetref, referenceindex, referenceshift)
         if ( spineoffsetref === undefined ) {
-            // console.log('calculating spineposref SCROLLFORWARD: previousreferenceindex, referenceshift, crosscount', 
-            //     previousreferenceindex, referenceshift, crosscount)
             for (let rowindex = previousreferenceindex;
                 rowindex < previousreferenceindex + referenceshift; 
                 rowindex += crosscount ) {
@@ -1093,10 +1036,6 @@ export const getSpinePosRef = (
                 
         }
 
-        // console.log('inside getSpinePosRef SCROLLFORWARD: \
-        //     previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineoffsetref', 
-        //     previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineoffsetref)
-
         return scrolloffset
 
     }
@@ -1108,15 +1047,10 @@ export const getSpinePosRef = (
     // let spineposref
     if (headcontent.length == 0) {
 
-        // console.log('spineposref, padding',spineoffsetref, padding)
-
         spineoffsetref = padding
 
     } else { 
 
-        // console.log('calculating spineposref SCROLLBACKWARD')
-
-        // console.log('inside getSpinePosRef', previousreferenceindex, referenceshift, crosscount)
         for (let rowindex = previousreferenceindex;
             rowindex > previousreferenceindex - referenceshift; 
             rowindex -= crosscount ) {
@@ -1130,9 +1064,6 @@ export const getSpinePosRef = (
         }
 
         spineoffsetref = spineposbase - referenceposshift
-        // console.log('inside getSpinePosRef SCROLLBACKWARD: \
-        //     previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineoffsetref', 
-        //     previousreferenceindex, referenceshift, crosscount, spineposbase, referenceposshift, spineoffsetref)
 
     }
 
