@@ -19,6 +19,8 @@
 
     rapid scrolling immediately after load prevents cradlehidden behavuour
 
+    there is a rare gap at start of cradle when quickly scrolling backward
+
 */
 
 /*
@@ -142,7 +144,7 @@ const Cradle = ({
     const cradlestateRef = useRef(null) // access by closures
     cradlestateRef.current = cradlestate
 
-    console.log('cradlestate',cradlestate)
+    // console.log('cradlestate',cradlestate)
 
     // -----------------------------------------------------------------------
     // -------------------------[ control variables ]-----------------
@@ -674,8 +676,8 @@ const Cradle = ({
         }
         isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
 
-        console.log('isCradleInViewRef.current, scrollTop, scrollReferenceIndexDataRef.current',
-            isCradleInViewRef.current, viewportDataRef.current.elementref.current.scrollTop,scrollReferenceIndexDataRef.current)
+        // console.log('isCradleInViewRef.current, scrollTop, scrollReferenceIndexDataRef.current',
+        //     isCradleInViewRef.current, viewportDataRef.current.elementref.current.scrollTop,scrollReferenceIndexDataRef.current)
         
         // if (pauseCradleIntersectionObserverRef.current) {
         //     console.log('returning from cradleintersection callback owing to pause')
@@ -686,7 +688,7 @@ const Cradle = ({
 
         {
 
-            console.log('NOT isCradleInViewRef')
+            // console.log('NOT isCradleInViewRef')
             // console.log('CRADLE OUT OF VIEW')
             let cradleState = cradlestateRef.current        
             if (
@@ -706,7 +708,7 @@ const Cradle = ({
                 viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
                 pauseItemObserverRef.current = true
                 // pauseCradleIntersectionObserverRef.current = true
-                console.log('REPOSITIONING')
+                // console.log('REPOSITIONING')
                 saveCradleState('repositioning')
 
             }
@@ -791,7 +793,7 @@ const Cradle = ({
     // 1.shift, 2.clip, and 3.add clip amount at other end
     const updateCradleContent = (entries) => {
 
-        // console.log('updateCradleContent entries',entries)
+        // console.log('updateCradleContent entries.length',entries.length)
 
         // ----------------------------[ 1. initialize ]----------------------------
 
@@ -1047,7 +1049,7 @@ const Cradle = ({
         let cradlerowcount = cradlerowcountRef.current,
             crosscount = crosscountRef.current
 
-        console.log('setCradleContent cradleState, index, scrolloffset', cradleState, visibletargetindexoffset, visibletargetscrolloffset)
+        // console.log('setCradleContent cradleState, index, scrolloffset', cradleState, visibletargetindexoffset, visibletargetscrolloffset)
 
         if (cradleState == 'reposition') {
 
@@ -1224,7 +1226,7 @@ const Cradle = ({
                         crosscount:crosscountRef.current,
                     })
 
-                    console.log('scrolling referenceindex for REPOSITIONING',{...scrollReferenceIndexDataRef.current})
+                    // console.log('scrolling referenceindex for REPOSITIONING',{...scrollReferenceIndexDataRef.current})
                 }
 
                 referenceIndexCallbackRef.current && 
@@ -1283,7 +1285,7 @@ const Cradle = ({
 
         scrollTimeridRef.current = setTimeout(() => {
 
-            console.log('scroll timer')
+            // console.log('scroll timer')
             // isScrollingRef.current = false;
             let cradleState = cradlestateRef.current
             if (!viewportDataRef.current.isResizing) {
@@ -1418,9 +1420,13 @@ const Cradle = ({
 
                     }
 
-                },100)
+                    if (isCradleInViewRef.current) {
+                        saveCradleState('ready')
+                    } else {
+                        saveCradleState('repositioning')
+                    }
 
-                saveCradleState('ready')
+                },100)
 
                 break 
 

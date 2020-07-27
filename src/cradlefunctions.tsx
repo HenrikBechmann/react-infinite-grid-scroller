@@ -297,6 +297,18 @@ export const getContentListRequirements = ({
     if (targetrowoffset == 0) {
         scrollblockoffset = 0
         spineoffset = padding
+    } else {
+        spineoffset = adjustSpineOffsetForMaxRefindex({
+            spineoffset,
+            // referenceoffset,
+            targetrowoffset,
+            viewportlength,
+            listsize,
+            viewportrows,
+            crosscount,
+            cellLength,
+            padding,
+        })
     }
 
     // console.log('inside getContentListRequirements: referenceoffset, targetrowoffset, scrollblockoffset, spineoffset', 
@@ -304,6 +316,26 @@ export const getContentListRequirements = ({
 
     return {indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset} // summarize requirements message
 
+}
+
+const adjustSpineOffsetForMaxRefindex = ({
+    spineoffset:inputspineoffset,
+    // referenceoffset,
+    targetrowoffset,
+    viewportlength,
+    listsize,
+    viewportrows,
+    crosscount,
+    cellLength,
+    padding,
+}) => {
+    let spineoffset = inputspineoffset
+    let maxrefindexrow = Math.ceil(listsize/crosscount) - viewportrows
+    if (targetrowoffset >= maxrefindexrow) {
+        spineoffset = viewportlength - ((viewportrows * cellLength) + padding)
+    }
+    console.log('recalculated spineoffset: input, output',inputspineoffset, spineoffset)
+    return spineoffset
 }
 
 // filter out items that not proximate to the spine
