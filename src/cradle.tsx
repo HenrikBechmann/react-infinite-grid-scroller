@@ -774,6 +774,8 @@ const Cradle = ({
 
         })
 
+        console.log('intersections.length', intersections.length)
+
         // --------------------------------[ 3. Calculate item shift count ]-------------------------------
 
         let itemshiftcount = calcItemshiftcount({
@@ -787,8 +789,12 @@ const Cradle = ({
             scrollforward,
             crosscount,
             cradlecontentlist:modelcontentlist,
+            tailcontentlist,
+            cradlerowcount:cradlerowcountRef.current,
 
         })
+
+        console.log('itemshiftcount', itemshiftcount)
 
         if (itemshiftcount == 0) {  // nothing to do
 
@@ -852,6 +858,8 @@ const Cradle = ({
             // intersections,
         })
 
+        console.log('referenceindex, referenceitemshift, previousreferenceindex',referenceindex, referenceitemshift, previousreferenceindex)
+
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 
         let [headcontent, tailcontent] = allocateContentList(
@@ -907,10 +915,14 @@ const Cradle = ({
 
         }
 
+        console.log('calculated spineposref',spineposref)
+
         scrollReferenceIndexDataRef.current = {
             index:referenceindex,
             spineoffset:spineposref
         }
+
+        console.log('scrollReferenceIndexDataRef.current',scrollReferenceIndexDataRef.current)
 
         saveCradleState('updatescroll')
 
