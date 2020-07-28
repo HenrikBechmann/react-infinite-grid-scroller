@@ -774,11 +774,11 @@ const Cradle = ({
 
         })
 
-        console.log('intersections.length', intersections.length)
+        console.log('==> intersections.length', intersections.length)
 
         // --------------------------------[ 3. Calculate item shift count ]-------------------------------
 
-        let itemshiftcount = calcItemshiftcount({
+        let [cradleitemshiftcount, referenceitemshiftcount] = calcItemshiftcount({
 
             cradleProps,
             spineElement,
@@ -794,9 +794,9 @@ const Cradle = ({
 
         })
 
-        console.log('itemshiftcount', itemshiftcount)
+        console.log('cradleitemshiftcount, referenceitemshiftcount', cradleitemshiftcount, referenceitemshiftcount)
 
-        if (itemshiftcount == 0) {  // nothing to do
+        if ((cradleitemshiftcount == 0) && (referenceitemshiftcount == 0)) {  // nothing to do
 
             return
 
@@ -806,7 +806,7 @@ const Cradle = ({
 
         let [headchangecount,tailchangecount] = calcHeadAndTailChanges({
 
-            itemshiftcount,
+            itemshiftcount:cradleitemshiftcount,
             crosscount,
             headcontent:headModelContentRef.current,
             tailcontent:tailModelContentRef.current,
@@ -817,6 +817,8 @@ const Cradle = ({
             listsize,
 
         })
+
+        console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
 
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
@@ -847,7 +849,7 @@ const Cradle = ({
         // -------------------[ 6. calculate new referenceindex ]---------------------
 
         let [referenceindex, referenceitemshift, previousreferenceindex] = getNewReferenceindex({
-            itemshiftcount,
+            itemshiftcount:referenceitemshiftcount,
             crosscount,
             listsize,
             scrollforward,
