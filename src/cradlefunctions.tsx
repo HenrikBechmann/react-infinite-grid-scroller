@@ -616,9 +616,10 @@ export const calcItemshiftcount = ({
 
     if (cradleboundary < 0) cradleboundary = 0 // not relevant
     if (cradleboundary > viewportlength) cradleboundary = viewportlength
+    let gap = cradleProps.gap
 
-    let cellLength = (cradleProps.orientation == 'vertical')?cradleProps.cellHeight:cradleProps.cellWidth
-    let boundaryrowcount = (cradleboundary == 0)?0:Math.floor(cradleboundary/(cellLength + cradleProps.gap))
+    let cellLength = (cradleProps.orientation == 'vertical')?cradleProps.cellHeight + gap:cradleProps.cellWidth + gap
+    let boundaryrowcount = (cradleboundary == 0)?0:Math.floor(cradleboundary/cellLength)
 
     let boundaryitemcount = boundaryrowcount * crosscount
     if (boundaryitemcount) {
@@ -659,20 +660,20 @@ export const calcItemshiftcount = ({
     console.log('previouscradleindex, previousreferenceindex, cradleitemshiftcount, referenceitemshiftcount', 
         previouscradleindex, previousreferenceindex, cradleitemshiftcount, referenceitemshiftcount)
 
-    let proposedreferenceindex = previousreferenceindex + referenceitemshiftcount
-    let proposedcradleindex = previouscradleindex + cradleitemshiftcount
+    let newreferenceindex = previousreferenceindex + referenceitemshiftcount
+    let newcradleindex = previouscradleindex + cradleitemshiftcount
 
     let cradleitemcount = cradlerowcount * crosscount
     // let runwayitemcount = cradleProps.runwaycount * crosscount
 
-    if (proposedcradleindex < 0) {
-        cradleitemshiftcount -= proposedcradleindex
-        proposedcradleindex = 0
+    if (newcradleindex < 0) {
+        cradleitemshiftcount -= newcradleindex
+        newcradleindex = 0
     }
 
-    if (proposedreferenceindex < 0) {
-        referenceitemshiftcount -= proposedreferenceindex
-        proposedreferenceindex = 0
+    if (newreferenceindex < 0) {
+        referenceitemshiftcount -= newreferenceindex
+        newreferenceindex = 0
     }
 
     // if ((proposedreferenceindex - proposedcradleindex) < runwayitemcount) {
@@ -681,19 +682,19 @@ export const calcItemshiftcount = ({
     // } 
 
     let listsize = cradleProps.listsize
-    if ((proposedcradleindex + cradleitemcount) > listsize) {
-        let diff = listsize - (proposedcradleindex + cradleitemcount)
+    if ((newcradleindex + cradleitemcount) > listsize) {
+        let diff = listsize - (newcradleindex + cradleitemcount)
         cradleitemshiftcount -= diff
         console.log('itemshiftcount adjusted down, by', cradleitemshiftcount, diff)
     } 
 
-    console.log('proposedreferenceindex, proposedcradleindex', proposedreferenceindex, proposedcradleindex)
+    console.log('newreferenceindex, newcradleindex', newreferenceindex, newcradleindex)
 
     // if (proposedcradleindex < 0) {
     //     cradleitemshiftcount -= (proposedcradleindex)
     // } 
 
-    return [cradleitemshiftcount, referenceitemshiftcount] // positive = roll toward top/left; negative = roll toward bottom/right
+    return [newcradleindex, cradleitemshiftcount, previouscradleindex, newreferenceindex, referenceitemshiftcount, previousreferenceindex] // positive = roll toward top/left; negative = roll toward bottom/right
 
 }
 

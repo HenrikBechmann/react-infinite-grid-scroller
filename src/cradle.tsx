@@ -778,7 +778,7 @@ const Cradle = ({
 
         // --------------------------------[ 3. Calculate item shift count ]-------------------------------
 
-        let [cradleitemshiftcount, referenceitemshiftcount] = calcItemshiftcount({
+        let [cradleindex, cradleitemshift, previouscradleindex, referenceindex, referenceitemshift, previousreferenceindex] = calcItemshiftcount({
 
             cradleProps,
             spineElement,
@@ -794,9 +794,10 @@ const Cradle = ({
 
         })
 
-        console.log('cradleitemshiftcount, referenceitemshiftcount', cradleitemshiftcount, referenceitemshiftcount)
+        console.log('+++cradleitemshiftcount, referenceitemshiftcount,cradleindex, referenceindex, previouscradleindex, previousreferenceindex', 
+            cradleitemshift, referenceitemshift,cradleindex, referenceindex, previouscradleindex, previousreferenceindex)
 
-        if ((cradleitemshiftcount == 0) && (referenceitemshiftcount == 0)) {  // nothing to do
+        if ((cradleitemshift == 0) && (referenceitemshift == 0)) {  // nothing to do
 
             return
 
@@ -806,7 +807,7 @@ const Cradle = ({
 
         let [headchangecount,tailchangecount] = calcHeadAndTailChanges({
 
-            itemshiftcount:cradleitemshiftcount,
+            itemshiftcount:cradleitemshift,
             crosscount,
             headcontent:headModelContentRef.current,
             tailcontent:tailModelContentRef.current,
@@ -846,21 +847,22 @@ const Cradle = ({
 
         }
 
-        // -------------------[ 6. calculate new referenceindex ]---------------------
+        // // -------------------[ 6. calculate new referenceindex ]---------------------
 
-        let [referenceindex, referenceitemshift, previousreferenceindex] = getNewReferenceindex({
-            itemshiftcount:referenceitemshiftcount,
-            crosscount,
-            listsize,
-            scrollforward,
-            // localcontentlist:localContentList,
-            // headcontentlist,
-            tailcontentlist,
-            // itemelements,
-            // intersections,
-        })
+        // let [repeatreferenceindex, referenceitemshift, repeatpreviousreferenceindex] = getNewReferenceindex({
+        //     itemshiftcount:referenceitemshiftcount,
+        //     crosscount,
+        //     listsize,
+        //     scrollforward,
+        //     // localcontentlist:localContentList,
+        //     // headcontentlist,
+        //     tailcontentlist,
+        //     // itemelements,
+        //     // intersections,
+        // })
 
-        console.log('referenceindex, referenceitemshift, previousreferenceindex',referenceindex, referenceitemshift, previousreferenceindex)
+        // console.log('+++repeatreferenceindex, referenceitemshift, repeatpreviousreferenceindex',
+        //     repeatreferenceindex, referenceitemshift, repeatpreviousreferenceindex)
 
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 
@@ -890,7 +892,7 @@ const Cradle = ({
                 itemelements,
                 referenceindex,
                 previousreferenceindex,
-                referenceshift:cradleitemshiftcount,
+                referenceshift:cradleitemshift,
                 viewportElement,
                 spineElement,
                 // headElement,
