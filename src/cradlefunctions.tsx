@@ -579,7 +579,7 @@ export const calcItemshiftcount = ({
 
     let forwardcount = 0, backwardcount = 0
     let spineviewportoffset, headspineoffset, tailspineoffset
-    let cradleboundary, cradleitemshiftcount, referenceitenshiftcount, viewportlength
+    let cradleboundary, viewportlength
     if (cradleProps.orientation == 'vertical') {
         spineviewportoffset = spineElement.offsetTop - viewportElement.scrollTop
         headspineoffset = headElement.offsetTop
@@ -618,16 +618,19 @@ export const calcItemshiftcount = ({
     if (cradleboundary > viewportlength) cradleboundary = viewportlength
 
     let cellLength = (cradleProps.orientation == 'vertical')?cradleProps.cellHeight:cradleProps.cellWidth
-    let boundaryrowcount = (cradleboundary == 0)?0:Math.ceil(cradleboundary/(cellLength + cradleProps.gap))
+    let boundaryrowcount = (cradleboundary == 0)?0:Math.floor(cradleboundary/(cellLength + cradleProps.gap))
 
     let boundaryitemcount = boundaryrowcount * crosscount
-    // if (boundaryitemcount) {
-    //     boundaryitemcount += (cradleProps.runwaycount * crosscount)
-    // }
+    if (boundaryitemcount) {
+        boundaryitemcount += (cradleProps.runwaycount * crosscount)
+    }
 
-    if (!scrollforward && (boundaryitemcount != 0)) boundaryitemcount = -boundaryitemcount
+    if (!scrollforward && (boundaryitemcount != 0)) {
+        boundaryitemcount = -boundaryitemcount
+        boundaryrowcount = -boundaryrowcount
+    }
 
-    console.log('boundaryitemcount', boundaryitemcount)
+    console.log('BOUNDARY boundaryitemcount, boundaryrowcount', boundaryitemcount, boundaryrowcount)
 
     // ----------------------[  calculate itemshiftcount includng overshoot ]------------------------
     // shift item count is the number of items the virtual cradle shifts, according to observer notices
@@ -642,27 +645,34 @@ export const calcItemshiftcount = ({
 
     }
 
-    let referenceitemshiftcount = cradleitemshiftcount = backwardcount - forwardcount + boundaryitemcount
+    let referenceitemshiftcount = backwardcount - forwardcount + boundaryitemcount
+
+    let cradleitemshiftcount = backwardcount - forwardcount + boundaryitemcount
 
     let previousreferenceindex = tailcontentlist[0].props.index
 
     let previouscradleindex = cradlecontentlist[0].props.index
 
-    let testcradleshift = cradleitemshiftcount
-    if (!scrollforward) testcradleshift = -testcradleshift
+    // let testcradleshift = cradleitemshiftcount
+    // if (!scrollforward) testcradleshift = -testcradleshift
 
-    console.log('previouscradleindex, previousreferenceindex, cradleitemshiftcount, referenceitemshiftcount, testcradleshift', 
-        previouscradleindex, previousreferenceindex, cradleitemshiftcount, referenceitemshiftcount, testcradleshift)
+    console.log('previouscradleindex, previousreferenceindex, cradleitemshiftcount, referenceitemshiftcount', 
+        previouscradleindex, previousreferenceindex, cradleitemshiftcount, referenceitemshiftcount)
 
-    let proposedreferenceindex = previousreferenceindex - testcradleshift
-    let proposedcradleindex = previouscradleindex - testcradleshift
+    let proposedreferenceindex = previousreferenceindex + referenceitemshiftcount
+    let proposedcradleindex = previouscradleindex + cradleitemshiftcount
 
     let cradleitemcount = cradlerowcount * crosscount
     // let runwayitemcount = cradleProps.runwaycount * crosscount
 
     if (proposedcradleindex < 0) {
-        cradleitemshiftcount += proposedcradleindex
+        cradleitemshiftcount -= proposedcradleindex
         proposedcradleindex = 0
+    }
+
+    if (proposedreferenceindex < 0) {
+        referenceitemshiftcount -= proposedreferenceindex
+        proposedreferenceindex = 0
     }
 
     // if ((proposedreferenceindex - proposedcradleindex) < runwayitemcount) {
@@ -677,7 +687,7 @@ export const calcItemshiftcount = ({
         console.log('itemshiftcount adjusted down, by', cradleitemshiftcount, diff)
     } 
 
-    console.log('calcItemshiftcount proposedreferenceindex, proposedcradleindex', proposedreferenceindex, proposedcradleindex)
+    console.log('proposedreferenceindex, proposedcradleindex', proposedreferenceindex, proposedcradleindex)
 
     // if (proposedcradleindex < 0) {
     //     cradleitemshiftcount -= (proposedcradleindex)

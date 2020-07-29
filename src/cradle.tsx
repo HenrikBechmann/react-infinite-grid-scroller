@@ -890,7 +890,7 @@ const Cradle = ({
                 itemelements,
                 referenceindex,
                 previousreferenceindex,
-                referenceshift:referenceitemshift,
+                referenceshift:cradleitemshiftcount,
                 viewportElement,
                 spineElement,
                 // headElement,
