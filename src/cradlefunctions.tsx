@@ -587,7 +587,7 @@ export const calcItemshiftcount = ({
         viewportlength = viewportElement.offsetHeight
         if (scrollforward) {
 
-            cradleboundary = viewportlength - (spineviewportoffset + tailspineoffset + tailElement.offsetHeight)
+            cradleboundary = viewportlength - (spineviewportoffset + tailElement.offsetHeight)
 
         } else {
 
@@ -603,7 +603,7 @@ export const calcItemshiftcount = ({
 
         if (scrollforward) {
 
-            cradleboundary = viewportlength - (spineviewportoffset + tailspineoffset + tailElement.offsetWidth)
+            cradleboundary = viewportlength - (spineviewportoffset + tailElement.offsetWidth)
 
         } else {
 
@@ -612,10 +612,14 @@ export const calcItemshiftcount = ({
         }
     }
 
-    console.log('cradleboundary',cradleboundary)
-
     if (cradleboundary < 0) cradleboundary = 0 // not relevant
     if (cradleboundary > viewportlength) cradleboundary = viewportlength
+
+    console.log('CRADLEBOUNDARY: cradleboundary, viewportlength, spineviewportoffset, spineElement.offsetTop, \
+        viewportElement.scrollTop,tailspineoffset, tailElement.offsetHeight',
+        cradleboundary, viewportlength, spineviewportoffset, spineElement.offsetTop, 
+        viewportElement.scrollTop, tailspineoffset, tailElement.offsetHeight)
+
     let gap = cradleProps.gap
 
     let cellLength = (cradleProps.orientation == 'vertical')?cradleProps.cellHeight + gap:cradleProps.cellWidth + gap
@@ -624,6 +628,7 @@ export const calcItemshiftcount = ({
     let boundaryitemcount = boundaryrowcount * crosscount
     if (boundaryitemcount) {
         boundaryitemcount += (cradleProps.runwaycount * crosscount)
+        boundaryrowcount += cradleProps.runwaycount
     }
 
     if (!scrollforward && (boundaryitemcount != 0)) {
@@ -646,47 +651,38 @@ export const calcItemshiftcount = ({
 
     }
 
-    let referenceitemshiftcount = backwardcount - forwardcount + boundaryitemcount
-
-    let cradleitemshiftcount = backwardcount - forwardcount + boundaryitemcount
+    let itemshiftcount = backwardcount - forwardcount + boundaryitemcount
 
     let previousreferenceindex = tailcontentlist[0].props.index
 
     let previouscradleindex = cradlecontentlist[0].props.index
 
-    // let testcradleshift = cradleitemshiftcount
-    // if (!scrollforward) testcradleshift = -testcradleshift
-
     console.log('previouscradleindex, previousreferenceindex, cradleitemshiftcount, referenceitemshiftcount', 
-        previouscradleindex, previousreferenceindex, cradleitemshiftcount, referenceitemshiftcount)
+        previouscradleindex, previousreferenceindex, itemshiftcount)
 
-    let newreferenceindex = previousreferenceindex + referenceitemshiftcount
-    let newcradleindex = previouscradleindex + cradleitemshiftcount
+    let newreferenceindex = previousreferenceindex + itemshiftcount
+    let newcradleindex = previouscradleindex + itemshiftcount
 
     let cradleitemcount = cradlerowcount * crosscount
     // let runwayitemcount = cradleProps.runwaycount * crosscount
 
     if (newcradleindex < 0) {
-        cradleitemshiftcount -= newcradleindex
         newcradleindex = 0
     }
 
     if (newreferenceindex < 0) {
-        referenceitemshiftcount -= newreferenceindex
         newreferenceindex = 0
     }
-
-    // if ((proposedreferenceindex - proposedcradleindex) < runwayitemcount) {
-    //     cradleitemshiftcount = 0
-    //     proposedcradleindex = previouscradleindex
-    // } 
 
     let listsize = cradleProps.listsize
     if ((newcradleindex + cradleitemcount) > listsize) {
         let diff = listsize - (newcradleindex + cradleitemcount)
-        cradleitemshiftcount -= diff
-        console.log('itemshiftcount adjusted down, by', cradleitemshiftcount, diff)
+        newcradleindex -= diff
+        console.log('itemshiftcount adjusted down by, to', diff, newcradleindex)
     } 
+
+    let cradleitemshiftcount = newcradleindex - previouscradleindex
+    let referenceitemshiftcount = newreferenceindex - previousreferenceindex
 
     console.log('newreferenceindex, newcradleindex', newreferenceindex, newcradleindex)
 

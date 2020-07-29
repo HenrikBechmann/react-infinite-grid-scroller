@@ -642,7 +642,7 @@ const Cradle = ({
                 viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
                 pauseItemObserverRef.current = true
                 // pauseCradleIntersectionObserverRef.current = true
-                // console.log('REPOSITIONING')
+                console.log('REPOSITIONING')
                 saveCradleState('repositioning')
 
             }
@@ -778,7 +778,12 @@ const Cradle = ({
 
         // --------------------------------[ 3. Calculate item shift count ]-------------------------------
 
-        let [cradleindex, cradleitemshift, previouscradleindex, referenceindex, referenceitemshift, previousreferenceindex] = calcItemshiftcount({
+        let [cradleindex, 
+            cradleitemshift, 
+            previouscradleindex, 
+            referenceindex, 
+            referenceitemshift, 
+            previousreferenceindex] = calcItemshiftcount({
 
             cradleProps,
             spineElement,
