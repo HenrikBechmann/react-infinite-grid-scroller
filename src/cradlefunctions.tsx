@@ -625,7 +625,7 @@ export const calcItemshiftcount = ({
     //     boundaryitemcount += (cradleProps.runwaycount * crosscount)
     // }
 
-    if (scrollforward && (boundaryitemcount != 0)) boundaryitemcount = -boundaryitemcount
+    if (!scrollforward && (boundaryitemcount != 0)) boundaryitemcount = -boundaryitemcount
 
     console.log('boundaryitemcount', boundaryitemcount)
 
@@ -654,8 +654,8 @@ export const calcItemshiftcount = ({
     console.log('previouscradleindex, previousreferenceindex, cradleitemshiftcount, referenceitemshiftcount, testcradleshift', 
         previouscradleindex, previousreferenceindex, cradleitemshiftcount, referenceitemshiftcount, testcradleshift)
 
-    let proposedreferenceindex = previousreferenceindex + testcradleshift
-    let proposedcradleindex = previouscradleindex + testcradleshift
+    let proposedreferenceindex = previousreferenceindex - testcradleshift
+    let proposedcradleindex = previouscradleindex - testcradleshift
 
     let cradleitemcount = cradlerowcount * crosscount
     // let runwayitemcount = cradleProps.runwaycount * crosscount
