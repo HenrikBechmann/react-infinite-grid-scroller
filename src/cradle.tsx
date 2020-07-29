@@ -871,6 +871,8 @@ const Cradle = ({
             }
         )
 
+        console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
+
         modelContentRef.current = localContentList
         headViewContentRef.current = headModelContentRef.current = headcontent
         tailViewContentRef.current = tailModelContentRef.current = tailcontent
