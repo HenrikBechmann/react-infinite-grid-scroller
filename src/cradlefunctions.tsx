@@ -615,10 +615,10 @@ export const calcItemshiftcount = ({
     if (cradleboundary < 0) cradleboundary = 0 // not relevant
     if (cradleboundary > viewportlength) cradleboundary = viewportlength
 
-    console.log('CRADLEBOUNDARY: cradleboundary, viewportlength, spineviewportoffset, spineElement.offsetTop, \
-        viewportElement.scrollTop,tailspineoffset, tailElement.offsetHeight',
-        cradleboundary, viewportlength, spineviewportoffset, spineElement.offsetTop, 
-        viewportElement.scrollTop, tailspineoffset, tailElement.offsetHeight)
+    // console.log('CRADLEBOUNDARY: cradleboundary, viewportlength, spineviewportoffset, spineElement.offsetTop, \
+    //     viewportElement.scrollTop,tailspineoffset, tailElement.offsetHeight',
+    //     cradleboundary, viewportlength, spineviewportoffset, spineElement.offsetTop, 
+    //     viewportElement.scrollTop, tailspineoffset, tailElement.offsetHeight)
 
     let gap = cradleProps.gap
 
@@ -657,8 +657,8 @@ export const calcItemshiftcount = ({
 
     let previouscradleindex = cradlecontentlist[0].props.index
 
-    console.log('previouscradleindex, previousreferenceindex, cradleitemshiftcount, referenceitemshiftcount', 
-        previouscradleindex, previousreferenceindex, itemshiftcount)
+    // console.log('====>>>> previouscradleindex, previousreferenceindex, itemshiftcount', 
+        // previouscradleindex, previousreferenceindex, itemshiftcount)
 
     let newreferenceindex = previousreferenceindex + itemshiftcount
     let newcradleindex = previouscradleindex + itemshiftcount
@@ -677,20 +677,20 @@ export const calcItemshiftcount = ({
     let listsize = cradleProps.listsize
     if ((newcradleindex + cradleitemcount) > listsize) {
         let diff = listsize - (newcradleindex + cradleitemcount)
-        newcradleindex -= diff
-        console.log('itemshiftcount adjusted down by, to', diff, newcradleindex)
+        newcradleindex += Math.floor(diff/crosscount) * crosscount
+        // console.log('itemshiftcount adjusted down by, to', diff, newcradleindex)
     } 
 
     let cradleitemshiftcount = newcradleindex - previouscradleindex
     let referenceitemshiftcount = newreferenceindex - previousreferenceindex
 
-    console.log('newreferenceindex, newcradleindex', newreferenceindex, newcradleindex)
+    // console.log('newreferenceindex, newcradleindex', newreferenceindex, newcradleindex)
 
     // if (proposedcradleindex < 0) {
     //     cradleitemshiftcount -= (proposedcradleindex)
     // } 
 
-    return [newcradleindex, cradleitemshiftcount, previouscradleindex, newreferenceindex, referenceitemshiftcount, previousreferenceindex] // positive = roll toward top/left; negative = roll toward bottom/right
+    return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount] // positive = roll toward top/left; negative = roll toward bottom/right
 
 }
 

@@ -780,10 +780,8 @@ const Cradle = ({
 
         let [cradleindex, 
             cradleitemshift, 
-            previouscradleindex, 
             referenceindex, 
-            referenceitemshift, 
-            previousreferenceindex] = calcItemshiftcount({
+            referenceitemshift] = calcItemshiftcount({
 
             cradleProps,
             spineElement,
@@ -799,8 +797,15 @@ const Cradle = ({
 
         })
 
-        console.log('+++cradleitemshiftcount, referenceitemshiftcount,cradleindex, referenceindex, previouscradleindex, previousreferenceindex', 
-            cradleitemshift, referenceitemshift,cradleindex, referenceindex, previouscradleindex, previousreferenceindex)
+        console.log(`
+            cradleindex, 
+            cradleitemshift, 
+            referenceindex, 
+            referenceitemshift`, 
+            cradleindex, 
+            cradleitemshift, 
+            referenceindex, 
+            referenceitemshift)
 
         if ((cradleitemshift == 0) && (referenceitemshift == 0)) {  // nothing to do
 
@@ -824,7 +829,7 @@ const Cradle = ({
 
         })
 
-        console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
+        // console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
 
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
@@ -878,7 +883,7 @@ const Cradle = ({
             }
         )
 
-        console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
+        // console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
 
         modelContentRef.current = localContentList
         headViewContentRef.current = headModelContentRef.current = headcontent
@@ -896,7 +901,7 @@ const Cradle = ({
                 // tailcontent,
                 itemelements,
                 referenceindex,
-                previousreferenceindex,
+                previousreferenceindex:referenceindex - referenceitemshift,
                 referenceshift:cradleitemshift,
                 viewportElement,
                 spineElement,
@@ -926,7 +931,7 @@ const Cradle = ({
 
         }
 
-        console.log('calculated spineposref',spineposref)
+        // console.log('calculated spineposref',spineposref)
 
         scrollReferenceIndexDataRef.current = {
             index:referenceindex,
