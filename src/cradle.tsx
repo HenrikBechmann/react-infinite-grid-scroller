@@ -797,15 +797,15 @@ const Cradle = ({
 
         })
 
-        console.log(`
-            cradleindex, 
-            cradleitemshift, 
-            referenceindex, 
-            referenceitemshift`, 
-            cradleindex, 
-            cradleitemshift, 
-            referenceindex, 
-            referenceitemshift)
+        // console.log(`
+        //     cradleindex, 
+        //     cradleitemshift, 
+        //     referenceindex, 
+        //     referenceitemshift`, 
+        //     cradleindex, 
+        //     cradleitemshift, 
+        //     referenceindex, 
+        //     referenceitemshift)
 
         if ((cradleitemshift == 0) && (referenceitemshift == 0)) {  // nothing to do
 
@@ -829,7 +829,7 @@ const Cradle = ({
 
         })
 
-        console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
+        // console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
 
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
@@ -883,7 +883,7 @@ const Cradle = ({
             }
         )
 
-        console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
+        // console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
 
         modelContentRef.current = localContentList
         headViewContentRef.current = headModelContentRef.current = headcontent
@@ -913,7 +913,7 @@ const Cradle = ({
 
         if (spineposref !== undefined) {
             let headElement = headCradleElementRef.current
-            console.log('viewportElement.scrollTop, spineElement.style.top BEFORE', viewportElement.scrollTop, spineElement.style.top)
+            // console.log('viewportElement.scrollTop, spineElement.style.top BEFORE', viewportElement.scrollTop, spineElement.style.top)
 
             if (cradleProps.orientation == 'vertical') {
 
@@ -931,7 +931,7 @@ const Cradle = ({
 
             }
 
-            console.log('viewportElement.scrollTop, spineElement.style.top AFTER', viewportElement.scrollTop, spineElement.style.top)
+            // console.log('viewportElement.scrollTop, spineElement.style.top AFTER', viewportElement.scrollTop, spineElement.style.top)
         }
 
         scrollReferenceIndexDataRef.current = {
@@ -939,7 +939,7 @@ const Cradle = ({
             spineoffset:spineposref
         }
 
-        console.log('scrollReferenceIndexDataRef.current',scrollReferenceIndexDataRef.current)
+        // console.log('scrollReferenceIndexDataRef.current',scrollReferenceIndexDataRef.current)
 
         saveCradleState('updatescroll')
 

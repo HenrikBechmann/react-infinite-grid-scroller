@@ -636,7 +636,7 @@ export const calcItemshiftcount = ({
         boundaryrowcount = -boundaryrowcount
     }
 
-    console.log('BOUNDARY boundaryitemcount, boundaryrowcount', boundaryitemcount, boundaryrowcount)
+    // console.log('BOUNDARY boundaryitemcount, boundaryrowcount', boundaryitemcount, boundaryrowcount)
 
     // ===================[  calculate itemshiftcount includng overshoot ]=================
     // shift item count is the number of items the virtual cradle shifts, according to observer notices
@@ -671,7 +671,7 @@ export const calcItemshiftcount = ({
         } else {
             cradleshiftcount = itemshiftcount
         }
-        console.log('scrollforward cradleshiftcount', cradleshiftcount)
+        // console.log('scrollforward cradleshiftcount', cradleshiftcount)
     } else {
         if (((previousreferenceindex - previouscradleindex) < runwayitems )) {
             cradleshiftcount = itemshiftcount + (runwayitems - (previousreferenceindex - previouscradleindex))
@@ -1025,9 +1025,6 @@ export const getSpinePosRef = (
 
     // ----------[ calculate spine base position ]----------------
 
-    console.log('starting getSpinePosRef, referenceindex, previousreferenceindex, referenceshift',
-        referenceindex, previousreferenceindex, referenceshift)
-
     let spineoffsetref 
 
     let orientation = cradleProps.orientation,
@@ -1047,7 +1044,10 @@ export const getSpinePosRef = (
 
     }
 
-    let referenceposshift = referenceshift
+    let referenceposshift = 0 //pixels
+
+    console.log('starting getSpinePosRef, referenceindex, previousreferenceindex, referenceshift',
+        referenceindex, previousreferenceindex, referenceshift)
 
     if (scrollforward) {
 
@@ -1094,6 +1094,8 @@ export const getSpinePosRef = (
                 
         }
 
+        console.log('returning scrolloffset', scrolloffset)
+
         return scrolloffset
 
     }
@@ -1110,7 +1112,7 @@ export const getSpinePosRef = (
     } else { 
 
         for (let rowindex = previousreferenceindex;
-            rowindex > previousreferenceindex - referenceshift; 
+            rowindex > previousreferenceindex - referenceposshift; 
             rowindex -= crosscount ) {
 
             let propname = (cradleProps.orientation == 'vertical')?'offsetHeight':'offsetWidth'
