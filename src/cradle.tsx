@@ -909,7 +909,7 @@ const Cradle = ({
             }
         )
 
-        console.log('calculated spineposref',spineposref)
+        // console.log('calculated spineposref',spineposref)
 
         if (spineposref !== undefined) {
             let headElement = headCradleElementRef.current

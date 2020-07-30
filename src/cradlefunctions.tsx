@@ -655,6 +655,8 @@ export const calcItemshiftcount = ({
 
     let itemshiftcount = backwardcount - forwardcount + boundaryitemcount
 
+    console.log('calcItemshiftcount first itemshiftcount, backwardcount, forwardcount, boundaryitemcount',itemshiftcount, backwardcount, forwardcount, boundaryitemcount)
+
     let previousreferenceindex = tailcontentlist[0].props.index
 
     let previouscradleindex = cradlecontentlist[0].props.index
@@ -671,18 +673,15 @@ export const calcItemshiftcount = ({
         } else {
             cradleshiftcount = itemshiftcount
         }
-        // console.log('scrollforward cradleshiftcount', cradleshiftcount)
+        console.log('scrollforward cradleshiftcount', cradleshiftcount)
     } else {
         if (((previousreferenceindex - previouscradleindex) < runwayitems )) {
-            cradleshiftcount = itemshiftcount + (runwayitems - (previousreferenceindex - previouscradleindex))
+            cradleshiftcount = Math.min(0,itemshiftcount + (runwayitems - (previousreferenceindex - previouscradleindex)))
         } else {
             cradleshiftcount = itemshiftcount
         }
         console.log('scrollbackward cradleshiftcount', cradleshiftcount)
     }
-    // cradleshiftcount = ((previousreferenceindex - previouscradleindex) < runwayitems )
-    //     ?itemshiftcount - (previousreferenceindex - previouscradleindex):
-    //     previouscradleindex + itemshiftcount
     let newcradleindex = previouscradleindex + cradleshiftcount
 
     if (newcradleindex < 0) {
