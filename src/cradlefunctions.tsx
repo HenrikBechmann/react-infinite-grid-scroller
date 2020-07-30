@@ -651,6 +651,8 @@ export const calcItemshiftcount = ({
 
     }
 
+    let runwayitems = cradleProps.runwaycount * crosscount
+
     let itemshiftcount = backwardcount - forwardcount + boundaryitemcount
 
     let previousreferenceindex = tailcontentlist[0].props.index
@@ -661,6 +663,9 @@ export const calcItemshiftcount = ({
         // previouscradleindex, previousreferenceindex, itemshiftcount)
 
     let newreferenceindex = previousreferenceindex + itemshiftcount
+    let cradleshiftcount = (previousreferenceindex - previouscradleindex < runwayitems )
+        ?itemshiftcount - (previousreferenceindex - previouscradleindex):
+        previouscradleindex + itemshiftcount
     let newcradleindex = previouscradleindex + itemshiftcount
 
     let cradleitemcount = cradlerowcount * crosscount
