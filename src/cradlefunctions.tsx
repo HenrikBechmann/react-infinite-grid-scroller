@@ -1025,6 +1025,9 @@ export const getSpinePosRef = (
 
     // ----------[ calculate spine base position ]----------------
 
+    console.log('starting getSpinePosRef, referenceindex, previousreferenceindex, referenceshift',
+        referenceindex, previousreferenceindex, referenceshift)
+
     let spineoffsetref 
 
     let orientation = cradleProps.orientation,
@@ -1044,7 +1047,7 @@ export const getSpinePosRef = (
 
     }
 
-    let referenceposshift = 0 //referenceshift
+    let referenceposshift = referenceshift
 
     if (scrollforward) {
 

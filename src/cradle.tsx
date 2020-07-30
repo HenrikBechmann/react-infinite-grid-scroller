@@ -902,36 +902,37 @@ const Cradle = ({
                 itemelements,
                 referenceindex,
                 previousreferenceindex:referenceindex - referenceitemshift,
-                referenceshift:cradleitemshift,
+                referenceshift:referenceitemshift,
                 viewportElement,
                 spineElement,
                 // headElement,
             }
         )
 
+        console.log('calculated spineposref',spineposref)
+
         if (spineposref !== undefined) {
-            
-            // console.log('viewportElement.scrollTop BEFORE', viewportElement.scrollTop)
+            let headElement = headCradleElementRef.current
+            console.log('viewportElement.scrollTop, spineElement.style.top BEFORE', viewportElement.scrollTop, spineElement.style.top)
 
             if (cradleProps.orientation == 'vertical') {
 
                 scrollPositionDataRef.current = {property:'scrollTop',value:viewportElement.scrollTop}
-                spineCradleElementRef.current.style.top = viewportElement.scrollTop + spineposref + 'px'
-                spineCradleElementRef.current.style.left = 'auto'
-                headCradleElementRef.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
+                spineElement.style.top = viewportElement.scrollTop + spineposref + 'px'
+                spineElement.style.left = 'auto'
+                headElement.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
 
             } else {
 
                 scrollPositionDataRef.current = {property:'scrollLeft',value:viewportElement.scrollLeft}
-                spineCradleElementRef.current.style.left = viewportElement.scrollLeft + spineposref + 'px'
-                spineCradleElementRef.current.style.top = 'auto'
-                headCradleElementRef.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
+                spineElement.style.left = viewportElement.scrollLeft + spineposref + 'px'
+                spineElement.style.top = 'auto'
+                headElement.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
 
             }
 
+            console.log('viewportElement.scrollTop, spineElement.style.top AFTER', viewportElement.scrollTop, spineElement.style.top)
         }
-
-        // console.log('calculated spineposref',spineposref)
 
         scrollReferenceIndexDataRef.current = {
             index:referenceindex,
