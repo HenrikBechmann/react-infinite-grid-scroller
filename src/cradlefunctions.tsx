@@ -638,7 +638,7 @@ export const calcItemshiftcount = ({
 
     console.log('BOUNDARY boundaryitemcount, boundaryrowcount', boundaryitemcount, boundaryrowcount)
 
-    // ----------------------[  calculate itemshiftcount includng overshoot ]------------------------
+    // ===================[  calculate itemshiftcount includng overshoot ]=================
     // shift item count is the number of items the virtual cradle shifts, according to observer notices
 
     if (scrollforward) {
@@ -660,16 +660,30 @@ export const calcItemshiftcount = ({
     let previouscradleindex = cradlecontentlist[0].props.index
 
     // console.log('====>>>> previouscradleindex, previousreferenceindex, itemshiftcount', 
-        // previouscradleindex, previousreferenceindex, itemshiftcount)
+    //     previouscradleindex, previousreferenceindex, itemshiftcount)
 
     let newreferenceindex = previousreferenceindex + itemshiftcount
-    let cradleshiftcount = (previousreferenceindex - previouscradleindex < runwayitems )
-        ?itemshiftcount - (previousreferenceindex - previouscradleindex):
-        previouscradleindex + itemshiftcount
-    let newcradleindex = previouscradleindex + itemshiftcount
 
-    let cradleitemcount = cradlerowcount * crosscount
-    // let runwayitemcount = cradleProps.runwaycount * crosscount
+    let cradleshiftcount
+    if (scrollforward) {
+        if (((previousreferenceindex - previouscradleindex) < runwayitems )) {
+            cradleshiftcount = Math.max(0,itemshiftcount - (runwayitems - (previousreferenceindex - previouscradleindex)))
+        } else {
+            cradleshiftcount = itemshiftcount
+        }
+        console.log('scrollforward cradleshiftcount', cradleshiftcount)
+    } else {
+        if (((previousreferenceindex - previouscradleindex) < runwayitems )) {
+            cradleshiftcount = itemshiftcount + (runwayitems - (previousreferenceindex - previouscradleindex))
+        } else {
+            cradleshiftcount = itemshiftcount
+        }
+        console.log('scrollbackward cradleshiftcount', cradleshiftcount)
+    }
+    // cradleshiftcount = ((previousreferenceindex - previouscradleindex) < runwayitems )
+    //     ?itemshiftcount - (previousreferenceindex - previouscradleindex):
+    //     previouscradleindex + itemshiftcount
+    let newcradleindex = previouscradleindex + cradleshiftcount
 
     if (newcradleindex < 0) {
         newcradleindex = 0
@@ -678,6 +692,8 @@ export const calcItemshiftcount = ({
     if (newreferenceindex < 0) {
         newreferenceindex = 0
     }
+
+    let cradleitemcount = cradlerowcount * crosscount
 
     let listsize = cradleProps.listsize
     if ((newcradleindex + cradleitemcount) > listsize) {

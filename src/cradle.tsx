@@ -829,7 +829,7 @@ const Cradle = ({
 
         })
 
-        // console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
+        console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
 
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
@@ -883,7 +883,7 @@ const Cradle = ({
             }
         )
 
-        // console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
+        console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
 
         modelContentRef.current = localContentList
         headViewContentRef.current = headModelContentRef.current = headcontent
