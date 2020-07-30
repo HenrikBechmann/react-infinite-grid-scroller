@@ -760,6 +760,19 @@ const Cradle = ({
 
         let indexoffset = modelcontentlist[0].props.index
 
+        if (cradleProps.orientation == 'vertical') {
+
+            scrollPositionDataRef.current = {property:'scrollTop',value:viewportElement.scrollTop}
+
+        } else {
+
+            scrollPositionDataRef.current = {property:'scrollLeft',value:viewportElement.scrollLeft}
+
+        }
+
+        console.log('updateContent opening scrollPosition',{...scrollPositionDataRef.current})
+
+
         // --------------------[ 2. filter intersections list ]-----------------------
 
         // filter out inapplicable intersection entries
@@ -913,25 +926,26 @@ const Cradle = ({
 
         if (spineposref !== undefined) {
             let headElement = headCradleElementRef.current
-            // console.log('viewportElement.scrollTop, spineElement.style.top BEFORE', viewportElement.scrollTop, spineElement.style.top)
+            console.log('CSS spineposref, viewportElement.scrollTop, spineElement.style.top BEFORE', 
+                spineposref, viewportElement.scrollTop, spineElement.style.top)
 
             if (cradleProps.orientation == 'vertical') {
 
-                scrollPositionDataRef.current = {property:'scrollTop',value:viewportElement.scrollTop}
+                // scrollPositionDataRef.current = {property:'scrollTop',value:viewportElement.scrollTop}
                 spineElement.style.top = viewportElement.scrollTop + spineposref + 'px'
                 spineElement.style.left = 'auto'
                 headElement.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
 
             } else {
 
-                scrollPositionDataRef.current = {property:'scrollLeft',value:viewportElement.scrollLeft}
+                // scrollPositionDataRef.current = {property:'scrollLeft',value:viewportElement.scrollLeft}
                 spineElement.style.left = viewportElement.scrollLeft + spineposref + 'px'
                 spineElement.style.top = 'auto'
                 headElement.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
 
             }
 
-            // console.log('viewportElement.scrollTop, spineElement.style.top AFTER', viewportElement.scrollTop, spineElement.style.top)
+            console.log('viewportElement.scrollTop, spineElement.style.top AFTER', viewportElement.scrollTop, spineElement.style.top)
         }
 
         scrollReferenceIndexDataRef.current = {
@@ -1075,7 +1089,7 @@ const Cradle = ({
         let cradleState = cradlestateRef.current
 
         if (!viewportDataRef.current.isResizing) {
-
+            console.log('onScroll cradleState, viewportElement.scrollTop', cradleState,viewportElement.scrollTop)
             if (cradleState == 'ready' || cradleState == 'repositioning') {
 
                 if (cradleState == 'ready') {
@@ -1176,7 +1190,7 @@ const Cradle = ({
 
             case 'scrollposition': {
 
-                // console.log('within SCROLLPOSITION',scrollPositionDataRef.current)
+                console.log('within SCROLLPOSITION',scrollPositionDataRef.current)
                 viewportData.elementref.current[scrollPositionDataRef.current.property] =
                     scrollPositionDataRef.current.value
 

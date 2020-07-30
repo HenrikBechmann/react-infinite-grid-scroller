@@ -655,7 +655,7 @@ export const calcItemshiftcount = ({
 
     let itemshiftcount = backwardcount - forwardcount + boundaryitemcount
 
-    console.log('calcItemshiftcount first itemshiftcount, backwardcount, forwardcount, boundaryitemcount',itemshiftcount, backwardcount, forwardcount, boundaryitemcount)
+    // console.log('calcItemshiftcount first itemshiftcount, backwardcount, forwardcount, boundaryitemcount',itemshiftcount, backwardcount, forwardcount, boundaryitemcount)
 
     let previousreferenceindex = tailcontentlist[0].props.index
 
@@ -673,14 +673,14 @@ export const calcItemshiftcount = ({
         } else {
             cradleshiftcount = itemshiftcount
         }
-        console.log('scrollforward cradleshiftcount', cradleshiftcount)
+        // console.log('scrollforward cradleshiftcount', cradleshiftcount)
     } else {
         if (((previousreferenceindex - previouscradleindex) < runwayitems )) {
             cradleshiftcount = Math.min(0,itemshiftcount + (runwayitems - (previousreferenceindex - previouscradleindex)))
         } else {
             cradleshiftcount = itemshiftcount
         }
-        console.log('scrollbackward cradleshiftcount', cradleshiftcount)
+        // console.log('scrollbackward cradleshiftcount', cradleshiftcount)
     }
     let newcradleindex = previouscradleindex + cradleshiftcount
 
@@ -1045,8 +1045,8 @@ export const getSpinePosRef = (
 
     let referenceposshift = 0 //pixels
 
-    console.log('starting getSpinePosRef, referenceindex, previousreferenceindex, referenceshift',
-        referenceindex, previousreferenceindex, referenceshift)
+    // console.log('starting getSpinePosRef, referenceindex, previousreferenceindex, referenceshift',
+    //     referenceindex, previousreferenceindex, referenceshift)
 
     if (scrollforward) {
 
@@ -1093,7 +1093,7 @@ export const getSpinePosRef = (
                 
         }
 
-        console.log('returning scrolloffset', scrolloffset)
+        // console.log('returning scrolloffset', scrolloffset)
 
         return scrolloffset
 
