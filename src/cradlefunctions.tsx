@@ -565,7 +565,7 @@ let duplicatecompare = (a,b) => {
     let retval = (a.time < b.time)?-1:1
 }
 
-export const calcItemshiftcount = ({
+export const calcContentShifts = ({
     cradleProps,
     spineElement,
     viewportElement,
@@ -692,7 +692,7 @@ export const calcItemshiftcount = ({
     //     cradleitemshiftcount -= (proposedcradleindex)
     // } 
 
-    return [newcradleindex, cradleitemshiftcount, previouscradleindex, newreferenceindex, referenceitemshiftcount, previousreferenceindex] // positive = roll toward top/left; negative = roll toward bottom/right
+    return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount] // positive = roll toward top/left; negative = roll toward bottom/right
 
 }
 

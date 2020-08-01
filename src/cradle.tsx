@@ -59,7 +59,7 @@ import {
     getUIContentList, 
     getNewReferenceindex,
     calcHeadAndTailChanges,
-    calcItemshiftcount,
+    calcContentShifts,
     calcVisibleItems, 
     getScrollReferenceIndexData,
     getContentListRequirements,
@@ -790,10 +790,8 @@ const Cradle = ({
 
         let [cradleindex, 
             cradleitemshift, 
-            previouscradleindex, 
             referenceindex, 
-            referenceitemshift, 
-            previousreferenceindex] = calcItemshiftcount({
+            referenceitemshift] = calcContentShifts({
 
             cradleProps,
             spineElement,
@@ -809,14 +807,8 @@ const Cradle = ({
 
         })
 
-        // console.log('+++cradleitemshiftcount, referenceitemshiftcount,cradleindex, referenceindex, previouscradleindex, previousreferenceindex', 
-        //     cradleitemshift, referenceitemshift,cradleindex, referenceindex, previouscradleindex, previousreferenceindex)
-
-        // if ((cradleitemshift == 0) && (referenceitemshift == 0)) {  // nothing to do
-
-        //     return
-
-        // }
+        console.log('calcContentShifts: cradleindex, cradleitemshift, referenceindex, referenceitemshift', 
+            cradleindex, cradleitemshift, referenceindex, referenceitemshift)
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
@@ -906,7 +898,7 @@ const Cradle = ({
                 // tailcontent,
                 itemelements,
                 referenceindex,
-                previousreferenceindex,
+                previousreferenceindex:referenceindex - referenceitemshift,
                 referenceshift:cradleitemshift,
                 viewportElement,
                 spineElement,
