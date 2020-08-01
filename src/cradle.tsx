@@ -144,6 +144,7 @@ const Cradle = ({
     const cradlestateRef = useRef(null) // access by closures
     cradlestateRef.current = cradlestate
 
+    console.log('cradlestate',cradlestate)
     // -----------------------------------------------------------------------
     // -------------------------[ control variables ]-----------------
 
@@ -214,7 +215,7 @@ const Cradle = ({
             }
 
             callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
-            console.log('setting callingReferenceIndexDataRef for resizing',{...callingReferenceIndexDataRef.current})
+            // console.log('setting callingReferenceIndexDataRef for resizing',{...callingReferenceIndexDataRef.current})
 
             pauseItemObserverRef.current = true
             // pauseCradleIntersectionObserverRef.current = true
@@ -779,6 +780,8 @@ const Cradle = ({
 
         console.log('==> intersections.length', intersections.length)
 
+        if (intersections.length == 0) return
+
         // --------------------------------[ 3. Calculate item shift count ]-------------------------------
 
         let [cradleindex, 
@@ -802,14 +805,14 @@ const Cradle = ({
 
         })
 
-        console.log('+++cradleitemshiftcount, referenceitemshiftcount,cradleindex, referenceindex, previouscradleindex, previousreferenceindex', 
-            cradleitemshift, referenceitemshift,cradleindex, referenceindex, previouscradleindex, previousreferenceindex)
+        // console.log('+++cradleitemshiftcount, referenceitemshiftcount,cradleindex, referenceindex, previouscradleindex, previousreferenceindex', 
+        //     cradleitemshift, referenceitemshift,cradleindex, referenceindex, previouscradleindex, previousreferenceindex)
 
-        if ((cradleitemshift == 0) && (referenceitemshift == 0)) {  // nothing to do
+        // if ((cradleitemshift == 0) && (referenceitemshift == 0)) {  // nothing to do
 
-            return
+        //     return
 
-        }
+        // }
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
@@ -827,7 +830,7 @@ const Cradle = ({
 
         })
 
-        console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
+        // console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
 
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
@@ -881,7 +884,7 @@ const Cradle = ({
             }
         )
 
-        console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
+        // console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
 
         modelContentRef.current = localContentList
         headViewContentRef.current = headModelContentRef.current = headcontent
@@ -929,16 +932,16 @@ const Cradle = ({
 
         }
 
-        console.log('calculated spineposref',spineposref)
+        // console.log('calculated spineposref',spineposref)
 
         scrollReferenceIndexDataRef.current = {
             index:referenceindex,
             scrolloffset:spineposref
         }
 
-        console.log('scrollReferenceIndexDataRef.current',scrollReferenceIndexDataRef.current)
+        // console.log('scrollReferenceIndexDataRef.current',scrollReferenceIndexDataRef.current)
 
-        saveCradleState('updatescroll')
+        saveCradleState('updatecontent')
 
     }
 
@@ -1181,7 +1184,7 @@ const Cradle = ({
 
                 break
             }
-            case 'updatescroll': { // scroll
+            case 'updatecontent': { // scroll
 
                 saveCradleState('ready')
                 break
