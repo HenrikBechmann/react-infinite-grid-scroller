@@ -1195,8 +1195,8 @@ const Cradle = ({
 
             }
             case 'content': {
-                headViewContentRef.current = [...headModelContentRef.current]
-                tailViewContentRef.current = [...tailModelContentRef.current]
+                headViewContentRef.current = headModelContentRef.current
+                tailViewContentRef.current = tailModelContentRef.current
                 saveCradleState('normalize')
                 break
             }
