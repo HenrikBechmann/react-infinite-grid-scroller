@@ -710,7 +710,7 @@ export const calcItemshiftcount = ({
     //     cradleitemshiftcount -= (proposedcradleindex)
     // } 
 
-    return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount] // positive = roll toward top/left; negative = roll toward bottom/right
+    return [newcradleindex, cradleitemshiftcount, previouscradleindex, newreferenceindex, referenceitemshiftcount, previousreferenceindex] // positive = roll toward top/left; negative = roll toward bottom/right
 
 }
 
@@ -1045,14 +1045,15 @@ export const getSpinePosRef = (
 
     let referenceposshift = 0 //pixels
 
-    // console.log('starting getSpinePosRef, referenceindex, previousreferenceindex, referenceshift',
-    //     referenceindex, previousreferenceindex, referenceshift)
+    console.log('starting getSpinePosRef, referenceindex, previousreferenceindex, referenceshift',
+        referenceindex, previousreferenceindex, referenceshift)
 
     if (scrollforward) {
 
         if (orientation == 'vertical') {
             if (itemelements.has(referenceindex)) {
                 spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
+                console.log('spineposbase, itemelements.get(referenceindex).current.offsetTop, spineoffsetref',spineposbase, itemelements.get(referenceindex).current.offsetTop, spineoffsetref)
             }
 
         } else {
@@ -1084,7 +1085,8 @@ export const getSpinePosRef = (
         if (cradleProps.orientation == 'vertical') {
             scrolloffset = spineoffsetref - 
                 viewportElement.scrollTop
-                
+            console.log('scrolloffset, spineoffsetref, viewportElement.scrollTop',
+                scrolloffset, spineoffsetref, viewportElement.scrollTop)
                 
         } else {
 
