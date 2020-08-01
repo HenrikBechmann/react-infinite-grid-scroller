@@ -647,6 +647,10 @@ const Cradle = ({
                 pauseItemObserverRef.current = true
                 // pauseCradleIntersectionObserverRef.current = true
                 console.log('REPOSITIONING')
+                headModelContentRef.current = []
+                tailModelContentRef.current = []
+                headViewContentRef.current = []
+                tailViewContentRef.current = []
                 saveCradleState('repositioning')
 
             }
@@ -1066,7 +1070,7 @@ const Cradle = ({
         let scrollPositions = scrollPositionsRef.current
         scrollPositions.previous = scrollPositions.current
         scrollPositions.current = 
-            cradlePropsRef.current.orientation == 'vertical'
+            (cradlePropsRef.current.orientation == 'vertical')
             ?viewportElement.scrollTop
             :viewportElement.scrollLeft
 
@@ -1085,6 +1089,7 @@ const Cradle = ({
                     }
                     let scrolloffset
                     if (cradlePropsRef.current.orientation == 'vertical') {
+
                         scrolloffset = spineCradleElementRef.current.offsetTop - 
                             viewportDataRef.current.elementref.current.scrollTop
                             
@@ -1107,6 +1112,7 @@ const Cradle = ({
                         cradleProps:cradlePropsRef.current,
                         crosscount:crosscountRef.current,
                     })
+                    // saveCradleState('repositioning')
 
                 }
 
@@ -1168,10 +1174,6 @@ const Cradle = ({
                 break;
 
             case 'repositioning':
-                headModelContentRef.current = []
-                tailModelContentRef.current = []
-                headViewContentRef.current = []
-                tailViewContentRef.current = []
                 break;
 
             case 'scrollposition': {
