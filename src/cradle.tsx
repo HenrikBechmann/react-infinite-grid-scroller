@@ -290,14 +290,17 @@ const Cradle = ({
 
     // ------------------ current location -- first head visible item -------------
 
-    const [scrollReferenceIndexData, saveScrollReferenceIndexData] = useState({
+    // const [scrollReferenceIndexData, saveScrollReferenceIndexData] = useState({
+    //     index:Math.min(offset,(listsize - 1)) || 0,
+    //     scrolloffset:padding
+    // })
+    const scrollReferenceIndexDataRef = useRef({
         index:Math.min(offset,(listsize - 1)) || 0,
         scrolloffset:padding
-    })
-    const scrollReferenceIndexDataRef = useRef(null) // access by closures
-    scrollReferenceIndexDataRef.current = scrollReferenceIndexData
-    const stableReferenceIndexDataRef = useRef(scrollReferenceIndexData) // capture for state resetContent operations
-    const callingReferenceIndexDataRef = useRef(scrollReferenceIndexData) // anticipate reposition
+    }) // access by closures
+    // scrollReferenceIndexDataRef.current = scrollReferenceIndexData
+    const stableReferenceIndexDataRef = useRef(scrollReferenceIndexDataRef.current) // capture for state resetContent operations
+    const callingReferenceIndexDataRef = useRef(scrollReferenceIndexDataRef.current) // anticipate reposition
 
     // -------------------------------[ cradle data ]-------------------------------------
 
@@ -930,7 +933,7 @@ const Cradle = ({
 
         scrollReferenceIndexDataRef.current = {
             index:referenceindex,
-            spineoffset:spineposref
+            scrolloffset:spineposref
         }
 
         console.log('scrollReferenceIndexDataRef.current',scrollReferenceIndexDataRef.current)
@@ -1107,7 +1110,7 @@ const Cradle = ({
                 referenceIndexCallbackRef.current && 
                     referenceIndexCallbackRef.current(scrollReferenceIndexDataRef.current.index,'scrolling', cradleState)
 
-                saveScrollReferenceIndexData(scrollReferenceIndexDataRef.current)
+                // saveScrollReferenceIndexData(scrollReferenceIndexDataRef.current)
 
             }
 
@@ -1120,7 +1123,7 @@ const Cradle = ({
                 let localrefdata = {...scrollReferenceIndexDataRef.current}
 
                 stableReferenceIndexDataRef.current = localrefdata
-                saveScrollReferenceIndexData(localrefdata) // trigger re-run to capture end of scroll session values
+                // saveScrollReferenceIndexData(localrefdata) // trigger re-run to capture end of scroll session values
 
             }
             switch (cradleState) {
