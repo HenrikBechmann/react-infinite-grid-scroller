@@ -638,7 +638,7 @@ export const calcItemshiftcount = ({
 
     console.log('BOUNDARY boundaryitemcount, boundaryrowcount', boundaryitemcount, boundaryrowcount)
 
-    // ----------------------[  calculate itemshiftcount includng overshoot ]------------------------
+    // ===================[  calculate itemshiftcount includng overshoot ]=================
     // shift item count is the number of items the virtual cradle shifts, according to observer notices
 
     if (scrollforward) {
@@ -651,7 +651,11 @@ export const calcItemshiftcount = ({
 
     }
 
+    // let runwayitems = cradleProps.runwaycount * crosscount
+
     let itemshiftcount = backwardcount - forwardcount + boundaryitemcount
+
+    // console.log('calcItemshiftcount first itemshiftcount, backwardcount, forwardcount, boundaryitemcount',itemshiftcount, backwardcount, forwardcount, boundaryitemcount)
 
     let previousreferenceindex = tailcontentlist[0].props.index
 
@@ -684,7 +688,7 @@ export const calcItemshiftcount = ({
     let cradleitemshiftcount = newcradleindex - previouscradleindex
     let referenceitemshiftcount = newreferenceindex - previousreferenceindex
 
-    console.log('newreferenceindex, newcradleindex', newreferenceindex, newcradleindex)
+    // console.log('newreferenceindex, newcradleindex', newreferenceindex, newcradleindex)
 
     // if (proposedcradleindex < 0) {
     //     cradleitemshiftcount -= (proposedcradleindex)
@@ -1030,6 +1034,7 @@ export const getSpinePosRef = (
         if (orientation == 'vertical') {
             if (itemelements.has(referenceindex)) {
                 spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
+                console.log('spineposbase, itemelements.get(referenceindex).current.offsetTop, spineoffsetref',spineposbase, itemelements.get(referenceindex).current.offsetTop, spineoffsetref)
             }
 
         } else {
@@ -1061,7 +1066,8 @@ export const getSpinePosRef = (
         if (cradleProps.orientation == 'vertical') {
             scrolloffset = spineoffsetref - 
                 viewportElement.scrollTop
-                
+            console.log('scrolloffset, spineoffsetref, viewportElement.scrollTop',
+                scrolloffset, spineoffsetref, viewportElement.scrollTop)
                 
         } else {
 
@@ -1069,6 +1075,8 @@ export const getSpinePosRef = (
                 viewportElement.scrollLeft
                 
         }
+
+        // console.log('returning scrolloffset', scrolloffset)
 
         return scrolloffset
 
