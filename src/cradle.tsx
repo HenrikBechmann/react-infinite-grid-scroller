@@ -1178,7 +1178,7 @@ const Cradle = ({
             case 'repositioning':
                 break;
 
-            case 'scrollposition': {
+            case 'setscrolloffset': {
 
                 // console.log('within SCROLLPOSITION',scrollPositionDataRef.current)
                 viewportData.elementref.current[scrollPositionDataRef.current.property] =
@@ -1195,8 +1195,8 @@ const Cradle = ({
 
             }
             case 'content': {
-                headViewContentRef.current = headModelContentRef.current // contentDataRef.current
-                tailViewContentRef.current = tailModelContentRef.current
+                headViewContentRef.current = [...headModelContentRef.current]
+                tailViewContentRef.current = [...tailModelContentRef.current]
                 saveCradleState('normalize')
                 break
             }
@@ -1224,7 +1224,7 @@ const Cradle = ({
 
                 setCradleContent(callingCradleState.current, callingReferenceIndexDataRef.current)
 
-                saveCradleState('scrollposition')
+                saveCradleState('setscrolloffset')
 
                 break
             }

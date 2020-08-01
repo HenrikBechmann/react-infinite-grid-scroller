@@ -346,6 +346,8 @@ export const isolateRelevantIntersections = ({
         tailindexes.push(component.props.index)
     }
 
+    // console.log('headindexes, tailindexes',headindexes, tailindexes)
+
     // headintersectionindexes, tailintersectionindexes, intersecting
     let duplicates:any = {}
     let intersectionsptr = 0
