@@ -615,10 +615,10 @@ export const calcItemshiftcount = ({
     if (cradleboundary < 0) cradleboundary = 0 // not relevant
     if (cradleboundary > viewportlength) cradleboundary = viewportlength
 
-    // console.log('CRADLEBOUNDARY: cradleboundary, viewportlength, spineviewportoffset, spineElement.offsetTop, \
-    //     viewportElement.scrollTop,tailspineoffset, tailElement.offsetHeight',
-    //     cradleboundary, viewportlength, spineviewportoffset, spineElement.offsetTop, 
-    //     viewportElement.scrollTop, tailspineoffset, tailElement.offsetHeight)
+    console.log('CRADLEBOUNDARY: cradleboundary, viewportlength, spineviewportoffset, spineElement.offsetTop, \
+        viewportElement.scrollTop,tailspineoffset, tailElement.offsetHeight',
+        cradleboundary, viewportlength, spineviewportoffset, spineElement.offsetTop, 
+        viewportElement.scrollTop, tailspineoffset, tailElement.offsetHeight)
 
     let gap = cradleProps.gap
 
@@ -636,7 +636,7 @@ export const calcItemshiftcount = ({
         boundaryrowcount = -boundaryrowcount
     }
 
-    // console.log('BOUNDARY boundaryitemcount, boundaryrowcount', boundaryitemcount, boundaryrowcount)
+    console.log('BOUNDARY boundaryitemcount, boundaryrowcount', boundaryitemcount, boundaryrowcount)
 
     // ===================[  calculate itemshiftcount includng overshoot ]=================
     // shift item count is the number of items the virtual cradle shifts, according to observer notices
@@ -651,7 +651,7 @@ export const calcItemshiftcount = ({
 
     }
 
-    let runwayitems = cradleProps.runwaycount * crosscount
+    // let runwayitems = cradleProps.runwaycount * crosscount
 
     let itemshiftcount = backwardcount - forwardcount + boundaryitemcount
 
@@ -661,28 +661,14 @@ export const calcItemshiftcount = ({
 
     let previouscradleindex = cradlecontentlist[0].props.index
 
-    // console.log('====>>>> previouscradleindex, previousreferenceindex, itemshiftcount', 
-    //     previouscradleindex, previousreferenceindex, itemshiftcount)
+    console.log('previouscradleindex, previousreferenceindex, cradleitemshiftcount, referenceitemshiftcount', 
+        previouscradleindex, previousreferenceindex, itemshiftcount)
 
     let newreferenceindex = previousreferenceindex + itemshiftcount
+    let newcradleindex = previouscradleindex + itemshiftcount
 
-    let cradleshiftcount
-    if (scrollforward) {
-        if (((previousreferenceindex - previouscradleindex) < runwayitems )) {
-            cradleshiftcount = Math.max(0,itemshiftcount - (runwayitems - (previousreferenceindex - previouscradleindex)))
-        } else {
-            cradleshiftcount = itemshiftcount
-        }
-        // console.log('scrollforward cradleshiftcount', cradleshiftcount)
-    } else {
-        if (((previousreferenceindex - previouscradleindex) < runwayitems )) {
-            cradleshiftcount = Math.min(0,itemshiftcount + (runwayitems - (previousreferenceindex - previouscradleindex)))
-        } else {
-            cradleshiftcount = itemshiftcount
-        }
-        // console.log('scrollbackward cradleshiftcount', cradleshiftcount)
-    }
-    let newcradleindex = previouscradleindex + cradleshiftcount
+    let cradleitemcount = cradlerowcount * crosscount
+    // let runwayitemcount = cradleProps.runwaycount * crosscount
 
     if (newcradleindex < 0) {
         newcradleindex = 0
@@ -692,13 +678,11 @@ export const calcItemshiftcount = ({
         newreferenceindex = 0
     }
 
-    let cradleitemcount = cradlerowcount * crosscount
-
     let listsize = cradleProps.listsize
     if ((newcradleindex + cradleitemcount) > listsize) {
         let diff = listsize - (newcradleindex + cradleitemcount)
-        newcradleindex += Math.floor(diff/crosscount) * crosscount
-        // console.log('itemshiftcount adjusted down by, to', diff, newcradleindex)
+        newcradleindex -= diff
+        console.log('itemshiftcount adjusted down by, to', diff, newcradleindex)
     } 
 
     let cradleitemshiftcount = newcradleindex - previouscradleindex
@@ -1043,10 +1027,7 @@ export const getSpinePosRef = (
 
     }
 
-    let referenceposshift = 0 //pixels
-
-    console.log('starting getSpinePosRef, referenceindex, previousreferenceindex, referenceshift',
-        referenceindex, previousreferenceindex, referenceshift)
+    let referenceposshift = 0 //referenceshift
 
     if (scrollforward) {
 
@@ -1113,7 +1094,7 @@ export const getSpinePosRef = (
     } else { 
 
         for (let rowindex = previousreferenceindex;
-            rowindex > previousreferenceindex - referenceposshift; 
+            rowindex > previousreferenceindex - referenceshift; 
             rowindex -= crosscount ) {
 
             let propname = (cradleProps.orientation == 'vertical')?'offsetHeight':'offsetWidth'
