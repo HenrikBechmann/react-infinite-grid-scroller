@@ -1112,7 +1112,7 @@ const Cradle = ({
                         cradleProps:cradlePropsRef.current,
                         crosscount:crosscountRef.current,
                     })
-                    // saveCradleState('repositioning')
+                    saveCradleState('updatereposition')
 
                 }
 
@@ -1172,6 +1172,8 @@ const Cradle = ({
                 tailViewContentRef.current = []
                 saveCradleState('setreload')
                 break;
+            case 'updatereposition':
+                saveCradleState('repositioning')
 
             case 'repositioning':
                 break;
@@ -1339,9 +1341,11 @@ const Cradle = ({
         }
     },[viewportDimensions, scrollReferenceIndexDataRef.current, cradlePropsRef])
 
+    // console.log('cradlestate at render',cradlestateRef.current)
+
     return <>
 
-        {(cradlestateRef.current == 'repositioning')
+        {(cradlestateRef.current == 'updatereposition' || cradlestateRef.current == 'repositioning')
             ?<ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 
