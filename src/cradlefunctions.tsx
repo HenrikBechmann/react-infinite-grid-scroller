@@ -593,7 +593,7 @@ export const calcContentShifts = ({
 
         } else {
 
-            cradleboundary = spineviewportoffset + headspineoffset
+            cradleboundary = spineviewportoffset + headspineoffset // headspineoffset is negative from spine
 
         }
 
@@ -633,7 +633,7 @@ export const calcContentShifts = ({
         boundaryrowcount += cradleProps.runwaycount
     }
 
-    if (!scrollforward && (boundaryitemcount != 0)) {
+    if (!scrollforward && (boundaryitemcount != 0)) { // negation of values for scroll backward
         boundaryitemcount = -boundaryitemcount
         boundaryrowcount = -boundaryrowcount
     }
@@ -681,7 +681,14 @@ export const calcContentShifts = ({
         let diff = listsize - (newcradleindex + cradleitemcount)
         newcradleindex -= diff
         // console.log('itemshiftcount adjusted down by, to', diff, newcradleindex)
-    } 
+    }
+
+    let viewportrows = Math.floor(viewportlength/cellLength)
+    let targetindexrow = newreferenceindex/crosscount
+    let maxrefindexrow = Math.ceil(listsize/crosscount) - viewportrows
+    if (targetindexrow >= maxrefindexrow) {
+        newreferenceindex -= ((targetindexrow - maxrefindexrow) * crosscount)
+    }
 
     let cradleitemshiftcount = newcradleindex - previouscradleindex
     let referenceitemshiftcount = newreferenceindex - previousreferenceindex
