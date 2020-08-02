@@ -720,7 +720,7 @@ const Cradle = ({
 
         if (pauseItemObserverRef.current) {
 
-            // console.log('pause item observer', pauseItemObserverRef.current)
+            console.log('pause item observer', pauseItemObserverRef.current)
             return
 
         }
@@ -1221,7 +1221,7 @@ const Cradle = ({
                 break
             }
             case 'normalize': {
-                setTimeout(()=> {
+                // setTimeout(()=> {
 
                     // redundant scroll position to avoid accidental positioning at tail end of reposition
                     if (viewportData.elementref.current) { // already unmounted if fails
@@ -1237,7 +1237,7 @@ const Cradle = ({
                         saveCradleState('repositioning')
                     }
 
-                },100)
+                // },100)
 
                 break 
 

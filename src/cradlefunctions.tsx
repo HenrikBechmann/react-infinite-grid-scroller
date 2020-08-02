@@ -1011,7 +1011,8 @@ export const getSpinePortalOffset = (
         spineElement,
     }) => {
 
-    console.log('incoming referenceindex, previousreferenceindex, referenceshift',referenceindex, previousreferenceindex, referenceshift)
+    console.log('DIRECTION, incoming referenceindex, previousreferenceindex, referenceshift',
+        scrollforward, referenceindex, previousreferenceindex, referenceshift)
 
     // ----------[ collect input datas ]----------------
 
@@ -1058,6 +1059,7 @@ export const getSpinePortalOffset = (
 
     // ----------------------[ slightly different calculatoins for forward and back]-----------------
 
+    let propname = (cradleProps.orientation == 'vertical')?'offsetHeight':'offsetWidth'
     if (scrollforward) {
 
         if ( spineoffsetref === undefined ) {
@@ -1065,7 +1067,6 @@ export const getSpinePortalOffset = (
                 rowindex < previousreferenceindex + referenceshift; 
                 rowindex += crosscount ) {
 
-                let propname = (cradleProps.orientation == 'vertical')?'offsetHeight':'offsetWidth'
                 let iterationshift = itemelements.has(rowindex)
                     ?itemelements.get(rowindex).current[propname] + gap
                     :cellLength
@@ -1088,7 +1089,6 @@ export const getSpinePortalOffset = (
             rowindex > previousreferenceindex + referenceshift; 
             rowindex -= crosscount ) {
 
-            let propname = (cradleProps.orientation == 'vertical')?'offsetHeight':'offsetWidth'
             let iterationshift = itemelements.has(rowindex)
                 ?itemelements.get(rowindex).current[propname] + gap
                 :cellLength
@@ -1096,7 +1096,6 @@ export const getSpinePortalOffset = (
             console.log('iterating backshift: rowindex, iterationshift, referenceposshift',rowindex, iterationshift, referenceposshift)
 
         }
-
         spineoffsetref = spineposbase - referenceposshift
         console.log('inferring backward location for spine spineposbase, referenceshift, spineoffsetref', spineposbase,referenceposshift, spineoffsetref)
 
