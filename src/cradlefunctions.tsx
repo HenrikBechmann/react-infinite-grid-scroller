@@ -1052,25 +1052,11 @@ export const getSpinePortalOffset = (
 
     }
 
-    console.log('firt order spineoffsetref', spineoffsetref)
+    console.log('first order spineoffsetref', spineoffsetref)
 
     // ----------------------[ slightly different calculatoins for forward and back]-----------------
 
     if (scrollforward) {
-
-        // if (orientation == 'vertical') {
-
-        //     if (itemelements.has(referenceindex)) {
-        //         spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
-        //     }
-
-        // } else {
-
-        //     if (itemelements.has(referenceindex - crosscount)) {
-        //         spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetLeft
-        //     }
-
-        // }
 
         if ( spineoffsetref === undefined ) {
             for (let rowindex = previousreferenceindex;
@@ -1091,23 +1077,10 @@ export const getSpinePortalOffset = (
         }
 
         // let scrolloffset
-        if (cradleProps.orientation == 'vertical') {
-            scrolloffset = spineoffsetref - 
-                viewportElement.scrollTop
-                
-                
-        } else {
-
-            scrolloffset = spineoffsetref - 
-                viewportElement.scrollLeft
-                
-        }
-
-        // return scrolloffset
 
     } else { // scrollback
 
-        let referencerowshift = Math.ceil(referenceshift/crosscount)
+        // let referencerowshift = Math.ceil(referenceshift/crosscount)
 
         // ------------------[ calculate spine position ]---------------
 
@@ -1118,37 +1091,41 @@ export const getSpinePortalOffset = (
 
         } else { 
 
-            for (let rowindex = previousreferenceindex;
-                rowindex > previousreferenceindex - referenceshift; 
-                rowindex -= crosscount ) {
+            // if ( spineoffsetref === undefined ) {
 
-                let propname = (cradleProps.orientation == 'vertical')?'offsetHeight':'offsetWidth'
-                let iterationshift = itemelements.has(rowindex)
-                    ?itemelements.get(rowindex).current[propname] + gap
-                    :cellLength
-                referenceposshift += iterationshift
+                console.log('processing backward for undefined: previousreferenceindex, referenceshift',previousreferenceindex, referenceshift)
 
-            }
+                for (let rowindex = previousreferenceindex;
+                    rowindex > previousreferenceindex + referenceshift; 
+                    rowindex -= crosscount ) {
 
-            console.log('inferring backward location for spine offset', referenceposshift)
-            spineoffsetref = spineposbase - referenceposshift
+                    let propname = (cradleProps.orientation == 'vertical')?'offsetHeight':'offsetWidth'
+                    let iterationshift = itemelements.has(rowindex)
+                        ?itemelements.get(rowindex).current[propname] + gap
+                        :cellLength
+                    referenceposshift += iterationshift
+                    console.log('iterating backshift: rowindex, iterationshift, referenceposshift',rowindex, iterationshift, referenceposshift)
 
+                }
+
+                console.log('inferring backward location for spine offset', referenceposshift)
+                spineoffsetref = spineposbase - referenceposshift
+
+            // }
         }
 
-        // let scrolloffset
-        if (cradleProps.orientation == 'vertical') {
-            scrolloffset = spineoffsetref - 
-                viewportElement.scrollTop
-                
-                
-        } else {
+    }
 
-            scrolloffset = spineoffsetref - 
-                viewportElement.scrollLeft
-                
-        }
+    if (cradleProps.orientation == 'vertical') {
+        scrolloffset = spineoffsetref - 
+            viewportElement.scrollTop
+            
+            
+    } else {
 
-    // return scrolloffset
+        scrolloffset = spineoffsetref - 
+            viewportElement.scrollLeft
+            
     }
 
     
