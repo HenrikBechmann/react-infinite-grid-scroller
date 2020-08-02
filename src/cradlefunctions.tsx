@@ -997,7 +997,7 @@ export const allocateContentList = (
 
 }
 
-export const getSpinePosRef = (
+export const getSpinePortalOffset = (
     {
         cradleProps,
         crosscount,

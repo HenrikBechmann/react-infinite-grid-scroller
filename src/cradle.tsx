@@ -63,7 +63,7 @@ import {
     calcVisibleItems, 
     getScrollReferenceIndexData,
     getContentListRequirements,
-    getSpinePosRef,
+    getSpinePortalOffset,
     isolateRelevantIntersections,
     // normalizeCradleAnchors,
     allocateContentList,
@@ -889,7 +889,7 @@ const Cradle = ({
         // -------------------------------[ 8. set css changes ]-------------------------
 
         // place the spine in the scrollblock
-        let spineoffset = getSpinePosRef(
+        let spineoffset = getSpinePortalOffset(
             {
                 cradleProps,
                 crosscount,
