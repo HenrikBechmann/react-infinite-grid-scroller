@@ -21,6 +21,8 @@
 
     there is a rare gap at start of cradle when quickly scrolling backward
 
+    deal with spine being notified by bottom border rather than top
+
 */
 
 /*
@@ -1070,6 +1072,10 @@ const Cradle = ({
 
         let cradleState = cradlestateRef.current
 
+        // if (pauseScrollingEffectsRef.current == true) {
+        //     return
+        // }
+
         if (!viewportDataRef.current.isResizing) {
 
             if (cradleState == 'ready' || cradleState == 'repositioning') {
@@ -1132,7 +1138,7 @@ const Cradle = ({
                 case 'repositioning': {
 
                     callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
-                    pauseScrollingEffectsRef.current = true
+                    // pauseScrollingEffectsRef.current = true
 
                     saveCradleState('reposition')
 
@@ -1221,7 +1227,7 @@ const Cradle = ({
                 break
             }
             case 'normalize': {
-                // setTimeout(()=> {
+                setTimeout(()=> {
 
                     // redundant scroll position to avoid accidental positioning at tail end of reposition
                     if (viewportData.elementref.current) { // already unmounted if fails
@@ -1237,7 +1243,7 @@ const Cradle = ({
                         saveCradleState('repositioning')
                     }
 
-                // },100)
+                },100)
 
                 break 
 
