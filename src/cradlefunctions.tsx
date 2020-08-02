@@ -1011,7 +1011,7 @@ export const getSpinePortalOffset = (
         spineElement,
     }) => {
 
-    // ----------[ calculate spine base position ]----------------
+    // ----------[ collect input datas ]----------------
 
     let spineoffsetref 
 
@@ -1032,23 +1032,45 @@ export const getSpinePortalOffset = (
 
     }
 
+    // ----------------------[ prepare for calculations ]-------------------------------
+
+    // output vars
     let referenceposshift = 0 // pixels
     let scrolloffset
 
+    if (orientation == 'vertical') {
+        
+        if (itemelements.has(referenceindex)) {
+            spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
+        }
+
+    } else {
+
+        if (itemelements.has(referenceindex - crosscount)) {
+            spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetLeft
+        }
+
+    }
+
+    console.log('firt order spineoffsetref', spineoffsetref)
+
+    // ----------------------[ slightly different calculatoins for forward and back]-----------------
+
     if (scrollforward) {
 
-        if (orientation == 'vertical') {
-            if (itemelements.has(referenceindex)) {
-                spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
-            }
+        // if (orientation == 'vertical') {
 
-        } else {
+        //     if (itemelements.has(referenceindex)) {
+        //         spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
+        //     }
 
-            if (itemelements.has(referenceindex - crosscount)) {
-                spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetLeft
-            }
+        // } else {
 
-        }
+        //     if (itemelements.has(referenceindex - crosscount)) {
+        //         spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetLeft
+        //     }
+
+        // }
 
         if ( spineoffsetref === undefined ) {
             for (let rowindex = previousreferenceindex;
@@ -1083,7 +1105,7 @@ export const getSpinePortalOffset = (
 
         // return scrolloffset
 
-    } else {
+    } else { // scrollback
 
         let referencerowshift = Math.ceil(referenceshift/crosscount)
 
@@ -1126,8 +1148,9 @@ export const getSpinePortalOffset = (
                 
         }
 
-        // return scrolloffset
+    // return scrolloffset
     }
+
     
     return scrolloffset
 
