@@ -1011,6 +1011,8 @@ export const getSpinePortalOffset = (
         spineElement,
     }) => {
 
+    console.log('incoming referenceindex, previousreferenceindex, referenceshift',referenceindex, previousreferenceindex, referenceshift)
+
     // ----------[ collect input datas ]----------------
 
     let spineoffsetref 
@@ -1080,39 +1082,25 @@ export const getSpinePortalOffset = (
 
     } else { // scrollback
 
-        // let referencerowshift = Math.ceil(referenceshift/crosscount)
+        console.log('processing backward for undefined: previousreferenceindex, referenceshift',previousreferenceindex, referenceshift)
 
-        // ------------------[ calculate spine position ]---------------
+        for (let rowindex = previousreferenceindex;
+            rowindex > previousreferenceindex + referenceshift; 
+            rowindex -= crosscount ) {
 
-        // let spineposref
-        if (headcontent.length == 0) {
+            let propname = (cradleProps.orientation == 'vertical')?'offsetHeight':'offsetWidth'
+            let iterationshift = itemelements.has(rowindex)
+                ?itemelements.get(rowindex).current[propname] + gap
+                :cellLength
+            referenceposshift += iterationshift
+            console.log('iterating backshift: rowindex, iterationshift, referenceposshift',rowindex, iterationshift, referenceposshift)
 
-            spineoffsetref = padding
-
-        } else { 
-
-            // if ( spineoffsetref === undefined ) {
-
-                console.log('processing backward for undefined: previousreferenceindex, referenceshift',previousreferenceindex, referenceshift)
-
-                for (let rowindex = previousreferenceindex;
-                    rowindex > previousreferenceindex + referenceshift; 
-                    rowindex -= crosscount ) {
-
-                    let propname = (cradleProps.orientation == 'vertical')?'offsetHeight':'offsetWidth'
-                    let iterationshift = itemelements.has(rowindex)
-                        ?itemelements.get(rowindex).current[propname] + gap
-                        :cellLength
-                    referenceposshift += iterationshift
-                    console.log('iterating backshift: rowindex, iterationshift, referenceposshift',rowindex, iterationshift, referenceposshift)
-
-                }
-
-                console.log('inferring backward location for spine offset', referenceposshift)
-                spineoffsetref = spineposbase - referenceposshift
-
-            // }
         }
+
+        spineoffsetref = spineposbase - referenceposshift
+        console.log('inferring backward location for spine spineposbase, referenceshift, spineoffsetref', spineposbase,referenceposshift, spineoffsetref)
+
+        // }
 
     }
 
