@@ -889,7 +889,7 @@ const Cradle = ({
         // -------------------------------[ 8. set css changes ]-------------------------
 
         // place the spine in the scrollblock
-        let spineposref = getSpinePosRef(
+        let spineoffset = getSpinePosRef(
             {
                 cradleProps,
                 crosscount,
@@ -906,21 +906,21 @@ const Cradle = ({
             }
         )
 
-        if (spineposref !== undefined) {
+        if (spineoffset !== undefined) {
             
             // console.log('viewportElement.scrollTop BEFORE', viewportElement.scrollTop)
 
             if (cradleProps.orientation == 'vertical') {
 
                 scrollPositionDataRef.current = {property:'scrollTop',value:viewportElement.scrollTop}
-                spineCradleElementRef.current.style.top = viewportElement.scrollTop + spineposref + 'px'
+                spineCradleElementRef.current.style.top = viewportElement.scrollTop + spineoffset + 'px'
                 spineCradleElementRef.current.style.left = 'auto'
                 headCradleElementRef.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
 
             } else {
 
                 scrollPositionDataRef.current = {property:'scrollLeft',value:viewportElement.scrollLeft}
-                spineCradleElementRef.current.style.left = viewportElement.scrollLeft + spineposref + 'px'
+                spineCradleElementRef.current.style.left = viewportElement.scrollLeft + spineoffset + 'px'
                 spineCradleElementRef.current.style.top = 'auto'
                 headCradleElementRef.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
 
@@ -928,11 +928,11 @@ const Cradle = ({
 
         }
 
-        // console.log('calculated spineposref',spineposref)
+        console.log('calculated spineposref',spineoffset)
 
         scrollReferenceIndexDataRef.current = {
             index:referenceindex,
-            scrolloffset:spineposref
+            scrolloffset:spineoffset
         }
 
         // console.log('scrollReferenceIndexDataRef.current',scrollReferenceIndexDataRef.current)
