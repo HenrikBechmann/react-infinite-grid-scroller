@@ -1032,7 +1032,8 @@ export const getSpinePosRef = (
 
     }
 
-    let referenceposshift = 0 //referenceshift
+    let referenceposshift = 0 // pixels
+    let scrolloffset
 
     if (scrollforward) {
 
@@ -1061,12 +1062,13 @@ export const getSpinePosRef = (
                 referenceposshift += iterationshift
 
             }
+            console.log('inferring forward location for spine offset', referenceposshift)
 
             spineoffsetref = spineposbase - referenceposshift
 
         }
 
-        let scrolloffset
+        // let scrolloffset
         if (cradleProps.orientation == 'vertical') {
             scrolloffset = spineoffsetref - 
                 viewportElement.scrollTop
@@ -1079,52 +1081,56 @@ export const getSpinePosRef = (
                 
         }
 
-        return scrolloffset
+        // return scrolloffset
 
-    }
+    } else {
 
-    let referencerowshift = Math.ceil(referenceshift/crosscount)
+        let referencerowshift = Math.ceil(referenceshift/crosscount)
 
-    // ------------------[ calculate spine position ]---------------
+        // ------------------[ calculate spine position ]---------------
 
-    // let spineposref
-    if (headcontent.length == 0) {
+        // let spineposref
+        if (headcontent.length == 0) {
 
-        spineoffsetref = padding
+            spineoffsetref = padding
 
-    } else { 
+        } else { 
 
-        for (let rowindex = previousreferenceindex;
-            rowindex > previousreferenceindex - referenceshift; 
-            rowindex -= crosscount ) {
+            for (let rowindex = previousreferenceindex;
+                rowindex > previousreferenceindex - referenceshift; 
+                rowindex -= crosscount ) {
 
-            let propname = (cradleProps.orientation == 'vertical')?'offsetHeight':'offsetWidth'
-            let iterationshift = itemelements.has(rowindex)
-                ?itemelements.get(rowindex).current[propname] + gap
-                :cellLength
-            referenceposshift += iterationshift
+                let propname = (cradleProps.orientation == 'vertical')?'offsetHeight':'offsetWidth'
+                let iterationshift = itemelements.has(rowindex)
+                    ?itemelements.get(rowindex).current[propname] + gap
+                    :cellLength
+                referenceposshift += iterationshift
+
+            }
+
+            console.log('inferring backward location for spine offset', referenceposshift)
+            spineoffsetref = spineposbase - referenceposshift
 
         }
 
-        spineoffsetref = spineposbase - referenceposshift
+        // let scrolloffset
+        if (cradleProps.orientation == 'vertical') {
+            scrolloffset = spineoffsetref - 
+                viewportElement.scrollTop
+                
+                
+        } else {
 
+            scrolloffset = spineoffsetref - 
+                viewportElement.scrollLeft
+                
+        }
+
+        // return scrolloffset
     }
-
-    let scrolloffset
-    if (cradleProps.orientation == 'vertical') {
-        scrolloffset = spineoffsetref - 
-            viewportElement.scrollTop
-            
-            
-    } else {
-
-        scrolloffset = spineoffsetref - 
-            viewportElement.scrollLeft
-            
-    }
-
-    return scrolloffset
     
+    return scrolloffset
+
 }
 
 const emitItem = ({
