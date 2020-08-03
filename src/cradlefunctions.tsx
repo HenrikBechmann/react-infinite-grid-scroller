@@ -1055,7 +1055,8 @@ export const getSpinePortalOffset = (
 
     }
 
-    console.log('first order spineoffsetref', spineoffsetref)
+    console.log('first order spineoffsetref & spineposbase & itemelements.get(referenceindex).current.offsetTop', 
+        spineoffsetref, spineposbase, itemelements.get(referenceindex)?.current.offsetTop)
 
     // ----------------------[ slightly different calculatoins for forward and back]-----------------
 
@@ -1073,7 +1074,7 @@ export const getSpinePortalOffset = (
                 referenceposshift += iterationshift
 
             }
-            console.log('inferring forward location for spine offset', referenceposshift)
+            // console.log('inferring forward location for spine offset', referenceposshift)
 
             spineoffsetref = spineposbase - referenceposshift
 
@@ -1102,6 +1103,8 @@ export const getSpinePortalOffset = (
         // }
 
     }
+
+    console.log('subtracting viewportElement.scrollTop', viewportElement.scrollTop)
 
     if (cradleProps.orientation == 'vertical') {
         scrolloffset = spineoffsetref - 

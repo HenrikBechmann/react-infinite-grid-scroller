@@ -784,7 +784,7 @@ const Cradle = ({
 
         })
 
-        console.log('==> intersections.length', intersections.length)
+        console.log('==> intersections.length', intersections.length, scrollforward?"FORWARD":"BACKWARD")
 
         if (intersections.length == 0) return
 
@@ -809,8 +809,8 @@ const Cradle = ({
 
         })
 
-        // console.log('calcContentShifts: cradleindex, cradleitemshift, referenceindex, referenceitemshift', 
-        //     cradleindex, cradleitemshift, referenceindex, referenceitemshift)
+        console.log('calcContentShifts: cradleindex, cradleitemshift, referenceindex, referenceitemshift', 
+            cradleindex, cradleitemshift, referenceindex, referenceitemshift)
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
@@ -828,7 +828,7 @@ const Cradle = ({
 
         })
 
-        // console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
+        console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
 
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
