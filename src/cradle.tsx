@@ -629,6 +629,9 @@ const Cradle = ({
         }
         isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
 
+        console.log('setting isCradleInViewRef, isHeadCradleInViewRef, isTailCradleInViewRef',
+            isCradleInViewRef.current, isHeadCradleInViewRef.current, isTailCradleInViewRef.current)
+
         if (!isCradleInViewRef.current) 
 
         {
@@ -727,6 +730,8 @@ const Cradle = ({
 
         }
 
+        console.log('item notification calling updateCradleContent(moviedentries)', movedentries)
+
         isMounted() && updateCradleContent(movedentries)
 
     },[])
@@ -784,7 +789,7 @@ const Cradle = ({
 
         })
 
-        console.log('==> intersections.length', intersections.length, scrollforward?"FORWARD":"BACKWARD")
+        console.log('==> intersections.length: intersections.length, scrollforward, viewportElement.scrollTop', intersections.length, scrollforward?"FORWARD":"BACKWARD", viewportElement.scrollTop)
 
         if (intersections.length == 0) return
 
@@ -1057,9 +1062,10 @@ const Cradle = ({
 
     const scrollPositionsRef = useRef({current:0,previous:0})
 
-    // callback for scroll
+    // callback for scrolling
     const onScroll = useCallback(() => {
 
+    
         let viewportElement = viewportDataRef.current.elementref.current
         let scrollPositions = scrollPositionsRef.current
         scrollPositions.previous = scrollPositions.current
@@ -1068,6 +1074,7 @@ const Cradle = ({
             ?viewportElement.scrollTop
             :viewportElement.scrollLeft
 
+        console.log('scrolling', viewportElement.scrollTop)
         clearTimeout(scrollTimeridRef.current)
 
         let cradleState = cradlestateRef.current

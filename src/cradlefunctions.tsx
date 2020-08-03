@@ -1041,28 +1041,38 @@ export const getSpinePortalOffset = (
     let referenceposshift = 0 // pixels
     let scrolloffset
 
-    if (orientation == 'vertical') {
+    // if (orientation == 'vertical') {
         
-        if (itemelements.has(referenceindex)) {
-            spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
-        }
+    //     if (itemelements.has(referenceindex)) {
+    //         spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
+    //     }
 
-    } else {
+    // } else {
 
-        if (itemelements.has(referenceindex - crosscount)) {
-            spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetLeft
-        }
+    //     if (itemelements.has(referenceindex - crosscount)) {
+    //         spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetLeft
+    //     }
 
-    }
-
-    console.log('first order spineoffsetref & spineposbase & itemelements.get(referenceindex).current.offsetTop', 
-        spineoffsetref, spineposbase, itemelements.get(referenceindex)?.current.offsetTop)
+    // }
 
     // ----------------------[ slightly different calculatoins for forward and back]-----------------
 
     let propname = (cradleProps.orientation == 'vertical')?'offsetHeight':'offsetWidth'
     if (scrollforward) {
 
+        if (orientation == 'vertical') {
+            
+            if (itemelements.has(referenceindex)) {
+                spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
+            }
+
+        } else {
+
+            if (itemelements.has(referenceindex - crosscount)) {
+                spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetLeft
+            }
+
+        }
         if ( spineoffsetref === undefined ) {
             for (let rowindex = previousreferenceindex;
                 rowindex < previousreferenceindex + referenceshift; 
@@ -1084,27 +1094,47 @@ export const getSpinePortalOffset = (
 
     } else { // scrollback
 
-        console.log('processing backward for undefined: previousreferenceindex, referenceshift',previousreferenceindex, referenceshift)
+        // TODO add hight headblock reference for first order spineoffsetreference
 
-        for (let rowindex = previousreferenceindex;
-            rowindex > previousreferenceindex + referenceshift; 
-            rowindex -= crosscount ) {
+        if (orientation == 'vertical') {
+            
+            if (itemelements.has(referenceindex)) {
+                 spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
+            }
 
-            let iterationshift = itemelements.has(rowindex)
-                ?itemelements.get(rowindex).current[propname] + gap
-                :cellLength
-            referenceposshift += iterationshift
-            console.log('iterating backshift: rowindex, iterationshift, referenceposshift',rowindex, iterationshift, referenceposshift)
+        } else {
+
+            if (itemelements.has(referenceindex - crosscount)) {
+                spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetLeft
+            }
 
         }
-        spineoffsetref = spineposbase - referenceposshift
-        console.log('inferring backward location for spine spineposbase, referenceshift, spineoffsetref', spineposbase,referenceposshift, spineoffsetref)
+
+            console.log('first order backward spineoffsetref & spineposbase & itemelements.get(referenceindex)?.current.offsetTop', 
+                spineoffsetref, spineposbase, itemelements.get(referenceindex)?.current.offsetTop)
+
+    
+            console.log('processing backward for undefined: previousreferenceindex, referenceshift',previousreferenceindex, referenceshift)
+
+            for (let rowindex = previousreferenceindex;
+                rowindex > (previousreferenceindex + referenceshift); 
+                rowindex -= crosscount ) {
+
+                let iterationshift = itemelements.has(rowindex)
+                    ?itemelements.get(rowindex).current[propname] + gap
+                    :cellLength
+                referenceposshift += iterationshift
+                console.log('iterating backshift: rowindex, iterationshift, referenceposshift',rowindex, iterationshift, referenceposshift)
+
+            }
+            spineoffsetref = spineposbase - referenceposshift
+            console.log('inferring backward location for spine spineposbase, referenceshift, spineoffsetref', spineposbase,referenceposshift, spineoffsetref)
 
         // }
 
     }
 
-    console.log('subtracting viewportElement.scrollTop', viewportElement.scrollTop)
+    console.log('subtracting spineoffsetref, viewportElement.scrollTop, =', spineoffsetref, viewportElement.scrollTop, spineoffsetref - viewportElement.scrollTop)
 
     if (cradleProps.orientation == 'vertical') {
         scrolloffset = spineoffsetref - 
@@ -1117,6 +1147,8 @@ export const getSpinePortalOffset = (
             viewportElement.scrollLeft
             
     }
+
+   // scrolloffset = (scrolloffset % cellLength)
 
     
     return scrolloffset
