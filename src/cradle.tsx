@@ -792,7 +792,7 @@ const Cradle = ({
 
         })
 
-        // console.log('==> intersections.length: intersections.length, scrollforward, viewportElement.scrollTop', intersections.length, scrollforward?"FORWARD":"BACKWARD", viewportElement.scrollTop)
+        console.log('==> intersections.length, direction, viewportElement.scrollTop', intersections.length, scrollforward?"FORWARD":"BACKWARD", viewportElement.scrollTop)
 
         if (intersections.length == 0) return
 

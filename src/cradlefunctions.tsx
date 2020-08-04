@@ -717,10 +717,40 @@ export const calcContentShifts = ({
 
     console.log('adjusted newcradleindex, shift, and newreferenceindex, shift', 
         newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount)
-    console.log('viewport reference offsets old, shift, and new; viewportElement.scrollTop',
+    console.log('viewport reference pixel offsets old, shift, and new; viewportElement.scrollTop',
         previousrefindexcradleoffset, referenceposshift, previousrefindexcradleoffset + referenceposshift, viewportElement.scrollTop)
 
     let spineoffset = previousrefindexcradleoffset + referenceposshift
+
+    if (!scrollforward && (spineoffset >= cellLength)) {
+
+        let oldspineoffset = spineoffset
+        let remainder = spineoffset % cellLength
+        let rows = Math.floor(spineoffset/cellLength)
+
+        newreferenceindex -= rows * crosscount
+        spineoffset = remainder
+        referenceitemshiftcount -= rows * crosscount
+
+        console.log('adjusting spineoffset down: from to',oldspineoffset,spineoffset)
+
+    }
+
+    if (!scrollforward && (spineoffset < 0)) {
+
+        let oldspineoffset = spineoffset
+        let rowadjustment = Math.abs(Math.ceil(spineoffset/cellLength))
+        let itemadjustment = rowadjustment * crosscount
+
+        newreferenceindex += itemadjustment
+        spineoffset = cellLength - Math.abs(oldspineoffset % cellLength)
+        referenceitemshiftcount += itemadjustment
+
+        console.log('adjusting spineoffset up: from to',oldspineoffset,spineoffset)
+
+    }
+
+    // if (newreferenceindex == 0) spineoffset = 10
 
     return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineoffset] // positive = roll toward top/left; negative = roll toward bottom/right
 
