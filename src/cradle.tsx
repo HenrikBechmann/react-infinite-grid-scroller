@@ -68,7 +68,7 @@ import {
     calcVisibleItems, 
     getScrollReferenceIndexData,
     getContentListRequirements,
-    getSpinePortalOffset,
+    // getSpinePortalOffset,
     isolateRelevantIntersections,
     // normalizeCradleAnchors,
     allocateContentList,
@@ -632,8 +632,8 @@ const Cradle = ({
         }
         isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
 
-        console.log('setting isCradleInViewRef, isHeadCradleInViewRef, isTailCradleInViewRef',
-            isCradleInViewRef.current, isHeadCradleInViewRef.current, isTailCradleInViewRef.current)
+        // console.log('setting isCradleInViewRef, isHeadCradleInViewRef, isTailCradleInViewRef',
+        //     isCradleInViewRef.current, isHeadCradleInViewRef.current, isTailCradleInViewRef.current)
 
         if (!isCradleInViewRef.current) 
 
@@ -728,12 +728,12 @@ const Cradle = ({
 
         if (pauseItemObserverRef.current) {
 
-            console.log('pause item observer', pauseItemObserverRef.current)
+            // console.log('pause item observer', pauseItemObserverRef.current)
             return
 
         }
 
-        console.log('item notification calling updateCradleContent(moviedentries)', movedentries)
+        // console.log('item notification calling updateCradleContent(moviedentries)', movedentries)
 
         isMounted() && updateCradleContent(movedentries)
 
@@ -792,7 +792,7 @@ const Cradle = ({
 
         })
 
-        console.log('==> intersections.length: intersections.length, scrollforward, viewportElement.scrollTop', intersections.length, scrollforward?"FORWARD":"BACKWARD", viewportElement.scrollTop)
+        // console.log('==> intersections.length: intersections.length, scrollforward, viewportElement.scrollTop', intersections.length, scrollforward?"FORWARD":"BACKWARD", viewportElement.scrollTop)
 
         if (intersections.length == 0) return
 
@@ -801,7 +801,8 @@ const Cradle = ({
         let [cradleindex, 
             cradleitemshift, 
             referenceindex, 
-            referenceitemshift] = calcContentShifts({
+            referenceitemshift,
+            spineoffset] = calcContentShifts({
 
             cradleProps,
             spineElement,
@@ -815,11 +816,12 @@ const Cradle = ({
             tailcontentlist,
             cradlerowcount:cradlerowcountRef.current,
             itemobserverthreshold:ITEM_OBSERVER_THRESHOLD,
+            itemelements,
 
         })
 
-        console.log('calcContentShifts: cradleindex, cradleitemshift, referenceindex, referenceitemshift', 
-            cradleindex, cradleitemshift, referenceindex, referenceitemshift)
+        console.log('calcContentShifts: cradleindex, cradleitemshift, referenceindex, referenceitemshift, spineoffset', 
+            cradleindex, cradleitemshift, referenceindex, referenceitemshift, spineoffset)
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
@@ -837,7 +839,7 @@ const Cradle = ({
 
         })
 
-        console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
+        // console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
 
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
@@ -882,23 +884,23 @@ const Cradle = ({
 
         // -------------------------------[ 8. set css changes ]-------------------------
 
-        // place the spine in the scrollblock
-        let spineoffset = getSpinePortalOffset(
-            {
-                cradleProps,
-                crosscount,
-                scrollforward,
-                headcontent,
-                // tailcontent,
-                itemelements,
-                referenceindex,
-                previousreferenceindex:referenceindex - referenceitemshift,
-                referenceshift:referenceitemshift,
-                viewportElement,
-                spineElement,
-                // headElement,
-            }
-        )
+        // // place the spine in the scrollblock
+        // let spineoffset = getSpinePortalOffset(
+        //     {
+        //         cradleProps,
+        //         crosscount,
+        //         scrollforward,
+        //         headcontent,
+        //         // tailcontent,
+        //         itemelements,
+        //         referenceindex,
+        //         previousreferenceindex:referenceindex - referenceitemshift,
+        //         referenceshift:referenceitemshift,
+        //         viewportElement,
+        //         spineElement,
+        //         // headElement,
+        //     }
+        // )
 
         if (spineoffset !== undefined) {
             
@@ -922,7 +924,7 @@ const Cradle = ({
 
         }
 
-        console.log('calculated spineposref',spineoffset)
+        // console.log('calculated spineposref',spineoffset)
 
         scrollReferenceIndexDataRef.current = {
             index:referenceindex,
@@ -1061,7 +1063,7 @@ const Cradle = ({
             ?viewportElement.scrollTop
             :viewportElement.scrollLeft
 
-        // console.log('scrolling', viewportElement.scrollTop)
+        console.log('scrolling', viewportElement.scrollTop)
         clearTimeout(scrollTimeridRef.current)
 
         let cradleState = cradlestateRef.current

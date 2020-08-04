@@ -587,11 +587,15 @@ export const calcContentShifts = ({
     tailcontentlist,
     cradlerowcount,
     itemobserverthreshold,
+    itemelements,
 }) => {
 
     let forwardcount = 0, backwardcount = 0
     let spineviewportoffset, headspineoffset, tailspineoffset
-    let cradleboundary, viewportlength
+    let viewportovershoot, viewportlength
+
+    // calculate cradleboundary and boundary row and item count for overshoot
+
     if (cradleProps.orientation == 'vertical') {
         spineviewportoffset = spineElement.offsetTop - viewportElement.scrollTop
         headspineoffset = headElement.offsetTop
@@ -599,11 +603,11 @@ export const calcContentShifts = ({
         viewportlength = viewportElement.offsetHeight
         if (scrollforward) {
 
-            cradleboundary = viewportlength - (spineviewportoffset + tailElement.offsetHeight)
+            viewportovershoot = viewportlength - (spineviewportoffset + tailElement.offsetHeight)
 
         } else {
 
-            cradleboundary = spineviewportoffset + headspineoffset // headspineoffset is negative from spine
+            viewportovershoot = spineviewportoffset + headspineoffset // headspineoffset is negative from spine
 
         }
 
@@ -615,40 +619,38 @@ export const calcContentShifts = ({
 
         if (scrollforward) {
 
-            cradleboundary = viewportlength - (spineviewportoffset + tailElement.offsetWidth)
+            viewportovershoot = viewportlength - (spineviewportoffset + tailElement.offsetWidth)
 
         } else {
 
-            cradleboundary = spineviewportoffset + headspineoffset
+            viewportovershoot = spineviewportoffset + headspineoffset
 
         }
     }
 
-    if (cradleboundary < 0) cradleboundary = 0 // not relevant
-    if (cradleboundary > viewportlength) cradleboundary = viewportlength
+    if (viewportovershoot < 0) viewportovershoot = 0 // not relevant
+    if (viewportovershoot > viewportlength) viewportovershoot = viewportlength
 
-    // console.log('CRADLEBOUNDARY: cradleboundary, viewportlength, spineviewportoffset, spineElement.offsetTop, \
-    //     viewportElement.scrollTop,tailspineoffset, tailElement.offsetHeight',
-    //     cradleboundary, viewportlength, spineviewportoffset, spineElement.offsetTop, 
-    //     viewportElement.scrollTop, tailspineoffset, tailElement.offsetHeight)
+    console.log('vertical viewport portion overshoot for scroll',scrollforward?'FORWARD':'BACKWARD',viewportovershoot)
 
     let gap = cradleProps.gap
 
     let cellLength = (cradleProps.orientation == 'vertical')?cradleProps.cellHeight + gap:cradleProps.cellWidth + gap
-    let boundaryrowcount = (cradleboundary == 0)?0:Math.floor(cradleboundary/cellLength)
+    let overshootrowcount = (viewportovershoot == 0)?0:Math.ceil(viewportovershoot/cellLength) // rows to fill viewport
 
-    let boundaryitemcount = boundaryrowcount * crosscount
-    if (boundaryitemcount) {
-        boundaryitemcount += (cradleProps.runwaycount * crosscount)
-        boundaryrowcount += cradleProps.runwaycount
+    // extra rows for runway
+    let overshootitemcount = overshootrowcount * crosscount
+    if (overshootitemcount) {
+        overshootitemcount += (cradleProps.runwaycount * crosscount)
+        overshootrowcount += cradleProps.runwaycount
     }
 
-    if (!scrollforward && (boundaryitemcount != 0)) { // negation of values for scroll backward
-        boundaryitemcount = -boundaryitemcount
-        boundaryrowcount = -boundaryrowcount
+    if (!scrollforward && (overshootitemcount != 0)) { // negation of values for scroll backward
+        overshootitemcount = -overshootitemcount
+        overshootrowcount = -overshootrowcount
     }
 
-    // console.log('BOUNDARY boundaryitemcount, boundaryrowcount', boundaryitemcount, boundaryrowcount)
+    console.log('OVERSHOOT overshootitemcount, overshootrowcount', overshootitemcount, overshootrowcount)
 
     // ----------------------[  calculate itemshiftcount includng overshoot ]------------------------
     // shift item count is the number of items the virtual cradle shifts, according to observer notices
@@ -663,25 +665,24 @@ export const calcContentShifts = ({
 
     }
 
-    let itemshiftcount = backwardcount - forwardcount + boundaryitemcount
+    let itemshiftcount = backwardcount - forwardcount + overshootitemcount
 
     let previousreferenceindex = tailcontentlist[0].props.index
+    let previousrefindexcradleoffset = 
+        itemelements.get(previousreferenceindex).current.offsetTop + 
+        spineElement.offsetTop - viewportElement.scrollTop
 
     let previouscradleindex = cradlecontentlist[0].props.index
 
     // console.log('previouscradleindex, previousreferenceindex, cradleitemshiftcount, referenceitemshiftcount', 
     //     previouscradleindex, previousreferenceindex, itemshiftcount)
 
-    let newreferenceindex = previousreferenceindex + itemshiftcount
     let newcradleindex = previouscradleindex + itemshiftcount
+    let newreferenceindex = previousreferenceindex + itemshiftcount
 
-    let cradleitemcount = cradlerowcount * crosscount
-    // let runwayitemcount = cradleProps.runwaycount * crosscount
-
-
-    // if (!scrollforward) {
-    //     newreferenceindex -= crosscount
-    // }
+    if ((newreferenceindex - newcradleindex) < (cradleProps.runwaycount * crosscount)) {
+        newcradleindex = newreferenceindex - (cradleProps.runwaycount * crosscount)
+    }
 
     if (newcradleindex < 0) {
         newcradleindex = 0
@@ -690,6 +691,10 @@ export const calcContentShifts = ({
     if (newreferenceindex < 0) {
         newreferenceindex = 0
     }
+
+    console.log('first order newcradleindex and newreferenceindex', newcradleindex, newreferenceindex)
+
+    let cradleitemcount = cradlerowcount * crosscount
 
     let listsize = cradleProps.listsize
     if ((newcradleindex + cradleitemcount) > listsize) {
@@ -708,30 +713,16 @@ export const calcContentShifts = ({
     let cradleitemshiftcount = newcradleindex - previouscradleindex
     let referenceitemshiftcount = newreferenceindex - previousreferenceindex
 
+    let referenceposshift = (referenceitemshiftcount/crosscount) * cellLength
 
-    // if (!scrollforward) {
-    //     let crossrowratio = (cradleboundary % cellLength)/(cellLength - gap)
+    console.log('adjusted newcradleindex, shift, and newreferenceindex, shift', 
+        newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount)
+    console.log('viewport reference offsets old, shift, and new; viewportElement.scrollTop',
+        previousrefindexcradleoffset, referenceposshift, previousrefindexcradleoffset + referenceposshift, viewportElement.scrollTop)
 
-    //     let ratio
-    //     if (browser && browser.name == 'safari') {
-    //         ratio = crossrowratio
-    //     } else {
-    //         ratio = Math.round(crossrowratio * 1000)/1000
-    //     }
+    let spineoffset = previousrefindexcradleoffset + referenceposshift
 
-    //     console.log('ratio > (1 - itemobserverthreshold', 
-    //         ratio, itemobserverthreshold, 1 - itemobserverthreshold, ratio > (1 - itemobserverthreshold))
-    //     if (ratio > (1 - itemobserverthreshold)) {
-    //         console.log('incrementing boundaryrowcount by 1')
-    //         boundaryrowcount -= 1
-    //     }
-
-    //     // console.log('calcContentShifts: select referenceindex: remaining boundary, ratio, itemobserverthreshold, 1 - itemobserverthreshold, boundaryrowcount',
-    //     //     (cradleboundary % cellLength), ratio,itemobserverthreshold,(1 - itemobserverthreshold), boundaryrowcount)
-
-    // }
-
-    return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount] // positive = roll toward top/left; negative = roll toward bottom/right
+    return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineoffset] // positive = roll toward top/left; negative = roll toward bottom/right
 
 }
 
@@ -1029,168 +1020,168 @@ export const allocateContentList = (
 
 }
 
-export const getSpinePortalOffset = (
-    {
-        cradleProps,
-        crosscount,
-        scrollforward,
-        headcontent,
-        itemelements, 
-        referenceindex,
-        previousreferenceindex,
-        referenceshift,
-        viewportElement,
-        spineElement,
-    }) => {
+// export const getSpinePortalOffset = (
+//     {
+//         cradleProps,
+//         crosscount,
+//         scrollforward,
+//         headcontent,
+//         itemelements, 
+//         referenceindex,
+//         previousreferenceindex,
+//         referenceshift,
+//         viewportElement,
+//         spineElement,
+//     }) => {
 
-    // console.log('DIRECTION, incoming referenceindex, previousreferenceindex, referenceshift',
-    //     scrollforward, referenceindex, previousreferenceindex, referenceshift)
+//     // console.log('DIRECTION, incoming referenceindex, previousreferenceindex, referenceshift',
+//     //     scrollforward, referenceindex, previousreferenceindex, referenceshift)
 
-    // ----------[ collect input datas ]----------------
+//     // ----------[ collect input datas ]----------------
 
-    let spineoffsetref 
+//     let spineoffsetref 
 
-    let orientation = cradleProps.orientation,
-        padding = cradleProps.padding,
-        gap = cradleProps.gap
+//     let orientation = cradleProps.orientation,
+//         padding = cradleProps.padding,
+//         gap = cradleProps.gap
 
-    let spineposbase, cellLength
-    if (orientation == 'vertical') {
+//     let spineposbase, cellLength
+//     if (orientation == 'vertical') {
 
-        spineposbase = spineElement.offsetTop
-        cellLength = cradleProps.cellHeight + gap
+//         spineposbase = spineElement.offsetTop
+//         cellLength = cradleProps.cellHeight + gap
 
-    } else {
+//     } else {
 
-        spineposbase = spineElement.offsetLeft
-        cellLength = cradleProps.cellWidth + gap
+//         spineposbase = spineElement.offsetLeft
+//         cellLength = cradleProps.cellWidth + gap
 
-    }
+//     }
 
-    // ----------------------[ prepare for calculations ]-------------------------------
+//     // ----------------------[ prepare for calculations ]-------------------------------
 
-    // output vars
-    let referenceposshift = 0 // pixels
-    let scrolloffset
+//     // output vars
+//     let referenceposshift = 0 // pixels
+//     let scrolloffset
 
-    // if (orientation == 'vertical') {
+//     // if (orientation == 'vertical') {
         
-    //     if (itemelements.has(referenceindex)) {
-    //         spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
-    //     }
+//     //     if (itemelements.has(referenceindex)) {
+//     //         spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
+//     //     }
 
-    // } else {
+//     // } else {
 
-    //     if (itemelements.has(referenceindex - crosscount)) {
-    //         spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetLeft
-    //     }
+//     //     if (itemelements.has(referenceindex - crosscount)) {
+//     //         spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetLeft
+//     //     }
 
-    // }
+//     // }
 
-    // ----------------------[ slightly different calculatoins for forward and back]-----------------
+//     // ----------------------[ slightly different calculatoins for forward and back]-----------------
 
-    let propname = (cradleProps.orientation == 'vertical')?'offsetHeight':'offsetWidth'
-    if (scrollforward) {
+//     let propname = (cradleProps.orientation == 'vertical')?'offsetHeight':'offsetWidth'
+//     if (scrollforward) {
 
-        if (orientation == 'vertical') {
+//         if (orientation == 'vertical') {
             
-            if (itemelements.has(referenceindex)) {
-                spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
-            }
+//             if (itemelements.has(referenceindex)) {
+//                 spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
+//             }
 
-        } else {
+//         } else {
 
-            if (itemelements.has(referenceindex - crosscount)) {
-                spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetLeft
-            }
+//             if (itemelements.has(referenceindex - crosscount)) {
+//                 spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetLeft
+//             }
 
-        }
-        if ( spineoffsetref === undefined ) {
-            for (let rowindex = previousreferenceindex;
-                rowindex < previousreferenceindex + referenceshift; 
-                rowindex += crosscount ) {
+//         }
+//         if ( spineoffsetref === undefined ) {
+//             for (let rowindex = previousreferenceindex;
+//                 rowindex < previousreferenceindex + referenceshift; 
+//                 rowindex += crosscount ) {
 
-                let iterationshift = itemelements.has(rowindex)
-                    ?itemelements.get(rowindex).current[propname] + gap
-                    :cellLength
-                referenceposshift += iterationshift
+//                 let iterationshift = itemelements.has(rowindex)
+//                     ?itemelements.get(rowindex).current[propname] + gap
+//                     :cellLength
+//                 referenceposshift += iterationshift
 
-            }
-            // console.log('inferring forward location for spine offset', referenceposshift)
+//             }
+//             // console.log('inferring forward location for spine offset', referenceposshift)
 
-            spineoffsetref = spineposbase - referenceposshift
+//             spineoffsetref = spineposbase - referenceposshift
 
-        }
+//         }
 
-        // let scrolloffset
+//         // let scrolloffset
 
-    } else { // scrollback
+//     } else { // scrollback
 
-        // TODO add hight headblock reference for first order spineoffsetreference
+//         // TODO add hight headblock reference for first order spineoffsetreference
 
-        if (orientation == 'vertical') {
+//         if (orientation == 'vertical') {
             
-            if (itemelements.has(referenceindex)) {
-                 spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
-            }
+//             if (itemelements.has(referenceindex)) {
+//                  spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
+//             }
 
-        } else {
+//         } else {
 
-            if (itemelements.has(referenceindex - crosscount)) {
-                spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetLeft
-            }
+//             if (itemelements.has(referenceindex - crosscount)) {
+//                 spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetLeft
+//             }
 
-        }
+//         }
 
-            // console.log('first order backward spineoffsetref & spineposbase & itemelements.get(referenceindex)?.current.offsetTop', 
-            //     spineoffsetref, spineposbase, itemelements.get(referenceindex)?.current.offsetTop)
+//             // console.log('first order backward spineoffsetref & spineposbase & itemelements.get(referenceindex)?.current.offsetTop', 
+//             //     spineoffsetref, spineposbase, itemelements.get(referenceindex)?.current.offsetTop)
 
     
-            // console.log('processing backward for undefined: previousreferenceindex, referenceshift',previousreferenceindex, referenceshift)
+//             // console.log('processing backward for undefined: previousreferenceindex, referenceshift',previousreferenceindex, referenceshift)
 
-            for (let rowindex = previousreferenceindex;
-                rowindex > (previousreferenceindex + referenceshift); 
-                rowindex -= crosscount ) {
+//             for (let rowindex = previousreferenceindex;
+//                 rowindex > (previousreferenceindex + referenceshift); 
+//                 rowindex -= crosscount ) {
 
-                let iterationshift = itemelements.has(rowindex)
-                    ?itemelements.get(rowindex).current[propname] + gap
-                    :cellLength
-                referenceposshift += iterationshift
-                // console.log('iterating backshift: rowindex, iterationshift, referenceposshift',rowindex, iterationshift, referenceposshift)
+//                 let iterationshift = itemelements.has(rowindex)
+//                     ?itemelements.get(rowindex).current[propname] + gap
+//                     :cellLength
+//                 referenceposshift += iterationshift
+//                 // console.log('iterating backshift: rowindex, iterationshift, referenceposshift',rowindex, iterationshift, referenceposshift)
 
-            }
-            spineoffsetref = spineposbase - referenceposshift
-            // console.log('inferring backward location for spine spineposbase, referenceshift, spineoffsetref', spineposbase,referenceposshift, spineoffsetref)
+//             }
+//             spineoffsetref = spineposbase - referenceposshift
+//             // console.log('inferring backward location for spine spineposbase, referenceshift, spineoffsetref', spineposbase,referenceposshift, spineoffsetref)
 
-        // }
+//         // }
 
-    }
+//     }
 
-    console.log('spineoffsetref, viewportElement.scrollTop', spineoffsetref, viewportElement.scrollTop)
+//     // console.log('spineoffsetref, viewportElement.scrollTop', spineoffsetref, viewportElement.scrollTop)
 
-    if (cradleProps.orientation == 'vertical') {
-        scrolloffset = spineoffsetref - 
-            viewportElement.scrollTop
+//     if (cradleProps.orientation == 'vertical') {
+//         scrolloffset = spineoffsetref - 
+//             viewportElement.scrollTop
             
             
-    } else {
+//     } else {
 
-        scrolloffset = spineoffsetref - 
-            viewportElement.scrollLeft
+//         scrolloffset = spineoffsetref - 
+//             viewportElement.scrollLeft
             
-    }
+//     }
 
-    // if (!scrollforward && (scrolloffset > cellLength)) {
-    //     let newscrolloffset = (scrolloffset % cellLength)
-    //     let diff = newscrolloffset - scrolloffset
-    //     scrolloffset = newscrolloffset
-    //     viewportElement.scrollTop += diff
-    // }
+//     // if (!scrollforward && (scrolloffset > cellLength)) {
+//     //     let newscrolloffset = (scrolloffset % cellLength)
+//     //     let diff = newscrolloffset - scrolloffset
+//     //     scrolloffset = newscrolloffset
+//     //     viewportElement.scrollTop += diff
+//     // }
 
     
-    return scrolloffset
+//     return scrolloffset
 
-}
+// }
 
 const emitItem = ({
     index, 
