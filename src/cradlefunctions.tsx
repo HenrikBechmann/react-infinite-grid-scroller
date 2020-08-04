@@ -565,6 +565,15 @@ let duplicatecompare = (a,b) => {
     let retval = (a.time < b.time)?-1:1
 }
 
+
+        // let ratio
+        // if (browser && browser.name == 'safari') {
+        //     ratio = entry.intersectionRatio
+        // } else {
+        //     ratio = Math.round(entry.intersectionRatio * 1000)/1000
+        // }
+
+
 export const calcContentShifts = ({
     cradleProps,
     spineElement,
@@ -577,6 +586,7 @@ export const calcContentShifts = ({
     cradlecontentlist,
     tailcontentlist,
     cradlerowcount,
+    itemobserverthreshold,
 }) => {
 
     let forwardcount = 0, backwardcount = 0
@@ -668,6 +678,11 @@ export const calcContentShifts = ({
     let cradleitemcount = cradlerowcount * crosscount
     // let runwayitemcount = cradleProps.runwaycount * crosscount
 
+
+    // if (!scrollforward) {
+    //     newreferenceindex -= crosscount
+    // }
+
     if (newcradleindex < 0) {
         newcradleindex = 0
     }
@@ -693,11 +708,28 @@ export const calcContentShifts = ({
     let cradleitemshiftcount = newcradleindex - previouscradleindex
     let referenceitemshiftcount = newreferenceindex - previousreferenceindex
 
-    // console.log('newreferenceindex, newcradleindex', newreferenceindex, newcradleindex)
 
-    // if (proposedcradleindex < 0) {
-    //     cradleitemshiftcount -= (proposedcradleindex)
-    // } 
+    // if (!scrollforward) {
+    //     let crossrowratio = (cradleboundary % cellLength)/(cellLength - gap)
+
+    //     let ratio
+    //     if (browser && browser.name == 'safari') {
+    //         ratio = crossrowratio
+    //     } else {
+    //         ratio = Math.round(crossrowratio * 1000)/1000
+    //     }
+
+    //     console.log('ratio > (1 - itemobserverthreshold', 
+    //         ratio, itemobserverthreshold, 1 - itemobserverthreshold, ratio > (1 - itemobserverthreshold))
+    //     if (ratio > (1 - itemobserverthreshold)) {
+    //         console.log('incrementing boundaryrowcount by 1')
+    //         boundaryrowcount -= 1
+    //     }
+
+    //     // console.log('calcContentShifts: select referenceindex: remaining boundary, ratio, itemobserverthreshold, 1 - itemobserverthreshold, boundaryrowcount',
+    //     //     (cradleboundary % cellLength), ratio,itemobserverthreshold,(1 - itemobserverthreshold), boundaryrowcount)
+
+    // }
 
     return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount] // positive = roll toward top/left; negative = roll toward bottom/right
 
@@ -936,43 +968,43 @@ export const getUIContentList = (props) => {
     The referenceindex must result in correct spine placement,
     ... and must take into account the bounds of the list for positioning
 */
-export const getNewReferenceindex = ({
-    crosscount,
-    listsize,
-    scrollforward,
-    itemshiftcount,
-    // localcontentlist,
-    // headcontentlist,
-    tailcontentlist,
-    // itemelements,
-    // intersections,
-}) => {
+// export const getNewReferenceindex = ({
+//     crosscount,
+//     listsize,
+//     scrollforward,
+//     itemshiftcount,
+//     // localcontentlist,
+//     // headcontentlist,
+//     tailcontentlist,
+//     // itemelements,
+//     // intersections,
+// }) => {
 
-    let previousreferenceindex = tailcontentlist[0].props.index
+//     let previousreferenceindex = tailcontentlist[0].props.index
 
-    let referenceindex
+//     let referenceindex
 
-    itemshiftcount = Math.abs(itemshiftcount)
+//     itemshiftcount = Math.abs(itemshiftcount)
 
-    let referencerowshift = Math.ceil(itemshiftcount/crosscount)
-    let referenceitemshift = referencerowshift * crosscount
+//     let referencerowshift = Math.ceil(itemshiftcount/crosscount)
+//     let referenceitemshift = referencerowshift * crosscount
 
-    if (scrollforward) {
+//     if (scrollforward) {
 
-        referenceindex = previousreferenceindex + referenceitemshift
+//         referenceindex = previousreferenceindex + referenceitemshift
 
-    } else {
+//     } else {
 
-        referenceindex = previousreferenceindex - referenceitemshift
+//         referenceindex = previousreferenceindex - referenceitemshift
 
-    }
+//     }
 
-    if (referenceindex > (listsize -1)) {
-        referenceindex = listsize -1
-    }
+//     if (referenceindex > (listsize -1)) {
+//         referenceindex = listsize -1
+//     }
 
-    return [referenceindex, referenceitemshift, previousreferenceindex]
-}
+//     return [referenceindex, referenceitemshift, previousreferenceindex]
+// }
 
 // butterfly model. Leading (head) all or partially hidden; tail, visible plus following hidden
 export const allocateContentList = (
@@ -1011,8 +1043,8 @@ export const getSpinePortalOffset = (
         spineElement,
     }) => {
 
-    console.log('DIRECTION, incoming referenceindex, previousreferenceindex, referenceshift',
-        scrollforward, referenceindex, previousreferenceindex, referenceshift)
+    // console.log('DIRECTION, incoming referenceindex, previousreferenceindex, referenceshift',
+    //     scrollforward, referenceindex, previousreferenceindex, referenceshift)
 
     // ----------[ collect input datas ]----------------
 
@@ -1110,11 +1142,11 @@ export const getSpinePortalOffset = (
 
         }
 
-            console.log('first order backward spineoffsetref & spineposbase & itemelements.get(referenceindex)?.current.offsetTop', 
-                spineoffsetref, spineposbase, itemelements.get(referenceindex)?.current.offsetTop)
+            // console.log('first order backward spineoffsetref & spineposbase & itemelements.get(referenceindex)?.current.offsetTop', 
+            //     spineoffsetref, spineposbase, itemelements.get(referenceindex)?.current.offsetTop)
 
     
-            console.log('processing backward for undefined: previousreferenceindex, referenceshift',previousreferenceindex, referenceshift)
+            // console.log('processing backward for undefined: previousreferenceindex, referenceshift',previousreferenceindex, referenceshift)
 
             for (let rowindex = previousreferenceindex;
                 rowindex > (previousreferenceindex + referenceshift); 
@@ -1124,17 +1156,17 @@ export const getSpinePortalOffset = (
                     ?itemelements.get(rowindex).current[propname] + gap
                     :cellLength
                 referenceposshift += iterationshift
-                console.log('iterating backshift: rowindex, iterationshift, referenceposshift',rowindex, iterationshift, referenceposshift)
+                // console.log('iterating backshift: rowindex, iterationshift, referenceposshift',rowindex, iterationshift, referenceposshift)
 
             }
             spineoffsetref = spineposbase - referenceposshift
-            console.log('inferring backward location for spine spineposbase, referenceshift, spineoffsetref', spineposbase,referenceposshift, spineoffsetref)
+            // console.log('inferring backward location for spine spineposbase, referenceshift, spineoffsetref', spineposbase,referenceposshift, spineoffsetref)
 
         // }
 
     }
 
-    console.log('subtracting spineoffsetref, viewportElement.scrollTop, =', spineoffsetref, viewportElement.scrollTop, spineoffsetref - viewportElement.scrollTop)
+    console.log('spineoffsetref, viewportElement.scrollTop', spineoffsetref, viewportElement.scrollTop)
 
     if (cradleProps.orientation == 'vertical') {
         scrolloffset = spineoffsetref - 
@@ -1148,7 +1180,12 @@ export const getSpinePortalOffset = (
             
     }
 
-   // scrolloffset = (scrolloffset % cellLength)
+    // if (!scrollforward && (scrolloffset > cellLength)) {
+    //     let newscrolloffset = (scrolloffset % cellLength)
+    //     let diff = newscrolloffset - scrolloffset
+    //     scrolloffset = newscrolloffset
+    //     viewportElement.scrollTop += diff
+    // }
 
     
     return scrolloffset

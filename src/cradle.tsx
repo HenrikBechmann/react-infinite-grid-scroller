@@ -3,6 +3,10 @@
 
 /*
     TODO:
+    
+    ==>> check getShift logic. !scrollforward should select next calculated index 
+    to be above the fold if possible.
+
     review rotate referenceindex settings
     investigate cascading calls to out of scope cradle, in relation to itemshift
 
@@ -59,7 +63,6 @@ const ITEM_OBSERVER_THRESHOLD = .9
 import { 
     setCradleGridStyles, 
     getUIContentList, 
-    getNewReferenceindex,
     calcHeadAndTailChanges,
     calcContentShifts,
     calcVisibleItems, 
@@ -811,6 +814,7 @@ const Cradle = ({
             cradlecontentlist:modelcontentlist,
             tailcontentlist,
             cradlerowcount:cradlerowcountRef.current,
+            itemobserverthreshold:ITEM_OBSERVER_THRESHOLD,
 
         })
 
@@ -860,23 +864,6 @@ const Cradle = ({
             localContentList = modelcontentlist
 
         }
-
-        // // -------------------[ 6. calculate new referenceindex ]---------------------
-
-        // let [repeatreferenceindex, referenceitemshift, repeatpreviousreferenceindex] = getNewReferenceindex({
-        //     itemshiftcount:referenceitemshiftcount,
-        //     crosscount,
-        //     listsize,
-        //     scrollforward,
-        //     // localcontentlist:localContentList,
-        //     // headcontentlist,
-        //     tailcontentlist,
-        //     // itemelements,
-        //     // intersections,
-        // })
-
-        // console.log('+++repeatreferenceindex, referenceitemshift, repeatpreviousreferenceindex',
-        //     repeatreferenceindex, referenceitemshift, repeatpreviousreferenceindex)
 
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 
@@ -1074,7 +1061,7 @@ const Cradle = ({
             ?viewportElement.scrollTop
             :viewportElement.scrollLeft
 
-        console.log('scrolling', viewportElement.scrollTop)
+        // console.log('scrolling', viewportElement.scrollTop)
         clearTimeout(scrollTimeridRef.current)
 
         let cradleState = cradlestateRef.current
