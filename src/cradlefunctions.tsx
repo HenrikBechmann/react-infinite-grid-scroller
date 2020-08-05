@@ -608,7 +608,7 @@ export const calcContentShifts = ({
 
         } else {
 
-            viewportovershoot = spineviewportoffset + headspineoffset //+ cradleProps.gap // headspineoffset is negative from spine
+            viewportovershoot = spineviewportoffset + headspineoffset + cradleProps.gap // headspineoffset is negative from spine
 
         }
 
@@ -626,7 +626,7 @@ export const calcContentShifts = ({
 
         } else {
 
-            viewportovershoot = spineviewportoffset + headspineoffset //+ cradleProps.gap
+            viewportovershoot = spineviewportoffset + headspineoffset + cradleProps.gap
 
         }
     }
