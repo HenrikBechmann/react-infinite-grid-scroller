@@ -820,7 +820,7 @@ const Cradle = ({
 
         })
 
-        console.log('calcContentShifts: cradleindex, cradleitemshift, referenceindex, referenceitemshift, spineoffset', 
+        console.log('***calcContentShifts: cradleindex, cradleitemshift, referenceindex, referenceitemshift, spineoffset', 
             cradleindex, cradleitemshift, referenceindex, referenceitemshift, spineoffset)
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------

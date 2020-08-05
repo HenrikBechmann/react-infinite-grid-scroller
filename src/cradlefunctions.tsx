@@ -722,33 +722,47 @@ export const calcContentShifts = ({
 
     let spineoffset = previousrefindexcradleoffset + referenceposshift
 
-    if (!scrollforward && (spineoffset >= cellLength)) {
+    // if (!scrollforward && (spineoffset >= cellLength)) {
 
-        let oldspineoffset = spineoffset
-        let remainder = spineoffset % cellLength
-        let rows = Math.floor(spineoffset/cellLength)
+    //     let oldspineoffset = spineoffset
+    //     let remainder = spineoffset % cellLength
+    //     let rows = Math.floor(spineoffset/cellLength)
+    //     let oldreferenceindex = newreferenceindex
 
-        newreferenceindex -= rows * crosscount
-        spineoffset = remainder
-        referenceitemshiftcount -= rows * crosscount
+    //     console.log('rows',rows, spineoffset, cellLength)
 
-        console.log('adjusting spineoffset down: from to',oldspineoffset,spineoffset)
+    //     newreferenceindex -= rows * crosscount
+    //     spineoffset = remainder
+    //     let oldreferenceitemshiftcount = referenceitemshiftcount
+    //     referenceitemshiftcount -= rows * crosscount
 
-    }
+    //     console.log('adjusting spineoffset down from to',oldspineoffset,spineoffset)
+    //     console.log('adjusting newreferenceindex down from to',oldreferenceindex,newreferenceindex)
+    //     console.log('adjusting referenceitemshiftcount down from to',oldreferenceitemshiftcount,referenceitemshiftcount)
 
-    if (!scrollforward && (spineoffset < 0)) {
+    // }
 
-        let oldspineoffset = spineoffset
-        let rowadjustment = Math.abs(Math.ceil(spineoffset/cellLength))
-        let itemadjustment = rowadjustment * crosscount
+    // if (!scrollforward && (spineoffset < 0)) {
 
-        newreferenceindex += itemadjustment
-        spineoffset = cellLength - Math.abs(oldspineoffset % cellLength)
-        referenceitemshiftcount += itemadjustment
+    //     let oldspineoffset = spineoffset
+    //     let rowadjustment = Math.abs(Math.ceil(-spineoffset/cellLength))
+    //     let itemadjustment = rowadjustment * crosscount
 
-        console.log('adjusting spineoffset up: from to',oldspineoffset,spineoffset)
+    //     console.log('oldspineoffset, rowadjustment, itemadjustment', oldspineoffset, rowadjustment, itemadjustment)
 
-    }
+    //     let oldreferenceindex = newreferenceindex
+    //     newreferenceindex += itemadjustment
+    //     spineoffset = oldspineoffset % cellLength // cellLength - Math.abs(oldspineoffset % cellLength)
+    //     let oldreferenceitemshiftcount = referenceitemshiftcount
+    //     referenceitemshiftcount += itemadjustment
+
+    //     console.log('adjusting spineoffset up: from to',oldspineoffset,spineoffset)
+
+    //     console.log('adjusting newreferenceindex up from to',oldreferenceindex,newreferenceindex)
+        
+    //     console.log('adjusting referenceitemshiftcount up from to',oldreferenceitemshiftcount,referenceitemshiftcount)
+
+    // }
 
     // if (newreferenceindex == 0) spineoffset = 10
 
