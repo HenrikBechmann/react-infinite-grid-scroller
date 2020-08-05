@@ -780,6 +780,17 @@ const Cradle = ({
 
         // --------------------[ 2. filter intersections list ]-----------------------
 
+        let entryitems = []
+        for (let entry of entries) {
+            let entryitem = {
+                index:entry.target.dataset.index,
+                isIntersecting:entry.isIntersecting,
+            }
+            entryitems.push(entryitem)
+        }
+
+        console.log('entries before filter',entryitems)
+
         // filter out inapplicable intersection entries
         // we're only interested in intersections proximal to the spine
         let intersections = isolateRelevantIntersections({
@@ -791,6 +802,16 @@ const Cradle = ({
             ITEM_OBSERVER_THRESHOLD,
 
         })
+        let intersectitems = []
+        for (let entry of intersections) {
+            let entryitem = {
+                index:entry.target.dataset.index,
+                isIntersecting:entry.isIntersecting,
+            }
+            intersectitems.push(entryitem)
+        }
+
+        console.log('intersectitems, headcontentlist, tailcontentlist after filter', intersectitems, headcontentlist, tailcontentlist)
 
         console.log('==> intersections.length, direction, viewportElement.scrollTop', intersections.length, scrollforward?"FORWARD":"BACKWARD", viewportElement.scrollTop)
 
@@ -813,6 +834,7 @@ const Cradle = ({
             scrollforward,
             crosscount,
             cradlecontentlist:modelcontentlist,
+            headcontentlist,
             tailcontentlist,
             cradlerowcount:cradlerowcountRef.current,
             itemobserverthreshold:ITEM_OBSERVER_THRESHOLD,
