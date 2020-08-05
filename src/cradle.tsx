@@ -149,7 +149,8 @@ const Cradle = ({
     const cradlestateRef = useRef(null) // access by closures
     cradlestateRef.current = cradlestate
 
-    console.log('cradlestate',cradlestate)
+    // console.log('cradlestate, scrollTop',
+    //     cradlestate, viewportDataRef.current.elementref.current?.scrollTop)
     // -----------------------------------------------------------------------
     // -------------------------[ control variables ]-----------------
 
@@ -314,6 +315,9 @@ const Cradle = ({
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const spineCradleElementRef = useRef(null)
+
+    // console.log('cradle, head, tail offsets',
+    //     spineCradleElementRef.current?.offsetTop, headCradleElementRef.current?.offsetTop, tailCradleElementRef.current?.offsetTop)
 
     // data model
     const modelContentRef = useRef(null)
