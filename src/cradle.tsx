@@ -149,8 +149,7 @@ const Cradle = ({
     const cradlestateRef = useRef(null) // access by closures
     cradlestateRef.current = cradlestate
 
-    // console.log('cradlestate, scrollTop',
-    //     cradlestate, viewportDataRef.current.elementref.current?.scrollTop)
+    console.log('cradlestate', cradlestate)
     // -----------------------------------------------------------------------
     // -------------------------[ control variables ]-----------------
 
@@ -817,7 +816,8 @@ const Cradle = ({
 
         console.log('intersectitems, headcontentlist, tailcontentlist after filter', intersectitems, headcontentlist, tailcontentlist)
 
-        console.log('==> intersections.length, direction, viewportElement.scrollTop', intersections.length, scrollforward?"FORWARD":"BACKWARD", viewportElement.scrollTop)
+        console.log('==> intersections.length, direction, viewportElement.scrollTop, spineElement.offsetTop ', 
+            intersections.length, scrollforward?"FORWARD":"BACKWARD", viewportElement.scrollTop, spineCradleElementRef.current?.offsetTop)
 
         if (intersections.length == 0) return
 
