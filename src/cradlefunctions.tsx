@@ -632,7 +632,7 @@ export const calcContentShifts = ({
     }
 
     if (viewportovershoot < 0) viewportovershoot = 0 // not relevant
-    // if (viewportovershoot > viewportlength) viewportovershoot = viewportlength
+    if (viewportovershoot > viewportlength) viewportovershoot = viewportlength // TODO: ??
 
     // console.log('vertical viewport portion overshoot for scroll',scrollforward?'FORWARD':'BACKWARD',viewportovershoot)
 
