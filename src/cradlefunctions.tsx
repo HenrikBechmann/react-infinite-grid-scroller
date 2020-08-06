@@ -631,12 +631,12 @@ export const calcContentShifts = ({
         }
     }
 
-    if (viewportovershoot < 0) viewportovershoot = 0 // not relevant
+    let gap = cradleProps.gap
+
+    if (viewportovershoot < -(gap - 1)) viewportovershoot = 0 // not relevant
     if (viewportovershoot > viewportlength) viewportovershoot = viewportlength // TODO: ??
 
     // console.log('vertical viewport portion overshoot for scroll',scrollforward?'FORWARD':'BACKWARD',viewportovershoot)
-
-    let gap = cradleProps.gap
 
     let cellLength = (cradleProps.orientation == 'vertical')?cradleProps.cellHeight + gap:cradleProps.cellWidth + gap
     let overshootrowcount = (viewportovershoot == 0)?0:Math.floor(viewportovershoot/cellLength) // rows to fill viewport
@@ -674,7 +674,7 @@ export const calcContentShifts = ({
 
     let previousreferenceindex = tailcontentlist[0].props.index
     let previousrefindexcradleoffset = 
-        itemelements.get(previousreferenceindex).current.offsetTop + 
+        // itemelements.get(previousreferenceindex).current.offsetTop + 
         spineElement.offsetTop - viewportElement.scrollTop
 
     let previouscradleindex = cradlecontentlist[0].props.index
@@ -727,10 +727,23 @@ export const calcContentShifts = ({
 
     let spineoffset = previousrefindexcradleoffset + referenceposshift
 
-    if (newreferenceindex == 0) spineoffset = cradleProps.padding
+    // if (newreferenceindex == 0) spineoffset = cradleProps.padding
 
+    // brute force for edge cases. TODO: determine why necessary
     if ((spineoffset > cellLength) || (spineoffset < -(gap -1))) {
-        console.warn('spineoffset out of range',spineoffset)
+        console.warn('spineoffset out of range, adjusting: spineoffset, previousrefindexcradleoffset, referenceposshift',
+            spineoffset, previousrefindexcradleoffset, referenceposshift)
+        let diffrows = Math.floor(spineoffset/cellLength)
+        let diffitems = diffrows * crosscount
+        if (spineoffset > cellLength) {
+            newreferenceindex -= diffitems
+            referenceitemshiftcount -= diffitems
+            spineoffset -= (cellLength * diffrows)
+        } else { // spineoffset < -(gap -1)
+            newreferenceindex += -diffitems
+            referenceitemshiftcount += -diffitems
+            spineoffset += (-diffrows * cellLength)
+        }
     }
 
     return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineoffset] // positive = roll toward top/left; negative = roll toward bottom/right
