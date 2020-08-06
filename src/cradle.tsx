@@ -1181,11 +1181,11 @@ const Cradle = ({
 
                 }
 
-                default: {
-                    console.log('calling updateCradleContent from onScroll setTimeout section')
-                    updateCradleContent([])
+                // default: {
+                //     console.log('calling updateCradleContent from onScroll setTimeout section')
+                //     updateCradleContent([])
 
-                }
+                // }
 
             }
 

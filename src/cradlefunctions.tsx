@@ -727,49 +727,11 @@ export const calcContentShifts = ({
 
     let spineoffset = previousrefindexcradleoffset + referenceposshift
 
-    // if (!scrollforward && (spineoffset >= cellLength)) {
+    if (newreferenceindex == 0) spineoffset = cradleProps.padding
 
-    //     let oldspineoffset = spineoffset
-    //     let remainder = spineoffset % cellLength
-    //     let rows = Math.floor(spineoffset/cellLength)
-    //     let oldreferenceindex = newreferenceindex
-
-    //     console.log('rows',rows, spineoffset, cellLength)
-
-    //     newreferenceindex -= rows * crosscount
-    //     spineoffset = remainder
-    //     let oldreferenceitemshiftcount = referenceitemshiftcount
-    //     referenceitemshiftcount -= rows * crosscount
-
-    //     console.log('adjusting spineoffset down from to',oldspineoffset,spineoffset)
-    //     console.log('adjusting newreferenceindex down from to',oldreferenceindex,newreferenceindex)
-    //     console.log('adjusting referenceitemshiftcount down from to',oldreferenceitemshiftcount,referenceitemshiftcount)
-
-    // }
-
-    // if (!scrollforward && (spineoffset < 0)) {
-
-    //     let oldspineoffset = spineoffset
-    //     let rowadjustment = Math.abs(Math.ceil(-spineoffset/cellLength))
-    //     let itemadjustment = rowadjustment * crosscount
-
-    //     console.log('oldspineoffset, rowadjustment, itemadjustment', oldspineoffset, rowadjustment, itemadjustment)
-
-    //     let oldreferenceindex = newreferenceindex
-    //     newreferenceindex += itemadjustment
-    //     spineoffset = oldspineoffset % cellLength // cellLength - Math.abs(oldspineoffset % cellLength)
-    //     let oldreferenceitemshiftcount = referenceitemshiftcount
-    //     referenceitemshiftcount += itemadjustment
-
-    //     console.log('adjusting spineoffset up: from to',oldspineoffset,spineoffset)
-
-    //     console.log('adjusting newreferenceindex up from to',oldreferenceindex,newreferenceindex)
-        
-    //     console.log('adjusting referenceitemshiftcount up from to',oldreferenceitemshiftcount,referenceitemshiftcount)
-
-    // }
-
-    // if (newreferenceindex == 0) spineoffset = 10
+    if ((spineoffset > cellLength) || (spineoffset < -(gap -1))) {
+        console.warn('spineoffset out of range',spineoffset)
+    }
 
     return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineoffset] // positive = roll toward top/left; negative = roll toward bottom/right
 
