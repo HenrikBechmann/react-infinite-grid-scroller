@@ -819,7 +819,7 @@ const Cradle = ({
         console.log('==> intersections.length, direction, viewportElement.scrollTop, spineElement.offsetTop ', 
             intersections.length, scrollforward?"FORWARD":"BACKWARD", viewportElement.scrollTop, spineCradleElementRef.current?.offsetTop)
 
-        if (intersections.length == 0) return
+        // if (intersections.length == 0) return
 
         // --------------------------------[ 3. Calculate item shift count ]-------------------------------
 
@@ -848,6 +848,8 @@ const Cradle = ({
 
         console.log('***calcContentShifts: cradleindex, cradleitemshift, referenceindex, referenceitemshift, spineoffset', 
             cradleindex, cradleitemshift, referenceindex, referenceitemshift, spineoffset)
+
+        if (referenceitemshift == 0) return
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
