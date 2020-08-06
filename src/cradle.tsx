@@ -4,6 +4,12 @@
 /*
     TODO:
     
+    Add a console warning where spineoffset is negative (or negative gap), 
+    or greater than the viewport length/width
+
+    update scrollforward logic to take into account rapid opposite scrolling. 
+    Use differences in scrollTop?
+
     ==>> check getShift logic. !scrollforward should select next calculated index 
     to be above the fold if possible.
 
@@ -26,6 +32,10 @@
     there is a rare gap at start of cradle when quickly scrolling backward
 
     deal with spine being notified by bottom border rather than top
+
+    with rapid back and forth, headcontent is occasionally unstable (red line = referenceindex)
+    spine location occasionally down by 10 = padding
+    referenceindex is sometimes located (spineoffset) outside the viewport -- should never happen
 
 */
 
