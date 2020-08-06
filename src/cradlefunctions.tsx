@@ -612,7 +612,7 @@ export const calcContentShifts = ({
 
         }
 
-        console.log('initial viewportovershoot',viewportovershoot)
+        // console.log('initial viewportovershoot',viewportovershoot)
 
     } else { // horizontal
         spineviewportoffset = spineElement.offsetLeft - viewportElement.scrollLeft
@@ -634,7 +634,7 @@ export const calcContentShifts = ({
     if (viewportovershoot < 0) viewportovershoot = 0 // not relevant
     // if (viewportovershoot > viewportlength) viewportovershoot = viewportlength
 
-    console.log('vertical viewport portion overshoot for scroll',scrollforward?'FORWARD':'BACKWARD',viewportovershoot)
+    // console.log('vertical viewport portion overshoot for scroll',scrollforward?'FORWARD':'BACKWARD',viewportovershoot)
 
     let gap = cradleProps.gap
 
@@ -655,7 +655,7 @@ export const calcContentShifts = ({
         unincludedheaditems = intersections.length - headcontentlist.length
     }
 
-    console.log('OVERSHOOT overshootitemcount, overshootrowcount', overshootitemcount, overshootrowcount)
+    // console.log('OVERSHOOT overshootitemcount, overshootrowcount', overshootitemcount, overshootrowcount)
 
     // ----------------------[  calculate itemshiftcount includng overshoot ]------------------------
     // shift item count is the number of items the virtual cradle shifts, according to observer notices
@@ -679,8 +679,8 @@ export const calcContentShifts = ({
 
     let previouscradleindex = cradlecontentlist[0].props.index
 
-    console.log('previousreferenceindex, itemshiftcount, previousrefindexcradleoffset', 
-        previousreferenceindex, itemshiftcount, previousrefindexcradleoffset)
+    // console.log('previousreferenceindex, itemshiftcount, previousrefindexcradleoffset', 
+    //     previousreferenceindex, itemshiftcount, previousrefindexcradleoffset)
 
     let newcradleindex = previouscradleindex + itemshiftcount
     let newreferenceindex = previousreferenceindex + itemshiftcount
@@ -697,7 +697,7 @@ export const calcContentShifts = ({
         newreferenceindex = 0
     }
 
-    console.log('first order newcradleindex and newreferenceindex', newcradleindex, newreferenceindex)
+    // console.log('first order newcradleindex and newreferenceindex', newcradleindex, newreferenceindex)
 
     let cradleitemcount = cradlerowcount * crosscount
 
@@ -720,10 +720,10 @@ export const calcContentShifts = ({
 
     let referenceposshift = (referenceitemshiftcount/crosscount) * cellLength
 
-    console.log('adjusted newcradleindex, shift, and newreferenceindex, shift', 
-        newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount)
-    console.log('viewport reference pixel offsets old, shift, and new; viewportElement.scrollTop',
-        previousrefindexcradleoffset, referenceposshift, previousrefindexcradleoffset + referenceposshift, viewportElement.scrollTop)
+    // console.log('adjusted newcradleindex, shift, and newreferenceindex, shift', 
+    //     newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount)
+    // console.log('viewport reference pixel offsets old, shift, and new; viewportElement.scrollTop',
+    //     previousrefindexcradleoffset, referenceposshift, previousrefindexcradleoffset + referenceposshift, viewportElement.scrollTop)
 
     let spineoffset = previousrefindexcradleoffset + referenceposshift
 

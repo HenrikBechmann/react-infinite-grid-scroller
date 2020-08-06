@@ -792,7 +792,7 @@ const Cradle = ({
             entryitems.push(entryitem)
         }
 
-        console.log('entries before filter',entryitems)
+        // console.log('entries before filter',entryitems)
 
         // filter out inapplicable intersection entries
         // we're only interested in intersections proximal to the spine
@@ -814,7 +814,7 @@ const Cradle = ({
             intersectitems.push(entryitem)
         }
 
-        console.log('intersectitems, headcontentlist, tailcontentlist after filter', intersectitems, headcontentlist, tailcontentlist)
+        // console.log('intersectitems, headcontentlist, tailcontentlist after filter', intersectitems, headcontentlist, tailcontentlist)
 
         console.log('==> intersections.length, direction, viewportElement.scrollTop, spineElement.offsetTop ', 
             intersections.length, scrollforward?"FORWARD":"BACKWARD", viewportElement.scrollTop, spineCradleElementRef.current?.offsetTop)
@@ -1167,8 +1167,15 @@ const Cradle = ({
                     saveCradleState('reposition')
 
                     break
-                    
-                } 
+
+
+                }
+
+                default: {
+                    console.log('calling updateCradleContent from onScroll setTimeout section')
+                    updateCradleContent([])
+
+                }
 
             }
 
