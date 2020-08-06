@@ -731,20 +731,56 @@ export const calcContentShifts = ({
 
     // brute force for edge cases. TODO: determine why necessary
     if ((spineoffset > cellLength) || (spineoffset < -(gap -1))) {
-        console.warn('spineoffset out of range, adjusting: spineoffset, previousrefindexcradleoffset, referenceposshift',
-            spineoffset, previousrefindexcradleoffset, referenceposshift)
+        // console.warn('spineoffset out of range, adjusting: spineoffset, previousrefindexcradleoffset, referenceposshift',
+        //     spineoffset, previousrefindexcradleoffset, referenceposshift)
         let diffrows = Math.floor(spineoffset/cellLength)
         let diffitems = diffrows * crosscount
+        // console.log('diff rows, items',diffrows, diffitems)
         if (spineoffset > cellLength) {
             newreferenceindex -= diffitems
             referenceitemshiftcount -= diffitems
             spineoffset -= (cellLength * diffrows)
+
+            let proposedcradleindex = newcradleindex - diffitems
+            let cradleindexdiff = diffitems
+            if (proposedcradleindex < 0) {
+                let diff = -proposedcradleindex
+                cradleindexdiff -= diff
+            }
+            newcradleindex -= cradleindexdiff
+            cradleitemshiftcount -= cradleindexdiff 
+            // console.log('spineoffet too high, updated to newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineoffset',
+            //     newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineoffset)
         } else { // spineoffset < -(gap -1)
-            newreferenceindex += -diffitems
-            referenceitemshiftcount += -diffitems
-            spineoffset += (-diffrows * cellLength)
+            diffitems = -diffitems
+            diffrows = -diffrows
+            newreferenceindex += diffitems
+            referenceitemshiftcount += diffitems
+            spineoffset += (diffrows * cellLength)
+            let cradlediffitems = diffitems
+            let proposedcradlerow = (newcradleindex + cradlediffitems)/crosscount
+            let revisedreferencerow = newreferenceindex/crosscount
+            if ((revisedreferencerow - proposedcradlerow) < cradleProps.runwaycount) {
+                let diff = cradleProps.runwaycount - (revisedreferencerow - proposedcradlerow)
+                let diffitems = diff * crosscount
+                cradlediffitems -= diffitems
+            }
+            newcradleindex += cradlediffitems
+            cradleitemshiftcount += cradlediffitems 
+            // console.log('spineoffet too low, updated to newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineoffset',
+            //     newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineoffset)
         }
     }
+
+    // if (orientation == 'vertical') {
+    //     if (viewportElement.scrollTop == 0 && spineElement.offsetTop == 0) {
+    //         spineoffset = cradleProps.padding
+    //     }
+    // } else {
+    //     if (viewportElement.scrollLeft == 0 && spineElement.offsetLeft == 0) {
+    //         spineoffset = cradleProps.padding
+    //     }
+    // }
 
     return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineoffset] // positive = roll toward top/left; negative = roll toward bottom/right
 

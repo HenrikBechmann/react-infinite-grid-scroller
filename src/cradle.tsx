@@ -3,6 +3,8 @@
 
 /*
     TODO:
+
+    there is a rare gap at start of cradle when quickly scrolling backward
     
     Add a console warning where spineoffset is negative (or negative gap), 
     or greater than the viewport length/width
@@ -28,8 +30,6 @@
     sometimes scrollforward calculate overflow amount triggers reposition as a side effect
 
     rapid scrolling immediately after load prevents cradlehidden behavuour
-
-    there is a rare gap at start of cradle when quickly scrolling backward
 
     deal with spine being notified by bottom border rather than top
 
@@ -159,7 +159,7 @@ const Cradle = ({
     const cradlestateRef = useRef(null) // access by closures
     cradlestateRef.current = cradlestate
 
-    console.log('cradlestate', cradlestate)
+    // console.log('cradlestate', cradlestate)
     // -----------------------------------------------------------------------
     // -------------------------[ control variables ]-----------------
 
@@ -826,8 +826,8 @@ const Cradle = ({
 
         // console.log('intersectitems, headcontentlist, tailcontentlist after filter', intersectitems, headcontentlist, tailcontentlist)
 
-        console.log('==> intersections.length, direction, viewportElement.scrollTop, spineElement.offsetTop ', 
-            intersections.length, scrollforward?"FORWARD":"BACKWARD", viewportElement.scrollTop, spineCradleElementRef.current?.offsetTop)
+        // console.log('==> intersections.length, direction, viewportElement.scrollTop, spineElement.offsetTop ', 
+        //     intersections.length, scrollforward?"FORWARD":"BACKWARD", viewportElement.scrollTop, spineCradleElementRef.current?.offsetTop)
 
         // if (intersections.length == 0) return
 
@@ -856,8 +856,8 @@ const Cradle = ({
 
         })
 
-        console.log('***calcContentShifts: cradleindex, cradleitemshift, referenceindex, referenceitemshift, spineoffset', 
-            cradleindex, cradleitemshift, referenceindex, referenceitemshift, spineoffset)
+        // console.log('***calcContentShifts: cradleindex, cradleitemshift, referenceindex, referenceitemshift, spineoffset', 
+        //     cradleindex, cradleitemshift, referenceindex, referenceitemshift, spineoffset)
 
         if (referenceitemshift == 0) return
 
@@ -1101,7 +1101,7 @@ const Cradle = ({
             ?viewportElement.scrollTop
             :viewportElement.scrollLeft
 
-        console.log('scrolling', viewportElement.scrollTop)
+        // console.log('scrolling', viewportElement.scrollTop)
         clearTimeout(scrollTimeridRef.current)
 
         let cradleState = cradlestateRef.current
