@@ -5,6 +5,8 @@
     TODO:
 
     there is a rare gap at start of cradle when quickly scrolling backward
+
+    change height to 0px from auto for spine in vertical
     
     Add a console warning where spineoffset is negative (or negative gap), 
     or greater than the viewport length/width
