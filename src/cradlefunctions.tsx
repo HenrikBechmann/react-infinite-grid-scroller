@@ -292,6 +292,7 @@ export const getContentListRequirements = ({
             crosscount,
             cellLength,
             padding,
+            gap,
         })
     }
 
@@ -309,12 +310,15 @@ const adjustSpineOffsetForMaxRefindex = ({
     crosscount,
     cellLength,
     padding,
+    gap,
 }) => {
     let spineoffset = inputspineoffset
+    console.log('initial spineoffset', spineoffset)
     let maxrefindexrow = Math.ceil(listsize/crosscount) - viewportrows
     if (targetrowoffset >= maxrefindexrow) {
         spineoffset = viewportlength - ((viewportrows * cellLength) + padding)
     }
+    console.log('spineoffset, maxrefindexrow, targetrowoffset',spineoffset, maxrefindexrow, targetrowoffset)
     return spineoffset
 }
 

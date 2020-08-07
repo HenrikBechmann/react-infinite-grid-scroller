@@ -793,14 +793,14 @@ const Cradle = ({
 
         // --------------------[ 2. filter intersections list ]-----------------------
 
-        let entryitems = []
-        for (let entry of entries) {
-            let entryitem = {
-                index:entry.target.dataset.index,
-                isIntersecting:entry.isIntersecting,
-            }
-            entryitems.push(entryitem)
-        }
+        // let entryitems = []
+        // for (let entry of entries) {
+        //     let entryitem = {
+        //         index:entry.target.dataset.index,
+        //         isIntersecting:entry.isIntersecting,
+        //     }
+        //     entryitems.push(entryitem)
+        // }
 
         // console.log('entries before filter',entryitems)
 
@@ -815,14 +815,14 @@ const Cradle = ({
             ITEM_OBSERVER_THRESHOLD,
 
         })
-        let intersectitems = []
-        for (let entry of intersections) {
-            let entryitem = {
-                index:entry.target.dataset.index,
-                isIntersecting:entry.isIntersecting,
-            }
-            intersectitems.push(entryitem)
-        }
+        // let intersectitems = []
+        // for (let entry of intersections) {
+        //     let entryitem = {
+        //         index:entry.target.dataset.index,
+        //         isIntersecting:entry.isIntersecting,
+        //     }
+        //     intersectitems.push(entryitem)
+        // }
 
         // console.log('intersectitems, headcontentlist, tailcontentlist after filter', intersectitems, headcontentlist, tailcontentlist)
 
