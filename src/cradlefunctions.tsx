@@ -282,18 +282,19 @@ export const getContentListRequirements = ({
         scrollblockoffset = 0
         spineoffset = padding
     } else {
-        spineoffset = adjustSpineOffsetForMaxRefindex({
-            spineoffset,
-            // referenceoffset,
-            targetrowoffset,
-            viewportlength,
-            listsize,
-            viewportrows,
-            crosscount,
-            cellLength,
-            padding,
-            gap,
-        })
+        // [referenceoffset, scrollblockoffset, spineoffset] = adjustSpineOffsetForMaxRefindex({
+        //     referenceoffset,
+        //     spineoffset,
+        //     scrollblockoffset,            
+        //     targetrowoffset,
+        //     viewportlength,
+        //     listsize,
+        //     viewportrows,
+        //     crosscount,
+        //     cellLength,
+        //     padding,
+        //     gap,
+        // })
     }
 
     return {indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset} // summarize requirements message
@@ -301,8 +302,9 @@ export const getContentListRequirements = ({
 }
 
 const adjustSpineOffsetForMaxRefindex = ({
-    spineoffset:inputspineoffset,
-    // referenceoffset,
+    referenceoffset,
+    spineoffset,
+    scrollblockoffset,
     targetrowoffset,
     viewportlength,
     listsize,
@@ -312,14 +314,14 @@ const adjustSpineOffsetForMaxRefindex = ({
     padding,
     gap,
 }) => {
-    let spineoffset = inputspineoffset
     console.log('initial spineoffset', spineoffset)
     let maxrefindexrow = Math.ceil(listsize/crosscount) - viewportrows
     if (targetrowoffset >= maxrefindexrow) {
+        console.log('changing spineoffset')
         spineoffset = viewportlength - ((viewportrows * cellLength) + padding)
     }
     console.log('spineoffset, maxrefindexrow, targetrowoffset',spineoffset, maxrefindexrow, targetrowoffset)
-    return spineoffset
+    return [referenceoffset, scrollblockoffset, spineoffset]
 }
 
 // filter out items that not proximate to the spine
