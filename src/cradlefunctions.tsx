@@ -259,16 +259,16 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
     let targetrowoffset = Math.floor(referenceoffset/crosscount)
     let maxrowcount = Math.ceil(listsize/crosscount)
 
-    if (maxrowcount < (indexrowoffset + cradlerowcount)) {
+    // if (maxrowcount < (indexrowoffset + cradlerowcount)) {
 
-        let rowdiff = (indexrowoffset + cradlerowcount) - maxrowcount
-        let itemdiff = rowdiff * crosscount
-        // targetrowoffset -= rowdiff
-        indexoffset -= itemdiff
-        referenceoffset -= itemdiff
-        // spineoffset = viewportlength - (viewportrows * cellLength)
+    //     let rowdiff = (indexrowoffset + cradlerowcount) - maxrowcount
+    //     let itemdiff = rowdiff * crosscount
+    //     // targetrowoffset -= rowdiff
+    //     indexoffset -= itemdiff
+    //     referenceoffset -= itemdiff
+    //     // spineoffset = viewportlength - (viewportrows * cellLength)
 
-    }
+    // }
 
     let testlistsize = indexoffset + contentCount
     if (testlistsize > listsize) {
@@ -325,7 +325,7 @@ const adjustSpineOffsetForMaxRefindex = ({
 
         referenceoffset = (targetrowoffset * crosscount)
 
-        scrollblockoffset = (targetrowoffset * cellLength) + padding
+        scrollblockoffset = (targetrowoffset * cellLength) - padding
 
         spineoffset = viewportlength - ((viewportrows * cellLength) + padding)
 
