@@ -749,7 +749,6 @@ const Cradle = ({
         }
 
         // console.log('item notification calling updateCradleContent(moviedentries)', movedentries)
-
         isMounted() && updateCradleContent(movedentries)
 
     },[])

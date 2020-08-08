@@ -169,7 +169,7 @@ export const getScrollReferenceIndexData = ({
     }
 
     let referencescrolloffset = cellLength - (scrollPos % cellLength)
-    if (referencescrolloffset == cellLength + cradleProps.padding) {
+    if (referencescrolloffset == (cellLength + cradleProps.padding)) {
         referencescrolloffset = 0
     }
 
@@ -185,6 +185,8 @@ export const getScrollReferenceIndexData = ({
     }
 
     if (referenceIndexData.index == 0) referenceIndexData.scrolloffset = 0 // defensive
+
+    console.log('referenceIndexData from getScrollReferenceIndexData',referenceIndexData)
 
     return referenceIndexData
 }
@@ -225,32 +227,31 @@ export const getContentListRequirements = ({
 
     // -----------------------[ calc leadingitemcount, referenceoffset ]-----------------------
 
-    let leadingitemcount = runwaycount * crosscount
-    leadingitemcount = Math.min(leadingitemcount, referenceoffset) // for list head
+    let runwayitemcount = runwaycount * crosscount
+    runwayitemcount = Math.min(runwayitemcount, referenceoffset) // for list head
 
     // -----------------------[ calc indexoffset ]------------------------
 
     // leading edge
-    let indexoffset = referenceoffset - leadingitemcount
+    let indexoffset = referenceoffset - runwayitemcount
     diff = indexoffset % crosscount
-    indexoffset -= diff
+    indexoffset -= diff // should never be required
 
     // ------------[ adjust indexoffset for underflow ]------------
 
-    diff = 0
-    let shift = 0
+    diff = 0 // reset
+    let indexshift = 0 // adjustment if overshoot head
     if (indexoffset < 0) {
         diff = indexoffset
-        shift = Math.floor(diff / crosscount) * crosscount
+        indexshift = Math.floor(diff / crosscount) * crosscount
     }
-
-    if (diff) {
-        indexoffset += shift
+    if (diff) { // apply adjustment
+        indexoffset += indexshift
     }
 
     // ------------[ adjust indexoffset and contentCount for listsize overflow ]------------
 
-    let spineoffset = targetViewportOffset
+    let spineoffset = targetViewportOffset % cellLength
 
     // --------------------[ calc css positioning ]-----------------------
 
@@ -264,8 +265,8 @@ export const getContentListRequirements = ({
         let itemdiff = rowdiff * crosscount
         // targetrowoffset -= rowdiff
         indexoffset -= itemdiff
-        // referenceoffset -= itemdiff
-        spineoffset = viewportlength - (viewportrows * cellLength)
+        referenceoffset -= itemdiff
+        // spineoffset = viewportlength - (viewportrows * cellLength)
 
     }
 
@@ -276,7 +277,8 @@ export const getContentListRequirements = ({
         contentCount -= diff
     }
 
-    let scrollblockoffset = (targetrowoffset * cellLength) + gap
+    let scrollblockoffset = (targetrowoffset * cellLength) + padding + gap
+    console.log('getContentListRequirements: scrollblockoffset, targetrowoffset',scrollblockoffset, targetrowoffset)
 
     if (targetrowoffset == 0) {
         scrollblockoffset = 0
@@ -735,7 +737,7 @@ export const calcContentShifts = ({
 
     // if (newreferenceindex == 0) spineoffset = cradleProps.padding
 
-    // brute force for edge cases. TODO: determine why necessary
+    // brute force for edge cases - rapid back and forth random scrolling. TODO: determine why necessary
     if ((spineoffset > cellLength) || (spineoffset < -(gap -1))) {
         // console.warn('spineoffset out of range, adjusting: spineoffset, previousrefindexcradleoffset, referenceposshift',
         //     spineoffset, previousrefindexcradleoffset, referenceposshift)
