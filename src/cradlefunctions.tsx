@@ -277,7 +277,7 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
         contentCount -= diff
     }
 
-    let scrollblockoffset = (targetrowoffset * cellLength) + padding + gap
+    let scrollblockoffset = (targetrowoffset * cellLength) + gap
     console.log('getContentListRequirements: scrollblockoffset, targetrowoffset',scrollblockoffset, targetrowoffset)
 
     if (targetrowoffset == 0) {
@@ -316,7 +316,7 @@ const adjustSpineOffsetForMaxRefindex = ({
     padding,
     gap,
 }) => {
-    let oldspineoffset = spineoffset
+    // let oldspineoffset = spineoffset
     console.log('initial spineoffset', spineoffset)
     let maxrefindexrow = Math.ceil(listsize/crosscount) - viewportrows
     console.log('maxrefindexrow, viewportrows',maxrefindexrow, viewportrows)
