@@ -186,12 +186,12 @@ export const getScrollReferenceIndexData = ({
 
     if (referenceIndexData.index == 0) referenceIndexData.scrolloffset = 0 // defensive
 
-    console.log('referenceIndexData from getScrollReferenceIndexData',referenceIndexData)
+    // console.log('referenceIndexData from getScrollReferenceIndexData',referenceIndexData)
 
     return referenceIndexData
 }
 
-export const getContentListRequirements = ({
+export const getContentListRequirements = ({ // called from updateCradleContent only
         orientation, 
         cellHeight, 
         cellWidth, 
@@ -284,19 +284,19 @@ export const getContentListRequirements = ({
         scrollblockoffset = 0
         spineoffset = padding
     } else {
-        // [referenceoffset, scrollblockoffset, spineoffset] = adjustSpineOffsetForMaxRefindex({
-        //     referenceoffset,
-        //     spineoffset,
-        //     scrollblockoffset,            
-        //     targetrowoffset,
-        //     viewportlength,
-        //     listsize,
-        //     viewportrows,
-        //     crosscount,
-        //     cellLength,
-        //     padding,
-        //     gap,
-        // })
+        [referenceoffset, scrollblockoffset, spineoffset] = adjustSpineOffsetForMaxRefindex({
+            referenceoffset,
+            spineoffset,
+            scrollblockoffset,            
+            targetrowoffset,
+            viewportlength,
+            listsize,
+            viewportrows,
+            crosscount,
+            cellLength,
+            padding,
+            gap,
+        })
     }
 
     return {indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset} // summarize requirements message
@@ -316,11 +316,20 @@ const adjustSpineOffsetForMaxRefindex = ({
     padding,
     gap,
 }) => {
+    let oldspineoffset = spineoffset
     console.log('initial spineoffset', spineoffset)
     let maxrefindexrow = Math.ceil(listsize/crosscount) - viewportrows
+    console.log('maxrefindexrow, viewportrows',maxrefindexrow, viewportrows)
     if (targetrowoffset >= maxrefindexrow) {
-        console.log('changing spineoffset')
+        targetrowoffset = maxrefindexrow
+
+        referenceoffset = (targetrowoffset * crosscount)
+
+        scrollblockoffset = (targetrowoffset * cellLength) + padding
+
         spineoffset = viewportlength - ((viewportrows * cellLength) + padding)
+
+        console.log('changing referenceoffset, scrollblockoffset, spineoffset',referenceoffset, scrollblockoffset, spineoffset)
     }
     console.log('spineoffset, maxrefindexrow, targetrowoffset',spineoffset, maxrefindexrow, targetrowoffset)
     return [referenceoffset, scrollblockoffset, spineoffset]
@@ -582,7 +591,7 @@ let duplicatecompare = (a,b) => {
         // }
 
 
-export const calcContentShifts = ({
+export const calcContentShifts = ({ // called only from updateCradleContent
     cradleProps,
     spineElement,
     viewportElement,
