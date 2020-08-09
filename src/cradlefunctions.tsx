@@ -210,6 +210,8 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
     let diff = referenceoffset % crosscount
     referenceoffset -= diff
 
+    // console.log('entry referenceoffset',referenceoffset, diff)
+
     // -------------[ calc basic inputs: cellLength, contentCount. ]----------
 
     let cellLength,viewportlength
@@ -223,7 +225,6 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
     let viewportrows = Math.floor(viewportlength / cellLength)
 
     let contentCount = cradlerowcount * crosscount 
-    if (contentCount > listsize) contentCount = listsize
 
     // -----------------------[ calc leadingitemcount, referenceoffset ]-----------------------
 
@@ -234,18 +235,17 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
 
     // leading edge
     let indexoffset = referenceoffset - runwayitemcount
-    diff = indexoffset % crosscount
-    indexoffset -= diff // should never be required
+    // diff = indexoffset % crosscount
+    // indexoffset -= diff // should never be required
 
+    // console.log('entry indexoffset, referenceoffset, runwayitemcount', indexoffset, referenceoffset, runwayitemcount)
     // ------------[ adjust indexoffset for underflow ]------------
 
     diff = 0 // reset
     let indexshift = 0 // adjustment if overshoot head
     if (indexoffset < 0) {
         diff = indexoffset
-        indexshift = Math.floor(diff / crosscount) * crosscount
-    }
-    if (diff) { // apply adjustment
+        indexshift = Math.floor(indexoffset / crosscount) * crosscount
         indexoffset += indexshift
     }
 
@@ -255,9 +255,8 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
 
     // --------------------[ calc css positioning ]-----------------------
 
-    let indexrowoffset = Math.floor(indexoffset/crosscount)
-    let targetrowoffset = Math.floor(referenceoffset/crosscount)
-    let maxrowcount = Math.ceil(listsize/crosscount)
+    // let indexrowoffset = Math.floor(indexoffset/crosscount)
+    // let maxrowcount = Math.ceil(listsize/crosscount)
 
     // if (maxrowcount < (indexrowoffset + cradlerowcount)) {
 
@@ -270,21 +269,27 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
 
     // }
 
-    let testlistsize = indexoffset + contentCount
-    if (testlistsize > listsize) {
-        let diff = testlistsize - listsize
-        // console.log('testlistsize diff',testlistsize,listsize,diff,contentCount)
-        contentCount -= diff
-    }
+    // if (contentCount > listsize) {
 
+    //     contentCount = listsize
+
+    // } else {
+
+    //     let variant = listsize % crosscount
+    //     contentCount -= variant
+
+    // }
+
+    let targetrowoffset = Math.ceil(referenceoffset/crosscount)
     let scrollblockoffset = (targetrowoffset * cellLength) + gap
-    console.log('getContentListRequirements: scrollblockoffset, targetrowoffset',scrollblockoffset, targetrowoffset)
+    // console.log('getContentListRequirements: scrollblockoffset, targetrowoffset, contentCount, testlistsize, indexoffset',
+    //     scrollblockoffset, targetrowoffset, contentCount, testlistsize, indexoffset)
 
     if (targetrowoffset == 0) {
         scrollblockoffset = 0
         spineoffset = padding
     } else {
-        [referenceoffset, scrollblockoffset, spineoffset] = adjustSpineOffsetForMaxRefindex({
+        [indexoffset, contentCount, referenceoffset, scrollblockoffset, spineoffset] = adjustSpineOffsetForMaxRefindex({
             referenceoffset,
             spineoffset,
             scrollblockoffset,            
@@ -296,6 +301,8 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
             cellLength,
             padding,
             gap,
+            indexoffset,
+            contentCount,
         })
     }
 
@@ -315,24 +322,48 @@ const adjustSpineOffsetForMaxRefindex = ({
     cellLength,
     padding,
     gap,
+    indexoffset,
+    contentCount
 }) => {
-    // let oldspineoffset = spineoffset
-    console.log('initial spineoffset', spineoffset)
+
+    let testlistsize = indexoffset + contentCount + 1
+    let testlistrows = Math.ceil(testlistsize/crosscount)
+    let listrows = Math.ceil(listsize/crosscount)
+    // console.log('testlistrows, listrows, testlistsize, indexoffset, contentCount', 
+        // testlistrows, listrows, testlistsize, indexoffset, contentCount)
+    if (testlistrows > listrows) {
+        let diffrows = testlistrows - listrows - 1
+        let diff = diffrows * crosscount
+        indexoffset -= diff
+        // console.log('new indexoffset, diff', indexoffset, diff)
+    }
+
+    if (Math.ceil((indexoffset + contentCount)/crosscount) == listrows) {
+        contentCount -= crosscount - (listsize % crosscount)
+    }
+
+    // console.log('initial spineoffset', spineoffset)
     let maxrefindexrow = Math.ceil(listsize/crosscount) - viewportrows
-    console.log('maxrefindexrow, viewportrows',maxrefindexrow, viewportrows)
+    // console.log('maxrefindexrow, targetrowoffset, viewportrows',maxrefindexrow, targetrowoffset, viewportrows)
     if (targetrowoffset >= maxrefindexrow) {
+        let originalreferenceoffset = referenceoffset
         targetrowoffset = maxrefindexrow
 
         referenceoffset = (targetrowoffset * crosscount)
+
+        // let referenceoffsetshift = originalreferenceoffset - referenceoffset
+        // if (referenceoffsetshift) {
+        //     indexoffset += referenceoffsetshift
+        // }
 
         scrollblockoffset = (targetrowoffset * cellLength) - padding
 
         spineoffset = viewportlength - ((viewportrows * cellLength) + padding)
 
-        console.log('changing referenceoffset, scrollblockoffset, spineoffset',referenceoffset, scrollblockoffset, spineoffset)
+        // console.log('changing referenceoffset, scrollblockoffset, spineoffset',referenceoffset, scrollblockoffset, spineoffset)
     }
-    console.log('spineoffset, maxrefindexrow, targetrowoffset',spineoffset, maxrefindexrow, targetrowoffset)
-    return [referenceoffset, scrollblockoffset, spineoffset]
+    // console.log('spineoffset, maxrefindexrow, targetrowoffset',spineoffset, maxrefindexrow, targetrowoffset)
+    return [indexoffset, contentCount, referenceoffset, scrollblockoffset, spineoffset]
 }
 
 // filter out items that not proximate to the spine

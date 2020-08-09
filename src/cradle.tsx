@@ -759,6 +759,7 @@ const Cradle = ({
     // 1.shift, 2.clip, and 3.add clip amount at other end
     const updateCradleContent = (entries) => {
 
+        // console.log('updating cradle content')
         // ----------------------------[ 1. initialize ]----------------------------
 
         let scrollPositions = scrollPositionsRef.current
