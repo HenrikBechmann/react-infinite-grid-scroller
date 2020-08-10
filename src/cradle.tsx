@@ -4,6 +4,10 @@
 /*
     TODO:
 
+    Make sure item shell triggers are only fired at the leading, not trailing, edge
+
+    Inconsistency in viewportrows, sometimes Math.ceil, sometimes Math.floor
+
     there is a rare gap at start of cradle when quickly scrolling backward
 
     change height to 0px from auto for spine in vertical
@@ -64,9 +68,9 @@ import useIsMounted from 'react-is-mounted-hook'
 
 import ResizeObserverPolyfill from 'resize-observer-polyfill'
 
-import { detect } from 'detect-browser'
+// import { detect } from 'detect-browser'
 
-const browser = detect()
+// const browser = detect()
 
 const LocalResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
 
@@ -659,7 +663,8 @@ const Cradle = ({
                 !viewportDataRef.current.isResizing &&
                 !(cradleState == 'resize') &&
                 !(cradleState == 'repositioning') && 
-                !(cradleState == 'reposition')
+                !(cradleState == 'reposition') && 
+                !(cradleState == 'pivot')
                 ) 
             {
 
@@ -795,17 +800,6 @@ const Cradle = ({
 
         // --------------------[ 2. filter intersections list ]-----------------------
 
-        // let entryitems = []
-        // for (let entry of entries) {
-        //     let entryitem = {
-        //         index:entry.target.dataset.index,
-        //         isIntersecting:entry.isIntersecting,
-        //     }
-        //     entryitems.push(entryitem)
-        // }
-
-        // console.log('entries before filter',entryitems)
-
         // filter out inapplicable intersection entries
         // we're only interested in intersections proximal to the spine
         let intersections = isolateRelevantIntersections({
@@ -817,23 +811,8 @@ const Cradle = ({
             ITEM_OBSERVER_THRESHOLD,
 
         })
-        // let intersectitems = []
-        // for (let entry of intersections) {
-        //     let entryitem = {
-        //         index:entry.target.dataset.index,
-        //         isIntersecting:entry.isIntersecting,
-        //     }
-        //     intersectitems.push(entryitem)
-        // }
 
-        // console.log('intersectitems, headcontentlist, tailcontentlist after filter', intersectitems, headcontentlist, tailcontentlist)
-
-        // console.log('==> intersections.length, direction, viewportElement.scrollTop, spineElement.offsetTop ', 
-        //     intersections.length, scrollforward?"FORWARD":"BACKWARD", viewportElement.scrollTop, spineCradleElementRef.current?.offsetTop)
-
-        // if (intersections.length == 0) return
-
-        // --------------------------------[ 3. Calculate item shift count ]-------------------------------
+        // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         let [cradleindex, 
             cradleitemshift, 
@@ -858,9 +837,6 @@ const Cradle = ({
 
         })
 
-        // console.log('***calcContentShifts: cradleindex, cradleitemshift, referenceindex, referenceitemshift, spineoffset', 
-        //     cradleindex, cradleitemshift, referenceindex, referenceitemshift, spineoffset)
-
         if (referenceitemshift == 0) return
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
@@ -879,8 +855,6 @@ const Cradle = ({
 
         })
 
-        // console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
-
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
         // collect modified content
@@ -896,9 +870,8 @@ const Cradle = ({
                 indexoffset,
                 cradleProps,
                 observer: itemObserverRef.current,
-                // crosscount,
                 callbacks:callbacksRef.current,
-                listsize,
+                listsize, // TODO: redundant
 
             })
         } else {
@@ -924,24 +897,6 @@ const Cradle = ({
 
         // -------------------------------[ 8. set css changes ]-------------------------
 
-        // // place the spine in the scrollblock
-        // let spineoffset = getSpinePortalOffset(
-        //     {
-        //         cradleProps,
-        //         crosscount,
-        //         scrollforward,
-        //         headcontent,
-        //         // tailcontent,
-        //         itemelements,
-        //         referenceindex,
-        //         previousreferenceindex:referenceindex - referenceitemshift,
-        //         referenceshift:referenceitemshift,
-        //         viewportElement,
-        //         spineElement,
-        //         // headElement,
-        //     }
-        // )
-
         if (spineoffset !== undefined) {
             
             // console.log('viewportElement.scrollTop BEFORE', viewportElement.scrollTop)
@@ -964,14 +919,10 @@ const Cradle = ({
 
         }
 
-        // console.log('calculated spineposref',spineoffset)
-
         scrollReferenceIndexDataRef.current = {
             index:referenceindex,
             scrolloffset:spineoffset
         }
-
-        // console.log('scrollReferenceIndexDataRef.current',scrollReferenceIndexDataRef.current)
 
         saveCradleState('updatecontent')
 
@@ -1055,7 +1006,7 @@ const Cradle = ({
             scrolloffset:spineoffset,
 
         }
-        // console.log('setCradleContent stableReferenceIndexDataRef.current', stableReferenceIndexDataRef.current)
+
         if (referenceIndexCallbackRef.current) {
 
             let cstate = cradleState
@@ -1182,12 +1133,6 @@ const Cradle = ({
 
 
                 }
-
-                // default: {
-                //     console.log('calling updateCradleContent from onScroll setTimeout section')
-                //     updateCradleContent([])
-
-                // }
 
             }
 
