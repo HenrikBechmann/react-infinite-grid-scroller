@@ -339,7 +339,10 @@ const adjustSpineOffsetForMaxRefindex = ({
     }
 
     if (Math.ceil((indexoffset + contentCount)/crosscount) == listrows) {
-        contentCount -= crosscount - (listsize % crosscount)
+        let diff = listsize % crosscount
+        if (diff) {
+            contentCount -= crosscount - diff
+        }
     }
 
     // console.log('initial spineoffset', spineoffset)
