@@ -1231,7 +1231,7 @@ const Cradle = ({
                         saveCradleState('repositioning')
                     }
 
-                },100)
+                })//,100)
 
                 break 
 
