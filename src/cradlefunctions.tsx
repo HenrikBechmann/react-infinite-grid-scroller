@@ -332,7 +332,7 @@ const adjustSpineOffsetForMaxRefindex = ({
     // console.log('testlistrows, listrows, testlistsize, indexoffset, contentCount', 
         // testlistrows, listrows, testlistsize, indexoffset, contentCount)
     if (testlistrows > listrows) {
-        let diffrows = testlistrows - listrows - 1
+        let diffrows = testlistrows - listrows - 1 // TODO: why the "1"?
         let diff = diffrows * crosscount
         indexoffset -= diff
         // console.log('new indexoffset, diff', indexoffset, diff)
