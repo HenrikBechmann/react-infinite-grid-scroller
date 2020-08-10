@@ -764,6 +764,11 @@ const Cradle = ({
     // 1.shift, 2.clip, and 3.add clip amount at other end
     const updateCradleContent = (entries) => {
 
+        let viewportData = viewportDataRef.current
+        let viewportElement = viewportData.elementref.current
+
+        if (viewportElement.scrollTop < 0) return
+
         // ----------------------------[ 1. initialize ]----------------------------
 
         let scrollPositions = scrollPositionsRef.current
@@ -782,10 +787,8 @@ const Cradle = ({
 
         console.log('updating cradle content: entries.length, scrollforward, scrollPositions', entries.length, scrollforward, scrollPositions)
 
-        let viewportData = viewportDataRef.current
         let cradleProps = cradlePropsRef.current
 
-        let viewportElement = viewportData.elementref.current
         let spineElement = spineCradleElementRef.current
         let headElement = headCradleElementRef.current
         let tailElement = tailCradleElementRef.current
@@ -1051,16 +1054,32 @@ const Cradle = ({
     const scrollPositionsRef = useRef({current:0,previous:0})
 
     // callback for scrolling
-    const onScroll = useCallback(() => {
+    const onScroll = useCallback((e) => {
 
-    
         let viewportElement = viewportDataRef.current.elementref.current
         let scrollPositions = scrollPositionsRef.current
-        scrollPositions.previous = scrollPositions.current
-        scrollPositions.current = 
+
+        let scrollPositioncurrent = 
             (cradlePropsRef.current.orientation == 'vertical')
             ?viewportElement.scrollTop
             :viewportElement.scrollLeft
+        if (scrollPositioncurrent < 0) {
+            return 
+        }
+        //     scrollPositioncurrent = 0
+
+        //     if (cradlePropsRef.current.orientation == 'vertical')
+        //         viewportElement.scrollTop = 0
+        //     else 
+        //         viewportElement.scrollLeft = 0
+        // }
+        // if (scrollPositioncurrent >= 0) { // to suppress bounce
+            scrollPositions.previous = scrollPositions.current
+            scrollPositions.current = scrollPositioncurrent
+                // (cradlePropsRef.current.orientation == 'vertical')
+                // ?viewportElement.scrollTop
+                // :viewportElement.scrollLeft
+        // }
 
         console.log('SCROLLPOSITIONS', scrollPositions)
 
@@ -1099,6 +1118,8 @@ const Cradle = ({
                         index:itemindex,
                         scrolloffset,
                     }
+
+                    updateCradleContent([]) // for Safari to compensate for overscroll
 
                 } else {
 
