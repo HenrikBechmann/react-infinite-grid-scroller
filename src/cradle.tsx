@@ -764,7 +764,6 @@ const Cradle = ({
     // 1.shift, 2.clip, and 3.add clip amount at other end
     const updateCradleContent = (entries) => {
 
-        // console.log('updating cradle content')
         // ----------------------------[ 1. initialize ]----------------------------
 
         let scrollPositions = scrollPositionsRef.current
@@ -780,6 +779,8 @@ const Cradle = ({
             previousScrollForwardRef.current = scrollforward
 
         }
+
+        console.log('updating cradle content: entries.length, scrollforward, scrollPositions', entries.length, scrollforward, scrollPositions)
 
         let viewportData = viewportDataRef.current
         let cradleProps = cradlePropsRef.current
@@ -812,6 +813,8 @@ const Cradle = ({
 
         })
 
+        console.log('intersections.length',intersections.length)
+
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         let [cradleindex, 
@@ -836,6 +839,9 @@ const Cradle = ({
             itemelements,
 
         })
+
+        console.log('cradleindex, cradleitemshift, referenceindex, referenceitemshift', 
+            cradleindex, cradleitemshift, referenceindex, referenceitemshift)
 
         if (referenceitemshift == 0) return
 
@@ -935,7 +941,9 @@ const Cradle = ({
     // ========================================================================================
     
     // reset cradle, including allocation between head and tail parts of the cradle
-    const setCradleContent = (cradleState, referenceIndexData) => { //
+    const setCradleContent = (cradleState, referenceIndexData) => { 
+
+        console.log('setCradleContent: cradleState, referenceIndexData',cradleState, referenceIndexData)
 
         let cradleProps = cradlePropsRef.current
         let { index: visibletargetindexoffset, 
@@ -1053,6 +1061,8 @@ const Cradle = ({
             (cradlePropsRef.current.orientation == 'vertical')
             ?viewportElement.scrollTop
             :viewportElement.scrollLeft
+
+        console.log('SCROLLPOSITIONS', scrollPositions)
 
         // console.log('scrolling', viewportElement.scrollTop)
         clearTimeout(scrollTimeridRef.current)
