@@ -186,8 +186,6 @@ export const getScrollReferenceIndexData = ({
 
     if (referenceIndexData.index == 0) referenceIndexData.scrolloffset = 0 // defensive
 
-    // console.log('referenceIndexData from getScrollReferenceIndexData',referenceIndexData)
-
     return referenceIndexData
 }
 
@@ -209,8 +207,6 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
     // reconcile referenceindex to crosscount context
     let diff = referenceoffset % crosscount
     referenceoffset -= diff
-
-    // console.log('entry referenceoffset',referenceoffset, diff)
 
     // -------------[ calc basic inputs: cellLength, contentCount. ]----------
 
@@ -235,10 +231,7 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
 
     // leading edge
     let indexoffset = referenceoffset - runwayitemcount
-    // diff = indexoffset % crosscount
-    // indexoffset -= diff // should never be required
 
-    // console.log('entry indexoffset, referenceoffset, runwayitemcount', indexoffset, referenceoffset, runwayitemcount)
     // ------------[ adjust indexoffset for underflow ]------------
 
     diff = 0 // reset
@@ -255,35 +248,8 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
 
     // --------------------[ calc css positioning ]-----------------------
 
-    // let indexrowoffset = Math.floor(indexoffset/crosscount)
-    // let maxrowcount = Math.ceil(listsize/crosscount)
-
-    // if (maxrowcount < (indexrowoffset + cradlerowcount)) {
-
-    //     let rowdiff = (indexrowoffset + cradlerowcount) - maxrowcount
-    //     let itemdiff = rowdiff * crosscount
-    //     // targetrowoffset -= rowdiff
-    //     indexoffset -= itemdiff
-    //     referenceoffset -= itemdiff
-    //     // spineoffset = viewportlength - (viewportrows * cellLength)
-
-    // }
-
-    // if (contentCount > listsize) {
-
-    //     contentCount = listsize
-
-    // } else {
-
-    //     let variant = listsize % crosscount
-    //     contentCount -= variant
-
-    // }
-
     let targetrowoffset = Math.ceil(referenceoffset/crosscount)
     let scrollblockoffset = (targetrowoffset * cellLength) + gap
-    // console.log('getContentListRequirements: scrollblockoffset, targetrowoffset, contentCount, testlistsize, indexoffset',
-    //     scrollblockoffset, targetrowoffset, contentCount, testlistsize, indexoffset)
 
     if (targetrowoffset == 0) {
         scrollblockoffset = 0
@@ -329,13 +295,13 @@ const adjustSpineOffsetForMaxRefindex = ({
     let testlistsize = indexoffset + contentCount + 1
     let testlistrows = Math.ceil(testlistsize/crosscount)
     let listrows = Math.ceil(listsize/crosscount)
-    // console.log('testlistrows, listrows, testlistsize, indexoffset, contentCount', 
-        // testlistrows, listrows, testlistsize, indexoffset, contentCount)
+
     if (testlistrows > listrows) {
+
         let diffrows = testlistrows - listrows - 1 // TODO: why the "1"?
         let diff = diffrows * crosscount
         indexoffset -= diff
-        // console.log('new indexoffset, diff', indexoffset, diff)
+
     }
 
     if (Math.ceil((indexoffset + contentCount)/crosscount) == listrows) {
@@ -345,28 +311,22 @@ const adjustSpineOffsetForMaxRefindex = ({
         }
     }
 
-    // console.log('initial spineoffset', spineoffset)
     let maxrefindexrow = Math.ceil(listsize/crosscount) - viewportrows
-    // console.log('maxrefindexrow, targetrowoffset, viewportrows',maxrefindexrow, targetrowoffset, viewportrows)
+
     if (targetrowoffset >= maxrefindexrow) {
         let originalreferenceoffset = referenceoffset
         targetrowoffset = maxrefindexrow
 
         referenceoffset = (targetrowoffset * crosscount)
 
-        // let referenceoffsetshift = originalreferenceoffset - referenceoffset
-        // if (referenceoffsetshift) {
-        //     indexoffset += referenceoffsetshift
-        // }
-
         scrollblockoffset = (targetrowoffset * cellLength) - padding
 
         spineoffset = viewportlength - ((viewportrows * cellLength) + padding)
 
-        // console.log('changing referenceoffset, scrollblockoffset, spineoffset',referenceoffset, scrollblockoffset, spineoffset)
     }
-    // console.log('spineoffset, maxrefindexrow, targetrowoffset',spineoffset, maxrefindexrow, targetrowoffset)
+
     return [indexoffset, contentCount, referenceoffset, scrollblockoffset, spineoffset]
+
 }
 
 // filter out items that not proximate to the spine
@@ -397,9 +357,6 @@ export const isolateRelevantIntersections = ({
         tailindexes.push(component.props.index)
     }
 
-    // console.log('headindexes, tailindexes',headindexes, tailindexes)
-
-    // headintersectionindexes, tailintersectionindexes, intersecting
     let duplicates:any = {}
     let intersectionsptr = 0
     for (let entry of intersections) {
@@ -616,15 +573,6 @@ let duplicatecompare = (a,b) => {
     let retval = (a.time < b.time)?-1:1
 }
 
-
-        // let ratio
-        // if (browser && browser.name == 'safari') {
-        //     ratio = entry.intersectionRatio
-        // } else {
-        //     ratio = Math.round(entry.intersectionRatio * 1000)/1000
-        // }
-
-
 export const calcContentShifts = ({ // called only from updateCradleContent
     cradleProps,
     spineElement,
@@ -663,8 +611,6 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
         }
 
-        // console.log('initial viewportovershoot',viewportovershoot)
-
     } else { // horizontal
         spineviewportoffset = spineElement.offsetLeft - viewportElement.scrollLeft
         headspineoffset = headElement.offsetLeft
@@ -687,17 +633,11 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     if (viewportovershoot < -(gap - 1)) viewportovershoot = 0 // not relevant
     if (viewportovershoot > viewportlength) viewportovershoot = viewportlength // TODO: ??
 
-    // console.log('vertical viewport portion overshoot for scroll',scrollforward?'FORWARD':'BACKWARD',viewportovershoot)
-
     let cellLength = (cradleProps.orientation == 'vertical')?cradleProps.cellHeight + gap:cradleProps.cellWidth + gap
     let overshootrowcount = (viewportovershoot == 0)?0:Math.floor(viewportovershoot/cellLength) // rows to fill viewport
 
     // extra rows for runway
     let overshootitemcount = overshootrowcount * crosscount
-    // if (overshootitemcount) {
-    //     overshootitemcount += (cradleProps.runwaycount * crosscount)
-    //     overshootrowcount += cradleProps.runwaycount
-    // }
 
     let unincludedheaditems = 0
     if (!scrollforward && (overshootitemcount != 0)) { // negation of values for scroll backward
@@ -705,8 +645,6 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         overshootrowcount = -overshootrowcount
         unincludedheaditems = intersections.length - headcontentlist.length
     }
-
-    // console.log('OVERSHOOT overshootitemcount, overshootrowcount', overshootitemcount, overshootrowcount)
 
     // ----------------------[  calculate itemshiftcount includng overshoot ]------------------------
     // shift item count is the number of items the virtual cradle shifts, according to observer notices
@@ -723,18 +661,12 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let itemshiftcount = backwardcount - forwardcount + overshootitemcount + unincludedheaditems
 
-    // console.log('first itemshiftcount: itemshiftcount, backwardcount, forwardcount, overshootitemcount, unincludedheaditems', 
-    //     itemshiftcount, backwardcount, forwardcount, overshootitemcount, unincludedheaditems)
-
     let previousreferenceindex = tailcontentlist[0].props.index
     let previousrefindexcradleoffset = 
         // itemelements.get(previousreferenceindex).current.offsetTop + 
         spineElement.offsetTop - viewportElement.scrollTop
 
     let previouscradleindex = cradlecontentlist[0].props.index
-
-    // console.log('previousreferenceindex, itemshiftcount, previousrefindexcradleoffset', 
-    //     previousreferenceindex, itemshiftcount, previousrefindexcradleoffset)
 
     let newcradleindex = previouscradleindex + itemshiftcount
     let newreferenceindex = previousreferenceindex + itemshiftcount
@@ -751,15 +683,12 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         newreferenceindex = 0
     }
 
-    // console.log('first order newcradleindex and newreferenceindex', newcradleindex, newreferenceindex)
-
     let cradleitemcount = cradlerowcount * crosscount
 
     let listsize = cradleProps.listsize
     if ((newcradleindex + cradleitemcount) > listsize) {
         let diff = listsize - (newcradleindex + cradleitemcount)
         newcradleindex -= diff
-        // console.log('itemshiftcount adjusted down by, to', diff, newcradleindex)
     }
 
     let viewportrows = Math.floor(viewportlength/cellLength)
@@ -774,14 +703,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let referenceposshift = (referenceitemshiftcount/crosscount) * cellLength
 
-    // console.log('adjusted newcradleindex, shift, and newreferenceindex, shift', 
-    //     newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount)
-    // console.log('viewport reference pixel offsets old, shift, and new; viewportElement.scrollTop',
-    //     previousrefindexcradleoffset, referenceposshift, previousrefindexcradleoffset + referenceposshift, viewportElement.scrollTop)
-
     let spineoffset = previousrefindexcradleoffset + referenceposshift
-
-    // if (newreferenceindex == 0) spineoffset = cradleProps.padding
 
     // brute force for edge cases - rapid back and forth random scrolling. TODO: determine why necessary
     if ((spineoffset > cellLength) || (spineoffset < -(gap -1))) {
@@ -791,6 +713,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         let diffitems = diffrows * crosscount
         // console.log('diff rows, items',diffrows, diffitems)
         if (spineoffset > cellLength) {
+
             newreferenceindex -= diffitems
             referenceitemshiftcount -= diffitems
             spineoffset -= (cellLength * diffrows)
@@ -803,9 +726,9 @@ export const calcContentShifts = ({ // called only from updateCradleContent
             }
             newcradleindex -= cradleindexdiff
             cradleitemshiftcount -= cradleindexdiff 
-            // console.log('spineoffet too high, updated to newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineoffset',
-            //     newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineoffset)
+
         } else { // spineoffset < -(gap -1)
+
             diffitems = -diffitems
             diffrows = -diffrows
             newreferenceindex += diffitems
@@ -821,20 +744,9 @@ export const calcContentShifts = ({ // called only from updateCradleContent
             }
             newcradleindex += cradlediffitems
             cradleitemshiftcount += cradlediffitems 
-            // console.log('spineoffet too low, updated to newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineoffset',
-            //     newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineoffset)
+
         }
     }
-
-    // if (orientation == 'vertical') {
-    //     if (viewportElement.scrollTop == 0 && spineElement.offsetTop == 0) {
-    //         spineoffset = cradleProps.padding
-    //     }
-    // } else {
-    //     if (viewportElement.scrollLeft == 0 && spineElement.offsetLeft == 0) {
-    //         spineoffset = cradleProps.padding
-    //     }
-    // }
 
     return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineoffset] // positive = roll toward top/left; negative = roll toward bottom/right
 
@@ -1068,49 +980,6 @@ export const getUIContentList = (props) => {
     return returnContentlist
 }
 
-/*
-    Algorithm
-    The referenceindex must result in correct spine placement,
-    ... and must take into account the bounds of the list for positioning
-*/
-// export const getNewReferenceindex = ({
-//     crosscount,
-//     listsize,
-//     scrollforward,
-//     itemshiftcount,
-//     // localcontentlist,
-//     // headcontentlist,
-//     tailcontentlist,
-//     // itemelements,
-//     // intersections,
-// }) => {
-
-//     let previousreferenceindex = tailcontentlist[0].props.index
-
-//     let referenceindex
-
-//     itemshiftcount = Math.abs(itemshiftcount)
-
-//     let referencerowshift = Math.ceil(itemshiftcount/crosscount)
-//     let referenceitemshift = referencerowshift * crosscount
-
-//     if (scrollforward) {
-
-//         referenceindex = previousreferenceindex + referenceitemshift
-
-//     } else {
-
-//         referenceindex = previousreferenceindex - referenceitemshift
-
-//     }
-
-//     if (referenceindex > (listsize -1)) {
-//         referenceindex = listsize -1
-//     }
-
-//     return [referenceindex, referenceitemshift, previousreferenceindex]
-// }
-
 // butterfly model. Leading (head) all or partially hidden; tail, visible plus following hidden
 export const allocateContentList = (
     {
@@ -1133,169 +1002,6 @@ export const allocateContentList = (
     return [headlist,taillist]
 
 }
-
-// export const getSpinePortalOffset = (
-//     {
-//         cradleProps,
-//         crosscount,
-//         scrollforward,
-//         headcontent,
-//         itemelements, 
-//         referenceindex,
-//         previousreferenceindex,
-//         referenceshift,
-//         viewportElement,
-//         spineElement,
-//     }) => {
-
-//     // console.log('DIRECTION, incoming referenceindex, previousreferenceindex, referenceshift',
-//     //     scrollforward, referenceindex, previousreferenceindex, referenceshift)
-
-//     // ----------[ collect input datas ]----------------
-
-//     let spineoffsetref 
-
-//     let orientation = cradleProps.orientation,
-//         padding = cradleProps.padding,
-//         gap = cradleProps.gap
-
-//     let spineposbase, cellLength
-//     if (orientation == 'vertical') {
-
-//         spineposbase = spineElement.offsetTop
-//         cellLength = cradleProps.cellHeight + gap
-
-//     } else {
-
-//         spineposbase = spineElement.offsetLeft
-//         cellLength = cradleProps.cellWidth + gap
-
-//     }
-
-//     // ----------------------[ prepare for calculations ]-------------------------------
-
-//     // output vars
-//     let referenceposshift = 0 // pixels
-//     let scrolloffset
-
-//     // if (orientation == 'vertical') {
-        
-//     //     if (itemelements.has(referenceindex)) {
-//     //         spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
-//     //     }
-
-//     // } else {
-
-//     //     if (itemelements.has(referenceindex - crosscount)) {
-//     //         spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetLeft
-//     //     }
-
-//     // }
-
-//     // ----------------------[ slightly different calculatoins for forward and back]-----------------
-
-//     let propname = (cradleProps.orientation == 'vertical')?'offsetHeight':'offsetWidth'
-//     if (scrollforward) {
-
-//         if (orientation == 'vertical') {
-            
-//             if (itemelements.has(referenceindex)) {
-//                 spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
-//             }
-
-//         } else {
-
-//             if (itemelements.has(referenceindex - crosscount)) {
-//                 spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetLeft
-//             }
-
-//         }
-//         if ( spineoffsetref === undefined ) {
-//             for (let rowindex = previousreferenceindex;
-//                 rowindex < previousreferenceindex + referenceshift; 
-//                 rowindex += crosscount ) {
-
-//                 let iterationshift = itemelements.has(rowindex)
-//                     ?itemelements.get(rowindex).current[propname] + gap
-//                     :cellLength
-//                 referenceposshift += iterationshift
-
-//             }
-//             // console.log('inferring forward location for spine offset', referenceposshift)
-
-//             spineoffsetref = spineposbase - referenceposshift
-
-//         }
-
-//         // let scrolloffset
-
-//     } else { // scrollback
-
-//         // TODO add hight headblock reference for first order spineoffsetreference
-
-//         if (orientation == 'vertical') {
-            
-//             if (itemelements.has(referenceindex)) {
-//                  spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetTop
-//             }
-
-//         } else {
-
-//             if (itemelements.has(referenceindex - crosscount)) {
-//                 spineoffsetref = spineposbase + itemelements.get(referenceindex).current.offsetLeft
-//             }
-
-//         }
-
-//             // console.log('first order backward spineoffsetref & spineposbase & itemelements.get(referenceindex)?.current.offsetTop', 
-//             //     spineoffsetref, spineposbase, itemelements.get(referenceindex)?.current.offsetTop)
-
-    
-//             // console.log('processing backward for undefined: previousreferenceindex, referenceshift',previousreferenceindex, referenceshift)
-
-//             for (let rowindex = previousreferenceindex;
-//                 rowindex > (previousreferenceindex + referenceshift); 
-//                 rowindex -= crosscount ) {
-
-//                 let iterationshift = itemelements.has(rowindex)
-//                     ?itemelements.get(rowindex).current[propname] + gap
-//                     :cellLength
-//                 referenceposshift += iterationshift
-//                 // console.log('iterating backshift: rowindex, iterationshift, referenceposshift',rowindex, iterationshift, referenceposshift)
-
-//             }
-//             spineoffsetref = spineposbase - referenceposshift
-//             // console.log('inferring backward location for spine spineposbase, referenceshift, spineoffsetref', spineposbase,referenceposshift, spineoffsetref)
-
-//         // }
-
-//     }
-
-//     // console.log('spineoffsetref, viewportElement.scrollTop', spineoffsetref, viewportElement.scrollTop)
-
-//     if (cradleProps.orientation == 'vertical') {
-//         scrolloffset = spineoffsetref - 
-//             viewportElement.scrollTop
-            
-            
-//     } else {
-
-//         scrolloffset = spineoffsetref - 
-//             viewportElement.scrollLeft
-            
-//     }
-
-//     // if (!scrollforward && (scrolloffset > cellLength)) {
-//     //     let newscrolloffset = (scrolloffset % cellLength)
-//     //     let diff = newscrolloffset - scrolloffset
-//     //     scrolloffset = newscrolloffset
-//     //     viewportElement.scrollTop += diff
-//     // }
-
-    
-//     return scrolloffset
-
-// }
 
 const emitItem = ({
     index, 

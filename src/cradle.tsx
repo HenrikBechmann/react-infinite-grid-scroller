@@ -8,13 +8,8 @@
 
     Inconsistency in viewportrows, sometimes Math.ceil, sometimes Math.floor
 
-    there is a rare gap at start of cradle when quickly scrolling backward
-
     change height to 0px from auto for spine in vertical
     
-    Add a console warning where spineoffset is negative (or negative gap), 
-    or greater than the viewport length/width
-
     update scrollforward logic to take into account rapid opposite scrolling. 
     Use differences in scrollTop?
 
@@ -27,19 +22,10 @@
     QA defend against butterfly getting intersections from opposite scroll direction
         as the result of a short viewport
 
-    minimize use of shift scroll offset
-
-    reposition fails with back and forth
-
     implement sessionid scheme for cell content
-
-    sometimes scrollforward calculate overflow amount triggers reposition as a side effect
-
-    rapid scrolling immediately after load prevents cradlehidden behavuour
 
     deal with spine being notified by bottom border rather than top
 
-    with rapid back and forth, headcontent is occasionally unstable (red line = referenceindex)
     spine location occasionally down by 10 = padding
     referenceindex is sometimes located (spineoffset) outside the viewport -- should never happen
 
@@ -48,15 +34,6 @@
 /*
     Description
     -----------
-
-    This module has one main design pattern: the butterfuly pattern (my name)
-
-    the butterfly pattern:
-        This pattern consists of two containers for items (the "wings"), joined by a 0-length div (the "spine"). 
-        The wings are fixed to the spine through the bottom/right position style on one side, and top/left 
-        on the other. Thus additions or deletions effect the distant ends of the wings from the spine on each end. 
-        All three together comprise the "cradle" of items. After a change of content, the only compensating 
-        adjustment required is the change of position of the spine in relation to the viewport.
 
 */
 
@@ -67,10 +44,6 @@ import { ViewportContext } from './viewport'
 import useIsMounted from 'react-is-mounted-hook'
 
 import ResizeObserverPolyfill from 'resize-observer-polyfill'
-
-// import { detect } from 'detect-browser'
-
-// const browser = detect()
 
 const LocalResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
 
@@ -312,15 +285,11 @@ const Cradle = ({
 
     // ------------------ current location -- first head visible item -------------
 
-    // const [scrollReferenceIndexData, saveScrollReferenceIndexData] = useState({
-    //     index:Math.min(offset,(listsize - 1)) || 0,
-    //     scrolloffset:padding
-    // })
     const scrollReferenceIndexDataRef = useRef({
         index:Math.min(offset,(listsize - 1)) || 0,
         scrolloffset:padding
     }) // access by closures
-    // scrollReferenceIndexDataRef.current = scrollReferenceIndexData
+
     const stableReferenceIndexDataRef = useRef(scrollReferenceIndexDataRef.current) // capture for state resetContent operations
     const callingReferenceIndexDataRef = useRef(scrollReferenceIndexDataRef.current) // anticipate reposition
 
@@ -330,9 +299,6 @@ const Cradle = ({
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const spineCradleElementRef = useRef(null)
-
-    // console.log('cradle, head, tail offsets',
-    //     spineCradleElementRef.current?.offsetTop, headCradleElementRef.current?.offsetTop, tailCradleElementRef.current?.offsetTop)
 
     // data model
     const modelContentRef = useRef(null)
@@ -569,10 +535,6 @@ const Cradle = ({
         viewportwidth,
         crosscount,
 
-        // cradleHeadStyle,
-        // cradleTailStyle,
-        // cradleSpineStyle
-
       ])
 
     cradleHeadStyle = headstyle
@@ -650,9 +612,6 @@ const Cradle = ({
             }
         }
         isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
-
-        // console.log('setting isCradleInViewRef, isHeadCradleInViewRef, isTailCradleInViewRef',
-        //     isCradleInViewRef.current, isHeadCradleInViewRef.current, isTailCradleInViewRef.current)
 
         if (!isCradleInViewRef.current) 
 
@@ -748,20 +707,16 @@ const Cradle = ({
 
         if (pauseItemObserverRef.current) {
 
-            // console.log('pause item observer', pauseItemObserverRef.current)
             return
 
         }
 
-        // console.log('item notification calling updateCradleContent(moviedentries)', movedentries)
         isMounted() && updateCradleContent(movedentries)
 
     },[])
 
     const previousScrollForwardRef = useRef(undefined)
 
-    // adjust scroll content:
-    // 1.shift, 2.clip, and 3.add clip amount at other end
     const updateCradleContent = (entries, source = 'notifications') => {
 
         let viewportData = viewportDataRef.current
@@ -775,8 +730,9 @@ const Cradle = ({
             viewportScrollpos = viewportElement.scrollLeft
         }
         if ( viewportScrollpos < 0) { // for Safari
-            // console.log('aborting updateCradleContent with scrollPos',viewportScrollpos)
+
             return
+
         }
 
         // ----------------------------[ 1. initialize ]----------------------------
@@ -825,8 +781,6 @@ const Cradle = ({
 
         })
 
-        // console.log('intersections.length',intersections.length)
-
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         let [cradleindex, 
@@ -851,9 +805,6 @@ const Cradle = ({
             itemelements,
 
         })
-
-        // console.log('cradleindex, cradleitemshift, referenceindex, referenceitemshift', 
-        //     cradleindex, cradleitemshift, referenceindex, referenceitemshift)
 
         if (referenceitemshift == 0) return
 
@@ -907,8 +858,6 @@ const Cradle = ({
             }
         )
 
-        // console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
-
         modelContentRef.current = localContentList
         headViewContentRef.current = headModelContentRef.current = headcontent
         tailViewContentRef.current = tailModelContentRef.current = tailcontent
@@ -917,8 +866,6 @@ const Cradle = ({
 
         if (spineoffset !== undefined) {
             
-            // console.log('viewportElement.scrollTop BEFORE', viewportElement.scrollTop)
-
             if (cradleProps.orientation == 'vertical') {
 
                 scrollPositionDataRef.current = {property:'scrollTop',value:viewportElement.scrollTop}
@@ -954,8 +901,6 @@ const Cradle = ({
     
     // reset cradle, including allocation between head and tail parts of the cradle
     const setCradleContent = (cradleState, referenceIndexData) => { 
-
-        // console.log('setCradleContent: cradleState, referenceIndexData',cradleState, referenceIndexData)
 
         let cradleProps = cradlePropsRef.current
         let { index: visibletargetindexoffset, 
@@ -1074,35 +1019,20 @@ const Cradle = ({
             :viewportElement.scrollLeft
 
         if (scrollPositioncurrent < 0) { // for Safari
-            // console.log('aborting onScroll with scroll position of ',scrollPositioncurrent)
+
             return 
+
         }
 
-        //     scrollPositioncurrent = 0
+        scrollPositions.previous = scrollPositions.current
+        scrollPositions.current = //scrollPositioncurrent
+            (cradlePropsRef.current.orientation == 'vertical')
+            ?viewportElement.scrollTop
+            :viewportElement.scrollLeft
 
-        //     if (cradlePropsRef.current.orientation == 'vertical')
-        //         viewportElement.scrollTop = 0
-        //     else 
-        //         viewportElement.scrollLeft = 0
-        // }
-        // if (scrollPositioncurrent >= 0) { // to suppress bounce
-            scrollPositions.previous = scrollPositions.current
-            scrollPositions.current = //scrollPositioncurrent
-                (cradlePropsRef.current.orientation == 'vertical')
-                ?viewportElement.scrollTop
-                :viewportElement.scrollLeft
-        // }
-
-        // console.log('SCROLLPOSITIONS', scrollPositions)
-
-        // console.log('scrolling', viewportElement.scrollTop)
         clearTimeout(scrollTimeridRef.current)
 
         let cradleState = cradlestateRef.current
-
-        // if (pauseScrollingEffectsRef.current == true) {
-        //     return
-        // }
 
         if (!viewportDataRef.current.isResizing) {
 
@@ -1131,8 +1061,6 @@ const Cradle = ({
                         scrolloffset,
                     }
 
-                    // updateCradleContent([], 'end of scroll') // for Safari to compensate for overscroll
-
                 } else {
 
                     scrollReferenceIndexDataRef.current = getScrollReferenceIndexData({
@@ -1145,8 +1073,6 @@ const Cradle = ({
                 referenceIndexCallbackRef.current && 
                     referenceIndexCallbackRef.current(scrollReferenceIndexDataRef.current.index,'scrolling', cradleState)
 
-                // saveScrollReferenceIndexData(scrollReferenceIndexDataRef.current)
-
             }
 
         }
@@ -1158,7 +1084,6 @@ const Cradle = ({
                 let localrefdata = {...scrollReferenceIndexDataRef.current}
 
                 stableReferenceIndexDataRef.current = localrefdata
-                // saveScrollReferenceIndexData(localrefdata) // trigger re-run to capture end of scroll session values
 
             }
             switch (cradleState) {
@@ -1166,7 +1091,6 @@ const Cradle = ({
                 case 'repositioning': {
 
                     callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
-                    // pauseScrollingEffectsRef.current = true
 
                     saveCradleState('reposition')
 
@@ -1211,7 +1135,6 @@ const Cradle = ({
 
             case 'setscrolloffset': {
 
-                // console.log('within SCROLLPOSITION',scrollPositionDataRef.current)
                 viewportData.elementref.current[scrollPositionDataRef.current.property] =
                     scrollPositionDataRef.current.value
 
@@ -1322,8 +1245,8 @@ const Cradle = ({
     const reload = useCallback(() => {
 
         pauseItemObserverRef.current = true
-        // pauseCradleIntersectionObserverRef.current = true
         pauseScrollingEffectsRef.current = true
+
         let scrolloffset
         if (cradlePropsRef.current.orientation == 'vertical') {
             scrolloffset = spineCradleElementRef.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
@@ -1371,8 +1294,6 @@ const Cradle = ({
             styles:cradlePropsRef.current.styles,
         }
     },[viewportDimensions, scrollReferenceIndexDataRef.current, cradlePropsRef])
-
-    // console.log('cradlestate at render',cradlestateRef.current)
 
     return <>
 
