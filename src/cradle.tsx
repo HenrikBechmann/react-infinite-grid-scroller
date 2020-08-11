@@ -774,7 +774,7 @@ const Cradle = ({
         } else {
             viewportScrollpos = viewportElement.scrollLeft
         }
-        if ( viewportScrollpos < 0) {
+        if ( viewportScrollpos < 0) { // for Safari
             // console.log('aborting updateCradleContent with scrollPos',viewportScrollpos)
             return
         }
@@ -1073,7 +1073,7 @@ const Cradle = ({
             ?viewportElement.scrollTop
             :viewportElement.scrollLeft
 
-        if (scrollPositioncurrent < 0) {
+        if (scrollPositioncurrent < 0) { // for Safari
             // console.log('aborting onScroll with scroll position of ',scrollPositioncurrent)
             return 
         }
