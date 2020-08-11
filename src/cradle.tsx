@@ -762,7 +762,7 @@ const Cradle = ({
 
     // adjust scroll content:
     // 1.shift, 2.clip, and 3.add clip amount at other end
-    const updateCradleContent = (entries) => {
+    const updateCradleContent = (entries, source = 'notifications') => {
 
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current
@@ -775,7 +775,7 @@ const Cradle = ({
             viewportScrollpos = viewportElement.scrollLeft
         }
         if ( viewportScrollpos < 0) {
-            console.log('aborting updateCradleContent with scrollPos',viewportScrollpos)
+            // console.log('aborting updateCradleContent with scrollPos',viewportScrollpos)
             return
         }
 
@@ -795,7 +795,8 @@ const Cradle = ({
 
         }
 
-        // console.log('updating cradle content: entries.length, scrollforward, scrollPositions', entries.length, scrollforward, scrollPositions)
+        console.log('updating cradle content: source, entries.length, scrollforward, scrollPositions, viewportScrollpos', 
+            source, entries.length, scrollforward, scrollPositions, viewportScrollpos)
 
         let spineElement = spineCradleElementRef.current
         let headElement = headCradleElementRef.current
@@ -1073,7 +1074,7 @@ const Cradle = ({
             :viewportElement.scrollLeft
 
         if (scrollPositioncurrent < 0) {
-            console.log('aborting onScroll with scroll position of ',scrollPositioncurrent)
+            // console.log('aborting onScroll with scroll position of ',scrollPositioncurrent)
             return 
         }
 
@@ -1130,7 +1131,7 @@ const Cradle = ({
                         scrolloffset,
                     }
 
-                    // updateCradleContent([]) // for Safari to compensate for overscroll
+                    // updateCradleContent([], 'end of scroll') // for Safari to compensate for overscroll
 
                 } else {
 
@@ -1139,8 +1140,6 @@ const Cradle = ({
                         cradleProps:cradlePropsRef.current,
                         crosscount:crosscountRef.current,
                     })
-                    saveCradleState('updatereposition')
-
                 }
 
                 referenceIndexCallbackRef.current && 
@@ -1172,7 +1171,11 @@ const Cradle = ({
                     saveCradleState('reposition')
 
                     break
+                }
 
+                default: {
+                    
+                    updateCradleContent([], 'end of scroll') // for Safari to compensate for overscroll
 
                 }
 
