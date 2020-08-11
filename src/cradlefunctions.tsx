@@ -723,8 +723,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let itemshiftcount = backwardcount - forwardcount + overshootitemcount + unincludedheaditems
 
-    console.log('first itemshiftcount: itemshiftcount, backwardcount, forwardcount, overshootitemcount, unincludedheaditems', 
-        itemshiftcount, backwardcount, forwardcount, overshootitemcount, unincludedheaditems)
+    // console.log('first itemshiftcount: itemshiftcount, backwardcount, forwardcount, overshootitemcount, unincludedheaditems', 
+    //     itemshiftcount, backwardcount, forwardcount, overshootitemcount, unincludedheaditems)
 
     let previousreferenceindex = tailcontentlist[0].props.index
     let previousrefindexcradleoffset = 
@@ -785,8 +785,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     // brute force for edge cases - rapid back and forth random scrolling. TODO: determine why necessary
     if ((spineoffset > cellLength) || (spineoffset < -(gap -1))) {
-        console.warn('spineoffset out of range, adjusting: spineoffset, previousrefindexcradleoffset, referenceposshift',
-            spineoffset, previousrefindexcradleoffset, referenceposshift)
+        // console.warn('spineoffset out of range, adjusting: spineoffset, previousrefindexcradleoffset, referenceposshift',
+        //     spineoffset, previousrefindexcradleoffset, referenceposshift)
         let diffrows = Math.floor(spineoffset/cellLength)
         let diffitems = diffrows * crosscount
         // console.log('diff rows, items',diffrows, diffitems)

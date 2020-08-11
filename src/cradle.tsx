@@ -766,8 +766,18 @@ const Cradle = ({
 
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current
+        let cradleProps = cradlePropsRef.current
 
-        if (viewportElement.scrollTop < 0) return
+        let viewportScrollpos
+        if (cradleProps.orientation == 'vertical') {
+            viewportScrollpos = viewportElement.scrollTop
+        } else {
+            viewportScrollpos = viewportElement.scrollLeft
+        }
+        if ( viewportScrollpos < 0) {
+            console.log('aborting updateCradleContent with scrollPos',viewportScrollpos)
+            return
+        }
 
         // ----------------------------[ 1. initialize ]----------------------------
 
@@ -785,9 +795,7 @@ const Cradle = ({
 
         }
 
-        console.log('updating cradle content: entries.length, scrollforward, scrollPositions', entries.length, scrollforward, scrollPositions)
-
-        let cradleProps = cradlePropsRef.current
+        // console.log('updating cradle content: entries.length, scrollforward, scrollPositions', entries.length, scrollforward, scrollPositions)
 
         let spineElement = spineCradleElementRef.current
         let headElement = headCradleElementRef.current
@@ -816,7 +824,7 @@ const Cradle = ({
 
         })
 
-        console.log('intersections.length',intersections.length)
+        // console.log('intersections.length',intersections.length)
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
@@ -843,8 +851,8 @@ const Cradle = ({
 
         })
 
-        console.log('cradleindex, cradleitemshift, referenceindex, referenceitemshift', 
-            cradleindex, cradleitemshift, referenceindex, referenceitemshift)
+        // console.log('cradleindex, cradleitemshift, referenceindex, referenceitemshift', 
+        //     cradleindex, cradleitemshift, referenceindex, referenceitemshift)
 
         if (referenceitemshift == 0) return
 
@@ -946,7 +954,7 @@ const Cradle = ({
     // reset cradle, including allocation between head and tail parts of the cradle
     const setCradleContent = (cradleState, referenceIndexData) => { 
 
-        console.log('setCradleContent: cradleState, referenceIndexData',cradleState, referenceIndexData)
+        // console.log('setCradleContent: cradleState, referenceIndexData',cradleState, referenceIndexData)
 
         let cradleProps = cradlePropsRef.current
         let { index: visibletargetindexoffset, 
@@ -1063,9 +1071,12 @@ const Cradle = ({
             (cradlePropsRef.current.orientation == 'vertical')
             ?viewportElement.scrollTop
             :viewportElement.scrollLeft
+
         if (scrollPositioncurrent < 0) {
+            console.log('aborting onScroll with scroll position of ',scrollPositioncurrent)
             return 
         }
+
         //     scrollPositioncurrent = 0
 
         //     if (cradlePropsRef.current.orientation == 'vertical')
@@ -1075,13 +1086,13 @@ const Cradle = ({
         // }
         // if (scrollPositioncurrent >= 0) { // to suppress bounce
             scrollPositions.previous = scrollPositions.current
-            scrollPositions.current = scrollPositioncurrent
-                // (cradlePropsRef.current.orientation == 'vertical')
-                // ?viewportElement.scrollTop
-                // :viewportElement.scrollLeft
+            scrollPositions.current = //scrollPositioncurrent
+                (cradlePropsRef.current.orientation == 'vertical')
+                ?viewportElement.scrollTop
+                :viewportElement.scrollLeft
         // }
 
-        console.log('SCROLLPOSITIONS', scrollPositions)
+        // console.log('SCROLLPOSITIONS', scrollPositions)
 
         // console.log('scrolling', viewportElement.scrollTop)
         clearTimeout(scrollTimeridRef.current)
@@ -1119,7 +1130,7 @@ const Cradle = ({
                         scrolloffset,
                     }
 
-                    updateCradleContent([]) // for Safari to compensate for overscroll
+                    // updateCradleContent([]) // for Safari to compensate for overscroll
 
                 } else {
 
