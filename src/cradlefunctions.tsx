@@ -174,13 +174,13 @@ export const getScrollReferenceIndexData = ({
     }
 
     let referencerowindex = Math.ceil((scrollPos - cradleProps.padding)/cellLength)
-    let referenceindex = referencerowindex * crosscount
-    referenceindex = Math.min(referenceindex,listsize - 1)
-    let diff = referenceindex % crosscount
-    referenceindex -= diff
+    let spineReferenceIndex = referencerowindex * crosscount
+    spineReferenceIndex = Math.min(spineReferenceIndex,listsize - 1)
+    let diff = spineReferenceIndex % crosscount
+    spineReferenceIndex -= diff
 
     let referenceIndexData = {
-        index:referenceindex,
+        index:spineReferenceIndex,
         scrolloffset:referencescrolloffset
     }
 
@@ -204,7 +204,7 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
         viewportElement,
     }) => {
 
-    // reconcile referenceindex to crosscount context
+    // reconcile spineReferenceIndex to crosscount context
     let diff = referenceoffset % crosscount
     referenceoffset -= diff
 
@@ -227,24 +227,24 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
     let runwayitemcount = runwaycount * crosscount
     runwayitemcount = Math.min(runwayitemcount, referenceoffset) // for list head
 
-    // -----------------------[ calc indexoffset ]------------------------
+    // -----------------------[ calc cradleReferenceIndex ]------------------------
 
     // leading edge
-    let indexoffset = referenceoffset - runwayitemcount
+    let cradleReferenceIndex = referenceoffset - runwayitemcount
 
-    // ------------[ adjust indexoffset for underflow ]------------
+    // ------------[ adjust cradleReferenceIndex for underflow ]------------
 
     diff = 0 // reset
     let indexshift = 0 // adjustment if overshoot head
-    if (indexoffset < 0) {
-        diff = indexoffset
-        indexshift = Math.floor(indexoffset / crosscount) * crosscount
-        indexoffset += indexshift
+    if (cradleReferenceIndex < 0) {
+        diff = cradleReferenceIndex
+        indexshift = Math.floor(cradleReferenceIndex / crosscount) * crosscount
+        cradleReferenceIndex += indexshift
     }
 
-    // ------------[ adjust indexoffset and contentCount for listsize overflow ]------------
+    // ------------[ adjust cradleReferenceIndex and contentCount for listsize overflow ]------------
 
-    let spineoffset = targetViewportOffset % cellLength
+    let spineOffset = targetViewportOffset % cellLength
 
     // --------------------[ calc css positioning ]-----------------------
 
@@ -253,11 +253,11 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
 
     if (targetrowoffset == 0) {
         scrollblockoffset = 0
-        spineoffset = padding
+        spineOffset = padding
     } else {
-        [indexoffset, contentCount, referenceoffset, scrollblockoffset, spineoffset] = adjustSpineOffsetForMaxRefindex({
+        [cradleReferenceIndex, contentCount, referenceoffset, scrollblockoffset, spineOffset] = adjustSpineOffsetForMaxRefindex({
             referenceoffset,
-            spineoffset,
+            spineOffset,
             scrollblockoffset,            
             targetrowoffset,
             viewportlength,
@@ -267,18 +267,18 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
             cellLength,
             padding,
             gap,
-            indexoffset,
+            cradleReferenceIndex,
             contentCount,
         })
     }
 
-    return {indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset} // summarize requirements message
+    return {cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset} // summarize requirements message
 
 }
 
 const adjustSpineOffsetForMaxRefindex = ({
     referenceoffset,
-    spineoffset,
+    spineOffset,
     scrollblockoffset,
     targetrowoffset,
     viewportlength,
@@ -288,11 +288,11 @@ const adjustSpineOffsetForMaxRefindex = ({
     cellLength,
     padding,
     gap,
-    indexoffset,
+    cradleReferenceIndex,
     contentCount
 }) => {
 
-    let testlistsize = indexoffset + contentCount + 1
+    let testlistsize = cradleReferenceIndex + contentCount + 1
     let testlistrows = Math.ceil(testlistsize/crosscount)
     let listrows = Math.ceil(listsize/crosscount)
 
@@ -300,11 +300,11 @@ const adjustSpineOffsetForMaxRefindex = ({
 
         let diffrows = testlistrows - listrows - 1 // TODO: why the "1"?
         let diff = diffrows * crosscount
-        indexoffset -= diff
+        cradleReferenceIndex -= diff
 
     }
 
-    if (Math.ceil((indexoffset + contentCount)/crosscount) == listrows) {
+    if (Math.ceil((cradleReferenceIndex + contentCount)/crosscount) == listrows) {
         let diff = listsize % crosscount
         if (diff) {
             contentCount -= crosscount - diff
@@ -321,11 +321,11 @@ const adjustSpineOffsetForMaxRefindex = ({
 
         scrollblockoffset = (targetrowoffset * cellLength) - padding
 
-        spineoffset = viewportlength - ((viewportrows * cellLength) + padding)
+        spineOffset = viewportlength - ((viewportrows * cellLength) + padding)
 
     }
 
-    return [indexoffset, contentCount, referenceoffset, scrollblockoffset, spineoffset]
+    return [cradleReferenceIndex, contentCount, referenceoffset, scrollblockoffset, spineOffset]
 
 }
 
@@ -703,20 +703,20 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let referenceposshift = (referenceitemshiftcount/crosscount) * cellLength
 
-    let spineoffset = previousrefindexcradleoffset + referenceposshift
+    let spineOffset = previousrefindexcradleoffset + referenceposshift
 
     // brute force for edge cases - rapid back and forth random scrolling. TODO: determine why necessary
-    if ((spineoffset > cellLength) || (spineoffset < -(gap -1))) {
-        // console.warn('spineoffset out of range, adjusting: spineoffset, previousrefindexcradleoffset, referenceposshift',
-        //     spineoffset, previousrefindexcradleoffset, referenceposshift)
-        let diffrows = Math.floor(spineoffset/cellLength)
+    if ((spineOffset > cellLength) || (spineOffset < -(gap -1))) {
+        // console.warn('spineOffset out of range, adjusting: spineOffset, previousrefindexcradleoffset, referenceposshift',
+        //     spineOffset, previousrefindexcradleoffset, referenceposshift)
+        let diffrows = Math.floor(spineOffset/cellLength)
         let diffitems = diffrows * crosscount
         // console.log('diff rows, items',diffrows, diffitems)
-        if (spineoffset > cellLength) {
+        if (spineOffset > cellLength) {
 
             newreferenceindex -= diffitems
             referenceitemshiftcount -= diffitems
-            spineoffset -= (cellLength * diffrows)
+            spineOffset -= (cellLength * diffrows)
 
             let proposedcradleindex = newcradleindex - diffitems
             let cradleindexdiff = diffitems
@@ -727,13 +727,13 @@ export const calcContentShifts = ({ // called only from updateCradleContent
             newcradleindex -= cradleindexdiff
             cradleitemshiftcount -= cradleindexdiff 
 
-        } else { // spineoffset < -(gap -1)
+        } else { // spineOffset < -(gap -1)
 
             diffitems = -diffitems
             diffrows = -diffrows
             newreferenceindex += diffitems
             referenceitemshiftcount += diffitems
-            spineoffset += (diffrows * cellLength)
+            spineOffset += (diffrows * cellLength)
             let cradlediffitems = diffitems
             let proposedcradlerow = (newcradleindex + cradlediffitems)/crosscount
             let revisedreferencerow = newreferenceindex/crosscount
@@ -748,7 +748,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         }
     }
 
-    return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineoffset] // positive = roll toward top/left; negative = roll toward bottom/right
+    return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset] // positive = roll toward top/left; negative = roll toward bottom/right
 
 }
 
@@ -760,7 +760,7 @@ export const calcHeadAndTailChanges = (
         tailcontent,
         scrollforward,
         cradleProps,
-        indexoffset,
+        cradleReferenceIndex,
         cradlerowcount,
         listsize,
     }) => {
@@ -772,7 +772,7 @@ export const calcHeadAndTailChanges = (
     headrowcount = Math.ceil(headcontent.length/crosscount)
     tailrowcount = Math.ceil(tailcontent.length/crosscount)
 
-    let pendingcontentoffset // lookahead to new indexoffset
+    let pendingcontentoffset // lookahead to new cradleReferenceIndex
 
     let headchangecount, tailchangecount // the output instructions for getUIContentList
 
@@ -793,7 +793,7 @@ export const calcHeadAndTailChanges = (
 
         additemcount = clipitemcount // maintain constant cradle count
 
-        pendingcontentoffset = indexoffset + clipitemcount // after clip
+        pendingcontentoffset = cradleReferenceIndex + clipitemcount // after clip
 
         let proposedtailindex = pendingcontentoffset + (cradlerowcount * crosscount) - 1 // modelcontentlist.length - 1
 
@@ -855,7 +855,7 @@ export const calcHeadAndTailChanges = (
 
         }
 
-        let proposedindexoffset = indexoffset - additemcount
+        let proposedindexoffset = cradleReferenceIndex - additemcount
 
         if (proposedindexoffset < 0) {
 
@@ -894,7 +894,7 @@ export const getUIContentList = (props) => {
 
     let { 
 
-        indexoffset, 
+        cradleReferenceIndex, 
         headindexcount, 
         tailindexcount, 
         cradleProps,
@@ -912,14 +912,14 @@ export const getUIContentList = (props) => {
         placeholder = cradleProps.placeholder
 
     let localContentlist = [...contentlist]
-    let tailindexoffset = indexoffset + contentlist.length
+    let tailindexoffset = cradleReferenceIndex + contentlist.length
     let returnContentlist
 
     let headContentlist = []
 
     if (headindexcount >= 0) {
 
-        for (let index = indexoffset - headindexcount; index < (indexoffset); index++) {
+        for (let index = cradleReferenceIndex - headindexcount; index < (cradleReferenceIndex); index++) {
 
             headContentlist.push(
                 emitItem(
@@ -985,7 +985,7 @@ export const allocateContentList = (
     {
 
         contentlist, // of cradle, in items (React components)
-        referenceindex, // first tail item
+        spineReferenceIndex, // first tail item
 
     }
 ) => {
@@ -994,7 +994,7 @@ export const allocateContentList = (
 
     let headitemcount
 
-    headitemcount = (referenceindex - offsetindex)
+    headitemcount = (spineReferenceIndex - offsetindex)
 
     let headlist = contentlist.slice(0,headitemcount)
     let taillist = contentlist.slice(headitemcount)

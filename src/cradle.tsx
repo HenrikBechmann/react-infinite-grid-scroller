@@ -16,7 +16,7 @@
     ==>> check getShift logic. !scrollforward should select next calculated index 
     to be above the fold if possible.
 
-    review rotate referenceindex settings
+    review rotate spineReferenceIndex settings
     investigate cascading calls to out of scope cradle, in relation to itemshift
 
     QA defend against butterfly getting intersections from opposite scroll direction
@@ -27,7 +27,7 @@
     deal with spine being notified by bottom border rather than top
 
     spine location occasionally down by 10 = padding
-    referenceindex is sometimes located (spineoffset) outside the viewport -- should never happen
+    spineReferenceIndex is sometimes located (spineOffset) outside the viewport -- should never happen
 
 */
 
@@ -40,19 +40,27 @@
     The scrollblock is sized to approximate the list being viewed, so as to have a scroll thumb size and position which 
     realistically reflects the size of the list being shown.
 
-    The position of the cradle is controlled by a 'spine' which is a 0px height/width (along the medial). The purpose of the 
-    spine is to act as a 'fold', above which cell content expands 'upwards', and below which the cell content expands 
-    'downwards'. GridScroller can be viewed vertically or horizontally. When horizontal, the spine has a 0px width, so that
-    the 'fold' is vertical, and cells expand to the left and right.
+    The position of the cradle is controlled by a 'spine' which is a 0px height/width (along the medial - ScrollBlock can be 
+    verticsl or horizontal). The purpose of the spine is to act as a 'fold', above which cell content expands 'upwards', and 
+    below which the cell content expands  'downwards'. GridScroller can be viewed vertically or horizontally. When horizontal, 
+    the spine has a 0px width, so that the 'fold' is vertical, and cells expand to the left and right.
 
-    The spine is controlled to always be in the visible portion of the viewport, near the leading end of the cradle. Thus
+    The spine is controlled to always be in the at the leading edge of the leading cellrow of the viewport. Thus
     in vertical orientation, the spine 'top' css attribute is always equal to the 'scrollTop' position of the scrollblock,
-    plus an adjustment. The adjustment is the result of the placement of the spine in relation to the top-(or left-)most cell
-    in the viewport (the reference row). The spine can only be placed at the leading edge of the first completely visible
-    cell in the viewport. Therefore the spine offset from the leading edge of the viewport can be anywhere from 0 pixels
-    to the length of the cell ( minus 1 pixel plus the gap to the first completely visible cell).
+    plus an adjustment. The adjustment is the result of the alignment of the spine in relation to the top-(or left-)most cell
+    in the viewport (the 'reference' row). The spine can only be placed at the leading edge of the first visible
+    cell in the viewport. Therefore the spine offset from the leading edge of the viewport can be anywhere from minus to
+    plus the length of the leading row. The exact amount depends on where the 'breakpoint' of transition notification is set for
+    cells crossing the viewport threshold (and can be configured). The default of the breakpoint is .5 (half the length of the cell).
 
-    Technically, there are several reference points tracked by the GridScroller. 
+    Technically, there are several reference points tracked by the GridScroller. These are:
+        - spineReferenceIndex (the virtual index of the item controlling the location of the spine)
+            The spineReferenceIndex is also used to allocate items above (lower index value) and below (same or higher index value)
+            the fold
+        - cradleReferenceIndex (the virtual index of the item defining the leading bound of the cradle content)
+        - spineOffset (pixels - plus or minus - that the spine is placed in relation to the viewport's leading edge) 
+    These reference points are applied to the following structures:
+        - 
 */
 
 import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, useLayoutEffect } from 'react'
@@ -783,7 +791,7 @@ const Cradle = ({
         let listsize = cradleProps.listsize
         let crosscount = crosscountRef.current
 
-        let indexoffset = modelcontentlist[0].props.index
+        let cradleReferenceIndex = modelcontentlist[0].props.index
 
         // --------------------[ 2. filter intersections list ]-----------------------
 
@@ -803,9 +811,9 @@ const Cradle = ({
 
         let [cradleindex, 
             cradleitemshift, 
-            referenceindex, 
+            spineReferenceIndex, 
             referenceitemshift,
-            spineoffset] = calcContentShifts({
+            spineOffset] = calcContentShifts({
 
             cradleProps,
             spineElement,
@@ -836,7 +844,7 @@ const Cradle = ({
             tailcontent:tailModelContentRef.current,
             scrollforward,
             cradleProps,
-            indexoffset,
+            cradleReferenceIndex,
             cradlerowcount:cradlerowcountRef.current,
             listsize,
 
@@ -854,7 +862,7 @@ const Cradle = ({
                 localContentList:modelcontentlist,
                 headindexcount:headchangecount,
                 tailindexcount:tailchangecount,
-                indexoffset,
+                cradleReferenceIndex,
                 cradleProps,
                 observer: itemObserverRef.current,
                 callbacks:callbacksRef.current,
@@ -872,7 +880,7 @@ const Cradle = ({
         let [headcontent, tailcontent] = allocateContentList(
             {
                 contentlist:localContentList,
-                referenceindex,
+                spineReferenceIndex,
             }
         )
 
@@ -882,19 +890,19 @@ const Cradle = ({
 
         // -------------------------------[ 8. set css changes ]-------------------------
 
-        if (spineoffset !== undefined) {
+        if (spineOffset !== undefined) {
             
             if (cradleProps.orientation == 'vertical') {
 
                 scrollPositionDataRef.current = {property:'scrollTop',value:viewportElement.scrollTop}
-                spineCradleElementRef.current.style.top = viewportElement.scrollTop + spineoffset + 'px'
+                spineCradleElementRef.current.style.top = viewportElement.scrollTop + spineOffset + 'px'
                 spineCradleElementRef.current.style.left = 'auto'
                 headCradleElementRef.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
 
             } else {
 
                 scrollPositionDataRef.current = {property:'scrollLeft',value:viewportElement.scrollLeft}
-                spineCradleElementRef.current.style.left = viewportElement.scrollLeft + spineoffset + 'px'
+                spineCradleElementRef.current.style.left = viewportElement.scrollLeft + spineOffset + 'px'
                 spineCradleElementRef.current.style.top = 'auto'
                 headCradleElementRef.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
 
@@ -903,8 +911,8 @@ const Cradle = ({
         }
 
         scrollReferenceIndexDataRef.current = {
-            index:referenceindex,
-            scrolloffset:spineoffset
+            index:spineReferenceIndex,
+            scrolloffset:spineOffset
         }
 
         saveCradleState('updatecontent')
@@ -937,7 +945,7 @@ const Cradle = ({
 
         let localContentList = [] // any duplicated items will be re-used by react
 
-        let {indexoffset, referenceoffset, contentCount, scrollblockoffset, spineoffset} = 
+        let {cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset} = 
             getContentListRequirements({
 
                 cellHeight, 
@@ -959,7 +967,7 @@ const Cradle = ({
             localContentList,
             headindexcount:0,
             tailindexcount:contentCount,
-            indexoffset,
+            cradleReferenceIndex,
             cradleProps:cradlePropsRef.current,
             observer: itemObserverRef.current,
             // crosscount,
@@ -971,12 +979,12 @@ const Cradle = ({
         let [headcontentlist, tailcontentlist] = allocateContentList({
 
             contentlist:childlist,
-            referenceindex:referenceoffset,
+            spineReferenceIndex:referenceoffset,
     
         })
 
         if (headcontentlist.length == 0) {
-            spineoffset = padding
+            spineOffset = padding
         }
 
         modelContentRef.current = childlist
@@ -986,7 +994,7 @@ const Cradle = ({
         scrollReferenceIndexDataRef.current = stableReferenceIndexDataRef.current = {
 
             index: referenceoffset,
-            scrolloffset:spineoffset,
+            scrolloffset:spineOffset,
 
         }
 
@@ -1002,14 +1010,14 @@ const Cradle = ({
         if (orientation == 'vertical') {
 
             scrollPositionDataRef.current = {property:'scrollTop',value:scrollblockoffset}
-            spineCradleElementRef.current.style.top = (scrollblockoffset + spineoffset) + 'px'
+            spineCradleElementRef.current.style.top = (scrollblockoffset + spineOffset) + 'px'
             spineCradleElementRef.current.style.left = 'auto'
             headCradleElementRef.current.style.paddingBottom = headcontentlist.length?cradleProps.gap + 'px':0
 
         } else { // orientation = 'horizontal'
 
             scrollPositionDataRef.current = {property:'scrollLeft',value:scrollblockoffset}
-            spineCradleElementRef.current.style.left = (scrollblockoffset + spineoffset) + 'px'
+            spineCradleElementRef.current.style.left = (scrollblockoffset + spineOffset) + 'px'
             spineCradleElementRef.current.style.top = 'auto'
             headCradleElementRef.current.style.paddingRight = headcontentlist.length?cradleProps.gap + 'px':0
 
