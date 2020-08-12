@@ -34,7 +34,25 @@
 /*
     Description
     -----------
+    The GridSroller provides the illusion of infinite scrolling through the use of a data 'cradle' inside a viewport.
+    The illusion is maintained by synchronizing changes in cradle content with cradle location inside a scrollblock, such
+    that as the scrollblock is moved, the cradle moves oppositely in the scrollblock (to stay visible within the viewport). 
+    The scrollblock is sized to approximate the list being viewed, so as to have a scroll thumb size and position which 
+    realistically reflects the size of the list being shown.
 
+    The position of the cradle is controlled by a 'spine' which is a 0px height/width (along the medial). The purpose of the 
+    spine is to act as a 'fold', above which cell content expands 'upwards', and below which the cell content expands 
+    'downwards'. GridScroller can be viewed vertically or horizontally. When horizontal, the spine has a 0px width, so that
+    the 'fold' is vertical, and cells expand to the left and right.
+
+    The spine is controlled to always be in the visible portion of the viewport, near the leading end of the cradle. Thus
+    in vertical orientation, the spine 'top' css attribute is always equal to the 'scrollTop' position of the scrollblock,
+    plus an adjustment. The adjustment is the result of the placement of the spine in relation to the top-(or left-)most cell
+    in the viewport (the reference row). The spine can only be placed at the leading edge of the first completely visible
+    cell in the viewport. Therefore the spine offset from the leading edge of the viewport can be anywhere from 0 pixels
+    to the length of the cell ( minus 1 pixel plus the gap to the first completely visible cell).
+
+    Technically, there are several reference points tracked by the GridScroller. 
 */
 
 import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, useLayoutEffect } from 'react'
