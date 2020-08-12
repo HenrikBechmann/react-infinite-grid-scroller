@@ -59,8 +59,29 @@
             the fold
         - cradleReferenceIndex (the virtual index of the item defining the leading bound of the cradle content)
         - spineOffset (pixels - plus or minus - that the spine is placed in relation to the viewport's leading edge) 
+    
     These reference points are applied to the following structures:
-        - 
+        - the viewport
+        - the scrollblock
+        - the cradle, consisting of
+            - the spine (contains cradle head and tail)
+            - the head (contains leading items)
+            - the tail (contains trailing items)
+
+    Item containers:
+        Client cell content is contained in ItemShell's, which are configured according to GridScroller's input parameters.
+        The ItemCell's are in turn contained in CSS grid structures. There are two grid structures - one in the cradle head,
+        and one in the cradle tail. Each grid structure is allowed uniform padding and gaps - identical between the two.
+
+    Overscroll handling:
+        Owing to the weight of the code, and potential rapidity of scrolling, there is an overscroll protocol. 
+        if the overscroll is such that part of the cradle is still within the viewport boundaries, then the overscroll
+        is calculated as the number of cell rows that would fit (completely or partially) in the space between the edge of 
+        the cradle that is receding from a viewport edge. 
+
+        If the overshoot is such that the cradle has entirely passed out of the viewport, the GridScroller goes into 'Repositoining'
+        mode, meaning that it tracks relative location of the spine edge of the viewport, and repaints the cradle accroding to
+        this position when the scrolling stops.
 */
 
 import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, useLayoutEffect } from 'react'
@@ -160,11 +181,11 @@ const Cradle = ({
     const viewportDataRef = useRef(null)
     viewportDataRef.current = viewportData
 
-    const [cradlestate, saveCradleState] = useState('setup')
+    const [cradleState, saveCradleState] = useState('setup')
     const cradlestateRef = useRef(null) // access by closures
-    cradlestateRef.current = cradlestate
+    cradlestateRef.current = cradleState
 
-    // console.log('cradlestate', cradlestate)
+    // console.log('cradleState', cradleState)
     // -----------------------------------------------------------------------
     // -------------------------[ control variables ]-----------------
 
@@ -284,7 +305,7 @@ const Cradle = ({
     // trigger pivot on change in orientation
     useEffect(()=> {
 
-        // console.log('calling pivot effect, orientaton, cradlestate',orientation, cradlestateRef.current)
+        // console.log('calling pivot effect, orientaton, cradleState',orientation, cradlestateRef.current)
         if (cradlestateRef.current != 'setup') {
 
             callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
@@ -1145,7 +1166,7 @@ const Cradle = ({
     useLayoutEffect(()=>{
 
         let viewportData = viewportDataRef.current
-        switch (cradlestate) {
+        switch (cradleState) {
             case 'reload':
                 headModelContentRef.current = []
                 tailModelContentRef.current = []
@@ -1182,20 +1203,20 @@ const Cradle = ({
             }
         }
 
-    },[cradlestate])
+    },[cradleState])
 
     // standard processing stages
     useEffect(()=> {
 
         let viewportData = viewportDataRef.current
-        switch (cradlestate) {
+        switch (cradleState) {
             case 'setup': 
             case 'resize':
             case 'pivot':
             case 'setreload':
             case 'reposition':
 
-                callingCradleState.current = cradlestate
+                callingCradleState.current = cradleState
                 saveCradleState('settle')
 
                 break
@@ -1236,7 +1257,7 @@ const Cradle = ({
 
         }
 
-    },[cradlestate])
+    },[cradleState])
 
     // =============================================================================
     // ------------------------------[ callbacks ]----------------------------------
