@@ -258,14 +258,15 @@ const Cradle = ({
         if (viewportData.isResizing) {
 
             // enter resizing mode
-            let spineoffset
-            if (cradlePropsRef.current.orientation == 'vertical') {
-                spineoffset = spineCradleElementRef.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
-            } else {
-                spineoffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
-            }
+            // let spineoffset
+            // if (cradlePropsRef.current.orientation == 'vertical') {
+            //     spineoffset = spineCradleElementRef.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
+            // } else {
+            //     spineoffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
+            // }
 
             callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
+            // callingReferenceIndexDataRef.current.spineoffset = spineoffset
 
             controlFlagsRef.current.pauseItemObserver = true
             // pauseCradleIntersectionObserverRef.current = true
@@ -288,12 +289,12 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        let spineoffset
-        if (cradlePropsRef.current.orientation == 'vertical') {
-            spineoffset = spineCradleElementRef.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
-        } else {
-            spineoffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
-        }
+        // let spineoffset
+        // if (cradlePropsRef.current.orientation == 'vertical') {
+        //     spineoffset = spineCradleElementRef.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
+        // } else {
+        //     spineoffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
+        // }
 
         callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
 
@@ -341,15 +342,18 @@ const Cradle = ({
     // -----------------------------------------------------------------------
     // ------------------------[ session data ]-------------------------------
 
-    // ------------------ current location -- first head visible item -------------
+    // ------------------ current location -- first tail visible item -------------
 
-    const scrollReferenceIndexDataRef = useRef({
+    const scrollReferenceIndexDataRef = useRef({ // existing or expected, monitored through onScroll
         index:Math.min(indexoffset,(listsize - 1)) || 0,
         spineoffset:padding
     }) // access by closures
 
-    const stableReferenceIndexDataRef = useRef(scrollReferenceIndexDataRef.current) // capture for state resetContent operations
-    const callingReferenceIndexDataRef = useRef(scrollReferenceIndexDataRef.current) // anticipate reposition
+    // set by onScroll at the end of scroll sessions
+    const stableReferenceIndexDataRef = useRef(scrollReferenceIndexDataRef.current) 
+
+    // anticipate calling of operation which requires ReferenceIndex data
+    const callingReferenceIndexDataRef = useRef(stableReferenceIndexDataRef.current) // anticipate reposition
 
     // -------------------------------[ cradle data ]-------------------------------------
 
@@ -1023,7 +1027,8 @@ const Cradle = ({
         headModelContentRef.current = headcontentlist
         tailModelContentRef.current = tailcontentlist
 
-        scrollReferenceIndexDataRef.current = stableReferenceIndexDataRef.current = {
+        /*scrollReferenceIndexDataRef.current =*/ 
+        stableReferenceIndexDataRef.current = {
 
             index: referenceoffset,
             spineoffset:spineOffset,
@@ -1340,7 +1345,6 @@ const Cradle = ({
         controlFlagsRef.current.pauseItemObserver = true
         controlFlagsRef.current.pauseScrollingEffects = true
 
-        // stableReferenceIndexDataRef.current = {index,spineoffset:0}
         callingReferenceIndexDataRef.current = {index,spineoffset:0}
 
         saveCradleState('reposition')
