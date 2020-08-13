@@ -890,20 +890,31 @@ export const calcHeadAndTailChanges = (
 // update content
 // adds itemshells at end of contentlist according to headindexcount and tailindescount,
 // or if indexcount values are <0 removes them.
-export const getUIContentList = (props) => {
-
-    let { 
+export const getUIContentList = ({ 
 
         cradleReferenceIndex, 
-        headindexcount, 
-        tailindexcount, 
+        headchangecount, 
+        tailchangecount, 
         cradleProps,
         localContentList:contentlist,
         // crosscount,
         listsize,
         callbacks,
         observer,
-    } = props
+    }) => {
+
+    // let { 
+
+    //     cradleReferenceIndex, 
+    //     headchangecount, 
+    //     tailchangecount, 
+    //     cradleProps,
+    //     localContentList:contentlist,
+    //     // crosscount,
+    //     listsize,
+    //     callbacks,
+    //     observer,
+    // } = props
 
     let orientation = cradleProps.orientation,
         cellHeight = cradleProps.cellHeight,
@@ -917,9 +928,9 @@ export const getUIContentList = (props) => {
 
     let headContentlist = []
 
-    if (headindexcount >= 0) {
+    if (headchangecount >= 0) {
 
-        for (let index = cradleReferenceIndex - headindexcount; index < (cradleReferenceIndex); index++) {
+        for (let index = cradleReferenceIndex - headchangecount; index < (cradleReferenceIndex); index++) {
 
             headContentlist.push(
                 emitItem(
@@ -941,15 +952,15 @@ export const getUIContentList = (props) => {
 
     } else {
 
-        localContentlist.splice(0,-headindexcount)
+        localContentlist.splice(0,-headchangecount)
 
     }
 
     let tailContentlist = []
 
-    if (tailindexcount >= 0) {
+    if (tailchangecount >= 0) {
 
-        for (let index = tailindexoffset; index <(tailindexoffset + tailindexcount); index++) {
+        for (let index = tailindexoffset; index <(tailindexoffset + tailchangecount); index++) {
 
             tailContentlist.push(
                 emitItem(
@@ -971,7 +982,7 @@ export const getUIContentList = (props) => {
 
     } else {
 
-        localContentlist.splice(tailindexcount,-tailindexcount)
+        localContentlist.splice(tailchangecount,-tailchangecount)
 
     }
 

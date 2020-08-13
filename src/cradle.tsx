@@ -813,13 +813,13 @@ const Cradle = ({
         let viewportElement = viewportData.elementref.current
         let cradleProps = cradlePropsRef.current
 
-        let viewportScrollpos
+        let scrollOffset
         if (cradleProps.orientation == 'vertical') {
-            viewportScrollpos = viewportElement.scrollTop
+            scrollOffset = viewportElement.scrollTop
         } else {
-            viewportScrollpos = viewportElement.scrollLeft
+            scrollOffset = viewportElement.scrollLeft
         }
-        if ( viewportScrollpos < 0) { // for Safari
+        if ( scrollOffset < 0) { // for Safari elatic bounce at top of scroll
 
             return
 
@@ -927,8 +927,8 @@ const Cradle = ({
             localContentList = getUIContentList({
 
                 localContentList:modelcontentlist,
-                headindexcount:headchangecount,
-                tailindexcount:tailchangecount,
+                headchangecount,
+                tailchangecount,
                 cradleReferenceIndex,
                 cradleProps,
                 observer: itemObserverRef.current,
@@ -1035,8 +1035,8 @@ const Cradle = ({
         let childlist = getUIContentList({
 
             localContentList,
-            headindexcount:0,
-            tailindexcount:contentCount,
+            headchangecount:0,
+            tailchangecount:contentCount,
             cradleReferenceIndex,
             cradleProps:cradlePropsRef.current,
             observer: itemObserverRef.current,
