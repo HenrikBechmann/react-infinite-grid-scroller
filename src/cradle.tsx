@@ -132,7 +132,7 @@ const Cradle = ({
         // runwaylength,
         runwaycount, 
         listsize, 
-        offset, 
+        indexoffset, 
         orientation, 
         cellHeight, 
         cellWidth, 
@@ -151,7 +151,7 @@ const Cradle = ({
             // runwaylength,
             runwaycount, 
             listsize, 
-            offset, 
+            indexoffset, 
             orientation, 
             cellHeight, 
             cellWidth, 
@@ -163,7 +163,7 @@ const Cradle = ({
         // runwaylength,
         runwaycount, 
         listsize, 
-        offset, 
+        indexoffset, 
         orientation, 
         cellHeight, 
         cellWidth, 
@@ -342,7 +342,7 @@ const Cradle = ({
     // ------------------ current location -- first head visible item -------------
 
     const scrollReferenceIndexDataRef = useRef({
-        index:Math.min(offset,(listsize - 1)) || 0,
+        index:Math.min(indexoffset,(listsize - 1)) || 0,
         scrolloffset:padding
     }) // access by closures
 
@@ -807,8 +807,8 @@ const Cradle = ({
 
         }
 
-        console.log('updating cradle content: source, entries.length, scrollforward, scrollPositions, viewportScrollpos', 
-            source, entries.length, scrollforward, scrollPositions, viewportScrollpos)
+        // console.log('updating cradle content: source, entries.length, scrollforward, scrollPositions, viewportScrollpos', 
+        //     source, entries.length, scrollforward, scrollPositions, viewportScrollpos)
 
         let spineElement = spineCradleElementRef.current
         let headElement = headCradleElementRef.current
@@ -1357,7 +1357,7 @@ const Cradle = ({
         return {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
-            offset:scrollReferenceIndexDataRef.current.index,
+            indexoffset:scrollReferenceIndexDataRef.current.index,
             listsize:cradlePropsRef.current.listsize,
             styles:cradlePropsRef.current.styles,
         }
@@ -1369,7 +1369,7 @@ const Cradle = ({
             ?<ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 
-                offset = {scrollTrackerArgs.offset} 
+                offset = {scrollTrackerArgs.indexoffset} 
                 listsize = {scrollTrackerArgs.listsize}
                 styles = {scrollTrackerArgs.styles}
             />
