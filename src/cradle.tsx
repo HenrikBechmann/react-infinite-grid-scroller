@@ -329,6 +329,8 @@ const Cradle = ({
 
         headModelContentRef.current = []
         tailModelContentRef.current = []
+        headViewContentRef.current = []
+        tailViewContentRef.current = []
 
     },[orientation])
 
