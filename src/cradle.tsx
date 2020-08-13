@@ -182,22 +182,30 @@ const Cradle = ({
     viewportDataRef.current = viewportData
 
     const [cradleState, saveCradleState] = useState('setup')
-    const cradlestateRef = useRef(null) // access by closures
-    cradlestateRef.current = cradleState
+    const cradleStateRef = useRef(null) // access by closures
+    cradleStateRef.current = cradleState
 
-    // console.log('cradleState', cradleState)
     // -----------------------------------------------------------------------
-    // -------------------------[ control variables ]-----------------
+    // -------------------------[ control flags ]-----------------
 
-    const pauseItemObserverRef = useRef(false)
-    // const pauseCradleIntersectionObserverRef = useRef(false)
-    const pauseCradleResizeObserverRef = useRef(false)
-    const pauseScrollingEffectsRef = useRef(false)
 
-    // to control appearance of repositioning mode
-    const isTailCradleInViewRef = useRef(true)
-    const isHeadCradleInViewRef = useRef(true)
-    const isCradleInViewRef = useRef(false)
+    const controlFlagsRef = useRef({
+        pauseItemObserver: false,
+        pauseCradleResizeObserver: false,
+        pauseScrollingEffects: false,
+        isTailCradleInView:true,
+        isHeadCradleInView:true,
+        isCradleInView:false,
+    })
+
+    // const pauseItemObserverRef = useRef(false)
+    // const pauseCradleResizeObserverRef = useRef(false)
+    // const pauseScrollingEffectsRef = useRef(false)
+
+    // // to control appearance of repositioning mode
+    // const isTailCradleInViewRef = useRef(true)
+    // const isHeadCradleInViewRef = useRef(true)
+    // const isCradleInViewRef = useRef(false)
 
     // ------------------------------------------------------------------------
     // -----------------------[ initialization effects ]-----------------------
@@ -244,7 +252,7 @@ const Cradle = ({
     // trigger resizing based on viewport state
     useEffect(()=>{
 
-        if (cradlestateRef.current == 'setup') return
+        if (cradleStateRef.current == 'setup') return
         if (viewportData.isResizing) {
 
             // enter resizing mode
@@ -258,15 +266,15 @@ const Cradle = ({
             callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
             // console.log('setting callingReferenceIndexDataRef for resizing',{...callingReferenceIndexDataRef.current})
 
-            pauseItemObserverRef.current = true
+            controlFlagsRef.current.pauseItemObserver = true
             // pauseCradleIntersectionObserverRef.current = true
-            pauseScrollingEffectsRef.current = true
+            controlFlagsRef.current.pauseScrollingEffects = true
             saveCradleState('resizing')
 
         }
 
         // complete resizing mode
-        if (!viewportData.isResizing && (cradlestateRef.current == 'resizing')) {
+        if (!viewportData.isResizing && (cradleStateRef.current == 'resizing')) {
 
             saveCradleState('resize')
 
@@ -277,7 +285,7 @@ const Cradle = ({
     // reload for changed parameters
     useEffect(()=>{
 
-        if (cradlestateRef.current == 'setup') return
+        if (cradleStateRef.current == 'setup') return
 
         let scrolloffset
         if (cradlePropsRef.current.orientation == 'vertical') {
@@ -288,9 +296,9 @@ const Cradle = ({
 
         callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
 
-        pauseItemObserverRef.current = true
+        controlFlagsRef.current.pauseItemObserver = true
         // pauseCradleIntersectionObserverRef.current = true
-        pauseScrollingEffectsRef.current = true
+        controlFlagsRef.current.pauseScrollingEffects = true
 
         saveCradleState('reload')
 
@@ -305,14 +313,14 @@ const Cradle = ({
     // trigger pivot on change in orientation
     useEffect(()=> {
 
-        // console.log('calling pivot effect, orientaton, cradleState',orientation, cradlestateRef.current)
-        if (cradlestateRef.current != 'setup') {
+        // console.log('calling pivot effect, orientaton, cradleState',orientation, cradleStateRef.current)
+        if (cradleStateRef.current != 'setup') {
 
             callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
 
-            pauseItemObserverRef.current = true
+            controlFlagsRef.current.pauseItemObserver = true
             // pauseCradleIntersectionObserverRef.current = true
-            pauseScrollingEffectsRef.current = true
+            controlFlagsRef.current.pauseScrollingEffects = true
 
             saveCradleState('pivot')
 
@@ -620,7 +628,7 @@ const Cradle = ({
 
     const cradleresizeobservercallback = useCallback((entries) => {
 
-        if (pauseCradleResizeObserverRef.current) return
+        if (controlFlagsRef.current.pauseCradleResizeObserver) return
 
     },[])
 
@@ -653,18 +661,18 @@ const Cradle = ({
         for (let i = 0; i < entries.length; i++ ) {
             let entry = entries[i]
             if (entry.target.dataset.name == 'head') {
-                isHeadCradleInViewRef.current = entry.isIntersecting
+                controlFlagsRef.current.isHeadCradleInView = entry.isIntersecting
             } else {
-                isTailCradleInViewRef.current = entry.isIntersecting
+                controlFlagsRef.current.isTailCradleInView = entry.isIntersecting
             }
         }
-        isCradleInViewRef.current = (isHeadCradleInViewRef.current || isTailCradleInViewRef.current)
+        controlFlagsRef.current.isCradleInView = (controlFlagsRef.current.isHeadCradleInView || controlFlagsRef.current.isTailCradleInView)
 
-        if (!isCradleInViewRef.current) 
+        if (!controlFlagsRef.current.isCradleInView) 
 
         {
 
-            let cradleState = cradlestateRef.current        
+            let cradleState = cradleStateRef.current        
             if (
                 !viewportDataRef.current.isResizing &&
                 !(cradleState == 'resize') &&
@@ -678,7 +686,7 @@ const Cradle = ({
                 let {top, right, bottom, left} = rect
                 let width = right - left, height = bottom - top
                 viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
-                pauseItemObserverRef.current = true
+                controlFlagsRef.current.pauseItemObserver = true
                 // pauseCradleIntersectionObserverRef.current = true
                 console.log('REPOSITIONING')
                 headModelContentRef.current = []
@@ -752,7 +760,7 @@ const Cradle = ({
             }
         }
 
-        if (pauseItemObserverRef.current) {
+        if (controlFlagsRef.current.pauseItemObserver) {
 
             return
 
@@ -1079,7 +1087,7 @@ const Cradle = ({
 
         clearTimeout(scrollTimeridRef.current)
 
-        let cradleState = cradlestateRef.current
+        let cradleState = cradleStateRef.current
 
         if (!viewportDataRef.current.isResizing) {
 
@@ -1126,7 +1134,7 @@ const Cradle = ({
 
         scrollTimeridRef.current = setTimeout(() => {
 
-            let cradleState = cradlestateRef.current
+            let cradleState = cradleStateRef.current
             if (!viewportDataRef.current.isResizing) {
                 let localrefdata = {...scrollReferenceIndexDataRef.current}
 
@@ -1157,7 +1165,7 @@ const Cradle = ({
     },[])
 
     // data for state processing
-    const callingCradleState = useRef(cradlestateRef.current)
+    const callingCradleState = useRef(cradleStateRef.current)
     const headlayoutDataRef = useRef(null)
     const scrollPositionDataRef = useRef(null)
 
@@ -1235,12 +1243,12 @@ const Cradle = ({
                     // redundant scroll position to avoid accidental positioning at tail end of reposition
                     if (viewportData.elementref.current) { // already unmounted if fails
 
-                        pauseItemObserverRef.current  && (pauseItemObserverRef.current = false)
-                        pauseScrollingEffectsRef.current && (pauseScrollingEffectsRef.current = false)
+                        controlFlagsRef.current.pauseItemObserver  && (controlFlagsRef.current.pauseItemObserver = false)
+                        controlFlagsRef.current.pauseScrollingEffects && (controlFlagsRef.current.pauseScrollingEffects = false)
 
                     }
 
-                    if (isCradleInViewRef.current) {
+                    if (controlFlagsRef.current.isCradleInView) {
                         saveCradleState('ready')
                     } else {
                         saveCradleState('repositioning')
@@ -1291,8 +1299,8 @@ const Cradle = ({
 
     const reload = useCallback(() => {
 
-        pauseItemObserverRef.current = true
-        pauseScrollingEffectsRef.current = true
+        controlFlagsRef.current.pauseItemObserver = true
+        controlFlagsRef.current.pauseScrollingEffects = true
 
         let scrolloffset
         if (cradlePropsRef.current.orientation == 'vertical') {
@@ -1344,7 +1352,7 @@ const Cradle = ({
 
     return <>
 
-        {(cradlestateRef.current == 'updatereposition' || cradlestateRef.current == 'repositioning')
+        {(cradleStateRef.current == 'updatereposition' || cradleStateRef.current == 'repositioning')
             ?<ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 
@@ -1367,7 +1375,7 @@ const Cradle = ({
             
             >
             
-                {(cradlestateRef.current != 'setup')?headViewContentRef.current:null}
+                {(cradleStateRef.current != 'setup')?headViewContentRef.current:null}
             
             </div>
             <div 
@@ -1378,7 +1386,7 @@ const Cradle = ({
             
             >
             
-                {(cradlestateRef.current != 'setup')?tailViewContentRef.current:null}
+                {(cradleStateRef.current != 'setup')?tailViewContentRef.current:null}
             
             </div>
         </div>
