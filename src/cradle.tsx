@@ -691,17 +691,18 @@ const Cradle = ({
 
     const cradleintersectionobservercallback = useCallback((entries) => {
 
+        let controlFlags = controlFlagsRef.current
         for (let i = 0; i < entries.length; i++ ) {
             let entry = entries[i]
             if (entry.target.dataset.name == 'head') {
-                controlFlagsRef.current.isHeadCradleInView = entry.isIntersecting
+                controlFlags.isHeadCradleInView = entry.isIntersecting
             } else {
-                controlFlagsRef.current.isTailCradleInView = entry.isIntersecting
+                controlFlags.isTailCradleInView = entry.isIntersecting
             }
         }
-        controlFlagsRef.current.isCradleInView = (controlFlagsRef.current.isHeadCradleInView || controlFlagsRef.current.isTailCradleInView)
+        controlFlags.isCradleInView = (controlFlags.isHeadCradleInView || controlFlags.isTailCradleInView)
 
-        if (!controlFlagsRef.current.isCradleInView) 
+        if (!controlFlags.isCradleInView) 
 
         {
 
@@ -719,7 +720,7 @@ const Cradle = ({
                 let {top, right, bottom, left} = rect
                 let width = right - left, height = bottom - top
                 viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
-                controlFlagsRef.current.pauseItemObserver = true
+                controlFlags.pauseItemObserver = true
                 // pauseCradleIntersectionObserverRef.current = true
                 console.log('REPOSITIONING')
                 let cradleContent = cradleContentRef.current
