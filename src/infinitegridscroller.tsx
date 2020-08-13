@@ -39,7 +39,7 @@ const InfiniteGridScroller = (props) => {
         runway, // the number of items outside the view of each side of the viewport 
             // -- gives time to assemble before display
         listsize, // the exact number of the size of the virtual list
-        indexoffset, // the 0-based starting index of the list, when first loaded
+        indexOffset, // the 0-based starting index of the list, when first loaded
         getItem, // function provided by host - parameter is index number, set by system; return value is 
             // host-selected component or promise of a component
         functions, // properties with direct access to some component utilites, optional
@@ -57,12 +57,12 @@ const InfiniteGridScroller = (props) => {
     gap !?? (gap = 0)
     padding !?? (padding = 0)
     runway !?? (runway = 3)
-    indexoffset !?? (indexoffset = 0)
+    indexOffset !?? (indexOffset = 0)
     listsize !?? (listsize = 0)
     layout !?? (layout = 'uniform')
     // constraints
-    indexoffset = Math.max(0,indexoffset) // non-negative
-    indexoffset = Math.min(listsize, indexoffset) // not larger than list
+    indexOffset = Math.max(0,indexOffset) // non-negative
+    indexOffset = Math.min(listsize, indexOffset) // not larger than list
     if (!['horizontal','vertical'].includes(orientation)) {
         orientation = 'vertical'
     }
@@ -101,7 +101,7 @@ const InfiniteGridScroller = (props) => {
                 cellWidth = { cellWidth }
                 cellHeight = { cellHeight }
                 listsize = { listsize }
-                indexoffset = { indexoffset }
+                indexOffset = { indexOffset }
                 orientation = { orientation }
                 // runwaylength = { runwaylength } 
                 getItem = { getItem }

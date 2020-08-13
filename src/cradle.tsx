@@ -132,7 +132,7 @@ const Cradle = ({
         // runwaylength,
         runwaycount, 
         listsize, 
-        indexoffset, 
+        indexOffset, 
         orientation, 
         cellHeight, 
         cellWidth, 
@@ -151,7 +151,7 @@ const Cradle = ({
             // runwaylength,
             runwaycount, 
             listsize, 
-            indexoffset, 
+            indexOffset, 
             orientation, 
             cellHeight, 
             cellWidth, 
@@ -163,7 +163,7 @@ const Cradle = ({
         // runwaylength,
         runwaycount, 
         listsize, 
-        indexoffset, 
+        indexOffset, 
         orientation, 
         cellHeight, 
         cellWidth, 
@@ -345,7 +345,7 @@ const Cradle = ({
     // ------------------ current location -- first tail visible item -------------
 
     const scrollReferenceIndexDataRef = useRef({ // existing or expected, monitored through onScroll
-        index:Math.min(indexoffset,(listsize - 1)) || 0,
+        index:Math.min(indexOffset,(listsize - 1)) || 0,
         spineoffset:padding
     }) // access by closures
 
@@ -1363,7 +1363,7 @@ const Cradle = ({
         return {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
-            indexoffset:scrollReferenceIndexDataRef.current.index,
+            indexOffset:scrollReferenceIndexDataRef.current.index,
             listsize:cradlePropsRef.current.listsize,
             styles:cradlePropsRef.current.styles,
         }
@@ -1375,7 +1375,7 @@ const Cradle = ({
             ?<ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 
-                offset = {scrollTrackerArgs.indexoffset} 
+                offset = {scrollTrackerArgs.indexOffset} 
                 listsize = {scrollTrackerArgs.listsize}
                 styles = {scrollTrackerArgs.styles}
             />
