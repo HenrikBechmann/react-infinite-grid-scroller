@@ -258,11 +258,11 @@ const Cradle = ({
         if (viewportData.isResizing) {
 
             // enter resizing mode
-            let scrolloffset
+            let spineoffset
             if (cradlePropsRef.current.orientation == 'vertical') {
-                scrolloffset = spineCradleElementRef.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
+                spineoffset = spineCradleElementRef.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
             } else {
-                scrolloffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
+                spineoffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
             }
 
             callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
@@ -288,11 +288,11 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        let scrolloffset
+        let spineoffset
         if (cradlePropsRef.current.orientation == 'vertical') {
-            scrolloffset = spineCradleElementRef.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
+            spineoffset = spineCradleElementRef.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
         } else {
-            scrolloffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
+            spineoffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
         }
 
         callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
@@ -345,7 +345,7 @@ const Cradle = ({
 
     const scrollReferenceIndexDataRef = useRef({
         index:Math.min(indexoffset,(listsize - 1)) || 0,
-        scrolloffset:padding
+        spineoffset:padding
     }) // access by closures
 
     const stableReferenceIndexDataRef = useRef(scrollReferenceIndexDataRef.current) // capture for state resetContent operations
@@ -944,7 +944,7 @@ const Cradle = ({
 
         scrollReferenceIndexDataRef.current = {
             index:spineReferenceIndex,
-            scrolloffset:spineOffset
+            spineoffset:spineOffset
         }
 
         saveCradleState('updatecontent')
@@ -962,7 +962,7 @@ const Cradle = ({
 
         let cradleProps = cradlePropsRef.current
         let { index: visibletargetindexoffset, 
-            scrolloffset: visibletargetscrolloffset } = referenceIndexData
+            spineoffset: visibletargetscrolloffset } = referenceIndexData
 
         let {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
 
@@ -1026,7 +1026,7 @@ const Cradle = ({
         scrollReferenceIndexDataRef.current = stableReferenceIndexDataRef.current = {
 
             index: referenceoffset,
-            scrolloffset:spineOffset,
+            spineoffset:spineOffset,
 
         }
 
@@ -1101,22 +1101,22 @@ const Cradle = ({
                     if (itemindex === undefined) {
                         console.log('ERROR: scroll encountered undefined tailcontent lead')
                     }
-                    let scrolloffset
+                    let spineoffset
                     if (cradlePropsRef.current.orientation == 'vertical') {
 
-                        scrolloffset = spineCradleElementRef.current.offsetTop - 
+                        spineoffset = spineCradleElementRef.current.offsetTop - 
                             viewportDataRef.current.elementref.current.scrollTop
                             
                     } else {
 
-                        scrolloffset = spineCradleElementRef.current.offsetLeft - 
+                        spineoffset = spineCradleElementRef.current.offsetLeft - 
                             viewportDataRef.current.elementref.current.scrollLeft
                             
                             
                     }
                     scrollReferenceIndexDataRef.current = {
                         index:itemindex,
-                        scrolloffset,
+                        spineoffset,
                     }
 
                 } else {
@@ -1305,11 +1305,11 @@ const Cradle = ({
         controlFlagsRef.current.pauseItemObserver = true
         controlFlagsRef.current.pauseScrollingEffects = true
 
-        let scrolloffset
+        let spineoffset
         if (cradlePropsRef.current.orientation == 'vertical') {
-            scrolloffset = spineCradleElementRef.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
+            spineoffset = spineCradleElementRef.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
         } else {
-            scrolloffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
+            spineoffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
         }
 
         console.log('reload',callingReferenceIndexDataRef)
@@ -1340,8 +1340,8 @@ const Cradle = ({
         controlFlagsRef.current.pauseItemObserver = true
         controlFlagsRef.current.pauseScrollingEffects = true
 
-        // stableReferenceIndexDataRef.current = {index,scrolloffset:0}
-        callingReferenceIndexDataRef.current = {index,scrolloffset:0}
+        // stableReferenceIndexDataRef.current = {index,spineoffset:0}
+        callingReferenceIndexDataRef.current = {index,spineoffset:0}
 
         saveCradleState('reposition')
 

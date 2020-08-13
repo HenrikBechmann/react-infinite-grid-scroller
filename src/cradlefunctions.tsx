@@ -181,10 +181,10 @@ export const getScrollReferenceIndexData = ({
 
     let referenceIndexData = {
         index:spineReferenceIndex,
-        scrolloffset:referencescrolloffset
+        spineoffset:referencescrolloffset
     }
 
-    if (referenceIndexData.index == 0) referenceIndexData.scrolloffset = 0 // defensive
+    if (referenceIndexData.index == 0) referenceIndexData.spineoffset = 0 // defensive
 
     return referenceIndexData
 }
