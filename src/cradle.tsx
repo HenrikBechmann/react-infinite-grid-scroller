@@ -4,6 +4,9 @@
 /*
     TODO:
 
+    Debug scrollToItem callback (including setting scrollforward on first action).
+        motion takes place but gets close rather than exact. Position is off by runwaycount
+
     Make sure item shell triggers are only fired at the leading, not trailing, edge
 
     Inconsistency in viewportrows, sometimes Math.ceil, sometimes Math.floor
@@ -198,15 +201,6 @@ const Cradle = ({
         isCradleInView:false,
     })
 
-    // const pauseItemObserverRef = useRef(false)
-    // const pauseCradleResizeObserverRef = useRef(false)
-    // const pauseScrollingEffectsRef = useRef(false)
-
-    // // to control appearance of repositioning mode
-    // const isTailCradleInViewRef = useRef(true)
-    // const isHeadCradleInViewRef = useRef(true)
-    // const isCradleInViewRef = useRef(false)
-
     // ------------------------------------------------------------------------
     // -----------------------[ initialization effects ]-----------------------
 
@@ -214,7 +208,7 @@ const Cradle = ({
     useEffect(()=>{
 
         if (functions?.hasOwnProperty('scrollToItem')) {
-            // functions.scrollToItem = scrollToItem
+            functions.scrollToItem = scrollToItem
         } 
 
         if (functions?.hasOwnProperty('getVisibleList')) {
@@ -264,7 +258,6 @@ const Cradle = ({
             }
 
             callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
-            // console.log('setting callingReferenceIndexDataRef for resizing',{...callingReferenceIndexDataRef.current})
 
             controlFlagsRef.current.pauseItemObserver = true
             // pauseCradleIntersectionObserverRef.current = true
@@ -1331,6 +1324,18 @@ const Cradle = ({
         }
 
     },[])
+
+    const scrollToItem = useCallback((index) => {
+
+        controlFlagsRef.current.pauseItemObserver = true
+        controlFlagsRef.current.pauseScrollingEffects = true
+
+        // stableReferenceIndexDataRef.current = {index,scrolloffset:0}
+        callingReferenceIndexDataRef.current = {index,scrolloffset:0}
+
+        saveCradleState('reposition')
+
+    }, [])
 
     const callbacksRef = useRef({
         getElementData:getItemElementData
