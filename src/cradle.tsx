@@ -4,6 +4,8 @@
 /*
     TODO:
 
+    create configData var for stable things like number of cradle and viewport rows
+
     Debug scrollToItem callback (including setting scrollforward on first action).
         motion takes place but gets close rather than exact. Position is off by runwaycount
 
@@ -358,6 +360,7 @@ const Cradle = ({
 
     // -------------------------------[ cradle data ]-------------------------------------
 
+    // TODO: create a datamodel object for this?
     // cradle butterfly html components
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
@@ -372,6 +375,7 @@ const Cradle = ({
     const headViewContentRef = useRef([])
     const tailViewContentRef = useRef([])
 
+    // item elements cache...
     const itemElementsRef = useRef(new Map()) // items register their element
 
     // ------------------------------[ cradle configuration ]---------------------------
