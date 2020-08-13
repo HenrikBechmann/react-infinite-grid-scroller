@@ -78,6 +78,7 @@
         - the number of runway rows specified in the parameters, times 2 (one et for the head; one for the tail)
         - the number of items is the number of rows times the 'crosscount' the lateral number of cells. 
         - the last row might consist of fewer items than crosscount, to match the maximum listsize
+        - the cradleRowcount (visible default rows + runwaycount * 2) and viewpointRowcount (visble rows;typicall one partial)
 
     Item containers:
         Client cell content is contained in ItemShell's, which are configured according to GridScroller's input parameters.
@@ -404,7 +405,7 @@ const Cradle = ({
     const crosscountRef = useRef(crosscount) // for easy reference by observer
     crosscountRef.current = crosscount // available for observer closure
 
-    const [cradlerowcount,viewportrowcount] = useMemo(()=> {
+    const [cradleRowcount,viewportRowcount] = useMemo(()=> {
 
         let viewportLength, cellLength
         if (orientation == 'vertical') {
@@ -439,10 +440,10 @@ const Cradle = ({
         crosscount,
     ])
 
-    const cradlerowcountRef = useRef(null)
-    cradlerowcountRef.current = cradlerowcount
-    const viewportrowcountRef = useRef(null)
-    viewportrowcountRef.current = viewportrowcount
+    const cradleRowcountRef = useRef(null)
+    cradleRowcountRef.current = cradleRowcount
+    const viewportRowcountRef = useRef(null)
+    viewportRowcountRef.current = viewportRowcount
 
     // ----------------------------------[ cradle default styles]----------------------------------
 
@@ -864,7 +865,7 @@ const Cradle = ({
             cradlecontentlist:modelcontentlist,
             headcontentlist,
             tailcontentlist,
-            cradlerowcount:cradlerowcountRef.current,
+            cradlerowcount:cradleRowcountRef.current,
             itemobserverthreshold:ITEM_OBSERVER_THRESHOLD,
             itemelements,
 
@@ -883,7 +884,7 @@ const Cradle = ({
             scrollforward,
             cradleProps,
             cradleReferenceIndex,
-            cradlerowcount:cradlerowcountRef.current,
+            cradlerowcount:cradleRowcountRef.current,
             listsize,
 
         })
@@ -972,7 +973,7 @@ const Cradle = ({
 
         let {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
 
-        let cradlerowcount = cradlerowcountRef.current,
+        let cradleRowcount = cradleRowcountRef.current,
             crosscount = crosscountRef.current
 
         if (cradleState == 'reposition') {
@@ -990,7 +991,7 @@ const Cradle = ({
                 cellWidth, 
                 orientation, 
                 runwaycount,
-                cradlerowcount,
+                cradleRowcount,
                 gap,
                 padding,
                 visibletargetindexoffset,

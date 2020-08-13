@@ -193,7 +193,7 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
         orientation, 
         cellHeight, 
         cellWidth, 
-        cradlerowcount,
+        cradleRowcount,
         runwaycount,
         gap,
         padding,
@@ -220,7 +220,7 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
     }
     let viewportrows = Math.floor(viewportlength / cellLength)
 
-    let contentCount = cradlerowcount * crosscount 
+    let contentCount = cradleRowcount * crosscount 
 
     // -----------------------[ calc leadingitemcount, referenceoffset ]-----------------------
 
