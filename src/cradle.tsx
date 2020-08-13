@@ -331,10 +331,11 @@ const Cradle = ({
 
         }
 
-        headModelContentRef.current = []
-        tailModelContentRef.current = []
-        headViewContentRef.current = []
-        tailViewContentRef.current = []
+        let cradleContent = cradleContentRef.current
+        cradleContent.headModel = []
+        cradleContent.tailModel = []
+        cradleContent.headView = []
+        cradleContent.tailView = []
 
     },[orientation])
 
@@ -367,14 +368,22 @@ const Cradle = ({
     const spineCradleElementRef = useRef(null)
     const cradleElementsRef = useRef({head:headCradleElementRef, tail:tailCradleElementRef, spine:spineCradleElementRef})
 
-    // data model
-    const modelContentRef = useRef(null)
-    const headModelContentRef = useRef(null)
-    const tailModelContentRef = useRef(null)
+    // // data model
+    // const modelContentRef = useRef(null)
+    // const headModelContentRef = useRef(null)
+    // const tailModelContentRef = useRef(null)
 
-    // view model
-    const headViewContentRef = useRef([])
-    const tailViewContentRef = useRef([])
+    // // view model
+    // const headViewContentRef = useRef([])
+    // const tailViewContentRef = useRef([])
+
+    const cradleContentRef = useRef({
+        cradleModel: null,
+        headModel: null,
+        tailModel: null,
+        headView: [],
+        tailView: [],
+    })
 
     // item elements cache...
     const itemElementsRef = useRef(new Map()) // items register their element
@@ -706,10 +715,11 @@ const Cradle = ({
                 controlFlagsRef.current.pauseItemObserver = true
                 // pauseCradleIntersectionObserverRef.current = true
                 console.log('REPOSITIONING')
-                headModelContentRef.current = []
-                tailModelContentRef.current = []
-                headViewContentRef.current = []
-                tailViewContentRef.current = []
+                let cradleContent = cradleContentRef.current
+                cradleContent.headModel = []
+                cradleContent.tailModel = []
+                cradleContent.headView = []
+                cradleContent.tailView = []
                 saveCradleState('repositioning')
 
             }
@@ -827,14 +837,15 @@ const Cradle = ({
         //     source, entries.length, scrollforward, scrollPositions, viewportScrollpos)
 
         let cradleElements = cradleElementsRef.current
+        let cradleContent = cradleContentRef.current
 
         let spineElement = cradleElements.spine.current
         let headElement = cradleElements.head.current
         let tailElement = cradleElements.tail.current
         let itemelements = itemElementsRef.current
-        let modelcontentlist = modelContentRef.current
-        let headcontentlist = headModelContentRef.current
-        let tailcontentlist = tailModelContentRef.current
+        let modelcontentlist = cradleContent.cradleModel
+        let headcontentlist = cradleContent.headModel
+        let tailcontentlist = cradleContent.tailModel
 
         let listsize = cradleProps.listsize
         let crosscount = crosscountRef.current
@@ -883,13 +894,12 @@ const Cradle = ({
         if (referenceitemshift == 0) return
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
-
         let [headchangecount,tailchangecount] = calcHeadAndTailChanges({
 
             itemshiftcount:cradleitemshift,
             crosscount,
-            headcontent:headModelContentRef.current,
-            tailcontent:tailModelContentRef.current,
+            headcontent:cradleContent.headModel,
+            tailcontent:cradleContent.tailModel,
             scrollforward,
             cradleProps,
             cradleReferenceIndex,
@@ -932,9 +942,9 @@ const Cradle = ({
             }
         )
 
-        modelContentRef.current = localContentList
-        headViewContentRef.current = headModelContentRef.current = headcontent
-        tailViewContentRef.current = tailModelContentRef.current = tailcontent
+        cradleContent.cradleModel = localContentList
+        cradleContent.headView = cradleContent.headModel = headcontent
+        cradleContent.tailView = cradleContent.tailModel = tailcontent
 
         // -------------------------------[ 8. set css changes ]-------------------------
 
@@ -994,6 +1004,7 @@ const Cradle = ({
         }
 
         let localContentList = [] // any duplicated items will be re-used by react
+        let cradleContent = cradleContentRef.current
 
         let {cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset} = 
             getContentListRequirements({
@@ -1037,9 +1048,9 @@ const Cradle = ({
             spineOffset = padding
         }
 
-        modelContentRef.current = childlist
-        headModelContentRef.current = headcontentlist
-        tailModelContentRef.current = tailcontentlist
+        cradleContent.cradleModel = childlist
+        cradleContent.headModel = headcontentlist
+        cradleContent.tailModel = tailcontentlist
 
         /*scrollReferenceIndexDataRef.current =*/ 
         stableReferenceIndexDataRef.current = {
@@ -1114,12 +1125,14 @@ const Cradle = ({
 
         let cradleState = cradleStateRef.current
 
+        let cradleContent = cradleContentRef.current
+
         if (!viewportDataRef.current.isResizing) {
 
             if (cradleState == 'ready' || cradleState == 'repositioning') {
 
                 if (cradleState == 'ready') {
-                    let itemindex = tailModelContentRef.current[0]?.props.index 
+                    let itemindex = cradleContent.tailModel[0]?.props.index 
                     if (itemindex === undefined) {
                         console.log('ERROR: scroll encountered undefined tailcontent lead')
                     }
@@ -1201,12 +1214,13 @@ const Cradle = ({
     useLayoutEffect(()=>{
 
         let viewportData = viewportDataRef.current
+        let cradleContent = cradleContentRef.current
         switch (cradleState) {
             case 'reload':
-                headModelContentRef.current = []
-                tailModelContentRef.current = []
-                headViewContentRef.current = []
-                tailViewContentRef.current = []
+                cradleContent.headModel = []
+                cradleContent.tailModel = []
+                cradleContent.headView = []
+                cradleContent.tailView = []
                 saveCradleState('setreload')
                 break;
             case 'updatereposition':
@@ -1231,8 +1245,9 @@ const Cradle = ({
 
             }
             case 'content': {
-                headViewContentRef.current = headModelContentRef.current
-                tailViewContentRef.current = tailModelContentRef.current
+                let cradleContent = cradleContentRef.current
+                cradleContent.headView = cradleContent.headModel
+                cradleContent.tailView = cradleContent.tailModel
                 saveCradleState('normalize')
                 break
             }
@@ -1302,6 +1317,7 @@ const Cradle = ({
     const getVisibleList = useCallback(() => {
 
         let cradleElements = cradleElementsRef.current
+        let cradleContent = cradleContentRef.current
 
         return calcVisibleItems({
             itemElementMap:itemElementsRef.current,
@@ -1310,7 +1326,7 @@ const Cradle = ({
             // tailElement:cradlePropsRef.current.orientation,
             spineElement:cradleElements.spine.current,
             orientation:cradlePropsRef.current.orientation,
-            headlist:headViewContentRef.current,
+            headlist:cradleContent.headView,
         })
 
     },[])
@@ -1391,6 +1407,8 @@ const Cradle = ({
         }
     },[viewportDimensions, scrollReferenceIndexDataRef.current, cradlePropsRef])
 
+    let cradleContent = cradleContentRef.current
+
     return <>
 
         {(cradleStateRef.current == 'updatereposition' || cradleStateRef.current == 'repositioning')
@@ -1416,7 +1434,7 @@ const Cradle = ({
             
             >
             
-                {(cradleStateRef.current != 'setup')?headViewContentRef.current:null}
+                {(cradleStateRef.current != 'setup')?cradleContent.headView:null}
             
             </div>
             <div 
@@ -1427,7 +1445,7 @@ const Cradle = ({
             
             >
             
-                {(cradleStateRef.current != 'setup')?tailViewContentRef.current:null}
+                {(cradleStateRef.current != 'setup')?cradleContent.tailView:null}
             
             </div>
         </div>
