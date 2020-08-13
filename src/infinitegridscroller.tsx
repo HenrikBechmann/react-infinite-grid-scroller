@@ -67,8 +67,8 @@ const InfiniteGridScroller = (props) => {
         orientation = 'vertical'
     }
     // convert to pixels
-    let runwaylength = (orientation == 'vertical')?(runway * (cellHeight + gap)):(runway * (cellWidth + gap))
-    runwaylength && (runwaylength += (padding * 2))
+    // let runwaylength = (orientation == 'vertical')?(runway * (cellHeight + gap)):(runway * (cellWidth + gap))
+    // runwaylength && (runwaylength += (padding * 2))
 
     return <Viewport 
 
@@ -103,7 +103,7 @@ const InfiniteGridScroller = (props) => {
                 listsize = { listsize }
                 offset = { offset }
                 orientation = { orientation }
-                runwaylength = { runwaylength } 
+                // runwaylength = { runwaylength } 
                 getItem = { getItem }
                 functions = { functions }
                 placeholder = { placeholder }

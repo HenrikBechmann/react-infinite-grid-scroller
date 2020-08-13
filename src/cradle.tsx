@@ -71,6 +71,14 @@
             - the head (contains leading items)
             - the tail (contains trailing items)
 
+    Structure details:
+        the cradle content consists of
+        - the number of rows that are visible in the viewport (according to the default parameters)
+            - this typically includes one partially visible row
+        - the number of runway rows specified in the parameters, times 2 (one et for the head; one for the tail)
+        - the number of items is the number of rows times the 'crosscount' the lateral number of cells. 
+        - the last row might consist of fewer items than crosscount, to match the maximum listsize
+
     Item containers:
         Client cell content is contained in ItemShell's, which are configured according to GridScroller's input parameters.
         The ItemCell's are in turn contained in CSS grid structures. There are two grid structures - one in the cradle head,
@@ -121,7 +129,7 @@ const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 200
 const Cradle = ({ 
         gap, 
         padding, 
-        runwaylength,
+        // runwaylength,
         runwaycount, 
         listsize, 
         offset, 
@@ -140,7 +148,7 @@ const Cradle = ({
         return { 
             gap, 
             padding, 
-            runwaylength,
+            // runwaylength,
             runwaycount, 
             listsize, 
             offset, 
@@ -152,7 +160,7 @@ const Cradle = ({
     }},[
         gap, 
         padding, 
-        runwaylength,
+        // runwaylength,
         runwaycount, 
         listsize, 
         offset, 
