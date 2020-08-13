@@ -444,6 +444,8 @@ const Cradle = ({
     const viewportrowcountRef = useRef(null)
     viewportrowcountRef.current = viewportrowcount
 
+    // ----------------------------------[ cradle default styles]----------------------------------
+
     // base styles
     let cradleHeadStyle = useMemo(() => {
 
