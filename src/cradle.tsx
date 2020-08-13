@@ -416,8 +416,8 @@ const Cradle = ({
         viewportwidth,
     ])
 
-    const crosscountRef = useRef(crosscount) // for easy reference by observer
-    crosscountRef.current = crosscount // available for observer closure
+    // const crosscountRef = useRef(crosscount) // for easy reference by observer
+    // crosscountRef.current = crosscount // available for observer closure
 
     const [cradleRowcount,viewportRowcount] = useMemo(()=> {
 
@@ -454,10 +454,17 @@ const Cradle = ({
         crosscount,
     ])
 
-    const cradleRowcountRef = useRef(null)
-    cradleRowcountRef.current = cradleRowcount
-    const viewportRowcountRef = useRef(null)
-    viewportRowcountRef.current = viewportRowcount
+    // const cradleRowcountRef = useRef(null)
+    // cradleRowcountRef.current = cradleRowcount
+    // const viewportRowcountRef = useRef(null)
+    // viewportRowcountRef.current = viewportRowcount
+
+    const configDataRef = useRef({
+        crosscount,
+        cradleRowcount,
+        viewportRowcount,
+    })
+
 
     // ----------------------------------[ cradle default styles]----------------------------------
 
@@ -838,6 +845,7 @@ const Cradle = ({
 
         let cradleElements = cradleElementsRef.current
         let cradleContent = cradleContentRef.current
+        let configData = configDataRef.current
 
         let spineElement = cradleElements.spine.current
         let headElement = cradleElements.head.current
@@ -848,7 +856,7 @@ const Cradle = ({
         let tailcontentlist = cradleContent.tailModel
 
         let listsize = cradleProps.listsize
-        let crosscount = crosscountRef.current
+        let crosscount = configData.crosscount
 
         let cradleReferenceIndex = modelcontentlist[0].props.index
 
@@ -885,7 +893,7 @@ const Cradle = ({
             cradlecontentlist:modelcontentlist,
             headcontentlist,
             tailcontentlist,
-            cradlerowcount:cradleRowcountRef.current,
+            cradlerowcount:configData.cradleRowcount,
             itemobserverthreshold:ITEM_OBSERVER_THRESHOLD,
             itemelements,
 
@@ -903,7 +911,7 @@ const Cradle = ({
             scrollforward,
             cradleProps,
             cradleReferenceIndex,
-            cradlerowcount:cradleRowcountRef.current,
+            cradlerowcount:configData.cradleRowcount,
             listsize,
 
         })
@@ -994,8 +1002,8 @@ const Cradle = ({
 
         let {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
 
-        let cradleRowcount = cradleRowcountRef.current,
-            crosscount = crosscountRef.current
+        let cradleRowcount = configDataRef.current.cradleRowcount,
+            crosscount = configDataRef.current.crosscount
 
         if (cradleState == 'reposition') {
 
@@ -1161,7 +1169,7 @@ const Cradle = ({
                     scrollReferenceIndexDataRef.current = getScrollReferenceIndexData({
                         viewportData:viewportDataRef.current,
                         cradleProps:cradlePropsRef.current,
-                        crosscount:crosscountRef.current,
+                        crosscount:configDataRef.current.crosscount,
                     })
                 }
 
