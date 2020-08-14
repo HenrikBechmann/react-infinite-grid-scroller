@@ -646,7 +646,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
         } else {
 
-            viewportgap = spineoffset + headblockoffset + gap
+            viewportgap = spineoffset - headElement.offsetWidth
 
         }
     }
@@ -662,16 +662,16 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     // }
 
     let cellLength = (orientation == 'vertical')?cellHeight + gap:cellWidth + gap
-    let overshootrowcount = (viewportgap == 0)?0:Math.floor(viewportgap/cellLength) // rows to fill viewport
+    let overshootrowcount = (viewportgap == 0)?0:Math.ceil(viewportgap/cellLength) // rows to fill viewport
 
     // extra rows for runway
     let overshootitemcount = overshootrowcount * crosscount
 
-    let unincludedheaditems = 0
+    // let unincludedheaditems = 0
     if (!scrollforward && (overshootitemcount != 0)) { // negation of values for scroll backward
         overshootitemcount = -overshootitemcount
         overshootrowcount = -overshootrowcount
-        unincludedheaditems = intersections.length - headcontentlist.length
+        // unincludedheaditems = intersections.length - headcontentlist.length
     }
 
     // ----------------------[  calculate itemshiftcount includng overshoot ]------------------------
@@ -688,7 +688,12 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     }
 
-    let itemshiftcount = backwardcount - forwardcount + overshootitemcount + unincludedheaditems
+    let itemshiftcount = backwardcount - forwardcount + overshootitemcount //+ unincludedheaditems
+
+    if (overshootitemcount) {
+        console.log('first itemshiftcount = backwardcount - forwardcount + overshootitemcount', 
+            itemshiftcount, backwardcount, forwardcount, overshootitemcount)
+    }
 
     let previousreferenceindex = tailcontentlist[0].props.index
     let previousrefindexcradleoffset = 
