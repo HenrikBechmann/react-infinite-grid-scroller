@@ -201,6 +201,8 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
+    // console.log('cradleState',cradleState)
+
     // -----------------------------------------------------------------------
     // -------------------------[ control flags ]-----------------
 
@@ -1169,6 +1171,7 @@ const Cradle = ({
                         cradleProps:cradlePropsRef.current,
                         crosscount:cradleConfigRef.current.crosscount,
                     })
+                    saveCradleState('updatereposition')
                 }
 
                 referenceIndexCallbackRef.current && 
