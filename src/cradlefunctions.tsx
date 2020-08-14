@@ -332,11 +332,15 @@ const adjustSpineOffsetForMaxRefindex = ({
 // filter out items that not proximate to the spine
 export const isolateRelevantIntersections = ({
     intersections,
-    headcontent, 
-    tailcontent,
+    cradleContent,
+    // headcontent, 
+    // tailcontent,
     itemObserverThreshold,
     scrollforward,
 }) => {
+
+    let headcontent = cradleContent.headModel
+    let tailcontent = cradleContent.tailModel
 
     let headindexes = [], 
         tailindexes = [],
@@ -591,6 +595,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         listsize,
         runwaycount } = cradleProps
 
+    // unpack
     let spineElement = cradleElements.spine.current
     let headElement = cradleElements.head.current
     let tailElement = cradleElements.tail.current
@@ -603,6 +608,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         cradleRowcount,
         itemObserverThreshold } = cradleConfig
 
+    // initialize
     let forwardcount = 0, backwardcount = 0
     let spineviewportoffset, headspineoffset, tailspineoffset
     let viewportovershoot, viewportlength
@@ -627,7 +633,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         }
 
     } else { // horizontal
-        
+
         spineviewportoffset = spineElement.offsetLeft - viewportElement.scrollLeft
         headspineoffset = headElement.offsetLeft
         tailspineoffset = tailElement.offsetLeft // always 0
@@ -767,17 +773,18 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
 export const calcHeadAndTailChanges = (
     {
+        cradleProps,
         itemshiftcount,
         crosscount,
         headcontent,
         tailcontent,
         scrollforward,
-        cradleProps,
         cradleReferenceIndex,
         cradlerowcount,
-        listsize,
+        // listsize,
     }) => {
 
+    let listsize = cradleProps.listsize
     itemshiftcount = Math.abs(itemshiftcount) 
     let rowshiftcount = Math.ceil(itemshiftcount/crosscount) //+ boundaryrowcount
 

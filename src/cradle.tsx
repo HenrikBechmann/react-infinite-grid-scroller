@@ -849,18 +849,9 @@ const Cradle = ({
         let cradleContent = cradleContentRef.current
         let cradleConfig = cradleConfigRef.current
 
-        let listsize = cradleProps.listsize
-        let crosscount = cradleConfig.crosscount
-
-        let spineElement = cradleElements.spine.current
-        let headElement = cradleElements.head.current
-        let tailElement = cradleElements.tail.current
-
         let itemElements = itemElementsRef.current
 
         let modelcontentlist = cradleContent.cradleModel
-        let headcontentlist = cradleContent.headModel
-        let tailcontentlist = cradleContent.tailModel
 
         let cradleReferenceIndex = modelcontentlist[0].props.index
 
@@ -872,8 +863,7 @@ const Cradle = ({
 
             scrollforward,
             intersections:entries,
-            headcontent:headcontentlist, 
-            tailcontent:tailcontentlist,
+            cradleContent,
             itemObserverThreshold:cradleConfig.itemObserverThreshold,
 
         })
@@ -886,29 +876,21 @@ const Cradle = ({
             referenceitemshift,
             spineOffset] = calcContentShifts({
 
-            viewportElement,
-            cradleProps,
-            cradleElements,
-            cradleContent,
-            cradleConfig,
-            // spineElement,
-            // headElement,
-            // tailElement,
-            intersections,
-            scrollforward,
-            // crosscount,
-            // cradlecontentlist:modelcontentlist,
-            // headcontentlist,
-            // tailcontentlist,
-            // cradlerowcount:cradleConfig.cradleRowcount,
-            // itemobserverthreshold:cradleConfig.itemObserverThreshold,
-            itemElements,
+                cradleProps,
+                cradleElements,
+                cradleContent,
+                cradleConfig,
+                viewportElement,
+                itemElements,
+                intersections,
+                scrollforward,
 
         })
 
         if (referenceitemshift == 0) return
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
+    
         let [headchangecount,tailchangecount] = calcHeadAndTailChanges({
 
             itemshiftcount:cradleitemshift,
@@ -919,7 +901,7 @@ const Cradle = ({
             cradleProps,
             cradleReferenceIndex,
             cradlerowcount:cradleConfig.cradleRowcount,
-            listsize,
+            // listsize,
 
         })
 
