@@ -555,7 +555,7 @@ export const isolateRelevantIntersections = ({
 
     filteredintersections.sort(entrycompare) // TODO this should be integrated into the code above
 
-    return filteredintersections //, headrefindex, tailrefindex}
+    return filteredintersections 
 
 }
 
@@ -575,20 +575,35 @@ let duplicatecompare = (a,b) => {
 
 export const calcContentShifts = ({ // called only from updateCradleContent
     cradleProps,
-    spineElement,
+    cradleElements,
+    cradleContent,
+    cradleConfig,
     viewportElement,
-    headElement,
-    tailElement,
+    // spineElement,
+    // headElement,
+    // tailElement,
     intersections,
     scrollforward,
-    crosscount,
-    cradlecontentlist,
-    headcontentlist,
-    tailcontentlist,
-    cradlerowcount,
-    itemobserverthreshold,
+    // crosscount,
+    // cradlecontentlist,
+    // headcontentlist,
+    // tailcontentlist,
+    // cradlerowcount,
+    // itemobserverthreshold,
     itemelements,
 }) => {
+
+    let spineElement = cradleElements.spine.current
+    let headElement = cradleElements.head.current
+    let tailElement = cradleElements.tail.current
+
+    let cradlecontentlist = cradleContent.cradleModel
+    let headcontentlist = cradleContent.headModel
+    let tailcontentlist = cradleContent.tailModel
+
+    let crosscount = cradleConfig.crosscount
+    let cradlerowcount = cradleConfig.cradleRowcount
+    let itemobserverthreshold = cradleConfig.itemObserverThreshold
 
     let forwardcount = 0, backwardcount = 0
     let spineviewportoffset, headspineoffset, tailspineoffset
@@ -748,7 +763,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         }
     }
 
-    return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset] // positive = roll toward top/left; negative = roll toward bottom/right
+    return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset]
 
 }
 

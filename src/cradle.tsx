@@ -4,7 +4,7 @@
 /*
     TODO:
 
-    create configData var for stable things like number of cradle and viewport rows
+    create cradleConfig var for stable things like number of cradle and viewport rows
 
     Debug scrollToItem callback (including setting scrollforward on first action).
         motion takes place but gets close rather than exact. Position is off by runwaycount
@@ -459,7 +459,7 @@ const Cradle = ({
     // const viewportRowcountRef = useRef(null)
     // viewportRowcountRef.current = viewportRowcount
 
-    const configDataRef = useRef({
+    const cradleConfigRef = useRef({
         crosscount,
         cradleRowcount,
         viewportRowcount,
@@ -766,7 +766,7 @@ const Cradle = ({
             itemobservercallback,
             {
                 root:viewportDataRef.current.elementref.current, 
-                threshold:configDataRef.current.itemObserverThreshold,
+                threshold:cradleConfigRef.current.itemObserverThreshold,
             } 
 
         )
@@ -847,10 +847,10 @@ const Cradle = ({
 
         let cradleElements = cradleElementsRef.current
         let cradleContent = cradleContentRef.current
-        let configData = configDataRef.current
+        let cradleConfig = cradleConfigRef.current
 
         let listsize = cradleProps.listsize
-        let crosscount = configData.crosscount
+        let crosscount = cradleConfig.crosscount
 
         let spineElement = cradleElements.spine.current
         let headElement = cradleElements.head.current
@@ -874,7 +874,7 @@ const Cradle = ({
             intersections:entries,
             headcontent:headcontentlist, 
             tailcontent:tailcontentlist,
-            itemObserverThreshold:configData.itemObserverThreshold,
+            itemObserverThreshold:cradleConfig.itemObserverThreshold,
 
         })
 
@@ -886,19 +886,22 @@ const Cradle = ({
             referenceitemshift,
             spineOffset] = calcContentShifts({
 
-            cradleProps,
-            spineElement,
             viewportElement,
-            headElement,
-            tailElement,
+            cradleProps,
+            cradleElements,
+            cradleContent,
+            cradleConfig,
+            // spineElement,
+            // headElement,
+            // tailElement,
             intersections,
             scrollforward,
-            crosscount,
-            cradlecontentlist:modelcontentlist,
-            headcontentlist,
-            tailcontentlist,
-            cradlerowcount:configData.cradleRowcount,
-            itemobserverthreshold:configData.itemObserverThreshold,
+            // crosscount,
+            // cradlecontentlist:modelcontentlist,
+            // headcontentlist,
+            // tailcontentlist,
+            // cradlerowcount:cradleConfig.cradleRowcount,
+            // itemobserverthreshold:cradleConfig.itemObserverThreshold,
             itemelements,
 
         })
@@ -915,7 +918,7 @@ const Cradle = ({
             scrollforward,
             cradleProps,
             cradleReferenceIndex,
-            cradlerowcount:configData.cradleRowcount,
+            cradlerowcount:cradleConfig.cradleRowcount,
             listsize,
 
         })
@@ -1006,8 +1009,8 @@ const Cradle = ({
 
         let {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
 
-        let cradleRowcount = configDataRef.current.cradleRowcount,
-            crosscount = configDataRef.current.crosscount
+        let cradleRowcount = cradleConfigRef.current.cradleRowcount,
+            crosscount = cradleConfigRef.current.crosscount
 
         if (cradleState == 'reposition') {
 
@@ -1173,7 +1176,7 @@ const Cradle = ({
                     scrollReferenceIndexDataRef.current = getScrollReferenceIndexData({
                         viewportData:viewportDataRef.current,
                         cradleProps:cradlePropsRef.current,
-                        crosscount:configDataRef.current.crosscount,
+                        crosscount:cradleConfigRef.current.crosscount,
                     })
                 }
 
