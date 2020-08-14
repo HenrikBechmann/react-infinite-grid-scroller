@@ -610,10 +610,12 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     // calculate cradleboundary and boundary row and item count for overshoot
 
     if (orientation == 'vertical') {
+
         spineviewportoffset = spineElement.offsetTop - viewportElement.scrollTop
         headspineoffset = headElement.offsetTop
         tailspineoffset = tailElement.offsetTop // always 0
         viewportlength = viewportElement.offsetHeight
+
         if (scrollforward) {
 
             viewportovershoot = viewportlength - (spineviewportoffset + tailElement.offsetHeight)
@@ -625,6 +627,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         }
 
     } else { // horizontal
+        
         spineviewportoffset = spineElement.offsetLeft - viewportElement.scrollLeft
         headspineoffset = headElement.offsetLeft
         tailspineoffset = tailElement.offsetLeft // always 0
