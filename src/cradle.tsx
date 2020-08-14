@@ -856,7 +856,7 @@ const Cradle = ({
         let headElement = cradleElements.head.current
         let tailElement = cradleElements.tail.current
 
-        let itemelements = itemElementsRef.current
+        let itemElements = itemElementsRef.current
 
         let modelcontentlist = cradleContent.cradleModel
         let headcontentlist = cradleContent.headModel
@@ -902,7 +902,7 @@ const Cradle = ({
             // tailcontentlist,
             // cradlerowcount:cradleConfig.cradleRowcount,
             // itemobserverthreshold:cradleConfig.itemObserverThreshold,
-            itemelements,
+            itemElements,
 
         })
 

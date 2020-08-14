@@ -579,19 +579,17 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     cradleContent,
     cradleConfig,
     viewportElement,
-    // spineElement,
-    // headElement,
-    // tailElement,
+    itemElements,
     intersections,
     scrollforward,
-    // crosscount,
-    // cradlecontentlist,
-    // headcontentlist,
-    // tailcontentlist,
-    // cradlerowcount,
-    // itemobserverthreshold,
-    itemelements,
 }) => {
+
+    let { gap,
+        orientation,
+        cellHeight,
+        cellWidth,
+        listsize,
+        runwaycount } = cradleProps
 
     let spineElement = cradleElements.spine.current
     let headElement = cradleElements.head.current
@@ -601,9 +599,9 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let headcontentlist = cradleContent.headModel
     let tailcontentlist = cradleContent.tailModel
 
-    let crosscount = cradleConfig.crosscount
-    let cradlerowcount = cradleConfig.cradleRowcount
-    let itemobserverthreshold = cradleConfig.itemObserverThreshold
+    let { crosscount,
+        cradleRowcount,
+        itemObserverThreshold } = cradleConfig
 
     let forwardcount = 0, backwardcount = 0
     let spineviewportoffset, headspineoffset, tailspineoffset
@@ -611,7 +609,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     // calculate cradleboundary and boundary row and item count for overshoot
 
-    if (cradleProps.orientation == 'vertical') {
+    if (orientation == 'vertical') {
         spineviewportoffset = spineElement.offsetTop - viewportElement.scrollTop
         headspineoffset = headElement.offsetTop
         tailspineoffset = tailElement.offsetTop // always 0
@@ -622,7 +620,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
         } else {
 
-            viewportovershoot = spineviewportoffset + headspineoffset + cradleProps.gap // headspineoffset is negative from spine
+            viewportovershoot = spineviewportoffset + headspineoffset + gap // headspineoffset is negative from spine
 
         }
 
@@ -638,17 +636,15 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
         } else {
 
-            viewportovershoot = spineviewportoffset + headspineoffset + cradleProps.gap
+            viewportovershoot = spineviewportoffset + headspineoffset + gap
 
         }
     }
 
-    let gap = cradleProps.gap
-
     if (viewportovershoot < -(gap - 1)) viewportovershoot = 0 // not relevant
     if (viewportovershoot > viewportlength) viewportovershoot = viewportlength // TODO: ??
 
-    let cellLength = (cradleProps.orientation == 'vertical')?cradleProps.cellHeight + gap:cradleProps.cellWidth + gap
+    let cellLength = (orientation == 'vertical')?cellHeight + gap:cellWidth + gap
     let overshootrowcount = (viewportovershoot == 0)?0:Math.floor(viewportovershoot/cellLength) // rows to fill viewport
 
     // extra rows for runway
@@ -678,7 +674,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let previousreferenceindex = tailcontentlist[0].props.index
     let previousrefindexcradleoffset = 
-        // itemelements.get(previousreferenceindex).current.offsetTop + 
+        // itemElements.get(previousreferenceindex).current.offsetTop + 
         spineElement.offsetTop - viewportElement.scrollTop
 
     let previouscradleindex = cradlecontentlist[0].props.index
@@ -686,8 +682,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let newcradleindex = previouscradleindex + itemshiftcount
     let newreferenceindex = previousreferenceindex + itemshiftcount
 
-    if ((newreferenceindex - newcradleindex) < (cradleProps.runwaycount * crosscount)) {
-        newcradleindex = newreferenceindex - (cradleProps.runwaycount * crosscount)
+    if ((newreferenceindex - newcradleindex) < (runwaycount * crosscount)) {
+        newcradleindex = newreferenceindex - (runwaycount * crosscount)
     }
 
     if (newcradleindex < 0) {
@@ -698,9 +694,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         newreferenceindex = 0
     }
 
-    let cradleitemcount = cradlerowcount * crosscount
+    let cradleitemcount = cradleRowcount * crosscount
 
-    let listsize = cradleProps.listsize
     if ((newcradleindex + cradleitemcount) > listsize) {
         let diff = listsize - (newcradleindex + cradleitemcount)
         newcradleindex -= diff
@@ -752,8 +747,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
             let cradlediffitems = diffitems
             let proposedcradlerow = (newcradleindex + cradlediffitems)/crosscount
             let revisedreferencerow = newreferenceindex/crosscount
-            if ((revisedreferencerow - proposedcradlerow) < cradleProps.runwaycount) {
-                let diff = cradleProps.runwaycount - (revisedreferencerow - proposedcradlerow)
+            if ((revisedreferencerow - proposedcradlerow) < runwaycount) {
+                let diff = runwaycount - (revisedreferencerow - proposedcradlerow)
                 let diffitems = diff * crosscount
                 cradlediffitems -= diffitems
             }
