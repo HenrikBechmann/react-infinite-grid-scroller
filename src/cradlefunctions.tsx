@@ -657,6 +657,10 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     if (viewportgap < 0) viewportgap = 0
     if (viewportgap > viewportlength) viewportgap = 0 // reposition should have kicked in
 
+    // if (viewportgap) {
+    //     console.log('scrollforward, viewportgap, viewportlength',scrollforward, viewportgap, viewportlength)
+    // }
+
     let cellLength = (orientation == 'vertical')?cellHeight + gap:cellWidth + gap
     let overshootrowcount = (viewportgap == 0)?0:Math.floor(viewportgap/cellLength) // rows to fill viewport
 
