@@ -810,6 +810,8 @@ const Cradle = ({
 
     const updateCradleContent = (entries, source = 'notifications') => {
 
+        // if (cradleStateRef.current == 'setup') return
+
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current
         let cradleProps = cradlePropsRef.current
@@ -840,6 +842,11 @@ const Cradle = ({
             scrollforward = scrollPositions.current > scrollPositions.previous
             previousScrollForwardRef.current = scrollforward
 
+        }
+
+        if (scrollforward === undefined) {
+            return // init call
+            // console.log('scrollforward, cradleStateRef.current', scrollforward, cradleStateRef.current)
         }
 
         // console.log('updating cradle content: source, entries.length, scrollforward, scrollPositions, viewportScrollpos', 
@@ -890,7 +897,7 @@ const Cradle = ({
         if (referenceitemshift == 0) return
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
-    
+
         let [headchangecount,tailchangecount] = calcHeadAndTailChanges({
 
             itemshiftcount:cradleitemshift,

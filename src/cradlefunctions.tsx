@@ -588,6 +588,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     scrollforward,
 }) => {
 
+    // unpack
     let { gap,
         orientation,
         cellHeight,
@@ -595,7 +596,6 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         listsize,
         runwaycount } = cradleProps
 
-    // unpack
     let spineElement = cradleElements.spine.current
     let headElement = cradleElements.head.current
     let tailElement = cradleElements.tail.current
@@ -608,53 +608,57 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         cradleRowcount,
         itemObserverThreshold } = cradleConfig
 
-    // initialize
-    let forwardcount = 0, backwardcount = 0
-    let spineviewportoffset, headspineoffset, tailspineoffset
-    let viewportovershoot, viewportlength
-
     // calculate cradleboundary and boundary row and item count for overshoot
+    let spineoffset, headblockoffset, tailblockoffset, viewportlength
+    let viewportgap
 
     if (orientation == 'vertical') {
 
-        spineviewportoffset = spineElement.offsetTop - viewportElement.scrollTop
-        headspineoffset = headElement.offsetTop
-        tailspineoffset = tailElement.offsetTop // always 0
+        spineoffset = spineElement.offsetTop - viewportElement.scrollTop
+        headblockoffset = headElement.offsetTop
+        tailblockoffset = tailElement.offsetTop // always 0
         viewportlength = viewportElement.offsetHeight
 
+        // measure any gap between the cradle and the viewport boundary
         if (scrollforward) {
 
-            viewportovershoot = viewportlength - (spineviewportoffset + tailElement.offsetHeight)
+            viewportgap = viewportlength - (spineoffset + tailElement.offsetHeight)
 
         } else {
 
-            viewportovershoot = spineviewportoffset + headspineoffset + gap // headspineoffset is negative from spine
+            viewportgap = spineoffset - headElement.offsetHeight
 
         }
 
+        // console.log('scrollforward, viewportgap, spineoffset, headElement.offsetHeight', 
+        //     scrollforward, viewportgap, spineoffset, headElement.offsetHeight)
+
     } else { // horizontal
 
-        spineviewportoffset = spineElement.offsetLeft - viewportElement.scrollLeft
-        headspineoffset = headElement.offsetLeft
-        tailspineoffset = tailElement.offsetLeft // always 0
+        spineoffset = spineElement.offsetLeft - viewportElement.scrollLeft
+        headblockoffset = headElement.offsetLeft
+        tailblockoffset = tailElement.offsetLeft // always 0
         viewportlength = viewportElement.offsetWidth
 
         if (scrollforward) {
 
-            viewportovershoot = viewportlength - (spineviewportoffset + tailElement.offsetWidth)
+            viewportgap = viewportlength - (spineoffset + tailElement.offsetWidth)
 
         } else {
 
-            viewportovershoot = spineviewportoffset + headspineoffset + gap
+            viewportgap = spineoffset + headblockoffset + gap
 
         }
     }
 
-    if (viewportovershoot < -(gap - 1)) viewportovershoot = 0 // not relevant
-    if (viewportovershoot > viewportlength) viewportovershoot = viewportlength // TODO: ??
+    // if (viewportgap < -(gap - 1)) viewportgap = 0 // not relevant
+    // if (viewportgap > viewportlength) viewportgap = viewportlength // TODO: ??
+
+    if (viewportgap < 0) viewportgap = 0
+    if (viewportgap > viewportlength) viewportgap = 0 // reposition should have kicked in
 
     let cellLength = (orientation == 'vertical')?cellHeight + gap:cellWidth + gap
-    let overshootrowcount = (viewportovershoot == 0)?0:Math.floor(viewportovershoot/cellLength) // rows to fill viewport
+    let overshootrowcount = (viewportgap == 0)?0:Math.floor(viewportgap/cellLength) // rows to fill viewport
 
     // extra rows for runway
     let overshootitemcount = overshootrowcount * crosscount
@@ -669,6 +673,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     // ----------------------[  calculate itemshiftcount includng overshoot ]------------------------
     // shift item count is the number of items the virtual cradle shifts, according to observer notices
 
+    let forwardcount = 0, backwardcount = 0
     if (scrollforward) {
 
         backwardcount = intersections.length
