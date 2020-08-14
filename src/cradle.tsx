@@ -463,6 +463,7 @@ const Cradle = ({
         crosscount,
         cradleRowcount,
         viewportRowcount,
+        itemObserverThreshold:ITEM_OBSERVER_THRESHOLD,
     })
 
 
@@ -765,7 +766,7 @@ const Cradle = ({
             itemobservercallback,
             {
                 root:viewportDataRef.current.elementref.current, 
-                threshold:ITEM_OBSERVER_THRESHOLD,
+                threshold:configDataRef.current.itemObserverThreshold,
             } 
 
         )
@@ -848,16 +849,18 @@ const Cradle = ({
         let cradleContent = cradleContentRef.current
         let configData = configDataRef.current
 
+        let listsize = cradleProps.listsize
+        let crosscount = configData.crosscount
+
         let spineElement = cradleElements.spine.current
         let headElement = cradleElements.head.current
         let tailElement = cradleElements.tail.current
+
         let itemelements = itemElementsRef.current
+
         let modelcontentlist = cradleContent.cradleModel
         let headcontentlist = cradleContent.headModel
         let tailcontentlist = cradleContent.tailModel
-
-        let listsize = cradleProps.listsize
-        let crosscount = configData.crosscount
 
         let cradleReferenceIndex = modelcontentlist[0].props.index
 
@@ -871,7 +874,7 @@ const Cradle = ({
             intersections:entries,
             headcontent:headcontentlist, 
             tailcontent:tailcontentlist,
-            ITEM_OBSERVER_THRESHOLD,
+            itemObserverThreshold:configData.itemObserverThreshold,
 
         })
 
@@ -895,7 +898,7 @@ const Cradle = ({
             headcontentlist,
             tailcontentlist,
             cradlerowcount:configData.cradleRowcount,
-            itemobserverthreshold:ITEM_OBSERVER_THRESHOLD,
+            itemobserverthreshold:configData.itemObserverThreshold,
             itemelements,
 
         })

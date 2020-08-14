@@ -334,7 +334,7 @@ export const isolateRelevantIntersections = ({
     intersections,
     headcontent, 
     tailcontent,
-    ITEM_OBSERVER_THRESHOLD,
+    itemObserverThreshold,
     scrollforward,
 }) => {
 
@@ -389,7 +389,7 @@ export const isolateRelevantIntersections = ({
             ratio = Math.round(entry.intersectionRatio * 1000)/1000
         }
 
-        let calcintersecting = (ratio >= ITEM_OBSERVER_THRESHOLD)
+        let calcintersecting = (ratio >= itemObserverThreshold)
         let iobj = {
             index,
             intersecting:calcintersecting,  // to accommodate browser differences
