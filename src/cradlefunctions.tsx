@@ -606,6 +606,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let { crosscount,
         cradleRowcount,
+        viewportRowcount,
         itemObserverThreshold } = cradleConfig
 
     // calculate cradleboundary and boundary row and item count for overshoot
@@ -695,6 +696,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
             itemshiftcount, backwardcount, forwardcount, overshootitemcount)
     }
 
+    //-------------------------------[ calc return values ]----------------------------
+
     let previousreferenceindex = tailcontentlist[0].props.index
     let previousrefindexcradleoffset = 
         // itemElements.get(previousreferenceindex).current.offsetTop + 
@@ -727,7 +730,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let viewportrows = Math.floor(viewportlength/cellLength)
     let targetindexrow = newreferenceindex/crosscount
     let maxrefindexrow = Math.ceil(listsize/crosscount) - viewportrows
-    if (targetindexrow >= maxrefindexrow) {
+    if (targetindexrow > maxrefindexrow) {
         newreferenceindex -= ((targetindexrow - maxrefindexrow) * crosscount)
     }
 
@@ -738,48 +741,49 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let spineOffset = previousrefindexcradleoffset + referenceposshift
 
-    // brute force for edge cases - rapid back and forth random scrolling. TODO: determine why necessary
-    if ((spineOffset > cellLength) || (spineOffset < -(gap -1))) {
-        // console.warn('spineOffset out of range, adjusting: spineOffset, previousrefindexcradleoffset, referenceposshift',
-        //     spineOffset, previousrefindexcradleoffset, referenceposshift)
-        let diffrows = Math.floor(spineOffset/cellLength)
-        let diffitems = diffrows * crosscount
-        // console.log('diff rows, items',diffrows, diffitems)
-        if (spineOffset > cellLength) {
+    // -----------------------------------------[ brute force ]---------------------------------------
+    //for edge cases - rapid back and forth random scrolling. TODO: determine why necessary
+    // if ((spineOffset > cellLength) || (spineOffset < -(gap -1))) {
+    //     // console.warn('spineOffset out of range, adjusting: spineOffset, previousrefindexcradleoffset, referenceposshift',
+    //     //     spineOffset, previousrefindexcradleoffset, referenceposshift)
+    //     let diffrows = Math.floor(spineOffset/cellLength)
+    //     let diffitems = diffrows * crosscount
+    //     // console.log('diff rows, items',diffrows, diffitems)
+    //     if (spineOffset > cellLength) {
 
-            newreferenceindex -= diffitems
-            referenceitemshiftcount -= diffitems
-            spineOffset -= (cellLength * diffrows)
+    //         newreferenceindex -= diffitems
+    //         referenceitemshiftcount -= diffitems
+    //         spineOffset -= (cellLength * diffrows)
 
-            let proposedcradleindex = newcradleindex - diffitems
-            let cradleindexdiff = diffitems
-            if (proposedcradleindex < 0) {
-                let diff = -proposedcradleindex
-                cradleindexdiff -= diff
-            }
-            newcradleindex -= cradleindexdiff
-            cradleitemshiftcount -= cradleindexdiff 
+    //         let proposedcradleindex = newcradleindex - diffitems
+    //         let cradleindexdiff = diffitems
+    //         if (proposedcradleindex < 0) {
+    //             let diff = -proposedcradleindex
+    //             cradleindexdiff -= diff
+    //         }
+    //         newcradleindex -= cradleindexdiff
+    //         cradleitemshiftcount -= cradleindexdiff 
 
-        } else { // spineOffset < -(gap -1)
+    //     } else { // spineOffset < -(gap -1)
 
-            diffitems = -diffitems
-            diffrows = -diffrows
-            newreferenceindex += diffitems
-            referenceitemshiftcount += diffitems
-            spineOffset += (diffrows * cellLength)
-            let cradlediffitems = diffitems
-            let proposedcradlerow = (newcradleindex + cradlediffitems)/crosscount
-            let revisedreferencerow = newreferenceindex/crosscount
-            if ((revisedreferencerow - proposedcradlerow) < runwaycount) {
-                let diff = runwaycount - (revisedreferencerow - proposedcradlerow)
-                let diffitems = diff * crosscount
-                cradlediffitems -= diffitems
-            }
-            newcradleindex += cradlediffitems
-            cradleitemshiftcount += cradlediffitems 
+    //         diffitems = -diffitems
+    //         diffrows = -diffrows
+    //         newreferenceindex += diffitems
+    //         referenceitemshiftcount += diffitems
+    //         spineOffset += (diffrows * cellLength)
+    //         let cradlediffitems = diffitems
+    //         let proposedcradlerow = (newcradleindex + cradlediffitems)/crosscount
+    //         let revisedreferencerow = newreferenceindex/crosscount
+    //         if ((revisedreferencerow - proposedcradlerow) < runwaycount) {
+    //             let diff = runwaycount - (revisedreferencerow - proposedcradlerow)
+    //             let diffitems = diff * crosscount
+    //             cradlediffitems -= diffitems
+    //         }
+    //         newcradleindex += cradlediffitems
+    //         cradleitemshiftcount += cradlediffitems 
 
-        }
-    }
+    //     }
+    // }
 
     return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset]
 
