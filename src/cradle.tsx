@@ -329,6 +329,18 @@ const Cradle = ({
 
             callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
 
+            // let orientation = cradlePropsRef.current.orientation
+            // get previous ration
+            // let previousCellPixelLength = (orientation == 'vertical')?cradlePropsRef.current.CellWidth:cradlePropsRef.current.CellHeight
+
+            // let previousratio = callingReferenceIndexDataRef.current.spineoffset/previousCellPixelLength
+
+            // let currentCellPixelLength = (orientation == 'vertical')?cradlePropsRef.current.CellHeight:cradlePropsRef.current.CellWidth
+
+            // let currentSpineOffset = previousratio * currentCellPixelLength
+            
+            // callingReferenceIndexDataRef.current.spineoffset = currentSpineOffset
+
             controlFlagsRef.current.pauseItemObserver = true
             // pauseCradleIntersectionObserverRef.current = true
             controlFlagsRef.current.pauseScrollingEffects = true

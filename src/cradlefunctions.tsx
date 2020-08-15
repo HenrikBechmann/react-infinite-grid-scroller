@@ -701,6 +701,9 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         newcradleindex = newreferenceindex - (runwaycount * crosscount)
     }
 
+
+    // TODO: add logic to deal with {cradleReferenceIndex + 1) < rowcount
+
     if (newcradleindex < 0) {
         newcradleindex = 0
     }
