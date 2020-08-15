@@ -816,6 +816,8 @@ const Cradle = ({
 
         // if (cradleStateRef.current == 'setup') return
 
+        if (controlFlagsRef.current.pauseItemObserver) return
+
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current
         let cradleProps = cradlePropsRef.current
