@@ -725,6 +725,7 @@ const Cradle = ({
                 let {top, right, bottom, left} = rect
                 let width = right - left, height = bottom - top
                 viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
+                // console.log('setting pauseItemObserver in cradleObserver')
                 controlFlags.pauseItemObserver = true
                 // pauseCradleIntersectionObserverRef.current = true
                 console.log('REPOSITIONING')
@@ -806,7 +807,9 @@ const Cradle = ({
 
         }
 
-        isMounted() && updateCradleContent(movedentries)
+        // setTimeout(() => {
+            isMounted() && updateCradleContent(movedentries)
+        // })
 
     },[])
 
@@ -814,9 +817,12 @@ const Cradle = ({
 
     const updateCradleContent = (entries, source = 'notifications') => {
 
-        // if (cradleStateRef.current == 'setup') return
+        // console.log('updateing cradle content',controlFlagsRef.current.pauseItemObserver)
 
-        if (controlFlagsRef.current.pauseItemObserver) return
+        // if (controlFlagsRef.current.pauseItemObserver) {
+        //     console.log('update short-circuited by pauseItemObserver')
+        //     return
+        // }
 
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current

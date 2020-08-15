@@ -691,10 +691,10 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let itemshiftcount = backwardcount - forwardcount + overshootitemcount //+ unincludedheaditems
 
-    if (overshootitemcount) {
-        console.log('first itemshiftcount = backwardcount - forwardcount + overshootitemcount', 
-            itemshiftcount, backwardcount, forwardcount, overshootitemcount)
-    }
+    // if (overshootitemcount) {
+    //     console.log('first itemshiftcount = backwardcount - forwardcount + overshootitemcount', 
+    //         itemshiftcount, backwardcount, forwardcount, overshootitemcount)
+    // }
 
     //-------------------------------[ calc return values ]----------------------------
 
