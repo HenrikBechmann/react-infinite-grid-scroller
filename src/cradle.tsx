@@ -6,6 +6,8 @@
 
     can't mount error in nested lists
 
+    ***fold is sometimes wayword on scroll to upper limit
+
     create cradleConfig var for stable things like number of cradle and viewport rows
 
     Debug scrollToItem callback (including setting scrollforward on first action).
