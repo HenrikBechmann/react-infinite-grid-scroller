@@ -807,9 +807,7 @@ const Cradle = ({
 
         }
 
-        // setTimeout(() => {
-            isMounted() && updateCradleContent(movedentries)
-        // })
+        isMounted() && updateCradleContent(movedentries)
 
     },[])
 
@@ -896,9 +894,9 @@ const Cradle = ({
             spineOffset] = calcContentShifts({
 
                 cradleProps,
+                cradleConfig,
                 cradleElements,
                 cradleContent,
-                cradleConfig,
                 viewportElement,
                 itemElements,
                 intersections,

@@ -609,9 +609,9 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         viewportRowcount,
         itemObserverThreshold } = cradleConfig
 
-    // calculate cradleboundary and boundary row and item count for overshoot
+    // ------- calculate cradleboundary and boundary row and item count for overshoot
     let spineoffset, headblockoffset, tailblockoffset, viewportlength
-    let viewportgap
+    let viewportgaplength
 
     if (orientation == 'vertical') {
 
@@ -623,11 +623,11 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         // measure any gap between the cradle and the viewport boundary
         if (scrollforward) {
 
-            viewportgap = viewportlength - (spineoffset + tailElement.offsetHeight)
+            viewportgaplength = viewportlength - (spineoffset + tailElement.offsetHeight)
 
         } else {
 
-            viewportgap = spineoffset - headElement.offsetHeight
+            viewportgaplength = spineoffset - headElement.offsetHeight
 
         }
 
@@ -643,11 +643,11 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
         if (scrollforward) {
 
-            viewportgap = viewportlength - (spineoffset + tailElement.offsetWidth)
+            viewportgaplength = viewportlength - (spineoffset + tailElement.offsetWidth)
 
         } else {
 
-            viewportgap = spineoffset - headElement.offsetWidth
+            viewportgaplength = spineoffset - headElement.offsetWidth
 
         }
     }
@@ -655,17 +655,20 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     // if (viewportgap < -(gap - 1)) viewportgap = 0 // not relevant
     // if (viewportgap > viewportlength) viewportgap = viewportlength // TODO: ??
 
-    if (viewportgap < 0) viewportgap = 0
-    if (viewportgap > viewportlength) viewportgap = 0 // reposition should have kicked in
+    if (viewportgaplength < 0) viewportgaplength = 0
+    if (viewportgaplength > viewportlength) viewportgaplength = 0 // reposition should have kicked in
 
     // if (viewportgap) {
     //     console.log('scrollforward, viewportgap, viewportlength',scrollforward, viewportgap, viewportlength)
     // }
 
     let cellLength = (orientation == 'vertical')?cellHeight + gap:cellWidth + gap
-    let overshootrowcount = (viewportgap == 0)?0:Math.ceil(viewportgap/cellLength) // rows to fill viewport
+    let overshootrowcount = (viewportgaplength == 0)?0:Math.ceil(viewportgaplength/cellLength) // rows to fill viewport
 
     // extra rows for runway
+    if (overshootrowcount) {
+        overshootrowcount += runwaycount
+    }
     let overshootitemcount = overshootrowcount * crosscount
 
     // let unincludedheaditems = 0
