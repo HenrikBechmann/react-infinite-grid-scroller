@@ -323,19 +323,21 @@ const Cradle = ({
     useEffect(()=> {
 
         if (cradleStateRef.current != 'setup') {
-// debugger
+
             callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
 
             // let orientation = cradlePropsRef.current.orientation
             // get previous ration
             let previousCellPixelLength = (orientation == 'vertical')?cradlePropsRef.current.cellWidth:cradlePropsRef.current.cellHeight
+            let previousSpineOffset = callingReferenceIndexDataRef.current.spineoffset
 
-            let previousratio = callingReferenceIndexDataRef.current.spineoffset/previousCellPixelLength
+            let previousratio = previousSpineOffset/previousCellPixelLength
 
             let currentCellPixelLength = (orientation == 'vertical')?cradlePropsRef.current.cellHeight:cradlePropsRef.current.cellWidth
 
             let currentSpineOffset = previousratio * currentCellPixelLength
             
+            scrollReferenceIndexDataRef.current.spineoffset = 
             callingReferenceIndexDataRef.current.spineoffset = currentSpineOffset
 
             controlFlagsRef.current.pauseItemObserver = true
