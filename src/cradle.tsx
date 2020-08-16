@@ -326,20 +326,20 @@ const Cradle = ({
 
         // console.log('calling pivot effect, orientaton, cradleState',orientation, cradleStateRef.current)
         if (cradleStateRef.current != 'setup') {
-
+// debugger
             callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
 
             // let orientation = cradlePropsRef.current.orientation
             // get previous ration
-            // let previousCellPixelLength = (orientation == 'vertical')?cradlePropsRef.current.CellWidth:cradlePropsRef.current.CellHeight
+            let previousCellPixelLength = (orientation == 'vertical')?cradlePropsRef.current.cellWidth:cradlePropsRef.current.cellHeight
 
-            // let previousratio = callingReferenceIndexDataRef.current.spineoffset/previousCellPixelLength
+            let previousratio = callingReferenceIndexDataRef.current.spineoffset/previousCellPixelLength
 
-            // let currentCellPixelLength = (orientation == 'vertical')?cradlePropsRef.current.CellHeight:cradlePropsRef.current.CellWidth
+            let currentCellPixelLength = (orientation == 'vertical')?cradlePropsRef.current.cellHeight:cradlePropsRef.current.cellWidth
 
-            // let currentSpineOffset = previousratio * currentCellPixelLength
+            let currentSpineOffset = previousratio * currentCellPixelLength
             
-            // callingReferenceIndexDataRef.current.spineoffset = currentSpineOffset
+            callingReferenceIndexDataRef.current.spineoffset = currentSpineOffset
 
             controlFlagsRef.current.pauseItemObserver = true
             // pauseCradleIntersectionObserverRef.current = true
@@ -484,6 +484,12 @@ const Cradle = ({
         itemObserverThreshold:ITEM_OBSERVER_THRESHOLD,
     })
 
+    cradleConfigRef.current = {
+        crosscount,
+        cradleRowcount,
+        viewportRowcount,
+        itemObserverThreshold:ITEM_OBSERVER_THRESHOLD,
+    }
 
     // ----------------------------------[ cradle default styles]----------------------------------
 
@@ -1016,6 +1022,7 @@ const Cradle = ({
     // reset cradle, including allocation between head and tail parts of the cradle
     const setCradleContent = (cradleState, referenceIndexData) => { 
 
+// debugger
         let cradleProps = cradlePropsRef.current
         let { index: visibletargetindexoffset, 
             spineoffset: visibletargetscrolloffset } = referenceIndexData
@@ -1050,7 +1057,7 @@ const Cradle = ({
                 listsize,
                 viewportElement:viewportDataRef.current.elementref.current
             })
-
+// debugger
         let childlist = getUIContentList({
 
             localContentList,
@@ -1110,11 +1117,14 @@ const Cradle = ({
         } else { // orientation = 'horizontal'
 
             scrollPositionDataRef.current = {property:'scrollLeft',value:scrollblockoffset}
+
             cradleElements.spine.current.style.left = (scrollblockoffset + spineOffset) + 'px'
             cradleElements.spine.current.style.top = 'auto'
             cradleElements.head.current.style.paddingRight = headcontentlist.length?cradleProps.gap + 'px':0
 
         }
+
+        // debugger
 
     }
 
@@ -1259,10 +1269,10 @@ const Cradle = ({
                 break;
 
             case 'setscrolloffset': {
-
                 viewportData.elementref.current[scrollPositionDataRef.current.property] =
                     scrollPositionDataRef.current.value
 
+// debugger
                 saveCradleState('content')
 
                 break

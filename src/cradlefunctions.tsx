@@ -204,6 +204,8 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
         viewportElement,
     }) => {
 
+// debugger
+
     // reconcile spineReferenceIndex to crosscount context
     let diff = referenceoffset % crosscount
     referenceoffset -= diff
@@ -228,7 +230,6 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
     runwayitemcount = Math.min(runwayitemcount, referenceoffset) // for list head
 
     // -----------------------[ calc cradleReferenceIndex ]------------------------
-
     // leading edge
     let cradleReferenceIndex = referenceoffset - runwayitemcount
 
@@ -250,6 +251,8 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
 
     let targetrowoffset = Math.ceil(referenceoffset/crosscount)
     let scrollblockoffset = (targetrowoffset * cellLength) + gap
+
+// debugger
 
     if (targetrowoffset == 0) {
         scrollblockoffset = 0
