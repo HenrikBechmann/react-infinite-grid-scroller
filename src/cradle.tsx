@@ -203,8 +203,6 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // console.log('cradleState',cradleState)
-
     // -----------------------------------------------------------------------
     // -------------------------[ control flags ]-----------------
 
@@ -324,7 +322,6 @@ const Cradle = ({
     // trigger pivot on change in orientation
     useEffect(()=> {
 
-        // console.log('calling pivot effect, orientaton, cradleState',orientation, cradleStateRef.current)
         if (cradleStateRef.current != 'setup') {
 // debugger
             callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
@@ -745,7 +742,6 @@ const Cradle = ({
                 let {top, right, bottom, left} = rect
                 let width = right - left, height = bottom - top
                 viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
-                // console.log('setting pauseItemObserver in cradleObserver')
                 controlFlags.pauseItemObserver = true
                 // pauseCradleIntersectionObserverRef.current = true
                 console.log('REPOSITIONING')
@@ -835,13 +831,6 @@ const Cradle = ({
 
     const updateCradleContent = (entries, source = 'notifications') => {
 
-        // console.log('updateing cradle content',controlFlagsRef.current.pauseItemObserver)
-
-        // if (controlFlagsRef.current.pauseItemObserver) {
-        //     console.log('update short-circuited by pauseItemObserver')
-        //     return
-        // }
-
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current
         let cradleProps = cradlePropsRef.current
@@ -876,11 +865,7 @@ const Cradle = ({
 
         if (scrollforward === undefined) {
             return // init call
-            // console.log('scrollforward, cradleStateRef.current', scrollforward, cradleStateRef.current)
         }
-
-        // console.log('updating cradle content: source, entries.length, scrollforward, scrollPositions, viewportScrollpos', 
-        //     source, entries.length, scrollforward, scrollPositions, viewportScrollpos)
 
         let cradleElements = cradleElementsRef.current
         let cradleContent = cradleContentRef.current
@@ -1394,7 +1379,6 @@ const Cradle = ({
             spineoffset = cradleElements.spine.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
         }
 
-        console.log('reload',callingReferenceIndexDataRef)
         callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
         saveCradleState('reload')
 

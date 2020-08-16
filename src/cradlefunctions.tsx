@@ -25,7 +25,7 @@ export const calcVisibleItems = (
     for (let item of headlist) {
         headlistindexes.push(parseInt(item.props.index))
     }
-    // console.log('itemlistindexes, headlistindexes',itemlistindexes, headlistindexes)
+
     let list = []
     let cradleTop = headElement.offsetTop + spineElement.offsetTop, 
         cradleLeft = headElement.offsetLeft + spineElement.offsetLeft
@@ -736,10 +736,10 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let spineOffset = previousrefindexcradleoffset + referencepixelshift
 
-    if (spineOffset > cellLength) {
-        console.log('spineOffset = previousrefindexcradleoffset + referencepixelshift (>cellLength)',
-            spineOffset, previousrefindexcradleoffset, referencepixelshift, cellLength) 
-    }
+    // if (spineOffset > cellLength) {
+    //     console.log('spineOffset = previousrefindexcradleoffset + referencepixelshift (>cellLength)',
+    //         spineOffset, previousrefindexcradleoffset, referencepixelshift, cellLength) 
+    // }
 
     return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset]
 
@@ -1101,7 +1101,7 @@ export const setCradleGridStyles = ({
             
             tailstyles.gridTemplateRows = 'none'
             tailstyles.gridTemplateColumns = cellWidth?`repeat(auto-fit, minmax(${cellWidth}px, 1fr))`:'auto'
-            // console.log('setCradleGridStyles vertical, headstyles, tailstyles',headstyles, tailstyles)
+
         }
 
         return [headstyles,tailstyles]
