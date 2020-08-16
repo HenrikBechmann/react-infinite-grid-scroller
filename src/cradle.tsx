@@ -4,6 +4,8 @@
 /*
     TODO:
 
+    occasionally on first vertical scroll the itemobserver fails
+
     can't mount error in nested lists
 
     ***fold is sometimes wayword on scroll to upper limit
@@ -337,7 +339,7 @@ const Cradle = ({
 
             let currentSpineOffset = previousratio * currentCellPixelLength
             
-            scrollReferenceIndexDataRef.current.spineoffset = 
+            // scrollReferenceIndexDataRef.current.spineoffset = 
             callingReferenceIndexDataRef.current.spineoffset = currentSpineOffset
 
             controlFlagsRef.current.pauseItemObserver = true
@@ -1072,7 +1074,7 @@ const Cradle = ({
         cradleContent.headModel = headcontentlist
         cradleContent.tailModel = tailcontentlist
 
-        /*scrollReferenceIndexDataRef.current =*/ 
+        scrollReferenceIndexDataRef.current = 
         stableReferenceIndexDataRef.current = {
 
             index: referenceoffset,
