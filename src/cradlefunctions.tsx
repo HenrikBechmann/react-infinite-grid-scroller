@@ -687,9 +687,10 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     //-------------------------------[ calc return values ]----------------------------
 
     let previousreferenceindex = tailcontentlist[0].props.index
-    let previousrefindexcradleoffset = 
+    let previousrefindexcradleoffset = (orientation == 'vertical')?
         // itemElements.get(previousreferenceindex).current.offsetTop + 
-        spineElement.offsetTop - viewportElement.scrollTop
+        spineElement.offsetTop - viewportElement.scrollTop:
+        spineElement.offsetLeft - viewportElement.scrollLeft
 
     let previouscradleindex = cradlecontentlist[0].props.index
 
@@ -737,6 +738,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     //         spineOffset, previousrefindexcradleoffset, referencepixelshift, cellLength) 
     // }
 
+    // debugger
     return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset]
 
 }
@@ -873,6 +875,7 @@ export const calcHeadAndTailChanges = (
         tailchangecount = -clipitemcount
 
     }
+    // debugger
     return [headchangecount,tailchangecount]
 
 }
@@ -888,7 +891,7 @@ export const getUIContentList = ({
         cradleProps,
         localContentList:contentlist,
         // crosscount,
-        listsize,
+        // listsize,
         callbacks,
         observer,
     }) => {
@@ -906,11 +909,12 @@ export const getUIContentList = ({
     //     observer,
     // } = props
 
-    let orientation = cradleProps.orientation,
-        cellHeight = cradleProps.cellHeight,
-        cellWidth = cradleProps.cellWidth,
-        getItem = cradleProps.getItem,
-        placeholder = cradleProps.placeholder
+    let { orientation,
+        cellHeight,
+        cellWidth,
+        getItem,
+        placeholder,
+        listsize } = cradleProps
 
     let localContentlist = [...contentlist]
     let tailindexoffset = cradleReferenceIndex + contentlist.length

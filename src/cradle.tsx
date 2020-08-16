@@ -915,19 +915,21 @@ const Cradle = ({
 
         if (referenceitemshift == 0) return
 
+         // console.log('cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset',
+         //     cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset)
+
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
         let [headchangecount,tailchangecount] = calcHeadAndTailChanges({
 
             itemshiftcount:cradleitemshift,
-            crosscount,
+            crosscount:cradleConfig.crosscount,
+            cradlerowcount:cradleConfig.cradleRowcount,
             headcontent:cradleContent.headModel,
             tailcontent:cradleContent.tailModel,
             scrollforward,
             cradleProps,
             cradleReferenceIndex,
-            cradlerowcount:cradleConfig.cradleRowcount,
-            // listsize,
 
         })
 
@@ -947,7 +949,7 @@ const Cradle = ({
                 cradleProps,
                 observer: itemObserverRef.current,
                 callbacks:callbacksRef.current,
-                listsize, // TODO: redundant
+                // listsize, // TODO: redundant
 
             })
         } else {
@@ -985,8 +987,8 @@ const Cradle = ({
             } else {
 
                 scrollPositionDataRef.current = {property:'scrollLeft',value:viewportElement.scrollLeft}
-                cradleElements.spine.current.style.left = viewportElement.scrollLeft + spineOffset + 'px'
                 cradleElements.spine.current.style.top = 'auto'
+                cradleElements.spine.current.style.left = viewportElement.scrollLeft + spineOffset + 'px'
                 cradleElements.head.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
 
             }
@@ -1055,7 +1057,7 @@ const Cradle = ({
             observer: itemObserverRef.current,
             // crosscount,
             callbacks:callbacksRef.current,
-            listsize,
+            // listsize,
 
         })
 
