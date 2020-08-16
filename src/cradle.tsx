@@ -1097,7 +1097,7 @@ const Cradle = ({
 
         if (orientation == 'vertical') {
 
-            scrollPositionDataRef.current = {property:'scrollTop',value:scrollblockoffset}
+            scrollPositionDataRef.current = {property:'scrollTop',value:scrollblockoffset }
 
             cradleElements.spine.current.style.top = (scrollblockoffset + spineOffset) + 'px'
             cradleElements.spine.current.style.left = 'auto'
@@ -1105,7 +1105,7 @@ const Cradle = ({
 
         } else { // orientation = 'horizontal'
 
-            scrollPositionDataRef.current = {property:'scrollLeft',value:scrollblockoffset}
+            scrollPositionDataRef.current = {property:'scrollLeft',value:scrollblockoffset }
 
             cradleElements.spine.current.style.left = (scrollblockoffset + spineOffset) + 'px'
             cradleElements.spine.current.style.top = 'auto'

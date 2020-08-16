@@ -729,7 +729,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let cradleitemshiftcount = newcradleindex - previouscradleindex
     let referenceitemshiftcount = newreferenceindex - previousreferenceindex
 
-    let referencepixelshift = (referenceitemshiftcount/crosscount) * cellLength
+    let referencerowshift = referenceitemshiftcount/crosscount
+    let referencepixelshift = referencerowshift * cellLength
 
     let spineOffset = previousrefindexcradleoffset + referencepixelshift
 
@@ -738,7 +739,6 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     //         spineOffset, previousrefindexcradleoffset, referencepixelshift, cellLength) 
     // }
 
-    // debugger
     return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset]
 
 }
@@ -875,7 +875,6 @@ export const calcHeadAndTailChanges = (
         tailchangecount = -clipitemcount
 
     }
-    // debugger
     return [headchangecount,tailchangecount]
 
 }
