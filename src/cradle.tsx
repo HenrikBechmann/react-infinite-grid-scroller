@@ -1007,7 +1007,6 @@ const Cradle = ({
     // reset cradle, including allocation between head and tail parts of the cradle
     const setCradleContent = (cradleState, referenceIndexData) => { 
 
-// debugger
         let cradleProps = cradlePropsRef.current
         let { index: visibletargetindexoffset, 
             spineoffset: visibletargetscrolloffset } = referenceIndexData
@@ -1042,7 +1041,6 @@ const Cradle = ({
                 listsize,
                 viewportElement:viewportDataRef.current.elementref.current
             })
-// debugger
         let childlist = getUIContentList({
 
             localContentList,
@@ -1108,8 +1106,6 @@ const Cradle = ({
             cradleElements.head.current.style.paddingRight = headcontentlist.length?cradleProps.gap + 'px':0
 
         }
-
-        // debugger
 
     }
 
@@ -1257,7 +1253,6 @@ const Cradle = ({
                 viewportData.elementref.current[scrollPositionDataRef.current.property] =
                     scrollPositionDataRef.current.value
 
-// debugger
                 saveCradleState('content')
 
                 break
