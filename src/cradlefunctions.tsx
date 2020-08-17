@@ -194,6 +194,7 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
         cellHeight, 
         cellWidth, 
         cradleRowcount,
+        viewportRowcount,
         runwaycount,
         gap,
         padding,
@@ -218,7 +219,9 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
         cellLength = cellWidth + gap
         viewportlength = viewportElement.offsetWidth
     }
-    let viewportrows = Math.floor(viewportlength / cellLength)
+    // let viewportrows = Math.floor(viewportlength / cellLength)
+
+    let viewportrows = viewportRowcount
 
     let contentCount = cradleRowcount * crosscount 
 
@@ -301,7 +304,7 @@ const adjustSpineOffsetForMaxRefindex = ({
 
     if (testlistrows > listrows) {
 
-        let diffrows = testlistrows - listrows - 1 // TODO: why the "1"?
+        let diffrows = testlistrows - listrows
         let diff = diffrows * crosscount
         cradleReferenceIndex -= diff
 

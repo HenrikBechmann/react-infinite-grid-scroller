@@ -1023,8 +1023,10 @@ const Cradle = ({
 
         let {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
 
-        let cradleRowcount = cradleConfigRef.current.cradleRowcount,
-            crosscount = cradleConfigRef.current.crosscount
+        let cradleConfig = cradleConfigRef.current
+        let { cradleRowcount,
+            crosscount,
+            viewportRowcount } = cradleConfig
 
         if (cradleState == 'reposition') {
 
@@ -1043,6 +1045,7 @@ const Cradle = ({
                 orientation, 
                 runwaycount,
                 cradleRowcount,
+                viewportRowcount,
                 gap,
                 padding,
                 visibletargetindexoffset,
