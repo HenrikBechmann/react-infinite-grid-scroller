@@ -4,6 +4,8 @@
 /*
     TODO:
 
+    fix spine location anomalies at front and back.
+
     sometimes when reaching end of list by repositioning, the spine is one row higher than designe. 
     Rare, therefore probablyh rounding somewhere to to with referenceindex
 

@@ -453,7 +453,7 @@ export const isolateRelevantIntersections = ({
 
     let duplicateslength = Object.keys(duplicates).length
     if (duplicateslength > 0) {
-        console.log('DUPLICATES found', duplicateslength, duplicates)
+        // console.log('DUPLICATES found', duplicateslength, duplicates)
         let headintersectionsdelete = [],
             tailintersectionsdelete = []
 
