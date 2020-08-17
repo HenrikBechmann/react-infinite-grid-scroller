@@ -6,6 +6,8 @@
 
     fix spine location anomalies at front and back.
 
+    replace safari test with native observer test in cradlefunctions
+
     sometimes when reaching end of list by repositioning, the spine is one row higher than designe. 
     Rare, therefore probablyh rounding somewhere to to with referenceindex
 

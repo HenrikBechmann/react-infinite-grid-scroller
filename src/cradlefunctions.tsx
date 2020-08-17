@@ -413,6 +413,7 @@ export const isolateRelevantIntersections = ({
         }
 
         let ratio
+        // if (!window['ResizeObserver']) TODO: replace and test folling line of code.
         if (browser && browser.name == 'safari') {
             ratio = entry.intersectionRatio
         } else {
