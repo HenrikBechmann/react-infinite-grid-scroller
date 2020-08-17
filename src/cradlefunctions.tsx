@@ -249,11 +249,15 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
 
     let targetrowoffset = Math.ceil(referenceoffset/crosscount)
     let scrollblockoffset = (targetrowoffset * cellLength) + gap
+    let spineadjustment
 
     if (targetrowoffset == 0) {
         scrollblockoffset = 0
-        spineOffset = padding
+        spineOffset = 0 // padding
+        spineadjustment = padding
     } else {
+        spineadjustment = gap;
+
         [cradleReferenceIndex, contentCount, referenceoffset, scrollblockoffset, spineOffset] = adjustSpineOffsetForMaxRefindex({
             referenceoffset,
             spineOffset,
@@ -271,7 +275,7 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
         })
     }
 
-    return {cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset} // summarize requirements message
+    return {cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment} // summarize requirements message
 
 }
 

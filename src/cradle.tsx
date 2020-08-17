@@ -6,6 +6,10 @@
 
     occasionally on first vertical scroll the itemobserver fails
 
+    listisize overshoots on rapid scroll to end
+
+    sometimes padding at bottom is too high (double)
+
     can't mount error in nested lists
 
     ***fold is sometimes wayword on scroll to upper limit
@@ -340,7 +344,7 @@ const Cradle = ({
             let currentSpineOffset = previousratio * currentCellPixelLength
             
             // scrollReferenceIndexDataRef.current.spineoffset = 
-            callingReferenceIndexDataRef.current.spineoffset = currentSpineOffset
+            callingReferenceIndexDataRef.current.spineoffset = Math.round(currentSpineOffset)
 
             controlFlagsRef.current.pauseItemObserver = true
             // pauseCradleIntersectionObserverRef.current = true
@@ -1031,7 +1035,7 @@ const Cradle = ({
         let localContentList = [] // any duplicated items will be re-used by react
         let cradleContent = cradleContentRef.current
 
-        let {cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset} = 
+        let {cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment} = 
             getContentListRequirements({
 
                 cellHeight, 
@@ -1093,22 +1097,25 @@ const Cradle = ({
 
         }
 
+        // console.log('scrollblockoffset, spineOffset, spineadjustment',
+        //     scrollblockoffset, spineOffset, spineadjustment)
+
         let cradleElements = cradleElementsRef.current
 
         if (orientation == 'vertical') {
 
-            scrollPositionDataRef.current = {property:'scrollTop',value:scrollblockoffset }
+            scrollPositionDataRef.current = {property:'scrollTop',value:scrollblockoffset  - spineOffset}
 
-            cradleElements.spine.current.style.top = (scrollblockoffset + spineOffset) + 'px'
+            cradleElements.spine.current.style.top = (scrollblockoffset + spineadjustment) + 'px'
             cradleElements.spine.current.style.left = 'auto'
             cradleElements.head.current.style.paddingBottom = headcontentlist.length?cradleProps.gap + 'px':0
 
         } else { // orientation = 'horizontal'
 
-            scrollPositionDataRef.current = {property:'scrollLeft',value:scrollblockoffset }
+            scrollPositionDataRef.current = {property:'scrollLeft',value:scrollblockoffset - spineOffset}
 
-            cradleElements.spine.current.style.left = (scrollblockoffset + spineOffset) + 'px'
             cradleElements.spine.current.style.top = 'auto'
+            cradleElements.spine.current.style.left = (scrollblockoffset + spineadjustment) + 'px'
             cradleElements.head.current.style.paddingRight = headcontentlist.length?cradleProps.gap + 'px':0
 
         }
