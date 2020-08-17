@@ -4,6 +4,9 @@
 /*
     TODO:
 
+    sometimes when reaching end of list by repositioning, the spine is one row higher than designe. 
+    Rare, therefore probablyh rounding somewhere to to with referenceindex
+
     occasionally on first vertical scroll the itemobserver fails (sometimes after a few scrolls)
     seems to get behind in processing and then lose positioning for notifications.
 
@@ -840,7 +843,7 @@ const Cradle = ({
 
     const updateCradleContent = (entries, source = 'notifications') => {
 
-        console.log('updating cradle content: source', source)
+        // console.log('updating cradle content: source', source)
 
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current
@@ -1069,8 +1072,8 @@ const Cradle = ({
             callbacks:callbacksRef.current,
 
         })
-        console.log('childlist from setContent', childlist, contentCount)
-        
+        // console.log('childlist from setContent', childlist, contentCount)
+
         let [headcontentlist, tailcontentlist] = allocateContentList({
 
             contentlist:childlist,

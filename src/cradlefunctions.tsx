@@ -320,8 +320,8 @@ const adjustSpineOffsetForMaxRefindex = ({
         let diff = diffrows * crosscount
         cradleReferenceIndex -= diff
         activelistrowcount -= diffrows
-        console.log('cradlereference original, adjustment, rows, items, result', 
-            originalcradleoffset, diff, diffrows, cradleReferenceIndex)
+        // console.log('cradlereference original, adjustment, rows, items, result', 
+            // originalcradleoffset, diff, diffrows, cradleReferenceIndex)
     }
 
     // let testlistrowcount = Math.ceil((cradleReferenceIndex + contentCount + 1)/crosscount)
@@ -330,12 +330,12 @@ const adjustSpineOffsetForMaxRefindex = ({
         if (diff) {
             contentCount -= (crosscount - diff)
         }
-        console.log('final row adjustment through activelistrowcount, listrowcount, contentCount, crosscount, diff',
-        activelistrowcount, listrowcount, contentCount, crosscount, diff)
+        // console.log('final row adjustment through activelistrowcount, listrowcount, contentCount, crosscount, diff',
+        // activelistrowcount, listrowcount, contentCount, crosscount, diff)
     }
 
     let maxrefindexrow = Math.ceil(listsize/crosscount) - viewportrows + 1
-    console.log('targetrowoffset, maxrefindexrow', targetrowoffset, maxrefindexrow)
+    // console.log('targetrowoffset, maxrefindexrow', targetrowoffset, maxrefindexrow)
     if (targetrowoffset > maxrefindexrow) {
         targetrowoffset = maxrefindexrow
 
@@ -345,8 +345,8 @@ const adjustSpineOffsetForMaxRefindex = ({
 
         spineOffset = viewportlength - ((viewportrows * cellLength) + padding + gap)
 
-        console.log('targetrow adjustment: targetrowoffset, referenceoffset, scrollblockoffset, spineOffset',
-            targetrowoffset, referenceoffset, scrollblockoffset, spineOffset)
+        // console.log('targetrow adjustment: targetrowoffset, referenceoffset, scrollblockoffset, spineOffset',
+        //     targetrowoffset, referenceoffset, scrollblockoffset, spineOffset)
     }
 
     // debugger
