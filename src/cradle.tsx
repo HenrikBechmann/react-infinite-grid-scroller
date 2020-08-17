@@ -4,7 +4,8 @@
 /*
     TODO:
 
-    occasionally on first vertical scroll the itemobserver fails
+    occasionally on first vertical scroll the itemobserver fails (sometimes after a few scrolls)
+    seems to get behind in processing and then lose positioning for notifications.
 
     listisize overshoots on rapid scroll to end
 
@@ -839,6 +840,8 @@ const Cradle = ({
 
     const updateCradleContent = (entries, source = 'notifications') => {
 
+        console.log('updating cradle content: source', source)
+
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current
         let cradleProps = cradlePropsRef.current
@@ -1054,6 +1057,7 @@ const Cradle = ({
                 listsize,
                 viewportElement:viewportDataRef.current.elementref.current
             })
+
         let childlist = getUIContentList({
 
             localContentList,
@@ -1062,12 +1066,11 @@ const Cradle = ({
             cradleReferenceIndex,
             cradleProps:cradlePropsRef.current,
             observer: itemObserverRef.current,
-            // crosscount,
             callbacks:callbacksRef.current,
-            // listsize,
 
         })
-
+        console.log('childlist from setContent', childlist, contentCount)
+        
         let [headcontentlist, tailcontentlist] = allocateContentList({
 
             contentlist:childlist,

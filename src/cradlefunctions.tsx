@@ -278,58 +278,78 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
         })
     }
 
+    // debugger
+
     return {cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment} // summarize requirements message
 
 }
 
 const adjustSpineOffsetForMaxRefindex = ({
-    referenceoffset,
-    spineOffset,
-    scrollblockoffset,
-    targetrowoffset,
-    viewportlength,
+
     listsize,
-    viewportrows,
     crosscount,
+    contentCount,
+
+    cradleReferenceIndex,
+    referenceoffset,
+    targetrowoffset,
+
+    scrollblockoffset,
+    spineOffset,
+
+    viewportlength,
+    viewportrows,
+
     cellLength,
     padding,
     gap,
-    cradleReferenceIndex,
-    contentCount
+
 }) => {
 
-    let testlistsize = cradleReferenceIndex + contentCount + 1
-    let testlistrows = Math.ceil(testlistsize/crosscount)
-    let listrows = Math.ceil(listsize/crosscount)
+    let activelistitemcount = cradleReferenceIndex + contentCount
+    let activelistrowcount = Math.ceil(activelistitemcount/crosscount)
+    let listrowcount = Math.ceil(listsize/crosscount)
 
-    if (testlistrows > listrows) {
+    // memos
+    let originalcradleoffset = cradleReferenceIndex
+    let originalreferenceoffset = referenceoffset
+    let originalspineOffset = spineOffset
 
-        let diffrows = testlistrows - listrows
+    if (activelistrowcount > listrowcount) {
+        let diffrows = activelistrowcount - listrowcount
         let diff = diffrows * crosscount
         cradleReferenceIndex -= diff
-
+        activelistrowcount -= diffrows
+        console.log('cradlereference original, adjustment, rows, items, result', 
+            originalcradleoffset, diff, diffrows, cradleReferenceIndex)
     }
 
-    if (Math.ceil((cradleReferenceIndex + contentCount)/crosscount) == listrows) {
+    // let testlistrowcount = Math.ceil((cradleReferenceIndex + contentCount + 1)/crosscount)
+    if (activelistrowcount == listrowcount) {
         let diff = listsize % crosscount
         if (diff) {
-            contentCount -= crosscount - diff
+            contentCount -= (crosscount - diff)
         }
+        console.log('final row adjustment through activelistrowcount, listrowcount, contentCount, crosscount, diff',
+        activelistrowcount, listrowcount, contentCount, crosscount, diff)
     }
 
-    let maxrefindexrow = Math.ceil(listsize/crosscount) - viewportrows
-
-    if (targetrowoffset >= maxrefindexrow) {
-        let originalreferenceoffset = referenceoffset
+    let maxrefindexrow = Math.ceil(listsize/crosscount) - viewportrows + 1
+    console.log('targetrowoffset, maxrefindexrow', targetrowoffset, maxrefindexrow)
+    if (targetrowoffset > maxrefindexrow) {
         targetrowoffset = maxrefindexrow
 
         referenceoffset = (targetrowoffset * crosscount)
 
-        scrollblockoffset = (targetrowoffset * cellLength) - padding
+        scrollblockoffset = (targetrowoffset * cellLength) + gap
 
-        spineOffset = viewportlength - ((viewportrows * cellLength) + padding)
+        spineOffset = viewportlength - ((viewportrows * cellLength) + padding + gap)
 
+        console.log('targetrow adjustment: targetrowoffset, referenceoffset, scrollblockoffset, spineOffset',
+            targetrowoffset, referenceoffset, scrollblockoffset, spineOffset)
     }
+
+    // debugger
 
     return [cradleReferenceIndex, contentCount, referenceoffset, scrollblockoffset, spineOffset]
 
