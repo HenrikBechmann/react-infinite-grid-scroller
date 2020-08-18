@@ -895,6 +895,8 @@ const Cradle = ({
 
         let cradleReferenceIndex = modelcontentlist[0].props.index
 
+        let { cradleRowcount, crosscount } = cradleConfigRef.current
+
         // --------------------[ 2. filter intersections list ]-----------------------
 
         // filter out inapplicable intersection entries
@@ -914,7 +916,7 @@ const Cradle = ({
             cradleitemshift, 
             spineReferenceIndex, 
             referenceitemshift,
-            spineOffset] = calcContentShifts({
+            spineOffset, contentCount] = calcContentShifts({
 
                 cradleProps,
                 cradleConfig,
@@ -929,16 +931,16 @@ const Cradle = ({
 
         if (referenceitemshift == 0) return
 
-         console.log('cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset',
-             cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset)
+         // console.log('cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, cradleRowcount',
+         //     cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, cradleRowcount)
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
         let [headchangecount,tailchangecount] = calcHeadAndTailChanges({
 
             itemshiftcount:cradleitemshift,
-            crosscount:cradleConfig.crosscount,
-            cradlerowcount:cradleConfig.cradleRowcount,
+            crosscount,
+            cradlerowcount:cradleRowcount, // TODO: align case usage
             headcontent:cradleContent.headModel,
             tailcontent:cradleContent.tailModel,
             scrollforward,
@@ -947,7 +949,7 @@ const Cradle = ({
 
         })
 
-        console.log('headchangecount,tailchangecount',headchangecount,tailchangecount)
+        // console.log('headchangecount,tailchangecount',headchangecount,tailchangecount)
 
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
@@ -957,7 +959,7 @@ const Cradle = ({
         if (headchangecount || tailchangecount) {
 
             localContentList = getUIContentList({
-
+                contentCount,
                 localContentList:modelcontentlist,
                 headchangecount,
                 tailchangecount,
@@ -965,8 +967,8 @@ const Cradle = ({
                 cradleProps,
                 observer: itemObserverRef.current,
                 callbacks:callbacksRef.current,
-                // listsize, // TODO: redundant
-
+                cradleRowcount,
+                crosscount:cradleConfig.crosscount,
             })
         } else {
 
@@ -974,7 +976,7 @@ const Cradle = ({
 
         }
 
-        console.log('localContentList.length', localContentList.length)
+        // console.log('localContentList.length', localContentList.length)
 
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 
@@ -985,7 +987,7 @@ const Cradle = ({
             }
         )
 
-        console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
+        // console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
 
         cradleContent.cradleModel = localContentList
         cradleContent.headView = cradleContent.headModel = headcontent
@@ -1074,16 +1076,21 @@ const Cradle = ({
         // console.log('cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment',
         //     cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment)
 
+        // returns content constrained by cradleRowcount
         let childlist = getUIContentList({
 
-            localContentList,
+            contentCount,
+            crosscount:cradleConfig.crosscount,
+            // cradleitemshift:0,
+            // content,
+            cradleReferenceIndex,
             headchangecount:0,
             tailchangecount:contentCount,
-            cradleReferenceIndex,
             cradleProps:cradlePropsRef.current,
-            observer: itemObserverRef.current,
+            localContentList,
             callbacks:callbacksRef.current,
-
+            observer: itemObserverRef.current,
+            cradleRowcount,
         })
         // console.log('childlist.length, contentCount, rows from setContent', childlist.length, contentCount, Math.ceil(contentCount/crosscount))
 

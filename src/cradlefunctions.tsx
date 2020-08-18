@@ -740,6 +740,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     }
 
     let cradleitemcount = cradleRowcount * crosscount
+    let cradleadjustmnet = listsize % crosscount
 
     if ((newcradleindex + cradleitemcount) > listsize) {
         let diff = listsize - (newcradleindex + cradleitemcount)
@@ -761,12 +762,13 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let spineOffset = previousrefindexcradleoffset + referencepixelshift
 
+    cradleitemcount -= cradleadjustmnet
     // if (spineOffset > cellLength) {
     //     console.log('spineOffset = previousrefindexcradleoffset + referencepixelshift (>cellLength)',
     //         spineOffset, previousrefindexcradleoffset, referencepixelshift, cellLength) 
     // }
 
-    return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset]
+    return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset, cradleitemcount]
 
 }
 
@@ -911,29 +913,19 @@ export const calcHeadAndTailChanges = (
 // or if indexcount values are <0 removes them.
 export const getUIContentList = ({ 
 
+        contentCount,
+        crosscount,
+        // cradleitemshift,
+        // content,
         cradleReferenceIndex, 
         headchangecount, 
         tailchangecount, 
         cradleProps,
         localContentList:contentlist,
-        // crosscount,
-        // listsize,
         callbacks,
         observer,
+        cradleRowcount,
     }) => {
-
-    // let { 
-
-    //     cradleReferenceIndex, 
-    //     headchangecount, 
-    //     tailchangecount, 
-    //     cradleProps,
-    //     localContentList:contentlist,
-    //     // crosscount,
-    //     listsize,
-    //     callbacks,
-    //     observer,
-    // } = props
 
     let { orientation,
         cellHeight,
@@ -944,14 +936,21 @@ export const getUIContentList = ({
 
     let localContentlist = [...contentlist]
     let tailindexoffset = cradleReferenceIndex + contentlist.length
+    // let headindexoffset = cradleReferenceIndex
     let returnContentlist
 
     let headContentlist = []
+
+    let topconstraint = cradleReferenceIndex - headchangecount,
+    bottomconstraint = (cradleReferenceIndex - headchangecount) + (contentCount)
 
     if (headchangecount >= 0) {
 
         for (let index = cradleReferenceIndex - headchangecount; index < (cradleReferenceIndex); index++) {
 
+            if (!((index >= topconstraint) && (index <= bottomconstraint))) {
+                continue
+            }
             headContentlist.push(
                 emitItem(
                     {
@@ -972,7 +971,7 @@ export const getUIContentList = ({
 
     } else {
 
-        localContentlist.splice(0,-headchangecount)
+        localContentlist.splice( 0, -headchangecount )
 
     }
 
@@ -982,6 +981,9 @@ export const getUIContentList = ({
 
         for (let index = tailindexoffset; index <(tailindexoffset + tailchangecount); index++) {
 
+            if (!((index >= topconstraint) && (index <= bottomconstraint))) {
+                continue
+            }
             tailContentlist.push(
                 emitItem(
                     {
@@ -993,7 +995,7 @@ export const getUIContentList = ({
                         callbacks, 
                         getItem, 
                         listsize, 
-                        placeholder
+                        placeholder,
                     }
                 )
             )
@@ -1007,6 +1009,9 @@ export const getUIContentList = ({
     }
 
     returnContentlist = headContentlist.concat(localContentlist,tailContentlist)
+
+    // console.log('components of getcontentlist: returnContentList, headContentlist, localContentlist, tailContentlist', 
+    //     returnContentlist, headContentlist, localContentlist, tailContentlist)
 
     return returnContentlist
 }
