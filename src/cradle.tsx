@@ -929,8 +929,8 @@ const Cradle = ({
 
         if (referenceitemshift == 0) return
 
-         // console.log('cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset',
-         //     cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset)
+         console.log('cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset',
+             cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset)
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
@@ -946,6 +946,8 @@ const Cradle = ({
             cradleReferenceIndex,
 
         })
+
+        console.log('headchangecount,tailchangecount',headchangecount,tailchangecount)
 
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
@@ -972,6 +974,8 @@ const Cradle = ({
 
         }
 
+        console.log('localContentList.length', localContentList.length)
+
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 
         let [headcontent, tailcontent] = allocateContentList(
@@ -980,6 +984,8 @@ const Cradle = ({
                 spineReferenceIndex,
             }
         )
+
+        console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
 
         cradleContent.cradleModel = localContentList
         cradleContent.headView = cradleContent.headModel = headcontent
@@ -1065,6 +1071,9 @@ const Cradle = ({
                 viewportElement:viewportDataRef.current.elementref.current
             })
 
+        // console.log('cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment',
+        //     cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment)
+
         let childlist = getUIContentList({
 
             localContentList,
@@ -1076,7 +1085,7 @@ const Cradle = ({
             callbacks:callbacksRef.current,
 
         })
-        // console.log('childlist from setContent', childlist, contentCount)
+        // console.log('childlist.length, contentCount, rows from setContent', childlist.length, contentCount, Math.ceil(contentCount/crosscount))
 
         let [headcontentlist, tailcontentlist] = allocateContentList({
 
@@ -1084,6 +1093,8 @@ const Cradle = ({
             spineReferenceIndex:referenceoffset,
     
         })
+
+        // console.log('headcontentlist.length, tailcontentlist.length',headcontentlist.length, tailcontentlist.length)
 
         if (headcontentlist.length == 0) {
             spineOffset = padding
