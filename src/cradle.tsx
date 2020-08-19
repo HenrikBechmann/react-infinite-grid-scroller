@@ -299,7 +299,11 @@ const Cradle = ({
         // complete resizing mode
         if (!viewportData.isResizing && (cradleStateRef.current == 'resizing')) {
 
-            saveCradleState('resize')
+            setTimeout(() => { // let resize complete
+
+                saveCradleState('resize')
+
+            })
 
         }
 
@@ -1034,6 +1038,8 @@ const Cradle = ({
     
     // reset cradle, including allocation between head and tail parts of the cradle
     const setCradleContent = (cradleState, referenceIndexData) => { 
+
+        // console.log('setCradleContent: cradleState, referenceIndexData',cradleState, referenceIndexData)
 
         let cradleProps = cradlePropsRef.current
         let { index: visibletargetindexoffset, 
