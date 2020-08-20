@@ -223,6 +223,7 @@ const Cradle = ({
 
     const controlFlagsRef = useRef({
         pauseItemObserver: false,
+        pauseCradleIntersectionObserver:false,
         pauseCradleResizeObserver: false,
         pauseScrollingEffects: false,
         isTailCradleInView:true,
@@ -275,6 +276,7 @@ const Cradle = ({
     // trigger resizing based on viewport state
     useEffect(()=>{
 
+        console.log('viewportData.isResizing', viewportData.isResizing)
         if (cradleStateRef.current == 'setup') return
         if (viewportData.isResizing) {
 
@@ -290,7 +292,8 @@ const Cradle = ({
             // callingReferenceIndexDataRef.current.spineoffset = spineoffset
 
             controlFlagsRef.current.pauseItemObserver = true
-            // pauseCradleIntersectionObserverRef.current = true
+            controlFlagsRef.current.pauseCradleIntersectionObserver = true
+            controlFlagsRef.current.pauseCradleResizeObserver = true
             controlFlagsRef.current.pauseScrollingEffects = true
             saveCradleState('resizing')
 
@@ -299,11 +302,7 @@ const Cradle = ({
         // complete resizing mode
         if (!viewportData.isResizing && (cradleStateRef.current == 'resizing')) {
 
-            setTimeout(() => { // let resize complete
-
-                saveCradleState('resize')
-
-            })
+            saveCradleState('resize')
 
         }
 
@@ -734,6 +733,9 @@ const Cradle = ({
     const cradleintersectionobservercallback = useCallback((entries) => {
 
         let controlFlags = controlFlagsRef.current
+
+        if (controlFlags.pauseCradleIntersectionObserver) return
+
         for (let i = 0; i < entries.length; i++ ) {
             let entry = entries[i]
             if (entry.target.dataset.name == 'head') {
@@ -851,7 +853,7 @@ const Cradle = ({
 
     const updateCradleContent = (entries, source = 'notifications') => {
 
-        // console.log('updating cradle content: source', source)
+        console.log('updating cradle content: source', source)
 
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current
@@ -1039,7 +1041,7 @@ const Cradle = ({
     // reset cradle, including allocation between head and tail parts of the cradle
     const setCradleContent = (cradleState, referenceIndexData) => { 
 
-        // console.log('setCradleContent: cradleState, referenceIndexData',cradleState, referenceIndexData)
+        console.log('setCradleContent: cradleState, referenceIndexData',cradleState, referenceIndexData)
 
         let cradleProps = cradlePropsRef.current
         let { index: visibletargetindexoffset, 
@@ -1169,6 +1171,8 @@ const Cradle = ({
 
     // callback for scrolling
     const onScroll = useCallback((e) => {
+
+        if (controlFlagsRef.current.pauseScrollingEffects) return
 
         let viewportElement = viewportDataRef.current.elementref.current
         let scrollPositions = scrollPositionsRef.current
@@ -1353,10 +1357,11 @@ const Cradle = ({
 
                     // redundant scroll position to avoid accidental positioning at tail end of reposition
                     if (viewportData.elementref.current) { // already unmounted if fails
-
-                        controlFlagsRef.current.pauseItemObserver  && (controlFlagsRef.current.pauseItemObserver = false)
-                        controlFlagsRef.current.pauseScrollingEffects && (controlFlagsRef.current.pauseScrollingEffects = false)
-
+                        let controlFlags = controlFlagsRef.current
+                        controlFlags.pauseItemObserver  && (controlFlags.pauseItemObserver = false)
+                        controlFlags.pauseScrollingEffects && (controlFlags.pauseScrollingEffects = false)
+                        controlFlags.pauseCradleIntersectionObserver && (controlFlags.pauseCradleIntersectionObserver = false)
+                        controlFlags.pauseCradleResizeObserver && (controlFlags.pauseCradleResizeObserver = false)
                     }
 
                     if (controlFlagsRef.current.isCradleInView) {
