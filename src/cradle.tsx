@@ -217,6 +217,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
+    // console.log('cradleState', cradleState)
     // -----------------------------------------------------------------------
     // -------------------------[ control flags ]-----------------
 
@@ -228,7 +229,7 @@ const Cradle = ({
         pauseScrollingEffects: false,
         isTailCradleInView:true,
         isHeadCradleInView:true,
-        isCradleInView:false,
+        isCradleInView:true,
     })
 
     // ------------------------------------------------------------------------
@@ -1355,19 +1356,26 @@ const Cradle = ({
             case 'normalize': {
                 setTimeout(()=> {
 
-                    // redundant scroll position to avoid accidental positioning at tail end of reposition
-                    if (viewportData.elementref.current) { // already unmounted if fails
-                        let controlFlags = controlFlagsRef.current
-                        controlFlags.pauseItemObserver  && (controlFlags.pauseItemObserver = false)
-                        controlFlags.pauseScrollingEffects && (controlFlags.pauseScrollingEffects = false)
-                        controlFlags.pauseCradleIntersectionObserver && (controlFlags.pauseCradleIntersectionObserver = false)
-                        controlFlags.pauseCradleResizeObserver && (controlFlags.pauseCradleResizeObserver = false)
-                    }
+                    // console.log('inside normalize: viewportData.isResizing', viewportData.isResizing)
+                    if (!viewportData.isResizing) {
+                        // redundant scroll position to avoid accidental positioning at tail end of reposition
+                        if (viewportData.elementref.current) { // already unmounted if fails
+                            let controlFlags = controlFlagsRef.current
+                            // console.log('clearing control Flags', controlFlags)
+                            controlFlags.pauseItemObserver  && (controlFlags.pauseItemObserver = false)
+                            controlFlags.pauseScrollingEffects && (controlFlags.pauseScrollingEffects = false)
+                            controlFlags.pauseCradleIntersectionObserver && (controlFlags.pauseCradleIntersectionObserver = false)
+                            controlFlags.pauseCradleResizeObserver && (controlFlags.pauseCradleResizeObserver = false)
+                        }
 
-                    if (controlFlagsRef.current.isCradleInView) {
-                        saveCradleState('ready')
+                        if (controlFlagsRef.current.isCradleInView) {
+                            saveCradleState('ready')
+                        } else {
+                            saveCradleState('repositioning')
+                        }
+
                     } else {
-                        saveCradleState('repositioning')
+                        saveCradleState('resizing')
                     }
 
                 })//,100)
