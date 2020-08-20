@@ -276,7 +276,7 @@ const Cradle = ({
     // trigger resizing based on viewport state
     useEffect(()=>{
 
-        console.log('viewportData.isResizing', viewportData.isResizing)
+        // console.log('viewportData.isResizing', viewportData.isResizing)
         if (cradleStateRef.current == 'setup') return
         if (viewportData.isResizing) {
 
@@ -853,7 +853,7 @@ const Cradle = ({
 
     const updateCradleContent = (entries, source = 'notifications') => {
 
-        console.log('updating cradle content: source', source)
+        // console.log('updating cradle content: source', source)
 
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current
@@ -1041,7 +1041,7 @@ const Cradle = ({
     // reset cradle, including allocation between head and tail parts of the cradle
     const setCradleContent = (cradleState, referenceIndexData) => { 
 
-        console.log('setCradleContent: cradleState, referenceIndexData',cradleState, referenceIndexData)
+        // console.log('setCradleContent: cradleState, referenceIndexData',cradleState, referenceIndexData)
 
         let cradleProps = cradlePropsRef.current
         let { index: visibletargetindexoffset, 
