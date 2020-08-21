@@ -868,12 +868,12 @@ const Cradle = ({
         } else {
             scrollOffset = viewportElement.scrollLeft
         }
-        if ( scrollOffset < 0) { // for Safari elatic bounce at top of scroll
+        if ( scrollOffset < 0) { // for Safari elastic bounce at top of scroll
 
             return
 
         }
-
+        // console.log('updateCradleContent scrollOffset', scrollOffset)
         // ----------------------------[ 1. initialize ]----------------------------
 
         let scrollPositions = scrollPositionsRef.current
@@ -940,8 +940,8 @@ const Cradle = ({
 
         if (referenceitemshift == 0) return
 
-         console.log('cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, cradleRowcount',
-             cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, cradleRowcount)
+         // console.log('in updateCradleContent: cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, cradleRowcount',
+         //     cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, cradleRowcount)
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
@@ -1044,7 +1044,7 @@ const Cradle = ({
     // reset cradle, including allocation between head and tail parts of the cradle
     const setCradleContent = (cradleState, referenceIndexData) => { 
 
-        console.log('setCradleContent: cradleState, referenceIndexData',cradleState, referenceIndexData)
+        // console.log('setCradleContent start: cradleState, referenceIndexData',cradleState, referenceIndexData)
 
         let cradleProps = cradlePropsRef.current
         let { index: visibletargetindexoffset, 
@@ -1084,7 +1084,7 @@ const Cradle = ({
                 viewportElement:viewportDataRef.current.elementref.current
             })
 
-        // console.log('cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment',
+        // console.log('setCradleContent getContentListRequirement: cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment',
         //     cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment)
 
         // returns content constrained by cradleRowcount
@@ -1151,6 +1151,8 @@ const Cradle = ({
             cradleElements.spine.current.style.top = (scrollblockoffset + spineadjustment) + 'px'
             cradleElements.spine.current.style.left = 'auto'
             cradleElements.head.current.style.paddingBottom = headcontentlist.length?cradleProps.gap + 'px':0
+            // console.log('CSS adjustments: scrollTop, scrollblockoffset, spineOffset, top, spineadjustment',
+            //     scrollblockoffset  - spineOffset, scrollblockoffset, spineOffset, scrollblockoffset, scrollblockoffset + spineadjustment, spineadjustment )
 
         } else { // orientation = 'horizontal'
 
@@ -1175,7 +1177,11 @@ const Cradle = ({
     // callback for scrolling
     const onScroll = useCallback((e) => {
 
-        if (controlFlagsRef.current.pauseScrollingEffects) return
+        if (controlFlagsRef.current.pauseScrollingEffects) {
+            // console.log('returning from onScroll with pauseScrollingEffects true', 
+            //     viewportDataRef.current.elementref.current.scrollTop)
+            return
+        }
 
         let viewportElement = viewportDataRef.current.elementref.current
         let scrollPositions = scrollPositionsRef.current
@@ -1307,10 +1313,13 @@ const Cradle = ({
                 break;
 
             case 'setscrolloffset': {
+                // console.log('setting scroll offset', scrollPositionDataRef)
+                // cradleContent.headView = []
+                // cradleContent.tailView = []
                 viewportData.elementref.current[scrollPositionDataRef.current.property] =
                     scrollPositionDataRef.current.value
-
-                saveCradleState('content')
+                // console.log('resulting scrollTop',viewportData.elementref.current.scrollTop)
+                saveCradleState('normalize')//'content')
 
                 break
             }
@@ -1324,7 +1333,7 @@ const Cradle = ({
                 let cradleContent = cradleContentRef.current
                 cradleContent.headView = cradleContent.headModel
                 cradleContent.tailView = cradleContent.tailModel
-                saveCradleState('normalize')
+                saveCradleState('setscrolloffset')//'normalize')
                 break
             }
         }
@@ -1351,7 +1360,7 @@ const Cradle = ({
 
                 setCradleContent(callingCradleState.current, callingReferenceIndexDataRef.current)
 
-                saveCradleState('setscrolloffset')
+                saveCradleState('content')//'setscrolloffset')
 
                 break
             }

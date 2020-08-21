@@ -189,7 +189,7 @@ export const getScrollReferenceIndexData = ({
     return referenceIndexData
 }
 
-export const getContentListRequirements = ({ // called from updateCradleContent only
+export const getContentListRequirements = ({ // called from setCradleContent only
         orientation, 
         cellHeight, 
         cellWidth, 
@@ -280,8 +280,8 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
 
     // debugger
 
-    console.log('cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment',
-        cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment)
+    // console.log('cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment',
+    //     cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment)
 
     return {cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment} // summarize requirements message
 
