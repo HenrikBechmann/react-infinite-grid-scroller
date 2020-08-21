@@ -280,6 +280,9 @@ export const getContentListRequirements = ({ // called from updateCradleContent 
 
     // debugger
 
+    console.log('cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment',
+        cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment)
+
     return {cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment} // summarize requirements message
 
 }

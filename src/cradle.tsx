@@ -940,8 +940,8 @@ const Cradle = ({
 
         if (referenceitemshift == 0) return
 
-         // console.log('cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, cradleRowcount',
-         //     cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, cradleRowcount)
+         console.log('cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, cradleRowcount',
+             cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, cradleRowcount)
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
@@ -1044,7 +1044,7 @@ const Cradle = ({
     // reset cradle, including allocation between head and tail parts of the cradle
     const setCradleContent = (cradleState, referenceIndexData) => { 
 
-        // console.log('setCradleContent: cradleState, referenceIndexData',cradleState, referenceIndexData)
+        console.log('setCradleContent: cradleState, referenceIndexData',cradleState, referenceIndexData)
 
         let cradleProps = cradlePropsRef.current
         let { index: visibletargetindexoffset, 
