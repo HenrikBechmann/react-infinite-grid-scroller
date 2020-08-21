@@ -745,7 +745,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let cradleitemcount = cradleRowcount * crosscount
     let cradleadjustment = listsize % crosscount
     if (cradleadjustment) cradleadjustment = crosscount - cradleadjustment
-    console.log('cradleitemcount, cradleadjustment, crosscount, listsize',cradleitemcount, cradleadjustment, crosscount, listsize)
+    // console.log('cradleitemcount, cradleadjustment, crosscount, listsize',cradleitemcount, cradleadjustment, crosscount, listsize)
     if ((newcradleindex + cradleitemcount) > (listsize)) {
         let diff = listsize - (newcradleindex + cradleitemcount)
         newcradleindex -= diff
@@ -946,10 +946,10 @@ export const getUIContentList = ({
     let headContentlist = []
 
     let topconstraint = cradleReferenceIndex - headchangecount,
-    bottomconstraint = (cradleReferenceIndex - headchangecount) + (contentCount - 1)
+    bottomconstraint = (cradleReferenceIndex - headchangecount) + (contentCount + 1) // TODO: validate "+1"
 
-    console.log('topconstraint, bottomconstraint, cradleReferenceIndex, contentCount', 
-        topconstraint, bottomconstraint, cradleReferenceIndex, contentCount)
+    // console.log('topconstraint, bottomconstraint, cradleReferenceIndex, contentCount, headchangecount, tailchangecount', 
+    //     topconstraint, bottomconstraint, cradleReferenceIndex, contentCount, headchangecount, tailchangecount)
 
     if (headchangecount >= 0) {
 
@@ -1017,8 +1017,8 @@ export const getUIContentList = ({
 
     returnContentlist = headContentlist.concat(localContentlist,tailContentlist)
 
-    console.log('components of getcontentlist: returnContentList, headContentlist, localContentlist, tailContentlist', 
-        returnContentlist, headContentlist, localContentlist, tailContentlist)
+    // console.log('components of getcontentlist: returnContentList, headContentlist, localContentlist, tailContentlist', 
+    //     returnContentlist, headContentlist, localContentlist, tailContentlist)
 
     return returnContentlist
 }

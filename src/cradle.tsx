@@ -940,8 +940,8 @@ const Cradle = ({
 
         if (referenceitemshift == 0) return
 
-         console.log('in updateCradleContent: cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, contentCount, cradleConfig',
-             cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, contentCount, cradleConfig)
+         // console.log('in updateCradleContent: cradleindex, cradleitemshift, spi neReferenceIndex, referenceitemshift, spineOffset, contentCount, cradleConfig',
+         //     cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, contentCount, cradleConfig)
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
