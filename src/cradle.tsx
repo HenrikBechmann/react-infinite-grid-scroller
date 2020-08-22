@@ -1302,10 +1302,10 @@ const Cradle = ({
         let cradleContent = cradleContentRef.current
         switch (cradleState) {
             case 'reload':
-                cradleContent.headModel = []
-                cradleContent.tailModel = []
-                cradleContent.headView = []
-                cradleContent.tailView = []
+                // cradleContent.headModel = []
+                // cradleContent.tailModel = []
+                // cradleContent.headView = []
+                // cradleContent.tailView = []
                 saveCradleState('setreload')
                 break;
             case 'updatereposition':
@@ -1333,7 +1333,12 @@ const Cradle = ({
 
             }
             case 'content': {
+
                 console.log('content')
+                let cradleContent = cradleContentRef.current
+                cradleContent.headView = cradleContent.headModel
+                cradleContent.tailView = cradleContent.tailModel
+
                 // let cradleContent = cradleContentRef.current
                 // cradleContent.headView = cradleContent.headModel
                 // cradleContent.tailView = cradleContent.tailModel
@@ -1364,11 +1369,12 @@ const Cradle = ({
 
                 console.log('settle (setCradleContent): state, refIndex',callingCradleState.current, callingReferenceIndexDataRef.current)
 
-                setCradleContent(callingCradleState.current, callingReferenceIndexDataRef.current)
+                cradleContent.headModel = []
+                cradleContent.tailModel = []
+                cradleContent.headView = []
+                cradleContent.tailView = []
 
-                let cradleContent = cradleContentRef.current
-                cradleContent.headView = cradleContent.headModel
-                cradleContent.tailView = cradleContent.tailModel
+                setCradleContent(callingCradleState.current, callingReferenceIndexDataRef.current)
 
                 saveCradleState('content')//'setscrolloffset')
 
@@ -1382,7 +1388,7 @@ const Cradle = ({
                         // redundant scroll position to avoid accidental positioning at tail end of reposition
                         if (viewportData.elementref.current) { // already unmounted if fails
                             let controlFlags = controlFlagsRef.current
-                            // console.log('clearing control Flags', controlFlags)
+                            console.log('clearing control Flags', controlFlags)
                             controlFlags.pauseItemObserver  && (controlFlags.pauseItemObserver = false)
                             controlFlags.pauseScrollingEffects && (controlFlags.pauseScrollingEffects = false)
                             controlFlags.pauseCradleIntersectionObserver && (controlFlags.pauseCradleIntersectionObserver = false)
