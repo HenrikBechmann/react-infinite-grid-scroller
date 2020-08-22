@@ -4,6 +4,8 @@
 /*
     TODO:
 
+    for resize, preserve cache for reload
+
     fix spine location anomalies at front and back.
 
     resizing is triggered twice on setup and probably shouldn't be
