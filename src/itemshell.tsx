@@ -27,7 +27,7 @@ const ItemShell = (props) => {
         let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
         let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
         if (getItem) {
-            itemrequest = requestidlecallback(()=> {
+            itemrequest.current = requestidlecallback(()=> {
 
                 let value = getItem(index)
                 if (value && value.then) {
@@ -37,8 +37,10 @@ const ItemShell = (props) => {
                             saveError(null)
                         }
                     }).catch((e) => {
-                        saveContent(null)
-                        saveError(e)
+                        if (isMounted()) { 
+                            saveContent(null)
+                            saveError(e)
+                        }
                     })
                 } else {
                     if (isMounted()) {
@@ -66,6 +68,7 @@ const ItemShell = (props) => {
         let localcalls = callbacks
 
         localcalls.getElementData && localcalls.getElementData(getElementData(),'register')
+
         return (()=>{
 
             localcalls.getElementData && localcalls.getElementData(getElementData(),'unregister')

@@ -74,7 +74,15 @@ const Viewport = ({
     },[])
 
     const resizeCallback = useCallback((entries)=>{
+
         if (portstateRef.current == 'prepare') return
+
+        let target = entries[0].target
+
+        if (!target.dataset.initialized) {
+            target.dataset.initialized = true
+            return
+        }
 
         if (!isResizingRef.current) {
             isResizingRef.current = true 
