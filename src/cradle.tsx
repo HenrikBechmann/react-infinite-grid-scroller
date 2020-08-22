@@ -856,7 +856,7 @@ const Cradle = ({
 
     const updateCradleContent = (entries, source = 'notifications') => {
 
-        // console.log('updating cradle content: source', source)
+        console.log('updating cradle content: source', source)
 
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current
@@ -873,7 +873,7 @@ const Cradle = ({
             return
 
         }
-        // console.log('updateCradleContent scrollOffset', scrollOffset)
+        console.log('updateCradleContent scrollOffset', scrollOffset)
         // ----------------------------[ 1. initialize ]----------------------------
 
         let scrollPositions = scrollPositionsRef.current
@@ -919,6 +919,8 @@ const Cradle = ({
 
         })
 
+        console.log('intersections', intersections)
+
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         let [cradleindex, 
@@ -940,8 +942,8 @@ const Cradle = ({
 
         if (referenceitemshift == 0) return
 
-         // console.log('in updateCradleContent: cradleindex, cradleitemshift, spi neReferenceIndex, referenceitemshift, spineOffset, contentCount, cradleConfig',
-         //     cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, contentCount, cradleConfig)
+         console.log('in updateCradleContent: cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, contentCount, cradleConfig',
+             cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, contentCount, cradleConfig)
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
@@ -958,7 +960,7 @@ const Cradle = ({
 
         })
 
-        // console.log('headchangecount,tailchangecount',headchangecount,tailchangecount)
+        console.log('headchangecount,tailchangecount',headchangecount,tailchangecount)
 
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
@@ -985,7 +987,7 @@ const Cradle = ({
 
         }
 
-        // console.log('localContentList.length', localContentList.length)
+        console.log('localContentList.length', localContentList.length)
 
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 
@@ -1084,8 +1086,8 @@ const Cradle = ({
                 viewportElement:viewportDataRef.current.elementref.current
             })
 
-        // console.log('setCradleContent getContentListRequirement: cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment',
-        //     cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment)
+        console.log('setCradleContent getContentListRequirements: cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment',
+            cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment)
 
         // returns content constrained by cradleRowcount
         let childlist = getUIContentList({
@@ -1103,7 +1105,7 @@ const Cradle = ({
             observer: itemObserverRef.current,
             cradleRowcount,
         })
-        // console.log('childlist.length, contentCount, rows from setContent', childlist.length, contentCount, Math.ceil(contentCount/crosscount))
+        console.log('childlist.length, contentCount, rows from setContent', childlist.length, contentCount, Math.ceil(contentCount/crosscount))
 
         let [headcontentlist, tailcontentlist] = allocateContentList({
 
@@ -1112,7 +1114,7 @@ const Cradle = ({
     
         })
 
-        // console.log('headcontentlist.length, tailcontentlist.length',headcontentlist.length, tailcontentlist.length)
+        console.log('headcontentlist.length, tailcontentlist.length',headcontentlist.length, tailcontentlist.length)
 
         if (headcontentlist.length == 0) {
             spineOffset = padding
@@ -1313,13 +1315,14 @@ const Cradle = ({
                 break;
 
             case 'setscrolloffset': {
-                // console.log('setting scroll offset', scrollPositionDataRef)
-                // cradleContent.headView = []
-                // cradleContent.tailView = []
-                viewportData.elementref.current[scrollPositionDataRef.current.property] =
-                    scrollPositionDataRef.current.value
-                // console.log('resulting scrollTop',viewportData.elementref.current.scrollTop)
-                saveCradleState('normalize')//'content')
+
+                // setTimeout(() => {
+                    viewportData.elementref.current[scrollPositionDataRef.current.property] =
+                        scrollPositionDataRef.current.value
+                    console.log('setscrolloffset', scrollPositionDataRef.current)
+
+                    saveCradleState('normalize')//'content')
+                // })
 
                 break
             }
@@ -1330,9 +1333,10 @@ const Cradle = ({
 
             }
             case 'content': {
-                let cradleContent = cradleContentRef.current
-                cradleContent.headView = cradleContent.headModel
-                cradleContent.tailView = cradleContent.tailModel
+                console.log('content')
+                // let cradleContent = cradleContentRef.current
+                // cradleContent.headView = cradleContent.headModel
+                // cradleContent.tailView = cradleContent.tailModel
                 saveCradleState('setscrolloffset')//'normalize')
                 break
             }
@@ -1358,7 +1362,13 @@ const Cradle = ({
 
             case 'settle': {
 
+                console.log('settle (setCradleContent): state, refIndex',callingCradleState.current, callingReferenceIndexDataRef.current)
+
                 setCradleContent(callingCradleState.current, callingReferenceIndexDataRef.current)
+
+                let cradleContent = cradleContentRef.current
+                cradleContent.headView = cradleContent.headModel
+                cradleContent.tailView = cradleContent.tailModel
 
                 saveCradleState('content')//'setscrolloffset')
 
@@ -1389,7 +1399,7 @@ const Cradle = ({
                         saveCradleState('resizing')
                     }
 
-                })//,100)
+                },100)
 
                 break 
 

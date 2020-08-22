@@ -259,7 +259,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         spineOffset = 0 // padding
         spineadjustment = padding
     } else {
-        spineadjustment = gap;
+        spineadjustment = 0; //gap;
 
         [cradleReferenceIndex, contentCount, referenceoffset, scrollblockoffset, spineOffset] = adjustSpineOffsetForMaxRefindex({
             referenceoffset,
@@ -948,8 +948,8 @@ export const getUIContentList = ({
     let topconstraint = cradleReferenceIndex - headchangecount,
     bottomconstraint = (cradleReferenceIndex - headchangecount) + (contentCount + 1) // TODO: validate "+1"
 
-    // console.log('topconstraint, bottomconstraint, cradleReferenceIndex, contentCount, headchangecount, tailchangecount', 
-    //     topconstraint, bottomconstraint, cradleReferenceIndex, contentCount, headchangecount, tailchangecount)
+    console.log('topconstraint, bottomconstraint, cradleReferenceIndex, contentCount, headchangecount, tailchangecount', 
+        topconstraint, bottomconstraint, cradleReferenceIndex, contentCount, headchangecount, tailchangecount)
 
     if (headchangecount >= 0) {
 
