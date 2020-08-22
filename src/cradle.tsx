@@ -824,13 +824,13 @@ const Cradle = ({
         let movedentries = []
 
         for (let entry of entries) {
-            if (entry.target.dataset.moved) {
+            if (entry.target.dataset.initialized) {
 
                 movedentries.push(entry)
 
             } else {
 
-                entry.target.dataset.moved = 'moved'
+                entry.target.dataset.initialized = true
 
             }
         }
