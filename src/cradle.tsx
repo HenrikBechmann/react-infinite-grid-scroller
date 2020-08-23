@@ -1152,7 +1152,7 @@ const Cradle = ({
 
         } else { // orientation = 'horizontal'
 
-            scrollPositionDataRef.current = {property:'scrollLeft',value:scrollblockoffset - spineOffset - spineadjustment}
+            scrollPositionDataRef.current = {property:'scrollLeft',value:scrollblockoffset - spineOffset}
 
             cradleElements.spine.current.style.top = 'auto'
             cradleElements.spine.current.style.left = (scrollblockoffset + spineadjustment) + 'px'

@@ -251,7 +251,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     // --------------------[ calc css positioning ]-----------------------
 
     let targetrowoffset = Math.ceil(referenceoffset/crosscount)
-    let scrollblockoffset = (targetrowoffset * cellLength) + gap
+    let scrollblockoffset = (targetrowoffset * cellLength) + padding // gap
     let spineadjustment
 
     if (targetrowoffset == 0) {
