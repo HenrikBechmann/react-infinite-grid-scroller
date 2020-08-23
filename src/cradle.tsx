@@ -4,6 +4,8 @@
 /*
     TODO:
 
+    in horizontal mode, rapid scroll to right sometimes leads to wrong placement of spine
+
     for resize, preserve cache for reload
 
     fix spine location anomalies at front and back.

@@ -647,7 +647,6 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     if (orientation == 'vertical') {
 
-
         spineoffset = spineElement.offsetTop - viewportElement.scrollTop
         headblockoffset = headElement.offsetTop
         tailblockoffset = tailElement.offsetTop // always 0
@@ -765,10 +764,6 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let spineOffset = previousrefindexcradleoffset + referencepixelshift
 
     cradleitemcount -= cradleadjustment
-    // if (spineOffset > cellLength) {
-    //     console.log('spineOffset = previousrefindexcradleoffset + referencepixelshift (>cellLength)',
-    //         spineOffset, previousrefindexcradleoffset, referencepixelshift, cellLength) 
-    // }
 
     return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset, cradleitemcount]
 
