@@ -623,6 +623,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         cellHeight,
         cellWidth,
         listsize,
+        padding,
         runwaycount } = cradleProps
 
     let spineElement = cradleElements.spine.current
@@ -731,9 +732,6 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         newcradleindex = newreferenceindex - (runwaycount * crosscount)
     }
 
-
-    // TODO: add logic to deal with {cradleReferenceIndex + 1) < rowcount
-
     if (newcradleindex < 0) {
         newcradleindex = 0
     }
@@ -765,6 +763,10 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let referencepixelshift = referencerowshift * cellLength
 
     let spineOffset = previousrefindexcradleoffset + referencepixelshift
+    let spineoffsetadjustment = 0
+    if (newreferenceindex == 0) {
+        spineoffsetadjustment = padding
+    }
 
     cradleitemcount -= cradleadjustment
     // if (spineOffset > cellLength) {
@@ -772,7 +774,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     //         spineOffset, previousrefindexcradleoffset, referencepixelshift, cellLength) 
     // }
 
-    return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset, cradleitemcount]
+    return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset, cradleitemcount, spineoffsetadjustment]
 
 }
 

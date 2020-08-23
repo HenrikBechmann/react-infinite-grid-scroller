@@ -920,7 +920,8 @@ const Cradle = ({
             cradleitemshift, 
             spineReferenceIndex, 
             referenceitemshift,
-            spineOffset, contentCount] = calcContentShifts({
+            spineOffset, 
+            contentCount] = calcContentShifts({
 
                 cradleProps,
                 cradleConfig,
