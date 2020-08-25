@@ -714,8 +714,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let itemshiftcount = backwardcount - forwardcount + overshootitemcount
 
-    console.log('--- itemshiftcount = backwardcount - forwardcount + overshootitemcount',
-        itemshiftcount, backwardcount, forwardcount, overshootitemcount)
+    // console.log('--- itemshiftcount = backwardcount - forwardcount + overshootitemcount',
+    //     itemshiftcount, backwardcount, forwardcount, overshootitemcount)
     //-------------------------------[ calc return values ]----------------------------
 
     let previousreferenceindex = tailcontentlist[0].props.index
@@ -723,7 +723,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         spineElement.offsetTop - viewportElement.scrollTop:
         spineElement.offsetLeft - viewportElement.scrollLeft
 
-    console.log('calculatedcradleoffset',calculatedcradleoffset)
+    // console.log('calcuslatedcradleoffset',calculatedcradleoffset)
 
     let previouscradleindex = cradlecontentlist[0].props.index
 
@@ -743,8 +743,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     if (newreferenceindex < 0) {
         newreferenceindex = 0
     }
-    console.log('previouscradleindex, previousreferenceindex, newcradleindex, newreferenceindex',
-        previouscradleindex, previousreferenceindex, newcradleindex, newreferenceindex)
+    // console.log('previouscradleindex, previousreferenceindex, newcradleindex, newreferenceindex',
+    //     previouscradleindex, previousreferenceindex, newcradleindex, newreferenceindex)
 
     // -- tailbased adjustments
     let cradleitemcount = cradleRowcount * crosscount
@@ -771,8 +771,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let spineOffset = calculatedcradleoffset + referencepixelshift
 
-    console.log('adjusted spineOffset, crosscount, cellLength, referenceitemshiftcount, referencerowshift', 
-        spineOffset, crosscount, cellLength, referenceitemshiftcount, referencerowshift)
+    // console.log('adjusted spineOffset, crosscount, cellLength, referenceitemshiftcount, referencerowshift', 
+    //     spineOffset, crosscount, cellLength, referenceitemshiftcount, referencerowshift)
 
     cradleitemcount -= cradleadjustment
 
