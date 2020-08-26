@@ -686,6 +686,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let overshootrowcount = (viewportgaplength == 0)?0:Math.ceil(viewportgaplength/cellLength) // rows to fill viewport
 
+    console.log('--> overshootrowcount = viewportgaplength/cellLength; scrollforward',overshootrowcount, viewportgaplength, cellLength, scrollforward)
     // extra rows for runway
     if (overshootrowcount) {
         overshootrowcount += runwaycount
@@ -714,8 +715,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let itemshiftcount = backwardcount - forwardcount + overshootitemcount
 
-    // console.log('--- itemshiftcount = backwardcount - forwardcount + overshootitemcount',
-    //     itemshiftcount, backwardcount, forwardcount, overshootitemcount)
+    console.log('itemshiftcount = backwardcount - forwardcount + overshootitemcount',
+        itemshiftcount, backwardcount, forwardcount, overshootitemcount)
     //-------------------------------[ calc return values ]----------------------------
 
     let previousreferenceindex = tailcontentlist[0].props.index
@@ -743,14 +744,15 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     if (newreferenceindex < 0) {
         newreferenceindex = 0
     }
-    // console.log('previouscradleindex, previousreferenceindex, newcradleindex, newreferenceindex',
-    //     previouscradleindex, previousreferenceindex, newcradleindex, newreferenceindex)
+    console.log('previouscradleindex, previousreferenceindex, newcradleindex, newreferenceindex',
+        previouscradleindex, previousreferenceindex, newcradleindex, newreferenceindex)
 
     // -- tailbased adjustments
     let cradleitemcount = cradleRowcount * crosscount
     let cradleadjustment = listsize % crosscount
     if (cradleadjustment) cradleadjustment = crosscount - cradleadjustment
-    // console.log('cradleitemcount, cradleadjustment, crosscount, listsize',cradleitemcount, cradleadjustment, crosscount, listsize)
+    console.log('cradleitemcount, cradleadjustment, crosscount, listsize',
+        cradleitemcount, cradleadjustment, crosscount, listsize)
     if ((newcradleindex + cradleitemcount) > (listsize)) {
         let diff = listsize - (newcradleindex + cradleitemcount)
         newcradleindex -= diff
@@ -770,6 +772,9 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let referencepixelshift = referencerowshift * cellLength
 
     let spineOffset = calculatedcradleoffset + referencepixelshift
+
+    console.log('spineOffset = calculatedcradleoffset + referencepixelshift; referencerowshift',
+        spineOffset, calculatedcradleoffset, referencepixelshift, referencerowshift)
 
     // console.log('adjusted spineOffset, crosscount, cellLength, referenceitemshiftcount, referencerowshift', 
     //     spineOffset, crosscount, cellLength, referenceitemshiftcount, referencerowshift)
