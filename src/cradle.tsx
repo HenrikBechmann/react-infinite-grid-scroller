@@ -851,7 +851,7 @@ const Cradle = ({
 
     const updateCradleContent = (entries, source = 'notifications') => {
 
-        // console.log('updating cradle content: source', source)
+        console.log('updating cradle content: entries.length, source', entries.length, source)
 
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current

@@ -640,14 +640,14 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         itemObserverThreshold } = cradleConfig
 
     // ------- calculate cradleboundary and boundary row and item count for overshoot
-    let spineoffset, headblockoffset, tailblockoffset, viewportlength
+    let startingspineoffset, headblockoffset, tailblockoffset, viewportlength
     let viewportgaplength
 
     let cellLength = (orientation == 'vertical')?cellHeight + gap:cellWidth + gap
 
     if (orientation == 'vertical') {
 
-        spineoffset = spineElement.offsetTop - viewportElement.scrollTop
+        startingspineoffset = spineElement.offsetTop - viewportElement.scrollTop
         headblockoffset = headElement.offsetTop
         tailblockoffset = tailElement.offsetTop // always 0
         viewportlength = viewportElement.offsetHeight
@@ -655,28 +655,28 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         // measure any gap between the cradle and the viewport boundary
         if (scrollforward) {
 
-            viewportgaplength = viewportlength - (spineoffset + tailElement.offsetHeight)
+            viewportgaplength = viewportlength - (startingspineoffset + tailElement.offsetHeight)
 
         } else {
 
-            viewportgaplength = spineoffset - headElement.offsetHeight
+            viewportgaplength = startingspineoffset - headElement.offsetHeight
 
         }
 
     } else { // horizontal
 
-        spineoffset = spineElement.offsetLeft - viewportElement.scrollLeft
+        startingspineoffset = spineElement.offsetLeft - viewportElement.scrollLeft
         headblockoffset = headElement.offsetLeft
         tailblockoffset = tailElement.offsetLeft // always 0
         viewportlength = viewportElement.offsetWidth
 
         if (scrollforward) {
 
-            viewportgaplength = viewportlength - (spineoffset + tailElement.offsetWidth)
+            viewportgaplength = viewportlength - (startingspineoffset + tailElement.offsetWidth)
 
         } else {
 
-            viewportgaplength = spineoffset - headElement.offsetWidth
+            viewportgaplength = startingspineoffset - headElement.offsetWidth
 
         }
     }
@@ -758,11 +758,12 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         newcradleindex -= diff
     }
 
-    let viewportrows = Math.floor(viewportlength/cellLength)
-    let targetindexrow = newreferenceindex/crosscount
-    let maxrefindexrow = Math.ceil(listsize/crosscount) - viewportrows
-    if (targetindexrow > maxrefindexrow) {
-        newreferenceindex -= ((targetindexrow - maxrefindexrow) * crosscount)
+    let viewportfullrows = Math.floor(viewportlength/cellLength)
+    let targetindexrow = newreferenceindex/crosscount // 0-based
+    let maxrefindexrow = Math.ceil(listsize/crosscount) - viewportfullrows
+    if (targetindexrow >= maxrefindexrow) {
+        newreferenceindex = (maxrefindexrow * crosscount) // ((targetindexrow - maxrefindexrow) * crosscount)
+        console.log('>>>setting referenceindex to maxrefindexrow',newreferenceindex)
     }
 
     let cradleitemshiftcount = newcradleindex - previouscradleindex
