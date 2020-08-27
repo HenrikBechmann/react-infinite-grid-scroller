@@ -496,6 +496,7 @@ const Cradle = ({
         cradleRowcount,
         viewportRowcount,
         itemObserverThreshold:ITEM_OBSERVER_THRESHOLD,
+        listrows:Math.ceil(listsize/crosscount)
     })
 
     cradleConfigRef.current = {
@@ -503,6 +504,7 @@ const Cradle = ({
         cradleRowcount,
         viewportRowcount,
         itemObserverThreshold:ITEM_OBSERVER_THRESHOLD,
+        listrows:Math.ceil(listsize/crosscount),
     }
 
     // ----------------------------------[ cradle default styles]----------------------------------

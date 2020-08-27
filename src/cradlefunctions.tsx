@@ -636,6 +636,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let { crosscount,
         cradleRowcount,
+        listrowcount,
         viewportRowcount,
         itemObserverThreshold } = cradleConfig
 
@@ -649,8 +650,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     if (orientation == 'vertical') {
 
         startingspineoffset = spineElement.offsetTop - viewportElement.scrollTop
-        headblockoffset = headElement.offsetTop
-        tailblockoffset = tailElement.offsetTop // always 0
+        // headblockoffset = headElement.offsetTop
+        // tailblockoffset = tailElement.offsetTop // always 0
         viewportlength = viewportElement.offsetHeight
 
         // measure any gap between the cradle and the viewport boundary
@@ -667,8 +668,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     } else { // horizontal
 
         startingspineoffset = spineElement.offsetLeft - viewportElement.scrollLeft
-        headblockoffset = headElement.offsetLeft
-        tailblockoffset = tailElement.offsetLeft // always 0
+        // headblockoffset = headElement.offsetLeft
+        // tailblockoffset = tailElement.offsetLeft // always 0
         viewportlength = viewportElement.offsetWidth
 
         if (scrollforward) {
@@ -687,14 +688,14 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let overshootrowcount = (viewportgaplength == 0)?0:Math.ceil(viewportgaplength/cellLength) // rows to fill viewport
 
-    console.log('--> overshootrowcount = viewportgaplength/cellLength; scrollforward',overshootrowcount, viewportgaplength, cellLength, scrollforward)
+    console.log('--> overshootrowcount = viewportgaplength/cellLength; scrollforward',
+        overshootrowcount, viewportgaplength, cellLength, scrollforward)
     // extra rows for runway
     if (overshootrowcount) {
         overshootrowcount += runwaycount
     }
     let overshootitemcount = overshootrowcount * crosscount
 
-    // let unincludedheaditems = 0
     if (!scrollforward && (overshootitemcount != 0)) { // negation of values for scroll backward
         overshootitemcount = -overshootitemcount
         overshootrowcount = -overshootrowcount
@@ -716,8 +717,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let itemshiftcount = backwardcount - forwardcount + overshootitemcount
 
-    console.log('itemshiftcount = backwardcount - forwardcount + overshootitemcount',
-        itemshiftcount, backwardcount, forwardcount, overshootitemcount)
+    let itemrowshift = Math.ceil(itemshiftcount/crosscount)
+
 
     //-------------------------------[ calc return values ]----------------------------
 
@@ -725,28 +726,41 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let previouscradleindex = cradlecontentlist[0].props.index
 
+    let previousreferencerowoffset = previousreferenceindex/crosscount
+
+    let previouscradlerowoffset = previouscradleindex/crosscount
+
+    let diff, outerRowoffset = listrowcount - 1
+    if (scrollforward) {
+        diff = (previouscradlerowoffset + cradleRowcount + itemrowshift) - listrowcount
+        if (diff > 0) {
+            itemrowshift -= diff
+            itemshiftcount -= (diff * crosscount)
+        }
+    } else {
+        diff = previouscradlerowoffset + itemrowshift
+        if (diff < 0) {
+            itemrowshift += diff
+            itemshiftcount += (diff * crosscount)
+        }
+    }
+
     let newcradleindex = previouscradleindex + itemshiftcount
     let newreferenceindex = previousreferenceindex + itemshiftcount
 
-    console.log('+++ newreferenceindex = previousreferenceindex + itemshiftcount', 
-        newreferenceindex, previousreferenceindex, itemshiftcount)
-
+    if (newreferenceindex < 0) {
+        newreferenceindex = 0
+    }
     // --- head based adjustments
     // reset cradleindex to be relative to referenceindex by runwaycount
     if ((newreferenceindex - newcradleindex) < (runwaycount * crosscount)) {
         newcradleindex = newreferenceindex - (runwaycount * crosscount)
     }
+
     // correct cradleindex undershoot
     if (newcradleindex < 0) {
         newcradleindex = 0
     }
-
-    if (newreferenceindex < 0) {
-        newreferenceindex = 0
-    }
-
-    console.log('previouscradleindex, previousreferenceindex, newcradleindex, newreferenceindex',
-        previouscradleindex, previousreferenceindex, newcradleindex, newreferenceindex)
 
     // -- tailbased adjustments
     let cradleitemcount = cradleRowcount * crosscount
