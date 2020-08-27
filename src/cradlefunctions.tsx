@@ -749,9 +749,9 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     // --- head based adjustments
     // reset cradleindex to be relative to referenceindex by runwaycount
-    if ((newreferenceindex - newcradleindex) < (runwaycount * crosscount)) {
-        newcradleindex = newreferenceindex - (runwaycount * crosscount)
-    }
+    // if ((newreferenceindex - newcradleindex) < (runwaycount * crosscount)) {
+    //     newcradleindex = newreferenceindex - (runwaycount * crosscount)
+    // }
 
     console.log('=== newcradleindex, newreferenceindex', newcradleindex, newreferenceindex)
 
