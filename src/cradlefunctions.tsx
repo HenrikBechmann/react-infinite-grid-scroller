@@ -650,8 +650,6 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     if (orientation == 'vertical') {
 
         startingspineoffset = spineElement.offsetTop - viewportElement.scrollTop
-        // headblockoffset = headElement.offsetTop
-        // tailblockoffset = tailElement.offsetTop // always 0
         viewportlength = viewportElement.offsetHeight
 
         // measure any gap between the cradle and the viewport boundary
@@ -668,8 +666,6 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     } else { // horizontal
 
         startingspineoffset = spineElement.offsetLeft - viewportElement.scrollLeft
-        // headblockoffset = headElement.offsetLeft
-        // tailblockoffset = tailElement.offsetLeft // always 0
         viewportlength = viewportElement.offsetWidth
 
         if (scrollforward) {
@@ -688,8 +684,6 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let overshootrowcount = (viewportgaplength == 0)?0:Math.ceil(viewportgaplength/cellLength) // rows to fill viewport
 
-    console.log('--> overshootrowcount = viewportgaplength/cellLength; scrollforward',
-        overshootrowcount, viewportgaplength, cellLength, scrollforward)
     // extra rows for runway
     if (overshootrowcount) {
         overshootrowcount += runwaycount
@@ -719,7 +713,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let itemrowshift = Math.ceil(itemshiftcount/crosscount)
 
-
+    // console.log('==>> preliminary itemshiftcount, itemrowshift',itemshiftcount, itemrowshift)
     //-------------------------------[ calc return values ]----------------------------
 
     let previousreferenceindex = tailcontentlist[0].props.index
@@ -732,53 +726,45 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let diff, outerRowoffset = listrowcount - 1
     if (scrollforward) {
+
         diff = (previouscradlerowoffset + cradleRowcount + itemrowshift) - listrowcount
+
         if (diff > 0) {
             itemrowshift -= diff
             itemshiftcount -= (diff * crosscount)
         }
+
     } else {
+
         diff = previouscradlerowoffset + itemrowshift
         if (diff < 0) {
-            itemrowshift += diff
-            itemshiftcount += (diff * crosscount)
+            itemrowshift -= diff
+            itemshiftcount -= (diff * crosscount)
         }
+
     }
 
     let newcradleindex = previouscradleindex + itemshiftcount
     let newreferenceindex = previousreferenceindex + itemshiftcount
 
-    if (newreferenceindex < 0) {
-        newreferenceindex = 0
-    }
     // --- head based adjustments
     // reset cradleindex to be relative to referenceindex by runwaycount
     if ((newreferenceindex - newcradleindex) < (runwaycount * crosscount)) {
         newcradleindex = newreferenceindex - (runwaycount * crosscount)
     }
 
-    // correct cradleindex undershoot
-    if (newcradleindex < 0) {
-        newcradleindex = 0
-    }
+    console.log('=== newcradleindex, newreferenceindex', newcradleindex, newreferenceindex)
 
     // -- tailbased adjustments
     let cradleitemcount = cradleRowcount * crosscount
     let cradleadjustment = listsize % crosscount
-    if (cradleadjustment) cradleadjustment = crosscount - cradleadjustment
-    console.log('cradleitemcount, cradleadjustment, crosscount, listsize',
-        cradleitemcount, cradleadjustment, crosscount, listsize)
+    if (cradleadjustment) {
+        cradleadjustment = crosscount - cradleadjustment
+    }
+
     if ((newcradleindex + cradleitemcount) > (listsize)) {
         let diff = listsize - (newcradleindex + cradleitemcount)
         newcradleindex -= diff
-    }
-
-    let viewportfullrows = Math.floor(viewportlength/cellLength)
-    let targetindexrow = newreferenceindex/crosscount // 0-based
-    let maxrefindexrow = Math.ceil(listsize/crosscount) - viewportfullrows
-    if (targetindexrow >= maxrefindexrow) {
-        newreferenceindex = (maxrefindexrow * crosscount) // ((targetindexrow - maxrefindexrow) * crosscount)
-        console.log('>>>setting referenceindex to maxrefindexrow',newreferenceindex)
     }
 
     let cradleitemshiftcount = newcradleindex - previouscradleindex
@@ -788,12 +774,6 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let referencepixelshift = referencerowshift * cellLength
 
     let spineOffset = startingspineoffset + referencepixelshift
-
-    console.log('spineOffset = startingspineoffset + referencepixelshift; referencerowshift',
-        spineOffset, startingspineoffset, referencepixelshift, referencerowshift)
-
-    // console.log('adjusted spineOffset, crosscount, cellLength, referenceitemshiftcount, referencerowshift', 
-    //     spineOffset, crosscount, cellLength, referenceitemshiftcount, referencerowshift)
 
     cradleitemcount -= cradleadjustment
 

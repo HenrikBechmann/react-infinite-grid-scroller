@@ -4,6 +4,8 @@
 /*
     TODO:
 
+    resize from bottom position to full screen results in extra gap at bottom
+
     in horizontal mode, rapid scroll to right sometimes leads to wrong placement of spine
 
     for resize, preserve cache for reload
@@ -496,7 +498,7 @@ const Cradle = ({
         cradleRowcount,
         viewportRowcount,
         itemObserverThreshold:ITEM_OBSERVER_THRESHOLD,
-        listrows:Math.ceil(listsize/crosscount)
+        listrowcount:Math.ceil(listsize/crosscount)
     })
 
     cradleConfigRef.current = {
@@ -504,7 +506,7 @@ const Cradle = ({
         cradleRowcount,
         viewportRowcount,
         itemObserverThreshold:ITEM_OBSERVER_THRESHOLD,
-        listrows:Math.ceil(listsize/crosscount),
+        listrowcount:Math.ceil(listsize/crosscount),
     }
 
     // ----------------------------------[ cradle default styles]----------------------------------
@@ -853,7 +855,7 @@ const Cradle = ({
 
     const updateCradleContent = (entries, source = 'notifications') => {
 
-        console.log('updating cradle content: entries.length, source', entries.length, source)
+        // console.log('updating cradle content: entries.length, source', entries.length, source)
 
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current
