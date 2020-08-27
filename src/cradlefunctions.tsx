@@ -724,7 +724,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let previouscradlerowoffset = previouscradleindex/crosscount
 
-    let diff, outerRowoffset = listrowcount - 1
+    let diff //, outerRowoffset = listrowcount - 1
     if (scrollforward) {
 
         diff = (previouscradlerowoffset + cradleRowcount + itemrowshift) - listrowcount
@@ -747,13 +747,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let newcradleindex = previouscradleindex + itemshiftcount
     let newreferenceindex = previousreferenceindex + itemshiftcount
 
-    // --- head based adjustments
-    // reset cradleindex to be relative to referenceindex by runwaycount
-    // if ((newreferenceindex - newcradleindex) < (runwaycount * crosscount)) {
-    //     newcradleindex = newreferenceindex - (runwaycount * crosscount)
-    // }
-
-    console.log('=== newcradleindex, newreferenceindex', newcradleindex, newreferenceindex)
+    console.log('=== newcradleindex, newreferenceindex, diff', newcradleindex, newreferenceindex, diff)
 
     // -- tailbased adjustments
     let cradleitemcount = cradleRowcount * crosscount
