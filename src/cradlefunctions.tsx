@@ -640,6 +640,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         itemObserverThreshold } = cradleConfig
 
     // ------- calculate cradleboundary and boundary row and item count for overshoot
+    
     let startingspineoffset, headblockoffset, tailblockoffset, viewportlength
     let viewportgaplength
 
@@ -717,12 +718,13 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     console.log('itemshiftcount = backwardcount - forwardcount + overshootitemcount',
         itemshiftcount, backwardcount, forwardcount, overshootitemcount)
+
     //-------------------------------[ calc return values ]----------------------------
 
     let previousreferenceindex = tailcontentlist[0].props.index
-    let calculatedcradleoffset = (orientation == 'vertical')?
-        spineElement.offsetTop - viewportElement.scrollTop:
-        spineElement.offsetLeft - viewportElement.scrollLeft
+    // let calculatedcradleoffset = (orientation == 'vertical')?
+    //     spineElement.offsetTop - viewportElement.scrollTop:
+    //     spineElement.offsetLeft - viewportElement.scrollLeft
 
     // console.log('calcuslatedcradleoffset',calculatedcradleoffset)
 
@@ -772,10 +774,10 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let referencerowshift = referenceitemshiftcount/crosscount
     let referencepixelshift = referencerowshift * cellLength
 
-    let spineOffset = calculatedcradleoffset + referencepixelshift
+    let spineOffset = startingspineoffset + referencepixelshift
 
-    console.log('spineOffset = calculatedcradleoffset + referencepixelshift; referencerowshift',
-        spineOffset, calculatedcradleoffset, referencepixelshift, referencerowshift)
+    console.log('spineOffset = startingspineoffset + referencepixelshift; referencerowshift',
+        spineOffset, startingspineoffset, referencepixelshift, referencerowshift)
 
     // console.log('adjusted spineOffset, crosscount, cellLength, referenceitemshiftcount, referencerowshift', 
     //     spineOffset, crosscount, cellLength, referenceitemshiftcount, referencerowshift)
