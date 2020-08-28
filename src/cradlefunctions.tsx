@@ -640,6 +640,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         viewportRowcount,
         itemObserverThreshold } = cradleConfig
 
+    let BOD = false, EOD = false // beginning-of-data, end-of-data
+
     // ------- calculate cradleboundary and boundary row and item count for overshoot
     
     let startingspineoffset, headblockoffset, tailblockoffset, viewportlength
@@ -730,16 +732,22 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         diff = (previouscradlerowoffset + cradleRowcount + itemrowshift) - listrowcount
 
         if (diff > 0) {
+
+            EOD = true
             itemrowshift -= diff
             itemshiftcount -= (diff * crosscount)
+
         }
 
     } else {
 
         diff = previouscradlerowoffset + itemrowshift
         if (diff < 0) {
+
+            BOD = true
             itemrowshift -= diff
             itemshiftcount -= (diff * crosscount)
+
         }
 
     }
@@ -747,7 +755,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let newcradleindex = previouscradleindex + itemshiftcount
     let newreferenceindex = previousreferenceindex + itemshiftcount
 
-    console.log('=== newcradleindex, newreferenceindex, diff', newcradleindex, newreferenceindex, diff)
+    // console.log('=== newcradleindex, newreferenceindex, diff', newcradleindex, newreferenceindex, diff)
 
     // -- tailbased adjustments
     let cradleitemcount = cradleRowcount * crosscount
