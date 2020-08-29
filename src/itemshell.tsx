@@ -20,14 +20,14 @@ const ItemShell = (props) => {
     const shellRef = useRef(null)
 
     const isMounted = useIsMounted()
+    const itemrequestRef = useRef(null)
 
     // initialize
     useEffect(() => {
-        let itemrequest = {current:null}
         let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
         let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
         if (getItem) {
-            itemrequest.current = requestidlecallback(()=> {
+            itemrequestRef.current = requestidlecallback(()=> {
 
                 let value = getItem(index)
                 if (value && value.then) {
@@ -57,7 +57,7 @@ const ItemShell = (props) => {
         }
 
         return () => {
-            let requesthandle = itemrequest.current
+            let requesthandle = itemrequestRef.current
             cancelidlecallback(requesthandle)
         }
     },[])
