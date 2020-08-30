@@ -617,7 +617,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     scrollforward,
 }) => {
 
-    // unpack
+    // ------------------------[ initialize ]--------------
+
     let { gap,
         orientation,
         cellHeight,
@@ -642,7 +643,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let BOD = false, EOD = false // beginning-of-data, end-of-data
 
-    // ------- calculate cradleboundary and boundary row and item count for overshoot
+    // -------[ calculate cradleboundary, boundary row and overshoot ]-------
     
     let startingspineoffset, headblockoffset, tailblockoffset, viewportlength
     let viewportgaplength
@@ -716,14 +717,11 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let itemrowshift = Math.ceil(itemshiftcount/crosscount)
 
     // console.log('==>> preliminary itemshiftcount, itemrowshift',itemshiftcount, itemrowshift)
-    //-------------------------------[ calc return values ]----------------------------
+    // --------------------------[ calc cradleindex and referenceindex ]--------------------------
 
     let previousreferenceindex = tailcontentlist[0].props.index
-
     let previouscradleindex = cradlecontentlist[0].props.index
-
     let previousreferencerowoffset = previousreferenceindex/crosscount
-
     let previouscradlerowoffset = previouscradleindex/crosscount
 
     let diff //, outerRowoffset = listrowcount - 1
@@ -757,7 +755,19 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     // console.log('=== newcradleindex, newreferenceindex, diff', newcradleindex, newreferenceindex, diff)
 
-    // -- tailbased adjustments
+    // -------------[ calculate spineoffset ]------------------
+
+    let referenceitemshiftcount = newreferenceindex - previousreferenceindex
+
+    let referencerowshift = referenceitemshiftcount/crosscount
+    let referencepixelshift = referencerowshift * cellLength
+
+    let spineOffset = startingspineoffset + referencepixelshift
+
+    console.log('calculated spineOffset', spineOffset)
+
+    // ---------------[ adjustmnets based on spineOffset ]-----------------------
+
     let cradleitemcount = cradleRowcount * crosscount
     let cradleadjustment = listsize % crosscount
     if (cradleadjustment) {
@@ -770,12 +780,6 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     }
 
     let cradleitemshiftcount = newcradleindex - previouscradleindex
-    let referenceitemshiftcount = newreferenceindex - previousreferenceindex
-
-    let referencerowshift = referenceitemshiftcount/crosscount
-    let referencepixelshift = referencerowshift * cellLength
-
-    let spineOffset = startingspineoffset + referencepixelshift
 
     cradleitemcount -= cradleadjustment
 
