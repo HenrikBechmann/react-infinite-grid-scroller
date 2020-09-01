@@ -727,11 +727,14 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let diff //, outerRowoffset = listrowcount - 1
     if (scrollforward) {
 
+        if ((previouscradlerowoffset + cradleRowcount + itemrowshift) >= (listrowcount - 1)) {
+            EOD = true
+        }
+
         diff = (previouscradlerowoffset + cradleRowcount + itemrowshift) - listrowcount
 
         if (diff > 0) {
 
-            EOD = true
             itemrowshift -= diff
             itemshiftcount -= (diff * crosscount)
 
@@ -739,10 +742,12 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     } else {
 
+        if ((previouscradlerowoffset + itemrowshift) <= 0) {
+            BOD = true
+        }
         diff = previouscradlerowoffset + itemrowshift
         if (diff < 0) {
 
-            BOD = true
             itemrowshift -= diff
             itemshiftcount -= (diff * crosscount)
 
@@ -765,6 +770,27 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let spineOffset = startingspineoffset + referencepixelshift
 
     console.log('calculated spineOffset', spineOffset)
+
+    let spineOffsetTarget = (spineOffset % cellLength)
+    let spineAdjustment = ((spineOffset - spineOffsetTarget) / cellLength) * crosscount
+    
+    console.log('spineOffsetTarget, spineAdjustment, BOD, EOD, newreferenceindex, referenceitemshiftcount',
+        spineOffsetTarget, spineAdjustment, BOD, EOD, newreferenceindex, referenceitemshiftcount)
+
+    if (spineAdjustment && (BOD || EOD)) {
+        let testnewreferenceindex
+        testnewreferenceindex = (newreferenceindex - spineAdjustment)
+        let testreferenceitemshiftcount
+        testreferenceitemshiftcount = referenceitemshiftcount - spineAdjustment
+        console.log('testnewreferenceindex, testreferenceitemshiftcount',testnewreferenceindex, testreferenceitemshiftcount)
+        newreferenceindex = testnewreferenceindex
+        referenceitemshiftcount = testreferenceitemshiftcount
+        spineOffset = spineOffsetTarget
+    }
+
+    if (!(BOD || EOD)) {
+
+    }
 
     // ---------------[ adjustmnets based on spineOffset ]-----------------------
 
