@@ -731,7 +731,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
             EOD = true
         }
 
-        diff = (previouscradlerowoffset + cradleRowcount + itemrowshift) - listrowcount
+        diff = (previouscradlerowoffset + cradleRowcount + itemrowshift) - (listrowcount + 1)
 
         if (diff > 0) {
 
