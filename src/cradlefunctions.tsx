@@ -727,11 +727,11 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let diff //, outerRowoffset = listrowcount - 1
     if (scrollforward) {
 
-        if ((previouscradlerowoffset + cradleRowcount + itemrowshift) >= (listrowcount - 1)) {
+        if ((previouscradlerowoffset + cradleRowcount + itemrowshift) >= (listrowcount)) {
             EOD = true
         }
 
-        diff = (previouscradlerowoffset + cradleRowcount + itemrowshift) - (listrowcount - 1)
+        diff = (previouscradlerowoffset + cradleRowcount + itemrowshift) - (listrowcount)
 
         if (diff > 0) {
 
@@ -769,29 +769,23 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let spineOffset = startingspineoffset + referencepixelshift
 
-    // console.log('calculated spineOffset', spineOffset)
+    console.log('calculated spineOffset', spineOffset)
 
-    let spineOffsetTarget = (spineOffset % cellLength)
-    let spineAdjustment = ((spineOffset - spineOffsetTarget) / cellLength) * crosscount
+    let spineOffsetTarget
+    let spineAdjustment
 
-    // console.log('spineOffsetTarget, spineAdjustment, BOD, EOD, newreferenceindex, referenceitemshiftcount',
-    //     spineOffsetTarget, spineAdjustment, BOD, EOD, newreferenceindex, referenceitemshiftcount)
+    if (Math.abs(spineOffset) > cellLength) {
+
+        spineOffsetTarget = (spineOffset % cellLength)
+        spineAdjustment = ((spineOffset - spineOffsetTarget) / cellLength) * crosscount
+
+        console.log('spineOffset, spineOffsetTarget, spineAdjustment, BOD, EOD, newreferenceindex, referenceitemshiftcount',
+            spineOffset, spineOffsetTarget, spineAdjustment, BOD, EOD, newreferenceindex, referenceitemshiftcount)
+
+    }
 
     if (spineAdjustment && (BOD || EOD)) {
 
-        // if (EOD && (spineOffsetTarget < 0)) {
-
-        //     console.log('EOD, spineOffsetTarget, spineAdjustment',EOD, spineOffsetTarget, spineAdjustment)
-        //     let testspineOffsetTarget 
-        //     testspineOffsetTarget = cellLength + spineOffsetTarget
-        //     let testspineAdjustment 
-        //     testspineAdjustment = spineAdjustment - crosscount
-        //     // spineOffsetTarget = testspineOffsetTarget
-        //     // spineAdjustment = testspineOffsetTarget
-
-        //     console.log('EOD adjusted testspineOffsetTarget, testspineAdjustment',testspineOffsetTarget, testspineAdjustment)
-
-        // }
         let testnewreferenceindex
         testnewreferenceindex = (newreferenceindex - spineAdjustment)
         let testreferenceitemshiftcount
@@ -814,14 +808,17 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         cradleadjustment = crosscount - cradleadjustment
     }
 
+    let cradleitemshiftcount = newcradleindex - previouscradleindex
+
     if ((newcradleindex + cradleitemcount) > (listsize)) {
         let diff = listsize - (newcradleindex + cradleitemcount)
         newcradleindex -= diff
+        cradleitemshiftcount -= diff
     }
 
-    let cradleitemshiftcount = newcradleindex - previouscradleindex
-
-    cradleitemcount -= cradleadjustment
+    if (EOD) {
+        cradleitemcount -= cradleadjustment
+    }
 
     return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset, cradleitemcount]
 

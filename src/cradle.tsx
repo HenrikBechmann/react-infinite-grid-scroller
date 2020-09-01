@@ -134,7 +134,7 @@ import ResizeObserverPolyfill from 'resize-observer-polyfill'
 
 const LocalResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
 
-const ITEM_OBSERVER_THRESHOLD = .5
+const ITEM_OBSERVER_THRESHOLD = 1
 
 import { 
     setCradleGridStyles, 
