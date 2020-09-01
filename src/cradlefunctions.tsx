@@ -773,11 +773,25 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let spineOffsetTarget = (spineOffset % cellLength)
     let spineAdjustment = ((spineOffset - spineOffsetTarget) / cellLength) * crosscount
-    
+
     console.log('spineOffsetTarget, spineAdjustment, BOD, EOD, newreferenceindex, referenceitemshiftcount',
         spineOffsetTarget, spineAdjustment, BOD, EOD, newreferenceindex, referenceitemshiftcount)
 
     if (spineAdjustment && (BOD || EOD)) {
+
+        // if (EOD && (spineOffsetTarget < 0)) {
+
+        //     console.log('EOD, spineOffsetTarget, spineAdjustment',EOD, spineOffsetTarget, spineAdjustment)
+        //     let testspineOffsetTarget 
+        //     testspineOffsetTarget = cellLength + spineOffsetTarget
+        //     let testspineAdjustment 
+        //     testspineAdjustment = spineAdjustment - crosscount
+        //     // spineOffsetTarget = testspineOffsetTarget
+        //     // spineAdjustment = testspineOffsetTarget
+
+        //     console.log('EOD adjusted testspineOffsetTarget, testspineAdjustment',testspineOffsetTarget, testspineAdjustment)
+
+        // }
         let testnewreferenceindex
         testnewreferenceindex = (newreferenceindex - spineAdjustment)
         let testreferenceitemshiftcount
