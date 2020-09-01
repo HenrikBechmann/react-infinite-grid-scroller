@@ -769,7 +769,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let spineOffset = startingspineoffset + referencepixelshift
 
-    console.log('calculated spineOffset', spineOffset)
+    // console.log('calculated spineOffset', spineOffset)
 
     let spineOffsetTarget
     let spineAdjustment
