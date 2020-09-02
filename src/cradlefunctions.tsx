@@ -718,7 +718,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let cradlerowshift = Math.ceil(cradleshiftcount/crosscount)
     let referencerowshift = cradlerowshift
 
-    console.log('==>> preliminary itemshiftcount, itemrowshift',cradleshiftcount, cradlerowshift)
+    // console.log('==>> preliminary itemshiftcount, itemrowshift',cradleshiftcount, cradlerowshift)
     // --------------------------[ calc cradleindex and referenceindex ]--------------------------
 
     let previousreferenceindex = tailcontentlist[0].props.index
@@ -760,7 +760,12 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let newcradleindex = previouscradleindex + cradleshiftcount
     let newreferenceindex = previousreferenceindex + referenceshiftcount
 
-    console.log('=== newcradleindex, newreferenceindex, diff', newcradleindex, newreferenceindex, diff)
+    if (newreferenceindex < 0) {
+        referenceshiftcount += newreferenceindex
+        newreferenceindex = 0
+    }
+
+    // console.log('=== newcradleindex, newreferenceindex, diff', newcradleindex, newreferenceindex, diff)
 
     // -------------[ calculate spineoffset ]------------------
 
@@ -781,8 +786,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         spineOffsetTarget = (spineOffset % cellLength)
         spineAdjustment = ((spineOffset - spineOffsetTarget) / cellLength) * crosscount
 
-        console.log('spineOffset, spineOffsetTarget, spineAdjustment, BOD, EOD, newreferenceindex, referenceitemshiftcount',
-            spineOffset, spineOffsetTarget, spineAdjustment, BOD, EOD, newreferenceindex, referenceitemshiftcount)
+        // console.log('spineOffset, spineOffsetTarget, spineAdjustment, BOD, EOD, newreferenceindex, referenceitemshiftcount',
+        //     spineOffset, spineOffsetTarget, spineAdjustment, BOD, EOD, newreferenceindex, referenceitemshiftcount)
 
     }
 
