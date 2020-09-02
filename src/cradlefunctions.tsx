@@ -712,11 +712,13 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     }
 
-    let itemshiftcount = backwardcount - forwardcount + overshootitemcount
+    let cradleshiftcount = backwardcount - forwardcount + overshootitemcount
+    let referenceshiftcount = cradleshiftcount
 
-    let itemrowshift = Math.ceil(itemshiftcount/crosscount)
+    let cradlerowshift = Math.ceil(cradleshiftcount/crosscount)
+    let referencerowshift = cradlerowshift
 
-    // console.log('==>> preliminary itemshiftcount, itemrowshift',itemshiftcount, itemrowshift)
+    console.log('==>> preliminary itemshiftcount, itemrowshift',cradleshiftcount, cradlerowshift)
     // --------------------------[ calc cradleindex and referenceindex ]--------------------------
 
     let previousreferenceindex = tailcontentlist[0].props.index
@@ -727,44 +729,44 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let diff //, outerRowoffset = listrowcount - 1
     if (scrollforward) {
 
-        if ((previouscradlerowoffset + cradleRowcount + itemrowshift) >= (listrowcount)) {
+        if ((previouscradlerowoffset + cradleRowcount + cradlerowshift) >= (listrowcount)) {
             EOD = true
         }
 
-        diff = (previouscradlerowoffset + cradleRowcount + itemrowshift) - (listrowcount)
+        diff = (previouscradlerowoffset + cradleRowcount + cradlerowshift) - (listrowcount)
 
         if (diff > 0) {
 
-            itemrowshift -= diff
-            itemshiftcount -= (diff * crosscount)
+            cradlerowshift -= diff
+            cradleshiftcount -= (diff * crosscount)
 
         }
 
     } else {
 
-        if ((previouscradlerowoffset + itemrowshift) <= 0) {
+        if ((previouscradlerowoffset + cradlerowshift) <= 0) {
             BOD = true
         }
-        diff = previouscradlerowoffset + itemrowshift
+        diff = previouscradlerowoffset + cradlerowshift
         if (diff < 0) {
 
-            itemrowshift -= diff
-            itemshiftcount -= (diff * crosscount)
+            cradlerowshift -= diff
+            cradleshiftcount -= (diff * crosscount)
 
         }
 
     }
 
-    let newcradleindex = previouscradleindex + itemshiftcount
-    let newreferenceindex = previousreferenceindex + itemshiftcount
+    let newcradleindex = previouscradleindex + cradleshiftcount
+    let newreferenceindex = previousreferenceindex + referenceshiftcount
 
-    // console.log('=== newcradleindex, newreferenceindex, diff', newcradleindex, newreferenceindex, diff)
+    console.log('=== newcradleindex, newreferenceindex, diff', newcradleindex, newreferenceindex, diff)
 
     // -------------[ calculate spineoffset ]------------------
 
     let referenceitemshiftcount = newreferenceindex - previousreferenceindex
 
-    let referencerowshift = referenceitemshiftcount/crosscount
+    referencerowshift = referenceitemshiftcount/crosscount
     let referencepixelshift = referencerowshift * cellLength
 
     let spineOffset = startingspineoffset + referencepixelshift
@@ -810,15 +812,15 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let cradleitemshiftcount = newcradleindex - previouscradleindex
 
-    if ((newcradleindex + cradleitemcount) > (listsize)) {
-        let diff = listsize - (newcradleindex + cradleitemcount)
-        newcradleindex -= diff
-        cradleitemshiftcount -= diff
-    }
+    // if ((newcradleindex + cradleitemcount) > (listsize)) {
+    //     let diff = listsize - (newcradleindex + cradleitemcount)
+    //     newcradleindex -= diff
+    //     cradleitemshiftcount -= diff
+    // }
 
-    if (EOD) {
-        cradleitemcount -= cradleadjustment
-    }
+    // if (EOD) {
+    //     cradleitemcount -= cradleadjustment
+    // }
 
     return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset, cradleitemcount]
 
