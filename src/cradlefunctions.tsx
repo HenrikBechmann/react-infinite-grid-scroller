@@ -615,6 +615,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     itemElements,
     intersections,
     scrollforward,
+    source,
 }) => {
 
     // ------------------------[ initialize ]--------------
@@ -786,13 +787,26 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     if (spineAdjustment && (BOD || EOD)) {
 
-        newreferenceindex = (newreferenceindex - spineAdjustment)
-        referenceitemshiftcount = referenceitemshiftcount - spineAdjustment
+        newreferenceindex -= spineAdjustment
+        referenceitemshiftcount -= spineAdjustment
         spineOffset = spineOffsetTarget
 
     }
 
-    if (!(BOD || EOD)) {
+    if (spineAdjustment && (source == 'endofscroll') && !(BOD || EOD)) {
+        console.log('OPENING spineAdjustment, spineOffsetTarget, source',spineAdjustment, spineOffsetTarget, source)
+        if (spineOffsetTarget < 0) {
+            spineAdjustment += crosscount
+            spineOffsetTarget += cellLength
+        }
+
+        // newreferenceindex += spineAdjustment
+        // referenceitemshiftcount += spineAdjustment
+        // newcradleindex += spineAdjustment        
+        // spineOffset = spineOffsetTarget
+
+        console.log('adjusting middle section: spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, spineOffset',
+            spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset)
 
     }
 

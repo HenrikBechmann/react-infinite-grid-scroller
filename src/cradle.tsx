@@ -937,6 +937,7 @@ const Cradle = ({
                 itemElements,
                 intersections,
                 scrollforward,
+                source,
 
         })
 
@@ -1279,7 +1280,7 @@ const Cradle = ({
 
                 default: {
                     
-                    updateCradleContent([], 'end of scroll') // for Safari to compensate for overscroll
+                    updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
 
                 }
 
