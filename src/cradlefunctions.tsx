@@ -656,6 +656,9 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         startingspineoffset = spineElement.offsetTop - viewportElement.scrollTop
         viewportlength = viewportElement.offsetHeight
 
+        console.log('startingspineoffset = spineElement.offsetTop - viewportElement.scrollTop',
+            startingspineoffset, spineElement.offsetTop, viewportElement.scrollTop)
+
         // measure any gap between the cradle and the viewport boundary
         if (scrollforward) {
 
@@ -769,6 +772,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     // -------------[ calculate spineoffset ]------------------
 
     let referenceitemshiftcount = newreferenceindex - previousreferenceindex
+    let cradleitemshiftcount = newcradleindex - previouscradleindex
 
     referencerowshift = referenceitemshiftcount/crosscount
     let referencepixelshift = referencerowshift * cellLength
@@ -805,23 +809,22 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
         newreferenceindex += spineAdjustment
         referenceitemshiftcount += spineAdjustment
-        newcradleindex += spineAdjustment        
+        newcradleindex += spineAdjustment
+        cradleitemshiftcount += spineAdjustment        
         spineOffset = spineOffsetTarget
 
-        console.log('ADJUSTED spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset',
-            spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset)
+        console.log('ADJUSTED spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, cradleitemshiftcount, spineOffset',
+            spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, cradleitemshiftcount, spineOffset)
 
     }
 
     // ---------------[ adjustmnets based on spineOffset ]-----------------------
 
     let cradleitemcount = cradleRowcount * crosscount
-    let cradleadjustment = listsize % crosscount
-    if (cradleadjustment) {
-        cradleadjustment = crosscount - cradleadjustment
-    }
-
-    let cradleitemshiftcount = newcradleindex - previouscradleindex
+    // let cradleadjustment = listsize % crosscount
+    // if (cradleadjustment) {
+    //     cradleadjustment = crosscount - cradleadjustment
+    // }
 
     return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset, cradleitemcount]
 
