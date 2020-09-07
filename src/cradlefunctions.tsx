@@ -778,35 +778,38 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let spineOffsetTarget
     let spineAdjustment
 
+    // This can happen if scroll is interrupted while item observer is paused
     if (Math.abs(spineOffset) > cellLength) {
 
+        // console.log('spineOffset out of bounds:',spineOffset)
         spineOffsetTarget = (spineOffset % cellLength)
-        spineAdjustment = ((spineOffset - spineOffsetTarget) / cellLength) * crosscount
+        spineAdjustment = -(((spineOffset - spineOffsetTarget) / cellLength) * crosscount)
 
     }
 
     if (spineAdjustment && (BOD || EOD)) {
 
-        newreferenceindex -= spineAdjustment
-        referenceitemshiftcount -= spineAdjustment
+        newreferenceindex += spineAdjustment
+        referenceitemshiftcount += spineAdjustment
         spineOffset = spineOffsetTarget
 
     }
 
     if (spineAdjustment && (source == 'endofscroll') && !(BOD || EOD)) {
-        console.log('OPENING spineAdjustment, spineOffsetTarget, source',spineAdjustment, spineOffsetTarget, source)
+        // console.log('OPENING spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset',
+        //     spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset)
         if (spineOffsetTarget < 0) {
             spineAdjustment += crosscount
             spineOffsetTarget += cellLength
         }
 
-        // newreferenceindex += spineAdjustment
-        // referenceitemshiftcount += spineAdjustment
-        // newcradleindex += spineAdjustment        
-        // spineOffset = spineOffsetTarget
+        newreferenceindex += spineAdjustment
+        referenceitemshiftcount -= spineAdjustment
+        newcradleindex += spineAdjustment        
+        spineOffset = spineOffsetTarget
 
-        console.log('adjusting middle section: spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, spineOffset',
-            spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset)
+        // console.log('ADJUSTED spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset',
+        //     spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset)
 
     }
 
