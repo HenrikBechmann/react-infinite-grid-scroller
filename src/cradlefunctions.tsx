@@ -775,8 +775,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let spineOffset = startingspineoffset + referencepixelshift
 
-    let spineOffsetTarget
-    let spineAdjustment
+    let spineOffsetTarget = spineOffset
+    let spineAdjustment = 0
 
     // This can happen if scroll is interrupted while item observer is paused
     if (Math.abs(spineOffset) > cellLength) {
@@ -795,21 +795,21 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     }
 
-    if (spineAdjustment && (source == 'endofscroll') && !(BOD || EOD)) {
-        // console.log('OPENING spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset',
-        //     spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset)
+    if ((source == 'endofscroll') && ((spineOffsetTarget < 0) || (spineAdjustment && !(BOD || EOD)))) {
+        console.log('OPENING spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset',
+            spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset)
         if (spineOffsetTarget < 0) {
             spineAdjustment += crosscount
             spineOffsetTarget += cellLength
         }
 
         newreferenceindex += spineAdjustment
-        referenceitemshiftcount -= spineAdjustment
+        referenceitemshiftcount += spineAdjustment
         newcradleindex += spineAdjustment        
         spineOffset = spineOffsetTarget
 
-        // console.log('ADJUSTED spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset',
-        //     spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset)
+        console.log('ADJUSTED spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset',
+            spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset)
 
     }
 
