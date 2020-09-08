@@ -950,7 +950,7 @@ const Cradle = ({
 
         let [headchangecount,tailchangecount] = calcHeadAndTailChanges({
 
-            itemshiftcount:cradleitemshift,
+            cradleshiftcount:cradleitemshift,
             crosscount,
             cradlerowcount:cradleRowcount, // TODO: align case usage
             headcontent:cradleContent.headModel,

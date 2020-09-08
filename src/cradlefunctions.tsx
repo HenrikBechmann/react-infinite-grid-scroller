@@ -835,7 +835,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 export const calcHeadAndTailChanges = (
     {
         cradleProps,
-        itemshiftcount,
+        cradleshiftcount,
         crosscount,
         headcontent,
         tailcontent,
@@ -846,8 +846,8 @@ export const calcHeadAndTailChanges = (
     }) => {
 
     let listsize = cradleProps.listsize
-    itemshiftcount = Math.abs(itemshiftcount) 
-    let rowshiftcount = Math.ceil(itemshiftcount/crosscount) //+ boundaryrowcount
+    cradleshiftcount = Math.abs(cradleshiftcount) 
+    let rowshiftcount = Math.ceil(cradleshiftcount/crosscount) //+ boundaryrowcount
 
     let headrowcount, tailrowcount
     headrowcount = Math.ceil(headcontent.length/crosscount)
