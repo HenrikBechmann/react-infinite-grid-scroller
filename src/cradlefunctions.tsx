@@ -656,8 +656,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         startingspineoffset = spineElement.offsetTop - viewportElement.scrollTop
         viewportlength = viewportElement.offsetHeight
 
-        console.log('startingspineoffset = spineElement.offsetTop - viewportElement.scrollTop',
-            startingspineoffset, spineElement.offsetTop, viewportElement.scrollTop)
+        console.log('startingspineoffset = spineElement.offsetTop - viewportElement.scrollTop; scrollforward',
+            startingspineoffset, spineElement.offsetTop, viewportElement.scrollTop, scrollforward)
 
         // measure any gap between the cradle and the viewport boundary
         if (scrollforward) {
