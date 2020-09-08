@@ -816,6 +816,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         console.log('ADJUSTED spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, cradleitemshiftcount, spineOffset',
             spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, cradleitemshiftcount, spineOffset)
 
+        console.log('previouscradleindex, previousreferenceindex',previouscradleindex, previousreferenceindex)
+
     }
 
     // ---------------[ adjustmnets based on spineOffset ]-----------------------
