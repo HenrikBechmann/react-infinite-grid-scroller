@@ -785,11 +785,13 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let spineOffsetTarget = spineOffset
     let spineAdjustment = 0
 
-    // This can happen if scroll is interrupted while item observer is paused
     if (Math.abs(spineOffset) > cellLength) {
 
         // console.log('spineOffset out of bounds:',spineOffset)
         spineOffsetTarget = (spineOffset % cellLength)
+        if (spineOffsetTarget < 0) {
+            spineOffsetTarget += cellLength
+        }
         spineAdjustment = -(((spineOffset - spineOffsetTarget) / cellLength) * crosscount)
 
     }
