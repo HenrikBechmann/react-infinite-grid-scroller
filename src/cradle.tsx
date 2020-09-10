@@ -941,8 +941,8 @@ const Cradle = ({
 
         })
 
-         console.log('in updateCradleContent: cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, contentCount',
-             cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, contentCount)
+         // console.log('in updateCradleContent: cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, contentCount',
+         //     cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, contentCount)
 
         if ((referenceitemshift == 0 && cradleitemshift == 0)) return
 
@@ -961,7 +961,7 @@ const Cradle = ({
 
         })
 
-        console.log('headchangecount,tailchangecount',headchangecount,tailchangecount)
+        // console.log('headchangecount,tailchangecount',headchangecount,tailchangecount)
 
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
@@ -988,7 +988,7 @@ const Cradle = ({
 
         }
 
-        console.log('localContentList.length', localContentList.length)
+        // console.log('localContentList.length', localContentList.length)
 
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 
@@ -999,7 +999,7 @@ const Cradle = ({
             }
         )
 
-        console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
+        // console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
 
         cradleContent.cradleModel = localContentList
         cradleContent.headView = cradleContent.headModel = headcontent

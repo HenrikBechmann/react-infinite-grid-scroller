@@ -656,8 +656,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         startingspineoffset = spineElement.offsetTop - viewportElement.scrollTop
         viewportlength = viewportElement.offsetHeight
 
-        console.log('===> startingspineoffset = spineElement.offsetTop - viewportElement.scrollTop; scrollforward, source',
-            startingspineoffset, spineElement.offsetTop, viewportElement.scrollTop, scrollforward, source)
+        // console.log('===> startingspineoffset = spineElement.offsetTop - viewportElement.scrollTop; scrollforward, source',
+        //     startingspineoffset, spineElement.offsetTop, viewportElement.scrollTop, scrollforward, source)
 
         // measure any gap between the cradle and the viewport boundary
         if (scrollforward) {
@@ -722,10 +722,10 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let cradlerowshift = Math.ceil(cradleshiftcount/crosscount)
     let referencerowshift = cradlerowshift
 
-    console.log('preliminary cradleshiftcount, cradlerowshift, \
-        referenceshiftcount, referencerowshift, \
-        backwardcount, forwardcount, overshootitemcount',
-        cradleshiftcount, cradlerowshift, referenceshiftcount, referencerowshift, backwardcount, forwardcount, overshootitemcount)
+    // console.log('preliminary cradleshiftcount, cradlerowshift, \
+    //     referenceshiftcount, referencerowshift, \
+    //     backwardcount, forwardcount, overshootitemcount',
+    //     cradleshiftcount, cradlerowshift, referenceshiftcount, referencerowshift, backwardcount, forwardcount, overshootitemcount)
     // --------------------------[ calc cradleindex and referenceindex ]--------------------------
 
     let previousreferenceindex = tailcontentlist[0].props.index
@@ -789,22 +789,22 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
         // console.log('spineOffset out of bounds:',spineOffset)
         spineOffsetTarget = (spineOffset % cellLength)
-        if (spineOffsetTarget < 0) {
-            spineOffsetTarget += cellLength
-        }
+        // if (spineOffsetTarget < 0) {
+        //     spineOffsetTarget += cellLength
+        // }
         spineAdjustment = -(((spineOffset - spineOffsetTarget) / cellLength) * crosscount)
 
     }
 
     if (spineAdjustment && (BOD || EOD)) {
-        console.log('spineAdjustment, BOD, EOD',spineAdjustment, BOD, EOD)
+        // console.log('spineAdjustment, BOD, EOD',spineAdjustment, BOD, EOD)
 
         newreferenceindex += spineAdjustment
         referenceitemshiftcount += spineAdjustment
         spineOffset = spineOffsetTarget
 
     } else if (spineAdjustment) {
-        console.log('spineAdjustment',spineAdjustment)
+        // console.log('spineAdjustment',spineAdjustment)
         newcradleindex += spineAdjustment
         cradleitemshiftcount += spineAdjustment
         newreferenceindex += spineAdjustment
