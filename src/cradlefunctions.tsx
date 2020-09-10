@@ -647,7 +647,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     // -------[ calculate cradleboundary, boundary row and overshoot ]-------
     
     let startingspineoffset, headblockoffset, tailblockoffset, viewportlength
-    let viewportgaplength
+    let viewportvisiblegaplength
 
     let cellLength = (orientation == 'vertical')?cellHeight + gap:cellWidth + gap
 
@@ -662,11 +662,13 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         // measure any gap between the cradle and the viewport boundary
         if (scrollforward) {
 
-            viewportgaplength = viewportlength - (startingspineoffset + tailElement.offsetHeight)
+            // if startingspineoffset is above top border more than height of tailElement, then a gap will be visible
+            viewportvisiblegaplength = viewportlength - (startingspineoffset + tailElement.offsetHeight)
 
         } else {
 
-            viewportgaplength = startingspineoffset - headElement.offsetHeight
+            // if startingspineoffset is below the top by more than the height of the headElment then a gap will be visible
+            viewportvisiblegaplength = startingspineoffset - headElement.offsetHeight
 
         }
 
@@ -677,24 +679,25 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
         if (scrollforward) {
 
-            viewportgaplength = viewportlength - (startingspineoffset + tailElement.offsetWidth)
+            viewportvisiblegaplength = viewportlength - (startingspineoffset + tailElement.offsetWidth)
 
         } else {
 
-            viewportgaplength = startingspineoffset - headElement.offsetWidth
+            viewportvisiblegaplength = startingspineoffset - headElement.offsetWidth
 
         }
     }
 
-    if (viewportgaplength < 0) viewportgaplength = 0
-    if (viewportgaplength > viewportlength) viewportgaplength = 0 // reposition should have kicked in
+    if ((viewportvisiblegaplength < 0) || (viewportvisiblegaplength > viewportlength)) viewportvisiblegaplength = 0 // no visible gap, or reposition should have kicked in
 
-    let overshootrowcount = (viewportgaplength == 0)?0:Math.ceil(viewportgaplength/cellLength) // rows to fill viewport
+    // viewportvisiblegaplength is always positive
+    let overshootrowcount = (viewportvisiblegaplength == 0)?0:Math.ceil(viewportvisiblegaplength/cellLength) // rows to fill viewport
 
     // extra rows for runway
     if (overshootrowcount) {
         overshootrowcount += runwaycount
     }
+
     let overshootitemcount = overshootrowcount * crosscount
 
     if (!scrollforward && overshootitemcount) { // negation of values for scroll backward
@@ -722,10 +725,13 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let cradlerowshift = Math.ceil(cradleshiftcount/crosscount)
     let referencerowshift = cradlerowshift
 
-    // console.log('preliminary cradleshiftcount, cradlerowshift, \
-    //     referenceshiftcount, referencerowshift, \
-    //     backwardcount, forwardcount, overshootitemcount',
-    //     cradleshiftcount, cradlerowshift, referenceshiftcount, referencerowshift, backwardcount, forwardcount, overshootitemcount)
+    console.log('PRELIMINARY \
+        cradleshiftcount, cradlerowshift, \
+        referenceshiftcount, referencerowshift, \
+        backwardcount, forwardcount, overshootitemcount, \
+        startingspineoffset, spinepixelshift, scrollforward',
+        cradleshiftcount, cradlerowshift, referenceshiftcount, referencerowshift, backwardcount, 
+        forwardcount, overshootitemcount,startingspineoffset, ((cradleshiftcount/crosscount) * cellLength), scrollforward)
     // --------------------------[ calc cradleindex and referenceindex ]--------------------------
 
     let previousreferenceindex = tailcontentlist[0].props.index
@@ -811,27 +817,6 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         referenceitemshiftcount += spineAdjustment
         spineOffset = spineOffsetTarget
     }
-
-    // if ((source == 'endofscroll') && ((spineOffsetTarget < 0) || (spineAdjustment && !(BOD || EOD)))) {
-    //     console.log('OPENING spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset',
-    //         spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset)
-    //     if (spineOffsetTarget < 0) {
-    //         spineAdjustment += crosscount
-    //         spineOffsetTarget += cellLength
-    //     }
-
-    //     newreferenceindex += spineAdjustment
-    //     referenceitemshiftcount += spineAdjustment
-    //     newcradleindex += spineAdjustment
-    //     cradleitemshiftcount += spineAdjustment        
-    //     spineOffset = spineOffsetTarget
-
-    //     console.log('ADJUSTED spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, cradleitemshiftcount, spineOffset',
-    //         spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, cradleitemshiftcount, spineOffset)
-
-    //     console.log('previouscradleindex, previousreferenceindex, headcontentlist, tailcontentlist',previouscradleindex, previousreferenceindex, headcontentlist, tailcontentlist)
-
-    // }
 
     // ---------------[ adjustmnets based on spineOffset ]-----------------------
 
