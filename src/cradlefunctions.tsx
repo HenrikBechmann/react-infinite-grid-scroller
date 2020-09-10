@@ -656,8 +656,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         startingspineoffset = spineElement.offsetTop - viewportElement.scrollTop
         viewportlength = viewportElement.offsetHeight
 
-        console.log('startingspineoffset = spineElement.offsetTop - viewportElement.scrollTop; scrollforward',
-            startingspineoffset, spineElement.offsetTop, viewportElement.scrollTop, scrollforward)
+        console.log('===> startingspineoffset = spineElement.offsetTop - viewportElement.scrollTop; scrollforward, source',
+            startingspineoffset, spineElement.offsetTop, viewportElement.scrollTop, scrollforward, source)
 
         // measure any gap between the cradle and the viewport boundary
         if (scrollforward) {
@@ -697,7 +697,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     }
     let overshootitemcount = overshootrowcount * crosscount
 
-    if (!scrollforward && (overshootitemcount != 0)) { // negation of values for scroll backward
+    if (!scrollforward && overshootitemcount) { // negation of values for scroll backward
         overshootitemcount = -overshootitemcount
         overshootrowcount = -overshootrowcount
     }
@@ -722,7 +722,10 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let cradlerowshift = Math.ceil(cradleshiftcount/crosscount)
     let referencerowshift = cradlerowshift
 
-    // console.log('==>> preliminary itemshiftcount, itemrowshift',cradleshiftcount, cradlerowshift)
+    console.log('preliminary cradleshiftcount, cradlerowshift, \
+        referenceshiftcount, referencerowshift, \
+        backwardcount, forwardcount, overshootitemcount',
+        cradleshiftcount, cradlerowshift, referenceshiftcount, referencerowshift, backwardcount, forwardcount, overshootitemcount)
     // --------------------------[ calc cradleindex and referenceindex ]--------------------------
 
     let previousreferenceindex = tailcontentlist[0].props.index
@@ -792,33 +795,41 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     }
 
     if (spineAdjustment && (BOD || EOD)) {
+        console.log('spineAdjustment, BOD, EOD',spineAdjustment, BOD, EOD)
 
         newreferenceindex += spineAdjustment
         referenceitemshiftcount += spineAdjustment
         spineOffset = spineOffsetTarget
 
-    }
-
-    if ((source == 'endofscroll') && ((spineOffsetTarget < 0) || (spineAdjustment && !(BOD || EOD)))) {
-        console.log('OPENING spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset',
-            spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset)
-        if (spineOffsetTarget < 0) {
-            spineAdjustment += crosscount
-            spineOffsetTarget += cellLength
-        }
-
-        newreferenceindex += spineAdjustment
-        referenceitemshiftcount += spineAdjustment
+    } else if (spineAdjustment) {
+        console.log('spineAdjustment',spineAdjustment)
         newcradleindex += spineAdjustment
-        cradleitemshiftcount += spineAdjustment        
+        cradleitemshiftcount += spineAdjustment
+        newreferenceindex += spineAdjustment
+        referenceitemshiftcount += spineAdjustment
         spineOffset = spineOffsetTarget
-
-        console.log('ADJUSTED spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, cradleitemshiftcount, spineOffset',
-            spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, cradleitemshiftcount, spineOffset)
-
-        console.log('previouscradleindex, previousreferenceindex, headcontentlist, tailcontentlist',previouscradleindex, previousreferenceindex, headcontentlist, tailcontentlist)
-
     }
+
+    // if ((source == 'endofscroll') && ((spineOffsetTarget < 0) || (spineAdjustment && !(BOD || EOD)))) {
+    //     console.log('OPENING spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset',
+    //         spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, spineOffset)
+    //     if (spineOffsetTarget < 0) {
+    //         spineAdjustment += crosscount
+    //         spineOffsetTarget += cellLength
+    //     }
+
+    //     newreferenceindex += spineAdjustment
+    //     referenceitemshiftcount += spineAdjustment
+    //     newcradleindex += spineAdjustment
+    //     cradleitemshiftcount += spineAdjustment        
+    //     spineOffset = spineOffsetTarget
+
+    //     console.log('ADJUSTED spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, cradleitemshiftcount, spineOffset',
+    //         spineAdjustment, spineOffsetTarget, newreferenceindex, referenceitemshiftcount, newcradleindex, cradleitemshiftcount, spineOffset)
+
+    //     console.log('previouscradleindex, previousreferenceindex, headcontentlist, tailcontentlist',previouscradleindex, previousreferenceindex, headcontentlist, tailcontentlist)
+
+    // }
 
     // ---------------[ adjustmnets based on spineOffset ]-----------------------
 

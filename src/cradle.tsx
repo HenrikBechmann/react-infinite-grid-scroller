@@ -1280,7 +1280,7 @@ const Cradle = ({
 
                 default: {
                     
-                    updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
+                    // updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
 
                 }
 
