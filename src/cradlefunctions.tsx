@@ -803,15 +803,15 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         // }
         spineAdjustment = -(Math.ceil((spineOffset - spineOffsetTarget) / cellLength) * crosscount)
 
-        console.log('spineOffset out of bounds: spineOffset, spineOffsetTarget, spineAdjustment',
-            spineOffset, spineOffsetTarget, spineAdjustment)
+        // console.log('spineOffset out of bounds: spineOffset, spineOffsetTarget, spineAdjustment',
+        //     spineOffset, spineOffsetTarget, spineAdjustment)
 
     }
 
-    // if (spineOffsetTarget < 0) {
-    //     spineOffsetTarget += cellLength
-    //     spineAdjustment = Math.ceil((spineOffset - spineOffsetTarget) / cellLength) * crosscount
-    // }
+    if (spineOffsetTarget < 0) {
+        spineOffsetTarget += cellLength
+        spineAdjustment += crosscount // Math.ceil((spineOffset - spineOffsetTarget) / cellLength) * crosscount
+    }
 
     if (spineAdjustment && (BOD || EOD)) {
         // console.log('spineAdjustment, BOD, EOD',spineAdjustment, BOD, EOD)
