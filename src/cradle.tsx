@@ -1282,7 +1282,7 @@ const Cradle = ({
 
                 default: {
                     
-                    console.log('------- [ calling endofscroll ]-----------')
+                    // console.log('------- [ calling endofscroll ]-----------')
                     updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
                 }
 
