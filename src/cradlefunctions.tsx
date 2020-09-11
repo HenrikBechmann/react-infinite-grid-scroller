@@ -727,17 +727,19 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     console.log('PRELIMINARY \
         cradleshiftcount, cradlerowshift, \
-        referenceshiftcount, referencerowshift, \
-        backwardcount, forwardcount, overshootitemcount, \
-        startingspineoffset, spinepixelshift, scrollforward',
-        cradleshiftcount, cradlerowshift, referenceshiftcount, referencerowshift, backwardcount, 
-        forwardcount, overshootitemcount,startingspineoffset, ((cradleshiftcount/crosscount) * cellLength), scrollforward)
+        \nreferenceshiftcount, referencerowshift, \
+        \nbackwardcount, forwardcount, overshootitemcount, \
+        \nstartingspineoffset, spinepixelshift, scrollforward','\n',
+        cradleshiftcount, cradlerowshift, referenceshiftcount, referencerowshift, 
+        backwardcount, forwardcount, overshootitemcount,
+        startingspineoffset, ((cradleshiftcount/crosscount) * cellLength), scrollforward)
+
     // --------------------------[ calc cradleindex and referenceindex ]--------------------------
 
-    let previousreferenceindex = tailcontentlist[0].props.index
     let previouscradleindex = cradlecontentlist[0].props.index
-    let previousreferencerowoffset = previousreferenceindex/crosscount
     let previouscradlerowoffset = previouscradleindex/crosscount
+    let previousreferenceindex = tailcontentlist[0].props.index
+    let previousreferencerowoffset = previousreferenceindex/crosscount
 
     let diff 
     if (scrollforward) {
@@ -821,10 +823,6 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     // ---------------[ adjustmnets based on spineOffset ]-----------------------
 
     let cradleitemcount = cradleRowcount * crosscount
-    // let cradleadjustment = listsize % crosscount
-    // if (cradleadjustment) {
-    //     cradleadjustment = crosscount - cradleadjustment
-    // }
 
     return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset, cradleitemcount]
 
