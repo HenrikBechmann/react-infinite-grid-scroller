@@ -644,7 +644,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let BOD = false, EOD = false // beginning-of-data, end-of-data
 
-    // -------[ calculate cradleboundary, boundary row and overshoot row count ]-------
+    // -------[ 1. calculate head overshoot row count, if any ]-------
     
     let startingspineoffset, headblockoffset, tailblockoffset, viewportlength
     let viewportvisiblegaplength = 0
@@ -693,7 +693,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         overshootrowcount = -overshootrowcount
     }
 
-    // ----------------------[  calculate itemshiftcount includng overshoot ]------------------------
+    // ----------------------[ 2. calculate itemshiftcount includng overshoot ]------------------------
     // shift item count is the number of items the virtual cradle shifts, according to observer notices
 
     let forwardcount = 0, backwardcount = 0
@@ -713,7 +713,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let cradlerowshift = Math.ceil(cradleshiftcount/crosscount)
     let referencerowshift = cradlerowshift
 
-    // --------------------------[ calc cradleindex and referenceindex ]--------------------------
+    // --------------------------[ 3. calc cradleindex and referenceindex ]--------------------------
 
     let previouscradleindex = cradlecontentlist[0].props.index
     let previouscradlerowoffset = previouscradleindex/crosscount
@@ -759,7 +759,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         newreferenceindex = 0
     }
 
-    // -------------[ calculate spineoffset ]------------------
+    // -------------[ 4. calculate spineAdjustment and spineOffset ]------------------
 
     let referenceitemshiftcount = newreferenceindex - previousreferenceindex
     let cradleitemshiftcount = newcradleindex - previouscradleindex
@@ -800,11 +800,12 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     }
 
     spineOffset = spineOffsetTarget
-    // ---------------[ adjustmnets based on spineOffset ]-----------------------
+
+    // ---------------------[ 5. return required values ]-------------------
 
     let cradleitemcount = cradleRowcount * crosscount
 
-    return [newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset, cradleitemcount]
+    return [ newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset, cradleitemcount ]
 
 }
 

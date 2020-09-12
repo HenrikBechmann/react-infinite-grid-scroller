@@ -4,8 +4,6 @@
 /*
     TODO:
 
-    referenceIndex can be massively miscalculated and be near the bottom of the cradle
-
     resize from bottom position to full screen results in extra gap at bottom
 
     in horizontal mode, rapid scroll to right sometimes leads to wrong placement of spine
