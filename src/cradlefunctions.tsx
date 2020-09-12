@@ -344,9 +344,9 @@ const adjustSpineOffsetForMaxRefindex = ({
 
         referenceoffset = (targetrowoffset * crosscount)
 
-        scrollblockoffset = (targetrowoffset * cellLength) + gap
+        scrollblockoffset = (targetrowoffset * cellLength) + padding
 
-        spineOffset = viewportlength - ((viewportrows * cellLength) + padding + gap)
+        spineOffset = viewportlength - (viewportrows * cellLength)
 
         // console.log('targetrow adjustment: targetrowoffset, referenceoffset, scrollblockoffset, spineOffset',
         //     targetrowoffset, referenceoffset, scrollblockoffset, spineOffset)

@@ -1087,6 +1087,12 @@ const Cradle = ({
                 viewportElement:viewportDataRef.current.elementref.current
             })
 
+        if (spineOffset < 0) { // TODO: this shouldn't happen - reproduce from wide botton to narrow
+            spineOffset += (orientation == 'vertical'?cellHeight:cellWidth)
+            referenceoffset += crosscount
+            cradleReferenceIndex += crosscount
+        }
+
         // console.log('setCradleContent getContentListRequirements: cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment',
         //     cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment)
 
@@ -1142,8 +1148,8 @@ const Cradle = ({
 
         }
 
-        // console.log('scrollblockoffset, spineOffset, spineadjustment',
-        //     scrollblockoffset, spineOffset, spineadjustment)
+        // console.log('scrollblockoffset, spineOffset, spineadjustment, headcontentlist.length',
+        //     scrollblockoffset, spineOffset, spineadjustment, headcontentlist.length)
 
         let cradleElements = cradleElementsRef.current
 
@@ -1154,8 +1160,9 @@ const Cradle = ({
             cradleElements.spine.current.style.top = (scrollblockoffset + spineadjustment) + 'px'
             cradleElements.spine.current.style.left = 'auto'
             cradleElements.head.current.style.paddingBottom = headcontentlist.length?cradleProps.gap + 'px':0
-            // console.log('CSS adjustments: scrollTop, scrollblockoffset, spineOffset, top, spineadjustment',
-            //     scrollblockoffset  - spineOffset, scrollblockoffset, spineOffset, scrollblockoffset, scrollblockoffset + spineadjustment, spineadjustment )
+            // console.log('CSS adjustments: scrollTop, scrollblockoffset, spineOffset, top, spineadjustment, headcontentlist.length','\n',
+            //     scrollblockoffset  - spineOffset, scrollblockoffset, spineOffset, 
+            //     scrollblockoffset + spineadjustment, spineadjustment, headcontentlist.length )
 
         } else { // orientation = 'horizontal'
 
