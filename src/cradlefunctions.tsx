@@ -316,15 +316,15 @@ const adjustSpineOffsetForMaxRefindex = ({
 
     let activelistitemcount = cradleReferenceIndex + contentCount
     let activelistrowcount = Math.ceil(activelistitemcount/crosscount)
-    let listrowcount = Math.ceil(listsize/crosscount)
+    let listRowcount = Math.ceil(listsize/crosscount)
 
     // memos
     let originalcradleoffset = cradleReferenceIndex
     let originalreferenceoffset = referenceoffset
     let originalspineOffset = spineOffset
 
-    if (activelistrowcount > listrowcount) {
-        let diffrows = activelistrowcount - listrowcount
+    if (activelistrowcount > listRowcount) {
+        let diffrows = activelistrowcount - listRowcount
         let diff = diffrows * crosscount
         cradleReferenceIndex -= diff
         activelistrowcount -= diffrows
@@ -333,13 +333,13 @@ const adjustSpineOffsetForMaxRefindex = ({
     }
 
     // let testlistrowcount = Math.ceil((cradleReferenceIndex + contentCount + 1)/crosscount)
-    if (activelistrowcount == listrowcount) {
+    if (activelistrowcount == listRowcount) {
         let diff = listsize % crosscount
         if (diff) {
             contentCount -= (crosscount - diff)
         }
-        // console.log('final row adjustment through activelistrowcount, listrowcount, listsize, contentCount, crosscount, diff',
-        // activelistrowcount, listrowcount, listsize, contentCount, crosscount, diff)
+        // console.log('final row adjustment through activelistrowcount, listRowcount, listsize, contentCount, crosscount, diff',
+        // activelistrowcount, listRowcount, listsize, contentCount, crosscount, diff)
     }
 
     let maxrefindexrow = Math.ceil(listsize/crosscount) - viewportrows + 1
@@ -643,7 +643,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let { crosscount,
         cradleRowcount,
-        listrowcount,
+        listRowcount,
         viewportRowcount,
         itemObserverThreshold } = cradleConfig
 
@@ -728,11 +728,11 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let diff 
     if (scrollforward) {
 
-        if ((previouscradlerowoffset + cradleRowcount + cradlerowshift) >= (listrowcount)) {
+        if ((previouscradlerowoffset + cradleRowcount + cradlerowshift) >= (listRowcount)) {
             EOD = true
         }
 
-        diff = (previouscradlerowoffset + cradleRowcount + cradlerowshift) - (listrowcount)
+        diff = (previouscradlerowoffset + cradleRowcount + cradlerowshift) - (listRowcount)
 
         if (diff > 0) {
 
