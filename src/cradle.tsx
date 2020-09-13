@@ -1410,17 +1410,19 @@ const Cradle = ({
     // on host demand
     const getVisibleList = useCallback(() => {
 
-        let cradleElements = cradleElementsRef.current
+        // let cradleElements = cradleElementsRef.current
         let cradleContent = cradleContentRef.current
 
         return calcVisibleItems({
             itemElementMap:itemElementsRef.current,
             viewportElement:viewportDataRef.current.elementref.current,
-            headElement:cradleElements.head.current, 
+            cradleElements:cradleElementsRef.current, 
             // tailElement:cradlePropsRef.current.orientation,
-            spineElement:cradleElements.spine.current,
-            orientation:cradlePropsRef.current.orientation,
-            headlist:cradleContent.headView,
+            // spineElement:cradleElements.spine.current,
+            cradleProps:cradlePropsRef.current,
+            // orientation:cradlePropsRef.current.orientation,
+            cradleContent:cradleContentRef.current,
+            // headlist:cradleContent.headView,
         })
 
     },[])

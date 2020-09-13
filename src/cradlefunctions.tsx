@@ -14,8 +14,13 @@ import { detect } from 'detect-browser'
 const browser = detect()
 
 export const calcVisibleItems = (
-        {itemElementMap, viewportElement, spineElement, headElement, orientation, headlist}
+        {itemElementMap, viewportElement, cradleElements, cradleProps, cradleContent}
     ) => {
+
+    let headElement = cradleElements.head.current
+    let spineElement = cradleElements.spine.current
+    let {orientation} = cradleProps
+    let headlist = cradleContent.headView
 
     let itemlistindexes = Array.from(itemElementMap.keys())
     itemlistindexes.sort((a,b)=>{
