@@ -444,13 +444,13 @@ const Cradle = ({
         cellLength += gap
 
         let viewportrowcount = Math.ceil(viewportLength/cellLength)
-        let cradlerowcount = viewportrowcount + (runwaycount * 2)
-        let itemcount = cradlerowcount * crosscount
+        let cradleRowcount = viewportrowcount + (runwaycount * 2)
+        let itemcount = cradleRowcount * crosscount
         if (itemcount > listsize) {
             itemcount = listsize
-            cradlerowcount = Math.ceil(itemcount/crosscount)
+            cradleRowcount = Math.ceil(itemcount/crosscount)
         }
-        return [cradlerowcount, viewportrowcount]
+        return [cradleRowcount, viewportrowcount]
 
     },[
         orientation, 
@@ -880,7 +880,7 @@ const Cradle = ({
 
         let cradleReferenceIndex = modelcontentlist[0].props.index
 
-        let { cradleRowcount, crosscount } = cradleConfigRef.current
+        // let cradleConfig = cradleConfigRef.current
 
         // --------------------[ 2. filter intersections list ]-----------------------
 
@@ -927,13 +927,14 @@ const Cradle = ({
 
         let [headchangecount,tailchangecount] = calcHeadAndTailChanges({
 
-            cradleshiftcount:cradleitemshift,
-            crosscount,
-            cradlerowcount:cradleRowcount, // TODO: align case usage
+            cradleProps,
+            cradleConfig,
+            // crosscount,
+            // cradleRowcount,
             headcontent:cradleContent.headModel,
             tailcontent:cradleContent.tailModel,
+            cradleshiftcount:cradleitemshift,
             scrollforward,
-            cradleProps,
             cradleReferenceIndex,
 
         })
@@ -948,16 +949,17 @@ const Cradle = ({
         if (headchangecount || tailchangecount) {
 
             localContentList = getUIContentList({
+                cradleProps,
+                cradleConfig,
                 contentCount,
                 localContentList:modelcontentlist,
                 headchangecount,
                 tailchangecount,
                 cradleReferenceIndex,
-                cradleProps,
                 observer: itemObserverRef.current,
                 callbacks:callbacksRef.current,
-                cradleRowcount,
-                crosscount:cradleConfig.crosscount,
+                // cradleRowcount,
+                // crosscount:cradleConfig.crosscount,
             })
         } else {
 
@@ -1067,18 +1069,17 @@ const Cradle = ({
         // returns content constrained by cradleRowcount
         let childlist = getUIContentList({
 
+            cradleProps,
+            cradleConfig,
             contentCount,
-            crosscount:cradleConfig.crosscount,
-            // cradleitemshift:0,
-            // content,
+            // crosscount:cradleConfig.crosscount,
+            // cradleRowcount,
             cradleReferenceIndex,
             headchangecount:0,
             tailchangecount:contentCount,
-            cradleProps:cradlePropsRef.current,
             localContentList,
             callbacks:callbacksRef.current,
             observer: itemObserverRef.current,
-            cradleRowcount,
         })
         // console.log('childlist.length, contentCount, rows from setContent', childlist.length, contentCount, Math.ceil(contentCount/crosscount))
 

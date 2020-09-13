@@ -13,9 +13,15 @@ import { detect } from 'detect-browser'
 
 const browser = detect()
 
-export const calcVisibleItems = (
-        {itemElementMap, viewportElement, cradleElements, cradleProps, cradleContent}
-    ) => {
+export const calcVisibleItems = ({   
+
+        itemElementMap, 
+        viewportElement, 
+        cradleElements, 
+        cradleProps, 
+        cradleContent
+
+    }) => {
 
     let headElement = cradleElements.head.current
     let spineElement = cradleElements.spine.current
@@ -196,11 +202,13 @@ export const getScrollReferenceIndexData = ({
 }
 
 export const getContentListRequirements = ({ // called from setCradleContent only
+
         cradleProps,
         cradleConfig,
         visibletargetindexoffset:referenceoffset,
         targetViewportOffset,
         viewportElement,
+
     }) => {
 
     let { orientation, 
@@ -371,8 +379,6 @@ const adjustSpineOffsetForMaxRefindex = ({
 export const isolateRelevantIntersections = ({
     intersections,
     cradleContent,
-    // headcontent, 
-    // tailcontent,
     itemObserverThreshold,
     scrollforward,
 }) => {
@@ -818,20 +824,22 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
 }
 
-export const calcHeadAndTailChanges = (
-    {
+export const calcHeadAndTailChanges = ({
         cradleProps,
-        cradleshiftcount,
-        crosscount,
+        cradleConfig,
         headcontent,
         tailcontent,
+        cradleshiftcount,
         scrollforward,
         cradleReferenceIndex,
-        cradlerowcount,
         // listsize,
     }) => {
 
     let listsize = cradleProps.listsize
+
+    let { crosscount,
+    cradleRowcount } = cradleConfig
+
     cradleshiftcount = Math.abs(cradleshiftcount) 
     let rowshiftcount = Math.ceil(cradleshiftcount/crosscount) //+ boundaryrowcount
 
@@ -862,7 +870,7 @@ export const calcHeadAndTailChanges = (
 
         pendingcontentoffset = cradleReferenceIndex + clipitemcount // after clip
 
-        let proposedtailindex = pendingcontentoffset + (cradlerowcount * crosscount) - 1 // modelcontentlist.length - 1
+        let proposedtailindex = pendingcontentoffset + (cradleRowcount * crosscount) - 1 // modelcontentlist.length - 1
 
         // adkjust changes for list boundaries
         if ((proposedtailindex) > (listsize -1) ) {
@@ -959,18 +967,17 @@ export const calcHeadAndTailChanges = (
 // or if indexcount values are <0 removes them.
 export const getUIContentList = ({ 
 
+        cradleProps,
+        cradleConfig,
         contentCount,
-        crosscount,
         // cradleitemshift,
         // content,
         cradleReferenceIndex, 
         headchangecount, 
         tailchangecount, 
-        cradleProps,
         localContentList:contentlist,
         callbacks,
         observer,
-        cradleRowcount,
     }) => {
 
     let { orientation,
@@ -979,6 +986,9 @@ export const getUIContentList = ({
         getItem,
         placeholder,
         listsize } = cradleProps
+
+    let { crosscount,
+        cradleRowcount } = cradleConfig
 
     let localContentlist = [...contentlist]
     let tailindexoffset = cradleReferenceIndex + contentlist.length
