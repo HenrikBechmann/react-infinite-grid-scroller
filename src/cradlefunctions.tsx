@@ -622,7 +622,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     itemElements,
     intersections,
     scrollforward,
-    source,
+    // source,
 }) => {
 
     // ------------------------[ initialize ]--------------
