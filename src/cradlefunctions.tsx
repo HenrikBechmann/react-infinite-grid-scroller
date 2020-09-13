@@ -155,7 +155,6 @@ export const getScrollReferenceIndexData = ({
         viewportData,
         cradleProps,
         cradleConfig,
-        // crosscount,
 
     }) => {
 
@@ -197,21 +196,24 @@ export const getScrollReferenceIndexData = ({
 }
 
 export const getContentListRequirements = ({ // called from setCradleContent only
-        orientation, 
-        cellHeight, 
-        cellWidth, 
-        cradleRowcount,
-        viewportRowcount,
-        runwaycount,
-        gap,
-        padding,
+        cradleProps,
+        cradleConfig,
         visibletargetindexoffset:referenceoffset,
         targetViewportOffset,
-        crosscount,
-        listsize,
         viewportElement,
     }) => {
 
+    let { orientation, 
+        cellHeight, 
+        cellWidth, 
+        runwaycount,
+        gap,
+        padding,
+        listsize} = cradleProps
+
+    let {crosscount,
+        cradleRowcount,
+        viewportRowcount} = cradleConfig
     // reconcile spineReferenceIndex to crosscount context
     let diff = referenceoffset % crosscount
     referenceoffset -= diff

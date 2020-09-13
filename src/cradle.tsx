@@ -1043,24 +1043,15 @@ const Cradle = ({
 
         }
 
-        let localContentList = [] // any duplicated items will be re-used by react
+        let localContentList = []
         let cradleContent = cradleContentRef.current
 
         let {cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment} = 
             getContentListRequirements({
-
-                cellHeight, 
-                cellWidth, 
-                orientation, 
-                runwaycount,
-                cradleRowcount,
-                viewportRowcount,
-                gap,
-                padding,
+                cradleProps,
+                cradleConfig,
                 visibletargetindexoffset,
                 targetViewportOffset:visibletargetscrolloffset,
-                crosscount,
-                listsize,
                 viewportElement:viewportDataRef.current.elementref.current
             })
 
