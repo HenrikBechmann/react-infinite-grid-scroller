@@ -4,33 +4,9 @@
 /*
     TODO:
 
-    resize from bottom position to full screen results in extra gap at bottom
-
-    in horizontal mode, rapid scroll to right sometimes leads to wrong placement of spine
-
     for resize, preserve cache for reload
 
-    fix spine location anomalies at front and back.
-
-    resizing is triggered twice on setup and probably shouldn't be
-
-    replace safari test with native observer test in cradlefunctions
-
-    sometimes when reaching end of list by repositioning, the spine is one row higher than designe. 
-    Rare, therefore probablyh rounding somewhere to to with referenceindex
-
-    occasionally on first vertical scroll the itemobserver fails (sometimes after a few scrolls)
-    seems to get behind in processing and then lose positioning for notifications.
-
-    listisize overshoots on rapid scroll to end
-
-    sometimes padding at bottom is too high (double)
-
     can't mount error in nested lists
-
-    ***fold is sometimes wayword on scroll to upper limit
-
-    create cradleConfig var for stable things like number of cradle and viewport rows
 
     Debug scrollToItem callback (including setting scrollforward on first action).
         motion takes place but gets close rather than exact. Position is off by runwaycount
@@ -47,20 +23,14 @@
     ==>> check getShift logic. !scrollforward should select next calculated index 
     to be above the fold if possible.
 
-    review rotate spineReferenceIndex settings
-    investigate cascading calls to out of scope cradle, in relation to itemshift
-
-    QA defend against butterfly getting intersections from opposite scroll direction
+\    QA defend against butterfly getting intersections from opposite scroll direction
         as the result of a short viewport
 
     implement sessionid scheme for cell content
 
     deal with spine being notified by bottom border rather than top
 
-    spine location occasionally down by 10 = padding
-    spineReferenceIndex is sometimes located (spineOffset) outside the viewport -- should never happen
-
-*/
+ */
 
 /*
     Description
