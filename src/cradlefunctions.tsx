@@ -825,17 +825,20 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 }
 
 export const calcHeadAndTailChanges = ({
+
         cradleProps,
         cradleConfig,
-        headcontent,
-        tailcontent,
+        cradleContent,
         cradleshiftcount,
         scrollforward,
         cradleReferenceIndex,
-        // listsize,
+
     }) => {
 
     let listsize = cradleProps.listsize
+
+    let headcontent = cradleContent.headModel
+    let tailcontent = cradleContent.tailModel
 
     let { crosscount,
     cradleRowcount } = cradleConfig

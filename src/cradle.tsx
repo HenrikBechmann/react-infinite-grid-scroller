@@ -929,10 +929,7 @@ const Cradle = ({
 
             cradleProps,
             cradleConfig,
-            // crosscount,
-            // cradleRowcount,
-            headcontent:cradleContent.headModel,
-            tailcontent:cradleContent.tailModel,
+            cradleContent,
             cradleshiftcount:cradleitemshift,
             scrollforward,
             cradleReferenceIndex,
