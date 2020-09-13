@@ -154,10 +154,12 @@ export const getScrollReferenceIndexData = ({
 
         viewportData,
         cradleProps,
-        crosscount,
+        cradleConfig,
+        // crosscount,
 
     }) => {
 
+    let {crosscount} = cradleConfig
     let viewportElement = viewportData.elementref.current
     let {orientation, listsize} = cradleProps
     let scrollPos, cellLength

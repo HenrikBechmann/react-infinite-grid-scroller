@@ -1230,7 +1230,7 @@ const Cradle = ({
                     scrollReferenceIndexDataRef.current = getScrollReferenceIndexData({
                         viewportData:viewportDataRef.current,
                         cradleProps:cradlePropsRef.current,
-                        crosscount:cradleConfigRef.current.crosscount,
+                        cradleConfig:cradleConfigRef.current,
                     })
                     saveCradleState('updatereposition')
                 }
