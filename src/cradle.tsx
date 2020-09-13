@@ -30,6 +30,9 @@
 
     deal with spine being notified by bottom border rather than top
 
+    test ITEM_OBSERVER_THRESHOLD at various levels
+    think through management of items larger than viewport
+
  */
 
 /*
@@ -114,9 +117,7 @@ import {
     calcVisibleItems, 
     getScrollReferenceIndexData,
     getContentListRequirements,
-    // getSpinePortalOffset,
     isolateRelevantIntersections,
-    // normalizeCradleAnchors,
     allocateContentList,
 
 } from './cradlefunctions'
