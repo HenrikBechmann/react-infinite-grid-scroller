@@ -4,6 +4,8 @@
 /*
     TODO:
 
+    viewportElement null at 866 after can't perform state...
+
     for resize, preserve cache for reload
 
     can't mount error in nested lists
@@ -32,6 +34,10 @@
 
     test ITEM_OBSERVER_THRESHOLD at various levels
     think through management of items larger than viewport
+
+    Add ITEM_OBSERVER_THRESHOLD to test parameters
+
+    Add show fold to test parameters
 
  */
 
@@ -1238,6 +1244,8 @@ const Cradle = ({
 
         scrollTimeridRef.current = setTimeout(() => {
 
+            if (!isMounted()) return
+
             let cradleState = cradleStateRef.current
             if (!viewportDataRef.current.isResizing) {
                 let localrefdata = {...scrollReferenceIndexDataRef.current}
@@ -1359,6 +1367,7 @@ const Cradle = ({
             case 'normalize': {
                 setTimeout(()=> {
 
+                    if (!isMounted()) return
                     // console.log('inside normalize: viewportData.isResizing', viewportData.isResizing)
                     if (!viewportData.isResizing) {
                         // redundant scroll position to avoid accidental positioning at tail end of reposition
