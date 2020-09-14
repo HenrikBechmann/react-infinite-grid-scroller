@@ -332,7 +332,7 @@ const adjustSpineOffsetForMaxRefindex = ({
 
 }) => {
 
-    debugger
+    // debugger
 
     let activelistitemcount = cradleReferenceIndex + contentCount
     let activelistrowcount = Math.ceil(activelistitemcount/crosscount)
@@ -348,8 +348,8 @@ const adjustSpineOffsetForMaxRefindex = ({
         let diff = diffrows * crosscount
         cradleReferenceIndex -= diff
         activelistrowcount -= diffrows
-        // console.log('cradlereference original, adjustment, rows, items, result', 
-            // originalcradleoffset, diff, diffrows, cradleReferenceIndex)
+        // console.log('adjusting cradleReferemcicradlereference original, adjustment, rows, items, result', 
+        //     originalcradleoffset, diff, diffrows, cradleReferenceIndex)
     }
 
     // let testlistrowcount = Math.ceil((cradleReferenceIndex + contentCount + 1)/crosscount)
@@ -374,7 +374,7 @@ const adjustSpineOffsetForMaxRefindex = ({
 
         scrollblockoffset = (targetrowoffset * cellLength) + padding
 
-        spineOffset = viewportlength - (viewportrows * cellLength)
+        spineOffset = viewportlength - ((viewportrows - 1) * cellLength) - gap
 
         // console.log('targetrow adjustment: targetrowoffset, cradleReferenceIndex, referenceoffset, scrollblockoffset, spineOffset',
         //     targetrowoffset, cradleReferenceIndex, referenceoffset, scrollblockoffset, spineOffset)

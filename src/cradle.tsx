@@ -268,6 +268,8 @@ const Cradle = ({
 
             callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
 
+            // console.log('calling resizing with', callingReferenceIndexDataRef.current)
+
             controlFlagsRef.current.pauseItemObserver = true
             controlFlagsRef.current.pauseCradleIntersectionObserver = true
             controlFlagsRef.current.pauseCradleResizeObserver = true
@@ -1099,6 +1101,8 @@ const Cradle = ({
 
         }
 
+        // console.log('setting referenceindexdata in setCradleContent',stableReferenceIndexDataRef.current)
+
         if (referenceIndexCallbackRef.current) {
 
             let cstate = cradleState
@@ -1200,8 +1204,7 @@ const Cradle = ({
 
                         spineoffset = cradleElements.spine.current.offsetLeft - 
                             viewportDataRef.current.elementref.current.scrollLeft
-                            
-                            
+
                     }
                     scrollReferenceIndexDataRef.current = {
                         index:itemindex,
@@ -1228,6 +1231,23 @@ const Cradle = ({
         scrollTimeridRef.current = setTimeout(() => {
 
             if (!isMounted()) return
+
+            let spineoffset
+            let cradleElements = cradleElementsRef.current
+
+            if (cradlePropsRef.current.orientation == 'vertical') {
+
+                spineoffset = cradleElements.spine.current.offsetTop - 
+                    viewportDataRef.current.elementref.current.scrollTop
+                    
+            } else {
+
+                spineoffset = cradleElements.spine.current.offsetLeft - 
+                    viewportDataRef.current.elementref.current.scrollLeft
+
+            }
+
+            scrollReferenceIndexDataRef.current.spineoffset = spineoffset
 
             let cradleState = cradleStateRef.current
             if (!viewportDataRef.current.isResizing) {
