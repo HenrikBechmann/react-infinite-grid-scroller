@@ -265,6 +265,12 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     let spineOffset = targetViewportOffset % cellLength
 
+    // if (spineOffset < 0) { // TODO: this shouldn't happen - reproduce from wide botton to narrow
+    //     spineOffset += (orientation == 'vertical'?cellHeight:cellWidth)
+    //     referenceoffset += crosscount
+    //     cradleReferenceIndex += crosscount
+    // }
+
     // --------------------[ calc css positioning ]-----------------------
 
     let targetrowoffset = Math.ceil(referenceoffset/crosscount)
@@ -326,14 +332,16 @@ const adjustSpineOffsetForMaxRefindex = ({
 
 }) => {
 
+    debugger
+
     let activelistitemcount = cradleReferenceIndex + contentCount
     let activelistrowcount = Math.ceil(activelistitemcount/crosscount)
     let listRowcount = Math.ceil(listsize/crosscount)
 
     // memos
-    let originalcradleoffset = cradleReferenceIndex
-    let originalreferenceoffset = referenceoffset
-    let originalspineOffset = spineOffset
+    // let originalcradleoffset = cradleReferenceIndex
+    // let originalreferenceoffset = referenceoffset
+    // let originalspineOffset = spineOffset
 
     if (activelistrowcount > listRowcount) {
         let diffrows = activelistrowcount - listRowcount
@@ -354,10 +362,13 @@ const adjustSpineOffsetForMaxRefindex = ({
         // activelistrowcount, listRowcount, listsize, contentCount, crosscount, diff)
     }
 
-    let maxrefindexrow = Math.ceil(listsize/crosscount) - viewportrows + 1
-    // console.log('targetrowoffset, maxrefindexrow', targetrowoffset, maxrefindexrow)
-    if (targetrowoffset > maxrefindexrow) {
-        targetrowoffset = maxrefindexrow
+    let maxrefindexrowoffset = Math.ceil(listsize/crosscount) - viewportrows + 1
+    // console.log('targetrowoffset, maxrefindexrowoffset', targetrowoffset, maxrefindexrowoffset)
+    if (targetrowoffset > maxrefindexrowoffset) {
+
+        let diff = targetrowoffset - maxrefindexrowoffset
+        targetrowoffset -= diff // maxrefindexrowoffset
+        // cradleReferenceIndex -= (diff * crosscount)
 
         referenceoffset = (targetrowoffset * crosscount)
 
@@ -365,8 +376,9 @@ const adjustSpineOffsetForMaxRefindex = ({
 
         spineOffset = viewportlength - (viewportrows * cellLength)
 
-        // console.log('targetrow adjustment: targetrowoffset, referenceoffset, scrollblockoffset, spineOffset',
-        //     targetrowoffset, referenceoffset, scrollblockoffset, spineOffset)
+        // console.log('targetrow adjustment: targetrowoffset, cradleReferenceIndex, referenceoffset, scrollblockoffset, spineOffset',
+        //     targetrowoffset, cradleReferenceIndex, referenceoffset, scrollblockoffset, spineOffset)
+
     }
 
     // debugger

@@ -1054,12 +1054,6 @@ const Cradle = ({
                 viewportElement:viewportDataRef.current.elementref.current
             })
 
-        if (spineOffset < 0) { // TODO: this shouldn't happen - reproduce from wide botton to narrow
-            spineOffset += (orientation == 'vertical'?cellHeight:cellWidth)
-            referenceoffset += crosscount
-            cradleReferenceIndex += crosscount
-        }
-
         // console.log('setCradleContent getContentListRequirements: cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment',
         //     cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment)
 
