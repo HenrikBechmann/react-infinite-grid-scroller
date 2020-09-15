@@ -1027,7 +1027,7 @@ export const getUIContentList = ({
                 continue
             }
             headContentlist.push(
-                emitItem(
+                acquireItem(
                     {
                         index, 
                         orientation, 
@@ -1061,7 +1061,7 @@ export const getUIContentList = ({
                 continue
             }
             tailContentlist.push(
-                emitItem(
+                acquireItem(
                     {
                         index, 
                         orientation, 
@@ -1114,6 +1114,33 @@ export const allocateContentList = (
 
     return [headlist,taillist]
 
+}
+
+const acquireItem = ({
+    index, 
+    orientation, 
+    cellHeight, 
+    cellWidth, 
+    observer, 
+    callbacks, 
+    getItem, 
+    listsize, 
+    placeholder,
+    instanceIdCounterRef,
+
+}) => {
+    return emitItem({
+        index, 
+        orientation, 
+        cellHeight, 
+        cellWidth, 
+        observer, 
+        callbacks, 
+        getItem, 
+        listsize, 
+        placeholder,
+        instanceIdCounterRef,
+    })
 }
 
 const emitItem = ({
