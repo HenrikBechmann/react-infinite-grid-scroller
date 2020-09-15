@@ -361,6 +361,9 @@ const Cradle = ({
 
     // ------------------ current location -- first tail visible item -------------
 
+    const instanceIdCounterRef = useRef(0)
+    const instanceIdMapRef = useRef(new Map())
+
     const scrollReferenceIndexDataRef = useRef({ // existing or expected, monitored through onScroll
         index:Math.min(indexOffset,(listsize - 1)) || 0,
         spineoffset:padding
@@ -957,6 +960,7 @@ const Cradle = ({
                 cradleReferenceIndex,
                 observer: itemObserverRef.current,
                 callbacks:callbacksRef.current,
+                instanceIdCounterRef,
                 // cradleRowcount,
                 // crosscount:cradleConfig.crosscount,
             })
@@ -1073,6 +1077,7 @@ const Cradle = ({
             localContentList,
             callbacks:callbacksRef.current,
             observer: itemObserverRef.current,
+            instanceIdCounterRef,
         })
         // console.log('childlist.length, contentCount, rows from setContent', childlist.length, contentCount, Math.ceil(contentCount/crosscount))
 

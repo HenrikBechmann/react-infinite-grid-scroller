@@ -10,7 +10,7 @@ import useIsMounted from 'react-is-mounted-hook'
 import Placeholder from './placeholder'
 
 const ItemShell = (props) => {
-    const {orientation, cellHeight, cellWidth, index, observer, callbacks, getItem, listsize, placeholder} = props
+    const {orientation, cellHeight, cellWidth, index, observer, callbacks, getItem, listsize, placeholder, instanceID} = props
     
     const [content, saveContent] = useState(null)
     const [error, saveError] = useState(null)
@@ -18,7 +18,7 @@ const ItemShell = (props) => {
         overflow:'hidden',
     } as React.CSSProperties)
     const shellRef = useRef(null)
-
+    const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
 

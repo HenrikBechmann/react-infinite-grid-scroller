@@ -993,6 +993,7 @@ export const getUIContentList = ({
         localContentList:contentlist,
         callbacks,
         observer,
+        instanceIdCounterRef,
     }) => {
 
     let { orientation,
@@ -1036,7 +1037,8 @@ export const getUIContentList = ({
                         callbacks, 
                         getItem, 
                         listsize, 
-                        placeholder
+                        placeholder,
+                        instanceIdCounterRef,
                     }
                 )
             )
@@ -1070,6 +1072,7 @@ export const getUIContentList = ({
                         getItem, 
                         listsize, 
                         placeholder,
+                        instanceIdCounterRef,
                     }
                 )
             )
@@ -1122,9 +1125,11 @@ const emitItem = ({
     callbacks, 
     getItem, 
     listsize, 
-    placeholder
+    placeholder,
+    instanceIdCounterRef,
 }) => {
 
+    let instanceID = instanceIdCounterRef.current++
     return <ItemShell
         key = {index} 
         orientation = {orientation}
@@ -1136,6 +1141,7 @@ const emitItem = ({
         getItem = {getItem}
         listsize = {listsize}
         placeholder = { placeholder }
+        instanceID = {instanceID}
     />    
 
 }
