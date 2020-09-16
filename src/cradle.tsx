@@ -4,7 +4,7 @@
 /*
     TODO:
 
-    viewportElement null at 866 after can't perform state...
+    nested horizontal tail boundary is wrong - underlying structure; head bottom boundary is wrong
 
     for resize, preserve cache for reload
 
@@ -25,7 +25,7 @@
     ==>> check getShift logic. !scrollforward should select next calculated index 
     to be above the fold if possible.
 
-\    QA defend against butterfly getting intersections from opposite scroll direction
+    QA defend against butterfly getting intersections from opposite scroll direction
         as the result of a short viewport
 
     implement sessionid scheme for cell content
@@ -113,7 +113,7 @@ import ResizeObserverPolyfill from 'resize-observer-polyfill'
 
 const LocalResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
 
-const ITEM_OBSERVER_THRESHOLD = 1
+const ITEM_OBSERVER_THRESHOLD = 0
 
 import { 
     setCradleGridStyles, 
