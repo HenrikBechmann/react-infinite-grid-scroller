@@ -1,7 +1,9 @@
 // itemframe.tsx
 // copyright (c) 2020 Henrik Bechmann, Toronto, Licence: MIT
 
-import React, {useRef, useEffect, useState, useCallback } from 'react'
+import React, {useRef, useEffect, useState, useCallback, useMemo } from 'react'
+
+import ReactDOM from 'react-dom'
 
 import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
@@ -114,14 +116,28 @@ const ItemShell = (props) => {
     // placeholder handling
     const customholderRef = useRef(placeholder?React.createElement(placeholder, {index, listsize}):null)
 
-    // console.log('itemstate',itemstate)
-    return <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
+    const child = useMemo(()=>{
+        return <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
         {(itemstate == 'ready')?
             content?
                 content:customholderRef.current?
                     customholderRef.current:<Placeholder index = {index} listsize = {listsize} error = {error}/>
         :null}
     </div>
+    },[shellRef, index, instanceID, styles, itemstate, content, customholderRef.current, listsize, error])
+
+    const container = useMemo(()=>{
+        let ctr = document.createElement('div')
+        ctr.style.top = '0px'
+        ctr.style.right = '0px'
+        ctr.style.left = '0px'
+        ctr.style.bottom = '0px'
+        ctr.style.position = 'absolute'
+        return ctr
+    },[])
+
+    // console.log('itemstate',itemstate)
+    return ReactDOM.createPortal(child,container)
 
 } // ItemShell
 
