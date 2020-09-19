@@ -17,6 +17,7 @@ const ItemShell = (props) => {
     const [styles,saveStyles] = useState({
         overflow:'hidden',
     } as React.CSSProperties)
+    const [itemstate,setItemstate] = useState('setup')
     const shellRef = useRef(null)
     const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
@@ -62,6 +63,13 @@ const ItemShell = (props) => {
         }
     },[])
 
+    useEffect(()=>{
+        if (itemstate == 'setup') {
+            setItemstate('ready')
+        }
+
+    },[itemstate])
+
     // initialize
     useEffect(() => {
 
@@ -106,8 +114,9 @@ const ItemShell = (props) => {
     // placeholder handling
     const customholderRef = useRef(placeholder?React.createElement(placeholder, {index, listsize}):null)
 
-    return <div ref = { shellRef } data-index = {index} style = {styles}>
-        {styles.width?
+    // console.log('itemstate',itemstate)
+    return <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
+        {(itemstate == 'ready')?
             content?
                 content:customholderRef.current?
                     customholderRef.current:<Placeholder index = {index} listsize = {listsize} error = {error}/>

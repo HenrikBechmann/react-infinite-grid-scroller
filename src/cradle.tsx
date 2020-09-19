@@ -384,15 +384,6 @@ const Cradle = ({
     const spineCradleElementRef = useRef(null)
     const cradleElementsRef = useRef({head:headCradleElementRef, tail:tailCradleElementRef, spine:spineCradleElementRef})
 
-    // // data model
-    // const modelContentRef = useRef(null)
-    // const headModelContentRef = useRef(null)
-    // const tailModelContentRef = useRef(null)
-
-    // // view model
-    // const headViewContentRef = useRef([])
-    // const tailViewContentRef = useRef([])
-
     const cradleContentRef = useRef({
         cradleModel: null,
         headModel: null,
