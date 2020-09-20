@@ -117,14 +117,12 @@ const ItemShell = (props) => {
     const customholderRef = useRef(placeholder?React.createElement(placeholder, {index, listsize}):null)
 
     const child = useMemo(()=>{
-        return <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
-        {(itemstate == 'ready')?
-            content?
-                content:customholderRef.current?
-                    customholderRef.current:<Placeholder index = {index} listsize = {listsize} error = {error}/>
-        :null}
-    </div>
-    },[shellRef, index, instanceID, styles, itemstate, content, customholderRef.current, listsize, error])
+        let child = content?
+            content:customholderRef.current?
+                customholderRef.current:<Placeholder index = {index} listsize = {listsize} error = {error}/>
+        // console.log('index, child memo', index, child)
+        return child
+    }, [index, content, customholderRef.current, listsize, error])
 
     const container = useMemo(()=>{
         let ctr = document.createElement('div')
@@ -136,8 +134,25 @@ const ItemShell = (props) => {
         return ctr
     },[])
 
-    // console.log('itemstate',itemstate)
-    return ReactDOM.createPortal(child,container)
+    // const portal = useMemo(() => {
+
+    //     let portal = 
+    //     // console.log('index, child, portal',index, child, portal)
+    //     return portal
+
+    // },[child, container])
+
+    useEffect(() => {
+        if (itemstate != 'ready') return
+        shellRef.current.appendChild(container)
+        return () => {
+            shellRef.current.removeChild(container)
+        }
+    },[itemstate, container])
+
+    return <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
+        { (itemstate == 'ready') && ReactDOM.createPortal(child,container) }
+    </div>
 
 } // ItemShell
 
