@@ -382,7 +382,13 @@ const Cradle = ({
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const spineCradleElementRef = useRef(null)
-    const cradleElementsRef = useRef({head:headCradleElementRef, tail:tailCradleElementRef, spine:spineCradleElementRef})
+    const cradleElementsRef = useRef(
+        {
+            head:headCradleElementRef, 
+            tail:tailCradleElementRef, 
+            spine:spineCradleElementRef
+        }
+    )
 
     const cradleContentRef = useRef({
         cradleModel: null,
@@ -390,6 +396,7 @@ const Cradle = ({
         tailModel: null,
         headView: [],
         tailView: [],
+        portals: new Map(),
     })
 
     // item elements cache...
@@ -1458,15 +1465,21 @@ const Cradle = ({
     // content item registration callback; called from item
     const getItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
 
-        const [index, shellref] = itemElementData
+        const [index, shellref, portalRef] = itemElementData
+
+        let portals = cradleContentRef.current.portals
 
         if (reportType == 'register') {
 
+            // console.log('register index, portalRef, same',index, portalRef)
+
+            portals.set(index,portalRef)
             itemElementsRef.current.set(index,shellref)
 
         } else if (reportType == 'unregister') {
 
             itemElementsRef.current.delete(index)
+            portals.delete(index)
 
         }
 

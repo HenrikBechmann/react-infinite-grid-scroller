@@ -21,6 +21,7 @@ const ItemShell = (props) => {
     } as React.CSSProperties)
     const [itemstate,setItemstate] = useState('setup')
     const shellRef = useRef(null)
+    const portalRef = useRef(null)
     const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
@@ -110,7 +111,7 @@ const ItemShell = (props) => {
 
     // cradle ondemand callback parameter value
     const getElementData = useCallback(()=>{
-        return [index, shellRef]
+        return [index, shellRef, portalRef]
     },[])
 
     // placeholder handling
@@ -134,13 +135,16 @@ const ItemShell = (props) => {
         return ctr
     },[])
 
-    // const portal = useMemo(() => {
+    const portal = useMemo(() => {
 
-    //     let portal = 
-    //     // console.log('index, child, portal',index, child, portal)
-    //     return portal
+        if (itemstate != 'ready') return null
 
-    // },[child, container])
+        let portal = ReactDOM.createPortal(child,container)
+        portalRef.current = portal
+        // console.log('ITEM index, child, container, portalRef',index, child, container, portalRef)
+        return portal
+
+    },[child, container, itemstate])
 
     useEffect(() => {
         if (itemstate != 'ready') return
@@ -151,7 +155,7 @@ const ItemShell = (props) => {
     },[itemstate, container])
 
     return <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
-        { (itemstate == 'ready') && ReactDOM.createPortal(child,container) }
+        { portal /*(itemstate == 'ready') && ReactDOM.createPortal(child,container)*/ }
     </div>
 
 } // ItemShell
