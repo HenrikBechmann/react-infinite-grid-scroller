@@ -21,7 +21,8 @@ const ItemShell = (props) => {
     } as React.CSSProperties)
     const [itemstate,setItemstate] = useState('setup')
     const shellRef = useRef(null)
-    const portalRef = useRef(null)
+    const portalRef = useRef(portals.get(index)?portals.get(index).current:{placeholder:null, container:null, content:null, portal:null})
+    console.log('portalRef',portalRef)
     const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
@@ -122,6 +123,10 @@ const ItemShell = (props) => {
             content:customholderRef.current?
                 customholderRef.current:<Placeholder index = {index} listsize = {listsize} error = {error}/>
         // console.log('index, child memo', index, child)
+        portalRef.current.placeholder = customholderRef.current?
+            customholderRef.current:
+            <Placeholder index = {index} listsize = {listsize} error = {error}/>
+        portalRef.current.content = content
         return child
     }, [index, content, customholderRef.current, listsize, error])
 
@@ -132,6 +137,9 @@ const ItemShell = (props) => {
         ctr.style.left = '0px'
         ctr.style.bottom = '0px'
         ctr.style.position = 'absolute'
+
+        portalRef.current.container = ctr
+
         return ctr
     },[])
 
@@ -140,7 +148,7 @@ const ItemShell = (props) => {
         if (itemstate != 'ready') return null
 
         let localportal = ReactDOM.createPortal(child,container)
-        portalRef.current = localportal
+        portalRef.current.portal = localportal
         // console.log('ITEM index, child, container, portalRef',index, child, container, portalRef)
         return localportal
 
