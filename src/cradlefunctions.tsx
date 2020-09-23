@@ -996,12 +996,12 @@ export const getUIContentList = ({
         instanceIdCounterRef,
     }) => {
 
-    let { orientation,
-        cellHeight,
-        cellWidth,
-        getItem,
-        placeholder,
-        listsize } = cradleProps
+    // let { orientation,
+    //     cellHeight,
+    //     cellWidth,
+    //     getItem,
+    //     placeholder,
+    //     listsize } = cradleProps
 
     let { crosscount,
         cradleRowcount } = cradleConfig
@@ -1030,14 +1030,16 @@ export const getUIContentList = ({
                 acquireItem(
                     {
                         index, 
-                        orientation, 
-                        cellHeight, 
-                        cellWidth, 
+                        cradleProps,
+                        // orientation, 
+                        // cellHeight, 
+                        // cellWidth, 
+                        // getItem, 
+                        // listsize, 
+                        // placeholder,
+
                         observer, 
                         callbacks, 
-                        getItem, 
-                        listsize, 
-                        placeholder,
                         instanceIdCounterRef,
                     }
                 )
@@ -1064,14 +1066,15 @@ export const getUIContentList = ({
                 acquireItem(
                     {
                         index, 
-                        orientation, 
-                        cellHeight, 
-                        cellWidth, 
+                        cradleProps,
+                        // orientation, 
+                        // cellHeight, 
+                        // cellWidth, 
+                        // getItem, 
+                        // listsize, 
+                        // placeholder,
                         observer, 
                         callbacks, 
-                        getItem, 
-                        listsize, 
-                        placeholder,
                         instanceIdCounterRef,
                     }
                 )
@@ -1118,45 +1121,56 @@ export const allocateContentList = (
 
 const acquireItem = ({
     index, 
-    orientation, 
-    cellHeight, 
-    cellWidth, 
+    cradleProps,
+    // orientation, 
+    // cellHeight, 
+    // cellWidth, 
+    // getItem, 
+    // listsize, 
+    // placeholder,
     observer, 
     callbacks, 
-    getItem, 
-    listsize, 
-    placeholder,
     instanceIdCounterRef,
 
 }) => {
+    let instanceID = instanceIdCounterRef.current++
+
     return emitItem({
         index, 
-        orientation, 
-        cellHeight, 
-        cellWidth, 
+        cradleProps,
+        // orientation, 
+        // cellHeight, 
+        // cellWidth, 
+        // getItem, 
+        // listsize, 
+        // placeholder,
         observer, 
         callbacks, 
-        getItem, 
-        listsize, 
-        placeholder,
-        instanceIdCounterRef,
+        instanceID,
     })
 }
 
 const emitItem = ({
     index, 
-    orientation, 
-    cellHeight, 
-    cellWidth, 
+    cradleProps,
+    // orientation, 
+    // cellHeight, 
+    // cellWidth, 
+    // getItem, 
+    // listsize, 
+    // placeholder,
     observer, 
     callbacks, 
-    getItem, 
-    listsize, 
-    placeholder,
-    instanceIdCounterRef,
+    instanceID,
 }) => {
 
-    let instanceID = instanceIdCounterRef.current++
+    let { orientation,
+        cellHeight,
+        cellWidth,
+        getItem,
+        placeholder,
+        listsize } = cradleProps
+
     return <ItemShell
         key = {index} 
         orientation = {orientation}
