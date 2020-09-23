@@ -985,12 +985,11 @@ export const getUIContentList = ({
         cradleProps,
         cradleConfig,
         contentCount,
-        // cradleitemshift,
-        // content,
         cradleReferenceIndex, 
         headchangecount, 
         tailchangecount, 
         localContentList:contentlist,
+        portals,
         callbacks,
         observer,
         instanceIdCounterRef,
@@ -1024,7 +1023,7 @@ export const getUIContentList = ({
                     {
                         index, 
                         cradleProps,
-
+                        portals,
                         observer, 
                         callbacks, 
                         instanceIdCounterRef,
@@ -1054,6 +1053,7 @@ export const getUIContentList = ({
                     {
                         index, 
                         cradleProps,
+                        portals,
                         observer, 
                         callbacks, 
                         instanceIdCounterRef,
@@ -1103,6 +1103,7 @@ export const allocateContentList = (
 const acquireItem = ({
     index, 
     cradleProps,
+    portals,
     observer, 
     callbacks, 
     instanceIdCounterRef,
@@ -1113,6 +1114,7 @@ const acquireItem = ({
     return emitItem({
         index, 
         cradleProps,
+        portals,
         observer, 
         callbacks, 
         instanceID,
@@ -1122,6 +1124,7 @@ const acquireItem = ({
 const emitItem = ({
     index, 
     cradleProps,
+    portals,
     observer, 
     callbacks, 
     instanceID,
@@ -1140,6 +1143,7 @@ const emitItem = ({
         cellHeight = { cellHeight }
         cellWidth = { cellWidth }
         index = {index}
+        portals = { portals }
         observer = {observer}
         callbacks = {callbacks}
         getItem = {getItem}

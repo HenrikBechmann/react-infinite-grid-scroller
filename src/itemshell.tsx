@@ -12,7 +12,7 @@ import useIsMounted from 'react-is-mounted-hook'
 import Placeholder from './placeholder'
 
 const ItemShell = (props) => {
-    const {orientation, cellHeight, cellWidth, index, observer, callbacks, getItem, listsize, placeholder, instanceID} = props
+    const {orientation, cellHeight, cellWidth, index, observer, callbacks, getItem, listsize, placeholder, instanceID, portals} = props
     
     const [content, saveContent] = useState(null)
     const [error, saveError] = useState(null)
@@ -135,14 +135,14 @@ const ItemShell = (props) => {
         return ctr
     },[])
 
-    const portal = useMemo(() => {
+    const localportal = useMemo(() => {
 
         if (itemstate != 'ready') return null
 
-        let portal = ReactDOM.createPortal(child,container)
-        portalRef.current = portal
+        let localportal = ReactDOM.createPortal(child,container)
+        portalRef.current = localportal
         // console.log('ITEM index, child, container, portalRef',index, child, container, portalRef)
-        return portal
+        return localportal
 
     },[child, container, itemstate])
 
@@ -155,7 +155,7 @@ const ItemShell = (props) => {
     },[itemstate, container])
 
     return <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
-        { portal /*(itemstate == 'ready') && ReactDOM.createPortal(child,container)*/ }
+        { localportal /*(itemstate == 'ready') && ReactDOM.createPortal(child,container)*/ }
     </div>
 
 } // ItemShell

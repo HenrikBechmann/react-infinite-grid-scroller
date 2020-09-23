@@ -953,14 +953,13 @@ const Cradle = ({
                 cradleConfig,
                 contentCount,
                 localContentList:modelcontentlist,
+                portals:cradleContent.portals,
                 headchangecount,
                 tailchangecount,
                 cradleReferenceIndex,
                 observer: itemObserverRef.current,
                 callbacks:callbacksRef.current,
                 instanceIdCounterRef,
-                // cradleRowcount,
-                // crosscount:cradleConfig.crosscount,
             })
         } else {
 
@@ -1067,12 +1066,11 @@ const Cradle = ({
             cradleProps,
             cradleConfig,
             contentCount,
-            // crosscount:cradleConfig.crosscount,
-            // cradleRowcount,
             cradleReferenceIndex,
             headchangecount:0,
             tailchangecount:contentCount,
             localContentList,
+            portals:cradleContent.portals,
             callbacks:callbacksRef.current,
             observer: itemObserverRef.current,
             instanceIdCounterRef,
@@ -1295,10 +1293,6 @@ const Cradle = ({
         let cradleContent = cradleContentRef.current
         switch (cradleState) {
             case 'reload':
-                // cradleContent.headModel = []
-                // cradleContent.tailModel = []
-                // cradleContent.headView = []
-                // cradleContent.tailView = []
                 saveCradleState('setreload')
                 break;
             case 'updatereposition':
@@ -1309,13 +1303,10 @@ const Cradle = ({
 
             case 'setscrolloffset': {
 
-                // setTimeout(() => {
-                    viewportData.elementref.current[scrollPositionDataRef.current.property] =
-                        scrollPositionDataRef.current.value
-                    // console.log('setscrolloffset', scrollPositionDataRef.current)
+                viewportData.elementref.current[scrollPositionDataRef.current.property] =
+                    scrollPositionDataRef.current.value
 
-                    saveCradleState('normalize')//'content')
-                // })
+                saveCradleState('normalize')
 
                 break
             }
@@ -1327,7 +1318,6 @@ const Cradle = ({
             }
             case 'content': {
 
-                // console.log('content')
                 let cradleContent = cradleContentRef.current
                 cradleContent.headView = cradleContent.headModel
                 cradleContent.tailView = cradleContent.tailModel
