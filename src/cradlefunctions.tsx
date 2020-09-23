@@ -996,13 +996,6 @@ export const getUIContentList = ({
         instanceIdCounterRef,
     }) => {
 
-    // let { orientation,
-    //     cellHeight,
-    //     cellWidth,
-    //     getItem,
-    //     placeholder,
-    //     listsize } = cradleProps
-
     let { crosscount,
         cradleRowcount } = cradleConfig
 
@@ -1031,12 +1024,6 @@ export const getUIContentList = ({
                     {
                         index, 
                         cradleProps,
-                        // orientation, 
-                        // cellHeight, 
-                        // cellWidth, 
-                        // getItem, 
-                        // listsize, 
-                        // placeholder,
 
                         observer, 
                         callbacks, 
@@ -1067,12 +1054,6 @@ export const getUIContentList = ({
                     {
                         index, 
                         cradleProps,
-                        // orientation, 
-                        // cellHeight, 
-                        // cellWidth, 
-                        // getItem, 
-                        // listsize, 
-                        // placeholder,
                         observer, 
                         callbacks, 
                         instanceIdCounterRef,
@@ -1122,12 +1103,6 @@ export const allocateContentList = (
 const acquireItem = ({
     index, 
     cradleProps,
-    // orientation, 
-    // cellHeight, 
-    // cellWidth, 
-    // getItem, 
-    // listsize, 
-    // placeholder,
     observer, 
     callbacks, 
     instanceIdCounterRef,
@@ -1138,12 +1113,6 @@ const acquireItem = ({
     return emitItem({
         index, 
         cradleProps,
-        // orientation, 
-        // cellHeight, 
-        // cellWidth, 
-        // getItem, 
-        // listsize, 
-        // placeholder,
         observer, 
         callbacks, 
         instanceID,
@@ -1153,12 +1122,6 @@ const acquireItem = ({
 const emitItem = ({
     index, 
     cradleProps,
-    // orientation, 
-    // cellHeight, 
-    // cellWidth, 
-    // getItem, 
-    // listsize, 
-    // placeholder,
     observer, 
     callbacks, 
     instanceID,
