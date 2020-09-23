@@ -22,7 +22,7 @@ const ItemShell = (props) => {
     const [itemstate,setItemstate] = useState('setup')
     const shellRef = useRef(null)
     const portalRef = useRef(portals.get(index)?portals.get(index).current:{placeholder:null, container:null, content:null, portal:null})
-    console.log('portalRef',portalRef)
+    // console.log('portalRef',portalRef)
     const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
