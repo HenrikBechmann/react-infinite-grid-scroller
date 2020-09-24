@@ -1094,6 +1094,7 @@ const Cradle = ({
         }
 
         cradleContent.cradleModel = childlist
+        cradleContent.portals.clear()
         cradleContent.headModel = headcontentlist
         cradleContent.tailModel = tailcontentlist
 
@@ -1235,6 +1236,8 @@ const Cradle = ({
         scrollTimeridRef.current = setTimeout(() => {
 
             if (!isMounted()) return
+
+            console.log('portals',cradleContentRef.current.portals)
 
             let spineoffset
             let cradleElements = cradleElementsRef.current
