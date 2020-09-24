@@ -14,16 +14,16 @@ import Placeholder from './placeholder'
 const ItemShell = (props) => {
     const {orientation, cellHeight, cellWidth, index, observer, callbacks, getItem, listsize, placeholder, instanceID, portals} = props
     
-    const [content, saveContent] = useState(null)
+    const portalRef = useRef(portals.get(index)?portals.get(index).current:
+        {placeholder:null, container:null, content:null, portal:null})
+    const [content, saveContent] = useState(portalRef.current.content)
     const [error, saveError] = useState(null)
     const [styles,saveStyles] = useState({
         overflow:'hidden',
     } as React.CSSProperties)
     const [itemstate,setItemstate] = useState('setup')
     const shellRef = useRef(null)
-    const portalRef = useRef(portals.get(index)?portals.get(index).current:
-        {placeholder:null, container:null, content:null, portal:null})
-    console.log('----index, itemstate, portalRef',index, itemstate, portalRef)
+    console.log('----index, itemstate, portalRef',index, itemstate, {...portalRef.current})
     const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
@@ -31,7 +31,7 @@ const ItemShell = (props) => {
     // initialize
     useEffect(() => {
         if (portalRef.current.content) {
-            isMounted() && saveContent(portalRef.current.content)
+            // isMounted() && saveContent(portalRef.current.content)
             return
         }
         let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
@@ -128,7 +128,10 @@ const ItemShell = (props) => {
     )
 
     const child = useMemo(()=>{
-        if (portalRef.current.content) return portalRef.current.content
+        if (content) {
+            // (!portalRef.current.content) && (portalRef.current.content = content)
+            return content
+        }
         console.log('updating child:index, content, portalRef.current.content,customholderRef.current',
             index, content, portalRef.current.content,customholderRef.current)
         let child = content?
@@ -138,7 +141,6 @@ const ItemShell = (props) => {
         (!portalRef.current.placeholder) && (portalRef.current.placeholder = (customholderRef.current?
             customholderRef.current:
             <Placeholder index = {index} listsize = {listsize} error = {error}/>));
-        // (!portalRef.current.content) && (portalRef.current.content = content)
         return child
     }, [index, content, customholderRef.current, listsize, error])
 
@@ -166,7 +168,7 @@ const ItemShell = (props) => {
             return portalRef.current.portal
         }
 
-        (!portalRef.current.content) && (portalRef.current.content = content)
+        (!portalRef.current.content) && content && (portalRef.current.content = content)
 
         if (itemstate != 'ready') return null
 
@@ -176,7 +178,7 @@ const ItemShell = (props) => {
             index, child, container, itemstate, localportal)
         return localportal
 
-    },[child, container, itemstate])
+    },[child, container, itemstate, content])
 
     useEffect(() => {
         if (itemstate != 'ready') return

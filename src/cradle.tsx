@@ -351,6 +351,7 @@ const Cradle = ({
         cradleContent.tailModel = []
         cradleContent.headView = []
         cradleContent.tailView = []
+        // cradleContent.portals = new Map()
 
     },[orientation])
 
@@ -1471,7 +1472,7 @@ const Cradle = ({
         } else if (reportType == 'unregister') {
 
             itemElementsRef.current.delete(index)
-            portals.delete(index)
+            // portals.delete(index)
 
         }
 
