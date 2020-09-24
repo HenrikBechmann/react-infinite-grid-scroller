@@ -4,6 +4,8 @@
 /*
     TODO:
 
+    fold shift only happens after delay
+
     nested horizontal tail boundary is wrong - underlying structure; head bottom boundary is wrong
 
     for resize, preserve cache for reload
