@@ -41,7 +41,6 @@
   "dependencies": {
     "detect-browser": "^5.1.1",
     "react-is-mounted-hook": "^1.0.3",
-    "react-reverse-portal": "^2.0.1",
     "requestidlecallback": "^0.3.0",
     "resize-observer-polyfill": "^1.5.1",
     "save-dev": "0.0.1-security"
