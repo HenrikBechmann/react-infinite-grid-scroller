@@ -12,7 +12,7 @@ import useIsMounted from 'react-is-mounted-hook'
 import Placeholder from './placeholder'
 
 const ItemShell = (props) => {
-    const {orientation, cellHeight, cellWidth, index, observer, callbacks, getItem, listsize, placeholder, instanceID, portals} = props
+    const {orientation, cellHeight, cellWidth, index, observer, callbacks, getItem, listsize, placeholder, instanceID, portals, scrollerName} = props
     
     const portalRef = useRef(portals.get(index)?portals.get(index).current:
         {placeholder:null, container:null, content:null, portal:null})
@@ -37,7 +37,7 @@ const ItemShell = (props) => {
         let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
         let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
         if (getItem) {
-            console.log('getting item: index',index)
+            console.log('getting item: index, scrollerName',index, scrollerName)
             itemrequestRef.current = requestidlecallback(()=> {
 
                 let value = getItem(index)

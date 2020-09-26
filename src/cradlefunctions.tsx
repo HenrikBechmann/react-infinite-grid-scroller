@@ -1135,7 +1135,8 @@ const emitItem = ({
         cellWidth,
         getItem,
         placeholder,
-        listsize } = cradleProps
+        listsize,
+        scrollerName } = cradleProps
 
     return <ItemShell
         key = {index} 
@@ -1150,6 +1151,7 @@ const emitItem = ({
         listsize = {listsize}
         placeholder = { placeholder }
         instanceID = {instanceID}
+        scrollerName = { scrollerName }
     />    
 
 }

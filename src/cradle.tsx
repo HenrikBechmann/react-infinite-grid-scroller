@@ -4,6 +4,8 @@
 /*
     TODO:
 
+    add scroller name for debugging
+
     fold shift only happens after delay
 
     nested horizontal tail boundary is wrong - underlying structure; head bottom boundary is wrong
@@ -148,6 +150,7 @@ const Cradle = ({
         placeholder, 
         functions,
         styles,
+        scrollerName,
     }) => {
 
     // functions and styles handled separately
@@ -165,6 +168,7 @@ const Cradle = ({
             cellWidth, 
             getItem, 
             placeholder, 
+            scrollerName,
     }},[
         gap, 
         padding, 
@@ -204,7 +208,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // console.log('cradleState', cradleState)
+    console.log('cradleState, scrollerName', cradleState, scrollerName)
     // -----------------------------------------------------------------------
     // -------------------------[ control flags ]-----------------
 

@@ -50,6 +50,7 @@ const InfiniteGridScroller = (props) => {
         // cache = "preload", "keepload", "none"
         // dense, // boolean (only with preload)
         layout, // uniform, variable
+        scrollerName, // for debugging
     } = props
 
     // defaults
@@ -109,6 +110,7 @@ const InfiniteGridScroller = (props) => {
                 placeholder = { placeholder }
                 styles = { styles }
                 runwaycount = { runway }
+                scrollerName = {scrollerName}
 
             />
 
