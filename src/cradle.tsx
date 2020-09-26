@@ -208,7 +208,6 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    console.log('cradleState, scrollerName', cradleState, scrollerName)
     // -----------------------------------------------------------------------
     // -------------------------[ control flags ]-----------------
 
@@ -355,7 +354,6 @@ const Cradle = ({
         cradleContent.tailModel = []
         cradleContent.headView = []
         cradleContent.tailView = []
-        // cradleContent.portals = new Map()
 
     },[orientation])
 
@@ -403,7 +401,6 @@ const Cradle = ({
         tailModel: null,
         headView: [],
         tailView: [],
-        portals: new Map(),
     })
 
     // item elements cache...
@@ -960,7 +957,6 @@ const Cradle = ({
                 cradleConfig,
                 contentCount,
                 localContentList:modelcontentlist,
-                portals:cradleContent.portals,
                 headchangecount,
                 tailchangecount,
                 cradleReferenceIndex,
@@ -1077,7 +1073,6 @@ const Cradle = ({
             headchangecount:0,
             tailchangecount:contentCount,
             localContentList,
-            portals:cradleContent.portals,
             callbacks:callbacksRef.current,
             observer: itemObserverRef.current,
             instanceIdCounterRef,
@@ -1098,7 +1093,6 @@ const Cradle = ({
         }
 
         cradleContent.cradleModel = childlist
-        cradleContent.portals.clear()
         cradleContent.headModel = headcontentlist
         cradleContent.tailModel = tailcontentlist
 
@@ -1240,8 +1234,6 @@ const Cradle = ({
         scrollTimeridRef.current = setTimeout(() => {
 
             if (!isMounted()) return
-
-            console.log('portals',cradleContentRef.current.portals)
 
             let spineoffset
             let cradleElements = cradleElementsRef.current
@@ -1465,21 +1457,15 @@ const Cradle = ({
     // content item registration callback; called from item
     const getItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
 
-        const [index, shellref, portalRef] = itemElementData
-
-        let portals = cradleContentRef.current.portals
+        const [index, shellref] = itemElementData
 
         if (reportType == 'register') {
 
-            // console.log('register index, portalRef, same',index, portalRef)
-
-            portals.set(index,portalRef)
             itemElementsRef.current.set(index,shellref)
 
         } else if (reportType == 'unregister') {
 
             itemElementsRef.current.delete(index)
-            // portals.delete(index)
 
         }
 

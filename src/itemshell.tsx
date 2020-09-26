@@ -12,32 +12,24 @@ import useIsMounted from 'react-is-mounted-hook'
 import Placeholder from './placeholder'
 
 const ItemShell = (props) => {
-    const {orientation, cellHeight, cellWidth, index, observer, callbacks, getItem, listsize, placeholder, instanceID, portals, scrollerName} = props
+    const {orientation, cellHeight, cellWidth, index, observer, callbacks, getItem, listsize, placeholder, instanceID, scrollerName} = props
     
-    const portalRef = useRef(portals.get(index)?portals.get(index).current:
-        {placeholder:null, container:null, content:null, portal:null})
-    const [content, saveContent] = useState(portalRef.current.content)
+    const [content, saveContent] = useState(null)
     const [error, saveError] = useState(null)
     const [styles,saveStyles] = useState({
         overflow:'hidden',
     } as React.CSSProperties)
     const [itemstate,setItemstate] = useState('setup')
     const shellRef = useRef(null)
-    console.log('----index, itemstate, portalRef',index, itemstate, {...portalRef.current})
     const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
 
     // initialize
     useEffect(() => {
-        if (portalRef.current.content) {
-            // isMounted() && saveContent(portalRef.current.content)
-            return
-        }
         let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
         let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
         if (getItem) {
-            console.log('getting item: index, scrollerName',index, scrollerName)
             itemrequestRef.current = requestidlecallback(()=> {
 
                 let value = getItem(index)
@@ -118,78 +110,67 @@ const ItemShell = (props) => {
 
     // cradle ondemand callback parameter value
     const getElementData = useCallback(()=>{
-        return [index, shellRef, portalRef]
+        return [index, shellRef]
     },[])
 
     // placeholder handling
     const customholderRef = useRef(
-        portalRef.current.placeholder?portalRef.current.placeholder:
             placeholder?React.createElement(placeholder, {index, listsize}):null
     )
 
     const child = useMemo(()=>{
-        if (content) {
-            // (!portalRef.current.content) && (portalRef.current.content = content)
-            return content
-        }
-        console.log('updating child:index, content, portalRef.current.content,customholderRef.current',
-            index, content, portalRef.current.content,customholderRef.current)
         let child = content?
             content:customholderRef.current?
                 customholderRef.current:<Placeholder index = {index} listsize = {listsize} error = {error}/>
-        // console.log('index, child memo', index, child)
-        (!portalRef.current.placeholder) && (portalRef.current.placeholder = (customholderRef.current?
-            customholderRef.current:
-            <Placeholder index = {index} listsize = {listsize} error = {error}/>));
         return child
     }, [index, content, customholderRef.current, listsize, error])
 
-    const container = useMemo(()=>{
-        let ctr 
-        if (portalRef.current.container) {
-            ctr = portalRef.current.container
-            return ctr 
-        }
-        ctr = document.createElement('div')
-        ctr.style.top = '0px'
-        ctr.style.right = '0px'
-        ctr.style.left = '0px'
-        ctr.style.bottom = '0px'
-        ctr.style.position = 'absolute'
+    // const container = useMemo(()=>{
+    //     let ctr 
+    //     if (portalRef.current.container) {
+    //         ctr = portalRef.current.container
+    //         return ctr 
+    //     }
+    //     ctr = document.createElement('div')
+    //     ctr.style.top = '0px'
+    //     ctr.style.right = '0px'
+    //     ctr.style.left = '0px'
+    //     ctr.style.bottom = '0px'
+    //     ctr.style.position = 'absolute'
 
-        portalRef.current.container = ctr
+    //     portalRef.current.container = ctr
 
-        return ctr
-    },[])
+    //     return ctr
+    // },[])
 
-    const localportal = useMemo(() => {
-        // console.log('updating local portal')
-        if (portalRef.current.content) {
-            return portalRef.current.portal
-        }
+    // const localportal = useMemo(() => {
+    //     // console.log('updating local portal')
+    //     if (portalRef.current.content) {
+    //         return portalRef.current.portal
+    //     }
 
-        (!portalRef.current.content) && content && (portalRef.current.content = content)
+    //     (!portalRef.current.content) && content && (portalRef.current.content = content)
 
-        if (itemstate != 'ready') return null
+    //     if (itemstate != 'ready') return null
 
-        let localportal = ReactDOM.createPortal(child,container)
-        portalRef.current.portal = localportal
-        console.log('SETTING LOCALPORTAL index, child, container, itemstate, localportal',
-            index, child, container, itemstate, localportal)
-        return localportal
+    //     let localportal = ReactDOM.createPortal(child,container)
+    //     portalRef.current.portal = localportal
+    //     console.log('SETTING LOCALPORTAL index, child, container, itemstate, localportal',
+    //         index, child, container, itemstate, localportal)
+    //     return localportal
 
-    },[child, container, itemstate, content])
+    // },[child, container, itemstate, content])
 
-    useEffect(() => {
-        if (itemstate != 'ready') return
-        shellRef.current.appendChild(container)
-        return () => {
-            shellRef.current.removeChild(container)
-        }
-    },[itemstate, container])
+    // useEffect(() => {
+    //     if (itemstate != 'ready') return
+    //     shellRef.current.appendChild(container)
+    //     return () => {
+    //         shellRef.current.removeChild(container)
+    //     }
+    // },[itemstate, container])
 
     return <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
-        { localportal /*(itemstate == 'ready') && ReactDOM.createPortal(child,container)*/ }
+        { itemstate == 'ready'?child:null }
     </div>
 
 } // ItemShell
