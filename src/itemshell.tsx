@@ -14,7 +14,10 @@ import Placeholder from './placeholder'
 const ItemShell = (props) => {
     const {orientation, cellHeight, cellWidth, index, observer, callbacks, getItem, listsize, placeholder, instanceID, scrollerName,portalData} = props
     
-    const [content, saveContent] = useState(null)
+    if (scrollerName == 'NESTED OUTER') {
+        console.log('NESTED OUTER portalData',portalData)
+    }
+
     const [error, saveError] = useState(null)
     const [styles,saveStyles] = useState({
         overflow:'hidden',
@@ -24,14 +27,20 @@ const ItemShell = (props) => {
     const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
-    const portalDataRef = useRef(portalData.get(index)?portalData.get(index):{
+    const portalDataRef = useRef(portalData.get(index)?portalData.get(index).current:{
         container:null,
         content:null,
         placeholder:null,
+        portal:null,
     })
+    const [content, saveContent] = useState(portalDataRef.current.content)
 
     // initialize
     useEffect(() => {
+        if (portalDataRef.current.content) {
+            return
+        }
+        // console.log('fetching item index, scrollerName',index, scrollerName)
         let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
         let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
         if (getItem) {
@@ -39,9 +48,9 @@ const ItemShell = (props) => {
 
                 let value = getItem(index)
                 if (value && value.then) {
-                    value.then((value) => {
+                    value.then((content) => {
                         if (isMounted()) { 
-                            saveContent(value)
+                            saveContent(content)
                             saveError(null)
                         }
                     }).catch((e) => {
@@ -130,6 +139,25 @@ const ItemShell = (props) => {
         return child
     }, [index, content, customholderRef.current, listsize, error])
 
+    // const wrapper = useMemo(()=>{
+    //     let e 
+    //     // if (portalDataRef.current.container) {
+    //     //     ctr = portalDataRef.current.container
+    //     //     return ctr 
+    //     // }
+    //     e = document.createElement('div')
+    //     e.style.top = '0px'
+    //     e.style.right = '0px'
+    //     e.style.left = '0px'
+    //     e.style.bottom = '0px'
+    //     e.style.position = 'absolute'
+
+    //     // console.log('portalDataRef in container memo',portalDataRef)
+    //     // portalDataRef.current.container = ctr
+
+    //     return e
+    // },[])
+
     const container = useMemo(()=>{
         let ctr 
         if (portalDataRef.current.container) {
@@ -143,40 +171,53 @@ const ItemShell = (props) => {
         ctr.style.bottom = '0px'
         ctr.style.position = 'absolute'
 
-        portalDataRef.current.container = ctr
+        // console.log('portalDataRef in container memo',portalDataRef)
+        // portalDataRef.current.container = ctr
 
         return ctr
     },[])
 
-    // const localportal = useMemo(() => {
-    //     // console.log('updating local portal')
-    //     if (portalRef.current.content) {
-    //         return portalRef.current.portal
-    //     }
+    const localportal = useMemo(() => {
+        // console.log('updating local portal')
+        // if (portalDataRef.current.content && Object.is(portalDataRef.current.content, content)) {
+        //     return portalDataRef.current.portal
+        // }
 
-    //     (!portalRef.current.content) && content && (portalRef.current.content = content)
+        (!portalDataRef.current.content) && content && (portalDataRef.current.content = content)
 
-    //     if (itemstate != 'ready') return null
+        if (itemstate != 'ready') return null
 
-    //     let localportal = ReactDOM.createPortal(child,container)
-    //     portalRef.current.portal = localportal
-    //     console.log('SETTING LOCALPORTAL index, child, container, itemstate, localportal',
-    //         index, child, container, itemstate, localportal)
-    //     return localportal
+        let portal = ReactDOM.createPortal(child,container)
+        portalDataRef.current.portal = portal
+        // console.log('SETTING LOCALPORTAL index, itemstate, container, child',
+        //     index, itemstate, container, child)
+        portalDataRef.current.container = container
+        return portal
 
-    // },[child, container, itemstate, content])
+    },[child, container, itemstate, content])
 
     useEffect(() => {
         if (itemstate != 'ready') return
+        // console.log('appending container; index, itemstate, shellRef.current, container', 
+        //     index, itemstate, shellRef.current, container)
         shellRef.current.appendChild(container)
+        // wrapper.appendChild(container)
         return () => {
+            // wrapper.removeChild(container)
             shellRef.current.removeChild(container)
         }
     },[itemstate, container])
 
-    return <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
-        { /*itemstate == 'ready'?child:null*/ }
-    </div>
+    const renders = useMemo(()=>{
+        return <>
+        {localportal}
+
+        <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
+        </div>
+    </>
+    },[shellRef, localportal])
+
+    return renders
 
 } // ItemShell
 

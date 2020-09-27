@@ -255,6 +255,9 @@ const Cradle = ({
 
         return () => {
 
+            console.log('unmounting cradle:scrollerName, portals',
+                scrollerName,cradleContentRef.current.portalData)
+
             viewportData.elementref.current && viewportData.elementref.current.removeEventListener('scroll',onScroll)
 
         }
@@ -1052,6 +1055,7 @@ const Cradle = ({
 
         let localContentList = []
         let cradleContent = cradleContentRef.current
+        // cradleContent.portalData.clear()
 
         let {cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment} = 
             getContentListRequirements({
@@ -1238,6 +1242,8 @@ const Cradle = ({
 
             if (!isMounted()) return
 
+            console.log('scrollerName, portalData after SCROLL:',scrollerName, cradleContentRef.current.portalData)
+
             let spineoffset
             let cradleElements = cradleElementsRef.current
 
@@ -1298,6 +1304,7 @@ const Cradle = ({
         let cradleContent = cradleContentRef.current
         switch (cradleState) {
             case 'reload':
+                cradleContent.portalData.clear()
                 saveCradleState('setreload')
                 break;
             case 'updatereposition':
@@ -1390,6 +1397,8 @@ const Cradle = ({
                     } else {
                         saveCradleState('resizing')
                     }
+
+                    console.log('portalData after set, scrollerName',cradleContentRef.current.portalData, scrollerName)
 
                 },100)
 
