@@ -143,7 +143,7 @@ const ItemShell = (props) => {
         ctr.style.bottom = '0px'
         ctr.style.position = 'absolute'
 
-        portalRef.current.container = ctr
+        portalDataRef.current.container = ctr
 
         return ctr
     },[])
@@ -166,16 +166,16 @@ const ItemShell = (props) => {
 
     // },[child, container, itemstate, content])
 
-    // useEffect(() => {
-    //     if (itemstate != 'ready') return
-    //     shellRef.current.appendChild(container)
-    //     return () => {
-    //         shellRef.current.removeChild(container)
-    //     }
-    // },[itemstate, container])
+    useEffect(() => {
+        if (itemstate != 'ready') return
+        shellRef.current.appendChild(container)
+        return () => {
+            shellRef.current.removeChild(container)
+        }
+    },[itemstate, container])
 
     return <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
-        { itemstate == 'ready'?child:null }
+        { /*itemstate == 'ready'?child:null*/ }
     </div>
 
 } // ItemShell
