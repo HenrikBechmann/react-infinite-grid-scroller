@@ -12,7 +12,7 @@ import useIsMounted from 'react-is-mounted-hook'
 import Placeholder from './placeholder'
 
 const ItemShell = (props) => {
-    const {orientation, cellHeight, cellWidth, index, observer, callbacks, getItem, listsize, placeholder, instanceID, scrollerName} = props
+    const {orientation, cellHeight, cellWidth, index, observer, callbacks, getItem, listsize, placeholder, instanceID, scrollerName,portalData} = props
     
     const [content, saveContent] = useState(null)
     const [error, saveError] = useState(null)
@@ -24,6 +24,11 @@ const ItemShell = (props) => {
     const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
+    const portalDataRef = useRef(portalData.get(index)?portalData.get(index):{
+        container:null,
+        content:null,
+        placeholder:null,
+    })
 
     // initialize
     useEffect(() => {
@@ -110,7 +115,7 @@ const ItemShell = (props) => {
 
     // cradle ondemand callback parameter value
     const getElementData = useCallback(()=>{
-        return [index, shellRef]
+        return [index, shellRef, portalDataRef]
     },[])
 
     // placeholder handling
@@ -125,23 +130,23 @@ const ItemShell = (props) => {
         return child
     }, [index, content, customholderRef.current, listsize, error])
 
-    // const container = useMemo(()=>{
-    //     let ctr 
-    //     if (portalRef.current.container) {
-    //         ctr = portalRef.current.container
-    //         return ctr 
-    //     }
-    //     ctr = document.createElement('div')
-    //     ctr.style.top = '0px'
-    //     ctr.style.right = '0px'
-    //     ctr.style.left = '0px'
-    //     ctr.style.bottom = '0px'
-    //     ctr.style.position = 'absolute'
+    const container = useMemo(()=>{
+        let ctr 
+        if (portalDataRef.current.container) {
+            ctr = portalDataRef.current.container
+            return ctr 
+        }
+        ctr = document.createElement('div')
+        ctr.style.top = '0px'
+        ctr.style.right = '0px'
+        ctr.style.left = '0px'
+        ctr.style.bottom = '0px'
+        ctr.style.position = 'absolute'
 
-    //     portalRef.current.container = ctr
+        portalRef.current.container = ctr
 
-    //     return ctr
-    // },[])
+        return ctr
+    },[])
 
     // const localportal = useMemo(() => {
     //     // console.log('updating local portal')

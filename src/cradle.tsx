@@ -401,6 +401,7 @@ const Cradle = ({
         tailModel: null,
         headView: [],
         tailView: [],
+        portalData: new Map()
     })
 
     // item elements cache...
@@ -963,6 +964,7 @@ const Cradle = ({
                 observer: itemObserverRef.current,
                 callbacks:callbacksRef.current,
                 instanceIdCounterRef,
+                portalData:cradleContent.portalData
             })
         } else {
 
@@ -1076,6 +1078,7 @@ const Cradle = ({
             callbacks:callbacksRef.current,
             observer: itemObserverRef.current,
             instanceIdCounterRef,
+            portalData:cradleContent.portalData,
         })
         // console.log('childlist.length, contentCount, rows from setContent', childlist.length, contentCount, Math.ceil(contentCount/crosscount))
 
@@ -1457,11 +1460,12 @@ const Cradle = ({
     // content item registration callback; called from item
     const getItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
 
-        const [index, shellref] = itemElementData
+        const [index, shellref, portalDataRef] = itemElementData
 
         if (reportType == 'register') {
 
             itemElementsRef.current.set(index,shellref)
+            cradleContentRef.current.portalData.set(index,portalDataRef)
 
         } else if (reportType == 'unregister') {
 

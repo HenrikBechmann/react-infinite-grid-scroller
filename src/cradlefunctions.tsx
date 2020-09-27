@@ -992,6 +992,7 @@ export const getUIContentList = ({
         callbacks,
         observer,
         instanceIdCounterRef,
+        portalData,
     }) => {
 
     let { crosscount,
@@ -1025,6 +1026,7 @@ export const getUIContentList = ({
                         observer, 
                         callbacks, 
                         instanceIdCounterRef,
+                        portalData,
                     }
                 )
             )
@@ -1054,6 +1056,7 @@ export const getUIContentList = ({
                         observer, 
                         callbacks, 
                         instanceIdCounterRef,
+                        portalData,
                     }
                 )
             )
@@ -1103,6 +1106,7 @@ const acquireItem = ({
     observer, 
     callbacks, 
     instanceIdCounterRef,
+    portalData,
 
 }) => {
     let instanceID = instanceIdCounterRef.current++
@@ -1113,6 +1117,7 @@ const acquireItem = ({
         observer, 
         callbacks, 
         instanceID,
+        portalData,
     })
 }
 
@@ -1122,6 +1127,7 @@ const emitItem = ({
     observer, 
     callbacks, 
     instanceID,
+    portalData,
 }) => {
 
     let { orientation,
@@ -1145,6 +1151,7 @@ const emitItem = ({
         placeholder = { placeholder }
         instanceID = {instanceID}
         scrollerName = { scrollerName }
+        portalData = { portalData }
     />    
 
 }
