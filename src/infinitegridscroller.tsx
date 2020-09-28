@@ -1,12 +1,13 @@
 // infinitegridscroller.tsx
 // copyright (c) 2019 Henrik Bechmann, Toronto, Licence: MIT
 
-import React from 'react'
+import React, {useRef} from 'react'
 
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
 import Cradle from './cradle'
 
+let scrollerID = 0
 /*
     BACKLOG: 
     - cache: none/preload/keepload
@@ -52,6 +53,10 @@ const InfiniteGridScroller = (props) => {
         layout, // uniform, variable
         scrollerName, // for debugging
     } = props
+
+    const scrollerIDRef = useRef(scrollerID++)
+
+    console.log('scrollerIDRef',scrollerIDRef)
 
     // defaults
     functions !?? (functions = {})

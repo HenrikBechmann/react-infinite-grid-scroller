@@ -35,7 +35,7 @@ const ItemShell = (props) => {
     })
     const [content, saveContent] = useState(portalDataRef.current.content)
 
-    console.log('index itemstate', index, itemstate)
+    // console.log('index itemstate', index, itemstate)
     // initialize
     useEffect(() => {
         if (portalDataRef.current.content) {
@@ -45,7 +45,7 @@ const ItemShell = (props) => {
         let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
         let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
         if (getItem) {
-            console.log('fetching item index',index)
+            // console.log('fetching item index',index)
             itemrequestRef.current = requestidlecallback(()=> {
 
                 let value = getItem(index)
