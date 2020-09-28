@@ -255,8 +255,8 @@ const Cradle = ({
 
         return () => {
 
-            console.log('unmounting cradle:scrollerName, portals',
-                scrollerName,cradleContentRef.current.portalData)
+            // console.log('unmounting cradle:scrollerName, portals',
+            //     scrollerName,cradleContentRef.current.portalData)
 
             viewportData.elementref.current && viewportData.elementref.current.removeEventListener('scroll',onScroll)
 
@@ -1242,7 +1242,7 @@ const Cradle = ({
 
             if (!isMounted()) return
 
-            console.log('scrollerName, portalData after SCROLL:',scrollerName, cradleContentRef.current.portalData)
+            // console.log('scrollerName, portalData after SCROLL:',scrollerName, cradleContentRef.current.portalData)
 
             let spineoffset
             let cradleElements = cradleElementsRef.current
@@ -1398,7 +1398,7 @@ const Cradle = ({
                         saveCradleState('resizing')
                     }
 
-                    console.log('portalData after set, scrollerName',cradleContentRef.current.portalData, scrollerName)
+                    // console.log('portalData after set, scrollerName',cradleContentRef.current.portalData, scrollerName)
 
                 },100)
 

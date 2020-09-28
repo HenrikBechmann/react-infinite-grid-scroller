@@ -14,9 +14,9 @@ import Placeholder from './placeholder'
 const ItemShell = (props) => {
     const {orientation, cellHeight, cellWidth, index, observer, callbacks, getItem, listsize, placeholder, instanceID, scrollerName,portalData} = props
     
-    if (scrollerName == 'NESTED OUTER') {
-        console.log('NESTED OUTER portalData',portalData)
-    }
+    // if (scrollerName == 'NESTED OUTER') {
+    //     console.log('NESTED OUTER portalData',portalData)
+    // }
 
     const [error, saveError] = useState(null)
     const [styles,saveStyles] = useState({
@@ -35,6 +35,7 @@ const ItemShell = (props) => {
     })
     const [content, saveContent] = useState(portalDataRef.current.content)
 
+    console.log('index itemstate', index, itemstate)
     // initialize
     useEffect(() => {
         if (portalDataRef.current.content) {
@@ -44,6 +45,7 @@ const ItemShell = (props) => {
         let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
         let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
         if (getItem) {
+            console.log('fetching item index',index)
             itemrequestRef.current = requestidlecallback(()=> {
 
                 let value = getItem(index)
