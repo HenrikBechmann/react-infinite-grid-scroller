@@ -404,7 +404,7 @@ const Cradle = ({
         tailModel: null,
         headView: [],
         tailView: [],
-        portalData: new Map()
+        // portalData: new Map()
     })
 
     // item elements cache...
@@ -967,7 +967,7 @@ const Cradle = ({
                 observer: itemObserverRef.current,
                 callbacks:callbacksRef.current,
                 instanceIdCounterRef,
-                portalData:cradleContent.portalData
+                // portalData:cradleContent.portalData
             })
         } else {
 
@@ -1082,7 +1082,7 @@ const Cradle = ({
             callbacks:callbacksRef.current,
             observer: itemObserverRef.current,
             instanceIdCounterRef,
-            portalData:cradleContent.portalData,
+            // portalData:cradleContent.portalData,
         })
         // console.log('childlist.length, contentCount, rows from setContent', childlist.length, contentCount, Math.ceil(contentCount/crosscount))
 
@@ -1304,7 +1304,7 @@ const Cradle = ({
         let cradleContent = cradleContentRef.current
         switch (cradleState) {
             case 'reload':
-                cradleContent.portalData.clear()
+                // cradleContent.portalData.clear()
                 saveCradleState('setreload')
                 break;
             case 'updatereposition':
@@ -1474,7 +1474,7 @@ const Cradle = ({
         if (reportType == 'register') {
 
             itemElementsRef.current.set(index,shellref)
-            cradleContentRef.current.portalData.set(index,portalDataRef)
+            // cradleContentRef.current.portalData.set(index,portalDataRef)
 
         } else if (reportType == 'unregister') {
 
