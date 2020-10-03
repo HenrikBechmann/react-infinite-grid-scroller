@@ -117,6 +117,7 @@ const InfiniteGridScroller = (props) => {
                 styles = { styles }
                 runwaycount = { runway }
                 scrollerName = {scrollerName}
+                scrollerID = {scrollerIDRef.current}
 
             />
             </ContentContext.Provider>

@@ -151,6 +151,7 @@ const Cradle = ({
         functions,
         styles,
         scrollerName,
+        scrollerID,
     }) => {
 
     // functions and styles handled separately
@@ -169,6 +170,7 @@ const Cradle = ({
             getItem, 
             placeholder, 
             scrollerName,
+            scrollerID,
     }},[
         gap, 
         padding, 
@@ -967,7 +969,6 @@ const Cradle = ({
                 observer: itemObserverRef.current,
                 callbacks:callbacksRef.current,
                 instanceIdCounterRef,
-                // portalData:cradleContent.portalData
             })
         } else {
 
@@ -1082,7 +1083,6 @@ const Cradle = ({
             callbacks:callbacksRef.current,
             observer: itemObserverRef.current,
             instanceIdCounterRef,
-            // portalData:cradleContent.portalData,
         })
         // console.log('childlist.length, contentCount, rows from setContent', childlist.length, contentCount, Math.ceil(contentCount/crosscount))
 

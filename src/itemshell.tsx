@@ -1,7 +1,7 @@
 // itemframe.tsx
 // copyright (c) 2020 Henrik Bechmann, Toronto, Licence: MIT
 
-import React, {useRef, useEffect, useState, useCallback, useMemo } from 'react'
+import React, {useRef, useEffect, useState, useCallback, useMemo, useContext } from 'react'
 
 import ReactDOM from 'react-dom'
 
@@ -11,13 +11,24 @@ import useIsMounted from 'react-is-mounted-hook'
 
 import Placeholder from './placeholder'
 
-const ItemShell = (props) => {
-    const {orientation, cellHeight, cellWidth, index, observer, callbacks, getItem, listsize, placeholder, instanceID, scrollerName} = props
-    
-    // if (scrollerName == 'NESTED OUTER') {
-    //     console.log('NESTED OUTER portalData',portalData)
-    // }
+import { ContentContext } from './contentmanager'
 
+const ItemShell = ({
+    orientation, 
+    cellHeight, 
+    cellWidth, 
+    index, 
+    observer, 
+    callbacks, 
+    getItem, 
+    listsize, 
+    placeholder, 
+    instanceID, 
+    scrollerName,
+    scrollerID,
+}) => {
+    
+    const contentManager = useContext(ContentContext)
     const [error, saveError] = useState(null)
     const [styles,saveStyles] = useState({
         overflow:'hidden',
