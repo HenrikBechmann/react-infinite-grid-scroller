@@ -115,6 +115,8 @@ import useIsMounted from 'react-is-mounted-hook'
 
 import ResizeObserverPolyfill from 'resize-observer-polyfill'
 
+import { ContentContext } from './contentmanager'
+
 const LocalResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
 
 const ITEM_OBSERVER_THRESHOLD = 0
@@ -192,6 +194,7 @@ const Cradle = ({
     // -----------------------------------------------------------------------
     // -----------------------------------[ utilites ]------------------------
 
+    const contentManager = useContext(ContentContext)
     const isMounted = useIsMounted()
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
 
@@ -254,6 +257,8 @@ const Cradle = ({
     useEffect(() => {
         let viewportData = viewportDataRef.current
         viewportData.elementref.current.addEventListener('scroll',onScroll)
+
+        contentManager.setScrollerContentlist(cradlePropsRef.current.scrollerID)
 
         return () => {
 

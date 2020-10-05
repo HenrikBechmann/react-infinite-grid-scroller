@@ -10,7 +10,7 @@ const ItemPortal = ({content, container}) => {
 }
 class ContentManager {
     // constructor() {}
-    setContentlist (scrollerID) {
+    setScrollerContentlist (scrollerID) {
         if (!contentlists.has(scrollerID)) {
             contentlists.set(scrollerID, new Map())
         }
@@ -51,6 +51,9 @@ class ContentManager {
     }
     hasContentlistItem (scrollerID, index) {
         return contentlists.get(scrollerID).has(index)
+    }
+    getContentlistItem (scrollerID, index) {
+        return contentlists.get(scrollerID).get(index)
     }
 }
 

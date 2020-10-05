@@ -55,6 +55,13 @@ const ItemShell = ({
         // console.log('fetching item index, scrollerName',index, scrollerName)
         let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
         let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
+        if (contentManager.hasContentlistItem(scrollerID,index)) {
+            // console.log('content cache available for scrollerID, index',scrollerID, index)
+            let contentitem = contentManager.getContentlistItem(scrollerID,index)            
+            // console.log('cache contentitem',contentitem)
+            saveContent(contentitem.content)
+            return
+        }
         if (getItem) {
             // console.log('fetching item index',index)
             itemrequestRef.current = requestidlecallback(()=> {
@@ -64,6 +71,7 @@ const ItemShell = ({
                     value.then((content) => {
                         if (isMounted()) { 
                             saveContent(content)
+                            contentManager.setContentlistItem(scrollerID,index,content)
                             saveError(null)
                         }
                     }).catch((e) => {
@@ -76,6 +84,7 @@ const ItemShell = ({
                     if (isMounted()) {
                         if (value) {
                             saveContent(value)
+                            contentManager.setContentlistItem(scrollerID,index,value)
                             saveError(null)
                         } else {
                             saveError(true)
