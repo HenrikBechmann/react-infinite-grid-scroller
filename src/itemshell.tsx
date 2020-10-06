@@ -29,6 +29,7 @@ const ItemShell = ({
 }) => {
     
     const contentManager = useContext(ContentContext)
+    const linkedContentRef = useRef(false)
     const [error, saveError] = useState(null)
     const [styles,saveStyles] = useState({
         overflow:'hidden',
@@ -150,66 +151,29 @@ const ItemShell = ({
     },[])
 
     // placeholder handling
-    const customholderRef = useRef(
+    const customplaceholderRef = useRef(
             placeholder?React.createElement(placeholder, {index, listsize}):null
     )
 
+    useEffect(() => {
+        if (!(shellRef.current && content)) return
+        console.log('linking content',shellRef.current,content)
+        contentManager.attachContentlistItem(scrollerID,index,shellRef.current)
+        linkedContentRef.current = true
+        return () => {
+            contentManager.detachContentlistItem(scrollerID,index)
+        }
+    },[shellRef.current,content])
+
     const child = useMemo(()=>{
-        let child = content?
-            content:customholderRef.current?
-                customholderRef.current:<Placeholder index = {index} listsize = {listsize} error = {error}/>
+        let child = customplaceholderRef.current?
+                customplaceholderRef.current:<Placeholder index = {index} listsize = {listsize} error = {error}/>
         return child
-    }, [index, content, customholderRef.current, listsize, error])
-
-    // const container = useMemo(()=>{
-    //     let ctr 
-    //     if (portalDataRef.current.container) {
-    //         ctr = portalDataRef.current.container
-    //         return ctr 
-    //     }
-    //     ctr = document.createElement('div')
-    //     ctr.style.top = '0px'
-    //     ctr.style.right = '0px'
-    //     ctr.style.left = '0px'
-    //     ctr.style.bottom = '0px'
-    //     ctr.style.position = 'absolute'
-
-    //     // console.log('portalDataRef in container memo',portalDataRef)
-    //     // portalDataRef.current.container = ctr
-
-    //     return ctr
-    // },[])
-
-    // const localportal = useMemo(() => {
-    //     // console.log('updating local portal')
-
-    //     (!portalDataRef.current.content) && content && (portalDataRef.current.content = content)
-
-    //     if (itemstate != 'ready') return null
-
-    //     let portal = ReactDOM.createPortal(child,container)
-    //     portalDataRef.current.portal = portal
-    //     // console.log('SETTING LOCALPORTAL index, itemstate, container, child',
-    //     //     index, itemstate, container, child)
-    //     portalDataRef.current.container = container
-    //     return portal
-
-    // },[child, container, itemstate, content])
-
-    // useEffect(() => {
-    //     if (itemstate != 'ready') return
-    //     // console.log('appending container; index, itemstate, shellRef.current, container', 
-    //     //     index, itemstate, shellRef.current, container)
-    //     shellRef.current.appendChild(container)
-    //     return () => {
-    //         // wrapper.removeChild(container)
-    //         shellRef.current.removeChild(container)
-    //     }
-    // },[itemstate, container])
+    }, [index, content, customplaceholderRef.current, listsize, error])
 
     const renders = useMemo(()=>{
         return <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
-            { (itemstate == 'ready')?child:null}
+            { ((itemstate == 'ready') && linkedContentRef.current)?child:null}
         </div>
     },[shellRef, itemstate, child])
 

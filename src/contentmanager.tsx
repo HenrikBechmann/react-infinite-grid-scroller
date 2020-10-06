@@ -6,8 +6,15 @@ import ReactDOM from 'react-dom'
 const contentlists = new Map()
 
 const ItemPortal = ({content, container}) => {
+    console.log('returning from ItemPortal')
     return ReactDOM.createPortal(content, container)
 }
+
+const getPortal = (content, container) => {
+    console.log('returning from getPortal')
+    ReactDOM.createPortal(content, container)
+    return <ItemPortal content = {content} container = {container}/>
+} 
 class ContentManager {
     // constructor() {}
     setScrollerContentlist (scrollerID) {
@@ -33,7 +40,7 @@ class ContentManager {
         container.style.left = '0px'
         container.style.bottom = '0px'
         container.style.position = 'absolute'
-        let component = <ItemPortal content = {content} container = {container}/>
+        let component = getPortal(content, container)
         contentlists.get(scrollerID).set(index, {content, target:null, container, component} )
     }
     deleteContentlistItem (scrollerID, index) {
@@ -42,6 +49,7 @@ class ContentManager {
     attachContentlistItem (scrollerID, index, target) {
         this.detachContentlistItem(scrollerID, index)
         let item = contentlists.get(scrollerID).get(index)
+        console.log('item to be attached',item)
         if (!item) return
         target.appendChild(item.container)
         item.target = target
@@ -49,6 +57,7 @@ class ContentManager {
     detachContentlistItem (scrollerID, index) {
         let item = contentlists.get(scrollerID).get(index)
         if (item) {
+            console.log('detach child item scrollerID, index',item, scrollerID, index)
             if (item.target && item.container) {
                 item.target.removeChild(item.container)
             }
