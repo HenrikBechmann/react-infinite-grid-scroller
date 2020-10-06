@@ -10,9 +10,9 @@ const ItemPortal = ({content, container}) => {
     return ReactDOM.createPortal(content, container)
 }
 
-const getPortal = (content, container) => {
+const getPortal = (content, container, index) => {
     console.log('returning from getPortal')
-    ReactDOM.createPortal(content, container)
+    ReactDOM.createPortal(content, container, index)
     return <ItemPortal content = {content} container = {container}/>
 } 
 class ContentManager {
@@ -40,7 +40,9 @@ class ContentManager {
         container.style.left = '0px'
         container.style.bottom = '0px'
         container.style.position = 'absolute'
-        let component = getPortal(content, container)
+        container.dataset.index = index
+        container.dataset.scrollerid = scrollerID
+        let component = getPortal(content, container, index)
         contentlists.get(scrollerID).set(index, {content, target:null, container, component} )
     }
     deleteContentlistItem (scrollerID, index) {
@@ -49,7 +51,7 @@ class ContentManager {
     attachContentlistItem (scrollerID, index, target) {
         this.detachContentlistItem(scrollerID, index)
         let item = contentlists.get(scrollerID).get(index)
-        console.log('item to be attached',item)
+        console.log('item to be attached; scrollerID, index',item, scrollerID, index)
         if (!item) return
         target.appendChild(item.container)
         item.target = target
@@ -57,9 +59,13 @@ class ContentManager {
     detachContentlistItem (scrollerID, index) {
         let item = contentlists.get(scrollerID).get(index)
         if (item) {
-            console.log('detach child item scrollerID, index',item, scrollerID, index)
+            // console.log('detach child item scrollerID, index',item, scrollerID, index)
             if (item.target && item.container) {
-                item.target.removeChild(item.container)
+                try {
+                    item.target.removeChild(item.container)
+                } catch(e) {
+                    // noops
+                }
             }
         }
     }

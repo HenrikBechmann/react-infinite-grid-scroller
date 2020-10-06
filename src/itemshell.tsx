@@ -157,7 +157,7 @@ const ItemShell = ({
 
     useEffect(() => {
         if (!(shellRef.current && content)) return
-        console.log('linking content',shellRef.current,content)
+        console.log('linking scrollerID, index, shellRef.current, content; ',scrollerID, index, shellRef.current,content)
         contentManager.attachContentlistItem(scrollerID,index,shellRef.current)
         linkedContentRef.current = true
         return () => {
