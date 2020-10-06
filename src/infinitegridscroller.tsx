@@ -6,7 +6,7 @@ import React, {useRef} from 'react'
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
 import Cradle from './cradle'
-import { contentManager, ContentContext } from './contentmanager'
+import { portalList,contentManager, ContentContext } from './contentmanager'
 
 let scrollerID = 0
 /*
@@ -76,8 +76,10 @@ const InfiniteGridScroller = (props) => {
     // convert to pixels
     // let runwaylength = (orientation == 'vertical')?(runway * (cellHeight + gap)):(runway * (cellWidth + gap))
     // runwaylength && (runwaylength += (padding * 2))
-
-    return <Viewport 
+    console.log('portalList',portalList)
+    return <>
+    <div>{portalList}</div>
+    <Viewport 
 
         orientation = { orientation } 
         cellWidth = { cellHeight }
@@ -123,7 +125,7 @@ const InfiniteGridScroller = (props) => {
             </ContentContext.Provider>
         </Scrollblock>
     </Viewport>
-
+    </>
 }
 
 export default InfiniteGridScroller

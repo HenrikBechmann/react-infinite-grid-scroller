@@ -30,6 +30,7 @@ const ItemShell = ({
     
     const contentManager = useContext(ContentContext)
     const linkedContentRef = useRef(false)
+    // const portalRef = useRef(null)
     const [error, saveError] = useState(null)
     const [styles,saveStyles] = useState({
         overflow:'hidden',
@@ -157,7 +158,7 @@ const ItemShell = ({
 
     useEffect(() => {
         if (!(shellRef.current && content)) return
-        console.log('linking scrollerID, index, shellRef.current, content; ',scrollerID, index, shellRef.current,content)
+        // console.log('linking scrollerID, index, shellRef.current, content; ',scrollerID, index, shellRef.current,content)
         contentManager.attachContentlistItem(scrollerID,index,shellRef.current)
         linkedContentRef.current = true
         return () => {
@@ -171,13 +172,20 @@ const ItemShell = ({
         return child
     }, [index, content, customplaceholderRef.current, listsize, error])
 
-    const renders = useMemo(()=>{
-        return <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
-            { ((itemstate == 'ready') && linkedContentRef.current)?child:null}
-        </div>
-    },[shellRef, itemstate, child])
+    // const renders = useMemo(()=>{
+    //     return <> 
+    //     {portalRef.current}
+    //     <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
+    //         { ((itemstate == 'ready') && linkedContentRef.current)?child:null}
+    //     </div>
+    //     </>
+    // },[shellRef, itemstate, child])
 
-    return renders
+    // console.log('portal',portalRef.current)
+    return <>
+    <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
+        { ((itemstate == 'ready') && linkedContentRef.current)?child:null}
+    </div></>
 
 } // ItemShell
 

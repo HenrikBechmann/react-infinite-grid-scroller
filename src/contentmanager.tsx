@@ -5,15 +5,17 @@ import ReactDOM from 'react-dom'
 
 const contentlists = new Map()
 
-const ItemPortal = ({content, container}) => {
-    console.log('returning from ItemPortal')
-    return ReactDOM.createPortal(content, container)
-}
+// const ItemPortal = ({content, container}) => {
+//     console.log('returning from ItemPortal')
+//     return ReactDOM.createPortal(content, container)
+// }
+
+export let portalList = []
 
 const getPortal = (content, container, index) => {
-    console.log('returning from getPortal')
-    ReactDOM.createPortal(content, container, index)
-    return <ItemPortal content = {content} container = {container}/>
+    // console.log('returning from getPortal')
+    return ReactDOM.createPortal(content, container)
+    // return <ItemPortal content = {content} container = {container}/>
 } 
 class ContentManager {
     // constructor() {}
@@ -32,7 +34,7 @@ class ContentManager {
     }
     setContentlistItem (scrollerID, index, content) {
         if (this.hasContentlistItem(scrollerID, index)) {
-            return
+            return this.getContentlistItem(scrollerID,index).portal
         }
         let container = document.createElement('div')
         container.style.top = '0px'
@@ -42,8 +44,11 @@ class ContentManager {
         container.style.position = 'absolute'
         container.dataset.index = index
         container.dataset.scrollerid = scrollerID
-        let component = getPortal(content, container, index)
-        contentlists.get(scrollerID).set(index, {content, target:null, container, component} )
+        let portal = getPortal(content, container, index)
+        // portalList.push(<div key = {index}>{portal}</div>)
+        portalList.push(portal)
+        contentlists.get(scrollerID).set(index, {content, target:null, container, portal} )
+        return portal
     }
     deleteContentlistItem (scrollerID, index) {
         contentlists.get(scrollerID).delete(index)
@@ -51,7 +56,7 @@ class ContentManager {
     attachContentlistItem (scrollerID, index, target) {
         this.detachContentlistItem(scrollerID, index)
         let item = contentlists.get(scrollerID).get(index)
-        console.log('item to be attached; scrollerID, index',item, scrollerID, index)
+        // console.log('item to be attached; scrollerID, index',item, scrollerID, index)
         if (!item) return
         target.appendChild(item.container)
         item.target = target
