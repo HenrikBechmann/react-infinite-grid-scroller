@@ -15,7 +15,12 @@ class ContentManager {
             contentlists.set(scrollerID, new Map())
         }
     }
-    deleteContentlist (scrollerID) {
+    clearScrollerContentlist (scrollerID) {
+        if (contentlists.has(scrollerID)) {
+            contentlists.get(scrollerID).clear()
+        }
+    }
+    deleteScrollerContentlist (scrollerID) {
         contentlists.delete(scrollerID)
     }
     setContentlistItem (scrollerID, index, content) {
