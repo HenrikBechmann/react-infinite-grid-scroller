@@ -6,7 +6,7 @@ import React, {useRef} from 'react'
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
 import Cradle from './cradle'
-import { portalList,contentManager, ContentContext } from './contentmanager'
+import { portalList } from './contentmanager'
 
 let scrollerID = 0
 /*
@@ -102,7 +102,6 @@ const InfiniteGridScroller = (props) => {
             styles = { styles }
 
         >
-            <ContentContext.Provider value = {contentManager}>
             <Cradle 
 
                 gap = { gap }
@@ -122,7 +121,6 @@ const InfiniteGridScroller = (props) => {
                 scrollerID = {scrollerIDRef.current}
 
             />
-            </ContentContext.Provider>
         </Scrollblock>
     </Viewport>
     </>

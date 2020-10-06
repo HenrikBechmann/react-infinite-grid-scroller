@@ -82,6 +82,6 @@ class ContentManager {
     }
 }
 
-export const contentManager = new ContentManager()
+const contentManager = new ContentManager()
 
-export const ContentContext = React.createContext(null)
+export const ContentContext = React.createContext(contentManager)
