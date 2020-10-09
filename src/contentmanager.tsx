@@ -18,7 +18,7 @@ export const PortalCache = (props) => {
 
 const getPortal = (content, container, scrollerID, index) => {
     // console.log('returning from getPortal')
-    return ReactDOM.createPortal(content, container, scrollerID + '.' + index)
+    return ReactDOM.createPortal(content, container, index)
     // return <ItemPortal content = {content} container = {container}/>
 } 
 class ContentManager {
