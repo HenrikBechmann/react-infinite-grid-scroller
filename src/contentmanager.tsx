@@ -12,9 +12,13 @@ const contentlists = new Map()
 
 export let portalList = []
 
-const getPortal = (content, container, index) => {
+export const PortalCache = (props) => {
+    return <div>{props.portalList}</div>
+}
+
+const getPortal = (content, container, scrollerID, index) => {
     // console.log('returning from getPortal')
-    return ReactDOM.createPortal(content, container)
+    return ReactDOM.createPortal(content, container, scrollerID + '.' + index)
     // return <ItemPortal content = {content} container = {container}/>
 } 
 class ContentManager {
@@ -44,7 +48,7 @@ class ContentManager {
         container.style.position = 'absolute'
         container.dataset.index = index
         container.dataset.scrollerid = scrollerID
-        let portal = getPortal(content, container, index)
+        let portal = getPortal(content, container, scrollerID, index)
         // portalList.push(<div key = {index}>{portal}</div>)
         portalList.push(portal)
         contentlists.get(scrollerID).set(index, {content, target:null, container, portal} )

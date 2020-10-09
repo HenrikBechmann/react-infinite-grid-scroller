@@ -6,7 +6,7 @@ import React, {useRef} from 'react'
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
 import Cradle from './cradle'
-import { portalList } from './contentmanager'
+import { portalList, PortalCache } from './contentmanager'
 
 let scrollerID = 0
 /*
@@ -78,7 +78,7 @@ const InfiniteGridScroller = (props) => {
     // runwaylength && (runwaylength += (padding * 2))
     console.log('portalList',portalList)
     return <>
-    <div>{portalList}</div>
+    <PortalCache portalList = {portalList} />
     <Viewport 
 
         orientation = { orientation } 
