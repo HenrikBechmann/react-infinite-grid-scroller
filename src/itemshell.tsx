@@ -172,20 +172,9 @@ const ItemShell = ({
         return child
     }, [index, content, customplaceholderRef.current, listsize, error])
 
-    // const renders = useMemo(()=>{
-    //     return <> 
-    //     {portalRef.current}
-    //     <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
-    //         { ((itemstate == 'ready') && linkedContentRef.current)?child:null}
-    //     </div>
-    //     </>
-    // },[shellRef, itemstate, child])
-
-    // console.log('portal',portalRef.current)
-    return <>
-    <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
-        { ((itemstate == 'ready') && linkedContentRef.current)?child:null}
-    </div></>
+    return <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
+        {(!linkedContentRef.current)?child:null}
+    </div>
 
 } // ItemShell
 
