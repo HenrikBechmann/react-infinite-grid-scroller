@@ -1,6 +1,6 @@
 // contentmanager.tsx
 
-import React from 'react'
+import React, {useContext} from 'react'
 import ReactDOM from 'react-dom'
 
 const contentlists = new Map()
@@ -87,5 +87,7 @@ class ContentManager {
 }
 
 const contentManager = new ContentManager()
+
+const CacheContext = React.createContext(null)
 
 export const ContentContext = React.createContext(contentManager)
