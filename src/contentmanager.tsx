@@ -5,10 +5,26 @@ import ReactDOM from 'react-dom'
 
 const contentlists = new Map()
 
-export let portalCache = new Map()
+export let portalCacheMap = new Map()
 
-export const PortalCache = (props) => {
-    return <div>{props.portalList}</div>
+export const PortalCache = ({portalCacheMap}) => {
+    let portalLists = []
+    let portalkeys = []
+    portalCacheMap.forEach((value, key) => {
+        if (value.modified) {
+            value.portalList = Array.from(value.portals.values())
+            value.modified = false
+        }
+        portalLists.push(value.portalList)
+        portalkeys.push(key)
+    })
+    let index = 0
+    let portalblocks = []
+    for (let key of portalkeys) {
+        portalblocks.push(<div key = {key}>{portalLists[index]}</div>)
+        index++
+    }
+    return <div>{portalblocks}</div>
 }
 
 const getPortal = (content, container, index) => {
@@ -22,16 +38,16 @@ class ContentManager {
         if (!contentlists.has(scrollerID)) {
             contentlists.set(scrollerID, new Map())
         }
-        if (!portalCache.has(scrollerID)) {
-            portalCache.set(scrollerID, [])
+        if (!portalCacheMap.has(scrollerID)) {
+            portalCacheMap.set(scrollerID, {modified:false,portals:new Map(),portalList:[]})
         }
     }
     clearScrollerContentlist (scrollerID) {
         if (contentlists.has(scrollerID)) {
             contentlists.get(scrollerID).clear()
         }
-        if (portalCache.has(scrollerID)) {
-            portalCache.delete(scrollerID)
+        if (portalCacheMap.has(scrollerID)) {
+            portalCacheMap.delete(scrollerID)
         }
     }
     deleteScrollerContentlist (scrollerID) {
@@ -51,14 +67,18 @@ class ContentManager {
         container.dataset.scrollerid = scrollerID
         let portal = getPortal(content, container, index)
         // portalList.push(<div key = {index}>{portal}</div>)
-        let cacheindex = portalCache.get(scrollerID).push(portal) - 1
-        contentlists.get(scrollerID).set(index, {content, target:null, container, portal, cacheindex} )
+        let portalitem = portalCacheMap.get(scrollerID)
+        portalitem.portals.set(index,portal)
+        portalitem.modified = true
+        contentlists.get(scrollerID).set(index, {content, target:null, container, portal} )
         return portal
     }
     deleteContentlistItem (scrollerID, index) {
         let itemdata = contentlists.get(scrollerID).get(index)
         contentlists.get(scrollerID).delete(index)
-        portalCache.get(scrollerID).splice(itemdata.cacheindex,1)
+        let portalitem = portalCacheMap.get(scrollerID)
+        portalitem.portals.delete(index)
+        portalitem.modified = true
     }
     attachContentlistItem (scrollerID, index, target) {
         this.detachContentlistItem(scrollerID, index)
