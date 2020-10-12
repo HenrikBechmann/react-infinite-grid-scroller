@@ -5,18 +5,13 @@ import ReactDOM from 'react-dom'
 
 const contentlists = new Map()
 
-// const ItemPortal = ({content, container}) => {
-//     console.log('returning from ItemPortal')
-//     return ReactDOM.createPortal(content, container)
-// }
-
-export let portalList = []
+export let portalCache = new Map()
 
 export const PortalCache = (props) => {
     return <div>{props.portalList}</div>
 }
 
-const getPortal = (content, container, scrollerID, index) => {
+const getPortal = (content, container, index) => {
     // console.log('returning from getPortal')
     return ReactDOM.createPortal(content, container, index)
     // return <ItemPortal content = {content} container = {container}/>
@@ -27,10 +22,16 @@ class ContentManager {
         if (!contentlists.has(scrollerID)) {
             contentlists.set(scrollerID, new Map())
         }
+        if (!portalCache.has(scrollerID)) {
+            portalCache.set(scrollerID, [])
+        }
     }
     clearScrollerContentlist (scrollerID) {
         if (contentlists.has(scrollerID)) {
             contentlists.get(scrollerID).clear()
+        }
+        if (portalCache.has(scrollerID)) {
+            portalCache.delete(scrollerID)
         }
     }
     deleteScrollerContentlist (scrollerID) {
@@ -48,14 +49,16 @@ class ContentManager {
         container.style.position = 'absolute'
         container.dataset.index = index
         container.dataset.scrollerid = scrollerID
-        let portal = getPortal(content, container, scrollerID, index)
+        let portal = getPortal(content, container, index)
         // portalList.push(<div key = {index}>{portal}</div>)
-        portalList.push(portal)
-        contentlists.get(scrollerID).set(index, {content, target:null, container, portal} )
+        let cacheindex = portalCache.get(scrollerID).push(portal) - 1
+        contentlists.get(scrollerID).set(index, {content, target:null, container, portal, cacheindex} )
         return portal
     }
     deleteContentlistItem (scrollerID, index) {
+        let itemdata = contentlists.get(scrollerID).get(index)
         contentlists.get(scrollerID).delete(index)
+        portalCache.get(scrollerID).splice(itemdata.cacheindex,1)
     }
     attachContentlistItem (scrollerID, index, target) {
         this.detachContentlistItem(scrollerID, index)
