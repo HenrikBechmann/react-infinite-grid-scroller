@@ -1370,7 +1370,7 @@ const Cradle = ({
                 cradleContent.tailModel = []
                 cradleContent.headView = []
                 cradleContent.tailView = []
-
+                contentManager.resetScrollerContentList(scrollerID)
                 setCradleContent(callingCradleState.current, callingReferenceIndexDataRef.current)
 
                 saveCradleState('content')//'setscrolloffset')

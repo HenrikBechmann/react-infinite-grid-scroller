@@ -64,6 +64,10 @@ class ContentManager {
             portalCacheMap.delete(scrollerID)
         }
     }
+    resetScrollerContentList(scrollerID) {
+        this.clearScrollerContentlist(scrollerID)
+        this.setScrollerContentlist(scrollerID)
+    }
     deleteScrollerContentlist (scrollerID) {
         contentlists.delete(scrollerID)
     }
