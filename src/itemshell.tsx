@@ -29,7 +29,7 @@ const ItemShell = ({
 }) => {
     
     const contentManager = useContext(ContentContext)
-    const linkedContentRef = useRef(false)
+    // const linkedContentRef = useRef(false)
     // const portalRef = useRef(null)
     const [error, saveError] = useState(null)
     const [styles,saveStyles] = useState({
@@ -157,12 +157,15 @@ const ItemShell = ({
     )
 
     useEffect(() => {
-        if (!(shellRef.current && content)) return
+        if (!shellRef.current) return
         // console.log('linking scrollerID, index, shellRef.current, content; ',scrollerID, index, shellRef.current,content)
-        contentManager.attachContentlistItem(scrollerID,index,shellRef.current)
-        linkedContentRef.current = true
-        return () => {
-            contentManager.detachContentlistItem(scrollerID,index)
+        if (content) {
+            contentManager.attachContentlistItem(scrollerID,index,shellRef.current)
+            // console.log('scrollerID, setting linkedContentRef', scrollerID)
+            // linkedContentRef.current = true
+            return () => {
+                contentManager.detachContentlistItem(scrollerID,index)
+            }
         }
     },[shellRef.current,content])
 
@@ -172,8 +175,9 @@ const ItemShell = ({
         return child
     }, [index, content, customplaceholderRef.current, listsize, error])
 
+    // console.log('scrollerID, linkedContentRef.current',scrollerID, linkedContentRef.current)
     return <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
-        {(!linkedContentRef.current)?child:null}
+        {(!content)?child:null}
     </div>
 
 } // ItemShell

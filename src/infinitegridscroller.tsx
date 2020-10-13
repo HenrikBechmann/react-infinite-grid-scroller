@@ -10,7 +10,7 @@ import { portalCacheMap, PortalCache } from './contentmanager'
 
 let scrollerID = 0
 const getScrollerID = () => {
-    console.log('fetching scrollerID', scrollerID)
+    // console.log('fetching scrollerID', scrollerID)
     return scrollerID++
 }
 /*
@@ -65,7 +65,7 @@ const InfiniteGridScroller = (props) => {
 
     const scrollerIDRef = useRef(globalScrollerID)
 
-    console.log('scrollerIDRef, scrollerID',scrollerIDRef, scrollerID)
+    // console.log('scrollerIDRef, scrollerID',scrollerIDRef, scrollerID)
 
     // defaults
     functions !?? (functions = {})
@@ -92,6 +92,7 @@ const InfiniteGridScroller = (props) => {
         padding = { padding }
         functions = { functions }
         styles = { styles }
+        scrollerID = {scrollerIDRef.current}
     >
     
         <Scrollblock

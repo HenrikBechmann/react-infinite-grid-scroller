@@ -28,6 +28,7 @@ const Viewport = ({
     padding, 
     functions, 
     styles,
+    scrollerID,
 }) => {
 
     // -----------------------[ initialize ]------------------
@@ -157,6 +158,7 @@ const Viewport = ({
     },[portstate])
 
     // ----------------------[ render ]--------------------------------
+    console.log('scrollerID, viewportDataRef.current',scrollerID, viewportDataRef.current)
     return <ViewportContext.Provider value = { viewportDataRef.current }>
         <div 
             style = {divlinerstyleRef.current}
