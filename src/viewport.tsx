@@ -6,13 +6,15 @@
     and act as the visible portal of the list being shown
 */
 
-import React, {useState, useRef, useEffect, useMemo, useCallback} from 'react'
+import React, {useState, useRef, useEffect, useMemo, useCallback, useContext} from 'react'
 
 export const ViewportContext = React.createContext(null)
 
 import useIsMounted from 'react-is-mounted-hook'
 
 import ResizeObserverPolyfill from 'resize-observer-polyfill'
+
+import { ContentContext } from './contentmanager'
 
 const LocalResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
 
@@ -34,6 +36,7 @@ const Viewport = ({
     // -----------------------[ initialize ]------------------
 
     // processing state
+    const contentmanager = useContext(ContentContext)
     const [portstate,setPortState] = useState('prepare')
     const portstateRef = useRef(null)
     portstateRef.current = portstate
@@ -161,6 +164,7 @@ const Viewport = ({
     console.log('scrollerID, viewportDataRef.current',scrollerID, viewportDataRef.current)
     return <ViewportContext.Provider value = { viewportDataRef.current }>
         <div 
+            data-type = 'viewport'
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >
