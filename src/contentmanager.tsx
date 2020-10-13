@@ -1,19 +1,33 @@
 // contentmanager.tsx
 
-import React, {useContext} from 'react'
+import React, {useState, useEffect} from 'react'
 import ReactDOM from 'react-dom'
 
 const contentlists = new Map()
 
 export let portalCacheMap = new Map()
 
-export const PortalCache = ({portalCacheMap}) => {
+export let maincachetrigger = true
+
+// let contextTriggerFn = () => cacheGenerationCounter++
+
+let cacheSetTrigger
+
+export const PortalCache = () => {
+    // const trigger = useContext(CacheContext)
+    const [cachetoggle, setCachetoggle] = useState(maincachetrigger)
+    // console.log('running PORTALCACHE', cachetoggle)
+    // trigger.contextTrigger()
     let portalLists = []
     let portalkeys = []
+    useEffect(()=>{
+        cacheSetTrigger = setCachetoggle
+    },[])
     portalCacheMap.forEach((value, key) => {
         if (value.modified) {
             value.portalList = Array.from(value.portals.values())
             value.modified = false
+            // ++cacheGenerationCounter
         }
         portalLists.push(value.portalList)
         portalkeys.push(key)
@@ -54,6 +68,7 @@ class ContentManager {
         contentlists.delete(scrollerID)
     }
     setContentlistItem (scrollerID, index, content) {
+        // console.log('setting item ScrollerID, index, content', scrollerID, index, content)
         if (this.hasContentlistItem(scrollerID, index)) {
             return this.getContentlistItem(scrollerID,index).portal
         }
@@ -71,7 +86,8 @@ class ContentManager {
         portalitem.portals.set(index,portal)
         portalitem.modified = true
         contentlists.get(scrollerID).set(index, {content, target:null, container, portal} )
-        return portal
+        maincachetrigger = !maincachetrigger
+        cacheSetTrigger(maincachetrigger)
     }
     deleteContentlistItem (scrollerID, index) {
         let itemdata = contentlists.get(scrollerID).get(index)
@@ -79,6 +95,8 @@ class ContentManager {
         let portalitem = portalCacheMap.get(scrollerID)
         portalitem.portals.delete(index)
         portalitem.modified = true
+        maincachetrigger = !maincachetrigger
+        cacheSetTrigger(maincachetrigger)
     }
     attachContentlistItem (scrollerID, index, target) {
         this.detachContentlistItem(scrollerID, index)
@@ -96,7 +114,7 @@ class ContentManager {
                 try {
                     item.target.removeChild(item.container)
                 } catch(e) {
-                    // noops
+                    // noop
                 }
             }
         }
@@ -111,6 +129,7 @@ class ContentManager {
 
 const contentManager = new ContentManager()
 
-const CacheContext = React.createContext(null)
+// export const cacheContextData = {contextTrigger:() => ++cacheGenerationCounter}
+// export const CacheContext = React.createContext(null)
 
 export const ContentContext = React.createContext(contentManager)

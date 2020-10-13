@@ -74,7 +74,7 @@ const InfiniteGridScroller = (props) => {
         orientation = 'vertical'
     }
     return <>
-    {scrollerIDRef.current == 0?<PortalCache portalCacheMap = {portalCacheMap} />:null}
+    {scrollerIDRef.current == 0?<PortalCache />:null}
     <Viewport 
 
         orientation = { orientation } 
