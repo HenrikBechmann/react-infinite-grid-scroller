@@ -62,6 +62,7 @@ const Viewport = ({
     const viewportDataRef = useRef(null)
 
     const resizeObserverRef = useRef(null)
+    const portalRef = useRef(null)
 
     // initialize
     useEffect(()=>{
@@ -76,6 +77,34 @@ const Viewport = ({
         }
 
     },[])
+
+    useEffect(()=>{
+
+        if (scrollerID == 0 || !viewportdivRef.current) return
+        let parentscrollerid
+        let parentindex
+        let el = viewportdivRef.current
+        while (el) {
+            console.log('dataset',el.dataset, el)
+            if (el.dataset && (el.dataset.type == 'portalcontainer')) {
+                parentindex = parseInt(el.dataset.index)
+                parentscrollerid = parseInt(el.dataset.scrollerid)
+                break
+            } else {
+                el = el.parentElement
+            }
+        } 
+
+        if (!el) {
+            console.log('ERROR: parent portalcontainer not found')
+            return
+        }
+        portalRef.current = contentmanager.getContentlistItem(parentscrollerid, parentindex)
+        console.log('viewport of scrollerID has parentscrollerid and parentindex for portal', 
+            scrollerID, parentscrollerid, parentindex,portalRef.current)
+        // portalIndexRef.current = el.dataset.index
+
+    },[divlinerstyleRef.current])
 
     const resizeCallback = useCallback((entries)=>{
 
