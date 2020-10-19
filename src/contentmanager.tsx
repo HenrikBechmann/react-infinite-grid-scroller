@@ -108,14 +108,14 @@ class ContentManager {
         let item = contentlists.get(scrollerID).get(index)
         // console.log('item to be attached; scrollerID, index',item, scrollerID, index)
         if (!item) return
-        console.log('setting reparenting to true: scrollerID, index', scrollerID, index)
+        // console.log('setting reparenting to true: scrollerID, index', scrollerID, index)
         item.reparenting = true
         this.detachContentlistItem(scrollerID, index)
         target.appendChild(item.container)
         item.target = target
         setTimeout(()=>{
             item.reparenting = false
-            console.log('setting reparenting to false', scrollerID, index)
+            // console.log('setting reparenting to false', scrollerID, index)
         })
     }
     detachContentlistItem (scrollerID, index) {

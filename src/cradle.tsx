@@ -747,7 +747,7 @@ const Cradle = ({
         if (!controlFlags.isCradleInView) 
 
         {
-
+            console.log('inside cradleintersectionobservercallback portalRef',portalRef)
             let cradleState = cradleStateRef.current        
             if (
                 !viewportDataRef.current.isResizing &&
@@ -1472,10 +1472,13 @@ const Cradle = ({
 
     },[])
 
+    const portalRef = useRef(null)
     // content item registration callback; called from item
     const getItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
 
         const [index, shellref, portalDataRef] = itemElementData
+        console.log('getItemElementData: index, shellref, portalDataRef', index, shellref, portalDataRef)
+        portalRef.current = portalDataRef
 
         if (reportType == 'register') {
 
