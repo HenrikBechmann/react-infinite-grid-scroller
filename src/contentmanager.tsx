@@ -90,7 +90,8 @@ class ContentManager {
         let portalitem = portalCacheMap.get(scrollerID)
         portalitem.portals.set(index,portal)
         portalitem.modified = true
-        contentlists.get(scrollerID).set(index, {content, target:null, container, portal, reparenting:false} )
+        contentlists.get(scrollerID).set(index, 
+            {content, target:null, container, portal, reparenting:false, indexid:index,scrollerid:scrollerID} )
         maincachetrigger = !maincachetrigger
         cacheSetTrigger(maincachetrigger)
     }
@@ -107,11 +108,13 @@ class ContentManager {
         let item = contentlists.get(scrollerID).get(index)
         // console.log('item to be attached; scrollerID, index',item, scrollerID, index)
         if (!item) return
+        console.log('setting reparenting to true: scrollerID, index', scrollerID, index)
         item.reparenting = true
         this.detachContentlistItem(scrollerID, index)
         target.appendChild(item.container)
         item.target = target
         item.reparenting = false
+        console.log('setting reparenting to false', scrollerID, index)
     }
     detachContentlistItem (scrollerID, index) {
         let item = contentlists.get(scrollerID).get(index)

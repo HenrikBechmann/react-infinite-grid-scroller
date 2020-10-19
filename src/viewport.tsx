@@ -85,7 +85,7 @@ const Viewport = ({
         let parentindex
         let el = viewportdivRef.current
         while (el) {
-            console.log('dataset',el.dataset, el)
+            // console.log('dataset',el.dataset, el)
             if (el.dataset && (el.dataset.type == 'portalcontainer')) {
                 parentindex = parseInt(el.dataset.index)
                 parentscrollerid = parseInt(el.dataset.scrollerid)
@@ -100,8 +100,8 @@ const Viewport = ({
             return
         }
         portalRef.current = contentmanager.getContentlistItem(parentscrollerid, parentindex)
-        console.log('viewport of scrollerID has parentscrollerid and parentindex for portal', 
-            scrollerID, parentscrollerid, parentindex,portalRef.current)
+        // console.log('viewport of scrollerID has parentscrollerid and parentindex for portal', 
+        //     scrollerID, parentscrollerid, parentindex,portalRef.current)
         // portalIndexRef.current = el.dataset.index
 
     },[divlinerstyleRef.current])
@@ -109,6 +109,11 @@ const Viewport = ({
     const resizeCallback = useCallback((entries)=>{
 
         if (portstateRef.current == 'prepare') return
+
+        console.log('checking portal reparenting',portalRef.current)
+        if (portalRef.current && portalRef.current.reparenting) {
+            return
+        }
 
         let target = entries[0].target
 
