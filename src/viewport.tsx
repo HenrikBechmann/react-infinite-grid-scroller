@@ -112,6 +112,7 @@ const Viewport = ({
 
         console.log('checking portal reparenting',portalRef.current)
         if (portalRef.current && portalRef.current.reparenting) {
+            console.log('returning from viewport resizeCallback')
             return
         }
 
