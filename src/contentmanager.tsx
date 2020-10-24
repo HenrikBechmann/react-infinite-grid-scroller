@@ -112,6 +112,7 @@ class ContentManager {
         item.reparenting = true
         // this.detachContentlistItem(scrollerID, index)
         target.appendChild(item.container)
+        console.log('scrollerID, index, getBoundingClientRect',scrollerID, index, item.container.getBoundingClientRect())
         item.target = target
         setTimeout(()=>{
             item.reparenting = false

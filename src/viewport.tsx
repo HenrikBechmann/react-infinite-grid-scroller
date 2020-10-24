@@ -200,6 +200,7 @@ const Viewport = ({
     return <ViewportContext.Provider value = { viewportDataRef.current }>
         <div 
             data-type = 'viewport'
+            data-masterscrollerid = {scrollerID}
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >
