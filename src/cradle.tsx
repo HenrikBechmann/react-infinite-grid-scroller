@@ -191,6 +191,8 @@ const Cradle = ({
     // --------------------------------------[ INITIALIZATION ]-------------------------------------
     // =============================================================================================
 
+    const contentmanager = useContext(ContentContext)
+
     // -----------------------------------------------------------------------
     // -----------------------------------[ utilites ]------------------------
 
@@ -405,6 +407,35 @@ const Cradle = ({
             spine:spineCradleElementRef
         }
     )
+
+    useEffect(()=>{
+
+        if (scrollerID == 0 || !spineCradleElementRef.current) return
+        let parentscrollerid
+        let parentindex
+        let el = spineCradleElementRef.current
+        while (el) {
+            // console.log('dataset',el.dataset, el)
+            if (el.dataset && (el.dataset.type == 'portalcontainer')) {
+                parentindex = parseInt(el.dataset.index)
+                parentscrollerid = parseInt(el.dataset.scrollerid)
+                break
+            } else {
+                el = el.parentElement
+            }
+        } 
+
+        if (!el) {
+            console.log('ERROR: parent portalcontainer not found')
+            return
+        }
+        portalRef.current = contentmanager.getContentlistItem(parentscrollerid, parentindex)
+        // console.log('viewport of scrollerID has parentscrollerid and parentindex for portal', 
+        //     scrollerID, parentscrollerid, parentindex,portalRef.current)
+        // portalIndexRef.current = el.dataset.index
+
+    },[spineCradleElementRef.current])
+
 
     const cradleContentRef = useRef({
         cradleModel: null,
@@ -754,7 +785,8 @@ const Cradle = ({
                 !(cradleState == 'resize') &&
                 !(cradleState == 'repositioning') && 
                 !(cradleState == 'reposition') && 
-                !(cradleState == 'pivot')
+                !(cradleState == 'pivot') &&
+                !portalRef.current.reparenting
                 ) 
             {
 
@@ -764,7 +796,7 @@ const Cradle = ({
                 viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
                 controlFlags.pauseItemObserver = true
                 // pauseCradleIntersectionObserverRef.current = true
-                console.log('REPOSITIONING scrollerID', scrollerID)
+                console.log('REPOSITIONING scrollerID', scrollerID, portalRef.current)
                 let cradleContent = cradleContentRef.current
                 cradleContent.headModel = []
                 cradleContent.tailModel = []
@@ -1477,8 +1509,8 @@ const Cradle = ({
     const getItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
 
         const [index, shellref, portalDataRef] = itemElementData
-        console.log('getItemElementData: index, shellref, portalDataRef', index, shellref, portalDataRef)
-        portalRef.current = portalDataRef
+        // console.log('getItemElementData: index, shellref, portalDataRef', index, shellref, portalDataRef)
+        // portalRef.current = portalDataRef
 
         if (reportType == 'register') {
 

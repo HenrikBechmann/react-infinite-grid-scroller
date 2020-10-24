@@ -104,7 +104,7 @@ const Viewport = ({
         //     scrollerID, parentscrollerid, parentindex,portalRef.current)
         // portalIndexRef.current = el.dataset.index
 
-    },[divlinerstyleRef.current])
+    },[viewportdivRef.current])
 
     const resizeCallback = useCallback((entries)=>{
 

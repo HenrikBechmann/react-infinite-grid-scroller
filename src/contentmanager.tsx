@@ -110,7 +110,7 @@ class ContentManager {
         if (!item) return
         // console.log('setting reparenting to true: scrollerID, index', scrollerID, index)
         item.reparenting = true
-        this.detachContentlistItem(scrollerID, index)
+        // this.detachContentlistItem(scrollerID, index)
         target.appendChild(item.container)
         item.target = target
         setTimeout(()=>{
