@@ -110,9 +110,9 @@ const Viewport = ({
 
         if (portstateRef.current == 'prepare') return
 
-        console.log('checking portal reparenting',portalRef.current)
+        // console.log('checking portal reparenting',portalRef.current)
         if (portalRef.current && portalRef.current.reparenting) {
-            console.log('returning from viewport resizeCallback')
+            // console.log('returning from viewport resizeCallback')
             return
         }
 
@@ -196,7 +196,7 @@ const Viewport = ({
     },[portstate])
 
     // ----------------------[ render ]--------------------------------
-    console.log('scrollerID, viewportDataRef.current',scrollerID, viewportDataRef.current)
+    // console.log('scrollerID, viewportDataRef.current',scrollerID, viewportDataRef.current)
     return <ViewportContext.Provider value = { viewportDataRef.current }>
         <div 
             data-type = 'viewport'

@@ -127,10 +127,14 @@ const ItemShell = ({
 
     useEffect(()=>{
 
+        if (!shellRef.current) return
+
         observer.observe(shellRef.current)
 
         return () => {
 
+            if (!shellRef.current) return // TODO: memory leak?
+            // console.log('unobserve',shellRef.current)
             observer.unobserve(shellRef.current)
 
         }

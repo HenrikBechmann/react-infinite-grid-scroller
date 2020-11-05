@@ -215,7 +215,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    console.log('scrollerID, cradleState', scrollerID, cradleState)
+    // console.log('scrollerID, cradleState', scrollerID, cradleState)
     // -----------------------------------------------------------------------
     // -------------------------[ control flags ]-----------------
 
@@ -778,7 +778,7 @@ const Cradle = ({
         if (!controlFlags.isCradleInView) 
 
         {
-            console.log('inside cradleintersectionobservercallback portalRef',portalRef)
+            // console.log('inside cradleintersectionobservercallback portalRef',portalRef)
             let cradleState = cradleStateRef.current        
             if (
                 !viewportDataRef.current.isResizing &&
@@ -796,7 +796,7 @@ const Cradle = ({
                 viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
                 controlFlags.pauseItemObserver = true
                 // pauseCradleIntersectionObserverRef.current = true
-                console.log('REPOSITIONING scrollerID', scrollerID, portalRef.current)
+                // console.log('REPOSITIONING scrollerID', scrollerID, portalRef.current)
                 let cradleContent = cradleContentRef.current
                 cradleContent.headModel = []
                 cradleContent.tailModel = []
