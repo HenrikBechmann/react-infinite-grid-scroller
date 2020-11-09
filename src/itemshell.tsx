@@ -36,7 +36,7 @@ const ItemShell = ({
         overflow:'hidden',
     } as React.CSSProperties)
     const [itemstate,setItemstate] = useState('setup')
-    const shellRef = useRef(null)
+    const shellRef = useRef(undefined)
     const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
@@ -127,13 +127,14 @@ const ItemShell = ({
 
     useEffect(()=>{
 
-        if (!shellRef.current) return
-
+        // if (!shellRef.current) return
+        console.log('shellRef.current',shellRef.current)
         observer.observe(shellRef.current)
 
         return () => {
 
-            if (!shellRef.current) return // TODO: memory leak?
+            console.log('unobserving',shellRef.current)
+            // if (!shellRef.current) return // TODO: memory leak?
             // console.log('unobserve',shellRef.current)
             observer.unobserve(shellRef.current)
 
