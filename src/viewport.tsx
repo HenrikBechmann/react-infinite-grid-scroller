@@ -10,7 +10,7 @@ import React, {useState, useRef, useEffect, useMemo, useCallback, useContext} fr
 
 export const ViewportContext = React.createContext(null)
 
-import useIsMounted from 'react-is-mounted-hook'
+import useIsMounted from 'ismounted'
 
 import ResizeObserverPolyfill from 'resize-observer-polyfill'
 
@@ -129,14 +129,14 @@ const Viewport = ({
                 // to stop updating the referenceIndexData, and to the item observer to stop
                 // triggering responses (anticipating reset of cradle content based on resize)
             viewportDataRef.current.isResizing = true
-            if (isMounted()) setPortState('resizing')
+            if (isMounted.current) setPortState('resizing')
         }
 
         clearTimeout(resizeTimeridRef.current)
         resizeTimeridRef.current = setTimeout(() => {
 
             isResizingRef.current = false
-            if (isMounted()) setPortState('resize')
+            if (isMounted.current) setPortState('resize')
 
         },RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE)
 

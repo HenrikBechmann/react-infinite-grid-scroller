@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom'
 
 import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
-import useIsMounted from 'react-is-mounted-hook'
+import useIsMounted from 'ismounted'
 
 import Placeholder from './placeholder'
 
@@ -71,19 +71,19 @@ const ItemShell = ({
                 let value = getItem(index)
                 if (value && value.then) {
                     value.then((content) => {
-                        if (isMounted()) { 
+                        if (isMounted.current) { 
                             saveContent(content)
                             contentManager.setContentlistItem(scrollerID,index,content)
                             saveError(null)
                         }
                     }).catch((e) => {
-                        if (isMounted()) { 
+                        if (isMounted.current) { 
                             saveContent(null)
                             saveError(e)
                         }
                     })
                 } else {
-                    if (isMounted()) {
+                    if (isMounted.current) {
                         if (value) {
                             saveContent(value)
                             contentManager.setContentlistItem(scrollerID,index,value)
@@ -145,7 +145,7 @@ const ItemShell = ({
     useEffect(()=>{
 
         let newStyles = getShellStyles(orientation, cellHeight, cellWidth, styles)
-        if (isMounted()) {
+        if (isMounted.current) {
             saveStyles(newStyles)
         }
 
