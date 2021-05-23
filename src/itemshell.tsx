@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom'
 
 import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
-import useIsMounted from 'ismounted'
+import useIsMounted from 'react-is-mounted-hook'
 
 import Placeholder from './placeholder'
 
@@ -38,7 +38,7 @@ const ItemShell = ({
     const [itemstate,setItemstate] = useState('setup')
     const shellRef = useRef(undefined)
     const instanceIDRef = useRef(instanceID)
-    const isMounted = useIsMounted()
+    let isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
     // // const portalDataRef = useRef(portalData.get(index)?portalData.get(index).current:{
     //     container:null,
@@ -67,23 +67,23 @@ const ItemShell = ({
         if (getItem) {
             // console.log('fetching item index',index)
             itemrequestRef.current = requestidlecallback(()=> {
-
+                // isMounted = useIsMounted()
                 let value = getItem(index)
                 if (value && value.then) {
                     value.then((content) => {
-                        if (isMounted.current) { 
+                        if (isMounted()) { 
                             saveContent(content)
                             contentManager.setContentlistItem(scrollerID,index,content)
                             saveError(null)
                         }
                     }).catch((e) => {
-                        if (isMounted.current) { 
+                        if (isMounted()) { 
                             saveContent(null)
                             saveError(e)
                         }
                     })
                 } else {
-                    if (isMounted.current) {
+                    if (isMounted()) {
                         if (value) {
                             saveContent(value)
                             contentManager.setContentlistItem(scrollerID,index,value)
@@ -152,7 +152,8 @@ const ItemShell = ({
     useEffect(()=>{
 
         let newStyles = getShellStyles(orientation, cellHeight, cellWidth, styles)
-        if (isMounted.current) {
+        // isMounted = useIsMounted()
+        if (isMounted()) {
             saveStyles(newStyles)
         }
 

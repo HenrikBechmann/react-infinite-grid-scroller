@@ -43,6 +43,7 @@
     "@types/react": "^17.0.3",
     "detect-browser": "^5.2.0",
     "ismounted": "^0.1.8",
+    "react-is-mounted-hook": "^1.1.1",
     "requestidlecallback": "^0.3.0",
     "resize-observer-polyfill": "^1.5.1",
     "save-dev": "0.0.1-security"

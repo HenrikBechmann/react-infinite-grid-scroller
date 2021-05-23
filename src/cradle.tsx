@@ -111,7 +111,7 @@ import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, u
 
 import { ViewportContext } from './viewport'
 
-import useIsMounted from 'ismounted'
+import useIsMounted from 'react-is-mounted-hook'
 
 // import ResizeObserverPolyfill from 'resize-observer-polyfill'
 
@@ -199,7 +199,7 @@ const Cradle = ({
     // -----------------------------------[ utilites ]------------------------
 
     const contentManager = useContext(ContentContext)
-    const isMounted = useIsMounted()
+    let isMounted = useIsMounted()
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
 
     const itemObserverRef = useRef(null) // IntersectionObserver
@@ -876,8 +876,8 @@ const Cradle = ({
             return
 
         }
-
-        isMounted.current && updateCradleContent(movedentries)
+        // isMounted = useIsMounted()
+        isMounted() && updateCradleContent(movedentries)
 
     },[])
 
@@ -1280,7 +1280,9 @@ const Cradle = ({
 
         scrollTimeridRef.current = setTimeout(() => {
 
-            if (!isMounted.current) return
+            // isMounted = useIsMounted()
+
+            if (!isMounted()) return
 
             // console.log('scrollerName, portalData after SCROLL:',scrollerName, cradleContentRef.current.portalData)
 
@@ -1415,7 +1417,8 @@ const Cradle = ({
             case 'normalize': {
                 setTimeout(()=> {
 
-                    if (!isMounted.current) return
+                    // isMounted = useIsMounted()
+                    if (!isMounted()) return
                     // console.log('inside normalize: viewportData.isResizing', viewportData.isResizing)
                     if (!viewportData.isResizing) {
                         // redundant scroll position to avoid accidental positioning at tail end of reposition
