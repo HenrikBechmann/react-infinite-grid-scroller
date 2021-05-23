@@ -113,11 +113,13 @@ import { ViewportContext } from './viewport'
 
 import useIsMounted from 'ismounted'
 
-import ResizeObserverPolyfill from 'resize-observer-polyfill'
+// import ResizeObserverPolyfill from 'resize-observer-polyfill'
+
+import { ResizeObserver } from '@juggle/resize-observer'
 
 import { ContentContext } from './contentmanager'
 
-const LocalResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
+const LocalResizeObserver = window['ResizeObserver'] || ResizeObserver
 
 const ITEM_OBSERVER_THRESHOLD = 0
 
@@ -786,7 +788,7 @@ const Cradle = ({
                 !(cradleState == 'repositioning') && 
                 !(cradleState == 'reposition') && 
                 !(cradleState == 'pivot') &&
-                !portalRef.current.reparenting
+                !(portalRef.current && portalRef.current.reparenting)
                 ) 
             {
 

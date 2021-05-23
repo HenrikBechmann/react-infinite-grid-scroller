@@ -125,19 +125,26 @@ const ItemShell = ({
 
     },[callbacks])
 
+    let shellelement
+
     useEffect(()=>{
 
         // if (!shellRef.current) return
-        console.log('shellRef.current',shellRef.current)
+        // console.log('shellRef.current',shellRef.current)
         observer.observe(shellRef.current)
+        shellelement = shellRef.current
 
         return () => {
 
-            console.log('unobserving',shellRef.current)
+            // console.log('unobserving',shellRef.current)
             // if (!shellRef.current) return // TODO: memory leak?
             // console.log('unobserve',shellRef.current)
-            observer.unobserve(shellRef.current)
+            // observer.unobserve(shellRef.current)
 
+            // console.log('unobserving',shellelement)
+            // if (!shellelement) return // TODO: memory leak?
+            // console.log('unobserve',shellRef.current)
+            // observer.unobserve(shellelement)
         }
 
     },[observer])
@@ -165,6 +172,7 @@ const ItemShell = ({
         if (!shellRef.current) return
         // console.log('linking scrollerID, index, shellRef.current, content; ',scrollerID, index, shellRef.current,content)
         if (content) {
+            observer.unobserve(shellRef.current)
             contentManager.attachContentlistItem(scrollerID,index,shellRef.current)
             // console.log('scrollerID, setting linkedContentRef', scrollerID)
             // linkedContentRef.current = true

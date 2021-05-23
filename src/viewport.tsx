@@ -12,11 +12,13 @@ export const ViewportContext = React.createContext(null)
 
 import useIsMounted from 'ismounted'
 
-import ResizeObserverPolyfill from 'resize-observer-polyfill'
+// import ResizeObserverPolyfill from 'resize-observer-polyfill'
+
+import { ResizeObserver } from '@juggle/resize-observer'
 
 import { ContentContext } from './contentmanager'
 
-const LocalResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
+const LocalResizeObserver = window['ResizeObserver'] || ResizeObserver
 
 // control constant
 const RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = 250

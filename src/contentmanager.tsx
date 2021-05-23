@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom'
 
 const contentlists = new Map()
 
-export let portalCacheMap = new Map()
+let portalCacheMap = new Map()
 
 export let maincachetrigger = true
 
