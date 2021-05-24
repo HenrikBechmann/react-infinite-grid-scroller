@@ -6,7 +6,7 @@ import React, {useRef, useMemo} from 'react'
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
 import Cradle from './cradle'
-import { PortalCache } from './contentmanager'
+import { PortalCache } from './portalmanager'
 
 let scrollerID = 0
 const getScrollerID = () => {

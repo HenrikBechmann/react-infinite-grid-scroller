@@ -16,7 +16,7 @@ import useIsMounted from 'react-is-mounted-hook'
 
 import { ResizeObserver } from '@juggle/resize-observer'
 
-import { ContentContext } from './contentmanager'
+import { PortalContext } from './portalmanager'
 
 const LocalResizeObserver = window['ResizeObserver'] || ResizeObserver
 
@@ -38,7 +38,7 @@ const Viewport = ({
     // -----------------------[ initialize ]------------------
 
     // processing state
-    const contentmanager = useContext(ContentContext)
+    const contentmanager = useContext(PortalContext)
     const [portstate,setPortState] = useState('prepare')
     const portstateRef = useRef(null)
     portstateRef.current = portstate
@@ -101,7 +101,7 @@ const Viewport = ({
             console.log('ERROR: parent portalcontainer not found')
             return
         }
-        portalRef.current = contentmanager.getContentlistItem(parentscrollerid, parentindex)
+        portalRef.current = contentmanager.getPortalListItem(parentscrollerid, parentindex)
         // console.log('viewport of scrollerID has parentscrollerid and parentindex for portal', 
         //     scrollerID, parentscrollerid, parentindex,portalRef.current)
         // portalIndexRef.current = el.dataset.index

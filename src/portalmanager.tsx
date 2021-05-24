@@ -46,9 +46,9 @@ const getPortal = (content, container, index) => {
     return ReactDOM.createPortal(content, container, index)
     // return <ItemPortal content = {content} container = {container}/>
 } 
-class ContentManager {
+class PortalManager {
     // constructor() {}
-    setScrollerContentlist (scrollerID) {
+    createScrollerPortalList (scrollerID) {
         if (!contentlists.has(scrollerID)) {
             contentlists.set(scrollerID, new Map())
         }
@@ -56,7 +56,7 @@ class ContentManager {
             portalCacheMap.set(scrollerID, {modified:false,portals:new Map(),portalList:[]})
         }
     }
-    clearScrollerContentlist (scrollerID) {
+    clearScrollerPortalList (scrollerID) {
         if (contentlists.has(scrollerID)) {
             contentlists.get(scrollerID).clear()
         }
@@ -64,17 +64,17 @@ class ContentManager {
             portalCacheMap.delete(scrollerID)
         }
     }
-    resetScrollerContentList(scrollerID) {
-        this.clearScrollerContentlist(scrollerID)
-        this.setScrollerContentlist(scrollerID)
+    resetScrollerPortalList(scrollerID) {
+        this.clearScrollerPortalList(scrollerID)
+        this.createScrollerPortalList(scrollerID)
     }
-    deleteScrollerContentlist (scrollerID) {
+    deleteScrollerPortalList (scrollerID) {
         contentlists.delete(scrollerID)
     }
-    setContentlistItem (scrollerID, index, content) {
+    setPortal (scrollerID, index, content) {
         // console.log('setting item ScrollerID, index, content', scrollerID, index, content)
-        if (this.hasContentlistItem(scrollerID, index)) {
-            return this.getContentlistItem(scrollerID,index).portal
+        if (this.hasPortalListItem(scrollerID, index)) {
+            return this.getPortalListItem(scrollerID,index).portal
         }
         let container = document.createElement('div')
         container.style.top = '0px'
@@ -104,7 +104,7 @@ class ContentManager {
         maincachetrigger = !maincachetrigger
         cacheSetTrigger(maincachetrigger)
     }
-    attachContentlistItem (scrollerID, index, target) {
+    attachPortalListItem (scrollerID, index, target) {
         let item = contentlists.get(scrollerID).get(index)
         // console.log('item to be attached; scrollerID, index',item, scrollerID, index)
         if (!item) return
@@ -119,7 +119,7 @@ class ContentManager {
             // console.log('setting reparenting to false', scrollerID, index)
         })
     }
-    detachContentlistItem (scrollerID, index) {
+    detachPortalListItem (scrollerID, index) {
         let item = contentlists.get(scrollerID).get(index)
         if (item) {
             // console.log('detach child item scrollerID, index',item, scrollerID, index)
@@ -132,17 +132,17 @@ class ContentManager {
             }
         }
     }
-    hasContentlistItem (scrollerID, index) {
+    hasPortalListItem (scrollerID, index) {
         return contentlists.get(scrollerID).has(index)
     }
-    getContentlistItem (scrollerID, index) {
+    getPortalListItem (scrollerID, index) {
         return contentlists.get(scrollerID).get(index)
     }
 }
 
-const contentManager = new ContentManager()
+const portalManager = new PortalManager()
 
 // export const cacheContextData = {contextTrigger:() => ++cacheGenerationCounter}
 // export const CacheContext = React.createContext(null)
 
-export const ContentContext = React.createContext(contentManager)
+export const PortalContext = React.createContext(portalManager)

@@ -117,7 +117,7 @@ import useIsMounted from 'react-is-mounted-hook'
 
 import { ResizeObserver } from '@juggle/resize-observer'
 
-import { ContentContext } from './contentmanager'
+import { PortalContext } from './portalmanager'
 
 const LocalResizeObserver = window['ResizeObserver'] || ResizeObserver
 
@@ -193,12 +193,12 @@ const Cradle = ({
     // --------------------------------------[ INITIALIZATION ]-------------------------------------
     // =============================================================================================
 
-    const contentmanager = useContext(ContentContext)
+    const contentmanager = useContext(PortalContext)
 
     // -----------------------------------------------------------------------
     // -----------------------------------[ utilites ]------------------------
 
-    const contentManager = useContext(ContentContext)
+    const contentManager = useContext(PortalContext)
     let isMounted = useIsMounted()
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
 
@@ -263,7 +263,7 @@ const Cradle = ({
         let viewportData = viewportDataRef.current
         viewportData.elementref.current.addEventListener('scroll',onScroll)
 
-        contentManager.setScrollerContentlist(cradlePropsRef.current.scrollerID)
+        contentManager.createScrollerPortalList(cradlePropsRef.current.scrollerID)
 
         return () => {
 
@@ -431,7 +431,7 @@ const Cradle = ({
             console.log('ERROR: parent portalcontainer not found')
             return
         }
-        portalRef.current = contentmanager.getContentlistItem(parentscrollerid, parentindex)
+        portalRef.current = contentmanager.getPortalListItem(parentscrollerid, parentindex)
         // console.log('viewport of scrollerID has parentscrollerid and parentindex for portal', 
         //     scrollerID, parentscrollerid, parentindex,portalRef.current)
         // portalIndexRef.current = el.dataset.index
@@ -1407,7 +1407,7 @@ const Cradle = ({
                 cradleContent.tailModel = []
                 cradleContent.headView = []
                 cradleContent.tailView = []
-                contentManager.resetScrollerContentList(scrollerID)
+                contentManager.resetScrollerPortalList(scrollerID)
                 setCradleContent(callingCradleState.current, callingReferenceIndexDataRef.current)
 
                 saveCradleState('content')//'setscrolloffset')
