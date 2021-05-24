@@ -38,7 +38,8 @@ export const PortalCache = () => {
         portalblocks.push(<div key = {key}>{portalLists[index]}</div>)
         index++
     }
-    return <div>{portalblocks}</div>
+    let portalblockstyles:React.CSSProperties = {visibility:'hidden'}
+    return <div id = 'portalblocks' style={portalblockstyles}>{portalblocks}</div>
 }
 
 const getPortal = (content, container, index) => {
@@ -87,16 +88,16 @@ class PortalManager {
         container.dataset.scrollerid = scrollerID
         let portal = getPortal(content, container, index)
         // portalList.push(<div key = {index}>{portal}</div>)
-        let portalitem = portalCacheMap.get(scrollerID)
-        portalitem.portals.set(index,portal)
-        portalitem.modified = true
+        let scrollerportals = portalCacheMap.get(scrollerID)
+        scrollerportals.portals.set(index,portal)
+        scrollerportals.modified = true
         contentlists.get(scrollerID).set(index, 
             {content, target:null, container, portal, reparenting:false, indexid:index,scrollerid:scrollerID} )
         maincachetrigger = !maincachetrigger
         cacheSetTrigger(maincachetrigger)
     }
     deleteContentlistItem (scrollerID, index) {
-        let itemdata = contentlists.get(scrollerID).get(index)
+        // let itemdata = contentlists.get(scrollerID).get(index)
         contentlists.get(scrollerID).delete(index)
         let portalitem = portalCacheMap.get(scrollerID)
         portalitem.portals.delete(index)

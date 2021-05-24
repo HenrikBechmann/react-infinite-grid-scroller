@@ -2,6 +2,7 @@
 // copyright (c) 2019 Henrik Bechmann, Toronto, Licence: MIT
 
 import React, {useRef, useMemo} from 'react'
+import ReactDOM from 'react-dom'
 
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
@@ -81,8 +82,10 @@ const InfiniteGridScroller = (props) => {
     if (!['horizontal','vertical'].includes(orientation)) {
         orientation = 'vertical'
     }
+    console.log('PortalList',PortalCache)
     return <>
-    {scrollerIDRef.current == 0?<PortalCache />:null}
+    {scrollerIDRef.current == 0?<PortalCache/>:null // execute portal code
+    }
     <Viewport 
 
         orientation = { orientation } 
