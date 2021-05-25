@@ -3,43 +3,39 @@
 import React, {useState, useEffect} from 'react'
 import ReactDOM from 'react-dom'
 
-const contentlists = new Map()
+const scrollerPortalMetaMaps = new Map()
 
-let portalCacheMap = new Map()
+const scrollerPortalBlockMaps = new Map()
 
 export let maincachetrigger = true
 
-// let contextTriggerFn = () => cacheGenerationCounter++
-
 let cacheSetTrigger
 
-export const PortalCache = () => {
+export const PortalTreeBlocks = () => {
     // const trigger = useContext(CacheContext)
     const [cachetoggle, setCachetoggle] = useState(maincachetrigger)
     console.log('running PORTALCACHE', cachetoggle)
-    // trigger.contextTrigger()
-    let portalLists = []
+    let portalSets = []
     let portalKeys = []
     useEffect(()=>{
         cacheSetTrigger = setCachetoggle
     },[])
-    portalCacheMap.forEach((value, key) => {
+    scrollerPortalBlockMaps.forEach((value, key) => {
         if (value.modified) {
             value.portalList = Array.from(value.portals.values())
             value.modified = false
-            // ++cacheGenerationCounter
         }
-        portalLists.push(value.portalList)
+        portalSets.push(value.portalList)
         portalKeys.push(key)
     })
     let index = 0
-    let portalblocks = []
+    let portalTreeBlocks = []
     for (let key of portalKeys) {
-        portalblocks.push(<div key = {key}>{portalLists[index]}</div>)
+        portalTreeBlocks.push(<div key = {key}>{portalSets[index]}</div>)
         index++
     }
     let portalblockstyles:React.CSSProperties = {visibility:'hidden'}
-    return <div id = 'portalblocks' style={portalblockstyles}>{portalblocks}</div>
+    return <div key = 'portalblocks' id = 'portalblocks' style={portalblockstyles}>{portalTreeBlocks}</div>
 }
 
 const getPortal = (content, container, index) => {
@@ -48,31 +44,35 @@ const getPortal = (content, container, index) => {
     // return <ItemPortal content = {content} container = {container}/>
 } 
 class PortalManager {
-    // constructor() {}
-    createScrollerPortalList (scrollerID) {
-        if (!contentlists.has(scrollerID)) {
-            contentlists.set(scrollerID, new Map())
+
+    createScrollerPortalRepository (scrollerID) {
+        if (!scrollerPortalMetaMaps.has(scrollerID)) {
+            scrollerPortalMetaMaps.set(scrollerID, new Map())
         }
-        if (!portalCacheMap.has(scrollerID)) {
-            portalCacheMap.set(scrollerID, {modified:false,portals:new Map(),portalList:[]})
-        }
-    }
-    clearScrollerPortalList (scrollerID) {
-        if (contentlists.has(scrollerID)) {
-            contentlists.get(scrollerID).clear()
-        }
-        if (portalCacheMap.has(scrollerID)) {
-            portalCacheMap.delete(scrollerID)
+        if (!scrollerPortalBlockMaps.has(scrollerID)) {
+            scrollerPortalBlockMaps.set(scrollerID, {modified:false,portals:new Map(),portalList:[]})
         }
     }
-    resetScrollerPortalList(scrollerID) {
-        this.clearScrollerPortalList(scrollerID)
-        this.createScrollerPortalList(scrollerID)
+
+    clearScrollerPortalRepository (scrollerID) {
+        if (scrollerPortalMetaMaps.has(scrollerID)) {
+            scrollerPortalMetaMaps.get(scrollerID).clear()
+        }
+        if (scrollerPortalBlockMaps.has(scrollerID)) {
+            scrollerPortalBlockMaps.delete(scrollerID)
+        }
     }
-    deleteScrollerPortalList (scrollerID) {
-        contentlists.delete(scrollerID)
+
+    resetScrollerPortalRepository(scrollerID) {
+        this.clearScrollerPortalRepository(scrollerID)
+        this.createScrollerPortalRepository(scrollerID)
     }
-    setPortal (scrollerID, index, content) {
+
+    deleteScrollerPortalRepository (scrollerID) {
+        scrollerPortalMetaMaps.delete(scrollerID)
+    }
+
+    createPortalListItem (scrollerID, index, content) {
         // console.log('setting item ScrollerID, index, content', scrollerID, index, content)
         if (this.hasPortalListItem(scrollerID, index)) {
             return this.getPortalListItem(scrollerID,index).portal
@@ -88,25 +88,27 @@ class PortalManager {
         container.dataset.scrollerid = scrollerID
         let portal = getPortal(content, container, index)
         // portalList.push(<div key = {index}>{portal}</div>)
-        let scrollerportals = portalCacheMap.get(scrollerID)
+        let scrollerportals = scrollerPortalBlockMaps.get(scrollerID)
         scrollerportals.portals.set(index,portal)
         scrollerportals.modified = true
-        contentlists.get(scrollerID).set(index, 
+        scrollerPortalMetaMaps.get(scrollerID).set(index, 
             {content, target:null, container, portal, reparenting:false, indexid:index,scrollerid:scrollerID} )
         maincachetrigger = !maincachetrigger
         cacheSetTrigger(maincachetrigger)
     }
-    deleteContentlistItem (scrollerID, index) {
-        // let itemdata = contentlists.get(scrollerID).get(index)
-        contentlists.get(scrollerID).delete(index)
-        let portalitem = portalCacheMap.get(scrollerID)
+
+    deletePortalListItem (scrollerID, index) {
+        // let itemdata = portalLists.get(scrollerID).get(index)
+        scrollerPortalMetaMaps.get(scrollerID).delete(index)
+        let portalitem = scrollerPortalBlockMaps.get(scrollerID)
         portalitem.portals.delete(index)
         portalitem.modified = true
         maincachetrigger = !maincachetrigger
         cacheSetTrigger(maincachetrigger)
     }
+
     attachPortalListItem (scrollerID, index, target) {
-        let item = contentlists.get(scrollerID).get(index)
+        let item = scrollerPortalMetaMaps.get(scrollerID).get(index)
         // console.log('item to be attached; scrollerID, index',item, scrollerID, index)
         if (!item) return
         // console.log('setting reparenting to true: scrollerID, index', scrollerID, index)
@@ -120,8 +122,9 @@ class PortalManager {
             // console.log('setting reparenting to false', scrollerID, index)
         })
     }
+
     detachPortalListItem (scrollerID, index) {
-        let item = contentlists.get(scrollerID).get(index)
+        let item = scrollerPortalMetaMaps.get(scrollerID).get(index)
         if (item) {
             // console.log('detach child item scrollerID, index',item, scrollerID, index)
             if (item.target && item.container) {
@@ -133,11 +136,13 @@ class PortalManager {
             }
         }
     }
+
     hasPortalListItem (scrollerID, index) {
-        return contentlists.get(scrollerID).has(index)
+        return scrollerPortalMetaMaps.get(scrollerID).has(index)
     }
+
     getPortalListItem (scrollerID, index) {
-        return contentlists.get(scrollerID).get(index)
+        return scrollerPortalMetaMaps.get(scrollerID).get(index)
     }
 }
 

@@ -72,7 +72,7 @@ const ItemShell = ({
                         if (isMounted()) { 
                             console.log('saving new contentitem promise',scrollerName, scrollerID, index, content)
                             saveContent(content)
-                            portalManager.setPortal(scrollerID,index,content)
+                            portalManager.createPortalListItem(scrollerID,index,content)
                             saveError(null)
                         }
                     }).catch((e) => {
@@ -86,7 +86,7 @@ const ItemShell = ({
                         if (contentItem) {
                             console.log('saving new contentitem',scrollerName, scrollerID, index, contentItem)
                             saveContent(contentItem)
-                            portalManager.setPortal(scrollerID,index,contentItem)
+                            portalManager.createPortalListItem(scrollerID,index,contentItem)
                             saveError(null)
                         } else {
                             saveError(true)

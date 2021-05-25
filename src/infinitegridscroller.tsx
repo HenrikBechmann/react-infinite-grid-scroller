@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom'
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
 import Cradle from './cradle'
-import { PortalCache } from './portalmanager'
+import { PortalTreeBlocks } from './portalmanager'
 
 let scrollerID = 0
 const getScrollerID = () => {
@@ -82,9 +82,10 @@ const InfiniteGridScroller = (props) => {
     if (!['horizontal','vertical'].includes(orientation)) {
         orientation = 'vertical'
     }
-    console.log('PortalList',PortalCache)
+    console.log('PortalBlocks',PortalTreeBlocks)
     return <>
-    {scrollerIDRef.current == 0?<PortalCache/>:null // place portals in React Tree at root scroller
+    {scrollerIDRef.current == 0?<PortalTreeBlocks/>:null 
+        // activate portals by placing them in React Tree at root scroller
     }
     <Viewport 
 

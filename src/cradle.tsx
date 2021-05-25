@@ -263,7 +263,7 @@ const Cradle = ({
         let viewportData = viewportDataRef.current
         viewportData.elementref.current.addEventListener('scroll',onScroll)
 
-        contentManager.createScrollerPortalList(cradlePropsRef.current.scrollerID)
+        contentManager.createScrollerPortalRepository(cradlePropsRef.current.scrollerID)
 
         return () => {
 
@@ -1407,7 +1407,7 @@ const Cradle = ({
                 cradleContent.tailModel = []
                 cradleContent.headView = []
                 cradleContent.tailView = []
-                contentManager.resetScrollerPortalList(scrollerID)
+                contentManager.resetScrollerPortalRepository(scrollerID)
                 setCradleContent(callingCradleState.current, callingReferenceIndexDataRef.current)
 
                 saveCradleState('content')//'setscrolloffset')
