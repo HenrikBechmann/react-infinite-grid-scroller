@@ -20,22 +20,22 @@ export const PortalTreeBlocks = () => {
     useEffect(()=>{
         cacheSetTrigger = setCachetoggle
     },[])
-    scrollerPortalBlockMaps.forEach((value, key) => {
-        if (value.modified) {
-            value.portalList = Array.from(value.portals.values())
-            value.modified = false
+    scrollerPortalBlockMaps.forEach((block, key) => {
+        if (block.modified) {
+            block.portalList = Array.from(block.portalMap.values())
+            block.modified = false
         }
-        portalSets.push(value.portalList)
+        portalSets.push(block.portalList)
         portalKeys.push(key)
     })
     let index = 0
-    let portalTreeBlocks = []
+    let portalTreeBlocksList = []
     for (let key of portalKeys) {
-        portalTreeBlocks.push(<div key = {key}>{portalSets[index]}</div>)
+        portalTreeBlocksList.push(<div key = {key}>{portalSets[index]}</div>)
         index++
     }
     let portalblockstyles:React.CSSProperties = {visibility:'hidden'}
-    return <div key = 'portalblocks' id = 'portalblocks' style={portalblockstyles}>{portalTreeBlocks}</div>
+    return <div key = 'portalblocks' id = 'portalblocks' style={portalblockstyles}>{portalTreeBlocksList}</div>
 }
 
 const getPortal = (content, container, index) => {
@@ -50,7 +50,7 @@ class PortalManager {
             scrollerPortalMetaMaps.set(scrollerID, new Map())
         }
         if (!scrollerPortalBlockMaps.has(scrollerID)) {
-            scrollerPortalBlockMaps.set(scrollerID, {modified:false,portals:new Map(),portalList:[]})
+            scrollerPortalBlockMaps.set(scrollerID, {modified:false,portalMap:new Map(),portalList:[]})
         }
     }
 
@@ -89,7 +89,7 @@ class PortalManager {
         let portal = getPortal(content, container, index)
         // portalList.push(<div key = {index}>{portal}</div>)
         let scrollerportals = scrollerPortalBlockMaps.get(scrollerID)
-        scrollerportals.portals.set(index,portal)
+        scrollerportals.portalMap.set(index,portal)
         scrollerportals.modified = true
         scrollerPortalMetaMaps.get(scrollerID).set(index, 
             {content, target:null, container, portal, reparenting:false, indexid:index,scrollerid:scrollerID} )
@@ -101,7 +101,7 @@ class PortalManager {
         // let itemdata = portalLists.get(scrollerID).get(index)
         scrollerPortalMetaMaps.get(scrollerID).delete(index)
         let portalitem = scrollerPortalBlockMaps.get(scrollerID)
-        portalitem.portals.delete(index)
+        portalitem.portalMap.delete(index)
         portalitem.modified = true
         maincachetrigger = !maincachetrigger
         cacheSetTrigger(maincachetrigger)
@@ -147,8 +147,5 @@ class PortalManager {
 }
 
 const portalManager = new PortalManager()
-
-// export const cacheContextData = {contextTrigger:() => ++cacheGenerationCounter}
-// export const CacheContext = React.createContext(null)
 
 export const PortalContext = React.createContext(portalManager)
