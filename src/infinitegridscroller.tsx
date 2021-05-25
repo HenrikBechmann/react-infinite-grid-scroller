@@ -84,7 +84,7 @@ const InfiniteGridScroller = (props) => {
     }
     console.log('PortalList',PortalCache)
     return <>
-    {scrollerIDRef.current == 0?<PortalCache/>:null // execute portal code
+    {scrollerIDRef.current == 0?<PortalCache/>:null // place portals in React Tree at root scroller
     }
     <Viewport 
 

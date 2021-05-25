@@ -16,10 +16,10 @@ let cacheSetTrigger
 export const PortalCache = () => {
     // const trigger = useContext(CacheContext)
     const [cachetoggle, setCachetoggle] = useState(maincachetrigger)
-    // console.log('running PORTALCACHE', cachetoggle)
+    console.log('running PORTALCACHE', cachetoggle)
     // trigger.contextTrigger()
     let portalLists = []
-    let portalkeys = []
+    let portalKeys = []
     useEffect(()=>{
         cacheSetTrigger = setCachetoggle
     },[])
@@ -30,11 +30,11 @@ export const PortalCache = () => {
             // ++cacheGenerationCounter
         }
         portalLists.push(value.portalList)
-        portalkeys.push(key)
+        portalKeys.push(key)
     })
     let index = 0
     let portalblocks = []
-    for (let key of portalkeys) {
+    for (let key of portalKeys) {
         portalblocks.push(<div key = {key}>{portalLists[index]}</div>)
         index++
     }
