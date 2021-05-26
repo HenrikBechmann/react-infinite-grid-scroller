@@ -11,10 +11,11 @@ export let maincachetrigger = true
 
 let cacheSetTrigger
 
-export const PortalTreeBlocks = () => {
-    // const trigger = useContext(CacheContext)
+let portalblockstyles:React.CSSProperties = {visibility:'hidden'}
+
+export const PortalTree = () => {
     const [cachetoggle, setCachetoggle] = useState(maincachetrigger)
-    console.log('running PORTALCACHE', cachetoggle)
+    console.log('running PORTALTREE', cachetoggle)
     let portalSets = []
     let portalKeys = []
     useEffect(()=>{
@@ -34,14 +35,12 @@ export const PortalTreeBlocks = () => {
         portalTreeBlocksList.push(<div key = {key}>{portalSets[index]}</div>)
         index++
     }
-    let portalblockstyles:React.CSSProperties = {visibility:'hidden'}
     return <div key = 'portalblocks' id = 'portalblocks' style={portalblockstyles}>{portalTreeBlocksList}</div>
 }
 
 const getPortal = (content, container, index) => {
     // console.log('returning from getPortal')
     return ReactDOM.createPortal(content, container, index)
-    // return <ItemPortal content = {content} container = {container}/>
 } 
 class PortalManager {
 
