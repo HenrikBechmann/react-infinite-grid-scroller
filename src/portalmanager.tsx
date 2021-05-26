@@ -69,14 +69,16 @@ class PortalManager {
 
     deleteScrollerPortalRepository (scrollerID) {
         scrollerPortalMetaMaps.delete(scrollerID)
+        scrollerPortalBlockMaps.delete(scrollerID)
     }
 
-    createPortalListItem (scrollerID, index, content) {
+    createPortalListItem (scrollerID, index, usercontent) {
         // console.log('setting item ScrollerID, index, content', scrollerID, index, content)
         if (this.hasPortalListItem(scrollerID, index)) {
             return this.getPortalListItem(scrollerID,index).portal
         }
         let container = document.createElement('div')
+        // container.style.inset = '0px' // not recognized by React
         container.style.top = '0px'
         container.style.right = '0px'
         container.style.left = '0px'
@@ -85,13 +87,13 @@ class PortalManager {
         container.dataset.type = 'portalcontainer'
         container.dataset.index = index
         container.dataset.scrollerid = scrollerID
-        let portal = getPortal(content, container, index)
+        let portal = getPortal(usercontent, container, index)
         // portalList.push(<div key = {index}>{portal}</div>)
         let scrollerportals = scrollerPortalBlockMaps.get(scrollerID)
         scrollerportals.portalMap.set(index,portal)
         scrollerportals.modified = true
         scrollerPortalMetaMaps.get(scrollerID).set(index, 
-            {content, target:null, container, portal, reparenting:false, indexid:index,scrollerid:scrollerID} )
+            {usercontent, target:null, container, portal, reparenting:false, indexid:index,scrollerid:scrollerID} )
         maincachetrigger = !maincachetrigger
         cacheSetTrigger(maincachetrigger)
     }

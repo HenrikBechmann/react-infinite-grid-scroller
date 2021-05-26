@@ -1,11 +1,11 @@
 // itemframe.tsx
 // copyright (c) 2020 Henrik Bechmann, Toronto, Licence: MIT
 
-import React, {useRef, useEffect, useState, useCallback, useMemo, useContext } from 'react'
+import React, {useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo, useContext } from 'react'
 
 import ReactDOM from 'react-dom'
 
-import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
+// import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
 import useIsMounted from 'react-is-mounted-hook'
 
@@ -45,34 +45,35 @@ const ItemShell = ({
 
     // console.log('index itemstate', index, itemstate)
     // initialize
-    useEffect(() => {
+    useLayoutEffect(() => {
         console.log('fetching item scrollerName-scrollerID:index',scrollerName,'-', scrollerID, index)
 
-        let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
-        let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
+        // let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
+        // let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
 
         if (portalManager.hasPortalListItem(scrollerID,index)) {
 
             console.log('fetching PORTAL CACHE item')
 
-            let contentitem = portalManager.getPortalListItem(scrollerID,index) 
+            let portalitem = portalManager.getPortalListItem(scrollerID,index) 
 
-            console.log('saving cache contentitem',contentitem)
+            console.log('saving cache usercontent',portalitem)
 
-            saveContent(contentitem.content)
+            saveContent(portalitem.content)
             return
         } else {
         if (getItem) {
+
             console.log('fetching NEW item (queue)')
-            itemrequestRef.current = requestidlecallback(()=> {
-                // isMounted = useIsMounted()
+
+            // itemrequestRef.current = requestidlecallback(()=> {
                 let contentItem = getItem(index)
                 if (contentItem && contentItem.then) {
-                    contentItem.then((content) => {
+                    contentItem.then((usercontent) => {
                         if (isMounted()) { 
-                            console.log('saving new contentitem promise',scrollerName, scrollerID, index, content)
-                            saveContent(content)
-                            portalManager.createPortalListItem(scrollerID,index,content)
+                            console.log('saving new usercontent by promise',scrollerName, scrollerID, index, usercontent)
+                            saveContent(usercontent)
+                            portalManager.createPortalListItem(scrollerID,index,usercontent)
                             saveError(null)
                         }
                     }).catch((e) => {
@@ -84,9 +85,10 @@ const ItemShell = ({
                 } else {
                     if (isMounted()) {
                         if (contentItem) {
-                            console.log('saving new contentitem',scrollerName, scrollerID, index, contentItem)
-                            saveContent(contentItem)
-                            portalManager.createPortalListItem(scrollerID,index,contentItem)
+                            let usercontent = contentItem
+                            console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
+                            saveContent(usercontent)
+                            portalManager.createPortalListItem(scrollerID,index,usercontent)
                             saveError(null)
                         } else {
                             saveError(true)
@@ -94,13 +96,13 @@ const ItemShell = ({
                         }
                     }
                 }
-            },{timeout:50})
+            // },{timeout:50})
         }}
 
-        return () => {
-            let requesthandle = itemrequestRef.current
-            cancelidlecallback(requesthandle)
-        }
+        // return () => {
+        //     let requesthandle = itemrequestRef.current
+        //     cancelidlecallback(requesthandle)
+        // }
     },[])
 
     useEffect(()=>{
@@ -169,14 +171,12 @@ const ItemShell = ({
             placeholder?React.createElement(placeholder, {index, listsize}):null
     )
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (!shellRef.current) return
         console.log('linking scrollerName, scrollerID, index, shellRef.current, content; ',scrollerName, scrollerID, index, shellRef.current,content)
         if (content) {
             observer.unobserve(shellRef.current)
             portalManager.attachPortalListItem(scrollerID,index,shellRef.current)
-            // console.log('scrollerID, setting linkedContentRef', scrollerID)
-            // linkedContentRef.current = true
             return () => {
                 portalManager.detachPortalListItem(scrollerID,index)
             }

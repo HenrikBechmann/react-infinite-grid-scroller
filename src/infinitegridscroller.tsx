@@ -82,7 +82,6 @@ const InfiniteGridScroller = (props) => {
     if (!['horizontal','vertical'].includes(orientation)) {
         orientation = 'vertical'
     }
-    console.log('PortalBlocks',PortalTree)
     return <>
     {
         // activate portals by placing them in React Tree at root scroller
