@@ -41,7 +41,7 @@ const ItemShell = ({
     let isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
     const [content, saveContent] = useState(null)
-    const [portal, savePortal] = useState(null)
+    const [hasportal, saveHasPortal] = useState(false)
 
     // console.log('index itemstate', index, itemstate)
     // initialize
@@ -175,11 +175,14 @@ const ItemShell = ({
         if (!shellRef.current) return
         console.log('linking scrollerName, scrollerID, index, shellRef.current, content; ',scrollerName, scrollerID, index, shellRef.current,content)
         if (content) {
-            observer.unobserve(shellRef.current)
+            // observer.unobserve(shellRef.current)
             portalManager.attachPortalListItem(scrollerID,index,shellRef.current)
-            return () => {
-                portalManager.detachPortalListItem(scrollerID,index)
-            }
+            console.log('setting hasportal true for scrollerID, index', scrollerID, index)
+            saveHasPortal(true)
+            // return () => {
+            //     portalManager.detachPortalListItem(scrollerID,index)
+            // }
+
         }
     },[shellRef.current,content])
 
@@ -189,7 +192,6 @@ const ItemShell = ({
         return child
     }, [index, content, customplaceholderRef.current, listsize, error])
 
-    // console.log('scrollerID, linkedContentRef.current',scrollerID, linkedContentRef.current)
     return <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
             {(!content)?placeholderchild:null}
     </div>
