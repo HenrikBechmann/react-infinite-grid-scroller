@@ -133,7 +133,7 @@ const ItemShell = ({
 
     useEffect(()=>{
 
-        // if (!shellRef.current) return
+        if (!shellRef.current) return
         // console.log('shellRef.current',shellRef.current)
         observer.observe(shellRef.current)
         shellelement = shellRef.current
@@ -148,10 +148,10 @@ const ItemShell = ({
             // console.log('unobserving',shellelement)
             // if (!shellelement) return // TODO: memory leak?
             // console.log('unobserve',shellRef.current)
-            // observer.unobserve(shellelement)
+            observer.unobserve(shellelement)
         }
 
-    },[observer])
+    },[observer, shellRef.current])
 
     useEffect(()=>{
 
@@ -173,15 +173,17 @@ const ItemShell = ({
             placeholder?React.createElement(placeholder, {index, listsize}):null
     )
 
-    useLayoutEffect(() => {
+    const doattach = useCallback(() => {
         if (!shellRef.current) return
         if (hasportal) return
         // console.log('linking scrollerName, scrollerID, index, shellRef.current, content; ',scrollerName, scrollerID, index, shellRef.current,content)
         if (content) {
             // observer.unobserve(shellRef.current)
             console.log('attaching scrollerID, index', scrollerID, index)
-            portalManager.attachPortalListItem(scrollerID,index,shellRef.current)
-            // console.log('setting hasportal true for scrollerID, index', scrollerID, index)
+            // setTimeout(() => {
+                portalManager.attachPortalListItem(scrollerID,index,shellRef.current)
+                // console.log('setting hasportal true for scrollerID, index', scrollerID, index)
+            // })
             saveHasPortal(true)
             // return () => {
             //     portalManager.detachPortalListItem(scrollerID,index)
@@ -189,6 +191,8 @@ const ItemShell = ({
 
         }
     },[shellRef.current,content, hasportal])
+
+    doattach()
 
     const placeholderchild = useMemo(()=>{
         let child = customplaceholderRef.current?
