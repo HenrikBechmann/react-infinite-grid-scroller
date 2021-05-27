@@ -180,10 +180,10 @@ const ItemShell = ({
         if (content) {
             // observer.unobserve(shellRef.current)
             console.log('attaching scrollerID, index', scrollerID, index)
-            // setTimeout(() => {
+            setTimeout(() => {
                 portalManager.attachPortalListItem(scrollerID,index,shellRef.current)
                 // console.log('setting hasportal true for scrollerID, index', scrollerID, index)
-            // })
+            })
             saveHasPortal(true)
             // return () => {
             //     portalManager.detachPortalListItem(scrollerID,index)
