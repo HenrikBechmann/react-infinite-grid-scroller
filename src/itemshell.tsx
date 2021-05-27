@@ -5,7 +5,7 @@ import React, {useRef, useEffect, useLayoutEffect, useState, useCallback, useMem
 
 import ReactDOM from 'react-dom'
 
-// import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
+import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
 import useIsMounted from 'react-is-mounted-hook'
 
@@ -48,8 +48,8 @@ const ItemShell = ({
     useLayoutEffect(() => {
         // console.log('fetching item scrollerName-scrollerID:index',scrollerName,'-', scrollerID, index)
 
-        // let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
-        // let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
+        let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
+        let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
 
         if (portalManager.hasPortalListItem(scrollerID,index)) {
 
@@ -66,7 +66,7 @@ const ItemShell = ({
 
             // console.log('fetching NEW item (queue)')
 
-            // itemrequestRef.current = requestidlecallback(()=> {
+            itemrequestRef.current = requestidlecallback(()=> {
                 let contentItem = getItem(index)
                 // console.log('result of getItem(index)',contentItem)
                 if (contentItem && contentItem.then) {
@@ -98,13 +98,13 @@ const ItemShell = ({
                         }
                     // }
                 }
-            // },{timeout:50})
+            },{timeout:50})
         }}
 
-        // return () => {
-        //     let requesthandle = itemrequestRef.current
-        //     cancelidlecallback(requesthandle)
-        // }
+        return () => {
+            let requesthandle = itemrequestRef.current
+            cancelidlecallback(requesthandle)
+        }
     },[])
 
     useEffect(()=>{
