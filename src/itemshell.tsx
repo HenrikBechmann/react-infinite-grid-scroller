@@ -170,11 +170,10 @@ const ItemShell = ({
         if (portalStatus == 'attached') return
         // console.log('linking scrollerName, scrollerID, index, shellRef.current, content; ',scrollerName, scrollerID, index, shellRef.current,content)
         if (portalStatus == 'available') {
-            // console.log('attaching scrollerID, index', scrollerID, index)
+            setPortalStatus('attached')
             setTimeout(() => {
+                console.log('portalStatus; attaching scrollerName, scrollerID, index', portalStatus, scrollerName, scrollerID, index)
                 portalManager.attachPortalListItem(scrollerID,index,shellRef.current)
-                // console.log('setting hasportal true for scrollerID, index', scrollerID, index)
-                setPortalStatus('attached')
             })
 
             // return () => {
@@ -182,9 +181,9 @@ const ItemShell = ({
             // }
 
         }
-    },[shellRef.current, portalStatus])
+    },[shellRef.current, portalStatus]);
 
-    doattach()
+    (portalStatus == 'available') && doattach()
 
     const placeholderchild = useMemo(()=>{
         let child = customplaceholderRef.current?
@@ -192,7 +191,7 @@ const ItemShell = ({
         return child
     }, [index, customplaceholderRef.current, listsize, error])
 
-    return <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
+    return <div ref = { shellRef } data-name = 'itemshell' data-index = {index} data-instanceid = {instanceID} style = {styles}>
             { (!(portalStatus == 'attached')) && placeholderchild }
     </div>
 

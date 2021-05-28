@@ -38,7 +38,7 @@ const Viewport = ({
     // -----------------------[ initialize ]------------------
 
     // processing state
-    const contentmanager = useContext(PortalContext)
+    const portalmanager = useContext(PortalContext)
     const [portstate,setPortState] = useState('prepare')
     const portstateRef = useRef(null)
     portstateRef.current = portstate
@@ -101,7 +101,7 @@ const Viewport = ({
             console.log('ERROR: parent portalcontainer not found')
             return
         }
-        portalRef.current = contentmanager.getPortalListItem(parentscrollerid, parentindex)
+        portalRef.current = portalmanager.getPortalListItem(parentscrollerid, parentindex)
         // console.log('viewport of scrollerID has parentscrollerid and parentindex for portal', 
         //     scrollerID, parentscrollerid, parentindex,portalRef.current)
         // portalIndexRef.current = el.dataset.index
@@ -112,9 +112,10 @@ const Viewport = ({
 
         if (portstateRef.current == 'prepare') return
 
-        // console.log('checking portal reparenting',portalRef.current)
+        console.log('scrollerID, checking portal reparenting',scrollerID, portalRef.current)
         if (portalRef.current && portalRef.current.reparenting) {
-            // console.log('returning from viewport resizeCallback')
+            portalRef.current.reparenting = false
+            console.log('returning from viewport resizeCallback')
             return
         }
 

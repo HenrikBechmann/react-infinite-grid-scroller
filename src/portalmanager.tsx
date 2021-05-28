@@ -15,7 +15,7 @@ let portalblockstyles:React.CSSProperties = {visibility:'hidden'}
 
 export const PortalTree = () => {
     const [cachetoggle, setCachetoggle] = useState(maincachetrigger)
-    console.log('running PORTALTREE', cachetoggle)
+    // console.log('running PORTALTREE', cachetoggle)
     let portalSets = []
     let portalKeys = []
     useEffect(()=>{
@@ -35,6 +35,7 @@ export const PortalTree = () => {
         portalTreeBlocksList.push(<div key = {key}>{portalSets[index]}</div>)
         index++
     }
+    // console.log('portalTreeBlocksList',portalTreeBlocksList)
     return <div key = 'portalblocks' id = 'portalblocks' style={portalblockstyles}>{portalTreeBlocksList}</div>
 }
 
@@ -108,13 +109,18 @@ class PortalManager {
         cacheSetTrigger(maincachetrigger)
     }
 
-    attachPortalListItem (scrollerID, index, target) {
+    attachPortalListItem (scrollerID, index, target) { 
+        if (!target) {
+            console.log('SYSTEM: target not set, scrollerID, index', scrollerID, index)
+            return
+        }
         let item = scrollerPortalMetaMaps.get(scrollerID).get(index)
         // console.log('item to be attached; scrollerID, index',item, scrollerID, index)
         if (!item) return
         // console.log('setting reparenting to true: scrollerID, index', scrollerID, index)
         item.reparenting = true
         // this.detachContentlistItem(scrollerID, index)
+        // TODO target not always set
         target.appendChild(item.container)
         // console.log('scrollerID, index, getBoundingClientRect',scrollerID, index, item.container.getBoundingClientRect())
         item.target = target
