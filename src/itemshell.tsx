@@ -35,13 +35,12 @@ const ItemShell = ({
     const [styles,saveStyles] = useState({
         overflow:'hidden',
     } as React.CSSProperties)
-    const [itemstate,setItemstate] = useState('setup')
+    // const [itemstate,setItemstate] = useState('setup')
     const shellRef = useRef(undefined)
     const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
-    const [content, saveContent] = useState(null)
-    const [hasportal, saveHasPortal] = useState(false)
+    const [portalStatus, setPortalStatus] = useState('pending')
 
     // console.log('index itemstate', index, itemstate)
     // initialize
@@ -53,13 +52,14 @@ const ItemShell = ({
 
         if (portalManager.hasPortalListItem(scrollerID,index)) {
 
-            console.log('fetching PORTAL CACHE item', scrollerID, index)
+            // console.log('fetching PORTAL CACHE item', scrollerID, index)
 
             let portalitem = portalManager.getPortalListItem(scrollerID,index) 
 
             // console.log('saving cache usercontent',portalitem)
+            setPortalStatus('available')
 
-            saveContent(portalitem.usercontent)
+            // saveContent(portalitem.usercontent)
             return
         } else {
         if (getItem) {
@@ -73,13 +73,13 @@ const ItemShell = ({
                     contentItem.then((usercontent) => {
                         // if (isMounted()) { 
                             // console.log('saving new usercontent by promise',scrollerName, scrollerID, index, usercontent)
-                            saveContent(usercontent)
+                            setPortalStatus('available')
                             portalManager.createPortalListItem(scrollerID,index,usercontent)
                             saveError(null)
                         // }
                     }).catch((e) => {
                         // if (isMounted()) { 
-                            saveContent(null)
+                            // saveContent(null)
                             saveError(e)
                         // }
                     })
@@ -89,12 +89,12 @@ const ItemShell = ({
                         if (contentItem) {
                             let usercontent = contentItem
                             // console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
-                            saveContent(usercontent)
+                            setPortalStatus('available')
                             portalManager.createPortalListItem(scrollerID,index,usercontent)
                             saveError(null)
                         } else {
                             saveError(true)
-                            saveContent(null)
+                            // saveContent(null)
                         }
                     // }
                 }
@@ -107,12 +107,12 @@ const ItemShell = ({
         }
     },[])
 
-    useEffect(()=>{
-        if (itemstate == 'setup') {
-            setItemstate('ready')
-        }
+    // useEffect(()=>{
+    //     if (itemstate == 'setup') {
+    //         setItemstate('ready')
+    //     }
 
-    },[itemstate])
+    // },[itemstate])
 
     // initialize
     useEffect(() => {
@@ -140,15 +140,8 @@ const ItemShell = ({
 
         return () => {
 
-            // console.log('unobserving',shellRef.current)
-            // if (!shellRef.current) return // TODO: memory leak?
-            // console.log('unobserve',shellRef.current)
-            // observer.unobserve(shellRef.current)
-
-            // console.log('unobserving',shellelement)
-            // if (!shellelement) return // TODO: memory leak?
-            // console.log('unobserve',shellRef.current)
             observer.unobserve(shellelement)
+
         }
 
     },[observer, shellRef.current])
@@ -156,7 +149,6 @@ const ItemShell = ({
     useEffect(()=>{
 
         let newStyles = getShellStyles(orientation, cellHeight, cellWidth, styles)
-        // isMounted = useIsMounted()
         if (isMounted()) {
             saveStyles(newStyles)
         }
@@ -175,22 +167,22 @@ const ItemShell = ({
 
     const doattach = useCallback(() => {
         if (!shellRef.current) return
-        if (hasportal) return
+        if (portalStatus == 'attached') return
         // console.log('linking scrollerName, scrollerID, index, shellRef.current, content; ',scrollerName, scrollerID, index, shellRef.current,content)
-        if (content) {
-            // observer.unobserve(shellRef.current)
-            console.log('attaching scrollerID, index', scrollerID, index)
+        if (portalStatus == 'available') {
+            // console.log('attaching scrollerID, index', scrollerID, index)
             setTimeout(() => {
                 portalManager.attachPortalListItem(scrollerID,index,shellRef.current)
                 // console.log('setting hasportal true for scrollerID, index', scrollerID, index)
+                setPortalStatus('attached')
             })
-            saveHasPortal(true)
+
             // return () => {
             //     portalManager.detachPortalListItem(scrollerID,index)
             // }
 
         }
-    },[shellRef.current,content, hasportal])
+    },[shellRef.current, portalStatus])
 
     doattach()
 
@@ -198,10 +190,10 @@ const ItemShell = ({
         let child = customplaceholderRef.current?
                 customplaceholderRef.current:<Placeholder index = {index} listsize = {listsize} error = {error}/>
         return child
-    }, [index, content, customplaceholderRef.current, listsize, error])
+    }, [index, customplaceholderRef.current, listsize, error])
 
     return <div ref = { shellRef } data-index = {index} data-instanceid = {instanceID} style = {styles}>
-            {(!content)?placeholderchild:null}
+            { (!(portalStatus == 'attached')) && placeholderchild }
     </div>
 
 } // ItemShell
