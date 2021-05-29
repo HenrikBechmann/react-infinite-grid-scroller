@@ -74,7 +74,7 @@ class PortalManager {
     }
 
     createPortalListItem (scrollerID, index, usercontent) {
-        // console.log('setting item ScrollerID, index, content', scrollerID, index, content)
+        // console.log('creating portal item ScrollerID, index, content', scrollerID, index, usercontent)
         if (this.hasPortalListItem(scrollerID, index)) {
             return this.getPortalListItem(scrollerID,index).portal
         }

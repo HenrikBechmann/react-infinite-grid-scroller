@@ -172,7 +172,7 @@ const ItemShell = ({
         if (portalStatus == 'available') {
             setPortalStatus('attached')
             setTimeout(() => {
-                console.log('portalStatus; attaching scrollerName, scrollerID, index', portalStatus, scrollerName, scrollerID, index)
+                // console.log('portalStatus; attaching scrollerName, scrollerID, index', portalStatus, scrollerName, scrollerID, index)
                 portalManager.attachPortalListItem(scrollerID,index,shellRef.current)
             })
 

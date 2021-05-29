@@ -39,9 +39,10 @@ const Viewport = ({
 
     // processing state
     const portalmanager = useContext(PortalContext)
-    const [portstate,setPortState] = useState('prepare')
+    const [viewportstate,setViewportState] = useState('prepare')
+    console.log('viewport scrollerID, portstate',scrollerID,viewportstate)
     const portstateRef = useRef(null)
-    portstateRef.current = portstate
+    portstateRef.current = viewportstate
     let isMounted = useIsMounted()
     // data heap
     const timeoutidRef = useRef(null)
@@ -64,7 +65,7 @@ const Viewport = ({
     const viewportDataRef = useRef(null)
 
     const resizeObserverRef = useRef(null)
-    const portalRef = useRef(null)
+    const parentPortalRef = useRef(null)
 
     // initialize
     useEffect(()=>{
@@ -101,7 +102,7 @@ const Viewport = ({
             console.log('ERROR: parent portalcontainer not found')
             return
         }
-        portalRef.current = portalmanager.getPortalListItem(parentscrollerid, parentindex)
+        parentPortalRef.current = portalmanager.getPortalListItem(parentscrollerid, parentindex)
         // console.log('viewport of scrollerID has parentscrollerid and parentindex for portal', 
         //     scrollerID, parentscrollerid, parentindex,portalRef.current)
         // portalIndexRef.current = el.dataset.index
@@ -112,12 +113,12 @@ const Viewport = ({
 
         if (portstateRef.current == 'prepare') return
 
-        console.log('scrollerID, checking portal reparenting',scrollerID, portalRef.current)
-        if (portalRef.current && portalRef.current.reparenting) {
-            portalRef.current.reparenting = false
-            console.log('returning from viewport resizeCallback')
-            return
-        }
+        // console.log('scrollerID, checking portal reparenting',scrollerID, parentPortalRef.current)
+        // if (parentPortalRef.current && parentPortalRef.current.reparenting) {
+        //     parentPortalRef.current.reparenting = false
+        //     console.log('returning from viewport resizeCallback')
+        //     return
+        // }
 
         let target = entries[0].target
 
@@ -133,7 +134,7 @@ const Viewport = ({
                 // triggering responses (anticipating reset of cradle content based on resize)
             viewportDataRef.current.isResizing = true
             // isMounted = useIsMounted()
-            if (isMounted()) setPortState('resizing')
+            if (isMounted()) setViewportState('resizing')
         }
 
         clearTimeout(resizeTimeridRef.current)
@@ -141,7 +142,7 @@ const Viewport = ({
 
             isResizingRef.current = false
             // isMounted = useIsMounted()
-            if (isMounted()) setPortState('resize')
+            if (isMounted()) setViewportState('resize')
 
         },RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE)
 
@@ -191,17 +192,18 @@ const Viewport = ({
 
     // --------------------[ state processing ]---------------------------
     useEffect(()=>{
-        switch (portstate) {
+        switch (viewportstate) {
             case 'prepare':
             case 'resize': {
-                setPortState('render')
+                setViewportState('render')
                 break
             }
         }
-    },[portstate])
+    },[viewportstate]);
 
     // ----------------------[ render ]--------------------------------
-    // console.log('scrollerID, viewportDataRef.current',scrollerID, viewportDataRef.current)
+    (viewportstate != 'prepare') && console.log('scrollerID, viewportDataRef.current, children',
+        scrollerID, viewportDataRef.current, children)
     return <ViewportContext.Provider value = { viewportDataRef.current }>
         <div 
             data-type = 'viewport'
@@ -209,7 +211,7 @@ const Viewport = ({
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >
-            { (portstate != 'prepare')?children:null }
+            { (viewportstate != 'prepare')?children:null }
         </div>
     </ViewportContext.Provider>
     
