@@ -124,10 +124,10 @@ class PortalManager {
         target.appendChild(item.container)
         // console.log('scrollerID, index, getBoundingClientRect',scrollerID, index, item.container.getBoundingClientRect())
         item.target = target
-        setTimeout(()=>{
-            item.reparenting = false
-            // console.log('setting reparenting to false', scrollerID, index)
-        })
+        // setTimeout(()=>{
+        //     item.reparenting = false
+        //     // console.log('setting reparenting to false', scrollerID, index)
+        // })
     }
 
     detachPortalListItem (scrollerID, index) {

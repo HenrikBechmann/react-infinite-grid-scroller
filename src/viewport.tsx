@@ -12,8 +12,6 @@ export const ViewportContext = React.createContext(null)
 
 import useIsMounted from 'react-is-mounted-hook'
 
-// import ResizeObserverPolyfill from 'resize-observer-polyfill'
-
 import { ResizeObserver } from '@juggle/resize-observer'
 
 import { PortalContext } from './portalmanager'
@@ -41,8 +39,8 @@ const Viewport = ({
     const portalmanager = useContext(PortalContext)
     const [viewportstate,setViewportState] = useState('prepare')
     console.log('viewport scrollerID, portstate',scrollerID,viewportstate)
-    const portstateRef = useRef(null)
-    portstateRef.current = viewportstate
+    const viewportstateRef = useRef(null)
+    viewportstateRef.current = viewportstate
     let isMounted = useIsMounted()
     // data heap
     const timeoutidRef = useRef(null)
@@ -111,14 +109,14 @@ const Viewport = ({
 
     const resizeCallback = useCallback((entries)=>{
 
-        if (portstateRef.current == 'prepare') return
+        if (viewportstateRef.current == 'prepare') return
 
-        // console.log('scrollerID, checking portal reparenting',scrollerID, parentPortalRef.current)
-        // if (parentPortalRef.current && parentPortalRef.current.reparenting) {
-        //     parentPortalRef.current.reparenting = false
-        //     console.log('returning from viewport resizeCallback')
-        //     return
-        // }
+        console.log('scrollerID, checking portal reparenting',scrollerID, parentPortalRef.current)
+        if (parentPortalRef.current && parentPortalRef.current.reparenting) {
+            parentPortalRef.current.reparenting = false
+            console.log('returning from viewport resizeCallback')
+            return
+        }
 
         let target = entries[0].target
 
