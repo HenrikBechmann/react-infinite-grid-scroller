@@ -37,7 +37,7 @@ const Viewport = ({
 
     // processing state
     const portalmanager = useContext(PortalContext)
-    const [viewportstate,setViewportState] = useState('prepare')
+    const [viewportstate,setViewportState] = useState('attach')
     console.log('viewport scrollerID, portstate',scrollerID,viewportstate)
     const viewportstateRef = useRef(null)
     viewportstateRef.current = viewportstate
@@ -68,6 +68,10 @@ const Viewport = ({
     // initialize
     useEffect(()=>{
 
+        if (viewportstateRef.current == 'attach') {
+            setViewportState('prepare')
+            return
+        }
         resizeObserverRef.current = new LocalResizeObserver(resizeCallback)
         resizeObserverRef.current.observe(viewportdivRef.current)
 
@@ -101,15 +105,15 @@ const Viewport = ({
             return
         }
         parentPortalRef.current = portalmanager.getPortalListItem(parentscrollerid, parentindex)
-        // console.log('viewport of scrollerID has parentscrollerid and parentindex for portal', 
-        //     scrollerID, parentscrollerid, parentindex,portalRef.current)
+        console.log('viewport of scrollerID has parentscrollerid and parentindex for portal', 
+            scrollerID, parentscrollerid, parentindex,parentPortalRef.current)
         // portalIndexRef.current = el.dataset.index
 
     },[viewportdivRef.current])
 
     const resizeCallback = useCallback((entries)=>{
 
-        if (viewportstateRef.current == 'prepare') return
+        if (viewportstateRef.current == 'attach' || viewportstateRef.current == 'prepare') return
 
         console.log('scrollerID, checking portal reparenting',scrollerID, parentPortalRef.current)
         if (parentPortalRef.current && parentPortalRef.current.reparenting) {
@@ -186,7 +190,7 @@ const Viewport = ({
         }
         return localViewportData
 
-    },[orientation, top, right, bottom, left, isResizingRef.current])
+    },[orientation, top, right, bottom, left, isResizingRef.current,viewportstate])
 
     // --------------------[ state processing ]---------------------------
     useEffect(()=>{
@@ -203,14 +207,14 @@ const Viewport = ({
     (viewportstate != 'prepare') && console.log('scrollerID, viewportDataRef.current, children',
         scrollerID, viewportDataRef.current, children)
     return <ViewportContext.Provider value = { viewportDataRef.current }>
-        <div 
+        {viewportstate != 'attach' ? <div 
             data-type = 'viewport'
             data-masterscrollerid = {scrollerID}
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >
             { (viewportstate != 'prepare')?children:null }
-        </div>
+        </div>:null}
     </ViewportContext.Provider>
     
 } // Viewport
