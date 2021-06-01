@@ -6,7 +6,7 @@
     and act as the visible portal of the list being shown
 */
 
-import React, {useState, useRef, useEffect, useMemo, useCallback, useContext} from 'react'
+import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useContext} from 'react'
 
 export const ViewportContext = React.createContext(null)
 
@@ -37,8 +37,8 @@ const Viewport = ({
 
     // processing state
     const portalmanager = useContext(PortalContext)
-    const [viewportstate,setViewportState] = useState('attach')
-    console.log('viewport scrollerID, portstate',scrollerID,viewportstate)
+    const [viewportstate,setViewportState] = useState('attachpending')
+    console.log('RUNNING viewport scrollerID, portstate',scrollerID,viewportstate)
     const viewportstateRef = useRef(null)
     viewportstateRef.current = viewportstate
     let isMounted = useIsMounted()
@@ -66,9 +66,9 @@ const Viewport = ({
     const parentPortalRef = useRef(null)
 
     // initialize
-    useEffect(()=>{
+    useLayoutEffect(()=>{
 
-        if (viewportstateRef.current == 'attach') {
+        if (viewportstateRef.current == 'attachpending') {
             setViewportState('prepare')
             return
         }
@@ -83,7 +83,7 @@ const Viewport = ({
 
     },[])
 
-    useEffect(()=>{
+    useLayoutEffect(()=>{
 
         if (scrollerID == 0 || !viewportdivRef.current) return
         let parentscrollerid
@@ -113,7 +113,7 @@ const Viewport = ({
 
     const resizeCallback = useCallback((entries)=>{
 
-        if (viewportstateRef.current == 'attach' || viewportstateRef.current == 'prepare') return
+        if (viewportstateRef.current == 'attachpending' || viewportstateRef.current == 'prepare') return
 
         console.log('scrollerID, checking portal reparenting',scrollerID, parentPortalRef.current)
         if (parentPortalRef.current && parentPortalRef.current.reparenting) {
@@ -176,6 +176,8 @@ const Viewport = ({
     }
     let {top, right, bottom, left} = viewportClientRect
 
+    console.log('viewport top, right, bottom, left',top, right, bottom, left)
+
     // set context data for children
     viewportDataRef.current = useMemo(() => {
         let width, height, localViewportData
@@ -190,13 +192,14 @@ const Viewport = ({
         }
         return localViewportData
 
-    },[orientation, top, right, bottom, left, isResizingRef.current,viewportstate])
+    },[orientation, top, right, bottom, left, isResizingRef.current, viewportstate])
 
     // --------------------[ state processing ]---------------------------
     useEffect(()=>{
         switch (viewportstate) {
             case 'prepare':
             case 'resize': {
+                console.log('set viewportstate to render',viewportstate)
                 setViewportState('render')
                 break
             }
@@ -204,10 +207,10 @@ const Viewport = ({
     },[viewportstate]);
 
     // ----------------------[ render ]--------------------------------
-    (viewportstate != 'prepare') && console.log('scrollerID, viewportDataRef.current, children',
-        scrollerID, viewportDataRef.current, children)
+    (viewportstate != 'prepare') && console.log('rendering scrollerID, viewportstate viewportDataRef.current, children',
+        scrollerID, viewportstate, viewportDataRef.current, children)
     return <ViewportContext.Provider value = { viewportDataRef.current }>
-        {viewportstate != 'attach' ? <div 
+        {viewportstate != 'attachpending' ? <div 
             data-type = 'viewport'
             data-masterscrollerid = {scrollerID}
             style = {divlinerstyleRef.current}

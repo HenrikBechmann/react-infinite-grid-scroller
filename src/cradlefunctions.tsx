@@ -1185,7 +1185,8 @@ export const setCradleGridStyles = ({
             headstyles.gridAutoFlow = 'column'
             // explict crosscount next line as workaround for FF problem - 
             //     sets length of horiz cradle items in one line (row), not multi-row config
-            headstyles.gridTemplateRows = cellHeight?`repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:'auto'
+            // headstyles.gridTemplateRows = cellHeight?`repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:'auto'
+            headstyles.gridTemplateRows = cellHeight?`repeat(auto-fit, minmax(${cellHeight}px, 1fr))`:'auto'
             headstyles.gridTemplateColumns = 'none'
 
             tailstyles.padding = `${padding}px ${padding}px ${padding}px 0`
@@ -1195,7 +1196,8 @@ export const setCradleGridStyles = ({
             tailstyles.gridAutoFlow = 'column'
             // explict crosscount next line as workaround for FF problem - 
             //     sets length of horiz cradle items in one line (row), not multi-row config
-            tailstyles.gridTemplateRows = cellHeight?`repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:'auto'
+            // tailstyles.gridTemplateRows = cellHeight?`repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:'auto'
+            tailstyles.gridTemplateRows = cellHeight?`repeat(auto-fit, minmax(${cellHeight}px, 1fr))`:'auto'
             tailstyles.gridTemplateColumns = 'none'
 
         } else if (orientation == 'vertical') {

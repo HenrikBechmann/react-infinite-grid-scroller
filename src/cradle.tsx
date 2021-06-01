@@ -996,6 +996,8 @@ const Cradle = ({
         // collect modified content
         let localContentList 
 
+        console.log('cradle UPDATECradleContent cradleProps',cradleProps)
+
         if (headchangecount || tailchangecount) {
 
             localContentList = getUIContentList({
@@ -1109,6 +1111,8 @@ const Cradle = ({
 
         // console.log('setCradleContent getContentListRequirements: cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment',
         //     cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment)
+
+        console.log('cradle SETCradleContent cradleProps',cradleProps)
 
         // returns content constrained by cradleRowcount
         let childlist = getUIContentList({
