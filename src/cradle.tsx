@@ -467,6 +467,26 @@ const Cradle = ({
         let tilelengthforcalc = crossLength + gap
         tilelengthforcalc = Math.min(tilelengthforcalc,lengthforcalc) // result cannot be less than 1
         crosscount = Math.floor(lengthforcalc/(tilelengthforcalc))
+
+        console.log('cradle CROSSCOUNT for scrollerName, scrollerID',scrollerName, scrollerID, crosscount)
+
+//         console.log('parameters for crosscount',`        
+//         orientation, 
+//         cellWidth, 
+//         cellHeight, 
+//         gap, 
+//         padding, 
+//         viewportheight, 
+//         viewportwidth
+// `,      orientation, 
+//         cellWidth, 
+//         cellHeight, 
+//         gap, 
+//         padding, 
+//         viewportheight, 
+//         viewportwidth
+// )
+
         return crosscount
 
     },[
@@ -655,7 +675,7 @@ const Cradle = ({
             padding,
             crosscount, 
             viewportheight, 
-            viewportwidth, 
+            viewportwidth,
 
         })
 
@@ -996,7 +1016,7 @@ const Cradle = ({
         // collect modified content
         let localContentList 
 
-        console.log('cradle UPDATECradleContent cradleProps',cradleProps)
+        console.log('cradle UPDATECradleContent cradleReferenceIndex, cradleProps',cradleReferenceIndex, cradleProps)
 
         if (headchangecount || tailchangecount) {
 
