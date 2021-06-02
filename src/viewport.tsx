@@ -187,14 +187,18 @@ const Viewport = ({
 
     },[orientation, cellWidth, cellHeight, padding]) // TODO: gap?
 
-    let viewportClientRect
-    if (viewportdivRef.current) {
-        viewportClientRect = viewportdivRef.current.getBoundingClientRect()
-    } else {
-        viewportClientRect = {}
-    }
-    let {top, right, bottom, left} = viewportClientRect
+    let viewportClientRectRef = useRef({top:0,right:0,bottom:0,left:0})
+    useEffect(()=> {
+        if (viewportstate != 'prepare') return
+        // if (viewportdivRef.current) {
+        // setTimeout(()=>{
+            viewportClientRectRef.current = viewportdivRef.current.getBoundingClientRect()
+            console.log('getBoundingClientRect',viewportdivRef.current,viewportClientRectRef.current)
+        // })
+        // }
+    },[viewportstate])
 
+    let {top, right, bottom, left} = viewportClientRectRef.current
     console.log('viewport scrollerID, viewportstate, top, right, bottom, left',scrollerID, viewportstate, top, right, bottom, left)
 
     // set context data for children
@@ -233,8 +237,8 @@ const Viewport = ({
     },[viewportstate]);
 
     // ----------------------[ render ]--------------------------------
-    (viewportstate != 'prepare') && console.log('rendering scrollerID, viewportstate viewportDataRef.current, children',
-        scrollerID, viewportstate, viewportDataRef.current, children)
+    viewportstate == 'render' && console.log('rendering scrollerID, viewportstate viewportDataRef.current, divlinerstyleRef.current, children',
+        scrollerID, viewportstate, viewportDataRef.current, divlinerstyleRef.current, children)
     return <ViewportContext.Provider value = { viewportDataRef.current }>
         <div 
             data-type = 'viewport'
@@ -242,7 +246,7 @@ const Viewport = ({
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >
-            { ((viewportstate != 'attachpending') &&(viewportstate != 'prepare')&&(viewportstate!='calculate') )?children:null }
+            { ((viewportstate != 'attachpending') && (viewportstate != 'prepare') && (viewportstate!='calculate') )?children:null }
         </div>
     </ViewportContext.Provider>
     
