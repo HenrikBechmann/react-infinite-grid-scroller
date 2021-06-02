@@ -1169,7 +1169,7 @@ export const setCradleGridStyles = ({
 
 }) => {
 
-        console.log('setCradleGridStyles orientation, crosscount',orientation, crosscount)
+        // console.log('setCradleGridStyles orientation, crosscount',orientation, crosscount)
         // if (orientation == 'horizontal') crosscount = 8
 
         let headstyles = {...headstylesobject} as React.CSSProperties

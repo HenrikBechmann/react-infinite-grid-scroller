@@ -38,7 +38,7 @@ const Viewport = ({
     // processing state
     const portalmanager = useContext(PortalContext)
     const [viewportstate,setViewportState] = useState('attachpending')
-    console.log('RUNNING viewport scrollerID, portstate',scrollerID,viewportstate)
+    console.log('RUNNING viewport scrollerID, viewportstate',scrollerID,viewportstate)
 //     console.log(`parameters:    children, 
 //     orientation, 
 //     cellWidth, 
@@ -182,30 +182,30 @@ const Viewport = ({
             styles.minWidth = 'auto'
             styles.minHeight = mincrosslength + 'px'
         }
-        console.log('viewportliner styles',styles)
+        // console.log('viewportliner styles',styles)
         return styles
 
     },[orientation, cellWidth, cellHeight, padding]) // TODO: gap?
 
     let viewportClientRectRef = useRef({top:0,right:0,bottom:0,left:0})
-    useEffect(()=> {
-        if (viewportstate != 'prepare') return
-        // if (viewportdivRef.current) {
-        // setTimeout(()=>{
+    useLayoutEffect(()=> {
+        if (viewportstate != 'calculate') return
+        // if (scrollerID == 0) {
             viewportClientRectRef.current = viewportdivRef.current.getBoundingClientRect()
-            console.log('getBoundingClientRect',viewportdivRef.current,viewportClientRectRef.current)
-        // })
+        // } else {
+        //     viewportClientRectRef.current = parentPortalRef.current.container.getBoundingClientRect()
         // }
+        // console.log('getBoundingClientRect',viewportdivRef.current,viewportClientRectRef.current)
     },[viewportstate])
 
     let {top, right, bottom, left} = viewportClientRectRef.current
-    console.log('viewport scrollerID, viewportstate, top, right, bottom, left',scrollerID, viewportstate, top, right, bottom, left)
+    // console.log('viewport scrollerID, viewportstate, top, right, bottom, left',scrollerID, viewportstate, top, right, bottom, left)
 
     // set context data for children
 
     viewportDataRef.current = useMemo(() => {
         if (!(viewportstate == 'calculate')) return viewportDataRef.current || undefined
-        console.log('CALCULATING VIEWPORTDATAREF')
+        // console.log('CALCULATING VIEWPORTDATAREF')
         let width, height, localViewportData
         // if (!(top === undefined)) { //proxy
             width = (right - left)
@@ -216,7 +216,7 @@ const Viewport = ({
                 isResizing:isResizingRef.current,
             }
         // }
-        console.log('returning localViewportData',localViewportData)
+        // console.log('returning localViewportData',localViewportData)
         return localViewportData
 
     },[orientation, top, right, bottom, left, isResizingRef.current, viewportstate])
@@ -237,8 +237,8 @@ const Viewport = ({
     },[viewportstate]);
 
     // ----------------------[ render ]--------------------------------
-    viewportstate == 'render' && console.log('rendering scrollerID, viewportstate viewportDataRef.current, divlinerstyleRef.current, children',
-        scrollerID, viewportstate, viewportDataRef.current, divlinerstyleRef.current, children)
+    // viewportstate == 'render' && console.log('rendering scrollerID, viewportstate viewportDataRef.current, divlinerstyleRef.current, children',
+    //     scrollerID, viewportstate, viewportDataRef.current, divlinerstyleRef.current, children)
     return <ViewportContext.Provider value = { viewportDataRef.current }>
         <div 
             data-type = 'viewport'
@@ -246,7 +246,7 @@ const Viewport = ({
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >
-            { ((viewportstate != 'attachpending') && (viewportstate != 'prepare') && (viewportstate!='calculate') )?children:null }
+            { ((viewportstate != 'attachpending') && (viewportstate != 'prepare') && (viewportstate != 'calculate'))?children:null }
         </div>
     </ViewportContext.Provider>
     

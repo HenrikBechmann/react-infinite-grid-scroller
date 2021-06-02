@@ -40,11 +40,11 @@ const ItemShell = ({
     const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
-    const [portalStatus, setPortalStatus] = useState('pending')
+    const [portalStatus, setPortalStatus] = useState('pending'); // 'pending' -> 'available' -> 'attached'
 
-    // console.log('index itemstate', index, itemstate)
+    (scrollerID == 0) && console.log('RUNNING ITEMSHELL scrollerName, scrollerID, index, portalStatus', scrollerName, scrollerID, index, portalStatus)
     // initialize
-    useLayoutEffect(() => {
+    useEffect(() => {
         // console.log('fetching item scrollerName-scrollerID:index',scrollerName,'-', scrollerID, index)
 
         let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
@@ -73,8 +73,8 @@ const ItemShell = ({
                     contentItem.then((usercontent) => {
                         // if (isMounted()) { 
                             // console.log('saving new usercontent by promise',scrollerName, scrollerID, index, usercontent)
-                            setPortalStatus('available')
                             portalManager.createPortalListItem(scrollerID,index,usercontent)
+                            setPortalStatus('available')
                             saveError(null)
                         // }
                     }).catch((e) => {
@@ -87,10 +87,10 @@ const ItemShell = ({
                     // console.log('isMounted, contentItem',isMounted(), contentItem)
                     // if (isMounted()) {
                         if (contentItem) {
-                            let usercontent = contentItem
-                            // console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
-                            setPortalStatus('available')
+                            let usercontent = contentItem;
+                            (scrollerID == 0) && console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
                             portalManager.createPortalListItem(scrollerID,index,usercontent)
+                            setPortalStatus('available')
                             saveError(null)
                         } else {
                             saveError(true)
@@ -165,34 +165,29 @@ const ItemShell = ({
             placeholder?React.createElement(placeholder, {index, listsize}):null
     )
 
-    const doattach = useCallback(() => {
-        if (!shellRef.current) return
-        if (portalStatus == 'attached') return
+    useEffect(() => {
+        // if (!shellRef.current) return
+        if (portalStatus != 'available') return
         // console.log('linking scrollerName, scrollerID, index, shellRef.current, content; ',scrollerName, scrollerID, index, shellRef.current,content)
-        if (portalStatus == 'available') {
+        // setTimeout(()=>{
+
+            let listitem = portalManager.attachPortalListItem(scrollerID,index,shellRef.current);
+            (scrollerID == 0) && console.log('portalStatus; attached scrollerName, scrollerID, index, listitem', portalStatus, scrollerName, scrollerID, index, listitem)
             setPortalStatus('attached')
-            setTimeout(() => {
-                // console.log('portalStatus; attaching scrollerName, scrollerID, index', portalStatus, scrollerName, scrollerID, index)
-                portalManager.attachPortalListItem(scrollerID,index,shellRef.current)
-            })
 
-            // return () => {
-            //     portalManager.detachPortalListItem(scrollerID,index)
-            // }
+        // })
+    },[shellRef.current, index, portalStatus]);
 
-        }
-    },[shellRef.current, portalStatus]);
-
-    (portalStatus == 'available') && doattach()
+    // (portalStatus == 'available') && doattach()
 
     const placeholderchild = useMemo(()=>{
         let child = customplaceholderRef.current?
                 customplaceholderRef.current:<Placeholder index = {index} listsize = {listsize} error = {error}/>
         return child
-    }, [index, customplaceholderRef.current, listsize, error])
-
+    }, [index, customplaceholderRef.current, listsize, error]);
+    (scrollerID == 0) && console.log('ITEMSHELL rendering portalStatus',portalStatus)
     return <div ref = { shellRef } data-name = 'itemshell' data-index = {index} data-instanceid = {instanceID} style = {styles}>
-            { (!(portalStatus == 'attached')) && placeholderchild }
+            { (portalStatus != 'attached') && placeholderchild }
     </div>
 
 } // ItemShell

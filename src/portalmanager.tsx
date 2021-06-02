@@ -115,19 +115,22 @@ class PortalManager {
             return
         }
         let item = scrollerPortalMetaMaps.get(scrollerID).get(index)
-        // console.log('item to be attached; scrollerID, index',item, scrollerID, index)
         if (!item) return
+        console.log('item to be attached; scrollerID, index',item, scrollerID, index)
         // console.log('setting reparenting to true: scrollerID, index', scrollerID, index)
         item.reparenting = true
         // this.detachContentlistItem(scrollerID, index)
         // TODO target not always set
-        target.appendChild(item.container)
+        // setTimeout(()=>{
+            target.appendChild(item.container)
+        // })
         // console.log('scrollerID, index, getBoundingClientRect',scrollerID, index, item.container.getBoundingClientRect())
         item.target = target
         // setTimeout(()=>{
         //     item.reparenting = false
         //     // console.log('setting reparenting to false', scrollerID, index)
         // })
+        return item
     }
 
     detachPortalListItem (scrollerID, index) {

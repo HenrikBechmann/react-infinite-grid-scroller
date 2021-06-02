@@ -468,7 +468,7 @@ const Cradle = ({
         tilelengthforcalc = Math.min(tilelengthforcalc,lengthforcalc) // result cannot be less than 1
         crosscount = Math.floor(lengthforcalc/(tilelengthforcalc))
 
-        console.log('cradle CROSSCOUNT for scrollerName, scrollerID',scrollerName, scrollerID, crosscount)
+        // console.log('cradle CROSSCOUNT for scrollerName, scrollerID',scrollerName, scrollerID, crosscount)
 
 //         console.log('parameters for crosscount',`        
 //         orientation, 
@@ -1016,7 +1016,7 @@ const Cradle = ({
         // collect modified content
         let localContentList 
 
-        console.log('cradle UPDATECradleContent cradleReferenceIndex, cradleProps',cradleReferenceIndex, cradleProps)
+        // console.log('cradle UPDATECradleContent cradleReferenceIndex, cradleProps',cradleReferenceIndex, cradleProps)
 
         if (headchangecount || tailchangecount) {
 
@@ -1132,7 +1132,7 @@ const Cradle = ({
         // console.log('setCradleContent getContentListRequirements: cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment',
         //     cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment)
 
-        console.log('cradle SETCradleContent cradleProps',cradleProps)
+        // console.log('cradle SETCradleContent cradleProps',cradleProps)
 
         // returns content constrained by cradleRowcount
         let childlist = getUIContentList({
