@@ -170,11 +170,11 @@ const Viewport = ({
     },[orientation, cellWidth, cellHeight, padding]) // TODO: gap?
 
     let viewportClientRectRef = useRef({top:0,right:0,bottom:0,left:0})
-    useLayoutEffect(()=> {
-        if (viewportstate != 'calculate') return
+    useEffect(()=> {
+        if ((scrollerID == 0) && (viewportstate != 'calculate')) return
         // setTimeout(()=>{
             viewportClientRectRef.current = viewportdivRef.current.getBoundingClientRect()
-            console.log('getBoundingClientRect',viewportdivRef.current,viewportClientRectRef.current)
+            console.log('viewportstate, getBoundingClientRect',viewportstate, viewportClientRectRef.current)
         // })
     },[viewportstate])
 
@@ -211,6 +211,9 @@ const Viewport = ({
                 setViewportState('calculate')
                 break
             case 'provision':
+                setViewportState('prerender')
+                break
+            case 'prerender':
             case 'resize': {
                 console.log('set viewportstate to render from',viewportstate)
                 setViewportState('render')
@@ -229,7 +232,7 @@ const Viewport = ({
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >
-            { ((viewportstate != 'setup') && (viewportstate != 'configure') && (viewportstate != 'calculate') && (viewportstate != 'provision'))?children:null }
+            { ((viewportstate != 'setup') && (viewportstate != 'configure') && (viewportstate != 'calculate') && (viewportstate != 'provision') && (viewportstate != 'prerender'))?children:null }
         </div>
     </ViewportContext.Provider>
     

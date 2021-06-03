@@ -165,9 +165,9 @@ const ItemShell = ({
             placeholder?React.createElement(placeholder, {index, listsize}):null
     )
 
-    useEffect(() => {
+    // useEffect(() => {
         // if (!shellRef.current) return
-        if (portalStatus != 'available') return
+        if (portalStatus == 'available') {
         // console.log('linking scrollerName, scrollerID, index, shellRef.current, content; ',scrollerName, scrollerID, index, shellRef.current,content)
         // setTimeout(()=>{
 
@@ -176,7 +176,8 @@ const ItemShell = ({
             setPortalStatus('attached')
 
         // })
-    },[shellRef.current, index, portalStatus]);
+    }
+    // },[shellRef.current, index, portalStatus]);
 
     // (portalStatus == 'available') && doattach()
 
@@ -189,6 +190,7 @@ const ItemShell = ({
     return <div ref = { shellRef } data-name = 'itemshell' data-index = {index} data-instanceid = {instanceID} style = {styles}>
             { (portalStatus != 'attached') && placeholderchild }
     </div>
+
 
 } // ItemShell
 
