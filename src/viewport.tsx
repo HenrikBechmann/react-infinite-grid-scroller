@@ -37,7 +37,7 @@ const Viewport = ({
 
     // processing state
     const portalmanager = useContext(PortalContext)
-    // setup -> configure -> calculate -> provision -> render; resizing -> resize -> render
+    // setup -> configure -> calculate -> provision -> prepare -> render; resizing -> resize -> render
     const [viewportstate,setViewportState] = useState('setup')
     console.log('RUNNING viewport scrollerID, viewportstate',scrollerID,viewportstate)
     const viewportstateRef = useRef(null)
@@ -187,7 +187,7 @@ const Viewport = ({
     // set context data for children
 
     viewportDataRef.current = useMemo(() => {
-        if (!(viewportstate == 'provision')) return viewportDataRef.current || undefined
+        // if (!(viewportstate == 'provision')) return viewportDataRef.current || undefined
         console.log('CALCULATING VIEWPORTDATAREF',viewportstate)
         let width, height, localViewportData
         // if (!(top === undefined)) { //proxy
@@ -214,6 +214,11 @@ const Viewport = ({
                 setViewportState('calculate')
                 break
             case 'provision':
+                setTimeout(() => {
+                    setViewportState('prepare')
+                })
+                break
+            case 'prepare':
                 setViewportState('prerender')
                 break
             case 'prerender':
@@ -235,7 +240,7 @@ const Viewport = ({
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >
-            { ((viewportstate != 'setup') && (viewportstate != 'configure') && (viewportstate != 'calculate') && (viewportstate != 'provision') && (viewportstate != 'prerender'))?children:null }
+            { ((viewportstate != 'setup') && (viewportstate != 'configure') && (viewportstate != 'calculate') && (viewportstate != 'provision')  && (viewportstate != 'prepare') && (viewportstate != 'prerender'))?children:null }
         </div>
     </ViewportContext.Provider>
     

@@ -170,7 +170,7 @@ const ItemShell = ({
         // console.log('linking scrollerName, scrollerID, index, shellRef.current, content; ',scrollerName, scrollerID, index, shellRef.current,content)
 
         let listitem = portalManager.attachPortalListItem(scrollerID,index,shellRef.current);
-        let width = shellRef.current.offsetWidth // force recalc
+        // let width = shellRef.current.offsetWidth // force recalc
         // console.log('portalStatus; attached scrollerName, scrollerID, index, listitem', portalStatus, scrollerName, scrollerID, index, listitem)
         setPortalStatus('prepare')
 
@@ -179,7 +179,9 @@ const ItemShell = ({
     useEffect(() => {
         switch (portalStatus) {
             case 'prepare':
-                setPortalStatus('attached')
+                // setTimeout(()=> {
+                    setPortalStatus('attached')
+                // })
                 break
             case 'attached':
                 // setTimeout(()=> {
