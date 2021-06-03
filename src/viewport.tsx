@@ -106,8 +106,8 @@ const Viewport = ({
             return
         }
         parentPortalRef.current = portalmanager.getPortalListItem(parentscrollerid, parentindex)
-        console.log('viewport of scrollerID has parentscrollerid and parentindex for portal', 
-            scrollerID, parentscrollerid, parentindex,parentPortalRef.current)
+        // console.log('viewport of scrollerID has parentscrollerid and parentindex for portal', 
+        //     scrollerID, parentscrollerid, parentindex,parentPortalRef.current)
         // portalIndexRef.current = el.dataset.index
 
     },[viewportdivRef.current])
@@ -174,7 +174,7 @@ const Viewport = ({
         if ((scrollerID == 0) && (viewportstate != 'calculate')) return
         // setTimeout(()=>{
             viewportClientRectRef.current = viewportdivRef.current.getBoundingClientRect()
-            console.log('viewportstate, getBoundingClientRect',viewportstate, viewportClientRectRef.current)
+            // console.log('viewportstate, getBoundingClientRect',viewportstate, viewportClientRectRef.current)
             if (viewportClientRectRef.current.top == 0) {
                 setViewportState('configure')
             }
@@ -182,13 +182,13 @@ const Viewport = ({
     },[viewportstate])
 
     let {top, right, bottom, left} = viewportClientRectRef.current
-    console.log('viewport scrollerID, viewportstate, top, right, bottom, left',scrollerID, viewportstate, top, right, bottom, left)
+    // console.log('viewport scrollerID, viewportstate, top, right, bottom, left',scrollerID, viewportstate, top, right, bottom, left)
 
     // set context data for children
 
     viewportDataRef.current = useMemo(() => {
         // if (!(viewportstate == 'provision')) return viewportDataRef.current || undefined
-        console.log('CALCULATING VIEWPORTDATAREF',viewportstate)
+        // console.log('CALCULATING VIEWPORTDATAREF',viewportstate)
         let width, height, localViewportData
         // if (!(top === undefined)) { //proxy
             width = (right - left)
@@ -199,7 +199,7 @@ const Viewport = ({
                 isResizing:isResizingRef.current,
             }
         // }
-        console.log('viewportstate, returning localViewportData',viewportstate, localViewportData)
+        // console.log('viewportstate, returning localViewportData',viewportstate, localViewportData)
         return localViewportData
 
     },[orientation, top, right, bottom, left, isResizingRef.current, viewportstate])
@@ -207,23 +207,23 @@ const Viewport = ({
     // --------------------[ state processing ]---------------------------
     useEffect(()=>{
         switch (viewportstate) {
-            case 'calculate':
-                setViewportState('provision')
-                break
             case 'configure':
                 setViewportState('calculate')
                 break
+            case 'calculate':
+                setViewportState('provision')
+                break
             case 'provision':
-                setTimeout(() => {
+                setTimeout(() => { // allow ancestral DOM to catch up
                     setViewportState('prepare')
-                })
+                },1)
                 break
             case 'prepare':
-                setViewportState('prerender')
-                break
-            case 'prerender':
+            //     setViewportState('prerender')
+            //     break
+            // case 'prerender':
             case 'resize': {
-                console.log('set viewportstate to render from',viewportstate)
+                // console.log('set viewportstate to render from',viewportstate)
                 setViewportState('render')
                 break
             }
@@ -240,7 +240,7 @@ const Viewport = ({
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >
-            { ((viewportstate != 'setup') && (viewportstate != 'configure') && (viewportstate != 'calculate') && (viewportstate != 'provision')  && (viewportstate != 'prepare') && (viewportstate != 'prerender'))?children:null }
+            { ((viewportstate != 'setup') && (viewportstate != 'configure') && (viewportstate != 'calculate') && (viewportstate != 'provision')  && (viewportstate != 'prepare'))?children:null }
         </div>
     </ViewportContext.Provider>
     
