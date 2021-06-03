@@ -116,7 +116,7 @@ class PortalManager {
         }
         let item = scrollerPortalMetaMaps.get(scrollerID).get(index)
         if (!item) return
-        console.log('item to be attached; scrollerID, index',item, scrollerID, index)
+        // console.log('item to be attached; scrollerID, index',item, scrollerID, index)
         // console.log('setting reparenting to true: scrollerID, index', scrollerID, index)
         item.reparenting = true
         // this.detachContentlistItem(scrollerID, index)

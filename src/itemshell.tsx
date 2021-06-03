@@ -42,7 +42,7 @@ const ItemShell = ({
     const itemrequestRef = useRef(null)
     const [portalStatus, setPortalStatus] = useState('pending'); // 'pending' -> 'available' -> 'attached'
 
-    (scrollerID == 0) && console.log('RUNNING ITEMSHELL scrollerName, scrollerID, index, portalStatus', scrollerName, scrollerID, index, portalStatus)
+    // (scrollerID == 0) && console.log('RUNNING ITEMSHELL scrollerName, scrollerID, index, portalStatus', scrollerName, scrollerID, index, portalStatus)
     // initialize
     useEffect(() => {
         // console.log('fetching item scrollerName-scrollerID:index',scrollerName,'-', scrollerID, index)
@@ -88,7 +88,7 @@ const ItemShell = ({
                     // if (isMounted()) {
                         if (contentItem) {
                             let usercontent = contentItem;
-                            (scrollerID == 0) && console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
+                            // (scrollerID == 0) && console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
                             portalManager.createPortalListItem(scrollerID,index,usercontent)
                             setPortalStatus('available')
                             saveError(null)
@@ -172,7 +172,7 @@ const ItemShell = ({
         // setTimeout(()=>{
 
             let listitem = portalManager.attachPortalListItem(scrollerID,index,shellRef.current);
-            (scrollerID == 0) && console.log('portalStatus; attached scrollerName, scrollerID, index, listitem', portalStatus, scrollerName, scrollerID, index, listitem)
+            // (scrollerID == 0) && console.log('portalStatus; attached scrollerName, scrollerID, index, listitem', portalStatus, scrollerName, scrollerID, index, listitem)
             setPortalStatus('attached')
 
         // })
@@ -185,7 +185,7 @@ const ItemShell = ({
                 customplaceholderRef.current:<Placeholder index = {index} listsize = {listsize} error = {error}/>
         return child
     }, [index, customplaceholderRef.current, listsize, error]);
-    (scrollerID == 0) && console.log('ITEMSHELL rendering portalStatus',portalStatus)
+    // (scrollerID == 0) && console.log('ITEMSHELL rendering portalStatus',portalStatus)
     return <div ref = { shellRef } data-name = 'itemshell' data-index = {index} data-instanceid = {instanceID} style = {styles}>
             { (portalStatus != 'attached') && placeholderchild }
     </div>

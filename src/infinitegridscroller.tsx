@@ -66,7 +66,7 @@ const InfiniteGridScroller = (props) => {
 
     const scrollerIDRef = useRef(globalScrollerID)
 
-    console.log('creating INFINITEGRIDSCROLLER scrollerIDRef.current, scrollerID',scrollerIDRef.current)
+    // console.log('creating INFINITEGRIDSCROLLER scrollerIDRef.current, scrollerID',scrollerIDRef.current)
 
     // defaults
     functions !?? (functions = {})
