@@ -122,8 +122,10 @@ class PortalManager {
         // this.detachContentlistItem(scrollerID, index)
         // TODO target not always set
         // setTimeout(()=>{
+
             target.appendChild(item.container)
-        // })
+
+        // },1)
         // console.log('scrollerID, index, getBoundingClientRect',scrollerID, index, item.container.getBoundingClientRect())
         item.target = target
         // setTimeout(()=>{

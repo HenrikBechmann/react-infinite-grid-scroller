@@ -40,7 +40,7 @@ const ItemShell = ({
     const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
-    const [portalStatus, setPortalStatus] = useState('pending'); // 'pending' -> 'available' -> 'attached'
+    const [portalStatus, setPortalStatus] = useState('pending'); // 'pending' -> 'available' -> 'prepare' => 'attached' -> 'render'
 
     // (scrollerID == 0) && console.log('RUNNING ITEMSHELL scrollerName, scrollerID, index, portalStatus', scrollerName, scrollerID, index, portalStatus)
     // initialize
@@ -165,21 +165,29 @@ const ItemShell = ({
             placeholder?React.createElement(placeholder, {index, listsize}):null
     )
 
-    // useEffect(() => {
-        // if (!shellRef.current) return
-        if (portalStatus == 'available') {
+    if (portalStatus == 'available') {
+    
         // console.log('linking scrollerName, scrollerID, index, shellRef.current, content; ',scrollerName, scrollerID, index, shellRef.current,content)
-        // setTimeout(()=>{
 
-            let listitem = portalManager.attachPortalListItem(scrollerID,index,shellRef.current);
-            // (scrollerID == 0) && console.log('portalStatus; attached scrollerName, scrollerID, index, listitem', portalStatus, scrollerName, scrollerID, index, listitem)
-            setPortalStatus('attached')
+        let listitem = portalManager.attachPortalListItem(scrollerID,index,shellRef.current);
+        let width = shellRef.current.offsetWidth // force recalc
+        // console.log('portalStatus; attached scrollerName, scrollerID, index, listitem', portalStatus, scrollerName, scrollerID, index, listitem)
+        setPortalStatus('prepare')
 
-        // })
     }
-    // },[shellRef.current, index, portalStatus]);
 
-    // (portalStatus == 'available') && doattach()
+    useEffect(() => {
+        switch (portalStatus) {
+            case 'prepare':
+                setPortalStatus('attached')
+                break
+            case 'attached':
+                // setTimeout(()=> {
+                    setPortalStatus('render')
+                // },100)
+                break
+        }
+    },[portalStatus])
 
     const placeholderchild = useMemo(()=>{
         let child = customplaceholderRef.current?
@@ -188,7 +196,7 @@ const ItemShell = ({
     }, [index, customplaceholderRef.current, listsize, error]);
     // (scrollerID == 0) && console.log('ITEMSHELL rendering portalStatus',portalStatus)
     return <div ref = { shellRef } data-name = 'itemshell' data-index = {index} data-instanceid = {instanceID} style = {styles}>
-            { (portalStatus != 'attached') && placeholderchild }
+            { (portalStatus != 'render') && placeholderchild }
     </div>
 
 

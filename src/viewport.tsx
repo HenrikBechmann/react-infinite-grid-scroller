@@ -175,6 +175,9 @@ const Viewport = ({
         // setTimeout(()=>{
             viewportClientRectRef.current = viewportdivRef.current.getBoundingClientRect()
             console.log('viewportstate, getBoundingClientRect',viewportstate, viewportClientRectRef.current)
+            if (viewportClientRectRef.current.top == 0) {
+                setViewportState('configure')
+            }
         // })
     },[viewportstate])
 
