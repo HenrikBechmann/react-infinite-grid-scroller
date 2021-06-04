@@ -133,6 +133,7 @@ import {
     getContentListRequirements,
     isolateRelevantIntersections,
     allocateContentList,
+    deletePortals,
 
 } from './cradlefunctions'
 
@@ -187,18 +188,18 @@ const Cradle = ({
         cellWidth, 
         getItem, 
         placeholder, 
+        scrollerName,
+        scrollerID,
     ])
 
     // =============================================================================================
     // --------------------------------------[ INITIALIZATION ]-------------------------------------
     // =============================================================================================
 
-    const contentmanager = useContext(PortalContext)
-
     // -----------------------------------------------------------------------
     // -----------------------------------[ utilites ]------------------------
 
-    const contentManager = useContext(PortalContext)
+    const portalManager = useContext(PortalContext)
     let isMounted = useIsMounted()
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
 
@@ -263,7 +264,7 @@ const Cradle = ({
         let viewportData = viewportDataRef.current
         viewportData.elementref.current.addEventListener('scroll',onScroll)
 
-        contentManager.createScrollerPortalRepository(cradlePropsRef.current.scrollerID)
+        portalManager.createScrollerPortalRepository(cradlePropsRef.current.scrollerID)
 
         return () => {
 
@@ -311,13 +312,6 @@ const Cradle = ({
     useEffect(()=>{
 
         if (cradleStateRef.current == 'setup') return
-
-        // let spineoffset
-        // if (cradlePropsRef.current.orientation == 'vertical') {
-        //     spineoffset = spineCradleElementRef.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
-        // } else {
-        //     spineoffset = spineCradleElementRef.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
-        // }
 
         callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
 
@@ -431,7 +425,7 @@ const Cradle = ({
             console.log('ERROR: parent portalcontainer not found')
             return
         }
-        portalRef.current = contentmanager.getPortalListItem(parentscrollerid, parentindex)
+        portalRef.current = portalManager.getPortalListItem(parentscrollerid, parentindex)
         // console.log('viewport of scrollerID has parentscrollerid and parentindex for portal', 
         //     scrollerID, parentscrollerid, parentindex,portalRef.current)
         // portalIndexRef.current = el.dataset.index
@@ -469,23 +463,6 @@ const Cradle = ({
         crosscount = Math.floor(lengthforcalc/(tilelengthforcalc))
 
         // console.log('cradle CROSSCOUNT for scrollerName, scrollerID',scrollerName, scrollerID, crosscount)
-
-//         console.log('parameters for crosscount',`        
-//         orientation, 
-//         cellWidth, 
-//         cellHeight, 
-//         gap, 
-//         padding, 
-//         viewportheight, 
-//         viewportwidth
-// `,      orientation, 
-//         cellWidth, 
-//         cellHeight, 
-//         gap, 
-//         padding, 
-//         viewportheight, 
-//         viewportwidth
-// )
 
         return crosscount
 
@@ -1014,13 +991,13 @@ const Cradle = ({
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
         // collect modified content
-        let localContentList 
+        let localContentList, deletedContentItems = []
 
         // console.log('cradle UPDATECradleContent cradleReferenceIndex, cradleProps',cradleReferenceIndex, cradleProps)
 
         if (headchangecount || tailchangecount) {
 
-            localContentList = getUIContentList({
+            [localContentList,deletedContentItems] = getUIContentList({
                 cradleProps,
                 cradleConfig,
                 contentCount,
@@ -1037,6 +1014,10 @@ const Cradle = ({
             localContentList = modelcontentlist
 
         }
+
+        deletePortals(portalManager, scrollerID, deletedContentItems)
+
+        console.log('deletedContentItems from updateCradleContent',deletedContentItems)
 
         // console.log('localContentList.length', localContentList.length)
 
@@ -1135,7 +1116,7 @@ const Cradle = ({
         // console.log('cradle SETCradleContent cradleProps',cradleProps)
 
         // returns content constrained by cradleRowcount
-        let childlist = getUIContentList({
+        let [childlist,deleteditems] = getUIContentList({
 
             cradleProps,
             cradleConfig,
@@ -1148,6 +1129,11 @@ const Cradle = ({
             observer: itemObserverRef.current,
             instanceIdCounterRef,
         })
+
+        deletePortals(portalManager, scrollerID, deleteditems)
+
+        console.log('deleteditems from setCradleContent',deleteditems)
+
         // console.log('childlist.length, contentCount, rows from setContent', childlist.length, contentCount, Math.ceil(contentCount/crosscount))
 
         let [headcontentlist, tailcontentlist] = allocateContentList({
@@ -1431,7 +1417,7 @@ const Cradle = ({
                 cradleContent.tailModel = []
                 cradleContent.headView = []
                 cradleContent.tailView = []
-                contentManager.resetScrollerPortalRepository(scrollerID)
+                portalManager.resetScrollerPortalRepository(scrollerID)
                 setCradleContent(callingCradleState.current, callingReferenceIndexDataRef.current)
 
                 saveCradleState('content')//'setscrolloffset')

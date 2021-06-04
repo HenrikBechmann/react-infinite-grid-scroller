@@ -15,7 +15,7 @@ let portalblockstyles:React.CSSProperties = {visibility:'hidden'}
 
 export const PortalTree = () => {
     const [cachetoggle, setCachetoggle] = useState(maincachetrigger)
-    // console.log('running PORTALTREE', cachetoggle)
+    console.log('running PORTALTREE', cachetoggle)
     let portalSets = []
     let portalKeys = []
     useEffect(()=>{
@@ -119,19 +119,12 @@ class PortalManager {
         // console.log('item to be attached; scrollerID, index',item, scrollerID, index)
         // console.log('setting reparenting to true: scrollerID, index', scrollerID, index)
         item.reparenting = true
-        // this.detachContentlistItem(scrollerID, index)
-        // TODO target not always set
-        // setTimeout(()=>{
 
-            target.appendChild(item.container)
+        target.appendChild(item.container)
 
-        // },1)
         // console.log('scrollerID, index, getBoundingClientRect',scrollerID, index, item.container.getBoundingClientRect())
         item.target = target
-        // setTimeout(()=>{
-        //     item.reparenting = false
-        //     // console.log('setting reparenting to false', scrollerID, index)
-        // })
+
         return item
     }
 
@@ -142,6 +135,7 @@ class PortalManager {
             if (item.target && item.container) {
                 try {
                     item.target.removeChild(item.container)
+                    item.target = null
                 } catch(e) {
                     // noop
                 }

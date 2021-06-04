@@ -5,11 +5,13 @@
  ------------------------------------[ SUPPORTING FUNCTIONS ]------------------------------
 *******************************************************************************************/
 
-import React from 'react'
+import React, {useContext} from 'react'
 
 import ItemShell from './itemshell'
 
 import { detect } from 'detect-browser'
+
+import { PortalContext } from './portalmanager'
 
 const browser = detect()
 
@@ -744,7 +746,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let previouscradleindex = cradlecontentlist[0].props.index
     let previouscradlerowoffset = previouscradleindex/crosscount
-    let previousreferenceindex = tailcontentlist[0].props.index
+    let previousreferenceindex = tailcontentlist[0].props.index // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
     let previousreferencerowoffset = previousreferenceindex/crosscount
 
     let diff 
@@ -1007,6 +1009,7 @@ export const getUIContentList = ({
     let topconstraint = cradleReferenceIndex - headchangecount,
     bottomconstraint = (cradleReferenceIndex - headchangecount) + (contentCount + 1) // TODO: validate "+1"
 
+    let deletedtailitems = [], deletedheaditems = []
     // console.log('topconstraint, bottomconstraint, cradleReferenceIndex, contentCount, headchangecount, tailchangecount', 
     //     topconstraint, bottomconstraint, cradleReferenceIndex, contentCount, headchangecount, tailchangecount)
 
@@ -1033,7 +1036,7 @@ export const getUIContentList = ({
 
     } else {
 
-        localContentlist.splice( 0, -headchangecount )
+        deletedheaditems = localContentlist.splice( 0, -headchangecount )
 
     }
 
@@ -1062,16 +1065,18 @@ export const getUIContentList = ({
 
     } else {
 
-        localContentlist.splice(tailchangecount,-tailchangecount)
+        deletedtailitems = localContentlist.splice(tailchangecount,-tailchangecount)
 
     }
+
+    let deleteditems = deletedheaditems.concat(deletedtailitems)
 
     returnContentlist = headContentlist.concat(localContentlist,tailContentlist)
 
     // console.log('components of getcontentlist: returnContentList, headContentlist, localContentlist, tailContentlist', 
     //     returnContentlist, headContentlist, localContentlist, tailContentlist)
 
-    return returnContentlist
+    return [returnContentlist,deleteditems]
 }
 
 // butterfly model. Leading (head) all or partially hidden; tail, visible plus following hidden
@@ -1149,6 +1154,14 @@ const emitItem = ({
         scrollerID = { scrollerID }
     />    
 
+}
+
+export const deletePortals = (portalManager, scrollerID, deleteList) => {
+
+    console.log('deleteList', deleteList)
+    for (let item of deleteList) {
+        portalManager.deletePortalListItem(scrollerID, item.props.index)
+    }
 }
 // ========================================================================================
 // ------------------------------------[ styles ]------------------------------------------
