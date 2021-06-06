@@ -1017,7 +1017,7 @@ const Cradle = ({
 
         deletePortals(portalManager, scrollerID, deletedContentItems)
 
-        console.log('deletedContentItems from updateCradleContent',deletedContentItems)
+        // console.log('deletedContentItems from updateCradleContent',deletedContentItems)
 
         // console.log('localContentList.length', localContentList.length)
 

@@ -1,13 +1,13 @@
 // infinitegridscroller.tsx
 // copyright (c) 2019 Henrik Bechmann, Toronto, Licence: MIT
 
-import React, {useRef, useMemo} from 'react'
+import React, {useState, useRef, useEffect, useMemo, useContext} from 'react'
 import ReactDOM from 'react-dom'
 
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
 import Cradle from './cradle'
-import { PortalTree } from './portalmanager'
+import {PortalContext} from './portalmanager'
 
 let scrollerID = 0
 const getScrollerID = () => {
@@ -60,11 +60,16 @@ const InfiniteGridScroller = (props) => {
         scrollerName, // for debugging
     } = props
 
+    const portalrootref = useRef()
+    const portalManager = useContext(PortalContext)
     const globalScrollerID = useMemo(()=>{
         return getScrollerID()
     },[])
+    const [scrollerState,setScrollerState] = useState('setup');
 
-    const scrollerIDRef = useRef(globalScrollerID)
+    const scrollerIDRef = useRef(globalScrollerID);
+
+    ((globalScrollerID == 0) && (scrollerState == 'setup')) && portalManager.setPortalRootRef(portalrootref);
 
     // console.log('creating INFINITEGRIDSCROLLER scrollerIDRef.current, scrollerID',scrollerIDRef.current)
 
@@ -82,12 +87,24 @@ const InfiniteGridScroller = (props) => {
     if (!['horizontal','vertical'].includes(orientation)) {
         orientation = 'vertical'
     }
+    // {
+    //     // activate portals by placing them in React Tree at root scroller
+    //     scrollerIDRef.current == 0?<PortalTree/>:null 
+    // }
+
+    useEffect(()=>{
+        console.log('scrollerState',scrollerState)
+        if (scrollerState == 'setup') {
+            setScrollerState('render')
+        }
+        if (scrollerState == 'render') {
+            console.log('portalrootref in scroller',portalrootref)
+        }
+    },[scrollerState]) 
+
     return <>
-    {
-        // activate portals by placing them in React Tree at root scroller
-        scrollerIDRef.current == 0?<PortalTree/>:null 
-    }
-    <Viewport 
+    {(globalScrollerID == 0) && <div id = 'portalroot' ref = {portalrootref}></div>}
+    {(scrollerState == 'render') && <Viewport 
 
         orientation = { orientation } 
         cellWidth = { cellHeight }
@@ -131,7 +148,7 @@ const InfiniteGridScroller = (props) => {
 
             />
         </Scrollblock>
-    </Viewport>
+    </Viewport>}
     </>
 }
 

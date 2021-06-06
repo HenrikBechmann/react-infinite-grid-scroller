@@ -1158,7 +1158,7 @@ const emitItem = ({
 
 export const deletePortals = (portalManager, scrollerID, deleteList) => {
 
-    console.log('deleteList', deleteList)
+    // console.log('deleteList', deleteList)
     for (let item of deleteList) {
         portalManager.deletePortalListItem(scrollerID, item.props.index)
     }

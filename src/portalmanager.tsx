@@ -1,5 +1,7 @@
 // contentmanager.tsx
 
+// TODO: this should be an independent hook function for localization
+
 import React, {useState, useEffect} from 'react'
 import ReactDOM from 'react-dom'
 
@@ -7,43 +9,50 @@ const scrollerPortalMetaMaps = new Map()
 
 const scrollerPortalBlockMaps = new Map()
 
-export let maincachetrigger = true
+// export let maincachetrigger = true
 
 let cacheSetTrigger
 
 let portalblockstyles:React.CSSProperties = {visibility:'hidden'}
 
-export const PortalTree = () => {
-    const [cachetoggle, setCachetoggle] = useState(maincachetrigger)
-    console.log('running PORTALTREE', cachetoggle)
-    let portalSets = []
-    let portalKeys = []
-    useEffect(()=>{
-        cacheSetTrigger = setCachetoggle
-    },[])
-    scrollerPortalBlockMaps.forEach((block, key) => {
-        if (block.modified) {
-            block.portalList = Array.from(block.portalMap.values())
-            block.modified = false
-        }
-        portalSets.push(block.portalList)
-        portalKeys.push(key)
-    })
-    let index = 0
-    let portalTreeBlocksList = []
-    for (let key of portalKeys) {
-        portalTreeBlocksList.push(<div key = {key}>{portalSets[index]}</div>)
-        index++
-    }
-    // console.log('portalTreeBlocksList',portalTreeBlocksList)
-    return <div key = 'portalblocks' id = 'portalblocks' style={portalblockstyles}>{portalTreeBlocksList}</div>
-}
+// export const PortalTree = () => {
+//     const [cachetoggle, setCachetoggle] = useState(maincachetrigger)
+//     console.log('running PORTALTREE', cachetoggle)
+//     let portalSets = []
+//     let portalKeys = []
+//     useEffect(()=>{
+//         cacheSetTrigger = setCachetoggle
+//     },[])
+//     scrollerPortalBlockMaps.forEach((block, key) => {
+//         if (block.modified) {
+//             block.portalList = Array.from(block.portalMap.values())
+//             block.modified = false
+//         }
+//         portalSets.push(block.portalList)
+//         portalKeys.push(key)
+//     })
+//     let index = 0
+//     let portalTreeBlocksList = []
+//     for (let key of portalKeys) {
+//         portalTreeBlocksList.push(<div key = {key}>{portalSets[index]}</div>)
+//         index++
+//     }
+//     // console.log('portalTreeBlocksList',portalTreeBlocksList)
+//     return <div key = 'portalblocks' id = 'portalblocks' style={portalblockstyles}>{portalTreeBlocksList}</div>
+// }
 
 const getPortal = (content, container, index) => {
     // console.log('returning from getPortal')
     return ReactDOM.createPortal(content, container, index)
-} 
+}     
+
+let portalrootref
+
 class PortalManager {
+
+    setPortalRootRef (ref) {
+        portalrootref = ref
+    }
 
     createScrollerPortalRepository (scrollerID) {
         if (!scrollerPortalMetaMaps.has(scrollerID)) {
@@ -88,6 +97,10 @@ class PortalManager {
         container.dataset.type = 'portalcontainer'
         container.dataset.index = index
         container.dataset.scrollerid = scrollerID
+        container.setAttribute('key',index)
+
+        portalrootref.current.appendChild(container)
+
         let portal = getPortal(usercontent, container, index)
         // portalList.push(<div key = {index}>{portal}</div>)
         let scrollerportals = scrollerPortalBlockMaps.get(scrollerID)
@@ -95,8 +108,8 @@ class PortalManager {
         scrollerportals.modified = true
         scrollerPortalMetaMaps.get(scrollerID).set(index, 
             {usercontent, target:null, container, portal, reparenting:false, indexid:index,scrollerid:scrollerID} )
-        maincachetrigger = !maincachetrigger
-        cacheSetTrigger(maincachetrigger)
+        // maincachetrigger = !maincachetrigger
+        // cacheSetTrigger(maincachetrigger)
     }
 
     deletePortalListItem (scrollerID, index) {
@@ -105,8 +118,8 @@ class PortalManager {
         let portalitem = scrollerPortalBlockMaps.get(scrollerID)
         portalitem.portalMap.delete(index)
         portalitem.modified = true
-        maincachetrigger = !maincachetrigger
-        cacheSetTrigger(maincachetrigger)
+        // maincachetrigger = !maincachetrigger
+        // cacheSetTrigger(maincachetrigger)
     }
 
     attachPortalListItem (scrollerID, index, target) { 
@@ -135,6 +148,7 @@ class PortalManager {
             if (item.target && item.container) {
                 try {
                     item.target.removeChild(item.container)
+                    portalrootref.current.removeChild(item.container)
                     item.target = null
                 } catch(e) {
                     // noop
