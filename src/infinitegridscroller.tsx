@@ -60,8 +60,8 @@ const InfiniteGridScroller = (props) => {
         scrollerName, // for debugging
     } = props
 
-    const portalrootref = useRef()
     const portalManager = useContext(PortalContext)
+    const portalrootref = useRef()
     const globalScrollerID = useMemo(()=>{
         return getScrollerID()
     },[])
@@ -69,7 +69,7 @@ const InfiniteGridScroller = (props) => {
 
     const scrollerIDRef = useRef(globalScrollerID);
 
-    ((globalScrollerID == 0) && (scrollerState == 'setup')) && portalManager.setPortalRootRef(portalrootref);
+    ((scrollerIDRef.current == 0) && (scrollerState == 'setup')) && portalManager.setPortalRootRef(portalrootref);
 
     // console.log('creating INFINITEGRIDSCROLLER scrollerIDRef.current, scrollerID',scrollerIDRef.current)
 
@@ -102,8 +102,9 @@ const InfiniteGridScroller = (props) => {
         }
     },[scrollerState]) 
 
+    
     return <>
-    {(globalScrollerID == 0) && <div id = 'portalroot' ref = {portalrootref}></div>}
+    {(scrollerIDRef.current == 0) && <div id = 'portalroot' ref = {portalrootref}></div>}
     {(scrollerState == 'render') && <Viewport 
 
         orientation = { orientation } 

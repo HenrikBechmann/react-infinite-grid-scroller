@@ -109,6 +109,8 @@
 
 import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, useLayoutEffect } from 'react'
 
+// import { createHtmlPortalNode, InPortal, OutPortal } from 'react-reverse-portal'
+
 import { ViewportContext } from './viewport'
 
 import useIsMounted from 'react-is-mounted-hook'
@@ -1132,7 +1134,7 @@ const Cradle = ({
 
         deletePortals(portalManager, scrollerID, deleteditems)
 
-        console.log('deleteditems from setCradleContent',deleteditems)
+        console.log('contentlist, deleteditems from setCradleContent',childlist,deleteditems)
 
         // console.log('childlist.length, contentCount, rows from setContent', childlist.length, contentCount, Math.ceil(contentCount/crosscount))
 
