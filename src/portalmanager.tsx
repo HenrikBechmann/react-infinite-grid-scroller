@@ -46,12 +46,12 @@ const getPortal = (content, container, index) => {
     return ReactDOM.createPortal(content, container, index)
 }     
 
-let portalrootref
+let scrollerportalrootrefs = new Map()
 
 class PortalManager {
 
-    setPortalRootRef (ref) {
-        portalrootref = ref
+    setPortalRootRef (scrollerID, ref) {
+        scrollerportalrootrefs.set(scrollerID, {rootref:ref})
     }
 
     createScrollerPortalRepository (scrollerID) {
@@ -99,7 +99,7 @@ class PortalManager {
         container.dataset.scrollerid = scrollerID
         container.setAttribute('key',index)
 
-        portalrootref.current.appendChild(container)
+        scrollerportalrootrefs.get(scrollerID).rootref.current.appendChild(container)
 
         let portal = getPortal(usercontent, container, index)
         // portalList.push(<div key = {index}>{portal}</div>)
@@ -148,7 +148,7 @@ class PortalManager {
             if (item.target && item.container) {
                 try {
                     item.target.removeChild(item.container)
-                    portalrootref.current.removeChild(item.container)
+                    scrollerportalrootrefs.get(scrollerID).root.current.removeChild(item.container)
                     item.target = null
                 } catch(e) {
                     // noop
@@ -169,3 +169,13 @@ class PortalManager {
 const portalManager = new PortalManager()
 
 export const PortalContext = React.createContext(portalManager)
+
+export const PortalWrapper = ({
+    portal, key,
+}) => {
+
+    return <div data-type='portalwrapper' key={key}>
+        {portal}
+    </div>
+
+}
