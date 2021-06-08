@@ -8,6 +8,8 @@
 
 import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useContext} from 'react'
 
+import { createHtmlPortalNode, InPortal, OutPortal } from 'react-reverse-portal'
+
 export const ViewportContext = React.createContext(null)
 
 import useIsMounted from 'react-is-mounted-hook'
@@ -44,6 +46,10 @@ const Viewport = ({
     viewportstateRef.current = viewportstate
     let isMounted = useIsMounted()
     // data heap
+
+    const portalNode = React.useMemo(() => createHtmlPortalNode(), []);
+    console.log('reverse portal node, parent',portalNode)
+
     const timeoutidRef = useRef(null)
     const viewportdivRef = useRef(undefined)
     const divlinerstyleRef = useRef(
@@ -230,10 +236,24 @@ const Viewport = ({
         }
     },[viewportstate]);
 
+    const inportal = useMemo(() => {
+        return <InPortal node = {portalNode}>
+            hello
+        </InPortal>
+    },[])
+
+    const outportal = useMemo(() => {
+        return <OutPortal node = {portalNode} />
+    },[])
+
+    console.log('viewport inportal, outportal',inportal, outportal)
+
     // ----------------------[ render ]--------------------------------
     // viewportstate == 'render' && console.log('rendering scrollerID, viewportstate viewportDataRef.current, divlinerstyleRef.current, children',
     //     scrollerID, viewportstate, viewportDataRef.current, divlinerstyleRef.current, children)
     return <ViewportContext.Provider value = { viewportDataRef.current }>
+        {inportal}
+        {outportal}
         <div 
             data-type = 'viewport'
             data-masterscrollerid = {scrollerID}

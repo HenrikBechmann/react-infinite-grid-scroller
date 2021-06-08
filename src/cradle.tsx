@@ -109,8 +109,6 @@
 
 import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, useLayoutEffect } from 'react'
 
-// import { createHtmlPortalNode, InPortal, OutPortal } from 'react-reverse-portal'
-
 import { ViewportContext } from './viewport'
 
 import useIsMounted from 'react-is-mounted-hook'
