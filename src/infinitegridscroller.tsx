@@ -107,7 +107,9 @@ const InfiniteGridScroller = (props) => {
 
     
     return <>
-    <div data-type = 'portalroot' ref = {portalrootref}></div>
+    <div data-type = 'portalroot' ref = {portalrootref}>
+        {portalManager.getPortalList(scrollerIDRef.current)}
+    </div>
     {(scrollerState == 'render') && <Viewport 
 
         orientation = { orientation } 

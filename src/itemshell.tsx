@@ -9,6 +9,8 @@ import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
 import useIsMounted from 'react-is-mounted-hook'
 
+import { createHtmlPortalNode, InPortal, OutPortal } from 'react-reverse-portal'
+
 import Placeholder from './placeholder'
 
 import { PortalContext } from './portalmanager'
@@ -167,11 +169,11 @@ const ItemShell = ({
 
     if (portalStatus == 'available') {
     
-        // console.log('linking scrollerName, scrollerID, index, shellRef.current, content; ',scrollerName, scrollerID, index, shellRef.current,content)
+    //     // console.log('linking scrollerName, scrollerID, index, shellRef.current, content; ',scrollerName, scrollerID, index, shellRef.current,content)
 
-        let listitem = portalManager.attachPortalListItem(scrollerID,index,shellRef.current);
-        // let width = shellRef.current.offsetWidth // force recalc
-        // console.log('portalStatus; attached scrollerName, scrollerID, index, listitem', portalStatus, scrollerName, scrollerID, index, listitem)
+    //     let listitem = portalManager.attachPortalListItem(scrollerID,index,shellRef.current);
+    //     // let width = shellRef.current.offsetWidth // force recalc
+    //     // console.log('portalStatus; attached scrollerName, scrollerID, index, listitem', portalStatus, scrollerName, scrollerID, index, listitem)
         setPortalStatus('prepare')
 
     }
@@ -196,9 +198,19 @@ const ItemShell = ({
                 customplaceholderRef.current:<Placeholder index = {index} listsize = {listsize} error = {error}/>
         return child
     }, [index, customplaceholderRef.current, listsize, error]);
+
+    const portalchild = useMemo(()=>{
+        if (!(portalStatus == 'render')) return null
+        let portallistitem = portalManager.getPortalListItem(scrollerID, index)
+        // console.log('portallistitem for scrollerID, index', scrollerID, index, portallistitem)
+        let reverseportal = portallistitem.reverseportal
+        // console.log('reverseportal for scrollerID, index',scrollerID, index, reverseportal)
+        return <OutPortal node = {reverseportal} />
+    }, [portalStatus]);
+
     // (scrollerID == 0) && console.log('ITEMSHELL rendering portalStatus',portalStatus)
     return <div ref = { shellRef } data-name = 'itemshell' data-index = {index} data-instanceid = {instanceID} style = {styles}>
-            { (portalStatus != 'render') && placeholderchild }
+            { (portalStatus != 'render')?placeholderchild: portalchild }
     </div>
 
 

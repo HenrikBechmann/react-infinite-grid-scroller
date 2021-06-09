@@ -1132,7 +1132,7 @@ const Cradle = ({
 
         deletePortals(portalManager, scrollerID, deleteditems)
 
-        console.log('contentlist, deleteditems from setCradleContent',childlist,deleteditems)
+        // console.log('contentlist, deleteditems from setCradleContent',childlist,deleteditems)
 
         // console.log('childlist.length, contentCount, rows from setContent', childlist.length, contentCount, Math.ceil(contentCount/crosscount))
 
