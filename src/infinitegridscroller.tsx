@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom'
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
 import Cradle from './cradle'
-import {PortalContext} from './portalmanager'
+import {PortalContext, PortalList} from './portalmanager'
 
 let scrollerID = 0
 const getScrollerID = () => {
@@ -61,7 +61,7 @@ const InfiniteGridScroller = (props) => {
     } = props
 
     const portalManager = useContext(PortalContext)
-    const portalrootref = useRef()
+    // const portalrootref = useRef()
     const globalScrollerID = useMemo(()=>{
         return getScrollerID()
     },[])
@@ -69,10 +69,10 @@ const InfiniteGridScroller = (props) => {
     const scrollerIDRef = useRef(globalScrollerID)
     console.log('RUNNING infinitegridscroller scrollerID, scrollerState',scrollerIDRef.current, scrollerState)
 
-    if (scrollerState == 'setup') {
-        console.log('setting root ref for scrollerID',scrollerIDRef.current, portalrootref)
-        portalManager.setPortalRootRef(scrollerIDRef.current, portalrootref);
-    }
+    // if (scrollerState == 'setup') {
+    //     console.log('setting root ref for scrollerID',scrollerIDRef.current, portalrootref)
+    //     portalManager.setPortalRootRef(scrollerIDRef.current, portalrootref);
+    // }
 
     // defaults
     functions !?? (functions = {})
@@ -110,9 +110,9 @@ const InfiniteGridScroller = (props) => {
 
     
     return <>
-    {(scrollerState == 'render')? <div data-type = 'portalroot' ref = {portalrootref}>
-        {portalManager.getPortalList(scrollerIDRef.current)}
-    </div>:null}
+    <div data-type = 'portalroot'>
+        <PortalList scrollerID = {scrollerIDRef.current}/>
+    </div>
     {(scrollerState != 'setup')? <Viewport 
 
         orientation = { orientation } 

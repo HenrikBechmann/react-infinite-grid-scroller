@@ -11,6 +11,8 @@ const scrollerPortalMetaMaps = new Map()
 
 const scrollerPortalBlockMaps = new Map()
 
+const scrollerPortalCallbacks = new Map()
+
 // export let maincachetrigger = true
 
 let cacheSetTrigger
@@ -50,22 +52,40 @@ const getPortal = (content, container) => {
     return [<InPortal node = {reversePortal}>
         {content}
     </InPortal>,reversePortal]
-    // return ReactDOM.createPortal(content, container, index)
 }     
 
 let scrollerportalrootrefs = new Map()
 
 class PortalManager {
 
-    getPortalList = (scrollerID) => {
+    // getPortalList = (scrollerID) => {
+    //     // console.log('scrollerPortalBlockMaps',scrollerPortalBlockMaps)
+    //     let scrollerportals = scrollerPortalBlockMaps.get(scrollerID)
+    //     if (scrollerportals.modified) {
+    //         scrollerportals.portalList = Array.from(scrollerportals.portalMap.values())
+    //         scrollerportals.modified = false
+    //     }
+    //     console.log('portalList',scrollerportals.portalList)
+    //     return scrollerportals.portalList
+    // }
+
+    resetPortalList = (scrollerID) => {
         // console.log('scrollerPortalBlockMaps',scrollerPortalBlockMaps)
         let scrollerportals = scrollerPortalBlockMaps.get(scrollerID)
+        console.log('resetPortalList scrollerportals',scrollerportals)
         if (scrollerportals.modified) {
             scrollerportals.portalList = Array.from(scrollerportals.portalMap.values())
             scrollerportals.modified = false
         }
-        console.log('portalList',scrollerportals.portalList)
-        return scrollerportals.portalList
+
+        // console.log('scrollerPortalCallbacks',scrollerID, scrollerPortalCallbacks)
+        let callbackobj = scrollerPortalCallbacks.get(scrollerID)
+        // console.log('callbackobj',callbackobj)
+        let callback = scrollerPortalCallbacks.get(scrollerID).callback
+        // console.log('callback',callback)
+        callback()
+        // console.log('portalList',scrollerportals.portalList)
+        // return scrollerportals.portalList
     }
 
     setPortalRootRef (scrollerID, ref) {
@@ -98,6 +118,7 @@ class PortalManager {
     deleteScrollerPortalRepository (scrollerID) {
         scrollerPortalMetaMaps.delete(scrollerID)
         scrollerPortalBlockMaps.delete(scrollerID)
+
     }
 
     createPortalListItem (scrollerID, index, usercontent) {
@@ -140,41 +161,6 @@ class PortalManager {
         // cacheSetTrigger(maincachetrigger)
     }
 
-    // attachPortalListItem (scrollerID, index, target) { 
-    //     if (!target) {
-    //         console.log('SYSTEM: target not set, scrollerID, index', scrollerID, index)
-    //         return
-    //     }
-    //     let item = scrollerPortalMetaMaps.get(scrollerID).get(index)
-    //     if (!item) return
-    //     // console.log('item to be attached; scrollerID, index',item, scrollerID, index)
-    //     // console.log('setting reparenting to true: scrollerID, index', scrollerID, index)
-    //     item.reparenting = true
-
-    //     target.appendChild(item.container)
-
-    //     // console.log('scrollerID, index, getBoundingClientRect',scrollerID, index, item.container.getBoundingClientRect())
-    //     item.target = target
-
-    //     return item
-    // }
-
-    // detachPortalListItem (scrollerID, index) {
-    //     let item = scrollerPortalMetaMaps.get(scrollerID).get(index)
-    //     if (item) {
-    //         // console.log('detach child item scrollerID, index',item, scrollerID, index)
-    //         if (item.target && item.container) {
-    //             try {
-    //                 item.target.removeChild(item.container)
-    //                 scrollerportalrootrefs.get(scrollerID).root.current.removeChild(item.container)
-    //                 item.target = null
-    //             } catch(e) {
-    //                 // noop
-    //             }
-    //         }
-    //     }
-    // }
-
     hasPortalListItem (scrollerID, index) {
         return scrollerPortalMetaMaps.get(scrollerID).has(index)
     }
@@ -197,4 +183,19 @@ export const PortalWrapper = ({
         {portal}
     </div>
 
+}
+
+export const PortalList = ({scrollerID}) => {
+
+    useEffect(()=>{
+        console.log('setting callback with scrollerID',scrollerID)
+        scrollerPortalCallbacks.set(scrollerID,
+            {callback:()=>{
+                setPortalList(scrollerPortalBlockMaps.get(scrollerID).portalList)
+            }})
+    },[]) 
+
+    const [portalList, setPortalList] = useState(null)
+
+    return portalList
 }

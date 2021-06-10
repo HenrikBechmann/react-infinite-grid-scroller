@@ -204,6 +204,7 @@ const ItemShell = ({
         let portallistitem = portalManager.getPortalListItem(scrollerID, index)
         // console.log('portallistitem for scrollerID, index', scrollerID, index, portallistitem)
         let reverseportal = portallistitem.reverseportal
+        portallistitem.reparenting = true
         // console.log('reverseportal for scrollerID, index',scrollerID, index, reverseportal)
         return <OutPortal node = {reverseportal} />
     }, [portalStatus]);

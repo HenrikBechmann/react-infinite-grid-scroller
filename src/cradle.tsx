@@ -133,7 +133,7 @@ import {
     getContentListRequirements,
     isolateRelevantIntersections,
     allocateContentList,
-    deletePortals,
+    deleteAndResetPortals,
 
 } from './cradlefunctions'
 
@@ -1016,7 +1016,7 @@ const Cradle = ({
 
         }
 
-        deletePortals(portalManager, scrollerID, deletedContentItems)
+        deleteAndResetPortals(portalManager, scrollerID, deletedContentItems)
 
         // console.log('deletedContentItems from updateCradleContent',deletedContentItems)
 
@@ -1131,7 +1131,7 @@ const Cradle = ({
             instanceIdCounterRef,
         })
 
-        deletePortals(portalManager, scrollerID, deleteditems)
+        deleteAndResetPortals(portalManager, scrollerID, deleteditems)
 
         // console.log('contentlist, deleteditems from setCradleContent',childlist,deleteditems)
 
