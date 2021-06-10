@@ -57,6 +57,17 @@ let scrollerportalrootrefs = new Map()
 
 class PortalManager {
 
+    getPortalList = (scrollerID) => {
+        // console.log('scrollerPortalBlockMaps',scrollerPortalBlockMaps)
+        let scrollerportals = scrollerPortalBlockMaps.get(scrollerID)
+        if (scrollerportals.modified) {
+            scrollerportals.portalList = Array.from(scrollerportals.portalMap.values())
+            scrollerportals.modified = false
+        }
+        console.log('portalList',scrollerportals.portalList)
+        return scrollerportals.portalList
+    }
+
     setPortalRootRef (scrollerID, ref) {
         scrollerportalrootrefs.set(scrollerID, {rootref:ref})
     }
@@ -111,7 +122,7 @@ class PortalManager {
         let [portal,reverseportal] = getPortal(usercontent, container)
         // portalList.push(<div key = {index}>{portal}</div>)
         let scrollerportals = scrollerPortalBlockMaps.get(scrollerID)
-        scrollerportals.portalMap.set(index,<PortalWrapper portal = {portal} key = {index}/>)
+        scrollerportals.portalMap.set(index,<PortalWrapper portal = {portal} key = {index} index = {index}/>)
         scrollerportals.modified = true
         scrollerPortalMetaMaps.get(scrollerID).set(index, 
             {usercontent, target:null, container, portal, reverseportal, reparenting:false, indexid:index,scrollerid:scrollerID} )
@@ -172,12 +183,6 @@ class PortalManager {
         return scrollerPortalMetaMaps.get(scrollerID).get(index)
     }
 
-    getPortalList = (scrollerID) => {
-        let portalList = []
-        return portalList
-    }
-
-
 }
 
 const portalManager = new PortalManager()
@@ -185,10 +190,10 @@ const portalManager = new PortalManager()
 export const PortalContext = React.createContext(portalManager)
 
 export const PortalWrapper = ({
-    portal, key,
+    portal, index,
 }) => {
 
-    return <div data-type='portalwrapper' key={key}>
+    return <div data-type='portalwrapper' key={index}>
         {portal}
     </div>
 

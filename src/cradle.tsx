@@ -215,6 +215,9 @@ const Cradle = ({
     viewportDataRef.current = viewportData
 
     const [cradleState, saveCradleState] = useState('setup')
+
+    // console.log('cradle RUNNING cradleState',cradleState)
+
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
@@ -263,8 +266,6 @@ const Cradle = ({
     useEffect(() => {
         let viewportData = viewportDataRef.current
         viewportData.elementref.current.addEventListener('scroll',onScroll)
-
-        portalManager.createScrollerPortalRepository(cradlePropsRef.current.scrollerID)
 
         return () => {
 

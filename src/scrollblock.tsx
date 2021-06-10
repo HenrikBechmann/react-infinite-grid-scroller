@@ -14,12 +14,14 @@ const Scrollblock = ({
     padding, 
     orientation, 
     functions, 
-    styles 
+    styles,
+    scrollerID,
 }) => {
 
     // -------------------------[ context and state ]-------------------------
     const viewportData = useContext(ViewportContext)
     const [blockstate,setBlockState] = useState('prepare')
+    // console.log('RUNNING scrollblock scrollerID, viewportstate',scrollerID,blockstate)
 
     // -----------------------------------[ data heap ]-------------------------
     const scrollBlockLengthRef = useRef(null)

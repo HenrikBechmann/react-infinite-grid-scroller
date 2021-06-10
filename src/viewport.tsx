@@ -39,7 +39,7 @@ const Viewport = ({
     const portalmanager = useContext(PortalContext)
     // setup -> configure -> calculate -> provision -> prepare -> render; resizing -> resize -> render
     const [viewportstate,setViewportState] = useState('setup')
-    // console.log('RUNNING viewport scrollerID, viewportstate',scrollerID,viewportstate)
+    console.log('RUNNING viewport scrollerID, viewportstate',scrollerID,viewportstate)
     const viewportstateRef = useRef(null)
     viewportstateRef.current = viewportstate
     let isMounted = useIsMounted()
