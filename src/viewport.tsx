@@ -2,6 +2,10 @@
 // copyright (c) 2020 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
+
+    TODO:
+    Warning: Can't perform a React state update on an unmounted component. - find and fix
+
     The role of viewport is to provide data to its children (scrollblock and cradle), 
     and act as the visible portal of the list being shown
 */
@@ -215,9 +219,9 @@ const Viewport = ({
                 setViewportState('provision')
                 break
             case 'provision':
-                setTimeout(() => { // allow ancestral DOM to catch up
+                // setTimeout(() => { // allow ancestral DOM to catch up
                     setViewportState('prepare')
-                },1)
+                // },1)
                 break
             case 'prepare':
             //     setViewportState('prerender')

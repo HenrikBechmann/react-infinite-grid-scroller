@@ -746,7 +746,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let previouscradleindex = cradlecontentlist[0].props.index
     let previouscradlerowoffset = previouscradleindex/crosscount
-    let previousreferenceindex = tailcontentlist[0].props.index // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
+    let previousreferenceindex = tailcontentlist[0]?.props.index // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
     let previousreferencerowoffset = previousreferenceindex/crosscount
 
     let diff 
@@ -1089,7 +1089,7 @@ export const allocateContentList = (
     }
 ) => {
 
-    let offsetindex = contentlist[0].props.index
+    let offsetindex = contentlist[0]?.props.index // TODO: Cannot read property 'props' of undefined
 
     let headitemcount
 

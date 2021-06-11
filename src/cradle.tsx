@@ -893,7 +893,7 @@ const Cradle = ({
         if (cradleProps.orientation == 'vertical') {
             scrollOffset = viewportElement.scrollTop
         } else {
-            scrollOffset = viewportElement.scrollLeft
+            scrollOffset = viewportElement.scrollLeft // TODO: Cannot read property 'scrollLeft' of null
         }
         if ( scrollOffset < 0) { // for Safari elastic bounce at top of scroll
 
@@ -1250,7 +1250,7 @@ const Cradle = ({
 
                 if (cradleState == 'ready') {
                     let itemindex = cradleContent.tailModel[0]?.props.index 
-                    if (itemindex === undefined) {
+                    if (itemindex === undefined) { // TODO: investigate
                         console.log('ERROR: scroll encountered undefined tailcontent lead')
                     }
                     let spineoffset

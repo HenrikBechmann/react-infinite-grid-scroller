@@ -68,7 +68,9 @@ const ItemShell = ({
 
             // console.log('fetching NEW item (queue)')
 
-            itemrequestRef.current = requestidlecallback(()=> {
+            // TODO: createPoralListitem in any case, then update with usercontent when found
+            // this will allow requestidlecallback to be used.
+            // itemrequestRef.current = requestidlecallback(()=> {
                 let contentItem = getItem(index)
                 // console.log('result of getItem(index)',contentItem)
                 if (contentItem && contentItem.then) {
@@ -100,7 +102,7 @@ const ItemShell = ({
                         }
                     // }
                 }
-            },{timeout:50})
+            // },{timeout:100})
         }}
 
         return () => {
@@ -198,6 +200,10 @@ const ItemShell = ({
     const portalchild = useMemo(()=>{
         if (!(portalStatus == 'render')) return null
         let portallistitem = portalManager.getPortalListItem(scrollerID, index)
+        if (!portallistitem) {
+            return null // TODO: investigate the ned for this
+            setPortalStatus('prepare') // TODO: could lead to infinite loop
+        }
         // console.log('portallistitem for scrollerID, index', scrollerID, index, portallistitem)
         let reverseportal = portallistitem.reverseportal
         portallistitem.reparenting = true

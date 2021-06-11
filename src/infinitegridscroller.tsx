@@ -97,7 +97,7 @@ const InfiniteGridScroller = (props) => {
 
 
     useEffect(()=>{
-        console.log('infinitegridscroller createScrollerPortalRepository', scrollerIDRef.current)
+        // console.log('infinitegridscroller createScrollerPortalRepository', scrollerIDRef.current)
         portalManager.createScrollerPortalRepository(scrollerIDRef.current)
     },[])
     

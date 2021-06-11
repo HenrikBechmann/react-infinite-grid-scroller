@@ -72,7 +72,7 @@ class PortalManager {
     resetPortalList = (scrollerID) => {
         // console.log('scrollerPortalBlockMaps',scrollerPortalBlockMaps)
         let scrollerportals = scrollerPortalBlockMaps.get(scrollerID)
-        console.log('resetPortalList scrollerportals',scrollerportals)
+        // console.log('resetPortalList scrollerportals',scrollerportals)
         if (scrollerportals.modified) {
             scrollerportals.portalList = Array.from(scrollerportals.portalMap.values())
             scrollerportals.modified = false
@@ -191,7 +191,7 @@ export const PortalWrapper = ({
 export const PortalList = ({scrollerID}) => {
 
     useEffect(()=>{
-        console.log('setting callback with scrollerID',scrollerID)
+        // console.log('setting callback with scrollerID',scrollerID)
         scrollerPortalCallbacks.set(scrollerID,
             {callback:()=>{
                 setPortalList(scrollerPortalBlockMaps.get(scrollerID).portalList)
