@@ -173,13 +173,13 @@ const Viewport = ({
     let viewportClientRectRef = useRef({top:0,right:0,bottom:0,left:0})
     useEffect(()=> {
         if ((scrollerID == 0) && (viewportstate != 'calculate')) return
-        // setTimeout(()=>{
-            viewportClientRectRef.current = viewportdivRef.current.getBoundingClientRect()
-            // console.log('viewportstate, getBoundingClientRect',viewportstate, viewportClientRectRef.current)
-            if (viewportClientRectRef.current.top == 0) {
-                setViewportState('configure')
-            }
-        // })
+
+        viewportClientRectRef.current = viewportdivRef.current.getBoundingClientRect()
+        // console.log('viewportstate, getBoundingClientRect',viewportstate, viewportClientRectRef.current)
+        if (viewportClientRectRef.current.top == 0) {
+            setViewportState('configure')
+        }
+        
     },[viewportstate])
 
     let {top, right, bottom, left} = viewportClientRectRef.current

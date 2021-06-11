@@ -149,9 +149,7 @@ class PortalManager {
             {usercontent, target:null, container, portal, reverseportal, reparenting:false, indexid:index,scrollerid:scrollerID} )
         // maincachetrigger = !maincachetrigger
         // cacheSetTrigger(maincachetrigger)
-        // setTimeout(()=>{
-            portalManager.resetPortalList(scrollerID)
-        // })
+        portalManager.resetPortalList(scrollerID)
     }
 
     deletePortalListItem (scrollerID, index) {

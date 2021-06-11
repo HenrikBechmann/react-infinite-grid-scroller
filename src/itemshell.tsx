@@ -181,14 +181,10 @@ const ItemShell = ({
     useEffect(() => {
         switch (portalStatus) {
             case 'prepare':
-                // setTimeout(()=> {
-                    setPortalStatus('attached')
-                // })
+                setPortalStatus('attached')
                 break
             case 'attached':
-                // setTimeout(()=> {
-                    setPortalStatus('render')
-                // },100)
+                setPortalStatus('render')
                 break
         }
     },[portalStatus])
