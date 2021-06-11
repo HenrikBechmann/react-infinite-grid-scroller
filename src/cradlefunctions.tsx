@@ -1162,7 +1162,7 @@ export const deleteAndResetPortals = (portalManager, scrollerID, deleteList) => 
     for (let item of deleteList) {
         portalManager.deletePortalListItem(scrollerID, item.props.index)
     }
-    portalManager.resetPortalList(scrollerID)
+    if (deleteList.length) portalManager.resetPortalList(scrollerID)
 }
 // ========================================================================================
 // ------------------------------------[ styles ]------------------------------------------

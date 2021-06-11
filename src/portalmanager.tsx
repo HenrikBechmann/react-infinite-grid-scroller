@@ -149,6 +149,9 @@ class PortalManager {
             {usercontent, target:null, container, portal, reverseportal, reparenting:false, indexid:index,scrollerid:scrollerID} )
         // maincachetrigger = !maincachetrigger
         // cacheSetTrigger(maincachetrigger)
+        // setTimeout(()=>{
+            portalManager.resetPortalList(scrollerID)
+        // })
     }
 
     deletePortalListItem (scrollerID, index) {
@@ -175,11 +178,13 @@ const portalManager = new PortalManager()
 
 export const PortalContext = React.createContext(portalManager)
 
+const wrapperstyle = {display:'none'}
+
 export const PortalWrapper = ({
     portal, index,
 }) => {
 
-    return <div data-type='portalwrapper' key={index}>
+    return <div data-type='portalwrapper' style = {wrapperstyle} key={index}>
         {portal}
     </div>
 

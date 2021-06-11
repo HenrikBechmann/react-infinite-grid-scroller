@@ -14,6 +14,8 @@ const getScrollerID = () => {
     // console.log('fetching scrollerID', scrollerID)
     return scrollerID++
 }
+
+const rootstyle = {display:'none'}
 /*
     BACKLOG: 
     - cache: none/preload/keepload
@@ -110,7 +112,7 @@ const InfiniteGridScroller = (props) => {
 
     
     return <>
-    <div data-type = 'portalroot'>
+    <div data-type = 'portalroot' style = {rootstyle}>
         <PortalList scrollerID = {scrollerIDRef.current}/>
     </div>
     {(scrollerState != 'setup')? <Viewport 
