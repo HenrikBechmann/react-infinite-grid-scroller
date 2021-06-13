@@ -52,7 +52,9 @@ const ItemShell = ({
         let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
         let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
 
-        if (portalManager.hasPortalListItem(scrollerID,index)) {
+        portalManager.createPortalListItem(scrollerID,index,null, placeholderchildRef.current)
+
+        if (portalManager.hasPortalUserContent(scrollerID,index)) {
 
             // console.log('fetching PORTAL CACHE item', scrollerID, index)
 
@@ -70,14 +72,14 @@ const ItemShell = ({
 
             // TODO: createPoralListitem in any case, then update with usercontent when found
             // this will allow requestidlecallback to be used.
-            // itemrequestRef.current = requestidlecallback(()=> {
+            // itemrequestRef.current = requestidlecallback(()=> { // TODO make this optional
                 let contentItem = getItem(index)
                 // console.log('result of getItem(index)',contentItem)
                 if (contentItem && contentItem.then) {
                     contentItem.then((usercontent) => {
                         // if (isMounted()) { 
                             // console.log('saving new usercontent by promise',scrollerName, scrollerID, index, usercontent)
-                            portalManager.createPortalListItem(scrollerID,index,usercontent)
+                            portalManager.updatePortalListItem(scrollerID,index,usercontent)
                             setPortalStatus('available')
                             saveError(null)
                         // }
@@ -93,7 +95,7 @@ const ItemShell = ({
                         if (contentItem) {
                             let usercontent = contentItem;
                             // (scrollerID == 0) && console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
-                            portalManager.createPortalListItem(scrollerID,index,usercontent)
+                            portalManager.updatePortalListItem(scrollerID,index,usercontent)
                             setPortalStatus('available')
                             saveError(null)
                         } else {
@@ -102,7 +104,7 @@ const ItemShell = ({
                         }
                     // }
                 }
-            // },{timeout:100})
+            // },{timeout:50})
         }}
 
         return () => {
@@ -196,6 +198,8 @@ const ItemShell = ({
                 customplaceholderRef.current:<Placeholder index = {index} listsize = {listsize} error = {error}/>
         return child
     }, [index, customplaceholderRef.current, listsize, error]);
+
+    const placeholderchildRef = useRef(placeholderchild)
 
     const portalchild = useMemo(()=>{
         if (!(portalStatus == 'render')) return null
