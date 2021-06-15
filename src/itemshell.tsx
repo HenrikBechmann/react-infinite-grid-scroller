@@ -54,25 +54,26 @@ const ItemShell = ({
 
         portalManager.createPortalListItem(scrollerID,index,null, placeholderchildRef.current)
 
-        if (portalManager.hasPortalUserContent(scrollerID,index)) {
+        setPortalStatus('prepare')
+
+        if (!portalManager.hasPortalUserContent(scrollerID,index)) {
 
             // console.log('fetching PORTAL CACHE item', scrollerID, index)
 
-            let portalitem = portalManager.getPortalListItem(scrollerID,index) 
+            // let portalitem = portalManager.getPortalListItem(scrollerID,index) 
 
             // console.log('saving cache usercontent',portalitem)
-            setPortalStatus('available')
 
             // saveContent(portalitem.usercontent)
-            return
-        } else {
+            // return
+        // } else {
         if (getItem) {
 
             // console.log('fetching NEW item (queue)')
 
             // TODO: createPoralListitem in any case, then update with usercontent when found
             // this will allow requestidlecallback to be used.
-            // itemrequestRef.current = requestidlecallback(()=> { // TODO make this optional
+            itemrequestRef.current = requestidlecallback(()=> { // TODO make this optional
                 let contentItem = getItem(index)
                 // console.log('result of getItem(index)',contentItem)
                 if (contentItem && contentItem.then) {
@@ -80,7 +81,7 @@ const ItemShell = ({
                         // if (isMounted()) { 
                             // console.log('saving new usercontent by promise',scrollerName, scrollerID, index, usercontent)
                             portalManager.updatePortalListItem(scrollerID,index,usercontent)
-                            setPortalStatus('available')
+                            // setPortalStatus('available')
                             saveError(null)
                         // }
                     }).catch((e) => {
@@ -96,7 +97,7 @@ const ItemShell = ({
                             let usercontent = contentItem;
                             // (scrollerID == 0) && console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
                             portalManager.updatePortalListItem(scrollerID,index,usercontent)
-                            setPortalStatus('available')
+                            // setPortalStatus('available')
                             saveError(null)
                         } else {
                             saveError(true)
@@ -104,7 +105,7 @@ const ItemShell = ({
                         }
                     // }
                 }
-            // },{timeout:50})
+            },{timeout:100})
         }}
 
         return () => {
@@ -171,23 +172,23 @@ const ItemShell = ({
             placeholder?React.createElement(placeholder, {index, listsize}):null
     )
 
-    if (portalStatus == 'available') {
+    // if (portalStatus == 'available') {
     
     //     // console.log('linking scrollerName, scrollerID, index, shellRef.current, content; ',scrollerName, scrollerID, index, shellRef.current,content)
 
     //     let listitem = portalManager.attachPortalListItem(scrollerID,index,shellRef.current);
     //     // let width = shellRef.current.offsetWidth // force recalc
     //     // console.log('portalStatus; attached scrollerName, scrollerID, index, listitem', portalStatus, scrollerName, scrollerID, index, listitem)
-        setPortalStatus('prepare')
+        // setPortalStatus('prepare')
 
-    }
+    // }
 
     useEffect(() => {
         switch (portalStatus) {
             case 'prepare':
-                setPortalStatus('attached')
-                break
-            case 'attached':
+            //     setPortalStatus('attached')
+            //     break
+            // case 'attached':
                 setPortalStatus('render')
                 break
         }
@@ -202,12 +203,12 @@ const ItemShell = ({
     const placeholderchildRef = useRef(placeholderchild)
 
     const portalchild = useMemo(()=>{
-        if (!(portalStatus == 'render')) return null
+        if (portalStatus == 'pending') return null
         let portallistitem = portalManager.getPortalListItem(scrollerID, index)
-        if (!portallistitem) {
-            return null // TODO: investigate the ned for this
-            setPortalStatus('prepare') // TODO: could lead to infinite loop
-        }
+        // if (!portallistitem) {
+        //     return null // TODO: investigate the ned for this
+        //     setPortalStatus('prepare') // TODO: could lead to infinite loop
+        // }
         // console.log('portallistitem for scrollerID, index', scrollerID, index, portallistitem)
         let reverseportal = portallistitem.reverseportal
         portallistitem.reparenting = true
@@ -217,7 +218,7 @@ const ItemShell = ({
 
     // (scrollerID == 0) && console.log('ITEMSHELL rendering portalStatus',portalStatus)
     return <div ref = { shellRef } data-name = 'itemshell' data-index = {index} data-instanceid = {instanceID} style = {styles}>
-            { (portalStatus != 'render')?placeholderchild: portalchild }
+            { portalchild }
     </div>
 
 

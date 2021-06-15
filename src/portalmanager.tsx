@@ -55,7 +55,7 @@ const getPortal = (content, container) => {
 }     
 
 const updatePortal = (content, reversePortal) => {
-    console.log('content, reversePortal in updatePortal',content, reversePortal)
+    // console.log('content, reversePortal in updatePortal',content, reversePortal)
     return <InPortal node = {reversePortal} >
         {content}
     </InPortal>
@@ -174,7 +174,7 @@ class PortalManager {
 
     updatePortalListItem (scrollerID, index, usercontent) {
         let portalItem = this.getPortalListItem(scrollerID,index)
-        console.log('portalItem, reverseportal in updatePortalListItem',portalItem, portalItem.reverseportal)
+        // console.log('portalItem, reverseportal in updatePortalListItem',portalItem, portalItem.reverseportal)
         let portal = updatePortal(usercontent, portalItem.reverseportal )
 
         let scrollerportals = scrollerPortalBlockMaps.get(scrollerID)
