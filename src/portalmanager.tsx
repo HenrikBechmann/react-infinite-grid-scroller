@@ -17,13 +17,14 @@ let cacheSetTrigger
 
 let portalblockstyles:React.CSSProperties = {visibility:'hidden'}
 
-const getPortal = (content, container) => {
-    // console.log('returning from getPortal')
+const getInPortal = (content, container) => {
+
     let reversePortal = createHtmlPortalNode()
     reversePortal.element = container
     return [<InPortal node = {reversePortal}>
         {content}
     </InPortal>,reversePortal]
+
 }     
 
 const updatePortal = (content, reversePortal) => {
@@ -32,8 +33,6 @@ const updatePortal = (content, reversePortal) => {
         {content}
     </InPortal>
 }
-
-let scrollerportalrootrefs = new Map()
 
 class PortalManagerClass {
 
@@ -45,14 +44,7 @@ class PortalManagerClass {
             scrollerportals.modified = false
         }
 
-        let callback = scrollerPortalCallbacks.get(scrollerID).callback
-        callback()
-
-    }
-
-    setPortalRootRef (scrollerID, ref) {
-
-        scrollerportalrootrefs.set(scrollerID, {rootref:ref})
+        scrollerPortalCallbacks.get(scrollerID).callback()
 
     }
 
@@ -94,10 +86,9 @@ class PortalManagerClass {
     }
 
     createPortalListItem (scrollerID, index, usercontent, placeholder) {
-        // console.log('creating portal item ScrollerID, index, content', scrollerID, index, usercontent)
 
         if (this.hasPortalListItem(scrollerID, index)) {
-            return this.getPortalListItem(scrollerID,index).portal
+            return
         }
 
         let container = document.createElement('div')
@@ -112,17 +103,12 @@ class PortalManagerClass {
         container.dataset.scrollerid = scrollerID
         container.setAttribute('key',index)
 
-        // scrollerportalrootrefs.get(scrollerID).rootref.current.appendChild(container)
-
-        let [portal,reverseportal] = getPortal(usercontent || placeholder, container)
-        // portalList.push(<div key = {index}>{portal}</div>)
+        let [portal,reverseportal] = getInPortal(usercontent || placeholder, container)
         let scrollerportals = scrollerPortalBlockMaps.get(scrollerID)
         scrollerportals.portalMap.set(index,<PortalWrapper portal = {portal} key = {index} index = {index}/>)
         scrollerportals.modified = true
         scrollerPortalMetaMaps.get(scrollerID).set(index, 
             {usercontent, placeholder, target:null, container, portal, reverseportal, reparenting:false, indexid:index,scrollerid:scrollerID} )
-        // maincachetrigger = !maincachetrigger
-        // cacheSetTrigger(maincachetrigger)
         portalManager.resetPortalList(scrollerID)
 
     }
@@ -143,14 +129,11 @@ class PortalManagerClass {
     }
 
     deletePortalListItem (scrollerID, index) {
-        // let itemdata = portalLists.get(scrollerID).get(index)
 
         scrollerPortalMetaMaps.get(scrollerID).delete(index)
         let portalitem = scrollerPortalBlockMaps.get(scrollerID)
         portalitem.portalMap.delete(index)
         portalitem.modified = true
-        // maincachetrigger = !maincachetrigger
-        // cacheSetTrigger(maincachetrigger)
 
     }
 
