@@ -117,7 +117,7 @@ import useIsMounted from 'react-is-mounted-hook'
 
 import { ResizeObserver } from '@juggle/resize-observer'
 
-import { PortalContext } from './portalmanager'
+import { PortalManager } from './portalmanager'
 
 const LocalResizeObserver = window['ResizeObserver'] || ResizeObserver
 
@@ -199,7 +199,7 @@ const Cradle = ({
     // -----------------------------------------------------------------------
     // -----------------------------------[ utilites ]------------------------
 
-    const portalManager = useContext(PortalContext)
+    const portalManager = useContext(PortalManager)
     let isMounted = useIsMounted()
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
 

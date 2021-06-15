@@ -7,15 +7,14 @@ import ReactDOM from 'react-dom'
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
 import Cradle from './cradle'
-import {PortalContext, PortalList} from './portalmanager'
+import {PortalManager, PortalList} from './portalmanager'
 
 let scrollerID = 0
-const getScrollerID = () => {
-    // console.log('fetching scrollerID', scrollerID)
+const getScrollerSessionID = () => {
     return scrollerID++
 }
 
-const rootstyle = {display:'none'}
+const portalrootstyle = {display:'none'}
 /*
     BACKLOG: 
     - cache: none/preload/keepload
@@ -29,13 +28,16 @@ const rootstyle = {display:'none'}
         - a component that contains displayed (or nearly displayed) items. 
     The items are skeletons which contain the host content components.
 
+    Host content is created in a portal cache (via PortalManager) and then portal'd to its parent item
+
     Scrollblock virtually represents the entirety of the list, and of course scrolls
-    Cradle contains the list items, and is 'virtualiized' -- it appears as
+
+    Cradle contains the list items, and is 'virtualized' -- it appears as
       though it is the full scrollblock, but in fact it is only slightly larger than
       the viewport.
     - individual items are framed by ItemShell, managed by Cradle
 
-    Overall the infinitegridscroller manages the often asynchronous interactions of the 
+    Overall the infinitegridscroller manages the (often asynchronous) interactions of the 
     components of the mechanism
 */
 const InfiniteGridScroller = (props) => {
@@ -58,23 +60,19 @@ const InfiniteGridScroller = (props) => {
         // to come...
         // cache = "preload", "keepload", "none"
         // dense, // boolean (only with preload)
+        // advanced, technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
         layout, // uniform, variable
         scrollerName, // for debugging
     } = props
 
-    const portalManager = useContext(PortalContext)
-    // const portalrootref = useRef()
-    const globalScrollerID = useMemo(()=>{
-        return getScrollerID()
+    const portalManager = useContext(PortalManager)
+    const scrollerSessionID = useMemo(()=>{
+        return getScrollerSessionID()
     },[])
-    const [scrollerState,setScrollerState] = useState('setup');
-    const scrollerIDRef = useRef(globalScrollerID)
-    console.log('RUNNING infinitegridscroller scrollerID, scrollerState',scrollerIDRef.current, scrollerState)
+    const [scrollerState,setScrollerState] = useState('setup') // allow cycle for portal cache setup
+    const scrollerSessionIDRef = useRef(scrollerSessionID)
 
-    // if (scrollerState == 'setup') {
-    //     console.log('setting root ref for scrollerID',scrollerIDRef.current, portalrootref)
-    //     portalManager.setPortalRootRef(scrollerIDRef.current, portalrootref);
-    // }
+    console.log('RUNNING infinitegridscroller scrollerInstanceID, scrollerState',scrollerSessionIDRef.current, scrollerState)
 
     // defaults
     functions !?? (functions = {})
@@ -90,32 +88,32 @@ const InfiniteGridScroller = (props) => {
     if (!['horizontal','vertical'].includes(orientation)) {
         orientation = 'vertical'
     }
-    // {
-    //     // activate portals by placing them in React Tree at root scroller
-    //     scrollerIDRef.current == 0?<PortalTree/>:null 
-    // }
 
-
+    // initialize
     useEffect(()=>{
-        // console.log('infinitegridscroller createScrollerPortalRepository', scrollerIDRef.current)
-        portalManager.createScrollerPortalRepository(scrollerIDRef.current)
+
+        portalManager.createScrollerPortalRepository(scrollerSessionIDRef.current)
+
+        return () => {portalManager.deleteScrollerPortalRepository(scrollerSessionIDRef.current)}
+
     },[])
     
     useEffect(()=>{
-        if (scrollerState == 'setup') {
-            setScrollerState('prepare')
+
+        switch (scrollerState) {
+            case 'setup':
+                setScrollerState('render')
+                break
         }
-        if (scrollerState == 'prepare') {
-            setScrollerState('render')
-        }
+
     },[scrollerState]) 
 
     
     return <>
-    <div data-type = 'portalroot' style = {rootstyle}>
-        <PortalList scrollerID = {scrollerIDRef.current}/>
+    <div data-type = 'portalroot' style = {portalrootstyle}>
+        <PortalList scrollerID = {scrollerSessionID}/>
     </div>
-    {(scrollerState != 'setup')? <Viewport 
+    {scrollerState != 'setup'?<Viewport 
 
         orientation = { orientation } 
         cellWidth = { cellHeight }
@@ -124,7 +122,7 @@ const InfiniteGridScroller = (props) => {
         padding = { padding }
         functions = { functions }
         styles = { styles }
-        scrollerID = {scrollerIDRef.current}
+        scrollerID = {scrollerSessionID}
     >
     
         <Scrollblock
@@ -137,7 +135,7 @@ const InfiniteGridScroller = (props) => {
             orientation = { orientation }
             functions = { functions }
             styles = { styles }
-            scrollerID = {scrollerIDRef.current}
+            scrollerID = {scrollerSessionID}
 
         >
             <Cradle 
@@ -156,7 +154,7 @@ const InfiniteGridScroller = (props) => {
                 styles = { styles }
                 runwaycount = { runway }
                 scrollerName = {scrollerName}
-                scrollerID = {scrollerIDRef.current}
+                scrollerID = {scrollerSessionID}
 
             />
         </Scrollblock>

@@ -1,4 +1,4 @@
-// contentmanager.tsx
+// portalmanager.tsx
 
 // TODO: this should be an independent hook function for localization
 
@@ -13,37 +13,9 @@ const scrollerPortalBlockMaps = new Map()
 
 const scrollerPortalCallbacks = new Map()
 
-// export let maincachetrigger = true
-
 let cacheSetTrigger
 
 let portalblockstyles:React.CSSProperties = {visibility:'hidden'}
-
-// export const PortalTree = () => {
-//     const [cachetoggle, setCachetoggle] = useState(maincachetrigger)
-//     console.log('running PORTALTREE', cachetoggle)
-//     let portalSets = []
-//     let portalKeys = []
-//     useEffect(()=>{
-//         cacheSetTrigger = setCachetoggle
-//     },[])
-//     scrollerPortalBlockMaps.forEach((block, key) => {
-//         if (block.modified) {
-//             block.portalList = Array.from(block.portalMap.values())
-//             block.modified = false
-//         }
-//         portalSets.push(block.portalList)
-//         portalKeys.push(key)
-//     })
-//     let index = 0
-//     let portalTreeBlocksList = []
-//     for (let key of portalKeys) {
-//         portalTreeBlocksList.push(<div key = {key}>{portalSets[index]}</div>)
-//         index++
-//     }
-//     // console.log('portalTreeBlocksList',portalTreeBlocksList)
-//     return <div key = 'portalblocks' id = 'portalblocks' style={portalblockstyles}>{portalTreeBlocksList}</div>
-// }
 
 const getPortal = (content, container) => {
     // console.log('returning from getPortal')
@@ -63,36 +35,18 @@ const updatePortal = (content, reversePortal) => {
 
 let scrollerportalrootrefs = new Map()
 
-class PortalManager {
-
-    // getPortalList = (scrollerID) => {
-    //     // console.log('scrollerPortalBlockMaps',scrollerPortalBlockMaps)
-    //     let scrollerportals = scrollerPortalBlockMaps.get(scrollerID)
-    //     if (scrollerportals.modified) {
-    //         scrollerportals.portalList = Array.from(scrollerportals.portalMap.values())
-    //         scrollerportals.modified = false
-    //     }
-    //     console.log('portalList',scrollerportals.portalList)
-    //     return scrollerportals.portalList
-    // }
+class PortalManagerClass {
 
     resetPortalList = (scrollerID) => {
 
-        // console.log('scrollerPortalBlockMaps',scrollerPortalBlockMaps)
         let scrollerportals = scrollerPortalBlockMaps.get(scrollerID)
-        // console.log('resetPortalList scrollerportals',scrollerportals)
         if (scrollerportals.modified) {
             scrollerportals.portalList = Array.from(scrollerportals.portalMap.values())
             scrollerportals.modified = false
         }
 
-        // console.log('scrollerPortalCallbacks',scrollerID, scrollerPortalCallbacks)
-        let callbackobj = scrollerPortalCallbacks.get(scrollerID)
-        // console.log('callbackobj',callbackobj)
         let callback = scrollerPortalCallbacks.get(scrollerID).callback
-        // console.log('callback',callback)
         callback()
-        // console.log('portalList',scrollerportals.portalList)
 
     }
 
@@ -135,6 +89,7 @@ class PortalManager {
 
         scrollerPortalMetaMaps.delete(scrollerID)
         scrollerPortalBlockMaps.delete(scrollerID)
+        scrollerPortalCallbacks.delete(scrollerID)
 
     }
 
@@ -220,9 +175,9 @@ class PortalManager {
 
 }
 
-const portalManager = new PortalManager()
+const portalManager = new PortalManagerClass()
 
-export const PortalContext = React.createContext(portalManager)
+export const PortalManager = React.createContext(portalManager)
 
 const wrapperstyle = {display:'none'}
 
@@ -239,11 +194,12 @@ export const PortalWrapper = ({
 export const PortalList = ({scrollerID}) => {
 
     useEffect(()=>{
-        // console.log('setting callback with scrollerID',scrollerID)
+
         scrollerPortalCallbacks.set(scrollerID,
             {callback:()=>{
                 setPortalList(scrollerPortalBlockMaps.get(scrollerID).portalList)
             }})
+
     },[]) 
 
     const [portalList, setPortalList] = useState(null)

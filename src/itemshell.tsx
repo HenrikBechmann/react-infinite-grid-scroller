@@ -13,7 +13,7 @@ import { createHtmlPortalNode, InPortal, OutPortal } from 'react-reverse-portal'
 
 import Placeholder from './placeholder'
 
-import { PortalContext } from './portalmanager'
+import { PortalManager } from './portalmanager'
 
 const ItemShell = ({
     orientation, 
@@ -30,7 +30,7 @@ const ItemShell = ({
     scrollerID,
 }) => {
     
-    const portalManager = useContext(PortalContext)
+    const portalManager = useContext(PortalManager)
     // const linkedContentRef = useRef(false)
     // const portalRef = useRef(null)
     const [error, saveError] = useState(null)

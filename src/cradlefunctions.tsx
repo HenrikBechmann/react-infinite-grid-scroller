@@ -11,7 +11,7 @@ import ItemShell from './itemshell'
 
 import { detect } from 'detect-browser'
 
-import { PortalContext } from './portalmanager'
+// import { PortalManager } from './portalmanager'
 
 const browser = detect()
 
