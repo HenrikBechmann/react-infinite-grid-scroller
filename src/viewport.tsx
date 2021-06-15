@@ -69,15 +69,16 @@ const Viewport = ({
     const viewportDataRef = useRef(null)
 
     const resizeObserverRef = useRef(null)
-    const parentPortalRef = useRef(null)
+    // const parentPortalRef = useRef(null)
 
     // initialize
     useLayoutEffect(()=>{
 
-        if (viewportstateRef.current == 'setup') {
-            setViewportState('configure')
-            return
-        }
+        // if (viewportstateRef.current == 'setup') {
+        //     setViewportState('configure')
+        //     return
+        // }
+        console.log('resizeObserver setup viewportstateRef.current, viewportstateRef.current',viewportstateRef.current, viewportstateRef.current)
         resizeObserverRef.current = new LocalResizeObserver(resizeCallback)
         resizeObserverRef.current.observe(viewportdivRef.current)
 
@@ -110,7 +111,7 @@ const Viewport = ({
             console.log('ERROR: parent portalcontainer not found')
             return
         }
-        parentPortalRef.current = portalmanager.getPortalListItem(parentscrollerid, parentindex)
+        // parentPortalRef.current = portalmanager.getPortalListItem(parentscrollerid, parentindex)
         // console.log('viewport of scrollerID has parentscrollerid and parentindex for portal', 
         //     scrollerID, parentscrollerid, parentindex,parentPortalRef.current)
         // portalIndexRef.current = el.dataset.index
@@ -119,14 +120,16 @@ const Viewport = ({
 
     const resizeCallback = useCallback((entries)=>{
 
+        console.log('resizeCallback viewportstateRef.current',viewportstateRef.current)
+
         if (viewportstateRef.current == 'setup' || viewportstateRef.current == 'configure') return
 
-        console.log('scrollerID, checking portal reparenting',scrollerID, parentPortalRef.current)
-        if (parentPortalRef.current && parentPortalRef.current.reparenting) {
-            parentPortalRef.current.reparenting = false
-            console.log('returning from viewport resizeCallback')
-            return
-        }
+        // console.log('scrollerID, checking portal reparenting',scrollerID, parentPortalRef.current)
+        // if (parentPortalRef.current && parentPortalRef.current.reparenting) {
+        //     parentPortalRef.current.reparenting = false
+        //     console.log('returning from viewport resizeCallback')
+        //     return
+        // }
 
         let target = entries[0].target
 
@@ -212,6 +215,9 @@ const Viewport = ({
     // --------------------[ state processing ]---------------------------
     useEffect(()=>{
         switch (viewportstate) {
+            case 'setup':
+                setViewportState('configure')
+                break
             case 'configure':
                 setViewportState('calculate')
                 break
