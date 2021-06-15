@@ -72,7 +72,7 @@ const InfiniteGridScroller = (props) => {
     const [scrollerState,setScrollerState] = useState('setup') // allow cycle for portal cache setup
     const scrollerSessionIDRef = useRef(scrollerSessionID)
 
-    console.log('RUNNING infinitegridscroller scrollerInstanceID, scrollerState',scrollerSessionIDRef.current, scrollerState)
+    console.log('RUNNING infinitegridscroller scrollerSessionID, scrollerState',scrollerSessionIDRef.current, scrollerState)
 
     // defaults
     functions !?? (functions = {})
@@ -94,6 +94,7 @@ const InfiniteGridScroller = (props) => {
 
         portalManager.createScrollerPortalRepository(scrollerSessionIDRef.current)
 
+        // cleanup
         return () => {portalManager.deleteScrollerPortalRepository(scrollerSessionIDRef.current)}
 
     },[])

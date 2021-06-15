@@ -185,7 +185,7 @@ export const PortalWrapper = ({
     portal, index,
 }) => {
 
-    return <div data-type='portalwrapper' style = {wrapperstyle} key={index}>
+    return <div data-type='portalwrapper' data-index = {index} style = {wrapperstyle} key={index}>
         {portal}
     </div>
 
