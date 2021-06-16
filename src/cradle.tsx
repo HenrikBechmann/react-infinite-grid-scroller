@@ -426,7 +426,7 @@ const Cradle = ({
             console.log('ERROR: parent portalcontainer not found')
             return
         }
-        portalListItemRef.current = portalManager.getPortalListItem(parentscrollerid, parentindex)
+        ViewportPortalListItemRef.current = portalManager.getPortalListItem(parentscrollerid, parentindex)
 
     },[spineCradleElementRef.current])
 
@@ -782,7 +782,7 @@ const Cradle = ({
                 !(cradleState == 'repositioning') && 
                 !(cradleState == 'reposition') && 
                 !(cradleState == 'pivot') &&
-                !(portalListItemRef.current && portalListItemRef.current.reparenting)
+                !(ViewportPortalListItemRef.current && ViewportPortalListItemRef.current.reparenting)
                 ) 
             {
 
@@ -1515,7 +1515,7 @@ const Cradle = ({
 
     },[])
 
-    const portalListItemRef = useRef(null)
+    const ViewportPortalListItemRef = useRef(null)
     // content item registration callback; called from item
     const getItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
 

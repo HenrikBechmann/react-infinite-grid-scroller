@@ -37,15 +37,17 @@ const Viewport = ({
 
     // processing state
     const portalmanager = useContext(PortalManager)
-    // setup -> calculate -> render; resizing -> resize -> render
+
+    // setup -> calculate -> render; resizing -> resized -> render
     const [viewportstate,setViewportState] = useState('setup')
     console.log('RUNNING viewport scrollerID, viewportstate',scrollerID,viewportstate)
+
     const viewportstateRef = useRef(null)
     viewportstateRef.current = viewportstate
     let isMounted = useIsMounted()
-    // data heap
 
-    const timeoutidRef = useRef(null)
+    // data heap
+    // const timeoutidRef = useRef(null)
     const viewportdivRef = useRef(undefined)
     const divlinerstyleRef = useRef(
         Object.assign({
@@ -127,12 +129,10 @@ const Viewport = ({
         }
 
         if (!isResizingRef.current) {
-            isResizingRef.current = true 
+            viewportDataRef.current.isResizing = isResizingRef.current = true 
                 // below is a realtime message to cradle.onScroll
                 // to stop updating the referenceIndexData, and to the item observer to stop
                 // triggering responses (anticipating reset of cradle content based on resize)
-            viewportDataRef.current.isResizing = true
-            // isMounted = useIsMounted()
             if (isMounted()) setViewportState('resizing')
         }
 
@@ -140,7 +140,7 @@ const Viewport = ({
         resizeTimeridRef.current = setTimeout(() => {
 
             isResizingRef.current = false
-            if (isMounted()) setViewportState('resize')
+            if (isMounted()) setViewportState('resized')
 
         },RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE)
 
@@ -165,23 +165,17 @@ const Viewport = ({
     },[orientation, cellWidth, cellHeight, padding]) // TODO: gap?
 
     let viewportClientRectRef = useRef({top:0,right:0,bottom:0,left:0})
-    useEffect(()=> {
-        // if ((scrollerID == 0) && (viewportstate != 'calculate')) return
+
+    useLayoutEffect(()=> {
         if (viewportstate != 'calculate') return
 
         viewportClientRectRef.current = viewportdivRef.current.getBoundingClientRect()
-        // console.log('viewportstate, getBoundingClientRect',viewportstate, viewportClientRectRef.current)
-        // if (viewportClientRectRef.current.top == 0) {
-        //     setViewportState('configure')
-        // }
         
     },[viewportstate])
 
     let {top, right, bottom, left} = viewportClientRectRef.current
-    // console.log('viewport scrollerID, viewportstate, top, right, bottom, left',scrollerID, viewportstate, top, right, bottom, left)
 
     // set context data for children
-
     viewportDataRef.current = useMemo(() => {
 
         let width, height, localViewportData
@@ -197,13 +191,13 @@ const Viewport = ({
     },[orientation, top, right, bottom, left, isResizingRef.current, viewportstate])
 
     // --------------------[ state processing ]---------------------------
-    useEffect(()=>{
+    useLayoutEffect(()=>{
         switch (viewportstate) {
             case 'setup':
                 setViewportState('calculate')
                 break
             case 'calculate':
-            case 'resize': {
+            case 'resized': {
                 // console.log('set viewportstate to render from',viewportstate)
                 setViewportState('render')
                 break

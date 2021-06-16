@@ -1,7 +1,12 @@
 // infinitegridscroller.tsx
 // copyright (c) 2019 Henrik Bechmann, Toronto, Licence: MIT
 
-import React, {useState, useRef, useEffect, useMemo, useContext} from 'react'
+/*
+    TODO:
+    promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
+*/
+
+import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useContext} from 'react'
 import ReactDOM from 'react-dom'
 
 import Viewport from './viewport'
@@ -90,7 +95,7 @@ const InfiniteGridScroller = (props) => {
     }
 
     // initialize
-    useEffect(()=>{
+    useLayoutEffect(()=>{
 
         portalManager.createScrollerPortalRepository(scrollerSessionIDRef.current)
 
@@ -99,7 +104,7 @@ const InfiniteGridScroller = (props) => {
 
     },[])
     
-    useEffect(()=>{
+    useLayoutEffect(()=>{
 
         switch (scrollerState) {
             case 'setup':
