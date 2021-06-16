@@ -42,9 +42,9 @@ class PortalManagerClass {
     }
 
     // start again
-    resetScrollerPortalRepository(scrollerID) {
+    resetScrollerPortalRepository(scrollerID) { // TODO: confirm no memory leak
 
-        this.deleteScrollerPortalRepository(scrollerID)
+        this.clearScrollerPortalRepository(scrollerID)
         this.createScrollerPortalRepository(scrollerID)
 
     }

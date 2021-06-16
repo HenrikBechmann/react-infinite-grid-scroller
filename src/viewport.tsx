@@ -41,7 +41,7 @@ const Viewport = ({
 
     // processing state
     const portalmanager = useContext(PortalManager)
-    // setup -> configure -> calculate -> provision -> prepare -> render; resizing -> resize -> render
+    // setup -> calculate -> render; resizing -> resize -> render
     const [viewportstate,setViewportState] = useState('setup')
     console.log('RUNNING viewport scrollerID, viewportstate',scrollerID,viewportstate)
     const viewportstateRef = useRef(null)
@@ -74,11 +74,7 @@ const Viewport = ({
     // initialize
     useLayoutEffect(()=>{
 
-        // if (viewportstateRef.current == 'setup') {
-        //     setViewportState('configure')
-        //     return
-        // }
-        console.log('resizeObserver setup viewportstateRef.current, viewportstateRef.current',viewportstateRef.current, viewportstateRef.current)
+        // console.log('resizeObserver setup viewportstateRef.current, viewportdivRef.current',viewportstateRef.current, viewportdivRef.current)
         resizeObserverRef.current = new LocalResizeObserver(resizeCallback)
         resizeObserverRef.current.observe(viewportdivRef.current)
 
@@ -90,35 +86,35 @@ const Viewport = ({
 
     },[])
 
-    useLayoutEffect(()=>{
+    // useLayoutEffect(()=>{
 
-        if (scrollerID == 0 || !viewportdivRef.current) return
-        let parentscrollerid
-        let parentindex
-        let el = viewportdivRef.current
-        while (el) {
-            // console.log('dataset',el.dataset, el)
-            if (el.dataset && (el.dataset.type == 'portalcontainer')) {
-                parentindex = parseInt(el.dataset.index)
-                parentscrollerid = parseInt(el.dataset.scrollerid)
-                break
-            } else {
-                el = el.parentElement
-            }
-        } 
+    //     if (scrollerID == 0 || !viewportdivRef.current) return
+    //     let parentscrollerid
+    //     let parentindex
+    //     let el = viewportdivRef.current
+    //     while (el) {
+    //         // console.log('dataset',el.dataset, el)
+    //         if (el.dataset && (el.dataset.type == 'portalcontainer')) {
+    //             parentindex = parseInt(el.dataset.index)
+    //             parentscrollerid = parseInt(el.dataset.scrollerid)
+    //             break
+    //         } else {
+    //             el = el.parentElement
+    //         }
+    //     } 
 
-        if (!el) {
-            console.log('ERROR: parent portalcontainer not found')
-            return
-        }
+    //     if (!el) {
+    //         console.log('ERROR: parent portalcontainer not found')
+    //         return
+    //     }
 
-    },[viewportdivRef.current])
+    // },[viewportdivRef.current])
 
     const resizeCallback = useCallback((entries)=>{
 
-        console.log('resizeCallback viewportstateRef.current',viewportstateRef.current)
+        // console.log('resizeCallback viewportstateRef.current',viewportstateRef.current)
 
-        if (viewportstateRef.current == 'setup' || viewportstateRef.current == 'configure') return
+        if (viewportstateRef.current == 'setup') return
 
         // console.log('scrollerID, checking portal reparenting',scrollerID, parentPortalRef.current)
         // if (parentPortalRef.current && parentPortalRef.current.reparenting) {
@@ -148,7 +144,6 @@ const Viewport = ({
         resizeTimeridRef.current = setTimeout(() => {
 
             isResizingRef.current = false
-            // isMounted = useIsMounted()
             if (isMounted()) setViewportState('resize')
 
         },RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE)
@@ -175,13 +170,14 @@ const Viewport = ({
 
     let viewportClientRectRef = useRef({top:0,right:0,bottom:0,left:0})
     useEffect(()=> {
-        if ((scrollerID == 0) && (viewportstate != 'calculate')) return
+        // if ((scrollerID == 0) && (viewportstate != 'calculate')) return
+        if (viewportstate != 'calculate') return
 
         viewportClientRectRef.current = viewportdivRef.current.getBoundingClientRect()
         // console.log('viewportstate, getBoundingClientRect',viewportstate, viewportClientRectRef.current)
-        if (viewportClientRectRef.current.top == 0) {
-            setViewportState('configure')
-        }
+        // if (viewportClientRectRef.current.top == 0) {
+        //     setViewportState('configure')
+        // }
         
     },[viewportstate])
 
@@ -191,19 +187,15 @@ const Viewport = ({
     // set context data for children
 
     viewportDataRef.current = useMemo(() => {
-        // if (!(viewportstate == 'provision')) return viewportDataRef.current || undefined
-        // console.log('CALCULATING VIEWPORTDATAREF',viewportstate)
+
         let width, height, localViewportData
-        // if (!(top === undefined)) { //proxy
-            width = (right - left)
-            height = (bottom - top)
-            localViewportData = {
-                viewportDimensions:{top,right, bottom, left, width, height},
-                elementref:viewportdivRef,
-                isResizing:isResizingRef.current,
-            }
-        // }
-        // console.log('viewportstate, returning localViewportData',viewportstate, localViewportData)
+        width = (right - left)
+        height = (bottom - top)
+        localViewportData = {
+            viewportDimensions:{top,right, bottom, left, width, height},
+            elementref:viewportdivRef,
+            isResizing:isResizingRef.current,
+        }
         return localViewportData
 
     },[orientation, top, right, bottom, left, isResizingRef.current, viewportstate])
@@ -212,23 +204,9 @@ const Viewport = ({
     useEffect(()=>{
         switch (viewportstate) {
             case 'setup':
-                setViewportState('configure')
-                break
-            case 'configure':
                 setViewportState('calculate')
                 break
             case 'calculate':
-                setViewportState('provision')
-                break
-            case 'provision':
-                // setTimeout(() => { // allow ancestral DOM to catch up
-                    setViewportState('prepare')
-                // },1)
-                break
-            case 'prepare':
-            //     setViewportState('prerender')
-            //     break
-            // case 'prerender':
             case 'resize': {
                 // console.log('set viewportstate to render from',viewportstate)
                 setViewportState('render')
@@ -247,7 +225,7 @@ const Viewport = ({
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >
-            { ((viewportstate != 'setup') && (viewportstate != 'configure') && (viewportstate != 'calculate') && (viewportstate != 'provision')  && (viewportstate != 'prepare'))?children:null }
+            { ((viewportstate != 'setup') && (viewportstate != 'calculate'))?children:null }
         </div>
     </ViewportContext.Provider>
     
