@@ -1,19 +1,23 @@
 // portalmanager.tsx
 
-// TODO: this should be an independent hook function for localization
+/*
+    The infinite list scroller stores user cell data in a hidden portal cache, from whence
+    the data is pulled into the relevant ItemShell for display
+*/
 
 import React, {useState, useEffect} from 'react'
 import ReactDOM from 'react-dom'
 
 import { createHtmlPortalNode, InPortal, OutPortal } from 'react-reverse-portal'
 
-// scroller data
+// global scroller data, organized by session scrollerID
 const scrollerPortalMetaMaps = new Map()
 const scrollerPortalBlockMaps = new Map()
 const scrollerPortalCallbacks = new Map()
 
 class PortalManagerClass {
 
+    // initialize scroller repository
     createScrollerPortalRepository (scrollerID) {
 
         if (!scrollerPortalMetaMaps.has(scrollerID)) {
@@ -25,6 +29,7 @@ class PortalManagerClass {
 
     }
 
+    // clear scroller repository for list recreation (like re-positioning in list)
     clearScrollerPortalRepository (scrollerID) {
 
         if (scrollerPortalMetaMaps.has(scrollerID)) {
@@ -36,13 +41,15 @@ class PortalManagerClass {
 
     }
 
+    // start again
     resetScrollerPortalRepository(scrollerID) {
 
-        this.clearScrollerPortalRepository(scrollerID)
+        this.deleteScrollerPortalRepository(scrollerID)
         this.createScrollerPortalRepository(scrollerID)
 
     }
 
+    // delete scroller repository for reset or unmount
     deleteScrollerPortalRepository (scrollerID) {
 
         scrollerPortalMetaMaps.delete(scrollerID)
@@ -51,6 +58,7 @@ class PortalManagerClass {
 
     }
 
+    // set state of the PortalList component of the scroller to trigger render
     renderPortalList = (scrollerID) => {
 
         let scrollerblockmap = scrollerPortalBlockMaps.get(scrollerID)
@@ -63,6 +71,7 @@ class PortalManagerClass {
 
     }
 
+    // add a portal list item. The index is the scroller dataset index
     createPortalListItem (scrollerID, index, usercontent, placeholder) {
 
         if (this.hasPortalListItem(scrollerID, index)) {
@@ -94,6 +103,7 @@ class PortalManagerClass {
 
     }
 
+    // update the content of a portal list item
     updatePortalListItem (scrollerID, index, usercontent) {
         let portalItem = this.getPortalListItem(scrollerID,index)
 
@@ -108,6 +118,7 @@ class PortalManagerClass {
         this.renderPortalList(scrollerID)
     }
 
+    // delete a portal list item
     deletePortalListItem (scrollerID, index) {
 
         scrollerPortalMetaMaps.get(scrollerID).delete(index)
@@ -117,12 +128,14 @@ class PortalManagerClass {
 
     }
 
+    // query existence of a portal list item
     hasPortalListItem (scrollerID, index) {
 
         return scrollerPortalMetaMaps.get(scrollerID).has(index)
 
     }
 
+    // query existence of content for a portal list item
     hasPortalUserContent (scrollerID, index) {
 
         let portalItem = this.getPortalListItem(scrollerID, index)
@@ -130,6 +143,7 @@ class PortalManagerClass {
 
     }
 
+    // get a portal list item's meta data
     getPortalListItem (scrollerID, index) {
 
         return scrollerPortalMetaMaps.get(scrollerID).get(index)
@@ -138,10 +152,13 @@ class PortalManagerClass {
 
 }
 
+// export the portal manager
 export const PortalManager = React.createContext(new PortalManagerClass())
 
 // Utility functions
 
+// get a react-reverse-portal InPortal component, with its metadata
+// from user content and container
 const getInPortal = (content, container) => {
 
     let reversePortal = createHtmlPortalNode()
@@ -153,6 +170,7 @@ const getInPortal = (content, container) => {
 
 }     
 
+// update an InPortal component's user content
 const updateInPortal = (content, reversePortal) => {
 
     return <InPortal node = {reversePortal} >
@@ -163,8 +181,9 @@ const updateInPortal = (content, reversePortal) => {
 
 // Utility components
 
-const wrapperstyle = {display:'none'}
+const wrapperstyle = {display:'none'} // static
 
+// hidden portal wrapper for clarity and usage of conentional react relisting services
 export const PortalWrapper = ({
     portal, index,
 }) => {
@@ -175,6 +194,7 @@ export const PortalWrapper = ({
 
 }
 
+// portal list component for rapid relisting for updates, using external callback for set state
 export const PortalList = ({scrollerID}) => {
 
     const [portalList, setPortalList] = useState(null)
