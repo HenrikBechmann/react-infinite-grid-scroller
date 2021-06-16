@@ -2,12 +2,8 @@
 // copyright (c) 2020 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-
-    TODO:
-    Warning: Can't perform a React state update on an unmounted component. - find and fix
-
     The role of viewport is to provide data to its children (scrollblock and cradle), 
-    and act as the visible portal of the list being shown
+    and act as the visible screen portal of the list being shown
 */
 
 import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useContext} from 'react'
