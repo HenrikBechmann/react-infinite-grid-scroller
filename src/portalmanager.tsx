@@ -7,46 +7,12 @@ import ReactDOM from 'react-dom'
 
 import { createHtmlPortalNode, InPortal, OutPortal } from 'react-reverse-portal'
 
+// scroller data
 const scrollerPortalMetaMaps = new Map()
-
 const scrollerPortalBlockMaps = new Map()
-
 const scrollerPortalCallbacks = new Map()
 
-let cacheSetTrigger
-
-let portalblockstyles:React.CSSProperties = {visibility:'hidden'}
-
-const getInPortal = (content, container) => {
-
-    let reversePortal = createHtmlPortalNode()
-    reversePortal.element = container
-    return [<InPortal node = {reversePortal}>
-        {content}
-    </InPortal>,reversePortal]
-
-}     
-
-const updatePortal = (content, reversePortal) => {
-    // console.log('content, reversePortal in updatePortal',content, reversePortal)
-    return <InPortal node = {reversePortal} >
-        {content}
-    </InPortal>
-}
-
 class PortalManagerClass {
-
-    resetPortalList = (scrollerID) => {
-
-        let scrollerportals = scrollerPortalBlockMaps.get(scrollerID)
-        if (scrollerportals.modified) {
-            scrollerportals.portalList = Array.from(scrollerportals.portalMap.values())
-            scrollerportals.modified = false
-        }
-
-        scrollerPortalCallbacks.get(scrollerID).callback()
-
-    }
 
     createScrollerPortalRepository (scrollerID) {
 
@@ -85,6 +51,18 @@ class PortalManagerClass {
 
     }
 
+    renderPortalList = (scrollerID) => {
+
+        let scrollerblockmap = scrollerPortalBlockMaps.get(scrollerID)
+        if (scrollerblockmap.modified) {
+            scrollerblockmap.portalList = Array.from(scrollerblockmap.portalMap.values())
+            scrollerblockmap.modified = false
+        }
+
+        scrollerPortalCallbacks.get(scrollerID).setState() // trigger display update
+
+    }
+
     createPortalListItem (scrollerID, index, usercontent, placeholder) {
 
         if (this.hasPortalListItem(scrollerID, index)) {
@@ -104,28 +82,30 @@ class PortalManagerClass {
         container.setAttribute('key',index)
 
         let [portal,reverseportal] = getInPortal(usercontent || placeholder, container)
+
         let scrollerportals = scrollerPortalBlockMaps.get(scrollerID)
         scrollerportals.portalMap.set(index,<PortalWrapper portal = {portal} key = {index} index = {index}/>)
         scrollerportals.modified = true
+
         scrollerPortalMetaMaps.get(scrollerID).set(index, 
             {usercontent, placeholder, target:null, container, portal, reverseportal, reparenting:false, indexid:index,scrollerid:scrollerID} )
-        portalManager.resetPortalList(scrollerID)
+
+        this.renderPortalList(scrollerID)
 
     }
 
     updatePortalListItem (scrollerID, index, usercontent) {
         let portalItem = this.getPortalListItem(scrollerID,index)
-        // console.log('portalItem, reverseportal in updatePortalListItem',portalItem, portalItem.reverseportal)
-        let portal = updatePortal(usercontent, portalItem.reverseportal )
+
+        let portal = updateInPortal(usercontent, portalItem.reverseportal )
 
         let scrollerportals = scrollerPortalBlockMaps.get(scrollerID)
         scrollerportals.portalMap.set(index,<PortalWrapper portal = {portal} key = {index} index = {index}/>)
         scrollerportals.modified = true
-        let portalmap = scrollerPortalMetaMaps.get(scrollerID).get(index) 
-        
-        portalmap.usercontent = usercontent
 
-        portalManager.resetPortalList(scrollerID)
+        scrollerPortalMetaMaps.get(scrollerID).get(index).usercontent = usercontent
+
+        this.renderPortalList(scrollerID)
     }
 
     deletePortalListItem (scrollerID, index) {
@@ -158,9 +138,30 @@ class PortalManagerClass {
 
 }
 
-const portalManager = new PortalManagerClass()
+export const PortalManager = React.createContext(new PortalManagerClass())
 
-export const PortalManager = React.createContext(portalManager)
+// Utility functions
+
+const getInPortal = (content, container) => {
+
+    let reversePortal = createHtmlPortalNode()
+    reversePortal.element = container
+
+    return [<InPortal node = {reversePortal}>
+        {content}
+    </InPortal>,reversePortal]
+
+}     
+
+const updateInPortal = (content, reversePortal) => {
+
+    return <InPortal node = {reversePortal} >
+        { content }
+    </InPortal>
+
+}
+
+// Utility components
 
 const wrapperstyle = {display:'none'}
 
@@ -176,16 +177,16 @@ export const PortalWrapper = ({
 
 export const PortalList = ({scrollerID}) => {
 
+    const [portalList, setPortalList] = useState(null)
+
     useEffect(()=>{
 
         scrollerPortalCallbacks.set(scrollerID,
-            {callback:()=>{
+            {setState:()=>{
                 setPortalList(scrollerPortalBlockMaps.get(scrollerID).portalList)
             }})
 
     },[]) 
-
-    const [portalList, setPortalList] = useState(null)
 
     return portalList
 }

@@ -426,10 +426,7 @@ const Cradle = ({
             console.log('ERROR: parent portalcontainer not found')
             return
         }
-        portalRef.current = portalManager.getPortalListItem(parentscrollerid, parentindex)
-        // console.log('viewport of scrollerID has parentscrollerid and parentindex for portal', 
-        //     scrollerID, parentscrollerid, parentindex,portalRef.current)
-        // portalIndexRef.current = el.dataset.index
+        portalListItemRef.current = portalManager.getPortalListItem(parentscrollerid, parentindex)
 
     },[spineCradleElementRef.current])
 
@@ -778,7 +775,6 @@ const Cradle = ({
         if (!controlFlags.isCradleInView) 
 
         {
-            // console.log('inside cradleintersectionobservercallback portalRef',portalRef)
             let cradleState = cradleStateRef.current        
             if (
                 !viewportDataRef.current.isResizing &&
@@ -786,7 +782,7 @@ const Cradle = ({
                 !(cradleState == 'repositioning') && 
                 !(cradleState == 'reposition') && 
                 !(cradleState == 'pivot') &&
-                !(portalRef.current && portalRef.current.reparenting)
+                !(portalListItemRef.current && portalListItemRef.current.reparenting)
                 ) 
             {
 
@@ -796,7 +792,6 @@ const Cradle = ({
                 viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
                 controlFlags.pauseItemObserver = true
                 // pauseCradleIntersectionObserverRef.current = true
-                // console.log('REPOSITIONING scrollerID', scrollerID, portalRef.current)
                 let cradleContent = cradleContentRef.current
                 cradleContent.headModel = []
                 cradleContent.tailModel = []
@@ -1520,18 +1515,15 @@ const Cradle = ({
 
     },[])
 
-    const portalRef = useRef(null)
+    const portalListItemRef = useRef(null)
     // content item registration callback; called from item
     const getItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
 
         const [index, shellref, portalDataRef] = itemElementData
-        // console.log('getItemElementData: index, shellref, portalDataRef', index, shellref, portalDataRef)
-        // portalRef.current = portalDataRef
 
         if (reportType == 'register') {
 
             itemElementsRef.current.set(index,shellref)
-            // cradleContentRef.current.portalData.set(index,portalDataRef)
 
         } else if (reportType == 'unregister') {
 

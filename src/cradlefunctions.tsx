@@ -1158,11 +1158,10 @@ const emitItem = ({
 
 export const deleteAndResetPortals = (portalManager, scrollerID, deleteList) => {
 
-    // console.log('deleteList', deleteList)
     for (let item of deleteList) {
         portalManager.deletePortalListItem(scrollerID, item.props.index)
     }
-    if (deleteList.length) portalManager.resetPortalList(scrollerID)
+    if (deleteList.length) portalManager.renderPortalList(scrollerID)
 }
 // ========================================================================================
 // ------------------------------------[ styles ]------------------------------------------

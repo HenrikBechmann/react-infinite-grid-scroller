@@ -111,10 +111,6 @@ const Viewport = ({
             console.log('ERROR: parent portalcontainer not found')
             return
         }
-        // parentPortalRef.current = portalmanager.getPortalListItem(parentscrollerid, parentindex)
-        // console.log('viewport of scrollerID has parentscrollerid and parentindex for portal', 
-        //     scrollerID, parentscrollerid, parentindex,parentPortalRef.current)
-        // portalIndexRef.current = el.dataset.index
 
     },[viewportdivRef.current])
 
