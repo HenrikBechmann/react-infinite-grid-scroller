@@ -216,7 +216,7 @@ const Cradle = ({
 
     const [cradleState, saveCradleState] = useState('setup')
 
-    // console.log('cradle RUNNING cradleState',cradleState)
+    console.log('cradle RUNNING cradleState with viewportData',cradleState, viewportData)
 
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState

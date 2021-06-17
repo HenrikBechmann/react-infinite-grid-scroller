@@ -36,7 +36,7 @@ const Viewport = ({
     // -----------------------[ initialize ]------------------
 
     // processing state
-    const portalmanager = useContext(PortalManager)
+    const portalManager = useContext(PortalManager)
 
     // setup -> calculate -> render; resizing -> resized -> render
     const [viewportstate,setViewportState] = useState('setup')
@@ -64,7 +64,7 @@ const Viewport = ({
     } as React.CSSProperties,styles?.viewport))
     const resizeTimeridRef = useRef(null)
     const isResizingRef = useRef(false)
-    const viewportDataRef = useRef(null)
+    const viewportDataRef = useRef({portalitem:null, isResizing:false})
 
     const resizeObserverRef = useRef(null)
     // const parentPortalRef = useRef(null)
@@ -84,35 +84,38 @@ const Viewport = ({
 
     },[])
 
-    // useLayoutEffect(()=>{
+    useLayoutEffect(()=>{
 
-    //     if (scrollerID == 0 || !viewportdivRef.current) return
-    //     let parentscrollerid
-    //     let parentindex
-    //     let el = viewportdivRef.current
-    //     while (el) {
-    //         // console.log('dataset',el.dataset, el)
-    //         if (el.dataset && (el.dataset.type == 'portalcontainer')) {
-    //             parentindex = parseInt(el.dataset.index)
-    //             parentscrollerid = parseInt(el.dataset.scrollerid)
-    //             break
-    //         } else {
-    //             el = el.parentElement
-    //         }
-    //     } 
+        if (scrollerID == 0 || !viewportdivRef.current) return
+        let parentscrollerid
+        let parentindex
+        let el = viewportdivRef.current
+        while (el) {
+            // console.log('dataset',el.dataset, el)
+            if (el.dataset && (el.dataset.type == 'portalcontainer')) {
+                parentindex = parseInt(el.dataset.index)
+                parentscrollerid = parseInt(el.dataset.scrollerid)
+                viewportDataRef.current.portalitem = portalManager.getPortalListItem(parentscrollerid, parentindex)
+                break
+            } else {
+                el = el.parentElement
+            }
+        } 
 
-    //     if (!el) {
-    //         console.log('ERROR: parent portalcontainer not found')
-    //         return
-    //     }
+        if (!el) {
+            console.log('ERROR: parent portalcontainer not found')
+            return
+        }
 
-    // },[viewportdivRef.current])
+    },[viewportdivRef.current])
 
     const resizeCallback = useCallback((entries)=>{
 
         // console.log('resizeCallback viewportstateRef.current',viewportstateRef.current)
 
         if (viewportstateRef.current == 'setup') return
+        let portalitem = viewportDataRef.current.portalitem
+        if (portalitem && portalitem.reparenting) return
 
         // console.log('scrollerID, checking portal reparenting',scrollerID, parentPortalRef.current)
         // if (parentPortalRef.current && parentPortalRef.current.reparenting) {
@@ -186,7 +189,7 @@ const Viewport = ({
             elementref:viewportdivRef,
             isResizing:isResizingRef.current,
         }
-        return localViewportData
+        return Object.assign(viewportDataRef.current, localViewportData)
 
     },[orientation, top, right, bottom, left, isResizingRef.current, viewportstate])
 
