@@ -30,6 +30,8 @@ const ItemShell = ({
     scrollerID,
 }) => {
     
+    // console.log('running itemshell with scrollerID',scrollerID)
+
     const portalManager = useContext(PortalManager)
     // const linkedContentRef = useRef(false)
     // const portalRef = useRef(null)

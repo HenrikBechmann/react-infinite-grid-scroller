@@ -40,7 +40,7 @@ const Viewport = ({
 
     // setup -> calculate -> render; resizing -> resized -> render
     const [viewportstate,setViewportState] = useState('setup')
-    console.log('RUNNING viewport scrollerID, viewportstate',scrollerID,viewportstate)
+    // console.log('RUNNING viewport scrollerID, viewportstate',scrollerID,viewportstate)
 
     const viewportstateRef = useRef(null)
     viewportstateRef.current = viewportstate
@@ -115,6 +115,9 @@ const Viewport = ({
 
         if (viewportstateRef.current == 'setup') return
         let portalitem = viewportDataRef.current.portalitem
+
+        // console.log('viewport parent portalitem', portalitem)
+        
         if (portalitem && portalitem.reparenting) return
 
         let target = entries[0].target

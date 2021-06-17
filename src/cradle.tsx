@@ -159,6 +159,8 @@ const Cradle = ({
         scrollerID,
     }) => {
 
+    // console.log('cradle scrollerID',scrollerID)
+
     // functions and styles handled separately
     const cradlePropsRef = useRef(null) // access by closures
     cradlePropsRef.current = useMemo(() => {
@@ -216,7 +218,7 @@ const Cradle = ({
 
     const [cradleState, saveCradleState] = useState('setup')
 
-    console.log('cradle RUNNING cradleState with viewportData',cradleState, viewportData)
+    // console.log('cradle RUNNING cradleState with viewportData',cradleState, viewportData)
 
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
