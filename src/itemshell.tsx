@@ -81,12 +81,10 @@ const ItemShell = ({
                         // if (isMounted()) { 
                             // console.log('saving new usercontent by promise',scrollerName, scrollerID, index, usercontent)
                             portalManager.updatePortalListItem(scrollerID,index,usercontent)
-                            // setPortalStatus('available')
                             saveError(null)
                         // }
                     }).catch((e) => {
                         // if (isMounted()) { 
-                            // saveContent(null)
                             saveError(e)
                         // }
                     })
@@ -97,7 +95,6 @@ const ItemShell = ({
                             let usercontent = contentItem;
                             // (scrollerID == 0) && console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
                             portalManager.updatePortalListItem(scrollerID,index,usercontent)
-                            // setPortalStatus('available')
                             saveError(null)
                         } else {
                             saveError(true)
@@ -114,12 +111,6 @@ const ItemShell = ({
         }
     },[])
 
-    // useEffect(()=>{
-    //     if (itemstate == 'setup') {
-    //         setItemstate('ready')
-    //     }
-
-    // },[itemstate])
 
     // initialize
     useEffect(() => {
@@ -172,23 +163,9 @@ const ItemShell = ({
             placeholder?React.createElement(placeholder, {index, listsize}):null
     )
 
-    // if (portalStatus == 'available') {
-    
-    //     // console.log('linking scrollerName, scrollerID, index, shellRef.current, content; ',scrollerName, scrollerID, index, shellRef.current,content)
-
-    //     let listitem = portalManager.attachPortalListItem(scrollerID,index,shellRef.current);
-    //     // let width = shellRef.current.offsetWidth // force recalc
-    //     // console.log('portalStatus; attached scrollerName, scrollerID, index, listitem', portalStatus, scrollerName, scrollerID, index, listitem)
-        // setPortalStatus('prepare')
-
-    // }
-
     useEffect(() => {
         switch (portalStatus) {
             case 'prepare':
-            //     setPortalStatus('attached')
-            //     break
-            // case 'attached':
                 setPortalStatus('render')
                 break
         }
@@ -205,18 +182,14 @@ const ItemShell = ({
     const portalchild = useMemo(()=>{
         if (portalStatus == 'pending') return null
         let portallistitem = portalManager.getPortalListItem(scrollerID, index)
-        // if (!portallistitem) {
-        //     return null // TODO: investigate the ned for this
-        //     setPortalStatus('prepare') // TODO: could lead to infinite loop
-        // }
-        // console.log('portallistitem for scrollerID, index', scrollerID, index, portallistitem)
         let reverseportal = portallistitem.reverseportal
         portallistitem.reparenting = true
-        // console.log('reverseportal for scrollerID, index',scrollerID, index, reverseportal)
+        // setTimeout(()=>{
+        //     portallistitem.reparenting = false
+        // })
         return <OutPortal node = {reverseportal} />
     }, [portalStatus]);
 
-    // (scrollerID == 0) && console.log('ITEMSHELL rendering portalStatus',portalStatus)
     return <div ref = { shellRef } data-name = 'itemshell' data-index = {index} data-instanceid = {instanceID} style = {styles}>
             { portalchild }
     </div>

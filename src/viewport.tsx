@@ -117,13 +117,6 @@ const Viewport = ({
         let portalitem = viewportDataRef.current.portalitem
         if (portalitem && portalitem.reparenting) return
 
-        // console.log('scrollerID, checking portal reparenting',scrollerID, parentPortalRef.current)
-        // if (parentPortalRef.current && parentPortalRef.current.reparenting) {
-        //     parentPortalRef.current.reparenting = false
-        //     console.log('returning from viewport resizeCallback')
-        //     return
-        // }
-
         let target = entries[0].target
 
         if (!target.dataset.initialized) {
