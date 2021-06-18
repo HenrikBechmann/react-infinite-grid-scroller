@@ -44,7 +44,7 @@ const ItemShell = ({
     const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
-    const [portalStatus, setPortalStatus] = useState('pending'); // 'pending' -> 'available' -> 'prepare' => 'attached' -> 'render'
+    const [portalStatus, setPortalStatus] = useState('pending'); // 'pending' -> 'prepare' -> 'render'; 'reparent' -> 'render'
 
     // (scrollerID == 0) && console.log('RUNNING ITEMSHELL scrollerName, scrollerID, index, portalStatus', scrollerName, scrollerID, index, portalStatus)
     // initialize
@@ -167,6 +167,8 @@ const ItemShell = ({
 
     useEffect(() => {
         switch (portalStatus) {
+            case 'reparent':
+                // portalManager.getPortalListItem(scrollerID, index).reparenting = false
             case 'prepare':
                 setPortalStatus('render')
                 break
@@ -185,10 +187,8 @@ const ItemShell = ({
         if (portalStatus == 'pending') return null
         let portallistitem = portalManager.getPortalListItem(scrollerID, index)
         let reverseportal = portallistitem.reverseportal
-        portallistitem.reparenting = true
-        // setTimeout(()=>{
-        //     portallistitem.reparenting = false
-        // })
+        // portallistitem.reparenting = true
+        // setPortalStatus('reparent')
         return <OutPortal node = {reverseportal} />
     }, [portalStatus]);
 

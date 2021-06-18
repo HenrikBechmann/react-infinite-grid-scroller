@@ -59,7 +59,6 @@ const Viewport = ({
         bottom:0,
         left:0,
         overflow:'auto',
-        // WebkitOverflowScrolling:'touch',
         backgroundColor:'red',
     } as React.CSSProperties,styles?.viewport))
     const resizeTimeridRef = useRef(null)
@@ -67,7 +66,6 @@ const Viewport = ({
     const viewportDataRef = useRef({portalitem:null, isResizing:false})
 
     const resizeObserverRef = useRef(null)
-    // const parentPortalRef = useRef(null)
 
     useEffect(()=>{
 
@@ -86,7 +84,7 @@ const Viewport = ({
 
     useEffect(()=>{
 
-        if (scrollerID == 0) return // || !viewportdivRef.current) return
+        if (scrollerID == 0) return
         let parentscrollerid
         let parentindex
         let el = viewportdivRef.current
@@ -95,8 +93,6 @@ const Viewport = ({
                 parentindex = parseInt(el.dataset.index)
                 parentscrollerid = parseInt(el.dataset.scrollerid)
                 viewportDataRef.current.portalitem = portalManager.getPortalListItem(parentscrollerid, parentindex)
-                // console.log('viewport scrollerID, parentscrollerid, viewportstateRef.current, viewportdivRef.current',
-                //     scrollerID, parentscrollerid, viewportstateRef.current, viewportdivRef.current)
                 break
             } else {
                 el = el.parentElement
@@ -112,12 +108,10 @@ const Viewport = ({
 
     const resizeCallback = useCallback((entries)=>{
 
-        // console.log('resizeCallback viewportstateRef.current',viewportstateRef.current)
-
         if (viewportstateRef.current == 'setup') return
-        let portalitem = viewportDataRef.current.portalitem
+        // let portalitem = viewportDataRef.current.portalitem
 
-        if (portalitem && portalitem.reparenting) return
+        // if (portalitem && portalitem.reparenting) return
 
         let target = entries[0].target
 
@@ -125,6 +119,9 @@ const Viewport = ({
             target.dataset.initialized = true
             return
         }
+
+        console.log('viewport RESIZE CALLBACK viewportstateRef.current, entries',
+            viewportstateRef.current, entries)
 
         if (!isResizingRef.current) {
             viewportDataRef.current.isResizing = isResizingRef.current = true 
@@ -157,7 +154,6 @@ const Viewport = ({
             styles.minWidth = 'auto'
             styles.minHeight = mincrosslength + 'px'
         }
-        // console.log('viewportliner styles',styles)
         return styles
 
     },[orientation, cellWidth, cellHeight, padding]) // TODO: gap?
@@ -183,7 +179,6 @@ const Viewport = ({
         }
         return Object.assign(viewportDataRef.current, localViewportData)
 
-    // },[orientation, top, right, bottom, left, isResizingRef.current, viewportstate])
     },[orientation, isResizingRef.current, viewportstate])
 
     // --------------------[ state processing ]---------------------------
@@ -191,7 +186,6 @@ const Viewport = ({
         switch (viewportstate) {
             case 'setup':
             case 'resized': {
-                // console.log('set viewportstate to render from',viewportstate)
                 setViewportState('render')
                 break
             }
