@@ -40,7 +40,7 @@ const Viewport = ({
 
     // setup -> calculate -> render; resizing -> resized -> render
     const [viewportstate,setViewportState] = useState('setup')
-    // console.log('RUNNING viewport scrollerID, viewportstate',scrollerID,viewportstate)
+    console.log('RUNNING viewport scrollerID, viewportstate',scrollerID,viewportstate)
 
     const viewportstateRef = useRef(null)
     viewportstateRef.current = viewportstate
@@ -91,11 +91,12 @@ const Viewport = ({
         let parentindex
         let el = viewportdivRef.current
         while (el) {
-            // console.log('dataset',el.dataset, el)
             if (el.dataset && (el.dataset.type == 'portalcontainer')) {
                 parentindex = parseInt(el.dataset.index)
                 parentscrollerid = parseInt(el.dataset.scrollerid)
                 viewportDataRef.current.portalitem = portalManager.getPortalListItem(parentscrollerid, parentindex)
+                // console.log('viewport scrollerID, parentscrollerid, viewportstateRef.current, viewportdivRef.current',
+                //     scrollerID, parentscrollerid, viewportstateRef.current, viewportdivRef.current)
                 break
             } else {
                 el = el.parentElement
@@ -107,7 +108,7 @@ const Viewport = ({
             return
         }
 
-    },[viewportdivRef.current])
+    },[])
 
     const resizeCallback = useCallback((entries)=>{
 
@@ -116,8 +117,6 @@ const Viewport = ({
         if (viewportstateRef.current == 'setup') return
         let portalitem = viewportDataRef.current.portalitem
 
-        // console.log('viewport parent portalitem', portalitem)
-        
         if (portalitem && portalitem.reparenting) return
 
         let target = entries[0].target

@@ -6,7 +6,7 @@
     promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
 */
 
-import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useContext} from 'react'
+import React, {useRef, useEffect, useMemo, useContext} from 'react'
 import ReactDOM from 'react-dom'
 
 import Viewport from './viewport'
@@ -14,9 +14,9 @@ import Scrollblock from './scrollblock'
 import Cradle from './cradle'
 import {PortalManager, PortalList} from './portalmanager'
 
-let scrollerID = 0
+let globalScrollerID = 0
 const getScrollerSessionID = () => {
-    return scrollerID++
+    return globalScrollerID++
 }
 
 const portalrootstyle = {display:'none'}
@@ -74,10 +74,9 @@ const InfiniteGridScroller = (props) => {
     const scrollerSessionID = useMemo(()=>{
         return getScrollerSessionID()
     },[])
-    const [scrollerState,setScrollerState] = useState('setup') // allow cycle for portal cache setup
     const scrollerSessionIDRef = useRef(scrollerSessionID)
 
-    console.log('RUNNING infinitegridscroller scrollerSessionID, scrollerState',scrollerSessionIDRef.current, scrollerState)
+    console.log('RUNNING infinitegridscroller scrollerSessionID',scrollerSessionIDRef.current)//, scrollerState)
 
     // defaults
     functions !?? (functions = {})
@@ -95,7 +94,7 @@ const InfiniteGridScroller = (props) => {
     }
 
     // initialize
-    useLayoutEffect(()=>{
+    useEffect(()=>{
 
         portalManager.createScrollerPortalRepository(scrollerSessionIDRef.current)
 
@@ -103,68 +102,57 @@ const InfiniteGridScroller = (props) => {
         return () => {portalManager.deleteScrollerPortalRepository(scrollerSessionIDRef.current)}
 
     },[])
-    
-    useLayoutEffect(()=>{
 
-        switch (scrollerState) {
-            case 'setup':
-                setScrollerState('render')
-                break
-        }
-
-    },[scrollerState]) 
-
-    
     return <div data-type = 'scroller' data-scrollerid = {scrollerSessionID}>
-    <div data-type = 'portalroot' style = {portalrootstyle}>
-        <PortalList scrollerID = {scrollerSessionID}/>
-    </div>
-    {scrollerState != 'setup'?<Viewport 
+        <div data-type = 'portalroot' style = {portalrootstyle}>
+            <PortalList scrollerID = {scrollerSessionID}/>
+        </div>
+        <Viewport //scrollerState != 'setup'?<Viewport 
 
-        orientation = { orientation } 
-        cellWidth = { cellHeight }
-        cellHeight = { cellHeight }
-        gap = { gap }
-        padding = { padding }
-        functions = { functions }
-        styles = { styles }
-        scrollerID = {scrollerSessionID}
-    >
-    
-        <Scrollblock
-
-            listsize = { listsize }
-            cellWidth = { cellWidth }
+            orientation = { orientation } 
+            cellWidth = { cellHeight }
             cellHeight = { cellHeight }
-            gap = { gap}
+            gap = { gap }
             padding = { padding }
-            orientation = { orientation }
             functions = { functions }
             styles = { styles }
             scrollerID = {scrollerSessionID}
-
         >
-            <Cradle 
+        
+            <Scrollblock
 
-                gap = { gap }
-                padding = { padding }
+                listsize = { listsize }
                 cellWidth = { cellWidth }
                 cellHeight = { cellHeight }
-                listsize = { listsize }
-                indexOffset = { indexOffset }
+                gap = { gap}
+                padding = { padding }
                 orientation = { orientation }
-                // runwaylength = { runwaylength } 
-                getItem = { getItem }
                 functions = { functions }
-                placeholder = { placeholder }
                 styles = { styles }
-                runwaycount = { runway }
-                scrollerName = {scrollerName}
                 scrollerID = {scrollerSessionID}
 
-            />
-        </Scrollblock>
-    </Viewport>:null}
+            >
+                <Cradle 
+
+                    gap = { gap }
+                    padding = { padding }
+                    cellWidth = { cellWidth }
+                    cellHeight = { cellHeight }
+                    listsize = { listsize }
+                    indexOffset = { indexOffset }
+                    orientation = { orientation }
+                    // runwaylength = { runwaylength } 
+                    getItem = { getItem }
+                    functions = { functions }
+                    placeholder = { placeholder }
+                    styles = { styles }
+                    runwaycount = { runway }
+                    scrollerName = {scrollerName}
+                    scrollerID = {scrollerSessionID}
+
+                />
+            </Scrollblock>
+        </Viewport>
     </div>
 }
 

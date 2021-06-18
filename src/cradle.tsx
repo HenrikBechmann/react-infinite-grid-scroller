@@ -428,7 +428,7 @@ const Cradle = ({
             console.log('ERROR: parent portalcontainer not found')
             return
         }
-        ViewportPortalListItemRef.current = portalManager.getPortalListItem(parentscrollerid, parentindex)
+        ViewportPortalItemRef.current = portalManager.getPortalListItem(parentscrollerid, parentindex)
 
     },[spineCradleElementRef.current])
 
@@ -784,7 +784,7 @@ const Cradle = ({
                 !(cradleState == 'repositioning') && 
                 !(cradleState == 'reposition') && 
                 !(cradleState == 'pivot') &&
-                !(ViewportPortalListItemRef.current && ViewportPortalListItemRef.current.reparenting)
+                !(ViewportPortalItemRef.current && ViewportPortalItemRef.current.reparenting)
                 ) 
             {
 
@@ -1517,7 +1517,7 @@ const Cradle = ({
 
     },[])
 
-    const ViewportPortalListItemRef = useRef(null)
+    const ViewportPortalItemRef = useRef(null)
     // content item registration callback; called from item
     const getItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
 
@@ -1578,9 +1578,9 @@ const Cradle = ({
             />
             :null}
         <div 
+            data-type = 'cradle_spine'
             style = {cradleSpineStyle} 
             ref = {spineCradleElementRef}
-            data-type = 'cradle_spine'
         >
             {true?<div style = {{zIndex:1, position:'absolute',width:'100%',height:'100%',boxShadow:'0 0 5px 3px red'}}></div>:null}
             <div 
