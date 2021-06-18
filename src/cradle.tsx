@@ -1580,12 +1580,12 @@ const Cradle = ({
         <div 
             style = {cradleSpineStyle} 
             ref = {spineCradleElementRef}
-            data-name = 'spine'
+            data-type = 'cradle_spine'
         >
             {true?<div style = {{zIndex:1, position:'absolute',width:'100%',height:'100%',boxShadow:'0 0 5px 3px red'}}></div>:null}
             <div 
             
-                data-name = 'head'
+                data-type = 'head'
                 ref = {headCradleElementRef} 
                 style = {cradleHeadStyle}
             
@@ -1596,7 +1596,7 @@ const Cradle = ({
             </div>
             <div 
             
-                data-name = 'tail'
+                data-type = 'tail'
                 ref = {tailCradleElementRef} 
                 style = {cradleTailStyle}
             

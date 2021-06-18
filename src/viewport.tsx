@@ -210,7 +210,7 @@ const Viewport = ({
     return <ViewportContext.Provider value = { viewportDataRef.current }>
         <div 
             data-type = 'viewport'
-            data-masterscrollerid = {scrollerID}
+            data-scrollerid = {scrollerID}
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >

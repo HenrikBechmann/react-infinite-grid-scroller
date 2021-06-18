@@ -192,7 +192,7 @@ const ItemShell = ({
         return <OutPortal node = {reverseportal} />
     }, [portalStatus]);
 
-    return <div ref = { shellRef } data-name = 'itemshell' data-index = {index} data-instanceid = {instanceID} style = {styles}>
+    return <div ref = { shellRef } data-type = 'itemshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
             { portalchild }
     </div>
 

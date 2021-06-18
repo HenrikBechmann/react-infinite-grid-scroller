@@ -115,7 +115,7 @@ const InfiniteGridScroller = (props) => {
     },[scrollerState]) 
 
     
-    return <>
+    return <div data-type = 'scroller' data-scrollerid = {scrollerSessionID}>
     <div data-type = 'portalroot' style = {portalrootstyle}>
         <PortalList scrollerID = {scrollerSessionID}/>
     </div>
@@ -165,7 +165,7 @@ const InfiniteGridScroller = (props) => {
             />
         </Scrollblock>
     </Viewport>:null}
-    </>
+    </div>
 }
 
 export default InfiniteGridScroller
