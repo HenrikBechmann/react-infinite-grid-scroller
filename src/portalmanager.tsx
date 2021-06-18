@@ -24,7 +24,7 @@ class PortalManagerClass {
             scrollerPortalMetaData.set(scrollerID, new Map())
         }
         if (!scrollerPortalListData.has(scrollerID)) {
-            scrollerPortalListData.set(scrollerID, {modified:false,portalMap:new Map(),portalList:[]})
+            scrollerPortalListData.set(scrollerID, {modified:false,portalMap:new Map(),portalList:null})
         }
 
     }
