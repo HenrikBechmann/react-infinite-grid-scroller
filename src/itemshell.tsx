@@ -104,7 +104,7 @@ const ItemShell = ({
                         }
                     // }
                 }
-            },{timeout:100})
+            },{timeout:250})
         }}
 
         return () => {

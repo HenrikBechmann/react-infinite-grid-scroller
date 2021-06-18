@@ -38,7 +38,7 @@ const Viewport = ({
     // processing state
     const portalManager = useContext(PortalManager)
 
-    // setup -> calculate -> render; resizing -> resized -> render
+    // setup -> render; resizing -> resized -> render
     const [viewportstate,setViewportState] = useState('setup')
     console.log('RUNNING viewport scrollerID, viewportstate',scrollerID,viewportstate)
 
@@ -69,13 +69,13 @@ const Viewport = ({
     const resizeObserverRef = useRef(null)
     // const parentPortalRef = useRef(null)
 
-    // initialize
-    useLayoutEffect(()=>{
+    useEffect(()=>{
 
-        // console.log('resizeObserver setup viewportstateRef.current, viewportdivRef.current',viewportstateRef.current, viewportdivRef.current)
+        // initialize
         resizeObserverRef.current = new LocalResizeObserver(resizeCallback)
         resizeObserverRef.current.observe(viewportdivRef.current)
 
+        // cleanup
         return () => {
 
             resizeObserverRef.current.disconnect()
@@ -84,9 +84,9 @@ const Viewport = ({
 
     },[])
 
-    useLayoutEffect(()=>{
+    useEffect(()=>{
 
-        if (scrollerID == 0 || !viewportdivRef.current) return
+        if (scrollerID == 0) return // || !viewportdivRef.current) return
         let parentscrollerid
         let parentindex
         let el = viewportdivRef.current
@@ -164,17 +164,14 @@ const Viewport = ({
 
     let viewportClientRectRef = useRef({top:0,right:0,bottom:0,left:0})
 
-    useLayoutEffect(()=> {
-        if (viewportstate != 'calculate') return
-
-        viewportClientRectRef.current = viewportdivRef.current.getBoundingClientRect()
-        
-    },[viewportstate])
-
-    let {top, right, bottom, left} = viewportClientRectRef.current
-
     // set context data for children
     viewportDataRef.current = useMemo(() => {
+
+        if (viewportstate == 'setup') return viewportDataRef.current
+
+        viewportClientRectRef.current = viewportdivRef.current.getBoundingClientRect()
+
+        let {top, right, bottom, left} = viewportClientRectRef.current
 
         let width, height, localViewportData
         width = (right - left)
@@ -186,15 +183,13 @@ const Viewport = ({
         }
         return Object.assign(viewportDataRef.current, localViewportData)
 
-    },[orientation, top, right, bottom, left, isResizingRef.current, viewportstate])
+    // },[orientation, top, right, bottom, left, isResizingRef.current, viewportstate])
+    },[orientation, isResizingRef.current, viewportstate])
 
     // --------------------[ state processing ]---------------------------
-    useLayoutEffect(()=>{
+    useEffect(()=>{
         switch (viewportstate) {
             case 'setup':
-                setViewportState('calculate')
-                break
-            case 'calculate':
             case 'resized': {
                 // console.log('set viewportstate to render from',viewportstate)
                 setViewportState('render')
@@ -204,8 +199,7 @@ const Viewport = ({
     },[viewportstate]);
 
     // ----------------------[ render ]--------------------------------
-    // viewportstate == 'render' && console.log('rendering scrollerID, viewportstate viewportDataRef.current, divlinerstyleRef.current, children',
-    //     scrollerID, viewportstate, viewportDataRef.current, divlinerstyleRef.current, children)
+
     return <ViewportContext.Provider value = { viewportDataRef.current }>
         <div 
             data-type = 'viewport'
@@ -213,7 +207,7 @@ const Viewport = ({
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >
-            { ((viewportstate != 'setup') && (viewportstate != 'calculate'))?children:null }
+            { (viewportstate != 'setup') && children }
         </div>
     </ViewportContext.Provider>
     

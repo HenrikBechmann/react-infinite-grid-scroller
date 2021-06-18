@@ -19,7 +19,7 @@ const getScrollerSessionID = () => {
     return globalScrollerID++
 }
 
-const portalrootstyle = {display:'none'}
+const portalrootstyle = {display:'none'} // static
 /*
     BACKLOG: 
     - cache: none/preload/keepload
@@ -93,9 +93,9 @@ const InfiniteGridScroller = (props) => {
         orientation = 'vertical'
     }
 
-    // initialize
     useEffect(()=>{
 
+        // initialize
         portalManager.createScrollerPortalRepository(scrollerSessionIDRef.current)
 
         // cleanup
@@ -103,11 +103,11 @@ const InfiniteGridScroller = (props) => {
 
     },[])
 
-    return <div data-type = 'scroller' data-scrollerid = {scrollerSessionID}>
-        <div data-type = 'portalroot' style = {portalrootstyle}>
-            <PortalList scrollerID = {scrollerSessionID}/>
+    return <div data-type = 'scroller' data-scrollerid = { scrollerSessionID }>
+        <div data-type = 'portalroot' style = { portalrootstyle }>
+            <PortalList scrollerID = { scrollerSessionID }/>
         </div>
-        <Viewport //scrollerState != 'setup'?<Viewport 
+        <Viewport
 
             orientation = { orientation } 
             cellWidth = { cellHeight }
@@ -116,7 +116,7 @@ const InfiniteGridScroller = (props) => {
             padding = { padding }
             functions = { functions }
             styles = { styles }
-            scrollerID = {scrollerSessionID}
+            scrollerID = { scrollerSessionID }
         >
         
             <Scrollblock
@@ -129,7 +129,7 @@ const InfiniteGridScroller = (props) => {
                 orientation = { orientation }
                 functions = { functions }
                 styles = { styles }
-                scrollerID = {scrollerSessionID}
+                scrollerID = { scrollerSessionID }
 
             >
                 <Cradle 
@@ -141,14 +141,13 @@ const InfiniteGridScroller = (props) => {
                     listsize = { listsize }
                     indexOffset = { indexOffset }
                     orientation = { orientation }
-                    // runwaylength = { runwaylength } 
                     getItem = { getItem }
                     functions = { functions }
                     placeholder = { placeholder }
                     styles = { styles }
                     runwaycount = { runway }
-                    scrollerName = {scrollerName}
-                    scrollerID = {scrollerSessionID}
+                    scrollerName = { scrollerName }
+                    scrollerID = { scrollerSessionID }
 
                 />
             </Scrollblock>
