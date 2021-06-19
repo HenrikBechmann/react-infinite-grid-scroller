@@ -6,7 +6,7 @@
     and act as the visible screen portal of the list being shown
 */
 
-import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useContext} from 'react'
+import React, {useState, useRef, useEffect, useMemo, useCallback, useContext} from 'react'
 
 export const ViewportContext = React.createContext(null)
 
@@ -64,6 +64,7 @@ const Viewport = ({
     const resizeTimeridRef = useRef(null)
     const isResizingRef = useRef(false)
     const viewportDataRef = useRef({portalitem:null, isResizing:false})
+    const viewportClientRectRef = useRef({top:0,right:0,bottom:0,left:0})
 
     const resizeObserverRef = useRef(null)
 
@@ -86,13 +87,13 @@ const Viewport = ({
 
         if (scrollerID == 0) return
         let parentscrollerid
-        let parentindex
+        let portalindex
         let el = viewportdivRef.current
         while (el) {
             if (el.dataset && (el.dataset.type == 'portalcontainer')) {
-                parentindex = parseInt(el.dataset.index)
+                portalindex = parseInt(el.dataset.index)
                 parentscrollerid = parseInt(el.dataset.scrollerid)
-                viewportDataRef.current.portalitem = portalManager.getPortalListItem(parentscrollerid, parentindex)
+                viewportDataRef.current.portalitem = portalManager.getPortalListItem(parentscrollerid, portalindex)
                 break
             } else {
                 el = el.parentElement
@@ -109,9 +110,6 @@ const Viewport = ({
     const resizeCallback = useCallback((entries)=>{
 
         if (viewportstateRef.current == 'setup') return
-        // let portalitem = viewportDataRef.current.portalitem
-
-        // if (portalitem && portalitem.reparenting) return
 
         let target = entries[0].target
 
@@ -156,9 +154,7 @@ const Viewport = ({
         }
         return styles
 
-    },[orientation, cellWidth, cellHeight, padding]) // TODO: gap?
-
-    let viewportClientRectRef = useRef({top:0,right:0,bottom:0,left:0})
+    },[orientation, cellWidth, cellHeight, padding])
 
     // set context data for children
     viewportDataRef.current = useMemo(() => {
