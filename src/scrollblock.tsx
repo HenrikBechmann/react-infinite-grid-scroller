@@ -20,8 +20,8 @@ const Scrollblock = ({
 
     // -------------------------[ context and state ]-------------------------
     const viewportData = useContext(ViewportContext)
-    const [blockstate,setBlockState] = useState('prepare')
-    // console.log('RUNNING scrollblock scrollerID, viewportstate',scrollerID,blockstate)
+    const [blockstate,setBlockState] = useState('setup')
+    console.log('RUNNING scrollblock scrollerID, viewportstate',scrollerID,blockstate)
 
     // -----------------------------------[ data heap ]-------------------------
     const scrollBlockLengthRef = useRef(null)
@@ -44,7 +44,7 @@ const Scrollblock = ({
     // state engine
     useEffect(()=>{
         switch (blockstate) {
-            case 'prepare': {
+            case 'setup': {
                 setBlockState('render')
                 break
             }
@@ -98,7 +98,7 @@ const Scrollblock = ({
          ]
     )
 
-    return (blockstate != 'prepare')
+    return (blockstate != 'setup')
         ?<div ref = {scrollblockRef} data-type = 'scrollblock' style={divlinerstyleRef.current}>{children}</div>
         :null
 
