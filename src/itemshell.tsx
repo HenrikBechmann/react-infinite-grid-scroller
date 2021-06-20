@@ -46,7 +46,6 @@ const ItemShell = ({
     const itemrequestRef = useRef(null)
     const [portalStatus, setPortalStatus] = useState('setup'); // 'setup' -> 'prepare' -> 'render'
 
-    // (scrollerID == 0) && console.log('RUNNING ITEMSHELL scrollerName, scrollerID, index, portalStatus', scrollerName, scrollerID, index, portalStatus)
     // initialize
     useEffect(() => {
         // console.log('fetching item scrollerName-scrollerID:index',scrollerName,'-', scrollerID, index)
@@ -107,6 +106,7 @@ const ItemShell = ({
             },{timeout:250})
         }}
 
+        // cleanup
         return () => {
             let requesthandle = itemrequestRef.current
             cancelidlecallback(requesthandle)
@@ -134,7 +134,7 @@ const ItemShell = ({
     useEffect(()=>{
 
         if (!shellRef.current) return
-        // console.log('shellRef.current',shellRef.current)
+
         observer.observe(shellRef.current)
         shellelement = shellRef.current
 
