@@ -9,7 +9,7 @@ import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
 import useIsMounted from 'react-is-mounted-hook'
 
-import { createHtmlPortalNode, InPortal, OutPortal } from 'react-reverse-portal'
+import { OutPortal } from 'react-reverse-portal'
 
 import Placeholder from './placeholder'
 
@@ -33,78 +33,65 @@ const ItemShell = ({
     // console.log('running itemshell with scrollerID',scrollerID)
 
     const portalManager = useContext(PortalManager)
-    // const linkedContentRef = useRef(false)
-    // const portalRef = useRef(null)
     const [error, saveError] = useState(null)
     const [styles,saveStyles] = useState({
         overflow:'hidden',
     } as React.CSSProperties)
     // const [itemstate,setItemstate] = useState('setup')
-    const shellRef = useRef(undefined)
+    const shellRef = useRef()
     const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
-    const [portalStatus, setPortalStatus] = useState('setup'); // 'setup' -> 'prepare' -> 'render'
+    const [portalStatus, setPortalStatus] = useState('setup') // 'setup' -> 'render'
 
     // initialize
     useEffect(() => {
-        // console.log('fetching item scrollerName-scrollerID:index',scrollerName,'-', scrollerID, index)
 
         let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
         let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
 
         portalManager.createPortalListItem(scrollerID,index,null, placeholderchildRef.current)
 
-        setPortalStatus('prepare')
+        setPortalStatus('render')
 
         if (!portalManager.hasPortalUserContent(scrollerID,index)) {
 
-            // console.log('fetching PORTAL CACHE item', scrollerID, index)
+            if (getItem) {
 
-            // let portalitem = portalManager.getPortalListItem(scrollerID,index) 
+                // console.log('fetching NEW item (queue)')
 
-            // console.log('saving cache usercontent',portalitem)
-
-            // saveContent(portalitem.usercontent)
-            // return
-        // } else {
-        if (getItem) {
-
-            // console.log('fetching NEW item (queue)')
-
-            // TODO: createPoralListitem in any case, then update with usercontent when found
-            // this will allow requestidlecallback to be used.
-            itemrequestRef.current = requestidlecallback(()=> { // TODO make this optional
-                let contentItem = getItem(index)
-                // console.log('result of getItem(index)',contentItem)
-                if (contentItem && contentItem.then) {
-                    contentItem.then((usercontent) => {
-                        if (isMounted()) { 
-                            // console.log('saving new usercontent by promise',scrollerName, scrollerID, index, usercontent)
-                            portalManager.updatePortalListItem(scrollerID,index,usercontent)
-                            saveError(null)
-                        }
-                    }).catch((e) => {
-                        if (isMounted()) { 
-                            saveError(e)
-                        }
-                    })
-                } else {
-                    // console.log('isMounted, contentItem',isMounted(), contentItem)
-                    if (isMounted()) {
-                        if (contentItem) {
-                            let usercontent = contentItem;
-                            // (scrollerID == 0) && console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
-                            portalManager.updatePortalListItem(scrollerID,index,usercontent)
-                            saveError(null)
-                        } else {
-                            saveError(true)
-                            // saveContent(null)
+                itemrequestRef.current = requestidlecallback(()=> { // TODO make this optional
+                    let contentItem = getItem(index)
+                    // console.log('result of getItem(index)',contentItem)
+                    if (contentItem && contentItem.then) {
+                        contentItem.then((usercontent) => {
+                            if (isMounted()) { 
+                                // console.log('saving new usercontent by promise',scrollerName, scrollerID, index, usercontent)
+                                portalManager.updatePortalListItem(scrollerID,index,usercontent)
+                                saveError(null)
+                            }
+                        }).catch((e) => {
+                            if (isMounted()) { 
+                                saveError(e)
+                            }
+                        })
+                    } else {
+                        // console.log('isMounted, contentItem',isMounted(), contentItem)
+                        if (isMounted()) {
+                            if (contentItem) {
+                                let usercontent = contentItem;
+                                // (scrollerID == 0) && console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
+                                portalManager.updatePortalListItem(scrollerID,index,usercontent)
+                                saveError(null)
+                            } else {
+                                saveError(true)
+                                // saveContent(null)
+                            }
                         }
                     }
-                }
-            },{timeout:250})
-        }}
+                },{timeout:250})
+            }
+        }
 
         // cleanup
         return () => {
@@ -165,16 +152,6 @@ const ItemShell = ({
             placeholder?React.createElement(placeholder, {index, listsize}):null
     )
 
-    useEffect(() => {
-        switch (portalStatus) {
-            // case 'reparent':
-                // portalManager.getPortalListItem(scrollerID, index).reparenting = false
-            case 'prepare':
-                setPortalStatus('render')
-                break
-        }
-    },[portalStatus])
-
     const placeholderchild = useMemo(()=>{
         let child = customplaceholderRef.current?
                 customplaceholderRef.current:<Placeholder index = {index} listsize = {listsize} error = {error}/>
@@ -197,7 +174,6 @@ const ItemShell = ({
 
 } // ItemShell
 
-// TODO: memoize this
 const getShellStyles = (orientation, cellHeight, cellWidth, styles) => {
 
     let styleset = Object.assign({position:'relative'},styles)

@@ -8,7 +8,7 @@
 import React, {useState, useEffect} from 'react'
 import ReactDOM from 'react-dom'
 
-import { createHtmlPortalNode, InPortal, OutPortal } from 'react-reverse-portal'
+import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
 // global scroller data, organized by session scrollerID
 const scrollerPortalMetaData = new Map()
