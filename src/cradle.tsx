@@ -218,7 +218,7 @@ const Cradle = ({
 
     const [cradleState, saveCradleState] = useState('setup')
 
-    // console.log('cradle RUNNING cradleState with viewportData',cradleState, viewportData)
+    console.log('cradle RUNNING cradleState with viewportData',cradleState, viewportData)
 
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
@@ -404,30 +404,30 @@ const Cradle = ({
         }
     )
 
-    useEffect(()=>{
+    // useEffect(()=>{
 
-        if (scrollerID == 0 || !spineCradleElementRef.current) return
-        let parentscrollerid
-        let parentindex
-        let el = spineCradleElementRef.current
-        while (el) {
-            // console.log('dataset',el.dataset, el)
-            if (el.dataset && (el.dataset.type == 'portalcontainer')) {
-                parentindex = parseInt(el.dataset.index)
-                parentscrollerid = parseInt(el.dataset.scrollerid)
-                break
-            } else {
-                el = el.parentElement
-            }
-        } 
+    //     if (scrollerID == 0 || !spineCradleElementRef.current) return
+    //     let parentscrollerid
+    //     let parentindex
+    //     let el = spineCradleElementRef.current
+    //     while (el) {
+    //         // console.log('dataset',el.dataset, el)
+    //         if (el.dataset && (el.dataset.type == 'portalcontainer')) {
+    //             parentindex = parseInt(el.dataset.index)
+    //             parentscrollerid = parseInt(el.dataset.scrollerid)
+    //             break
+    //         } else {
+    //             el = el.parentElement
+    //         }
+    //     } 
 
-        if (!el) {
-            console.log('ERROR: parent portalcontainer not found')
-            return
-        }
-        ViewportPortalItemRef.current = portalManager.getPortalListItem(parentscrollerid, parentindex)
+    //     if (!el) {
+    //         console.log('ERROR: parent portalcontainer not found')
+    //         return
+    //     }
+    //     ViewportPortalItemRef.current = portalManager.getPortalListItem(parentscrollerid, parentindex)
 
-    },[spineCradleElementRef.current])
+    // },[spineCradleElementRef.current])
 
 
     const cradleContentRef = useRef({
@@ -1514,7 +1514,7 @@ const Cradle = ({
 
     },[])
 
-    const ViewportPortalItemRef = useRef(null)
+    // const ViewportPortalItemRef = useRef(null)
     // content item registration callback; called from item
     const getItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
 

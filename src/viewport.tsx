@@ -40,7 +40,7 @@ const Viewport = ({
 
     // setup -> render; resizing -> resized -> render
     const [viewportstate,setViewportState] = useState('setup')
-    console.log('RUNNING viewport scrollerID, viewportstate',scrollerID,viewportstate)
+    // console.log('RUNNING viewport scrollerID, viewportstate',scrollerID,viewportstate)
 
     const viewportstateRef = useRef(null)
     viewportstateRef.current = viewportstate

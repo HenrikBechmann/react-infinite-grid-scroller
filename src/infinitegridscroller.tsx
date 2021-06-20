@@ -76,7 +76,7 @@ const InfiniteGridScroller = (props) => {
     },[])
     const scrollerSessionIDRef = useRef(scrollerSessionID)
 
-    console.log('RUNNING infinitegridscroller scrollerSessionID',scrollerSessionIDRef.current)//, scrollerState)
+    // console.log('RUNNING infinitegridscroller scrollerSessionID',scrollerSessionIDRef.current)//, scrollerState)
 
     // defaults
     functions !?? (functions = {})
