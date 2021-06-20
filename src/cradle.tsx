@@ -218,7 +218,7 @@ const Cradle = ({
 
     const [cradleState, saveCradleState] = useState('setup')
 
-    console.log('cradle RUNNING cradleState with viewportData',cradleState, viewportData)
+    // console.log('cradle RUNNING cradleState with viewportData',cradleState, viewportData)
 
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
@@ -283,7 +283,7 @@ const Cradle = ({
     // trigger resizing based on viewport state
     useEffect(()=>{
 
-        console.log('viewportData.isResizing', viewportData.isResizing)
+        // console.log('viewportData.isResizing', viewportData.isResizing)
         if (cradleStateRef.current == 'setup') return
         if (viewportData.isResizing) {
 
