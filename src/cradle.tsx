@@ -283,7 +283,7 @@ const Cradle = ({
     // trigger resizing based on viewport state
     useEffect(()=>{
 
-        // console.log('viewportData.isResizing', viewportData.isResizing)
+        console.log('viewportData.isResizing', viewportData.isResizing)
         if (cradleStateRef.current == 'setup') return
         if (viewportData.isResizing) {
 
@@ -302,7 +302,7 @@ const Cradle = ({
         // complete resizing mode
         if (!viewportData.isResizing && (cradleStateRef.current == 'resizing')) {
 
-            saveCradleState('resize')
+            saveCradleState('resized')
 
         }
 
@@ -777,7 +777,7 @@ const Cradle = ({
             let cradleState = cradleStateRef.current        
             if (
                 !viewportDataRef.current.isResizing &&
-                !(cradleState == 'resize') &&
+                !(cradleState == 'resized') &&
                 !(cradleState == 'repositioning') && 
                 !(cradleState == 'reposition') && 
                 !(cradleState == 'pivot') // &&
@@ -1394,7 +1394,7 @@ const Cradle = ({
         let viewportData = viewportDataRef.current
         switch (cradleState) {
             case 'setup': 
-            case 'resize':
+            case 'resized':
             case 'pivot':
             case 'setreload':
             case 'reposition':

@@ -40,7 +40,7 @@ const Viewport = ({
 
     // setup -> render; resizing -> resized -> render
     const [viewportstate,setViewportState] = useState('setup')
-    // console.log('RUNNING viewport scrollerID, viewportstate',scrollerID,viewportstate)
+    console.log('RUNNING viewport scrollerID, viewportstate',scrollerID,viewportstate)
 
     const viewportstateRef = useRef(null)
     viewportstateRef.current = viewportstate
@@ -114,6 +114,7 @@ const Viewport = ({
         let target = entries[0].target
 
         if (!target.dataset.initialized) {
+            // console.log('initializing target', target.dataset)
             target.dataset.initialized = true
             return
         }
@@ -123,17 +124,21 @@ const Viewport = ({
 
         if (!isResizingRef.current) {
             viewportDataRef.current.isResizing = isResizingRef.current = true 
-                // below is a realtime message to cradle.onScroll
-                // to stop updating the referenceIndexData, and to the item observer to stop
-                // triggering responses (anticipating reset of cradle content based on resize)
+            viewportDataRef.current = Object.assign({},viewportDataRef.current) // trigger child render
+            // below is a realtime message to cradle.onScroll
+            // to stop updating the referenceIndexData, and to the item observer to stop
+            // triggering responses (anticipating reset of cradle content based on resize)
             if (isMounted()) setViewportState('resizing')
         }
 
         clearTimeout(resizeTimeridRef.current)
         resizeTimeridRef.current = setTimeout(() => {
-
+            console.log('setting viewportstate to resized: isMounted(), from',isMounted(), viewportstateRef.current)
             isResizingRef.current = false
-            if (isMounted()) setViewportState('resized')
+            if (isMounted()) {
+                console.log('calling setViewportState for resized')
+                setViewportState('resized')
+            }
 
         },RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE)
 
@@ -173,7 +178,7 @@ const Viewport = ({
             elementref:viewportdivRef,
             isResizing:isResizingRef.current,
         }
-        return Object.assign(viewportDataRef.current, localViewportData)
+        return Object.assign({},viewportDataRef.current, localViewportData)
 
     },[orientation, isResizingRef.current, viewportstate])
 
