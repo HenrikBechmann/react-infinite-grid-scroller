@@ -44,7 +44,7 @@ const ItemShell = ({
     const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
-    const [portalStatus, setPortalStatus] = useState('pending'); // 'pending' -> 'prepare' -> 'render'; 'reparent' -> 'render'
+    const [portalStatus, setPortalStatus] = useState('setup'); // 'setup' -> 'prepare' -> 'render'
 
     // (scrollerID == 0) && console.log('RUNNING ITEMSHELL scrollerName, scrollerID, index, portalStatus', scrollerName, scrollerID, index, portalStatus)
     // initialize
@@ -80,19 +80,19 @@ const ItemShell = ({
                 // console.log('result of getItem(index)',contentItem)
                 if (contentItem && contentItem.then) {
                     contentItem.then((usercontent) => {
-                        // if (isMounted()) { 
+                        if (isMounted()) { 
                             // console.log('saving new usercontent by promise',scrollerName, scrollerID, index, usercontent)
                             portalManager.updatePortalListItem(scrollerID,index,usercontent)
                             saveError(null)
-                        // }
+                        }
                     }).catch((e) => {
-                        // if (isMounted()) { 
+                        if (isMounted()) { 
                             saveError(e)
-                        // }
+                        }
                     })
                 } else {
                     // console.log('isMounted, contentItem',isMounted(), contentItem)
-                    // if (isMounted()) {
+                    if (isMounted()) {
                         if (contentItem) {
                             let usercontent = contentItem;
                             // (scrollerID == 0) && console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
@@ -102,7 +102,7 @@ const ItemShell = ({
                             saveError(true)
                             // saveContent(null)
                         }
-                    // }
+                    }
                 }
             },{timeout:250})
         }}
@@ -167,7 +167,7 @@ const ItemShell = ({
 
     useEffect(() => {
         switch (portalStatus) {
-            case 'reparent':
+            // case 'reparent':
                 // portalManager.getPortalListItem(scrollerID, index).reparenting = false
             case 'prepare':
                 setPortalStatus('render')
@@ -184,11 +184,9 @@ const ItemShell = ({
     const placeholderchildRef = useRef(placeholderchild)
 
     const portalchild = useMemo(()=>{
-        if (portalStatus == 'pending') return null
+        if (portalStatus == 'setup') return null
         let portallistitem = portalManager.getPortalListItem(scrollerID, index)
         let reverseportal = portallistitem.reverseportal
-        // portallistitem.reparenting = true
-        // setPortalStatus('reparent')
         return <OutPortal node = {reverseportal} />
     }, [portalStatus]);
 
