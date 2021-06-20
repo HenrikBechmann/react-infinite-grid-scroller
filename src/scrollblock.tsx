@@ -20,7 +20,7 @@ const Scrollblock = ({
 
     // -------------------------[ context and state ]-------------------------
     const viewportData = useContext(ViewportContext)
-    const [blockstate,setBlockState] = useState('setup')
+    const [blockstate,setBlockState] = useState('setup') // setup -> render
     console.log('RUNNING scrollblock scrollerID, viewportstate',scrollerID,blockstate)
 
     // -----------------------------------[ data heap ]-------------------------
@@ -95,12 +95,11 @@ const Scrollblock = ({
             orientation, 
             height,
             width,
-         ]
+       ]
     )
 
-    return (blockstate != 'setup')
-        ?<div ref = {scrollblockRef} data-type = 'scrollblock' style={divlinerstyleRef.current}>{children}</div>
-        :null
+    return (blockstate != 'setup') &&
+        <div ref = {scrollblockRef} data-type = 'scrollblock' style={divlinerstyleRef.current}>{children}</div>
 
 } // Scrollblock
 
