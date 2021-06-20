@@ -3,7 +3,9 @@
 
 /*
     TODO:
-    promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
+    - fix rapid scroll mismatch
+    - fix nested scroll back reference mismatch
+    - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
 */
 
 import React, {useRef, useEffect, useMemo, useContext} from 'react'
