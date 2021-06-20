@@ -9,6 +9,7 @@
     - clear out reparenting
     - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
     - break up cradle
+    - avoid double load of nested scrollers
 */
 
 import React, {useRef, useEffect, useMemo, useContext} from 'react'
