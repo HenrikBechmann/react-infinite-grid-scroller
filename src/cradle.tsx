@@ -266,15 +266,12 @@ const Cradle = ({
 
     // initialize window scroll listener
     useEffect(() => {
-        let viewportData = viewportDataRef.current
-        viewportData.elementref.current.addEventListener('scroll',onScroll)
+        let viewportdata = viewportDataRef.current
+        viewportdata.elementref.current.addEventListener('scroll',onScroll)
 
         return () => {
 
-            // console.log('unmounting cradle:scrollerName, portals',
-            //     scrollerName,cradleContentRef.current.portalData)
-
-            viewportData.elementref.current && viewportData.elementref.current.removeEventListener('scroll',onScroll)
+            viewportdata.elementref.current && viewportdata.elementref.current.removeEventListener('scroll',onScroll)
 
         }
 
