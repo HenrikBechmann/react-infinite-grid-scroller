@@ -3,13 +3,12 @@
 
 /*
     TODO:
-    - fix scroll tracker
-    - fix rapid scroll mismatch
+    - avoid double load of nested scrollers
     - fix nested scroll back reference mismatch
+    
     - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
     - break up cradle
-    - avoid double load of nested scrollers
-*/
+    */
 
 import React, {useRef, useEffect, useMemo, useContext} from 'react'
 import ReactDOM from 'react-dom'

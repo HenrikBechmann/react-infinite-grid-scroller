@@ -738,7 +738,7 @@ const Cradle = ({
         // IntersectionObserver
         cradleIntersectionObserverRef.current = new IntersectionObserver(
 
-            cradleintersectionobservercallback,
+            cradleIntersectionObserverCallback,
             {root:viewportData.elementref.current, threshold:0}
 
         )
@@ -755,7 +755,7 @@ const Cradle = ({
 
     },[])
 
-    const cradleintersectionobservercallback = useCallback((entries) => {
+    const cradleIntersectionObserverCallback = useCallback((entries) => {
 
         let controlFlags = controlFlagsRef.current
 
@@ -763,7 +763,7 @@ const Cradle = ({
 
         for (let i = 0; i < entries.length; i++ ) {
             let entry = entries[i]
-            if (entry.target.dataset.name == 'head') {
+            if (entry.target.dataset.type == 'head') {
                 controlFlags.isHeadCradleInView = entry.isIntersecting
             } else {
                 controlFlags.isTailCradleInView = entry.isIntersecting
@@ -772,7 +772,6 @@ const Cradle = ({
         controlFlags.isCradleInView = (controlFlags.isHeadCradleInView || controlFlags.isTailCradleInView)
 
         if (!controlFlags.isCradleInView) 
-
         {
             let cradleState = cradleStateRef.current        
             if (
@@ -1206,8 +1205,6 @@ const Cradle = ({
     const onScroll = useCallback((e) => {
 
         if (controlFlagsRef.current.pauseScrollingEffects) {
-            // console.log('returning from onScroll with pauseScrollingEffects true', 
-            //     viewportDataRef.current.elementref.current.scrollTop)
             return
         }
 
@@ -1226,7 +1223,7 @@ const Cradle = ({
         }
 
         scrollPositions.previous = scrollPositions.current
-        scrollPositions.current = //scrollPositioncurrent
+        scrollPositions.current = 
             (cradlePropsRef.current.orientation == 'vertical')
             ?viewportElement.scrollTop
             :viewportElement.scrollLeft
@@ -1284,8 +1281,6 @@ const Cradle = ({
 
         scrollTimeridRef.current = setTimeout(() => {
 
-            // isMounted = useIsMounted()
-
             if (!isMounted()) return
 
             // console.log('scrollerName, portalData after SCROLL:',scrollerName, cradleContentRef.current.portalData)
@@ -1327,8 +1322,8 @@ const Cradle = ({
 
                 default: {
                     
-                    // console.log('------- [ calling endofscroll ]-----------')
                     updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
+
                 }
 
             }

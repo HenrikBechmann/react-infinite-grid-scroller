@@ -119,9 +119,6 @@ const Viewport = ({
             return
         }
 
-        console.log('viewport RESIZE CALLBACK viewportstateRef.current, entries',
-            viewportstateRef.current, entries)
-
         if (!isResizingRef.current) {
             viewportDataRef.current.isResizing = isResizingRef.current = true 
             viewportDataRef.current = Object.assign({},viewportDataRef.current) // trigger child render
@@ -133,10 +130,8 @@ const Viewport = ({
 
         clearTimeout(resizeTimeridRef.current)
         resizeTimeridRef.current = setTimeout(() => {
-            console.log('setting viewportstate to resized: isMounted(), from',isMounted(), viewportstateRef.current)
             isResizingRef.current = false
             if (isMounted()) {
-                console.log('calling setViewportState for resized')
                 setViewportState('resized')
             }
 
