@@ -780,8 +780,7 @@ const Cradle = ({
                 !(cradleState == 'resized') &&
                 !(cradleState == 'repositioning') && 
                 !(cradleState == 'reposition') && 
-                !(cradleState == 'pivot') // &&
-                // !(ViewportPortalItemRef.current && ViewportPortalItemRef.current.reparenting)
+                !(cradleState == 'pivot')
                 ) 
             {
 

@@ -6,7 +6,6 @@
     - fix scroll tracker
     - fix rapid scroll mismatch
     - fix nested scroll back reference mismatch
-    - clear out reparenting
     - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
     - break up cradle
     - avoid double load of nested scrollers
