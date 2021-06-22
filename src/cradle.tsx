@@ -141,6 +141,16 @@ import ScrollTracker from './scrolltracker'
 
 const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 200
 
+const signalsbaseline = {
+        pauseItemObserver: true,
+        pauseCradleIntersectionObserver:true,
+        pauseCradleResizeObserver: true,
+        pauseScrollingEffects: true,
+        isTailCradleInView:true,
+        isHeadCradleInView:true,
+        isCradleInView:true,
+    }
+
 const Cradle = ({ 
         gap, 
         padding, 
@@ -227,16 +237,7 @@ const Cradle = ({
     // -----------------------------------------------------------------------
     // -------------------------[ control flags ]-----------------
 
-
-    const signalsRef = useRef({
-        pauseItemObserver: true,
-        pauseCradleIntersectionObserver:true,
-        pauseCradleResizeObserver: true,
-        pauseScrollingEffects: true,
-        isTailCradleInView:true,
-        isHeadCradleInView:true,
-        isCradleInView:true,
-    })
+    const signalsRef = useRef(signalsbaseline)
 
     // ------------------------------------------------------------------------
     // -----------------------[ initialization effects ]-----------------------

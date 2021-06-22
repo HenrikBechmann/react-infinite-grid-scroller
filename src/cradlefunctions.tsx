@@ -7,7 +7,7 @@
 
 import React, {useContext} from 'react'
 
-import ItemShell from './itemshell'
+import ItemShell from './cellshell'
 
 import { detect } from 'detect-browser'
 
