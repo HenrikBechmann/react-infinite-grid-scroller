@@ -97,7 +97,7 @@ class PortalManagerClass {
         scrollerportals.modified = true
 
         scrollerPortalMetaData.get(scrollerID).set(index, 
-            {usercontent, placeholder, target:null, container, portal, reverseportal, indexid:index,scrollerid:scrollerID} )
+            {usercontent, placeholder, target:null, container, portal, reverseportal, reparenting:false, indexid: index,scrollerid:scrollerID} )
 
         this.renderPortalList(scrollerID)
 

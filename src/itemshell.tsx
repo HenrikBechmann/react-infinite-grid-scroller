@@ -42,7 +42,8 @@ const ItemShell = ({
     const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
-    const [portalStatus, setPortalStatus] = useState('setup') // 'setup' -> 'render'
+    const [portalStatus, setPortalStatus] = useState('setup'); // 'setup' -> 'render'
+    // (scrollerID == 3) && console.log('RUNNING itemshell scrollerID, portalStatus', scrollerID, portalStatus)
 
     // initialize
     useEffect(() => {
@@ -160,15 +161,32 @@ const ItemShell = ({
 
     const placeholderchildRef = useRef(placeholderchild)
 
-    const portalchild = useMemo(()=>{
-        if (portalStatus == 'setup') return null
+    const portalchildRef = useRef(placeholderchild)
+
+    portalchildRef.current = useMemo(()=>{
+        if (portalStatus == 'setup') return portalchildRef.current
         let portallistitem = portalManager.getPortalListItem(scrollerID, index)
         let reverseportal = portallistitem.reverseportal
+        // portallistitem.reparenting = true
         return <OutPortal node = {reverseportal} />
     }, [portalStatus]);
 
+    // useEffect(()=>{
+    //     if (portalStatus == 'setup') return
+    //     let portallistitem = portalManager.getPortalListItem(scrollerID, index)
+    //     let reverseportal = portallistitem.reverseportal
+    //     // portallistitem.reparenting = true
+    //     // setPortalStatus('reparenting')
+    //     // setTimeout(()=>{
+    //     //     portallistitem.reparenting = false
+    //     //     setPortalStatus('ready')
+    //     //     return
+    //     // },1000)
+    //     portalchildRef.current = <OutPortal node = {reverseportal} />
+    // }, [portalStatus])
+
     return <div ref = { shellRef } data-type = 'itemshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
-            { portalchild }
+            { portalchildRef.current }
     </div>
 
 
