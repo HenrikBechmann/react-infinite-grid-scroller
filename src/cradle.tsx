@@ -118,6 +118,7 @@ import useIsMounted from 'react-is-mounted-hook'
 import { ResizeObserver } from '@juggle/resize-observer'
 
 import { PortalManager } from './portalmanager'
+import { PortalContext } from './cellshell'
 
 const LocalResizeObserver = window['ResizeObserver'] || ResizeObserver
 
@@ -228,8 +229,6 @@ const Cradle = ({
 
     const [cradleState, saveCradleState] = useState('setup')
 
-    // console.log('cradle RUNNING cradleState with viewportData',cradleState, viewportData)
-
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
@@ -238,6 +237,16 @@ const Cradle = ({
     // -------------------------[ control flags ]-----------------
 
     const signalsRef = useRef(signalsbaseline)
+
+    const portalRecord = useContext(PortalContext)
+
+    console.log('cradle RUNNING scrollerID cradleState with portalRecord.current.reparenting',
+        scrollerID, cradleState, portalRecord.current?.reparenting)
+
+    if (portalRecord.current?.reparenting) {
+        signalsRef.current = signalsbaseline
+        portalRecord.current.reparenting = false
+    }
 
     // ------------------------------------------------------------------------
     // -----------------------[ initialization effects ]-----------------------

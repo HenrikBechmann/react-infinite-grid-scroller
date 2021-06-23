@@ -15,6 +15,8 @@ import Placeholder from './placeholder'
 
 import { PortalManager } from './portalmanager'
 
+export const PortalContext = React.createContext({current:null})
+
 const ItemShell = ({
     orientation, 
     cellHeight, 
@@ -42,6 +44,7 @@ const ItemShell = ({
     const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
+    const portalRecord = useRef(null)
     const [portalStatus, setPortalStatus] = useState('setup'); // 'setup' -> 'render'
     // (scrollerID == 3) && console.log('RUNNING cellshell scrollerID, portalStatus', scrollerID, portalStatus)
 
@@ -51,7 +54,7 @@ const ItemShell = ({
         let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
         let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
 
-        portalManager.createPortalListItem(scrollerID,index,null, placeholderchildRef.current)
+        portalRecord.current = portalManager.createPortalListItem(scrollerID,index,null, placeholderchildRef.current)
 
         setPortalStatus('render')
 
@@ -86,7 +89,6 @@ const ItemShell = ({
                                 saveError(null)
                             } else {
                                 saveError(true)
-                                // saveContent(null)
                             }
                         }
                     }
@@ -166,14 +168,18 @@ const ItemShell = ({
     portalchildRef.current = useMemo(()=>{
         if (portalStatus == 'setup') return portalchildRef.current
         // console.log('reparenting instanceID',instanceID)
-        let portallistitem = portalManager.getPortalListItem(scrollerID, index)
+        // let portallistitem = portalManager.getPortalListItem(scrollerID, index)
+        let portallistitem = portalRecord.current
+        portallistitem.reparenting = true
         let reverseportal = portallistitem.reverseportal
         return <OutPortal node = {reverseportal} />
     }, [portalStatus]);
 
-    return <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
+    return <PortalContext.Provider value = { portalRecord }>
+        <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
             { portalchildRef.current }
-    </div>
+        </div>
+    </PortalContext.Provider>
 
 
 } // ItemShell

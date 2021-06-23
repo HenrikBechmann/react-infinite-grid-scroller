@@ -75,7 +75,7 @@ class PortalManagerClass {
     createPortalListItem (scrollerID, index, usercontent, placeholder) {
 
         if (this.hasPortalListItem(scrollerID, index)) {
-            return
+            return this.getPortalListItem(scrollerID, index)
         }
 
         let container = document.createElement('div')
@@ -96,10 +96,13 @@ class PortalManagerClass {
         scrollerportals.portalMap.set(index,<PortalWrapper portal = {portal} key = {index} index = {index}/>)
         scrollerportals.modified = true
 
-        scrollerPortalMetaData.get(scrollerID).set(index, 
-            {usercontent, placeholder, target:null, container, portal, reverseportal, reparenting:false, indexid: index,scrollerid:scrollerID} )
+        let portalitem = {usercontent, placeholder, target:null, container, portal, reverseportal, reparenting:false, indexid: index,scrollerid:scrollerID}
+
+        scrollerPortalMetaData.get(scrollerID).set(index, portalitem)
 
         this.renderPortalList(scrollerID)
+
+        return portalitem
 
     }
 
