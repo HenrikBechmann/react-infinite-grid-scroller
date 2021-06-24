@@ -16,8 +16,6 @@ import { ResizeObserver } from '@juggle/resize-observer'
 
 import { PortalManager } from './portalmanager'
 
-import { PortalContext } from './cellshell'
-
 const LocalResizeObserver = window['ResizeObserver'] || ResizeObserver
 
 // control constant
@@ -39,7 +37,6 @@ const Viewport = ({
 
     // processing state
     const portalManager = useContext(PortalManager)
-    const portalRecord = useContext(PortalContext)
     // setup -> render; resizing -> resized -> render
     const [viewportstate,setViewportState] = useState('setup')
 
@@ -69,7 +66,7 @@ const Viewport = ({
 
     const resizeObserverRef = useRef(null);
 
-    // console.log('RUNNING viewport scrollerID, viewportstate',
+    // console.log('RUNNING viewport scrollerID, viewportstate, portalRecord.current',
     //     scrollerID,viewportstate)
 
     useEffect(()=>{
@@ -114,8 +111,6 @@ const Viewport = ({
     const resizeCallback = useCallback((entries)=>{
 
         if (viewportstateRef.current == 'setup') return
-
-        if (portalRecord.current?.reparenting) return
 
         let target = entries[0].target
 

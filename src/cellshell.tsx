@@ -15,8 +15,6 @@ import Placeholder from './placeholder'
 
 import { PortalManager } from './portalmanager'
 
-export const PortalContext = React.createContext({current:null})
-
 const ItemShell = ({
     orientation, 
     cellHeight, 
@@ -55,6 +53,8 @@ const ItemShell = ({
         let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
 
         portalRecord.current = portalManager.createPortalListItem(scrollerID,index,null, placeholderchildRef.current)
+
+        // console.log('cellshell scrollerID, index, instanceID, portalRecord.current',scrollerID, index, instanceID, portalRecord.current)
 
         setPortalStatus('render')
 
@@ -167,7 +167,7 @@ const ItemShell = ({
 
     portalchildRef.current = useMemo(()=>{
         if (portalStatus == 'setup') return portalchildRef.current
-        // console.log('reparenting instanceID',instanceID)
+        // console.log('cellshell reparenting instanceID',instanceID, scrollerID, )
         // let portallistitem = portalManager.getPortalListItem(scrollerID, index)
         let portallistitem = portalRecord.current
         portallistitem.reparenting = true
@@ -175,14 +175,14 @@ const ItemShell = ({
         return <OutPortal node = {reverseportal} />
     }, [portalStatus]);
 
-    return <PortalContext.Provider value = { portalRecord }>
-        <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
+
+    // console.log('rendering cellshell portalStatus with portalRecord',portalStatus, portalRecord)
+
+    return <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
             { portalchildRef.current }
         </div>
-    </PortalContext.Provider>
 
-
-} // ItemShell
+} // CellShell
 
 const getShellStyles = (orientation, cellHeight, cellWidth, styles) => {
 
