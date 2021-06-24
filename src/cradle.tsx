@@ -231,7 +231,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    console.log('RUNNING cradle scrollerID, cradleState', scrollerID, cradleState)
+    // console.log('RUNNING cradle scrollerID, cradleState', scrollerID, cradleState)
     // -----------------------------------------------------------------------
     // -------------------------[ control flags ]-----------------
 
@@ -243,11 +243,6 @@ const Cradle = ({
 
     // console.log('RUNNING cradle scrollerID cradleState with portalRecord',
     //     scrollerID, cradleState)
-
-    // if (portalRecord.current?.reparenting) {
-    //     signalsRef.current = signalsbaseline
-    //     portalRecord.current.reparenting = false
-    // }
 
     // ------------------------------------------------------------------------
     // -----------------------[ initialization effects ]-----------------------
@@ -414,32 +409,6 @@ const Cradle = ({
             spine:spineCradleElementRef
         }
     )
-
-    // useEffect(()=>{
-
-    //     if (scrollerID == 0 || !spineCradleElementRef.current) return
-    //     let parentscrollerid
-    //     let parentindex
-    //     let el = spineCradleElementRef.current
-    //     while (el) {
-    //         // console.log('dataset',el.dataset, el)
-    //         if (el.dataset && (el.dataset.type == 'portalcontainer')) {
-    //             parentindex = parseInt(el.dataset.index)
-    //             parentscrollerid = parseInt(el.dataset.scrollerid)
-    //             break
-    //         } else {
-    //             el = el.parentElement
-    //         }
-    //     } 
-
-    //     if (!el) {
-    //         console.log('ERROR: parent portalcontainer not found')
-    //         return
-    //     }
-    //     ViewportPortalItemRef.current = portalManager.getPortalListItem(parentscrollerid, parentindex)
-
-    // },[spineCradleElementRef.current])
-
 
     const cradleContentRef = useRef({
         cradleModel: null,
