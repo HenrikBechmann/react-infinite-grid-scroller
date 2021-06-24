@@ -172,20 +172,20 @@ const ItemShell = ({
         let portallistitem = portalRecord.current
         portallistitem.reparenting = true
         let reverseportal = portallistitem.reverseportal
-        setPortalStatus('reparenting')
+        // setPortalStatus('reparenting')
         return <OutPortal node = {reverseportal} />
     }, [portalStatus]);
 
 
     useEffect(()=> {
-        if (portalStatus == 'reparenting') {
+        // if (portalStatus == 'reparenting') {
+        if (portalRecord.current?.reparenting) {
             setTimeout(()=>{
-                let portallistitem = portalRecord.current
-                portallistitem.reparenting = false
-                setPortalStatus('ready')
+                // let portallistitem = portalRecord.current
+                portalRecord.current.reparenting = false
             })
         }
-    },[portalStatus])
+    }, [portalRecord.current?.reparenting])//[portalStatus])
 
     // console.log('rendering cellshell portalStatus with portalRecord',portalStatus, portalRecord)
 
