@@ -231,7 +231,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // console.log('RUNNING cradle scrollerID, cradleState', scrollerID, cradleState)
+    console.log('RUNNING cradle scrollerID, cradleState', scrollerID, cradleState)
     // -----------------------------------------------------------------------
     // -------------------------[ control flags ]-----------------
 
@@ -865,8 +865,6 @@ const Cradle = ({
 
     const updateCradleContent = (entries, source = 'notifications') => {
 
-        // console.log('updating cradle content: entries.length, source', entries.length, source)
-
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current
         let cradleProps = cradlePropsRef.current
@@ -882,7 +880,7 @@ const Cradle = ({
             return
 
         }
-        // console.log('updateCradleContent scrollOffset', scrollOffset)
+
         // ----------------------------[ 1. initialize ]----------------------------
 
         let scrollPositions = scrollPositionsRef.current
@@ -1155,9 +1153,6 @@ const Cradle = ({
 
         }
 
-        // console.log('scrollblockoffset, spineOffset, spineadjustment, headcontentlist.length',
-        //     scrollblockoffset, spineOffset, spineadjustment, headcontentlist.length)
-
         let cradleElements = cradleElementsRef.current
 
         if (orientation == 'vertical') {
@@ -1167,9 +1162,6 @@ const Cradle = ({
             cradleElements.spine.current.style.top = (scrollblockoffset + spineadjustment) + 'px'
             cradleElements.spine.current.style.left = 'auto'
             cradleElements.head.current.style.paddingBottom = headcontentlist.length?cradleProps.gap + 'px':0
-            // console.log('CSS adjustments: scrollTop, scrollblockoffset, spineOffset, top, spineadjustment, headcontentlist.length','\n',
-            //     scrollblockoffset  - spineOffset, scrollblockoffset, spineOffset, 
-            //     scrollblockoffset + spineadjustment, spineadjustment, headcontentlist.length )
 
         } else { // orientation = 'horizontal'
 
@@ -1344,12 +1336,12 @@ const Cradle = ({
             case 'repositioning':
                 break;
 
-            case 'setscrolloffset': {
+            case 'setscrollposition': {
 
                 viewportData.elementref.current[scrollPositionDataRef.current.property] =
                     scrollPositionDataRef.current.value
 
-                saveCradleState('normalize')
+                saveCradleState('normalizecontrols')
 
                 break
             }
@@ -1359,13 +1351,13 @@ const Cradle = ({
                 break
 
             }
-            case 'content': {
+            case 'preparerender': {
 
                 let cradleContent = cradleContentRef.current
                 cradleContent.headView = cradleContent.headModel
                 cradleContent.tailView = cradleContent.tailModel
 
-                saveCradleState('setscrolloffset')//'normalize')
+                saveCradleState('setscrollposition')
                 break
             }
         }
@@ -1384,11 +1376,11 @@ const Cradle = ({
             case 'reposition':
 
                 callingCradleState.current = cradleState
-                saveCradleState('settle')
+                saveCradleState('preparecontent')
 
                 break
 
-            case 'settle': {
+            case 'preparecontent': {
 
                 // console.log('settle (setCradleContent): state, refIndex',callingCradleState.current, callingReferenceIndexDataRef.current)
 
@@ -1399,21 +1391,18 @@ const Cradle = ({
                 portalManager.resetScrollerPortalRepository(scrollerID)
                 setCradleContent(callingCradleState.current, callingReferenceIndexDataRef.current)
 
-                saveCradleState('content')//'setscrolloffset')
+                saveCradleState('preparerender')
 
                 break
             }
-            case 'normalize': {
+            case 'normalizecontrols': {
                 setTimeout(()=> {
 
-                    // isMounted = useIsMounted()
                     if (!isMounted()) return
-                    // console.log('inside normalize: viewportData.isResizing', viewportData.isResizing)
                     if (!viewportData.isResizing) {
                         // redundant scroll position to avoid accidental positioning at tail end of reposition
                         if (viewportData.elementref.current) { // already unmounted if fails
                             let signals = signalsRef.current
-                            // console.log('clearing control Flags', signals)
                             signals.pauseItemObserver  && (signals.pauseItemObserver = false)
                             signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
                             signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
@@ -1429,8 +1418,6 @@ const Cradle = ({
                     } else {
                         saveCradleState('resizing')
                     }
-
-                    // console.log('portalData after set, scrollerName',cradleContentRef.current.portalData, scrollerName)
 
                 },100)
 
