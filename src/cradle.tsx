@@ -231,11 +231,15 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // console.log('CRADLE scrollerName scrollerID, cradleState', scrollerName, scrollerID, cradleState)
+    console.log('RUNNING cradle scrollerID, cradleState', scrollerID, cradleState)
     // -----------------------------------------------------------------------
     // -------------------------[ control flags ]-----------------
 
     const signalsRef = useRef(signalsbaseline)
+
+    if (viewportData.portalitem?.reparenting) {
+        signalsRef.current = signalsbaseline
+    }
 
     // console.log('RUNNING cradle scrollerID cradleState with portalRecord',
     //     scrollerID, cradleState)
@@ -772,7 +776,7 @@ const Cradle = ({
         //     scrollerID, viewportDataRef.current.portalitem.reparenting, signals, entries)
 
         if (signals.pauseCradleIntersectionObserver) return
-        // if (viewportDataRef.current.portalitem?.reparenting) return
+        if (viewportDataRef.current.portalitem?.reparenting) return
 
         for (let i = 0; i < entries.length; i++ ) {
             let entry = entries[i]
@@ -883,7 +887,7 @@ const Cradle = ({
             return
 
         }
-        // isMounted = useIsMounted()
+
         isMounted() && updateCradleContent(movedentries)
 
     },[])
@@ -1367,7 +1371,7 @@ const Cradle = ({
                 break;
             case 'updatereposition':
                 saveCradleState('repositioning')
-
+                break;
             case 'repositioning':
                 break;
 

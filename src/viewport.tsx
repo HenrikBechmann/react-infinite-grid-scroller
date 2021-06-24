@@ -66,8 +66,8 @@ const Viewport = ({
 
     const resizeObserverRef = useRef(null);
 
-    // console.log('RUNNING viewport scrollerID, viewportstate, portalRecord.current',
-    //     scrollerID,viewportstate)
+    console.log('RUNNING viewport scrollerID, viewportstate',
+        scrollerID,viewportstate)
 
     useEffect(()=>{
 
@@ -111,6 +111,11 @@ const Viewport = ({
     const resizeCallback = useCallback((entries)=>{
 
         if (viewportstateRef.current == 'setup') return
+
+        console.log('viewport resizeCallback scrollerID, viewportDataRef.current.portalitem.reparenting, viewportDataRef.current.portalitem',
+            scrollerID, viewportDataRef.current.portalitem?.reparenting, viewportDataRef.current.portalitem)
+
+        if (viewportDataRef.current.portalitem?.reparenting) return
 
         let target = entries[0].target
 
