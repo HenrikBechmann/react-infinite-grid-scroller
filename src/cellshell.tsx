@@ -166,15 +166,26 @@ const ItemShell = ({
     const portalchildRef = useRef(placeholderchild)
 
     portalchildRef.current = useMemo(()=>{
-        if (portalStatus == 'setup') return portalchildRef.current
+        if (portalStatus != 'render') return portalchildRef.current
         // console.log('cellshell reparenting instanceID',instanceID, scrollerID, )
         // let portallistitem = portalManager.getPortalListItem(scrollerID, index)
         let portallistitem = portalRecord.current
         portallistitem.reparenting = true
         let reverseportal = portallistitem.reverseportal
+        setPortalStatus('reparenting')
         return <OutPortal node = {reverseportal} />
     }, [portalStatus]);
 
+
+    useEffect(()=> {
+        if (portalStatus == 'reparenting') {
+            setTimeout(()=>{
+                let portallistitem = portalRecord.current
+                portallistitem.reparenting = false
+                setPortalStatus('ready')
+            })
+        }
+    },[portalStatus])
 
     // console.log('rendering cellshell portalStatus with portalRecord',portalStatus, portalRecord)
 
