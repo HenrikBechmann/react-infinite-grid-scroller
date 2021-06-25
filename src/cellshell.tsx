@@ -188,7 +188,7 @@ const ItemShell = ({
     // console.log('rendering cellshell portalStatus with portalRecord',portalStatus, portalRecord)
 
     return <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
-            { portalchildRef.current }
+            { (portalStatus == 'render') && portalchildRef.current }
         </div>
 
 } // CellShell

@@ -81,7 +81,7 @@ const InfiniteGridScroller = (props) => {
     },[])
     const scrollerSessionIDRef = useRef(scrollerSessionID)
 
-    // console.log('RUNNING infinitegridscroller scrollerSessionID',scrollerSessionIDRef.current)//, scrollerState)
+    console.log('RUNNING infinitegridscroller scrollerSessionID',scrollerSessionIDRef.current)//, scrollerState)
 
     // defaults
     functions !?? (functions = {})
@@ -109,6 +109,9 @@ const InfiniteGridScroller = (props) => {
     },[])
 
     return <div data-type = 'scroller' data-scrollerid = { scrollerSessionID }>
+        <div data-type = 'portalroot' style = { portalrootstyle }>
+            <PortalList scrollerID = { scrollerSessionID }/>
+        </div>
         <Viewport
 
             orientation = { orientation } 
@@ -152,9 +155,6 @@ const InfiniteGridScroller = (props) => {
                     scrollerID = { scrollerSessionID }
 
                 />
-                <div data-type = 'portalroot' style = { portalrootstyle }>
-                    <PortalList scrollerID = { scrollerSessionID }/>
-                </div>
             </Scrollblock>
         </Viewport>
     </div>
