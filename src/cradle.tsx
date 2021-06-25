@@ -491,11 +491,6 @@ const Cradle = ({
         crosscount,
     ])
 
-    // const cradleRowcountRef = useRef(null)
-    // cradleRowcountRef.current = cradleRowcount
-    // const viewportRowcountRef = useRef(null)
-    // viewportRowcountRef.current = viewportRowcount
-
     const cradleConfigRef = useRef({
         crosscount,
         cradleRowcount,
@@ -867,6 +862,8 @@ const Cradle = ({
 
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current
+        if (!viewportElement) return
+            
         let cradleProps = cradlePropsRef.current
 
         let scrollOffset

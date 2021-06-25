@@ -60,13 +60,11 @@ const ItemShell = ({
 
         if (!portalManager.hasPortalUserContent(scrollerID,index)) {
 
-            if (getItem) {
-
-                // console.log('fetching NEW item (queue)')
+            if (isMounted() && getItem) {
 
                 itemrequestRef.current = requestidlecallback(()=> { // TODO make this optional
                     let contentItem = getItem(index)
-                    // console.log('result of getItem(index)',contentItem)
+
                     if (contentItem && contentItem.then) {
                         contentItem.then((usercontent) => {
                             if (isMounted()) { 
@@ -166,22 +164,22 @@ const ItemShell = ({
     const portalchildRef = useRef(placeholderchild)
 
     portalchildRef.current = useMemo(()=>{
+
         if (portalStatus != 'render') return portalchildRef.current
-        // console.log('cellshell reparenting instanceID',instanceID, scrollerID, )
-        // let portallistitem = portalManager.getPortalListItem(scrollerID, index)
+
         let portallistitem = portalRecord.current
         portallistitem.reparenting = true
         let reverseportal = portallistitem.reverseportal
-        // setPortalStatus('reparenting')
+
         return <OutPortal node = {reverseportal} />
+
     }, [portalStatus]);
 
 
     useEffect(()=> {
-        // if (portalStatus == 'reparenting') {
         if (portalRecord.current?.reparenting) {
             setTimeout(()=>{
-                // let portallistitem = portalRecord.current
+                if (!isMounted()) return
                 portalRecord.current.reparenting = false
             })
         }

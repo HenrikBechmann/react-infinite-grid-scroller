@@ -10,6 +10,8 @@ import ReactDOM from 'react-dom'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
+import useIsMounted from 'react-is-mounted-hook'
+
 // global scroller data, organized by session scrollerID
 const scrollerPortalMetaData = new Map()
 const scrollerPortalListData = new Map()
@@ -201,12 +203,13 @@ export const PortalWrapper = ({
 export const PortalList = ({scrollerID}) => {
 
     const [portalList, setPortalList] = useState(null)
+    const isMounted = useIsMounted()
 
     useEffect(()=>{
 
         scrollerPortalCallbacks.set(scrollerID,
             {setListState:()=>{
-                setPortalList(scrollerPortalListData.get(scrollerID).portalList)
+                isMounted() && setPortalList(scrollerPortalListData.get(scrollerID).portalList)
             }})
 
     },[]) 
