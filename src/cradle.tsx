@@ -768,7 +768,11 @@ const Cradle = ({
                 ) 
             {
                 let element = viewportDataRef.current.elementref.current
-                if (!element) return
+                if (!element) {
+                    console.log('viewport element not set in cradleIntersectionObserverCallback',
+                        scrollerID, viewportDataRef.current.elementref.current,viewportDataRef)
+                    return
+                }
                 let rect = element.getBoundingClientRect()
                 let {top, right, bottom, left} = rect
                 let width = right - left, height = bottom - top
@@ -863,7 +867,11 @@ const Cradle = ({
 
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current
-        if (!viewportElement) return
+        if (!viewportElement) {
+            console.log('viewport element not set in updateCradleContent',
+                scrollerID, viewportData.elementref.current,viewportDataRef)
+            return
+        }
             
         let cradleProps = cradlePropsRef.current
 
@@ -1405,6 +1413,8 @@ const Cradle = ({
                             signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
                             signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
                             signals.pauseCradleResizeObserver && (signals.pauseCradleResizeObserver = false)
+                        } else {
+                            console.log('viewport element not set in normalizecontrols', scrollerID, viewportData)
                         }
 
                         if (signalsRef.current.isCradleInView) {
