@@ -5,6 +5,7 @@
     TODO:
     - avoid double load of nested scrollers
     - fix nested scroll back reference mismatch
+    - conflict between reposition and reparent?
     
     - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
     - break up cradle
