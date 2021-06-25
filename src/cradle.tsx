@@ -868,7 +868,7 @@ const Cradle = ({
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current
         if (!viewportElement) {
-            console.log('viewport element not set in updateCradleContent',
+            console.error('ERROR: viewport element not set in updateCradleContent',
                 scrollerID, viewportData.elementref.current,viewportDataRef)
             return
         }
@@ -1414,7 +1414,7 @@ const Cradle = ({
                             signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
                             signals.pauseCradleResizeObserver && (signals.pauseCradleResizeObserver = false)
                         } else {
-                            console.log('viewport element not set in normalizecontrols', scrollerID, viewportData)
+                            console.log('ERROR: viewport element not set in normalizecontrols', scrollerID, viewportData)
                         }
 
                         if (signalsRef.current.isCradleInView) {
