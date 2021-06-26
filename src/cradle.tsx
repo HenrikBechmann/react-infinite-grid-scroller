@@ -232,16 +232,16 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    console.log('RUNNING cradle scrollerID, cradleState', scrollerID, cradleState)
+    console.log('RUNNING cradle scrollerID, cradleState, viewportData', scrollerID, cradleState, viewportData)
     // -----------------------------------------------------------------------
     // -------------------------[ control flags ]-----------------
 
-    const signalsRef = useRef(signalsbaseline)
+    const signalsRef = useRef(Object.assign({},signalsbaseline))
 
-    if (viewportData.portalitem?.reparenting && !signalsRef.current.isReparenting && !(cradleState == 'setup')) {
-            console.log('resetting signals for reparenting')
-            signalsRef.current = signalsbaseline;
+    if (viewportData.portalitem?.reparenting) {
+            Object.assign(signalsRef.current,signalsbaseline)
             signalsRef.current.isReparenting = true
+            console.log('resetting signals for reparenting scrollerID',scrollerID)
             // let observerRecords = cellObserverRef.current.takeRecords()
             // console.log('taken observerRecords',observerRecords)
             // setCradleState('normalizecontrols')
@@ -864,7 +864,7 @@ const Cradle = ({
 
         }
 
-        console.log('scrollerID cradle calling updateCradleContent from cellobserver',scrollerID)
+        console.log('scrollerID cradle calling updateCradleContent from cellobserver',scrollerID,Object.assign({},signalsRef.current) )
 
         isMounted() && updateCradleContent(movedentries)
 
@@ -1353,6 +1353,8 @@ const Cradle = ({
 
             case 'setscrollposition': {
 
+                console.log('setting scroll position for scrollerID',scrollerID)
+
                 viewportData.elementref.current[scrollPositionDataRef.current.property] =
                     scrollPositionDataRef.current.value
 
@@ -1414,6 +1416,7 @@ const Cradle = ({
                 setTimeout(()=> {
 
                     if (!isMounted()) return
+                    console.log('normalizecontrols for cradle',scrollerID)
                     if (!viewportData.isResizing) {
                         // redundant scroll position to avoid accidental positioning at tail end of reposition
                         if (viewportData.elementref.current) { // already unmounted if fails (?)
