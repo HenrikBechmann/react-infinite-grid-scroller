@@ -7,11 +7,9 @@
 
 import React, {useContext} from 'react'
 
-import ItemShell from './cellshell'
+import CellShell from './cellshell'
 
 import { detect } from 'detect-browser'
-
-// import { PortalManager } from './portalmanager'
 
 const browser = detect()
 
@@ -393,7 +391,7 @@ const adjustSpineOffsetForMaxRefindex = ({
 export const isolateRelevantIntersections = ({
     intersections,
     cradleContent,
-    itemObserverThreshold,
+    cellObserverThreshold,
     scrollforward,
 }) => {
 
@@ -451,7 +449,7 @@ export const isolateRelevantIntersections = ({
             ratio = Math.round(entry.intersectionRatio * 1000)/1000
         }
 
-        let calcintersecting = (ratio >= itemObserverThreshold)
+        let calcintersecting = (ratio >= cellObserverThreshold)
         let iobj = {
             index,
             intersecting:calcintersecting,  // to accommodate browser differences
@@ -1138,7 +1136,7 @@ const emitItem = ({
         scrollerName,
         scrollerID } = cradleProps
 
-    return <ItemShell
+    return <CellShell
         key = {index} 
         orientation = {orientation}
         cellHeight = { cellHeight }

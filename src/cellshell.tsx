@@ -15,7 +15,7 @@ import Placeholder from './placeholder'
 
 import { PortalManager } from './portalmanager'
 
-const ItemShell = ({
+const CellShell = ({
     orientation, 
     cellHeight, 
     cellWidth, 
@@ -165,11 +165,20 @@ const ItemShell = ({
 
     portalchildRef.current = useMemo(()=>{
 
+        // if (portalStatus == 'reparenting') {
+        //     setPortalStatus('render')            
+        // }
         if (portalStatus != 'render') return portalchildRef.current
 
         let portallistitem = portalRecord.current
+        // if (portallistitem.reparenting) {
+        //     portallistitem.reparenting = false
+        //     return portalchildRef.current
+        // }
         portallistitem.reparenting = true
         let reverseportal = portallistitem.reverseportal
+
+        // setPortalStatus('reparenting')
 
         return <OutPortal node = {reverseportal} />
 
@@ -188,7 +197,7 @@ const ItemShell = ({
     // console.log('rendering cellshell portalStatus with portalRecord',portalStatus, portalRecord)
 
     return <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
-            { (portalStatus == 'render') && portalchildRef.current }
+            { ((portalStatus == 'render') || portalStatus == 'reparenting') && portalchildRef.current }
         </div>
 
 } // CellShell
@@ -208,4 +217,4 @@ const getShellStyles = (orientation, cellHeight, cellWidth, styles) => {
 
 }
 
-export default ItemShell
+export default CellShell

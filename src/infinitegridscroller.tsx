@@ -44,7 +44,7 @@ const portalrootstyle = {display:'none'} // static
     Cradle contains the list items, and is 'virtualized' -- it appears as
       though it is the full scrollblock, but in fact it is only slightly larger than
       the viewport.
-    - individual items are framed by ItemShell, managed by Cradle
+    - individual items are framed by CellShell, managed by Cradle
 
     Overall the infinitegridscroller manages the (often asynchronous) interactions of the 
     components of the mechanism
