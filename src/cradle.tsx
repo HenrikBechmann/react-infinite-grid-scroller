@@ -1353,7 +1353,7 @@ const Cradle = ({
 
             case 'setscrollposition': {
 
-                console.log('setting scroll position for scrollerID',scrollerID)
+                console.log('setting scroll position for scrollerID',scrollerID,scrollPositionDataRef)
 
                 viewportData.elementref.current[scrollPositionDataRef.current.property] =
                     scrollPositionDataRef.current.value
