@@ -236,10 +236,10 @@ const Cradle = ({
     // -----------------------------------------------------------------------
     // -------------------------[ control flags ]-----------------
 
-    const signalsRef = useRef(Object.assign({},signalsbaseline))
+    const signalsRef = useRef(Object.assign({},signalsbaseline)) // clone
 
     if (viewportData.portalitem?.reparenting) {
-            Object.assign(signalsRef.current,signalsbaseline)
+            Object.assign(signalsRef.current,signalsbaseline) //clone 
             signalsRef.current.isReparenting = true
             console.log('resetting signals for reparenting scrollerID',scrollerID)
             // let observerRecords = cellObserverRef.current.takeRecords()
