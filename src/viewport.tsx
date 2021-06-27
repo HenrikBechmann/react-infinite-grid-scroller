@@ -66,8 +66,8 @@ const Viewport = ({
 
     const resizeObserverRef = useRef(null);
 
-    console.log('RUNNING viewport scrollerID, viewportstate, portalitem',
-        scrollerID,viewportstate,viewportDataRef.current.portalitem)
+    // console.log('RUNNING viewport scrollerID, viewportstate, portalitem',
+    //     scrollerID,viewportstate,viewportDataRef.current.portalitem)
 
     if (viewportDataRef.current.portalitem?.reparenting && !viewportDataRef.current.isReparenting) {
         viewportDataRef.current.isReparenting = true
