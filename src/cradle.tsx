@@ -149,7 +149,7 @@ const signalsbaseline = {
         isTailCradleInView:true,
         isHeadCradleInView:true,
         isCradleInView:true,
-        isReparenting:false,
+        // isReparenting:false,
     }
 
 const Cradle = ({ 
@@ -232,19 +232,21 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
+    const isReparentingRef = useRef(false)
+
     console.log('RUNNING cradle scrollerID, cradleState, viewportData', scrollerID, cradleState, viewportData)
     // -----------------------------------------------------------------------
     // -------------------------[ control flags ]-----------------
 
     const signalsRef = useRef(Object.assign({},signalsbaseline)) // clone
 
-    if (viewportData.portalitem?.reparenting) {
+    if (viewportData.isReparenting) {
             Object.assign(signalsRef.current,signalsbaseline) //clone 
-            signalsRef.current.isReparenting = true
+            // signalsRef.current.isReparenting = true
+            viewportData.isReparenting = false
+            isReparentingRef.current = true
             console.log('resetting signals for reparenting scrollerID',scrollerID)
-            // let observerRecords = cellObserverRef.current.takeRecords()
-            // console.log('taken observerRecords',observerRecords)
-            // setCradleState('normalizecontrols')
+            setCradleState('reparenting')
         // }
     }
 
@@ -748,6 +750,7 @@ const Cradle = ({
 
         if (signals.pauseCradleIntersectionObserver) return
         if (viewportDataRef.current.portalitem?.reparenting) return
+        // if (isReparentingRef.current) return
 
         for (let i = 0; i < entries.length; i++ ) {
             let entry = entries[i]
@@ -1351,6 +1354,11 @@ const Cradle = ({
             case 'repositioning':
                 break;
 
+            case 'reparenting':
+                isReparentingRef.current = false
+                setCradleState('setscrollposition')
+                break;
+
             case 'setscrollposition': {
 
                 console.log('setting scroll position for scrollerID',scrollerID,scrollPositionDataRef)
@@ -1425,7 +1433,7 @@ const Cradle = ({
                             signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
                             signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
                             signals.pauseCradleResizeObserver && (signals.pauseCradleResizeObserver = false)
-                            signals.isReparenting && (signals.isReparenting = false)
+                            // signals.isReparenting && (signals.isReparenting = false)
                         } else {
                             console.log('ERROR: viewport element not set in normalizecontrols', scrollerID, viewportData)
                         }

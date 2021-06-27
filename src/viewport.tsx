@@ -61,13 +61,17 @@ const Viewport = ({
     } as React.CSSProperties,styles?.viewport))
     const resizeTimeridRef = useRef(null)
     const isResizingRef = useRef(false)
-    const viewportDataRef = useRef({portalitem:null, isResizing:false})
+    const viewportDataRef = useRef({portalitem:null, isResizing:false, isReparenting: false})
     const viewportClientRectRef = useRef({top:0,right:0,bottom:0,left:0})
 
     const resizeObserverRef = useRef(null);
 
     console.log('RUNNING viewport scrollerID, viewportstate, portalitem',
         scrollerID,viewportstate,viewportDataRef.current.portalitem)
+
+    if (viewportDataRef.current.portalitem?.reparenting && !viewportDataRef.current.isReparenting) {
+        viewportDataRef.current.isReparenting = true
+    }
 
     useEffect(()=>{
 
@@ -114,8 +118,6 @@ const Viewport = ({
 
         // console.log('viewport resizeCallback scrollerID, viewportDataRef.current.portalitem.reparenting, viewportDataRef.current.portalitem',
         //     scrollerID, viewportDataRef.current.portalitem?.reparenting, viewportDataRef.current.portalitem)
-
-        // if (viewportDataRef.current.portalitem?.reparenting) return
 
         // console.log('continuing')
 
