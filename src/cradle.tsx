@@ -235,6 +235,7 @@ const Cradle = ({
     const isReparentingRef = useRef(false)
 
     // console.log('RUNNING cradle scrollerID, cradleState, viewportData', scrollerID, cradleState, viewportData)
+    console.log('RUNNING cradle scrollerID, cradleState', scrollerID, cradleState)
     // -----------------------------------------------------------------------
     // -------------------------[ control flags ]-----------------
 
@@ -869,13 +870,15 @@ const Cradle = ({
 
         // console.log('scrollerID cradle calling updateCradleContent from cellobserver',scrollerID,Object.assign({},signalsRef.current) )
 
-        isMounted() && updateCradleContent(movedentries)
+        isMounted() && updateCradleContent(movedentries,'cellObserver')
 
     },[])
 
     const previousScrollForwardRef = useRef(undefined)
 
     const updateCradleContent = (entries, source = 'notifications') => {
+
+        console.log('updateCradleContent source',scrollerID,source)
 
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current
@@ -1057,6 +1060,9 @@ const Cradle = ({
 
             }
 
+            console.log('scrollPositionDataRef.current after updateCradleContent',scrollerID, scrollPositionDataRef.current)
+            // EXPERIMENTAL:
+            setCradleState('setscrollposition')
         }
 
         scrollReferenceIndexDataRef.current = {
@@ -1190,6 +1196,8 @@ const Cradle = ({
             cradleElements.head.current.style.paddingRight = headcontentlist.length?cradleProps.gap + 'px':0
 
         }
+
+        console.log('scrollPositionDataRef.current after setCradleContent',scrollerID, scrollPositionDataRef.current)
 
     }
 
@@ -1361,7 +1369,7 @@ const Cradle = ({
 
             case 'setscrollposition': {
 
-                // console.log('setting scroll position for scrollerID',scrollerID,scrollPositionDataRef)
+                console.log('setting scroll position for scrollerID',scrollerID,scrollPositionDataRef)
 
                 viewportData.elementref.current[scrollPositionDataRef.current.property] =
                     scrollPositionDataRef.current.value
