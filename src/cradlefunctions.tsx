@@ -274,20 +274,20 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     // --------------------[ calc css positioning ]-----------------------
 
     let targetrowoffset = Math.ceil(referenceoffset/crosscount)
-    let scrollblockoffset = (targetrowoffset * cellLength) + padding // gap
-    let spineadjustment
+    let scrollblockOffset = (targetrowoffset * cellLength) + padding // gap
+    let spineAdjustment
 
     if (targetrowoffset == 0) {
-        scrollblockoffset = 0
+        scrollblockOffset = 0
         spineOffset = 0 // padding
-        spineadjustment = padding
+        spineAdjustment = padding
     } else {
-        spineadjustment = 0; //gap;
+        spineAdjustment = 0; //gap;
 
-        [cradleReferenceIndex, contentCount, referenceoffset, scrollblockoffset, spineOffset] = adjustSpineOffsetForMaxRefindex({
+        [cradleReferenceIndex, contentCount, referenceoffset, scrollblockOffset, spineOffset] = adjustSpineOffsetForMaxRefindex({
             referenceoffset,
             spineOffset,
-            scrollblockoffset,            
+            scrollblockOffset,            
             targetrowoffset,
             viewportlength,
             listsize,
@@ -303,10 +303,10 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     // debugger
 
-    // console.log('cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment',
-    //     cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment)
+    // console.log('cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spineOffset, spineAdjustment',
+    //     cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spineOffset, spineAdjustment)
 
-    return {cradleReferenceIndex, referenceoffset, contentCount, scrollblockoffset, spineOffset, spineadjustment} // summarize requirements message
+    return {cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spineOffset, spineAdjustment} // summarize requirements message
 
 }
 
@@ -320,7 +320,7 @@ const adjustSpineOffsetForMaxRefindex = ({
     referenceoffset,
     targetrowoffset,
 
-    scrollblockoffset,
+    scrollblockOffset,
     spineOffset,
 
     viewportlength,
@@ -372,18 +372,18 @@ const adjustSpineOffsetForMaxRefindex = ({
 
         referenceoffset = (targetrowoffset * crosscount)
 
-        scrollblockoffset = (targetrowoffset * cellLength) + padding
+        scrollblockOffset = (targetrowoffset * cellLength) + padding
 
         spineOffset = viewportlength - ((viewportrows - 1) * cellLength) - gap
 
-        // console.log('targetrow adjustment: targetrowoffset, cradleReferenceIndex, referenceoffset, scrollblockoffset, spineOffset',
-        //     targetrowoffset, cradleReferenceIndex, referenceoffset, scrollblockoffset, spineOffset)
+        // console.log('targetrow adjustment: targetrowoffset, cradleReferenceIndex, referenceoffset, scrollblockOffset, spineOffset',
+        //     targetrowoffset, cradleReferenceIndex, referenceoffset, scrollblockOffset, spineOffset)
 
     }
 
     // debugger
 
-    return [cradleReferenceIndex, contentCount, referenceoffset, scrollblockoffset, spineOffset]
+    return [cradleReferenceIndex, contentCount, referenceoffset, scrollblockOffset, spineOffset]
 
 }
 
