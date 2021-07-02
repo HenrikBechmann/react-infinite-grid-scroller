@@ -13,7 +13,7 @@ import { detect } from 'detect-browser'
 
 const browser = detect()
 
-export const calcVisibleItems = ({   
+export const getVisibleItemsList = ({   
 
         itemElementMap, 
         viewportElement, 

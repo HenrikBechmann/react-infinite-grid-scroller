@@ -5,7 +5,11 @@
     TODO:
 
     ContentManager
-    GridManager
+    CradleManager
+    WingManager
+    SignalsManager
+    Observers
+    ScrollManager
 
 */
 /*
@@ -91,7 +95,7 @@ import {
     getUIContentList, 
     calcHeadAndTailChanges,
     calcContentShifts,
-    calcVisibleItems, 
+    getVisibleItemsList, 
     getScrollReferenceIndexData,
     getContentListRequirements,
     isolateRelevantIntersections,
@@ -1445,7 +1449,7 @@ const Cradle = ({
         // let cradleElements = cradleElementsRef.current
         let cradleContent = cradleContentRef.current
 
-        return calcVisibleItems({
+        return getVisibleItemsList({
             itemElementMap:itemElementsRef.current,
             viewportElement:viewportDataRef.current.elementref.current,
             cradleElements:cradleElementsRef.current, 
@@ -1549,7 +1553,7 @@ const Cradle = ({
             />
             :null}
         <div 
-            data-type = 'cradle_spine'
+            data-type = 'cradle_handle'
             style = {cradleSpineStyle} 
             ref = {spineCradleElementRef}
         >
