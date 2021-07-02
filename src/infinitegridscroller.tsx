@@ -59,7 +59,7 @@ const InfiniteGridScroller = (props) => {
         runway, // the number of items outside the view of each side of the viewport 
             // -- gives time to assemble before display
         listsize, // the exact number of the size of the virtual list
-        indexOffset:defaultVisibleIndexOffset, // the 0-based starting index of the list, when first loaded
+        indexOffset:defaultVisibleIndex, // the 0-based starting index of the list, when first loaded
         getItem, // function provided by host - parameter is index number, set by system; return value is 
             // host-selected component or promise of a component
         functions, // properties with direct access to some component utilites, optional
@@ -87,12 +87,12 @@ const InfiniteGridScroller = (props) => {
     gap !?? (gap = 0)
     padding !?? (padding = 0)
     runway !?? (runway = 3)
-    defaultVisibleIndexOffset !?? (defaultVisibleIndexOffset = 0)
+    defaultVisibleIndex !?? (defaultVisibleIndex = 0)
     listsize !?? (listsize = 0)
     layout !?? (layout = 'uniform')
     // constraints
-    defaultVisibleIndexOffset = Math.max(0,defaultVisibleIndexOffset) // non-negative
-    defaultVisibleIndexOffset = Math.min(listsize, defaultVisibleIndexOffset) // not larger than list
+    defaultVisibleIndex = Math.max(0,defaultVisibleIndex) // non-negative
+    defaultVisibleIndex = Math.min(listsize, defaultVisibleIndex) // not larger than list
     if (!['horizontal','vertical'].includes(orientation)) {
         orientation = 'vertical'
     }
@@ -143,7 +143,7 @@ const InfiniteGridScroller = (props) => {
                     cellWidth = { cellWidth }
                     cellHeight = { cellHeight }
                     listsize = { listsize }
-                    defaultVisibleIndexOffset = { defaultVisibleIndexOffset }
+                    defaultVisibleIndex = { defaultVisibleIndex }
                     orientation = { orientation }
                     getItem = { getItem }
                     functions = { functions }

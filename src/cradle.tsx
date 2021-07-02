@@ -123,7 +123,7 @@ const Cradle = ({
         padding, 
         runwaycount, 
         listsize, 
-        defaultVisibleIndexOffset, 
+        defaultVisibleIndex, 
         orientation, 
         cellHeight, 
         cellWidth, 
@@ -143,7 +143,7 @@ const Cradle = ({
             padding, 
             runwaycount, 
             listsize, 
-            defaultVisibleIndexOffset, 
+            defaultVisibleIndex, 
             orientation, 
             cellHeight, 
             cellWidth, 
@@ -156,7 +156,7 @@ const Cradle = ({
         padding, 
         runwaycount, 
         listsize, 
-        defaultVisibleIndexOffset, 
+        defaultVisibleIndex, 
         orientation, 
         cellHeight, 
         cellWidth, 
@@ -313,10 +313,9 @@ const Cradle = ({
 
             callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
 
-            // let orientation = cradlePropsRef.current.orientation
-            // get previous ration
+            // get previous ratio
             let previousCellPixelLength = (orientation == 'vertical')?cradlePropsRef.current.cellWidth:cradlePropsRef.current.cellHeight
-            let previousSpineOffset = callingReferenceIndexDataRef.current.spinePosOffset
+            let previousSpineOffset = callingReferenceIndexDataRef.current.spineVisiblePosOffset
 
             let previousratio = previousSpineOffset/previousCellPixelLength
 
@@ -324,7 +323,7 @@ const Cradle = ({
 
             let currentSpineOffset = previousratio * currentCellPixelLength
             
-            callingReferenceIndexDataRef.current.spinePosOffset = Math.round(currentSpineOffset)
+            callingReferenceIndexDataRef.current.spineVisiblePosOffset = Math.round(currentSpineOffset)
 
             signalsRef.current.pauseCellObserver = true
             // pauseCradleIntersectionObserverRef.current = true
@@ -355,8 +354,8 @@ const Cradle = ({
     const instanceIdMapRef = useRef(new Map())
 
     const scrollReferenceIndexDataRef = useRef({ // existing or expected, monitored through onScroll
-        index:Math.min(defaultVisibleIndexOffset,(listsize - 1)) || 0,
-        spinePosOffset:padding
+        index:Math.min(defaultVisibleIndex,(listsize - 1)) || 0,
+        spineVisiblePosOffset:padding
     }) // access by closures
 
     // set by onScroll at the end of scroll sessions
@@ -1025,7 +1024,7 @@ const Cradle = ({
 
         scrollReferenceIndexDataRef.current = {
             index:spineReferenceIndex,
-            spinePosOffset:spineOffset
+            spineVisiblePosOffset:spineOffset
         }
 
         setCradleState('updatecontent')
@@ -1045,7 +1044,7 @@ const Cradle = ({
 
         let cradleProps = cradlePropsRef.current
         let { index: visibletargetindexoffset, 
-            spinePosOffset: visibletargetscrolloffset } = referenceIndexData
+            spineVisiblePosOffset: visibletargetscrolloffset } = referenceIndexData
 
         let {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
 
@@ -1120,7 +1119,7 @@ const Cradle = ({
         stableReferenceIndexDataRef.current = {
 
             index: referenceoffset,
-            spinePosOffset:spineOffset,
+            spineVisiblePosOffset:spineOffset,
 
         }
 
@@ -1210,23 +1209,23 @@ const Cradle = ({
                     if (itemindex === undefined) { // TODO: investigate
                         console.log('ERROR: scroll encountered undefined tailcontent lead')
                     }
-                    let spinePosOffset
+                    let spineVisiblePosOffset
                     let cradleElements = cradleElementsRef.current
 
                     if (cradlePropsRef.current.orientation == 'vertical') {
 
-                        spinePosOffset = cradleElements.spine.current.offsetTop - 
+                        spineVisiblePosOffset = cradleElements.spine.current.offsetTop - 
                             viewportDataRef.current.elementref.current.scrollTop
                             
                     } else {
 
-                        spinePosOffset = cradleElements.spine.current.offsetLeft - 
+                        spineVisiblePosOffset = cradleElements.spine.current.offsetLeft - 
                             viewportDataRef.current.elementref.current.scrollLeft
 
                     }
                     scrollReferenceIndexDataRef.current = {
                         index:itemindex,
-                        spinePosOffset,
+                        spineVisiblePosOffset,
                     }
 
                 } else {
@@ -1252,22 +1251,22 @@ const Cradle = ({
 
             // console.log('scrollerName, portalData after SCROLL:',scrollerName, cradleContentRef.current.portalData)
 
-            let spinePosOffset
+            let spineVisiblePosOffset
             let cradleElements = cradleElementsRef.current
 
             if (cradlePropsRef.current.orientation == 'vertical') {
 
-                spinePosOffset = cradleElements.spine.current.offsetTop - 
+                spineVisiblePosOffset = cradleElements.spine.current.offsetTop - 
                     viewportDataRef.current.elementref.current.scrollTop
                     
             } else {
 
-                spinePosOffset = cradleElements.spine.current.offsetLeft - 
+                spineVisiblePosOffset = cradleElements.spine.current.offsetLeft - 
                     viewportDataRef.current.elementref.current.scrollLeft
 
             }
 
-            scrollReferenceIndexDataRef.current.spinePosOffset = spinePosOffset
+            scrollReferenceIndexDataRef.current.spineVisiblePosOffset = spineVisiblePosOffset
 
             let cradleState = cradleStateRef.current
             if (!viewportDataRef.current.isResizing) {
@@ -1469,13 +1468,13 @@ const Cradle = ({
         signalsRef.current.pauseCellObserver = true
         signalsRef.current.pauseScrollingEffects = true
 
-        let spinePosOffset
+        let spineVisiblePosOffset
         let cradleElements = cradleElementsRef.current
 
         if (cradlePropsRef.current.orientation == 'vertical') {
-            spinePosOffset = cradleElements.spine.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
+            spineVisiblePosOffset = cradleElements.spine.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
         } else {
-            spinePosOffset = cradleElements.spine.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
+            spineVisiblePosOffset = cradleElements.spine.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
         }
 
         callingReferenceIndexDataRef.current = {...stableReferenceIndexDataRef.current}
@@ -1506,7 +1505,7 @@ const Cradle = ({
         signalsRef.current.pauseCellObserver = true
         signalsRef.current.pauseScrollingEffects = true
 
-        callingReferenceIndexDataRef.current = {index,spinePosOffset:0}
+        callingReferenceIndexDataRef.current = {index,spineVisiblePosOffset:0}
 
         setCradleState('reposition')
 
