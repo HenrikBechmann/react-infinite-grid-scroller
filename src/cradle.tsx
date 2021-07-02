@@ -4,47 +4,10 @@
 /*
     TODO:
 
-    add scroller name for debugging
+    ContentManager
+    GridManager
 
-    fold shift only happens after delay
-
-    nested horizontal tail boundary is wrong - underlying structure; head bottom boundary is wrong
-
-    for resize, preserve cache for reload
-
-    can't mount error in nested lists
-
-    Debug scrollToItem callback (including setting scrollforward on first action).
-        motion takes place but gets close rather than exact. Position is off by runwaycount
-
-    Make sure item shell triggers are only fired at the leading, not trailing, edge
-
-    Inconsistency in viewportrows, sometimes Math.ceil, sometimes Math.floor
-
-    change height to 0px from auto for spine in vertical
-    
-    update scrollforward logic to take into account rapid opposite scrolling. 
-    Use differences in scrollTop?
-
-    ==>> check getShift logic. !scrollforward should select next calculated index 
-    to be above the fold if possible.
-
-    QA defend against butterfly getting intersections from opposite scroll direction
-        as the result of a short viewport
-
-    implement sessionid scheme for cell content
-
-    deal with spine being notified by bottom border rather than top
-
-    test ITEM_OBSERVER_THRESHOLD at various levels
-    think through management of items larger than viewport
-
-    Add ITEM_OBSERVER_THRESHOLD to test parameters
-
-    Add show fold to test parameters
-
- */
-
+*/
 /*
     Description
     -----------
@@ -109,17 +72,17 @@
 
 import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, useLayoutEffect } from 'react'
 
-import { ViewportContext } from './viewport'
-
 import useIsMounted from 'react-is-mounted-hook'
 
 // import ResizeObserverPolyfill from 'resize-observer-polyfill'
 
 import { ResizeObserver } from '@juggle/resize-observer'
 
+import { ViewportContext } from './viewport'
+
 import { PortalManager } from './portalmanager'
 
-const LocalResizeObserver = window['ResizeObserver'] || ResizeObserver
+const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
 
 const ITEM_OBSERVER_THRESHOLD = 0
 
@@ -235,7 +198,7 @@ const Cradle = ({
     const isReparentingRef = useRef(false)
 
     // console.log('RUNNING cradle scrollerID, cradleState, viewportData', scrollerID, cradleState, viewportData)
-    console.log('RUNNING cradle scrollerID, cradleState', scrollerID, cradleState)
+    // console.log('RUNNING cradle scrollerID, cradleState', scrollerID, cradleState)
     // -----------------------------------------------------------------------
     // -------------------------[ control flags ]-----------------
 
@@ -695,7 +658,7 @@ const Cradle = ({
     useEffect(() => {
 
         // ResizeObserver
-        cradleResizeObserverRef.current = new LocalResizeObserver(cradleresizeobservercallback)
+        cradleResizeObserverRef.current = new ResizeObserverClass(cradleresizeobservercallback)
 
         let cradleElements = cradleElementsRef.current
         cradleResizeObserverRef.current.observe(cradleElements.head.current)
@@ -878,7 +841,7 @@ const Cradle = ({
 
     const updateCradleContent = (entries, source = 'notifications') => {
 
-        console.log('updateCradleContent source',scrollerID,source)
+        // console.log('updateCradleContent source',scrollerID,source)
 
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current
@@ -1060,7 +1023,7 @@ const Cradle = ({
 
             }
 
-            console.log('UPDATE updateCradleContent calculatedScrollPositionRef.current',scrollerID, Object.assign({},calculatedScrollPositionRef.current))
+            // console.log('UPDATE updateCradleContent calculatedScrollPositionRef.current',scrollerID, Object.assign({},calculatedScrollPositionRef.current))
             // EXPERIMENTAL:
             // setCradleState('setscrollposition')
         }
@@ -1198,7 +1161,7 @@ const Cradle = ({
         }
 
         // console.log('SET setCradleContent scrollblockOffset - spineOffset = calculatedScrollPositionRef.current ',scrollerID, scrollblockOffset, spineOffset, Object.assign({},calculatedScrollPositionRef.current))
-        console.log('SET setCradleContent scrollblockOffset = calculatedScrollPositionRef.current ',scrollerID, scrollblockOffset, Object.assign({},calculatedScrollPositionRef.current))
+        // console.log('SET setCradleContent scrollblockOffset = calculatedScrollPositionRef.current ',scrollerID, scrollblockOffset, Object.assign({},calculatedScrollPositionRef.current))
 
     }
 
@@ -1370,9 +1333,9 @@ const Cradle = ({
 
             case 'setscrollposition': {
 
-                console.log('DOM setscrollposition for scrollerID: calculatedScrollPositionRef.current, Math.max(0,value)',
-                    scrollerID,Object.assign({},calculatedScrollPositionRef.current),
-                    Math.max(0,calculatedScrollPositionRef.current.value))
+                // console.log('DOM setscrollposition for scrollerID: calculatedScrollPositionRef.current, Math.max(0,value)',
+                //     scrollerID,Object.assign({},calculatedScrollPositionRef.current),
+                //     Math.max(0,calculatedScrollPositionRef.current.value))
 
                 viewportData.elementref.current[calculatedScrollPositionRef.current.property] =
                     Math.max(0,calculatedScrollPositionRef.current.value)

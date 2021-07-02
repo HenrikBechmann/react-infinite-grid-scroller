@@ -16,7 +16,7 @@ import { ResizeObserver } from '@juggle/resize-observer'
 
 import { PortalManager } from './portalmanager'
 
-const LocalResizeObserver = window['ResizeObserver'] || ResizeObserver
+const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
 
 // control constant
 const RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = 250
@@ -76,7 +76,7 @@ const Viewport = ({
     useEffect(()=>{
 
         // initialize
-        resizeObserverRef.current = new LocalResizeObserver(resizeCallback)
+        resizeObserverRef.current = new ResizeObserverClass(resizeCallback)
         resizeObserverRef.current.observe(viewportdivRef.current)
 
         // cleanup
