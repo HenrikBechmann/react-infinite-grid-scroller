@@ -123,7 +123,7 @@ const Cradle = ({
         padding, 
         runwaycount, 
         listsize, 
-        cellIndexOffset, 
+        defaultVisibleIndexOffset, 
         orientation, 
         cellHeight, 
         cellWidth, 
@@ -135,8 +135,6 @@ const Cradle = ({
         scrollerID,
     }) => {
 
-    // console.log('cradle scrollerID',scrollerID)
-
     // functions and styles handled separately
     const cradlePropsRef = useRef(null) // access by closures
     cradlePropsRef.current = useMemo(() => {
@@ -145,7 +143,7 @@ const Cradle = ({
             padding, 
             runwaycount, 
             listsize, 
-            cellIndexOffset, 
+            defaultVisibleIndexOffset, 
             orientation, 
             cellHeight, 
             cellWidth, 
@@ -158,7 +156,7 @@ const Cradle = ({
         padding, 
         runwaycount, 
         listsize, 
-        cellIndexOffset, 
+        defaultVisibleIndexOffset, 
         orientation, 
         cellHeight, 
         cellWidth, 
@@ -326,7 +324,6 @@ const Cradle = ({
 
             let currentSpineOffset = previousratio * currentCellPixelLength
             
-            // scrollReferenceIndexDataRef.current.spineoffset = 
             callingReferenceIndexDataRef.current.spineoffset = Math.round(currentSpineOffset)
 
             signalsRef.current.pauseCellObserver = true
@@ -358,7 +355,7 @@ const Cradle = ({
     const instanceIdMapRef = useRef(new Map())
 
     const scrollReferenceIndexDataRef = useRef({ // existing or expected, monitored through onScroll
-        index:Math.min(cellIndexOffset,(listsize - 1)) || 0,
+        index:Math.min(defaultVisibleIndexOffset,(listsize - 1)) || 0,
         spineoffset:padding
     }) // access by closures
 
@@ -1529,7 +1526,7 @@ const Cradle = ({
         return {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
-            cellIndexOffset:scrollReferenceIndexDataRef.current.index,
+            currentIndexOffset:scrollReferenceIndexDataRef.current.index,
             listsize:cradlePropsRef.current.listsize,
             styles:cradlePropsRef.current.styles,
         }
@@ -1543,7 +1540,7 @@ const Cradle = ({
             ?<ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 
-                offset = {scrollTrackerArgs.cellIndexOffset} 
+                offset = {scrollTrackerArgs.currentIndexOffset} 
                 listsize = {scrollTrackerArgs.listsize}
                 styles = {scrollTrackerArgs.styles}
             />
