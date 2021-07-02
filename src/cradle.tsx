@@ -116,7 +116,6 @@ const signalsbaseline = {
         isTailCradleInView:true,
         isHeadCradleInView:true,
         isCradleInView:true,
-        // isReparenting:false,
     }
 
 const Cradle = ({ 
