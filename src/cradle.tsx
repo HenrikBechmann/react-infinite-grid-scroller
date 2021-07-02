@@ -121,10 +121,9 @@ const signalsbaseline = {
 const Cradle = ({ 
         gap, 
         padding, 
-        // runwaylength,
         runwaycount, 
         listsize, 
-        indexOffset, 
+        cellIndexOffset, 
         orientation, 
         cellHeight, 
         cellWidth, 
@@ -144,10 +143,9 @@ const Cradle = ({
         return { 
             gap, 
             padding, 
-            // runwaylength,
             runwaycount, 
             listsize, 
-            indexOffset, 
+            cellIndexOffset, 
             orientation, 
             cellHeight, 
             cellWidth, 
@@ -158,10 +156,9 @@ const Cradle = ({
     }},[
         gap, 
         padding, 
-        // runwaylength,
         runwaycount, 
         listsize, 
-        indexOffset, 
+        cellIndexOffset, 
         orientation, 
         cellHeight, 
         cellWidth, 
@@ -361,7 +358,7 @@ const Cradle = ({
     const instanceIdMapRef = useRef(new Map())
 
     const scrollReferenceIndexDataRef = useRef({ // existing or expected, monitored through onScroll
-        index:Math.min(indexOffset,(listsize - 1)) || 0,
+        index:Math.min(cellIndexOffset,(listsize - 1)) || 0,
         spineoffset:padding
     }) // access by closures
 
@@ -1532,7 +1529,7 @@ const Cradle = ({
         return {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
-            indexOffset:scrollReferenceIndexDataRef.current.index,
+            cellIndexOffset:scrollReferenceIndexDataRef.current.index,
             listsize:cradlePropsRef.current.listsize,
             styles:cradlePropsRef.current.styles,
         }
@@ -1546,7 +1543,7 @@ const Cradle = ({
             ?<ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 
-                offset = {scrollTrackerArgs.indexOffset} 
+                offset = {scrollTrackerArgs.cellIndexOffset} 
                 listsize = {scrollTrackerArgs.listsize}
                 styles = {scrollTrackerArgs.styles}
             />
