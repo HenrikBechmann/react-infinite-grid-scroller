@@ -263,10 +263,10 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     // ------------[ adjust cradleReferenceIndex and contentCount for listsize overflow ]------------
 
-    let spineOffset = targetViewportOffset % cellLength
+    let spinePosOffset = targetViewportOffset % cellLength
 
-    // if (spineOffset < 0) { // TODO: this shouldn't happen - reproduce from wide botton to narrow
-    //     spineOffset += (orientation == 'vertical'?cellHeight:cellWidth)
+    // if (spinePosOffset < 0) { // TODO: this shouldn't happen - reproduce from wide botton to narrow
+    //     spinePosOffset += (orientation == 'vertical'?cellHeight:cellWidth)
     //     referenceoffset += crosscount
     //     cradleReferenceIndex += crosscount
     // }
@@ -279,14 +279,14 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     if (targetrowoffset == 0) {
         scrollblockOffset = 0
-        spineOffset = 0 // padding
+        spinePosOffset = 0 // padding
         spineAdjustment = padding
     } else {
         spineAdjustment = 0; //gap;
 
-        [cradleReferenceIndex, contentCount, referenceoffset, scrollblockOffset, spineOffset] = adjustSpineOffsetForMaxRefindex({
+        [cradleReferenceIndex, contentCount, referenceoffset, scrollblockOffset, spinePosOffset] = adjustSpineOffsetForMaxRefindex({
             referenceoffset,
-            spineOffset,
+            spinePosOffset,
             scrollblockOffset,            
             targetrowoffset,
             viewportlength,
@@ -303,10 +303,10 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     // debugger
 
-    // console.log('cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spineOffset, spineAdjustment',
-    //     cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spineOffset, spineAdjustment)
+    // console.log('cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spinePosOffset, spineAdjustment',
+    //     cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spinePosOffset, spineAdjustment)
 
-    return {cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spineOffset, spineAdjustment} // summarize requirements message
+    return {cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spinePosOffset, spineAdjustment} // summarize requirements message
 
 }
 
@@ -321,7 +321,7 @@ const adjustSpineOffsetForMaxRefindex = ({
     targetrowoffset,
 
     scrollblockOffset,
-    spineOffset,
+    spinePosOffset,
 
     viewportlength,
     viewportrows,
@@ -341,7 +341,7 @@ const adjustSpineOffsetForMaxRefindex = ({
     // memos
     // let originalcradleoffset = cradleReferenceIndex
     // let originalreferenceoffset = referenceoffset
-    // let originalspineOffset = spineOffset
+    // let originalspineOffset = spinePosOffset
 
     if (activelistrowcount > listRowcount) {
         let diffrows = activelistrowcount - listRowcount
@@ -374,16 +374,16 @@ const adjustSpineOffsetForMaxRefindex = ({
 
         scrollblockOffset = (targetrowoffset * cellLength) + padding
 
-        spineOffset = viewportlength - ((viewportrows - 1) * cellLength) - gap
+        spinePosOffset = viewportlength - ((viewportrows - 1) * cellLength) - gap
 
-        // console.log('targetrow adjustment: targetrowoffset, cradleReferenceIndex, referenceoffset, scrollblockOffset, spineOffset',
-        //     targetrowoffset, cradleReferenceIndex, referenceoffset, scrollblockOffset, spineOffset)
+        // console.log('targetrow adjustment: targetrowoffset, cradleReferenceIndex, referenceoffset, scrollblockOffset, spinePosOffset',
+        //     targetrowoffset, cradleReferenceIndex, referenceoffset, scrollblockOffset, spinePosOffset)
 
     }
 
     // debugger
 
-    return [cradleReferenceIndex, contentCount, referenceoffset, scrollblockOffset, spineOffset]
+    return [cradleReferenceIndex, contentCount, referenceoffset, scrollblockOffset, spinePosOffset]
 
 }
 
@@ -786,7 +786,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         newreferenceindex = 0
     }
 
-    // -------------[ 4. calculate spineAdjustment and spineOffset ]------------------
+    // -------------[ 4. calculate spineAdjustment and spinePosOffset ]------------------
 
     let referenceitemshiftcount = newreferenceindex - previousreferenceindex
     let cradleitemshiftcount = newcradleindex - previouscradleindex
@@ -794,15 +794,15 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     referencerowshift = referenceitemshiftcount/crosscount
     let referencepixelshift = referencerowshift * cellLength
 
-    let spineOffset = startingspineoffset + referencepixelshift
+    let spinePosOffset = startingspineoffset + referencepixelshift
 
-    let spineOffsetTarget = spineOffset
+    let spineOffsetTarget = spinePosOffset
     let spineAdjustment = 0
 
-    if (Math.abs(spineOffset) > cellLength) {
+    if (Math.abs(spinePosOffset) > cellLength) {
 
-        spineOffsetTarget = (spineOffset % cellLength)
-        spineAdjustment = -(Math.ceil((spineOffset - spineOffsetTarget) / cellLength) * crosscount)
+        spineOffsetTarget = (spinePosOffset % cellLength)
+        spineAdjustment = -(Math.ceil((spinePosOffset - spineOffsetTarget) / cellLength) * crosscount)
 
     }
 
@@ -815,7 +815,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
         newreferenceindex += spineAdjustment
         referenceitemshiftcount += spineAdjustment
-        spineOffset = spineOffsetTarget
+        spinePosOffset = spineOffsetTarget
 
     } else if (spineAdjustment) {
 
@@ -823,16 +823,16 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         cradleitemshiftcount += spineAdjustment
         newreferenceindex += spineAdjustment
         referenceitemshiftcount += spineAdjustment
-        spineOffset = spineOffsetTarget
+        spinePosOffset = spineOffsetTarget
     }
 
-    spineOffset = spineOffsetTarget
+    spinePosOffset = spineOffsetTarget
 
     // ---------------------[ 5. return required values ]-------------------
 
     let cradleitemcount = cradleRowcount * crosscount
 
-    return [ newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spineOffset, cradleitemcount ]
+    return [ newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spinePosOffset, cradleitemcount ]
 
 }
 

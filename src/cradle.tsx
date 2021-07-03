@@ -39,7 +39,7 @@
             The spineReferenceIndex is also used to allocate items above (lower index value) and below (same or higher index value)
             the fold
         - cradleReferenceIndex (the virtual index of the item defining the leading bound of the cradle content)
-        - spineOffset (pixels - plus or minus - that the spine is placed in relation to the viewport's leading edge) 
+        - spinePosOffset (pixels - plus or minus - that the spine is placed in relation to the viewport's leading edge) 
     
     These reference points are applied to the following structures:
         - the viewport
@@ -853,7 +853,7 @@ const Cradle = ({
         if (cradleProps.orientation == 'vertical') {
             scrollOffset = viewportElement.scrollTop
         } else {
-            scrollOffset = viewportElement.scrollLeft // TODO: Cannot read property 'scrollLeft' of null
+            scrollOffset = viewportElement.scrollLeft
         }
         if ( scrollOffset < 0) { // for Safari elastic bounce at top of scroll
 
@@ -912,7 +912,7 @@ const Cradle = ({
             cradleitemshift, 
             spineReferenceIndex, 
             referenceitemshift,
-            spineOffset, 
+            spinePosOffset, 
             contentCount] = calcContentShifts({
 
                 cradleProps,
@@ -923,12 +923,11 @@ const Cradle = ({
                 itemElements,
                 intersections,
                 scrollforward,
-                // source,
 
         })
 
-         // console.log('in updateCradleContent: cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, contentCount',
-         //     cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spineOffset, contentCount)
+         // console.log('in updateCradleContent: cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spinePosOffset, contentCount',
+         //     cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spinePosOffset, contentCount)
 
         if ((referenceitemshift == 0 && cradleitemshift == 0)) return
 
@@ -997,14 +996,14 @@ const Cradle = ({
 
         // -------------------------------[ 8. set css changes ]-------------------------
 
-        if (spineOffset !== undefined) {
+        if (spinePosOffset !== undefined) {
             
             let cradleElements = cradleElementsRef.current
 
             if (cradleProps.orientation == 'vertical') {
 
                 calculatedScrollPositionRef.current = {property:'scrollTop',value:viewportElement.scrollTop}
-                cradleElements.spine.current.style.top = viewportElement.scrollTop + spineOffset + 'px'
+                cradleElements.spine.current.style.top = viewportElement.scrollTop + spinePosOffset + 'px'
                 cradleElements.spine.current.style.left = 'auto'
                 cradleElements.head.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
 
@@ -1012,7 +1011,7 @@ const Cradle = ({
 
                 calculatedScrollPositionRef.current = {property:'scrollLeft',value:viewportElement.scrollLeft}
                 cradleElements.spine.current.style.top = 'auto'
-                cradleElements.spine.current.style.left = viewportElement.scrollLeft + spineOffset + 'px'
+                cradleElements.spine.current.style.left = viewportElement.scrollLeft + spinePosOffset + 'px'
                 cradleElements.head.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
 
             }
@@ -1022,9 +1021,10 @@ const Cradle = ({
             // setCradleState('setscrollposition')
         }
 
+        stableReferenceIndexDataRef.current = 
         scrollReferenceIndexDataRef.current = {
             index:spineReferenceIndex,
-            spineVisiblePosOffset:spineOffset
+            spineVisiblePosOffset:spinePosOffset
         }
 
         setCradleState('updatecontent')
@@ -1063,7 +1063,7 @@ const Cradle = ({
         let cradleContent = cradleContentRef.current
         // cradleContent.portalData.clear()
 
-        let {cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spineOffset, spineAdjustment} = 
+        let {cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spinePosOffset, spineAdjustment} = 
             getContentListRequirements({
                 cradleProps,
                 cradleConfig,
@@ -1072,8 +1072,8 @@ const Cradle = ({
                 viewportElement:viewportDataRef.current.elementref.current
             })
 
-        // console.log('setCradleContent getContentListRequirements: cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spineOffset, spineAdjustment',
-        //     cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spineOffset, spineAdjustment)
+        // console.log('setCradleContent getContentListRequirements: cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spinePosOffset, spineAdjustment',
+        //     cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spinePosOffset, spineAdjustment)
 
         // console.log('cradle SETCradleContent cradleProps',cradleProps)
 
@@ -1108,7 +1108,7 @@ const Cradle = ({
         // console.log('headcontentlist.length, tailcontentlist.length',headcontentlist.length, tailcontentlist.length)
 
         if (headcontentlist.length == 0) {
-            spineOffset = padding
+            spinePosOffset = padding
         }
 
         cradleContent.cradleModel = childlist
@@ -1119,7 +1119,7 @@ const Cradle = ({
         stableReferenceIndexDataRef.current = {
 
             index: referenceoffset,
-            spineVisiblePosOffset:spineOffset,
+            spineVisiblePosOffset:spinePosOffset,
 
         }
 
@@ -1138,7 +1138,7 @@ const Cradle = ({
 
         if (orientation == 'vertical') {
 
-            calculatedScrollPositionRef.current = {property:'scrollTop',value:scrollblockOffset - spineOffset}
+            calculatedScrollPositionRef.current = {property:'scrollTop',value:scrollblockOffset - spinePosOffset}
 
             cradleElements.spine.current.style.top = (scrollblockOffset + spineAdjustment) + 'px'
             cradleElements.spine.current.style.left = 'auto'
@@ -1146,7 +1146,7 @@ const Cradle = ({
 
         } else { // orientation = 'horizontal'
 
-            calculatedScrollPositionRef.current = {property:'scrollLeft',value:scrollblockOffset - spineOffset}
+            calculatedScrollPositionRef.current = {property:'scrollLeft',value:scrollblockOffset - spinePosOffset}
 
             cradleElements.spine.current.style.top = 'auto'
             cradleElements.spine.current.style.left = (scrollblockOffset + spineAdjustment) + 'px'
@@ -1154,7 +1154,7 @@ const Cradle = ({
 
         }
 
-        // console.log('SET setCradleContent scrollblockOffset - spineOffset = calculatedScrollPositionRef.current ',scrollerID, scrollblockOffset, spineOffset, Object.assign({},calculatedScrollPositionRef.current))
+        // console.log('SET setCradleContent scrollblockOffset - spinePosOffset = calculatedScrollPositionRef.current ',scrollerID, scrollblockOffset, spinePosOffset, Object.assign({},calculatedScrollPositionRef.current))
         // console.log('SET setCradleContent scrollblockOffset = calculatedScrollPositionRef.current ',scrollerID, scrollblockOffset, Object.assign({},calculatedScrollPositionRef.current))
 
     }
