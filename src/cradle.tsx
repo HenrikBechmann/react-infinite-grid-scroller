@@ -1002,21 +1002,21 @@ const Cradle = ({
 
             if (cradleProps.orientation == 'vertical') {
 
-                calculatedScrollPositionRef.current = {property:'scrollTop',value:viewportElement.scrollTop}
+                blockScrollPosRef.current = {property:'scrollTop',value:viewportElement.scrollTop}
                 cradleElements.spine.current.style.top = viewportElement.scrollTop + spinePosOffset + 'px'
                 cradleElements.spine.current.style.left = 'auto'
                 cradleElements.head.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
 
             } else {
 
-                calculatedScrollPositionRef.current = {property:'scrollLeft',value:viewportElement.scrollLeft}
+                blockScrollPosRef.current = {property:'scrollLeft',value:viewportElement.scrollLeft}
                 cradleElements.spine.current.style.top = 'auto'
                 cradleElements.spine.current.style.left = viewportElement.scrollLeft + spinePosOffset + 'px'
                 cradleElements.head.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
 
             }
 
-            // console.log('UPDATE updateCradleContent calculatedScrollPositionRef.current',scrollerID, Object.assign({},calculatedScrollPositionRef.current))
+            // console.log('UPDATE updateCradleContent blockScrollPosRef.current',scrollerID, Object.assign({},blockScrollPosRef.current))
             // EXPERIMENTAL:
             // setCradleState('setscrollposition')
         }
@@ -1138,7 +1138,7 @@ const Cradle = ({
 
         if (orientation == 'vertical') {
 
-            calculatedScrollPositionRef.current = {property:'scrollTop',value:scrollblockOffset - spinePosOffset}
+            blockScrollPosRef.current = {property:'scrollTop',value:scrollblockOffset - spinePosOffset}
 
             cradleElements.spine.current.style.top = (scrollblockOffset + spineAdjustment) + 'px'
             cradleElements.spine.current.style.left = 'auto'
@@ -1146,7 +1146,7 @@ const Cradle = ({
 
         } else { // orientation = 'horizontal'
 
-            calculatedScrollPositionRef.current = {property:'scrollLeft',value:scrollblockOffset - spinePosOffset}
+            blockScrollPosRef.current = {property:'scrollLeft',value:scrollblockOffset - spinePosOffset}
 
             cradleElements.spine.current.style.top = 'auto'
             cradleElements.spine.current.style.left = (scrollblockOffset + spineAdjustment) + 'px'
@@ -1154,8 +1154,8 @@ const Cradle = ({
 
         }
 
-        // console.log('SET setCradleContent scrollblockOffset - spinePosOffset = calculatedScrollPositionRef.current ',scrollerID, scrollblockOffset, spinePosOffset, Object.assign({},calculatedScrollPositionRef.current))
-        // console.log('SET setCradleContent scrollblockOffset = calculatedScrollPositionRef.current ',scrollerID, scrollblockOffset, Object.assign({},calculatedScrollPositionRef.current))
+        // console.log('SET setCradleContent scrollblockOffset - spinePosOffset = blockScrollPosRef.current ',scrollerID, scrollblockOffset, spinePosOffset, Object.assign({},blockScrollPosRef.current))
+        // console.log('SET setCradleContent scrollblockOffset = blockScrollPosRef.current ',scrollerID, scrollblockOffset, Object.assign({},blockScrollPosRef.current))
 
     }
 
@@ -1277,10 +1277,10 @@ const Cradle = ({
                 // ***new***
                 if (cradlePropsRef.current.orientation == 'vertical') {
 
-                    calculatedScrollPositionRef.current = {property:'scrollTop',value:viewportElement.scrollTop}
+                    blockScrollPosRef.current = {property:'scrollTop',value:viewportElement.scrollTop}
 
                 } else {
-                    calculatedScrollPositionRef.current = {property:'scrollLeft',value:viewportElement.scrollLeft}
+                    blockScrollPosRef.current = {property:'scrollLeft',value:viewportElement.scrollLeft}
                 }
 
             }
@@ -1310,7 +1310,7 @@ const Cradle = ({
     // data for state processing
     const callingCradleState = useRef(cradleStateRef.current)
     const headlayoutDataRef = useRef(null)
-    const calculatedScrollPositionRef = useRef(null)
+    const blockScrollPosRef = useRef(null)
 
     // this is the core state engine
     // useLayout for suppressing flashes
@@ -1336,12 +1336,12 @@ const Cradle = ({
 
             case 'setscrollposition': {
 
-                // console.log('DOM setscrollposition for scrollerID: calculatedScrollPositionRef.current, Math.max(0,value)',
-                //     scrollerID,Object.assign({},calculatedScrollPositionRef.current),
-                //     Math.max(0,calculatedScrollPositionRef.current.value))
+                // console.log('DOM setscrollposition for scrollerID: blockScrollPosRef.current, Math.max(0,value)',
+                //     scrollerID,Object.assign({},blockScrollPosRef.current),
+                //     Math.max(0,blockScrollPosRef.current.value))
 
-                viewportData.elementref.current[calculatedScrollPositionRef.current.property] =
-                    Math.max(0,calculatedScrollPositionRef.current.value)
+                viewportData.elementref.current[blockScrollPosRef.current.property] =
+                    Math.max(0,blockScrollPosRef.current.value)
 
                 setCradleState('normalizecontrols')
 
