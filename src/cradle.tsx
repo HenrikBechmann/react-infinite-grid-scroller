@@ -4,12 +4,14 @@
 /*
     TODO:
 
+    ScrollManager
+    SignalsManager
+
     ContentManager
     CradleManager
     WingManager
-    SignalsManager
     Observers
-    ScrollManager
+    StateManager
 
 */
 /*
@@ -168,6 +170,8 @@ const Cradle = ({
         scrollerID,
     ])
 
+    const cradleProps = cradlePropsRef.current
+
     // =============================================================================================
     // --------------------------------------[ INITIALIZATION ]-------------------------------------
     // =============================================================================================
@@ -202,10 +206,19 @@ const Cradle = ({
     // -----------------------------------------------------------------------
     // -------------------------[ control flags ]-----------------
 
-    const signalsRef = useRef(Object.assign({},signalsbaseline)) // clone = new ScrollManager()
+    const signalsRef = useRef(Object.assign({},signalsbaseline))
+    const signals = signalsRef.current
 
-    const scrollManagerRef = useRef(new ScrollManager())
+    const observersRef = useRef({})
+    const observers = observersRef.current    
+
+    const managersRef = useRef(
+        {scroll:null,signals, content:null, cradle:null, wings:null, observers, state:null})
+    const managers = managersRef.current
+
+    const scrollManagerRef = useRef(new ScrollManager({managers,viewportdata:viewportData,cradleprops:cradleProps}))
     const scrollManager = scrollManagerRef.current
+    managers.scroll = scrollManager
 
     if (viewportData.isReparenting) {
             Object.assign(signalsRef.current,signalsbaseline) //clone 
