@@ -93,6 +93,7 @@ const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
 const ITEM_OBSERVER_THRESHOLD = 0
 
 import ScrollManager from './cradle/scrollmanager'
+import SignalsManager from './cradle/signalsmanager'
 
 import { 
     setCradleGridStyles, 
