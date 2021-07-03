@@ -3,10 +3,10 @@
 
 /*
     TODO:
-    - fix nested scroll back reference mismatch - update scroll position before portal
     - nested list overflows port boundaries on android FF
     
     - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
+
     - break up cradle
     */
 
