@@ -1274,6 +1274,7 @@ const Cradle = ({
 
                 stableReferenceDataRef.current = localrefdata
 
+                // ***new***
                 if (cradlePropsRef.current.orientation == 'vertical') {
 
                     calculatedScrollPositionRef.current = {property:'scrollTop',value:viewportElement.scrollTop}
