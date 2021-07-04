@@ -94,6 +94,7 @@ const ITEM_OBSERVER_THRESHOLD = 0
 
 import ScrollManager from './cradle/scrollmanager'
 import SignalsManager from './cradle/signalsmanager'
+import StateManager from './cradle/statemanager'
 
 import { 
     setCradleGridStyles, 
@@ -214,7 +215,7 @@ const Cradle = ({
     const observers = observersRef.current    
 
     const managersRef = useRef(
-        {scroll:null,signals, content:null, cradle:null, wings:null, observers, state:null})
+        {scroll:null,signals:null, content:null, cradle:null, wings:null, observers, state:null})
     const managers = managersRef.current
 
     const managersPropsRef = useRef({managers,viewportdata:viewportData,cradleprops:cradleProps})
@@ -226,7 +227,12 @@ const Cradle = ({
     const signalsManagerRef = useRef(new SignalsManager(managerProps, signalsbaseline))
     const signalsManager = signalsManagerRef.current
 
+    const stateManagerRef = useRef(new StateManager(managerProps,setCradleState,cradleStateRef))
+    const statemanager = stateManagerRef.current
+
     managers.scroll = scrollManager
+    managers.signals = signalsManager
+    managers.state = StateManager
 
     if (viewportData.isReparenting) {
             Object.assign(signalsRef.current,signalsbaseline) //clone 

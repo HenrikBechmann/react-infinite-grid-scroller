@@ -1,6 +1,8 @@
 // scrollmanager.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
+const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 200
+
 export default class ScrollManager {
 
     constructor({managers,viewportdata,cradleprops}) {
@@ -62,21 +64,18 @@ export default class ScrollManager {
 
         this._scrollpositions.previous = this._scrollpositions.current
         this._scrollpositions.current = scrollPositionCurrent
-            // (cradlePropsRef.current.orientation == 'vertical')
-            // ?viewportElement.scrollTop
-            // :viewportElement.scrollLeft
 
         clearTimeout(this._scrolltimerid)
 
-        // let cradleState = cradleStateRef.current
+        let cradleState = this._statemanager.cradleStateRef.current
 
         // let cradleContent = cradleContentRef.current
 
-        // if (!viewportDataRef.current.isResizing) {
+        if (!this._viewportdata.current.isResizing) {
 
-        //     if (cradleState == 'ready' || cradleState == 'repositioning') {
+            if (cradleState == 'ready' || cradleState == 'repositioning') {
 
-        //         if (cradleState == 'ready') {
+                if (cradleState == 'ready') {
         //             let itemindex = cradleContent.tailModel[0]?.props.index 
         //             if (itemindex === undefined) { // TODO: investigate
         //                 console.log('ERROR: scroll encountered undefined tailcontent lead')
@@ -100,7 +99,7 @@ export default class ScrollManager {
         //                 spineVisiblePosOffset,
         //             }
 
-        //         } else {
+                } else {
 
         //             scrollReferenceDataRef.current = getScrollReferenceIndexData({
         //                 viewportData:viewportDataRef.current,
@@ -108,16 +107,16 @@ export default class ScrollManager {
         //                 cradleConfig:cradleConfigRef.current,
         //             })
         //             setCradleState('updatereposition')
-        //         }
+                }
 
         //         referenceIndexCallbackRef.current && 
         //             referenceIndexCallbackRef.current(scrollReferenceDataRef.current.index,'scrolling', cradleState)
 
-        //     }
+            }
 
-        // }
+        }
 
-        // scrollTimeridRef.current = setTimeout(() => {
+        this._scrolltimerid.current = setTimeout(() => {
 
         //     if (!isMounted()) return
 
@@ -175,9 +174,9 @@ export default class ScrollManager {
 
         //         }
 
-        //     }
+            // }
 
-        // },SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
+        },SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
 
     }
 

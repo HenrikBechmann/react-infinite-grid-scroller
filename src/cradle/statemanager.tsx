@@ -3,7 +3,7 @@
 
 export default class StateManager {
 
-    constructor({managers,viewportdata,cradleprops}) {
+    constructor({managers,viewportdata,cradleprops},setCradleState,cradleStateRef) {
 
        this._managers = managers
        this._viewportdata = viewportdata
@@ -16,7 +16,12 @@ export default class StateManager {
        this._wingsmanager = wings
        this._observersmanager = observers
        // this.statemanager = state
+       this.setCradleState = setCradleState
+       this.cradleStateRef = cradleStateRef
     }
+
+    cradleStateRef
+    setCradleState
 
     private _managers
     private _viewportdata
