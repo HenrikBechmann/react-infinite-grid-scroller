@@ -5,69 +5,52 @@ export default class ScrollManager {
 
     constructor({managers,viewportdata,cradleprops}) {
 
-       this.managers = managers
-       this.viewportdata = viewportdata
-       this.cradleprops = cradleprops
-       let {scroll, signals, content, cradle, wings, observers, state} = managers
-       this.scrollmanager = scroll
-       this.signalsmanager = signals
-       this.contentmanager = content
-       this.cradlemanager = cradle
-       this.wingsmanager = wings
-       this.observersmanager = observers
-       this.statemanager = state
+       this._managers = managers
+       this._viewportdata = viewportdata
+       this._cradleprops = cradleprops
+       let {signals, content, cradle, wings, observers, state} = managers
+       // this.scrollmanager = scroll
+       this._signalsmanager = signals
+       this._contentmanager = content
+       this._cradlemanager = cradle
+       this._wingsmanager = wings
+       this._observersmanager = observers
+       this._statemanager = state
     }
 
-    private managers
-    private viewportdata
-    private cradleprops
+    blockScrollPos:number
 
-    private scrollmanager
-    private signalsmanager
-    private contentmanager
-    private cradlemanager
-    private wingsmanager
-    private observersmanager
-    private statemanager
+    blockScrollProperty:string
 
-    private blockpos:number
-    private scrollproperty:string
+    private _managers
+    private _viewportdata
+    private _cradleprops
 
-    private scrollpositions = {current:0,previous:0}
+    // private scrollmanager
+    private _signalsmanager
+    private _contentmanager
+    private _cradlemanager
+    private _wingsmanager
+    private _observersmanager
+    private _statemanager
 
-    private scrolltimerid = null
+    private _scrollpositions = {current:0,previous:0}
 
-
-
-    set blockScrollPos(blockpos) {
-        this.blockpos = blockpos
-    }
-
-    get blockScrollPos() {
-        return this.blockpos
-    }
-
-    set blockScrollProperty(property) {
-        this.scrollproperty = property
-    }
-
-    get blockScrollProperty() {
-        return this.scrollproperty
-    }
+    private _scrolltimerid = null
 
     onScroll() {
 
-        if (this.signalsmanager.signals.pauseScrollingEffects) {
+        if (this._signalsmanager.signals.pauseScrollingEffects) {
 
             return
             
         }
 
-        let viewportElement = this.viewportdata.current.elementref.current
+        let viewportElement = this._viewportdata.current.elementref.current
         // let scrollPositions = scrollPositionsRef.current
 
         let scrollPositionCurrent = 
-            (this.cradleprops.orientation == 'vertical')
+            (this._cradleprops.orientation == 'vertical')
             ?viewportElement.scrollTop
             :viewportElement.scrollLeft
 
@@ -77,13 +60,13 @@ export default class ScrollManager {
 
         }
 
-        this.scrollpositions.previous = this.scrollpositions.current
-        this.scrollpositions.current = scrollPositionCurrent
+        this._scrollpositions.previous = this._scrollpositions.current
+        this._scrollpositions.current = scrollPositionCurrent
             // (cradlePropsRef.current.orientation == 'vertical')
             // ?viewportElement.scrollTop
             // :viewportElement.scrollLeft
 
-        clearTimeout(this.scrolltimerid)
+        clearTimeout(this._scrolltimerid)
 
         // let cradleState = cradleStateRef.current
 

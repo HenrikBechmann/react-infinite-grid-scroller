@@ -5,27 +5,19 @@ export default class SignalsManager {
 
     constructor({managers,viewportdata,cradleprops},signalsbaseline) {
 
-       this.managers = managers
-       this.viewportdata = viewportdata
-       this.cradleprops = cradleprops
-       this.signalsbaseline = signalsbaseline
-       this.currentsignals = Object.assign({},signalsbaseline)
+       this.signalsBaseline = signalsbaseline
+       this._managers = managers
+       this._viewportdata = viewportdata
+       this._cradleprops = cradleprops
+       this._currentsignals = Object.assign({},signalsbaseline)
 
     }
 
-    private managers
-    private viewportdata
-    private cradleprops
-    private signalsbaseline
-    private currentsignals
+    signalsBaseline
 
-    get signalsBaseline() {
+    private _managers
+    private _viewportdata
+    private _cradleprops
+    private _currentsignals
 
-        return this.signalsbaseline
-
-    }
-
-    get signals() {
-        return this.currentsignals
-    }
 }
