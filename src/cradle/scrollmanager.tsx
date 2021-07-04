@@ -8,14 +8,36 @@ export default class ScrollManager {
        this.managers = managers
        this.viewportdata = viewportdata
        this.cradleprops = cradleprops
-
+       let {scroll, signals, content, cradle, wings, observers, state} = managers
+       this.scrollmanager = scroll
+       this.signalsmanager = signals
+       this.contentmanager = content
+       this.cradlemanager = cradle
+       this.wingsmanager = wings
+       this.observersmanager = observers
+       this.statemanager = state
     }
 
     private managers
     private viewportdata
     private cradleprops
+
+    private scrollmanager
+    private signalsmanager
+    private contentmanager
+    private cradlemanager
+    private wingsmanager
+    private observersmanager
+    private statemanager
+
     private blockpos:number
     private scrollproperty:string
+
+    private scrollpositions = {current:0,previous:0}
+
+    private scrolltimerid = null
+
+
 
     set blockScrollPos(blockpos) {
         this.blockpos = blockpos
@@ -33,33 +55,35 @@ export default class ScrollManager {
         return this.scrollproperty
     }
 
-    onScroll(e) {
+    onScroll() {
 
-        // if (signalsRef.current.pauseScrollingEffects) {
-        //     return
-        // }
+        if (this.signalsmanager.signals.pauseScrollingEffects) {
 
-        // let viewportElement = viewportDataRef.current.elementref.current
+            return
+            
+        }
+
+        let viewportElement = this.viewportdata.current.elementref.current
         // let scrollPositions = scrollPositionsRef.current
 
-        // let scrollPositioncurrent = 
-        //     (cradlePropsRef.current.orientation == 'vertical')
-        //     ?viewportElement.scrollTop
-        //     :viewportElement.scrollLeft
+        let scrollPositionCurrent = 
+            (this.cradleprops.orientation == 'vertical')
+            ?viewportElement.scrollTop
+            :viewportElement.scrollLeft
 
-        // if (scrollPositioncurrent < 0) { // for Safari
+        if (scrollPositionCurrent < 0) { // for Safari
 
-        //     return 
+            return 
 
-        // }
+        }
 
-        // scrollPositions.previous = scrollPositions.current
-        // scrollPositions.current = 
-        //     (cradlePropsRef.current.orientation == 'vertical')
-        //     ?viewportElement.scrollTop
-        //     :viewportElement.scrollLeft
+        this.scrollpositions.previous = this.scrollpositions.current
+        this.scrollpositions.current = scrollPositionCurrent
+            // (cradlePropsRef.current.orientation == 'vertical')
+            // ?viewportElement.scrollTop
+            // :viewportElement.scrollLeft
 
-        // clearTimeout(scrollTimeridRef.current)
+        clearTimeout(this.scrolltimerid)
 
         // let cradleState = cradleStateRef.current
 

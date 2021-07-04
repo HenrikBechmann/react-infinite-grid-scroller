@@ -217,8 +217,15 @@ const Cradle = ({
         {scroll:null,signals, content:null, cradle:null, wings:null, observers, state:null})
     const managers = managersRef.current
 
-    const scrollManagerRef = useRef(new ScrollManager({managers,viewportdata:viewportData,cradleprops:cradleProps}))
+    const managersPropsRef = useRef({managers,viewportdata:viewportData,cradleprops:cradleProps})
+    const managerProps = managersPropsRef.current
+
+    const scrollManagerRef = useRef(new ScrollManager(managerProps))
     const scrollManager = scrollManagerRef.current
+
+    const signalsManagerRef = useRef(new SignalsManager(managerProps, signalsbaseline))
+    const signalsManager = signalsManagerRef.current
+
     managers.scroll = scrollManager
 
     if (viewportData.isReparenting) {
