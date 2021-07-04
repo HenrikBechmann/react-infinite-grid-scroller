@@ -12,9 +12,9 @@ export default class StateManager {
        this._scrollmanager = scroll
        this._signalsmanager = signals
        this._contentmanager = content
-       this._cradlemanager = cradle
        this._wingsmanager = wings
        this._observersmanager = observers
+       this._cradlemanager = cradle
        // this.statemanager = state
        this.setCradleState = setCradleState
        this.cradleStateRef = cradleStateRef

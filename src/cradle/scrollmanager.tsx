@@ -10,6 +10,7 @@ export default class ScrollManager {
        this._managers = managers
        this._viewportdata = viewportdata
        this._cradleprops = cradleprops
+
        let {signals, content, cradle, wings, observers, state} = managers
        // this.scrollmanager = scroll
        this._signalsmanager = signals
@@ -83,17 +84,17 @@ export default class ScrollManager {
         //             let spineVisiblePosOffset
         //             let cradleElements = cradleElementsRef.current
 
-        //             if (cradlePropsRef.current.orientation == 'vertical') {
+                    if (this._cradleprops.orientation == 'vertical') {
 
         //                 spineVisiblePosOffset = cradleElements.spine.current.offsetTop - 
         //                     viewportDataRef.current.elementref.current.scrollTop
                             
-        //             } else {
+                    } else {
 
         //                 spineVisiblePosOffset = cradleElements.spine.current.offsetLeft - 
         //                     viewportDataRef.current.elementref.current.scrollLeft
 
-        //             }
+                    }
         //             scrollReferenceDataRef.current = {
         //                 index:itemindex,
         //                 spineVisiblePosOffset,
@@ -177,6 +178,54 @@ export default class ScrollManager {
             // }
 
         },SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
+
+    }
+
+
+    setScrollReferenceIndexData({
+
+        viewportData,
+        cradleProps,
+        cradleConfig,
+
+    }) {
+
+        let {crosscount} = cradleConfig
+        let viewportElement = viewportData.elementref.current
+        let {orientation, listsize} = cradleProps
+        let scrollPos, cellLength
+        if (orientation == 'vertical') {
+
+            scrollPos = viewportElement.scrollTop
+            cellLength = cradleProps.cellHeight + cradleProps.gap
+
+        } else {
+
+            scrollPos = viewportElement.scrollLeft
+            cellLength = cradleProps.cellWidth + cradleProps.gap
+
+        }
+
+        let referencescrolloffset = cellLength - (scrollPos % cellLength)
+        if (referencescrolloffset == (cellLength + cradleProps.padding)) {
+            referencescrolloffset = 0
+        }
+
+        let referencerowindex = Math.ceil((scrollPos - cradleProps.padding)/cellLength)
+        let spineReferenceIndex = referencerowindex * crosscount
+        spineReferenceIndex = Math.min(spineReferenceIndex,listsize - 1)
+        let diff = spineReferenceIndex % crosscount
+        spineReferenceIndex -= diff
+
+        let referenceIndexData = {
+            index:spineReferenceIndex,
+            spineVisiblePosOffset:referencescrolloffset
+        }
+
+        if (spineReferenceIndex == 0) referencescrolloffset = 0 // defensive
+
+        this._cradlemanager.scrollReferenceIndex = spineReferenceIndex
+        this._cradlemanager.scrollReferenceSpineOffset = referencescrolloffset
 
     }
 
