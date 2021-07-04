@@ -143,7 +143,7 @@ export default class ScrollManager {
         //     if (!viewportDataRef.current.isResizing) {
         //         let localrefdata = {...scrollReferenceDataRef.current}
 
-        //         stableReferenceDataRef.current = localrefdata
+        //         cradleReferenceDataRef.current = localrefdata
 
         //         // ***new***
         //         if (cradlePropsRef.current.orientation == 'vertical') {
@@ -161,7 +161,7 @@ export default class ScrollManager {
 
         //         case 'repositioning': {
 
-        //             callingReferenceDataRef.current = {...stableReferenceDataRef.current}
+        //             nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
 
         //             setCradleState('reposition')
 
