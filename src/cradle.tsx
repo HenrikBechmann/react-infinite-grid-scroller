@@ -509,13 +509,15 @@ const Cradle = ({
         crosscount,
     ])
 
-    const cradleConfigRef = useRef({
-        crosscount,
-        cradleRowcount,
-        viewportRowcount,
-        cellObserverThreshold:ITEM_OBSERVER_THRESHOLD,
-        listRowcount:Math.ceil(listsize/crosscount)
-    })
+    const cradleConfigRef = useRef(null
+    // {
+    //     crosscount,
+    //     cradleRowcount,
+    //     viewportRowcount,
+    //     cellObserverThreshold:ITEM_OBSERVER_THRESHOLD,
+    //     listRowcount:Math.ceil(listsize/crosscount)
+    // }
+    )
 
     cradleConfigRef.current = {
         crosscount,
