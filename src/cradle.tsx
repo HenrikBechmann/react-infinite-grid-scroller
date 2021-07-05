@@ -210,10 +210,9 @@ const Cradle = ({
     // -----------------------------------------------------------------------
     // -------------------------[ control flags ]-----------------
 
-    const signalsRef = useRef(Object.assign({},signalsbaseline))
+    // const signalsRef = useRef(Object.assign({},signalsbaseline))
 
-    const observersRef = useRef({})
-    const managersRef = useRef(null)
+    const managersRef = useRef(null) // make available to individual managers
 
     const commonPropsRef = useRef({managersRef,viewportdata:viewportData,cradleprops:cradleProps})
 
@@ -227,17 +226,23 @@ const Cradle = ({
 
     const cradleManagerRef = useRef(new CradleManager(commonPropsRef))
 
-    managersRef.current = {
+    const observersRef = useRef({})
+
+    // to instantiate managersRef
+    const managementsetRef = useRef({
         scrollRef:scrollManagerRef,
         signalsRef:signalsManagerRef, 
         contentRef:contentManagerRef, 
         cradleRef:cradleManagerRef, 
         wingsRef:null, 
         observersRef, 
-        stateRef:stateManagerRef}
+        stateRef:stateManagerRef
+    })
+
+    managersRef.current = managementsetRef.current
 
     if (viewportData.isReparenting) {
-            Object.assign(signalsRef.current,signalsbaseline) //clone 
+            Object.assign(signalsManagerRef.current.signals,signalsbaseline) //clone 
             // signalsRef.current.isReparenting = true
             viewportData.isReparenting = false
             isReparentingRef.current = true
@@ -302,10 +307,11 @@ const Cradle = ({
 
             // console.log('calling resizing with', nextReferenceDataRef.current)
 
-            signalsRef.current.pauseCellObserver = true
-            signalsRef.current.pauseCradleIntersectionObserver = true
-            signalsRef.current.pauseCradleResizeObserver = true
-            signalsRef.current.pauseScrollingEffects = true
+            let signals = signalsManagerRef.current.signals
+            signals.pauseCellObserver = true
+            signals.pauseCradleIntersectionObserver = true
+            signals.pauseCradleResizeObserver = true
+            signals.pauseScrollingEffects = true
             setCradleState('resizing')
 
         }
@@ -326,9 +332,11 @@ const Cradle = ({
 
         nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
 
-        signalsRef.current.pauseCellObserver = true
+        let signals = signalsManagerRef.current.signals
+
+        signals.pauseCellObserver = true
         // pauseCradleIntersectionObserverRef.current = true
-        signalsRef.current.pauseScrollingEffects = true
+        signals.pauseScrollingEffects = true
 
         setCradleState('reload')
 
@@ -359,9 +367,11 @@ const Cradle = ({
             
             nextReferenceDataRef.current.spineVisiblePosOffset = Math.round(currentSpineOffset)
 
-            signalsRef.current.pauseCellObserver = true
+            let signals = signalsManagerRef.current.signals
+
+            signals.pauseCellObserver = true
             // pauseCradleIntersectionObserverRef.current = true
-            signalsRef.current.pauseScrollingEffects = true
+            signals.pauseScrollingEffects = true
 
             setCradleState('pivot')
 
@@ -715,7 +725,7 @@ const Cradle = ({
     // TODO: noop
     const cradleresizeobservercallback = useCallback((entries) => {
 
-        if (signalsRef.current.pauseCradleResizeObserver) return
+        if (signalsManagerRef.current.signals.pauseCradleResizeObserver) return
 
     },[])
 
@@ -747,7 +757,7 @@ const Cradle = ({
     const cradleIntersectionObserverCallback = useCallback((entries) => {
 
 
-        let signals = signalsRef.current;
+        let signals = signalsManagerRef.current.signals;
 
         // (scrollerID == 3) && console.log('OBSERVER IntersectionObserver callback scrollerid, reparenting, signals, entries',
         //     scrollerID, viewportDataRef.current.portalitem.reparenting, signals, entries)
@@ -865,7 +875,7 @@ const Cradle = ({
             }
         }
 
-        if (signalsRef.current.pauseCellObserver) {
+        if (signalsManagerRef.current.signals.pauseCellObserver) {
 
             return
 
@@ -1226,7 +1236,7 @@ const Cradle = ({
     // callback for scrolling
     const onScroll = useCallback((e) => {
 
-        if (signalsRef.current.pauseScrollingEffects) {
+        if (signalsManagerRef.current.signals.pauseScrollingEffects) {
             return
         }
 
@@ -1472,8 +1482,8 @@ const Cradle = ({
                     // console.log('normalizecontrols for cradle',scrollerID)
                     if (!viewportData.isResizing) {
                         // redundant scroll position to avoid accidental positioning at tail end of reposition
+                        let signals = signalsManagerRef.current.signals
                         if (viewportData.elementref.current) { // already unmounted if fails (?)
-                            let signals = signalsRef.current
                             signals.pauseCellObserver  && (signals.pauseCellObserver = false)
                             signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
                             signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
@@ -1483,7 +1493,7 @@ const Cradle = ({
                             console.log('ERROR: viewport element not set in normalizecontrols', scrollerID, viewportData)
                         }
 
-                        if (signalsRef.current.isCradleInView) {
+                        if (signals.isCradleInView) {
                             setCradleState('ready')
                         } else {
                             setCradleState('repositioning')
@@ -1542,8 +1552,9 @@ const Cradle = ({
 
     const reload = useCallback(() => {
 
-        signalsRef.current.pauseCellObserver = true
-        signalsRef.current.pauseScrollingEffects = true
+        let signals = signalsManagerRef.current.signals
+        signals.pauseCellObserver = true
+        signals.pauseScrollingEffects = true
 
         let spineVisiblePosOffset
         let cradleElements = cradleElementsRef.current
@@ -1579,8 +1590,10 @@ const Cradle = ({
 
     const scrollToItem = useCallback((index) => {
 
-        signalsRef.current.pauseCellObserver = true
-        signalsRef.current.pauseScrollingEffects = true
+        let signals = signalsManagerRef.current.signals
+
+        signals.pauseCellObserver = true
+        signals.pauseScrollingEffects = true
 
         nextReferenceDataRef.current = {index,spineVisiblePosOffset:0}
 

@@ -9,12 +9,20 @@ export default class SignalsManager extends CradleManagement {
 
        super(commonPropsRef)
        this.signalsBaseline = signalsbaseline
-       this._currentsignals = Object.assign({},signalsbaseline)
+       this.signals = Object.assign({},signalsbaseline)
 
     }
 
     signalsBaseline
 
-    private _currentsignals
+   signals = {
+      pauseCellObserver: null,
+      pauseCradleIntersectionObserver:null,
+      pauseCradleResizeObserver: null,
+      pauseScrollingEffects: null,
+      isTailCradleInView:null,
+      isHeadCradleInView:null,
+      isCradleInView:null,
+   }
 
 }

@@ -23,7 +23,7 @@ export default class ScrollManager extends CradleManagement{
 
     onScroll() {
 
-        if (this._managers.signals.current.signals.pauseScrollingEffects) {
+        if (this._managers.signalsRef.current.signals.pauseScrollingEffects) {
 
             return
             
