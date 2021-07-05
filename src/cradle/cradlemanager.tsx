@@ -5,9 +5,13 @@ import CradleManagement from './cradlemanagement'
 
 export default class CradleManager extends CradleManagement{
 
-    constructor(commonPropsRef) {
+    constructor(commonPropsRef, cradleElements) {
 
        super(commonPropsRef)
+       let elements = this.elements
+       elements.spineRef = cradleElements.spineRef
+       elements.headRef = cradleElements.headRef
+       elements.tailRef = cradleElements.tailRef
 
     }
     
@@ -17,5 +21,11 @@ export default class CradleManager extends CradleManagement{
     readySpineOffset
     nextReferenceIndex
     nextSpineOffset
+
+    elements = {
+       spineRef:null, 
+       headRef:null, 
+       tailRef:null
+    }
 
 }

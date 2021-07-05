@@ -52,7 +52,9 @@ export default class ScrollManager extends CradleManagement{
         let stateManager = this._managers.current.stateRef.current
         let cradleState = stateManager.cradleStateRef.current
 
-        // let cradleContent = cradleContentRef.current
+        let contentManager = this._managers.current.contentRef.current
+        let cradleManager = this._managers.current.cradleRef.current
+
 
         if (!this._viewportdata.current.isResizing) {
 
@@ -60,36 +62,31 @@ export default class ScrollManager extends CradleManagement{
 
                 if (cradleState == 'ready') {
         //             let itemindex = cradleContent.tailModel[0]?.props.index 
-                       // let itemindex = 
-        //             if (itemindex === undefined) { // TODO: investigate
-        //                 console.log('ERROR: scroll encountered undefined tailcontent lead')
-        //             }
-        //             let spineVisiblePosOffset
-        //             let cradleElements = cradleElementsRef.current
+                    let itemindex = cradleManager.readyReferenceIndex
+                    let spineVisiblePosOffset
+                    let cradleElements = cradleManager.elements
 
                     if (this._cradleprops.orientation == 'vertical') {
 
-        //                 spineVisiblePosOffset = cradleElements.spine.current.offsetTop - 
-        //                     viewportDataRef.current.elementref.current.scrollTop
+                        spineVisiblePosOffset = cradleElements.spine.current.offsetTop - 
+                            this._viewportdata.elementref.current.scrollTop
                             
                     } else {
 
-        //                 spineVisiblePosOffset = cradleElements.spine.current.offsetLeft - 
-        //                     viewportDataRef.current.elementref.current.scrollLeft
+                        spineVisiblePosOffset = cradleElements.spine.current.offsetLeft - 
+                            this._viewportdata.elementref.current.scrollLeft
 
                     }
-        //             scrollReferenceDataRef.current = {
-        //                 index:itemindex,
-        //                 spineVisiblePosOffset,
-        //             }
+                    cradleManager.scrollReferenceIndex = itemindex
+                    cradleManager.scrollSpineOffset = spineVisiblePosOffset
 
                 } else {
 
-        //             scrollReferenceDataRef.current = getScrollReferenceIndexData({
-        //                 viewportData:viewportDataRef.current,
-        //                 cradleProps:cradlePropsRef.current,
-        //                 cradleConfig:cradleConfigRef.current,
-        //             })
+                    this.setScrollReferenceIndexData({
+                        viewportData:this._viewportdata,
+                        cradleProps:this._cradleprops,
+                        cradleConfig:this._cradleconfigRef.current,
+                    })
                     stateManager.setCradleState('updatereposition')
                 }
 

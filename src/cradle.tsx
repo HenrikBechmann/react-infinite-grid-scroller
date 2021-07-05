@@ -215,16 +215,112 @@ const Cradle = ({
     // -----------------------------------------------------------------------
     // -------------------------[ control flags ]-----------------
 
+    const { viewportDimensions } = viewportData
+
+    let { height:viewportheight,width:viewportwidth } = viewportDimensions
+    
+    const crosscount = useMemo(() => {
+
+        let crosscount
+        let size = (orientation == 'horizontal')?viewportheight:viewportwidth
+        let crossLength = (orientation == 'horizontal')?cellHeight:cellWidth
+
+        let lengthforcalc = size - (padding * 2) + gap // length of viewport
+        let tilelengthforcalc = crossLength + gap
+        tilelengthforcalc = Math.min(tilelengthforcalc,lengthforcalc) // result cannot be less than 1
+        crosscount = Math.floor(lengthforcalc/(tilelengthforcalc))
+
+        // console.log('cradle CROSSCOUNT for scrollerName, scrollerID',scrollerName, scrollerID, crosscount)
+
+        return crosscount
+
+    },[
+        orientation, 
+        cellWidth, 
+        cellHeight, 
+        gap, 
+        padding, 
+        viewportheight, 
+        viewportwidth,
+    ])
+
+    // const crosscountRef = useRef(crosscount) // for easy reference by observer
+    // crosscountRef.current = crosscount // available for observer closure
+
+    const [cradleRowcount,viewportRowcount] = useMemo(()=> {
+
+        let viewportLength, cellLength
+        if (orientation == 'vertical') {
+            viewportLength = viewportheight
+            cellLength = cellHeight
+        } else {
+            viewportLength = viewportwidth
+            cellLength = cellWidth
+        }
+
+        cellLength += gap
+
+        let viewportrowcount = Math.ceil(viewportLength/cellLength)
+        let cradleRowcount = viewportrowcount + (runwaycount * 2)
+        let itemcount = cradleRowcount * crosscount
+        if (itemcount > listsize) {
+            itemcount = listsize
+            cradleRowcount = Math.ceil(itemcount/crosscount)
+        }
+        return [cradleRowcount, viewportrowcount]
+
+    },[
+        orientation, 
+        cellWidth, 
+        cellHeight, 
+        gap, 
+        listsize,
+        // padding,
+        viewportheight, 
+        viewportwidth,
+        runwaycount,
+        crosscount,
+    ])
+
+
     // const signalsRef = useRef(Object.assign({},signalsbaseline))
+    const cradleConfigRef = useRef(null
+    // {
+    //     crosscount,
+    //     cradleRowcount,
+    //     viewportRowcount,
+    //     cellObserverThreshold:ITEM_OBSERVER_THRESHOLD,
+    //     listRowcount:Math.ceil(listsize/crosscount)
+    // }
+    )
+
+    cradleConfigRef.current = {
+        crosscount,
+        cradleRowcount,
+        viewportRowcount,
+        cellObserverThreshold:ITEM_OBSERVER_THRESHOLD,
+        listRowcount:Math.ceil(listsize/crosscount),
+    }
 
     const managersRef = useRef(null) // make available to individual managers
-    const commonPropsRef = useRef({managersRef,viewportdata:viewportData,cradleprops:cradleProps})
+    const commonPropsRef = useRef({managersRef,viewportdata:viewportData,cradleprops:cradleProps, cradleConfigRef})
 
+    // cradle butterfly html components
+    const headCradleElementRef = useRef(null)
+    const tailCradleElementRef = useRef(null)
+    const spineCradleElementRef = useRef(null)
+    const cradleElementsRef = useRef(
+        {
+            head:headCradleElementRef, 
+            tail:tailCradleElementRef, 
+            spine:spineCradleElementRef
+        }
+    )
     const scrollManagerRef = useRef(new ScrollManager(commonPropsRef))
     const signalsManagerRef = useRef(new SignalsManager(commonPropsRef, signalsbaseline))
     const stateManagerRef = useRef(new StateManager(commonPropsRef,cradleStateRef,setCradleState,isMounted))
     const contentManagerRef = useRef(new ContentManager(commonPropsRef))
-    const cradleManagerRef = useRef(new CradleManager(commonPropsRef))
+    const cradleManagerRef = useRef(new CradleManager(commonPropsRef, cradleElementsRef.current))
     const wingsManagerRef = useRef(new WingsManager(commonPropsRef))
     const observersManagerRef = useRef({})
 
@@ -418,108 +514,10 @@ const Cradle = ({
 
     // -------------------------------[ cradle data ]-------------------------------------
 
-    // TODO: create a datamodel object for this?
-    // cradle butterfly html components
-    const headCradleElementRef = useRef(null)
-    const tailCradleElementRef = useRef(null)
-    const spineCradleElementRef = useRef(null)
-    const cradleElementsRef = useRef(
-        {
-            head:headCradleElementRef, 
-            tail:tailCradleElementRef, 
-            spine:spineCradleElementRef
-        }
-    )
-
     // item elements cache...
     const itemElementsRef = useRef(new Map()) // items register their element
 
     // ------------------------------[ cradle configuration ]---------------------------
-
-    const { viewportDimensions } = viewportData
-
-    let { height:viewportheight,width:viewportwidth } = viewportDimensions
-    
-    const crosscount = useMemo(() => {
-
-        let crosscount
-        let size = (orientation == 'horizontal')?viewportheight:viewportwidth
-        let crossLength = (orientation == 'horizontal')?cellHeight:cellWidth
-
-        let lengthforcalc = size - (padding * 2) + gap // length of viewport
-        let tilelengthforcalc = crossLength + gap
-        tilelengthforcalc = Math.min(tilelengthforcalc,lengthforcalc) // result cannot be less than 1
-        crosscount = Math.floor(lengthforcalc/(tilelengthforcalc))
-
-        // console.log('cradle CROSSCOUNT for scrollerName, scrollerID',scrollerName, scrollerID, crosscount)
-
-        return crosscount
-
-    },[
-        orientation, 
-        cellWidth, 
-        cellHeight, 
-        gap, 
-        padding, 
-        viewportheight, 
-        viewportwidth,
-    ])
-
-    // const crosscountRef = useRef(crosscount) // for easy reference by observer
-    // crosscountRef.current = crosscount // available for observer closure
-
-    const [cradleRowcount,viewportRowcount] = useMemo(()=> {
-
-        let viewportLength, cellLength
-        if (orientation == 'vertical') {
-            viewportLength = viewportheight
-            cellLength = cellHeight
-        } else {
-            viewportLength = viewportwidth
-            cellLength = cellWidth
-        }
-
-        cellLength += gap
-
-        let viewportrowcount = Math.ceil(viewportLength/cellLength)
-        let cradleRowcount = viewportrowcount + (runwaycount * 2)
-        let itemcount = cradleRowcount * crosscount
-        if (itemcount > listsize) {
-            itemcount = listsize
-            cradleRowcount = Math.ceil(itemcount/crosscount)
-        }
-        return [cradleRowcount, viewportrowcount]
-
-    },[
-        orientation, 
-        cellWidth, 
-        cellHeight, 
-        gap, 
-        listsize,
-        // padding,
-        viewportheight, 
-        viewportwidth,
-        runwaycount,
-        crosscount,
-    ])
-
-    const cradleConfigRef = useRef(null
-    // {
-    //     crosscount,
-    //     cradleRowcount,
-    //     viewportRowcount,
-    //     cellObserverThreshold:ITEM_OBSERVER_THRESHOLD,
-    //     listRowcount:Math.ceil(listsize/crosscount)
-    // }
-    )
-
-    cradleConfigRef.current = {
-        crosscount,
-        cradleRowcount,
-        viewportRowcount,
-        cellObserverThreshold:ITEM_OBSERVER_THRESHOLD,
-        listRowcount:Math.ceil(listsize/crosscount),
-    }
 
     // ----------------------------------[ cradle default styles]----------------------------------
 
