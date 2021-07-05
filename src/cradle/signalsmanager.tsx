@@ -5,9 +5,9 @@ import CradleManagement from './cradlemanagement'
 
 export default class SignalsManager extends CradleManagement {
 
-    constructor(props,signalsbaseline) {
+    constructor(commonPropsRef,signalsbaseline) {
 
-       super(props)
+       super(commonPropsRef)
        this.signalsBaseline = signalsbaseline
        this._currentsignals = Object.assign({},signalsbaseline)
 

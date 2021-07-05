@@ -7,9 +7,9 @@ const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 200
 
 export default class ScrollManager extends CradleManagement{
 
-    constructor(props) {
+    constructor(commonPropsRef) {
 
-        super(props)
+        super(commonPropsRef)
 
     }
 

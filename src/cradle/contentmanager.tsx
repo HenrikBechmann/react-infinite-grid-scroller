@@ -5,9 +5,9 @@ import CradleManagement from './cradlemanagement'
 
 export default class ContentManager extends CradleManagement{
 
-    constructor(commonprops) {
+    constructor(commonPropsRef) {
 
-       super(commonprops)
+       super(commonPropsRef)
 
     }
 

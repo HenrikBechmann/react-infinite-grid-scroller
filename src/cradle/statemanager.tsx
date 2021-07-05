@@ -5,9 +5,9 @@ import CradleManagement from './cradlemanagement'
 
 export default class StateManager extends CradleManagement{
 
-    constructor(commonprops,setCradleState,cradleStateRef) {
+    constructor(commonPropsRef,setCradleState,cradleStateRef) {
 
-       super(commonprops)
+       super(commonPropsRef)
        this.setCradleState = setCradleState
        this.cradleStateRef = cradleStateRef
     }

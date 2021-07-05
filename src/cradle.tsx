@@ -211,31 +211,21 @@ const Cradle = ({
     // -------------------------[ control flags ]-----------------
 
     const signalsRef = useRef(Object.assign({},signalsbaseline))
-    // const signals = signalsRef.current
 
     const observersRef = useRef({})
-    // const observers = observersRef.current    
-
     const managersRef = useRef(null)
-    // const managers = managersRef.current
 
-    const managersPropsRef = useRef({managersRef,viewportdata:viewportData,cradleprops:cradleProps})
-    // const managersProps = managersPropsRef.current
+    const commonPropsRef = useRef({managersRef,viewportdata:viewportData,cradleprops:cradleProps})
 
-    const scrollManagerRef = useRef(new ScrollManager(managersPropsRef))
-    // const scrollManager = scrollManagerRef.current
+    const scrollManagerRef = useRef(new ScrollManager(commonPropsRef))
 
-    const signalsManagerRef = useRef(new SignalsManager(managersPropsRef, signalsbaseline))
-    // const signalsManager = signalsManagerRef.current
+    const signalsManagerRef = useRef(new SignalsManager(commonPropsRef, signalsbaseline))
 
-    const stateManagerRef = useRef(new StateManager(managersPropsRef,setCradleState,cradleStateRef))
-    // const stateManager = stateManagerRef.current
+    const stateManagerRef = useRef(new StateManager(commonPropsRef,setCradleState,cradleStateRef))
 
-    const contentManagerRef = useRef(new ContentManager(managersPropsRef))
-    // const contentManager = contentManagerRef.current
+    const contentManagerRef = useRef(new ContentManager(commonPropsRef))
 
-    const cradleManagerRef = useRef(new CradleManager(managersPropsRef))
-    // const cradleManager = cradleManagerRef.current
+    const cradleManagerRef = useRef(new CradleManager(commonPropsRef))
 
     managersRef.current = {
         scrollRef:scrollManagerRef,
