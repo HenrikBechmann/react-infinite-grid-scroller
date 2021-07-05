@@ -23,10 +23,11 @@ export default class ScrollManager extends CradleManagement{
 
     onScroll() {
 
-        if (this._managers.signalsRef.current.signals.pauseScrollingEffects) {
+        let signals = this._managers.signalsRef.current.signals
+        if (signals.pauseScrollingEffects) {
 
             return
-            
+
         }
 
         let viewportElement = this._viewportdata.current.elementref.current
@@ -48,7 +49,8 @@ export default class ScrollManager extends CradleManagement{
 
         clearTimeout(this._scrolltimerid)
 
-        let cradleState = this._managers.current.stateRef.current.cradleStateRef.current
+        let stateManager = this._managers.current.stateRef.current
+        let cradleState = stateManager.cradleStateRef.current
 
         // let cradleContent = cradleContentRef.current
 
@@ -58,6 +60,7 @@ export default class ScrollManager extends CradleManagement{
 
                 if (cradleState == 'ready') {
         //             let itemindex = cradleContent.tailModel[0]?.props.index 
+                       // let itemindex = 
         //             if (itemindex === undefined) { // TODO: investigate
         //                 console.log('ERROR: scroll encountered undefined tailcontent lead')
         //             }

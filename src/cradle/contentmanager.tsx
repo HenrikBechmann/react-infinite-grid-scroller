@@ -5,9 +5,19 @@ import CradleManagement from './cradlemanagement'
 
 export default class ContentManager extends CradleManagement{
 
-    constructor(commonPropsRef) {
+   constructor(commonPropsRef) {
 
-       super(commonPropsRef)
+      super(commonPropsRef)
+
+   }
+
+   content = {
+
+      cradleModel: null,
+      headModel: null,
+      tailModel: null,
+      headView: [],
+      tailView: [],
 
     }
 

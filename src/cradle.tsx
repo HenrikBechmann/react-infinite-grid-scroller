@@ -13,6 +13,10 @@
     WingManager
     Observers
 
+    BUGS:
+
+    - scrollTracker index number is inaccurate
+
 */
 /*
     Description
@@ -372,7 +376,7 @@ const Cradle = ({
 
         }
 
-        let cradleContent = cradleContentRef.current
+        let cradleContent = contentManagerRef.current.content
         cradleContent.headModel = []
         cradleContent.tailModel = []
         cradleContent.headView = []
@@ -425,15 +429,6 @@ const Cradle = ({
             spine:spineCradleElementRef
         }
     )
-
-    const cradleContentRef = useRef({
-        cradleModel: null,
-        headModel: null,
-        tailModel: null,
-        headView: [],
-        tailView: [],
-        // portalData: new Map()
-    })
 
     // item elements cache...
     const itemElementsRef = useRef(new Map()) // items register their element
@@ -798,7 +793,7 @@ const Cradle = ({
                 viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
                 signals.pauseCellObserver = true
                 // pauseCradleIntersectionObserverRef.current = true
-                let cradleContent = cradleContentRef.current
+                let cradleContent = contentManagerRef.current.content
                 cradleContent.headModel = []
                 cradleContent.tailModel = []
                 cradleContent.headView = []
@@ -931,7 +926,7 @@ const Cradle = ({
         }
 
         let cradleElements = cradleElementsRef.current
-        let cradleContent = cradleContentRef.current
+        let cradleContent = contentManagerRef.current.content
         let cradleConfig = cradleConfigRef.current
 
         let itemElements = itemElementsRef.current
@@ -1115,7 +1110,7 @@ const Cradle = ({
         }
 
         let localContentList = []
-        let cradleContent = cradleContentRef.current
+        let cradleContent = contentManagerRef.current.content
         // cradleContent.portalData.clear()
 
         let {cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spinePosOffset, spineAdjustment} = 
@@ -1231,7 +1226,8 @@ const Cradle = ({
     // callback for scrolling
     const onScroll = useCallback((e) => {
 
-        if (signalsManagerRef.current.signals.pauseScrollingEffects) {
+        let signals = signalsManagerRef.current.signals
+        if (signals.pauseScrollingEffects) {
             return
         }
 
@@ -1259,7 +1255,7 @@ const Cradle = ({
 
         let cradleState = cradleStateRef.current
 
-        let cradleContent = cradleContentRef.current
+        let cradleContent = contentManagerRef.current.content
 
         if (!viewportDataRef.current.isResizing) {
 
@@ -1295,11 +1291,6 @@ const Cradle = ({
 
                 } else {
 
-                    // scrollReferenceDataRef.current = getScrollReferenceIndexData({
-                    //     viewportData:viewportDataRef.current,
-                    //     cradleProps:cradlePropsRef.current,
-                    //     cradleConfig:cradleConfigRef.current,
-                    // })
                     const scrollManager = managersRef.current.scrollRef.current
                     scrollManager.setScrollReferenceIndexData({
                         viewportData:viewportDataRef.current,
@@ -1322,8 +1313,6 @@ const Cradle = ({
         scrollTimeridRef.current = setTimeout(() => {
 
             if (!isMounted()) return
-
-            // console.log('scrollerName, portalData after SCROLL:',scrollerName, cradleContentRef.current.portalData)
 
             let spineVisiblePosOffset
             let cradleElements = cradleElementsRef.current
@@ -1393,7 +1382,7 @@ const Cradle = ({
     useLayoutEffect(()=>{
 
         let viewportData = viewportDataRef.current
-        let cradleContent = cradleContentRef.current
+        let cradleContent = contentManagerRef.current.content
         switch (cradleState) {
             case 'reload':
                 // cradleContent.portalData.clear()
@@ -1428,7 +1417,7 @@ const Cradle = ({
             }
             case 'preparerender': {
 
-                let cradleContent = cradleContentRef.current
+                let cradleContent = contentManagerRef.current.content
                 cradleContent.headView = cradleContent.headModel
                 cradleContent.tailView = cradleContent.tailModel
 
@@ -1519,7 +1508,7 @@ const Cradle = ({
     const getVisibleList = useCallback(() => {
 
         // let cradleElements = cradleElementsRef.current
-        let cradleContent = cradleContentRef.current
+        let cradleContent = contentManagerRef.current.content
 
         return getVisibleItemsList({
             itemElementMap:itemElementsRef.current,
@@ -1529,7 +1518,7 @@ const Cradle = ({
             // spineElement:cradleElements.spine.current,
             cradleProps:cradlePropsRef.current,
             // orientation:cradlePropsRef.current.orientation,
-            cradleContent:cradleContentRef.current,
+            cradleContent,
             // headlist:cradleContent.headView,
         })
 
@@ -1614,7 +1603,7 @@ const Cradle = ({
         }
     },[viewportDimensions, scrollReferenceDataRef.current, cradlePropsRef])
 
-    let cradleContent = cradleContentRef.current
+    let cradleContent = contentManagerRef.current.content
 
     return <>
 
