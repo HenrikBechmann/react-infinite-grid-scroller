@@ -5,7 +5,7 @@ export default class CradleManagement {
 
     constructor(commonPropsRef) {
 
-       let {managersRef,viewportdata,cradleprops, cradleConfigRef} = commonPropsRef.current
+       let {managersRef, viewportdata, cradleprops, cradleConfigRef} = commonPropsRef.current
 
        this._managers = managersRef
        this._viewportdata = viewportdata

@@ -107,13 +107,14 @@ export default class ScrollManager extends CradleManagement{
         let stateManager = this._managers.current.stateRef.current
         let cradleManager = this._managers.current.cradleRef.current
         let cradleProps = this._cradleprops
+        let viewportData = this._viewportdata
 
         if (!stateManager.isMounted()) return
 
         let spineVisiblePosOffset
         let cradleElements = cradleManager.elements
 
-        let viewportElement = this._viewportdata.elementref.current
+        let viewportElement = viewportData.elementref.current
         if (cradleProps.orientation == 'vertical') {
 
             spineVisiblePosOffset = cradleElements.spine.current.offsetTop - 
@@ -143,7 +144,7 @@ export default class ScrollManager extends CradleManagement{
         cradleManager.scrollSpineOffset = spineVisiblePosOffset
 
         let cradleState = stateManager.cradleStateRef.current
-        if (!this._viewportdata.isResizing) {
+        if (!viewportData.isResizing) {
 
         //         let localrefdata = {...scrollReferenceDataRef.current}
 
