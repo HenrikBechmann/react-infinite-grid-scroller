@@ -1,41 +1,21 @@
 // scrollmanager.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
+import CradleManagement from './cradlemanagement'
+
 const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 200
 
-export default class ScrollManager {
+export default class ScrollManager extends CradleManagement{
 
-    constructor({managers,viewportdata,cradleprops}) {
+    constructor(props) {
 
-       this._managers = managers
-       this._viewportdata = viewportdata
-       this._cradleprops = cradleprops
+        super(props)
 
-       let {signals, content, cradle, wings, observers, state} = managers
-       // this.scrollmanager = scroll
-       this._signalsmanager = signals
-       this._contentmanager = content
-       this._cradlemanager = cradle
-       this._wingsmanager = wings
-       this._observersmanager = observers
-       this._statemanager = state
     }
 
     blockScrollPos:number
 
     blockScrollProperty:string
-
-    private _managers
-    private _viewportdata
-    private _cradleprops
-
-    // private scrollmanager
-    private _signalsmanager
-    private _contentmanager
-    private _cradlemanager
-    private _wingsmanager
-    private _observersmanager
-    private _statemanager
 
     private _scrollpositions = {current:0,previous:0}
 
@@ -43,7 +23,7 @@ export default class ScrollManager {
 
     onScroll() {
 
-        if (this._signalsmanager.signals.pauseScrollingEffects) {
+        if (this._managers.signals.current.signals.pauseScrollingEffects) {
 
             return
             
@@ -68,7 +48,7 @@ export default class ScrollManager {
 
         clearTimeout(this._scrolltimerid)
 
-        let cradleState = this._statemanager.cradleStateRef.current
+        let cradleState = this._managers.current.stateRef.current.cradleStateRef.current
 
         // let cradleContent = cradleContentRef.current
 
@@ -224,8 +204,9 @@ export default class ScrollManager {
 
         if (spineReferenceIndex == 0) referencescrolloffset = 0 // defensive
 
-        this._cradlemanager.scrollReferenceIndex = spineReferenceIndex
-        this._cradlemanager.scrollReferenceSpineOffset = referencescrolloffset
+        let cradleManager = this._managers.current._cradleRef.current
+        cradleManager.scrollReferenceIndex = spineReferenceIndex
+        cradleManager.scrollReferenceSpineOffset = referencescrolloffset
 
     }
 

@@ -211,38 +211,40 @@ const Cradle = ({
     // -------------------------[ control flags ]-----------------
 
     const signalsRef = useRef(Object.assign({},signalsbaseline))
-    const signals = signalsRef.current
+    // const signals = signalsRef.current
 
     const observersRef = useRef({})
-    const observers = observersRef.current    
+    // const observers = observersRef.current    
 
-    const managersRef = useRef(
-        {scroll:null,signals:null, content:null, cradle:null, wings:null, observers, state:null})
-    const managers = managersRef.current
+    const managersRef = useRef(null)
+    // const managers = managersRef.current
 
-    const managersPropsRef = useRef({managers,viewportdata:viewportData,cradleprops:cradleProps})
-    const managerProps = managersPropsRef.current
+    const managersPropsRef = useRef({managersRef,viewportdata:viewportData,cradleprops:cradleProps})
+    // const managersProps = managersPropsRef.current
 
-    const scrollManagerRef = useRef(new ScrollManager(managerProps))
-    const scrollManager = scrollManagerRef.current
+    const scrollManagerRef = useRef(new ScrollManager(managersPropsRef))
+    // const scrollManager = scrollManagerRef.current
 
-    const signalsManagerRef = useRef(new SignalsManager(managerProps, signalsbaseline))
-    const signalsManager = signalsManagerRef.current
+    const signalsManagerRef = useRef(new SignalsManager(managersPropsRef, signalsbaseline))
+    // const signalsManager = signalsManagerRef.current
 
-    const stateManagerRef = useRef(new StateManager(managerProps,setCradleState,cradleStateRef))
-    const stateManager = stateManagerRef.current
+    const stateManagerRef = useRef(new StateManager(managersPropsRef,setCradleState,cradleStateRef))
+    // const stateManager = stateManagerRef.current
 
-    const contentManagerRef = useRef(new ContentManager(managerProps))
-    const contentManager = contentManagerRef.current
+    const contentManagerRef = useRef(new ContentManager(managersPropsRef))
+    // const contentManager = contentManagerRef.current
 
-    const cradleManagerRef = useRef(new CradleManager(managerProps))
-    const cradleManager = cradleManagerRef.current
+    const cradleManagerRef = useRef(new CradleManager(managersPropsRef))
+    // const cradleManager = cradleManagerRef.current
 
-    managers.scroll = scrollManager
-    managers.signals = signalsManager
-    managers.state = stateManager
-    managers.content = contentManager
-    managers.cradle = cradleManager
+    managersRef.current = {
+        scrollRef:scrollManagerRef,
+        signalsRef:signalsManagerRef, 
+        contentRef:contentManagerRef, 
+        cradleRef:cradleManagerRef, 
+        wingsRef:null, 
+        observersRef, 
+        stateRef:stateManagerRef}
 
     if (viewportData.isReparenting) {
             Object.assign(signalsRef.current,signalsbaseline) //clone 
@@ -406,6 +408,7 @@ const Cradle = ({
     // anticipate calling of operation which requires ReferenceIndex data
     const nextReferenceDataRef = useRef(cradleReferenceDataRef.current) // anticipate reposition
 
+    const cradleManager = managersRef.current.cradleRef.current
     cradleManager.scrollReferenceIndex = (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
     cradleManager.scrollReferenceSpineOffset = padding
     cradleManager.spineReferenceIndex = cradleManager.scrollReferenceIndex
@@ -1051,6 +1054,7 @@ const Cradle = ({
             
             let cradleElements = cradleElementsRef.current
 
+            const scrollManager = managersRef.current.scrollRef.current
             if (cradleProps.orientation == 'vertical') {
 
                 scrollManager.blockScrollPos = viewportElement.scrollTop
@@ -1198,6 +1202,8 @@ const Cradle = ({
 
         let cradleElements = cradleElementsRef.current
 
+        const scrollManager = managersRef.current.scrollRef.current
+
         scrollManager.blockScrollPos = scrollblockOffset - spinePosOffset
         if (orientation == 'vertical') {
 
@@ -1294,16 +1300,19 @@ const Cradle = ({
 
                 } else {
 
-                    scrollReferenceDataRef.current = getScrollReferenceIndexData({
-                        viewportData:viewportDataRef.current,
-                        cradleProps:cradlePropsRef.current,
-                        cradleConfig:cradleConfigRef.current,
-                    })
+                    // scrollReferenceDataRef.current = getScrollReferenceIndexData({
+                    //     viewportData:viewportDataRef.current,
+                    //     cradleProps:cradlePropsRef.current,
+                    //     cradleConfig:cradleConfigRef.current,
+                    // })
+                    const scrollManager = managersRef.current.scrollRef.current
                     scrollManager.setScrollReferenceIndexData({
                         viewportData:viewportDataRef.current,
                         cradleProps:cradlePropsRef.current,
                         cradleConfig:cradleConfigRef.current,
                     })
+                    scrollReferenceDataRef.current.spineVisiblePosOffset = cradleManager.scrollReferenceSpineOffset
+                    scrollReferenceDataRef.current.index = cradleManager.scrollReferenceIndex
 
                     setCradleState('updatereposition')
                 }
@@ -1345,6 +1354,7 @@ const Cradle = ({
                 cradleReferenceDataRef.current = localrefdata
 
                 // ***new***
+                const scrollManager = managersRef.current.scrollRef.current
                 if (cradlePropsRef.current.orientation == 'vertical') {
 
                     scrollManager.blockScrollProperty = 'scrollTop'
@@ -1407,6 +1417,7 @@ const Cradle = ({
 
             case 'setscrollposition': {
 
+                const scrollManager = managersRef.current.scrollRef.current
                 viewportData.elementref.current[scrollManager.blockScrollProperty] =
                     Math.max(0,scrollManager.blockScrollPos)
 
