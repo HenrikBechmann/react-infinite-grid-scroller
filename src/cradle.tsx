@@ -101,6 +101,7 @@ import SignalsManager from './cradle/signalsmanager'
 import StateManager from './cradle/statemanager'
 import ContentManager from './cradle/contentmanager'
 import CradleManager from './cradle/cradlemanager'
+import WingsManager from './cradle/wingsmanager'
 
 import { 
     setCradleGridStyles, 
@@ -224,7 +225,7 @@ const Cradle = ({
     const stateManagerRef = useRef(new StateManager(commonPropsRef,cradleStateRef,setCradleState,isMounted))
     const contentManagerRef = useRef(new ContentManager(commonPropsRef))
     const cradleManagerRef = useRef(new CradleManager(commonPropsRef))
-    const wingsManagerRef = useRef(/*new wingManagerRef*/)
+    const wingsManagerRef = useRef(new WingsManager(commonPropsRef))
     const observersManagerRef = useRef({})
 
     // to instantiate managersRef
