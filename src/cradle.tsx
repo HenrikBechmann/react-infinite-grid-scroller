@@ -1291,11 +1291,7 @@ const Cradle = ({
                 } else {
 
                     const scrollManager = managersRef.current.scrollRef.current
-                    scrollManager.setScrollReferenceIndexData({
-                        viewportData:viewportDataRef.current,
-                        cradleProps:cradlePropsRef.current,
-                        cradleConfig:cradleConfigRef.current,
-                    })
+                    scrollManager.setScrollReferenceIndexData()
                     scrollReferenceDataRef.current.spineVisiblePosOffset = cradleManager.scrollSpineOffset
                     scrollReferenceDataRef.current.index = cradleManager.scrollReferenceIndex
 

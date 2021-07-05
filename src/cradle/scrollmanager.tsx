@@ -82,11 +82,7 @@ export default class ScrollManager extends CradleManagement{
 
                 } else {
 
-                    this.setScrollReferenceIndexData({
-                        viewportData:this._viewportdata,
-                        cradleProps:this._cradleprops,
-                        cradleConfig:this._cradleconfigRef.current,
-                    })
+                    this.setScrollReferenceIndexData()
                     stateManager.setCradleState('updatereposition')
                 }
 
@@ -109,42 +105,59 @@ export default class ScrollManager extends CradleManagement{
     doEndOfScroll = () => {
 
         let stateManager = this._managers.current.stateRef.current
+        let cradleManager = this._managers.current.cradleRef.current
+        let cradleProps = this._cradleprops
 
         if (!stateManager.isMounted()) return
 
-        //     let spineVisiblePosOffset
-        //     let cradleElements = cradleElementsRef.current
+        let spineVisiblePosOffset
+        let cradleElements = cradleManager.elements
 
-        if (this._cradleprops.orientation == 'vertical') {
+        let viewportElement = this._viewportdata.elementref.current
+        if (cradleProps.orientation == 'vertical') {
 
-        //         spineVisiblePosOffset = cradleElements.spine.current.offsetTop - 
-        //             viewportDataRef.current.elementref.current.scrollTop
+            spineVisiblePosOffset = cradleElements.spine.current.offsetTop - 
+                viewportElement.scrollTop
+                
+        } else {
+
+            spineVisiblePosOffset = cradleElements.spine.current.offsetLeft - 
+                viewportElement.scrollLeft
+
+        }
+                    // cradleManager.scrollReferenceIndex = itemindex
+        cradleManager.scrollSpineOffset = spineVisiblePosOffset
+
+        if (cradleProps.orientation == 'vertical') {
+
+            spineVisiblePosOffset = cradleElements.spine.current.offsetTop - 
+                viewportElement.scrollTop
                     
         } else {
 
-        //         spineVisiblePosOffset = cradleElements.spine.current.offsetLeft - 
-        //             viewportDataRef.current.elementref.current.scrollLeft
+            spineVisiblePosOffset = cradleElements.spine.current.offsetLeft - 
+                viewportElement.scrollLeft
 
         }
 
-        //     scrollReferenceDataRef.current.spineVisiblePosOffset = spineVisiblePosOffset
+        cradleManager.scrollSpineOffset = spineVisiblePosOffset
 
         let cradleState = stateManager.cradleStateRef.current
         if (!this._viewportdata.isResizing) {
+
         //         let localrefdata = {...scrollReferenceDataRef.current}
 
         //         cradleReferenceDataRef.current = localrefdata
 
-        //         // ***new***
-        //         if (cradlePropsRef.current.orientation == 'vertical') {
+            if (cradleProps.orientation == 'vertical') {
 
-        //             scrollManager.blockScrollProperty = 'scrollTop'
-        //             scrollManager.blockScrollPos = viewportElement.scrollTop
+                this.blockScrollProperty = 'scrollTop'
+                this.blockScrollPos = viewportElement.scrollTop
 
-        //         } else {
-        //             scrollManager.blockScrollProperty = 'scrollLeft'
-        //             scrollManager.blockScrollPos = viewportElement.scrollLeft
-        //         }
+            } else {
+                this.blockScrollProperty = 'scrollLeft'
+                this.blockScrollPos = viewportElement.scrollLeft
+            }
 
         }
         switch (cradleState) {
@@ -168,13 +181,11 @@ export default class ScrollManager extends CradleManagement{
         
     }
 
-    setScrollReferenceIndexData = ({
+    setScrollReferenceIndexData = () => {
 
-        viewportData,
-        cradleProps,
-        cradleConfig,
-
-    }) => {
+        let viewportData = this._viewportdata
+        let cradleProps = this._cradleprops
+        let cradleConfig = this._cradleconfigRef.current
 
         let {crosscount} = cradleConfig
         let viewportElement = viewportData.elementref.current
@@ -215,6 +226,5 @@ export default class ScrollManager extends CradleManagement{
         cradleManager.scrollSpineOffset = referencescrolloffset
 
     }
-
 
 }
