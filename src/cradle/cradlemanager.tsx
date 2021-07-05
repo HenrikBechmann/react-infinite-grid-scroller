@@ -12,10 +12,10 @@ export default class CradleManager extends CradleManagement{
     }
     
     scrollReferenceIndex
-    scrollReferenceSpineOffset
-    spineReferenceIndex
-    spineReferenceSpineOffset
+    scrollSpineOffset
+    readyReferenceIndex
+    readySpineOffset
     nextReferenceIndex
-    nextReferenceSpineOffset
+    nextSpineOffset
 
 }
