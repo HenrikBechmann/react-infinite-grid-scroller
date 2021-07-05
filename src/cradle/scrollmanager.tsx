@@ -21,7 +21,7 @@ export default class ScrollManager extends CradleManagement{
 
     private _scrolltimerid = null
 
-    onScroll() {
+    onScroll = () => {
 
         let signals = this._managers.signalsRef.current.signals
         if (signals.pauseScrollingEffects) {
@@ -90,7 +90,7 @@ export default class ScrollManager extends CradleManagement{
         //                 cradleProps:cradlePropsRef.current,
         //                 cradleConfig:cradleConfigRef.current,
         //             })
-        //             setCradleState('updatereposition')
+                    stateManager.setCradleState('updatereposition')
                 }
 
         //         referenceIndexCallbackRef.current && 
@@ -100,31 +100,40 @@ export default class ScrollManager extends CradleManagement{
 
         }
 
-        this._scrolltimerid.current = setTimeout(() => {
+        this._scrolltimerid = setTimeout(() => {
 
-        //     if (!isMounted()) return
+            this.doEndOfScroll()
 
-        //     // console.log('scrollerName, portalData after SCROLL:',scrollerName, cradleContentRef.current.portalData)
+        },SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
+
+    }
+
+
+    doEndOfScroll = () => {
+
+        let stateManager = this._managers.current.stateRef.current
+
+        if (!stateManager.isMounted()) return
 
         //     let spineVisiblePosOffset
         //     let cradleElements = cradleElementsRef.current
 
-        //     if (cradlePropsRef.current.orientation == 'vertical') {
+        if (this._cradleprops.orientation == 'vertical') {
 
         //         spineVisiblePosOffset = cradleElements.spine.current.offsetTop - 
         //             viewportDataRef.current.elementref.current.scrollTop
                     
-        //     } else {
+        } else {
 
         //         spineVisiblePosOffset = cradleElements.spine.current.offsetLeft - 
         //             viewportDataRef.current.elementref.current.scrollLeft
 
-        //     }
+        }
 
         //     scrollReferenceDataRef.current.spineVisiblePosOffset = spineVisiblePosOffset
 
-        //     let cradleState = cradleStateRef.current
-        //     if (!viewportDataRef.current.isResizing) {
+        let cradleState = stateManager.cradleStateRef.current
+        if (!this._viewportdata.isResizing) {
         //         let localrefdata = {...scrollReferenceDataRef.current}
 
         //         cradleReferenceDataRef.current = localrefdata
@@ -140,38 +149,35 @@ export default class ScrollManager extends CradleManagement{
         //             scrollManager.blockScrollPos = viewportElement.scrollLeft
         //         }
 
-        //     }
-        //     switch (cradleState) {
+        }
+        switch (cradleState) {
 
-        //         case 'repositioning': {
+            case 'repositioning': {
 
         //             nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
 
-        //             setCradleState('reposition')
+                stateManager.setCradleState('reposition')
 
-        //             break
-        //         }
+                break
+            }
 
-        //         default: {
-        //             // console.log('scrollerID cradle calling updateCradleContent from end of scroll',scrollerID)
+            default: {
+
         //             updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
 
-        //         }
+            }
 
-            // }
-
-        },SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
-
+        }
+        
     }
 
-
-    setScrollReferenceIndexData({
+    setScrollReferenceIndexData = ({
 
         viewportData,
         cradleProps,
         cradleConfig,
 
-    }) {
+    }) => {
 
         let {crosscount} = cradleConfig
         let viewportElement = viewportData.elementref.current

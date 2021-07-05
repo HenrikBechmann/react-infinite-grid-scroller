@@ -221,7 +221,7 @@ const Cradle = ({
 
     const scrollManagerRef = useRef(new ScrollManager(commonPropsRef))
     const signalsManagerRef = useRef(new SignalsManager(commonPropsRef, signalsbaseline))
-    const stateManagerRef = useRef(new StateManager(commonPropsRef,setCradleState,cradleStateRef))
+    const stateManagerRef = useRef(new StateManager(commonPropsRef,cradleStateRef,setCradleState,isMounted))
     const contentManagerRef = useRef(new ContentManager(commonPropsRef))
     const cradleManagerRef = useRef(new CradleManager(commonPropsRef))
     const wingsManagerRef = useRef(/*new wingManagerRef*/)
