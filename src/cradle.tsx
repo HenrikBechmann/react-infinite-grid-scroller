@@ -1045,19 +1045,20 @@ const Cradle = ({
             
             let cradleElements = cradleElementsRef.current
 
-            const scrollManager = managersRef.current.scrollRef.current
+            // const scrollManager = managersRef.current.scrollRef.current
+            const cradleManager = managersRef.current.cradleRef.current
             if (cradleProps.orientation == 'vertical') {
 
-                scrollManager.blockScrollPos = viewportElement.scrollTop
-                scrollManager.blockScrollProperty = 'scrollTop'
+                cradleManager.blockScrollPos = viewportElement.scrollTop
+                cradleManager.blockScrollProperty = 'scrollTop'
                 cradleElements.spine.current.style.top = viewportElement.scrollTop + spinePosOffset + 'px'
                 cradleElements.spine.current.style.left = 'auto'
                 cradleElements.head.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
 
             } else {
 
-                scrollManager.blockScrollPos = viewportElement.scrollLeft
-                scrollManager.blockScrollProperty = 'scrollLeft'
+                cradleManager.blockScrollPos = viewportElement.scrollLeft
+                cradleManager.blockScrollProperty = 'scrollLeft'
                 cradleElements.spine.current.style.top = 'auto'
                 cradleElements.spine.current.style.left = viewportElement.scrollLeft + spinePosOffset + 'px'
                 cradleElements.head.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
@@ -1194,12 +1195,12 @@ const Cradle = ({
 
         let cradleElements = cradleElementsRef.current
 
-        const scrollManager = managersRef.current.scrollRef.current
+        // const scrollManager = managersRef.current.scrollRef.current
 
-        scrollManager.blockScrollPos = scrollblockOffset - spinePosOffset
+        cradleManager.blockScrollPos = scrollblockOffset - spinePosOffset
         if (orientation == 'vertical') {
 
-            scrollManager.blockScrollProperty = 'scrollTop'
+            cradleManager.blockScrollProperty = 'scrollTop'
 
             cradleElements.spine.current.style.top = (scrollblockOffset + spineAdjustment) + 'px'
             cradleElements.spine.current.style.left = 'auto'
@@ -1207,7 +1208,7 @@ const Cradle = ({
 
         } else { // orientation = 'horizontal'
 
-            scrollManager.blockScrollProperty = 'scrollLeft'
+            cradleManager.blockScrollProperty = 'scrollLeft'
 
             cradleElements.spine.current.style.top = 'auto'
             cradleElements.spine.current.style.left = (scrollblockOffset + spineAdjustment) + 'px'
@@ -1336,15 +1337,15 @@ const Cradle = ({
                 cradleReferenceDataRef.current = localrefdata
 
                 // ***new***
-                const scrollManager = managersRef.current.scrollRef.current
+                const cradleManager = managersRef.current.scrollRef.current
                 if (cradlePropsRef.current.orientation == 'vertical') {
 
-                    scrollManager.blockScrollProperty = 'scrollTop'
-                    scrollManager.blockScrollPos = viewportElement.scrollTop
+                    cradleManager.blockScrollProperty = 'scrollTop'
+                    cradleManager.blockScrollPos = viewportElement.scrollTop
 
                 } else {
-                    scrollManager.blockScrollProperty = 'scrollLeft'
-                    scrollManager.blockScrollPos = viewportElement.scrollLeft
+                    cradleManager.blockScrollProperty = 'scrollLeft'
+                    cradleManager.blockScrollPos = viewportElement.scrollLeft
                 }
 
             }
@@ -1399,9 +1400,9 @@ const Cradle = ({
 
             case 'setscrollposition': {
 
-                const scrollManager = managersRef.current.scrollRef.current
-                viewportData.elementref.current[scrollManager.blockScrollProperty] =
-                    Math.max(0,scrollManager.blockScrollPos)
+                const cradleManager = managersRef.current.scrollRef.current
+                viewportData.elementref.current[cradleManager.blockScrollProperty] =
+                    Math.max(0,cradleManager.blockScrollPos)
 
                 setCradleState('normalizecontrols')
 

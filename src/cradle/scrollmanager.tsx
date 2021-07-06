@@ -13,10 +13,6 @@ export default class ScrollManager extends CradleManagement{
 
     }
 
-    blockScrollPos:number
-
-    blockScrollProperty:string
-
     private _scrollpositions = {current:0,previous:0}
 
     private _scrolltimerid = null
@@ -156,12 +152,12 @@ export default class ScrollManager extends CradleManagement{
 
             if (cradleProps.orientation == 'vertical') {
 
-                this.blockScrollProperty = 'scrollTop'
-                this.blockScrollPos = viewportElement.scrollTop
+                cradleManager.blockScrollProperty = 'scrollTop'
+                cradleManager.blockScrollPos = viewportElement.scrollTop
 
             } else {
-                this.blockScrollProperty = 'scrollLeft'
-                this.blockScrollPos = viewportElement.scrollLeft
+                cradleManager.blockScrollProperty = 'scrollLeft'
+                cradleManager.blockScrollPos = viewportElement.scrollLeft
             }
 
         }

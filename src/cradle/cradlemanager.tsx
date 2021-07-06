@@ -18,10 +18,16 @@ export default class CradleManager extends CradleManagement{
     
     scrollReferenceIndex
     scrollSpineOffset
+    
     readyReferenceIndex
     readySpineOffset
+    
     nextReferenceIndex
     nextSpineOffset
+
+    blockScrollPos:number
+    blockScrollProperty:string
+
 
     elements = {
        spineRef:null, 
