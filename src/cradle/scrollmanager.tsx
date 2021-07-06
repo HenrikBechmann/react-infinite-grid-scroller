@@ -11,6 +11,8 @@ export default class ScrollManager extends CradleManagement{
 
         super(commonPropsRef)
 
+        // console.log('CALLING ScrollManager constructor')
+
     }
 
     scrollPositions = {current:0,previous:0}
@@ -33,7 +35,7 @@ export default class ScrollManager extends CradleManagement{
         // let scrollPositions = scrollPositionsRef.current
 
         let scrollPositionCurrent = 
-            (this._cradleprops.orientation == 'vertical')
+            (this._cradlepropsRef.current.orientation == 'vertical')
             ?viewportElement.scrollTop
             :viewportElement.scrollLeft
 
@@ -63,12 +65,12 @@ export default class ScrollManager extends CradleManagement{
                     // let itemindex = cradleContent.tailModel[0]?.props.index 
                     let itemindex = contentManager.content.tailModel[0]?.props.index 
                     // console.log('itemindex, tailModel, readyReferenceIndex', itemindex,
-                    //     contentManager.content.tailModel,cradleManager.readyReferenceIndex)
+                    //     contentManager.content.tailModel,cradleManager.referenceData.readyReferenceIndex)
                     // let itemindex = cradleManager.readyReferenceIndex
                     let spineVisiblePosOffset
                     let cradleElements = cradleManager.elements
 
-                    if (this._cradleprops.orientation == 'vertical') {
+                    if (this._cradlepropsRef.current.orientation == 'vertical') {
 
                         spineVisiblePosOffset = cradleElements.spineRef.current.offsetTop - 
                             this._viewportdata.elementref.current.scrollTop
@@ -79,8 +81,8 @@ export default class ScrollManager extends CradleManagement{
                             this._viewportdata.elementref.current.scrollLeft
 
                     }
-                    cradleManager.scrollReferenceIndex = itemindex
-                    cradleManager.scrollSpineOffset = spineVisiblePosOffset
+                    cradleManager.referenceData.scrollReferenceIndex = itemindex
+                    cradleManager.referenceData.scrollSpineOffset = spineVisiblePosOffset
 
                 } else {
 
@@ -110,7 +112,7 @@ export default class ScrollManager extends CradleManagement{
 
         let stateManager = this._managers.current.stateRef.current
         let cradleManager = this._managers.current.cradleRef.current
-        let cradleProps = this._cradleprops
+        let cradleProps = this._cradlepropsRef.current
         let viewportData = this._viewportdata
         let cradleMaster = this._managers.current.cradleMaster
 
@@ -132,14 +134,14 @@ export default class ScrollManager extends CradleManagement{
 
         }
 
-        cradleManager.scrollSpineOffset = spineVisiblePosOffset
+        cradleManager.referenceData.scrollSpineOffset = spineVisiblePosOffset
 
         if (!viewportData.isResizing) {
 
         //         let localrefdata = {...scrollReferenceDataRef.current}
         //         cradleReferenceDataRef.current = localrefdata
-            cradleManager.readyReferenceIndex = cradleManager.scrollReferenceIndex
-            cradleManager.readySpineOffset = cradleManager.scrollSpineOffset
+            cradleManager.referenceData.readyReferenceIndex = cradleManager.referenceData.scrollReferenceIndex
+            cradleManager.referenceData.readySpineOffset = cradleManager.referenceData.scrollSpineOffset
 
             if (cradleProps.orientation == 'vertical') {
 
@@ -152,6 +154,8 @@ export default class ScrollManager extends CradleManagement{
             }
 
         }
+
+        console.log('end of scroll referenceData',Object.assign({},cradleManager.referenceData))
 
         let cradleState = stateManager.cradleStateRef.current
         switch (cradleState) {
@@ -183,7 +187,7 @@ export default class ScrollManager extends CradleManagement{
     setScrollReferenceIndexData = () => {
 
         let viewportData = this._viewportdata
-        let cradleProps = this._cradleprops
+        let cradleProps = this._cradlepropsRef.current
         let cradleConfig = this._cradleconfigRef.current
 
         let {crosscount} = cradleConfig

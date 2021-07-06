@@ -9,21 +9,38 @@ export default class CradleManager extends CradleManagement{
 
        super(commonPropsRef)
 
+       // console.log('CALLING CradleManager CONSTRUCTOR')
+
        let elements = this.elements
        elements.spineRef = cradleElements.spine
        elements.headRef = cradleElements.head
        elements.tailRef = cradleElements.tail
 
+       let {defaultVisibleIndex, listsize, padding} = commonPropsRef.current.cradlepropsRef.current
+
+       console.log('commonPropsRef.current.cradlepropsRef.current in CradleManager constructor',commonPropsRef.current.cradlepropsRef.current)
+
+       this.referenceData.scrollReferenceIndex = (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
+       this.referenceData.scrollSpineOffset = padding
+       this.referenceData.readyReferenceIndex = this.referenceData.scrollReferenceIndex
+       this.referenceData.readySpineOffset = this.referenceData.scrollSpineOffset
+       this.referenceData.nextReferenceIndex = this.referenceData.readyReferenceIndex
+       this.referenceData.nextSpineOffset = this.referenceData.readySpineOffset
+
     }
-    
-    scrollReferenceIndex
-    scrollSpineOffset
-    
-    readyReferenceIndex
-    readySpineOffset
-    
-    nextReferenceIndex
-    nextSpineOffset
+
+   referenceData = {
+
+      scrollReferenceIndex:null,
+      scrollSpineOffset:null,
+
+      readyReferenceIndex:null,
+      readySpineOffset:null,
+
+      nextReferenceIndex:null,
+      nextSpineOffset:null,
+
+   }    
 
     blockScrollPos:number
     blockScrollProperty:string

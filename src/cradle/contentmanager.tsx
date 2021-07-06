@@ -213,11 +213,11 @@ export default class ContentManager extends CradleManagement{
     //         spineVisiblePosOffset:spinePosOffset
     //     }
 
-    //     cradleManager.scrollReferenceIndex = spineReferenceIndex
-    //     cradleManager.scrollSpineOffset = spinePosOffset
+    //     cradleManager.referenceData.scrollReferenceIndex = spineReferenceIndex
+    //     cradleManager.referenceData.scrollSpineOffset = spinePosOffset
 
-    //     cradleManager.readyReferenceIndex = spineReferenceIndex
-    //     cradleManager.readySpineOffset = spinePosOffset
+    //     cradleManager.referenceData.readyReferenceIndex = spineReferenceIndex
+    //     cradleManager.referenceData.readySpineOffset = spinePosOffset
 
     //     setCradleState('updatecontent')
 
@@ -307,11 +307,11 @@ export default class ContentManager extends CradleManagement{
 
         // }
 
-        // cradleManager.scrollReferenceIndex = referenceoffset
-        // cradleManager.scrollSpineOffset = spinePosOffset
+        // cradleManager.referenceData.scrollReferenceIndex = referenceoffset
+        // cradleManager.referenceData.scrollSpineOffset = spinePosOffset
 
-        // cradleManager.readyReferenceIndex = referenceoffset
-        // cradleManager.readySpineOffset = spinePosOffset
+        // cradleManager.referenceData.readyReferenceIndex = referenceoffset
+        // cradleManager.referenceData.readySpineOffset = spinePosOffset
 
         // // console.log('setting referenceindexdata in setCradleContent',cradleReferenceDataRef.current)
 
