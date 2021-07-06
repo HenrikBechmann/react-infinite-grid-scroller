@@ -156,51 +156,6 @@ export const getVisibleItemsList = ({
     return list
 }
 
-export const getScrollReferenceIndexData = ({
-
-        viewportData,
-        cradleProps,
-        cradleConfig,
-
-    }) => {
-
-    let {crosscount} = cradleConfig
-    let viewportElement = viewportData.elementref.current
-    let {orientation, listsize} = cradleProps
-    let scrollPos, cellLength
-    if (orientation == 'vertical') {
-
-        scrollPos = viewportElement.scrollTop
-        cellLength = cradleProps.cellHeight + cradleProps.gap
-
-    } else {
-
-        scrollPos = viewportElement.scrollLeft
-        cellLength = cradleProps.cellWidth + cradleProps.gap
-
-    }
-
-    let referencescrolloffset = cellLength - (scrollPos % cellLength)
-    if (referencescrolloffset == (cellLength + cradleProps.padding)) {
-        referencescrolloffset = 0
-    }
-
-    let referencerowindex = Math.ceil((scrollPos - cradleProps.padding)/cellLength)
-    let spineReferenceIndex = referencerowindex * crosscount
-    spineReferenceIndex = Math.min(spineReferenceIndex,listsize - 1)
-    let diff = spineReferenceIndex % crosscount
-    spineReferenceIndex -= diff
-
-    let referenceIndexData = {
-        index:spineReferenceIndex,
-        spineVisiblePosOffset:referencescrolloffset
-    }
-
-    if (referenceIndexData.index == 0) referenceIndexData.spineVisiblePosOffset = 0 // defensive
-
-    return referenceIndexData
-}
-
 export const getContentListRequirements = ({ // called from setCradleContent only
 
         cradleProps,

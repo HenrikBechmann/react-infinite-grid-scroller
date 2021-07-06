@@ -18,7 +18,7 @@ export default class CradleManager extends CradleManagement{
 
        let {defaultVisibleIndex, listsize, padding} = commonPropsRef.current.cradlepropsRef.current
 
-       console.log('commonPropsRef.current.cradlepropsRef.current in CradleManager constructor',commonPropsRef.current.cradlepropsRef.current)
+       // console.log('commonPropsRef.current.cradlepropsRef.current in CradleManager constructor',commonPropsRef.current.cradlepropsRef.current)
 
        this.referenceData.scrollReferenceIndex = (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
        this.referenceData.scrollSpineOffset = padding
