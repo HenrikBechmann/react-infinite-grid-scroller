@@ -8,10 +8,11 @@ export default class CradleManager extends CradleManagement{
     constructor(commonPropsRef, cradleElements) {
 
        super(commonPropsRef)
+
        let elements = this.elements
-       elements.spineRef = cradleElements.spineRef
-       elements.headRef = cradleElements.headRef
-       elements.tailRef = cradleElements.tailRef
+       elements.spineRef = cradleElements.spine
+       elements.headRef = cradleElements.head
+       elements.tailRef = cradleElements.tail
 
     }
     

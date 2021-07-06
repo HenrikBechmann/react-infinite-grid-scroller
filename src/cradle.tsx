@@ -12,6 +12,7 @@
     CradleManager
     WingManager
     Observers
+    MessageManager // message with host environment, such as referenceIndexCallback
 
     BUGS:
 
@@ -333,6 +334,7 @@ const Cradle = ({
         cradleRef:cradleManagerRef, 
         wingsRef:wingsManagerRef, 
         observersRef:observersManagerRef,
+        cradleMaster:{updateCradleContent:null},
     })
 
     managersRef.current = managementsetRef.current
@@ -379,11 +381,11 @@ const Cradle = ({
     // initialize window scroll listener
     useEffect(() => {
         let viewportdata = viewportDataRef.current
-        viewportdata.elementref.current.addEventListener('scroll',onScroll)
+        viewportdata.elementref.current.addEventListener('scroll',scrollManagerRef.current.onScroll)
 
         return () => {
 
-            viewportdata.elementref.current && viewportdata.elementref.current.removeEventListener('scroll',onScroll)
+            viewportdata.elementref.current && viewportdata.elementref.current.removeEventListener('scroll',scrollManagerRef.current.onScroll)
 
         }
 
@@ -1080,6 +1082,7 @@ const Cradle = ({
 
     }
 
+    managementsetRef.current.cradleMaster.updateCradleContent = updateCradleContent
     // End of IntersectionObserver support
 
     // ========================================================================================
