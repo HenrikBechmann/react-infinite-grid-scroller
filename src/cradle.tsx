@@ -922,7 +922,8 @@ const Cradle = ({
 
         // ----------------------------[ 1. initialize ]----------------------------
 
-        let scrollPositions = scrollPositionsRef.current
+        let scrollManager = scrollManagerRef.current
+        let scrollPositions = scrollManager.scrollPositions //scrollPositionsRef.current
 
         let scrollforward
         if (scrollPositions.current == scrollPositions.previous) { // edge case 
@@ -943,6 +944,7 @@ const Cradle = ({
         let cradleElements = cradleElementsRef.current
         let cradleContent = contentManagerRef.current.content
         let cradleConfig = cradleConfigRef.current
+        let cradleManager = managersRef.current.cradleRef.current
 
         let itemElements = itemElementsRef.current
 
@@ -1055,7 +1057,6 @@ const Cradle = ({
 
         // -------------------------------[ 8. set css changes ]-------------------------
 
-        const cradleManager = managersRef.current.cradleRef.current
         if (spinePosOffset !== undefined) {
             
             let cradleElements = cradleElementsRef.current
@@ -1243,161 +1244,161 @@ const Cradle = ({
 
     const scrollTimeridRef = useRef(null)
 
-    const scrollPositionsRef = useRef({current:0,previous:0})
+    // const scrollPositionsRef = useRef({current:0,previous:0})
 
     // callback for scrolling
-    const onScroll = useCallback((e) => {
+    // const onScroll = useCallback((e) => {
 
-        let signals = signalsManagerRef.current.signals
-        if (signals.pauseScrollingEffects) {
-            return
-        }
+    //     let signals = signalsManagerRef.current.signals
+    //     if (signals.pauseScrollingEffects) {
+    //         return
+    //     }
 
-        let viewportElement = viewportDataRef.current.elementref.current
-        let scrollPositions = scrollPositionsRef.current
+    //     let viewportElement = viewportDataRef.current.elementref.current
+    //     let scrollPositions = scrollPositionsRef.current
 
-        let scrollPositioncurrent = 
-            (cradlePropsRef.current.orientation == 'vertical')
-            ?viewportElement.scrollTop
-            :viewportElement.scrollLeft
+    //     let scrollPositioncurrent = 
+    //         (cradlePropsRef.current.orientation == 'vertical')
+    //         ?viewportElement.scrollTop
+    //         :viewportElement.scrollLeft
 
-        if (scrollPositioncurrent < 0) { // for Safari
+    //     if (scrollPositioncurrent < 0) { // for Safari
 
-            return 
+    //         return 
 
-        }
+    //     }
 
-        scrollPositions.previous = scrollPositions.current
-        scrollPositions.current = 
-            (cradlePropsRef.current.orientation == 'vertical')
-            ?viewportElement.scrollTop
-            :viewportElement.scrollLeft
+    //     scrollPositions.previous = scrollPositions.current
+    //     scrollPositions.current = 
+    //         (cradlePropsRef.current.orientation == 'vertical')
+    //         ?viewportElement.scrollTop
+    //         :viewportElement.scrollLeft
 
-        clearTimeout(scrollTimeridRef.current)
+    //     clearTimeout(scrollTimeridRef.current)
 
-        let cradleState = cradleStateRef.current
+    //     let cradleState = cradleStateRef.current
 
-        let cradleContent = contentManagerRef.current.content
+    //     let cradleContent = contentManagerRef.current.content
 
-        if (!viewportDataRef.current.isResizing) {
+    //     if (!viewportDataRef.current.isResizing) {
 
-            if (cradleState == 'ready' || cradleState == 'repositioning') {
+    //         if (cradleState == 'ready' || cradleState == 'repositioning') {
 
-                if (cradleState == 'ready') {
-                    let itemindex = cradleContent.tailModel[0]?.props.index 
-                    if (itemindex === undefined) { // TODO: investigate
-                        console.log('ERROR: scroll encountered undefined tailcontent lead')
-                    }
-                    let spineVisiblePosOffset
-                    let cradleElements = cradleElementsRef.current
+    //             if (cradleState == 'ready') {
+    //                 let itemindex = cradleContent.tailModel[0]?.props.index 
+    //                 if (itemindex === undefined) { // TODO: investigate
+    //                     console.log('ERROR: scroll encountered undefined tailcontent lead')
+    //                 }
+    //                 let spineVisiblePosOffset
+    //                 let cradleElements = cradleElementsRef.current
 
-                    if (cradlePropsRef.current.orientation == 'vertical') {
+    //                 if (cradlePropsRef.current.orientation == 'vertical') {
 
-                        spineVisiblePosOffset = cradleElements.spine.current.offsetTop - 
-                            viewportDataRef.current.elementref.current.scrollTop
+    //                     spineVisiblePosOffset = cradleElements.spine.current.offsetTop - 
+    //                         viewportDataRef.current.elementref.current.scrollTop
                             
-                    } else {
+    //                 } else {
 
-                        spineVisiblePosOffset = cradleElements.spine.current.offsetLeft - 
-                            viewportDataRef.current.elementref.current.scrollLeft
+    //                     spineVisiblePosOffset = cradleElements.spine.current.offsetLeft - 
+    //                         viewportDataRef.current.elementref.current.scrollLeft
 
-                    }
-                    // scrollReferenceDataRef.current = {
-                    //     index:itemindex,
-                    //     spineVisiblePosOffset,
-                    // }
+    //                 }
+    //                 // scrollReferenceDataRef.current = {
+    //                 //     index:itemindex,
+    //                 //     spineVisiblePosOffset,
+    //                 // }
 
-                    cradleManager.scrollReferenceIndex = itemindex
-                    cradleManager.scrollSpineOffset = spineVisiblePosOffset
+    //                 cradleManager.scrollReferenceIndex = itemindex
+    //                 cradleManager.scrollSpineOffset = spineVisiblePosOffset
 
 
-                } else {
+    //             } else {
 
-                    const scrollManager = managersRef.current.scrollRef.current
-                    scrollManager.setScrollReferenceIndexData()
-                    // scrollReferenceDataRef.current.spineVisiblePosOffset = cradleManager.scrollSpineOffset
-                    // scrollReferenceDataRef.current.index = cradleManager.scrollReferenceIndex
+    //                 const scrollManager = managersRef.current.scrollRef.current
+    //                 scrollManager.setScrollReferenceIndexData()
+    //                 // scrollReferenceDataRef.current.spineVisiblePosOffset = cradleManager.scrollSpineOffset
+    //                 // scrollReferenceDataRef.current.index = cradleManager.scrollReferenceIndex
 
-                    setCradleState('updatereposition')
-                }
+    //                 setCradleState('updatereposition')
+    //             }
 
-                referenceIndexCallbackRef.current && 
-                    // referenceIndexCallbackRef.current(scrollReferenceDataRef.current.index,'scrolling', cradleState)
-                    referenceIndexCallbackRef.current(cradleManager.scrollReferenceIndex,'scrolling', cradleState)
+    //             referenceIndexCallbackRef.current && 
+    //                 // referenceIndexCallbackRef.current(scrollReferenceDataRef.current.index,'scrolling', cradleState)
+    //                 referenceIndexCallbackRef.current(cradleManager.scrollReferenceIndex,'scrolling', cradleState)
 
-            }
+    //         }
 
-        }
+    //     }
 
-        scrollTimeridRef.current = setTimeout(() => {
+    //     scrollTimeridRef.current = setTimeout(() => {
 
-            if (!isMounted()) return
+    //         if (!isMounted()) return
 
-            let spineVisiblePosOffset
-            let cradleElements = cradleElementsRef.current
+    //         let spineVisiblePosOffset
+    //         let cradleElements = cradleElementsRef.current
 
-            if (cradlePropsRef.current.orientation == 'vertical') {
+    //         if (cradlePropsRef.current.orientation == 'vertical') {
 
-                spineVisiblePosOffset = cradleElements.spine.current.offsetTop - 
-                    viewportDataRef.current.elementref.current.scrollTop
+    //             spineVisiblePosOffset = cradleElements.spine.current.offsetTop - 
+    //                 viewportDataRef.current.elementref.current.scrollTop
                     
-            } else {
+    //         } else {
 
-                spineVisiblePosOffset = cradleElements.spine.current.offsetLeft - 
-                    viewportDataRef.current.elementref.current.scrollLeft
+    //             spineVisiblePosOffset = cradleElements.spine.current.offsetLeft - 
+    //                 viewportDataRef.current.elementref.current.scrollLeft
 
-            }
+    //         }
 
-            let cradleState = cradleStateRef.current
-            let cradleManager = cradleManagerRef.current
+    //         let cradleState = cradleStateRef.current
+    //         let cradleManager = cradleManagerRef.current
 
-            // scrollReferenceDataRef.current.spineVisiblePosOffset = spineVisiblePosOffset
-            cradleManager.scrollSpineOffset = spineVisiblePosOffset
+    //         // scrollReferenceDataRef.current.spineVisiblePosOffset = spineVisiblePosOffset
+    //         cradleManager.scrollSpineOffset = spineVisiblePosOffset
 
-            if (!viewportDataRef.current.isResizing) {
-                // let localrefdata = {...scrollReferenceDataRef.current}
+    //         if (!viewportDataRef.current.isResizing) {
+    //             // let localrefdata = {...scrollReferenceDataRef.current}
 
-                // cradleReferenceDataRef.current = localrefdata
-                cradleManager.readyReferenceIndex = cradleManager.scrollReferenceIndex
-                cradleManager.readySpineOffset = cradleManager.scrollSpineOffset
+    //             // cradleReferenceDataRef.current = localrefdata
+    //             cradleManager.readyReferenceIndex = cradleManager.scrollReferenceIndex
+    //             cradleManager.readySpineOffset = cradleManager.scrollSpineOffset
 
-                // ***new***
-                // const cradleManager = managersRef.current.scrollRef.current
-                if (cradlePropsRef.current.orientation == 'vertical') {
+    //             // ***new***
+    //             // const cradleManager = managersRef.current.scrollRef.current
+    //             if (cradlePropsRef.current.orientation == 'vertical') {
 
-                    cradleManager.blockScrollProperty = 'scrollTop'
-                    cradleManager.blockScrollPos = viewportElement.scrollTop
+    //                 cradleManager.blockScrollProperty = 'scrollTop'
+    //                 cradleManager.blockScrollPos = viewportElement.scrollTop
 
-                } else {
-                    cradleManager.blockScrollProperty = 'scrollLeft'
-                    cradleManager.blockScrollPos = viewportElement.scrollLeft
-                }
+    //             } else {
+    //                 cradleManager.blockScrollProperty = 'scrollLeft'
+    //                 cradleManager.blockScrollPos = viewportElement.scrollLeft
+    //             }
 
-            }
-            switch (cradleState) {
+    //         }
+    //         switch (cradleState) {
 
-                case 'repositioning': {
+    //             case 'repositioning': {
 
-                    // nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
-                    cradleManager.nextReferenceIndex = cradleManager.readyReferenceIndex
-                    cradleManager.nextSpineOffset = cradleManager.readySpineOffset
+    //                 // nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
+    //                 cradleManager.nextReferenceIndex = cradleManager.readyReferenceIndex
+    //                 cradleManager.nextSpineOffset = cradleManager.readySpineOffset
 
-                    setCradleState('reposition')
+    //                 setCradleState('reposition')
 
-                    break
-                }
+    //                 break
+    //             }
 
-                default: {
-                    // console.log('scrollerID cradle calling updateCradleContent from end of scroll',scrollerID)
-                    updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
+    //             default: {
+    //                 // console.log('scrollerID cradle calling updateCradleContent from end of scroll',scrollerID)
+    //                 updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
 
-                }
+    //             }
 
-            }
+    //         }
 
-        },SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
+    //     },SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
 
-    },[])
+    // },[])
 
     // data for state processing
     const callingCradleState = useRef(cradleStateRef.current)
@@ -1630,13 +1631,15 @@ const Cradle = ({
     // =============================================================================
 
     const scrollTrackerArgs = useMemo(() => {
-        return {
+        let trackerargs = {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
             referenceIndexOffset:cradleManagerRef.current.scrollReferenceIndex,
             listsize:cradlePropsRef.current.listsize,
             styles:cradlePropsRef.current.styles,
         }
+        console.log('trackerargs',trackerargs)
+        return trackerargs
     },[viewportDimensions, cradleManagerRef.current.scrollReferenceIndex, cradlePropsRef])
 
     let cradleContent = contentManagerRef.current.content

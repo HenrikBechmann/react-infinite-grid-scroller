@@ -13,13 +13,16 @@ export default class ScrollManager extends CradleManagement{
 
     }
 
-    private _scrollpositions = {current:0,previous:0}
+    scrollPositions = {current:0,previous:0}
 
     private _scrolltimerid = null
 
     onScroll = () => {
 
         let signals = this._managers.current.signalsRef.current.signals
+
+        // console.log('running onScroll', signals)
+
         if (signals.pauseScrollingEffects) {
 
             return
@@ -40,8 +43,8 @@ export default class ScrollManager extends CradleManagement{
 
         }
 
-        this._scrollpositions.previous = this._scrollpositions.current
-        this._scrollpositions.current = scrollPositionCurrent
+        this.scrollPositions.previous = this.scrollPositions.current
+        this.scrollPositions.current = scrollPositionCurrent
 
         clearTimeout(this._scrolltimerid)
 
@@ -57,8 +60,11 @@ export default class ScrollManager extends CradleManagement{
             if (cradleState == 'ready' || cradleState == 'repositioning') {
 
                 if (cradleState == 'ready') {
-        //             let itemindex = cradleContent.tailModel[0]?.props.index 
-                    let itemindex = cradleManager.readyReferenceIndex
+                    // let itemindex = cradleContent.tailModel[0]?.props.index 
+                    let itemindex = contentManager.content.tailModel[0]?.props.index 
+                    // console.log('itemindex, tailModel, readyReferenceIndex', itemindex,
+                    //     contentManager.content.tailModel,cradleManager.readyReferenceIndex)
+                    // let itemindex = cradleManager.readyReferenceIndex
                     let spineVisiblePosOffset
                     let cradleElements = cradleManager.elements
 
@@ -100,6 +106,8 @@ export default class ScrollManager extends CradleManagement{
 
     doEndOfScroll = () => {
 
+        console.log('end of scroll')
+
         let stateManager = this._managers.current.stateRef.current
         let cradleManager = this._managers.current.cradleRef.current
         let cradleProps = this._cradleprops
@@ -126,21 +134,6 @@ export default class ScrollManager extends CradleManagement{
 
         cradleManager.scrollSpineOffset = spineVisiblePosOffset
 
-        if (cradleProps.orientation == 'vertical') {
-
-            spineVisiblePosOffset = cradleElements.spineRef.current.offsetTop - 
-                viewportElement.scrollTop
-                    
-        } else {
-
-            spineVisiblePosOffset = cradleElements.spineRef.current.offsetLeft - 
-                viewportElement.scrollLeft
-
-        }
-
-        cradleManager.scrollSpineOffset = spineVisiblePosOffset
-
-        let cradleState = stateManager.cradleStateRef.current
         if (!viewportData.isResizing) {
 
         //         let localrefdata = {...scrollReferenceDataRef.current}
@@ -159,6 +152,8 @@ export default class ScrollManager extends CradleManagement{
             }
 
         }
+
+        let cradleState = stateManager.cradleStateRef.current
         switch (cradleState) {
 
             case 'repositioning': {
