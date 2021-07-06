@@ -303,7 +303,7 @@ const Cradle = ({
     }
 
     const managersRef = useRef(null) // make available to individual managers
-    const commonPropsRef = useRef({managersRef,viewportdata:viewportData,cradlepropsRef:cradlePropsRef, cradleConfigRef})
+    const commonPropsRef = useRef({managersRef,viewportdata:viewportData,cradlePropsRef, cradleConfigRef})
 
     // cradle butterfly html components
     const headCradleElementRef = useRef(null)
@@ -337,19 +337,16 @@ const Cradle = ({
         cradle:cradleManager, 
         wings:wingsManager, 
         observers:observersManager,
-        cradleMaster:{updateCradleContent:null},
+        cradleMaster:{updateCradleContent:null}, // temporary!!
     })
 
     managersRef.current = managementsetRef.current
 
     if (viewportData.isReparenting) {
-            Object.assign(signalsManager.signals,signalsbaseline) //clone 
-            // signalsRef.current.isReparenting = true
-            viewportData.isReparenting = false
-            isReparentingRef.current = true
-            // console.log('resetting signals for reparenting scrollerID',scrollerID)
-            setCradleState('reparenting')
-        // }
+        Object.assign(signalsManager.signals,signalsbaseline) //clone 
+        viewportData.isReparenting = false
+        isReparentingRef.current = true
+        setCradleState('reparenting')
     }
 
     // console.log('RUNNING cradle scrollerID cradleState with portalRecord',
@@ -434,10 +431,6 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        // let cradleManager = cradleManagerRef.current
-
-        // nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
-
         cradleManager.referenceData.nextReferenceIndex = cradleManager.referenceData.readyReferenceIndex
         cradleManager.referenceData.nextSpineOffset = cradleManager.referenceData.readySpineOffset
 
@@ -462,17 +455,12 @@ const Cradle = ({
 
         if (cradleStateRef.current != 'setup') {
 
-            // let cradleManager = cradleManagerRef.current
-
-            // console.log('referenceData before pivot',cradleManager.referenceData)
-
-            // nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
             cradleManager.referenceData.nextReferenceIndex = cradleManager.referenceData.readyReferenceIndex
             cradleManager.referenceData.nextSpineOffset = cradleManager.referenceData.readySpineOffset
 
             // get previous ratio
             let previousCellPixelLength = (orientation == 'vertical')?cradlePropsRef.current.cellWidth:cradlePropsRef.current.cellHeight
-            // let previousSpineOffset = nextReferenceDataRef.current.spineVisiblePosOffset
+
             let previousSpineOffset = cradleManager.referenceData.nextSpineOffset
 
             let previousratio = previousSpineOffset/previousCellPixelLength
@@ -481,7 +469,6 @@ const Cradle = ({
 
             let currentSpineOffset = previousratio * currentCellPixelLength
             
-            // nextReferenceDataRef.current.spineVisiblePosOffset = Math.round(currentSpineOffset)
             cradleManager.referenceData.nextSpineOffset = Math.round(currentSpineOffset)
 
             let signals = signalsManager.signals
@@ -750,12 +737,8 @@ const Cradle = ({
 
         let signals = signalsManager.signals;
 
-        // (scrollerID == 3) && console.log('OBSERVER IntersectionObserver callback scrollerid, reparenting, signals, entries',
-        //     scrollerID, viewportDataRef.current.portalitem.reparenting, signals, entries)
-
         if (signals.pauseCradleIntersectionObserver) return
         if (viewportDataRef.current.portalitem?.reparenting) return
-        // if (isReparentingRef.current) return
 
         for (let i = 0; i < entries.length; i++ ) {
             let entry = entries[i]
@@ -767,9 +750,6 @@ const Cradle = ({
         }
 
         signals.isCradleInView = (signals.isHeadCradleInView || signals.isTailCradleInView);
-
-        // (scrollerID == 3) && console.log('isCradleInView, isHeadCradleInView, isTailCradleInView, cradlestate',
-        //     signals.isCradleInView, signals.isHeadCradleInView, signals.isTailCradleInView, cradleStateRef.current)
 
         if (!signals.isCradleInView) 
         {
@@ -872,8 +852,6 @@ const Cradle = ({
 
         }
 
-        // console.log('scrollerID cradle calling updateCradleContent from cellobserver',scrollerID,Object.assign({},signalsRef.current) )
-
         isMounted() && updateCradleContent(movedentries,'cellObserver')
 
     },[])
@@ -881,8 +859,6 @@ const Cradle = ({
     const previousScrollForwardRef = useRef(undefined)
 
     const updateCradleContent = (entries, source = 'notifications') => {
-
-        // console.log('updateCradleContent source',scrollerID,source)
 
         let viewportData = viewportDataRef.current
         let viewportElement = viewportData.elementref.current
@@ -908,7 +884,6 @@ const Cradle = ({
 
         // ----------------------------[ 1. initialize ]----------------------------
 
-        // let scrollManager = scrollManagerRef.current
         let scrollPositions = scrollManager.scrollPositions //scrollPositionsRef.current
 
         let scrollforward
@@ -930,7 +905,6 @@ const Cradle = ({
         let cradleElements = cradleElementsRef.current
         let cradleContent = contentManager.content
         let cradleConfig = cradleConfigRef.current
-        // let cradleManager = managersRef.current.cradleRef.current
 
         let itemElements = itemElementsRef.current
 
@@ -951,8 +925,6 @@ const Cradle = ({
 
         })
 
-        // console.log('intersections', intersections)
-
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         let [cradleindex, 
@@ -972,9 +944,6 @@ const Cradle = ({
                 scrollforward,
 
         })
-
-         // console.log('in updateCradleContent from calcContentShifts: cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spinePosOffset, contentCount, cradleManager.referenceData',
-         //     cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spinePosOffset, contentCount, cradleManager.referenceData)
 
         if ((referenceitemshift == 0 && cradleitemshift == 0)) return
 
@@ -1047,7 +1016,6 @@ const Cradle = ({
             
             let cradleElements = cradleElementsRef.current
 
-            // const scrollManager = managersRef.current.scrollRef.current
             if (cradleProps.orientation == 'vertical') {
 
                 cradleManager.blockScrollPos = viewportElement.scrollTop
@@ -1073,8 +1041,6 @@ const Cradle = ({
 
         cradleManager.referenceData.readyReferenceIndex = spineReferenceIndex
         cradleManager.referenceData.readySpineOffset = spinePosOffset
-
-        // console.log('final referenceData in updateCradleContent',Object.assign({},cradleManager.referenceData))
 
         setCradleState('updatecontent')
 
@@ -1398,8 +1364,6 @@ const Cradle = ({
 
     },[])
 
-    // const ViewportPortalItemRef = useRef(null)
-    // content item registration callback; called from item
     const getItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
 
         const [index, shellref, portalDataRef] = itemElementData
@@ -1423,8 +1387,6 @@ const Cradle = ({
 
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
-
-        // nextReferenceDataRef.current = {index,spineVisiblePosOffset:0}
 
         cradleManager.referenceData.nextSpineOffset = cradleManager.referenceData.readySpineOffset
         cradleManager.referenceData.nextReferenceIndex = cradleManager.referenceData.readyReferenceIndex
