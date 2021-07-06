@@ -8,6 +8,8 @@
     - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
 
     - break up cradle
+
+    - change portalmanager to simple object (singleton)
     */
 
 import React, {useRef, useEffect, useMemo, useContext} from 'react'

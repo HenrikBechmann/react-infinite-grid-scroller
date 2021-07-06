@@ -13,12 +13,12 @@
     WingManager
     Observers
     MessageManager // message with host environment, such as referenceIndexCallback
+    ServiceManager // user services
 
     BUGS:
 
     - scrollTracker index number is static
 
-*/
 /*
     Description
     -----------
@@ -284,15 +284,7 @@ const Cradle = ({
 
 
     // const signalsRef = useRef(Object.assign({},signalsbaseline))
-    const cradleConfigRef = useRef(null
-    // {
-    //     crosscount,
-    //     cradleRowcount,
-    //     viewportRowcount,
-    //     cellObserverThreshold:ITEM_OBSERVER_THRESHOLD,
-    //     listRowcount:Math.ceil(listsize/crosscount)
-    // }
-    )
+    const cradleConfigRef = useRef(null)
 
     cradleConfigRef.current = {
         crosscount,
@@ -303,6 +295,7 @@ const Cradle = ({
     }
 
     const managersRef = useRef(null) // make available to individual managers
+    // TODO: match viewportdata case here
     const commonPropsRef = useRef({managersRef,viewportdata:viewportData,cradlePropsRef, cradleConfigRef})
 
     // cradle butterfly html components
@@ -1209,7 +1202,7 @@ const Cradle = ({
                 viewportData.elementref.current[cradleManager.blockScrollProperty] =
                     Math.max(0,cradleManager.blockScrollPos)
 
-                setCradleState('normalizecontrols')
+                setCradleState('normalizesignals')
 
                 break
             }
@@ -1257,19 +1250,17 @@ const Cradle = ({
                 cradleContent.headView = []
                 cradleContent.tailView = []
                 portalManager.resetScrollerPortalRepository(scrollerID)
-                // setCradleContent(callingCradleState.current, nextReferenceDataRef.current)
-                // let cradleManager = cradleManagerRef.current
-                setCradleContent(callingCradleState.current)//, nextReferenceDataRef.current)
+                setCradleContent(callingCradleState.current)
 
                 setCradleState('preparerender')
 
                 break
             }
-            case 'normalizecontrols': {
+            case 'normalizesignals': {
                 setTimeout(()=> {
 
                     if (!isMounted()) return
-                    // console.log('normalizecontrols for cradle',scrollerID)
+                    // console.log('normalizesignals for cradle',scrollerID)
                     if (!viewportData.isResizing) {
                         // redundant scroll position to avoid accidental positioning at tail end of reposition
                         let signals = signalsManager.signals
@@ -1280,7 +1271,7 @@ const Cradle = ({
                             signals.pauseCradleResizeObserver && (signals.pauseCradleResizeObserver = false)
                             // signals.isReparenting && (signals.isReparenting = false)
                         } else {
-                            console.log('ERROR: viewport element not set in normalizecontrols', scrollerID, viewportData)
+                            console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportData)
                         }
 
                         if (signals.isCradleInView) {
