@@ -397,11 +397,14 @@ const Cradle = ({
     // trigger resizing based on viewport state
     useEffect(()=>{
 
+        let cradleManager = cradleManagerRef.current
         // console.log('viewportData.isResizing', viewportData.isResizing)
         if (cradleStateRef.current == 'setup') return
         if (viewportData.isResizing) {
 
-            nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
+            // nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
+            cradleManager.nextReferenceIndex = cradleManager.readyReferenceIndex
+            cradleManager.nextSpineOffset = cradleManager.readySpineOffset
 
             // console.log('calling resizing with', nextReferenceDataRef.current)
 
@@ -428,7 +431,12 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
+        let cradleManager = cradleManagerRef.current
+
+        // nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
+
+        cradleManager.nextReferenceIndex = cradleManager.readyReferenceIndex
+        cradleManager.nextSpineOffset = cradleManager.readySpineOffset
 
         let signals = signalsManagerRef.current.signals
 
@@ -451,11 +459,16 @@ const Cradle = ({
 
         if (cradleStateRef.current != 'setup') {
 
-            nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
+            let cradleManager = cradleManagerRef.current
+
+            // nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
+            cradleManager.nextReferenceIndex = cradleManager.readyReferenceIndex
+            cradleManager.nextSpineOffset = cradleManager.readySpineOffset
 
             // get previous ratio
             let previousCellPixelLength = (orientation == 'vertical')?cradlePropsRef.current.cellWidth:cradlePropsRef.current.cellHeight
-            let previousSpineOffset = nextReferenceDataRef.current.spineVisiblePosOffset
+            // let previousSpineOffset = nextReferenceDataRef.current.spineVisiblePosOffset
+            let previousSpineOffset = cradleManager.nextSpineOffset
 
             let previousratio = previousSpineOffset/previousCellPixelLength
 
@@ -463,7 +476,8 @@ const Cradle = ({
 
             let currentSpineOffset = previousratio * currentCellPixelLength
             
-            nextReferenceDataRef.current.spineVisiblePosOffset = Math.round(currentSpineOffset)
+            // nextReferenceDataRef.current.spineVisiblePosOffset = Math.round(currentSpineOffset)
+            cradleManager.nextSpineOffset = Math.round(currentSpineOffset)
 
             let signals = signalsManagerRef.current.signals
 
@@ -495,16 +509,16 @@ const Cradle = ({
     const instanceIdCounterRef = useRef(0)
     const instanceIdMapRef = useRef(new Map())
 
-    const scrollReferenceDataRef = useRef({ // existing or expected, monitored through onScroll
-        index:Math.min(defaultVisibleIndex,(listsize - 1)) || 0,
-        spineVisiblePosOffset:padding
-    }) // access by closures
+    // const scrollReferenceDataRef = useRef({ // existing or expected, monitored through onScroll
+    //     index:Math.min(defaultVisibleIndex,(listsize - 1)) || 0,
+    //     spineVisiblePosOffset:padding
+    // }) // access by closures
 
-    // set by onScroll at the end of scroll sessions
-    const cradleReferenceDataRef = useRef(scrollReferenceDataRef.current) 
+    // // set by onScroll at the end of scroll sessions
+    // const cradleReferenceDataRef = useRef(scrollReferenceDataRef.current) 
 
-    // anticipate calling of operation which requires ReferenceIndex data
-    const nextReferenceDataRef = useRef(cradleReferenceDataRef.current) // anticipate reposition
+    // // anticipate calling of operation which requires ReferenceIndex data
+    // const nextReferenceDataRef = useRef(cradleReferenceDataRef.current) // anticipate reposition
 
     const cradleManager = managersRef.current.cradleRef.current
     cradleManager.scrollReferenceIndex = (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
@@ -1041,12 +1055,12 @@ const Cradle = ({
 
         // -------------------------------[ 8. set css changes ]-------------------------
 
+        const cradleManager = managersRef.current.cradleRef.current
         if (spinePosOffset !== undefined) {
             
             let cradleElements = cradleElementsRef.current
 
             // const scrollManager = managersRef.current.scrollRef.current
-            const cradleManager = managersRef.current.cradleRef.current
             if (cradleProps.orientation == 'vertical') {
 
                 cradleManager.blockScrollPos = viewportElement.scrollTop
@@ -1067,11 +1081,11 @@ const Cradle = ({
 
         }
 
-        cradleReferenceDataRef.current = // **new July 3**
-        scrollReferenceDataRef.current = {
-            index:spineReferenceIndex,
-            spineVisiblePosOffset:spinePosOffset
-        }
+        // cradleReferenceDataRef.current = // **new July 3**
+        // scrollReferenceDataRef.current = {
+        //     index:spineReferenceIndex,
+        //     spineVisiblePosOffset:spinePosOffset
+        // }
 
         cradleManager.scrollReferenceIndex = spineReferenceIndex
         cradleManager.scrollSpineOffset = spinePosOffset
@@ -1091,13 +1105,18 @@ const Cradle = ({
     // ========================================================================================
     
     // reset cradle, including allocation between head and tail parts of the cradle
-    const setCradleContent = (cradleState, referenceIndexData) => { 
+    const setCradleContent = (cradleState/*, referenceIndexData*/) => { 
 
         // console.log('setCradleContent start: cradleState, referenceIndexData',cradleState, referenceIndexData)
 
         let cradleProps = cradlePropsRef.current
-        let { index: visibletargetindexoffset, 
-            spineVisiblePosOffset: visibletargetscrolloffset } = referenceIndexData
+        let cradleManager = cradleManagerRef.current
+
+        // let { index: visibletargetindexoffset, 
+        //     spineVisiblePosOffset: visibletargetscrolloffset } = referenceIndexData
+
+        let visibletargetindexoffset = cradleManager.readyReferenceIndex
+        let visibletargetscrolloffset = cradleManager.readySpineOffset
 
         let {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
 
@@ -1168,13 +1187,13 @@ const Cradle = ({
         cradleContent.headModel = headcontentlist
         cradleContent.tailModel = tailcontentlist
 
-        scrollReferenceDataRef.current = 
-        cradleReferenceDataRef.current = {
+        // scrollReferenceDataRef.current = 
+        // cradleReferenceDataRef.current = {
 
-            index: referenceoffset,
-            spineVisiblePosOffset:spinePosOffset,
+        //     index: referenceoffset,
+        //     spineVisiblePosOffset:spinePosOffset,
 
-        }
+        // }
 
         cradleManager.scrollReferenceIndex = referenceoffset
         cradleManager.scrollSpineOffset = spinePosOffset
@@ -1189,8 +1208,8 @@ const Cradle = ({
             let cstate = cradleState
             if (cstate == 'setreload') cstate = 'reload'
             referenceIndexCallbackRef.current(
-                cradleReferenceDataRef.current.index, 'setCradleContent', cstate)
-
+                // cradleReferenceDataRef.current.index, 'setCradleContent', cstate)
+                cradleManager.readyReferenceIndex,'setCradleContent', cstate)
         }
 
         let cradleElements = cradleElementsRef.current
@@ -1283,10 +1302,10 @@ const Cradle = ({
                             viewportDataRef.current.elementref.current.scrollLeft
 
                     }
-                    scrollReferenceDataRef.current = {
-                        index:itemindex,
-                        spineVisiblePosOffset,
-                    }
+                    // scrollReferenceDataRef.current = {
+                    //     index:itemindex,
+                    //     spineVisiblePosOffset,
+                    // }
 
                     cradleManager.scrollReferenceIndex = itemindex
                     cradleManager.scrollSpineOffset = spineVisiblePosOffset
@@ -1296,14 +1315,15 @@ const Cradle = ({
 
                     const scrollManager = managersRef.current.scrollRef.current
                     scrollManager.setScrollReferenceIndexData()
-                    scrollReferenceDataRef.current.spineVisiblePosOffset = cradleManager.scrollSpineOffset
-                    scrollReferenceDataRef.current.index = cradleManager.scrollReferenceIndex
+                    // scrollReferenceDataRef.current.spineVisiblePosOffset = cradleManager.scrollSpineOffset
+                    // scrollReferenceDataRef.current.index = cradleManager.scrollReferenceIndex
 
                     setCradleState('updatereposition')
                 }
 
                 referenceIndexCallbackRef.current && 
-                    referenceIndexCallbackRef.current(scrollReferenceDataRef.current.index,'scrolling', cradleState)
+                    // referenceIndexCallbackRef.current(scrollReferenceDataRef.current.index,'scrolling', cradleState)
+                    referenceIndexCallbackRef.current(cradleManager.scrollReferenceIndex,'scrolling', cradleState)
 
             }
 
@@ -1328,16 +1348,21 @@ const Cradle = ({
 
             }
 
-            scrollReferenceDataRef.current.spineVisiblePosOffset = spineVisiblePosOffset
-
             let cradleState = cradleStateRef.current
-            if (!viewportDataRef.current.isResizing) {
-                let localrefdata = {...scrollReferenceDataRef.current}
+            let cradleManager = cradleManagerRef.current
 
-                cradleReferenceDataRef.current = localrefdata
+            // scrollReferenceDataRef.current.spineVisiblePosOffset = spineVisiblePosOffset
+            cradleManager.scrollSpineOffset = spineVisiblePosOffset
+
+            if (!viewportDataRef.current.isResizing) {
+                // let localrefdata = {...scrollReferenceDataRef.current}
+
+                // cradleReferenceDataRef.current = localrefdata
+                cradleManager.readyReferenceIndex = cradleManager.scrollReferenceIndex
+                cradleManager.readySpineOffset = cradleManager.scrollSpineOffset
 
                 // ***new***
-                const cradleManager = managersRef.current.scrollRef.current
+                // const cradleManager = managersRef.current.scrollRef.current
                 if (cradlePropsRef.current.orientation == 'vertical') {
 
                     cradleManager.blockScrollProperty = 'scrollTop'
@@ -1353,7 +1378,9 @@ const Cradle = ({
 
                 case 'repositioning': {
 
-                    nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
+                    // nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
+                    cradleManager.nextReferenceIndex = cradleManager.readyReferenceIndex
+                    cradleManager.nextSpineOffset = cradleManager.readySpineOffset
 
                     setCradleState('reposition')
 
@@ -1452,7 +1479,9 @@ const Cradle = ({
                 cradleContent.headView = []
                 cradleContent.tailView = []
                 portalManager.resetScrollerPortalRepository(scrollerID)
-                setCradleContent(callingCradleState.current, nextReferenceDataRef.current)
+                // setCradleContent(callingCradleState.current, nextReferenceDataRef.current)
+                // let cradleManager = cradleManagerRef.current
+                setCradleContent(callingCradleState.current)//, nextReferenceDataRef.current)
 
                 setCradleState('preparerender')
 
@@ -1548,7 +1577,11 @@ const Cradle = ({
             spineVisiblePosOffset = cradleElements.spine.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
         }
 
-        nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
+        // nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
+
+        let cradleManager = cradleManagerRef.current
+        cradleManager.nextSpineOffset = cradleManager.readySpineOffset
+        cradleManager.nextReferenceIndex = cradleManager.readyReferenceIndex        
         setCradleState('reload')
 
     },[])
@@ -1574,11 +1607,15 @@ const Cradle = ({
     const scrollToItem = useCallback((index) => {
 
         let signals = signalsManagerRef.current.signals
+        let cradleManager = cradleManagerRef.current
 
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
 
-        nextReferenceDataRef.current = {index,spineVisiblePosOffset:0}
+        // nextReferenceDataRef.current = {index,spineVisiblePosOffset:0}
+
+        cradleManager.nextSpineOffset = cradleManager.readySpineOffset
+        cradleManager.nextReferenceIndex = cradleManager.readyReferenceIndex
 
         setCradleState('reposition')
 
@@ -1596,11 +1633,11 @@ const Cradle = ({
         return {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
-            referenceIndexOffset:scrollReferenceDataRef.current.index,
+            referenceIndexOffset:cradleManagerRef.current.scrollReferenceIndex,
             listsize:cradlePropsRef.current.listsize,
             styles:cradlePropsRef.current.styles,
         }
-    },[viewportDimensions, scrollReferenceDataRef.current, cradlePropsRef])
+    },[viewportDimensions, cradleManagerRef.current.scrollReferenceIndex, cradlePropsRef])
 
     let cradleContent = contentManagerRef.current.content
 

@@ -106,8 +106,6 @@ export default class ScrollManager extends CradleManagement{
         let viewportData = this._viewportdata
         let cradleMaster = this._managers.current.cradleMaster
 
-        // console.log('cradleMaster',cradleMaster)
-
         if (!stateManager.isMounted()) return
 
         let spineVisiblePosOffset
