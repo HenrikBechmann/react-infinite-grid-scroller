@@ -103,6 +103,7 @@ import StateManager from './cradle/statemanager'
 import ContentManager from './cradle/contentmanager'
 import CradleManager from './cradle/cradlemanager'
 import WingsManager from './cradle/wingsmanager'
+import ServiceManager from './cradle/servicemanager'
 
 import { 
     setCradleGridStyles, 
@@ -328,8 +329,8 @@ const Cradle = ({
     const callbacksRef = useRef({
         getElementData:getItemElementData
     })
-    const [scrollManager,signalsManager,stateManager,contentManager,cradleManager,wingsManager,observersManager]:
-    [ScrollManager,SignalsManager,StateManager,ContentManager,CradleManager,WingsManager,any] = useMemo(()=>{
+    const [scrollManager,signalsManager,stateManager,contentManager,cradleManager,wingsManager,serviceManager,observersManager]:
+    [ScrollManager,SignalsManager,StateManager,ContentManager,CradleManager,WingsManager,ServiceManager,any] = useMemo(()=>{
         return [
             new ScrollManager(commonPropsRef,referenceIndexCallbackRef),
             new SignalsManager(commonPropsRef, signalsbaseline),
@@ -337,6 +338,7 @@ const Cradle = ({
             new ContentManager(commonPropsRef, cellObserverRef, callbacksRef, referenceIndexCallbackRef),
             new CradleManager(commonPropsRef, cradleElementsRef.current),
             new WingsManager(commonPropsRef),
+            new ServiceManager(commonPropsRef),
             {}
         ]
     },[])
@@ -349,6 +351,7 @@ const Cradle = ({
         content:contentManager, 
         cradle:cradleManager, 
         wings:wingsManager, 
+        service:serviceManager,
         observers:observersManager,
     })
 
