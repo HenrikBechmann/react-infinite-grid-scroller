@@ -215,8 +215,8 @@ export default class ScrollManager extends CradleManagement{
         if (spineReferenceIndex == 0) referencescrolloffset = 0 // defensive
 
         let cradleManager = this._managers.current.cradle
-        cradleManager.scrollReferenceIndex = spineReferenceIndex
-        cradleManager.scrollSpineOffset = referencescrolloffset
+        cradleManager.referenceData.scrollReferenceIndex = spineReferenceIndex
+        cradleManager.referenceData.scrollSpineOffset = referencescrolloffset
 
     }
 

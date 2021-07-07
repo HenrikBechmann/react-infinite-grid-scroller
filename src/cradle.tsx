@@ -17,7 +17,8 @@
 
     BUGS:
 
-    - scrollTracker index number is static
+    - referenceIndexCallback
+    - FF Android nested layout
 
 /*
     Description
@@ -328,7 +329,8 @@ const Cradle = ({
     const callbacksRef = useRef({
         getElementData:getItemElementData
     })
-    const [scrollManager,signalsManager,stateManager,contentManager,cradleManager,wingsManager,observersManager] = useMemo(()=>{
+    const [scrollManager,signalsManager,stateManager,contentManager,cradleManager,wingsManager,observersManager]:
+    [ScrollManager,SignalsManager,StateManager,ContentManager,CradleManager,WingsManager,any] = useMemo(()=>{
         return [
             new ScrollManager(commonPropsRef),
             new SignalsManager(commonPropsRef, signalsbaseline),
@@ -1082,6 +1084,9 @@ const Cradle = ({
     // =============================================================================
 
     const scrollTrackerArgs = useMemo(() => {
+        if (!(cradleStateRef.current == 'updatereposition' || cradleStateRef.current == 'repositioning')) {
+            return
+        }
         let trackerargs = {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
@@ -1089,9 +1094,8 @@ const Cradle = ({
             listsize:cradlePropsRef.current.listsize,
             styles:cradlePropsRef.current.styles,
         }
-        // console.log('trackerargs',trackerargs)
         return trackerargs
-    },[viewportDimensions, cradleManager.referenceData.scrollReferenceIndex, cradlePropsRef])
+    },[cradleStateRef.current, viewportDimensions, cradleManager.referenceData.scrollReferenceIndex, cradlePropsRef])
 
     let cradleContent = contentManager.content
 
