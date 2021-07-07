@@ -10,6 +10,8 @@
     - break up cradle
 
     - change portalmanager to simple object (singleton)
+
+    - calc minwidth by form factor
     */
 
 import React, {useRef, useEffect, useMemo, useContext} from 'react'
@@ -116,7 +118,7 @@ const InfiniteGridScroller = (props) => {
         <Viewport
 
             orientation = { orientation } 
-            cellWidth = { cellHeight }
+            cellWidth = { cellWidth }
             cellHeight = { cellHeight }
             gap = { gap }
             padding = { padding }

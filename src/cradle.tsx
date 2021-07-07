@@ -17,7 +17,7 @@
 
     BUGS:
 
-    - FF Android nested layout
+*/
 
 /*
     Description

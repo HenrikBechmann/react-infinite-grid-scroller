@@ -215,6 +215,7 @@ const Viewport = ({
 
 // establish minimum width/height for the viewport -- approximately one item
 const calcMinViewportCrossLength = (orientation, cellWidth, cellHeight, padding) => {
+    // console.log('calcMinViewportCrossLength parms',orientation, cellWidth, cellHeight, padding,)
     let crosslength, cellLength
     if (orientation == 'vertical') {
         cellLength = cellWidth
