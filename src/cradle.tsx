@@ -17,7 +17,6 @@
 
     BUGS:
 
-    - referenceIndexCallback
     - FF Android nested layout
 
 /*
@@ -332,7 +331,7 @@ const Cradle = ({
     const [scrollManager,signalsManager,stateManager,contentManager,cradleManager,wingsManager,observersManager]:
     [ScrollManager,SignalsManager,StateManager,ContentManager,CradleManager,WingsManager,any] = useMemo(()=>{
         return [
-            new ScrollManager(commonPropsRef),
+            new ScrollManager(commonPropsRef,referenceIndexCallbackRef),
             new SignalsManager(commonPropsRef, signalsbaseline),
             new StateManager(commonPropsRef,cradleStateRef,setCradleState,isMounted),
             new ContentManager(commonPropsRef, cellObserverRef, callbacksRef, referenceIndexCallbackRef),

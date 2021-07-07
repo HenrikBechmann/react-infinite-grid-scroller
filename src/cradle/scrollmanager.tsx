@@ -7,15 +7,19 @@ const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 200
 
 export default class ScrollManager extends CradleManagement{
 
-    constructor(commonPropsRef) {
+    constructor(commonPropsRef, referenceIndexCallbackRef) {
 
         super(commonPropsRef)
+
+        this.referenceIndexCallbackRef = referenceIndexCallbackRef
 
     }
 
     scrollPositions = {current:0,previous:0}
 
     private _scrolltimerid = null
+
+    referenceIndexCallbackRef
 
     onScroll = () => {
 
@@ -51,18 +55,15 @@ export default class ScrollManager extends CradleManagement{
         let contentManager = this._managers.current.content
         let cradleManager = this._managers.current.cradle
 
-
         if (!this._viewportdata.isResizing) {
 
             if (cradleState == 'ready' || cradleState == 'repositioning') {
 
                 if (cradleState == 'ready') {
-                    let itemindex = contentManager.content.tailModel[0]?.props.index 
-                    // console.log('itemindex, tailModel, readyReferenceIndex', itemindex,
-                    //     contentManager.content.tailModel,cradleManager.referenceData.readyReferenceIndex)
+                    // let itemindex = contentManager.content.tailModel[0]?.props.index 
+                    // console.log('itemindex, readyReferenceIndex',itemindex,cradleManager.referenceData.readyReferenceIndex)
 
-                    // TODO: change back to the following
-                    // let itemindex = cradleManager.readyReferenceIndex
+                    let itemindex = cradleManager.referenceData.readyReferenceIndex
                     let spineVisiblePosOffset
                     let cradleElements = cradleManager.elements
 
@@ -87,8 +88,8 @@ export default class ScrollManager extends CradleManagement{
                 }
 
                 // TODO: re-instatiate the following
-        //         referenceIndexCallbackRef.current && 
-        //             referenceIndexCallbackRef.current(scrollReferenceDataRef.current.index,'scrolling', cradleState)
+                this.referenceIndexCallbackRef.current && 
+                    this.referenceIndexCallbackRef.current(cradleManager.referenceData.scrollReferenceIndex,'scrolling', cradleState)
 
             }
 
