@@ -158,7 +158,8 @@ class PortalManagerClass {
 }
 
 // export the portal manager
-export const PortalManager = React.createContext(new PortalManagerClass())
+export const portalManager = new PortalManagerClass()
+// export const PortalManager = React.createContext(portalManager)
 
 // Utility functions
 

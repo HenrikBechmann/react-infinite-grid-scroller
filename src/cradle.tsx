@@ -91,7 +91,7 @@ import { ResizeObserver } from '@juggle/resize-observer'
 
 import { ViewportContext } from './viewport'
 
-import { PortalManager } from './portalmanager'
+import { portalManager as portalManagerInstance } from './portalmanager'
 
 const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
 
@@ -188,7 +188,7 @@ const Cradle = ({
     // -----------------------------------------------------------------------
     // -----------------------------------[ utilites ]------------------------
 
-    const portalManager = useContext(PortalManager)
+    const portalManager = portalManagerInstance// useContext(PortalManager)
     let isMounted = useIsMounted()
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
 
@@ -491,13 +491,13 @@ const Cradle = ({
 
     // ------------------ current location -- first tail visible item -------------
 
-    const instanceIdCounterRef = useRef(0)
-    const instanceIdMapRef = useRef(new Map())
+    // const instanceIdCounterRef = useRef(0)
+    // const instanceIdMapRef = useRef(new Map())
 
     // -------------------------------[ cradle data ]-------------------------------------
 
     // item elements cache...
-    const itemElementsRef = useRef(new Map()) // items register their element
+    // const itemElementsRef = useRef(new Map()) // items register their element
 
     // ------------------------------[ cradle configuration ]---------------------------
 
@@ -845,201 +845,201 @@ const Cradle = ({
 
         }
 
-        isMounted() && updateCradleContent(movedentries,'cellObserver')
+        isMounted() && contentManager.updateCradleContent(movedentries,'cellObserver')
 
     },[])
 
     const previousScrollForwardRef = useRef(undefined)
 
-    const updateCradleContent = (entries, source = 'notifications') => {
+    // const updateCradleContent = (entries, source = 'notifications') => {
 
-        let viewportData = viewportDataRef.current
-        let viewportElement = viewportData.elementref.current
-        if (!viewportElement) {
-            console.error('ERROR: viewport element not set in updateCradleContent',
-                scrollerID, viewportData.elementref.current,viewportDataRef)
-            return
-        }
+    //     let viewportData = viewportDataRef.current
+    //     let viewportElement = viewportData.elementref.current
+    //     if (!viewportElement) {
+    //         console.error('ERROR: viewport element not set in updateCradleContent',
+    //             scrollerID, viewportData.elementref.current,viewportDataRef)
+    //         return
+    //     }
             
-        let cradleProps = cradlePropsRef.current
+    //     let cradleProps = cradlePropsRef.current
 
-        let scrollOffset
-        if (cradleProps.orientation == 'vertical') {
-            scrollOffset = viewportElement.scrollTop
-        } else {
-            scrollOffset = viewportElement.scrollLeft
-        }
-        if ( scrollOffset < 0) { // for Safari elastic bounce at top of scroll
+    //     let scrollOffset
+    //     if (cradleProps.orientation == 'vertical') {
+    //         scrollOffset = viewportElement.scrollTop
+    //     } else {
+    //         scrollOffset = viewportElement.scrollLeft
+    //     }
+    //     if ( scrollOffset < 0) { // for Safari elastic bounce at top of scroll
 
-            return
+    //         return
 
-        }
+    //     }
 
-        // ----------------------------[ 1. initialize ]----------------------------
+    //     // ----------------------------[ 1. initialize ]----------------------------
 
-        let scrollPositions = scrollManager.scrollPositions //scrollPositionsRef.current
+    //     let scrollPositions = scrollManager.scrollPositions //scrollPositionsRef.current
 
-        let scrollforward
-        if (scrollPositions.current == scrollPositions.previous) { // edge case 
+    //     let scrollforward
+    //     if (scrollPositions.current == scrollPositions.previous) { // edge case 
 
-            scrollforward = previousScrollForwardRef.current
+    //         scrollforward = previousScrollForwardRef.current
 
-        } else {
+    //     } else {
 
-            scrollforward = scrollPositions.current > scrollPositions.previous
-            previousScrollForwardRef.current = scrollforward
+    //         scrollforward = scrollPositions.current > scrollPositions.previous
+    //         previousScrollForwardRef.current = scrollforward
 
-        }
+    //     }
 
-        if (scrollforward === undefined) {
-            return // init call
-        }
+    //     if (scrollforward === undefined) {
+    //         return // init call
+    //     }
 
-        let cradleElements = cradleElementsRef.current
-        let cradleContent = contentManager.content
-        let cradleConfig = cradleConfigRef.current
+    //     let cradleElements = cradleElementsRef.current
+    //     let cradleContent = contentManager.content
+    //     let cradleConfig = cradleConfigRef.current
 
-        let itemElements = itemElementsRef.current
+    //     let itemElements = itemElementsRef.current
 
-        let modelcontentlist = cradleContent.cradleModel
+    //     let modelcontentlist = cradleContent.cradleModel
 
-        let cradleReferenceIndex = modelcontentlist[0].props.index
+    //     let cradleReferenceIndex = modelcontentlist[0].props.index
 
-        // --------------------[ 2. filter intersections list ]-----------------------
+    //     // --------------------[ 2. filter intersections list ]-----------------------
 
-        // filter out inapplicable intersection entries
-        // we're only interested in intersections proximal to the spine
-        let intersections = isolateRelevantIntersections({
+    //     // filter out inapplicable intersection entries
+    //     // we're only interested in intersections proximal to the spine
+    //     let intersections = isolateRelevantIntersections({
 
-            scrollforward,
-            intersections:entries,
-            cradleContent,
-            cellObserverThreshold:cradleConfig.cellObserverThreshold,
+    //         scrollforward,
+    //         intersections:entries,
+    //         cradleContent,
+    //         cellObserverThreshold:cradleConfig.cellObserverThreshold,
 
-        })
+    //     })
 
-        // --------------------------------[ 3. Calculate shifts ]-------------------------------
+    //     // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
-        let [cradleindex, 
-            cradleitemshift, 
-            spineReferenceIndex, 
-            referenceitemshift,
-            spinePosOffset, 
-            contentCount] = calcContentShifts({
+    //     let [cradleindex, 
+    //         cradleitemshift, 
+    //         spineReferenceIndex, 
+    //         referenceitemshift,
+    //         spinePosOffset, 
+    //         contentCount] = calcContentShifts({
 
-                cradleProps,
-                cradleConfig,
-                cradleElements,
-                cradleContent,
-                viewportElement,
-                itemElements,
-                intersections,
-                scrollforward,
+    //             cradleProps,
+    //             cradleConfig,
+    //             cradleElements,
+    //             cradleContent,
+    //             viewportElement,
+    //             itemElements,
+    //             intersections,
+    //             scrollforward,
 
-        })
+    //     })
 
-        if ((referenceitemshift == 0 && cradleitemshift == 0)) return
+    //     if ((referenceitemshift == 0 && cradleitemshift == 0)) return
 
-        // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
+    //     // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
-        let [headchangecount,tailchangecount] = calcHeadAndTailChanges({
+    //     let [headchangecount,tailchangecount] = calcHeadAndTailChanges({
 
-            cradleProps,
-            cradleConfig,
-            cradleContent,
-            cradleshiftcount:cradleitemshift,
-            scrollforward,
-            cradleReferenceIndex,
+    //         cradleProps,
+    //         cradleConfig,
+    //         cradleContent,
+    //         cradleshiftcount:cradleitemshift,
+    //         scrollforward,
+    //         cradleReferenceIndex,
 
-        })
+    //     })
 
-        // console.log('headchangecount,tailchangecount',headchangecount,tailchangecount)
+    //     // console.log('headchangecount,tailchangecount',headchangecount,tailchangecount)
 
-        // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
+    //     // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
-        // collect modified content
-        let localContentList, deletedContentItems = []
+    //     // collect modified content
+    //     let localContentList, deletedContentItems = []
 
-        // console.log('cradle UPDATECradleContent cradleReferenceIndex, cradleProps',cradleReferenceIndex, cradleProps)
+    //     // console.log('cradle UPDATECradleContent cradleReferenceIndex, cradleProps',cradleReferenceIndex, cradleProps)
 
-        if (headchangecount || tailchangecount) {
+    //     if (headchangecount || tailchangecount) {
 
-            [localContentList,deletedContentItems] = getUIContentList({
-                cradleProps,
-                cradleConfig,
-                contentCount,
-                localContentList:modelcontentlist,
-                headchangecount,
-                tailchangecount,
-                cradleReferenceIndex,
-                observer: cellObserverRef.current,
-                callbacks:callbacksRef.current,
-                instanceIdCounterRef,
-            })
-        } else {
+    //         [localContentList,deletedContentItems] = getUIContentList({
+    //             cradleProps,
+    //             cradleConfig,
+    //             contentCount,
+    //             localContentList:modelcontentlist,
+    //             headchangecount,
+    //             tailchangecount,
+    //             cradleReferenceIndex,
+    //             observer: cellObserverRef.current,
+    //             callbacks:callbacksRef.current,
+    //             instanceIdCounterRef,
+    //         })
+    //     } else {
 
-            localContentList = modelcontentlist
+    //         localContentList = modelcontentlist
 
-        }
+    //     }
 
-        deleteAndResetPortals(portalManager, scrollerID, deletedContentItems)
+    //     deleteAndResetPortals(portalManager, scrollerID, deletedContentItems)
 
-        // console.log('deletedContentItems from updateCradleContent',deletedContentItems)
+    //     // console.log('deletedContentItems from updateCradleContent',deletedContentItems)
 
-        // console.log('localContentList.length', localContentList.length)
+    //     // console.log('localContentList.length', localContentList.length)
 
-        // ----------------------------------[ 7. allocate cradle content ]--------------------------
+    //     // ----------------------------------[ 7. allocate cradle content ]--------------------------
 
-        let [headcontent, tailcontent] = allocateContentList(
-            {
-                contentlist:localContentList,
-                spineReferenceIndex,
-            }
-        )
+    //     let [headcontent, tailcontent] = allocateContentList(
+    //         {
+    //             contentlist:localContentList,
+    //             spineReferenceIndex,
+    //         }
+    //     )
 
-        // console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
+    //     // console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
 
-        cradleContent.cradleModel = localContentList
-        cradleContent.headView = cradleContent.headModel = headcontent
-        cradleContent.tailView = cradleContent.tailModel = tailcontent
+    //     cradleContent.cradleModel = localContentList
+    //     cradleContent.headView = cradleContent.headModel = headcontent
+    //     cradleContent.tailView = cradleContent.tailModel = tailcontent
 
-        // -------------------------------[ 8. set css changes ]-------------------------
+    //     // -------------------------------[ 8. set css changes ]-------------------------
 
-        if (spinePosOffset !== undefined) {
+    //     if (spinePosOffset !== undefined) {
             
-            let cradleElements = cradleElementsRef.current
+    //         let cradleElements = cradleElementsRef.current
 
-            if (cradleProps.orientation == 'vertical') {
+    //         if (cradleProps.orientation == 'vertical') {
 
-                cradleManager.blockScrollPos = viewportElement.scrollTop
-                cradleManager.blockScrollProperty = 'scrollTop'
-                cradleElements.spine.current.style.top = viewportElement.scrollTop + spinePosOffset + 'px'
-                cradleElements.spine.current.style.left = 'auto'
-                cradleElements.head.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
+    //             cradleManager.blockScrollPos = viewportElement.scrollTop
+    //             cradleManager.blockScrollProperty = 'scrollTop'
+    //             cradleElements.spine.current.style.top = viewportElement.scrollTop + spinePosOffset + 'px'
+    //             cradleElements.spine.current.style.left = 'auto'
+    //             cradleElements.head.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
 
-            } else {
+    //         } else {
 
-                cradleManager.blockScrollPos = viewportElement.scrollLeft
-                cradleManager.blockScrollProperty = 'scrollLeft'
-                cradleElements.spine.current.style.top = 'auto'
-                cradleElements.spine.current.style.left = viewportElement.scrollLeft + spinePosOffset + 'px'
-                cradleElements.head.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
+    //             cradleManager.blockScrollPos = viewportElement.scrollLeft
+    //             cradleManager.blockScrollProperty = 'scrollLeft'
+    //             cradleElements.spine.current.style.top = 'auto'
+    //             cradleElements.spine.current.style.left = viewportElement.scrollLeft + spinePosOffset + 'px'
+    //             cradleElements.head.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
 
-            }
+    //         }
 
-        }
+    //     }
 
-        cradleManager.referenceData.scrollReferenceIndex = spineReferenceIndex
-        cradleManager.referenceData.scrollSpineOffset = spinePosOffset
+    //     cradleManager.referenceData.scrollReferenceIndex = spineReferenceIndex
+    //     cradleManager.referenceData.scrollSpineOffset = spinePosOffset
 
-        cradleManager.referenceData.readyReferenceIndex = spineReferenceIndex
-        cradleManager.referenceData.readySpineOffset = spinePosOffset
+    //     cradleManager.referenceData.readyReferenceIndex = spineReferenceIndex
+    //     cradleManager.referenceData.readySpineOffset = spinePosOffset
 
-        setCradleState('updatecontent')
+    //     setCradleState('updatecontent')
 
-    }
+    // }
 
-    managementsetRef.current.cradleMaster.updateCradleContent = updateCradleContent
+    // managementsetRef.current.cradleMaster.updateCradleContent = updateCradleContent
     // End of IntersectionObserver support
 
     // ========================================================================================
@@ -1098,7 +1098,7 @@ const Cradle = ({
             localContentList,
             callbacks:callbacksRef.current,
             observer: cellObserverRef.current,
-            instanceIdCounterRef,
+            instanceIdCounterRef:contentManager.instanceIdCounterRef,
         })
 
         deleteAndResetPortals(portalManager, scrollerID, deleteditems)
@@ -1308,7 +1308,7 @@ const Cradle = ({
         let cradleContent = contentManager.content
 
         return getVisibleItemsList({
-            itemElementMap:itemElementsRef.current,
+            itemElementMap:contentManager.itemElements,
             viewportElement:viewportDataRef.current.elementref.current,
             cradleElements:cradleElementsRef.current, 
             // tailElement:cradlePropsRef.current.orientation,
@@ -1322,7 +1322,7 @@ const Cradle = ({
     },[])
 
     const getContentList = useCallback(() => {
-        let contentlist = Array.from(itemElementsRef.current)
+        let contentlist = Array.from(contentManager.itemElements)
 
         contentlist.sort((a,b)=>{
             return (a[0] < b[0])?-1:1
@@ -1361,11 +1361,11 @@ const Cradle = ({
 
         if (reportType == 'register') {
 
-            itemElementsRef.current.set(index,shellref)
+            contentManager.itemElements.set(index,shellref)
 
         } else if (reportType == 'unregister') {
 
-            itemElementsRef.current.delete(index)
+            contentManager.itemElements.delete(index)
 
         }
 

@@ -2,6 +2,20 @@
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
 import CradleManagement from './cradlemanagement'
+import { 
+    setCradleGridStyles, 
+    getUIContentList, 
+    calcHeadAndTailChanges,
+    calcContentShifts,
+    getVisibleItemsList, 
+    getContentListRequirements,
+    isolateRelevantIntersections,
+    allocateContentList,
+    deleteAndResetPortals,
+
+} from '../cradlefunctions'
+
+import { portalManager } from '../portalmanager'
 
 export default class ContentManager extends CradleManagement{
 
@@ -21,205 +35,205 @@ export default class ContentManager extends CradleManagement{
 
     }
 
+    instanceIdCounterRef = {
+       current:0
+    }
+    instanceIdMap = new Map()
+
+    previousScrollForward = undefined
+
+    itemElements = new Map()
+
     updateCradleContent = (entries, source = 'notifications') => {
 
-    //     // console.log('updateCradleContent source',scrollerID,source)
+        let viewportData = this._viewportdata
+        let cradleProps = this._cradlePropsRef.current
+        let scrollManager = this._managers.scroll
+        let cradleManager = this._managers.cradle
+        let stateManager = this._managers.state
 
-    //     let viewportData = viewportDataRef.current
-    //     let viewportElement = viewportData.elementref.current
-    //     if (!viewportElement) {
-    //         console.error('ERROR: viewport element not set in updateCradleContent',
-    //             scrollerID, viewportData.elementref.current,viewportDataRef)
-    //         return
-    //     }
+        let viewportElement = viewportData.elementref.current
+        if (!viewportElement) {
+            console.error('ERROR: viewport element not set in updateCradleContent',
+                cradleProps.scrollerID, viewportData.elementref.current,viewportData)
+            return
+        }
             
-    //     let cradleProps = cradlePropsRef.current
+        // let cradleProps = cradlePropsRef.current
 
-    //     let scrollOffset
-    //     if (cradleProps.orientation == 'vertical') {
-    //         scrollOffset = viewportElement.scrollTop
-    //     } else {
-    //         scrollOffset = viewportElement.scrollLeft
-    //     }
-    //     if ( scrollOffset < 0) { // for Safari elastic bounce at top of scroll
+        let scrollOffset
+        if (cradleProps.orientation == 'vertical') {
+            scrollOffset = viewportElement.scrollTop
+        } else {
+            scrollOffset = viewportElement.scrollLeft
+        }
+        if ( scrollOffset < 0) { // for Safari elastic bounce at top of scroll
 
-    //         return
+            return
 
-    //     }
+        }
 
-    //     // ----------------------------[ 1. initialize ]----------------------------
+        // ----------------------------[ 1. initialize ]----------------------------
 
-    //     let scrollPositions = scrollPositionsRef.current
+        let scrollPositions = scrollManager.scrollPositions //scrollPositionsRef.current
 
-    //     let scrollforward
-    //     if (scrollPositions.current == scrollPositions.previous) { // edge case 
+        let scrollforward
+        if (scrollPositions.current == scrollPositions.previous) { // edge case 
 
-    //         scrollforward = previousScrollForwardRef.current
+            scrollforward = this.previousScrollForward.current
 
-    //     } else {
+        } else {
 
-    //         scrollforward = scrollPositions.current > scrollPositions.previous
-    //         previousScrollForwardRef.current = scrollforward
+            scrollforward = scrollPositions.current > scrollPositions.previous
+            this.previousScrollForward = scrollforward
 
-    //     }
+        }
 
-    //     if (scrollforward === undefined) {
-    //         return // init call
-    //     }
+        if (scrollforward === undefined) {
+            return // init call
+        }
 
-    //     let cradleElements = cradleElementsRef.current
-    //     let cradleContent = contentManagerRef.current.content
-    //     let cradleConfig = cradleConfigRef.current
+        let cradleElements = cradleManager.elements
+        let cradleContent = this.content
+        let cradleConfig = this._cradleconfigRef.current
 
-    //     let itemElements = itemElementsRef.current
+        let itemElements = this.itemElements
 
-    //     let modelcontentlist = cradleContent.cradleModel
+        let modelcontentlist = cradleContent.cradleModel
 
-    //     let cradleReferenceIndex = modelcontentlist[0].props.index
+        let cradleReferenceIndex = modelcontentlist[0].props.index
 
-    //     // --------------------[ 2. filter intersections list ]-----------------------
+        // --------------------[ 2. filter intersections list ]-----------------------
 
-    //     // filter out inapplicable intersection entries
-    //     // we're only interested in intersections proximal to the spine
-    //     let intersections = isolateRelevantIntersections({
+        // filter out inapplicable intersection entries
+        // we're only interested in intersections proximal to the spine
+        let intersections = isolateRelevantIntersections({
 
-    //         scrollforward,
-    //         intersections:entries,
-    //         cradleContent,
-    //         cellObserverThreshold:cradleConfig.cellObserverThreshold,
+            scrollforward,
+            intersections:entries,
+            cradleContent,
+            cellObserverThreshold:cradleConfig.cellObserverThreshold,
 
-    //     })
+        })
 
-    //     // console.log('intersections', intersections)
+        // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
-    //     // --------------------------------[ 3. Calculate shifts ]-------------------------------
+        let [cradleindex, 
+            cradleitemshift, 
+            spineReferenceIndex, 
+            referenceitemshift,
+            spinePosOffset, 
+            contentCount] = calcContentShifts({
 
-    //     let [cradleindex, 
-    //         cradleitemshift, 
-    //         spineReferenceIndex, 
-    //         referenceitemshift,
-    //         spinePosOffset, 
-    //         contentCount] = calcContentShifts({
+                cradleProps,
+                cradleConfig,
+                cradleElements,
+                cradleContent,
+                viewportElement,
+                itemElements,
+                intersections,
+                scrollforward,
 
-    //             cradleProps,
-    //             cradleConfig,
-    //             cradleElements,
-    //             cradleContent,
-    //             viewportElement,
-    //             itemElements,
-    //             intersections,
-    //             scrollforward,
+        })
 
-    //     })
+        if ((referenceitemshift == 0 && cradleitemshift == 0)) return
 
-    //      // console.log('in updateCradleContent: cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spinePosOffset, contentCount',
-    //      //     cradleindex, cradleitemshift, spineReferenceIndex, referenceitemshift, spinePosOffset, contentCount)
+        // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
-    //     if ((referenceitemshift == 0 && cradleitemshift == 0)) return
+        let [headchangecount,tailchangecount] = calcHeadAndTailChanges({
 
-    //     // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
+            cradleProps,
+            cradleConfig,
+            cradleContent,
+            cradleshiftcount:cradleitemshift,
+            scrollforward,
+            cradleReferenceIndex,
 
-    //     let [headchangecount,tailchangecount] = calcHeadAndTailChanges({
+        })
 
-    //         cradleProps,
-    //         cradleConfig,
-    //         cradleContent,
-    //         cradleshiftcount:cradleitemshift,
-    //         scrollforward,
-    //         cradleReferenceIndex,
+        // console.log('headchangecount,tailchangecount',headchangecount,tailchangecount)
 
-    //     })
+        // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
-    //     // console.log('headchangecount,tailchangecount',headchangecount,tailchangecount)
+        // collect modified content
+        let localContentList, deletedContentItems = []
 
-    //     // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
+        // console.log('cradle UPDATECradleContent cradleReferenceIndex, cradleProps',cradleReferenceIndex, cradleProps)
 
-    //     // collect modified content
-    //     let localContentList, deletedContentItems = []
+        if (headchangecount || tailchangecount) {
 
-    //     // console.log('cradle UPDATECradleContent cradleReferenceIndex, cradleProps',cradleReferenceIndex, cradleProps)
+            [localContentList,deletedContentItems] = getUIContentList({
+                cradleProps,
+                cradleConfig,
+                contentCount,
+                localContentList:modelcontentlist,
+                headchangecount,
+                tailchangecount,
+                cradleReferenceIndex,
+                observer: cellObserverRef.current,
+                callbacks:callbacksRef.current,
+                instanceIdCounterRef:this.instanceIdCounterRef,
+            })
+        } else {
 
-    //     if (headchangecount || tailchangecount) {
+            localContentList = modelcontentlist
 
-    //         [localContentList,deletedContentItems] = getUIContentList({
-    //             cradleProps,
-    //             cradleConfig,
-    //             contentCount,
-    //             localContentList:modelcontentlist,
-    //             headchangecount,
-    //             tailchangecount,
-    //             cradleReferenceIndex,
-    //             observer: cellObserverRef.current,
-    //             callbacks:callbacksRef.current,
-    //             instanceIdCounterRef,
-    //         })
-    //     } else {
+        }
 
-    //         localContentList = modelcontentlist
+        deleteAndResetPortals(portalManager, cradleProps.scrollerID, deletedContentItems)
 
-    //     }
+        // console.log('deletedContentItems from updateCradleContent',deletedContentItems)
 
-    //     deleteAndResetPortals(portalManager, scrollerID, deletedContentItems)
+        // console.log('localContentList.length', localContentList.length)
 
-    //     // console.log('deletedContentItems from updateCradleContent',deletedContentItems)
+        // ----------------------------------[ 7. allocate cradle content ]--------------------------
 
-    //     // console.log('localContentList.length', localContentList.length)
+        let [headcontent, tailcontent] = allocateContentList(
+            {
+                contentlist:localContentList,
+                spineReferenceIndex,
+            }
+        )
 
-    //     // ----------------------------------[ 7. allocate cradle content ]--------------------------
+        // console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
 
-    //     let [headcontent, tailcontent] = allocateContentList(
-    //         {
-    //             contentlist:localContentList,
-    //             spineReferenceIndex,
-    //         }
-    //     )
+        cradleContent.cradleModel = localContentList
+        cradleContent.headView = cradleContent.headModel = headcontent
+        cradleContent.tailView = cradleContent.tailModel = tailcontent
 
-    //     // console.log('headcontent.length, tailcontent.length',headcontent.length, tailcontent.length)
+        // -------------------------------[ 8. set css changes ]-------------------------
 
-    //     cradleContent.cradleModel = localContentList
-    //     cradleContent.headView = cradleContent.headModel = headcontent
-    //     cradleContent.tailView = cradleContent.tailModel = tailcontent
-
-    //     // -------------------------------[ 8. set css changes ]-------------------------
-
-    //     if (spinePosOffset !== undefined) {
+        if (spinePosOffset !== undefined) {
             
-    //         let cradleElements = cradleElementsRef.current
+            // let cradleElements = cradleElementsRef.current
 
-    //         const scrollManager = managersRef.current.scrollRef.current
-    //         if (cradleProps.orientation == 'vertical') {
+            if (cradleProps.orientation == 'vertical') {
 
-    //             scrollManager.blockScrollPos = viewportElement.scrollTop
-    //             scrollManager.blockScrollProperty = 'scrollTop'
-    //             cradleElements.spine.current.style.top = viewportElement.scrollTop + spinePosOffset + 'px'
-    //             cradleElements.spine.current.style.left = 'auto'
-    //             cradleElements.head.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
+                cradleManager.blockScrollPos = viewportElement.scrollTop
+                cradleManager.blockScrollProperty = 'scrollTop'
+                cradleElements.spine.current.style.top = viewportElement.scrollTop + spinePosOffset + 'px'
+                cradleElements.spine.current.style.left = 'auto'
+                cradleElements.head.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
 
-    //         } else {
+            } else {
 
-    //             scrollManager.blockScrollPos = viewportElement.scrollLeft
-    //             scrollManager.blockScrollProperty = 'scrollLeft'
-    //             cradleElements.spine.current.style.top = 'auto'
-    //             cradleElements.spine.current.style.left = viewportElement.scrollLeft + spinePosOffset + 'px'
-    //             cradleElements.head.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
+                cradleManager.blockScrollPos = viewportElement.scrollLeft
+                cradleManager.blockScrollProperty = 'scrollLeft'
+                cradleElements.spine.current.style.top = 'auto'
+                cradleElements.spine.current.style.left = viewportElement.scrollLeft + spinePosOffset + 'px'
+                cradleElements.head.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
 
-    //         }
+            }
 
-    //     }
+        }
 
-    //     cradleReferenceDataRef.current = // **new July 3**
-    //     scrollReferenceDataRef.current = {
-    //         index:spineReferenceIndex,
-    //         spineVisiblePosOffset:spinePosOffset
-    //     }
+        cradleManager.referenceData.scrollReferenceIndex = spineReferenceIndex
+        cradleManager.referenceData.scrollSpineOffset = spinePosOffset
 
-    //     cradleManager.referenceData.scrollReferenceIndex = spineReferenceIndex
-    //     cradleManager.referenceData.scrollSpineOffset = spinePosOffset
+        cradleManager.referenceData.readyReferenceIndex = spineReferenceIndex
+        cradleManager.referenceData.readySpineOffset = spinePosOffset
 
-    //     cradleManager.referenceData.readyReferenceIndex = spineReferenceIndex
-    //     cradleManager.referenceData.readySpineOffset = spinePosOffset
-
-    //     setCradleState('updatecontent')
+        stateManager.setCradleState('updatecontent')
 
     }
 

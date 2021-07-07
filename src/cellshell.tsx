@@ -13,7 +13,7 @@ import { OutPortal } from 'react-reverse-portal'
 
 import Placeholder from './placeholder'
 
-import { PortalManager } from './portalmanager'
+import { portalManager as portalManagerInstance } from './portalmanager'
 
 const CellShell = ({
     orientation, 
@@ -32,7 +32,7 @@ const CellShell = ({
     
     // console.log('running cellshell with scrollerID',scrollerID)
 
-    const portalManager = useContext(PortalManager)
+    const portalManager = portalManagerInstance // useContext(PortalManager)
     const [error, saveError] = useState(null)
     const [styles,saveStyles] = useState({
         overflow:'hidden',
