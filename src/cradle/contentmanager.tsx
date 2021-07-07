@@ -19,10 +19,11 @@ import { portalManager } from '../portalmanager'
 
 export default class ContentManager extends CradleManagement{
 
-   constructor(commonPropsRef) {
+   constructor(commonPropsRef, cellObserverRef, callbacksRef) {
 
       super(commonPropsRef)
-
+      this.cellObserverRef = cellObserverRef
+      this.callbacksRef = callbacksRef
    }
 
    content = {
@@ -43,6 +44,10 @@ export default class ContentManager extends CradleManagement{
     previousScrollForward = undefined
 
     itemElements = new Map()
+
+    cellObserverRef
+
+    callbacksRef
 
     updateCradleContent = (entries, source = 'notifications') => {
 
@@ -170,8 +175,8 @@ export default class ContentManager extends CradleManagement{
                 headchangecount,
                 tailchangecount,
                 cradleReferenceIndex,
-                observer: cellObserverRef.current,
-                callbacks:callbacksRef.current,
+                observer: this.cellObserverRef.current,
+                callbacks:this.callbacksRef.current,
                 instanceIdCounterRef:this.instanceIdCounterRef,
             })
         } else {
