@@ -19,11 +19,14 @@ import { portalManager } from '../portalmanager'
 
 export default class ContentManager extends CradleManagement{
 
-   constructor(commonPropsRef, cellObserverRef, callbacksRef) {
+   constructor(commonPropsRef, cellObserverRef, callbacksRef, referenceIndexCallbackRef) {
 
       super(commonPropsRef)
       this.cellObserverRef = cellObserverRef
       this.callbacksRef = callbacksRef
+      this.referenceIndexCallbackRef = referenceIndexCallbackRef
+
+      // console.log('ContentManager props',commonPropsRef, cellObserverRef, callbacksRef, referenceIndexCallbackRef)
    }
 
    content = {
@@ -49,13 +52,15 @@ export default class ContentManager extends CradleManagement{
 
     callbacksRef
 
+    referenceIndexCallbackRef
+
     updateCradleContent = (entries, source = 'notifications') => {
 
         let viewportData = this._viewportdata
         let cradleProps = this._cradlePropsRef.current
-        let scrollManager = this._managers.scroll
-        let cradleManager = this._managers.cradle
-        let stateManager = this._managers.state
+        let scrollManager = this._managers.current.scroll
+        let cradleManager = this._managers.current.cradle
+        let stateManager = this._managers.current.state
 
         let viewportElement = viewportData.elementref.current
         if (!viewportElement) {
@@ -85,7 +90,7 @@ export default class ContentManager extends CradleManagement{
         let scrollforward
         if (scrollPositions.current == scrollPositions.previous) { // edge case 
 
-            scrollforward = this.previousScrollForward.current
+            scrollforward = this.previousScrollForward
 
         } else {
 
@@ -216,17 +221,17 @@ export default class ContentManager extends CradleManagement{
 
                 cradleManager.blockScrollPos = viewportElement.scrollTop
                 cradleManager.blockScrollProperty = 'scrollTop'
-                cradleElements.spine.current.style.top = viewportElement.scrollTop + spinePosOffset + 'px'
-                cradleElements.spine.current.style.left = 'auto'
-                cradleElements.head.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
+                cradleElements.spineRef.current.style.top = viewportElement.scrollTop + spinePosOffset + 'px'
+                cradleElements.spineRef.current.style.left = 'auto'
+                cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
 
             } else {
 
                 cradleManager.blockScrollPos = viewportElement.scrollLeft
                 cradleManager.blockScrollProperty = 'scrollLeft'
-                cradleElements.spine.current.style.top = 'auto'
-                cradleElements.spine.current.style.left = viewportElement.scrollLeft + spinePosOffset + 'px'
-                cradleElements.head.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
+                cradleElements.spineRef.current.style.top = 'auto'
+                cradleElements.spineRef.current.style.left = viewportElement.scrollLeft + spinePosOffset + 'px'
+                cradleElements.headRef.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
 
             }
 
@@ -243,129 +248,126 @@ export default class ContentManager extends CradleManagement{
     }
 
     // reset cradle, including allocation between head and tail parts of the cradle
-   setCradleContent = (cradleState, referenceIndexData) => { 
+    setCradleContent = (cradleState/*, referenceIndexData*/) => { 
+
+        let viewportData = this._viewportdata
+        let cradleProps = this._cradlePropsRef.current
+        let cradleConfig = this._cradleconfigRef.current
+        let scrollManager = this._managers.current.scroll
+        let cradleManager = this._managers.current.cradle
+        let stateManager = this._managers.current.state
+
+        // console.log('cradleManager in setCradleContent',this._managers,cradleManager)
+
+        let viewportElement = viewportData.elementref.current
+
+        // console.log('setCradleContent start: cradleState, referenceIndexData',cradleState, referenceIndexData)
 
         // let cradleProps = cradlePropsRef.current
-        // let { index: visibletargetindexoffset, 
-        //     spineVisiblePosOffset: visibletargetscrolloffset } = referenceIndexData
 
-        // let {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
+        let visibletargetindexoffset = cradleManager.referenceData.readyReferenceIndex
+        let visibletargetscrolloffset = cradleManager.referenceData.readySpineOffset
+
+        let {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
 
         // let cradleConfig = cradleConfigRef.current
-        // let { cradleRowcount,
-        //     crosscount,
-        //     viewportRowcount } = cradleConfig
+        let { cradleRowcount,
+            crosscount,
+            viewportRowcount } = cradleConfig
 
-        // if (cradleState == 'reposition') {
+        if (cradleState == 'reposition') {
 
-        //     visibletargetscrolloffset = (visibletargetindexoffset == 0)?padding:gap
+            visibletargetscrolloffset = (visibletargetindexoffset == 0)?padding:gap
 
-        // }
+        }
 
-        // let localContentList = []
-        // let cradleContent = contentManagerRef.current.content
-        // // cradleContent.portalData.clear()
+        let localContentList = []
+        let cradleContent = this.content
 
-        // let {cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spinePosOffset, spineAdjustment} = 
-        //     getContentListRequirements({
-        //         cradleProps,
-        //         cradleConfig,
-        //         visibletargetindexoffset,
-        //         targetViewportOffset:visibletargetscrolloffset,
-        //         viewportElement:viewportDataRef.current.elementref.current
-        //     })
+        let {cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spinePosOffset, spineAdjustment} = 
+            getContentListRequirements({
+                cradleProps,
+                cradleConfig,
+                visibletargetindexoffset,
+                targetViewportOffset:visibletargetscrolloffset,
+                viewportElement:viewportData.elementref.current
+            })
 
-        // // console.log('setCradleContent getContentListRequirements: cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spinePosOffset, spineAdjustment',
-        // //     cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spinePosOffset, spineAdjustment)
+        // returns content constrained by cradleRowcount
+        let [childlist,deleteditems] = getUIContentList({
 
-        // // console.log('cradle SETCradleContent cradleProps',cradleProps)
+            cradleProps,
+            cradleConfig,
+            contentCount,
+            cradleReferenceIndex,
+            headchangecount:0,
+            tailchangecount:contentCount,
+            localContentList,
+            callbacks:this.callbacksRef.current,
+            observer: this.cellObserverRef.current,
+            instanceIdCounterRef:this.instanceIdCounterRef,
+        })
 
-        // // returns content constrained by cradleRowcount
-        // let [childlist,deleteditems] = getUIContentList({
+        deleteAndResetPortals(portalManager, cradleProps.scrollerID, deleteditems)
 
-        //     cradleProps,
-        //     cradleConfig,
-        //     contentCount,
-        //     cradleReferenceIndex,
-        //     headchangecount:0,
-        //     tailchangecount:contentCount,
-        //     localContentList,
-        //     callbacks:callbacksRef.current,
-        //     observer: cellObserverRef.current,
-        //     instanceIdCounterRef,
-        // })
+        let [headcontentlist, tailcontentlist] = allocateContentList({
 
-        // deleteAndResetPortals(portalManager, scrollerID, deleteditems)
-
-        // // console.log('contentlist, deleteditems from setCradleContent',childlist,deleteditems)
-
-        // // console.log('childlist.length, contentCount, rows from setContent', childlist.length, contentCount, Math.ceil(contentCount/crosscount))
-
-        // let [headcontentlist, tailcontentlist] = allocateContentList({
-
-        //     contentlist:childlist,
-        //     spineReferenceIndex:referenceoffset,
+            contentlist:childlist,
+            spineReferenceIndex:referenceoffset,
     
-        // })
+        })
 
-        // // console.log('headcontentlist.length, tailcontentlist.length',headcontentlist.length, tailcontentlist.length)
+        if (headcontentlist.length == 0) {
+            spinePosOffset = padding
+        }
 
-        // if (headcontentlist.length == 0) {
-        //     spinePosOffset = padding
-        // }
+        cradleContent.cradleModel = childlist
+        cradleContent.headModel = headcontentlist
+        cradleContent.tailModel = tailcontentlist
 
-        // cradleContent.cradleModel = childlist
-        // cradleContent.headModel = headcontentlist
-        // cradleContent.tailModel = tailcontentlist
+        cradleManager.referenceData.scrollReferenceIndex = referenceoffset
+        cradleManager.referenceData.scrollSpineOffset = spinePosOffset
 
-        // scrollReferenceDataRef.current = 
-        // cradleReferenceDataRef.current = {
+        cradleManager.referenceData.readyReferenceIndex = referenceoffset
+        cradleManager.referenceData.readySpineOffset = spinePosOffset
 
-        //     index: referenceoffset,
-        //     spineVisiblePosOffset:spinePosOffset,
+        // console.log('setting referenceindexdata in setCradleContent',cradleReferenceDataRef.current)
 
-        // }
+        if (this.referenceIndexCallbackRef.current) {
 
-        // cradleManager.referenceData.scrollReferenceIndex = referenceoffset
-        // cradleManager.referenceData.scrollSpineOffset = spinePosOffset
+            let cstate = cradleState
+            if (cstate == 'setreload') cstate = 'reload'
+            this.referenceIndexCallbackRef.current(
 
-        // cradleManager.referenceData.readyReferenceIndex = referenceoffset
-        // cradleManager.referenceData.readySpineOffset = spinePosOffset
+                cradleManager.referenceData.readyReferenceIndex,'setCradleContent', cstate)
+        
+        }
 
-        // // console.log('setting referenceindexdata in setCradleContent',cradleReferenceDataRef.current)
+        let cradleElements = cradleManager.elements //cradleElementsRef.current
 
-        // if (referenceIndexCallbackRef.current) {
 
-        //     let cstate = cradleState
-        //     if (cstate == 'setreload') cstate = 'reload'
-        //     referenceIndexCallbackRef.current(
-        //         cradleReferenceDataRef.current.index, 'setCradleContent', cstate)
-
-        // }
-
-        // let cradleElements = cradleElementsRef.current
 
         // const scrollManager = managersRef.current.scrollRef.current
 
-        // scrollManager.blockScrollPos = scrollblockOffset - spinePosOffset
-        // if (orientation == 'vertical') {
+        cradleManager.blockScrollPos = scrollblockOffset - spinePosOffset
+        if (orientation == 'vertical') {
 
-        //     scrollManager.blockScrollProperty = 'scrollTop'
+            cradleManager.blockScrollProperty = 'scrollTop'
 
-        //     cradleElements.spine.current.style.top = (scrollblockOffset + spineAdjustment) + 'px'
-        //     cradleElements.spine.current.style.left = 'auto'
-        //     cradleElements.head.current.style.paddingBottom = headcontentlist.length?cradleProps.gap + 'px':0
+            cradleElements.spineRef.current.style.top = (scrollblockOffset + spineAdjustment) + 'px'
+            cradleElements.spineRef.current.style.left = 'auto'
+            cradleElements.headRef.current.style.paddingBottom = headcontentlist.length?cradleProps.gap + 'px':0
 
-        // } else { // orientation = 'horizontal'
+        } else { // orientation = 'horizontal'
 
-        //     scrollManager.blockScrollProperty = 'scrollLeft'
+            cradleManager.blockScrollProperty = 'scrollLeft'
 
-        //     cradleElements.spine.current.style.top = 'auto'
-        //     cradleElements.spine.current.style.left = (scrollblockOffset + spineAdjustment) + 'px'
-        //     cradleElements.head.current.style.paddingRight = headcontentlist.length?cradleProps.gap + 'px':0
+            cradleElements.spineRef.current.style.top = 'auto'
+            cradleElements.spineRef.current.style.left = (scrollblockOffset + spineAdjustment) + 'px'
+            cradleElements.headRef.current.style.paddingRight = headcontentlist.length?cradleProps.gap + 'px':0
 
-        // }
+        }
 
-   }
+    }
 
 }

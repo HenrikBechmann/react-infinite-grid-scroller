@@ -109,7 +109,8 @@ export default class ScrollManager extends CradleManagement{
         let cradleManager = this._managers.current.cradle
         let cradleProps = this._cradlePropsRef.current
         let viewportData = this._viewportdata
-        let cradleMaster = this._managers.current.cradleMaster
+        // let cradleMaster = this._managers.current.cradleMaster
+        let contentManager = this._managers.current.content
 
         if (!stateManager.isMounted()) return
 
@@ -164,7 +165,7 @@ export default class ScrollManager extends CradleManagement{
             default: {
 
                 // TODO: cradleMaster is only transitory!
-                cradleMaster.updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
+                contentManager.updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
 
 
             }

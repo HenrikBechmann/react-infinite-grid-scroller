@@ -23,8 +23,8 @@ export const getVisibleItemsList = ({
 
     }) => {
 
-    let headElement = cradleElements.head.current
-    let spineElement = cradleElements.spine.current
+    let headElement = cradleElements.headRef.current
+    let spineElement = cradleElements.spineRef.current
     let {orientation} = cradleProps
     let headlist = cradleContent.headView
 
@@ -610,9 +610,9 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         padding,
         runwaycount } = cradleProps
 
-    let spineElement = cradleElements.spine.current
-    let headElement = cradleElements.head.current
-    let tailElement = cradleElements.tail.current
+    let spineElement = cradleElements.spineRef.current
+    let headElement = cradleElements.headRef.current
+    let tailElement = cradleElements.tailRef.current
 
     let cradlecontentlist = cradleContent.cradleModel
     let headcontentlist = cradleContent.headModel
