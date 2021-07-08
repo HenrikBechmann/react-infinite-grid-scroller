@@ -105,12 +105,13 @@ import ContentManager from './cradle/contentmanager'
 import CradleManager from './cradle/cradlemanager'
 import WingsManager from './cradle/wingsmanager'
 import ServiceManager from './cradle/servicemanager'
+import StylesManager from './cradle/stylesmanager'
 
-import { 
+// import { 
 
-    setCradleGridStyles, 
+//     setCradleGridStyles, 
 
-} from './cradlefunctions'
+// } from './cradlefunctions'
 
 import ScrollTracker from './scrolltracker'
 
@@ -325,8 +326,8 @@ const Cradle = ({
         setElementData:setItemElementData
     })
 
-    const [scrollManager,signalsManager,stateManager,contentManager,cradleManager,wingsManager,serviceManager,observersManager]:
-    [ScrollManager,SignalsManager,StateManager,ContentManager,CradleManager,WingsManager,ServiceManager,any] = useMemo(()=>{
+    const [scrollManager,signalsManager,stateManager,contentManager,cradleManager,wingsManager,serviceManager,stylesManager,observersManager]:
+    [ScrollManager,SignalsManager,StateManager,ContentManager,CradleManager,WingsManager,ServiceManager,StylesManager,any] = useMemo(()=>{
         return [
             new ScrollManager(commonPropsRef),
             new SignalsManager(commonPropsRef, signalsbaseline),
@@ -335,6 +336,7 @@ const Cradle = ({
             new CradleManager(commonPropsRef, cradleElementsRef.current),
             new WingsManager(commonPropsRef),
             new ServiceManager(commonPropsRef,serviceCallsRef),
+            new StylesManager(commonPropsRef),
             {}
         ]
     },[])
@@ -349,6 +351,7 @@ const Cradle = ({
         wings:wingsManager, 
         service:serviceManager,
         observers:observersManager,
+        styles:stylesManager,
     })
 
     managersRef.current = managementsetRef.current
@@ -622,7 +625,7 @@ const Cradle = ({
         // merge base style and revisions (by observer)
         let headCradleStyles:React.CSSProperties = {...cradleHeadStyle}
         let tailCradleStyles:React.CSSProperties = {...cradleTailStyle}
-        let [headstyles, tailstyles] = setCradleGridStyles({
+        let [headstyles, tailstyles] = stylesManager.setCradleGridStyles({
 
             orientation, 
             headCradleStyles, 

@@ -11,7 +11,7 @@ import {
     allocateContentList,
     deleteAndResetPortals,
 
-} from '../cradlefunctions'
+} from './contentfunctions'
 
 import { portalManager } from '../portalmanager'
 
