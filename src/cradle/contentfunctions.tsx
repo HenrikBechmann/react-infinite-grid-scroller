@@ -113,11 +113,6 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         })
     }
 
-    // debugger
-
-    // console.log('cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spinePosOffset, spineAdjustment',
-    //     cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spinePosOffset, spineAdjustment)
-
     return {cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spinePosOffset, spineAdjustment} // summarize requirements message
 
 }
@@ -144,24 +139,15 @@ const adjustSpineOffsetForMaxRefindex = ({
 
 }) => {
 
-    // debugger
-
     let activelistitemcount = cradleReferenceIndex + contentCount
     let activelistrowcount = Math.ceil(activelistitemcount/crosscount)
     let listRowcount = Math.ceil(listsize/crosscount)
-
-    // memos
-    // let originalcradleoffset = cradleReferenceIndex
-    // let originalreferenceoffset = referenceoffset
-    // let originalspineOffset = spinePosOffset
 
     if (activelistrowcount > listRowcount) {
         let diffrows = activelistrowcount - listRowcount
         let diff = diffrows * crosscount
         cradleReferenceIndex -= diff
         activelistrowcount -= diffrows
-        // console.log('adjusting cradleReferemcicradlereference original, adjustment, rows, items, result', 
-        //     originalcradleoffset, diff, diffrows, cradleReferenceIndex)
     }
 
     // let testlistrowcount = Math.ceil((cradleReferenceIndex + contentCount + 1)/crosscount)
@@ -170,8 +156,6 @@ const adjustSpineOffsetForMaxRefindex = ({
         if (diff) {
             contentCount -= (crosscount - diff)
         }
-        // console.log('final row adjustment through activelistrowcount, listRowcount, listsize, contentCount, crosscount, diff',
-        // activelistrowcount, listRowcount, listsize, contentCount, crosscount, diff)
     }
 
     let maxrefindexrowoffset = Math.ceil(listsize/crosscount) - viewportrows + 1
@@ -180,7 +164,6 @@ const adjustSpineOffsetForMaxRefindex = ({
 
         let diff = targetrowoffset - maxrefindexrowoffset
         targetrowoffset -= diff // maxrefindexrowoffset
-        // cradleReferenceIndex -= (diff * crosscount)
 
         referenceoffset = (targetrowoffset * crosscount)
 
@@ -188,12 +171,7 @@ const adjustSpineOffsetForMaxRefindex = ({
 
         spinePosOffset = viewportlength - ((viewportrows - 1) * cellLength) - gap
 
-        // console.log('targetrow adjustment: targetrowoffset, cradleReferenceIndex, referenceoffset, scrollblockOffset, spinePosOffset',
-        //     targetrowoffset, cradleReferenceIndex, referenceoffset, scrollblockOffset, spinePosOffset)
-
     }
-
-    // debugger
 
     return [cradleReferenceIndex, contentCount, referenceoffset, scrollblockOffset, spinePosOffset]
 
@@ -820,8 +798,6 @@ export const getUICellShellList = ({
     bottomconstraint = (cradleReferenceIndex - headchangecount) + (contentCount + 1) // TODO: validate "+1"
 
     let deletedtailitems = [], deletedheaditems = []
-    // console.log('topconstraint, bottomconstraint, cradleReferenceIndex, contentCount, headchangecount, tailchangecount', 
-    //     topconstraint, bottomconstraint, cradleReferenceIndex, contentCount, headchangecount, tailchangecount)
 
     if (headchangecount >= 0) {
 
@@ -883,10 +859,8 @@ export const getUICellShellList = ({
 
     let componentList = headContentlist.concat(localContentlist,tailContentlist)
 
-    // console.log('components of getcontentlist: returnContentList, headContentlist, localContentlist, tailContentlist', 
-    //     returnContentlist, headContentlist, localContentlist, tailContentlist)
-
     return [componentList,deleteditems]
+
 }
 
 // butterfly model. Leading (head) all or partially hidden; tail, visible plus following hidden
