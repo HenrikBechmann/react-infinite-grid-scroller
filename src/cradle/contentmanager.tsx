@@ -3,7 +3,7 @@
 
 import CradleManagement from './cradlemanagement'
 import { 
-    getUIContentList, 
+    getUICellShellList, 
     calcHeadAndTailChanges,
     calcContentShifts,
     getContentListRequirements,
@@ -167,7 +167,7 @@ export default class ContentManager extends CradleManagement{
 
         if (headchangecount || tailchangecount) {
 
-            [localContentList,deletedContentItems] = getUIContentList({
+            [localContentList,deletedContentItems] = getUICellShellList({
                 cradleProps,
                 cradleConfig,
                 contentCount,
@@ -290,7 +290,7 @@ export default class ContentManager extends CradleManagement{
             })
 
         // returns content constrained by cradleRowcount
-        let [childlist,deleteditems] = getUIContentList({
+        let [childlist,deleteditems] = getUICellShellList({
 
             cradleProps,
             cradleConfig,

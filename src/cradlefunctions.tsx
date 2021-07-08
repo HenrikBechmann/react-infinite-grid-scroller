@@ -676,7 +676,7 @@ export const calcHeadAndTailChanges = ({
 
     let pendingcontentoffset // lookahead to new cradleReferenceIndex
 
-    let headchangecount, tailchangecount // the output instructions for getUIContentList
+    let headchangecount, tailchangecount // the output instructions for getUICellShellList
 
     // anticipaate add to one end, clip from the other        
     let additemcount = 0
@@ -792,7 +792,7 @@ export const calcHeadAndTailChanges = ({
 // update content
 // adds itemshells at end of contentlist according to headindexcount and tailindescount,
 // or if indexcount values are <0 removes them.
-export const getUIContentList = ({ 
+export const getUICellShellList = ({ 
 
         cradleProps,
         cradleConfig,
@@ -812,7 +812,7 @@ export const getUIContentList = ({
     let localContentlist = [...contentlist]
     let tailindexoffset = cradleReferenceIndex + contentlist.length
     // let headindexoffset = cradleReferenceIndex
-    let returnContentlist
+    // let returnContentlist
 
     let headContentlist = []
 
@@ -881,12 +881,12 @@ export const getUIContentList = ({
 
     let deleteditems = deletedheaditems.concat(deletedtailitems)
 
-    returnContentlist = headContentlist.concat(localContentlist,tailContentlist)
+    let componentList = headContentlist.concat(localContentlist,tailContentlist)
 
     // console.log('components of getcontentlist: returnContentList, headContentlist, localContentlist, tailContentlist', 
     //     returnContentlist, headContentlist, localContentlist, tailContentlist)
 
-    return [returnContentlist,deleteditems]
+    return [componentList,deleteditems]
 }
 
 // butterfly model. Leading (head) all or partially hidden; tail, visible plus following hidden
