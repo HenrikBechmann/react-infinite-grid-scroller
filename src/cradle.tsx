@@ -312,7 +312,7 @@ const Cradle = ({
     )
     const setItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
 
-        const [index, shellref, portalDataRef] = itemElementData
+        const [index, shellref] = itemElementData
 
         if (reportType == 'register') {
 
@@ -329,7 +329,7 @@ const Cradle = ({
     const contentCallbacksRef = useRef({
         setElementData:setItemElementData
     })
-    
+
     const [scrollManager,signalsManager,stateManager,contentManager,cradleManager,wingsManager,serviceManager,observersManager]:
     [ScrollManager,SignalsManager,StateManager,ContentManager,CradleManager,WingsManager,ServiceManager,any] = useMemo(()=>{
         return [
