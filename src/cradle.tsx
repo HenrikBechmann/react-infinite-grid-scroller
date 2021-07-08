@@ -376,19 +376,19 @@ const Cradle = ({
     useEffect(()=>{
 
         if (functions?.hasOwnProperty('scrollToItem')) {
-            functions.scrollToItem = scrollToItem
+            functions.scrollToItem = serviceManager.scrollToItem
         } 
 
         if (functions?.hasOwnProperty('getVisibleList')) {
-            functions.getVisibleList = getVisibleList
+            functions.getVisibleList = serviceManager.getVisibleList
         } 
 
         if (functions?.hasOwnProperty('getContentList')) {
-            functions.getContentList = getContentList
+            functions.getContentList = serviceManager.getContentList
         } 
 
         if (functions?.hasOwnProperty('reload')) {
-            functions.reload = reload
+            functions.reload = serviceManager.reload
         }
 
         referenceIndexCallbackRef.current = functions?.referenceIndexCallback
@@ -423,8 +423,6 @@ const Cradle = ({
             cradleManager.cellReferenceData.nextReferenceIndex = cradleManager.cellReferenceData.readyReferenceIndex
             cradleManager.cellReferenceData.nextSpineOffset = cradleManager.cellReferenceData.readySpineOffset
 
-            // console.log('calling resizing with', nextReferenceDataRef.current)
-
             let signals = signalsManager.signals
             signals.pauseCellObserver = true
             signals.pauseCradleIntersectionObserver = true
@@ -454,7 +452,6 @@ const Cradle = ({
         let signals = signalsManager.signals
 
         signals.pauseCellObserver = true
-        // pauseCradleIntersectionObserverRef.current = true
         signals.pauseScrollingEffects = true
 
         setCradleState('reload')
@@ -1005,79 +1002,6 @@ const Cradle = ({
         }
 
     },[cradleState])
-
-    // =============================================================================
-    // ------------------------------[ callbacks ]----------------------------------
-    // =============================================================================
-
-    // on host demand
-    const getVisibleList = useCallback(() => {
-
-        // let cradleElements = cradleElementsRef.current
-        let cradleContent = contentManager.content
-
-        return getVisibleItemsList({
-            itemElementMap:contentManager.itemElements,
-            viewportElement:viewportDataRef.current.elementref.current,
-            cradleElements:cradleElementsRef.current, 
-            // tailElement:cradlePropsRef.current.orientation,
-            // spineElement:cradleElements.spine.current,
-            cradleProps:cradlePropsRef.current,
-            // orientation:cradlePropsRef.current.orientation,
-            cradleContent,
-            // headlist:cradleContent.headView,
-        })
-
-    },[])
-
-    const getContentList = useCallback(() => {
-        let contentlist = Array.from(contentManager.itemElements)
-
-        contentlist.sort((a,b)=>{
-            return (a[0] < b[0])?-1:1
-        })
-
-        return contentlist
-    },[])
-
-    const reload = useCallback(() => {
-
-        let signals = signalsManager.signals
-        signals.pauseCellObserver = true
-        signals.pauseScrollingEffects = true
-
-        let spineVisiblePosOffset
-        let cradleElements = cradleElementsRef.current
-
-        if (cradlePropsRef.current.orientation == 'vertical') {
-            spineVisiblePosOffset = cradleElements.spine.current.offsetTop - viewportDataRef.current.elementref.current.scrollTop
-        } else {
-            spineVisiblePosOffset = cradleElements.spine.current.offsetLeft - viewportDataRef.current.elementref.current.scrollLeft
-        }
-
-        // nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
-
-        // let cradleManager = cradleManagerRef.current
-        cradleManager.cellReferenceData.nextSpineOffset = cradleManager.cellReferenceData.readySpineOffset
-        cradleManager.cellReferenceData.nextReferenceIndex = cradleManager.cellReferenceData.readyReferenceIndex        
-        setCradleState('reload')
-
-    },[])
-
-    const scrollToItem = useCallback((index) => {
-
-        let signals = signalsManager.signals
-        // let cradleManager = cradleManagerRef.current
-
-        signals.pauseCellObserver = true
-        signals.pauseScrollingEffects = true
-
-        cradleManager.cellReferenceData.nextSpineOffset = cradleManager.cellReferenceData.readySpineOffset
-        cradleManager.cellReferenceData.nextReferenceIndex = cradleManager.cellReferenceData.readyReferenceIndex
-
-        setCradleState('reposition')
-
-    }, [])
 
     // =============================================================================
     // ------------------------------[ RENDER... ]----------------------------------
