@@ -10,10 +10,11 @@
     ContentManager
 
     CradleManager
-    WingManager
-    Observers
-    MessageManager // message with host environment, such as referenceIndexCallback
+    WingsManager
+    ObserversManager
+    MessageManager ? // message with host environment, such as referenceIndexCallback
     ServiceManager // user services
+    StyleManager
 
     BUGS:
     - check styles in scrollTracker args
