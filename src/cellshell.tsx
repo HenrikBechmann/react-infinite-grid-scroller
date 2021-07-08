@@ -107,11 +107,11 @@ const CellShell = ({
 
         let localcalls = callbacks
 
-        localcalls.getElementData && localcalls.getElementData(getElementData(),'register')
+        localcalls.setElementData && localcalls.setElementData(getElementData(),'register')
 
         return (()=>{
 
-            localcalls.getElementData && localcalls.getElementData(getElementData(),'unregister')
+            localcalls.setElementData && localcalls.setElementData(getElementData(),'unregister')
 
         })
 

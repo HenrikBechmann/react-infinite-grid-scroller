@@ -310,7 +310,7 @@ const Cradle = ({
             spine:spineCradleElementRef
         }
     )
-    const getItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
+    const setItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
 
         const [index, shellref, portalDataRef] = itemElementData
 
@@ -327,8 +327,9 @@ const Cradle = ({
     },[])
 
     const callbacksRef = useRef({
-        getElementData:getItemElementData
+        setElementData:setItemElementData
     })
+    
     const [scrollManager,signalsManager,stateManager,contentManager,cradleManager,wingsManager,serviceManager,observersManager]:
     [ScrollManager,SignalsManager,StateManager,ContentManager,CradleManager,WingsManager,ServiceManager,any] = useMemo(()=>{
         return [
@@ -1076,10 +1077,6 @@ const Cradle = ({
         setCradleState('reposition')
 
     }, [])
-
-    // const callbacksRef = useRef({
-    //     getElementData:getItemElementData
-    // })
 
     // =============================================================================
     // ------------------------------[ RENDER... ]----------------------------------
