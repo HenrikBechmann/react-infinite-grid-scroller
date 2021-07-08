@@ -3,7 +3,6 @@
 
 import CradleManagement from './cradlemanagement'
 import { 
-    // setCradleGridStyles, 
     getUIContentList, 
     calcHeadAndTailChanges,
     calcContentShifts,
@@ -23,7 +22,6 @@ export default class ContentManager extends CradleManagement{
       super(commonPropsRef)
       this.cellObserverRef = cellObserverRef
       this.contentCallbacksRef = contentCallbacksRef
-      // this.referenceIndexCallbackRef = referenceIndexCallbackRef
 
       // console.log('ContentManager props',commonPropsRef, cellObserverRef, contentCallbacksRef, referenceIndexCallbackRef)
    }
@@ -50,8 +48,6 @@ export default class ContentManager extends CradleManagement{
     cellObserverRef
 
     contentCallbacksRef
-
-    // referenceIndexCallbackRef
 
     updateCradleContent = (entries, source = 'notifications') => {
 

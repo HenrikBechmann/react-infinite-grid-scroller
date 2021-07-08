@@ -18,7 +18,6 @@ export default class ServiceManager extends CradleManagement{
     getVisibleList = () => {
 
         let contentManager = this._managers.current.content        
-        // let cradleElements = cradleElementsRef.current
 
         let cradleContent = contentManager.content
         let viewportData = this._viewportdata

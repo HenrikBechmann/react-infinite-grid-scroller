@@ -106,15 +106,8 @@ import WingsManager from './cradle/wingsmanager'
 import ServiceManager from './cradle/servicemanager'
 
 import { 
+
     setCradleGridStyles, 
-    getUIContentList, 
-    calcHeadAndTailChanges,
-    calcContentShifts,
-    // getVisibleItemsList, 
-    getContentListRequirements,
-    isolateRelevantIntersections,
-    allocateContentList,
-    deleteAndResetPortals,
 
 } from './cradlefunctions'
 
