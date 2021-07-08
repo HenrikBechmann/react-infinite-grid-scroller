@@ -5,10 +5,14 @@ import CradleManagement from './cradlemanagement'
 
 export default class ServiceManager extends CradleManagement{
 
-    constructor(commonPropsRef) {
+    constructor(commonPropsRef, serviceCallsRef) {
 
        super(commonPropsRef)
 
+       this.serviceCallsRef = serviceCallsRef
+
     }
+
+    serviceCallsRef
 
 }

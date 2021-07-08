@@ -298,6 +298,7 @@ const Cradle = ({
     const managersRef = useRef(null) // make available to individual managers
     // TODO: match viewportdata case here
     const commonPropsRef = useRef({managersRef,viewportdata:viewportData,cradlePropsRef, cradleConfigRef})
+    const serviceCallsRef = useRef({referenceIndexCallbackRef})
 
     // cradle butterfly html components
     const headCradleElementRef = useRef(null)
@@ -333,13 +334,13 @@ const Cradle = ({
     const [scrollManager,signalsManager,stateManager,contentManager,cradleManager,wingsManager,serviceManager,observersManager]:
     [ScrollManager,SignalsManager,StateManager,ContentManager,CradleManager,WingsManager,ServiceManager,any] = useMemo(()=>{
         return [
-            new ScrollManager(commonPropsRef,referenceIndexCallbackRef),
+            new ScrollManager(commonPropsRef),
             new SignalsManager(commonPropsRef, signalsbaseline),
             new StateManager(commonPropsRef,cradleStateRef,setCradleState,isMounted),
-            new ContentManager(commonPropsRef, cellObserverRef, contentCallbacksRef, referenceIndexCallbackRef),
+            new ContentManager(commonPropsRef, cellObserverRef, contentCallbacksRef),
             new CradleManager(commonPropsRef, cradleElementsRef.current),
             new WingsManager(commonPropsRef),
-            new ServiceManager(commonPropsRef),
+            new ServiceManager(commonPropsRef,serviceCallsRef),
             {}
         ]
     },[])

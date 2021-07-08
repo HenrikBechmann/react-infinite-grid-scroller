@@ -7,11 +7,11 @@ const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 200
 
 export default class ScrollManager extends CradleManagement{
 
-    constructor(commonPropsRef, referenceIndexCallbackRef) {
+    constructor(commonPropsRef) {
 
         super(commonPropsRef)
 
-        this.referenceIndexCallbackRef = referenceIndexCallbackRef
+        // this.referenceIndexCallbackRef = referenceIndexCallbackRef
 
     }
 
@@ -19,7 +19,7 @@ export default class ScrollManager extends CradleManagement{
 
     private _scrolltimerid = null
 
-    referenceIndexCallbackRef
+    // referenceIndexCallbackRef
 
     onScroll = () => {
 
@@ -54,6 +54,7 @@ export default class ScrollManager extends CradleManagement{
 
         let contentManager = this._managers.current.content
         let cradleManager = this._managers.current.cradle
+        let serviceManager = this._managers.current.service
 
         if (!this._viewportdata.isResizing) {
 
@@ -88,8 +89,8 @@ export default class ScrollManager extends CradleManagement{
                 }
 
                 // TODO: re-instatiate the following
-                this.referenceIndexCallbackRef.current && 
-                    this.referenceIndexCallbackRef.current(cradleManager.referenceData.scrollReferenceIndex,'scrolling', cradleState)
+                serviceManager.serviceCallsRef.current.referenceIndexCallbackRef.current && 
+                    serviceManager.serviceCallsRef.current.referenceIndexCallbackRef.current(cradleManager.referenceData.scrollReferenceIndex,'scrolling', cradleState)
 
             }
 

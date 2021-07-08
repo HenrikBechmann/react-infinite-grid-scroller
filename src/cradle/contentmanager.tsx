@@ -19,12 +19,12 @@ import { portalManager } from '../portalmanager'
 
 export default class ContentManager extends CradleManagement{
 
-   constructor(commonPropsRef, cellObserverRef, contentCallbacksRef, referenceIndexCallbackRef) {
+   constructor(commonPropsRef, cellObserverRef, contentCallbacksRef) {
 
       super(commonPropsRef)
       this.cellObserverRef = cellObserverRef
       this.contentCallbacksRef = contentCallbacksRef
-      this.referenceIndexCallbackRef = referenceIndexCallbackRef
+      // this.referenceIndexCallbackRef = referenceIndexCallbackRef
 
       // console.log('ContentManager props',commonPropsRef, cellObserverRef, contentCallbacksRef, referenceIndexCallbackRef)
    }
@@ -52,7 +52,7 @@ export default class ContentManager extends CradleManagement{
 
     contentCallbacksRef
 
-    referenceIndexCallbackRef
+    // referenceIndexCallbackRef
 
     updateCradleContent = (entries, source = 'notifications') => {
 
@@ -256,6 +256,7 @@ export default class ContentManager extends CradleManagement{
         let scrollManager = this._managers.current.scroll
         let cradleManager = this._managers.current.cradle
         let stateManager = this._managers.current.state
+        let serviceManager = this._managers.current.service
 
         // console.log('cradleManager in setCradleContent',this._managers,cradleManager)
 
@@ -333,19 +334,17 @@ export default class ContentManager extends CradleManagement{
 
         // console.log('setting referenceindexdata in setCradleContent',cradleReferenceDataRef.current)
 
-        if (this.referenceIndexCallbackRef.current) {
+        if (serviceManager.serviceCallsRef.current.referenceIndexCallbackRef.current) {
 
             let cstate = cradleState
             if (cstate == 'setreload') cstate = 'reload'
-            this.referenceIndexCallbackRef.current(
+            serviceManager.serviceCallsRef.current.referenceIndexCallbackRef.current(
 
                 cradleManager.referenceData.readyReferenceIndex,'setCradleContent', cstate)
         
         }
 
         let cradleElements = cradleManager.elements //cradleElementsRef.current
-
-
 
         // const scrollManager = managersRef.current.scrollRef.current
 
