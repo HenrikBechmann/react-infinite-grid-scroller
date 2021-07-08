@@ -19,14 +19,14 @@ import { portalManager } from '../portalmanager'
 
 export default class ContentManager extends CradleManagement{
 
-   constructor(commonPropsRef, cellObserverRef, callbacksRef, referenceIndexCallbackRef) {
+   constructor(commonPropsRef, cellObserverRef, contentCallbacksRef, referenceIndexCallbackRef) {
 
       super(commonPropsRef)
       this.cellObserverRef = cellObserverRef
-      this.callbacksRef = callbacksRef
+      this.contentCallbacksRef = contentCallbacksRef
       this.referenceIndexCallbackRef = referenceIndexCallbackRef
 
-      // console.log('ContentManager props',commonPropsRef, cellObserverRef, callbacksRef, referenceIndexCallbackRef)
+      // console.log('ContentManager props',commonPropsRef, cellObserverRef, contentCallbacksRef, referenceIndexCallbackRef)
    }
 
    content = {
@@ -50,7 +50,7 @@ export default class ContentManager extends CradleManagement{
 
     cellObserverRef
 
-    callbacksRef
+    contentCallbacksRef
 
     referenceIndexCallbackRef
 
@@ -181,7 +181,7 @@ export default class ContentManager extends CradleManagement{
                 tailchangecount,
                 cradleReferenceIndex,
                 observer: this.cellObserverRef.current,
-                callbacks:this.callbacksRef.current,
+                callbacks:this.contentCallbacksRef.current,
                 instanceIdCounterRef:this.instanceIdCounterRef,
             })
         } else {
@@ -303,7 +303,7 @@ export default class ContentManager extends CradleManagement{
             headchangecount:0,
             tailchangecount:contentCount,
             localContentList,
-            callbacks:this.callbacksRef.current,
+            callbacks:this.contentCallbacksRef.current,
             observer: this.cellObserverRef.current,
             instanceIdCounterRef:this.instanceIdCounterRef,
         })

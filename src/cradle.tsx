@@ -326,7 +326,7 @@ const Cradle = ({
 
     },[])
 
-    const callbacksRef = useRef({
+    const contentCallbacksRef = useRef({
         setElementData:setItemElementData
     })
     
@@ -336,7 +336,7 @@ const Cradle = ({
             new ScrollManager(commonPropsRef,referenceIndexCallbackRef),
             new SignalsManager(commonPropsRef, signalsbaseline),
             new StateManager(commonPropsRef,cradleStateRef,setCradleState,isMounted),
-            new ContentManager(commonPropsRef, cellObserverRef, callbacksRef, referenceIndexCallbackRef),
+            new ContentManager(commonPropsRef, cellObserverRef, contentCallbacksRef, referenceIndexCallbackRef),
             new CradleManager(commonPropsRef, cradleElementsRef.current),
             new WingsManager(commonPropsRef),
             new ServiceManager(commonPropsRef),
