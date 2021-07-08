@@ -5,24 +5,39 @@ import CradleManagement from './cradlemanagement'
 
 export default class SignalsManager extends CradleManagement {
 
-    constructor(commonPropsRef,signalsbaseline) {
+    constructor(commonPropsRef) {
 
        super(commonPropsRef)
-       this.signalsBaseline = signalsbaseline
-       this.signals = Object.assign({},signalsbaseline)
+       this.resetSignals()
 
     }
 
     signalsBaseline
 
-   signals = {
-      pauseCellObserver: null,
-      pauseCradleIntersectionObserver:null,
-      pauseCradleResizeObserver: null,
-      pauseScrollingEffects: null,
-      isTailCradleInView:null,
-      isHeadCradleInView:null,
-      isCradleInView:null,
-   }
+    signals = {
+        pauseCellObserver: null,
+        pauseCradleIntersectionObserver:null,
+        pauseCradleResizeObserver: null,
+        pauseScrollingEffects: null,
+        isTailCradleInView:null,
+        isHeadCradleInView:null,
+        isCradleInView:null,
+    }
+
+    private _signalsbaseline = {
+        pauseCellObserver: true,
+        pauseCradleIntersectionObserver:true,
+        pauseCradleResizeObserver: true,
+        pauseScrollingEffects: true,
+        isTailCradleInView:true,
+        isHeadCradleInView:true,
+        isCradleInView:true,
+    }
+
+    resetSignals = () => {
+
+        this.signals = Object.assign({},this._signalsbaseline) //clone 
+
+    }
 
 }

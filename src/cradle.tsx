@@ -107,25 +107,9 @@ import WingsManager from './cradle/wingsmanager'
 import ServiceManager from './cradle/servicemanager'
 import StylesManager from './cradle/stylesmanager'
 
-// import { 
-
-//     setCradleGridStyles, 
-
-// } from './cradlefunctions'
-
 import ScrollTracker from './scrolltracker'
 
 const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 200
-
-const signalsbaseline = {
-        pauseCellObserver: true,
-        pauseCradleIntersectionObserver:true,
-        pauseCradleResizeObserver: true,
-        pauseScrollingEffects: true,
-        isTailCradleInView:true,
-        isHeadCradleInView:true,
-        isCradleInView:true,
-    }
 
 const Cradle = ({ 
         gap, 
@@ -330,7 +314,7 @@ const Cradle = ({
     [ScrollManager,SignalsManager,StateManager,ContentManager,CradleManager,WingsManager,ServiceManager,StylesManager,any] = useMemo(()=>{
         return [
             new ScrollManager(commonPropsRef),
-            new SignalsManager(commonPropsRef, signalsbaseline),
+            new SignalsManager(commonPropsRef),
             new StateManager(commonPropsRef,cradleStateRef,setCradleState,isMounted),
             new ContentManager(commonPropsRef, cellObserverRef, contentCallbacksRef),
             new CradleManager(commonPropsRef, cradleElementsRef.current),
@@ -357,7 +341,7 @@ const Cradle = ({
     managersRef.current = managementsetRef.current
 
     if (viewportData.isReparenting) {
-        Object.assign(signalsManager.signals,signalsbaseline) //clone 
+        signalsManager.resetSignals() //clone 
         viewportData.isReparenting = false
         isReparentingRef.current = true
         setCradleState('reparenting')
