@@ -420,8 +420,8 @@ const Cradle = ({
         if (viewportData.isResizing) {
 
             // nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
-            cradleManager.referenceData.nextReferenceIndex = cradleManager.referenceData.readyReferenceIndex
-            cradleManager.referenceData.nextSpineOffset = cradleManager.referenceData.readySpineOffset
+            cradleManager.cellReferenceData.nextReferenceIndex = cradleManager.cellReferenceData.readyReferenceIndex
+            cradleManager.cellReferenceData.nextSpineOffset = cradleManager.cellReferenceData.readySpineOffset
 
             // console.log('calling resizing with', nextReferenceDataRef.current)
 
@@ -448,8 +448,8 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        cradleManager.referenceData.nextReferenceIndex = cradleManager.referenceData.readyReferenceIndex
-        cradleManager.referenceData.nextSpineOffset = cradleManager.referenceData.readySpineOffset
+        cradleManager.cellReferenceData.nextReferenceIndex = cradleManager.cellReferenceData.readyReferenceIndex
+        cradleManager.cellReferenceData.nextSpineOffset = cradleManager.cellReferenceData.readySpineOffset
 
         let signals = signalsManager.signals
 
@@ -472,13 +472,13 @@ const Cradle = ({
 
         if (cradleStateRef.current != 'setup') {
 
-            cradleManager.referenceData.nextReferenceIndex = cradleManager.referenceData.readyReferenceIndex
-            cradleManager.referenceData.nextSpineOffset = cradleManager.referenceData.readySpineOffset
+            cradleManager.cellReferenceData.nextReferenceIndex = cradleManager.cellReferenceData.readyReferenceIndex
+            cradleManager.cellReferenceData.nextSpineOffset = cradleManager.cellReferenceData.readySpineOffset
 
             // get previous ratio
             let previousCellPixelLength = (orientation == 'vertical')?cradlePropsRef.current.cellWidth:cradlePropsRef.current.cellHeight
 
-            let previousSpineOffset = cradleManager.referenceData.nextSpineOffset
+            let previousSpineOffset = cradleManager.cellReferenceData.nextSpineOffset
 
             let previousratio = previousSpineOffset/previousCellPixelLength
 
@@ -486,7 +486,7 @@ const Cradle = ({
 
             let currentSpineOffset = previousratio * currentCellPixelLength
             
-            cradleManager.referenceData.nextSpineOffset = Math.round(currentSpineOffset)
+            cradleManager.cellReferenceData.nextSpineOffset = Math.round(currentSpineOffset)
 
             let signals = signalsManager.signals
 
@@ -1058,8 +1058,8 @@ const Cradle = ({
         // nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
 
         // let cradleManager = cradleManagerRef.current
-        cradleManager.referenceData.nextSpineOffset = cradleManager.referenceData.readySpineOffset
-        cradleManager.referenceData.nextReferenceIndex = cradleManager.referenceData.readyReferenceIndex        
+        cradleManager.cellReferenceData.nextSpineOffset = cradleManager.cellReferenceData.readySpineOffset
+        cradleManager.cellReferenceData.nextReferenceIndex = cradleManager.cellReferenceData.readyReferenceIndex        
         setCradleState('reload')
 
     },[])
@@ -1072,8 +1072,8 @@ const Cradle = ({
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
 
-        cradleManager.referenceData.nextSpineOffset = cradleManager.referenceData.readySpineOffset
-        cradleManager.referenceData.nextReferenceIndex = cradleManager.referenceData.readyReferenceIndex
+        cradleManager.cellReferenceData.nextSpineOffset = cradleManager.cellReferenceData.readySpineOffset
+        cradleManager.cellReferenceData.nextReferenceIndex = cradleManager.cellReferenceData.readyReferenceIndex
 
         setCradleState('reposition')
 
@@ -1090,12 +1090,12 @@ const Cradle = ({
         let trackerargs = {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
-            referenceIndexOffset:cradleManager.referenceData.scrollReferenceIndex,
+            referenceIndexOffset:cradleManager.cellReferenceData.scrollReferenceIndex,
             listsize:cradlePropsRef.current.listsize,
             styles:cradlePropsRef.current.styles,
         }
         return trackerargs
-    },[cradleStateRef.current, viewportDimensions, cradleManager.referenceData.scrollReferenceIndex, cradlePropsRef])
+    },[cradleStateRef.current, viewportDimensions, cradleManager.cellReferenceData.scrollReferenceIndex, cradlePropsRef])
 
     let cradleContent = contentManager.content
 

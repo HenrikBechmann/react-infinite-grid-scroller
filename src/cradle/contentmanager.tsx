@@ -237,11 +237,11 @@ export default class ContentManager extends CradleManagement{
 
         }
 
-        cradleManager.referenceData.scrollReferenceIndex = spineReferenceIndex
-        cradleManager.referenceData.scrollSpineOffset = spinePosOffset
+        cradleManager.cellReferenceData.scrollReferenceIndex = spineReferenceIndex
+        cradleManager.cellReferenceData.scrollSpineOffset = spinePosOffset
 
-        cradleManager.referenceData.readyReferenceIndex = spineReferenceIndex
-        cradleManager.referenceData.readySpineOffset = spinePosOffset
+        cradleManager.cellReferenceData.readyReferenceIndex = spineReferenceIndex
+        cradleManager.cellReferenceData.readySpineOffset = spinePosOffset
 
         stateManager.setCradleState('updatecontent')
 
@@ -266,8 +266,8 @@ export default class ContentManager extends CradleManagement{
 
         // let cradleProps = cradlePropsRef.current
 
-        let visibletargetindexoffset = cradleManager.referenceData.readyReferenceIndex
-        let visibletargetscrolloffset = cradleManager.referenceData.readySpineOffset
+        let visibletargetindexoffset = cradleManager.cellReferenceData.readyReferenceIndex
+        let visibletargetscrolloffset = cradleManager.cellReferenceData.readySpineOffset
 
         let {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
 
@@ -326,11 +326,11 @@ export default class ContentManager extends CradleManagement{
         cradleContent.headModel = headcontentlist
         cradleContent.tailModel = tailcontentlist
 
-        cradleManager.referenceData.scrollReferenceIndex = referenceoffset
-        cradleManager.referenceData.scrollSpineOffset = spinePosOffset
+        cradleManager.cellReferenceData.scrollReferenceIndex = referenceoffset
+        cradleManager.cellReferenceData.scrollSpineOffset = spinePosOffset
 
-        cradleManager.referenceData.readyReferenceIndex = referenceoffset
-        cradleManager.referenceData.readySpineOffset = spinePosOffset
+        cradleManager.cellReferenceData.readyReferenceIndex = referenceoffset
+        cradleManager.cellReferenceData.readySpineOffset = spinePosOffset
 
         // console.log('setting referenceindexdata in setCradleContent',cradleReferenceDataRef.current)
 
@@ -340,7 +340,7 @@ export default class ContentManager extends CradleManagement{
             if (cstate == 'setreload') cstate = 'reload'
             serviceManager.serviceCalls.referenceIndexCallbackRef.current(
 
-                cradleManager.referenceData.readyReferenceIndex,'setCradleContent', cstate)
+                cradleManager.cellReferenceData.readyReferenceIndex,'setCradleContent', cstate)
         
         }
 

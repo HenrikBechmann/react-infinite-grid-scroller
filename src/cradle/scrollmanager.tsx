@@ -62,9 +62,9 @@ export default class ScrollManager extends CradleManagement{
 
                 if (cradleState == 'ready') {
                     // let itemindex = contentManager.content.tailModel[0]?.props.index 
-                    // console.log('itemindex, readyReferenceIndex',itemindex,cradleManager.referenceData.readyReferenceIndex)
+                    // console.log('itemindex, readyReferenceIndex',itemindex,cradleManager.cellReferenceData.readyReferenceIndex)
 
-                    let itemindex = cradleManager.referenceData.readyReferenceIndex
+                    let itemindex = cradleManager.cellReferenceData.readyReferenceIndex
                     let spineVisiblePosOffset
                     let cradleElements = cradleManager.elements
 
@@ -79,8 +79,8 @@ export default class ScrollManager extends CradleManagement{
                             this._viewportdata.elementref.current.scrollLeft
 
                     }
-                    cradleManager.referenceData.scrollReferenceIndex = itemindex
-                    cradleManager.referenceData.scrollSpineOffset = spineVisiblePosOffset
+                    cradleManager.cellReferenceData.scrollReferenceIndex = itemindex
+                    cradleManager.cellReferenceData.scrollSpineOffset = spineVisiblePosOffset
 
                 } else {
 
@@ -90,7 +90,7 @@ export default class ScrollManager extends CradleManagement{
 
                 // TODO: re-instatiate the following
                 serviceManager.serviceCalls.referenceIndexCallbackRef.current && 
-                    serviceManager.serviceCalls.referenceIndexCallbackRef.current(cradleManager.referenceData.scrollReferenceIndex,'scrolling', cradleState)
+                    serviceManager.serviceCalls.referenceIndexCallbackRef.current(cradleManager.cellReferenceData.scrollReferenceIndex,'scrolling', cradleState)
 
             }
 
@@ -132,12 +132,12 @@ export default class ScrollManager extends CradleManagement{
 
         }
 
-        cradleManager.referenceData.scrollSpineOffset = spineVisiblePosOffset
+        cradleManager.cellReferenceData.scrollSpineOffset = spineVisiblePosOffset
 
         if (!viewportData.isResizing) {
 
-            cradleManager.referenceData.readyReferenceIndex = cradleManager.referenceData.scrollReferenceIndex
-            cradleManager.referenceData.readySpineOffset = cradleManager.referenceData.scrollSpineOffset
+            cradleManager.cellReferenceData.readyReferenceIndex = cradleManager.cellReferenceData.scrollReferenceIndex
+            cradleManager.cellReferenceData.readySpineOffset = cradleManager.cellReferenceData.scrollSpineOffset
 
             if (cradleProps.orientation == 'vertical') {
 
@@ -217,8 +217,8 @@ export default class ScrollManager extends CradleManagement{
         if (spineReferenceIndex == 0) referencescrolloffset = 0 // defensive
 
         let cradleManager = this._managers.current.cradle
-        cradleManager.referenceData.scrollReferenceIndex = spineReferenceIndex
-        cradleManager.referenceData.scrollSpineOffset = referencescrolloffset
+        cradleManager.cellReferenceData.scrollReferenceIndex = spineReferenceIndex
+        cradleManager.cellReferenceData.scrollSpineOffset = referencescrolloffset
 
     }
 

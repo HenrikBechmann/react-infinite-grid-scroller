@@ -20,16 +20,16 @@ export default class CradleManager extends CradleManagement{
 
        // console.log('commonPropsRef.current.cradlePropsRef.current in CradleManager constructor',commonPropsRef.current.cradlePropsRef.current)
 
-       this.referenceData.scrollReferenceIndex = (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
-       this.referenceData.scrollSpineOffset = padding
-       this.referenceData.readyReferenceIndex = this.referenceData.scrollReferenceIndex
-       this.referenceData.readySpineOffset = this.referenceData.scrollSpineOffset
-       this.referenceData.nextReferenceIndex = this.referenceData.readyReferenceIndex
-       this.referenceData.nextSpineOffset = this.referenceData.readySpineOffset
+       this.cellReferenceData.scrollReferenceIndex = (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
+       this.cellReferenceData.scrollSpineOffset = padding
+       this.cellReferenceData.readyReferenceIndex = this.cellReferenceData.scrollReferenceIndex
+       this.cellReferenceData.readySpineOffset = this.cellReferenceData.scrollSpineOffset
+       this.cellReferenceData.nextReferenceIndex = this.cellReferenceData.readyReferenceIndex
+       this.cellReferenceData.nextSpineOffset = this.cellReferenceData.readySpineOffset
 
     }
 
-   referenceData = {
+   cellReferenceData = {
 
       scrollReferenceIndex:null,
       scrollSpineOffset:null,
