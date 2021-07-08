@@ -89,8 +89,8 @@ export default class ScrollManager extends CradleManagement{
                 }
 
                 // TODO: re-instatiate the following
-                serviceManager.serviceCallsRef.current.referenceIndexCallbackRef.current && 
-                    serviceManager.serviceCallsRef.current.referenceIndexCallbackRef.current(cradleManager.referenceData.scrollReferenceIndex,'scrolling', cradleState)
+                serviceManager.serviceCalls.referenceIndexCallbackRef.current && 
+                    serviceManager.serviceCalls.referenceIndexCallbackRef.current(cradleManager.referenceData.scrollReferenceIndex,'scrolling', cradleState)
 
             }
 

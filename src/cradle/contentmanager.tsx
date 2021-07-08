@@ -334,11 +334,11 @@ export default class ContentManager extends CradleManagement{
 
         // console.log('setting referenceindexdata in setCradleContent',cradleReferenceDataRef.current)
 
-        if (serviceManager.serviceCallsRef.current.referenceIndexCallbackRef.current) {
+        if (serviceManager.serviceCalls.referenceIndexCallbackRef.current) {
 
             let cstate = cradleState
             if (cstate == 'setreload') cstate = 'reload'
-            serviceManager.serviceCallsRef.current.referenceIndexCallbackRef.current(
+            serviceManager.serviceCalls.referenceIndexCallbackRef.current(
 
                 cradleManager.referenceData.readyReferenceIndex,'setCradleContent', cstate)
         

@@ -9,10 +9,10 @@ export default class ServiceManager extends CradleManagement{
 
        super(commonPropsRef)
 
-       this.serviceCallsRef = serviceCallsRef
+       this.serviceCalls = serviceCallsRef.current
 
     }
 
-    serviceCallsRef
+    serviceCalls
 
 }
