@@ -23,7 +23,6 @@ export default class ContentManager extends CradleManagement{
       this.cellObserverRef = cellObserverRef
       this.contentCallbacksRef = contentCallbacksRef
 
-      // console.log('ContentManager props',commonPropsRef, cellObserverRef, contentCallbacksRef, referenceIndexCallbackRef)
    }
 
    content = {

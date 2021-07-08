@@ -11,8 +11,6 @@ export default class ScrollManager extends CradleManagement{
 
         super(commonPropsRef)
 
-        // this.referenceIndexCallbackRef = referenceIndexCallbackRef
-
     }
 
     scrollPositions = {current:0,previous:0}
@@ -82,7 +80,7 @@ export default class ScrollManager extends CradleManagement{
 
                 } else {
 
-                    this.setScrollReferenceIndexData()
+                    this._setScrollReferenceIndexData()
                     stateManager.setCradleState('updatereposition')
                 }
 
@@ -96,14 +94,14 @@ export default class ScrollManager extends CradleManagement{
 
         this._scrolltimerid = setTimeout(() => {
 
-            this.doEndOfScroll()
+            this._onAfterScroll()
 
         },SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
 
     }
 
 
-    doEndOfScroll = () => {
+    private _onAfterScroll = () => {
 
         let stateManager = this._managers.current.state
         let cradleManager = this._managers.current.cradle
@@ -173,7 +171,7 @@ export default class ScrollManager extends CradleManagement{
         
     }
 
-    setScrollReferenceIndexData = () => {
+    private _setScrollReferenceIndexData = () => {
 
         let viewportData = this._viewportdata
         let cradleProps = this._cradlePropsRef.current

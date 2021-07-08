@@ -14,23 +14,23 @@ export default class StylesManager extends CradleManagement{
     setCradleGridStyles = ({
 
         orientation, 
-        headCradleStyles:headstylesobject, 
-        tailCradleStyles:tailstylesobject,
+        // headCradleStyles:headstylesobject, 
+        // tailCradleStyles:tailstylesobject,
         cellHeight, 
         cellWidth, 
         gap,
         padding, 
         crosscount, 
         viewportheight, 
-        viewportwidth
+        viewportwidth,
+        userstyles,
 
     }) => {
 
-        // console.log('setCradleGridStyles orientation, crosscount',orientation, crosscount)
-        // if (orientation == 'horizontal') crosscount = 8
-
-        let headstyles = {...headstylesobject} as React.CSSProperties
-        let tailstyles = {...tailstylesobject} as React.CSSProperties
+        // TODO: change 'cradle' to 'head' and 'tail' for more granularity
+        let headstyles:React.CSSProperties = this.getHeadStyles(gap, padding, orientation, userstyles?.cradle)
+        let tailstyles:React.CSSProperties = this.getTailStyles(gap, padding, orientation, userstyles?.cradle)
+        let spinestyles:React.CSSProperties = this.getSpineStyles(gap, padding, orientation, userstyles?.spine)
 
         headstyles.gridGap = gap + 'px'
 
@@ -82,7 +82,227 @@ export default class StylesManager extends CradleManagement{
 
         }
 
-        return [headstyles,tailstyles]
+        return [headstyles,tailstyles,spinestyles]
         
     }
+
+    getHeadStyles = (gap,padding,orientation,userheadstyles) => {
+
+        let bottom, left, top, right
+
+        if (orientation == 'vertical') {
+            bottom = 0
+            left = 0
+            right = 0
+            top = 'auto'
+        } else {
+            bottom = 0
+            left = 'auto'
+            right = 0
+            top = 0
+        }
+
+        return {...{
+
+            position: 'absolute',
+            backgroundColor: 'blue',
+            display: 'grid',
+            gridGap: gap + 'px',
+            padding: padding + 'px',
+            justifyContent:'start',
+            alignContent:'start',
+            boxSizing:'border-box',
+            bottom,
+            left,
+            right,
+            top,
+
+        } as React.CSSProperties,...userheadstyles}
+
+    }
+
+    getTailStyles = (gap,padding,orientation,usertailstyles) => {
+
+        let bottom, left, top, right
+
+        if (orientation == 'vertical') {
+            bottom = 'auto'
+            left = 0
+            right = 0
+            top = 0
+        } else {
+            bottom = 0
+            left = 0
+            right = 'auto'
+            top = 0
+        }
+
+        return {...{
+
+            position: 'absolute',
+            backgroundColor: 'blue',
+            display: 'grid',
+            gridGap: gap + 'px',
+            padding: padding + 'px',
+            justifyContent:'start',
+            alignContent:'start',
+            boxSizing:'border-box',
+            top,
+            left,
+            right,
+            bottom,
+
+        } as React.CSSProperties,...usertailstyles}
+
+    }
+
+    getSpineStyles = (gap, padding, orientation, userspinestyles) => {
+        let top, left, width, height // for spine
+
+        if (orientation == 'vertical') {
+            top = padding + 'px'
+            left = 'auto'
+            width = '100%'
+            height = 'auto'
+        } else {
+            top = 'auto'
+            left = padding + 'px'
+            width = 0
+            height = '100%'
+        }
+
+        return { ...{
+            position: 'relative',
+            top,
+            left,
+            width,
+            height,
+
+        } as React.CSSProperties,...userspinestyles}
+
+    }
+
 }
+
+    // ----------------------------------[ cradle default styles]----------------------------------
+
+    // base styles
+    // let cradleHeadStyle = useMemo(() => {
+
+    //     let bottom, left, top, right
+
+    //     if (orientation == 'vertical') {
+    //         bottom = 0
+    //         left = 0
+    //         right = 0
+    //         top = 'auto'
+    //     } else {
+    //         bottom = 0
+    //         left = 'auto'
+    //         right = 0
+    //         top = 0
+    //     }
+
+    //     return {...{
+
+    //         position: 'absolute',
+    //         backgroundColor: 'blue',
+    //         display: 'grid',
+    //         gridGap: gap + 'px',
+    //         padding: padding + 'px',
+    //         justifyContent:'start',
+    //         alignContent:'start',
+    //         boxSizing:'border-box',
+    //         bottom,
+    //         left,
+    //         right,
+    //         top,
+
+    //     } as React.CSSProperties,...styles?.cradle}
+
+    // },[
+    //     gap,
+    //     padding,
+    //     styles,
+    //     orientation,
+    // ])
+
+    // let cradleTailStyle = useMemo(() => {
+
+    //     let bottom, left, top, right
+
+    //     if (orientation == 'vertical') {
+    //         bottom = 'auto'
+    //         left = 0
+    //         right = 0
+    //         top = 0
+    //     } else {
+    //         bottom = 0
+    //         left = 0
+    //         right = 'auto'
+    //         top = 0
+    //     }
+
+    //     return {...{
+
+    //         position: 'absolute',
+    //         backgroundColor: 'blue',
+    //         display: 'grid',
+    //         gridGap: gap + 'px',
+    //         padding: padding + 'px',
+    //         justifyContent:'start',
+    //         alignContent:'start',
+    //         boxSizing:'border-box',
+    //         top,
+    //         left,
+    //         right,
+    //         bottom,
+
+    //     } as React.CSSProperties,...styles?.cradle}
+
+    // },[
+    //     gap,
+    //     padding,
+    //     styles,
+    //     orientation,
+    // ])
+
+    // // redundant
+    // let cradleSpineStyle = useMemo(() => {
+
+    //     let styleobj:React.CSSProperties = {
+
+    //         position: 'relative',
+
+    //     }
+
+    //     return styleobj
+
+    // },[
+
+    //     padding,
+    //     orientation,
+
+    // ])
+
+            // let top, left, width, height // for spine
+        // if (orientation == 'vertical') {
+        //     top = padding + 'px'
+        //     left = 'auto'
+        //     width = '100%'
+        //     height = 'auto'
+        // } else {
+        //     top = 'auto'
+        //     left = padding + 'px'
+        //     width = 0
+        //     height = '100%'
+        // }
+
+        // let spinestyle = {
+        //     position: 'relative',
+        //     top,
+        //     left,
+        //     width,
+        //     height,
+        // } as React.CSSProperties
+

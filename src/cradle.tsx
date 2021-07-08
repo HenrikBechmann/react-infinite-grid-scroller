@@ -4,17 +4,17 @@
 /*
     TODO:
 
+    ObserversManager
+    WingsManager
+    MessageManager ? // message with host environment, such as referenceIndexCallback
+
     ScrollManager
     SignalsManager
     StateManager
     ContentManager
-
     CradleManager
-    WingsManager
-    ObserversManager
-    MessageManager ? // message with host environment, such as referenceIndexCallback
     ServiceManager // user services
-    StyleManager
+    StylesManager
 
     BUGS:
     - check styles in scrollTracker args
@@ -92,12 +92,13 @@ import { ResizeObserver } from '@juggle/resize-observer'
 
 import { ViewportContext } from './viewport'
 
-import { portalManager as portalManagerInstance } from './portalmanager'
+import { portalManager /*as portalManagerInstance*/ } from './portalmanager'
 
 const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
 
 const ITEM_OBSERVER_THRESHOLD = 0
 
+// import management classes - loci of data and related methods
 import ScrollManager from './cradle/scrollmanager'
 import SignalsManager from './cradle/signalsmanager'
 import StateManager from './cradle/statemanager'
@@ -107,9 +108,8 @@ import WingsManager from './cradle/wingsmanager'
 import ServiceManager from './cradle/servicemanager'
 import StylesManager from './cradle/stylesmanager'
 
+// popup position trackeer
 import ScrollTracker from './scrolltracker'
-
-const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 200
 
 const Cradle = ({ 
         gap, 
@@ -168,7 +168,7 @@ const Cradle = ({
     // -----------------------------------------------------------------------
     // -----------------------------------[ utilites ]------------------------
 
-    const portalManager = portalManagerInstance// useContext(PortalManager)
+    // const portalManager = portalManagerInstance// useContext(PortalManager)
     let isMounted = useIsMounted()
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
 
@@ -395,8 +395,6 @@ const Cradle = ({
     // trigger resizing based on viewport state
     useEffect(()=>{
 
-        // let cradleManager = cradleManagerRef.current
-        // console.log('viewportData.isResizing', viewportData.isResizing)
         if (cradleStateRef.current == 'setup') return
         if (viewportData.isResizing) {
 
@@ -491,152 +489,24 @@ const Cradle = ({
     // -----------------------------------------------------------------------
     // ------------------------[ session data ]-------------------------------
 
-    // item elements cache...
-    // const itemElementsRef = useRef(new Map()) // items register their element
+    // styles for grids and spine
+    const [cradleHeadStyle, cradleTailStyle, cradleSpineStyle] = useMemo(()=> {
 
-    // ----------------------------------[ cradle default styles]----------------------------------
-
-    // base styles
-    let cradleHeadStyle = useMemo(() => {
-
-        let bottom, left, top, right
-
-        if (orientation == 'vertical') {
-            bottom = 0
-            left = 0
-            right = 0
-            top = 'auto'
-        } else {
-            bottom = 0
-            left = 'auto'
-            right = 0
-            top = 0
-        }
-
-        return {...{
-
-            position: 'absolute',
-            backgroundColor: 'blue',
-            display: 'grid',
-            gridGap: gap + 'px',
-            padding: padding + 'px',
-            justifyContent:'start',
-            alignContent:'start',
-            boxSizing:'border-box',
-            bottom,
-            left,
-            right,
-            top,
-
-        } as React.CSSProperties,...styles?.cradle}
-
-    },[
-        gap,
-        padding,
-        styles,
-        orientation,
-    ])
-
-    let cradleTailStyle = useMemo(() => {
-
-        let bottom, left, top, right
-
-        if (orientation == 'vertical') {
-            bottom = 'auto'
-            left = 0
-            right = 0
-            top = 0
-        } else {
-            bottom = 0
-            left = 0
-            right = 'auto'
-            top = 0
-        }
-
-        return {...{
-
-            position: 'absolute',
-            backgroundColor: 'blue',
-            display: 'grid',
-            gridGap: gap + 'px',
-            padding: padding + 'px',
-            justifyContent:'start',
-            alignContent:'start',
-            boxSizing:'border-box',
-            top,
-            left,
-            right,
-            bottom,
-
-        } as React.CSSProperties,...styles?.cradle}
-
-    },[
-        gap,
-        padding,
-        styles,
-        orientation,
-    ])
-
-    // redundant
-    let cradleSpineStyle = useMemo(() => {
-
-        let styleobj:React.CSSProperties = {
-
-            position: 'relative',
-
-        }
-
-        return styleobj
-
-    },[
-
-        padding,
-        orientation,
-
-    ])
-
-    // enhanced styles for grid
-    const [headstyle, tailstyle, spinestyle] = useMemo(()=> {
-        // merge base style and revisions (by observer)
-        let headCradleStyles:React.CSSProperties = {...cradleHeadStyle}
-        let tailCradleStyles:React.CSSProperties = {...cradleTailStyle}
-        let [headstyles, tailstyles] = stylesManager.setCradleGridStyles({
+        let [headstyles, tailstyles, spinestyles] = stylesManager.setCradleGridStyles({
 
             orientation, 
-            headCradleStyles, 
-            tailCradleStyles, 
             cellHeight, 
             cellWidth, 
             gap,
             padding,
-            crosscount, 
             viewportheight, 
             viewportwidth,
+            crosscount, 
+            userstyles:styles,
 
         })
 
-        let top, left, width, height
-        if (orientation == 'vertical') {
-            top = padding + 'px'
-            left = 'auto'
-            width = '100%'
-            height = 'auto'
-        } else {
-            top = 'auto'
-            left = padding + 'px'
-            width = 0
-            height = '100%'
-        }
-
-        let spinestyle = {
-            position: 'relative',
-            top,
-            left,
-            width,
-            height,
-        } as React.CSSProperties
-
-        return [headstyles, tailstyles, spinestyle]
+        return [headstyles, tailstyles, spinestyles]
 
     },[
 
@@ -648,12 +518,9 @@ const Cradle = ({
         viewportheight,
         viewportwidth,
         crosscount,
+        styles,
 
       ])
-
-    cradleHeadStyle = headstyle
-    cradleTailStyle = tailstyle
-    cradleSpineStyle = spinestyle
 
     // =================================================================================
     // -------------------------[ IntersectionObserver support]-------------------------
