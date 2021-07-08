@@ -3,11 +3,10 @@
 
 import CradleManagement from './cradlemanagement'
 import { 
-    setCradleGridStyles, 
+    // setCradleGridStyles, 
     getUIContentList, 
     calcHeadAndTailChanges,
     calcContentShifts,
-    getVisibleItemsList, 
     getContentListRequirements,
     isolateRelevantIntersections,
     allocateContentList,

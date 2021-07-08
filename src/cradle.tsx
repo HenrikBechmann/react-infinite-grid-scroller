@@ -110,7 +110,7 @@ import {
     getUIContentList, 
     calcHeadAndTailChanges,
     calcContentShifts,
-    getVisibleItemsList, 
+    // getVisibleItemsList, 
     getContentListRequirements,
     isolateRelevantIntersections,
     allocateContentList,
