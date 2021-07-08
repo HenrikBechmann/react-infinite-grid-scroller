@@ -507,17 +507,8 @@ const Cradle = ({
     // -----------------------------------------------------------------------
     // ------------------------[ session data ]-------------------------------
 
-    // ------------------ current location -- first tail visible item -------------
-
-    // const instanceIdCounterRef = useRef(0)
-    // const instanceIdMapRef = useRef(new Map())
-
-    // -------------------------------[ cradle data ]-------------------------------------
-
     // item elements cache...
     // const itemElementsRef = useRef(new Map()) // items register their element
-
-    // ------------------------------[ cradle configuration ]---------------------------
 
     // ----------------------------------[ cradle default styles]----------------------------------
 

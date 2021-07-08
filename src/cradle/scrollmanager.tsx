@@ -19,8 +19,6 @@ export default class ScrollManager extends CradleManagement{
 
     private _scrolltimerid = null
 
-    // referenceIndexCallbackRef
-
     onScroll = () => {
 
         let signals = this._managers.current.signals.signals
@@ -166,7 +164,6 @@ export default class ScrollManager extends CradleManagement{
 
             default: {
 
-                // TODO: cradleMaster is only transitory!
                 contentManager.updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
 
 
