@@ -128,6 +128,8 @@ const Cradle = ({
         scrollerID,
     }) => {
 
+    // --------------------------[ bundle cradleProps ]----------------------------
+
     // functions and styles handled separately
     const cradlePropsRef = useRef(null) // access by closures
     cradlePropsRef.current = useMemo(() => {
@@ -173,8 +175,8 @@ const Cradle = ({
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
 
     const cellObserverRef = useRef(null) // IntersectionObserver
-    const cradleIntersectionObserverRef = useRef(null)
-    const cradleResizeObserverRef = useRef(null)
+    const cradleIntersectionObserverRef = useRef(null) // for reposition
+    const cradleResizeObserverRef = useRef(null) // for reconfiguration
 
     // -----------------------------------------------------------------------
     // ---------------------------[ context data ]----------------------------
@@ -193,7 +195,7 @@ const Cradle = ({
     // console.log('RUNNING cradle scrollerID, cradleState, viewportData', scrollerID, cradleState, viewportData)
     // console.log('RUNNING cradle scrollerID, cradleState', scrollerID, cradleState)
     // -----------------------------------------------------------------------
-    // -------------------------[ control flags ]-----------------
+    // -------------------------[ configuration ]-----------------
 
     const { viewportDimensions } = viewportData
 
@@ -274,8 +276,10 @@ const Cradle = ({
         listRowcount:Math.ceil(listsize/crosscount),
     }
 
+    // -----------------------------------------------------------------------
+    // -------------------------[ cradle management nodes ]-----------------
+
     const managersRef = useRef(null) // make available to individual managers
-    // TODO: match viewportdata case here
     const commonPropsRef = useRef({managersRef,viewportdata:viewportData,cradlePropsRef, cradleConfigRef})
     const serviceCallsRef = useRef({referenceIndexCallbackRef})
 
@@ -283,6 +287,7 @@ const Cradle = ({
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const spineCradleElementRef = useRef(null)
+
     const cradleElementsRef = useRef(
         {
             head:headCradleElementRef, 
@@ -346,9 +351,6 @@ const Cradle = ({
         isReparentingRef.current = true
         setCradleState('reparenting')
     }
-
-    // console.log('RUNNING cradle scrollerID cradleState with portalRecord',
-    //     scrollerID, cradleState)
 
     // ------------------------------------------------------------------------
     // -----------------------[ initialization effects ]-----------------------
@@ -487,12 +489,14 @@ const Cradle = ({
     // =======================================================================
 
     // -----------------------------------------------------------------------
-    // ------------------------[ session data ]-------------------------------
+    // ------------------------[ style data ]-------------------------------
 
-    // styles for grids and spine
+    // styles for wings and spine
     const [cradleHeadStyle, cradleTailStyle, cradleSpineStyle] = useMemo(()=> {
 
-        let [headstyles, tailstyles, spinestyles] = stylesManager.setCradleGridStyles({
+        // let [headstyles, tailstyles, spinestyles] = stylesManager.setCradleGridStyles({
+
+        return stylesManager.setCradleGridStyles({
 
             orientation, 
             cellHeight, 
@@ -506,7 +510,7 @@ const Cradle = ({
 
         })
 
-        return [headstyles, tailstyles, spinestyles]
+        // return [headstyles, tailstyles, spinestyles]
 
     },[
 
@@ -523,7 +527,7 @@ const Cradle = ({
       ])
 
     // =================================================================================
-    // -------------------------[ IntersectionObserver support]-------------------------
+    // -------------------------[ Observer support]-------------------------
     // =================================================================================
 
     /*
@@ -533,7 +537,7 @@ const Cradle = ({
             variable cells.
     */    
 
-    // --------------------------[ cradle observers ]-----------------------------------
+    // --------------------------[ resize observer ]-----------------------------------
 
     // set up cradle resizeobserver
     useEffect(() => {
@@ -559,6 +563,8 @@ const Cradle = ({
         if (signalsManager.signals.pauseCradleResizeObserver) return
 
     },[])
+
+    // --------------------[ intersection observer for cradle body wings]-----------------------
 
     // this sets up an IntersectionObserver of the cradle against the viewport. When the
     // cradle goes out of the observer scope, the "repositioning" cradle state is triggerd.
@@ -586,7 +592,6 @@ const Cradle = ({
     },[])
 
     const cradleIntersectionObserverCallback = useCallback((entries) => {
-
 
         let signals = signalsManager.signals;
 
@@ -709,7 +714,7 @@ const Cradle = ({
 
     },[])
 
-    const previousScrollForwardRef = useRef(undefined)
+    // const previousScrollForwardRef = useRef(undefined)
 
     // =====================================================================================
     // ----------------------------------[ state management ]-------------------------------
@@ -787,8 +792,6 @@ const Cradle = ({
                 break
 
             case 'preparecontent': {
-
-                // console.log('settle (setCradleContent): state, refIndex',callingCradleState.current, nextReferenceDataRef.current)
 
                 cradleContent.headModel = []
                 cradleContent.tailModel = []
