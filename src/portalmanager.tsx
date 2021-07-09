@@ -17,7 +17,7 @@ const scrollerPortalMetaData = new Map()
 const scrollerPortalListData = new Map()
 const scrollerPortalCallbacks = new Map()
 
-class PortalManagerClass {
+class PortalAgentClass {
 
     // initialize scroller repository
     createScrollerPortalRepository (scrollerID) {
@@ -158,8 +158,8 @@ class PortalManagerClass {
 }
 
 // export the portal manager
-export const portalManager = new PortalManagerClass()
-// export const PortalManager = React.createContext(portalManager)
+export const portalManager = new PortalAgentClass()
+// export const PortalAgent = React.createContext(portalManager)
 
 // Utility functions
 

@@ -20,7 +20,7 @@ import ReactDOM from 'react-dom'
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
 import Cradle from './cradle'
-import {portalManager as portalManagerInstance, PortalList} from './portalmanager'
+import {portalManager as portalAgentInstance, PortalList} from './portalmanager'
 
 let globalScrollerID = 0
 const getScrollerSessionID = () => {
@@ -41,7 +41,7 @@ const portalrootstyle = {display:'none'} // static
         - a component that contains displayed (or nearly displayed) items. 
     The items are skeletons which contain the host content components.
 
-    Host content is created in a portal cache (via PortalManager) and then portal'd to its parent item
+    Host content is created in a portal cache (via PortalAgent) and then portal'd to its parent item
 
     Scrollblock virtually represents the entirety of the list, and of course scrolls
 
@@ -78,7 +78,7 @@ const InfiniteGridScroller = (props) => {
         scrollerName, // for debugging
     } = props
 
-    const portalManager = portalManagerInstance // useContext(PortalManager)
+    const portalManager = portalAgentInstance // useContext(PortalAgent)
     const scrollerSessionID = useMemo(()=>{
         return getScrollerSessionID()
     },[])

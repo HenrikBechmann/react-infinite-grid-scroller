@@ -14,7 +14,7 @@ import useIsMounted from 'react-is-mounted-hook'
 
 import { ResizeObserver } from '@juggle/resize-observer'
 
-import { portalManager as portalManagerInstance } from './portalmanager'
+import { portalManager as portalAgentInstance } from './portalmanager'
 
 const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
 
@@ -36,7 +36,7 @@ const Viewport = ({
     // -----------------------[ initialize ]------------------
 
     // processing state
-    const portalManager = portalManagerInstance// useContext(PortalManager)
+    const portalManager = portalAgentInstance// useContext(PortalAgent)
     // setup -> render; resizing -> resized -> render
     const [viewportstate,setViewportState] = useState('setup')
 
