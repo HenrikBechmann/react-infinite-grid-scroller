@@ -11,7 +11,7 @@ export default class StylesManager extends CradleManagement{
 
     }
 
-    setCradleGridStyles = ({
+    setCradleStyles = ({
 
         orientation, 
         cellHeight, 

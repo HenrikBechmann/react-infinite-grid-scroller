@@ -18,6 +18,9 @@
 
     BUGS:
     - check styles in scrollTracker args
+    - reposition gets stuck at a particular number after getting behind on heavy scroll
+        check pauseScrollingEffects
+
 */
 
 /*
@@ -92,7 +95,7 @@ import { ResizeObserver } from '@juggle/resize-observer'
 
 import { ViewportContext } from './viewport'
 
-import { portalManager /*as portalManagerInstance*/ } from './portalmanager'
+import { portalManager } from './portalmanager'
 
 const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
 
@@ -192,8 +195,6 @@ const Cradle = ({
 
     const isReparentingRef = useRef(false)
 
-    // console.log('RUNNING cradle scrollerID, cradleState, viewportData', scrollerID, cradleState, viewportData)
-    // console.log('RUNNING cradle scrollerID, cradleState', scrollerID, cradleState)
     // -----------------------------------------------------------------------
     // -------------------------[ configuration ]-----------------
 
@@ -212,8 +213,6 @@ const Cradle = ({
         tilelengthforcalc = Math.min(tilelengthforcalc,lengthforcalc) // result cannot be less than 1
         crosscount = Math.floor(lengthforcalc/(tilelengthforcalc))
 
-        // console.log('cradle CROSSCOUNT for scrollerName, scrollerID',scrollerName, scrollerID, crosscount)
-
         return crosscount
 
     },[
@@ -225,9 +224,6 @@ const Cradle = ({
         viewportheight, 
         viewportwidth,
     ])
-
-    // const crosscountRef = useRef(crosscount) // for easy reference by observer
-    // crosscountRef.current = crosscount // available for observer closure
 
     const [cradleRowcount,viewportRowcount] = useMemo(()=> {
 
@@ -315,8 +311,28 @@ const Cradle = ({
         setElementData:setItemElementData
     })
 
-    const [scrollManager,signalsManager,stateManager,contentManager,cradleManager,wingsManager,serviceManager,stylesManager,observersManager]:
-    [ScrollManager,SignalsManager,StateManager,ContentManager,CradleManager,WingsManager,ServiceManager,StylesManager,any] = useMemo(()=>{
+    const [
+        scrollManager,
+        signalsManager,
+        stateManager,
+        contentManager,
+        cradleManager,
+        wingsManager,
+        serviceManager,
+        stylesManager,
+        observersManager
+    ]:
+    [
+        ScrollManager,
+        SignalsManager,
+        StateManager,
+        ContentManager,
+        CradleManager,
+        WingsManager,
+        ServiceManager,
+        StylesManager,
+        any
+    ] = useMemo(()=>{
         return [
             new ScrollManager(commonPropsRef),
             new SignalsManager(commonPropsRef),
@@ -398,9 +414,9 @@ const Cradle = ({
     useEffect(()=>{
 
         if (cradleStateRef.current == 'setup') return
+
         if (viewportData.isResizing) {
 
-            // nextReferenceDataRef.current = {...cradleReferenceDataRef.current}
             cradleManager.cellReferenceData.nextReferenceIndex = cradleManager.cellReferenceData.readyReferenceIndex
             cradleManager.cellReferenceData.nextSpineOffset = cradleManager.cellReferenceData.readySpineOffset
 
@@ -494,9 +510,7 @@ const Cradle = ({
     // styles for wings and spine
     const [cradleHeadStyle, cradleTailStyle, cradleSpineStyle] = useMemo(()=> {
 
-        // let [headstyles, tailstyles, spinestyles] = stylesManager.setCradleGridStyles({
-
-        return stylesManager.setCradleGridStyles({
+        return stylesManager.setCradleStyles({
 
             orientation, 
             cellHeight, 
@@ -509,8 +523,6 @@ const Cradle = ({
             userstyles:styles,
 
         })
-
-        // return [headstyles, tailstyles, spinestyles]
 
     },[
 
