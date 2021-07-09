@@ -20,6 +20,7 @@
     - check styles in scrollTracker args
     - reposition gets stuck at a particular number after getting behind on heavy scroll
         check pauseScrollingEffects
+    - variable cells showing signs of getItem() with portal
 
 */
 
@@ -107,7 +108,7 @@ import SignalsManager from './cradle/signalsmanager'
 import StateManager from './cradle/statemanager'
 import ContentManager from './cradle/contentmanager'
 import CradleManager from './cradle/cradlemanager'
-import WingsManager from './cradle/wingsmanager'
+import ObserversManager from './cradle/observersmanager'
 import ServiceManager from './cradle/servicemanager'
 import StylesManager from './cradle/stylesmanager'
 
@@ -317,10 +318,9 @@ const Cradle = ({
         stateManager,
         contentManager,
         cradleManager,
-        wingsManager,
+        observersManager,
         serviceManager,
         stylesManager,
-        observersManager
     ]:
     [
         ScrollManager,
@@ -328,10 +328,9 @@ const Cradle = ({
         StateManager,
         ContentManager,
         CradleManager,
-        WingsManager,
+        ObserversManager,
         ServiceManager,
         StylesManager,
-        any
     ] = useMemo(()=>{
         return [
             new ScrollManager(commonPropsRef),
@@ -339,10 +338,9 @@ const Cradle = ({
             new StateManager(commonPropsRef,cradleStateRef,setCradleState,isMounted),
             new ContentManager(commonPropsRef, cellObserverRef, contentCallbacksRef),
             new CradleManager(commonPropsRef, cradleElementsRef.current),
-            new WingsManager(commonPropsRef),
+            new ObserversManager(commonPropsRef),
             new ServiceManager(commonPropsRef,serviceCallsRef),
             new StylesManager(commonPropsRef),
-            {}
         ]
     },[])
 
@@ -353,7 +351,6 @@ const Cradle = ({
         state:stateManager,
         content:contentManager, 
         cradle:cradleManager, 
-        wings:wingsManager, 
         service:serviceManager,
         observers:observersManager,
         styles:stylesManager,

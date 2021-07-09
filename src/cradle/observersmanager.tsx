@@ -3,7 +3,7 @@
 
 import CradleManagement from './cradlemanagement'
 
-export default class WingsManager extends CradleManagement{
+export default class ObserversManager extends CradleManagement{
 
    constructor(commonPropsRef) {
 
