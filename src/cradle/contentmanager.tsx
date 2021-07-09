@@ -17,10 +17,10 @@ import { portalManager } from '../portalmanager'
 
 export default class ContentManager extends CradleManagement{
 
-   constructor(commonPropsRef, cellObserverRef, contentCallbacksRef) {
+   constructor(commonPropsRef, contentCallbacksRef) {
 
       super(commonPropsRef)
-      this.cellObserverRef = cellObserverRef
+
       this.contentCallbacksRef = contentCallbacksRef
 
    }
@@ -44,8 +44,6 @@ export default class ContentManager extends CradleManagement{
 
     itemElements = new Map()
 
-    cellObserverRef
-
     contentCallbacksRef
 
     // Two public methods - setCradleContent and updateCradleContent
@@ -60,6 +58,7 @@ export default class ContentManager extends CradleManagement{
         let cradleManager = this._managersRef.current.cradle
         let stateManager = this._managersRef.current.state
         let serviceManager = this._managersRef.current.service
+        let observersManager = this._managersRef.current.observers
 
         let viewportElement = viewportData.elementref.current
 
@@ -101,7 +100,7 @@ export default class ContentManager extends CradleManagement{
             tailchangecount:contentCount,
             localContentList,
             callbacks:this.contentCallbacksRef.current,
-            observer: this.cellObserverRef.current,
+            observer: observersManager.cellIntersect.observer,
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
@@ -168,6 +167,7 @@ export default class ContentManager extends CradleManagement{
         let scrollManager = this._managersRef.current.scroll
         let cradleManager = this._managersRef.current.cradle
         let stateManager = this._managersRef.current.state
+        let observersManager = this._managersRef.current.observers
 
         let viewportElement = viewportData.elementref.current
         if (!viewportElement) {
@@ -281,7 +281,7 @@ export default class ContentManager extends CradleManagement{
                 headchangecount,
                 tailchangecount,
                 cradleReferenceIndex,
-                observer: this.cellObserverRef.current,
+                observer: observersManager.cellIntersect.observer,
                 callbacks:this.contentCallbacksRef.current,
                 instanceIdCounterRef:this.instanceIdCounterRef,
             })

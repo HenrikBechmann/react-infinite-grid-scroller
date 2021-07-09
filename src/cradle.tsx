@@ -178,10 +178,6 @@ const Cradle = ({
     let isMounted = useIsMounted()
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
 
-    const cellObserverRef = useRef(null) // IntersectionObserver
-    // const cradleIntersectionObserverRef = useRef(null) // for reposition
-    // const cradleResizeObserverRef = useRef(null) // for reconfiguration
-
     // -----------------------------------------------------------------------
     // ---------------------------[ context data ]----------------------------
 
@@ -336,7 +332,7 @@ const Cradle = ({
             new ScrollManager(commonPropsRef),
             new SignalsManager(commonPropsRef),
             new StateManager(commonPropsRef,cradleStateRef,setCradleState,isMounted),
-            new ContentManager(commonPropsRef, cellObserverRef, contentCallbacksRef),
+            new ContentManager(commonPropsRef, contentCallbacksRef),
             new CradleManager(commonPropsRef, cradleElementsRef.current),
             new ObserversManager(commonPropsRef),
             new ServiceManager(commonPropsRef,serviceCallsRef),
@@ -607,51 +603,17 @@ const Cradle = ({
     // change orientation
     useEffect(() => {
 
-        if (cellObserverRef.current) cellObserverRef.current.disconnect()
-        cellObserverRef.current = new IntersectionObserver(
-
-            cellobservercallback,
-            {
-                root:viewportDataRef.current.elementref.current, 
-                threshold:cradleConfigRef.current.cellObserverThreshold,
-            } 
-
-        )
+        let observer = observersManager.cellIntersect.observer
+        if (observer) observer.disconnect()
+        observer = observersManager.cellIntersect.create()
 
         return () => {
 
-            cellObserverRef.current.disconnect()
+            observer.disconnect()
 
         }
 
     },[orientation])
-
-    // the async callback from IntersectionObserver.
-    const cellobservercallback = useCallback((entries)=>{
-
-        let movedentries = []
-
-        for (let entry of entries) {
-            if (entry.target.dataset.initialized) {
-
-                movedentries.push(entry)
-
-            } else {
-
-                entry.target.dataset.initialized = true
-
-            }
-        }
-
-        if (signalsManager.signals.pauseCellObserver) {
-
-            return
-
-        }
-
-        isMounted() && contentManager.updateCradleContent(movedentries,'cellObserver')
-
-    },[])
 
     // =====================================================================================
     // ----------------------------------[ state management ]-------------------------------

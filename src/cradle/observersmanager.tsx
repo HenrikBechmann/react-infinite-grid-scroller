@@ -80,6 +80,37 @@ export default class ObserversManager extends CradleManagement{
 
     }
 
+    // the async callback from IntersectionObserver.
+    cellobservercallback = (entries)=>{
+
+        let signalsManager = this._managersRef.current.signals
+        let contentManager = this._managersRef.current.content
+        let stateManager = this._managersRef.current.state
+
+        let movedentries = []
+
+        for (let entry of entries) {
+            if (entry.target.dataset.initialized) {
+
+                movedentries.push(entry)
+
+            } else {
+
+                entry.target.dataset.initialized = true
+
+            }
+        }
+
+        if (signalsManager.signals.pauseCellObserver) {
+
+            return
+
+        }
+
+        stateManager.isMounted() && contentManager.updateCradleContent(movedentries,'cellObserver')
+
+    }
+
    cradleResize = {
       observer:null,
       callback:this.cradleresizeobservercallback,
@@ -91,20 +122,33 @@ export default class ObserversManager extends CradleManagement{
       }
    }
    cradleIntersect = {
-      observer:null,
-      callback:this.cradleIntersectionObserverCallback,
-      create:() => {
-        let viewportData = this._viewportdataRef.current
-        this.cradleIntersect.observer = new IntersectionObserver(
-            this.cradleIntersect.callback,
-            {root:viewportData.elementref.current, threshold:0}
-        )
-        return this.cradleIntersect.observer
-      }
-   }
-   cellIntersect = {
-      observer:null,
-      callback:null
-   }
+        observer:null,
+        callback:this.cradleIntersectionObserverCallback,
+        create:() => {
+            let viewportData = this._viewportdataRef.current
+            this.cradleIntersect.observer = new IntersectionObserver(
+                this.cradleIntersect.callback,
+                {root:viewportData.elementref.current, threshold:0}
+            )
+            return this.cradleIntersect.observer
+        }
+    }
+    cellIntersect = {
+        observer:null,
+        callback:null,
+        create:() => {
+            let viewportData = this._viewportdataRef.current
+            this.cellIntersect.observer = new IntersectionObserver(
+
+                this.cellobservercallback,
+                {
+                    root:viewportData.elementref.current, 
+                    threshold:this._cradleconfigRef.current.cellObserverThreshold,
+                } 
+            )
+            return this.cellIntersect.observer
+        }
+
+    }
 
 }
