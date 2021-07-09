@@ -19,7 +19,7 @@ export default class ScrollManager extends CradleManagement{
 
     onScroll = () => {
 
-        let signals = this._managers.current.signals.signals
+        let signals = this._managersRef.current.signals.signals
 
         if (signals.pauseScrollingEffects) {
 
@@ -46,12 +46,12 @@ export default class ScrollManager extends CradleManagement{
 
         clearTimeout(this._scrolltimerid)
 
-        let stateManager = this._managers.current.state
+        let stateManager = this._managersRef.current.state
         let cradleState = stateManager.cradleStateRef.current
 
-        let contentManager = this._managers.current.content
-        let cradleManager = this._managers.current.cradle
-        let serviceManager = this._managers.current.service
+        let contentManager = this._managersRef.current.content
+        let cradleManager = this._managersRef.current.cradle
+        let serviceManager = this._managersRef.current.service
 
         if (!viewportData.isResizing) {
 
@@ -104,12 +104,12 @@ export default class ScrollManager extends CradleManagement{
 
     private _onAfterScroll = () => {
 
-        let stateManager = this._managers.current.state
-        let cradleManager = this._managers.current.cradle
+        let stateManager = this._managersRef.current.state
+        let cradleManager = this._managersRef.current.cradle
         let cradleProps = this._cradlePropsRef.current
         let viewportData = this._viewportdataRef.current
-        // let cradleMaster = this._managers.current.cradleMaster
-        let contentManager = this._managers.current.content
+        // let cradleMaster = this._managersRef.current.cradleMaster
+        let contentManager = this._managersRef.current.content
 
         if (!stateManager.isMounted()) return
 
@@ -212,7 +212,7 @@ export default class ScrollManager extends CradleManagement{
 
         if (spineReferenceIndex == 0) referencescrolloffset = 0 // defensive
 
-        let cradleManager = this._managers.current.cradle
+        let cradleManager = this._managersRef.current.cradle
         cradleManager.cellReferenceData.scrollReferenceIndex = spineReferenceIndex
         cradleManager.cellReferenceData.scrollSpineOffset = referencescrolloffset
 

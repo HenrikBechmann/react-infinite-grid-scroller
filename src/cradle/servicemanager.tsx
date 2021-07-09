@@ -17,11 +17,11 @@ export default class ServiceManager extends CradleManagement{
 
     getVisibleList = () => {
 
-        let contentManager = this._managers.current.content        
+        let contentManager = this._managersRef.current.content        
 
         let cradleContent = contentManager.content
         let viewportData = this._viewportdataRef.current
-        let cradleManager = this._managers.current.cradle
+        let cradleManager = this._managersRef.current.cradle
         let cradleElements = cradleManager.elements
 
         return getVisibleItemsList({
@@ -35,7 +35,7 @@ export default class ServiceManager extends CradleManagement{
     }
 
     getContentList = () => {
-        let contentManager = this._managers.current.content        
+        let contentManager = this._managersRef.current.content        
         let contentlist = Array.from(contentManager.itemElements)
 
         contentlist.sort((a,b)=>{
@@ -47,9 +47,9 @@ export default class ServiceManager extends CradleManagement{
 
     reload = () => {
 
-        let cradleManager = this._managers.current.cradle
-        let signalsManager = this._managers.current.signals
-        let stateManager = this._managers.current.state
+        let cradleManager = this._managersRef.current.cradle
+        let signalsManager = this._managersRef.current.signals
+        let stateManager = this._managersRef.current.state
         let signals = signalsManager.signals
         // let viewportData = this._viewportdata
 
@@ -68,9 +68,9 @@ export default class ServiceManager extends CradleManagement{
 
     scrollToItem = (index) => {
 
-        let signalsManager = this._managers.current.signals
-        let cradleManager = this._managers.current.cradle
-        let stateManager = this._managers.current.state
+        let signalsManager = this._managersRef.current.signals
+        let cradleManager = this._managersRef.current.cradle
+        let stateManager = this._managersRef.current.state
 
         let signals = signalsManager.signals
         // let cradleManager = cradleManagerRef.current

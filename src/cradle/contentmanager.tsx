@@ -56,10 +56,10 @@ export default class ContentManager extends CradleManagement{
         let viewportData = this._viewportdataRef.current
         let cradleProps = this._cradlePropsRef.current
         let cradleConfig = this._cradleconfigRef.current
-        let scrollManager = this._managers.current.scroll
-        let cradleManager = this._managers.current.cradle
-        let stateManager = this._managers.current.state
-        let serviceManager = this._managers.current.service
+        let scrollManager = this._managersRef.current.scroll
+        let cradleManager = this._managersRef.current.cradle
+        let stateManager = this._managersRef.current.state
+        let serviceManager = this._managersRef.current.service
 
         let viewportElement = viewportData.elementref.current
 
@@ -165,9 +165,9 @@ export default class ContentManager extends CradleManagement{
 
         let viewportData = this._viewportdataRef.current
         let cradleProps = this._cradlePropsRef.current
-        let scrollManager = this._managers.current.scroll
-        let cradleManager = this._managers.current.cradle
-        let stateManager = this._managers.current.state
+        let scrollManager = this._managersRef.current.scroll
+        let cradleManager = this._managersRef.current.cradle
+        let stateManager = this._managersRef.current.state
 
         let viewportElement = viewportData.elementref.current
         if (!viewportElement) {

@@ -18,17 +18,17 @@ export default class ObserversManager extends CradleManagement{
    // TODO: stub
    cradleresizeobservercallback = (entries) => {
 
-       let signalsManager = this._managers.current.signals
+       let signalsManager = this._managersRef.current.signals
        if (signalsManager.signals.pauseCradleResizeObserver) return
 
    }
 
     cradleIntersectionObserverCallback = (entries) => {
 
-        let signalsManager = this._managers.current.signals
+        let signalsManager = this._managersRef.current.signals
         let signals = signalsManager.signals
-        let stateManager = this._managers.current.state
-        let contentManager = this._managers.current.content
+        let stateManager = this._managersRef.current.state
+        let contentManager = this._managersRef.current.content
 
         if (signals.pauseCradleIntersectionObserver) return
         let viewportData = this._viewportdataRef.current
