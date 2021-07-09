@@ -27,7 +27,8 @@ export default class ScrollManager extends CradleManagement{
 
         }
 
-        let viewportElement = this._viewportdata.elementref.current
+        let viewportData = this._viewportdataRef.current
+        let viewportElement = viewportData.elementref.current
 
         let scrollPositionCurrent = 
             (this._cradlePropsRef.current.orientation == 'vertical')
@@ -52,7 +53,7 @@ export default class ScrollManager extends CradleManagement{
         let cradleManager = this._managers.current.cradle
         let serviceManager = this._managers.current.service
 
-        if (!this._viewportdata.isResizing) {
+        if (!viewportData.isResizing) {
 
             if (cradleState == 'ready' || cradleState == 'repositioning') {
 
@@ -67,12 +68,12 @@ export default class ScrollManager extends CradleManagement{
                     if (this._cradlePropsRef.current.orientation == 'vertical') {
 
                         spineVisiblePosOffset = cradleElements.spineRef.current.offsetTop - 
-                            this._viewportdata.elementref.current.scrollTop
+                            this._viewportdataRef.current.elementref.current.scrollTop
                             
                     } else {
 
                         spineVisiblePosOffset = cradleElements.spineRef.current.offsetLeft - 
-                            this._viewportdata.elementref.current.scrollLeft
+                            this._viewportdataRef.current.elementref.current.scrollLeft
 
                     }
                     cradleManager.cellReferenceData.scrollReferenceIndex = itemindex
@@ -106,7 +107,7 @@ export default class ScrollManager extends CradleManagement{
         let stateManager = this._managers.current.state
         let cradleManager = this._managers.current.cradle
         let cradleProps = this._cradlePropsRef.current
-        let viewportData = this._viewportdata
+        let viewportData = this._viewportdataRef.current
         // let cradleMaster = this._managers.current.cradleMaster
         let contentManager = this._managers.current.content
 
@@ -173,7 +174,7 @@ export default class ScrollManager extends CradleManagement{
 
     private _setScrollReferenceIndexData = () => {
 
-        let viewportData = this._viewportdata
+        let viewportData = this._viewportdataRef.current
         let cradleProps = this._cradlePropsRef.current
         let cradleConfig = this._cradleconfigRef.current
 

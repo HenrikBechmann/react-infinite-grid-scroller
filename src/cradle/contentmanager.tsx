@@ -53,7 +53,7 @@ export default class ContentManager extends CradleManagement{
     // reset cradle, including allocation between head and tail parts of the cradle
     setCradleContent = (cradleState/*, referenceIndexData*/) => { 
 
-        let viewportData = this._viewportdata
+        let viewportData = this._viewportdataRef.current
         let cradleProps = this._cradlePropsRef.current
         let cradleConfig = this._cradleconfigRef.current
         let scrollManager = this._managers.current.scroll
@@ -163,7 +163,7 @@ export default class ContentManager extends CradleManagement{
 
     updateCradleContent = (entries, source = 'notifications') => {
 
-        let viewportData = this._viewportdata
+        let viewportData = this._viewportdataRef.current
         let cradleProps = this._cradlePropsRef.current
         let scrollManager = this._managers.current.scroll
         let cradleManager = this._managers.current.cradle

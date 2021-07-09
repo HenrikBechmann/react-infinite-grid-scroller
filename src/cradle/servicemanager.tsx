@@ -20,7 +20,7 @@ export default class ServiceManager extends CradleManagement{
         let contentManager = this._managers.current.content        
 
         let cradleContent = contentManager.content
-        let viewportData = this._viewportdata
+        let viewportData = this._viewportdataRef.current
         let cradleManager = this._managers.current.cradle
         let cradleElements = cradleManager.elements
 

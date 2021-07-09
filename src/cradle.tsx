@@ -92,13 +92,13 @@ import useIsMounted from 'react-is-mounted-hook'
 
 // import ResizeObserverPolyfill from 'resize-observer-polyfill'
 
-import { ResizeObserver } from '@juggle/resize-observer'
-
 import { ViewportContext } from './viewport'
 
 import { portalManager } from './portalmanager'
 
-const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
+// import { ResizeObserver } from '@juggle/resize-observer'
+
+// const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
 
 const ITEM_OBSERVER_THRESHOLD = 0
 
@@ -179,8 +179,8 @@ const Cradle = ({
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
 
     const cellObserverRef = useRef(null) // IntersectionObserver
-    const cradleIntersectionObserverRef = useRef(null) // for reposition
-    const cradleResizeObserverRef = useRef(null) // for reconfiguration
+    // const cradleIntersectionObserverRef = useRef(null) // for reposition
+    // const cradleResizeObserverRef = useRef(null) // for reconfiguration
 
     // -----------------------------------------------------------------------
     // ---------------------------[ context data ]----------------------------
@@ -277,7 +277,7 @@ const Cradle = ({
     // -------------------------[ cradle management nodes ]-----------------
 
     const managersRef = useRef(null) // make available to individual managers
-    const commonPropsRef = useRef({managersRef,viewportdata:viewportData,cradlePropsRef, cradleConfigRef})
+    const commonPropsRef = useRef({managersRef,viewportdataRef:viewportDataRef,cradlePropsRef, cradleConfigRef})
     const serviceCallsRef = useRef({referenceIndexCallbackRef})
 
     // cradle butterfly html components
@@ -551,25 +551,16 @@ const Cradle = ({
     // set up cradle resizeobserver
     useEffect(() => {
 
-        // ResizeObserver
-        cradleResizeObserverRef.current = new ResizeObserverClass(cradleresizeobservercallback)
-
-        let cradleElements = cradleElementsRef.current
-        cradleResizeObserverRef.current.observe(cradleElements.head.current)
-        cradleResizeObserverRef.current.observe(cradleElements.tail.current)
+        let observer = observersManager.cradleResize.create()
+        let cradleElements = cradleManager.elements
+        observer.observe(cradleElements.headRef.current)
+        observer.observe(cradleElements.tailRef.current)
 
         return () => {
 
-            cradleResizeObserverRef.current.disconnect()
+            observer.disconnect()
 
         }
-
-    },[])
-
-    // TODO: noop
-    const cradleresizeobservercallback = useCallback((entries) => {
-
-        if (signalsManager.signals.pauseCradleResizeObserver) return
 
     },[])
 
@@ -579,79 +570,80 @@ const Cradle = ({
     // cradle goes out of the observer scope, the "repositioning" cradle state is triggerd.
     useEffect(() => {
 
-        let viewportData = viewportDataRef.current
+        // let viewportData = viewportDataRef.current
         // IntersectionObserver
-        cradleIntersectionObserverRef.current = new IntersectionObserver(
+        // cradleIntersectionObserverRef.current = new IntersectionObserver(
 
-            cradleIntersectionObserverCallback,
-            {root:viewportData.elementref.current, threshold:0}
+        //     cradleIntersectionObserverCallback,
+        //     {root:viewportData.elementref.current, threshold:0}
 
-        )
+        // )
 
-        let cradleElements = cradleElementsRef.current
-        cradleIntersectionObserverRef.current.observe(cradleElements.head.current)
-        cradleIntersectionObserverRef.current.observe(cradleElements.tail.current)
+        let observer = observersManager.cradleIntersect.create()
+        let cradleElements = cradleManager.elements
+        observer.observe(cradleElements.headRef.current)
+        observer.observe(cradleElements.tailRef.current)
 
         return () => {
 
-            cradleIntersectionObserverRef.current.disconnect()
+            observer.disconnect()
 
         }
 
     },[])
 
-    const cradleIntersectionObserverCallback = useCallback((entries) => {
+    // const cradleIntersectionObserverCallback = useCallback((entries) => {
 
-        let signals = signalsManager.signals;
+    //     let signals = signalsManager.signals;
 
-        if (signals.pauseCradleIntersectionObserver) return
-        if (viewportDataRef.current.portalitem?.reparenting) return
+    //     if (signals.pauseCradleIntersectionObserver) return
+    //     if (viewportDataRef.current.portalitem?.reparenting) return
 
-        for (let i = 0; i < entries.length; i++ ) {
-            let entry = entries[i]
-            if (entry.target.dataset.type == 'head') {
-                signals.isHeadCradleInView = entry.isIntersecting
-            } else {
-                signals.isTailCradleInView = entry.isIntersecting
-            }
-        }
+    //     for (let i = 0; i < entries.length; i++ ) {
+    //         let entry = entries[i]
+    //         if (entry.target.dataset.type == 'head') {
+    //             signals.isHeadCradleInView = entry.isIntersecting
+    //         } else {
+    //             signals.isTailCradleInView = entry.isIntersecting
+    //         }
+    //     }
 
-        signals.isCradleInView = (signals.isHeadCradleInView || signals.isTailCradleInView);
+    //     signals.isCradleInView = (signals.isHeadCradleInView || signals.isTailCradleInView);
 
-        if (!signals.isCradleInView) 
-        {
-            let cradleState = cradleStateRef.current        
-            if (
-                !viewportDataRef.current.isResizing &&
-                !(cradleState == 'resized') &&
-                !(cradleState == 'repositioning') && 
-                !(cradleState == 'reposition') && 
-                !(cradleState == 'pivot')
-                ) 
-            {
-                let element = viewportDataRef.current.elementref.current
-                if (!element) {
-                    console.log('viewport element not set in cradleIntersectionObserverCallback',
-                        scrollerID, viewportDataRef.current.elementref.current,viewportDataRef)
-                    return
-                }
-                let rect = element.getBoundingClientRect()
-                let {top, right, bottom, left} = rect
-                let width = right - left, height = bottom - top
-                viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
-                signals.pauseCellObserver = true
-                // pauseCradleIntersectionObserverRef.current = true
-                let cradleContent = contentManager.content
-                cradleContent.headModel = []
-                cradleContent.tailModel = []
-                cradleContent.headView = []
-                cradleContent.tailView = []
-                setCradleState('repositioning')
+    //     if (!signals.isCradleInView) 
+    //     {
+    //         let cradleState = cradleStateRef.current        
+    //         if (
+    //             !viewportDataRef.current.isResizing &&
+    //             !(cradleState == 'resized') &&
+    //             !(cradleState == 'repositioning') && 
+    //             !(cradleState == 'reposition') && 
+    //             !(cradleState == 'pivot')
+    //             ) 
+    //         {
+    //             let element = viewportDataRef.current.elementref.current
+    //             if (!element) {
+    //                 console.log('viewport element not set in cradleIntersectionObserverCallback',
+    //                     scrollerID, viewportDataRef.current.elementref.current,viewportDataRef)
+    //                 return
+    //             }
+    //             let rect = element.getBoundingClientRect()
+    //             let {top, right, bottom, left} = rect
+    //             let width = right - left, height = bottom - top
+    //             viewportDataRef.current.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
+    //             signals.pauseCellObserver = true
+    //             // pauseCradleIntersectionObserverRef.current = true
+    //             let cradleContent = contentManager.content
+    //             cradleContent.headModel = []
+    //             cradleContent.tailModel = []
+    //             cradleContent.headView = []
+    //             cradleContent.tailView = []
+    //             setCradleState('repositioning')
 
-            }
-        }
+    //         }
+    //     }
 
-    },[])
+    // },[])
 
     // --------------------------[ item shell observer ]-----------------------------
 
