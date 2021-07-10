@@ -58,7 +58,13 @@ const CellShell = ({
 
         setPortalStatus('render')
 
-        if (!portalManager.hasPortalUserContent(scrollerID,index)) {
+        let hasUserContent = portalManager.hasPortalUserContent(scrollerID,index)
+
+        // console.log('cellshell hasUserContent',index,hasUserContent)
+
+        if (!hasUserContent) {
+
+            // console.log('cellshell getItem',index)
 
             if (isMounted() && getItem) {
 
@@ -162,23 +168,16 @@ const CellShell = ({
     const placeholderchildRef = useRef(placeholderchild)
 
     const portalchildRef = useRef(placeholderchild)
+    const usingPlaceholder = useRef(true)
 
     portalchildRef.current = useMemo(()=>{
 
-        // if (portalStatus == 'reparenting') {
-        //     setPortalStatus('render')            
-        // }
         if (portalStatus != 'render') return portalchildRef.current
-
+        if (!usingPlaceholder.current) return
         let portallistitem = portalRecord.current
-        // if (portallistitem.reparenting) {
-        //     portallistitem.reparenting = false
-        //     return portalchildRef.current
-        // }
         portallistitem.reparenting = true
         let reverseportal = portallistitem.reverseportal
-
-        // setPortalStatus('reparenting')
+        usingPlaceholder.current = false
 
         return <OutPortal node = {reverseportal} />
 
@@ -192,9 +191,7 @@ const CellShell = ({
                 portalRecord.current.reparenting = false
             })
         }
-    }, [portalRecord.current?.reparenting])//[portalStatus])
-
-    // console.log('rendering cellshell portalStatus with portalRecord',portalStatus, portalRecord)
+    }, [portalRecord.current?.reparenting])
 
     return <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
             { (portalStatus == 'render') && portalchildRef.current }

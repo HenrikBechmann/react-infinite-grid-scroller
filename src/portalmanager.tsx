@@ -144,7 +144,7 @@ class PortalAgentClass {
     hasPortalUserContent (scrollerID, index) {
 
         let portalItem = this.getPortalListItem(scrollerID, index)
-        return  portalItem && portalItem.usercontent
+        return  !!(portalItem && portalItem.usercontent)
 
     }
 

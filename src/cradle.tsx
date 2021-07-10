@@ -317,16 +317,6 @@ const Cradle = ({
         observersAgent,
         serviceAgent,
         stylesAgent,
-    ]:
-    [
-        ScrollAgent,
-        SignalsAgent,
-        StateAgent,
-        ContentAgent,
-        CradleAgent,
-        ObserversAgent,
-        ServiceAgent,
-        StylesAgent,
     ] = useMemo(()=>{
         return [
             new ScrollAgent(commonPropsRef),
@@ -463,13 +453,14 @@ const Cradle = ({
             cradleAgent.cellReferenceData.nextSpineOffset = cradleAgent.cellReferenceData.readySpineOffset
 
             // get previous ratio
-            let previousCellPixelLength = (orientation == 'vertical')?cradlePropsRef.current.cellWidth:cradlePropsRef.current.cellHeight
-
+            let previousCellPixelLength = (orientation == 'vertical')?
+                cradlePropsRef.current.cellWidth:cradlePropsRef.current.cellHeight
             let previousSpineOffset = cradleAgent.cellReferenceData.nextSpineOffset
 
             let previousratio = previousSpineOffset/previousCellPixelLength
 
-            let currentCellPixelLength = (orientation == 'vertical')?cradlePropsRef.current.cellHeight:cradlePropsRef.current.cellWidth
+            let currentCellPixelLength = (orientation == 'vertical')?
+                cradlePropsRef.current.cellHeight:cradlePropsRef.current.cellWidth
 
             let currentSpineOffset = previousratio * currentCellPixelLength
             
@@ -600,7 +591,7 @@ const Cradle = ({
             There are exceptions for setup and edge cases.
     */
 
-    // change orientation
+    // responds to change of orientation
     useEffect(() => {
 
         let observer = observersAgent.cellIntersect.observer
