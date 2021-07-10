@@ -21,7 +21,7 @@
     - reposition gets stuck at a particular number after getting behind on heavy scroll
         check pauseScrollingEffects
     - variable cells showing signs of getItem() with portal
-
+    Chrome sometimes misses nested cell portals horizontally
 */
 
 /*
@@ -102,7 +102,7 @@ import { portalManager } from './portalmanager'
 
 const ITEM_OBSERVER_THRESHOLD = 0
 
-// import management classes - loci of data and related methods
+// import agency classes - loci of data and related methods
 import ScrollAgent from './cradle/scrollagent'
 import SignalsAgent from './cradle/signalsagent'
 import StateAgent from './cradle/stateagent'
@@ -355,7 +355,7 @@ const Cradle = ({
     managersRef.current = managementsetRef.current
 
     if (viewportData.isReparenting) {
-        signalsAgent.resetSignals() //clone 
+        signalsAgent.resetSignals() 
         viewportData.isReparenting = false
         isReparentingRef.current = true
         setCradleState('reparenting')
