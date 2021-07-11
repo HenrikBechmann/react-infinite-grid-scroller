@@ -173,9 +173,10 @@ const CellShell = ({
     portalchildRef.current = useMemo(()=>{
 
         if (portalStatus != 'render') return portalchildRef.current
-        if (!usingPlaceholder.current) return
+        if (!usingPlaceholder.current) return portalchildRef.current
         let portallistitem = portalRecord.current
         portallistitem.reparenting = true
+        // setPortalStatus('reparenting')
         let reverseportal = portallistitem.reverseportal
         usingPlaceholder.current = false
 
@@ -192,6 +193,20 @@ const CellShell = ({
             })
         }
     }, [portalRecord.current?.reparenting])
+
+    // useLayoutEffect(()=> {
+
+    //     if (portalStatus == 'reparenting') {
+    //         setPortalStatus('reparentingdone')
+    //     }
+
+    // },[portalStatus])
+
+    // useEffect(()=>{
+    //     if (portalStatus == 'reparentingdone') {
+    //         setPortalStatus('render')
+    //     }
+    // })
 
     return <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
             { (portalStatus == 'render') && portalchildRef.current }
