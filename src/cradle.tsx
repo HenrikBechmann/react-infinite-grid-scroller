@@ -21,7 +21,8 @@
     - reposition gets stuck at a particular number after getting behind on heavy scroll
         check pauseScrollingEffects
     - variable cells showing signs of getItem() with portal
-    Chrome sometimes misses nested cell portals horizontally
+    - Chrome sometimes misses nested cell portals horizontally
+    - reduce computing intensity to avoid battery drainage
 */
 
 /*
