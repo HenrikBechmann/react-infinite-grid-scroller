@@ -36,9 +36,10 @@ const CellShell = ({
     const [error, saveError] = useState(null)
     const [styles,saveStyles] = useState({
         overflow:'hidden',
+        // willChange:'transform', // for Chrome Android paint bug
     } as React.CSSProperties)
     // const [itemstate,setItemstate] = useState('setup')
-    const shellRef = useRef()
+    const shellRef = useRef(null)
     const instanceIDRef = useRef(instanceID)
     const isMounted = useIsMounted()
     const itemrequestRef = useRef(null)
@@ -178,25 +179,10 @@ const CellShell = ({
         portallistitem.reparenting = true
         let reverseportal = portallistitem.reverseportal
         usingPlaceholder.current = false
-        // setPortalStatus('reparenting')
-        // setTimeout(() => {
-        //     let container = portallistitem.container
-        //     // container.style.display = 'none'
-        //     // container.style.offsetWidth
-        //     container.style.display = 'block'
-        // },200)
 
         return <OutPortal node = {reverseportal} />
 
     }, [portalStatus]);
-
-    // useEffect(()=>{
-    //     if (portalStatus == 'reparenting') {
-    //         let portallistitem = portalRecord.current
-    //         portallistitem.container.style.display = 'block'
-    //         setPortalStatus('render')
-    //     }
-    // },[portalStatus])
 
     useEffect(()=> {
         if (portalRecord.current?.reparenting) {
@@ -206,20 +192,6 @@ const CellShell = ({
             })
         }
     }, [portalRecord.current?.reparenting])
-
-    // useLayoutEffect(()=> {
-
-    //     if (portalStatus == 'reparenting') {
-    //         setPortalStatus('reparentingdone')
-    //     }
-
-    // },[portalStatus])
-
-    // useEffect(()=>{
-    //     if (portalStatus == 'reparentingdone') {
-    //         setPortalStatus('render')
-    //     }
-    // })
 
     return <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
             { (portalStatus == 'render') && portalchildRef.current }
