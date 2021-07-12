@@ -87,6 +87,7 @@ class PortalAgentClass {
         container.style.left = '0px'
         container.style.bottom = '0px'
         container.style.position = 'absolute'
+        // container.style.display = 'none'
         container.dataset.type = 'portalcontainer'
         container.dataset.index = index
         container.dataset.scrollerid = scrollerID

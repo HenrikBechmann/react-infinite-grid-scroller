@@ -176,14 +176,27 @@ const CellShell = ({
         if (!usingPlaceholder.current) return portalchildRef.current
         let portallistitem = portalRecord.current
         portallistitem.reparenting = true
-        // setPortalStatus('reparenting')
         let reverseportal = portallistitem.reverseportal
         usingPlaceholder.current = false
+        // setPortalStatus('reparenting')
+        // setTimeout(() => {
+        //     let container = portallistitem.container
+        //     // container.style.display = 'none'
+        //     // container.style.offsetWidth
+        //     container.style.display = 'block'
+        // },200)
 
         return <OutPortal node = {reverseportal} />
 
     }, [portalStatus]);
 
+    // useEffect(()=>{
+    //     if (portalStatus == 'reparenting') {
+    //         let portallistitem = portalRecord.current
+    //         portallistitem.container.style.display = 'block'
+    //         setPortalStatus('render')
+    //     }
+    // },[portalStatus])
 
     useEffect(()=> {
         if (portalRecord.current?.reparenting) {
