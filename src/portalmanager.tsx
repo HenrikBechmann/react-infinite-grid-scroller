@@ -100,13 +100,13 @@ class PortalAgentClass {
         scrollerportals.portalMap.set(index,<PortalWrapper portal = {portal} key = {index} index = {index}/>)
         scrollerportals.modified = true
 
-        let portalitem = {usercontent, placeholder, target:null, container, portal, reverseportal, reparenting:false, indexid: index,scrollerid:scrollerID}
+        let portalMetaItem = {usercontent, placeholder, target:null, container, portal, reverseportal, reparenting:false, indexid: index,scrollerid:scrollerID}
 
-        scrollerPortalMetaData.get(scrollerID).set(index, portalitem)
+        scrollerPortalMetaData.get(scrollerID).set(index, portalMetaItem)
 
         this.renderPortalList(scrollerID)
 
-        return portalitem
+        return portalMetaItem
 
     }
 
@@ -120,18 +120,22 @@ class PortalAgentClass {
         scrollerportals.portalMap.set(index,<PortalWrapper portal = {portal} key = {index} index = {index}/>)
         scrollerportals.modified = true
 
-        scrollerPortalMetaData.get(scrollerID).get(index).usercontent = usercontent
+        let portalMetaItem = scrollerPortalMetaData.get(scrollerID).get(index)
+        portalMetaItem.usercontent = usercontent
 
         this.renderPortalList(scrollerID)
+
+        return portalMetaItem
     }
 
     // delete a portal list item
     deletePortalListItem (scrollerID, index) {
 
         scrollerPortalMetaData.get(scrollerID).delete(index)
-        let portalitem = scrollerPortalListData.get(scrollerID)
-        portalitem.portalMap.delete(index)
-        portalitem.modified = true
+        let portalMetaItem = scrollerPortalListData.get(scrollerID)
+        portalMetaItem.portalMap.delete(index)
+        portalMetaItem.modified = true
+        return portalMetaItem
 
     }
 

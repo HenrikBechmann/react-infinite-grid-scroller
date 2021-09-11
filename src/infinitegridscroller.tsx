@@ -12,6 +12,7 @@
     - change portalmanager to simple object (singleton)
 
     - calc minwidth by form factor
+    - use state machine logic throughout
     */
 
 import React, {useRef, useEffect, useMemo, useContext} from 'react'

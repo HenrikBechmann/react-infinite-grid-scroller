@@ -33,7 +33,7 @@ const CellShell = ({
     // console.log('running cellshell with scrollerID',scrollerID)
 
     const portalManager = portalAgentInstance // useContext(PortalAgent)
-    const [error, saveError] = useState(null)
+    // const [error, saveError] = useState(null)
     const [styles,saveStyles] = useState({
         overflow:'hidden',
         // willChange:'transform', // for Chrome Android paint bug
@@ -45,7 +45,7 @@ const CellShell = ({
     const itemrequestRef = useRef(null)
     const portalRecord = useRef(null)
     const [portalStatus, setPortalStatus] = useState('setup'); // 'setup' -> 'render'
-    // (scrollerID == 3) && console.log('RUNNING cellshell scrollerID, portalStatus', scrollerID, portalStatus)
+    // console.log('RUNNING cellshell scrollerID, portalStatus', scrollerID, portalStatus)
 
     // initialize
     useEffect(() => {
@@ -57,13 +57,13 @@ const CellShell = ({
 
         // console.log('cellshell scrollerID, index, instanceID, portalRecord.current',scrollerID, index, instanceID, portalRecord.current)
 
-        setPortalStatus('render')
-
         let hasUserContent = portalManager.hasPortalUserContent(scrollerID,index)
 
         // console.log('cellshell hasUserContent',index,hasUserContent)
 
         if (!hasUserContent) {
+
+            setPortalStatus('renderplaceholder')
 
             // console.log('cellshell getItem',index)
 
@@ -76,13 +76,15 @@ const CellShell = ({
                         contentItem.then((usercontent) => {
                             if (isMounted()) { 
                                 // console.log('saving new usercontent by promise',scrollerName, scrollerID, index, usercontent)
-                                portalManager.updatePortalListItem(scrollerID,index,usercontent)
-                                saveError(null)
+                                portalRecord.current = portalManager.updatePortalListItem(scrollerID,index,usercontent)
+                                setPortalStatus('render')
+                                // saveError(null)
                             }
                         }).catch((e) => {
-                            if (isMounted()) { 
-                                saveError(e)
-                            }
+                            console.log('ERROR',e)
+                            // if (isMounted()) { 
+                            //     saveError(e)
+                            // }
                         })
                     } else {
                         // console.log('isMounted, contentItem',isMounted(), contentItem)
@@ -90,16 +92,23 @@ const CellShell = ({
                             if (contentItem) {
                                 let usercontent = contentItem;
                                 // (scrollerID == 0) && console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
-                                portalManager.updatePortalListItem(scrollerID,index,usercontent)
-                                saveError(null)
+                                portalRecord.current = portalManager.updatePortalListItem(scrollerID,index,usercontent)
+                                setPortalStatus('render')
+                                // saveError(null)
                             } else {
-                                saveError(true)
+                                console.log('ERROR','no content item')
+                                // saveError(true)
                             }
                         }
                     }
                 },{timeout:250})
-            }
-        }
+        
+            }         
+        } else {
+        
+            setPortalStatus('render')
+    
+        }        
 
         // cleanup
         return () => {
@@ -162,9 +171,9 @@ const CellShell = ({
 
     const placeholderchild = useMemo(()=>{
         let child = customplaceholderRef.current?
-                customplaceholderRef.current:<Placeholder index = {index} listsize = {listsize} error = {error}/>
+                customplaceholderRef.current:<Placeholder index = {index} listsize = {listsize} error = 'none'/>
         return child
-    }, [index, customplaceholderRef.current, listsize, error]);
+    }, [index, customplaceholderRef.current, listsize]);
 
     const placeholderchildRef = useRef(placeholderchild)
 
@@ -173,10 +182,14 @@ const CellShell = ({
 
     portalchildRef.current = useMemo(()=>{
 
-        if (portalStatus != 'render') return portalchildRef.current
-        if (!usingPlaceholder.current) return portalchildRef.current
         let portallistitem = portalRecord.current
-        portallistitem.reparenting = true
+        if (portalStatus != 'render') {
+            if (portallistitem && !portallistitem.reparenting) {
+                portallistitem.reparenting = true
+            }
+            return portalchildRef.current 
+        }
+        if (!usingPlaceholder.current) return portalchildRef.current
         let reverseportal = portallistitem.reverseportal
         usingPlaceholder.current = false
 
@@ -185,16 +198,17 @@ const CellShell = ({
     }, [portalStatus]);
 
     useEffect(()=> {
+        if (portalStatus != 'render') return
         if (portalRecord.current?.reparenting) {
             setTimeout(()=>{
                 if (!isMounted()) return
                 portalRecord.current.reparenting = false
             })
         }
-    }, [portalRecord.current?.reparenting])
+    }, [portalRecord.current?.reparenting, portalStatus])
 
     return <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
-            { (portalStatus == 'render') && portalchildRef.current }
+            { ((portalStatus == 'render') || (portalStatus == 'renderplaceholder')) && portalchildRef.current }
         </div>
 
 } // CellShell

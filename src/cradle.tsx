@@ -202,6 +202,9 @@ const Cradle = ({
     
     const crosscount = useMemo(() => {
 
+        console.log('in cradle calc crosscount viewportheight, viewportwidth', 
+            viewportheight, viewportwidth, Object.assign({},viewportDataRef.current))
+
         let crosscount
         let size = (orientation == 'horizontal')?viewportheight:viewportwidth
         let crossLength = (orientation == 'horizontal')?cellHeight:cellWidth
@@ -210,6 +213,8 @@ const Cradle = ({
         let tilelengthforcalc = crossLength + gap
         tilelengthforcalc = Math.min(tilelengthforcalc,lengthforcalc) // result cannot be less than 1
         crosscount = Math.floor(lengthforcalc/(tilelengthforcalc))
+
+        console.log('crosscount calculated in cradle', scrollerID, crosscount)
 
         return crosscount
 

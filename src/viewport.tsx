@@ -71,6 +71,9 @@ const Viewport = ({
 
     if (viewportDataRef.current.portalitem?.reparenting && !viewportDataRef.current.isReparenting) {
         viewportDataRef.current.isReparenting = true
+
+        console.log('in viewport, setting isReparenting', scrollerID, viewportstateRef.current, viewportDataRef.current)
+        setViewportState('reparenting')
     }
 
     useEffect(()=>{
@@ -174,7 +177,7 @@ const Viewport = ({
         viewportClientRectRef.current = viewportdivRef.current.getBoundingClientRect()
 
         let {top, right, bottom, left} = viewportClientRectRef.current
-
+        console.log('getting scrollerID, viewport dimensions',scrollerID,top, right, bottom, left )
         let width, height, localViewportData
         width = (right - left)
         height = (bottom - top)
@@ -196,7 +199,16 @@ const Viewport = ({
                 break
             }
         }
-    },[viewportstate]);
+    },[viewportstate])
+
+    useEffect(() => {
+
+        let viewportstate = viewportstateRef.current
+        if (viewportstate == 'reparenting') {
+            setViewportState('render')
+        }
+
+    },[viewportstateRef.current])
 
     // ----------------------[ render ]--------------------------------
 
@@ -207,7 +219,7 @@ const Viewport = ({
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >
-            { (viewportstate != 'setup') && children }
+            { ((viewportstate != 'setup') && (viewportstate != 'reparenting')) && children }
         </div>
     </ViewportContext.Provider>
     
