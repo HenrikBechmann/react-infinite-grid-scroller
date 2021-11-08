@@ -10,7 +10,7 @@ module.exports = {
   output: {
     filename: 'build.js',
     path: path.resolve('lib'),
-    library:'Scroller',
+    library:'react-infinite-grid-scroller',
     libraryTarget:'umd',
     clean:true
   },
@@ -27,7 +27,7 @@ module.exports = {
     ]
   },
   externals: {
-      "react": "react",
-      "react-dom": "react-dom"
+      react: 'react',
+      "react-dom": 'react-dom'
   },
 };
