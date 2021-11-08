@@ -4,7 +4,7 @@
   "description": "infinite vertical or horizontal scroll using css grid layout",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --mode development --config webpack.config.js",
+    "dev": "webpack --mode development --devtool 'eval-source-map' --config webpack.config.js",
     "build": "webpack --mode production --config webpack.config.js",
     "test": "echo \"No test specified\""
   },

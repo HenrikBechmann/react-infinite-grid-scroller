@@ -3,7 +3,7 @@ var webpack = require('webpack');
 var path = require('path');
 
 module.exports = {
-  devtool: 'source-map',
+  // devtool: 'source-map',
   entry: {
     main:'./src/infinitegridscroller.tsx'
   },
@@ -11,7 +11,8 @@ module.exports = {
     filename: 'build.js',
     path: path.resolve('lib'),
     library:'Scroller',
-    libraryTarget:'umd'
+    libraryTarget:'umd',
+    clean:true
   },
   resolve: {
     extensions: ['.tsx', '.js'],
