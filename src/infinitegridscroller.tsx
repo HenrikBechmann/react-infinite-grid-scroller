@@ -16,7 +16,7 @@
     */
 
 import React, {useRef, useEffect, useMemo, useContext} from 'react'
-import ReactDOM from 'react-dom'
+// import ReactDOM from 'react-dom'
 
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
@@ -61,7 +61,7 @@ const InfiniteGridScroller = (props) => {
         padding, // the space between the items and the viewport, applied to the cradle
         cellHeight, // the outer pixel height - literal for vertical; approximate for horizontal
         cellWidth, // the outer pixel width - literal for horizontal; approximate for vertical
-        runway, // the number of items outside the view of each side of the viewport 
+        runwaysize, // the number of items outside the view of each side of the viewport 
             // -- gives time to assemble before display
         listsize, // the exact number of the size of the virtual list
         indexOffset:defaultVisibleIndex, // the 0-based starting index of the list, when first loaded
@@ -91,7 +91,7 @@ const InfiniteGridScroller = (props) => {
     functions !?? (functions = {})
     gap !?? (gap = 0)
     padding !?? (padding = 0)
-    runway !?? (runway = 3)
+    runwaysize !?? (runwaysize = 3)
     defaultVisibleIndex !?? (defaultVisibleIndex = 0)
     listsize !?? (listsize = 0)
     layout !?? (layout = 'uniform')
@@ -154,7 +154,7 @@ const InfiniteGridScroller = (props) => {
                     functions = { functions }
                     placeholder = { placeholder }
                     styles = { styles }
-                    runwaycount = { runway }
+                    runwaycount = { runwaysize }
                     scrollerName = { scrollerName }
                     scrollerID = { scrollerSessionID }
 
