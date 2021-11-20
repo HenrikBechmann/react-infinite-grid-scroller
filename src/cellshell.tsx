@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom'
 
 import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
-import useIsMounted from 'react-is-mounted-hook'
+// import useIsMounted from 'react-is-mounted-hook'
 
 import { OutPortal } from 'react-reverse-portal'
 
@@ -41,7 +41,7 @@ const CellShell = ({
     // const [itemstate,setItemstate] = useState('setup')
     const shellRef = useRef(null)
     const instanceIDRef = useRef(instanceID)
-    const isMounted = useIsMounted()
+    const isMounted = useRef(true) // useIsMounted()
     const itemrequestRef = useRef(null)
     const portalRecord = useRef(null)
     const [portalStatus, setPortalStatus] = useState('setup'); // 'setup' -> 'render'
@@ -67,14 +67,14 @@ const CellShell = ({
 
             // console.log('cellshell getItem',index)
 
-            if (isMounted() && getItem) {
+            if (isMounted.current && getItem) {
 
                 itemrequestRef.current = requestidlecallback(()=> { // TODO make this optional
                     let contentItem = getItem(index)
 
                     if (contentItem && contentItem.then) {
                         contentItem.then((usercontent) => {
-                            if (isMounted()) { 
+                            if (isMounted.current) { 
                                 // console.log('saving new usercontent by promise',scrollerName, scrollerID, index, usercontent)
                                 portalRecord.current = portalManager.updatePortalListItem(scrollerID,index,usercontent)
                                 setPortalStatus('render')
@@ -88,7 +88,7 @@ const CellShell = ({
                         })
                     } else {
                         // console.log('isMounted, contentItem',isMounted(), contentItem)
-                        if (isMounted()) {
+                        if (isMounted.current) {
                             if (contentItem) {
                                 let usercontent = contentItem;
                                 // (scrollerID == 0) && console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
@@ -153,7 +153,7 @@ const CellShell = ({
     useEffect(()=>{
 
         let newStyles = getShellStyles(orientation, cellHeight, cellWidth, styles)
-        if (isMounted()) {
+        if (isMounted.current) {
             saveStyles(newStyles)
         }
 
@@ -201,11 +201,15 @@ const CellShell = ({
         if (portalStatus != 'render') return
         if (portalRecord.current?.reparenting) {
             setTimeout(()=>{
-                if (!isMounted()) return
+                if (!isMounted.current) return
                 portalRecord.current.reparenting = false
             })
         }
     }, [portalRecord.current?.reparenting, portalStatus])
+
+    useLayoutEffect(()=>{
+        return () => {isMounted.current = false}
+    },[])
 
     return <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
             { ((portalStatus == 'render') || (portalStatus == 'renderplaceholder')) && portalchildRef.current }

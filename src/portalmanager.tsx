@@ -5,12 +5,12 @@
     the data is pulled into the relevant CellShell for display
 */
 
-import React, {useState, useEffect} from 'react'
-import ReactDOM from 'react-dom'
+import React, {useState, useLayoutEffect, useRef} from 'react'
+// import ReactDOM from 'react-dom'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
-import useIsMounted from 'react-is-mounted-hook'
+// import useIsMounted from 'react-is-mounted-hook'
 
 // global scroller data, organized by session scrollerID
 const scrollerPortalMetaData = new Map()
@@ -210,14 +210,16 @@ export const PortalWrapper = ({
 export const PortalList = ({scrollerID}) => {
 
     const [portalList, setPortalList] = useState(null)
-    const isMounted = useIsMounted()
+    // const isMounted = useIsMounted()
+    const isMounted = useRef(true)
 
-    useEffect(()=>{
+    useLayoutEffect(()=>{
 
         scrollerPortalCallbacks.set(scrollerID,
             {setListState:()=>{
-                isMounted() && setPortalList(scrollerPortalListData.get(scrollerID).portalList)
+                isMounted.current && setPortalList(scrollerPortalListData.get(scrollerID).portalList)
             }})
+        return () => {isMounted.current = false}
 
     },[]) 
 

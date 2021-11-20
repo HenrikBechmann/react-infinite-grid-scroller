@@ -111,7 +111,7 @@ export default class ScrollAgent extends CradleManagement{
         // let cradleMaster = this._managersRef.current.cradleMaster
         let contentAgent = this._managersRef.current.content
 
-        if (!stateAgent.isMounted()) return
+        if (!stateAgent.isMounted.current) return
 
         let spineVisiblePosOffset
         let cradleElements = cradleAgent.elements

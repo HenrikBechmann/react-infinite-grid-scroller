@@ -6,11 +6,11 @@
     and act as the visible screen portal of the list being shown
 */
 
-import React, {useState, useRef, useEffect, useMemo, useCallback, useContext} from 'react'
+import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useContext} from 'react'
 
 export const ViewportContext = React.createContext(null)
 
-import useIsMounted from 'react-is-mounted-hook'
+// import useIsMounted from 'react-is-mounted-hook'
 
 import { ResizeObserver } from '@juggle/resize-observer'
 
@@ -42,7 +42,13 @@ const Viewport = ({
 
     const viewportstateRef = useRef(null)
     viewportstateRef.current = viewportstate
-    let isMounted = useIsMounted()
+    const isMounted = useRef(true)
+
+    useLayoutEffect(() => {
+
+        return () => {isMounted.current = false}
+
+    },[])
 
     // data heap
     // const timeoutidRef = useRef(null)
@@ -138,13 +144,13 @@ const Viewport = ({
             // below is a realtime message to cradle.onScroll
             // to stop updating the referenceIndexData, and to the item observer to stop
             // triggering responses (anticipating reset of cradle content based on resize)
-            if (isMounted()) setViewportState('resizing')
+            if (isMounted.current) setViewportState('resizing')
         }
 
         clearTimeout(resizeTimeridRef.current)
         resizeTimeridRef.current = setTimeout(() => {
             isResizingRef.current = false
-            if (isMounted()) {
+            if (isMounted.current) {
                 setViewportState('resized')
             }
 

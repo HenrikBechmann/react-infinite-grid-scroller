@@ -107,7 +107,7 @@ export default class ObserversAgent extends CradleManagement{
 
         }
 
-        stateAgent.isMounted() && contentAgent.updateCradleContent(movedentries,'cellObserver')
+        stateAgent.isMounted.current && contentAgent.updateCradleContent(movedentries,'cellObserver')
 
     }
 

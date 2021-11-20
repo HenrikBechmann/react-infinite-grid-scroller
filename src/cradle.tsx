@@ -89,7 +89,7 @@
 
 import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, useLayoutEffect } from 'react'
 
-import useIsMounted from 'react-is-mounted-hook'
+// import useIsMounted from 'react-is-mounted-hook'
 
 // import ResizeObserverPolyfill from 'resize-observer-polyfill'
 
@@ -137,6 +137,10 @@ const Cradle = ({
 
     // functions and styles handled separately
     const cradlePropsRef = useRef(null) // access by closures
+    const isMounted = useRef(true)
+    useLayoutEffect(()=>{
+        return () => {isMounted.current = false}
+    },[])
     cradlePropsRef.current = useMemo(() => {
         return { 
             gap, 
@@ -176,7 +180,7 @@ const Cradle = ({
     // -----------------------------------[ utilites ]------------------------
 
     // const portalManager = portalAgentInstance// useContext(PortalAgent)
-    let isMounted = useIsMounted()
+    // let isMounted = useIsMounted()
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
 
     // -----------------------------------------------------------------------
@@ -703,7 +707,7 @@ const Cradle = ({
             case 'normalizesignals': {
                 setTimeout(()=> {
 
-                    if (!isMounted()) return
+                    if (!isMounted.current) return
                     // console.log('normalizesignals for cradle',scrollerID)
                     if (!viewportData.isResizing) {
                         // redundant scroll position to avoid accidental positioning at tail end of reposition
