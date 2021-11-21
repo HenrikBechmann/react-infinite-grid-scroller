@@ -1,6 +1,10 @@
 // cellshell.tsx
 // copyright (c) 2020 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+    Consider not using requestIdleCallback; try it.
+*/
+
 import React, {useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo, useContext } from 'react'
 
 import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
