@@ -160,7 +160,6 @@ class PortalManager {
 
 }
 
-// export the portal manager
 export const portalManager = new PortalManager()
 
 // Utility functions
@@ -192,12 +191,10 @@ const updateInPortal = (content, reversePortal) => {
 const wrapperstyle = {display:'none'} // static; should take same dimensions as container CellShell
 
 // hidden portal wrapper for clarity and usage of conventional react relisting services
-export const PortalWrapper = ({
-    portal, index,
-}) => {
+export const PortalWrapper = ({ portal, index }) => {
 
-    return <div data-type='portalwrapper' data-index = {index} style = {wrapperstyle} key={index}>
-        {portal}
+    return <div data-type = 'portalwrapper' data-index = { index } style = { wrapperstyle } key = { index }>
+        { portal }
     </div>
 
 }

@@ -1,5 +1,5 @@
 // infinitegridscroller.tsx
-// copyright (c) 2019 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-2021 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     TODO:
