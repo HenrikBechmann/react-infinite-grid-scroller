@@ -17,7 +17,7 @@
     - consider rendering client content offscreen instead of display none
     */
 
-import React, {useRef, useEffect, useMemo, useContext} from 'react'
+import React, {useEffect, useMemo} from 'react'
 
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
@@ -74,16 +74,17 @@ const InfiniteGridScroller = (props) => {
             // optional, replaces default placeholder
         styles, // passive style over-rides (eg. color, opacity) for viewport, scrollblock, cradle, or scrolltracker
         // to come...
-        // cache = "preload", "keepload", "none"
+        // cache = "preload" or "keepload" or "none"
         // dense, // boolean (only with preload)
         // advanced, technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
         layout, // uniform, variable
         scrollerName, // for debugging
     } = props
 
-    // const portalManager = portalAgentInstance // useContext(PortalAgent)
     const scrollerSessionID = useMemo(()=>{ // get once only per instance
+
         return getScrollerSessionID()
+
     },[])
 
     // console.log('RUNNING infinitegridscroller scrollerSessionID',scrollerSessionID)
