@@ -58,7 +58,7 @@ const CellShell = ({
         let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
         let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
 
-        portalRecord.current = portalManager.fetchPortalListItem(scrollerID, index, null, placeholderchildRef.current)
+        portalRecord.current = portalManager.fetchPortalMetaData(scrollerID, index, placeholderchildRef.current)
 
         let hasUserContent = portalManager.hasPortalUserContent(scrollerID,index)
 

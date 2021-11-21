@@ -105,7 +105,7 @@ const Viewport = ({
             if (el.dataset && (el.dataset.type == 'portalcontainer')) {
                 portalindex = parseInt(el.dataset.index)
                 parentscrollerid = parseInt(el.dataset.scrollerid)
-                viewportDataRef.current.portalitem = portalManager.getPortalListItem(parentscrollerid, portalindex)
+                viewportDataRef.current.portalitem = portalManager.getPortalMetaData(parentscrollerid, portalindex)
                 break
             } else {
                 el = el.parentElement
