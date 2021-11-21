@@ -3,8 +3,6 @@
 
 import React, {useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo, useContext } from 'react'
 
-import ReactDOM from 'react-dom'
-
 import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
 import { OutPortal } from 'react-reverse-portal'
@@ -169,7 +167,7 @@ const CellShell = ({
 
     const placeholderchild = useMemo(()=>{
         let child = customplaceholderRef.current?
-                customplaceholderRef.current:<Placeholder index = {index} listsize = {listsize} error = 'none'/>
+                customplaceholderRef.current:<Placeholder index = {index} listsize = {listsize} error = {false}/>
         return child
     }, [index, customplaceholderRef.current, listsize]);
 

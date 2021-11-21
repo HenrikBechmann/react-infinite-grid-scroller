@@ -16,7 +16,6 @@
     */
 
 import React, {useRef, useEffect, useMemo, useContext} from 'react'
-// import ReactDOM from 'react-dom'
 
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'

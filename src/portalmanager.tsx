@@ -1,12 +1,11 @@
 // portalmanager.tsx
 
 /*
-    The infinite list scroller stores user cell data in a hidden portal cache, from whence
-    the data is pulled into the relevant CellShell for display
+    The infinite list scroller stores user cell data in a central hidden portal cache for each
+    infinitegridscroller root, from whence the data is pulled into the relevant CellShell for display
 */
 
 import React, {useState, useLayoutEffect, useRef} from 'react'
-// import ReactDOM from 'react-dom'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
