@@ -13,6 +13,8 @@
 
     - calc minwidth by form factor
     - use state machine logic throughout
+
+    - consider rendering client content offscreen instead of display none
     */
 
 import React, {useRef, useEffect, useMemo, useContext} from 'react'
@@ -27,7 +29,7 @@ const getScrollerSessionID = () => {
     return globalScrollerID++
 }
 
-const portalrootstyle = {display:'none'} // static
+const portalrootstyle = {display:'block'} // static
 /*
     BACKLOG: 
     - cache: none/preload/keepload
