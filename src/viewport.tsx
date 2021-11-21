@@ -12,7 +12,7 @@ export const ViewportContext = React.createContext(null)
 
 import { ResizeObserver } from '@juggle/resize-observer'
 
-import { portalManager as portalAgentInstance } from './portalmanager'
+import { portalManager } from './portalmanager'
 
 const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
 
@@ -34,7 +34,7 @@ const Viewport = ({
     // -----------------------[ initialize ]------------------
 
     // processing state
-    const portalManager = portalAgentInstance// useContext(PortalAgent)
+    // const portalManager = portalAgentInstance// useContext(PortalAgent)
     // setup -> render; resizing -> resized -> render
     const [viewportstate,setViewportState] = useState('setup')
 

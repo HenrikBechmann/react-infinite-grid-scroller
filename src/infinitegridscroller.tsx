@@ -22,7 +22,7 @@ import React, {useRef, useEffect, useMemo, useContext} from 'react'
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
 import Cradle from './cradle'
-import {portalManager as portalAgentInstance, PortalList} from './portalmanager'
+import {portalManager, PortalList} from './portalmanager'
 
 let globalScrollerID = 0
 const getScrollerSessionID = () => {
@@ -80,7 +80,7 @@ const InfiniteGridScroller = (props) => {
         scrollerName, // for debugging
     } = props
 
-    const portalManager = portalAgentInstance // useContext(PortalAgent)
+    // const portalManager = portalAgentInstance // useContext(PortalAgent)
     const scrollerSessionID = useMemo(()=>{
         return getScrollerSessionID()
     },[])
