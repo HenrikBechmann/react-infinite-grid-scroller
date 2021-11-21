@@ -26,6 +26,7 @@ import {portalManager, PortalList} from './portalmanager'
 
 let globalScrollerID = 0
 const getScrollerSessionID = () => {
+    console.log('getting globalScrollerID',globalScrollerID)
     return globalScrollerID++
 }
 
@@ -81,27 +82,29 @@ const InfiniteGridScroller = (props) => {
     } = props
 
     // const portalManager = portalAgentInstance // useContext(PortalAgent)
-    const scrollerSessionID = useMemo(()=>{
+    const scrollerSessionID = useMemo(()=>{ // get once only
         return getScrollerSessionID()
     },[])
     const scrollerSessionIDRef = useRef(scrollerSessionID)
 
     // console.log('RUNNING infinitegridscroller scrollerSessionID',scrollerSessionIDRef.current)//, scrollerState)
 
-    // defaults
-    functions !?? (functions = {})
-    gap !?? (gap = 0)
-    padding !?? (padding = 0)
-    runwaySize !?? (runwaySize = 3)
-    defaultVisibleIndex !?? (defaultVisibleIndex = 0)
-    listSize !?? (listSize = 0)
-    layout !?? (layout = 'uniform')
+    // set defaults
+    functions ?? (functions = {})
+    gap ?? (gap = 0)
+    padding ?? (padding = 0)
+    runwaySize ?? (runwaySize = 3)
+    defaultVisibleIndex ?? (defaultVisibleIndex = 0)
+    listSize ?? (listSize = 0)
+    layout ?? (layout = 'uniform')
     // constraints
     defaultVisibleIndex = Math.max(0,defaultVisibleIndex) // non-negative
     defaultVisibleIndex = Math.min(listSize, defaultVisibleIndex) // not larger than list
     if (!['horizontal','vertical'].includes(orientation)) {
         orientation = 'vertical'
     }
+
+    console.log('runwaySize',runwaySize)
 
     useEffect(()=>{
 
@@ -113,9 +116,9 @@ const InfiniteGridScroller = (props) => {
 
     },[])
 
-    return <div data-type = 'scroller' data-scrollerid = { scrollerSessionID }>
+    return <div data-type = 'scroller' data-scrollerid = { scrollerSessionIDRef.current }>
         <div data-type = 'portalroot' style = { portalrootstyle }>
-            <PortalList scrollerID = { scrollerSessionID }/>
+            <PortalList scrollerID = { scrollerSessionIDRef.current }/>
         </div>
         <Viewport
 
@@ -126,7 +129,7 @@ const InfiniteGridScroller = (props) => {
             padding = { padding }
             functions = { functions }
             styles = { styles }
-            scrollerID = { scrollerSessionID }
+            scrollerID = { scrollerSessionIDRef.current }
         >
         
             <Scrollblock
@@ -139,7 +142,7 @@ const InfiniteGridScroller = (props) => {
                 orientation = { orientation }
                 functions = { functions }
                 styles = { styles }
-                scrollerID = { scrollerSessionID }
+                scrollerID = { scrollerSessionIDRef.current }
 
             >
                 <Cradle 
@@ -157,7 +160,7 @@ const InfiniteGridScroller = (props) => {
                     styles = { styles }
                     runwaycount = { runwaySize }
                     scrollerName = { scrollerName }
-                    scrollerID = { scrollerSessionID }
+                    scrollerID = { scrollerSessionIDRef.current }
 
                 />
             </Scrollblock>
