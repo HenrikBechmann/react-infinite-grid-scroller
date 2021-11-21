@@ -89,8 +89,6 @@
 
 import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, useLayoutEffect } from 'react'
 
-// import useIsMounted from 'react-is-mounted-hook'
-
 // import ResizeObserverPolyfill from 'resize-observer-polyfill'
 
 import { ViewportContext } from './viewport'
@@ -180,7 +178,6 @@ const Cradle = ({
     // -----------------------------------[ utilites ]------------------------
 
     // const portalManager = portalAgentInstance// useContext(PortalAgent)
-    // let isMounted = useIsMounted()
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
 
     // -----------------------------------------------------------------------

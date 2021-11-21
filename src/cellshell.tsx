@@ -7,8 +7,6 @@ import ReactDOM from 'react-dom'
 
 import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
-// import useIsMounted from 'react-is-mounted-hook'
-
 import { OutPortal } from 'react-reverse-portal'
 
 import Placeholder from './placeholder'
@@ -41,7 +39,7 @@ const CellShell = ({
     // const [itemstate,setItemstate] = useState('setup')
     const shellRef = useRef(null)
     const instanceIDRef = useRef(instanceID)
-    const isMounted = useRef(true) // useIsMounted()
+    const isMounted = useRef(true)
     const itemrequestRef = useRef(null)
     const portalRecord = useRef(null)
     const [portalStatus, setPortalStatus] = useState('setup'); // 'setup' -> 'render'

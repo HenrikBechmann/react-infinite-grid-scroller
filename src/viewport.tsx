@@ -10,8 +10,6 @@ import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallbac
 
 export const ViewportContext = React.createContext(null)
 
-// import useIsMounted from 'react-is-mounted-hook'
-
 import { ResizeObserver } from '@juggle/resize-observer'
 
 import { portalManager as portalAgentInstance } from './portalmanager'
