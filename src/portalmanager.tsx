@@ -71,7 +71,7 @@ class PortalManager {
     }
 
     // add a portal list item. The index is the scroller dataset index
-    createPortalListItem (scrollerID, index, usercontent, placeholder) {
+    fetchPortalListItem (scrollerID, index, usercontent, placeholder) {
 
         if (this.hasPortalListItem(scrollerID, index)) {
             return this.getPortalListItem(scrollerID, index)
