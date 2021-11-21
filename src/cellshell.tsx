@@ -44,8 +44,13 @@ const CellShell = ({
     const isMounted = useRef(true)
     const itemrequestRef = useRef(null)
     const portalRecord = useRef(null)
-    const [portalStatus, setPortalStatus] = useState('setup'); // 'setup' -> 'render'
+    const [portalStatus, setPortalStatus] = useState('setup'); // 'setup' -> 'renderplaceholder' -> 'render'
+
     // console.log('RUNNING cellshell scrollerID, portalStatus', scrollerID, portalStatus)
+
+    useLayoutEffect(()=>{
+        return () => {isMounted.current = false}
+    },[])
 
     // initialize
     useEffect(() => {
@@ -54,8 +59,6 @@ const CellShell = ({
         let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
 
         portalRecord.current = portalManager.createPortalListItem(scrollerID,index,null, placeholderchildRef.current)
-
-        // console.log('cellshell scrollerID, index, instanceID, portalRecord.current',scrollerID, index, instanceID, portalRecord.current)
 
         let hasUserContent = portalManager.hasPortalUserContent(scrollerID,index)
 
@@ -189,7 +192,9 @@ const CellShell = ({
             }
             return portalchildRef.current 
         }
+
         if (!usingPlaceholder.current) return portalchildRef.current
+            
         let reverseportal = portallistitem.reverseportal
         usingPlaceholder.current = false
 
@@ -206,10 +211,6 @@ const CellShell = ({
             })
         }
     }, [portalRecord.current?.reparenting, portalStatus])
-
-    useLayoutEffect(()=>{
-        return () => {isMounted.current = false}
-    },[])
 
     return <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
             { ((portalStatus == 'render') || (portalStatus == 'renderplaceholder')) && portalchildRef.current }
