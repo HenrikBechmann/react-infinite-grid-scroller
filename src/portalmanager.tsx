@@ -12,7 +12,7 @@ import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 // global scroller data, organized by session scrollerID
 const scrollerPortalComponentMetaData = new Map()
 const scrollerPortalComponentData = new Map()
-const scrollerPortalBlockCallbacks = new Map()
+const scrollerPortalBlockComponentCallbacks = new Map()
 
 class PortalManager {
 
@@ -53,7 +53,7 @@ class PortalManager {
 
         scrollerPortalComponentMetaData.delete(scrollerID)
         scrollerPortalComponentData.delete(scrollerID)
-        scrollerPortalBlockCallbacks.delete(scrollerID)
+        scrollerPortalBlockComponentCallbacks.delete(scrollerID)
 
     }
 
@@ -66,7 +66,7 @@ class PortalManager {
             scrollerlistmap.modified = false
         }
 
-        scrollerPortalBlockCallbacks.get(scrollerID).setListState() // trigger display update
+        scrollerPortalBlockComponentCallbacks.get(scrollerID).setListState() // trigger display update
 
     }
 
@@ -210,7 +210,7 @@ export const PortalList = ({scrollerID}) => {
 
     useLayoutEffect(()=>{
 
-        scrollerPortalBlockCallbacks.set(scrollerID,
+        scrollerPortalBlockComponentCallbacks.set(scrollerID,
             {setListState:()=>{
                 isMounted.current && setPortalList(scrollerPortalComponentData.get(scrollerID).portalList)
             }})
