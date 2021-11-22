@@ -65,15 +65,12 @@ const Viewport = ({
     } as React.CSSProperties,styles?.viewport))
     const resizeTimeridRef = useRef(null)
     const isResizingRef = useRef(false)
-    const viewportDataRef = useRef({portalitem:null, isResizing:false, isReparenting: false})
+    const viewportDataRef = useRef({portal:null, isResizing:false, isReparenting: false})
     const viewportClientRectRef = useRef({top:0,right:0,bottom:0,left:0})
 
     const resizeObserverRef = useRef(null);
 
-    // console.log('RUNNING viewport scrollerID, viewportstate, portalitem',
-    //     scrollerID,viewportstate,viewportDataRef.current.portalitem)
-
-    if (viewportDataRef.current.portalitem?.reparenting && !viewportDataRef.current.isReparenting) {
+    if (viewportDataRef.current.portal?.reparenting && !viewportDataRef.current.isReparenting) {
         viewportDataRef.current.isReparenting = true
 
         // console.log('in viewport, setting isReparenting', scrollerID, viewportstateRef.current, viewportDataRef.current)
@@ -105,7 +102,7 @@ const Viewport = ({
             if (el.dataset && (el.dataset.type == 'portalcontainer')) {
                 portalindex = parseInt(el.dataset.index)
                 parentscrollerid = parseInt(el.dataset.scrollerid)
-                viewportDataRef.current.portalitem = portalManager.getPortalMetaData(parentscrollerid, portalindex)
+                viewportDataRef.current.portal = portalManager.getPortal(parentscrollerid, portalindex)
                 break
             } else {
                 el = el.parentElement
@@ -122,11 +119,6 @@ const Viewport = ({
     const resizeCallback = useCallback((entries)=>{
 
         if (viewportstateRef.current == 'setup') return
-
-        // console.log('viewport resizeCallback scrollerID, viewportDataRef.current.portalitem.reparenting, viewportDataRef.current.portalitem',
-        //     scrollerID, viewportDataRef.current.portalitem?.reparenting, viewportDataRef.current.portalitem)
-
-        // console.log('continuing')
 
         let target = entries[0].target
 

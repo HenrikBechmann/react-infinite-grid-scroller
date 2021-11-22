@@ -58,7 +58,7 @@ const CellShell = ({
         let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
         let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
 
-        portalRecord.current = portalManager.fetchPortalMetaData(scrollerID, index, placeholderchildRef.current)
+        portalRecord.current = portalManager.fetchPortal(scrollerID, index, placeholderchildRef.current)
 
         let hasUserContent = portalManager.hasPortalUserContent(scrollerID,index)
 
@@ -77,7 +77,7 @@ const CellShell = ({
                         contentItem.then((usercontent) => {
                             if (isMounted.current) { 
                                 // console.log('saving new usercontent by promise',scrollerName, scrollerID, index, usercontent)
-                                portalRecord.current = portalManager.updatePortalMetaData(scrollerID,index,usercontent)
+                                portalRecord.current = portalManager.updatePortal(scrollerID,index,usercontent)
                                 setPortalStatus('render')
                                 // saveError(null)
                             }
@@ -93,7 +93,7 @@ const CellShell = ({
                             if (contentItem) {
                                 let usercontent = contentItem;
                                 // (scrollerID == 0) && console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
-                                portalRecord.current = portalManager.updatePortalMetaData(scrollerID,index,usercontent)
+                                portalRecord.current = portalManager.updatePortal(scrollerID,index,usercontent)
                                 setPortalStatus('render')
                                 // saveError(null)
                             } else {

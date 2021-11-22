@@ -64,12 +64,14 @@ class PortalManager {
 
     }
 
-    // add a portal list item. The index is the scroller dataset index
-    fetchPortalMetaData(scrollerID, index, placeholder) {
+    // add a portal list item. The index is the scroller's portal dataset index
+    fetchPortal(scrollerID, index, placeholder) {
 
         if (this.hasPortal(scrollerID, index)) {
-            return this.getPortalMetaData(scrollerID, index)
+            return this.getPortal(scrollerID, index)
         }
+
+        // if not found, create new portal
 
         let container = document.createElement('div')
         // container.style.inset = '0px' // not recognized by React
@@ -102,8 +104,8 @@ class PortalManager {
     }
 
     // update the content of a portal list item
-    updatePortalMetaData (scrollerID, index, usercontent) {
-        let portalMetaData = this.getPortalMetaData(scrollerID,index)
+    updatePortal(scrollerID, index, usercontent) {
+        let portalMetaData = this.getPortal(scrollerID,index)
 
         let portalComponent = updateInPortal(usercontent, portalMetaData.reverseportal )
 
@@ -126,7 +128,6 @@ class PortalManager {
         scrollerdata.portalMetaDataMap.delete(index)
         scrollerdata.portalMap.delete(index)
         scrollerdata.modified = true
-        // return portalMetaItem
 
     }
 
@@ -140,13 +141,13 @@ class PortalManager {
     // query existence of content for a portal list item
     hasPortalUserContent (scrollerID, index) {
 
-        let portalMetaData = this.getPortalMetaData(scrollerID, index)
+        let portalMetaData = this.getPortal(scrollerID, index)
         return  !!(portalMetaData && portalMetaData.usercontent)
 
     }
 
     // get a portal list item's meta data
-    getPortalMetaData (scrollerID, index) {
+    getPortal(scrollerID, index) {
 
         return scrollerPortals.get(scrollerID).portalMetaDataMap.get(index)
 
