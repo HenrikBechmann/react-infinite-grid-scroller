@@ -694,7 +694,7 @@ const Cradle = ({
                 cradleContent.tailModel = []
                 cradleContent.headView = []
                 cradleContent.tailView = []
-                portalManager.resetScrollerPortalContentRepository(scrollerID)
+                portalManager.resetScrollerPortals(scrollerID)
                 contentAgent.setCradleContent(callingCradleState.current)
 
                 setCradleState('preparerender')

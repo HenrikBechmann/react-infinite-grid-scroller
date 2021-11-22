@@ -79,7 +79,11 @@ const InfiniteGridScroller = (props) => {
 
     const scrollerSessionID = useMemo(()=>{ // get once only per instance
 
-        return getScrollerSessionID()
+        let sessionID = getScrollerSessionID()
+
+        portalManager.createScrollerPortalContentRepository(sessionID)
+
+        return sessionID
 
     },[])
 
@@ -103,10 +107,10 @@ const InfiniteGridScroller = (props) => {
     useEffect(()=>{
 
         // initialize
-        portalManager.createScrollerPortalContentRepository(scrollerSessionID)
+        // portalManager.createScrollerPortalContentRepository(scrollerSessionID)
 
         // cleanup
-        return () => {portalManager.deleteScrollerPortalRepository(scrollerSessionID)}
+        return () => {portalManager.deleteScrollerPortals(scrollerSessionID)}
 
     },[])
 

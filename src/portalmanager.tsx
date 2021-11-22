@@ -5,68 +5,64 @@
     infinitegridscroller root, from whence the data is pulled into the relevant CellShell for display
 */
 
-import React, {useState, useLayoutEffect, useRef} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
 // global scroller data, organized by session scrollerID
-const scrollerPortalMetaData = new Map()
+// const scrollerPortalMetaData = new Map()
 const scrollerPortals = new Map()
-const scrollerPortalBlockCallbacks = new Map()
+// const scrollerPortalBlockCallbacks = new Map()
 
 class PortalManager {
 
     // initialize scroller repository
     createScrollerPortalContentRepository (scrollerID) {
 
-        if (!scrollerPortalMetaData.has(scrollerID)) {
-            scrollerPortalMetaData.set(scrollerID, new Map())
-        }
         if (!scrollerPortals.has(scrollerID)) {
-            scrollerPortals.set(scrollerID, {modified:false,portalMap:new Map(),portalList:null})
-        }
-
-    }
-
-    // clear scroller repository for list recreation (like re-positioning in list)
-    clearScrollerPortalContentRepository(scrollerID) {
-
-        if (scrollerPortalMetaData.has(scrollerID)) {
-            scrollerPortalMetaData.delete(scrollerID) // get(scrollerID).clear()
-        }
-        if (scrollerPortals.has(scrollerID)) {
-            scrollerPortals.delete(scrollerID)
+            scrollerPortals.set(scrollerID, 
+                {
+                    setListState:null,
+                    modified:false,
+                    portalMetaDataMap:new Map(),
+                    portalMap:new Map(),
+                    portalList:null
+                }
+            )
         }
 
     }
 
     // start again
-    resetScrollerPortalContentRepository(scrollerID) { // TODO: confirm no memory leak
+    resetScrollerPortals(scrollerID) { // TODO: confirm no memory leak
 
-        this.clearScrollerPortalContentRepository(scrollerID)
-        this.createScrollerPortalContentRepository(scrollerID)
+        if (scrollerPortals.has(scrollerID)) {
+            let scrollerdata = scrollerPortals.get(scrollerID)
+            scrollerdata.portalMap.clear() 
+            scrollerdata.portalMetaDataMap.clear()
+            scrollerdata.portalList = null
+            scrollerdata.modified = false
+        }
 
     }
 
     // delete scroller repository for reset or unmount
-    deleteScrollerPortalRepository (scrollerID) {
+    deleteScrollerPortals (scrollerID) {
 
-        scrollerPortalMetaData.delete(scrollerID)
         scrollerPortals.delete(scrollerID)
-        scrollerPortalBlockCallbacks.delete(scrollerID)
 
     }
 
     // set state of the PortalList component of the scroller to trigger render
     renderPortalList = (scrollerID) => {
 
-        let scrollerlistmap = scrollerPortals.get(scrollerID)
-        if (scrollerlistmap.modified) {
-            scrollerlistmap.portalList = Array.from(scrollerlistmap.portalMap.values())
-            scrollerlistmap.modified = false
+        let scrollerportaldata = scrollerPortals.get(scrollerID)
+        if (scrollerportaldata.modified) {
+            scrollerportaldata.portalList = Array.from(scrollerportaldata.portalMap.values())
+            scrollerportaldata.modified = false
         }
 
-        scrollerPortalBlockCallbacks.get(scrollerID).setListState() // trigger display update
+        scrollerportaldata.setListState() // trigger display update
 
     }
 
@@ -99,7 +95,7 @@ class PortalManager {
 
         let portalMetaData = {usercontent:null, placeholder, target:null, container, portal, reverseportal, reparenting:false, indexid: index,scrollerid:scrollerID}
 
-        scrollerPortalMetaData.get(scrollerID).set(index, portalMetaData)
+        scrollerPortals.get(scrollerID).portalMetaDataMap.set(index, portalMetaData)
 
         this.renderPortalList(scrollerID)
 
@@ -117,7 +113,7 @@ class PortalManager {
         scrollerportals.portalMap.set(index,<PortalWrapper portal = {portalComponent} key = {index} index = {index}/>)
         scrollerportals.modified = true
 
-        portalMetaData = scrollerPortalMetaData.get(scrollerID).get(index)
+        portalMetaData = scrollerPortals.get(scrollerID).portalMetaDataMap.get(index)
         portalMetaData.usercontent = usercontent
 
         this.renderPortalList(scrollerID)
@@ -128,18 +124,18 @@ class PortalManager {
     // delete a portal list item
     deletePortal(scrollerID, index) {
 
-        scrollerPortalMetaData.get(scrollerID).delete(index)
-        let portalMetaItem = scrollerPortals.get(scrollerID)
-        portalMetaItem.portalMap.delete(index)
-        portalMetaItem.modified = true
-        return portalMetaItem
+        let scrollerdata = scrollerPortals.get(scrollerID)
+        scrollerdata.portalMetaDataMap.delete(index)
+        scrollerdata.portalMap.delete(index)
+        scrollerdata.modified = true
+        // return portalMetaItem
 
     }
 
     // query existence of a portal list item
     hasPortal(scrollerID, index) {
 
-        return scrollerPortalMetaData.get(scrollerID).has(index)
+        return scrollerPortals.get(scrollerID).portalMetaDataMap.has(index)
 
     }
 
@@ -154,7 +150,7 @@ class PortalManager {
     // get a portal list item's meta data
     getPortalMetaData (scrollerID, index) {
 
-        return scrollerPortalMetaData.get(scrollerID).get(index)
+        return scrollerPortals.get(scrollerID).portalMetaDataMap.get(index)
 
     }
 
@@ -205,12 +201,14 @@ export const PortalList = ({scrollerID}) => {
     const [portalList, setPortalList] = useState(null)
     const isMounted = useRef(true)
 
-    useLayoutEffect(()=>{
+    useEffect(()=>{
 
-        scrollerPortalBlockCallbacks.set(scrollerID,
-            {setListState:()=>{
-                isMounted.current && setPortalList(scrollerPortals.get(scrollerID).portalList)
-            }})
+        let scrollerportals = scrollerPortals.get(scrollerID)
+
+        scrollerportals.setListState = ()=>{
+            isMounted.current && setPortalList(scrollerportals.portalList)
+        }
+
         return () => {isMounted.current = false}
 
     },[]) 

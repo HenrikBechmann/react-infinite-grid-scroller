@@ -943,7 +943,7 @@ const emitItem = ({
 export const deleteAndResetPortals = (portalManager, scrollerID, deleteList) => {
 
     for (let item of deleteList) {
-        portalManager.deletePortalListItem(scrollerID, item.props.index)
+        portalManager.deletePortal(scrollerID, item.props.index)
     }
     if (deleteList.length) portalManager.renderPortalList(scrollerID)
 }
