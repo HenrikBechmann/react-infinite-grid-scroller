@@ -196,7 +196,11 @@ const CellShell = ({
         let reverseportal = portallistitem.reverseportal
         usingPlaceholder.current = false
 
-        return <OutPortal node = {reverseportal} />
+        let child = <OutPortal node = {reverseportal} />
+
+        // console.log('portalStatus,child',portalStatus,child)
+
+        return child
 
     }, [portalStatus]);
 

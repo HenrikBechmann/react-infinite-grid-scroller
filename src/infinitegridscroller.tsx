@@ -11,6 +11,7 @@
     - calc minwidth by form factor
     - use state machine logic throughout
     - consider rendering client content offscreen instead of display none
+    - review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
 */
 
 import React, {useEffect, useMemo} from 'react'
@@ -64,7 +65,8 @@ const InfiniteGridScroller = (props) => {
         functions, // properties with direct access to some component utilites, optional
         placeholder, // a sparse component to stand in for content until the content arrives; 
             // optional, replaces default placeholder
-        styles, // passive style over-rides (eg. color, opacity) for viewport, scrollblock, cradle, or scrolltracker
+        styles, // passive style over-rides (eg. color, opacity); has 
+            // properties viewport, scrollblock, cradle, or scrolltracker
         // to come...
         // cache = "preload" or "keepload" or "none"
         // dense, // boolean (only with preload)
@@ -109,7 +111,7 @@ const InfiniteGridScroller = (props) => {
         orientation = 'vertical'
     }
 
-    return <div data-type = 'scroller' data-scrollerid = { scrollerSessionID }>
+    return <div data-type = 'scroller-frame' data-scrollerid = { scrollerSessionID }>
         <div data-type = 'portalroot' style = { portalrootstyle }>
             <PortalList scrollerID = { scrollerSessionID }/>
         </div>

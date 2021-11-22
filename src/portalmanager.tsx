@@ -74,15 +74,8 @@ class PortalManager {
         // if not found, create new portal
 
         let container = document.createElement('div')
-        container.style.inset = '0px' // not recognized by React
-        container.style.top = '0px'
-        container.style.right = '0px'
-        container.style.left = '0px'
-        container.style.bottom = '0px'
-        // container.style.height = '100px'
+        container.style.inset = '0px' 
         container.style.position = 'absolute'
-        // container.style.willChange = 'transform'
-        // container.style.display = 'none'
         container.dataset.type = 'portalcontainer'
         container.dataset.index = index
         container.dataset.scrollerid = scrollerID
