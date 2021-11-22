@@ -10,9 +10,7 @@ import React, {useState, useEffect, useRef} from 'react'
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
 // global scroller data, organized by session scrollerID
-// const scrollerPortalMetaData = new Map()
 const scrollerPortals = new Map()
-// const scrollerPortalBlockCallbacks = new Map()
 
 class PortalManager {
 
@@ -33,9 +31,9 @@ class PortalManager {
 
     }
 
-    // start again
     resetScrollerPortals(scrollerID) { // TODO: confirm no memory leak
 
+        // keep the setListState callback
         if (scrollerPortals.has(scrollerID)) {
             let scrollerdata = scrollerPortals.get(scrollerID)
             scrollerdata.portalMap.clear() 
@@ -95,7 +93,7 @@ class PortalManager {
 
         let portalMetaData = {usercontent:null, placeholder, target:null, container, portal, reverseportal, reparenting:false, indexid: index,scrollerid:scrollerID}
 
-        scrollerPortals.get(scrollerID).portalMetaDataMap.set(index, portalMetaData)
+        scrollerportals.portalMetaDataMap.set(index, portalMetaData)
 
         this.renderPortalList(scrollerID)
 
