@@ -2,7 +2,7 @@
 // copyright (c) 2020 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    The role of viewport is to provide data to its children (scrollblock and cradle), 
+    The role of viewport is to provide data to its children (scrollblock and cradle),
     and act as the visible screen portal of the list being shown
 */
 
@@ -76,7 +76,7 @@ const Viewport = ({
     if (viewportDataRef.current.portalitem?.reparenting && !viewportDataRef.current.isReparenting) {
         viewportDataRef.current.isReparenting = true
 
-        console.log('in viewport, setting isReparenting', scrollerID, viewportstateRef.current, viewportDataRef.current)
+        // console.log('in viewport, setting isReparenting', scrollerID, viewportstateRef.current, viewportDataRef.current)
         setViewportState('reparenting')
     }
 
@@ -181,7 +181,7 @@ const Viewport = ({
         viewportClientRectRef.current = viewportdivRef.current.getBoundingClientRect()
 
         let {top, right, bottom, left} = viewportClientRectRef.current
-        console.log('getting scrollerID, viewport dimensions',scrollerID,top, right, bottom, left )
+        // console.log('getting scrollerID, viewport dimensions',scrollerID,top, right, bottom, left )
         let width, height, localViewportData
         width = (right - left)
         height = (bottom - top)

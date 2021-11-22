@@ -203,8 +203,8 @@ const Cradle = ({
     
     const crosscount = useMemo(() => {
 
-        console.log('in cradle calc crosscount viewportheight, viewportwidth', 
-            viewportheight, viewportwidth, Object.assign({},viewportDataRef.current))
+        // console.log('in cradle calc crosscount viewportheight, viewportwidth', 
+        //     viewportheight, viewportwidth, Object.assign({},viewportDataRef.current))
 
         let crosscount
         let size = (orientation == 'horizontal')?viewportheight:viewportwidth
@@ -215,7 +215,7 @@ const Cradle = ({
         tilelengthforcalc = Math.min(tilelengthforcalc,lengthforcalc) // result cannot be less than 1
         crosscount = Math.floor(lengthforcalc/(tilelengthforcalc))
 
-        console.log('crosscount calculated in cradle', scrollerID, crosscount)
+        // console.log('crosscount calculated in cradle', scrollerID, crosscount)
 
         return crosscount
 
@@ -694,7 +694,7 @@ const Cradle = ({
                 cradleContent.tailModel = []
                 cradleContent.headView = []
                 cradleContent.tailView = []
-                portalManager.resetScrollerPortalRepository(scrollerID)
+                portalManager.resetScrollerPortalContent(scrollerID)
                 contentAgent.setCradleContent(callingCradleState.current)
 
                 setCradleState('preparerender')
@@ -774,7 +774,7 @@ const Cradle = ({
             />
             :null}
         <div 
-            data-type = 'cradle_handle'
+            data-type = 'cradle'
             style = {cradleSpineStyle} 
             ref = {spineCradleElementRef}
         >

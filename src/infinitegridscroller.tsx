@@ -26,15 +26,11 @@ import {portalManager, PortalList} from './portalmanager'
 
 let globalScrollerID = 0
 const getScrollerSessionID = () => {
-    console.log('getting globalScrollerID',globalScrollerID)
+    // console.log('getting globalScrollerID',globalScrollerID)
     return globalScrollerID++
 }
 
-const portalrootstyle = {display:'none'} // static
-/*
-    BACKLOG: 
-    - cache: none/preload/keepload
-*/
+const portalrootstyle = {display:'none'} // static parm
 
 // ===================================[ INITIALIZE ]===========================
 
@@ -107,7 +103,7 @@ const InfiniteGridScroller = (props) => {
     useEffect(()=>{
 
         // initialize
-        portalManager.createScrollerPortalRepository(scrollerSessionID)
+        portalManager.createScrollerPortalContentRepository(scrollerSessionID)
 
         // cleanup
         return () => {portalManager.deleteScrollerPortalRepository(scrollerSessionID)}
