@@ -3,19 +3,15 @@
 
 /*
     TODO:
+    - test for two root portals
     - nested list overflows port boundaries on android FF
-    
     - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
-
     - break up cradle
-
     - change portalmanager to simple object (singleton)
-
     - calc minwidth by form factor
     - use state machine logic throughout
-
     - consider rendering client content offscreen instead of display none
-    */
+*/
 
 import React, {useEffect, useMemo} from 'react'
 
