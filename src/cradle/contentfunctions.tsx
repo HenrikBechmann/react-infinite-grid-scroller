@@ -940,7 +940,7 @@ const emitItem = ({
 
 }
 
-export const deleteAndResetPortals = (portalManager, scrollerID, deleteList) => {
+export const deleteAndRerenderPortals = (portalManager, scrollerID, deleteList) => {
 
     for (let item of deleteList) {
         portalManager.deletePortal(scrollerID, item.props.index)

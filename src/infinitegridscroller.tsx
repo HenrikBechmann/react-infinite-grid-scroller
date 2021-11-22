@@ -73,6 +73,7 @@ const InfiniteGridScroller = (props) => {
         scrollerName, // for debugging
     } = props
 
+    // for mount
     const scrollerSessionID = useMemo(()=>{ // get once only per instance
 
         let sessionID = getScrollerSessionID()
@@ -80,6 +81,14 @@ const InfiniteGridScroller = (props) => {
         portalManager.createScrollerPortalRepository(sessionID)
 
         return sessionID
+
+    },[])
+
+    // for unmount
+    useEffect(()=>{
+
+        // cleanup portal repository
+        return () => {portalManager.deleteScrollerPortalRepository(scrollerSessionID)}
 
     },[])
 
@@ -99,13 +108,6 @@ const InfiniteGridScroller = (props) => {
     if (!['horizontal','vertical'].includes(orientation)) {
         orientation = 'vertical'
     }
-
-    useEffect(()=>{
-
-        // cleanup portal repository
-        return () => {portalManager.deleteScrollerPortals(scrollerSessionID)}
-
-    },[])
 
     return <div data-type = 'scroller' data-scrollerid = { scrollerSessionID }>
         <div data-type = 'portalroot' style = { portalrootstyle }>

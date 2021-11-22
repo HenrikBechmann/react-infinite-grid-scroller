@@ -9,7 +9,7 @@ import {
     getContentListRequirements,
     isolateRelevantIntersections,
     allocateContentList,
-    deleteAndResetPortals,
+    deleteAndRerenderPortals,
 
 } from './contentfunctions'
 
@@ -104,7 +104,7 @@ export default class ContentAgent extends CradleManagement{
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
-        deleteAndResetPortals(portalManager, cradleProps.scrollerID, deleteditems)
+        deleteAndRerenderPortals(portalManager, cradleProps.scrollerID, deleteditems)
 
         let [headcontentlist, tailcontentlist] = allocateContentList({
 
@@ -291,7 +291,7 @@ export default class ContentAgent extends CradleManagement{
 
         }
 
-        deleteAndResetPortals(portalManager, cradleProps.scrollerID, deletedContentItems)
+        deleteAndRerenderPortals(portalManager, cradleProps.scrollerID, deletedContentItems)
 
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 

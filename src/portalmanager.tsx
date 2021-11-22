@@ -22,7 +22,7 @@ class PortalManager {
                 {
                     setListState:null,
                     modified:false,
-                    portalMetaDataMap:new Map(),
+                    portalMetadataMap:new Map(),
                     portalMap:new Map(),
                     portalList:null
                 }
@@ -31,13 +31,13 @@ class PortalManager {
 
     }
 
-    resetScrollerPortals(scrollerID) { // TODO: confirm no memory leak
+    resetScrollerPortalRepository(scrollerID) { // TODO: confirm no memory leak
 
         // keep the setListState callback
         if (scrollerPortals.has(scrollerID)) {
             let scrollerdata = scrollerPortals.get(scrollerID)
             scrollerdata.portalMap.clear() 
-            scrollerdata.portalMetaDataMap.clear()
+            scrollerdata.portalMetadataMap.clear()
             scrollerdata.portalList = null
             scrollerdata.modified = false
         }
@@ -45,7 +45,7 @@ class PortalManager {
     }
 
     // delete scroller repository for reset or unmount
-    deleteScrollerPortals (scrollerID) {
+    deleteScrollerPortalRepository (scrollerID) {
 
         scrollerPortals.delete(scrollerID)
 
@@ -93,39 +93,39 @@ class PortalManager {
         scrollerportals.portalMap.set(index,<PortalWrapper portal = {portal} key = {index} index = {index}/>)
         scrollerportals.modified = true
 
-        let portalMetaData = {usercontent:null, placeholder, target:null, container, portal, reverseportal, reparenting:false, indexid: index,scrollerid:scrollerID}
+        let portalMetadata = {usercontent:null, placeholder, target:null, container, portal, reverseportal, reparenting:false, indexid: index,scrollerid:scrollerID}
 
-        scrollerportals.portalMetaDataMap.set(index, portalMetaData)
+        scrollerportals.portalMetadataMap.set(index, portalMetadata)
 
         this.renderPortalList(scrollerID)
 
-        return portalMetaData
+        return portalMetadata
 
     }
 
     // update the content of a portal list item
     updatePortal(scrollerID, index, usercontent) {
-        let portalMetaData = this.getPortal(scrollerID,index)
+        let portalMetadata = this.getPortal(scrollerID,index)
 
-        let portalComponent = updateInPortal(usercontent, portalMetaData.reverseportal )
+        let portalComponent = updateInPortal(usercontent, portalMetadata.reverseportal )
 
         let scrollerportals = scrollerPortals.get(scrollerID)
         scrollerportals.portalMap.set(index,<PortalWrapper portal = {portalComponent} key = {index} index = {index}/>)
         scrollerportals.modified = true
 
-        portalMetaData = scrollerPortals.get(scrollerID).portalMetaDataMap.get(index)
-        portalMetaData.usercontent = usercontent
+        portalMetadata = scrollerPortals.get(scrollerID).portalMetadataMap.get(index)
+        portalMetadata.usercontent = usercontent
 
         this.renderPortalList(scrollerID)
 
-        return portalMetaData
+        return portalMetadata
     }
 
     // delete a portal list item
     deletePortal(scrollerID, index) {
 
         let scrollerdata = scrollerPortals.get(scrollerID)
-        scrollerdata.portalMetaDataMap.delete(index)
+        scrollerdata.portalMetadataMap.delete(index)
         scrollerdata.portalMap.delete(index)
         scrollerdata.modified = true
 
@@ -134,22 +134,22 @@ class PortalManager {
     // query existence of a portal list item
     hasPortal(scrollerID, index) {
 
-        return scrollerPortals.get(scrollerID).portalMetaDataMap.has(index)
+        return scrollerPortals.get(scrollerID).portalMetadataMap.has(index)
 
     }
 
     // query existence of content for a portal list item
     hasPortalUserContent (scrollerID, index) {
 
-        let portalMetaData = this.getPortal(scrollerID, index)
-        return  !!(portalMetaData && portalMetaData.usercontent)
+        let portalMetadata = this.getPortal(scrollerID, index)
+        return  !!(portalMetadata && portalMetadata.usercontent)
 
     }
 
     // get a portal list item's meta data
     getPortal(scrollerID, index) {
 
-        return scrollerPortals.get(scrollerID).portalMetaDataMap.get(index)
+        return scrollerPortals.get(scrollerID).portalMetadataMap.get(index)
 
     }
 
