@@ -15,7 +15,7 @@ const scrollerPortals = new Map()
 class PortalManager {
 
     // initialize scroller repository
-    createScrollerPortalContentRepository (scrollerID) {
+    createScrollerPortalRepository (scrollerID) {
 
         if (!scrollerPortals.has(scrollerID)) {
             scrollerPortals.set(scrollerID, 
