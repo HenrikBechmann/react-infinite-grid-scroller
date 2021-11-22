@@ -11,7 +11,7 @@ import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
 // global scroller data, organized by session scrollerID
 const scrollerPortalMetaData = new Map()
-const scrollerPortalData = new Map()
+const scrollerPortals = new Map()
 const scrollerPortalBlockCallbacks = new Map()
 
 class PortalManager {
@@ -22,28 +22,28 @@ class PortalManager {
         if (!scrollerPortalMetaData.has(scrollerID)) {
             scrollerPortalMetaData.set(scrollerID, new Map())
         }
-        if (!scrollerPortalData.has(scrollerID)) {
-            scrollerPortalData.set(scrollerID, {modified:false,portalMap:new Map(),portalList:null})
+        if (!scrollerPortals.has(scrollerID)) {
+            scrollerPortals.set(scrollerID, {modified:false,portalMap:new Map(),portalList:null})
         }
 
     }
 
     // clear scroller repository for list recreation (like re-positioning in list)
-    clearScrollerPortalContent(scrollerID) {
+    clearScrollerPortalContentRepository(scrollerID) {
 
         if (scrollerPortalMetaData.has(scrollerID)) {
             scrollerPortalMetaData.delete(scrollerID) // get(scrollerID).clear()
         }
-        if (scrollerPortalData.has(scrollerID)) {
-            scrollerPortalData.delete(scrollerID)
+        if (scrollerPortals.has(scrollerID)) {
+            scrollerPortals.delete(scrollerID)
         }
 
     }
 
     // start again
-    resetScrollerPortalContent(scrollerID) { // TODO: confirm no memory leak
+    resetScrollerPortalContentRepository(scrollerID) { // TODO: confirm no memory leak
 
-        this.clearScrollerPortalContent(scrollerID)
+        this.clearScrollerPortalContentRepository(scrollerID)
         this.createScrollerPortalContentRepository(scrollerID)
 
     }
@@ -52,7 +52,7 @@ class PortalManager {
     deleteScrollerPortalRepository (scrollerID) {
 
         scrollerPortalMetaData.delete(scrollerID)
-        scrollerPortalData.delete(scrollerID)
+        scrollerPortals.delete(scrollerID)
         scrollerPortalBlockCallbacks.delete(scrollerID)
 
     }
@@ -60,7 +60,7 @@ class PortalManager {
     // set state of the PortalList component of the scroller to trigger render
     renderPortalList = (scrollerID) => {
 
-        let scrollerlistmap = scrollerPortalData.get(scrollerID)
+        let scrollerlistmap = scrollerPortals.get(scrollerID)
         if (scrollerlistmap.modified) {
             scrollerlistmap.portalList = Array.from(scrollerlistmap.portalMap.values())
             scrollerlistmap.modified = false
@@ -73,7 +73,7 @@ class PortalManager {
     // add a portal list item. The index is the scroller dataset index
     fetchPortalMetaData(scrollerID, index, placeholder) {
 
-        if (this.hasPortalMetaData(scrollerID, index)) {
+        if (this.hasPortal(scrollerID, index)) {
             return this.getPortalMetaData(scrollerID, index)
         }
 
@@ -93,43 +93,43 @@ class PortalManager {
 
         let [portal,reverseportal] = getInPortal(placeholder, container)
 
-        let scrollerportals = scrollerPortalData.get(scrollerID)
+        let scrollerportals = scrollerPortals.get(scrollerID)
         scrollerportals.portalMap.set(index,<PortalWrapper portal = {portal} key = {index} index = {index}/>)
         scrollerportals.modified = true
 
-        let portalMetaItem = {usercontent:null, placeholder, target:null, container, portal, reverseportal, reparenting:false, indexid: index,scrollerid:scrollerID}
+        let portalMetaData = {usercontent:null, placeholder, target:null, container, portal, reverseportal, reparenting:false, indexid: index,scrollerid:scrollerID}
 
-        scrollerPortalMetaData.get(scrollerID).set(index, portalMetaItem)
+        scrollerPortalMetaData.get(scrollerID).set(index, portalMetaData)
 
         this.renderPortalList(scrollerID)
 
-        return portalMetaItem
+        return portalMetaData
 
     }
 
     // update the content of a portal list item
-    updatePortalListItem (scrollerID, index, usercontent) {
+    updatePortalMetaData (scrollerID, index, usercontent) {
         let portalMetaData = this.getPortalMetaData(scrollerID,index)
 
-        let portalcomponent = updateInPortal(usercontent, portalMetaData.reverseportal )
+        let portalComponent = updateInPortal(usercontent, portalMetaData.reverseportal )
 
-        let scrollerportals = scrollerPortalData.get(scrollerID)
-        scrollerportals.portalMap.set(index,<PortalWrapper portal = {portalcomponent} key = {index} index = {index}/>)
+        let scrollerportals = scrollerPortals.get(scrollerID)
+        scrollerportals.portalMap.set(index,<PortalWrapper portal = {portalComponent} key = {index} index = {index}/>)
         scrollerportals.modified = true
 
-        let portalMetaItem = scrollerPortalMetaData.get(scrollerID).get(index)
-        portalMetaItem.usercontent = usercontent
+        portalMetaData = scrollerPortalMetaData.get(scrollerID).get(index)
+        portalMetaData.usercontent = usercontent
 
         this.renderPortalList(scrollerID)
 
-        return portalMetaItem
+        return portalMetaData
     }
 
     // delete a portal list item
-    deletePortalListItem (scrollerID, index) {
+    deletePortal(scrollerID, index) {
 
         scrollerPortalMetaData.get(scrollerID).delete(index)
-        let portalMetaItem = scrollerPortalData.get(scrollerID)
+        let portalMetaItem = scrollerPortals.get(scrollerID)
         portalMetaItem.portalMap.delete(index)
         portalMetaItem.modified = true
         return portalMetaItem
@@ -137,7 +137,7 @@ class PortalManager {
     }
 
     // query existence of a portal list item
-    hasPortalMetaData(scrollerID, index) {
+    hasPortal(scrollerID, index) {
 
         return scrollerPortalMetaData.get(scrollerID).has(index)
 
@@ -209,7 +209,7 @@ export const PortalList = ({scrollerID}) => {
 
         scrollerPortalBlockCallbacks.set(scrollerID,
             {setListState:()=>{
-                isMounted.current && setPortalList(scrollerPortalData.get(scrollerID).portalList)
+                isMounted.current && setPortalList(scrollerPortals.get(scrollerID).portalList)
             }})
         return () => {isMounted.current = false}
 
