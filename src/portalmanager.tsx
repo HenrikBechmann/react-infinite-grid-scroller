@@ -196,10 +196,10 @@ export const PortalList = ({scrollerID}) => {
 
     useEffect(()=>{
 
-        let scrollerportals = scrollerPortals.get(scrollerID)
+        let scrollersessionportals = scrollerPortals.get(scrollerID)
 
-        scrollerportals.setListState = ()=>{
-            isMounted.current && setPortalList(scrollerportals.portalList)
+        scrollersessionportals.setListState = ()=>{
+            isMounted.current && setPortalList(scrollersessionportals.portalList)
         }
 
         return () => {isMounted.current = false}
