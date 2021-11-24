@@ -3,6 +3,8 @@
 
 /*
     TODO:
+    - resize triggered by root only, unless variable
+    - intersection applied to cradle only
     - test for two root portals
     - nested list overflows port boundaries on android FF
     - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE

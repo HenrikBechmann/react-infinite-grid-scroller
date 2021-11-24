@@ -38,6 +38,8 @@ const Viewport = ({
     // setup -> render; resizing -> resized -> render
     const [viewportstate,setViewportState] = useState('setup')
 
+    console.log('running scrollerID viewportstate',scrollerID,viewportstate)
+
     const viewportstateRef = useRef(null)
     viewportstateRef.current = viewportstate
     const isMounted = useRef(true)
@@ -173,7 +175,9 @@ const Viewport = ({
         viewportClientRectRef.current = viewportdivRef.current.getBoundingClientRect()
 
         let {top, right, bottom, left} = viewportClientRectRef.current
-        // console.log('getting scrollerID, viewport dimensions',scrollerID,top, right, bottom, left )
+        console.log('orientation, isResizingRef.current, viewportstate',orientation, isResizingRef.current, viewportstate)
+        console.log('getting scrollerID, viewport top, right, bottom, left, width, height',
+                scrollerID,top, right, bottom, left, right - left, bottom - top )
         let width, height, localViewportData
         width = (right - left)
         height = (bottom - top)
@@ -201,6 +205,7 @@ const Viewport = ({
 
         let viewportstate = viewportstateRef.current
         if (viewportstate == 'reparenting') {
+
             setViewportState('render')
         }
 
@@ -215,7 +220,7 @@ const Viewport = ({
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >
-            { ((viewportstate != 'setup') && (viewportstate != 'reparenting')) && children }
+            { ((viewportstate != 'setup') && (!viewportDataRef.current.portal?.reparenting) && (viewportstate != 'reparenting')) && children }
         </div>
     </ViewportContext.Provider>
     
