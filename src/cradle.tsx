@@ -774,11 +774,11 @@ const Cradle = ({
             />
             :null}
         <div 
-            data-type = 'cradle'
+            data-type = 'cradle-spine'
             style = {cradleSpineStyle} 
             ref = {spineCradleElementRef}
         >
-            {true?<div style = {{zIndex:1, position:'absolute',width:'100%',height:'100%',boxShadow:'0 0 5px 3px red'}}></div>:null}
+            {true?<div data-type = 'cradle-divider' style = {{zIndex:1, position:'absolute',width:'100%',height:'100%',boxShadow:'0 0 5px 3px red'}}></div>:null}
             <div 
             
                 data-type = 'head'
