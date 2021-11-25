@@ -15,7 +15,7 @@ const scrollerPortals = new Map()
 class PortalManager {
 
     // initialize scroller repository
-    createScrollerPortalRepository (scrollerID) {
+    createScrollerPortalRepository(scrollerID) {
 
         if (!scrollerPortals.has(scrollerID)) {
             scrollerPortals.set(scrollerID, 
@@ -98,17 +98,17 @@ class PortalManager {
     }
 
     // update the content of a portal list item
-    updatePortal(scrollerID, index, usercontent) {
+    updatePortal(scrollerID, index, content) {
         let portalMetadata = this.getPortal(scrollerID,index)
 
-        let portalComponent = updateInPortal(usercontent, portalMetadata.reverseportal )
+        let portalComponent = updateInPortal(content, portalMetadata.reverseportal )
 
         let scrollerportals = scrollerPortals.get(scrollerID)
         scrollerportals.portalMap.set(index,<PortalWrapper portal = {portalComponent} key = {index} index = {index}/>)
         scrollerportals.modified = true
 
         portalMetadata = scrollerPortals.get(scrollerID).portalMetadataMap.get(index)
-        portalMetadata.usercontent = usercontent
+        portalMetadata.usercontent = content
 
         this.renderPortalList(scrollerID)
 

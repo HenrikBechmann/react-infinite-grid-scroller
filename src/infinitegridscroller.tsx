@@ -3,6 +3,8 @@
 
 /*
     TODO:
+    - make sure outportal locations are unmounted before outportal is moved
+    - check use of useCallback
     - resize triggered by root only, unless variable
     - intersection applied to cradle only
     - test for two root portals
@@ -16,7 +18,7 @@
     - review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
 */
 
-import React, {useEffect, useMemo} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
@@ -24,7 +26,7 @@ import Cradle from './cradle'
 import {portalManager, PortalList} from './portalmanager'
 
 let globalScrollerID = 0
-const getScrollerSessionID = () => {
+const getNextScrollerSessionID = () => {
     // console.log('getting globalScrollerID',globalScrollerID)
     return globalScrollerID++
 }
@@ -78,25 +80,26 @@ const InfiniteGridScroller = (props) => {
     } = props
 
     // for mount
-    const scrollerSessionID = useMemo(()=>{ // get once only per instance
+    // TODO: this is an anti pattern because useMemo is not guaranteed to run only once
+    const scrollerSessionID = useRef(null) //useMemo(()=>{ // get once only per instance
 
-        let sessionID = getScrollerSessionID()
+    const [scrollerstate,setScollerState] = useState('setup')
+
+    useEffect(()=>{
+
+        let sessionID = getNextScrollerSessionID()
+        scrollerSessionID.current = sessionID
         // side effect: immediate initialization of session portal repository
         portalManager.createScrollerPortalRepository(sessionID)
 
-        return sessionID
-
-    },[])
-
-    // for unmount
-    useEffect(()=>{
+        setScollerState('render')
 
         // cleanup portal repository
-        return () => {portalManager.deleteScrollerPortalRepository(scrollerSessionID)}
+        return () => portalManager.deleteScrollerPortalRepository(scrollerSessionID.current)
 
     },[])
 
-    // console.log('RUNNING infinitegridscroller scrollerSessionID',scrollerSessionID)
+    // console.log('RUNNING infinitegridscroller scrollerSessionID',scrollerSessionID.current)
 
     // set defaults
     functions ?? (functions = {})
@@ -113,7 +116,7 @@ const InfiniteGridScroller = (props) => {
         orientation = 'vertical'
     }
 
-    return <div data-type = 'scroller-frame' data-scrollerid = { scrollerSessionID }>
+    return ((scrollerstate == 'render') && <div data-type = 'scroller-frame' data-scrollerid = { scrollerSessionID.current }>
         <div data-type = 'portalroot' style = { portalrootstyle }>
             <PortalList scrollerID = { scrollerSessionID }/>
         </div>
@@ -162,7 +165,7 @@ const InfiniteGridScroller = (props) => {
                 />
             </Scrollblock>
         </Viewport>
-    </div>
+    </div>)
 }
 
 export default InfiniteGridScroller

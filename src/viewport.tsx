@@ -220,7 +220,7 @@ const Viewport = ({
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >
-            { ((viewportstate != 'setup') && (!viewportDataRef.current.portal?.reparenting) && (viewportstate != 'reparenting')) && children }
+            { ((viewportstate != 'setup') && (viewportstate != 'reparenting')) && children }
         </div>
     </ViewportContext.Provider>
     
