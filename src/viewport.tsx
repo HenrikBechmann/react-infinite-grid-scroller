@@ -6,7 +6,7 @@
     and act as the visible screen portal of the list being shown
 */
 
-import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useContext} from 'react'
+import React, {useState, useRef, useEffect, useMemo, useCallback, useContext} from 'react'
 
 export const ViewportContext = React.createContext(null)
 
@@ -44,27 +44,30 @@ const Viewport = ({
     viewportstateRef.current = viewportstate
     const isMounted = useRef(true)
 
-    useLayoutEffect(() => {
+    useEffect(() => {
 
         return () => {isMounted.current = false}
 
     },[])
 
-    // data heap
-    // const timeoutidRef = useRef(null)
+    const divlinerstyleRef = useRef(null)
+
     const viewportdivRef = useRef(undefined)
-    const divlinerstyleRef = useRef(
-        Object.assign({
-        position:'absolute',
-        // height:'100%',
-        // width:'100%',
-        top:0,
-        right:0,
-        bottom:0,
-        left:0,
-        overflow:'auto',
-        backgroundColor:'red',
-    } as React.CSSProperties,styles?.viewport))
+
+    divlinerstyleRef.current = useMemo(() => {
+
+        return Object.assign(
+        {
+            position:'absolute',
+            top:0,
+            right:0,
+            bottom:0,
+            left:0,
+            overflow:'auto',
+            backgroundColor:'red',
+         } as React.CSSProperties,styles?.viewport)},
+    [styles?.viewport])
+
     const resizeTimeridRef = useRef(null)
     const isResizingRef = useRef(false)
     const viewportDataRef = useRef({portal:null, isResizing:false, isReparenting: false})
@@ -220,7 +223,7 @@ const Viewport = ({
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >
-            { ((viewportstate != 'setup') && (viewportstate != 'reparenting')) && children }
+            { (viewportstate == 'render') && children }
         </div>
     </ViewportContext.Provider>
     
