@@ -52,7 +52,7 @@ const Viewport = ({
 
     const divlinerstyleRef = useRef(null)
 
-    const viewportdivRef = useRef(undefined)
+    const viewportdivRef = useRef(null)
 
     divlinerstyleRef.current = useMemo(() => {
 
@@ -65,8 +65,8 @@ const Viewport = ({
             left:0,
             overflow:'auto',
             backgroundColor:'red',
-         } as React.CSSProperties,styles?.viewport)},
-    [styles?.viewport])
+         }, styles?.viewport)
+    },[styles?.viewport])
 
     const resizeTimeridRef = useRef(null)
     const isResizingRef = useRef(false)
@@ -158,7 +158,7 @@ const Viewport = ({
     // calculated values
     divlinerstyleRef.current = useMemo(() => {
         let mincrosslength = calcMinViewportCrossLength(orientation, cellWidth, cellHeight, padding)
-        let styles = {...divlinerstyleRef.current} as React.CSSProperties
+        let styles = divlinerstyleRef.current
         if (orientation == 'vertical') {
             styles.minWidth = mincrosslength + 'px'
             styles.minHeight = 'auto'
