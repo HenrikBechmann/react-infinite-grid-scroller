@@ -70,17 +70,11 @@ const Viewport = ({
 
     const resizeTimeridRef = useRef(null)
     const isResizingRef = useRef(false)
+
     const viewportDataRef = useRef({portal:null, isResizing:false, isReparenting: false})
     const viewportClientRectRef = useRef({top:0,right:0,bottom:0,left:0})
 
     const resizeObserverRef = useRef(null);
-
-    if (viewportDataRef.current.portal?.reparenting && !viewportDataRef.current.isReparenting) {
-        viewportDataRef.current.isReparenting = true
-
-        // console.log('in viewport, setting isReparenting', scrollerID, viewportstateRef.current, viewportDataRef.current)
-        setViewportState('reparenting')
-    }
 
     useEffect(()=>{
 
@@ -88,7 +82,7 @@ const Viewport = ({
         resizeObserverRef.current = new ResizeObserverClass(resizeCallback)
         resizeObserverRef.current.observe(viewportdivRef.current)
 
-        // cleanup
+        // unmount
         return () => {
 
             resizeObserverRef.current.disconnect()
@@ -102,24 +96,31 @@ const Viewport = ({
         if (scrollerID == 0) return
         let parentscrollerid
         let portalindex
-        let el = viewportdivRef.current
-        while (el) {
-            if (el.dataset && (el.dataset.type == 'portalcontainer')) {
-                portalindex = parseInt(el.dataset.index)
-                parentscrollerid = parseInt(el.dataset.scrollerid)
+        let element = viewportdivRef.current
+        while (element) {
+            if (element.dataset && (element.dataset.type == 'portalcontainer')) {
+                portalindex = parseInt(element.dataset.index)
+                parentscrollerid = parseInt(element.dataset.scrollerid)
                 viewportDataRef.current.portal = portalManager.getPortal(parentscrollerid, portalindex)
                 break
             } else {
-                el = el.parentElement
+                element = element.parentElement
             }
         } 
 
-        if (!el) {
+        if (!element) {
             console.log('ERROR: parent portalcontainer not found')
             return
         }
 
     },[])
+
+    if (viewportDataRef.current.portal?.reparenting && !viewportDataRef.current.isReparenting) {
+        viewportDataRef.current.isReparenting = true
+
+        // console.log('in viewport, setting isReparenting', scrollerID, viewportstateRef.current, viewportDataRef.current)
+        setViewportState('reparenting')
+    }
 
     const resizeCallback = useCallback((entries)=>{
 

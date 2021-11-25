@@ -87,7 +87,7 @@ const InfiniteGridScroller = (props) => {
 
     useEffect(()=>{
 
-        let sessionID = getNextScrollerSessionID()
+        const sessionID = getNextScrollerSessionID()
         scrollerSessionIDRef.current = sessionID
         // side effect: immediate initialization of session portal repository
         portalManager.createScrollerPortalRepository(sessionID)
