@@ -70,7 +70,6 @@ const Viewport = ({
     },[styles?.viewport])
 
     const viewportDataRef = useRef({portal:null, isResizing:false, isReparenting: false})
-    // const viewportClientRectRef = useRef({top:0,right:0,bottom:0,left:0})
 
     const resizeTimeridRef = useRef(null)
     const isResizingRef = useRef(false)
@@ -183,20 +182,16 @@ const Viewport = ({
 
         if (viewportstate == 'setup') return viewportDataRef.current
 
-        let viewportclientrect = viewportdivRef.current.getBoundingClientRect()
+        const {top, right, bottom, left} = viewportdivRef.current.getBoundingClientRect() // viewportclientrect
+        const width = (right - left)
+        const height = (bottom - top)
 
-        let {top, right, bottom, left} = viewportclientrect
-        // console.log('orientation, isResizingRef.current, viewportstate',orientation, isResizingRef.current, viewportstate)
-        // console.log('getting scrollerID, viewport top, right, bottom, left, width, height',
-        //         scrollerID,top, right, bottom, left, right - left, bottom - top )
-        let width, height, localViewportData
-        width = (right - left)
-        height = (bottom - top)
-        localViewportData = {
+        const localViewportData = {
             viewportDimensions:{top,right, bottom, left, width, height},
             elementref:viewportdivRef,
             isResizing:isResizingRef.current,
         }
+
         return Object.assign({},viewportDataRef.current, localViewportData)
 
     },[orientation, isResizingRef.current, viewportstate])
