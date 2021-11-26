@@ -42,11 +42,11 @@ const Viewport = ({
 
     const viewportstateRef = useRef(null) // for useCallback
     viewportstateRef.current = viewportstate
-    const isMounted = useRef(true)
+    const isMountedRef = useRef(true)
 
     useEffect(() => {
 
-        return () => {isMounted.current = false}
+        return () => {isMountedRef.current = false}
 
     },[])
 
@@ -139,13 +139,13 @@ const Viewport = ({
             // below is a realtime message to cradle.onScroll
             // to stop updating the referenceIndexData, and to the item observer to stop
             // triggering responses (anticipating reset of cradle content based on resize)
-            if (isMounted.current) setViewportState('resizing')
+            if (isMountedRef.current) setViewportState('resizing')
         }
 
         clearTimeout(resizeTimeridRef.current)
         resizeTimeridRef.current = setTimeout(() => {
             isResizingRef.current = false
-            if (isMounted.current) {
+            if (isMountedRef.current) {
                 setViewportState('resized')
             }
 
@@ -164,6 +164,8 @@ const Viewport = ({
 
     // calculated values
     divlinerstyleRef.current = useMemo(() => {
+
+        // TODO: gap
         let mincrosslength = calcMinViewportCrossLength(orientation, cellWidth, cellHeight, padding)
         let styles = divlinerstyleRef.current
         if (orientation == 'vertical') {
@@ -192,7 +194,7 @@ const Viewport = ({
             isResizing:isResizingRef.current,
         }
 
-        return Object.assign({},viewportDataRef.current, localViewportData)
+        return Object.assign({},viewportDataRef.current, localViewportData) // TODO: find alternate way to signal a change
 
     },[orientation, isResizingRef.current, viewportstate])
 
@@ -200,6 +202,7 @@ const Viewport = ({
     useLayoutEffect(()=>{
         switch (viewportstate) {
             case 'reparenting':
+            case 'resized':
             case 'setup': {
                 setViewportState('render')
                 break
@@ -207,14 +210,6 @@ const Viewport = ({
         }
     },[viewportstate])
 
-    useLayoutEffect(()=>{
-        switch (viewportstate) {
-            case 'resized': {
-                setViewportState('render')
-                break
-            }
-        }
-    },[viewportstate])
     // ----------------------[ render ]--------------------------------
 
     return <ViewportContext.Provider value = { viewportDataRef.current }>
