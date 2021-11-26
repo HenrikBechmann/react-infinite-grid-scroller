@@ -197,6 +197,7 @@ const Viewport = ({
     // --------------------[ state processing ]---------------------------
     useEffect(()=>{
         switch (viewportstateRef.current) {
+            case 'reparenting':
             case 'setup':
             case 'resized': {
                 setViewportState('render')
@@ -205,15 +206,15 @@ const Viewport = ({
         }
     },[viewportstateRef.current])
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        if (viewportstateRef.current == 'reparenting') {
+    //     if (viewportstateRef.current == 'reparenting') {
 
-            setViewportState('render')
+    //         setViewportState('render')
 
-        }
+    //     }
 
-    },[viewportstateRef.current])
+    // },[viewportstateRef.current])
 
     // ----------------------[ render ]--------------------------------
 
@@ -224,7 +225,7 @@ const Viewport = ({
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >
-            { (viewportstateRef.current == 'render') && children }
+            { ((viewportstate != 'setup') && (viewportstate != 'reparenting')) && children }
         </div>
     </ViewportContext.Provider>
     
