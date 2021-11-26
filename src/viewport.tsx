@@ -183,9 +183,9 @@ const Viewport = ({
 
         if (viewportstate == 'setup') return viewportDataRef.current
 
-        let viewportClientRect = viewportdivRef.current.getBoundingClientRect()
+        let viewportclientrect = viewportdivRef.current.getBoundingClientRect()
 
-        let {top, right, bottom, left} = viewportClientRect
+        let {top, right, bottom, left} = viewportclientrect
         // console.log('orientation, isResizingRef.current, viewportstate',orientation, isResizingRef.current, viewportstate)
         // console.log('getting scrollerID, viewport top, right, bottom, left, width, height',
         //         scrollerID,top, right, bottom, left, right - left, bottom - top )
