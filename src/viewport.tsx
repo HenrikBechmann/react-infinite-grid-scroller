@@ -6,7 +6,7 @@
     and act as the visible screen portal of the list being shown
 */
 
-import React, {useState, useRef, useEffect, useMemo, useCallback, useContext} from 'react'
+import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useContext} from 'react'
 
 export const ViewportContext = React.createContext(null)
 
@@ -40,7 +40,7 @@ const Viewport = ({
 
     console.log('running scrollerID viewportstate',scrollerID,viewportstate)
 
-    const viewportstateRef = useRef(null)
+    const viewportstateRef = useRef(null) // for useCallback
     viewportstateRef.current = viewportstate
     const isMounted = useRef(true)
 
@@ -70,12 +70,13 @@ const Viewport = ({
     },[styles?.viewport])
 
     const viewportDataRef = useRef({portal:null, isResizing:false, isReparenting: false})
-    const viewportClientRectRef = useRef({top:0,right:0,bottom:0,left:0})
+    // const viewportClientRectRef = useRef({top:0,right:0,bottom:0,left:0})
 
     const resizeTimeridRef = useRef(null)
     const isResizingRef = useRef(false)
     const resizeObserverRef = useRef(null);
 
+    // set up resizeObserver
     useEffect(()=>{
 
         // initialize
@@ -91,12 +92,14 @@ const Viewport = ({
 
     },[])
 
+    // get portal for non-root viewports
     useEffect(()=>{
 
-        if (scrollerID == 0) return
-        let parentscrollerid
-        let portalindex
+        if (scrollerID == 0) return // root
+
+        let parentscrollerid, portalindex
         let element = viewportdivRef.current
+
         while (element) {
             if (element.dataset && (element.dataset.type == 'portalcontainer')) {
                 portalindex = parseInt(element.dataset.index)
@@ -115,11 +118,14 @@ const Viewport = ({
 
     },[])
 
+    // for resizeObserver
     const resizeCallback = useCallback((entries)=>{
 
         if (viewportstateRef.current == 'setup') return
 
-        let target = entries[0].target
+        // console.log('calling resizeCallback',viewportstateRef.current)
+
+        const target = entries[0].target
 
         if (!target.dataset.initialized) {
             // console.log('initializing target', target.dataset)
@@ -130,6 +136,7 @@ const Viewport = ({
         if (!isResizingRef.current) {
             viewportDataRef.current.isResizing = isResizingRef.current = true 
             viewportDataRef.current = Object.assign({},viewportDataRef.current) // trigger child render
+            // TODO: trace this:!
             // below is a realtime message to cradle.onScroll
             // to stop updating the referenceIndexData, and to the item observer to stop
             // triggering responses (anticipating reset of cradle content based on resize)
@@ -174,14 +181,14 @@ const Viewport = ({
     // set context data for children
     viewportDataRef.current = useMemo(() => {
 
-        if (viewportstateRef.current == 'setup') return viewportDataRef.current
+        if (viewportstate == 'setup') return viewportDataRef.current
 
-        viewportClientRectRef.current = viewportdivRef.current.getBoundingClientRect()
+        let viewportClientRect = viewportdivRef.current.getBoundingClientRect()
 
-        let {top, right, bottom, left} = viewportClientRectRef.current
-        console.log('orientation, isResizingRef.current, viewportstate',orientation, isResizingRef.current, viewportstateRef.current)
-        console.log('getting scrollerID, viewport top, right, bottom, left, width, height',
-                scrollerID,top, right, bottom, left, right - left, bottom - top )
+        let {top, right, bottom, left} = viewportClientRect
+        // console.log('orientation, isResizingRef.current, viewportstate',orientation, isResizingRef.current, viewportstate)
+        // console.log('getting scrollerID, viewport top, right, bottom, left, width, height',
+        //         scrollerID,top, right, bottom, left, right - left, bottom - top )
         let width, height, localViewportData
         width = (right - left)
         height = (bottom - top)
@@ -192,30 +199,27 @@ const Viewport = ({
         }
         return Object.assign({},viewportDataRef.current, localViewportData)
 
-    },[orientation, isResizingRef.current, viewportstateRef.current])
+    },[orientation, isResizingRef.current, viewportstate])
 
     // --------------------[ state processing ]---------------------------
-    useEffect(()=>{
-        switch (viewportstateRef.current) {
+    useLayoutEffect(()=>{
+        switch (viewportstate) {
             case 'reparenting':
-            case 'setup':
+            case 'setup': {
+                setViewportState('render')
+                break
+            }
+        }
+    },[viewportstate])
+
+    useLayoutEffect(()=>{
+        switch (viewportstate) {
             case 'resized': {
                 setViewportState('render')
                 break
             }
         }
-    },[viewportstateRef.current])
-
-    // useEffect(() => {
-
-    //     if (viewportstateRef.current == 'reparenting') {
-
-    //         setViewportState('render')
-
-    //     }
-
-    // },[viewportstateRef.current])
-
+    },[viewportstate])
     // ----------------------[ render ]--------------------------------
 
     return <ViewportContext.Provider value = { viewportDataRef.current }>
