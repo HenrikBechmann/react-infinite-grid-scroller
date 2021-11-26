@@ -32,7 +32,7 @@ export default class ObserversAgent extends CradleManagement{
 
         if (signals.pauseCradleIntersectionObserver) return
         let viewportData = this._viewportdataRef.current
-        if (viewportData.portalitem?.reparenting) return
+        // if (viewportData.portalitem?.reparenting) return
 
         for (let i = 0; i < entries.length; i++ ) {
             let entry = entries[i]

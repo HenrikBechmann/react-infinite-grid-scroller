@@ -6,7 +6,7 @@
     and act as the visible screen portal of the list being shown
 */
 
-import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useContext} from 'react'
+import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback} from 'react'
 
 export const ViewportContext = React.createContext(null)
 
@@ -33,26 +33,22 @@ const Viewport = ({
 
     // -----------------------[ initialize ]------------------
 
-    // processing state
-    // const portalManager = portalAgentInstance// useContext(PortalAgent)
-    // setup -> render; resizing -> resized -> render
     const [viewportstate,setViewportState] = useState('setup')
 
     console.log('running scrollerID viewportstate',scrollerID,viewportstate)
 
-    const viewportstateRef = useRef(null) // for useCallback
+    const viewportstateRef = useRef(null) // for useCallback -> resizeCallback
     viewportstateRef.current = viewportstate
-    const isMountedRef = useRef(true)
+    const isMountedRef = useRef(true) // monitor for unmounted
 
     useEffect(() => {
 
+        // unmount
         return () => {isMountedRef.current = false}
 
     },[])
 
     const divlinerstyleRef = useRef(null)
-
-    const viewportdivRef = useRef(null)
 
     divlinerstyleRef.current = useMemo(() => {
 
@@ -69,7 +65,10 @@ const Viewport = ({
 
     },[styles?.viewport])
 
-    const viewportDataRef = useRef({portal:null, isResizing:false, isReparenting: false})
+    const viewportdivRef = useRef(null)
+
+    // viewportDataRef is passed as context to children
+    const viewportDataRef = useRef({portal:null, isResizing:false}) //, isReparenting: false})
 
     const resizeTimeridRef = useRef(null)
     const isResizingRef = useRef(false)
@@ -88,6 +87,47 @@ const Viewport = ({
             resizeObserverRef.current.disconnect()
 
         }
+
+    },[])
+
+    // for resizeObserver; generates interrupt
+    const resizeCallback = useCallback((entries)=>{
+
+        if (viewportstateRef.current == 'setup') {
+
+            return
+
+        }
+
+        const target = entries[0].target
+
+        if (!target.dataset.initialized) {
+
+            // console.log('initializing target', target.dataset)
+            target.dataset.initialized = true
+
+            return
+
+        }
+
+        if (!isResizingRef.current) { // generate interrupt response
+            viewportDataRef.current.isResizing = isResizingRef.current = true 
+            // new object creation triggers a realtime message to cradle through context
+            viewportDataRef.current = Object.assign({},viewportDataRef.current) 
+
+            if (isMountedRef.current) setViewportState('resizing')
+
+        }
+
+        clearTimeout(resizeTimeridRef.current)
+        resizeTimeridRef.current = setTimeout(() => {
+
+            isResizingRef.current = false
+            if (isMountedRef.current) {
+                setViewportState('resized')
+            }
+
+        },RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE)
 
     },[])
 
@@ -117,48 +157,12 @@ const Viewport = ({
 
     },[])
 
-    // for resizeObserver
-    const resizeCallback = useCallback((entries)=>{
+    // if (viewportDataRef.current.portal?.reparenting && !viewportDataRef.current.isReparenting) {
+    //     viewportDataRef.current.isReparenting = true
 
-        if (viewportstateRef.current == 'setup') return
-
-        // console.log('calling resizeCallback',viewportstateRef.current)
-
-        const target = entries[0].target
-
-        if (!target.dataset.initialized) {
-            // console.log('initializing target', target.dataset)
-            target.dataset.initialized = true
-            return
-        }
-
-        if (!isResizingRef.current) {
-            viewportDataRef.current.isResizing = isResizingRef.current = true 
-            viewportDataRef.current = Object.assign({},viewportDataRef.current) // trigger child render
-            // TODO: trace this:!
-            // below is a realtime message to cradle.onScroll
-            // to stop updating the referenceIndexData, and to the item observer to stop
-            // triggering responses (anticipating reset of cradle content based on resize)
-            if (isMountedRef.current) setViewportState('resizing')
-        }
-
-        clearTimeout(resizeTimeridRef.current)
-        resizeTimeridRef.current = setTimeout(() => {
-            isResizingRef.current = false
-            if (isMountedRef.current) {
-                setViewportState('resized')
-            }
-
-        },RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE)
-
-    },[])
-
-    if (viewportDataRef.current.portal?.reparenting && !viewportDataRef.current.isReparenting) {
-        viewportDataRef.current.isReparenting = true
-
-        // console.log('in viewport, setting isReparenting', scrollerID, viewportstateRef.current, viewportDataRef.current)
-        setViewportState('reparenting')
-    }
+    //     // console.log('in viewport, setting isReparenting', scrollerID, viewportstateRef.current, viewportDataRef.current)
+    //     setViewportState('reparenting')
+    // }
 
     // ----------------------------------[ calculate ]--------------------------------
 
@@ -167,7 +171,8 @@ const Viewport = ({
 
         // TODO: gap
         let mincrosslength = calcMinViewportCrossLength(orientation, cellWidth, cellHeight, padding)
-        let styles = divlinerstyleRef.current
+        let styles = Object.assign({},divlinerstyleRef.current) // avoid readonly
+        // console.log('styles',styles)
         if (orientation == 'vertical') {
             styles.minWidth = mincrosslength + 'px'
             styles.minHeight = 'auto'
@@ -201,7 +206,7 @@ const Viewport = ({
     // --------------------[ state processing ]---------------------------
     useLayoutEffect(()=>{
         switch (viewportstate) {
-            case 'reparenting':
+            // case 'reparenting':
             case 'resized':
             case 'setup': {
                 setViewportState('render')
@@ -219,7 +224,7 @@ const Viewport = ({
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >
-            { ((viewportstate != 'setup') && (viewportstate != 'reparenting')) && children }
+            { (viewportstate != 'setup') && children }
         </div>
     </ViewportContext.Provider>
     

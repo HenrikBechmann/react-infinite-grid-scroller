@@ -192,7 +192,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    const isReparentingRef = useRef(false)
+    // const isReparentingRef = useRef(false)
 
     // -----------------------------------------------------------------------
     // -------------------------[ configuration ]-----------------
@@ -351,12 +351,12 @@ const Cradle = ({
 
     managersRef.current = managementsetRef.current
 
-    if (viewportData.isReparenting) {
-        signalsAgent.resetSignals() 
-        viewportData.isReparenting = false
-        isReparentingRef.current = true
-        setCradleState('reparenting')
-    }
+    // if (viewportData.isReparenting) {
+    //     signalsAgent.resetSignals() 
+    //     viewportData.isReparenting = false
+    //     isReparentingRef.current = true
+    //     setCradleState('reparenting')
+    // }
 
     // ------------------------------------------------------------------------
     // -----------------------[ initialization effects ]-----------------------
@@ -638,10 +638,10 @@ const Cradle = ({
             case 'repositioning':
                 break;
 
-            case 'reparenting':
-                isReparentingRef.current = false
-                setCradleState('setscrollposition')
-                break;
+            // case 'reparenting':
+            //     isReparentingRef.current = false
+            //     setCradleState('setscrollposition')
+            //     break;
 
             case 'setscrollposition': {
 

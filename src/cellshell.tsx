@@ -185,9 +185,9 @@ const CellShell = ({
 
         let portallistitem = portalRecord.current
         if (portalStatus != 'render') {
-            if (portallistitem && !portallistitem.reparenting) {
-                portallistitem.reparenting = true
-            }
+        //     if (portallistitem && !portallistitem.reparenting) {
+        //         portallistitem.reparenting = true
+        //     }
             return portalchildRef.current 
         }
 
@@ -204,15 +204,15 @@ const CellShell = ({
 
     }, [portalStatus]);
 
-    useEffect(()=> {
-        if (portalStatus != 'render') return
-        if (portalRecord.current?.reparenting) {
-            setTimeout(()=>{
-                if (!isMounted.current) return
-                portalRecord.current.reparenting = false
-            })
-        }
-    }, [portalRecord.current?.reparenting, portalStatus])
+    // useEffect(()=> {
+    //     if (portalStatus != 'render') return
+    //     // if (portalRecord.current?.reparenting) {
+    //     //     setTimeout(()=>{
+    //     //         if (!isMounted.current) return
+    //     //         portalRecord.current.reparenting = false
+    //     //     })
+    //     // }
+    // }, [portalRecord.current?.reparenting, portalStatus])
 
     return <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
             { ((portalStatus == 'render') || (portalStatus == 'renderplaceholder')) && portalchildRef.current }
