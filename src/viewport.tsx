@@ -90,7 +90,7 @@ const Viewport = ({
 
     },[])
 
-    // for resizeObserver; generates interrupt
+    // used by resizeObserver; generates interrupt
     const resizeCallback = useCallback((entries)=>{
 
         if (viewportstateRef.current == 'setup') {
@@ -172,7 +172,7 @@ const Viewport = ({
         // TODO: gap
         let mincrosslength = calcMinViewportCrossLength(orientation, cellWidth, cellHeight, padding)
         let styles = Object.assign({},divlinerstyleRef.current) // avoid readonly
-        // console.log('styles',styles)
+
         if (orientation == 'vertical') {
             styles.minWidth = mincrosslength + 'px'
             styles.minHeight = 'auto'
@@ -180,6 +180,7 @@ const Viewport = ({
             styles.minWidth = 'auto'
             styles.minHeight = mincrosslength + 'px'
         }
+
         return styles
 
     },[orientation, cellWidth, cellHeight, padding])

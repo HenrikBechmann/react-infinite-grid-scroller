@@ -30,8 +30,6 @@ const CellShell = ({
     scrollerID,
 }) => {
     
-    // console.log('running cellshell with scrollerID',scrollerID)
-
     // const portalManager = portalAgentInstance // useContext(PortalAgent)
     // const [error, saveError] = useState(null)
     const [styles,saveStyles] = useState({
@@ -46,11 +44,13 @@ const CellShell = ({
     const portalRecord = useRef(null)
     const [portalStatus, setPortalStatus] = useState('setup'); // 'setup' -> 'renderplaceholder' -> 'render'
 
-    // console.log('RUNNING cellshell scrollerID, portalStatus', scrollerID, portalStatus)
+    console.log('RUNNING cellshell scrollerID, instanceID, index, portalStatus', scrollerID, instanceID, index, portalStatus)
 
     useLayoutEffect(()=>{
         return () => {isMounted.current = false}
     },[])
+
+    // const usingPlaceholder = useRef(null)
 
     // initialize
     useEffect(() => {
@@ -62,10 +62,12 @@ const CellShell = ({
 
         let hasUserContent = portalManager.hasPortalUserContent(scrollerID,index)
 
+        console.log('hasUserContent',hasUserContent)
+
         if (!hasUserContent) {
 
             setPortalStatus('renderplaceholder')
-
+            // usingPlaceholder.current = true
             // console.log('cellshell getItem',index)
 
             if (isMounted.current && getItem) {
@@ -107,6 +109,7 @@ const CellShell = ({
             }         
         } else {
         
+            // usingPlaceholder.current = false
             setPortalStatus('render')
     
         }        
@@ -153,6 +156,7 @@ const CellShell = ({
 
     useEffect(()=>{
 
+        console.log('setting cell styles scrollerID, index',scrollerID,index)
         let newStyles = getShellStyles(orientation, cellHeight, cellWidth, styles)
         if (isMounted.current) {
             saveStyles(newStyles)
@@ -178,31 +182,46 @@ const CellShell = ({
 
     const placeholderchildRef = useRef(placeholderchild)
 
-    const portalchildRef = useRef(placeholderchild)
-    const usingPlaceholder = useRef(true)
+    const portalchildRef = useRef(null) //placeholderchild)
 
-    portalchildRef.current = useMemo(()=>{
+    let reverseportal
+    [portalchildRef.current,reverseportal] = useMemo(()=>{
+
+        if (portalStatus == 'setup') return [portalchildRef.current,null]
 
         let portallistitem = portalRecord.current
+        let reverseportal = portallistitem.reverseportal
         if (portalStatus != 'render') {
         //     if (portallistitem && !portallistitem.reparenting) {
         //         portallistitem.reparenting = true
         //     }
-            return portalchildRef.current 
+            (portalStatus != 'setup') && (portalchildRef.current = placeholderchildRef.current)
+            return [portalchildRef.current,reverseportal] 
         }
 
-        if (!usingPlaceholder.current) return portalchildRef.current
+        if (portallistitem.outportal) {
+            console.log('returning outportal, index, portalStatus', index, portalStatus)
+            return [portallistitem.outportal,reverseportal]
+            // return portalchildRef.current
+        }
             
-        let reverseportal = portallistitem.reverseportal
-        usingPlaceholder.current = false
+        // usingPlaceholder.current = false
 
         let child = <OutPortal node = {reverseportal} />
+        portallistitem.outportal = child
 
-        // console.log('portalStatus,child',portalStatus,child)
+        console.log('index,portalStatus,creating outportal',index,portalStatus,child)
 
-        return child
+        return [child,reverseportal]
 
     }, [portalStatus]);
+
+    useEffect(()=>{
+        if (portalStatus == 'render') {
+            console.log('switching to render1 for scrollerID, index, reverseportal',scrollerID,index, reverseportal)
+            setPortalStatus('render1')
+        }
+    },[portalStatus, reverseportal])
 
     // useEffect(()=> {
     //     if (portalStatus != 'render') return
@@ -214,11 +233,15 @@ const CellShell = ({
     //     // }
     // }, [portalRecord.current?.reparenting, portalStatus])
 
+    // ((portalStatus == 'render') || (portalStatus == 'renderplaceholder')) && console.log('cellshell child',portalchildRef.current)
+
     return <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
-            { ((portalStatus == 'render') || (portalStatus == 'renderplaceholder')) && portalchildRef.current }
+            { ((portalStatus == 'render') || (portalStatus == 'renderplaceholder')) && <OutPortal node = {reverseportal} /> }
+            { (portalStatus == 'render1') && <OutPortal node = {reverseportal} /> }
         </div>
 
 } // CellShell
+            // { ((portalStatus == 'render') || (portalStatus == 'renderplaceholder')) && portalchildRef.current }
 
 const getShellStyles = (orientation, cellHeight, cellWidth, styles) => {
 

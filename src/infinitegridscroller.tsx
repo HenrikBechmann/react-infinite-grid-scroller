@@ -16,6 +16,7 @@
     - use state machine logic throughout
     - consider rendering client content offscreen instead of display none
     - review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
+    - add grid-template-rows: max-content to parent for safari issue grid-auto-flow: column not filling column
 */
 
 import React, {useEffect, useRef, useState} from 'react'
