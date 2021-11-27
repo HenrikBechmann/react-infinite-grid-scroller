@@ -218,9 +218,14 @@ const CellShell = ({
 
     useEffect(()=>{
         if (portalStatus == 'render') {
-            console.log('switching to render1 for scrollerID, index, reverseportal',scrollerID,index, reverseportal)
+            console.log('switching to render1 for scrollerID, index',scrollerID,index)
             setPortalStatus('render1')
         }
+        if (portalStatus == 'render1') {
+            console.log('switching to render2 for scrollerID, index',scrollerID,index)
+            setPortalStatus('render2')
+        }
+
     },[portalStatus, reverseportal])
 
     // useEffect(()=> {
@@ -238,6 +243,7 @@ const CellShell = ({
     return <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
             { ((portalStatus == 'render') || (portalStatus == 'renderplaceholder')) && <OutPortal node = {reverseportal} /> }
             { (portalStatus == 'render1') && <OutPortal node = {reverseportal} /> }
+            { (portalStatus == 'render2') && <OutPortal node = {reverseportal} /> }
         </div>
 
 } // CellShell
