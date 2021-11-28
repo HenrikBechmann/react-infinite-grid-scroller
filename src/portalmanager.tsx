@@ -69,7 +69,7 @@ class PortalManager {
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
     // add a portal list item. The index is the scroller's portal dataset index
-    fetchOrCreatePortal(scrollerID, index, content) {
+    fetchOrCreatePortal(scrollerID, index, content) { // content is used for new portal only
 
         if (this.hasPortal(scrollerID, index)) {
             return this.getPortal(scrollerID, index)
