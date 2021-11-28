@@ -41,7 +41,7 @@ const CellShell = ({
     const instanceIDRef = useRef(instanceID)
     const isMounted = useRef(true)
     const itemrequestRef = useRef(null)
-    const portalRecord = useRef(null)
+    const portalDataRef = useRef(null)
     const [cellStatus, setCellStatus] = useState('setup'); // 'setup' -> 'renderplaceholder' -> 'render'
 
     console.log('RUNNING cellshell scrollerID, instanceID, index, cellStatus', scrollerID, instanceID, index, cellStatus)
@@ -58,7 +58,7 @@ const CellShell = ({
         let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
         let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
 
-        portalRecord.current = portalManager.fetchPortal(scrollerID, index, placeholderRef.current)
+        portalDataRef.current = portalManager.fetchPortal(scrollerID, index, placeholderRef.current)
 
         let hasUserContent = !!usercontentRef.current //portalManager.hasPortalUserContent(scrollerID,index)
 
@@ -80,7 +80,7 @@ const CellShell = ({
                             if (isMounted.current) { 
                                 // console.log('saving new usercontent by promise',scrollerName, scrollerID, index, usercontent)
                                 usercontentRef.current = usercontent
-                                portalRecord.current = portalManager.updatePortal(scrollerID,index,usercontent)
+                                portalDataRef.current = portalManager.updatePortal(scrollerID,index,usercontent)
                                 setCellStatus('render')
                                 // saveError(null)
                             }
@@ -97,7 +97,7 @@ const CellShell = ({
                                 let usercontent = contentItem;
                                 usercontentRef.current = usercontent
                                 // (scrollerID == 0) && console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
-                                portalRecord.current = portalManager.updatePortal(scrollerID,index,usercontent)
+                                portalDataRef.current = portalManager.updatePortal(scrollerID,index,usercontent)
                                 setCellStatus('render')
                                 // saveError(null)
                             } else {
@@ -190,8 +190,7 @@ const CellShell = ({
 
         if (cellStatus == 'setup') return null
 
-        let portallistitem = portalRecord.current
-        return portallistitem.reverseportal
+        return portalDataRef.current.reverseportal
 
     }, [cellStatus]);
 
