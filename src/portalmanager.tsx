@@ -56,7 +56,7 @@ class PortalManager {
     // set state of the PortalList component of the scroller to trigger render
     renderPortalList = (scrollerID) => {
 
-        let scrollerportaldata = scrollerPortals.get(scrollerID)
+        const scrollerportaldata = scrollerPortals.get(scrollerID)
         if (scrollerportaldata.modified) {
             scrollerportaldata.portalList = Array.from(scrollerportaldata.portalMap.values())
             scrollerportaldata.modified = false
@@ -77,13 +77,13 @@ class PortalManager {
 
         // if not found, create new portal
 
-        let [inportal,reverseportal] = getInPortal(content, index, scrollerID)
+        const [inportal,reverseportal] = getInPortal(content, index, scrollerID)
 
-        let scrollerportals = scrollerPortals.get(scrollerID)
+        const scrollerportals = scrollerPortals.get(scrollerID)
         scrollerportals.portalMap.set(index,<PortalWrapper inportal = {inportal} key = {index} index = {index}/>)
         scrollerportals.modified = true
 
-        let portalMetadata = {
+        const portalMetadata = {
             reverseportal, 
             initialized:false, 
         }
@@ -98,15 +98,15 @@ class PortalManager {
 
     // update the content of a portal list item
     updatePortal(scrollerID, index, content) {
-        let portalMetadata = this.getPortal(scrollerID,index)
+        const portalMetadata = this.getPortal(scrollerID,index)
 
-        let portalComponent = updateInPortal(content, portalMetadata.reverseportal )
+        const portalComponent = updateInPortal(content, portalMetadata.reverseportal )
 
-        let scrollerportals = scrollerPortals.get(scrollerID)
+        const scrollerportals = scrollerPortals.get(scrollerID)
         scrollerportals.portalMap.set(index,<PortalWrapper inportal = {portalComponent} key = {index} index = {index}/>)
         scrollerportals.modified = true
 
-        portalMetadata = scrollerPortals.get(scrollerID).portalMetadataMap.get(index)
+        // portalMetadata = scrollerPortals.get(scrollerID).portalMetadataMap.get(index)
 
         this.renderPortalList(scrollerID)
 
