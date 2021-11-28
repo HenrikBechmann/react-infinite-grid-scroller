@@ -69,7 +69,7 @@ class PortalManager {
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
     // add a portal list item. The index is the scroller's portal dataset index
-    fetchPortal(scrollerID, index, content) {
+    fetchOrCreatePortal(scrollerID, index, content) {
 
         if (this.hasPortal(scrollerID, index)) {
             return this.getPortal(scrollerID, index)
@@ -85,7 +85,8 @@ class PortalManager {
 
         const portalMetadata = {
             reverseportal, 
-            initialized:false, 
+            initialized:false,
+            hasusercontent:false 
         }
 
         scrollerportals.portalMetadataMap.set(index, portalMetadata)
@@ -105,8 +106,6 @@ class PortalManager {
         const scrollerportals = scrollerPortals.get(scrollerID)
         scrollerportals.portalMap.set(index,<PortalWrapper inportal = {portalComponent} key = {index} index = {index}/>)
         scrollerportals.modified = true
-
-        // portalMetadata = scrollerPortals.get(scrollerID).portalMetadataMap.get(index)
 
         this.renderPortalList(scrollerID)
 

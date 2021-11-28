@@ -40,7 +40,7 @@ const CellShell = ({
     const shellRef = useRef(null)
     const instanceIDRef = useRef(instanceID)
     const isMounted = useRef(true)
-    const itemrequestRef = useRef(null)
+    const callbackrequestRef = useRef(null)
     const portalDataRef = useRef(null)
     const [cellStatus, setCellStatus] = useState('setup'); // 'setup' -> 'renderplaceholder' -> 'render'
 
@@ -50,17 +50,15 @@ const CellShell = ({
         return () => {isMounted.current = false}
     },[])
 
-    const usercontentRef = useRef(null)
-
     // initialize
     useEffect(() => {
 
-        let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
-        let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
+        const requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
+        const cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
 
-        portalDataRef.current = portalManager.fetchPortal(scrollerID, index, placeholderRef.current)
+        portalDataRef.current = portalManager.fetchOrCreatePortal(scrollerID, index, placeholderRef.current)
 
-        let hasUserContent = !!usercontentRef.current //portalManager.hasPortalUserContent(scrollerID,index)
+        const hasUserContent = !!portalDataRef.current.hasusercontent
 
         console.log('hasUserContent',hasUserContent)
 
@@ -72,14 +70,14 @@ const CellShell = ({
 
             if (isMounted.current && getItem) {
 
-                itemrequestRef.current = requestidlecallback(()=> { // TODO make this optional
-                    let contentItem = getItem(index)
+                callbackrequestRef.current = requestidlecallback(()=> { // TODO make this optional
+                    const contentItem = getItem(index)
 
                     if (contentItem && contentItem.then) {
                         contentItem.then((usercontent) => {
                             if (isMounted.current) { 
                                 // console.log('saving new usercontent by promise',scrollerName, scrollerID, index, usercontent)
-                                usercontentRef.current = usercontent
+                                portalDataRef.current.hasusercontent = true
                                 portalDataRef.current = portalManager.updatePortal(scrollerID,index,usercontent)
                                 setCellStatus('render')
                                 // saveError(null)
@@ -94,8 +92,8 @@ const CellShell = ({
                         // console.log('isMounted, contentItem',isMounted(), contentItem)
                         if (isMounted.current) {
                             if (contentItem) {
-                                let usercontent = contentItem;
-                                usercontentRef.current = usercontent
+                                const usercontent = contentItem;
+                                portalDataRef.current.hasusercontent = true
                                 // (scrollerID == 0) && console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
                                 portalDataRef.current = portalManager.updatePortal(scrollerID,index,usercontent)
                                 setCellStatus('render')
@@ -111,15 +109,14 @@ const CellShell = ({
             }         
         } else {
         
-            // usingPlaceholder.current = false
             setCellStatus('render')
     
         }        
 
         // cleanup
         return () => {
-            let requesthandle = itemrequestRef.current
-            cancelidlecallback(requesthandle)
+            const callbackhandle = callbackrequestRef.current
+            cancelidlecallback(callbackhandle)
         }
     },[])
 
@@ -158,7 +155,7 @@ const CellShell = ({
 
     useEffect(()=>{
 
-        console.log('setting cell styles scrollerID, index',scrollerID,index)
+        // console.log('setting cell styles scrollerID, index',scrollerID,index)
         let newStyles = getShellStyles(orientation, cellHeight, cellWidth, styles)
         if (isMounted.current) {
             saveStyles(newStyles)
