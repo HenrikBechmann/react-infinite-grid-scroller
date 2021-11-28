@@ -84,12 +84,8 @@ class PortalManager {
         scrollerportals.modified = true
 
         let portalMetadata = {
-            inportal, 
-            outportal:null, 
             reverseportal, 
             initialized:false, 
-            indexid: index,
-            scrollerid:scrollerID
         }
 
         scrollerportals.portalMetadataMap.set(index, portalMetadata)
