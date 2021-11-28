@@ -50,7 +50,7 @@ const CellShell = ({
         return () => {isMounted.current = false}
     },[])
 
-    // const usingPlaceholder = useRef(null)
+    const usercontentRef = useRef(null)
 
     // initialize
     useEffect(() => {
@@ -58,9 +58,9 @@ const CellShell = ({
         let requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
         let cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
 
-        portalRecord.current = portalManager.fetchPortal(scrollerID, index, null, placeholderchildRef.current)
+        portalRecord.current = portalManager.fetchPortal(scrollerID, index, placeholderRef.current)
 
-        let hasUserContent = portalManager.hasPortalUserContent(scrollerID,index)
+        let hasUserContent = !!usercontentRef.current //portalManager.hasPortalUserContent(scrollerID,index)
 
         console.log('hasUserContent',hasUserContent)
 
@@ -79,7 +79,8 @@ const CellShell = ({
                         contentItem.then((usercontent) => {
                             if (isMounted.current) { 
                                 // console.log('saving new usercontent by promise',scrollerName, scrollerID, index, usercontent)
-                                portalRecord.current = portalManager.updatePortal(scrollerID,index,usercontent,placeholderchildRef.current)
+                                usercontentRef.current = usercontent
+                                portalRecord.current = portalManager.updatePortal(scrollerID,index,usercontent)
                                 setCellStatus('render')
                                 // saveError(null)
                             }
@@ -94,8 +95,9 @@ const CellShell = ({
                         if (isMounted.current) {
                             if (contentItem) {
                                 let usercontent = contentItem;
+                                usercontentRef.current = usercontent
                                 // (scrollerID == 0) && console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
-                                portalRecord.current = portalManager.updatePortal(scrollerID,index,usercontent,placeholderchildRef.current)
+                                portalRecord.current = portalManager.updatePortal(scrollerID,index,usercontent)
                                 setCellStatus('render')
                                 // saveError(null)
                             } else {
@@ -180,7 +182,7 @@ const CellShell = ({
         return child
     }, [index, customplaceholderRef.current, listsize]);
 
-    const placeholderchildRef = useRef(placeholderchild)
+    const placeholderRef = useRef(placeholderchild)
 
     const portalchildRef = useRef(null) //placeholderchild)
 
@@ -192,7 +194,7 @@ const CellShell = ({
         let portallistitem = portalRecord.current
         let reverseportal = portallistitem.reverseportal
         if ((cellStatus != 'render') && (cellStatus != 'render1') && (cellStatus != 'render2')) {
-            (cellStatus != 'setup') && (portalchildRef.current = placeholderchildRef.current)
+            (cellStatus != 'setup') && (portalchildRef.current = placeholderRef.current)
             return [portalchildRef.current,reverseportal] 
         }
 

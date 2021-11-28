@@ -157,13 +157,6 @@ const Viewport = ({
 
     },[])
 
-    // if (viewportDataRef.current.portal?.reparenting && !viewportDataRef.current.isReparenting) {
-    //     viewportDataRef.current.isReparenting = true
-
-    //     // console.log('in viewport, setting isReparenting', scrollerID, viewportstateRef.current, viewportDataRef.current)
-    //     setViewportState('reparenting')
-    // }
-
     // ----------------------------------[ calculate ]--------------------------------
 
     // calculated values

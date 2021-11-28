@@ -69,15 +69,13 @@ class PortalManager {
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
     // add a portal list item. The index is the scroller's portal dataset index
-    fetchPortal(scrollerID, index, usercontent, placeholder) {
+    fetchPortal(scrollerID, index, content) {
 
         if (this.hasPortal(scrollerID, index)) {
             return this.getPortal(scrollerID, index)
         }
 
         // if not found, create new portal
-
-        const content = usercontent || placeholder
 
         let [inportal,reverseportal] = getInPortal(content, index, scrollerID)
 
@@ -86,8 +84,6 @@ class PortalManager {
         scrollerportals.modified = true
 
         let portalMetadata = {
-            usercontent, 
-            placeholder, 
             inportal, 
             outportal:null, 
             reverseportal, 
@@ -105,10 +101,8 @@ class PortalManager {
     }
 
     // update the content of a portal list item
-    updatePortal(scrollerID, index, usercontent, placeholder) {
+    updatePortal(scrollerID, index, content) {
         let portalMetadata = this.getPortal(scrollerID,index)
-
-        const content = usercontent || placeholder
 
         let portalComponent = updateInPortal(content, portalMetadata.reverseportal )
 
@@ -117,8 +111,6 @@ class PortalManager {
         scrollerportals.modified = true
 
         portalMetadata = scrollerPortals.get(scrollerID).portalMetadataMap.get(index)
-        portalMetadata.usercontent = usercontent
-        portalMetadata.placeholder = placeholder
 
         this.renderPortalList(scrollerID)
 
@@ -139,14 +131,6 @@ class PortalManager {
     hasPortal(scrollerID, index) {
 
         return scrollerPortals.get(scrollerID).portalMetadataMap.has(index)
-
-    }
-
-    // query existence of content for a portal list item
-    hasPortalUserContent (scrollerID, index) {
-
-        let portalMetadata = this.getPortal(scrollerID, index)
-        return  !!(portalMetadata && portalMetadata.usercontent)
 
     }
 
