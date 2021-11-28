@@ -30,11 +30,8 @@ const CellShell = ({
     scrollerID,
 }) => {
     
-    // const portalManager = portalAgentInstance // useContext(PortalAgent)
-    // const [error, saveError] = useState(null)
     const [styles,saveStyles] = useState({
         overflow:'hidden',
-        // willChange:'transform', // for Chrome Android paint bug
     } as React.CSSProperties)
     // const [itemstate,setItemstate] = useState('setup')
     const shellRef = useRef(null)
@@ -44,7 +41,7 @@ const CellShell = ({
     const portalDataRef = useRef(null)
     const [cellStatus, setCellStatus] = useState('setup'); // 'setup' -> 'renderplaceholder' -> 'render'
 
-    console.log('RUNNING cellshell scrollerID, instanceID, index, cellStatus', scrollerID, instanceID, index, cellStatus)
+    // console.log('RUNNING cellshell scrollerID, instanceID, index, cellStatus', scrollerID, instanceID, index, cellStatus)
 
     useLayoutEffect(()=>{
         return () => {isMounted.current = false}
@@ -60,13 +57,11 @@ const CellShell = ({
 
         const hasUserContent = !!portalDataRef.current.hasusercontent
 
-        console.log('hasUserContent',hasUserContent)
+        // console.log('hasUserContent',hasUserContent)
 
         if (!hasUserContent) {
 
             setCellStatus('renderplaceholder')
-            // usingPlaceholder.current = true
-            // console.log('cellshell getItem',index)
 
             if (isMounted.current && getItem) {
 
@@ -74,6 +69,7 @@ const CellShell = ({
                     const contentItem = getItem(index)
 
                     if (contentItem && contentItem.then) {
+
                         contentItem.then((usercontent) => {
                             if (isMounted.current) { 
                                 // console.log('saving new usercontent by promise',scrollerName, scrollerID, index, usercontent)
@@ -83,12 +79,13 @@ const CellShell = ({
                                 // saveError(null)
                             }
                         }).catch((e) => {
+
                             console.log('ERROR',e)
-                            // if (isMounted()) { 
-                            //     saveError(e)
-                            // }
+
                         })
+
                     } else {
+
                         // console.log('isMounted, contentItem',isMounted(), contentItem)
                         if (isMounted.current) {
                             if (contentItem) {
@@ -103,6 +100,7 @@ const CellShell = ({
                                 // saveError(true)
                             }
                         }
+
                     }
                 },{timeout:250})
         
@@ -115,8 +113,10 @@ const CellShell = ({
 
         // cleanup
         return () => {
+
             const callbackhandle = callbackrequestRef.current
             cancelidlecallback(callbackhandle)
+            
         }
     },[])
 

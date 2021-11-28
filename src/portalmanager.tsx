@@ -77,7 +77,7 @@ class PortalManager {
 
         // if not found, create new portal
 
-        const [inportal,reverseportal] = getInPortal(content, index, scrollerID)
+        const [inportal,reverseportal] = createInPortal(content, index, scrollerID)
 
         const scrollerportals = scrollerPortals.get(scrollerID)
         scrollerportals.portalMap.set(index,<PortalWrapper inportal = {inportal} key = {index} index = {index}/>)
@@ -144,9 +144,9 @@ export const portalManager = new PortalManager()
 
 // get a react-reverse-portal InPortal component, with its metadata
 // with user content and container
-const getInPortal = (content, index, scrollerID) => {
+const createInPortal = (content, index, scrollerID) => {
 
-    console.log('creating inportal index, scrollerID',index,scrollerID)
+    // console.log('creating inportal index, scrollerID',index,scrollerID)
     let reversePortal = createHtmlPortalNode()
     // reversePortal.element = container
     let container = reversePortal.element
