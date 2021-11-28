@@ -14,6 +14,8 @@ const scrollerPortals = new Map()
 
 class PortalManager {
 
+    //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
+
     // initialize scroller repository
     createScrollerPortalRepository(scrollerID) {
 
@@ -64,8 +66,10 @@ class PortalManager {
 
     }
 
+    // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
+
     // add a portal list item. The index is the scroller's portal dataset index
-    fetchPortal(scrollerID, index, placeholder) {
+    fetchPortal(scrollerID, index, usercontent, placeholder) {
 
         if (this.hasPortal(scrollerID, index)) {
             return this.getPortal(scrollerID, index)
@@ -73,21 +77,24 @@ class PortalManager {
 
         // if not found, create new portal
 
-        // let container = document.createElement('div')
-        // container.style.inset = '0px' 
-        // container.style.position = 'absolute'
-        // container.dataset.type = 'portalcontainer'
-        // container.dataset.index = index
-        // container.dataset.scrollerid = scrollerID
-        // container.setAttribute('key',index)
+        const content = usercontent || placeholder
 
-        let [inportal,reverseportal] = getInPortal(placeholder, index, scrollerID)
+        let [inportal,reverseportal] = getInPortal(content, index, scrollerID)
 
         let scrollerportals = scrollerPortals.get(scrollerID)
         scrollerportals.portalMap.set(index,<PortalWrapper inportal = {inportal} key = {index} index = {index}/>)
         scrollerportals.modified = true
 
-        let portalMetadata = {usercontent:null, placeholder, inportal, outportal:null, reverseportal, initialized:false, indexid: index,scrollerid:scrollerID}
+        let portalMetadata = {
+            usercontent, 
+            placeholder, 
+            inportal, 
+            outportal:null, 
+            reverseportal, 
+            initialized:false, 
+            indexid: index,
+            scrollerid:scrollerID
+        }
 
         scrollerportals.portalMetadataMap.set(index, portalMetadata)
 
@@ -98,8 +105,10 @@ class PortalManager {
     }
 
     // update the content of a portal list item
-    updatePortal(scrollerID, index, content) {
+    updatePortal(scrollerID, index, usercontent, placeholder) {
         let portalMetadata = this.getPortal(scrollerID,index)
+
+        const content = usercontent || placeholder
 
         let portalComponent = updateInPortal(content, portalMetadata.reverseportal )
 
@@ -108,7 +117,8 @@ class PortalManager {
         scrollerportals.modified = true
 
         portalMetadata = scrollerPortals.get(scrollerID).portalMetadataMap.get(index)
-        portalMetadata.usercontent = content
+        portalMetadata.usercontent = usercontent
+        portalMetadata.placeholder = placeholder
 
         this.renderPortalList(scrollerID)
 
@@ -151,7 +161,7 @@ class PortalManager {
 
 export const portalManager = new PortalManager()
 
-// Utility functions
+// ==========================[ Utility functions ]============================
 
 // get a react-reverse-portal InPortal component, with its metadata
 // with user content and container
@@ -184,7 +194,7 @@ const updateInPortal = (content, reversePortal) => {
 
 }
 
-// Utility components
+// ========================[ Utility components ]==============================
 
 const wrapperstyle = {display:'none'} // static; should take same dimensions as container CellShell
 
