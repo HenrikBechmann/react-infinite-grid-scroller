@@ -5,7 +5,7 @@
     Consider not using requestIdleCallback; try it.
 */
 
-import React, {useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo, useContext } from 'react'
+import React, {useRef, useEffect, useState, useCallback, useMemo, useContext } from 'react'
 
 import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
@@ -20,7 +20,7 @@ const CellShell = ({
     cellHeight, 
     cellWidth, 
     index, 
-    observer, 
+    observer, // intersection observer
     callbacks, 
     getItem, 
     listsize, 
@@ -33,32 +33,47 @@ const CellShell = ({
     const [styles,saveStyles] = useState({
         overflow:'hidden',
     } as React.CSSProperties)
-    // const [itemstate,setItemstate] = useState('setup')
+    const [cellStatus, setCellStatus] = useState('setup'); // 'setup' -> 'renderplaceholder' -> 'render'
+
     const shellRef = useRef(null)
     const instanceIDRef = useRef(instanceID)
     const isMounted = useRef(true)
     const callbackrequestRef = useRef(null)
-    const portalDataRef = useRef(null)
-    const [cellStatus, setCellStatus] = useState('setup'); // 'setup' -> 'renderplaceholder' -> 'render'
+    const portaldataRef = useRef(null)
 
     // console.log('RUNNING cellshell scrollerID, instanceID, index, cellStatus', scrollerID, instanceID, index, cellStatus)
 
+    // placeholder definition
+    const customplaceholder = useMemo(() => {
+
+            return placeholder?React.createElement(placeholder, {index, listsize}):null
+            
+    },[placeholder,listsize])
+
+    const placeholderRef = useRef(null)
+
+    placeholderRef.current = useMemo(()=>{
+        let child = customplaceholder?
+                customplaceholder:<Placeholder index = {index} listsize = {listsize} error = {false}/>
+        return child
+    }, [index, customplaceholder, listsize]);
+
     // for unmount
-    useLayoutEffect(()=>{
+    useEffect(()=>{
 
         return () => {isMounted.current = false}
 
     },[])
 
-    // initialize
+    // initialize cell content
     useEffect(() => {
 
         const requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
         const cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
 
-        portalDataRef.current = portalManager.fetchOrCreatePortal(scrollerID, index, placeholderRef.current)
+        portaldataRef.current = portalManager.fetchOrCreatePortal(scrollerID, index, placeholderRef.current)
 
-        const hasUserContent = !!portalDataRef.current.hasusercontent
+        const hasUserContent = !!portaldataRef.current.hasusercontent // previous InPortal creation for index
 
         if (!hasUserContent) {
 
@@ -66,7 +81,7 @@ const CellShell = ({
 
             if (isMounted.current && getItem) {
 
-                callbackrequestRef.current = requestidlecallback(()=> { // TODO make this optional
+                callbackrequestRef.current = requestidlecallback(()=> {
                     const contentItem = getItem(index)
 
                     if (contentItem && contentItem.then) { // it's a promise
@@ -74,8 +89,8 @@ const CellShell = ({
                         contentItem.then((usercontent) => {
                             if (isMounted.current) { 
 
-                                portalDataRef.current.hasusercontent = true
-                                portalDataRef.current = portalManager.updatePortal(scrollerID,index,usercontent)
+                                portaldataRef.current.hasusercontent = true
+                                portaldataRef.current = portalManager.updatePortal(scrollerID,index,usercontent)
                                 setCellStatus('render')
 
                             }
@@ -91,12 +106,11 @@ const CellShell = ({
                         if (isMounted.current) {
 
                             if (contentItem) {
-                                const usercontent = contentItem;
-                                portalDataRef.current.hasusercontent = true
-                                // (scrollerID == 0) && console.log('saving new usercontent',scrollerName, scrollerID, index, usercontent)
-                                portalDataRef.current = portalManager.updatePortal(scrollerID,index,usercontent)
+                                const usercontent = contentItem
+
+                                portaldataRef.current.hasusercontent = true
+                                portaldataRef.current = portalManager.updatePortal(scrollerID,index,usercontent)
                                 setCellStatus('render')
-                                // saveError(null)
 
                             } else {
 
@@ -115,7 +129,7 @@ const CellShell = ({
     
         }        
 
-        // cleanup
+        // unmount
         return () => {
 
             const callbackhandle = callbackrequestRef.current
@@ -125,7 +139,12 @@ const CellShell = ({
     },[])
 
 
-    // initialize
+    // cradle invariant ondemand callback parameter value
+    const getElementData = useCallback(()=>{
+        return [index, shellRef]
+    },[])
+
+    // initialize callbacks
     useEffect(() => {
 
         const localcalls = callbacks
@@ -140,23 +159,25 @@ const CellShell = ({
 
     },[callbacks])
 
-    const observerelementRef = useRef(null) // invariant observer ref
+    // configure observer
+    const observerElementRef = useRef(null) // persistent observer element ref for unmount
 
     useEffect(()=>{
 
         if (!shellRef.current) return
 
         observer.observe(shellRef.current)
-        observerelementRef.current = shellRef.current
+        observerElementRef.current = shellRef.current
 
         return () => {
 
-            observer.unobserve(observerelementRef.current)
+            observer.unobserve(observerElementRef.current)
 
         }
 
     },[observer, shellRef.current])
 
+    // set styles
     useEffect(()=>{
 
         let newStyles = getShellStyles(orientation, cellHeight, cellWidth, styles)
@@ -164,37 +185,13 @@ const CellShell = ({
             saveStyles(newStyles)
         }
 
-    },[orientation,cellHeight,cellWidth])
-
-    // cradle invariant ondemand callback parameter value
-    const getElementData = useCallback(()=>{
-        return [index, shellRef]
-    },[])
-
-    // placeholder handling
-    const customplaceholderRef = useRef(null)
-
-    customplaceholderRef.current = useMemo(() => {
-
-            placeholder?React.createElement(placeholder, {index, listsize}):null
-            
-    },[placeholder,listsize])
-
-    const placeholderchild = useMemo(()=>{
-        let child = customplaceholderRef.current?
-                customplaceholderRef.current:<Placeholder index = {index} listsize = {listsize} error = {false}/>
-        return child
-    }, [index, customplaceholderRef.current, listsize]);
-
-    const placeholderRef = useRef(placeholderchild)
-
-    const portalchildRef = useRef(null) //placeholderchild)
+    },[orientation,cellHeight,cellWidth]) 
 
     const reverseportal = useMemo(()=>{
 
         if (cellStatus == 'setup') return null
 
-        return portalDataRef.current.reverseportal
+        return portaldataRef.current.reverseportal
 
     }, [cellStatus]);
 
