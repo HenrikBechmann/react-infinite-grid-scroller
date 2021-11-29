@@ -119,7 +119,7 @@ const InfiniteGridScroller = (props) => {
 
     return ((scrollerstate == 'render') && <div data-type = 'scroller-frame' data-scrollerid = { scrollerSessionIDRef.current }>
         <div data-type = 'portalroot' style = { portalrootstyle }>
-            <PortalList scrollerID = { scrollerSessionIDRef.current }/>
+            <PortalList scrollerID = { scrollerSessionIDRef.current } scrollerPortals = {portalManager.scrollerPortals}/>
         </div>
         <Viewport
 
