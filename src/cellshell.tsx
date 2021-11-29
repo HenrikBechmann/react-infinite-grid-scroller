@@ -5,7 +5,7 @@
     Consider not using requestIdleCallback; try it.
 */
 
-import React, {useRef, useEffect, useState, useCallback, useMemo, useContext } from 'react'
+import React, {useRef, useEffect, useState, useCallback, useMemo } from 'react'
 
 import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
