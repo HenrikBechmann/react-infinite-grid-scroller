@@ -13,7 +13,7 @@ import {
 
 } from './contentfunctions'
 
-import { portalManager } from '../portalmanager'
+// import { portalManager } from '../portalmanager'
 
 export default class ContentAgent extends CradleManagement{
 
@@ -49,7 +49,7 @@ export default class ContentAgent extends CradleManagement{
     // Two public methods - setCradleContent and updateCradleContent
 
     // reset cradle, including allocation between head and tail parts of the cradle
-    setCradleContent = (cradleState/*, referenceIndexData*/) => { 
+    setCradleContent = (cradleState) => { 
 
         let viewportData = this._viewportdataRef.current
         let cradleProps = this._cradlePropsRef.current
@@ -59,6 +59,9 @@ export default class ContentAgent extends CradleManagement{
         let stateAgent = this._managersRef.current.state
         let serviceAgent = this._managersRef.current.service
         let observersAgent = this._managersRef.current.observers
+        let cradleData = this._cradleDataRef.current
+
+        // console.log('cradleData in setCradleContent',cradleData)
 
         let viewportElement = viewportData.elementref.current
 
@@ -104,7 +107,7 @@ export default class ContentAgent extends CradleManagement{
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
-        deleteAndRerenderPortals(portalManager, cradleProps.scrollerID, deleteditems)
+        deleteAndRerenderPortals(cradleData.portalManager, cradleProps.scrollerID, deleteditems)
 
         let [headcontentlist, tailcontentlist] = allocateContentList({
 
@@ -168,6 +171,11 @@ export default class ContentAgent extends CradleManagement{
         let cradleAgent = this._managersRef.current.cradle
         let stateAgent = this._managersRef.current.state
         let observersAgent = this._managersRef.current.observers
+
+        let cradleData = this._cradleDataRef.current
+        let portalManager = cradleData.portalManager
+
+        // console.log('cradleData in updateCradleContent',cradleData)
 
         let viewportElement = viewportData.elementref.current
         if (!viewportElement) {
@@ -291,7 +299,7 @@ export default class ContentAgent extends CradleManagement{
 
         }
 
-        deleteAndRerenderPortals(portalManager, cradleProps.scrollerID, deletedContentItems)
+        deleteAndRerenderPortals(portalManager,cradleProps.scrollerID, deletedContentItems)
 
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 

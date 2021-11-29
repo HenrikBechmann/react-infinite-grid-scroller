@@ -138,7 +138,7 @@ export class PortalManager {
 
 }
 
-export const portalManager = new PortalManager()
+// export const portalManager = new PortalManager()
 
 // ==========================[ Utility functions ]============================
 

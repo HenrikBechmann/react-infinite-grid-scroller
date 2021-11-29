@@ -5,7 +5,7 @@
     Consider not using requestIdleCallback; try it.
 */
 
-import React, {useRef, useEffect, useState, useCallback, useMemo } from 'react'
+import React, {useRef, useEffect, useState, useCallback, useMemo, useContext } from 'react'
 
 import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
@@ -13,7 +13,9 @@ import { OutPortal } from 'react-reverse-portal'
 
 import Placeholder from './placeholder'
 
-import { portalManager } from './portalmanager'
+import { CradleContext } from './cradle'
+
+// import { portalManager } from './portalmanager'
 
 const CellShell = ({
     orientation, 
@@ -29,6 +31,9 @@ const CellShell = ({
     scrollerName,
     scrollerID,
 }) => {
+
+    const cradleData = useContext(CradleContext)
+    const portalManager = cradleData.current.portalManager
     
     const [styles,saveStyles] = useState({
         overflow:'hidden',

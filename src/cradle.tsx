@@ -95,7 +95,7 @@ import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, u
 
 import { ViewportContext } from './viewport'
 
-import { portalManager, PortalManager, PortalList } from './portalmanager'
+import { PortalManager, PortalList } from './portalmanager'
 
 // import { ResizeObserver } from '@juggle/resize-observer'
 
@@ -299,7 +299,7 @@ const Cradle = ({
     // -------------------------[ cradle management nodes ]-----------------
 
     const managersRef = useRef(null) // make available to individual managers
-    const commonPropsRef = useRef({managersRef,viewportdataRef:viewportDataRef,cradlePropsRef, cradleConfigRef})
+    const commonPropsRef = useRef({managersRef,viewportdataRef:viewportDataRef,cradlePropsRef, cradleConfigRef, cradleDataRef})
     const serviceCallsRef = useRef({referenceIndexCallbackRef})
 
     // cradle butterfly html components
@@ -713,7 +713,7 @@ const Cradle = ({
                 cradleContent.tailModel = []
                 cradleContent.headView = []
                 cradleContent.tailView = []
-                portalManager.resetScrollerPortalRepository(scrollerID)
+                cradleDataRef.current.portalManager.resetScrollerPortalRepository(scrollerID)
                 contentAgent.setCradleContent(callingCradleState.current)
 
                 setCradleState('preparerender')
@@ -783,7 +783,7 @@ const Cradle = ({
 
     return <CradleContext.Provider value = {cradleDataRef}>
         {(cradleStateRef.current != 'setup') && <div data-type = 'portalroot' style = { portalrootstyle }>
-            <PortalList scrollerID = { scrollerID } scrollerPortals = {portalManager.scrollerPortals}/>
+            <PortalList scrollerID = { scrollerID } scrollerPortals = {cradleDataRef.current.portalManager.scrollerPortals}/>
         </div>}
 
         {(cradleStateRef.current == 'updatereposition' || cradleStateRef.current == 'repositioning')

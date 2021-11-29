@@ -12,7 +12,7 @@ export const ViewportContext = React.createContext(null) // for children
 
 import { ResizeObserver } from '@juggle/resize-observer'
 
-import { portalManager } from './portalmanager'
+// import { portalManager } from './portalmanager'
 
 import { CradleContext } from './cradle'
 
@@ -39,7 +39,9 @@ const Viewport = ({
 
     const cradleData = useContext(CradleContext);
 
-    console.log('cradleData at viewport',cradleData);
+    const portalManager = cradleData?.current.portalManager;
+
+    // console.log('cradleData at viewport',cradleData);
 
     (scrollerID == 1) && console.log('running scrollerID, viewportstate',scrollerID, viewportstate)
 
