@@ -43,7 +43,15 @@ const CellShell = ({
 
     // console.log('RUNNING cellshell scrollerID, instanceID, index, cellStatus', scrollerID, instanceID, index, cellStatus)
 
-    // placeholder definition
+    // for unmount
+    useEffect(()=>{
+
+        return () => {isMounted.current = false}
+
+    },[])
+
+    // ----------------- [ placeholder definition ] -------------------------
+
     const customplaceholder = useMemo(() => {
 
             return placeholder?React.createElement(placeholder, {index, listsize}):null
@@ -58,12 +66,7 @@ const CellShell = ({
         return child
     }, [index, customplaceholder, listsize]);
 
-    // for unmount
-    useEffect(()=>{
-
-        return () => {isMounted.current = false}
-
-    },[])
+    // ---------------- [ end of placeholder definition ] ------------------------
 
     // initialize cell content
     useEffect(() => {
@@ -159,7 +162,8 @@ const CellShell = ({
 
     },[callbacks])
 
-    // configure observer
+    // ---------------------[ configure observer ]--------------------------
+    
     const observerElementRef = useRef(null) // persistent observer element ref for unmount
 
     useEffect(()=>{
@@ -176,6 +180,8 @@ const CellShell = ({
         }
 
     },[observer, shellRef.current])
+
+    // ---------------------[ end of configure observer ]-------------------------
 
     // set styles
     useEffect(()=>{
