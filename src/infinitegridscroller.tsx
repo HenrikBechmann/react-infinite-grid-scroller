@@ -81,8 +81,7 @@ const InfiniteGridScroller = (props) => {
     } = props
 
     // for mount
-    // TODO: this is an anti pattern because useMemo is not guaranteed to run only once
-    const scrollerSessionIDRef = useRef(null) //useMemo(()=>{ // get once only per instance
+    const scrollerSessionIDRef = useRef(null)
 
     const [scrollerstate,setScollerState] = useState('setup')
 
@@ -100,7 +99,8 @@ const InfiniteGridScroller = (props) => {
 
     },[])
 
-    // console.log('RUNNING infinitegridscroller scrollerSessionID',scrollerSessionID.current)
+    console.log('RUNNING infinitegridscroller scrollerSessionID, scrollerstate, listSize',
+        scrollerSessionIDRef.current,scrollerstate, listSize)
 
     // set defaults
     functions ?? (functions = {})

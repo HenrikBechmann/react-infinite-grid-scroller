@@ -8,7 +8,7 @@
 
 import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback} from 'react'
 
-export const ViewportContext = React.createContext(null)
+export const ViewportContext = React.createContext(null) // for children
 
 import { ResizeObserver } from '@juggle/resize-observer'
 
@@ -35,7 +35,7 @@ const Viewport = ({
 
     const [viewportstate,setViewportState] = useState('setup')
 
-    // console.log('running scrollerID viewportstate',scrollerID,viewportstate)
+    console.log('running scrollerID, viewportstate',scrollerID, viewportstate)
 
     const viewportstateRef = useRef(null) // for useCallback -> resizeCallback
     viewportstateRef.current = viewportstate
@@ -183,7 +183,7 @@ const Viewport = ({
 
         if (viewportstate == 'setup') return viewportDataRef.current
 
-        const {top, right, bottom, left} = viewportdivRef.current.getBoundingClientRect() // viewportclientrect
+        const {top, right, bottom, left} = viewportdivRef.current.getBoundingClientRect()
         const width = (right - left)
         const height = (bottom - top)
 
@@ -193,7 +193,10 @@ const Viewport = ({
             isResizing:isResizingRef.current,
         }
 
-        return Object.assign({},viewportDataRef.current, localViewportData) // TODO: find alternate way to signal a change
+        const viewportdataobject = Object.assign({},viewportDataRef.current, localViewportData)
+        console.log('scrollerID, orientation, isResizingRef.current, viewportstate, viewportdataobject',
+            scrollerID, orientation, isResizingRef.current, viewportstate, Object.assign({},viewportdataobject))
+        return  viewportdataobject
 
     },[orientation, isResizingRef.current, viewportstate])
 

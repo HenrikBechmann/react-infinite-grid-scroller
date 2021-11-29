@@ -191,6 +191,8 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
+    console.log('cradle scrollerID, cradleState, props',cradleProps.scrollerID,cradleState, cradleProps)
+
     // const isReparentingRef = useRef(false)
 
     // -----------------------------------------------------------------------
