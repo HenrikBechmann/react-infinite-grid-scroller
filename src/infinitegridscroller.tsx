@@ -97,9 +97,9 @@ const InfiniteGridScroller = (props) => {
         // cleanup portal repository
         return () => portalManager.deleteScrollerPortalRepository(scrollerSessionIDRef.current)
 
-    },[])
+    },[]);
 
-    console.log('RUNNING infinitegridscroller scrollerSessionID, scrollerstate, listSize',
+    (scrollerSessionIDRef.current == 1) && console.log('RUNNING infinitegridscroller scrollerSessionID, scrollerstate, listSize',
         scrollerSessionIDRef.current,scrollerstate, listSize)
 
     // set defaults

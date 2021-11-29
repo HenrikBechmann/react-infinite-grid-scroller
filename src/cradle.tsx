@@ -4,6 +4,8 @@
 /*
     TODO:
 
+    - fix repositioning
+
     ObserversAgent
     WingsAgent
     MessageAgent ? // message with host environment, such as referenceIndexCallback
@@ -189,9 +191,9 @@ const Cradle = ({
     const [cradleState, setCradleState] = useState('setup')
 
     const cradleStateRef = useRef(null) // access by closures
-    cradleStateRef.current = cradleState
+    cradleStateRef.current = cradleState;
 
-    console.log('cradle scrollerID, cradleState, props',cradleProps.scrollerID,cradleState, cradleProps)
+    (scrollerID == 1) && console.log('cradle scrollerID, cradleState, props',cradleProps.scrollerID,cradleState, cradleProps)
 
     // const isReparentingRef = useRef(false)
 

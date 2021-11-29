@@ -33,9 +33,9 @@ const Viewport = ({
 
     // -----------------------[ initialize ]------------------
 
-    const [viewportstate,setViewportState] = useState('setup')
+    const [viewportstate,setViewportState] = useState('setup');
 
-    console.log('running scrollerID, viewportstate',scrollerID, viewportstate)
+    (scrollerID == 1) && console.log('running scrollerID, viewportstate',scrollerID, viewportstate)
 
     const viewportstateRef = useRef(null) // for useCallback -> resizeCallback
     viewportstateRef.current = viewportstate
@@ -193,8 +193,8 @@ const Viewport = ({
             isResizing:isResizingRef.current,
         }
 
-        const viewportdataobject = Object.assign({},viewportDataRef.current, localViewportData)
-        console.log('scrollerID, orientation, isResizingRef.current, viewportstate, viewportdataobject',
+        const viewportdataobject = Object.assign({},viewportDataRef.current, localViewportData);
+        (scrollerID == 1) && console.log('scrollerID, orientation, isResizingRef.current, viewportstate, viewportdataobject',
             scrollerID, orientation, isResizingRef.current, viewportstate, Object.assign({},viewportdataobject))
         return  viewportdataobject
 
