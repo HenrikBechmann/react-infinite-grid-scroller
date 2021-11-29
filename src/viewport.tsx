@@ -6,13 +6,15 @@
     and act as the visible screen portal of the list being shown
 */
 
-import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback} from 'react'
+import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useContext} from 'react'
 
 export const ViewportContext = React.createContext(null) // for children
 
 import { ResizeObserver } from '@juggle/resize-observer'
 
 import { portalManager } from './portalmanager'
+
+import { CradleContext } from './cradle'
 
 const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
 
@@ -34,6 +36,10 @@ const Viewport = ({
     // -----------------------[ initialize ]------------------
 
     const [viewportstate,setViewportState] = useState('setup');
+
+    const cradleData = useContext(CradleContext);
+
+    console.log('cradleData at viewport',cradleData);
 
     (scrollerID == 1) && console.log('running scrollerID, viewportstate',scrollerID, viewportstate)
 
@@ -68,7 +74,12 @@ const Viewport = ({
     const viewportdivRef = useRef(null)
 
     // viewportDataRef is passed as context to children
-    const viewportDataRef = useRef({portal:null, isResizing:false}) //, isReparenting: false})
+    const viewportDataRef = useRef(
+        {
+            portal:null, 
+            isResizing:false, 
+        }
+    )
 
     const resizeTimeridRef = useRef(null)
     const isResizingRef = useRef(false)

@@ -95,7 +95,7 @@ import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, u
 
 import { ViewportContext } from './viewport'
 
-import { portalManager } from './portalmanager'
+import { portalManager, PortalManager, PortalList } from './portalmanager'
 
 // import { ResizeObserver } from '@juggle/resize-observer'
 
@@ -116,6 +116,10 @@ import StylesAgent from './cradle/stylesagent'
 // popup position trackeer
 import ScrollTracker from './scrolltracker'
 
+export const CradleContext = React.createContext(null) // for children
+
+const portalrootstyle = {display:'none'} // static parm
+
 const Cradle = ({ 
         gap, 
         padding, 
@@ -133,13 +137,29 @@ const Cradle = ({
         scrollerID,
     }) => {
 
+    const [cradleState, setCradleState] = useState('setup')
+    const cradleStateRef = useRef(null) // access by closures
+    cradleStateRef.current = cradleState;
+
+    const cradleDataRef = useRef({
+        portalManager:null,
+        scrollerID
+    })
     // --------------------------[ bundle cradleProps ]----------------------------
 
     // functions and styles handled separately
     const cradlePropsRef = useRef(null) // access by closures
     const isMounted = useRef(true)
     useLayoutEffect(()=>{
-        return () => {isMounted.current = false}
+        const portalmanager = cradleDataRef.current.portalManager = new PortalManager()
+        portalmanager.createScrollerPortalRepository(scrollerID)
+
+        // cleanup portal repository; clear isMounted
+        return () => {
+            portalmanager.deleteScrollerPortalRepository(scrollerID)
+            isMounted.current = false
+        }
+
     },[])
     cradlePropsRef.current = useMemo(() => {
         return { 
@@ -184,14 +204,10 @@ const Cradle = ({
     // -----------------------------------------------------------------------
     // ---------------------------[ context data ]----------------------------
 
-    const viewportData = useContext(ViewportContext)
+    const viewportData = useContext(ViewportContext);
+
     const viewportDataRef = useRef(null)
-    viewportDataRef.current = viewportData
-
-    const [cradleState, setCradleState] = useState('setup')
-
-    const cradleStateRef = useRef(null) // access by closures
-    cradleStateRef.current = cradleState;
+    viewportDataRef.current = viewportData;
 
     (scrollerID == 1) && console.log('cradle scrollerID, cradleState, props',cradleProps.scrollerID,cradleState, cradleProps)
 
@@ -765,7 +781,10 @@ const Cradle = ({
 
     let cradleContent = contentAgent.content
 
-    return <>
+    return <CradleContext.Provider value = {cradleDataRef}>
+        {(cradleStateRef.current != 'setup') && <div data-type = 'portalroot' style = { portalrootstyle }>
+            <PortalList scrollerID = { scrollerID } scrollerPortals = {portalManager.scrollerPortals}/>
+        </div>}
 
         {(cradleStateRef.current == 'updatereposition' || cradleStateRef.current == 'repositioning')
             ?<ScrollTracker 
@@ -806,7 +825,7 @@ const Cradle = ({
             </div>
         </div>
         
-    </>
+    </CradleContext.Provider>
 
 } // Cradle
 
