@@ -24,7 +24,6 @@ import React, {useEffect, useRef, useState} from 'react'
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
 import Cradle from './cradle'
-// import {portalManager, PortalList} from './portalmanager'
 
 let globalScrollerID = 0
 const getNextScrollerSessionID = () => {
@@ -89,12 +88,8 @@ const InfiniteGridScroller = (props) => {
 
         const sessionID = getNextScrollerSessionID()
         scrollerSessionIDRef.current = sessionID
-        // portalManager.createScrollerPortalRepository(sessionID)
 
         setScollerState('render')
-
-        // cleanup portal repository
-        // return () => portalManager.deleteScrollerPortalRepository(scrollerSessionIDRef.current)
 
     },[]);
 
@@ -116,9 +111,6 @@ const InfiniteGridScroller = (props) => {
         orientation = 'vertical'
     }
 
-        // <div data-type = 'portalroot' style = { portalrootstyle }>
-        //     <PortalList scrollerID = { scrollerSessionIDRef.current } scrollerPortals = {portalManager.scrollerPortals}/>
-        // </div>
     return ((scrollerstate == 'render') && <div data-type = 'scroller-frame' data-scrollerid = { scrollerSessionIDRef.current }>
         <Viewport
 

@@ -152,11 +152,9 @@ const Cradle = ({
     const isMounted = useRef(true)
     useLayoutEffect(()=>{
         const portalmanager = cradleDataRef.current.portalManager = new PortalManager()
-        portalmanager.createScrollerPortalRepository(scrollerID)
 
         // cleanup portal repository; clear isMounted
         return () => {
-            portalmanager.deleteScrollerPortalRepository(scrollerID)
             isMounted.current = false
         }
 
@@ -713,7 +711,7 @@ const Cradle = ({
                 cradleContent.tailModel = []
                 cradleContent.headView = []
                 cradleContent.tailView = []
-                cradleDataRef.current.portalManager.resetScrollerPortalRepository(scrollerID)
+                cradleDataRef.current.portalManager.resetScrollerPortalRepository()
                 contentAgent.setCradleContent(callingCradleState.current)
 
                 setCradleState('preparerender')
@@ -783,7 +781,7 @@ const Cradle = ({
 
     return <CradleContext.Provider value = {cradleDataRef}>
         {(cradleStateRef.current != 'setup') && <div data-type = 'portalroot' style = { portalrootstyle }>
-            <PortalList scrollerID = { scrollerID } scrollerPortals = {cradleDataRef.current.portalManager.scrollerPortals}/>
+            <PortalList scrollerData = {cradleDataRef.current.portalManager.scrollerData}/>
         </div>}
 
         {(cradleStateRef.current == 'updatereposition' || cradleStateRef.current == 'repositioning')

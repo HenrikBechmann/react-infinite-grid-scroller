@@ -15,8 +15,6 @@ import Placeholder from './placeholder'
 
 import { CradleContext } from './cradle'
 
-// import { portalManager } from './portalmanager'
-
 const CellShell = ({
     orientation, 
     cellHeight, 
@@ -32,8 +30,8 @@ const CellShell = ({
     scrollerID,
 }) => {
 
-    const cradleData = useContext(CradleContext)
-    const portalManager = cradleData.current.portalManager
+    const cradleDataRef = useContext(CradleContext)
+    const portalManager = cradleDataRef.current.portalManager
     
     const [styles,saveStyles] = useState({
         overflow:'hidden',
@@ -79,7 +77,7 @@ const CellShell = ({
         const requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
         const cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
 
-        portaldataRef.current = portalManager.fetchOrCreatePortal(scrollerID, index, placeholderRef.current)
+        portaldataRef.current = portalManager.fetchOrCreatePortal(index, placeholderRef.current)
 
         const hasUserContent = !!portaldataRef.current.hasusercontent // previous InPortal creation for index
 
@@ -98,7 +96,7 @@ const CellShell = ({
                             if (isMounted.current) { 
 
                                 portaldataRef.current.hasusercontent = true
-                                portaldataRef.current = portalManager.updatePortal(scrollerID,index,usercontent)
+                                portaldataRef.current = portalManager.updatePortal(index,usercontent)
                                 setCellStatus('render')
 
                             }
@@ -117,7 +115,7 @@ const CellShell = ({
                                 const usercontent = contentItem
 
                                 portaldataRef.current.hasusercontent = true
-                                portaldataRef.current = portalManager.updatePortal(scrollerID,index,usercontent)
+                                portaldataRef.current = portalManager.updatePortal(index,usercontent)
                                 setCellStatus('render')
 
                             } else {

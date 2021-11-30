@@ -13,8 +13,6 @@ import {
 
 } from './contentfunctions'
 
-// import { portalManager } from '../portalmanager'
-
 export default class ContentAgent extends CradleManagement{
 
    constructor(commonPropsRef, contentCallbacksRef) {
@@ -107,7 +105,7 @@ export default class ContentAgent extends CradleManagement{
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
-        deleteAndRerenderPortals(cradleData.portalManager, cradleProps.scrollerID, deleteditems)
+        deleteAndRerenderPortals(cradleData.portalManager, deleteditems)
 
         let [headcontentlist, tailcontentlist] = allocateContentList({
 
@@ -299,7 +297,7 @@ export default class ContentAgent extends CradleManagement{
 
         }
 
-        deleteAndRerenderPortals(portalManager,cradleProps.scrollerID, deletedContentItems)
+        deleteAndRerenderPortals(portalManager, deletedContentItems)
 
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 

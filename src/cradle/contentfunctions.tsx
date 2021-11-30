@@ -940,10 +940,10 @@ const emitItem = ({
 
 }
 
-export const deleteAndRerenderPortals = (portalManager, scrollerID, deleteList) => {
+export const deleteAndRerenderPortals = (portalManager, deleteList) => {
 
     for (let item of deleteList) {
-        portalManager.deletePortal(scrollerID, item.props.index)
+        portalManager.deletePortal(item.props.index)
     }
-    if (deleteList.length) portalManager.renderPortalList(scrollerID)
+    if (deleteList.length) portalManager.renderPortalList()
 }

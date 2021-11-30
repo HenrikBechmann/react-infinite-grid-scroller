@@ -14,74 +14,54 @@ export class PortalManager {
 
     //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
 
-    scrollerPortals = new Map()
+    // scrollerPortals = new Map()
+    scrollerData = {
+        setListState:null,
+        modified:false,
+        portalMetadataMap:new Map(),
+        portalMap:new Map(),
+        portalList:null
+    }
 
     // initialize scroller repository
-    createScrollerPortalRepository(scrollerID) {
-
-        if (!this.scrollerPortals.has(scrollerID)) {
-            this.scrollerPortals.set(scrollerID, 
-                {
-                    setListState:null,
-                    modified:false,
-                    portalMetadataMap:new Map(),
-                    portalMap:new Map(),
-                    portalList:null
-                }
-            )
-        }
-
-    }
 
     resetScrollerPortalRepository(scrollerID) { // TODO: confirm no memory leak
 
         // keep the setListState callback
-        if (this.scrollerPortals.has(scrollerID)) {
-            let scrollerdata = this.scrollerPortals.get(scrollerID)
-            scrollerdata.portalMap.clear() 
-            scrollerdata.portalMetadataMap.clear()
-            scrollerdata.portalList = null
-            scrollerdata.modified = false
-        }
-
-    }
-
-    // delete scroller repository for reset or unmount
-    deleteScrollerPortalRepository (scrollerID) {
-
-        this.scrollerPortals.delete(scrollerID)
+        this.scrollerData.portalMap.clear() 
+        this.scrollerData.portalMetadataMap.clear()
+        this.scrollerData.portalList = null
+        this.scrollerData.modified = false
 
     }
 
     // set state of the PortalList component of the scroller to trigger render
-    renderPortalList = (scrollerID) => {
+    renderPortalList = () => {
 
-        const scrollerportaldata = this.scrollerPortals.get(scrollerID)
-        if (scrollerportaldata.modified) {
-            scrollerportaldata.portalList = Array.from(scrollerportaldata.portalMap.values())
-            scrollerportaldata.modified = false
+        if (this.scrollerData.modified) {
+            this.scrollerData.portalList = Array.from(this.scrollerData.portalMap.values())
+            this.scrollerData.modified = false
         }
 
-        scrollerportaldata.setListState() // trigger display update
+        this.scrollerData.setListState() // trigger display update
 
     }
 
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
     // add a portal list item. The index is the scroller's portal dataset index
-    fetchOrCreatePortal(scrollerID, index, content) { // content is used for new portal only
+    fetchOrCreatePortal(index, content) { // content is used for new portal only
 
-        if (this.hasPortal(scrollerID, index)) {
-            return this.getPortal(scrollerID, index)
+        if (this.hasPortal(index)) {
+            return this.getPortal(index)
         }
 
         // if not found, create new portal
 
-        const [inportal,reverseportal] = createInPortal(content, index, scrollerID)
+        const [inportal,reverseportal] = createInPortal(content, index)
 
-        const scrollerportals = this.scrollerPortals.get(scrollerID)
-        scrollerportals.portalMap.set(index,<PortalWrapper inportal = {inportal} key = {index} index = {index}/>)
-        scrollerportals.modified = true
+        this.scrollerData.portalMap.set(index,<PortalWrapper inportal = {inportal} key = {index} index = {index}/>)
+        this.scrollerData.modified = true
 
         const portalMetadata = {
             reverseportal, 
@@ -89,25 +69,24 @@ export class PortalManager {
             hasusercontent:false 
         }
 
-        scrollerportals.portalMetadataMap.set(index, portalMetadata)
+        this.scrollerData.portalMetadataMap.set(index, portalMetadata)
 
-        this.renderPortalList(scrollerID)
+        this.renderPortalList()
 
         return portalMetadata
 
     }
 
     // update the content of a portal list item
-    updatePortal(scrollerID, index, content) {
-        const portalMetadata = this.getPortal(scrollerID,index)
+    updatePortal(index, content) {
+        const portalMetadata = this.getPortal(index)
 
         const portalComponent = updateInPortal(content, portalMetadata.reverseportal )
 
-        const scrollerportals = this.scrollerPortals.get(scrollerID)
-        scrollerportals.portalMap.set(index,<PortalWrapper inportal = {portalComponent} key = {index} index = {index}/>)
-        scrollerportals.modified = true
+        this.scrollerData.portalMap.set(index,<PortalWrapper inportal = {portalComponent} key = {index} index = {index}/>)
+        this.scrollerData.modified = true
 
-        this.renderPortalList(scrollerID)
+        this.renderPortalList()
 
         return portalMetadata
     }
@@ -115,36 +94,33 @@ export class PortalManager {
     // delete a portal list item
     deletePortal(scrollerID, index) {
 
-        const scrollerdata = this.scrollerPortals.get(scrollerID)
-        scrollerdata.portalMetadataMap.delete(index)
-        scrollerdata.portalMap.delete(index)
-        scrollerdata.modified = true
+        this.scrollerData.portalMetadataMap.delete(index)
+        this.scrollerData.portalMap.delete(index)
+        this.scrollerData.modified = true
 
     }
 
     // query existence of a portal list item
-    hasPortal(scrollerID, index) {
+    hasPortal(index) {
 
-        return this.scrollerPortals.get(scrollerID).portalMetadataMap.has(index)
+        return this.scrollerData.portalMetadataMap.has(index)
 
     }
 
     // get a portal list item's meta data
-    getPortal(scrollerID, index) {
+    getPortal(index) {
 
-        return this.scrollerPortals.get(scrollerID).portalMetadataMap.get(index)
+        return this.scrollerData.portalMetadataMap.get(index)
 
     }
 
 }
 
-// export const portalManager = new PortalManager()
-
 // ==========================[ Utility functions ]============================
 
 // get a react-reverse-portal InPortal component, with its metadata
 // with user content and container
-const createInPortal = (content, index, scrollerID) => {
+const createInPortal = (content, index) => {
 
     // console.log('creating inportal index, scrollerID',index,scrollerID)
     let reversePortal = createHtmlPortalNode()
@@ -154,7 +130,7 @@ const createInPortal = (content, index, scrollerID) => {
     container.style.position = 'absolute'
     container.dataset.type = 'portalcontainer'
     container.dataset.index = index
-    container.dataset.scrollerid = scrollerID
+    // container.dataset.scrollerid = scrollerID
     container.setAttribute('key',index)
 
 
@@ -187,17 +163,15 @@ export const PortalWrapper = ({ inportal, index }) => {
 }
 
 // portal list component for rapid relisting of updates, using external callback for set state
-export const PortalList = ({scrollerID, scrollerPortals}) => {
+export const PortalList = ({scrollerData}) => {
 
     const [portalList, setPortalList] = useState(null)
     const isMounted = useRef(true)
 
     useEffect(()=>{
 
-        let scrollersessionportals = scrollerPortals.get(scrollerID)
-
-        scrollersessionportals.setListState = ()=>{
-            isMounted.current && setPortalList(scrollersessionportals.portalList)
+        scrollerData.setListState = ()=>{
+            isMounted.current && setPortalList(scrollerData.portalList)
         }
 
         return () => {isMounted.current = false}

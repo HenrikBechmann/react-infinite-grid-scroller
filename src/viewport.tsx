@@ -12,8 +12,6 @@ export const ViewportContext = React.createContext(null) // for children
 
 import { ResizeObserver } from '@juggle/resize-observer'
 
-// import { portalManager } from './portalmanager'
-
 import { CradleContext } from './cradle'
 
 const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
@@ -37,11 +35,9 @@ const Viewport = ({
 
     const [viewportstate,setViewportState] = useState('setup');
 
-    const cradleData = useContext(CradleContext);
+    const cradleDataRef = useContext(CradleContext);
 
-    const portalManager = cradleData?.current.portalManager;
-
-    // console.log('cradleData at viewport',cradleData);
+    const portalManager = cradleDataRef?.current.portalManager;
 
     (scrollerID == 1) && console.log('running scrollerID, viewportstate',scrollerID, viewportstate)
 
@@ -147,16 +143,16 @@ const Viewport = ({
     // get portal for non-root viewports
     useEffect(()=>{
 
-        if (scrollerID == 0) return // root
+        if (!cradleDataRef) return // root
 
-        let parentscrollerid, portalindex
+
+        let portalindex
         let element = viewportdivRef.current
 
         while (element) {
             if (element.dataset && (element.dataset.type == 'portalcontainer')) {
                 portalindex = parseInt(element.dataset.index)
-                parentscrollerid = parseInt(element.dataset.scrollerid)
-                viewportDataRef.current.portal = portalManager.getPortal(parentscrollerid, portalindex)
+                viewportDataRef.current.portal = portalManager.getPortal(portalindex)
                 break
             } else {
                 element = element.parentElement
