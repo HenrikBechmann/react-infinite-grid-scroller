@@ -137,46 +137,9 @@ const Cradle = ({
         scrollerID,
     }) => {
 
-    const [cradleState, setCradleState] = useState('setup')
-    const cradleStateRef = useRef(null) // access by closures
-    cradleStateRef.current = cradleState;
-
-    const cradleDataRef = useRef({
-        portalManager:null,
-        scrollerID
-    })
-    // --------------------------[ bundle cradleProps ]----------------------------
-
-    // functions and styles handled separately
     const cradlePropsRef = useRef(null) // access by closures
-    const isMounted = useRef(true)
-    useLayoutEffect(()=>{
-        const portalmanager = cradleDataRef.current.portalManager = new PortalManager()
 
-        // cleanup portal repository; clear isMounted
-        return () => {
-            isMounted.current = false
-        }
-
-    },[])
-
-    useEffect(()=>{
-
-        cradlePropsRef.current =  {
-            gap, 
-            padding, 
-            runwaycount, 
-            listsize, 
-            defaultVisibleIndex, 
-            orientation, 
-            cellHeight, 
-            cellWidth, 
-            getItem, 
-            placeholder, 
-            scrollerName,
-            scrollerID,
-        }
-    },[
+    cradlePropsRef.current =  {
         gap, 
         padding, 
         runwaycount, 
@@ -189,7 +152,29 @@ const Cradle = ({
         placeholder, 
         scrollerName,
         scrollerID,
-    ])
+    }
+
+    const [cradleState, setCradleState] = useState('setup')
+    const cradleStateRef = useRef(null) // access by closures
+    cradleStateRef.current = cradleState;
+
+    const cradleDataRef = useRef({
+        portalManager:null,
+        scrollerID
+    })
+    // --------------------------[ bundle cradleProps ]----------------------------
+
+    // functions and styles handled separately
+    const isMounted = useRef(true)
+    useLayoutEffect(()=>{
+        const portalmanager = cradleDataRef.current.portalManager = new PortalManager()
+
+        // cleanup portal repository; clear isMounted
+        return () => {
+            isMounted.current = false
+        }
+
+    },[])
 
     // const cradleProps = cradlePropsRef.current
 
@@ -210,7 +195,8 @@ const Cradle = ({
     const viewportDataRef = useRef(null)
     viewportDataRef.current = viewportData;
 
-    // (scrollerID == 1) && console.log('cradle scrollerID, cradleState, props',cradleProps.scrollerID,cradleState, cradleProps)
+    (viewportData.index == 0) && console.log('cradle index, cradleState, props',
+        viewportData.index,cradleState, cradlePropsRef.current)
 
     // const isReparentingRef = useRef(false)
 

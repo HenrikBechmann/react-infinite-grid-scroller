@@ -39,7 +39,7 @@ const Viewport = ({
 
     const portalManager = cradleDataRef?.current.portalManager;
 
-    (scrollerID == 1) && console.log('running scrollerID, viewportstate',scrollerID, viewportstate)
+    // ((scrollerID == 1) || (scrollerID == 0)) && console.log('running scrollerID, viewportstate',scrollerID, viewportstate)
 
     const viewportstateRef = useRef(null) // for useCallback -> resizeCallback
     viewportstateRef.current = viewportstate
@@ -76,6 +76,7 @@ const Viewport = ({
         {
             portal:null, 
             isResizing:false, 
+            index:null
         }
     )
 
@@ -153,6 +154,7 @@ const Viewport = ({
             if (element.dataset && (element.dataset.type == 'portalcontainer')) {
                 portalindex = parseInt(element.dataset.index)
                 viewportDataRef.current.portal = portalManager.getPortal(portalindex)
+                viewportDataRef.current.index = portalindex
                 break
             } else {
                 element = element.parentElement
@@ -203,8 +205,8 @@ const Viewport = ({
         }
 
         const viewportdataobject = Object.assign({},viewportDataRef.current, localViewportData);
-        (scrollerID == 1) && console.log('scrollerID, orientation, isResizingRef.current, viewportstate, viewportdataobject',
-            scrollerID, orientation, isResizingRef.current, viewportstate, Object.assign({},viewportdataobject))
+        // ((scrollerID == 1) || (scrollerID == 0)) && console.log('scrollerID, orientation, isResizingRef.current, viewportstate, viewportdataobject',
+        //     scrollerID, orientation, isResizingRef.current, viewportstate, Object.assign({},viewportdataobject))
         return  viewportdataobject
 
     },[orientation, isResizingRef.current, viewportstate])
