@@ -88,6 +88,12 @@ export default class ObserversAgent extends CradleManagement{
     // the async callback from IntersectionObserver.
     cellobservercallback = (entries)=>{
 
+        const testrootbounds = entries[0].rootBounds
+        if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
+            console.log('invalid testrootbounds',testrootbounds)
+            return
+        }
+
         let signalsAgent = this._managersRef.current.signals
         let contentAgent = this._managersRef.current.content
         let stateAgent = this._managersRef.current.state
@@ -111,11 +117,6 @@ export default class ObserversAgent extends CradleManagement{
             }
         }
 
-        const testrootbounds = entries[0].rootBounds
-        if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
-            console.log('invalid testrootbounds',testrootbounds)
-            return
-        }
         if (signalsAgent.signals.pauseCellObserver) {
 
             return

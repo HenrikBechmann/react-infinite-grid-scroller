@@ -172,7 +172,7 @@ export default class ContentAgent extends CradleManagement{
 
         let cradleData = this._cradleDataRef.current
 
-        console.log('source, cradleData in updateCradleContent',source, cradleData)
+        if (viewportData.index == 0) console.log('source, cradleData, entries in updateCradleContent',source, cradleData, entries)
 
         let viewportElement = viewportData.elementref.current
         if (!viewportElement) {
@@ -235,6 +235,8 @@ export default class ContentAgent extends CradleManagement{
             cellObserverThreshold:cradleConfig.cellObserverThreshold,
 
         })
+
+        if (viewportData.index == 0) console.log('intersections in updateCradleContent',intersections)
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 

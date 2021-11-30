@@ -21,7 +21,7 @@ const Scrollblock = ({
     // -------------------------[ context and state ]-------------------------
     const viewportData = useContext(ViewportContext)
     const [blockstate,setBlockState] = useState('setup') // setup -> render
-    // console.log('RUNNING scrollblock scrollerID, viewportstate',scrollerID,blockstate)
+    if (viewportData.index == 0) console.log('RUNNING scrollblock viewportData.index, blockstate',viewportData.index,blockstate)
 
     // -----------------------------------[ data heap ]-------------------------
     const scrollBlockLengthRef = useRef(null)
@@ -84,6 +84,7 @@ const Scrollblock = ({
                     }
                 )
 
+            if (viewportData.index == 0) console.log('scrollblock updateBlockLength to ', scrollblocklength)
             scrollBlockLengthRef.current = scrollblocklength
 
         },[
