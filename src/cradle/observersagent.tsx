@@ -54,7 +54,6 @@ export default class ObserversAgent extends CradleManagement{
         {
             let cradleState = stateAgent.cradleStateRef.current        
             if (
-                // false &&
                 !viewportData.isResizing &&
                 !(cradleState == 'resized') &&
                 !(cradleState == 'repositioning') && 
@@ -92,6 +91,11 @@ export default class ObserversAgent extends CradleManagement{
         let signalsAgent = this._managersRef.current.signals
         let contentAgent = this._managersRef.current.content
         let stateAgent = this._managersRef.current.state
+        let viewportData = this._viewportdataRef.current
+
+        // if (viewportData.index == 0) {
+        //     debugger
+        // }
 
         let movedentries = []
 
@@ -107,12 +111,20 @@ export default class ObserversAgent extends CradleManagement{
             }
         }
 
+        const testrootbounds = entries[0].rootBounds
+        if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
+            console.log('invalid testrootbounds',testrootbounds)
+            return
+        }
         if (signalsAgent.signals.pauseCellObserver) {
 
             return
 
         }
 
+        if (viewportData.index == 0) {
+            console.log('calling updateCradleContent from cellobservercallback')
+        }
         stateAgent.isMounted.current && contentAgent.updateCradleContent(movedentries,'cellObserver')
 
     }

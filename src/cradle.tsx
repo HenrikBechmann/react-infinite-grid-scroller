@@ -149,8 +149,8 @@ const Cradle = ({
     }
 
     const [cradleState, setCradleState] = useState('setup')
-    const viewportData = useContext(ViewportContext);
-    (viewportData.index == 0) && console.log('RUNNING cradle viewport index, cradle cradleState',
+    const viewportData = useContext(ViewportContext)
+    if (viewportData.index == 0) console.log('RUNNING cradle viewport index, cradle cradleState',
         viewportData.index, cradleState)
 
     const cradleStateRef = useRef(null) // access by closures
@@ -189,9 +189,9 @@ const Cradle = ({
     // ---------------------------[ context data ]----------------------------
 
     const viewportDataRef = useRef(null)
-    viewportDataRef.current = viewportData;
+    viewportDataRef.current = viewportData
 
-    // (viewportData.index == 0) && console.log('cradle index, cradleState, props',
+    // if (viewportData.index == 0) console.log('cradle index, cradleState, props',
     //     viewportData.index,cradleState, cradlePropsRef.current)
 
     // -----------------------------------------------------------------------

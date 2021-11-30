@@ -163,8 +163,11 @@ export default class ScrollAgent extends CradleManagement{
 
             default: {
 
-                contentAgent.updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
+                if (viewportData.index == 0) {
+                    console.log('calling updateCradleContent from _onAfterScroll')
+                }
 
+                contentAgent.updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
 
             }
 
