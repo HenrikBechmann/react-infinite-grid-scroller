@@ -93,8 +93,8 @@ const InfiniteGridScroller = (props) => {
 
     },[]);
 
-    (scrollerSessionIDRef.current == 1) && console.log('RUNNING infinitegridscroller scrollerSessionID, scrollerstate, listSize',
-        scrollerSessionIDRef.current,scrollerstate, listSize)
+    // (scrollerSessionIDRef.current == 1) && console.log('RUNNING infinitegridscroller scrollerSessionID, scrollerstate, listSize',
+    //     scrollerSessionIDRef.current,scrollerstate, listSize)
 
     // set defaults
     functions ?? (functions = {})

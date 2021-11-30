@@ -97,10 +97,6 @@ import { ViewportContext } from './viewport'
 
 import { PortalManager, PortalList } from './portalmanager'
 
-// import { ResizeObserver } from '@juggle/resize-observer'
-
-// const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
-
 const ITEM_OBSERVER_THRESHOLD = 0
 
 // import agency classes - loci of data and related methods
@@ -195,22 +191,17 @@ const Cradle = ({
     const viewportDataRef = useRef(null)
     viewportDataRef.current = viewportData;
 
-    (viewportData.index == 0) && console.log('cradle index, cradleState, props',
-        viewportData.index,cradleState, cradlePropsRef.current)
-
-    // const isReparentingRef = useRef(false)
+    // (viewportData.index == 0) && console.log('cradle index, cradleState, props',
+    //     viewportData.index,cradleState, cradlePropsRef.current)
 
     // -----------------------------------------------------------------------
-    // -------------------------[ configuration ]-----------------
+    // -------------------------[ configuration ]-----------------------------
 
     const { viewportDimensions } = viewportData
 
     let { height:viewportheight,width:viewportwidth } = viewportDimensions
     
     const crosscount = useMemo(() => {
-
-        // console.log('in cradle calc crosscount viewportheight, viewportwidth', 
-        //     viewportheight, viewportwidth, Object.assign({},viewportDataRef.current))
 
         let crosscount
         let size = (orientation == 'horizontal')?viewportheight:viewportwidth
@@ -220,8 +211,6 @@ const Cradle = ({
         let tilelengthforcalc = crossLength + gap
         tilelengthforcalc = Math.min(tilelengthforcalc,lengthforcalc) // result cannot be less than 1
         crosscount = Math.floor(lengthforcalc/(tilelengthforcalc))
-
-        // console.log('crosscount calculated in cradle', scrollerID, crosscount)
 
         return crosscount
 
@@ -271,7 +260,6 @@ const Cradle = ({
     ])
 
 
-    // const signalsRef = useRef(Object.assign({},signalsbaseline))
     const cradleConfigRef = useRef(null)
 
     cradleConfigRef.current = {
@@ -359,9 +347,6 @@ const Cradle = ({
 
     // if (viewportData.isReparenting) {
     //     signalsAgent.resetSignals() 
-    //     viewportData.isReparenting = false
-    //     isReparentingRef.current = true
-    //     setCradleState('reparenting')
     // }
 
     // ------------------------------------------------------------------------

@@ -37,9 +37,14 @@ export default class ObserversAgent extends CradleManagement{
         for (let i = 0; i < entries.length; i++ ) {
             let entry = entries[i]
             if (entry.target.dataset.type == 'head') {
-                signals.isHeadCradleInView = entry.isIntersecting
+                signals.isHeadCradleInView = 
+                    (entry.isIntersecting || 
+                    (!((entry.rootBounds.height == 0 ) && (entry.rootBounds.width == 0))) // transitory; reparenting hack
+                )
             } else {
-                signals.isTailCradleInView = entry.isIntersecting
+                    (entry.isIntersecting || 
+                    (!((entry.rootBounds.height == 0 ) && (entry.rootBounds.width == 0))) // transitory; reparenting hack
+                )
             }
         }
 
@@ -49,6 +54,7 @@ export default class ObserversAgent extends CradleManagement{
         {
             let cradleState = stateAgent.cradleStateRef.current        
             if (
+                // false &&
                 !viewportData.isResizing &&
                 !(cradleState == 'resized') &&
                 !(cradleState == 'repositioning') && 
@@ -56,19 +62,19 @@ export default class ObserversAgent extends CradleManagement{
                 !(cradleState == 'pivot')
                 ) 
             {
-                let element = viewportData.elementref.current
+                const element = viewportData.elementref.current
                 if (!element) {
                     console.log('viewport element not set in cradleIntersectionObserverCallback',
                         this._cradlePropsRef.current.scrollerID,viewportData)
                     return
                 }
-                let rect = element.getBoundingClientRect()
-                let {top, right, bottom, left} = rect
-                let width = right - left, height = bottom - top
+                const rect = element.getBoundingClientRect()
+                const {top, right, bottom, left} = rect
+                const width = right - left, height = bottom - top
                 viewportData.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
                 signals.pauseCellObserver = true
                 // pauseCradleIntersectionObserverRef.current = true
-                let cradleContent = contentAgent.content
+                const cradleContent = contentAgent.content
                 cradleContent.headModel = []
                 cradleContent.tailModel = []
                 cradleContent.headView = []
