@@ -91,8 +91,6 @@
 
 import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, useLayoutEffect } from 'react'
 
-// import ResizeObserverPolyfill from 'resize-observer-polyfill'
-
 import { ViewportContext } from './viewport'
 
 import { PortalManager, PortalList } from './portalmanager'
@@ -151,6 +149,10 @@ const Cradle = ({
     }
 
     const [cradleState, setCradleState] = useState('setup')
+    const viewportData = useContext(ViewportContext);
+    (viewportData.index == 0) && console.log('RUNNING cradle viewport index, cradle cradleState',
+        viewportData.index, cradleState)
+
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState;
 
@@ -185,8 +187,6 @@ const Cradle = ({
 
     // -----------------------------------------------------------------------
     // ---------------------------[ context data ]----------------------------
-
-    const viewportData = useContext(ViewportContext);
 
     const viewportDataRef = useRef(null)
     viewportDataRef.current = viewportData;
