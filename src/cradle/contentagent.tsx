@@ -171,7 +171,6 @@ export default class ContentAgent extends CradleManagement{
         let observersAgent = this._managersRef.current.observers
 
         let cradleData = this._cradleDataRef.current
-        let portalManager = cradleData.portalManager
 
         // console.log('cradleData in updateCradleContent',cradleData)
 
@@ -297,7 +296,7 @@ export default class ContentAgent extends CradleManagement{
 
         }
 
-        deleteAndRerenderPortals(portalManager, deletedContentItems)
+        deleteAndRerenderPortals(cradleData.portalManager, deletedContentItems)
 
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 
