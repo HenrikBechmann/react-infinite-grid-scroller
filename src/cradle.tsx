@@ -159,8 +159,10 @@ const Cradle = ({
         }
 
     },[])
-    cradlePropsRef.current = useMemo(() => {
-        return { 
+
+    useEffect(()=>{
+
+        cradlePropsRef.current =  {
             gap, 
             padding, 
             runwaycount, 
@@ -173,7 +175,8 @@ const Cradle = ({
             placeholder, 
             scrollerName,
             scrollerID,
-    }},[
+        }
+    },[
         gap, 
         padding, 
         runwaycount, 
@@ -188,7 +191,7 @@ const Cradle = ({
         scrollerID,
     ])
 
-    const cradleProps = cradlePropsRef.current
+    // const cradleProps = cradlePropsRef.current
 
     // =============================================================================================
     // --------------------------------------[ INITIALIZATION ]-------------------------------------
@@ -207,7 +210,7 @@ const Cradle = ({
     const viewportDataRef = useRef(null)
     viewportDataRef.current = viewportData;
 
-    (scrollerID == 1) && console.log('cradle scrollerID, cradleState, props',cradleProps.scrollerID,cradleState, cradleProps)
+    // (scrollerID == 1) && console.log('cradle scrollerID, cradleState, props',cradleProps.scrollerID,cradleState, cradleProps)
 
     // const isReparentingRef = useRef(false)
 
@@ -654,11 +657,6 @@ const Cradle = ({
                 break;
             case 'repositioning':
                 break;
-
-            // case 'reparenting':
-            //     isReparentingRef.current = false
-            //     setCradleState('setscrollposition')
-            //     break;
 
             case 'setscrollposition': {
 
