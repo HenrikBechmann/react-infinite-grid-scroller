@@ -14,7 +14,6 @@ export class PortalManager {
 
     //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
 
-    // scrollerPortals = new Map()
     scrollerData = {
         setListState:null,
         modified:false,
@@ -25,7 +24,7 @@ export class PortalManager {
 
     // initialize scroller repository
 
-    resetScrollerPortalRepository(scrollerID) { // TODO: confirm no memory leak
+    resetScrollerPortalRepository() {
 
         // keep the setListState callback
         this.scrollerData.portalMap.clear() 
@@ -92,7 +91,7 @@ export class PortalManager {
     }
 
     // delete a portal list item
-    deletePortal(scrollerID, index) {
+    deletePortal(index) {
 
         this.scrollerData.portalMetadataMap.delete(index)
         this.scrollerData.portalMap.delete(index)
@@ -163,7 +162,7 @@ export const PortalWrapper = ({ inportal, index }) => {
 }
 
 // portal list component for rapid relisting of updates, using external callback for set state
-export const PortalList = ({scrollerData}) => {
+export const PortalList = ({ scrollerData }) => {
 
     const [portalList, setPortalList] = useState(null)
     const isMounted = useRef(true)
