@@ -38,6 +38,8 @@ const CellShell = ({
     } as React.CSSProperties)
     const [cellStatus, setCellStatus] = useState('setup'); // 'setup' -> 'renderplaceholder' -> 'render'
 
+    console.log('running cellshell cellStatus, index, scrollerID, instanceID',cellStatus, index, scrollerID, instanceID)
+
     const shellRef = useRef(null)
     const instanceIDRef = useRef(instanceID)
     const isMounted = useRef(true)
@@ -196,16 +198,23 @@ const CellShell = ({
 
     },[orientation,cellHeight,cellWidth]) 
 
-    const reverseportal = useMemo(()=>{
+    const contentcomponent = useMemo(()=>{
 
         if (cellStatus == 'setup') return null
 
-        return portaldataRef.current.reverseportal
+        const component = <OutPortal node = {portaldataRef.current.reverseportal}/>
+
+        if (index == 0) {
+            console.log('cellStatus, index, cradleDataRef, component in cellshell',
+                cellStatus, index, cradleDataRef,component)
+        }
+
+        return component
 
     }, [cellStatus]);
 
     return <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
-            { ((cellStatus == 'render') || (cellStatus == 'renderplaceholder')) && <OutPortal node = {reverseportal}/> }
+            { ((cellStatus == 'render') || (cellStatus == 'renderplaceholder')) && contentcomponent }
         </div>
 
 } // CellShell

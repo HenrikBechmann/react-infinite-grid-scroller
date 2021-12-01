@@ -4,7 +4,8 @@
 /*
     TODO:
 
-    - fix repositioning
+    - fix scroll reset on reparent
+    - review need for setscrollposition
 
     ObserversAgent
     WingsAgent
@@ -150,13 +151,14 @@ const Cradle = ({
 
     const [cradleState, setCradleState] = useState('setup')
     const viewportData = useContext(ViewportContext)
+    const viewportDataRef = useRef(null)
+    viewportDataRef.current = viewportData
     useEffect(()=>{
         const rectwidth = viewportData.elementref.current.offsetWidth
         const rectheight = viewportData.elementref.current.offsetWidth
-        console.log('viewport index, width, height, viewportData', 
-            viewportData.index, rectwidth, rectheight, viewportData)
+        // console.log('viewport index, width, height, viewportData', 
+        //     viewportData.index, rectwidth, rectheight, viewportData)
     },[viewportData])
-
     // if (viewportData.index == 0) {
     //     const rectscrollLeft = viewportData.elementref.current.offsetLeft
 
@@ -169,7 +171,8 @@ const Cradle = ({
 
     const cradleDataRef = useRef({
         portalManager:null,
-        scrollerID
+        scrollerID,
+        viewportDataRef,
     })
     // --------------------------[ bundle cradleProps ]----------------------------
 
@@ -198,9 +201,6 @@ const Cradle = ({
 
     // -----------------------------------------------------------------------
     // ---------------------------[ context data ]----------------------------
-
-    const viewportDataRef = useRef(null)
-    viewportDataRef.current = viewportData
 
     // if (viewportData.index == 0) console.log('cradle index, cradleState, props',
     //     viewportData.index,cradleState, cradlePropsRef.current)
@@ -640,6 +640,8 @@ const Cradle = ({
 
             case 'setscrollposition': {
 
+                // console.log('setting scroll position scrollProperty, blockScrollPos',
+                //     cradleAgent.blockScrollProperty,cradleAgent.blockScrollPos)
                 // const cradleAgent = managersRef.current.scrollRef.current
                 viewportData.elementref.current[cradleAgent.blockScrollProperty] =
                     Math.max(0,cradleAgent.blockScrollPos)
