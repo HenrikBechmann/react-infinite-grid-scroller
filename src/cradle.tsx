@@ -150,15 +150,19 @@ const Cradle = ({
 
     const [cradleState, setCradleState] = useState('setup')
     const viewportData = useContext(ViewportContext)
-    // const rectwidth = viewportData.elementref.current.offsetWidth
-    // const rectheight = viewportData.elementref.current.offsetWidth
+    useEffect(()=>{
+        const rectwidth = viewportData.elementref.current.offsetWidth
+        const rectheight = viewportData.elementref.current.offsetWidth
+        console.log('viewport index, width, height, viewportData', 
+            viewportData.index, rectwidth, rectheight, viewportData)
+    },[viewportData])
 
-    if (viewportData.index == 0) {
-        const rectscrollLeft = viewportData.elementref.current.offsetLeft
+    // if (viewportData.index == 0) {
+    //     const rectscrollLeft = viewportData.elementref.current.offsetLeft
 
-        console.log('RUNNING cradle viewport index, cradle cradleState',
-        viewportData.index, cradleState, rectscrollLeft)
-    }
+    //     console.log('RUNNING cradle viewport index, cradle cradleState',
+    //     viewportData.index, cradleState, rectscrollLeft)
+    // }
 
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState;

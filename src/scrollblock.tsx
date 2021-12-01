@@ -84,7 +84,7 @@ const Scrollblock = ({
                     }
                 )
 
-            if (viewportData.index == 0) console.log('scrollblock updateBlockLength to ', scrollblocklength)
+            // if (viewportData.index == 0) console.log('scrollblock updateBlockLength to ', scrollblocklength)
             scrollBlockLengthRef.current = scrollblocklength
 
         },[
