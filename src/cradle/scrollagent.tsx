@@ -17,7 +17,10 @@ export default class ScrollAgent extends CradleManagement{
 
     private _scrolltimerid = null
 
-    onScroll = () => {
+    onScroll = (e) => {
+
+        // e.preventDefault()
+        e.stopPropagation()
 
         let signals = this._managersRef.current.signals.signals
 
@@ -98,6 +101,8 @@ export default class ScrollAgent extends CradleManagement{
             this._onAfterScroll()
 
         },SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
+
+        return false
 
     }
 
