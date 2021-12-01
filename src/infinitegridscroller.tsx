@@ -111,7 +111,7 @@ const InfiniteGridScroller = (props) => {
         orientation = 'vertical'
     }
 
-    return ((scrollerstate == 'render') && <div data-type = 'scroller-frame' data-scrollerid = { scrollerSessionIDRef.current }>
+    return ((scrollerstate == 'render') && 
         <Viewport
 
             orientation = { orientation } 
@@ -157,7 +157,7 @@ const InfiniteGridScroller = (props) => {
                 />
             </Scrollblock>
         </Viewport>
-    </div>)
+    )
 }
 
 export default InfiniteGridScroller
