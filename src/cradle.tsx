@@ -6,6 +6,7 @@
 
     - fix scroll reset on reparent
     - review need for setscrollposition
+    - BUG: reposition is broken
 
     ObserversAgent
     WingsAgent
@@ -153,12 +154,12 @@ const Cradle = ({
     const viewportData = useContext(ViewportContext)
     const viewportDataRef = useRef(null)
     viewportDataRef.current = viewportData
-    useEffect(()=>{
-        const rectwidth = viewportData.elementref.current.offsetWidth
-        const rectheight = viewportData.elementref.current.offsetWidth
-        // console.log('viewport index, width, height, viewportData', 
-        //     viewportData.index, rectwidth, rectheight, viewportData)
-    },[viewportData])
+    // useEffect(()=>{
+    //     const rectwidth = viewportData.elementref.current.offsetWidth
+    //     const rectheight = viewportData.elementref.current.offsetWidth
+    //     // console.log('viewport index, width, height, viewportData', 
+    //     //     viewportData.index, rectwidth, rectheight, viewportData)
+    // },[viewportData])
     // if (viewportData.index == 0) {
     //     const rectscrollLeft = viewportData.elementref.current.offsetLeft
 
@@ -175,7 +176,7 @@ const Cradle = ({
         viewportDataRef,
     })
 
-    console.log('RUNNING CRADLE cradleState, cradleDataRef',cradleState,cradleDataRef)
+    console.log('RUNNING CRADLE cradleState',cradleState)
     // --------------------------[ bundle cradleProps ]----------------------------
 
     // functions and styles handled separately
@@ -436,13 +437,13 @@ const Cradle = ({
 
         if (cradleState != 'ready') return
 
-        console.log('viewportDataRef in cradle for ready',viewportDataRef)
-        if ((viewportDataRef.current.portal) && (viewportDataRef.current.portal.initialized == false)) {
-            viewportDataRef.current.portal.initialized = true
-            setCradleState('setscrollposition')
+        // console.log('viewportDataRef in cradle for ready',viewportDataRef)
+        if ((viewportDataRef.current.portal) && (viewportDataRef.current.portal.isreparenting == true)) {
+            viewportDataRef.current.portal.isreparenting = false
+            setCradleState('resetscrollposition')
         }
 
-    },[cradleState,viewportDataRef.current.portal?.initialized])
+    },[cradleState,viewportDataRef.current.portal?.isreparenting])
 
     // reload for changed parameters
     useEffect(()=>{
@@ -652,11 +653,17 @@ const Cradle = ({
             case 'repositioning':
                 break;
 
+            case 'resetscrollposition': {
+
+                viewportData.elementref.current[cradleAgent.blockScrollProperty] =
+                    Math.max(0,cradleAgent.blockScrollPos)
+
+                setCradleState('ready')
+
+                break;
+            }
             case 'setscrollposition': {
 
-                // console.log('setting scroll position scrollProperty, blockScrollPos',
-                //     cradleAgent.blockScrollProperty,cradleAgent.blockScrollPos)
-                // const cradleAgent = managersRef.current.scrollRef.current
                 viewportData.elementref.current[cradleAgent.blockScrollProperty] =
                     Math.max(0,cradleAgent.blockScrollPos)
 

@@ -211,7 +211,7 @@ const CellShell = ({
         //     cellStatus, index, cradleDataRef, reverseportal, component)
 
         if (cellStatus != 'ready') {
-            portaldataRef.current.initialized = false
+            portaldataRef.current.isreparenting = true
             setCellStatus('ready')
         }
 

@@ -64,7 +64,7 @@ export class PortalManager {
 
         const portalMetadata = {
             reverseportal, 
-            initialized:false,
+            isreparenting:false,
             hasusercontent:false 
         }
 
