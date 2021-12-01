@@ -36,9 +36,10 @@ const CellShell = ({
     const [styles,saveStyles] = useState({
         overflow:'hidden',
     } as React.CSSProperties)
-    const [cellStatus, setCellStatus] = useState('setup'); // 'setup' -> 'renderplaceholder' -> 'render'
+    // 'setup' -> 'renderplaceholder' -> 'rendercontent' -> 'ready'
+    const [cellStatus, setCellStatus] = useState('setup'); 
 
-    console.log('RUNNING cellshell cellStatus, index, scrollerID, instanceID',cellStatus, index, scrollerID, instanceID)
+    // console.log('RUNNING cellshell cellStatus, index, scrollerID, instanceID',cellStatus, index, scrollerID, instanceID)
 
     const shellRef = useRef(null)
     const instanceIDRef = useRef(instanceID)
@@ -99,7 +100,7 @@ const CellShell = ({
 
                                 portaldataRef.current.hasusercontent = true
                                 portaldataRef.current = portalManager.updatePortal(index,usercontent)
-                                setCellStatus('render')
+                                setCellStatus('rendercontent')
 
                             }
 
@@ -118,7 +119,7 @@ const CellShell = ({
 
                                 portaldataRef.current.hasusercontent = true
                                 portaldataRef.current = portalManager.updatePortal(index,usercontent)
-                                setCellStatus('render')
+                                setCellStatus('rendercontent')
 
                             } else {
 
@@ -133,7 +134,7 @@ const CellShell = ({
             }         
         } else {
         
-            setCellStatus('render')
+            setCellStatus('rendercontent')
     
         }        
 
@@ -206,15 +207,20 @@ const CellShell = ({
 
         const component = <OutPortal node = {reverseportal}/>
 
-        console.log('- cellStatus, index, cradleDataRef, reverseportal, component in cellshell',
-            cellStatus, index, cradleDataRef, reverseportal, component)
+        // console.log('- cellStatus, index, cradleDataRef, reverseportal, component in cellshell',
+        //     cellStatus, index, cradleDataRef, reverseportal, component)
+
+        if (cellStatus != 'ready') {
+            portaldataRef.current.initialized = false
+            setCellStatus('ready')
+        }
 
         return component
 
     }, [cellStatus]);
 
     return <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
-            { ((cellStatus == 'render') || (cellStatus == 'renderplaceholder')) && contentcomponent }
+            { (cellStatus != 'setup') && contentcomponent }
         </div>
 
 } // CellShell

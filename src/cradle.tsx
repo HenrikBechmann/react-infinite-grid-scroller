@@ -174,6 +174,8 @@ const Cradle = ({
         scrollerID,
         viewportDataRef,
     })
+
+    console.log('RUNNING CRADLE cradleState, cradleDataRef',cradleState,cradleDataRef)
     // --------------------------[ bundle cradleProps ]----------------------------
 
     // functions and styles handled separately
@@ -429,6 +431,18 @@ const Cradle = ({
         }
 
     },[viewportData.isResizing])
+
+    useLayoutEffect(()=>{
+
+        if (cradleState != 'ready') return
+
+        console.log('viewportDataRef in cradle for ready',viewportDataRef)
+        if ((viewportDataRef.current.portal) && (viewportDataRef.current.portal.initialized == false)) {
+            viewportDataRef.current.portal.initialized = true
+            setCradleState('setscrollposition')
+        }
+
+    },[cradleState,viewportDataRef.current.portal?.initialized])
 
     // reload for changed parameters
     useEffect(()=>{
