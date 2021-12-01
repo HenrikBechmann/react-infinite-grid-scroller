@@ -150,8 +150,13 @@ const Cradle = ({
 
     const [cradleState, setCradleState] = useState('setup')
     const viewportData = useContext(ViewportContext)
-    if (viewportData.index == 0) console.log('RUNNING cradle viewport index, cradle cradleState',
-        viewportData.index, cradleState)
+    // const rectwidth = viewportData.elementref.current.offsetWidth
+    // const rectheight = viewportData.elementref.current.offsetWidth
+
+    const rectscrollLeft = viewportData.elementref.current.scrollLeft
+
+    if (viewportData.index == 0) console.log('RUNNING cradle viewport index, cradle cradleState, rectscrollLeft',
+        viewportData.index, cradleState, rectscrollLeft)
 
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState;
@@ -445,34 +450,32 @@ const Cradle = ({
     // trigger pivot on change in orientation
     useEffect(()=> {
 
-        if (cradleStateRef.current != 'setup') {
+        if (cradleStateRef.current == 'setup') return
 
-            cradleAgent.cellReferenceData.nextReferenceIndex = cradleAgent.cellReferenceData.readyReferenceIndex
-            cradleAgent.cellReferenceData.nextSpineOffset = cradleAgent.cellReferenceData.readySpineOffset
+        cradleAgent.cellReferenceData.nextReferenceIndex = cradleAgent.cellReferenceData.readyReferenceIndex
+        cradleAgent.cellReferenceData.nextSpineOffset = cradleAgent.cellReferenceData.readySpineOffset
 
-            // get previous ratio
-            let previousCellPixelLength = (orientation == 'vertical')?
-                cradlePropsRef.current.cellWidth:cradlePropsRef.current.cellHeight
-            let previousSpineOffset = cradleAgent.cellReferenceData.nextSpineOffset
+        // get previous ratio
+        let previousCellPixelLength = (orientation == 'vertical')?
+            cradlePropsRef.current.cellWidth:cradlePropsRef.current.cellHeight
+        let previousSpineOffset = cradleAgent.cellReferenceData.nextSpineOffset
 
-            let previousratio = previousSpineOffset/previousCellPixelLength
+        let previousratio = previousSpineOffset/previousCellPixelLength
 
-            let currentCellPixelLength = (orientation == 'vertical')?
-                cradlePropsRef.current.cellHeight:cradlePropsRef.current.cellWidth
+        let currentCellPixelLength = (orientation == 'vertical')?
+            cradlePropsRef.current.cellHeight:cradlePropsRef.current.cellWidth
 
-            let currentSpineOffset = previousratio * currentCellPixelLength
-            
-            cradleAgent.cellReferenceData.nextSpineOffset = Math.round(currentSpineOffset)
+        let currentSpineOffset = previousratio * currentCellPixelLength
+        
+        cradleAgent.cellReferenceData.nextSpineOffset = Math.round(currentSpineOffset)
 
-            let signals = signalsAgent.signals
+        let signals = signalsAgent.signals
 
-            signals.pauseCellObserver = true
-            // pauseCradleIntersectionObserverRef.current = true
-            signals.pauseScrollingEffects = true
+        signals.pauseCellObserver = true
+        // pauseCradleIntersectionObserverRef.current = true
+        signals.pauseScrollingEffects = true
 
-            setCradleState('pivot')
-
-        }
+        setCradleState('pivot')
 
         // let cradleContent = contentAgentRef.current.content
         cradleContent.headModel = []

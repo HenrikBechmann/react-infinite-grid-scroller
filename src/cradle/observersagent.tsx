@@ -90,7 +90,7 @@ export default class ObserversAgent extends CradleManagement{
 
         const testrootbounds = entries[0].rootBounds
         if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
-            console.log('invalid testrootbounds',testrootbounds)
+            // console.log('invalid testrootbounds',testrootbounds)
             return
         }
 
@@ -123,9 +123,9 @@ export default class ObserversAgent extends CradleManagement{
 
         }
 
-        if (viewportData.index == 0) {
-            console.log('calling updateCradleContent from cellobservercallback')
-        }
+        // if (viewportData.index == 0) {
+        //     console.log('calling updateCradleContent from cellobservercallback')
+        // }
         stateAgent.isMounted.current && contentAgent.updateCradleContent(movedentries,'cellObserver')
 
     }
