@@ -38,7 +38,7 @@ const CellShell = ({
     } as React.CSSProperties)
     const [cellStatus, setCellStatus] = useState('setup'); // 'setup' -> 'renderplaceholder' -> 'render'
 
-    console.log('running cellshell cellStatus, index, scrollerID, instanceID',cellStatus, index, scrollerID, instanceID)
+    console.log('RUNNING cellshell cellStatus, index, scrollerID, instanceID',cellStatus, index, scrollerID, instanceID)
 
     const shellRef = useRef(null)
     const instanceIDRef = useRef(instanceID)
@@ -202,12 +202,12 @@ const CellShell = ({
 
         if (cellStatus == 'setup') return null
 
-        const component = <OutPortal node = {portaldataRef.current.reverseportal}/>
+        const reverseportal = portaldataRef.current.reverseportal
 
-        if (index == 0) {
-            console.log('cellStatus, index, cradleDataRef, component in cellshell',
-                cellStatus, index, cradleDataRef,component)
-        }
+        const component = <OutPortal node = {reverseportal}/>
+
+        console.log('- cellStatus, index, cradleDataRef, reverseportal, component in cellshell',
+            cellStatus, index, cradleDataRef, reverseportal, component)
 
         return component
 
