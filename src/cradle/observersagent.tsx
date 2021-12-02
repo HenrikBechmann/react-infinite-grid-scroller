@@ -25,6 +25,12 @@ export default class ObserversAgent extends CradleManagement{
 
     cradleIntersectionObserverCallback = (entries) => {
 
+        const testrootbounds = entries[0].rootBounds
+        if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
+            // console.log('invalid testrootbounds',testrootbounds)
+            return
+        }
+
         let signalsAgent = this._managersRef.current.signals
         let signals = signalsAgent.signals
         let stateAgent = this._managersRef.current.state
@@ -38,12 +44,13 @@ export default class ObserversAgent extends CradleManagement{
             let entry = entries[i]
             if (entry.target.dataset.type == 'head') {
                 signals.isHeadCradleInView = 
-                    (entry.isIntersecting || 
-                    (!((entry.rootBounds.height == 0 ) && (entry.rootBounds.width == 0))) // transitory; reparenting hack
+                    (entry.isIntersecting //|| 
+                    // (!((entry.rootBounds.height == 0 ) && (entry.rootBounds.width == 0))) // transitory; reparenting hack
                 )
             } else {
-                    (entry.isIntersecting || 
-                    (!((entry.rootBounds.height == 0 ) && (entry.rootBounds.width == 0))) // transitory; reparenting hack
+                signals.isTailCradleInView = 
+                    (entry.isIntersecting //|| 
+                    // (!((entry.rootBounds.height == 0 ) && (entry.rootBounds.width == 0))) // transitory; reparenting hack
                 )
             }
         }
