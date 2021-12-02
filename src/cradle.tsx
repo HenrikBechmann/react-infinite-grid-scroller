@@ -6,7 +6,7 @@
 
     - fix scroll reset on reparent
     - review need for setscrollposition
-    - BUG: reposition is broken
+    - BUG: in FF nested scroller switch from placeholder to content resets scroll position
 
     ObserversAgent
     WingsAgent
