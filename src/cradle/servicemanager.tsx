@@ -3,7 +3,7 @@
 
 import CradleManagement from './cradlesuper'
 
-export default class ServiceAgent extends CradleManagement{
+export default class ServiceManager extends CradleManagement{
 
     constructor(commonPropsRef, serviceCallsRef) {
 

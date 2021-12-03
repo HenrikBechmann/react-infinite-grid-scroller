@@ -3,7 +3,7 @@
 
 import CradleManagement from './cradlesuper'
 
-export default class StateAgent extends CradleManagement{
+export default class StateManager extends CradleManagement{
 
     constructor(commonPropsRef,cradleStateRef,setCradleState,isMounted) {
 

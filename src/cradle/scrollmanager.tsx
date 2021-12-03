@@ -5,7 +5,7 @@ import CradleManagement from './cradlesuper'
 
 const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 200
 
-export default class ScrollAgent extends CradleManagement{
+export default class ScrollManager extends CradleManagement{
 
     constructor(commonPropsRef) {
 

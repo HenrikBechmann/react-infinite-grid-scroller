@@ -7,7 +7,7 @@ const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
 
 import CradleManagement from './cradlesuper'
 
-export default class ObserversAgent extends CradleManagement{
+export default class ObserversManager extends CradleManagement{
 
    constructor(commonPropsRef) {
 

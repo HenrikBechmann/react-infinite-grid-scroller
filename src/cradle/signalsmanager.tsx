@@ -13,7 +13,7 @@ const signalsbaseline = {
     isCradleInView:true,
 }
 
-export default class SignalsAgent extends CradleManagement {
+export default class SignalsManager extends CradleManagement {
 
     constructor(commonPropsRef) {
 

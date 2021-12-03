@@ -3,13 +3,13 @@
 
 import CradleManagement from './cradlesuper'
 
-export default class CradleAgent extends CradleManagement{
+export default class CradleManager extends CradleManagement{
 
     constructor(commonPropsRef, cradleElements) {
 
        super(commonPropsRef)
 
-       // console.log('CALLING CradleAgent CONSTRUCTOR')
+       // console.log('CALLING CradleManager CONSTRUCTOR')
 
        let elements = this.elements
        elements.spineRef = cradleElements.spine
@@ -18,7 +18,7 @@ export default class CradleAgent extends CradleManagement{
 
        let {defaultVisibleIndex, listsize, padding} = commonPropsRef.current.cradlePropsRef.current
 
-       // console.log('commonPropsRef.current.cradlePropsRef.current in CradleAgent constructor',commonPropsRef.current.cradlePropsRef.current)
+       // console.log('commonPropsRef.current.cradlePropsRef.current in CradleManager constructor',commonPropsRef.current.cradlePropsRef.current)
 
        this.cradleReferenceData.scrollItemIndexReference = (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
        this.cradleReferenceData.scrollSpinePixelOffset = padding
@@ -29,6 +29,13 @@ export default class CradleAgent extends CradleManagement{
 
     }
 
+   /* 
+      ItemIndexReference is the sequential index of first item of the cradle tail
+      SpinePixelOffset is the pixel offset of the cradle spine from the edge of the viewport
+      spinePixelPos is the pixel offset of the cradle spine from the edge of the scrollblock;
+         it is blockScrollPos + SpinePixelOffset
+      blockScrollPos is the scrollPos of the scrollblock in relation to the viewport
+   */
    cradleReferenceData = {
 
       scrollItemIndexReference:null,
@@ -44,7 +51,9 @@ export default class CradleAgent extends CradleManagement{
       currentSpinePixelOffset:null,
 
       blockScrollPos:null,
-      blockScrollProperty:null
+      blockScrollProperty:null,
+
+      spinePixelPos: null
 
    }    
 

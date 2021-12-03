@@ -13,7 +13,7 @@ import {
 
 } from './contentfunctions'
 
-export default class ContentAgent extends CradleManagement{
+export default class ContentManager extends CradleManagement{
 
    constructor(commonPropsRef, contentCallbacksRef) {
 

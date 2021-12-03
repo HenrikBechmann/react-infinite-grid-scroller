@@ -3,7 +3,7 @@
 
 import CradleManagement from './cradlesuper'
 
-export default class StylesAgent extends CradleManagement{
+export default class StylesManager extends CradleManagement{
 
    constructor(commonPropsRef) {
 

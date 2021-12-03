@@ -8,17 +8,17 @@
     - review need for setscrollposition
     - BUG: in FF nested scroller switch from placeholder to content resets scroll position
 
-    ObserversAgent
+    ObserversManager
     WingsAgent
     MessageAgent ? // message with host environment, such as referenceIndexCallback
 
-    ScrollAgent
-    SignalsAgent
-    StateAgent
-    ContentAgent
-    CradleAgent
-    ServiceAgent // user services
-    StylesAgent
+    ScrollManager
+    SignalsManager
+    StateManager
+    ContentManager
+    CradleManager
+    ServiceManager // user services
+    StylesManager
 
     BUGS:
     - check styles in scrollTracker args
@@ -100,14 +100,14 @@ import { PortalManager, PortalList } from './portalmanager'
 const ITEM_OBSERVER_THRESHOLD = 0
 
 // import agency classes - loci of data and related methods
-import ScrollAgent from './cradle/scrollagent'
-import SignalsAgent from './cradle/signalsagent'
-import StateAgent from './cradle/stateagent'
-import ContentAgent from './cradle/contentagent'
-import CradleAgent from './cradle/cradleagent'
-import ObserversAgent from './cradle/observersagent'
-import ServiceAgent from './cradle/serviceagent'
-import StylesAgent from './cradle/stylesagent'
+import ScrollManager from './cradle/scrollmanager'
+import SignalsManager from './cradle/signalsmanager'
+import StateManager from './cradle/statemanager'
+import ContentManager from './cradle/contentmanager'
+import CradleManager from './cradle/cradlemanager'
+import ObserversManager from './cradle/observersmanager'
+import ServiceManager from './cradle/servicemanager'
+import StylesManager from './cradle/stylesmanager'
 
 // popup position trackeer
 import ScrollTracker from './scrolltracker'
@@ -335,14 +335,14 @@ const Cradle = ({
         stylesAgent,
     ] = useMemo(()=>{
         return [
-            new ScrollAgent(commonPropsRef),
-            new SignalsAgent(commonPropsRef),
-            new StateAgent(commonPropsRef,cradleStateRef,setCradleState,isMounted),
-            new ContentAgent(commonPropsRef, contentCallbacksRef),
-            new CradleAgent(commonPropsRef, cradleElementsRef.current),
-            new ObserversAgent(commonPropsRef),
-            new ServiceAgent(commonPropsRef,serviceCallsRef),
-            new StylesAgent(commonPropsRef),
+            new ScrollManager(commonPropsRef),
+            new SignalsManager(commonPropsRef),
+            new StateManager(commonPropsRef,cradleStateRef,setCradleState,isMounted),
+            new ContentManager(commonPropsRef, contentCallbacksRef),
+            new CradleManager(commonPropsRef, cradleElementsRef.current),
+            new ObserversManager(commonPropsRef),
+            new ServiceManager(commonPropsRef,serviceCallsRef),
+            new StylesManager(commonPropsRef),
         ]
     },[])
 
