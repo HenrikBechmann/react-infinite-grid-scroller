@@ -21,31 +21,32 @@ export default class CradleAgent extends CradleManagement{
        // console.log('commonPropsRef.current.cradlePropsRef.current in CradleAgent constructor',commonPropsRef.current.cradlePropsRef.current)
 
        this.cellReferenceData.scrollReferenceIndex = (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
-       this.cellReferenceData.scrollSpineOffset = padding
+       this.cellReferenceData.scrollSpinePixelOffset = padding
        this.cellReferenceData.readyReferenceIndex = this.cellReferenceData.scrollReferenceIndex
-       this.cellReferenceData.readySpineOffset = this.cellReferenceData.scrollSpineOffset
+       this.cellReferenceData.readySpinePixelOffset = this.cellReferenceData.scrollSpinePixelOffset
        this.cellReferenceData.nextReferenceIndex = this.cellReferenceData.readyReferenceIndex
-       this.cellReferenceData.nextSpineOffset = this.cellReferenceData.readySpineOffset
+       this.cellReferenceData.nextSpinePixelOffset = this.cellReferenceData.readySpinePixelOffset
 
     }
 
    cellReferenceData = {
 
       scrollReferenceIndex:null,
-      scrollSpineOffset:null,
+      scrollSpinePixelOffset:null,
 
       readyReferenceIndex:null,
-      readySpineOffset:null,
+      readySpinePixelOffset:null,
 
       nextReferenceIndex:null,
-      nextSpineOffset:null,
+      nextSpinePixelOffset:null,
 
    }    
 
-   // TODO: wrap this in blockPosData
-    blockScrollPos:number
-    blockScrollProperty:string
-
+   // TODO: wrap this in blockScrollPosData
+   blockScrollPosData = {
+       blockScrollPos:null,
+       blockScrollProperty:null
+   }
 
     elements = {
        spineRef:null, 

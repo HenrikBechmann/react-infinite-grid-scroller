@@ -64,7 +64,7 @@ export default class ContentAgent extends CradleManagement{
         let viewportElement = viewportData.elementref.current
 
         let visibletargetindexoffset = cradleAgent.cellReferenceData.readyReferenceIndex
-        let visibletargetscrolloffset = cradleAgent.cellReferenceData.readySpineOffset
+        let visibletargetscrolloffset = cradleAgent.cellReferenceData.readySpinePixelOffset
 
         let {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
 
@@ -123,10 +123,10 @@ export default class ContentAgent extends CradleManagement{
         cradleContent.tailModel = tailcontentlist
 
         cradleAgent.cellReferenceData.scrollReferenceIndex = referenceoffset
-        cradleAgent.cellReferenceData.scrollSpineOffset = spinePosOffset
+        cradleAgent.cellReferenceData.scrollSpinePixelOffset = spinePosOffset
 
         cradleAgent.cellReferenceData.readyReferenceIndex = referenceoffset
-        cradleAgent.cellReferenceData.readySpineOffset = spinePosOffset
+        cradleAgent.cellReferenceData.readySpinePixelOffset = spinePosOffset
 
         if (serviceAgent.serviceCalls.referenceIndexCallbackRef.current) {
 
@@ -140,11 +140,11 @@ export default class ContentAgent extends CradleManagement{
 
         let cradleElements = cradleAgent.elements //cradleElementsRef.current
 
-        cradleAgent.blockScrollPos = scrollblockOffset - spinePosOffset
+        cradleAgent.blockScrollPosData.blockScrollPos = scrollblockOffset - spinePosOffset
         
         if (orientation == 'vertical') {
 
-            cradleAgent.blockScrollProperty = 'scrollTop'
+            cradleAgent.blockScrollPosData.blockScrollProperty = 'scrollTop'
 
             cradleElements.spineRef.current.style.top = (scrollblockOffset + spineAdjustment) + 'px'
             cradleElements.spineRef.current.style.left = 'auto'
@@ -152,7 +152,7 @@ export default class ContentAgent extends CradleManagement{
 
         } else { // orientation = 'horizontal'
 
-            cradleAgent.blockScrollProperty = 'scrollLeft'
+            cradleAgent.blockScrollPosData.blockScrollProperty = 'scrollLeft'
 
             cradleElements.spineRef.current.style.top = 'auto'
             cradleElements.spineRef.current.style.left = (scrollblockOffset + spineAdjustment) + 'px'
@@ -320,16 +320,16 @@ export default class ContentAgent extends CradleManagement{
             
             if (cradleProps.orientation == 'vertical') {
 
-                cradleAgent.blockScrollPos = viewportElement.scrollTop
-                cradleAgent.blockScrollProperty = 'scrollTop'
+                cradleAgent.blockScrollPosData.blockScrollPos = viewportElement.scrollTop
+                cradleAgent.blockScrollPosData.blockScrollProperty = 'scrollTop'
                 cradleElements.spineRef.current.style.top = viewportElement.scrollTop + spinePosOffset + 'px'
                 cradleElements.spineRef.current.style.left = 'auto'
                 cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
 
             } else {
 
-                cradleAgent.blockScrollPos = viewportElement.scrollLeft
-                cradleAgent.blockScrollProperty = 'scrollLeft'
+                cradleAgent.blockScrollPosData.blockScrollPos = viewportElement.scrollLeft
+                cradleAgent.blockScrollPosData.blockScrollProperty = 'scrollLeft'
                 cradleElements.spineRef.current.style.top = 'auto'
                 cradleElements.spineRef.current.style.left = viewportElement.scrollLeft + spinePosOffset + 'px'
                 cradleElements.headRef.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
@@ -339,10 +339,10 @@ export default class ContentAgent extends CradleManagement{
         }
 
         cradleAgent.cellReferenceData.scrollReferenceIndex = spineReferenceIndex
-        cradleAgent.cellReferenceData.scrollSpineOffset = spinePosOffset
+        cradleAgent.cellReferenceData.scrollSpinePixelOffset = spinePosOffset
 
         cradleAgent.cellReferenceData.readyReferenceIndex = spineReferenceIndex
-        cradleAgent.cellReferenceData.readySpineOffset = spinePosOffset
+        cradleAgent.cellReferenceData.readySpinePixelOffset = spinePosOffset
 
         stateAgent.setCradleState('updatecontent')
 

@@ -46,7 +46,7 @@ export default class ScrollAgent extends CradleManagement{
 
         }
 
-        // cradleAgent.blockScrollPos = scrollPositionCurrent // EXPERIMENTAL!!
+        // cradleAgent.blockScrollPosData.blockScrollPos = scrollPositionCurrent // EXPERIMENTAL!!
 
         this.scrollPositions.previous = this.scrollPositions.current
         this.scrollPositions.current = scrollPositionCurrent
@@ -83,7 +83,7 @@ export default class ScrollAgent extends CradleManagement{
 
                     }
                     cradleAgent.cellReferenceData.scrollReferenceIndex = itemindex
-                    cradleAgent.cellReferenceData.scrollSpineOffset = spineVisiblePosOffset
+                    cradleAgent.cellReferenceData.scrollSpinePixelOffset = spineVisiblePosOffset
 
                 } else {
 
@@ -137,21 +137,21 @@ export default class ScrollAgent extends CradleManagement{
 
         }
 
-        cradleAgent.cellReferenceData.scrollSpineOffset = spineVisiblePosOffset
+        cradleAgent.cellReferenceData.scrollSpinePixelOffset = spineVisiblePosOffset
 
         if (!viewportData.isResizing) {
 
             cradleAgent.cellReferenceData.readyReferenceIndex = cradleAgent.cellReferenceData.scrollReferenceIndex
-            cradleAgent.cellReferenceData.readySpineOffset = cradleAgent.cellReferenceData.scrollSpineOffset
+            cradleAgent.cellReferenceData.readySpinePixelOffset = cradleAgent.cellReferenceData.scrollSpinePixelOffset
 
             if (cradleProps.orientation == 'vertical') {
 
-                cradleAgent.blockScrollProperty = 'scrollTop'
-                cradleAgent.blockScrollPos = viewportElement.scrollTop
+                cradleAgent.blockScrollPosData.blockScrollProperty = 'scrollTop'
+                cradleAgent.blockScrollPosData.blockScrollPos = viewportElement.scrollTop
 
             } else {
-                cradleAgent.blockScrollProperty = 'scrollLeft'
-                cradleAgent.blockScrollPos = viewportElement.scrollLeft
+                cradleAgent.blockScrollPosData.blockScrollProperty = 'scrollLeft'
+                cradleAgent.blockScrollPosData.blockScrollPos = viewportElement.scrollLeft
             }
 
         }
@@ -162,7 +162,7 @@ export default class ScrollAgent extends CradleManagement{
             case 'repositioning': {
 
                 cradleAgent.nextReferenceIndex = cradleAgent.readyReferenceIndex
-                cradleAgent.nextSpineOffset = cradleAgent.readySpineOffset
+                cradleAgent.nextSpinePixelOffset = cradleAgent.readySpinePixelOffset
 
                 stateAgent.setCradleState('reposition')
 
@@ -221,7 +221,7 @@ export default class ScrollAgent extends CradleManagement{
 
         let cradleAgent = this._managersRef.current.cradle
         cradleAgent.cellReferenceData.scrollReferenceIndex = spineReferenceIndex
-        cradleAgent.cellReferenceData.scrollSpineOffset = referencescrolloffset
+        cradleAgent.cellReferenceData.scrollSpinePixelOffset = referencescrolloffset
 
     }
 

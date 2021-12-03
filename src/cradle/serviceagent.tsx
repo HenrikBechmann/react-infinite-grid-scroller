@@ -59,7 +59,7 @@ export default class ServiceAgent extends CradleManagement{
         let spineVisiblePosOffset
         let cradleElements = cradleAgent.elements
 
-        cradleAgent.cellReferenceData.nextSpineOffset = cradleAgent.cellReferenceData.readySpineOffset
+        cradleAgent.cellReferenceData.nextSpinePixelOffset = cradleAgent.cellReferenceData.readySpinePixelOffset
         cradleAgent.cellReferenceData.nextReferenceIndex = cradleAgent.cellReferenceData.readyReferenceIndex        
 
         stateAgent.setCradleState('reload')
@@ -78,8 +78,8 @@ export default class ServiceAgent extends CradleManagement{
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
 
-        cradleAgent.cellReferenceData.nextSpineOffset = 
-            cradleAgent.cellReferenceData.readySpineOffset
+        cradleAgent.cellReferenceData.nextSpinePixelOffset = 
+            cradleAgent.cellReferenceData.readySpinePixelOffset
         cradleAgent.cellReferenceData.nextReferenceIndex = 
             cradleAgent.cellReferenceData.readyReferenceIndex = index
 
