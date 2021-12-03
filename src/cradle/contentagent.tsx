@@ -59,7 +59,7 @@ export default class ContentAgent extends CradleManagement{
         let observersAgent = this._managersRef.current.observers
         let cradleData = this._cradleDataRef.current
 
-        // if (viewportData.index == 0) console.log('cradleState, cradleData in setCradleContent',cradleState, cradleData)
+        if (viewportData.index == 0) console.log('cradleState, cradleData in setCradleContent',cradleState, cradleData)
 
         let viewportElement = viewportData.elementref.current
 
@@ -144,6 +144,7 @@ export default class ContentAgent extends CradleManagement{
         if (orientation == 'vertical') {
 
             cradleAgent.blockScrollProperty = 'scrollTop'
+            // cradleAgent.blockScrollPos = viewportElement.scrollTop
 
             cradleElements.spineRef.current.style.top = (scrollblockOffset + spineAdjustment) + 'px'
             cradleElements.spineRef.current.style.left = 'auto'
@@ -152,6 +153,7 @@ export default class ContentAgent extends CradleManagement{
         } else { // orientation = 'horizontal'
 
             cradleAgent.blockScrollProperty = 'scrollLeft'
+            // cradleAgent.blockScrollPos = viewportElement.scrollLeft
 
             cradleElements.spineRef.current.style.top = 'auto'
             cradleElements.spineRef.current.style.left = (scrollblockOffset + spineAdjustment) + 'px'
@@ -172,7 +174,7 @@ export default class ContentAgent extends CradleManagement{
 
         let cradleData = this._cradleDataRef.current
 
-        // if (viewportData.index == 0) console.log('source, cradleData, entries in updateCradleContent',source, cradleData, entries)
+        if (viewportData.index == 0) console.log('source, cradleData in updateCradleContent',source, cradleData)
 
         let viewportElement = viewportData.elementref.current
         if (!viewportElement) {
