@@ -43,13 +43,10 @@ export default class CradleAgent extends CradleManagement{
       currentItemIndexReference:null,
       currentSpinePixelOffset:null,
 
-   }    
+      blockScrollPos:null,
+      blockScrollProperty:null
 
-   // TODO: wrap this in blockScrollPosData
-   blockScrollPosData = {
-       blockScrollPos:null,
-       blockScrollProperty:null
-   }
+   }    
 
     elements = {
        spineRef:null, 

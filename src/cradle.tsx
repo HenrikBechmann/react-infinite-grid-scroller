@@ -659,8 +659,8 @@ const Cradle = ({
 
             case 'resetscrollposition': {
 
-                viewportData.elementref.current[cradleAgent.blockScrollPosData.blockScrollProperty] =
-                    Math.max(0,cradleAgent.blockScrollPosData.blockScrollPos)
+                viewportData.elementref.current[cradleAgent.cradleReferenceData.blockScrollProperty] =
+                    Math.max(0,cradleAgent.cradleReferenceData.blockScrollPos)
 
                 setCradleState('ready')
 
@@ -668,8 +668,8 @@ const Cradle = ({
             }
             case 'setscrollposition': {
 
-                viewportData.elementref.current[cradleAgent.blockScrollPosData.blockScrollProperty] =
-                    Math.max(0,cradleAgent.blockScrollPosData.blockScrollPos)
+                viewportData.elementref.current[cradleAgent.cradleReferenceData.blockScrollProperty] =
+                    Math.max(0,cradleAgent.cradleReferenceData.blockScrollPos)
 
                 setCradleState('normalizesignals')
 

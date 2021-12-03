@@ -140,11 +140,11 @@ export default class ContentAgent extends CradleManagement{
 
         let cradleElements = cradleAgent.elements //cradleElementsRef.current
 
-        cradleAgent.blockScrollPosData.blockScrollPos = scrollblockOffset - spinePosOffset
+        cradleAgent.cradleReferenceData.blockScrollPos = scrollblockOffset - spinePosOffset
         
         if (orientation == 'vertical') {
 
-            cradleAgent.blockScrollPosData.blockScrollProperty = 'scrollTop'
+            cradleAgent.cradleReferenceData.blockScrollProperty = 'scrollTop'
 
             cradleElements.spineRef.current.style.top = (scrollblockOffset + spineAdjustment) + 'px'
             cradleElements.spineRef.current.style.left = 'auto'
@@ -152,7 +152,7 @@ export default class ContentAgent extends CradleManagement{
 
         } else { // orientation = 'horizontal'
 
-            cradleAgent.blockScrollPosData.blockScrollProperty = 'scrollLeft'
+            cradleAgent.cradleReferenceData.blockScrollProperty = 'scrollLeft'
 
             cradleElements.spineRef.current.style.top = 'auto'
             cradleElements.spineRef.current.style.left = (scrollblockOffset + spineAdjustment) + 'px'
@@ -320,16 +320,16 @@ export default class ContentAgent extends CradleManagement{
             
             if (cradleProps.orientation == 'vertical') {
 
-                cradleAgent.blockScrollPosData.blockScrollPos = viewportElement.scrollTop
-                cradleAgent.blockScrollPosData.blockScrollProperty = 'scrollTop'
+                cradleAgent.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
+                cradleAgent.cradleReferenceData.blockScrollProperty = 'scrollTop'
                 cradleElements.spineRef.current.style.top = viewportElement.scrollTop + spinePosOffset + 'px'
                 cradleElements.spineRef.current.style.left = 'auto'
                 cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
 
             } else {
 
-                cradleAgent.blockScrollPosData.blockScrollPos = viewportElement.scrollLeft
-                cradleAgent.blockScrollPosData.blockScrollProperty = 'scrollLeft'
+                cradleAgent.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
+                cradleAgent.cradleReferenceData.blockScrollProperty = 'scrollLeft'
                 cradleElements.spineRef.current.style.top = 'auto'
                 cradleElements.spineRef.current.style.left = viewportElement.scrollLeft + spinePosOffset + 'px'
                 cradleElements.headRef.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0

@@ -46,7 +46,7 @@ export default class ScrollAgent extends CradleManagement{
 
         }
 
-        // cradleAgent.blockScrollPosData.blockScrollPos = scrollPositionCurrent // EXPERIMENTAL!!
+        // cradleAgent.cradleReferenceData.blockScrollPos = scrollPositionCurrent // EXPERIMENTAL!!
 
         this.scrollPositions.previous = this.scrollPositions.current
         this.scrollPositions.current = scrollPositionCurrent
@@ -146,12 +146,12 @@ export default class ScrollAgent extends CradleManagement{
 
             if (cradleProps.orientation == 'vertical') {
 
-                cradleAgent.blockScrollPosData.blockScrollProperty = 'scrollTop'
-                cradleAgent.blockScrollPosData.blockScrollPos = viewportElement.scrollTop
+                cradleAgent.cradleReferenceData.blockScrollProperty = 'scrollTop'
+                cradleAgent.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
 
             } else {
-                cradleAgent.blockScrollPosData.blockScrollProperty = 'scrollLeft'
-                cradleAgent.blockScrollPosData.blockScrollPos = viewportElement.scrollLeft
+                cradleAgent.cradleReferenceData.blockScrollProperty = 'scrollLeft'
+                cradleAgent.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
             }
 
         }
