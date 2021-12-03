@@ -25,15 +25,15 @@ export default class ObserversAgent extends CradleManagement{
 
     cradleIntersectionObserverCallback = (entries) => {
 
-        let viewportData = this._viewportdataRef.current
-        const testrootbounds = entries[0].rootBounds
-        if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
-            if (viewportData.index == 0) {
-                console.log('INTERSECTION OBSERVER viewportData.index, invalid testrootbounds',
-                    viewportData.index, testrootbounds)
-            }
-            return
-        }
+        // let cradleData = this._cradleDataRef.current
+        // const testrootbounds = entries[0].rootBounds
+        // if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
+        //     if (viewportData.index == 0) {
+        //         console.log('INTERSECTION OBSERVER viewportData.index, invalid testrootbounds, viewportData.portal, cradleData',
+        //             viewportData.index, testrootbounds,Object.assign({}, viewportData.portal, cradleData))
+        //     }
+        //     return
+        // }
 
         let signalsAgent = this._managersRef.current.signals
         let signals = signalsAgent.signals
@@ -41,25 +41,23 @@ export default class ObserversAgent extends CradleManagement{
         let contentAgent = this._managersRef.current.content
 
         if (signals.pauseCradleIntersectionObserver) return
-        // if (viewportData.portalitem?.reparenting) return
 
         for (let i = 0; i < entries.length; i++ ) {
             let entry = entries[i]
             if (entry.target.dataset.type == 'head') {
                 signals.isHeadCradleInView = 
-                    (entry.isIntersecting //|| 
-                    // (!((entry.rootBounds.height == 0 ) && (entry.rootBounds.width == 0))) // transitory; reparenting hack
+                    (entry.isIntersecting || ((entry.rootBounds.width == 0) && (entry.rootBounds.height == 0))
                 )
             } else {
                 signals.isTailCradleInView = 
-                    (entry.isIntersecting //|| 
-                    // (!((entry.rootBounds.height == 0 ) && (entry.rootBounds.width == 0))) // transitory; reparenting hack
+                    (entry.isIntersecting  || ((entry.rootBounds.width == 0) && (entry.rootBounds.height == 0))
                 )
             }
         }
 
         signals.isCradleInView = (signals.isHeadCradleInView || signals.isTailCradleInView);
 
+        let viewportData = this._viewportdataRef.current
         if (!signals.isCradleInView) 
         {
             let cradleState = stateAgent.cradleStateRef.current        
