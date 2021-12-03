@@ -413,8 +413,8 @@ const Cradle = ({
 
         if (viewportData.isResizing) {
 
-            cradleAgent.cellReferenceData.nextReferenceItemIndex = cradleAgent.cellReferenceData.readyReferenceItemIndex
-            cradleAgent.cellReferenceData.nextSpinePixelOffset = cradleAgent.cellReferenceData.readySpinePixelOffset
+            cradleAgent.cradleReferenceData.nextItemIndexReference = cradleAgent.cradleReferenceData.readyItemIndexReference
+            cradleAgent.cradleReferenceData.nextSpinePixelOffset = cradleAgent.cradleReferenceData.readySpinePixelOffset
 
             let signals = signalsAgent.signals
             signals.pauseCellObserver = true
@@ -454,8 +454,8 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        cradleAgent.cellReferenceData.nextReferenceItemIndex = cradleAgent.cellReferenceData.readyReferenceItemIndex
-        cradleAgent.cellReferenceData.nextSpinePixelOffset = cradleAgent.cellReferenceData.readySpinePixelOffset
+        cradleAgent.cradleReferenceData.nextItemIndexReference = cradleAgent.cradleReferenceData.readyItemIndexReference
+        cradleAgent.cradleReferenceData.nextSpinePixelOffset = cradleAgent.cradleReferenceData.readySpinePixelOffset
 
         let signals = signalsAgent.signals
 
@@ -477,13 +477,13 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        cradleAgent.cellReferenceData.nextReferenceItemIndex = cradleAgent.cellReferenceData.readyReferenceItemIndex
-        cradleAgent.cellReferenceData.nextSpinePixelOffset = cradleAgent.cellReferenceData.readySpinePixelOffset
+        cradleAgent.cradleReferenceData.nextItemIndexReference = cradleAgent.cradleReferenceData.readyItemIndexReference
+        cradleAgent.cradleReferenceData.nextSpinePixelOffset = cradleAgent.cradleReferenceData.readySpinePixelOffset
 
         // get previous ratio
         let previousCellPixelLength = (orientation == 'vertical')?
             cradlePropsRef.current.cellWidth:cradlePropsRef.current.cellHeight
-        let previousSpineOffset = cradleAgent.cellReferenceData.nextSpinePixelOffset
+        let previousSpineOffset = cradleAgent.cradleReferenceData.nextSpinePixelOffset
 
         let previousratio = previousSpineOffset/previousCellPixelLength
 
@@ -492,7 +492,7 @@ const Cradle = ({
 
         let currentSpineOffset = previousratio * currentCellPixelLength
         
-        cradleAgent.cellReferenceData.nextSpinePixelOffset = Math.round(currentSpineOffset)
+        cradleAgent.cradleReferenceData.nextSpinePixelOffset = Math.round(currentSpineOffset)
 
         let signals = signalsAgent.signals
 
@@ -775,12 +775,12 @@ const Cradle = ({
         let trackerargs = {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
-            referenceIndexOffset:cradleAgent.cellReferenceData.scrollReferenceItemIndex,
+            referenceIndexOffset:cradleAgent.cradleReferenceData.scrollItemIndexReference,
             listsize:cradlePropsRef.current.listsize,
             styles:cradlePropsRef.current.styles,
         }
         return trackerargs
-    },[cradleStateRef.current, viewportDimensions, cradleAgent.cellReferenceData.scrollReferenceItemIndex, cradlePropsRef])
+    },[cradleStateRef.current, viewportDimensions, cradleAgent.cradleReferenceData.scrollItemIndexReference, cradlePropsRef])
 
     let cradleContent = contentAgent.content
 

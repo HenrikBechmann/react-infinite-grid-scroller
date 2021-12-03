@@ -63,8 +63,8 @@ export default class ContentAgent extends CradleManagement{
 
         let viewportElement = viewportData.elementref.current
 
-        let visibletargetindexoffset = cradleAgent.cellReferenceData.readyReferenceItemIndex
-        let visibletargetscrolloffset = cradleAgent.cellReferenceData.readySpinePixelOffset
+        let visibletargetindexoffset = cradleAgent.cradleReferenceData.readyItemIndexReference
+        let visibletargetscrolloffset = cradleAgent.cradleReferenceData.readySpinePixelOffset
 
         let {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
 
@@ -122,11 +122,11 @@ export default class ContentAgent extends CradleManagement{
         cradleContent.headModel = headcontentlist
         cradleContent.tailModel = tailcontentlist
 
-        cradleAgent.cellReferenceData.scrollReferenceItemIndex = referenceoffset
-        cradleAgent.cellReferenceData.scrollSpinePixelOffset = spinePosOffset
+        cradleAgent.cradleReferenceData.scrollItemIndexReference = referenceoffset
+        cradleAgent.cradleReferenceData.scrollSpinePixelOffset = spinePosOffset
 
-        cradleAgent.cellReferenceData.readyReferenceItemIndex = referenceoffset
-        cradleAgent.cellReferenceData.readySpinePixelOffset = spinePosOffset
+        cradleAgent.cradleReferenceData.readyItemIndexReference = referenceoffset
+        cradleAgent.cradleReferenceData.readySpinePixelOffset = spinePosOffset
 
         if (serviceAgent.serviceCalls.referenceIndexCallbackRef.current) {
 
@@ -134,7 +134,7 @@ export default class ContentAgent extends CradleManagement{
             if (cstate == 'setreload') cstate = 'reload'
             serviceAgent.serviceCalls.referenceIndexCallbackRef.current(
 
-                cradleAgent.cellReferenceData.readyReferenceItemIndex,'setCradleContent', cstate)
+                cradleAgent.cradleReferenceData.readyItemIndexReference,'setCradleContent', cstate)
         
         }
 
@@ -338,11 +338,11 @@ export default class ContentAgent extends CradleManagement{
 
         }
 
-        cradleAgent.cellReferenceData.scrollReferenceItemIndex = spineReferenceIndex
-        cradleAgent.cellReferenceData.scrollSpinePixelOffset = spinePosOffset
+        cradleAgent.cradleReferenceData.scrollItemIndexReference = spineReferenceIndex
+        cradleAgent.cradleReferenceData.scrollSpinePixelOffset = spinePosOffset
 
-        cradleAgent.cellReferenceData.readyReferenceItemIndex = spineReferenceIndex
-        cradleAgent.cellReferenceData.readySpinePixelOffset = spinePosOffset
+        cradleAgent.cradleReferenceData.readyItemIndexReference = spineReferenceIndex
+        cradleAgent.cradleReferenceData.readySpinePixelOffset = spinePosOffset
 
         stateAgent.setCradleState('updatecontent')
 

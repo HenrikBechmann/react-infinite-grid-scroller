@@ -65,9 +65,9 @@ export default class ScrollAgent extends CradleManagement{
 
                 if (cradleState == 'ready') {
                     // let itemindex = contentAgent.content.tailModel[0]?.props.index 
-                    // console.log('itemindex, readyReferenceItemIndex',itemindex,cradleAgent.cellReferenceData.readyReferenceItemIndex)
+                    // console.log('itemindex, readyItemIndexReference',itemindex,cradleAgent.cradleReferenceData.readyItemIndexReference)
 
-                    let itemindex = cradleAgent.cellReferenceData.readyReferenceItemIndex
+                    let itemindex = cradleAgent.cradleReferenceData.readyItemIndexReference
                     let spineVisiblePosOffset
                     let cradleElements = cradleAgent.elements
 
@@ -82,8 +82,8 @@ export default class ScrollAgent extends CradleManagement{
                             this._viewportdataRef.current.elementref.current.scrollLeft
 
                     }
-                    cradleAgent.cellReferenceData.scrollReferenceItemIndex = itemindex
-                    cradleAgent.cellReferenceData.scrollSpinePixelOffset = spineVisiblePosOffset
+                    cradleAgent.cradleReferenceData.scrollItemIndexReference = itemindex
+                    cradleAgent.cradleReferenceData.scrollSpinePixelOffset = spineVisiblePosOffset
 
                 } else {
 
@@ -93,7 +93,7 @@ export default class ScrollAgent extends CradleManagement{
 
                 // TODO: re-instatiate the following
                 serviceAgent.serviceCalls.referenceIndexCallbackRef.current && 
-                    serviceAgent.serviceCalls.referenceIndexCallbackRef.current(cradleAgent.cellReferenceData.scrollReferenceItemIndex,'scrolling', cradleState)
+                    serviceAgent.serviceCalls.referenceIndexCallbackRef.current(cradleAgent.cradleReferenceData.scrollItemIndexReference,'scrolling', cradleState)
 
             }
 
@@ -137,12 +137,12 @@ export default class ScrollAgent extends CradleManagement{
 
         }
 
-        cradleAgent.cellReferenceData.scrollSpinePixelOffset = spineVisiblePosOffset
+        cradleAgent.cradleReferenceData.scrollSpinePixelOffset = spineVisiblePosOffset
 
         if (!viewportData.isResizing) {
 
-            cradleAgent.cellReferenceData.readyReferenceItemIndex = cradleAgent.cellReferenceData.scrollReferenceItemIndex
-            cradleAgent.cellReferenceData.readySpinePixelOffset = cradleAgent.cellReferenceData.scrollSpinePixelOffset
+            cradleAgent.cradleReferenceData.readyItemIndexReference = cradleAgent.cradleReferenceData.scrollItemIndexReference
+            cradleAgent.cradleReferenceData.readySpinePixelOffset = cradleAgent.cradleReferenceData.scrollSpinePixelOffset
 
             if (cradleProps.orientation == 'vertical') {
 
@@ -161,7 +161,7 @@ export default class ScrollAgent extends CradleManagement{
 
             case 'repositioning': {
 
-                cradleAgent.nextReferenceItemIndex = cradleAgent.readyReferenceItemIndex
+                cradleAgent.nextItemIndexReference = cradleAgent.readyItemIndexReference
                 cradleAgent.nextSpinePixelOffset = cradleAgent.readySpinePixelOffset
 
                 stateAgent.setCradleState('reposition')
@@ -220,8 +220,8 @@ export default class ScrollAgent extends CradleManagement{
         if (spineReferenceIndex == 0) referencescrolloffset = 0 // defensive
 
         let cradleAgent = this._managersRef.current.cradle
-        cradleAgent.cellReferenceData.scrollReferenceItemIndex = spineReferenceIndex
-        cradleAgent.cellReferenceData.scrollSpinePixelOffset = referencescrolloffset
+        cradleAgent.cradleReferenceData.scrollItemIndexReference = spineReferenceIndex
+        cradleAgent.cradleReferenceData.scrollSpinePixelOffset = referencescrolloffset
 
     }
 

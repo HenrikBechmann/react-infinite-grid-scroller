@@ -20,24 +20,24 @@ export default class CradleAgent extends CradleManagement{
 
        // console.log('commonPropsRef.current.cradlePropsRef.current in CradleAgent constructor',commonPropsRef.current.cradlePropsRef.current)
 
-       this.cellReferenceData.scrollReferenceItemIndex = (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
-       this.cellReferenceData.scrollSpinePixelOffset = padding
-       this.cellReferenceData.readyReferenceItemIndex = this.cellReferenceData.scrollReferenceItemIndex
-       this.cellReferenceData.readySpinePixelOffset = this.cellReferenceData.scrollSpinePixelOffset
-       this.cellReferenceData.nextReferenceItemIndex = this.cellReferenceData.readyReferenceItemIndex
-       this.cellReferenceData.nextSpinePixelOffset = this.cellReferenceData.readySpinePixelOffset
+       this.cradleReferenceData.scrollItemIndexReference = (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
+       this.cradleReferenceData.scrollSpinePixelOffset = padding
+       this.cradleReferenceData.readyItemIndexReference = this.cradleReferenceData.scrollItemIndexReference
+       this.cradleReferenceData.readySpinePixelOffset = this.cradleReferenceData.scrollSpinePixelOffset
+       this.cradleReferenceData.nextItemIndexReference = this.cradleReferenceData.readyItemIndexReference
+       this.cradleReferenceData.nextSpinePixelOffset = this.cradleReferenceData.readySpinePixelOffset
 
     }
 
-   cellReferenceData = {
+   cradleReferenceData = {
 
-      scrollReferenceItemIndex:null,
+      scrollItemIndexReference:null,
       scrollSpinePixelOffset:null,
 
-      readyReferenceItemIndex:null,
+      readyItemIndexReference:null,
       readySpinePixelOffset:null,
 
-      nextReferenceItemIndex:null,
+      nextItemIndexReference:null,
       nextSpinePixelOffset:null,
 
    }    
