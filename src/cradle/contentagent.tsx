@@ -173,7 +173,7 @@ export default class ContentAgent extends CradleManagement{
 
         let cradleData = this._cradleDataRef.current
 
-        if (viewportData.index == 0) console.log('source, cradleData in updateCradleContent',source, cradleData)
+        // if (viewportData.index == 0) console.log('source, cradleData in updateCradleContent',source, cradleData)
 
         let viewportElement = viewportData.elementref.current
         if (!viewportElement) {

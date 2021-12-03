@@ -210,13 +210,10 @@ const CellShell = ({
 
         if (cellStatus != 'ready') {
             if (!isreparented.current) {
-                if ((cradleDataRef.current.viewportDataRef.current.index === null)
-                    && (index == 0))
-                console.log('- CELL reparenting cellStatus, index, cradleDataRef, reverseportal, component in cellshell',
-                    cellStatus, index, cradleDataRef, reverseportal, component)
 
                 portaldataRef.current.isreparenting = true
-                if (!isreparented.current) isreparented.current = true
+                isreparented.current = true
+
             }
             setCellStatus('ready')
         }

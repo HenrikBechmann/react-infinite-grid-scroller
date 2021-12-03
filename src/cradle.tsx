@@ -176,8 +176,8 @@ const Cradle = ({
         viewportDataRef,
     })
 
-    if (viewportDataRef.current.index == 0)
-        console.log('RUNNING CRADLE index, cradleState',viewportDataRef.current.index, cradleState)
+    // if (viewportDataRef.current.index == 0)
+    //     console.log('RUNNING CRADLE index, cradleState',viewportDataRef.current.index, cradleState)
     // --------------------------[ bundle cradleProps ]----------------------------
 
     // functions and styles handled separately
@@ -438,11 +438,11 @@ const Cradle = ({
 
         if (cradleState != 'ready') return
 
-        if ((viewportDataRef.current.portal) && (viewportDataRef.current.portal.isreparenting == true)) {
-            if (viewportDataRef.current.index == 0) {
-                console.log('CRADLE calling resetscrollposition viewportDataRef.current.index, viewportDataRref.current in cradle for reparenting ready',
-                    viewportDataRef.current.index, viewportDataRef)
-            }
+        if ((viewportDataRef.current.portal) && (viewportDataRef.current.portal.isreparenting)) {
+            // if (viewportDataRef.current.index == 0) {
+            //     console.log('CRADLE calling resetscrollposition viewportDataRef.current.index, viewportDataRref.current in cradle for reparenting ready',
+            //         viewportDataRef.current.index, viewportDataRef)
+            // }
             viewportDataRef.current.portal.isreparenting = false
             setCradleState('resetscrollposition')
         }
