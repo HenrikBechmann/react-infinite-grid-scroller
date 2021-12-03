@@ -60,7 +60,7 @@ export default class ServiceAgent extends CradleManagement{
         let cradleElements = cradleAgent.elements
 
         cradleAgent.cellReferenceData.nextSpinePixelOffset = cradleAgent.cellReferenceData.readySpinePixelOffset
-        cradleAgent.cellReferenceData.nextReferenceIndex = cradleAgent.cellReferenceData.readyReferenceIndex        
+        cradleAgent.cellReferenceData.nextReferenceItemIndex = cradleAgent.cellReferenceData.readyReferenceItemIndex        
 
         stateAgent.setCradleState('reload')
 
@@ -80,8 +80,8 @@ export default class ServiceAgent extends CradleManagement{
 
         cradleAgent.cellReferenceData.nextSpinePixelOffset = 
             cradleAgent.cellReferenceData.readySpinePixelOffset
-        cradleAgent.cellReferenceData.nextReferenceIndex = 
-            cradleAgent.cellReferenceData.readyReferenceIndex = index
+        cradleAgent.cellReferenceData.nextReferenceItemIndex = 
+            cradleAgent.cellReferenceData.readyReferenceItemIndex = index
 
         stateAgent.setCradleState('reposition')
 

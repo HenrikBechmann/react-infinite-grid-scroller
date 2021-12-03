@@ -413,7 +413,7 @@ const Cradle = ({
 
         if (viewportData.isResizing) {
 
-            cradleAgent.cellReferenceData.nextReferenceIndex = cradleAgent.cellReferenceData.readyReferenceIndex
+            cradleAgent.cellReferenceData.nextReferenceItemIndex = cradleAgent.cellReferenceData.readyReferenceItemIndex
             cradleAgent.cellReferenceData.nextSpinePixelOffset = cradleAgent.cellReferenceData.readySpinePixelOffset
 
             let signals = signalsAgent.signals
@@ -454,7 +454,7 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        cradleAgent.cellReferenceData.nextReferenceIndex = cradleAgent.cellReferenceData.readyReferenceIndex
+        cradleAgent.cellReferenceData.nextReferenceItemIndex = cradleAgent.cellReferenceData.readyReferenceItemIndex
         cradleAgent.cellReferenceData.nextSpinePixelOffset = cradleAgent.cellReferenceData.readySpinePixelOffset
 
         let signals = signalsAgent.signals
@@ -477,7 +477,7 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        cradleAgent.cellReferenceData.nextReferenceIndex = cradleAgent.cellReferenceData.readyReferenceIndex
+        cradleAgent.cellReferenceData.nextReferenceItemIndex = cradleAgent.cellReferenceData.readyReferenceItemIndex
         cradleAgent.cellReferenceData.nextSpinePixelOffset = cradleAgent.cellReferenceData.readySpinePixelOffset
 
         // get previous ratio
@@ -775,12 +775,12 @@ const Cradle = ({
         let trackerargs = {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
-            referenceIndexOffset:cradleAgent.cellReferenceData.scrollReferenceIndex,
+            referenceIndexOffset:cradleAgent.cellReferenceData.scrollReferenceItemIndex,
             listsize:cradlePropsRef.current.listsize,
             styles:cradlePropsRef.current.styles,
         }
         return trackerargs
-    },[cradleStateRef.current, viewportDimensions, cradleAgent.cellReferenceData.scrollReferenceIndex, cradlePropsRef])
+    },[cradleStateRef.current, viewportDimensions, cradleAgent.cellReferenceData.scrollReferenceItemIndex, cradlePropsRef])
 
     let cradleContent = contentAgent.content
 
