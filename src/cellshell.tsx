@@ -32,6 +32,7 @@ const CellShell = ({
 
     const cradleDataRef = useContext(CradleContext)
     const portalManager = cradleDataRef.current.portalManager
+    const isreparented = useRef(false)
     
     const [styles,saveStyles] = useState({
         overflow:'hidden',
@@ -207,11 +208,16 @@ const CellShell = ({
 
         const component = <OutPortal node = {reverseportal}/>
 
-        // console.log('- cellStatus, index, cradleDataRef, reverseportal, component in cellshell',
-        //     cellStatus, index, cradleDataRef, reverseportal, component)
-
         if (cellStatus != 'ready') {
-            portaldataRef.current.isreparenting = true
+            if (!isreparented.current) {
+                if ((cradleDataRef.current.viewportDataRef.current.index === null)
+                    && (index == 0))
+                console.log('- CELL reparenting cellStatus, index, cradleDataRef, reverseportal, component in cellshell',
+                    cellStatus, index, cradleDataRef, reverseportal, component)
+
+                portaldataRef.current.isreparenting = true
+                if (!isreparented.current) isreparented.current = true
+            }
             setCellStatus('ready')
         }
 

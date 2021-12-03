@@ -25,9 +25,13 @@ export default class ObserversAgent extends CradleManagement{
 
     cradleIntersectionObserverCallback = (entries) => {
 
+        let viewportData = this._viewportdataRef.current
         const testrootbounds = entries[0].rootBounds
         if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
-            // console.log('invalid testrootbounds',testrootbounds)
+            if (viewportData.index == 0) {
+                console.log('INTERSECTION OBSERVER viewportData.index, invalid testrootbounds',
+                    viewportData.index, testrootbounds)
+            }
             return
         }
 
@@ -37,7 +41,6 @@ export default class ObserversAgent extends CradleManagement{
         let contentAgent = this._managersRef.current.content
 
         if (signals.pauseCradleIntersectionObserver) return
-        let viewportData = this._viewportdataRef.current
         // if (viewportData.portalitem?.reparenting) return
 
         for (let i = 0; i < entries.length; i++ ) {
@@ -95,16 +98,20 @@ export default class ObserversAgent extends CradleManagement{
     // the async callback from IntersectionObserver.
     cellobservercallback = (entries)=>{
 
+        let viewportData = this._viewportdataRef.current
+
         const testrootbounds = entries[0].rootBounds
         if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
-            // console.log('invalid testrootbounds',testrootbounds)
+            if (viewportData.index == 0) {
+                console.log('CELL OBSERVER invalid viewportData.index, testrootbounds', 
+                viewportData.index,testrootbounds)
+            }
             return
         }
 
         let signalsAgent = this._managersRef.current.signals
         let contentAgent = this._managersRef.current.content
         let stateAgent = this._managersRef.current.state
-        let viewportData = this._viewportdataRef.current
 
         // if (viewportData.index == 0) {
         //     debugger
