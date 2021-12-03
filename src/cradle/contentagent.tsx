@@ -59,7 +59,7 @@ export default class ContentAgent extends CradleManagement{
         let observersAgent = this._managersRef.current.observers
         let cradleData = this._cradleDataRef.current
 
-        if (viewportData.index == 0) console.log('cradleState, cradleData in setCradleContent',cradleState, cradleData)
+        // if (viewportData.index == 0) console.log('cradleState, cradleData in setCradleContent',cradleState, cradleData)
 
         let viewportElement = viewportData.elementref.current
 
