@@ -20,7 +20,7 @@ export default class ScrollAgent extends CradleManagement{
     onScroll = (e) => {
 
         // e.preventDefault()
-        e.stopPropagation()
+        // e.stopPropagation()
 
         let signals = this._managersRef.current.signals.signals
 
@@ -33,6 +33,8 @@ export default class ScrollAgent extends CradleManagement{
         let viewportData = this._viewportdataRef.current
         let viewportElement = viewportData.elementref.current
 
+        let cradleAgent = this._managersRef.current.cradle
+
         let scrollPositionCurrent = 
             (this._cradlePropsRef.current.orientation == 'vertical')
             ?viewportElement.scrollTop
@@ -44,6 +46,8 @@ export default class ScrollAgent extends CradleManagement{
 
         }
 
+        // cradleAgent.blockScrollPos = scrollPositionCurrent // EXPERIMENTAL!!
+
         this.scrollPositions.previous = this.scrollPositions.current
         this.scrollPositions.current = scrollPositionCurrent
 
@@ -53,7 +57,6 @@ export default class ScrollAgent extends CradleManagement{
         let cradleState = stateAgent.cradleStateRef.current
 
         let contentAgent = this._managersRef.current.content
-        let cradleAgent = this._managersRef.current.cradle
         let serviceAgent = this._managersRef.current.service
 
         if (!viewportData.isResizing) {

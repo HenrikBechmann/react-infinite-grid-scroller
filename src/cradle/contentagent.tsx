@@ -141,10 +141,10 @@ export default class ContentAgent extends CradleManagement{
         let cradleElements = cradleAgent.elements //cradleElementsRef.current
 
         cradleAgent.blockScrollPos = scrollblockOffset - spinePosOffset
+        
         if (orientation == 'vertical') {
 
             cradleAgent.blockScrollProperty = 'scrollTop'
-            // cradleAgent.blockScrollPos = viewportElement.scrollTop
 
             cradleElements.spineRef.current.style.top = (scrollblockOffset + spineAdjustment) + 'px'
             cradleElements.spineRef.current.style.left = 'auto'
@@ -153,7 +153,6 @@ export default class ContentAgent extends CradleManagement{
         } else { // orientation = 'horizontal'
 
             cradleAgent.blockScrollProperty = 'scrollLeft'
-            // cradleAgent.blockScrollPos = viewportElement.scrollLeft
 
             cradleElements.spineRef.current.style.top = 'auto'
             cradleElements.spineRef.current.style.left = (scrollblockOffset + spineAdjustment) + 'px'
