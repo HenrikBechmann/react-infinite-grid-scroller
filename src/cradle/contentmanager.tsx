@@ -57,7 +57,7 @@ export default class ContentManager {
         let cradleManager = this.commonProps.managersRef.current.cradle
         let stateManager = this.commonProps.managersRef.current.state
         let serviceManager = this.commonProps.managersRef.current.service
-        let observersManager = this.commonProps.managersRef.current.observers
+        let interruptManager = this.commonProps.managersRef.current.interrupts
         let cradleData = this.commonProps.cradleDataRef.current
 
         // if (viewportData.index == 0) console.log('cradleState, cradleData in setCradleContent',cradleState, cradleData)
@@ -102,7 +102,7 @@ export default class ContentManager {
             tailchangecount:contentCount,
             localContentList,
             callbacks:this.contentCallbacksRef.current,
-            observer: observersManager.cellIntersect.observer,
+            observer: interruptManager.cellIntersect.observer,
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
@@ -170,7 +170,7 @@ export default class ContentManager {
         let scrollManager = this.commonProps.managersRef.current.scroll
         let cradleManager = this.commonProps.managersRef.current.cradle
         let stateManager = this.commonProps.managersRef.current.state
-        let observersManager = this.commonProps.managersRef.current.observers
+        let interruptManager = this.commonProps.managersRef.current.interrupts
 
         let cradleData = this.commonProps.cradleDataRef.current
 
@@ -290,7 +290,7 @@ export default class ContentManager {
                 headchangecount,
                 tailchangecount,
                 cradleReferenceIndex,
-                observer: observersManager.cellIntersect.observer,
+                observer: interruptManager.cellIntersect.observer,
                 callbacks:this.contentCallbacksRef.current,
                 instanceIdCounterRef:this.instanceIdCounterRef,
             })

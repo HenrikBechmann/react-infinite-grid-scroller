@@ -105,7 +105,7 @@ import SignalsManager from './cradle/signalsmanager'
 import StateManager from './cradle/statemanager'
 import ContentManager from './cradle/contentmanager'
 import CradleManager from './cradle/cradlemanager'
-import ObserversManager from './cradle/observersmanager'
+import InterruptManager from './cradle/interruptmanager'
 import ServiceManager from './cradle/servicemanager'
 import StylesManager from './cradle/stylesmanager'
 
@@ -330,7 +330,7 @@ const Cradle = ({
         stateManager,
         contentManager,
         cradleManager,
-        observersManager,
+        interruptManager,
         serviceManager,
         stylesManager,
     ] = useMemo(()=>{
@@ -340,7 +340,7 @@ const Cradle = ({
             new StateManager(commonProps,cradleStateRef,setCradleState,isMounted),
             new ContentManager(commonProps, contentCallbacksRef),
             new CradleManager(commonProps, cradleElementsRef.current),
-            new ObserversManager(commonProps),
+            new InterruptManager(commonProps),
             new ServiceManager(commonProps,serviceCallsRef),
             new StylesManager(commonProps),
         ]
@@ -354,7 +354,7 @@ const Cradle = ({
         content:contentManager, 
         cradle:cradleManager, 
         service:serviceManager,
-        observers:observersManager,
+        interrupts:interruptManager,
         styles:stylesManager,
     })
 
@@ -564,7 +564,7 @@ const Cradle = ({
     // set up cradle resizeobserver
     useEffect(() => {
 
-        let observer = observersManager.cradleResize.create()
+        let observer = interruptManager.cradleResize.create()
         let cradleElements = cradleManager.elements
         observer.observe(cradleElements.headRef.current)
         observer.observe(cradleElements.tailRef.current)
@@ -583,7 +583,7 @@ const Cradle = ({
     // cradle goes out of the observer scope, the "repositioning" cradle state is triggerd.
     useEffect(() => {
 
-        let observer = observersManager.cradleIntersect.create()
+        let observer = interruptManager.cradleIntersect.create()
         let cradleElements = cradleManager.elements
         observer.observe(cradleElements.headRef.current)
         observer.observe(cradleElements.tailRef.current)
@@ -620,9 +620,9 @@ const Cradle = ({
     // responds to change of orientation
     useEffect(() => {
 
-        let observer = observersManager.cellIntersect.observer
+        let observer = interruptManager.cellIntersect.observer
         if (observer) observer.disconnect()
-        observer = observersManager.cellIntersect.create()
+        observer = interruptManager.cellIntersect.create()
 
         return () => {
 

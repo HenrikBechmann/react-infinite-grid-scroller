@@ -5,7 +5,7 @@ import { ResizeObserver } from '@juggle/resize-observer'
 
 const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
 
-export default class ObserversManager {
+export default class InterruptManager {
 
    constructor(commonProps) {
 
