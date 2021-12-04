@@ -1,17 +1,17 @@
 // scrollmanager.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-import CradleParent from './cradleparent'
-
 const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 200
 
-export default class ScrollManager extends CradleParent{
+export default class ScrollManager {
 
     constructor(commonPropsRef) {
 
-        super(commonPropsRef)
+        this.commonProps = commonPropsRef.current
 
     }
+
+    commonProps
 
     scrollPositions = {current:0,previous:0}
 
@@ -22,7 +22,7 @@ export default class ScrollManager extends CradleParent{
         // e.preventDefault()
         // e.stopPropagation()
 
-        let signals = this._managersRef.current.signals.signals
+        let signals = this.commonProps.managersRef.current.signals.signals
 
         if (signals.pauseScrollingEffects) {
 
@@ -30,13 +30,13 @@ export default class ScrollManager extends CradleParent{
 
         }
 
-        let viewportData = this._viewportdataRef.current
+        let viewportData = this.commonProps.viewportdataRef.current
         let viewportElement = viewportData.elementref.current
 
-        let cradleManager = this._managersRef.current.cradle
+        let cradleManager = this.commonProps.managersRef.current.cradle
 
         let scrollPositionCurrent = 
-            (this._cradlePropsRef.current.orientation == 'vertical')
+            (this.commonProps.cradlePropsRef.current.orientation == 'vertical')
             ?viewportElement.scrollTop
             :viewportElement.scrollLeft
 
@@ -53,11 +53,11 @@ export default class ScrollManager extends CradleParent{
 
         clearTimeout(this._scrolltimerid)
 
-        let stateManager = this._managersRef.current.state
+        let stateManager = this.commonProps.managersRef.current.state
         let cradleState = stateManager.cradleStateRef.current
 
-        let contentManager = this._managersRef.current.content
-        let serviceManager = this._managersRef.current.service
+        let contentManager = this.commonProps.managersRef.current.content
+        let serviceManager = this.commonProps.managersRef.current.service
 
         if (!viewportData.isResizing) {
 
@@ -71,15 +71,15 @@ export default class ScrollManager extends CradleParent{
                     let spineVisiblePosOffset
                     let cradleElements = cradleManager.elements
 
-                    if (this._cradlePropsRef.current.orientation == 'vertical') {
+                    if (this.commonProps.cradlePropsRef.current.orientation == 'vertical') {
 
                         spineVisiblePosOffset = cradleElements.spineRef.current.offsetTop - 
-                            this._viewportdataRef.current.elementref.current.scrollTop
+                            this.commonProps.viewportdataRef.current.elementref.current.scrollTop
                             
                     } else {
 
                         spineVisiblePosOffset = cradleElements.spineRef.current.offsetLeft - 
-                            this._viewportdataRef.current.elementref.current.scrollLeft
+                            this.commonProps.viewportdataRef.current.elementref.current.scrollLeft
 
                     }
                     cradleManager.cradleReferenceData.scrollItemIndexReference = itemindex
@@ -112,12 +112,12 @@ export default class ScrollManager extends CradleParent{
 
     private _onAfterScroll = () => {
 
-        let stateManager = this._managersRef.current.state
-        let cradleManager = this._managersRef.current.cradle
-        let cradleProps = this._cradlePropsRef.current
-        let viewportData = this._viewportdataRef.current
+        let stateManager = this.commonProps.managersRef.current.state
+        let cradleManager = this.commonProps.managersRef.current.cradle
+        let cradleProps = this.commonProps.cradlePropsRef.current
+        let viewportData = this.commonProps.viewportdataRef.current
         // let cradleMaster = this._managersRef.current.cradleMaster
-        let contentManager = this._managersRef.current.content
+        let contentManager = this.commonProps.managersRef.current.content
 
         if (!stateManager.isMounted.current) return
 
@@ -181,9 +181,9 @@ export default class ScrollManager extends CradleParent{
 
     private _setScrollReferenceIndexData = () => {
 
-        let viewportData = this._viewportdataRef.current
-        let cradleProps = this._cradlePropsRef.current
-        let cradleConfig = this._cradleConfigRef.current
+        let viewportData = this.commonProps.viewportdataRef.current
+        let cradleProps = this.commonProps.cradlePropsRef.current
+        let cradleConfig = this.commonProps.cradleConfigRef.current
 
         let {crosscount} = cradleConfig
         let viewportElement = viewportData.elementref.current
@@ -219,7 +219,7 @@ export default class ScrollManager extends CradleParent{
 
         if (spineReferenceIndex == 0) referencescrolloffset = 0 // defensive
 
-        let cradleManager = this._managersRef.current.cradle
+        let cradleManager = this.commonProps.managersRef.current.cradle
         cradleManager.cradleReferenceData.scrollItemIndexReference = spineReferenceIndex
         cradleManager.cradleReferenceData.scrollSpinePixelOffset = referencescrolloffset
 

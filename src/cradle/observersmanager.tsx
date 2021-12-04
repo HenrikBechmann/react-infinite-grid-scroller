@@ -5,30 +5,30 @@ import { ResizeObserver } from '@juggle/resize-observer'
 
 const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
 
-import CradleParent from './cradleparent'
-
-export default class ObserversManager extends CradleParent{
+export default class ObserversManager {
 
    constructor(commonPropsRef) {
 
-      super(commonPropsRef)
+      this.commonProps = commonPropsRef.current
 
    }
+
+   commonProps
 
    // TODO: stub
    cradleresizeobservercallback = (entries) => {
 
-       let signalsManager = this._managersRef.current.signals
+       let signalsManager = this.commonProps.managersRef.current.signals
        if (signalsManager.signals.pauseCradleResizeObserver) return
 
    }
 
     cradleIntersectionObserverCallback = (entries) => {
 
-        let signalsManager = this._managersRef.current.signals
+        let signalsManager = this.commonProps.managersRef.current.signals
         let signals = signalsManager.signals
-        let stateManager = this._managersRef.current.state
-        let contentManager = this._managersRef.current.content
+        let stateManager = this.commonProps.managersRef.current.state
+        let contentManager = this.commonProps.managersRef.current.content
 
         if (signals.pauseCradleIntersectionObserver) return
 
@@ -49,7 +49,7 @@ export default class ObserversManager extends CradleParent{
 
         signals.isCradleInView = (signals.isHeadCradleInView || signals.isTailCradleInView);
 
-        let viewportData = this._viewportdataRef.current
+        let viewportData = this.commonProps.viewportdataRef.current
         if (!signals.isCradleInView) 
         {
             let cradleState = stateManager.cradleStateRef.current        
@@ -64,7 +64,7 @@ export default class ObserversManager extends CradleParent{
                 const element = viewportData.elementref.current
                 if (!element) {
                     console.log('viewport element not set in cradleIntersectionObserverCallback',
-                        this._cradlePropsRef.current.scrollerID,viewportData)
+                        this.commonProps.cradlePropsRef.current.scrollerID,viewportData)
                     return
                 }
                 const rect = element.getBoundingClientRect()
@@ -88,7 +88,7 @@ export default class ObserversManager extends CradleParent{
     // the async callback from IntersectionObserver.
     cellobservercallback = (entries)=>{
 
-        let viewportData = this._viewportdataRef.current
+        let viewportData = this.commonProps.viewportdataRef.current
 
         const testrootbounds = entries[0].rootBounds
         if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
@@ -97,9 +97,9 @@ export default class ObserversManager extends CradleParent{
 
         }
 
-        let signalsManager = this._managersRef.current.signals
-        let contentManager = this._managersRef.current.content
-        let stateManager = this._managersRef.current.state
+        let signalsManager = this.commonProps.managersRef.current.signals
+        let contentManager = this.commonProps.managersRef.current.content
+        let stateManager = this.commonProps.managersRef.current.state
 
         let movedentries = []
 
@@ -139,7 +139,7 @@ export default class ObserversManager extends CradleParent{
         observer:null,
         callback:this.cradleIntersectionObserverCallback,
         create:() => {
-            let viewportData = this._viewportdataRef.current
+            let viewportData = this.commonProps.viewportdataRef.current
             this.cradleIntersect.observer = new IntersectionObserver(
                 this.cradleIntersect.callback,
                 {root:viewportData.elementref.current, threshold:0}
@@ -151,13 +151,13 @@ export default class ObserversManager extends CradleParent{
         observer:null,
         callback:null,
         create:() => {
-            let viewportData = this._viewportdataRef.current
+            let viewportData = this.commonProps.viewportdataRef.current
             this.cellIntersect.observer = new IntersectionObserver(
 
                 this.cellobservercallback,
                 {
                     root:viewportData.elementref.current, 
-                    threshold:this._cradleConfigRef.current.cellObserverThreshold,
+                    threshold:this.commonProps.cradleConfigRef.current.cellObserverThreshold,
                 } 
             )
             return this.cellIntersect.observer

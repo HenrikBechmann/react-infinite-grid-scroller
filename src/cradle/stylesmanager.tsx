@@ -1,15 +1,15 @@
 // stylesmanager.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-import CradleParent from './cradleparent'
-
-export default class StylesManager extends CradleParent{
+export default class StylesManager { 
 
    constructor(commonPropsRef) {
 
-      super(commonPropsRef)
+      this.commonProps = commonPropsRef.current
 
     }
+
+    commonProps
 
     setCradleStyles = ({
 

@@ -1,13 +1,11 @@
 // cradlemanager.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-import CradleParent from './cradleparent'
-
-export default class CradleManager extends CradleParent{
+export default class CradleManager { 
 
     constructor(commonPropsRef, cradleElements) {
 
-       super(commonPropsRef)
+       // super(commonPropsRef)
 
        // console.log('CALLING CradleManager CONSTRUCTOR')
 

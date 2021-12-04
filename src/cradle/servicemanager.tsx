@@ -1,41 +1,41 @@
 // servicemanager.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-import CradleParent from './cradleparent'
-
-export default class ServiceManager extends CradleParent{
+export default class ServiceManager {
 
     constructor(commonPropsRef, serviceCallsRef) {
 
-       super(commonPropsRef)
+       this.commonProps = commonPropsRef.current
 
        this.serviceCalls = serviceCallsRef.current
 
     }
 
+    commonProps
+
     serviceCalls
 
     getVisibleList = () => {
 
-        let contentManager = this._managersRef.current.content        
+        let contentManager = this.commonProps.managersRef.current.content        
 
         let cradleContent = contentManager.content
-        let viewportData = this._viewportdataRef.current
-        let cradleManager = this._managersRef.current.cradle
+        let viewportData = this.commonProps.viewportdataRef.current
+        let cradleManager = this.commonProps.managersRef.current.cradle
         let cradleElements = cradleManager.elements
 
         return getVisibleItemsList({
             itemElementMap:contentManager.itemElements,
             viewportElement:viewportData.elementref.current,
             cradleElements, 
-            cradleProps:this._cradlePropsRef.current,
+            cradleProps:this.commonProps.cradlePropsRef.current,
             cradleContent,
         })
 
     }
 
     getContentList = () => {
-        let contentManager = this._managersRef.current.content        
+        let contentManager = this.commonProps.managersRef.current.content        
         let contentlist = Array.from(contentManager.itemElements)
 
         contentlist.sort((a,b)=>{
@@ -47,9 +47,9 @@ export default class ServiceManager extends CradleParent{
 
     reload = () => {
 
-        let cradleManager = this._managersRef.current.cradle
-        let signalsManager = this._managersRef.current.signals
-        let stateManager = this._managersRef.current.state
+        let cradleManager = this.commonProps.managersRef.current.cradle
+        let signalsManager = this.commonProps.managersRef.current.signals
+        let stateManager = this.commonProps.managersRef.current.state
         let signals = signalsManager.signals
         // let viewportData = this._viewportdata
 
@@ -68,9 +68,9 @@ export default class ServiceManager extends CradleParent{
 
     scrollToItem = (index) => {
 
-        let signalsManager = this._managersRef.current.signals
-        let cradleManager = this._managersRef.current.cradle
-        let stateManager = this._managersRef.current.state
+        let signalsManager = this.commonProps.managersRef.current.signals
+        let cradleManager = this.commonProps.managersRef.current.cradle
+        let stateManager = this.commonProps.managersRef.current.state
 
         let signals = signalsManager.signals
         // let cradleManager = cradleAgentRef.current

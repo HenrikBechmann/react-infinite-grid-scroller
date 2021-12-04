@@ -1,7 +1,6 @@
 // contentmanager.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-import CradleParent from './cradleparent'
 import { 
     getUICellShellList, 
     calcHeadAndTailChanges,
@@ -13,15 +12,17 @@ import {
 
 } from './contentfunctions'
 
-export default class ContentManager extends CradleParent{
+export default class ContentManager {
 
    constructor(commonPropsRef, contentCallbacksRef) {
 
-      super(commonPropsRef)
+      this.commonProps = commonPropsRef.current
 
       this.contentCallbacksRef = contentCallbacksRef
 
    }
+
+   commonProps
 
    content = {
 
@@ -49,15 +50,15 @@ export default class ContentManager extends CradleParent{
     // reset cradle, including allocation between head and tail parts of the cradle
     setCradleContent = (cradleState) => { 
 
-        let viewportData = this._viewportdataRef.current
-        let cradleProps = this._cradlePropsRef.current
-        let cradleConfig = this._cradleConfigRef.current
-        let scrollManager = this._managersRef.current.scroll
-        let cradleManager = this._managersRef.current.cradle
-        let stateManager = this._managersRef.current.state
-        let serviceManager = this._managersRef.current.service
-        let observersManager = this._managersRef.current.observers
-        let cradleData = this._cradleDataRef.current
+        let viewportData = this.commonProps.viewportdataRef.current
+        let cradleProps = this.commonProps.cradlePropsRef.current
+        let cradleConfig = this.commonProps.cradleConfigRef.current
+        let scrollManager = this.commonProps.managersRef.current.scroll
+        let cradleManager = this.commonProps.managersRef.current.cradle
+        let stateManager = this.commonProps.managersRef.current.state
+        let serviceManager = this.commonProps.managersRef.current.service
+        let observersManager = this.commonProps.managersRef.current.observers
+        let cradleData = this.commonProps.cradleDataRef.current
 
         // if (viewportData.index == 0) console.log('cradleState, cradleData in setCradleContent',cradleState, cradleData)
 
@@ -164,14 +165,14 @@ export default class ContentManager extends CradleParent{
 
     updateCradleContent = (entries, source = 'notifications') => {
 
-        let viewportData = this._viewportdataRef.current
-        let cradleProps = this._cradlePropsRef.current
-        let scrollManager = this._managersRef.current.scroll
-        let cradleManager = this._managersRef.current.cradle
-        let stateManager = this._managersRef.current.state
-        let observersManager = this._managersRef.current.observers
+        let viewportData = this.commonProps.viewportdataRef.current
+        let cradleProps = this.commonProps.cradlePropsRef.current
+        let scrollManager = this.commonProps.managersRef.current.scroll
+        let cradleManager = this.commonProps.managersRef.current.cradle
+        let stateManager = this.commonProps.managersRef.current.state
+        let observersManager = this.commonProps.managersRef.current.observers
 
-        let cradleData = this._cradleDataRef.current
+        let cradleData = this.commonProps.cradleDataRef.current
 
         // if (viewportData.index == 0) console.log('source, cradleData in updateCradleContent',source, cradleData)
 
@@ -216,7 +217,7 @@ export default class ContentManager extends CradleParent{
 
         let cradleElements = cradleManager.elements
         let cradleContent = this.content
-        let cradleConfig = this._cradleConfigRef.current
+        let cradleConfig = this.commonProps.cradleConfigRef.current
 
         let itemElements = this.itemElements
 
