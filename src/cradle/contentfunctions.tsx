@@ -52,7 +52,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     let viewportrows = viewportRowcount
 
-    let contentCount = cradleRowcount * crosscount 
+    let cradleAvailableContentCount = cradleRowcount * crosscount 
 
     // -----------------------[ calc leadingitemcount, referenceoffset ]-----------------------
 
@@ -88,6 +88,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     let targetrowoffset = Math.ceil(referenceoffset/crosscount)
     let scrollblockOffset = (targetrowoffset * cellLength) + padding // gap
     let spineAdjustment
+    let cradleActualContentCount = cradleAvailableContentCount
 
     if (targetrowoffset == 0) {
         scrollblockOffset = 0
@@ -96,7 +97,8 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     } else {
         spineAdjustment = 0; //gap;
 
-        [cradleReferenceIndex, contentCount, referenceoffset, scrollblockOffset, spinePosOffset] = adjustSpineOffsetForMaxRefindex({
+        [cradleReferenceIndex, cradleActualContentCount, referenceoffset, scrollblockOffset, spinePosOffset] = 
+            adjustSpineOffsetForMaxRefindex({
             referenceoffset,
             spinePosOffset,
             scrollblockOffset,            
@@ -109,11 +111,11 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
             padding,
             gap,
             cradleReferenceIndex,
-            contentCount,
+            cradleAvailableContentCount,
         })
     }
 
-    return {cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spinePosOffset, spineAdjustment} // summarize requirements message
+    return {cradleReferenceIndex, referenceoffset, cradleActualContentCount, scrollblockOffset, spinePosOffset, spineAdjustment} // summarize requirements message
 
 }
 
@@ -121,7 +123,7 @@ const adjustSpineOffsetForMaxRefindex = ({
 
     listsize,
     crosscount,
-    contentCount,
+    cradleAvailableContentCount,
 
     cradleReferenceIndex,
     referenceoffset,
@@ -139,7 +141,7 @@ const adjustSpineOffsetForMaxRefindex = ({
 
 }) => {
 
-    let activelistitemcount = cradleReferenceIndex + contentCount
+    let activelistitemcount = cradleReferenceIndex + cradleAvailableContentCount
     let activelistrowcount = Math.ceil(activelistitemcount/crosscount)
     let listRowcount = Math.ceil(listsize/crosscount)
 
@@ -151,10 +153,11 @@ const adjustSpineOffsetForMaxRefindex = ({
     }
 
     // let testlistrowcount = Math.ceil((cradleReferenceIndex + contentCount + 1)/crosscount)
+    let cradleActualContentCount = cradleAvailableContentCount
     if (activelistrowcount == listRowcount) {
         let diff = listsize % crosscount
         if (diff) {
-            contentCount -= (crosscount - diff)
+            cradleActualContentCount -= (crosscount - diff)
         }
     }
 
@@ -173,7 +176,7 @@ const adjustSpineOffsetForMaxRefindex = ({
 
     }
 
-    return [cradleReferenceIndex, contentCount, referenceoffset, scrollblockOffset, spinePosOffset]
+    return [cradleReferenceIndex, cradleActualContentCount, referenceoffset, scrollblockOffset, spinePosOffset]
 
 }
 
@@ -437,7 +440,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     // ------------------------[ initialize ]--------------
 
-    let { gap,
+    const { gap,
         orientation,
         cellHeight,
         cellWidth,
@@ -445,15 +448,15 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         padding,
         runwaycount } = cradleProps
 
-    let spineElement = cradleElements.spineRef.current
-    let headElement = cradleElements.headRef.current
-    let tailElement = cradleElements.tailRef.current
+    const spineElement = cradleElements.spineRef.current
+    const headElement = cradleElements.headRef.current
+    const tailElement = cradleElements.tailRef.current
 
-    let cradlecontentlist = cradleContent.cradleModel
-    let headcontentlist = cradleContent.headModel
-    let tailcontentlist = cradleContent.tailModel
+    const cradlecontentlist = cradleContent.cradleModel
+    const headcontentlist = cradleContent.headModel
+    const tailcontentlist = cradleContent.tailModel
 
-    let { crosscount,
+    const { crosscount,
         cradleRowcount,
         listRowcount,
         viewportRowcount,
@@ -466,7 +469,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let startingspineoffset, headblockoffset, tailblockoffset, viewportlength
     let viewportvisiblegaplength = 0
 
-    let cellLength = (orientation == 'vertical')?cellHeight + gap:cellWidth + gap
+    const cellLength = (orientation == 'vertical')?cellHeight + gap:cellWidth + gap
 
     if (orientation == 'vertical') {
 
@@ -532,10 +535,10 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     // --------------------------[ 3. calc cradleindex and referenceindex ]--------------------------
 
-    let previouscradleindex = cradlecontentlist[0].props.index
-    let previouscradlerowoffset = previouscradleindex/crosscount
-    let previousreferenceindex = tailcontentlist[0]?.props.index // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
-    let previousreferencerowoffset = previousreferenceindex/crosscount
+    const previouscradleindex = cradlecontentlist[0].props.index
+    const previouscradlerowoffset = previouscradleindex/crosscount
+    const previousreferenceindex = tailcontentlist[0]?.props.index // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
+    const previousreferencerowoffset = previousreferenceindex/crosscount
 
     let diff 
     if (scrollforward) {
@@ -620,9 +623,9 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     // ---------------------[ 5. return required values ]-------------------
 
-    let cradleitemcount = cradleRowcount * crosscount
+    const cradleAvailableItemCount = cradleRowcount * crosscount
 
-    return [ newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spinePosOffset, cradleitemcount ]
+    return [ newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spinePosOffset, cradleAvailableItemCount ]
 
 }
 
@@ -774,7 +777,7 @@ export const getUICellShellList = ({
 
         cradleProps,
         cradleConfig,
-        contentCount,
+        cradleActualContentCount,
         cradleReferenceIndex, 
         headchangecount, 
         tailchangecount, 
@@ -795,7 +798,7 @@ export const getUICellShellList = ({
     let headContentlist = []
 
     let topconstraint = cradleReferenceIndex - headchangecount,
-    bottomconstraint = (cradleReferenceIndex - headchangecount) + (contentCount + 1) // TODO: validate "+1"
+    bottomconstraint = (cradleReferenceIndex - headchangecount) + (cradleActualContentCount + 1) // TODO: validate "+1"
 
     let deletedtailitems = [], deletedheaditems = []
 

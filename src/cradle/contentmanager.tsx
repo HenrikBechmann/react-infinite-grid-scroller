@@ -83,7 +83,7 @@ export default class ContentManager {
         let localContentList = []
         let cradleContent = this.content
 
-        let {cradleReferenceIndex, referenceoffset, contentCount, scrollblockOffset, spinePosOffset, spineAdjustment} = 
+        let {cradleReferenceIndex, referenceoffset, cradleActualContentCount, scrollblockOffset, spinePosOffset, spineAdjustment} = 
             getContentListRequirements({
                 cradleProps,
                 cradleConfig,
@@ -97,10 +97,10 @@ export default class ContentManager {
 
             cradleProps,
             cradleConfig,
-            contentCount,
+            cradleActualContentCount,
             cradleReferenceIndex,
             headchangecount:0,
-            tailchangecount:contentCount,
+            tailchangecount:cradleActualContentCount,
             localContentList,
             callbacks:this.contentCallbacksRef.current,
             observer: interruptManager.cellIntersect.observer,
@@ -248,7 +248,7 @@ export default class ContentManager {
             spineReferenceIndex, 
             referenceitemshift,
             spinePosOffset, 
-            contentCount] = calcContentShifts({
+            cradleAvailableContentCount] = calcContentShifts({
 
                 cradleProps,
                 cradleConfig,
@@ -271,7 +271,7 @@ export default class ContentManager {
             spineReferenceIndex, 
             referenceitemshift,
             spinePosOffset, 
-            contentCount)
+            cradleAvailableContentCount)
         }
         if ((referenceitemshift == 0 && cradleitemshift == 0)) return
 
@@ -298,7 +298,7 @@ export default class ContentManager {
             [localContentList,deletedContentItems] = getUICellShellList({
                 cradleProps,
                 cradleConfig,
-                contentCount,
+                cradleActualContentCount:cradleAvailableContentCount,
                 localContentList:modelcontentlist,
                 headchangecount,
                 tailchangecount,
