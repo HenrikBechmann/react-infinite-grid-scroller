@@ -289,7 +289,7 @@ const Cradle = ({
     // -------------------------[ cradle management nodes ]-----------------
 
     const managersRef = useRef(null) // make available to individual managers
-    const commonPropsRef = useRef({managersRef,viewportdataRef:viewportDataRef,cradlePropsRef, cradleConfigRef, cradleDataRef})
+    const commonProps = useRef({managersRef,viewportdataRef:viewportDataRef,cradlePropsRef, cradleConfigRef, cradleDataRef})
     const serviceCallsRef = useRef({referenceIndexCallbackRef})
 
     // cradle butterfly html components
@@ -335,14 +335,14 @@ const Cradle = ({
         stylesManager,
     ] = useMemo(()=>{
         return [
-            new ScrollManager(commonPropsRef),
-            new SignalsManager(commonPropsRef),
-            new StateManager(commonPropsRef,cradleStateRef,setCradleState,isMounted),
-            new ContentManager(commonPropsRef, contentCallbacksRef),
-            new CradleManager(commonPropsRef, cradleElementsRef.current),
-            new ObserversManager(commonPropsRef),
-            new ServiceManager(commonPropsRef,serviceCallsRef),
-            new StylesManager(commonPropsRef),
+            new ScrollManager(commonProps),
+            new SignalsManager(commonProps),
+            new StateManager(commonProps,cradleStateRef,setCradleState,isMounted),
+            new ContentManager(commonProps, contentCallbacksRef),
+            new CradleManager(commonProps, cradleElementsRef.current),
+            new ObserversManager(commonProps),
+            new ServiceManager(commonProps,serviceCallsRef),
+            new StylesManager(commonProps),
         ]
     },[])
 

@@ -13,9 +13,9 @@ const signalsbaseline = {
 
 export default class SignalsManager {
 
-    constructor(commonPropsRef) {
+    constructor(commonProps) {
 
-       this.commonProps = commonPropsRef.current
+       this.commonProps = commonProps
        this.resetSignals()
 
     }

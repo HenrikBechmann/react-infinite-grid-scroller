@@ -3,9 +3,9 @@
 
 export default class StylesManager { 
 
-   constructor(commonPropsRef) {
+   constructor(commonProps) {
 
-      this.commonProps = commonPropsRef.current
+      this.commonProps = commonProps
 
     }
 

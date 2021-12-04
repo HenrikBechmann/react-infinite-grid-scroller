@@ -5,9 +5,9 @@ const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 200
 
 export default class ScrollManager {
 
-    constructor(commonPropsRef) {
+    constructor(commonProps) {
 
-        this.commonProps = commonPropsRef.current
+        this.commonProps = commonProps
 
     }
 

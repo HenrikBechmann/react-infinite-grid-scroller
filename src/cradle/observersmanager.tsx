@@ -7,9 +7,9 @@ const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
 
 export default class ObserversManager {
 
-   constructor(commonPropsRef) {
+   constructor(commonProps) {
 
-      this.commonProps = commonPropsRef.current
+      this.commonProps = commonProps
 
    }
 

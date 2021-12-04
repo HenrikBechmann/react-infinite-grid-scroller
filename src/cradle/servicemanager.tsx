@@ -3,9 +3,9 @@
 
 export default class ServiceManager {
 
-    constructor(commonPropsRef, serviceCallsRef) {
+    constructor(commonProps, serviceCallsRef) {
 
-       this.commonProps = commonPropsRef.current
+       this.commonProps = commonProps
 
        this.serviceCalls = serviceCallsRef.current
 

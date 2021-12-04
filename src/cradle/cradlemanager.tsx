@@ -3,9 +3,9 @@
 
 export default class CradleManager { 
 
-    constructor(commonPropsRef, cradleElements) {
+    constructor(commonProps, cradleElements) {
 
-       // super(commonPropsRef)
+       // super(commonProps)
 
        // console.log('CALLING CradleManager CONSTRUCTOR')
 
@@ -14,9 +14,9 @@ export default class CradleManager {
        elements.headRef = cradleElements.head
        elements.tailRef = cradleElements.tail
 
-       let {defaultVisibleIndex, listsize, padding} = commonPropsRef.current.cradlePropsRef.current
+       let {defaultVisibleIndex, listsize, padding} = commonProps.cradlePropsRef.current
 
-       // console.log('commonPropsRef.current.cradlePropsRef.current in CradleManager constructor',commonPropsRef.current.cradlePropsRef.current)
+       // console.log('commonProps.cradlePropsRef.current in CradleManager constructor',commonProps.cradlePropsRef.current)
 
        this.cradleReferenceData.scrollItemIndexReference = (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
        this.cradleReferenceData.scrollSpinePixelOffset = padding

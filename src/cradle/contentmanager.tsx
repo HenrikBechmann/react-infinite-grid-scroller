@@ -14,9 +14,9 @@ import {
 
 export default class ContentManager {
 
-   constructor(commonPropsRef, contentCallbacksRef) {
+   constructor(commonProps, contentCallbacksRef) {
 
-      this.commonProps = commonPropsRef.current
+      this.commonProps = commonProps
 
       this.contentCallbacksRef = contentCallbacksRef
 

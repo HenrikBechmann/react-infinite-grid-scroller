@@ -3,9 +3,9 @@
 
 export default class StateManager {
 
-    constructor(commonPropsRef,cradleStateRef,setCradleState,isMounted) {
+    constructor(commonProps,cradleStateRef,setCradleState,isMounted) {
 
-       this.commonProps = commonPropsRef.current
+       this.commonProps = commonProps
 
        this.setCradleState = setCradleState
        this.cradleStateRef = cradleStateRef
