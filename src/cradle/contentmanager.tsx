@@ -61,7 +61,7 @@ export default class ContentManager {
         let interruptManager = this.commonProps.managersRef.current.interrupts
         let cradleData = this.commonProps.cradleDataRef.current
 
-        // if (viewportData.index == 0) console.log('cradleState, cradleData in setCradleContent',cradleState, cradleData)
+        if (viewportData.index == 0) console.log('SETTING content - cradleState, cradleData in setCradleContent',cradleState, cradleData)
 
         let viewportElement = viewportData.elementref.current
 
@@ -175,7 +175,7 @@ export default class ContentManager {
 
         let cradleData = this.commonProps.cradleDataRef.current
 
-        // if (viewportData.index == 0) console.log('source, cradleData in updateCradleContent',source, cradleData)
+        if (viewportData.index == 0) console.log('UPDATING content - source, cradleData in updateCradleContent',source, cradleData)
 
         let viewportElement = viewportData.elementref.current
         if (!viewportElement) {
@@ -243,7 +243,7 @@ export default class ContentManager {
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
-        let [cradleindex, 
+        const [cradleindex, 
             cradleitemshift, 
             spineReferenceIndex, 
             referenceitemshift,
@@ -260,7 +260,19 @@ export default class ContentManager {
                 scrollforward,
 
         })
-
+        if (viewportData.index == 0) {
+            console.log(`cradleindex, 
+            cradleitemshift, 
+            spineReferenceIndex, 
+            referenceitemshift,
+            spinePosOffset, 
+            contentCount`,cradleindex, 
+            cradleitemshift, 
+            spineReferenceIndex, 
+            referenceitemshift,
+            spinePosOffset, 
+            contentCount)
+        }
         if ((referenceitemshift == 0 && cradleitemshift == 0)) return
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------

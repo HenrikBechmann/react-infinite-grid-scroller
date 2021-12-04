@@ -7,6 +7,7 @@
     - fix scroll reset on reparent
     - review need for setscrollposition
     - BUG: in FF nested scroller switch from placeholder to content resets scroll position
+    - unmounted warning to do with InPortal
 
     ObserversManager
     WingsAgent
@@ -687,7 +688,7 @@ const Cradle = ({
     },[cradleState])
 
     // standard processing stages
-    useLayoutEffect(()=> {
+    useLayoutEffect(()=> { // TODO: verify benefit of useLayoutEffect
 
         let viewportData = viewportDataRef.current
         switch (cradleState) {
