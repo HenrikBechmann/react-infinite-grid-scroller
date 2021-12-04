@@ -82,8 +82,8 @@ export default class ScrollManager {
                             this.commonProps.viewportdataRef.current.elementref.current.scrollLeft
 
                     }
-                    cradleManager.cradleReferenceData.scrollItemIndexReference = itemindex
-                    cradleManager.cradleReferenceData.scrollSpinePixelOffset = spineVisiblePosOffset
+                    cradleManager.cradleReferenceData.scrollImpliedItemIndexReference = itemindex
+                    cradleManager.cradleReferenceData.scrollImpliedCradlePixelOffset = spineVisiblePosOffset
 
                 }
 
@@ -96,7 +96,7 @@ export default class ScrollManager {
 
                 // TODO: re-instate the following
                 serviceManager.serviceCalls.referenceIndexCallbackRef.current && 
-                    serviceManager.serviceCalls.referenceIndexCallbackRef.current(cradleManager.cradleReferenceData.scrollItemIndexReference,'scrolling', cradleState)
+                    serviceManager.serviceCalls.referenceIndexCallbackRef.current(cradleManager.cradleReferenceData.scrollImpliedItemIndexReference,'scrolling', cradleState)
 
             }
 
@@ -140,7 +140,7 @@ export default class ScrollManager {
 
         }
 
-        cradleManager.cradleReferenceData.scrollSpinePixelOffset = spineVisiblePosOffset
+        cradleManager.cradleReferenceData.scrollImpliedCradlePixelOffset = spineVisiblePosOffset
 
         if (!viewportData.isResizing) {
 
@@ -151,9 +151,9 @@ export default class ScrollManager {
             // }
 
             cradleManager.cradleReferenceData.nextItemIndexReference = 
-                cradleManager.cradleReferenceData.scrollItemIndexReference
-            cradleManager.cradleReferenceData.nextSpinePixelOffset = 
-                cradleManager.cradleReferenceData.scrollSpinePixelOffset
+                cradleManager.cradleReferenceData.scrollImpliedItemIndexReference
+            cradleManager.cradleReferenceData.nextCradlePixelOffset = 
+                cradleManager.cradleReferenceData.scrollImpliedCradlePixelOffset
 
             if (cradleProps.orientation == 'vertical') {
 
@@ -173,7 +173,7 @@ export default class ScrollManager {
             case 'repositioning': {
 
                 // cradleManager.theNextItemIndexReference = cradleManager.nextItemIndexReference
-                // cradleManager.theNextSpinePixelOffset = cradleManager.nextSpinePixelOffset
+                // cradleManager.theNextSpinePixelOffset = cradleManager.nextCradlePixelOffset
 
                 stateManager.setCradleState('reposition')
 
@@ -231,8 +231,8 @@ export default class ScrollManager {
         if (spineReferenceIndex == 0) referencescrolloffset = 0 // defensive
 
         let cradleManager = this.commonProps.managersRef.current.cradle
-        cradleManager.cradleReferenceData.scrollItemIndexReference = spineReferenceIndex
-        cradleManager.cradleReferenceData.scrollSpinePixelOffset = referencescrolloffset
+        cradleManager.cradleReferenceData.scrollImpliedItemIndexReference = spineReferenceIndex
+        cradleManager.cradleReferenceData.scrollImpliedCradlePixelOffset = referencescrolloffset
 
     }
 

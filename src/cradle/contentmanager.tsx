@@ -66,7 +66,7 @@ export default class ContentManager {
         let viewportElement = viewportData.elementref.current
 
         let visibletargetindexoffset = cradleManager.cradleReferenceData.nextItemIndexReference
-        let visibletargetscrolloffset = cradleManager.cradleReferenceData.nextSpinePixelOffset
+        let visibletargetscrolloffset = cradleManager.cradleReferenceData.nextCradlePixelOffset
 
         let {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
 
@@ -124,11 +124,11 @@ export default class ContentManager {
         cradleContent.headModel = headcontentlist
         cradleContent.tailModel = tailcontentlist
 
-        cradleManager.cradleReferenceData.scrollItemIndexReference = referenceoffset
-        cradleManager.cradleReferenceData.scrollSpinePixelOffset = spinePosOffset
+        cradleManager.cradleReferenceData.scrollImpliedItemIndexReference = referenceoffset
+        cradleManager.cradleReferenceData.scrollImpliedCradlePixelOffset = spinePosOffset
 
         cradleManager.cradleReferenceData.nextItemIndexReference = referenceoffset
-        cradleManager.cradleReferenceData.nextSpinePixelOffset = spinePosOffset
+        cradleManager.cradleReferenceData.nextCradlePixelOffset = spinePosOffset
 
         if (serviceManager.serviceCalls.referenceIndexCallbackRef.current) {
 
@@ -340,11 +340,11 @@ export default class ContentManager {
 
         }
 
-        cradleManager.cradleReferenceData.scrollItemIndexReference = spineReferenceIndex
-        cradleManager.cradleReferenceData.scrollSpinePixelOffset = spinePosOffset
+        cradleManager.cradleReferenceData.scrollImpliedItemIndexReference = spineReferenceIndex
+        cradleManager.cradleReferenceData.scrollImpliedCradlePixelOffset = spinePosOffset
 
         cradleManager.cradleReferenceData.nextItemIndexReference = spineReferenceIndex
-        cradleManager.cradleReferenceData.nextSpinePixelOffset = spinePosOffset
+        cradleManager.cradleReferenceData.nextCradlePixelOffset = spinePosOffset
 
         stateManager.setCradleState('updatecontent')
 

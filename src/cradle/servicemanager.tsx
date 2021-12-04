@@ -47,20 +47,11 @@ export default class ServiceManager {
 
     reload = () => {
 
-        let cradleManager = this.commonProps.managersRef.current.cradle
-        let signalsManager = this.commonProps.managersRef.current.signals
-        let stateManager = this.commonProps.managersRef.current.state
-        let signals = signalsManager.signals
-        // let viewportData = this._viewportdata
+        const signals = this.commonProps.managersRef.current.signals.signals
+        const stateManager = this.commonProps.managersRef.current.state
 
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
-
-        let spineVisiblePosOffset
-        let cradleElements = cradleManager.elements
-
-        // cradleManager.cradleReferenceData.theNextSpinePixelOffset = cradleManager.cradleReferenceData.nextSpinePixelOffset
-        // cradleManager.cradleReferenceData.theNextItemIndexReference = cradleManager.cradleReferenceData.nextItemIndexReference        
 
         stateManager.setCradleState('reload')
 
@@ -79,7 +70,7 @@ export default class ServiceManager {
         signals.pauseScrollingEffects = true
 
         cradleManager.cradleReferenceData.theNextSpinePixelOffset = 
-            cradleManager.cradleReferenceData.nextSpinePixelOffset
+            cradleManager.cradleReferenceData.nextCradlePixelOffset
         cradleManager.cradleReferenceData.theNextItemIndexReference = 
             cradleManager.cradleReferenceData.nextItemIndexReference = index
 
