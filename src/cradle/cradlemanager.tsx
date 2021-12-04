@@ -5,7 +5,7 @@ export default class CradleManager {
 
     constructor(commonProps, cradleElements) {
 
-       // super(commonProps)
+       this.commonProps = commonProps
 
        // console.log('CALLING CradleManager CONSTRUCTOR')
 
@@ -14,7 +14,7 @@ export default class CradleManager {
        elements.headRef = cradleElements.head
        elements.tailRef = cradleElements.tail
 
-       let {defaultVisibleIndex, listsize, padding} = commonProps.cradlePropsRef.current
+       let {defaultVisibleIndex, listsize, padding} = this.commonProps.cradlePropsRef.current
 
        // console.log('commonProps.cradlePropsRef.current in CradleManager constructor',commonProps.cradlePropsRef.current)
 
@@ -26,6 +26,8 @@ export default class CradleManager {
        this.cradleReferenceData.nextSpinePixelOffset = this.cradleReferenceData.readySpinePixelOffset
 
     }
+
+    commonProps
 
    /* 
       ItemIndexReference is the sequential index of first item of the cradle tail

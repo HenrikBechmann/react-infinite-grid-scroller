@@ -289,7 +289,7 @@ const Cradle = ({
     // -------------------------[ cradle management nodes ]-----------------
 
     const managersRef = useRef(null) // make available to individual managers
-    const commonProps = useRef({managersRef,viewportdataRef:viewportDataRef,cradlePropsRef, cradleConfigRef, cradleDataRef})
+    const commonProps = {managersRef,viewportdataRef:viewportDataRef,cradlePropsRef, cradleConfigRef, cradleDataRef}
     const serviceCallsRef = useRef({referenceIndexCallbackRef})
 
     // cradle butterfly html components
