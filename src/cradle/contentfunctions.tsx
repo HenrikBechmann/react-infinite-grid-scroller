@@ -98,7 +98,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         spineAdjustment = 0; //gap;
 
         [cradleReferenceIndex, cradleActualContentCount, referenceoffset, scrollblockOffset, spinePosOffset] = 
-            adjustSpineOffsetForMaxRefindex({
+            adjustSpineOffsetForMaxRefIndex({
             referenceoffset,
             spinePosOffset,
             scrollblockOffset,            
@@ -119,7 +119,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
 }
 
-const adjustSpineOffsetForMaxRefindex = ({
+const adjustSpineOffsetForMaxRefIndex = ({
 
     listsize,
     crosscount,
@@ -435,6 +435,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     itemElements,
     intersections,
     scrollforward,
+    viewportData,
     // source,
 }) => {
 
@@ -447,6 +448,10 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         listsize,
         padding,
         runwaycount } = cradleProps
+
+    if (viewportData.index == 0) {
+        console.log('in calcContentShifts cradleContent',cradleContent)
+    }
 
     const spineElement = cradleElements.spineRef.current
     const headElement = cradleElements.headRef.current
@@ -535,9 +540,9 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     // --------------------------[ 3. calc cradleindex and referenceindex ]--------------------------
 
-    const previouscradleindex = cradlecontentlist[0].props.index
+    const previouscradleindex = (cradlecontentlist[0].props.index || 0) // TODO: undefined should never happen! system error
     const previouscradlerowoffset = previouscradleindex/crosscount
-    const previousreferenceindex = tailcontentlist[0]?.props.index // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
+    const previousreferenceindex = (tailcontentlist[0]?.props.index || 0) // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
     const previousreferencerowoffset = previousreferenceindex/crosscount
 
     let diff 
@@ -623,9 +628,40 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     // ---------------------[ 5. return required values ]-------------------
 
-    const cradleAvailableItemCount = cradleRowcount * crosscount
+    // -------------------[ EXPERIMENTAL ADJUSTMENT ]------------------------
+    // to return cradleActualContentCount, TODO: but over-trims; not working
 
-    return [ newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spinePosOffset, cradleAvailableItemCount ]
+    // let cradleReferenceIndex = newreferenceindex 
+
+    const cradleAvailableContentCount = cradleRowcount * crosscount
+
+    // let activelistitemcount = newreferenceindex + cradleAvailableContentCount
+    // let activelistrowcount = Math.ceil(activelistitemcount/crosscount)
+    // // let listRowcount = Math.ceil(listsize/crosscount)
+
+    // if (activelistrowcount > listRowcount) {
+    //     let diffrows = activelistrowcount - listRowcount
+    //     let diff = diffrows * crosscount
+    //     // cradleReferenceIndex -= diff // TODO: why is newreferenceindex not updated?
+    //     activelistrowcount -= diffrows
+    // }
+
+    // let testlistrowcount = Math.ceil((cradleReferenceIndex + contentCount + 1)/crosscount)
+    let cradleActualContentCount = cradleAvailableContentCount
+    // if (activelistrowcount == listRowcount) {
+    //     let diff = listsize % crosscount
+    //     if (diff) {
+    //         cradleActualContentCount -= (crosscount - diff)
+    //     }
+    // }
+
+    // if (isNaN(newreferenceindex)) {
+    //     debugger
+    // }
+
+    // ----------------[ END OF EXPERIMENTAL ADJUSTMENT ]-----------------------
+
+    return [ newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spinePosOffset, cradleActualContentCount ]
 
 }
 

@@ -248,7 +248,7 @@ export default class ContentManager {
             spineReferenceIndex, 
             referenceitemshift,
             spinePosOffset, 
-            cradleAvailableContentCount] = calcContentShifts({
+            cradleActualContentCount] = calcContentShifts({
 
                 cradleProps,
                 cradleConfig,
@@ -258,6 +258,7 @@ export default class ContentManager {
                 itemElements,
                 intersections,
                 scrollforward,
+                viewportData,
 
         })
         if (viewportData.index == 0) {
@@ -271,7 +272,7 @@ export default class ContentManager {
             spineReferenceIndex, 
             referenceitemshift,
             spinePosOffset, 
-            cradleAvailableContentCount)
+            cradleActualContentCount)
         }
         if ((referenceitemshift == 0 && cradleitemshift == 0)) return
 
@@ -293,12 +294,14 @@ export default class ContentManager {
         // collect modified content
         let localContentList, deletedContentItems = []
 
+        // let cradleActualContentCount = cradleAvailableContentCount
+
         if (headchangecount || tailchangecount) {
 
             [localContentList,deletedContentItems] = getUICellShellList({
                 cradleProps,
                 cradleConfig,
-                cradleActualContentCount:cradleAvailableContentCount,
+                cradleActualContentCount, // TODO: problem!
                 localContentList:modelcontentlist,
                 headchangecount,
                 tailchangecount,
