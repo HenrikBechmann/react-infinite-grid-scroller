@@ -59,8 +59,8 @@ export default class ServiceManager {
         let spineVisiblePosOffset
         let cradleElements = cradleManager.elements
 
-        // cradleManager.cradleReferenceData.nextSpinePixelOffset = cradleManager.cradleReferenceData.readySpinePixelOffset
-        // cradleManager.cradleReferenceData.nextItemIndexReference = cradleManager.cradleReferenceData.readyItemIndexReference        
+        // cradleManager.cradleReferenceData.theNextSpinePixelOffset = cradleManager.cradleReferenceData.nextSpinePixelOffset
+        // cradleManager.cradleReferenceData.theNextItemIndexReference = cradleManager.cradleReferenceData.nextItemIndexReference        
 
         stateManager.setCradleState('reload')
 
@@ -78,10 +78,10 @@ export default class ServiceManager {
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
 
-        cradleManager.cradleReferenceData.nextSpinePixelOffset = 
-            cradleManager.cradleReferenceData.readySpinePixelOffset
-        cradleManager.cradleReferenceData.nextItemIndexReference = 
-            cradleManager.cradleReferenceData.readyItemIndexReference = index
+        cradleManager.cradleReferenceData.theNextSpinePixelOffset = 
+            cradleManager.cradleReferenceData.nextSpinePixelOffset
+        cradleManager.cradleReferenceData.theNextItemIndexReference = 
+            cradleManager.cradleReferenceData.nextItemIndexReference = index
 
         stateManager.setCradleState('reposition')
 

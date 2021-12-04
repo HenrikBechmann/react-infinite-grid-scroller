@@ -65,8 +65,8 @@ export default class ContentManager {
 
         let viewportElement = viewportData.elementref.current
 
-        let visibletargetindexoffset = cradleManager.cradleReferenceData.readyItemIndexReference
-        let visibletargetscrolloffset = cradleManager.cradleReferenceData.readySpinePixelOffset
+        let visibletargetindexoffset = cradleManager.cradleReferenceData.nextItemIndexReference
+        let visibletargetscrolloffset = cradleManager.cradleReferenceData.nextSpinePixelOffset
 
         let {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
 
@@ -127,8 +127,8 @@ export default class ContentManager {
         cradleManager.cradleReferenceData.scrollItemIndexReference = referenceoffset
         cradleManager.cradleReferenceData.scrollSpinePixelOffset = spinePosOffset
 
-        cradleManager.cradleReferenceData.readyItemIndexReference = referenceoffset
-        cradleManager.cradleReferenceData.readySpinePixelOffset = spinePosOffset
+        cradleManager.cradleReferenceData.nextItemIndexReference = referenceoffset
+        cradleManager.cradleReferenceData.nextSpinePixelOffset = spinePosOffset
 
         if (serviceManager.serviceCalls.referenceIndexCallbackRef.current) {
 
@@ -136,7 +136,7 @@ export default class ContentManager {
             if (cstate == 'setreload') cstate = 'reload'
             serviceManager.serviceCalls.referenceIndexCallbackRef.current(
 
-                cradleManager.cradleReferenceData.readyItemIndexReference,'setCradleContent', cstate)
+                cradleManager.cradleReferenceData.nextItemIndexReference,'setCradleContent', cstate)
         
         }
 
@@ -343,8 +343,8 @@ export default class ContentManager {
         cradleManager.cradleReferenceData.scrollItemIndexReference = spineReferenceIndex
         cradleManager.cradleReferenceData.scrollSpinePixelOffset = spinePosOffset
 
-        cradleManager.cradleReferenceData.readyItemIndexReference = spineReferenceIndex
-        cradleManager.cradleReferenceData.readySpinePixelOffset = spinePosOffset
+        cradleManager.cradleReferenceData.nextItemIndexReference = spineReferenceIndex
+        cradleManager.cradleReferenceData.nextSpinePixelOffset = spinePosOffset
 
         stateManager.setCradleState('updatecontent')
 

@@ -19,10 +19,10 @@ export default class CradleManager {
        // progression of references: scroll->ready->next
        this.cradleReferenceData.scrollItemIndexReference = (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
        this.cradleReferenceData.scrollSpinePixelOffset = padding
-       this.cradleReferenceData.readyItemIndexReference = this.cradleReferenceData.scrollItemIndexReference
-       this.cradleReferenceData.readySpinePixelOffset = this.cradleReferenceData.scrollSpinePixelOffset
-       // this.cradleReferenceData.nextItemIndexReference = this.cradleReferenceData.readyItemIndexReference
-       // this.cradleReferenceData.nextSpinePixelOffset = this.cradleReferenceData.readySpinePixelOffset
+       this.cradleReferenceData.nextItemIndexReference = this.cradleReferenceData.scrollItemIndexReference
+       this.cradleReferenceData.nextSpinePixelOffset = this.cradleReferenceData.scrollSpinePixelOffset
+       // this.cradleReferenceData.theNextItemIndexReference = this.cradleReferenceData.nextItemIndexReference
+       // this.cradleReferenceData.theNextSpinePixelOffset = this.cradleReferenceData.nextSpinePixelOffset
 
     }
 
@@ -41,11 +41,11 @@ export default class CradleManager {
       scrollItemIndexReference:null,
       scrollSpinePixelOffset:null,
 
-      readyItemIndexReference:null,
-      readySpinePixelOffset:null,
+      nextItemIndexReference:null,
+      nextSpinePixelOffset:null,
 
-      // nextItemIndexReference:null,
-      // nextSpinePixelOffset:null,
+      // theNextItemIndexReference:null,
+      // theNextSpinePixelOffset:null,
 
       // currentItemIndexReference:null,
       // currentSpinePixelOffset:null,

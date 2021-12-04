@@ -65,9 +65,9 @@ export default class ScrollManager {
 
                 if (cradleState == 'ready') {
                     // let itemindex = contentManager.content.tailModel[0]?.props.index 
-                    // console.log('itemindex, readyItemIndexReference',itemindex,cradleManager.cradleReferenceData.readyItemIndexReference)
+                    // console.log('itemindex, nextItemIndexReference',itemindex,cradleManager.cradleReferenceData.nextItemIndexReference)
 
-                    let itemindex = cradleManager.cradleReferenceData.readyItemIndexReference
+                    let itemindex = cradleManager.cradleReferenceData.nextItemIndexReference
                     let spineVisiblePosOffset
                     let cradleElements = cradleManager.elements
 
@@ -150,9 +150,9 @@ export default class ScrollManager {
 
             // }
 
-            cradleManager.cradleReferenceData.readyItemIndexReference = 
+            cradleManager.cradleReferenceData.nextItemIndexReference = 
                 cradleManager.cradleReferenceData.scrollItemIndexReference
-            cradleManager.cradleReferenceData.readySpinePixelOffset = 
+            cradleManager.cradleReferenceData.nextSpinePixelOffset = 
                 cradleManager.cradleReferenceData.scrollSpinePixelOffset
 
             if (cradleProps.orientation == 'vertical') {
@@ -172,8 +172,8 @@ export default class ScrollManager {
 
             case 'repositioning': {
 
-                // cradleManager.nextItemIndexReference = cradleManager.readyItemIndexReference
-                // cradleManager.nextSpinePixelOffset = cradleManager.readySpinePixelOffset
+                // cradleManager.theNextItemIndexReference = cradleManager.nextItemIndexReference
+                // cradleManager.theNextSpinePixelOffset = cradleManager.nextSpinePixelOffset
 
                 stateManager.setCradleState('reposition')
 
