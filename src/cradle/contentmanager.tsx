@@ -22,9 +22,7 @@ export default class ContentManager {
 
    }
 
-   commonProps
-
-   content = {
+   public content = {
 
       cradleModel: null,
       headModel: null,
@@ -34,21 +32,24 @@ export default class ContentManager {
 
     }
 
-    instanceIdCounterRef = {
+    public itemElements = new Map()
+
+    private commonProps
+
+    private instanceIdCounterRef = {
        current:0
     }
-    instanceIdMap = new Map()
+    private instanceIdMap = new Map()
 
     private _previousScrollForward = undefined
 
-    itemElements = new Map()
-
-    contentCallbacksRef
+    private contentCallbacksRef
 
     // Two public methods - setCradleContent and updateCradleContent
 
     // reset cradle, including allocation between head and tail parts of the cradle
-    setCradleContent = (cradleState) => { 
+    // called only from cradle preparerender event
+    public setCradleContent = (cradleState) => { 
 
         let viewportData = this.commonProps.viewportdataRef.current
         let cradleProps = this.commonProps.cradlePropsRef.current

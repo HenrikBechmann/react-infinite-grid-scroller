@@ -59,8 +59,8 @@ export default class ServiceManager {
         let spineVisiblePosOffset
         let cradleElements = cradleManager.elements
 
-        cradleManager.cradleReferenceData.nextSpinePixelOffset = cradleManager.cradleReferenceData.readySpinePixelOffset
-        cradleManager.cradleReferenceData.nextItemIndexReference = cradleManager.cradleReferenceData.readyItemIndexReference        
+        // cradleManager.cradleReferenceData.nextSpinePixelOffset = cradleManager.cradleReferenceData.readySpinePixelOffset
+        // cradleManager.cradleReferenceData.nextItemIndexReference = cradleManager.cradleReferenceData.readyItemIndexReference        
 
         stateManager.setCradleState('reload')
 

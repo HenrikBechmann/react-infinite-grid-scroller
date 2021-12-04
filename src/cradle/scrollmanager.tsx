@@ -85,13 +85,16 @@ export default class ScrollManager {
                     cradleManager.cradleReferenceData.scrollItemIndexReference = itemindex
                     cradleManager.cradleReferenceData.scrollSpinePixelOffset = spineVisiblePosOffset
 
-                } else {
+                }
+
+                if (cradleState == 'repositioning') {
 
                     this._setScrollReferenceIndexData()
                     stateManager.setCradleState('updatereposition')
+
                 }
 
-                // TODO: re-instatiate the following
+                // TODO: re-instate the following
                 serviceManager.serviceCalls.referenceIndexCallbackRef.current && 
                     serviceManager.serviceCalls.referenceIndexCallbackRef.current(cradleManager.cradleReferenceData.scrollItemIndexReference,'scrolling', cradleState)
 
@@ -141,8 +144,16 @@ export default class ScrollManager {
 
         if (!viewportData.isResizing) {
 
-            cradleManager.cradleReferenceData.readyItemIndexReference = cradleManager.cradleReferenceData.scrollItemIndexReference
-            cradleManager.cradleReferenceData.readySpinePixelOffset = cradleManager.cradleReferenceData.scrollSpinePixelOffset
+            // if (stateManager.cradleStateRef.current == 'repositioning') {
+
+                // this._setScrollReferenceIndexData()
+
+            // }
+
+            cradleManager.cradleReferenceData.readyItemIndexReference = 
+                cradleManager.cradleReferenceData.scrollItemIndexReference
+            cradleManager.cradleReferenceData.readySpinePixelOffset = 
+                cradleManager.cradleReferenceData.scrollSpinePixelOffset
 
             if (cradleProps.orientation == 'vertical') {
 
@@ -161,8 +172,8 @@ export default class ScrollManager {
 
             case 'repositioning': {
 
-                cradleManager.nextItemIndexReference = cradleManager.readyItemIndexReference
-                cradleManager.nextSpinePixelOffset = cradleManager.readySpinePixelOffset
+                // cradleManager.nextItemIndexReference = cradleManager.readyItemIndexReference
+                // cradleManager.nextSpinePixelOffset = cradleManager.readySpinePixelOffset
 
                 stateManager.setCradleState('reposition')
 

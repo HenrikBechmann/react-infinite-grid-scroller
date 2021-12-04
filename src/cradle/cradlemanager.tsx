@@ -7,8 +7,6 @@ export default class CradleManager {
 
        this.commonProps = commonProps
 
-       // console.log('CALLING CradleManager CONSTRUCTOR')
-
        let elements = this.elements
        elements.spineRef = cradleElements.spine
        elements.headRef = cradleElements.head
@@ -18,12 +16,13 @@ export default class CradleManager {
 
        // console.log('commonProps.cradlePropsRef.current in CradleManager constructor',commonProps.cradlePropsRef.current)
 
+       // progression of references: scroll->ready->next
        this.cradleReferenceData.scrollItemIndexReference = (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
        this.cradleReferenceData.scrollSpinePixelOffset = padding
        this.cradleReferenceData.readyItemIndexReference = this.cradleReferenceData.scrollItemIndexReference
        this.cradleReferenceData.readySpinePixelOffset = this.cradleReferenceData.scrollSpinePixelOffset
-       this.cradleReferenceData.nextItemIndexReference = this.cradleReferenceData.readyItemIndexReference
-       this.cradleReferenceData.nextSpinePixelOffset = this.cradleReferenceData.readySpinePixelOffset
+       // this.cradleReferenceData.nextItemIndexReference = this.cradleReferenceData.readyItemIndexReference
+       // this.cradleReferenceData.nextSpinePixelOffset = this.cradleReferenceData.readySpinePixelOffset
 
     }
 
@@ -35,6 +34,7 @@ export default class CradleManager {
       spinePixelPos is the pixel offset of the cradle spine from the edge of the scrollblock;
          it is blockScrollPos + SpinePixelOffset
       blockScrollPos is the scrollPos of the scrollblock in relation to the viewport
+      progression is scroll -> ready -> next
    */
    cradleReferenceData = {
 
@@ -44,16 +44,16 @@ export default class CradleManager {
       readyItemIndexReference:null,
       readySpinePixelOffset:null,
 
-      nextItemIndexReference:null,
-      nextSpinePixelOffset:null,
+      // nextItemIndexReference:null,
+      // nextSpinePixelOffset:null,
 
-      currentItemIndexReference:null,
-      currentSpinePixelOffset:null,
+      // currentItemIndexReference:null,
+      // currentSpinePixelOffset:null,
 
       blockScrollPos:null,
       blockScrollProperty:null,
 
-      spinePixelPos: null
+      // spinePixelPos: null
 
    }
 
