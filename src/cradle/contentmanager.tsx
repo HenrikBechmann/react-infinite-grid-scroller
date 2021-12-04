@@ -66,7 +66,7 @@ export default class ContentManager {
         let viewportElement = viewportData.elementref.current
 
         let visibletargetindexoffset = cradleManager.cradleReferenceData.nextItemIndexReference
-        let visibletargetscrolloffset = cradleManager.cradleReferenceData.nextCradlePixelOffset
+        let visibletargetscrolloffset = cradleManager.cradleReferenceData.nextCradlePosOffset
 
         let {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
 
@@ -125,10 +125,10 @@ export default class ContentManager {
         cradleContent.tailModel = tailcontentlist
 
         cradleManager.cradleReferenceData.scrollImpliedItemIndexReference = referenceoffset
-        cradleManager.cradleReferenceData.scrollImpliedCradlePixelOffset = spinePosOffset
+        cradleManager.cradleReferenceData.scrollImpliedCradlePosOffset = spinePosOffset
 
         cradleManager.cradleReferenceData.nextItemIndexReference = referenceoffset
-        cradleManager.cradleReferenceData.nextCradlePixelOffset = spinePosOffset
+        cradleManager.cradleReferenceData.nextCradlePosOffset = spinePosOffset
 
         if (serviceManager.serviceCalls.referenceIndexCallbackRef.current) {
 
@@ -341,10 +341,10 @@ export default class ContentManager {
         }
 
         cradleManager.cradleReferenceData.scrollImpliedItemIndexReference = spineReferenceIndex
-        cradleManager.cradleReferenceData.scrollImpliedCradlePixelOffset = spinePosOffset
+        cradleManager.cradleReferenceData.scrollImpliedCradlePosOffset = spinePosOffset
 
         cradleManager.cradleReferenceData.nextItemIndexReference = spineReferenceIndex
-        cradleManager.cradleReferenceData.nextCradlePixelOffset = spinePosOffset
+        cradleManager.cradleReferenceData.nextCradlePosOffset = spinePosOffset
 
         stateManager.setCradleState('updatecontent')
 

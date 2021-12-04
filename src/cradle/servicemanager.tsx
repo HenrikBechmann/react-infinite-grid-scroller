@@ -59,20 +59,14 @@ export default class ServiceManager {
 
     scrollToItem = (index) => {
 
-        let signalsManager = this.commonProps.managersRef.current.signals
+        const signals = this.commonProps.managersRef.current.signals.signals
         let cradleManager = this.commonProps.managersRef.current.cradle
         let stateManager = this.commonProps.managersRef.current.state
-
-        let signals = signalsManager.signals
-        // let cradleManager = cradleAgentRef.current
 
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
 
-        cradleManager.cradleReferenceData.theNextSpinePixelOffset = 
-            cradleManager.cradleReferenceData.nextCradlePixelOffset
-        cradleManager.cradleReferenceData.theNextItemIndexReference = 
-            cradleManager.cradleReferenceData.nextItemIndexReference = index
+        cradleManager.cradleReferenceData.nextItemIndexReference = index
 
         stateManager.setCradleState('reposition')
 

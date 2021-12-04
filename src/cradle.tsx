@@ -413,9 +413,6 @@ const Cradle = ({
 
         if (viewportData.isResizing) {
 
-            // cradleManager.cradleReferenceData.theNextItemIndexReference = cradleManager.cradleReferenceData.nextItemIndexReference
-            // cradleManager.cradleReferenceData.theNextSpinePixelOffset = cradleManager.cradleReferenceData.nextCradlePixelOffset
-
             let signals = signalsManager.signals
             signals.pauseCellObserver = true
             signals.pauseCradleIntersectionObserver = true
@@ -440,11 +437,11 @@ const Cradle = ({
 
         if ((viewportDataRef.current.portal) && (viewportDataRef.current.portal.isreparenting)) {
             // if (viewportDataRef.current.index == 0) {
-            //     console.log('CRADLE calling resetscrollposition viewportDataRef.current.index, viewportDataRref.current in cradle for reparenting ready',
+            //     console.log('CRADLE calling restorescrollposition viewportDataRef.current.index, viewportDataRref.current in cradle for reparenting ready',
             //         viewportDataRef.current.index, viewportDataRef)
             // }
             viewportDataRef.current.portal.isreparenting = false
-            setCradleState('resetscrollposition')
+            setCradleState('restorescrollposition')
         }
 
     },[cradleState,viewportDataRef.current.portal?.isreparenting])
@@ -453,9 +450,6 @@ const Cradle = ({
     useEffect(()=>{
 
         if (cradleStateRef.current == 'setup') return
-
-        // cradleManager.cradleReferenceData.theNextItemIndexReference = cradleManager.cradleReferenceData.nextItemIndexReference
-        // cradleManager.cradleReferenceData.theNextSpinePixelOffset = cradleManager.cradleReferenceData.nextCradlePixelOffset
 
         let signals = signalsManager.signals
 
@@ -477,14 +471,11 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        // cradleManager.cradleReferenceData.theNextItemIndexReference = cradleManager.cradleReferenceData.nextItemIndexReference
-        // cradleManager.cradleReferenceData.theNextSpinePixelOffset = cradleManager.cradleReferenceData.nextCradlePixelOffset
-
         // get previous ratio
         let previousCellPixelLength = (orientation == 'vertical')?
             cradlePropsRef.current.cellWidth:cradlePropsRef.current.cellHeight
         // let previousSpineOffset = cradleManager.cradleReferenceData.theNextSpinePixelOffset
-        let previousSpineOffset = cradleManager.cradleReferenceData.nextCradlePixelOffset
+        let previousSpineOffset = cradleManager.cradleReferenceData.nextCradlePosOffset
 
         let previousratio = previousSpineOffset/previousCellPixelLength
 
@@ -493,8 +484,7 @@ const Cradle = ({
 
         let currentSpineOffset = previousratio * currentCellPixelLength
         
-        // cradleManager.cradleReferenceData.theNextSpinePixelOffset = Math.round(currentSpineOffset)
-        cradleManager.cradleReferenceData.nextCradlePixelOffset = Math.round(currentSpineOffset)
+        cradleManager.cradleReferenceData.nextCradlePosOffset = Math.round(currentSpineOffset)
 
         let signals = signalsManager.signals
 
@@ -659,7 +649,7 @@ const Cradle = ({
             case 'repositioning':
                 break;
 
-            case 'resetscrollposition': {
+            case 'restorescrollposition': {
 
                 viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
                     Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
@@ -697,7 +687,7 @@ const Cradle = ({
     },[cradleState])
 
     // standard processing stages
-    useEffect(()=> {
+    useLayoutEffect(()=> {
 
         let viewportData = viewportDataRef.current
         switch (cradleState) {

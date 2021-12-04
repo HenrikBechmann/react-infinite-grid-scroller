@@ -14,46 +14,34 @@ export default class CradleManager {
 
        let {defaultVisibleIndex, listsize, padding} = this.commonProps.cradlePropsRef.current
 
-       // console.log('commonProps.cradlePropsRef.current in CradleManager constructor',commonProps.cradlePropsRef.current)
-
-       // progression of references: scroll->ready->next
+       // progression of references: scroll->next
        this.cradleReferenceData.scrollImpliedItemIndexReference = (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
-       this.cradleReferenceData.scrollImpliedCradlePixelOffset = padding
+       this.cradleReferenceData.scrollImpliedCradlePosOffset = padding
        this.cradleReferenceData.nextItemIndexReference = this.cradleReferenceData.scrollImpliedItemIndexReference
-       this.cradleReferenceData.nextCradlePixelOffset = this.cradleReferenceData.scrollImpliedCradlePixelOffset
-       // this.cradleReferenceData.theNextItemIndexReference = this.cradleReferenceData.nextItemIndexReference
-       // this.cradleReferenceData.theNextSpinePixelOffset = this.cradleReferenceData.nextCradlePixelOffset
+       this.cradleReferenceData.nextCradlePosOffset = this.cradleReferenceData.scrollImpliedCradlePosOffset
 
     }
 
-    commonProps
+    commonProps // standard for managers, but not used here yet
 
    /* 
       ItemIndexReference is the sequential index of first item of the cradle tail
-      SpinePixelOffset is the pixel offset of the cradle spine from the edge of the viewport
-      spinePixelPos is the pixel offset of the cradle spine from the edge of the scrollblock;
-         it is blockScrollPos + SpinePixelOffset
+      CradlePosOffset is the pixel offset of the cradle spine from the edge of the viewport
       blockScrollPos is the scrollPos of the scrollblock in relation to the viewport
-      progression is scroll -> ready -> next
+      progression is scroll -> next
    */
    cradleReferenceData = {
 
       scrollImpliedItemIndexReference:null,
-      scrollImpliedCradlePixelOffset:null,
+      scrollImpliedCradlePosOffset:null,
 
       nextItemIndexReference:null,
-      nextCradlePixelOffset:null,
+      nextCradlePosOffset:null,
 
-      // theNextItemIndexReference:null,
-      // theNextSpinePixelOffset:null,
-
-      // currentItemIndexReference:null,
-      // currentSpinePixelOffset:null,
-
-      blockScrollPos:null,
+      // to set scrollPos after reposition, or
+      // to restore scrollTop or scrollLeft after clobbered by DOM
+      blockScrollPos:null, 
       blockScrollProperty:null,
-
-      // spinePixelPos: null
 
    }
 
