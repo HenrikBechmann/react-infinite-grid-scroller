@@ -1,9 +1,9 @@
 // cradlemanager.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-import CradleManagement from './cradlesuper'
+import CradleParent from './cradleparent'
 
-export default class CradleManager extends CradleManagement{
+export default class CradleManager extends CradleParent{
 
     constructor(commonPropsRef, cradleElements) {
 
@@ -55,7 +55,11 @@ export default class CradleManager extends CradleManagement{
 
       spinePixelPos: null
 
-   }    
+   }
+
+   cradleConfigRef
+
+   cradlePropsRef    
 
     elements = {
        spineRef:null, 

@@ -5,9 +5,9 @@ import { ResizeObserver } from '@juggle/resize-observer'
 
 const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
 
-import CradleManagement from './cradlesuper'
+import CradleParent from './cradleparent'
 
-export default class ObserversManager extends CradleManagement{
+export default class ObserversManager extends CradleParent{
 
    constructor(commonPropsRef) {
 
@@ -157,7 +157,7 @@ export default class ObserversManager extends CradleManagement{
                 this.cellobservercallback,
                 {
                     root:viewportData.elementref.current, 
-                    threshold:this._cradleconfigRef.current.cellObserverThreshold,
+                    threshold:this._cradleConfigRef.current.cellObserverThreshold,
                 } 
             )
             return this.cellIntersect.observer

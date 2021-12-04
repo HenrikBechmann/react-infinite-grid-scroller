@@ -1,7 +1,7 @@
 // contentmanager.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-import CradleManagement from './cradlesuper'
+import CradleParent from './cradleparent'
 import { 
     getUICellShellList, 
     calcHeadAndTailChanges,
@@ -13,7 +13,7 @@ import {
 
 } from './contentfunctions'
 
-export default class ContentManager extends CradleManagement{
+export default class ContentManager extends CradleParent{
 
    constructor(commonPropsRef, contentCallbacksRef) {
 
@@ -51,7 +51,7 @@ export default class ContentManager extends CradleManagement{
 
         let viewportData = this._viewportdataRef.current
         let cradleProps = this._cradlePropsRef.current
-        let cradleConfig = this._cradleconfigRef.current
+        let cradleConfig = this._cradleConfigRef.current
         let scrollManager = this._managersRef.current.scroll
         let cradleManager = this._managersRef.current.cradle
         let stateManager = this._managersRef.current.state
@@ -216,7 +216,7 @@ export default class ContentManager extends CradleManagement{
 
         let cradleElements = cradleManager.elements
         let cradleContent = this.content
-        let cradleConfig = this._cradleconfigRef.current
+        let cradleConfig = this._cradleConfigRef.current
 
         let itemElements = this.itemElements
 

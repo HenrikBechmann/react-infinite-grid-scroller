@@ -1,7 +1,7 @@
-// cradlesuper.tsx
+// cradleparent.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-export default class CradleManagement {
+export default class CradleParent {
 
     constructor(commonPropsRef) {
 
@@ -10,7 +10,7 @@ export default class CradleManagement {
        this._managersRef = managersRef
        this._viewportdataRef = viewportdataRef
        this._cradlePropsRef = cradlePropsRef
-       this._cradleconfigRef = cradleConfigRef
+       this._cradleConfigRef = cradleConfigRef
        this._cradleDataRef = cradleDataRef
 
 
@@ -19,7 +19,7 @@ export default class CradleManagement {
     protected _managersRef
     protected _viewportdataRef
     protected _cradlePropsRef
-    protected _cradleconfigRef
+    protected _cradleConfigRef
     protected _cradleDataRef
 
 }

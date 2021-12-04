@@ -1,11 +1,11 @@
 // scrollmanager.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-import CradleManagement from './cradlesuper'
+import CradleParent from './cradleparent'
 
 const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 200
 
-export default class ScrollManager extends CradleManagement{
+export default class ScrollManager extends CradleParent{
 
     constructor(commonPropsRef) {
 
@@ -183,7 +183,7 @@ export default class ScrollManager extends CradleManagement{
 
         let viewportData = this._viewportdataRef.current
         let cradleProps = this._cradlePropsRef.current
-        let cradleConfig = this._cradleconfigRef.current
+        let cradleConfig = this._cradleConfigRef.current
 
         let {crosscount} = cradleConfig
         let viewportElement = viewportData.elementref.current

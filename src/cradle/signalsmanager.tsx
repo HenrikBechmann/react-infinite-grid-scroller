@@ -1,7 +1,7 @@
 // singalsmanager.txt
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-import CradleManagement from './cradlesuper'
+import CradleParent from './cradleparent'
 
 const signalsbaseline = {
     pauseCellObserver: true,
@@ -13,7 +13,7 @@ const signalsbaseline = {
     isCradleInView:true,
 }
 
-export default class SignalsManager extends CradleManagement {
+export default class SignalsManager extends CradleParent {
 
     constructor(commonPropsRef) {
 

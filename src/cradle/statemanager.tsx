@@ -1,9 +1,9 @@
 // statemanager.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-import CradleManagement from './cradlesuper'
+import CradleParent from './cradleparent'
 
-export default class StateManager extends CradleManagement{
+export default class StateManager extends CradleParent{
 
     constructor(commonPropsRef,cradleStateRef,setCradleState,isMounted) {
 
