@@ -165,15 +165,15 @@ export const PortalWrapper = ({ inportal, index }) => {
 export const PortalList = ({ scrollerData }) => {
 
     const [portalList, setPortalList] = useState(null)
-    const isMounted = useRef(true)
+    const isMountedRef = useRef(true)
 
     useEffect(()=>{
 
         scrollerData.setListState = ()=>{
-            isMounted.current && setPortalList(scrollerData.portalList)
+            isMountedRef.current && setPortalList(scrollerData.portalList)
         }
 
-        return () => {isMounted.current = false}
+        return () => {isMountedRef.current = false}
 
     },[]) 
 

@@ -181,13 +181,13 @@ const Cradle = ({
     // --------------------------[ bundle cradleProps ]----------------------------
 
     // functions and styles handled separately
-    const isMounted = useRef(true)
+    const isMountedRef = useRef(true)
     useLayoutEffect(()=>{
         const portalmanager = cradleDataRef.current.portalManager = new PortalManager()
 
-        // cleanup portal repository; clear isMounted
+        // cleanup portal repository; clear isMountedRef
         return () => {
-            isMounted.current = false
+            isMountedRef.current = false
         }
 
     },[])
@@ -337,7 +337,7 @@ const Cradle = ({
         return [
             new ScrollManager(commonProps),
             new SignalsManager(commonProps),
-            new StateManager(commonProps,cradleStateRef,setCradleState,isMounted),
+            new StateManager(commonProps,cradleStateRef,setCradleState,isMountedRef),
             new ContentManager(commonProps, contentCallbacksRef),
             new CradleManager(commonProps, cradleElementsRef.current),
             new InterruptManager(commonProps),
@@ -728,7 +728,7 @@ const Cradle = ({
             case 'normalizesignals': {
                 setTimeout(()=> {
 
-                    if (!isMounted.current) return
+                    if (!isMountedRef.current) return
                     // console.log('normalizesignals for cradle',scrollerID)
                     if (!viewportData.isResizing) {
                         // redundant scroll position to avoid accidental positioning at tail end of reposition

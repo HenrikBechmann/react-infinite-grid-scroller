@@ -122,7 +122,7 @@ export default class ScrollManager {
         // let cradleMaster = this._managersRef.current.cradleMaster
         let contentManager = this.commonProps.managersRef.current.content
 
-        if (!stateManager.isMounted.current) return
+        if (!stateManager.isMountedRef.current) return
 
         let spineVisiblePosOffset
         let cradleElements = cradleManager.elements

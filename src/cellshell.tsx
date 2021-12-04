@@ -44,7 +44,7 @@ const CellShell = ({
 
     const shellRef = useRef(null)
     const instanceIDRef = useRef(instanceID)
-    const isMounted = useRef(true)
+    const isMountedRef = useRef(true)
     const callbackrequestRef = useRef(null)
     const portaldataRef = useRef(null)
 
@@ -53,7 +53,7 @@ const CellShell = ({
     // for unmount
     useEffect(()=>{
 
-        return () => {isMounted.current = false}
+        return () => {isMountedRef.current = false}
 
     },[])
 
@@ -89,7 +89,7 @@ const CellShell = ({
 
             setCellStatus('renderplaceholder')
 
-            if (isMounted.current && getItem) {
+            if (isMountedRef.current && getItem) {
 
                 callbackrequestRef.current = requestidlecallback(()=> {
                     const contentItem = getItem(index)
@@ -97,7 +97,7 @@ const CellShell = ({
                     if (contentItem && contentItem.then) { // it's a promise
 
                         contentItem.then((usercontent) => {
-                            if (isMounted.current) { 
+                            if (isMountedRef.current) { 
 
                                 portaldataRef.current.hasusercontent = true
                                 portaldataRef.current = portalManager.updatePortal(index,usercontent)
@@ -113,7 +113,7 @@ const CellShell = ({
 
                     } else {
 
-                        if (isMounted.current) {
+                        if (isMountedRef.current) {
 
                             if (contentItem) {
                                 const usercontent = contentItem
@@ -194,7 +194,7 @@ const CellShell = ({
     useEffect(()=>{
 
         let newStyles = getShellStyles(orientation, cellHeight, cellWidth, styles)
-        if (isMounted.current) {
+        if (isMountedRef.current) {
             saveStyles(newStyles)
         }
 

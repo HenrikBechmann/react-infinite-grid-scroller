@@ -121,7 +121,7 @@ export default class InterruptManager {
 
         }
 
-        stateManager.isMounted.current && contentManager.updateCradleContent(movedentries,'cellObserver')
+        stateManager.isMountedRef.current && contentManager.updateCradleContent(movedentries,'cellObserver')
 
     }
 
