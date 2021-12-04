@@ -52,19 +52,19 @@ export default class ContentManager extends CradleManagement{
         let viewportData = this._viewportdataRef.current
         let cradleProps = this._cradlePropsRef.current
         let cradleConfig = this._cradleconfigRef.current
-        let scrollAgent = this._managersRef.current.scroll
-        let cradleAgent = this._managersRef.current.cradle
-        let stateAgent = this._managersRef.current.state
-        let serviceAgent = this._managersRef.current.service
-        let observersAgent = this._managersRef.current.observers
+        let scrollManager = this._managersRef.current.scroll
+        let cradleManager = this._managersRef.current.cradle
+        let stateManager = this._managersRef.current.state
+        let serviceManager = this._managersRef.current.service
+        let observersManager = this._managersRef.current.observers
         let cradleData = this._cradleDataRef.current
 
         // if (viewportData.index == 0) console.log('cradleState, cradleData in setCradleContent',cradleState, cradleData)
 
         let viewportElement = viewportData.elementref.current
 
-        let visibletargetindexoffset = cradleAgent.cradleReferenceData.readyItemIndexReference
-        let visibletargetscrolloffset = cradleAgent.cradleReferenceData.readySpinePixelOffset
+        let visibletargetindexoffset = cradleManager.cradleReferenceData.readyItemIndexReference
+        let visibletargetscrolloffset = cradleManager.cradleReferenceData.readySpinePixelOffset
 
         let {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
 
@@ -101,7 +101,7 @@ export default class ContentManager extends CradleManagement{
             tailchangecount:contentCount,
             localContentList,
             callbacks:this.contentCallbacksRef.current,
-            observer: observersAgent.cellIntersect.observer,
+            observer: observersManager.cellIntersect.observer,
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
@@ -122,29 +122,29 @@ export default class ContentManager extends CradleManagement{
         cradleContent.headModel = headcontentlist
         cradleContent.tailModel = tailcontentlist
 
-        cradleAgent.cradleReferenceData.scrollItemIndexReference = referenceoffset
-        cradleAgent.cradleReferenceData.scrollSpinePixelOffset = spinePosOffset
+        cradleManager.cradleReferenceData.scrollItemIndexReference = referenceoffset
+        cradleManager.cradleReferenceData.scrollSpinePixelOffset = spinePosOffset
 
-        cradleAgent.cradleReferenceData.readyItemIndexReference = referenceoffset
-        cradleAgent.cradleReferenceData.readySpinePixelOffset = spinePosOffset
+        cradleManager.cradleReferenceData.readyItemIndexReference = referenceoffset
+        cradleManager.cradleReferenceData.readySpinePixelOffset = spinePosOffset
 
-        if (serviceAgent.serviceCalls.referenceIndexCallbackRef.current) {
+        if (serviceManager.serviceCalls.referenceIndexCallbackRef.current) {
 
             let cstate = cradleState
             if (cstate == 'setreload') cstate = 'reload'
-            serviceAgent.serviceCalls.referenceIndexCallbackRef.current(
+            serviceManager.serviceCalls.referenceIndexCallbackRef.current(
 
-                cradleAgent.cradleReferenceData.readyItemIndexReference,'setCradleContent', cstate)
+                cradleManager.cradleReferenceData.readyItemIndexReference,'setCradleContent', cstate)
         
         }
 
-        let cradleElements = cradleAgent.elements //cradleElementsRef.current
+        let cradleElements = cradleManager.elements //cradleElementsRef.current
 
-        cradleAgent.cradleReferenceData.blockScrollPos = scrollblockOffset - spinePosOffset
+        cradleManager.cradleReferenceData.blockScrollPos = scrollblockOffset - spinePosOffset
         
         if (orientation == 'vertical') {
 
-            cradleAgent.cradleReferenceData.blockScrollProperty = 'scrollTop'
+            cradleManager.cradleReferenceData.blockScrollProperty = 'scrollTop'
 
             cradleElements.spineRef.current.style.top = (scrollblockOffset + spineAdjustment) + 'px'
             cradleElements.spineRef.current.style.left = 'auto'
@@ -152,7 +152,7 @@ export default class ContentManager extends CradleManagement{
 
         } else { // orientation = 'horizontal'
 
-            cradleAgent.cradleReferenceData.blockScrollProperty = 'scrollLeft'
+            cradleManager.cradleReferenceData.blockScrollProperty = 'scrollLeft'
 
             cradleElements.spineRef.current.style.top = 'auto'
             cradleElements.spineRef.current.style.left = (scrollblockOffset + spineAdjustment) + 'px'
@@ -166,10 +166,10 @@ export default class ContentManager extends CradleManagement{
 
         let viewportData = this._viewportdataRef.current
         let cradleProps = this._cradlePropsRef.current
-        let scrollAgent = this._managersRef.current.scroll
-        let cradleAgent = this._managersRef.current.cradle
-        let stateAgent = this._managersRef.current.state
-        let observersAgent = this._managersRef.current.observers
+        let scrollManager = this._managersRef.current.scroll
+        let cradleManager = this._managersRef.current.cradle
+        let stateManager = this._managersRef.current.state
+        let observersManager = this._managersRef.current.observers
 
         let cradleData = this._cradleDataRef.current
 
@@ -196,7 +196,7 @@ export default class ContentManager extends CradleManagement{
 
         // ----------------------------[ 1. initialize ]----------------------------
 
-        let scrollPositions = scrollAgent.scrollPositions //scrollPositionsRef.current
+        let scrollPositions = scrollManager.scrollPositions //scrollPositionsRef.current
 
         let scrollforward
         if (scrollPositions.current == scrollPositions.previous) { // edge case 
@@ -214,7 +214,7 @@ export default class ContentManager extends CradleManagement{
             return // init call
         }
 
-        let cradleElements = cradleAgent.elements
+        let cradleElements = cradleManager.elements
         let cradleContent = this.content
         let cradleConfig = this._cradleconfigRef.current
 
@@ -289,7 +289,7 @@ export default class ContentManager extends CradleManagement{
                 headchangecount,
                 tailchangecount,
                 cradleReferenceIndex,
-                observer: observersAgent.cellIntersect.observer,
+                observer: observersManager.cellIntersect.observer,
                 callbacks:this.contentCallbacksRef.current,
                 instanceIdCounterRef:this.instanceIdCounterRef,
             })
@@ -320,16 +320,16 @@ export default class ContentManager extends CradleManagement{
             
             if (cradleProps.orientation == 'vertical') {
 
-                cradleAgent.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
-                cradleAgent.cradleReferenceData.blockScrollProperty = 'scrollTop'
+                cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
+                cradleManager.cradleReferenceData.blockScrollProperty = 'scrollTop'
                 cradleElements.spineRef.current.style.top = viewportElement.scrollTop + spinePosOffset + 'px'
                 cradleElements.spineRef.current.style.left = 'auto'
                 cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
 
             } else {
 
-                cradleAgent.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
-                cradleAgent.cradleReferenceData.blockScrollProperty = 'scrollLeft'
+                cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
+                cradleManager.cradleReferenceData.blockScrollProperty = 'scrollLeft'
                 cradleElements.spineRef.current.style.top = 'auto'
                 cradleElements.spineRef.current.style.left = viewportElement.scrollLeft + spinePosOffset + 'px'
                 cradleElements.headRef.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
@@ -338,13 +338,13 @@ export default class ContentManager extends CradleManagement{
 
         }
 
-        cradleAgent.cradleReferenceData.scrollItemIndexReference = spineReferenceIndex
-        cradleAgent.cradleReferenceData.scrollSpinePixelOffset = spinePosOffset
+        cradleManager.cradleReferenceData.scrollItemIndexReference = spineReferenceIndex
+        cradleManager.cradleReferenceData.scrollSpinePixelOffset = spinePosOffset
 
-        cradleAgent.cradleReferenceData.readyItemIndexReference = spineReferenceIndex
-        cradleAgent.cradleReferenceData.readySpinePixelOffset = spinePosOffset
+        cradleManager.cradleReferenceData.readyItemIndexReference = spineReferenceIndex
+        cradleManager.cradleReferenceData.readySpinePixelOffset = spinePosOffset
 
-        stateAgent.setCradleState('updatecontent')
+        stateManager.setCradleState('updatecontent')
 
     }
 

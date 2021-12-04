@@ -17,15 +17,15 @@ export default class ServiceManager extends CradleManagement{
 
     getVisibleList = () => {
 
-        let contentAgent = this._managersRef.current.content        
+        let contentManager = this._managersRef.current.content        
 
-        let cradleContent = contentAgent.content
+        let cradleContent = contentManager.content
         let viewportData = this._viewportdataRef.current
-        let cradleAgent = this._managersRef.current.cradle
-        let cradleElements = cradleAgent.elements
+        let cradleManager = this._managersRef.current.cradle
+        let cradleElements = cradleManager.elements
 
         return getVisibleItemsList({
-            itemElementMap:contentAgent.itemElements,
+            itemElementMap:contentManager.itemElements,
             viewportElement:viewportData.elementref.current,
             cradleElements, 
             cradleProps:this._cradlePropsRef.current,
@@ -35,8 +35,8 @@ export default class ServiceManager extends CradleManagement{
     }
 
     getContentList = () => {
-        let contentAgent = this._managersRef.current.content        
-        let contentlist = Array.from(contentAgent.itemElements)
+        let contentManager = this._managersRef.current.content        
+        let contentlist = Array.from(contentManager.itemElements)
 
         contentlist.sort((a,b)=>{
             return (a[0] < b[0])?-1:1
@@ -47,43 +47,43 @@ export default class ServiceManager extends CradleManagement{
 
     reload = () => {
 
-        let cradleAgent = this._managersRef.current.cradle
-        let signalsAgent = this._managersRef.current.signals
-        let stateAgent = this._managersRef.current.state
-        let signals = signalsAgent.signals
+        let cradleManager = this._managersRef.current.cradle
+        let signalsManager = this._managersRef.current.signals
+        let stateManager = this._managersRef.current.state
+        let signals = signalsManager.signals
         // let viewportData = this._viewportdata
 
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
 
         let spineVisiblePosOffset
-        let cradleElements = cradleAgent.elements
+        let cradleElements = cradleManager.elements
 
-        cradleAgent.cradleReferenceData.nextSpinePixelOffset = cradleAgent.cradleReferenceData.readySpinePixelOffset
-        cradleAgent.cradleReferenceData.nextItemIndexReference = cradleAgent.cradleReferenceData.readyItemIndexReference        
+        cradleManager.cradleReferenceData.nextSpinePixelOffset = cradleManager.cradleReferenceData.readySpinePixelOffset
+        cradleManager.cradleReferenceData.nextItemIndexReference = cradleManager.cradleReferenceData.readyItemIndexReference        
 
-        stateAgent.setCradleState('reload')
+        stateManager.setCradleState('reload')
 
     }
 
     scrollToItem = (index) => {
 
-        let signalsAgent = this._managersRef.current.signals
-        let cradleAgent = this._managersRef.current.cradle
-        let stateAgent = this._managersRef.current.state
+        let signalsManager = this._managersRef.current.signals
+        let cradleManager = this._managersRef.current.cradle
+        let stateManager = this._managersRef.current.state
 
-        let signals = signalsAgent.signals
-        // let cradleAgent = cradleAgentRef.current
+        let signals = signalsManager.signals
+        // let cradleManager = cradleAgentRef.current
 
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
 
-        cradleAgent.cradleReferenceData.nextSpinePixelOffset = 
-            cradleAgent.cradleReferenceData.readySpinePixelOffset
-        cradleAgent.cradleReferenceData.nextItemIndexReference = 
-            cradleAgent.cradleReferenceData.readyItemIndexReference = index
+        cradleManager.cradleReferenceData.nextSpinePixelOffset = 
+            cradleManager.cradleReferenceData.readySpinePixelOffset
+        cradleManager.cradleReferenceData.nextItemIndexReference = 
+            cradleManager.cradleReferenceData.readyItemIndexReference = index
 
-        stateAgent.setCradleState('reposition')
+        stateManager.setCradleState('reposition')
 
     }
 

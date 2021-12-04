@@ -18,17 +18,17 @@ export default class ObserversManager extends CradleManagement{
    // TODO: stub
    cradleresizeobservercallback = (entries) => {
 
-       let signalsAgent = this._managersRef.current.signals
-       if (signalsAgent.signals.pauseCradleResizeObserver) return
+       let signalsManager = this._managersRef.current.signals
+       if (signalsManager.signals.pauseCradleResizeObserver) return
 
    }
 
     cradleIntersectionObserverCallback = (entries) => {
 
-        let signalsAgent = this._managersRef.current.signals
-        let signals = signalsAgent.signals
-        let stateAgent = this._managersRef.current.state
-        let contentAgent = this._managersRef.current.content
+        let signalsManager = this._managersRef.current.signals
+        let signals = signalsManager.signals
+        let stateManager = this._managersRef.current.state
+        let contentManager = this._managersRef.current.content
 
         if (signals.pauseCradleIntersectionObserver) return
 
@@ -52,7 +52,7 @@ export default class ObserversManager extends CradleManagement{
         let viewportData = this._viewportdataRef.current
         if (!signals.isCradleInView) 
         {
-            let cradleState = stateAgent.cradleStateRef.current        
+            let cradleState = stateManager.cradleStateRef.current        
             if (
                 !viewportData.isResizing &&
                 !(cradleState == 'resized') &&
@@ -73,12 +73,12 @@ export default class ObserversManager extends CradleManagement{
                 viewportData.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
                 signals.pauseCellObserver = true
                 // pauseCradleIntersectionObserverRef.current = true
-                const cradleContent = contentAgent.content
+                const cradleContent = contentManager.content
                 cradleContent.headModel = []
                 cradleContent.tailModel = []
                 cradleContent.headView = []
                 cradleContent.tailView = []
-                stateAgent.setCradleState('repositioning')
+                stateManager.setCradleState('repositioning')
 
             }
         }
@@ -97,9 +97,9 @@ export default class ObserversManager extends CradleManagement{
 
         }
 
-        let signalsAgent = this._managersRef.current.signals
-        let contentAgent = this._managersRef.current.content
-        let stateAgent = this._managersRef.current.state
+        let signalsManager = this._managersRef.current.signals
+        let contentManager = this._managersRef.current.content
+        let stateManager = this._managersRef.current.state
 
         let movedentries = []
 
@@ -115,13 +115,13 @@ export default class ObserversManager extends CradleManagement{
             }
         }
 
-        if (signalsAgent.signals.pauseCellObserver) {
+        if (signalsManager.signals.pauseCellObserver) {
 
             return
 
         }
 
-        stateAgent.isMounted.current && contentAgent.updateCradleContent(movedentries,'cellObserver')
+        stateManager.isMounted.current && contentManager.updateCradleContent(movedentries,'cellObserver')
 
     }
 

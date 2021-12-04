@@ -310,11 +310,11 @@ const Cradle = ({
 
         if (reportType == 'register') {
 
-            contentAgent.itemElements.set(index,shellref)
+            contentManager.itemElements.set(index,shellref)
 
         } else if (reportType == 'unregister') {
 
-            contentAgent.itemElements.delete(index)
+            contentManager.itemElements.delete(index)
 
         }
 
@@ -325,14 +325,14 @@ const Cradle = ({
     })
 
     const [
-        scrollAgent,
-        signalsAgent,
-        stateAgent,
-        contentAgent,
-        cradleAgent,
-        observersAgent,
-        serviceAgent,
-        stylesAgent,
+        scrollManager,
+        signalsManager,
+        stateManager,
+        contentManager,
+        cradleManager,
+        observersManager,
+        serviceManager,
+        stylesManager,
     ] = useMemo(()=>{
         return [
             new ScrollManager(commonPropsRef),
@@ -348,20 +348,20 @@ const Cradle = ({
 
     // to instantiate managersRef
     const managementsetRef = useRef({
-        scroll:scrollAgent,
-        signals:signalsAgent, 
-        state:stateAgent,
-        content:contentAgent, 
-        cradle:cradleAgent, 
-        service:serviceAgent,
-        observers:observersAgent,
-        styles:stylesAgent,
+        scroll:scrollManager,
+        signals:signalsManager, 
+        state:stateManager,
+        content:contentManager, 
+        cradle:cradleManager, 
+        service:serviceManager,
+        observers:observersManager,
+        styles:stylesManager,
     })
 
     managersRef.current = managementsetRef.current
 
     // if (viewportData.isReparenting) {
-    //     signalsAgent.resetSignals() 
+    //     signalsManager.resetSignals() 
     // }
 
     // ------------------------------------------------------------------------
@@ -371,19 +371,19 @@ const Cradle = ({
     useEffect(()=>{
 
         if (functions?.hasOwnProperty('scrollToItem')) {
-            functions.scrollToItem = serviceAgent.scrollToItem
+            functions.scrollToItem = serviceManager.scrollToItem
         } 
 
         if (functions?.hasOwnProperty('getVisibleList')) {
-            functions.getVisibleList = serviceAgent.getVisibleList
+            functions.getVisibleList = serviceManager.getVisibleList
         } 
 
         if (functions?.hasOwnProperty('getContentList')) {
-            functions.getContentList = serviceAgent.getContentList
+            functions.getContentList = serviceManager.getContentList
         } 
 
         if (functions?.hasOwnProperty('reload')) {
-            functions.reload = serviceAgent.reload
+            functions.reload = serviceManager.reload
         }
 
         referenceIndexCallbackRef.current = functions?.referenceIndexCallback
@@ -393,11 +393,11 @@ const Cradle = ({
     // initialize window scroll listener
     useEffect(() => {
         let viewportdata = viewportDataRef.current
-        viewportdata.elementref.current.addEventListener('scroll',scrollAgent.onScroll)
+        viewportdata.elementref.current.addEventListener('scroll',scrollManager.onScroll)
 
         return () => {
 
-            viewportdata.elementref.current && viewportdata.elementref.current.removeEventListener('scroll',scrollAgent.onScroll)
+            viewportdata.elementref.current && viewportdata.elementref.current.removeEventListener('scroll',scrollManager.onScroll)
 
         }
 
@@ -413,10 +413,10 @@ const Cradle = ({
 
         if (viewportData.isResizing) {
 
-            cradleAgent.cradleReferenceData.nextItemIndexReference = cradleAgent.cradleReferenceData.readyItemIndexReference
-            cradleAgent.cradleReferenceData.nextSpinePixelOffset = cradleAgent.cradleReferenceData.readySpinePixelOffset
+            cradleManager.cradleReferenceData.nextItemIndexReference = cradleManager.cradleReferenceData.readyItemIndexReference
+            cradleManager.cradleReferenceData.nextSpinePixelOffset = cradleManager.cradleReferenceData.readySpinePixelOffset
 
-            let signals = signalsAgent.signals
+            let signals = signalsManager.signals
             signals.pauseCellObserver = true
             signals.pauseCradleIntersectionObserver = true
             signals.pauseCradleResizeObserver = true
@@ -454,10 +454,10 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        cradleAgent.cradleReferenceData.nextItemIndexReference = cradleAgent.cradleReferenceData.readyItemIndexReference
-        cradleAgent.cradleReferenceData.nextSpinePixelOffset = cradleAgent.cradleReferenceData.readySpinePixelOffset
+        cradleManager.cradleReferenceData.nextItemIndexReference = cradleManager.cradleReferenceData.readyItemIndexReference
+        cradleManager.cradleReferenceData.nextSpinePixelOffset = cradleManager.cradleReferenceData.readySpinePixelOffset
 
-        let signals = signalsAgent.signals
+        let signals = signalsManager.signals
 
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
@@ -477,13 +477,13 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        cradleAgent.cradleReferenceData.nextItemIndexReference = cradleAgent.cradleReferenceData.readyItemIndexReference
-        cradleAgent.cradleReferenceData.nextSpinePixelOffset = cradleAgent.cradleReferenceData.readySpinePixelOffset
+        cradleManager.cradleReferenceData.nextItemIndexReference = cradleManager.cradleReferenceData.readyItemIndexReference
+        cradleManager.cradleReferenceData.nextSpinePixelOffset = cradleManager.cradleReferenceData.readySpinePixelOffset
 
         // get previous ratio
         let previousCellPixelLength = (orientation == 'vertical')?
             cradlePropsRef.current.cellWidth:cradlePropsRef.current.cellHeight
-        let previousSpineOffset = cradleAgent.cradleReferenceData.nextSpinePixelOffset
+        let previousSpineOffset = cradleManager.cradleReferenceData.nextSpinePixelOffset
 
         let previousratio = previousSpineOffset/previousCellPixelLength
 
@@ -492,9 +492,9 @@ const Cradle = ({
 
         let currentSpineOffset = previousratio * currentCellPixelLength
         
-        cradleAgent.cradleReferenceData.nextSpinePixelOffset = Math.round(currentSpineOffset)
+        cradleManager.cradleReferenceData.nextSpinePixelOffset = Math.round(currentSpineOffset)
 
-        let signals = signalsAgent.signals
+        let signals = signalsManager.signals
 
         signals.pauseCellObserver = true
         // pauseCradleIntersectionObserverRef.current = true
@@ -520,7 +520,7 @@ const Cradle = ({
     // styles for wings and spine
     const [cradleHeadStyle, cradleTailStyle, cradleSpineStyle] = useMemo(()=> {
 
-        return stylesAgent.setCradleStyles({
+        return stylesManager.setCradleStyles({
 
             orientation, 
             cellHeight, 
@@ -564,8 +564,8 @@ const Cradle = ({
     // set up cradle resizeobserver
     useEffect(() => {
 
-        let observer = observersAgent.cradleResize.create()
-        let cradleElements = cradleAgent.elements
+        let observer = observersManager.cradleResize.create()
+        let cradleElements = cradleManager.elements
         observer.observe(cradleElements.headRef.current)
         observer.observe(cradleElements.tailRef.current)
 
@@ -583,8 +583,8 @@ const Cradle = ({
     // cradle goes out of the observer scope, the "repositioning" cradle state is triggerd.
     useEffect(() => {
 
-        let observer = observersAgent.cradleIntersect.create()
-        let cradleElements = cradleAgent.elements
+        let observer = observersManager.cradleIntersect.create()
+        let cradleElements = cradleManager.elements
         observer.observe(cradleElements.headRef.current)
         observer.observe(cradleElements.tailRef.current)
 
@@ -620,9 +620,9 @@ const Cradle = ({
     // responds to change of orientation
     useEffect(() => {
 
-        let observer = observersAgent.cellIntersect.observer
+        let observer = observersManager.cellIntersect.observer
         if (observer) observer.disconnect()
-        observer = observersAgent.cellIntersect.create()
+        observer = observersManager.cellIntersect.create()
 
         return () => {
 
@@ -645,7 +645,7 @@ const Cradle = ({
     useLayoutEffect(()=>{
 
         let viewportData = viewportDataRef.current
-        let cradleContent = contentAgent.content
+        let cradleContent = contentManager.content
         switch (cradleState) {
             case 'reload':
                 // cradleContent.portalData.clear()
@@ -659,8 +659,8 @@ const Cradle = ({
 
             case 'resetscrollposition': {
 
-                viewportData.elementref.current[cradleAgent.cradleReferenceData.blockScrollProperty] =
-                    Math.max(0,cradleAgent.cradleReferenceData.blockScrollPos)
+                viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
+                    Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
 
                 setCradleState('ready')
 
@@ -668,8 +668,8 @@ const Cradle = ({
             }
             case 'setscrollposition': {
 
-                viewportData.elementref.current[cradleAgent.cradleReferenceData.blockScrollProperty] =
-                    Math.max(0,cradleAgent.cradleReferenceData.blockScrollPos)
+                viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
+                    Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
 
                 setCradleState('normalizesignals')
 
@@ -683,7 +683,7 @@ const Cradle = ({
             }
             case 'preparerender': {
 
-                let cradleContent = contentAgent.content
+                let cradleContent = contentManager.content
                 cradleContent.headView = cradleContent.headModel
                 cradleContent.tailView = cradleContent.tailModel
 
@@ -717,7 +717,7 @@ const Cradle = ({
                 cradleContent.headView = []
                 cradleContent.tailView = []
                 cradleDataRef.current.portalManager.resetScrollerPortalRepository()
-                contentAgent.setCradleContent(callingCradleState.current)
+                contentManager.setCradleContent(callingCradleState.current)
 
                 setCradleState('preparerender')
 
@@ -730,7 +730,7 @@ const Cradle = ({
                     // console.log('normalizesignals for cradle',scrollerID)
                     if (!viewportData.isResizing) {
                         // redundant scroll position to avoid accidental positioning at tail end of reposition
-                        let signals = signalsAgent.signals
+                        let signals = signalsManager.signals
                         if (viewportData.elementref.current) { // already unmounted if fails (?)
                             signals.pauseCellObserver  && (signals.pauseCellObserver = false)
                             signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
@@ -775,14 +775,14 @@ const Cradle = ({
         let trackerargs = {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
-            referenceIndexOffset:cradleAgent.cradleReferenceData.scrollItemIndexReference,
+            referenceIndexOffset:cradleManager.cradleReferenceData.scrollItemIndexReference,
             listsize:cradlePropsRef.current.listsize,
             styles:cradlePropsRef.current.styles,
         }
         return trackerargs
-    },[cradleStateRef.current, viewportDimensions, cradleAgent.cradleReferenceData.scrollItemIndexReference, cradlePropsRef])
+    },[cradleStateRef.current, viewportDimensions, cradleManager.cradleReferenceData.scrollItemIndexReference, cradlePropsRef])
 
-    let cradleContent = contentAgent.content
+    let cradleContent = contentManager.content
 
     return <CradleContext.Provider value = {cradleDataRef}>
         {(cradleStateRef.current != 'setup') && <div data-type = 'portalroot' style = { portalrootstyle }>
