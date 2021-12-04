@@ -57,14 +57,10 @@ export default class CradleManager extends CradleParent{
 
    }
 
-   cradleConfigRef
-
-   cradlePropsRef    
-
-    elements = {
-       spineRef:null, 
-       headRef:null, 
-       tailRef:null
-    }
+   elements = {
+      spineRef:null, 
+      headRef:null, 
+      tailRef:null
+   }
 
 }
