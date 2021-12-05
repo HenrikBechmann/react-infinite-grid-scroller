@@ -4,6 +4,7 @@
 /*
     TODO:
 
+    - scroll reset problem recurs with repeated above and below rapid resets
     - fix scroll reset on reparent
     - review need for setscrollposition
     - BUG: in FF nested scroller switch from placeholder to content resets scroll position
@@ -437,10 +438,16 @@ const Cradle = ({
         if (cradleState != 'ready') return
 
         if ((viewportDataRef.current.portal) && (viewportDataRef.current.portal.isreparenting)) {
+            // if (!(cradleState == 'ready')) {
+            //     viewportDataRef.current.portal.isreparenting = false
+            //     return
+            // }
             // if (viewportDataRef.current.index == 0) {
             //     console.log('CRADLE calling restorescrollposition viewportDataRef.current.index, viewportDataRref.current in cradle for reparenting ready',
             //         viewportDataRef.current.index, viewportDataRef)
             // }
+            // TODO: there's a race condition here when user repeatedly scrolls past top and bottom
+            //    resetting the cradle boundary
             viewportDataRef.current.portal.isreparenting = false
             setCradleState('restorescrollposition')
         }
@@ -652,10 +659,13 @@ const Cradle = ({
 
             case 'restorescrollposition': {
 
+                const signals = signalsManager.signals
+                signals.pauseCellObserver = true
+                signals.pauseScrollingEffects = true
                 viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
                     Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
 
-                setCradleState('ready')
+                setCradleState('normalizesignals')
 
                 break;
             }

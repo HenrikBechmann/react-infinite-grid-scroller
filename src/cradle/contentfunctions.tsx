@@ -449,9 +449,9 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         padding,
         runwaycount } = cradleProps
 
-    if (viewportData.index == 0) {
-        console.log('in calcContentShifts cradleContent',cradleContent)
-    }
+    // if (viewportData.index == 0) {
+    //     console.log('in calcContentShifts cradleContent',cradleContent)
+    // }
 
     const spineElement = cradleElements.spineRef.current
     const headElement = cradleElements.headRef.current
