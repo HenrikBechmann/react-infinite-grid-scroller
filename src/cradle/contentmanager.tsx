@@ -246,11 +246,12 @@ export default class ContentManager {
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
-        const [cradleindex, 
+        const [cradleindex, // TODO: BUG: this changed to 20 from 24
             cradleitemshift, // TODO: BUG: for problem cradleitemshift ends up as -4
             spineReferenceIndex, // TODO: BUG: for problem spineReferenceIndex ends up at 100 (one past the end of list)
-            referenceitemshift,
-            spinePosOffset, 
+            referenceitemshift, // TODO: BUG: set to 4
+            spinePosOffset, // TODO: BUG: set to 100
+            // TODO: actual content set to 80 (available content), not 76 as it should be
             cradleActualContentCount] = calcContentShifts({
 
                 cradleProps,
@@ -269,7 +270,8 @@ export default class ContentManager {
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
-        let [headchangecount,tailchangecount] = calcHeadAndTailChanges({
+        // both counts set to 0 but with headchnagecount set to -0
+        let [headchangecount,tailchangecount] = calcHeadAndTailChanges({ 
 
             cradleProps,
             cradleConfig,
@@ -285,7 +287,8 @@ export default class ContentManager {
         // collect modified content
         let localContentList, deletedContentItems = []
 
-        if (headchangecount || tailchangecount) {
+        // both changecounts are 0 (but head = -0) so test should fail
+        if (headchangecount || tailchangecount) { // TODO: apparently headchangecount of -0 fails test, should be fixed
 
             [localContentList,deletedContentItems] = getUICellShellList({
                 cradleProps,
@@ -312,7 +315,7 @@ export default class ContentManager {
         let [headcontent, tailcontent] = allocateContentList(
             {
                 contentlist:localContentList,
-                spineReferenceIndex,
+                spineReferenceIndex, // TODO: BUG: set to 100 for problem
             }
         )
 

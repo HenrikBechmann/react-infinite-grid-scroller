@@ -101,6 +101,13 @@ export default class InterruptManager {
         let contentManager = this.commonProps.managersRef.current.content
         let stateManager = this.commonProps.managersRef.current.state
 
+        // TODO: moved this above initialization; no apparent difference to bug
+        if (signalsManager.signals.pauseCellObserver) { 
+
+            return
+
+        }
+
         let movedentries = []
 
         for (let entry of entries) {
@@ -115,10 +122,11 @@ export default class InterruptManager {
             }
         }
 
-        if (signalsManager.signals.pauseCellObserver) {
-
-            return
-
+        if (viewportData.index == 6) {
+            if (movedentries.length == 12) {
+                console.log('12 movedentries for ', viewportData.index, movedentries)
+                debugger
+            }
         }
 
         stateManager.isMountedRef.current && contentManager.updateCradleContent(movedentries,'cellObserver')
