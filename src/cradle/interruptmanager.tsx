@@ -16,14 +16,14 @@ export default class InterruptManager {
    commonProps
 
    // TODO: stub
-   cradleresizeobservercallback = (entries) => {
+   private cradleresizeobservercallback = (entries) => {
 
        let signalsManager = this.commonProps.managersRef.current.signals
        if (signalsManager.signals.pauseCradleResizeObserver) return
 
    }
 
-    cradleIntersectionObserverCallback = (entries) => {
+    private cradleIntersectionObserverCallback = (entries) => {
 
         let signalsManager = this.commonProps.managersRef.current.signals
         let signals = signalsManager.signals
@@ -86,9 +86,7 @@ export default class InterruptManager {
     }
 
     // the async callback from IntersectionObserver.
-    cellobservercallback = (entries)=>{
-
-        let viewportData = this.commonProps.viewportdataRef.current
+    private cellintersectionobservercallback = (entries)=>{
 
         const testrootbounds = entries[0].rootBounds
         if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
@@ -96,6 +94,8 @@ export default class InterruptManager {
             return
 
         }
+        
+        let viewportData = this.commonProps.viewportdataRef.current
 
         let signalsManager = this.commonProps.managersRef.current.signals
         let contentManager = this.commonProps.managersRef.current.content
@@ -154,7 +154,7 @@ export default class InterruptManager {
             let viewportData = this.commonProps.viewportdataRef.current
             this.cellIntersect.observer = new IntersectionObserver(
 
-                this.cellobservercallback,
+                this.cellintersectionobservercallback,
                 {
                     root:viewportData.elementref.current, 
                     threshold:this.commonProps.cradleConfigRef.current.cellObserverThreshold,

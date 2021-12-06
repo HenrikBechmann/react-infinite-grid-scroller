@@ -122,7 +122,7 @@ export const CradleContext = React.createContext(null) // for children
 
 const portalrootstyle = {display:'none'} // static parm
 
-const NORMALIZE_SIGNALS_TIMEOUT = 100
+const NORMALIZE_SIGNALS_TIMEOUT = 250
 
 const Cradle = ({ 
         gap, 
@@ -678,7 +678,18 @@ const Cradle = ({
                 break;
             case 'repositioning':
                 break;
+            case 'restorescrollposition': {
 
+                if (viewportDataRef.current.index == 6) {
+                    console.log('setting scroll to ',cradleManager.cradleReferenceData.blockScrollPos)
+                }
+                viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
+                    Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
+                isReparentingRef.current = false
+                setCradleState('normalizesignals')
+
+                break;
+            }
             case 'setscrollposition': {
 
                 viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
@@ -705,23 +716,6 @@ const Cradle = ({
             }
         }
 
-    },[cradleState])
-
-    useEffect(()=> {
-        switch (cradleState) {
-            case 'restorescrollposition': {
-
-                // if (viewportDataRef.current.index == 6) {
-                //     console.log('setting scroll to ',cradleManager.cradleReferenceData.blockScrollPos)
-                // }
-                viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
-                    Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
-                isReparentingRef.current = false
-                setCradleState('normalizesignals')
-
-                break;
-            }
-        }
     },[cradleState])
 
     // standard processing stages
@@ -758,9 +752,10 @@ const Cradle = ({
 
                     if (!isMountedRef.current) return
                     // console.log('normalizesignals for cradle',scrollerID)
-                    if ((!viewportData.isResizing) && ((!viewportDataRef.current.portal) || (!viewportDataRef.current.portal.isreparenting))) {
+                    if (!viewportData.isResizing) {
                         // redundant scroll position to avoid accidental positioning at tail end of reposition
-                        if ((!viewportDataRef.current.portal) || (!viewportDataRef.current.portal.isreparenting)) {
+                        if ((!viewportDataRef.current.portal) || (!viewportDataRef.current.portal.isreparenting)
+                            && (!isReparentingRef.current)) {
                             let signals = signalsManager.signals
                             if (viewportData.elementref.current) { // already unmounted if fails (?)
                                 signals.pauseCellObserver  && (signals.pauseCellObserver = false)

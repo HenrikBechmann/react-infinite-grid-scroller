@@ -61,7 +61,9 @@ export default class ContentManager {
         let interruptManager = this.commonProps.managersRef.current.interrupts
         let cradleData = this.commonProps.cradleDataRef.current
 
-        // if (viewportData.index == 0) console.log('SETTING content - cradleState, cradleData in setCradleContent',cradleState, cradleData)
+        if (viewportData.index == 6) {
+            console.log('SETTING content - cradleState, cradleData in setCradleContent',cradleState, cradleData)
+        }
 
         let viewportElement = viewportData.elementref.current
 
@@ -175,9 +177,9 @@ export default class ContentManager {
 
         let cradleData = this.commonProps.cradleDataRef.current
 
-        // if (viewportData.index == 6) {
-        //     console.log('UPDATING content - source, cradleData in updateCradleContent',source, cradleData)
-        // }
+        if (viewportData.index == 6) {
+            console.log('UPDATING content - source, cradleData in updateCradleContent',source, cradleData)
+        }
 
         let viewportElement = viewportData.elementref.current
         if (!viewportElement) {
@@ -232,6 +234,7 @@ export default class ContentManager {
 
         // filter out inapplicable intersection entries
         // we're only interested in intersections proximal to the spine
+        // TODO: BUG: for nested config end problem intersections count = 4; should be 0; 12 count for entries
         let intersections = isolateRelevantIntersections({
 
             scrollforward,
@@ -241,13 +244,11 @@ export default class ContentManager {
 
         })
 
-        // if (viewportData.index == 0) console.log('intersections in updateCradleContent',intersections)
-
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         const [cradleindex, 
-            cradleitemshift, 
-            spineReferenceIndex, 
+            cradleitemshift, // TODO: BUG: for problem cradleitemshift ends up as -4
+            spineReferenceIndex, // TODO: BUG: for problem spineReferenceIndex ends up at 100 (one past the end of list)
             referenceitemshift,
             spinePosOffset, 
             cradleActualContentCount] = calcContentShifts({
@@ -263,19 +264,7 @@ export default class ContentManager {
                 viewportData,
 
         })
-        // if (viewportData.index == 0) {
-        //     console.log(`cradleindex, 
-        //     cradleitemshift, 
-        //     spineReferenceIndex, 
-        //     referenceitemshift,
-        //     spinePosOffset, 
-        //     contentCount`,cradleindex, 
-        //     cradleitemshift, 
-        //     spineReferenceIndex, 
-        //     referenceitemshift,
-        //     spinePosOffset, 
-        //     cradleActualContentCount)
-        // }
+
         if ((referenceitemshift == 0 && cradleitemshift == 0)) return
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
@@ -295,8 +284,6 @@ export default class ContentManager {
 
         // collect modified content
         let localContentList, deletedContentItems = []
-
-        // let cradleActualContentCount = cradleAvailableContentCount
 
         if (headchangecount || tailchangecount) {
 
@@ -328,6 +315,11 @@ export default class ContentManager {
                 spineReferenceIndex,
             }
         )
+
+        if ((viewportData.index == 6) && (tailcontent.length == 0)) {
+            console.log('in updatecontent ZERO TAIL LENGTH entries', entries) 
+            debugger           
+        }
 
         cradleContent.cradleModel = localContentList
         cradleContent.headView = cradleContent.headModel = headcontent
