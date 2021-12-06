@@ -159,14 +159,20 @@ const Cradle = ({
     }
 
     const [cradleState, setCradleState] = useState('setup')
+    const isReparentingRef = useRef(false)
     const viewportData = useContext(ViewportContext)
     const viewportDataRef = useRef(null)
-    const isReparentingRef = useRef(false)
     viewportDataRef.current = viewportData
-    if (viewportDataRef.current.index == 6) {
-        console.log('RUNNING CRADLE index, cradleState, isReparentingRef.current, viewportDataRef.current.portal?.isreparenting',
-            viewportDataRef.current.index, cradleState,isReparentingRef.current,
-            viewportDataRef.current.portal?.isreparenting)
+
+    // if (viewportDataRef.current.index == 6) {
+    //     console.log('RUNNING CRADLE index, cradleState, isReparentingRef.current, viewportDataRef.current.portal?.isreparenting',
+    //         viewportDataRef.current.index, cradleState,isReparentingRef.current,
+    //         viewportDataRef.current.portal?.isreparenting)
+    // }
+
+    const normalizetimerRef = useRef(null)
+    if ((cradleState == 'normalizesignals') && viewportData.portal?.isreparenting) {
+        clearTimeout(normalizetimerRef.current)
     }
 
     const cradleStateRef = useRef(null) // access by closures
@@ -450,9 +456,9 @@ const Cradle = ({
 
         if (!isReparentingRef.current) return
 
-        if (viewportDataRef.current.index == 6) {
-            console.log('setting signals for state', cradleState)
-        }
+        // if (viewportDataRef.current.index == 6) {
+        //     console.log('setting signals for state', cradleState)
+        // }
 
         const signals = signalsManager.signals
         signals.pauseCellObserver = true
@@ -698,9 +704,9 @@ const Cradle = ({
         switch (cradleState) {
             case 'restorescrollposition': {
 
-                if (viewportDataRef.current.index == 6) {
-                    console.log('setting scroll to ',cradleManager.cradleReferenceData.blockScrollPos)
-                }
+                // if (viewportDataRef.current.index == 6) {
+                //     console.log('setting scroll to ',cradleManager.cradleReferenceData.blockScrollPos)
+                // }
                 viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
                     Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
                 isReparentingRef.current = false
@@ -741,7 +747,7 @@ const Cradle = ({
                 break
             }
             case 'normalizesignals': {
-                setTimeout(()=> {
+                normalizetimerRef.current = setTimeout(()=> {
 
                     if (!isMountedRef.current) return
                     // console.log('normalizesignals for cradle',scrollerID)
