@@ -122,7 +122,7 @@ export const CradleContext = React.createContext(null) // for children
 
 const portalrootstyle = {display:'none'} // static parm
 
-const NORMALIZE_SIGNALS_TIMEOUT = 200
+const NORMALIZE_SIGNALS_TIMEOUT = 100
 
 const Cradle = ({ 
         gap, 
