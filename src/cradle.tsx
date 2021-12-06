@@ -5,6 +5,10 @@
     TODO:
 
     - scroll reset problem recurs with repeated above and below rapid resets
+        the problem comes with update content from endofscroll, after double normalize signals
+        the extra reparenting is inserted during the timeout for normalize signals
+
+
     - fix scroll reset on reparent
     - review need for setscrollposition
     - BUG: in FF nested scroller switch from placeholder to content resets scroll position
@@ -118,6 +122,8 @@ export const CradleContext = React.createContext(null) // for children
 
 const portalrootstyle = {display:'none'} // static parm
 
+const NORMALIZE_SIGNALS_TIMEOUT = 200
+
 const Cradle = ({ 
         gap, 
         padding, 
@@ -155,19 +161,13 @@ const Cradle = ({
     const [cradleState, setCradleState] = useState('setup')
     const viewportData = useContext(ViewportContext)
     const viewportDataRef = useRef(null)
+    const isReparentingRef = useRef(false)
     viewportDataRef.current = viewportData
-    // useEffect(()=>{
-    //     const rectwidth = viewportData.elementref.current.offsetWidth
-    //     const rectheight = viewportData.elementref.current.offsetWidth
-    //     // console.log('viewport index, width, height, viewportData', 
-    //     //     viewportData.index, rectwidth, rectheight, viewportData)
-    // },[viewportData])
-    // if (viewportData.index == 0) {
-    //     const rectscrollLeft = viewportData.elementref.current.offsetLeft
-
-    //     console.log('RUNNING cradle viewport index, cradle cradleState',
-    //     viewportData.index, cradleState, rectscrollLeft)
-    // }
+    if (viewportDataRef.current.index == 6) {
+        console.log('RUNNING CRADLE index, cradleState, isReparentingRef.current, viewportDataRef.current.portal?.isreparenting',
+            viewportDataRef.current.index, cradleState,isReparentingRef.current,
+            viewportDataRef.current.portal?.isreparenting)
+    }
 
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState;
@@ -435,22 +435,31 @@ const Cradle = ({
 
     useLayoutEffect(()=>{
 
-        if (cradleState != 'ready') return
+        if (!viewportDataRef.current.portal) return
 
-        if ((viewportDataRef.current.portal) && (viewportDataRef.current.portal.isreparenting)) {
-            // if (!(cradleState == 'ready')) {
-            //     viewportDataRef.current.portal.isreparenting = false
-            //     return
-            // }
-            // if (viewportDataRef.current.index == 0) {
-            //     console.log('CRADLE calling restorescrollposition viewportDataRef.current.index, viewportDataRref.current in cradle for reparenting ready',
-            //         viewportDataRef.current.index, viewportDataRef)
-            // }
-            // TODO: there's a race condition here when user repeatedly scrolls past top and bottom
-            //    resetting the cradle boundary
+        if (viewportDataRef.current.portal.isreparenting) {
             viewportDataRef.current.portal.isreparenting = false
-            setCradleState('restorescrollposition')
+
+            if (!isReparentingRef.current) { // new setting
+                isReparentingRef.current = true
+            }
+
         }
+
+        // if (cradleState != 'ready') return
+
+        if (!isReparentingRef.current) return
+
+        if (viewportDataRef.current.index == 6) {
+            console.log('setting signals for state', cradleState)
+        }
+
+        const signals = signalsManager.signals
+        signals.pauseCellObserver = true
+        signals.pauseScrollingEffects = true
+        signals.pauseCradleIntersectionObserver = true
+
+        setCradleState('restorescrollposition')
 
     },[cradleState,viewportDataRef.current.portal?.isreparenting])
 
@@ -657,18 +666,6 @@ const Cradle = ({
             case 'repositioning':
                 break;
 
-            case 'restorescrollposition': {
-
-                const signals = signalsManager.signals
-                signals.pauseCellObserver = true
-                signals.pauseScrollingEffects = true
-                viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
-                    Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
-
-                setCradleState('normalizesignals')
-
-                break;
-            }
             case 'setscrollposition': {
 
                 viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
@@ -695,6 +692,23 @@ const Cradle = ({
             }
         }
 
+    },[cradleState])
+
+    useEffect(()=> {
+        switch (cradleState) {
+            case 'restorescrollposition': {
+
+                if (viewportDataRef.current.index == 6) {
+                    console.log('setting scroll to ',cradleManager.cradleReferenceData.blockScrollPos)
+                }
+                viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
+                    Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
+                isReparentingRef.current = false
+                setCradleState('normalizesignals')
+
+                break;
+            }
+        }
     },[cradleState])
 
     // standard processing stages
@@ -731,30 +745,33 @@ const Cradle = ({
 
                     if (!isMountedRef.current) return
                     // console.log('normalizesignals for cradle',scrollerID)
-                    if (!viewportData.isResizing) {
+                    if ((!viewportData.isResizing) && ((!viewportDataRef.current.portal) || (!viewportDataRef.current.portal.isreparenting))) {
                         // redundant scroll position to avoid accidental positioning at tail end of reposition
-                        let signals = signalsManager.signals
-                        if (viewportData.elementref.current) { // already unmounted if fails (?)
-                            signals.pauseCellObserver  && (signals.pauseCellObserver = false)
-                            signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
-                            signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
-                            signals.pauseCradleResizeObserver && (signals.pauseCradleResizeObserver = false)
-                            // signals.isReparenting && (signals.isReparenting = false)
-                        } else {
-                            console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportData)
-                        }
+                        if ((!viewportDataRef.current.portal) || (!viewportDataRef.current.portal.isreparenting)) {
+                            let signals = signalsManager.signals
+                            if (viewportData.elementref.current) { // already unmounted if fails (?)
+                                signals.pauseCellObserver  && (signals.pauseCellObserver = false)
+                                signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
+                                signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
+                                signals.pauseCradleResizeObserver && (signals.pauseCradleResizeObserver = false)
+                                // signals.isReparenting && (signals.isReparenting = false)
+                            } else {
+                                console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportData)
+                            }
 
-                        if (signals.isCradleInView) {
+                            if (signals.isCradleInView) {
+                                setCradleState('ready')
+                            } else {
+                                setCradleState('repositioning')
+                            }
+                        } else {
                             setCradleState('ready')
-                        } else {
-                            setCradleState('repositioning')
                         }
-
                     } else {
                         setCradleState('resizing')
                     }
 
-                },100)
+                },NORMALIZE_SIGNALS_TIMEOUT)
 
                 break 
 
