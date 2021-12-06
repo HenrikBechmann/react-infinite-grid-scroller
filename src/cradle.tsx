@@ -164,11 +164,13 @@ const Cradle = ({
     const viewportDataRef = useRef(null)
     viewportDataRef.current = viewportData
 
-    // if (viewportDataRef.current.index == 6) {
-    //     console.log('RUNNING CRADLE index, cradleState, isReparentingRef.current, viewportDataRef.current.portal?.isreparenting',
-    //         viewportDataRef.current.index, cradleState,isReparentingRef.current,
-    //         viewportDataRef.current.portal?.isreparenting)
-    // }
+    if (viewportDataRef.current.index == 6) {
+        console.log(`RUNNING CRADLE index, cradleState, isReparentingRef.current, 
+            viewportDataRef.current.portal?.isreparenting\n`,
+            viewportDataRef.current.index, cradleState,isReparentingRef.current,
+            viewportDataRef.current.portal?.isreparenting,
+            viewportData.isResizing)
+    }
 
     const normalizetimerRef = useRef(null)
     if ((cradleState == 'normalizesignals') && viewportData.portal?.isreparenting) {
@@ -444,28 +446,33 @@ const Cradle = ({
         if (!viewportDataRef.current.portal) return
 
         if (viewportDataRef.current.portal.isreparenting) {
+
             viewportDataRef.current.portal.isreparenting = false
 
-            if (!isReparentingRef.current) { // new setting
+            if (cradleState == 'setup') return
+
+            if ((isReparentingRef.current) && (!(cradleState == 'normalizesignals'))) {
+                return
+            } else {
                 isReparentingRef.current = true
+                if (viewportDataRef.current.index == 6) console.log('setting restorescrollposition')
+                setCradleState('restorescrollposition')
             }
 
+        } else {
+            return
         }
 
-        // if (cradleState != 'ready') return
-
-        if (!isReparentingRef.current) return
-
-        // if (viewportDataRef.current.index == 6) {
-        //     console.log('setting signals for state', cradleState)
-        // }
+        if (viewportDataRef.current.index == 6) {
+            console.log('setting signals for state', cradleState)
+        }
 
         const signals = signalsManager.signals
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
         signals.pauseCradleIntersectionObserver = true
 
-        setCradleState('restorescrollposition')
+        // setCradleState('restorescrollposition')
 
     },[cradleState,viewportDataRef.current.portal?.isreparenting])
 
