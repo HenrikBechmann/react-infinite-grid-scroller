@@ -96,6 +96,9 @@ export default class InterruptManager {
         }
         
         let viewportData = this.commonProps.viewportdataRef.current
+        if (viewportData.index == 6) {
+                console.log('entries for ', viewportData.index, entries)
+        }
 
         let signalsManager = this.commonProps.managersRef.current.signals
         let contentManager = this.commonProps.managersRef.current.content
@@ -103,7 +106,9 @@ export default class InterruptManager {
 
         // TODO: moved this above initialization; no apparent difference to bug
         if (signalsManager.signals.pauseCellObserver) { 
-
+            if (viewportData.index == 6) {
+                console.log('breaking from callback for pauseCellObserver')
+            }
             return
 
         }
@@ -123,10 +128,7 @@ export default class InterruptManager {
         }
 
         if (viewportData.index == 6) {
-            if (movedentries.length == 12) {
-                console.log('12 movedentries for ', viewportData.index, movedentries)
-                debugger
-            }
+                console.log('movedentries for ', viewportData.index, movedentries)
         }
 
         stateManager.isMountedRef.current && contentManager.updateCradleContent(movedentries,'cellObserver')

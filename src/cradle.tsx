@@ -4,10 +4,13 @@
 /*
     TODO:
 
+    - consider eliminating cellintersectobserver in favour of head and tail intersect oberver
+
     - scroll reset problem recurs with repeated above and below rapid resets
         the problem comes with update content from endofscroll, after double normalize signals
         the extra reparenting is inserted during the timeout for normalize signals
     - try cleartimeout
+
 
     - fix scroll reset on reparent
     - review need for setscrollposition
@@ -173,7 +176,8 @@ const Cradle = ({
     }
 
     const normalizetimerRef = useRef(null)
-    if ((cradleState == 'normalizesignals') && viewportData.portal?.isreparenting) {
+    // if ((cradleState == 'normalizesignals') && viewportData.portal?.isreparenting) {
+    if (viewportData.portal?.isreparenting) {
         clearTimeout(normalizetimerRef.current)
     }
 
@@ -773,7 +777,7 @@ const Cradle = ({
                                 setCradleState('repositioning')
                             }
                         } else {
-                            setCradleState('ready')
+                            setCradleState('restorescrollposition')
                         }
                     } else {
                         setCradleState('resizing')
