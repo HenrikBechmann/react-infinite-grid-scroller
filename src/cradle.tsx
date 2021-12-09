@@ -167,17 +167,21 @@ const Cradle = ({
     const viewportDataRef = useRef(null)
     viewportDataRef.current = viewportData
 
-    if (viewportDataRef.current.index == 6) {
-        console.log(`RUNNING CRADLE index, cradleState, isReparentingRef.current, 
-            viewportDataRef.current.portal?.isreparenting\n`,
-            viewportDataRef.current.index, cradleState,isReparentingRef.current,
-            viewportDataRef.current.portal?.isreparenting,
-            viewportData.isResizing)
+    // if (viewportDataRef.current.index == 6) {
+    //     console.log(`RUNNING CRADLE index, cradleState, isReparentingRef.current, 
+    //         viewportDataRef.current.portal?.isreparenting\n`,
+    //         viewportDataRef.current.index, cradleState,isReparentingRef.current,
+    //         viewportDataRef.current.portal?.isreparenting,
+    //         viewportData.isResizing)
+    // }
+
+    if (viewportDataRef.current.index === null) {
+        console.log('RUNNING CRADLE index, cradleState\n', viewportDataRef.current.index, cradleState)
     }
 
     const normalizetimerRef = useRef(null)
     // if ((cradleState == 'normalizesignals') && viewportData.portal?.isreparenting) {
-    if (viewportData.portal?.isreparenting) {
+    if (viewportData.portal?.isreparenting) { // tiny edge case; avoid resetting signals
         clearTimeout(normalizetimerRef.current)
     }
 
@@ -456,11 +460,15 @@ const Cradle = ({
             if (cradleState == 'setup') return
 
             if ((isReparentingRef.current) && (!(cradleState == 'normalizesignals'))) {
+
                 return
+
             } else {
+
                 isReparentingRef.current = true
                 if (viewportDataRef.current.index == 6) console.log('setting restorescrollposition')
                 setCradleState('restorescrollposition')
+
             }
 
         } else {
@@ -474,7 +482,7 @@ const Cradle = ({
         const signals = signalsManager.signals
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
-        signals.pauseCradleIntersectionObserver = true
+        // signals.pauseCradleIntersectionObserver = true
 
         // setCradleState('restorescrollposition')
 
@@ -681,6 +689,14 @@ const Cradle = ({
                 setCradleState('repositioning')
                 break;
             case 'repositioning':
+                // if (viewportData.portal?.isreparenting) {
+                //     viewportData.portal.isreparenting = false
+                // }
+                // if (isReparentingRef.current) {
+                //     isReparentingRef.current = false
+                // }
+                // (signalsManager.signals.pauseScrollingEffects) && (signalsManager.signals.pauseScrollingEffects = false);
+                // (signalsManager.signals.pauseCellObserver) && (signalsManager.signals.pauseCellObserver = false)
                 break;
             case 'restorescrollposition': {
 
@@ -774,7 +790,10 @@ const Cradle = ({
                             if (signals.isCradleInView) {
                                 setCradleState('ready')
                             } else {
-                                setCradleState('repositioning')
+                                if (viewportDataRef.current.index === null) {
+                                    console.log('calling repositioning from normqlizesignals, isCradleInView == false')
+                                    setCradleState('repositioning')
+                                }
                             }
                         } else {
                             setCradleState('restorescrollposition')

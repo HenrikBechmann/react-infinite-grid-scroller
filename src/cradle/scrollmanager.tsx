@@ -21,11 +21,11 @@ export default class ScrollManager {
 
         const signals = this.commonProps.managersRef.current.signals.signals
 
-        if (signals.pauseScrollingEffects) {
+        // if (signals.pauseScrollingEffects) {
 
-            return
+        //     return
 
-        }
+        // }
 
         const viewportData = this.commonProps.viewportdataRef.current
         const viewportElement = viewportData.elementref.current
@@ -49,6 +49,12 @@ export default class ScrollManager {
         this.scrollPositions.current = scrollPositionCurrent
 
         clearTimeout(this._scrolltimerid)
+
+        if (signals.pauseScrollingEffects) {
+
+            return
+
+        }
 
         const stateManager = this.commonProps.managersRef.current.state
         const cradleState = stateManager.cradleStateRef.current

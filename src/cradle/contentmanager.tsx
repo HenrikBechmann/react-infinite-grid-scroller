@@ -61,9 +61,9 @@ export default class ContentManager {
         let interruptManager = this.commonProps.managersRef.current.interrupts
         let cradleData = this.commonProps.cradleDataRef.current
 
-        if (viewportData.index == 6) {
-            console.log('SETTING content - cradleState, cradleData in setCradleContent',cradleState, cradleData)
-        }
+        // if (viewportData.index == 6) {
+        //     console.log('SETTING content - cradleState, cradleData in setCradleContent',cradleState, cradleData)
+        // }
 
         let viewportElement = viewportData.elementref.current
 
