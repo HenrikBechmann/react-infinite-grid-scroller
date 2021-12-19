@@ -31,7 +31,7 @@
 
     BUGS:
     - check styles in scrollTracker args
-    - reposition gets stuck at a particular number after getting behind on heavy scroll
+    - doreposition gets stuck at a particular number after getting behind on heavy scroll
         check pauseScrollingEffects
     - variable cells showing signs of getItem() with portal
     - Chrome sometimes misses nested cell portals horizontally
@@ -167,17 +167,18 @@ const Cradle = ({
     const viewportDataRef = useRef(null)
     viewportDataRef.current = viewportData
 
-    // if (viewportDataRef.current.index == 6) {
-    //     console.log(`RUNNING CRADLE index, cradleState, isReparentingRef.current, 
-    //         viewportDataRef.current.portal?.isreparenting\n`,
-    //         viewportDataRef.current.index, cradleState,isReparentingRef.current,
-    //         viewportDataRef.current.portal?.isreparenting,
-    //         viewportData.isResizing)
-    // }
-
-    if (viewportDataRef.current.index === null) {
-        console.log('RUNNING CRADLE index, cradleState\n', viewportDataRef.current.index, cradleState)
+    if ((viewportDataRef.current.index == 6) || (viewportDataRef.current.index === null)) {
+        console.log(`RUNNING CRADLE index, cradleState, isReparentingRef.current, 
+viewportDataRef.current.portal?.isreparenting, viewportData.isResizing`,
+            viewportDataRef.current.index, '\n',
+            cradleState,isReparentingRef.current,
+            viewportDataRef.current.portal?.isreparenting,
+            viewportData.isResizing)
     }
+
+    // if (viewportDataRef.current.index === null) {
+    //     console.log('RUNNING CRADLE index, cradleState\n', viewportDataRef.current.index, cradleState)
+    // }
 
     const normalizetimerRef = useRef(null)
     // if ((cradleState == 'normalizesignals') && viewportData.portal?.isreparenting) {
@@ -685,10 +686,15 @@ const Cradle = ({
                 // cradleContent.portalData.clear()
                 setCradleState('setreload')
                 break;
+            case 'startreposition': {
+                setCradleState('repositioning')
+                break
+            }
             case 'updatereposition':
                 setCradleState('repositioning')
-                break;
+                break
             case 'repositioning':
+                // setCradleState('updatereposition')
                 // if (viewportData.portal?.isreparenting) {
                 //     viewportData.portal.isreparenting = false
                 // }
@@ -697,7 +703,7 @@ const Cradle = ({
                 // }
                 // (signalsManager.signals.pauseScrollingEffects) && (signalsManager.signals.pauseScrollingEffects = false);
                 // (signalsManager.signals.pauseCellObserver) && (signalsManager.signals.pauseCellObserver = false)
-                break;
+                break
             case 'restorescrollposition': {
 
                 if (viewportDataRef.current.index == 6) {
@@ -708,7 +714,7 @@ const Cradle = ({
                 isReparentingRef.current = false
                 setCradleState('normalizesignals')
 
-                break;
+                break
             }
             case 'setscrollposition': {
 
@@ -747,7 +753,7 @@ const Cradle = ({
             case 'resized':
             case 'pivot':
             case 'setreload':
-            case 'reposition':
+            case 'doreposition':
 
                 callingCradleState.current = cradleState
                 setCradleState('preparecontent')
@@ -773,7 +779,7 @@ const Cradle = ({
                     if (!isMountedRef.current) return
                     // console.log('normalizesignals for cradle',scrollerID)
                     if (!viewportData.isResizing) {
-                        // redundant scroll position to avoid accidental positioning at tail end of reposition
+                        // redundant scroll position to avoid accidental positioning at tail end of doreposition
                         if ((!viewportDataRef.current.portal) || (!viewportDataRef.current.portal.isreparenting)
                             && (!isReparentingRef.current)) {
                             let signals = signalsManager.signals
@@ -791,7 +797,7 @@ const Cradle = ({
                                 setCradleState('ready')
                             } else {
                                 if (viewportDataRef.current.index === null) {
-                                    console.log('calling repositioning from normqlizesignals, isCradleInView == false')
+                                    console.log('calling repositioning from normalizesignals, isCradleInView == false')
                                     setCradleState('repositioning')
                                 }
                             }

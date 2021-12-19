@@ -38,7 +38,7 @@ export default class CradleManager {
       nextItemIndexReference:null,
       nextCradlePosOffset:null,
 
-      // to set scrollPos after reposition, or
+      // to set scrollPos after doreposition, or
       // to restore scrollTop or scrollLeft after clobbered by DOM
       blockScrollPos:null, 
       blockScrollProperty:null,

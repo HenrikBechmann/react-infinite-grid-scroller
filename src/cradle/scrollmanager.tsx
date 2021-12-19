@@ -164,9 +164,11 @@ export default class ScrollManager {
         const cradleState = stateManager.cradleStateRef.current
         switch (cradleState) {
 
-            case 'repositioning': {
+            case 'repositioning': 
+            case 'updatereposition':
+            {
 
-                stateManager.setCradleState('reposition')
+                stateManager.setCradleState('doreposition')
 
                 break
             }

@@ -57,7 +57,7 @@ export default class InterruptManager {
                 !viewportData.isResizing &&
                 !(cradleState == 'resized') &&
                 !(cradleState == 'repositioning') && 
-                !(cradleState == 'reposition') && 
+                !(cradleState == 'doreposition') && 
                 !(cradleState == 'pivot')
                 ) 
             {
@@ -78,7 +78,7 @@ export default class InterruptManager {
                 cradleContent.tailModel = []
                 cradleContent.headView = []
                 cradleContent.tailView = []
-                stateManager.setCradleState('repositioning')
+                stateManager.setCradleState('startreposition')
 
             }
         }

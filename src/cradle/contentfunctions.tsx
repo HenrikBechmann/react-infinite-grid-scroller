@@ -501,7 +501,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         }
     }
 
-    if ((viewportvisiblegaplength < 0) || (viewportvisiblegaplength > viewportlength)) viewportvisiblegaplength = 0 // no visible gap, or reposition should have kicked in
+    if ((viewportvisiblegaplength < 0) || (viewportvisiblegaplength > viewportlength)) viewportvisiblegaplength = 0 // no visible gap, or doreposition should have kicked in
 
     // viewportvisiblegaplength is always positive
     let overshootrowcount = (viewportvisiblegaplength == 0)?0:Math.ceil(viewportvisiblegaplength/cellLength) // rows to fill viewport

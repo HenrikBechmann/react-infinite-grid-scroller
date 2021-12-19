@@ -68,7 +68,7 @@ export default class ServiceManager {
 
         cradleManager.cradleReferenceData.nextItemIndexReference = index
 
-        stateManager.setCradleState('reposition')
+        stateManager.setCradleState('doreposition')
 
     }
 

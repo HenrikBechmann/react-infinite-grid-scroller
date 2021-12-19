@@ -76,7 +76,7 @@ export default class ContentManager {
             crosscount,
             viewportRowcount } = cradleConfig
 
-        if (cradleState == 'reposition') {
+        if (cradleState == 'doreposition') {
 
             visibletargetscrolloffset = (visibletargetindexoffset == 0)?padding:gap
 
