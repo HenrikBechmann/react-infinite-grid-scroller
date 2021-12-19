@@ -50,13 +50,14 @@ export default class InterruptManager {
         signals.isCradleInView = (signals.isHeadCradleInView || signals.isTailCradleInView);
 
         let viewportData = this.commonProps.viewportdataRef.current
-        if (!signals.isCradleInView) 
+        if (!signals.isCradleInView) // start reposition if no other interrupts are underway
         {
             let cradleState = stateManager.cradleStateRef.current        
             if (
                 !viewportData.isResizing &&
                 !(cradleState == 'resized') &&
                 !(cradleState == 'repositioning') && 
+                !(cradleState == 'updatereposition') &&
                 !(cradleState == 'doreposition') && 
                 !(cradleState == 'pivot')
                 ) 
