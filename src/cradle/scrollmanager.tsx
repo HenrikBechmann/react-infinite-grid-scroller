@@ -64,7 +64,7 @@ export default class ScrollManager {
 
         if (!viewportData.isResizing) {
 
-            if (cradleState == 'ready' || cradleState == 'repositioning') {
+            if ((cradleState == 'ready') || (cradleState == 'repositioning') || (cradleState == 'updatereposition')) {
 
                 if (cradleState == 'ready') {
 
@@ -88,10 +88,10 @@ export default class ScrollManager {
 
                 }
 
-                if (cradleState == 'repositioning') {
+                if ((cradleState == 'repositioning') || (cradleState == 'updatereposition')) {
 
                     this._setScrollReferenceIndexData()
-                    stateManager.setCradleState('updatereposition')
+                    if (cradleState == 'repositioning') stateManager.setCradleState('updatereposition')
 
                 }
 
