@@ -1,23 +1,23 @@
 // singalsmanager.txt
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-const signalsbaseline = {
-    pauseCellObserver: false,
-    pauseCradleIntersectionObserver:false,
-    pauseCradleResizeObserver: false,
-    pauseScrollingEffects: false,
-    isTailCradleInView:true,
-    isHeadCradleInView:true,
-    isCradleInView:true,
-    // isRepositioning:false,
-}
+// const signalsbaseline = {
+//     pauseCellObserver: false,
+//     pauseCradleIntersectionObserver:false,
+//     pauseCradleResizeObserver: false,
+//     pauseScrollingEffects: false,
+//     isTailCradleInView:true,
+//     isHeadCradleInView:true,
+//     isCradleInView:true,
+//     // isRepositioning:false,
+// }
 
 export default class SignalsManager {
 
     constructor(commonProps) {
 
        this.commonProps = commonProps
-       this.resetSignals()
+       // this.resetSignals()
 
     }
 
@@ -26,20 +26,20 @@ export default class SignalsManager {
     signalsBaseline
 
     signals = {
-        pauseCellObserver: null,
-        pauseCradleIntersectionObserver:null,
-        pauseCradleResizeObserver: null,
-        pauseScrollingEffects: null,
-        isTailCradleInView:null,
-        isHeadCradleInView:null,
-        isCradleInView:null,
+        pauseCellObserver: false,
+        pauseCradleIntersectionObserver:false,
+        pauseCradleResizeObserver: false,
+        pauseScrollingEffects: false,
+        // isTailCradleInView:true,
+        // isHeadCradleInView:true,
+        // isCradleInView:true,
         // isRepositioning: null,
     }
 
-    resetSignals = () => {
+    // resetSignals = () => {
 
-        this.signals = Object.assign({},signalsbaseline) //clone 
+    //     this.signals = Object.assign({},signalsbaseline) //clone 
 
-    }
+    // }
 
 }

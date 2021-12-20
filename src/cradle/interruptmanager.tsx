@@ -13,7 +13,10 @@ export default class InterruptManager {
 
    }
 
-   commonProps
+   private commonProps
+
+   private isTailCradleInView = false
+   private isHeadCradleInView = false
 
    // TODO: stub
    private cradleresizeobservercallback = (entries) => {
@@ -35,22 +38,22 @@ export default class InterruptManager {
         for (let i = 0; i < entries.length; i++ ) {
             let entry = entries[i]
             if (entry.target.dataset.type == 'head') {
-                signals.isHeadCradleInView = 
+                this.isHeadCradleInView = 
                     (entry.isIntersecting || 
                         ((entry.rootBounds.width == 0) && (entry.rootBounds.height == 0)) // reparenting
                 )
             } else {
-                signals.isTailCradleInView = 
+                this.isTailCradleInView = 
                     (entry.isIntersecting  || 
                         ((entry.rootBounds.width == 0) && (entry.rootBounds.height == 0)) // reparenting
                 )
             }
         }
 
-        signals.isCradleInView = (signals.isHeadCradleInView || signals.isTailCradleInView);
+        this.states.isCradleInView = (this.isHeadCradleInView || this.isTailCradleInView);
 
         let viewportData = this.commonProps.viewportdataRef.current
-        if (!signals.isCradleInView) // start reposition if no other interrupts are underway
+        if (!this.states.isCradleInView) // start reposition if no other interrupts are underway
         {
             let cradleState = stateManager.cradleStateRef.current        
             if (
@@ -176,10 +179,15 @@ export default class InterruptManager {
 
     }
 
-    interruptStates = {
+    states = {
         isRepositioning:false,
         isResizing:false,
         isReparenting:false,
+        isCradleInView: false,
+    }
+
+    signals = {
+
     }
 
 }
