@@ -167,8 +167,8 @@ const Cradle = ({
     viewportDataRef.current = viewportData
 
     const normalizetimerRef = useRef(null)
-    // if ((cradleState == 'normalizesignals') && viewportData.portal?.isreparenting) {
-    if (viewportData.portal?.isreparenting) { // tiny edge case; avoid resetting signals
+    // if ((cradleState == 'normalizesignals') && viewportData.portal?.isReparenting) {
+    if (viewportData.portal?.isReparenting) { // tiny edge case; avoid resetting signals
         clearTimeout(normalizetimerRef.current)
     }
 
@@ -368,7 +368,7 @@ const Cradle = ({
             viewportDataRef.current.index, '\n',
             '==>','cradleState:',cradleState,'\n',
             'isRepositioning signal:',interruptManager.states.isRepositioning,'\n',
-            'isreparenting signal, state:',viewportDataRef.current.portal?.isreparenting,
+            'isReparenting signal, state:',viewportDataRef.current.portal?.isReparenting,
             isReparentingRef.current,'\n',
             'isResizing signal:',viewportData.isResizing)
     }
@@ -422,11 +422,13 @@ const Cradle = ({
 
         if (viewportData.isResizing) {
 
-            let signals = interruptManager.signals
+            const signals = interruptManager.signals
             signals.pauseCellObserver = true
             signals.pauseCradleIntersectionObserver = true
             signals.pauseCradleResizeObserver = true
             signals.pauseScrollingEffects = true
+            const states = interruptManager.states
+            // states.isResizing = true
             setCradleState('resizing')
 
         }
@@ -434,6 +436,7 @@ const Cradle = ({
         // complete resizing mode
         if (!viewportData.isResizing && (cradleStateRef.current == 'resizing')) {
 
+            // interruptManager.states.isResizing = false
             setCradleState('resized')
 
         }
@@ -444,9 +447,9 @@ const Cradle = ({
 
         if (!viewportDataRef.current.portal) return
 
-        if (viewportDataRef.current.portal.isreparenting) {
+        if (viewportDataRef.current.portal.isReparenting) {
 
-            viewportDataRef.current.portal.isreparenting = false
+            viewportDataRef.current.portal.isReparenting = false
 
             if (cradleState == 'setup') return
 
@@ -481,7 +484,7 @@ const Cradle = ({
 
         // setCradleState('restorescrollposition')
 
-    },[cradleState,viewportDataRef.current.portal?.isreparenting])
+    },[cradleState,viewportDataRef.current.portal?.isReparenting])
 
     // reload for changed parameters
     useEffect(()=>{
@@ -757,14 +760,16 @@ const Cradle = ({
                 normalizetimerRef.current = setTimeout(()=> {
 
                     if (!isMountedRef.current) return
-                    // console.log('normalizesignals for cradle',scrollerID)
-                    if (!viewportData.isResizing) {
-                        // redundant scroll position to avoid accidental positioning at tail end of doreposition
-                        if ((!viewportDataRef.current.portal) || ((!viewportDataRef.current.portal.isreparenting)
-                            && (!isReparentingRef.current))) {
-                            let signals = interruptManager.signals
-                            if (interruptManager.states.isCradleInView) {
 
+                    // allow short-circuits to restart or continue interrupt responses
+            /*1*/   if (!viewportData.isResizing) { // resize short-circuit
+                        
+            /*2*/       if (interruptManager.states.isCradleInView) { // repositioning short-circuit
+
+            /*3*/           if ((!viewportDataRef.current.portal) || ((!viewportDataRef.current.portal.isReparenting)
+                                && (!isReparentingRef.current))) { // reparent (restorescrollpos) short-circuit
+                            
+                                const signals = interruptManager.signals
                                 if (viewportData.elementref.current) { // already unmounted if fails (?)
                                     signals.pauseCellObserver  && (signals.pauseCellObserver = false)
                                     signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
@@ -778,13 +783,15 @@ const Cradle = ({
                                 setCradleState('ready')
 
                             } else {
-                                setCradleState('startreposition')
+            /*3*/               setCradleState('restorescrollposition')
                             }
+
                         } else {
-                            setCradleState('restorescrollposition')
+            /*2*/           setCradleState('startreposition')
                         }
+
                     } else {
-                        setCradleState('resizing')
+            /*1*/       setCradleState('resizing')
                     }
 
                 },NORMALIZE_SIGNALS_TIMEOUT)

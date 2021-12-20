@@ -211,7 +211,7 @@ const CellShell = ({
         if (cellStatus != 'ready') {
             if (!isreparented.current) {
 
-                portaldataRef.current.isreparenting = true
+                portaldataRef.current.isReparenting = true
                 isreparented.current = true
 
             }

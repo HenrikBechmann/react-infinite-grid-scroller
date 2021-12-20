@@ -204,9 +204,9 @@ const Viewport = ({
             isResizing:isResizingRef.current,
         }
 
-        const viewportdataobject = Object.assign({},viewportDataRef.current, localViewportData);
-        // ((scrollerID == 1) || (scrollerID == 0)) && console.log('scrollerID, orientation, isResizingRef.current, viewportstate, viewportdataobject',
-        //     scrollerID, orientation, isResizingRef.current, viewportstate, Object.assign({},viewportdataobject))
+        // trigger context change with new object
+        const viewportdataobject = Object.assign({},viewportDataRef.current, localViewportData) 
+
         return  viewportdataobject
 
     },[orientation, isResizingRef.current, viewportstate])
