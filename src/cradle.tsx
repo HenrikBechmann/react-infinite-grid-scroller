@@ -110,7 +110,6 @@ const ITEM_OBSERVER_THRESHOLD = 0
 
 // import agency classes - loci of data and related methods
 import ScrollManager from './cradle/scrollmanager'
-// import SignalsManager from './cradle/signalsmanager'
 import StateManager from './cradle/statemanager'
 import ContentManager from './cradle/contentmanager'
 import CradleManager from './cradle/cradlemanager'
@@ -332,7 +331,6 @@ const Cradle = ({
 
     const [
         scrollManager,
-        // signalsManager,
         stateManager,
         contentManager,
         cradleManager,
@@ -342,7 +340,6 @@ const Cradle = ({
     ] = useMemo(()=>{
         return [
             new ScrollManager(commonProps),
-            // new SignalsManager(commonProps),
             new StateManager(commonProps,cradleStateRef,setCradleState,isMountedRef),
             new ContentManager(commonProps, contentCallbacksRef),
             new CradleManager(commonProps, cradleElementsRef.current),
