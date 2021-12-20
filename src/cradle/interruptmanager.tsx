@@ -176,4 +176,10 @@ export default class InterruptManager {
 
     }
 
+    interruptStates = {
+        isRepositioning:false,
+        isResizing:false,
+        isReparenting:false,
+    }
+
 }

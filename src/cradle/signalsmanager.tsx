@@ -9,7 +9,7 @@ const signalsbaseline = {
     isTailCradleInView:true,
     isHeadCradleInView:true,
     isCradleInView:true,
-    isRepositioning:false,
+    // isRepositioning:false,
 }
 
 export default class SignalsManager {
@@ -33,7 +33,7 @@ export default class SignalsManager {
         isTailCradleInView:null,
         isHeadCradleInView:null,
         isCradleInView:null,
-        isRepositioning: null,
+        // isRepositioning: null,
     }
 
     resetSignals = () => {

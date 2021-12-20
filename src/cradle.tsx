@@ -370,7 +370,7 @@ const Cradle = ({
         console.log('RUNNING CRADLE index',
             viewportDataRef.current.index, '\n',
             '==>','cradleState:',cradleState,'\n',
-            'isRepositioning signal:',signalsManager.signals.isRepositioning,'\n',
+            'isRepositioning signal:',interruptManager.interruptStates.isRepositioning,'\n',
             'isreparenting signal, state:',viewportDataRef.current.portal?.isreparenting,
             isReparentingRef.current,'\n',
             'isResizing signal:',viewportData.isResizing)
@@ -686,7 +686,7 @@ const Cradle = ({
                 break;
 
             case 'startreposition': {
-                signalsManager.signals.isRepositioning = true
+                interruptManager.interruptStates.isRepositioning = true
                 setCradleState('repositioningA')
                 break
             }
@@ -729,7 +729,7 @@ const Cradle = ({
                 break
             }
             case 'doreposition': {
-                signalsManager.signals.isRepositioning = false
+                interruptManager.interruptStates.isRepositioning = false
             }
 
             case 'setup': 
@@ -778,14 +778,14 @@ const Cradle = ({
                                     console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportData)
                                 }
 
-                                if (signals.isCradleInView) {
+                                // if (signals.isCradleInView) {
                                     setCradleState('ready')
-                                } else {
-                                    if (viewportDataRef.current.index === null) {
-                                        console.log('calling repositioningA from normalizesignals, isCradleInView == false')
-                                        setCradleState('repositioningA')
-                                    }
-                                }
+                                // } else {
+                                //     if (viewportDataRef.current.index === null) {
+                                //         console.log('calling repositioningA from normalizesignals, isCradleInView == false')
+                                //         setCradleState('repositioningA')
+                                //     }
+                                // }
 
                             } else {
                                 setCradleState('startreposition')
