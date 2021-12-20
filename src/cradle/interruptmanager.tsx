@@ -176,7 +176,7 @@ export default class InterruptManager {
 
     states = {
         isRepositioning:false,
-        // isResizing:false,
+        isResizing:false,
         isReparenting:false,
         isCradleInView: false,
     }

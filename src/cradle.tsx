@@ -428,7 +428,7 @@ const Cradle = ({
             signals.pauseCradleResizeObserver = true
             signals.pauseScrollingEffects = true
             const states = interruptManager.states
-            // states.isResizing = true
+            states.isResizing = true
             setCradleState('resizing')
 
         }
@@ -436,7 +436,7 @@ const Cradle = ({
         // complete resizing mode
         if (!viewportData.isResizing && (cradleStateRef.current == 'resizing')) {
 
-            // interruptManager.states.isResizing = false
+            interruptManager.states.isResizing = false
             setCradleState('resized')
 
         }
