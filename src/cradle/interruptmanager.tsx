@@ -21,17 +21,17 @@ export default class InterruptManager {
    // TODO: stub
    private cradleresizeobservercallback = (entries) => {
 
-       let signalsManager = this.commonProps.managersRef.current.signals
-       if (signalsManager.signals.pauseCradleResizeObserver) return
+       const interruptManager = this.commonProps.managersRef.current.interrupts
+       if (interruptManager.signals.pauseCradleResizeObserver) return
 
    }
 
     private cradleIntersectionObserverCallback = (entries) => {
 
-        let signalsManager = this.commonProps.managersRef.current.signals
-        let signals = signalsManager.signals
-        let stateManager = this.commonProps.managersRef.current.state
-        let contentManager = this.commonProps.managersRef.current.content
+        const interruptManager = this.commonProps.managersRef.current.interrupts
+        const signals = interruptManager.signals
+        const stateManager = this.commonProps.managersRef.current.state
+        const contentManager = this.commonProps.managersRef.current.content
 
         if (signals.pauseCradleIntersectionObserver) return
 
@@ -104,12 +104,12 @@ export default class InterruptManager {
         //         console.log('entries for ', viewportData.index, entries)
         // }
 
-        let signalsManager = this.commonProps.managersRef.current.signals
+        let interruptManager = this.commonProps.managersRef.current.interrupts
         let contentManager = this.commonProps.managersRef.current.content
         let stateManager = this.commonProps.managersRef.current.state
 
         // TODO: moved this above initialization; no apparent difference to bug
-        if (signalsManager.signals.pauseCellObserver) { 
+        if (interruptManager.signals.pauseCellObserver) { 
             // if (viewportData.index == 6) {
             //     console.log('breaking from callback for pauseCellObserver')
             // }
@@ -187,7 +187,10 @@ export default class InterruptManager {
     }
 
     signals = {
-
+        pauseCellObserver: false,
+        pauseCradleIntersectionObserver:false,
+        pauseCradleResizeObserver: false,
+        pauseScrollingEffects: false,
     }
 
 }

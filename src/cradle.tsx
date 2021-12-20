@@ -110,7 +110,7 @@ const ITEM_OBSERVER_THRESHOLD = 0
 
 // import agency classes - loci of data and related methods
 import ScrollManager from './cradle/scrollmanager'
-import SignalsManager from './cradle/signalsmanager'
+// import SignalsManager from './cradle/signalsmanager'
 import StateManager from './cradle/statemanager'
 import ContentManager from './cradle/contentmanager'
 import CradleManager from './cradle/cradlemanager'
@@ -332,7 +332,7 @@ const Cradle = ({
 
     const [
         scrollManager,
-        signalsManager,
+        // signalsManager,
         stateManager,
         contentManager,
         cradleManager,
@@ -342,7 +342,7 @@ const Cradle = ({
     ] = useMemo(()=>{
         return [
             new ScrollManager(commonProps),
-            new SignalsManager(commonProps),
+            // new SignalsManager(commonProps),
             new StateManager(commonProps,cradleStateRef,setCradleState,isMountedRef),
             new ContentManager(commonProps, contentCallbacksRef),
             new CradleManager(commonProps, cradleElementsRef.current),
@@ -355,7 +355,7 @@ const Cradle = ({
     // to instantiate managersRef
     const managementsetRef = useRef({
         scroll:scrollManager,
-        signals:signalsManager, 
+        // signals:signalsManager, 
         state:stateManager,
         content:contentManager, 
         cradle:cradleManager, 
@@ -425,7 +425,7 @@ const Cradle = ({
 
         if (viewportData.isResizing) {
 
-            let signals = signalsManager.signals
+            let signals = interruptManager.signals
             signals.pauseCellObserver = true
             signals.pauseCradleIntersectionObserver = true
             signals.pauseCradleResizeObserver = true
@@ -477,7 +477,7 @@ const Cradle = ({
             console.log('setting reparenting signals for index, state', viewportDataRef.current.index, cradleState)
         }
 
-        const signals = signalsManager.signals
+        const signals = interruptManager.signals
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
         // signals.pauseCradleIntersectionObserver = true
@@ -491,7 +491,7 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        let signals = signalsManager.signals
+        let signals = interruptManager.signals
 
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
@@ -526,7 +526,7 @@ const Cradle = ({
         
         cradleManager.cradleReferenceData.nextCradlePosOffset = Math.round(currentSpineOffset)
 
-        let signals = signalsManager.signals
+        let signals = interruptManager.signals
 
         signals.pauseCellObserver = true
         // pauseCradleIntersectionObserverRef.current = true
@@ -765,7 +765,7 @@ const Cradle = ({
                         // redundant scroll position to avoid accidental positioning at tail end of doreposition
                         if ((!viewportDataRef.current.portal) || ((!viewportDataRef.current.portal.isreparenting)
                             && (!isReparentingRef.current))) {
-                            let signals = signalsManager.signals
+                            let signals = interruptManager.signals
                             if (interruptManager.states.isCradleInView) {
 
                                 if (viewportData.elementref.current) { // already unmounted if fails (?)

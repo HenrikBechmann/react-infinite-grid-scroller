@@ -19,7 +19,7 @@ export default class ScrollManager {
 
     onScroll = (e) => {
 
-        const signals = this.commonProps.managersRef.current.signals.signals
+        const signals = this.commonProps.managersRef.current.interrupts.signals
 
         // if (signals.pauseScrollingEffects) {
 

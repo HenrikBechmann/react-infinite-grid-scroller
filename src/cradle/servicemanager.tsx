@@ -47,7 +47,7 @@ export default class ServiceManager {
 
     reload = () => {
 
-        const signals = this.commonProps.managersRef.current.signals.signals
+        const signals = this.commonProps.managersRef.current.interrupts.signals
         const stateManager = this.commonProps.managersRef.current.state
 
         signals.pauseCellObserver = true
@@ -59,7 +59,7 @@ export default class ServiceManager {
 
     scrollToItem = (index) => {
 
-        const signals = this.commonProps.managersRef.current.signals.signals
+        const signals = this.commonProps.managersRef.current.interrupts.signals
         let cradleManager = this.commonProps.managersRef.current.cradle
         let stateManager = this.commonProps.managersRef.current.state
 
