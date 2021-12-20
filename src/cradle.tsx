@@ -775,7 +775,6 @@ const Cradle = ({
                                     signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
                                     signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
                                     signals.pauseCradleResizeObserver && (signals.pauseCradleResizeObserver = false)
-                                    // signals.isReparenting && (signals.isReparenting = false)
                                 } else {
                                     console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportData)
                                 }

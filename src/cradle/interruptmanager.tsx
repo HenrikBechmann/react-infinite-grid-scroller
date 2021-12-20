@@ -21,15 +21,13 @@ export default class InterruptManager {
    // TODO: stub
    private cradleresizeobservercallback = (entries) => {
 
-       const interruptManager = this.commonProps.managersRef.current.interrupts
-       if (interruptManager.signals.pauseCradleResizeObserver) return
+       if (this.signals.pauseCradleResizeObserver) return
 
    }
 
     private cradleIntersectionObserverCallback = (entries) => {
 
-        const interruptManager = this.commonProps.managersRef.current.interrupts
-        const signals = interruptManager.signals
+        const signals = this.signals
         const stateManager = this.commonProps.managersRef.current.state
         const contentManager = this.commonProps.managersRef.current.content
 
@@ -104,15 +102,12 @@ export default class InterruptManager {
         //         console.log('entries for ', viewportData.index, entries)
         // }
 
-        let interruptManager = this.commonProps.managersRef.current.interrupts
         let contentManager = this.commonProps.managersRef.current.content
         let stateManager = this.commonProps.managersRef.current.state
 
         // TODO: moved this above initialization; no apparent difference to bug
-        if (interruptManager.signals.pauseCellObserver) { 
-            // if (viewportData.index == 6) {
-            //     console.log('breaking from callback for pauseCellObserver')
-            // }
+        if (this.signals.pauseCellObserver) { 
+
             return
 
         }
