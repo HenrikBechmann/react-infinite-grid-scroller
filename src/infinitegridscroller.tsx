@@ -2,7 +2,7 @@
 // copyright (c) 2019-2021 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    BUG: repositioning is broken.
+    BUG: repositioningA is broken.
     TODO:
     - make sure outportal locations are unmounted before outportal is moved
     - check use of useCallback

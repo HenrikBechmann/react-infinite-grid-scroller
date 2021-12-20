@@ -56,8 +56,8 @@ export default class InterruptManager {
             if (
                 !viewportData.isResizing &&
                 !(cradleState == 'resized') &&
-                !(cradleState == 'repositioning') && 
-                !(cradleState == 'updatereposition') &&
+                !(cradleState == 'repositioningA') && 
+                !(cradleState == 'repositioningB') &&
                 !(cradleState == 'doreposition') && 
                 !(cradleState == 'pivot')
                 ) 

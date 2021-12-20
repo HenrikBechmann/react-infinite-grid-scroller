@@ -2,10 +2,10 @@
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
 const signalsbaseline = {
-    pauseCellObserver: true,
-    pauseCradleIntersectionObserver:true,
-    pauseCradleResizeObserver: true,
-    pauseScrollingEffects: true,
+    pauseCellObserver: false,
+    pauseCradleIntersectionObserver:false,
+    pauseCradleResizeObserver: false,
+    pauseScrollingEffects: false,
     isTailCradleInView:true,
     isHeadCradleInView:true,
     isCradleInView:true,

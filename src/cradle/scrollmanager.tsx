@@ -64,7 +64,7 @@ export default class ScrollManager {
 
         if (!viewportData.isResizing) {
 
-            if ((cradleState == 'ready') || (cradleState == 'repositioning') || (cradleState == 'updatereposition')) {
+            if ((cradleState == 'ready') || (cradleState == 'repositioningA') || (cradleState == 'repositioningB')) {
 
                 if (cradleState == 'ready') {
 
@@ -88,10 +88,10 @@ export default class ScrollManager {
 
                 }
 
-                if ((cradleState == 'repositioning') || (cradleState == 'updatereposition')) {
+                if ((cradleState == 'repositioningA') || (cradleState == 'repositioningB')) {
 
                     this._setScrollReferenceIndexData()
-                    if (cradleState == 'repositioning') stateManager.setCradleState('updatereposition')
+                    if (cradleState == 'repositioningA') stateManager.setCradleState('repositioningB')
 
                 }
 
@@ -164,8 +164,8 @@ export default class ScrollManager {
         const cradleState = stateManager.cradleStateRef.current
         switch (cradleState) {
 
-            case 'repositioning': 
-            case 'updatereposition':
+            case 'repositioningA': 
+            case 'repositioningB':
             {
 
                 stateManager.setCradleState('doreposition')

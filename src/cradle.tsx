@@ -167,19 +167,6 @@ const Cradle = ({
     const viewportDataRef = useRef(null)
     viewportDataRef.current = viewportData
 
-    if ((viewportDataRef.current.index == 6) || (viewportDataRef.current.index === null)) {
-        console.log(`RUNNING CRADLE index, cradleState, isReparentingRef.current, 
-viewportDataRef.current.portal?.isreparenting, viewportData.isResizing`,
-            viewportDataRef.current.index, '\n',
-            '==>',cradleState,isReparentingRef.current,
-            viewportDataRef.current.portal?.isreparenting,
-            viewportData.isResizing)
-    }
-
-    // if (viewportDataRef.current.index === null) {
-    //     console.log('RUNNING CRADLE index, cradleState\n', viewportDataRef.current.index, cradleState)
-    // }
-
     const normalizetimerRef = useRef(null)
     // if ((cradleState == 'normalizesignals') && viewportData.portal?.isreparenting) {
     if (viewportData.portal?.isreparenting) { // tiny edge case; avoid resetting signals
@@ -379,6 +366,16 @@ viewportDataRef.current.portal?.isreparenting, viewportData.isResizing`,
 
     managersRef.current = managementsetRef.current
 
+    if (/*(viewportDataRef.current.index == 6) ||*/ (viewportDataRef.current.index === null)) {
+        console.log('RUNNING CRADLE index',
+            viewportDataRef.current.index, '\n',
+            '==>','cradleState:',cradleState,'\n',
+            'isRepositioning signal:',signalsManager.signals.isRepositioning,'\n',
+            'isreparenting signal, state:',viewportDataRef.current.portal?.isreparenting,
+            isReparentingRef.current,'\n',
+            'isResizing signal:',viewportData.isResizing)
+    }
+
     // ------------------------------------------------------------------------
     // -----------------------[ initialization effects ]-----------------------
 
@@ -463,7 +460,11 @@ viewportDataRef.current.portal?.isreparenting, viewportData.isResizing`,
             } else {
 
                 isReparentingRef.current = true
-                if (viewportDataRef.current.index == 6) console.log('setting restorescrollposition')
+
+                if (/*(viewportDataRef.current.index == 6) ||*/ (viewportDataRef.current.index === null)) {
+                    console.log('setting restorescrollposition for index',viewportDataRef.current.index)
+                }
+
                 setCradleState('restorescrollposition')
 
             }
@@ -472,8 +473,8 @@ viewportDataRef.current.portal?.isreparenting, viewportData.isResizing`,
             return
         }
 
-        if (viewportDataRef.current.index == 6) {
-            console.log('setting signals for state', cradleState)
+        if (/*(viewportDataRef.current.index == 6) ||*/ (viewportDataRef.current.index === null)) {
+            console.log('setting reparenting signals for index, state', viewportDataRef.current.index, cradleState)
         }
 
         const signals = signalsManager.signals
@@ -611,7 +612,7 @@ viewportDataRef.current.portal?.isreparenting, viewportData.isResizing`,
     // --------------------[ intersection observer for cradle body ]-----------------------
 
     // this sets up an IntersectionObserver of the cradle against the viewport. When the
-    // cradle goes out of the observer scope, the "repositioning" cradle state is triggerd.
+    // cradle goes out of the observer scope, the "repositioningA" cradle state is triggerd.
     useEffect(() => {
 
         let observer = interruptManager.cradleIntersect.create()
@@ -678,20 +679,18 @@ viewportDataRef.current.portal?.isreparenting, viewportData.isResizing`,
         let viewportData = viewportDataRef.current
         let cradleContent = contentManager.content
         switch (cradleState) {
+
             case 'reload':
                 // cradleContent.portalData.clear()
                 setCradleState('setreload')
                 break;
+
             case 'startreposition': {
                 signalsManager.signals.isRepositioning = true
-                setCradleState('repositioning')
+                setCradleState('repositioningA')
                 break
             }
-            case 'updatereposition':
-                setCradleState('repositioning')
-                break
-            case 'repositioning':
-                break
+
             case 'restorescrollposition': {
 
                 if (viewportDataRef.current.index == 6) {
@@ -704,6 +703,7 @@ viewportDataRef.current.portal?.isreparenting, viewportData.isResizing`,
 
                 break
             }
+
             case 'setscrollposition': {
 
                 viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
@@ -728,18 +728,10 @@ viewportDataRef.current.portal?.isreparenting, viewportData.isResizing`,
                 setCradleState('setscrollposition')
                 break
             }
-        }
-
-    },[cradleState])
-
-    // standard processing stages
-    useLayoutEffect(()=> { // TODO: verify benefit of useLayoutEffect
-
-        let viewportData = viewportDataRef.current
-        switch (cradleState) {
             case 'doreposition': {
                 signalsManager.signals.isRepositioning = false
             }
+
             case 'setup': 
             case 'resized':
             case 'pivot':
@@ -763,6 +755,7 @@ viewportDataRef.current.portal?.isreparenting, viewportData.isResizing`,
 
                 break
             }
+
             case 'normalizesignals': {
                 normalizetimerRef.current = setTimeout(()=> {
 
@@ -789,8 +782,8 @@ viewportDataRef.current.portal?.isreparenting, viewportData.isResizing`,
                                     setCradleState('ready')
                                 } else {
                                     if (viewportDataRef.current.index === null) {
-                                        console.log('calling repositioning from normalizesignals, isCradleInView == false')
-                                        setCradleState('repositioning')
+                                        console.log('calling repositioningA from normalizesignals, isCradleInView == false')
+                                        setCradleState('repositioningA')
                                     }
                                 }
 
@@ -810,6 +803,23 @@ viewportDataRef.current.portal?.isreparenting, viewportData.isResizing`,
 
             }          
 
+        }
+
+    },[cradleState])
+
+    // standard processing stages
+    useEffect(()=> { // TODO: verify benefit of useLayoutEffect
+
+        let viewportData = viewportDataRef.current
+        switch (cradleState) {
+
+            case 'repositioningB':
+                setCradleState('repositioningA')
+                break
+
+            case 'repositioningA':
+                break
+
             case 'ready':
                 break
 
@@ -822,7 +832,7 @@ viewportDataRef.current.portal?.isreparenting, viewportData.isResizing`,
     // =============================================================================
 
     const scrollTrackerArgs = useMemo(() => {
-        if (!(cradleStateRef.current == 'updatereposition' || cradleStateRef.current == 'repositioning')) {
+        if (!(cradleStateRef.current == 'repositioningB' || cradleStateRef.current == 'repositioningA')) {
             return
         }
         let trackerargs = {
@@ -842,7 +852,7 @@ viewportDataRef.current.portal?.isreparenting, viewportData.isResizing`,
             <PortalList scrollerData = {cradleDataRef.current.portalManager.scrollerData}/>
         </div>}
 
-        {(cradleStateRef.current == 'updatereposition' || cradleStateRef.current == 'repositioning')
+        {(cradleStateRef.current == 'repositioningB' || cradleStateRef.current == 'repositioningA')
             ?<ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 
