@@ -224,10 +224,10 @@ const Cradle = ({
     const crosscount = useMemo(() => {
 
         let crosscount
-        let size = (orientation == 'horizontal')?viewportheight:viewportwidth
-        let crossLength = (orientation == 'horizontal')?cellHeight:cellWidth
+        const size = (orientation == 'horizontal')?viewportheight:viewportwidth
+        const crossLength = (orientation == 'horizontal')?cellHeight:cellWidth
 
-        let lengthforcalc = size - (padding * 2) + gap // length of viewport
+        const lengthforcalc = size - (padding * 2) + gap // length of viewport
         let tilelengthforcalc = crossLength + gap
         tilelengthforcalc = Math.min(tilelengthforcalc,lengthforcalc) // result cannot be less than 1
         crosscount = Math.floor(lengthforcalc/(tilelengthforcalc))
@@ -363,7 +363,7 @@ const Cradle = ({
 
     managersRef.current = managementsetRef.current
 
-    if (/*(viewportDataRef.current.index == 6) ||*/ (viewportDataRef.current.index === null)) {
+    if ((viewportDataRef.current.index == 6) /*|| (viewportDataRef.current.index === null)*/) {
         console.log('RUNNING CRADLE index',
             viewportDataRef.current.index, '\n',
             '==>','cradleState:',cradleState,'\n',
@@ -462,7 +462,7 @@ const Cradle = ({
 
                 isReparentingRef.current = true
 
-                if (/*(viewportDataRef.current.index == 6) ||*/ (viewportDataRef.current.index === null)) {
+                if ((viewportDataRef.current.index == 6) /*|| (viewportDataRef.current.index === null)*/) {
                     console.log('setting restorescrollposition for index',viewportDataRef.current.index)
                 }
 
@@ -474,7 +474,7 @@ const Cradle = ({
             return
         }
 
-        if (/*(viewportDataRef.current.index == 6) ||*/ (viewportDataRef.current.index === null)) {
+        if ((viewportDataRef.current.index == 6) /*|| (viewportDataRef.current.index === null)*/) {
             console.log('setting reparenting signals for index, state', viewportDataRef.current.index, cradleState)
         }
 

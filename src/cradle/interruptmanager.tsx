@@ -53,9 +53,12 @@ export default class InterruptManager {
 
         this.states.isCradleInView = (this.isHeadCradleInView || this.isTailCradleInView);
 
-        // console.log('new isCradleInView from intersection interrupt',this.states.isCradleInView)
-
         const viewportData = this.commonProps.viewportdataRef.current
+
+        // if (viewportData.index == 6) {
+        //     console.log('new isCradleInView from intersection interrupt',this.states.isCradleInView)
+        // }
+
         if (!this.states.isCradleInView) // start reposition if no other interrupts are underway
         {
             let cradleState = stateManager.cradleStateRef.current        
@@ -133,9 +136,9 @@ export default class InterruptManager {
             }
         }
 
-        if (viewportData.index == 6) {
-                console.log('movedentries for ', viewportData.index, movedentries)
-        }
+        // if (viewportData.index == 6) {
+        //         console.log('movedentries for ', viewportData.index, movedentries)
+        // }
 
         stateManager.isMountedRef.current && contentManager.updateCradleContent(movedentries,'cellObserver')
 
