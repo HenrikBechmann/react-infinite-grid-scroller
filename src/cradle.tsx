@@ -370,7 +370,8 @@ const Cradle = ({
             'isRepositioning signal:',interruptManager.states.isRepositioning,'\n',
             'isReparenting signal, state:',viewportDataRef.current.portal?.isReparenting,
             isReparentingRef.current,'\n',
-            'isResizing signal:',viewportData.isResizing)
+            'isResizing signal:',viewportData.isResizing,'\n',
+            'isCradleInView:',interruptManager.states.isCradleInView)
     }
 
     // ------------------------------------------------------------------------
@@ -613,10 +614,10 @@ const Cradle = ({
 
     // this sets up an IntersectionObserver of the cradle against the viewport. When the
     // cradle goes out of the observer scope, the "repositioningA" cradle state is triggerd.
-    useEffect(() => {
+    useEffect(()=>{
 
-        let observer = interruptManager.cradleIntersect.create()
-        let cradleElements = cradleManager.elements
+        const observer = interruptManager.cradleIntersect.create()
+        const cradleElements = cradleManager.elements
         observer.observe(cradleElements.headRef.current)
         observer.observe(cradleElements.tailRef.current)
 
@@ -627,6 +628,22 @@ const Cradle = ({
         }
 
     },[])
+    useEffect(() => {
+
+        if ((cradleState != 'startreposition') && (cradleState != 'finishreposition')) return
+
+        const observer = interruptManager.cradleIntersect.observer
+
+        if (cradleState == 'startreposition') {
+            observer.disconnect()
+        }
+        if (cradleState == 'finishreposition') {
+            const cradleElements = cradleManager.elements
+            observer.observe(cradleElements.headRef.current)
+            observer.observe(cradleElements.tailRef.current)
+        }
+
+    },[cradleState])
 
     // --------------------------[ item shell observer ]-----------------------------
 
@@ -685,12 +702,6 @@ const Cradle = ({
                 setCradleState('setreload')
                 break;
 
-            case 'startreposition': {
-                interruptManager.states.isRepositioning = true
-                setCradleState('repositioningA')
-                break
-            }
-
             case 'restorescrollposition': {
 
                 if (viewportDataRef.current.index == 6) {
@@ -726,6 +737,25 @@ const Cradle = ({
                 cradleContent.tailView = cradleContent.tailModel
 
                 setCradleState('setscrollposition')
+                break
+            }
+
+            case 'startreposition': {
+                interruptManager.states.isRepositioning = true
+                interruptManager.signals.pauseCradleIntersectionObserver = true
+                setCradleState('repositioningA')
+                break
+            }
+
+            case 'finishreposition': {
+                // interruptManager.states.isCradleInView = true
+                interruptManager.signals.pauseCradleIntersectionObserver = false
+                setCradleState('updatereferences')
+                break
+            }
+            case 'updatereferences':{
+                scrollManager.updateReferenceData()
+                setCradleState('doreposition')
                 break
             }
             case 'doreposition': {
@@ -856,7 +886,7 @@ const Cradle = ({
                 listsize = {scrollTrackerArgs.listsize}
                 styles = {scrollTrackerArgs.styles}
             />
-            :null}
+            :
         <div 
             data-type = 'cradle-spine'
             style = {cradleSpineStyle} 
@@ -885,7 +915,7 @@ const Cradle = ({
                 {(cradleStateRef.current != 'setup')?cradleContent.tailView:null}
             
             </div>
-        </div>
+        </div>}
         
     </CradleContext.Provider>
 

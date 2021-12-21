@@ -31,7 +31,10 @@ export default class InterruptManager {
         const stateManager = this.commonProps.managersRef.current.state
         const contentManager = this.commonProps.managersRef.current.content
 
-        if (signals.pauseCradleIntersectionObserver) return
+        if (signals.pauseCradleIntersectionObserver) {
+            console.log('returning from intersectionobserver for PAUSE')
+            return
+        }
 
         for (let i = 0; i < entries.length; i++ ) {
             let entry = entries[i]
@@ -50,7 +53,9 @@ export default class InterruptManager {
 
         this.states.isCradleInView = (this.isHeadCradleInView || this.isTailCradleInView);
 
-        let viewportData = this.commonProps.viewportdataRef.current
+        // console.log('new isCradleInView from intersection interrupt',this.states.isCradleInView)
+
+        const viewportData = this.commonProps.viewportdataRef.current
         if (!this.states.isCradleInView) // start reposition if no other interrupts are underway
         {
             let cradleState = stateManager.cradleStateRef.current        
@@ -59,6 +64,8 @@ export default class InterruptManager {
                 !(cradleState == 'resized') &&
                 !(cradleState == 'repositioningA') && 
                 !(cradleState == 'repositioningB') &&
+                !(cradleState == 'finishreposition') &&
+                !(cradleState == 'updatereferences') &&
                 !(cradleState == 'doreposition') && 
                 !(cradleState == 'pivot')
                 ) 
@@ -175,9 +182,9 @@ export default class InterruptManager {
     }
 
     states = {
-        isRepositioning:false,
-        isResizing:false,
-        isReparenting:false,
+        isRepositioning:false, // right now for debug only
+        isResizing:false, // right now for debug only
+        isReparenting:false, // right now not used
         isCradleInView: false,
     }
 

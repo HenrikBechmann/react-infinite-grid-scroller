@@ -117,10 +117,37 @@ export default class ScrollManager {
     private _onAfterScroll = () => {
 
         const stateManager = this.commonProps.managersRef.current.state
+        const contentManager = this.commonProps.managersRef.current.content
+
+        const cradleState = stateManager.cradleStateRef.current
+        switch (cradleState) {
+
+            case 'repositioningA': 
+            case 'repositioningB':
+            {
+
+                stateManager.setCradleState('finishreposition')
+
+                break
+            }
+
+            default: {
+                this.updateReferenceData()
+                contentManager.updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
+
+            }
+
+        }
+        
+    }
+
+    updateReferenceData = () => {
+
+        const stateManager = this.commonProps.managersRef.current.state
         const cradleManager = this.commonProps.managersRef.current.cradle
         const cradleProps = this.commonProps.cradlePropsRef.current
         const viewportData = this.commonProps.viewportdataRef.current
-        const contentManager = this.commonProps.managersRef.current.content
+        // const contentManager = this.commonProps.managersRef.current.content
 
         if (!stateManager.isMountedRef.current) return
 
@@ -161,26 +188,6 @@ export default class ScrollManager {
 
         }
 
-        const cradleState = stateManager.cradleStateRef.current
-        switch (cradleState) {
-
-            case 'repositioningA': 
-            case 'repositioningB':
-            {
-
-                stateManager.setCradleState('doreposition')
-
-                break
-            }
-
-            default: {
-
-                contentManager.updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
-
-            }
-
-        }
-        
     }
 
     private _setScrollReferenceIndexData = () => {
