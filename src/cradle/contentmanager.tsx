@@ -320,7 +320,7 @@ export default class ContentManager {
         )
 
         if ((viewportData.index == 6) && (tailcontent.length == 0)) {
-            console.log('in updatecontent ZERO TAIL LENGTH entries', entries) 
+            console.log('in renderupdatedcontent ZERO TAIL LENGTH entries', entries) 
             debugger           
         }
 
@@ -358,7 +358,7 @@ export default class ContentManager {
         cradleManager.cradleReferenceData.nextItemIndexReference = spineReferenceIndex
         cradleManager.cradleReferenceData.nextCradlePosOffset = spinePosOffset
 
-        stateManager.setCradleState('updatecontent')
+        stateManager.setCradleState('renderupdatedcontent')
 
     }
 

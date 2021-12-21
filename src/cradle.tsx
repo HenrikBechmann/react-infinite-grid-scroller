@@ -697,12 +697,15 @@ const Cradle = ({
         let cradleContent = contentManager.content
         switch (cradleState) {
 
-            case 'reload':
-                // cradleContent.portalData.clear()
+            // the following three messsages are initiated independent of one another
+
+            case 'reload': // called after size configuration changes, or direct host call
+
                 setCradleState('setreload')
+
                 break;
 
-            case 'restorescrollposition': {
+            case 'restorescrollposition': { // triggered by viewpoint reParenting
 
                 if (viewportDataRef.current.index == 6) {
                     console.log('setting scroll to ',cradleManager.cradleReferenceData.blockScrollPos)
@@ -715,30 +718,18 @@ const Cradle = ({
                 break
             }
 
-            case 'setscrollposition': {
-
-                viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
-                    Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
-
-                setCradleState('normalizesignals')
-
-                break
-            }
-            case 'updatecontent': { // scroll
+            // 'renderupdatedcontent' is called from updateCradleContent, which is...
+            // called from cellintersectionobservercallback (interruptManager), and 
+            // called from onAfterScroll (scrollManager)
+            case 'renderupdatedcontent': {
 
                 setCradleState('ready')
                 break
 
             }
-            case 'preparerender': {
 
-                let cradleContent = contentManager.content
-                cradleContent.headView = cradleContent.headModel
-                cradleContent.tailView = cradleContent.tailModel
-
-                setCradleState('setscrollposition')
-                break
-            }
+            // ----------------------------------------------------------------------
+            // ------------[ reposition when isCradleInView is false ]---------------
 
             case 'startreposition': {
                 interruptManager.states.isRepositioning = true
@@ -750,24 +741,29 @@ const Cradle = ({
             case 'finishreposition': {
                 // interruptManager.states.isCradleInView = true
                 interruptManager.signals.pauseCradleIntersectionObserver = false
-                setCradleState('updatereferences')
+                setCradleState('updatepositionreferences')
                 break
             }
-            case 'updatereferences':{
+            case 'updatepositionreferences':{
                 scrollManager.updateReferenceData()
                 setCradleState('doreposition')
                 break
             }
+
+            // -----------------------------------------------------------------------
+            // ------------[ the following 5 cradle states all resolve with ]---------
+            // ------------[ a chain starting with 'preparecontent', which  ]---------
+            // ------------[ calls setCradleContent                         ]---------
+
             case 'doreposition': {
                 interruptManager.states.isRepositioning = false
-            }
-
+            } // no break; follow through to preparecontent
             case 'setup': 
             case 'resized':
             case 'pivot':
             case 'setreload':
 
-                callingCradleState.current = cradleState
+                callingCradleState.current = cradleState // message for setCradleContent
                 setCradleState('preparecontent')
 
                 break
@@ -786,12 +782,32 @@ const Cradle = ({
                 break
             }
 
+            case 'preparerender': {
+
+                let cradleContent = contentManager.content
+                cradleContent.headView = cradleContent.headModel
+                cradleContent.tailView = cradleContent.tailModel
+
+                setCradleState('setscrollposition')
+                break
+            }
+
+            case 'setscrollposition': { // always calculated with setCradleContent
+
+                viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
+                    Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
+
+                setCradleState('normalizesignals') // call a timeout for ready (or interrupt continuation)
+
+                break
+            }
+
             case 'normalizesignals': {
                 normalizetimerRef.current = setTimeout(()=> {
 
                     if (!isMountedRef.current) return
 
-                    // allow short-circuits to restart or continue interrupt responses
+                    // allow short-circuit fallbacks to continue interrupt responses
             /*1*/   if (!viewportData.isResizing) { // resize short-circuit
                         
             /*2*/       if (interruptManager.states.isCradleInView) { // repositioning short-circuit
@@ -809,7 +825,7 @@ const Cradle = ({
                                     console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportData)
                                 }
 
-                                setCradleState('ready')
+            /*default outcome*/ setCradleState('ready')
 
                             } else {
             /*3*/               setCradleState('restorescrollposition')
@@ -839,11 +855,11 @@ const Cradle = ({
         let viewportData = viewportDataRef.current
         switch (cradleState) {
 
-            case 'repositioningB':
-                setCradleState('repositioningA')
+            case 'repositioningA':
                 break
 
-            case 'repositioningA':
+            case 'repositioningB':
+                setCradleState('repositioningA')
                 break
 
             case 'ready':
