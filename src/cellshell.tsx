@@ -48,7 +48,7 @@ const CellShell = ({
     const callbackrequestRef = useRef(null)
     const portaldataRef = useRef(null)
 
-    // console.log('RUNNING cellshell scrollerID, instanceID, index, cellStatus', scrollerID, instanceID, index, cellStatus)
+    // console.log('RUNNING cellshell scrollerID, index, cellStatus', scrollerID, index, cellStatus)
 
     // for unmount
     useEffect(()=>{
@@ -135,7 +135,7 @@ const CellShell = ({
             }         
         } else {
         
-            setCellStatus('rendercontent')
+            if (isMountedRef.current) setCellStatus('rendercontent')
     
         }        
 
@@ -215,7 +215,7 @@ const CellShell = ({
                 isreparented.current = true
 
             }
-            setCellStatus('ready')
+            if (isMountedRef.current) setCellStatus('ready')
         }
 
         return component

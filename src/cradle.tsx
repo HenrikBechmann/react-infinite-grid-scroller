@@ -446,44 +446,32 @@ const Cradle = ({
 
     useLayoutEffect(()=>{
 
-        if (!viewportDataRef.current.portal) return
+        if (!viewportDataRef.current.portal) return // not nested
 
-        if (viewportDataRef.current.portal.isReparenting) {
+        if (viewportDataRef.current.portal.isReparenting) { // configure for reParenting
 
             viewportDataRef.current.portal.isReparenting = false
 
             if (cradleState == 'setup') return
 
-            if ((isReparentingRef.current) && (cradleState != 'normalizesignals')) {
-
-                return
-
-            } else {
+            if ((!isReparentingRef.current) || (cradleState == 'normalizesignals')) {
 
                 isReparentingRef.current = true
 
                 if ((viewportDataRef.current.index == 6) /*|| (viewportDataRef.current.index === null)*/) {
-                    console.log('setting restorescrollposition for index',viewportDataRef.current.index)
+                    console.log('setting reparenting + signals for index, state', viewportDataRef.current.index, cradleState)
                 }
 
+                const signals = interruptManager.signals
+                signals.pauseCellObserver = true
+                signals.pauseScrollingEffects = true
+                // signals.pauseCradleIntersectionObserver = true
+                // interruptManager.states.isCradleInView = true
                 setCradleState('restorescrollposition')
 
             }
 
-        } else {
-            return
         }
-
-        if ((viewportDataRef.current.index == 6) /*|| (viewportDataRef.current.index === null)*/) {
-            console.log('setting reparenting signals for index, state', viewportDataRef.current.index, cradleState)
-        }
-
-        const signals = interruptManager.signals
-        signals.pauseCellObserver = true
-        signals.pauseScrollingEffects = true
-        // signals.pauseCradleIntersectionObserver = true
-
-        // setCradleState('restorescrollposition')
 
     },[cradleState,viewportDataRef.current.portal?.isReparenting])
 
@@ -825,18 +813,18 @@ const Cradle = ({
                                     console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportData)
                                 }
 
-            /*default outcome*/ setCradleState('ready')
+            /*default outcome*/ if (isMountedRef.current) setCradleState('ready')
 
                             } else {
-            /*3*/               setCradleState('restorescrollposition')
+            /*3*/               if (isMountedRef.current) setCradleState('restorescrollposition')
                             }
 
                         } else {
-            /*2*/           setCradleState('startreposition')
+            /*2*/           if (isMountedRef.current) setCradleState('startreposition')
                         }
 
                     } else {
-            /*1*/       setCradleState('resizing')
+            /*1*/       if (isMountedRef.current) setCradleState('resizing')
                     }
 
                 },NORMALIZE_SIGNALS_TIMEOUT)
@@ -894,7 +882,7 @@ const Cradle = ({
             <PortalList scrollerData = {cradleDataRef.current.portalManager.scrollerData}/>
         </div>}
 
-        {(cradleStateRef.current == 'repositioningB' || cradleStateRef.current == 'repositioningA')
+        {((cradleStateRef.current == 'repositioningB') || (cradleStateRef.current == 'repositioningA'))
             ?<ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 

@@ -64,13 +64,15 @@ export default class InterruptManager {
             let cradleState = stateManager.cradleStateRef.current        
             if (
                 !viewportData.isResizing &&
+                !viewportData.portal?.isReparenting &&
                 !(cradleState == 'resized') &&
                 !(cradleState == 'repositioningA') && 
                 !(cradleState == 'repositioningB') &&
                 !(cradleState == 'finishreposition') &&
                 !(cradleState == 'updatepositionreferences') &&
                 !(cradleState == 'doreposition') && 
-                !(cradleState == 'pivot')
+                !(cradleState == 'pivot') && 
+                !(cradleState == 'restorescrollposition')
                 ) 
             {
                 const element = viewportData.elementref.current
@@ -188,7 +190,7 @@ export default class InterruptManager {
         isRepositioning:false, // right now for debug only
         isResizing:false, // right now for debug only
         isReparenting:false, // right now not used
-        isCradleInView: false,
+        isCradleInView: true,
     }
 
     signals = {
