@@ -166,61 +166,24 @@ const Cradle = ({
     const viewportDataRef = useRef(null)
     viewportDataRef.current = viewportData
 
-    const normalizetimerRef = useRef(null)
-    // if ((cradleState == 'normalizesignals') && viewportData.portal?.isReparenting) {
-    if (viewportData.portal?.isReparenting) { // tiny edge case; avoid resetting signals
-        clearTimeout(normalizetimerRef.current)
-    }
+    // cradle butterfly html components
+    const headCradleElementRef = useRef(null)
+    const tailCradleElementRef = useRef(null)
+    const spineCradleElementRef = useRef(null)
 
-    const cradleStateRef = useRef(null) // access by closures
-    cradleStateRef.current = cradleState;
-
-    const cradleDataRef = useRef({
-        portalManager:null,
-        scrollerID,
-        viewportDataRef,
-    })
-
-    // if (viewportDataRef.current.index == 0)
-    //     console.log('RUNNING CRADLE index, cradleState',viewportDataRef.current.index, cradleState)
-    // --------------------------[ bundle cradleProps ]----------------------------
-
-    // functions and styles handled separately
-    const isMountedRef = useRef(true)
-    useLayoutEffect(()=>{
-        const portalmanager = cradleDataRef.current.portalManager = new PortalManager()
-
-        // cleanup portal repository; clear isMountedRef
-        return () => {
-            isMountedRef.current = false
+    const cradleElementsRef = useRef(
+        {
+            head:headCradleElementRef, 
+            tail:tailCradleElementRef, 
+            spine:spineCradleElementRef
         }
-
-    },[])
-
-    // const cradleProps = cradlePropsRef.current
-
-    // =============================================================================================
-    // --------------------------------------[ INITIALIZATION ]-------------------------------------
-    // =============================================================================================
-
-    // -----------------------------------------------------------------------
-    // -----------------------------------[ utilites ]------------------------
-
-    const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
-
-    // -----------------------------------------------------------------------
-    // ---------------------------[ context data ]----------------------------
-
-    // if (viewportData.index == 0) console.log('cradle index, cradleState, props',
-    //     viewportData.index,cradleState, cradlePropsRef.current)
-
-    // -----------------------------------------------------------------------
-    // -------------------------[ configuration ]-----------------------------
+    )
 
     const { viewportDimensions } = viewportData
 
     let { height:viewportheight,width:viewportwidth } = viewportDimensions
     
+
     const crosscount = useMemo(() => {
 
         let crosscount
@@ -290,25 +253,18 @@ const Cradle = ({
         listRowcount:Math.ceil(listsize/crosscount),
     }
 
-    // -----------------------------------------------------------------------
-    // -------------------------[ cradle management nodes ]-----------------
+    const cradleDataRef = useRef({
+        portalManager:null,
+        scrollerID,
+        viewportDataRef,
+    })
 
     const managersRef = useRef(null) // make available to individual managers
     const commonProps = {managersRef,viewportdataRef:viewportDataRef,cradlePropsRef, cradleConfigRef, cradleDataRef}
+
+    const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
     const serviceCallsRef = useRef({referenceIndexCallbackRef})
 
-    // cradle butterfly html components
-    const headCradleElementRef = useRef(null)
-    const tailCradleElementRef = useRef(null)
-    const spineCradleElementRef = useRef(null)
-
-    const cradleElementsRef = useRef(
-        {
-            head:headCradleElementRef, 
-            tail:tailCradleElementRef, 
-            spine:spineCradleElementRef
-        }
-    )
     const setItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
 
         const [index, shellref] = itemElementData
@@ -328,6 +284,22 @@ const Cradle = ({
     const contentCallbacksRef = useRef({
         setElementData:setItemElementData
     })
+
+    const isMountedRef = useRef(true)
+    useLayoutEffect(()=>{
+        const portalmanager = cradleDataRef.current.portalManager = new PortalManager()
+
+        // cleanup portal repository; clear isMountedRef
+        return () => {
+            isMountedRef.current = false
+        }
+
+    },[])
+
+    // console.log('commonProps',commonProps, contentCallbacksRef)
+
+    const cradleStateRef = useRef(null) // access by closures
+    cradleStateRef.current = cradleState;
 
     const [
         scrollManager,
@@ -349,6 +321,42 @@ const Cradle = ({
         ]
     },[])
 
+    const normalizetimerRef = useRef(null)
+    // if ((cradleState == 'normalizesignals') && viewportData.portal?.isReparenting) {
+    if (viewportData.portal?.isReparenting) { // tiny edge case; avoid resetting signals
+        viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
+            Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
+        viewportData.portal.isReparenting = false
+        // clearTimeout(normalizetimerRef.current)
+    }
+
+    // if (viewportDataRef.current.index == 0)
+    //     console.log('RUNNING CRADLE index, cradleState',viewportDataRef.current.index, cradleState)
+    // --------------------------[ bundle cradleProps ]----------------------------
+
+    // functions and styles handled separately
+    // const cradleProps = cradlePropsRef.current
+
+    // =============================================================================================
+    // --------------------------------------[ INITIALIZATION ]-------------------------------------
+    // =============================================================================================
+
+    // -----------------------------------------------------------------------
+    // -----------------------------------[ utilites ]------------------------
+
+
+    // -----------------------------------------------------------------------
+    // ---------------------------[ context data ]----------------------------
+
+    // if (viewportData.index == 0) console.log('cradle index, cradleState, props',
+    //     viewportData.index,cradleState, cradlePropsRef.current)
+
+    // -----------------------------------------------------------------------
+    // -------------------------[ configuration ]-----------------------------
+
+    // -----------------------------------------------------------------------
+    // -------------------------[ cradle management nodes ]-----------------
+
     // to instantiate managersRef
     const managementsetRef = useRef({
         scroll:scrollManager,
@@ -359,7 +367,7 @@ const Cradle = ({
         service:serviceManager,
         interrupts:interruptManager,
         styles:stylesManager,
-    })
+    });
 
     managersRef.current = managementsetRef.current
 
@@ -444,36 +452,36 @@ const Cradle = ({
 
     },[viewportData.isResizing])
 
-    useLayoutEffect(()=>{
+    // useLayoutEffect(()=>{
 
-        if (!viewportDataRef.current.portal) return // not nested
+    //     if (!viewportDataRef.current.portal) return // not nested
 
-        if (viewportDataRef.current.portal.isReparenting) { // configure for reParenting
+    //     if (viewportDataRef.current.portal.isReparenting) { // configure for reParenting
 
-            viewportDataRef.current.portal.isReparenting = false
+    //         viewportDataRef.current.portal.isReparenting = false
 
-            if (cradleState == 'setup') return
+    //         if (cradleState == 'setup') return
 
-            if ((!isReparentingRef.current) || (cradleState == 'normalizesignals')) {
+    //         if ((!isReparentingRef.current) || (cradleState == 'normalizesignals')) {
 
-                isReparentingRef.current = true
+    //             isReparentingRef.current = true
 
-                if ((viewportDataRef.current.index == 6) /*|| (viewportDataRef.current.index === null)*/) {
-                    console.log('setting reparenting + signals for index, state', viewportDataRef.current.index, cradleState)
-                }
+    //             if ((viewportDataRef.current.index == 6) /*|| (viewportDataRef.current.index === null)*/) {
+    //                 console.log('setting reparenting + signals for index, state', viewportDataRef.current.index, cradleState)
+    //             }
 
-                const signals = interruptManager.signals
-                signals.pauseCellObserver = true
-                signals.pauseScrollingEffects = true
-                // signals.pauseCradleIntersectionObserver = true
-                // interruptManager.signals.repositioningRequired = false
-                setCradleState('restorescrollposition')
+    //             const signals = interruptManager.signals
+    //             signals.pauseCellObserver = true
+    //             signals.pauseScrollingEffects = true
+    //             // signals.pauseCradleIntersectionObserver = true
+    //             // interruptManager.signals.repositioningRequired = false
+    //             setCradleState('restorescrollposition')
 
-            }
+    //         }
 
-        }
+    //     }
 
-    },[cradleState,viewportDataRef.current.portal?.isReparenting])
+    // },[cradleState,viewportDataRef.current.portal?.isReparenting])
 
     // reload for changed parameters
     useEffect(()=>{
