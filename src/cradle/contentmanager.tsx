@@ -320,7 +320,9 @@ export default class ContentManager {
         )
 
         if ((viewportData.index == 6) && (tailcontent.length == 0)) {
-            console.log('in renderupdatedcontent ZERO TAIL LENGTH entries', entries) 
+            console.log('in updateCradleContent after allocateContentList ZERO TAIL LENGTH entries \n',
+            'spineReferenceIndex, localContentList, headcontent, tailcontent', 
+                entries, spineReferenceIndex, localContentList, headcontent, tailcontent) 
             // debugger
         }
 

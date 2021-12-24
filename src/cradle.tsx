@@ -371,7 +371,7 @@ const Cradle = ({
             'isReparenting signal, state:',viewportDataRef.current.portal?.isReparenting,
             isReparentingRef.current,'\n',
             'isResizing signal:',viewportData.isResizing,'\n',
-            'isCradleInView:',interruptManager.states.isCradleInView)
+            'repositioningRequired:',interruptManager.signals.repositioningRequired)
     }
 
     // ------------------------------------------------------------------------
@@ -466,7 +466,7 @@ const Cradle = ({
                 signals.pauseCellObserver = true
                 signals.pauseScrollingEffects = true
                 // signals.pauseCradleIntersectionObserver = true
-                // interruptManager.states.isCradleInView = true
+                // interruptManager.signals.repositioningRequired = false
                 setCradleState('restorescrollposition')
 
             }
@@ -717,7 +717,7 @@ const Cradle = ({
             }
 
             // ----------------------------------------------------------------------
-            // ------------[ reposition when isCradleInView is false ]---------------
+            // ------------[ reposition when repositioningRequired is true ]---------------
 
             case 'startreposition': {
                 interruptManager.states.isRepositioning = true
@@ -727,7 +727,7 @@ const Cradle = ({
             }
 
             case 'finishreposition': {
-                // interruptManager.states.isCradleInView = true
+                // interruptManager.signals.repositioningRequired = false
                 interruptManager.signals.pauseCradleIntersectionObserver = false
                 setCradleState('updatepositionreferences')
                 break
@@ -798,7 +798,7 @@ const Cradle = ({
                     // allow short-circuit fallbacks to continue interrupt responses
             /*1*/   if (!viewportData.isResizing) { // resize short-circuit
                         
-            /*2*/       if (interruptManager.states.isCradleInView) { // repositioning short-circuit
+            /*2*/       if (!interruptManager.signals.repositioningRequired) { // repositioning short-circuit
 
             /*3*/           if ((!viewportDataRef.current.portal) || ((!viewportDataRef.current.portal.isReparenting)
                                 && (!isReparentingRef.current))) { // reparent (restorescrollpos) short-circuit

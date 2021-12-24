@@ -51,15 +51,15 @@ export default class InterruptManager {
             }
         }
 
-        this.states.isCradleInView = (this.isHeadCradleInView || this.isTailCradleInView);
+        this.signals.repositioningRequired = (!this.isHeadCradleInView && !this.isTailCradleInView);
 
         const viewportData = this.commonProps.viewportdataRef.current
 
         // if (viewportData.index == 6) {
-        //     console.log('new isCradleInView from intersection interrupt',this.states.isCradleInView)
+        //     console.log('new repositioningRequired from intersection interrupt',this.signals.repositioningRequired)
         // }
 
-        if (!this.states.isCradleInView) // start reposition if no other interrupts are underway
+        if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway
         {
             let cradleState = stateManager.cradleStateRef.current        
             if (
@@ -190,10 +190,11 @@ export default class InterruptManager {
         isRepositioning:false, // right now for debug only
         isResizing:false, // right now for debug only
         isReparenting:false, // right now not used
-        isCradleInView: true,
+        // repositioningRequired: false,
     }
 
     signals = {
+        repositioningRequired: false,
         pauseCellObserver: false,
         pauseCradleIntersectionObserver:false,
         pauseCradleResizeObserver: false,
