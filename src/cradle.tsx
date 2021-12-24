@@ -296,8 +296,6 @@ const Cradle = ({
 
     },[])
 
-    // console.log('commonProps',commonProps, contentCallbacksRef)
-
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState;
 
@@ -376,8 +374,8 @@ const Cradle = ({
             viewportDataRef.current.index, '\n',
             '==>','cradleState:',cradleState,'\n',
             'isRepositioning signal:',interruptManager.states.isRepositioning,'\n',
-            'isReparenting signal, state:',viewportDataRef.current.portal?.isReparenting,
-            isReparentingRef.current,'\n',
+            // 'isReparenting signal, state:',viewportDataRef.current.portal?.isReparenting,
+            // isReparentingRef.current,'\n',
             'isResizing signal:',viewportData.isResizing,'\n',
             'repositioningRequired:',interruptManager.signals.repositioningRequired)
     }
@@ -701,18 +699,18 @@ const Cradle = ({
 
                 break;
 
-            case 'restorescrollposition': { // triggered by viewpoint reParenting
+            // case 'restorescrollposition': { // triggered by viewpoint reParenting
 
-                if (viewportDataRef.current.index == 6) {
-                    console.log('setting scroll to ',cradleManager.cradleReferenceData.blockScrollPos)
-                }
-                viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
-                    Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
-                isReparentingRef.current = false
-                setCradleState('normalizesignals')
+            //     if (viewportDataRef.current.index == 6) {
+            //         console.log('setting scroll to ',cradleManager.cradleReferenceData.blockScrollPos)
+            //     }
+            //     viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
+            //         Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
+            //     isReparentingRef.current = false
+            //     setCradleState('normalizesignals')
 
-                break
-            }
+            //     break
+            // }
 
             // 'renderupdatedcontent' is called from updateCradleContent, which is...
             // called from cellintersectionobservercallback (interruptManager), and 
@@ -808,8 +806,8 @@ const Cradle = ({
                         
             /*2*/       if (!interruptManager.signals.repositioningRequired) { // repositioning short-circuit
 
-            /*3*/           if ((!viewportDataRef.current.portal) || ((!viewportDataRef.current.portal.isReparenting)
-                                && (!isReparentingRef.current))) { // reparent (restorescrollpos) short-circuit
+            // /*3*/           if ((!viewportDataRef.current.portal) || (!viewportDataRef.current.portal.isReparenting))
+            //                     /*&& (!isReparentingRef.current))*/ { // reparent (restorescrollpos) short-circuit
                             
                                 const signals = interruptManager.signals
                                 if (viewportData.elementref.current) { // already unmounted if fails (?)
@@ -823,9 +821,9 @@ const Cradle = ({
 
             /*default outcome*/ if (isMountedRef.current) setCradleState('ready')
 
-                            } else {
-            /*3*/               if (isMountedRef.current) setCradleState('restorescrollposition')
-                            }
+            //                 } else {
+            // /*3*/               if (isMountedRef.current) setCradleState('restorescrollposition')
+            //                 }
 
                         } else {
             /*2*/           if (isMountedRef.current) setCradleState('startreposition')
