@@ -43,7 +43,7 @@ export default class ScrollManager {
 
         }
 
-        cradleManager.cradleReferenceData.blockScrollPos = scrollPositionCurrent // TODO: redundant?
+        // cradleManager.cradleReferenceData.blockScrollPos = scrollPositionCurrent // TODO: redundant?
 
         this.scrollPositions.previous = this.scrollPositions.current
         this.scrollPositions.current = scrollPositionCurrent

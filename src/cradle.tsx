@@ -369,16 +369,16 @@ const Cradle = ({
 
     managersRef.current = managementsetRef.current
 
-    if ((viewportDataRef.current.index == 6) /*|| (viewportDataRef.current.index === null)*/) {
-        console.log('RUNNING CRADLE index',
-            viewportDataRef.current.index, '\n',
-            '==>','cradleState:',cradleState,'\n',
-            'isRepositioning signal:',interruptManager.states.isRepositioning,'\n',
-            // 'isReparenting signal, state:',viewportDataRef.current.portal?.isReparenting,
-            // isReparentingRef.current,'\n',
-            'isResizing signal:',viewportData.isResizing,'\n',
-            'repositioningRequired:',interruptManager.signals.repositioningRequired)
-    }
+    // if ((viewportDataRef.current.index == 6) /*|| (viewportDataRef.current.index === null)*/) {
+    //     console.log('RUNNING CRADLE index',
+    //         viewportDataRef.current.index, '\n',
+    //         '==>','cradleState:',cradleState,'\n',
+    //         'isRepositioning signal:',interruptManager.states.isRepositioning,'\n',
+    //         // 'isReparenting signal, state:',viewportDataRef.current.portal?.isReparenting,
+    //         // isReparentingRef.current,'\n',
+    //         'isResizing signal:',viewportData.isResizing,'\n',
+    //         'repositioningRequired:',interruptManager.signals.repositioningRequired)
+    // }
 
     // ------------------------------------------------------------------------
     // -----------------------[ initialization effects ]-----------------------

@@ -61,9 +61,9 @@ export default class ContentManager {
         let interruptManager = this.commonProps.managersRef.current.interrupts
         let cradleData = this.commonProps.cradleDataRef.current
 
-        // if (viewportData.index == 6) {
-        //     console.log('SETTING content - cradleState, cradleData in setCradleContent',cradleState, cradleData)
-        // }
+        if (viewportData.index == 6) {
+            console.log('SETTING content - cradleState, cradleData in setCradleContent',cradleState, cradleData)
+        }
 
         let viewportElement = viewportData.elementref.current
 
@@ -150,8 +150,8 @@ export default class ContentManager {
         let cradleElements = cradleManager.elements //cradleElementsRef.current
 
         cradleManager.cradleReferenceData.blockScrollPos = scrollblockOffset - spinePosOffset
-        console.log('setting blockScrollPos in setCradleContent: blockScrollPos, scrollblockOffset, spinePosOffset',
-            cradleManager.cradleReferenceData.blockScrollPos, scrollblockOffset, spinePosOffset)
+        // console.log('setting blockScrollPos in setCradleContent: blockScrollPos, scrollblockOffset, spinePosOffset',
+        //     cradleManager.cradleReferenceData.blockScrollPos, scrollblockOffset, spinePosOffset)
 
         if (orientation == 'vertical') {
 
@@ -186,9 +186,9 @@ export default class ContentManager {
 
         let cradleData = this.commonProps.cradleDataRef.current
 
-        // if (viewportData.index == 6) {
-        //     console.log('UPDATING content - source, cradleData in updateCradleContent',source, cradleData)
-        // }
+        if (viewportData.index == 6) {
+            console.log('UPDATING content - source, cradleData in updateCradleContent',source, cradleData)
+        }
 
         let viewportElement = viewportData.elementref.current
         if (!viewportElement) {
