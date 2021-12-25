@@ -149,6 +149,7 @@ export default class ContentManager {
         if (orientation == 'vertical') {
 
             cradleManager.cradleReferenceData.blockScrollProperty = 'scrollTop'
+            // cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
 
             cradleElements.spineRef.current.style.top = (scrollblockOffset + spineAdjustment) + 'px'
             cradleElements.spineRef.current.style.left = 'auto'
@@ -157,6 +158,7 @@ export default class ContentManager {
         } else { // orientation = 'horizontal'
 
             cradleManager.cradleReferenceData.blockScrollProperty = 'scrollLeft'
+            // cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
 
             cradleElements.spineRef.current.style.top = 'auto'
             cradleElements.spineRef.current.style.left = (scrollblockOffset + spineAdjustment) + 'px'

@@ -176,16 +176,37 @@ export default class ScrollManager {
             cradleManager.cradleReferenceData.nextCradlePosOffset = 
                 cradleManager.cradleReferenceData.scrollImpliedCradlePosOffset
 
-            if (cradleProps.orientation == 'vertical') {
 
-                cradleManager.cradleReferenceData.blockScrollProperty = 'scrollTop'
-                cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
+            this.updateBlockScrollPos()
+            // if (cradleProps.orientation == 'vertical') {
 
-            } else {
-                cradleManager.cradleReferenceData.blockScrollProperty = 'scrollLeft'
-                cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
-            }
+            //     cradleManager.cradleReferenceData.blockScrollProperty = 'scrollTop'
+            //     cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
 
+            // } else {
+            //     cradleManager.cradleReferenceData.blockScrollProperty = 'scrollLeft'
+            //     cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
+            // }
+
+        }
+
+    }
+
+    updateBlockScrollPos = () => {
+
+        const cradleManager = this.commonProps.managersRef.current.cradle
+        const cradleProps = this.commonProps.cradlePropsRef.current
+        const viewportData = this.commonProps.viewportdataRef.current
+        const viewportElement = viewportData.elementref.current
+
+        if (cradleProps.orientation == 'vertical') {
+
+            cradleManager.cradleReferenceData.blockScrollProperty = 'scrollTop'
+            cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
+
+        } else {
+            cradleManager.cradleReferenceData.blockScrollProperty = 'scrollLeft'
+            cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
         }
 
     }
