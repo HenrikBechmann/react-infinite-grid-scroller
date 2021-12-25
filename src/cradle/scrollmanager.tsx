@@ -176,17 +176,7 @@ export default class ScrollManager {
             cradleManager.cradleReferenceData.nextCradlePosOffset = 
                 cradleManager.cradleReferenceData.scrollImpliedCradlePosOffset
 
-
             this.updateBlockScrollPos()
-            // if (cradleProps.orientation == 'vertical') {
-
-            //     cradleManager.cradleReferenceData.blockScrollProperty = 'scrollTop'
-            //     cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
-
-            // } else {
-            //     cradleManager.cradleReferenceData.blockScrollProperty = 'scrollLeft'
-            //     cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
-            // }
 
         }
 

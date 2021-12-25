@@ -82,10 +82,15 @@ export default class ContentManager {
 
         }
 
-        let localContentList = []
-        let cradleContent = this.content
+        const localContentList = []
+        const cradleContent = this.content
 
-        let {cradleReferenceIndex, referenceoffset, cradleActualContentCount, scrollblockOffset, spinePosOffset, spineAdjustment} = 
+        let {cradleReferenceIndex, 
+            referenceoffset, 
+            cradleActualContentCount, 
+            scrollblockOffset, 
+            spinePosOffset, 
+            spineAdjustment} = 
             getContentListRequirements({
                 cradleProps,
                 cradleConfig,
@@ -145,7 +150,9 @@ export default class ContentManager {
         let cradleElements = cradleManager.elements //cradleElementsRef.current
 
         cradleManager.cradleReferenceData.blockScrollPos = scrollblockOffset - spinePosOffset
-        
+        console.log('setting blockScrollPos in setCradleContent: blockScrollPos, scrollblockOffset, spinePosOffset',
+            cradleManager.cradleReferenceData.blockScrollPos, scrollblockOffset, spinePosOffset)
+
         if (orientation == 'vertical') {
 
             cradleManager.cradleReferenceData.blockScrollProperty = 'scrollTop'
@@ -321,10 +328,10 @@ export default class ContentManager {
             }
         )
 
-        if ((viewportData.index == 6) && (tailcontent.length == 0)) {
-            console.log('in updateCradleContent after allocateContentList ZERO TAIL LENGTH entries \n',
+        if ((viewportData.index == 6) /*&& (tailcontent.length == 0)*/) {
+            console.log('in updateCradleContent after allocateContentList \n',
             'spineReferenceIndex, localContentList, headcontent, tailcontent', 
-                entries, spineReferenceIndex, localContentList, headcontent, tailcontent) 
+                spineReferenceIndex, entries, localContentList, headcontent, tailcontent) 
             // debugger
         }
 
@@ -334,20 +341,24 @@ export default class ContentManager {
 
         // -------------------------------[ 8. set css changes ]-------------------------
 
+        scrollManager.updateBlockScrollPos()
+
         if (spinePosOffset !== undefined) {
+
+            // scrollManager.updateBlockScrollPos()
             
             if (cradleProps.orientation == 'vertical') {
 
-                cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
-                cradleManager.cradleReferenceData.blockScrollProperty = 'scrollTop'
+                // cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
+                // cradleManager.cradleReferenceData.blockScrollProperty = 'scrollTop'
                 cradleElements.spineRef.current.style.top = viewportElement.scrollTop + spinePosOffset + 'px'
                 cradleElements.spineRef.current.style.left = 'auto'
                 cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
 
             } else {
 
-                cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
-                cradleManager.cradleReferenceData.blockScrollProperty = 'scrollLeft'
+                // cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
+                // cradleManager.cradleReferenceData.blockScrollProperty = 'scrollLeft'
                 cradleElements.spineRef.current.style.top = 'auto'
                 cradleElements.spineRef.current.style.left = viewportElement.scrollLeft + spinePosOffset + 'px'
                 cradleElements.headRef.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
