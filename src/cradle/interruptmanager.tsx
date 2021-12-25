@@ -110,9 +110,9 @@ export default class InterruptManager {
         }
         
         let viewportData = this.commonProps.viewportdataRef.current
-        // if (viewportData.index == 6) {
-        //         console.log('entries for ', viewportData.index, entries)
-        // }
+        if (viewportData.index == 6) {
+                console.log('cell intersection entries for ', viewportData.index, entries)
+        }
 
         let contentManager = this.commonProps.managersRef.current.content
         let stateManager = this.commonProps.managersRef.current.state

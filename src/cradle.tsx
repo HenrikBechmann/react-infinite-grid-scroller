@@ -322,6 +322,9 @@ const Cradle = ({
     const normalizetimerRef = useRef(null)
     // if ((cradleState == 'normalizesignals') && viewportData.portal?.isReparenting) {
     if (viewportData.portal?.isReparenting) { // tiny edge case; avoid resetting signals
+        if (viewportData.index == 6) {
+                console.log('restoring scrollpos ', viewportData.index,Math.max(0,cradleManager.cradleReferenceData.blockScrollPos))
+        }
         viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
             Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
         viewportData.portal.isReparenting = false
