@@ -661,7 +661,14 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     // ----------------[ END OF EXPERIMENTAL ADJUSTMENT ]-----------------------
 
-    return [ newcradleindex, cradleitemshiftcount, newreferenceindex, referenceitemshiftcount, spinePosOffset, cradleActualContentCount ]
+    return [ 
+        newcradleindex, 
+        cradleitemshiftcount, 
+        newreferenceindex, 
+        referenceitemshiftcount, 
+        spinePosOffset, 
+        cradleActualContentCount 
+    ]
 
 }
 

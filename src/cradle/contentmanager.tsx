@@ -330,8 +330,8 @@ export default class ContentManager {
 
         if ((viewportData.index == 6) /*&& (tailcontent.length == 0)*/) {
             console.log('in updateCradleContent after allocateContentList \n',
-            'spineReferenceIndex, localContentList, headcontent, tailcontent', 
-                spineReferenceIndex, entries, localContentList, headcontent, tailcontent) 
+            'spineReferenceIndex, spinePosOffset', //localContentList, headcontent, tailcontent', 
+                spineReferenceIndex, spinePosOffset) //, entries, localContentList, headcontent, tailcontent) 
             // debugger
         }
 
