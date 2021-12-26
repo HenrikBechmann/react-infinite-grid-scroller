@@ -61,9 +61,10 @@ export default class ContentManager {
         let interruptManager = this.commonProps.managersRef.current.interrupts
         let cradleData = this.commonProps.cradleDataRef.current
 
-        if (viewportData.index == 6) {
-            console.log('SETTING content - cradleState, cradleData in setCradleContent',cradleState, cradleData)
-        }
+        // if (viewportData.index == 6) {
+        //     console.log('SETTING content - cradleState, cradleData in setCradleContent',
+                    // cradleState, cradleData)
+        // }
 
         let viewportElement = viewportData.elementref.current
 
@@ -187,7 +188,7 @@ export default class ContentManager {
         let cradleData = this.commonProps.cradleDataRef.current
 
         if (viewportData.index == 6) {
-            console.log('UPDATING content - source, cradleData in updateCradleContent',source, cradleData)
+            console.log('UPDATING content - source; in updateCradleContent',source)
         }
 
         let viewportElement = viewportData.elementref.current
@@ -253,9 +254,9 @@ export default class ContentManager {
 
         })
 
-        if ((viewportData.index == 6) /*&& (tailcontent.length == 0)*/) {
-            console.log('updateCradleContent INTERSECTIONS',intersections)
-        }
+        // if ((viewportData.index == 6) /*&& (tailcontent.length == 0)*/) {
+        //     console.log('updateCradleContent INTERSECTIONS',intersections)
+        // }
 
         // if (intersections.length == 0) return
 
@@ -334,12 +335,12 @@ export default class ContentManager {
             }
         )
 
-        if ((viewportData.index == 6) /*&& (tailcontent.length == 0)*/) {
-            console.log('in updateCradleContent after allocateContentList \n',
-            'referenceitemshift, cradleitemshift, spineReferenceIndex, spinePosOffset, headcontent, tailcontent', //localContentList, headcontent, tailcontent', 
-                referenceitemshift, cradleitemshift, spineReferenceIndex, spinePosOffset, headcontent, tailcontent) //, entries, localContentList, headcontent, tailcontent) 
-            // debugger
-        }
+        // if ((viewportData.index == 6) /*&& (tailcontent.length == 0)*/) {
+        //     console.log('in updateCradleContent after allocateContentList \n',
+        //     'referenceitemshift, cradleitemshift, spineReferenceIndex, spinePosOffset, headcontent, tailcontent', //localContentList, headcontent, tailcontent', 
+        //         referenceitemshift, cradleitemshift, spineReferenceIndex, spinePosOffset, headcontent, tailcontent) //, entries, localContentList, headcontent, tailcontent) 
+        //     // debugger
+        // }
 
         cradleContent.cradleModel = localContentList
         cradleContent.headView = cradleContent.headModel = headcontent

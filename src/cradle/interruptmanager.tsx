@@ -32,7 +32,7 @@ export default class InterruptManager {
         const contentManager = this.commonProps.managersRef.current.content
 
         if (signals.pauseCradleIntersectionObserver) {
-            console.log('returning from intersectionobserver for PAUSE')
+            // console.log('returning from intersectionobserver for PAUSE')
             return
         }
 
@@ -109,13 +109,15 @@ export default class InterruptManager {
 
         }
         
-        let viewportData = this.commonProps.viewportdataRef.current
-        if (viewportData.index == 6) {
-                console.log('cell intersection entries for ', viewportData.index, entries)
-        }
+        const viewportData = this.commonProps.viewportdataRef.current
+        // if (viewportData.index == 6) {
+        //         console.log('cell intersection entries for ', viewportData.index, entries)
+        // }
 
-        let contentManager = this.commonProps.managersRef.current.content
-        let stateManager = this.commonProps.managersRef.current.state
+        const contentManager = this.commonProps.managersRef.current.content
+        const stateManager = this.commonProps.managersRef.current.state
+        const scrollManager = this.commonProps.managersRef.current.scroll
+
 
         // TODO: moved this above initialization; no apparent difference to bug
         if (this.signals.pauseCellObserver) { 
@@ -142,7 +144,11 @@ export default class InterruptManager {
         //         console.log('movedentries for ', viewportData.index, movedentries)
         // }
 
-        stateManager.isMountedRef.current && contentManager.updateCradleContent(movedentries,'cellObserver')
+        if (stateManager.isMountedRef.current) {
+            if (scrollManager.scrollPositions.start != scrollManager.scrollPositions.current) {
+                contentManager.updateCradleContent(movedentries,'cellObserver')
+            }
+        }
 
     }
 

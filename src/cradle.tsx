@@ -4,6 +4,8 @@
 /*
     TODO:
 
+    - try position fixed during reparenting to preserve scroll position
+
     - consider eliminating cellintersectobserver in favour of head and tail intersect oberver
 
     - scroll reset problem recurs with repeated above and below rapid resets
@@ -166,6 +168,10 @@ const Cradle = ({
     const viewportDataRef = useRef(null)
     viewportDataRef.current = viewportData
 
+    if (viewportData.index == 6) {
+        console.log('RUNNING index cradleState', viewportData.index, cradleState)
+    }
+
     // cradle butterfly html components
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
@@ -321,7 +327,7 @@ const Cradle = ({
 
     const normalizetimerRef = useRef(null)
     // if ((cradleState == 'normalizesignals') && viewportData.portal?.isReparenting) {
-    if (viewportData.portal?.isReparenting) { // tiny edge case; avoid resetting signals
+    if (viewportData.portal?.isReparenting) { 
         if (viewportData.index == 6) {
                 console.log('restoring scrollpos ', viewportData.index,Math.max(0,cradleManager.cradleReferenceData.blockScrollPos))
         }

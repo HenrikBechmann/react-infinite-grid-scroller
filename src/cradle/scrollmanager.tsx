@@ -13,9 +13,11 @@ export default class ScrollManager {
 
     commonProps
 
-    scrollPositions = {current:0,previous:0}
+    scrollPositions = {start:0, current:0, previous:0}
 
     private _scrolltimerid = null
+
+    private isScrolling = false
 
     onScroll = (e) => {
 
@@ -37,6 +39,11 @@ export default class ScrollManager {
             ?viewportElement.scrollTop
             :viewportElement.scrollLeft
 
+        if (!this.isScrolling) {
+            this.isScrolling = true
+            this.scrollPositions.start = scrollPositionCurrent
+        }
+
         if (scrollPositionCurrent < 0) { // for Safari
 
             return 
@@ -47,6 +54,11 @@ export default class ScrollManager {
 
         this.scrollPositions.previous = this.scrollPositions.current
         this.scrollPositions.current = scrollPositionCurrent
+
+        if (viewportData.index == 6) {
+            console.log('running onScroll for index, scrollPositions',
+                viewportData.index,this.scrollPositions)
+        }
 
         clearTimeout(this._scrolltimerid)
 
@@ -116,10 +128,19 @@ export default class ScrollManager {
 
     private _onAfterScroll = () => {
 
+        this.isScrolling = false
+
         const stateManager = this.commonProps.managersRef.current.state
         const contentManager = this.commonProps.managersRef.current.content
+        const viewportData = this.commonProps.viewportdataRef.current
 
         const cradleState = stateManager.cradleStateRef.current
+
+        if (viewportData.index == 6) {
+            console.log('running onAfterScroll for index, cradleState',
+                viewportData.index,this.scrollPositions, cradleState)
+        }
+
         switch (cradleState) {
 
             case 'repositioningA': 
@@ -132,9 +153,11 @@ export default class ScrollManager {
             }
 
             default: {
-                this.updateReferenceData()
-                contentManager.updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
 
+                if (this.scrollPositions.start != this.scrollPositions.current) {
+                    this.updateReferenceData()
+                    contentManager.updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
+                }
             }
 
         }
