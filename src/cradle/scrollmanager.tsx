@@ -55,10 +55,10 @@ export default class ScrollManager {
         this.scrollPositions.previous = this.scrollPositions.current
         this.scrollPositions.current = scrollPositionCurrent
 
-        if (viewportData.index == 6) {
-            console.log('running onScroll for index, scrollPositions',
-                viewportData.index,this.scrollPositions)
-        }
+        // if (viewportData.index == 6) {
+        //     console.log('running onScroll for index, scrollPositions',
+        //         viewportData.index,this.scrollPositions)
+        // }
 
         clearTimeout(this._scrolltimerid)
 
@@ -136,10 +136,10 @@ export default class ScrollManager {
 
         const cradleState = stateManager.cradleStateRef.current
 
-        if (viewportData.index == 6) {
-            console.log('running onAfterScroll for index, cradleState',
-                viewportData.index,this.scrollPositions, cradleState)
-        }
+        // if (viewportData.index == 6) {
+        //     console.log('running onAfterScroll for index, cradleState',
+        //         viewportData.index,this.scrollPositions, cradleState)
+        // }
 
         switch (cradleState) {
 

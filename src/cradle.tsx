@@ -329,7 +329,10 @@ const Cradle = ({
     // if ((cradleState == 'normalizesignals') && viewportData.portal?.isReparenting) {
     if (viewportData.portal?.isReparenting) { 
         if (viewportData.index == 6) {
-                console.log('restoring scrollpos ', viewportData.index,Math.max(0,cradleManager.cradleReferenceData.blockScrollPos))
+                console.log('restoring scrollpos from, to', 
+                    viewportData.index,
+                    viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty],
+                    Math.max(0,cradleManager.cradleReferenceData.blockScrollPos))
         }
         // interruptManager.signals.pauseCellObserver = true
         viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
