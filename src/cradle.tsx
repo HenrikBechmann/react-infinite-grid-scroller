@@ -168,9 +168,9 @@ const Cradle = ({
     const viewportDataRef = useRef(null)
     viewportDataRef.current = viewportData
 
-    if (viewportData.index == 6) {
-        console.log('RUNNING index cradleState', viewportData.index, cradleState)
-    }
+    // if (viewportData.index == 6) {
+    //     console.log('RUNNING index cradleState', viewportData.index, cradleState)
+    // }
 
     // cradle butterfly html components
     const headCradleElementRef = useRef(null)
@@ -328,12 +328,12 @@ const Cradle = ({
     const normalizetimerRef = useRef(null)
     // if ((cradleState == 'normalizesignals') && viewportData.portal?.isReparenting) {
     if (viewportData.portal?.isReparenting) { 
-        if (viewportData.index == 6) {
-                console.log('restoring scrollpos from, to', 
-                    viewportData.index,
-                    viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty],
-                    Math.max(0,cradleManager.cradleReferenceData.blockScrollPos))
-        }
+        // if (viewportData.index == 6) {
+        //         console.log('restoring scrollpos from, to', 
+        //             viewportData.index,
+        //             viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty],
+        //             Math.max(0,cradleManager.cradleReferenceData.blockScrollPos))
+        // }
         // interruptManager.signals.pauseCellObserver = true
         viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
             Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)

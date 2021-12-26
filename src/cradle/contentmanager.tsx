@@ -187,9 +187,9 @@ export default class ContentManager {
 
         let cradleData = this.commonProps.cradleDataRef.current
 
-        if (viewportData.index == 6) {
-            console.log('UPDATING content - source; in updateCradleContent',source)
-        }
+        // if (viewportData.index == 6) {
+        //     console.log('UPDATING content - source; in updateCradleContent',source)
+        // }
 
         let viewportElement = viewportData.elementref.current
         if (!viewportElement) {
