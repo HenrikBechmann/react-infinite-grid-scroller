@@ -325,9 +325,11 @@ const Cradle = ({
         if (viewportData.index == 6) {
                 console.log('restoring scrollpos ', viewportData.index,Math.max(0,cradleManager.cradleReferenceData.blockScrollPos))
         }
+        // interruptManager.signals.pauseCellObserver = true
         viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
             Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
         viewportData.portal.isReparenting = false
+        // setCradleState('restorescrollposition')
         // clearTimeout(normalizetimerRef.current)
     }
 
@@ -702,7 +704,7 @@ const Cradle = ({
 
                 break;
 
-            // case 'restorescrollposition': { // triggered by viewpoint reParenting
+            case 'restorescrollposition': { // triggered by viewpoint reParenting
 
             //     if (viewportDataRef.current.index == 6) {
             //         console.log('setting scroll to ',cradleManager.cradleReferenceData.blockScrollPos)
@@ -710,10 +712,10 @@ const Cradle = ({
             //     viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
             //         Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
             //     isReparentingRef.current = false
-            //     setCradleState('normalizesignals')
+                setCradleState('normalizesignals')
 
-            //     break
-            // }
+                break
+            }
 
             // 'renderupdatedcontent' is called from updateCradleContent, which is...
             // called from cellintersectionobservercallback (interruptManager), and 
