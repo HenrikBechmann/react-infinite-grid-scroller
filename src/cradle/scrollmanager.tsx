@@ -154,9 +154,12 @@ export default class ScrollManager {
 
             default: {
 
-                if (this.scrollPositions.start != this.scrollPositions.current) {
+                if ((this.scrollPositions.start != this.scrollPositions.current) || 
+                    (this.scrollPositions.current != this.scrollPositions.previous)) {
+
                     this.updateReferenceData()
                     contentManager.updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
+
                 }
             }
 

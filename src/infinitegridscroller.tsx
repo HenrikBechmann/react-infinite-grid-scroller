@@ -5,14 +5,12 @@
     BUG: reposition chip appears outside viewport when list partly hidden
     BUG: repositioningA is broken.
     TODO:
-    - make sure outportal locations are unmounted before outportal is moved
     - check use of useCallback
     - resize triggered by root only, unless variable
     - intersection applied to cradle only
     - test for two root portals
     - nested list overflows port boundaries on android FF
     - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
-    - break up cradle
     - change portalmanager to simple object (singleton)
     - calc minwidth by form factor
     - use state machine logic throughout

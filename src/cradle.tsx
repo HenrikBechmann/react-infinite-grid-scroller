@@ -187,8 +187,7 @@ const Cradle = ({
 
     const { viewportDimensions } = viewportData
 
-    let { height:viewportheight,width:viewportwidth } = viewportDimensions
-    
+    const { height:viewportheight,width:viewportwidth } = viewportDimensions
 
     const crosscount = useMemo(() => {
 
@@ -226,7 +225,7 @@ const Cradle = ({
 
         cellLength += gap
 
-        let viewportrowcount = Math.ceil(viewportLength/cellLength)
+        const viewportrowcount = Math.ceil(viewportLength/cellLength)
         let cradleRowcount = viewportrowcount + (runwaycount * 2)
         let itemcount = cradleRowcount * crosscount
         if (itemcount > listsize) {
@@ -293,7 +292,8 @@ const Cradle = ({
 
     const isMountedRef = useRef(true)
     useLayoutEffect(()=>{
-        const portalmanager = cradleDataRef.current.portalManager = new PortalManager()
+        /*const portalmanager =*/ 
+        cradleDataRef.current.portalManager = new PortalManager()
 
         // cleanup portal repository; clear isMountedRef
         return () => {
@@ -327,6 +327,7 @@ const Cradle = ({
 
     const normalizetimerRef = useRef(null)
     // if ((cradleState == 'normalizesignals') && viewportData.portal?.isReparenting) {
+    // TODO: setblockScrollProperty for first pass
     if (viewportData.portal?.isReparenting) { 
         // if (viewportData.index == 6) {
         //         console.log('restoring scrollpos from, to', 
@@ -344,7 +345,6 @@ const Cradle = ({
     // --------------------------[ bundle cradleProps ]----------------------------
 
     // functions and styles handled separately
-    // const cradleProps = cradlePropsRef.current
 
     // =============================================================================================
     // --------------------------------------[ INITIALIZATION ]-------------------------------------
@@ -460,37 +460,6 @@ const Cradle = ({
         }
 
     },[viewportData.isResizing])
-
-    // useLayoutEffect(()=>{
-
-    //     if (!viewportDataRef.current.portal) return // not nested
-
-    //     if (viewportDataRef.current.portal.isReparenting) { // configure for reParenting
-
-    //         viewportDataRef.current.portal.isReparenting = false
-
-    //         if (cradleState == 'setup') return
-
-    //         if ((!isReparentingRef.current) || (cradleState == 'normalizesignals')) {
-
-    //             isReparentingRef.current = true
-
-    //             if ((viewportDataRef.current.index == 6) /*|| (viewportDataRef.current.index === null)*/) {
-    //                 console.log('setting reparenting + signals for index, state', viewportDataRef.current.index, cradleState)
-    //             }
-
-    //             const signals = interruptManager.signals
-    //             signals.pauseCellObserver = true
-    //             signals.pauseScrollingEffects = true
-    //             // signals.pauseCradleIntersectionObserver = true
-    //             // interruptManager.signals.repositioningRequired = false
-    //             setCradleState('restorescrollposition')
-
-    //         }
-
-    //     }
-
-    // },[cradleState,viewportDataRef.current.portal?.isReparenting])
 
     // reload for changed parameters
     useEffect(()=>{
@@ -710,19 +679,6 @@ const Cradle = ({
 
                 break;
 
-            // case 'restorescrollposition': { // triggered by viewpoint reParenting
-
-            //     if (viewportDataRef.current.index == 6) {
-            //         console.log('setting scroll to ',cradleManager.cradleReferenceData.blockScrollPos)
-            //     }
-            //     viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
-            //         Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
-            //     isReparentingRef.current = false
-            //     setCradleState('normalizesignals')
-
-            //     break
-            // }
-
             // 'renderupdatedcontent' is called from updateCradleContent, which is...
             // called from cellintersectionobservercallback (interruptManager), and 
             // called from onAfterScroll (scrollManager)
@@ -907,36 +863,50 @@ const Cradle = ({
                 listsize = {scrollTrackerArgs.listsize}
                 styles = {scrollTrackerArgs.styles}
             />
-            :
-        <div 
-            data-type = 'cradle-spine'
-            style = {cradleSpineStyle} 
-            ref = {spineCradleElementRef}
-        >
-            {true?<div data-type = 'cradle-divider' style = {{zIndex:1, position:'absolute',width:'100%',height:'100%',boxShadow:'0 0 5px 3px red'}}></div>:null}
-            <div 
-            
-                data-type = 'head'
-                ref = {headCradleElementRef} 
-                style = {cradleHeadStyle}
-            
+            :<div 
+                data-type = 'cradle-spine'
+                style = {cradleSpineStyle} 
+                ref = {spineCradleElementRef}
             >
-            
-                {(cradleStateRef.current != 'setup')?cradleContent.headView:null}
-            
+                {true
+                    ?<div 
+                        data-type = 'cradle-divider' 
+                        style = {
+                            {
+                                zIndex:1, 
+                                position:'absolute',
+                                width:'100%',
+                                height:'100%',
+                                boxShadow:'0 0 5px 3px red'
+                            }
+                        }>
+                    </div>
+                    :null
+                }
+                <div 
+                
+                    data-type = 'head'
+                    ref = {headCradleElementRef} 
+                    style = {cradleHeadStyle}
+                
+                >
+                
+                    {(cradleStateRef.current != 'setup')?cradleContent.headView:null}
+                
+                </div>
+                <div 
+                
+                    data-type = 'tail'
+                    ref = {tailCradleElementRef} 
+                    style = {cradleTailStyle}
+                
+                >
+                
+                    {(cradleStateRef.current != 'setup')?cradleContent.tailView:null}
+                
+                </div>
             </div>
-            <div 
-            
-                data-type = 'tail'
-                ref = {tailCradleElementRef} 
-                style = {cradleTailStyle}
-            
-            >
-            
-                {(cradleStateRef.current != 'setup')?cradleContent.tailView:null}
-            
-            </div>
-        </div>}
+        }
         
     </CradleContext.Provider>
 

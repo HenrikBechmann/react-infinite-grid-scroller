@@ -145,7 +145,8 @@ export default class InterruptManager {
         // }
 
         if (stateManager.isMountedRef.current) {
-            if (scrollManager.scrollPositions.start != scrollManager.scrollPositions.current) {
+            if ((scrollManager.scrollPositions.start != scrollManager.scrollPositions.current) ||
+                (scrollManager.scrollPositions.current != scrollManager.scrollPositions.previous)) {
                 contentManager.updateCradleContent(movedentries,'cellObserver')
             }
         }
