@@ -201,10 +201,10 @@ export const isolateRelevantIntersections = ({
         headintersections = [],
         tailintersectionindexes = [],
         tailintersections = [],
-        intersecting:any = {},
+        intersectingmetadata:any = {},
         filteredintersections = []
 
-    // collect lists of indexes...
+    // collect lists of current content indexes...
     // headindexes, tailindexes
     for (let component of headcontent) {
         headindexes.push(component.props.index)
@@ -216,21 +216,23 @@ export const isolateRelevantIntersections = ({
 
     let duplicates:any = {}
     let intersectionsptr = 0
+
+    // split intersections into head and tail indexes
     for (let entry of intersections) {
 
         const entryindex = parseInt(entry.target.dataset.index)
-        let headptr, tailptr
+        let newheaditemptr, newtailitemptr
         if (tailindexes.includes(entryindex)) {
 
             tailintersectionindexes.push(entryindex)
             tailintersections.push(entry)
-            tailptr = tailintersections.length - 1 // used for duplicate resolution
+            newtailitemptr = tailintersections.length - 1 // used from iobj metadata for duplicate resolution
 
         } else if (headindexes.includes(entryindex)) {
 
             headintersectionindexes.push(entryindex)
             headintersections.push(entry)
-            headptr = headintersections.length - 1 // used for duplicate resolution
+            newheaditemptr = headintersections.length - 1 // used for duplicate resolution
 
         } else {
 
@@ -246,60 +248,62 @@ export const isolateRelevantIntersections = ({
             ratio = Math.round(entry.intersectionRatio * 1000)/1000
         }
 
-        let calcintersecting = (ratio >= cellObserverThreshold)
-        let iobj = {
+        const calculatedintersecting = (ratio >= cellObserverThreshold)
+        const iobj = { // entry item metadata
             entryindex,
-            intersecting:calcintersecting,  // to accommodate browser differences
+            intersecting:calculatedintersecting,  // to accommodate browser differences
             isIntersecting:entry.isIntersecting,
             ratio,
             originalratio:entry.intersectionRatio,
             time:entry.time,
-            headptr,
-            tailptr,
+            headptr:newheaditemptr,
+            tailptr:newtailitemptr,
             intersectionsptr,
         }
-        if (!intersecting[entryindex]) { // this is a new item
-            intersecting[entryindex] = iobj
-        } else { // this is a duplicate item
-            if (!Array.isArray(intersecting[entryindex])) {
-                // let arr = [intersecting[index]] // array of one iobj
-                intersecting[entryindex] = [intersecting[entryindex]] // arr
+        if (!intersectingmetadata[entryindex]) { // this is a new item
+            intersectingmetadata[entryindex] = iobj
+        } else { // this is a duplicate intersection item
+            // duplicate items occur with rapid back and forth scrolling
+            // an even number of items cancel out; for an odd number the most recent is valid
+            if (!Array.isArray(intersectingmetadata[entryindex])) {
+                intersectingmetadata[entryindex] = [intersectingmetadata[entryindex]] // arr
             }
-            intersecting[entryindex].push(iobj)
+            intersectingmetadata[entryindex].push(iobj)
+            // add to duplicates list for later processing
             if (!duplicates[entryindex]) {
                 duplicates[entryindex] = []
-                duplicates[entryindex].push(intersecting[entryindex][0])
+                duplicates[entryindex].push(intersectingmetadata[entryindex][0])
             }
             duplicates[entryindex].push(iobj)
         }
+
         intersectionsptr++
 
     }
 
     // resolve duplicates. For uneven number, keep the most recent
-    // otherwise delete them, they cancel each other out.
-    const duplicateslength = Object.keys(duplicates).length
-    if (duplicateslength > 0) {
-        // console.log('DUPLICATES found', duplicateslength, duplicates)
-        let headintersectionsdelete = [],
+    // otherwise delete them; they cancel each other out.
+    if (Object.keys(duplicates).length > 0) { // there are duplicates to process
+
+        const headintersectionsdelete = [],
             tailintersectionsdelete = []
 
         for (let duplicateindex in duplicates) {
 
-            let duplicate = duplicates[duplicateindex]
+            const duplicatemetadatalist = duplicates[duplicateindex]
 
-            if (duplicate.length % 2) {
-                duplicate.sort(duplicatecompare)
-                const entry = duplicate.slice(duplicate.length -1,1)
-                intersecting[entry.index] = entry
-            } else {
-                delete intersecting[duplicate[0].index]
-                // intersectingdelete.push(duplicate[0].index)
+            // replace duplicates array in interesting with selected iobj
+            if (duplicatemetadatalist.length % 2) { // uneven; keep one
+                duplicatemetadatalist.sort(duplicatecomparebytime)
+                const iobj = duplicatemetadatalist.slice(duplicatemetadatalist.length -1,1)
+                intersectingmetadata[iobj.index] = iobj // replace any array with the metadata object
+            } else { // remove the entry
+                delete intersectingmetadata[duplicatemetadatalist[0].index]
             }
-            for (let entryobj of duplicate) {
-                let headptr = entryobj.headptr
-                let tailptr = entryobj.tailptr
-                if (headptr !== undefined) {
+            for (let entrymetadata of duplicatemetadatalist) {
+                let headptr = entrymetadata.headptr
+                let tailptr = entrymetadata.tailptr
+                if (headptr !== undefined) { // TODO: shouldn't happen
                     headintersectionsdelete.push(headptr)
                 }
                 if (tailptr !== undefined) {
@@ -307,6 +311,7 @@ export const isolateRelevantIntersections = ({
                 }
             }
         }
+        // filter out deleted head and tail items
         if (headintersectionsdelete.length) {
             headintersectionindexes = headintersectionindexes.filter((value, index) => {
                 return !headintersectionsdelete.includes(index)
@@ -330,6 +335,8 @@ export const isolateRelevantIntersections = ({
 
     headintersections.sort(entrycompare)
     tailintersections.sort(entrycompare)
+
+    // --------------------------[ ready to process! ]-----------------------------
 
     // set reference points in relation to the spine
     const headindex = headindexes[headindexes.length - 1]
@@ -357,19 +364,20 @@ export const isolateRelevantIntersections = ({
     }
 
     // collect notifications to main thread (filtered intersections)
+    
     // for scrollbackward
     let headrefindex, tailrefindex // for return
     if (!scrollforward && (headptr >= 0)) {
         headrefindex = headintersectionindexes[headptr]
         let refindex = headrefindex + 1
-        let refintersecting = intersecting[refindex - 1].intersecting
+        let refintersecting = intersectingmetadata[refindex - 1].intersecting
 
         for (let ptr = headptr; ptr >= 0; ptr--) {
 
             let index = headintersectionindexes[ptr]
 
             // test for continuity and consistency
-            if (((index + 1) == refindex) && (intersecting[index].intersecting == refintersecting)) {
+            if (((index + 1) == refindex) && (intersectingmetadata[index].intersecting == refintersecting)) {
 
                 filteredintersections.push(headintersections[ptr])
 
@@ -380,22 +388,23 @@ export const isolateRelevantIntersections = ({
             }
 
             refindex = index
-            refintersecting = intersecting[refindex].intersecting
+            refintersecting = intersectingmetadata[refindex].intersecting
 
         }
     }
+
     // for scrollforward
     if (scrollforward && (tailptr >= 0)) {
         tailrefindex = tailintersectionindexes[tailptr]
         let refindex = tailrefindex - 1
-        let refintersecting = intersecting[refindex + 1].intersecting
+        let refintersecting = intersectingmetadata[refindex + 1].intersecting
 
         for (let ptr = tailptr; ptr < tailintersectionindexes.length; ptr++) {
 
             let index = tailintersectionindexes[ptr]
 
             // test for continuity and consistency
-            if (((index - 1) == refindex) && (intersecting[index].intersecting == refintersecting)) {
+            if (((index - 1) == refindex) && (intersectingmetadata[index].intersecting == refintersecting)) {
 
                 filteredintersections.push(tailintersections[ptr])
 
@@ -406,7 +415,7 @@ export const isolateRelevantIntersections = ({
             }
 
             refindex = index
-            refintersecting = intersecting[index].intersecting
+            refintersecting = intersectingmetadata[index].intersecting
 
         }
     }
@@ -427,7 +436,7 @@ let entrycompare = (a,b) => {
     return retval
 }
 
-let duplicatecompare = (a,b) => {
+let duplicatecomparebytime = (a,b) => {
     let retval = (a.time < b.time)?-1:1
 }
 
