@@ -13,6 +13,8 @@ import { detect } from 'detect-browser'
 
 const browser = detect()
 
+// ======================[ for setCradleContent ]===========================
+
 export const getContentListRequirements = ({ // called from setCradleContent only
 
         cradleProps,
@@ -180,6 +182,8 @@ const adjustSpineOffsetForMaxRefIndex = ({
 
 }
 
+// ======================[ for updateCradleContent ]===========================
+
 // filter out items that not proximate to the spine
 export const isolateRelevantIntersections = ({
     intersections,
@@ -188,8 +192,8 @@ export const isolateRelevantIntersections = ({
     scrollforward,
 }) => {
 
-    let headcontent = cradleContent.headModel
-    let tailcontent = cradleContent.tailModel
+    const headcontent = cradleContent.headModel
+    const tailcontent = cradleContent.tailModel
 
     let headindexes = [], 
         tailindexes = [],
@@ -214,23 +218,23 @@ export const isolateRelevantIntersections = ({
     let intersectionsptr = 0
     for (let entry of intersections) {
 
-        let index = parseInt(entry.target.dataset.index)
+        const entryindex = parseInt(entry.target.dataset.index)
         let headptr, tailptr
-        if (tailindexes.includes(index)) {
+        if (tailindexes.includes(entryindex)) {
 
-            tailintersectionindexes.push(index)
+            tailintersectionindexes.push(entryindex)
             tailintersections.push(entry)
             tailptr = tailintersections.length - 1 // used for duplicate resolution
 
-        } else if (headindexes.includes(index)) {
+        } else if (headindexes.includes(entryindex)) {
 
-            headintersectionindexes.push(index)
+            headintersectionindexes.push(entryindex)
             headintersections.push(entry)
             headptr = headintersections.length - 1 // used for duplicate resolution
 
         } else {
 
-            console.log('error: unknown intersection element, aborting isolateRelevantIntersections',entry)
+            console.log('SYSTEM ERROR: unknown intersection element, aborting isolateRelevantIntersections',entry)
             return // shouldn't happen; give up
 
         }
@@ -244,7 +248,7 @@ export const isolateRelevantIntersections = ({
 
         let calcintersecting = (ratio >= cellObserverThreshold)
         let iobj = {
-            index,
+            entryindex,
             intersecting:calcintersecting,  // to accommodate browser differences
             isIntersecting:entry.isIntersecting,
             ratio,
@@ -254,27 +258,27 @@ export const isolateRelevantIntersections = ({
             tailptr,
             intersectionsptr,
         }
-        if (!intersecting[index]) { // new item
-            intersecting[index] = iobj
-        } else { // duplicate item
-            if (!Array.isArray(intersecting[index])) {
-                let arr = [intersecting[index]]
-                intersecting[index] = arr
+        if (!intersecting[entryindex]) { // this is a new item
+            intersecting[entryindex] = iobj
+        } else { // this is a duplicate item
+            if (!Array.isArray(intersecting[entryindex])) {
+                // let arr = [intersecting[index]] // array of one iobj
+                intersecting[entryindex] = [intersecting[entryindex]] // arr
             }
-            intersecting[index].push(iobj)
-            if (!duplicates[index]) {
-                duplicates[index] = []
-                duplicates[index].push(intersecting[index][0])
+            intersecting[entryindex].push(iobj)
+            if (!duplicates[entryindex]) {
+                duplicates[entryindex] = []
+                duplicates[entryindex].push(intersecting[entryindex][0])
             }
-            duplicates[index].push(iobj)
+            duplicates[entryindex].push(iobj)
         }
         intersectionsptr++
 
     }
+
     // resolve duplicates. For uneven number, keep the most recent
     // otherwise delete them, they cancel each other out.
-
-    let duplicateslength = Object.keys(duplicates).length
+    const duplicateslength = Object.keys(duplicates).length
     if (duplicateslength > 0) {
         // console.log('DUPLICATES found', duplicateslength, duplicates)
         let headintersectionsdelete = [],
@@ -286,7 +290,7 @@ export const isolateRelevantIntersections = ({
 
             if (duplicate.length % 2) {
                 duplicate.sort(duplicatecompare)
-                let entry = duplicate.slice(duplicate.length -1,1)
+                const entry = duplicate.slice(duplicate.length -1,1)
                 intersecting[entry.index] = entry
             } else {
                 delete intersecting[duplicate[0].index]
@@ -328,8 +332,8 @@ export const isolateRelevantIntersections = ({
     tailintersections.sort(entrycompare)
 
     // set reference points in relation to the spine
-    let headindex = headindexes[headindexes.length - 1]
-    let tailindex = tailindexes[0]
+    const headindex = headindexes[headindexes.length - 1]
+    const tailindex = tailindexes[0]
     let headptr = headintersectionindexes.indexOf(headindex)
     let tailptr = tailintersectionindexes.indexOf(tailindex)
 
@@ -341,6 +345,7 @@ export const isolateRelevantIntersections = ({
     if (tailptr !==0) { 
         tailptr = -1
     }
+
     if ((headptr > -1) && (tailptr > -1)) { // edge case
 
         if (scrollforward) {
@@ -449,10 +454,6 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         padding,
         runwaycount } = cradleProps
 
-    // if (viewportData.index == 0) {
-    //     console.log('in calcContentShifts cradleContent',cradleContent)
-    // }
-
     const spineElement = cradleElements.spineRef.current
     const headElement = cradleElements.headRef.current
     const tailElement = cradleElements.tailRef.current
@@ -513,7 +514,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let overshootitemcount = overshootrowcount * crosscount
 
-    if (overshootitemcount) {// (!scrollforward && overshootitemcount) { // negation of values for scroll backward
+    if (overshootitemcount) {
         overshootitemcount = -overshootitemcount
         overshootrowcount = -overshootrowcount
     }
@@ -628,38 +629,9 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     // ---------------------[ 5. return required values ]-------------------
 
-    // -------------------[ EXPERIMENTAL ADJUSTMENT ]------------------------
-    // to return cradleActualContentCount, TODO: but over-trims; not working
-
-    // let cradleReferenceIndex = newreferenceindex 
-
     const cradleAvailableContentCount = cradleRowcount * crosscount
 
-    // let activelistitemcount = newreferenceindex + cradleAvailableContentCount
-    // let activelistrowcount = Math.ceil(activelistitemcount/crosscount)
-    // // let listRowcount = Math.ceil(listsize/crosscount)
-
-    // if (activelistrowcount > listRowcount) {
-    //     let diffrows = activelistrowcount - listRowcount
-    //     let diff = diffrows * crosscount
-    //     // cradleReferenceIndex -= diff // TODO: why is newreferenceindex not updated?
-    //     activelistrowcount -= diffrows
-    // }
-
-    // let testlistrowcount = Math.ceil((cradleReferenceIndex + contentCount + 1)/crosscount)
     let cradleActualContentCount = cradleAvailableContentCount
-    // if (activelistrowcount == listRowcount) {
-    //     let diff = listsize % crosscount
-    //     if (diff) {
-    //         cradleActualContentCount -= (crosscount - diff)
-    //     }
-    // }
-
-    // if (isNaN(newreferenceindex)) {
-    //     debugger
-    // }
-
-    // ----------------[ END OF EXPERIMENTAL ADJUSTMENT ]-----------------------
 
     return [ 
         newcradleindex, 
@@ -812,6 +784,9 @@ export const calcHeadAndTailChanges = ({
     return [headchangecount,tailchangecount]
 
 }
+
+
+// =====================[ shared by both setCradleContent and updateCradleContent ]====================
 
 // update content
 // adds itemshells at end of contentlist according to headindexcount and tailindescount,
