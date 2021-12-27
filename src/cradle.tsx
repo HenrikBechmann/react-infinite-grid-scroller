@@ -334,16 +334,13 @@ const Cradle = ({
         //             viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty],
         //             Math.max(0,cradleManager.cradleReferenceData.blockScrollPos))
         // }
-        // interruptManager.signals.pauseCellObserver = true
+        viewportData.portal.isReparenting = false
         viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
             Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
-        viewportData.portal.isReparenting = false
-        // setCradleState('restorescrollposition')
-        // clearTimeout(normalizetimerRef.current)
     }
 
-    // if (viewportDataRef.current.index == 0)
-    //     console.log('RUNNING CRADLE index, cradleState',viewportDataRef.current.index, cradleState)
+    if (viewportDataRef.current.index == 6)
+        console.log('RUNNING CRADLE index, cradleState',viewportDataRef.current.index, cradleState)
     // --------------------------[ bundle cradleProps ]----------------------------
 
     // functions and styles handled separately

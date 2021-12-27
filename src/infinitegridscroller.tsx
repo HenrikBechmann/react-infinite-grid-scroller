@@ -2,6 +2,7 @@
 // copyright (c) 2019-2021 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
+    BUG: reposition chip appears outside viewport when list partly hidden
     BUG: repositioningA is broken.
     TODO:
     - make sure outportal locations are unmounted before outportal is moved
