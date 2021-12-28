@@ -263,8 +263,6 @@ export const isolateRelevantIntersections = ({
         if (!intersectingmetadata[entryindex]) { // this is a new item
             intersectingmetadata[entryindex] = iobj
         } else { // this is a duplicate intersection item
-            // duplicate items occur with rapid back and forth scrolling
-            // an even number of items cancel out; for an odd number the most recent is valid
             if (!Array.isArray(intersectingmetadata[entryindex])) {
                 intersectingmetadata[entryindex] = [intersectingmetadata[entryindex]] // arr
             }
@@ -283,6 +281,8 @@ export const isolateRelevantIntersections = ({
 
     // resolve duplicates. For uneven number, keep the most recent
     // otherwise delete them; they cancel each other out.
+    // duplicate items occur with rapid back and forth scrolling
+    // an even number of items cancel out; for an odd number the most recent is valid
     if (Object.keys(duplicates).length > 0) { // there are duplicates to process
 
         const headintersectionsdelete = [],
