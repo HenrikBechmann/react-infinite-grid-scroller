@@ -51,29 +51,29 @@ export default class ContentManager {
     // called only from cradle preparerender event
     public setCradleContent = (cradleState) => { 
 
-        let viewportData = this.commonProps.viewportdataRef.current
-        let cradleProps = this.commonProps.cradlePropsRef.current
-        let cradleConfig = this.commonProps.cradleConfigRef.current
-        let scrollManager = this.commonProps.managersRef.current.scroll
-        let cradleManager = this.commonProps.managersRef.current.cradle
-        let stateManager = this.commonProps.managersRef.current.state
-        let serviceManager = this.commonProps.managersRef.current.service
-        let interruptManager = this.commonProps.managersRef.current.interrupts
-        let cradleData = this.commonProps.cradleDataRef.current
+        const viewportData = this.commonProps.viewportdataRef.current
+        const cradleProps = this.commonProps.cradlePropsRef.current
+        const cradleConfig = this.commonProps.cradleConfigRef.current
+        const scrollManager = this.commonProps.managersRef.current.scroll
+        const cradleManager = this.commonProps.managersRef.current.cradle
+        const stateManager = this.commonProps.managersRef.current.state
+        const serviceManager = this.commonProps.managersRef.current.service
+        const interruptManager = this.commonProps.managersRef.current.interrupts
+        const cradleData = this.commonProps.cradleDataRef.current
 
         // if (viewportData.index == 6) {
         //     console.log('SETTING content - cradleState, cradleData in setCradleContent',
                     // cradleState, cradleData)
         // }
 
-        let viewportElement = viewportData.elementref.current
+        const viewportElement = viewportData.elementref.current
 
-        let visibletargetindexoffset = cradleManager.cradleReferenceData.nextItemIndexReference
+        const visibletargetindexoffset = cradleManager.cradleReferenceData.nextItemIndexReference
         let visibletargetscrolloffset = cradleManager.cradleReferenceData.nextCradlePosOffset
 
-        let {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
+        const {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
 
-        let { cradleRowcount,
+        const { cradleRowcount,
             crosscount,
             viewportRowcount } = cradleConfig
 
@@ -101,7 +101,7 @@ export default class ContentManager {
             })
 
         // returns content constrained by cradleRowcount
-        let [childlist,deleteditems] = getUICellShellList({
+        const [childlist,deleteditems] = getUICellShellList({
 
             cradleProps,
             cradleConfig,
@@ -117,7 +117,7 @@ export default class ContentManager {
 
         deleteAndRerenderPortals(cradleData.portalManager, deleteditems)
 
-        let [headcontentlist, tailcontentlist] = allocateContentList({
+        const [headcontentlist, tailcontentlist] = allocateContentList({
 
             contentlist:childlist,
             spineReferenceIndex:referenceoffset,
@@ -148,7 +148,7 @@ export default class ContentManager {
         
         }
 
-        let cradleElements = cradleManager.elements //cradleElementsRef.current
+        const cradleElements = cradleManager.elements //cradleElementsRef.current
 
         cradleManager.cradleReferenceData.blockScrollPos = scrollblockOffset - spinePosOffset
         // console.log('setting blockScrollPos in setCradleContent: blockScrollPos, scrollblockOffset, spinePosOffset',
@@ -178,20 +178,20 @@ export default class ContentManager {
 
     updateCradleContent = (entries, source = 'notifications') => {
 
-        let viewportData = this.commonProps.viewportdataRef.current
-        let cradleProps = this.commonProps.cradlePropsRef.current
-        let scrollManager = this.commonProps.managersRef.current.scroll
-        let cradleManager = this.commonProps.managersRef.current.cradle
-        let stateManager = this.commonProps.managersRef.current.state
-        let interruptManager = this.commonProps.managersRef.current.interrupts
+        const viewportData = this.commonProps.viewportdataRef.current
+        const cradleProps = this.commonProps.cradlePropsRef.current
+        const scrollManager = this.commonProps.managersRef.current.scroll
+        const cradleManager = this.commonProps.managersRef.current.cradle
+        const stateManager = this.commonProps.managersRef.current.state
+        const interruptManager = this.commonProps.managersRef.current.interrupts
 
-        let cradleData = this.commonProps.cradleDataRef.current
+        const cradleData = this.commonProps.cradleDataRef.current
 
         // if (viewportData.index == 6) {
         //     console.log('UPDATING content - source; in updateCradleContent',source)
         // }
 
-        let viewportElement = viewportData.elementref.current
+        const viewportElement = viewportData.elementref.current
         if (!viewportElement) {
             console.error('ERROR: viewport element not set in updateCradleContent',
                 cradleProps.scrollerID, viewportData.elementref.current,viewportData)
@@ -212,7 +212,7 @@ export default class ContentManager {
 
         // ----------------------------[ 1. initialize ]----------------------------
 
-        let scrollPositions = scrollManager.scrollPositions //scrollPositionsRef.current
+        const scrollPositions = scrollManager.scrollPositions //scrollPositionsRef.current
 
         let scrollforward
         if (scrollPositions.current == scrollPositions.previous) { // edge case 
@@ -230,22 +230,22 @@ export default class ContentManager {
             return // init call
         }
 
-        let cradleElements = cradleManager.elements
-        let cradleContent = this.content
-        let cradleConfig = this.commonProps.cradleConfigRef.current
+        const cradleElements = cradleManager.elements
+        const cradleContent = this.content
+        const cradleConfig = this.commonProps.cradleConfigRef.current
 
-        let itemElements = this.itemElements
+        const itemElements = this.itemElements
 
-        let modelcontentlist = cradleContent.cradleModel
+        const modelcontentlist = cradleContent.cradleModel
 
-        let cradleReferenceIndex = modelcontentlist[0].props.index
+        const cradleReferenceIndex = modelcontentlist[0].props.index
 
         // --------------------[ 2. filter intersections list ]-----------------------
 
         // filter out inapplicable intersection entries
         // we're only interested in intersections proximal to the spine
         // TODO: BUG: for nested config end problem intersections count = 4; should be 0; 12 count for entries
-        let intersections = isolateRelevantIntersections({
+        const intersections = isolateRelevantIntersections({
 
             scrollforward,
             intersections:entries,
@@ -287,7 +287,7 @@ export default class ContentManager {
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
         // both counts set to 0 but with headchnagecount set to -0
-        let [headchangecount,tailchangecount] = calcHeadAndTailChanges({ 
+        const [headchangecount,tailchangecount] = calcHeadAndTailChanges({ 
 
             cradleProps,
             cradleConfig,
@@ -328,7 +328,7 @@ export default class ContentManager {
 
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 
-        let [headcontent, tailcontent] = allocateContentList(
+        const [headcontent, tailcontent] = allocateContentList(
             {
                 contentlist:localContentList,
                 spineReferenceIndex, // TODO: BUG: set to 100 for problem

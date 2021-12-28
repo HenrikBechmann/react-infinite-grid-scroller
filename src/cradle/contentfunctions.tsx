@@ -356,9 +356,9 @@ export const isolateRelevantIntersections = ({
 
     if ((headptr > -1) && (tailptr > -1)) { // edge case, both are found
 
-        if (scrollforward) { // moving toward tail; add tail items
+        if (scrollforward) { // moving toward tail; add items to tail
             headptr = -1 // assert head item not found
-        } else { // moving toward head; add head items
+        } else { // moving toward head; add items to head
             tailptr = -1 // scrollbackward assert tail item not found
         }
 
@@ -366,7 +366,7 @@ export const isolateRelevantIntersections = ({
 
     // collect notifications to main thread (filtered intersections)
 
-    // for scrollbackward, moving toward head, add head items
+    // for scrollbackward, moving toward head, add items to head, shift items to tail
     let headrefindex, tailrefindex // for return
     if (!scrollforward && (headptr >= 0)) {
         headrefindex = headintersectionindexes[headptr]
@@ -375,7 +375,7 @@ export const isolateRelevantIntersections = ({
 
         for (let ptr = headptr; ptr >= 0; ptr--) {
 
-            let index = headintersectionindexes[ptr]
+            const index = headintersectionindexes[ptr]
 
             // test for continuity and consistency
             if (((index + 1) == refindex) && (intersectingmetadata[index].intersecting == refintersecting)) {
@@ -394,7 +394,7 @@ export const isolateRelevantIntersections = ({
         }
     }
 
-    // for scrollforward, moving toward tail, add tail items
+    // for scrollforward, moving toward tail, add items to tail, shift items to head
     if (scrollforward && (tailptr >= 0)) {
         tailrefindex = tailintersectionindexes[tailptr]
         let refindex = tailrefindex - 1
@@ -421,7 +421,9 @@ export const isolateRelevantIntersections = ({
         }
     }
 
-    filteredintersections.sort(entrycompare) // TODO this should be integrated into the code above
+    filteredintersections.sort(entrycompare)
+
+    // this returns items to shift, according to scrollforward
 
     return filteredintersections 
 
