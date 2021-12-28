@@ -6,7 +6,7 @@ import {
     calcHeadAndTailChanges,
     calcContentShifts,
     getContentListRequirements,
-    isolateShiftIntersections,
+    isolateShiftingIntersections,
     allocateContentList,
     deleteAndRerenderPortals,
 
@@ -245,7 +245,7 @@ export default class ContentManager {
         // filter out inapplicable intersection entries
         // we're only interested in intersections proximal to the spine
         // TODO: BUG: for nested config end problem intersections count = 4; should be 0; 12 count for entries
-        const shiftintersections = isolateShiftIntersections({
+        const shiftintersections = isolateShiftingIntersections({
 
             scrollforward,
             intersections:entries,

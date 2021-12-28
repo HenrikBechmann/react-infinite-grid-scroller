@@ -185,7 +185,7 @@ const adjustSpineOffsetForMaxRefIndex = ({
 // ======================[ for updateCradleContent ]===========================
 
 // filter out items that not proximate to the spine
-export const isolateShiftIntersections = ({
+export const isolateShiftingIntersections = ({
     intersections,
     cradleContent,
     cellObserverThreshold,
