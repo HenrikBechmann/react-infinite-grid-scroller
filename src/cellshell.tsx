@@ -89,12 +89,14 @@ const CellShell = ({
 
             setCellStatus('renderplaceholder')
 
-            if (isMountedRef.current && getItem) {
+        } else {
+
+            // if (isMountedRef.current && getItem) {
 
                 // callbackrequestRef.current = requestidlecallback(()=> {
                     // setTimeout(() => {
 
-                    const contentItem = getItem(index)
+                    // const contentItem = getItem(index)
 
                     // if (contentItem && contentItem.then) { // it's a promise
 
@@ -115,28 +117,27 @@ const CellShell = ({
 
                     // } else {
 
-                        if (isMountedRef.current) {
+                        // if (isMountedRef.current) {
 
-                            if (contentItem) {
-                                const usercontent = contentItem
+                        //     if (contentItem) {
+                        //         const usercontent = contentItem
 
-                                portaldataRef.current.hasusercontent = true
-                                portaldataRef.current = portalManager.updatePortal(index,usercontent)
-                                setCellStatus('rendercontent')
+                        //         portaldataRef.current.hasusercontent = true
+                        //         portaldataRef.current = portalManager.updatePortal(index,usercontent)
+                        //         setCellStatus('rendercontent')
 
-                            } else {
+                        //     } else {
 
-                                console.log('ERROR','no content item')
+                        //         console.log('ERROR','no content item')
 
-                            }
-                        }
+                        //     }
+                        // }
 
                     // }
                 // },{timeout:250})
         
                 // },50)
-            }         
-        } else {
+            // }         
         
             if (isMountedRef.current) setCellStatus('rendercontent')
     
@@ -203,30 +204,54 @@ const CellShell = ({
 
     },[orientation,cellHeight,cellWidth]) 
 
-    const contentcomponent = useMemo(()=>{
+    const contentcomponentRef = useRef(null)
 
-        if (cellStatus == 'setup') return null
+    useEffect(() => {
 
-        const reverseportal = portaldataRef.current.reverseportal
+        if (cellStatus == 'setup') return
 
-        const component = <OutPortal node = {reverseportal}/>
+        if (cellStatus == 'renderplaceholder') {
+            
+            const reverseportal = portaldataRef.current.reverseportal
 
-        if (cellStatus != 'ready') {
-            if (!isreparentedRef.current) {
+            setCellStatus('rendercontent')
 
-                portaldataRef.current.isReparenting = true
-                isreparentedRef.current = true
+            contentcomponentRef.current = <OutPortal node = {reverseportal}/>
 
-            }
-            if (isMountedRef.current) setCellStatus('ready')
         }
 
-        return component
+        if (cellStatus == 'rendercontent') {
 
-    }, [cellStatus]);
+            const contentItem = getItem(index)
+
+            if (isMountedRef.current) {
+
+                if (contentItem) {
+                    const usercontent = contentItem
+
+                    portaldataRef.current.hasusercontent = true
+                    portaldataRef.current = portalManager.updatePortal(index,usercontent)
+                    const reverseportal = portaldataRef.current.reverseportal
+                    portaldataRef.current.isReparenting = true
+                    isreparentedRef.current = true
+
+                    setCellStatus('ready')
+
+                    contentcomponentRef.current = <OutPortal node = {reverseportal}/>
+
+                } else {
+
+                    console.log('ERROR','no content item')
+
+                }
+            }
+
+        }
+
+    }, [cellStatus])
 
     return <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
-            { (cellStatus != 'setup') && contentcomponent }
+            { (cellStatus != 'setup') && contentcomponentRef.current }
         </div>
 
 } // CellShell
