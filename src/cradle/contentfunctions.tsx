@@ -356,9 +356,9 @@ export const isolateRelevantIntersections = ({
 
     if ((headptr > -1) && (tailptr > -1)) { // edge case, both are found
 
-        if (scrollforward) { // moving toward tail
+        if (scrollforward) { // moving toward tail; add tail items
             headptr = -1 // assert head item not found
-        } else { // moving toward head
+        } else { // moving toward head; add head items
             tailptr = -1 // scrollbackward assert tail item not found
         }
 
@@ -366,7 +366,7 @@ export const isolateRelevantIntersections = ({
 
     // collect notifications to main thread (filtered intersections)
 
-    // for scrollbackward
+    // for scrollbackward, moving toward head, add head items
     let headrefindex, tailrefindex // for return
     if (!scrollforward && (headptr >= 0)) {
         headrefindex = headintersectionindexes[headptr]
@@ -394,7 +394,7 @@ export const isolateRelevantIntersections = ({
         }
     }
 
-    // for scrollforward
+    // for scrollforward, moving toward tail, add tail items
     if (scrollforward && (tailptr >= 0)) {
         tailrefindex = tailintersectionindexes[tailptr]
         let refindex = tailrefindex - 1
