@@ -344,21 +344,22 @@ export const isolateRelevantIntersections = ({
     let headptr = headintersectionindexes.indexOf(headreferenceindex)
     let tailptr = tailintersectionindexes.indexOf(tailreferenceindex)
 
-    // filter out items that register only because they have just been moved
-    if (headptr !== (headintersectionindexes.length - 1)) { 
+    // filter out incorrect values for headptr and tailptr
+    // -1 means doesn't exist
+    if (headptr !== (headintersectionindexes.length - 1)) { // must be last before spine
         headptr = -1
     }
 
-    if (tailptr !==0) { 
+    if (tailptr !==0) { // must be first after spine
         tailptr = -1
     }
 
-    if ((headptr > -1) && (tailptr > -1)) { // edge case
+    if ((headptr > -1) && (tailptr > -1)) { // edge case, both are found
 
-        if (scrollforward) {
-            headptr = -1
-        } else {
-            tailptr = -1
+        if (scrollforward) { // moving toward tail
+            headptr = -1 // assert head item not found
+        } else { // moving toward head
+            tailptr = -1 // scrollbackward assert tail item not found
         }
 
     }
