@@ -207,14 +207,7 @@ export const isolateRelevantIntersections = ({
     // collect lists of current content indexes...
     // headindexes, tailindexes
     const headindexes = headcontent.map(component => component.props.index)
-    // for (let component of headcontent) {
-    //     headindexes.push(component.props.index)
-    // }
-
     const tailindexes = tailcontent.map(component => component.props.index)
-    // for (let component of tailcontent) {
-    //     tailindexes.push(component.props.index)
-    // }
 
     let duplicates:any = {}
     let intersectionsptr = 0
@@ -285,7 +278,7 @@ export const isolateRelevantIntersections = ({
     // otherwise delete them; they cancel each other out.
     // duplicate items occur with rapid back and forth scrolling
     // an even number of items cancel out; for an odd number the most recent is valid
-    if (Object.keys(duplicates).length > 0) { // there are duplicates to process
+    if (Object.keys(duplicates).length) { // > 0) { // there are duplicates to process
 
         const headintersectionsdelete = [],
             tailintersectionsdelete = []
