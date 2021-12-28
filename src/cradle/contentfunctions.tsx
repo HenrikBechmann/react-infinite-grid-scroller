@@ -185,7 +185,7 @@ const adjustSpineOffsetForMaxRefIndex = ({
 // ======================[ for updateCradleContent ]===========================
 
 // filter out items that not proximate to the spine
-export const isolateRelevantIntersections = ({
+export const isolateShiftIntersections = ({
     intersections,
     cradleContent,
     cellObserverThreshold,
@@ -202,7 +202,7 @@ export const isolateRelevantIntersections = ({
         tailintersectionindexes = [],
         tailintersections = [],
         intersectingmetadata:any = {},
-        filteredintersections = []
+        shiftintersections = []
 
     // collect lists of current content indexes...
     // headindexes, tailindexes
@@ -375,7 +375,7 @@ export const isolateRelevantIntersections = ({
             // test for continuity and consistency
             if (((index + 1) == refindex) && (intersectingmetadata[index].intersecting == refintersecting)) {
 
-                filteredintersections.push(headintersections[ptr])
+                shiftintersections.push(headintersections[ptr])
 
             } else {
 
@@ -402,7 +402,7 @@ export const isolateRelevantIntersections = ({
             // test for continuity and consistency
             if (((index - 1) == refindex) && (intersectingmetadata[index].intersecting == refintersecting)) {
 
-                filteredintersections.push(tailintersections[ptr])
+                shiftintersections.push(tailintersections[ptr])
 
             } else {
 
@@ -416,11 +416,11 @@ export const isolateRelevantIntersections = ({
         }
     }
 
-    filteredintersections.sort(entrycompare)
+    shiftintersections.sort(entrycompare)
 
     // this returns items to shift, according to scrollforward
 
-    return filteredintersections 
+    return shiftintersections 
 
 }
 
@@ -445,7 +445,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     cradleConfig,
     viewportElement,
     itemElements,
-    intersections,
+    shiftintersections,
     scrollforward,
     viewportData,
     // source,
@@ -533,11 +533,11 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let forwardcount = 0, backwardcount = 0
     if (scrollforward) {
 
-        backwardcount = intersections.length
+        backwardcount = shiftintersections.length
 
     } else {
 
-        forwardcount = intersections.length
+        forwardcount = shiftintersections.length
 
     }
 
