@@ -195,8 +195,8 @@ export const isolateRelevantIntersections = ({
     const headcontent = cradleContent.headModel
     const tailcontent = cradleContent.tailModel
 
-    let headindexes = [], 
-        tailindexes = [],
+    let //headindexes = [], 
+        // tailindexes = [],
         headintersectionindexes = [],
         headintersections = [],
         tailintersectionindexes = [],
@@ -206,13 +206,15 @@ export const isolateRelevantIntersections = ({
 
     // collect lists of current content indexes...
     // headindexes, tailindexes
-    for (let component of headcontent) {
-        headindexes.push(component.props.index)
-    }
+    const headindexes = headcontent.map(component => component.props.index)
+    // for (let component of headcontent) {
+    //     headindexes.push(component.props.index)
+    // }
 
-    for (let component of tailcontent) {
-        tailindexes.push(component.props.index)
-    }
+    const tailindexes = tailcontent.map(component => component.props.index)
+    // for (let component of tailcontent) {
+    //     tailindexes.push(component.props.index)
+    // }
 
     let duplicates:any = {}
     let intersectionsptr = 0
