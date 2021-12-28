@@ -339,10 +339,10 @@ export const isolateRelevantIntersections = ({
     // --------------------------[ ready to process! ]-----------------------------
 
     // set reference points in relation to the spine
-    const headindex = headindexes[headindexes.length - 1]
-    const tailindex = tailindexes[0]
-    let headptr = headintersectionindexes.indexOf(headindex)
-    let tailptr = tailintersectionindexes.indexOf(tailindex)
+    const headreferenceindex = headindexes[headindexes.length - 1]
+    const tailreferenceindex = tailindexes[0]
+    let headptr = headintersectionindexes.indexOf(headreferenceindex)
+    let tailptr = tailintersectionindexes.indexOf(tailreferenceindex)
 
     // filter out items that register only because they have just been moved
     if (headptr !== (headintersectionindexes.length - 1)) { 
@@ -364,7 +364,7 @@ export const isolateRelevantIntersections = ({
     }
 
     // collect notifications to main thread (filtered intersections)
-    
+
     // for scrollbackward
     let headrefindex, tailrefindex // for return
     if (!scrollforward && (headptr >= 0)) {
