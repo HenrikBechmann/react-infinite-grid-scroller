@@ -7,7 +7,7 @@
 
 import React, {useRef, useEffect, useState, useCallback, useMemo, useContext } from 'react'
 
-import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
+// import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
 import { OutPortal } from 'react-reverse-portal'
 
@@ -45,7 +45,7 @@ const CellShell = ({
     const shellRef = useRef(null)
     const instanceIDRef = useRef(instanceID)
     const isMountedRef = useRef(true)
-    const callbackrequestRef = useRef(null)
+    // const callbackrequestRef = useRef(null)
     const portaldataRef = useRef(null)
 
     // console.log('RUNNING cellshell scrollerID, index, cellStatus', scrollerID, index, cellStatus)
@@ -78,8 +78,8 @@ const CellShell = ({
     // initialize cell content
     useEffect(() => {
 
-        const requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
-        const cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
+        // const requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
+        // const cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
 
         portaldataRef.current = portalManager.fetchOrCreatePortal(index, placeholderRef.current)
 
@@ -91,27 +91,29 @@ const CellShell = ({
 
             if (isMountedRef.current && getItem) {
 
-                callbackrequestRef.current = requestidlecallback(()=> {
+                // callbackrequestRef.current = requestidlecallback(()=> {
+                    // setTimeout(() => {
+
                     const contentItem = getItem(index)
 
-                    if (contentItem && contentItem.then) { // it's a promise
+                    // if (contentItem && contentItem.then) { // it's a promise
 
-                        contentItem.then((usercontent) => {
-                            if (isMountedRef.current) { 
+                    //     contentItem.then((usercontent) => {
+                    //         if (isMountedRef.current) { 
 
-                                portaldataRef.current.hasusercontent = true
-                                portaldataRef.current = portalManager.updatePortal(index,usercontent)
-                                setCellStatus('rendercontent')
+                    //             portaldataRef.current.hasusercontent = true
+                    //             portaldataRef.current = portalManager.updatePortal(index,usercontent)
+                    //             setCellStatus('rendercontent')
 
-                            }
+                    //         }
 
-                        }).catch((e) => {
+                    //     }).catch((e) => {
 
-                            console.log('ERROR',e)
+                    //         console.log('ERROR',e)
 
-                        })
+                    //     })
 
-                    } else {
+                    // } else {
 
                         if (isMountedRef.current) {
 
@@ -129,9 +131,10 @@ const CellShell = ({
                             }
                         }
 
-                    }
-                },{timeout:250})
+                    // }
+                // },{timeout:250})
         
+                // },50)
             }         
         } else {
         
@@ -140,12 +143,12 @@ const CellShell = ({
         }        
 
         // unmount
-        return () => {
+        // return () => {
 
-            const callbackhandle = callbackrequestRef.current
-            cancelidlecallback(callbackhandle)
+        //     const callbackhandle = callbackrequestRef.current
+        //     cancelidlecallback(callbackhandle)
 
-        }
+        // }
     },[])
 
 
