@@ -258,8 +258,6 @@ export default class ContentManager {
         //     console.log('updateCradleContent INTERSECTIONS',intersections)
         // }
 
-        // if (intersections.length == 0) return
-
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         const [cradleindex, // TODO: BUG: this changed to 20 from 24

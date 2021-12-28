@@ -456,7 +456,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     // source,
 }) => {
 
-    // ------------------------[ initialize ]--------------
+    // ------------------------[ initialize ]-----------------------
 
     const { gap,
         orientation,
@@ -480,7 +480,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         viewportRowcount,
         itemObserverThreshold } = cradleConfig
 
-    let BOD = false, EOD = false // beginning-of-data, end-of-data
+    let BOD = false, EOD = false // beginning-of-data, end-of-data flags
 
     // -------[ 1. calculate head overshoot row count, if any ]-------
     
