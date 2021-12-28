@@ -466,13 +466,14 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         padding,
         runwaycount } = cradleProps
 
-    const spineElement = cradleElements.spineRef.current
-    const headElement = cradleElements.headRef.current
-    const tailElement = cradleElements.tailRef.current
+    const spineElement = cradleElements.spineRef.current,
+     headElement = cradleElements.headRef.current,
+     tailElement = cradleElements.tailRef.current
 
-    const cradlecontentlist = cradleContent.cradleModel
-    const headcontentlist = cradleContent.headModel
-    const tailcontentlist = cradleContent.tailModel
+    const {cradleModel:cradlecontentlist, 
+        headModel:headcontentlist, 
+        tailModel:tailcontentlist
+    } = cradleContent
 
     const { crosscount,
         cradleRowcount,
