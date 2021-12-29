@@ -29,21 +29,20 @@ const CellShell = ({
 }) => {
 
     const cradleDataRef = useContext(CradleContext)
-    const portalManager = cradleDataRef.current.portalManager
-    // const isreparentedRef = useRef(false)
+    const { portalManager } = cradleDataRef.current
     
     const [styles,saveStyles] = useState({
         overflow:'hidden',
     } as React.CSSProperties)
-    // 'setup' -> 'renderplaceholder' -> 'rendercontent' -> 'ready'
+
     const [cellStatus, setCellStatus] = useState('setup'); 
 
     // console.log('RUNNING cellshell cellStatus, index, scrollerID, instanceID',cellStatus, index, scrollerID, instanceID)
 
     const shellRef = useRef(null)
-    const instanceIDRef = useRef(instanceID)
+    // const instanceIDRef = useRef(instanceID)
     const isMountedRef = useRef(true)
-    // const callbackrequestRef = useRef(null)
+
     const portaldataRef = useRef(null)
 
     // console.log('RUNNING cellshell scrollerID, index, cellStatus', scrollerID, index, cellStatus)
@@ -85,7 +84,7 @@ const CellShell = ({
 
         const hasUserContent = !!portaldataRef.current.hasusercontent // previous InPortal creation for index
 
-        const reverseportal = portaldataRef.current.reverseportal
+        const { reverseportal } = portaldataRef.current
 
         contentcomponentRef.current = <OutPortal node = {reverseportal}/>
 
@@ -157,6 +156,7 @@ const CellShell = ({
     useEffect(()=>{
 
         let newStyles = getShellStyles(orientation, cellHeight, cellWidth, styles)
+        
         if (isMountedRef.current) {
             saveStyles(newStyles)
         }

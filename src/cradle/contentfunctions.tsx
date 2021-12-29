@@ -445,7 +445,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     cradleConfig,
     viewportElement,
     itemElements,
-    shiftintersections,
+    shiftingintersections,
     scrollforward,
     viewportData,
     // source,
@@ -533,11 +533,11 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let forwardcount = 0, backwardcount = 0
     if (scrollforward) {
 
-        backwardcount = shiftintersections.length
+        backwardcount = shiftingintersections.length
 
     } else {
 
-        forwardcount = shiftintersections.length
+        forwardcount = shiftingintersections.length
 
     }
 
