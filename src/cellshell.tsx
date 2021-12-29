@@ -190,11 +190,11 @@ const CellShell = ({
                         } else {
 
                             console.log('ERROR','no content item')
+                            setCellStatus('ready')
 
                         }
                     }
 
-                    setCellStatus('ready')
                 },{timeout:IDLECALLBACK_TIMEOUT})
                 break
             }
