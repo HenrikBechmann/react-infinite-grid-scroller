@@ -11,6 +11,8 @@ import Placeholder from './placeholder'
 
 import { CradleContext } from './cradle'
 
+const IDLECALLBACK_TIMEOUT = 1000
+
 const CellShell = ({
     orientation, 
     cellHeight, 
@@ -190,7 +192,7 @@ const CellShell = ({
                     }
 
                     setCellStatus('ready')
-                },{timeout:1000})
+                },{timeout:IDLECALLBACK_TIMEOUT})
                 break
             }
 
