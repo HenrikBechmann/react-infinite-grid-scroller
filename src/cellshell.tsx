@@ -32,7 +32,7 @@ const CellShell = ({
 
     const cradleDataRef = useContext(CradleContext)
     const portalManager = cradleDataRef.current.portalManager
-    const isreparentedRef = useRef(false)
+    // const isreparentedRef = useRef(false)
     
     const [styles,saveStyles] = useState({
         overflow:'hidden',
@@ -68,9 +68,9 @@ const CellShell = ({
     const placeholderRef = useRef(null)
 
     placeholderRef.current = useMemo(()=>{
-        let child = customplaceholder?
+        const placeholder = customplaceholder?
                 customplaceholder:<Placeholder index = {index} listsize = {listsize} error = {false}/>
-        return child
+        return placeholder
     }, [index, customplaceholder, listsize]);
 
     // ---------------- [ end of placeholder definition ] ------------------------
@@ -85,16 +85,22 @@ const CellShell = ({
 
         const hasUserContent = !!portaldataRef.current.hasusercontent // previous InPortal creation for index
 
+        const reverseportal = portaldataRef.current.reverseportal
+
+        contentcomponentRef.current = <OutPortal node = {reverseportal}/>
+
         if (!hasUserContent) {
 
-            setCellStatus('renderplaceholder')
+            setCellStatus('getusercontent')
 
         } else {
+
+            portaldataRef.current.isReparenting = true
+            if (isMountedRef.current) setCellStatus('ready')
 
             // if (isMountedRef.current && getItem) {
 
                 // callbackrequestRef.current = requestidlecallback(()=> {
-                    // setTimeout(() => {
 
                     // const contentItem = getItem(index)
 
@@ -136,11 +142,8 @@ const CellShell = ({
                     // }
                 // },{timeout:250})
         
-                // },50)
             // }         
-        
-            if (isMountedRef.current) setCellStatus('rendercontent')
-    
+            
         }        
 
         // unmount
@@ -208,44 +211,48 @@ const CellShell = ({
 
     useEffect(() => {
 
-        if (cellStatus == 'setup') return
+        switch (cellStatus) {
+            case 'setup':
+                // no-op
+                break
+            case 'getusercontent': {
+                const usercontent = getItem(index)
 
-        if (cellStatus == 'renderplaceholder') {
-            
-            const reverseportal = portaldataRef.current.reverseportal
+                if (isMountedRef.current) {
 
-            setCellStatus('rendercontent')
+                    if (usercontent) {
 
-            contentcomponentRef.current = <OutPortal node = {reverseportal}/>
+                        portaldataRef.current.hasusercontent = true
+                        portaldataRef.current = portalManager.updatePortal(index,usercontent)
+                        const reverseportal = portaldataRef.current.reverseportal
+                        portaldataRef.current.isReparenting = true
+                        contentcomponentRef.current = <OutPortal node = {reverseportal}/>
 
-        }
+                        setCellStatus('ready')
 
-        if (cellStatus == 'rendercontent') {
+                    } else {
 
-            const contentItem = getItem(index)
+                        console.log('ERROR','no content item')
 
-            if (isMountedRef.current) {
-
-                if (contentItem) {
-                    const usercontent = contentItem
-
-                    portaldataRef.current.hasusercontent = true
-                    portaldataRef.current = portalManager.updatePortal(index,usercontent)
-                    const reverseportal = portaldataRef.current.reverseportal
-                    portaldataRef.current.isReparenting = true
-                    isreparentedRef.current = true
-
-                    setCellStatus('ready')
-
-                    contentcomponentRef.current = <OutPortal node = {reverseportal}/>
-
-                } else {
-
-                    console.log('ERROR','no content item')
-
+                    }
                 }
-            }
 
+                setCellStatus('ready')
+
+                break
+            }
+            // case 'rendercontent': {
+
+            //         const reverseportal = portaldataRef.current.reverseportal
+
+            //         contentcomponentRef.current = <OutPortal node = {reverseportal}/>
+
+            //         setCellStatus('ready')
+            //     break
+            // }
+            case 'ready': {
+                break
+            }
         }
 
     }, [cellStatus])
