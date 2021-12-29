@@ -77,6 +77,7 @@ const CellShell = ({
     const cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
 
     const requestIdleCallbackIdRef = useRef(null)
+
     // initialize cell content
     useEffect(() => {
 
@@ -102,16 +103,18 @@ const CellShell = ({
         // unmount
         return () => {
 
-            const callbackhandle = requestIdleCallbackIdRef.current
-            cancelidlecallback(callbackhandle)
+            cancelidlecallback(requestIdleCallbackIdRef.current)
 
         }
+
     },[])
 
 
     // cradle invariant ondemand callback parameter value
     const getElementData = useCallback(()=>{
+
         return [index, shellRef]
+        
     },[])
 
     // initialize callbacks
