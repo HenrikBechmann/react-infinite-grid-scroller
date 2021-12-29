@@ -172,8 +172,8 @@ const CellShell = ({
                 // no-op
                 break
             case 'getusercontent': {
-                requestIdleCallbackIdRef.current = requestidlecallback(()=>{
-                    const usercontent = getItem(index)
+                requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
+                    const usercontent = await getItem(index)
 
                     if (isMountedRef.current) {
 
