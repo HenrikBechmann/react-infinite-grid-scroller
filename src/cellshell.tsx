@@ -185,14 +185,14 @@ const CellShell = ({
                             portaldataRef.current.isReparenting = true
                             contentcomponentRef.current = <OutPortal node = {reverseportal}/>
 
-                            setCellStatus('ready')
-
                         } else {
 
                             console.log('ERROR','no content item')
-                            setCellStatus('ready')
 
                         }
+
+                        setCellStatus('ready')
+
                     }
 
                 },{timeout:IDLECALLBACK_TIMEOUT})
