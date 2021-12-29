@@ -266,12 +266,16 @@ const CellShell = ({
 const getShellStyles = (orientation, cellHeight, cellWidth, styles) => {
 
     let styleset = Object.assign({position:'relative'},styles)
+
     if (orientation == 'horizontal') {
         styleset.width = cellWidth?(cellWidth + 'px'):'auto'
         styleset.height = 'auto'
+
     } else if (orientation === 'vertical') {
+
         styleset.width = 'auto'
         styleset.height = cellHeight?(cellHeight + 'px'):'auto'
+        
     }
 
     return styleset
