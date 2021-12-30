@@ -483,7 +483,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let viewportspineoffset // the pixel distance between the viewport frame and the spine, toward the head
 
-    // -------[ 1. calculate spine's headblock overshoot row count, if any ]-------
+    // -------[ 1. calculate spine's headblock overshoot item & row counts, if any ]-------
     
     let headblockoffset, tailblockoffset, viewportlength
     let viewportvisiblegaplength = 0
@@ -534,6 +534,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     // -----------------[ 2. calculate item & row shift counts including overshoot ]-------------
     // shift item count is the number of items the virtual cradle shifts, according to observer
     // shift negative closer to head, shift positive closer to tail
+    // cradle reference is the first content item
+    // spine reference is the first tail item
 
     let headaddshiftitemcount = 0, tailaddshiftitemcount = 0
     if (scrollingviewportforward) { // viewport moves toward tail, add tail items, shift positive
@@ -548,8 +550,6 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     // negative value shifted toward head; positive value shofted toward tail
     // one of the two expressions in the following line will be 0
-    // cradle reference is the first content item
-    // spine reference is the first tail item
     let cradleshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
     let spinereferenceitemshiftcount = cradleshiftitemcount
 
@@ -558,57 +558,57 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         :Math.floor(cradleshiftitemcount/crosscount)
     let spinereferencerowshift = cradlerowshift
 
-    // ----------------[ 3. calc new cradle index and spine reference index ]-----------------
+    // ----------------[ 3. calc new cradle reference index and spine reference index ]-----------------
 
     const previouscradleindex = (cradlecontentlist[0].props.index || 0)
     const previouscradlerowoffset = previouscradleindex/crosscount
     const previousspinereferenceindex = (tailcontentlist[0]?.props.index || 0) // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
     // const previousspinereferencerowoffset = previousspinereferenceindex/crosscount
 
-    let diff 
+    let rowovershoot
     if (scrollingviewportforward) { // scroll viewport toward tail, shift is positive, add to tail
 
-        // computed shifted cradle rowoffset
-        const computedcradlerowoffset = previouscradlerowoffset + cradleRowcount + cradlerowshift
-        if ((computedcradlerowoffset) >= (listRowcount)) {
+        // computed shifted cradle end row, looking for overshoot
+        const computedcradleEndrow = previouscradlerowoffset + cradleRowcount + cradlerowshift
+        if ((computedcradleEndrow) >= (listRowcount)) {
             EOD = true
         }
 
-        diff = computedcradlerowoffset - listRowcount
+        rowovershoot = computedcradleEndrow - listRowcount // overshoot amount 
 
-        if (diff > 0) {
+        if (rowovershoot > 0) {
 
-            cradlerowshift -= diff
-            cradleshiftitemcount -= (diff * crosscount)
+            cradlerowshift -= rowovershoot
+            cradleshiftitemcount -= (rowovershoot * crosscount)
 
         }
 
     } else { // scroll viewport backward, scroll viewport toward head, shift is negative, add to head
 
-        if ((previouscradlerowoffset + cradlerowshift) <= 0) {
+        if ((previouscradlerowoffset + cradlerowshift) <= 0) { // undershoot, past start of dataset
             BOD = true
         }
-        diff = previouscradlerowoffset + cradlerowshift
-        if (diff < 0) {
+        rowovershoot = previouscradlerowoffset + cradlerowshift
+        if (rowovershoot < 0) {
 
-            cradlerowshift -= diff
-            cradleshiftitemcount -= (diff * crosscount)
+            cradlerowshift -= rowovershoot // add back the overshoot
+            cradleshiftitemcount -= (rowovershoot * crosscount)
 
         }
 
     }
 
     let newcradleindex = previouscradleindex + cradleshiftitemcount
-    let newreferenceindex = previousspinereferenceindex + spinereferenceitemshiftcount
+    let newspinereferenceindex = previousspinereferenceindex + spinereferenceitemshiftcount
 
-    if (newreferenceindex < 0) {
-        spinereferenceitemshiftcount += newreferenceindex
-        newreferenceindex = 0
+    if (newspinereferenceindex < 0) {
+        spinereferenceitemshiftcount += newspinereferenceindex
+        newspinereferenceindex = 0
     }
 
     // -------------[ 4. calculate spineAdjustment and spinePosOffset ]------------------
 
-    let spinereferenceitemshift = newreferenceindex - previousspinereferenceindex
+    let spinereferenceitemshift = newspinereferenceindex - previousspinereferenceindex
     let cradleitemshiftcount = newcradleindex - previouscradleindex
 
     spinereferencerowshift = spinereferenceitemshift/crosscount
@@ -633,7 +633,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     if (spineAdjustment && (BOD || EOD)) {
 
-        newreferenceindex += spineAdjustment
+        newspinereferenceindex += spineAdjustment
         spinereferenceitemshift += spineAdjustment
         spinePosOffset = spineOffsetTarget
 
@@ -641,7 +641,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
         newcradleindex += spineAdjustment
         cradleitemshiftcount += spineAdjustment
-        newreferenceindex += spineAdjustment
+        newspinereferenceindex += spineAdjustment
         spinereferenceitemshift += spineAdjustment
         spinePosOffset = spineOffsetTarget
     }
@@ -658,7 +658,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         spinereferenceitemshift, 
         cradleitemshiftcount, 
         newcradleindex, 
-        newreferenceindex, 
+        newspinereferenceindex, 
         spinePosOffset, 
         cradleActualContentCount 
     ]
