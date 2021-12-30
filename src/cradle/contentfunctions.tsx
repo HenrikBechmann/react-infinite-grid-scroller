@@ -189,7 +189,7 @@ export const isolateShiftingIntersections = ({
     intersections,
     cradleContent,
     cellObserverThreshold,
-    scrollforward,
+    scrollingviewportforward,
 }) => {
 
     const headcontent = cradleContent.headModel
@@ -351,19 +351,19 @@ export const isolateShiftingIntersections = ({
 
     if ((headptr > -1) && (tailptr > -1)) { // edge case, both are found
 
-        if (scrollforward) { // moving toward tail; add items to tail
+        if (scrollingviewportforward) { // moving toward tail; add items to tail
             headptr = -1 // assert head item not found
         } else { // moving toward head; add items to head
-            tailptr = -1 // scrollbackward assert tail item not found
+            tailptr = -1 // scrollviewportbackward assert tail item not found
         }
 
     }
 
     // collect notifications to main thread (filtered intersections)
 
-    // for scrollbackward, moving toward head, add items to head, shift items to tail
+    // for scrollviewportbackward, moving toward head, add items to head, shift items to tail
     let headrefindex, tailrefindex // for return
-    if (!scrollforward && (headptr >= 0)) {
+    if (!scrollingviewportforward && (headptr >= 0)) {
         headrefindex = headintersectionindexes[headptr]
         let refindex = headrefindex + 1
         let refintersecting = intersectingmetadata[refindex - 1].intersecting
@@ -389,8 +389,8 @@ export const isolateShiftingIntersections = ({
         }
     }
 
-    // for scrollforward, moving toward tail, add items to tail, shift items to head
-    if (scrollforward && (tailptr >= 0)) {
+    // for scrollingviewportforward, moving toward tail, add items to tail, shift items to head
+    if (scrollingviewportforward && (tailptr >= 0)) {
         tailrefindex = tailintersectionindexes[tailptr]
         let refindex = tailrefindex - 1
         let refintersecting = intersectingmetadata[refindex + 1].intersecting
@@ -418,7 +418,7 @@ export const isolateShiftingIntersections = ({
 
     shiftintersections.sort(entrycompare)
 
-    // this returns items to shift, according to scrollforward
+    // this returns items to shift, according to scrollingviewportforward
 
     return shiftintersections 
 
@@ -447,7 +447,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     viewportElement,
     itemElements,
     shiftingintersections,
-    scrollforward,
+    scrollingviewportforward,
     viewportData,
     // source,
 }) => {
@@ -483,7 +483,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let viewportspineoffset // the pixel distance between the viewport frame and the spine, toward the head
 
-    // -------[ 1. calculate overshoot row count, if any ]-------
+    // -------[ 1. calculate spine's headblock overshoot row count, if any ]-------
     
     let headblockoffset, tailblockoffset, viewportlength
     let viewportvisiblegaplength = 0
@@ -494,9 +494,10 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         viewportlength = viewportElement.offsetHeight
 
         // measure any gap between the cradle and the top viewport boundary
-        if (!scrollforward) { // scrollbackward, toward head
+        if (!scrollingviewportforward) { // scrollviewportbackward, toward head
 
-            // if viewportspineoffset is below the top by more than the height of the headElment then a gap will be visible
+            // if viewportspineoffset is below the top by more than the height of 
+            // the headElment then a gap will be visible
             viewportvisiblegaplength = viewportspineoffset - headElement.offsetHeight
 
         }
@@ -506,7 +507,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         viewportspineoffset = spineElement.offsetLeft - viewportElement.scrollLeft
         viewportlength = viewportElement.offsetWidth
 
-        if (!scrollforward) { // scroll backward, toward head
+        if (!scrollingviewportforward) { // scroll backward, toward head
 
             viewportvisiblegaplength = viewportspineoffset - headElement.offsetWidth
 
@@ -530,46 +531,42 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let overshootitemcount = overshootrowcount * crosscount
 
-    // must be scrollbackward, viewport moves toward head, items added to head, shift is negative
-    // if (overshootitemcount) { 
-    //     overshootitemcount = -overshootitemcount
-    //     overshootrowcount = -overshootrowcount
-    // }
-
-    // ----------------------[ 2. calculate itemshiftcount including overshoot ]------------------------
+    // -----------------[ 2. calculate item & row shift counts including overshoot ]-------------
     // shift item count is the number of items the virtual cradle shifts, according to observer
     // shift negative closer to head, shift positive closer to tail
 
     let headaddshiftitemcount = 0, tailaddshiftitemcount = 0
-    if (scrollforward) { // viewport moves toward tail, add tail items, shift positive
+    if (scrollingviewportforward) { // viewport moves toward tail, add tail items, shift positive
 
         tailaddshiftitemcount = shiftingintersections.length
 
-    } else { // scrollbackward, viewport toward head, add head items, shift negative
+    } else { // scrollviewportbackward, viewport toward head, add head items, shift negative
 
         headaddshiftitemcount = shiftingintersections.length
 
     }
 
     // negative value shifted toward head; positive value shofted toward tail
-    // one of the expressions in the following line will be 0
+    // one of the two expressions in the following line will be 0
+    // cradle reference is the first content item
+    // spine reference is the first tail item
     let cradleshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
-    let referenceshiftitemcount = cradleshiftitemcount
+    let spinereferenceitemshiftcount = cradleshiftitemcount
 
     let cradlerowshift = (cradleshiftitemcount > 0)
         ?Math.ceil(cradleshiftitemcount/crosscount)
-        :Math.floor(cradleshiftitemcount/crosscount) // TODO: **new**
-    let referencerowshift = cradlerowshift
+        :Math.floor(cradleshiftitemcount/crosscount)
+    let spinereferencerowshift = cradlerowshift
 
-    // --------------------------[ 3. calc cradleindex and referenceindex ]--------------------------
+    // ----------------[ 3. calc new cradle index and spine reference index ]-----------------
 
     const previouscradleindex = (cradlecontentlist[0].props.index || 0)
     const previouscradlerowoffset = previouscradleindex/crosscount
-    const previousreferenceindex = (tailcontentlist[0]?.props.index || 0) // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
-    const previousreferencerowoffset = previousreferenceindex/crosscount
+    const previousspinereferenceindex = (tailcontentlist[0]?.props.index || 0) // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
+    // const previousspinereferencerowoffset = previousspinereferenceindex/crosscount
 
     let diff 
-    if (scrollforward) { // scroll viewport toward tail, shift is positive, add to tail
+    if (scrollingviewportforward) { // scroll viewport toward tail, shift is positive, add to tail
 
         // computed shifted cradle rowoffset
         const computedcradlerowoffset = previouscradlerowoffset + cradleRowcount + cradlerowshift
@@ -586,7 +583,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
         }
 
-    } else { // scroll backward, scroll viewport toward head, shift is negative, add to head
+    } else { // scroll viewport backward, scroll viewport toward head, shift is negative, add to head
 
         if ((previouscradlerowoffset + cradlerowshift) <= 0) {
             BOD = true
@@ -602,20 +599,20 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     }
 
     let newcradleindex = previouscradleindex + cradleshiftitemcount
-    let newreferenceindex = previousreferenceindex + referenceshiftitemcount
+    let newreferenceindex = previousspinereferenceindex + spinereferenceitemshiftcount
 
     if (newreferenceindex < 0) {
-        referenceshiftitemcount += newreferenceindex
+        spinereferenceitemshiftcount += newreferenceindex
         newreferenceindex = 0
     }
 
     // -------------[ 4. calculate spineAdjustment and spinePosOffset ]------------------
 
-    let referenceitemshiftcount = newreferenceindex - previousreferenceindex
+    let spinereferenceitemshift = newreferenceindex - previousspinereferenceindex
     let cradleitemshiftcount = newcradleindex - previouscradleindex
 
-    referencerowshift = referenceitemshiftcount/crosscount
-    let referencepixelshift = referencerowshift * cellLength
+    spinereferencerowshift = spinereferenceitemshift/crosscount
+    let referencepixelshift = spinereferencerowshift * cellLength
 
     let spinePosOffset = viewportspineoffset + referencepixelshift
 
@@ -637,7 +634,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     if (spineAdjustment && (BOD || EOD)) {
 
         newreferenceindex += spineAdjustment
-        referenceitemshiftcount += spineAdjustment
+        spinereferenceitemshift += spineAdjustment
         spinePosOffset = spineOffsetTarget
 
     } else if (spineAdjustment) {
@@ -645,7 +642,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         newcradleindex += spineAdjustment
         cradleitemshiftcount += spineAdjustment
         newreferenceindex += spineAdjustment
-        referenceitemshiftcount += spineAdjustment
+        spinereferenceitemshift += spineAdjustment
         spinePosOffset = spineOffsetTarget
     }
 
@@ -658,7 +655,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let cradleActualContentCount = cradleAvailableContentCount
 
     return [ 
-        referenceitemshiftcount, 
+        spinereferenceitemshift, 
         cradleitemshiftcount, 
         newcradleindex, 
         newreferenceindex, 
@@ -674,7 +671,7 @@ export const calcHeadAndTailChanges = ({
         cradleConfig,
         cradleContent,
         cradleshiftcount,
-        scrollforward,
+        scrollingviewportforward,
         cradleReferenceIndex,
 
     }) => {
@@ -702,7 +699,7 @@ export const calcHeadAndTailChanges = ({
     let additemcount = 0
     let cliprowcount = 0, clipitemcount = 0
 
-    if (scrollforward) { // clip from head; add to tail; scroll forward head is direction of scroll
+    if (scrollingviewportforward) { // clip from head; add to tail; scroll forward head is direction of scroll
 
         // adjust clipitemcount
         if ((headrowcount + rowshiftcount) > (cradleProps.runwaycount)) {

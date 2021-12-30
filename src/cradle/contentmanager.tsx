@@ -214,19 +214,19 @@ export default class ContentManager {
 
         const scrollPositions = scrollManager.scrollPositions //scrollPositionsRef.current
 
-        let scrollforward
+        let scrollingviewportforward
         if (scrollPositions.current == scrollPositions.previous) { // edge case 
 
-            scrollforward = this._previousScrollForward
+            scrollingviewportforward = this._previousScrollForward
 
         } else {
 
-            scrollforward = scrollPositions.current > scrollPositions.previous
-            this._previousScrollForward = scrollforward
+            scrollingviewportforward = scrollPositions.current > scrollPositions.previous
+            this._previousScrollForward = scrollingviewportforward
 
         }
 
-        if (scrollforward === undefined) {
+        if (scrollingviewportforward === undefined) {
             return // init call
         }
 
@@ -247,7 +247,7 @@ export default class ContentManager {
         // TODO: BUG: for nested config end problem intersections count = 4; should be 0; 12 count for entries
         const shiftingintersections = isolateShiftingIntersections({
 
-            scrollforward,
+            scrollingviewportforward,
             intersections:entries,
             cradleContent,
             cellObserverThreshold:cradleConfig.cellObserverThreshold,
@@ -261,7 +261,7 @@ export default class ContentManager {
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         const [
-            referenceitemshift, // TODO: BUG: set to 4
+            spinereferenceitemshift, // TODO: BUG: set to 4
             cradleitemshift, // TODO: BUG: for problem cradleitemshift ends up as -4
             cradleindex, // TODO: BUG: this changed to 20 from 24
             spineReferenceIndex, // TODO: BUG: for problem spineReferenceIndex ends up at 100 (one past the end of list)
@@ -277,12 +277,12 @@ export default class ContentManager {
             viewportElement,
             itemElements,
             shiftingintersections,
-            scrollforward,
+            scrollingviewportforward,
             viewportData,
 
         })
 
-        if ((referenceitemshift == 0 && cradleitemshift == 0)) return
+        if ((spinereferenceitemshift == 0 && cradleitemshift == 0)) return
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
@@ -293,7 +293,7 @@ export default class ContentManager {
             cradleConfig,
             cradleContent,
             cradleshiftcount:cradleitemshift,
-            scrollforward,
+            scrollingviewportforward,
             cradleReferenceIndex,
 
         })
@@ -337,8 +337,8 @@ export default class ContentManager {
 
         // if ((viewportData.index == 6) /*&& (tailcontent.length == 0)*/) {
         //     console.log('in updateCradleContent after allocateContentList \n',
-        //     'referenceitemshift, cradleitemshift, spineReferenceIndex, spinePosOffset, headcontent, tailcontent', //localContentList, headcontent, tailcontent', 
-        //         referenceitemshift, cradleitemshift, spineReferenceIndex, spinePosOffset, headcontent, tailcontent) //, entries, localContentList, headcontent, tailcontent) 
+        //     'spinereferenceitemshift, cradleitemshift, spineReferenceIndex, spinePosOffset, headcontent, tailcontent', //localContentList, headcontent, tailcontent', 
+        //         spinereferenceitemshift, cradleitemshift, spineReferenceIndex, spinePosOffset, headcontent, tailcontent) //, entries, localContentList, headcontent, tailcontent) 
         //     // debugger
         // }
 
