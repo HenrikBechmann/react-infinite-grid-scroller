@@ -553,9 +553,10 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let cradleshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
     let spinereferenceitemshiftcount = cradleshiftitemcount
 
-    let cradlerowshift = (cradleshiftitemcount > 0)
-        ?Math.ceil(cradleshiftitemcount/crosscount)
-        :Math.floor(cradleshiftitemcount/crosscount)
+    let cradlerowshift = Math.round(cradleshiftitemcount/crosscount)
+    // (cradleshiftitemcount > 0)
+    //     ?Math.ceil(cradleshiftitemcount/crosscount)
+    //     :Math.floor(cradleshiftitemcount/crosscount)
     let spinereferencerowshift = cradlerowshift
 
     // ----------------[ 3. calc new cradle reference index and spine reference index ]-----------------
@@ -611,7 +612,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let spinereferenceitemshift = newspinereferenceindex - previousspinereferenceindex
     let cradleitemshiftcount = newcradleindex - previouscradleindex
 
-    spinereferencerowshift = spinereferenceitemshift/crosscount
+    spinereferencerowshift = Math.round(spinereferenceitemshift/crosscount)
     let referencepixelshift = spinereferencerowshift * cellLength
 
     let spinePosOffset = viewportspineoffset + referencepixelshift
@@ -622,7 +623,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     if (Math.abs(spinePosOffset) > cellLength) {
 
         spineOffsetTarget = (spinePosOffset % cellLength)
-        spineAdjustment = -(Math.ceil((spinePosOffset - spineOffsetTarget) / cellLength) * crosscount)
+        // spineAdjustment = -(Math.ceil((spinePosOffset - spineOffsetTarget) / cellLength) * crosscount)
+        spineAdjustment = -(Math.round((spinePosOffset - spineOffsetTarget) / cellLength) * crosscount)
 
     }
 
