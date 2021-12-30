@@ -438,6 +438,7 @@ let duplicatecomparebytime = (a,b) => {
     let retval = (a.time < b.time)?-1:1
 }
 
+// A negative shift is toward the head, a positive shift is toward the tail
 export const calcContentShifts = ({ // called only from updateCradleContent
     cradleProps,
     cradleElements,
@@ -551,7 +552,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     }
 
     // negative value shifted toward head; positive value shofted toward tail
-    // one of thes expressions will be 0
+    // one of the expressions in the following line will be 0
     let cradleshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
     let referenceshiftitemcount = cradleshiftitemcount
 
@@ -568,13 +569,15 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     const previousreferencerowoffset = previousreferenceindex/crosscount
 
     let diff 
-    if (scrollforward) {
+    if (scrollforward) { // scroll viewport toward tail, shift is positive, add to tail
 
-        if ((previouscradlerowoffset + cradleRowcount + cradlerowshift) >= (listRowcount)) {
+        // computed shifted cradle rowoffset
+        const computedcradlerowoffset = previouscradlerowoffset + cradleRowcount + cradlerowshift
+        if ((computedcradlerowoffset) >= (listRowcount)) {
             EOD = true
         }
 
-        diff = (previouscradlerowoffset + cradleRowcount + cradlerowshift) - (listRowcount)
+        diff = computedcradlerowoffset - listRowcount
 
         if (diff > 0) {
 
@@ -583,7 +586,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
         }
 
-    } else {
+    } else { // scroll backward, scroll viewport toward head, shift is negative, add to head
 
         if ((previouscradlerowoffset + cradlerowshift) <= 0) {
             BOD = true
