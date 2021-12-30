@@ -599,7 +599,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     }
 
-    let newcradleindex = previouscradleindex + cradleshiftitemcount
+    let newcradlereferenceindex = previouscradleindex + cradleshiftitemcount
     let newspinereferenceindex = previousspinereferenceindex + spinereferenceitemshiftcount
 
     if (newspinereferenceindex < 0) {
@@ -607,48 +607,48 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         newspinereferenceindex = 0
     }
 
-    // -------------[ 4. calculate spineAdjustment and spinePosOffset ]------------------
+    // -------------[ 4. reconcile spineReferenceAdjustment and calc newspinePosOffset ]------------------
 
     let spinereferenceitemshift = newspinereferenceindex - previousspinereferenceindex
-    let cradleitemshiftcount = newcradleindex - previouscradleindex
+    let cradlereferenceitemshift = newcradlereferenceindex - previouscradleindex
 
-    spinereferencerowshift = Math.round(spinereferenceitemshift/crosscount)
-    let referencepixelshift = spinereferencerowshift * cellLength
+    const spinerowshift = Math.round(spinereferenceitemshift/crosscount)
+    let spinepixelshift = spinerowshift * cellLength
 
-    let spinePosOffset = viewportspineoffset + referencepixelshift
+    let newspinePosOffset = viewportspineoffset + spinepixelshift
 
-    let spineOffsetTarget = spinePosOffset
-    let spineAdjustment = 0
+    let newspinePosOffsetTarget = newspinePosOffset
+    let spineReferenceAdjustment = 0
 
-    if (Math.abs(spinePosOffset) > cellLength) {
+    if (Math.abs(newspinePosOffset) > cellLength) {
 
-        spineOffsetTarget = (spinePosOffset % cellLength)
-        // spineAdjustment = -(Math.ceil((spinePosOffset - spineOffsetTarget) / cellLength) * crosscount)
-        spineAdjustment = -(Math.round((spinePosOffset - spineOffsetTarget) / cellLength) * crosscount)
+        newspinePosOffsetTarget = (newspinePosOffset % cellLength)
+        // spineReferenceAdjustment = -(Math.ceil((newspinePosOffset - spinePosOffsetTarget) / cellLength) * crosscount)
+        spineReferenceAdjustment = -(Math.round((newspinePosOffset - newspinePosOffsetTarget) / cellLength) * crosscount)
 
     }
 
-    if (spineOffsetTarget < 0) {
-        spineOffsetTarget += cellLength
-        spineAdjustment += crosscount 
+    if (newspinePosOffsetTarget < 0) {
+        newspinePosOffsetTarget += cellLength
+        spineReferenceAdjustment += crosscount 
     }
 
-    if (spineAdjustment && (BOD || EOD)) {
+    if (spineReferenceAdjustment && (BOD || EOD)) {
 
-        newspinereferenceindex += spineAdjustment
-        spinereferenceitemshift += spineAdjustment
-        spinePosOffset = spineOffsetTarget
+        newspinereferenceindex += spineReferenceAdjustment
+        spinereferenceitemshift += spineReferenceAdjustment
+        newspinePosOffset = newspinePosOffsetTarget
 
-    } else if (spineAdjustment) {
+    } else if (spineReferenceAdjustment) {
 
-        newcradleindex += spineAdjustment
-        cradleitemshiftcount += spineAdjustment
-        newspinereferenceindex += spineAdjustment
-        spinereferenceitemshift += spineAdjustment
-        spinePosOffset = spineOffsetTarget
+        newcradlereferenceindex += spineReferenceAdjustment
+        cradlereferenceitemshift += spineReferenceAdjustment
+        newspinereferenceindex += spineReferenceAdjustment
+        spinereferenceitemshift += spineReferenceAdjustment
+        newspinePosOffset = newspinePosOffsetTarget
     }
 
-    spinePosOffset = spineOffsetTarget
+    newspinePosOffset = newspinePosOffsetTarget
 
     // ---------------------[ 5. return required values ]-------------------
 
@@ -658,10 +658,10 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     return [ 
         spinereferenceitemshift, 
-        cradleitemshiftcount, 
-        newcradleindex, 
+        cradlereferenceitemshift, 
+        newcradlereferenceindex, 
         newspinereferenceindex, 
-        spinePosOffset, 
+        newspinePosOffset, 
         cradleActualContentCount 
     ]
 
