@@ -555,7 +555,9 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let cradleshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
     let referenceshiftitemcount = cradleshiftitemcount
 
-    let cradlerowshift = Math.ceil(cradleshiftitemcount/crosscount)
+    let cradlerowshift = (cradleshiftitemcount > 0)
+        ?Math.ceil(cradleshiftitemcount/crosscount)
+        :Math.floor(cradleshiftitemcount/crosscount) // TODO: **new**
     let referencerowshift = cradlerowshift
 
     // --------------------------[ 3. calc cradleindex and referenceindex ]--------------------------
