@@ -525,18 +525,20 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let overshootrowcount = (viewportvisiblegaplength == 0)?0:Math.ceil(viewportvisiblegaplength/cellLength) // rows to fill viewport
 
     // extra rows for runway
-    if (overshootrowcount) {
-        overshootrowcount += runwaycount
-    }
+    // if (overshootrowcount) {
+    //     overshootrowcount += runwaycount
+    // }
 
     let overshootitemcount = overshootrowcount * crosscount
 
     // -----------------[ 2. calculate item & row shift counts including overshoot ]-------------
-    // shift item count is the number of items the virtual cradle shifts, according to observer
-    // shift negative closer to head, shift positive closer to tail
-    // cradle reference is the first content item
-    // spine reference is the first tail item
 
+    /*
+        shift item count is the number of items the virtual cradle shifts, according to observer
+        shift negative closer to head, shift positive closer to tail
+        cradle reference is the first content item
+        spine reference is the first tail item
+    */
     let headaddshiftitemcount = 0, tailaddshiftitemcount = 0
     if (scrollingviewportforward) { // viewport moves toward tail, add tail items, shift positive
 
