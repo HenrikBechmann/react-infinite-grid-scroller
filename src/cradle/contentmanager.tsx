@@ -260,23 +260,25 @@ export default class ContentManager {
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
-        const [cradleindex, // TODO: BUG: this changed to 20 from 24
-            cradleitemshift, // TODO: BUG: for problem cradleitemshift ends up as -4
-            spineReferenceIndex, // TODO: BUG: for problem spineReferenceIndex ends up at 100 (one past the end of list)
+        const [
             referenceitemshift, // TODO: BUG: set to 4
+            cradleitemshift, // TODO: BUG: for problem cradleitemshift ends up as -4
+            cradleindex, // TODO: BUG: this changed to 20 from 24
+            spineReferenceIndex, // TODO: BUG: for problem spineReferenceIndex ends up at 100 (one past the end of list)
             spinePosOffset, // TODO: BUG: set to 100
             // TODO: actual content set to 80 (available content), not 76 as it should be
-            cradleActualContentCount] = calcContentShifts({
+            cradleActualContentCount
+        ] = calcContentShifts({
 
-                cradleProps,
-                cradleConfig,
-                cradleElements,
-                cradleContent,
-                viewportElement,
-                itemElements,
-                shiftingintersections,
-                scrollforward,
-                viewportData,
+            cradleProps,
+            cradleConfig,
+            cradleElements,
+            cradleContent,
+            viewportElement,
+            itemElements,
+            shiftingintersections,
+            scrollforward,
+            viewportData,
 
         })
 

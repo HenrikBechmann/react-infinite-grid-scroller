@@ -478,39 +478,46 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let BOD = false, EOD = false // beginning-of-data, end-of-data flags
 
-    // -------[ 1. calculate head overshoot row count, if any ]-------
-    
-    let startingspineoffset, headblockoffset, tailblockoffset, viewportlength
-    let viewportvisiblegaplength = 0
+    const cellLength = ((orientation == 'vertical')?cellHeight:cellWidth) + gap
 
-    const cellLength = (orientation == 'vertical')?cellHeight + gap:cellWidth + gap
+    let viewportspineoffset // the pixel distance between the viewport frame and the spine, toward the head
+
+    // -------[ 1. calculate overshoot row count, if any ]-------
+    
+    let headblockoffset, tailblockoffset, viewportlength
+    let viewportvisiblegaplength = 0
 
     if (orientation == 'vertical') {
 
-        startingspineoffset = spineElement.offsetTop - viewportElement.scrollTop
+        viewportspineoffset = spineElement.offsetTop - viewportElement.scrollTop
         viewportlength = viewportElement.offsetHeight
 
         // measure any gap between the cradle and the top viewport boundary
-        if (!scrollforward) {
+        if (!scrollforward) { // scrollbackward, toward head
 
-            // if startingspineoffset is below the top by more than the height of the headElment then a gap will be visible
-            viewportvisiblegaplength = startingspineoffset - headElement.offsetHeight
+            // if viewportspineoffset is below the top by more than the height of the headElment then a gap will be visible
+            viewportvisiblegaplength = viewportspineoffset - headElement.offsetHeight
 
         }
 
     } else { // horizontal
 
-        startingspineoffset = spineElement.offsetLeft - viewportElement.scrollLeft
+        viewportspineoffset = spineElement.offsetLeft - viewportElement.scrollLeft
         viewportlength = viewportElement.offsetWidth
 
-        if (!scrollforward) {
+        if (!scrollforward) { // scroll backward, toward head
 
-            viewportvisiblegaplength = startingspineoffset - headElement.offsetWidth
+            viewportvisiblegaplength = viewportspineoffset - headElement.offsetWidth
 
         }
+
     }
 
-    if ((viewportvisiblegaplength < 0) || (viewportvisiblegaplength > viewportlength)) viewportvisiblegaplength = 0 // no visible gap, or doreposition should have kicked in
+    if ((viewportvisiblegaplength < 0) || (viewportvisiblegaplength > viewportlength)) {
+
+        viewportvisiblegaplength = 0 // no visible gap, or doreposition should have kicked in
+        
+    }
 
     // viewportvisiblegaplength is always positive
     let overshootrowcount = (viewportvisiblegaplength == 0)?0:Math.ceil(viewportvisiblegaplength/cellLength) // rows to fill viewport
@@ -522,34 +529,38 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let overshootitemcount = overshootrowcount * crosscount
 
-    if (overshootitemcount) {
-        overshootitemcount = -overshootitemcount
-        overshootrowcount = -overshootrowcount
+    // must be scrollbackward, viewport moves toward head, items added to head, shift is negative
+    // if (overshootitemcount) { 
+    //     overshootitemcount = -overshootitemcount
+    //     overshootrowcount = -overshootrowcount
+    // }
+
+    // ----------------------[ 2. calculate itemshiftcount including overshoot ]------------------------
+    // shift item count is the number of items the virtual cradle shifts, according to observer
+    // shift negative closer to head, shift positive closer to tail
+
+    let headaddshiftitemcount = 0, tailaddshiftitemcount = 0
+    if (scrollforward) { // viewport moves toward tail, add tail items, shift positive
+
+        tailaddshiftitemcount = shiftingintersections.length
+
+    } else { // scrollbackward, viewport toward head, add head items, shift negative
+
+        headaddshiftitemcount = shiftingintersections.length
+
     }
 
-    // ----------------------[ 2. calculate itemshiftcount includng overshoot ]------------------------
-    // shift item count is the number of items the virtual cradle shifts, according to observer notices
+    // negative value shifted toward head; positive value shofted toward tail
+    // one of thes expressions will be 0
+    let cradleshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
+    let referenceshiftitemcount = cradleshiftitemcount
 
-    let forwardcount = 0, backwardcount = 0
-    if (scrollforward) {
-
-        backwardcount = shiftingintersections.length
-
-    } else {
-
-        forwardcount = shiftingintersections.length
-
-    }
-
-    let cradleshiftcount = backwardcount - forwardcount + overshootitemcount
-    let referenceshiftcount = cradleshiftcount
-
-    let cradlerowshift = Math.ceil(cradleshiftcount/crosscount)
+    let cradlerowshift = Math.ceil(cradleshiftitemcount/crosscount)
     let referencerowshift = cradlerowshift
 
     // --------------------------[ 3. calc cradleindex and referenceindex ]--------------------------
 
-    const previouscradleindex = (cradlecontentlist[0].props.index || 0) // TODO: undefined should never happen! system error
+    const previouscradleindex = (cradlecontentlist[0].props.index || 0)
     const previouscradlerowoffset = previouscradleindex/crosscount
     const previousreferenceindex = (tailcontentlist[0]?.props.index || 0) // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
     const previousreferencerowoffset = previousreferenceindex/crosscount
@@ -566,7 +577,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         if (diff > 0) {
 
             cradlerowshift -= diff
-            cradleshiftcount -= (diff * crosscount)
+            cradleshiftitemcount -= (diff * crosscount)
 
         }
 
@@ -579,17 +590,17 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         if (diff < 0) {
 
             cradlerowshift -= diff
-            cradleshiftcount -= (diff * crosscount)
+            cradleshiftitemcount -= (diff * crosscount)
 
         }
 
     }
 
-    let newcradleindex = previouscradleindex + cradleshiftcount
-    let newreferenceindex = previousreferenceindex + referenceshiftcount
+    let newcradleindex = previouscradleindex + cradleshiftitemcount
+    let newreferenceindex = previousreferenceindex + referenceshiftitemcount
 
     if (newreferenceindex < 0) {
-        referenceshiftcount += newreferenceindex
+        referenceshiftitemcount += newreferenceindex
         newreferenceindex = 0
     }
 
@@ -601,7 +612,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     referencerowshift = referenceitemshiftcount/crosscount
     let referencepixelshift = referencerowshift * cellLength
 
-    let spinePosOffset = startingspineoffset + referencepixelshift
+    let spinePosOffset = viewportspineoffset + referencepixelshift
 
     let spineOffsetTarget = spinePosOffset
     let spineAdjustment = 0
@@ -642,10 +653,10 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let cradleActualContentCount = cradleAvailableContentCount
 
     return [ 
-        newcradleindex, 
-        cradleitemshiftcount, 
-        newreferenceindex, 
         referenceitemshiftcount, 
+        cradleitemshiftcount, 
+        newcradleindex, 
+        newreferenceindex, 
         spinePosOffset, 
         cradleActualContentCount 
     ]
