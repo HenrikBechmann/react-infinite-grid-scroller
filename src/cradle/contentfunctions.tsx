@@ -524,7 +524,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     // viewportvisiblegaplength is always positive
     let overshootrowcount = (viewportvisiblegaplength == 0)?0:Math.ceil(viewportvisiblegaplength/cellLength) // rows to fill viewport
 
-    // extra rows for runway
+    // extra rows for runway // TODO: DEPRECATED -- VERIFY
     // if (overshootrowcount) {
     //     overshootrowcount += runwaycount
     // }
@@ -555,10 +555,10 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let cradleshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
     let spinereferenceitemshiftcount = cradleshiftitemcount
 
-    let cradlerowshift = Math.round(cradleshiftitemcount/crosscount)
-    // (cradleshiftitemcount > 0)
-    //     ?Math.ceil(cradleshiftitemcount/crosscount)
-    //     :Math.floor(cradleshiftitemcount/crosscount)
+    let cradlerowshift = // Math.round(cradleshiftitemcount/crosscount)
+    (cradleshiftitemcount > 0) // could include partial row from shiftingintersections
+        ?Math.ceil(cradleshiftitemcount/crosscount)
+        :Math.floor(cradleshiftitemcount/crosscount)
     let spinereferencerowshift = cradlerowshift
 
     // ----------------[ 3. calc new cradle reference index and spine reference index ]-----------------
@@ -615,9 +615,11 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let cradlereferenceitemshift = newcradlereferenceindex - previouscradleindex
 
     const spinerowshift = Math.round(spinereferenceitemshift/crosscount)
-    let spinepixelshift = spinerowshift * cellLength
+    const spinePosShift = spinerowshift * cellLength
 
-    let newspinePosOffset = viewportspineoffset + spinepixelshift
+    let newspinePosOffset = viewportspineoffset + spinePosShift
+
+    // make necessary visibility adjustments
 
     let newspinePosOffsetTarget = newspinePosOffset
     let spineReferenceAdjustment = 0
