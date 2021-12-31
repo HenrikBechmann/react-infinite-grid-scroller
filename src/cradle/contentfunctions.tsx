@@ -202,7 +202,7 @@ export const isolateShiftingIntersections = ({
         tailintersectionindexes = [],
         tailintersections = [],
         intersectingmetadata:any = {},
-        shiftintersections = []
+        shiftingintersections = []
 
     // collect lists of current content indexes...
     // headindexes, tailindexes
@@ -375,7 +375,7 @@ export const isolateShiftingIntersections = ({
             // test for continuity and consistency
             if (((index + 1) == refindex) && (intersectingmetadata[index].intersecting == refintersecting)) {
 
-                shiftintersections.push(headintersections[ptr])
+                shiftingintersections.push(headintersections[ptr])
 
             } else {
 
@@ -402,7 +402,7 @@ export const isolateShiftingIntersections = ({
             // test for continuity and consistency
             if (((index - 1) == refindex) && (intersectingmetadata[index].intersecting == refintersecting)) {
 
-                shiftintersections.push(tailintersections[ptr])
+                shiftingintersections.push(tailintersections[ptr])
 
             } else {
 
@@ -416,11 +416,11 @@ export const isolateShiftingIntersections = ({
         }
     }
 
-    shiftintersections.sort(entrycompare)
+    shiftingintersections.sort(entrycompare)
 
     // this returns items to shift, according to scrollingviewportforward
 
-    return shiftintersections 
+    return shiftingintersections 
 
 }
 
