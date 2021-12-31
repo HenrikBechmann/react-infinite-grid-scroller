@@ -539,40 +539,46 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         cradle reference is the first content item
         spine reference is the first tail item
     */
-    let headaddshiftitemcount = 0, tailaddshiftitemcount = 0
+    let headaddshiftitemcount = 0, tailaddshiftitemcount = 0,
+        headaddshiftrowcount = 0, tailaddshiftrowcount = 0
     if (scrollingviewportforward) { // viewport moves toward tail, add tail items, shift positive
 
         tailaddshiftitemcount = shiftingintersections.length
+        // tailaddshiftrowcount = Math.ceil(tailaddshiftitemcount/crosscount)
 
     } else { // scrollviewportbackward, viewport toward head, add head items, shift negative
 
         headaddshiftitemcount = shiftingintersections.length
+        // headaddshiftrowcount = Math.ceil(headaddshiftitemcount/crosscount)
 
     }
 
     // negative value shifted toward head; positive value shofted toward tail
     // one of the two expressions in the following line will be 0
-    let cradleshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
-    let spinereferenceitemshiftcount = cradleshiftitemcount
+    let spinereferenceshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
+    let cradlereferenceshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
 
-    let cradlerowshift = // Math.round(cradleshiftitemcount/crosscount)
-    (cradleshiftitemcount > 0) // could include partial row from shiftingintersections
-        ?Math.ceil(cradleshiftitemcount/crosscount)
-        :Math.floor(cradleshiftitemcount/crosscount)
-    let spinereferencerowshift = cradlerowshift
+    let cradlereferencerowshift = // Math.round(cradleshiftitemcount/crosscount)
+    (cradlereferenceshiftitemcount > 0) // could include partial row from shiftingintersections
+        ?Math.floor(cradlereferenceshiftitemcount/crosscount)
+        :Math.ceil(cradlereferenceshiftitemcount/crosscount)
+    let spinereferencerowshift = 
+    (spinereferenceshiftitemcount > 0) // could include partial row from shiftingintersections
+        ?Math.ceil(spinereferenceshiftitemcount/crosscount)
+        :Math.floor(spinereferenceshiftitemcount/crosscount)
 
     // ----------------[ 3. calc new cradle reference index and spine reference index ]-----------------
 
     const previouscradlereferenceindex = (cradlecontentlist[0].props.index || 0)
     const previouscradlerowoffset = Math.round(previouscradlereferenceindex/crosscount)
     const previousspinereferenceindex = (tailcontentlist[0]?.props.index || 0) // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
-    // const previousspinereferencerowoffset = previousspinereferenceindex/crosscount
+    const previousspinereferencerowoffset = Math.round(previousspinereferenceindex/crosscount)
 
     let rowovershoot
     if (scrollingviewportforward) { // scroll viewport toward tail, shift is positive, add to tail
 
         // computed shifted cradle end row, looking for overshoot
-        const computedcradleEndrow = previouscradlerowoffset + cradleRowcount + cradlerowshift
+        const computedcradleEndrow = previouscradlerowoffset + cradleRowcount + cradlereferencerowshift
         if ((computedcradleEndrow) >= (listRowcount)) {
             EOD = true
         }
@@ -581,31 +587,35 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
         if (rowovershoot > 0) {
 
-            cradlerowshift -= rowovershoot
-            cradleshiftitemcount -= (rowovershoot * crosscount)
+            cradlereferencerowshift -= rowovershoot
+            cradlereferenceshiftitemcount -= (rowovershoot * crosscount)
 
         }
 
     } else { // scroll viewport backward, scroll viewport toward head, shift is negative, add to head
 
-        if ((previouscradlerowoffset + cradlerowshift) <= 0) { // undershoot, past start of dataset
+        if ((previouscradlerowoffset + cradlereferencerowshift) <= 0) { // undershoot, past start of dataset
             BOD = true
         }
-        rowovershoot = previouscradlerowoffset + cradlerowshift
+        rowovershoot = previouscradlerowoffset + cradlereferencerowshift
         if (rowovershoot < 0) {
 
-            cradlerowshift -= rowovershoot // add back the overshoot
-            cradleshiftitemcount -= (rowovershoot * crosscount)
+            cradlereferencerowshift -= rowovershoot // add back the overshoot
+            cradlereferenceshiftitemcount -= (rowovershoot * crosscount)
 
         }
 
     }
 
-    let newcradlereferenceindex = previouscradlereferenceindex + cradleshiftitemcount
-    let newspinereferenceindex = previousspinereferenceindex + spinereferenceitemshiftcount
+    let newcradlereferenceindex = previouscradlereferenceindex + cradlereferenceshiftitemcount
+    let newspinereferenceindex = previousspinereferenceindex + spinereferenceshiftitemcount
 
+    if (newcradlereferenceindex < 0) {
+        cradlereferenceshiftitemcount += newcradlereferenceindex
+        newcradlereferenceindex = 0
+    }
     if (newspinereferenceindex < 0) {
-        spinereferenceitemshiftcount += newspinereferenceindex
+        spinereferenceshiftitemcount += newspinereferenceindex
         newspinereferenceindex = 0
     }
 
@@ -614,7 +624,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let spinereferenceitemshift = newspinereferenceindex - previousspinereferenceindex
     let cradlereferenceitemshift = newcradlereferenceindex - previouscradlereferenceindex
 
-    const spinerowshift = Math.round(spinereferenceitemshift/crosscount)
+    const spinerowshift = spinereferencerowshift // Math.round(spinereferenceitemshift/crosscount)
     const spineposshift = spinerowshift * cellLength
 
     let newspineposoffset = viewportspineoffset + spineposshift
@@ -636,17 +646,20 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         spineReferenceAdjustment += crosscount 
     }
 
+    if (viewportData.index == 6) {
+        console.log('index, BOD, EOD, cradlereferenceitemshift,\nnewcradlereferenceindex, previouscradlereferenceindex',
+            viewportData.index,BOD,EOD,'\n',cradlereferenceitemshift, newcradlereferenceindex, previouscradlereferenceindex)
+    }
+
     if (spineReferenceAdjustment && (BOD || EOD)) {
 
         newspinereferenceindex += spineReferenceAdjustment
         spinereferenceitemshift += spineReferenceAdjustment
-        // newspineposoffset = newspinePosOffsetWorking
 
     } else if (spineReferenceAdjustment) {
 
         newspinereferenceindex += spineReferenceAdjustment
         spinereferenceitemshift += spineReferenceAdjustment
-        // newspineposoffset = newspinePosOffsetWorking
 
         newcradlereferenceindex += spineReferenceAdjustment
         cradlereferenceitemshift += spineReferenceAdjustment
