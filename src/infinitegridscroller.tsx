@@ -5,16 +5,14 @@
     BUG: reposition chip appears outside viewport when list partly hidden
     BUG: repositioningA is broken.
     TODO:
+    - provide user with isReparenting flag to be able to reset scroll
     - check use of useCallback
     - resize triggered by root only, unless variable
     - intersection applied to cradle only
     - test for two root portals
     - nested list overflows port boundaries on android FF
     - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
-    - change portalmanager to simple object (singleton)
     - calc minwidth by form factor
-    - use state machine logic throughout
-    - consider rendering client content offscreen instead of display none
     - review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
     - add grid-template-rows: max-content to parent for safari issue grid-auto-flow: column not filling column
 */
