@@ -562,6 +562,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     (cradlereferenceshiftitemcount > 0) // could include partial row from shiftingintersections
         ?Math.floor(cradlereferenceshiftitemcount/crosscount)
         :Math.ceil(cradlereferenceshiftitemcount/crosscount)
+    cradlereferenceshiftitemcount = Math.round(cradlereferencerowshift * crosscount)
     let spinereferencerowshift = 
     (spinereferenceshiftitemcount > 0) // could include partial row from shiftingintersections
         ?Math.ceil(spinereferenceshiftitemcount/crosscount)
@@ -647,8 +648,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     }
 
     if (viewportData.index == 6) {
-        console.log('index, BOD, EOD, cradlereferenceitemshift,\nnewcradlereferenceindex, previouscradlereferenceindex',
-            viewportData.index,BOD,EOD,'\n',cradlereferenceitemshift, newcradlereferenceindex, previouscradlereferenceindex)
+        console.log('index, BOD, EOD, cradlereferenceitemshift,\nnewcradlereferenceindex, previouscradlereferenceindex, cradlecontentlist',
+            viewportData.index,BOD,EOD,'\n',cradlereferenceitemshift, newcradlereferenceindex, previouscradlereferenceindex, [...cradlecontentlist])
     }
 
     if (spineReferenceAdjustment && (BOD || EOD)) {
@@ -822,6 +823,9 @@ export const calcHeadAndTailChanges = ({
         tailchangecount = -clipitemcount
 
     }
+    // remove -0, failed TODO:
+    // headchangecount = Math.round(headchangecount)
+    // tailchangecount = Math.round(tailchangecount)
     return [headchangecount,tailchangecount]
 
 }

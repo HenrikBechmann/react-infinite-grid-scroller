@@ -298,7 +298,7 @@ export default class ContentManager {
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
-        // both counts set to 0 but with headchnagecount set to -0
+        // TODO: BUG: both counts set to 0 but with headchangecount set to -0
         const [headchangecount,tailchangecount] = calcHeadAndTailChanges({ 
 
             cradleProps,
@@ -306,10 +306,13 @@ export default class ContentManager {
             cradleContent,
             cradleshiftcount:cradleitemshift,
             scrollingviewportforward,
-            cradleReferenceIndex,
+            cradleReferenceIndex, // previous cradlereferenceindex
 
         })
 
+        if (viewportData.index == 6) {
+            console.log('index, headchangecount, tailchangecount', viewportData.index, headchangecount, tailchangecount)
+        }
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
         // collect modified content
