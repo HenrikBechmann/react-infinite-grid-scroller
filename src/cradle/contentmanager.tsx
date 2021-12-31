@@ -86,12 +86,14 @@ export default class ContentManager {
         const localContentList = []
         const cradleContent = this.content
 
-        let {cradleReferenceIndex, 
+        let {
+            cradleReferenceIndex, 
             referenceoffset, 
             cradleActualContentCount, 
             scrollblockOffset, 
             spinePosOffset, 
-            spineAdjustment} = 
+            spineAdjustment
+        } = 
             getContentListRequirements({
                 cradleProps,
                 cradleConfig,
@@ -120,7 +122,7 @@ export default class ContentManager {
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
             contentlist:childlist,
-            spineReferenceIndex:referenceoffset,
+            spinereferenceindex:referenceoffset,
     
         })
 
@@ -261,11 +263,11 @@ export default class ContentManager {
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         const [
-            spinereferenceitemshift, // TODO: BUG: set to 4
+            cradlereferenceindex, // TODO: BUG: this changed to 20 from 24
             cradleitemshift, // TODO: BUG: for problem cradleitemshift ends up as -4
-            cradleindex, // TODO: BUG: this changed to 20 from 24
-            spineReferenceIndex, // TODO: BUG: for problem spineReferenceIndex ends up at 100 (one past the end of list)
-            spinePosOffset, // TODO: BUG: set to 100
+            spinereferenceindex, // TODO: BUG: for problem spineReferenceIndex ends up at 100 (one past the end of list)
+            spineitemshift, // TODO: BUG: set to 4
+            spineposoffset, // TODO: BUG: set to 100
             // TODO: actual content set to 80 (available content), not 76 as it should be
             cradleActualContentCount
         ] = calcContentShifts({
@@ -282,7 +284,7 @@ export default class ContentManager {
 
         })
 
-        if ((spinereferenceitemshift == 0 && cradleitemshift == 0)) return
+        if ((spineitemshift == 0 && cradleitemshift == 0)) return
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
@@ -331,7 +333,7 @@ export default class ContentManager {
         const [headcontent, tailcontent] = allocateContentList(
             {
                 contentlist:localContentList,
-                spineReferenceIndex, // TODO: BUG: set to 100 for problem
+                spinereferenceindex, // TODO: BUG: set to 100 for problem
             }
         )
 
@@ -350,7 +352,7 @@ export default class ContentManager {
 
         scrollManager.updateBlockScrollPos()
 
-        if (spinePosOffset !== undefined) {
+        if (spineposoffset !== undefined) {
 
             // scrollManager.updateBlockScrollPos()
             
@@ -358,7 +360,7 @@ export default class ContentManager {
 
                 // cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
                 // cradleManager.cradleReferenceData.blockScrollProperty = 'scrollTop'
-                cradleElements.spineRef.current.style.top = viewportElement.scrollTop + spinePosOffset + 'px'
+                cradleElements.spineRef.current.style.top = viewportElement.scrollTop + spineposoffset + 'px'
                 cradleElements.spineRef.current.style.left = 'auto'
                 cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
 
@@ -367,18 +369,18 @@ export default class ContentManager {
                 // cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
                 // cradleManager.cradleReferenceData.blockScrollProperty = 'scrollLeft'
                 cradleElements.spineRef.current.style.top = 'auto'
-                cradleElements.spineRef.current.style.left = viewportElement.scrollLeft + spinePosOffset + 'px'
+                cradleElements.spineRef.current.style.left = viewportElement.scrollLeft + spineposoffset + 'px'
                 cradleElements.headRef.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
 
             }
 
         }
 
-        cradleManager.cradleReferenceData.scrollImpliedItemIndexReference = spineReferenceIndex
-        cradleManager.cradleReferenceData.scrollImpliedCradlePosOffset = spinePosOffset
+        cradleManager.cradleReferenceData.scrollImpliedItemIndexReference = spinereferenceindex
+        cradleManager.cradleReferenceData.scrollImpliedCradlePosOffset = spineposoffset
 
-        cradleManager.cradleReferenceData.nextItemIndexReference = spineReferenceIndex
-        cradleManager.cradleReferenceData.nextCradlePosOffset = spinePosOffset
+        cradleManager.cradleReferenceData.nextItemIndexReference = spinereferenceindex
+        cradleManager.cradleReferenceData.nextCradlePosOffset = spineposoffset
 
         stateManager.setCradleState('renderupdatedcontent')
 

@@ -621,19 +621,19 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     // make necessary visibility adjustments
 
-    let newspinePosOffsetTarget = newspinePosOffset
+    let newspinePosOffsetWorking = newspinePosOffset
     let spineReferenceAdjustment = 0
 
     if (Math.abs(newspinePosOffset) > cellLength) {
 
-        newspinePosOffsetTarget = (newspinePosOffset % cellLength)
+        newspinePosOffsetWorking = (newspinePosOffset % cellLength)
         // spineReferenceAdjustment = -(Math.ceil((newspinePosOffset - spinePosOffsetTarget) / cellLength) * crosscount)
-        spineReferenceAdjustment = -(Math.round((newspinePosOffset - newspinePosOffsetTarget) / cellLength) * crosscount)
+        spineReferenceAdjustment = -(Math.round((newspinePosOffset - newspinePosOffsetWorking) / cellLength) * crosscount)
 
     }
 
-    if (newspinePosOffsetTarget < 0) {
-        newspinePosOffsetTarget += cellLength
+    if (newspinePosOffsetWorking < 0) {
+        newspinePosOffsetWorking += cellLength
         spineReferenceAdjustment += crosscount 
     }
 
@@ -641,7 +641,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
         newspinereferenceindex += spineReferenceAdjustment
         spinereferenceitemshift += spineReferenceAdjustment
-        newspinePosOffset = newspinePosOffsetTarget
+        newspinePosOffset = newspinePosOffsetWorking
 
     } else if (spineReferenceAdjustment) {
 
@@ -649,10 +649,10 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         cradlereferenceitemshift += spineReferenceAdjustment
         newspinereferenceindex += spineReferenceAdjustment
         spinereferenceitemshift += spineReferenceAdjustment
-        newspinePosOffset = newspinePosOffsetTarget
+        newspinePosOffset = newspinePosOffsetWorking
     }
 
-    newspinePosOffset = newspinePosOffsetTarget
+    newspinePosOffset = newspinePosOffsetWorking
 
     // ---------------------[ 5. return required values ]-------------------
 
@@ -661,10 +661,10 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let cradleActualContentCount = cradleAvailableContentCount
 
     return [ 
-        spinereferenceitemshift, 
-        cradlereferenceitemshift, 
         newcradlereferenceindex, 
+        cradlereferenceitemshift, 
         newspinereferenceindex, 
+        spinereferenceitemshift, 
         newspinePosOffset, 
         cradleActualContentCount 
     ]
@@ -916,7 +916,7 @@ export const allocateContentList = (
     {
 
         contentlist, // of cradle, in items (React components)
-        spineReferenceIndex, // first tail item
+        spinereferenceindex, // first tail item
 
     }
 ) => {
@@ -925,7 +925,7 @@ export const allocateContentList = (
 
     let headitemcount
 
-    headitemcount = (spineReferenceIndex - offsetindex)
+    headitemcount = (spinereferenceindex - offsetindex)
 
     let headlist = contentlist.slice(0,headitemcount)
     let taillist = contentlist.slice(headitemcount)
