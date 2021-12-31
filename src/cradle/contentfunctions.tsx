@@ -615,20 +615,20 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     let cradlereferenceitemshift = newcradlereferenceindex - previouscradleindex
 
     const spinerowshift = Math.round(spinereferenceitemshift/crosscount)
-    const spinePosShift = spinerowshift * cellLength
+    const spineposshift = spinerowshift * cellLength
 
-    let newspinePosOffset = viewportspineoffset + spinePosShift
+    let newspineposoffset = viewportspineoffset + spineposshift
 
     // make necessary visibility adjustments
 
-    let newspinePosOffsetWorking = newspinePosOffset
+    let newspinePosOffsetWorking = newspineposoffset
     let spineReferenceAdjustment = 0
 
-    if (Math.abs(newspinePosOffset) > cellLength) {
+    if (Math.abs(newspineposoffset) > cellLength) {
 
-        newspinePosOffsetWorking = (newspinePosOffset % cellLength)
-        // spineReferenceAdjustment = -(Math.ceil((newspinePosOffset - spinePosOffsetTarget) / cellLength) * crosscount)
-        spineReferenceAdjustment = -(Math.round((newspinePosOffset - newspinePosOffsetWorking) / cellLength) * crosscount)
+        newspinePosOffsetWorking = (newspineposoffset % cellLength)
+        spineReferenceAdjustment = -(Math.ceil((newspineposoffset - newspinePosOffsetWorking) / cellLength) * crosscount)
+        // spineReferenceAdjustment = -(Math.round((newspineposoffset - newspinePosOffsetWorking) / cellLength) * crosscount)
 
     }
 
@@ -641,7 +641,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
         newspinereferenceindex += spineReferenceAdjustment
         spinereferenceitemshift += spineReferenceAdjustment
-        newspinePosOffset = newspinePosOffsetWorking
+        newspineposoffset = newspinePosOffsetWorking
 
     } else if (spineReferenceAdjustment) {
 
@@ -649,10 +649,10 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         cradlereferenceitemshift += spineReferenceAdjustment
         newspinereferenceindex += spineReferenceAdjustment
         spinereferenceitemshift += spineReferenceAdjustment
-        newspinePosOffset = newspinePosOffsetWorking
+        newspineposoffset = newspinePosOffsetWorking
     }
 
-    newspinePosOffset = newspinePosOffsetWorking
+    newspineposoffset = newspinePosOffsetWorking
 
     // ---------------------[ 5. return required values ]-------------------
 
@@ -665,7 +665,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         cradlereferenceitemshift, 
         newspinereferenceindex, 
         spinereferenceitemshift, 
-        newspinePosOffset, 
+        newspineposoffset, 
         cradleActualContentCount 
     ]
 
