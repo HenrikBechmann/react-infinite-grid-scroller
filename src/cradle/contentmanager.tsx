@@ -263,12 +263,11 @@ export default class ContentManager {
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         const [
-            cradlereferenceindex, // TODO: BUG: this changed to 20 from 24
-            cradleitemshift, // TODO: BUG: for problem cradleitemshift ends up as -4
-            spinereferenceindex, // TODO: BUG: for problem spineReferenceIndex ends up at 100 (one past the end of list)
-            spineitemshift, // TODO: BUG: set to 4
-            spineposoffset, // TODO: BUG: set to 100
-            // TODO: actual content set to 80 (available content), not 76 as it should be
+            cradlereferenceindex, 
+            cradleitemshift, 
+            spinereferenceindex, 
+            spineitemshift, 
+            spineposoffset, 
             cradleActualContentCount
         ] = calcContentShifts({
 
@@ -285,6 +284,17 @@ export default class ContentManager {
         })
 
         if ((spineitemshift == 0 && cradleitemshift == 0)) return
+
+        if (viewportData.index == 6) {
+            console.log('index =',viewportData.index,'\n',
+                'cradlereferenceindex',cradlereferenceindex ,'\n',
+                'cradleitemshift', cradleitemshift,'\n',
+                'spinereferenceindex',spinereferenceindex ,'\n',
+                'spineitemshift', spineitemshift,'\n',
+                'spineposoffset', spineposoffset,'\n',
+                'cradleActualContentCount',cradleActualContentCount
+            )
+        }
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 

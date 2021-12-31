@@ -563,8 +563,8 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     // ----------------[ 3. calc new cradle reference index and spine reference index ]-----------------
 
-    const previouscradleindex = (cradlecontentlist[0].props.index || 0)
-    const previouscradlerowoffset = previouscradleindex/crosscount
+    const previouscradlereferenceindex = (cradlecontentlist[0].props.index || 0)
+    const previouscradlerowoffset = Math.round(previouscradlereferenceindex/crosscount)
     const previousspinereferenceindex = (tailcontentlist[0]?.props.index || 0) // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
     // const previousspinereferencerowoffset = previousspinereferenceindex/crosscount
 
@@ -601,7 +601,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     }
 
-    let newcradlereferenceindex = previouscradleindex + cradleshiftitemcount
+    let newcradlereferenceindex = previouscradlereferenceindex + cradleshiftitemcount
     let newspinereferenceindex = previousspinereferenceindex + spinereferenceitemshiftcount
 
     if (newspinereferenceindex < 0) {
@@ -612,7 +612,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     // -------------[ 4. reconcile spineReferenceAdjustment and calc newspinePosOffset ]------------------
 
     let spinereferenceitemshift = newspinereferenceindex - previousspinereferenceindex
-    let cradlereferenceitemshift = newcradlereferenceindex - previouscradleindex
+    let cradlereferenceitemshift = newcradlereferenceindex - previouscradlereferenceindex
 
     const spinerowshift = Math.round(spinereferenceitemshift/crosscount)
     const spineposshift = spinerowshift * cellLength
@@ -640,15 +640,17 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
         newspinereferenceindex += spineReferenceAdjustment
         spinereferenceitemshift += spineReferenceAdjustment
-        newspineposoffset = newspinePosOffsetWorking
+        // newspineposoffset = newspinePosOffsetWorking
 
     } else if (spineReferenceAdjustment) {
 
-        newcradlereferenceindex += spineReferenceAdjustment
-        cradlereferenceitemshift += spineReferenceAdjustment
         newspinereferenceindex += spineReferenceAdjustment
         spinereferenceitemshift += spineReferenceAdjustment
-        newspineposoffset = newspinePosOffsetWorking
+        // newspineposoffset = newspinePosOffsetWorking
+
+        newcradlereferenceindex += spineReferenceAdjustment
+        cradlereferenceitemshift += spineReferenceAdjustment
+
     }
 
     newspineposoffset = newspinePosOffsetWorking
