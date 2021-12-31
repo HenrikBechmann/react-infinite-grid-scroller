@@ -628,7 +628,6 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
         newspinePosOffsetWorking = (newspineposoffset % cellLength)
         spineReferenceAdjustment = -(Math.ceil((newspineposoffset - newspinePosOffsetWorking) / cellLength) * crosscount)
-        // spineReferenceAdjustment = -(Math.round((newspineposoffset - newspinePosOffsetWorking) / cellLength) * crosscount)
 
     }
 
