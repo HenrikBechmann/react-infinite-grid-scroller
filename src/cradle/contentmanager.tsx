@@ -285,16 +285,16 @@ export default class ContentManager {
 
         if ((spineitemshift == 0 && cradleitemshift == 0)) return
 
-        if (viewportData.index == 6) {
-            console.log('index =',viewportData.index,'\n',
-                'cradlereferenceindex',cradlereferenceindex ,'\n',
-                'cradleitemshift', cradleitemshift,'\n',
-                'spinereferenceindex',spinereferenceindex ,'\n',
-                'spineitemshift', spineitemshift,'\n',
-                'spineposoffset', spineposoffset,'\n',
-                'cradleActualContentCount',cradleActualContentCount
-            )
-        }
+        // if (viewportData.index == 6) {
+        //     console.log('index =',viewportData.index,'\n',
+        //         'cradlereferenceindex',cradlereferenceindex ,'\n',
+        //         'cradleitemshift', cradleitemshift,'\n',
+        //         'spinereferenceindex',spinereferenceindex ,'\n',
+        //         'spineitemshift', spineitemshift,'\n',
+        //         'spineposoffset', spineposoffset,'\n',
+        //         'cradleActualContentCount',cradleActualContentCount
+        //     )
+        // }
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
@@ -310,9 +310,9 @@ export default class ContentManager {
 
         })
 
-        if (viewportData.index == 6) {
-            console.log('index, headchangecount, tailchangecount', viewportData.index, headchangecount, tailchangecount)
-        }
+        // if (viewportData.index == 6) {
+        //     console.log('index, headchangecount, tailchangecount', viewportData.index, headchangecount, tailchangecount)
+        // }
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
         // collect modified content

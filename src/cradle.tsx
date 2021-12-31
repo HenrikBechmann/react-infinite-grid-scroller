@@ -340,8 +340,9 @@ const Cradle = ({
             Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
     }
 
-    if (viewportDataRef.current.index == 6)
-        console.log('RUNNING CRADLE index, cradleState',viewportDataRef.current.index, cradleState)
+    // if (viewportDataRef.current.index == 6) {
+    //     console.log('RUNNING CRADLE index, cradleState',viewportDataRef.current.index, cradleState)
+    // }
     // --------------------------[ bundle cradleProps ]----------------------------
 
     // functions and styles handled separately

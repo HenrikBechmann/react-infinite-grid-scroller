@@ -567,7 +567,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     (spinereferenceshiftitemcount > 0) // could include partial row from shiftingintersections
         ?Math.ceil(spinereferenceshiftitemcount/crosscount)
         :Math.floor(spinereferenceshiftitemcount/crosscount)
-
+    spinereferenceshiftitemcount = Math.round(spinereferencerowshift * crosscount)
     // ----------------[ 3. calc new cradle reference index and spine reference index ]-----------------
 
     const previouscradlereferenceindex = (cradlecontentlist[0].props.index || 0)
@@ -647,10 +647,15 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         spineReferenceAdjustment += crosscount 
     }
 
-    if (viewportData.index == 6) {
-        console.log('index, BOD, EOD, cradlereferenceitemshift,\nnewcradlereferenceindex, previouscradlereferenceindex, cradlecontentlist',
-            viewportData.index,BOD,EOD,'\n',cradlereferenceitemshift, newcradlereferenceindex, previouscradlereferenceindex, [...cradlecontentlist])
-    }
+    // if (viewportData.index == 6) {
+    //     console.log('index, BOD, EOD','\n',
+    //         'cradlereferenceitemshift, newcradlereferenceindex, previouscradlereferenceindex', '\n',
+    //         'spinereferenceitemshift, newspinereferenceindex, previousspinereferenceindex',
+    //         viewportData.index,BOD,EOD,'\n',
+    //         cradlereferenceitemshift, newcradlereferenceindex, previouscradlereferenceindex,'\n',
+    //         spinereferenceitemshift, newspinereferenceindex, previousspinereferenceindex
+    //     )
+    // }
 
     if (spineReferenceAdjustment && (BOD || EOD)) {
 
@@ -760,7 +765,7 @@ export const calcHeadAndTailChanges = ({
             }
         }
 
-        headchangecount = -clipitemcount
+        headchangecount = (clipitemcount ==0)?0:-clipitemcount
         tailchangecount = additemcount
 
     } else { // scroll backward, in direction of tail; clip from tail, add to head
@@ -820,7 +825,7 @@ export const calcHeadAndTailChanges = ({
         }
 
         headchangecount = additemcount
-        tailchangecount = -clipitemcount
+        tailchangecount = (clipitemcount == 0)?0:-clipitemcount
 
     }
     // remove -0, failed TODO:
