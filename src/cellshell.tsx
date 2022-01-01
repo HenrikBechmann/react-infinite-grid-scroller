@@ -206,8 +206,15 @@ const CellShell = ({
 
     }, [cellStatus])
 
-    return <div ref = { shellRef } data-type = 'cellshell' data-scrollerid = {scrollerID} data-index = {index} data-instanceid = {instanceID} style = {styles}>
+    return <div ref = { shellRef } 
+        data-type = 'cellshell' 
+        data-scrollerid = {scrollerID} 
+        data-index = {index} 
+        data-instanceid = {instanceID} 
+        style = {styles}>
+
             { (cellStatus != 'setup') && contentcomponentRef.current }
+            
         </div>
 
 } // CellShell
