@@ -29,8 +29,6 @@ const getNextScrollerSessionID = () => {
     return globalScrollerID++
 }
 
-const portalrootstyle = {display:'none'} // static parm
-
 // ===================================[ INITIALIZE ]===========================
 
 /*

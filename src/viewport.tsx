@@ -146,7 +146,6 @@ const Viewport = ({
 
         if (!cradleDataRef) return // root
 
-
         let portalindex
         let element = viewportdivRef.current
 
@@ -174,7 +173,7 @@ const Viewport = ({
     divlinerstyleRef.current = useMemo(() => {
 
         // TODO: gap
-        let mincrosslength = calcMinViewportCrossLength(orientation, cellWidth, cellHeight, padding)
+        let mincrosslength = calcMinViewportCrossLength(orientation, cellWidth, cellHeight, gap, padding)
         let styles = Object.assign({},divlinerstyleRef.current) // avoid readonly
 
         if (orientation == 'vertical') {
@@ -187,7 +186,7 @@ const Viewport = ({
 
         return styles
 
-    },[orientation, cellWidth, cellHeight, padding])
+    },[orientation, cellWidth, cellHeight, gap, padding])
 
     // set context data for children
     viewportDataRef.current = useMemo(() => {
@@ -214,12 +213,13 @@ const Viewport = ({
     // --------------------[ state processing ]---------------------------
     useLayoutEffect(()=>{
         switch (viewportstate) {
-            // case 'reparenting':
+
             case 'resized':
             case 'setup': {
                 setViewportState('render')
                 break
             }
+
         }
     },[viewportstate])
 
@@ -239,13 +239,14 @@ const Viewport = ({
 } // Viewport
 
 // establish minimum width/height for the viewport -- approximately one item
-const calcMinViewportCrossLength = (orientation, cellWidth, cellHeight, padding) => {
+// gap only applies with multi-width items, therefore not used in calculations
+const calcMinViewportCrossLength = (orientation, cellWidth, cellHeight, gap, padding) => {
     // console.log('calcMinViewportCrossLength parms',orientation, cellWidth, cellHeight, padding,)
     let crosslength, cellLength
     if (orientation == 'vertical') {
-        cellLength = cellWidth
+        cellLength = cellWidth //+ gap
     } else {
-        cellLength = cellHeight
+        cellLength = cellHeight // + gap
     }
     crosslength = cellLength + (padding * 2)
     return crosslength
