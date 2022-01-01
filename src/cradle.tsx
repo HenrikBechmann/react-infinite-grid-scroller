@@ -752,11 +752,11 @@ const Cradle = ({
                 cradleContent.headView = cradleContent.headModel
                 cradleContent.tailView = cradleContent.tailModel
 
-                setCradleState('setscrollposition')
-                break
-            }
+            //     setCradleState('setscrollposition')
+            //     break
+            // }
 
-            case 'setscrollposition': { // always calculated with setCradleContent
+            // case 'setscrollposition': { // always calculated with setCradleContent
 
                 viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
                     Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
