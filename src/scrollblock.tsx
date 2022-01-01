@@ -20,12 +20,12 @@ const Scrollblock = ({
 
     // -------------------------[ context and state ]-------------------------
     const viewportData = useContext(ViewportContext)
-    const [blockstate,setBlockState] = useState('setup') // setup -> render
+    // const [blockstate,setBlockState] = useState('render') // setup -> render
     // if (viewportData.index == 0) console.log('RUNNING scrollblock viewportData.index, blockstate',viewportData.index,blockstate)
 
     // -----------------------------------[ data heap ]-------------------------
     const scrollBlockLengthRef = useRef(null)
-    const scrollblockRef = useRef(null)
+    // const scrollblockRef = useRef(null)
     const divlinerstyleRef = useRef(
         Object.assign(
         {
@@ -42,14 +42,14 @@ const Scrollblock = ({
     let { top, right, bottom, left, width, height } = viewportDimensions
 
     // state engine
-    useEffect(()=>{
-        switch (blockstate) {
-            case 'setup': {
-                setBlockState('render')
-                break
-            }
-        }
-    },[blockstate])
+    // useEffect(()=>{
+    //     switch (blockstate) {
+    //         case 'setup': {
+    //             setBlockState('render')
+    //             break
+    //         }
+    //     }
+    // },[blockstate])
     
     useLayoutEffect(() => {
 
@@ -99,10 +99,10 @@ const Scrollblock = ({
        ]
     )
 
-    return (blockstate != 'setup') &&
-        <div ref = {scrollblockRef} data-type = 'scrollblock' style={divlinerstyleRef.current}>{children}</div>
+    return <div data-type = 'scrollblock' style={divlinerstyleRef.current}>{children}</div>
 
 } // Scrollblock
+        // <div ref = {scrollblockRef} data-type = 'scrollblock' style={divlinerstyleRef.current}>{children}</div>
 
 // all the parameters affect the length
 const calcScrollblockLength = ({
