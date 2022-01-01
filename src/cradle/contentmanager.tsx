@@ -182,7 +182,7 @@ export default class ContentManager {
 
     }
 
-    updateCradleContent = (entries, source = 'notifications') => {
+    public updateCradleContent = (entries, source = 'notifications') => {
 
         const viewportData = this.commonProps.viewportdataRef.current
         const cradleProps = this.commonProps.cradlePropsRef.current

@@ -957,6 +957,16 @@ export const allocateContentList = (
 
 }
 
+export const deleteAndRerenderPortals = (portalManager, deleteList) => {
+
+    for (let item of deleteList) {
+        portalManager.deletePortal(item.props.index)
+    }
+    if (deleteList.length) portalManager.renderPortalList()
+}
+
+// =====================[ acquire item support ]======================
+
 const acquireItem = ({
     index, 
     cradleProps,
@@ -1011,10 +1021,3 @@ const emitItem = ({
 
 }
 
-export const deleteAndRerenderPortals = (portalManager, deleteList) => {
-
-    for (let item of deleteList) {
-        portalManager.deletePortal(item.props.index)
-    }
-    if (deleteList.length) portalManager.renderPortalList()
-}
