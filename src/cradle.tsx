@@ -456,7 +456,6 @@ const Cradle = ({
         // complete resizing mode
         if (!viewportData.isResizing && (cradleStateRef.current == 'resizing')) {
 
-            // interruptManager.states.isResizing = false
             setCradleState('resized')
 
         }
@@ -702,16 +701,17 @@ const Cradle = ({
             }
 
             case 'finishreposition': {
-                // interruptManager.signals.repositioningRequired = false
                 interruptManager.signals.pauseCradleIntersectionObserver = false
-                setCradleState('updatepositionreferences')
-                break
-            }
-            case 'updatepositionreferences':{
                 scrollManager.updateReferenceData()
                 setCradleState('doreposition')
+                // setCradleState('updatepositionreferences')
                 break
             }
+            // case 'updatepositionreferences':{
+            //     scrollManager.updateReferenceData()
+            //     setCradleState('doreposition')
+            //     break
+            // }
 
             // -----------------------------------------------------------------------
             // ------------[ the following 5 cradle states all resolve with ]---------

@@ -69,7 +69,7 @@ export default class InterruptManager {
                 !(cradleState == 'repositioningA') && 
                 !(cradleState == 'repositioningB') &&
                 !(cradleState == 'finishreposition') &&
-                !(cradleState == 'updatepositionreferences') &&
+                // !(cradleState == 'updatepositionreferences') &&
                 !(cradleState == 'doreposition') && 
                 !(cradleState == 'pivot') && 
                 !(cradleState == 'restorescrollposition')

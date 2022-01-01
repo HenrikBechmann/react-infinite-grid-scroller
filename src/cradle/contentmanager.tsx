@@ -404,6 +404,7 @@ export default class ContentManager {
         cradleManager.cradleReferenceData.nextCradlePosOffset = spineposoffset
 
         stateManager.setCradleState('renderupdatedcontent')
+        // stateManager.setCradleState('ready')
 
     }
 
