@@ -168,7 +168,7 @@ const Cradle = ({
     const viewportDataRef = useRef(null)
     viewportDataRef.current = viewportData
 
-    // if (viewportData.index == 6) {
+    // if (viewportData.index === null) {
     //     console.log('RUNNING index cradleState', viewportData.index, cradleState)
     // }
 
@@ -728,7 +728,7 @@ const Cradle = ({
             // case 'setreload':
 
                 callingCradleState.current = cradleState // message for setCradleContent
-                setCradleState('preparecontent')
+                setCradleState('preparecontent') // cycle to allow some config
 
                 break
 
