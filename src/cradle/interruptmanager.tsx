@@ -193,12 +193,12 @@ export default class InterruptManager {
 
     }
 
-    states = {
-        isRepositioning:false, // right now for debug only
-        isResizing:false, // right now for debug only
-        isReparenting:false, // right now not used
+    // states = {
+        // isRepositioning:false, // right now for debug only
+        // isResizing:false, // right now for debug only
+        // isReparenting:false, // right now not used
         // repositioningRequired: false,
-    }
+    // }
 
     signals = {
         repositioningRequired: false,

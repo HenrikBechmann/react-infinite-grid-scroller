@@ -447,8 +447,8 @@ const Cradle = ({
             signals.pauseCradleIntersectionObserver = true
             signals.pauseCradleResizeObserver = true
             signals.pauseScrollingEffects = true
-            const states = interruptManager.states
-            states.isResizing = true
+            // const states = interruptManager.states
+            // states.isResizing = true
             setCradleState('resizing')
 
         }
@@ -456,7 +456,7 @@ const Cradle = ({
         // complete resizing mode
         if (!viewportData.isResizing && (cradleStateRef.current == 'resizing')) {
 
-            interruptManager.states.isResizing = false
+            // interruptManager.states.isResizing = false
             setCradleState('resized')
 
         }
@@ -695,7 +695,7 @@ const Cradle = ({
             // ------------[ reposition when repositioningRequired is true ]---------------
 
             case 'startreposition': {
-                interruptManager.states.isRepositioning = true
+                // interruptManager.states.isRepositioning = true
                 interruptManager.signals.pauseCradleIntersectionObserver = true
                 setCradleState('repositioningA')
                 break
@@ -718,9 +718,9 @@ const Cradle = ({
             // ------------[ a chain starting with 'preparecontent', which  ]---------
             // ------------[ calls setCradleContent                         ]---------
 
-            case 'doreposition': {
-                interruptManager.states.isRepositioning = false
-            } // no break; follow through to preparecontent
+            case 'doreposition': //{
+                // interruptManager.states.isRepositioning = false
+            //} // no break; follow through to preparecontent
             case 'setup': 
             case 'resized':
             case 'pivot':
