@@ -675,11 +675,11 @@ const Cradle = ({
 
             // the following three messsages are initiated independent of one another
 
-            case 'reload': // called after size configuration changes, or direct host call
+            // case 'reload': // called after size configuration changes, or direct host call
 
-                setCradleState('setreload')
+            //     setCradleState('setreload')
 
-                break;
+            //     break;
 
             // 'renderupdatedcontent' is called from updateCradleContent, which is...
             // called from cellintersectionobservercallback (interruptManager), and 
@@ -724,7 +724,8 @@ const Cradle = ({
             case 'setup': 
             case 'resized':
             case 'pivot':
-            case 'setreload':
+            case 'reload':
+            // case 'setreload':
 
                 callingCradleState.current = cradleState // message for setCradleContent
                 setCradleState('preparecontent')

@@ -147,7 +147,7 @@ export default class ContentManager {
         if (serviceManager.serviceCalls.referenceIndexCallbackRef.current) {
 
             let cstate = cradleState
-            if (cstate == 'setreload') cstate = 'reload'
+            // if (cstate == 'setreload') cstate = 'reload'
             serviceManager.serviceCalls.referenceIndexCallbackRef.current(
 
                 cradleManager.cradleReferenceData.nextItemIndexReference,'setCradleContent', cstate)
