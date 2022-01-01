@@ -326,6 +326,7 @@ const Cradle = ({
     },[])
 
     const normalizetimerRef = useRef(null)
+    
     // if ((cradleState == 'normalizesignals') && viewportData.portal?.isReparenting) {
     // TODO: setblockScrollProperty for first pass
     if (viewportData.portal?.isReparenting) { 

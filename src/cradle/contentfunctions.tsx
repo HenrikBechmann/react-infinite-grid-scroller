@@ -440,7 +440,9 @@ let duplicatecomparebytime = (a,b) => {
 
 // TODO: fix cradleActualContentCount
 // A negative shift is toward the head, a positive shift is toward the tail
-export const calcContentShifts = ({ // called only from updateCradleContent
+// called only from updateCradleContent
+export const calcContentShifts = ({
+
     cradleProps,
     cradleElements,
     cradleContent,
@@ -450,7 +452,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
     shiftingintersections,
     scrollingviewportforward,
     viewportData,
-    // source,
+
 }) => {
 
     // ------------------------[ initialize ]-----------------------
@@ -569,12 +571,13 @@ export const calcContentShifts = ({ // called only from updateCradleContent
         ?Math.ceil(spinereferenceshiftitemcount/crosscount)
         :Math.floor(spinereferenceshiftitemcount/crosscount)
     spinereferenceshiftitemcount = Math.round(spinereferencerowshift * crosscount)
+
     // ----------------[ 3. calc new cradle reference index and spine reference index ]-----------------
 
     const previouscradlereferenceindex = (cradlecontentlist[0].props.index || 0)
     const previouscradlerowoffset = Math.round(previouscradlereferenceindex/crosscount)
     const previousspinereferenceindex = (tailcontentlist[0]?.props.index || 0) // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
-    const previousspinereferencerowoffset = Math.round(previousspinereferenceindex/crosscount)
+    // const previousspinereferencerowoffset = Math.round(previousspinereferenceindex/crosscount)
 
     let rowovershoot
     if (scrollingviewportforward) { // scroll viewport toward tail, shift is positive, add to tail
@@ -681,7 +684,7 @@ export const calcContentShifts = ({ // called only from updateCradleContent
 
     let cradleActualContentCount = cradleAvailableContentCount
 
-    return [ 
+    return [
         newcradlereferenceindex, 
         cradlereferenceitemshift, 
         newspinereferenceindex, 
@@ -708,11 +711,10 @@ export const calcHeadAndTailChanges = ({
     let headcontent = cradleContent.headModel
     let tailcontent = cradleContent.tailModel
 
-    let { crosscount,
-    cradleRowcount } = cradleConfig
+    const { crosscount, cradleRowcount } = cradleConfig
 
     cradleshiftcount = Math.abs(cradleshiftcount) 
-    let rowshiftcount = Math.ceil(cradleshiftcount/crosscount) //+ boundaryrowcount
+    const rowshiftcount = Math.ceil(cradleshiftcount/crosscount) //+ boundaryrowcount
 
     let headrowcount, tailrowcount
     headrowcount = Math.ceil(headcontent.length/crosscount)
@@ -726,7 +728,7 @@ export const calcHeadAndTailChanges = ({
     let additemcount = 0
     let cliprowcount = 0, clipitemcount = 0
 
-    if (scrollingviewportforward) { // clip from head; add to tail; scroll forward head is direction of scroll
+    if (scrollingviewportforward) { // clip from head; add to tail; scroll forward tail is direction of scroll
 
         // adjust clipitemcount
         if ((headrowcount + rowshiftcount) > (cradleProps.runwaycount)) {
@@ -769,7 +771,7 @@ export const calcHeadAndTailChanges = ({
         headchangecount = (clipitemcount ==0)?0:-clipitemcount
         tailchangecount = additemcount
 
-    } else { // scroll backward, in direction of tail; clip from tail, add to head
+    } else { // scroll viewport backward, in direction of head; clip from tail, add to head
 
         let intersectionindexes = []
 
@@ -829,13 +831,10 @@ export const calcHeadAndTailChanges = ({
         tailchangecount = (clipitemcount == 0)?0:-clipitemcount
 
     }
-    // remove -0, failed TODO:
-    // headchangecount = Math.round(headchangecount)
-    // tailchangecount = Math.round(tailchangecount)
+
     return [headchangecount,tailchangecount]
 
 }
-
 
 // =====================[ shared by both setCradleContent and updateCradleContent ]====================
 
