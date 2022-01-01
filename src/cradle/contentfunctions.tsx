@@ -438,6 +438,7 @@ let duplicatecomparebytime = (a,b) => {
     let retval = (a.time < b.time)?-1:1
 }
 
+// TODO: fix cradleActualContentCount
 // A negative shift is toward the head, a positive shift is toward the tail
 export const calcContentShifts = ({ // called only from updateCradleContent
     cradleProps,
