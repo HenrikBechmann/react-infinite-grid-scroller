@@ -102,9 +102,9 @@ export default class ContentManager {
                 viewportElement:viewportData.elementref.current
             })
 
-        if (viewportData.index == 6) {
-            console.log('SET index, cradleActualContentCount', viewportData.index,cradleActualContentCount)
-        }
+        // if (viewportData.index == 6) {
+        //     console.log('SET index, cradleActualContentCount', viewportData.index,cradleActualContentCount)
+        // }
 
         // returns content constrained by cradleRowcount
         const [childlist,deleteditems] = getUICellShellList({
