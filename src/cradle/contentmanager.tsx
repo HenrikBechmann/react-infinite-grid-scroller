@@ -198,9 +198,8 @@ export default class ContentManager {
         // }
 
         const viewportElement = viewportData.elementref.current
-        if (!viewportElement) {
-            console.error('ERROR: viewport element not set in updateCradleContent',
-                cradleProps.scrollerID, viewportData.elementref.current,viewportData)
+        if (!viewportElement) { 
+            // not mounted; return
             return
         }
             
