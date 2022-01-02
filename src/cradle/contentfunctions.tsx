@@ -574,7 +574,6 @@ export const calcContentShifts = ({
 
     // computed shifted cradle end row, looking for overshoot
     const computedcradleEndrow = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift)
-
     if ((computedcradleEndrow) >= (listRowcount)) {
         EOD = true
     }
@@ -646,19 +645,15 @@ export const calcContentShifts = ({
         spineReferenceAdjustment += crosscount 
     }
 
-    if (spineReferenceAdjustment && (BOD || EOD)) {
+    if (spineReferenceAdjustment) {
 
         newspinereferenceindex += spineReferenceAdjustment
         spinereferenceitemshift += spineReferenceAdjustment
 
-    } else if (spineReferenceAdjustment) {
-
-        newspinereferenceindex += spineReferenceAdjustment
-        spinereferenceitemshift += spineReferenceAdjustment
-
-        newcradlereferenceindex += spineReferenceAdjustment
-        cradlereferenceitemshift += spineReferenceAdjustment
-
+        if (!(BOD || EOD)) {
+            newcradlereferenceindex += spineReferenceAdjustment
+            cradlereferenceitemshift += spineReferenceAdjustment
+        }
     }
 
     newspineposoffset = newspinePosOffsetWorking
@@ -670,7 +665,12 @@ export const calcContentShifts = ({
     const cradleAvailableContentCount = (cradlecontentlist.length + partialrowitems) // cradleRowcount * crosscount
 
     let newCradleActualContentCount = Math.min(cradleAvailableContentCount, (listsize - newcradlereferenceindex))
-    let headchangecount, tailchangecount
+    let newheadcount, newtailcount, headchangecount, tailchangecount
+
+    newheadcount = newspinereferenceindex - newcradlereferenceindex
+    newtailcount = newCradleActualContentCount - newheadcount
+
+    console.log('newheadcount, newtailcount', newheadcount, newtailcount)
 
     return [
         newcradlereferenceindex, 
