@@ -680,9 +680,15 @@ export const calcContentShifts = ({
 
     // ---------------------[ 5. return required values ]-------------------
 
-    const cradleAvailableContentCount = cradleRowcount * crosscount
+    const partialrowfreespaces = (cradlecontentlist.length % crosscount)
+    const partialrowitems = partialrowfreespaces?(crosscount - partialrowfreespaces):0
+    const cradleAvailableContentCount = (cradlecontentlist.length + partialrowitems) // cradleRowcount * crosscount
 
-    let cradleActualContentCount = cradleAvailableContentCount
+    let newCradleActualContentCount = Math.min(cradleAvailableContentCount, (listsize - newcradlereferenceindex))
+    let headchangecount, tailchangecount
+
+    console.log('cradleAvailableContentCount, newcradleActualContentCount, newcradlereferenceindex, newspinereferenceindex', '\n',
+        cradleAvailableContentCount, newCradleActualContentCount, newcradlereferenceindex, newspinereferenceindex)
 
     return [
         newcradlereferenceindex, 
@@ -690,7 +696,9 @@ export const calcContentShifts = ({
         newspinereferenceindex, 
         spinereferenceitemshift, 
         newspineposoffset, 
-        cradleActualContentCount 
+        newCradleActualContentCount,
+        headchangecount,
+        tailchangecount, 
     ]
 
 }

@@ -102,6 +102,8 @@ export default class ContentManager {
                 viewportElement:viewportData.elementref.current
             })
 
+         console.log('cradleActualContentCount from getContentListRequirements',cradleActualContentCount)
+
         // if (viewportData.index == 6) {
         //     console.log('SET index, cradleActualContentCount', viewportData.index,cradleActualContentCount)
         // }
@@ -194,7 +196,7 @@ export default class ContentManager {
         const cradleData = this.commonProps.cradleDataRef.current
 
         // if (viewportData.index == 6) {
-        //     console.log('UPDATING content - source; in updateCradleContent',source)
+            console.log('UPDATING content - source; in updateCradleContent',source)
         // }
 
         const viewportElement = viewportData.elementref.current
@@ -271,7 +273,9 @@ export default class ContentManager {
             spinereferenceindex, 
             spineitemshift, 
             spineposoffset, 
-            cradleActualContentCount
+            newCradleActualContentCount,
+            headchange,
+            tailchange,
         ] = calcContentShifts({
 
             cradleProps,
@@ -287,7 +291,7 @@ export default class ContentManager {
         })
 
         if (viewportData.index == 6) {
-            console.log('UPDATE index, cradleActualContentCount', viewportData.index,cradleActualContentCount)
+            console.log('UPDATE index, newCradleActualContentCount', viewportData.index,newCradleActualContentCount)
         }
 
         if ((spineitemshift == 0 && cradleitemshift == 0)) return
@@ -331,7 +335,7 @@ export default class ContentManager {
             [localContentList,deletedContentItems] = getUICellShellList({
                 cradleProps,
                 cradleConfig,
-                cradleActualContentCount, // TODO: problem!
+                cradleActualContentCount:newCradleActualContentCount,
                 localContentList:modelcontentlist,
                 headchangecount,
                 tailchangecount,
