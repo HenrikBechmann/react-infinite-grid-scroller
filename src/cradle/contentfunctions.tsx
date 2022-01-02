@@ -527,11 +527,6 @@ export const calcContentShifts = ({
     // viewportvisiblegaplength is always positive
     let overshootrowcount = (viewportvisiblegaplength == 0)?0:Math.ceil(viewportvisiblegaplength/cellLength) // rows to fill viewport
 
-    // extra rows for runway // TODO: DEPRECATED -- VERIFY
-    // if (overshootrowcount) {
-    //     overshootrowcount += runwaycount
-    // }
-
     let overshootitemcount = overshootrowcount * crosscount
 
     // -----------------[ 2. calculate item & row shift counts including overshoot ]-------------
@@ -547,12 +542,10 @@ export const calcContentShifts = ({
     if (scrollingviewportforward) { // viewport moves toward tail, add tail items, shift positive
 
         tailaddshiftitemcount = shiftingintersections.length
-        // tailaddshiftrowcount = Math.ceil(tailaddshiftitemcount/crosscount)
 
     } else { // scrollviewportbackward, viewport toward head, add head items, shift negative
 
         headaddshiftitemcount = shiftingintersections.length
-        // headaddshiftrowcount = Math.ceil(headaddshiftitemcount/crosscount)
 
     }
 
@@ -582,8 +575,6 @@ export const calcContentShifts = ({
     // computed shifted cradle end row, looking for overshoot
     const computedcradleEndrow = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift)
 
-    // console.log('computedcradleEndrow = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift)',
-    //     computedcradleEndrow , previouscradlerowoffset, cradleRowcount, cradlereferencerowshift)
     if ((computedcradleEndrow) >= (listRowcount)) {
         EOD = true
     }
@@ -594,15 +585,6 @@ export const calcContentShifts = ({
 
     let rowovershoot
     if (scrollingviewportforward) { // scroll viewport toward tail, shift is positive, add to tail
-
-        // // computed shifted cradle end row, looking for overshoot
-        // const computedcradleEndrow = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift)
-
-        // console.log('computedcradleEndrow = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift)',
-        //     computedcradleEndrow , previouscradlerowoffset, cradleRowcount, cradlereferencerowshift)
-        // if ((computedcradleEndrow) >= (listRowcount)) {
-        //     EOD = true
-        // }
 
         rowovershoot = computedcradleEndrow - listRowcount // overshoot amount 
 
@@ -615,9 +597,6 @@ export const calcContentShifts = ({
 
     } else { // scroll viewport backward, scroll viewport toward head, shift is negative, add to head
 
-        // if ((previouscradlerowoffset + cradlereferencerowshift) <= 0) { // undershoot, past start of dataset
-        //     BOD = true
-        // }
         rowovershoot = previouscradlerowoffset + cradlereferencerowshift
         if (rowovershoot < 0) {
 
@@ -667,16 +646,6 @@ export const calcContentShifts = ({
         spineReferenceAdjustment += crosscount 
     }
 
-    // if (viewportData.index == 6) {
-    //     console.log('index, BOD, EOD','\n',
-    //         'cradlereferenceitemshift, newcradlereferenceindex, previouscradlereferenceindex', '\n',
-    //         'spinereferenceitemshift, newspinereferenceindex, previousspinereferenceindex',
-    //         viewportData.index,BOD,EOD,'\n',
-    //         cradlereferenceitemshift, newcradlereferenceindex, previouscradlereferenceindex,'\n',
-    //         spinereferenceitemshift, newspinereferenceindex, previousspinereferenceindex
-    //     )
-    // }
-
     if (spineReferenceAdjustment && (BOD || EOD)) {
 
         newspinereferenceindex += spineReferenceAdjustment
@@ -702,20 +671,6 @@ export const calcContentShifts = ({
 
     let newCradleActualContentCount = Math.min(cradleAvailableContentCount, (listsize - newcradlereferenceindex))
     let headchangecount, tailchangecount
-
-    // console.log('cradleAvailableContentCount, newcradleActualContentCount, newcradlereferenceindex,\
-    //  newspinereferenceindex, cradlereferenceitemshift, spinereferenceitemshift, spineReferenceAdjustment, BOD, EOD', '\n',
-
-    //     cradleAvailableContentCount, 
-    //     newCradleActualContentCount, 
-    //     newcradlereferenceindex, 
-    //     newspinereferenceindex,
-    //     cradlereferenceitemshift,
-    //     spinereferenceitemshift,
-    //     spineReferenceAdjustment,
-    //     BOD,
-    //     EOD
-    // )
 
     return [
         newcradlereferenceindex, 

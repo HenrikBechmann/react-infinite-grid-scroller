@@ -251,7 +251,6 @@ export default class ContentManager {
 
         // filter out inapplicable intersection entries
         // we're only interested in intersections proximal to the spine
-        // TODO: BUG: for nested config end problem intersections count = 4; should be 0; 12 count for entries
         const shiftingintersections = isolateShiftingIntersections({
 
             scrollingviewportforward,
@@ -260,10 +259,6 @@ export default class ContentManager {
             cellObserverThreshold:cradleConfig.cellObserverThreshold,
 
         })
-
-        // if ((viewportData.index == 6) /*&& (tailcontent.length == 0)*/) {
-        //     console.log('updateCradleContent INTERSECTIONS',intersections)
-        // }
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
@@ -290,22 +285,7 @@ export default class ContentManager {
 
         })
 
-        // if (viewportData.index == 6) {
-        //     console.log('UPDATE index, newCradleActualContentCount', viewportData.index,newCradleActualContentCount)
-        // }
-
         if ((spineitemshift == 0 && cradleitemshift == 0)) return
-
-        // if (viewportData.index == 6) {
-        //     console.log('index =',viewportData.index,'\n',
-        //         'cradlereferenceindex',cradlereferenceindex ,'\n',
-        //         'cradleitemshift', cradleitemshift,'\n',
-        //         'spinereferenceindex',spinereferenceindex ,'\n',
-        //         'spineitemshift', spineitemshift,'\n',
-        //         'spineposoffset', spineposoffset,'\n',
-        //         'cradleActualContentCount',cradleActualContentCount
-        //     )
-        // }
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
@@ -322,9 +302,6 @@ export default class ContentManager {
 
         })
 
-        // if (viewportData.index == 6) {
-        //     console.log('index, headchangecount, tailchangecount', viewportData.index, headchangecount, tailchangecount)
-        // }
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
         // collect modified content
@@ -360,13 +337,6 @@ export default class ContentManager {
                 spinereferenceindex, // TODO: BUG: set to 100 for problem
             }
         )
-
-        // if ((viewportData.index == 6) /*&& (tailcontent.length == 0)*/) {
-        //     console.log('in updateCradleContent after allocateContentList \n',
-        //     'spinereferenceitemshift, cradleitemshift, spineReferenceIndex, spinePosOffset, headcontent, tailcontent', //localContentList, headcontent, tailcontent', 
-        //         spinereferenceitemshift, cradleitemshift, spineReferenceIndex, spinePosOffset, headcontent, tailcontent) //, entries, localContentList, headcontent, tailcontent) 
-        //     // debugger
-        // }
 
         cradleContent.cradleModel = localContentList
         cradleContent.headView = cradleContent.headModel = headcontent
@@ -407,7 +377,6 @@ export default class ContentManager {
         cradleManager.cradleReferenceData.nextCradlePosOffset = spineposoffset
 
         stateManager.setCradleState('renderupdatedcontent')
-        // stateManager.setCradleState('ready')
 
     }
 
