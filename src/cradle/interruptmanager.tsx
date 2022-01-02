@@ -128,14 +128,20 @@ export default class InterruptManager {
 
         let movedentries = []
 
+        console.log('ENTRIES', entries)
+
         for (let entry of entries) {
+            console.log('entry dataset',Object.assign({},entry.target.dataset))
             if (entry.target.dataset.initialized) {
 
+                console.log('entry initialized',entry.target.dataset.initialized)
                 movedentries.push(entry)
 
             } else {
 
+                console.log('INITIALIZING entry',entry.target.dataset.initialized)
                 entry.target.dataset.initialized = true
+                console.log('INITIALIZED entry',Object.assign({},entry.target.dataset))
 
             }
         }

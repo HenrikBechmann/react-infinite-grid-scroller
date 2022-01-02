@@ -196,7 +196,7 @@ export default class ContentManager {
         const cradleData = this.commonProps.cradleDataRef.current
 
         // if (viewportData.index == 6) {
-            // console.log('UPDATING content - source; in updateCradleContent',source)
+            console.log('UPDATING content - source, entries; in updateCradleContent',source, entries)
         // }
 
         const viewportElement = viewportData.elementref.current
@@ -259,6 +259,8 @@ export default class ContentManager {
             cellObserverThreshold:cradleConfig.cellObserverThreshold,
 
         })
+
+        console.log('UPDATECRADLECONTENT shiftingintersections',shiftingintersections)
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 

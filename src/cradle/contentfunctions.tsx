@@ -192,6 +192,8 @@ export const isolateShiftingIntersections = ({
     scrollingviewportforward,
 }) => {
 
+    console.log('==>> intersections',intersections)
+
     const headcontent = cradleContent.headModel
     const tailcontent = cradleContent.tailModel
 
@@ -332,6 +334,8 @@ export const isolateShiftingIntersections = ({
     tailintersections.sort(entrycompare)
 
     // --------------------------[ ready to process! ]-----------------------------
+
+    console.log('==>headintersections,tailintersections',headintersections,tailintersections)
 
     // set reference points in relation to the spine
     const headreferenceindex = headindexes[headindexes.length - 1]
@@ -548,16 +552,17 @@ export const calcContentShifts = ({
         headaddshiftitemcount = shiftingintersections.length
 
     }
-
+    console.log('1. shiftingintersections.length, headaddshiftitemcount,tailaddshiftitemcount',
+        shiftingintersections.length,headaddshiftitemcount,tailaddshiftitemcount)
     // negative value shifted toward head; positive value shofted toward tail
     // one of the two expressions in the following line will be 0
     let spinereferenceshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
     let cradlereferenceshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
 
-    let cradlereferencerowshift = // Math.round(cradleshiftitemcount/crosscount)
+    let cradlereferencerowshift = 
     (cradlereferenceshiftitemcount > 0) // could include partial row from shiftingintersections
-        ?Math.floor(cradlereferenceshiftitemcount/crosscount)
-        :Math.ceil(cradlereferenceshiftitemcount/crosscount)
+        ?Math.ceil(cradlereferenceshiftitemcount/crosscount)
+        :Math.floor(cradlereferenceshiftitemcount/crosscount)
     cradlereferenceshiftitemcount = Math.round(cradlereferencerowshift * crosscount)
     let spinereferencerowshift = 
     (spinereferenceshiftitemcount > 0) // could include partial row from shiftingintersections
@@ -573,16 +578,8 @@ export const calcContentShifts = ({
     // const previousspinereferencerowoffset = Math.round(previousspinereferenceindex/crosscount)
 
     // computed shifted cradle end row, looking for overshoot
-    const computedcradleEndrow = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift)
-    if ((computedcradleEndrow) >= (listRowcount)) {
-        EOD = true
-    }
-
-    if ((previouscradlerowoffset + cradlereferencerowshift) <= 0) { // undershoot, past start of dataset
-        BOD = true
-    }
-
     let rowovershoot
+    let computedcradleEndrow = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift - 1)
     if (scrollingviewportforward) { // scroll viewport toward tail, shift is positive, add to tail
 
         rowovershoot = computedcradleEndrow - listRowcount // overshoot amount 
@@ -611,12 +608,26 @@ export const calcContentShifts = ({
 
     if (newcradlereferenceindex < 0) {
         cradlereferenceshiftitemcount += newcradlereferenceindex
+        // cradlereferencerowshift += Math.round(newcradlereferenceindex/crosscount)
+        // computedcradleEndrow += Math.round(newcradlereferenceindex/crosscount)
         newcradlereferenceindex = 0
     }
     if (newspinereferenceindex < 0) {
         spinereferenceshiftitemcount += newspinereferenceindex
+        // spinereferencerowshift += Math.round(newspinereferenceindex/crosscount)
         newspinereferenceindex = 0
     }
+
+    if ((computedcradleEndrow) >= (listRowcount)) {
+        EOD = true
+    }
+
+    if ((previouscradlerowoffset + cradlereferencerowshift) <= 0) { // undershoot, past start of dataset
+        BOD = true
+    }
+
+    console.log('2. computedcradleEndrow,listRowcount,previouscradlerowoffset,cradlereferencerowshift','\n',
+        computedcradleEndrow,listRowcount,previouscradlerowoffset,cradlereferencerowshift)
 
     // -------------[ 4. reconcile spineReferenceAdjustment and calc newspinePosOffset ]------------------
 
@@ -646,7 +657,7 @@ export const calcContentShifts = ({
     }
 
     if (spineReferenceAdjustment) {
-
+        const spineRowAdjustment = Math.round(spineReferenceAdjustment/crosscount)
         newspinereferenceindex += spineReferenceAdjustment
         spinereferenceitemshift += spineReferenceAdjustment
 
@@ -670,7 +681,8 @@ export const calcContentShifts = ({
     newheadcount = newspinereferenceindex - newcradlereferenceindex
     newtailcount = newCradleActualContentCount - newheadcount
 
-    console.log('newheadcount, newtailcount', newheadcount, newtailcount)
+    console.log('3. newheadcount, newtailcount, newspinereferenceindex - newcradlereferenceindex,newCradleActualContentCount, BOD, EOD', '\n',
+        newheadcount, newtailcount, newspinereferenceindex, newcradlereferenceindex, newCradleActualContentCount,BOD, EOD)
 
     return [
         newcradlereferenceindex, 
