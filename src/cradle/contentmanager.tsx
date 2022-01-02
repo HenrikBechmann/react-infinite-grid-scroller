@@ -279,7 +279,7 @@ export default class ContentManager {
             cradleElements,
             cradleContent,
             viewportElement,
-            itemElements,
+            // itemElements,
             shiftingintersections,
             scrollingviewportforward,
             viewportData,
@@ -305,7 +305,8 @@ export default class ContentManager {
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
-        // TODO: BUG: both counts set to 0 but with headchangecount set to -0
+        // the number of items to add to and clip from the contentlist
+        // negative number is clip; positive number is add
         const [headchangecount,tailchangecount] = calcHeadAndTailChanges({ 
 
             cradleProps,
@@ -325,7 +326,6 @@ export default class ContentManager {
         // collect modified content
         let localContentList, deletedContentItems = []
 
-        // both changecounts are 0 (but head = -0) so test should fail
         if (headchangecount || tailchangecount) { // TODO: apparently headchangecount of -0 fails test, should be fixed
 
             [localContentList,deletedContentItems] = getUICellShellList({

@@ -448,7 +448,7 @@ export const calcContentShifts = ({
     cradleContent,
     cradleConfig,
     viewportElement,
-    itemElements,
+    // itemElements,
     shiftingintersections,
     scrollingviewportforward,
     viewportData,

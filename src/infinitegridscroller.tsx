@@ -5,6 +5,7 @@
     BUG: reposition chip appears outside viewport when list partly hidden
     BUG: repositioningA is broken.
     TODO:
+    - reload from/to for insertions and substitutions
     - provide user with isReparenting flag to be able to reset scroll
     - check use of useCallback
     - resize triggered by root only, unless variable
