@@ -290,9 +290,9 @@ export default class ContentManager {
 
         })
 
-        if (viewportData.index == 6) {
-            console.log('UPDATE index, newCradleActualContentCount', viewportData.index,newCradleActualContentCount)
-        }
+        // if (viewportData.index == 6) {
+        //     console.log('UPDATE index, newCradleActualContentCount', viewportData.index,newCradleActualContentCount)
+        // }
 
         if ((spineitemshift == 0 && cradleitemshift == 0)) return
 

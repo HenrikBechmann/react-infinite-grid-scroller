@@ -687,8 +687,14 @@ export const calcContentShifts = ({
     let newCradleActualContentCount = Math.min(cradleAvailableContentCount, (listsize - newcradlereferenceindex))
     let headchangecount, tailchangecount
 
-    console.log('cradleAvailableContentCount, newcradleActualContentCount, newcradlereferenceindex, newspinereferenceindex', '\n',
-        cradleAvailableContentCount, newCradleActualContentCount, newcradlereferenceindex, newspinereferenceindex)
+    console.log('cradleAvailableContentCount, newcradleActualContentCount, newcradlereferenceindex,\
+     newspinereferenceindex, cradlereferenceitemshift, spinereferenceitemshift', '\n',
+        cradleAvailableContentCount, 
+        newCradleActualContentCount, 
+        newcradlereferenceindex, 
+        newspinereferenceindex,
+        cradlereferenceitemshift,
+        spinereferenceitemshift)
 
     return [
         newcradlereferenceindex, 
