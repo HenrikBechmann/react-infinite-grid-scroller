@@ -579,14 +579,30 @@ export const calcContentShifts = ({
     const previousspinereferenceindex = (tailcontentlist[0]?.props.index || 0) // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
     // const previousspinereferencerowoffset = Math.round(previousspinereferenceindex/crosscount)
 
+    // computed shifted cradle end row, looking for overshoot
+    const computedcradleEndrow = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift)
+
+    // console.log('computedcradleEndrow = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift)',
+    //     computedcradleEndrow , previouscradlerowoffset, cradleRowcount, cradlereferencerowshift)
+    if ((computedcradleEndrow) >= (listRowcount)) {
+        EOD = true
+    }
+
+    if ((previouscradlerowoffset + cradlereferencerowshift) <= 0) { // undershoot, past start of dataset
+        BOD = true
+    }
+
     let rowovershoot
     if (scrollingviewportforward) { // scroll viewport toward tail, shift is positive, add to tail
 
-        // computed shifted cradle end row, looking for overshoot
-        const computedcradleEndrow = previouscradlerowoffset + cradleRowcount + cradlereferencerowshift
-        if ((computedcradleEndrow) >= (listRowcount)) {
-            EOD = true
-        }
+        // // computed shifted cradle end row, looking for overshoot
+        // const computedcradleEndrow = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift)
+
+        // console.log('computedcradleEndrow = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift)',
+        //     computedcradleEndrow , previouscradlerowoffset, cradleRowcount, cradlereferencerowshift)
+        // if ((computedcradleEndrow) >= (listRowcount)) {
+        //     EOD = true
+        // }
 
         rowovershoot = computedcradleEndrow - listRowcount // overshoot amount 
 
@@ -599,9 +615,9 @@ export const calcContentShifts = ({
 
     } else { // scroll viewport backward, scroll viewport toward head, shift is negative, add to head
 
-        if ((previouscradlerowoffset + cradlereferencerowshift) <= 0) { // undershoot, past start of dataset
-            BOD = true
-        }
+        // if ((previouscradlerowoffset + cradlereferencerowshift) <= 0) { // undershoot, past start of dataset
+        //     BOD = true
+        // }
         rowovershoot = previouscradlerowoffset + cradlereferencerowshift
         if (rowovershoot < 0) {
 
@@ -687,14 +703,19 @@ export const calcContentShifts = ({
     let newCradleActualContentCount = Math.min(cradleAvailableContentCount, (listsize - newcradlereferenceindex))
     let headchangecount, tailchangecount
 
-    console.log('cradleAvailableContentCount, newcradleActualContentCount, newcradlereferenceindex,\
-     newspinereferenceindex, cradlereferenceitemshift, spinereferenceitemshift', '\n',
-        cradleAvailableContentCount, 
-        newCradleActualContentCount, 
-        newcradlereferenceindex, 
-        newspinereferenceindex,
-        cradlereferenceitemshift,
-        spinereferenceitemshift)
+    // console.log('cradleAvailableContentCount, newcradleActualContentCount, newcradlereferenceindex,\
+    //  newspinereferenceindex, cradlereferenceitemshift, spinereferenceitemshift, spineReferenceAdjustment, BOD, EOD', '\n',
+
+    //     cradleAvailableContentCount, 
+    //     newCradleActualContentCount, 
+    //     newcradlereferenceindex, 
+    //     newspinereferenceindex,
+    //     cradlereferenceitemshift,
+    //     spinereferenceitemshift,
+    //     spineReferenceAdjustment,
+    //     BOD,
+    //     EOD
+    // )
 
     return [
         newcradlereferenceindex, 

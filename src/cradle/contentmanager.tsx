@@ -102,7 +102,7 @@ export default class ContentManager {
                 viewportElement:viewportData.elementref.current
             })
 
-         console.log('cradleActualContentCount from getContentListRequirements',cradleActualContentCount)
+         // console.log('cradleActualContentCount from getContentListRequirements',cradleActualContentCount)
 
         // if (viewportData.index == 6) {
         //     console.log('SET index, cradleActualContentCount', viewportData.index,cradleActualContentCount)
@@ -196,7 +196,7 @@ export default class ContentManager {
         const cradleData = this.commonProps.cradleDataRef.current
 
         // if (viewportData.index == 6) {
-            console.log('UPDATING content - source; in updateCradleContent',source)
+            // console.log('UPDATING content - source; in updateCradleContent',source)
         // }
 
         const viewportElement = viewportData.elementref.current
