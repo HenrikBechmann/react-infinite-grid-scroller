@@ -335,7 +335,7 @@ export const isolateShiftingIntersections = ({
 
     // --------------------------[ ready to process! ]-----------------------------
 
-    console.log('==>headintersections,tailintersections',headintersections,tailintersections)
+    // console.log('==>headintersections,tailintersections',headintersections,tailintersections)
 
     // set reference points in relation to the spine
     const headreferenceindex = headindexes[headindexes.length - 1]
@@ -365,9 +365,11 @@ export const isolateShiftingIntersections = ({
 
     // collect notifications to main thread (filtered intersections)
 
-    // for scrollviewportbackward, moving toward head, add items to head, shift items to tail
+    // console.log('POINTERS scrollingviewportforward, headptr, tailptr', scrollingviewportforward,headptr, tailptr)
+
+    // for scrollviewportforward, moving toward tail, add items to tail, shift items to head
     let headrefindex, tailrefindex // for return
-    if (!scrollingviewportforward && (headptr >= 0)) {
+    if (scrollingviewportforward && (headptr >= 0)) {
         headrefindex = headintersectionindexes[headptr]
         let refindex = headrefindex + 1
         let refintersecting = intersectingmetadata[refindex - 1].intersecting
@@ -393,8 +395,8 @@ export const isolateShiftingIntersections = ({
         }
     }
 
-    // for scrollingviewportforward, moving toward tail, add items to tail, shift items to head
-    if (scrollingviewportforward && (tailptr >= 0)) {
+    // for scrollingviewportbackward, moving toward head, add items to head, shift items to tail
+    if (!scrollingviewportforward && (tailptr >= 0)) {
         tailrefindex = tailintersectionindexes[tailptr]
         let refindex = tailrefindex - 1
         let refintersecting = intersectingmetadata[refindex + 1].intersecting
@@ -420,6 +422,7 @@ export const isolateShiftingIntersections = ({
         }
     }
 
+    console.log('headintersectionindexes, tailintersectionindexes',headintersectionindexes, tailintersectionindexes)
     shiftingintersections.sort(entrycompare)
 
     // this returns items to shift, according to scrollingviewportforward
@@ -543,7 +546,7 @@ export const calcContentShifts = ({
     */
     let headaddshiftitemcount = 0, tailaddshiftitemcount = 0,
         headaddshiftrowcount = 0, tailaddshiftrowcount = 0
-    if (scrollingviewportforward) { // viewport moves toward tail, add tail items, shift positive
+    if (!scrollingviewportforward) { // viewport moves toward tail, add tail items, shift positive
 
         tailaddshiftitemcount = shiftingintersections.length
 
@@ -626,8 +629,8 @@ export const calcContentShifts = ({
         BOD = true
     }
 
-    console.log('2. computedcradleEndrow,listRowcount,previouscradlerowoffset,cradlereferencerowshift','\n',
-        computedcradleEndrow,listRowcount,previouscradlerowoffset,cradlereferencerowshift)
+    // console.log('2. computedcradleEndrow,listRowcount,previouscradlerowoffset,cradlereferencerowshift','\n',
+    //     computedcradleEndrow,listRowcount,previouscradlerowoffset,cradlereferencerowshift)
 
     // -------------[ 4. reconcile spineReferenceAdjustment and calc newspinePosOffset ]------------------
 
@@ -681,8 +684,8 @@ export const calcContentShifts = ({
     newheadcount = newspinereferenceindex - newcradlereferenceindex
     newtailcount = newCradleActualContentCount - newheadcount
 
-    console.log('3. newheadcount, newtailcount, newspinereferenceindex - newcradlereferenceindex,newCradleActualContentCount, BOD, EOD', '\n',
-        newheadcount, newtailcount, newspinereferenceindex, newcradlereferenceindex, newCradleActualContentCount,BOD, EOD)
+    // console.log('3. newheadcount, newtailcount, newspinereferenceindex - newcradlereferenceindex,newCradleActualContentCount, BOD, EOD', '\n',
+    //     newheadcount, newtailcount, newspinereferenceindex, newcradlereferenceindex, newCradleActualContentCount,BOD, EOD)
 
     return [
         newcradlereferenceindex, 

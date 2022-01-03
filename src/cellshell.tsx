@@ -211,6 +211,7 @@ const CellShell = ({
         data-scrollerid = {scrollerID} 
         data-index = {index} 
         data-instanceid = {instanceID} 
+        data-initialized = 'true'
         style = {styles}>
 
             { (cellStatus != 'setup') && contentcomponentRef.current }
