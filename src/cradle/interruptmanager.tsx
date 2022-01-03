@@ -126,30 +126,30 @@ export default class InterruptManager {
 
         }
 
-        // let movedentries = []
+        let movedentries = []
 
-        // console.log('ENTRIES', entries)
+        console.log('ENTRIES', entries)
 
         // debugger
 
-        // for (let entry of entries) {
-        //     // console.log('entry dataset',Object.assign({},entry.target.dataset))
-        //     if (entry.target.dataset.initialized) {
+        for (let entry of entries) {
+            // console.log('entry dataset',Object.assign({},entry.target.dataset))
+            if (entry.target.dataset.initializex) {
 
-        //         // console.log('entry initialized',entry.target.dataset.initialized)
-        //         movedentries.push(entry)
+                // console.log('entry initialized',entry.target.dataset.initialized)
+                movedentries.push(entry)
 
-        //     } else {
+            } else {
 
-        //         // console.log('INITIALIZING entry',entry.target.dataset.initialized)
-        //         entry.target.dataset.initialized = true
-        //         // console.log('INITIALIZED entry',Object.assign({},entry.target.dataset))
+                // console.log('INITIALIZING entry',entry.target.dataset.initialized)
+                entry.target.dataset.initializex = 'true'
+                console.log('INITIALIZED entry',Object.assign({},entry.target.dataset))
 
-        //     }
-        // }
+            }
+        }
 
         // if (viewportData.index == 6) {
-        //         console.log('movedentries for ', viewportData.index, movedentries)
+                console.log('movedentries for ', viewportData.index, movedentries)
         // }
 
         if (stateManager.isMountedRef.current) {

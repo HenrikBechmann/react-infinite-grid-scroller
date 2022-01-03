@@ -1,7 +1,7 @@
 // scrollmanager.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 200
+const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 500
 
 export default class ScrollManager {
 
