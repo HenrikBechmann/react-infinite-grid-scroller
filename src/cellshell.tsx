@@ -142,20 +142,22 @@ const CellShell = ({
     
     const observerElementRef = useRef(null) // persistent observer element ref for unmount
 
-    const observersetRef = useRef(false)
+    // const observersetRef = useRef(false)
     useEffect(()=>{
 
-        if ((!shellRef.current) || observersetRef.current) {
-            return
-        }
+        console.log('index, cellStatus', index, shellRef.current)
+
+        // if ((!shellRef.current) || observersetRef.current) {
+        //     return
+        // }
 
         console.log('setting observer for index',index)
 
         observer.observe(shellRef.current)
         observerElementRef.current = shellRef.current
-        observersetRef.current = true
+        // observersetRef.current = true
 
-    },[observer, shellRef.current])
+    },[])//[observer, shellRef.current, cellStatus])
 
     // ---------------------[ end of configure observer ]-------------------------
 
