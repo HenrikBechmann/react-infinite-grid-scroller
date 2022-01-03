@@ -192,7 +192,7 @@ export const isolateShiftingIntersections = ({
     scrollingviewportforward,
 }) => {
 
-    console.log('==>> intersections',intersections)
+    // console.log('==>> intersections',intersections)
 
     const headcontent = cradleContent.headModel
     const tailcontent = cradleContent.tailModel
