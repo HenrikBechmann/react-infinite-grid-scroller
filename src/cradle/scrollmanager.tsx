@@ -161,7 +161,7 @@ export default class ScrollManager {
 
                         this.updateReferenceData()
                         
-                        contentManager.updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
+                        // contentManager.updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
 
                     }
 
