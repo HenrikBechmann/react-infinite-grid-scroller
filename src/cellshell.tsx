@@ -52,7 +52,7 @@ const CellShell = ({
 
         return () => {
             isMountedRef.current = false
-            console.log('UNsetting observer for index',index)
+            // console.log('UNsetting observer for index',index)
             observer.unobserve(observerElementRef.current)
         }
 
@@ -84,7 +84,7 @@ const CellShell = ({
     // initialize cell content
     useEffect(() => {
 
-        console.log('CELLSHELL mounting index',index)
+        // console.log('CELLSHELL mounting index',index)
 
         portaldataRef.current = portalManager.fetchOrCreatePortal(index, placeholderRef.current)
 
@@ -108,7 +108,7 @@ const CellShell = ({
         // unmount
         return () => {
 
-            console.log('CELLSHELL UNmounting index',index)
+            // console.log('CELLSHELL UNmounting index',index)
             cancelidlecallback(requestIdleCallbackIdRef.current)
 
         }
@@ -145,13 +145,13 @@ const CellShell = ({
     // const observersetRef = useRef(false)
     useEffect(()=>{
 
-        console.log('index, cellStatus', index, shellRef.current)
+        // console.log('index, cellStatus', index, shellRef.current)
 
         // if ((!shellRef.current) || observersetRef.current) {
         //     return
         // }
 
-        console.log('setting observer for index',index)
+        // console.log('setting observer for index',index)
 
         observer.observe(shellRef.current)
         observerElementRef.current = shellRef.current
@@ -220,7 +220,6 @@ const CellShell = ({
         data-scrollerid = {scrollerID} 
         data-index = {index} 
         data-instanceid = {instanceID} 
-        data-initialized = 'true'
         style = {styles}>
 
             { (cellStatus != 'setup') && contentcomponentRef.current }

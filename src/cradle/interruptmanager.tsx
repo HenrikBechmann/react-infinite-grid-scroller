@@ -128,13 +128,13 @@ export default class InterruptManager {
 
         let movedentries = []
 
-        console.log('ENTRIES', entries)
+        // console.log('ENTRIES', entries)
 
         // debugger
 
         for (let entry of entries) {
             // console.log('entry dataset',Object.assign({},entry.target.dataset))
-            if (entry.target.dataset.initializex) {
+            if (entry.target.dataset.initialized) {
 
                 // console.log('entry initialized',entry.target.dataset.initialized)
                 movedentries.push(entry)
@@ -142,8 +142,8 @@ export default class InterruptManager {
             } else {
 
                 // console.log('INITIALIZING entry',entry.target.dataset.initialized)
-                entry.target.dataset.initializex = 'true'
-                console.log('INITIALIZED entry',Object.assign({},entry.target.dataset))
+                entry.target.dataset.initialized = 'true'
+                // console.log('INITIALIZED entry',Object.assign({},entry.target.dataset))
 
             }
         }
@@ -155,7 +155,7 @@ export default class InterruptManager {
         if (stateManager.isMountedRef.current) {
             if ((scrollManager.scrollPositions.start != scrollManager.scrollPositions.current) ||
                 (scrollManager.scrollPositions.current != scrollManager.scrollPositions.previous)) {
-                contentManager.updateCradleContent(entries,'cellObserver')
+                contentManager.updateCradleContent(movedentries,'cellObserver')
             }
         }
 
@@ -193,7 +193,7 @@ export default class InterruptManager {
                 this.cellintersectionobservercallback,
                 {
                     root:viewportData.elementref.current, 
-                    threshold:[0,1]//this.commonProps.cradleConfigRef.current.cellObserverThreshold,
+                    threshold:this.commonProps.cradleConfigRef.current.cellObserverThreshold,
                 } 
             )
             return this.cellIntersect.observer

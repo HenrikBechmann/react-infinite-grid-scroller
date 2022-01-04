@@ -108,7 +108,7 @@ import { ViewportContext } from './viewport'
 
 import { PortalManager, PortalList } from './portalmanager'
 
-const ITEM_OBSERVER_THRESHOLD = 0
+const ITEM_OBSERVER_THRESHOLD = [0,1]
 
 // import agency classes - loci of data and related methods
 import ScrollManager from './cradle/scrollmanager'
