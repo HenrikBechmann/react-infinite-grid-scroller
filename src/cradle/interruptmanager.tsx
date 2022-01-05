@@ -149,7 +149,7 @@ export default class InterruptManager {
         }
 
         // if (viewportData.index == 6) {
-                console.log('movedentries for ', viewportData.index, movedentries)
+                // console.log('movedentries for ', viewportData.index, movedentries)
         // }
 
         // TODO: set scrollPositions.atLastUpdateCall

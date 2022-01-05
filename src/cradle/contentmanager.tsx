@@ -199,7 +199,7 @@ export default class ContentManager {
         const cradleData = this.commonProps.cradleDataRef.current
 
         // if (viewportData.index == 6) {
-            console.log('UPDATING content - source, entries; in updateCradleContent',source, entries)
+            // console.log('UPDATING content - source; in updateCradleContent',source)
         // }
 
         const viewportElement = viewportData.elementref.current
@@ -231,7 +231,7 @@ export default class ContentManager {
 
         } else {
 
-            console.log('scrollPositions',scrollPositions)
+            // console.log('scrollPositions',scrollPositions)
             scrollingviewportforward = scrollPositions.currentupdate > scrollPositions.previousupdate
             this._previousScrollForward = scrollingviewportforward
 
