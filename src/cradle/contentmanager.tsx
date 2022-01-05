@@ -49,6 +49,9 @@ export default class ContentManager {
 
     // reset cradle, including allocation between head and tail parts of the cradle
     // called only from cradle preparerender event
+
+
+    // TODO: last row is sometimes left off with reposition
     public setCradleContent = (cradleState) => { 
 
         const viewportData = this.commonProps.viewportdataRef.current
@@ -228,7 +231,8 @@ export default class ContentManager {
 
         } else {
 
-            scrollingviewportforward = scrollPositions.current > scrollPositions.previous
+            console.log('scrollPositions',scrollPositions)
+            scrollingviewportforward = scrollPositions.currentupdate > scrollPositions.previousupdate
             this._previousScrollForward = scrollingviewportforward
 
         }

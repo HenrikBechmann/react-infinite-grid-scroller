@@ -119,13 +119,6 @@ export default class InterruptManager {
         const scrollManager = this.commonProps.managersRef.current.scroll
 
 
-        // TODO: moved this above initialization; no apparent difference to bug
-        if (this.signals.pauseCellObserver) { 
-
-            return
-
-        }
-
         let movedentries = []
 
         // console.log('ENTRIES', entries)
@@ -148,13 +141,24 @@ export default class InterruptManager {
             }
         }
 
+        // TODO: moved this above initialization; no apparent difference to bug
+        if (this.signals.pauseCellObserver) { 
+
+            return
+
+        }
+
         // if (viewportData.index == 6) {
                 console.log('movedentries for ', viewportData.index, movedentries)
         // }
 
+        // TODO: set scrollPositions.atLastUpdateCall
         if (stateManager.isMountedRef.current) {
-            if ((scrollManager.scrollPositions.start != scrollManager.scrollPositions.current) ||
-                (scrollManager.scrollPositions.current != scrollManager.scrollPositions.previous)) {
+            const { scrollPositions } = scrollManager
+            if ((scrollPositions.start != scrollPositions.current) ||
+                (scrollPositions.current != scrollPositions.previous)) {
+                scrollPositions.previousupdate = scrollPositions.currentupdate
+                scrollPositions.currentupdate = scrollPositions.current
                 contentManager.updateCradleContent(movedentries,'cellObserver')
             }
         }

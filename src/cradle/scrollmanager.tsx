@@ -13,7 +13,7 @@ export default class ScrollManager {
 
     commonProps
 
-    scrollPositions = {start:0, current:0, previous:0}
+    scrollPositions = {start:0, current:0, previous:0, previousupdate:0, currentupdate:0}
 
     private _scrolltimerid = null
 
@@ -42,6 +42,7 @@ export default class ScrollManager {
         if (!this.isScrolling) {
             this.isScrolling = true
             this.scrollPositions.start = scrollPositionCurrent
+            this.scrollPositions.currentupdate = scrollPositionCurrent
         }
 
         if (scrollPositionCurrent < 0) { // for Safari
