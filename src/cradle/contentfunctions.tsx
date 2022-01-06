@@ -192,7 +192,7 @@ export const isolateShiftingIntersections = ({
     scrollingviewportforward,
 }) => {
 
-    // console.log('==>> intersections',intersections)
+    console.log('==>> intersections',intersections)
 
     const headcontent = cradleContent.headModel
     const tailcontent = cradleContent.tailModel
@@ -294,13 +294,13 @@ export const isolateShiftingIntersections = ({
             const duplicatemetadatalist = duplicates[duplicateindex]
 
             // replace duplicates array in interesting with selected iobj
-            if (duplicatemetadatalist.length % 2) { // uneven; keep one
-                duplicatemetadatalist.sort(duplicatecomparebytime)
+            // if (duplicatemetadatalist.length % 2) { // uneven; keep one
+                // duplicatemetadatalist.sort(duplicatecomparebytime)
                 const iobj = duplicatemetadatalist.slice(duplicatemetadatalist.length -1,1)
                 intersectingmetadata[iobj.index] = iobj // replace any array with the metadata object
-            } else { // remove the entry
-                delete intersectingmetadata[duplicatemetadatalist[0].index]
-            }
+            // } else { // remove the entry
+            //     delete intersectingmetadata[duplicatemetadatalist[0].index]
+            // }
             for (let entrymetadata of duplicatemetadatalist) {
                 let headptr = entrymetadata.headptr
                 let tailptr = entrymetadata.tailptr
@@ -369,24 +369,23 @@ export const isolateShiftingIntersections = ({
 
     // console.log('POINTERS scrollingviewportforward, headptr, tailptr', scrollingviewportforward,headptr, tailptr)
 
-    // for scrollviewportforward, moving toward tail, add items to tail, shift items to head
-    let headrefindex, tailrefindex // for return
+    let tailrefindex, headrefindex // for return
+    // for scrollviewportbackward, moving toward head, add items to head, shift items to tail
     if (!scrollingviewportforward && (headptr >= 0)) {
         headrefindex = headintersectionindexes[headptr]
         let refindex = headrefindex + 1
-        let refintersecting = intersectingmetadata[refindex - 1].isIntersecting
+        // let refintersecting = intersectingmetadata[refindex - 1].isIntersecting
 
         for (let ptr = headptr; ptr >= 0; ptr--) {
 
             const index = headintersectionindexes[ptr]
 
             // test for continuity and consistency
-            if (((index + 1) == refindex) && (intersectingmetadata[index].isIntersecting == refintersecting)) {
+            if ((index + 1) == refindex) {//&& (intersectingmetadata[index].isIntersecting == refintersecting)) {
 
-                shiftingintersections.push(headintersections[ptr])
-                shiftingindexes.push(index)
-                shiftingmetadata.push(intersectingmetadata[index])
-
+                shiftingintersections.splice(0,0,headintersections[ptr])
+                shiftingindexes.splice(0,0,index)
+                shiftingmetadata.splice(0,0,intersectingmetadata[index])
 
             } else {
 
@@ -395,16 +394,15 @@ export const isolateShiftingIntersections = ({
             }
 
             refindex = index
-            refintersecting = intersectingmetadata[refindex].isIntersecting
+            // refintersecting = intersectingmetadata[refindex].isIntersecting
 
         }
     }
 
-    // for scrollingviewportbackward, moving toward head, add items to head, shift items to tail
+    // for scrollingviewportforward, moving toward tail, add items to tail, shift items to head
     if (scrollingviewportforward && (tailptr >= 0)) {
         tailrefindex = tailintersectionindexes[tailptr]
         let refindex = tailrefindex - 1
-        // let refintersecting = intersectingmetadata[refindex + 1].isIntersecting
 
         for (let ptr = tailptr; ptr < tailintersectionindexes.length; ptr++) {
 
@@ -434,8 +432,8 @@ export const isolateShiftingIntersections = ({
 
     // this returns items to shift, according to scrollingviewportforward
 
-    console.log('==> shiftingindexes, shiftingmetadata, shiftingintersections',
-        shiftingindexes, shiftingmetadata, shiftingintersections)
+    console.log('==> scrollingviewportforward, shiftingindexes, shiftingmetadata, shiftingintersections',
+        scrollingviewportforward ,shiftingindexes, shiftingmetadata, shiftingintersections)
 
     return shiftingintersections 
 
