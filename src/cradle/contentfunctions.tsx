@@ -245,10 +245,10 @@ export const isolateShiftingIntersections = ({
             ratio = Math.round(entry.intersectionRatio * 1000)/1000
         }
 
-        const calculatedintersecting = (ratio >= cellObserverThreshold)
+        // const calculatedintersecting = (ratio >= cellObserverThreshold)
         const iobj = { // entry item metadata
             entryindex,
-            intersecting:calculatedintersecting,  // to accommodate browser differences
+            // intersecting:calculatedintersecting,  // to accommodate browser differences
             isIntersecting:entry.isIntersecting,
             threshold:Math.round(ratio),
             ratio,
@@ -277,8 +277,8 @@ export const isolateShiftingIntersections = ({
 
     }
 
-    console.log('headintersectionindexes, tailintersectionindexes, intersectingmetadata',
-        headintersectionindexes, tailintersectionindexes, intersectingmetadata)
+    console.log('headintersectionindexes, tailintersectionindexes, intersections, intersectingmetadata',
+        headintersectionindexes, tailintersectionindexes, intersections, intersectingmetadata)
 
     // resolve duplicates. For uneven number, keep the most recent
     // otherwise delete them; they cancel each other out.
@@ -401,14 +401,14 @@ export const isolateShiftingIntersections = ({
     if (!scrollingviewportforward && (tailptr >= 0)) {
         tailrefindex = tailintersectionindexes[tailptr]
         let refindex = tailrefindex - 1
-        let refintersecting = intersectingmetadata[refindex + 1].intersecting
+        // let refintersecting = intersectingmetadata[refindex + 1].isIntersecting
 
         for (let ptr = tailptr; ptr < tailintersectionindexes.length; ptr++) {
 
             let index = tailintersectionindexes[ptr]
 
             // test for continuity and consistency
-            if (((index - 1) == refindex) && (intersectingmetadata[index].intersecting == refintersecting)) {
+            if ((index - 1) == refindex) {// && (intersectingmetadata[index].isIntersecting == refintersecting)) {
 
                 shiftingintersections.push(tailintersections[ptr])
 
@@ -419,7 +419,7 @@ export const isolateShiftingIntersections = ({
             }
 
             refindex = index
-            refintersecting = intersectingmetadata[index].intersecting
+            // refintersecting = intersectingmetadata[index].intersecting
 
         }
     }
