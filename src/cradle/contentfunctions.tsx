@@ -250,6 +250,7 @@ export const isolateShiftingIntersections = ({
             entryindex,
             intersecting:calculatedintersecting,  // to accommodate browser differences
             isIntersecting:entry.isIntersecting,
+            threshold:Math.round(ratio),
             ratio,
             originalratio:entry.intersectionRatio,
             time:entry.time,
@@ -275,6 +276,9 @@ export const isolateShiftingIntersections = ({
         intersectionsptr++
 
     }
+
+    console.log('headintersectionindexes, tailintersectionindexes, intersectingmetadata',
+        headintersectionindexes, tailintersectionindexes, intersectingmetadata)
 
     // resolve duplicates. For uneven number, keep the most recent
     // otherwise delete them; they cancel each other out.
@@ -334,8 +338,6 @@ export const isolateShiftingIntersections = ({
     tailintersections.sort(entrycompare)
 
     // --------------------------[ ready to process! ]-----------------------------
-
-    // console.log('==>headintersections,tailintersections',headintersections,tailintersections)
 
     // set reference points in relation to the spine
     const headreferenceindex = headindexes[headindexes.length - 1]
@@ -422,8 +424,8 @@ export const isolateShiftingIntersections = ({
         }
     }
 
-    console.log('headintersectionindexes, tailintersectionindexes',headintersectionindexes, tailintersectionindexes)
-    shiftingintersections.sort(entrycompare)
+    // console.log('headintersectionindexes, tailintersectionindexes',headintersectionindexes, tailintersectionindexes)
+    // shiftingintersections.sort(entrycompare)
 
     // this returns items to shift, according to scrollingviewportforward
 
@@ -555,8 +557,8 @@ export const calcContentShifts = ({
         headaddshiftitemcount = shiftingintersections.length
 
     }
-    console.log('1. shiftingintersections.length, headaddshiftitemcount,tailaddshiftitemcount',
-        shiftingintersections.length,headaddshiftitemcount,tailaddshiftitemcount)
+    // console.log('1. shiftingintersections.length, headaddshiftitemcount,tailaddshiftitemcount',
+    //     shiftingintersections.length,headaddshiftitemcount,tailaddshiftitemcount)
     // negative value shifted toward head; positive value shofted toward tail
     // one of the two expressions in the following line will be 0
     let spinereferenceshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
