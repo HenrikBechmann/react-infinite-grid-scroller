@@ -185,6 +185,7 @@ const adjustSpineOffsetForMaxRefIndex = ({
 // ======================[ for updateCradleContent ]===========================
 
 // filter out items that not proximate to the spine
+// TODO: keep last trigger position (x or y) to determine direction of scroll
 export const isolateShiftingIntersections = ({
     intersections,
     cradleContent,
@@ -192,17 +193,17 @@ export const isolateShiftingIntersections = ({
     scrollingviewportforward,
 }) => {
 
-    console.log('==>> intersections',intersections)
+    // console.log('==>> intersections',intersections)
 
     const headcontent = cradleContent.headModel
     const tailcontent = cradleContent.tailModel
 
     let //headindexes = [], 
         // tailindexes = [],
-        headintersectionindexes = [],
-        headintersections = [],
-        tailintersectionindexes = [],
-        tailintersections = [],
+        // headintersectionindexes = [],
+        // headintersections = [],
+        // tailintersectionindexes = [],
+        // tailintersections = [],
         intersectingmetadata:any = {},
         shiftingintersections = [],
         shiftingindexes = [],
@@ -220,25 +221,36 @@ export const isolateShiftingIntersections = ({
     for (let entry of intersections) {
 
         const entryindex = parseInt(entry.target.dataset.index)
-        let newheaditemptr, newtailitemptr
-        if (tailindexes.includes(entryindex)) {
+        let newitemptr
+        let isShiftingEntry = false
+        if (scrollingviewportforward) {
 
-            tailintersectionindexes.push(entryindex)
-            tailintersections.push(entry)
-            newtailitemptr = tailintersections.length - 1 // used from iobj metadata for duplicate resolution
+            if (tailindexes.includes(entryindex)) {
 
-        } else if (headindexes.includes(entryindex)) {
+                shiftingindexes.push(entryindex)
+                shiftingintersections.push(entry)
+                newitemptr = shiftingintersections.length - 1 // used from iobj metadata for duplicate resolution
+                isShiftingEntry = true
+            }
 
-            headintersectionindexes.push(entryindex)
-            headintersections.push(entry)
-            newheaditemptr = headintersections.length - 1 // used for duplicate resolution
+        } else { // if (scrollingviewportforward) {
 
-        } else {
+            if (headindexes.includes(entryindex)) {
 
-            console.log('SYSTEM ERROR: unknown intersection element, aborting isolateRelevantIntersections',entry)
-            return // shouldn't happen; give up
+                shiftingindexes.push(entryindex)
+                shiftingintersections.push(entry)
+                newitemptr = shiftingintersections.length - 1 // used for duplicate resolution
+                isShiftingEntry = true
+
+            }
 
         }
+        // } else {
+
+        //     console.log('SYSTEM ERROR: unknown intersection element, aborting isolateRelevantIntersections',entry)
+        //     return // shouldn't happen; give up
+
+        // }
 
         // let ratio
         // if (browser && browser.name == 'safari') {
@@ -247,35 +259,39 @@ export const isolateShiftingIntersections = ({
         //     ratio = Math.round(entry.intersectionRatio * 1000)/1000
         // }
 
-        const iobj = { // entry item metadata
-            entryindex,
-            // intersecting:calculatedintersecting,  // to accommodate browser differences
-            isIntersecting:entry.isIntersecting,
-            threshold:Math.round(entry.intersectionRatio),
-            intersectionRatio:entry.intersectionRatio,
-            time:entry.time,
-            headptr:newheaditemptr,
-            tailptr:newtailitemptr,
-            intersectionsptr,
-        }
-        if (!intersectingmetadata[entryindex]) { // this is a new item
-            intersectingmetadata[entryindex] = iobj
-        } else { // this is a duplicate intersection item
-            if (!Array.isArray(intersectingmetadata[entryindex])) {
-                intersectingmetadata[entryindex] = [intersectingmetadata[entryindex]] // arr
+        if (isShiftingEntry) {
+            const iobj = { // entry item metadata
+                entryindex,
+                // intersecting:calculatedintersecting,  // to accommodate browser differences
+                isIntersecting:entry.isIntersecting,
+                threshold:Math.round(entry.intersectionRatio),
+                intersectionRatio:entry.intersectionRatio,
+                time:entry.time,
+                itemptr:newitemptr,
+                intersectionsptr,
+                entry,
             }
-            intersectingmetadata[entryindex].push(iobj)
-            // add to duplicates list for later processing
-            if (!duplicates[entryindex]) {
-                duplicates[entryindex] = []
-                duplicates[entryindex].push(intersectingmetadata[entryindex][0])
+            if (!intersectingmetadata[entryindex]) { // this is a new item
+                intersectingmetadata[entryindex] = iobj
+            } else { // this is a duplicate intersection item
+                if (!Array.isArray(intersectingmetadata[entryindex])) {
+                    intersectingmetadata[entryindex] = [intersectingmetadata[entryindex]] // arr
+                }
+                intersectingmetadata[entryindex].push(iobj)
+                // add to duplicates list for later processing
+                if (!duplicates[entryindex]) {
+                    duplicates[entryindex] = []
+                    duplicates[entryindex].push(intersectingmetadata[entryindex][0])
+                }
+                duplicates[entryindex].push(iobj)
             }
-            duplicates[entryindex].push(iobj)
         }
 
         intersectionsptr++
 
     }
+
+    console.log('scrollingviewportforward, duplicates',scrollingviewportforward, {...duplicates})
 
     // console.log('headintersectionindexes, tailintersectionindexes, intersections, intersectingmetadata',
     //     headintersectionindexes, tailintersectionindexes, intersections, intersectingmetadata)
@@ -286,8 +302,7 @@ export const isolateShiftingIntersections = ({
     // an even number of items cancel out; for an odd number the most recent is valid
     if (Object.keys(duplicates).length) { // > 0) { // there are duplicates to process
 
-        const headintersectionsdelete = [],
-            tailintersectionsdelete = []
+        const intersectionsdelete = []
 
         for (let duplicateindex in duplicates) {
 
@@ -302,116 +317,50 @@ export const isolateShiftingIntersections = ({
             //     delete intersectingmetadata[duplicatemetadatalist[0].index]
             // }
             for (let entrymetadata of duplicatemetadatalist) {
-                let headptr = entrymetadata.headptr
-                let tailptr = entrymetadata.tailptr
-                if (headptr !== undefined) { // TODO: shouldn't happen
-                    headintersectionsdelete.push(headptr)
-                }
-                if (tailptr !== undefined) {
-                    tailintersectionsdelete.push(tailptr)
+                let itemptr = entrymetadata.itemptr
+                if (itemptr !== undefined) { // TODO: shouldn't happen
+                    intersectionsdelete.push(itemptr)
                 }
             }
         }
         // filter out deleted head and tail items
-        if (headintersectionsdelete.length) {
-            headintersectionindexes = headintersectionindexes.filter((value, index) => {
-                return !headintersectionsdelete.includes(index)
-            })
-            headintersections = headintersections.filter((value, index) => {
-                return !headintersectionsdelete.includes(index)
-            })
-        }
-        if (tailintersectionsdelete.length) {
-            tailintersectionindexes = tailintersectionindexes.filter((value, index) => {
-                return !tailintersectionsdelete.includes(index)
-            })
-            tailintersections = tailintersections.filter((value, index) => {
-                return !tailintersectionsdelete.includes(index)
+        if (intersectionsdelete.length) {
+            shiftingindexes = shiftingindexes.filter((value, index) => {
+                return !intersectionsdelete.includes(index)
             })
         }
     }
 
-    headintersectionindexes.sort(indexcompare)
-    tailintersectionindexes.sort(indexcompare)
+    shiftingindexes.sort(indexcompare)
 
-    headintersections.sort(entrycompare)
-    tailintersections.sort(entrycompare)
+    shiftingintersections.sort(entrycompare)
 
     // --------------------------[ ready to process! ]-----------------------------
 
     // set reference points in relation to the spine
-    const headreferenceindex = headindexes[headindexes.length - 1]
-    const tailreferenceindex = tailindexes[0]
-    let headptr = headintersectionindexes.indexOf(headreferenceindex)
-    let tailptr = tailintersectionindexes.indexOf(tailreferenceindex)
-
-    // filter out incorrect values for headptr and tailptr
-    // -1 means doesn't exist
-    if (headptr !== (headintersectionindexes.length - 1)) { // must be last before spine
-        headptr = -1
-    }
-
-    if (tailptr !==0) { // must be first after spine
-        tailptr = -1
-    }
-
-    if ((headptr > -1) && (tailptr > -1)) { // edge case, both are found
-
-        if (scrollingviewportforward) { // moving toward tail; add items to tail
-            headptr = -1 // assert head item not found
-        } else { // moving toward head; add items to head
-            tailptr = -1 // scrollviewportbackward assert tail item not found
-        }
-
-    }
+    const referenceindex = shiftingindexes[shiftingindexes.length - 1]
+    // TODO referenceindex is 0 in other direction
+    let sectionptr = shiftingindexes.indexOf(referenceindex)
 
     // collect notifications to main thread (filtered intersections)
 
     // console.log('POINTERS scrollingviewportforward, headptr, tailptr', scrollingviewportforward,headptr, tailptr)
 
-    let tailrefindex, headrefindex // for return
+    let returnindex // for return
     // for scrollviewportbackward, moving toward head, add items to head, shift items to tail
-    if (!scrollingviewportforward && (headptr >= 0)) {
-        headrefindex = headintersectionindexes[headptr]
-        let refindex = headrefindex + 1
-        // let refintersecting = intersectingmetadata[refindex - 1].isIntersecting
-
-        for (let ptr = headptr; ptr >= 0; ptr--) {
-
-            const index = headintersectionindexes[ptr]
-
-            // test for continuity and consistency
-            if ((index + 1) == refindex) {//&& (intersectingmetadata[index].isIntersecting == refintersecting)) {
-
-                shiftingintersections.splice(0,0,headintersections[ptr])
-                shiftingindexes.splice(0,0,index)
-                shiftingmetadata.splice(0,0,intersectingmetadata[index])
-
-            } else {
-
-                break
-
-            }
-
-            refindex = index
-            // refintersecting = intersectingmetadata[refindex].isIntersecting
-
-        }
-    }
-
     // for scrollingviewportforward, moving toward tail, add items to tail, shift items to head
-    if (scrollingviewportforward && (tailptr >= 0)) {
-        tailrefindex = tailintersectionindexes[tailptr]
-        let refindex = tailrefindex - 1
+    if (scrollingviewportforward && (sectionptr >= 0)) {
+        returnindex = shiftingindexes[sectionptr]
+        let refindex = returnindex - 1
 
-        for (let ptr = tailptr; ptr < tailintersectionindexes.length; ptr++) {
+        for (let ptr = sectionptr; ptr < shiftingindexes.length; ptr++) {
 
-            let index = tailintersectionindexes[ptr]
+            let index = shiftingindexes[ptr]
 
             // test for continuity and consistency
             if ((index - 1) == refindex) {// && (intersectingmetadata[index].isIntersecting == refintersecting)) {
 
-                shiftingintersections.push(tailintersections[ptr])
+                shiftingintersections.push(shiftingintersections[ptr])
                 shiftingindexes.push(index)
                 shiftingmetadata.push(intersectingmetadata[index])
 
@@ -432,8 +381,8 @@ export const isolateShiftingIntersections = ({
 
     // this returns items to shift, according to scrollingviewportforward
 
-    console.log('==> scrollingviewportforward, shiftingindexes, shiftingmetadata, shiftingintersections',
-        scrollingviewportforward ,shiftingindexes, shiftingmetadata, shiftingintersections)
+    // console.log('==> scrollingviewportforward, shiftingindexes, shiftingmetadata, shiftingintersections',
+    //     scrollingviewportforward ,shiftingindexes, shiftingmetadata, shiftingintersections)
 
     return shiftingintersections 
 
