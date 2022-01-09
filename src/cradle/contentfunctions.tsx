@@ -264,7 +264,7 @@ export const isolateShiftingIntersections = ({
                 entryindex,
                 // intersecting:calculatedintersecting,  // to accommodate browser differences
                 isIntersecting:entry.isIntersecting,
-                threshold:Math.round(entry.intersectionRatio),
+                // threshold:Math.round(entry.intersectionRatio),
                 intersectionRatio:entry.intersectionRatio,
                 time:entry.time,
                 itemptr:newitemptr,
