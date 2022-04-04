@@ -50,8 +50,8 @@
     "xstate": "^4.23.1"
   },
   "peerDependencies": {
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
@@ -60,7 +60,7 @@
     "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
     "@babel/preset-react": "^7.12.5",
-    "@types/node": "^16.11.6",
+    "@types/node": "^17.0.23",
     "@types/react-dom": "^17.0.2",
     "babel-loader": "^8.2.1",
     "ts-loader": "^9.2.6",
