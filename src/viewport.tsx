@@ -12,7 +12,7 @@ export const ViewportContext = React.createContext(null) // for children
 
 import { ResizeObserver } from '@juggle/resize-observer'
 
-import { CradleContext } from './cradle'
+import { CradleContext as ParentCradleContext } from './cradle'
 
 const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
 
@@ -34,11 +34,11 @@ const Viewport = ({
     // -----------------------[ initialize ]------------------
 
     const [viewportState,setViewportState] = useState('setup');
-    const viewportStateRef = useRef(null) // for useCallback -> resizeCallback
+    const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
     viewportStateRef.current = viewportState
 
     // only available if viewport is a child of an infiniteScroller
-    const parentCradlePropertiesRef = useContext(CradleContext);
+    const parentCradlePropertiesRef = useContext(ParentCradleContext);
 
     // if this is a child, get the parent portal manager
     const parentPortalManagerRef = useRef(parentCradlePropertiesRef?.current.portalManager);
