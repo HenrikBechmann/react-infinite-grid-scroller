@@ -104,7 +104,7 @@
 
 import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, useLayoutEffect } from 'react'
 
-import { ViewportContext } from './viewport'
+import { ViewportInterrupt } from './viewport'
 
 import { PortalManager, PortalList } from './portalmanager'
 
@@ -171,9 +171,9 @@ const Cradle = ({
     // ----------------[ context ]----------------
 
     const [cradleState, setCradleState] = useState('setup')
-    const viewportData = useContext(ViewportContext)
+    const viewportProperties = useContext(ViewportInterrupt)
     const viewportDataRef = useRef(null)
-    viewportDataRef.current = viewportData
+    viewportDataRef.current = viewportProperties
 
     // if (viewportData.index === null) {
     //     console.log('RUNNING index cradleState', viewportData.index, cradleState)
@@ -198,7 +198,7 @@ const Cradle = ({
     )
     
     // if ((cradleState == 'normalizesignals') && viewportData.portal?.isReparenting) {
-    const { viewportDimensions } = viewportData
+    const { viewportDimensions } = viewportProperties
 
     const { height:viewportheight,width:viewportwidth } = viewportDimensions
 
@@ -343,15 +343,15 @@ const Cradle = ({
 
     // this is an immediate response to reparenting. Reparenting resets scroll positions
     // this restores scroll as soon as cradle is invoked after reparenting
-    if (viewportData.portal?.isReparenting) { 
+    if (viewportProperties.portal?.isReparenting) { 
         // if (viewportData.index == 6) {
         //         console.log('restoring scrollpos from, to', 
         //             viewportData.index,
         //             viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty],
         //             Math.max(0,cradleManager.cradleReferenceData.blockScrollPos))
         // }
-        viewportData.portal.isReparenting = false
-        viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
+        viewportProperties.portal.isReparenting = false
+        viewportProperties.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
             Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
     }
 
@@ -442,7 +442,7 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        if (viewportData.isResizing) {
+        if (viewportProperties.isResizing) {
 
             const signals = interruptManager.signals
             signals.pauseCellObserver = true
@@ -456,13 +456,13 @@ const Cradle = ({
         }
 
         // complete resizing mode
-        if (!viewportData.isResizing && (cradleStateRef.current == 'resizing')) {
+        if (!viewportProperties.isResizing && (cradleStateRef.current == 'resizing')) {
 
             setCradleState('resized')
 
         }
 
-    },[viewportData.isResizing])
+    },[viewportProperties.isResizing])
 
     // reload for changed parameters
     useEffect(()=>{

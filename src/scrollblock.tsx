@@ -3,7 +3,7 @@
 
 import React, {useContext, useRef, useCallback, useEffect, useLayoutEffect, useState} from 'react'
 
-import { ViewportContext } from './viewport'
+import { ViewportInterrupt } from './viewport'
 
 const Scrollblock = ({
     children,
@@ -19,7 +19,7 @@ const Scrollblock = ({
 }) => {
 
     // -------------------------[ context and state ]-------------------------
-    const viewportData = useContext(ViewportContext)
+    const viewportData = useContext(ViewportInterrupt)
     // const [blockstate,setBlockState] = useState('render') // setup -> render
     // if (viewportData.index == 0) console.log('RUNNING scrollblock viewportData.index, blockstate',viewportData.index,blockstate)
 

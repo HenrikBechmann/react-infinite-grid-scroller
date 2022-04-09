@@ -8,7 +8,7 @@
 
 import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useContext} from 'react'
 
-export const ViewportContext = React.createContext(null) // for children
+export const ViewportInterrupt = React.createContext(null) // for children
 
 import { ResizeObserver as ResizeObserverPollyfill } from '@juggle/resize-observer'
 
@@ -228,7 +228,7 @@ const Viewport = ({
 
     // ----------------------[ render ]--------------------------------
 
-    return <ViewportContext.Provider value = { viewportPropertiesRef.current }>
+    return <ViewportInterrupt.Provider value = { viewportPropertiesRef.current }>
         <div 
             data-type = 'viewport'
             data-scrollerid = {scrollerID}
@@ -237,7 +237,7 @@ const Viewport = ({
         >
             { (viewportState != 'setup') && children }
         </div>
-    </ViewportContext.Provider>
+    </ViewportInterrupt.Provider>
     
 } // Viewport
 
