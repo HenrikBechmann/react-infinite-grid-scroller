@@ -19,7 +19,7 @@ const Scrollblock = ({
 }) => {
 
     // -------------------------[ context and state ]-------------------------
-    const viewportData = useContext(ViewportInterrupt)
+    const viewportProperties = useContext(ViewportInterrupt)
     // const [blockstate,setBlockState] = useState('render') // setup -> render
     // if (viewportData.index == 0) console.log('RUNNING scrollblock viewportData.index, blockstate',viewportData.index,blockstate)
 
@@ -38,7 +38,7 @@ const Scrollblock = ({
     )
     const [divlinerstyle,saveDivlinerstyle] = useState(divlinerstyleRef.current) // to trigger render
 
-    let { viewportDimensions, itemobserver/*, isResizing*/ } = viewportData
+    let { viewportDimensions, itemobserver/*, isResizing*/ } = viewportProperties
     let { top, right, bottom, left, width, height } = viewportDimensions
 
     // state engine
