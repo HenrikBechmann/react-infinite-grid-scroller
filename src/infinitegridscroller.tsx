@@ -25,10 +25,11 @@ import Scrollblock from './scrollblock'
 import Cradle from './cradle'
 
 let globalScrollerID = 0
-const setNextScrollerSessionID = () => {
-    // console.log('getting globalScrollerID',globalScrollerID)
-    /*return */globalScrollerID++
-}
+// const setNextScrollerSessionID = () => {
+
+//     globalScrollerID++
+
+// }
 
 // ===================================[ INITIALIZE ]===========================
 
@@ -83,12 +84,10 @@ const InfiniteGridScroller = (props) => {
     // increment scrollerSessionID
     useEffect(()=>{
 
-        setNextScrollerSessionID()
+        globalScrollerID++
+        // setNextScrollerSessionID()
 
     },[]);
-
-    // (scrollerSessionIDRef.current == 1) && console.log('RUNNING infinitegridscroller scrollerSessionID, scrollerstate, listSize',
-    //     scrollerSessionIDRef.current,scrollerstate, listSize)
 
     // set defaults
     functions ?? (functions = {})
