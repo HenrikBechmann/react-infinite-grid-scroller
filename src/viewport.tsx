@@ -123,7 +123,7 @@ const Viewport = ({
 
         if (!isResizingRef.current) { // generate interrupt response
             viewportPropertiesRef.current.isResizing = isResizingRef.current = true 
-            // new object creation triggers a realtime message to cradle through context
+            // new object creation triggers a realtime interrupt message to cradle through context
             viewportPropertiesRef.current = Object.assign({},viewportPropertiesRef.current) 
 
             if (isMountedRef.current) setViewportState('resizing')
