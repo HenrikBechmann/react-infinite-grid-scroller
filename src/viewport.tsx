@@ -33,16 +33,16 @@ const Viewport = ({
 
     // -----------------------[ initialize ]------------------
 
-    const [viewportstate,setViewportState] = useState('setup');
+    const [viewportState,setViewportState] = useState('setup');
+    const viewportStateRef = useRef(null) // for useCallback -> resizeCallback
+    viewportStateRef.current = viewportState
 
-    const cradleDataRef = useContext(CradleContext);
+    // only available if viewport is a child of an infiniteScroller
+    const parentCradlePropertiesRef = useContext(CradleContext);
 
-    const portalManager = cradleDataRef?.current.portalManager;
+    // if this is a child, get the parent portal manager
+    const parentPortalManagerRef = useRef(parentCradlePropertiesRef?.current.portalManager);
 
-    // ((scrollerID == 1) || (scrollerID == 0)) && console.log('running scrollerID, viewportstate',scrollerID, viewportstate)
-
-    const viewportstateRef = useRef(null) // for useCallback -> resizeCallback
-    viewportstateRef.current = viewportstate
     const isMountedRef = useRef(true) // monitor for unmounted
 
     useEffect(() => {
@@ -54,6 +54,7 @@ const Viewport = ({
 
     const divlinerstyleRef = useRef(null)
 
+    // integrate inherited styles
     divlinerstyleRef.current = useMemo(() => {
 
         return Object.assign(
@@ -71,8 +72,8 @@ const Viewport = ({
 
     const viewportdivRef = useRef(null)
 
-    // viewportDataRef is passed as context to children
-    const viewportDataRef = useRef(
+    // viewportPropertiesRef is passed as context to children
+    const viewportPropertiesRef = useRef(
         {
             portal:null, 
             isResizing:false, 
@@ -103,7 +104,7 @@ const Viewport = ({
     // used by resizeObserver; generates interrupt
     const resizeCallback = useCallback((entries)=>{
 
-        if (viewportstateRef.current == 'setup') {
+        if (viewportStateRef.current == 'setup') {
 
             return
 
@@ -121,9 +122,9 @@ const Viewport = ({
         }
 
         if (!isResizingRef.current) { // generate interrupt response
-            viewportDataRef.current.isResizing = isResizingRef.current = true 
+            viewportPropertiesRef.current.isResizing = isResizingRef.current = true 
             // new object creation triggers a realtime message to cradle through context
-            viewportDataRef.current = Object.assign({},viewportDataRef.current) 
+            viewportPropertiesRef.current = Object.assign({},viewportPropertiesRef.current) 
 
             if (isMountedRef.current) setViewportState('resizing')
 
@@ -144,7 +145,9 @@ const Viewport = ({
     // get portal for non-root viewports
     useEffect(()=>{
 
-        if (!cradleDataRef) return // root
+        if (!parentPortalManagerRef.current) return // root
+
+        const parentPortalManager = parentPortalManagerRef.current
 
         let portalindex
         let element = viewportdivRef.current
@@ -152,8 +155,8 @@ const Viewport = ({
         while (element) {
             if (element.dataset && (element.dataset.type == 'portalcontainer')) {
                 portalindex = parseInt(element.dataset.index)
-                viewportDataRef.current.portal = portalManager.getPortal(portalindex)
-                viewportDataRef.current.index = portalindex
+                viewportPropertiesRef.current.portal = parentPortalManager.getPortal(portalindex)
+                viewportPropertiesRef.current.index = portalindex
                 break
             } else {
                 element = element.parentElement
@@ -189,9 +192,9 @@ const Viewport = ({
     },[orientation, cellWidth, cellHeight, gap, padding])
 
     // set context data for children
-    viewportDataRef.current = useMemo(() => {
+    viewportPropertiesRef.current = useMemo(() => {
 
-        if (viewportstate == 'setup') return viewportDataRef.current
+        if (viewportState == 'setup') return viewportPropertiesRef.current
 
         const {top, right, bottom, left} = viewportdivRef.current.getBoundingClientRect()
         const width = (right - left)
@@ -204,15 +207,15 @@ const Viewport = ({
         }
 
         // trigger context change with new object
-        const viewportdataobject = Object.assign({},viewportDataRef.current, localViewportData) 
+        const viewportdataobject = Object.assign({},viewportPropertiesRef.current, localViewportData) 
 
         return  viewportdataobject
 
-    },[orientation, isResizingRef.current, viewportstate])
+    },[orientation, isResizingRef.current, viewportState])
 
     // --------------------[ state processing ]---------------------------
     useLayoutEffect(()=>{
-        switch (viewportstate) {
+        switch (viewportState) {
 
             case 'resized':
             case 'setup': {
@@ -221,18 +224,18 @@ const Viewport = ({
             }
 
         }
-    },[viewportstate])
+    },[viewportState])
 
     // ----------------------[ render ]--------------------------------
 
-    return <ViewportContext.Provider value = { viewportDataRef.current }>
+    return <ViewportContext.Provider value = { viewportPropertiesRef.current }>
         <div 
             data-type = 'viewport'
             data-scrollerid = {scrollerID}
             style = {divlinerstyleRef.current}
             ref = {viewportdivRef}
         >
-            { (viewportstate != 'setup') && children }
+            { (viewportState != 'setup') && children }
         </div>
     </ViewportContext.Provider>
     

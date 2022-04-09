@@ -18,7 +18,7 @@
     - add grid-template-rows: max-content to parent for safari issue grid-auto-flow: column not filling column
 */
 
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useEffect, useRef} from 'react'
 
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
