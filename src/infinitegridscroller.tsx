@@ -25,9 +25,9 @@ import Scrollblock from './scrollblock'
 import Cradle from './cradle'
 
 let globalScrollerID = 0
-const getNextScrollerSessionID = () => {
+const setNextScrollerSessionID = () => {
     // console.log('getting globalScrollerID',globalScrollerID)
-    return globalScrollerID++
+    /*return */globalScrollerID++
 }
 
 // ===================================[ INITIALIZE ]===========================
@@ -51,6 +51,7 @@ const getNextScrollerSessionID = () => {
     components of the mechanism
 */
 const InfiniteGridScroller = (props) => {
+    // empty parameters use defaults
     let { 
         orientation, // vertical or horizontal
         gap, // space between grid cells, not including the leading and trailing edges
@@ -77,16 +78,12 @@ const InfiniteGridScroller = (props) => {
     } = props
 
     // for mount
-    const scrollerSessionIDRef = useRef(null)
+    const scrollerSessionIDRef = useRef(globalScrollerID)
 
-    const [scrollerstate,setScollerState] = useState('setup')
-
+    // increment scrollerSessionID
     useEffect(()=>{
 
-        const sessionID = getNextScrollerSessionID()
-        scrollerSessionIDRef.current = sessionID
-
-        setScollerState('render')
+        setNextScrollerSessionID()
 
     },[]);
 
@@ -108,8 +105,7 @@ const InfiniteGridScroller = (props) => {
         orientation = 'vertical'
     }
 
-    return ((scrollerstate == 'render') && 
-        <Viewport
+    return <Viewport
 
             orientation = { orientation } 
             cellWidth = { cellWidth }
@@ -154,7 +150,6 @@ const InfiniteGridScroller = (props) => {
                 />
             </Scrollblock>
         </Viewport>
-    )
 }
 
 export default InfiniteGridScroller
