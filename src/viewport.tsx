@@ -10,11 +10,11 @@ import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallbac
 
 export const ViewportContext = React.createContext(null) // for children
 
-import { ResizeObserver } from '@juggle/resize-observer'
+import { ResizeObserver as ResizeObserverPollyfill } from '@juggle/resize-observer'
 
 import { CradleContext as ParentCradleContext } from './cradle'
 
-const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
+const ResizeObserver = window['ResizeObserver'] || ResizeObserverPollyfill
 
 // control constant
 const RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = 250
@@ -89,7 +89,7 @@ const Viewport = ({
     useEffect(()=>{
 
         // initialize
-        resizeObserverRef.current = new ResizeObserverClass(resizeCallback)
+        resizeObserverRef.current = new ResizeObserver(resizeCallback)
         resizeObserverRef.current.observe(viewportdivRef.current)
 
         // unmount
