@@ -196,7 +196,8 @@ const Viewport = ({
 
     },[orientation, cellWidth, cellHeight, gap, padding])
 
-    // complete context data for children
+    // measure viewport dimensions for children
+    // TODO: should dimensions be updated during resize or only after resize?
     viewportPropertiesRef.current = useMemo(() => {
 
         if (viewportState == 'setup') return viewportPropertiesRef.current
@@ -205,6 +206,7 @@ const Viewport = ({
         const width = (right - left)
         const height = (bottom - top)
 
+        // TODO this is a duplicate setting procedure with interruptmanager.tsx cradleIntersectionObserverCallback
         const localViewportData = {
             viewportDimensions:{top,right, bottom, left, width, height},
             elementref:viewportdivRef,

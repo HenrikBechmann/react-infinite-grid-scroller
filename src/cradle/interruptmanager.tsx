@@ -81,6 +81,7 @@ export default class InterruptManager {
                         this.commonProps.cradlePropsRef.current.scrollerID,viewportData)
                     return
                 }
+                // TODO this is a duplicate setting procedure with viewport.tsx
                 const rect = element.getBoundingClientRect()
                 const {top, right, bottom, left} = rect
                 const width = right - left, height = bottom - top

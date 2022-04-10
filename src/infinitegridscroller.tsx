@@ -26,6 +26,10 @@ import Cradle from './cradle'
 
 let globalScrollerID = 0
 
+const getSessionID = () => {
+    return globalScrollerID++
+}
+
 // ===================================[ INITIALIZE ]===========================
 
 /*
@@ -74,14 +78,11 @@ const InfiniteGridScroller = (props) => {
     } = props
 
     // for mount
-    const scrollerSessionIDRef = useRef(globalScrollerID)
+    const scrollerSessionIDRef = useRef(null);
 
-    // increment scrollerSessionID
-    useEffect(()=>{
-
-        globalScrollerID++
-
-    },[]);
+    if (scrollerSessionIDRef.current === null) {
+        scrollerSessionIDRef.current = getSessionID()
+    }
 
     // set defaults
     functions ?? (functions = {})
@@ -113,6 +114,7 @@ const InfiniteGridScroller = (props) => {
             <Scrollblock
 
                 listsize = { listSize }
+                
                 cellWidth = { cellWidth }
                 cellHeight = { cellHeight }
                 gap = { gap}
@@ -126,6 +128,7 @@ const InfiniteGridScroller = (props) => {
                 <Cradle 
 
                     listsize = { listSize }
+
                     cellWidth = { cellWidth }
                     cellHeight = { cellHeight }
                     gap = { gap }
