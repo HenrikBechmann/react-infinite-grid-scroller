@@ -100,11 +100,11 @@ const InfiniteGridScroller = (props) => {
 
     return <Viewport
 
-            orientation = { orientation } 
             cellWidth = { cellWidth }
             cellHeight = { cellHeight }
             gap = { gap }
             padding = { padding }
+            orientation = { orientation } 
             functions = { functions }
             styles = { styles }
             scrollerID = { scrollerSessionIDRef.current }
@@ -125,20 +125,21 @@ const InfiniteGridScroller = (props) => {
             >
                 <Cradle 
 
-                    gap = { gap }
-                    padding = { padding }
+                    listsize = { listSize }
                     cellWidth = { cellWidth }
                     cellHeight = { cellHeight }
-                    listsize = { listSize }
-                    defaultVisibleIndex = { defaultVisibleIndex }
+                    gap = { gap }
+                    padding = { padding }
                     orientation = { orientation }
-                    getItem = { getItem }
                     functions = { functions }
-                    placeholder = { placeholder }
                     styles = { styles }
-                    runwaycount = { runwaySize }
-                    scrollerName = { scrollerName }
                     scrollerID = { scrollerSessionIDRef.current }
+
+                    scrollerName = { scrollerName }
+                    defaultVisibleIndex = { defaultVisibleIndex }
+                    getItem = { getItem }
+                    placeholder = { placeholder }
+                    runwaycount = { runwaySize }
 
                 />
             </Scrollblock>

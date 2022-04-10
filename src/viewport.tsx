@@ -21,11 +21,11 @@ const RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = 250
 
 const Viewport = ({
     children, 
-    orientation, 
     cellWidth, 
     cellHeight, 
     gap, 
     padding, 
+    orientation, 
     functions, 
     styles,
     scrollerID,
@@ -40,7 +40,7 @@ const Viewport = ({
     // only available if viewport is a child of an infiniteScroller
     const parentCradlePropertiesRef = useContext(ParentCradleContext);
 
-    // if this is a child, get the parent portal manager
+    // if this is a scroller child, get the parent portal manager
     const parentPortalManagerRef = useRef(parentCradlePropertiesRef?.current.portalManager);
 
     const isMountedRef = useRef(true) // monitor for unmounted
@@ -66,7 +66,7 @@ const Viewport = ({
             left:0,
             overflow:'auto',
             backgroundColor:'red',
-         }, styles?.viewport)
+        }, styles?.viewport)
 
     },[styles?.viewport])
 
@@ -80,6 +80,8 @@ const Viewport = ({
             index:null
         }
     )
+
+    // --------------------[ resizer setup ]-----------------------
 
     const resizeTimeridRef = useRef(null)
     const isResizingRef = useRef(false)
@@ -142,7 +144,8 @@ const Viewport = ({
 
     },[])
 
-    // get portal for non-root viewports
+    // -------------------[ set portal for non-root viewports ]-------------
+
     useEffect(()=>{
 
         if (!parentPortalManagerRef.current) return // root
@@ -170,7 +173,7 @@ const Viewport = ({
 
     },[])
 
-    // ----------------------------------[ calculate ]--------------------------------
+    // ----------------------------------[ calculate config ]--------------------------------
 
     // calculated values
     divlinerstyleRef.current = useMemo(() => {
@@ -191,7 +194,7 @@ const Viewport = ({
 
     },[orientation, cellWidth, cellHeight, gap, padding])
 
-    // set context data for children
+    // complete context data for children
     viewportPropertiesRef.current = useMemo(() => {
 
         if (viewportState == 'setup') return viewportPropertiesRef.current
@@ -214,6 +217,7 @@ const Viewport = ({
     },[orientation, isResizingRef.current, viewportState])
 
     // --------------------[ state processing ]---------------------------
+    
     useLayoutEffect(()=>{
         switch (viewportState) {
 
