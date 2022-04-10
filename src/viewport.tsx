@@ -72,7 +72,7 @@ const Viewport = ({
 
     const viewportdivRef = useRef(null)
 
-    // viewportPropertiesRef is passed as context to children
+    // viewportPropertiesRef is passed as an interrupt context to children
     const viewportPropertiesRef = useRef(
         {
             portal:null, 
@@ -114,6 +114,7 @@ const Viewport = ({
 
         const target = entries[0].target
 
+        // first register shouldn't generate interrupt
         if (!target.dataset.initialized) {
 
             // console.log('initializing target', target.dataset)
@@ -123,7 +124,8 @@ const Viewport = ({
 
         }
 
-        if (!isResizingRef.current) { // generate interrupt response
+        // generate interrupt response, if initiating resize
+        if (!isResizingRef.current) {
             viewportPropertiesRef.current.isResizing = isResizingRef.current = true 
             // new object creation triggers a realtime interrupt message to cradle through context
             viewportPropertiesRef.current = Object.assign({},viewportPropertiesRef.current) 
@@ -148,7 +150,7 @@ const Viewport = ({
 
     useEffect(()=>{
 
-        if (!parentPortalManagerRef.current) return // root
+        if (!parentPortalManagerRef.current) return // root viewport has no portal
 
         const parentPortalManager = parentPortalManagerRef.current
 
