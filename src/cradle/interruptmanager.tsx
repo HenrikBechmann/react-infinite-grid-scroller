@@ -1,19 +1,19 @@
 // wingsmanager.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-import { ResizeObserver } from '@juggle/resize-observer'
+import { ResizeObserver as ResizeObserverPolyfill} from '@juggle/resize-observer'
 
-const ResizeObserverClass = window['ResizeObserver'] || ResizeObserver
+const ResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
 
 export default class InterruptManager {
 
-   constructor(commonProps) {
+   constructor(cradleBackProps) {
 
-      this.commonProps = commonProps
+      this.cradleBackProps = cradleBackProps
 
    }
 
-   private commonProps
+   private cradleBackProps
 
    private isTailCradleInView = false
    private isHeadCradleInView = false
@@ -25,11 +25,53 @@ export default class InterruptManager {
 
    }
 
+    // const viewportresizeobservercallback = (entries)=>{
+
+    //     if (viewportStateRef.current == 'setup') {
+
+    //         return
+
+    //     }
+
+    //     const target = entries[0].target
+
+    //     // first register shouldn't generate interrupt
+    //     if (!target.dataset.initialized) {
+
+    //         // console.log('initializing target', target.dataset)
+    //         target.dataset.initialized = true
+
+    //         return
+
+    //     }
+
+    //     // generate interrupt response, if initiating resize
+    //     if (!isResizingRef.current) {
+    //         viewportPropertiesRef.current.isResizing = isResizingRef.current = true 
+    //         // new object creation triggers a realtime interrupt message to cradle through context
+    //         viewportPropertiesRef.current = Object.assign({},viewportPropertiesRef.current) 
+
+    //         if (isMountedRef.current) setViewportState('resizing')
+
+    //     }
+
+    //     clearTimeout(resizeTimeridRef.current)
+    //     resizeTimeridRef.current = setTimeout(() => {
+
+    //         isResizingRef.current = false
+    //         if (isMountedRef.current) {
+    //             setViewportState('resized')
+    //         }
+
+    //     },RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE)
+
+    // }
+
     private cradleIntersectionObserverCallback = (entries) => {
 
         const signals = this.signals
-        const stateManager = this.commonProps.managersRef.current.state
-        const contentManager = this.commonProps.managersRef.current.content
+        const stateManager = this.cradleBackProps.managersRef.current.state
+        const contentManager = this.cradleBackProps.managersRef.current.content
 
         if (signals.pauseCradleIntersectionObserver) {
             // console.log('returning from intersectionobserver for PAUSE')
@@ -53,7 +95,7 @@ export default class InterruptManager {
 
         this.signals.repositioningRequired = (!this.isHeadCradleInView && !this.isTailCradleInView);
 
-        const viewportData = this.commonProps.viewportdataRef.current
+        const viewportData = this.cradleBackProps.viewportdataRef.current
 
         // if (viewportData.index == 6) {
         //     console.log('new repositioningRequired from intersection interrupt',this.signals.repositioningRequired)
@@ -78,7 +120,7 @@ export default class InterruptManager {
                 const element = viewportData.elementref.current
                 if (!element) {
                     console.log('viewport element not set in cradleIntersectionObserverCallback',
-                        this.commonProps.cradlePropsRef.current.scrollerID,viewportData)
+                        this.cradleBackProps.cradlePropsRef.current.scrollerID,viewportData)
                     return
                 }
                 // TODO this is a duplicate setting procedure with viewport.tsx
@@ -110,14 +152,14 @@ export default class InterruptManager {
 
         }
         
-        const viewportData = this.commonProps.viewportdataRef.current
+        const viewportData = this.cradleBackProps.viewportdataRef.current
         // if (viewportData.index == 6) {
         //         console.log('cell intersection entries for ', viewportData.index, entries)
         // }
 
-        const contentManager = this.commonProps.managersRef.current.content
-        const stateManager = this.commonProps.managersRef.current.state
-        const scrollManager = this.commonProps.managersRef.current.scroll
+        const contentManager = this.cradleBackProps.managersRef.current.content
+        const stateManager = this.cradleBackProps.managersRef.current.state
+        const scrollManager = this.cradleBackProps.managersRef.current.scroll
 
 
         let movedentries = []
@@ -166,12 +208,23 @@ export default class InterruptManager {
 
     }
 
+   viewportResize = {
+      observer:null,
+      callback:null,
+      createObserver:() => {
+
+        this.viewportResize.observer = new ResizeObserver(this.viewportResize.callback)
+        return this.viewportResize.observer
+
+      }
+   }
+
    cradleResize = {
       observer:null,
       callback:this.cradleresizeobservercallback,
-      create:() => {
+      createObserver:() => {
 
-        this.cradleResize.observer = new ResizeObserverClass(this.cradleResize.callback)
+        this.cradleResize.observer = new ResizeObserver(this.cradleResize.callback)
         return this.cradleResize.observer
 
       }
@@ -179,8 +232,8 @@ export default class InterruptManager {
    cradleIntersect = {
         observer:null,
         callback:this.cradleIntersectionObserverCallback,
-        create:() => {
-            let viewportData = this.commonProps.viewportdataRef.current
+        createObserver:() => {
+            let viewportData = this.cradleBackProps.viewportdataRef.current
             this.cradleIntersect.observer = new IntersectionObserver(
                 this.cradleIntersect.callback,
                 {root:viewportData.elementref.current, threshold:0}
@@ -191,27 +244,20 @@ export default class InterruptManager {
     cellIntersect = {
         observer:null,
         callback:null,
-        create:() => {
-            let viewportData = this.commonProps.viewportdataRef.current
+        createObserver:() => {
+            let viewportData = this.cradleBackProps.viewportdataRef.current
             this.cellIntersect.observer = new IntersectionObserver(
 
                 this.cellintersectionobservercallback,
                 {
                     root:viewportData.elementref.current, 
-                    threshold:this.commonProps.cradleConfigRef.current.cellObserverThreshold,
+                    threshold:this.cradleBackProps.cradleConfigRef.current.cellObserverThreshold,
                 } 
             )
             return this.cellIntersect.observer
         }
 
     }
-
-    // states = {
-        // isRepositioning:false, // right now for debug only
-        // isResizing:false, // right now for debug only
-        // isReparenting:false, // right now not used
-        // repositioningRequired: false,
-    // }
 
     signals = {
         repositioningRequired: false,

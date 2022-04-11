@@ -3,13 +3,13 @@
 
 export default class StylesManager { 
 
-   constructor(commonProps) {
+   constructor(cradleBackProps) {
 
-      this.commonProps = commonProps
+      this.cradleBackProps = cradleBackProps
 
     }
 
-    commonProps
+    cradleBackProps
 
     setCradleStyles = ({
 

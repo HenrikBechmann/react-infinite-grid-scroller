@@ -14,9 +14,9 @@ import {
 
 export default class ContentManager {
 
-   constructor(commonProps, contentCallbacksRef) {
+   constructor(cradleBackProps, contentCallbacksRef) {
 
-      this.commonProps = commonProps
+      this.cradleBackProps = cradleBackProps
 
       this.contentCallbacksRef = contentCallbacksRef
 
@@ -34,7 +34,7 @@ export default class ContentManager {
 
     public itemElements = new Map()
 
-    private commonProps
+    private cradleBackProps
 
     private instanceIdCounterRef = {
        current:0
@@ -54,15 +54,15 @@ export default class ContentManager {
     // TODO: last row is sometimes left off with reposition
     public setCradleContent = (cradleState) => { 
 
-        const viewportData = this.commonProps.viewportdataRef.current
-        const cradleProps = this.commonProps.cradlePropsRef.current
-        const cradleConfig = this.commonProps.cradleConfigRef.current
-        const scrollManager = this.commonProps.managersRef.current.scroll
-        const cradleManager = this.commonProps.managersRef.current.cradle
-        const stateManager = this.commonProps.managersRef.current.state
-        const serviceManager = this.commonProps.managersRef.current.service
-        const interruptManager = this.commonProps.managersRef.current.interrupts
-        const cradleData = this.commonProps.cradleDataRef.current
+        const viewportData = this.cradleBackProps.viewportdataRef.current
+        const cradleProps = this.cradleBackProps.cradlePropsRef.current
+        const cradleConfig = this.cradleBackProps.cradleConfigRef.current
+        const scrollManager = this.cradleBackProps.managersRef.current.scroll
+        const cradleManager = this.cradleBackProps.managersRef.current.cradle
+        const stateManager = this.cradleBackProps.managersRef.current.state
+        const serviceManager = this.cradleBackProps.managersRef.current.service
+        const interruptManager = this.cradleBackProps.managersRef.current.interrupts
+        const cradleData = this.cradleBackProps.cradleDataRef.current
 
         // if (viewportData.index == 6) {
         //     console.log('SETTING content - cradleState, cradleData in setCradleContent',
@@ -189,14 +189,14 @@ export default class ContentManager {
 
     public updateCradleContent = (entries, source = 'notifications') => {
 
-        const viewportData = this.commonProps.viewportdataRef.current
-        const cradleProps = this.commonProps.cradlePropsRef.current
-        const scrollManager = this.commonProps.managersRef.current.scroll
-        const cradleManager = this.commonProps.managersRef.current.cradle
-        const stateManager = this.commonProps.managersRef.current.state
-        const interruptManager = this.commonProps.managersRef.current.interrupts
+        const viewportData = this.cradleBackProps.viewportdataRef.current
+        const cradleProps = this.cradleBackProps.cradlePropsRef.current
+        const scrollManager = this.cradleBackProps.managersRef.current.scroll
+        const cradleManager = this.cradleBackProps.managersRef.current.cradle
+        const stateManager = this.cradleBackProps.managersRef.current.state
+        const interruptManager = this.cradleBackProps.managersRef.current.interrupts
 
-        const cradleData = this.commonProps.cradleDataRef.current
+        const cradleData = this.cradleBackProps.cradleDataRef.current
 
         // if (viewportData.index == 6) {
             // console.log('UPDATING content - source; in updateCradleContent',source)
@@ -243,7 +243,7 @@ export default class ContentManager {
 
         const cradleElements = cradleManager.elements
         const cradleContent = this.content
-        const cradleConfig = this.commonProps.cradleConfigRef.current
+        const cradleConfig = this.cradleBackProps.cradleConfigRef.current
 
         const itemElements = this.itemElements
 

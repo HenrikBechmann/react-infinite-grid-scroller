@@ -11,6 +11,7 @@ import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallbac
 export const ViewportInterrupt = React.createContext(null) // for children
 
 import { ResizeObserver as ResizeObserverPollyfill } from '@juggle/resize-observer'
+// import InterruptManager from './cradle/interruptmanager'
 
 import { CradleContext as ParentCradleContext } from './cradle'
 
@@ -82,6 +83,22 @@ const Viewport = ({
     )
 
     // --------------------[ resizer setup ]-----------------------
+
+    // useEffect(() => {
+
+    //     let observer = interruptManager.cradleResize.createObserver()
+    //     let cradleElements = cradleManager.elements
+    //     observer.observe(cradleElements.headRef.current)
+    //     observer.observe(cradleElements.tailRef.current)
+
+    //     return () => {
+
+    //         observer.disconnect()
+
+    //     }
+
+    // },[])
+
 
     const resizeTimeridRef = useRef(null)
     const isResizingRef = useRef(false)

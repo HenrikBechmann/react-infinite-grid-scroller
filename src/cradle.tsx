@@ -281,7 +281,13 @@ const Cradle = ({
     // -------------------[ support services ]------------------
 
     const managersRef = useRef(null) // make available to individual managers
-    const commonProps = {managersRef,viewportdataRef:viewportDataRef,cradlePropsRef, cradleConfigRef, cradleDataRef}
+    const cradleBackProps = {
+        managersRef,
+        viewportdataRef:viewportDataRef,
+        cradlePropsRef, 
+        cradleConfigRef, 
+        cradleDataRef
+    }
 
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
     const serviceCallsRef = useRef({referenceIndexCallbackRef})
@@ -321,6 +327,7 @@ const Cradle = ({
 
     },[])
 
+    // replace use of useMemo to guarantee one-time-only run
     const [
         scrollManager,
         stateManager,
@@ -331,13 +338,13 @@ const Cradle = ({
         stylesManager,
     ] = useMemo(()=>{
         return [
-            new ScrollManager(commonProps),
-            new StateManager(commonProps,cradleStateRef,setCradleState,isMountedRef),
-            new ContentManager(commonProps, contentCallbacksRef),
-            new CradleManager(commonProps, cradleElementsRef.current),
-            new InterruptManager(commonProps),
-            new ServiceManager(commonProps,serviceCallsRef),
-            new StylesManager(commonProps),
+            new ScrollManager(cradleBackProps),
+            new StateManager(cradleBackProps,cradleStateRef,setCradleState,isMountedRef),
+            new ContentManager(cradleBackProps, contentCallbacksRef),
+            new CradleManager(cradleBackProps, cradleElementsRef.current),
+            new InterruptManager(cradleBackProps),
+            new ServiceManager(cradleBackProps,serviceCallsRef),
+            new StylesManager(cradleBackProps),
         ]
     },[])
 
@@ -449,8 +456,6 @@ const Cradle = ({
             signals.pauseCradleIntersectionObserver = true
             signals.pauseCradleResizeObserver = true
             signals.pauseScrollingEffects = true
-            // const states = interruptManager.states
-            // states.isResizing = true
             setCradleState('resizing')
 
         }
@@ -574,7 +579,7 @@ const Cradle = ({
     // set up cradle resizeobserver
     useEffect(() => {
 
-        let observer = interruptManager.cradleResize.create()
+        let observer = interruptManager.cradleResize.createObserver()
         let cradleElements = cradleManager.elements
         observer.observe(cradleElements.headRef.current)
         observer.observe(cradleElements.tailRef.current)
@@ -593,7 +598,7 @@ const Cradle = ({
     // cradle goes out of the observer scope, the "repositioningA" cradle state is triggerd.
     useEffect(()=>{
 
-        const observer = interruptManager.cradleIntersect.create()
+        const observer = interruptManager.cradleIntersect.createObserver()
         const cradleElements = cradleManager.elements
         observer.observe(cradleElements.headRef.current)
         observer.observe(cradleElements.tailRef.current)
@@ -650,7 +655,7 @@ const Cradle = ({
 
         let observer = interruptManager.cellIntersect.observer
         if (observer) observer.disconnect()
-        observer = interruptManager.cellIntersect.create()
+        observer = interruptManager.cellIntersect.createObserver()
 
         return () => {
 

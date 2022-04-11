@@ -3,39 +3,39 @@
 
 export default class ServiceManager {
 
-    constructor(commonProps, serviceCallsRef) {
+    constructor(cradleBackProps, serviceCallsRef) {
 
-       this.commonProps = commonProps
+       this.cradleBackProps = cradleBackProps
 
        this.serviceCalls = serviceCallsRef.current
 
     }
 
-    commonProps
+    cradleBackProps
 
     serviceCalls
 
     getVisibleList = () => {
 
-        let contentManager = this.commonProps.managersRef.current.content        
+        let contentManager = this.cradleBackProps.managersRef.current.content        
 
         let cradleContent = contentManager.content
-        let viewportData = this.commonProps.viewportdataRef.current
-        let cradleManager = this.commonProps.managersRef.current.cradle
+        let viewportData = this.cradleBackProps.viewportdataRef.current
+        let cradleManager = this.cradleBackProps.managersRef.current.cradle
         let cradleElements = cradleManager.elements
 
         return getVisibleItemsList({
             itemElementMap:contentManager.itemElements,
             viewportElement:viewportData.elementref.current,
             cradleElements, 
-            cradleProps:this.commonProps.cradlePropsRef.current,
+            cradleProps:this.cradleBackProps.cradlePropsRef.current,
             cradleContent,
         })
 
     }
 
     getContentList = () => {
-        let contentManager = this.commonProps.managersRef.current.content        
+        let contentManager = this.cradleBackProps.managersRef.current.content        
         let contentlist = Array.from(contentManager.itemElements)
 
         contentlist.sort((a,b)=>{
@@ -47,8 +47,8 @@ export default class ServiceManager {
 
     reload = () => {
 
-        const signals = this.commonProps.managersRef.current.interrupts.signals
-        const stateManager = this.commonProps.managersRef.current.state
+        const signals = this.cradleBackProps.managersRef.current.interrupts.signals
+        const stateManager = this.cradleBackProps.managersRef.current.state
 
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
@@ -59,9 +59,9 @@ export default class ServiceManager {
 
     scrollToItem = (index) => {
 
-        const signals = this.commonProps.managersRef.current.interrupts.signals
-        let cradleManager = this.commonProps.managersRef.current.cradle
-        let stateManager = this.commonProps.managersRef.current.state
+        const signals = this.cradleBackProps.managersRef.current.interrupts.signals
+        let cradleManager = this.cradleBackProps.managersRef.current.cradle
+        let stateManager = this.cradleBackProps.managersRef.current.state
 
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
