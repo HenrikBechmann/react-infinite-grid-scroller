@@ -1,7 +1,7 @@
 // servicemanager.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-export default class ServiceManager {
+export default class ServiceHandler {
 
     constructor(cradleBackProps, serviceCallsRef) {
 
@@ -17,15 +17,15 @@ export default class ServiceManager {
 
     getVisibleList = () => {
 
-        let contentManager = this.cradleBackProps.managersRef.current.content        
+        let contentHandler = this.cradleBackProps.managersRef.current.content        
 
-        let cradleContent = contentManager.content
+        let cradleContent = contentHandler.content
         let viewportData = this.cradleBackProps.viewportdataRef.current
-        let cradleManager = this.cradleBackProps.managersRef.current.cradle
-        let cradleElements = cradleManager.elements
+        let cradleHandler = this.cradleBackProps.managersRef.current.cradle
+        let cradleElements = cradleHandler.elements
 
         return getVisibleItemsList({
-            itemElementMap:contentManager.itemElements,
+            itemElementMap:contentHandler.itemElements,
             viewportElement:viewportData.elementref.current,
             cradleElements, 
             cradleProps:this.cradleBackProps.cradlePropsRef.current,
@@ -35,8 +35,8 @@ export default class ServiceManager {
     }
 
     getContentList = () => {
-        let contentManager = this.cradleBackProps.managersRef.current.content        
-        let contentlist = Array.from(contentManager.itemElements)
+        let contentHandler = this.cradleBackProps.managersRef.current.content        
+        let contentlist = Array.from(contentHandler.itemElements)
 
         contentlist.sort((a,b)=>{
             return (a[0] < b[0])?-1:1
@@ -48,27 +48,27 @@ export default class ServiceManager {
     reload = () => {
 
         const signals = this.cradleBackProps.managersRef.current.interrupts.signals
-        const stateManager = this.cradleBackProps.managersRef.current.state
+        const stateHandler = this.cradleBackProps.managersRef.current.state
 
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
 
-        stateManager.setCradleState('reload')
+        stateHandler.setCradleState('reload')
 
     }
 
     scrollToItem = (index) => {
 
         const signals = this.cradleBackProps.managersRef.current.interrupts.signals
-        let cradleManager = this.cradleBackProps.managersRef.current.cradle
-        let stateManager = this.cradleBackProps.managersRef.current.state
+        let cradleHandler = this.cradleBackProps.managersRef.current.cradle
+        let stateHandler = this.cradleBackProps.managersRef.current.state
 
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
 
-        cradleManager.cradleReferenceData.nextItemIndexReference = index
+        cradleHandler.cradleReferenceData.nextItemIndexReference = index
 
-        stateManager.setCradleState('doreposition')
+        stateHandler.setCradleState('doreposition')
 
     }
 

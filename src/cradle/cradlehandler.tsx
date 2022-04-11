@@ -1,7 +1,7 @@
 // cradlemanager.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-export default class CradleManager { 
+export default class CradleHandler { 
 
     constructor(cradleBackProps, cradleElements) {
 

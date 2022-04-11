@@ -919,12 +919,12 @@ export const allocateContentList = (
 
 }
 
-export const deleteAndRerenderPortals = (portalManager, deleteList) => {
+export const deleteAndRerenderPortals = (portalHandler, deleteList) => {
 
     for (let item of deleteList) {
-        portalManager.deletePortal(item.props.index)
+        portalHandler.deletePortal(item.props.index)
     }
-    if (deleteList.length) portalManager.renderPortalList()
+    if (deleteList.length) portalHandler.renderPortalList()
 }
 
 // =====================[ acquire item support ]======================

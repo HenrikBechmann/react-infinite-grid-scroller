@@ -5,7 +5,7 @@ import { ResizeObserver as ResizeObserverPolyfill} from '@juggle/resize-observer
 
 const ResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
 
-export default class InterruptManager {
+export default class InterruptHandler {
 
    constructor(cradleBackProps) {
 
@@ -70,8 +70,8 @@ export default class InterruptManager {
     private cradleIntersectionObserverCallback = (entries) => {
 
         const signals = this.signals
-        const stateManager = this.cradleBackProps.managersRef.current.state
-        const contentManager = this.cradleBackProps.managersRef.current.content
+        const stateHandler = this.cradleBackProps.managersRef.current.state
+        const contentHandler = this.cradleBackProps.managersRef.current.content
 
         if (signals.pauseCradleIntersectionObserver) {
             // console.log('returning from intersectionobserver for PAUSE')
@@ -103,7 +103,7 @@ export default class InterruptManager {
 
         if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway
         {
-            let cradleState = stateManager.cradleStateRef.current        
+            let cradleState = stateHandler.cradleStateRef.current        
             if (
                 !viewportData.isResizing &&
                 !viewportData.portal?.isReparenting &&
@@ -130,12 +130,12 @@ export default class InterruptManager {
                 viewportData.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
                 signals.pauseCellObserver = true
                 // pauseCradleIntersectionObserverRef.current = true
-                const cradleContent = contentManager.content
+                const cradleContent = contentHandler.content
                 cradleContent.headModel = []
                 cradleContent.tailModel = []
                 cradleContent.headView = []
                 cradleContent.tailView = []
-                stateManager.setCradleState('startreposition')
+                stateHandler.setCradleState('startreposition')
 
             }
         }
@@ -157,9 +157,9 @@ export default class InterruptManager {
         //         console.log('cell intersection entries for ', viewportData.index, entries)
         // }
 
-        const contentManager = this.cradleBackProps.managersRef.current.content
-        const stateManager = this.cradleBackProps.managersRef.current.state
-        const scrollManager = this.cradleBackProps.managersRef.current.scroll
+        const contentHandler = this.cradleBackProps.managersRef.current.content
+        const stateHandler = this.cradleBackProps.managersRef.current.state
+        const scrollHandler = this.cradleBackProps.managersRef.current.scroll
 
 
         let movedentries = []
@@ -196,13 +196,13 @@ export default class InterruptManager {
         // }
 
         // TODO: set scrollPositions.atLastUpdateCall
-        if (stateManager.isMountedRef.current) {
-            const { scrollPositions } = scrollManager
+        if (stateHandler.isMountedRef.current) {
+            const { scrollPositions } = scrollHandler
             if ((scrollPositions.start != scrollPositions.current) ||
                 (scrollPositions.current != scrollPositions.previous)) {
                 scrollPositions.previousupdate = scrollPositions.currentupdate
                 scrollPositions.currentupdate = scrollPositions.current
-                contentManager.updateCradleContent(movedentries,'cellObserver')
+                contentHandler.updateCradleContent(movedentries,'cellObserver')
             }
         }
 

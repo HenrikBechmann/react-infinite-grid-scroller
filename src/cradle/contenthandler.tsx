@@ -12,7 +12,7 @@ import {
 
 } from './contentfunctions'
 
-export default class ContentManager {
+export default class ContentHandler {
 
    constructor(cradleBackProps, contentCallbacksRef) {
 
@@ -57,11 +57,11 @@ export default class ContentManager {
         const viewportData = this.cradleBackProps.viewportdataRef.current
         const cradleProps = this.cradleBackProps.cradlePropsRef.current
         const cradleConfig = this.cradleBackProps.cradleConfigRef.current
-        const scrollManager = this.cradleBackProps.managersRef.current.scroll
-        const cradleManager = this.cradleBackProps.managersRef.current.cradle
-        const stateManager = this.cradleBackProps.managersRef.current.state
-        const serviceManager = this.cradleBackProps.managersRef.current.service
-        const interruptManager = this.cradleBackProps.managersRef.current.interrupts
+        const scrollHandler = this.cradleBackProps.managersRef.current.scroll
+        const cradleHandler = this.cradleBackProps.managersRef.current.cradle
+        const stateHandler = this.cradleBackProps.managersRef.current.state
+        const serviceHandler = this.cradleBackProps.managersRef.current.service
+        const interruptHandler = this.cradleBackProps.managersRef.current.interrupts
         const cradleData = this.cradleBackProps.cradleDataRef.current
 
         // if (viewportData.index == 6) {
@@ -71,8 +71,8 @@ export default class ContentManager {
 
         const viewportElement = viewportData.elementref.current
 
-        const visibletargetindexoffset = cradleManager.cradleReferenceData.nextItemIndexReference
-        let visibletargetscrolloffset = cradleManager.cradleReferenceData.nextCradlePosOffset
+        const visibletargetindexoffset = cradleHandler.cradleReferenceData.nextItemIndexReference
+        let visibletargetscrolloffset = cradleHandler.cradleReferenceData.nextCradlePosOffset
 
         const {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
 
@@ -122,11 +122,11 @@ export default class ContentManager {
             tailchangecount:cradleActualContentCount,
             localContentList,
             callbacks:this.contentCallbacksRef.current,
-            observer: interruptManager.cellIntersect.observer,
+            observer: interruptHandler.cellIntersect.observer,
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
-        deleteAndRerenderPortals(cradleData.portalManager, deleteditems)
+        deleteAndRerenderPortals(cradleData.portalHandler, deleteditems)
 
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
@@ -143,32 +143,32 @@ export default class ContentManager {
         cradleContent.headModel = headcontentlist
         cradleContent.tailModel = tailcontentlist
 
-        cradleManager.cradleReferenceData.scrollImpliedItemIndexReference = referenceoffset
-        cradleManager.cradleReferenceData.scrollImpliedCradlePosOffset = spinePosOffset
+        cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference = referenceoffset
+        cradleHandler.cradleReferenceData.scrollImpliedCradlePosOffset = spinePosOffset
 
-        cradleManager.cradleReferenceData.nextItemIndexReference = referenceoffset
-        cradleManager.cradleReferenceData.nextCradlePosOffset = spinePosOffset
+        cradleHandler.cradleReferenceData.nextItemIndexReference = referenceoffset
+        cradleHandler.cradleReferenceData.nextCradlePosOffset = spinePosOffset
 
-        if (serviceManager.serviceCalls.referenceIndexCallbackRef.current) {
+        if (serviceHandler.serviceCalls.referenceIndexCallbackRef.current) {
 
             let cstate = cradleState
             // if (cstate == 'setreload') cstate = 'reload'
-            serviceManager.serviceCalls.referenceIndexCallbackRef.current(
+            serviceHandler.serviceCalls.referenceIndexCallbackRef.current(
 
-                cradleManager.cradleReferenceData.nextItemIndexReference,'setCradleContent', cstate)
+                cradleHandler.cradleReferenceData.nextItemIndexReference,'setCradleContent', cstate)
         
         }
 
-        const cradleElements = cradleManager.elements //cradleElementsRef.current
+        const cradleElements = cradleHandler.elements //cradleElementsRef.current
 
-        cradleManager.cradleReferenceData.blockScrollPos = scrollblockOffset - spinePosOffset
+        cradleHandler.cradleReferenceData.blockScrollPos = scrollblockOffset - spinePosOffset
         // console.log('setting blockScrollPos in setCradleContent: blockScrollPos, scrollblockOffset, spinePosOffset',
-        //     cradleManager.cradleReferenceData.blockScrollPos, scrollblockOffset, spinePosOffset)
+        //     cradleHandler.cradleReferenceData.blockScrollPos, scrollblockOffset, spinePosOffset)
 
         if (orientation == 'vertical') {
 
-            cradleManager.cradleReferenceData.blockScrollProperty = 'scrollTop'
-            // cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
+            cradleHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
+            // cradleHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
 
             cradleElements.spineRef.current.style.top = (scrollblockOffset + spineAdjustment) + 'px'
             cradleElements.spineRef.current.style.left = 'auto'
@@ -176,8 +176,8 @@ export default class ContentManager {
 
         } else { // orientation = 'horizontal'
 
-            cradleManager.cradleReferenceData.blockScrollProperty = 'scrollLeft'
-            // cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
+            cradleHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
+            // cradleHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
 
             cradleElements.spineRef.current.style.top = 'auto'
             cradleElements.spineRef.current.style.left = (scrollblockOffset + spineAdjustment) + 'px'
@@ -191,10 +191,10 @@ export default class ContentManager {
 
         const viewportData = this.cradleBackProps.viewportdataRef.current
         const cradleProps = this.cradleBackProps.cradlePropsRef.current
-        const scrollManager = this.cradleBackProps.managersRef.current.scroll
-        const cradleManager = this.cradleBackProps.managersRef.current.cradle
-        const stateManager = this.cradleBackProps.managersRef.current.state
-        const interruptManager = this.cradleBackProps.managersRef.current.interrupts
+        const scrollHandler = this.cradleBackProps.managersRef.current.scroll
+        const cradleHandler = this.cradleBackProps.managersRef.current.cradle
+        const stateHandler = this.cradleBackProps.managersRef.current.state
+        const interruptHandler = this.cradleBackProps.managersRef.current.interrupts
 
         const cradleData = this.cradleBackProps.cradleDataRef.current
 
@@ -222,7 +222,7 @@ export default class ContentManager {
 
         // ----------------------------[ 1. initialize ]----------------------------
 
-        const scrollPositions = scrollManager.scrollPositions //scrollPositionsRef.current
+        const scrollPositions = scrollHandler.scrollPositions //scrollPositionsRef.current
 
         let scrollingviewportforward
         if (scrollPositions.current == scrollPositions.previous) { // edge case 
@@ -241,7 +241,7 @@ export default class ContentManager {
             return // init call
         }
 
-        const cradleElements = cradleManager.elements
+        const cradleElements = cradleHandler.elements
         const cradleContent = this.content
         const cradleConfig = this.cradleBackProps.cradleConfigRef.current
 
@@ -325,7 +325,7 @@ export default class ContentManager {
                 headchangecount,
                 tailchangecount,
                 cradleReferenceIndex,
-                observer: interruptManager.cellIntersect.observer,
+                observer: interruptHandler.cellIntersect.observer,
                 callbacks:this.contentCallbacksRef.current,
                 instanceIdCounterRef:this.instanceIdCounterRef,
             })
@@ -335,7 +335,7 @@ export default class ContentManager {
 
         }
 
-        deleteAndRerenderPortals(cradleData.portalManager, deletedContentItems)
+        deleteAndRerenderPortals(cradleData.portalHandler, deletedContentItems)
 
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 
@@ -352,24 +352,24 @@ export default class ContentManager {
 
         // -------------------------------[ 8. set css changes ]-------------------------
 
-        scrollManager.updateBlockScrollPos()
+        scrollHandler.updateBlockScrollPos()
 
         if (spineposoffset !== undefined) {
 
-            // scrollManager.updateBlockScrollPos()
+            // scrollHandler.updateBlockScrollPos()
             
             if (cradleProps.orientation == 'vertical') {
 
-                // cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
-                // cradleManager.cradleReferenceData.blockScrollProperty = 'scrollTop'
+                // cradleHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
+                // cradleHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
                 cradleElements.spineRef.current.style.top = viewportElement.scrollTop + spineposoffset + 'px'
                 cradleElements.spineRef.current.style.left = 'auto'
                 cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
 
             } else {
 
-                // cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
-                // cradleManager.cradleReferenceData.blockScrollProperty = 'scrollLeft'
+                // cradleHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
+                // cradleHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
                 cradleElements.spineRef.current.style.top = 'auto'
                 cradleElements.spineRef.current.style.left = viewportElement.scrollLeft + spineposoffset + 'px'
                 cradleElements.headRef.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
@@ -378,13 +378,13 @@ export default class ContentManager {
 
         }
 
-        cradleManager.cradleReferenceData.scrollImpliedItemIndexReference = spinereferenceindex
-        cradleManager.cradleReferenceData.scrollImpliedCradlePosOffset = spineposoffset
+        cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference = spinereferenceindex
+        cradleHandler.cradleReferenceData.scrollImpliedCradlePosOffset = spineposoffset
 
-        cradleManager.cradleReferenceData.nextItemIndexReference = spinereferenceindex
-        cradleManager.cradleReferenceData.nextCradlePosOffset = spineposoffset
+        cradleHandler.cradleReferenceData.nextItemIndexReference = spinereferenceindex
+        cradleHandler.cradleReferenceData.nextCradlePosOffset = spineposoffset
 
-        stateManager.setCradleState('renderupdatedcontent')
+        stateHandler.setCradleState('renderupdatedcontent')
 
     }
 

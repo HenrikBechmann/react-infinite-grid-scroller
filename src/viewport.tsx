@@ -11,7 +11,7 @@ import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallbac
 export const ViewportInterrupt = React.createContext(null) // for children
 
 import { ResizeObserver as ResizeObserverPollyfill } from '@juggle/resize-observer'
-// import InterruptManager from './cradle/interruptmanager'
+// import InterruptHandler from './cradle/interruptmanager'
 
 import { CradleContext as ParentCradleContext } from './cradle'
 
@@ -42,7 +42,7 @@ const Viewport = ({
     const parentCradlePropertiesRef = useContext(ParentCradleContext);
 
     // if this is a scroller child, get the parent portal manager
-    const parentPortalManagerRef = useRef(parentCradlePropertiesRef?.current.portalManager);
+    const parentPortalHandlerRef = useRef(parentCradlePropertiesRef?.current.portalHandler);
 
     const isMountedRef = useRef(true) // monitor for unmounted
 
@@ -86,8 +86,8 @@ const Viewport = ({
 
     // useEffect(() => {
 
-    //     let observer = interruptManager.cradleResize.createObserver()
-    //     let cradleElements = cradleManager.elements
+    //     let observer = interruptHandler.cradleResize.createObserver()
+    //     let cradleElements = cradleHandler.elements
     //     observer.observe(cradleElements.headRef.current)
     //     observer.observe(cradleElements.tailRef.current)
 
@@ -167,9 +167,9 @@ const Viewport = ({
 
     useEffect(()=>{
 
-        if (!parentPortalManagerRef.current) return // root viewport has no portal
+        if (!parentPortalHandlerRef.current) return // root viewport has no portal
 
-        const parentPortalManager = parentPortalManagerRef.current
+        const parentPortalHandler = parentPortalHandlerRef.current
 
         let portalindex
         let element = viewportdivRef.current
@@ -177,7 +177,7 @@ const Viewport = ({
         while (element) {
             if (element.dataset && (element.dataset.type == 'portalcontainer')) {
                 portalindex = parseInt(element.dataset.index)
-                viewportPropertiesRef.current.portal = parentPortalManager.getPortal(portalindex)
+                viewportPropertiesRef.current.portal = parentPortalHandler.getPortal(portalindex)
                 viewportPropertiesRef.current.index = portalindex
                 break
             } else {

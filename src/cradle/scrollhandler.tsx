@@ -3,7 +3,7 @@
 
 const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 500
 
-export default class ScrollManager {
+export default class ScrollHandler {
 
     constructor(cradleBackProps) {
 
@@ -32,7 +32,7 @@ export default class ScrollManager {
         const viewportData = this.cradleBackProps.viewportdataRef.current
         const viewportElement = viewportData.elementref.current
 
-        const cradleManager = this.cradleBackProps.managersRef.current.cradle
+        const cradleHandler = this.cradleBackProps.managersRef.current.cradle
 
         const scrollPositionCurrent = 
             (this.cradleBackProps.cradlePropsRef.current.orientation == 'vertical')
@@ -51,7 +51,7 @@ export default class ScrollManager {
 
         }
 
-        // cradleManager.cradleReferenceData.blockScrollPos = scrollPositionCurrent // TODO: redundant?
+        // cradleHandler.cradleReferenceData.blockScrollPos = scrollPositionCurrent // TODO: redundant?
 
         this.scrollPositions.previous = this.scrollPositions.current
         this.scrollPositions.current = scrollPositionCurrent
@@ -69,11 +69,11 @@ export default class ScrollManager {
 
         }
 
-        const stateManager = this.cradleBackProps.managersRef.current.state
-        const cradleState = stateManager.cradleStateRef.current
+        const stateHandler = this.cradleBackProps.managersRef.current.state
+        const cradleState = stateHandler.cradleStateRef.current
 
-        const contentManager = this.cradleBackProps.managersRef.current.content
-        const serviceManager = this.cradleBackProps.managersRef.current.service
+        const contentHandler = this.cradleBackProps.managersRef.current.content
+        const serviceHandler = this.cradleBackProps.managersRef.current.service
 
         if (!viewportData.isResizing) {
 
@@ -81,9 +81,9 @@ export default class ScrollManager {
 
                 if (cradleState == 'ready') {
 
-                    const itemindex = cradleManager.cradleReferenceData.nextItemIndexReference
+                    const itemindex = cradleHandler.cradleReferenceData.nextItemIndexReference
                     let spineVisiblePosOffset
-                    const cradleElements = cradleManager.elements
+                    const cradleElements = cradleHandler.elements
 
                     if (this.cradleBackProps.cradlePropsRef.current.orientation == 'vertical') {
 
@@ -96,21 +96,21 @@ export default class ScrollManager {
                             this.cradleBackProps.viewportdataRef.current.elementref.current.scrollLeft
 
                     }
-                    cradleManager.cradleReferenceData.scrollImpliedItemIndexReference = itemindex
-                    cradleManager.cradleReferenceData.scrollImpliedCradlePosOffset = spineVisiblePosOffset
+                    cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference = itemindex
+                    cradleHandler.cradleReferenceData.scrollImpliedCradlePosOffset = spineVisiblePosOffset
 
                 }
 
                 if ((cradleState == 'repositioningA') || (cradleState == 'repositioningB')) {
 
                     this._setScrollReferenceIndexData()
-                    if (cradleState == 'repositioningA') stateManager.setCradleState('repositioningB')
+                    if (cradleState == 'repositioningA') stateHandler.setCradleState('repositioningB')
 
                 }
 
                 // TODO: re-instate the following
-                serviceManager.serviceCalls.referenceIndexCallbackRef.current && 
-                    serviceManager.serviceCalls.referenceIndexCallbackRef.current(cradleManager.cradleReferenceData.scrollImpliedItemIndexReference,'scrolling', cradleState)
+                serviceHandler.serviceCalls.referenceIndexCallbackRef.current && 
+                    serviceHandler.serviceCalls.referenceIndexCallbackRef.current(cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference,'scrolling', cradleState)
 
             }
 
@@ -131,11 +131,11 @@ export default class ScrollManager {
 
         this.isScrolling = false
 
-        const stateManager = this.cradleBackProps.managersRef.current.state
-        const contentManager = this.cradleBackProps.managersRef.current.content
+        const stateHandler = this.cradleBackProps.managersRef.current.state
+        const contentHandler = this.cradleBackProps.managersRef.current.content
         const viewportData = this.cradleBackProps.viewportdataRef.current
 
-        const cradleState = stateManager.cradleStateRef.current
+        const cradleState = stateHandler.cradleStateRef.current
 
         // if (viewportData.index == 6) {
         //     console.log('running onAfterScroll for index, cradleState',
@@ -148,7 +148,7 @@ export default class ScrollManager {
             case 'repositioningB':
             {
 
-                stateManager.setCradleState('finishreposition')
+                stateHandler.setCradleState('finishreposition')
 
                 break
             }
@@ -158,11 +158,11 @@ export default class ScrollManager {
                 if ((this.scrollPositions.start != this.scrollPositions.current) || 
                     (this.scrollPositions.current != this.scrollPositions.previous)) {
 
-                    if (stateManager.isMountedRef.current) {
+                    if (stateHandler.isMountedRef.current) {
 
                         this.updateReferenceData()
                         
-                        // contentManager.updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
+                        // contentHandler.updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
 
                     }
 
@@ -175,16 +175,16 @@ export default class ScrollManager {
 
     updateReferenceData = () => {
 
-        const stateManager = this.cradleBackProps.managersRef.current.state
-        const cradleManager = this.cradleBackProps.managersRef.current.cradle
+        const stateHandler = this.cradleBackProps.managersRef.current.state
+        const cradleHandler = this.cradleBackProps.managersRef.current.cradle
         const cradleProps = this.cradleBackProps.cradlePropsRef.current
         const viewportData = this.cradleBackProps.viewportdataRef.current
-        // const contentManager = this.cradleBackProps.managersRef.current.content
+        // const contentHandler = this.cradleBackProps.managersRef.current.content
 
-        if (!stateManager.isMountedRef.current) return
+        if (!stateHandler.isMountedRef.current) return
 
         let spineVisiblePosOffset
-        const cradleElements = cradleManager.elements
+        const cradleElements = cradleHandler.elements
 
         const viewportElement = viewportData.elementref.current
         if (cradleProps.orientation == 'vertical') {
@@ -199,14 +199,14 @@ export default class ScrollManager {
 
         }
 
-        cradleManager.cradleReferenceData.scrollImpliedCradlePosOffset = spineVisiblePosOffset
+        cradleHandler.cradleReferenceData.scrollImpliedCradlePosOffset = spineVisiblePosOffset
 
         if (!viewportData.isResizing) {
 
-            cradleManager.cradleReferenceData.nextItemIndexReference = 
-                cradleManager.cradleReferenceData.scrollImpliedItemIndexReference
-            cradleManager.cradleReferenceData.nextCradlePosOffset = 
-                cradleManager.cradleReferenceData.scrollImpliedCradlePosOffset
+            cradleHandler.cradleReferenceData.nextItemIndexReference = 
+                cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference
+            cradleHandler.cradleReferenceData.nextCradlePosOffset = 
+                cradleHandler.cradleReferenceData.scrollImpliedCradlePosOffset
 
             this.updateBlockScrollPos()
 
@@ -216,19 +216,19 @@ export default class ScrollManager {
 
     updateBlockScrollPos = () => {
 
-        const cradleManager = this.cradleBackProps.managersRef.current.cradle
+        const cradleHandler = this.cradleBackProps.managersRef.current.cradle
         const cradleProps = this.cradleBackProps.cradlePropsRef.current
         const viewportData = this.cradleBackProps.viewportdataRef.current
         const viewportElement = viewportData.elementref.current
 
         if (cradleProps.orientation == 'vertical') {
 
-            cradleManager.cradleReferenceData.blockScrollProperty = 'scrollTop'
-            cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
+            cradleHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
+            cradleHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
 
         } else {
-            cradleManager.cradleReferenceData.blockScrollProperty = 'scrollLeft'
-            cradleManager.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
+            cradleHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
+            cradleHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
         }
 
     }
@@ -273,9 +273,9 @@ export default class ScrollManager {
 
         if (spineReferenceIndex == 0) referencescrolloffset = 0 // defensive
 
-        let cradleManager = this.cradleBackProps.managersRef.current.cradle
-        cradleManager.cradleReferenceData.scrollImpliedItemIndexReference = spineReferenceIndex
-        cradleManager.cradleReferenceData.scrollImpliedCradlePosOffset = referencescrolloffset
+        let cradleHandler = this.cradleBackProps.managersRef.current.cradle
+        cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference = spineReferenceIndex
+        cradleHandler.cradleReferenceData.scrollImpliedCradlePosOffset = referencescrolloffset
 
     }
 

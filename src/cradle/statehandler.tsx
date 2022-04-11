@@ -1,7 +1,7 @@
 // statemanager.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-export default class StateManager {
+export default class StateHandler {
 
     constructor(cradleBackProps,cradleStateRef,setCradleState,isMountedRef) {
 

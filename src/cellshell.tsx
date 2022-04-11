@@ -29,7 +29,7 @@ const CellShell = ({
 }) => {
 
     const cradleDataRef = useContext(CradleContext)
-    const { portalManager } = cradleDataRef.current
+    const { portalHandler } = cradleDataRef.current
     
     const [styles,saveStyles] = useState({
         overflow:'hidden',
@@ -86,7 +86,7 @@ const CellShell = ({
 
         // console.log('CELLSHELL mounting index',index)
 
-        portaldataRef.current = portalManager.fetchOrCreatePortal(index, placeholderRef.current)
+        portaldataRef.current = portalHandler.fetchOrCreatePortal(index, placeholderRef.current)
 
         const hasUserContent = !!portaldataRef.current.hasusercontent // previous InPortal creation for index
 
@@ -189,7 +189,7 @@ const CellShell = ({
                         if (usercontent) {
 
                             portaldataRef.current.hasusercontent = true
-                            portaldataRef.current = portalManager.updatePortal(index,usercontent)
+                            portaldataRef.current = portalHandler.updatePortal(index,usercontent)
                             const reverseportal = portaldataRef.current.reverseportal
                             portaldataRef.current.isReparenting = true
                             contentcomponentRef.current = <OutPortal node = {reverseportal}/>

@@ -19,17 +19,17 @@
     - BUG: in FF nested scroller switch from placeholder to content resets scroll position
     - unmounted warning to do with InPortal
 
-    ObserversManager
+    ObserversHandler
     WingsAgent
     MessageAgent ? // message with host environment, such as referenceIndexCallback
 
-    ScrollManager
-    SignalsManager
-    StateManager
-    ContentManager
-    CradleManager
-    ServiceManager // user services
-    StylesManager
+    ScrollHandler
+    SignalsHandler
+    StateHandler
+    ContentHandler
+    CradleHandler
+    ServiceHandler // user services
+    StylesHandler
 
     BUGS:
     - check styles in scrollTracker args
@@ -106,18 +106,18 @@ import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, u
 
 import { ViewportInterrupt } from './viewport'
 
-import { PortalManager, PortalList } from './portalmanager'
+import { PortalHandler, PortalList } from './portalmanager'
 
 const ITEM_OBSERVER_THRESHOLD = [0,1]
 
 // import agency classes - loci of data and related methods
-import ScrollManager from './cradle/scrollhandler'
-import StateManager from './cradle/statehandler'
-import ContentManager from './cradle/contenthandler'
-import CradleManager from './cradle/cradlehandler'
-import InterruptManager from './cradle/interrupthandler'
-import ServiceManager from './cradle/servicehandler'
-import StylesManager from './cradle/styleshandler'
+import ScrollHandler from './cradle/scrollhandler'
+import StateHandler from './cradle/statehandler'
+import ContentHandler from './cradle/contenthandler'
+import CradleHandler from './cradle/cradlehandler'
+import InterruptHandler from './cradle/interrupthandler'
+import ServiceHandler from './cradle/servicehandler'
+import StylesHandler from './cradle/styleshandler'
 
 // popup position trackeer
 import ScrollTracker from './scrolltracker'
@@ -273,7 +273,7 @@ const Cradle = ({
     }
 
     const cradleDataRef = useRef({
-        portalManager:null,
+        portalHandler:null,
         scrollerID,
         viewportDataRef,
     })
@@ -298,11 +298,11 @@ const Cradle = ({
 
         if (reportType == 'register') {
 
-            contentManager.itemElements.set(index,shellref)
+            contentHandler.itemElements.set(index,shellref)
 
         } else if (reportType == 'unregister') {
 
-            contentManager.itemElements.delete(index)
+            contentHandler.itemElements.delete(index)
 
         }
 
@@ -318,7 +318,7 @@ const Cradle = ({
 
     useLayoutEffect(()=>{
 
-        cradleDataRef.current.portalManager = new PortalManager()
+        cradleDataRef.current.portalHandler = new PortalHandler()
 
         // cleanup portal repository; clear isMountedRef
         return () => {
@@ -329,22 +329,22 @@ const Cradle = ({
 
     // replace use of useMemo to guarantee one-time-only run
     const [
-        scrollManager,
-        stateManager,
-        contentManager,
-        cradleManager,
-        interruptManager,
-        serviceManager,
-        stylesManager,
+        scrollHandler,
+        stateHandler,
+        contentHandler,
+        cradleHandler,
+        interruptHandler,
+        serviceHandler,
+        stylesHandler,
     ] = useMemo(()=>{
         return [
-            new ScrollManager(cradleBackProps),
-            new StateManager(cradleBackProps,cradleStateRef,setCradleState,isMountedRef),
-            new ContentManager(cradleBackProps, contentCallbacksRef),
-            new CradleManager(cradleBackProps, cradleElementsRef.current),
-            new InterruptManager(cradleBackProps),
-            new ServiceManager(cradleBackProps,serviceCallsRef),
-            new StylesManager(cradleBackProps),
+            new ScrollHandler(cradleBackProps),
+            new StateHandler(cradleBackProps,cradleStateRef,setCradleState,isMountedRef),
+            new ContentHandler(cradleBackProps, contentCallbacksRef),
+            new CradleHandler(cradleBackProps, cradleElementsRef.current),
+            new InterruptHandler(cradleBackProps),
+            new ServiceHandler(cradleBackProps,serviceCallsRef),
+            new StylesHandler(cradleBackProps),
         ]
     },[])
 
@@ -354,12 +354,12 @@ const Cradle = ({
         // if (viewportData.index == 6) {
         //         console.log('restoring scrollpos from, to', 
         //             viewportData.index,
-        //             viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty],
-        //             Math.max(0,cradleManager.cradleReferenceData.blockScrollPos))
+        //             viewportData.elementref.current[cradleHandler.cradleReferenceData.blockScrollProperty],
+        //             Math.max(0,cradleHandler.cradleReferenceData.blockScrollPos))
         // }
         viewportProperties.portal.isReparenting = false
-        viewportProperties.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
-            Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
+        viewportProperties.elementref.current[cradleHandler.cradleReferenceData.blockScrollProperty] =
+            Math.max(0,cradleHandler.cradleReferenceData.blockScrollPos)
     }
 
     // if (viewportDataRef.current.index == 6) {
@@ -379,14 +379,14 @@ const Cradle = ({
 
     // to instantiate managersRef
     const managementsetRef = useRef({
-        scroll:scrollManager,
-        // signals:signalsManager, 
-        state:stateManager,
-        content:contentManager, 
-        cradle:cradleManager, 
-        service:serviceManager,
-        interrupts:interruptManager,
-        styles:stylesManager,
+        scroll:scrollHandler,
+        // signals:signalsHandler, 
+        state:stateHandler,
+        content:contentHandler, 
+        cradle:cradleHandler, 
+        service:serviceHandler,
+        interrupts:interruptHandler,
+        styles:stylesHandler,
     });
 
     managersRef.current = managementsetRef.current
@@ -395,11 +395,11 @@ const Cradle = ({
     //     console.log('RUNNING CRADLE index',
     //         viewportDataRef.current.index, '\n',
     //         '==>','cradleState:',cradleState,'\n',
-    //         'isRepositioning signal:',interruptManager.states.isRepositioning,'\n',
+    //         'isRepositioning signal:',interruptHandler.states.isRepositioning,'\n',
     //         // 'isReparenting signal, state:',viewportDataRef.current.portal?.isReparenting,
     //         // isReparentingRef.current,'\n',
     //         'isResizing signal:',viewportData.isResizing,'\n',
-    //         'repositioningRequired:',interruptManager.signals.repositioningRequired)
+    //         'repositioningRequired:',interruptHandler.signals.repositioningRequired)
     // }
 
     // ------------------------------------------------------------------------
@@ -409,19 +409,19 @@ const Cradle = ({
     useEffect(()=>{
 
         if (functions?.hasOwnProperty('scrollToItem')) {
-            functions.scrollToItem = serviceManager.scrollToItem
+            functions.scrollToItem = serviceHandler.scrollToItem
         } 
 
         if (functions?.hasOwnProperty('getVisibleList')) {
-            functions.getVisibleList = serviceManager.getVisibleList
+            functions.getVisibleList = serviceHandler.getVisibleList
         } 
 
         if (functions?.hasOwnProperty('getContentList')) {
-            functions.getContentList = serviceManager.getContentList
+            functions.getContentList = serviceHandler.getContentList
         } 
 
         if (functions?.hasOwnProperty('reload')) {
-            functions.reload = serviceManager.reload
+            functions.reload = serviceHandler.reload
         }
 
         referenceIndexCallbackRef.current = functions?.referenceIndexCallback
@@ -431,11 +431,11 @@ const Cradle = ({
     // initialize window scroll listener
     useEffect(() => {
         let viewportdata = viewportDataRef.current
-        viewportdata.elementref.current.addEventListener('scroll',scrollManager.onScroll)
+        viewportdata.elementref.current.addEventListener('scroll',scrollHandler.onScroll)
 
         return () => {
 
-            viewportdata.elementref.current && viewportdata.elementref.current.removeEventListener('scroll',scrollManager.onScroll)
+            viewportdata.elementref.current && viewportdata.elementref.current.removeEventListener('scroll',scrollHandler.onScroll)
 
         }
 
@@ -451,7 +451,7 @@ const Cradle = ({
 
         if (viewportProperties.isResizing) {
 
-            const signals = interruptManager.signals
+            const signals = interruptHandler.signals
             signals.pauseCellObserver = true
             signals.pauseCradleIntersectionObserver = true
             signals.pauseCradleResizeObserver = true
@@ -474,7 +474,7 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        let signals = interruptManager.signals
+        let signals = interruptHandler.signals
 
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
@@ -497,8 +497,8 @@ const Cradle = ({
         // get previous ratio
         let previousCellPixelLength = (orientation == 'vertical')?
             cradlePropsRef.current.cellWidth:cradlePropsRef.current.cellHeight
-        // let previousSpineOffset = cradleManager.cradleReferenceData.theNextSpinePixelOffset
-        let previousSpineOffset = cradleManager.cradleReferenceData.nextCradlePosOffset
+        // let previousSpineOffset = cradleHandler.cradleReferenceData.theNextSpinePixelOffset
+        let previousSpineOffset = cradleHandler.cradleReferenceData.nextCradlePosOffset
 
         let previousratio = previousSpineOffset/previousCellPixelLength
 
@@ -507,9 +507,9 @@ const Cradle = ({
 
         let currentSpineOffset = previousratio * currentCellPixelLength
         
-        cradleManager.cradleReferenceData.nextCradlePosOffset = Math.round(currentSpineOffset)
+        cradleHandler.cradleReferenceData.nextCradlePosOffset = Math.round(currentSpineOffset)
 
-        let signals = interruptManager.signals
+        let signals = interruptHandler.signals
 
         signals.pauseCellObserver = true
         // pauseCradleIntersectionObserverRef.current = true
@@ -535,7 +535,7 @@ const Cradle = ({
     // styles for wings and spine
     const [cradleHeadStyle, cradleTailStyle, cradleSpineStyle] = useMemo(()=> {
 
-        return stylesManager.setCradleStyles({
+        return stylesHandler.setCradleStyles({
 
             orientation, 
             cellHeight, 
@@ -579,8 +579,8 @@ const Cradle = ({
     // set up cradle resizeobserver
     useEffect(() => {
 
-        let observer = interruptManager.cradleResize.createObserver()
-        let cradleElements = cradleManager.elements
+        let observer = interruptHandler.cradleResize.createObserver()
+        let cradleElements = cradleHandler.elements
         observer.observe(cradleElements.headRef.current)
         observer.observe(cradleElements.tailRef.current)
 
@@ -598,8 +598,8 @@ const Cradle = ({
     // cradle goes out of the observer scope, the "repositioningA" cradle state is triggerd.
     useEffect(()=>{
 
-        const observer = interruptManager.cradleIntersect.createObserver()
-        const cradleElements = cradleManager.elements
+        const observer = interruptHandler.cradleIntersect.createObserver()
+        const cradleElements = cradleHandler.elements
         observer.observe(cradleElements.headRef.current)
         observer.observe(cradleElements.tailRef.current)
 
@@ -616,13 +616,13 @@ const Cradle = ({
 
         if ((cradleState != 'startreposition') && (cradleState != 'finishreposition')) return
 
-        const observer = interruptManager.cradleIntersect.observer
+        const observer = interruptHandler.cradleIntersect.observer
 
         if (cradleState == 'startreposition') {
             observer.disconnect()
         }
         if (cradleState == 'finishreposition') {
-            const cradleElements = cradleManager.elements
+            const cradleElements = cradleHandler.elements
             observer.observe(cradleElements.headRef.current)
             observer.observe(cradleElements.tailRef.current)
         }
@@ -653,9 +653,9 @@ const Cradle = ({
     // responds to change of orientation
     useEffect(() => {
 
-        let observer = interruptManager.cellIntersect.observer
+        let observer = interruptHandler.cellIntersect.observer
         if (observer) observer.disconnect()
-        observer = interruptManager.cellIntersect.createObserver()
+        observer = interruptHandler.cellIntersect.createObserver()
 
         return () => {
 
@@ -678,11 +678,11 @@ const Cradle = ({
     useLayoutEffect(()=>{
 
         let viewportData = viewportDataRef.current
-        let cradleContent = contentManager.content
+        let cradleContent = contentHandler.content
         switch (cradleState) {
 
-            // renderupdatedcontent is called from cellintersectionobservercallback (interruptManager), 
-            // and called from onAfterScroll (scrollManager)
+            // renderupdatedcontent is called from cellintersectionobservercallback (interruptHandler), 
+            // and called from onAfterScroll (scrollHandler)
             // it is required set configurations before 'ready' TODO: specify!
             case 'renderupdatedcontent': {
 
@@ -695,21 +695,21 @@ const Cradle = ({
             // ------------[ reposition when repositioningRequired is true ]---------------
 
             case 'startreposition': {
-                // interruptManager.states.isRepositioning = true
-                interruptManager.signals.pauseCradleIntersectionObserver = true
+                // interruptHandler.states.isRepositioning = true
+                interruptHandler.signals.pauseCradleIntersectionObserver = true
                 setCradleState('repositioningA')
                 break
             }
 
             case 'finishreposition': {
-                interruptManager.signals.pauseCradleIntersectionObserver = false
-                scrollManager.updateReferenceData()
+                interruptHandler.signals.pauseCradleIntersectionObserver = false
+                scrollHandler.updateReferenceData()
                 setCradleState('doreposition')
                 // setCradleState('updatepositionreferences')
                 break
             }
             // case 'updatepositionreferences':{
-            //     scrollManager.updateReferenceData()
+            //     scrollHandler.updateReferenceData()
             //     setCradleState('doreposition')
             //     break
             // }
@@ -736,8 +736,8 @@ const Cradle = ({
                 cradleContent.tailModel = []
                 cradleContent.headView = []
                 cradleContent.tailView = []
-                cradleDataRef.current.portalManager.resetScrollerPortalRepository()
-                contentManager.setCradleContent(callingCradleState.current)
+                cradleDataRef.current.portalHandler.resetScrollerPortalRepository()
+                contentHandler.setCradleContent(callingCradleState.current)
 
                 setCradleState('preparerender')
 
@@ -746,12 +746,12 @@ const Cradle = ({
 
             case 'preparerender': {
 
-                let cradleContent = contentManager.content
+                let cradleContent = contentHandler.content
                 cradleContent.headView = cradleContent.headModel
                 cradleContent.tailView = cradleContent.tailModel
 
-                viewportData.elementref.current[cradleManager.cradleReferenceData.blockScrollProperty] =
-                    Math.max(0,cradleManager.cradleReferenceData.blockScrollPos)
+                viewportData.elementref.current[cradleHandler.cradleReferenceData.blockScrollProperty] =
+                    Math.max(0,cradleHandler.cradleReferenceData.blockScrollPos)
 
                 setCradleState('normalizesignals') // call a timeout for ready (or interrupt continuation)
 
@@ -766,12 +766,12 @@ const Cradle = ({
                     // allow short-circuit fallbacks to continue interrupt responses
             /*1*/   if (!viewportData.isResizing) { // resize short-circuit
                         
-            /*2*/       if (!interruptManager.signals.repositioningRequired) { // repositioning short-circuit
+            /*2*/       if (!interruptHandler.signals.repositioningRequired) { // repositioning short-circuit
 
             // /*3*/           if ((!viewportDataRef.current.portal) || (!viewportDataRef.current.portal.isReparenting))
             //                     /*&& (!isReparentingRef.current))*/ { // reparent (restorescrollpos) short-circuit
                             
-                                const signals = interruptManager.signals
+                                const signals = interruptHandler.signals
                                 if (viewportData.elementref.current) { // already unmounted if fails (?)
                                     signals.pauseCellObserver  && (signals.pauseCellObserver = false)
                                     signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
@@ -836,7 +836,7 @@ const Cradle = ({
         let trackerargs = {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
-            referenceIndexOffset:cradleManager.cradleReferenceData.scrollImpliedItemIndexReference,
+            referenceIndexOffset:cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference,
             listsize:cradlePropsRef.current.listsize,
             styles:cradlePropsRef.current.styles,
         }
@@ -844,17 +844,17 @@ const Cradle = ({
     },[
         cradleStateRef.current, 
         viewportDimensions, 
-        cradleManager.cradleReferenceData.scrollImpliedItemIndexReference, 
+        cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference, 
         cradlePropsRef
         ]
     )
 
-    let cradleContent = contentManager.content
+    let cradleContent = contentHandler.content
 
     // portalroot is the hidden portal component cache
     return <CradleContext.Provider value = {cradleDataRef}>
         {(cradleStateRef.current != 'setup') && <div data-type = 'portalroot' style = { portalrootstyle }>
-            <PortalList scrollerData = {cradleDataRef.current.portalManager.scrollerData}/>
+            <PortalList scrollerData = {cradleDataRef.current.portalHandler.scrollerData}/>
         </div>}
 
         {((cradleStateRef.current == 'repositioningA') || (cradleStateRef.current == 'repositioningB'))
