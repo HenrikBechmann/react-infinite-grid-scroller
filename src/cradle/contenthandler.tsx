@@ -1,4 +1,4 @@
-// contentmanager.tsx
+// contenthandler.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
 import { 
@@ -57,11 +57,11 @@ export default class ContentHandler {
         const viewportData = this.cradleBackProps.viewportdataRef.current
         const cradleProps = this.cradleBackProps.cradlePropsRef.current
         const cradleConfig = this.cradleBackProps.cradleConfigRef.current
-        const scrollHandler = this.cradleBackProps.managersRef.current.scroll
-        const cradleHandler = this.cradleBackProps.managersRef.current.cradle
-        const stateHandler = this.cradleBackProps.managersRef.current.state
-        const serviceHandler = this.cradleBackProps.managersRef.current.service
-        const interruptHandler = this.cradleBackProps.managersRef.current.interrupts
+        const scrollHandler = this.cradleBackProps.handlersRef.current.scroll
+        const cradleHandler = this.cradleBackProps.handlersRef.current.cradle
+        const stateHandler = this.cradleBackProps.handlersRef.current.state
+        const serviceHandler = this.cradleBackProps.handlersRef.current.service
+        const interruptHandler = this.cradleBackProps.handlersRef.current.interrupts
         const cradleData = this.cradleBackProps.cradleDataRef.current
 
         // if (viewportData.index == 6) {
@@ -191,10 +191,10 @@ export default class ContentHandler {
 
         const viewportData = this.cradleBackProps.viewportdataRef.current
         const cradleProps = this.cradleBackProps.cradlePropsRef.current
-        const scrollHandler = this.cradleBackProps.managersRef.current.scroll
-        const cradleHandler = this.cradleBackProps.managersRef.current.cradle
-        const stateHandler = this.cradleBackProps.managersRef.current.state
-        const interruptHandler = this.cradleBackProps.managersRef.current.interrupts
+        const scrollHandler = this.cradleBackProps.handlersRef.current.scroll
+        const cradleHandler = this.cradleBackProps.handlersRef.current.cradle
+        const stateHandler = this.cradleBackProps.handlersRef.current.state
+        const interruptHandler = this.cradleBackProps.handlersRef.current.interrupts
 
         const cradleData = this.cradleBackProps.cradleDataRef.current
 

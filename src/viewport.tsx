@@ -11,7 +11,7 @@ import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallbac
 export const ViewportInterrupt = React.createContext(null) // for children
 
 import { ResizeObserver as ResizeObserverPollyfill } from '@juggle/resize-observer'
-// import InterruptHandler from './cradle/interruptmanager'
+// import InterruptHandler from './cradle/interrupthandler'
 
 import { CradleContext as ParentCradleContext } from './cradle'
 
@@ -41,7 +41,7 @@ const Viewport = ({
     // only available if viewport is a child of an infiniteScroller
     const parentCradlePropertiesRef = useContext(ParentCradleContext);
 
-    // if this is a scroller child, get the parent portal manager
+    // if this is a scroller child, get the parent portal handler
     const parentPortalHandlerRef = useRef(parentCradlePropertiesRef?.current.portalHandler);
 
     const isMountedRef = useRef(true) // monitor for unmounted
@@ -223,7 +223,7 @@ const Viewport = ({
         const width = (right - left)
         const height = (bottom - top)
 
-        // TODO this is a duplicate setting procedure with interruptmanager.tsx cradleIntersectionObserverCallback
+        // TODO this is a duplicate setting procedure with interrupthandler.tsx cradleIntersectionObserverCallback
         const localViewportData = {
             viewportDimensions:{top,right, bottom, left, width, height},
             elementref:viewportdivRef,

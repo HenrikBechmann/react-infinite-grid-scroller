@@ -1,4 +1,4 @@
-// portalmanager.tsx
+// portalhandler.tsx
 
 /*
     The infinite list scroller stores user cell data in a central hidden portal cache for each

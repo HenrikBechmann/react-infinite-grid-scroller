@@ -1,4 +1,4 @@
-// scrollmanager.tsx
+// scrollhandler.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
 const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 500
@@ -21,7 +21,7 @@ export default class ScrollHandler {
 
     onScroll = (e) => {
 
-        const signals = this.cradleBackProps.managersRef.current.interrupts.signals
+        const signals = this.cradleBackProps.handlersRef.current.interrupts.signals
 
         // if (signals.pauseScrollingEffects) {
 
@@ -32,7 +32,7 @@ export default class ScrollHandler {
         const viewportData = this.cradleBackProps.viewportdataRef.current
         const viewportElement = viewportData.elementref.current
 
-        const cradleHandler = this.cradleBackProps.managersRef.current.cradle
+        const cradleHandler = this.cradleBackProps.handlersRef.current.cradle
 
         const scrollPositionCurrent = 
             (this.cradleBackProps.cradlePropsRef.current.orientation == 'vertical')
@@ -69,11 +69,11 @@ export default class ScrollHandler {
 
         }
 
-        const stateHandler = this.cradleBackProps.managersRef.current.state
+        const stateHandler = this.cradleBackProps.handlersRef.current.state
         const cradleState = stateHandler.cradleStateRef.current
 
-        const contentHandler = this.cradleBackProps.managersRef.current.content
-        const serviceHandler = this.cradleBackProps.managersRef.current.service
+        const contentHandler = this.cradleBackProps.handlersRef.current.content
+        const serviceHandler = this.cradleBackProps.handlersRef.current.service
 
         if (!viewportData.isResizing) {
 
@@ -131,8 +131,8 @@ export default class ScrollHandler {
 
         this.isScrolling = false
 
-        const stateHandler = this.cradleBackProps.managersRef.current.state
-        const contentHandler = this.cradleBackProps.managersRef.current.content
+        const stateHandler = this.cradleBackProps.handlersRef.current.state
+        const contentHandler = this.cradleBackProps.handlersRef.current.content
         const viewportData = this.cradleBackProps.viewportdataRef.current
 
         const cradleState = stateHandler.cradleStateRef.current
@@ -175,11 +175,11 @@ export default class ScrollHandler {
 
     updateReferenceData = () => {
 
-        const stateHandler = this.cradleBackProps.managersRef.current.state
-        const cradleHandler = this.cradleBackProps.managersRef.current.cradle
+        const stateHandler = this.cradleBackProps.handlersRef.current.state
+        const cradleHandler = this.cradleBackProps.handlersRef.current.cradle
         const cradleProps = this.cradleBackProps.cradlePropsRef.current
         const viewportData = this.cradleBackProps.viewportdataRef.current
-        // const contentHandler = this.cradleBackProps.managersRef.current.content
+        // const contentHandler = this.cradleBackProps.handlersRef.current.content
 
         if (!stateHandler.isMountedRef.current) return
 
@@ -216,7 +216,7 @@ export default class ScrollHandler {
 
     updateBlockScrollPos = () => {
 
-        const cradleHandler = this.cradleBackProps.managersRef.current.cradle
+        const cradleHandler = this.cradleBackProps.handlersRef.current.cradle
         const cradleProps = this.cradleBackProps.cradlePropsRef.current
         const viewportData = this.cradleBackProps.viewportdataRef.current
         const viewportElement = viewportData.elementref.current
@@ -273,7 +273,7 @@ export default class ScrollHandler {
 
         if (spineReferenceIndex == 0) referencescrolloffset = 0 // defensive
 
-        let cradleHandler = this.cradleBackProps.managersRef.current.cradle
+        let cradleHandler = this.cradleBackProps.handlersRef.current.cradle
         cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference = spineReferenceIndex
         cradleHandler.cradleReferenceData.scrollImpliedCradlePosOffset = referencescrolloffset
 

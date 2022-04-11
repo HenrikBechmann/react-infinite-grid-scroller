@@ -1,4 +1,4 @@
-// servicemanager.tsx
+// servicehandler.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
 export default class ServiceHandler {
@@ -17,11 +17,11 @@ export default class ServiceHandler {
 
     getVisibleList = () => {
 
-        let contentHandler = this.cradleBackProps.managersRef.current.content        
+        let contentHandler = this.cradleBackProps.handlersRef.current.content        
 
         let cradleContent = contentHandler.content
         let viewportData = this.cradleBackProps.viewportdataRef.current
-        let cradleHandler = this.cradleBackProps.managersRef.current.cradle
+        let cradleHandler = this.cradleBackProps.handlersRef.current.cradle
         let cradleElements = cradleHandler.elements
 
         return getVisibleItemsList({
@@ -35,7 +35,7 @@ export default class ServiceHandler {
     }
 
     getContentList = () => {
-        let contentHandler = this.cradleBackProps.managersRef.current.content        
+        let contentHandler = this.cradleBackProps.handlersRef.current.content        
         let contentlist = Array.from(contentHandler.itemElements)
 
         contentlist.sort((a,b)=>{
@@ -47,8 +47,8 @@ export default class ServiceHandler {
 
     reload = () => {
 
-        const signals = this.cradleBackProps.managersRef.current.interrupts.signals
-        const stateHandler = this.cradleBackProps.managersRef.current.state
+        const signals = this.cradleBackProps.handlersRef.current.interrupts.signals
+        const stateHandler = this.cradleBackProps.handlersRef.current.state
 
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
@@ -59,9 +59,9 @@ export default class ServiceHandler {
 
     scrollToItem = (index) => {
 
-        const signals = this.cradleBackProps.managersRef.current.interrupts.signals
-        let cradleHandler = this.cradleBackProps.managersRef.current.cradle
-        let stateHandler = this.cradleBackProps.managersRef.current.state
+        const signals = this.cradleBackProps.handlersRef.current.interrupts.signals
+        let cradleHandler = this.cradleBackProps.handlersRef.current.cradle
+        let stateHandler = this.cradleBackProps.handlersRef.current.state
 
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true

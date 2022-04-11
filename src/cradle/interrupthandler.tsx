@@ -1,4 +1,4 @@
-// wingsmanager.tsx
+// wingshandler.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
 import { ResizeObserver as ResizeObserverPolyfill} from '@juggle/resize-observer'
@@ -70,8 +70,8 @@ export default class InterruptHandler {
     private cradleIntersectionObserverCallback = (entries) => {
 
         const signals = this.signals
-        const stateHandler = this.cradleBackProps.managersRef.current.state
-        const contentHandler = this.cradleBackProps.managersRef.current.content
+        const stateHandler = this.cradleBackProps.handlersRef.current.state
+        const contentHandler = this.cradleBackProps.handlersRef.current.content
 
         if (signals.pauseCradleIntersectionObserver) {
             // console.log('returning from intersectionobserver for PAUSE')
@@ -157,9 +157,9 @@ export default class InterruptHandler {
         //         console.log('cell intersection entries for ', viewportData.index, entries)
         // }
 
-        const contentHandler = this.cradleBackProps.managersRef.current.content
-        const stateHandler = this.cradleBackProps.managersRef.current.state
-        const scrollHandler = this.cradleBackProps.managersRef.current.scroll
+        const contentHandler = this.cradleBackProps.handlersRef.current.content
+        const stateHandler = this.cradleBackProps.handlersRef.current.state
+        const scrollHandler = this.cradleBackProps.handlersRef.current.scroll
 
 
         let movedentries = []

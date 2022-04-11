@@ -106,7 +106,7 @@ import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, u
 
 import { ViewportInterrupt } from './viewport'
 
-import { PortalHandler, PortalList } from './portalmanager'
+import { PortalHandler, PortalList } from './portalhandler'
 
 const ITEM_OBSERVER_THRESHOLD = [0,1]
 
@@ -280,9 +280,9 @@ const Cradle = ({
 
     // -------------------[ support services ]------------------
 
-    const managersRef = useRef(null) // make available to individual managers
+    const handlersRef = useRef(null) // make available to individual handlers
     const cradleBackProps = {
-        managersRef,
+        handlersRef,
         viewportdataRef:viewportDataRef,
         cradlePropsRef, 
         cradleConfigRef, 
@@ -377,7 +377,7 @@ const Cradle = ({
     // -----------------------------------------------------------------------
     // -------------------------[ cradle management nodes ]-----------------
 
-    // to instantiate managersRef
+    // to instantiate handlersRef
     const managementsetRef = useRef({
         scroll:scrollHandler,
         // signals:signalsHandler, 
@@ -389,7 +389,7 @@ const Cradle = ({
         styles:stylesHandler,
     });
 
-    managersRef.current = managementsetRef.current
+    handlersRef.current = managementsetRef.current
 
     // if ((viewportDataRef.current.index == 6) /*|| (viewportDataRef.current.index === null)*/) {
     //     console.log('RUNNING CRADLE index',

@@ -1,4 +1,4 @@
-// cradlemanager.tsx
+// cradlehandler.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
 export default class CradleHandler { 
@@ -22,7 +22,7 @@ export default class CradleHandler {
 
     }
 
-    cradleBackProps // standard for managers, but not used here yet
+    cradleBackProps // standard for handlers, but not used here yet
 
    /* 
       ItemIndexReference is the sequential index of first item of the cradle tail
