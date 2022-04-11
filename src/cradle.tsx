@@ -111,13 +111,13 @@ import { PortalManager, PortalList } from './portalmanager'
 const ITEM_OBSERVER_THRESHOLD = [0,1]
 
 // import agency classes - loci of data and related methods
-import ScrollManager from './cradle/scrollmanager'
-import StateManager from './cradle/statemanager'
-import ContentManager from './cradle/contentmanager'
-import CradleManager from './cradle/cradlemanager'
-import InterruptManager from './cradle/interruptmanager'
-import ServiceManager from './cradle/servicemanager'
-import StylesManager from './cradle/stylesmanager'
+import ScrollManager from './cradle/scrollhandler'
+import StateManager from './cradle/statehandler'
+import ContentManager from './cradle/contenthandler'
+import CradleManager from './cradle/cradlehandler'
+import InterruptManager from './cradle/interrupthandler'
+import ServiceManager from './cradle/servicehandler'
+import StylesManager from './cradle/styleshandler'
 
 // popup position trackeer
 import ScrollTracker from './scrolltracker'
