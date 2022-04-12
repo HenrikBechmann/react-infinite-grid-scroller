@@ -333,6 +333,19 @@ const Cradle = ({
 
     },[])
 
+    const availableHandlersRef = useRef(null)
+
+    if (!availableHandlersRef.current) {
+        availableHandlersRef.current = [
+            new InterruptHandler(cradleBackProps),
+            new ScrollHandler(cradleBackProps),
+            new StateHandler(cradleBackProps),
+            new ContentHandler(cradleBackProps),
+            new CradleHandler(cradleBackProps),
+            new ServiceHandler(cradleBackProps),
+            new StylesHandler(cradleBackProps),
+        ]
+    }
     // replace use of useMemo to guarantee one-time-only run
     const [
         interruptHandler,
@@ -342,17 +355,7 @@ const Cradle = ({
         cradleHandler,
         serviceHandler,
         stylesHandler,
-    ] = useMemo(()=>{
-        return [
-            new InterruptHandler(cradleBackProps),
-            new ScrollHandler(cradleBackProps),
-            new StateHandler(cradleBackProps),
-            new ContentHandler(cradleBackProps),
-            new CradleHandler(cradleBackProps),
-            new ServiceHandler(cradleBackProps),
-            new StylesHandler(cradleBackProps),
-        ]
-    },[])
+    ] = availableHandlersRef.current
 
     // this is an immediate response to reparenting. Reparenting resets scroll positions
     // this restores scroll as soon as cradle is invoked after reparenting
