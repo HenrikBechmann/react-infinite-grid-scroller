@@ -110,7 +110,9 @@ import { PortalHandler, PortalList } from './portalhandler'
 
 const ITEM_OBSERVER_THRESHOLD = [0,1]
 
-// import agency classes - loci of data and related methods
+// popup position trackeer
+import ScrollTracker from './scrolltracker'
+
 import ScrollHandler from './cradle/scrollhandler'
 import StateHandler from './cradle/statehandler'
 import ContentHandler from './cradle/contenthandler'
@@ -118,9 +120,6 @@ import CradleHandler from './cradle/cradlehandler'
 import InterruptHandler from './cradle/interrupthandler'
 import ServiceHandler from './cradle/servicehandler'
 import StylesHandler from './cradle/styleshandler'
-
-// popup position trackeer
-import ScrollTracker from './scrolltracker'
 
 export const CradleContext = React.createContext(null) // for children
 
@@ -306,7 +305,7 @@ const Cradle = ({
     const serviceCallsRef = useRef({referenceIndexCallbackRef})
 
     const handlersRef = useRef(null) // make available to individual handlers
-    const cradleBackProps = {
+    const cradleBackProps = Object.freeze({
         handlersRef,
         viewportdataRef:viewportDataRef,
         cradlePropsRef, 
@@ -318,7 +317,7 @@ const Cradle = ({
         contentCallbacksRef,
         cradleElementsRef,
         serviceCallsRef,
-    }
+    })
 
     // ---------------------[ setup ]------------------
 
@@ -336,15 +335,7 @@ const Cradle = ({
     const availableHandlersRef = useRef(null)
 
     if (!availableHandlersRef.current) {
-        availableHandlersRef.current = [
-            new InterruptHandler(cradleBackProps),
-            new ScrollHandler(cradleBackProps),
-            new StateHandler(cradleBackProps),
-            new ContentHandler(cradleBackProps),
-            new CradleHandler(cradleBackProps),
-            new ServiceHandler(cradleBackProps),
-            new StylesHandler(cradleBackProps),
-        ]
+        availableHandlersRef.current = getCradleHandlers(cradleBackProps)
     }
     // replace use of useMemo to guarantee one-time-only run
     const [
@@ -922,6 +913,23 @@ const Cradle = ({
     </CradleContext.Provider>
 
 } // Cradle
+
+
+const getCradleHandlers = (cradleBackProps) => {
+
+    const createHandler = handler => new handler(cradleBackProps)
+
+    return [
+        createHandler(InterruptHandler),
+        createHandler(ScrollHandler),
+        createHandler(StateHandler),
+        createHandler(ContentHandler),
+        createHandler(CradleHandler),
+        createHandler(ServiceHandler),
+        createHandler(StylesHandler),
+    ]
+}
+
 
 
 export default Cradle
