@@ -280,18 +280,6 @@ const Cradle = ({
 
     // -------------------[ support services ]------------------
 
-    const handlersRef = useRef(null) // make available to individual handlers
-    const cradleBackProps = {
-        handlersRef,
-        viewportdataRef:viewportDataRef,
-        cradlePropsRef, 
-        cradleConfigRef, 
-        cradleDataRef
-    }
-
-    const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
-    const serviceCallsRef = useRef({referenceIndexCallbackRef})
-
     const setItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
 
         const [index, shellref] = itemElementData
@@ -314,6 +302,24 @@ const Cradle = ({
 
     })
 
+    const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
+    const serviceCallsRef = useRef({referenceIndexCallbackRef})
+
+    const handlersRef = useRef(null) // make available to individual handlers
+    const cradleBackProps = {
+        handlersRef,
+        viewportdataRef:viewportDataRef,
+        cradlePropsRef, 
+        cradleConfigRef, 
+        cradleDataRef,
+        cradleStateRef,
+        setCradleState,
+        isMountedRef,
+        contentCallbacksRef,
+        cradleElementsRef,
+        serviceCallsRef,
+    }
+
     // ---------------------[ setup ]------------------
 
     useLayoutEffect(()=>{
@@ -329,21 +335,21 @@ const Cradle = ({
 
     // replace use of useMemo to guarantee one-time-only run
     const [
+        interruptHandler,
         scrollHandler,
         stateHandler,
         contentHandler,
         cradleHandler,
-        interruptHandler,
         serviceHandler,
         stylesHandler,
     ] = useMemo(()=>{
         return [
-            new ScrollHandler(cradleBackProps),
-            new StateHandler(cradleBackProps,cradleStateRef,setCradleState,isMountedRef),
-            new ContentHandler(cradleBackProps, contentCallbacksRef),
-            new CradleHandler(cradleBackProps, cradleElementsRef.current),
             new InterruptHandler(cradleBackProps),
-            new ServiceHandler(cradleBackProps,serviceCallsRef),
+            new ScrollHandler(cradleBackProps),
+            new StateHandler(cradleBackProps),
+            new ContentHandler(cradleBackProps),
+            new CradleHandler(cradleBackProps),
+            new ServiceHandler(cradleBackProps),
             new StylesHandler(cradleBackProps),
         ]
     },[])

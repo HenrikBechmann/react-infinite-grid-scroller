@@ -3,13 +3,13 @@
 
 export default class StateHandler {
 
-    constructor(cradleBackProps,cradleStateRef,setCradleState,isMountedRef) {
+    constructor(cradleBackProps) {
 
        this.cradleBackProps = cradleBackProps
 
-       this.setCradleState = setCradleState
-       this.cradleStateRef = cradleStateRef
-       this.isMountedRef = isMountedRef
+       this.setCradleState = cradleBackProps.setCradleState
+       this.cradleStateRef = cradleBackProps.cradleStateRef
+       this.isMountedRef = cradleBackProps.isMountedRef
        
     }
 

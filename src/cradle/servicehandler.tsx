@@ -3,11 +3,11 @@
 
 export default class ServiceHandler {
 
-    constructor(cradleBackProps, serviceCallsRef) {
+    constructor(cradleBackProps) {
 
        this.cradleBackProps = cradleBackProps
 
-       this.serviceCalls = serviceCallsRef.current
+       this.serviceCalls = cradleBackProps.serviceCallsRef.current
 
     }
 

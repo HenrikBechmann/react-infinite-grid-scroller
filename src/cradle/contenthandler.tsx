@@ -14,11 +14,11 @@ import {
 
 export default class ContentHandler {
 
-   constructor(cradleBackProps, contentCallbacksRef) {
+   constructor(cradleBackProps) {
 
       this.cradleBackProps = cradleBackProps
 
-      this.contentCallbacksRef = contentCallbacksRef
+      this.contentCallbacksRef = cradleBackProps.contentCallbacksRef
 
    }
 

@@ -3,14 +3,14 @@
 
 export default class CradleHandler { 
 
-    constructor(cradleBackProps, cradleElements) {
+    constructor(cradleBackProps) {
 
        this.cradleBackProps = cradleBackProps
 
        let elements = this.elements
-       elements.spineRef = cradleElements.spine
-       elements.headRef = cradleElements.head
-       elements.tailRef = cradleElements.tail
+       elements.spineRef = cradleBackProps.cradleElementsRef.current.spine
+       elements.headRef = cradleBackProps.cradleElementsRef.current.head
+       elements.tailRef = cradleBackProps.cradleElementsRef.current.tail
 
        let {defaultVisibleIndex, listsize, padding} = this.cradleBackProps.cradlePropsRef.current
 
