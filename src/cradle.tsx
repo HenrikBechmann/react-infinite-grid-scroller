@@ -138,7 +138,7 @@ const Cradle = ({
         cellWidth, 
         getItem, 
         placeholder, 
-        functions,
+        functions:inheritedfunctions,
         styles,
         scrollerName,
         scrollerID,
@@ -151,6 +151,8 @@ const Cradle = ({
     // ---------------------[ bundle cradle props to pass around ]-------------------
 
     const cradlePropsRef = useRef(null) // access by closures
+
+    let functions = Object.assign({},inheritedfunctions)
 
     cradlePropsRef.current =  {
         gap, 

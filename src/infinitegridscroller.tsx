@@ -50,9 +50,39 @@ const getSessionID = () => {
     Overall the infinitegridscroller manages the (often asynchronous) interactions of the 
     components of the mechanism
 */
-const InfiniteGridScroller = (props) => {
+function freeze(...args) {
+    let [arg, ...rest] = Array.from(arguments)
+    Object.freeze(arg)
+    if (rest.length == 0) {
+        return
+    }
+    freeze(...rest)
+}
+
+const InfiniteGridScroller = (inheritedprops) => {
     // empty parameters use defaults
-    let { 
+    let props = Object.assign({},inheritedprops)
+
+    // set defaults
+    props.functions ?? (props.functions = {})
+    props.gap ?? (props.gap = 0)
+    props.padding ?? (props.padding = 0)
+    props.runwaySize ?? (props.runwaySize = 3)
+    props.defaultVisibleIndex ?? (props.defaultVisibleIndex = 0)
+    props.listSize ?? (props.listSize = 0)
+    props.layout ?? (props.layout = 'uniform')
+    // constraints
+    props.defaultVisibleIndex = Math.max(0,props.defaultVisibleIndex) // non-negative
+    props.defaultVisibleIndex = Math.min(props.listSize, props.defaultVisibleIndex) // not larger than list
+    if (!['horizontal','vertical'].includes(props.orientation)) {
+        props.orientation = 'vertical'
+    }
+    freeze(
+        props.functions,
+        props.styles,
+    )
+
+    const { 
         orientation, // vertical or horizontal
         gap, // space between grid cells, not including the leading and trailing edges
         padding, // the space between the items and the viewport, applied to the cradle
@@ -82,21 +112,6 @@ const InfiniteGridScroller = (props) => {
 
     if (scrollerSessionIDRef.current === null) {
         scrollerSessionIDRef.current = getSessionID()
-    }
-
-    // set defaults
-    functions ?? (functions = {})
-    gap ?? (gap = 0)
-    padding ?? (padding = 0)
-    runwaySize ?? (runwaySize = 3)
-    defaultVisibleIndex ?? (defaultVisibleIndex = 0)
-    listSize ?? (listSize = 0)
-    layout ?? (layout = 'uniform')
-    // constraints
-    defaultVisibleIndex = Math.max(0,defaultVisibleIndex) // non-negative
-    defaultVisibleIndex = Math.min(listSize, defaultVisibleIndex) // not larger than list
-    if (!['horizontal','vertical'].includes(orientation)) {
-        orientation = 'vertical'
     }
 
     return <Viewport
