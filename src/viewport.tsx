@@ -67,9 +67,9 @@ const Viewport = ({
             left:0,
             overflow:'auto',
             backgroundColor:'red',
-        }, styles?.viewport)
+        }, styles.viewport)
 
-    },[styles?.viewport])
+    },[styles.viewport])
 
     const viewportdivRef = useRef(null)
 

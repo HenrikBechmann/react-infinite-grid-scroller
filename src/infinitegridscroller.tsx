@@ -65,6 +65,7 @@ const InfiniteGridScroller = (inheritedprops) => {
 
     // set defaults
     props.functions ?? (props.functions = {})
+    props.styles ?? (props.styles = {})
     props.gap ?? (props.gap = 0)
     props.padding ?? (props.padding = 0)
     props.runwaySize ?? (props.runwaySize = 3)

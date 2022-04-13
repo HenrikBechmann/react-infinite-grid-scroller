@@ -33,7 +33,7 @@ const Scrollblock = ({
             backgroundColor:'white',
             position:'relative',
             
-        } as React.CSSProperties, styles?.cradle)
+        } as React.CSSProperties, styles.cradle)
 
     )
     const [divlinerstyle,saveDivlinerstyle] = useState(divlinerstyleRef.current) // to trigger render
