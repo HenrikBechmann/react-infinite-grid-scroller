@@ -122,7 +122,6 @@ const InfiniteGridScroller = (inheritedprops) => {
             gap = { gap }
             padding = { padding }
             orientation = { orientation } 
-            functions = { functions }
             styles = { styles }
             scrollerID = { scrollerSessionIDRef.current }
         >
@@ -136,7 +135,6 @@ const InfiniteGridScroller = (inheritedprops) => {
                 gap = { gap}
                 padding = { padding }
                 orientation = { orientation }
-                functions = { functions }
                 styles = { styles }
                 scrollerID = { scrollerSessionIDRef.current }
 
@@ -150,10 +148,10 @@ const InfiniteGridScroller = (inheritedprops) => {
                     gap = { gap }
                     padding = { padding }
                     orientation = { orientation }
-                    functions = { functions }
                     styles = { styles }
                     scrollerID = { scrollerSessionIDRef.current }
 
+                    functions = { functions }
                     scrollerName = { scrollerName }
                     defaultVisibleIndex = { defaultVisibleIndex }
                     getItem = { getItem }

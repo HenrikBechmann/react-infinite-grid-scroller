@@ -410,25 +410,24 @@ const Cradle = ({
     //initialize host functions properties
     useEffect(()=>{
 
-        if (functions?.hasOwnProperty('scrollToItem')) {
-            functions.scrollToItem = serviceHandler.scrollToItem
-        } 
-
-        if (functions?.hasOwnProperty('getVisibleList')) {
-            functions.getVisibleList = serviceHandler.getVisibleList
-        } 
-
-        if (functions?.hasOwnProperty('getContentList')) {
-            functions.getContentList = serviceHandler.getContentList
-        } 
-
-        if (functions?.hasOwnProperty('reload')) {
-            functions.reload = serviceHandler.reload
-        }
-
         referenceIndexCallbackRef.current = functions?.referenceIndexCallback
 
-    },[functions])
+        if (!functions.getCallbacks) return
+
+        const {scrollToItem, getVisibleList, getContentList, reload} = serviceHandler
+
+        const callbacks = {
+            scrollToItem,
+            getVisibleList,
+            getContentList,
+            reload,
+        }
+
+        Object.freeze(callbacks)
+
+        functions.getCallbacks(callbacks)
+
+    },[])
 
     // initialize window scroll listener
     useEffect(() => {

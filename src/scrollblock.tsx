@@ -13,7 +13,6 @@ const Scrollblock = ({
     gap, 
     padding, 
     orientation, 
-    functions, 
     styles,
     scrollerID,
 }) => {

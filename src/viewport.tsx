@@ -27,7 +27,6 @@ const Viewport = ({
     gap, 
     padding, 
     orientation, 
-    functions, 
     styles,
     scrollerID,
 }) => {
