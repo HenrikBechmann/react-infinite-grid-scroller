@@ -22,16 +22,22 @@ const RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = 250
 
 const Viewport = ({
     children, 
-    cellWidth, 
-    cellHeight, 
-    gap, 
-    padding, 
-    orientation, 
+    gridSpecs,
     styles,
     scrollerID,
 }) => {
 
     // -----------------------[ initialize ]------------------
+
+    const {
+        orientation,
+        gap,
+        padding,
+        cellHeight,
+        cellWidth,
+        layout,
+        dense,
+    } = gridSpecs
 
     const [viewportState,setViewportState] = useState('setup');
     const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope

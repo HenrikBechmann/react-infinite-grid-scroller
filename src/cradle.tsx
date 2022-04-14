@@ -128,14 +128,11 @@ const portalrootstyle = {display:'none'} // static parm
 const NORMALIZE_SIGNALS_TIMEOUT = 250
 
 const Cradle = ({ 
-        gap, 
-        padding, 
+        gridSpecs,
+
         runwaycount, 
         listsize, 
         defaultVisibleIndex, 
-        orientation, 
-        cellHeight, 
-        cellWidth, 
         getItem, 
         placeholder, 
         functions:inheritedfunctions,
@@ -143,6 +140,16 @@ const Cradle = ({
         scrollerName,
         scrollerID,
     }) => {
+
+    const {
+        orientation,
+        gap,
+        padding,
+        cellHeight,
+        cellWidth,
+        layout,
+        dense,
+    } = gridSpecs
 
     // =============================================================================================
     // --------------------------------------[ INITIALIZATION ]-------------------------------------

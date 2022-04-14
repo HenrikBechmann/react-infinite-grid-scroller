@@ -78,10 +78,6 @@ const InfiniteGridScroller = (inheritedprops) => {
     if (!['horizontal','vertical'].includes(props.orientation)) {
         props.orientation = 'vertical'
     }
-    freeze(
-        props.functions,
-        props.styles,
-    )
 
     const { 
         orientation, // vertical or horizontal
@@ -89,6 +85,9 @@ const InfiniteGridScroller = (inheritedprops) => {
         padding, // the space between the items and the viewport, applied to the cradle
         cellHeight, // the outer pixel height - literal for vertical; approximate for horizontal
         cellWidth, // the outer pixel width - literal for horizontal; approximate for vertical
+        layout, // uniform, variable
+        dense, // boolean (only with preload)
+
         runwaySize, // the number of items outside the view of each side of the viewport 
             // -- gives time to assemble before display
         listSize, // the exact number of the size of the virtual list; will eventually be changable.
@@ -102,11 +101,25 @@ const InfiniteGridScroller = (inheritedprops) => {
             // properties viewport, scrollblock, cradle, or scrolltracker
         // to come...
         // cache = "preload" or "keepload" or "none"
-        // dense, // boolean (only with preload)
         // advanced, technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
-        layout, // uniform, variable
         scrollerName, // for debugging
     } = props
+
+    const gridSpecs = {
+        orientation,
+        gap,
+        padding,
+        cellHeight,
+        cellWidth,
+        layout,
+        dense,
+    }
+
+    freeze(
+        functions,
+        styles,
+        gridSpecs,
+    )
 
     // for mount
     const scrollerSessionIDRef = useRef(null);
@@ -117,42 +130,36 @@ const InfiniteGridScroller = (inheritedprops) => {
 
     return <Viewport
 
-            cellWidth = { cellWidth }
-            cellHeight = { cellHeight }
-            gap = { gap }
-            padding = { padding }
-            orientation = { orientation } 
+            gridSpecs = {gridSpecs}
+
             styles = { styles }
+
             scrollerID = { scrollerSessionIDRef.current }
         >
         
             <Scrollblock
 
-                listsize = { listSize }
-                
-                cellWidth = { cellWidth }
-                cellHeight = { cellHeight }
-                gap = { gap}
-                padding = { padding }
-                orientation = { orientation }
+                gridSpecs = {gridSpecs}
+
                 styles = { styles }
+
                 scrollerID = { scrollerSessionIDRef.current }
 
+                listsize = { listSize }
+                
             >
                 <Cradle 
 
+                    gridSpecs = {gridSpecs}
+
+                    styles = { styles }
+
+                    scrollerID = { scrollerSessionIDRef.current }
+                    scrollerName = { scrollerName }
+
                     listsize = { listSize }
 
-                    cellWidth = { cellWidth }
-                    cellHeight = { cellHeight }
-                    gap = { gap }
-                    padding = { padding }
-                    orientation = { orientation }
-                    styles = { styles }
-                    scrollerID = { scrollerSessionIDRef.current }
-
                     functions = { functions }
-                    scrollerName = { scrollerName }
                     defaultVisibleIndex = { defaultVisibleIndex }
                     getItem = { getItem }
                     placeholder = { placeholder }

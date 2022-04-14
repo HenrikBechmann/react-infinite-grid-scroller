@@ -7,15 +7,21 @@ import { ViewportInterrupt } from './viewport'
 
 const Scrollblock = ({
     children,
-    listsize, 
-    cellHeight, 
-    cellWidth, 
-    gap, 
-    padding, 
-    orientation, 
+    listsize,
+    gridSpecs, 
     styles,
     scrollerID,
 }) => {
+
+    const {
+        orientation,
+        gap,
+        padding,
+        cellHeight,
+        cellWidth,
+        layout,
+        dense,
+    } = gridSpecs
 
     // -------------------------[ context and state ]-------------------------
     const viewportProperties = useContext(ViewportInterrupt)
