@@ -55,6 +55,7 @@ const getSessionID = () => {
 
 const InfiniteGridScroller = (args) => {
 
+    console.log('running InfiniteGridScroller')
 
     // ------------------[ normalize properties ]--------------------
 
@@ -112,10 +113,25 @@ const InfiniteGridScroller = (args) => {
         dense,
     }
 
+    const gridSpecsRef = useRef(gridSpecs)
+    const stylesRef = useRef(styles)
+    const functionsRef = useRef(functions)
+
+    // satisfy React Object.is for attributes
+    if (!compare(gridSpecs, gridSpecsRef.current)) {
+        gridSpecsRef.current = gridSpecs
+    }
+    if (!compare(styles, stylesRef.current)) {
+        stylesRef.current = styles
+    }
+    if (!compare(functions, functionsRef.current)) {
+        functionsRef.current = functions
+    }
+
     freeze(
-        functions,
-        styles,
-        gridSpecs,
+        functionsRef.current,
+        stylesRef.current,
+        gridSpecsRef.current,
     )
 
     // for mount
@@ -127,22 +143,24 @@ const InfiniteGridScroller = (args) => {
 
     const scrollerID = scrollerSessionIDRef.current
 
+    console.log('scrollerID',scrollerID)
     // --------------------[ render ]---------------------
 
-    return <Viewport
+    return (
+        <Viewport
 
-            gridSpecs = {gridSpecs}
+            gridSpecs = {gridSpecsRef.current}
 
-            styles = { styles }
+            styles = { stylesRef.current }
 
             scrollerID = { scrollerID }
         >
         
             <Scrollblock
 
-                gridSpecs = {gridSpecs}
+                gridSpecs = {gridSpecsRef.current}
 
-                styles = { styles }
+                styles = { stylesRef.current }
 
                 scrollerID = { scrollerID }
 
@@ -151,16 +169,16 @@ const InfiniteGridScroller = (args) => {
             >
                 <Cradle 
 
-                    gridSpecs = {gridSpecs}
+                    gridSpecs = {gridSpecsRef.current}
 
-                    styles = { styles }
+                    styles = { stylesRef.current }
 
                     scrollerID = { scrollerID }
                     scrollerName = { scrollerName }
 
                     listsize = { listSize }
 
-                    functions = { functions }
+                    functions = { functionsRef.current }
                     defaultVisibleIndex = { defaultVisibleIndex }
                     getItem = { getItem }
                     placeholder = { placeholder }
@@ -169,11 +187,12 @@ const InfiniteGridScroller = (args) => {
                 />
             </Scrollblock>
         </Viewport>
+    )
 }
 
 export default InfiniteGridScroller
 
-// utility
+// utilities
 function freeze(...args) {
     let [arg, ...rest] = Array.from(arguments)
     Object.freeze(arg)
@@ -183,4 +202,13 @@ function freeze(...args) {
     freeze(...rest)
 }
 
-
+function compare (obj1,obj2) {
+    const keys = Object.keys(obj1)
+    let same
+    for (let key of keys) {
+        if (!Object.is(obj1[key],obj2[key])) {
+            return false
+        }
+    }
+    return true
+}

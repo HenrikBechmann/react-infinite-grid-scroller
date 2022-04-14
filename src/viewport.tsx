@@ -40,6 +40,8 @@ const Viewport = ({
     } = gridSpecs
 
     const [viewportState,setViewportState] = useState('setup');
+
+    console.log('running Viewport: viewportState',viewportState)
     const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
     viewportStateRef.current = viewportState
 
