@@ -24,6 +24,8 @@ import Viewport from './viewport'
 import Scrollblock from './scrollblock'
 import Cradle from './cradle'
 
+// -------------------[ global session ID generator ]----------------
+
 let globalScrollerID = 0
 
 const getSessionID = () => {
@@ -50,18 +52,13 @@ const getSessionID = () => {
     Overall the infinitegridscroller manages the (often asynchronous) interactions of the 
     components of the mechanism
 */
-function freeze(...args) {
-    let [arg, ...rest] = Array.from(arguments)
-    Object.freeze(arg)
-    if (rest.length == 0) {
-        return
-    }
-    freeze(...rest)
-}
 
-const InfiniteGridScroller = (inheritedprops) => {
-    // empty parameters use defaults
-    let props = Object.assign({},inheritedprops)
+const InfiniteGridScroller = (args) => {
+
+
+    // ------------------[ normalize properties ]--------------------
+
+    const props = Object.assign({},args) // args should be immutable
 
     // set defaults
     props.functions ?? (props.functions = {})
@@ -69,12 +66,12 @@ const InfiniteGridScroller = (inheritedprops) => {
     props.gap ?? (props.gap = 0)
     props.padding ?? (props.padding = 0)
     props.runwaySize ?? (props.runwaySize = 3)
-    props.defaultVisibleIndex ?? (props.defaultVisibleIndex = 0)
+    props.indexOffset ?? (props.indexOffset = 0)
     props.listSize ?? (props.listSize = 0)
     props.layout ?? (props.layout = 'uniform')
     // constraints
-    props.defaultVisibleIndex = Math.max(0,props.defaultVisibleIndex) // non-negative
-    props.defaultVisibleIndex = Math.min(props.listSize, props.defaultVisibleIndex) // not larger than list
+    props.indexOffset = Math.max(0,props.indexOffset) // non-negative
+    props.indexOffset = Math.min(props.listSize, props.indexOffset) // not larger than list
     if (!['horizontal','vertical'].includes(props.orientation)) {
         props.orientation = 'vertical'
     }
@@ -94,7 +91,7 @@ const InfiniteGridScroller = (inheritedprops) => {
         indexOffset:defaultVisibleIndex, // the 0-based starting index of the list, when first loaded
         getItem, // function provided by host - parameter is index number, set by system; return value is 
             // host-selected component or promise of a component
-        functions, // properties with direct access to some component utilites, optional
+        functions, // properties to get direct access to some component utilites, optional
         placeholder, // a sparse component to stand in for content until the content arrives; 
             // optional, replaces default placeholder
         styles, // passive style over-rides (eg. color, opacity); has 
@@ -105,7 +102,7 @@ const InfiniteGridScroller = (inheritedprops) => {
         scrollerName, // for debugging
     } = props
 
-    const gridSpecs = {
+    const gridSpecs = { // package
         orientation,
         gap,
         padding,
@@ -128,13 +125,17 @@ const InfiniteGridScroller = (inheritedprops) => {
         scrollerSessionIDRef.current = getSessionID()
     }
 
+    const scrollerID = scrollerSessionIDRef.current
+
+    // --------------------[ render ]---------------------
+
     return <Viewport
 
             gridSpecs = {gridSpecs}
 
             styles = { styles }
 
-            scrollerID = { scrollerSessionIDRef.current }
+            scrollerID = { scrollerID }
         >
         
             <Scrollblock
@@ -143,7 +144,7 @@ const InfiniteGridScroller = (inheritedprops) => {
 
                 styles = { styles }
 
-                scrollerID = { scrollerSessionIDRef.current }
+                scrollerID = { scrollerID }
 
                 listsize = { listSize }
                 
@@ -154,7 +155,7 @@ const InfiniteGridScroller = (inheritedprops) => {
 
                     styles = { styles }
 
-                    scrollerID = { scrollerSessionIDRef.current }
+                    scrollerID = { scrollerID }
                     scrollerName = { scrollerName }
 
                     listsize = { listSize }
@@ -171,3 +172,15 @@ const InfiniteGridScroller = (inheritedprops) => {
 }
 
 export default InfiniteGridScroller
+
+// utility
+function freeze(...args) {
+    let [arg, ...rest] = Array.from(arguments)
+    Object.freeze(arg)
+    if (rest.length == 0) {
+        return
+    }
+    freeze(...rest)
+}
+
+
