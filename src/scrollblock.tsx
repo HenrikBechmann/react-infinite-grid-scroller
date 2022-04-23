@@ -60,6 +60,7 @@ const Scrollblock = ({
 
         updateBlockLength()
         divlinerstyleRef.current = updateScrollblockStyles(orientation,divlinerstyleRef,scrollBlockLengthRef)
+        // console.log('scrollblock new divlinerstyle',divlinerstyleRef)
         saveDivlinerstyle(divlinerstyleRef.current)
 
     },[
