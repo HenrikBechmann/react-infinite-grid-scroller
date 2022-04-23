@@ -18,6 +18,8 @@
     - add grid-template-rows: max-content to parent for safari issue grid-auto-flow: column not filling column
 */
 
+'use strict'
+
 import React, {useEffect, useRef} from 'react'
 
 import Viewport from './viewport'
@@ -147,6 +149,7 @@ const InfiniteGridScroller = (args) => {
     // --------------------[ render ]---------------------
 
     return (
+        <React.StrictMode>
         <Viewport
 
             gridSpecs = {gridSpecsRef.current}
@@ -187,6 +190,8 @@ const InfiniteGridScroller = (args) => {
                 />
             </Scrollblock>
         </Viewport>
+        </React.StrictMode>
+
     )
 }
 

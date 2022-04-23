@@ -1,6 +1,8 @@
 // scrollblock.tsx
 // copyright (c) 2020 Henrik Bechmann, Toronto, Licence: MIT
 
+'use strict'
+
 import React, {useContext, useRef, useCallback, useEffect, useLayoutEffect, useState} from 'react'
 
 import { ViewportInterrupt } from './viewport'
@@ -25,8 +27,7 @@ const Scrollblock = ({
 
     // -------------------------[ context and state ]-------------------------
     const viewportProperties = useContext(ViewportInterrupt)
-    // const [blockstate,setBlockState] = useState('render') // setup -> render
-    // if (viewportData.index == 0) console.log('RUNNING scrollblock viewportData.index, blockstate',viewportData.index,blockstate)
+    // console.log('running scrollblock')
 
     // -----------------------------------[ data heap ]-------------------------
     const scrollBlockLengthRef = useRef(null)
@@ -45,22 +46,12 @@ const Scrollblock = ({
 
     let { viewportDimensions, itemobserver/*, isResizing*/ } = viewportProperties
     let { top, right, bottom, left, width, height } = viewportDimensions
-
-    // state engine
-    // useEffect(()=>{
-    //     switch (blockstate) {
-    //         case 'setup': {
-    //             setBlockState('render')
-    //             break
-    //         }
-    //     }
-    // },[blockstate])
     
     useLayoutEffect(() => {
 
+        // console.log('updating scrollblock divlinerstyleRef')
         updateBlockLength()
         divlinerstyleRef.current = updateScrollblockStyles(orientation,divlinerstyleRef,scrollBlockLengthRef)
-        // console.log('scrollblock new divlinerstyle',divlinerstyleRef)
         saveDivlinerstyle(divlinerstyleRef.current)
 
     },[
@@ -108,7 +99,6 @@ const Scrollblock = ({
     return <div data-type = 'scrollblock' style={divlinerstyleRef.current}>{children}</div>
 
 } // Scrollblock
-        // <div ref = {scrollblockRef} data-type = 'scrollblock' style={divlinerstyleRef.current}>{children}</div>
 
 // all the parameters affect the length
 const calcScrollblockLength = ({

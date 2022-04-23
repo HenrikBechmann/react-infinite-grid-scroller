@@ -1,6 +1,8 @@
 // wingshandler.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
+'use strict'
+
 import { ResizeObserver as ResizeObserverPolyfill} from '@juggle/resize-observer'
 
 const ResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill

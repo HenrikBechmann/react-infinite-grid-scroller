@@ -102,6 +102,8 @@
         this position when the scrolling stops.
 */
 
+'use strict'
+
 import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, useLayoutEffect } from 'react'
 
 import { ViewportInterrupt } from './viewport'
@@ -183,6 +185,7 @@ const Cradle = ({
     const viewportDataRef = useRef(null)
     viewportDataRef.current = viewportProperties
 
+    // console.log('running cradle',cradleState)
     // if (viewportData.index === null) {
     //     console.log('RUNNING index cradleState', viewportData.index, cradleState)
     // }

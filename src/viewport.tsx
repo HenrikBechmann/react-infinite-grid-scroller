@@ -6,6 +6,8 @@
     and act as the visible screen portal of the list being shown
 */
 
+'use strict'
+
 import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useContext} from 'react'
 
 export const ViewportInterrupt = React.createContext(null) // for children
@@ -40,6 +42,7 @@ const Viewport = ({
     } = gridSpecs
 
     const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, render
+    // console.log('running viewport', viewportState)
 
     const oldGridSpecs = useRef(gridSpecs)
     const oldStyles = useRef(styles)
