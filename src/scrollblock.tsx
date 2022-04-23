@@ -44,8 +44,8 @@ const Scrollblock = ({
     )
     const [divlinerstyle,saveDivlinerstyle] = useState(divlinerstyleRef.current) // to trigger render
 
-    let { viewportDimensions, itemobserver/*, isResizing*/ } = viewportProperties
-    let { top, right, bottom, left, width, height } = viewportDimensions
+    const { viewportDimensions, itemobserver/*, isResizing*/ } = viewportProperties
+    const { top, right, bottom, left, width, height } = viewportDimensions
     
     useLayoutEffect(() => {
 
