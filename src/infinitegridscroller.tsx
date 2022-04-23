@@ -55,7 +55,7 @@ const getSessionID = () => {
 
 const InfiniteGridScroller = (args) => {
 
-    console.log('running InfiniteGridScroller')
+    // console.log('running InfiniteGridScroller')
 
     // ------------------[ normalize properties ]--------------------
 
@@ -143,7 +143,7 @@ const InfiniteGridScroller = (args) => {
 
     const scrollerID = scrollerSessionIDRef.current
 
-    console.log('scrollerID',scrollerID)
+    // console.log('scrollerID',scrollerID)
     // --------------------[ render ]---------------------
 
     return (
