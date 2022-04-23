@@ -291,7 +291,7 @@ export const isolateShiftingIntersections = ({
 
     }
 
-    console.log('scrollingviewportforward, duplicates',scrollingviewportforward, {...duplicates})
+    // console.log('scrollingviewportforward, duplicates',scrollingviewportforward, {...duplicates})
 
     // console.log('headintersectionindexes, tailintersectionindexes, intersections, intersectingmetadata',
     //     headintersectionindexes, tailintersectionindexes, intersections, intersectingmetadata)

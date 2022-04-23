@@ -44,8 +44,7 @@ const Scrollblock = ({
     )
     const [divlinerstyle,saveDivlinerstyle] = useState(divlinerstyleRef.current) // to trigger render
 
-    const { viewportDimensions, itemobserver/*, isResizing*/ } = viewportProperties
-    const { top, right, bottom, left, width, height } = viewportDimensions
+    const { width, height } = viewportProperties.viewportDimensions
     
     useLayoutEffect(() => {
 
@@ -70,29 +69,28 @@ const Scrollblock = ({
             let scrollblocklength = 
                 calcScrollblockLength(
                     {
+                        orientation,
+                        viewportheight:height,
+                        viewportwidth:width,
                         listsize,
                         cellHeight,
                         cellWidth,
                         gap,
                         padding,
-                        orientation, 
-                        viewportheight:height,
-                        viewportwidth:width,
                     }
                 )
 
-            // if (viewportData.index == 0) console.log('scrollblock updateBlockLength to ', scrollblocklength)
             scrollBlockLengthRef.current = scrollblocklength
 
         },[
+            orientation,
+            height,
+            width,
             listsize,
             cellHeight,
             cellWidth,
             gap,
             padding,
-            orientation, 
-            height,
-            width,
        ]
     )
 
@@ -102,14 +100,14 @@ const Scrollblock = ({
 
 // all the parameters affect the length
 const calcScrollblockLength = ({
-    listsize, 
-    cellHeight, 
-    cellWidth, 
-    gap, 
-    padding, 
-    orientation, 
-    viewportheight,
-    viewportwidth,
+        orientation,
+        viewportheight,
+        viewportwidth,
+        listsize,
+        cellHeight,
+        cellWidth,
+        gap,
+        padding,
     }) => {
 
     // dependents of orientation
@@ -122,7 +120,7 @@ const calcScrollblockLength = ({
         cellLength = cellHeight + gap
         viewportcrosslength = viewportwidth 
 
-    } else {
+    } else { // 'horizontal'
 
         crosslength = cellHeight + gap
         cellLength = cellWidth + gap
