@@ -39,7 +39,7 @@ const Viewport = ({
         dense,
     } = gridSpecs
 
-    const [viewportState,setViewportState] = useState('setup');
+    const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, render
 
     console.log('running Viewport: viewportState',viewportState)
     const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope

@@ -118,13 +118,13 @@ const InfiniteGridScroller = (args) => {
     const functionsRef = useRef(functions)
 
     // satisfy React Object.is for attributes
-    if (!compare(gridSpecs, gridSpecsRef.current)) {
+    if (!compareProps(gridSpecs, gridSpecsRef.current)) {
         gridSpecsRef.current = gridSpecs
     }
-    if (!compare(styles, stylesRef.current)) {
+    if (!compareProps(styles, stylesRef.current)) {
         stylesRef.current = styles
     }
-    if (!compare(functions, functionsRef.current)) {
+    if (!compareProps(functions, functionsRef.current)) {
         functionsRef.current = functions
     }
 
@@ -202,7 +202,7 @@ function freeze(...args) {
     freeze(...rest)
 }
 
-function compare (obj1,obj2) {
+function compareProps (obj1,obj2) {
     const keys = Object.keys(obj1)
     let same
     for (let key of keys) {
