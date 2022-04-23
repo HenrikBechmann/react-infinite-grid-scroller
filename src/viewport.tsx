@@ -41,7 +41,10 @@ const Viewport = ({
 
     const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, render
 
-    // console.log('running Viewport: viewportState',viewportState)
+    const oldGridSpecs = useRef(gridSpecs)
+    const oldStyles = useRef(styles)
+    const oldScrollerID = useRef(scrollerID)
+
     const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
     viewportStateRef.current = viewportState
 
@@ -80,7 +83,7 @@ const Viewport = ({
 
     const viewportdivRef = useRef(null)
 
-    // viewportPropertiesRef is passed as an interrupt context to children
+    // viewportPropertiesRef is passed as an interrupt (context) to children
     const viewportPropertiesRef = useRef(
         {
             portal:null, 
@@ -90,22 +93,6 @@ const Viewport = ({
     )
 
     // --------------------[ resizer setup ]-----------------------
-
-    // useEffect(() => {
-
-    //     let observer = interruptHandler.cradleResize.createObserver()
-    //     let cradleElements = cradleHandler.elements
-    //     observer.observe(cradleElements.headRef.current)
-    //     observer.observe(cradleElements.tailRef.current)
-
-    //     return () => {
-
-    //         observer.disconnect()
-
-    //     }
-
-    // },[])
-
 
     const resizeTimeridRef = useRef(null)
     const isResizingRef = useRef(false)
@@ -141,8 +128,8 @@ const Viewport = ({
         // first register shouldn't generate interrupt
         if (!target.dataset.initialized) {
 
-            // console.log('initializing target', target.dataset)
             target.dataset.initialized = true
+            // console.log('initialed target', target.dataset)
 
             return
 
@@ -152,6 +139,7 @@ const Viewport = ({
         if (!isResizingRef.current) {
             viewportPropertiesRef.current.isResizing = isResizingRef.current = true 
             // new object creation triggers a realtime interrupt message to cradle through context
+            // console.log('updating viewportPropertiesRef in resizeCallback')
             viewportPropertiesRef.current = Object.assign({},viewportPropertiesRef.current) 
 
             if (isMountedRef.current) setViewportState('resizing')
@@ -174,7 +162,7 @@ const Viewport = ({
 
     useEffect(()=>{
 
-        if (!parentPortalHandlerRef.current) return // root viewport has no portal
+        if (!parentPortalHandlerRef.current) return // root viewport; has no portal
 
         const parentPortalHandler = parentPortalHandlerRef.current
 
@@ -224,6 +212,8 @@ const Viewport = ({
     // TODO: should dimensions be updated during resize or only after resize?
     viewportPropertiesRef.current = useMemo(() => {
 
+        // console.log('useMemo state', viewportState)
+
         if (viewportState == 'setup') return viewportPropertiesRef.current
 
         const {top, right, bottom, left} = viewportdivRef.current.getBoundingClientRect()
@@ -239,7 +229,7 @@ const Viewport = ({
 
         // trigger context change with new object
         const viewportdataobject = Object.assign({},viewportPropertiesRef.current, localViewportData) 
-
+        // console.log('updating viewportPropertiesRef from useMemo')
         return  viewportdataobject
 
     },[orientation, isResizingRef.current, viewportState])
@@ -259,7 +249,10 @@ const Viewport = ({
     },[viewportState])
 
     // ----------------------[ render ]--------------------------------
-
+    // const oldViewportPropertiesRef = useRef(viewportPropertiesRef.current)
+    // console.log('viewport changes',
+    //     Object.is(viewportPropertiesRef.current,oldViewportPropertiesRef.current))
+    // oldViewportPropertiesRef.current = viewportPropertiesRef.current
     return <ViewportInterrupt.Provider value = { viewportPropertiesRef.current }>
         <div 
             data-type = 'viewport'
