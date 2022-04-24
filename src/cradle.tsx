@@ -112,9 +112,10 @@ import { PortalHandler, PortalList } from './portalhandler'
 
 const ITEM_OBSERVER_THRESHOLD = [0,1]
 
-// popup position trackeer
+// popup position tracker
 import ScrollTracker from './scrolltracker'
 
+// support code
 import ScrollHandler from './cradle/scrollhandler'
 import StateHandler from './cradle/statehandler'
 import ContentHandler from './cradle/contenthandler'
@@ -123,6 +124,7 @@ import InterruptHandler from './cradle/interrupthandler'
 import ServiceHandler from './cradle/servicehandler'
 import StylesHandler from './cradle/styleshandler'
 
+// for children
 export const CradleContext = React.createContext(null) // for children
 
 const portalrootstyle = {display:'none'} // static parm
@@ -161,7 +163,7 @@ const Cradle = ({
 
     const cradleInheritedPropsRef = useRef(null) // access by closures
 
-    let functions = Object.assign({},inheritedfunctions)
+    const functions = Object.assign({},inheritedfunctions)
 
     cradleInheritedPropsRef.current =  {
         gap, 
@@ -372,31 +374,11 @@ const Cradle = ({
     // this is an immediate response to reparenting. Reparenting resets scroll positions
     // this restores scroll as soon as cradle is invoked after reparenting
     if (viewportProperties.portal?.isReparenting) { 
-        // if (viewportData.index == 6) {
-        //         console.log('restoring scrollpos from, to', 
-        //             viewportData.index,
-        //             viewportData.elementref.current[cradleHandler.cradleReferenceData.blockScrollProperty],
-        //             Math.max(0,cradleHandler.cradleReferenceData.blockScrollPos))
-        // }
+
         viewportProperties.portal.isReparenting = false
         viewportProperties.elementref.current[cradleHandler.cradleReferenceData.blockScrollProperty] =
             Math.max(0,cradleHandler.cradleReferenceData.blockScrollPos)
     }
-
-    // if (viewportPropertiesRef.current.index == 6) {
-    //     console.log('RUNNING CRADLE index, cradleState',viewportPropertiesRef.current.index, cradleState)
-    // }
-    // functions and styles handled separately
-
-
-    // if (viewportData.index == 0) console.log('cradle index, cradleState, props',
-    //     viewportData.index,cradleState, cradleInheritedPropsRef.current)
-
-    // -----------------------------------------------------------------------
-    // -------------------------[ configuration ]-----------------------------
-
-    // -----------------------------------------------------------------------
-    // -------------------------[ cradle management nodes ]-----------------
 
     // ------------------------------------------------------------------------
     // -----------------------[ initialization effects ]-----------------------
