@@ -159,11 +159,11 @@ const Cradle = ({
 
     // ---------------------[ bundle cradle props to pass around ]-------------------
 
-    const cradlePropsRef = useRef(null) // access by closures
+    const cradleInheritedPropsRef = useRef(null) // access by closures
 
     let functions = Object.assign({},inheritedfunctions)
 
-    cradlePropsRef.current =  {
+    cradleInheritedPropsRef.current =  {
         gap, 
         padding, 
         runwaycount, 
@@ -182,13 +182,8 @@ const Cradle = ({
 
     const [cradleState, setCradleState] = useState('setup')
     const viewportProperties = useContext(ViewportInterrupt)
-    const viewportDataRef = useRef(null)
-    viewportDataRef.current = viewportProperties
-
-    // console.log('running cradle',cradleState)
-    // if (viewportData.index === null) {
-    //     console.log('RUNNING index cradleState', viewportData.index, cradleState)
-    // }
+    const viewportPropertiesRef = useRef(null)
+    viewportPropertiesRef.current = viewportProperties // for closures
 
     // ----------------[ cradle butterfly html components ]---------------
 
@@ -230,10 +225,10 @@ const Cradle = ({
 
     },[
         orientation, 
-        cellWidth, 
-        cellHeight, 
         gap, 
         padding, 
+        cellWidth, 
+        cellHeight, 
         viewportheight, 
         viewportwidth,
     ])
@@ -283,10 +278,10 @@ const Cradle = ({
         listRowcount:Math.ceil(listsize/crosscount),
     }
 
-    const cradleDataRef = useRef({
+    const cradlePropertiesRef = useRef({
         portalHandler:null,
         scrollerID,
-        viewportDataRef,
+        // viewportPropertiesRef,
     })
 
     // -------------------[ support services ]------------------
@@ -319,10 +314,10 @@ const Cradle = ({
     const handlersRef = useRef(null) // make available to individual handlers
     const cradleBackProps = Object.freeze({
         handlersRef,
-        viewportdataRef:viewportDataRef,
-        cradlePropsRef, 
+        viewportdataRef:viewportPropertiesRef,
+        cradleInheritedPropsRef, 
         cradleConfigRef, 
-        cradleDataRef,
+        cradlePropertiesRef,
         cradleStateRef,
         setCradleState,
         isMountedRef,
@@ -335,9 +330,9 @@ const Cradle = ({
 
     useLayoutEffect(()=>{
 
-        cradleDataRef.current.portalHandler = new PortalHandler()
+        cradlePropertiesRef.current.portalHandler = new PortalHandler()
 
-        // cleanup portal repository; clear isMountedRef
+        // unmount
         return () => {
             isMountedRef.current = false
         }
@@ -374,14 +369,14 @@ const Cradle = ({
             Math.max(0,cradleHandler.cradleReferenceData.blockScrollPos)
     }
 
-    // if (viewportDataRef.current.index == 6) {
-    //     console.log('RUNNING CRADLE index, cradleState',viewportDataRef.current.index, cradleState)
+    // if (viewportPropertiesRef.current.index == 6) {
+    //     console.log('RUNNING CRADLE index, cradleState',viewportPropertiesRef.current.index, cradleState)
     // }
     // functions and styles handled separately
 
 
     // if (viewportData.index == 0) console.log('cradle index, cradleState, props',
-    //     viewportData.index,cradleState, cradlePropsRef.current)
+    //     viewportData.index,cradleState, cradleInheritedPropsRef.current)
 
     // -----------------------------------------------------------------------
     // -------------------------[ configuration ]-----------------------------
@@ -403,12 +398,12 @@ const Cradle = ({
 
     handlersRef.current = managementsetRef.current
 
-    // if ((viewportDataRef.current.index == 6) /*|| (viewportDataRef.current.index === null)*/) {
+    // if ((viewportPropertiesRef.current.index == 6) /*|| (viewportPropertiesRef.current.index === null)*/) {
     //     console.log('RUNNING CRADLE index',
-    //         viewportDataRef.current.index, '\n',
+    //         viewportPropertiesRef.current.index, '\n',
     //         '==>','cradleState:',cradleState,'\n',
     //         'isRepositioning signal:',interruptHandler.states.isRepositioning,'\n',
-    //         // 'isReparenting signal, state:',viewportDataRef.current.portal?.isReparenting,
+    //         // 'isReparenting signal, state:',viewportPropertiesRef.current.portal?.isReparenting,
     //         // isReparentingRef.current,'\n',
     //         'isResizing signal:',viewportData.isResizing,'\n',
     //         'repositioningRequired:',interruptHandler.signals.repositioningRequired)
@@ -441,7 +436,7 @@ const Cradle = ({
 
     // initialize window scroll listener
     useEffect(() => {
-        let viewportdata = viewportDataRef.current
+        let viewportdata = viewportPropertiesRef.current
         viewportdata.elementref.current.addEventListener('scroll',scrollHandler.onScroll)
 
         return () => {
@@ -507,14 +502,14 @@ const Cradle = ({
 
         // get previous ratio
         let previousCellPixelLength = (orientation == 'vertical')?
-            cradlePropsRef.current.cellWidth:cradlePropsRef.current.cellHeight
+            cradleInheritedPropsRef.current.cellWidth:cradleInheritedPropsRef.current.cellHeight
         // let previousSpineOffset = cradleHandler.cradleReferenceData.theNextSpinePixelOffset
         let previousSpineOffset = cradleHandler.cradleReferenceData.nextCradlePosOffset
 
         let previousratio = previousSpineOffset/previousCellPixelLength
 
         let currentCellPixelLength = (orientation == 'vertical')?
-            cradlePropsRef.current.cellHeight:cradlePropsRef.current.cellWidth
+            cradleInheritedPropsRef.current.cellHeight:cradleInheritedPropsRef.current.cellWidth
 
         let currentSpineOffset = previousratio * currentCellPixelLength
         
@@ -688,7 +683,7 @@ const Cradle = ({
     // useLayout for suppressing flashes
     useLayoutEffect(()=>{
 
-        let viewportData = viewportDataRef.current
+        let viewportData = viewportPropertiesRef.current
         let cradleContent = contentHandler.content
         switch (cradleState) {
 
@@ -747,7 +742,7 @@ const Cradle = ({
                 cradleContent.tailModel = []
                 cradleContent.headView = []
                 cradleContent.tailView = []
-                cradleDataRef.current.portalHandler.resetScrollerPortalRepository()
+                cradlePropertiesRef.current.portalHandler.resetScrollerPortalRepository()
                 contentHandler.setCradleContent(callingCradleState.current)
 
                 setCradleState('preparerender')
@@ -779,7 +774,7 @@ const Cradle = ({
                         
             /*2*/       if (!interruptHandler.signals.repositioningRequired) { // repositioning short-circuit
 
-            // /*3*/           if ((!viewportDataRef.current.portal) || (!viewportDataRef.current.portal.isReparenting))
+            // /*3*/           if ((!viewportPropertiesRef.current.portal) || (!viewportPropertiesRef.current.portal.isReparenting))
             //                     /*&& (!isReparentingRef.current))*/ { // reparent (restorescrollpos) short-circuit
                             
                                 const signals = interruptHandler.signals
@@ -819,7 +814,7 @@ const Cradle = ({
     // standard processing stages
     useEffect(()=> { // TODO: verify benefit of useLayoutEffect
 
-        let viewportData = viewportDataRef.current
+        let viewportData = viewportPropertiesRef.current
         switch (cradleState) {
 
             case 'repositioningA':
@@ -848,24 +843,24 @@ const Cradle = ({
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
             referenceIndexOffset:cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference,
-            listsize:cradlePropsRef.current.listsize,
-            styles:cradlePropsRef.current.styles,
+            listsize:cradleInheritedPropsRef.current.listsize,
+            styles:cradleInheritedPropsRef.current.styles,
         }
         return trackerargs
     },[
         cradleStateRef.current, 
         viewportDimensions, 
         cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference, 
-        cradlePropsRef
+        cradleInheritedPropsRef
         ]
     )
 
     let cradleContent = contentHandler.content
 
     // portalroot is the hidden portal component cache
-    return <CradleContext.Provider value = {cradleDataRef}>
+    return <CradleContext.Provider value = {cradlePropertiesRef}>
         {(cradleStateRef.current != 'setup') && <div data-type = 'portalroot' style = { portalrootstyle }>
-            <PortalList scrollerData = {cradleDataRef.current.portalHandler.scrollerData}/>
+            <PortalList scrollerData = {cradlePropertiesRef.current.portalHandler.scrollerData}/>
         </div>}
 
         {((cradleStateRef.current == 'repositioningA') || (cradleStateRef.current == 'repositioningB'))

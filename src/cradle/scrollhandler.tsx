@@ -35,7 +35,7 @@ export default class ScrollHandler {
         const cradleHandler = this.cradleBackProps.handlersRef.current.cradle
 
         const scrollPositionCurrent = 
-            (this.cradleBackProps.cradlePropsRef.current.orientation == 'vertical')
+            (this.cradleBackProps.cradleInheritedPropsRef.current.orientation == 'vertical')
             ?viewportElement.scrollTop
             :viewportElement.scrollLeft
 
@@ -85,7 +85,7 @@ export default class ScrollHandler {
                     let spineVisiblePosOffset
                     const cradleElements = cradleHandler.elements
 
-                    if (this.cradleBackProps.cradlePropsRef.current.orientation == 'vertical') {
+                    if (this.cradleBackProps.cradleInheritedPropsRef.current.orientation == 'vertical') {
 
                         spineVisiblePosOffset = cradleElements.spineRef.current.offsetTop - 
                             this.cradleBackProps.viewportdataRef.current.elementref.current.scrollTop
@@ -177,7 +177,7 @@ export default class ScrollHandler {
 
         const stateHandler = this.cradleBackProps.handlersRef.current.state
         const cradleHandler = this.cradleBackProps.handlersRef.current.cradle
-        const cradleProps = this.cradleBackProps.cradlePropsRef.current
+        const cradleProps = this.cradleBackProps.cradleInheritedPropsRef.current
         const viewportData = this.cradleBackProps.viewportdataRef.current
         // const contentHandler = this.cradleBackProps.handlersRef.current.content
 
@@ -217,7 +217,7 @@ export default class ScrollHandler {
     updateBlockScrollPos = () => {
 
         const cradleHandler = this.cradleBackProps.handlersRef.current.cradle
-        const cradleProps = this.cradleBackProps.cradlePropsRef.current
+        const cradleProps = this.cradleBackProps.cradleInheritedPropsRef.current
         const viewportData = this.cradleBackProps.viewportdataRef.current
         const viewportElement = viewportData.elementref.current
 
@@ -236,7 +236,7 @@ export default class ScrollHandler {
     private _setScrollReferenceIndexData = () => {
 
         const viewportData = this.cradleBackProps.viewportdataRef.current
-        let cradleProps = this.cradleBackProps.cradlePropsRef.current
+        let cradleProps = this.cradleBackProps.cradleInheritedPropsRef.current
         let cradleConfig = this.cradleBackProps.cradleConfigRef.current
 
         let {crosscount} = cradleConfig

@@ -55,14 +55,14 @@ export default class ContentHandler {
     public setCradleContent = (cradleState) => { 
 
         const viewportData = this.cradleBackProps.viewportdataRef.current
-        const cradleProps = this.cradleBackProps.cradlePropsRef.current
+        const cradleProps = this.cradleBackProps.cradleInheritedPropsRef.current
         const cradleConfig = this.cradleBackProps.cradleConfigRef.current
         const scrollHandler = this.cradleBackProps.handlersRef.current.scroll
         const cradleHandler = this.cradleBackProps.handlersRef.current.cradle
         const stateHandler = this.cradleBackProps.handlersRef.current.state
         const serviceHandler = this.cradleBackProps.handlersRef.current.service
         const interruptHandler = this.cradleBackProps.handlersRef.current.interrupts
-        const cradleData = this.cradleBackProps.cradleDataRef.current
+        const cradleData = this.cradleBackProps.cradleInheritedPropsRef.current
 
         // if (viewportData.index == 6) {
         //     console.log('SETTING content - cradleState, cradleData in setCradleContent',
@@ -190,13 +190,13 @@ export default class ContentHandler {
     public updateCradleContent = (entries, source = 'notifications') => {
 
         const viewportData = this.cradleBackProps.viewportdataRef.current
-        const cradleProps = this.cradleBackProps.cradlePropsRef.current
+        const cradleProps = this.cradleBackProps.cradleInheritedPropsRef.current
         const scrollHandler = this.cradleBackProps.handlersRef.current.scroll
         const cradleHandler = this.cradleBackProps.handlersRef.current.cradle
         const stateHandler = this.cradleBackProps.handlersRef.current.state
         const interruptHandler = this.cradleBackProps.handlersRef.current.interrupts
 
-        const cradleData = this.cradleBackProps.cradleDataRef.current
+        const cradleData = this.cradleBackProps.cradleInheritedPropsRef.current
 
         // if (viewportData.index == 6) {
             // console.log('UPDATING content - source; in updateCradleContent',source)

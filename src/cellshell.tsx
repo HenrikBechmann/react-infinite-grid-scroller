@@ -28,8 +28,8 @@ const CellShell = ({
     scrollerID,
 }) => {
 
-    const cradleDataRef = useContext(CradleContext)
-    const { portalHandler } = cradleDataRef.current
+    const cradlePropertiesRef = useContext(CradleContext)
+    const { portalHandler } = cradlePropertiesRef.current
     
     const [styles,saveStyles] = useState({
         overflow:'hidden',
