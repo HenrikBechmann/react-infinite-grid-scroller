@@ -1,6 +1,12 @@
 // scrollblock.tsx
 // copyright (c) 2020 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+    TODO
+    update length for cradle adjustments based on variable length cell shells.
+
+*/
+
 'use strict'
 
 import React, {useContext, useRef, useCallback, useEffect, useLayoutEffect, useState} from 'react'
@@ -30,7 +36,7 @@ const Scrollblock = ({
     // console.log('running scrollblock')
 
     // -----------------------------------[ data heap ]-------------------------
-    const scrollBlockLengthRef = useRef(null)
+    const baseScrollBlockLengthRef = useRef(null)
     // const scrollblockRef = useRef(null)
     const divlinerstyleRef = useRef(
         Object.assign(
@@ -49,8 +55,8 @@ const Scrollblock = ({
     useLayoutEffect(() => {
 
         // console.log('updating scrollblock divlinerstyleRef')
-        updateBlockLength()
-        divlinerstyleRef.current = updateScrollblockStyles(orientation,divlinerstyleRef,scrollBlockLengthRef)
+        updateBaseBlockLength()
+        divlinerstyleRef.current = updateScrollblockStyles(orientation,divlinerstyleRef,baseScrollBlockLengthRef)
         saveDivlinerstyle(divlinerstyleRef.current)
 
     },[
@@ -64,10 +70,10 @@ const Scrollblock = ({
         padding,
     ])
 
-    const updateBlockLength = useCallback(
+    const updateBaseBlockLength = useCallback(
         () => {
-            let scrollblocklength = 
-                calcScrollblockLength(
+            const basescrollblocklength = 
+                calcBaseScrollblockLength(
                     {
                         orientation,
                         viewportheight:height,
@@ -80,7 +86,7 @@ const Scrollblock = ({
                     }
                 )
 
-            scrollBlockLengthRef.current = scrollblocklength
+            baseScrollBlockLengthRef.current = basescrollblocklength
 
         },[
             orientation,
@@ -99,7 +105,7 @@ const Scrollblock = ({
 } // Scrollblock
 
 // all the parameters affect the length
-const calcScrollblockLength = ({
+const calcBaseScrollblockLength = ({
         orientation,
         viewportheight,
         viewportwidth,
@@ -142,16 +148,16 @@ const calcScrollblockLength = ({
 
 }
 
-const updateScrollblockStyles = (orientation,stylesRef,scrollblocklengthRef) => {
+const updateScrollblockStyles = (orientation,stylesRef,baseScrollblocklengthRef) => {
 
     let localstyles = Object.assign({},stylesRef.current) as React.CSSProperties
     let height 
     let width
     if (orientation == 'horizontal') {
         height = '100%'
-        width = scrollblocklengthRef.current + 'px'
+        width = baseScrollblocklengthRef.current + 'px'
     } else if (orientation == 'vertical') {
-        height = scrollblocklengthRef.current + 'px'
+        height = baseScrollblocklengthRef.current + 'px'
         width = '100%'
     }
     localstyles.height = height
