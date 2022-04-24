@@ -207,12 +207,11 @@ const Cradle = ({
     const spineCradleElementRef = useRef(null)
     const cradleElementsRef = useRef(
         {
-            head:headCradleElementRef, 
-            tail:tailCradleElementRef, 
-            spine:spineCradleElementRef
+            headRef:headCradleElementRef, 
+            tailRef:tailCradleElementRef, 
+            spineRef:spineCradleElementRef
         }
     )
-    
     // ----------------[ viewport dimensions ]------------------
 
     const { viewportDimensions } = viewportProperties

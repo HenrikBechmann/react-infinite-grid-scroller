@@ -7,12 +7,14 @@ export default class CradleHandler {
 
        this.cradleParameters = cradleParameters
 
-       let elements = this.elements
-       elements.spineRef = cradleParameters.cradleElementsRef.current.spine
-       elements.headRef = cradleParameters.cradleElementsRef.current.head
-       elements.tailRef = cradleParameters.cradleElementsRef.current.tail
+       const {spineRef, headRef, tailRef} = cradleParameters.cradleElementsRef.current
+       this.elements = {
+          spineRef,
+          headRef,
+          tailRef,
+       }
 
-       let {defaultVisibleIndex, listsize, padding} = this.cradleParameters.cradleInheritedPropertiesRef.current
+       const {defaultVisibleIndex, listsize, padding} = this.cradleParameters.cradleInheritedPropertiesRef.current
 
        // progression of references: scroll->next
        this.cradleReferenceData.scrollImpliedItemIndexReference = (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
@@ -45,10 +47,6 @@ export default class CradleHandler {
 
    }
 
-   elements = {
-      spineRef:null, 
-      headRef:null, 
-      tailRef:null
-   }
+   elements
 
 }
