@@ -840,7 +840,7 @@ const Cradle = ({
     // portalroot is the hidden portal component cache
     return <CradleContext.Provider value = {cradlePropertiesRef}>
         {(cradleStateRef.current != 'setup') && <div data-type = 'portalroot' style = { portalrootstyle }>
-            <PortalList scrollerData = {cradlePropertiesRef.current.portalHandler.scrollerData}/>
+            <PortalList scrollerProps = {cradlePropertiesRef.current.portalHandler.scrollerProps}/>
         </div>}
 
         {((cradleStateRef.current == 'repositioningA') || (cradleStateRef.current == 'repositioningB'))

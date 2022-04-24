@@ -14,7 +14,7 @@ export class PortalHandler {
 
     //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
 
-    scrollerData = {
+    scrollerProps = {
         setListState:null,
         modified:false,
         portalMetadataMap:new Map(),
@@ -27,22 +27,22 @@ export class PortalHandler {
     resetScrollerPortalRepository() {
 
         // keep the setListState callback
-        this.scrollerData.portalMap.clear() 
-        this.scrollerData.portalMetadataMap.clear()
-        this.scrollerData.portalList = null
-        this.scrollerData.modified = false
+        this.scrollerProps.portalMap.clear() 
+        this.scrollerProps.portalMetadataMap.clear()
+        this.scrollerProps.portalList = null
+        this.scrollerProps.modified = false
 
     }
 
     // set state of the PortalList component of the scroller to trigger render
     renderPortalList = () => {
 
-        if (this.scrollerData.modified) {
-            this.scrollerData.portalList = Array.from(this.scrollerData.portalMap.values())
-            this.scrollerData.modified = false
+        if (this.scrollerProps.modified) {
+            this.scrollerProps.portalList = Array.from(this.scrollerProps.portalMap.values())
+            this.scrollerProps.modified = false
         }
 
-        this.scrollerData.setListState() // trigger display update
+        this.scrollerProps.setListState() // trigger display update
 
     }
 
@@ -59,8 +59,8 @@ export class PortalHandler {
 
         const [inportal,reverseportal] = createInPortal(content, index)
 
-        this.scrollerData.portalMap.set(index,<PortalWrapper inportal = {inportal} key = {index} index = {index}/>)
-        this.scrollerData.modified = true
+        this.scrollerProps.portalMap.set(index,<PortalWrapper inportal = {inportal} key = {index} index = {index}/>)
+        this.scrollerProps.modified = true
 
         const portalMetadata = {
             reverseportal, 
@@ -68,7 +68,7 @@ export class PortalHandler {
             hasusercontent:false 
         }
 
-        this.scrollerData.portalMetadataMap.set(index, portalMetadata)
+        this.scrollerProps.portalMetadataMap.set(index, portalMetadata)
 
         this.renderPortalList()
 
@@ -82,8 +82,8 @@ export class PortalHandler {
 
         const portalComponent = updateInPortal(content, portalMetadata.reverseportal )
 
-        this.scrollerData.portalMap.set(index,<PortalWrapper inportal = {portalComponent} key = {index} index = {index}/>)
-        this.scrollerData.modified = true
+        this.scrollerProps.portalMap.set(index,<PortalWrapper inportal = {portalComponent} key = {index} index = {index}/>)
+        this.scrollerProps.modified = true
 
         this.renderPortalList()
 
@@ -93,23 +93,23 @@ export class PortalHandler {
     // delete a portal list item
     deletePortal(index) {
 
-        this.scrollerData.portalMetadataMap.delete(index)
-        this.scrollerData.portalMap.delete(index)
-        this.scrollerData.modified = true
+        this.scrollerProps.portalMetadataMap.delete(index)
+        this.scrollerProps.portalMap.delete(index)
+        this.scrollerProps.modified = true
 
     }
 
     // query existence of a portal list item
     hasPortal(index) {
 
-        return this.scrollerData.portalMetadataMap.has(index)
+        return this.scrollerProps.portalMetadataMap.has(index)
 
     }
 
     // get a portal list item's meta data
     getPortal(index) {
 
-        return this.scrollerData.portalMetadataMap.get(index)
+        return this.scrollerProps.portalMetadataMap.get(index)
 
     }
 
@@ -162,15 +162,15 @@ export const PortalWrapper = ({ inportal, index }) => {
 }
 
 // portal list component for rapid relisting of updates, using external callback for set state
-export const PortalList = ({ scrollerData }) => {
+export const PortalList = ({ scrollerProps }) => {
 
     const [portalList, setPortalList] = useState(null)
     const isMountedRef = useRef(true)
 
     useEffect(()=>{
 
-        scrollerData.setListState = ()=>{
-            isMountedRef.current && setPortalList(scrollerData.portalList)
+        scrollerProps.setListState = ()=>{
+            isMountedRef.current && setPortalList(scrollerProps.portalList)
         }
 
         return () => {isMountedRef.current = false}
