@@ -55,7 +55,8 @@ export default class ContentHandler {
     public setCradleContent = (cradleState) => { 
 
         const viewportData = this.cradleBackProps.viewportdataRef.current
-        const cradleProps = this.cradleBackProps.cradleInheritedPropsRef.current
+        const cradleInheritedProps = this.cradleBackProps.cradleInheritedPropsRef.current
+        const cradleProperties = this.cradleBackProps.cradlePropertiesRef.current
         const cradleConfig = this.cradleBackProps.cradleConfigRef.current
         const scrollHandler = this.cradleBackProps.handlersRef.current.scroll
         const cradleHandler = this.cradleBackProps.handlersRef.current.cradle
@@ -74,7 +75,7 @@ export default class ContentHandler {
         const visibletargetindexoffset = cradleHandler.cradleReferenceData.nextItemIndexReference
         let visibletargetscrolloffset = cradleHandler.cradleReferenceData.nextCradlePosOffset
 
-        const {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleProps
+        const {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleInheritedProps
 
         const { cradleRowcount,
             crosscount,
@@ -98,7 +99,7 @@ export default class ContentHandler {
             spineAdjustment
         } = 
             getContentListRequirements({
-                cradleProps,
+                cradleProps:cradleInheritedProps,
                 cradleConfig,
                 visibletargetindexoffset,
                 targetViewportOffset:visibletargetscrolloffset,
@@ -114,7 +115,7 @@ export default class ContentHandler {
         // returns content constrained by cradleRowcount
         const [childlist,deleteditems] = getUICellShellList({
 
-            cradleProps,
+            cradleProps:cradleInheritedProps,
             cradleConfig,
             cradleActualContentCount,
             cradleReferenceIndex,
@@ -126,7 +127,7 @@ export default class ContentHandler {
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
-        deleteAndRerenderPortals(cradleData.portalHandler, deleteditems)
+        deleteAndRerenderPortals(cradleProperties.portalHandler, deleteditems)
 
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
@@ -172,7 +173,7 @@ export default class ContentHandler {
 
             cradleElements.spineRef.current.style.top = (scrollblockOffset + spineAdjustment) + 'px'
             cradleElements.spineRef.current.style.left = 'auto'
-            cradleElements.headRef.current.style.paddingBottom = headcontentlist.length?cradleProps.gap + 'px':0
+            cradleElements.headRef.current.style.paddingBottom = headcontentlist.length?cradleInheritedProps.gap + 'px':0
 
         } else { // orientation = 'horizontal'
 
@@ -181,7 +182,7 @@ export default class ContentHandler {
 
             cradleElements.spineRef.current.style.top = 'auto'
             cradleElements.spineRef.current.style.left = (scrollblockOffset + spineAdjustment) + 'px'
-            cradleElements.headRef.current.style.paddingRight = headcontentlist.length?cradleProps.gap + 'px':0
+            cradleElements.headRef.current.style.paddingRight = headcontentlist.length?cradleInheritedProps.gap + 'px':0
 
         }
 
@@ -190,7 +191,8 @@ export default class ContentHandler {
     public updateCradleContent = (entries, source = 'notifications') => {
 
         const viewportData = this.cradleBackProps.viewportdataRef.current
-        const cradleProps = this.cradleBackProps.cradleInheritedPropsRef.current
+        const cradleInheritedProps = this.cradleBackProps.cradleInheritedPropsRef.current
+        const cradleProperties = this.cradleBackProps.cradlePropertiesRef.current
         const scrollHandler = this.cradleBackProps.handlersRef.current.scroll
         const cradleHandler = this.cradleBackProps.handlersRef.current.cradle
         const stateHandler = this.cradleBackProps.handlersRef.current.state
@@ -209,7 +211,7 @@ export default class ContentHandler {
         }
             
         let scrollOffset
-        if (cradleProps.orientation == 'vertical') {
+        if (cradleInheritedProps.orientation == 'vertical') {
             scrollOffset = viewportElement.scrollTop
         } else {
             scrollOffset = viewportElement.scrollLeft
@@ -281,7 +283,7 @@ export default class ContentHandler {
             tailchange,
         ] = calcContentShifts({
 
-            cradleProps,
+            cradleProps:cradleInheritedProps,
             cradleConfig,
             cradleElements,
             cradleContent,
@@ -301,7 +303,7 @@ export default class ContentHandler {
         // negative number is clip; positive number is add
         const [headchangecount,tailchangecount] = calcHeadAndTailChanges({ 
 
-            cradleProps,
+            cradleProps:cradleInheritedProps,
             cradleConfig,
             cradleContent,
             cradleshiftcount:cradleitemshift,
@@ -318,7 +320,7 @@ export default class ContentHandler {
         if (headchangecount || tailchangecount) { // TODO: apparently headchangecount of -0 fails test, should be fixed
 
             [localContentList,deletedContentItems] = getUICellShellList({
-                cradleProps,
+                cradleProps:cradleInheritedProps,
                 cradleConfig,
                 cradleActualContentCount:newCradleActualContentCount,
                 localContentList:modelcontentlist,
@@ -335,7 +337,7 @@ export default class ContentHandler {
 
         }
 
-        deleteAndRerenderPortals(cradleData.portalHandler, deletedContentItems)
+        deleteAndRerenderPortals(cradleProperties.portalHandler, deletedContentItems)
 
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 
@@ -358,13 +360,13 @@ export default class ContentHandler {
 
             // scrollHandler.updateBlockScrollPos()
             
-            if (cradleProps.orientation == 'vertical') {
+            if (cradleInheritedProps.orientation == 'vertical') {
 
                 // cradleHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
                 // cradleHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
                 cradleElements.spineRef.current.style.top = viewportElement.scrollTop + spineposoffset + 'px'
                 cradleElements.spineRef.current.style.left = 'auto'
-                cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleProps.gap + 'px':0
+                cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleInheritedProps.gap + 'px':0
 
             } else {
 
@@ -372,7 +374,7 @@ export default class ContentHandler {
                 // cradleHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
                 cradleElements.spineRef.current.style.top = 'auto'
                 cradleElements.spineRef.current.style.left = viewportElement.scrollLeft + spineposoffset + 'px'
-                cradleElements.headRef.current.style.paddingRight = headcontent.length?cradleProps.gap + 'px':0
+                cradleElements.headRef.current.style.paddingRight = headcontent.length?cradleInheritedProps.gap + 'px':0
 
             }
 

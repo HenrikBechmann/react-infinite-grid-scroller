@@ -131,6 +131,7 @@ const portalrootstyle = {display:'none'} // static parm
 
 const NORMALIZE_SIGNALS_TIMEOUT = 250
 
+// component
 const Cradle = ({ 
         gridSpecs,
 
@@ -140,11 +141,12 @@ const Cradle = ({
         getItem, 
         placeholder, 
         functions:inheritedfunctions,
-        styles,
+        styles:inheritedstyles,
         scrollerName,
         scrollerID,
     }) => {
 
+    // unpack gridSpecs
     const {
         orientation,
         gap,
@@ -159,26 +161,35 @@ const Cradle = ({
     // --------------------------------------[ INITIALIZATION ]-------------------------------------
     // =============================================================================================
 
-    // ---------------------[ bundle cradle props to pass around ]-------------------
+    // ---------------------[ package cradle props to pass to handlers ]-------------------
 
     const cradleInheritedPropsRef = useRef(null) // access by closures
 
-    const functions = Object.assign({},inheritedfunctions)
+    const functions = Object.freeze(Object.assign({},inheritedfunctions))
+    const styles = Object.freeze(Object.assign({},inheritedstyles))
 
-    cradleInheritedPropsRef.current =  {
+    cradleInheritedPropsRef.current =  Object.freeze({
+        // gridSpecs
+        orientation, 
         gap, 
         padding, 
+        cellHeight, 
+        cellWidth, 
+        layout,
+        dense,
+        // ...rest
         runwaycount, 
         listsize, 
         defaultVisibleIndex, 
-        orientation, 
-        cellHeight, 
-        cellWidth, 
         getItem, 
         placeholder, 
         scrollerName,
         scrollerID,
-    }
+
+        functions,
+        styles,
+
+    })
 
     // ----------------[ context ]----------------
 
@@ -248,14 +259,15 @@ const Cradle = ({
 
         cellLength += gap
 
-        const viewportrowcount = Math.ceil(viewportLength/cellLength)
-        let cradleRowcount = viewportrowcount + (runwaycount * 2)
+        const viewportRowcount = Math.ceil(viewportLength/cellLength)
+
+        let cradleRowcount = viewportRowcount + (runwaycount * 2)
         let itemcount = cradleRowcount * crosscount
         if (itemcount > listsize) {
             itemcount = listsize
             cradleRowcount = Math.ceil(itemcount/crosscount)
         }
-        return [cradleRowcount, viewportrowcount]
+        return [cradleRowcount, viewportRowcount]
 
     },[
         orientation, 
@@ -466,27 +478,27 @@ const Cradle = ({
         padding,
     ])
 
-    // trigger pivot on change in orientation
+    // trigger pivot *only* on change in orientation
     useEffect(()=> {
 
         if (cradleStateRef.current == 'setup') return
 
         // get previous ratio
-        let previousCellPixelLength = (orientation == 'vertical')?
+        const previousCellPixelLength = (orientation == 'vertical')?
             cradleInheritedPropsRef.current.cellWidth:cradleInheritedPropsRef.current.cellHeight
         // let previousSpineOffset = cradleHandler.cradleReferenceData.theNextSpinePixelOffset
-        let previousSpineOffset = cradleHandler.cradleReferenceData.nextCradlePosOffset
+        const previousSpineOffset = cradleHandler.cradleReferenceData.nextCradlePosOffset
 
-        let previousratio = previousSpineOffset/previousCellPixelLength
+        const previousratio = previousSpineOffset/previousCellPixelLength
 
-        let currentCellPixelLength = (orientation == 'vertical')?
+        const currentCellPixelLength = (orientation == 'vertical')?
             cradleInheritedPropsRef.current.cellHeight:cradleInheritedPropsRef.current.cellWidth
 
-        let currentSpineOffset = previousratio * currentCellPixelLength
+        const currentSpineOffset = previousratio * currentCellPixelLength
         
         cradleHandler.cradleReferenceData.nextCradlePosOffset = Math.round(currentSpineOffset)
 
-        let signals = interruptHandler.signals
+        const signals = interruptHandler.signals
 
         signals.pauseCellObserver = true
         // pauseCradleIntersectionObserverRef.current = true
@@ -806,23 +818,25 @@ const Cradle = ({
     // ------------------------------[ RENDER... ]----------------------------------
     // =============================================================================
 
+    const referenceIndexOffset = cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference
     const scrollTrackerArgs = useMemo(() => {
-        if (!(cradleStateRef.current == 'repositioningB' || cradleStateRef.current == 'repositioningA')) {
+        if (!(cradleState == 'repositioningB' || cradleState == 'repositioningA')) {
             return
         }
         let trackerargs = {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
             referenceIndexOffset:cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference,
-            listsize:cradleInheritedPropsRef.current.listsize,
-            styles:cradleInheritedPropsRef.current.styles,
+            listsize,
+            styles,
         }
         return trackerargs
     },[
-        cradleStateRef.current, 
+        cradleState, 
         viewportDimensions, 
-        cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference, 
-        cradleInheritedPropsRef
+        referenceIndexOffset, 
+        listsize,
+        styles,
         ]
     )
 
