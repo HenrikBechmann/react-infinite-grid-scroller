@@ -296,8 +296,6 @@ const Cradle = ({
         scrollerID,
     })
 
-    // -------------------[ support services ]------------------
-
     const setItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
 
         const [index, shellref] = itemElementData
@@ -338,8 +336,6 @@ const Cradle = ({
         serviceCallsRef,
     })
 
-    // ---------------------[ setup ]------------------
-
     const setOfHandlersRef = useRef(null)
 
     if (!setOfHandlersRef.current) {
@@ -370,16 +366,8 @@ const Cradle = ({
 
     handlersRef.current = handlerObjectRef.current // back-fill cradleParameters property
 
-    useLayoutEffect(()=>{
-
-        cradlePropertiesRef.current.portalHandler = new PortalHandler()
-
-        // unmount
-        return () => {
-            isMountedRef.current = false
-        }
-
-    },[])
+    // ------------------------------------------------------------------------
+    // -----------------------[ initialization effects ]-----------------------
 
     // this is an immediate response to reparenting. Reparenting resets scroll positions
     // this restores scroll as soon as cradle is invoked after reparenting
@@ -390,8 +378,17 @@ const Cradle = ({
             Math.max(0,cradleHandler.cradleReferenceData.blockScrollPos)
     }
 
-    // ------------------------------------------------------------------------
-    // -----------------------[ initialization effects ]-----------------------
+    // set portalHandler, and unmounted flag
+    useLayoutEffect(()=>{
+
+        cradlePropertiesRef.current.portalHandler = new PortalHandler()
+
+        // unmount
+        return () => {
+            isMountedRef.current = false
+        }
+
+    },[])
 
     //initialize host functions properties
     useEffect(()=>{
