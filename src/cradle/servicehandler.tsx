@@ -3,39 +3,39 @@
 
 export default class ServiceHandler {
 
-    constructor(cradleBackProps) {
+    constructor(cradleParameters) {
 
-       this.cradleBackProps = cradleBackProps
+       this.cradleParameters = cradleParameters
 
-       this.serviceCalls = cradleBackProps.serviceCallsRef.current
+       this.serviceCalls = cradleParameters.serviceCallsRef.current
 
     }
 
-    cradleBackProps
+    cradleParameters
 
     serviceCalls
 
     getVisibleList = () => {
 
-        const contentHandler = this.cradleBackProps.handlersRef.current.content        
+        const contentHandler = this.cradleParameters.handlersRef.current.content        
 
         const cradleContent = contentHandler.content
-        const viewportProperties = this.cradleBackProps.viewportPropertiesRef.current
-        const cradleHandler = this.cradleBackProps.handlersRef.current.cradle
+        const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
+        const cradleHandler = this.cradleParameters.handlersRef.current.cradle
         const cradleElements = cradleHandler.elements
 
         return getVisibleItemsList({
             itemElementMap:contentHandler.itemElements,
             viewportElement:viewportProperties.elementref.current,
             cradleElements, 
-            cradleProps:this.cradleBackProps.cradleInheritedPropertiesRef.current,
+            cradleProps:this.cradleParameters.cradleInheritedPropertiesRef.current,
             cradleContent,
         })
 
     }
 
     getContentList = () => {
-        let contentHandler = this.cradleBackProps.handlersRef.current.content        
+        let contentHandler = this.cradleParameters.handlersRef.current.content        
         let contentlist = Array.from(contentHandler.itemElements)
 
         contentlist.sort((a,b)=>{
@@ -47,8 +47,8 @@ export default class ServiceHandler {
 
     reload = () => {
 
-        const signals = this.cradleBackProps.handlersRef.current.interrupts.signals
-        const stateHandler = this.cradleBackProps.handlersRef.current.state
+        const signals = this.cradleParameters.handlersRef.current.interrupts.signals
+        const stateHandler = this.cradleParameters.handlersRef.current.state
 
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
@@ -59,9 +59,9 @@ export default class ServiceHandler {
 
     scrollToItem = (index) => {
 
-        const signals = this.cradleBackProps.handlersRef.current.interrupts.signals
-        let cradleHandler = this.cradleBackProps.handlersRef.current.cradle
-        let stateHandler = this.cradleBackProps.handlersRef.current.state
+        const signals = this.cradleParameters.handlersRef.current.interrupts.signals
+        let cradleHandler = this.cradleParameters.handlersRef.current.cradle
+        let stateHandler = this.cradleParameters.handlersRef.current.state
 
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true

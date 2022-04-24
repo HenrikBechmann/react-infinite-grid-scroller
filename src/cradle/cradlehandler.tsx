@@ -3,16 +3,16 @@
 
 export default class CradleHandler { 
 
-    constructor(cradleBackProps) {
+    constructor(cradleParameters) {
 
-       this.cradleBackProps = cradleBackProps
+       this.cradleParameters = cradleParameters
 
        let elements = this.elements
-       elements.spineRef = cradleBackProps.cradleElementsRef.current.spine
-       elements.headRef = cradleBackProps.cradleElementsRef.current.head
-       elements.tailRef = cradleBackProps.cradleElementsRef.current.tail
+       elements.spineRef = cradleParameters.cradleElementsRef.current.spine
+       elements.headRef = cradleParameters.cradleElementsRef.current.head
+       elements.tailRef = cradleParameters.cradleElementsRef.current.tail
 
-       let {defaultVisibleIndex, listsize, padding} = this.cradleBackProps.cradleInheritedPropertiesRef.current
+       let {defaultVisibleIndex, listsize, padding} = this.cradleParameters.cradleInheritedPropertiesRef.current
 
        // progression of references: scroll->next
        this.cradleReferenceData.scrollImpliedItemIndexReference = (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
@@ -22,7 +22,7 @@ export default class CradleHandler {
 
     }
 
-    cradleBackProps // standard for handlers, but not used here yet
+    cradleParameters // standard for handlers, but not used here yet
 
    /* 
       ItemIndexReference is the sequential index of first item of the cradle tail

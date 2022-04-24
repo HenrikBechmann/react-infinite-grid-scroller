@@ -9,13 +9,13 @@ const ResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
 
 export default class InterruptHandler {
 
-   constructor(cradleBackProps) {
+   constructor(cradleParameters) {
 
-      this.cradleBackProps = cradleBackProps
+      this.cradleParameters = cradleParameters
 
    }
 
-   private cradleBackProps
+   private cradleParameters
 
    private isTailCradleInView = false
    private isHeadCradleInView = false
@@ -72,8 +72,8 @@ export default class InterruptHandler {
     private cradleIntersectionObserverCallback = (entries) => {
 
         const signals = this.signals
-        const stateHandler = this.cradleBackProps.handlersRef.current.state
-        const contentHandler = this.cradleBackProps.handlersRef.current.content
+        const stateHandler = this.cradleParameters.handlersRef.current.state
+        const contentHandler = this.cradleParameters.handlersRef.current.content
 
         if (signals.pauseCradleIntersectionObserver) {
             // console.log('returning from intersectionobserver for PAUSE')
@@ -97,7 +97,7 @@ export default class InterruptHandler {
 
         this.signals.repositioningRequired = (!this.isHeadCradleInView && !this.isTailCradleInView);
 
-        const viewportProperties = this.cradleBackProps.viewportPropertiesRef.current
+        const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
 
         // if (viewportProperties.index == 6) {
         //     console.log('new repositioningRequired from intersection interrupt',this.signals.repositioningRequired)
@@ -122,7 +122,7 @@ export default class InterruptHandler {
                 const element = viewportProperties.elementref.current
                 if (!element) {
                     console.log('viewport element not set in cradleIntersectionObserverCallback',
-                        this.cradleBackProps.cradleInheritedPropertiesRef.current.scrollerID,viewportProperties)
+                        this.cradleParameters.cradleInheritedPropertiesRef.current.scrollerID,viewportProperties)
                     return
                 }
                 // TODO this is a duplicate setting procedure with viewport.tsx
@@ -154,14 +154,14 @@ export default class InterruptHandler {
 
         }
         
-        const viewportProperties = this.cradleBackProps.viewportPropertiesRef.current
+        const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
         // if (viewportProperties.index == 6) {
         //         console.log('cell intersection entries for ', viewportProperties.index, entries)
         // }
 
-        const contentHandler = this.cradleBackProps.handlersRef.current.content
-        const stateHandler = this.cradleBackProps.handlersRef.current.state
-        const scrollHandler = this.cradleBackProps.handlersRef.current.scroll
+        const contentHandler = this.cradleParameters.handlersRef.current.content
+        const stateHandler = this.cradleParameters.handlersRef.current.state
+        const scrollHandler = this.cradleParameters.handlersRef.current.scroll
 
 
         let movedentries = []
@@ -235,7 +235,7 @@ export default class InterruptHandler {
         observer:null,
         callback:this.cradleIntersectionObserverCallback,
         createObserver:() => {
-            let viewportProperties = this.cradleBackProps.viewportPropertiesRef.current
+            let viewportProperties = this.cradleParameters.viewportPropertiesRef.current
             this.cradleIntersect.observer = new IntersectionObserver(
                 this.cradleIntersect.callback,
                 {root:viewportProperties.elementref.current, threshold:0}
@@ -247,13 +247,13 @@ export default class InterruptHandler {
         observer:null,
         callback:null,
         createObserver:() => {
-            let viewportProperties = this.cradleBackProps.viewportPropertiesRef.current
+            let viewportProperties = this.cradleParameters.viewportPropertiesRef.current
             this.cellIntersect.observer = new IntersectionObserver(
 
                 this.cellintersectionobservercallback,
                 {
                     root:viewportProperties.elementref.current, 
-                    threshold:this.cradleBackProps.cradleConfigRef.current.cellObserverThreshold,
+                    threshold:this.cradleParameters.cradleConfigRef.current.cellObserverThreshold,
                 } 
             )
             return this.cellIntersect.observer

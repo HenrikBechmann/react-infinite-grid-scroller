@@ -198,7 +198,6 @@ const Cradle = ({
     viewportPropertiesRef.current = viewportProperties // for closures
 
     const isMountedRef = useRef(true)
-    // const isReparentingRef = useRef(false)
     const normalizeTimerRef = useRef(null)
 
     // ----------------[ cradle butterfly html components ]---------------
@@ -295,7 +294,6 @@ const Cradle = ({
     const cradlePropertiesRef = useRef({
         portalHandler:null,
         scrollerID,
-        // viewportPropertiesRef,
     })
 
     // -------------------[ support services ]------------------
@@ -326,9 +324,9 @@ const Cradle = ({
     const serviceCallsRef = useRef({referenceIndexCallbackRef})
 
     const handlersRef = useRef(null) // placeholder; make available to individual handlers
-    const cradleBackProps = Object.freeze({
+    const cradleParameters = Object.freeze({
         handlersRef,
-        viewportPropertiesRef:viewportPropertiesRef,
+        viewportPropertiesRef,
         cradleInheritedPropertiesRef, 
         cradleConfigRef, 
         cradlePropertiesRef,
@@ -345,7 +343,7 @@ const Cradle = ({
     const setOfHandlersRef = useRef(null)
 
     if (!setOfHandlersRef.current) {
-        setOfHandlersRef.current = getCradleHandlers(cradleBackProps)
+        setOfHandlersRef.current = getCradleHandlers(cradleParameters)
     }
     // make handlers directly available to cradle code
     const [
@@ -370,7 +368,7 @@ const Cradle = ({
         styles:stylesHandler,
     });
 
-    handlersRef.current = handlerObjectRef.current // back-fill cradleBackProps property
+    handlersRef.current = handlerObjectRef.current // back-fill cradleParameters property
 
     useLayoutEffect(()=>{
 
@@ -906,9 +904,9 @@ const Cradle = ({
 } // Cradle
 
 
-const getCradleHandlers = (cradleBackProps) => {
+const getCradleHandlers = (cradleParameters) => {
 
-    const createHandler = handler => new handler(cradleBackProps)
+    const createHandler = handler => new handler(cradleParameters)
 
     return [
         createHandler(InterruptHandler),

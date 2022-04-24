@@ -14,11 +14,11 @@ import {
 
 export default class ContentHandler {
 
-   constructor(cradleBackProps) {
+   constructor(cradleParameters) {
 
-      this.cradleBackProps = cradleBackProps
+      this.cradleParameters = cradleParameters
 
-      this.contentCallbacksRef = cradleBackProps.contentCallbacksRef
+      this.contentCallbacksRef = cradleParameters.contentCallbacksRef
 
    }
 
@@ -34,7 +34,7 @@ export default class ContentHandler {
 
     public itemElements = new Map()
 
-    private cradleBackProps
+    private cradleParameters
 
     private instanceIdCounterRef = {
        current:0
@@ -54,16 +54,16 @@ export default class ContentHandler {
     // TODO: last row is sometimes left off with reposition
     public setCradleContent = (cradleState) => { 
 
-        const viewportProperties = this.cradleBackProps.viewportPropertiesRef.current
-        const cradleInheritedProps = this.cradleBackProps.cradleInheritedPropertiesRef.current
-        const cradleProperties = this.cradleBackProps.cradlePropertiesRef.current
-        const cradleConfig = this.cradleBackProps.cradleConfigRef.current
-        const scrollHandler = this.cradleBackProps.handlersRef.current.scroll
-        const cradleHandler = this.cradleBackProps.handlersRef.current.cradle
-        const stateHandler = this.cradleBackProps.handlersRef.current.state
-        const serviceHandler = this.cradleBackProps.handlersRef.current.service
-        const interruptHandler = this.cradleBackProps.handlersRef.current.interrupts
-        const cradleData = this.cradleBackProps.cradleInheritedPropertiesRef.current
+        const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
+        const cradleInheritedProps = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const cradleProperties = this.cradleParameters.cradlePropertiesRef.current
+        const cradleConfig = this.cradleParameters.cradleConfigRef.current
+        const scrollHandler = this.cradleParameters.handlersRef.current.scroll
+        const cradleHandler = this.cradleParameters.handlersRef.current.cradle
+        const stateHandler = this.cradleParameters.handlersRef.current.state
+        const serviceHandler = this.cradleParameters.handlersRef.current.service
+        const interruptHandler = this.cradleParameters.handlersRef.current.interrupts
+        const cradleData = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         // if (viewportProperties.index == 6) {
         //     console.log('SETTING content - cradleState, cradleData in setCradleContent',
@@ -190,15 +190,15 @@ export default class ContentHandler {
 
     public updateCradleContent = (entries, source = 'notifications') => {
 
-        const viewportProperties = this.cradleBackProps.viewportPropertiesRef.current
-        const cradleInheritedProps = this.cradleBackProps.cradleInheritedPropertiesRef.current
-        const cradleProperties = this.cradleBackProps.cradlePropertiesRef.current
-        const scrollHandler = this.cradleBackProps.handlersRef.current.scroll
-        const cradleHandler = this.cradleBackProps.handlersRef.current.cradle
-        const stateHandler = this.cradleBackProps.handlersRef.current.state
-        const interruptHandler = this.cradleBackProps.handlersRef.current.interrupts
+        const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
+        const cradleInheritedProps = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const cradleProperties = this.cradleParameters.cradlePropertiesRef.current
+        const scrollHandler = this.cradleParameters.handlersRef.current.scroll
+        const cradleHandler = this.cradleParameters.handlersRef.current.cradle
+        const stateHandler = this.cradleParameters.handlersRef.current.state
+        const interruptHandler = this.cradleParameters.handlersRef.current.interrupts
 
-        const cradleData = this.cradleBackProps.cradleInheritedPropertiesRef.current
+        const cradleData = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         // if (viewportProperties.index == 6) {
             // console.log('UPDATING content - source; in updateCradleContent',source)
@@ -245,7 +245,7 @@ export default class ContentHandler {
 
         const cradleElements = cradleHandler.elements
         const cradleContent = this.content
-        const cradleConfig = this.cradleBackProps.cradleConfigRef.current
+        const cradleConfig = this.cradleParameters.cradleConfigRef.current
 
         const itemElements = this.itemElements
 
