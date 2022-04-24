@@ -27,48 +27,6 @@ export default class InterruptHandler {
 
    }
 
-    // const viewportresizeobservercallback = (entries)=>{
-
-    //     if (viewportStateRef.current == 'setup') {
-
-    //         return
-
-    //     }
-
-    //     const target = entries[0].target
-
-    //     // first register shouldn't generate interrupt
-    //     if (!target.dataset.initialized) {
-
-    //         // console.log('initializing target', target.dataset)
-    //         target.dataset.initialized = true
-
-    //         return
-
-    //     }
-
-    //     // generate interrupt response, if initiating resize
-    //     if (!isResizingRef.current) {
-    //         viewportPropertiesRef.current.isResizing = isResizingRef.current = true 
-    //         // new object creation triggers a realtime interrupt message to cradle through context
-    //         viewportPropertiesRef.current = Object.assign({},viewportPropertiesRef.current) 
-
-    //         if (isMountedRef.current) setViewportState('resizing')
-
-    //     }
-
-    //     clearTimeout(resizeTimeridRef.current)
-    //     resizeTimeridRef.current = setTimeout(() => {
-
-    //         isResizingRef.current = false
-    //         if (isMountedRef.current) {
-    //             setViewportState('resized')
-    //         }
-
-    //     },RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE)
-
-    // }
-
     private cradleIntersectionObserverCallback = (entries) => {
 
         const signals = this.signals
@@ -98,10 +56,6 @@ export default class InterruptHandler {
         this.signals.repositioningRequired = (!this.isHeadCradleInView && !this.isTailCradleInView);
 
         const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
-
-        // if (viewportProperties.index == 6) {
-        //     console.log('new repositioningRequired from intersection interrupt',this.signals.repositioningRequired)
-        // }
 
         if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway
         {
@@ -155,9 +109,6 @@ export default class InterruptHandler {
         }
         
         const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
-        // if (viewportProperties.index == 6) {
-        //         console.log('cell intersection entries for ', viewportProperties.index, entries)
-        // }
 
         const contentHandler = this.cradleParameters.handlersRef.current.content
         const stateHandler = this.cradleParameters.handlersRef.current.state
@@ -166,22 +117,15 @@ export default class InterruptHandler {
 
         let movedentries = []
 
-        // console.log('ENTRIES', entries)
-
-        // debugger
-
         for (let entry of entries) {
             // console.log('entry dataset',Object.assign({},entry.target.dataset))
             if (entry.target.dataset.initialized) {
 
-                // console.log('entry initialized',entry.target.dataset.initialized)
                 movedentries.push(entry)
 
             } else {
 
-                // console.log('INITIALIZING entry',entry.target.dataset.initialized)
                 entry.target.dataset.initialized = 'true'
-                // console.log('INITIALIZED entry',Object.assign({},entry.target.dataset))
 
             }
         }
@@ -192,10 +136,6 @@ export default class InterruptHandler {
             return
 
         }
-
-        // if (viewportProperties.index == 6) {
-                // console.log('movedentries for ', viewportProperties.index, movedentries)
-        // }
 
         // TODO: set scrollPositions.atLastUpdateCall
         if (stateHandler.isMountedRef.current) {
