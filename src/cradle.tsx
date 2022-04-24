@@ -524,10 +524,10 @@ const Cradle = ({
         setCradleState('pivot')
 
         // let cradleContent = contentAgentRef.current.content
-        cradleContent.headModel = []
-        cradleContent.tailModel = []
-        cradleContent.headView = []
-        cradleContent.tailView = []
+        cradleContent.headModelComponents = []
+        cradleContent.tailModelComponents = []
+        cradleContent.headViewComponents = []
+        cradleContent.tailViewComponents = []
 
     },[orientation])
 
@@ -738,10 +738,10 @@ const Cradle = ({
 
             case 'preparecontent': {
 
-                cradleContent.headModel = []
-                cradleContent.tailModel = []
-                cradleContent.headView = []
-                cradleContent.tailView = []
+                cradleContent.headModelComponents = []
+                cradleContent.tailModelComponents = []
+                cradleContent.headViewComponents = []
+                cradleContent.tailViewComponents = []
                 cradlePropertiesRef.current.portalHandler.resetScrollerPortalRepository()
                 contentHandler.setCradleContent(callingCradleState.current)
 
@@ -753,8 +753,8 @@ const Cradle = ({
             case 'preparerender': {
 
                 let cradleContent = contentHandler.content
-                cradleContent.headView = cradleContent.headModel
-                cradleContent.tailView = cradleContent.tailModel
+                cradleContent.headViewComponents = cradleContent.headModelComponents
+                cradleContent.tailViewComponents = cradleContent.tailModelComponents
 
                 viewportData.elementref.current[cradleHandler.cradleReferenceData.blockScrollProperty] =
                     Math.max(0,cradleHandler.cradleReferenceData.blockScrollPos)
@@ -899,7 +899,7 @@ const Cradle = ({
                 
                 >
                 
-                    {(cradleStateRef.current != 'setup')?cradleContent.headView:null}
+                    {(cradleStateRef.current != 'setup')?cradleContent.headViewComponents:null}
                 
                 </div>
                 <div 
@@ -910,7 +910,7 @@ const Cradle = ({
                 
                 >
                 
-                    {(cradleStateRef.current != 'setup')?cradleContent.tailView:null}
+                    {(cradleStateRef.current != 'setup')?cradleContent.tailViewComponents:null}
                 
                 </div>
             </div>

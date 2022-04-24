@@ -133,10 +133,10 @@ export default class InterruptHandler {
                 signals.pauseCellObserver = true
                 // pauseCradleIntersectionObserverRef.current = true
                 const cradleContent = contentHandler.content
-                cradleContent.headModel = []
-                cradleContent.tailModel = []
-                cradleContent.headView = []
-                cradleContent.tailView = []
+                cradleContent.headModelComponents = []
+                cradleContent.tailModelComponents = []
+                cradleContent.headViewComponents = []
+                cradleContent.tailViewComponents = []
                 stateHandler.setCradleState('startreposition')
 
             }

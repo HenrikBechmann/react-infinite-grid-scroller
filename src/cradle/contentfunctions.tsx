@@ -195,8 +195,8 @@ export const isolateShiftingIntersections = ({
 
     // console.log('==>> intersections',intersections)
 
-    const headcontent = cradleContent.headModel
-    const tailcontent = cradleContent.tailModel
+    const headcontent = cradleContent.headModelComponents
+    const tailcontent = cradleContent.tailModelComponents
 
     let //headindexes = [], 
         // tailindexes = [],
@@ -434,8 +434,8 @@ export const calcContentShifts = ({
      tailElement = cradleElements.tailRef.current
 
     const {cradleModel:cradlecontentlist, 
-        headModel:headcontentlist, 
-        tailModel:tailcontentlist
+        headModelComponents:headcontentlist, 
+        tailModelComponents:tailcontentlist
     } = cradleContent
 
     const { crosscount,
@@ -670,8 +670,8 @@ export const calcHeadAndTailChanges = ({
 
     let listsize = cradleProps.listsize
 
-    let headcontent = cradleContent.headModel
-    let tailcontent = cradleContent.tailModel
+    let headcontent = cradleContent.headModelComponents
+    let tailcontent = cradleContent.tailModelComponents
 
     const { crosscount, cradleRowcount } = cradleConfig
 

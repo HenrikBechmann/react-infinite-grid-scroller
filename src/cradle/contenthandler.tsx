@@ -25,10 +25,10 @@ export default class ContentHandler {
    public content = {
 
       cradleModel: null,
-      headModel: null,
-      tailModel: null,
-      headView: [],
-      tailView: [],
+      headModelComponents: null,
+      tailModelComponents: null,
+      headViewComponents: [],
+      tailViewComponents: [],
 
     }
 
@@ -140,8 +140,8 @@ export default class ContentHandler {
         }
 
         cradleContent.cradleModel = childlist
-        cradleContent.headModel = headcontentlist
-        cradleContent.tailModel = tailcontentlist
+        cradleContent.headModelComponents = headcontentlist
+        cradleContent.tailModelComponents = tailcontentlist
 
         cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference = referenceoffset
         cradleHandler.cradleReferenceData.scrollImpliedCradlePosOffset = spinePosOffset
@@ -347,8 +347,8 @@ export default class ContentHandler {
         )
 
         cradleContent.cradleModel = localContentList
-        cradleContent.headView = cradleContent.headModel = headcontent
-        cradleContent.tailView = cradleContent.tailModel = tailcontent
+        cradleContent.headViewComponents = cradleContent.headModelComponents = headcontent
+        cradleContent.tailViewComponents = cradleContent.tailModelComponents = tailcontent
 
         // -------------------------------[ 8. set css changes ]-------------------------
 

@@ -87,7 +87,7 @@ const getVisibleItemsList = ({
     let headElement = cradleElements.headRef.current
     let spineElement = cradleElements.spineRef.current
     let {orientation} = cradleProps
-    let headlist = cradleContent.headView
+    let headlist = cradleContent.headViewComponents
 
     let itemlistindexes = Array.from(itemElementMap.keys())
     itemlistindexes.sort((a,b)=>{
