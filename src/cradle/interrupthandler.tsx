@@ -110,8 +110,8 @@ export default class InterruptHandler {
                 !viewportProperties.isResizing &&
                 !viewportProperties.portal?.isReparenting &&
                 !(cradleState == 'resized') &&
-                !(cradleState == 'repositioningA') && 
-                !(cradleState == 'repositioningB') &&
+                !(cradleState == 'repositioningRender') && 
+                !(cradleState == 'repositioningContinuation') &&
                 !(cradleState == 'finishreposition') &&
                 // !(cradleState == 'updatepositionreferences') &&
                 !(cradleState == 'doreposition') && 

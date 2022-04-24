@@ -146,6 +146,8 @@ const Cradle = ({
         scrollerID,
     }) => {
 
+    // ========================[ SETUP ]========================
+
     // unpack gridSpecs
     const {
         orientation,
@@ -161,7 +163,7 @@ const Cradle = ({
     const functions = Object.freeze(Object.assign({},inheritedfunctions))
     const styles = Object.freeze(Object.assign({},inheritedstyles))
 
-    // ---------------------[ package cradle props to pass to handlers ]-------------------
+    // package cradle props to pass to handlers
 
     const cradleInheritedPropertiesRef = useRef(null) // access by closures and support functions
 
@@ -188,20 +190,21 @@ const Cradle = ({
 
     })
 
-    // ----------------[ context ]----------------
-
-    const [cradleState, setCradleState] = useState('setup')
-    const cradleStateRef = useRef(null) // access by closures
-    cradleStateRef.current = cradleState;
+    // context
 
     const viewportProperties = useContext(ViewportInterrupt)
     const viewportPropertiesRef = useRef(null)
     viewportPropertiesRef.current = viewportProperties // for closures
 
+    const [cradleState, setCradleState] = useState('setup')
+    const cradleStateRef = useRef(null) // access by closures
+    cradleStateRef.current = cradleState;
+
+    // controls
     const isMountedRef = useRef(true)
     const normalizeTimerRef = useRef(null)
 
-    // ----------------[ cradle butterfly html components ]---------------
+    // cradle butterfly elements
 
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
@@ -213,13 +216,14 @@ const Cradle = ({
             spineRef:spineCradleElementRef
         }
     )
-    // ----------------[ viewport dimensions ]------------------
+
+    // viewport dimensions
 
     const { viewportDimensions } = viewportProperties
 
     const { height:viewportheight,width:viewportwidth } = viewportDimensions
 
-    // -------------------[ configuration calculations ]---------------------
+    // configuration calculations
 
     const crosscount = useMemo(() => {
 
@@ -281,6 +285,7 @@ const Cradle = ({
         crosscount,
     ])
 
+    // configuration objects
     const cradleConfigRef = useRef(null)
     cradleConfigRef.current = {
         crosscount,
@@ -295,7 +300,8 @@ const Cradle = ({
         scrollerID,
     })
 
-    const setItemElementData = useCallback((itemElementData, reportType) => { // candidate to export
+    // utility to register or unregister cradle item elements
+    const setItemElementData = useCallback((itemElementData, reportType) => {
 
         const [index, shellref] = itemElementData
 
@@ -317,10 +323,12 @@ const Cradle = ({
 
     })
 
+    // host callbacks
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
     const serviceCallsRef = useRef({referenceIndexCallbackRef})
 
-    const handlersRef = useRef(null) // placeholder; make available to individual handlers
+    // cradle parameters master bundle
+    const handlersRef = useRef(null) // placeholder in cradleParamters; make available individual handlers
     const cradleParameters = Object.freeze({
         handlersRef,
         viewportPropertiesRef,
@@ -353,20 +361,18 @@ const Cradle = ({
 
     // to instantiate handlersRef
     const handlerObjectRef = useRef({
+        interrupts:interruptHandler,
         scroll:scrollHandler,
-        // signals:signalsHandler, 
         state:stateHandler,
         content:contentHandler, 
         scaffold:scaffoldHandler, 
         service:serviceHandler,
-        interrupts:interruptHandler,
         styles:stylesHandler,
     });
 
     handlersRef.current = handlerObjectRef.current // back-fill cradleParameters property
 
-    // ------------------------------------------------------------------------
-    // -----------------------[ initialization effects ]-----------------------
+    // ===================[ INITIALIZATION effects ]=========================
 
     // this is an immediate response to reparenting. Reparenting resets scroll positions
     // this restores scroll as soon as cradle is invoked after reparenting
@@ -424,8 +430,7 @@ const Cradle = ({
 
     },[])
 
-    // -----------------------------------------------------------------------
-    // -----------------------[ reconfiguration effects ]---------------------
+    // =====================[ RECONFIGURATION effects ]======================
 
     // trigger resizing based on viewport state
     useEffect(()=>{
@@ -508,14 +513,9 @@ const Cradle = ({
 
     },[orientation])
 
-    // =======================================================================
-    // -------------------------[ OPERATION ]---------------------------------
-    // =======================================================================
+    // =====================[ OPERATION ]===========================
 
-    // -----------------------------------------------------------------------
-    // ------------------------[ style data ]-------------------------------
-
-    // styles for wings and spine
+    // styles for scaffold
     const [cradleHeadStyle, cradleTailStyle, cradleSpineStyle] = useMemo(()=> {
 
         return stylesHandler.setCradleStyles({
@@ -546,9 +546,7 @@ const Cradle = ({
 
       ])
 
-    // =================================================================================
-    // -------------------------[ Observer support]-------------------------
-    // =================================================================================
+    // observer support
 
     /*
         There are two interection observers, one for the cradle, and another for itemShells; 
@@ -556,8 +554,6 @@ const Cradle = ({
         There is also a resize observer for the cradle wings, to respond to size changes of 
             variable cells.
     */    
-
-    // --------------------------[ resize observer ]-----------------------------------
 
     // set up cradle resizeobserver
     useEffect(() => {
@@ -575,10 +571,10 @@ const Cradle = ({
 
     },[])
 
-    // --------------------[ intersection observer for cradle body ]-----------------------
+    // intersection observer for cradle body
 
     // this sets up an IntersectionObserver of the cradle against the viewport. When the
-    // cradle goes out of the observer scope, the "repositioningA" cradle state is triggerd.
+    // cradle goes out of the observer scope, the "repositioningRender" cradle state is triggerd.
     useEffect(()=>{
 
         const observer = interruptHandler.cradleIntersect.createObserver()
@@ -612,7 +608,7 @@ const Cradle = ({
 
     },[cradleState])
 
-    // --------------------------[ item shell observer ]-----------------------------
+    // item shell observer
 
     /*
         The cradle content is driven by notifications from the IntersectionObserver.
@@ -648,9 +644,7 @@ const Cradle = ({
 
     },[orientation])
 
-    // =====================================================================================
-    // ----------------------------------[ state management ]-------------------------------
-    // =====================================================================================
+    // =====================[ STATE management ]==========================
 
     // data for state processing
     const callingCradleState = useRef(cradleStateRef.current)
@@ -680,7 +674,7 @@ const Cradle = ({
             case 'startreposition': {
                 // interruptHandler.states.isRepositioning = true
                 interruptHandler.signals.pauseCradleIntersectionObserver = true
-                setCradleState('repositioningA')
+                setCradleState('repositioningRender')
                 break
             }
 
@@ -691,11 +685,6 @@ const Cradle = ({
                 // setCradleState('updatepositionreferences')
                 break
             }
-            // case 'updatepositionreferences':{
-            //     scrollHandler.updateReferenceData()
-            //     setCradleState('doreposition')
-            //     break
-            // }
 
             // -----------------------------------------------------------------------
             // ------------[ the following 5 cradle states all resolve with ]---------
@@ -751,31 +740,28 @@ const Cradle = ({
                         
             /*2*/       if (!interruptHandler.signals.repositioningRequired) { // repositioning short-circuit
 
-            // /*3*/           if ((!viewportPropertiesRef.current.portal) || (!viewportPropertiesRef.current.portal.isReparenting))
-            //                     /*&& (!isReparentingRef.current))*/ { // reparent (restorescrollpos) short-circuit
-                            
-                                const signals = interruptHandler.signals
-                                if (viewportProperties.elementref.current) { // already unmounted if fails (?)
-                                    signals.pauseCellObserver  && (signals.pauseCellObserver = false)
-                                    signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
-                                    signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
-                                    signals.pauseCradleResizeObserver && (signals.pauseCradleResizeObserver = false)
-                                } else {
-                                    console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportProperties)
-                                }
+                            const signals = interruptHandler.signals
+                            if (viewportProperties.elementref.current) { // already unmounted if fails (?)
+                                signals.pauseCellObserver  && (signals.pauseCellObserver = false)
+                                signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
+                                signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
+                                signals.pauseCradleResizeObserver && (signals.pauseCradleResizeObserver = false)
+                            } else {
+                                console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportProperties)
+                            }
 
-            /*default outcome*/ if (isMountedRef.current) setCradleState('ready')
-
-            //                 } else {
-            // /*3*/               if (isMountedRef.current) setCradleState('restorescrollposition')
-            //                 }
+                /*default*/ if (isMountedRef.current) setCradleState('ready')
 
                         } else {
+
             /*2*/           if (isMountedRef.current) setCradleState('startreposition')
+
                         }
 
                     } else {
+
             /*1*/       if (isMountedRef.current) setCradleState('resizing')
+            
                     }
 
                 },NORMALIZE_SIGNALS_TIMEOUT)
@@ -794,11 +780,11 @@ const Cradle = ({
         let viewportProperties = viewportPropertiesRef.current
         switch (cradleState) {
 
-            case 'repositioningA':
+            case 'repositioningRender':
                 break
 
-            case 'repositioningB':
-                setCradleState('repositioningA')
+            case 'repositioningContinuation':
+                setCradleState('repositioningRender')
                 break
 
             case 'ready':
@@ -808,13 +794,11 @@ const Cradle = ({
 
     },[cradleState])
 
-    // =============================================================================
-    // ------------------------------[ RENDER... ]----------------------------------
-    // =============================================================================
+    // ==========================[ RENDER ]===========================
 
     const referenceIndexOffset = scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference
     const scrollTrackerArgs = useMemo(() => {
-        if (!(cradleState == 'repositioningB' || cradleState == 'repositioningA')) {
+        if (!(cradleState == 'repositioningContinuation' || cradleState == 'repositioningRender')) {
             return null
         }
         let trackerargs = {
@@ -842,7 +826,7 @@ const Cradle = ({
             <PortalList scrollerProps = {cradlePortalRef.current.portalHandler.scrollerProps}/>
         </div>}
 
-        {((cradleStateRef.current == 'repositioningA') || (cradleStateRef.current == 'repositioningB'))
+        {((cradleStateRef.current == 'repositioningRender') || (cradleStateRef.current == 'repositioningContinuation'))
             ?<ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 
@@ -899,6 +883,7 @@ const Cradle = ({
 
 } // Cradle
 
+// utilities
 
 const getCradleHandlers = (cradleParameters) => {
 

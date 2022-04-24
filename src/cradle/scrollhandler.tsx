@@ -77,7 +77,7 @@ export default class ScrollHandler {
 
         if (!viewportProperties.isResizing) {
 
-            if ((cradleState == 'ready') || (cradleState == 'repositioningA') || (cradleState == 'repositioningB')) {
+            if ((cradleState == 'ready') || (cradleState == 'repositioningRender') || (cradleState == 'repositioningContinuation')) {
 
                 if (cradleState == 'ready') {
 
@@ -101,10 +101,10 @@ export default class ScrollHandler {
 
                 }
 
-                if ((cradleState == 'repositioningA') || (cradleState == 'repositioningB')) {
+                if ((cradleState == 'repositioningRender') || (cradleState == 'repositioningContinuation')) {
 
                     this._setScrollReferenceIndexData()
-                    if (cradleState == 'repositioningA') stateHandler.setCradleState('repositioningB')
+                    if (cradleState == 'repositioningRender') stateHandler.setCradleState('repositioningContinuation')
 
                 }
 
@@ -144,8 +144,8 @@ export default class ScrollHandler {
 
         switch (cradleState) {
 
-            case 'repositioningA': 
-            case 'repositioningB':
+            case 'repositioningRender': 
+            case 'repositioningContinuation':
             {
 
                 stateHandler.setCradleState('finishreposition')
