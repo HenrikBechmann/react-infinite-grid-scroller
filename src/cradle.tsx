@@ -439,7 +439,7 @@ const Cradle = ({
 
         if (viewportProperties.isResizing) {
 
-            const signals = interruptHandler.signals
+            const { signals } = interruptHandler
             signals.pauseCellObserver = true
             signals.pauseCradleIntersectionObserver = true
             signals.pauseCradleResizeObserver = true
@@ -761,7 +761,7 @@ const Cradle = ({
                     } else {
 
             /*1*/       if (isMountedRef.current) setCradleState('resizing')
-            
+
                     }
 
                 },NORMALIZE_SIGNALS_TIMEOUT)
