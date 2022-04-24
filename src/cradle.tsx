@@ -311,7 +311,7 @@ const Cradle = ({
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
     const serviceCallsRef = useRef({referenceIndexCallbackRef})
 
-    const handlersRef = useRef(null) // make available to individual handlers
+    const handlersRef = useRef(null) // placeholder; make available to individual handlers
     const cradleBackProps = Object.freeze({
         handlersRef,
         viewportdataRef:viewportPropertiesRef,
@@ -328,6 +328,36 @@ const Cradle = ({
 
     // ---------------------[ setup ]------------------
 
+    const setOfHandlersRef = useRef(null)
+
+    if (!setOfHandlersRef.current) {
+        setOfHandlersRef.current = getCradleHandlers(cradleBackProps)
+    }
+    // make handlers directly available to cradle code
+    const [
+        interruptHandler,
+        scrollHandler,
+        stateHandler,
+        contentHandler,
+        cradleHandler,
+        serviceHandler,
+        stylesHandler,
+    ] = setOfHandlersRef.current
+
+    // to instantiate handlersRef
+    const handlerObjectRef = useRef({
+        scroll:scrollHandler,
+        // signals:signalsHandler, 
+        state:stateHandler,
+        content:contentHandler, 
+        cradle:cradleHandler, 
+        service:serviceHandler,
+        interrupts:interruptHandler,
+        styles:stylesHandler,
+    });
+
+    handlersRef.current = handlerObjectRef.current // back-fill cradleBackProps property
+
     useLayoutEffect(()=>{
 
         cradlePropertiesRef.current.portalHandler = new PortalHandler()
@@ -338,22 +368,6 @@ const Cradle = ({
         }
 
     },[])
-
-    const availableHandlersRef = useRef(null)
-
-    if (!availableHandlersRef.current) {
-        availableHandlersRef.current = getCradleHandlers(cradleBackProps)
-    }
-    // replace use of useMemo to guarantee one-time-only run
-    const [
-        interruptHandler,
-        scrollHandler,
-        stateHandler,
-        contentHandler,
-        cradleHandler,
-        serviceHandler,
-        stylesHandler,
-    ] = availableHandlersRef.current
 
     // this is an immediate response to reparenting. Reparenting resets scroll positions
     // this restores scroll as soon as cradle is invoked after reparenting
@@ -383,31 +397,6 @@ const Cradle = ({
 
     // -----------------------------------------------------------------------
     // -------------------------[ cradle management nodes ]-----------------
-
-    // to instantiate handlersRef
-    const managementsetRef = useRef({
-        scroll:scrollHandler,
-        // signals:signalsHandler, 
-        state:stateHandler,
-        content:contentHandler, 
-        cradle:cradleHandler, 
-        service:serviceHandler,
-        interrupts:interruptHandler,
-        styles:stylesHandler,
-    });
-
-    handlersRef.current = managementsetRef.current
-
-    // if ((viewportPropertiesRef.current.index == 6) /*|| (viewportPropertiesRef.current.index === null)*/) {
-    //     console.log('RUNNING CRADLE index',
-    //         viewportPropertiesRef.current.index, '\n',
-    //         '==>','cradleState:',cradleState,'\n',
-    //         'isRepositioning signal:',interruptHandler.states.isRepositioning,'\n',
-    //         // 'isReparenting signal, state:',viewportPropertiesRef.current.portal?.isReparenting,
-    //         // isReparentingRef.current,'\n',
-    //         'isResizing signal:',viewportData.isResizing,'\n',
-    //         'repositioningRequired:',interruptHandler.signals.repositioningRequired)
-    // }
 
     // ------------------------------------------------------------------------
     // -----------------------[ initialization effects ]-----------------------
