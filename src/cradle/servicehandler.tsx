@@ -21,8 +21,8 @@ export default class ServiceHandler {
 
         const cradleContent = contentHandler.content
         const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
-        const cradleHandler = this.cradleParameters.handlersRef.current.cradle
-        const cradleElements = cradleHandler.elements
+        const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
+        const cradleElements = scaffoldHandler.elements
 
         return getVisibleItemsList({
             itemElementMap:contentHandler.itemElements,
@@ -60,13 +60,13 @@ export default class ServiceHandler {
     scrollToItem = (index) => {
 
         const signals = this.cradleParameters.handlersRef.current.interrupts.signals
-        let cradleHandler = this.cradleParameters.handlersRef.current.cradle
+        let scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         let stateHandler = this.cradleParameters.handlersRef.current.state
 
         signals.pauseCellObserver = true
         signals.pauseScrollingEffects = true
 
-        cradleHandler.cradleReferenceData.nextItemIndexReference = index
+        scaffoldHandler.cradleReferenceData.nextItemIndexReference = index
 
         stateHandler.setCradleState('doreposition')
 

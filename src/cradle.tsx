@@ -27,7 +27,7 @@
     SignalsHandler
     StateHandler
     ContentHandler
-    CradleHandler
+    ScaffoldHandler
     ServiceHandler // user services
     StylesHandler
 
@@ -119,7 +119,7 @@ import ScrollTracker from './scrolltracker'
 import ScrollHandler from './cradle/scrollhandler'
 import StateHandler from './cradle/statehandler'
 import ContentHandler from './cradle/contenthandler'
-import CradleHandler from './cradle/cradlehandler'
+import ScaffoldHandler from './cradle/scaffoldhandler'
 import InterruptHandler from './cradle/interrupthandler'
 import ServiceHandler from './cradle/servicehandler'
 import StylesHandler from './cradle/styleshandler'
@@ -345,7 +345,7 @@ const Cradle = ({
         scrollHandler,
         stateHandler,
         contentHandler,
-        cradleHandler,
+        scaffoldHandler,
         serviceHandler,
         stylesHandler,
     ] = setOfHandlersRef.current
@@ -356,7 +356,7 @@ const Cradle = ({
         // signals:signalsHandler, 
         state:stateHandler,
         content:contentHandler, 
-        cradle:cradleHandler, 
+        scaffold:scaffoldHandler, 
         service:serviceHandler,
         interrupts:interruptHandler,
         styles:stylesHandler,
@@ -372,8 +372,8 @@ const Cradle = ({
     if (viewportProperties.portal?.isReparenting) { 
 
         viewportProperties.portal.isReparenting = false
-        viewportProperties.elementref.current[cradleHandler.cradleReferenceData.blockScrollProperty] =
-            Math.max(0,cradleHandler.cradleReferenceData.blockScrollPos)
+        viewportProperties.elementref.current[scaffoldHandler.cradleReferenceData.blockScrollProperty] =
+            Math.max(0,scaffoldHandler.cradleReferenceData.blockScrollPos)
     }
 
     // set portalHandler, and unmounted flag
@@ -479,8 +479,8 @@ const Cradle = ({
         // get previous ratio
         const previousCellPixelLength = (orientation == 'vertical')?
             cradleInheritedPropertiesRef.current.cellWidth:cradleInheritedPropertiesRef.current.cellHeight
-        // let previousSpineOffset = cradleHandler.cradleReferenceData.theNextSpinePixelOffset
-        const previousSpineOffset = cradleHandler.cradleReferenceData.nextCradlePosOffset
+        // let previousSpineOffset = scaffoldHandler.cradleReferenceData.theNextSpinePixelOffset
+        const previousSpineOffset = scaffoldHandler.cradleReferenceData.nextCradlePosOffset
 
         const previousratio = previousSpineOffset/previousCellPixelLength
 
@@ -489,7 +489,7 @@ const Cradle = ({
 
         const currentSpineOffset = previousratio * currentCellPixelLength
         
-        cradleHandler.cradleReferenceData.nextCradlePosOffset = Math.round(currentSpineOffset)
+        scaffoldHandler.cradleReferenceData.nextCradlePosOffset = Math.round(currentSpineOffset)
 
         const signals = interruptHandler.signals
 
@@ -562,7 +562,7 @@ const Cradle = ({
     useEffect(() => {
 
         let observer = interruptHandler.cradleResize.createObserver()
-        let cradleElements = cradleHandler.elements
+        let cradleElements = scaffoldHandler.elements
         observer.observe(cradleElements.headRef.current)
         observer.observe(cradleElements.tailRef.current)
 
@@ -581,7 +581,7 @@ const Cradle = ({
     useEffect(()=>{
 
         const observer = interruptHandler.cradleIntersect.createObserver()
-        const cradleElements = cradleHandler.elements
+        const cradleElements = scaffoldHandler.elements
         observer.observe(cradleElements.headRef.current)
         observer.observe(cradleElements.tailRef.current)
 
@@ -604,7 +604,7 @@ const Cradle = ({
             observer.disconnect()
         }
         if (cradleState == 'finishreposition') {
-            const cradleElements = cradleHandler.elements
+            const cradleElements = scaffoldHandler.elements
             observer.observe(cradleElements.headRef.current)
             observer.observe(cradleElements.tailRef.current)
         }
@@ -732,8 +732,8 @@ const Cradle = ({
                 cradleContent.headViewComponents = cradleContent.headModelComponents
                 cradleContent.tailViewComponents = cradleContent.tailModelComponents
 
-                viewportProperties.elementref.current[cradleHandler.cradleReferenceData.blockScrollProperty] =
-                    Math.max(0,cradleHandler.cradleReferenceData.blockScrollPos)
+                viewportProperties.elementref.current[scaffoldHandler.cradleReferenceData.blockScrollProperty] =
+                    Math.max(0,scaffoldHandler.cradleReferenceData.blockScrollPos)
 
                 setCradleState('normalizesignals') // call a timeout for ready (or interrupt continuation)
 
@@ -811,7 +811,7 @@ const Cradle = ({
     // ------------------------------[ RENDER... ]----------------------------------
     // =============================================================================
 
-    const referenceIndexOffset = cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference
+    const referenceIndexOffset = scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference
     const scrollTrackerArgs = useMemo(() => {
         if (!(cradleState == 'repositioningB' || cradleState == 'repositioningA')) {
             return
@@ -819,7 +819,7 @@ const Cradle = ({
         let trackerargs = {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
-            referenceIndexOffset:cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference,
+            referenceIndexOffset:scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference,
             listsize,
             styles,
         }
@@ -908,7 +908,7 @@ const getCradleHandlers = (cradleParameters) => {
         createHandler(ScrollHandler),
         createHandler(StateHandler),
         createHandler(ContentHandler),
-        createHandler(CradleHandler),
+        createHandler(ScaffoldHandler),
         createHandler(ServiceHandler),
         createHandler(StylesHandler),
     ]

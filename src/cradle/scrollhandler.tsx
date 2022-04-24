@@ -32,7 +32,7 @@ export default class ScrollHandler {
         const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
         const viewportElement = viewportProperties.elementref.current
 
-        const cradleHandler = this.cradleParameters.handlersRef.current.cradle
+        const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
 
         const scrollPositionCurrent = 
             (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical')
@@ -51,7 +51,7 @@ export default class ScrollHandler {
 
         }
 
-        // cradleHandler.cradleReferenceData.blockScrollPos = scrollPositionCurrent // TODO: redundant?
+        // scaffoldHandler.cradleReferenceData.blockScrollPos = scrollPositionCurrent // TODO: redundant?
 
         this.scrollPositions.previous = this.scrollPositions.current
         this.scrollPositions.current = scrollPositionCurrent
@@ -81,9 +81,9 @@ export default class ScrollHandler {
 
                 if (cradleState == 'ready') {
 
-                    const itemindex = cradleHandler.cradleReferenceData.nextItemIndexReference
+                    const itemindex = scaffoldHandler.cradleReferenceData.nextItemIndexReference
                     let spineVisiblePosOffset
-                    const cradleElements = cradleHandler.elements
+                    const cradleElements = scaffoldHandler.elements
 
                     if (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical') {
 
@@ -96,8 +96,8 @@ export default class ScrollHandler {
                             this.cradleParameters.viewportPropertiesRef.current.elementref.current.scrollLeft
 
                     }
-                    cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference = itemindex
-                    cradleHandler.cradleReferenceData.scrollImpliedCradlePosOffset = spineVisiblePosOffset
+                    scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference = itemindex
+                    scaffoldHandler.cradleReferenceData.scrollImpliedCradlePosOffset = spineVisiblePosOffset
 
                 }
 
@@ -110,7 +110,7 @@ export default class ScrollHandler {
 
                 // TODO: re-instate the following
                 serviceHandler.serviceCalls.referenceIndexCallbackRef.current && 
-                    serviceHandler.serviceCalls.referenceIndexCallbackRef.current(cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference,'scrolling', cradleState)
+                    serviceHandler.serviceCalls.referenceIndexCallbackRef.current(scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference,'scrolling', cradleState)
 
             }
 
@@ -176,7 +176,7 @@ export default class ScrollHandler {
     updateReferenceData = () => {
 
         const stateHandler = this.cradleParameters.handlersRef.current.state
-        const cradleHandler = this.cradleParameters.handlersRef.current.cradle
+        const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
         const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
         // const contentHandler = this.cradleParameters.handlersRef.current.content
@@ -184,7 +184,7 @@ export default class ScrollHandler {
         if (!stateHandler.isMountedRef.current) return
 
         let spineVisiblePosOffset
-        const cradleElements = cradleHandler.elements
+        const cradleElements = scaffoldHandler.elements
 
         const viewportElement = viewportProperties.elementref.current
         if (cradleProps.orientation == 'vertical') {
@@ -199,14 +199,14 @@ export default class ScrollHandler {
 
         }
 
-        cradleHandler.cradleReferenceData.scrollImpliedCradlePosOffset = spineVisiblePosOffset
+        scaffoldHandler.cradleReferenceData.scrollImpliedCradlePosOffset = spineVisiblePosOffset
 
         if (!viewportProperties.isResizing) {
 
-            cradleHandler.cradleReferenceData.nextItemIndexReference = 
-                cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference
-            cradleHandler.cradleReferenceData.nextCradlePosOffset = 
-                cradleHandler.cradleReferenceData.scrollImpliedCradlePosOffset
+            scaffoldHandler.cradleReferenceData.nextItemIndexReference = 
+                scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference
+            scaffoldHandler.cradleReferenceData.nextCradlePosOffset = 
+                scaffoldHandler.cradleReferenceData.scrollImpliedCradlePosOffset
 
             this.updateBlockScrollPos()
 
@@ -216,19 +216,19 @@ export default class ScrollHandler {
 
     updateBlockScrollPos = () => {
 
-        const cradleHandler = this.cradleParameters.handlersRef.current.cradle
+        const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
         const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
         const viewportElement = viewportProperties.elementref.current
 
         if (cradleProps.orientation == 'vertical') {
 
-            cradleHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
-            cradleHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
+            scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
+            scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
 
         } else {
-            cradleHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
-            cradleHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
+            scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
+            scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
         }
 
     }
@@ -273,9 +273,9 @@ export default class ScrollHandler {
 
         if (spineReferenceIndex == 0) referencescrolloffset = 0 // defensive
 
-        let cradleHandler = this.cradleParameters.handlersRef.current.cradle
-        cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference = spineReferenceIndex
-        cradleHandler.cradleReferenceData.scrollImpliedCradlePosOffset = referencescrolloffset
+        let scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
+        scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference = spineReferenceIndex
+        scaffoldHandler.cradleReferenceData.scrollImpliedCradlePosOffset = referencescrolloffset
 
     }
 

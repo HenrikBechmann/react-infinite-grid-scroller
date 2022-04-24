@@ -59,7 +59,7 @@ export default class ContentHandler {
         const cradleProperties = this.cradleParameters.cradlePortalRef.current
         const cradleConfig = this.cradleParameters.cradleConfigRef.current
         const scrollHandler = this.cradleParameters.handlersRef.current.scroll
-        const cradleHandler = this.cradleParameters.handlersRef.current.cradle
+        const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         const stateHandler = this.cradleParameters.handlersRef.current.state
         const serviceHandler = this.cradleParameters.handlersRef.current.service
         const interruptHandler = this.cradleParameters.handlersRef.current.interrupts
@@ -72,8 +72,8 @@ export default class ContentHandler {
 
         const viewportElement = viewportProperties.elementref.current
 
-        const visibletargetindexoffset = cradleHandler.cradleReferenceData.nextItemIndexReference
-        let visibletargetscrolloffset = cradleHandler.cradleReferenceData.nextCradlePosOffset
+        const visibletargetindexoffset = scaffoldHandler.cradleReferenceData.nextItemIndexReference
+        let visibletargetscrolloffset = scaffoldHandler.cradleReferenceData.nextCradlePosOffset
 
         const {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleInheritedProps
 
@@ -144,11 +144,11 @@ export default class ContentHandler {
         cradleContent.headModelComponents = headcontentlist
         cradleContent.tailModelComponents = tailcontentlist
 
-        cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference = referenceoffset
-        cradleHandler.cradleReferenceData.scrollImpliedCradlePosOffset = spinePosOffset
+        scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference = referenceoffset
+        scaffoldHandler.cradleReferenceData.scrollImpliedCradlePosOffset = spinePosOffset
 
-        cradleHandler.cradleReferenceData.nextItemIndexReference = referenceoffset
-        cradleHandler.cradleReferenceData.nextCradlePosOffset = spinePosOffset
+        scaffoldHandler.cradleReferenceData.nextItemIndexReference = referenceoffset
+        scaffoldHandler.cradleReferenceData.nextCradlePosOffset = spinePosOffset
 
         if (serviceHandler.serviceCalls.referenceIndexCallbackRef.current) {
 
@@ -156,20 +156,20 @@ export default class ContentHandler {
             // if (cstate == 'setreload') cstate = 'reload'
             serviceHandler.serviceCalls.referenceIndexCallbackRef.current(
 
-                cradleHandler.cradleReferenceData.nextItemIndexReference,'setCradleContent', cstate)
+                scaffoldHandler.cradleReferenceData.nextItemIndexReference,'setCradleContent', cstate)
         
         }
 
-        const cradleElements = cradleHandler.elements //cradleElementsRef.current
+        const cradleElements = scaffoldHandler.elements //cradleElementsRef.current
 
-        cradleHandler.cradleReferenceData.blockScrollPos = scrollblockOffset - spinePosOffset
+        scaffoldHandler.cradleReferenceData.blockScrollPos = scrollblockOffset - spinePosOffset
         // console.log('setting blockScrollPos in setCradleContent: blockScrollPos, scrollblockOffset, spinePosOffset',
-        //     cradleHandler.cradleReferenceData.blockScrollPos, scrollblockOffset, spinePosOffset)
+        //     scaffoldHandler.cradleReferenceData.blockScrollPos, scrollblockOffset, spinePosOffset)
 
         if (orientation == 'vertical') {
 
-            cradleHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
-            // cradleHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
+            scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
+            // scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
 
             cradleElements.spineRef.current.style.top = (scrollblockOffset + spineAdjustment) + 'px'
             cradleElements.spineRef.current.style.left = 'auto'
@@ -177,8 +177,8 @@ export default class ContentHandler {
 
         } else { // orientation = 'horizontal'
 
-            cradleHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
-            // cradleHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
+            scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
+            // scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
 
             cradleElements.spineRef.current.style.top = 'auto'
             cradleElements.spineRef.current.style.left = (scrollblockOffset + spineAdjustment) + 'px'
@@ -194,7 +194,7 @@ export default class ContentHandler {
         const cradleInheritedProps = this.cradleParameters.cradleInheritedPropertiesRef.current
         const cradleProperties = this.cradleParameters.cradlePortalRef.current
         const scrollHandler = this.cradleParameters.handlersRef.current.scroll
-        const cradleHandler = this.cradleParameters.handlersRef.current.cradle
+        const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         const stateHandler = this.cradleParameters.handlersRef.current.state
         const interruptHandler = this.cradleParameters.handlersRef.current.interrupts
 
@@ -243,7 +243,7 @@ export default class ContentHandler {
             return // init call
         }
 
-        const cradleElements = cradleHandler.elements
+        const cradleElements = scaffoldHandler.elements
         const cradleContent = this.content
         const cradleConfig = this.cradleParameters.cradleConfigRef.current
 
@@ -362,16 +362,16 @@ export default class ContentHandler {
             
             if (cradleInheritedProps.orientation == 'vertical') {
 
-                // cradleHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
-                // cradleHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
+                // scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
+                // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
                 cradleElements.spineRef.current.style.top = viewportElement.scrollTop + spineposoffset + 'px'
                 cradleElements.spineRef.current.style.left = 'auto'
                 cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleInheritedProps.gap + 'px':0
 
             } else {
 
-                // cradleHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
-                // cradleHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
+                // scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
+                // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
                 cradleElements.spineRef.current.style.top = 'auto'
                 cradleElements.spineRef.current.style.left = viewportElement.scrollLeft + spineposoffset + 'px'
                 cradleElements.headRef.current.style.paddingRight = headcontent.length?cradleInheritedProps.gap + 'px':0
@@ -380,11 +380,11 @@ export default class ContentHandler {
 
         }
 
-        cradleHandler.cradleReferenceData.scrollImpliedItemIndexReference = spinereferenceindex
-        cradleHandler.cradleReferenceData.scrollImpliedCradlePosOffset = spineposoffset
+        scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference = spinereferenceindex
+        scaffoldHandler.cradleReferenceData.scrollImpliedCradlePosOffset = spineposoffset
 
-        cradleHandler.cradleReferenceData.nextItemIndexReference = spinereferenceindex
-        cradleHandler.cradleReferenceData.nextCradlePosOffset = spineposoffset
+        scaffoldHandler.cradleReferenceData.nextItemIndexReference = spinereferenceindex
+        scaffoldHandler.cradleReferenceData.nextCradlePosOffset = spineposoffset
 
         stateHandler.setCradleState('renderupdatedcontent')
 
