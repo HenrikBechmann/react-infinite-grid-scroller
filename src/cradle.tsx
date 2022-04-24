@@ -157,6 +157,7 @@ const Cradle = ({
         dense,
     } = gridSpecs
 
+    // freeze object props
     const functions = Object.freeze(Object.assign({},inheritedfunctions))
     const styles = Object.freeze(Object.assign({},inheritedstyles))
 
@@ -814,7 +815,7 @@ const Cradle = ({
     const referenceIndexOffset = scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference
     const scrollTrackerArgs = useMemo(() => {
         if (!(cradleState == 'repositioningB' || cradleState == 'repositioningA')) {
-            return
+            return null
         }
         let trackerargs = {
             top:viewportDimensions.top + 3,
