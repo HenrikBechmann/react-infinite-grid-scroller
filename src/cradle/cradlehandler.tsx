@@ -12,7 +12,7 @@ export default class CradleHandler {
        elements.headRef = cradleBackProps.cradleElementsRef.current.head
        elements.tailRef = cradleBackProps.cradleElementsRef.current.tail
 
-       let {defaultVisibleIndex, listsize, padding} = this.cradleBackProps.cradleInheritedPropsRef.current
+       let {defaultVisibleIndex, listsize, padding} = this.cradleBackProps.cradleInheritedPropertiesRef.current
 
        // progression of references: scroll->next
        this.cradleReferenceData.scrollImpliedItemIndexReference = (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)

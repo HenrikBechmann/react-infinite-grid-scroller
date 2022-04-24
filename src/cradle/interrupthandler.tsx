@@ -122,7 +122,7 @@ export default class InterruptHandler {
                 const element = viewportProperties.elementref.current
                 if (!element) {
                     console.log('viewport element not set in cradleIntersectionObserverCallback',
-                        this.cradleBackProps.cradleInheritedPropsRef.current.scrollerID,viewportProperties)
+                        this.cradleBackProps.cradleInheritedPropertiesRef.current.scrollerID,viewportProperties)
                     return
                 }
                 // TODO this is a duplicate setting procedure with viewport.tsx

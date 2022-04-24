@@ -28,7 +28,7 @@ export default class ServiceHandler {
             itemElementMap:contentHandler.itemElements,
             viewportElement:viewportProperties.elementref.current,
             cradleElements, 
-            cradleProps:this.cradleBackProps.cradleInheritedPropsRef.current,
+            cradleProps:this.cradleBackProps.cradleInheritedPropertiesRef.current,
             cradleContent,
         })
 

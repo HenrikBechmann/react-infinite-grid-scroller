@@ -162,9 +162,9 @@ const Cradle = ({
 
     // ---------------------[ package cradle props to pass to handlers ]-------------------
 
-    const cradleInheritedPropsRef = useRef(null) // access by closures and support functions
+    const cradleInheritedPropertiesRef = useRef(null) // access by closures and support functions
 
-    cradleInheritedPropsRef.current =  Object.freeze({
+    cradleInheritedPropertiesRef.current =  Object.freeze({
         // gridSpecs
         orientation, 
         gap, 
@@ -329,7 +329,7 @@ const Cradle = ({
     const cradleBackProps = Object.freeze({
         handlersRef,
         viewportPropertiesRef:viewportPropertiesRef,
-        cradleInheritedPropsRef, 
+        cradleInheritedPropertiesRef, 
         cradleConfigRef, 
         cradlePropertiesRef,
         cradleStateRef,
@@ -485,14 +485,14 @@ const Cradle = ({
 
         // get previous ratio
         const previousCellPixelLength = (orientation == 'vertical')?
-            cradleInheritedPropsRef.current.cellWidth:cradleInheritedPropsRef.current.cellHeight
+            cradleInheritedPropertiesRef.current.cellWidth:cradleInheritedPropertiesRef.current.cellHeight
         // let previousSpineOffset = cradleHandler.cradleReferenceData.theNextSpinePixelOffset
         const previousSpineOffset = cradleHandler.cradleReferenceData.nextCradlePosOffset
 
         const previousratio = previousSpineOffset/previousCellPixelLength
 
         const currentCellPixelLength = (orientation == 'vertical')?
-            cradleInheritedPropsRef.current.cellHeight:cradleInheritedPropsRef.current.cellWidth
+            cradleInheritedPropertiesRef.current.cellHeight:cradleInheritedPropertiesRef.current.cellWidth
 
         const currentSpineOffset = previousratio * currentCellPixelLength
         
