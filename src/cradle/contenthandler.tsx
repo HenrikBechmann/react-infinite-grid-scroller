@@ -56,7 +56,7 @@ export default class ContentHandler {
 
         const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
         const cradleInheritedProps = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const cradleProperties = this.cradleParameters.cradlePropertiesRef.current
+        const cradleProperties = this.cradleParameters.cradlePortalRef.current
         const cradleConfig = this.cradleParameters.cradleConfigRef.current
         const scrollHandler = this.cradleParameters.handlersRef.current.scroll
         const cradleHandler = this.cradleParameters.handlersRef.current.cradle
@@ -192,7 +192,7 @@ export default class ContentHandler {
 
         const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
         const cradleInheritedProps = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const cradleProperties = this.cradleParameters.cradlePropertiesRef.current
+        const cradleProperties = this.cradleParameters.cradlePortalRef.current
         const scrollHandler = this.cradleParameters.handlersRef.current.scroll
         const cradleHandler = this.cradleParameters.handlersRef.current.cradle
         const stateHandler = this.cradleParameters.handlersRef.current.state

@@ -282,7 +282,6 @@ const Cradle = ({
     ])
 
     const cradleConfigRef = useRef(null)
-
     cradleConfigRef.current = {
         crosscount,
         cradleRowcount,
@@ -291,7 +290,7 @@ const Cradle = ({
         cellObserverThreshold:ITEM_OBSERVER_THRESHOLD,
     }
 
-    const cradlePropertiesRef = useRef({
+    const cradlePortalRef = useRef({
         portalHandler:null,
         scrollerID,
     })
@@ -327,7 +326,7 @@ const Cradle = ({
         viewportPropertiesRef,
         cradleInheritedPropertiesRef, 
         cradleConfigRef, 
-        cradlePropertiesRef,
+        cradlePortalRef,
         cradleStateRef,
         setCradleState,
         isMountedRef,
@@ -381,7 +380,7 @@ const Cradle = ({
     // set portalHandler, and unmounted flag
     useLayoutEffect(()=>{
 
-        cradlePropertiesRef.current.portalHandler = new PortalHandler()
+        cradlePortalRef.current.portalHandler = new PortalHandler()
 
         // unmount
         return () => {
@@ -720,7 +719,7 @@ const Cradle = ({
                 cradleContent.tailModelComponents = []
                 cradleContent.headViewComponents = []
                 cradleContent.tailViewComponents = []
-                cradlePropertiesRef.current.portalHandler.resetScrollerPortalRepository()
+                cradlePortalRef.current.portalHandler.resetScrollerPortalRepository()
                 contentHandler.setCradleContent(callingCradleState.current)
 
                 setCradleState('preparerender')
@@ -838,9 +837,9 @@ const Cradle = ({
     let cradleContent = contentHandler.content
 
     // portalroot is the hidden portal component cache
-    return <CradleContext.Provider value = {cradlePropertiesRef}>
+    return <CradleContext.Provider value = {cradlePortalRef}>
         {(cradleStateRef.current != 'setup') && <div data-type = 'portalroot' style = { portalrootstyle }>
-            <PortalList scrollerProps = {cradlePropertiesRef.current.portalHandler.scrollerProps}/>
+            <PortalList scrollerProps = {cradlePortalRef.current.portalHandler.scrollerProps}/>
         </div>}
 
         {((cradleStateRef.current == 'repositioningA') || (cradleStateRef.current == 'repositioningB'))
