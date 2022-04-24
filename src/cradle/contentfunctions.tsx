@@ -415,7 +415,7 @@ export const calcContentShifts = ({
     // itemElements,
     shiftingintersections,
     scrollingviewportforward,
-    viewportData,
+    viewportProperties,
 
 }) => {
 

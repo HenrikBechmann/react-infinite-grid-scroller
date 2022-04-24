@@ -157,16 +157,12 @@ const Cradle = ({
         dense,
     } = gridSpecs
 
-    // =============================================================================================
-    // --------------------------------------[ INITIALIZATION ]-------------------------------------
-    // =============================================================================================
+    const functions = Object.freeze(Object.assign({},inheritedfunctions))
+    const styles = Object.freeze(Object.assign({},inheritedstyles))
 
     // ---------------------[ package cradle props to pass to handlers ]-------------------
 
-    const cradleInheritedPropsRef = useRef(null) // access by closures
-
-    const functions = Object.freeze(Object.assign({},inheritedfunctions))
-    const styles = Object.freeze(Object.assign({},inheritedstyles))
+    const cradleInheritedPropsRef = useRef(null) // access by closures and support functions
 
     cradleInheritedPropsRef.current =  Object.freeze({
         // gridSpecs
@@ -194,20 +190,22 @@ const Cradle = ({
     // ----------------[ context ]----------------
 
     const [cradleState, setCradleState] = useState('setup')
+    const cradleStateRef = useRef(null) // access by closures
+    cradleStateRef.current = cradleState;
+
     const viewportProperties = useContext(ViewportInterrupt)
     const viewportPropertiesRef = useRef(null)
     viewportPropertiesRef.current = viewportProperties // for closures
 
+    const isMountedRef = useRef(true)
+    // const isReparentingRef = useRef(false)
+    const normalizeTimerRef = useRef(null)
+
     // ----------------[ cradle butterfly html components ]---------------
 
-    const isMountedRef = useRef(true)
-    const isReparentingRef = useRef(false)
-    const normalizeTimerRef = useRef(null)
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const spineCradleElementRef = useRef(null)
-    const cradleStateRef = useRef(null) // access by closures
-    cradleStateRef.current = cradleState;
     const cradleElementsRef = useRef(
         {
             head:headCradleElementRef, 
@@ -216,7 +214,8 @@ const Cradle = ({
         }
     )
     
-    // if ((cradleState == 'normalizesignals') && viewportData.portal?.isReparenting) {
+    // ----------------[ viewport dimensions ]------------------
+
     const { viewportDimensions } = viewportProperties
 
     const { height:viewportheight,width:viewportwidth } = viewportDimensions
@@ -225,16 +224,14 @@ const Cradle = ({
 
     const crosscount = useMemo(() => {
 
-        let crosscount
-        const size = (orientation == 'horizontal')?viewportheight:viewportwidth
+        const viewportsize = (orientation == 'horizontal')?viewportheight:viewportwidth
         const crossLength = (orientation == 'horizontal')?cellHeight:cellWidth
 
-        const lengthforcalc = size - (padding * 2) + gap // length of viewport
+        const viewportlengthforcalc = viewportsize - (padding * 2) + gap // length of viewport
         let tilelengthforcalc = crossLength + gap
-        tilelengthforcalc = Math.min(tilelengthforcalc,lengthforcalc) // result cannot be less than 1
-        crosscount = Math.floor(lengthforcalc/(tilelengthforcalc))
+        tilelengthforcalc = Math.min(tilelengthforcalc,viewportlengthforcalc) // result cannot be less than 1
 
-        return crosscount
+        return Math.floor(viewportlengthforcalc/tilelengthforcalc)
 
     },[
         orientation, 
@@ -246,7 +243,7 @@ const Cradle = ({
         viewportwidth,
     ])
 
-    const [cradleRowcount,viewportRowcount] = useMemo(()=> {
+    const [cradleRowcount, viewportRowcount, listRowcount] = useMemo(()=> {
 
         let viewportLength, cellLength
         if (orientation == 'vertical') {
@@ -267,17 +264,20 @@ const Cradle = ({
             itemcount = listsize
             cradleRowcount = Math.ceil(itemcount/crosscount)
         }
-        return [cradleRowcount, viewportRowcount]
+        const listRowcount = Math.ceil(listsize/crosscount)
+
+        return [cradleRowcount, viewportRowcount, listRowcount]
 
     },[
         orientation, 
+        gap, 
+        // padding,
         cellWidth, 
         cellHeight, 
-        gap, 
-        listsize,
-        // padding,
         viewportheight, 
         viewportwidth,
+
+        listsize,
         runwaycount,
         crosscount,
     ])
@@ -288,8 +288,8 @@ const Cradle = ({
         crosscount,
         cradleRowcount,
         viewportRowcount,
+        listRowcount,
         cellObserverThreshold:ITEM_OBSERVER_THRESHOLD,
-        listRowcount:Math.ceil(listsize/crosscount),
     }
 
     const cradlePropertiesRef = useRef({
@@ -328,7 +328,7 @@ const Cradle = ({
     const handlersRef = useRef(null) // placeholder; make available to individual handlers
     const cradleBackProps = Object.freeze({
         handlersRef,
-        viewportdataRef:viewportPropertiesRef,
+        viewportPropertiesRef:viewportPropertiesRef,
         cradleInheritedPropsRef, 
         cradleConfigRef, 
         cradlePropertiesRef,
@@ -666,7 +666,7 @@ const Cradle = ({
     // useLayout for suppressing flashes
     useLayoutEffect(()=>{
 
-        let viewportData = viewportPropertiesRef.current
+        let viewportProperties = viewportPropertiesRef.current
         let cradleContent = contentHandler.content
         switch (cradleState) {
 
@@ -739,7 +739,7 @@ const Cradle = ({
                 cradleContent.headViewComponents = cradleContent.headModelComponents
                 cradleContent.tailViewComponents = cradleContent.tailModelComponents
 
-                viewportData.elementref.current[cradleHandler.cradleReferenceData.blockScrollProperty] =
+                viewportProperties.elementref.current[cradleHandler.cradleReferenceData.blockScrollProperty] =
                     Math.max(0,cradleHandler.cradleReferenceData.blockScrollPos)
 
                 setCradleState('normalizesignals') // call a timeout for ready (or interrupt continuation)
@@ -753,7 +753,7 @@ const Cradle = ({
                     if (!isMountedRef.current) return
 
                     // allow short-circuit fallbacks to continue interrupt responses
-            /*1*/   if (!viewportData.isResizing) { // resize short-circuit
+            /*1*/   if (!viewportProperties.isResizing) { // resize short-circuit
                         
             /*2*/       if (!interruptHandler.signals.repositioningRequired) { // repositioning short-circuit
 
@@ -761,13 +761,13 @@ const Cradle = ({
             //                     /*&& (!isReparentingRef.current))*/ { // reparent (restorescrollpos) short-circuit
                             
                                 const signals = interruptHandler.signals
-                                if (viewportData.elementref.current) { // already unmounted if fails (?)
+                                if (viewportProperties.elementref.current) { // already unmounted if fails (?)
                                     signals.pauseCellObserver  && (signals.pauseCellObserver = false)
                                     signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
                                     signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
                                     signals.pauseCradleResizeObserver && (signals.pauseCradleResizeObserver = false)
                                 } else {
-                                    console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportData)
+                                    console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportProperties)
                                 }
 
             /*default outcome*/ if (isMountedRef.current) setCradleState('ready')
@@ -797,7 +797,7 @@ const Cradle = ({
     // standard processing stages
     useEffect(()=> { // TODO: verify benefit of useLayoutEffect
 
-        let viewportData = viewportPropertiesRef.current
+        let viewportProperties = viewportPropertiesRef.current
         switch (cradleState) {
 
             case 'repositioningA':

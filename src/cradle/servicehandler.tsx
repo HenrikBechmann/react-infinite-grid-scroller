@@ -17,16 +17,16 @@ export default class ServiceHandler {
 
     getVisibleList = () => {
 
-        let contentHandler = this.cradleBackProps.handlersRef.current.content        
+        const contentHandler = this.cradleBackProps.handlersRef.current.content        
 
-        let cradleContent = contentHandler.content
-        let viewportData = this.cradleBackProps.viewportdataRef.current
-        let cradleHandler = this.cradleBackProps.handlersRef.current.cradle
-        let cradleElements = cradleHandler.elements
+        const cradleContent = contentHandler.content
+        const viewportProperties = this.cradleBackProps.viewportPropertiesRef.current
+        const cradleHandler = this.cradleBackProps.handlersRef.current.cradle
+        const cradleElements = cradleHandler.elements
 
         return getVisibleItemsList({
             itemElementMap:contentHandler.itemElements,
-            viewportElement:viewportData.elementref.current,
+            viewportElement:viewportProperties.elementref.current,
             cradleElements, 
             cradleProps:this.cradleBackProps.cradleInheritedPropsRef.current,
             cradleContent,
