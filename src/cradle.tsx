@@ -108,14 +108,13 @@ import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, u
 
 import { ViewportInterrupt } from './viewport'
 
-import { PortalHandler, PortalList } from './portalhandler'
-
 const ITEM_OBSERVER_THRESHOLD = [0,1]
 
 // popup position tracker
 import ScrollTracker from './scrolltracker'
 
 // support code
+import { PortalHandler, PortalList } from './cradle/portalhandler'
 import ScrollHandler from './cradle/scrollhandler'
 import StateHandler from './cradle/statehandler'
 import ContentHandler from './cradle/contenthandler'
