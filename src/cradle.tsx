@@ -285,8 +285,8 @@ const Cradle = ({
     ])
 
     // configuration objects
-    const cradleConfigRef = useRef(null)
-    cradleConfigRef.current = {
+    const CradleInternalPropertiesRef = useRef(null)
+    CradleInternalPropertiesRef.current = {
         crosscount,
         cradleRowcount,
         viewportRowcount,
@@ -330,7 +330,7 @@ const Cradle = ({
         handlersRef,
         viewportPropertiesRef,
         cradleInheritedPropertiesRef, 
-        cradleConfigRef, 
+        CradleInternalPropertiesRef, 
         contentCallbacksRef,
         cradleElementsRef,
         serviceCallsRef,

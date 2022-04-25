@@ -193,7 +193,7 @@ export default class InterruptHandler {
                 this.cellintersectionobservercallback,
                 {
                     root:viewportProperties.elementref.current, 
-                    threshold:this.cradleParameters.cradleConfigRef.current.cellObserverThreshold,
+                    threshold:this.cradleParameters.CradleInternalPropertiesRef.current.cellObserverThreshold,
                 } 
             )
             return this.cellIntersect.observer
