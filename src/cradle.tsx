@@ -104,8 +104,14 @@
 
 /*
     Cradle is activated by interrupts:
-    - resizing of the 
-
+    - resizing of the viewport (1)
+    - observer callbacks:
+        - cradle viewport intersection for repositioning when the cradle races out of scope - by scroll (2)
+        - cellShell viewport intersection which triggers rolling of content - by scroll (3)
+            - rolling content triggers re-allocation of content between cradle wings
+        - cradle wing resize (responding to variable length cell changes) which triggers reconfiguration (4)
+    - pivot - change of orientation (5)
+    - host change of other configuration specs (6)
 */
 
 'use strict'
