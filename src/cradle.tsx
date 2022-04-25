@@ -295,6 +295,7 @@ const Cradle = ({
         cradleStateRef,
         setCradleState,
         isMountedRef,
+        cradleElementsRef,
     }
 
     // utility to register or unregister cradle item elements
@@ -332,7 +333,6 @@ const Cradle = ({
         cradleInheritedPropertiesRef, 
         CradleInternalPropertiesRef, 
         contentCallbacksRef,
-        cradleElementsRef,
         serviceCallsRef,
     })
 

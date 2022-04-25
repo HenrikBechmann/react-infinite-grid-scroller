@@ -7,7 +7,8 @@ export default class ScaffoldHandler {
 
        this.cradleParameters = cradleParameters
 
-       const {spineRef, headRef, tailRef} = cradleParameters.cradleElementsRef.current
+       const {spineRef, headRef, tailRef} = 
+          cradleParameters.CradleInternalPropertiesRef.current.cradleElementsRef.current
        this.elements = {
           spineRef,
           headRef,
