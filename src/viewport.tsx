@@ -44,10 +44,6 @@ const Viewport = ({
     const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, render
     // console.log('running viewport', viewportState)
 
-    const oldGridSpecs = useRef(gridSpecs)
-    const oldStyles = useRef(styles)
-    const oldScrollerID = useRef(scrollerID)
-
     const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
     viewportStateRef.current = viewportState
 
