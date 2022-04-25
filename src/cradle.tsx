@@ -102,6 +102,12 @@
         this position when the scrolling stops.
 */
 
+/*
+    Cradle is activated by interrupts:
+    - resizing of the 
+
+*/
+
 'use strict'
 
 import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, useLayoutEffect } from 'react'
@@ -191,11 +197,11 @@ const Cradle = ({
 
     // context
 
-    const viewportProperties = useContext(ViewportInterrupt)
-    const viewportPropertiesRef = useRef(null)
-    viewportPropertiesRef.current = viewportProperties // for closures
+    const viewportInterruptProperties = useContext(ViewportInterrupt)
+    const viewportInterruptPropertiesRef = useRef(null)
+    viewportInterruptPropertiesRef.current = viewportInterruptProperties // for closures
 
-    const { viewportDimensions } = viewportProperties
+    const { viewportDimensions } = viewportInterruptProperties
     const { height:viewportheight,width:viewportwidth } = viewportDimensions
 
     const [cradleState, setCradleState] = useState('setup')
@@ -327,7 +333,7 @@ const Cradle = ({
     const handlersRef = useRef(null) // placeholder in cradleParamters; make available individual handlers
     const cradleParameters = Object.freeze({
         handlersRef,
-        viewportPropertiesRef,
+        viewportInterruptPropertiesRef,
         cradleInheritedPropertiesRef, 
         CradleInternalPropertiesRef, 
         internalCallbacksRef,
@@ -369,10 +375,10 @@ const Cradle = ({
 
     // this is an immediate response to reparenting. Reparenting resets scroll positions
     // this restores scroll as soon as cradle is invoked after reparenting
-    if (viewportProperties.portal?.isReparenting) { 
+    if (viewportInterruptProperties.portal?.isReparenting) { 
 
-        viewportProperties.portal.isReparenting = false
-        viewportProperties.elementref.current[scaffoldHandler.cradleReferenceData.blockScrollProperty] =
+        viewportInterruptProperties.portal.isReparenting = false
+        viewportInterruptProperties.elementref.current[scaffoldHandler.cradleReferenceData.blockScrollProperty] =
             Math.max(0,scaffoldHandler.cradleReferenceData.blockScrollPos)
     }
 
@@ -410,7 +416,7 @@ const Cradle = ({
 
     // initialize window scroll listener
     useEffect(() => {
-        let viewportdata = viewportPropertiesRef.current
+        let viewportdata = viewportInterruptPropertiesRef.current
         viewportdata.elementref.current.addEventListener('scroll',scrollHandler.onScroll)
 
         return () => {
@@ -472,7 +478,7 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        if (viewportProperties.isResizing) {
+        if (viewportInterruptProperties.isResizing) {
 
             const { signals } = interruptHandler
             signals.pauseCellObserver = true
@@ -484,13 +490,13 @@ const Cradle = ({
         }
 
         // complete resizing mode
-        if (!viewportProperties.isResizing && (cradleStateRef.current == 'resizing')) {
+        if (!viewportInterruptProperties.isResizing && (cradleStateRef.current == 'resizing')) {
 
             setCradleState('resized')
 
         }
 
-    },[viewportProperties.isResizing])
+    },[viewportInterruptProperties.isResizing])
 
     // reload for changed parameters
     useEffect(()=>{
@@ -645,7 +651,7 @@ const Cradle = ({
     // useLayout for suppressing flashes
     useLayoutEffect(()=>{
 
-        let viewportProperties = viewportPropertiesRef.current
+        let viewportInterruptProperties = viewportInterruptPropertiesRef.current
         let cradleContent = contentHandler.content
         switch (cradleState) {
 
@@ -713,7 +719,7 @@ const Cradle = ({
                 cradleContent.headViewComponents = cradleContent.headModelComponents
                 cradleContent.tailViewComponents = cradleContent.tailModelComponents
 
-                viewportProperties.elementref.current[scaffoldHandler.cradleReferenceData.blockScrollProperty] =
+                viewportInterruptProperties.elementref.current[scaffoldHandler.cradleReferenceData.blockScrollProperty] =
                     Math.max(0,scaffoldHandler.cradleReferenceData.blockScrollPos)
 
                 setCradleState('normalizesignals') // call a timeout for ready (or interrupt continuation)
@@ -727,18 +733,18 @@ const Cradle = ({
                     if (!isMountedRef.current) return
 
                     // allow short-circuit fallbacks to continue interrupt responses
-            /*1*/   if (!viewportProperties.isResizing) { // resize short-circuit
+            /*1*/   if (!viewportInterruptProperties.isResizing) { // resize short-circuit
                         
             /*2*/       if (!interruptHandler.signals.repositioningRequired) { // repositioning short-circuit
 
                             const signals = interruptHandler.signals
-                            if (viewportProperties.elementref.current) { // already unmounted if fails (?)
+                            if (viewportInterruptProperties.elementref.current) { // already unmounted if fails (?)
                                 signals.pauseCellObserver  && (signals.pauseCellObserver = false)
                                 signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
                                 signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
                                 signals.pauseCradleResizeObserver && (signals.pauseCradleResizeObserver = false)
                             } else {
-                                console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportProperties)
+                                console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportInterruptProperties)
                             }
 
                 /*default*/ if (isMountedRef.current) setCradleState('ready')
@@ -768,7 +774,7 @@ const Cradle = ({
     // standard processing stages
     useEffect(()=> { // TODO: verify benefit of useLayoutEffect
 
-        let viewportProperties = viewportPropertiesRef.current
+        let viewportInterruptProperties = viewportInterruptPropertiesRef.current
         switch (cradleState) {
 
             case 'repositioningRender':

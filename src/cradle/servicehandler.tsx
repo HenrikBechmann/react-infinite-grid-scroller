@@ -20,13 +20,13 @@ export default class ServiceHandler {
         const contentHandler = this.cradleParameters.handlersRef.current.content        
 
         const cradleContent = contentHandler.content
-        const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
+        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         const cradleElements = scaffoldHandler.elements
 
         return getVisibleItemsList({
             itemElementMap:contentHandler.itemElements,
-            viewportElement:viewportProperties.elementref.current,
+            viewportElement:viewportInterruptProperties.elementref.current,
             cradleElements, 
             cradleProps:this.cradleParameters.cradleInheritedPropertiesRef.current,
             cradleContent,

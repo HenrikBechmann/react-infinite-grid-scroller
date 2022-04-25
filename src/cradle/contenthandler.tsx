@@ -54,7 +54,7 @@ export default class ContentHandler {
     // TODO: last row is sometimes left off with reposition
     public setCradleContent = (cradleState) => { 
 
-        const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
+        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const cradleInheritedProps = this.cradleParameters.cradleInheritedPropertiesRef.current
         const portalHandler = this.cradleParameters.handlersRef.current.portals
         const cradleConfig = this.cradleParameters.CradleInternalPropertiesRef.current
@@ -65,12 +65,12 @@ export default class ContentHandler {
         const interruptHandler = this.cradleParameters.handlersRef.current.interrupts
         const cradleData = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        // if (viewportProperties.index == 6) {
+        // if (viewportInterruptProperties.index == 6) {
         //     console.log('SETTING content - cradleState, cradleData in setCradleContent',
                     // cradleState, cradleData)
         // }
 
-        const viewportElement = viewportProperties.elementref.current
+        const viewportElement = viewportInterruptProperties.elementref.current
 
         const visibletargetindexoffset = scaffoldHandler.cradleReferenceData.nextItemIndexReference
         let visibletargetscrolloffset = scaffoldHandler.cradleReferenceData.nextCradlePosOffset
@@ -103,13 +103,13 @@ export default class ContentHandler {
                 cradleConfig,
                 visibletargetindexoffset,
                 targetViewportOffset:visibletargetscrolloffset,
-                viewportElement:viewportProperties.elementref.current
+                viewportElement:viewportInterruptProperties.elementref.current
             })
 
          // console.log('cradleActualContentCount from getContentListRequirements',cradleActualContentCount)
 
-        // if (viewportProperties.index == 6) {
-        //     console.log('SET index, cradleActualContentCount', viewportProperties.index,cradleActualContentCount)
+        // if (viewportInterruptProperties.index == 6) {
+        //     console.log('SET index, cradleActualContentCount', viewportInterruptProperties.index,cradleActualContentCount)
         // }
 
         // returns content constrained by cradleRowcount
@@ -190,7 +190,7 @@ export default class ContentHandler {
 
     public updateCradleContent = (entries, source = 'notifications') => {
 
-        const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
+        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const cradleInheritedProps = this.cradleParameters.cradleInheritedPropertiesRef.current
         const portalHandler = this.cradleParameters.handlersRef.current.portals
         const scrollHandler = this.cradleParameters.handlersRef.current.scroll
@@ -200,11 +200,11 @@ export default class ContentHandler {
 
         const cradleData = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        // if (viewportProperties.index == 6) {
+        // if (viewportInterruptProperties.index == 6) {
             // console.log('UPDATING content - source; in updateCradleContent',source)
         // }
 
-        const viewportElement = viewportProperties.elementref.current
+        const viewportElement = viewportInterruptProperties.elementref.current
         if (!viewportElement) { 
             // not mounted; return
             return
@@ -291,7 +291,7 @@ export default class ContentHandler {
             // itemElements,
             shiftingintersections,
             scrollingviewportforward,
-            viewportProperties,
+            // viewportInterruptProperties,
 
         })
 

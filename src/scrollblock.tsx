@@ -32,7 +32,7 @@ const Scrollblock = ({
     } = gridSpecs
 
     // -------------------------[ context and state ]-------------------------
-    const viewportProperties = useContext(ViewportInterrupt)
+    const viewportInterruptProperties = useContext(ViewportInterrupt)
     // console.log('running scrollblock')
 
     // -----------------------------------[ data heap ]-------------------------
@@ -50,7 +50,7 @@ const Scrollblock = ({
     )
     const [divlinerstyle,saveDivlinerstyle] = useState(divlinerstyleRef.current) // to trigger render
 
-    const { width, height } = viewportProperties.viewportDimensions
+    const { width, height } = viewportInterruptProperties.viewportDimensions
     
     useLayoutEffect(() => {
 

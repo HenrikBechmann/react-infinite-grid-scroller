@@ -83,8 +83,8 @@ const Viewport = ({
 
     const viewportdivRef = useRef(null)
 
-    // viewportPropertiesRef is passed as an interrupt (context) to children
-    const viewportPropertiesRef = useRef(
+    // viewportInterruptPropertiesRef is passed as an interrupt (context) to children
+    const viewportInterruptPropertiesRef = useRef(
         {
             portal:null, 
             isResizing:false, 
@@ -137,10 +137,10 @@ const Viewport = ({
 
         // generate interrupt response, if initiating resize
         if (!isResizingRef.current) {
-            viewportPropertiesRef.current.isResizing = isResizingRef.current = true 
+            viewportInterruptPropertiesRef.current.isResizing = isResizingRef.current = true 
             // new object creation triggers a realtime interrupt message to cradle through context
-            // console.log('updating viewportPropertiesRef in resizeCallback')
-            viewportPropertiesRef.current = Object.assign({},viewportPropertiesRef.current) 
+            // console.log('updating viewportInterruptPropertiesRef in resizeCallback')
+            viewportInterruptPropertiesRef.current = Object.assign({},viewportInterruptPropertiesRef.current) 
 
             if (isMountedRef.current) setViewportState('resizing')
 
@@ -173,8 +173,8 @@ const Viewport = ({
         while (element) {
             if (element.dataset && (element.dataset.type == 'portalcontainer')) {
                 portalindex = parseInt(element.dataset.index)
-                viewportPropertiesRef.current.portal = parentPortalHandler.getPortal(portalindex)
-                viewportPropertiesRef.current.index = portalindex
+                viewportInterruptPropertiesRef.current.portal = parentPortalHandler.getPortal(portalindex)
+                viewportInterruptPropertiesRef.current.index = portalindex
                 break
             } else {
                 element = element.parentElement
@@ -211,11 +211,11 @@ const Viewport = ({
 
     // measure viewport dimensions for children
     // TODO: should dimensions be updated during resize or only after resize?
-    viewportPropertiesRef.current = useMemo(() => {
+    viewportInterruptPropertiesRef.current = useMemo(() => {
 
         // console.log('useMemo state', viewportState)
 
-        if (viewportState == 'setup') return viewportPropertiesRef.current
+        if (viewportState == 'setup') return viewportInterruptPropertiesRef.current
 
         const {top, right, bottom, left} = viewportdivRef.current.getBoundingClientRect()
         const width = (right - left)
@@ -229,8 +229,8 @@ const Viewport = ({
         }
 
         // trigger context change with new object
-        const viewportdataobject = Object.assign({},viewportPropertiesRef.current, localViewportData) 
-        // console.log('updating viewportPropertiesRef from useMemo')
+        const viewportdataobject = Object.assign({},viewportInterruptPropertiesRef.current, localViewportData) 
+        // console.log('updating viewportInterruptPropertiesRef from useMemo')
         return  viewportdataobject
 
     },[orientation, isResizingRef.current, viewportState])
@@ -250,11 +250,11 @@ const Viewport = ({
     },[viewportState])
 
     // ----------------------[ render ]--------------------------------
-    // const oldViewportPropertiesRef = useRef(viewportPropertiesRef.current)
+    // const oldViewportPropertiesRef = useRef(viewportInterruptPropertiesRef.current)
     // console.log('viewport changes',
-    //     Object.is(viewportPropertiesRef.current,oldViewportPropertiesRef.current))
-    // oldViewportPropertiesRef.current = viewportPropertiesRef.current
-    return <ViewportInterrupt.Provider value = { viewportPropertiesRef.current }>
+    //     Object.is(viewportInterruptPropertiesRef.current,oldViewportPropertiesRef.current))
+    // oldViewportPropertiesRef.current = viewportInterruptPropertiesRef.current
+    return <ViewportInterrupt.Provider value = { viewportInterruptPropertiesRef.current }>
         <div 
             data-type = 'viewport'
             data-scrollerid = {scrollerID}

@@ -29,8 +29,8 @@ export default class ScrollHandler {
 
         // }
 
-        const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
-        const viewportElement = viewportProperties.elementref.current
+        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+        const viewportElement = viewportInterruptProperties.elementref.current
 
         const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
 
@@ -56,9 +56,9 @@ export default class ScrollHandler {
         this.scrollPositions.previous = this.scrollPositions.current
         this.scrollPositions.current = scrollPositionCurrent
 
-        // if (viewportProperties.index == 6) {
+        // if (viewportInterruptProperties.index == 6) {
         //     console.log('running onScroll for index, scrollPositions',
-        //         viewportProperties.index,this.scrollPositions)
+        //         viewportInterruptProperties.index,this.scrollPositions)
         // }
 
         clearTimeout(this._scrolltimerid)
@@ -75,7 +75,7 @@ export default class ScrollHandler {
         const contentHandler = this.cradleParameters.handlersRef.current.content
         const serviceHandler = this.cradleParameters.handlersRef.current.service
 
-        if (!viewportProperties.isResizing) {
+        if (!viewportInterruptProperties.isResizing) {
 
             if ((cradleState == 'ready') || (cradleState == 'repositioningRender') || (cradleState == 'repositioningContinuation')) {
 
@@ -88,12 +88,12 @@ export default class ScrollHandler {
                     if (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical') {
 
                         spineVisiblePosOffset = cradleElements.spineRef.current.offsetTop - 
-                            this.cradleParameters.viewportPropertiesRef.current.elementref.current.scrollTop
+                            this.cradleParameters.viewportInterruptPropertiesRef.current.elementref.current.scrollTop
                             
                     } else {
 
                         spineVisiblePosOffset = cradleElements.spineRef.current.offsetLeft - 
-                            this.cradleParameters.viewportPropertiesRef.current.elementref.current.scrollLeft
+                            this.cradleParameters.viewportInterruptPropertiesRef.current.elementref.current.scrollLeft
 
                     }
                     scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference = itemindex
@@ -133,13 +133,13 @@ export default class ScrollHandler {
 
         const stateHandler = this.cradleParameters.handlersRef.current.state
         const contentHandler = this.cradleParameters.handlersRef.current.content
-        const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
+        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
 
         const cradleState = stateHandler.cradleStateRef.current
 
-        // if (viewportProperties.index == 6) {
+        // if (viewportInterruptProperties.index == 6) {
         //     console.log('running onAfterScroll for index, cradleState',
-        //         viewportProperties.index,this.scrollPositions, cradleState)
+        //         viewportInterruptProperties.index,this.scrollPositions, cradleState)
         // }
 
         switch (cradleState) {
@@ -178,7 +178,7 @@ export default class ScrollHandler {
         const stateHandler = this.cradleParameters.handlersRef.current.state
         const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
+        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         // const contentHandler = this.cradleParameters.handlersRef.current.content
 
         if (!stateHandler.isMountedRef.current) return
@@ -186,7 +186,7 @@ export default class ScrollHandler {
         let spineVisiblePosOffset
         const cradleElements = scaffoldHandler.elements
 
-        const viewportElement = viewportProperties.elementref.current
+        const viewportElement = viewportInterruptProperties.elementref.current
         if (cradleProps.orientation == 'vertical') {
 
             spineVisiblePosOffset = cradleElements.spineRef.current.offsetTop - 
@@ -201,7 +201,7 @@ export default class ScrollHandler {
 
         scaffoldHandler.cradleReferenceData.scrollImpliedCradlePosOffset = spineVisiblePosOffset
 
-        if (!viewportProperties.isResizing) {
+        if (!viewportInterruptProperties.isResizing) {
 
             scaffoldHandler.cradleReferenceData.nextItemIndexReference = 
                 scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference
@@ -218,8 +218,8 @@ export default class ScrollHandler {
 
         const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
-        const viewportElement = viewportProperties.elementref.current
+        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+        const viewportElement = viewportInterruptProperties.elementref.current
 
         if (cradleProps.orientation == 'vertical') {
 
@@ -235,12 +235,12 @@ export default class ScrollHandler {
 
     private _setScrollReferenceIndexData = () => {
 
-        const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
+        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         let cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
         let cradleConfig = this.cradleParameters.CradleInternalPropertiesRef.current
 
         let {crosscount} = cradleConfig
-        let viewportElement = viewportProperties.elementref.current
+        let viewportElement = viewportInterruptProperties.elementref.current
         let {orientation, listsize} = cradleProps
         let scrollPos, cellLength
         if (orientation == 'vertical') {

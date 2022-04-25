@@ -55,14 +55,14 @@ export default class InterruptHandler {
 
         this.signals.repositioningRequired = (!this.isHeadCradleInView && !this.isTailCradleInView);
 
-        const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
+        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
 
         if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway
         {
             let cradleState = stateHandler.cradleStateRef.current        
             if (
-                !viewportProperties.isResizing &&
-                !viewportProperties.portal?.isReparenting &&
+                !viewportInterruptProperties.isResizing &&
+                !viewportInterruptProperties.portal?.isReparenting &&
                 !(cradleState == 'resized') &&
                 !(cradleState == 'repositioningRender') && 
                 !(cradleState == 'repositioningContinuation') &&
@@ -73,17 +73,17 @@ export default class InterruptHandler {
                 !(cradleState == 'restorescrollposition')
                 ) 
             {
-                const element = viewportProperties.elementref.current
+                const element = viewportInterruptProperties.elementref.current
                 if (!element) {
                     console.log('viewport element not set in cradleIntersectionObserverCallback',
-                        this.cradleParameters.cradleInheritedPropertiesRef.current.scrollerID,viewportProperties)
+                        this.cradleParameters.cradleInheritedPropertiesRef.current.scrollerID,viewportInterruptProperties)
                     return
                 }
                 // TODO this is a duplicate setting procedure with viewport.tsx
                 const rect = element.getBoundingClientRect()
                 const {top, right, bottom, left} = rect
                 const width = right - left, height = bottom - top
-                viewportProperties.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
+                viewportInterruptProperties.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
                 signals.pauseCellObserver = true
                 // pauseCradleIntersectionObserverRef.current = true
                 const cradleContent = contentHandler.content
@@ -108,7 +108,7 @@ export default class InterruptHandler {
 
         }
         
-        const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
+        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
 
         const contentHandler = this.cradleParameters.handlersRef.current.content
         const stateHandler = this.cradleParameters.handlersRef.current.state
@@ -175,10 +175,10 @@ export default class InterruptHandler {
         observer:null,
         callback:this.cradleIntersectionObserverCallback,
         createObserver:() => {
-            let viewportProperties = this.cradleParameters.viewportPropertiesRef.current
+            let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
             this.cradleIntersect.observer = new IntersectionObserver(
                 this.cradleIntersect.callback,
-                {root:viewportProperties.elementref.current, threshold:0}
+                {root:viewportInterruptProperties.elementref.current, threshold:0}
             )
             return this.cradleIntersect.observer
         }
@@ -187,12 +187,12 @@ export default class InterruptHandler {
         observer:null,
         callback:null,
         createObserver:() => {
-            let viewportProperties = this.cradleParameters.viewportPropertiesRef.current
+            let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
             this.cellIntersect.observer = new IntersectionObserver(
 
                 this.cellintersectionobservercallback,
                 {
-                    root:viewportProperties.elementref.current, 
+                    root:viewportInterruptProperties.elementref.current, 
                     threshold:this.cradleParameters.CradleInternalPropertiesRef.current.cellObserverThreshold,
                 } 
             )
