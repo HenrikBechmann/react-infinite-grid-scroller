@@ -124,7 +124,7 @@ import ServiceHandler from './cradle/servicehandler'
 import StylesHandler from './cradle/styleshandler'
 
 // for children
-export const CradleContext = React.createContext(null) // for children
+export const CradlePortalsContext = React.createContext(null) // for children
 
 const portalrootstyle = {display:'none'} // static parm
 
@@ -294,11 +294,6 @@ const Cradle = ({
         cellObserverThreshold:ITEM_OBSERVER_THRESHOLD,
     }
 
-    const cradlePortalRef = useRef({
-        portalHandler:null,
-        scrollerID,
-    })
-
     // utility to register or unregister cradle item elements
     const setItemElementData = useCallback((itemElementData, reportType) => {
 
@@ -333,7 +328,6 @@ const Cradle = ({
         viewportPropertiesRef,
         cradleInheritedPropertiesRef, 
         cradleConfigRef, 
-        cradlePortalRef,
         cradleStateRef,
         setCradleState,
         isMountedRef,
@@ -349,6 +343,7 @@ const Cradle = ({
     }
     // make handlers directly available to cradle code
     const [
+        portalHandler,
         interruptHandler,
         scrollHandler,
         stateHandler,
@@ -360,6 +355,7 @@ const Cradle = ({
 
     // to instantiate handlersRef
     const handlerObjectRef = useRef({
+        portals:portalHandler,
         interrupts:interruptHandler,
         scroll:scrollHandler,
         state:stateHandler,
@@ -384,8 +380,6 @@ const Cradle = ({
 
     // set portalHandler, and unmounted flag
     useLayoutEffect(()=>{
-
-        cradlePortalRef.current.portalHandler = new PortalHandler()
 
         // unmount
         return () => {
@@ -707,7 +701,7 @@ const Cradle = ({
                 cradleContent.tailModelComponents = []
                 cradleContent.headViewComponents = []
                 cradleContent.tailViewComponents = []
-                cradlePortalRef.current.portalHandler.resetScrollerPortalRepository()
+                handlersRef.current.portals.resetScrollerPortalRepository()
                 contentHandler.setCradleContent(callingCradleState.current)
 
                 setCradleState('preparerender')
@@ -820,9 +814,9 @@ const Cradle = ({
     let cradleContent = contentHandler.content
 
     // portalroot is the hidden portal component cache
-    return <CradleContext.Provider value = {cradlePortalRef}>
+    return <CradlePortalsContext.Provider value = {handlersRef.current.portals}>
         {(cradleStateRef.current != 'setup') && <div data-type = 'portalroot' style = { portalrootstyle }>
-            <PortalList scrollerProps = {cradlePortalRef.current.portalHandler.scrollerProps}/>
+            <PortalList scrollerProps = {handlersRef.current.portals.scrollerProps}/>
         </div>}
 
         {((cradleStateRef.current == 'repositioningRender') || (cradleStateRef.current == 'repositioningContinuation'))
@@ -878,7 +872,7 @@ const Cradle = ({
             </div>
         }
         
-    </CradleContext.Provider>
+    </CradlePortalsContext.Provider>
 
 } // Cradle
 
@@ -889,6 +883,7 @@ const getCradleHandlers = (cradleParameters) => {
     const createHandler = handler => new handler(cradleParameters)
 
     return [
+        new PortalHandler(),
         createHandler(InterruptHandler),
         createHandler(ScrollHandler),
         createHandler(StateHandler),

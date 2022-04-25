@@ -9,7 +9,7 @@ import { OutPortal } from 'react-reverse-portal'
 
 import Placeholder from './placeholder'
 
-import { CradleContext } from './cradle'
+import { CradlePortalsContext } from './cradle'
 
 const IDLECALLBACK_TIMEOUT = 1000
 
@@ -28,8 +28,7 @@ const CellShell = ({
     scrollerID,
 }) => {
 
-    const cradlePortalRef = useContext(CradleContext)
-    const { portalHandler } = cradlePortalRef.current
+    const portalHandler = useContext(CradlePortalsContext)
     
     const [styles,saveStyles] = useState({
         overflow:'hidden',

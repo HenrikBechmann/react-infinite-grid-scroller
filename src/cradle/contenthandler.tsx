@@ -56,7 +56,7 @@ export default class ContentHandler {
 
         const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
         const cradleInheritedProps = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const cradleProperties = this.cradleParameters.cradlePortalRef.current
+        const portalHandler = this.cradleParameters.handlersRef.current.portals
         const cradleConfig = this.cradleParameters.cradleConfigRef.current
         const scrollHandler = this.cradleParameters.handlersRef.current.scroll
         const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
@@ -127,7 +127,7 @@ export default class ContentHandler {
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
-        deleteAndRerenderPortals(cradleProperties.portalHandler, deleteditems)
+        deleteAndRerenderPortals(portalHandler, deleteditems)
 
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
@@ -192,7 +192,7 @@ export default class ContentHandler {
 
         const viewportProperties = this.cradleParameters.viewportPropertiesRef.current
         const cradleInheritedProps = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const cradleProperties = this.cradleParameters.cradlePortalRef.current
+        const portalHandler = this.cradleParameters.handlersRef.current.portals
         const scrollHandler = this.cradleParameters.handlersRef.current.scroll
         const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         const stateHandler = this.cradleParameters.handlersRef.current.state
@@ -337,7 +337,7 @@ export default class ContentHandler {
 
         }
 
-        deleteAndRerenderPortals(cradleProperties.portalHandler, deletedContentItems)
+        deleteAndRerenderPortals(portalHandler, deletedContentItems)
 
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 

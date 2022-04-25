@@ -15,7 +15,7 @@ export const ViewportInterrupt = React.createContext(null) // for children
 import { ResizeObserver as ResizeObserverPollyfill } from '@juggle/resize-observer'
 // import InterruptHandler from './cradle/interrupthandler'
 
-import { CradleContext as ParentCradleContext } from './cradle'
+import { CradlePortalsContext as ParentCradlePortalsContext } from './cradle'
 
 const ResizeObserver = window['ResizeObserver'] || ResizeObserverPollyfill
 
@@ -52,10 +52,11 @@ const Viewport = ({
     viewportStateRef.current = viewportState
 
     // only available if viewport is a child of an infiniteScroller
-    const parentCradlePropertiesRef = useContext(ParentCradleContext);
+    // const parentCradlePropertiesRef = useContext(ParentCradlePortalsContext);
+    const parentPortalHandler = useContext(ParentCradlePortalsContext);
 
     // if this is a scroller child, get the parent portal handler
-    const parentPortalHandlerRef = useRef(parentCradlePropertiesRef?.current.portalHandler);
+    // const parentPortalHandlerRef = useRef(parentCradlePropertiesRef?.current.portalHandler);
 
     const isMountedRef = useRef(true) // monitor for unmounted
 
@@ -165,9 +166,10 @@ const Viewport = ({
 
     useEffect(()=>{
 
-        if (!parentPortalHandlerRef.current) return // root viewport; has no portal
+        // if (!parentPortalHandlerRef.current) return // root viewport; has no portal
 
-        const parentPortalHandler = parentPortalHandlerRef.current
+        // const parentPortalHandler = parentPortalHandlerRef.current
+        if (!parentPortalHandler) return // root viewport; has no portal
 
         let portalindex
         let element = viewportdivRef.current
