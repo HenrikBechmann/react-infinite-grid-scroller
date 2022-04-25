@@ -18,7 +18,7 @@ export default class ContentHandler {
 
       this.cradleParameters = cradleParameters
 
-      this.contentCallbacksRef = cradleParameters.contentCallbacksRef
+      this.internalCallbacksRef = cradleParameters.internalCallbacksRef
 
    }
 
@@ -43,7 +43,7 @@ export default class ContentHandler {
 
     private _previousScrollForward = undefined
 
-    private contentCallbacksRef
+    private internalCallbacksRef
 
     // Two public methods - setCradleContent and updateCradleContent
 
@@ -122,7 +122,7 @@ export default class ContentHandler {
             headchangecount:0,
             tailchangecount:cradleActualContentCount,
             localContentList,
-            callbacks:this.contentCallbacksRef.current,
+            callbacks:this.internalCallbacksRef.current,
             observer: interruptHandler.cellIntersect.observer,
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
@@ -328,7 +328,7 @@ export default class ContentHandler {
                 tailchangecount,
                 cradleReferenceIndex,
                 observer: interruptHandler.cellIntersect.observer,
-                callbacks:this.contentCallbacksRef.current,
+                callbacks:this.internalCallbacksRef.current,
                 instanceIdCounterRef:this.instanceIdCounterRef,
             })
         } else {

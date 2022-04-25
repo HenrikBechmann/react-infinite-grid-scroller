@@ -315,7 +315,7 @@ const Cradle = ({
 
     },[])
 
-    const contentCallbacksRef = useRef({
+    const internalCallbacksRef = useRef({
 
         setElementData:setItemElementData
 
@@ -332,7 +332,7 @@ const Cradle = ({
         viewportPropertiesRef,
         cradleInheritedPropertiesRef, 
         CradleInternalPropertiesRef, 
-        contentCallbacksRef,
+        internalCallbacksRef,
         serviceCallsRef,
     })
 
