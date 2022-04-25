@@ -7,9 +7,11 @@ export default class StateHandler {
 
        this.cradleParameters = cradleParameters
 
-       this.setCradleState = cradleParameters.setCradleState
-       this.cradleStateRef = cradleParameters.cradleStateRef
-       this.isMountedRef = cradleParameters.isMountedRef
+       const config = cradleParameters.cradleConfigRef.current
+
+       this.setCradleState = config.setCradleState
+       this.cradleStateRef = config.cradleStateRef
+       this.isMountedRef = config.isMountedRef
        
     }
 

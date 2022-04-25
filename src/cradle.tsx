@@ -292,6 +292,9 @@ const Cradle = ({
         viewportRowcount,
         listRowcount,
         cellObserverThreshold:ITEM_OBSERVER_THRESHOLD,
+        cradleStateRef,
+        setCradleState,
+        isMountedRef,
     }
 
     // utility to register or unregister cradle item elements
@@ -328,9 +331,6 @@ const Cradle = ({
         viewportPropertiesRef,
         cradleInheritedPropertiesRef, 
         cradleConfigRef, 
-        cradleStateRef,
-        setCradleState,
-        isMountedRef,
         contentCallbacksRef,
         cradleElementsRef,
         serviceCallsRef,
