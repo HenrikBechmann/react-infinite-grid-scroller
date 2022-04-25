@@ -7,10 +7,10 @@ export default class ScaffoldHandler {
 
        this.cradleParameters = cradleParameters
 
-       const {spineRef, headRef, tailRef} = 
+       const {axisRef, headRef, tailRef} = 
           cradleParameters.CradleInternalPropertiesRef.current.cradleElementsRef.current
        this.elements = {
-          spineRef,
+          axisRef,
           headRef,
           tailRef,
        }
@@ -29,7 +29,7 @@ export default class ScaffoldHandler {
 
    /* 
       ItemIndexReference is the sequential index of first item of the cradle tail
-      CradlePosOffset is the pixel offset of the cradle spine from the edge of the viewport
+      CradlePosOffset is the pixel offset of the cradle axis from the edge of the viewport
       blockScrollPos is the scrollPos of the scrollblock in relation to the viewport
       progression is scroll -> next
    */

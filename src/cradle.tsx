@@ -49,31 +49,31 @@
     The scrollblock is sized to approximate the list being viewed, so as to have a scroll thumb size and position which 
     realistically reflects the size of the list being shown.
 
-    The position of the cradle is controlled by a 'spine' which is a 0px height/width (along the medial - ScrollBlock can be 
-    verticsl or horizontal). The purpose of the spine is to act as a 'fold', above which cell content expands 'upwards', and 
+    The position of the cradle is controlled by a 'axis' which is a 0px height/width (along the medial - ScrollBlock can be 
+    verticsl or horizontal). The purpose of the axis is to act as a 'fold', above which cell content expands 'upwards', and 
     below which the cell content expands  'downwards'. GridScroller can be viewed vertically or horizontally. When horizontal, 
-    the spine has a 0px width, so that the 'fold' is vertical, and cells expand to the left and right.
+    the axis has a 0px width, so that the 'fold' is vertical, and cells expand to the left and right.
 
-    The spine is controlled to always be in the at the leading edge of the leading cellrow of the viewport. Thus
-    in vertical orientation, the spine 'top' css attribute is always equal to the 'scrollTop' position of the scrollblock,
-    plus an adjustment. The adjustment is the result of the alignment of the spine in relation to the top-(or left-)most cell
-    in the viewport (the 'reference' row). The spine can only be placed at the leading edge of the first visible
-    cell in the viewport. Therefore the spine offset from the leading edge of the viewport can be anywhere from minus to
+    The axis is controlled to always be in the at the leading edge of the leading cellrow of the viewport. Thus
+    in vertical orientation, the axis 'top' css attribute is always equal to the 'scrollTop' position of the scrollblock,
+    plus an adjustment. The adjustment is the result of the alignment of the axis in relation to the top-(or left-)most cell
+    in the viewport (the 'reference' row). The axis can only be placed at the leading edge of the first visible
+    cell in the viewport. Therefore the axis offset from the leading edge of the viewport can be anywhere from minus to
     plus the length of the leading row. The exact amount depends on where the 'breakpoint' of transition notification is set for
     cells crossing the viewport threshold (and can be configured). The default of the breakpoint is .5 (half the length of the cell).
 
     Technically, there are several reference points tracked by the GridScroller. These are:
-        - spineReferenceIndex (the virtual index of the item controlling the location of the spine)
-            The spineReferenceIndex is also used to allocate items above (lower index value) and below (same or higher index value)
+        - axisReferenceIndex (the virtual index of the item controlling the location of the axis)
+            The axisReferenceIndex is also used to allocate items above (lower index value) and below (same or higher index value)
             the fold
         - cradleReferenceIndex (the virtual index of the item defining the leading bound of the cradle content)
-        - spinePosOffset (pixels - plus or minus - that the spine is placed in relation to the viewport's leading edge) 
+        - axisPosOffset (pixels - plus or minus - that the axis is placed in relation to the viewport's leading edge) 
     
     These reference points are applied to the following structures:
         - the viewport
         - the scrollblock
         - the cradle, consisting of
-            - the spine (contains cradle head and tail)
+            - the axis (contains cradle head and tail)
             - the head (contains leading items)
             - the tail (contains trailing items)
 
@@ -98,7 +98,7 @@
         the cradle that is receding from a viewport edge. 
 
         If the overshoot is such that the cradle has entirely passed out of the viewport, the GridScroller goes into 'Repositoining'
-        mode, meaning that it tracks relative location of the spine edge of the viewport, and repaints the cradle accroding to
+        mode, meaning that it tracks relative location of the axis edge of the viewport, and repaints the cradle accroding to
         this position when the scrolling stops.
 */
 
@@ -160,6 +160,7 @@ const Cradle = ({
     // ========================[ SETUP ]========================
 
     // unpack gridSpecs
+
     const {
         orientation,
         gap,
@@ -215,6 +216,7 @@ const Cradle = ({
     cradleStateRef.current = cradleState;
 
     // controls
+    
     const isMountedRef = useRef(true)
     const normalizeTimerRef = useRef(null)
 
@@ -222,12 +224,12 @@ const Cradle = ({
 
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
-    const spineCradleElementRef = useRef(null)
+    const axisCradleElementRef = useRef(null)
     const cradleElementsRef = useRef(
         {
             headRef:headCradleElementRef, 
             tailRef:tailCradleElementRef, 
-            spineRef:spineCradleElementRef
+            axisRef:axisCradleElementRef
         }
     )
 
@@ -838,9 +840,9 @@ const Cradle = ({
                 styles = {scrollTrackerArgs.styles}
             />
             :<div 
-                data-type = 'cradle-spine'
+                data-type = 'cradle-axis'
                 style = {cradleSpineStyle} 
-                ref = {spineCradleElementRef}
+                ref = {axisCradleElementRef}
             >
                 {true
                     ?<div 

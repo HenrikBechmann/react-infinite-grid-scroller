@@ -36,7 +36,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     let {crosscount,
         cradleRowcount,
         viewportRowcount} = cradleConfig
-    // reconcile spineReferenceIndex to crosscount context
+    // reconcile axisReferenceIndex to crosscount context
     let diff = referenceoffset % crosscount
     referenceoffset -= diff
 
@@ -77,10 +77,10 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     // ------------[ adjust cradleReferenceIndex and contentCount for listsize overflow ]------------
 
-    let spinePosOffset = targetViewportOffset % cellLength
+    let axisPosOffset = targetViewportOffset % cellLength
 
-    // if (spinePosOffset < 0) { // TODO: this shouldn't happen - reproduce from wide botton to narrow
-    //     spinePosOffset += (orientation == 'vertical'?cellHeight:cellWidth)
+    // if (axisPosOffset < 0) { // TODO: this shouldn't happen - reproduce from wide botton to narrow
+    //     axisPosOffset += (orientation == 'vertical'?cellHeight:cellWidth)
     //     referenceoffset += crosscount
     //     cradleReferenceIndex += crosscount
     // }
@@ -89,20 +89,20 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     let targetrowoffset = Math.ceil(referenceoffset/crosscount)
     let scrollblockOffset = (targetrowoffset * cellLength) + padding // gap
-    let spineAdjustment
+    let axisAdjustment
     let cradleActualContentCount = cradleAvailableContentCount
 
     if (targetrowoffset == 0) {
         scrollblockOffset = 0
-        spinePosOffset = 0 // padding
-        spineAdjustment = padding
+        axisPosOffset = 0 // padding
+        axisAdjustment = padding
     } else {
-        spineAdjustment = 0; //gap;
+        axisAdjustment = 0; //gap;
 
-        [cradleReferenceIndex, cradleActualContentCount, referenceoffset, scrollblockOffset, spinePosOffset] = 
+        [cradleReferenceIndex, cradleActualContentCount, referenceoffset, scrollblockOffset, axisPosOffset] = 
             adjustSpineOffsetForMaxRefIndex({
             referenceoffset,
-            spinePosOffset,
+            axisPosOffset,
             scrollblockOffset,            
             targetrowoffset,
             viewportlength,
@@ -117,7 +117,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         })
     }
 
-    return {cradleReferenceIndex, referenceoffset, cradleActualContentCount, scrollblockOffset, spinePosOffset, spineAdjustment} // summarize requirements message
+    return {cradleReferenceIndex, referenceoffset, cradleActualContentCount, scrollblockOffset, axisPosOffset, axisAdjustment} // summarize requirements message
 
 }
 
@@ -132,7 +132,7 @@ const adjustSpineOffsetForMaxRefIndex = ({
     targetrowoffset,
 
     scrollblockOffset,
-    spinePosOffset,
+    axisPosOffset,
 
     viewportlength,
     viewportrows,
@@ -174,17 +174,17 @@ const adjustSpineOffsetForMaxRefIndex = ({
 
         scrollblockOffset = (targetrowoffset * cellLength) + padding
 
-        spinePosOffset = viewportlength - ((viewportrows - 1) * cellLength) - gap
+        axisPosOffset = viewportlength - ((viewportrows - 1) * cellLength) - gap
 
     }
 
-    return [cradleReferenceIndex, cradleActualContentCount, referenceoffset, scrollblockOffset, spinePosOffset]
+    return [cradleReferenceIndex, cradleActualContentCount, referenceoffset, scrollblockOffset, axisPosOffset]
 
 }
 
 // ======================[ for updateCradleContent ]===========================
 
-// filter out items that not proximate to the spine
+// filter out items that not proximate to the axis
 // TODO: keep last trigger position (x or y) to determine direction of scroll
 export const isolateShiftingIntersections = ({
     intersections,
@@ -337,7 +337,7 @@ export const isolateShiftingIntersections = ({
 
     // --------------------------[ ready to process! ]-----------------------------
 
-    // set reference points in relation to the spine
+    // set reference points in relation to the axis
     const referenceindex = shiftingindexes[shiftingindexes.length - 1]
     // TODO referenceindex is 0 in other direction
     let sectionptr = shiftingindexes.indexOf(referenceindex)
@@ -429,7 +429,7 @@ export const calcContentShifts = ({
         padding,
         runwaycount } = cradleProps
 
-    const spineElement = cradleElements.spineRef.current,
+    const axisElement = cradleElements.axisRef.current,
      headElement = cradleElements.headRef.current,
      tailElement = cradleElements.tailRef.current
 
@@ -448,35 +448,35 @@ export const calcContentShifts = ({
 
     const cellLength = ((orientation == 'vertical')?cellHeight:cellWidth) + gap
 
-    let viewportspineoffset // the pixel distance between the viewport frame and the spine, toward the head
+    let viewportaxisoffset // the pixel distance between the viewport frame and the axis, toward the head
 
-    // -------[ 1. calculate spine's headblock overshoot item & row counts, if any ]-------
+    // -------[ 1. calculate axis's headblock overshoot item & row counts, if any ]-------
     
     let headblockoffset, tailblockoffset, viewportlength
     let viewportvisiblegaplength = 0
 
     if (orientation == 'vertical') {
 
-        viewportspineoffset = spineElement.offsetTop - viewportElement.scrollTop
+        viewportaxisoffset = axisElement.offsetTop - viewportElement.scrollTop
         viewportlength = viewportElement.offsetHeight
 
         // measure any gap between the cradle and the top viewport boundary
         if (!scrollingviewportforward) { // scrollviewportbackward, toward head
 
-            // if viewportspineoffset is below the top by more than the height of 
+            // if viewportaxisoffset is below the top by more than the height of 
             // the headElment then a gap will be visible
-            viewportvisiblegaplength = viewportspineoffset - headElement.offsetHeight
+            viewportvisiblegaplength = viewportaxisoffset - headElement.offsetHeight
 
         }
 
     } else { // horizontal
 
-        viewportspineoffset = spineElement.offsetLeft - viewportElement.scrollLeft
+        viewportaxisoffset = axisElement.offsetLeft - viewportElement.scrollLeft
         viewportlength = viewportElement.offsetWidth
 
         if (!scrollingviewportforward) { // scroll backward, toward head
 
-            viewportvisiblegaplength = viewportspineoffset - headElement.offsetWidth
+            viewportvisiblegaplength = viewportaxisoffset - headElement.offsetWidth
 
         }
 
@@ -499,7 +499,7 @@ export const calcContentShifts = ({
         shift item count is the number of items the virtual cradle shifts, according to observer
         shift negative closer to head, shift positive closer to tail
         cradle reference is the first content item
-        spine reference is the first tail item
+        axis reference is the first tail item
     */
     let headaddshiftitemcount = 0, tailaddshiftitemcount = 0,
         headaddshiftrowcount = 0, tailaddshiftrowcount = 0
@@ -516,7 +516,7 @@ export const calcContentShifts = ({
     //     shiftingintersections.length,headaddshiftitemcount,tailaddshiftitemcount)
     // negative value shifted toward head; positive value shofted toward tail
     // one of the two expressions in the following line will be 0
-    let spinereferenceshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
+    let axisreferenceshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
     let cradlereferenceshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
 
     let cradlereferencerowshift = 
@@ -524,18 +524,18 @@ export const calcContentShifts = ({
         ?Math.ceil(cradlereferenceshiftitemcount/crosscount)
         :Math.floor(cradlereferenceshiftitemcount/crosscount)
     cradlereferenceshiftitemcount = Math.round(cradlereferencerowshift * crosscount)
-    let spinereferencerowshift = 
-    (spinereferenceshiftitemcount > 0) // could include partial row from shiftingintersections
-        ?Math.ceil(spinereferenceshiftitemcount/crosscount)
-        :Math.floor(spinereferenceshiftitemcount/crosscount)
-    spinereferenceshiftitemcount = Math.round(spinereferencerowshift * crosscount)
+    let axisreferencerowshift = 
+    (axisreferenceshiftitemcount > 0) // could include partial row from shiftingintersections
+        ?Math.ceil(axisreferenceshiftitemcount/crosscount)
+        :Math.floor(axisreferenceshiftitemcount/crosscount)
+    axisreferenceshiftitemcount = Math.round(axisreferencerowshift * crosscount)
 
-    // ----------------[ 3. calc new cradle reference index and spine reference index ]-----------------
+    // ----------------[ 3. calc new cradle reference index and axis reference index ]-----------------
 
     const previouscradlereferenceindex = (cradlecontentlist[0].props.index || 0)
     const previouscradlerowoffset = Math.round(previouscradlereferenceindex/crosscount)
-    const previousspinereferenceindex = (tailcontentlist[0]?.props.index || 0) // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
-    // const previousspinereferencerowoffset = Math.round(previousspinereferenceindex/crosscount)
+    const previousaxisreferenceindex = (tailcontentlist[0]?.props.index || 0) // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
+    // const previousaxisreferencerowoffset = Math.round(previousaxisreferenceindex/crosscount)
 
     // computed shifted cradle end row, looking for overshoot
     let rowovershoot
@@ -564,7 +564,7 @@ export const calcContentShifts = ({
     }
 
     let newcradlereferenceindex = previouscradlereferenceindex + cradlereferenceshiftitemcount
-    let newspinereferenceindex = previousspinereferenceindex + spinereferenceshiftitemcount
+    let newaxisreferenceindex = previousaxisreferenceindex + axisreferenceshiftitemcount
 
     if (newcradlereferenceindex < 0) {
         cradlereferenceshiftitemcount += newcradlereferenceindex
@@ -572,10 +572,10 @@ export const calcContentShifts = ({
         // computedcradleEndrow += Math.round(newcradlereferenceindex/crosscount)
         newcradlereferenceindex = 0
     }
-    if (newspinereferenceindex < 0) {
-        spinereferenceshiftitemcount += newspinereferenceindex
-        // spinereferencerowshift += Math.round(newspinereferenceindex/crosscount)
-        newspinereferenceindex = 0
+    if (newaxisreferenceindex < 0) {
+        axisreferenceshiftitemcount += newaxisreferenceindex
+        // axisreferencerowshift += Math.round(newaxisreferenceindex/crosscount)
+        newaxisreferenceindex = 0
     }
 
     if ((computedcradleEndrow) >= (listRowcount)) {
@@ -589,45 +589,45 @@ export const calcContentShifts = ({
     // console.log('2. computedcradleEndrow,listRowcount,previouscradlerowoffset,cradlereferencerowshift','\n',
     //     computedcradleEndrow,listRowcount,previouscradlerowoffset,cradlereferencerowshift)
 
-    // -------------[ 4. reconcile spineReferenceAdjustment and calc newspinePosOffset ]------------------
+    // -------------[ 4. reconcile axisReferenceAdjustment and calc newaxisPosOffset ]------------------
 
-    let spinereferenceitemshift = newspinereferenceindex - previousspinereferenceindex
+    let axisreferenceitemshift = newaxisreferenceindex - previousaxisreferenceindex
     let cradlereferenceitemshift = newcradlereferenceindex - previouscradlereferenceindex
 
-    const spinerowshift = spinereferencerowshift // Math.round(spinereferenceitemshift/crosscount)
-    const spineposshift = spinerowshift * cellLength
+    const axisrowshift = axisreferencerowshift // Math.round(axisreferenceitemshift/crosscount)
+    const axisposshift = axisrowshift * cellLength
 
-    let newspineposoffset = viewportspineoffset + spineposshift
+    let newaxisposoffset = viewportaxisoffset + axisposshift
 
     // make necessary visibility adjustments
 
-    let newspinePosOffsetWorking = newspineposoffset
-    let spineReferenceAdjustment = 0
+    let newaxisPosOffsetWorking = newaxisposoffset
+    let axisReferenceAdjustment = 0
 
-    if (Math.abs(newspineposoffset) > cellLength) {
+    if (Math.abs(newaxisposoffset) > cellLength) {
 
-        newspinePosOffsetWorking = (newspineposoffset % cellLength)
-        spineReferenceAdjustment = -(Math.ceil((newspineposoffset - newspinePosOffsetWorking) / cellLength) * crosscount)
+        newaxisPosOffsetWorking = (newaxisposoffset % cellLength)
+        axisReferenceAdjustment = -(Math.ceil((newaxisposoffset - newaxisPosOffsetWorking) / cellLength) * crosscount)
 
     }
 
-    if (newspinePosOffsetWorking < 0) {
-        newspinePosOffsetWorking += cellLength
-        spineReferenceAdjustment += crosscount 
+    if (newaxisPosOffsetWorking < 0) {
+        newaxisPosOffsetWorking += cellLength
+        axisReferenceAdjustment += crosscount 
     }
 
-    if (spineReferenceAdjustment) {
-        const spineRowAdjustment = Math.round(spineReferenceAdjustment/crosscount)
-        newspinereferenceindex += spineReferenceAdjustment
-        spinereferenceitemshift += spineReferenceAdjustment
+    if (axisReferenceAdjustment) {
+        const axisRowAdjustment = Math.round(axisReferenceAdjustment/crosscount)
+        newaxisreferenceindex += axisReferenceAdjustment
+        axisreferenceitemshift += axisReferenceAdjustment
 
         if (!(BOD || EOD)) {
-            newcradlereferenceindex += spineReferenceAdjustment
-            cradlereferenceitemshift += spineReferenceAdjustment
+            newcradlereferenceindex += axisReferenceAdjustment
+            cradlereferenceitemshift += axisReferenceAdjustment
         }
     }
 
-    newspineposoffset = newspinePosOffsetWorking
+    newaxisposoffset = newaxisPosOffsetWorking
 
     // ---------------------[ 5. return required values ]-------------------
 
@@ -638,18 +638,18 @@ export const calcContentShifts = ({
     let newCradleActualContentCount = Math.min(cradleAvailableContentCount, (listsize - newcradlereferenceindex))
     let newheadcount, newtailcount, headchangecount, tailchangecount
 
-    newheadcount = newspinereferenceindex - newcradlereferenceindex
+    newheadcount = newaxisreferenceindex - newcradlereferenceindex
     newtailcount = newCradleActualContentCount - newheadcount
 
-    // console.log('3. newheadcount, newtailcount, newspinereferenceindex - newcradlereferenceindex,newCradleActualContentCount, BOD, EOD', '\n',
-    //     newheadcount, newtailcount, newspinereferenceindex, newcradlereferenceindex, newCradleActualContentCount,BOD, EOD)
+    // console.log('3. newheadcount, newtailcount, newaxisreferenceindex - newcradlereferenceindex,newCradleActualContentCount, BOD, EOD', '\n',
+    //     newheadcount, newtailcount, newaxisreferenceindex, newcradlereferenceindex, newCradleActualContentCount,BOD, EOD)
 
     return [
         newcradlereferenceindex, 
         cradlereferenceitemshift, 
-        newspinereferenceindex, 
-        spinereferenceitemshift, 
-        newspineposoffset, 
+        newaxisreferenceindex, 
+        axisreferenceitemshift, 
+        newaxisposoffset, 
         newCradleActualContentCount,
         headchangecount,
         tailchangecount, 
@@ -901,7 +901,7 @@ export const allocateContentList = (
     {
 
         contentlist, // of cradle, in items (React components)
-        spinereferenceindex, // first tail item
+        axisreferenceindex, // first tail item
 
     }
 ) => {
@@ -910,7 +910,7 @@ export const allocateContentList = (
 
     let headitemcount
 
-    headitemcount = (spinereferenceindex - offsetindex)
+    headitemcount = (axisreferenceindex - offsetindex)
 
     let headlist = contentlist.slice(0,headitemcount)
     let taillist = contentlist.slice(headitemcount)

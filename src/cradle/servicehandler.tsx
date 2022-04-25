@@ -85,7 +85,7 @@ const getVisibleItemsList = ({
     }) => {
 
     let headElement = cradleElements.headRef.current
-    let spineElement = cradleElements.spineRef.current
+    let axisElement = cradleElements.axisRef.current
     let {orientation} = cradleProps
     let headlist = cradleContent.headViewComponents
 
@@ -99,8 +99,8 @@ const getVisibleItemsList = ({
     }
 
     let list = []
-    let cradleTop = headElement.offsetTop + spineElement.offsetTop, 
-        cradleLeft = headElement.offsetLeft + spineElement.offsetLeft
+    let cradleTop = headElement.offsetTop + axisElement.offsetTop, 
+        cradleLeft = headElement.offsetLeft + axisElement.offsetLeft
     let scrollblockTopOffset = -viewportElement.scrollTop, 
         scrollblockLeftOffset = -viewportElement.scrollLeft,
         viewportHeight = viewportElement.offsetHeight,

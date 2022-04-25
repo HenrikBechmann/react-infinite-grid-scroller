@@ -95,8 +95,8 @@ export default class ContentHandler {
             referenceoffset, 
             cradleActualContentCount, 
             scrollblockOffset, 
-            spinePosOffset, 
-            spineAdjustment
+            axisPosOffset, 
+            axisAdjustment
         } = 
             getContentListRequirements({
                 cradleProps:cradleInheritedProps,
@@ -132,12 +132,12 @@ export default class ContentHandler {
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
             contentlist:childlist,
-            spinereferenceindex:referenceoffset,
+            axisreferenceindex:referenceoffset,
     
         })
 
         if (headcontentlist.length == 0) {
-            spinePosOffset = padding
+            axisPosOffset = padding
         }
 
         cradleContent.cradleModel = childlist
@@ -145,10 +145,10 @@ export default class ContentHandler {
         cradleContent.tailModelComponents = tailcontentlist
 
         scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference = referenceoffset
-        scaffoldHandler.cradleReferenceData.scrollImpliedCradlePosOffset = spinePosOffset
+        scaffoldHandler.cradleReferenceData.scrollImpliedCradlePosOffset = axisPosOffset
 
         scaffoldHandler.cradleReferenceData.nextItemIndexReference = referenceoffset
-        scaffoldHandler.cradleReferenceData.nextCradlePosOffset = spinePosOffset
+        scaffoldHandler.cradleReferenceData.nextCradlePosOffset = axisPosOffset
 
         if (serviceHandler.serviceCalls.referenceIndexCallbackRef.current) {
 
@@ -162,17 +162,17 @@ export default class ContentHandler {
 
         const cradleElements = scaffoldHandler.elements //cradleElementsRef.current
 
-        scaffoldHandler.cradleReferenceData.blockScrollPos = scrollblockOffset - spinePosOffset
-        // console.log('setting blockScrollPos in setCradleContent: blockScrollPos, scrollblockOffset, spinePosOffset',
-        //     scaffoldHandler.cradleReferenceData.blockScrollPos, scrollblockOffset, spinePosOffset)
+        scaffoldHandler.cradleReferenceData.blockScrollPos = scrollblockOffset - axisPosOffset
+        // console.log('setting blockScrollPos in setCradleContent: blockScrollPos, scrollblockOffset, axisPosOffset',
+        //     scaffoldHandler.cradleReferenceData.blockScrollPos, scrollblockOffset, axisPosOffset)
 
         if (orientation == 'vertical') {
 
             scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
             // scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
 
-            cradleElements.spineRef.current.style.top = (scrollblockOffset + spineAdjustment) + 'px'
-            cradleElements.spineRef.current.style.left = 'auto'
+            cradleElements.axisRef.current.style.top = (scrollblockOffset + axisAdjustment) + 'px'
+            cradleElements.axisRef.current.style.left = 'auto'
             cradleElements.headRef.current.style.paddingBottom = headcontentlist.length?cradleInheritedProps.gap + 'px':0
 
         } else { // orientation = 'horizontal'
@@ -180,8 +180,8 @@ export default class ContentHandler {
             scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
             // scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
 
-            cradleElements.spineRef.current.style.top = 'auto'
-            cradleElements.spineRef.current.style.left = (scrollblockOffset + spineAdjustment) + 'px'
+            cradleElements.axisRef.current.style.top = 'auto'
+            cradleElements.axisRef.current.style.left = (scrollblockOffset + axisAdjustment) + 'px'
             cradleElements.headRef.current.style.paddingRight = headcontentlist.length?cradleInheritedProps.gap + 'px':0
 
         }
@@ -256,7 +256,7 @@ export default class ContentHandler {
         // --------------------[ 2. filter intersections list ]-----------------------
 
         // filter out inapplicable intersection entries
-        // we're only interested in intersections proximal to the spine
+        // we're only interested in intersections proximal to the axis
         let shiftingintersections = []
         if (entries.length) {
             shiftingintersections = isolateShiftingIntersections({
@@ -275,9 +275,9 @@ export default class ContentHandler {
         const [
             cradlereferenceindex, 
             cradleitemshift, 
-            spinereferenceindex, 
-            spineitemshift, 
-            spineposoffset, 
+            axisreferenceindex, 
+            axisitemshift, 
+            axisposoffset, 
             newCradleActualContentCount,
             headchange,
             tailchange,
@@ -295,7 +295,7 @@ export default class ContentHandler {
 
         })
 
-        if ((spineitemshift == 0 && cradleitemshift == 0)) return
+        if ((axisitemshift == 0 && cradleitemshift == 0)) return
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
@@ -344,7 +344,7 @@ export default class ContentHandler {
         const [headcontent, tailcontent] = allocateContentList(
             {
                 contentlist:localContentList,
-                spinereferenceindex, // TODO: BUG: set to 100 for problem
+                axisreferenceindex, // TODO: BUG: set to 100 for problem
             }
         )
 
@@ -356,7 +356,7 @@ export default class ContentHandler {
 
         scrollHandler.updateBlockScrollPos()
 
-        if (spineposoffset !== undefined) {
+        if (axisposoffset !== undefined) {
 
             // scrollHandler.updateBlockScrollPos()
             
@@ -364,27 +364,27 @@ export default class ContentHandler {
 
                 // scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
                 // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
-                cradleElements.spineRef.current.style.top = viewportElement.scrollTop + spineposoffset + 'px'
-                cradleElements.spineRef.current.style.left = 'auto'
+                cradleElements.axisRef.current.style.top = viewportElement.scrollTop + axisposoffset + 'px'
+                cradleElements.axisRef.current.style.left = 'auto'
                 cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleInheritedProps.gap + 'px':0
 
             } else {
 
                 // scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
                 // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
-                cradleElements.spineRef.current.style.top = 'auto'
-                cradleElements.spineRef.current.style.left = viewportElement.scrollLeft + spineposoffset + 'px'
+                cradleElements.axisRef.current.style.top = 'auto'
+                cradleElements.axisRef.current.style.left = viewportElement.scrollLeft + axisposoffset + 'px'
                 cradleElements.headRef.current.style.paddingRight = headcontent.length?cradleInheritedProps.gap + 'px':0
 
             }
 
         }
 
-        scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference = spinereferenceindex
-        scaffoldHandler.cradleReferenceData.scrollImpliedCradlePosOffset = spineposoffset
+        scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference = axisreferenceindex
+        scaffoldHandler.cradleReferenceData.scrollImpliedCradlePosOffset = axisposoffset
 
-        scaffoldHandler.cradleReferenceData.nextItemIndexReference = spinereferenceindex
-        scaffoldHandler.cradleReferenceData.nextCradlePosOffset = spineposoffset
+        scaffoldHandler.cradleReferenceData.nextItemIndexReference = axisreferenceindex
+        scaffoldHandler.cradleReferenceData.nextCradlePosOffset = axisposoffset
 
         stateHandler.setCradleState('renderupdatedcontent')
 

@@ -28,7 +28,7 @@ export default class StylesHandler {
         // TODO: change 'cradle' to 'head' and 'tail' for more granularity
         let headstyles:React.CSSProperties = this.getHeadStyles(gap, padding, orientation, userstyles.cradle)
         let tailstyles:React.CSSProperties = this.getTailStyles(gap, padding, orientation, userstyles.cradle)
-        let spinestyles:React.CSSProperties = this.getSpineStyles(gap, padding, orientation, userstyles.spine)
+        let axisstyles:React.CSSProperties = this.getSpineStyles(gap, padding, orientation, userstyles.axis)
 
         headstyles.gridGap = gap + 'px'
 
@@ -80,7 +80,7 @@ export default class StylesHandler {
 
         }
 
-        return [headstyles,tailstyles,spinestyles]
+        return [headstyles,tailstyles,axisstyles]
         
     }
 
@@ -154,8 +154,8 @@ export default class StylesHandler {
 
     }
 
-    getSpineStyles = (gap, padding, orientation, userspinestyles) => {
-        let top, left, width, height // for spine
+    getSpineStyles = (gap, padding, orientation, useraxisstyles) => {
+        let top, left, width, height // for axis
 
         if (orientation == 'vertical') {
             top = padding + 'px'
@@ -176,7 +176,7 @@ export default class StylesHandler {
             width,
             height,
 
-        } as React.CSSProperties,...userspinestyles}
+        } as React.CSSProperties,...useraxisstyles}
 
     }
 
