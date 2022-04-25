@@ -323,7 +323,7 @@ const Cradle = ({
 
     // host callbacks
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
-    const serviceCallsRef = useRef({referenceIndexCallbackRef})
+    const externalCallbacksRef = useRef({referenceIndexCallbackRef})
 
     // cradle parameters master bundle
     const handlersRef = useRef(null) // placeholder in cradleParamters; make available individual handlers
@@ -333,7 +333,7 @@ const Cradle = ({
         cradleInheritedPropertiesRef, 
         CradleInternalPropertiesRef, 
         internalCallbacksRef,
-        serviceCallsRef,
+        externalCallbacksRef,
     })
 
     const setOfHandlersRef = useRef(null)

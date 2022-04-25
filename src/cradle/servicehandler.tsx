@@ -7,7 +7,7 @@ export default class ServiceHandler {
 
        this.cradleParameters = cradleParameters
 
-       this.serviceCalls = cradleParameters.serviceCallsRef.current
+       this.serviceCalls = cradleParameters.externalCallbacksRef.current
 
     }
 
