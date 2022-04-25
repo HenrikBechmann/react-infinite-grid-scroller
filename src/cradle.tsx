@@ -183,7 +183,7 @@ const Cradle = ({
         placeholder, 
         scrollerName,
         scrollerID,
-
+        // objects
         functions,
         styles,
 
@@ -194,6 +194,9 @@ const Cradle = ({
     const viewportProperties = useContext(ViewportInterrupt)
     const viewportPropertiesRef = useRef(null)
     viewportPropertiesRef.current = viewportProperties // for closures
+
+    const { viewportDimensions } = viewportProperties
+    const { height:viewportheight,width:viewportwidth } = viewportDimensions
 
     const [cradleState, setCradleState] = useState('setup')
     const cradleStateRef = useRef(null) // access by closures
@@ -215,12 +218,6 @@ const Cradle = ({
             spineRef:spineCradleElementRef
         }
     )
-
-    // viewport dimensions
-
-    const { viewportDimensions } = viewportProperties
-
-    const { height:viewportheight,width:viewportwidth } = viewportDimensions
 
     // configuration calculations
 
@@ -323,6 +320,7 @@ const Cradle = ({
 
     // host callbacks
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
+
     const externalCallbacksRef = useRef({referenceIndexCallbackRef})
 
     // cradle parameters master bundle
@@ -342,7 +340,7 @@ const Cradle = ({
         setOfHandlersRef.current = getCradleHandlers(cradleParameters)
     }
     // make handlers directly available to cradle code
-    const [
+    const {
         portalHandler,
         interruptHandler,
         scrollHandler,
@@ -351,7 +349,7 @@ const Cradle = ({
         scaffoldHandler,
         serviceHandler,
         stylesHandler,
-    ] = setOfHandlersRef.current
+    } = setOfHandlersRef.current
 
     // to instantiate handlersRef
     const handlerObjectRef = useRef({
@@ -378,7 +376,7 @@ const Cradle = ({
             Math.max(0,scaffoldHandler.cradleReferenceData.blockScrollPos)
     }
 
-    // set portalHandler, and unmounted flag
+    // clear mounted flag on unmount
     useLayoutEffect(()=>{
 
         // unmount
@@ -418,6 +416,50 @@ const Cradle = ({
         return () => {
 
             viewportdata.elementref.current && viewportdata.elementref.current.removeEventListener('scroll',scrollHandler.onScroll)
+
+        }
+
+    },[])
+
+    // observer support
+
+    /*
+        There are two interection observers, one for the cradle, and another for itemShells; 
+            both against the viewport.
+        There is also a resize observer for the cradle wings, to respond to size changes of 
+            variable cells.
+    */    
+
+    // set up cradle resizeobserver
+    useEffect(() => {
+
+        let observer = interruptHandler.cradleResize.createObserver()
+        let cradleElements = scaffoldHandler.elements
+        observer.observe(cradleElements.headRef.current)
+        observer.observe(cradleElements.tailRef.current)
+
+        return () => {
+
+            observer.disconnect()
+
+        }
+
+    },[])
+
+    // intersection observer for cradle body
+
+    // this sets up an IntersectionObserver of the cradle against the viewport. When the
+    // cradle goes out of the observer scope, the "repositioningRender" cradle state is triggerd.
+    useEffect(()=>{
+
+        const observer = interruptHandler.cradleIntersect.createObserver()
+        const cradleElements = scaffoldHandler.elements
+        observer.observe(cradleElements.headRef.current)
+        observer.observe(cradleElements.tailRef.current)
+
+        return () => {
+
+            observer.disconnect()
 
         }
 
@@ -538,50 +580,6 @@ const Cradle = ({
         styles,
 
       ])
-
-    // observer support
-
-    /*
-        There are two interection observers, one for the cradle, and another for itemShells; 
-            both against the viewport.
-        There is also a resize observer for the cradle wings, to respond to size changes of 
-            variable cells.
-    */    
-
-    // set up cradle resizeobserver
-    useEffect(() => {
-
-        let observer = interruptHandler.cradleResize.createObserver()
-        let cradleElements = scaffoldHandler.elements
-        observer.observe(cradleElements.headRef.current)
-        observer.observe(cradleElements.tailRef.current)
-
-        return () => {
-
-            observer.disconnect()
-
-        }
-
-    },[])
-
-    // intersection observer for cradle body
-
-    // this sets up an IntersectionObserver of the cradle against the viewport. When the
-    // cradle goes out of the observer scope, the "repositioningRender" cradle state is triggerd.
-    useEffect(()=>{
-
-        const observer = interruptHandler.cradleIntersect.createObserver()
-        const cradleElements = scaffoldHandler.elements
-        observer.observe(cradleElements.headRef.current)
-        observer.observe(cradleElements.tailRef.current)
-
-        return () => {
-
-            observer.disconnect()
-
-        }
-
-    },[])
 
     // unset and reset observers for reposition
     useEffect(() => {
@@ -882,16 +880,16 @@ const getCradleHandlers = (cradleParameters) => {
 
     const createHandler = handler => new handler(cradleParameters)
 
-    return [
-        new PortalHandler(),
-        createHandler(InterruptHandler),
-        createHandler(ScrollHandler),
-        createHandler(StateHandler),
-        createHandler(ContentHandler),
-        createHandler(ScaffoldHandler),
-        createHandler(ServiceHandler),
-        createHandler(StylesHandler),
-    ]
+    return {
+        portalHandler:new PortalHandler(),
+        interruptHandler:createHandler(InterruptHandler),
+        scrollHandler:createHandler(ScrollHandler),
+        stateHandler:createHandler(StateHandler),
+        contentHandler:createHandler(ContentHandler),
+        scaffoldHandler:createHandler(ScaffoldHandler),
+        serviceHandler:createHandler(ServiceHandler),
+        stylesHandler:createHandler(StylesHandler),
+    }
 }
 
 
