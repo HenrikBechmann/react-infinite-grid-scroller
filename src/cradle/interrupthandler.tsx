@@ -1,4 +1,4 @@
-// wingshandler.tsx
+// interruptshandler.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
 'use strict'
@@ -26,6 +26,10 @@ export default class InterruptHandler {
        if (this.signals.pauseCradleResizeObserver) return
 
    }
+
+    private axisIntersectionObserverCallback = (entries) => {
+        console.log('axisIntersectionObserverCallback entries',entries)
+    }
 
     private cradleIntersectionObserverCallback = (entries) => {
 
@@ -181,6 +185,18 @@ export default class InterruptHandler {
                 {root:viewportInterruptProperties.elementref.current, threshold:0}
             )
             return this.cradleIntersect.observer
+        }
+    }
+   axisIntersect = {
+        observer:null,
+        callback:this.axisIntersectionObserverCallback,
+        createObserver:() => {
+            let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+            this.axisIntersect.observer = new IntersectionObserver(
+                this.axisIntersect.callback,
+                {root:viewportInterruptProperties.elementref.current, threshold:0}
+            )
+            return this.axisIntersect.observer
         }
     }
     cellIntersect = {

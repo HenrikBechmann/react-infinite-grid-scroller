@@ -1,5 +1,5 @@
 // cradle.tsx
-// copyright (c) 2020 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     TODO:
@@ -216,7 +216,7 @@ const Cradle = ({
     cradleStateRef.current = cradleState;
 
     // controls
-    
+
     const isMountedRef = useRef(true)
     const normalizeTimerRef = useRef(null)
 
@@ -470,6 +470,21 @@ const Cradle = ({
         const cradleElements = scaffoldHandler.elements
         observer.observe(cradleElements.headRef.current)
         observer.observe(cradleElements.tailRef.current)
+
+        return () => {
+
+            observer.disconnect()
+
+        }
+
+    },[])
+
+    // intersection observer for cradle axis
+    useEffect(()=>{
+
+        const observer = interruptHandler.axisIntersect.createObserver()
+        const cradleElements = scaffoldHandler.elements
+        observer.observe(cradleElements.axisRef.current)
 
         return () => {
 
