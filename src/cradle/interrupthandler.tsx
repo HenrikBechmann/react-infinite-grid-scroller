@@ -27,12 +27,14 @@ export default class InterruptHandler {
 
    }
 
-    private axisHeadIntersectionObserverCallback = (entries) => {
-        console.log('axisHEADIntersectionObserverCallback entries',entries)
+    private axisHeadBreaklineObserverCallback = (entries) => {
+        console.log('HEAD',entries)
+        console.log('    isIntersecting',entries[0].isIntersecting)
     }
 
-    private axisTailIntersectionObserverCallback = (entries) => {
-        console.log('axisTAILIntersectionObserverCallback entries',entries)
+    private axisTailBreaklineObserverCallback = (entries) => {
+        console.log('TAIL',entries)
+        console.log('    isIntersecting',entries[0].isIntersecting)
     }
 
     private cradleIntersectionObserverCallback = (entries) => {
@@ -192,28 +194,28 @@ export default class InterruptHandler {
             return this.cradleIntersect.observer
         }
     }
-   axisHeadIntersect = {
+   axisHeadBreaklineIntersect = {
         observer:null,
-        callback:this.axisHeadIntersectionObserverCallback,
+        callback:this.axisHeadBreaklineObserverCallback,
         createObserver:() => {
             let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-            this.axisHeadIntersect.observer = new IntersectionObserver(
-                this.axisHeadIntersect.callback,
+            this.axisHeadBreaklineIntersect.observer = new IntersectionObserver(
+                this.axisHeadBreaklineIntersect.callback,
                 {root:viewportInterruptProperties.elementref.current, threshold:0}
             )
-            return this.axisHeadIntersect.observer
+            return this.axisHeadBreaklineIntersect.observer
         }
     }
-   axisTailIntersect = {
+   axisTailBreaklineIntersect = {
         observer:null,
-        callback:this.axisTailIntersectionObserverCallback,
+        callback:this.axisTailBreaklineObserverCallback,
         createObserver:() => {
             let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-            this.axisTailIntersect.observer = new IntersectionObserver(
-                this.axisTailIntersect.callback,
+            this.axisTailBreaklineIntersect.observer = new IntersectionObserver(
+                this.axisTailBreaklineIntersect.callback,
                 {root:viewportInterruptProperties.elementref.current, threshold:0}
             )
-            return this.axisTailIntersect.observer
+            return this.axisTailBreaklineIntersect.observer
         }
     }
     cellIntersect = {

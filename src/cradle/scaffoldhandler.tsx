@@ -7,14 +7,14 @@ export default class ScaffoldHandler {
 
        this.cradleParameters = cradleParameters
 
-       const {axisRef, headRef, tailRef,headIntersectionRef,tailIntersectionRef} = 
+       const {axisRef, headRef, tailRef,headBreaklineRef,tailBreaklineRef} = 
           cradleParameters.CradleInternalPropertiesRef.current.cradleElementsRef.current
        this.elements = {
           axisRef,
           headRef,
           tailRef,
-          headIntersectionRef,
-          tailIntersectionRef
+          headBreaklineRef,
+          tailBreaklineRef
        }
 
        const {defaultVisibleIndex, listsize, padding} = this.cradleParameters.cradleInheritedPropertiesRef.current
