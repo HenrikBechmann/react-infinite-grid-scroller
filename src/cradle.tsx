@@ -225,11 +225,15 @@ const Cradle = ({
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const axisCradleElementRef = useRef(null)
+    const headIntersectionCradleElementRef = useRef(null)
+    const tailIntersectionCradleElementRef = useRef(null)
     const cradleElementsRef = useRef(
         {
             headRef:headCradleElementRef, 
             tailRef:tailCradleElementRef, 
-            axisRef:axisCradleElementRef
+            axisRef:axisCradleElementRef,
+            headIntersectionRef:headIntersectionCradleElementRef,
+            tailIntersectionRef:tailIntersectionCradleElementRef
         }
     )
 
@@ -479,16 +483,21 @@ const Cradle = ({
 
     },[])
 
-    // intersection observer for cradle axis
+    // intersection observer for cradle head axis
     useEffect(()=>{
 
-        const observer = interruptHandler.axisIntersect.createObserver()
         const cradleElements = scaffoldHandler.elements
-        observer.observe(cradleElements.axisRef.current)
+
+        const headobserver = interruptHandler.axisHeadIntersect.createObserver()
+        headobserver.observe(cradleElements.headIntersectionRef.current)
+
+        const tailobserver = interruptHandler.axisTailIntersect.createObserver()
+        tailobserver.observe(cradleElements.tailIntersectionRef.current)
 
         return () => {
 
-            observer.disconnect()
+            headobserver.disconnect()
+            tailobserver.disconnect()
 
         }
 
@@ -615,15 +624,6 @@ const Cradle = ({
         styles,
 
       ])
-
-    console.log('styles',
-        cradleHeadStyle, 
-        cradleTailStyle, 
-        cradleAxisStyle, 
-        intersectionlineHeadStyle, 
-        intersectionlineTailStyle,
-        cradleDividerStyle
-    )
 
     // unset and reset observers for reposition
     useEffect(() => {
@@ -877,11 +877,13 @@ const Cradle = ({
                 <div
                     data-type = 'intersectionline-head'
                     style = {intersectionlineHeadStyle}
+                    ref = {headIntersectionCradleElementRef}
                 >
                 </div>
                 <div
                     data-type = 'intersectionline-tail'
                     style = {intersectionlineTailStyle}
+                    ref = {tailIntersectionCradleElementRef}
                 >
                 </div>
 

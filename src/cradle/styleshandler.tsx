@@ -212,7 +212,6 @@ export default class StylesHandler {
             // height = 0
             transform = `translateY(${Math.round(cellWidth * .05) + 'px'})`
         }
-        console.log('orientation, transform', orientation, transform)
         return { ...{
             position,
             width,
