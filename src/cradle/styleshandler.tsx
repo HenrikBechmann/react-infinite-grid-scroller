@@ -26,9 +26,19 @@ export default class StylesHandler {
     }) => {
 
         // TODO: change 'cradle' to 'head' and 'tail' for more granularity
-        let headstyles:React.CSSProperties = this.getHeadStyles(gap, padding, orientation, userstyles.cradle)
-        let tailstyles:React.CSSProperties = this.getTailStyles(gap, padding, orientation, userstyles.cradle)
-        let axisstyles:React.CSSProperties = this.getSpineStyles(gap, padding, orientation, userstyles.axis)
+        const headstyles:React.CSSProperties = this.getHeadStyles(gap, padding, orientation, userstyles.cradle)
+        const tailstyles:React.CSSProperties = this.getTailStyles(gap, padding, orientation, userstyles.cradle)
+        const axisstyles:React.CSSProperties = this.getAxisStyles(gap, padding, orientation, userstyles.axis)
+        const intersectionlineheadstyles:React.CSSProperties = this.getIntersectionlineHeadStyles(orientation,cellHeight, cellWidth)
+        const intersectionlinetailstyles:React.CSSProperties = this.getIntersectionlineTailStyles(orientation,cellHeight, cellWidth)
+        const cradledividerstyles:React.CSSProperties = 
+            {
+                zIndex:1, 
+                position:'absolute',
+                width:'100%',
+                height:'100%',
+                boxShadow:'0 0 5px 3px red'
+            }
 
         headstyles.gridGap = gap + 'px'
 
@@ -80,7 +90,14 @@ export default class StylesHandler {
 
         }
 
-        return [headstyles,tailstyles,axisstyles]
+        return [
+            headstyles,
+            tailstyles,
+            axisstyles,
+            intersectionlineheadstyles,
+            intersectionlinetailstyles,
+            cradledividerstyles
+        ]
         
     }
 
@@ -154,7 +171,7 @@ export default class StylesHandler {
 
     }
 
-    getSpineStyles = (gap, padding, orientation, useraxisstyles) => {
+    getAxisStyles = (gap, padding, orientation, useraxisstyles) => {
         let top, left, width, height // for axis
 
         if (orientation == 'vertical') {
@@ -180,4 +197,50 @@ export default class StylesHandler {
 
     }
 
+    getIntersectionlineTailStyles = (orientation, cellHeight, cellWidth) => {
+        let transform // for position relative to axis
+        const position = 'absolute',
+            width = '100%',
+            height = '100%'
+
+        if (orientation == 'horizontal') {
+            // width = 0
+            // height = cellHeight + 'px'
+            transform = `translateX(${Math.round(cellHeight * .05) + 'px'})`
+        } else {
+            // width = 'auto'
+            // height = 0
+            transform = `translateY(${Math.round(cellWidth * .05) + 'px'})`
+        }
+        console.log('orientation, transform', orientation, transform)
+        return { ...{
+            position,
+            width,
+            height,
+            transform
+        } as React.CSSProperties}
+    }
+
+
+    getIntersectionlineHeadStyles = (orientation, cellHeight, cellWidth) => {
+        let transform // for position relative to axis
+        const position = 'absolute',
+            width = '100%',
+            height = '100%'
+        if (orientation == 'horizontal') {
+            // width = 0
+            // height = cellHeight + 'px'
+            transform = `translateX(${Math.round(-cellHeight * .95) + 'px'})`
+        } else {
+            // width = 'auto'
+            // height = 0
+            transform = `translateY(${Math.round(-cellWidth * .95) + 'px'})`
+        }
+        return { ...{
+            position,
+            width,
+            height,
+            transform
+        } as React.CSSProperties}
+    }
 }

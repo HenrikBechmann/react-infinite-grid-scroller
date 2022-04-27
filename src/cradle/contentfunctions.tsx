@@ -100,7 +100,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         axisAdjustment = 0; //gap;
 
         [cradleReferenceIndex, cradleActualContentCount, referenceoffset, scrollblockOffset, axisPosOffset] = 
-            adjustSpineOffsetForMaxRefIndex({
+            adjustAxisOffsetForMaxRefIndex({
             referenceoffset,
             axisPosOffset,
             scrollblockOffset,            
@@ -121,7 +121,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
 }
 
-const adjustSpineOffsetForMaxRefIndex = ({
+const adjustAxisOffsetForMaxRefIndex = ({
 
     listsize,
     crosscount,

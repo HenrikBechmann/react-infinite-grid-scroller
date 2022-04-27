@@ -549,17 +549,17 @@ const Cradle = ({
         // get previous ratio
         const previousCellPixelLength = (orientation == 'vertical')?
             cradleInheritedPropertiesRef.current.cellWidth:cradleInheritedPropertiesRef.current.cellHeight
-        // let previousSpineOffset = scaffoldHandler.cradleReferenceData.theNextSpinePixelOffset
-        const previousSpineOffset = scaffoldHandler.cradleReferenceData.nextCradlePosOffset
+        // let previousAxisOffset = scaffoldHandler.cradleReferenceData.theNextAxisPixelOffset
+        const previousAxisOffset = scaffoldHandler.cradleReferenceData.nextCradlePosOffset
 
-        const previousratio = previousSpineOffset/previousCellPixelLength
+        const previousratio = previousAxisOffset/previousCellPixelLength
 
         const currentCellPixelLength = (orientation == 'vertical')?
             cradleInheritedPropertiesRef.current.cellHeight:cradleInheritedPropertiesRef.current.cellWidth
 
-        const currentSpineOffset = previousratio * currentCellPixelLength
+        const currentAxisOffset = previousratio * currentCellPixelLength
         
-        scaffoldHandler.cradleReferenceData.nextCradlePosOffset = Math.round(currentSpineOffset)
+        scaffoldHandler.cradleReferenceData.nextCradlePosOffset = Math.round(currentAxisOffset)
 
         const signals = interruptHandler.signals
 
@@ -580,7 +580,13 @@ const Cradle = ({
     // =====================[ OPERATION ]===========================
 
     // styles for scaffold
-    const [cradleHeadStyle, cradleTailStyle, cradleSpineStyle] = useMemo(()=> {
+    const [
+        cradleHeadStyle, 
+        cradleTailStyle, 
+        cradleAxisStyle, 
+        intersectionlineHeadStyle, 
+        intersectionlineTailStyle,
+        cradleDividerStyle] = useMemo(()=> {
 
         return stylesHandler.setCradleStyles({
 
@@ -609,6 +615,15 @@ const Cradle = ({
         styles,
 
       ])
+
+    console.log('styles',
+        cradleHeadStyle, 
+        cradleTailStyle, 
+        cradleAxisStyle, 
+        intersectionlineHeadStyle, 
+        intersectionlineTailStyle,
+        cradleDividerStyle
+    )
 
     // unset and reset observers for reposition
     useEffect(() => {
@@ -856,21 +871,25 @@ const Cradle = ({
             />
             :<div 
                 data-type = 'cradle-axis'
-                style = {cradleSpineStyle} 
+                style = {cradleAxisStyle} 
                 ref = {axisCradleElementRef}
             >
+                <div
+                    data-type = 'intersectionline-head'
+                    style = {intersectionlineHeadStyle}
+                >
+                </div>
+                <div
+                    data-type = 'intersectionline-tail'
+                    style = {intersectionlineTailStyle}
+                >
+                </div>
+
                 {true
                     ?<div 
                         data-type = 'cradle-divider' 
-                        style = {
-                            {
-                                zIndex:1, 
-                                position:'absolute',
-                                width:'100%',
-                                height:'100%',
-                                boxShadow:'0 0 5px 3px red'
-                            }
-                        }>
+                        style = {cradleDividerStyle}
+                    >
                     </div>
                     :null
                 }
