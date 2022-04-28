@@ -7,6 +7,7 @@ import {
     calcContentShifts,
     getContentListRequirements,
     isolateShiftingIntersections,
+    isolateShiftingItems,
     allocateContentList,
     deleteAndRerenderPortals,
 
@@ -50,6 +51,7 @@ export default class ContentHandler {
     // reset cradle, including allocation between head and tail parts of the cradle
     // called only from cradle preparerender event
 
+    // ==========================[ SET CONTENT initially, or after reposition ]===========================
 
     // TODO: last row is sometimes left off with reposition
     public setCradleContent = (cradleState) => { 
@@ -91,7 +93,7 @@ export default class ContentHandler {
         const cradleContent = this.content
 
         let {
-            cradleReferenceIndex, 
+            cradleFirstIndex, 
             referenceoffset, 
             cradleActualContentCount, 
             scrollblockOffset, 
@@ -118,7 +120,7 @@ export default class ContentHandler {
             cradleInheritedProperties,
             cradleInternalProperties,
             cradleActualContentCount,
-            cradleReferenceIndex,
+            cradleFirstIndex,
             headchangecount:0,
             tailchangecount:cradleActualContentCount,
             localContentList,
@@ -188,13 +190,25 @@ export default class ContentHandler {
 
     }
 
-    public updateCradleContent = (entries, source = 'notifications') => {
+    // =============================[ UPDATE through scroll ]===============================
 
-        console.log('updateCradleContent', source, entries )
+    public updateCradleContent = (breaklineEntries, source = 'notifications') => {
 
+        console.log('updateCradleContent', source, breaklineEntries )
+
+        // ----------------------[ data assembly ]-------------------------
+        // viewport
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+        const viewportElement = viewportInterruptProperties.elementref.current
+        if (!viewportElement) { 
+            // not mounted; return
+            return
+        }
+        // cradle properties
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const cradleInternalProperties = this.cradleParameters.CradleInternalPropertiesRef.current
 
+        // handler support
         const {
             portals: portalHandler, 
             scroll: scrollHandler, 
@@ -203,18 +217,7 @@ export default class ContentHandler {
             // interrupts: interruptHandler,
         } = this.cradleParameters.handlersRef.current
 
-        // const cradleData = this.cradleParameters.cradleInheritedPropertiesRef.current
-
-        // if (viewportInterruptProperties.index == 6) {
-            // console.log('UPDATING content - source; in updateCradleContent',source)
-        // }
-
-        const viewportElement = viewportInterruptProperties.elementref.current
-        if (!viewportElement) { 
-            // not mounted; return
-            return
-        }
-            
+        // scroll data
         let scrollOffset
         if (cradleInheritedProperties.orientation == 'vertical') {
             scrollOffset = viewportElement.scrollTop
@@ -227,8 +230,7 @@ export default class ContentHandler {
 
         }
 
-        // ----------------------------[ 1. initialize ]----------------------------
-
+        // scroll data
         const scrollPositions = scrollHandler.scrollPositions 
 
         let isScrollingviewportforward
@@ -248,35 +250,45 @@ export default class ContentHandler {
             return // init call
         }
 
+        // cradle scaffold and contained data
         const cradleElements = scaffoldHandler.elements
         const cradleContent = this.content
-        const cradleInternalProperties = this.cradleParameters.CradleInternalPropertiesRef.current
-
         const itemElements = this.itemElements
-
         const modelcontentlist = cradleContent.cradleModel
-
-        const cradleReferenceIndex = modelcontentlist[0].props.index
-
-        console.log('returning for DEBUG')
-        return; // *    DEBUG*
+        const cradleFirstIndex = modelcontentlist[0].props.index
 
         // --------------------[ 2. filter intersections list ]-----------------------
 
         // filter out inapplicable intersection entries
         // we're only interested in intersections proximal to the axis
-        let shiftingintersections = []
-        if (entries.length) {
-            shiftingintersections = isolateShiftingIntersections({
 
+        let shiftingitems = []
+        if (breaklineEntries.length) {
+
+            shiftingitems = isolateShiftingItems({
                 isScrollingviewportforward,
-                intersections:entries,
+                breaklineEntries,
                 cradleContent,
-                cellObserverThreshold:cradleInternalProperties.cellObserverThreshold,
-
+                breaklinesOffset:cradleInheritedProperties.breaklinesOffset,
             })
-            // console.log('SHIFTING intersections',shiftingintersections)
+
         }
+
+        console.log('returning for DEBUG')
+        return; // *DEBUG*
+
+        let shiftingintersections = []
+        // if (breaklineEntries.length) {
+        //     shiftingintersections = isolateShiftingIntersections({
+
+        //         isScrollingviewportforward,
+        //         intersections:breaklineEntries,
+        //         cradleContent,
+        //         cellObserverThreshold:cradleInternalProperties.cellObserverThreshold,
+
+        //     })
+        //     // console.log('SHIFTING intersections',shiftingintersections)
+        // }
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
@@ -316,7 +328,7 @@ export default class ContentHandler {
             cradleContent,
             cradleshiftcount:cradleitemshift,
             isScrollingviewportforward,
-            cradleReferenceIndex, // previous cradlereferenceindex
+            cradleFirstIndex, // previous cradlefirstindex
 
         })
 
@@ -334,7 +346,7 @@ export default class ContentHandler {
                 localContentList:modelcontentlist,
                 headchangecount,
                 tailchangecount,
-                cradleReferenceIndex,
+                cradleFirstIndex,
                 // observer: interruptHandler.cellIntersect.observer,
                 callbacks:this.internalCallbacksRef.current,
                 instanceIdCounterRef:this.instanceIdCounterRef,
