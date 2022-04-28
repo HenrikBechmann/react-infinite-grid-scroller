@@ -6,8 +6,8 @@ import {
     calcHeadAndTailChanges,
     calcContentShifts,
     getContentListRequirements,
-    isolateShiftingIntersections,
-    isolateShiftingItems,
+    // isolateShiftingIntersections,
+    getShiftingItemsList,
     allocateContentList,
     deleteAndRerenderPortals,
 
@@ -263,7 +263,7 @@ export default class ContentHandler {
         let shiftingitems = []
         if (breaklineEntries.length) {
 
-            shiftingitems = isolateShiftingItems({
+            shiftingitems = getShiftingItemsList({
                 isScrollingviewportforward,
                 breaklineEntries,
                 cradleContent,

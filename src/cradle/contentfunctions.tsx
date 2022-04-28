@@ -184,7 +184,7 @@ const adjustAxisOffsetForMaxRefIndex = ({
 
 // ======================[ for updateCradleContent ]===========================
 
-export const isolateShiftingItems = ({
+export const getShiftingItemsList = ({
     isScrollingviewportforward,
     breaklineEntries,
     cradleContent,
