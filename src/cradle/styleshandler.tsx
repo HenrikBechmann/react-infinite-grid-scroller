@@ -22,6 +22,7 @@ export default class StylesHandler {
         viewportheight, 
         viewportwidth,
         userstyles,
+        breaklineOffset,
 
     }) => {
 
@@ -29,8 +30,8 @@ export default class StylesHandler {
         const headstyles:React.CSSProperties = this.getHeadStyles(gap, padding, orientation, userstyles.cradle)
         const tailstyles:React.CSSProperties = this.getTailStyles(gap, padding, orientation, userstyles.cradle)
         const axisstyles:React.CSSProperties = this.getAxisStyles(gap, padding, orientation, userstyles.axis)
-        const intersectionlineheadstyles:React.CSSProperties = this.getIntersectionlineHeadStyles(orientation,cellHeight, cellWidth)
-        const intersectionlinetailstyles:React.CSSProperties = this.getIntersectionlineTailStyles(orientation,cellHeight, cellWidth)
+        const intersectionlineheadstyles:React.CSSProperties = this.getIntersectionlineHeadStyles(orientation,cellHeight, cellWidth, breaklineOffset)
+        const intersectionlinetailstyles:React.CSSProperties = this.getIntersectionlineTailStyles(orientation,cellHeight, cellWidth, breaklineOffset)
         const cradledividerstyles:React.CSSProperties = 
             {
                 zIndex:1, 
@@ -197,7 +198,7 @@ export default class StylesHandler {
 
     }
 
-    getIntersectionlineTailStyles = (orientation, cellHeight, cellWidth) => {
+    getIntersectionlineTailStyles = (orientation, cellHeight, cellWidth, breaklineOffset) => {
         let transform // for position relative to axis
         const position = 'absolute',
             width = '100%',
@@ -206,11 +207,11 @@ export default class StylesHandler {
         if (orientation == 'horizontal') {
             // width = 0
             // height = cellHeight + 'px'
-            transform = `translateX(${Math.round(cellHeight * .05) + 'px'})`
+            transform = `translateX(${breaklineOffset + 'px'})`
         } else {
             // width = 'auto'
             // height = 0
-            transform = `translateY(${Math.round(cellWidth * .05) + 'px'})`
+            transform = `translateY(${breaklineOffset + 'px'})`
         }
         return { ...{
             position,
@@ -221,7 +222,7 @@ export default class StylesHandler {
     }
 
 
-    getIntersectionlineHeadStyles = (orientation, cellHeight, cellWidth) => {
+    getIntersectionlineHeadStyles = (orientation, cellHeight, cellWidth, breaklineOffset) => {
         let transform // for position relative to axis
         const position = 'absolute',
             width = '100%',
@@ -229,11 +230,11 @@ export default class StylesHandler {
         if (orientation == 'horizontal') {
             // width = 0
             // height = cellHeight + 'px'
-            transform = `translateX(${Math.round(-cellHeight * .95) + 'px'})`
+            transform = `translateX(${-(cellHeight -breaklineOffset) + 'px'})`
         } else {
             // width = 'auto'
             // height = 0
-            transform = `translateY(${Math.round(-cellWidth * .95) + 'px'})`
+            transform = `translateY(${-(cellWidth -breaklineOffset) + 'px'})`
         }
         return { ...{
             position,

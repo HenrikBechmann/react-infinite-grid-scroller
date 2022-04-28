@@ -78,6 +78,7 @@ const InfiniteGridScroller = (args) => {
     if (!['horizontal','vertical'].includes(props.orientation)) {
         props.orientation = 'vertical'
     }
+    props.breaklineOffset ?? (props.breaklineOffset = 20) // TODO: rationalize with cellHeight & cellWidth
 
     const { 
         orientation, // vertical or horizontal
@@ -103,6 +104,7 @@ const InfiniteGridScroller = (args) => {
         // cache = "preload" or "keepload" or "none"
         // advanced, technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
         scrollerName, // for debugging
+        breaklineOffset,
     } = props
 
     const gridSpecs = { // package
@@ -186,6 +188,8 @@ const InfiniteGridScroller = (args) => {
                     getItem = { getItem }
                     placeholder = { placeholder }
                     runwaycount = { runwaySize }
+
+                    breaklineOffset = { breaklineOffset }
 
                 />
             </Scrollblock>

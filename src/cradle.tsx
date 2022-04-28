@@ -155,6 +155,7 @@ const Cradle = ({
         styles:inheritedstyles,
         scrollerName,
         scrollerID,
+        breaklineOffset,
     }) => {
 
     // ========================[ SETUP ]========================
@@ -199,6 +200,7 @@ const Cradle = ({
         // objects
         functions,
         styles,
+        breaklineOffset,
 
     })
 
@@ -608,6 +610,7 @@ const Cradle = ({
             viewportwidth,
             crosscount, 
             userstyles:styles,
+            breaklineOffset,
 
         })
 
