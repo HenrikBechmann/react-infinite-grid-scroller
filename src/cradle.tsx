@@ -571,7 +571,7 @@ const Cradle = ({
 
         const signals = interruptHandler.signals
 
-        signals.pauseCellObserver = true
+        // signals.pauseCellObserver = true
         // pauseCradleIntersectionObserverRef.current = true
         signals.pauseScrollingEffects = true
 
@@ -665,19 +665,19 @@ const Cradle = ({
     */
 
     // responds to change of orientation
-    useEffect(() => {
+    // useEffect(() => {
 
-        let observer = interruptHandler.cellIntersect.observer
-        if (observer) observer.disconnect()
-        observer = interruptHandler.cellIntersect.createObserver()
+    //     let observer = interruptHandler.cellIntersect.observer
+    //     if (observer) observer.disconnect()
+    //     observer = interruptHandler.cellIntersect.createObserver()
 
-        return () => {
+    //     return () => {
 
-            observer.disconnect()
+    //         observer.disconnect()
 
-        }
+    //     }
 
-    },[orientation])
+    // },[orientation])
 
     // =====================[ STATE management ]==========================
 
@@ -777,7 +777,7 @@ const Cradle = ({
 
                             const signals = interruptHandler.signals
                             if (viewportInterruptProperties.elementref.current) { // already unmounted if fails (?)
-                                signals.pauseCellObserver  && (signals.pauseCellObserver = false)
+                                // signals.pauseCellObserver  && (signals.pauseCellObserver = false)
                                 signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
                                 signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
                                 signals.pauseCradleResizeObserver && (signals.pauseCradleResizeObserver = false)

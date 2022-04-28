@@ -113,7 +113,7 @@ export default class InterruptHandler {
                 const {top, right, bottom, left} = rect
                 const width = right - left, height = bottom - top
                 viewportInterruptProperties.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
-                signals.pauseCellObserver = true
+                // signals.pauseCellObserver = true
                 // pauseCradleIntersectionObserverRef.current = true
                 const cradleContent = contentHandler.content
                 cradleContent.headModelComponents = []
@@ -128,59 +128,59 @@ export default class InterruptHandler {
     }
 
     // the async callback from IntersectionObserver.
-    private cellintersectionobservercallback = (entries)=>{
+    // private cellintersectionobservercallback = (entries)=>{
 
-        return // prepare for switch to breakline interrupts
+    //     return // prepare for switch to breakline interrupts
 
-        const testrootbounds = entries[0].rootBounds
-        if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
+    //     const testrootbounds = entries[0].rootBounds
+    //     if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
 
-            return
+    //         return
 
-        }
+    //     }
         
-        // const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+    //     // const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
 
-        const {content:contentHandler,state:stateHandler,scroll:scrollHandler} = 
-            this.cradleParameters.handlersRef.current
-        // const contentHandler = this.cradleParameters.handlersRef.current.content
-        // const stateHandler = this.cradleParameters.handlersRef.current.state
-        // const scrollHandler = this.cradleParameters.handlersRef.current.scroll
+    //     const {content:contentHandler,state:stateHandler,scroll:scrollHandler} = 
+    //         this.cradleParameters.handlersRef.current
+    //     // const contentHandler = this.cradleParameters.handlersRef.current.content
+    //     // const stateHandler = this.cradleParameters.handlersRef.current.state
+    //     // const scrollHandler = this.cradleParameters.handlersRef.current.scroll
 
-        let movedentries = []
+    //     let movedentries = []
 
-        for (let entry of entries) {
-            // console.log('entry dataset',Object.assign({},entry.target.dataset))
-            if (entry.target.dataset.initialized) {
+    //     for (let entry of entries) {
+    //         // console.log('entry dataset',Object.assign({},entry.target.dataset))
+    //         if (entry.target.dataset.initialized) {
 
-                movedentries.push(entry)
+    //             movedentries.push(entry)
 
-            } else {
+    //         } else {
 
-                entry.target.dataset.initialized = 'true'
+    //             entry.target.dataset.initialized = 'true'
 
-            }
-        }
+    //         }
+    //     }
 
-        // TODO: moved this above initialization; no apparent difference to bug
-        if (this.signals.pauseCellObserver) { 
+    //     // TODO: moved this above initialization; no apparent difference to bug
+    //     if (this.signals.pauseCellObserver) { 
 
-            return
+    //         return
 
-        }
+    //     }
 
-        // TODO: set scrollPositions.atLastUpdateCall
-        if (stateHandler.isMountedRef.current) {
-            const { scrollPositions } = scrollHandler
-            if ((scrollPositions.start != scrollPositions.current) ||
-                (scrollPositions.current != scrollPositions.previous)) {
-                scrollPositions.previousupdate = scrollPositions.currentupdate
-                scrollPositions.currentupdate = scrollPositions.current
-                contentHandler.updateCradleContent(movedentries,'cellObserver')
-            }
-        }
+    //     // TODO: set scrollPositions.atLastUpdateCall
+    //     if (stateHandler.isMountedRef.current) {
+    //         const { scrollPositions } = scrollHandler
+    //         if ((scrollPositions.start != scrollPositions.current) ||
+    //             (scrollPositions.current != scrollPositions.previous)) {
+    //             scrollPositions.previousupdate = scrollPositions.currentupdate
+    //             scrollPositions.currentupdate = scrollPositions.current
+    //             contentHandler.updateCradleContent(movedentries,'cellObserver')
+    //         }
+    //     }
 
-    }
+    // }
 
    // viewportResize = {
    //    observer:null,
@@ -228,28 +228,28 @@ export default class InterruptHandler {
             return this.axisBreaklinesIntersect.observer
         }
     }
-    cellIntersect = {
-        observer:null,
-        callback:null,
-        createObserver:() => {
-            let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-            this.cellIntersect.observer = new IntersectionObserver(
+    // cellIntersect = {
+    //     observer:null,
+    //     callback:null,
+    //     createObserver:() => {
+    //         let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+    //         this.cellIntersect.observer = new IntersectionObserver(
 
-                this.cellintersectionobservercallback,
-                {
-                    root:viewportInterruptProperties.elementref.current, 
-                    threshold:this.cradleParameters.CradleInternalPropertiesRef.current.cellObserverThreshold,
-                } 
-            )
-            return this.cellIntersect.observer
-        }
+    //             this.cellintersectionobservercallback,
+    //             {
+    //                 root:viewportInterruptProperties.elementref.current, 
+    //                 threshold:this.cradleParameters.CradleInternalPropertiesRef.current.cellObserverThreshold,
+    //             } 
+    //         )
+    //         return this.cellIntersect.observer
+    //     }
 
-    }
+    // }
 
     signals = {
         repositioningRequired: false,
-        pauseCellObserver: false,
-        pauseBreaklineObservers: false,
+        // pauseCellObserver: false,
+        pauseBreaklineObservers: false, // TODO: track pauseCellObserver usage, and mimic with pauseBreakline
         pauseCradleIntersectionObserver:false,
         pauseCradleResizeObserver: false,
         pauseScrollingEffects: false,

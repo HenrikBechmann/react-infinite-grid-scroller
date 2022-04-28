@@ -123,7 +123,7 @@ export default class ContentHandler {
             tailchangecount:cradleActualContentCount,
             localContentList,
             callbacks:this.internalCallbacksRef.current,
-            observer: interruptHandler.cellIntersect.observer,
+            // observer: interruptHandler.cellIntersect.observer,
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
@@ -331,7 +331,7 @@ export default class ContentHandler {
                 headchangecount,
                 tailchangecount,
                 cradleReferenceIndex,
-                observer: interruptHandler.cellIntersect.observer,
+                // observer: interruptHandler.cellIntersect.observer,
                 callbacks:this.internalCallbacksRef.current,
                 instanceIdCounterRef:this.instanceIdCounterRef,
             })

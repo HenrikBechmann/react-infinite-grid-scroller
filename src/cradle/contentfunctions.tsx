@@ -813,7 +813,7 @@ export const getUICellShellList = ({
         tailchangecount, 
         localContentList:contentlist,
         callbacks,
-        observer,
+        // observer,
         instanceIdCounterRef,
     }) => {
 
@@ -844,7 +844,7 @@ export const getUICellShellList = ({
                     {
                         index, 
                         cradleProps,
-                        observer, 
+                        // observer, 
                         callbacks, 
                         instanceIdCounterRef,
                     }
@@ -873,7 +873,7 @@ export const getUICellShellList = ({
                     {
                         index, 
                         cradleProps,
-                        observer, 
+                        // observer, 
                         callbacks, 
                         instanceIdCounterRef,
                     }
@@ -932,7 +932,7 @@ export const deleteAndRerenderPortals = (portalHandler, deleteList) => {
 const acquireItem = ({
     index, 
     cradleProps,
-    observer, 
+    // observer, 
     callbacks, 
     instanceIdCounterRef,
 
@@ -942,7 +942,7 @@ const acquireItem = ({
     return emitItem({
         index, 
         cradleProps,
-        observer, 
+        // observer, 
         callbacks, 
         instanceID,
     })
@@ -951,7 +951,7 @@ const acquireItem = ({
 const emitItem = ({
     index, 
     cradleProps,
-    observer, 
+    // observer, 
     callbacks, 
     instanceID,
 }) => {
@@ -971,7 +971,7 @@ const emitItem = ({
         cellHeight = { cellHeight }
         cellWidth = { cellWidth }
         index = {index}
-        observer = {observer}
+        // observer = {observer}
         callbacks = {callbacks}
         getItem = {getItem}
         listsize = {listsize}

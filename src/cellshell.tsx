@@ -18,7 +18,7 @@ const CellShell = ({
     cellHeight, 
     cellWidth, 
     index, 
-    observer, // intersection observer
+    // observer, // intersection observer
     callbacks, 
     getItem, 
     listsize, 
@@ -52,7 +52,7 @@ const CellShell = ({
         return () => {
             isMountedRef.current = false
             // console.log('UNsetting observer for index',index)
-            observer.unobserve(observerElementRef.current)
+            // observer.unobserve(observerElementRef.current)
         }
 
     },[])
@@ -139,10 +139,10 @@ const CellShell = ({
 
     // ---------------------[ configure observer ]--------------------------
     
-    const observerElementRef = useRef(null) // persistent observer element ref for unmount
+    // const observerElementRef = useRef(null) // persistent observer element ref for unmount
 
     // const observersetRef = useRef(false)
-    useEffect(()=>{
+    // useEffect(()=>{
 
         // console.log('index, cellStatus', index, shellRef.current)
 
@@ -152,11 +152,11 @@ const CellShell = ({
 
         // console.log('setting observer for index',index)
 
-        observer.observe(shellRef.current)
-        observerElementRef.current = shellRef.current
+        // observer.observe(shellRef.current)
+        // observerElementRef.current = shellRef.current
         // observersetRef.current = true
 
-    },[])//[observer, shellRef.current, cellStatus])
+    // },[])//[observer, shellRef.current, cellStatus])
 
     // ---------------------[ end of configure observer ]-------------------------
 
