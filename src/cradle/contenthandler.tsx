@@ -248,9 +248,6 @@ export default class ContentHandler {
             return // init call
         }
 
-        console.log('returning for DEBUG')
-        return; // *    DEBUG*
-
         const cradleElements = scaffoldHandler.elements
         const cradleContent = this.content
         const cradleInternalProperties = this.cradleParameters.CradleInternalPropertiesRef.current
@@ -260,6 +257,9 @@ export default class ContentHandler {
         const modelcontentlist = cradleContent.cradleModel
 
         const cradleReferenceIndex = modelcontentlist[0].props.index
+
+        console.log('returning for DEBUG')
+        return; // *    DEBUG*
 
         // --------------------[ 2. filter intersections list ]-----------------------
 
