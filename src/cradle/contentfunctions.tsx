@@ -190,7 +190,7 @@ export const isolateShiftingIntersections = ({
     intersections,
     cradleContent,
     cellObserverThreshold,
-    scrollingviewportforward,
+    isScrollingviewportforward,
 }) => {
 
     // console.log('==>> intersections',intersections)
@@ -223,7 +223,7 @@ export const isolateShiftingIntersections = ({
         const entryindex = parseInt(entry.target.dataset.index)
         let newitemptr
         let isShiftingEntry = false
-        if (scrollingviewportforward) {
+        if (isScrollingviewportforward) {
 
             if (tailindexes.includes(entryindex)) {
 
@@ -349,7 +349,7 @@ export const isolateShiftingIntersections = ({
     let returnindex // for return
     // for scrollviewportbackward, moving toward head, add items to head, shift items to tail
     // for scrollingviewportforward, moving toward tail, add items to tail, shift items to head
-    if (scrollingviewportforward && (sectionptr >= 0)) {
+    if (isScrollingviewportforward && (sectionptr >= 0)) {
         returnindex = shiftingindexes[sectionptr]
         let refindex = returnindex - 1
 
@@ -414,7 +414,7 @@ export const calcContentShifts = ({
     viewportElement,
     // itemElements,
     shiftingintersections,
-    scrollingviewportforward,
+    isScrollingviewportforward,
     // viewportInterruptProperties,
 
 }) => {
@@ -461,7 +461,7 @@ export const calcContentShifts = ({
         viewportlength = viewportElement.offsetHeight
 
         // measure any gap between the cradle and the top viewport boundary
-        if (!scrollingviewportforward) { // scrollviewportbackward, toward head
+        if (!isScrollingviewportforward) { // scrollviewportbackward, toward head
 
             // if viewportaxisoffset is below the top by more than the height of 
             // the headElment then a gap will be visible
@@ -474,7 +474,7 @@ export const calcContentShifts = ({
         viewportaxisoffset = axisElement.offsetLeft - viewportElement.scrollLeft
         viewportlength = viewportElement.offsetWidth
 
-        if (!scrollingviewportforward) { // scroll backward, toward head
+        if (!isScrollingviewportforward) { // scroll backward, toward head
 
             viewportvisiblegaplength = viewportaxisoffset - headElement.offsetWidth
 
@@ -503,7 +503,7 @@ export const calcContentShifts = ({
     */
     let headaddshiftitemcount = 0, tailaddshiftitemcount = 0,
         headaddshiftrowcount = 0, tailaddshiftrowcount = 0
-    if (!scrollingviewportforward) { // viewport moves toward tail, add tail items, shift positive
+    if (!isScrollingviewportforward) { // viewport moves toward tail, add tail items, shift positive
 
         tailaddshiftitemcount = shiftingintersections.length
 
@@ -540,7 +540,7 @@ export const calcContentShifts = ({
     // computed shifted cradle end row, looking for overshoot
     let rowovershoot
     let computedcradleEndrow = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift - 1)
-    if (scrollingviewportforward) { // scroll viewport toward tail, shift is positive, add to tail
+    if (isScrollingviewportforward) { // scroll viewport toward tail, shift is positive, add to tail
 
         rowovershoot = computedcradleEndrow - listRowcount // overshoot amount 
 
@@ -663,7 +663,7 @@ export const calcHeadAndTailChanges = ({
         cradleInternalProperties,
         cradleContent,
         cradleshiftcount,
-        scrollingviewportforward,
+        isScrollingviewportforward,
         cradleReferenceIndex,
 
     }) => {
@@ -690,7 +690,7 @@ export const calcHeadAndTailChanges = ({
     let additemcount = 0
     let cliprowcount = 0, clipitemcount = 0
 
-    if (scrollingviewportforward) { // clip from head; add to tail; scroll forward tail is direction of scroll
+    if (isScrollingviewportforward) { // clip from head; add to tail; scroll forward tail is direction of scroll
 
         // adjust clipitemcount
         if ((headrowcount + rowshiftcount) > (cradleInheritedProperties.runwaycount)) {

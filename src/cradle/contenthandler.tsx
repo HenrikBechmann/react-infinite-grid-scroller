@@ -62,7 +62,7 @@ export default class ContentHandler {
         const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         const stateHandler = this.cradleParameters.handlersRef.current.state
         const serviceHandler = this.cradleParameters.handlersRef.current.service
-        const interruptHandler = this.cradleParameters.handlersRef.current.interrupts
+        // const interruptHandler = this.cradleParameters.handlersRef.current.interrupts
         // const cradleData = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         // if (viewportInterruptProperties.index == 6) {
@@ -200,7 +200,7 @@ export default class ContentHandler {
             scroll: scrollHandler, 
             scaffold: scaffoldHandler, 
             state: stateHandler, 
-            interrupts: interruptHandler,
+            // interrupts: interruptHandler,
         } = this.cradleParameters.handlersRef.current
 
         // const cradleData = this.cradleParameters.cradleInheritedPropertiesRef.current
@@ -231,23 +231,24 @@ export default class ContentHandler {
 
         const scrollPositions = scrollHandler.scrollPositions 
 
-        let scrollingviewportforward
+        let isScrollingviewportforward
         if (scrollPositions.current == scrollPositions.previous) { // edge case 
 
-            scrollingviewportforward = this._previousScrollForward
+            isScrollingviewportforward = this._previousScrollForward
 
         } else {
 
             // console.log('scrollPositions',scrollPositions)
-            scrollingviewportforward = scrollPositions.currentupdate > scrollPositions.previousupdate
-            this._previousScrollForward = scrollingviewportforward
+            isScrollingviewportforward = scrollPositions.currentupdate > scrollPositions.previousupdate
+            this._previousScrollForward = isScrollingviewportforward
 
         }
 
-        if (scrollingviewportforward === undefined) {
+        if (isScrollingviewportforward === undefined) {
             return // init call
         }
 
+        console.log('returning for DEBUG')
         return; // *    DEBUG*
 
         const cradleElements = scaffoldHandler.elements
@@ -268,7 +269,7 @@ export default class ContentHandler {
         if (entries.length) {
             shiftingintersections = isolateShiftingIntersections({
 
-                scrollingviewportforward,
+                isScrollingviewportforward,
                 intersections:entries,
                 cradleContent,
                 cellObserverThreshold:cradleInternalProperties.cellObserverThreshold,
@@ -297,7 +298,7 @@ export default class ContentHandler {
             viewportElement,
             // itemElements,
             shiftingintersections,
-            scrollingviewportforward,
+            isScrollingviewportforward,
             // viewportInterruptProperties,
 
         })
@@ -314,7 +315,7 @@ export default class ContentHandler {
             cradleInternalProperties,
             cradleContent,
             cradleshiftcount:cradleitemshift,
-            scrollingviewportforward,
+            isScrollingviewportforward,
             cradleReferenceIndex, // previous cradlereferenceindex
 
         })
