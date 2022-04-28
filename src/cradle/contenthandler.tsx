@@ -229,8 +229,6 @@ export default class ContentHandler {
             return
 
         }
-
-        // scroll data
         const scrollPositions = scrollHandler.scrollPositions 
 
         let isScrollingviewportforward
