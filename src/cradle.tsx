@@ -490,16 +490,13 @@ const Cradle = ({
 
         const cradleElements = scaffoldHandler.elements
 
-        const headobserver = interruptHandler.axisHeadBreaklineIntersect.createObserver()
-        headobserver.observe(cradleElements.headBreaklineRef.current)
-
-        const tailobserver = interruptHandler.axisTailBreaklineIntersect.createObserver()
-        tailobserver.observe(cradleElements.tailBreaklineRef.current)
+        const observer = interruptHandler.axisBreaklinesIntersect.createObserver()
+        observer.observe(cradleElements.headBreaklineRef.current)
+        observer.observe(cradleElements.tailBreaklineRef.current)
 
         return () => {
 
-            headobserver.disconnect()
-            tailobserver.disconnect()
+            observer.disconnect()
 
         }
 

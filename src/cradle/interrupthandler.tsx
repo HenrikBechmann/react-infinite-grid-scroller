@@ -27,10 +27,7 @@ export default class InterruptHandler {
 
    }
 
-    private axisHeadBreaklineObserverCallback = (entries) => {
-        // const isIntersecting = entries[0].isIntersecting
-        // console.log('HEAD',entries)
-        // console.log('    isIntersecting',isIntersecting)
+    private axisBreaklinesObserverCallback = (entries) => {
 
         const testrootbounds = entries[0].rootBounds
         if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
@@ -54,39 +51,7 @@ export default class InterruptHandler {
                 (scrollPositions.current != scrollPositions.previous)) {
                 scrollPositions.previousupdate = scrollPositions.currentupdate
                 scrollPositions.currentupdate = scrollPositions.current
-                contentHandler.updateCradleContent(entries,'headBreaklineObserver')
-            }
-        }
-    }
-
-    private axisTailBreaklineObserverCallback = (entries) => {
-        // const isIntersecting = entries[0].isIntersecting
-        // console.log('TAIL',entries)
-        // console.log('    isIntersecting',entries[0].isIntersecting)
-
-        const testrootbounds = entries[0].rootBounds
-        if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
-
-            return
-
-        }
-
-        if (this.signals.pauseBreaklineObservers) { 
-
-            return
-
-        }
-
-        const {content:contentHandler,state:stateHandler,scroll:scrollHandler} = 
-            this.cradleParameters.handlersRef.current
-
-        if (stateHandler.isMountedRef.current) {
-            const { scrollPositions } = scrollHandler
-            if ((scrollPositions.start != scrollPositions.current) ||
-                (scrollPositions.current != scrollPositions.previous)) {
-                scrollPositions.previousupdate = scrollPositions.currentupdate
-                scrollPositions.currentupdate = scrollPositions.current
-                contentHandler.updateCradleContent(entries,'tailBreaklineObserver')
+                contentHandler.updateCradleContent(entries,'breaklinesObserver')
             }
         }
     }
@@ -251,28 +216,16 @@ export default class InterruptHandler {
             return this.cradleIntersect.observer
         }
     }
-   axisHeadBreaklineIntersect = {
+   axisBreaklinesIntersect = {
         observer:null,
-        callback:this.axisHeadBreaklineObserverCallback,
+        callback:this.axisBreaklinesObserverCallback,
         createObserver:() => {
             let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-            this.axisHeadBreaklineIntersect.observer = new IntersectionObserver(
-                this.axisHeadBreaklineIntersect.callback,
+            this.axisBreaklinesIntersect.observer = new IntersectionObserver(
+                this.axisBreaklinesIntersect.callback,
                 {root:viewportInterruptProperties.elementref.current, threshold:0}
             )
-            return this.axisHeadBreaklineIntersect.observer
-        }
-    }
-   axisTailBreaklineIntersect = {
-        observer:null,
-        callback:this.axisTailBreaklineObserverCallback,
-        createObserver:() => {
-            let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-            this.axisTailBreaklineIntersect.observer = new IntersectionObserver(
-                this.axisTailBreaklineIntersect.callback,
-                {root:viewportInterruptProperties.elementref.current, threshold:0}
-            )
-            return this.axisTailBreaklineIntersect.observer
+            return this.axisBreaklinesIntersect.observer
         }
     }
     cellIntersect = {
