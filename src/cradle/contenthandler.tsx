@@ -55,15 +55,15 @@ export default class ContentHandler {
     public setCradleContent = (cradleState) => { 
 
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-        const cradleInheritedProps = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
         const portalHandler = this.cradleParameters.handlersRef.current.portals
-        const cradleConfig = this.cradleParameters.CradleInternalPropertiesRef.current
+        const cradleInternalProperties = this.cradleParameters.CradleInternalPropertiesRef.current
         const scrollHandler = this.cradleParameters.handlersRef.current.scroll
         const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         const stateHandler = this.cradleParameters.handlersRef.current.state
         const serviceHandler = this.cradleParameters.handlersRef.current.service
         const interruptHandler = this.cradleParameters.handlersRef.current.interrupts
-        const cradleData = this.cradleParameters.cradleInheritedPropertiesRef.current
+        // const cradleData = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         // if (viewportInterruptProperties.index == 6) {
         //     console.log('SETTING content - cradleState, cradleData in setCradleContent',
@@ -75,11 +75,11 @@ export default class ContentHandler {
         const visibletargetindexoffset = scaffoldHandler.cradleReferenceData.nextItemIndexReference
         let visibletargetscrolloffset = scaffoldHandler.cradleReferenceData.nextCradlePosOffset
 
-        const {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleInheritedProps
+        const {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleInheritedProperties
 
         const { cradleRowcount,
             crosscount,
-            viewportRowcount } = cradleConfig
+            viewportRowcount } = cradleInternalProperties
 
         if (cradleState == 'doreposition') {
 
@@ -99,8 +99,8 @@ export default class ContentHandler {
             axisAdjustment
         } = 
             getContentListRequirements({
-                cradleProps:cradleInheritedProps,
-                cradleConfig,
+                cradleInheritedProperties,
+                cradleInternalProperties,
                 visibletargetindexoffset,
                 targetViewportOffset:visibletargetscrolloffset,
                 viewportElement:viewportInterruptProperties.elementref.current
@@ -115,8 +115,8 @@ export default class ContentHandler {
         // returns content constrained by cradleRowcount
         const [childlist,deleteditems] = getUICellShellList({
 
-            cradleProps:cradleInheritedProps,
-            cradleConfig,
+            cradleInheritedProperties,
+            cradleInternalProperties,
             cradleActualContentCount,
             cradleReferenceIndex,
             headchangecount:0,
@@ -173,7 +173,7 @@ export default class ContentHandler {
 
             cradleElements.axisRef.current.style.top = (scrollblockOffset + axisAdjustment) + 'px'
             cradleElements.axisRef.current.style.left = 'auto'
-            cradleElements.headRef.current.style.paddingBottom = headcontentlist.length?cradleInheritedProps.gap + 'px':0
+            cradleElements.headRef.current.style.paddingBottom = headcontentlist.length?cradleInheritedProperties.gap + 'px':0
 
         } else { // orientation = 'horizontal'
 
@@ -182,7 +182,7 @@ export default class ContentHandler {
 
             cradleElements.axisRef.current.style.top = 'auto'
             cradleElements.axisRef.current.style.left = (scrollblockOffset + axisAdjustment) + 'px'
-            cradleElements.headRef.current.style.paddingRight = headcontentlist.length?cradleInheritedProps.gap + 'px':0
+            cradleElements.headRef.current.style.paddingRight = headcontentlist.length?cradleInheritedProperties.gap + 'px':0
 
         }
 
@@ -190,19 +190,20 @@ export default class ContentHandler {
 
     public updateCradleContent = (entries, source = 'notifications') => {
 
-        console.log('updateCradleContent', entries, source)
-
-        return
+        console.log('updateCradleContent', source, entries )
 
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-        const cradleInheritedProps = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const portalHandler = this.cradleParameters.handlersRef.current.portals
-        const scrollHandler = this.cradleParameters.handlersRef.current.scroll
-        const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
-        const stateHandler = this.cradleParameters.handlersRef.current.state
-        const interruptHandler = this.cradleParameters.handlersRef.current.interrupts
+        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        const cradleData = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const {
+            portals: portalHandler, 
+            scroll: scrollHandler, 
+            scaffold: scaffoldHandler, 
+            state: stateHandler, 
+            interrupts: interruptHandler,
+        } = this.cradleParameters.handlersRef.current
+
+        // const cradleData = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         // if (viewportInterruptProperties.index == 6) {
             // console.log('UPDATING content - source; in updateCradleContent',source)
@@ -215,7 +216,7 @@ export default class ContentHandler {
         }
             
         let scrollOffset
-        if (cradleInheritedProps.orientation == 'vertical') {
+        if (cradleInheritedProperties.orientation == 'vertical') {
             scrollOffset = viewportElement.scrollTop
         } else {
             scrollOffset = viewportElement.scrollLeft
@@ -228,7 +229,7 @@ export default class ContentHandler {
 
         // ----------------------------[ 1. initialize ]----------------------------
 
-        const scrollPositions = scrollHandler.scrollPositions //scrollPositionsRef.current
+        const scrollPositions = scrollHandler.scrollPositions 
 
         let scrollingviewportforward
         if (scrollPositions.current == scrollPositions.previous) { // edge case 
@@ -247,9 +248,11 @@ export default class ContentHandler {
             return // init call
         }
 
+        return; // *    DEBUG*
+
         const cradleElements = scaffoldHandler.elements
         const cradleContent = this.content
-        const cradleConfig = this.cradleParameters.CradleInternalPropertiesRef.current
+        const cradleInternalProperties = this.cradleParameters.CradleInternalPropertiesRef.current
 
         const itemElements = this.itemElements
 
@@ -268,7 +271,7 @@ export default class ContentHandler {
                 scrollingviewportforward,
                 intersections:entries,
                 cradleContent,
-                cellObserverThreshold:cradleConfig.cellObserverThreshold,
+                cellObserverThreshold:cradleInternalProperties.cellObserverThreshold,
 
             })
             // console.log('SHIFTING intersections',shiftingintersections)
@@ -287,8 +290,8 @@ export default class ContentHandler {
             tailchange,
         ] = calcContentShifts({
 
-            cradleProps:cradleInheritedProps,
-            cradleConfig,
+            cradleInheritedProperties,
+            cradleInternalProperties,
             cradleElements,
             cradleContent,
             viewportElement,
@@ -307,8 +310,8 @@ export default class ContentHandler {
         // negative number is clip; positive number is add
         const [headchangecount,tailchangecount] = calcHeadAndTailChanges({ 
 
-            cradleProps:cradleInheritedProps,
-            cradleConfig,
+            cradleInheritedProperties,
+            cradleInternalProperties,
             cradleContent,
             cradleshiftcount:cradleitemshift,
             scrollingviewportforward,
@@ -324,8 +327,8 @@ export default class ContentHandler {
         if (headchangecount || tailchangecount) { // TODO: apparently headchangecount of -0 fails test, should be fixed
 
             [localContentList,deletedContentItems] = getUICellShellList({
-                cradleProps:cradleInheritedProps,
-                cradleConfig,
+                cradleInheritedProperties,
+                cradleInternalProperties,
                 cradleActualContentCount:newCradleActualContentCount,
                 localContentList:modelcontentlist,
                 headchangecount,
@@ -364,13 +367,13 @@ export default class ContentHandler {
 
             // scrollHandler.updateBlockScrollPos()
             
-            if (cradleInheritedProps.orientation == 'vertical') {
+            if (cradleInheritedProperties.orientation == 'vertical') {
 
                 // scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
                 // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
                 cradleElements.axisRef.current.style.top = viewportElement.scrollTop + axisposoffset + 'px'
                 cradleElements.axisRef.current.style.left = 'auto'
-                cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleInheritedProps.gap + 'px':0
+                cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleInheritedProperties.gap + 'px':0
 
             } else {
 
@@ -378,7 +381,7 @@ export default class ContentHandler {
                 // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
                 cradleElements.axisRef.current.style.top = 'auto'
                 cradleElements.axisRef.current.style.left = viewportElement.scrollLeft + axisposoffset + 'px'
-                cradleElements.headRef.current.style.paddingRight = headcontent.length?cradleInheritedProps.gap + 'px':0
+                cradleElements.headRef.current.style.paddingRight = headcontent.length?cradleInheritedProperties.gap + 'px':0
 
             }
 

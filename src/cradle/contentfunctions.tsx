@@ -17,8 +17,8 @@ const browser = detect()
 
 export const getContentListRequirements = ({ // called from setCradleContent only
 
-        cradleProps,
-        cradleConfig,
+        cradleInheritedProperties,
+        cradleInternalProperties,
         visibletargetindexoffset:referenceoffset,
         targetViewportOffset,
         viewportElement,
@@ -31,11 +31,11 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         runwaycount,
         gap,
         padding,
-        listsize} = cradleProps
+        listsize} = cradleInheritedProperties
 
     let {crosscount,
         cradleRowcount,
-        viewportRowcount} = cradleConfig
+        viewportRowcount} = cradleInternalProperties
     // reconcile axisReferenceIndex to crosscount context
     let diff = referenceoffset % crosscount
     referenceoffset -= diff
@@ -407,10 +407,10 @@ let duplicatecomparebytime = (a,b) => {
 // called only from updateCradleContent
 export const calcContentShifts = ({
 
-    cradleProps,
+    cradleInheritedProperties,
     cradleElements,
     cradleContent,
-    cradleConfig,
+    cradleInternalProperties,
     viewportElement,
     // itemElements,
     shiftingintersections,
@@ -427,7 +427,7 @@ export const calcContentShifts = ({
         cellWidth,
         listsize,
         padding,
-        runwaycount } = cradleProps
+        runwaycount } = cradleInheritedProperties
 
     const axisElement = cradleElements.axisRef.current,
      headElement = cradleElements.headRef.current,
@@ -442,7 +442,7 @@ export const calcContentShifts = ({
         cradleRowcount,
         listRowcount,
         viewportRowcount,
-        itemObserverThreshold } = cradleConfig
+        itemObserverThreshold } = cradleInternalProperties
 
     let BOD = false, EOD = false // beginning-of-data, end-of-data flags
 
@@ -659,8 +659,8 @@ export const calcContentShifts = ({
 
 export const calcHeadAndTailChanges = ({
 
-        cradleProps,
-        cradleConfig,
+        cradleInheritedProperties,
+        cradleInternalProperties,
         cradleContent,
         cradleshiftcount,
         scrollingviewportforward,
@@ -668,12 +668,12 @@ export const calcHeadAndTailChanges = ({
 
     }) => {
 
-    let listsize = cradleProps.listsize
+    let listsize = cradleInheritedProperties.listsize
 
     let headcontent = cradleContent.headModelComponents
     let tailcontent = cradleContent.tailModelComponents
 
-    const { crosscount, cradleRowcount } = cradleConfig
+    const { crosscount, cradleRowcount } = cradleInternalProperties
 
     cradleshiftcount = Math.abs(cradleshiftcount) 
     const rowshiftcount = Math.ceil(cradleshiftcount/crosscount) //+ boundaryrowcount
@@ -693,9 +693,9 @@ export const calcHeadAndTailChanges = ({
     if (scrollingviewportforward) { // clip from head; add to tail; scroll forward tail is direction of scroll
 
         // adjust clipitemcount
-        if ((headrowcount + rowshiftcount) > (cradleProps.runwaycount)) {
+        if ((headrowcount + rowshiftcount) > (cradleInheritedProperties.runwaycount)) {
 
-            let rowdiff = (headrowcount + rowshiftcount) - (cradleProps.runwaycount)
+            let rowdiff = (headrowcount + rowshiftcount) - (cradleInheritedProperties.runwaycount)
             cliprowcount = rowdiff
             clipitemcount = (cliprowcount * crosscount)
 
@@ -738,9 +738,9 @@ export const calcHeadAndTailChanges = ({
         let intersectionindexes = []
 
         // headcount will be less than minimum (runwaycount), so a shift can be accomplished[]
-        if ((headrowcount - rowshiftcount) < (cradleProps.runwaycount)) {
+        if ((headrowcount - rowshiftcount) < (cradleInheritedProperties.runwaycount)) {
             // calculate clip for tail
-            let rowshortfall = (cradleProps.runwaycount) - (headrowcount - rowshiftcount)
+            let rowshortfall = (cradleInheritedProperties.runwaycount) - (headrowcount - rowshiftcount)
 
             cliprowcount = rowshortfall
             let tailrowitemcount = (tailcontent.length % crosscount)
@@ -805,8 +805,8 @@ export const calcHeadAndTailChanges = ({
 // or if indexcount values are <0 removes them.
 export const getUICellShellList = ({ 
 
-        cradleProps,
-        cradleConfig,
+        cradleInheritedProperties,
+        cradleInternalProperties,
         cradleActualContentCount,
         cradleReferenceIndex, 
         headchangecount, 
@@ -818,7 +818,7 @@ export const getUICellShellList = ({
     }) => {
 
     let { crosscount,
-        cradleRowcount } = cradleConfig
+        cradleRowcount } = cradleInternalProperties
 
     let localContentlist = [...contentlist]
     let tailindexoffset = cradleReferenceIndex + contentlist.length
@@ -843,7 +843,7 @@ export const getUICellShellList = ({
                 acquireItem(
                     {
                         index, 
-                        cradleProps,
+                        cradleInheritedProperties,
                         // observer, 
                         callbacks, 
                         instanceIdCounterRef,
@@ -872,7 +872,7 @@ export const getUICellShellList = ({
                 acquireItem(
                     {
                         index, 
-                        cradleProps,
+                        cradleInheritedProperties,
                         // observer, 
                         callbacks, 
                         instanceIdCounterRef,
@@ -931,7 +931,7 @@ export const deleteAndRerenderPortals = (portalHandler, deleteList) => {
 
 const acquireItem = ({
     index, 
-    cradleProps,
+    cradleInheritedProperties,
     // observer, 
     callbacks, 
     instanceIdCounterRef,
@@ -941,7 +941,7 @@ const acquireItem = ({
 
     return emitItem({
         index, 
-        cradleProps,
+        cradleInheritedProperties,
         // observer, 
         callbacks, 
         instanceID,
@@ -950,7 +950,7 @@ const acquireItem = ({
 
 const emitItem = ({
     index, 
-    cradleProps,
+    cradleInheritedProperties,
     // observer, 
     callbacks, 
     instanceID,
@@ -963,7 +963,7 @@ const emitItem = ({
         placeholder,
         listsize,
         scrollerName,
-        scrollerID } = cradleProps
+        scrollerID } = cradleInheritedProperties
 
     return <CellShell
         key = {index} 
