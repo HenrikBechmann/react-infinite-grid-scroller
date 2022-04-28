@@ -28,18 +28,66 @@ export default class InterruptHandler {
    }
 
     private axisHeadBreaklineObserverCallback = (entries) => {
-        const isIntersecting = entries[0].isIntersecting
-        if (!isIntersecting) {
-            console.log('HEAD',entries)
-            console.log('    isIntersecting',isIntersecting)
+        // const isIntersecting = entries[0].isIntersecting
+        // console.log('HEAD',entries)
+        // console.log('    isIntersecting',isIntersecting)
+
+        const testrootbounds = entries[0].rootBounds
+        if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
+
+            return
+
+        }
+
+        if (this.signals.pauseBreaklineObservers) { 
+
+            return
+
+        }
+
+        const {content:contentHandler,state:stateHandler,scroll:scrollHandler} = 
+            this.cradleParameters.handlersRef.current
+
+        if (stateHandler.isMountedRef.current) {
+            const { scrollPositions } = scrollHandler
+            if ((scrollPositions.start != scrollPositions.current) ||
+                (scrollPositions.current != scrollPositions.previous)) {
+                scrollPositions.previousupdate = scrollPositions.currentupdate
+                scrollPositions.currentupdate = scrollPositions.current
+                contentHandler.updateCradleContent(entries,'headBreaklineObserver')
+            }
         }
     }
 
     private axisTailBreaklineObserverCallback = (entries) => {
-        const isIntersecting = entries[0].isIntersecting
-        if (isIntersecting) {
-            console.log('TAIL',entries)
-            console.log('    isIntersecting',entries[0].isIntersecting)
+        // const isIntersecting = entries[0].isIntersecting
+        // console.log('TAIL',entries)
+        // console.log('    isIntersecting',entries[0].isIntersecting)
+
+        const testrootbounds = entries[0].rootBounds
+        if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
+
+            return
+
+        }
+
+        if (this.signals.pauseBreaklineObservers) { 
+
+            return
+
+        }
+
+        const {content:contentHandler,state:stateHandler,scroll:scrollHandler} = 
+            this.cradleParameters.handlersRef.current
+
+        if (stateHandler.isMountedRef.current) {
+            const { scrollPositions } = scrollHandler
+            if ((scrollPositions.start != scrollPositions.current) ||
+                (scrollPositions.current != scrollPositions.previous)) {
+                scrollPositions.previousupdate = scrollPositions.currentupdate
+                scrollPositions.currentupdate = scrollPositions.current
+                contentHandler.updateCradleContent(entries,'tailBreaklineObserver')
+            }
         }
     }
 
@@ -116,6 +164,8 @@ export default class InterruptHandler {
 
     // the async callback from IntersectionObserver.
     private cellintersectionobservercallback = (entries)=>{
+
+        return // prepare for switch to breakline interrupts
 
         const testrootbounds = entries[0].rootBounds
         if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
@@ -246,6 +296,7 @@ export default class InterruptHandler {
     signals = {
         repositioningRequired: false,
         pauseCellObserver: false,
+        pauseBreaklineObservers: false,
         pauseCradleIntersectionObserver:false,
         pauseCradleResizeObserver: false,
         pauseScrollingEffects: false,

@@ -190,6 +190,10 @@ export default class ContentHandler {
 
     public updateCradleContent = (entries, source = 'notifications') => {
 
+        console.log('updateCradleContent', entries, source)
+
+        return
+
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const cradleInheritedProps = this.cradleParameters.cradleInheritedPropertiesRef.current
         const portalHandler = this.cradleParameters.handlersRef.current.portals
