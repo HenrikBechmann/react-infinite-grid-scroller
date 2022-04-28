@@ -124,12 +124,13 @@ export default class InterruptHandler {
 
         }
         
-        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+        // const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
 
-        const contentHandler = this.cradleParameters.handlersRef.current.content
-        const stateHandler = this.cradleParameters.handlersRef.current.state
-        const scrollHandler = this.cradleParameters.handlersRef.current.scroll
-
+        const {content:contentHandler,state:stateHandler,scroll:scrollHandler} = 
+            this.cradleParameters.handlersRef.current
+        // const contentHandler = this.cradleParameters.handlersRef.current.content
+        // const stateHandler = this.cradleParameters.handlersRef.current.state
+        // const scrollHandler = this.cradleParameters.handlersRef.current.scroll
 
         let movedentries = []
 
