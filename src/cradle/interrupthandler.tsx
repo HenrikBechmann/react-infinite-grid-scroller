@@ -28,13 +28,19 @@ export default class InterruptHandler {
    }
 
     private axisHeadBreaklineObserverCallback = (entries) => {
-        console.log('HEAD',entries)
-        console.log('    isIntersecting',entries[0].isIntersecting)
+        const isIntersecting = entries[0].isIntersecting
+        if (!isIntersecting) {
+            console.log('HEAD',entries)
+            console.log('    isIntersecting',isIntersecting)
+        }
     }
 
     private axisTailBreaklineObserverCallback = (entries) => {
-        console.log('TAIL',entries)
-        console.log('    isIntersecting',entries[0].isIntersecting)
+        const isIntersecting = entries[0].isIntersecting
+        if (isIntersecting) {
+            console.log('TAIL',entries)
+            console.log('    isIntersecting',entries[0].isIntersecting)
+        }
     }
 
     private cradleIntersectionObserverCallback = (entries) => {
