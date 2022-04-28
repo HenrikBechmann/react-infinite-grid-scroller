@@ -36,7 +36,7 @@ export default class InterruptHandler {
 
         }
 
-        if (this.signals.pauseBreaklineObservers) { 
+        if (this.signals.pauseBreaklinesObserver) { 
 
             return
 
@@ -114,6 +114,7 @@ export default class InterruptHandler {
                 const width = right - left, height = bottom - top
                 viewportInterruptProperties.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
                 // signals.pauseCellObserver = true
+                signals.pauseBreaklinesObserver = true
                 // pauseCradleIntersectionObserverRef.current = true
                 const cradleContent = contentHandler.content
                 cradleContent.headModelComponents = []
@@ -249,7 +250,7 @@ export default class InterruptHandler {
     signals = {
         repositioningRequired: false,
         // pauseCellObserver: false,
-        pauseBreaklineObservers: false, // TODO: track pauseCellObserver usage, and mimic with pauseBreakline
+        pauseBreaklinesObserver: false, 
         pauseCradleIntersectionObserver:false,
         pauseCradleResizeObserver: false,
         pauseScrollingEffects: false,

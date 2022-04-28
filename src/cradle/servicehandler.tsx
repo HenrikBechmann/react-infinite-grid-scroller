@@ -51,6 +51,7 @@ export default class ServiceHandler {
         const stateHandler = this.cradleParameters.handlersRef.current.state
 
         // signals.pauseCellObserver = true
+        signals.pauseBreaklinesObserver = true
         signals.pauseScrollingEffects = true
 
         stateHandler.setCradleState('reload')
@@ -64,6 +65,7 @@ export default class ServiceHandler {
         let stateHandler = this.cradleParameters.handlersRef.current.state
 
         // signals.pauseCellObserver = true
+        signals.pauseBreaklinesObserver = true
         signals.pauseScrollingEffects = true
 
         scaffoldHandler.cradleReferenceData.nextItemIndexReference = index

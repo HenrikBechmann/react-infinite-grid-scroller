@@ -512,7 +512,7 @@ const Cradle = ({
         if (viewportInterruptProperties.isResizing) {
 
             const { signals } = interruptHandler
-            signals.pauseCellObserver = true
+            // signals.pauseCellObserver = true
             signals.pauseCradleIntersectionObserver = true
             signals.pauseCradleResizeObserver = true
             signals.pauseScrollingEffects = true
@@ -536,7 +536,8 @@ const Cradle = ({
 
         let signals = interruptHandler.signals
 
-        signals.pauseCellObserver = true
+        // signals.pauseCellObserver = true
+        signals.pauseBreaklinesObserver = true
         signals.pauseScrollingEffects = true
 
         setCradleState('reload')
@@ -573,6 +574,7 @@ const Cradle = ({
 
         // signals.pauseCellObserver = true
         // pauseCradleIntersectionObserverRef.current = true
+        signals.pauseBreaklinesObserver = true
         signals.pauseScrollingEffects = true
 
         setCradleState('pivot')
@@ -778,6 +780,7 @@ const Cradle = ({
                             const signals = interruptHandler.signals
                             if (viewportInterruptProperties.elementref.current) { // already unmounted if fails (?)
                                 // signals.pauseCellObserver  && (signals.pauseCellObserver = false)
+                                signals.pauseBreaklinesObserver && (signals.pauseBreaklinesObserver = false)
                                 signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
                                 signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
                                 signals.pauseCradleResizeObserver && (signals.pauseCradleResizeObserver = false)
