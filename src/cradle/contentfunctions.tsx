@@ -191,11 +191,21 @@ export const getShiftingInstruction = ({
 
 }) => {
 
-    if (breaklineEntries.length > 1) {
+
+    const entries = breaklineEntries.filter(entry => {
+        const isIntersecting = entry.isIntersecting
+        const breaklinename = entry.target.dataset.type
+        const retval = ((!isIntersecting) && isScrollingviewportforward && (breaklinename == 'breakline-tail')) ||
+            (isIntersecting && (!isScrollingviewportforward) && (breaklinename == 'breakline-head'))
+        return retval
+    })
+
+    if (entries.length > 1) {
         console.log('SYSTEM ISSUE: MORE THAN ONE BREAKLINE ENTRY', breaklineEntries.length, breaklineEntries)
     }
 
-    const [entry] = breaklineEntries
+    const [entry] = entries
+    if (!entry) return 0
     const isIntersecting = entry.isIntersecting
     const breaklinename = entry.target.dataset.type
     let retval
@@ -205,7 +215,7 @@ export const getShiftingInstruction = ({
     } else if (isIntersecting && (!isScrollingviewportforward) && (breaklinename == 'breakline-head')) {
         return 1 // shift row to tail
     } else {
-        return null // do not shift a row
+        return 0 // do not shift a row
     }
 
 }
@@ -431,20 +441,18 @@ let duplicatecomparebytime = (a,b) => {
 // TODO: fix cradleActualContentCount
 // A negative shift is toward the head, a positive shift is toward the tail
 // called only from updateCradleContent
-export const calcContentShifts = ({
+export const calcContentShift = ({
 
+    shiftinginstruction,
     cradleInheritedProperties,
-    cradleElements,
-    cradleContent,
     cradleInternalProperties,
+    cradleContent,
+    cradleElements,
     viewportElement,
-    // itemElements,
-    shiftingintersections,
-    isScrollingviewportforward,
-    // viewportInterruptProperties,
 
 }) => {
 
+    const isScrollingviewportforward = (shiftinginstruction < 0)
     // ------------------------[ initialize ]-----------------------
 
     const { gap,
@@ -531,11 +539,11 @@ export const calcContentShifts = ({
         headaddshiftrowcount = 0, tailaddshiftrowcount = 0
     if (!isScrollingviewportforward) { // viewport moves toward tail, add tail items, shift positive
 
-        tailaddshiftitemcount = shiftingintersections.length
+        tailaddshiftitemcount = shiftinginstruction * cradleInternalProperties.crosscount //shiftingintersections.length
 
     } else { // scrollviewportbackward, viewport toward head, add head items, shift negative
 
-        headaddshiftitemcount = shiftingintersections.length
+        headaddshiftitemcount = -shiftinginstruction * cradleInternalProperties.crosscount//shiftingintersections.length
 
     }
     // console.log('1. shiftingintersections.length, headaddshiftitemcount,tailaddshiftitemcount',
@@ -682,6 +690,262 @@ export const calcContentShifts = ({
     ]
 
 }
+
+
+// // TODO: fix cradleActualContentCount
+// // A negative shift is toward the head, a positive shift is toward the tail
+// // called only from updateCradleContent
+// export const calcContentShifts = ({
+
+//     cradleInheritedProperties,
+//     cradleElements,
+//     cradleContent,
+//     cradleInternalProperties,
+//     viewportElement,
+//     // itemElements,
+//     shiftingintersections,
+//     isScrollingviewportforward,
+//     // viewportInterruptProperties,
+
+// }) => {
+
+//     // ------------------------[ initialize ]-----------------------
+
+//     const { gap,
+//         orientation,
+//         cellHeight,
+//         cellWidth,
+//         listsize,
+//         padding,
+//         runwaycount } = cradleInheritedProperties
+
+//     const axisElement = cradleElements.axisRef.current,
+//      headElement = cradleElements.headRef.current,
+//      tailElement = cradleElements.tailRef.current
+
+//     const {cradleModel:cradlecontentlist, 
+//         headModelComponents:headcontentlist, 
+//         tailModelComponents:tailcontentlist
+//     } = cradleContent
+
+//     const { crosscount,
+//         cradleRowcount,
+//         listRowcount,
+//         viewportRowcount,
+//         itemObserverThreshold } = cradleInternalProperties
+
+//     let BOD = false, EOD = false // beginning-of-data, end-of-data flags
+
+//     const cellLength = ((orientation == 'vertical')?cellHeight:cellWidth) + gap
+
+//     let viewportaxisoffset // the pixel distance between the viewport frame and the axis, toward the head
+
+//     // -------[ 1. calculate axis's headblock overshoot item & row counts, if any ]-------
+    
+//     let headblockoffset, tailblockoffset, viewportlength
+//     let viewportvisiblegaplength = 0
+
+//     if (orientation == 'vertical') {
+
+//         viewportaxisoffset = axisElement.offsetTop - viewportElement.scrollTop
+//         viewportlength = viewportElement.offsetHeight
+
+//         // measure any gap between the cradle and the top viewport boundary
+//         if (!isScrollingviewportforward) { // scrollviewportbackward, toward head
+
+//             // if viewportaxisoffset is below the top by more than the height of 
+//             // the headElment then a gap will be visible
+//             viewportvisiblegaplength = viewportaxisoffset - headElement.offsetHeight
+
+//         }
+
+//     } else { // horizontal
+
+//         viewportaxisoffset = axisElement.offsetLeft - viewportElement.scrollLeft
+//         viewportlength = viewportElement.offsetWidth
+
+//         if (!isScrollingviewportforward) { // scroll backward, toward head
+
+//             viewportvisiblegaplength = viewportaxisoffset - headElement.offsetWidth
+
+//         }
+
+//     }
+
+//     if ((viewportvisiblegaplength < 0) || (viewportvisiblegaplength > viewportlength)) {
+
+//         viewportvisiblegaplength = 0 // no visible gap, or doreposition should have kicked in
+        
+//     }
+
+//     // viewportvisiblegaplength is always positive
+//     let overshootrowcount = (viewportvisiblegaplength == 0)?0:Math.ceil(viewportvisiblegaplength/cellLength) // rows to fill viewport
+
+//     let overshootitemcount = overshootrowcount * crosscount
+
+//     // -----------------[ 2. calculate item & row shift counts including overshoot ]-------------
+
+//     /*
+//         shift item count is the number of items the virtual cradle shifts, according to observer
+//         shift negative closer to head, shift positive closer to tail
+//         cradle reference is the first content item
+//         axis reference is the first tail item
+//     */
+//     let headaddshiftitemcount = 0, tailaddshiftitemcount = 0,
+//         headaddshiftrowcount = 0, tailaddshiftrowcount = 0
+//     if (!isScrollingviewportforward) { // viewport moves toward tail, add tail items, shift positive
+
+//         tailaddshiftitemcount = shiftingintersections.length
+
+//     } else { // scrollviewportbackward, viewport toward head, add head items, shift negative
+
+//         headaddshiftitemcount = shiftingintersections.length
+
+//     }
+//     // console.log('1. shiftingintersections.length, headaddshiftitemcount,tailaddshiftitemcount',
+//     //     shiftingintersections.length,headaddshiftitemcount,tailaddshiftitemcount)
+//     // negative value shifted toward head; positive value shofted toward tail
+//     // one of the two expressions in the following line will be 0
+//     let axisreferenceshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
+//     let cradlereferenceshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
+
+//     let cradlereferencerowshift = 
+//     (cradlereferenceshiftitemcount > 0) // could include partial row from shiftingintersections
+//         ?Math.ceil(cradlereferenceshiftitemcount/crosscount)
+//         :Math.floor(cradlereferenceshiftitemcount/crosscount)
+//     cradlereferenceshiftitemcount = Math.round(cradlereferencerowshift * crosscount)
+//     let axisreferencerowshift = 
+//     (axisreferenceshiftitemcount > 0) // could include partial row from shiftingintersections
+//         ?Math.ceil(axisreferenceshiftitemcount/crosscount)
+//         :Math.floor(axisreferenceshiftitemcount/crosscount)
+//     axisreferenceshiftitemcount = Math.round(axisreferencerowshift * crosscount)
+
+//     // ----------------[ 3. calc new cradle reference index and axis reference index ]-----------------
+
+//     const previouscradlereferenceindex = (cradlecontentlist[0].props.index || 0)
+//     const previouscradlerowoffset = Math.round(previouscradlereferenceindex/crosscount)
+//     const previousaxisreferenceindex = (tailcontentlist[0]?.props.index || 0) // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
+//     // const previousaxisreferencerowoffset = Math.round(previousaxisreferenceindex/crosscount)
+
+//     // computed shifted cradle end row, looking for overshoot
+//     let rowovershoot
+//     let computedcradleEndrow = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift - 1)
+//     if (isScrollingviewportforward) { // scroll viewport toward tail, shift is positive, add to tail
+
+//         rowovershoot = computedcradleEndrow - listRowcount // overshoot amount 
+
+//         if (rowovershoot > 0) {
+
+//             cradlereferencerowshift -= rowovershoot
+//             cradlereferenceshiftitemcount -= (rowovershoot * crosscount)
+
+//         }
+
+//     } else { // scroll viewport backward, scroll viewport toward head, shift is negative, add to head
+
+//         rowovershoot = previouscradlerowoffset + cradlereferencerowshift
+//         if (rowovershoot < 0) {
+
+//             cradlereferencerowshift -= rowovershoot // add back the overshoot
+//             cradlereferenceshiftitemcount -= (rowovershoot * crosscount)
+
+//         }
+
+//     }
+
+//     let newcradlereferenceindex = previouscradlereferenceindex + cradlereferenceshiftitemcount
+//     let newaxisreferenceindex = previousaxisreferenceindex + axisreferenceshiftitemcount
+
+//     if (newcradlereferenceindex < 0) {
+//         cradlereferenceshiftitemcount += newcradlereferenceindex
+//         // cradlereferencerowshift += Math.round(newcradlereferenceindex/crosscount)
+//         // computedcradleEndrow += Math.round(newcradlereferenceindex/crosscount)
+//         newcradlereferenceindex = 0
+//     }
+//     if (newaxisreferenceindex < 0) {
+//         axisreferenceshiftitemcount += newaxisreferenceindex
+//         // axisreferencerowshift += Math.round(newaxisreferenceindex/crosscount)
+//         newaxisreferenceindex = 0
+//     }
+
+//     if ((computedcradleEndrow) >= (listRowcount)) {
+//         EOD = true
+//     }
+
+//     if ((previouscradlerowoffset + cradlereferencerowshift) <= 0) { // undershoot, past start of dataset
+//         BOD = true
+//     }
+
+//     // console.log('2. computedcradleEndrow,listRowcount,previouscradlerowoffset,cradlereferencerowshift','\n',
+//     //     computedcradleEndrow,listRowcount,previouscradlerowoffset,cradlereferencerowshift)
+
+//     // -------------[ 4. reconcile axisReferenceAdjustment and calc newaxisPosOffset ]------------------
+
+//     let axisreferenceitemshift = newaxisreferenceindex - previousaxisreferenceindex
+//     let cradlereferenceitemshift = newcradlereferenceindex - previouscradlereferenceindex
+
+//     const axisrowshift = axisreferencerowshift // Math.round(axisreferenceitemshift/crosscount)
+//     const axisposshift = axisrowshift * cellLength
+
+//     let newaxisposoffset = viewportaxisoffset + axisposshift
+
+//     // make necessary visibility adjustments
+
+//     let newaxisPosOffsetWorking = newaxisposoffset
+//     let axisReferenceAdjustment = 0
+
+//     if (Math.abs(newaxisposoffset) > cellLength) {
+
+//         newaxisPosOffsetWorking = (newaxisposoffset % cellLength)
+//         axisReferenceAdjustment = -(Math.ceil((newaxisposoffset - newaxisPosOffsetWorking) / cellLength) * crosscount)
+
+//     }
+
+//     if (newaxisPosOffsetWorking < 0) {
+//         newaxisPosOffsetWorking += cellLength
+//         axisReferenceAdjustment += crosscount 
+//     }
+
+//     if (axisReferenceAdjustment) {
+//         const axisRowAdjustment = Math.round(axisReferenceAdjustment/crosscount)
+//         newaxisreferenceindex += axisReferenceAdjustment
+//         axisreferenceitemshift += axisReferenceAdjustment
+
+//         if (!(BOD || EOD)) {
+//             newcradlereferenceindex += axisReferenceAdjustment
+//             cradlereferenceitemshift += axisReferenceAdjustment
+//         }
+//     }
+
+//     newaxisposoffset = newaxisPosOffsetWorking
+
+//     // ---------------------[ 5. return required values ]-------------------
+
+//     const partialrowfreespaces = (cradlecontentlist.length % crosscount)
+//     const partialrowitems = partialrowfreespaces?(crosscount - partialrowfreespaces):0
+//     const cradleAvailableContentCount = (cradlecontentlist.length + partialrowitems) // cradleRowcount * crosscount
+
+//     let newCradleActualContentCount = Math.min(cradleAvailableContentCount, (listsize - newcradlereferenceindex))
+//     let newheadcount, newtailcount, headchangecount, tailchangecount
+
+//     newheadcount = newaxisreferenceindex - newcradlereferenceindex
+//     newtailcount = newCradleActualContentCount - newheadcount
+
+//     // console.log('3. newheadcount, newtailcount, newaxisreferenceindex - newcradlereferenceindex,newCradleActualContentCount, BOD, EOD', '\n',
+//     //     newheadcount, newtailcount, newaxisreferenceindex, newcradlereferenceindex, newCradleActualContentCount,BOD, EOD)
+
+//     return [
+//         newcradlereferenceindex, 
+//         cradlereferenceitemshift, 
+//         newaxisreferenceindex, 
+//         axisreferenceitemshift, 
+//         newaxisposoffset, 
+//         newCradleActualContentCount,
+//         headchangecount,
+//         tailchangecount, 
+//     ]
+
+// }
 
 export const calcHeadAndTailChanges = ({
 

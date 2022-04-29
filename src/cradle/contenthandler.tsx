@@ -4,7 +4,7 @@
 import { 
     getUICellShellList, 
     calcHeadAndTailChanges,
-    calcContentShifts,
+    calcContentShift,
     getContentListRequirements,
     // isolateShiftingIntersections,
     getShiftingInstruction,
@@ -194,7 +194,7 @@ export default class ContentHandler {
 
     public updateCradleContent = (breaklineEntries, source = 'notifications') => {
 
-        console.log('updateCradleContent', source, breaklineEntries )
+        // console.log('updateCradleContent', source, breaklineEntries )
 
         // ----------------------[ 1. data assembly ]-------------------------
         // viewport
@@ -262,11 +262,13 @@ export default class ContentHandler {
             breaklineEntries,
         })
 
-        if (shiftinginstruction === null) return
+        console.log('shiftinginstruction',shiftinginstruction)
 
-        console.log('returning for DEBUG; isScrollingviewportforward, shiftinginstruction',
-            isScrollingviewportforward,shiftinginstruction )
-        return; // *DEBUG*
+        if (shiftinginstruction == 0) return
+
+        // console.log('returning for DEBUG; isScrollingviewportforward, shiftinginstruction',
+        //     isScrollingviewportforward,shiftinginstruction )
+        // return; // *DEBUG*
 
         let shiftingintersections = []
         // if (breaklineEntries.length) {
@@ -284,6 +286,7 @@ export default class ContentHandler {
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         const [
+
             cradlereferenceindex, 
             cradleitemshift, 
             axisreferenceindex, 
@@ -292,19 +295,40 @@ export default class ContentHandler {
             newCradleActualContentCount,
             headchange,
             tailchange,
-        ] = calcContentShifts({
 
+        ] = calcContentShift({
+
+            shiftinginstruction,
             cradleInheritedProperties,
             cradleInternalProperties,
-            cradleElements,
             cradleContent,
+            cradleElements,
             viewportElement,
-            // itemElements,
-            shiftingintersections,
-            isScrollingviewportforward,
-            // viewportInterruptProperties,
 
         })
+
+        // const [
+        //     cradlereferenceindex, 
+        //     cradleitemshift, 
+        //     axisreferenceindex, 
+        //     axisitemshift, 
+        //     axisposoffset, 
+        //     newCradleActualContentCount,
+        //     headchange,
+        //     tailchange,
+        // ] = calcContentShifts({
+
+        //     cradleInheritedProperties,
+        //     cradleInternalProperties,
+        //     cradleElements,
+        //     cradleContent,
+        //     viewportElement,
+        //     // itemElements,
+        //     shiftingintersections,
+        //     isScrollingviewportforward,
+        //     // viewportInterruptProperties,
+
+        // })
 
         if ((axisitemshift == 0 && cradleitemshift == 0)) return
 
