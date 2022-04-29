@@ -475,18 +475,16 @@ export const calcContentShift = ({
     const { crosscount,
         cradleRowcount,
         listRowcount,
-        viewportRowcount,
-        itemObserverThreshold } = cradleInternalProperties
+        viewportRowcount
+    } = cradleInternalProperties
 
     let BOD = false, EOD = false // beginning-of-data, end-of-data flags
 
     const cellLength = ((orientation == 'vertical')?cellHeight:cellWidth) + gap
 
-    let viewportaxisoffset // the pixel distance between the viewport frame and the axis, toward the head
+    let viewportaxisoffset, // the pixel distance between the viewport frame and the axis, toward the head
+        viewportlength
 
-    // -------[ 1. calculate axis's headblock overshoot item & row counts, if any ]-------
-    
-    let headblockoffset, tailblockoffset, viewportlength
     let viewportvisiblegaplength = 0
 
     if (orientation == 'vertical') {
@@ -522,6 +520,8 @@ export const calcContentShift = ({
         
     }
 
+    // -------[ 1. calculate axis's headblock overshoot item & row counts, if any ]-------
+    
     // viewportvisiblegaplength is always positive
     let overshootrowcount = (viewportvisiblegaplength == 0)?0:Math.ceil(viewportvisiblegaplength/cellLength) // rows to fill viewport
 
@@ -546,12 +546,14 @@ export const calcContentShift = ({
         headaddshiftitemcount = -shiftinginstruction * cradleInternalProperties.crosscount//shiftingintersections.length
 
     }
-    // console.log('1. shiftingintersections.length, headaddshiftitemcount,tailaddshiftitemcount',
-    //     shiftingintersections.length,headaddshiftitemcount,tailaddshiftitemcount)
-    // negative value shifted toward head; positive value shofted toward tail
+
+    console.log('headaddshiftitemcount, tailaddshiftitemcount, overshootitemcount', 
+        headaddshiftitemcount, tailaddshiftitemcount, overshootitemcount)
+
+    // negative value shifted toward head; positive value shifted toward tail
     // one of the two expressions in the following line will be 0
     let axisreferenceshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
-    let cradlereferenceshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
+    let cradlereferenceshiftitemcount = axisreferenceshiftitemcount
 
     let cradlereferencerowshift = 
     (cradlereferenceshiftitemcount > 0) // could include partial row from shiftingintersections
@@ -563,6 +565,9 @@ export const calcContentShift = ({
         ?Math.ceil(axisreferenceshiftitemcount/crosscount)
         :Math.floor(axisreferenceshiftitemcount/crosscount)
     axisreferenceshiftitemcount = Math.round(axisreferencerowshift * crosscount)
+
+    console.log('preliminary axisreferenceshiftitemcount, cradlereferenceshiftitemcount, axisreferencerowshift, cradlereferencerowshift',
+        axisreferenceshiftitemcount, cradlereferenceshiftitemcount, axisreferencerowshift, cradlereferencerowshift)
 
     // ----------------[ 3. calc new cradle reference index and axis reference index ]-----------------
 
