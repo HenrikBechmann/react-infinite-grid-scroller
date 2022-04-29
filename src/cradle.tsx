@@ -2,6 +2,10 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
+
+    BUGS:
+    - sometimes the head breakline triggers a callback while scrolling forward
+
     TODO:
 
     - try position fixed during reparenting to preserve scroll position

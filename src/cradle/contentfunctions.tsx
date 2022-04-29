@@ -509,6 +509,9 @@ export const calcContentShift = ({
 
     }
 
+    console.log('1. cellLength, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength',
+        cellLength, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength)
+
     // if ((viewportheadgaplength < 0) { //|| (viewportheadgaplength > viewportlength)) {
 
     //     viewportheadgaplength = 0 // no visible gap, or doreposition should have kicked in
@@ -517,7 +520,7 @@ export const calcContentShift = ({
 
     // -------[ 1. calculate the axis overshoot item & row counts, if any ]-------
     
-    // viewportvisiblegaplength is always positive
+    // overshoot lengths are always positive
     let headovershootrowcount = Math.floor(viewportheadgaplength/cellLength)
     let tailovershootrowcount = Math.floor(viewporttailgaplength/cellLength)
 
@@ -544,13 +547,16 @@ export const calcContentShift = ({
 
     }
 
-    console.log('headaddshiftitemcount, tailaddshiftitemcount, headovershootitemcount, tailovershootitemcount', 
-        headaddshiftitemcount, tailaddshiftitemcount, headovershootitemcount, tailovershootitemcount)
+    console.log('2.a headaddshiftitemcount, tailaddshiftitemcount', 
+        headaddshiftitemcount, tailaddshiftitemcount)
+
+    console.log('2.b headovershootrowcount, headovershootitemcount, tailovershootrowcount, tailovershootitemcount', 
+        headovershootrowcount, headovershootitemcount, tailovershootrowcount, tailovershootitemcount)
 
     // negative value shifted toward head; positive value shifted toward tail
     // one of the two expressions in the following line will be 0
     let axisreferenceshiftitemcount = 
-        -(tailaddshiftitemcount + tailovershootitemcount) + 
+        -(tailaddshiftitemcount - tailovershootitemcount) + 
         (headaddshiftitemcount + headovershootitemcount)
 
     let cradlereferenceshiftitemcount = axisreferenceshiftitemcount
@@ -566,7 +572,7 @@ export const calcContentShift = ({
         :Math.floor(axisreferenceshiftitemcount/crosscount)
     axisreferenceshiftitemcount = Math.round(axisreferencerowshift * crosscount)
 
-    console.log('preliminary axisreferenceshiftitemcount, cradlereferenceshiftitemcount, axisreferencerowshift, cradlereferencerowshift',
+    console.log('3. preliminary axisreferenceshiftitemcount, cradlereferenceshiftitemcount, axisreferencerowshift, cradlereferencerowshift',
         axisreferenceshiftitemcount, cradlereferenceshiftitemcount, axisreferencerowshift, cradlereferencerowshift)
 
     // ----------------[ 3. calc new cradle reference index and axis reference index ]-----------------
@@ -576,7 +582,7 @@ export const calcContentShift = ({
     const previousaxisreferenceindex = (tailcontentlist[0]?.props.index || 0)
     // const previousaxisreferencerowoffset = Math.round(previousaxisreferenceindex/crosscount)
 
-    console.log('previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount',
+    console.log('4. previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount',
         previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount)
 
     // computed shifted cradle end row, looking for overshoot
@@ -614,13 +620,13 @@ export const calcContentShift = ({
         cradlereferenceshiftitemcount -= (rowovershoot * crosscount)
     }
 
-    console.log('rowovershoot, computedNextCradleEndrowOffset, cradlereferencerowshift, cradlereferenceshiftitemcount',
+    console.log('5. rowovershoot, computedNextCradleEndrowOffset, cradlereferencerowshift, cradlereferenceshiftitemcount',
         rowovershoot,computedNextCradleEndrowOffset, cradlereferencerowshift, cradlereferenceshiftitemcount)
 
     let proposedcradlereferenceindex = previouscradlereferenceindex + cradlereferenceshiftitemcount
     let proposedaxisreferenceindex = previousaxisreferenceindex + axisreferenceshiftitemcount
 
-    console.log('proposedcradlereferenceindex, proposedaxisreferenceindex',
+    console.log('6. proposedcradlereferenceindex, proposedaxisreferenceindex',
         proposedcradlereferenceindex, proposedaxisreferenceindex)
 
     if (proposedcradlereferenceindex < 0) {
@@ -643,8 +649,8 @@ export const calcContentShift = ({
         BOD = true
     }
 
-    // console.log('revised cradlereferenceshiftitemcount, newcradlereferenceindex, axisreferenceshiftitemcount, newaxisreferenceindex,EOD, BOD',
-    //     cradlereferenceshiftitemcount, proposedcradlereferenceindex, axisreferenceshiftitemcount, proposedaxisreferenceindex, EOD, BOD)
+    console.log('7. revised cradlereferenceshiftitemcount, newcradlereferenceindex, axisreferenceshiftitemcount, newaxisreferenceindex,EOD, BOD',
+        cradlereferenceshiftitemcount, proposedcradlereferenceindex, axisreferenceshiftitemcount, proposedaxisreferenceindex, EOD, BOD)
 
     // -------------[ 4. reconcile ]------------------
 
