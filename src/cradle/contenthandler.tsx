@@ -7,7 +7,7 @@ import {
     calcContentShifts,
     getContentListRequirements,
     // isolateShiftingIntersections,
-    getShiftingItemsList,
+    getShiftingInstruction,
     allocateContentList,
     deleteAndRerenderPortals,
 
@@ -196,7 +196,7 @@ export default class ContentHandler {
 
         console.log('updateCradleContent', source, breaklineEntries )
 
-        // ----------------------[ data assembly ]-------------------------
+        // ----------------------[ 1. data assembly ]-------------------------
         // viewport
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const viewportElement = viewportInterruptProperties.elementref.current
@@ -238,15 +238,15 @@ export default class ContentHandler {
 
         } else {
 
-            // console.log('scrollPositions',scrollPositions)
             isScrollingviewportforward = scrollPositions.currentupdate > scrollPositions.previousupdate
             this._previousScrollForward = isScrollingviewportforward
 
         }
 
-        if (isScrollingviewportforward === undefined) {
-            return // init call
-        }
+        // if (isScrollingviewportforward === undefined) {
+        //     console.log('isScrollingviewportforward === undefined')
+        //     return // init call
+        // }
 
         // cradle scaffold and contained data
         const cradleElements = scaffoldHandler.elements
@@ -255,24 +255,17 @@ export default class ContentHandler {
         const modelcontentlist = cradleContent.cradleModel
         const cradleFirstIndex = modelcontentlist[0].props.index
 
-        // --------------------[ 2. filter intersections list ]-----------------------
+        // --------------------[ 2. get shifting instruction ]-----------------------
 
-        // filter out inapplicable intersection entries
-        // we're only interested in intersections proximal to the axis
+        const shiftinginstruction = getShiftingInstruction({
+            isScrollingviewportforward,
+            breaklineEntries,
+        })
 
-        let shiftingitems = []
-        if (breaklineEntries.length) {
+        if (shiftinginstruction === null) return
 
-            shiftingitems = getShiftingItemsList({
-                isScrollingviewportforward,
-                breaklineEntries,
-                cradleContent,
-                breaklinesOffset:cradleInheritedProperties.breaklinesOffset,
-            })
-
-        }
-
-        console.log('returning for DEBUG')
+        console.log('returning for DEBUG; isScrollingviewportforward, shiftinginstruction',
+            isScrollingviewportforward,shiftinginstruction )
         return; // *DEBUG*
 
         let shiftingintersections = []

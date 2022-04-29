@@ -184,222 +184,235 @@ const adjustAxisOffsetForMaxRefIndex = ({
 
 // ======================[ for updateCradleContent ]===========================
 
-export const getShiftingItemsList = ({
+export const getShiftingInstruction = ({
+
     isScrollingviewportforward,
     breaklineEntries,
-    cradleContent,
-    breaklinesOffset,
 
 }) => {
-    const shiftingitems = []
 
+    if (breaklineEntries.length > 1) {
+        console.log('SYSTEM ISSUE: MORE THAN ONE BREAKLINE ENTRY', breaklineEntries.length, breaklineEntries)
+    }
 
-    return shiftingitems
+    const [entry] = breaklineEntries
+    const isIntersecting = entry.isIntersecting
+    const breaklinename = entry.target.dataset.type
+    let retval
+    // TODO: calculate the grid row count required to be shifted
+    if ((!isIntersecting) && isScrollingviewportforward && (breaklinename == 'breakline-tail')) {
+        return -1 // shift row to head
+    } else if (isIntersecting && (!isScrollingviewportforward) && (breaklinename == 'breakline-head')) {
+        return 1 // shift row to tail
+    } else {
+        return null // do not shift a row
+    }
+
 }
 
 // filter out items that not proximate to the axis
 // TODO: keep last trigger position (x or y) to determine direction of scroll
-export const isolateShiftingIntersections = ({
-    intersections,
-    cradleContent,
-    cellObserverThreshold,
-    isScrollingviewportforward,
-}) => {
+// export const isolateShiftingIntersections = ({
+//     intersections,
+//     cradleContent,
+//     cellObserverThreshold,
+//     isScrollingviewportforward,
+// }) => {
 
-    // console.log('==>> intersections',intersections)
+//     // console.log('==>> intersections',intersections)
 
-    const headcontent = cradleContent.headModelComponents
-    const tailcontent = cradleContent.tailModelComponents
+//     const headcontent = cradleContent.headModelComponents
+//     const tailcontent = cradleContent.tailModelComponents
 
-    let //headindexes = [], 
-        // tailindexes = [],
-        // headintersectionindexes = [],
-        // headintersections = [],
-        // tailintersectionindexes = [],
-        // tailintersections = [],
-        intersectingmetadata:any = {},
-        shiftingintersections = [],
-        shiftingindexes = [],
-        shiftingmetadata = []
+//     let //headindexes = [], 
+//         // tailindexes = [],
+//         // headintersectionindexes = [],
+//         // headintersections = [],
+//         // tailintersectionindexes = [],
+//         // tailintersections = [],
+//         intersectingmetadata:any = {},
+//         shiftingintersections = [],
+//         shiftingindexes = [],
+//         shiftingmetadata = []
 
-    // collect lists of current content indexes...
-    // headindexes, tailindexes
-    const headindexes = headcontent.map(component => component.props.index)
-    const tailindexes = tailcontent.map(component => component.props.index)
+//     // collect lists of current content indexes...
+//     // headindexes, tailindexes
+//     const headindexes = headcontent.map(component => component.props.index)
+//     const tailindexes = tailcontent.map(component => component.props.index)
 
-    let duplicates:any = {}
-    let intersectionsptr = 0
+//     let duplicates:any = {}
+//     let intersectionsptr = 0
 
-    // split intersections into head and tail indexes
-    for (let entry of intersections) {
+//     // split intersections into head and tail indexes
+//     for (let entry of intersections) {
 
-        const entryindex = parseInt(entry.target.dataset.index)
-        let newitemptr
-        let isShiftingEntry = false
-        if (isScrollingviewportforward) {
+//         const entryindex = parseInt(entry.target.dataset.index)
+//         let newitemptr
+//         let isShiftingEntry = false
+//         if (isScrollingviewportforward) {
 
-            if (tailindexes.includes(entryindex)) {
+//             if (tailindexes.includes(entryindex)) {
 
-                shiftingindexes.push(entryindex)
-                shiftingintersections.push(entry)
-                newitemptr = shiftingintersections.length - 1 // used from iobj metadata for duplicate resolution
-                isShiftingEntry = true
-            }
+//                 shiftingindexes.push(entryindex)
+//                 shiftingintersections.push(entry)
+//                 newitemptr = shiftingintersections.length - 1 // used from iobj metadata for duplicate resolution
+//                 isShiftingEntry = true
+//             }
 
-        } else { // if (scrollingviewportforward) {
+//         } else { // if (scrollingviewportforward) {
 
-            if (headindexes.includes(entryindex)) {
+//             if (headindexes.includes(entryindex)) {
 
-                shiftingindexes.push(entryindex)
-                shiftingintersections.push(entry)
-                newitemptr = shiftingintersections.length - 1 // used for duplicate resolution
-                isShiftingEntry = true
+//                 shiftingindexes.push(entryindex)
+//                 shiftingintersections.push(entry)
+//                 newitemptr = shiftingintersections.length - 1 // used for duplicate resolution
+//                 isShiftingEntry = true
 
-            }
+//             }
 
-        }
-        // } else {
+//         }
+//         // } else {
 
-        //     console.log('SYSTEM ERROR: unknown intersection element, aborting isolateRelevantIntersections',entry)
-        //     return // shouldn't happen; give up
+//         //     console.log('SYSTEM ERROR: unknown intersection element, aborting isolateRelevantIntersections',entry)
+//         //     return // shouldn't happen; give up
 
-        // }
+//         // }
 
-        // let ratio
-        // if (browser && browser.name == 'safari') {
-        //     ratio = entry.intersectionRatio
-        // } else {
-        //     ratio = Math.round(entry.intersectionRatio * 1000)/1000
-        // }
+//         // let ratio
+//         // if (browser && browser.name == 'safari') {
+//         //     ratio = entry.intersectionRatio
+//         // } else {
+//         //     ratio = Math.round(entry.intersectionRatio * 1000)/1000
+//         // }
 
-        if (isShiftingEntry) {
-            const iobj = { // entry item metadata
-                entryindex,
-                // intersecting:calculatedintersecting,  // to accommodate browser differences
-                isIntersecting:entry.isIntersecting,
-                // threshold:Math.round(entry.intersectionRatio),
-                intersectionRatio:entry.intersectionRatio,
-                time:entry.time,
-                itemptr:newitemptr,
-                intersectionsptr,
-                entry,
-            }
-            if (!intersectingmetadata[entryindex]) { // this is a new item
-                intersectingmetadata[entryindex] = iobj
-            } else { // this is a duplicate intersection item
-                if (!Array.isArray(intersectingmetadata[entryindex])) {
-                    intersectingmetadata[entryindex] = [intersectingmetadata[entryindex]] // arr
-                }
-                intersectingmetadata[entryindex].push(iobj)
-                // add to duplicates list for later processing
-                if (!duplicates[entryindex]) {
-                    duplicates[entryindex] = []
-                    duplicates[entryindex].push(intersectingmetadata[entryindex][0])
-                }
-                duplicates[entryindex].push(iobj)
-            }
-        }
+//         if (isShiftingEntry) {
+//             const iobj = { // entry item metadata
+//                 entryindex,
+//                 // intersecting:calculatedintersecting,  // to accommodate browser differences
+//                 isIntersecting:entry.isIntersecting,
+//                 // threshold:Math.round(entry.intersectionRatio),
+//                 intersectionRatio:entry.intersectionRatio,
+//                 time:entry.time,
+//                 itemptr:newitemptr,
+//                 intersectionsptr,
+//                 entry,
+//             }
+//             if (!intersectingmetadata[entryindex]) { // this is a new item
+//                 intersectingmetadata[entryindex] = iobj
+//             } else { // this is a duplicate intersection item
+//                 if (!Array.isArray(intersectingmetadata[entryindex])) {
+//                     intersectingmetadata[entryindex] = [intersectingmetadata[entryindex]] // arr
+//                 }
+//                 intersectingmetadata[entryindex].push(iobj)
+//                 // add to duplicates list for later processing
+//                 if (!duplicates[entryindex]) {
+//                     duplicates[entryindex] = []
+//                     duplicates[entryindex].push(intersectingmetadata[entryindex][0])
+//                 }
+//                 duplicates[entryindex].push(iobj)
+//             }
+//         }
 
-        intersectionsptr++
+//         intersectionsptr++
 
-    }
+//     }
 
-    // console.log('scrollingviewportforward, duplicates',scrollingviewportforward, {...duplicates})
+//     // console.log('scrollingviewportforward, duplicates',scrollingviewportforward, {...duplicates})
 
-    // console.log('headintersectionindexes, tailintersectionindexes, intersections, intersectingmetadata',
-    //     headintersectionindexes, tailintersectionindexes, intersections, intersectingmetadata)
+//     // console.log('headintersectionindexes, tailintersectionindexes, intersections, intersectingmetadata',
+//     //     headintersectionindexes, tailintersectionindexes, intersections, intersectingmetadata)
 
-    // resolve duplicates. For uneven number, keep the most recent
-    // otherwise delete them; they cancel each other out.
-    // duplicate items occur with rapid back and forth scrolling
-    // an even number of items cancel out; for an odd number the most recent is valid
-    if (Object.keys(duplicates).length) { // > 0) { // there are duplicates to process
+//     // resolve duplicates. For uneven number, keep the most recent
+//     // otherwise delete them; they cancel each other out.
+//     // duplicate items occur with rapid back and forth scrolling
+//     // an even number of items cancel out; for an odd number the most recent is valid
+//     if (Object.keys(duplicates).length) { // > 0) { // there are duplicates to process
 
-        const intersectionsdelete = []
+//         const intersectionsdelete = []
 
-        for (let duplicateindex in duplicates) {
+//         for (let duplicateindex in duplicates) {
 
-            const duplicatemetadatalist = duplicates[duplicateindex]
+//             const duplicatemetadatalist = duplicates[duplicateindex]
 
-            // replace duplicates array in interesting with selected iobj
-            // if (duplicatemetadatalist.length % 2) { // uneven; keep one
-                // duplicatemetadatalist.sort(duplicatecomparebytime)
-                const iobj = duplicatemetadatalist.slice(duplicatemetadatalist.length -1,1)
-                intersectingmetadata[iobj.index] = iobj // replace any array with the metadata object
-            // } else { // remove the entry
-            //     delete intersectingmetadata[duplicatemetadatalist[0].index]
-            // }
-            for (let entrymetadata of duplicatemetadatalist) {
-                let itemptr = entrymetadata.itemptr
-                if (itemptr !== undefined) { // TODO: shouldn't happen
-                    intersectionsdelete.push(itemptr)
-                }
-            }
-        }
-        // filter out deleted head and tail items
-        if (intersectionsdelete.length) {
-            shiftingindexes = shiftingindexes.filter((value, index) => {
-                return !intersectionsdelete.includes(index)
-            })
-        }
-    }
+//             // replace duplicates array in interesting with selected iobj
+//             // if (duplicatemetadatalist.length % 2) { // uneven; keep one
+//                 // duplicatemetadatalist.sort(duplicatecomparebytime)
+//                 const iobj = duplicatemetadatalist.slice(duplicatemetadatalist.length -1,1)
+//                 intersectingmetadata[iobj.index] = iobj // replace any array with the metadata object
+//             // } else { // remove the entry
+//             //     delete intersectingmetadata[duplicatemetadatalist[0].index]
+//             // }
+//             for (let entrymetadata of duplicatemetadatalist) {
+//                 let itemptr = entrymetadata.itemptr
+//                 if (itemptr !== undefined) { // TODO: shouldn't happen
+//                     intersectionsdelete.push(itemptr)
+//                 }
+//             }
+//         }
+//         // filter out deleted head and tail items
+//         if (intersectionsdelete.length) {
+//             shiftingindexes = shiftingindexes.filter((value, index) => {
+//                 return !intersectionsdelete.includes(index)
+//             })
+//         }
+//     }
 
-    shiftingindexes.sort(indexcompare)
+//     shiftingindexes.sort(indexcompare)
 
-    shiftingintersections.sort(entrycompare)
+//     shiftingintersections.sort(entrycompare)
 
-    // --------------------------[ ready to process! ]-----------------------------
+//     // --------------------------[ ready to process! ]-----------------------------
 
-    // set reference points in relation to the axis
-    const referenceindex = shiftingindexes[shiftingindexes.length - 1]
-    // TODO referenceindex is 0 in other direction
-    let sectionptr = shiftingindexes.indexOf(referenceindex)
+//     // set reference points in relation to the axis
+//     const referenceindex = shiftingindexes[shiftingindexes.length - 1]
+//     // TODO referenceindex is 0 in other direction
+//     let sectionptr = shiftingindexes.indexOf(referenceindex)
 
-    // collect notifications to main thread (filtered intersections)
+//     // collect notifications to main thread (filtered intersections)
 
-    // console.log('POINTERS scrollingviewportforward, headptr, tailptr', scrollingviewportforward,headptr, tailptr)
+//     // console.log('POINTERS scrollingviewportforward, headptr, tailptr', scrollingviewportforward,headptr, tailptr)
 
-    let returnindex // for return
-    // for scrollviewportbackward, moving toward head, add items to head, shift items to tail
-    // for scrollingviewportforward, moving toward tail, add items to tail, shift items to head
-    if (isScrollingviewportforward && (sectionptr >= 0)) {
-        returnindex = shiftingindexes[sectionptr]
-        let refindex = returnindex - 1
+//     let returnindex // for return
+//     // for scrollviewportbackward, moving toward head, add items to head, shift items to tail
+//     // for scrollingviewportforward, moving toward tail, add items to tail, shift items to head
+//     if (isScrollingviewportforward && (sectionptr >= 0)) {
+//         returnindex = shiftingindexes[sectionptr]
+//         let refindex = returnindex - 1
 
-        for (let ptr = sectionptr; ptr < shiftingindexes.length; ptr++) {
+//         for (let ptr = sectionptr; ptr < shiftingindexes.length; ptr++) {
 
-            let index = shiftingindexes[ptr]
+//             let index = shiftingindexes[ptr]
 
-            // test for continuity and consistency
-            if ((index - 1) == refindex) {// && (intersectingmetadata[index].isIntersecting == refintersecting)) {
+//             // test for continuity and consistency
+//             if ((index - 1) == refindex) {// && (intersectingmetadata[index].isIntersecting == refintersecting)) {
 
-                shiftingintersections.push(shiftingintersections[ptr])
-                shiftingindexes.push(index)
-                shiftingmetadata.push(intersectingmetadata[index])
+//                 shiftingintersections.push(shiftingintersections[ptr])
+//                 shiftingindexes.push(index)
+//                 shiftingmetadata.push(intersectingmetadata[index])
 
-            } else {
+//             } else {
 
-                break
+//                 break
 
-            }
+//             }
 
-            refindex = index
-            // refintersecting = intersectingmetadata[index].intersecting
+//             refindex = index
+//             // refintersecting = intersectingmetadata[index].intersecting
 
-        }
-    }
+//         }
+//     }
 
-    // console.log('headintersectionindexes, tailintersectionindexes',headintersectionindexes, tailintersectionindexes)
-    // shiftingintersections.sort(entrycompare)
+//     // console.log('headintersectionindexes, tailintersectionindexes',headintersectionindexes, tailintersectionindexes)
+//     // shiftingintersections.sort(entrycompare)
 
-    // this returns items to shift, according to scrollingviewportforward
+//     // this returns items to shift, according to scrollingviewportforward
 
-    // console.log('==> scrollingviewportforward, shiftingindexes, shiftingmetadata, shiftingintersections',
-    //     scrollingviewportforward ,shiftingindexes, shiftingmetadata, shiftingintersections)
+//     // console.log('==> scrollingviewportforward, shiftingindexes, shiftingmetadata, shiftingintersections',
+//     //     scrollingviewportforward ,shiftingindexes, shiftingmetadata, shiftingintersections)
 
-    return shiftingintersections 
+//     return shiftingintersections 
 
-}
+// }
 
 let indexcompare = (a,b) => {
     let retval = (a < b)?-1:1

@@ -30,8 +30,8 @@ export default class StylesHandler {
         const headstyles:React.CSSProperties = this.getHeadStyles(gap, padding, orientation, userstyles.cradle)
         const tailstyles:React.CSSProperties = this.getTailStyles(gap, padding, orientation, userstyles.cradle)
         const axisstyles:React.CSSProperties = this.getAxisStyles(gap, padding, orientation, userstyles.axis)
-        const intersectionlineheadstyles:React.CSSProperties = this.getIntersectionlineHeadStyles(orientation,cellHeight, cellWidth, breaklineOffset)
-        const intersectionlinetailstyles:React.CSSProperties = this.getIntersectionlineTailStyles(orientation,cellHeight, cellWidth, breaklineOffset)
+        const breaklineheadstyles:React.CSSProperties = this.getBreaklineHeadStyles(orientation,cellHeight, cellWidth, breaklineOffset)
+        const breaklinetailstyles:React.CSSProperties = this.getBreaklineTailStyles(orientation,cellHeight, cellWidth, breaklineOffset)
         const cradledividerstyles:React.CSSProperties = 
             {
                 zIndex:1, 
@@ -95,8 +95,8 @@ export default class StylesHandler {
             headstyles,
             tailstyles,
             axisstyles,
-            intersectionlineheadstyles,
-            intersectionlinetailstyles,
+            breaklineheadstyles,
+            breaklinetailstyles,
             cradledividerstyles
         ]
         
@@ -198,7 +198,7 @@ export default class StylesHandler {
 
     }
 
-    getIntersectionlineTailStyles = (orientation, cellHeight, cellWidth, breaklineOffset) => {
+    getBreaklineTailStyles = (orientation, cellHeight, cellWidth, breaklineOffset) => {
         let transform // for position relative to axis
         const position = 'absolute',
             width = '100%',
@@ -222,7 +222,7 @@ export default class StylesHandler {
     }
 
 
-    getIntersectionlineHeadStyles = (orientation, cellHeight, cellWidth, breaklineOffset) => {
+    getBreaklineHeadStyles = (orientation, cellHeight, cellWidth, breaklineOffset) => {
         let transform // for position relative to axis
         const position = 'absolute',
             width = '100%',

@@ -594,8 +594,8 @@ const Cradle = ({
         cradleHeadStyle, 
         cradleTailStyle, 
         cradleAxisStyle, 
-        intersectionlineHeadStyle, 
-        intersectionlineTailStyle,
+        breaklineHeadStyle, 
+        breaklineTailStyle,
         cradleDividerStyle] = useMemo(()=> {
 
         return stylesHandler.setCradleStyles({
@@ -878,14 +878,14 @@ const Cradle = ({
                 ref = {axisCradleElementRef}
             >
                 <div
-                    data-type = 'intersectionline-head'
-                    style = {intersectionlineHeadStyle}
+                    data-type = 'breakline-head'
+                    style = {breaklineHeadStyle}
                     ref = {headBreaklineCradleElementRef}
                 >
                 </div>
                 <div
-                    data-type = 'intersectionline-tail'
-                    style = {intersectionlineTailStyle}
+                    data-type = 'breakline-tail'
+                    style = {breaklineTailStyle}
                     ref = {tailBreaklineCradleElementRef}
                 >
                 </div>
