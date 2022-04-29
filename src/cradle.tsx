@@ -632,15 +632,19 @@ const Cradle = ({
 
         if ((cradleState != 'startreposition') && (cradleState != 'finishreposition')) return
 
-        const observer = interruptHandler.cradleIntersect.observer
+        const cradleobserver = interruptHandler.cradleIntersect.observer
+        const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
 
         if (cradleState == 'startreposition') {
-            observer.disconnect()
+            cradleobserver.disconnect()
+            breaklineobserver.disconnect()
         }
         if (cradleState == 'finishreposition') {
             const cradleElements = scaffoldHandler.elements
-            observer.observe(cradleElements.headRef.current)
-            observer.observe(cradleElements.tailRef.current)
+            cradleobserver.observe(cradleElements.headRef.current)
+            cradleobserver.observe(cradleElements.tailRef.current)
+            breaklineobserver.observe(cradleElements.headBreaklineRef.current)
+            breaklineobserver.observe(cradleElements.tailBreaklineRef.current)
         }
 
     },[cradleState])

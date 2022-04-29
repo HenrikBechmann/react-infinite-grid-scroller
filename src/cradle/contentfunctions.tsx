@@ -485,7 +485,7 @@ export const calcContentShift = ({
     let viewportaxisoffset, // the pixel distance between the viewport frame and the axis, toward the head
         viewportlength
 
-    let viewportvisiblegaplength = 0
+    let viewportheadgaplength = 0
 
     if (orientation == 'vertical') {
 
@@ -497,7 +497,7 @@ export const calcContentShift = ({
 
             // if viewportaxisoffset is below the top by more than the height of 
             // the headElment then a gap will be visible
-            viewportvisiblegaplength = viewportaxisoffset - headElement.offsetHeight
+            viewportheadgaplength = viewportaxisoffset - headElement.offsetHeight
 
         }
 
@@ -508,22 +508,22 @@ export const calcContentShift = ({
 
         if (!isScrollingviewportforward) { // scroll backward, toward head
 
-            viewportvisiblegaplength = viewportaxisoffset - headElement.offsetWidth
+            viewportheadgaplength = viewportaxisoffset - headElement.offsetWidth
 
         }
 
     }
 
-    if ((viewportvisiblegaplength < 0) || (viewportvisiblegaplength > viewportlength)) {
+    if ((viewportheadgaplength < 0) || (viewportheadgaplength > viewportlength)) {
 
-        viewportvisiblegaplength = 0 // no visible gap, or doreposition should have kicked in
+        viewportheadgaplength = 0 // no visible gap, or doreposition should have kicked in
         
     }
 
     // -------[ 1. calculate axis's headblock overshoot item & row counts, if any ]-------
     
     // viewportvisiblegaplength is always positive
-    let overshootrowcount = (viewportvisiblegaplength == 0)?0:Math.ceil(viewportvisiblegaplength/cellLength) // rows to fill viewport
+    let overshootrowcount = (viewportheadgaplength == 0)?0:Math.ceil(viewportheadgaplength/cellLength) // rows to fill viewport
 
     let overshootitemcount = overshootrowcount * crosscount
 
@@ -552,7 +552,7 @@ export const calcContentShift = ({
 
     // negative value shifted toward head; positive value shifted toward tail
     // one of the two expressions in the following line will be 0
-    let axisreferenceshiftitemcount = tailaddshiftitemcount - (headaddshiftitemcount + overshootitemcount)
+    let axisreferenceshiftitemcount = -tailaddshiftitemcount + headaddshiftitemcount + overshootitemcount
     let cradlereferenceshiftitemcount = axisreferenceshiftitemcount
 
     let cradlereferencerowshift = 
@@ -571,17 +571,20 @@ export const calcContentShift = ({
 
     // ----------------[ 3. calc new cradle reference index and axis reference index ]-----------------
 
-    const previouscradlereferenceindex = (cradlecontentlist[0].props.index || 0)
+    const previouscradlereferenceindex = (cradlecontentlist[0]?.props.index || 0)
     const previouscradlerowoffset = Math.round(previouscradlereferenceindex/crosscount)
-    const previousaxisreferenceindex = (tailcontentlist[0]?.props.index || 0) // TODO:Uncaught TypeError: Cannot read property 'props' of undefined
+    const previousaxisreferenceindex = (tailcontentlist[0]?.props.index || 0)
     // const previousaxisreferencerowoffset = Math.round(previousaxisreferenceindex/crosscount)
+
+    console.log('previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount',
+        previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount)
 
     // computed shifted cradle end row, looking for overshoot
     let rowovershoot
-    let computedcradleEndrow = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift - 1)
+    let computedcradleEndrowOffset = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift - 1)
     if (isScrollingviewportforward) { // scroll viewport toward tail, shift is positive, add to tail
 
-        rowovershoot = computedcradleEndrow - listRowcount // overshoot amount 
+        rowovershoot = computedcradleEndrowOffset - listRowcount // overshoot amount 
 
         if (rowovershoot > 0) {
 
@@ -602,8 +605,14 @@ export const calcContentShift = ({
 
     }
 
+    console.log('computedcradleEndrowOffset, cradlereferencerowshift, cradlereferenceshiftitemcount',
+        computedcradleEndrowOffset, cradlereferencerowshift, cradlereferenceshiftitemcount)
+
     let newcradlereferenceindex = previouscradlereferenceindex + cradlereferenceshiftitemcount
     let newaxisreferenceindex = previousaxisreferenceindex + axisreferenceshiftitemcount
+
+    console.log('newcradlereferenceindex, newaxisreferenceindex',
+        newcradlereferenceindex, newaxisreferenceindex)
 
     if (newcradlereferenceindex < 0) {
         cradlereferenceshiftitemcount += newcradlereferenceindex
@@ -617,7 +626,7 @@ export const calcContentShift = ({
         newaxisreferenceindex = 0
     }
 
-    if ((computedcradleEndrow) >= (listRowcount)) {
+    if ((computedcradleEndrowOffset) >= (listRowcount)) {
         EOD = true
     }
 
