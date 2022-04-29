@@ -486,46 +486,42 @@ export const calcContentShift = ({
         viewportlength
 
     let viewportheadgaplength = 0
+    let viewporttailgaplength = 0
 
     if (orientation == 'vertical') {
 
         viewportaxisoffset = axisElement.offsetTop - viewportElement.scrollTop
-        viewportlength = viewportElement.offsetHeight
-
-        // measure any gap between the cradle and the top viewport boundary
-        if (!isScrollingviewportforward) { // scrollviewportbackward, toward head
-
-            // if viewportaxisoffset is below the top by more than the height of 
-            // the headElment then a gap will be visible
-            viewportheadgaplength = viewportaxisoffset - headElement.offsetHeight
-
-        }
 
     } else { // horizontal
 
         viewportaxisoffset = axisElement.offsetLeft - viewportElement.scrollLeft
-        viewportlength = viewportElement.offsetWidth
-
-        if (!isScrollingviewportforward) { // scroll backward, toward head
-
-            viewportheadgaplength = viewportaxisoffset - headElement.offsetWidth
-
-        }
 
     }
 
-    if ((viewportheadgaplength < 0) || (viewportheadgaplength > viewportlength)) {
+    if (!isScrollingviewportforward) { // scrollviewportbackward, toward head
 
-        viewportheadgaplength = 0 // no visible gap, or doreposition should have kicked in
+        viewportheadgaplength = viewportaxisoffset
+
+    } else {
+
+        viewporttailgaplength = -viewportaxisoffset
+
+    }
+
+    // if ((viewportheadgaplength < 0) { //|| (viewportheadgaplength > viewportlength)) {
+
+    //     viewportheadgaplength = 0 // no visible gap, or doreposition should have kicked in
         
-    }
+    // }
 
     // -------[ 1. calculate axis's headblock overshoot item & row counts, if any ]-------
     
     // viewportvisiblegaplength is always positive
-    let overshootrowcount = (viewportheadgaplength == 0)?0:Math.ceil(viewportheadgaplength/cellLength) // rows to fill viewport
+    let headovershootrowcount = (viewportheadgaplength == 0)?0:Math.floor(viewportheadgaplength/cellLength) // rows to fill viewport
+    let tailovershootrowcount = (viewporttailgaplength == 0)?0:Math.floor(viewporttailgaplength/cellLength) // rows to fill viewport
 
-    let overshootitemcount = overshootrowcount * crosscount
+    let headovershootitemcount = headovershootrowcount * crosscount
+    let tailovershootitemcount = tailovershootrowcount * crosscount
 
     // -----------------[ 2. calculate item & row shift counts including overshoot ]-------------
 
@@ -547,12 +543,15 @@ export const calcContentShift = ({
 
     }
 
-    console.log('headaddshiftitemcount, tailaddshiftitemcount, overshootitemcount', 
-        headaddshiftitemcount, tailaddshiftitemcount, overshootitemcount)
+    console.log('headaddshiftitemcount, tailaddshiftitemcount, headovershootitemcount, tailovershootitemcount', 
+        headaddshiftitemcount, tailaddshiftitemcount, headovershootitemcount, tailovershootitemcount)
 
     // negative value shifted toward head; positive value shifted toward tail
     // one of the two expressions in the following line will be 0
-    let axisreferenceshiftitemcount = -tailaddshiftitemcount + headaddshiftitemcount + overshootitemcount
+    let axisreferenceshiftitemcount = 
+        -(tailaddshiftitemcount + tailovershootitemcount) + 
+        (headaddshiftitemcount + headovershootitemcount)
+
     let cradlereferenceshiftitemcount = axisreferenceshiftitemcount
 
     let cradlereferencerowshift = 
