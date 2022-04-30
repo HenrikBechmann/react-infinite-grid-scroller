@@ -45,7 +45,7 @@ export default class ScrollHandler {
             this.scrollPositions.currentupdate = scrollPositionCurrent
         }
 
-        console.log('onScroll scrollPositionCurrent, e.target.scrollTop',scrollPositionCurrent, e.target.scrollTop)
+        console.log('onScroll scrollPositionCurrent',scrollPositionCurrent)
 
         if (scrollPositionCurrent < 0) { // for Safari
 

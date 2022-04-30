@@ -398,17 +398,17 @@ export default class ContentHandler {
             // scrollHandler.updateBlockScrollPos()
             
             if (cradleInheritedProperties.orientation == 'vertical') {
-
-                // scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
-                // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
+                console.log('viewportElement.scrollTop in updateCradleContent',viewportElement.scrollTop)
+                scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
+                scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
                 cradleElements.axisRef.current.style.top = viewportElement.scrollTop + axisposoffset + 'px'
                 cradleElements.axisRef.current.style.left = 'auto'
                 cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleInheritedProperties.gap + 'px':0
 
             } else {
 
-                // scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
-                // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
+                scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
+                scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
                 cradleElements.axisRef.current.style.top = 'auto'
                 cradleElements.axisRef.current.style.left = viewportElement.scrollLeft + axisposoffset + 'px'
                 cradleElements.headRef.current.style.paddingRight = headcontent.length?cradleInheritedProperties.gap + 'px':0
@@ -423,7 +423,6 @@ export default class ContentHandler {
         scaffoldHandler.cradleReferenceData.nextItemIndexReference = axisreferenceindex
         scaffoldHandler.cradleReferenceData.nextCradlePosOffset = axisposoffset
 
-        console.log('=> axis viewportOffset',viewportElement.scrollTop - cradleElements.axisRef.current.offsetTop)
         stateHandler.setCradleState('renderupdatedcontent')
 
     }
