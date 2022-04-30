@@ -232,23 +232,23 @@ export default class ContentHandler {
         const scrollPositions = scrollHandler.scrollPositions 
 
         let isScrollingviewportforward
-        // if (scrollPositions.current == scrollPositions.previous) { // edge case 
+        if (scrollPositions.currentupdate == scrollPositions.previousupdate) { // edge case 
 
-        //     isScrollingviewportforward = this._previousScrollForward
+            isScrollingviewportforward = this._previousScrollForward
 
-        // } else {
+        } else {
 
             isScrollingviewportforward = (scrollPositions.currentupdate > scrollPositions.previousupdate)
             this._previousScrollForward = isScrollingviewportforward
 
-        // }
+        }
 
         console.log('calculated isScrollingviewportforward: scrollPositions',isScrollingviewportforward, Object.assign({},scrollPositions))
 
-        // if (isScrollingviewportforward === undefined) {
-        //     console.log('isScrollingviewportforward === undefined')
-        //     return // init call
-        // }
+        if (isScrollingviewportforward === undefined) {
+            console.log('isScrollingviewportforward === undefined')
+            return // init call
+        }
 
         // cradle scaffold and contained data
         const cradleElements = scaffoldHandler.elements
@@ -395,8 +395,6 @@ export default class ContentHandler {
 
         if (axisposoffset !== undefined) {
 
-            // scrollHandler.updateBlockScrollPos()
-            
             if (cradleInheritedProperties.orientation == 'vertical') {
                 console.log('viewportElement.scrollTop in updateCradleContent',viewportElement.scrollTop)
                 scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
