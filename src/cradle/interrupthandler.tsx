@@ -29,7 +29,7 @@ export default class InterruptHandler {
 
     private axisBreaklinesObserverCallback = (entries) => {
 
-        // console.log('breaklines observer triggered')
+        console.log('breaklines observer triggered:entries',entries)
 
         const testrootbounds = entries[0].rootBounds
         if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting

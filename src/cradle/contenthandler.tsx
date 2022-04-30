@@ -421,6 +421,7 @@ export default class ContentHandler {
         scaffoldHandler.cradleReferenceData.nextItemIndexReference = axisreferenceindex
         scaffoldHandler.cradleReferenceData.nextCradlePosOffset = axisposoffset
 
+        console.log('=> axis viewportOffset',viewportElement.scrollTop - cradleElements.axisRef.current.offsetTop)
         stateHandler.setCradleState('renderupdatedcontent')
 
     }

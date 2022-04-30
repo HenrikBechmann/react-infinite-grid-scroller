@@ -237,7 +237,8 @@ export const calcContentShift = ({
         cellWidth,
         listsize,
         // padding,
-        runwaycount 
+        runwaycount,
+        breaklineOffset,
     } = cradleInheritedProperties
 
     const axisElement = cradleElements.axisRef.current,
