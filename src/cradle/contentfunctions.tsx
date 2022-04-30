@@ -584,28 +584,29 @@ export const calcContentShift = ({
     let computedNextCradleEndrowOffset = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift - 1)
     if (isScrollingviewportforward) { // scroll viewport toward tail, shift is positive, add to tail
 
-        rowovershoot = computedNextCradleEndrowOffset - listRowcount // overshoot amount 
+        rowovershoot = Math.max(0,computedNextCradleEndrowOffset - listRowcount) // overshoot amount 
 
-        if (rowovershoot > 0) {
+        // if (rowovershoot > 0) {
 
-            // cradlereferencerowshift -= rowovershoot
-            // cradlereferenceshiftitemcount -= (rowovershoot * crosscount)
+        //     // cradlereferencerowshift -= rowovershoot
+        //     // cradlereferenceshiftitemcount -= (rowovershoot * crosscount)
 
-        } else {
-            rowovershoot = 0
-        }
+        // } else {
+        //     rowovershoot = 0
+        // }
 
     } else { // scroll viewport backward, scroll viewport toward head, shift is negative, add to head
 
-        rowovershoot = previouscradlerowoffset + cradlereferencerowshift
-        if (rowovershoot < 0) {
+        rowovershoot = Math.min(0,previouscradlerowoffset + cradlereferencerowshift)
 
-            // cradlereferencerowshift -= rowovershoot // add back the overshoot
-            // cradlereferenceshiftitemcount -= (rowovershoot * crosscount)
+        // if (rowovershoot < 0) {
 
-        } else {
-            rowovershoot = 0
-        }
+        //     // cradlereferencerowshift -= rowovershoot // add back the overshoot
+        //     // cradlereferenceshiftitemcount -= (rowovershoot * crosscount)
+
+        // } else {
+        //     rowovershoot = 0
+        // }
 
     }
 
