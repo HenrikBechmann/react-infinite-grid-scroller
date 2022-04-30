@@ -33,7 +33,7 @@ export default class InterruptHandler {
 
         const testrootbounds = entries[0].rootBounds
         if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
-
+            console.log('axisBreaklinesObserverCallback return for reparenting')
             return
 
         }

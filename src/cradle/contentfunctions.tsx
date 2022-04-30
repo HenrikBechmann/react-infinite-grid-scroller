@@ -194,6 +194,8 @@ export const getShiftingInstruction = ({
         return retval
     })
 
+    console.log('getShiftingInstruction isScrollingviewportforward, filtered entry',isScrollingviewportforward, entries)
+
     if (entries.length > 1) {
         console.log('SYSTEM ISSUE: MORE THAN ONE BREAKLINE ENTRY', breaklineEntries.length, breaklineEntries)
     }

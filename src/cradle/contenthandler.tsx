@@ -238,10 +238,12 @@ export default class ContentHandler {
 
         // } else {
 
-            isScrollingviewportforward = scrollPositions.currentupdate > scrollPositions.previousupdate
+            isScrollingviewportforward = (scrollPositions.currentupdate > scrollPositions.previousupdate)
             this._previousScrollForward = isScrollingviewportforward
 
         // }
+
+        console.log('calculated isScrollingviewportforward: scrollPositions',isScrollingviewportforward, Object.assign({},scrollPositions))
 
         // if (isScrollingviewportforward === undefined) {
         //     console.log('isScrollingviewportforward === undefined')
