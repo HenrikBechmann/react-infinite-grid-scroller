@@ -512,12 +512,6 @@ export const calcContentShift = ({
     console.log('1. cellLength, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength',
         cellLength, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength)
 
-    // if ((viewportheadgaplength < 0) { //|| (viewportheadgaplength > viewportlength)) {
-
-    //     viewportheadgaplength = 0 // no visible gap, or doreposition should have kicked in
-        
-    // }
-
     // -------[ 1. calculate the axis overshoot item & row counts, if any ]-------
     
     // overshoot lengths are always positive
@@ -629,17 +623,33 @@ export const calcContentShift = ({
     console.log('6. proposedcradlereferenceindex, proposedaxisreferenceindex',
         proposedcradlereferenceindex, proposedaxisreferenceindex)
 
+    const runwayrows = (proposedaxisreferenceindex - proposedcradlereferenceindex)/crosscount
+    if ((runwayrows) < runwaycount) {
+        const diff = runwaycount - runwayrows
+        proposedcradlereferenceindex -= (diff * crosscount)
+    }
+
+    console.log('6.b proposedcradlereferenceindex adjusted for runwaycount; runwayrows', 
+        proposedcradlereferenceindex, runwayrows)
+
     if (proposedcradlereferenceindex < 0) {
         cradlereferenceshiftitemcount += proposedcradlereferenceindex
-        // cradlereferencerowshift += Math.round(newcradlereferenceindex/crosscount)
-        // computedcradleEndrow += Math.round(newcradlereferenceindex/crosscount)
+        cradlereferenceshiftitemcount = Math.max(0,cradlereferenceshiftitemcount)
+        const x = cradlereferencerowshift
+        cradlereferencerowshift = cradlereferenceshiftitemcount/crosscount
+        const diff = x - cradlereferencerowshift
         proposedcradlereferenceindex = 0
+        computedNextCradleEndrowOffset += diff
     }
     if (proposedaxisreferenceindex < 0) {
         axisreferenceshiftitemcount += proposedaxisreferenceindex
-        // axisreferencerowshift += Math.round(newaxisreferenceindex/crosscount)
+        axisreferencerowshift = axisreferenceshiftitemcount/crosscount
         proposedaxisreferenceindex = 0
     }
+    console.log('6.c revised cradlereferenceshiftitemcount, cradlereferencerowshift, proposedcradlereferenceindex, computedNextCradleEndrowOffset',
+        cradlereferenceshiftitemcount, cradlereferencerowshift, proposedcradlereferenceindex, computedNextCradleEndrowOffset)
+    console.log('6.d revised axisreferenceshiftitemcount, axisreferencerowshift, proposedaxisreferenceindex',
+        axisreferenceshiftitemcount, axisreferencerowshift, proposedaxisreferenceindex)
 
     if ((computedNextCradleEndrowOffset) >= (listRowcount)) {
         EOD = true
@@ -649,8 +659,7 @@ export const calcContentShift = ({
         BOD = true
     }
 
-    console.log('7. revised cradlereferenceshiftitemcount, newcradlereferenceindex, axisreferenceshiftitemcount, newaxisreferenceindex,EOD, BOD',
-        cradlereferenceshiftitemcount, proposedcradlereferenceindex, axisreferenceshiftitemcount, proposedaxisreferenceindex, EOD, BOD)
+    console.log('7. EOD, BOD', EOD, BOD)
 
     // -------------[ 4. reconcile ]------------------
 
