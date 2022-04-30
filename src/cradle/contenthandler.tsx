@@ -232,16 +232,16 @@ export default class ContentHandler {
         const scrollPositions = scrollHandler.scrollPositions 
 
         let isScrollingviewportforward
-        if (scrollPositions.current == scrollPositions.previous) { // edge case 
+        // if (scrollPositions.current == scrollPositions.previous) { // edge case 
 
-            isScrollingviewportforward = this._previousScrollForward
+        //     isScrollingviewportforward = this._previousScrollForward
 
-        } else {
+        // } else {
 
             isScrollingviewportforward = scrollPositions.currentupdate > scrollPositions.previousupdate
             this._previousScrollForward = isScrollingviewportforward
 
-        }
+        // }
 
         // if (isScrollingviewportforward === undefined) {
         //     console.log('isScrollingviewportforward === undefined')

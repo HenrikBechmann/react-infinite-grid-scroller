@@ -501,7 +501,7 @@ export const calcContentShift = ({
 
     if (!isScrollingviewportforward) { // scrollviewportbackward, toward head
 
-        viewportheadgaplength = viewportaxisoffset
+        viewportheadgaplength = -(viewportaxisoffset - cellLength)
 
     } else {
 
