@@ -265,13 +265,15 @@ export const calcContentShift = ({
     let viewportheadgaplength = 0
     let viewporttailgaplength = 0
 
+    let scrollPos
     if (orientation == 'vertical') {
-
-        viewportaxisoffset = axisElement.offsetTop - viewportElement.scrollTop
+        scrollPos = viewportElement.scrollTop
+        viewportaxisoffset = axisElement.offsetTop - scrollPos // viewportElement.scrollTop
 
     } else { // horizontal
 
-        viewportaxisoffset = axisElement.offsetLeft - viewportElement.scrollLeft
+        scrollPos = viewportElement.scrollLeft
+        viewportaxisoffset = axisElement.offsetLeft - scrollPos // viewportElement.scrollLeft
 
     }
 
@@ -285,8 +287,8 @@ export const calcContentShift = ({
 
     }
 
-    // console.log('1. cellLength, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength',
-    //     cellLength, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength)
+    console.log('1. cellLength, scrollPos, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength',
+        cellLength, scrollPos, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength)
 
     // -------[ 1. calculate the axis overshoot item & row counts, if any ]-------
     
