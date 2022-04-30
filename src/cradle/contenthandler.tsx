@@ -194,7 +194,7 @@ export default class ContentHandler {
 
     public updateCradleContent = (breaklineEntries, source = 'notifications') => {
 
-        // console.log('updateCradleContent', source, breaklineEntries )
+        console.log('updateCradleContent', source )
 
         // ----------------------[ 1. data assembly ]-------------------------
         // viewport

@@ -29,6 +29,8 @@ export default class InterruptHandler {
 
     private axisBreaklinesObserverCallback = (entries) => {
 
+        console.log('breaklines observer triggered')
+
         const testrootbounds = entries[0].rootBounds
         if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
 
@@ -38,7 +40,7 @@ export default class InterruptHandler {
 
         if (this.signals.pauseBreaklinesObserver) { 
 
-            console.log('pauseBreaklinesObserver is TRUE')
+            console.log('pauseBreaklinesObserver is TRUE; returning')
 
             return
 
@@ -54,7 +56,7 @@ export default class InterruptHandler {
                 scrollPositions.previousupdate = scrollPositions.currentupdate
                 scrollPositions.currentupdate = scrollPositions.current
                 contentHandler.updateCradleContent(entries,'breaklinesObserver')
-                // console.log('completed update from breaklines callback')
+                console.log('completed update from breaklines callback')
             }
         }
     }
@@ -98,6 +100,7 @@ export default class InterruptHandler {
                 !(cradleState == 'resized') &&
                 !(cradleState == 'repositioningRender') && 
                 !(cradleState == 'repositioningContinuation') &&
+                !(cradleState == 'renderupdatedcontent') && // *TEST*
                 !(cradleState == 'finishreposition') &&
                 // !(cradleState == 'updatepositionreferences') &&
                 !(cradleState == 'doreposition') && 
