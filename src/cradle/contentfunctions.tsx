@@ -285,8 +285,8 @@ export const calcContentShift = ({
 
     }
 
-    console.log('1. cellLength, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength',
-        cellLength, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength)
+    // console.log('1. cellLength, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength',
+    //     cellLength, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength)
 
     // -------[ 1. calculate the axis overshoot item & row counts, if any ]-------
     
@@ -317,11 +317,11 @@ export const calcContentShift = ({
 
     }
 
-    console.log('2.a headaddshiftitemcount, tailaddshiftitemcount', 
-        headaddshiftitemcount, tailaddshiftitemcount)
+    // console.log('2.a headaddshiftitemcount, tailaddshiftitemcount', 
+    //     headaddshiftitemcount, tailaddshiftitemcount)
 
-    console.log('2.b headovershootrowcount, headovershootitemcount, tailovershootrowcount, tailovershootitemcount', 
-        headovershootrowcount, headovershootitemcount, tailovershootrowcount, tailovershootitemcount)
+    // console.log('2.b headovershootrowcount, headovershootitemcount, tailovershootrowcount, tailovershootitemcount', 
+    //     headovershootrowcount, headovershootitemcount, tailovershootrowcount, tailovershootitemcount)
 
     // negative value shifted toward head; positive value shifted toward tail
     // one of the two expressions in the following line will be 0
@@ -342,8 +342,8 @@ export const calcContentShift = ({
         :Math.floor(axisreferenceshiftitemcount/crosscount)
     axisreferenceshiftitemcount = Math.round(axisreferencerowshift * crosscount)
 
-    console.log('3. preliminary axisreferenceshiftitemcount, cradlereferenceshiftitemcount, axisreferencerowshift, cradlereferencerowshift',
-        axisreferenceshiftitemcount, cradlereferenceshiftitemcount, axisreferencerowshift, cradlereferencerowshift)
+    // console.log('3. preliminary axisreferenceshiftitemcount, cradlereferenceshiftitemcount, axisreferencerowshift, cradlereferencerowshift',
+    //     axisreferenceshiftitemcount, cradlereferenceshiftitemcount, axisreferencerowshift, cradlereferencerowshift)
 
     // ----------------[ 3. calc new cradle reference index and axis reference index ]-----------------
 
@@ -352,8 +352,8 @@ export const calcContentShift = ({
     const previousaxisreferenceindex = (tailcontentlist[0]?.props.index || 0)
     // const previousaxisreferencerowoffset = Math.round(previousaxisreferenceindex/crosscount)
 
-    console.log('4. previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount',
-        previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount)
+    // console.log('4. previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount',
+    //     previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount)
 
     // computed shifted cradle end row, looking for overshoot
     let rowovershoot
@@ -373,14 +373,14 @@ export const calcContentShift = ({
         cradlereferenceshiftitemcount -= (rowovershoot * crosscount)
     }
 
-    console.log('5. rowovershoot, computedNextCradleEndrowOffset, cradlereferencerowshift, cradlereferenceshiftitemcount',
-        rowovershoot,computedNextCradleEndrowOffset, cradlereferencerowshift, cradlereferenceshiftitemcount)
+    // console.log('5. rowovershoot, computedNextCradleEndrowOffset, cradlereferencerowshift, cradlereferenceshiftitemcount',
+    //     rowovershoot,computedNextCradleEndrowOffset, cradlereferencerowshift, cradlereferenceshiftitemcount)
 
     let proposedcradlereferenceindex = previouscradlereferenceindex + cradlereferenceshiftitemcount
     let proposedaxisreferenceindex = previousaxisreferenceindex + axisreferenceshiftitemcount
 
-    console.log('6. proposedcradlereferenceindex, proposedaxisreferenceindex',
-        proposedcradlereferenceindex, proposedaxisreferenceindex)
+    // console.log('6.a proposedcradlereferenceindex, proposedaxisreferenceindex',
+    //     proposedcradlereferenceindex, proposedaxisreferenceindex)
 
     const runwayrows = (proposedaxisreferenceindex - proposedcradlereferenceindex)/crosscount
     if ((runwayrows) < runwaycount) {
@@ -388,8 +388,8 @@ export const calcContentShift = ({
         proposedcradlereferenceindex -= (diff * crosscount)
     }
 
-    console.log('6.b proposedcradlereferenceindex adjusted for runwaycount; runwayrows', 
-        proposedcradlereferenceindex, runwayrows)
+    // console.log('6.b proposedcradlereferenceindex adjusted for runwaycount; runwayrows', 
+    //     proposedcradlereferenceindex, runwayrows)
 
     if (proposedcradlereferenceindex < 0) {
         cradlereferenceshiftitemcount += proposedcradlereferenceindex
@@ -405,10 +405,10 @@ export const calcContentShift = ({
         axisreferencerowshift = axisreferenceshiftitemcount/crosscount
         proposedaxisreferenceindex = 0
     }
-    console.log('6.c revised cradlereferenceshiftitemcount, cradlereferencerowshift, proposedcradlereferenceindex, computedNextCradleEndrowOffset',
-        cradlereferenceshiftitemcount, cradlereferencerowshift, proposedcradlereferenceindex, computedNextCradleEndrowOffset)
-    console.log('6.d revised axisreferenceshiftitemcount, axisreferencerowshift, proposedaxisreferenceindex',
-        axisreferenceshiftitemcount, axisreferencerowshift, proposedaxisreferenceindex)
+    // console.log('6.c revised cradlereferenceshiftitemcount, cradlereferencerowshift, proposedcradlereferenceindex, computedNextCradleEndrowOffset',
+    //     cradlereferenceshiftitemcount, cradlereferencerowshift, proposedcradlereferenceindex, computedNextCradleEndrowOffset)
+    // console.log('6.d revised axisreferenceshiftitemcount, axisreferencerowshift, proposedaxisreferenceindex',
+    //     axisreferenceshiftitemcount, axisreferencerowshift, proposedaxisreferenceindex)
 
     if ((computedNextCradleEndrowOffset) >= (listRowcount)) {
         EOD = true
@@ -418,7 +418,7 @@ export const calcContentShift = ({
         BOD = true
     }
 
-    console.log('7. EOD, BOD', EOD, BOD)
+    // console.log('7. EOD, BOD', EOD, BOD)
 
     // -------------[ 4. calculate new axis pixel position ]------------------
 

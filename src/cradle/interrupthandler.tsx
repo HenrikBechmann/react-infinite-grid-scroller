@@ -54,6 +54,7 @@ export default class InterruptHandler {
                 scrollPositions.previousupdate = scrollPositions.currentupdate
                 scrollPositions.currentupdate = scrollPositions.current
                 contentHandler.updateCradleContent(entries,'breaklinesObserver')
+                // console.log('completed update from breaklines callback')
             }
         }
     }
