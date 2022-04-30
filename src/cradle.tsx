@@ -728,7 +728,6 @@ const Cradle = ({
                 interruptHandler.signals.pauseCradleIntersectionObserver = false
                 scrollHandler.updateReferenceData()
                 setCradleState('doreposition')
-                // setCradleState('updatepositionreferences')
                 break
             }
 

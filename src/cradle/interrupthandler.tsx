@@ -93,7 +93,8 @@ export default class InterruptHandler {
 
         if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway
         {
-            let cradleState = stateHandler.cradleStateRef.current        
+            let cradleState = stateHandler.cradleStateRef.current
+            // startreposition, reload, preparecontent, preparerender, normalizesignals, ready
             if (
                 !viewportInterruptProperties.isResizing &&
                 !viewportInterruptProperties.portal?.isReparenting &&
@@ -102,10 +103,8 @@ export default class InterruptHandler {
                 !(cradleState == 'repositioningContinuation') &&
                 !(cradleState == 'renderupdatedcontent') && // *TEST*
                 !(cradleState == 'finishreposition') &&
-                // !(cradleState == 'updatepositionreferences') &&
                 !(cradleState == 'doreposition') && 
-                !(cradleState == 'pivot') && 
-                !(cradleState == 'restorescrollposition')
+                !(cradleState == 'pivot')
                 ) 
             {
                 const element = viewportInterruptProperties.elementref.current
