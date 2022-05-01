@@ -243,8 +243,8 @@ export default class ContentHandler {
 
         }
 
-        console.log('scrollPos, calculated isScrollingviewportforward: scrollPositions',
-            scrollPos, isScrollingviewportforward, Object.assign({},scrollPositions))
+        // console.log('scrollPos, calculated isScrollingviewportforward: scrollPositions',
+        //     scrollPos, isScrollingviewportforward, Object.assign({},scrollPositions))
 
         // if (isScrollingviewportforward === undefined) {
         //     console.log('isScrollingviewportforward === undefined')
