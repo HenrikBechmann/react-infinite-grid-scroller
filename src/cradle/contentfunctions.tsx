@@ -194,7 +194,7 @@ export const getShiftingInstruction = ({
         return retval
     })
 
-    console.log('getShiftingInstruction isScrollingviewportforward, filtered entry',isScrollingviewportforward, entries)
+    // console.log('getShiftingInstruction isScrollingviewportforward, filtered entry',isScrollingviewportforward, entries)
 
     if (entries.length > 1) {
         console.log('SYSTEM ISSUE: MORE THAN ONE BREAKLINE ENTRY', breaklineEntries.length, breaklineEntries)
@@ -290,8 +290,8 @@ export const calcContentShift = ({
 
     }
 
-    console.log('1. cellLength, scrollPos, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength',
-        cellLength, scrollPos, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength)
+    // console.log('1. cellLength, scrollPos, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength',
+    //     cellLength, scrollPos, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength)
 
     // -------[ 1. calculate the axis overshoot item & row counts, if any ]-------
     

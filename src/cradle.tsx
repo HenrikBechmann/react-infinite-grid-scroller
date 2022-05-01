@@ -4,7 +4,7 @@
 /*
 
     BUGS:
-    - sometimes the head breakline triggers a callback while scrolling forward
+    - context problems develop when rotating phone while scrolling intertia continues
 
     TODO:
 
@@ -706,22 +706,6 @@ const Cradle = ({
         const cradleContent = contentHandler.content
         switch (cradleState) {
 
-            // renderupdatedcontent is called from cellintersectionobservercallback (interruptHandler), 
-            // and called from onAfterScroll (scrollHandler)
-            // it is required set configurations before 'ready' TODO: specify!
-            case 'renderupdatedcontent': {
-
-                const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
-                const cradleElements = scaffoldHandler.elements
-
-                breaklineobserver.observe(cradleElements.headBreaklineRef.current)
-                breaklineobserver.observe(cradleElements.tailBreaklineRef.current)
-
-                setCradleState('ready')
-                break
-
-            }
-
             // ----------------------------------------------------------------------
             // ------------[ reposition when repositioningRequired is true ]---------------
 
@@ -833,6 +817,22 @@ const Cradle = ({
 
         const viewportInterruptProperties = viewportInterruptPropertiesRef.current
         switch (cradleState) {
+
+            // renderupdatedcontent is called from breaklineintersectionobservercallback (interruptHandler), 
+            // and called from onAfterScroll (scrollHandler)
+            // it is required set configurations before 'ready' TODO: specify!
+            case 'renderupdatedcontent': {
+
+                const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
+                const cradleElements = scaffoldHandler.elements
+
+                breaklineobserver.observe(cradleElements.headBreaklineRef.current)
+                breaklineobserver.observe(cradleElements.tailBreaklineRef.current)
+
+                setCradleState('ready')
+                break
+
+            }
 
             case 'repositioningRender':
                 break

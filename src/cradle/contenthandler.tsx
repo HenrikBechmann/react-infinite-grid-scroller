@@ -194,7 +194,7 @@ export default class ContentHandler {
 
     public updateCradleContent = (breaklineEntries, source = 'notifications') => {
 
-        console.log('updateCradleContent', source )
+        // console.log('updateCradleContent', source )
 
         // ----------------------[ 1. data assembly ]-------------------------
         // viewport
@@ -264,7 +264,7 @@ export default class ContentHandler {
             breaklineEntries,
         })
 
-        console.log('shiftinginstruction',shiftinginstruction)
+        // console.log('shiftinginstruction',shiftinginstruction)
 
         if (shiftinginstruction == 0) return
 
@@ -361,8 +361,8 @@ export default class ContentHandler {
             if (cradleInheritedProperties.orientation == 'vertical') {
                 const scrolltop = viewportElement.scrollTop
                 const top = scrolltop + axisposoffset
-                console.log('==> axisposoffset, viewportElement.scrollTop, axis top in updateCradleContent',
-                    axisposoffset, scrolltop, top)
+                // console.log('==> axisposoffset, viewportElement.scrollTop, axis top in updateCradleContent',
+                //     axisposoffset, scrolltop, top)
                 scaffoldHandler.cradleReferenceData.blockScrollPos = scrolltop
                 scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
                 cradleElements.axisRef.current.style.top = top + 'px'
