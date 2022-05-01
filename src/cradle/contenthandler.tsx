@@ -214,7 +214,7 @@ export default class ContentHandler {
             scroll: scrollHandler, 
             scaffold: scaffoldHandler, 
             state: stateHandler, 
-            // interrupts: interruptHandler,
+            interrupts: interruptHandler,
         } = this.cradleParameters.handlersRef.current
 
         // scroll data
@@ -268,7 +268,8 @@ export default class ContentHandler {
 
         if (shiftinginstruction == 0) return
 
-        const interruptHandler = this.cradleParameters.handlersRef.current.interrupts
+        // the breaklines will be moved, so disconnect them from their observer
+        // they are reconnected with 'renderupdatedcontent' state change in cradle.tsx
         interruptHandler.axisBreaklinesIntersect.observer.disconnect()
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
@@ -281,8 +282,6 @@ export default class ContentHandler {
             axisitemshift, 
             axisposoffset, 
             newCradleActualContentCount,
-            headchange,
-            tailchange,
 
         ] = calcContentShift({
 
@@ -294,6 +293,23 @@ export default class ContentHandler {
             viewportElement,
 
         })
+
+
+        console.log(`
+            cradlereferenceindex, 
+            cradleitemshift, 
+            axisreferenceindex, 
+            axisitemshift, 
+            axisposoffset, 
+            newCradleActualContentCount,
+            `,
+            cradlereferenceindex, 
+            cradleitemshift, 
+            axisreferenceindex, 
+            axisitemshift, 
+            axisposoffset, 
+            newCradleActualContentCount,
+            )
 
         if ((axisitemshift == 0 && cradleitemshift == 0)) return
 

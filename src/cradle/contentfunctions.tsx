@@ -189,23 +189,20 @@ export const getShiftingInstruction = ({
     const entries = breaklineEntries.filter(entry => {
         const isIntersecting = entry.isIntersecting
         const breaklinename = entry.target.dataset.type
-        const retval = ((!isIntersecting) && isScrollingviewportforward && (breaklinename == 'breakline-tail')) ||
+        return ((!isIntersecting) && isScrollingviewportforward && (breaklinename == 'breakline-tail')) ||
             (isIntersecting && (!isScrollingviewportforward) && (breaklinename == 'breakline-head'))
-        return retval
     })
-
-    // console.log('getShiftingInstruction isScrollingviewportforward, filtered entry',isScrollingviewportforward, entries)
 
     if (entries.length > 1) {
         console.log('SYSTEM ISSUE: MORE THAN ONE BREAKLINE ENTRY', breaklineEntries.length, breaklineEntries)
+        debugger
     }
 
     const [entry] = entries
     if (!entry) return 0
     const isIntersecting = entry.isIntersecting
     const breaklinename = entry.target.dataset.type
-    let retval
-    // TODO: calculate the grid row count required to be shifted
+
     if ((!isIntersecting) && isScrollingviewportforward && (breaklinename == 'breakline-tail')) {
         return -1 // shift row to head
     } else if (isIntersecting && (!isScrollingviewportforward) && (breaklinename == 'breakline-head')) {
@@ -216,8 +213,7 @@ export const getShiftingInstruction = ({
 
 }
 
-// TODO: fix cradleActualContentCount
-// A negative shift is toward the head, a positive shift is toward the tail
+// A negative shift instruction is into the head, a positive shift is into the tail
 // called only from updateCradleContent
 export const calcContentShift = ({
 
@@ -231,6 +227,7 @@ export const calcContentShift = ({
 }) => {
 
     const isScrollingviewportforward = (shiftinginstruction < 0)
+
     // ------------------------[ initialize ]-----------------------
 
     const { gap,
@@ -240,7 +237,7 @@ export const calcContentShift = ({
         listsize,
         // padding,
         runwaycount,
-        breaklineOffset,
+        // breaklineOffset,
     } = cradleInheritedProperties
 
     const axisElement = cradleElements.axisRef.current,
@@ -258,17 +255,10 @@ export const calcContentShift = ({
         viewportRowcount
     } = cradleInternalProperties
 
-    let BOD = false, EOD = false // beginning-of-data, end-of-data flags
-
     const cellLength = ((orientation == 'vertical')?cellHeight:cellWidth) + gap
 
-    let viewportaxisoffset, // the pixel distance between the viewport frame and the axis, toward the head
-        viewportlength
+    let scrollPos, viewportaxisoffset // the pixel distance between the viewport frame and the axis, toward the head
 
-    let viewportheadgaplength = 0
-    let viewporttailgaplength = 0
-
-    let scrollPos
     if (orientation == 'vertical') {
         scrollPos = viewportElement.scrollTop
         viewportaxisoffset = axisElement.offsetTop - scrollPos // viewportElement.scrollTop
@@ -279,6 +269,9 @@ export const calcContentShift = ({
         viewportaxisoffset = axisElement.offsetLeft - scrollPos // viewportElement.scrollLeft
 
     }
+
+    let viewportheadgaplength = 0
+    let viewporttailgaplength = 0
 
     if (!isScrollingviewportforward) { // scrollviewportbackward, toward head
 
@@ -310,8 +303,8 @@ export const calcContentShift = ({
         cradle reference is the first content item
         axis reference is the first tail item
     */
-    let headaddshiftitemcount = 0, tailaddshiftitemcount = 0,
-        headaddshiftrowcount = 0, tailaddshiftrowcount = 0
+    let headaddshiftitemcount = 0, tailaddshiftitemcount = 0
+
     if (!isScrollingviewportforward) { // viewport moves toward tail, add tail items, shift positive
 
         tailaddshiftitemcount = shiftinginstruction * crosscount //shiftingintersections.length
@@ -381,49 +374,39 @@ export const calcContentShift = ({
     // console.log('5. rowovershoot, computedNextCradleEndrowOffset, cradlereferencerowshift, cradlereferenceshiftitemcount',
     //     rowovershoot,computedNextCradleEndrowOffset, cradlereferencerowshift, cradlereferenceshiftitemcount)
 
-    let proposedcradlereferenceindex = previouscradlereferenceindex + cradlereferenceshiftitemcount
-    let proposedaxisreferenceindex = previousaxisreferenceindex + axisreferenceshiftitemcount
+    let newcradlereferenceindex = previouscradlereferenceindex + cradlereferenceshiftitemcount
+    let newaxisreferenceindex = previousaxisreferenceindex + axisreferenceshiftitemcount
 
     // console.log('6.a proposedcradlereferenceindex, proposedaxisreferenceindex',
     //     proposedcradlereferenceindex, proposedaxisreferenceindex)
 
-    const runwayrows = (proposedaxisreferenceindex - proposedcradlereferenceindex)/crosscount
+    const runwayrows = (newaxisreferenceindex - newcradlereferenceindex)/crosscount
     if ((runwayrows) < runwaycount) {
         const diff = runwaycount - runwayrows
-        proposedcradlereferenceindex -= (diff * crosscount)
+        newcradlereferenceindex -= (diff * crosscount)
     }
 
     // console.log('6.b proposedcradlereferenceindex adjusted for runwaycount; runwayrows', 
     //     proposedcradlereferenceindex, runwayrows)
 
-    if (proposedcradlereferenceindex < 0) {
-        cradlereferenceshiftitemcount += proposedcradlereferenceindex
+    if (newcradlereferenceindex < 0) {
+        cradlereferenceshiftitemcount += newcradlereferenceindex
         cradlereferenceshiftitemcount = Math.max(0,cradlereferenceshiftitemcount)
         const x = cradlereferencerowshift
         cradlereferencerowshift = cradlereferenceshiftitemcount/crosscount
         const diff = x - cradlereferencerowshift
-        proposedcradlereferenceindex = 0
+        newcradlereferenceindex = 0
         computedNextCradleEndrowOffset += diff
     }
-    if (proposedaxisreferenceindex < 0) {
-        axisreferenceshiftitemcount += proposedaxisreferenceindex
+    if (newaxisreferenceindex < 0) {
+        axisreferenceshiftitemcount += newaxisreferenceindex
         axisreferencerowshift = axisreferenceshiftitemcount/crosscount
-        proposedaxisreferenceindex = 0
+        newaxisreferenceindex = 0
     }
     // console.log('6.c revised cradlereferenceshiftitemcount, cradlereferencerowshift, proposedcradlereferenceindex, computedNextCradleEndrowOffset',
     //     cradlereferenceshiftitemcount, cradlereferencerowshift, proposedcradlereferenceindex, computedNextCradleEndrowOffset)
     // console.log('6.d revised axisreferenceshiftitemcount, axisreferencerowshift, proposedaxisreferenceindex',
     //     axisreferenceshiftitemcount, axisreferencerowshift, proposedaxisreferenceindex)
-
-    if ((computedNextCradleEndrowOffset) >= (listRowcount)) {
-        EOD = true
-    }
-
-    if ((previouscradlerowoffset + cradlereferencerowshift) <= 0) { // undershoot, past start of dataset
-        BOD = true
-    }
-
-    // console.log('7. EOD, BOD', EOD, BOD)
 
     // -------------[ 4. calculate new axis pixel position ]------------------
 
@@ -437,21 +420,15 @@ export const calcContentShift = ({
     const partialrowitems = partialrowfreespaces?(crosscount - partialrowfreespaces):0
     const cradleAvailableContentCount = (cradlecontentlist.length + partialrowitems) // cradleRowcount * crosscount
 
-    let newCradleActualContentCount = Math.min(cradleAvailableContentCount, (listsize - proposedcradlereferenceindex))
-    let newheadcount, newtailcount, headchangecount, tailchangecount
-
-    newheadcount = proposedaxisreferenceindex - proposedcradlereferenceindex
-    newtailcount = newCradleActualContentCount - newheadcount
+    let newCradleActualContentCount = Math.min(cradleAvailableContentCount, (listsize - newcradlereferenceindex))
 
     return [
-        proposedcradlereferenceindex, 
+        newcradlereferenceindex, 
         cradlereferenceshiftitemcount, 
-        proposedaxisreferenceindex, 
+        newaxisreferenceindex, 
         axisreferenceshiftitemcount, 
         newaxisposoffset, 
         newCradleActualContentCount,
-        headchangecount,
-        tailchangecount, 
     ]
 
 }
