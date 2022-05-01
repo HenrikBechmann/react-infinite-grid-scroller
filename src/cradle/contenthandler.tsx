@@ -198,28 +198,13 @@ export default class ContentHandler {
 
         // ----------------------[ 1. data assembly ]-------------------------
         // viewport
-        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-        const viewportElement = viewportInterruptProperties.elementref.current
+        // const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+        // const viewportElement = viewportInterruptProperties.elementref.current
 
-        if (!viewportElement) { 
-            // not mounted; return
-            return
-        }
-        // cradle properties
-        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const cradleInternalProperties = this.cradleParameters.CradleInternalPropertiesRef.current
-
-        let scrollPos
-        if (cradleInheritedProperties.orientation == 'vertical') {
-            scrollPos = viewportElement.scrollTop
-        } else {
-            scrollPos = viewportElement.scrollLeft
-        }
-        if ( scrollPos < 0) { // for Safari elastic bounce at top of scroll
-
-            return
-
-        }
+        // if (!viewportElement) { 
+        //     // not mounted; return
+        //     return
+        // }
 
         // handler support
         const {
@@ -233,6 +218,19 @@ export default class ContentHandler {
         // scroll data
         const scrollPositions = scrollHandler.scrollPositions 
 
+        let scrollPos = scrollPositions.currentupdate
+
+        // if (cradleInheritedProperties.orientation == 'vertical') {
+        //     scrollPos = viewportElement.scrollTop
+        // } else {
+        //     scrollPos = viewportElement.scrollLeft
+        // }
+        if ( scrollPos < 0) { // for Safari elastic bounce at top of scroll
+
+            return
+
+        }
+
         let isScrollingviewportforward
         if (scrollPositions.currentupdate == scrollPositions.previousupdate) { // edge case 
 
@@ -245,7 +243,8 @@ export default class ContentHandler {
 
         }
 
-        // console.log('calculated isScrollingviewportforward: scrollPositions',isScrollingviewportforward, Object.assign({},scrollPositions))
+        console.log('scrollPos, calculated isScrollingviewportforward: scrollPositions',
+            scrollPos, isScrollingviewportforward, Object.assign({},scrollPositions))
 
         // if (isScrollingviewportforward === undefined) {
         //     console.log('isScrollingviewportforward === undefined')
@@ -271,7 +270,12 @@ export default class ContentHandler {
 
         if (shiftinstruction == 0) return
 
+
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
+
+        // cradle properties
+        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const cradleInternalProperties = this.cradleParameters.CradleInternalPropertiesRef.current
 
         const [
 
@@ -289,7 +293,8 @@ export default class ContentHandler {
             cradleInternalProperties,
             cradleContent,
             cradleElements,
-            viewportElement,
+            scrollPos,
+            // viewportElement,
 
         })
 
@@ -310,7 +315,11 @@ export default class ContentHandler {
             cradleContentCount,
             )
 
-        if ((axisitemshift == 0 && cradleitemshift == 0)) return
+        if ((axisitemshift == 0 && cradleitemshift == 0)) {
+            console.log('returning for no axis or cradle shift')
+            return
+
+        }
 
         // the breaklines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state change in cradle.tsx
@@ -378,7 +387,7 @@ export default class ContentHandler {
         if (axisposoffset !== undefined) {
 
             if (cradleInheritedProperties.orientation == 'vertical') {
-                const scrolltop = viewportElement.scrollTop
+                const scrolltop = scrollPos // viewportElement.scrollTop
                 const top = scrolltop + axisposoffset
                 // console.log('==> axisposoffset, viewportElement.scrollTop, axis top in updateCradleContent',
                 //     axisposoffset, scrolltop, top)
@@ -389,10 +398,10 @@ export default class ContentHandler {
                 cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleInheritedProperties.gap + 'px':0
             } else {
 
-                scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
+                scaffoldHandler.cradleReferenceData.blockScrollPos = scrollPos // viewportElement.scrollLeft
                 scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
                 cradleElements.axisRef.current.style.top = 'auto'
-                cradleElements.axisRef.current.style.left = viewportElement.scrollLeft + axisposoffset + 'px'
+                cradleElements.axisRef.current.style.left = /*viewportElement.scrollLeft*/scrollPos + axisposoffset + 'px'
                 cradleElements.headRef.current.style.paddingRight = headcontent.length?cradleInheritedProperties.gap + 'px':0
 
             }

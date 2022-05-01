@@ -219,7 +219,8 @@ export const calcContentShift = ({
     cradleInternalProperties,
     cradleContent,
     cradleElements,
-    viewportElement,
+    scrollPos,
+    // viewportElement,
 
 }) => {
 
@@ -254,15 +255,15 @@ export const calcContentShift = ({
 
     const cellLength = ((orientation == 'vertical')?cellHeight:cellWidth) + gap
 
-    let scrollPos, viewportaxisoffset // the pixel distance between the viewport frame and the axis, toward the head
+    let viewportaxisoffset // the pixel distance between the viewport frame and the axis, toward the head
 
     if (orientation == 'vertical') {
-        scrollPos = viewportElement.scrollTop
+        // scrollPos = viewportElement.scrollTop
         viewportaxisoffset = axisElement.offsetTop - scrollPos // viewportElement.scrollTop
 
     } else { // horizontal
 
-        scrollPos = viewportElement.scrollLeft
+        // scrollPos = viewportElement.scrollLeft
         viewportaxisoffset = axisElement.offsetLeft - scrollPos // viewportElement.scrollLeft
 
     }
