@@ -80,7 +80,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     let targetrowoffset = Math.ceil(referenceoffset/crosscount)
     let scrollblockOffset = (targetrowoffset * cellLength) + padding // gap
     let axisAdjustment
-    let cradleActualContentCount = cradleAvailableContentCount
+    let cradleContentCount = cradleAvailableContentCount
 
     if (targetrowoffset == 0) {
         scrollblockOffset = 0
@@ -89,7 +89,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     } else {
         axisAdjustment = 0; //gap;
 
-        [cradleFirstIndex, cradleActualContentCount, referenceoffset, scrollblockOffset, axisPosOffset] = 
+        [cradleFirstIndex, cradleContentCount, referenceoffset, scrollblockOffset, axisPosOffset] = 
             adjustAxisOffsetForMaxRefIndex({
             referenceoffset,
             axisPosOffset,
@@ -107,7 +107,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         })
     }
 
-    return {cradleFirstIndex, referenceoffset, cradleActualContentCount, scrollblockOffset, axisPosOffset, axisAdjustment} // summarize requirements message
+    return {cradleFirstIndex, referenceoffset, cradleContentCount, scrollblockOffset, axisPosOffset, axisAdjustment} // summarize requirements message
 
 }
 
@@ -581,7 +581,7 @@ export const getUICellShellList = ({
 
         cradleInheritedProperties,
         cradleInternalProperties,
-        cradleActualContentCount,
+        cradleContentCount,
         cradleFirstIndex, 
         headchangecount, 
         tailchangecount, 
@@ -602,7 +602,7 @@ export const getUICellShellList = ({
     let headContentlist = []
 
     let topconstraint = cradleFirstIndex - headchangecount,
-    bottomconstraint = (cradleFirstIndex - headchangecount) + (cradleActualContentCount + 1) // TODO: validate "+1"
+    bottomconstraint = (cradleFirstIndex - headchangecount) + (cradleContentCount + 1) // TODO: validate "+1"
 
     let deletedtailitems = [], deletedheaditems = []
 

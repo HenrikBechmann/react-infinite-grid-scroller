@@ -95,7 +95,7 @@ export default class ContentHandler {
         let {
             cradleFirstIndex, 
             referenceoffset, 
-            cradleActualContentCount, 
+            cradleContentCount, 
             scrollblockOffset, 
             axisPosOffset, 
             axisAdjustment
@@ -119,10 +119,10 @@ export default class ContentHandler {
 
             cradleInheritedProperties,
             cradleInternalProperties,
-            cradleActualContentCount,
+            cradleContentCount,
             cradleFirstIndex,
             headchangecount:0,
-            tailchangecount:cradleActualContentCount,
+            tailchangecount:cradleContentCount,
             localContentList,
             callbacks:this.internalCallbacksRef.current,
             // observer: interruptHandler.cellIntersect.observer,
@@ -258,8 +258,9 @@ export default class ContentHandler {
         const modelcontentlist = cradleContent.cradleModel
         const cradleFirstIndex = modelcontentlist[0].props.index
 
-        // --------------------[ 2. get shifting instruction ]-----------------------
+        // --------------------[ 2. get shift instruction ]-----------------------
 
+        // -1 is move a row up to the head, 1 is move a row down to the tail, 0 is no shift
         const shiftinstruction = getShiftInstruction({
             isScrollingviewportforward,
             breaklineEntries,
@@ -269,7 +270,7 @@ export default class ContentHandler {
 
         if (shiftinstruction == 0) return
 
-        // the breaklines will be moved, so disconnect them from their observer
+        // the breaklines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state change in cradle.tsx
         interruptHandler.axisBreaklinesIntersect.observer.disconnect()
 
@@ -277,12 +278,12 @@ export default class ContentHandler {
 
         const [
 
-            cradlereferenceindex, 
+            cradlereferenceindex, // new index
             cradleitemshift, 
-            axisreferenceindex, 
+            axisreferenceindex, // new index
             axisitemshift, 
-            axisposoffset, 
-            newCradleActualContentCount,
+            axisposoffset, // new offset
+            cradleContentCount, // updated
 
         ] = calcContentShift({
 
@@ -309,7 +310,7 @@ export default class ContentHandler {
             axisreferenceindex, 
             axisitemshift, 
             axisposoffset, 
-            newCradleActualContentCount,
+            cradleContentCount,
             )
 
         if ((axisitemshift == 0 && cradleitemshift == 0)) return
@@ -339,7 +340,7 @@ export default class ContentHandler {
             [localContentList,deletedContentItems] = getUICellShellList({
                 cradleInheritedProperties,
                 cradleInternalProperties,
-                cradleActualContentCount:newCradleActualContentCount,
+                cradleContentCount,
                 localContentList:modelcontentlist,
                 headchangecount,
                 tailchangecount,
