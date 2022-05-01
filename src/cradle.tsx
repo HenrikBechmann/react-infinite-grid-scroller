@@ -437,7 +437,7 @@ const Cradle = ({
 
     // initialize window scroll listener
     useEffect(() => {
-        let viewportdata = viewportInterruptPropertiesRef.current
+        const viewportdata = viewportInterruptPropertiesRef.current
         viewportdata.elementref.current.addEventListener('scroll',scrollHandler.onScroll)
 
         return () => {
@@ -460,8 +460,8 @@ const Cradle = ({
     // set up cradle resizeobserver
     useEffect(() => {
 
-        let observer = interruptHandler.cradleResize.createObserver()
-        let cradleElements = scaffoldHandler.elements
+        const observer = interruptHandler.cradleResize.createObserver()
+        const cradleElements = scaffoldHandler.elements
         observer.observe(cradleElements.headRef.current)
         observer.observe(cradleElements.tailRef.current)
 
@@ -541,7 +541,7 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        let signals = interruptHandler.signals
+        const signals = interruptHandler.signals
 
         // signals.pauseCellObserver = true
         signals.pauseBreaklinesObserver = true
@@ -702,14 +702,20 @@ const Cradle = ({
     // useLayout for suppressing flashes
     useLayoutEffect(()=>{
 
-        let viewportInterruptProperties = viewportInterruptPropertiesRef.current
-        let cradleContent = contentHandler.content
+        const viewportInterruptProperties = viewportInterruptPropertiesRef.current
+        const cradleContent = contentHandler.content
         switch (cradleState) {
 
             // renderupdatedcontent is called from cellintersectionobservercallback (interruptHandler), 
             // and called from onAfterScroll (scrollHandler)
             // it is required set configurations before 'ready' TODO: specify!
             case 'renderupdatedcontent': {
+
+                const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
+                const cradleElements = scaffoldHandler.elements
+
+                breaklineobserver.observe(cradleElements.headBreaklineRef.current)
+                breaklineobserver.observe(cradleElements.tailBreaklineRef.current)
 
                 setCradleState('ready')
                 break
@@ -765,7 +771,7 @@ const Cradle = ({
 
             case 'preparerender': {
 
-                let cradleContent = contentHandler.content
+                const cradleContent = contentHandler.content
                 cradleContent.headViewComponents = cradleContent.headModelComponents
                 cradleContent.tailViewComponents = cradleContent.tailModelComponents
 
@@ -825,7 +831,7 @@ const Cradle = ({
     // standard processing stages
     useEffect(()=> { // TODO: verify benefit of useLayoutEffect
 
-        let viewportInterruptProperties = viewportInterruptPropertiesRef.current
+        const viewportInterruptProperties = viewportInterruptPropertiesRef.current
         switch (cradleState) {
 
             case 'repositioningRender':
@@ -849,7 +855,7 @@ const Cradle = ({
         if (!(cradleState == 'repositioningContinuation' || cradleState == 'repositioningRender')) {
             return null
         }
-        let trackerargs = {
+        const trackerargs = {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
             referenceIndexOffset:scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference,
@@ -866,7 +872,7 @@ const Cradle = ({
         ]
     )
 
-    let cradleContent = contentHandler.content
+    const cradleContent = contentHandler.content
 
     // portalroot is the hidden portal component cache
     return <CradlePortalsContext.Provider value = {handlersRef.current.portals}>

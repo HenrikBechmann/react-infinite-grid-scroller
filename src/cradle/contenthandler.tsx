@@ -268,22 +268,8 @@ export default class ContentHandler {
 
         if (shiftinginstruction == 0) return
 
-        // console.log('returning for DEBUG; isScrollingviewportforward, shiftinginstruction',
-        //     isScrollingviewportforward,shiftinginstruction )
-        // return; // *DEBUG*
-
-        let shiftingintersections = []
-        // if (breaklineEntries.length) {
-        //     shiftingintersections = isolateShiftingIntersections({
-
-        //         isScrollingviewportforward,
-        //         intersections:breaklineEntries,
-        //         cradleContent,
-        //         cellObserverThreshold:cradleInternalProperties.cellObserverThreshold,
-
-        //     })
-        //     // console.log('SHIFTING intersections',shiftingintersections)
-        // }
+        const interruptHandler = this.cradleParameters.handlersRef.current.interrupts
+        interruptHandler.axisBreaklinesIntersect.observer.disconnect()
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
@@ -308,29 +294,6 @@ export default class ContentHandler {
             viewportElement,
 
         })
-
-        // const [
-        //     cradlereferenceindex, 
-        //     cradleitemshift, 
-        //     axisreferenceindex, 
-        //     axisitemshift, 
-        //     axisposoffset, 
-        //     newCradleActualContentCount,
-        //     headchange,
-        //     tailchange,
-        // ] = calcContentShifts({
-
-        //     cradleInheritedProperties,
-        //     cradleInternalProperties,
-        //     cradleElements,
-        //     cradleContent,
-        //     viewportElement,
-        //     // itemElements,
-        //     shiftingintersections,
-        //     isScrollingviewportforward,
-        //     // viewportInterruptProperties,
-
-        // })
 
         if ((axisitemshift == 0 && cradleitemshift == 0)) return
 
