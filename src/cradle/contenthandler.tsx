@@ -405,7 +405,6 @@ export default class ContentHandler {
                 cradleElements.axisRef.current.style.top = top + 'px'
                 cradleElements.axisRef.current.style.left = 'auto'
                 cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleInheritedProperties.gap + 'px':0
-                setTimeout(()=>{})
             } else {
 
                 scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
