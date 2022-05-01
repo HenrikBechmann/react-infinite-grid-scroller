@@ -396,13 +396,16 @@ export default class ContentHandler {
         if (axisposoffset !== undefined) {
 
             if (cradleInheritedProperties.orientation == 'vertical') {
-                console.log('viewportElement.scrollTop in updateCradleContent',viewportElement.scrollTop)
-                scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
+                const scrolltop = viewportElement.scrollTop
+                const top = scrolltop + axisposoffset
+                console.log('==> axisposoffset, viewportElement.scrollTop, axis top in updateCradleContent',
+                    axisposoffset, scrolltop, top)
+                scaffoldHandler.cradleReferenceData.blockScrollPos = scrolltop
                 scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
-                cradleElements.axisRef.current.style.top = viewportElement.scrollTop + axisposoffset + 'px'
+                cradleElements.axisRef.current.style.top = top + 'px'
                 cradleElements.axisRef.current.style.left = 'auto'
                 cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleInheritedProperties.gap + 'px':0
-
+                setTimeout(()=>{})
             } else {
 
                 scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft

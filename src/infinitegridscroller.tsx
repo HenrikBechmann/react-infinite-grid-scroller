@@ -86,7 +86,7 @@ const InfiniteGridScroller = (args) => {
         padding, // the space between the items and the viewport, applied to the cradle
         cellHeight, // the outer pixel height - literal for vertical; approximate for horizontal
         cellWidth, // the outer pixel width - literal for horizontal; approximate for vertical
-        layout, // uniform, variable
+        layout, // uniform, variable (don't use axis), dynamic (uses axis)
         dense, // boolean (only with preload)
 
         runwaySize, // the number of items outside the view of each side of the viewport 
