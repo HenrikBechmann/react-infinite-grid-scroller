@@ -271,10 +271,6 @@ export default class ContentHandler {
 
         if (shiftinstruction == 0) return
 
-        // the breaklines will be moved, so disconnect them from their observer.
-        // they are reconnected with 'renderupdatedcontent' state change in cradle.tsx
-        interruptHandler.axisBreaklinesIntersect.observer.disconnect()
-
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         const [
@@ -283,7 +279,7 @@ export default class ContentHandler {
             cradleitemshift, 
             axisreferenceindex, // new index
             axisitemshift, 
-            axisposoffset, // new offset
+            axisposoffset, // new offset (from leading edge of viewport)
             cradleContentCount, // updated
 
         ] = calcContentShift({
@@ -315,6 +311,10 @@ export default class ContentHandler {
             )
 
         if ((axisitemshift == 0 && cradleitemshift == 0)) return
+
+        // the breaklines will be moved, so disconnect them from their observer.
+        // they are reconnected with 'renderupdatedcontent' state change in cradle.tsx
+        interruptHandler.axisBreaklinesIntersect.observer.disconnect()
 
         // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
 
