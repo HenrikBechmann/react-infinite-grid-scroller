@@ -200,6 +200,7 @@ export default class ContentHandler {
         // viewport
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const viewportElement = viewportInterruptProperties.elementref.current
+
         if (!viewportElement) { 
             // not mounted; return
             return
@@ -260,7 +261,7 @@ export default class ContentHandler {
 
         // --------------------[ 2. get shift instruction ]-----------------------
 
-        // -1 is move a row up to the head, 1 is move a row down to the tail, 0 is no shift
+        // -1 is move a row up to the head, +1 is move a row down to the tail, 0 is no shift
         const shiftinstruction = getShiftInstruction({
             isScrollingviewportforward,
             breaklineEntries,
