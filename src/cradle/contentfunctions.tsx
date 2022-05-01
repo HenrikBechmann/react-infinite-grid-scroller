@@ -304,11 +304,11 @@ export const calcContentShift = ({
 
     if (!isScrollingviewportforward) { // viewport moves toward tail, add tail items, shift positive
 
-        tailaddshiftitemcount = crosscount //shiftingintersections.length
+        tailaddshiftitemcount = shiftinstruction * crosscount 
 
     } else { // scrollviewportbackward, viewport toward head, add head items, shift negative
 
-        headaddshiftitemcount = -crosscount//shiftingintersections.length
+        headaddshiftitemcount = -shiftinstruction * crosscount
 
     }
 

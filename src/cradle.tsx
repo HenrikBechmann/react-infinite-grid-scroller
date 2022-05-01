@@ -728,6 +728,7 @@ const Cradle = ({
             // it is required set configurations before 'ready' TODO: specify!
             case 'renderupdatedcontent': {
 
+                console.log('relinking breaklines to observer')
                 const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
                 const cradleElements = scaffoldHandler.elements
 
