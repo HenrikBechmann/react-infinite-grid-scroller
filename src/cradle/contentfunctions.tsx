@@ -302,13 +302,14 @@ export const calcContentShift = ({
     */
     let headaddshiftitemcount = 0, tailaddshiftitemcount = 0
 
+    // assign a shift to head or tail
     if (!isScrollingviewportforward) { // viewport moves toward tail, add tail items, shift positive
 
-        tailaddshiftitemcount = shiftinstruction * crosscount 
+        tailaddshiftitemcount = crosscount
 
     } else { // scrollviewportbackward, viewport toward head, add head items, shift negative
 
-        headaddshiftitemcount = -shiftinstruction * crosscount
+        headaddshiftitemcount = crosscount
 
     }
 
