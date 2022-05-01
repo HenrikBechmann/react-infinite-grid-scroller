@@ -723,6 +723,22 @@ const Cradle = ({
                 break
             }
 
+            // renderupdatedcontent is called from breaklineintersectionobservercallback (interruptHandler), 
+            // and called from onAfterScroll (scrollHandler)
+            // it is required set configurations before 'ready' TODO: specify!
+            case 'renderupdatedcontent': {
+
+                const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
+                const cradleElements = scaffoldHandler.elements
+
+                breaklineobserver.observe(cradleElements.headBreaklineRef.current)
+                breaklineobserver.observe(cradleElements.tailBreaklineRef.current)
+
+                setCradleState('ready')
+                break
+
+            }
+
             // -----------------------------------------------------------------------
             // ------------[ the following 5 cradle states all resolve with ]---------
             // ------------[ a chain starting with 'preparecontent', which  ]---------
@@ -817,22 +833,6 @@ const Cradle = ({
 
         const viewportInterruptProperties = viewportInterruptPropertiesRef.current
         switch (cradleState) {
-
-            // renderupdatedcontent is called from breaklineintersectionobservercallback (interruptHandler), 
-            // and called from onAfterScroll (scrollHandler)
-            // it is required set configurations before 'ready' TODO: specify!
-            case 'renderupdatedcontent': {
-
-                const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
-                const cradleElements = scaffoldHandler.elements
-
-                breaklineobserver.observe(cradleElements.headBreaklineRef.current)
-                breaklineobserver.observe(cradleElements.tailBreaklineRef.current)
-
-                setCradleState('ready')
-                break
-
-            }
 
             case 'repositioningRender':
                 break

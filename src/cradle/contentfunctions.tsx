@@ -174,7 +174,7 @@ const adjustAxisOffsetForMaxRefIndex = ({
 
 // ======================[ for updateCradleContent ]===========================
 
-export const getShiftingInstruction = ({
+export const getShiftInstruction = ({
 
     isScrollingviewportforward,
     breaklineEntries,
@@ -189,13 +189,14 @@ export const getShiftingInstruction = ({
             (isIntersecting && (!isScrollingviewportforward) && (breaklinename == 'breakline-head'))
     })
 
+    if (entries.length == 0) return 0
+
     if (entries.length > 1) {
         console.log('SYSTEM ISSUE: MORE THAN ONE BREAKLINE ENTRY', breaklineEntries.length, breaklineEntries)
         debugger
     }
 
     const [entry] = entries
-    if (!entry) return 0
     const isIntersecting = entry.isIntersecting
     const breaklinename = entry.target.dataset.type
 
@@ -213,7 +214,7 @@ export const getShiftingInstruction = ({
 // called only from updateCradleContent
 export const calcContentShift = ({
 
-    shiftinginstruction,
+    shiftinstruction,
     cradleInheritedProperties,
     cradleInternalProperties,
     cradleContent,
@@ -222,7 +223,7 @@ export const calcContentShift = ({
 
 }) => {
 
-    const isScrollingviewportforward = (shiftinginstruction < 0)
+    const isScrollingviewportforward = (shiftinstruction < 0)
 
     // ------------------------[ initialize ]-----------------------
 
@@ -303,11 +304,11 @@ export const calcContentShift = ({
 
     if (!isScrollingviewportforward) { // viewport moves toward tail, add tail items, shift positive
 
-        tailaddshiftitemcount = shiftinginstruction * crosscount //shiftingintersections.length
+        tailaddshiftitemcount = crosscount //shiftingintersections.length
 
     } else { // scrollviewportbackward, viewport toward head, add head items, shift negative
 
-        headaddshiftitemcount = -shiftinginstruction * crosscount//shiftingintersections.length
+        headaddshiftitemcount = -crosscount//shiftingintersections.length
 
     }
 

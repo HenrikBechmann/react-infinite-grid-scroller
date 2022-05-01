@@ -7,7 +7,7 @@ import {
     calcContentShift,
     getContentListRequirements,
     // isolateShiftingIntersections,
-    getShiftingInstruction,
+    getShiftInstruction,
     allocateContentList,
     deleteAndRerenderPortals,
 
@@ -208,6 +208,18 @@ export default class ContentHandler {
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
         const cradleInternalProperties = this.cradleParameters.CradleInternalPropertiesRef.current
 
+        let scrollPos
+        if (cradleInheritedProperties.orientation == 'vertical') {
+            scrollPos = viewportElement.scrollTop
+        } else {
+            scrollPos = viewportElement.scrollLeft
+        }
+        if ( scrollPos < 0) { // for Safari elastic bounce at top of scroll
+
+            return
+
+        }
+
         // handler support
         const {
             portals: portalHandler, 
@@ -218,17 +230,6 @@ export default class ContentHandler {
         } = this.cradleParameters.handlersRef.current
 
         // scroll data
-        let scrollOffset
-        if (cradleInheritedProperties.orientation == 'vertical') {
-            scrollOffset = viewportElement.scrollTop
-        } else {
-            scrollOffset = viewportElement.scrollLeft
-        }
-        if ( scrollOffset < 0) { // for Safari elastic bounce at top of scroll
-
-            return
-
-        }
         const scrollPositions = scrollHandler.scrollPositions 
 
         let isScrollingviewportforward
@@ -245,10 +246,10 @@ export default class ContentHandler {
 
         // console.log('calculated isScrollingviewportforward: scrollPositions',isScrollingviewportforward, Object.assign({},scrollPositions))
 
-        if (isScrollingviewportforward === undefined) {
-            console.log('isScrollingviewportforward === undefined')
-            return // init call
-        }
+        // if (isScrollingviewportforward === undefined) {
+        //     console.log('isScrollingviewportforward === undefined')
+        //     return // init call
+        // }
 
         // cradle scaffold and contained data
         const cradleElements = scaffoldHandler.elements
@@ -259,14 +260,14 @@ export default class ContentHandler {
 
         // --------------------[ 2. get shifting instruction ]-----------------------
 
-        const shiftinginstruction = getShiftingInstruction({
+        const shiftinstruction = getShiftInstruction({
             isScrollingviewportforward,
             breaklineEntries,
         })
 
-        // console.log('shiftinginstruction',shiftinginstruction)
+        console.log('shiftinstruction',shiftinstruction)
 
-        if (shiftinginstruction == 0) return
+        if (shiftinstruction == 0) return
 
         // the breaklines will be moved, so disconnect them from their observer
         // they are reconnected with 'renderupdatedcontent' state change in cradle.tsx
@@ -285,7 +286,7 @@ export default class ContentHandler {
 
         ] = calcContentShift({
 
-            shiftinginstruction,
+            shiftinstruction,
             cradleInheritedProperties,
             cradleInternalProperties,
             cradleContent,
