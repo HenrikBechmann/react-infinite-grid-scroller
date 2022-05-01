@@ -219,7 +219,7 @@ const Cradle = ({
 
     const [cradleState, setCradleState] = useState('setup')
 
-    console.log('cradle state',cradleState)
+    // console.log('cradle state',cradleState)
 
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState;
