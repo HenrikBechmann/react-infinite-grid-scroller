@@ -5,13 +5,9 @@
  ------------------------------------[ SUPPORTING FUNCTIONS ]------------------------------
 *******************************************************************************************/
 
-import React, {useContext} from 'react'
+import React from 'react'
 
 import CellShell from '../cellshell'
-
-import { detect } from 'detect-browser'
-
-const browser = detect()
 
 // ======================[ for setCradleContent ]===========================
 
