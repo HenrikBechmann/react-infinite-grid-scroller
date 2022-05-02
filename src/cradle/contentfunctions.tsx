@@ -388,7 +388,7 @@ export const calcContentShift = ({
         newCradleActualContentCount -= itemsShortfall
     }
 
-    console.log('8. newCradleActualContentCount',newCradleActualContentCount)
+    // console.log('8. newCradleActualContentCount',newCradleActualContentCount)
 
     return [
         newcradlereferenceindex, 

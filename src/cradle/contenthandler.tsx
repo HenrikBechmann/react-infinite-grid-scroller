@@ -256,7 +256,7 @@ export default class ContentHandler {
             breaklineEntries,
         })
 
-        console.log('shiftinstruction',shiftinstruction)
+        // console.log('shiftinstruction',shiftinstruction)
 
         if (shiftinstruction == 0) return
 
@@ -284,7 +284,6 @@ export default class ContentHandler {
             cradleContent,
             cradleElements,
             scrollPos,
-            // viewportElement,
 
         })
 
@@ -329,6 +328,8 @@ export default class ContentHandler {
             cradleFirstIndex, // previous cradlefirstindex
 
         })
+
+        console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
 
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
