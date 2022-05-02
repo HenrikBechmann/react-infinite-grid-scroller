@@ -376,7 +376,7 @@ export const calcContentShift = ({
 
     let newaxisposoffset = viewportaxisoffset + axisposshift
 
-    console.log('7. axisposshift, newaxisposoffset',axisposshift, newaxisposoffset)
+    // console.log('7. axisposshift, newaxisposoffset',axisposshift, newaxisposoffset)
 
     // ---------------------[ 6. return required values ]-------------------
 
