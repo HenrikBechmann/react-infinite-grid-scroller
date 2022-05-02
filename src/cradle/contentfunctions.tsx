@@ -324,7 +324,7 @@ export const calcContentShift = ({
     // negative value shifted toward head; positive value shifted toward tail
     // one of the two expressions in the following line will be 0
     let axisreferenceshiftitemcount = 
-        -(tailaddshiftitemcount - tailovershootitemcount) + 
+        -(tailaddshiftitemcount + tailovershootitemcount) + 
         (headaddshiftitemcount + headovershootitemcount)
 
     let cradlereferenceshiftitemcount = axisreferenceshiftitemcount
