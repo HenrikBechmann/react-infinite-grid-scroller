@@ -291,19 +291,20 @@ export const calcContentShift = ({
         axis reference is the first tail item
     */
 
-    // assign a shift to head or tail
-    const tailaddshiftitemcount = (!isScrollingviewportforward)?crosscount:0
-    const headaddshiftitemcount = (isScrollingviewportforward)?crosscount:0
+    // allocate a base shift to head or tail
+    const headblockaddshiftitemcount = (isScrollingviewportforward)?crosscount:0
+    const tailblockaddshiftitemcount = (!isScrollingviewportforward)?crosscount:0
 
-    console.log('2.b headaddshiftitemcount, tailaddshiftitemcount', 
-        headaddshiftitemcount, tailaddshiftitemcount)
+    console.log('2.b base headblockaddshiftitemcount, tailblockaddshiftitemcount', 
+        headblockaddshiftitemcount, tailblockaddshiftitemcount)
 
-    // negative value shifted toward head; positive value shifted toward tail
+    // negative value shifted toward tail; positive value shifted toward head
     // one of the two expressions in the following line will be 0
     let axisreferenceshiftitemcount = 
-        -(tailaddshiftitemcount + backwardovershootitemcount) + 
-        (headaddshiftitemcount + forwardovershootitemcount)
+        -(tailblockaddshiftitemcount + backwardovershootitemcount) + 
+        (headblockaddshiftitemcount + forwardovershootitemcount)
 
+    // base value for cradle reference shift
     let cradlereferenceshiftitemcount = axisreferenceshiftitemcount
 
     let cradlereferencerowshift = 
@@ -313,13 +314,13 @@ export const calcContentShift = ({
     cradlereferenceshiftitemcount = Math.round(cradlereferencerowshift * crosscount)
 
     let axisreferencerowshift = 
-    (axisreferenceshiftitemcount > 0) // could include partial row from shiftingintersections
-        ?Math.ceil(axisreferenceshiftitemcount/crosscount)
-        :Math.floor(axisreferenceshiftitemcount/crosscount)
+        (axisreferenceshiftitemcount > 0) // could include partial row from shiftingintersections
+            ?Math.ceil(axisreferenceshiftitemcount/crosscount)
+            :Math.floor(axisreferenceshiftitemcount/crosscount)
     axisreferenceshiftitemcount = Math.round(axisreferencerowshift * crosscount)
 
-    // console.log('3. preliminary axisreferenceshiftitemcount, cradlereferenceshiftitemcount, axisreferencerowshift, cradlereferencerowshift',
-    //     axisreferenceshiftitemcount, cradlereferenceshiftitemcount, axisreferencerowshift, cradlereferencerowshift)
+    console.log('3. preliminary axisreferenceshiftitemcount, cradlereferenceshiftitemcount, axisreferencerowshift, cradlereferencerowshift',
+        axisreferenceshiftitemcount, cradlereferenceshiftitemcount, axisreferencerowshift, cradlereferencerowshift)
 
     // ----------------[ 3. calc new cradle reference index and axis reference index ]-----------------
 
