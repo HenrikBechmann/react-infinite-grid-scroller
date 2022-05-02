@@ -220,11 +220,6 @@ export default class ContentHandler {
 
         let scrollPos = scrollPositions.currentupdate
 
-        // if (cradleInheritedProperties.orientation == 'vertical') {
-        //     scrollPos = viewportElement.scrollTop
-        // } else {
-        //     scrollPos = viewportElement.scrollLeft
-        // }
         if ( scrollPos < 0) { // for Safari elastic bounce at top of scroll
 
             return
@@ -245,11 +240,6 @@ export default class ContentHandler {
 
         // console.log('scrollPos, calculated isScrollingviewportforward: scrollPositions',
         //     scrollPos, isScrollingviewportforward, Object.assign({},scrollPositions))
-
-        // if (isScrollingviewportforward === undefined) {
-        //     console.log('isScrollingviewportforward === undefined')
-        //     return // init call
-        // }
 
         // cradle scaffold and contained data
         const cradleElements = scaffoldHandler.elements

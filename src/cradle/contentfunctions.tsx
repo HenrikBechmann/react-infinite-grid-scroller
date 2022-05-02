@@ -250,7 +250,7 @@ export const calcContentShift = ({
     const { crosscount,
         cradleRowcount,
         listRowcount,
-        viewportRowcount
+        // viewportRowcount
     } = cradleInternalProperties
 
     const cellLength = ((orientation == 'vertical')?cellHeight:cellWidth) + gap
