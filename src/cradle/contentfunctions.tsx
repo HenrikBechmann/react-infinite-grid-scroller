@@ -356,19 +356,19 @@ export const calcContentShift = ({
     console.log('6.a proposedcradlereferenceindex, proposedaxisreferenceindex',
         newcradlereferenceindex, newaxisreferenceindex)
 
-    const headrunwayrows = Math.round((newaxisreferenceindex - newcradlereferenceindex)/crosscount)
-    if (headrunwayrows < runwaycount) {
-        const diff = runwaycount - headrunwayrows
-        newcradlereferenceindex -= (diff * crosscount)
-    }
+    // const headrunwayrows = Math.round((newaxisreferenceindex - newcradlereferenceindex)/crosscount)
+    // if (headrunwayrows < runwaycount) {
+    //     const diff = runwaycount - headrunwayrows
+    //     newcradlereferenceindex -= (diff * crosscount)
+    // }
     const tailrunwayrows = computedNextCradleEndrowOffset - (newaxisreferenceindex/crosscount)
     if ((tailrunwayrows - viewportRowcount)  < runwaycount) {
         const diff = runwaycount - (tailrunwayrows - viewportRowcount)
         newaxisreferenceindex -= (diff * crosscount)
     }
 
-    console.log('6.b runwaycount, viewportRowcount, newcradlereferenceindex, headrunwayrows, newaxisreferenceindex, tailrunwayrows', 
-        runwaycount, viewportRowcount, newcradlereferenceindex, headrunwayrows, newaxisreferenceindex, tailrunwayrows)
+    console.log('6.b runwaycount, viewportRowcount, newaxisreferenceindex, tailrunwayrows', 
+        runwaycount, viewportRowcount, newaxisreferenceindex, tailrunwayrows)
 
     if (newcradlereferenceindex < 0) {
         cradlereferenceitemshift += newcradlereferenceindex
