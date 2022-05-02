@@ -238,9 +238,9 @@ export const calcContentShift = ({
         // breaklineOffset,
     } = cradleInheritedProperties
 
-    const axisElement = cradleElements.axisRef.current,
-        headElement = cradleElements.headRef.current,
-        tailElement = cradleElements.tailRef.current
+    const axisElement = cradleElements.axisRef.current
+        // headElement = cradleElements.headRef.current,
+        // tailElement = cradleElements.tailRef.current
 
     const {cradleModel:cradlecontentlist, 
         headModelComponents:headcontentlist, 
@@ -253,34 +253,34 @@ export const calcContentShift = ({
         // viewportRowcount
     } = cradleInternalProperties
 
-    const cellLength = ((orientation == 'vertical')?cellHeight:cellWidth) + gap
+    const cellLength = ((orientation == 'vertical')?cellHeight:(cellWidth) + gap)
 
-    let viewportaxisoffset // the pixel distance between the viewport frame and the axis, toward the head
+    const viewportaxisoffset = // the pixel distance between the viewport frame and the axis, toward the head
+        ((orientation == 'vertical')?axisElement.offsetTop:(axisElement.offsetLeft)) - scrollPos
+    // if (orientation == 'vertical') {
+    //     // scrollPos = viewportElement.scrollTop
+    //     viewportaxisoffset = axisElement.offsetTop - scrollPos // viewportElement.scrollTop
 
-    if (orientation == 'vertical') {
-        // scrollPos = viewportElement.scrollTop
-        viewportaxisoffset = axisElement.offsetTop - scrollPos // viewportElement.scrollTop
+    // } else { // horizontal
 
-    } else { // horizontal
+    //     // scrollPos = viewportElement.scrollLeft
+    //     viewportaxisoffset = axisElement.offsetLeft - scrollPos // viewportElement.scrollLeft
 
-        // scrollPos = viewportElement.scrollLeft
-        viewportaxisoffset = axisElement.offsetLeft - scrollPos // viewportElement.scrollLeft
-
-    }
+    // }
 
     // these are always positive
-    let viewportheadgaplength = 0
-    let viewporttailgaplength = 0
+    const viewportheadgaplength = (!isScrollingviewportforward)?(-(viewportaxisoffset - cellLength)):0
+    const viewporttailgaplength = (isScrollingviewportforward)?-viewportaxisoffset:0
 
-    if (!isScrollingviewportforward) { // scrollviewportbackward, toward head
+    // if (!isScrollingviewportforward) { // scrollviewportbackward, toward head
 
-        viewportheadgaplength = -(viewportaxisoffset - cellLength)
+    //     viewportheadgaplength = -(viewportaxisoffset - cellLength)
 
-    } else {
+    // } else {
 
-        viewporttailgaplength = -viewportaxisoffset
+    //     viewporttailgaplength = -viewportaxisoffset
 
-    }
+    // }
 
     // console.log('1. cellLength, scrollPos, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength',
     //     cellLength, scrollPos, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength)
@@ -288,11 +288,11 @@ export const calcContentShift = ({
     // -------[ 1. calculate the axis overshoot item & row counts, if any ]-------
     
     // overshoot lengths are always positive
-    let headovershootrowcount = Math.floor(viewportheadgaplength/cellLength)
-    let tailovershootrowcount = Math.floor(viewporttailgaplength/cellLength)
+    const headovershootrowcount = Math.floor(viewportheadgaplength/cellLength)
+    const tailovershootrowcount = Math.floor(viewporttailgaplength/cellLength)
 
-    let headovershootitemcount = headovershootrowcount * crosscount
-    let tailovershootitemcount = tailovershootrowcount * crosscount
+    const headovershootitemcount = headovershootrowcount * crosscount
+    const tailovershootitemcount = tailovershootrowcount * crosscount
 
     // -----------------[ 2. calculate item & row shift counts including overshoot ]-------------
 
@@ -302,18 +302,20 @@ export const calcContentShift = ({
         cradle reference is the first content item
         axis reference is the first tail item
     */
-    let headaddshiftitemcount = 0, tailaddshiftitemcount = 0
 
     // assign a shift to head or tail
-    if (!isScrollingviewportforward) { // viewport moves toward tail, add tail items, shift positive
+    const tailaddshiftitemcount = (!isScrollingviewportforward)?crosscount:0
+    const headaddshiftitemcount = (isScrollingviewportforward)?crosscount:0
 
-        tailaddshiftitemcount = crosscount
+    // if (!isScrollingviewportforward) { // viewport moves toward tail, add tail items, shift positive
 
-    } else { // scrollviewportbackward, viewport toward head, add head items, shift negative
+    //     tailaddshiftitemcount = crosscount
 
-        headaddshiftitemcount = crosscount
+    // } else { // scrollviewportbackward, viewport toward head, add head items, shift negative
 
-    }
+    //     headaddshiftitemcount = crosscount
+
+    // }
 
     // console.log('2.a headaddshiftitemcount, tailaddshiftitemcount', 
     //     headaddshiftitemcount, tailaddshiftitemcount)
