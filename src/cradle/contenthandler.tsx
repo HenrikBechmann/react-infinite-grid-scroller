@@ -287,6 +287,9 @@ export default class ContentHandler {
 
         })
 
+        console.log('cradlereferenceindex, cradleitemshift', 
+            cradlereferenceindex, cradleitemshift)
+
 
         // console.log(`
         //     cradlereferenceindex, 
@@ -329,7 +332,7 @@ export default class ContentHandler {
 
         })
 
-        console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
+        // console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
 
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 

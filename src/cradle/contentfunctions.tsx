@@ -234,7 +234,7 @@ export const calcContentShift = ({
         cellWidth,
         listsize,
         // padding,
-        // runwaycount,
+        runwaycount,
         // breaklineOffset,
     } = cradleInheritedProperties
 
@@ -368,6 +368,27 @@ export const calcContentShift = ({
         const diff = prev - cradlereferencerowshift
         newcradlereferenceindex = 0
         computedNextCradleEndrowOffset += diff
+    }
+
+    // cradlerows is designed to remain constant...
+    let targetcradlereferenceindex = 
+        newaxisreferenceindex - ((runwaycount * crosscount) + crosscount )
+
+    console.log('targetcradlereferenceindex, newcradlereferenceindex',
+        targetcradlereferenceindex, newcradlereferenceindex)
+
+    let runwayadjustment = 0
+    if (targetcradlereferenceindex < 0) {
+        runwayadjustment = -targetcradlereferenceindex
+        targetcradlereferenceindex = 0
+    } 
+
+
+    if (targetcradlereferenceindex < newcradlereferenceindex) {
+        const indexadjustment = newcradlereferenceindex - targetcradlereferenceindex
+        newcradlereferenceindex -= indexadjustment
+        cradlereferenceitemshift -= indexadjustment
+        cradlereferencerowshift -= (indexadjustment/crosscount)
     }
 
     // -------------[ 5. calculate new axis pixel position ]------------------
