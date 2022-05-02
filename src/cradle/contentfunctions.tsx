@@ -257,42 +257,30 @@ export const calcContentShift = ({
 
     const viewportaxisoffset = // the pixel distance between the viewport frame and the axis, toward the head
         ((orientation == 'vertical')?axisElement.offsetTop:(axisElement.offsetLeft)) - scrollPos
-    // if (orientation == 'vertical') {
-    //     // scrollPos = viewportElement.scrollTop
-    //     viewportaxisoffset = axisElement.offsetTop - scrollPos // viewportElement.scrollTop
-
-    // } else { // horizontal
-
-    //     // scrollPos = viewportElement.scrollLeft
-    //     viewportaxisoffset = axisElement.offsetLeft - scrollPos // viewportElement.scrollLeft
 
     // }
 
-    // these are always positive
-    const viewportheadgaplength = (!isScrollingviewportforward)?(-(viewportaxisoffset - cellLength)):0
-    const viewporttailgaplength = (isScrollingviewportforward)?-viewportaxisoffset:0
+    // the gap between the cell about to be moved, and the viewport edge
+    // reference cell forward end for scrolling forward or backward end for moving backward
+    const viewportaxisbackwardgaplength = (!isScrollingviewportforward)?(viewportaxisoffset - cellLength):0
+    const viewportaxisforwardgaplength = (isScrollingviewportforward)?-viewportaxisoffset:0
 
-    // if (!isScrollingviewportforward) { // scrollviewportbackward, toward head
-
-    //     viewportheadgaplength = -(viewportaxisoffset - cellLength)
-
-    // } else {
-
-    //     viewporttailgaplength = -viewportaxisoffset
-
-    // }
-
-    // console.log('1. cellLength, scrollPos, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength',
-    //     cellLength, scrollPos, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength)
+    console.log('1. cellLength, viewportaxisoffset, viewportbackwardgaplength, viewportforwardgaplength',
+        cellLength, viewportaxisoffset, viewportaxisbackwardgaplength, viewportaxisforwardgaplength)
 
     // -------[ 1. calculate the axis overshoot item & row counts, if any ]-------
     
-    // overshoot lengths are always positive
-    const headovershootrowcount = Math.floor(viewportheadgaplength/cellLength)
-    const tailovershootrowcount = Math.floor(viewporttailgaplength/cellLength)
+    // these overshoot numbers guaranteed to be 0 or positive
+    const forwardovershootrowcount = 
+        Math.max(0,Math.floor(viewportaxisforwardgaplength/cellLength))
+    const backwardovershootrowcount = 
+        Math.max(0,Math.floor(viewportaxisbackwardgaplength/cellLength))
 
-    const headovershootitemcount = headovershootrowcount * crosscount
-    const tailovershootitemcount = tailovershootrowcount * crosscount
+    const forwardovershootitemcount = forwardovershootrowcount * crosscount
+    const backwardovershootitemcount = backwardovershootrowcount * crosscount
+
+    console.log('2.a forwardovershootrowcount, forwardovershootitemcount, backwardovershootrowcount, backwardovershootitemcount', 
+        forwardovershootrowcount, forwardovershootitemcount, backwardovershootrowcount, backwardovershootitemcount)
 
     // -----------------[ 2. calculate item & row shift counts including overshoot ]-------------
 
@@ -307,35 +295,23 @@ export const calcContentShift = ({
     const tailaddshiftitemcount = (!isScrollingviewportforward)?crosscount:0
     const headaddshiftitemcount = (isScrollingviewportforward)?crosscount:0
 
-    // if (!isScrollingviewportforward) { // viewport moves toward tail, add tail items, shift positive
-
-    //     tailaddshiftitemcount = crosscount
-
-    // } else { // scrollviewportbackward, viewport toward head, add head items, shift negative
-
-    //     headaddshiftitemcount = crosscount
-
-    // }
-
-    // console.log('2.a headaddshiftitemcount, tailaddshiftitemcount', 
-    //     headaddshiftitemcount, tailaddshiftitemcount)
-
-    // console.log('2.b headovershootrowcount, headovershootitemcount, tailovershootrowcount, tailovershootitemcount', 
-    //     headovershootrowcount, headovershootitemcount, tailovershootrowcount, tailovershootitemcount)
+    console.log('2.b headaddshiftitemcount, tailaddshiftitemcount', 
+        headaddshiftitemcount, tailaddshiftitemcount)
 
     // negative value shifted toward head; positive value shifted toward tail
     // one of the two expressions in the following line will be 0
     let axisreferenceshiftitemcount = 
-        -(tailaddshiftitemcount + tailovershootitemcount) + 
-        (headaddshiftitemcount + headovershootitemcount)
+        -(tailaddshiftitemcount + backwardovershootitemcount) + 
+        (headaddshiftitemcount + forwardovershootitemcount)
 
     let cradlereferenceshiftitemcount = axisreferenceshiftitemcount
 
     let cradlereferencerowshift = 
-    (cradlereferenceshiftitemcount > 0) // could include partial row from shiftingintersections
-        ?Math.ceil(cradlereferenceshiftitemcount/crosscount)
-        :Math.floor(cradlereferenceshiftitemcount/crosscount)
+        (cradlereferenceshiftitemcount > 0)
+            ?Math.ceil(cradlereferenceshiftitemcount/crosscount)
+            :Math.floor(cradlereferenceshiftitemcount/crosscount)
     cradlereferenceshiftitemcount = Math.round(cradlereferencerowshift * crosscount)
+
     let axisreferencerowshift = 
     (axisreferenceshiftitemcount > 0) // could include partial row from shiftingintersections
         ?Math.ceil(axisreferenceshiftitemcount/crosscount)
@@ -356,17 +332,11 @@ export const calcContentShift = ({
     //     previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount)
 
     // computed shifted cradle end row, looking for overshoot
-    let rowovershoot
     let computedNextCradleEndrowOffset = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift - 1)
-    if (isScrollingviewportforward) { // scroll viewport toward tail, shift is positive, add to tail
 
-        rowovershoot = Math.max(0,computedNextCradleEndrowOffset - listRowcount) // overshoot amount 
-
-    } else { // scroll viewport backward, scroll viewport toward head, shift is negative, add to head
-
-        rowovershoot = Math.min(0,previouscradlerowoffset + cradlereferencerowshift)
-
-    }
+    const rowovershoot = (isScrollingviewportforward)
+        ?(Math.max(0,computedNextCradleEndrowOffset - listRowcount))
+        :(Math.min(0,previouscradlerowoffset + cradlereferencerowshift))
 
     if (rowovershoot) {
         cradlereferencerowshift -= rowovershoot
