@@ -330,6 +330,7 @@ export const calcContentShift = ({
     const previouscradlereferenceindex = (cradlecontentlist[0]?.props.index || 0)
     const previouscradlerowoffset = Math.round(previouscradlereferenceindex/crosscount)
     const previousaxisreferenceindex = (tailcontentlist[0]?.props.index || 0)
+    const previouslastindex = (cradlecontentlist.at(-1)?.props.index || 0)
     // const previousaxisreferencerowoffset = Math.round(previousaxisreferenceindex/crosscount)
 
     // console.log('4. previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount',
@@ -374,12 +375,12 @@ export const calcContentShift = ({
     let targetcradlereferenceindex = 
         newaxisreferenceindex - ((runwaycount * crosscount) + crosscount )
 
-    console.log('targetcradlereferenceindex, newcradlereferenceindex',
-        targetcradlereferenceindex, newcradlereferenceindex)
+    // console.log('targetcradlereferenceindex, newcradlereferenceindex',
+    //     targetcradlereferenceindex, newcradlereferenceindex)
 
-    let runwayadjustment = 0
+    // let runwayadjustment = 0
     if (targetcradlereferenceindex < 0) {
-        runwayadjustment = -targetcradlereferenceindex
+        // runwayadjustment = -targetcradlereferenceindex
         targetcradlereferenceindex = 0
     } 
 
@@ -409,8 +410,17 @@ export const calcContentShift = ({
         newCradleActualContentCount -= itemsShortfall
     }
 
+    const targetlastindex = newcradlereferenceindex + newCradleActualContentCount -1
+
     const headchangecount = -cradlereferenceitemshift
-    const tailchangecount = -headchangecount - (cradlecontentlist.length - newCradleActualContentCount)
+    let tailchangecount = -headchangecount - (cradlecontentlist.length - newCradleActualContentCount)
+
+    console.log('previouslastindex, headchangecount, tailchangecount, targetlastindex',
+        previouslastindex, headchangecount, tailchangecount, targetlastindex)
+    if ((previouslastindex + tailchangecount) < targetlastindex) {
+        const diff = targetlastindex - (previouslastindex + tailchangecount)
+        tailchangecount -= diff
+    }
 
     // console.log('8. newCradleActualContentCount',newCradleActualContentCount)
 

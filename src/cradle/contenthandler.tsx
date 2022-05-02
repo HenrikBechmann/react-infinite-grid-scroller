@@ -246,7 +246,7 @@ export default class ContentHandler {
         const cradleContent = this.content
         const itemElements = this.itemElements
         const modelcontentlist = cradleContent.cradleModel
-        const cradleFirstIndex = modelcontentlist[0].props.index
+        const cradleFirstIndex = (modelcontentlist[0]?.props.index || 0)
 
         // --------------------[ 2. get shift instruction ]-----------------------
 
