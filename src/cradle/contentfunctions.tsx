@@ -234,7 +234,7 @@ export const calcContentShift = ({
         cellWidth,
         listsize,
         // padding,
-        runwaycount,
+        // runwaycount,
         // breaklineOffset,
     } = cradleInheritedProperties
 
@@ -250,10 +250,10 @@ export const calcContentShift = ({
     const { crosscount,
         cradleRowcount,
         listRowcount,
-        viewportRowcount
+        // viewportRowcount
     } = cradleInternalProperties
 
-    const cellLength = ((orientation == 'vertical')?cellHeight:(cellWidth) + gap)
+    const cellLength = ((orientation == 'vertical')?cellHeight:cellWidth) + gap
 
     // -----------[ 1. calculate the forward or backward values for input ]-------------------
 
@@ -332,8 +332,8 @@ export const calcContentShift = ({
     const previousaxisreferenceindex = (tailcontentlist[0]?.props.index || 0)
     // const previousaxisreferencerowoffset = Math.round(previousaxisreferenceindex/crosscount)
 
-    console.log('4. previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount',
-        previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount)
+    // console.log('4. previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount',
+    //     previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount)
 
     // computed shifted cradle end row, looking for overshoot
     let computedNextCradleEndrowOffset = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift - 1)
@@ -347,53 +347,36 @@ export const calcContentShift = ({
         cradlereferenceitemshift -= (listovershoot * crosscount)
     }
 
-    console.log('5. listovershoot, computedNextCradleEndrowOffset, cradlereferencerowshift, cradlereferenceitemshift',
-        listovershoot,computedNextCradleEndrowOffset, cradlereferencerowshift, cradlereferenceitemshift)
+    // console.log('5. listovershoot, computedNextCradleEndrowOffset, cradlereferencerowshift, cradlereferenceitemshift',
+    //     listovershoot,computedNextCradleEndrowOffset, cradlereferencerowshift, cradlereferenceitemshift)
 
     let newcradlereferenceindex = previouscradlereferenceindex + cradlereferenceitemshift
     let newaxisreferenceindex = previousaxisreferenceindex + axisreferenceitemshift
 
-    console.log('6.a proposedcradlereferenceindex, proposedaxisreferenceindex',
-        newcradlereferenceindex, newaxisreferenceindex)
+    // console.log('6.a proposedcradlereferenceindex, proposedaxisreferenceindex',
+    //     newcradlereferenceindex, newaxisreferenceindex)
 
-    // const headrunwayrows = Math.round((newaxisreferenceindex - newcradlereferenceindex)/crosscount)
-    // if (headrunwayrows < runwaycount) {
-    //     const diff = runwaycount - headrunwayrows
-    //     newcradlereferenceindex -= (diff * crosscount)
-    // }
-    const tailrunwayrows = computedNextCradleEndrowOffset - (newaxisreferenceindex/crosscount)
-    if ((tailrunwayrows - viewportRowcount)  < runwaycount) {
-        const diff = runwaycount - (tailrunwayrows - viewportRowcount)
-        newaxisreferenceindex -= (diff * crosscount)
-    }
+    // console.log('6.b runwaycount, viewportRowcount, newaxisreferenceindex, tailrunwayrows', 
+    //     runwaycount, viewportRowcount)
 
-    console.log('6.b runwaycount, viewportRowcount, newaxisreferenceindex, tailrunwayrows', 
-        runwaycount, viewportRowcount, newaxisreferenceindex, tailrunwayrows)
-
+    // undershoot
     if (newcradlereferenceindex < 0) {
         cradlereferenceitemshift += newcradlereferenceindex
         cradlereferenceitemshift = Math.max(0,cradlereferenceitemshift)
-        const x = cradlereferencerowshift
+        const prev = cradlereferencerowshift
         cradlereferencerowshift = cradlereferenceitemshift/crosscount
-        const diff = x - cradlereferencerowshift
+        const diff = prev - cradlereferencerowshift
         newcradlereferenceindex = 0
         computedNextCradleEndrowOffset += diff
     }
-    if (newaxisreferenceindex < 0) {
-        axisreferenceitemshift += newaxisreferenceindex
-        axisreferencerowshift = axisreferenceitemshift/crosscount
-        newaxisreferenceindex = 0
-    }
-    // console.log('6.c revised cradlereferenceshiftitemcount, cradlereferencerowshift, proposedcradlereferenceindex, computedNextCradleEndrowOffset',
-    //     cradlereferenceshiftitemcount, cradlereferencerowshift, proposedcradlereferenceindex, computedNextCradleEndrowOffset)
-    // console.log('6.d revised axisreferenceshiftitemcount, axisreferencerowshift, proposedaxisreferenceindex',
-    //     axisreferenceshiftitemcount, axisreferencerowshift, proposedaxisreferenceindex)
 
     // -------------[ 5. calculate new axis pixel position ]------------------
 
     const axisposshift = axisreferencerowshift * cellLength
 
     let newaxisposoffset = viewportaxisoffset + axisposshift
+
+    console.log('7. axisposshift, newaxisposoffset',axisposshift, newaxisposoffset)
 
     // ---------------------[ 6. return required values ]-------------------
 
