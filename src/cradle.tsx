@@ -6,6 +6,7 @@
     BUGS:
     - context problems develop when rotating phone while scrolling intertia continues
     - rapid back and forth in middle eventually causes fail of intercepts
+    - cell height not being respected in nested scrollers.
 
     TODO:
 

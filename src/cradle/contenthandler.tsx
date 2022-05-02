@@ -289,21 +289,21 @@ export default class ContentHandler {
         })
 
 
-        console.log(`
-            cradlereferenceindex, 
-            cradleitemshift, 
-            axisreferenceindex, 
-            axisitemshift, 
-            axisposoffset, 
-            newCradleActualContentCount,
-            `,
-            cradlereferenceindex, 
-            cradleitemshift, 
-            axisreferenceindex, 
-            axisitemshift, 
-            axisposoffset, 
-            cradleContentCount,
-            )
+        // console.log(`
+        //     cradlereferenceindex, 
+        //     cradleitemshift, 
+        //     axisreferenceindex, 
+        //     axisitemshift, 
+        //     axisposoffset, 
+        //     newCradleActualContentCount,
+        //     `,
+        //     cradlereferenceindex, 
+        //     cradleitemshift, 
+        //     axisreferenceindex, 
+        //     axisitemshift, 
+        //     axisposoffset, 
+        //     cradleContentCount,
+        //     )
 
         if ((axisitemshift == 0 && cradleitemshift == 0)) {
             console.log('returning for no axis or cradle shift')

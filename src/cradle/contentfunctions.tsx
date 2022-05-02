@@ -282,8 +282,8 @@ export const calcContentShift = ({
 
     }
 
-    console.log('1. cellLength, scrollPos, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength',
-        cellLength, scrollPos, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength)
+    // console.log('1. cellLength, scrollPos, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength',
+    //     cellLength, scrollPos, viewportaxisoffset, viewportheadgaplength, viewporttailgaplength)
 
     // -------[ 1. calculate the axis overshoot item & row counts, if any ]-------
     
@@ -315,11 +315,11 @@ export const calcContentShift = ({
 
     }
 
-    console.log('2.a headaddshiftitemcount, tailaddshiftitemcount', 
-        headaddshiftitemcount, tailaddshiftitemcount)
+    // console.log('2.a headaddshiftitemcount, tailaddshiftitemcount', 
+    //     headaddshiftitemcount, tailaddshiftitemcount)
 
-    console.log('2.b headovershootrowcount, headovershootitemcount, tailovershootrowcount, tailovershootitemcount', 
-        headovershootrowcount, headovershootitemcount, tailovershootrowcount, tailovershootitemcount)
+    // console.log('2.b headovershootrowcount, headovershootitemcount, tailovershootrowcount, tailovershootitemcount', 
+    //     headovershootrowcount, headovershootitemcount, tailovershootrowcount, tailovershootitemcount)
 
     // negative value shifted toward head; positive value shifted toward tail
     // one of the two expressions in the following line will be 0
@@ -340,8 +340,8 @@ export const calcContentShift = ({
         :Math.floor(axisreferenceshiftitemcount/crosscount)
     axisreferenceshiftitemcount = Math.round(axisreferencerowshift * crosscount)
 
-    console.log('3. preliminary axisreferenceshiftitemcount, cradlereferenceshiftitemcount, axisreferencerowshift, cradlereferencerowshift',
-        axisreferenceshiftitemcount, cradlereferenceshiftitemcount, axisreferencerowshift, cradlereferencerowshift)
+    // console.log('3. preliminary axisreferenceshiftitemcount, cradlereferenceshiftitemcount, axisreferencerowshift, cradlereferencerowshift',
+    //     axisreferenceshiftitemcount, cradlereferenceshiftitemcount, axisreferencerowshift, cradlereferencerowshift)
 
     // ----------------[ 3. calc new cradle reference index and axis reference index ]-----------------
 
