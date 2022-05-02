@@ -409,6 +409,9 @@ export const calcContentShift = ({
         newCradleActualContentCount -= itemsShortfall
     }
 
+    const headchangecount = -cradlereferenceitemshift
+    const tailchangecount = -headchangecount - (cradlecontentlist.length - newCradleActualContentCount)
+
     // console.log('8. newCradleActualContentCount',newCradleActualContentCount)
 
     return [
@@ -418,6 +421,8 @@ export const calcContentShift = ({
         axisreferenceitemshift, 
         newaxisposoffset, 
         newCradleActualContentCount,
+        headchangecount,
+        tailchangecount
     ]
 
 }

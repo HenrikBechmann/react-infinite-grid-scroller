@@ -275,6 +275,8 @@ export default class ContentHandler {
             axisitemshift, 
             axisposoffset, // new offset (from leading edge of viewport)
             cradleContentCount, // updated
+            headchangecount,
+            tailchangecount,
 
         ] = calcContentShift({
 
@@ -287,8 +289,8 @@ export default class ContentHandler {
 
         })
 
-        console.log('cradlereferenceindex, cradleitemshift', 
-            cradlereferenceindex, cradleitemshift)
+        console.log('cradlereferenceindex, cradleitemshift, headchangecount, tailchangecount', 
+            cradlereferenceindex, cradleitemshift, headchangecount, tailchangecount)
 
 
         // console.log(`
@@ -321,16 +323,16 @@ export default class ContentHandler {
 
         // the number of items to add to and clip from the contentlist
         // negative number is clip; positive number is add
-        const [headchangecount,tailchangecount] = calcHeadAndTailChanges({ 
+        // const [headchangecount,tailchangecount] = calcHeadAndTailChanges({ 
 
-            cradleInheritedProperties,
-            cradleInternalProperties,
-            cradleContent,
-            cradleshiftcount:cradleitemshift,
-            isScrollingviewportforward,
-            cradleFirstIndex, // previous cradlefirstindex
+        //     cradleInheritedProperties,
+        //     cradleInternalProperties,
+        //     cradleContent,
+        //     cradleshiftcount:cradleitemshift,
+        //     isScrollingviewportforward,
+        //     cradleFirstIndex, // previous cradlefirstindex
 
-        })
+        // })
 
         // console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
 
