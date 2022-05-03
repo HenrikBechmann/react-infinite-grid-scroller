@@ -339,6 +339,7 @@ export const calcContentShift = ({
     // computed shifted cradle end row, looking for overshoot
     let computedNextCradleEndrowOffset = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift - 1)
 
+    // adjust for overshoot end of list
     const listovershoot = (isScrollingviewportforward)
         ?(Math.max(0,computedNextCradleEndrowOffset - listRowcount))
         :(Math.min(0,previouscradlerowoffset + cradlereferencerowshift))
@@ -360,7 +361,7 @@ export const calcContentShift = ({
     // console.log('6.b runwaycount, viewportRowcount, newaxisreferenceindex, tailrunwayrows', 
     //     runwaycount, viewportRowcount)
 
-    // undershoot
+    // adjust for undershoot start of list
     if (newcradlereferenceindex < 0) {
         cradlereferenceitemshift += newcradlereferenceindex
         cradlereferenceitemshift = Math.max(0,cradlereferenceitemshift)
@@ -371,19 +372,28 @@ export const calcContentShift = ({
         computedNextCradleEndrowOffset += diff
     }
 
-    // cradlerows is designed to remain constant...
+    // adjustments at start and end of list to maintain constant number of cradle rows
+
+    let newCradleActualContentCount = cradleRowcount * crosscount
+
+    const includesLastRow = (computedNextCradleEndrowOffset >= listRowcount)
+    if (includesLastRow) {
+        const partialspaces = listsize % crosscount
+        const itemsShortfall = crosscount - partialspaces
+        newCradleActualContentCount -= itemsShortfall
+    }
+
     let targetcradlereferenceindex = 
         newaxisreferenceindex - ((runwaycount * crosscount) + crosscount )
 
-    // console.log('targetcradlereferenceindex, newcradlereferenceindex',
+    // console.log('6.c targetcradlereferenceindex, newcradlereferenceindex',
     //     targetcradlereferenceindex, newcradlereferenceindex)
 
-    // let runwayadjustment = 0
     if (targetcradlereferenceindex < 0) {
-        // runwayadjustment = -targetcradlereferenceindex
-        targetcradlereferenceindex = 0
-    } 
 
+        targetcradlereferenceindex = 0
+
+    }
 
     if (targetcradlereferenceindex < newcradlereferenceindex) {
         const indexadjustment = newcradlereferenceindex - targetcradlereferenceindex
@@ -402,26 +412,30 @@ export const calcContentShift = ({
 
     // ---------------------[ 6. return required values ]-------------------
 
-    let newCradleActualContentCount = cradleRowcount * crosscount
-    const isLastRow = (computedNextCradleEndrowOffset == listRowcount)
-    if (isLastRow) {
-        const partialspaces = listsize % crosscount
-        const itemsShortfall = crosscount - partialspaces
-        newCradleActualContentCount -= itemsShortfall
-    }
-
-    const targetlastindex = newcradlereferenceindex + newCradleActualContentCount -1
-
-    const headchangecount = -cradlereferenceitemshift
+    let headchangecount = -cradlereferenceitemshift
     let tailchangecount = -headchangecount - (cradlecontentlist.length - newCradleActualContentCount)
 
-    console.log('previouslastindex, headchangecount, tailchangecount, targetlastindex',
-        previouslastindex, headchangecount, tailchangecount, targetlastindex)
+    let targetlastindex = newcradlereferenceindex + newCradleActualContentCount -1
+
+    console.log('8. previouslastindex, headchangecount, tailchangecount, targetlastindex, listsize',
+        previouslastindex, headchangecount, tailchangecount, targetlastindex, listsize)
     if ((previouslastindex + tailchangecount) < targetlastindex) {
         const diff = targetlastindex - (previouslastindex + tailchangecount)
         tailchangecount -= diff
+        targetlastindex += diff
     }
 
+    if (targetlastindex > (listsize - 1)) {
+        const diff = (listsize - 1) - targetlastindex
+        targetlastindex -= diff
+        tailchangecount -= diff
+        const diffrows = Math.ceil(diff/crosscount)
+        const diffheaditems = diffrows * crosscount
+        headchangecount -= diffheaditems
+    }
+
+    console.log('revised headchangecount, tailchangecount, targetlastindex', 
+        headchangecount, tailchangecount, targetlastindex)
     // console.log('8. newCradleActualContentCount',newCradleActualContentCount)
 
     return [
