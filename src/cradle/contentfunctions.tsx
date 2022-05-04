@@ -396,7 +396,19 @@ export const calcContentShift = ({
     // accommodate the leading runway
 
     if (isScrollingviewportforward) {
-
+        // case of in bounds of leading runway
+        const targetcradlereferenceindex = newaxisreferenceindex - 
+            ((runwaycount * crosscount) + crosscount)
+        const diff = newcradlereferenceindex - targetcradlereferenceindex
+        if (diff != 0) {
+            newcradlereferenceindex -= diff
+            headchangecount -= diff
+            cradlereferenceitemshift -= diff
+            tailchangecount += diff
+        }
+        console.log('scrolling forward in lead runway scope\
+            targetcradlereferenceindex, diff, newcradlereferenceindex, headchangecount, cradlereferenceitemshift, tailchangecount',
+            targetcradlereferenceindex, diff, newcradlereferenceindex, headchangecount, cradlereferenceitemshift, tailchangecount)
     }
 
     // c. if scrolling backward (toward head of list), as the cradleindex hits 0, tailchagecount has to 
@@ -431,146 +443,146 @@ export const calcContentShift = ({
 
 }
 
-export const calcHeadAndTailChanges = ({
+// export const calcHeadAndTailChanges = ({
 
-        cradleInheritedProperties,
-        cradleInternalProperties,
-        cradleContent,
-        cradleshiftcount,
-        isScrollingviewportforward,
-        cradleFirstIndex,
+//         cradleInheritedProperties,
+//         cradleInternalProperties,
+//         cradleContent,
+//         cradleshiftcount,
+//         isScrollingviewportforward,
+//         cradleFirstIndex,
 
-    }) => {
+//     }) => {
 
-    let listsize = cradleInheritedProperties.listsize
+//     let listsize = cradleInheritedProperties.listsize
 
-    let headcontent = cradleContent.headModelComponents
-    let tailcontent = cradleContent.tailModelComponents
+//     let headcontent = cradleContent.headModelComponents
+//     let tailcontent = cradleContent.tailModelComponents
 
-    const { crosscount, cradleRowcount } = cradleInternalProperties
+//     const { crosscount, cradleRowcount } = cradleInternalProperties
 
-    cradleshiftcount = Math.abs(cradleshiftcount) 
-    const rowshiftcount = Math.ceil(cradleshiftcount/crosscount) //+ boundaryrowcount
+//     cradleshiftcount = Math.abs(cradleshiftcount) 
+//     const rowshiftcount = Math.ceil(cradleshiftcount/crosscount) //+ boundaryrowcount
 
-    let headrowcount, tailrowcount
-    headrowcount = Math.ceil(headcontent.length/crosscount)
-    tailrowcount = Math.ceil(tailcontent.length/crosscount)
+//     let headrowcount, tailrowcount
+//     headrowcount = Math.ceil(headcontent.length/crosscount)
+//     tailrowcount = Math.ceil(tailcontent.length/crosscount)
 
-    let pendingcontentoffset // lookahead to new cradleFirstIndex
+//     let pendingcontentoffset // lookahead to new cradleFirstIndex
 
-    let headchangecount, tailchangecount // the output instructions for getUICellShellList
+//     let headchangecount, tailchangecount // the output instructions for getUICellShellList
 
-    // anticipaate add to one end, clip from the other        
-    let additemcount = 0
-    let cliprowcount = 0, clipitemcount = 0
+//     // anticipaate add to one end, clip from the other        
+//     let additemcount = 0
+//     let cliprowcount = 0, clipitemcount = 0
 
-    if (isScrollingviewportforward) { // clip from head; add to tail; scroll forward tail is direction of scroll
+//     if (isScrollingviewportforward) { // clip from head; add to tail; scroll forward tail is direction of scroll
 
-        // adjust clipitemcount
-        if ((headrowcount + rowshiftcount) > (cradleInheritedProperties.runwaycount)) {
+//         // adjust clipitemcount
+//         if ((headrowcount + rowshiftcount) > (cradleInheritedProperties.runwaycount)) {
 
-            let rowdiff = (headrowcount + rowshiftcount) - (cradleInheritedProperties.runwaycount)
-            cliprowcount = rowdiff
-            clipitemcount = (cliprowcount * crosscount)
+//             let rowdiff = (headrowcount + rowshiftcount) - (cradleInheritedProperties.runwaycount)
+//             cliprowcount = rowdiff
+//             clipitemcount = (cliprowcount * crosscount)
 
-        }
+//         }
 
-        additemcount = clipitemcount // maintain constant cradle count
+//         additemcount = clipitemcount // maintain constant cradle count
 
-        pendingcontentoffset = cradleFirstIndex + clipitemcount // after clip
+//         pendingcontentoffset = cradleFirstIndex + clipitemcount // after clip
 
-        let proposedtailindex = pendingcontentoffset + (cradleRowcount * crosscount) - 1 // modelcontentlist.length - 1
+//         let proposedtailindex = pendingcontentoffset + (cradleRowcount * crosscount) - 1 // modelcontentlist.length - 1
 
-        // adkjust changes for list boundaries
-        if ((proposedtailindex) > (listsize -1) ) {
+//         // adkjust changes for list boundaries
+//         if ((proposedtailindex) > (listsize -1) ) {
 
-            let diffitemcount = (proposedtailindex - (listsize -1)) // items outside range
-            additemcount -= diffitemcount // adjust the addcontent accordingly
+//             let diffitemcount = (proposedtailindex - (listsize -1)) // items outside range
+//             additemcount -= diffitemcount // adjust the addcontent accordingly
             
-            let diffrows = Math.floor(diffitemcount/crosscount) // number of full rows to leave in place
-            let diffrowitems = (diffrows * crosscount)  // derived number of items to leave in place
+//             let diffrows = Math.floor(diffitemcount/crosscount) // number of full rows to leave in place
+//             let diffrowitems = (diffrows * crosscount)  // derived number of items to leave in place
 
-            clipitemcount -= diffrowitems // apply adjustment to netshift
+//             clipitemcount -= diffrowitems // apply adjustment to netshift
 
-            if (additemcount <=0) { // nothing to do
+//             if (additemcount <=0) { // nothing to do
 
-                additemcount = 0
+//                 additemcount = 0
 
-            }
-            if (clipitemcount <=0 ) {
+//             }
+//             if (clipitemcount <=0 ) {
 
-                clipitemcount = 0
+//                 clipitemcount = 0
                 
-            }
-        }
+//             }
+//         }
 
-        headchangecount = (clipitemcount ==0)?0:-clipitemcount
-        tailchangecount = additemcount
+//         headchangecount = (clipitemcount ==0)?0:-clipitemcount
+//         tailchangecount = additemcount
 
-    } else { // scroll viewport backward, in direction of head; clip from tail, add to head
+//     } else { // scroll viewport backward, in direction of head; clip from tail, add to head
 
-        let intersectionindexes = []
+//         let intersectionindexes = []
 
-        // headcount will be less than minimum (runwaycount), so a shift can be accomplished[]
-        if ((headrowcount - rowshiftcount) < (cradleInheritedProperties.runwaycount)) {
-            // calculate clip for tail
-            let rowshortfall = (cradleInheritedProperties.runwaycount) - (headrowcount - rowshiftcount)
+//         // headcount will be less than minimum (runwaycount), so a shift can be accomplished[]
+//         if ((headrowcount - rowshiftcount) < (cradleInheritedProperties.runwaycount)) {
+//             // calculate clip for tail
+//             let rowshortfall = (cradleInheritedProperties.runwaycount) - (headrowcount - rowshiftcount)
 
-            cliprowcount = rowshortfall
-            let tailrowitemcount = (tailcontent.length % crosscount)
+//             cliprowcount = rowshortfall
+//             let tailrowitemcount = (tailcontent.length % crosscount)
 
-            if (tailrowitemcount == 0) tailrowitemcount = crosscount
+//             if (tailrowitemcount == 0) tailrowitemcount = crosscount
 
-            clipitemcount = tailrowitemcount
-            if (tailrowcount > 1) {
+//             clipitemcount = tailrowitemcount
+//             if (tailrowcount > 1) {
 
-                if (cliprowcount > tailrowcount) {
-                    cliprowcount = tailrowcount
-                }
+//                 if (cliprowcount > tailrowcount) {
+//                     cliprowcount = tailrowcount
+//                 }
 
-                if (cliprowcount > 1) {
-                    clipitemcount += ((cliprowcount -1) * crosscount)
-                }
+//                 if (cliprowcount > 1) {
+//                     clipitemcount += ((cliprowcount -1) * crosscount)
+//                 }
 
-            }
+//             }
 
-            // compenstate with additemcount
-            additemcount = (cliprowcount * crosscount)
+//             // compenstate with additemcount
+//             additemcount = (cliprowcount * crosscount)
 
-        }
+//         }
 
-        let proposedindexoffset = cradleFirstIndex - additemcount
+//         let proposedindexoffset = cradleFirstIndex - additemcount
 
-        if (proposedindexoffset < 0) {
+//         if (proposedindexoffset < 0) {
 
-            let diffitemcount = -proposedindexoffset
-            let diffrows = Math.ceil(diffitemcount/crosscount) // number of full rows to leave in place
-            let diffrowitems = (diffrows * crosscount)
+//             let diffitemcount = -proposedindexoffset
+//             let diffrows = Math.ceil(diffitemcount/crosscount) // number of full rows to leave in place
+//             let diffrowitems = (diffrows * crosscount)
 
-            additemcount -= diffitemcount
-            clipitemcount -= diffrowitems
+//             additemcount -= diffitemcount
+//             clipitemcount -= diffrowitems
 
-            if (additemcount <= 0) {
+//             if (additemcount <= 0) {
 
-                additemcount = 0
+//                 additemcount = 0
                 
-            }
+//             }
 
-            if (clipitemcount <= 0) {
+//             if (clipitemcount <= 0) {
 
-                clipitemcount = 0
+//                 clipitemcount = 0
 
-            }
-        }
+//             }
+//         }
 
-        headchangecount = additemcount
-        tailchangecount = (clipitemcount == 0)?0:-clipitemcount
+//         headchangecount = additemcount
+//         tailchangecount = (clipitemcount == 0)?0:-clipitemcount
 
-    }
+//     }
 
-    return [headchangecount,tailchangecount]
+//     return [headchangecount,tailchangecount]
 
-}
+// }
 
 // =====================[ shared by both setCradleContent and updateCradleContent ]====================
 

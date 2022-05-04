@@ -3,7 +3,7 @@
 
 import { 
     getUICellShellList, 
-    calcHeadAndTailChanges,
+    // calcHeadAndTailChanges,
     calcContentShift,
     getContentListRequirements,
     // isolateShiftingIntersections,
