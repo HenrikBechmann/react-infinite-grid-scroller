@@ -397,14 +397,14 @@ export const calcContentShift = ({
 
     if (isScrollingviewportforward) {
         // case of in bounds of leading runway
-        const targetcradlereferenceindex = newaxisreferenceindex - 
-            ((runwaycount * crosscount) + crosscount)
+        const targetcradlereferenceindex = Math.max(0,(newaxisreferenceindex - 
+            ((runwaycount * crosscount) + crosscount)))
         const diff = newcradlereferenceindex - targetcradlereferenceindex
         if (diff != 0) {
             newcradlereferenceindex -= diff
-            headchangecount -= diff
-            cradlereferenceitemshift -= diff
-            tailchangecount += diff
+            headchangecount += diff
+            cradlereferenceitemshift += diff
+            tailchangecount -= diff
         }
         console.log('scrolling forward in lead runway scope\
             targetcradlereferenceindex, diff, newcradlereferenceindex, headchangecount, cradlereferenceitemshift, tailchangecount',
