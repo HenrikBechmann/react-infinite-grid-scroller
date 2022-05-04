@@ -374,6 +374,20 @@ export const calcContentShift = ({
 
     // --------[ 5. adjust start and end of list to maintain constant number of cradle rows ]-------
 
+
+    // a. if scrolling forward (toward tail of list), as the cradle index approaches listCount less 
+    // newCradleContent count, headchangecount has to be adjusted to prevent shortening of cradle content.
+    // b. if scrolling forward near the start of the list, headchangecount has to be adjusted to
+    // accommodate the leading runway
+
+
+    // c. if scrolling backward (toward head of list), as the cradleindex hits 0, tailchagecount has to 
+    // be adjusted to prevent shortening of cradle content
+    // d. if scrolling backward near the end of the list, tailchangecount has to be adjusted to accomodate
+    // the trailing runway
+
+
+
     let newCradleContentCount = cradleRowcount * crosscount // base count
 
     const includesLastRow = (computedNextCradleEndrowOffset >= listRowcount)
