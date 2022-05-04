@@ -372,21 +372,21 @@ export const calcContentShift = ({
         computedNextCradleEndrowOffset += diff
     }
 
-    // adjustments at start and end of list to maintain constant number of cradle rows
+    // --------[ 5. adjust start and end of list to maintain constant number of cradle rows ]-------
 
-    let newCradleActualContentCount = cradleRowcount * crosscount
+    let newCradleContentCount = cradleRowcount * crosscount // base count
 
     const includesLastRow = (computedNextCradleEndrowOffset >= listRowcount)
     if (includesLastRow) {
         const partialspaces = listsize % crosscount
         const itemsShortfall = crosscount - partialspaces
-        newCradleActualContentCount -= itemsShortfall
+        newCradleContentCount -= itemsShortfall
     }
 
     let targetcradlereferenceindex = 
         newaxisreferenceindex - ((runwaycount * crosscount) + crosscount )
 
-    // console.log('6.c targetcradlereferenceindex, newcradlereferenceindex',
+    // console.log('7. targetcradlereferenceindex, newcradlereferenceindex',
     //     targetcradlereferenceindex, newcradlereferenceindex)
 
     if (targetcradlereferenceindex < 0) {
@@ -402,20 +402,10 @@ export const calcContentShift = ({
         cradlereferencerowshift -= (indexadjustment/crosscount)
     }
 
-    // -------------[ 5. calculate new axis pixel position ]------------------
-
-    const axisposshift = axisreferencerowshift * cellLength
-
-    let newaxisposoffset = viewportaxisoffset + axisposshift
-
-    // console.log('7. axisposshift, newaxisposoffset',axisposshift, newaxisposoffset)
-
-    // ---------------------[ 6. return required values ]-------------------
-
     let headchangecount = -cradlereferenceitemshift
-    let tailchangecount = -headchangecount - (cradlecontentlist.length - newCradleActualContentCount)
+    let tailchangecount = -headchangecount - (cradlecontentlist.length - newCradleContentCount)
 
-    let targetlastindex = newcradlereferenceindex + newCradleActualContentCount -1
+    let targetlastindex = newcradlereferenceindex + newCradleContentCount -1
 
     console.log('8. previouslastindex, headchangecount, tailchangecount, targetlastindex, listsize',
         previouslastindex, headchangecount, tailchangecount, targetlastindex, listsize)
@@ -434,9 +424,19 @@ export const calcContentShift = ({
         headchangecount -= diffheaditems
     }
 
-    console.log('revised headchangecount, tailchangecount, targetlastindex', 
+    console.log('9. revised headchangecount, tailchangecount, targetlastindex', 
         headchangecount, tailchangecount, targetlastindex)
     // console.log('8. newCradleActualContentCount',newCradleActualContentCount)
+
+    // -------------[ 5. calculate new axis pixel position ]------------------
+
+    const axisposshift = axisreferencerowshift * cellLength
+
+    let newaxisposoffset = viewportaxisoffset + axisposshift
+
+    // console.log('10. axisposshift, newaxisposoffset',axisposshift, newaxisposoffset)
+
+    // ---------------------[ 6. return required values ]-------------------
 
     return [
         newcradlereferenceindex, 
@@ -444,7 +444,7 @@ export const calcContentShift = ({
         newaxisreferenceindex, 
         axisreferenceitemshift, 
         newaxisposoffset, 
-        newCradleActualContentCount,
+        newCradleContentCount,
         headchangecount,
         tailchangecount
     ]
