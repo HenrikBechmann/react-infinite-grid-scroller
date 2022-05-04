@@ -371,25 +371,10 @@ export const calcContentShift = ({
         newcradlereferenceindex = 0
         computedNextCradleEndrowOffset += diff
     }
-
     // --------[ 5. adjust start and end of list to maintain constant number of cradle rows ]-------
 
-
-    // a. if scrolling forward (toward tail of list), as the cradle index approaches listCount less 
-    // newCradleContent count, headchangecount has to be adjusted to prevent shortening of cradle content.
-    // b. if scrolling forward near the start of the list, headchangecount has to be adjusted to
-    // accommodate the leading runway
-
-
-    // c. if scrolling backward (toward head of list), as the cradleindex hits 0, tailchagecount has to 
-    // be adjusted to prevent shortening of cradle content
-    // d. if scrolling backward near the end of the list, tailchangecount has to be adjusted to accomodate
-    // the trailing runway
-
-
-
+    // create updated cradle content count
     let newCradleContentCount = cradleRowcount * crosscount // base count
-
     const includesLastRow = (computedNextCradleEndrowOffset >= listRowcount)
     if (includesLastRow) {
         const partialspaces = listsize % crosscount
@@ -397,50 +382,31 @@ export const calcContentShift = ({
         newCradleContentCount -= itemsShortfall
     }
 
-    let targetcradlereferenceindex = 
-        newaxisreferenceindex - ((runwaycount * crosscount) + crosscount )
-
-    // console.log('7. targetcradlereferenceindex, newcradlereferenceindex',
-    //     targetcradlereferenceindex, newcradlereferenceindex)
-
-    if (targetcradlereferenceindex < 0) {
-
-        targetcradlereferenceindex = 0
-
-    }
-
-    if (targetcradlereferenceindex < newcradlereferenceindex) {
-        const indexadjustment = newcradlereferenceindex - targetcradlereferenceindex
-        newcradlereferenceindex -= indexadjustment
-        cradlereferenceitemshift -= indexadjustment
-        cradlereferencerowshift -= (indexadjustment/crosscount)
-    }
-
+    // create base head and tail change counts
+    const changeOfCradleContentCount = cradlecontentlist.length - newCradleContentCount
     let headchangecount = -cradlereferenceitemshift
-    let tailchangecount = -headchangecount - (cradlecontentlist.length - newCradleContentCount)
+    let tailchangecount = -headchangecount - (changeOfCradleContentCount)
 
-    let targetlastindex = newcradlereferenceindex + newCradleContentCount -1
+    console.log('7. newCradleContentCount, base headchangecount & tailchangecount',
+        newCradleContentCount, headchangecount, tailchangecount)
 
-    console.log('8. previouslastindex, headchangecount, tailchangecount, targetlastindex, listsize',
-        previouslastindex, headchangecount, tailchangecount, targetlastindex, listsize)
-    if ((previouslastindex + tailchangecount) < targetlastindex) {
-        const diff = targetlastindex - (previouslastindex + tailchangecount)
-        tailchangecount -= diff
-        targetlastindex += diff
+    // a. if scrolling forward (toward tail of list), as the cradle index approaches listCount less 
+    // newCradleContent count, headchangecount has to be adjusted to prevent shortening of cradle content.
+    // b. if scrolling forward near the start of the list, headchangecount has to be adjusted to
+    // accommodate the leading runway
+
+    if (isScrollingviewportforward) {
+
     }
 
-    if (targetlastindex > (listsize - 1)) {
-        const diff = (listsize - 1) - targetlastindex
-        targetlastindex -= diff
-        tailchangecount -= diff
-        const diffrows = Math.ceil(diff/crosscount)
-        const diffheaditems = diffrows * crosscount
-        headchangecount -= diffheaditems
-    }
+    // c. if scrolling backward (toward head of list), as the cradleindex hits 0, tailchagecount has to 
+    // be adjusted to prevent shortening of cradle content
+    // d. if scrolling backward near the end of the list, tailchangecount has to be adjusted to accomodate
+    // the trailing runway
 
-    console.log('9. revised headchangecount, tailchangecount, targetlastindex', 
-        headchangecount, tailchangecount, targetlastindex)
-    // console.log('8. newCradleActualContentCount',newCradleActualContentCount)
+    if (!isScrollingviewportforward) {
+
+    }
 
     // -------------[ 5. calculate new axis pixel position ]------------------
 

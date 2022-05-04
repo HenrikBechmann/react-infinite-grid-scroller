@@ -289,8 +289,8 @@ export default class ContentHandler {
 
         })
 
-        console.log('cradlereferenceindex, cradleitemshift, headchangecount, tailchangecount', 
-            cradlereferenceindex, cradleitemshift, headchangecount, tailchangecount)
+        console.log('cradlereferenceindex, cradleitemshift, headchangecount, tailchangecount, cradleContentCount', 
+            cradlereferenceindex, cradleitemshift, headchangecount, tailchangecount, cradleContentCount)
 
 
         // console.log(`
