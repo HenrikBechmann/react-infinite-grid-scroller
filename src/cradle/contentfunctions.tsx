@@ -435,10 +435,13 @@ export const calcContentShift = ({
         const tailrowdiff = Math.max(0,(listRowcount -1) - targetcradleEndrowoffset)
         console.log('backward trailing runway: targetcradleEndrowoffset,tailrowdiff',targetcradleEndrowoffset,tailrowdiff)
         if (tailrowdiff != 0) {
-            const tailitemdiff = (tailrowdiff * crosscount) - ((cradleRowcount * crosscount) - newCradleContentCount)
+            const tailitemdiff = (tailrowdiff * crosscount)
+            // const tailitemadjustment = ((cradleRowcount * crosscount) - newCradleContentCount)
+            // tailitemdiff -= tailitemadjustment
             newcradlereferenceindex += tailitemdiff
             headchangecount -= tailitemdiff
             cradlereferenceitemshift -= tailitemdiff
+            // TODO make tail item count adjustment here!
             tailchangecount += tailitemdiff
             console.log('scrolling backward in tail runway scope - changes\
                 targetcradleEndrowoffset, tailrowdiff, tailitemdiff, newcradlereferenceindex, headchangecount, cradlereferenceitemshift, tailchangecount',
