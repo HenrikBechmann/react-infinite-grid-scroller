@@ -390,25 +390,37 @@ export const calcContentShift = ({
     console.log('7. newCradleContentCount, base headchangecount & tailchangecount',
         newCradleContentCount, headchangecount, tailchangecount)
 
-    // a. if scrolling forward (toward tail of list), as the cradle index approaches listCount less 
-    // newCradleContent count, headchangecount has to be adjusted to prevent shortening of cradle content.
-    // b. if scrolling forward near the start of the list, headchangecount has to be adjusted to
+    // a. if scrolling forward near the start of the list, headchangecount has to be adjusted to
     // accommodate the leading runway
+    // b. if scrolling forward (toward tail of list), as the cradle index approaches listCount less 
+    // newCradleContent count, headchangecount has to be adjusted to prevent shortening of cradle content.
 
     if (isScrollingviewportforward) {
-        // case of in bounds of leading runway
+        // case of in bounds of leading runway (start of list)
         const targetcradlereferenceindex = Math.max(0,(newaxisreferenceindex - 
             ((runwaycount * crosscount) + crosscount)))
-        const diff = newcradlereferenceindex - targetcradlereferenceindex
-        if (diff != 0) {
-            newcradlereferenceindex -= diff
-            headchangecount += diff
-            cradlereferenceitemshift += diff
-            tailchangecount -= diff
+        const head_diff = newcradlereferenceindex - targetcradlereferenceindex
+        if (head_diff != 0) {
+            newcradlereferenceindex -= head_diff
+            headchangecount += head_diff
+            cradlereferenceitemshift += head_diff
+            tailchangecount -= head_diff
+            console.log('scrolling forward in head runway scope - changes\
+                targetcradlereferenceindex, head_diff, newcradlereferenceindex, headchangecount, cradlereferenceitemshift, tailchangecount',
+                targetcradlereferenceindex, head_diff, newcradlereferenceindex, headchangecount, cradlereferenceitemshift, tailchangecount)
         }
-        console.log('scrolling forward in lead runway scope\
-            targetcradlereferenceindex, diff, newcradlereferenceindex, headchangecount, cradlereferenceitemshift, tailchangecount',
-            targetcradlereferenceindex, diff, newcradlereferenceindex, headchangecount, cradlereferenceitemshift, tailchangecount)
+        const targetcradleEndrowoffset = Math.floor((newcradlereferenceindex + newCradleContentCount - 1)/crosscount)
+        const tailrowdiff = Math.max(0,targetcradleEndrowoffset - (listRowcount -1))
+        if (tailrowdiff != 0) {
+            const tailitemdiff = tailrowdiff * crosscount
+            newcradlereferenceindex -= tailitemdiff
+            headchangecount += tailitemdiff
+            cradlereferenceitemshift += tailitemdiff
+            tailchangecount -= tailitemdiff
+            console.log('scrolling forward in tail runway scope - changes\
+                targetcradleEndrowoffset, tailrowdiff, tailitemdiff, newcradlereferenceindex, headchangecount, cradlereferenceitemshift, tailchangecount',
+                targetcradleEndrowoffset, tailrowdiff, tailitemdiff, newcradlereferenceindex, headchangecount, cradlereferenceitemshift, tailchangecount)
+        }
     }
 
     // c. if scrolling backward (toward head of list), as the cradleindex hits 0, tailchagecount has to 
