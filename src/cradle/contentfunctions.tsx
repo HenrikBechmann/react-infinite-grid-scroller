@@ -249,6 +249,7 @@ export const calcContentShift = ({
     const { crosscount,
         cradleRowcount,
         listRowcount,
+        viewportRowcount,
     } = cradleInternalProperties
 
     const cellLength = ((orientation == 'vertical')?cellHeight:cellWidth) + gap
@@ -312,16 +313,16 @@ export const calcContentShift = ({
     // ----------------[ 4. calc new cradle reference index and axis reference index ]-----------------
 
     const previouscradlereferenceindex = (cradlecontentlist[0]?.props.index || 0)
-    const previouscradlerowoffset = Math.round(previouscradlereferenceindex/crosscount)
+    const previouscradlerowoffset = Math.ceil(previouscradlereferenceindex/crosscount)
 
     const previousaxisreferenceindex = (tailcontentlist[0]?.props.index || 0)
-    const previousaxisrowoffset = Math.round(previousaxisreferenceindex/crosscount)
+    const previousaxisrowoffset = Math.ceil(previousaxisreferenceindex/crosscount)
 
     console.log('4. previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount',
         previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount)
 
     // computed shifted cradle end row, looking for overshoot
-    let computedNextCradleEndrowOffset = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift - 1)
+    let computedNextCradleEndrowOffset = (previouscradlerowoffset + (cradleRowcount -1) + cradlereferencerowshift)
 
     // adjust for overshoot end of list
     const listovershoot = (isScrollingviewportforward)
@@ -372,17 +373,17 @@ export const calcContentShift = ({
         if (headrowdiff > 0) {
             newcradlereferencerowoffset -= headrowdiff
             cradlereferencerowshift -= headrowdiff
-            console.log('adjusted for headrowdiff\
+            console.log('adjusted for forward headrowdiff\
                 newaxisreferencerowoffset, targetcradlereferencerowoffset, runwaycount, headrowdiff, newcradlereferencerowoffset, cradlereferencerowshift',
                 newaxisreferencerowoffset, targetcradlereferencerowoffset, runwaycount, headrowdiff, newcradlereferencerowoffset, cradlereferencerowshift)
         }
         // case of in bounds of trailing runway (end of list)
-        const targetcradleEndrowoffset = newcradlereferencerowoffset + (cradleRowcount - 1)
+        const targetcradleEndrowoffset = newcradlereferencerowoffset + (cradleRowcount -1)
         const tailrowdiff = Math.max(0,targetcradleEndrowoffset - (listRowcount -1))
         if (tailrowdiff > 0) {
             newcradlereferencerowoffset -= tailrowdiff
             cradlereferencerowshift -= tailrowdiff
-            console.log('adjusted for tailrowdiff\
+            console.log('adjusted for forward tailrowdiff\
                 targetcradleEndrowoffset, runwaycount, tailrowdiff, newcradlereferencerowoffset, cradlereferencerowshift',
                 targetcradleEndrowoffset, runwaycount, tailrowdiff, newcradlereferencerowoffset, cradlereferencerowshift)
         }
@@ -393,27 +394,23 @@ export const calcContentShift = ({
     // d. if scrolling backward near the end of the list, tailchangecount has to be adjusted to accomodate
     // the trailing runway
 
-    // if (!isScrollingviewportforward) {
+    if (!isScrollingviewportforward) {
 
-    //     // case of in bounds of trailing runway (end of list)
-    //     const targetcradleEndrowoffset = Math.floor((newcradlereferenceindex + newCradleContentCount - 1)/crosscount)
-    //     const tailrowdiff = Math.max(0,(listRowcount -1) - targetcradleEndrowoffset)
-    //     // console.log('backward trailing runway: targetcradleEndrowoffset,tailrowdiff',targetcradleEndrowoffset,tailrowdiff)
-    //     if (tailrowdiff != 0) {
-    //         const tailitemdiff = (tailrowdiff * crosscount)
-    //         // const tailitemadjustment = ((cradleRowcount * crosscount) - newCradleContentCount)
-    //         // tailitemdiff -= tailitemadjustment
-    //         newcradlereferenceindex += tailitemdiff
-    //         headchangecount -= tailitemdiff
-    //         cradlereferenceitemshift -= tailitemdiff
-    //         // TODO make tail item count adjustment here!
-    //         tailchangecount += tailitemdiff
-    //         // console.log('scrolling backward in tail runway scope - changes\
-    //         //     targetcradleEndrowoffset, tailrowdiff, tailitemdiff, newcradlereferenceindex, headchangecount, cradlereferenceitemshift, tailchangecount',
-    //         //     targetcradleEndrowoffset, tailrowdiff, tailitemdiff, newcradlereferenceindex, headchangecount, cradlereferenceitemshift, tailchangecount)
-    //     }
+        // case of in bounds of trailing runway (end of list)
+        const targetcradleEndrowoffset = Math.min(listRowcount - 1, (newaxisreferencerowoffset + (viewportRowcount - 1) + (runwaycount - 1)))
+        const tailrowdiff = Math.max(0, targetcradleEndrowoffset - computedNextCradleEndrowOffset)
+        // console.log('backward trailing runway: \
+        //     targetcradleEndrowoffset,newaxisreferencerowoffset, viewportRowcount, runwaycount, computedNextCradleEndrowOffset, tailrowdiff',
+        //     targetcradleEndrowoffset,newaxisreferencerowoffset, viewportRowcount, runwaycount, computedNextCradleEndrowOffset, tailrowdiff)
+        if (tailrowdiff > 0) {
+            newcradlereferencerowoffset += tailrowdiff
+            cradlereferencerowshift += tailrowdiff
+            console.log('adjusted for backward tailrowdiff\
+                targetcradleEndrowoffset, runwaycount, tailrowdiff, newcradlereferencerowoffset, cradlereferencerowshift',
+                targetcradleEndrowoffset, runwaycount, tailrowdiff, newcradlereferencerowoffset, cradlereferencerowshift)
+        }
 
-    // }
+    }
 
     // ----------------------[ convert to item references ]----------------------
 
@@ -424,21 +421,20 @@ export const calcContentShift = ({
     const axisreferenceitemshift = axisreferencerowshift * crosscount
 
     let newCradleContentCount = cradleRowcount * crosscount // base count
-    const includesLastRow = (computedNextCradleEndrowOffset >= listRowcount)
+    const includesLastRow = ((newcradlereferencerowoffset + cradleRowcount) >= listRowcount)
     if (includesLastRow) {
         const partialspaces = listsize % crosscount
-        const itemsShortfall = crosscount - partialspaces
+        const itemsShortfall = (partialspaces == 0)?0:crosscount - partialspaces
         newCradleContentCount -= itemsShortfall
     }
-
-    // console.log('7. newCradleContentCount, base headchangecount & tailchangecount',
-    //     newCradleContentCount, headchangecount, tailchangecount)
 
     // create base head and tail change counts
     const changeOfCradleContentCount = cradlecontentlist.length - newCradleContentCount
     let headchangecount = -(cradlereferencerowshift * crosscount)
     let tailchangecount = -headchangecount - (changeOfCradleContentCount)
 
+    console.log('7. newCradleContentCount, includesLastRow, changeOfCradleContentCount, base headch1angecount & tailchangecount',
+        newCradleContentCount, includesLastRow, changeOfCradleContentCount, headchangecount, tailchangecount)
 
     // -------------[ 5. calculate new axis pixel position ]------------------
 
