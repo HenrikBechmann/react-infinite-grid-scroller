@@ -240,18 +240,15 @@ export const calcContentShift = ({
     } = cradleInheritedProperties
 
     const axisElement = cradleElements.axisRef.current
-        // headElement = cradleElements.headRef.current,
-        // tailElement = cradleElements.tailRef.current
 
     const {cradleModel:cradlecontentlist, 
-        headModelComponents:headcontentlist, 
+        // headModelComponents:headcontentlist, 
         tailModelComponents:tailcontentlist
     } = cradleContent
 
     const { crosscount,
         cradleRowcount,
         listRowcount,
-        // viewportRowcount
     } = cradleInternalProperties
 
     const cellLength = ((orientation == 'vertical')?cellHeight:cellWidth) + gap
@@ -268,10 +265,10 @@ export const calcContentShift = ({
     const viewportaxisbackwardgaplength = (!isScrollingviewportforward)?(viewportaxisoffset - cellLength):0
     const viewportaxisforwardgaplength = (isScrollingviewportforward)?-viewportaxisoffset:0
 
-    // // console.log('1. cellLength, viewportaxisoffset, viewportbackwardgaplength, viewportforwardgaplength',
-    // //     cellLength, viewportaxisoffset, viewportaxisbackwardgaplength, viewportaxisforwardgaplength)
+    // console.log('1. cellLength, viewportaxisoffset, viewportbackwardgaplength, viewportforwardgaplength',
+    //     cellLength, viewportaxisoffset, viewportaxisbackwardgaplength, viewportaxisforwardgaplength)
 
-    // // -------[ 2. calculate the axis overshoot (more than one row) item & row counts, if any ]-------
+    // -------[ 2. calculate the axis overshoot (more than one row) item & row counts, if any ]-------
     
     // these overshoot numbers guaranteed to be 0 or positive
     const forwardovershootrowcount = 
@@ -279,11 +276,8 @@ export const calcContentShift = ({
     const backwardovershootrowcount = 
         Math.max(0,Math.floor(viewportaxisbackwardgaplength/cellLength))
 
-    // const forwardovershootitemcount = forwardovershootrowcount * crosscount
-    // const backwardovershootitemcount = backwardovershootrowcount * crosscount
-
-    // console.log('2.a forwardovershootrowcount, forwardovershootitemcount, backwardovershootrowcount, backwardovershootitemcount', 
-    //     forwardovershootrowcount, forwardovershootitemcount, backwardovershootrowcount, backwardovershootitemcount)
+    // console.log('2.a forwardovershootrowcount, backwardovershootrowcount', 
+    //     forwardovershootrowcount, backwardovershootrowcount)
 
     // -----------------[ 3. combine item & row shift counts including base and overshoot ]-------------
 
@@ -297,37 +291,20 @@ export const calcContentShift = ({
     // allocate a base shift to head or tail
     const headblockaddshiftrowcount = (isScrollingviewportforward)?1:0
     const tailblockaddshiftrowcount = (!isScrollingviewportforward)?1:0
-    // const headblockaddshiftitemcount = (isScrollingviewportforward)?crosscount:0
-    // const tailblockaddshiftitemcount = (!isScrollingviewportforward)?crosscount:0
 
-    // console.log('2.b base headblockaddshiftitemcount, tailblockaddshiftitemcount', 
-    //     headblockaddshiftitemcount, tailblockaddshiftitemcount)
+    // console.log('2.b base headblockaddshiftrowcount, tailblockaddshiftrowcount', 
+    //     headblockaddshiftrowcount, tailblockaddshiftrowcount)
 
-    // // consolidate head and tail information into single axis and cradle reference shifts
-    // // negative value shifted toward tail; positive value shifted toward head
-    // // one of the two expressions in the following line will be 0
+    // consolidate head and tail information into single axis and cradle reference shifts
+    // negative value shifted toward tail; positive value shifted toward head
+    // one of the two expressions in the following line will be 0
     let axisreferencerowshift = 
         - (tailblockaddshiftrowcount + backwardovershootrowcount) + 
         (headblockaddshiftrowcount + forwardovershootrowcount)
-    // let axisreferenceitemshift = 
-    //     -(tailblockaddshiftitemcount + backwardovershootitemcount) + 
-    //     (headblockaddshiftitemcount + forwardovershootitemcount)
 
     // // base value for cradle reference shift; may change if beyond list count
     // // let cradlereferenceitemshift = axisreferenceitemshift
     let cradlereferencerowshift = axisreferencerowshift
-
-    // let cradlereferencerowshift = 
-    //     (cradlereferenceitemshift > 0)
-    //         ?Math.ceil(cradlereferenceitemshift/crosscount)
-    //         :Math.floor(cradlereferenceitemshift/crosscount)
-    // // cradlereferenceitemshift = Math.round(cradlereferencerowshift * crosscount)
-
-    // let axisreferencerowshift = 
-    //     (axisreferenceitemshift > 0) // could include partial row from shiftingintersections
-    //         ?Math.ceil(axisreferenceitemshift/crosscount)
-    //         :Math.floor(axisreferenceitemshift/crosscount)
-    // axisreferenceitemshift = Math.round(axisreferencerowshift * crosscount)
 
     // console.log('3. preliminary axisreferenceitemshift, cradlereferenceitemshift, axisreferencerowshift, cradlereferencerowshift',
     //     axisreferenceitemshift, cradlereferenceitemshift, axisreferencerowshift, cradlereferencerowshift)
@@ -338,13 +315,12 @@ export const calcContentShift = ({
     const previouscradlerowoffset = Math.round(previouscradlereferenceindex/crosscount)
 
     const previousaxisreferenceindex = (tailcontentlist[0]?.props.index || 0)
-    // const previouslastindex = (cradlecontentlist.at(-1)?.props.index || 0)
     const previousaxisrowoffset = Math.round(previousaxisreferenceindex/crosscount)
 
-    // // console.log('4. previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount',
-    // //     previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount)
+    // console.log('4. previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount',
+    //     previouscradlereferenceindex, previouscradlerowoffset, previousaxisreferenceindex, cradleRowcount, listRowcount)
 
-    // // computed shifted cradle end row, looking for overshoot
+    // computed shifted cradle end row, looking for overshoot
     let computedNextCradleEndrowOffset = (previouscradlerowoffset + cradleRowcount + cradlereferencerowshift - 1)
 
     // // adjust for overshoot end of list
@@ -354,15 +330,12 @@ export const calcContentShift = ({
 
     if (listovershoot) {
         cradlereferencerowshift -= listovershoot
-        // cradlereferenceitemshift -= (listovershoot * crosscount)
     }
 
     // console.log('5. listovershoot, computedNextCradleEndrowOffset, cradlereferencerowshift, cradlereferenceitemshift',
     //     listovershoot,computedNextCradleEndrowOffset, cradlereferencerowshift, cradlereferenceitemshift)
 
-    // let newcradlereferenceindex = previouscradlereferenceindex + cradlereferenceitemshift
     let newcradlereferencerowoffset = previouscradlerowoffset + cradlereferencerowshift
-    // let newaxisreferenceindex = previousaxisreferenceindex + axisreferenceitemshift
     let newaxisreferencerowoffset = previousaxisrowoffset + axisreferencerowshift
 
     // console.log('6.a proposedcradlereferenceindex, proposedaxisreferenceindex',
@@ -376,10 +349,6 @@ export const calcContentShift = ({
         cradlereferencerowshift += newcradlereferencerowoffset
         cradlereferencerowshift = Math.max(0,cradlereferencerowshift)
         const diff = previous - cradlereferencerowshift
-        // const prev = cradlereferencerowshift
-        // cradlereferencerowshift = cradlereferenceitemshift/crosscount
-        // const diff = prev - cradlereferencerowshift
-        // newcradlereferenceindex = 0
         newcradlereferencerowoffset = 0
         computedNextCradleEndrowOffset += diff
     }
