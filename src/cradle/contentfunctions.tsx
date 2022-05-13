@@ -369,22 +369,22 @@ export const calcContentShift = ({
         // case of in bounds of leading runway (start of list)
         const targetcradlereferencerowoffset = Math.max(0,(newaxisreferencerowoffset - runwaycount))
         const headrowdiff = newcradlereferencerowoffset - targetcradlereferencerowoffset
-        if (headrowdiff != 0) {
+        if (headrowdiff > 0) {
             newcradlereferencerowoffset -= headrowdiff
             cradlereferencerowshift -= headrowdiff
             console.log('adjusted for headrowdiff\
-                targetcradlereferencerowoffset, runwaycount, headrowdiff, newcradlereferencerowoffset, cradlereferencerowshift',
-                targetcradlereferencerowoffset, runwaycount, headrowdiff, newcradlereferencerowoffset, cradlereferencerowshift)
+                newaxisreferencerowoffset, targetcradlereferencerowoffset, runwaycount, headrowdiff, newcradlereferencerowoffset, cradlereferencerowshift',
+                newaxisreferencerowoffset, targetcradlereferencerowoffset, runwaycount, headrowdiff, newcradlereferencerowoffset, cradlereferencerowshift)
         }
         // case of in bounds of trailing runway (end of list)
-        const targetcradleEndrowoffset = newcradlereferencerowoffset + cradleRowcount - 1
+        const targetcradleEndrowoffset = newcradlereferencerowoffset + (cradleRowcount - 1)
         const tailrowdiff = Math.max(0,targetcradleEndrowoffset - (listRowcount -1))
-        if (tailrowdiff != 0) {
+        if (tailrowdiff > 0) {
             newcradlereferencerowoffset -= tailrowdiff
-            cradlereferencerowshift += tailrowdiff
+            cradlereferencerowshift -= tailrowdiff
             console.log('adjusted for tailrowdiff\
-                headrowdiff, newcradlereferencerowoffset, cradlereferencerowshift',
-                tailrowdiff, newcradlereferencerowoffset, cradlereferencerowshift)
+                targetcradleEndrowoffset, runwaycount, tailrowdiff, newcradlereferencerowoffset, cradlereferencerowshift',
+                targetcradleEndrowoffset, runwaycount, tailrowdiff, newcradlereferencerowoffset, cradlereferencerowshift)
         }
     }
 
