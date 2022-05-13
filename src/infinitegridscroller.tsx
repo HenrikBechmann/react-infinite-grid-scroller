@@ -4,6 +4,7 @@
 /*
     BUG: reposition chip appears outside viewport when list partly hidden
     BUG: repositioningRender is broken.
+    BUG: breaklineOffset can fail when >= cellLength -- optimize this; impose correction
     TODO:
     - reload from/to for insertions and substitutions
     - provide user with isReparenting flag to be able to reset scroll
@@ -78,7 +79,7 @@ const InfiniteGridScroller = (args) => {
     if (!['horizontal','vertical'].includes(props.orientation)) {
         props.orientation = 'vertical'
     }
-    props.breaklineOffset ?? (props.breaklineOffset = 20) // TODO: rationalize with cellHeight & cellWidth
+    props.breaklineOffset ?? (props.breaklineOffset = 10) // TODO: rationalize with cellHeight & cellWidth
 
     const { 
         orientation, // vertical or horizontal

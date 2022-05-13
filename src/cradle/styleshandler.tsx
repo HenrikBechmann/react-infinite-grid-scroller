@@ -224,17 +224,18 @@ export default class StylesHandler {
 
     getBreaklineHeadStyles = (orientation, cellHeight, cellWidth, breaklineOffset) => {
         let transform // for position relative to axis
+        console.log('')
         const position = 'absolute',
             width = '100%',
             height = '100%'
         if (orientation == 'horizontal') {
             // width = 0
             // height = cellHeight + 'px'
-            transform = `translateX(${-(cellHeight -breaklineOffset) + 'px'})`
+            transform = `translateX(${-(cellWidth -breaklineOffset) + 'px'})`
         } else {
             // width = 'auto'
             // height = 0
-            transform = `translateY(${-(cellWidth -breaklineOffset) + 'px'})`
+            transform = `translateY(${-(cellHeight -breaklineOffset) + 'px'})`
         }
         return { ...{
             position,
