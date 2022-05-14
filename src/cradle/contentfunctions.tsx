@@ -279,12 +279,10 @@ export const calcContentShift = ({
         Math.max(0,Math.floor(viewportaxisbackwardgaplength/cellLength))
 
     // -----------------[ 4. combine row shift counts of base shift and overshoot ]-------------
-
-    /*
-        shift row count is the number of rows the virtual cradle shifts, according to observer
-        - shift negative closer to head, shift positive closer to tail
-    */
-
+    
+    // shift row count is the number of rows the virtual cradle shifts, according to observer
+    // - shift negative closer to head, shift positive closer to tail
+    
     // allocate a base shift to head or tail
     const headblockaddshiftrowcount = (isScrollingviewportforward)?1:0
     const tailblockaddshiftrowcount = (!isScrollingviewportforward)?1:0
@@ -310,7 +308,7 @@ export const calcContentShift = ({
     let newcradlereferencerowoffset = previouscradlerowoffset + cradlereferencerowshift
     let newaxisreferencerowoffset = previousaxisrowoffset + axisreferencerowshift
 
-    // --------[ 6. adjust cradle contents at start and end of list ]-------
+    // --------[ 6. adjust cradle contents when at start and end of list ]-------
     // ...to maintain constant number of cradle rows
 
     if (isScrollingviewportforward) {
