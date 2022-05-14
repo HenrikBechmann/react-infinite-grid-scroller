@@ -224,9 +224,9 @@ export const calcContentShift = ({
 
 }) => {
 
-    const isScrollingviewportforward = (shiftinstruction < 0)
-
     // ------------------------[ 1. initialize ]-----------------------
+
+    const isScrollingviewportforward = (shiftinstruction < 0)
 
     const { 
 
@@ -260,6 +260,7 @@ export const calcContentShift = ({
     const cellLength = ((orientation == 'vertical')?cellHeight:cellWidth) + gap
 
     // -----------[ 2. calculate the forward or backward gaps for input ]-------------------
+    // gaps can be caused by rapid scrolling
 
     const viewportaxisoffset = // the pixel distance between the viewport frame and the axis, toward the head
         ((orientation == 'vertical')?axisElement.offsetTop:(axisElement.offsetLeft)) - scrollPos
@@ -291,7 +292,7 @@ export const calcContentShift = ({
     // consolidate head and tail information into single axis and cradle reference shifts
     // - negative value shifted toward tail; positive value shifted toward head
     // - one of the two expressions in the following line will be 0
-    let axisreferencerowshift = 
+    const axisreferencerowshift = 
         - (tailblockaddshiftrowcount + backwardovershootrowcount) + 
         (headblockaddshiftrowcount + forwardovershootrowcount)
 
@@ -312,14 +313,14 @@ export const calcContentShift = ({
     // --------[ 6. adjust cradle contents at start and end of list ]-------
     // ...to maintain constant number of cradle rows
 
-    // a. if scrolling forward near the start of the list, new cradle row offset and
-    // cradle row shift count has to be adjusted to accommodate the leading runway
-    // b. if scrolling forward (toward tail of list), as the cradle last row offset approaches 
-    // listrow new cradle offset and cradle row shift have to be adjusted to prevent shortening 
-    // of cradle content.
-
     if (isScrollingviewportforward) {
-        // case of being in bounds of leading runway (start of list)
+
+        // a. if scrolling forward near the start of the list, new cradle row offset and
+        // cradle row shift count has to be adjusted to accommodate the leading runway
+        // b. if scrolling forward (toward tail of list), as the cradle last row offset approaches 
+        // listrow new cradle offset and cradle row shift have to be adjusted to prevent shortening 
+        // of cradle content.
+
         const targetcradlereferencerowoffset = Math.max(0,(newaxisreferencerowoffset - (runwaycount - 1)))
         const headrowdiff = newcradlereferencerowoffset - targetcradlereferencerowoffset
         if (headrowdiff > 0) {
@@ -339,40 +340,31 @@ export const calcContentShift = ({
         }
     }
 
-    // c. if scrolling backward (toward head of list), as the cradleindex hits 0, tailchagecount has to 
-    // be adjusted to prevent shortening of cradle content
-    // d. if scrolling backward near the end of the list, tailchangecount has to be adjusted to accomodate
-    // the trailing runway
-
-    // computed shifted cradle end row, looking for overshoot
     if (!isScrollingviewportforward) {
 
-        // adjust for undershoot start of list
+        // c. if scrolling backward (toward head of list), as the cradlerowoffset hits 0, cradle changes have
+        // to be adjusted to prevent shortening of cradle content
+        // d. if scrolling backward near the end of the list, cradle changes has to be adjusted to accomodate
+        // the trailing runway
+
         if (newcradlereferencerowoffset < 0) {
+
             const previousrowshift = cradlereferencerowshift
             cradlereferencerowshift += newcradlereferencerowoffset
             cradlereferencerowshift = Math.max(0,cradlereferencerowshift)
             newcradlereferencerowoffset = 0
-            const rowdiff = previousrowshift - cradlereferencerowshift
-            // computedNextCradleEndrowOffset += rowdiff
 
-            // console.log('adjusted cradle row counts for undershoot start of list\
-            //     cradlereferencerowshift, newcradlereferencerowoffset, computedNextCradleEndrowOffset',
-            //     cradlereferencerowshift, newcradlereferencerowoffset, computedNextCradleEndrowOffset)
         }
         // case of in bounds of trailing runway (end of list)
         const computedNextCradleEndrowOffset = (previouscradlerowoffset + (cradleRowcount -1) + cradlereferencerowshift)
         const targetcradleEndrowoffset = Math.min((listRowcount - 1), (newaxisreferencerowoffset + (viewportRowcount - 1) + (runwaycount - 1)))
         const tailrowdiff = Math.max(0, targetcradleEndrowoffset - computedNextCradleEndrowOffset)
-        // console.log('backward trailing runway: \
-        //     targetcradleEndrowoffset,newaxisreferencerowoffset, viewportRowcount, runwaycount, computedNextCradleEndrowOffset, tailrowdiff',
-        //     targetcradleEndrowoffset,newaxisreferencerowoffset, viewportRowcount, runwaycount, computedNextCradleEndrowOffset, tailrowdiff)
+
         if (tailrowdiff > 0) {
-            newcradlereferencerowoffset += tailrowdiff
+
             cradlereferencerowshift += tailrowdiff
-            // console.log('adjusted for backward tailrowdiff\
-            //     targetcradleEndrowoffset, runwaycount, tailrowdiff, newcradlereferencerowoffset, cradlereferencerowshift',
-            //     targetcradleEndrowoffset, runwaycount, tailrowdiff, newcradlereferencerowoffset, cradlereferencerowshift)
+            newcradlereferencerowoffset += tailrowdiff
+
         }
 
     }
@@ -398,16 +390,11 @@ export const calcContentShift = ({
     let headchangecount = -(cradlereferencerowshift * crosscount)
     let tailchangecount = -headchangecount - (changeOfCradleContentCount)
 
-    // console.log('7. newcradlecontentcount, includesLastRow, changeOfCradleContentCount, base headch1angecount & tailchangecount',
-    //     newcradlecontentcount, includesLastRow, changeOfCradleContentCount, headchangecount, tailchangecount)
-
     // -------------[ 8. calculate new axis pixel position ]------------------
 
     const axisposshift = axisreferencerowshift * cellLength
 
-    let newaxisposoffset = viewportaxisoffset + axisposshift
-
-    // console.log('10. axisposshift, newaxisposoffset',axisposshift, newaxisposoffset)
+    const newaxisposoffset = viewportaxisoffset + axisposshift
 
     // ---------------------[ 9. return required values ]-------------------
 
