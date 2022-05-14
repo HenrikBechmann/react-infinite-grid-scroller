@@ -340,19 +340,19 @@ export const calcContentShift = ({
     // console.log('6 newcradlereferencerowoffset, newaxisreferencerowoffset',
     //     newcradlereferencerowoffset, newaxisreferencerowoffset)
 
-    // ** TODO move to section 5 below ** adjust for undershoot start of list
-    if (newcradlereferencerowoffset < 0) {
-        const previousrowshift = cradlereferencerowshift
-        cradlereferencerowshift += newcradlereferencerowoffset
-        cradlereferencerowshift = Math.max(0,cradlereferencerowshift)
-        newcradlereferencerowoffset = 0
-        const rowdiff = previousrowshift - cradlereferencerowshift
-        computedNextCradleEndrowOffset += rowdiff
+    // // ** TODO move to section 5 below ** adjust for undershoot start of list
+    // if (newcradlereferencerowoffset < 0) {
+    //     const previousrowshift = cradlereferencerowshift
+    //     cradlereferencerowshift += newcradlereferencerowoffset
+    //     cradlereferencerowshift = Math.max(0,cradlereferencerowshift)
+    //     newcradlereferencerowoffset = 0
+    //     const rowdiff = previousrowshift - cradlereferencerowshift
+    //     computedNextCradleEndrowOffset += rowdiff
 
-        // console.log('adjusted cradle row counts for undershoot start of list\
-        //     cradlereferencerowshift, newcradlereferencerowoffset, computedNextCradleEndrowOffset',
-        //     cradlereferencerowshift, newcradlereferencerowoffset, computedNextCradleEndrowOffset)
-    }
+    //     // console.log('adjusted cradle row counts for undershoot start of list\
+    //     //     cradlereferencerowshift, newcradlereferencerowoffset, computedNextCradleEndrowOffset',
+    //     //     cradlereferencerowshift, newcradlereferencerowoffset, computedNextCradleEndrowOffset)
+    // }
 
 
     // --------[ 6. adjust start and end of list to maintain constant number of cradle rows ]-------
@@ -394,6 +394,19 @@ export const calcContentShift = ({
 
     if (!isScrollingviewportforward) {
 
+        // ** TODO move to section 5 below ** adjust for undershoot start of list
+        if (newcradlereferencerowoffset < 0) {
+            const previousrowshift = cradlereferencerowshift
+            cradlereferencerowshift += newcradlereferencerowoffset
+            cradlereferencerowshift = Math.max(0,cradlereferencerowshift)
+            newcradlereferencerowoffset = 0
+            const rowdiff = previousrowshift - cradlereferencerowshift
+            computedNextCradleEndrowOffset += rowdiff
+
+            // console.log('adjusted cradle row counts for undershoot start of list\
+            //     cradlereferencerowshift, newcradlereferencerowoffset, computedNextCradleEndrowOffset',
+            //     cradlereferencerowshift, newcradlereferencerowoffset, computedNextCradleEndrowOffset)
+        }
         // case of in bounds of trailing runway (end of list)
         const targetcradleEndrowoffset = Math.min((listRowcount - 1), (newaxisreferencerowoffset + (viewportRowcount - 1) + (runwaycount - 1)))
         const tailrowdiff = Math.max(0, targetcradleEndrowoffset - computedNextCradleEndrowOffset)
