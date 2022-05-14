@@ -5,6 +5,7 @@
     BUG: reposition chip appears outside viewport when list partly hidden
     BUG: repositioningRender is broken.
     BUG: breaklineOffset can fail when >= cellLength -- optimize this; impose correction
+    BUG: in one instance embedded list breakline failed to trigger start of scroll response
     TODO:
     - reload from/to for insertions and substitutions
     - provide user with isReparenting flag to be able to reset scroll
