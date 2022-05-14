@@ -174,6 +174,7 @@ const adjustAxisOffsetForMaxRefIndex = ({
 
 // ======================[ for updateCradleContent ]===========================
 
+// BUG: TODO scroll stopped right at head window forward does not trigger intersection in opposite direction
 // -1 = shift row to head. 1 = shift row to tail. 0 = do not shift a row.
 export const getShiftInstruction = ({
 
@@ -182,6 +183,7 @@ export const getShiftInstruction = ({
 
 }) => {
 
+    console.log('breaklineEntries', breaklineEntries)
 
     const entries = breaklineEntries.filter(entry => {
         const isIntersecting = entry.isIntersecting

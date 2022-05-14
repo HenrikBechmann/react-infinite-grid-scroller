@@ -200,48 +200,52 @@ export default class StylesHandler {
 
     getBreaklineTailStyles = (orientation, cellHeight, cellWidth, breaklineOffset) => {
         let transform // for position relative to axis
-        const position = 'absolute',
-            width = '100%',
-            height = '100%'
+        let position = 'absolute',
+            backgroundColor = 'blue',
+            width, // = '100%',
+            height // = '100%'
 
         if (orientation == 'horizontal') {
-            // width = 0
-            // height = cellHeight + 'px'
+            width = '5px'
+            height = '100%'
             transform = `translateX(${breaklineOffset + 'px'})`
         } else {
-            // width = 'auto'
-            // height = 0
+            width = '100%'
+            height = '5px'
             transform = `translateY(${breaklineOffset + 'px'})`
         }
         return { ...{
             position,
             width,
             height,
-            transform
+            transform,
+            backgroundColor
         } as React.CSSProperties}
     }
 
 
     getBreaklineHeadStyles = (orientation, cellHeight, cellWidth, breaklineOffset) => {
         let transform // for position relative to axis
-        console.log('')
-        const position = 'absolute',
-            width = '100%',
-            height = '100%'
+        // console.log('orientation', orientation)
+        let position = 'absolute',
+            backgroundColor = 'blue',
+            width, // = '100%',
+            height // = '100%'
         if (orientation == 'horizontal') {
-            // width = 0
-            // height = cellHeight + 'px'
+            width = '5px'
+            height = '100%'
             transform = `translateX(${-(cellWidth -breaklineOffset) + 'px'})`
         } else {
-            // width = 'auto'
-            // height = 0
+            width = '100%'
+            height = '5px'
             transform = `translateY(${-(cellHeight -breaklineOffset) + 'px'})`
         }
         return { ...{
             position,
             width,
             height,
-            transform
+            transform,
+            backgroundColor,
         } as React.CSSProperties}
     }
 }
