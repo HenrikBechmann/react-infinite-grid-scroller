@@ -312,31 +312,30 @@ export const calcContentShift = ({
     // --------[ 6. adjust cradle contents at start and end of list ]-------
     // ...to maintain constant number of cradle rows
 
-    // a. if scrolling forward near the start of the list, headchangecount has to be adjusted to
-    // accommodate the leading runway
-    // b. if scrolling forward (toward tail of list), as the cradle index approaches listCount less 
-    // newCradleContent count, headchangecount has to be adjusted to prevent shortening of cradle content.
+    // a. if scrolling forward near the start of the list, new cradle row offset and
+    // cradle row shift count has to be adjusted to accommodate the leading runway
+    // b. if scrolling forward (toward tail of list), as the cradle last row offset approaches 
+    // listrow new cradle offset and cradle row shift have to be adjusted to prevent shortening 
+    // of cradle content.
 
     if (isScrollingviewportforward) {
-        // case of in bounds of leading runway (start of list)
-        const targetcradlereferencerowoffset = Math.max(0,(newaxisreferencerowoffset - runwaycount))
+        // case of being in bounds of leading runway (start of list)
+        const targetcradlereferencerowoffset = Math.max(0,(newaxisreferencerowoffset - (runwaycount - 1)))
         const headrowdiff = newcradlereferencerowoffset - targetcradlereferencerowoffset
         if (headrowdiff > 0) {
+
             newcradlereferencerowoffset -= headrowdiff
             cradlereferencerowshift -= headrowdiff
-            // console.log('adjusted for forward headrowdiff\
-            //     newaxisreferencerowoffset, targetcradlereferencerowoffset, runwaycount, headrowdiff, newcradlereferencerowoffset, cradlereferencerowshift',
-            //     newaxisreferencerowoffset, targetcradlereferencerowoffset, runwaycount, headrowdiff, newcradlereferencerowoffset, cradlereferencerowshift)
+
         }
-        // case of in bounds of trailing runway (end of list)
+        // case of being in bounds of trailing runway (end of list)
         const targetcradleEndrowoffset = newcradlereferencerowoffset + (cradleRowcount -1)
         const tailrowdiff = Math.max(0,targetcradleEndrowoffset - (listRowcount -1))
         if (tailrowdiff > 0) {
+
             newcradlereferencerowoffset -= tailrowdiff
             cradlereferencerowshift -= tailrowdiff
-            // console.log('adjusted for forward tailrowdiff\
-            //     targetcradleEndrowoffset, runwaycount, tailrowdiff, newcradlereferencerowoffset, cradlereferencerowshift',
-            //     targetcradleEndrowoffset, runwaycount, tailrowdiff, newcradlereferencerowoffset, cradlereferencerowshift)
+
         }
     }
 
