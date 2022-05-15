@@ -27,10 +27,12 @@ export default class StylesHandler {
     }) => {
 
         // TODO: change 'cradle' to 'head' and 'tail' for more granularity
+        // TODO: breakline offset for head styles experimentally set to negative
+        //    to assure a brealline is always available for notification
         const headstyles:React.CSSProperties = this.getHeadStyles(gap, padding, orientation, userstyles.cradle)
         const tailstyles:React.CSSProperties = this.getTailStyles(gap, padding, orientation, userstyles.cradle)
         const axisstyles:React.CSSProperties = this.getAxisStyles(gap, padding, orientation, userstyles.axis)
-        const breaklineheadstyles:React.CSSProperties = this.getBreaklineHeadStyles(orientation,cellHeight, cellWidth, breaklineOffset)
+        const breaklineheadstyles:React.CSSProperties = this.getBreaklineHeadStyles(orientation,cellHeight, cellWidth, -breaklineOffset)
         const breaklinetailstyles:React.CSSProperties = this.getBreaklineTailStyles(orientation,cellHeight, cellWidth, breaklineOffset)
         const cradledividerstyles:React.CSSProperties = 
             {

@@ -4,6 +4,7 @@
 /*
 
     BUGS:
+    - Scrolltop is sometimes set to 0 while head overflows above border
     - context problems develop when rotating phone while scrolling intertia continues
     - rapid back and forth in middle eventually causes fail of intercepts
     - cell height not being respected in nested scrollers.
@@ -725,23 +726,6 @@ const Cradle = ({
                 break
             }
 
-            // renderupdatedcontent is called from breaklineintersectionobservercallback (interruptHandler), 
-            // and called from onAfterScroll (scrollHandler)
-            // it is required set configurations before 'ready' TODO: specify!
-            case 'renderupdatedcontent': {
-
-                // console.log('relinking breaklines to observer')
-                const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
-                const cradleElements = scaffoldHandler.elements
-
-                breaklineobserver.observe(cradleElements.headBreaklineRef.current)
-                breaklineobserver.observe(cradleElements.tailBreaklineRef.current)
-
-                setCradleState('ready')
-                break
-
-            }
-
             // -----------------------------------------------------------------------
             // ------------[ the following 5 cradle states all resolve with ]---------
             // ------------[ a chain starting with 'preparecontent', which  ]---------
@@ -836,6 +820,23 @@ const Cradle = ({
 
         const viewportInterruptProperties = viewportInterruptPropertiesRef.current
         switch (cradleState) {
+
+            // renderupdatedcontent is called from breaklineintersectionobservercallback (interruptHandler), 
+            // and called from onAfterScroll (scrollHandler)
+            // it is required set configurations before 'ready' TODO: specify!
+            case 'renderupdatedcontent': {
+
+                // console.log('relinking breaklines to observer')
+                const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
+                const cradleElements = scaffoldHandler.elements
+
+                breaklineobserver.observe(cradleElements.headBreaklineRef.current)
+                breaklineobserver.observe(cradleElements.tailBreaklineRef.current)
+
+                setCradleState('ready')
+                break
+
+            }
 
             case 'repositioningRender':
                 break

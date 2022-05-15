@@ -11,7 +11,7 @@ import Placeholder from './placeholder'
 
 import { CradlePortalsContext } from './cradle'
 
-const IDLECALLBACK_TIMEOUT = 1000
+const IDLECALLBACK_TIMEOUT = 8000 // TODO experimentally high!!
 
 const CellShell = ({
     orientation, 

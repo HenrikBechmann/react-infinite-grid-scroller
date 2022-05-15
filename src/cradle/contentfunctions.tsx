@@ -374,8 +374,8 @@ export const calcContentShift = ({
     let newcradlereferenceindex = (newcradlereferencerowoffset * crosscount)
     let cradlereferenceitemshift = (cradlereferencerowshift * crosscount)
 
-    const newaxisreferenceindex = newaxisreferencerowoffset * crosscount
-    const axisreferenceitemshift = axisreferencerowshift * crosscount
+    let newaxisreferenceindex = newaxisreferencerowoffset * crosscount
+    let axisreferenceitemshift = axisreferencerowshift * crosscount
 
     let newcradlecontentcount = cradleRowcount * crosscount // base count
     const includesLastRow = ((newcradlereferencerowoffset + cradleRowcount) >= listRowcount)
@@ -390,11 +390,23 @@ export const calcContentShift = ({
     let headchangecount = -(cradlereferencerowshift * crosscount)
     let tailchangecount = -headchangecount - (changeOfCradleContentCount)
 
-    // -------------[ 8. calculate new axis pixel position ]------------------
+    // -------------[ 8. calculate new axis pixel position; adjust for overshoot ]------------------
 
-    const axisposshift = axisreferencerowshift * cellLength
+    let axisposshift = axisreferencerowshift * cellLength
 
-    const newaxisposoffset = viewportaxisoffset + axisposshift
+    let newaxisposoffset = viewportaxisoffset + axisposshift
+
+    // TODO this is provisional; may be related to directional confusion
+    // TODO consider an undershoot option
+    if (newaxisposoffset > cellLength) {
+        console.log('adjusting for axis overshoot newaxisposoffset, cellLength', newaxisposoffset, cellLength)
+        const rowchange = Math.floor(newaxisposoffset/cellLength)
+        const pixelchange = rowchange * cellLength
+        const itemchange = rowchange * crosscount
+        newaxisposoffset -= pixelchange
+        newaxisreferenceindex -= itemchange
+        axisreferenceitemshift -= itemchange
+    }
 
     // ---------------------[ 9. return required values ]-------------------
 

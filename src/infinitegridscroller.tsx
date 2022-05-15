@@ -6,7 +6,12 @@
     BUG: repositioningRender is broken.
     BUG: breaklineOffset can fail when >= cellLength -- optimize this; impose correction
     BUG: in one instance embedded list breakline failed to trigger start of scroll response
+    BUG: sometimes inaccurate shifting of content type re cradle bounds
+    BUG: occasional position recalculation bugs, particularly in full screen mode
+    BUG: there is a delay in setting breakline interceptors (or the axis) under heavy load
     TODO:
+    - trigger reposition when head or tail are paritially intersecting,not when totally hidden
+        - or when both breaklines are hidden
     - reload from/to for insertions and substitutions
     - provide user with isReparenting flag to be able to reset scroll
     - check use of useCallback
