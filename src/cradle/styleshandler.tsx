@@ -201,17 +201,17 @@ export default class StylesHandler {
     getBreaklineTailStyles = (orientation, cellHeight, cellWidth, breaklineOffset) => {
         let transform // for position relative to axis
         let position = 'absolute',
-            backgroundColor = 'blue',
-            width, // = '100%',
-            height // = '100%'
+            // backgroundColor = 'blue',
+            width = '100%',
+            height = '100%'
 
         if (orientation == 'horizontal') {
-            width = '5px'
-            height = '100%'
+            // width = '5px'
+            // height = '100%'
             transform = `translateX(${breaklineOffset + 'px'})`
         } else {
-            width = '100%'
-            height = '5px'
+            // width = '100%'
+            // height = '5px'
             transform = `translateY(${breaklineOffset + 'px'})`
         }
         return { ...{
@@ -219,7 +219,7 @@ export default class StylesHandler {
             width,
             height,
             transform,
-            backgroundColor
+            // backgroundColor
         } as React.CSSProperties}
     }
 
@@ -228,16 +228,16 @@ export default class StylesHandler {
         let transform // for position relative to axis
         // console.log('orientation', orientation)
         let position = 'absolute',
-            backgroundColor = 'blue',
-            width, // = '100%',
-            height // = '100%'
-        if (orientation == 'horizontal') {
-            width = '5px'
+            // backgroundColor = 'blue',
+            width = '100%',
             height = '100%'
+        if (orientation == 'horizontal') {
+            // width = '5px'
+            // height = '100%'
             transform = `translateX(${-(cellWidth -breaklineOffset) + 'px'})`
         } else {
-            width = '100%'
-            height = '5px'
+            // width = '100%'
+            // height = '5px'
             transform = `translateY(${-(cellHeight -breaklineOffset) + 'px'})`
         }
         return { ...{
@@ -245,7 +245,7 @@ export default class StylesHandler {
             width,
             height,
             transform,
-            backgroundColor,
+            // backgroundColor,
         } as React.CSSProperties}
     }
 }

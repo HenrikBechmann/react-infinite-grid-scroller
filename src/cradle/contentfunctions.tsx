@@ -183,7 +183,7 @@ export const getShiftInstruction = ({
 
 }) => {
 
-    console.log('breaklineEntries', breaklineEntries)
+    // console.log('breaklineEntries', breaklineEntries)
 
     const entries = breaklineEntries.filter(entry => {
         const isIntersecting = entry.isIntersecting
