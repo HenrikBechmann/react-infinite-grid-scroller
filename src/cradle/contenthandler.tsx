@@ -281,26 +281,6 @@ export default class ContentHandler {
 
         })
 
-        // console.log('cradlereferenceindex, cradleitemshift, headchangecount, tailchangecount,', 
-        //     cradlereferenceindex, cradleitemshift, headchangecount, tailchangecount, cradleContentCount)
-
-
-        // console.log(`
-        //     cradlereferenceindex, 
-        //     cradleitemshift, 
-        //     axisreferenceindex, 
-        //     axisitemshift, 
-        //     axisposoffset, 
-        //     newCradleActualContentCount,
-        //     `,
-        //     cradlereferenceindex, 
-        //     cradleitemshift, 
-        //     axisreferenceindex, 
-        //     axisitemshift, 
-        //     axisposoffset, 
-        //     cradleContentCount,
-        //     )
-
         if ((axisitemshift == 0 && cradleitemshift == 0)) {
             console.log('returning for no axis or cradle shift')
             return
@@ -360,13 +340,13 @@ export default class ContentHandler {
             if (cradleInheritedProperties.orientation == 'vertical') {
                 const scrolltop = scrollPos // viewportElement.scrollTop
                 const top = scrolltop + axisposoffset
-                // console.log('==> axisposoffset, viewportElement.scrollTop, axis top in updateCradleContent',
-                //     axisposoffset, scrolltop, top)
+
                 scaffoldHandler.cradleReferenceData.blockScrollPos = scrolltop
                 scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
                 cradleElements.axisRef.current.style.top = top + 'px'
                 cradleElements.axisRef.current.style.left = 'auto'
                 cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleInheritedProperties.gap + 'px':0
+
             } else {
 
                 scaffoldHandler.cradleReferenceData.blockScrollPos = scrollPos // viewportElement.scrollLeft
