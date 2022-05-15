@@ -21,17 +21,23 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     }) => {
 
-    let { orientation, 
+    let { 
+        orientation, 
         cellHeight, 
         cellWidth, 
         runwaycount,
         gap,
         padding,
-        listsize} = cradleInheritedProperties
+        listsize
+    } = cradleInheritedProperties
 
-    let {crosscount,
+    let {
+
+        crosscount,
         cradleRowcount,
-        viewportRowcount} = cradleInternalProperties
+        viewportRowcount
+
+    } = cradleInternalProperties
     // reconcile axisReferenceIndex to crosscount context
     let diff = referenceoffset % crosscount
     referenceoffset -= diff
@@ -107,7 +113,14 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         })
     }
 
-    return {cradleFirstIndex, referenceoffset, cradleContentCount, scrollblockOffset, axisPosOffset, axisAdjustment} // summarize requirements message
+    return {
+        cradleFirstIndex, 
+        referenceoffset, 
+        cradleContentCount, 
+        scrollblockOffset, 
+        axisPosOffset, 
+        axisAdjustment
+    } // summarize requirements message
 
 }
 
@@ -443,8 +456,10 @@ export const getUICellShellList = ({
         instanceIdCounterRef,
     }) => {
 
-    let { crosscount,
-        cradleRowcount } = cradleInternalProperties
+    let { 
+        crosscount,
+        cradleRowcount 
+    } = cradleInternalProperties
 
     let localContentlist = [...contentlist]
     let tailindexoffset = cradleFirstIndex + contentlist.length

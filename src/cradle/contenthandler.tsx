@@ -197,14 +197,6 @@ export default class ContentHandler {
         // console.log('updateCradleContent', source )
 
         // ----------------------[ 1. data assembly ]-------------------------
-        // viewport
-        // const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-        // const viewportElement = viewportInterruptProperties.elementref.current
-
-        // if (!viewportElement) { 
-        //     // not mounted; return
-        //     return
-        // }
 
         // handler support
         const {
@@ -318,23 +310,6 @@ export default class ContentHandler {
         // the breaklines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state change in cradle.tsx
         interruptHandler.axisBreaklinesIntersect.observer.disconnect()
-
-        // ------------------[ 4. calculate head and tail consolidated cradle content changes ]-----------------
-
-        // the number of items to add to and clip from the contentlist
-        // negative number is clip; positive number is add
-        // const [headchangecount,tailchangecount] = calcHeadAndTailChanges({ 
-
-        //     cradleInheritedProperties,
-        //     cradleInternalProperties,
-        //     cradleContent,
-        //     cradleshiftcount:cradleitemshift,
-        //     isScrollingviewportforward,
-        //     cradleFirstIndex, // previous cradlefirstindex
-
-        // })
-
-        // console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
 
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 
