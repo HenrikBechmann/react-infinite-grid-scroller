@@ -399,7 +399,7 @@ export const calcContentShift = ({
     // TODO this is provisional; may be related to directional confusion
     // TODO consider an undershoot option
     if (newaxisposoffset > cellLength) {
-        console.log('adjusting for axis overshoot newaxisposoffset, cellLength', newaxisposoffset, cellLength)
+        console.log('overshoot newaxisposoffset, cellLength', newaxisposoffset, cellLength)
         const rowchange = Math.floor(newaxisposoffset/cellLength)
         const pixelchange = rowchange * cellLength
         const itemchange = rowchange * crosscount
