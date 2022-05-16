@@ -714,13 +714,6 @@ const Cradle = ({
             // it is required set configurations before 'ready' TODO: specify!
             case 'renderupdatedcontent': {
 
-                setCradleState('remount-breakline-listeners')
-                break
-
-            }
-
-            case 'remount-breakline-listeners': {
-
                 // console.log('relinking breaklines to observer')
                 const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
                 const cradleElements = scaffoldHandler.elements
@@ -730,6 +723,7 @@ const Cradle = ({
 
                 setCradleState('ready')
                 break
+
             }
 
             // ----------------------------------------------------------------------
