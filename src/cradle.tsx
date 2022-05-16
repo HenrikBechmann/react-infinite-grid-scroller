@@ -4,6 +4,10 @@
 /*
 
     BUGS:
+    - sometimes on android chrome axis gets stuck outside of visible area and 
+        loses intersect norifications
+    - android firefox loses position on fast scroll
+    - safari mac loses place in sublists on rapid backscroll at start of list
     - Scrolltop is sometimes set to 0 while head overflows above border
     - context problems develop when rotating phone while scrolling intertia continues
     - rapid back and forth in middle eventually causes fail of intercepts
