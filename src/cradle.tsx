@@ -634,6 +634,7 @@ const Cradle = ({
         viewportwidth,
         crosscount,
         styles,
+        breaklineOffset,
 
       ])
 
@@ -679,21 +680,6 @@ const Cradle = ({
 
             There are exceptions for setup and edge cases.
     */
-
-    // responds to change of orientation
-    // useEffect(() => {
-
-    //     let observer = interruptHandler.cellIntersect.observer
-    //     if (observer) observer.disconnect()
-    //     observer = interruptHandler.cellIntersect.createObserver()
-
-    //     return () => {
-
-    //         observer.disconnect()
-
-    //     }
-
-    // },[orientation])
 
     // =====================[ STATE management ]==========================
 
