@@ -709,6 +709,29 @@ const Cradle = ({
         const cradleContent = contentHandler.content
         switch (cradleState) {
 
+            // renderupdatedcontent is called from breaklineintersectionobservercallback (interruptHandler), 
+            // and called from onAfterScroll (scrollHandler)
+            // it is required set configurations before 'ready' TODO: specify!
+            case 'renderupdatedcontent': {
+
+                setCradleState('remount-breakline-listeners')
+                break
+
+            }
+
+            case 'remount-breakline-listeners': {
+
+                // console.log('relinking breaklines to observer')
+                const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
+                const cradleElements = scaffoldHandler.elements
+
+                breaklineobserver.observe(cradleElements.headBreaklineRef.current)
+                breaklineobserver.observe(cradleElements.tailBreaklineRef.current)
+
+                setCradleState('ready')
+                break
+            }
+
             // ----------------------------------------------------------------------
             // ------------[ reposition when repositioningRequired is true ]---------------
 
@@ -820,23 +843,6 @@ const Cradle = ({
 
         const viewportInterruptProperties = viewportInterruptPropertiesRef.current
         switch (cradleState) {
-
-            // renderupdatedcontent is called from breaklineintersectionobservercallback (interruptHandler), 
-            // and called from onAfterScroll (scrollHandler)
-            // it is required set configurations before 'ready' TODO: specify!
-            case 'renderupdatedcontent': {
-
-                // console.log('relinking breaklines to observer')
-                const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
-                const cradleElements = scaffoldHandler.elements
-
-                breaklineobserver.observe(cradleElements.headBreaklineRef.current)
-                breaklineobserver.observe(cradleElements.tailBreaklineRef.current)
-
-                setCradleState('ready')
-                break
-
-            }
 
             case 'repositioningRender':
                 break

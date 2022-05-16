@@ -32,8 +32,8 @@ export default class StylesHandler {
         const headstyles:React.CSSProperties = this.getHeadStyles(gap, padding, orientation, userstyles.cradle)
         const tailstyles:React.CSSProperties = this.getTailStyles(gap, padding, orientation, userstyles.cradle)
         const axisstyles:React.CSSProperties = this.getAxisStyles(gap, padding, orientation, userstyles.axis)
-        const breaklineheadstyles:React.CSSProperties = this.getBreaklineHeadStyles(orientation,cellHeight, cellWidth, -breaklineOffset)
-        const breaklinetailstyles:React.CSSProperties = this.getBreaklineTailStyles(orientation,cellHeight, cellWidth, breaklineOffset)
+        const breaklineheadstyles:React.CSSProperties = this.getBreaklineHeadStyles(orientation,cellHeight, cellWidth, breaklineOffset, gap)
+        const breaklinetailstyles:React.CSSProperties = this.getBreaklineTailStyles(orientation,cellHeight, cellWidth, breaklineOffset, gap)
         const cradledividerstyles:React.CSSProperties = 
             {
                 zIndex:1, 
@@ -200,7 +200,7 @@ export default class StylesHandler {
 
     }
 
-    getBreaklineTailStyles = (orientation, cellHeight, cellWidth, breaklineOffset) => {
+    getBreaklineTailStyles = (orientation, cellHeight, cellWidth, breaklineOffset, gap) => {
         let transform // for position relative to axis
         let position = 'absolute',
             // backgroundColor = 'blue',
@@ -226,7 +226,7 @@ export default class StylesHandler {
     }
 
 
-    getBreaklineHeadStyles = (orientation, cellHeight, cellWidth, breaklineOffset) => {
+    getBreaklineHeadStyles = (orientation, cellHeight, cellWidth, breaklineOffset, gap) => {
         let transform // for position relative to axis
         // console.log('orientation', orientation)
         let position = 'absolute',
@@ -236,11 +236,11 @@ export default class StylesHandler {
         if (orientation == 'horizontal') {
             // width = '5px'
             // height = '100%'
-            transform = `translateX(${-(cellWidth -breaklineOffset) + 'px'})`
+            transform = `translateX(${-(cellWidth + gap -breaklineOffset) + 'px'})`
         } else {
             // width = '100%'
             // height = '5px'
-            transform = `translateY(${-(cellHeight -breaklineOffset) + 'px'})`
+            transform = `translateY(${-(cellHeight + gap -breaklineOffset) + 'px'})`
         }
         return { ...{
             position,
