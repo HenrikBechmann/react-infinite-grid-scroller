@@ -196,7 +196,7 @@ export default class ContentHandler {
 
         // console.log('updateCradleContent source, breaklineEntries', source, breaklineEntries )
 
-        // ----------------------[ 1. data assembly ]-------------------------
+        // ----------------------[ 1. initialize ]-------------------------
 
         // handler support
         const {
@@ -229,9 +229,6 @@ export default class ContentHandler {
             this._previousScrollForward = isScrollingviewportforward
 
         }
-
-        // console.log('scrollPos, calculated isScrollingviewportforward: scrollPositions',
-        //     scrollPos, isScrollingviewportforward, Object.assign({},scrollPositions))
 
         // cradle scaffold and contained data
         const cradleElements = scaffoldHandler.elements
@@ -296,7 +293,7 @@ export default class ContentHandler {
         // collect modified content
         let localContentList, deletedContentItems = []
 
-        if (headchangecount || tailchangecount) { // TODO: apparently headchangecount of -0 fails test, should be fixed
+        if (headchangecount || tailchangecount) { 
 
             [localContentList,deletedContentItems] = getUICellShellList({
                 cradleInheritedProperties,
