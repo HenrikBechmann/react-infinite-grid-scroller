@@ -409,18 +409,6 @@ export const calcContentShift = ({
 
     let newaxisposoffset = viewportaxisoffset + axisposshift
 
-    // TODO this is provisional; may be related to directional confusion
-    // TODO consider an undershoot option
-    // if (newaxisposoffset > cellLength) {
-    //     console.log('overshoot newaxisposoffset, cellLength', newaxisposoffset, cellLength)
-    //     const rowchange = Math.floor(newaxisposoffset/cellLength)
-    //     const pixelchange = rowchange * cellLength
-    //     const itemchange = rowchange * crosscount
-    //     newaxisposoffset -= pixelchange
-    //     newaxisreferenceindex -= itemchange
-    //     axisreferenceitemshift -= itemchange
-    // }
-
     // ---------------------[ 9. return required values ]-------------------
 
     return [

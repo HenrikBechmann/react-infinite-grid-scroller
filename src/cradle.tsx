@@ -755,7 +755,9 @@ const Cradle = ({
                 cradleContent.tailModelComponents = []
                 cradleContent.headViewComponents = []
                 cradleContent.tailViewComponents = []
+
                 handlersRef.current.portals.resetScrollerPortalRepository()
+                
                 contentHandler.setCradleContent(callingCradleState.current)
 
                 setCradleState('preparerender')

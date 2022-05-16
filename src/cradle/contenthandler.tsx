@@ -3,10 +3,8 @@
 
 import { 
     getUICellShellList, 
-    // calcHeadAndTailChanges,
     calcContentShift,
     getContentListRequirements,
-    // isolateShiftingIntersections,
     getShiftInstruction,
     allocateContentList,
     deleteAndRerenderPortals,
@@ -64,13 +62,6 @@ export default class ContentHandler {
         const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         const stateHandler = this.cradleParameters.handlersRef.current.state
         const serviceHandler = this.cradleParameters.handlersRef.current.service
-        // const interruptHandler = this.cradleParameters.handlersRef.current.interrupts
-        // const cradleData = this.cradleParameters.cradleInheritedPropertiesRef.current
-
-        // if (viewportInterruptProperties.index == 6) {
-        //     console.log('SETTING content - cradleState, cradleData in setCradleContent',
-                    // cradleState, cradleData)
-        // }
 
         const viewportElement = viewportInterruptProperties.elementref.current
 
@@ -108,12 +99,6 @@ export default class ContentHandler {
                 viewportElement:viewportInterruptProperties.elementref.current
             })
 
-         // console.log('cradleActualContentCount from getContentListRequirements',cradleActualContentCount)
-
-        // if (viewportInterruptProperties.index == 6) {
-        //     console.log('SET index, cradleActualContentCount', viewportInterruptProperties.index,cradleActualContentCount)
-        // }
-
         // returns content constrained by cradleRowcount
         const [childlist,deleteditems] = getUICellShellList({
 
@@ -125,7 +110,6 @@ export default class ContentHandler {
             tailchangecount:cradleContentCount,
             localContentList,
             callbacks:this.internalCallbacksRef.current,
-            // observer: interruptHandler.cellIntersect.observer,
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
@@ -155,7 +139,7 @@ export default class ContentHandler {
         if (serviceHandler.serviceCalls.referenceIndexCallbackRef.current) {
 
             let cstate = cradleState
-            // if (cstate == 'setreload') cstate = 'reload'
+
             serviceHandler.serviceCalls.referenceIndexCallbackRef.current(
 
                 scaffoldHandler.cradleReferenceData.nextItemIndexReference,'setCradleContent', cstate)
@@ -165,13 +149,10 @@ export default class ContentHandler {
         const cradleElements = scaffoldHandler.elements //cradleElementsRef.current
 
         scaffoldHandler.cradleReferenceData.blockScrollPos = scrollblockOffset - axisPosOffset
-        // console.log('setting blockScrollPos in setCradleContent: blockScrollPos, scrollblockOffset, axisPosOffset',
-        //     scaffoldHandler.cradleReferenceData.blockScrollPos, scrollblockOffset, axisPosOffset)
 
         if (orientation == 'vertical') {
 
             scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
-            // scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
 
             cradleElements.axisRef.current.style.top = (scrollblockOffset + axisAdjustment) + 'px'
             cradleElements.axisRef.current.style.left = 'auto'
@@ -180,7 +161,7 @@ export default class ContentHandler {
         } else { // orientation = 'horizontal'
 
             scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
-            // scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
+            // ??? scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
 
             cradleElements.axisRef.current.style.top = 'auto'
             cradleElements.axisRef.current.style.left = (scrollblockOffset + axisAdjustment) + 'px'
@@ -193,8 +174,6 @@ export default class ContentHandler {
     // =============================[ UPDATE through scroll ]===============================
 
     public updateCradleContent = (breaklineEntries, source = 'notifications') => {
-
-        // console.log('updateCradleContent source, breaklineEntries', source, breaklineEntries )
 
         // ----------------------[ 1. initialize ]-------------------------
 
@@ -230,7 +209,7 @@ export default class ContentHandler {
 
         }
 
-        // cradle scaffold and contained data
+        // cradle scaffold and user cells
         const cradleElements = scaffoldHandler.elements
         const cradleContent = this.content
         const itemElements = this.itemElements
@@ -245,10 +224,7 @@ export default class ContentHandler {
             breaklineEntries,
         })
 
-        // console.log('shiftinstruction',shiftinstruction)
-
         if (shiftinstruction == 0) return
-
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 

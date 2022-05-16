@@ -3,6 +3,10 @@
 
 'use strict'
 
+/*
+    TODO: trigger reposition if breakline entries come back with isIntersecting the same for both
+*/
+
 import { ResizeObserver as ResizeObserverPolyfill} from '@juggle/resize-observer'
 
 const ResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
@@ -29,35 +33,35 @@ export default class InterruptHandler {
 
     private axisBreaklinesObserverCallback = (entries) => {
 
-        // console.log('breaklines observer triggered:entries',entries)
-
         const testrootbounds = entries[0].rootBounds
         if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
-            // console.log('axisBreaklinesObserverCallback return for reparenting')
+
             return
 
         }
 
         if (this.signals.pauseBreaklinesObserver) { 
 
-            // console.log('pauseBreaklinesObserver is TRUE; returning')
-
             return
 
         }
 
-        const {content:contentHandler,state:stateHandler,scroll:scrollHandler} = 
-            this.cradleParameters.handlersRef.current
+        const {
+            content:contentHandler,
+            state:stateHandler,
+            scroll:scrollHandler
+        } = this.cradleParameters.handlersRef.current
 
         if (stateHandler.isMountedRef.current) {
             const { scrollPositions } = scrollHandler
             if ((scrollPositions.start != scrollPositions.current) ||
                 (scrollPositions.current != scrollPositions.previous)) {
+
                 scrollPositions.previousupdate = scrollPositions.currentupdate
                 scrollPositions.currentupdate = scrollPositions.current
-                // console.log('scrollPositions.current before update call',scrollPositions.current)
+
                 contentHandler.updateCradleContent(entries,'breaklinesObserver')
-                // console.log('completed update from breaklines callback')
+
             }
         }
     }
@@ -119,9 +123,9 @@ export default class InterruptHandler {
                 const {top, right, bottom, left} = rect
                 const width = right - left, height = bottom - top
                 viewportInterruptProperties.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
-                // signals.pauseCellObserver = true
+
                 signals.pauseBreaklinesObserver = true
-                // pauseCradleIntersectionObserverRef.current = true
+                
                 const cradleContent = contentHandler.content
                 cradleContent.headModelComponents = []
                 cradleContent.tailModelComponents = []
