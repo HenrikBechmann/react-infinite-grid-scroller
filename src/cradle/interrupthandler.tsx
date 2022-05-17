@@ -138,72 +138,6 @@ export default class InterruptHandler {
 
     }
 
-    // the async callback from IntersectionObserver.
-    // private cellintersectionobservercallback = (entries)=>{
-
-    //     return // prepare for switch to breakline interrupts
-
-    //     const testrootbounds = entries[0].rootBounds
-    //     if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
-
-    //         return
-
-    //     }
-        
-    //     // const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-
-    //     const {content:contentHandler,state:stateHandler,scroll:scrollHandler} = 
-    //         this.cradleParameters.handlersRef.current
-    //     // const contentHandler = this.cradleParameters.handlersRef.current.content
-    //     // const stateHandler = this.cradleParameters.handlersRef.current.state
-    //     // const scrollHandler = this.cradleParameters.handlersRef.current.scroll
-
-    //     let movedentries = []
-
-    //     for (let entry of entries) {
-    //         // console.log('entry dataset',Object.assign({},entry.target.dataset))
-    //         if (entry.target.dataset.initialized) {
-
-    //             movedentries.push(entry)
-
-    //         } else {
-
-    //             entry.target.dataset.initialized = 'true'
-
-    //         }
-    //     }
-
-    //     // TODO: moved this above initialization; no apparent difference to bug
-    //     if (this.signals.pauseCellObserver) { 
-
-    //         return
-
-    //     }
-
-    //     // TODO: set scrollPositions.atLastUpdateCall
-    //     if (stateHandler.isMountedRef.current) {
-    //         const { scrollPositions } = scrollHandler
-    //         if ((scrollPositions.start != scrollPositions.current) ||
-    //             (scrollPositions.current != scrollPositions.previous)) {
-    //             scrollPositions.previousupdate = scrollPositions.currentupdate
-    //             scrollPositions.currentupdate = scrollPositions.current
-    //             contentHandler.updateCradleContent(movedentries,'cellObserver')
-    //         }
-    //     }
-
-    // }
-
-   // viewportResize = {
-   //    observer:null,
-   //    callback:null,
-   //    createObserver:() => {
-
-   //      this.viewportResize.observer = new ResizeObserver(this.viewportResize.callback)
-   //      return this.viewportResize.observer
-
-   //    }
-   // }
-
    // for adjusting to content re-sizing
    cradleResize = {
       observer:null,
@@ -215,6 +149,7 @@ export default class InterruptHandler {
 
       }
    }
+
    cradleIntersect = {
         observer:null,
         callback:this.cradleIntersectionObserverCallback,
@@ -227,6 +162,7 @@ export default class InterruptHandler {
             return this.cradleIntersect.observer
         }
     }
+
    axisBreaklinesIntersect = {
         observer:null,
         callback:this.axisBreaklinesObserverCallback,
@@ -239,23 +175,6 @@ export default class InterruptHandler {
             return this.axisBreaklinesIntersect.observer
         }
     }
-    // cellIntersect = {
-    //     observer:null,
-    //     callback:null,
-    //     createObserver:() => {
-    //         let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-    //         this.cellIntersect.observer = new IntersectionObserver(
-
-    //             this.cellintersectionobservercallback,
-    //             {
-    //                 root:viewportInterruptProperties.elementref.current, 
-    //                 threshold:this.cradleParameters.CradleInternalPropertiesRef.current.cellObserverThreshold,
-    //             } 
-    //         )
-    //         return this.cellIntersect.observer
-    //     }
-
-    // }
 
     signals = {
         repositioningRequired: false,

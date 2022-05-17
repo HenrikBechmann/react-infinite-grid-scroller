@@ -131,8 +131,6 @@ import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, u
 
 import { ViewportInterrupt } from './viewport'
 
-const ITEM_OBSERVER_THRESHOLD = [0,1]
-
 // popup position tracker
 import ScrollTracker from './scrolltracker'
 
@@ -322,7 +320,6 @@ const Cradle = ({
         cradleRowcount,
         viewportRowcount,
         listRowcount,
-        cellObserverThreshold:ITEM_OBSERVER_THRESHOLD,
         cradleStateRef,
         setCradleState,
         isMountedRef,

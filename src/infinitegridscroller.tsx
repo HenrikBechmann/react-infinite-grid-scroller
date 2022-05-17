@@ -38,7 +38,9 @@ import Cradle from './cradle'
 let globalScrollerID = 0
 
 const getSessionID = () => {
+
     return globalScrollerID++
+
 }
 
 // ===================================[ INITIALIZE ]===========================
@@ -64,8 +66,6 @@ const getSessionID = () => {
 
 const InfiniteGridScroller = (args) => {
 
-    // console.log('running InfiniteGridScroller')
-
     // ------------------[ normalize properties ]--------------------
 
     const props = Object.assign({},args) // args should be immutable
@@ -81,11 +81,12 @@ const InfiniteGridScroller = (args) => {
     props.layout ?? (props.layout = 'uniform')
     // constraints
     props.indexOffset = Math.max(0,props.indexOffset) // non-negative
-    props.indexOffset = Math.min(props.listSize, props.indexOffset) // not larger than list
+    props.indexOffset = Math.min((props.listSize -1), props.indexOffset) // not larger than list
     if (!['horizontal','vertical'].includes(props.orientation)) {
         props.orientation = 'vertical'
     }
-    props.breaklineOffset ?? (props.breaklineOffset = 10) // TODO: rationalize with cellHeight & cellWidth
+    // TODO: rationalize with cellHeight & cellWidth; must be less than half
+    props.breaklineOffset ?? (props.breaklineOffset = 10) 
 
     const { 
         orientation, // vertical or horizontal
@@ -154,14 +155,13 @@ const InfiniteGridScroller = (args) => {
 
     const scrollerID = scrollerSessionIDRef.current
 
-    // console.log('scrollerID',scrollerID)
     // --------------------[ render ]---------------------
 
     return (
         <React.StrictMode>
         <Viewport
 
-            gridSpecs = {gridSpecsRef.current}
+            gridSpecs = { gridSpecsRef.current }
 
             styles = { stylesRef.current }
 
@@ -170,7 +170,7 @@ const InfiniteGridScroller = (args) => {
         
             <Scrollblock
 
-                gridSpecs = {gridSpecsRef.current}
+                gridSpecs = { gridSpecsRef.current }
 
                 styles = { stylesRef.current }
 
@@ -181,7 +181,7 @@ const InfiniteGridScroller = (args) => {
             >
                 <Cradle 
 
-                    gridSpecs = {gridSpecsRef.current}
+                    gridSpecs = { gridSpecsRef.current }
 
                     styles = { stylesRef.current }
 
