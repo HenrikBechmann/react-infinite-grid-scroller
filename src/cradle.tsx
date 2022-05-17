@@ -149,7 +149,7 @@ import StylesHandler from './cradle/styleshandler'
 // for children
 export const CradlePortalsContext = React.createContext(null) // for children
 
-const portalrootstyle = {display:'none'} // static parm
+const portalrootstyle = {display:'none'} // static 
 
 const NORMALIZE_SIGNALS_TIMEOUT = 250
 
@@ -170,7 +170,7 @@ const Cradle = ({
         breaklineOffset,
     }) => {
 
-    // ========================[ SETUP ]========================
+    // ========================[ DATA SETUP ]========================
 
     // unpack gridSpecs
     const {
@@ -216,7 +216,6 @@ const Cradle = ({
     })
 
     // context
-
     const viewportInterruptProperties = useContext(ViewportInterrupt)
     const viewportInterruptPropertiesRef = useRef(null)
     viewportInterruptPropertiesRef.current = viewportInterruptProperties // for closures
@@ -226,18 +225,14 @@ const Cradle = ({
 
     const [cradleState, setCradleState] = useState('setup')
 
-    // console.log('entering cradle with cradleState', cradleState)
-
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState;
 
     // controls
-
     const isMountedRef = useRef(true)
     const normalizeTimerRef = useRef(null)
 
-    // cradle butterfly elements
-
+    // cradle scaffold elements
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const axisCradleElementRef = useRef(null)
@@ -254,7 +249,6 @@ const Cradle = ({
     )
 
     // configuration calculations
-
     const crosscount = useMemo(() => {
 
         const viewportsize = (orientation == 'horizontal')?viewportheight:viewportwidth
@@ -384,7 +378,7 @@ const Cradle = ({
         stylesHandler,
     } = setOfHandlersRef.current
 
-    // to instantiate handlersRef
+    // to instantiate handlersRef for cradleParameters
     const handlerObjectRef = useRef({
         portals:portalHandler,
         interrupts:interruptHandler,
@@ -498,14 +492,11 @@ const Cradle = ({
 
     },[])
 
-    // intersection observer for cradle axix breaklines
+    // intersection observer for cradle axis breaklines
     useEffect(()=>{
 
-        // const cradleElements = scaffoldHandler.elements
-
+        // the breaklines are observed with 'resetbreaklines' state
         const observer = interruptHandler.axisBreaklinesIntersect.createObserver()
-        // observer.observe(cradleElements.headBreaklineRef.current)
-        // observer.observe(cradleElements.tailBreaklineRef.current)
 
         return () => {
 
@@ -663,27 +654,6 @@ const Cradle = ({
 
     },[cradleState])
 
-    // item shell observer
-
-    /*
-        The cradle content is driven by notifications from the IntersectionObserver.
-        - as the user scrolls the cradle, which has a runwaycount at both the leading
-            and trailing edges, CellShells scroll into or out of the scope of the observer 
-            (defined by the width/height of the viewport + the lengths of the runways). The observer
-            notifies the app (through cellobservercallback() below) at the crossings of the itemshells 
-            of the defined observer cradle boundaries.
-
-            The no-longer-intersecting notifications trigger dropping of that number of affected items from 
-            the cradle contentlist. The dropping of items from the trailing end of the content list
-            triggers the addition of an equal number of items at the leading edge of the cradle content.
-
-            Technically, the opposite end position spec is set (top or left depending on orientation), 
-            and the matching end position spec is set to 'auto' when items are added. This causes items to be 
-            "squeezed" into the leading or trailing ends of the ui content (out of view) as appropriate.
-
-            There are exceptions for setup and edge cases.
-    */
-
     // =====================[ STATE management ]==========================
 
     // data for state processing
@@ -699,6 +669,8 @@ const Cradle = ({
 
         switch (cradleState) {
 
+            // resetbreaklines is called after setCradleContent cycle is complete
+            // it is called specifically from the normalizesignals default response
             case 'resetbreaklines':
             // renderupdatedcontent is called from breaklineintersectionobservercallback (interruptHandler), 
             // and called from onAfterScroll (scrollHandler)
