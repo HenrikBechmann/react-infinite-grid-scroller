@@ -696,7 +696,7 @@ const Cradle = ({
 
         const viewportInterruptProperties = viewportInterruptPropertiesRef.current
         const cradleContent = contentHandler.content
-        // console.log('handling cradleState',cradleState)
+
         switch (cradleState) {
 
             case 'resetbreaklines':
@@ -705,7 +705,6 @@ const Cradle = ({
             // it is required set configurations before 'ready' TODO: specify!
             case 'renderupdatedcontent': {
 
-                // console.log('relinking breaklines to observer')
                 const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
                 const cradleElements = scaffoldHandler.elements
 
@@ -721,17 +720,20 @@ const Cradle = ({
             // ------------[ reposition when repositioningRequired is true ]---------------
 
             case 'startreposition': {
-                // interruptHandler.states.isRepositioning = true
+
                 interruptHandler.signals.pauseCradleIntersectionObserver = true
                 setCradleState('repositioningRender')
                 break
+
             }
 
             case 'finishreposition': {
+
                 interruptHandler.signals.pauseCradleIntersectionObserver = false
                 scrollHandler.updateReferenceData()
                 setCradleState('doreposition')
                 break
+
             }
 
             // -----------------------------------------------------------------------
@@ -781,6 +783,7 @@ const Cradle = ({
             }
 
             case 'normalizesignals': {
+
                 normalizeTimerRef.current = setTimeout(()=> {
 
                     if (!isMountedRef.current) return
@@ -801,7 +804,7 @@ const Cradle = ({
                                 console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportInterruptProperties)
                             }
 
-                /*default*/ if (isMountedRef.current) setCradleState('resetbreaklines')//'ready')
+                /*default*/ if (isMountedRef.current) setCradleState('resetbreaklines') // then 'ready'
 
                         } else {
 
