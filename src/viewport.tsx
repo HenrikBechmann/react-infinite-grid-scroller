@@ -203,7 +203,7 @@ const Viewport = ({
 
     },[orientation, cellWidth, cellHeight, gap, padding])
 
-    // update; add viewport dimensions
+    // update viewportInterruptPropertiesRef; add viewport dimensions
     viewportInterruptPropertiesRef.current = useMemo(() => {
 
         if (viewportState == 'setup') return viewportInterruptPropertiesRef.current
@@ -241,10 +241,7 @@ const Viewport = ({
     },[viewportState])
 
     // ----------------------[ render ]--------------------------------
-    // const oldViewportPropertiesRef = useRef(viewportInterruptPropertiesRef.current)
-    // console.log('viewport changes',
-    //     Object.is(viewportInterruptPropertiesRef.current,oldViewportPropertiesRef.current))
-    // oldViewportPropertiesRef.current = viewportInterruptPropertiesRef.current
+
     return <ViewportInterrupt.Provider value = { viewportInterruptPropertiesRef.current }>
         <div 
             data-type = 'viewport'
@@ -261,15 +258,18 @@ const Viewport = ({
 // establish minimum width/height for the viewport -- approximately one item
 // gap only applies with multi-width items, therefore not used in calculations
 const calcMinViewportCrossLength = (orientation, cellWidth, cellHeight, gap, padding) => {
-    // console.log('calcMinViewportCrossLength parms',orientation, cellWidth, cellHeight, padding,)
+
     let crosslength, cellLength
+    
     if (orientation == 'vertical') {
-        cellLength = cellWidth //+ gap
+        cellLength = cellWidth 
     } else {
-        cellLength = cellHeight // + gap
+        cellLength = cellHeight
     }
     crosslength = cellLength + (padding * 2)
+
     return crosslength
+
 }
 
 export default Viewport
