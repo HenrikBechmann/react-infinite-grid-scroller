@@ -12,6 +12,7 @@
     - context problems develop when rotating phone while scrolling intertia continues
     - rapid back and forth in middle eventually causes fail of intercepts
     - cell height not being respected in nested scrollers.
+    - resize sometimes loses correct allocation of head items; leaves blank items
 
     BUGS:
     - check styles in scrollTracker args
@@ -225,7 +226,7 @@ const Cradle = ({
 
     const [cradleState, setCradleState] = useState('setup')
 
-    console.log('entering cradle with cradleState', cradleState)
+    // console.log('entering cradle with cradleState', cradleState)
 
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState;
@@ -695,7 +696,7 @@ const Cradle = ({
 
         const viewportInterruptProperties = viewportInterruptPropertiesRef.current
         const cradleContent = contentHandler.content
-        console.log('handling cradleState',cradleState)
+        // console.log('handling cradleState',cradleState)
         switch (cradleState) {
 
             case 'resetbreaklines':
