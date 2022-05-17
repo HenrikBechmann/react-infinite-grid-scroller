@@ -45,7 +45,7 @@ const Viewport = ({
     const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
     viewportStateRef.current = viewportState
 
-    // only set if viewport is a child of an infiniteScroller
+    // this is only set if viewport is a child of an infiniteScroller
     const parentPortalHandler = useContext(ParentCradlePortalsContext);
 
     const isMountedRef = useRef(true) // monitor for unmounted
@@ -57,32 +57,17 @@ const Viewport = ({
 
     },[])
 
-    const divlinerstyleRef = useRef(null)
-
-    // integrate inherited styles
-    divlinerstyleRef.current = useMemo(() => {
-
-        return Object.assign(
-        {
-            position:'absolute',
-            top:0,
-            right:0,
-            bottom:0,
-            left:0,
-            overflow:'auto',
-            backgroundColor:'red',
-        }, styles.viewport)
-
-    },[styles.viewport])
-
     const viewportdivRef = useRef(null)
 
-    // viewportInterruptPropertiesRef is passed as an interrupt (through context) to children
+    // viewportInterruptPropertiesRef is passed as a resizing interrupt (through context) to children
+    // initialize
     const viewportInterruptPropertiesRef = useRef(
         {
             portal:null, 
             isResizing:false, 
-            index:null
+            index:null,
+            viewportDimensions:null,
+            elementref:null
         }
     )
 
@@ -123,7 +108,6 @@ const Viewport = ({
         if (!target.dataset.initialized) {
 
             target.dataset.initialized = true
-            // console.log('initialed target', target.dataset)
 
             return
 
@@ -131,9 +115,9 @@ const Viewport = ({
 
         // generate interrupt response, if initiating resize
         if (!isResizingRef.current) {
+
             viewportInterruptPropertiesRef.current.isResizing = isResizingRef.current = true 
             // new object creation triggers a realtime interrupt message to cradle through context
-            // console.log('updating viewportInterruptPropertiesRef in resizeCallback')
             viewportInterruptPropertiesRef.current = Object.assign({},viewportInterruptPropertiesRef.current) 
 
             if (isMountedRef.current) setViewportState('resizing')
@@ -154,6 +138,7 @@ const Viewport = ({
 
     // -------------------[ set portal for non-root viewports ]-------------
 
+    // sets portal in viewportInterruptPropertiesRef
     useEffect(()=>{
 
         if (!parentPortalHandler) return // root viewport; has no portal
@@ -162,7 +147,7 @@ const Viewport = ({
         let element = viewportdivRef.current
 
         while (element) {
-            if (element.dataset && (element.dataset.type == 'portalcontainer')) {
+            if (element.dataset && (element.dataset.type == 'portalcontainer')) { // set portal & exit
                 portalindex = parseInt(element.dataset.index)
                 viewportInterruptPropertiesRef.current.portal = parentPortalHandler.getPortal(portalindex)
                 viewportInterruptPropertiesRef.current.index = portalindex
@@ -179,9 +164,27 @@ const Viewport = ({
 
     },[])
 
-    // ----------------------------------[ calculate config ]--------------------------------
+    // ----------------------------------[ calculate config values ]--------------------------------
 
-    // calculated values
+    const divlinerstyleRef = useRef(null)
+
+    // initialize with inherited styles
+    divlinerstyleRef.current = useMemo(() => {
+
+        return Object.assign(
+        {
+            position:'absolute',
+            top:0,
+            right:0,
+            bottom:0,
+            left:0,
+            overflow:'auto',
+            backgroundColor:'red',
+        }, styles.viewport)
+
+    },[styles.viewport])
+
+    // update with config values
     divlinerstyleRef.current = useMemo(() => {
 
         // TODO: gap
@@ -200,11 +203,8 @@ const Viewport = ({
 
     },[orientation, cellWidth, cellHeight, gap, padding])
 
-    // measure viewport dimensions for children
-    // TODO: should dimensions be updated during resize or only after resize?
+    // update; add viewport dimensions
     viewportInterruptPropertiesRef.current = useMemo(() => {
-
-        // console.log('useMemo state', viewportState)
 
         if (viewportState == 'setup') return viewportInterruptPropertiesRef.current
 
