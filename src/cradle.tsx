@@ -13,6 +13,14 @@
     - rapid back and forth in middle eventually causes fail of intercepts
     - cell height not being respected in nested scrollers.
 
+    BUGS:
+    - check styles in scrollTracker args
+    - doreposition gets stuck at a particular number after getting behind on heavy scroll
+        check pauseScrollingEffects
+    - variable cells showing signs of getItem() with portal
+    - Chrome sometimes misses nested cell portals horizontally
+    - reduce computing intensity to avoid battery drainage
+
     TODO:
 
     - try position fixed during reparenting to preserve scroll position
@@ -42,13 +50,6 @@
     ServiceHandler // user services
     StylesHandler
 
-    BUGS:
-    - check styles in scrollTracker args
-    - doreposition gets stuck at a particular number after getting behind on heavy scroll
-        check pauseScrollingEffects
-    - variable cells showing signs of getItem() with portal
-    - Chrome sometimes misses nested cell portals horizontally
-    - reduce computing intensity to avoid battery drainage
 */
 
 /*
@@ -131,7 +132,7 @@ import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, u
 
 import { ViewportInterrupt } from './viewport'
 
-// popup position tracker
+// popup position tracker for repositioning
 import ScrollTracker from './scrolltracker'
 
 // support code
@@ -162,6 +163,7 @@ const Cradle = ({
         placeholder, 
         functions:inheritedfunctions,
         styles:inheritedstyles,
+
         scrollerName,
         scrollerID,
         breaklineOffset,
@@ -170,7 +172,6 @@ const Cradle = ({
     // ========================[ SETUP ]========================
 
     // unpack gridSpecs
-
     const {
         orientation,
         gap,
@@ -223,8 +224,6 @@ const Cradle = ({
     const { height:viewportheight,width:viewportwidth } = viewportDimensions
 
     const [cradleState, setCradleState] = useState('setup')
-
-    // console.log('cradle state',cradleState)
 
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState;
@@ -953,7 +952,5 @@ const getCradleHandlers = (cradleParameters) => {
         stylesHandler:createHandler(StylesHandler),
     }
 }
-
-
 
 export default Cradle
