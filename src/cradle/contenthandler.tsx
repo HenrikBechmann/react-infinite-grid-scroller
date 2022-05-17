@@ -56,12 +56,28 @@ export default class ContentHandler {
 
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const portalHandler = this.cradleParameters.handlersRef.current.portals
+
         const cradleInternalProperties = this.cradleParameters.CradleInternalPropertiesRef.current
-        const scrollHandler = this.cradleParameters.handlersRef.current.scroll
-        const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
-        const stateHandler = this.cradleParameters.handlersRef.current.state
-        const serviceHandler = this.cradleParameters.handlersRef.current.service
+        // const portalHandler = this.cradleParameters.handlersRef.current.portals
+        // const scrollHandler = this.cradleParameters.handlersRef.current.scroll
+        // const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
+        // const stateHandler = this.cradleParameters.handlersRef.current.state
+        // const serviceHandler = this.cradleParameters.handlersRef.current.service
+
+        const {
+
+            portals:portalHandler,
+            scroll:scrollHandler,
+            scaffold:scaffoldHandler,
+            state:stateHandler,
+            service:serviceHandler,
+            interrupts:interruptHandler,
+
+        } = this.cradleParameters.handlersRef.current
+
+        // the breaklines will be moved, so disconnect them from their observer.
+        // they are reconnected with 'renderupdatedcontent' state change in cradle.tsx
+        interruptHandler.axisBreaklinesIntersect.observer.disconnect()
 
         const viewportElement = viewportInterruptProperties.elementref.current
 

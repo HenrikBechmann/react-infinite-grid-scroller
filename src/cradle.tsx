@@ -225,6 +225,8 @@ const Cradle = ({
 
     const [cradleState, setCradleState] = useState('setup')
 
+    console.log('entering cradle with cradleState', cradleState)
+
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState;
 
@@ -498,11 +500,11 @@ const Cradle = ({
     // intersection observer for cradle axix breaklines
     useEffect(()=>{
 
-        const cradleElements = scaffoldHandler.elements
+        // const cradleElements = scaffoldHandler.elements
 
         const observer = interruptHandler.axisBreaklinesIntersect.createObserver()
-        observer.observe(cradleElements.headBreaklineRef.current)
-        observer.observe(cradleElements.tailBreaklineRef.current)
+        // observer.observe(cradleElements.headBreaklineRef.current)
+        // observer.observe(cradleElements.tailBreaklineRef.current)
 
         return () => {
 
@@ -693,8 +695,10 @@ const Cradle = ({
 
         const viewportInterruptProperties = viewportInterruptPropertiesRef.current
         const cradleContent = contentHandler.content
+        console.log('handling cradleState',cradleState)
         switch (cradleState) {
 
+            case 'resetbreaklines':
             // renderupdatedcontent is called from breaklineintersectionobservercallback (interruptHandler), 
             // and called from onAfterScroll (scrollHandler)
             // it is required set configurations before 'ready' TODO: specify!
@@ -796,7 +800,7 @@ const Cradle = ({
                                 console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportInterruptProperties)
                             }
 
-                /*default*/ if (isMountedRef.current) setCradleState('ready')
+                /*default*/ if (isMountedRef.current) setCradleState('resetbreaklines')//'ready')
 
                         } else {
 
