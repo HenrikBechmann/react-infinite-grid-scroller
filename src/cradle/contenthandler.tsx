@@ -84,11 +84,21 @@ export default class ContentHandler {
         const visibletargetindexoffset = scaffoldHandler.cradleReferenceData.nextItemIndexReference
         let visibletargetscrolloffset = scaffoldHandler.cradleReferenceData.nextCradlePosOffset
 
-        const {cellHeight, cellWidth, orientation, runwaycount, gap, padding, listsize} = cradleInheritedProperties
+        const {
+            cellHeight, 
+            cellWidth, 
+            orientation, 
+            runwaycount, 
+            gap, 
+            padding, 
+            listsize
+        } = cradleInheritedProperties
 
-        const { cradleRowcount,
+        const { 
+            cradleRowcount,
             crosscount,
-            viewportRowcount } = cradleInternalProperties
+            viewportRowcount 
+        } = cradleInternalProperties
 
         if (cradleState == 'doreposition') {
 
@@ -99,7 +109,7 @@ export default class ContentHandler {
         const localContentList = []
         const cradleContent = this.content
 
-        let {
+        const {
             cradleFirstIndex, 
             referenceoffset, 
             cradleContentCount, 
@@ -138,19 +148,17 @@ export default class ContentHandler {
     
         })
 
-        if (headcontentlist.length == 0) {
-            axisPosOffset = padding
-        }
+        const axisPos = (headcontentlist.length == 0)?padding:axisPosOffset
 
         cradleContent.cradleModel = childlist
         cradleContent.headModelComponents = headcontentlist
         cradleContent.tailModelComponents = tailcontentlist
 
         scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference = referenceoffset
-        scaffoldHandler.cradleReferenceData.scrollImpliedCradlePosOffset = axisPosOffset
+        scaffoldHandler.cradleReferenceData.scrollImpliedCradlePosOffset = axisPos
 
         scaffoldHandler.cradleReferenceData.nextItemIndexReference = referenceoffset
-        scaffoldHandler.cradleReferenceData.nextCradlePosOffset = axisPosOffset
+        scaffoldHandler.cradleReferenceData.nextCradlePosOffset = axisPos
 
         if (serviceHandler.serviceCalls.referenceIndexCallbackRef.current) {
 
@@ -164,7 +172,7 @@ export default class ContentHandler {
 
         const cradleElements = scaffoldHandler.elements //cradleElementsRef.current
 
-        scaffoldHandler.cradleReferenceData.blockScrollPos = scrollblockOffset - axisPosOffset
+        scaffoldHandler.cradleReferenceData.blockScrollPos = scrollblockOffset - axisPos
 
         if (orientation == 'vertical') {
 
@@ -207,6 +215,7 @@ export default class ContentHandler {
 
         let scrollPos = scrollPositions.currentupdate
 
+        // first abandon option/3
         if ( scrollPos < 0) { // for Safari elastic bounce at top of scroll
 
             return
@@ -240,6 +249,7 @@ export default class ContentHandler {
             breaklineEntries,
         })
 
+        // second abandon option/3
         if (shiftinstruction == 0) return
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
@@ -270,8 +280,9 @@ export default class ContentHandler {
 
         })
 
+        // third abandon option/3
         if ((axisitemshift == 0 && cradleitemshift == 0)) {
-            console.log('returning for no axis or cradle shift')
+            console.log('returning for no axis or cradle shift') // notice for suspicious requirement
             return
 
         }
@@ -285,7 +296,7 @@ export default class ContentHandler {
         // collect modified content
         let localContentList, deletedContentItems = []
 
-        if (headchangecount || tailchangecount) { 
+        if (headchangecount || tailchangecount) { // if either is non-0 then modify content
 
             [localContentList,deletedContentItems] = getUICellShellList({
                 cradleInheritedProperties,
@@ -295,7 +306,6 @@ export default class ContentHandler {
                 headchangecount,
                 tailchangecount,
                 cradleFirstIndex,
-                // observer: interruptHandler.cellIntersect.observer,
                 callbacks:this.internalCallbacksRef.current,
                 instanceIdCounterRef:this.instanceIdCounterRef,
             })

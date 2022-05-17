@@ -7,8 +7,13 @@ export default class ScaffoldHandler {
 
        this.cradleParameters = cradleParameters
 
-       const {axisRef, headRef, tailRef,headBreaklineRef,tailBreaklineRef} = 
-          cradleParameters.CradleInternalPropertiesRef.current.cradleElementsRef.current
+       const {
+          axisRef, 
+          headRef, 
+          tailRef,
+          headBreaklineRef,
+          tailBreaklineRef
+       } = cradleParameters.CradleInternalPropertiesRef.current.cradleElementsRef.current
        this.elements = {
           axisRef,
           headRef,
@@ -17,13 +22,20 @@ export default class ScaffoldHandler {
           tailBreaklineRef
        }
 
-       const {defaultVisibleIndex, listsize, padding} = this.cradleParameters.cradleInheritedPropertiesRef.current
+       const {
+          defaultVisibleIndex, 
+          listsize, 
+          padding
+       } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
        // progression of references: scroll->next
-       this.cradleReferenceData.scrollImpliedItemIndexReference = (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
+       this.cradleReferenceData.scrollImpliedItemIndexReference = 
+          (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
        this.cradleReferenceData.scrollImpliedCradlePosOffset = padding
-       this.cradleReferenceData.nextItemIndexReference = this.cradleReferenceData.scrollImpliedItemIndexReference
-       this.cradleReferenceData.nextCradlePosOffset = this.cradleReferenceData.scrollImpliedCradlePosOffset
+       this.cradleReferenceData.nextItemIndexReference = 
+          this.cradleReferenceData.scrollImpliedItemIndexReference
+       this.cradleReferenceData.nextCradlePosOffset = 
+          this.cradleReferenceData.scrollImpliedCradlePosOffset
 
     }
 

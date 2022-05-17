@@ -188,7 +188,6 @@ const Cradle = ({
     const styles = Object.freeze(Object.assign({},inheritedstyles))
 
     // package cradle props to pass to handlers
-
     const cradleInheritedPropertiesRef = useRef(null) // access by closures and support functions
 
     cradleInheritedPropertiesRef.current =  Object.freeze({
@@ -215,7 +214,7 @@ const Cradle = ({
 
     })
 
-    // context
+    // create context
     const viewportInterruptProperties = useContext(ViewportInterrupt)
     const viewportInterruptPropertiesRef = useRef(null)
     viewportInterruptPropertiesRef.current = viewportInterruptProperties // for closures
@@ -270,7 +269,11 @@ const Cradle = ({
         viewportwidth,
     ])
 
-    const [cradleRowcount, viewportRowcount, listRowcount] = useMemo(()=> {
+    const [
+        cradleRowcount, 
+        viewportRowcount, 
+        listRowcount
+    ] = useMemo(()=> {
 
         let viewportLength, cellLength
         if (orientation == 'vertical') {
@@ -293,7 +296,11 @@ const Cradle = ({
         }
         const listRowcount = Math.ceil(listsize/crosscount)
 
-        return [cradleRowcount, viewportRowcount, listRowcount]
+        return [
+            cradleRowcount, 
+            viewportRowcount, 
+            listRowcount
+        ]
 
     },[
         orientation, 
@@ -309,7 +316,7 @@ const Cradle = ({
         crosscount,
     ])
 
-    // configuration objects
+    // bundle configuration objects
     const CradleInternalPropertiesRef = useRef(null)
     CradleInternalPropertiesRef.current = {
         crosscount,
@@ -632,28 +639,6 @@ const Cradle = ({
 
       ])
 
-    // unset and reset observers for reposition
-    useEffect(() => {
-
-        if ((cradleState != 'startreposition') && (cradleState != 'finishreposition')) return
-
-        const cradleobserver = interruptHandler.cradleIntersect.observer
-        const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
-
-        if (cradleState == 'startreposition') {
-            cradleobserver.disconnect()
-            breaklineobserver.disconnect()
-        }
-        if (cradleState == 'finishreposition') {
-            const cradleElements = scaffoldHandler.elements
-            cradleobserver.observe(cradleElements.headRef.current)
-            cradleobserver.observe(cradleElements.tailRef.current)
-            breaklineobserver.observe(cradleElements.headBreaklineRef.current)
-            breaklineobserver.observe(cradleElements.tailBreaklineRef.current)
-        }
-
-    },[cradleState])
-
     // =====================[ STATE management ]==========================
 
     // data for state processing
@@ -693,6 +678,11 @@ const Cradle = ({
 
             case 'startreposition': {
 
+                const cradleobserver = interruptHandler.cradleIntersect.observer
+                const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
+                cradleobserver.disconnect()
+                breaklineobserver.disconnect()
+
                 interruptHandler.signals.pauseCradleIntersectionObserver = true
                 setCradleState('repositioningRender')
                 break
@@ -701,6 +691,20 @@ const Cradle = ({
 
             case 'finishreposition': {
 
+                const cradleobserver = interruptHandler.cradleIntersect.observer
+                const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
+                const cradleElements = scaffoldHandler.elements
+                const {
+                    headRef, 
+                    tailRef, 
+                    headBreaklineRef, 
+                    tailBreaklineRef
+                } = cradleElements
+                cradleobserver.observe(headRef.current)
+                cradleobserver.observe(tailRef.current)
+                breaklineobserver.observe(headBreaklineRef.current)
+                breaklineobserver.observe(tailBreaklineRef.current)
+
                 interruptHandler.signals.pauseCradleIntersectionObserver = false
                 scrollHandler.updateReferenceData()
                 setCradleState('doreposition')
@@ -708,11 +712,11 @@ const Cradle = ({
 
             }
 
-            // -----------------------------------------------------------------------
-            // ------------[ the following 5 cradle states all resolve with ]---------
-            // ------------[ a chain starting with 'preparecontent', which  ]---------
-            // ------------[ calls setCradleContent                         ]---------
-
+            /*
+                the following 5 cradle states all resolve with
+                a chain starting with 'preparecontent', which
+                calls setCradleContent
+            */
             case 'doreposition':
             case 'setup': 
             case 'resized':
