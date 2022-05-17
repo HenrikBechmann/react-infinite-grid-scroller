@@ -24,6 +24,7 @@
 
     TODO:
 
+    - PLACE SENTINELS (assertions) AT CRITICAL LOCATIONS TO WATCH FOR ANOMALIES
     - try position fixed during reparenting to preserve scroll position
 
     - consider eliminating cellintersectobserver in favour of head and tail intersect oberver
@@ -598,7 +599,7 @@ const Cradle = ({
 
     },[orientation])
 
-    // =====================[ OPERATION ]===========================
+    // =====================[ STYLES ]===========================
 
     // styles for scaffold
     const [
