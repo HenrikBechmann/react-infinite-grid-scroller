@@ -188,7 +188,7 @@ const Cradle = ({
     const functions = Object.freeze(Object.assign({},inheritedfunctions))
     const styles = Object.freeze(Object.assign({},inheritedstyles))
 
-    // package cradle props to pass to handlers
+    // bundle cradle props to pass to handlers
     const cradleInheritedPropertiesRef = useRef(null) // access by closures and support functions
     cradleInheritedPropertiesRef.current =  Object.freeze({
         // gridSpecs
@@ -402,7 +402,8 @@ const Cradle = ({
     // ===================[ INITIALIZATION effects ]=========================
 
     // this is an immediate response to reparenting. Reparenting resets scroll positions
-    // this restores scroll as soon as cradle is invoked after reparenting
+    // for nested infinitegridscrollers.
+    // the code restores scroll as soon as cradle is invoked after reparenting
     if (viewportInterruptProperties.portal?.isReparenting) { 
 
         viewportInterruptProperties.portal.isReparenting = false
@@ -562,6 +563,7 @@ const Cradle = ({
     ])
 
     // trigger pivot *only* on change in orientation
+    // TODO: review this code
     useEffect(()=> {
 
         if (cradleStateRef.current == 'setup') return
@@ -607,7 +609,8 @@ const Cradle = ({
         cradleAxisStyle, 
         breaklineHeadStyle, 
         breaklineTailStyle,
-        cradleDividerStyle] = useMemo(()=> {
+        cradleDividerStyle
+    ] = useMemo(()=> {
 
         return stylesHandler.setCradleStyles({
 

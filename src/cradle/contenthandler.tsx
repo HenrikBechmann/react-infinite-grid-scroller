@@ -71,7 +71,7 @@ export default class ContentHandler {
         } = this.cradleParameters.handlersRef.current
 
         // the breaklines will be moved, so disconnect them from their observer.
-        // they are reconnected with 'renderupdatedcontent' state change in cradle.tsx
+        // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
         interruptHandler.axisBreaklinesIntersect.observer.disconnect()
 
         const viewportElement = viewportInterruptProperties.elementref.current
@@ -210,7 +210,7 @@ export default class ContentHandler {
 
         let scrollPos = scrollPositions.currentupdate
 
-        // first abandon option/3
+        // first abandon option/3; nothing to do
         if ( scrollPos < 0) { // for Safari elastic bounce at top of scroll
 
             return
@@ -244,7 +244,7 @@ export default class ContentHandler {
             breaklineEntries,
         })
 
-        // second abandon option/3
+        // second abandon option/3; nothing to do
         if (shiftinstruction == 0) return
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
@@ -275,7 +275,7 @@ export default class ContentHandler {
 
         })
 
-        // third abandon option/3
+        // third abandon option/3; nothing to do
         if ((axisitemshift == 0 && cradleitemshift == 0)) {
             console.log('returning for no axis or cradle shift') // notice for suspicious requirement
             return
@@ -283,7 +283,7 @@ export default class ContentHandler {
         }
 
         // the breaklines will be moved, so disconnect them from their observer.
-        // they are reconnected with 'renderupdatedcontent' state change in cradle.tsx
+        // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
         interruptHandler.axisBreaklinesIntersect.observer.disconnect()
 
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
