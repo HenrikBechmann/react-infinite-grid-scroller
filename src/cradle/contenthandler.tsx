@@ -58,11 +58,6 @@ export default class ContentHandler {
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         const cradleInternalProperties = this.cradleParameters.CradleInternalPropertiesRef.current
-        // const portalHandler = this.cradleParameters.handlersRef.current.portals
-        // const scrollHandler = this.cradleParameters.handlersRef.current.scroll
-        // const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
-        // const stateHandler = this.cradleParameters.handlersRef.current.state
-        // const serviceHandler = this.cradleParameters.handlersRef.current.service
 
         const {
 

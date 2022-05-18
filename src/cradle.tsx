@@ -190,7 +190,6 @@ const Cradle = ({
 
     // package cradle props to pass to handlers
     const cradleInheritedPropertiesRef = useRef(null) // access by closures and support functions
-
     cradleInheritedPropertiesRef.current =  Object.freeze({
         // gridSpecs
         orientation, 
@@ -317,7 +316,7 @@ const Cradle = ({
         crosscount,
     ])
 
-    // bundle configuration objects
+    // bundle configuration properties
     const CradleInternalPropertiesRef = useRef(null)
     CradleInternalPropertiesRef.current = {
         crosscount,
@@ -459,7 +458,7 @@ const Cradle = ({
     // observer support
 
     /*
-        There are two interection observers, one for the cradle, and another for itemShells; 
+        There are two interection observers, one for the cradle, and another for breaklines; 
             both against the viewport.
         There is also a resize observer for the cradle wings, to respond to size changes of 
             variable cells.
@@ -503,7 +502,7 @@ const Cradle = ({
     // intersection observer for cradle axis breaklines
     useEffect(()=>{
 
-        // the breaklines are observed with 'resetbreaklines' state
+        // the breaklines are observed with 'resetbreaklines' state -- see state management below
         const observer = interruptHandler.axisBreaklinesIntersect.createObserver()
 
         return () => {
