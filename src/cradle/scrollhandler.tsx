@@ -83,7 +83,7 @@ export default class ScrollHandler {
 
                 if (cradleState == 'ready') {
 
-                    const itemindex = scaffoldHandler.cradleReferenceData.nextItemIndexReference
+                    const itemindex = scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex
                     let axisVisiblePosOffset
                     const cradleElements = scaffoldHandler.elements
 
@@ -98,8 +98,8 @@ export default class ScrollHandler {
                             this.cradleParameters.viewportInterruptPropertiesRef.current.elementref.current.scrollLeft
 
                     }
-                    scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference = itemindex
-                    scaffoldHandler.cradleReferenceData.scrollImpliedCradlePosOffset = axisVisiblePosOffset
+                    scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = itemindex
+                    scaffoldHandler.cradleReferenceData.scrollImpliedAxisPosOffset = axisVisiblePosOffset
 
                 }
 
@@ -112,7 +112,7 @@ export default class ScrollHandler {
 
                 // TODO: re-instate the following
                 serviceHandler.serviceCalls.referenceIndexCallbackRef.current && 
-                    serviceHandler.serviceCalls.referenceIndexCallbackRef.current(scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference,'scrolling', cradleState)
+                    serviceHandler.serviceCalls.referenceIndexCallbackRef.current(scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex,'scrolling', cradleState)
 
             }
 
@@ -201,14 +201,14 @@ export default class ScrollHandler {
 
         }
 
-        scaffoldHandler.cradleReferenceData.scrollImpliedCradlePosOffset = axisVisiblePosOffset
+        scaffoldHandler.cradleReferenceData.scrollImpliedAxisPosOffset = axisVisiblePosOffset
 
         if (!viewportInterruptProperties.isResizing) {
 
-            scaffoldHandler.cradleReferenceData.nextItemIndexReference = 
-                scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference
-            scaffoldHandler.cradleReferenceData.nextCradlePosOffset = 
-                scaffoldHandler.cradleReferenceData.scrollImpliedCradlePosOffset
+            scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = 
+                scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex
+            scaffoldHandler.cradleReferenceData.targetAxisPosOffset = 
+                scaffoldHandler.cradleReferenceData.scrollImpliedAxisPosOffset
 
             this.updateBlockScrollPos()
 
@@ -276,8 +276,8 @@ export default class ScrollHandler {
         if (axisReferenceIndex == 0) referencescrolloffset = 0 // defensive
 
         let scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
-        scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference = axisReferenceIndex
-        scaffoldHandler.cradleReferenceData.scrollImpliedCradlePosOffset = referencescrolloffset
+        scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
+        scaffoldHandler.cradleReferenceData.scrollImpliedAxisPosOffset = referencescrolloffset
 
     }
 

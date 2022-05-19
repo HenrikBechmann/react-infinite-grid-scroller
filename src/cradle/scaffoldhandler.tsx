@@ -29,13 +29,13 @@ export default class ScaffoldHandler {
        } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
        // progression of references: scroll->next
-       this.cradleReferenceData.scrollImpliedItemIndexReference = 
+       this.cradleReferenceData.scrollImpliedAxisReferenceIndex = 
           (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
-       this.cradleReferenceData.scrollImpliedCradlePosOffset = padding
-       this.cradleReferenceData.nextItemIndexReference = 
-          this.cradleReferenceData.scrollImpliedItemIndexReference
-       this.cradleReferenceData.nextCradlePosOffset = 
-          this.cradleReferenceData.scrollImpliedCradlePosOffset
+       this.cradleReferenceData.scrollImpliedAxisPosOffset = padding
+       this.cradleReferenceData.targetAxisReferenceIndex = 
+          this.cradleReferenceData.scrollImpliedAxisReferenceIndex
+       this.cradleReferenceData.targetAxisPosOffset = 
+          this.cradleReferenceData.scrollImpliedAxisPosOffset
 
     }
 
@@ -49,11 +49,11 @@ export default class ScaffoldHandler {
    */
    cradleReferenceData = {
 
-      scrollImpliedItemIndexReference:null,
-      scrollImpliedCradlePosOffset:null,
+      scrollImpliedAxisReferenceIndex:null,
+      scrollImpliedAxisPosOffset:null,
 
-      nextItemIndexReference:null,
-      nextCradlePosOffset:null,
+      targetAxisReferenceIndex:null,
+      targetAxisPosOffset:null,
 
       // to set scrollPos after doreposition, or
       // to restore scrollTop or scrollLeft after clobbered by DOM

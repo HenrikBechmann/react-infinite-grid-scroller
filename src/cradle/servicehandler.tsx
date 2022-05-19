@@ -68,7 +68,7 @@ export default class ServiceHandler {
         signals.pauseBreaklinesObserver = true
         signals.pauseScrollingEffects = true
 
-        scaffoldHandler.cradleReferenceData.nextItemIndexReference = index
+        scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = index
 
         stateHandler.setCradleState('doreposition')
 

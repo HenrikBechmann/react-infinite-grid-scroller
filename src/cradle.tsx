@@ -569,10 +569,11 @@ const Cradle = ({
         if (cradleStateRef.current == 'setup') return
 
         // get previous ratio
-        const previousCellPixelLength = (orientation == 'vertical')?
-            cradleInheritedPropertiesRef.current.cellWidth:cradleInheritedPropertiesRef.current.cellHeight
-        // let previousAxisOffset = scaffoldHandler.cradleReferenceData.theNextAxisPixelOffset
-        const previousAxisOffset = scaffoldHandler.cradleReferenceData.nextCradlePosOffset
+        const previousCellPixelLength = (orientation == 'vertical')
+            ?cradleInheritedPropertiesRef.current.cellWidth
+            :cradleInheritedPropertiesRef.current.cellHeight
+
+        const previousAxisOffset = scaffoldHandler.cradleReferenceData.targetAxisPosOffset
 
         const previousratio = previousAxisOffset/previousCellPixelLength
 
@@ -581,7 +582,7 @@ const Cradle = ({
 
         const currentAxisOffset = previousratio * currentCellPixelLength
         
-        scaffoldHandler.cradleReferenceData.nextCradlePosOffset = Math.round(currentAxisOffset)
+        scaffoldHandler.cradleReferenceData.targetAxisPosOffset = Math.round(currentAxisOffset)
 
         const signals = interruptHandler.signals
 
@@ -829,7 +830,7 @@ const Cradle = ({
 
     // ==========================[ RENDER ]===========================
 
-    const referenceIndexOffset = scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference
+    const referenceIndexOffset = scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex
     const scrollTrackerArgs = useMemo(() => {
         if (!(cradleState == 'repositioningContinuation' || cradleState == 'repositioningRender')) {
             return null
@@ -837,7 +838,7 @@ const Cradle = ({
         const trackerargs = {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
-            referenceIndexOffset:scaffoldHandler.cradleReferenceData.scrollImpliedItemIndexReference,
+            referenceIndexOffset:scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex,
             listsize,
             styles,
         }

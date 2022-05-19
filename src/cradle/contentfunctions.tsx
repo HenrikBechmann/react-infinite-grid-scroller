@@ -15,7 +15,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
         cradleInheritedProperties,
         cradleInternalProperties,
-        visibletargetindexoffset:referenceoffset,
+        targetAxisReferenceIndex:referenceoffset,
         targetViewportOffset,
         viewportElement,
 
