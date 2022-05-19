@@ -569,37 +569,36 @@ const Cradle = ({
         if (cradleStateRef.current == 'setup') return
 
         // get previous ratio
-        const previousCellPixelLength = (orientation == 'vertical')
-            ?cradleInheritedPropertiesRef.current.cellWidth
-            :cradleInheritedPropertiesRef.current.cellHeight
+        const previousCellPixelLength = 
+            (orientation == 'vertical')?
+                cradleInheritedPropertiesRef.current.cellWidth:
+                cradleInheritedPropertiesRef.current.cellHeight
 
         const previousAxisOffset = scaffoldHandler.cradleReferenceData.targetAxisPosOffset
 
         const previousratio = previousAxisOffset/previousCellPixelLength
 
-        const currentCellPixelLength = 
+        const pivotCellPixelLength = 
             (orientation == 'vertical')?
                 cradleInheritedPropertiesRef.current.cellHeight:
                 cradleInheritedPropertiesRef.current.cellWidth
 
-        const currentAxisOffset = previousratio * currentCellPixelLength
+        const pivotAxisOffset = previousratio * pivotCellPixelLength
         
-        scaffoldHandler.cradleReferenceData.targetAxisPosOffset = Math.round(currentAxisOffset)
+        scaffoldHandler.cradleReferenceData.targetAxisPosOffset = Math.round(pivotAxisOffset)
 
-        const signals = interruptHandler.signals
+        const { signals } = interruptHandler
 
-        // signals.pauseCellObserver = true
-        // pauseCradleIntersectionObserverRef.current = true
         signals.pauseBreaklinesObserver = true
         signals.pauseScrollingEffects = true
 
-        setCradleState('pivot')
-
-        // let cradleContent = contentAgentRef.current.content
+        const cradleContent = contentHandler.content
         cradleContent.headModelComponents = []
         cradleContent.tailModelComponents = []
         cradleContent.headViewComponents = []
         cradleContent.tailViewComponents = []
+
+        setCradleState('pivot')
 
     },[orientation])
 
