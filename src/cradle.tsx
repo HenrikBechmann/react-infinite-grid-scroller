@@ -568,20 +568,28 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
+        const { 
+            cellWidth,
+            cellHeight,
+            gap,
+        } = cradleInheritedPropertiesRef.current
+
         // get previous ratio
         const previousCellPixelLength = 
-            (orientation == 'vertical')?
-                cradleInheritedPropertiesRef.current.cellWidth:
-                cradleInheritedPropertiesRef.current.cellHeight
+            ((orientation == 'vertical')?
+                cellWidth:
+                cellHeight)
+            + gap
 
         const previousAxisOffset = scaffoldHandler.cradleReferenceData.targetAxisPosOffset
 
         const previousratio = previousAxisOffset/previousCellPixelLength
 
         const pivotCellPixelLength = 
-            (orientation == 'vertical')?
-                cradleInheritedPropertiesRef.current.cellHeight:
-                cradleInheritedPropertiesRef.current.cellWidth
+            ((orientation == 'vertical')?
+                cellHeight:
+                cellWidth)
+            + gap
 
         const pivotAxisOffset = previousratio * pivotCellPixelLength
         
