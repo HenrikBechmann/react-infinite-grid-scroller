@@ -570,7 +570,7 @@ export const allocateContentList = (
 
 }
 
-export const deleteAndRerenderPortals = (portalHandler, deleteList) => {
+export const deletePortals = (portalHandler, deleteList) => {
 
     for (let item of deleteList) {
         portalHandler.deletePortal(item.props.index)

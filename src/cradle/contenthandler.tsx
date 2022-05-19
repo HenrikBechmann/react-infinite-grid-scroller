@@ -7,7 +7,7 @@ import {
     getContentListRequirements,
     getShiftInstruction,
     allocateContentList,
-    deleteAndRerenderPortals,
+    deletePortals,
 
 } from './contentfunctions'
 
@@ -138,7 +138,7 @@ export default class ContentHandler {
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
-        deleteAndRerenderPortals(portalHandler, deleteditems)
+        if (deleteditems.length) deletePortals(portalHandler, deleteditems)
 
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
@@ -323,7 +323,7 @@ export default class ContentHandler {
 
         }
 
-        deleteAndRerenderPortals(portalHandler, deletedContentItems)
+        if (deletedContentItems.length) deletePortals(portalHandler, deletedContentItems)
 
         // ----------------------------------[ 7. allocate cradle content ]--------------------------
 
