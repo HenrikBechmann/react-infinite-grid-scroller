@@ -577,8 +577,10 @@ const Cradle = ({
 
         const previousratio = previousAxisOffset/previousCellPixelLength
 
-        const currentCellPixelLength = (orientation == 'vertical')?
-            cradleInheritedPropertiesRef.current.cellHeight:cradleInheritedPropertiesRef.current.cellWidth
+        const currentCellPixelLength = 
+            (orientation == 'vertical')?
+                cradleInheritedPropertiesRef.current.cellHeight:
+                cradleInheritedPropertiesRef.current.cellWidth
 
         const currentAxisOffset = previousratio * currentCellPixelLength
         
@@ -902,7 +904,10 @@ const Cradle = ({
                 
                 >
                 
-                    {(cradleStateRef.current != 'setup')?cradleContent.headViewComponents:null}
+                    {(cradleStateRef.current != 'setup')?
+                        cradleContent.headViewComponents:
+                        null
+                    }
                 
                 </div>
                 <div 
@@ -913,7 +918,10 @@ const Cradle = ({
                 
                 >
                 
-                    {(cradleStateRef.current != 'setup')?cradleContent.tailViewComponents:null}
+                    {(cradleStateRef.current != 'setup')?
+                        cradleContent.tailViewComponents:
+                        null
+                    }
                 
                 </div>
             </div>

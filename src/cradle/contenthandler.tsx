@@ -96,7 +96,10 @@ export default class ContentHandler {
 
         if (cradleState == 'doreposition') {
 
-            targetAxisPosOffset = (targetAxisReferenceIndex == 0)?padding:gap
+            targetAxisPosOffset = 
+                (targetAxisReferenceIndex == 0)?
+                    padding:
+                    gap
 
         }
 
@@ -144,7 +147,10 @@ export default class ContentHandler {
     
         })
 
-        const axisPos = (headcontentlist.length == 0)?padding:axisPosOffset
+        const axisPos = 
+            (headcontentlist.length == 0)?
+                padding:
+                axisPosOffset
 
         cradleContent.cradleModel = childlist
         cradleContent.headModelComponents = headcontentlist
@@ -176,7 +182,10 @@ export default class ContentHandler {
 
             cradleElements.axisRef.current.style.top = (scrollblockOffset + axisAdjustment) + 'px'
             cradleElements.axisRef.current.style.left = 'auto'
-            cradleElements.headRef.current.style.paddingBottom = headcontentlist.length?cradleInheritedProperties.gap + 'px':0
+            cradleElements.headRef.current.style.paddingBottom = 
+                headcontentlist.length?
+                    cradleInheritedProperties.gap + 'px':
+                    0
 
         } else { // orientation = 'horizontal'
 
@@ -185,7 +194,10 @@ export default class ContentHandler {
 
             cradleElements.axisRef.current.style.top = 'auto'
             cradleElements.axisRef.current.style.left = (scrollblockOffset + axisAdjustment) + 'px'
-            cradleElements.headRef.current.style.paddingRight = headcontentlist.length?cradleInheritedProperties.gap + 'px':0
+            cradleElements.headRef.current.style.paddingRight = 
+                headcontentlist.length?
+                    cradleInheritedProperties.gap + 'px':
+                    0
 
         }
 
@@ -340,7 +352,10 @@ export default class ContentHandler {
                 scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
                 cradleElements.axisRef.current.style.top = top + 'px'
                 cradleElements.axisRef.current.style.left = 'auto'
-                cradleElements.headRef.current.style.paddingBottom = headcontent.length?cradleInheritedProperties.gap + 'px':0
+                cradleElements.headRef.current.style.paddingBottom = 
+                    headcontent.length?
+                        cradleInheritedProperties.gap + 'px':
+                        0
 
             } else {
 
@@ -348,7 +363,10 @@ export default class ContentHandler {
                 scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
                 cradleElements.axisRef.current.style.top = 'auto'
                 cradleElements.axisRef.current.style.left = /*viewportElement.scrollLeft*/scrollPos + axisposoffset + 'px'
-                cradleElements.headRef.current.style.paddingRight = headcontent.length?cradleInheritedProperties.gap + 'px':0
+                cradleElements.headRef.current.style.paddingRight = 
+                    headcontent.length?
+                        cradleInheritedProperties.gap + 'px':
+                        0
 
             }
 

@@ -272,18 +272,31 @@ export const calcContentShift = ({
 
     } = cradleInternalProperties
 
-    const cellLength = ((orientation == 'vertical')?cellHeight:cellWidth) + gap
+    const cellLength = 
+        ((orientation == 'vertical')?
+            cellHeight:
+            cellWidth) 
+        + gap
 
     // -----------[ 2. calculate the forward or backward gaps for input ]-------------------
     // gaps can be caused by rapid scrolling
 
     const viewportaxisoffset = // the pixel distance between the viewport frame and the axis, toward the head
-        ((orientation == 'vertical')?axisElement.offsetTop:(axisElement.offsetLeft)) - scrollPos
+        ((orientation == 'vertical')?
+            axisElement.offsetTop:
+            (axisElement.offsetLeft)) 
+        - scrollPos
 
     // the gap between the cell about to be moved, and the viewport edge
     // reference cell forward end for scrolling forward or back end for scrolling backward
-    const viewportaxisbackwardgaplength = (!isScrollingviewportforward)?(viewportaxisoffset - cellLength):0
-    const viewportaxisforwardgaplength = (isScrollingviewportforward)?-viewportaxisoffset:0
+    const viewportaxisbackwardgaplength = 
+        (!isScrollingviewportforward)?
+            (viewportaxisoffset - cellLength):
+            0
+    const viewportaxisforwardgaplength = 
+        (isScrollingviewportforward)?
+            -viewportaxisoffset:
+            0
 
     // -------[ 3. calculate the axis overshoot (more than one row) row counts, if any ]-------
     
@@ -299,8 +312,14 @@ export const calcContentShift = ({
     // - shift negative closer to head, shift positive closer to tail
     
     // allocate a base shift to head or tail
-    const headblockaddshiftrowcount = (isScrollingviewportforward)?1:0
-    const tailblockaddshiftrowcount = (!isScrollingviewportforward)?1:0
+    const headblockaddshiftrowcount = 
+        (isScrollingviewportforward)?
+            1:
+            0
+    const tailblockaddshiftrowcount = 
+        (!isScrollingviewportforward)?
+            1:
+            0
 
     // consolidate head and tail information into single axis and cradle reference shifts
     // - negative value shifted toward tail; positive value shifted toward head
@@ -394,7 +413,10 @@ export const calcContentShift = ({
     const includesLastRow = ((newcradlereferencerowoffset + cradleRowcount) >= listRowcount)
     if (includesLastRow) {
         const partialspaces = listsize % crosscount
-        const itemsShortfall = (partialspaces == 0)?0:crosscount - partialspaces
+        const itemsShortfall = 
+            (partialspaces == 0)?
+                0:
+                crosscount - partialspaces
         newcradlecontentcount -= itemsShortfall
     }
 

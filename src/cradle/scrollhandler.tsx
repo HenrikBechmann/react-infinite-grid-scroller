@@ -35,9 +35,9 @@ export default class ScrollHandler {
         const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
 
         const scrollPositionCurrent = 
-            (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical')
-            ?viewportElement.scrollTop
-            :viewportElement.scrollLeft
+            (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical')?
+                viewportElement.scrollTop:
+                viewportElement.scrollLeft
 
         if (!this.isScrolling) {
             this.isScrolling = true

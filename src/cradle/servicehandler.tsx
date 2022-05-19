@@ -39,7 +39,9 @@ export default class ServiceHandler {
         let contentlist = Array.from(contentHandler.itemElements)
 
         contentlist.sort((a,b)=>{
-            return (a[0] < b[0])?-1:1
+            return (a[0] < b[0])?
+                -1:
+                1
         })
 
         return contentlist
@@ -93,7 +95,9 @@ const getVisibleItemsList = ({
 
     let itemlistindexes = Array.from(itemElementMap.keys())
     itemlistindexes.sort((a,b)=>{
-        return (a < b)?-1:1
+        return (a < b)?
+            -1:
+            1
     })
     let headlistindexes = []
     for (let item of headlist) {
@@ -114,8 +118,25 @@ const getVisibleItemsList = ({
 
         let element = itemElementMap.get(index).current
         let inheadlist = headlistindexes.includes(index)
-        let top = inheadlist?(element.offsetTop):(((orientation == 'vertical')?headElement.offsetHeight:0) + element.offsetTop), 
-            left = inheadlist?(element.offsetLeft):(((orientation == 'horizontal')?headElement.offsetWidth:0) + element.offsetLeft), 
+        const 
+            top = 
+                inheadlist?
+                    element.offsetTop:
+                    (
+                        (orientation == 'vertical')?
+                            headElement.offsetHeight:
+                            0
+                    ) 
+                    + element.offsetTop, 
+            left = 
+                inheadlist?
+                    element.offsetLeft:
+                    (
+                        (orientation == 'horizontal')?
+                            headElement.offsetWidth:
+                            0
+                    ) 
+                    + element.offsetLeft,
             width = element.offsetWidth, 
             height = element.offsetHeight,
             right = left + width,
@@ -182,8 +203,14 @@ const getVisibleItemsList = ({
 
         }
 
-        let verticalRatio = (topPortion > 0)?topPortion/height:bottomPortion/height,
-            horizontalRatio = (leftPortion > 0)?leftPortion/width:rightPortion/height
+        let verticalRatio = 
+                (topPortion > 0)?
+                    topPortion/height:
+                    bottomPortion/height,
+            horizontalRatio = 
+                (leftPortion > 0)?
+                    leftPortion/width:
+                    rightPortion/height
 
         let itemData = {
 

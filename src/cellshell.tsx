@@ -61,22 +61,32 @@ const CellShell = ({
 
     const customplaceholder = useMemo(() => {
 
-            return placeholder?React.createElement(placeholder, {index, listsize}):null
+            return placeholder?
+                React.createElement(placeholder, {index, listsize}):
+                null
             
     },[placeholder,listsize])
 
     const placeholderRef = useRef(null)
 
     placeholderRef.current = useMemo(()=>{
-        const placeholder = customplaceholder?
-                customplaceholder:<Placeholder index = {index} listsize = {listsize} error = {false}/>
+        const placeholder = 
+            customplaceholder?
+                customplaceholder:
+                <Placeholder index = {index} listsize = {listsize} error = {false}/>
         return placeholder
     }, [index, customplaceholder, listsize]);
 
     // ---------------- [ end of placeholder definition ] ------------------------
 
-    const requestidlecallback = window['requestIdleCallback']?window['requestIdleCallback']:requestIdleCallback
-    const cancelidlecallback = window['cancelIdleCallback']?window['cancelIdleCallback']:cancelIdleCallback
+    const requestidlecallback = 
+        window['requestIdleCallback']?
+            window['requestIdleCallback']:
+            requestIdleCallback
+    const cancelidlecallback = 
+        window['cancelIdleCallback']?
+            window['cancelIdleCallback']:
+            cancelIdleCallback
 
     const requestIdleCallbackIdRef = useRef(null)
 
@@ -232,13 +242,19 @@ const getShellStyles = (orientation, cellHeight, cellWidth, styles) => {
     let styleset = Object.assign({position:'relative'},styles)
 
     if (orientation == 'horizontal') {
-        styleset.width = cellWidth?(cellWidth + 'px'):'auto'
+        styleset.width = 
+            cellWidth?
+                (cellWidth + 'px'):
+                'auto'
         styleset.height = 'auto'
 
     } else if (orientation === 'vertical') {
 
         styleset.width = 'auto'
-        styleset.height = cellHeight?(cellHeight + 'px'):'auto'
+        styleset.height = 
+            cellHeight?
+                (cellHeight + 'px'):
+                'auto'
         
     }
 
