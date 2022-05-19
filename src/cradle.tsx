@@ -727,21 +727,22 @@ const Cradle = ({
 
             /*
                 the following 5 cradle states all resolve with
-                a chain starting with 'preparecontent', which
+                a chain starting with 'preparerender', which
                 calls setCradleContent
             */
-            case 'doreposition':
             case 'setup': 
+            case 'doreposition':
             case 'resized':
             case 'pivot':
             case 'reload':
 
                 callingCradleState.current = cradleState // message for setCradleContent
-                setCradleState('preparecontent') // cycle to allow some config
+                setCradleState('preparecontent') // cycle to allow some config; eg. for setup
 
                 break
 
-            case 'preparecontent': {
+            case 'preparecontent': 
+            {
 
                 cradleContent.headModelComponents = []
                 cradleContent.tailModelComponents = []
@@ -750,7 +751,7 @@ const Cradle = ({
 
                 handlersRef.current.portals.resetScrollerPortalRepository()
                 
-                contentHandler.setCradleContent(callingCradleState.current)
+                contentHandler.setCradleContent( callingCradleState.current)
 
                 setCradleState('preparerender')
 
