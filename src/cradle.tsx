@@ -80,7 +80,7 @@
         - axisReferenceIndex (the virtual index of the item controlling the location of the axis)
             The axisReferenceIndex is also used to allocate items above (lower index value) and below (same or higher index value)
             the fold
-        - cradleFirstIndex (the virtual index of the item defining the leading bound of the cradle content)
+        - cradleReferenceIndex (the virtual index of the item defining the leading bound of the cradle content)
         - axisPosOffset (pixels - plus or minus - that the axis is placed in relation to the viewport's leading edge) 
     
     These reference points are applied to the following structures:

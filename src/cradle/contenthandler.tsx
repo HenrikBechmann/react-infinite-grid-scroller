@@ -109,8 +109,8 @@ export default class ContentHandler {
         // ----------------------[ 2. get content requirements ]----------------------
 
         const {
-            cradleFirstIndex, 
-            referenceoffset, 
+            cradleReferenceIndex, 
+            axisReferenceIndex,
             cradleContentCount, 
             scrollblockOffset, 
             axisPosOffset, 
@@ -130,7 +130,7 @@ export default class ContentHandler {
             cradleInheritedProperties,
             cradleInternalProperties,
             cradleContentCount,
-            cradleFirstIndex,
+            cradleReferenceIndex,
             headchangecount:0,
             tailchangecount:cradleContentCount,
             localContentList,
@@ -143,7 +143,7 @@ export default class ContentHandler {
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
             contentlist:childlist,
-            axisreferenceindex:referenceoffset,
+            axisReferenceIndex,
     
         })
 
@@ -156,10 +156,10 @@ export default class ContentHandler {
         cradleContent.headModelComponents = headcontentlist
         cradleContent.tailModelComponents = tailcontentlist
 
-        scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = referenceoffset
+        scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisPosOffset = axisPos
 
-        scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = referenceoffset
+        scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = axisReferenceIndex
         scaffoldHandler.cradleReferenceData.targetAxisPosOffset = axisPos
 
         if (serviceHandler.serviceCalls.referenceIndexCallbackRef.current) {
@@ -247,7 +247,7 @@ export default class ContentHandler {
         const cradleContent = this.content
         const itemElements = this.itemElements
         const modelcontentlist = cradleContent.cradleModel
-        const cradleFirstIndex = (modelcontentlist[0]?.props.index || 0)
+        const cradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
         // --------------------[ 2. get shift instruction ]-----------------------
 
@@ -268,9 +268,9 @@ export default class ContentHandler {
 
         const [
 
-            cradlereferenceindex, // new index
+            // cradlereferenceindex, // new index
             cradleitemshift, 
-            axisreferenceindex, // new index
+            axisReferenceIndex, // new index
             axisitemshift, 
             axisposoffset, // new offset (from leading edge of viewport)
             cradleContentCount, // updated
@@ -313,7 +313,7 @@ export default class ContentHandler {
                 localContentList:modelcontentlist,
                 headchangecount,
                 tailchangecount,
-                cradleFirstIndex,
+                cradleReferenceIndex,
                 callbacks:this.internalCallbacksRef.current,
                 instanceIdCounterRef:this.instanceIdCounterRef,
             })
@@ -330,7 +330,7 @@ export default class ContentHandler {
         const [headcontent, tailcontent] = allocateContentList(
             {
                 contentlist:localContentList,
-                axisreferenceindex, // TODO: BUG: set to 100 for problem
+                axisReferenceIndex, // TODO: BUG: set to 100 for problem
             }
         )
 
@@ -372,10 +372,10 @@ export default class ContentHandler {
 
         }
 
-        scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = axisreferenceindex
+        scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisPosOffset = axisposoffset
 
-        scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = axisreferenceindex
+        scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = axisReferenceIndex
         scaffoldHandler.cradleReferenceData.targetAxisPosOffset = axisposoffset
 
         stateHandler.setCradleState('renderupdatedcontent')
