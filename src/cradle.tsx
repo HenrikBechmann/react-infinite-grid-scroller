@@ -737,7 +737,7 @@ const Cradle = ({
             case 'reload':
 
                 callingCradleState.current = cradleState // message for setCradleContent
-                setCradleState('preparecontent') // cycle to allow some config; eg. for setup
+                setCradleState('preparecontent') // cycle to allow for config; eg. for setup
 
                 break
 
@@ -751,7 +751,7 @@ const Cradle = ({
 
                 handlersRef.current.portals.resetScrollerPortalRepository()
                 
-                contentHandler.setCradleContent( callingCradleState.current)
+                contentHandler.setCradleContent( callingCradleState.current )
 
                 setCradleState('preparerender')
 

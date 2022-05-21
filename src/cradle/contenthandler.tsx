@@ -110,7 +110,7 @@ export default class ContentHandler {
 
         const {
             cradleReferenceIndex, 
-            axisReferenceIndex,
+            calculatedAxisReferenceIndex,
             cradleContentCount, 
             scrollblockOffset, 
             axisPosOffset, 
@@ -120,7 +120,7 @@ export default class ContentHandler {
                 cradleInheritedProperties,
                 cradleInternalProperties,
                 targetAxisReferenceIndex,
-                targetViewportOffset:targetAxisPosOffset,
+                targetAxisPosOffset,
                 viewportElement:viewportInterruptProperties.elementref.current
             })
 
@@ -143,7 +143,7 @@ export default class ContentHandler {
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
             contentlist:childlist,
-            axisReferenceIndex,
+            axisReferenceIndex:calculatedAxisReferenceIndex,
     
         })
 
@@ -156,10 +156,10 @@ export default class ContentHandler {
         cradleContent.headModelComponents = headcontentlist
         cradleContent.tailModelComponents = tailcontentlist
 
-        scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
+        scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = calculatedAxisReferenceIndex
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisPosOffset = axisPos
 
-        scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = axisReferenceIndex
+        scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = calculatedAxisReferenceIndex
         scaffoldHandler.cradleReferenceData.targetAxisPosOffset = axisPos
 
         if (serviceHandler.serviceCalls.referenceIndexCallbackRef.current) {
