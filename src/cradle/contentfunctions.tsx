@@ -1,4 +1,4 @@
-// cradlefunctions.tsx
+// contentfunctions.tsx
 // copyright (c) 2020 Henrik Bechmann, Toronto, Licence: MIT
 
 /******************************************************************************************
@@ -15,13 +15,13 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
         cradleInheritedProperties,
         cradleInternalProperties,
-        targetAxisReferenceIndex,
+        targetAxisReferenceIndex:targetIndex,
         targetAxisPosOffset,
         viewportElement,
 
     }) => {
 
-    let { 
+    const { 
         orientation, 
         cellHeight, 
         cellWidth, 
@@ -31,7 +31,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         listsize
     } = cradleInheritedProperties
 
-    let {
+    const {
 
         crosscount,
         cradleRowcount,
@@ -39,23 +39,27 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     } = cradleInternalProperties
     
+    let targetAxisReferenceIndex = targetIndex
     // reconcile axisReferenceIndex to crosscount context
     let diff = targetAxisReferenceIndex % crosscount
     targetAxisReferenceIndex -= diff
+    const targetAxisRowOffset = targetAxisReferenceIndex/crosscount
 
     // -------------[ calc basic inputs: cellLength, contentCount. ]----------
 
-    let cellLength,viewportlength
-    if (orientation == 'vertical') {
-        cellLength = cellHeight + gap
-        viewportlength = viewportElement.offsetHeight
-    } else {
-        cellLength = cellWidth + gap
-        viewportlength = viewportElement.offsetWidth
-    }
-    let viewportrows = viewportRowcount
+    const isVertical = (orientation == 'vertical')
+    const cellLength = 
+        isVertical?
+            (cellHeight + gap):
+            (cellWidth + gap)
+    const viewportlength = 
+        isVertical?
+            viewportElement.offsetHeight:
+            viewportElement.offsetWidth
 
-    let cradleAvailableContentCount = cradleRowcount * crosscount 
+    const viewportrows = viewportRowcount
+
+    const cradleAvailableContentCount = cradleRowcount * crosscount 
 
     // -----------------------[ calc leadingitemcount, axisReferenceIndex ]-----------------------
 
@@ -64,17 +68,17 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     // -----------------------[ calc cradleReferenceIndex ]------------------------
     // leading edge
-    let cradleReferenceIndex = targetAxisReferenceIndex - runwayitemcount
+    let cradleReferenceIndex = Math.max(0,targetAxisReferenceIndex - runwayitemcount)
 
     // ------------[ adjust cradleReferenceIndex for underflow ]------------
 
-    diff = 0 // reset
-    let indexshift = 0 // adjustment if overshoot head
-    if (cradleReferenceIndex < 0) {
-        diff = cradleReferenceIndex
-        indexshift = Math.floor(cradleReferenceIndex / crosscount) * crosscount
-        cradleReferenceIndex += indexshift
-    }
+    // diff = 0 // reset
+    // let indexshift = 0 // adjustment if overshoot head
+    // if (cradleReferenceIndex < 0) {
+    //     diff = cradleReferenceIndex
+    //     indexshift = Math.floor(cradleReferenceIndex / crosscount) * crosscount
+    //     cradleReferenceIndex += indexshift
+    // }
 
     // ------------[ adjust cradleReferenceIndex and contentCount for listsize overflow ]------------
 
