@@ -38,6 +38,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         viewportRowcount
 
     } = cradleInternalProperties
+    
     // reconcile axisReferenceIndex to crosscount context
     let diff = targetAxisReferenceIndex % crosscount
     targetAxisReferenceIndex -= diff
@@ -52,8 +53,6 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         cellLength = cellWidth + gap
         viewportlength = viewportElement.offsetWidth
     }
-    // let viewportrows = Math.floor(viewportlength / cellLength)
-
     let viewportrows = viewportRowcount
 
     let cradleAvailableContentCount = cradleRowcount * crosscount 
@@ -186,6 +185,181 @@ const adjustAxisOffsetForMaxRefIndex = ({
     return [cradleReferenceIndex, cradleActualContentCount, calculatedAxisReferenceIndex, scrollblockOffset, axisPosOffset]
 
 }
+
+// export const getContentListRequirements = ({ // called from setCradleContent only
+
+//         cradleInheritedProperties,
+//         cradleInternalProperties,
+//         targetAxisReferenceIndex,
+//         targetAxisPosOffset,
+//         viewportElement,
+
+//     }) => {
+
+//     let { 
+//         orientation, 
+//         cellHeight, 
+//         cellWidth, 
+//         runwaycount,
+//         gap,
+//         padding,
+//         listsize
+//     } = cradleInheritedProperties
+
+//     let {
+
+//         crosscount,
+//         cradleRowcount,
+//         viewportRowcount
+
+//     } = cradleInternalProperties
+    
+//     // reconcile axisReferenceIndex to crosscount context
+//     let diff = targetAxisReferenceIndex % crosscount
+//     targetAxisReferenceIndex -= diff
+
+//     // -------------[ calc basic inputs: cellLength, contentCount. ]----------
+
+//     let cellLength,viewportlength
+//     if (orientation == 'vertical') {
+//         cellLength = cellHeight + gap
+//         viewportlength = viewportElement.offsetHeight
+//     } else {
+//         cellLength = cellWidth + gap
+//         viewportlength = viewportElement.offsetWidth
+//     }
+//     let viewportrows = viewportRowcount
+
+//     let cradleAvailableContentCount = cradleRowcount * crosscount 
+
+//     // -----------------------[ calc leadingitemcount, axisReferenceIndex ]-----------------------
+
+//     let runwayitemcount = runwaycount * crosscount
+//     runwayitemcount = Math.min(runwayitemcount, targetAxisReferenceIndex) // for list head
+
+//     // -----------------------[ calc cradleReferenceIndex ]------------------------
+//     // leading edge
+//     let cradleReferenceIndex = targetAxisReferenceIndex - runwayitemcount
+
+//     // ------------[ adjust cradleReferenceIndex for underflow ]------------
+
+//     diff = 0 // reset
+//     let indexshift = 0 // adjustment if overshoot head
+//     if (cradleReferenceIndex < 0) {
+//         diff = cradleReferenceIndex
+//         indexshift = Math.floor(cradleReferenceIndex / crosscount) * crosscount
+//         cradleReferenceIndex += indexshift
+//     }
+
+//     // ------------[ adjust cradleReferenceIndex and contentCount for listsize overflow ]------------
+
+//     let axisPosOffset = targetAxisPosOffset % cellLength
+
+//     // --------------------[ calc css positioning ]-----------------------
+
+//     let targetrowoffset = Math.ceil(targetAxisReferenceIndex/crosscount)
+//     let scrollblockOffset = (targetrowoffset * cellLength) + padding // gap
+//     let axisAdjustment
+//     let cradleContentCount = cradleAvailableContentCount
+//     let calculatedAxisReferenceIndex = targetAxisReferenceIndex
+
+//     if (targetrowoffset == 0) {
+//         scrollblockOffset = 0
+//         axisPosOffset = 0 // padding
+//         axisAdjustment = padding
+//     } else {
+//         axisAdjustment = 0; //gap;
+
+//         [cradleReferenceIndex, cradleContentCount, calculatedAxisReferenceIndex, scrollblockOffset, axisPosOffset] = 
+//             adjustAxisOffsetForMaxRefIndex({
+//             targetAxisReferenceIndex,
+//             axisPosOffset,
+//             scrollblockOffset,            
+//             targetrowoffset,
+//             viewportlength,
+//             listsize,
+//             viewportrows,
+//             crosscount,
+//             cellLength,
+//             padding,
+//             gap,
+//             cradleReferenceIndex,
+//             cradleAvailableContentCount,
+//         })
+//     }
+
+//     return {
+//         cradleReferenceIndex, 
+//         calculatedAxisReferenceIndex, 
+//         cradleContentCount, 
+//         scrollblockOffset, 
+//         axisPosOffset, 
+//         axisAdjustment
+//     } // summarize requirements message
+
+// }
+
+// const adjustAxisOffsetForMaxRefIndex = ({
+
+//     listsize,
+//     crosscount,
+//     cradleAvailableContentCount,
+
+//     cradleReferenceIndex,
+//     targetAxisReferenceIndex,
+//     targetrowoffset,
+
+//     scrollblockOffset,
+//     axisPosOffset,
+
+//     viewportlength,
+//     viewportrows,
+
+//     cellLength,
+//     padding,
+//     gap,
+
+// }) => {
+
+//     let activelistitemcount = cradleReferenceIndex + cradleAvailableContentCount
+//     let activelistrowcount = Math.ceil(activelistitemcount/crosscount)
+//     let listRowcount = Math.ceil(listsize/crosscount)
+//     let calculatedAxisReferenceIndex = targetAxisReferenceIndex
+
+//     if (activelistrowcount > listRowcount) {
+//         let diffrows = activelistrowcount - listRowcount
+//         let diff = diffrows * crosscount
+//         cradleReferenceIndex -= diff
+//         activelistrowcount -= diffrows
+//     }
+
+//     // let testlistrowcount = Math.ceil((cradleReferenceIndex + contentCount + 1)/crosscount)
+//     let cradleActualContentCount = cradleAvailableContentCount
+//     if (activelistrowcount == listRowcount) {
+//         let diff = listsize % crosscount
+//         if (diff) {
+//             cradleActualContentCount -= (crosscount - diff)
+//         }
+//     }
+
+//     let maxrefindexrowoffset = Math.ceil(listsize/crosscount) - viewportrows + 1
+//     // console.log('targetrowoffset, maxrefindexrowoffset', targetrowoffset, maxrefindexrowoffset)
+//     if (targetrowoffset > maxrefindexrowoffset) {
+
+//         let diff = targetrowoffset - maxrefindexrowoffset
+//         targetrowoffset -= diff // maxrefindexrowoffset
+
+//         calculatedAxisReferenceIndex = (targetrowoffset * crosscount)
+
+//         scrollblockOffset = (targetrowoffset * cellLength) + padding
+
+//         axisPosOffset = viewportlength - ((viewportrows - 1) * cellLength) - gap
+
+//     }
+
+//     return [cradleReferenceIndex, cradleActualContentCount, calculatedAxisReferenceIndex, scrollblockOffset, axisPosOffset]
+
+// }
 
 // ======================[ for updateCradleContent ]===========================
 
