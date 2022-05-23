@@ -70,29 +70,19 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     // leading edge
     let cradleReferenceIndex = Math.max(0,targetAxisReferenceIndex - runwayitemcount)
 
-    // ------------[ adjust cradleReferenceIndex for underflow ]------------
-
-    // diff = 0 // reset
-    // let indexshift = 0 // adjustment if overshoot head
-    // if (cradleReferenceIndex < 0) {
-    //     diff = cradleReferenceIndex
-    //     indexshift = Math.floor(cradleReferenceIndex / crosscount) * crosscount
-    //     cradleReferenceIndex += indexshift
-    // }
-
     // ------------[ adjust cradleReferenceIndex and contentCount for listsize overflow ]------------
 
     let axisPosOffset = targetAxisPosOffset % cellLength
 
     // --------------------[ calc css positioning ]-----------------------
 
-    let targetrowoffset = Math.ceil(targetAxisReferenceIndex/crosscount)
-    let scrollblockOffset = (targetrowoffset * cellLength) + padding // gap
+    // let targetrowoffset = Math.ceil(targetAxisReferenceIndex/crosscount)
+    let scrollblockOffset = (targetAxisRowOffset * cellLength) + padding // gap
     let axisAdjustment
     let cradleContentCount = cradleAvailableContentCount
     let calculatedAxisReferenceIndex = targetAxisReferenceIndex
 
-    if (targetrowoffset == 0) {
+    if (targetAxisRowOffset == 0) {
         scrollblockOffset = 0
         axisPosOffset = 0 // padding
         axisAdjustment = padding
@@ -104,7 +94,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
             targetAxisReferenceIndex,
             axisPosOffset,
             scrollblockOffset,            
-            targetrowoffset,
+            targetAxisRowOffset,
             viewportlength,
             listsize,
             viewportrows,
@@ -136,7 +126,7 @@ const adjustAxisOffsetForMaxRefIndex = ({
 
     cradleReferenceIndex,
     targetAxisReferenceIndex,
-    targetrowoffset,
+    targetAxisRowOffset,
 
     scrollblockOffset,
     axisPosOffset,
@@ -173,14 +163,14 @@ const adjustAxisOffsetForMaxRefIndex = ({
 
     let maxrefindexrowoffset = Math.ceil(listsize/crosscount) - viewportrows + 1
     // console.log('targetrowoffset, maxrefindexrowoffset', targetrowoffset, maxrefindexrowoffset)
-    if (targetrowoffset > maxrefindexrowoffset) {
+    if (targetAxisRowOffset > maxrefindexrowoffset) {
 
-        let diff = targetrowoffset - maxrefindexrowoffset
-        targetrowoffset -= diff // maxrefindexrowoffset
+        let diff = targetAxisRowOffset - maxrefindexrowoffset
+        targetAxisRowOffset -= diff // maxrefindexrowoffset
 
-        calculatedAxisReferenceIndex = (targetrowoffset * crosscount)
+        calculatedAxisReferenceIndex = (targetAxisRowOffset * crosscount)
 
-        scrollblockOffset = (targetrowoffset * cellLength) + padding
+        scrollblockOffset = (targetAxisRowOffset * cellLength) + padding
 
         axisPosOffset = viewportlength - ((viewportrows - 1) * cellLength) - gap
 
