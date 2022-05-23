@@ -75,7 +75,7 @@ export default class ContentHandler {
 
         const viewportElement = viewportInterruptProperties.elementref.current
 
-        const targetAxisReferenceIndex = scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex
+        const requestedAxisReferenceIndex = scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex
         let targetAxisPosOffset = scaffoldHandler.cradleReferenceData.targetAxisPosOffset
 
         const {
@@ -97,7 +97,7 @@ export default class ContentHandler {
         if (cradleState == 'doreposition') {
 
             targetAxisPosOffset = 
-                (targetAxisReferenceIndex == 0)?
+                (requestedAxisReferenceIndex == 0)?
                     padding:
                     gap
 
@@ -110,16 +110,16 @@ export default class ContentHandler {
 
         const {
             targetCradleReferenceIndex, 
-            calculatedAxisReferenceIndex,
+            targetAxisReferenceIndex,
             cradleContentCount, 
-            scrollblockOffset, 
+            scrollblockPosOffset, 
             axisPosOffset, 
             // axisAdjustment
         } = 
             getContentListRequirements({
                 cradleInheritedProperties,
                 cradleInternalProperties,
-                targetAxisReferenceIndex,
+                targetAxisReferenceIndex:requestedAxisReferenceIndex,
                 targetAxisPosOffset,
                 viewportElement:viewportInterruptProperties.elementref.current
             })
@@ -143,7 +143,7 @@ export default class ContentHandler {
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
             contentlist:childlist,
-            axisReferenceIndex:calculatedAxisReferenceIndex,
+            axisReferenceIndex:targetAxisReferenceIndex,
     
         })
 
@@ -156,10 +156,10 @@ export default class ContentHandler {
         cradleContent.headModelComponents = headcontentlist
         cradleContent.tailModelComponents = tailcontentlist
 
-        scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = calculatedAxisReferenceIndex
+        scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = targetAxisReferenceIndex
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisPosOffset = axisPos
 
-        scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = calculatedAxisReferenceIndex
+        scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = targetAxisReferenceIndex
         scaffoldHandler.cradleReferenceData.targetAxisPosOffset = axisPos
 
         if (serviceHandler.serviceCalls.referenceIndexCallbackRef.current) {
@@ -174,13 +174,13 @@ export default class ContentHandler {
 
         const cradleElements = scaffoldHandler.elements //cradleElementsRef.current
 
-        scaffoldHandler.cradleReferenceData.blockScrollPos = scrollblockOffset - axisPos
+        scaffoldHandler.cradleReferenceData.blockScrollPos = scrollblockPosOffset - axisPos
 
         if (orientation == 'vertical') {
 
             scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
 
-            cradleElements.axisRef.current.style.top = (scrollblockOffset /*+ axisAdjustment*/) + 'px'
+            cradleElements.axisRef.current.style.top = (scrollblockPosOffset /*+ axisAdjustment*/) + 'px'
             cradleElements.axisRef.current.style.left = 'auto'
             cradleElements.headRef.current.style.paddingBottom = 
                 headcontentlist.length?
@@ -193,7 +193,7 @@ export default class ContentHandler {
             // ??? scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
 
             cradleElements.axisRef.current.style.top = 'auto'
-            cradleElements.axisRef.current.style.left = (scrollblockOffset /*+ axisAdjustment*/) + 'px'
+            cradleElements.axisRef.current.style.left = (scrollblockPosOffset /*+ axisAdjustment*/) + 'px'
             cradleElements.headRef.current.style.paddingRight = 
                 headcontentlist.length?
                     cradleInheritedProperties.gap + 'px':
