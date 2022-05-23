@@ -109,12 +109,12 @@ export default class ContentHandler {
         // ----------------------[ 2. get content requirements ]----------------------
 
         const {
-            cradleReferenceIndex, 
+            targetCradleReferenceIndex, 
             calculatedAxisReferenceIndex,
             cradleContentCount, 
             scrollblockOffset, 
             axisPosOffset, 
-            axisAdjustment
+            // axisAdjustment
         } = 
             getContentListRequirements({
                 cradleInheritedProperties,
@@ -130,7 +130,7 @@ export default class ContentHandler {
             cradleInheritedProperties,
             cradleInternalProperties,
             cradleContentCount,
-            cradleReferenceIndex,
+            cradleReferenceIndex:targetCradleReferenceIndex,
             headchangecount:0,
             tailchangecount:cradleContentCount,
             localContentList,
@@ -180,7 +180,7 @@ export default class ContentHandler {
 
             scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
 
-            cradleElements.axisRef.current.style.top = (scrollblockOffset + axisAdjustment) + 'px'
+            cradleElements.axisRef.current.style.top = (scrollblockOffset /*+ axisAdjustment*/) + 'px'
             cradleElements.axisRef.current.style.left = 'auto'
             cradleElements.headRef.current.style.paddingBottom = 
                 headcontentlist.length?
@@ -193,7 +193,7 @@ export default class ContentHandler {
             // ??? scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
 
             cradleElements.axisRef.current.style.top = 'auto'
-            cradleElements.axisRef.current.style.left = (scrollblockOffset + axisAdjustment) + 'px'
+            cradleElements.axisRef.current.style.left = (scrollblockOffset /*+ axisAdjustment*/) + 'px'
             cradleElements.headRef.current.style.paddingRight = 
                 headcontentlist.length?
                     cradleInheritedProperties.gap + 'px':

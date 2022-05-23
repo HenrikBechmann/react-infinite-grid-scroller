@@ -56,7 +56,12 @@ const Scrollblock = ({
 
         // console.log('updating scrollblock divlinerstyleRef')
         updateBaseBlockLength()
-        divlinerstyleRef.current = updateScrollblockStyles(orientation,divlinerstyleRef,baseScrollBlockLengthRef)
+        divlinerstyleRef.current = 
+            updateScrollblockStyles(
+                orientation,
+                divlinerstyleRef,
+                baseScrollBlockLengthRef
+            )
         saveDivlinerstyle(divlinerstyleRef.current)
 
     },[
@@ -104,7 +109,7 @@ const Scrollblock = ({
 
 } // Scrollblock
 
-// all the parameters affect the length
+// all the parameters can affect the length
 const calcBaseScrollblockLength = ({
         orientation,
         viewportheight,
