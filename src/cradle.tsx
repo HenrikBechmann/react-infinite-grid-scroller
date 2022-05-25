@@ -98,7 +98,7 @@
         - the number of runway rows specified in the parameters, times 2 (one et for the head; one for the tail)
         - the number of items is the number of rows times the 'crosscount' the lateral number of cells. 
         - the last row might consist of fewer items than crosscount, to match the maximum listsize
-        - the cradleRowcount (visible default rows + runwayRowcount * 2) and viewpointRowcount (visble rows;typicall one partial)
+        - the cradleRowcount (visible default rows + runwayRowcountSpec * 2) and viewpointRowcount (visble rows;typicall one partial)
 
     Item containers:
         Client cell content is contained in CellShell's, which are configured according to GridScroller's input parameters.
@@ -158,7 +158,7 @@ const NORMALIZE_SIGNALS_TIMEOUT = 250
 const Cradle = ({ 
         gridSpecs,
 
-        runwayRowcount, 
+        runwayRowcountSpec, 
         listsize, 
         defaultVisibleIndex, 
         getItem, 
@@ -200,7 +200,7 @@ const Cradle = ({
         layout,
         dense,
         // ...rest
-        runwayRowcount, 
+        runwayRowcountSpec, 
         listsize, 
         defaultVisibleIndex, 
         getItem, 
@@ -290,7 +290,7 @@ const Cradle = ({
 
         const listRowcount = Math.ceil(listsize/crosscount)
 
-        let cradleRowcount = Math.min(listRowcount, viewportRowcount + (runwayRowcount * 2))
+        let cradleRowcount = Math.min(listRowcount, viewportRowcount + (runwayRowcountSpec * 2))
         let itemcount = cradleRowcount * crosscount
         if (itemcount > listsize) {
             itemcount = listsize
@@ -313,7 +313,7 @@ const Cradle = ({
         viewportwidth,
 
         listsize,
-        runwayRowcount,
+        runwayRowcountSpec,
         crosscount,
     ])
 

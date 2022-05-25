@@ -82,7 +82,7 @@ export default class ContentHandler {
             cellHeight, 
             cellWidth, 
             orientation, 
-            runwayRowcount, 
+            runwayRowcountSpec, 
             gap, 
             padding, 
             listsize

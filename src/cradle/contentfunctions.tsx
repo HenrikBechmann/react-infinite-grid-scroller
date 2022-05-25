@@ -25,7 +25,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         orientation, 
         cellHeight, 
         cellWidth, 
-        runwayRowcount,
+        runwayRowcountSpec,
         gap,
         padding,
         listsize
@@ -47,25 +47,17 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     const listEndRowOffset = (listRowcount - 1)
 
-    // check for out of bounds
+    // check for out-of-bounds
     if (targetAxisRowOffset > listEndRowOffset) {
         targetAxisRowOffset = listEndRowOffset
         targetAxisReferenceIndex = targetAxisRowOffset * crosscount
     }
 
-    // -------------[ calc base inputs: cellLength, cradle content ]----------
-
-    const isVertical = (orientation == 'vertical')
-    const cellLength = 
-        isVertical?
-            (cellHeight + gap):
-            (cellWidth + gap)
-
-    const cradleAvailableContentCount = cradleRowcount * crosscount 
+    // const cradleAvailableContentCount = cradleRowcount * crosscount 
 
     // -----------------------[ calc leadingitemcount, axisReferenceIndex ]-----------------------
 
-    let leadingrunwayitemcount = runwayRowcount * crosscount
+    let leadingrunwayitemcount = runwayRowcountSpec * crosscount
     leadingrunwayitemcount = Math.min(leadingrunwayitemcount, targetAxisReferenceIndex) // for list head
 
     // -----------------------[ calc cradleReferenceIndex ]------------------------
@@ -84,6 +76,12 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     // --------------------[ calc css positioning ]-----------------------
 
     const newCradleContentCount = cradleRowcount * crosscount
+
+    const isVertical = (orientation == 'vertical')
+    const cellLength = 
+        isVertical?
+            (cellHeight + gap):
+            (cellWidth + gap)
 
     const targetScrollblockPosOffset = ((targetAxisRowOffset * cellLength) + padding) - targetAxisPosOffset // gap
 
@@ -111,7 +109,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 //         orientation, 
 //         cellHeight, 
 //         cellWidth, 
-//         runwayRowcount,
+//         runwayRowcountSpec,
 //         gap,
 //         padding,
 //         listsize
@@ -337,7 +335,7 @@ export const calcContentShift = ({
         cellHeight,
         cellWidth,
         listsize,
-        runwayRowcount,
+        runwayRowcountSpec,
 
     } = cradleInheritedProperties
 
@@ -440,7 +438,7 @@ export const calcContentShift = ({
         // listrow new cradle offset and cradle row shift have to be adjusted to prevent shortening 
         // of cradle content.
 
-        const targetcradlereferencerowoffset = Math.max(0,(newaxisreferencerowoffset - (runwayRowcount - 1)))
+        const targetcradlereferencerowoffset = Math.max(0,(newaxisreferencerowoffset - (runwayRowcountSpec - 1)))
         const headrowdiff = newcradlereferencerowoffset - targetcradlereferencerowoffset
         if (headrowdiff > 0) {
 
@@ -476,7 +474,7 @@ export const calcContentShift = ({
         }
         // case of in bounds of trailing runway (end of list)
         const computedNextCradleEndrowOffset = (previouscradlerowoffset + (cradleRowcount -1) + cradlereferencerowshift)
-        const targetcradleEndrowoffset = Math.min((listRowcount - 1), (newaxisreferencerowoffset + (viewportRowcount - 1) + (runwayRowcount - 1)))
+        const targetcradleEndrowoffset = Math.min((listRowcount - 1), (newaxisreferencerowoffset + (viewportRowcount - 1) + (runwayRowcountSpec - 1)))
         const tailrowdiff = Math.max(0, targetcradleEndrowoffset - computedNextCradleEndrowOffset)
 
         if (tailrowdiff > 0) {
