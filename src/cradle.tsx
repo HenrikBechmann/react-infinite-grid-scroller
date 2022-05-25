@@ -200,7 +200,7 @@ const Cradle = ({
         layout,
         dense,
         // ...rest
-        runwayRowcountSpec, 
+        // runwayRowcountSpec, 
         listsize, 
         defaultVisibleIndex, 
         getItem, 
@@ -272,7 +272,8 @@ const Cradle = ({
     const [
         cradleRowcount, 
         viewportRowcount, 
-        listRowcount
+        listRowcount,
+        runwayRowcount,
     ] = useMemo(()=> {
 
         let viewportLength, cellLength
@@ -290,7 +291,18 @@ const Cradle = ({
 
         const listRowcount = Math.ceil(listsize/crosscount)
 
-        let cradleRowcount = Math.min(listRowcount, viewportRowcount + (runwayRowcountSpec * 2))
+        const calculatedCradleRowcount = viewportRowcount + (runwayRowcountSpec * 2)
+
+        let cradleRowcount = Math.min(listRowcount, calculatedCradleRowcount)
+
+        let runwayRowcount
+        if (calculatedCradleRowcount >= cradleRowcount) {
+            runwayRowcount = runwayRowcountSpec
+        } else {
+            const diff = (cradleRowcount - calculatedCradleRowcount)
+            runwayRowcount -= Math.floor(diff/2)
+            runwayRowcount = Math.max(0,runwayRowcount)
+        }
         let itemcount = cradleRowcount * crosscount
         if (itemcount > listsize) {
             itemcount = listsize
@@ -300,7 +312,8 @@ const Cradle = ({
         return [
             cradleRowcount, 
             viewportRowcount, 
-            listRowcount
+            listRowcount,
+            runwayRowcount,
         ]
 
     },[
@@ -328,6 +341,7 @@ const Cradle = ({
         setCradleState,
         isMountedRef,
         cradleElementsRef,
+        runwayRowcount,
     }
 
     // utility to register or unregister cradle item elements

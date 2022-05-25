@@ -82,7 +82,7 @@ export default class ContentHandler {
             cellHeight, 
             cellWidth, 
             orientation, 
-            runwayRowcountSpec, 
+            // runwayRowcountSpec, 
             gap, 
             padding, 
             listsize
@@ -91,7 +91,8 @@ export default class ContentHandler {
         const { 
             cradleRowcount,
             crosscount,
-            viewportRowcount 
+            viewportRowcount,
+            // runwayRowcount, 
         } = cradleInternalProperties
 
         if (cradleState == 'doreposition') {
