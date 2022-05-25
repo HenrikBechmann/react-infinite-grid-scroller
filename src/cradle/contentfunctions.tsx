@@ -35,17 +35,18 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
         crosscount,
         cradleRowcount,
-        viewportRowcount,
+        // viewportRowcount,
         listRowcount,
 
     } = cradleInternalProperties
     
+    // align target index with row heads
     let targetAxisReferenceIndex = targetAxisIndex
-    // reconcile targetAxisReferenceIndex to crosscount context
     targetAxisReferenceIndex -= (targetAxisReferenceIndex % crosscount)
+    // derive target row
     const targetAxisRowOffset = targetAxisReferenceIndex/crosscount
 
-    // -------------[ calc basic inputs: cellLength, contentCount. ]----------
+    // -------------[ calc base inputs: cellLength, cradle content ]----------
 
     const isVertical = (orientation == 'vertical')
     const cellLength = 
@@ -53,7 +54,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
             (cellHeight + gap):
             (cellWidth + gap)
 
-    const viewportrows = viewportRowcount
+    // const viewportrows = viewportRowcount
 
     const cradleAvailableContentCount = cradleRowcount * crosscount 
 
