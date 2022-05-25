@@ -288,13 +288,14 @@ const Cradle = ({
 
         const viewportRowcount = Math.ceil(viewportLength/cellLength)
 
-        let cradleRowcount = viewportRowcount + (runwaycount * 2)
+        const listRowcount = Math.ceil(listsize/crosscount)
+
+        let cradleRowcount = Math.min(listRowcount, viewportRowcount + (runwaycount * 2))
         let itemcount = cradleRowcount * crosscount
         if (itemcount > listsize) {
             itemcount = listsize
             cradleRowcount = Math.ceil(itemcount/crosscount)
         }
-        const listRowcount = Math.ceil(listsize/crosscount)
 
         return [
             cradleRowcount, 

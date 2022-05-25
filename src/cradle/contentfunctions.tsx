@@ -15,8 +15,8 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
         cradleInheritedProperties,
         cradleInternalProperties,
-        targetAxisReferenceIndex:targetAxisIndex, // from user, or from pivot
-        targetAxisPosOffset:targetAxisPos,
+        targetAxisReferenceIndex, // from user, or from pivot
+        targetAxisPosOffset,
         viewportElement,
 
     }) => {
@@ -40,13 +40,18 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     } = cradleInternalProperties
     
-    // local mutable copies
-    let targetAxisReferenceIndex = targetAxisIndex
-    let targetAxisPosOffset = targetAxisPos
-
+    // align axis reference to first row item
     targetAxisReferenceIndex -= (targetAxisReferenceIndex % crosscount)
     // derive target row
-    const targetAxisRowOffset = targetAxisReferenceIndex/crosscount
+    let targetAxisRowOffset = targetAxisReferenceIndex/crosscount
+
+    const listEndRowOffset = (listRowcount - 1)
+
+    // check for out of bounds
+    if (targetAxisRowOffset > listEndRowOffset) {
+        targetAxisRowOffset = listEndRowOffset
+        targetAxisReferenceIndex = targetAxisRowOffset * crosscount
+    }
 
     // -------------[ calc base inputs: cellLength, cradle content ]----------
 
@@ -56,18 +61,16 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
             (cellHeight + gap):
             (cellWidth + gap)
 
-    // const viewportrows = viewportRowcount
-
     const cradleAvailableContentCount = cradleRowcount * crosscount 
 
     // -----------------------[ calc leadingitemcount, axisReferenceIndex ]-----------------------
 
-    let runwayitemcount = runwaycount * crosscount
-    runwayitemcount = Math.min(runwayitemcount, targetAxisReferenceIndex) // for list head
+    let leadingrunwayitemcount = runwaycount * crosscount
+    leadingrunwayitemcount = Math.min(leadingrunwayitemcount, targetAxisReferenceIndex) // for list head
 
     // -----------------------[ calc cradleReferenceIndex ]------------------------
     // leading edge
-    let targetCradleReferenceIndex = Math.max(0,targetAxisReferenceIndex - runwayitemcount)
+    let targetCradleReferenceIndex = Math.max(0,targetAxisReferenceIndex - leadingrunwayitemcount)
     let targetCradleRowOffset = targetCradleReferenceIndex/crosscount
     const targetCradleEndRowOffset = targetCradleRowOffset + (cradleRowcount - 1)
 
