@@ -40,8 +40,10 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     } = cradleInternalProperties
     
-    // align target index with row heads
+    // local mutable copies
     let targetAxisReferenceIndex = targetAxisIndex
+    let targetAxisPosOffset = targetAxisPos
+
     targetAxisReferenceIndex -= (targetAxisReferenceIndex % crosscount)
     // derive target row
     const targetAxisRowOffset = targetAxisReferenceIndex/crosscount
@@ -76,20 +78,18 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     // ------------[ adjust cradleReferenceIndex and contentCount for listsize overflow ]------------
 
-    let axisPosOffset = targetAxisPos // % cellLength
-
     // --------------------[ calc css positioning ]-----------------------
 
-    let cradleContentCount = cradleRowcount * crosscount
+    const newCradleContentCount = cradleRowcount * crosscount
 
-    let scrollblockPosOffset = ((targetAxisRowOffset * cellLength) + padding) - axisPosOffset // gap
+    const targetScrollblockPosOffset = ((targetAxisRowOffset * cellLength) + padding) - targetAxisPosOffset // gap
 
     return {
         targetCradleReferenceIndex, 
         targetAxisReferenceIndex, 
-        cradleContentCount, 
-        scrollblockPosOffset, 
-        axisPosOffset, 
+        targetAxisPosOffset, 
+        targetScrollblockPosOffset, 
+        newCradleContentCount, 
     } // summarize requirements message
 
 }

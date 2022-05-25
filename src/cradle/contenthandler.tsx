@@ -111,9 +111,9 @@ export default class ContentHandler {
         const {
             targetCradleReferenceIndex, 
             targetAxisReferenceIndex,
-            cradleContentCount, 
-            scrollblockPosOffset, 
-            axisPosOffset, 
+            newCradleContentCount:cradleContentCount, 
+            targetScrollblockPosOffset:scrollblockPosOffset, 
+            targetAxisPosOffset:axisPosOffset, 
             // axisAdjustment
         } = 
             getContentListRequirements({
