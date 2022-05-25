@@ -194,7 +194,7 @@ const InfiniteGridScroller = (args) => {
                     defaultVisibleIndex = { defaultVisibleIndex }
                     getItem = { getItem }
                     placeholder = { placeholder }
-                    runwaycount = { runwaySize }
+                    runwayRowcount = { runwaySize }
 
                     breaklineOffset = { breaklineOffset }
 

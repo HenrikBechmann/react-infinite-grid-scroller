@@ -13,7 +13,7 @@ export default class ScaffoldHandler {
           tailRef,
           headBreaklineRef,
           tailBreaklineRef
-       } = cradleParameters.CradleInternalPropertiesRef.current.cradleElementsRef.current
+       } = cradleParameters.cradleInternalPropertiesRef.current.cradleElementsRef.current
        this.elements = {
           axisRef,
           headRef,

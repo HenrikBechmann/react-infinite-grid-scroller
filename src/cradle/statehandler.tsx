@@ -7,7 +7,7 @@ export default class StateHandler {
 
        this.cradleParameters = cradleParameters
 
-       const internalProperties = cradleParameters.CradleInternalPropertiesRef.current
+       const internalProperties = cradleParameters.cradleInternalPropertiesRef.current
 
        this.setCradleState = internalProperties.setCradleState
        this.cradleStateRef = internalProperties.cradleStateRef

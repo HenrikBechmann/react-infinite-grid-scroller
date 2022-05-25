@@ -58,7 +58,7 @@ export default class ContentHandler {
 
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const cradleInternalProperties = this.cradleParameters.CradleInternalPropertiesRef.current
+        const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
 
         const {
 
@@ -82,7 +82,7 @@ export default class ContentHandler {
             cellHeight, 
             cellWidth, 
             orientation, 
-            runwaycount, 
+            runwayRowcount, 
             gap, 
             padding, 
             listsize
@@ -264,7 +264,7 @@ export default class ContentHandler {
 
         // cradle properties
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const cradleInternalProperties = this.cradleParameters.CradleInternalPropertiesRef.current
+        const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
 
         const [
 

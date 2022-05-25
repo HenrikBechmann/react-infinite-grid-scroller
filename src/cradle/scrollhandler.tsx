@@ -239,7 +239,7 @@ export default class ScrollHandler {
 
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         let cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
-        let cradleConfig = this.cradleParameters.CradleInternalPropertiesRef.current
+        let cradleConfig = this.cradleParameters.cradleInternalPropertiesRef.current
 
         let {crosscount} = cradleConfig
         let viewportElement = viewportInterruptProperties.elementref.current

@@ -25,7 +25,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         orientation, 
         cellHeight, 
         cellWidth, 
-        runwaycount,
+        runwayRowcount,
         gap,
         padding,
         listsize
@@ -65,7 +65,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     // -----------------------[ calc leadingitemcount, axisReferenceIndex ]-----------------------
 
-    let leadingrunwayitemcount = runwaycount * crosscount
+    let leadingrunwayitemcount = runwayRowcount * crosscount
     leadingrunwayitemcount = Math.min(leadingrunwayitemcount, targetAxisReferenceIndex) // for list head
 
     // -----------------------[ calc cradleReferenceIndex ]------------------------
@@ -111,7 +111,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 //         orientation, 
 //         cellHeight, 
 //         cellWidth, 
-//         runwaycount,
+//         runwayRowcount,
 //         gap,
 //         padding,
 //         listsize
@@ -337,7 +337,7 @@ export const calcContentShift = ({
         cellHeight,
         cellWidth,
         listsize,
-        runwaycount,
+        runwayRowcount,
 
     } = cradleInheritedProperties
 
@@ -440,7 +440,7 @@ export const calcContentShift = ({
         // listrow new cradle offset and cradle row shift have to be adjusted to prevent shortening 
         // of cradle content.
 
-        const targetcradlereferencerowoffset = Math.max(0,(newaxisreferencerowoffset - (runwaycount - 1)))
+        const targetcradlereferencerowoffset = Math.max(0,(newaxisreferencerowoffset - (runwayRowcount - 1)))
         const headrowdiff = newcradlereferencerowoffset - targetcradlereferencerowoffset
         if (headrowdiff > 0) {
 
@@ -476,7 +476,7 @@ export const calcContentShift = ({
         }
         // case of in bounds of trailing runway (end of list)
         const computedNextCradleEndrowOffset = (previouscradlerowoffset + (cradleRowcount -1) + cradlereferencerowshift)
-        const targetcradleEndrowoffset = Math.min((listRowcount - 1), (newaxisreferencerowoffset + (viewportRowcount - 1) + (runwaycount - 1)))
+        const targetcradleEndrowoffset = Math.min((listRowcount - 1), (newaxisreferencerowoffset + (viewportRowcount - 1) + (runwayRowcount - 1)))
         const tailrowdiff = Math.max(0, targetcradleEndrowoffset - computedNextCradleEndrowOffset)
 
         if (tailrowdiff > 0) {

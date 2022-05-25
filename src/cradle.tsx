@@ -98,7 +98,7 @@
         - the number of runway rows specified in the parameters, times 2 (one et for the head; one for the tail)
         - the number of items is the number of rows times the 'crosscount' the lateral number of cells. 
         - the last row might consist of fewer items than crosscount, to match the maximum listsize
-        - the cradleRowcount (visible default rows + runwaycount * 2) and viewpointRowcount (visble rows;typicall one partial)
+        - the cradleRowcount (visible default rows + runwayRowcount * 2) and viewpointRowcount (visble rows;typicall one partial)
 
     Item containers:
         Client cell content is contained in CellShell's, which are configured according to GridScroller's input parameters.
@@ -158,7 +158,7 @@ const NORMALIZE_SIGNALS_TIMEOUT = 250
 const Cradle = ({ 
         gridSpecs,
 
-        runwaycount, 
+        runwayRowcount, 
         listsize, 
         defaultVisibleIndex, 
         getItem, 
@@ -200,7 +200,7 @@ const Cradle = ({
         layout,
         dense,
         // ...rest
-        runwaycount, 
+        runwayRowcount, 
         listsize, 
         defaultVisibleIndex, 
         getItem, 
@@ -290,7 +290,7 @@ const Cradle = ({
 
         const listRowcount = Math.ceil(listsize/crosscount)
 
-        let cradleRowcount = Math.min(listRowcount, viewportRowcount + (runwaycount * 2))
+        let cradleRowcount = Math.min(listRowcount, viewportRowcount + (runwayRowcount * 2))
         let itemcount = cradleRowcount * crosscount
         if (itemcount > listsize) {
             itemcount = listsize
@@ -313,13 +313,13 @@ const Cradle = ({
         viewportwidth,
 
         listsize,
-        runwaycount,
+        runwayRowcount,
         crosscount,
     ])
 
     // bundle configuration properties
-    const CradleInternalPropertiesRef = useRef(null)
-    CradleInternalPropertiesRef.current = {
+    const cradleInternalPropertiesRef = useRef(null)
+    cradleInternalPropertiesRef.current = {
         crosscount,
         cradleRowcount,
         viewportRowcount,
@@ -364,7 +364,7 @@ const Cradle = ({
         handlersRef,
         viewportInterruptPropertiesRef,
         cradleInheritedPropertiesRef, 
-        CradleInternalPropertiesRef, 
+        cradleInternalPropertiesRef, 
         internalCallbacksRef,
         externalCallbacksRef,
     })
