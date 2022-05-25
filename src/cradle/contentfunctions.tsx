@@ -438,8 +438,8 @@ export const calcContentShift = ({
         // listrow new cradle offset and cradle row shift have to be adjusted to prevent shortening 
         // of cradle content.
 
-        // TODO: runwayRowcount could be negative with -1 !! Wrong.
-        const targetcradlereferencerowoffset = Math.max(0,(newaxisreferencerowoffset - (runwayRowcount - 1)))
+        const targetcradlereferencerowoffset = 
+            Math.max(0,(newaxisreferencerowoffset - (runwayRowcount?runwayRowcount - 1:0)))
         const headrowdiff = newcradlereferencerowoffset - targetcradlereferencerowoffset
         if (headrowdiff > 0) {
 
@@ -474,9 +474,10 @@ export const calcContentShift = ({
 
         }
         // case of in bounds of trailing runway (end of list)
-        const computedNextCradleEndrowOffset = (previouscradlerowoffset + (cradleRowcount -1) + cradlereferencerowshift)
-        // TODO runwayRowcount could be negative with -1 -- wrong!!
-        const targetcradleEndrowoffset = Math.min((listRowcount - 1), (newaxisreferencerowoffset + (viewportRowcount - 1) + (runwayRowcount - 1)))
+        const computedNextCradleEndrowOffset = 
+            (previouscradlerowoffset + (cradleRowcount -1) + cradlereferencerowshift)
+        const targetcradleEndrowoffset = Math.min((listRowcount - 1), 
+            (newaxisreferencerowoffset + (viewportRowcount - 1) + (runwayRowcount?runwayRowcount - 1:0)))
         const tailrowdiff = Math.max(0, targetcradleEndrowoffset - computedNextCradleEndrowOffset)
 
         if (tailrowdiff > 0) {

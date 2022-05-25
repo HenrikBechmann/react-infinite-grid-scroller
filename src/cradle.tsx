@@ -171,6 +171,8 @@ const Cradle = ({
         breaklineOffset,
     }) => {
 
+    if (listsize == 0) return // nothing to do
+
     // ========================[ DATA SETUP ]========================
 
     // unpack gridSpecs
