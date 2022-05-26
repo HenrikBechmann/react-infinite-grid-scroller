@@ -53,7 +53,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         targetAxisReferenceIndex = targetAxisRowOffset * crosscount
     }
 
-    // -----------------------[ calc cradleReferenceRow ]------------------------
+    // -----------------------[ calc cradleReferenceRow & Index ]------------------------
     // leading edge
     // let targetCradleReferenceIndex = Math.max(0,targetAxisReferenceIndex - leadingrunwayitemcount)
     let targetCradleRowOffset = Math.max(0,targetAxisRowOffset - runwayRowcount)
@@ -69,7 +69,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     const targetCradleReferenceIndex = targetCradleRowOffset * crosscount
 
-    // --------------------[ calc css positioning ]-----------------------
+    // ---------------------[ calc cradle content count ]---------------------
 
     let newCradleContentCount = cradleRowcount * crosscount
     if (targetCradleEndRowOffset == listEndRowOffset) {
@@ -78,6 +78,8 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
             newCradleContentCount -= (crosscount - endrowremaindercount)
         }
     }
+
+    // --------------------[ calc css positioning ]-----------------------
 
     const isVertical = (orientation == 'vertical')
     const cellLength = 
@@ -88,13 +90,15 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     const targetScrollblockPixelOffset = 
         ((targetAxisRowOffset * cellLength) + padding) - (targetAxisPixelOffset) // gap
 
+    // ----------------------[ return required values ]---------------------
+
     return {
         targetCradleReferenceIndex, 
         targetAxisReferenceIndex, 
         targetAxisPixelOffset, 
         targetScrollblockPixelOffset, 
         newCradleContentCount, 
-    } // summarize requirements message
+    } 
 
 }
 
