@@ -76,7 +76,7 @@ export default class ContentHandler {
         const viewportElement = viewportInterruptProperties.elementref.current
 
         const requestedAxisReferenceIndex = scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex
-        let targetAxisPosOffset = scaffoldHandler.cradleReferenceData.targetAxisPosOffset
+        let targetAxisPixelOffset = scaffoldHandler.cradleReferenceData.targetAxisPixelOffset
 
         const {
             cellHeight, 
@@ -97,7 +97,7 @@ export default class ContentHandler {
 
         if (cradleState == 'doreposition') {
 
-            targetAxisPosOffset = 
+            targetAxisPixelOffset = 
                 (requestedAxisReferenceIndex == 0)?
                     padding:
                     gap
@@ -113,15 +113,15 @@ export default class ContentHandler {
             targetCradleReferenceIndex, 
             targetAxisReferenceIndex,
             newCradleContentCount:cradleContentCount, 
-            targetScrollblockPosOffset:scrollblockPosOffset, 
-            targetAxisPosOffset:axisPosOffset, 
+            targetScrollblockPixelOffset:scrollblockPixelOffset, 
+            targetAxisPixelOffset:axisPixelOffset, 
             // axisAdjustment
         } = 
             getContentListRequirements({
                 cradleInheritedProperties,
                 cradleInternalProperties,
                 targetAxisReferenceIndex:requestedAxisReferenceIndex,
-                targetAxisPosOffset,
+                targetAxisPixelOffset,
                 viewportElement:viewportInterruptProperties.elementref.current
             })
 
@@ -151,17 +151,17 @@ export default class ContentHandler {
         const axisPos = 
             (headcontentlist.length == 0)?
                 padding:
-                axisPosOffset
+                axisPixelOffset
 
         cradleContent.cradleModel = childlist
         cradleContent.headModelComponents = headcontentlist
         cradleContent.tailModelComponents = tailcontentlist
 
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = targetAxisReferenceIndex
-        scaffoldHandler.cradleReferenceData.scrollImpliedAxisPosOffset = axisPos
+        scaffoldHandler.cradleReferenceData.scrollImpliedAxisPixelOffset = axisPos
 
         scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = targetAxisReferenceIndex
-        scaffoldHandler.cradleReferenceData.targetAxisPosOffset = axisPos
+        scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = axisPos
 
         if (serviceHandler.serviceCalls.referenceIndexCallbackRef.current) {
 
@@ -175,13 +175,13 @@ export default class ContentHandler {
 
         const cradleElements = scaffoldHandler.elements //cradleElementsRef.current
 
-        scaffoldHandler.cradleReferenceData.blockScrollPos = scrollblockPosOffset - axisPos
+        scaffoldHandler.cradleReferenceData.blockScrollPos = scrollblockPixelOffset - axisPos
 
         if (orientation == 'vertical') {
 
             scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
 
-            cradleElements.axisRef.current.style.top = (scrollblockPosOffset /*+ axisAdjustment*/) + 'px'
+            cradleElements.axisRef.current.style.top = (scrollblockPixelOffset /*+ axisAdjustment*/) + 'px'
             cradleElements.axisRef.current.style.left = 'auto'
             cradleElements.headRef.current.style.paddingBottom = 
                 headcontentlist.length?
@@ -194,7 +194,7 @@ export default class ContentHandler {
             // ??? scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
 
             cradleElements.axisRef.current.style.top = 'auto'
-            cradleElements.axisRef.current.style.left = (scrollblockPosOffset /*+ axisAdjustment*/) + 'px'
+            cradleElements.axisRef.current.style.left = (scrollblockPixelOffset /*+ axisAdjustment*/) + 'px'
             cradleElements.headRef.current.style.paddingRight = 
                 headcontentlist.length?
                     cradleInheritedProperties.gap + 'px':
@@ -273,7 +273,7 @@ export default class ContentHandler {
             cradleitemshift, 
             axisReferenceIndex, // new index
             axisitemshift, 
-            axisposoffset, // new offset (from leading edge of viewport)
+            axispixeloffset, // new offset (from leading edge of viewport)
             cradleContentCount, // updated
             headchangecount,
             tailchangecount,
@@ -343,11 +343,11 @@ export default class ContentHandler {
 
         scrollHandler.updateBlockScrollPos()
 
-        if (axisposoffset !== undefined) {
+        if (axispixeloffset !== undefined) {
 
             if (cradleInheritedProperties.orientation == 'vertical') {
                 const scrolltop = scrollPos // viewportElement.scrollTop
-                const top = scrolltop + axisposoffset
+                const top = scrolltop + axispixeloffset
 
                 scaffoldHandler.cradleReferenceData.blockScrollPos = scrolltop
                 scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
@@ -363,7 +363,7 @@ export default class ContentHandler {
                 scaffoldHandler.cradleReferenceData.blockScrollPos = scrollPos // viewportElement.scrollLeft
                 scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
                 cradleElements.axisRef.current.style.top = 'auto'
-                cradleElements.axisRef.current.style.left = /*viewportElement.scrollLeft*/scrollPos + axisposoffset + 'px'
+                cradleElements.axisRef.current.style.left = /*viewportElement.scrollLeft*/scrollPos + axispixeloffset + 'px'
                 cradleElements.headRef.current.style.paddingRight = 
                     headcontent.length?
                         cradleInheritedProperties.gap + 'px':
@@ -374,10 +374,10 @@ export default class ContentHandler {
         }
 
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
-        scaffoldHandler.cradleReferenceData.scrollImpliedAxisPosOffset = axisposoffset
+        scaffoldHandler.cradleReferenceData.scrollImpliedAxisPixelOffset = axispixeloffset
 
         scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = axisReferenceIndex
-        scaffoldHandler.cradleReferenceData.targetAxisPosOffset = axisposoffset
+        scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = axispixeloffset
 
         stateHandler.setCradleState('renderupdatedcontent')
 

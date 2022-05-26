@@ -81,7 +81,7 @@
             The axisReferenceIndex is also used to allocate items above (lower index value) and below (same or higher index value)
             the fold
         - cradleReferenceIndex (the virtual index of the item defining the leading bound of the cradle content)
-        - axisPosOffset (pixels - plus or minus - that the axis is placed in relation to the viewport's leading edge) 
+        - axisPixelOffset (pixels - plus or minus - that the axis is placed in relation to the viewport's leading edge) 
     
     These reference points are applied to the following structures:
         - the viewport
@@ -598,7 +598,7 @@ const Cradle = ({
                 cellHeight)
             + gap
 
-        const previousAxisOffset = scaffoldHandler.cradleReferenceData.targetAxisPosOffset
+        const previousAxisOffset = scaffoldHandler.cradleReferenceData.targetAxisPixelOffset
 
         const previousratio = previousAxisOffset/previousCellPixelLength
 
@@ -610,7 +610,7 @@ const Cradle = ({
 
         const pivotAxisOffset = previousratio * pivotCellPixelLength
         
-        scaffoldHandler.cradleReferenceData.targetAxisPosOffset = Math.round(pivotAxisOffset)
+        scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = Math.round(pivotAxisOffset)
 
         const { signals } = interruptHandler
 

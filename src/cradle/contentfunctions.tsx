@@ -16,19 +16,15 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         cradleInheritedProperties,
         cradleInternalProperties,
         targetAxisReferenceIndex, // from user, or from pivot
-        targetAxisPosOffset,
+        targetAxisPixelOffset,
         viewportElement,
 
     }) => {
-
-    console.log('1. incoming targetAxisReferenceIndex, targetAxisPosOffset',
-        targetAxisReferenceIndex, targetAxisPosOffset)
 
     const { 
         orientation, 
         cellHeight, 
         cellWidth, 
-        // runwayRowcountSpec,
         gap,
         padding,
         listsize
@@ -57,27 +53,31 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         targetAxisReferenceIndex = targetAxisRowOffset * crosscount
     }
 
-    console.log('2. targetAxisRowOffset, targetAxisReferenceIndex',
-        targetAxisRowOffset, targetAxisReferenceIndex)
-
     // -----------------------[ calc cradleReferenceRow ]------------------------
     // leading edge
     // let targetCradleReferenceIndex = Math.max(0,targetAxisReferenceIndex - leadingrunwayitemcount)
     let targetCradleRowOffset = Math.max(0,targetAxisRowOffset - runwayRowcount)
 
-    const targetCradleEndRowOffset = targetCradleRowOffset + (cradleRowcount - 1)
+    // trailing edge
+    let targetCradleEndRowOffset = targetCradleRowOffset + (cradleRowcount - 1)
 
     if (targetCradleEndRowOffset > (listRowcount - 1)) {
-        targetCradleRowOffset -= ((listRowcount - 1) - targetCradleEndRowOffset)
+        const diff = ((listRowcount - 1) - targetCradleEndRowOffset)
+        targetCradleRowOffset -= diff
+        targetCradleEndRowOffset -= diff
     }
 
     const targetCradleReferenceIndex = targetCradleRowOffset * crosscount
 
-    console.log('3. targetCradleReferenceIndex',targetCradleReferenceIndex)
-
     // --------------------[ calc css positioning ]-----------------------
 
-    const newCradleContentCount = cradleRowcount * crosscount
+    let newCradleContentCount = cradleRowcount * crosscount
+    if (targetCradleEndRowOffset == listEndRowOffset) {
+        const endrowremaindercount = listsize % crosscount
+        if (endrowremaindercount) {
+            newCradleContentCount -= (crosscount - endrowremaindercount)
+        }
+    }
 
     const isVertical = (orientation == 'vertical')
     const cellLength = 
@@ -85,25 +85,14 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
             (cellHeight + gap):
             (cellWidth + gap)
 
-    const targetScrollblockPosOffset = 
-        ((targetAxisRowOffset * cellLength) + padding) - (targetAxisPosOffset) // gap
-
-    console.log(`targetCradleReferenceIndex, 
-        targetAxisReferenceIndex, 
-        targetAxisPosOffset, 
-        targetScrollblockPosOffset, 
-        newCradleContentCount`,
-        targetCradleReferenceIndex, 
-        targetAxisReferenceIndex, 
-        targetAxisPosOffset, 
-        targetScrollblockPosOffset, 
-        newCradleContentCount)
+    const targetScrollblockPixelOffset = 
+        ((targetAxisRowOffset * cellLength) + padding) - (targetAxisPixelOffset) // gap
 
     return {
         targetCradleReferenceIndex, 
         targetAxisReferenceIndex, 
-        targetAxisPosOffset, 
-        targetScrollblockPosOffset, 
+        targetAxisPixelOffset, 
+        targetScrollblockPixelOffset, 
         newCradleContentCount, 
     } // summarize requirements message
 
@@ -355,7 +344,7 @@ export const calcContentShift = ({
 
     let axisposshift = axisreferencerowshift * cellLength
 
-    let newaxisposoffset = viewportaxisoffset + axisposshift
+    let newaxispixeloffset = viewportaxisoffset + axisposshift
 
     // ---------------------[ 9. return required values ]-------------------
 
@@ -364,7 +353,7 @@ export const calcContentShift = ({
         cradlereferenceitemshift, 
         newaxisreferenceindex, 
         axisreferenceitemshift, 
-        newaxisposoffset, 
+        newaxispixeloffset, 
         newcradlecontentcount,
         headchangecount,
         tailchangecount
