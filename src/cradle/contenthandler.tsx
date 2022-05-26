@@ -59,6 +59,7 @@ export default class ContentHandler {
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
         const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
+        const cradleHandlers = this.cradleParameters.handlersRef.current
 
         const {
 
@@ -67,7 +68,7 @@ export default class ContentHandler {
             service:serviceHandler,
             interrupts:interruptHandler,
 
-        } = this.cradleParameters.handlersRef.current
+        } = cradleHandlers
 
         // the breaklines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
@@ -97,10 +98,7 @@ export default class ContentHandler {
 
         if (cradleState == 'doreposition') {
 
-            targetAxisPixelOffset = 
-                (requestedAxisReferenceIndex == 0)?
-                    padding:
-                    gap
+            targetAxisPixelOffset = 0
 
         }
 
@@ -115,7 +113,6 @@ export default class ContentHandler {
             newCradleContentCount:cradleContentCount, 
             targetScrollblockPixelOffset:scrollblockPixelOffset, 
             targetAxisPixelOffset:axisPixelOffset, 
-            // axisAdjustment
         } = 
             getContentListRequirements({
                 cradleInheritedProperties,
@@ -148,20 +145,15 @@ export default class ContentHandler {
     
         })
 
-        const axisPos = 
-            (headcontentlist.length == 0)?
-                padding:
-                axisPixelOffset
-
         cradleContent.cradleModel = childlist
         cradleContent.headModelComponents = headcontentlist
         cradleContent.tailModelComponents = tailcontentlist
 
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = targetAxisReferenceIndex
-        scaffoldHandler.cradleReferenceData.scrollImpliedAxisPixelOffset = axisPos
+        scaffoldHandler.cradleReferenceData.scrollImpliedAxisPixelOffset = axisPixelOffset//axisPos
 
         scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = targetAxisReferenceIndex
-        scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = axisPos
+        scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = axisPixelOffset//axisPos
 
         if (serviceHandler.serviceCalls.referenceIndexCallbackRef.current) {
 
@@ -175,13 +167,13 @@ export default class ContentHandler {
 
         const cradleElements = scaffoldHandler.elements //cradleElementsRef.current
 
-        scaffoldHandler.cradleReferenceData.blockScrollPos = scrollblockPixelOffset - axisPos
+        scaffoldHandler.cradleReferenceData.blockScrollPos = scrollblockPixelOffset - axisPixelOffset//axisPos
 
         if (orientation == 'vertical') {
 
             scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
 
-            cradleElements.axisRef.current.style.top = (scrollblockPixelOffset /*+ axisAdjustment*/) + 'px'
+            cradleElements.axisRef.current.style.top = (scrollblockPixelOffset + padding) + 'px'
             cradleElements.axisRef.current.style.left = 'auto'
             cradleElements.headRef.current.style.paddingBottom = 
                 headcontentlist.length?
@@ -191,10 +183,9 @@ export default class ContentHandler {
         } else { // orientation = 'horizontal'
 
             scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
-            // ??? scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
 
             cradleElements.axisRef.current.style.top = 'auto'
-            cradleElements.axisRef.current.style.left = (scrollblockPixelOffset /*+ axisAdjustment*/) + 'px'
+            cradleElements.axisRef.current.style.left = (scrollblockPixelOffset + padding) + 'px'
             cradleElements.headRef.current.style.paddingRight = 
                 headcontentlist.length?
                     cradleInheritedProperties.gap + 'px':
