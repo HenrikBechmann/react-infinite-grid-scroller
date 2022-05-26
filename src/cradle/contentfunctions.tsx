@@ -35,7 +35,6 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         crosscount,
         cradleRowcount,
         runwayRowcount,
-        // viewportRowcount,
         listRowcount,
 
     } = cradleInternalProperties
@@ -47,7 +46,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     const listEndRowOffset = (listRowcount - 1)
 
-    // check for out-of-bounds
+    // check for end list out-of-bounds
     if (targetAxisRowOffset > listEndRowOffset) {
         targetAxisRowOffset = listEndRowOffset
         targetAxisReferenceIndex = targetAxisRowOffset * crosscount
@@ -364,7 +363,6 @@ export const calcContentShift = ({
     ]
 
 }
-
 
 // =====================[ shared by both setCradleContent and updateCradleContent ]====================
 
