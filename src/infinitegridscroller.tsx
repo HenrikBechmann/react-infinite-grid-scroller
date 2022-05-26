@@ -64,31 +64,13 @@ const getSessionID = () => {
     components of the mechanism
 */
 
-const InfiniteGridScroller = (args) => {
+const InfiniteGridScroller = (props) => {
 
     // ------------------[ normalize properties ]--------------------
 
-    const props = Object.assign({},args) // args should be immutable
+    // const props = Object.assign({},args) // args should be immutable
 
-    // set defaults
-    props.functions ?? (props.functions = {})
-    props.styles ?? (props.styles = {})
-    props.gap ?? (props.gap = 0)
-    props.padding ?? (props.padding = 0)
-    props.runwaySize ?? (props.runwaySize = 3)
-    props.indexOffset ?? (props.indexOffset = 0)
-    props.listSize ?? (props.listSize = 0)
-    props.layout ?? (props.layout = 'uniform')
-    // constraints
-    props.indexOffset = Math.max(0,props.indexOffset) // non-negative
-    props.indexOffset = Math.min((props.listSize -1), props.indexOffset) // not larger than list
-    if (!['horizontal','vertical'].includes(props.orientation)) {
-        props.orientation = 'vertical'
-    }
-    // TODO: rationalize with cellHeight & cellWidth; must be less than half
-    props.breaklineOffset ?? (props.breaklineOffset = 10) 
-
-    const { 
+    let { 
         orientation, // vertical or horizontal
         gap, // space between grid cells, not including the leading and trailing edges
         padding, // the space between the items and the viewport, applied to the cradle
@@ -113,6 +95,7 @@ const InfiniteGridScroller = (args) => {
         // advanced, technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
         scrollerName, // for debugging
         breaklineOffset,
+        indexOffset,
     } = props
 
     const gridSpecs = { // package
@@ -124,6 +107,26 @@ const InfiniteGridScroller = (args) => {
         layout,
         dense,
     }
+
+    // set defaults
+    functions ?? (functions = {})
+    styles ?? (styles = {})
+    gap ?? (gap = 0)
+    padding ?? (padding = 0)
+    runwaySize ?? (runwaySize = 3)
+    runwaySize = Math.max(0,runwaySize)
+    indexOffset ?? (indexOffset = 0)
+    listSize ?? (listSize = 0)
+    listSize = Math.max(0,listSize)
+    layout ?? (layout = 'uniform')
+    // constraints
+    indexOffset = Math.max(0,indexOffset) // non-negative
+    indexOffset = Math.min((listSize -1), indexOffset) // not larger than list
+    if (!['horizontal','vertical'].includes(orientation)) {
+        orientation = 'vertical'
+    }
+    // TODO: rationalize with cellHeight & cellWidth; must be less than half
+    breaklineOffset ?? (breaklineOffset = 10) 
 
     const gridSpecsRef = useRef(gridSpecs)
     const stylesRef = useRef(styles)
