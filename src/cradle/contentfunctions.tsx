@@ -21,6 +21,9 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     }) => {
 
+    console.log('1. incoming targetAxisReferenceIndex, targetAxisPosOffset',
+        targetAxisReferenceIndex, targetAxisPosOffset)
+
     const { 
         orientation, 
         cellHeight, 
@@ -54,23 +57,23 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         targetAxisReferenceIndex = targetAxisRowOffset * crosscount
     }
 
-    // -----------------------[ calc leadingitemcount, axisReferenceIndex ]-----------------------
-
-    // let leadingrunwayitemcount = runwayRowcount * crosscount
-    // leadingrunwayitemcount = Math.min(leadingrunwayitemcount, targetAxisReferenceIndex) // for list head
+    console.log('2. targetAxisRowOffset, targetAxisReferenceIndex',
+        targetAxisRowOffset, targetAxisReferenceIndex)
 
     // -----------------------[ calc cradleReferenceRow ]------------------------
     // leading edge
     // let targetCradleReferenceIndex = Math.max(0,targetAxisReferenceIndex - leadingrunwayitemcount)
-    let targetCradleRowOffset = targetAxisRowOffset - runwayRowcount
+    let targetCradleRowOffset = Math.max(0,targetAxisRowOffset - runwayRowcount)
+
     const targetCradleEndRowOffset = targetCradleRowOffset + (cradleRowcount - 1)
 
     if (targetCradleEndRowOffset > (listRowcount - 1)) {
         targetCradleRowOffset -= ((listRowcount - 1) - targetCradleEndRowOffset)
-        // targetCradleReferenceIndex = (targetCradleRowOffset * crosscount)
     }
 
     const targetCradleReferenceIndex = targetCradleRowOffset * crosscount
+
+    console.log('3. targetCradleReferenceIndex',targetCradleReferenceIndex)
 
     // --------------------[ calc css positioning ]-----------------------
 
@@ -84,6 +87,17 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     const targetScrollblockPosOffset = 
         ((targetAxisRowOffset * cellLength) + padding) - targetAxisPosOffset // gap
+
+    console.log(`targetCradleReferenceIndex, 
+        targetAxisReferenceIndex, 
+        targetAxisPosOffset, 
+        targetScrollblockPosOffset, 
+        newCradleContentCount`,
+        targetCradleReferenceIndex, 
+        targetAxisReferenceIndex, 
+        targetAxisPosOffset, 
+        targetScrollblockPosOffset, 
+        newCradleContentCount)
 
     return {
         targetCradleReferenceIndex, 
