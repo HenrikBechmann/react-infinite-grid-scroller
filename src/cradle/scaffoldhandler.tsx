@@ -31,7 +31,7 @@ export default class ScaffoldHandler {
        // progression of references: scroll->next
        this.cradleReferenceData.scrollImpliedAxisReferenceIndex = 
           (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
-       this.cradleReferenceData.scrollImpliedAxisPosOffset = padding
+       this.cradleReferenceData.scrollImpliedAxisPosOffset = 0 // padding
        this.cradleReferenceData.targetAxisReferenceIndex = 
           this.cradleReferenceData.scrollImpliedAxisReferenceIndex
        this.cradleReferenceData.targetAxisPosOffset = 

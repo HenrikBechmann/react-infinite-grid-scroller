@@ -86,7 +86,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
             (cellWidth + gap)
 
     const targetScrollblockPosOffset = 
-        ((targetAxisRowOffset * cellLength) + padding) - targetAxisPosOffset // gap
+        ((targetAxisRowOffset * cellLength) + padding) - (targetAxisPosOffset) // gap
 
     console.log(`targetCradleReferenceIndex, 
         targetAxisReferenceIndex, 
