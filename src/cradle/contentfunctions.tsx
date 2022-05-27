@@ -26,7 +26,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         cellHeight, 
         cellWidth, 
         gap,
-        padding,
+        // padding,
         listsize
     } = cradleInheritedProperties
 
