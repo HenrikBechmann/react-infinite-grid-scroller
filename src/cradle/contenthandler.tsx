@@ -116,13 +116,12 @@ export default class ContentHandler {
         if (cradleState == 'doreposition' || targetAxisReferenceIndex == 0) {
 
             targetAxisPixelAdjustment = padding
-                // (targetAxisReferenceIndex == 0)? 
-                //     targetAxisPixelAdjustment = padding:
-                //     gap
+
             targetScrollblockPixelAdjustment =
                 (targetAxisReferenceIndex == 0)?
                     0:
                     gap
+                    
         }
 
         // returns content constrained by cradleRowcount
