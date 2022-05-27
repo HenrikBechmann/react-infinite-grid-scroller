@@ -80,21 +80,10 @@ export default class ContentHandler {
         let targetAxisPixelOffset = scaffoldHandler.cradleReferenceData.targetAxisPixelOffset
 
         const {
-            cellHeight, 
-            cellWidth, 
             orientation, 
-            // runwayRowcountSpec, 
             gap, 
             padding, 
-            listsize
         } = cradleInheritedProperties
-
-        const { 
-            cradleRowcount,
-            crosscount,
-            viewportRowcount,
-            // runwayRowcount, 
-        } = cradleInternalProperties
 
         if (cradleState == 'doreposition') {
 
@@ -115,11 +104,11 @@ export default class ContentHandler {
             targetAxisPixelOffset:axisPixelOffset, 
         } = 
             getContentListRequirements({
-                cradleInheritedProperties,
-                cradleInternalProperties,
                 targetAxisReferenceIndex:requestedAxisReferenceIndex,
                 targetAxisPixelOffset,
-                viewportElement:viewportInterruptProperties.elementref.current
+                cradleInheritedProperties,
+                cradleInternalProperties,
+                viewportElement:viewportInterruptProperties.elementref.current,
             })
 
         // returns content constrained by cradleRowcount
@@ -177,7 +166,7 @@ export default class ContentHandler {
             cradleElements.axisRef.current.style.left = 'auto'
             cradleElements.headRef.current.style.paddingBottom = 
                 headcontentlist.length?
-                    cradleInheritedProperties.gap + 'px':
+                    gap + 'px':
                     0
 
         } else { // orientation = 'horizontal'
@@ -188,7 +177,7 @@ export default class ContentHandler {
             cradleElements.axisRef.current.style.left = (scrollblockPixelOffset + padding) + 'px'
             cradleElements.headRef.current.style.paddingRight = 
                 headcontentlist.length?
-                    cradleInheritedProperties.gap + 'px':
+                    gap + 'px':
                     0
 
         }
