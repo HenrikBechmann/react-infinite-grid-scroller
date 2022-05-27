@@ -124,6 +124,9 @@ export default class ContentHandler {
                     
         }
 
+        console.log('orientation, targetAxisPixelAdjustment, targetScrollblockPixelAdjustment',
+            orientation, targetAxisPixelAdjustment, targetScrollblockPixelAdjustment)
+
         // returns content constrained by cradleRowcount
         const [childlist,deleteditems] = getUICellShellList({
 
@@ -170,13 +173,13 @@ export default class ContentHandler {
         const cradleElements = scaffoldHandler.elements //cradleElementsRef.current
 
         scaffoldHandler.cradleReferenceData.blockScrollPos = 
-            scrollblockPixelOffset - axisPixelOffset + targetScrollblockPixelAdjustment
+            scrollblockPixelOffset + targetScrollblockPixelAdjustment
 
         if (orientation == 'vertical') {
 
             scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
 
-            cradleElements.axisRef.current.style.top = (scrollblockPixelOffset + targetAxisPixelAdjustment) + 'px'
+            cradleElements.axisRef.current.style.top = (axisPixelOffset + targetAxisPixelAdjustment) + 'px'
             cradleElements.axisRef.current.style.left = 'auto'
             cradleElements.headRef.current.style.paddingBottom = 
                 headcontentlist.length?
@@ -188,7 +191,7 @@ export default class ContentHandler {
             scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
 
             cradleElements.axisRef.current.style.top = 'auto'
-            cradleElements.axisRef.current.style.left = (scrollblockPixelOffset + targetAxisPixelAdjustment) + 'px'
+            cradleElements.axisRef.current.style.left = (axisPixelOffset + targetAxisPixelAdjustment) + 'px'
             cradleElements.headRef.current.style.paddingRight = 
                 headcontentlist.length?
                     gap + 'px':

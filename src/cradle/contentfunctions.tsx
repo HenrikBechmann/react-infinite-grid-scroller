@@ -26,7 +26,6 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         cellHeight, 
         cellWidth, 
         gap,
-        // padding,
         listsize
     } = cradleInheritedProperties
 
@@ -89,7 +88,8 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     const targetScrollblockPixelOffset = 
         (targetAxisRowOffset * cellLength) - (targetAxisPixelOffset)
 
-    console.log('targetScrollblockPixelOffset',targetScrollblockPixelOffset)
+    console.log(' getContentListRequirements: targetScrollblockPixelOffset, targetAxisPixelOffset, targetAxisRowOffset, cellLength',
+        targetScrollblockPixelOffset, targetAxisPixelOffset, targetAxisRowOffset, cellLength)
 
     // ----------------------[ return required values ]---------------------
 
@@ -103,7 +103,6 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
 }
 
-// BUG: TODO scroll stopped right at head window forward does not trigger intersection in opposite direction
 // -1 = shift row to head. 1 = shift row to tail. 0 = do not shift a row.
 export const getShiftInstruction = ({
 
