@@ -44,8 +44,11 @@ export default class InterruptHandler {
             const [first,second] = entries
             // console.log('first.time, second.time, first.time == second.time,first, second',
             //     first.time, second.time,first.time == second.time,first,second)
+            // TODO: consider using scrollHandler.isScrolling instead
             if (first.time == second.time) { // initializing, not scrolling
                 return
+            } else {
+                console.log('WARNING: double breaklines intersection. Contace author.')
             }
         }
 

@@ -222,6 +222,7 @@ export default class ScrollHandler {
         const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+        
         const viewportElement = viewportInterruptProperties.elementref.current
 
         if (cradleProps.orientation == 'vertical') {

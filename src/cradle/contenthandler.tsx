@@ -242,8 +242,7 @@ export default class ContentHandler {
 
         }
 
-        // isScrollingForward is wrong
-        console.log('updateCradleContent cradleState, isScrollingviewportforward, source, breaklineEntries',
+        console.log('1. updateCradleContent cradleState, isScrollingviewportforward, source, breaklineEntries',
             stateHandler.cradleStateRef.current, isScrollingviewportforward, source, breaklineEntries)
 
         // cradle scaffold and user cells
