@@ -105,7 +105,7 @@ export default class ScrollHandler {
 
                 if ((cradleState == 'repositioningRender') || (cradleState == 'repositioningContinuation')) {
 
-                    this._setScrollReferenceIndexData()
+                    this._setScrollRepositionReferenceIndexData()
                     if (cradleState == 'repositioningRender') stateHandler.setCradleState('repositioningContinuation')
 
                 }
@@ -177,8 +177,9 @@ export default class ScrollHandler {
 
     updateReferenceData = () => {
 
-        const stateHandler = this.cradleParameters.handlersRef.current.state
-        const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
+        const { state:stateHandler, scaffold:scaffoldHandler } 
+            = this.cradleParameters.handlersRef.current
+
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         // const contentHandler = this.cradleParameters.handlersRef.current.content
@@ -235,7 +236,7 @@ export default class ScrollHandler {
 
     }
 
-    private _setScrollReferenceIndexData = () => {
+    private _setScrollRepositionReferenceIndexData = () => {
 
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         let cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
@@ -268,12 +269,14 @@ export default class ScrollHandler {
         let diff = axisReferenceIndex % crosscount
         axisReferenceIndex -= diff
 
-        let referenceIndexData = {
-            index:axisReferenceIndex,
-            axisVisiblePixelOffset:referencescrolloffset
-        }
+        // let referenceIndexData = {
+        //     index:axisReferenceIndex,
+        //     axisVisiblePixelOffset:referencescrolloffset
+        // }
 
         if (axisReferenceIndex == 0) referencescrolloffset = 0 // defensive
+
+        console.log('scrollHandler setting repositioning axisReferenceIndex',axisReferenceIndex)
 
         let scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = axisReferenceIndex

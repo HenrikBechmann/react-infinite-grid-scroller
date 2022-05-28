@@ -612,6 +612,8 @@ const Cradle = ({
         
         scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = Math.round(pivotAxisOffset)
 
+        console.log('pivot scaffoldHandler.cradleReferenceData',Object.assign({},scaffoldHandler.cradleReferenceData))
+
         const { signals } = interruptHandler
 
         signals.pauseBreaklinesObserver = true

@@ -79,6 +79,8 @@ export default class ContentHandler {
         const requestedAxisReferenceIndex = scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex
         let targetAxisPixelOffset = scaffoldHandler.cradleReferenceData.targetAxisPixelOffset
 
+        console.log('setCradleContent requestedAxisReferenceIndex',requestedAxisReferenceIndex)
+
         const {
             orientation, 
             gap, 
@@ -124,8 +126,8 @@ export default class ContentHandler {
                     
         }
 
-        console.log('orientation, targetAxisPixelAdjustment, targetScrollblockPixelAdjustment',
-            orientation, targetAxisPixelAdjustment, targetScrollblockPixelAdjustment)
+        // console.log('orientation, targetAxisPixelAdjustment, targetScrollblockPixelAdjustment',
+        //     orientation, targetAxisPixelAdjustment, targetScrollblockPixelAdjustment)
 
         // returns content constrained by cradleRowcount
         const [childlist,deleteditems] = getUICellShellList({
@@ -215,6 +217,8 @@ export default class ContentHandler {
             state: stateHandler, 
             interrupts: interruptHandler,
         } = this.cradleParameters.handlersRef.current
+
+        console.log('updateCradleContent stateHandler.cradleState',stateHandler.cradleStateRef.current)
 
         // scroll data
         const scrollPositions = scrollHandler.scrollPositions 
@@ -369,6 +373,8 @@ export default class ContentHandler {
             }
 
         }
+
+        console.log('updateCradleContent axisReferenceIndex', axisReferenceIndex)
 
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisPixelOffset = axispixeloffset
