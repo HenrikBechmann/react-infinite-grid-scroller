@@ -40,6 +40,15 @@ export default class InterruptHandler {
 
         }
 
+        if (entries.length == 2) {
+            const [first,second] = entries
+            // console.log('first.time, second.time, first.time == second.time,first, second',
+            //     first.time, second.time,first.time == second.time,first,second)
+            if (first.time == second.time) { // initializing, not scrolling
+                return
+            }
+        }
+
         if (this.signals.pauseBreaklinesObserver) { 
 
             return

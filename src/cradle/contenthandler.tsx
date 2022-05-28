@@ -218,8 +218,6 @@ export default class ContentHandler {
             interrupts: interruptHandler,
         } = this.cradleParameters.handlersRef.current
 
-        console.log('updateCradleContent stateHandler.cradleState',stateHandler.cradleStateRef.current)
-
         // scroll data
         const scrollPositions = scrollHandler.scrollPositions 
 
@@ -243,6 +241,10 @@ export default class ContentHandler {
             this._previousScrollForward = isScrollingviewportforward
 
         }
+
+        // isScrollingForward is wrong
+        console.log('updateCradleContent cradleState, isScrollingviewportforward, source, breaklineEntries',
+            stateHandler.cradleStateRef.current, isScrollingviewportforward, source, breaklineEntries)
 
         // cradle scaffold and user cells
         const cradleElements = scaffoldHandler.elements
