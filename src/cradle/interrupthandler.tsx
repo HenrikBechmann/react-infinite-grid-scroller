@@ -143,6 +143,7 @@ export default class InterruptHandler {
                 cradleContent.tailModelComponents = []
                 cradleContent.headViewComponents = []
                 cradleContent.tailViewComponents = []
+                console.log('cradleIntersectionObserverCallback: calling state startreposition')
                 stateHandler.setCradleState('startreposition')
 
             }

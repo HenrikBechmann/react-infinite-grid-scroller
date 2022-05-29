@@ -226,6 +226,8 @@ const Cradle = ({
 
     const [cradleState, setCradleState] = useState('setup')
 
+    console.log('entering Cradle with state',cradleState)
+
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState;
 
@@ -725,18 +727,18 @@ const Cradle = ({
             case 'finishreposition': {
 
                 const cradleobserver = interruptHandler.cradleIntersect.observer
-                const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
+                // const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
                 const cradleElements = scaffoldHandler.elements
                 const {
                     headRef, 
                     tailRef, 
-                    headBreaklineRef, 
-                    tailBreaklineRef
+                    // headBreaklineRef, 
+                    // tailBreaklineRef
                 } = cradleElements
                 cradleobserver.observe(headRef.current)
                 cradleobserver.observe(tailRef.current)
-                breaklineobserver.observe(headBreaklineRef.current)
-                breaklineobserver.observe(tailBreaklineRef.current)
+                // breaklineobserver.observe(headBreaklineRef.current)
+                // breaklineobserver.observe(tailBreaklineRef.current)
 
                 interruptHandler.signals.pauseCradleIntersectionObserver = false
                 scrollHandler.updateReferenceData()
@@ -780,6 +782,16 @@ const Cradle = ({
 
             case 'preparerender': {
 
+                const cradleElements = scaffoldHandler.elements
+                const {
+                    headBreaklineRef, 
+                    tailBreaklineRef
+                } = cradleElements
+
+                const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
+                breaklineobserver.observe(headBreaklineRef.current)
+                breaklineobserver.observe(tailBreaklineRef.current)
+
                 const cradleContent = contentHandler.content
                 cradleContent.headViewComponents = cradleContent.headModelComponents
                 cradleContent.tailViewComponents = cradleContent.tailModelComponents
@@ -805,7 +817,6 @@ const Cradle = ({
 
                             const signals = interruptHandler.signals
                             if (viewportInterruptProperties.elementref.current) { // already unmounted if fails (?)
-                                // signals.pauseCellObserver  && (signals.pauseCellObserver = false)
                                 signals.pauseBreaklinesObserver && (signals.pauseBreaklinesObserver = false)
                                 signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
                                 signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
@@ -883,6 +894,8 @@ const Cradle = ({
     )
 
     const cradleContent = contentHandler.content
+
+    console.log('rendering with state',cradleStateRef.current)
 
     // portalroot is the hidden portal component cache
     return <CradlePortalsContext.Provider value = {handlersRef.current.portals}>

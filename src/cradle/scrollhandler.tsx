@@ -139,6 +139,8 @@ export default class ScrollHandler {
 
         const cradleState = stateHandler.cradleStateRef.current
 
+        console.log('onAfterScroll cradleState',cradleState)
+
         // if (viewportInterruptProperties.index == 6) {
         //     console.log('running onAfterScroll for index, cradleState',
         //         viewportInterruptProperties.index,this.scrollPositions, cradleState)
@@ -277,7 +279,7 @@ export default class ScrollHandler {
 
         if (axisReferenceIndex == 0) referencescrolloffset = 0 // defensive
 
-        console.log('scrollHandler setting repositioning axisReferenceIndex',axisReferenceIndex)
+        // console.log('scrollHandler setting repositioning axisReferenceIndex',axisReferenceIndex)
 
         let scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = axisReferenceIndex

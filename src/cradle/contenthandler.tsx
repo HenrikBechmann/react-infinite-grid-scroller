@@ -177,6 +177,9 @@ export default class ContentHandler {
         scaffoldHandler.cradleReferenceData.blockScrollPos = 
             scrollblockPixelOffset + targetScrollblockPixelAdjustment
 
+        console.log('finishing setCradleContent: scrollblockPixelOffset, targetScrollblockPixelAdjustment',
+            scrollblockPixelOffset, targetScrollblockPixelAdjustment)
+
         if (orientation == 'vertical') {
 
             scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
