@@ -376,8 +376,8 @@ export const getUICellShellList = ({
         cradleInternalProperties,
         cradleContentCount,
         cradleReferenceIndex, 
-        headchangecount, 
-        tailchangecount, 
+        headChangeCount, 
+        tailChangeCount, 
         localContentList:contentlist,
         callbacks,
         // observer,
@@ -396,14 +396,14 @@ export const getUICellShellList = ({
 
     let headContentlist = []
 
-    let topconstraint = cradleReferenceIndex - headchangecount,
-    bottomconstraint = (cradleReferenceIndex - headchangecount) + (cradleContentCount + 1) // TODO: validate "+1"
+    let topconstraint = cradleReferenceIndex - headChangeCount,
+    bottomconstraint = (cradleReferenceIndex - headChangeCount) + (cradleContentCount + 1) // TODO: validate "+1"
 
     let deletedtailitems = [], deletedheaditems = []
 
-    if (headchangecount >= 0) {
+    if (headChangeCount >= 0) {
 
-        for (let index = cradleReferenceIndex - headchangecount; index < (cradleReferenceIndex); index++) {
+        for (let index = cradleReferenceIndex - headChangeCount; index < (cradleReferenceIndex); index++) {
 
             if (!((index >= topconstraint) && (index <= bottomconstraint))) {
                 continue
@@ -424,15 +424,15 @@ export const getUICellShellList = ({
 
     } else {
 
-        deletedheaditems = localContentlist.splice( 0, -headchangecount )
+        deletedheaditems = localContentlist.splice( 0, -headChangeCount )
 
     }
 
     let tailContentlist = []
 
-    if (tailchangecount >= 0) {
+    if (tailChangeCount >= 0) {
 
-        for (let index = tailindexoffset; index < (tailindexoffset + tailchangecount); index++) {
+        for (let index = tailindexoffset; index < (tailindexoffset + tailChangeCount); index++) {
 
             if (!((index >= topconstraint) && (index <= bottomconstraint))) {
                 continue
@@ -453,7 +453,7 @@ export const getUICellShellList = ({
 
     } else {
 
-        deletedtailitems = localContentlist.splice(tailchangecount,-tailchangecount)
+        deletedtailitems = localContentlist.splice(tailChangeCount,-tailChangeCount)
 
     }
 

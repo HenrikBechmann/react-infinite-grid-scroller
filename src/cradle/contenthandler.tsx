@@ -136,8 +136,8 @@ export default class ContentHandler {
             cradleInternalProperties,
             cradleContentCount,
             cradleReferenceIndex:targetCradleReferenceIndex,
-            headchangecount:0,
-            tailchangecount:cradleContentCount,
+            headChangeCount:0,
+            tailChangeCount:cradleContentCount,
             localContentList,
             callbacks:this.internalCallbacksRef.current,
             instanceIdCounterRef:this.instanceIdCounterRef,
@@ -275,13 +275,13 @@ export default class ContentHandler {
         const [
 
             // cradlereferenceindex, // new index
-            cradleitemshift, 
+            cradleItemShift, 
             axisReferenceIndex, // new index
-            axisitemshift, 
-            axispixeloffset, // new offset (from leading edge of viewport)
+            axisItemShift, 
+            axisPixelOffset, // new offset (from leading edge of viewport)
             cradleContentCount, // updated
-            headchangecount,
-            tailchangecount,
+            headChangeCount,
+            tailChangeCount,
 
         ] = calcContentShift({
 
@@ -295,7 +295,7 @@ export default class ContentHandler {
         })
 
         // third abandon option/3; nothing to do
-        if ((axisitemshift == 0 && cradleitemshift == 0)) {
+        if ((axisItemShift == 0 && cradleItemShift == 0)) {
             console.log('returning for no axis or cradle shift') // notice for suspicious requirement
             return
 
@@ -310,15 +310,15 @@ export default class ContentHandler {
         // collect modified content
         let localContentList, deletedContentItems = []
 
-        if (headchangecount || tailchangecount) { // if either is non-0 then modify content
+        if (headChangeCount || tailChangeCount) { // if either is non-0 then modify content
 
             [localContentList,deletedContentItems] = getUICellShellList({
                 cradleInheritedProperties,
                 cradleInternalProperties,
                 cradleContentCount,
                 localContentList:modelcontentlist,
-                headchangecount,
-                tailchangecount,
+                headChangeCount,
+                tailChangeCount,
                 cradleReferenceIndex,
                 callbacks:this.internalCallbacksRef.current,
                 instanceIdCounterRef:this.instanceIdCounterRef,
@@ -348,43 +348,44 @@ export default class ContentHandler {
 
         scrollHandler.updateBlockScrollPos()
 
-        if (axispixeloffset !== undefined) {
+        // if (axisPixelOffset !== undefined) {
 
-            if (cradleInheritedProperties.orientation == 'vertical') {
-                const scrolltop = scrollPos // viewportElement.scrollTop
-                const top = scrolltop + axispixeloffset
+        if (cradleInheritedProperties.orientation == 'vertical') {
+            // const scrolltop = scrollPos // viewportElement.scrollTop
+            const top = scrollPos + axisPixelOffset
 
-                scaffoldHandler.cradleReferenceData.blockScrollPos = scrolltop
-                scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
-                cradleElements.axisRef.current.style.top = top + 'px'
-                cradleElements.axisRef.current.style.left = 'auto'
-                cradleElements.headRef.current.style.paddingBottom = 
-                    headcontent.length?
-                        cradleInheritedProperties.gap + 'px':
-                        0
+            scaffoldHandler.cradleReferenceData.blockScrollPos = scrollPos
+            scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
+            cradleElements.axisRef.current.style.top = top + 'px'
+            cradleElements.axisRef.current.style.left = 'auto'
+            cradleElements.headRef.current.style.paddingBottom = 
+                headcontent.length?
+                    cradleInheritedProperties.gap + 'px':
+                    0
 
-            } else {
+        } else {
 
-                scaffoldHandler.cradleReferenceData.blockScrollPos = scrollPos // viewportElement.scrollLeft
-                scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
-                cradleElements.axisRef.current.style.top = 'auto'
-                cradleElements.axisRef.current.style.left = /*viewportElement.scrollLeft*/scrollPos + axispixeloffset + 'px'
-                cradleElements.headRef.current.style.paddingRight = 
-                    headcontent.length?
-                        cradleInheritedProperties.gap + 'px':
-                        0
-
-            }
+            scaffoldHandler.cradleReferenceData.blockScrollPos = scrollPos // viewportElement.scrollLeft
+            scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
+            cradleElements.axisRef.current.style.top = 'auto'
+            cradleElements.axisRef.current.style.left = scrollPos + axisPixelOffset + 'px'
+            cradleElements.headRef.current.style.paddingRight = 
+                headcontent.length?
+                    cradleInheritedProperties.gap + 'px':
+                    0
 
         }
 
-        console.log('updateCradleContent axisReferenceIndex', axisReferenceIndex)
+        // }
+
+        console.log('++updateCradleContent axisReferenceIndex, axisPixelOffset, axisItemShift, cradleItemShift, scrollPos', 
+            axisReferenceIndex, axisPixelOffset, axisItemShift, cradleItemShift, scrollPos)
 
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
-        scaffoldHandler.cradleReferenceData.scrollImpliedAxisPixelOffset = axispixeloffset
+        scaffoldHandler.cradleReferenceData.scrollImpliedAxisPixelOffset = axisPixelOffset
 
         scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = axisReferenceIndex
-        scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = axispixeloffset
+        scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = axisPixelOffset
 
         stateHandler.setCradleState('renderupdatedcontent')
 

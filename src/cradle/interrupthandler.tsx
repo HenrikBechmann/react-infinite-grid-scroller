@@ -40,6 +40,8 @@ export default class InterruptHandler {
 
         }
 
+        console.log('=> axisBreaklinesObserverCallback', entries)
+
         if (entries.length == 2) {
             const [first,second] = entries
             // console.log('first.time, second.time, first.time == second.time,first, second',

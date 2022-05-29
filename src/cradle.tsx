@@ -689,13 +689,14 @@ const Cradle = ({
 
         switch (cradleState) {
 
-            // resetbreaklines is called after setCradleContent cycle is complete
-            // it is called specifically from the normalizesignals default response
-            case 'resetbreaklines':
             // renderupdatedcontent is called from breaklineintersectionobservercallback (interruptHandler), 
             // and called from onAfterScroll (scrollHandler)
             // it is required set configurations before 'ready' TODO: specify!
-            case 'renderupdatedcontent': {
+            case 'renderupdatedcontent':
+
+            // resetbreaklines is called after setCradleContent cycle is complete
+            // it is called specifically from the normalizesignals default response
+            case 'resetbreaklines': {
 
                 const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
                 const cradleElements = scaffoldHandler.elements
@@ -706,11 +707,9 @@ const Cradle = ({
                 setCradleState('ready')
                 break
 
-            }
-
             // ----------------------------------------------------------------------
             // ------------[ reposition when repositioningRequired is true ]---------------
-
+            }
             case 'startreposition': {
 
                 const cradleobserver = interruptHandler.cradleIntersect.observer
