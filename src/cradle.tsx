@@ -168,7 +168,7 @@ const Cradle = ({
 
         scrollerName,
         scrollerID,
-        breaklineOffset,
+        triggerlineOffset,
     }) => {
 
     if (listsize == 0) return // nothing to do
@@ -212,7 +212,7 @@ const Cradle = ({
         // objects
         functions,
         styles,
-        breaklineOffset,
+        triggerlineOffset,
 
     })
 
@@ -239,15 +239,15 @@ const Cradle = ({
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const axisCradleElementRef = useRef(null)
-    const headBreaklineCradleElementRef = useRef(null)
-    const tailBreaklineCradleElementRef = useRef(null)
+    const headTriggerlineCradleElementRef = useRef(null)
+    const tailTriggerlineCradleElementRef = useRef(null)
     const cradleElementsRef = useRef(
         {
             headRef:headCradleElementRef, 
             tailRef:tailCradleElementRef, 
             axisRef:axisCradleElementRef,
-            headBreaklineRef:headBreaklineCradleElementRef,
-            tailBreaklineRef:tailBreaklineCradleElementRef
+            headTriggerlineRef:headTriggerlineCradleElementRef,
+            tailTriggerlineRef:tailTriggerlineCradleElementRef
         }
     )
 
@@ -478,7 +478,7 @@ const Cradle = ({
     // observer support
 
     /*
-        There are two interection observers, one for the cradle, and another for breaklines; 
+        There are two interection observers, one for the cradle, and another for triggerlines; 
             both against the viewport.
         There is also a resize observer for the cradle wings, to respond to size changes of 
             variable cells.
@@ -519,11 +519,11 @@ const Cradle = ({
 
     },[])
 
-    // intersection observer for cradle axis breaklines
+    // intersection observer for cradle axis triggerlines
     useEffect(()=>{
 
-        // the breaklines are observed with 'resetbreaklines' state -- see state management below
-        const observer = interruptHandler.axisBreaklinesIntersect.createObserver()
+        // the triggerlines are observed with 'resettriggerlines' state -- see state management below
+        const observer = interruptHandler.axisTriggerlinesIntersect.createObserver()
 
         return () => {
 
@@ -568,7 +568,7 @@ const Cradle = ({
         const signals = interruptHandler.signals
 
         // signals.pauseCellObserver = true
-        signals.pauseBreaklinesObserver = true
+        signals.pauseTriggerlinesObserver = true
         signals.pauseScrollingEffects = true
 
         setCradleState('reload')
@@ -619,7 +619,7 @@ const Cradle = ({
 
         const { signals } = interruptHandler
 
-        signals.pauseBreaklinesObserver = true
+        signals.pauseTriggerlinesObserver = true
         signals.pauseScrollingEffects = true
 
         const cradleContent = contentHandler.content
@@ -639,8 +639,8 @@ const Cradle = ({
         cradleHeadStyle, 
         cradleTailStyle, 
         cradleAxisStyle, 
-        breaklineHeadStyle, 
-        breaklineTailStyle,
+        triggerlineHeadStyle, 
+        triggerlineTailStyle,
         cradleDividerStyle
     ] = useMemo(()=> {
 
@@ -655,7 +655,7 @@ const Cradle = ({
             viewportwidth,
             crosscount, 
             userstyles:styles,
-            breaklineOffset,
+            triggerlineOffset,
 
         })
 
@@ -670,7 +670,7 @@ const Cradle = ({
         viewportwidth,
         crosscount,
         styles,
-        breaklineOffset,
+        triggerlineOffset,
 
       ])
 
@@ -689,20 +689,20 @@ const Cradle = ({
 
         switch (cradleState) {
 
-            // renderupdatedcontent is called from breaklineintersectionobservercallback (interruptHandler), 
+            // renderupdatedcontent is called from triggerlineintersectionobservercallback (interruptHandler), 
             // and called from onAfterScroll (scrollHandler)
             // it is required set configurations before 'ready' TODO: specify!
             case 'renderupdatedcontent':
 
-            // resetbreaklines is called after setCradleContent cycle is complete
+            // resettriggerlines is called after setCradleContent cycle is complete
             // it is called specifically from the normalizesignals default response
-            case 'resetbreaklines': {
+            case 'resettriggerlines': {
 
-                const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
+                const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
                 const cradleElements = scaffoldHandler.elements
 
-                breaklineobserver.observe(cradleElements.headBreaklineRef.current)
-                breaklineobserver.observe(cradleElements.tailBreaklineRef.current)
+                triggerlineobserver.observe(cradleElements.headTriggerlineRef.current)
+                triggerlineobserver.observe(cradleElements.tailTriggerlineRef.current)
 
                 setCradleState('ready')
                 break
@@ -713,9 +713,9 @@ const Cradle = ({
             case 'startreposition': {
 
                 const cradleobserver = interruptHandler.cradleIntersect.observer
-                const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
+                const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
                 cradleobserver.disconnect()
-                breaklineobserver.disconnect()
+                triggerlineobserver.disconnect()
 
                 interruptHandler.signals.pauseCradleIntersectionObserver = true
                 setCradleState('repositioningRender')
@@ -726,18 +726,18 @@ const Cradle = ({
             case 'finishreposition': {
 
                 const cradleobserver = interruptHandler.cradleIntersect.observer
-                // const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
+                // const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
                 const cradleElements = scaffoldHandler.elements
                 const {
                     headRef, 
                     tailRef, 
-                    // headBreaklineRef, 
-                    // tailBreaklineRef
+                    // headTriggerlineRef, 
+                    // tailTriggerlineRef
                 } = cradleElements
                 cradleobserver.observe(headRef.current)
                 cradleobserver.observe(tailRef.current)
-                // breaklineobserver.observe(headBreaklineRef.current)
-                // breaklineobserver.observe(tailBreaklineRef.current)
+                // triggerlineobserver.observe(headTriggerlineRef.current)
+                // triggerlineobserver.observe(tailTriggerlineRef.current)
 
                 interruptHandler.signals.pauseCradleIntersectionObserver = false
                 scrollHandler.updateReferenceData()
@@ -783,13 +783,13 @@ const Cradle = ({
 
                 const cradleElements = scaffoldHandler.elements
                 const {
-                    headBreaklineRef, 
-                    tailBreaklineRef
+                    headTriggerlineRef, 
+                    tailTriggerlineRef
                 } = cradleElements
 
-                const breaklineobserver = interruptHandler.axisBreaklinesIntersect.observer
-                breaklineobserver.observe(headBreaklineRef.current)
-                breaklineobserver.observe(tailBreaklineRef.current)
+                const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
+                triggerlineobserver.observe(headTriggerlineRef.current)
+                triggerlineobserver.observe(tailTriggerlineRef.current)
 
                 const cradleContent = contentHandler.content
                 cradleContent.headViewComponents = cradleContent.headModelComponents
@@ -816,7 +816,7 @@ const Cradle = ({
 
                             const signals = interruptHandler.signals
                             if (viewportInterruptProperties.elementref.current) { // already unmounted if fails (?)
-                                signals.pauseBreaklinesObserver && (signals.pauseBreaklinesObserver = false)
+                                signals.pauseTriggerlinesObserver && (signals.pauseTriggerlinesObserver = false)
                                 signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
                                 signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
                                 signals.pauseCradleResizeObserver && (signals.pauseCradleResizeObserver = false)
@@ -824,7 +824,7 @@ const Cradle = ({
                                 console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportInterruptProperties)
                             }
 
-                /*default*/ if (isMountedRef.current) setCradleState('resetbreaklines') // then 'ready'
+                /*default*/ if (isMountedRef.current) setCradleState('resettriggerlines') // then 'ready'
 
                         } else {
 
@@ -916,15 +916,15 @@ const Cradle = ({
                 ref = {axisCradleElementRef}
             >
                 <div
-                    data-type = 'breakline-head'
-                    style = {breaklineHeadStyle}
-                    ref = {headBreaklineCradleElementRef}
+                    data-type = 'triggerline-head'
+                    style = {triggerlineHeadStyle}
+                    ref = {headTriggerlineCradleElementRef}
                 >
                 </div>
                 <div
-                    data-type = 'breakline-tail'
-                    style = {breaklineTailStyle}
-                    ref = {tailBreaklineCradleElementRef}
+                    data-type = 'triggerline-tail'
+                    style = {triggerlineTailStyle}
+                    ref = {tailTriggerlineCradleElementRef}
                 >
                 </div>
 

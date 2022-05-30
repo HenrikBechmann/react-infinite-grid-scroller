@@ -107,33 +107,33 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 export const getShiftInstruction = ({
 
     isScrollingviewportforward,
-    breaklineEntries,
+    triggerlineEntries,
 
 }) => {
 
-    // console.log('breaklineEntries', breaklineEntries)
+    // console.log('triggerlineEntries', triggerlineEntries)
 
-    const entries = breaklineEntries.filter(entry => {
+    const entries = triggerlineEntries.filter(entry => {
         const isIntersecting = entry.isIntersecting
-        const breaklinename = entry.target.dataset.type
-        return ((!isIntersecting) && isScrollingviewportforward && (breaklinename == 'breakline-tail')) ||
-            (isIntersecting && (!isScrollingviewportforward) && (breaklinename == 'breakline-head'))
+        const triggerlinename = entry.target.dataset.type
+        return ((!isIntersecting) && isScrollingviewportforward && (triggerlinename == 'triggerline-tail')) ||
+            (isIntersecting && (!isScrollingviewportforward) && (triggerlinename == 'triggerline-head'))
     })
 
     if (entries.length == 0) return 0
 
     if (entries.length > 1) {
-        console.log('SYSTEM ISSUE: MORE THAN ONE BREAKLINE OBSERVER ENTRY', breaklineEntries.length, breaklineEntries)
+        console.log('SYSTEM ISSUE: MORE THAN ONE BREAKLINE OBSERVER ENTRY', triggerlineEntries.length, triggerlineEntries)
         debugger
     }
 
     const [entry] = entries
     const isIntersecting = entry.isIntersecting
-    const breaklinename = entry.target.dataset.type
+    const triggerlinename = entry.target.dataset.type
 
-    if ((!isIntersecting) && isScrollingviewportforward && (breaklinename == 'breakline-tail')) {
+    if ((!isIntersecting) && isScrollingviewportforward && (triggerlinename == 'triggerline-tail')) {
         return -1 // shift row to head
-    } else if (isIntersecting && (!isScrollingviewportforward) && (breaklinename == 'breakline-head')) {
+    } else if (isIntersecting && (!isScrollingviewportforward) && (triggerlinename == 'triggerline-head')) {
         return 1 // shift row to tail
     } else {
         return 0 // do not shift a row

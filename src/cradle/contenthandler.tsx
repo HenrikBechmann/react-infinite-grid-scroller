@@ -70,9 +70,9 @@ export default class ContentHandler {
 
         } = cradleHandlers
 
-        // the breaklines will be moved, so disconnect them from their observer.
+        // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
-        interruptHandler.axisBreaklinesIntersect.observer.disconnect()
+        interruptHandler.axisTriggerlinesIntersect.observer.disconnect()
 
         const viewportElement = viewportInterruptProperties.elementref.current
 
@@ -208,7 +208,7 @@ export default class ContentHandler {
 
     // =============================[ UPDATE through scroll ]===============================
 
-    public updateCradleContent = (breaklineEntries, source = 'notifications') => {
+    public updateCradleContent = (triggerlineEntries, source = 'notifications') => {
 
         // ----------------------[ 1. initialize ]-------------------------
 
@@ -245,8 +245,8 @@ export default class ContentHandler {
 
         }
 
-        console.log('1. updateCradleContent cradleState, isScrollingviewportforward, source, breaklineEntries',
-            stateHandler.cradleStateRef.current, isScrollingviewportforward, source, breaklineEntries)
+        console.log('1. updateCradleContent cradleState, isScrollingviewportforward, source, triggerlineEntries',
+            stateHandler.cradleStateRef.current, isScrollingviewportforward, source, triggerlineEntries)
 
         // cradle scaffold and user cells
         const cradleElements = scaffoldHandler.elements
@@ -260,7 +260,7 @@ export default class ContentHandler {
         // -1 is move a row up to the head, +1 is move a row down to the tail, 0 is no shift
         const shiftinstruction = getShiftInstruction({
             isScrollingviewportforward,
-            breaklineEntries,
+            triggerlineEntries,
         })
 
         // second abandon option/3; nothing to do
@@ -301,9 +301,9 @@ export default class ContentHandler {
 
         }
 
-        // the breaklines will be moved, so disconnect them from their observer.
+        // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
-        interruptHandler.axisBreaklinesIntersect.observer.disconnect()
+        interruptHandler.axisTriggerlinesIntersect.observer.disconnect()
 
         // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
 

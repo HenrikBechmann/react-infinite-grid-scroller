@@ -22,18 +22,18 @@ export default class StylesHandler {
         viewportheight, 
         viewportwidth,
         userstyles,
-        breaklineOffset,
+        triggerlineOffset,
 
     }) => {
 
         // TODO: change 'cradle' to 'head' and 'tail' for more granularity
-        // TODO: breakline offset for head styles experimentally set to negative
+        // TODO: triggerline offset for head styles experimentally set to negative
         //    to assure a brealline is always available for notification
         const headstyles:React.CSSProperties = this.getHeadStyles(gap, padding, orientation, userstyles.cradle)
         const tailstyles:React.CSSProperties = this.getTailStyles(gap, padding, orientation, userstyles.cradle)
         const axisstyles:React.CSSProperties = this.getAxisStyles(gap, padding, orientation, userstyles.axis)
-        const breaklineheadstyles:React.CSSProperties = this.getBreaklineHeadStyles(orientation,cellHeight, cellWidth, breaklineOffset, gap)
-        const breaklinetailstyles:React.CSSProperties = this.getBreaklineTailStyles(orientation,cellHeight, cellWidth, breaklineOffset, gap)
+        const triggerlineheadstyles:React.CSSProperties = this.getTriggerlineHeadStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
+        const triggerlinetailstyles:React.CSSProperties = this.getTriggerlineTailStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
         const cradledividerstyles:React.CSSProperties = 
             {
                 zIndex:1, 
@@ -107,8 +107,8 @@ export default class StylesHandler {
             headstyles,
             tailstyles,
             axisstyles,
-            breaklineheadstyles,
-            breaklinetailstyles,
+            triggerlineheadstyles,
+            triggerlinetailstyles,
             cradledividerstyles
         ]
         
@@ -210,7 +210,7 @@ export default class StylesHandler {
 
     }
 
-    getBreaklineTailStyles = (orientation, cellHeight, cellWidth, breaklineOffset, gap) => {
+    getTriggerlineTailStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
         let transform // for position relative to axis
         let position = 'absolute',
             // backgroundColor = 'blue',
@@ -220,11 +220,11 @@ export default class StylesHandler {
         if (orientation == 'horizontal') {
             // width = '5px'
             // height = '100%'
-            transform = `translateX(${breaklineOffset + 'px'})`
+            transform = `translateX(${triggerlineOffset + 'px'})`
         } else {
             // width = '100%'
             // height = '5px'
-            transform = `translateY(${breaklineOffset + 'px'})`
+            transform = `translateY(${triggerlineOffset + 'px'})`
         }
         return { ...{
             position,
@@ -236,7 +236,7 @@ export default class StylesHandler {
     }
 
 
-    getBreaklineHeadStyles = (orientation, cellHeight, cellWidth, breaklineOffset, gap) => {
+    getTriggerlineHeadStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
         let transform // for position relative to axis
         // console.log('orientation', orientation)
         let position = 'absolute',
@@ -246,11 +246,11 @@ export default class StylesHandler {
         if (orientation == 'horizontal') {
             // width = '5px'
             // height = '100%'
-            transform = `translateX(${-(cellWidth + gap -breaklineOffset) + 'px'})`
+            transform = `translateX(${-(cellWidth + gap -triggerlineOffset) + 'px'})`
         } else {
             // width = '100%'
             // height = '5px'
-            transform = `translateY(${-(cellHeight + gap -breaklineOffset) + 'px'})`
+            transform = `translateY(${-(cellHeight + gap -triggerlineOffset) + 'px'})`
         }
         return { ...{
             position,

@@ -4,14 +4,14 @@
 /*
     BUG: reposition chip appears outside viewport when list partly hidden
     BUG: repositioningRender is broken.
-    BUG: breaklineOffset can fail when >= cellLength -- optimize this; impose correction
-    BUG: in one instance embedded list breakline failed to trigger start of scroll response
+    BUG: triggerlineOffset can fail when >= cellLength -- optimize this; impose correction
+    BUG: in one instance embedded list triggerline failed to trigger start of scroll response
     BUG: sometimes inaccurate shifting of content type re cradle bounds
     BUG: occasional position recalculation bugs, particularly in full screen mode
-    BUG: there is a delay in setting breakline interceptors (or the axis) under heavy load
+    BUG: there is a delay in setting triggerline interceptors (or the axis) under heavy load
     TODO:
     - trigger reposition when head or tail are paritially intersecting,not when totally hidden
-        - or when both breaklines are hidden
+        - or when both triggerlines are hidden
     - reload from/to for insertions and substitutions
     - provide user with isReparenting flag to be able to reset scroll
     - check use of useCallback
@@ -94,7 +94,7 @@ const InfiniteGridScroller = (props) => {
         // cache = "preload" or "keepload" or "none"
         // advanced, technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
         scrollerName, // for debugging
-        breaklineOffset,
+        triggerlineOffset,
         indexOffset,
     } = props
 
@@ -126,7 +126,7 @@ const InfiniteGridScroller = (props) => {
         orientation = 'vertical'
     }
     // TODO: rationalize with cellHeight & cellWidth; must be less than half
-    breaklineOffset ?? (breaklineOffset = 10) 
+    triggerlineOffset ?? (triggerlineOffset = 10) 
 
     const gridSpecsRef = useRef(gridSpecs)
     const stylesRef = useRef(styles)
@@ -199,7 +199,7 @@ const InfiniteGridScroller = (props) => {
                     placeholder = { placeholder }
                     runwayRowcountSpec = { runwaySize }
 
-                    breaklineOffset = { breaklineOffset }
+                    triggerlineOffset = { triggerlineOffset }
 
                 />
             </Scrollblock>
