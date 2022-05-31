@@ -88,7 +88,7 @@ export default class InterruptHandler {
         const contentHandler = this.cradleParameters.handlersRef.current.content
 
         if (signals.pauseCradleIntersectionObserver) {
-            // console.log('returning from intersectionobserver for PAUSE')
+            console.log('returning from intersectionobserver for PAUSE')
             return
         }
 

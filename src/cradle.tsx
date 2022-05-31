@@ -719,14 +719,14 @@ const Cradle = ({
             }
             case 'startreposition': {
 
-                // const cradleobserver = interruptHandler.cradleIntersect.observer
-                // cradleobserver.disconnect()
+                const cradleobserver = interruptHandler.cradleIntersect.observer
+                cradleobserver.disconnect()
 
                 const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
                 triggerlineobserver.disconnect()
 
                 // avoid recursive cradle intersection interrupts
-                interruptHandler.signals.pauseCradleIntersectionObserver = true
+                // interruptHandler.signals.pauseCradleIntersectionObserver = true
                 interruptHandler.signals.repositioningRequired = false // because now underway
 
                 setCradleState('repositioningRender')
@@ -736,17 +736,17 @@ const Cradle = ({
 
             case 'finishreposition': {
 
-                // const cradleobserver = interruptHandler.cradleIntersect.observer
                 // const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
+                // const cradleobserver = interruptHandler.cradleIntersect.observer
                 // const cradleElements = scaffoldHandler.elements
                 // const {
                 //     headRef, 
                 //     tailRef, 
-                    // headTriggerlineRef, 
-                    // tailTriggerlineRef
                 // } = cradleElements
                 // cradleobserver.observe(headRef.current)
                 // cradleobserver.observe(tailRef.current)
+                // headTriggerlineRef, 
+                // tailTriggerlineRef
                 // triggerlineobserver.observe(headTriggerlineRef.current)
                 // triggerlineobserver.observe(tailTriggerlineRef.current)
 
@@ -838,7 +838,17 @@ const Cradle = ({
                             if (viewportInterruptProperties.elementref.current) { // already unmounted if fails (?)
                                 signals.pauseTriggerlinesObserver && (signals.pauseTriggerlinesObserver = false)
                                 signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
-                                signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
+                                // signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
+
+                                const cradleobserver = interruptHandler.cradleIntersect.observer
+                                const cradleElements = scaffoldHandler.elements
+                                const {
+                                    headRef, 
+                                    tailRef, 
+                                } = cradleElements
+                                cradleobserver.observe(headRef.current)
+                                cradleobserver.observe(tailRef.current)
+
                                 signals.pauseCradleResizeObserver && (signals.pauseCradleResizeObserver = false)
                             } else {
                                 console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportInterruptProperties)
