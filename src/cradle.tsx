@@ -699,8 +699,12 @@ const Cradle = ({
             // renderupdatedcontent is called from triggerlineintersectionobservercallback (interruptHandler), 
             // and called from onAfterScroll (scrollHandler)
             // it is required set configurations before 'ready' TODO: specify!
-            case 'renderupdatedcontent':
+            case 'renderupdatedcontent': {
 
+                // setCradleState('ready')
+                // break
+
+            }
             // resettriggerlines is called after setCradleContent cycle is complete
             // it is called specifically from the normalizesignals default response
             case 'resettriggerlines': {
@@ -714,9 +718,9 @@ const Cradle = ({
                 setCradleState('ready')
                 break
 
+            }
             // ----------------------------------------------------------------------
             // ------------[ reposition when repositioningRequired is true ]---------------
-            }
             case 'startreposition': {
 
                 const cradleobserver = interruptHandler.cradleIntersect.observer
@@ -821,6 +825,13 @@ const Cradle = ({
             case 'normalizesignals': {
 
                 console.log('- in normalizesignals call')
+
+                const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
+                const cradleElements = scaffoldHandler.elements
+
+                triggerlineobserver.observe(cradleElements.headTriggerlineRef.current)
+                triggerlineobserver.observe(cradleElements.tailTriggerlineRef.current)
+
                 normalizeTimerRef.current = setTimeout(()=> {
 
                     console.log('-- executing normalizesignals call:interruptHandler.signals.repositioningRequired',
@@ -854,7 +865,7 @@ const Cradle = ({
                                 console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportInterruptProperties)
                             }
 
-                /*default*/ if (isMountedRef.current) setCradleState('resettriggerlines') // then 'ready'
+                /*default*/ if (isMountedRef.current) setCradleState('ready') // then 'ready'
 
                         } else {
 
