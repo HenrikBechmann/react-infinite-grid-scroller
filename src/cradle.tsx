@@ -757,8 +757,8 @@ const Cradle = ({
                 // interruptHandler.signals.pauseCradleIntersectionObserver = false
                 // scrollHandler.updateReferenceData()
                 scrollHandler.updateBlockScrollPos()
-                console.log('==> in finishposition:pauseCradleIntersectionObserver, scaffoldHandler.cradleReferenceData',
-                    interruptHandler.signals.pauseCradleIntersectionObserver, Object.assign({},scaffoldHandler.cradleReferenceData))
+                // console.log('==> in finishposition:pauseCradleIntersectionObserver, scaffoldHandler.cradleReferenceData',
+                //     interruptHandler.signals.pauseCradleIntersectionObserver, Object.assign({},scaffoldHandler.cradleReferenceData))
                 setCradleState('doreposition')
                 break
 
@@ -824,7 +824,7 @@ const Cradle = ({
 
             case 'normalizesignals': {
 
-                console.log('- in normalizesignals call')
+                // console.log('- in normalizesignals call')
 
                 const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
                 const cradleElements = scaffoldHandler.elements
@@ -834,8 +834,8 @@ const Cradle = ({
 
                 normalizeTimerRef.current = setTimeout(()=> {
 
-                    console.log('-- executing normalizesignals call:interruptHandler.signals.repositioningRequired',
-                        interruptHandler.signals.repositioningRequired)
+                    // console.log('-- executing normalizesignals call:interruptHandler.signals.repositioningRequired',
+                    //     interruptHandler.signals.repositioningRequired)
                     if (!isMountedRef.current) return
 
                     // allow short-circuit fallbacks to continue interrupt responses
@@ -844,7 +844,7 @@ const Cradle = ({
             /*2*/       if (!interruptHandler.signals.repositioningRequired) { // repositioning short-circuit
 
 
-                            console.log('normalizing signals')
+                            // console.log('normalizing signals')
                             const signals = interruptHandler.signals
                             if (viewportInterruptProperties.elementref.current) { // already unmounted if fails (?)
                                 signals.pauseTriggerlinesObserver && (signals.pauseTriggerlinesObserver = false)

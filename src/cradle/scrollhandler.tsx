@@ -152,7 +152,7 @@ export default class ScrollHandler {
             case 'repositioningContinuation':
             {
 
-                console.log('scrollHandler calling finishreposition from ', cradleState)
+                // console.log('scrollHandler calling finishreposition from ', cradleState)
                 stateHandler.setCradleState('finishreposition')
 
                 break
