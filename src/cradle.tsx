@@ -725,6 +725,7 @@ const Cradle = ({
                 triggerlineobserver.disconnect()
 
                 interruptHandler.signals.pauseCradleIntersectionObserver = true
+                interruptHandler.signals.repositioningRequired = false // now underway
                 setCradleState('repositioningRender')
                 break
 
@@ -747,10 +748,10 @@ const Cradle = ({
                 // triggerlineobserver.observe(tailTriggerlineRef.current)
 
                 // interruptHandler.signals.pauseCradleIntersectionObserver = false
-                scrollHandler.updateReferenceData()
+                // scrollHandler.updateReferenceData()
                 scrollHandler.updateBlockScrollPos()
-                console.log('==> in finishposition scaffoldHandler.cradleReferenceData',
-                    Object.assign({},scaffoldHandler.cradleReferenceData))
+                console.log('==> in finishposition:pauseCradleIntersectionObserver, scaffoldHandler.cradleReferenceData',
+                    interruptHandler.signals.pauseCradleIntersectionObserver, Object.assign({},scaffoldHandler.cradleReferenceData))
                 setCradleState('doreposition')
                 break
 
@@ -816,8 +817,11 @@ const Cradle = ({
 
             case 'normalizesignals': {
 
+                console.log('- in normalizesignals call')
                 normalizeTimerRef.current = setTimeout(()=> {
 
+                    console.log('-- executing normalizesignals call:interruptHandler.signals.repositioningRequired',
+                        interruptHandler.signals.repositioningRequired)
                     if (!isMountedRef.current) return
 
                     // allow short-circuit fallbacks to continue interrupt responses
