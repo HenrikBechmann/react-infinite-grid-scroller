@@ -719,13 +719,16 @@ const Cradle = ({
             }
             case 'startreposition': {
 
-                const cradleobserver = interruptHandler.cradleIntersect.observer
+                // const cradleobserver = interruptHandler.cradleIntersect.observer
+                // cradleobserver.disconnect()
+
                 const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
-                cradleobserver.disconnect()
                 triggerlineobserver.disconnect()
 
+                // avoid recursive cradle intersection interrupts
                 interruptHandler.signals.pauseCradleIntersectionObserver = true
-                interruptHandler.signals.repositioningRequired = false // now underway
+                interruptHandler.signals.repositioningRequired = false // because now underway
+
                 setCradleState('repositioningRender')
                 break
 
@@ -829,6 +832,8 @@ const Cradle = ({
                         
             /*2*/       if (!interruptHandler.signals.repositioningRequired) { // repositioning short-circuit
 
+
+                            console.log('normalizing signals')
                             const signals = interruptHandler.signals
                             if (viewportInterruptProperties.elementref.current) { // already unmounted if fails (?)
                                 signals.pauseTriggerlinesObserver && (signals.pauseTriggerlinesObserver = false)
@@ -866,17 +871,19 @@ const Cradle = ({
     // standard processing stages
     useEffect(()=> { // TODO: verify benefit of useLayoutEffect
 
-        const viewportInterruptProperties = viewportInterruptPropertiesRef.current
+        // const viewportInterruptProperties = viewportInterruptPropertiesRef.current
+        // repositioningRender and repositioningContinuation are toggled to generate continuous 
+        //    reposiioning renders
         switch (cradleState) {
 
-            case 'repositioningRender':
+            case 'repositioningRender': // to trigger render between scrolls
                 break
 
-            case 'repositioningContinuation':
+            case 'repositioningContinuation': // set from onScroll
                 setCradleState('repositioningRender')
                 break
 
-            case 'ready':
+            case 'ready': // to specify no action on ready
                 break
 
         }

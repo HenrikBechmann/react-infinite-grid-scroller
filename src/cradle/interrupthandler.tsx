@@ -82,6 +82,7 @@ export default class InterruptHandler {
 
     private cradleIntersectionObserverCallback = (entries) => {
 
+        console.log('cradleIntersectionObserverCallback')
         const signals = this.signals
         const stateHandler = this.cradleParameters.handlersRef.current.state
         const contentHandler = this.cradleParameters.handlersRef.current.content

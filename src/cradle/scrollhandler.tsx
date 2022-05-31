@@ -284,8 +284,8 @@ export default class ScrollHandler {
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisPixelOffset = axisPixelOffset
 
-        console.log('scrollHandler setting implied repositioning axisReferenceIndex, axisPixelOffset, cradleReferenceData',
-            axisReferenceIndex, axisPixelOffset, Object.assign({},scaffoldHandler.cradleReferenceData))
+        // console.log('scrollHandler setting implied repositioning axisReferenceIndex, axisPixelOffset, cradleReferenceData',
+        //     axisReferenceIndex, axisPixelOffset, Object.assign({},scaffoldHandler.cradleReferenceData))
 
     }
 
