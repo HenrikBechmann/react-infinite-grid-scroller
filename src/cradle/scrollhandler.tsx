@@ -153,7 +153,6 @@ export default class ScrollHandler {
             {
 
                 console.log('scrollHandler calling finishreposition')
-                // this.updateReferenceData()
                 stateHandler.setCradleState('finishreposition')
 
                 break
@@ -263,13 +262,13 @@ export default class ScrollHandler {
 
         }
 
-        let referencescrolloffset = cellLength - (scrollPos % cellLength)
-        if (referencescrolloffset == (cellLength + cradleProps.padding)) {
-            referencescrolloffset = 0
+        let axisPixelOffset = cellLength - (scrollPos % cellLength)
+        if (axisPixelOffset == (cellLength + cradleProps.padding)) {
+            axisPixelOffset = 0
         }
 
-        let referencerowindex = Math.ceil((scrollPos - cradleProps.padding)/cellLength)
-        let axisReferenceIndex = referencerowindex * crosscount
+        const axisRowIndex = Math.ceil((scrollPos - cradleProps.padding)/cellLength)
+        let axisReferenceIndex = axisRowIndex * crosscount
         axisReferenceIndex = Math.min(axisReferenceIndex,listsize - 1)
         let diff = axisReferenceIndex % crosscount
         axisReferenceIndex -= diff
@@ -279,13 +278,14 @@ export default class ScrollHandler {
         //     axisVisiblePixelOffset:referencescrolloffset
         // }
 
-        if (axisReferenceIndex == 0) referencescrolloffset = 0 // defensive
-
-        // console.log('scrollHandler setting repositioning axisReferenceIndex',axisReferenceIndex)
+        if (axisReferenceIndex == 0) axisPixelOffset = 0 // defensive
 
         let scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
-        scaffoldHandler.cradleReferenceData.scrollImpliedAxisPixelOffset = referencescrolloffset
+        scaffoldHandler.cradleReferenceData.scrollImpliedAxisPixelOffset = axisPixelOffset
+
+        console.log('scrollHandler setting implied repositioning axisReferenceIndex, axisPixelOffset, cradleReferenceData',
+            axisReferenceIndex, axisPixelOffset, Object.assign({},scaffoldHandler.cradleReferenceData))
 
     }
 

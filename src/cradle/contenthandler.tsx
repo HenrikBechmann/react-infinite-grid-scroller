@@ -79,7 +79,8 @@ export default class ContentHandler {
         const requestedAxisReferenceIndex = scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex
         let targetAxisPixelOffset = scaffoldHandler.cradleReferenceData.targetAxisPixelOffset
 
-        // console.log('setCradleContent requestedAxisReferenceIndex',requestedAxisReferenceIndex)
+        console.log('setCradleContent requestedAxisReferenceIndex, targetAxisPixelOffset',
+            requestedAxisReferenceIndex, targetAxisPixelOffset)
 
         const {
             orientation, 

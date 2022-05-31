@@ -749,6 +749,8 @@ const Cradle = ({
                 // interruptHandler.signals.pauseCradleIntersectionObserver = false
                 scrollHandler.updateReferenceData()
                 scrollHandler.updateBlockScrollPos()
+                console.log('==> in finishposition scaffoldHandler.cradleReferenceData',
+                    Object.assign({},scaffoldHandler.cradleReferenceData))
                 setCradleState('doreposition')
                 break
 
