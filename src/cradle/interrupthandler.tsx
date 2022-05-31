@@ -40,7 +40,7 @@ export default class InterruptHandler {
 
         }
 
-        console.log('=> axisTriggerlinesObserverCallback', entries)
+        // console.log('=> axisTriggerlinesObserverCallback', entries)
 
         if (entries.length == 2) {
             const [first,second] = entries
@@ -145,7 +145,7 @@ export default class InterruptHandler {
                 cradleContent.tailModelComponents = []
                 cradleContent.headViewComponents = []
                 cradleContent.tailViewComponents = []
-                console.log('cradleIntersectionObserverCallback: calling state startreposition')
+                // console.log('cradleIntersectionObserverCallback: calling state startreposition')
                 stateHandler.setCradleState('startreposition')
 
             }

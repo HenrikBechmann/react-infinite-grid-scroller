@@ -226,7 +226,7 @@ const Cradle = ({
 
     const [cradleState, setCradleState] = useState('setup')
 
-    console.log('entering Cradle with state',cradleState)
+    // console.log('entering Cradle with state',cradleState)
 
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState;
@@ -732,22 +732,23 @@ const Cradle = ({
 
             case 'finishreposition': {
 
-                const cradleobserver = interruptHandler.cradleIntersect.observer
+                // const cradleobserver = interruptHandler.cradleIntersect.observer
                 // const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
-                const cradleElements = scaffoldHandler.elements
-                const {
-                    headRef, 
-                    tailRef, 
+                // const cradleElements = scaffoldHandler.elements
+                // const {
+                //     headRef, 
+                //     tailRef, 
                     // headTriggerlineRef, 
                     // tailTriggerlineRef
-                } = cradleElements
-                cradleobserver.observe(headRef.current)
-                cradleobserver.observe(tailRef.current)
+                // } = cradleElements
+                // cradleobserver.observe(headRef.current)
+                // cradleobserver.observe(tailRef.current)
                 // triggerlineobserver.observe(headTriggerlineRef.current)
                 // triggerlineobserver.observe(tailTriggerlineRef.current)
 
-                interruptHandler.signals.pauseCradleIntersectionObserver = false
+                // interruptHandler.signals.pauseCradleIntersectionObserver = false
                 scrollHandler.updateReferenceData()
+                scrollHandler.updateBlockScrollPos()
                 setCradleState('doreposition')
                 break
 
@@ -902,7 +903,7 @@ const Cradle = ({
 
     const cradleContent = contentHandler.content
 
-    console.log('rendering with state',cradleStateRef.current)
+    // console.log('rendering with state',cradleStateRef.current)
 
     // portalroot is the hidden portal component cache
     return <CradlePortalsContext.Provider value = {handlersRef.current.portals}>

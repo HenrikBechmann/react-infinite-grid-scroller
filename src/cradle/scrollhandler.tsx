@@ -139,7 +139,7 @@ export default class ScrollHandler {
 
         const cradleState = stateHandler.cradleStateRef.current
 
-        console.log('onAfterScroll cradleState',cradleState)
+        // console.log('onAfterScroll cradleState',cradleState)
 
         // if (viewportInterruptProperties.index == 6) {
         //     console.log('running onAfterScroll for index, cradleState',
@@ -152,6 +152,8 @@ export default class ScrollHandler {
             case 'repositioningContinuation':
             {
 
+                console.log('scrollHandler calling finishreposition')
+                // this.updateReferenceData()
                 stateHandler.setCradleState('finishreposition')
 
                 break

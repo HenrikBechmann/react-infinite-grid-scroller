@@ -79,7 +79,7 @@ export default class ContentHandler {
         const requestedAxisReferenceIndex = scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex
         let targetAxisPixelOffset = scaffoldHandler.cradleReferenceData.targetAxisPixelOffset
 
-        console.log('setCradleContent requestedAxisReferenceIndex',requestedAxisReferenceIndex)
+        // console.log('setCradleContent requestedAxisReferenceIndex',requestedAxisReferenceIndex)
 
         const {
             orientation, 
@@ -177,8 +177,8 @@ export default class ContentHandler {
         scaffoldHandler.cradleReferenceData.blockScrollPos = 
             scrollblockPixelOffset + targetScrollblockPixelAdjustment
 
-        console.log('finishing setCradleContent: scrollblockPixelOffset, targetScrollblockPixelAdjustment',
-            scrollblockPixelOffset, targetScrollblockPixelAdjustment)
+        // console.log('finishing setCradleContent: scrollblockPixelOffset, targetScrollblockPixelAdjustment',
+        //     scrollblockPixelOffset, targetScrollblockPixelAdjustment)
 
         if (orientation == 'vertical') {
 
@@ -245,8 +245,8 @@ export default class ContentHandler {
 
         }
 
-        console.log('1. updateCradleContent cradleState, isScrollingviewportforward, source, triggerlineEntries',
-            stateHandler.cradleStateRef.current, isScrollingviewportforward, source, triggerlineEntries)
+        // console.log('1. updateCradleContent cradleState, isScrollingviewportforward, source, triggerlineEntries',
+        //     stateHandler.cradleStateRef.current, isScrollingviewportforward, source, triggerlineEntries)
 
         // cradle scaffold and user cells
         const cradleElements = scaffoldHandler.elements
@@ -378,8 +378,8 @@ export default class ContentHandler {
 
         // }
 
-        console.log('++updateCradleContent axisReferenceIndex, axisPixelOffset, axisItemShift, cradleItemShift, scrollPos', 
-            axisReferenceIndex, axisPixelOffset, axisItemShift, cradleItemShift, scrollPos)
+        // console.log('++updateCradleContent axisReferenceIndex, axisPixelOffset, axisItemShift, cradleItemShift, scrollPos', 
+        //     axisReferenceIndex, axisPixelOffset, axisItemShift, cradleItemShift, scrollPos)
 
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisPixelOffset = axisPixelOffset
