@@ -426,8 +426,12 @@ const Cradle = ({
     if (viewportInterruptProperties.portal?.isReparenting) { 
 
         viewportInterruptProperties.portal.isReparenting = false
-        viewportInterruptProperties.elementref.current[scaffoldHandler.cradleReferenceData.blockScrollProperty] =
-            Math.max(0,scaffoldHandler.cradleReferenceData.blockScrollPos)
+
+        const cradleReferenceData = scaffoldHandler.cradleReferenceData
+        viewportInterruptProperties.elementref.current[
+            cradleReferenceData.blockScrollProperty] =
+            Math.max(0,cradleReferenceData.blockScrollPos)
+
     }
 
     // clear mounted flag on unmount
@@ -584,6 +588,9 @@ const Cradle = ({
     // trigger pivot *only* on change in orientation
     // TODO: review this code
     useEffect(()=> {
+
+        scaffoldHandler.cradleReferenceData.blockScrollProperty = 
+            (orientation == "vertical")?"scrollTop":"scrollLeft"
 
         if (cradleStateRef.current == 'setup') return
 
@@ -795,8 +802,9 @@ const Cradle = ({
                 cradleContent.headViewComponents = cradleContent.headModelComponents
                 cradleContent.tailViewComponents = cradleContent.tailModelComponents
 
-                viewportInterruptProperties.elementref.current[scaffoldHandler.cradleReferenceData.blockScrollProperty] =
-                    Math.max(0,scaffoldHandler.cradleReferenceData.blockScrollPos)
+                const cradleReferenceData = scaffoldHandler.cradleReferenceData
+                viewportInterruptProperties.elementref.current[cradleReferenceData.blockScrollProperty] =
+                    Math.max(0,cradleReferenceData.blockScrollPos)
 
                 setCradleState('normalizesignals') // call a timeout for ready (or interrupt continuation)
 

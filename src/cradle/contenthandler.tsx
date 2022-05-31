@@ -182,7 +182,7 @@ export default class ContentHandler {
 
         if (orientation == 'vertical') {
 
-            scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
+            // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
 
             cradleElements.axisRef.current.style.top = (axisPixelOffset + targetAxisPixelAdjustment) + 'px'
             cradleElements.axisRef.current.style.left = 'auto'
@@ -193,7 +193,7 @@ export default class ContentHandler {
 
         } else { // orientation = 'horizontal'
 
-            scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
+            // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
 
             cradleElements.axisRef.current.style.top = 'auto'
             cradleElements.axisRef.current.style.left = (axisPixelOffset + targetAxisPixelAdjustment) + 'px'
@@ -355,7 +355,7 @@ export default class ContentHandler {
             const top = scrollPos + axisPixelOffset
 
             scaffoldHandler.cradleReferenceData.blockScrollPos = scrollPos
-            scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
+            // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
             cradleElements.axisRef.current.style.top = top + 'px'
             cradleElements.axisRef.current.style.left = 'auto'
             cradleElements.headRef.current.style.paddingBottom = 
@@ -366,7 +366,7 @@ export default class ContentHandler {
         } else {
 
             scaffoldHandler.cradleReferenceData.blockScrollPos = scrollPos // viewportElement.scrollLeft
-            scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
+            // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
             cradleElements.axisRef.current.style.top = 'auto'
             cradleElements.axisRef.current.style.left = scrollPos + axisPixelOffset + 'px'
             cradleElements.headRef.current.style.paddingRight = 

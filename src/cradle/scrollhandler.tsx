@@ -229,11 +229,11 @@ export default class ScrollHandler {
 
         if (cradleProps.orientation == 'vertical') {
 
-            scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
+            // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
             scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
 
         } else {
-            scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
+            // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
             scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
         }
 
