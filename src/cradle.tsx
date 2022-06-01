@@ -488,53 +488,32 @@ const Cradle = ({
             variable cells.
     */    
 
-    // set up cradle resizeobserver
-    useEffect(() => {
-
-        const observer = interruptHandler.cradleResize.createObserver()
-        const cradleElements = scaffoldHandler.elements
-        observer.observe(cradleElements.headRef.current)
-        observer.observe(cradleElements.tailRef.current)
-
-        return () => {
-
-            observer.disconnect()
-
-        }
-
-    },[])
-
     // intersection observer for cradle body
 
     // this sets up an IntersectionObserver of the cradle against the viewport. When the
     // cradle goes out of the observer scope, the "repositioningRender" cradle state is triggerd.
+    // Also, intersection observer for cradle axis triggerlines, and cradle resizeobserver
     useEffect(()=>{
 
-        const observer = interruptHandler.cradleIntersect.createObserver()
         const cradleElements = scaffoldHandler.elements
-        observer.observe(cradleElements.headRef.current)
-        observer.observe(cradleElements.tailRef.current)
+
+        const cradleobserver = interruptHandler.cradleIntersect.createObserver()
+        cradleobserver.observe(cradleElements.headRef.current)
+        cradleobserver.observe(cradleElements.tailRef.current)
+
+        const triggerobserver = interruptHandler.axisTriggerlinesIntersect.createObserver()
+        triggerobserver.observe(cradleElements.headTriggerlineRef.current)
+        triggerobserver.observe(cradleElements.tailTriggerlineRef.current)
+
+        const resizeobserver = interruptHandler.cradleResize.createObserver()
+        resizeobserver.observe(cradleElements.headRef.current)
+        resizeobserver.observe(cradleElements.tailRef.current)
 
         return () => {
 
-            observer.disconnect()
-
-        }
-
-    },[])
-
-    // intersection observer for cradle axis triggerlines
-    useEffect(()=>{
-
-        // the triggerlines are observed with 'resettriggerlines' state -- see state management below
-        const observer = interruptHandler.axisTriggerlinesIntersect.createObserver()
-        const cradleElements = scaffoldHandler.elements
-        observer.observe(cradleElements.headTriggerlineRef.current)
-        observer.observe(cradleElements.tailTriggerlineRef.current)
-
-        return () => {
-
-            observer.disconnect()
+            cradleobserver.disconnect()
+            triggerobserver.disconnect()
+            resizeobserver.disconnect()
 
         }
 
