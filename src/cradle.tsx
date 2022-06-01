@@ -693,13 +693,8 @@ const Cradle = ({
 
                 interruptHandler.signals.pauseTriggerlinesObserver = false
 
-                // const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
-                // const cradleElements = scaffoldHandler.elements
-
-                // triggerlineobserver.observe(cradleElements.headTriggerlineRef.current)
-                // triggerlineobserver.observe(cradleElements.tailTriggerlineRef.current)
-
                 setCradleState('ready')
+
                 break
 
             }
@@ -709,9 +704,6 @@ const Cradle = ({
 
                 const cradleobserver = interruptHandler.cradleIntersect.observer
                 cradleobserver.disconnect()
-
-                // const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
-                // triggerlineobserver.disconnect()
 
                 interruptHandler.signals.pauseTriggerlinesObserver = true
 
@@ -725,20 +717,6 @@ const Cradle = ({
             }
 
             case 'finishreposition': {
-
-                // const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
-                // const cradleobserver = interruptHandler.cradleIntersect.observer
-                // const cradleElements = scaffoldHandler.elements
-                // const {
-                //     headRef, 
-                //     tailRef, 
-                // } = cradleElements
-                // cradleobserver.observe(headRef.current)
-                // cradleobserver.observe(tailRef.current)
-                // headTriggerlineRef, 
-                // tailTriggerlineRef
-                // triggerlineobserver.observe(headTriggerlineRef.current)
-                // triggerlineobserver.observe(tailTriggerlineRef.current)
 
                 // interruptHandler.signals.pauseCradleIntersectionObserver = false
                 // scrollHandler.updateReferenceData()
@@ -785,16 +763,6 @@ const Cradle = ({
 
             case 'preparerender': {
 
-                // const cradleElements = scaffoldHandler.elements
-                // const {
-                //     headTriggerlineRef, 
-                //     tailTriggerlineRef
-                // } = cradleElements
-
-                // const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
-                // triggerlineobserver.observe(headTriggerlineRef.current)
-                // triggerlineobserver.observe(tailTriggerlineRef.current)
-
                 const cradleContent = contentHandler.content
                 cradleContent.headViewComponents = cradleContent.headModelComponents
                 cradleContent.tailViewComponents = cradleContent.tailModelComponents
@@ -811,12 +779,6 @@ const Cradle = ({
             case 'normalizesignals': {
 
                 // console.log('- in normalizesignals call')
-
-                // const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
-                // const cradleElements = scaffoldHandler.elements
-
-                // triggerlineobserver.observe(cradleElements.headTriggerlineRef.current)
-                // triggerlineobserver.observe(cradleElements.tailTriggerlineRef.current)
 
                 normalizeTimerRef.current = setTimeout(()=> {
 
@@ -878,7 +840,6 @@ const Cradle = ({
     // standard processing stages
     useEffect(()=> { // TODO: verify benefit of useLayoutEffect
 
-        // const viewportInterruptProperties = viewportInterruptPropertiesRef.current
         // repositioningRender and repositioningContinuation are toggled to generate continuous 
         //    reposiioning renders
         switch (cradleState) {
