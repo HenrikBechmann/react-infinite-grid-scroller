@@ -497,9 +497,9 @@ const Cradle = ({
 
         const cradleElements = scaffoldHandler.elements
 
-        const cradleobserver = interruptHandler.cradleIntersect.createObserver()
-        cradleobserver.observe(cradleElements.headRef.current)
-        cradleobserver.observe(cradleElements.tailRef.current)
+        const cradleintersectobserver = interruptHandler.cradleIntersect.createObserver()
+        cradleintersectobserver.observe(cradleElements.headRef.current)
+        cradleintersectobserver.observe(cradleElements.tailRef.current)
 
         const triggerobserver = interruptHandler.axisTriggerlinesIntersect.createObserver()
         triggerobserver.observe(cradleElements.headTriggerlineRef.current)
@@ -511,7 +511,7 @@ const Cradle = ({
 
         return () => {
 
-            cradleobserver.disconnect()
+            cradleintersectobserver.disconnect()
             triggerobserver.disconnect()
             resizeobserver.disconnect()
 
@@ -665,9 +665,6 @@ const Cradle = ({
 
     // =====================[ STATE management ]==========================
 
-    // data for state processing
-    const headlayoutDataRef = useRef(null)
-
     // this is the core state engine
     // useLayout for suppressing flashes
     useLayoutEffect(()=>{
@@ -697,6 +694,7 @@ const Cradle = ({
 
                 // avoid recursive cradle intersection interrupts
                 interruptHandler.signals.pauseCradleIntersectionObserver = true
+
                 interruptHandler.signals.repositioningRequired = false // because now underway
 
                 setCradleState('repositioningRender')
@@ -723,6 +721,7 @@ const Cradle = ({
                 setCradleState('dosetup') // cycle to allow for config; ie. for setup
                 break
 
+            // the following all setCradleContent
             case 'dosetup':
             case 'doreposition':
             case 'resized':
