@@ -222,6 +222,9 @@ export const calcContentShift = ({
     const backwardovershootrowcount = 
         Math.max(0,Math.floor(viewportaxisbackwardgaplength/cellLength))
 
+    console.log('axisovershoot: cellLength, viewportaxisoffset, forwardovershootrowcount, viewportaxisforwardgaplength, backwardovershootrowcount, viewportaxisbackwardgaplength',
+        cellLength, viewportaxisoffset, forwardovershootrowcount, viewportaxisforwardgaplength, backwardovershootrowcount, viewportaxisbackwardgaplength)
+
     // -----------------[ 4. combine row shift counts of base shift and overshoot ]-------------
     
     // shift row count is the number of rows the virtual cradle shifts, according to observer
