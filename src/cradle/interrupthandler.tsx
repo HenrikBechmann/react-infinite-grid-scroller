@@ -33,14 +33,21 @@ export default class InterruptHandler {
 
     private axisTriggerlinesObserverCallback = (entries) => {
 
+        // console.log('=> axisTriggerlinesObserverCallback: this.signals.pauseTriggerlinesObserver, entries',
+        //     this.signals.pauseTriggerlinesObserver, entries)
+
+        if (this.signals.pauseTriggerlinesObserver) { 
+
+            return
+
+        }
+
         const testrootbounds = entries[0].rootBounds
         if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
 
             return
 
         }
-
-        // console.log('=> axisTriggerlinesObserverCallback', entries)
 
         if (entries.length == 2) {
             const [first,second] = entries
@@ -52,12 +59,6 @@ export default class InterruptHandler {
             } else {
                 console.log('WARNING: double triggerlines intersection. Contace author.')
             }
-        }
-
-        if (this.signals.pauseTriggerlinesObserver) { 
-
-            return
-
         }
 
         const {
@@ -139,7 +140,7 @@ export default class InterruptHandler {
                 const width = right - left, height = bottom - top
                 viewportInterruptProperties.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
 
-                signals.pauseTriggerlinesObserver = true
+                // signals.pauseTriggerlinesObserver = true
                 
                 const cradleContent = contentHandler.content
                 cradleContent.headModelComponents = []
@@ -194,7 +195,6 @@ export default class InterruptHandler {
 
     signals = {
         repositioningRequired: false,
-        // pauseCellObserver: false,
         pauseTriggerlinesObserver: false, 
         pauseCradleIntersectionObserver:false,
         pauseCradleResizeObserver: false,

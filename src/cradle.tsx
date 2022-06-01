@@ -528,6 +528,9 @@ const Cradle = ({
 
         // the triggerlines are observed with 'resettriggerlines' state -- see state management below
         const observer = interruptHandler.axisTriggerlinesIntersect.createObserver()
+        const cradleElements = scaffoldHandler.elements
+        observer.observe(cradleElements.headTriggerlineRef.current)
+        observer.observe(cradleElements.tailTriggerlineRef.current)
 
         return () => {
 
@@ -572,7 +575,7 @@ const Cradle = ({
         const signals = interruptHandler.signals
 
         // signals.pauseCellObserver = true
-        signals.pauseTriggerlinesObserver = true
+        // signals.pauseTriggerlinesObserver = true
         signals.pauseScrollingEffects = true
 
         setCradleState('reload')
@@ -626,7 +629,7 @@ const Cradle = ({
 
         const { signals } = interruptHandler
 
-        signals.pauseTriggerlinesObserver = true
+        // signals.pauseTriggerlinesObserver = true
         signals.pauseScrollingEffects = true
 
         const cradleContent = contentHandler.content
@@ -709,11 +712,13 @@ const Cradle = ({
             // it is called specifically from the normalizesignals default response
             case 'resettriggerlines': {
 
-                const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
-                const cradleElements = scaffoldHandler.elements
+                interruptHandler.signals.pauseTriggerlinesObserver = false
 
-                triggerlineobserver.observe(cradleElements.headTriggerlineRef.current)
-                triggerlineobserver.observe(cradleElements.tailTriggerlineRef.current)
+                // const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
+                // const cradleElements = scaffoldHandler.elements
+
+                // triggerlineobserver.observe(cradleElements.headTriggerlineRef.current)
+                // triggerlineobserver.observe(cradleElements.tailTriggerlineRef.current)
 
                 setCradleState('ready')
                 break
@@ -726,8 +731,10 @@ const Cradle = ({
                 const cradleobserver = interruptHandler.cradleIntersect.observer
                 cradleobserver.disconnect()
 
-                const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
-                triggerlineobserver.disconnect()
+                // const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
+                // triggerlineobserver.disconnect()
+
+                interruptHandler.signals.pauseTriggerlinesObserver = true
 
                 // avoid recursive cradle intersection interrupts
                 // interruptHandler.signals.pauseCradleIntersectionObserver = true
@@ -799,15 +806,15 @@ const Cradle = ({
 
             case 'preparerender': {
 
-                const cradleElements = scaffoldHandler.elements
-                const {
-                    headTriggerlineRef, 
-                    tailTriggerlineRef
-                } = cradleElements
+                // const cradleElements = scaffoldHandler.elements
+                // const {
+                //     headTriggerlineRef, 
+                //     tailTriggerlineRef
+                // } = cradleElements
 
-                const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
-                triggerlineobserver.observe(headTriggerlineRef.current)
-                triggerlineobserver.observe(tailTriggerlineRef.current)
+                // const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
+                // triggerlineobserver.observe(headTriggerlineRef.current)
+                // triggerlineobserver.observe(tailTriggerlineRef.current)
 
                 const cradleContent = contentHandler.content
                 cradleContent.headViewComponents = cradleContent.headModelComponents
@@ -826,11 +833,11 @@ const Cradle = ({
 
                 // console.log('- in normalizesignals call')
 
-                const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
-                const cradleElements = scaffoldHandler.elements
+                // const triggerlineobserver = interruptHandler.axisTriggerlinesIntersect.observer
+                // const cradleElements = scaffoldHandler.elements
 
-                triggerlineobserver.observe(cradleElements.headTriggerlineRef.current)
-                triggerlineobserver.observe(cradleElements.tailTriggerlineRef.current)
+                // triggerlineobserver.observe(cradleElements.headTriggerlineRef.current)
+                // triggerlineobserver.observe(cradleElements.tailTriggerlineRef.current)
 
                 normalizeTimerRef.current = setTimeout(()=> {
 
