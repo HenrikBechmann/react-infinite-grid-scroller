@@ -202,7 +202,6 @@ const Cradle = ({
         layout,
         dense,
         // ...rest
-        // runwayRowcountSpec, 
         listsize, 
         defaultVisibleIndex, 
         getItem, 
@@ -718,7 +717,7 @@ const Cradle = ({
                 calls setCradleContent
             */
             case 'setup': 
-                setCradleState('dosetup') // cycle to allow for config; ie. for setup
+                setCradleState('dosetup') // cycle to allow for config, particlularly ref's
                 break
 
             // the following all setCradleContent
@@ -827,7 +826,7 @@ const Cradle = ({
 
     // ==========================[ RENDER ]===========================
 
-    const referenceIndexOffset = scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex
+    const axisReferenceIndex = scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex
     const scrollTrackerArgs = useMemo(() => {
         if (!(cradleState == 'repositioningContinuation' || cradleState == 'repositioningRender')) {
             return null
@@ -835,7 +834,7 @@ const Cradle = ({
         const trackerargs = {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
-            referenceIndexOffset:scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex,
+            axisReferenceIndex,//:scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex,
             listsize,
             styles,
         }
@@ -843,7 +842,7 @@ const Cradle = ({
     },[
         cradleState, 
         viewportDimensions, 
-        referenceIndexOffset, 
+        axisReferenceIndex, 
         listsize,
         styles,
         ]
@@ -863,7 +862,7 @@ const Cradle = ({
             ?<ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 
-                offset = {scrollTrackerArgs.referenceIndexOffset} 
+                offset = {scrollTrackerArgs.axisReferenceIndex} 
                 listsize = {scrollTrackerArgs.listsize}
                 styles = {scrollTrackerArgs.styles}
             />

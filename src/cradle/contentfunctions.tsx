@@ -352,8 +352,8 @@ export const calcContentShift = ({
 
     // ---------------------[ 9. return required values ]-------------------
 
-    return [
-        // newcradlereferenceindex, 
+    return {
+        newcradlereferenceindex, 
         cradlereferenceitemshift, 
         newaxisreferenceindex, 
         axisreferenceitemshift, 
@@ -361,7 +361,7 @@ export const calcContentShift = ({
         newcradlecontentcount,
         headchangecount,
         tailchangecount
-    ]
+    }
 
 }
 

@@ -255,7 +255,7 @@ export default class ContentHandler {
         const cradleContent = this.content
         const itemElements = this.itemElements
         const modelcontentlist = cradleContent.cradleModel
-        const cradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
+        const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
         // --------------------[ 2. get shift instruction ]-----------------------
 
@@ -274,18 +274,18 @@ export default class ContentHandler {
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
         const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
 
-        const [
+        const {
 
-            // cradlereferenceindex, // new index
-            cradleItemShift, 
-            axisReferenceIndex, // new index
-            axisItemShift, 
-            axisPixelOffset, // new offset (from leading edge of viewport)
-            cradleContentCount, // updated
-            headChangeCount,
-            tailChangeCount,
+            newcradlereferenceindex, 
+            cradlereferenceitemshift:cradleItemShift, 
+            newaxisreferenceindex:axisReferenceIndex, 
+            axisreferenceitemshift:axisItemShift, 
+            newaxispixeloffset:axisPixelOffset, 
+            newcradlecontentcount:cradleContentCount,
+            headchangecount:headChangeCount,
+            tailchangecount:tailChangeCount,
 
-        ] = calcContentShift({
+        } = calcContentShift({
 
             shiftinstruction,
             cradleInheritedProperties,
@@ -295,6 +295,25 @@ export default class ContentHandler {
             scrollPos,
 
         })
+
+        console.log(`return values from calcContentShift:
+            newcradlereferenceindex, 
+            cradleItemShift, 
+            axisReferenceIndex, 
+            axisItemShift, 
+            axisPixelOffset, 
+            cradleContentCount,
+            headChangeCount,
+            tailChangeCount`,
+            newcradlereferenceindex, 
+            cradleItemShift, 
+            axisReferenceIndex, 
+            axisItemShift, 
+            axisPixelOffset, 
+            cradleContentCount,
+            headChangeCount,
+            tailChangeCount
+        )
 
         // third abandon option/3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) {
@@ -308,7 +327,7 @@ export default class ContentHandler {
         // interruptHandler.axisTriggerlinesIntersect.observer.disconnect()
         interruptHandler.signals.pauseTriggerlinesObserver = true
 
-        // ----------------------------------[ 5. reconfigure cradle content ]--------------------------
+        // ----------------------------------[ 4. reconfigure cradle content ]--------------------------
 
         // collect modified content
         let localContentList, deletedContentItems = []
@@ -322,7 +341,7 @@ export default class ContentHandler {
                 localContentList:modelcontentlist,
                 headChangeCount,
                 tailChangeCount,
-                cradleReferenceIndex,
+                cradleReferenceIndex:oldCradleReferenceIndex,
                 callbacks:this.internalCallbacksRef.current,
                 instanceIdCounterRef:this.instanceIdCounterRef,
             })
@@ -334,7 +353,7 @@ export default class ContentHandler {
 
         if (deletedContentItems.length) deletePortals(portalHandler, deletedContentItems)
 
-        // ----------------------------------[ 7. allocate cradle content ]--------------------------
+        // ----------------------------------[ 5. allocate cradle content ]--------------------------
 
         const [headcontent, tailcontent] = allocateContentList(
             {
@@ -347,7 +366,7 @@ export default class ContentHandler {
         cradleContent.headViewComponents = cradleContent.headModelComponents = headcontent
         cradleContent.tailViewComponents = cradleContent.tailModelComponents = tailcontent
 
-        // -------------------------------[ 8. set css changes ]-------------------------
+        // -------------------------------[ 6. set css changes ]-------------------------
 
         scrollHandler.updateBlockScrollPos()
 
