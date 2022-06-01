@@ -666,7 +666,6 @@ const Cradle = ({
     // =====================[ STATE management ]==========================
 
     // data for state processing
-    const callingCradleState = useRef(cradleStateRef.current)
     const headlayoutDataRef = useRef(null)
 
     // this is the core state engine
@@ -683,14 +682,6 @@ const Cradle = ({
             // it is required set configurations before 'ready' TODO: specify!
             case 'renderupdatedcontent': {
 
-                // setCradleState('ready')
-                // break
-
-            }
-            // resettriggerlines is called after setCradleContent cycle is complete
-            // it is called specifically from the normalizesignals default response
-            case 'resettriggerlines': {
-
                 interruptHandler.signals.pauseTriggerlinesObserver = false
 
                 setCradleState('ready')
@@ -701,9 +692,6 @@ const Cradle = ({
             // ----------------------------------------------------------------------
             // ------------[ reposition when repositioningRequired is true ]---------------
             case 'startreposition': {
-
-                // const cradleobserver = interruptHandler.cradleIntersect.observer
-                // cradleobserver.disconnect()
 
                 interruptHandler.signals.pauseTriggerlinesObserver = true
 
@@ -718,8 +706,6 @@ const Cradle = ({
 
             case 'finishreposition': {
 
-                // interruptHandler.signals.pauseCradleIntersectionObserver = false
-                // scrollHandler.updateReferenceData()
                 scrollHandler.updateBlockScrollPos()
                 // console.log('==> in finishposition:pauseCradleIntersectionObserver, scaffoldHandler.cradleReferenceData',
                 //     interruptHandler.signals.pauseCradleIntersectionObserver, Object.assign({},scaffoldHandler.cradleReferenceData))
@@ -734,18 +720,14 @@ const Cradle = ({
                 calls setCradleContent
             */
             case 'setup': 
+                setCradleState('dosetup') // cycle to allow for config; ie. for setup
+                break
+
+            case 'dosetup':
             case 'doreposition':
             case 'resized':
             case 'pivot':
-            case 'reload':
-
-                callingCradleState.current = cradleState // message for setCradleContent
-                setCradleState('preparecontent') // cycle to allow for config; eg. for setup
-
-                break
-
-            case 'preparecontent': 
-            {
+            case 'reload': {
 
                 cradleContent.headModelComponents = []
                 cradleContent.tailModelComponents = []
@@ -754,7 +736,7 @@ const Cradle = ({
 
                 handlersRef.current.portals.resetScrollerPortalRepository()
                 
-                contentHandler.setCradleContent( callingCradleState.current )
+                contentHandler.setCradleContent( cradleState )
 
                 setCradleState('preparerender')
 
@@ -794,24 +776,14 @@ const Cradle = ({
 
                             // console.log('normalizing signals')
                             const signals = interruptHandler.signals
-                            if (viewportInterruptProperties.elementref.current) { // already unmounted if fails (?)
+                            // if (viewportInterruptProperties.elementref.current) { // already unmounted if fails (?)
                                 signals.pauseTriggerlinesObserver && (signals.pauseTriggerlinesObserver = false)
                                 signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
                                 signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
-
-                                // const cradleobserver = interruptHandler.cradleIntersect.observer
-                                // const cradleElements = scaffoldHandler.elements
-                                // const {
-                                //     headRef, 
-                                //     tailRef, 
-                                // } = cradleElements
-                                // cradleobserver.observe(headRef.current)
-                                // cradleobserver.observe(tailRef.current)
-
                                 signals.pauseCradleResizeObserver && (signals.pauseCradleResizeObserver = false)
-                            } else {
-                                console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportInterruptProperties)
-                            }
+                            // } else {
+                            //     console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportInterruptProperties)
+                            // }
 
                 /*default*/ if (isMountedRef.current) setCradleState('ready') // then 'ready'
 
