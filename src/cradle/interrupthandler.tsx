@@ -89,7 +89,7 @@ export default class InterruptHandler {
         const contentHandler = this.cradleParameters.handlersRef.current.content
 
         if (signals.pauseCradleIntersectionObserver) {
-            // console.log('returning from intersectionobserver for PAUSE')
+            // console.log('returning from cradle intersectionobserver for PAUSE')
             return
         }
 
@@ -140,14 +140,12 @@ export default class InterruptHandler {
                 const width = right - left, height = bottom - top
                 viewportInterruptProperties.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
 
-                // signals.pauseTriggerlinesObserver = true
-                
                 const cradleContent = contentHandler.content
                 cradleContent.headModelComponents = []
                 cradleContent.tailModelComponents = []
                 cradleContent.headViewComponents = []
                 cradleContent.tailViewComponents = []
-                // console.log('cradleIntersectionObserverCallback: calling state startreposition')
+
                 stateHandler.setCradleState('startreposition')
 
             }
