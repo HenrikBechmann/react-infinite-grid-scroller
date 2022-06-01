@@ -776,26 +776,22 @@ const Cradle = ({
 
                             // console.log('normalizing signals')
                             const signals = interruptHandler.signals
-                            // if (viewportInterruptProperties.elementref.current) { // already unmounted if fails (?)
-                                signals.pauseTriggerlinesObserver && (signals.pauseTriggerlinesObserver = false)
-                                signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
-                                signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
-                                signals.pauseCradleResizeObserver && (signals.pauseCradleResizeObserver = false)
-                            // } else {
-                            //     console.log('ERROR: viewport element not set in normalizesignals', scrollerID, viewportInterruptProperties)
-                            // }
 
-                /*default*/ if (isMountedRef.current) setCradleState('ready') // then 'ready'
+                            signals.pauseTriggerlinesObserver && (signals.pauseTriggerlinesObserver = false)
+                            signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
+                            signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
+
+            /*default*/     setCradleState('ready')
 
                         } else {
 
-            /*2*/           if (isMountedRef.current) setCradleState('startreposition')
+            /*2*/           setCradleState('startreposition')
 
                         }
 
                     } else {
 
-            /*1*/       if (isMountedRef.current) setCradleState('resizing')
+            /*1*/       setCradleState('resizing')
 
                     }
 
