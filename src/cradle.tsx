@@ -702,13 +702,13 @@ const Cradle = ({
             // ------------[ reposition when repositioningRequired is true ]---------------
             case 'startreposition': {
 
-                const cradleobserver = interruptHandler.cradleIntersect.observer
-                cradleobserver.disconnect()
+                // const cradleobserver = interruptHandler.cradleIntersect.observer
+                // cradleobserver.disconnect()
 
                 interruptHandler.signals.pauseTriggerlinesObserver = true
 
                 // avoid recursive cradle intersection interrupts
-                // interruptHandler.signals.pauseCradleIntersectionObserver = true
+                interruptHandler.signals.pauseCradleIntersectionObserver = true
                 interruptHandler.signals.repositioningRequired = false // because now underway
 
                 setCradleState('repositioningRender')
@@ -797,16 +797,16 @@ const Cradle = ({
                             if (viewportInterruptProperties.elementref.current) { // already unmounted if fails (?)
                                 signals.pauseTriggerlinesObserver && (signals.pauseTriggerlinesObserver = false)
                                 signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
-                                // signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
+                                signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
 
-                                const cradleobserver = interruptHandler.cradleIntersect.observer
-                                const cradleElements = scaffoldHandler.elements
-                                const {
-                                    headRef, 
-                                    tailRef, 
-                                } = cradleElements
-                                cradleobserver.observe(headRef.current)
-                                cradleobserver.observe(tailRef.current)
+                                // const cradleobserver = interruptHandler.cradleIntersect.observer
+                                // const cradleElements = scaffoldHandler.elements
+                                // const {
+                                //     headRef, 
+                                //     tailRef, 
+                                // } = cradleElements
+                                // cradleobserver.observe(headRef.current)
+                                // cradleobserver.observe(tailRef.current)
 
                                 signals.pauseCradleResizeObserver && (signals.pauseCradleResizeObserver = false)
                             } else {
