@@ -362,6 +362,9 @@ export default class ContentHandler {
             }
         )
 
+        // console.log('headcontent.length, tailcontent.length',
+        //     headcontent.length, tailcontent.length)
+
         cradleContent.cradleModel = localContentList
         cradleContent.headViewComponents = cradleContent.headModelComponents = headcontent
         cradleContent.tailViewComponents = cradleContent.tailModelComponents = tailcontent

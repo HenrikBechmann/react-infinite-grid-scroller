@@ -188,6 +188,19 @@ export const calcContentShift = ({
 
     } = cradleInternalProperties
 
+    // console.log(`
+    //     crosscount,
+    //     cradleRowcount,
+    //     listRowcount,
+    //     viewportRowcount,
+    //     runwayRowcount,
+    //     `,
+    //     crosscount,
+    //     cradleRowcount,
+    //     listRowcount,
+    //     viewportRowcount,
+    //     runwayRowcount,
+    //     )
     const cellLength = 
         ((orientation == 'vertical')?
             cellHeight:
@@ -222,8 +235,8 @@ export const calcContentShift = ({
     const backwardovershootrowcount = 
         Math.max(0,Math.floor(viewportaxisbackwardgaplength/cellLength))
 
-    console.log('axisovershoot: cellLength, viewportaxisoffset, forwardovershootrowcount, viewportaxisforwardgaplength, backwardovershootrowcount, viewportaxisbackwardgaplength',
-        cellLength, viewportaxisoffset, forwardovershootrowcount, viewportaxisforwardgaplength, backwardovershootrowcount, viewportaxisbackwardgaplength)
+    console.log('axisovershoot: forwardovershootrowcount, backwardovershootrowcount, cellLength, viewportaxisoffset, viewportaxisforwardgaplength, viewportaxisbackwardgaplength',
+        forwardovershootrowcount, backwardovershootrowcount, cellLength, viewportaxisoffset, viewportaxisforwardgaplength, viewportaxisbackwardgaplength)
 
     // -----------------[ 4. combine row shift counts of base shift and overshoot ]-------------
     
@@ -231,11 +244,11 @@ export const calcContentShift = ({
     // - shift negative closer to head, shift positive closer to tail
     
     // allocate a base shift to head or tail
-    const headblockaddshiftrowcount = 
+    const headaddrowcount = 
         (isScrollingviewportforward)?
             1:
             0
-    const tailblockaddshiftrowcount = 
+    const tailaddrowcount = 
         (!isScrollingviewportforward)?
             1:
             0
@@ -244,11 +257,14 @@ export const calcContentShift = ({
     // - negative value shifted toward tail; positive value shifted toward head
     // - one of the two expressions in the following line will be 0
     const axisreferencerowshift = 
-        - (tailblockaddshiftrowcount + backwardovershootrowcount) + 
-        (headblockaddshiftrowcount + forwardovershootrowcount)
+        - (tailaddrowcount + backwardovershootrowcount) + 
+        (headaddrowcount + forwardovershootrowcount)
 
     // base value for cradle reference shift; may change if beyond list count
     let cradlereferencerowshift = axisreferencerowshift
+
+    // console.log('BASE cradlereferencerowshift, axisreferencerowshift',
+    //     cradlereferencerowshift, axisreferencerowshift)
 
     // ------------[ 5. calc new cradle reference row offset and axis reference row offset ]-------------
 
@@ -260,6 +276,9 @@ export const calcContentShift = ({
 
     let newcradlereferencerowoffset = previouscradlerowoffset + cradlereferencerowshift
     let newaxisreferencerowoffset = previousaxisrowoffset + axisreferencerowshift
+
+    // console.log('BASE newcradlereferencerowoffset, newaxisreferencerowoffset',
+    //     newcradlereferencerowoffset, newaxisreferencerowoffset)
 
     // --------[ 6. adjust cradle contents when at start and end of list ]-------
     // ...to maintain constant number of cradle rows
@@ -273,7 +292,8 @@ export const calcContentShift = ({
         // of cradle content.
 
         const targetcradlereferencerowoffset = 
-            Math.max(0,(newaxisreferencerowoffset - (runwayRowcount?runwayRowcount - 1:0)))
+            Math.max(0, (newaxisreferencerowoffset - 1 - runwayRowcount))
+
         const headrowdiff = newcradlereferencerowoffset - targetcradlereferencerowoffset
         if (headrowdiff > 0) {
 
@@ -311,7 +331,7 @@ export const calcContentShift = ({
         const computedNextCradleEndrowOffset = 
             (previouscradlerowoffset + (cradleRowcount -1) + cradlereferencerowshift)
         const targetcradleEndrowoffset = Math.min((listRowcount - 1), 
-            (newaxisreferencerowoffset + (viewportRowcount - 1) + (runwayRowcount?runwayRowcount - 1:0)))
+            (newaxisreferencerowoffset + (viewportRowcount - 1) + (runwayRowcount - 1)))
         const tailrowdiff = Math.max(0, targetcradleEndrowoffset - computedNextCradleEndrowOffset)
 
         if (tailrowdiff > 0) {
@@ -322,6 +342,12 @@ export const calcContentShift = ({
         }
 
     }
+
+    // console.log('FINAL cradlereferencerowshift, axisreferencerowshift',
+    //     cradlereferencerowshift, axisreferencerowshift)
+
+    // console.log('FINAL newcradlereferencerowoffset, newaxisreferencerowoffset',
+    //     newcradlereferencerowoffset, newaxisreferencerowoffset)
 
     // ----------------------[ 7. map rows to item references ]----------------------
 
