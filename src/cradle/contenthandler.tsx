@@ -212,6 +212,8 @@ export default class ContentHandler {
 
     public updateCradleContent = (triggerlineEntries, source = 'notifications') => {
 
+        console.log('inside updateCradleContent from', source)
+
         // ----------------------[ 1. initialize ]-------------------------
 
         // handler support
@@ -362,8 +364,8 @@ export default class ContentHandler {
             }
         )
 
-        // console.log('headcontent.length, tailcontent.length',
-        //     headcontent.length, tailcontent.length)
+        console.log('headcontent.length, tailcontent.length',
+            headcontent.length, tailcontent.length)
 
         cradleContent.cradleModel = localContentList
         cradleContent.headViewComponents = cradleContent.headModelComponents = headcontent
@@ -379,6 +381,7 @@ export default class ContentHandler {
             //     this.cradleParameters.viewportInterruptPropertiesRef.current.elementref.current.scrollTop,
             //     scaffoldHandler.cradleReferenceData.blockScrollPos)
             const top = scrollPos + axisPixelOffset
+            console.log('scrollPos, axis top, axisPixelOffset in updateCradleContent', scrollPos, top, axisPixelOffset)
 
             scaffoldHandler.cradleReferenceData.blockScrollPos = scrollPos
             // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'

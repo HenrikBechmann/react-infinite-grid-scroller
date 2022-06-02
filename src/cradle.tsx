@@ -678,7 +678,8 @@ const Cradle = ({
             // it is required set configurations before 'ready' TODO: specify!
             case 'renderupdatedcontent': {
 
-                console.log('running renderupdatedcontent')
+                console.log('running renderupdatedcontent with scrollTop',
+                    viewportInterruptProperties.elementref.current.scrollTop)
                 interruptHandler.signals.pauseTriggerlinesObserver = false
 
                 setCradleState('ready')

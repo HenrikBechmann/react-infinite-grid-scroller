@@ -33,8 +33,8 @@ export default class InterruptHandler {
 
     private axisTriggerlinesObserverCallback = (entries) => {
 
-        console.log('=> axisTriggerlinesObserverCallback: this.signals.pauseTriggerlinesObserver, entries',
-            this.signals.pauseTriggerlinesObserver, entries)
+        // console.log('=> axisTriggerlinesObserverCallback: this.signals.pauseTriggerlinesObserver, entries',
+        //     this.signals.pauseTriggerlinesObserver, entries)
 
         if (this.signals.pauseTriggerlinesObserver) { 
 
