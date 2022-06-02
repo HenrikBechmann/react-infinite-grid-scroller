@@ -140,7 +140,7 @@ export const getShiftInstruction = ({
         retval = 0 // do not shift a row
     }
 
-    console.log('getShiftInstruction return value',retval)
+    // console.log('getShiftInstruction return value',retval)
 
     return retval
 
@@ -222,7 +222,7 @@ export const calcContentShift = ({
             (axisElement.offsetLeft)) 
         - scrollPos
 
-    console.log('viewportaxisoffset',viewportaxisoffset)
+    // console.log('viewportaxisoffset',viewportaxisoffset)
 
     // the gap between the cell about to be moved, and the viewport edge
     // reference cell forward end for scrolling forward or back end for scrolling backward
