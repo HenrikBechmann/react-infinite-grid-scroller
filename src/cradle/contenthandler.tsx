@@ -296,24 +296,24 @@ export default class ContentHandler {
 
         })
 
-        console.log(`return values from calcContentShift:
-            newcradlereferenceindex, 
-            cradleItemShift, 
-            axisReferenceIndex, 
-            axisItemShift, 
-            axisPixelOffset, 
-            cradleContentCount,
-            headChangeCount,
-            tailChangeCount`,
-            newcradlereferenceindex, 
-            cradleItemShift, 
-            axisReferenceIndex, 
-            axisItemShift, 
-            axisPixelOffset, 
-            cradleContentCount,
-            headChangeCount,
-            tailChangeCount
-        )
+        // console.log(`return values from calcContentShift:
+        //     newcradlereferenceindex, 
+        //     cradleItemShift, 
+        //     axisReferenceIndex, 
+        //     axisItemShift, 
+        //     axisPixelOffset, 
+        //     cradleContentCount,
+        //     headChangeCount,
+        //     tailChangeCount`,
+        //     newcradlereferenceindex, 
+        //     cradleItemShift, 
+        //     axisReferenceIndex, 
+        //     axisItemShift, 
+        //     axisPixelOffset, 
+        //     cradleContentCount,
+        //     headChangeCount,
+        //     tailChangeCount
+        // )
 
         // third abandon option/3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) {
