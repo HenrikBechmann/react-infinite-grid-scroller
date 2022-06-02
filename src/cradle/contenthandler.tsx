@@ -243,7 +243,7 @@ export default class ContentHandler {
 
         }
 
-        console.log('isScrollingviewportforward',isScrollingviewportforward)
+        console.log('---isScrollingviewportforward',isScrollingviewportforward)
 
         // cradle scaffold and user cells
         const cradleElements = scaffoldHandler.elements
@@ -354,6 +354,9 @@ export default class ContentHandler {
 
             const top = scrollPos + axisPixelOffset
 
+            console.log('DOM setting axis top, scrollPos, axisPixelOffset',
+                top, scrollPos, axisPixelOffset)
+
             cradleElements.axisRef.current.style.top = top + 'px'
             cradleElements.axisRef.current.style.left = 'auto'
             cradleElements.headRef.current.style.paddingBottom = 
@@ -363,8 +366,10 @@ export default class ContentHandler {
 
         } else {
 
+            const left = scrollPos + axisPixelOffset
+
             cradleElements.axisRef.current.style.top = 'auto'
-            cradleElements.axisRef.current.style.left = scrollPos + axisPixelOffset + 'px'
+            cradleElements.axisRef.current.style.left = left + 'px'
             cradleElements.headRef.current.style.paddingRight = 
                 headcontent.length?
                     cradleInheritedProperties.gap + 'px':

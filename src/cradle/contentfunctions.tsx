@@ -119,8 +119,8 @@ export const getShiftInstruction = ({
         //     ((!isScrollingviewportforward) && (triggerlinename == 'triggerline-head'))
     })
 
-    console.log('getShiftInstruction triggerlineEntries.length, entries.length, triggerlineEntries, entries',
-        triggerlineEntries.length, entries.length, triggerlineEntries, entries)
+    // console.log('getShiftInstruction triggerlineEntries.length, entries.length, triggerlineEntries, entries',
+    //     triggerlineEntries.length, entries.length, triggerlineEntries, entries)
 
     if (entries.length == 0) return 0
 
@@ -218,7 +218,7 @@ export const calcContentShift = ({
     // reference cell forward end for scrolling forward or back end for scrolling backward
     const viewportaxisbackwardgaplength = 
         (!isScrollingviewportforward)?
-            (viewportaxisOffset - cellLength):// + triggerlineOffset):
+            (viewportaxisOffset - cellLength):// + triggerlineOffset)):
             0
     const viewportaxisforwardgaplength = 
         (isScrollingviewportforward)?
@@ -227,6 +227,11 @@ export const calcContentShift = ({
 
     console.log('viewportaxisbackwardgaplength, viewportaxisforwardgaplength, triggerlineOffset',
         viewportaxisbackwardgaplength, viewportaxisforwardgaplength, triggerlineOffset)
+
+    const viewportheadtriggergaplength = 
+        (!isScrollingviewportforward)?
+            viewportaxisOffset - (cellLength + triggerlineOffset):
+            0
 
     // -------[ 3. calculate the axis overshoot (more than one row) row counts, if any ]-------
     
@@ -238,6 +243,12 @@ export const calcContentShift = ({
 
     console.log('backwardovershootrowcount, forwardovershootrowcount',
         backwardovershootrowcount, forwardovershootrowcount)
+
+    const backwardtriggerovershootrowcount = 
+        Math.max(0,Math.ceil(viewportheadtriggergaplength/cellLength))
+
+    console.log('++backwardtriggerovershootrowcount, viewportheadtriggergaplength',
+        backwardtriggerovershootrowcount, viewportheadtriggergaplength)
 
     // -----------------[ 4. combine row shift counts of base shift and overshoot ]-------------
     
@@ -257,7 +268,7 @@ export const calcContentShift = ({
     // consolidate head and tail information into single axis and cradle reference shifts
     // - negative value shifted toward tail; positive value shifted toward head
     // - one of the two expressions in the following line will be 0
-    const axisreferencerowshift = 
+    let axisreferencerowshift = 
         - (tailaddrowcount + backwardovershootrowcount) +
         (headaddrowcount + forwardovershootrowcount)
 
@@ -343,7 +354,15 @@ export const calcContentShift = ({
 
         }
 
+        if (newaxisreferencerowoffset < 0) {
+            axisreferencerowshift -= newaxisreferencerowoffset
+            newaxisreferencerowoffset = 0
+        }
+
     }
+
+    console.log('FINAL newcradlereferencerowoffset, newaxisreferencerowoffset',
+        newcradlereferencerowoffset, newaxisreferencerowoffset)
 
     // ----------------------[ 7. map rows to item references ]----------------------
 
@@ -374,6 +393,9 @@ export const calcContentShift = ({
     let axisposshift = axisreferencerowshift * cellLength
 
     let newaxispixeloffset = viewportaxisOffset + axisposshift
+
+    console.log('newaxispixeloffset, viewportaxisOffset, axisposshift', 
+        newaxispixeloffset, viewportaxisOffset, axisposshift)
 
     // ---------------------[ 9. return required values ]-------------------
 
