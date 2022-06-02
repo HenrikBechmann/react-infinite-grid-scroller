@@ -88,9 +88,6 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     const targetScrollblockPixelOffset = 
         (targetAxisRowOffset * cellLength) - (targetAxisPixelOffset)
 
-    // console.log(' getContentListRequirements: targetScrollblockPixelOffset, targetAxisPixelOffset, targetAxisRowOffset, cellLength',
-    //     targetScrollblockPixelOffset, targetAxisPixelOffset, targetAxisRowOffset, cellLength)
-
     // ----------------------[ return required values ]---------------------
 
     return {
@@ -110,8 +107,6 @@ export const getShiftInstruction = ({
     triggerlineEntries,
 
 }) => {
-
-    // console.log('triggerlineEntries', triggerlineEntries)
 
     const entries = triggerlineEntries.filter(entry => {
         const isIntersecting = entry.isIntersecting
@@ -139,8 +134,6 @@ export const getShiftInstruction = ({
     } else {
         retval = 0 // do not shift a row
     }
-
-    // console.log('getShiftInstruction return value',retval)
 
     return retval
 
@@ -193,20 +186,6 @@ export const calcContentShift = ({
 
     } = cradleInternalProperties
 
-    // console.log(`
-    //     crosscount,
-    //     cradleRowcount,
-    //     listRowcount,
-    //     viewportRowcount,
-    //     runwayRowcount,
-    //     `,
-    //     crosscount,
-    //     cradleRowcount,
-    //     listRowcount,
-    //     viewportRowcount,
-    //     runwayRowcount,
-    //     )
-
     const cellLength = 
         ((orientation == 'vertical')?
             cellHeight:
@@ -221,8 +200,6 @@ export const calcContentShift = ({
             axisElement.offsetTop:
             (axisElement.offsetLeft)) 
         - scrollPos
-
-    // console.log('viewportaxisoffset',viewportaxisoffset)
 
     // the gap between the cell about to be moved, and the viewport edge
     // reference cell forward end for scrolling forward or back end for scrolling backward
@@ -242,9 +219,6 @@ export const calcContentShift = ({
         Math.max(0,Math.floor(viewportaxisforwardgaplength/cellLength))
     const backwardovershootrowcount = 
         Math.max(0,Math.floor(viewportaxisbackwardgaplength/cellLength))
-
-    // console.log('OVERSHOOT ROWS: forwardovershootrowcount, backwardovershootrowcount, cellLength, viewportaxisoffset, viewportaxisforwardgaplength, viewportaxisbackwardgaplength',
-    //     forwardovershootrowcount, backwardovershootrowcount, cellLength, viewportaxisoffset, viewportaxisforwardgaplength, viewportaxisbackwardgaplength)
 
     // -----------------[ 4. combine row shift counts of base shift and overshoot ]-------------
     
@@ -271,9 +245,6 @@ export const calcContentShift = ({
     // base value for cradle reference shift; may change if beyond list count
     let cradlereferencerowshift = axisreferencerowshift
 
-    // console.log('BASE cradlereferencerowshift, axisreferencerowshift',
-    //     cradlereferencerowshift, axisreferencerowshift)
-
     // ------------[ 5. calc new cradle reference row offset and axis reference row offset ]-------------
 
     const previouscradlereferenceindex = (cradlecontentlist[0]?.props.index || 0)
@@ -284,9 +255,6 @@ export const calcContentShift = ({
 
     let newcradlereferencerowoffset = previouscradlerowoffset + cradlereferencerowshift
     let newaxisreferencerowoffset = previousaxisrowoffset + axisreferencerowshift
-
-    // console.log('BASE newcradlereferencerowoffset, newaxisreferencerowoffset',
-    //     newcradlereferencerowoffset, newaxisreferencerowoffset)
 
     // --------[ 6. adjust cradle contents when at start and end of list ]-------
     // ...to maintain constant number of cradle rows
@@ -350,12 +318,6 @@ export const calcContentShift = ({
         }
 
     }
-
-    // console.log('FINAL cradlereferencerowshift, axisreferencerowshift',
-    //     cradlereferencerowshift, axisreferencerowshift)
-
-    // console.log('FINAL newcradlereferencerowoffset, newaxisreferencerowoffset',
-    //     newcradlereferencerowoffset, newaxisreferencerowoffset)
 
     // ----------------------[ 7. map rows to item references ]----------------------
 

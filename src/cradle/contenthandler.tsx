@@ -80,9 +80,6 @@ export default class ContentHandler {
         const requestedAxisReferenceIndex = scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex
         let targetAxisPixelOffset = scaffoldHandler.cradleReferenceData.targetAxisPixelOffset
 
-        // console.log('setCradleContent requestedAxisReferenceIndex, targetAxisPixelOffset',
-        //     requestedAxisReferenceIndex, targetAxisPixelOffset)
-
         const {
             orientation, 
             gap, 
@@ -127,9 +124,6 @@ export default class ContentHandler {
                     gap
                     
         }
-
-        // console.log('orientation, targetAxisPixelAdjustment, targetScrollblockPixelAdjustment',
-        //     orientation, targetAxisPixelAdjustment, targetScrollblockPixelAdjustment)
 
         // returns content constrained by cradleRowcount
         const [childlist,deleteditems] = getUICellShellList({
@@ -179,9 +173,6 @@ export default class ContentHandler {
         scaffoldHandler.cradleReferenceData.blockScrollPos = 
             scrollblockPixelOffset + targetScrollblockPixelAdjustment
 
-        // console.log('finishing setCradleContent: scrollblockPixelOffset, targetScrollblockPixelAdjustment',
-        //     scrollblockPixelOffset, targetScrollblockPixelAdjustment)
-
         if (orientation == 'vertical') {
 
             // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
@@ -211,8 +202,6 @@ export default class ContentHandler {
     // =============================[ UPDATE through scroll ]===============================
 
     public updateCradleContent = (triggerlineEntries, source = 'notifications') => {
-
-        // console.log('inside updateCradleContent from', source)
 
         // ----------------------[ 1. initialize ]-------------------------
 
@@ -248,9 +237,6 @@ export default class ContentHandler {
             this._previousScrollForward = isScrollingviewportforward
 
         }
-
-        // console.log('1. updateCradleContent cradleState, isScrollingviewportforward, source, triggerlineEntries',
-        //     stateHandler.cradleStateRef.current, isScrollingviewportforward, source, triggerlineEntries)
 
         // cradle scaffold and user cells
         const cradleElements = scaffoldHandler.elements
@@ -298,28 +284,9 @@ export default class ContentHandler {
 
         })
 
-        // console.log(`return values from calcContentShift:
-        //     newcradlereferenceindex, 
-        //     cradleItemShift, 
-        //     axisReferenceIndex, 
-        //     axisItemShift, 
-        //     axisPixelOffset, 
-        //     cradleContentCount,
-        //     headChangeCount,
-        //     tailChangeCount`,
-        //     newcradlereferenceindex, 
-        //     cradleItemShift, 
-        //     axisReferenceIndex, 
-        //     axisItemShift, 
-        //     axisPixelOffset, 
-        //     cradleContentCount,
-        //     headChangeCount,
-        //     tailChangeCount
-        // )
-
         // third abandon option/3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) {
-            console.log('returning for no axis or cradle shift') // notice for suspicious requirement
+
             return
 
         }
@@ -364,29 +331,18 @@ export default class ContentHandler {
             }
         )
 
-        console.log('headcontent.length, tailcontent.length',
-            headcontent.length, tailcontent.length)
-
         cradleContent.cradleModel = localContentList
         cradleContent.headViewComponents = cradleContent.headModelComponents = headcontent
         cradleContent.tailViewComponents = cradleContent.tailModelComponents = tailcontent
 
         // -------------------------------[ 6. set css changes ]-------------------------
 
-        // scrollHandler.updateBlockScrollPos()
-
         scaffoldHandler.cradleReferenceData.blockScrollPos = scrollPos
 
         if (cradleInheritedProperties.orientation == 'vertical') {
-            // const scrolltop = scrollPos // viewportElement.scrollTop
-            // console.log('scrollPos vs viewportElement.scrollTop vs blockScrollPos',scrollPos, 
-            //     this.cradleParameters.viewportInterruptPropertiesRef.current.elementref.current.scrollTop,
-            //     scaffoldHandler.cradleReferenceData.blockScrollPos)
-            const top = scrollPos + axisPixelOffset
-            // console.log('scrollPos, blockScrollPos, axis top, axisPixelOffset in updateCradleContent', 
-            //     scrollPos, scaffoldHandler.cradleReferenceData.blockScrollPos, top, axisPixelOffset)
 
-            // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
+            const top = scrollPos + axisPixelOffset
+
             cradleElements.axisRef.current.style.top = top + 'px'
             cradleElements.axisRef.current.style.left = 'auto'
             cradleElements.headRef.current.style.paddingBottom = 
@@ -396,8 +352,6 @@ export default class ContentHandler {
 
         } else {
 
-            // scaffoldHandler.cradleReferenceData.blockScrollPos = scrollPos // viewportElement.scrollLeft
-            // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
             cradleElements.axisRef.current.style.top = 'auto'
             cradleElements.axisRef.current.style.left = scrollPos + axisPixelOffset + 'px'
             cradleElements.headRef.current.style.paddingRight = 
@@ -407,16 +361,11 @@ export default class ContentHandler {
 
         }
 
-        // console.log('++updateCradleContent axisReferenceIndex, axisPixelOffset, axisItemShift, cradleItemShift, scrollPos', 
-        //     axisReferenceIndex, axisPixelOffset, axisItemShift, cradleItemShift, scrollPos)
-
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisPixelOffset = axisPixelOffset
 
         scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = axisReferenceIndex
         scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = axisPixelOffset
-
-        // console.log('calling renderupdatedcontent from updateCradleContent')
 
         stateHandler.setCradleState('renderupdatedcontent')
 

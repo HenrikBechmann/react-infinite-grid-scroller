@@ -33,7 +33,6 @@ const Scrollblock = ({
 
     // -------------------------[ context and state ]-------------------------
     const viewportInterruptProperties = useContext(ViewportInterrupt)
-    // console.log('running scrollblock')
 
     // -----------------------------------[ data heap ]-------------------------
     const baseScrollBlockLengthRef = useRef(null)
@@ -54,7 +53,6 @@ const Scrollblock = ({
     
     useLayoutEffect(() => {
 
-        // console.log('updating scrollblock divlinerstyleRef')
         updateBaseBlockLength()
         divlinerstyleRef.current = 
             updateScrollblockStyles(

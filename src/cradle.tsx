@@ -225,8 +225,6 @@ const Cradle = ({
 
     const [cradleState, setCradleState] = useState('setup')
 
-    // console.log('entering Cradle with state',cradleState)
-
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState;
 
@@ -602,9 +600,6 @@ const Cradle = ({
         
         scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = Math.round(pivotAxisOffset)
 
-        console.log('pivot scaffoldHandler.cradleReferenceData',
-            Object.assign({},scaffoldHandler.cradleReferenceData))
-
         const { signals } = interruptHandler
 
         // signals.pauseTriggerlinesObserver = true
@@ -678,12 +673,6 @@ const Cradle = ({
             // it is required set configurations before 'ready' TODO: specify!
             case 'renderupdatedcontent': {
 
-                // console.log('running renderupdatedcontent with scrollTop',
-                //     viewportInterruptProperties.elementref.current.scrollTop)
-                // viewportInterruptProperties.elementref.current[scaffoldHandler.cradleReferenceData.blockScrollProperty] =
-                //     scaffoldHandler.cradleReferenceData.blockScrollPos
-                // console.log('revised scrollTop',
-                //     viewportInterruptProperties.elementref.current.scrollTop)
                 interruptHandler.signals.pauseTriggerlinesObserver = false
 
                 setCradleState('ready')
@@ -695,7 +684,6 @@ const Cradle = ({
             // ------------[ reposition when repositioningRequired is true ]---------------
             case 'startreposition': {
 
-                // console.log('starting reposition')
                 interruptHandler.signals.pauseTriggerlinesObserver = true
 
                 // avoid recursive cradle intersection interrupts
@@ -711,8 +699,7 @@ const Cradle = ({
             case 'finishreposition': {
 
                 scrollHandler.updateBlockScrollPos()
-                // console.log('==> in finishposition:pauseCradleIntersectionObserver, scaffoldHandler.cradleReferenceData',
-                //     interruptHandler.signals.pauseCradleIntersectionObserver, Object.assign({},scaffoldHandler.cradleReferenceData))
+
                 setCradleState('doreposition')
                 break
 
@@ -765,12 +752,8 @@ const Cradle = ({
 
             case 'normalizesignals': {
 
-                // console.log('- in normalizesignals call')
-
                 normalizeTimerRef.current = setTimeout(()=> {
 
-                    // console.log('-- executing normalizesignals call:interruptHandler.signals.repositioningRequired',
-                    //     interruptHandler.signals.repositioningRequired)
                     if (!isMountedRef.current) return
 
                     // allow short-circuit fallbacks to continue interrupt responses
@@ -778,8 +761,6 @@ const Cradle = ({
                         
             /*2*/       if (!interruptHandler.signals.repositioningRequired) { // repositioning short-circuit
 
-
-                            // console.log('normalizing signals')
                             const signals = interruptHandler.signals
 
                             signals.pauseTriggerlinesObserver && (signals.pauseTriggerlinesObserver = false)
@@ -856,8 +837,6 @@ const Cradle = ({
     )
 
     const cradleContent = contentHandler.content
-
-    // console.log('rendering with state',cradleStateRef.current)
 
     // portalroot is the hidden portal component cache
     return <CradlePortalsContext.Provider value = {handlersRef.current.portals}>

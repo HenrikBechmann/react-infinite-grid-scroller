@@ -221,7 +221,7 @@ const Viewport = ({
 
         // trigger context change with new object
         const viewportdataobject = Object.assign({},viewportInterruptPropertiesRef.current, localViewportData) 
-        // console.log('updating viewportInterruptPropertiesRef from useMemo')
+
         return  viewportdataobject
 
     },[orientation, isResizingRef.current, viewportState])

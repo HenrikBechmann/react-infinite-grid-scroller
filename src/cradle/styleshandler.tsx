@@ -238,7 +238,7 @@ export default class StylesHandler {
 
     getTriggerlineHeadStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
         let transform // for position relative to axis
-        // console.log('orientation', orientation)
+
         let position = 'absolute',
             // backgroundColor = 'blue',
             width = '100%',

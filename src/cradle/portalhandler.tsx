@@ -121,15 +121,14 @@ export class PortalHandler {
 // with user content and container
 const createInPortal = (content, index) => {
 
-    // console.log('creating inportal index, scrollerID',index,scrollerID)
     let reversePortal = createHtmlPortalNode()
-    // reversePortal.element = container
+
     let container = reversePortal.element
     container.style.inset = '0px' 
     container.style.position = 'absolute'
     container.dataset.type = 'portalcontainer'
     container.dataset.index = index
-    // container.dataset.scrollerid = scrollerID
+
     container.setAttribute('key',index)
 
 

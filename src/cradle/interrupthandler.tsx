@@ -33,9 +33,6 @@ export default class InterruptHandler {
 
     private axisTriggerlinesObserverCallback = (entries) => {
 
-        // console.log('=> axisTriggerlinesObserverCallback: this.signals.pauseTriggerlinesObserver, entries',
-        //     this.signals.pauseTriggerlinesObserver, entries)
-
         if (this.signals.pauseTriggerlinesObserver) { 
 
             return
@@ -51,8 +48,6 @@ export default class InterruptHandler {
 
         if (entries.length == 2) {
             const [first,second] = entries
-            // console.log('first.time, second.time, first.time == second.time,first, second',
-            //     first.time, second.time,first.time == second.time,first,second)
             // TODO: consider using scrollHandler.isScrolling instead
             if (first.time == second.time) { // initializing, not scrolling
                 return
@@ -83,13 +78,12 @@ export default class InterruptHandler {
 
     private cradleIntersectionObserverCallback = (entries) => {
 
-        // console.log('cradleIntersectionObserverCallback')
         const signals = this.signals
         const stateHandler = this.cradleParameters.handlersRef.current.state
         const contentHandler = this.cradleParameters.handlersRef.current.content
 
         if (signals.pauseCradleIntersectionObserver) {
-            // console.log('returning from cradle intersectionobserver for PAUSE')
+
             return
         }
 
@@ -130,7 +124,7 @@ export default class InterruptHandler {
             {
                 const element = viewportInterruptProperties.elementref.current
                 if (!element) {
-                    console.log('viewport element not set in cradleIntersectionObserverCallback',
+                    console.log('SYSTEM: viewport element not set in cradleIntersectionObserverCallback',
                         this.cradleParameters.cradleInheritedPropertiesRef.current.scrollerID,viewportInterruptProperties)
                     return
                 }

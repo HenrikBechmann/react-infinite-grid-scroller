@@ -36,23 +36,17 @@ const CellShell = ({
 
     const [cellStatus, setCellStatus] = useState('setup'); 
 
-    // console.log('RUNNING cellshell cellStatus, index, scrollerID, instanceID',cellStatus, index, scrollerID, instanceID)
-
     const shellRef = useRef(null)
     // const instanceIDRef = useRef(instanceID)
     const isMountedRef = useRef(true)
 
     const portaldataRef = useRef(null)
 
-    // console.log('RUNNING cellshell scrollerID, index, cellStatus', scrollerID, index, cellStatus)
-
     // for unmount
     useEffect(()=>{
 
         return () => {
             isMountedRef.current = false
-            // console.log('UNsetting observer for index',index)
-            // observer.unobserve(observerElementRef.current)
         }
 
     },[])
@@ -93,8 +87,6 @@ const CellShell = ({
     // initialize cell content
     useEffect(() => {
 
-        // console.log('CELLSHELL mounting index',index)
-
         portaldataRef.current = portalHandler.fetchOrCreatePortal(index, placeholderRef.current)
 
         const hasUserContent = !!portaldataRef.current.hasusercontent // previous InPortal creation for index
@@ -117,7 +109,6 @@ const CellShell = ({
         // unmount
         return () => {
 
-            // console.log('CELLSHELL UNmounting index',index)
             cancelidlecallback(requestIdleCallbackIdRef.current)
 
         }
@@ -146,27 +137,6 @@ const CellShell = ({
         })
 
     },[callbacks])
-
-    // ---------------------[ configure observer ]--------------------------
-    
-    // const observerElementRef = useRef(null) // persistent observer element ref for unmount
-
-    // const observersetRef = useRef(false)
-    // useEffect(()=>{
-
-        // console.log('index, cellStatus', index, shellRef.current)
-
-        // if ((!shellRef.current) || observersetRef.current) {
-        //     return
-        // }
-
-        // console.log('setting observer for index',index)
-
-        // observer.observe(shellRef.current)
-        // observerElementRef.current = shellRef.current
-        // observersetRef.current = true
-
-    // },[])//[observer, shellRef.current, cellStatus])
 
     // ---------------------[ end of configure observer ]-------------------------
 

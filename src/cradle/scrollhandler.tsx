@@ -45,8 +45,6 @@ export default class ScrollHandler {
             this.scrollPositions.currentupdate = scrollPositionCurrent
         }
 
-        // console.log('onScroll scrollPositionCurrent',scrollPositionCurrent)
-
         if (scrollPositionCurrent < 0) { // for Safari
 
             return 
@@ -57,11 +55,6 @@ export default class ScrollHandler {
 
         this.scrollPositions.previous = this.scrollPositions.current
         this.scrollPositions.current = scrollPositionCurrent
-
-        // if (viewportInterruptProperties.index == 6) {
-        //     console.log('running onScroll for index, scrollPositions',
-        //         viewportInterruptProperties.index,this.scrollPositions)
-        // }
 
         clearTimeout(this._scrolltimerid)
 
@@ -139,20 +132,12 @@ export default class ScrollHandler {
 
         const cradleState = stateHandler.cradleStateRef.current
 
-        // console.log('onAfterScroll cradleState',cradleState)
-
-        // if (viewportInterruptProperties.index == 6) {
-        //     console.log('running onAfterScroll for index, cradleState',
-        //         viewportInterruptProperties.index,this.scrollPositions, cradleState)
-        // }
-
         switch (cradleState) {
 
             case 'repositioningRender': 
             case 'repositioningContinuation':
             {
 
-                // console.log('scrollHandler calling finishreposition from ', cradleState)
                 stateHandler.setCradleState('finishreposition')
 
                 break
@@ -283,9 +268,6 @@ export default class ScrollHandler {
         let scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
         scaffoldHandler.cradleReferenceData.scrollImpliedAxisPixelOffset = axisPixelOffset
-
-        // console.log('scrollHandler setting implied repositioning axisReferenceIndex, axisPixelOffset, cradleReferenceData',
-        //     axisReferenceIndex, axisPixelOffset, Object.assign({},scaffoldHandler.cradleReferenceData))
 
     }
 
