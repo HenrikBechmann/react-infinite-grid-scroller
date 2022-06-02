@@ -113,14 +113,14 @@ export const getShiftInstruction = ({
     const entries = triggerlineEntries.filter(entry => {
         const isIntersecting = entry.isIntersecting
         const triggerlinename = entry.target.dataset.type
-        // return ((!isIntersecting) && isScrollingviewportforward && (triggerlinename == 'triggerline-tail')) ||
-        //     (isIntersecting && (!isScrollingviewportforward) && (triggerlinename == 'triggerline-head'))
-        return (isScrollingviewportforward && (triggerlinename == 'triggerline-tail')) ||
-            ((!isScrollingviewportforward) && (triggerlinename == 'triggerline-head'))
+        return ((!isIntersecting) && isScrollingviewportforward && (triggerlinename == 'triggerline-tail')) ||
+            (isIntersecting && (!isScrollingviewportforward) && (triggerlinename == 'triggerline-head'))
+        // return (isScrollingviewportforward && (triggerlinename == 'triggerline-tail')) ||
+        //     ((!isScrollingviewportforward) && (triggerlinename == 'triggerline-head'))
     })
 
-    console.log('getShiftInstruction triggerlineEntries.length, entries.length',
-        triggerlineEntries.length, entries.length, triggerlineEntries)
+    console.log('getShiftInstruction triggerlineEntries.length, entries.length, triggerlineEntries, entries',
+        triggerlineEntries.length, entries.length, triggerlineEntries, entries)
 
     if (entries.length == 0) return 0
 
@@ -130,13 +130,13 @@ export const getShiftInstruction = ({
     }
 
     const [entry] = entries
-    const isIntersecting = entry.isIntersecting
+    // const isIntersecting = entry.isIntersecting
     const triggerlinename = entry.target.dataset.type
 
     let retval
-    if ((!isIntersecting) && isScrollingviewportforward && (triggerlinename == 'triggerline-tail')) {
+    if (triggerlinename == 'triggerline-tail') {
         retval = -1 // shift row to head
-    } else if (isIntersecting && (!isScrollingviewportforward) && (triggerlinename == 'triggerline-head')) {
+    } else if (triggerlinename == 'triggerline-head') {
         retval = 1 // shift row to tail
     } else {
         retval = 0 // do not shift a row
@@ -170,6 +170,7 @@ export const calcContentShift = ({
         cellHeight,
         cellWidth,
         listsize,
+        triggerlineOffset,
         // runwayRowcountSpec,
 
     } = cradleInheritedProperties
@@ -210,26 +211,33 @@ export const calcContentShift = ({
     const viewportaxisOffset = // the pixel distance between the viewport frame and the axis, toward the head
         axisOffset - scrollPos
 
-    console.log('calcContentShift: viewportaxisOffset, axisOffset, scrollPos',viewportaxisOffset, axisOffset, scrollPos)
+    console.log('==> calcContentShift: viewportaxisOffset', //, axisOffset, scrollPos',
+        viewportaxisOffset)//, axisOffset, scrollPos)
 
     // the gap between the cell about to be moved, and the viewport edge
     // reference cell forward end for scrolling forward or back end for scrolling backward
     const viewportaxisbackwardgaplength = 
         (!isScrollingviewportforward)?
-            (viewportaxisOffset - cellLength):
+            (viewportaxisOffset - cellLength):// + triggerlineOffset):
             0
     const viewportaxisforwardgaplength = 
         (isScrollingviewportforward)?
             -viewportaxisOffset:
             0
 
+    console.log('viewportaxisbackwardgaplength, viewportaxisforwardgaplength, triggerlineOffset',
+        viewportaxisbackwardgaplength, viewportaxisforwardgaplength, triggerlineOffset)
+
     // -------[ 3. calculate the axis overshoot (more than one row) row counts, if any ]-------
     
     // these overshoot numbers guaranteed to be 0 or positive
+    const backwardovershootrowcount = 
+        Math.max(0,Math.ceil(viewportaxisbackwardgaplength/cellLength))
     const forwardovershootrowcount = 
         Math.max(0,Math.floor(viewportaxisforwardgaplength/cellLength))
-    const backwardovershootrowcount = 
-        Math.max(0,Math.floor(viewportaxisbackwardgaplength/cellLength))
+
+    console.log('backwardovershootrowcount, forwardovershootrowcount',
+        backwardovershootrowcount, forwardovershootrowcount)
 
     // -----------------[ 4. combine row shift counts of base shift and overshoot ]-------------
     
@@ -250,8 +258,11 @@ export const calcContentShift = ({
     // - negative value shifted toward tail; positive value shifted toward head
     // - one of the two expressions in the following line will be 0
     const axisreferencerowshift = 
-        - (tailaddrowcount + backwardovershootrowcount) + 
+        - (tailaddrowcount + backwardovershootrowcount) +
         (headaddrowcount + forwardovershootrowcount)
+
+    console.log('axisreferencerowshift, tailaddrowcount, headaddrowcount',
+        axisreferencerowshift, tailaddrowcount, headaddrowcount)
 
     // base value for cradle reference shift; may change if beyond list count
     let cradlereferencerowshift = axisreferencerowshift
@@ -266,6 +277,10 @@ export const calcContentShift = ({
 
     let newcradlereferencerowoffset = previouscradlerowoffset + cradlereferencerowshift
     let newaxisreferencerowoffset = previousaxisrowoffset + axisreferencerowshift
+    console.log('previouscradlerowoffset, previousaxisrowoffset',
+        previouscradlerowoffset, previousaxisrowoffset)
+    console.log('BASE newcradlereferencerowoffset, newaxisreferencerowoffset',
+        newcradlereferencerowoffset, newaxisreferencerowoffset)
 
     // --------[ 6. adjust cradle contents when at start and end of list ]-------
     // ...to maintain constant number of cradle rows

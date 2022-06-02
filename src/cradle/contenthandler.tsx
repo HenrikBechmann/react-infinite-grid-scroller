@@ -263,7 +263,7 @@ export default class ContentHandler {
         // second abandon option/3; nothing to do
         if (shiftinstruction == 0) {
 
-            console.log('returning with shiftinstruction',shiftinstruction)
+            console.log('quitting with shiftinstruction',shiftinstruction)
             return
 
         }
