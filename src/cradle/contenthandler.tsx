@@ -54,6 +54,8 @@ export default class ContentHandler {
     // TODO: last row is sometimes left off with reposition
     public setCradleContent = (cradleState) => { 
 
+        console.log('inside setCradleContent from cradleState', cradleState)
+
         // ------------------------------[ 1. initialize ]---------------------------
 
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
@@ -205,6 +207,8 @@ export default class ContentHandler {
 
         // ----------------------[ 1. initialize ]-------------------------
 
+        console.log('inside updateCradleContent')
+
         // handler support
         const {
             portals: portalHandler, 
@@ -222,6 +226,7 @@ export default class ContentHandler {
         // first abandon option/3; nothing to do
         if ( scrollPos < 0) { // for Safari elastic bounce at top of scroll
 
+            console.log('returning with scrollPos < 0')
             return
 
         }
@@ -237,6 +242,8 @@ export default class ContentHandler {
             this._previousScrollForward = isScrollingviewportforward
 
         }
+
+        console.log('isScrollingviewportforward',isScrollingviewportforward)
 
         // cradle scaffold and user cells
         const cradleElements = scaffoldHandler.elements
@@ -254,8 +261,12 @@ export default class ContentHandler {
         })
 
         // second abandon option/3; nothing to do
-        if (shiftinstruction == 0) return
+        if (shiftinstruction == 0) {
 
+            console.log('returning with shiftinstruction',shiftinstruction)
+            return
+
+        }
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         // cradle properties
@@ -286,7 +297,7 @@ export default class ContentHandler {
 
         // third abandon option/3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) {
-
+            console.log('returning with axisItemShift and cradleItemShift both 0')
             return
 
         }

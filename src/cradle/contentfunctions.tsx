@@ -100,6 +100,8 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
 }
 
+// ======================[ for updateCradleContent ]===========================
+
 // -1 = shift row to head. 1 = shift row to tail. 0 = do not shift a row.
 export const getShiftInstruction = ({
 
@@ -111,9 +113,14 @@ export const getShiftInstruction = ({
     const entries = triggerlineEntries.filter(entry => {
         const isIntersecting = entry.isIntersecting
         const triggerlinename = entry.target.dataset.type
-        return ((!isIntersecting) && isScrollingviewportforward && (triggerlinename == 'triggerline-tail')) ||
-            (isIntersecting && (!isScrollingviewportforward) && (triggerlinename == 'triggerline-head'))
+        // return ((!isIntersecting) && isScrollingviewportforward && (triggerlinename == 'triggerline-tail')) ||
+        //     (isIntersecting && (!isScrollingviewportforward) && (triggerlinename == 'triggerline-head'))
+        return (isScrollingviewportforward && (triggerlinename == 'triggerline-tail')) ||
+            ((!isScrollingviewportforward) && (triggerlinename == 'triggerline-head'))
     })
+
+    console.log('getShiftInstruction triggerlineEntries.length, entries.length',
+        triggerlineEntries.length, entries.length, triggerlineEntries)
 
     if (entries.length == 0) return 0
 
@@ -195,21 +202,25 @@ export const calcContentShift = ({
     // -----------[ 2. calculate the forward or backward gaps for input ]-------------------
     // extra gaps can be caused by rapid scrolling
 
-    const viewportaxisoffset = // the pixel distance between the viewport frame and the axis, toward the head
-        ((orientation == 'vertical')?
+    const axisOffset = 
+        (orientation == 'vertical')?
             axisElement.offsetTop:
-            (axisElement.offsetLeft)) 
-        - scrollPos
+            axisElement.offsetLeft
+
+    const viewportaxisOffset = // the pixel distance between the viewport frame and the axis, toward the head
+        axisOffset - scrollPos
+
+    console.log('calcContentShift: viewportaxisOffset, axisOffset, scrollPos',viewportaxisOffset, axisOffset, scrollPos)
 
     // the gap between the cell about to be moved, and the viewport edge
     // reference cell forward end for scrolling forward or back end for scrolling backward
     const viewportaxisbackwardgaplength = 
         (!isScrollingviewportforward)?
-            (viewportaxisoffset - cellLength):
+            (viewportaxisOffset - cellLength):
             0
     const viewportaxisforwardgaplength = 
         (isScrollingviewportforward)?
-            -viewportaxisoffset:
+            -viewportaxisOffset:
             0
 
     // -------[ 3. calculate the axis overshoot (more than one row) row counts, if any ]-------
@@ -347,7 +358,7 @@ export const calcContentShift = ({
 
     let axisposshift = axisreferencerowshift * cellLength
 
-    let newaxispixeloffset = viewportaxisoffset + axisposshift
+    let newaxispixeloffset = viewportaxisOffset + axisposshift
 
     // ---------------------[ 9. return required values ]-------------------
 

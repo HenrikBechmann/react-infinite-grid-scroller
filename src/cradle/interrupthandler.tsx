@@ -52,7 +52,7 @@ export default class InterruptHandler {
             if (first.time == second.time) { // initializing, not scrolling
                 return
             } else {
-                console.log('WARNING: double triggerlines intersection. Contace author.')
+                console.log('WARNING: double triggerlines intersection. Contact author.')
             }
         }
 
