@@ -131,13 +131,18 @@ export const getShiftInstruction = ({
     const isIntersecting = entry.isIntersecting
     const triggerlinename = entry.target.dataset.type
 
+    let retval
     if ((!isIntersecting) && isScrollingviewportforward && (triggerlinename == 'triggerline-tail')) {
-        return -1 // shift row to head
+        retval = -1 // shift row to head
     } else if (isIntersecting && (!isScrollingviewportforward) && (triggerlinename == 'triggerline-head')) {
-        return 1 // shift row to tail
+        retval = 1 // shift row to tail
     } else {
-        return 0 // do not shift a row
+        retval = 0 // do not shift a row
     }
+
+    console.log('getShiftInstruction return value',retval)
+
+    return retval
 
 }
 
@@ -201,6 +206,7 @@ export const calcContentShift = ({
     //     viewportRowcount,
     //     runwayRowcount,
     //     )
+
     const cellLength = 
         ((orientation == 'vertical')?
             cellHeight:
@@ -208,13 +214,15 @@ export const calcContentShift = ({
         + gap
 
     // -----------[ 2. calculate the forward or backward gaps for input ]-------------------
-    // gaps can be caused by rapid scrolling
+    // extra gaps can be caused by rapid scrolling
 
     const viewportaxisoffset = // the pixel distance between the viewport frame and the axis, toward the head
         ((orientation == 'vertical')?
             axisElement.offsetTop:
             (axisElement.offsetLeft)) 
         - scrollPos
+
+    console.log('viewportaxisoffset',viewportaxisoffset)
 
     // the gap between the cell about to be moved, and the viewport edge
     // reference cell forward end for scrolling forward or back end for scrolling backward
@@ -235,8 +243,8 @@ export const calcContentShift = ({
     const backwardovershootrowcount = 
         Math.max(0,Math.floor(viewportaxisbackwardgaplength/cellLength))
 
-    console.log('axisovershoot: forwardovershootrowcount, backwardovershootrowcount, cellLength, viewportaxisoffset, viewportaxisforwardgaplength, viewportaxisbackwardgaplength',
-        forwardovershootrowcount, backwardovershootrowcount, cellLength, viewportaxisoffset, viewportaxisforwardgaplength, viewportaxisbackwardgaplength)
+    // console.log('OVERSHOOT ROWS: forwardovershootrowcount, backwardovershootrowcount, cellLength, viewportaxisoffset, viewportaxisforwardgaplength, viewportaxisbackwardgaplength',
+    //     forwardovershootrowcount, backwardovershootrowcount, cellLength, viewportaxisoffset, viewportaxisforwardgaplength, viewportaxisbackwardgaplength)
 
     // -----------------[ 4. combine row shift counts of base shift and overshoot ]-------------
     

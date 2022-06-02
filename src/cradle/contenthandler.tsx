@@ -373,10 +373,11 @@ export default class ContentHandler {
 
         scrollHandler.updateBlockScrollPos()
 
-        // if (axisPixelOffset !== undefined) {
-
         if (cradleInheritedProperties.orientation == 'vertical') {
             // const scrolltop = scrollPos // viewportElement.scrollTop
+            // console.log('scrollPos vs viewportElement.scrollTop vs blockScrollPos',scrollPos, 
+            //     this.cradleParameters.viewportInterruptPropertiesRef.current.elementref.current.scrollTop,
+            //     scaffoldHandler.cradleReferenceData.blockScrollPos)
             const top = scrollPos + axisPixelOffset
 
             scaffoldHandler.cradleReferenceData.blockScrollPos = scrollPos
@@ -401,8 +402,6 @@ export default class ContentHandler {
 
         }
 
-        // }
-
         // console.log('++updateCradleContent axisReferenceIndex, axisPixelOffset, axisItemShift, cradleItemShift, scrollPos', 
         //     axisReferenceIndex, axisPixelOffset, axisItemShift, cradleItemShift, scrollPos)
 
@@ -411,6 +410,8 @@ export default class ContentHandler {
 
         scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = axisReferenceIndex
         scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = axisPixelOffset
+
+        console.log('calling renderupdatedcontent from updateCradleContent')
 
         stateHandler.setCradleState('renderupdatedcontent')
 

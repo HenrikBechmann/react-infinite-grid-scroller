@@ -678,6 +678,7 @@ const Cradle = ({
             // it is required set configurations before 'ready' TODO: specify!
             case 'renderupdatedcontent': {
 
+                console.log('running renderupdatedcontent')
                 interruptHandler.signals.pauseTriggerlinesObserver = false
 
                 setCradleState('ready')
@@ -689,6 +690,7 @@ const Cradle = ({
             // ------------[ reposition when repositioningRequired is true ]---------------
             case 'startreposition': {
 
+                console.log('starting reposition')
                 interruptHandler.signals.pauseTriggerlinesObserver = true
 
                 // avoid recursive cradle intersection interrupts
