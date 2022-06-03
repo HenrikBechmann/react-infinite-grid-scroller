@@ -80,13 +80,13 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     // --------------------[ calc css positioning ]-----------------------
 
     const isVertical = (orientation == 'vertical')
-    const cellLength = 
+    const rowLength = 
         isVertical?
             (cellHeight + gap):
             (cellWidth + gap)
 
     const targetScrollblockPixelOffset = 
-        (targetAxisRowOffset * cellLength) - (targetAxisPixelOffset)
+        (targetAxisRowOffset * rowLength) - (targetAxisPixelOffset)
 
     // ----------------------[ return required values ]---------------------
 
@@ -194,7 +194,7 @@ export const calcContentShift = ({
 
     } = cradleInternalProperties
 
-    const cellLength = 
+    const rowLength = 
         ((orientation == 'vertical')?
             cellHeight:
             cellWidth) 
@@ -218,7 +218,7 @@ export const calcContentShift = ({
     // reference cell forward end for scrolling forward or back end for scrolling backward
     const viewportaxisbackwardgaplength = 
         (!isScrollingviewportforward)?
-            (viewportaxisOffset - cellLength):// + triggerlineOffset)):
+            (viewportaxisOffset - rowLength):// + triggerlineOffset)):
             0
     const viewportaxisforwardgaplength = 
         (isScrollingviewportforward)?
@@ -230,22 +230,22 @@ export const calcContentShift = ({
 
     const viewportheadtriggergaplength = 
         (!isScrollingviewportforward)?
-            viewportaxisOffset - (cellLength + triggerlineOffset):
+            viewportaxisOffset - (rowLength + triggerlineOffset):
             0
 
     // -------[ 3. calculate the axis overshoot (more than one row) row counts, if any ]-------
     
     // these overshoot numbers guaranteed to be 0 or positive
     const backwardovershootrowcount = 
-        Math.max(0,Math.ceil(viewportaxisbackwardgaplength/cellLength))
+        Math.max(0,Math.ceil(viewportaxisbackwardgaplength/rowLength))
     const forwardovershootrowcount = 
-        Math.max(0,Math.floor(viewportaxisforwardgaplength/cellLength))
+        Math.max(0,Math.floor(viewportaxisforwardgaplength/rowLength))
 
     console.log('backwardovershootrowcount, forwardovershootrowcount',
         backwardovershootrowcount, forwardovershootrowcount)
 
     const backwardtriggerovershootrowcount = 
-        Math.max(0,Math.ceil(viewportheadtriggergaplength/cellLength))
+        Math.max(0,Math.ceil(viewportheadtriggergaplength/rowLength))
 
     console.log('++backwardtriggerovershootrowcount, viewportheadtriggergaplength',
         backwardtriggerovershootrowcount, viewportheadtriggergaplength)
@@ -392,7 +392,7 @@ export const calcContentShift = ({
 
     // -------------[ 8. calculate new axis pixel position; adjust for overshoot ]------------------
 
-    let axisposshift = axisreferencerowshift * cellLength
+    let axisposshift = axisreferencerowshift * rowLength
 
     let newaxispixeloffset = viewportaxisOffset + axisposshift
 
