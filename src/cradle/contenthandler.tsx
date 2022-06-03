@@ -54,7 +54,7 @@ export default class ContentHandler {
     // TODO: last row is sometimes left off with reposition
     public setCradleContent = (cradleState) => { 
 
-        console.log('inside setCradleContent from cradleState', cradleState)
+        // console.log('inside setCradleContent from cradleState', cradleState)
 
         // ------------------------------[ 1. initialize ]---------------------------
 
@@ -207,7 +207,7 @@ export default class ContentHandler {
 
         // ----------------------[ 1. initialize ]-------------------------
 
-        console.log('inside updateCradleContent')
+        // console.log('inside updateCradleContent')
 
         // handler support
         const {
@@ -243,7 +243,7 @@ export default class ContentHandler {
 
         }
 
-        console.log('---isScrollingviewportforward',isScrollingviewportforward)
+        // console.log('---isScrollingviewportforward',isScrollingviewportforward)
 
         // cradle scaffold and user cells
         const cradleElements = scaffoldHandler.elements
@@ -263,7 +263,7 @@ export default class ContentHandler {
         // second abandon option/3; nothing to do
         if (shiftinstruction == 0) {
 
-            console.log('quitting with shiftinstruction',shiftinstruction, triggerlineEntries)
+            // console.log('quitting with shiftinstruction',shiftinstruction, triggerlineEntries)
             return
 
         }
@@ -344,8 +344,8 @@ export default class ContentHandler {
             }
         )
 
-        console.log('allocated content to head and tail, axisreferenceindex',
-            headcontent.length, tailcontent.length, axisReferenceIndex)
+        // console.log('allocated content to head and tail, axisreferenceindex',
+        //     headcontent.length, tailcontent.length, axisReferenceIndex)
 
         cradleContent.cradleModel = localContentList
         cradleContent.headViewComponents = cradleContent.headModelComponents = headcontent
@@ -360,8 +360,8 @@ export default class ContentHandler {
 
             const top = scrollPos + axisPixelOffset
 
-            console.log('DOM setting axis top, scrollPos, axisPixelOffset',
-                top, scrollPos, axisPixelOffset)
+            // console.log('DOM setting axis top, scrollPos, axisPixelOffset',
+            //     top, scrollPos, axisPixelOffset)
 
             cradleElements.axisRef.current.style.top = top + 'px'
             cradleElements.axisRef.current.style.left = 'auto'
@@ -389,7 +389,8 @@ export default class ContentHandler {
         scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = axisReferenceIndex
         scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = axisPixelOffset
 
-        interruptHandler.axisTriggerlinesIntersect.reset()
+        // trigger lines have been moved, so observer must be reset
+        interruptHandler.axisTriggerlinesIntersect.resetObserver()
         interruptHandler.signals.pauseTriggerlinesObserver = false
 
         stateHandler.setCradleState('renderupdatedcontent')

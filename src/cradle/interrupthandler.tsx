@@ -34,7 +34,7 @@ export default class InterruptHandler {
     private axisTriggerlinesObserverCallback = (entries) => {
 
         if (this.signals.pauseTriggerlinesObserver) { 
-            console.log('returning from trigger callback with pauseTriggerlinesObserver = TRUE', entries)
+            // console.log('returning from trigger callback with pauseTriggerlinesObserver = TRUE', entries)
             return
 
         }
@@ -165,7 +165,7 @@ export default class InterruptHandler {
    axisTriggerlinesIntersect = {
         observer:null,
         callback:this.axisTriggerlinesObserverCallback,
-        reset:() => {
+        resetObserver:() => {
             const observer = this.axisTriggerlinesIntersect.observer
             observer.disconnect()
             const cradleElements = this.cradleParameters.handlersRef.current.scaffold.elements

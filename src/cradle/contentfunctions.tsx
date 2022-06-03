@@ -203,7 +203,7 @@ export const calcContentShift = ({
             cellWidth) 
         + gap
 
-    console.log('viewportElement.scrollTop vs scrollPos', viewportElement.scrollTop, scrollPos)
+    // console.log('viewportElement.scrollTop vs scrollPos', viewportElement.scrollTop, scrollPos)
 
     // -----------[ 2. calculate the forward or backward gaps for input ]-------------------
     // extra gaps can be caused by rapid scrolling
@@ -233,13 +233,13 @@ export const calcContentShift = ({
             Math.floor((triggerAxisOffset - 1)/rowLength):
             Math.ceil((triggerAxisOffset + 1)/rowLength)
 
-    const direction = 
-        isScrollingViewportForward?
-            "FORWARD":
-            "BACKWARD"
-    console.log('==>',direction ,'calcContentShift: viewportaxisOffset, triggerAxisOffset, triggerRowShift\
-        triggerlineOffset, rowLength', //, axisOffset, scrollPos',
-        viewportAxisOffset, triggerAxisOffset, triggerRowShift, triggerlineOffset, rowLength)//, axisOffset, scrollPos)
+    // const direction = 
+    //     isScrollingViewportForward?
+    //         "FORWARD":
+    //         "BACKWARD"
+    // console.log('==>',direction ,'calcContentShift: viewportaxisOffset, triggerAxisOffset, triggerRowShift\
+    //     triggerlineOffset, rowLength', //, axisOffset, scrollPos',
+    //     viewportAxisOffset, triggerAxisOffset, triggerRowShift, triggerlineOffset, rowLength)//, axisOffset, scrollPos)
 
     // consolidate head and tail information into single axis and cradle reference shifts
     // - negative value shifted toward tail; positive value shifted toward head
@@ -250,7 +250,7 @@ export const calcContentShift = ({
 
     // console.log('axisreferencerowshift, tailaddrowcount, headaddrowcount',
     //     axisreferencerowshift, tailaddrowcount, headaddrowcount)
-    console.log('axisreferencerowshift', axisreferencerowshift)
+    // console.log('axisreferencerowshift', axisreferencerowshift)
 
     // base value for cradle reference shift; may change if beyond list count
     let cradlereferencerowshift = axisreferencerowshift
@@ -265,10 +265,10 @@ export const calcContentShift = ({
 
     let newcradlereferencerowoffset = previouscradlerowoffset + cradlereferencerowshift
     let newaxisreferencerowoffset = previousaxisrowoffset + axisreferencerowshift
-    console.log('previouscradlerowoffset, previousaxisrowoffset',
-        previouscradlerowoffset, previousaxisrowoffset)
-    console.log('BASE newcradlereferencerowoffset, newaxisreferencerowoffset',
-        newcradlereferencerowoffset, newaxisreferencerowoffset)
+    // console.log('previouscradlerowoffset, previousaxisrowoffset',
+    //     previouscradlerowoffset, previousaxisrowoffset)
+    // console.log('BASE newcradlereferencerowoffset, newaxisreferencerowoffset',
+    //     newcradlereferencerowoffset, newaxisreferencerowoffset)
 
     // --------[ 6. adjust cradle contents when at start and end of list ]-------
     // ...to maintain constant number of cradle rows
@@ -338,8 +338,8 @@ export const calcContentShift = ({
 
     }
 
-    console.log('FINAL newcradlereferencerowoffset, newaxisreferencerowoffset',
-        newcradlereferencerowoffset, newaxisreferencerowoffset)
+    // console.log('FINAL newcradlereferencerowoffset, newaxisreferencerowoffset',
+    //     newcradlereferencerowoffset, newaxisreferencerowoffset)
 
     // ----------------------[ 7. map rows to item references ]----------------------
 
@@ -365,7 +365,7 @@ export const calcContentShift = ({
     let headchangecount = -(cradlereferencerowshift * crosscount)
     let tailchangecount = -headchangecount - (changeOfCradleContentCount)
 
-    console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
+    // console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
 
     // -------------[ 8. calculate new axis pixel position; adjust for overshoot ]------------------
 
@@ -373,8 +373,8 @@ export const calcContentShift = ({
 
     let newaxispixeloffset = viewportAxisOffset + axisposshift
 
-    console.log('newaxispixeloffset, viewportaxisOffset, axisposshift', 
-        newaxispixeloffset, viewportAxisOffset, axisposshift)
+    // console.log('newaxispixeloffset, viewportaxisOffset, axisposshift', 
+    //     newaxispixeloffset, viewportAxisOffset, axisposshift)
 
     // ---------------------[ 9. return required values ]-------------------
 
