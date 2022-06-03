@@ -149,15 +149,15 @@ export default class InterruptHandler {
       }
    }
 
-   cradleIntersect = {
-        observer:null,
+   cradleIntersect = {    
+        observer:null,    
         callback:this.cradleIntersectionObserverCallback,
         createObserver:() => {
             let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
             this.cradleIntersect.observer = new IntersectionObserver(
                 this.cradleIntersect.callback,
                 {root:viewportInterruptProperties.elementref.current, threshold:0}
-            )
+            )    
             return this.cradleIntersect.observer
         }
     }
@@ -165,6 +165,13 @@ export default class InterruptHandler {
    axisTriggerlinesIntersect = {
         observer:null,
         callback:this.axisTriggerlinesObserverCallback,
+        reset:() => {
+            const observer = this.axisTriggerlinesIntersect.observer
+            observer.disconnect()
+            const cradleElements = this.cradleParameters.handlersRef.current.scaffold.elements
+            observer.observe(cradleElements.headTriggerlineRef.current)
+            observer.observe(cradleElements.tailTriggerlineRef.current)
+        },
         createObserver:() => {
             let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
             this.axisTriggerlinesIntersect.observer = new IntersectionObserver(

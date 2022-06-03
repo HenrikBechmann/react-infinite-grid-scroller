@@ -272,6 +272,7 @@ export default class ContentHandler {
         // cradle properties
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
         const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
+        const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementref.current
 
         const {
 
@@ -292,6 +293,7 @@ export default class ContentHandler {
             cradleContent,
             cradleElements,
             scrollPos,
+            viewportElement,
 
         })
 
@@ -350,8 +352,9 @@ export default class ContentHandler {
         cradleContent.tailViewComponents = cradleContent.tailModelComponents = tailcontent
 
         // -------------------------------[ 6. set css changes ]-------------------------
-
+        // debugger
         scaffoldHandler.cradleReferenceData.blockScrollPos = scrollPos
+        // viewportElement.scrollTop = scrollPos
 
         if (cradleInheritedProperties.orientation == 'vertical') {
 
@@ -386,6 +389,7 @@ export default class ContentHandler {
         scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = axisReferenceIndex
         scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = axisPixelOffset
 
+        interruptHandler.axisTriggerlinesIntersect.reset()
         interruptHandler.signals.pauseTriggerlinesObserver = false
 
         stateHandler.setCradleState('renderupdatedcontent')

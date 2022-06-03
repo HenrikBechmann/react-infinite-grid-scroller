@@ -126,7 +126,7 @@ export const getShiftInstruction = ({
 
     if (entries.length > 1) {
         console.log('SYSTEM ISSUE: MORE THAN ONE BREAKLINE OBSERVER ENTRY', triggerlineEntries.length, triggerlineEntries)
-        debugger
+        // debugger
     }
 
     const [entry] = entries
@@ -156,10 +156,13 @@ export const calcContentShift = ({
     cradleContent,
     cradleElements,
     scrollPos, // of cradle against viewport; where the cradle motion intersects the viewport
+    viewportElement,
 
 }) => {
 
     // ------------------------[ 1. initialize ]-----------------------
+
+    // debugger
 
     const isScrollingViewportForward = (shiftinstruction < 0)
 
@@ -199,6 +202,8 @@ export const calcContentShift = ({
             cellHeight:
             cellWidth) 
         + gap
+
+    console.log('viewportElement.scrollTop vs scrollPos', viewportElement.scrollTop, scrollPos)
 
     // -----------[ 2. calculate the forward or backward gaps for input ]-------------------
     // extra gaps can be caused by rapid scrolling
