@@ -388,6 +388,8 @@ export const calcContentShift = ({
     let headchangecount = -(cradlereferencerowshift * crosscount)
     let tailchangecount = -headchangecount - (changeOfCradleContentCount)
 
+    console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
+
     // -------------[ 8. calculate new axis pixel position; adjust for overshoot ]------------------
 
     let axisposshift = axisreferencerowshift * cellLength

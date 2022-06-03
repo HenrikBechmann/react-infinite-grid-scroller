@@ -342,6 +342,9 @@ export default class ContentHandler {
             }
         )
 
+        console.log('allocated content to head and tail, axisreferenceindex',
+            headcontent.length, tailcontent.length, axisReferenceIndex)
+
         cradleContent.cradleModel = localContentList
         cradleContent.headViewComponents = cradleContent.headModelComponents = headcontent
         cradleContent.tailViewComponents = cradleContent.tailModelComponents = tailcontent
