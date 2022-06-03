@@ -46,17 +46,6 @@ export default class InterruptHandler {
 
         }
 
-        // if (entries.length >= 2) {
-        //     console.log('2 or more trigger entries', entries)
-        //     const [first,second] = entries
-        //     // TODO: consider using scrollHandler.isScrolling instead
-        //     if (first.time == second.time) { // initializing, not scrolling
-        //         return
-        //     } else {
-        //         console.log('WARNING: double triggerlines intersection. Contact author.')
-        //     }
-        // }
-
         const {
             content:contentHandler,
             state:stateHandler,
