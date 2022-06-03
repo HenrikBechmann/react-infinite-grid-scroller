@@ -208,22 +208,31 @@ export const calcContentShift = ({
             axisElement.offsetTop:
             axisElement.offsetLeft
 
+    // viewportAxisOffset will be negative for scroll forward and positive for scroll backward
     const viewportAxisOffset = // the pixel distance between the viewport frame and the axis, toward the head
         cradleAxisOffset - scrollPos
 
     const triggerAxisOffset = 
         (isScrollingViewportForward)?
-            viewportAxisOffset - triggerlineOffset:
-            viewportAxisOffset + triggerlineOffset
+            // scroll forward engages the tail triggerline which is below the axis
+            // the tail triggerline must be placed to intersect to re-trigger
+            viewportAxisOffset + triggerlineOffset:
+            // scrollbackward engages the head triggerline which is above the axis
+            // the head triggerline muse be placed not to intersect to retrigger
+            viewportAxisOffset - (rowLength - triggerlineOffset)
 
     // negative for moving rows out of head into tail;
     // positive for moving rows out of tail into head
     const triggerRowShift = 
         (isScrollingViewportForward)?
-            Math.floor(triggerAxisOffset/rowLength):
-            Math.ceil(triggerAxisOffset/rowLength)
+            Math.floor((triggerAxisOffset - 1)/rowLength):
+            Math.ceil((triggerAxisOffset + 1)/rowLength)
 
-    console.log('==> calcContentShift: viewportaxisOffset, triggerAxisOffset, triggerRowShift\
+    const direction = 
+        isScrollingViewportForward?
+            "FORWARD":
+            "BACKWARD"
+    console.log('==>',direction ,'calcContentShift: viewportaxisOffset, triggerAxisOffset, triggerRowShift\
         triggerlineOffset, rowLength', //, axisOffset, scrollPos',
         viewportAxisOffset, triggerAxisOffset, triggerRowShift, triggerlineOffset, rowLength)//, axisOffset, scrollPos)
 

@@ -263,7 +263,7 @@ export default class ContentHandler {
         // second abandon option/3; nothing to do
         if (shiftinstruction == 0) {
 
-            console.log('quitting with shiftinstruction',shiftinstruction)
+            console.log('quitting with shiftinstruction',shiftinstruction, triggerlineEntries)
             return
 
         }
@@ -385,6 +385,8 @@ export default class ContentHandler {
 
         scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = axisReferenceIndex
         scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = axisPixelOffset
+
+        interruptHandler.signals.pauseTriggerlinesObserver = false
 
         stateHandler.setCradleState('renderupdatedcontent')
 
