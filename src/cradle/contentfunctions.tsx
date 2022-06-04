@@ -268,7 +268,7 @@ export const calcContentShift = ({
     // console.log('BASE newcradlereferencerowoffset, newaxisreferencerowoffset',
     //     newcradlereferencerowoffset, newaxisreferencerowoffset)
 
-    // --------[ 6. adjust cradle contents when at start and end of list ]-------
+    // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
 
     if (isScrollingViewportForward) {
@@ -298,9 +298,9 @@ export const calcContentShift = ({
             cradleReferenceRowshift -= tailrowdiff
 
         }
-    }
+    } else { // !isScrollingViewportForward
 
-    if (!isScrollingViewportForward) {
+    // if (!isScrollingViewportForward) {
 
         // c. if scrolling backward (toward head of list), as the cradlerowoffset hits 0, cradle changes have
         // to be adjusted to prevent shortening of cradle content
@@ -327,11 +327,6 @@ export const calcContentShift = ({
             cradleReferenceRowshift += tailrowdiff
             newCradleReferenceRowOffset += tailrowdiff
 
-        }
-
-        if (newAxisReferenceRowOffset < 0) {
-            axisReferenceRowshift -= newAxisReferenceRowOffset
-            newAxisReferenceRowOffset = 0
         }
 
     }
