@@ -230,8 +230,8 @@ export const calcContentShift = ({
     // positive for moving rows out of tail into head
     const triggerRowShift = 
         (isScrollingViewportForward)?
-            Math.floor((triggerAxisOffset -1)/rowLength):
-            Math.ceil((triggerAxisOffset + 1)/rowLength)
+            Math.floor((triggerAxisOffset?triggerAxisOffset: -1)/rowLength):
+            Math.ceil((triggerAxisOffset?triggerAxisOffset: 1)/rowLength)
 
     // const direction = 
     //     isScrollingViewportForward?

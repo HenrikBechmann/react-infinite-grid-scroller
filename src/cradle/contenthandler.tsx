@@ -390,7 +390,7 @@ export default class ContentHandler {
         scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = axisPixelOffset
 
         // trigger lines have been moved, so observer must be reset
-        interruptHandler.axisTriggerlinesIntersect.resetObservers()
+        interruptHandler.axisTriggerlinesIntersect.resetObserves()
         interruptHandler.signals.pauseTriggerlinesObserver = false
 
         stateHandler.setCradleState('renderupdatedcontent')
