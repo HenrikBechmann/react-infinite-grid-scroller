@@ -156,7 +156,7 @@ export const calcContentShift = ({
     cradleContent,
     cradleElements,
     scrollPos, // of cradle against viewport; where the cradle motion intersects the viewport
-    viewportElement,
+    // viewportElement,
 
 }) => {
 
@@ -250,19 +250,19 @@ export const calcContentShift = ({
     //     axisreferencerowshift, tailaddrowcount, headaddrowcount)
     // console.log('axisreferencerowshift', axisreferencerowshift)
 
-    // ------------[ 5. calc new cradle reference row offset ]-------------
+    // ------------[ 5. calc new cradle and axis reference row offset ]-------------
 
-    // base value for cradle reference shift; may change if beyond list count
+    // base value for cradle reference shift; may change if beyond list bounds
     let cradleReferenceRowshift = axisReferenceRowshift
 
-    const previouscradlereferenceindex = (cradlecontentlist[0]?.props.index || 0)
-    const previouscradlerowoffset = Math.ceil(previouscradlereferenceindex/crosscount)
+    const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0)
+    const previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)
 
-    const previousaxisreferenceindex = (tailcontentlist[0]?.props.index || 0)
-    const previousaxisrowoffset = Math.ceil(previousaxisreferenceindex/crosscount)
+    const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0)
+    const previousAxisRowOffset = Math.ceil(previousAxisReferenceIndex/crosscount)
 
-    let newcradlereferencerowoffset = previouscradlerowoffset + cradleReferenceRowshift
-    let newaxisreferencerowoffset = previousaxisrowoffset + axisReferenceRowshift
+    let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
+    let newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowshift
     // console.log('previouscradlerowoffset, previousaxisrowoffset',
     //     previouscradlerowoffset, previousaxisrowoffset)
     // console.log('BASE newcradlereferencerowoffset, newaxisreferencerowoffset',
@@ -280,21 +280,21 @@ export const calcContentShift = ({
         // of cradle content.
 
         const targetcradlereferencerowoffset = 
-            Math.max(0, (newaxisreferencerowoffset - 1 - runwayRowcount))
+            Math.max(0, (newAxisReferenceRowOffset - 1 - runwayRowcount))
 
-        const headrowdiff = newcradlereferencerowoffset - targetcradlereferencerowoffset
+        const headrowdiff = newCradleReferenceRowOffset - targetcradlereferencerowoffset
         if (headrowdiff > 0) {
 
-            newcradlereferencerowoffset -= headrowdiff
+            newCradleReferenceRowOffset -= headrowdiff
             cradleReferenceRowshift -= headrowdiff
 
         }
         // case of being in bounds of trailing runway (end of list)
-        const targetcradleEndrowoffset = newcradlereferencerowoffset + (cradleRowcount -1)
+        const targetcradleEndrowoffset = newCradleReferenceRowOffset + (cradleRowcount -1)
         const tailrowdiff = Math.max(0,targetcradleEndrowoffset - (listRowcount -1))
         if (tailrowdiff > 0) {
 
-            newcradlereferencerowoffset -= tailrowdiff
+            newCradleReferenceRowOffset -= tailrowdiff
             cradleReferenceRowshift -= tailrowdiff
 
         }
@@ -307,31 +307,31 @@ export const calcContentShift = ({
         // d. if scrolling backward near the end of the list, cradle changes has to be adjusted to accomodate
         // the trailing runway
 
-        if (newcradlereferencerowoffset < 0) {
+        if (newCradleReferenceRowOffset < 0) {
 
             const previousrowshift = cradleReferenceRowshift
-            cradleReferenceRowshift += newcradlereferencerowoffset
+            cradleReferenceRowshift += newCradleReferenceRowOffset
             cradleReferenceRowshift = Math.max(0,cradleReferenceRowshift)
-            newcradlereferencerowoffset = 0
+            newCradleReferenceRowOffset = 0
 
         }
         // case of in bounds of trailing runway (end of list)
         const computedNextCradleEndrowOffset = 
-            (previouscradlerowoffset + (cradleRowcount -1) + cradleReferenceRowshift)
+            (previousCradleRowOffset + (cradleRowcount -1) + cradleReferenceRowshift)
         const targetcradleEndrowoffset = Math.min((listRowcount - 1), 
-            (newaxisreferencerowoffset + (viewportRowcount - 1) + (runwayRowcount - 1)))
+            (newAxisReferenceRowOffset + (viewportRowcount - 1) + (runwayRowcount - 1)))
         const tailrowdiff = Math.max(0, targetcradleEndrowoffset - computedNextCradleEndrowOffset)
 
         if (tailrowdiff > 0) {
 
             cradleReferenceRowshift += tailrowdiff
-            newcradlereferencerowoffset += tailrowdiff
+            newCradleReferenceRowOffset += tailrowdiff
 
         }
 
-        if (newaxisreferencerowoffset < 0) {
-            axisReferenceRowshift -= newaxisreferencerowoffset
-            newaxisreferencerowoffset = 0
+        if (newAxisReferenceRowOffset < 0) {
+            axisReferenceRowshift -= newAxisReferenceRowOffset
+            newAxisReferenceRowOffset = 0
         }
 
     }
@@ -341,35 +341,35 @@ export const calcContentShift = ({
 
     // ----------------------[ 7. map rows to item references ]----------------------
 
-    let newcradlereferenceindex = (newcradlereferencerowoffset * crosscount)
-    let cradlereferenceitemshift = (cradleReferenceRowshift * crosscount)
+    // let newCradleReferenceIndex = (newCradleReferenceRowOffset * crosscount)
+    let cradleReferenceItemShift = (cradleReferenceRowshift * crosscount)
 
-    let newaxisreferenceindex = newaxisreferencerowoffset * crosscount
-    let axisreferenceitemshift = axisReferenceRowshift * crosscount
+    let newAxisReferenceIndex = newAxisReferenceRowOffset * crosscount
+    let axisReferenceItemShift = axisReferenceRowshift * crosscount
 
-    let newcradlecontentcount = cradleRowcount * crosscount // base count
-    const includesLastRow = ((newcradlereferencerowoffset + cradleRowcount) >= listRowcount)
+    let newCradleContentCount = cradleRowcount * crosscount // base count
+    const includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount) >= listRowcount)
     if (includesLastRow) {
         const partialspaces = listsize % crosscount
         const itemsShortfall = 
             (partialspaces == 0)?
                 0:
                 crosscount - partialspaces
-        newcradlecontentcount -= itemsShortfall
+        newCradleContentCount -= itemsShortfall
     }
 
     // create head and tail change counts
-    const changeOfCradleContentCount = cradlecontentlist.length - newcradlecontentcount
-    let headchangecount = -(cradleReferenceRowshift * crosscount)
-    let tailchangecount = -headchangecount - (changeOfCradleContentCount)
+    const changeOfCradleContentCount = cradlecontentlist.length - newCradleContentCount
+    let headChangeCount = -(cradleReferenceRowshift * crosscount)
+    let tailChangeCount = -headChangeCount - (changeOfCradleContentCount)
 
     // console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
 
     // -------------[ 8. calculate new axis pixel position; adjust for overshoot ]------------------
 
-    let axisposshift = axisReferenceRowshift * rowLength
+    // const axisPosShift = axisReferenceRowshift * rowLength
 
-    let newaxispixeloffset = viewportAxisOffset + axisposshift
+    const newAxisPixelOffset = viewportAxisOffset + (axisReferenceRowshift * rowLength)
 
     // console.log('newaxispixeloffset, viewportaxisOffset, axisposshift', 
     //     newaxispixeloffset, viewportAxisOffset, axisposshift)
@@ -377,14 +377,14 @@ export const calcContentShift = ({
     // ---------------------[ 9. return required values ]-------------------
 
     return {
-        newcradlereferenceindex, 
-        cradlereferenceitemshift, 
-        newaxisreferenceindex, 
-        axisreferenceitemshift, 
-        newaxispixeloffset, 
-        newcradlecontentcount,
-        headchangecount,
-        tailchangecount
+        // newCradleReferenceIndex, 
+        cradleReferenceItemShift, 
+        newAxisReferenceIndex, 
+        axisReferenceItemShift, 
+        newAxisPixelOffset, 
+        newCradleContentCount,
+        headChangeCount,
+        tailChangeCount
     }
 
 }

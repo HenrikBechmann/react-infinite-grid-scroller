@@ -276,14 +276,14 @@ export default class ContentHandler {
 
         const {
 
-            newcradlereferenceindex, 
-            cradlereferenceitemshift:cradleItemShift, 
-            newaxisreferenceindex:axisReferenceIndex, 
-            axisreferenceitemshift:axisItemShift, 
-            newaxispixeloffset:axisPixelOffset, 
-            newcradlecontentcount:cradleContentCount,
-            headchangecount:headChangeCount,
-            tailchangecount:tailChangeCount,
+            // newCradleReferenceIndex:newcradlereferenceindex, 
+            cradleReferenceItemShift:cradleItemShift, 
+            newAxisReferenceIndex:axisReferenceIndex, 
+            axisReferenceItemShift:axisItemShift, 
+            newAxisPixelOffset:axisPixelOffset, 
+            newCradleContentCount:cradleContentCount,
+            headChangeCount,
+            tailChangeCount,
 
         } = calcContentShift({
 
@@ -293,7 +293,7 @@ export default class ContentHandler {
             cradleContent,
             cradleElements,
             scrollPos,
-            viewportElement,
+            // viewportElement,
 
         })
 
