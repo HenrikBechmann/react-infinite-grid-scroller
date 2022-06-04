@@ -261,6 +261,7 @@ export const calcContentShift = ({
     const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0)
     const previousAxisRowOffset = Math.ceil(previousAxisReferenceIndex/crosscount)
 
+    // base values
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
     let newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowshift
     // console.log('previouscradlerowoffset, previousaxisrowoffset',
@@ -279,19 +280,19 @@ export const calcContentShift = ({
         // listrow new cradle offset and cradle row shift have to be adjusted to prevent shortening 
         // of cradle content.
 
-        const targetcradlereferencerowoffset = 
-            Math.max(0, (newAxisReferenceRowOffset - 1 - runwayRowcount))
+        const targetCradleReferenceRowOffset = 
+            Math.max(0, (newAxisReferenceRowOffset - runwayRowcount)) // - (runwayRowcount?-1:0))));
 
-        const headrowdiff = newCradleReferenceRowOffset - targetcradlereferencerowoffset
-        if (headrowdiff > 0) {
+        const headrowDiff = newCradleReferenceRowOffset - targetCradleReferenceRowOffset
+        if (headrowDiff > 0) {
 
-            newCradleReferenceRowOffset -= headrowdiff
-            cradleReferenceRowshift -= headrowdiff
+            newCradleReferenceRowOffset -= headrowDiff
+            cradleReferenceRowshift -= headrowDiff
 
         }
         // case of being in bounds of trailing runway (end of list)
-        const targetcradleEndrowoffset = newCradleReferenceRowOffset + (cradleRowcount -1)
-        const tailrowdiff = Math.max(0,targetcradleEndrowoffset - (listRowcount -1))
+        const targetCradleEndrowOffset = newCradleReferenceRowOffset + (cradleRowcount - 1)
+        const tailrowdiff = Math.max(0,targetCradleEndrowOffset - (listRowcount -1))
         if (tailrowdiff > 0) {
 
             newCradleReferenceRowOffset -= tailrowdiff
