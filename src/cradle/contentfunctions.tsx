@@ -205,7 +205,7 @@ export const calcContentShift = ({
 
     // console.log('viewportElement.scrollTop vs scrollPos', viewportElement.scrollTop, scrollPos)
 
-    // -----------[ 2. calculate the forward or backward gaps for input ]-------------------
+    // -----------[ 2. calculate axis reference row shift ]-------------------
     // extra gaps can be caused by rapid scrolling
 
     const cradleAxisOffset = 
@@ -230,7 +230,7 @@ export const calcContentShift = ({
     // positive for moving rows out of tail into head
     const triggerRowShift = 
         (isScrollingViewportForward)?
-            Math.floor((triggerAxisOffset - 1)/rowLength):
+            Math.floor((triggerAxisOffset -1)/rowLength):
             Math.ceil((triggerAxisOffset + 1)/rowLength)
 
     // const direction = 
@@ -244,18 +244,16 @@ export const calcContentShift = ({
     // consolidate head and tail information into single axis and cradle reference shifts
     // - negative value shifted toward tail; positive value shifted toward head
     // - one of the two expressions in the following line will be 0
-    let axisreferencerowshift = -triggerRowShift
-        // - (tailaddrowcount + backwardovershootrowcount) +
-        // (headaddrowcount + forwardovershootrowcount)
+    let axisReferenceRowshift = -triggerRowShift
 
     // console.log('axisreferencerowshift, tailaddrowcount, headaddrowcount',
     //     axisreferencerowshift, tailaddrowcount, headaddrowcount)
     // console.log('axisreferencerowshift', axisreferencerowshift)
 
-    // base value for cradle reference shift; may change if beyond list count
-    let cradlereferencerowshift = axisreferencerowshift
+    // ------------[ 5. calc new cradle reference row offset ]-------------
 
-    // ------------[ 5. calc new cradle reference row offset and axis reference row offset ]-------------
+    // base value for cradle reference shift; may change if beyond list count
+    let cradlereferencerowshift = axisReferenceRowshift
 
     const previouscradlereferenceindex = (cradlecontentlist[0]?.props.index || 0)
     const previouscradlerowoffset = Math.ceil(previouscradlereferenceindex/crosscount)
@@ -264,7 +262,7 @@ export const calcContentShift = ({
     const previousaxisrowoffset = Math.ceil(previousaxisreferenceindex/crosscount)
 
     let newcradlereferencerowoffset = previouscradlerowoffset + cradlereferencerowshift
-    let newaxisreferencerowoffset = previousaxisrowoffset + axisreferencerowshift
+    let newaxisreferencerowoffset = previousaxisrowoffset + axisReferenceRowshift
     // console.log('previouscradlerowoffset, previousaxisrowoffset',
     //     previouscradlerowoffset, previousaxisrowoffset)
     // console.log('BASE newcradlereferencerowoffset, newaxisreferencerowoffset',
@@ -332,7 +330,7 @@ export const calcContentShift = ({
         }
 
         if (newaxisreferencerowoffset < 0) {
-            axisreferencerowshift -= newaxisreferencerowoffset
+            axisReferenceRowshift -= newaxisreferencerowoffset
             newaxisreferencerowoffset = 0
         }
 
@@ -347,7 +345,7 @@ export const calcContentShift = ({
     let cradlereferenceitemshift = (cradlereferencerowshift * crosscount)
 
     let newaxisreferenceindex = newaxisreferencerowoffset * crosscount
-    let axisreferenceitemshift = axisreferencerowshift * crosscount
+    let axisreferenceitemshift = axisReferenceRowshift * crosscount
 
     let newcradlecontentcount = cradleRowcount * crosscount // base count
     const includesLastRow = ((newcradlereferencerowoffset + cradleRowcount) >= listRowcount)
@@ -369,7 +367,7 @@ export const calcContentShift = ({
 
     // -------------[ 8. calculate new axis pixel position; adjust for overshoot ]------------------
 
-    let axisposshift = axisreferencerowshift * rowLength
+    let axisposshift = axisReferenceRowshift * rowLength
 
     let newaxispixeloffset = viewportAxisOffset + axisposshift
 
