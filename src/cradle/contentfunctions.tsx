@@ -253,7 +253,7 @@ export const calcContentShift = ({
     // ------------[ 5. calc new cradle reference row offset ]-------------
 
     // base value for cradle reference shift; may change if beyond list count
-    let cradlereferencerowshift = axisReferenceRowshift
+    let cradleReferenceRowshift = axisReferenceRowshift
 
     const previouscradlereferenceindex = (cradlecontentlist[0]?.props.index || 0)
     const previouscradlerowoffset = Math.ceil(previouscradlereferenceindex/crosscount)
@@ -261,7 +261,7 @@ export const calcContentShift = ({
     const previousaxisreferenceindex = (tailcontentlist[0]?.props.index || 0)
     const previousaxisrowoffset = Math.ceil(previousaxisreferenceindex/crosscount)
 
-    let newcradlereferencerowoffset = previouscradlerowoffset + cradlereferencerowshift
+    let newcradlereferencerowoffset = previouscradlerowoffset + cradleReferenceRowshift
     let newaxisreferencerowoffset = previousaxisrowoffset + axisReferenceRowshift
     // console.log('previouscradlerowoffset, previousaxisrowoffset',
     //     previouscradlerowoffset, previousaxisrowoffset)
@@ -286,7 +286,7 @@ export const calcContentShift = ({
         if (headrowdiff > 0) {
 
             newcradlereferencerowoffset -= headrowdiff
-            cradlereferencerowshift -= headrowdiff
+            cradleReferenceRowshift -= headrowdiff
 
         }
         // case of being in bounds of trailing runway (end of list)
@@ -295,7 +295,7 @@ export const calcContentShift = ({
         if (tailrowdiff > 0) {
 
             newcradlereferencerowoffset -= tailrowdiff
-            cradlereferencerowshift -= tailrowdiff
+            cradleReferenceRowshift -= tailrowdiff
 
         }
     }
@@ -309,22 +309,22 @@ export const calcContentShift = ({
 
         if (newcradlereferencerowoffset < 0) {
 
-            const previousrowshift = cradlereferencerowshift
-            cradlereferencerowshift += newcradlereferencerowoffset
-            cradlereferencerowshift = Math.max(0,cradlereferencerowshift)
+            const previousrowshift = cradleReferenceRowshift
+            cradleReferenceRowshift += newcradlereferencerowoffset
+            cradleReferenceRowshift = Math.max(0,cradleReferenceRowshift)
             newcradlereferencerowoffset = 0
 
         }
         // case of in bounds of trailing runway (end of list)
         const computedNextCradleEndrowOffset = 
-            (previouscradlerowoffset + (cradleRowcount -1) + cradlereferencerowshift)
+            (previouscradlerowoffset + (cradleRowcount -1) + cradleReferenceRowshift)
         const targetcradleEndrowoffset = Math.min((listRowcount - 1), 
             (newaxisreferencerowoffset + (viewportRowcount - 1) + (runwayRowcount - 1)))
         const tailrowdiff = Math.max(0, targetcradleEndrowoffset - computedNextCradleEndrowOffset)
 
         if (tailrowdiff > 0) {
 
-            cradlereferencerowshift += tailrowdiff
+            cradleReferenceRowshift += tailrowdiff
             newcradlereferencerowoffset += tailrowdiff
 
         }
@@ -342,7 +342,7 @@ export const calcContentShift = ({
     // ----------------------[ 7. map rows to item references ]----------------------
 
     let newcradlereferenceindex = (newcradlereferencerowoffset * crosscount)
-    let cradlereferenceitemshift = (cradlereferencerowshift * crosscount)
+    let cradlereferenceitemshift = (cradleReferenceRowshift * crosscount)
 
     let newaxisreferenceindex = newaxisreferencerowoffset * crosscount
     let axisreferenceitemshift = axisReferenceRowshift * crosscount
@@ -360,7 +360,7 @@ export const calcContentShift = ({
 
     // create head and tail change counts
     const changeOfCradleContentCount = cradlecontentlist.length - newcradlecontentcount
-    let headchangecount = -(cradlereferencerowshift * crosscount)
+    let headchangecount = -(cradleReferenceRowshift * crosscount)
     let tailchangecount = -headchangecount - (changeOfCradleContentCount)
 
     // console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
