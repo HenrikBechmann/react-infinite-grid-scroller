@@ -115,18 +115,12 @@ export const getShiftInstruction = ({
         const triggerlinename = entry.target.dataset.type
         return ((!isIntersecting) && isScrollingviewportforward && (triggerlinename == 'triggerline-tail')) ||
             (isIntersecting && (!isScrollingviewportforward) && (triggerlinename == 'triggerline-head'))
-        // return (isScrollingviewportforward && (triggerlinename == 'triggerline-tail')) ||
-        //     ((!isScrollingviewportforward) && (triggerlinename == 'triggerline-head'))
     })
-
-    // console.log('getShiftInstruction triggerlineEntries.length, entries.length, triggerlineEntries, entries',
-    //     triggerlineEntries.length, entries.length, triggerlineEntries, entries)
 
     if (entries.length == 0) return 0
 
     if (entries.length > 1) {
         console.log('SYSTEM ISSUE: MORE THAN ONE BREAKLINE OBSERVER ENTRY', triggerlineEntries.length, triggerlineEntries)
-        // debugger
     }
 
     const [entry] = entries
@@ -161,8 +155,6 @@ export const calcContentShift = ({
 }) => {
 
     // ------------------------[ 1. initialize ]-----------------------
-
-    // debugger
 
     const isScrollingViewportForward = (shiftinstruction < 0)
 
@@ -203,8 +195,6 @@ export const calcContentShift = ({
             cellWidth) 
         + gap
 
-    // console.log('viewportElement.scrollTop vs scrollPos', viewportElement.scrollTop, scrollPos)
-
     // -----------[ 2. calculate axis reference row shift ]-------------------
     // extra gaps can be caused by rapid scrolling
 
@@ -233,22 +223,7 @@ export const calcContentShift = ({
             Math.floor((triggerAxisOffset?triggerAxisOffset: -1)/rowLength):
             Math.ceil((triggerAxisOffset?triggerAxisOffset: 1)/rowLength)
 
-    // const direction = 
-    //     isScrollingViewportForward?
-    //         "FORWARD":
-    //         "BACKWARD"
-    // console.log('==>',direction ,'calcContentShift: viewportaxisOffset, triggerAxisOffset, triggerRowShift\
-    //     triggerlineOffset, rowLength', //, axisOffset, scrollPos',
-    //     viewportAxisOffset, triggerAxisOffset, triggerRowShift, triggerlineOffset, rowLength)//, axisOffset, scrollPos)
-
-    // consolidate head and tail information into single axis and cradle reference shifts
-    // - negative value shifted toward tail; positive value shifted toward head
-    // - one of the two expressions in the following line will be 0
     let axisReferenceRowshift = -triggerRowShift
-
-    // console.log('axisreferencerowshift, tailaddrowcount, headaddrowcount',
-    //     axisreferencerowshift, tailaddrowcount, headaddrowcount)
-    // console.log('axisreferencerowshift', axisreferencerowshift)
 
     // ------------[ 5. calc new cradle and axis reference row offset ]-------------
 
@@ -264,10 +239,6 @@ export const calcContentShift = ({
     // base values
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
     let newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowshift
-    // console.log('previouscradlerowoffset, previousaxisrowoffset',
-    //     previouscradlerowoffset, previousaxisrowoffset)
-    // console.log('BASE newcradlereferencerowoffset, newaxisreferencerowoffset',
-    //     newcradlereferencerowoffset, newaxisreferencerowoffset)
 
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
@@ -337,9 +308,6 @@ export const calcContentShift = ({
 
     }
 
-    // console.log('FINAL newcradlereferencerowoffset, newaxisreferencerowoffset',
-    //     newcradlereferencerowoffset, newaxisreferencerowoffset)
-
     // ----------------------[ 7. map rows to item references ]----------------------
 
     // let newCradleReferenceIndex = (newCradleReferenceRowOffset * crosscount)
@@ -364,14 +332,9 @@ export const calcContentShift = ({
     let headChangeCount = -(cradleReferenceRowshift * crosscount)
     let tailChangeCount = -headChangeCount - (changeOfCradleContentCount)
 
-    // console.log('headchangecount, tailchangecount',headchangecount, tailchangecount)
-
     // -------------[ 8. calculate new axis pixel position ]------------------
 
     const newAxisPixelOffset = viewportAxisOffset + (axisReferenceRowshift * rowLength)
-
-    // console.log('newaxispixeloffset, viewportaxisOffset, axisposshift', 
-    //     newaxispixeloffset, viewportAxisOffset, axisposshift)
 
     // ---------------------[ 9. return required values ]-------------------
 

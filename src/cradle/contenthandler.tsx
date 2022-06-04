@@ -54,8 +54,6 @@ export default class ContentHandler {
     // TODO: last row is sometimes left off with reposition
     public setCradleContent = (cradleState) => { 
 
-        // console.log('inside setCradleContent from cradleState', cradleState)
-
         // ------------------------------[ 1. initialize ]---------------------------
 
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
@@ -177,8 +175,6 @@ export default class ContentHandler {
 
         if (orientation == 'vertical') {
 
-            // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
-
             cradleElements.axisRef.current.style.top = (axisPixelOffset + targetAxisPixelAdjustment) + 'px'
             cradleElements.axisRef.current.style.left = 'auto'
             cradleElements.headRef.current.style.paddingBottom = 
@@ -187,8 +183,6 @@ export default class ContentHandler {
                     0
 
         } else { // orientation = 'horizontal'
-
-            // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
 
             cradleElements.axisRef.current.style.top = 'auto'
             cradleElements.axisRef.current.style.left = (axisPixelOffset + targetAxisPixelAdjustment) + 'px'
@@ -207,8 +201,6 @@ export default class ContentHandler {
 
         // ----------------------[ 1. initialize ]-------------------------
 
-        // console.log('inside updateCradleContent')
-
         // handler support
         const {
             portals: portalHandler, 
@@ -226,7 +218,6 @@ export default class ContentHandler {
         // first abandon option/3; nothing to do
         if ( scrollPos < 0) { // for Safari elastic bounce at top of scroll
 
-            console.log('returning with scrollPos < 0')
             return
 
         }
@@ -242,8 +233,6 @@ export default class ContentHandler {
             this._previousScrollForward = isScrollingviewportforward
 
         }
-
-        // console.log('---isScrollingviewportforward',isScrollingviewportforward)
 
         // cradle scaffold and user cells
         const cradleElements = scaffoldHandler.elements
@@ -263,7 +252,6 @@ export default class ContentHandler {
         // second abandon option/3; nothing to do
         if (shiftinstruction == 0) {
 
-            // console.log('quitting with shiftinstruction',shiftinstruction, triggerlineEntries)
             return
 
         }
@@ -276,7 +264,6 @@ export default class ContentHandler {
 
         const {
 
-            // newCradleReferenceIndex:newcradlereferenceindex, 
             cradleReferenceItemShift:cradleItemShift, 
             newAxisReferenceIndex:axisReferenceIndex, 
             axisReferenceItemShift:axisItemShift, 
@@ -293,13 +280,12 @@ export default class ContentHandler {
             cradleContent,
             cradleElements,
             scrollPos,
-            // viewportElement,
 
         })
 
         // third abandon option/3; nothing to do
-        if ((axisItemShift == 0 && cradleItemShift == 0)) {
-            console.log('returning with axisItemShift and cradleItemShift both 0')
+        if ((axisItemShift == 0 && cradleItemShift == 0)) { // TODO: is this possible?
+
             return
 
         }
@@ -344,24 +330,17 @@ export default class ContentHandler {
             }
         )
 
-        // console.log('allocated content to head and tail, axisreferenceindex',
-        //     headcontent.length, tailcontent.length, axisReferenceIndex)
-
         cradleContent.cradleModel = localContentList
         cradleContent.headViewComponents = cradleContent.headModelComponents = headcontent
         cradleContent.tailViewComponents = cradleContent.tailModelComponents = tailcontent
 
         // -------------------------------[ 6. set css changes ]-------------------------
-        // debugger
+
         scaffoldHandler.cradleReferenceData.blockScrollPos = scrollPos
-        // viewportElement.scrollTop = scrollPos
 
         if (cradleInheritedProperties.orientation == 'vertical') {
 
             const top = scrollPos + axisPixelOffset
-
-            // console.log('DOM setting axis top, scrollPos, axisPixelOffset',
-            //     top, scrollPos, axisPixelOffset)
 
             cradleElements.axisRef.current.style.top = top + 'px'
             cradleElements.axisRef.current.style.left = 'auto'

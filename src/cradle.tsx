@@ -225,8 +225,6 @@ const Cradle = ({
 
     const [cradleState, setCradleState] = useState('setup')
 
-    // console.log('=> running Cradle with state',cradleState)
-
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState;
 
