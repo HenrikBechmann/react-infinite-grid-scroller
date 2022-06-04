@@ -166,7 +166,6 @@ export const calcContentShift = ({
         cellWidth,
         listsize,
         triggerlineOffset,
-        // runwayRowcountSpec,
 
     } = cradleInheritedProperties
 
@@ -218,6 +217,7 @@ export const calcContentShift = ({
 
     // negative for moving rows out of head into tail;
     // positive for moving rows out of tail into head
+    // +/- 1 gurantees boundary location results in move
     const triggerRowShift = 
         (isScrollingViewportForward)?
             Math.floor((triggerAxisOffset?triggerAxisOffset: -1)/rowLength):

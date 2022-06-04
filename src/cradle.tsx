@@ -673,8 +673,6 @@ const Cradle = ({
             // it is required set configurations before 'ready' TODO: specify!
             case 'renderupdatedcontent': {
 
-                // interruptHandler.signals.pauseTriggerlinesObserver = false
-
                 setCradleState('ready')
 
                 break
