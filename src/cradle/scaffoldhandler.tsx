@@ -60,7 +60,33 @@ export default class ScaffoldHandler {
         */
         blockScrollProperty:null,
 
+        /*
+            targetAxisReferenceIndex is set by
+                - setCradleContent
+                - updateCradleContent
+                - scaffoldHandler (initialization)
+                - scrollHandler (during and after scroll)
+                - host scrollToItem call
+
+            targetAxisReferenceIndex is used by
+                - scrollTrackerArgs in cradle module
+                - requestedAxisReferenceIndex in setCradleContent
+        */
         targetAxisReferenceIndex:null,
+
+        /*
+            targetAxisPixelOffset is set by
+                - setCradleContent
+                - updateCradleContent
+                - scaffoldHandler (initialiozation)
+                - scrollHandler (during and after scroll)
+                - pivot effect (change of orientation) in cradle module
+
+            targetAxisPixelOffset is used by
+                - previousAxisOffset in pivot effect
+                - setCradleContent
+
+        */
         targetAxisPixelOffset:null,
 
     }
