@@ -116,6 +116,19 @@ export default class ContentHandler {
                 viewportElement:viewportInterruptProperties.elementref.current,
             })
 
+        console.log(`getContentListRequirements return values:
+            targetCradleReferenceIndex, 
+            targetAxisReferenceIndex,
+            cradleContentCount, 
+            scrollblockPixelOffset, 
+            axisPixelOffset`,
+            targetCradleReferenceIndex, 
+            targetAxisReferenceIndex,
+            cradleContentCount, 
+            scrollblockPixelOffset, 
+            axisPixelOffset, 
+            )
+
         let targetAxisPixelAdjustment = 0
         let targetScrollblockPixelAdjustment = 0
         if (cradleState == 'doreposition' || targetAxisReferenceIndex == 0) {
