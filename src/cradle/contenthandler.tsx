@@ -75,14 +75,14 @@ export default class ContentHandler {
         // interruptHandler.axisTriggerlinesIntersect.observer.disconnect()
         interruptHandler.signals.pauseTriggerlinesObserver = true
 
-        const { cradleReferenceData } = scaffoldHandler
+        const { cradlePositionData } = scaffoldHandler
         const viewportElement = viewportInterruptProperties.elementref.current
 
-        const requestedAxisReferenceIndex = cradleReferenceData.targetAxisReferenceIndex
-        let targetAxisPixelOffset = cradleReferenceData.targetAxisPixelOffset
+        const requestedAxisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
+        let targetAxisPixelOffset = cradlePositionData.targetAxisPixelOffset
 
-        console.log('==> setCradleContent: scaffoldHandler.cradleReferenceData',
-            Object.assign({},cradleReferenceData))
+        console.log('==> setCradleContent: scaffoldHandler.cradlePositionData',
+            Object.assign({},cradlePositionData))
 
         const {
             orientation, 
@@ -156,11 +156,11 @@ export default class ContentHandler {
         cradleContent.headModelComponents = headcontentlist
         cradleContent.tailModelComponents = tailcontentlist
 
-        cradleReferenceData.scrollImpliedAxisReferenceIndex = targetAxisReferenceIndex
-        cradleReferenceData.scrollImpliedAxisPixelOffset = axisPixelOffset
+        cradlePositionData.scrollImpliedAxisReferenceIndex = targetAxisReferenceIndex
+        cradlePositionData.scrollImpliedAxisPixelOffset = axisPixelOffset
 
-        cradleReferenceData.targetAxisReferenceIndex = targetAxisReferenceIndex
-        cradleReferenceData.targetAxisPixelOffset = axisPixelOffset
+        cradlePositionData.targetAxisReferenceIndex = targetAxisReferenceIndex
+        cradlePositionData.targetAxisPixelOffset = axisPixelOffset
 
         if (serviceHandler.serviceCalls.referenceIndexCallbackRef.current) {
 
@@ -168,11 +168,11 @@ export default class ContentHandler {
 
             serviceHandler.serviceCalls.referenceIndexCallbackRef.current(
 
-                cradleReferenceData.targetAxisReferenceIndex,'setCradleContent', cstate)
+                cradlePositionData.targetAxisReferenceIndex,'setCradleContent', cstate)
         
         }
 
-        cradleReferenceData.blockScrollPos = 
+        cradlePositionData.blockScrollPos = 
             scrollblockPixelOffset + targetScrollblockPixelAdjustment
 
         const cradleElements = scaffoldHandler.elements //cradleElementsRef.current
@@ -342,7 +342,7 @@ export default class ContentHandler {
 
         // -------------------------------[ 6. set css changes ]-------------------------
 
-        // cradleReferenceData.blockScrollPos = scrollPos
+        // cradlePositionData.blockScrollPos = scrollPos
 
         const axisElement = cradleElements.axisRef.current
         const headElement = cradleElements.headRef.current
@@ -371,13 +371,13 @@ export default class ContentHandler {
 
         }
 
-        const { cradleReferenceData } = scaffoldHandler
+        const { cradlePositionData } = scaffoldHandler
 
-        cradleReferenceData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
-        cradleReferenceData.scrollImpliedAxisPixelOffset = axisPixelOffset
+        cradlePositionData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
+        cradlePositionData.scrollImpliedAxisPixelOffset = axisPixelOffset
 
-        cradleReferenceData.targetAxisReferenceIndex = axisReferenceIndex
-        cradleReferenceData.targetAxisPixelOffset = axisPixelOffset
+        cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
+        cradlePositionData.targetAxisPixelOffset = axisPixelOffset
 
         // trigger lines have been moved, so observer must be reset
         interruptHandler.axisTriggerlinesIntersect.resetObserves()

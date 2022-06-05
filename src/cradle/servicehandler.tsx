@@ -66,7 +66,7 @@ export default class ServiceHandler {
 
         signals.pauseScrollingEffects = true
 
-        scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = index
+        scaffoldHandler.cradlePositionData.targetAxisReferenceIndex = index
 
         stateHandler.setCradleState('doreposition')
 
@@ -84,26 +84,26 @@ const getVisibleItemsList = ({
 
     }) => {
 
-    let headElement = cradleElements.headRef.current
-    let axisElement = cradleElements.axisRef.current
-    let {orientation} = cradleProps
-    let headlist = cradleContent.headViewComponents
+    const headElement = cradleElements.headRef.current
+    const axisElement = cradleElements.axisRef.current
+    const {orientation} = cradleProps
+    const headlist = cradleContent.headViewComponents
 
-    let itemlistindexes = Array.from(itemElementMap.keys())
+    const itemlistindexes = Array.from(itemElementMap.keys())
     itemlistindexes.sort((a,b)=>{
         return (a < b)?
             -1:
             1
     })
-    let headlistindexes = []
+    const headlistindexes = []
     for (let item of headlist) {
         headlistindexes.push(parseInt(item.props.index))
     }
 
-    let list = []
-    let cradleTop = headElement.offsetTop + axisElement.offsetTop, 
+    const list = []
+    const cradleTop = headElement.offsetTop + axisElement.offsetTop, 
         cradleLeft = headElement.offsetLeft + axisElement.offsetLeft
-    let scrollblockTopOffset = -viewportElement.scrollTop, 
+    const scrollblockTopOffset = -viewportElement.scrollTop, 
         scrollblockLeftOffset = -viewportElement.scrollLeft,
         viewportHeight = viewportElement.offsetHeight,
         viewportWidth = viewportElement.offsetWidth,
@@ -112,8 +112,8 @@ const getVisibleItemsList = ({
 
     for (let index of itemlistindexes) {
 
-        let element = itemElementMap.get(index).current
-        let inheadlist = headlistindexes.includes(index)
+        const element = itemElementMap.get(index).current
+        const inheadlist = headlistindexes.includes(index)
         const 
             top = 
                 inheadlist?
@@ -138,7 +138,7 @@ const getVisibleItemsList = ({
             right = left + width,
             bottom = top + height
 
-        let itemTopOffset = scrollblockTopOffset + cradleTop + top, // offset from top of viewport
+        const itemTopOffset = scrollblockTopOffset + cradleTop + top, // offset from top of viewport
             itemBottomOffset = scrollblockTopOffset + cradleTop + bottom, // offset from top of viewport
             itemLeftOffset = scrollblockLeftOffset + cradleLeft + left, 
             itemRightOffset = scrollblockLeftOffset + cradleLeft + right 
@@ -153,19 +153,19 @@ const getVisibleItemsList = ({
 
         if ((itemTopOffset < 0) && (itemBottomOffset > 0)) {
 
-            (orientation == 'vertical') && (isVisible = true)
+            if (orientation == 'vertical') isVisible = true
             bottomPortion = itemBottomOffset
             topPortion = bottomPortion - height
 
         } else if ((itemTopOffset >= 0) && (itemBottomOffset < viewportHeight)) {
 
-            (orientation == 'vertical') && (isVisible = true)
+            if (orientation == 'vertical') isVisible = true
             topPortion = height
             bottomPortion = 0
 
         } else if ((itemTopOffset > 0) && ((itemTopOffset - viewportHeight) < 0)) {
 
-            (orientation == 'vertical') && (isVisible = true)
+            if (orientation == 'vertical') isVisible = true
             topPortion = viewportHeight - itemTopOffset
             bottomPortion = topPortion - height
 
@@ -177,19 +177,19 @@ const getVisibleItemsList = ({
 
         if (itemLeftOffset < 0 && itemRightOffset > 0) {
 
-            (orientation == 'horizontal') && (isVisible = true)
+            if (orientation == 'horizontal') isVisible = true
             rightPortion = itemRightOffset
             leftPortion = rightPortion - width
 
         } else if (itemLeftOffset >= 0 && itemRightOffset < viewportWidth) {
 
-            (orientation == 'horizontal') && (isVisible = true)
+            if (orientation == 'horizontal') isVisible = true
             leftPortion = width
             rightPortion = 0
 
         } else if (itemLeftOffset > 0 && (itemLeftOffset - viewportWidth) < 0) {
 
-            (orientation == 'horizontal') && (isVisible = true)
+            if (orientation == 'horizontal') isVisible = true
             leftPortion = viewportWidth - itemLeftOffset
             rightPortion = leftPortion - width
 
@@ -199,7 +199,7 @@ const getVisibleItemsList = ({
 
         }
 
-        let verticalRatio = 
+        const verticalRatio = 
                 (topPortion > 0)?
                     topPortion/height:
                     bottomPortion/height,
@@ -208,7 +208,7 @@ const getVisibleItemsList = ({
                     leftPortion/width:
                     rightPortion/height
 
-        let itemData = {
+        const itemData = {
 
             index,
             isVisible,

@@ -424,10 +424,10 @@ const Cradle = ({
 
         viewportInterruptProperties.portal.isReparenting = false
 
-        const cradleReferenceData = scaffoldHandler.cradleReferenceData
+        const cradlePositionData = scaffoldHandler.cradlePositionData
         viewportInterruptProperties.elementref.current[
-            cradleReferenceData.blockScrollProperty] =
-            Math.max(0,cradleReferenceData.blockScrollPos)
+            cradlePositionData.blockScrollProperty] =
+            Math.max(0,cradlePositionData.blockScrollPos)
 
     }
 
@@ -568,7 +568,7 @@ const Cradle = ({
     // TODO: review this code
     useEffect(()=> {
 
-        scaffoldHandler.cradleReferenceData.blockScrollProperty = 
+        scaffoldHandler.cradlePositionData.blockScrollProperty = 
             (orientation == "vertical")?"scrollTop":"scrollLeft"
 
         if (cradleStateRef.current == 'setup') return
@@ -586,7 +586,7 @@ const Cradle = ({
                 cellHeight)
             + gap
 
-        const previousAxisOffset = scaffoldHandler.cradleReferenceData.targetAxisPixelOffset
+        const previousAxisOffset = scaffoldHandler.cradlePositionData.targetAxisPixelOffset
 
         const previousratio = previousAxisOffset/previousCellPixelLength
 
@@ -598,7 +598,7 @@ const Cradle = ({
 
         const pivotAxisOffset = previousratio * pivotCellPixelLength
         
-        scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = Math.round(pivotAxisOffset)
+        scaffoldHandler.cradlePositionData.targetAxisPixelOffset = Math.round(pivotAxisOffset)
 
         const { signals } = interruptHandler
 
@@ -740,10 +740,10 @@ const Cradle = ({
                 cradleContent.tailViewComponents = cradleContent.tailModelComponents
 
                 const viewportElement = viewportInterruptProperties.elementref.current
-                const cradleReferenceData = scaffoldHandler.cradleReferenceData
+                const cradlePositionData = scaffoldHandler.cradlePositionData
 
-                viewportElement[cradleReferenceData.blockScrollProperty] =
-                    Math.max(0,cradleReferenceData.blockScrollPos)
+                viewportElement[cradlePositionData.blockScrollProperty] =
+                    Math.max(0,cradlePositionData.blockScrollPos)
 
                 setCradleState('normalizesignals') // call a timeout for ready (or interrupt continuation)
 
@@ -814,7 +814,7 @@ const Cradle = ({
 
     // ==========================[ RENDER ]===========================
 
-    const axisReferenceIndex = scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex
+    const axisReferenceIndex = scaffoldHandler.cradlePositionData.scrollImpliedAxisReferenceIndex
     const scrollTrackerArgs = useMemo(() => {
         if (!(cradleState == 'repositioningContinuation' || cradleState == 'repositioningRender')) {
             return null

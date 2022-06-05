@@ -5,63 +5,57 @@ export default class ScaffoldHandler {
 
     constructor(cradleParameters) {
 
-       this.cradleParameters = cradleParameters
+        this.cradleParameters = cradleParameters
 
-       const {
-          axisRef, 
-          headRef, 
-          tailRef,
-          headTriggerlineRef,
-          tailTriggerlineRef
-       } = cradleParameters.cradleInternalPropertiesRef.current.cradleElementsRef.current
-       this.elements = {
-          axisRef,
-          headRef,
-          tailRef,
-          headTriggerlineRef,
-          tailTriggerlineRef
-       }
+        const {
+            axisRef, 
+            headRef, 
+            tailRef,
+            headTriggerlineRef,
+            tailTriggerlineRef
+        } = cradleParameters.cradleInternalPropertiesRef.current.cradleElementsRef.current
+        this.elements = {
+            axisRef,
+            headRef,
+            tailRef,
+            headTriggerlineRef,
+            tailTriggerlineRef
+        }
 
-       const {
-          defaultVisibleIndex, 
-          listsize, 
-          padding
-       } = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const {
+            defaultVisibleIndex, 
+            listsize, 
+            padding
+        } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-       // progression of references: scroll->next
-       this.cradleReferenceData.scrollImpliedAxisReferenceIndex = 
-          (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
-       this.cradleReferenceData.scrollImpliedAxisPixelOffset = 0 // padding
-       this.cradleReferenceData.targetAxisReferenceIndex = 
-          this.cradleReferenceData.scrollImpliedAxisReferenceIndex
-       this.cradleReferenceData.targetAxisPixelOffset = 
-          this.cradleReferenceData.scrollImpliedAxisPixelOffset
+        // progression of references: scroll->next
+        this.cradlePositionData.scrollImpliedAxisReferenceIndex = 
+            (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
+        this.cradlePositionData.scrollImpliedAxisPixelOffset = 0 // padding
+        this.cradlePositionData.targetAxisReferenceIndex = 
+            this.cradlePositionData.scrollImpliedAxisReferenceIndex
+        this.cradlePositionData.targetAxisPixelOffset = 
+            this.cradlePositionData.scrollImpliedAxisPixelOffset
 
     }
 
-    cradleParameters // standard for handlers, but not used here yet
+    cradleParameters
 
-   /* 
-      ItemIndexReference is the sequential index of first item of the cradle tail
-      CradlePixelOffset is the pixel offset of the cradle axis from the edge of the viewport
-      blockScrollPos is the scrollPos of the scrollblock in relation to the viewport
-      progression is scroll -> next
-   */
-   cradleReferenceData = {
+    cradlePositionData = {
 
-      scrollImpliedAxisReferenceIndex:null,
-      scrollImpliedAxisPixelOffset:null,
+        scrollImpliedAxisReferenceIndex:null,
+        scrollImpliedAxisPixelOffset:null,
 
-      targetAxisReferenceIndex:null,
-      targetAxisPixelOffset:null,
+        targetAxisReferenceIndex:null,
+        targetAxisPixelOffset:null,
 
-      // to set scrollPos after doreposition, or
-      // to restore scrollTop or scrollLeft after clobbered by DOM
-      blockScrollPos:null, 
-      blockScrollProperty:null,
+        // to set scrollPos after doreposition, or
+        // to restore scrollTop or scrollLeft after clobbered by DOM
+        blockScrollPos:null, 
+        blockScrollProperty:null,
 
-   }
+    }
 
-   elements
+    elements
 
 }
