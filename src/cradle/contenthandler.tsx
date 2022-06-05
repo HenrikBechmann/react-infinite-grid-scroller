@@ -156,9 +156,6 @@ export default class ContentHandler {
         cradleContent.headModelComponents = headcontentlist
         cradleContent.tailModelComponents = tailcontentlist
 
-        cradlePositionData.scrollImpliedAxisReferenceIndex = targetAxisReferenceIndex
-        cradlePositionData.scrollImpliedAxisPixelOffset = axisPixelOffset
-
         cradlePositionData.targetAxisReferenceIndex = targetAxisReferenceIndex
         cradlePositionData.targetAxisPixelOffset = axisPixelOffset
 
@@ -370,9 +367,6 @@ export default class ContentHandler {
         }
 
         const { cradlePositionData } = scaffoldHandler
-
-        cradlePositionData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
-        cradlePositionData.scrollImpliedAxisPixelOffset = axisPixelOffset
 
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisPixelOffset = axisPixelOffset

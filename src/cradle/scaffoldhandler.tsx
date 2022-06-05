@@ -29,13 +29,9 @@ export default class ScaffoldHandler {
         } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         // progression of references: implied->target
-        this.cradlePositionData.scrollImpliedAxisReferenceIndex = 
-            (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
-        this.cradlePositionData.scrollImpliedAxisPixelOffset = 0 // padding
         this.cradlePositionData.targetAxisReferenceIndex = 
-            this.cradlePositionData.scrollImpliedAxisReferenceIndex
-        this.cradlePositionData.targetAxisPixelOffset = 
-            this.cradlePositionData.scrollImpliedAxisPixelOffset
+            (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
+        this.cradlePositionData.targetAxisPixelOffset = 0
 
     }
 
@@ -63,11 +59,6 @@ export default class ScaffoldHandler {
             values can be "scrollTop" or "scrollLeft" (of the viewport element) depending on orientation
         */
         blockScrollProperty:null,
-
-        /*
-        */
-        scrollImpliedAxisReferenceIndex:null,
-        scrollImpliedAxisPixelOffset:null,
 
         targetAxisReferenceIndex:null,
         targetAxisPixelOffset:null,

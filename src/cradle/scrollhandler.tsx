@@ -19,32 +19,21 @@ export default class ScrollHandler {
 
     private isScrolling = false
 
+    /*
+
+    */
+    scrollImpliedAxisReferenceIndex = null
+    scrollImpliedAxisPixelOffset = null
+
     onScroll = (e) => {
-
-        const signals = this.cradleParameters.handlersRef.current.interrupts.signals
-
-        // if (signals.pauseScrollingEffects) {
-
-        //     return
-
-        // }
 
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const viewportElement = viewportInterruptProperties.elementref.current
-
-        const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
-        const { cradlePositionData } = scaffoldHandler
 
         const scrollPositionCurrent = 
             (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical')?
                 viewportElement.scrollTop:
                 viewportElement.scrollLeft
-
-        if (!this.isScrolling) {
-            this.isScrolling = true
-            this.scrollPositions.start = scrollPositionCurrent
-            this.scrollPositions.currentupdate = scrollPositionCurrent
-        }
 
         if (scrollPositionCurrent < 0) { // for Safari
 
@@ -52,19 +41,30 @@ export default class ScrollHandler {
 
         }
 
-        // keep up to date in case of reparenting interrupt
-        cradlePositionData.blockScrollPos = scrollPositionCurrent
-
-        this.scrollPositions.previous = this.scrollPositions.current
-        this.scrollPositions.current = scrollPositionCurrent
-
         clearTimeout(this._scrolltimerid)
+
+        const signals = this.cradleParameters.handlersRef.current.interrupts.signals
 
         if (signals.pauseScrollingEffects) {
 
             return
 
         }
+
+        if (!this.isScrolling) {
+            this.isScrolling = true
+            this.scrollPositions.start = scrollPositionCurrent
+            this.scrollPositions.currentupdate = scrollPositionCurrent
+        }
+
+        const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
+        const { cradlePositionData } = scaffoldHandler
+
+        // keep up to date in case of reparenting interrupt
+        cradlePositionData.blockScrollPos = scrollPositionCurrent
+
+        this.scrollPositions.previous = this.scrollPositions.current
+        this.scrollPositions.current = scrollPositionCurrent
 
         const stateHandler = this.cradleParameters.handlersRef.current.state
         const cradleState = stateHandler.cradleStateRef.current
@@ -93,21 +93,21 @@ export default class ScrollHandler {
                             this.cradleParameters.viewportInterruptPropertiesRef.current.elementref.current.scrollLeft
 
                     }
-                    cradlePositionData.scrollImpliedAxisReferenceIndex = itemindex
-                    cradlePositionData.scrollImpliedAxisPixelOffset = axisVisiblePixelOffset
+                    this.scrollImpliedAxisReferenceIndex = itemindex
+                    this.scrollImpliedAxisPixelOffset = axisVisiblePixelOffset
 
                 }
 
                 if ((cradleState == 'repositioningRender') || (cradleState == 'repositioningContinuation')) {
 
-                    this._setScrollRepositionReferenceIndexData()
+                    this.calcImpliedRepositioningData()
                     if (cradleState == 'repositioningRender') stateHandler.setCradleState('repositioningContinuation')
 
                 }
 
                 // TODO: re-instate the following
                 serviceHandler.serviceCalls.referenceIndexCallbackRef.current && 
-                    serviceHandler.serviceCalls.referenceIndexCallbackRef.current(cradlePositionData.scrollImpliedAxisReferenceIndex,'scrolling', cradleState)
+                    serviceHandler.serviceCalls.referenceIndexCallbackRef.current(this.scrollImpliedAxisReferenceIndex,'scrolling', cradleState)
 
             }
 
@@ -140,7 +140,9 @@ export default class ScrollHandler {
             case 'repositioningContinuation':
             {
 
-                stateHandler.setCradleState('finishreposition')
+                this.updateBlockScrollPos()
+                // stateHandler.setCradleState('finishreposition')
+                stateHandler.setCradleState('doreposition')
 
                 break
             }
@@ -171,7 +173,7 @@ export default class ScrollHandler {
         
     }
 
-    // after scroll
+    // after scroll, but not after repositioning
     updateReferenceData = () => {
 
         const { state:stateHandler, scaffold:scaffoldHandler } 
@@ -201,14 +203,14 @@ export default class ScrollHandler {
 
         const { cradlePositionData } = scaffoldHandler
 
-        cradlePositionData.scrollImpliedAxisPixelOffset = axisVisiblePixelOffset
+        this.scrollImpliedAxisPixelOffset = axisVisiblePixelOffset
 
         if (!viewportInterruptProperties.isResizing) {
 
             cradlePositionData.targetAxisReferenceIndex = 
-                cradlePositionData.scrollImpliedAxisReferenceIndex
+                this.scrollImpliedAxisReferenceIndex
             cradlePositionData.targetAxisPixelOffset = 
-                cradlePositionData.scrollImpliedAxisPixelOffset
+                this.scrollImpliedAxisPixelOffset
 
             this.updateBlockScrollPos()
 
@@ -216,7 +218,9 @@ export default class ScrollHandler {
 
     }
 
-    updateBlockScrollPos = () => {
+    // called from finishreposition state change call above
+    // called from updateReferenceData
+    private updateBlockScrollPos = () => {
 
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
@@ -236,7 +240,7 @@ export default class ScrollHandler {
 
     }
 
-    private _setScrollRepositionReferenceIndexData = () => {
+    private calcImpliedRepositioningData = () => {
 
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
@@ -269,16 +273,11 @@ export default class ScrollHandler {
         const diff = axisReferenceIndex % crosscount
         axisReferenceIndex -= diff
 
-        // let referenceIndexData = {
-        //     index:axisReferenceIndex,
-        //     axisVisiblePixelOffset:referencescrolloffset
-        // }
-
         if (axisReferenceIndex == 0) axisPixelOffset = 0 // defensive
 
         const { cradlePositionData } = this.cradleParameters.handlersRef.current.scaffold
-        cradlePositionData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
-        cradlePositionData.scrollImpliedAxisPixelOffset = axisPixelOffset
+        this.scrollImpliedAxisReferenceIndex = axisReferenceIndex
+        this.scrollImpliedAxisPixelOffset = axisPixelOffset
 
     }
 

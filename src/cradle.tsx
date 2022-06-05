@@ -693,14 +693,14 @@ const Cradle = ({
 
             }
 
-            case 'finishreposition': {
+            // case 'finishreposition': {
 
-                scrollHandler.updateBlockScrollPos()
+            //     // scrollHandler.updateBlockScrollPos()
 
-                setCradleState('doreposition')
-                break
+            //     setCradleState('doreposition')
+            //     break
 
-            }
+            // }
 
             /*
                 the following 5 cradle states all resolve with
@@ -813,7 +813,7 @@ const Cradle = ({
 
     // ==========================[ RENDER ]===========================
 
-    const axisReferenceIndex = scaffoldHandler.cradlePositionData.scrollImpliedAxisReferenceIndex
+    const scrollAxisReferenceIndex = scrollHandler.scrollImpliedAxisReferenceIndex
     const scrollTrackerArgs = useMemo(() => {
         if (!(cradleState == 'repositioningContinuation' || cradleState == 'repositioningRender')) {
             return null
@@ -821,7 +821,7 @@ const Cradle = ({
         const trackerargs = {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
-            axisReferenceIndex,
+            scrollAxisReferenceIndex,
             listsize,
             styles,
         }
@@ -829,7 +829,7 @@ const Cradle = ({
     },[
         cradleState, 
         viewportDimensions, 
-        axisReferenceIndex, 
+        scrollAxisReferenceIndex, 
         listsize,
         styles,
         ]
@@ -847,7 +847,7 @@ const Cradle = ({
             ?<ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 
-                offset = {scrollTrackerArgs.axisReferenceIndex} 
+                offset = {scrollTrackerArgs.scrollAxisReferenceIndex} 
                 listsize = {scrollTrackerArgs.listsize}
                 styles = {scrollTrackerArgs.styles}
             />
