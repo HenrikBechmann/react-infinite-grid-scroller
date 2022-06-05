@@ -738,11 +738,11 @@ const Cradle = ({
                 cradleContent.headViewComponents = cradleContent.headModelComponents
                 cradleContent.tailViewComponents = cradleContent.tailModelComponents
 
-                const viewportElement = viewportInterruptProperties.elementref.current
-                const cradlePositionData = scaffoldHandler.cradlePositionData
+                // const viewportElement = viewportInterruptProperties.elementref.current
+                // const cradlePositionData = scaffoldHandler.cradlePositionData
 
-                viewportElement[cradlePositionData.blockScrollProperty] =
-                    Math.max(0,cradlePositionData.blockScrollPos)
+                // viewportElement[cradlePositionData.blockScrollProperty] =
+                //     Math.max(0,cradlePositionData.blockScrollPos)
 
                 setCradleState('normalizesignals') // call a timeout for ready (or interrupt continuation)
 

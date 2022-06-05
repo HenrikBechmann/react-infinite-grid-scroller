@@ -81,7 +81,7 @@ export default class ContentHandler {
         const requestedAxisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
         let targetAxisPixelOffset = cradlePositionData.targetAxisPixelOffset
 
-        console.log('==> setCradleContent: scaffoldHandler.cradlePositionData',
+        console.log('==> OPENING setCradleContent: scaffoldHandler.cradlePositionData',
             Object.assign({},cradlePositionData))
 
         const {
@@ -169,8 +169,14 @@ export default class ContentHandler {
         
         }
 
+        // const viewportElement = viewportInterruptProperties.elementref.current
+        // const cradlePositionData = scaffoldHandler.cradlePositionData
+
         cradlePositionData.blockScrollPos = 
             scrollblockPixelOffset + targetScrollblockPixelAdjustment
+
+        viewportElement[cradlePositionData.blockScrollProperty] =
+            Math.max(0,cradlePositionData.blockScrollPos)
 
         const cradleElements = scaffoldHandler.elements //cradleElementsRef.current
         const axisElement = cradleElements.axisRef.current
@@ -195,6 +201,9 @@ export default class ContentHandler {
                     0
 
         }
+
+        console.log('==> CLOSING setCradleContent: scaffoldHandler.cradlePositionData',
+            Object.assign({},cradlePositionData))
 
     }
 
