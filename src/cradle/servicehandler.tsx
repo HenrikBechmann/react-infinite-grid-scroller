@@ -35,8 +35,8 @@ export default class ServiceHandler {
     }
 
     getContentList = () => {
-        let contentHandler = this.cradleParameters.handlersRef.current.content        
-        let contentlist = Array.from(contentHandler.itemElements)
+        const contentHandler = this.cradleParameters.handlersRef.current.content        
+        const contentlist = Array.from(contentHandler.itemElements)
 
         contentlist.sort((a,b)=>{
             return (a[0] < b[0])?
@@ -61,8 +61,8 @@ export default class ServiceHandler {
     scrollToItem = (index) => {
 
         const signals = this.cradleParameters.handlersRef.current.interrupts.signals
-        let scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
-        let stateHandler = this.cradleParameters.handlersRef.current.state
+        const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
+        const stateHandler = this.cradleParameters.handlersRef.current.state
 
         signals.pauseScrollingEffects = true
 
