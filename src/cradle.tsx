@@ -670,7 +670,7 @@ const Cradle = ({
 
             // renderupdatedcontent is called from triggerlineintersectionobservercallback (interruptHandler), 
             // and called from onAfterScroll (scrollHandler)
-            // it is required set configurations before 'ready' TODO: specify!
+            // it is required to set configurations before 'ready' TODO: specify!
             case 'renderupdatedcontent': {
 
                 setCradleState('ready')

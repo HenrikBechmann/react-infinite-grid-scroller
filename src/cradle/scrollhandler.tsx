@@ -51,7 +51,7 @@ export default class ScrollHandler {
 
         }
 
-        // scaffoldHandler.cradleReferenceData.blockScrollPos = scrollPositionCurrent // TODO: redundant?
+        scaffoldHandler.cradleReferenceData.blockScrollPos = scrollPositionCurrent // TODO: redundant?
 
         this.scrollPositions.previous = this.scrollPositions.current
         this.scrollPositions.current = scrollPositionCurrent
@@ -160,6 +160,12 @@ export default class ScrollHandler {
             }
 
         }
+
+
+        const {scaffold:scaffoldHandler} = this.cradleParameters.handlersRef.current
+        const { cradleReferenceData } = scaffoldHandler
+
+        console.log('onAfterScroll cradleReferenceData',Object.assign({},cradleReferenceData))
         
     }
 
@@ -190,14 +196,16 @@ export default class ScrollHandler {
 
         }
 
-        scaffoldHandler.cradleReferenceData.scrollImpliedAxisPixelOffset = axisVisiblePixelOffset
+        const { cradleReferenceData } = scaffoldHandler
+
+        cradleReferenceData.scrollImpliedAxisPixelOffset = axisVisiblePixelOffset
 
         if (!viewportInterruptProperties.isResizing) {
 
-            scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = 
-                scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex
-            scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = 
-                scaffoldHandler.cradleReferenceData.scrollImpliedAxisPixelOffset
+            cradleReferenceData.targetAxisReferenceIndex = 
+                cradleReferenceData.scrollImpliedAxisReferenceIndex
+            cradleReferenceData.targetAxisPixelOffset = 
+                cradleReferenceData.scrollImpliedAxisPixelOffset
 
             this.updateBlockScrollPos()
 
@@ -210,17 +218,18 @@ export default class ScrollHandler {
         const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-        
+        const { cradleReferenceData } = scaffoldHandler
+
         const viewportElement = viewportInterruptProperties.elementref.current
 
         if (cradleProps.orientation == 'vertical') {
 
             // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollTop'
-            scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollTop
+            cradleReferenceData.blockScrollPos = viewportElement.scrollTop
 
         } else {
             // scaffoldHandler.cradleReferenceData.blockScrollProperty = 'scrollLeft'
-            scaffoldHandler.cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
+            cradleReferenceData.blockScrollPos = viewportElement.scrollLeft
         }
 
     }

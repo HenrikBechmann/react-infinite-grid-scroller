@@ -80,6 +80,9 @@ export default class ContentHandler {
         const requestedAxisReferenceIndex = scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex
         let targetAxisPixelOffset = scaffoldHandler.cradleReferenceData.targetAxisPixelOffset
 
+        console.log('==> setCradleContent: scaffoldHandler.cradleReferenceData',
+            Object.assign({},scaffoldHandler.cradleReferenceData))
+
         const {
             orientation, 
             gap, 
@@ -148,15 +151,17 @@ export default class ContentHandler {
     
         })
 
+        const { cradleReferenceData } = scaffoldHandler
+
         cradleContent.cradleModel = childlist
         cradleContent.headModelComponents = headcontentlist
         cradleContent.tailModelComponents = tailcontentlist
 
-        scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = targetAxisReferenceIndex
-        scaffoldHandler.cradleReferenceData.scrollImpliedAxisPixelOffset = axisPixelOffset
+        cradleReferenceData.scrollImpliedAxisReferenceIndex = targetAxisReferenceIndex
+        cradleReferenceData.scrollImpliedAxisPixelOffset = axisPixelOffset
 
-        scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = targetAxisReferenceIndex
-        scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = axisPixelOffset
+        cradleReferenceData.targetAxisReferenceIndex = targetAxisReferenceIndex
+        cradleReferenceData.targetAxisPixelOffset = axisPixelOffset
 
         if (serviceHandler.serviceCalls.referenceIndexCallbackRef.current) {
 
@@ -164,13 +169,13 @@ export default class ContentHandler {
 
             serviceHandler.serviceCalls.referenceIndexCallbackRef.current(
 
-                scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex,'setCradleContent', cstate)
+                cradleReferenceData.targetAxisReferenceIndex,'setCradleContent', cstate)
         
         }
 
         const cradleElements = scaffoldHandler.elements //cradleElementsRef.current
 
-        scaffoldHandler.cradleReferenceData.blockScrollPos = 
+        cradleReferenceData.blockScrollPos = 
             scrollblockPixelOffset + targetScrollblockPixelAdjustment
 
         if (orientation == 'vertical') {
@@ -336,7 +341,8 @@ export default class ContentHandler {
 
         // -------------------------------[ 6. set css changes ]-------------------------
 
-        scaffoldHandler.cradleReferenceData.blockScrollPos = scrollPos
+        const { cradleReferenceData } = scaffoldHandler
+        cradleReferenceData.blockScrollPos = scrollPos
 
         if (cradleInheritedProperties.orientation == 'vertical') {
 
@@ -362,11 +368,11 @@ export default class ContentHandler {
 
         }
 
-        scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
-        scaffoldHandler.cradleReferenceData.scrollImpliedAxisPixelOffset = axisPixelOffset
+        cradleReferenceData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
+        cradleReferenceData.scrollImpliedAxisPixelOffset = axisPixelOffset
 
-        scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex = axisReferenceIndex
-        scaffoldHandler.cradleReferenceData.targetAxisPixelOffset = axisPixelOffset
+        cradleReferenceData.targetAxisReferenceIndex = axisReferenceIndex
+        cradleReferenceData.targetAxisPixelOffset = axisPixelOffset
 
         // trigger lines have been moved, so observer must be reset
         interruptHandler.axisTriggerlinesIntersect.resetObserves()
