@@ -28,7 +28,7 @@ export default class ScaffoldHandler {
             padding
         } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        // progression of references: scroll->next
+        // progression of references: implied->target
         this.cradlePositionData.scrollImpliedAxisReferenceIndex = 
             (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
         this.cradlePositionData.scrollImpliedAxisPixelOffset = 0 // padding
@@ -41,18 +41,36 @@ export default class ScaffoldHandler {
 
     cradleParameters
 
+    // cradlePositionData controls the relative positions of the scaffold elements
     cradlePositionData = {
 
+        /*
+            "block" = cradleblock, which is the element that is scrolled
+
+            blockScrollPos is set by scrollHandler during and after scrolling,
+            and by setCradleContent in contentHandler, which repositions the cradle.
+
+            blockScrollPos is used by
+                - cradle initialization in response to reparenting interrupt
+                - 'preparerender' state in cradle module after setCradleContent
+
+        */
+        blockScrollPos:null,
+
+        /*
+            blockScrollProperty is set by the orientation reconfiguration effect in cradle module.
+            it is used where blockScrollPos is used above.
+            values can be "scrollTop" or "scrollLeft" (of the viewport element) depending on orientation
+        */
+        blockScrollProperty:null,
+
+        /*
+        */
         scrollImpliedAxisReferenceIndex:null,
         scrollImpliedAxisPixelOffset:null,
 
         targetAxisReferenceIndex:null,
         targetAxisPixelOffset:null,
-
-        // to set scrollPos after doreposition, or
-        // to restore scrollTop or scrollLeft after clobbered by DOM
-        blockScrollPos:null, 
-        blockScrollProperty:null,
 
     }
 

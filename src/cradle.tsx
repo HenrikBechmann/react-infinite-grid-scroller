@@ -565,7 +565,6 @@ const Cradle = ({
     ])
 
     // trigger pivot *only* on change in orientation
-    // TODO: review this code
     useEffect(()=> {
 
         scaffoldHandler.cradlePositionData.blockScrollProperty = 

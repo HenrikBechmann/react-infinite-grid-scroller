@@ -51,7 +51,7 @@ export default class ContentHandler {
 
     // ==========================[ SET CONTENT initially, or after reposition ]===========================
 
-    // TODO: last row is sometimes left off with reposition
+    // setCradleContent does not touch the viewport element's scroll position for the scrollblock
     public setCradleContent = (cradleState) => { 
 
         // ------------------------------[ 1. initialize ]---------------------------
@@ -341,8 +341,6 @@ export default class ContentHandler {
         cradleContent.tailViewComponents = cradleContent.tailModelComponents = tailcontent
 
         // -------------------------------[ 6. set css changes ]-------------------------
-
-        // cradlePositionData.blockScrollPos = scrollPos
 
         const axisElement = cradleElements.axisRef.current
         const headElement = cradleElements.headRef.current

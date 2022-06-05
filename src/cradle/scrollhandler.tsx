@@ -52,7 +52,7 @@ export default class ScrollHandler {
 
         }
 
-        // keep up to data in case of reparenting interrupt
+        // keep up to date in case of reparenting interrupt
         cradlePositionData.blockScrollPos = scrollPositionCurrent
 
         this.scrollPositions.previous = this.scrollPositions.current
@@ -171,6 +171,7 @@ export default class ScrollHandler {
         
     }
 
+    // after scroll
     updateReferenceData = () => {
 
         const { state:stateHandler, scaffold:scaffoldHandler } 
