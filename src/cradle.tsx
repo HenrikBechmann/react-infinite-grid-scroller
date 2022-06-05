@@ -813,7 +813,8 @@ const Cradle = ({
 
     // ==========================[ RENDER ]===========================
 
-    const scrollAxisReferenceIndex = scrollHandler.scrollImpliedAxisReferenceIndex
+    // const scrollAxisReferenceIndex = scrollHandler.scrollImpliedAxisReferenceIndex
+    const scrollAxisReferenceIndex = scaffoldHandler.cradlePositionData.targetAxisReferenceIndex
     const scrollTrackerArgs = useMemo(() => {
         if (!(cradleState == 'repositioningContinuation' || cradleState == 'repositioningRender')) {
             return null

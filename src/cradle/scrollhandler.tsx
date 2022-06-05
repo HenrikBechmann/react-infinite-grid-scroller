@@ -22,8 +22,8 @@ export default class ScrollHandler {
     /*
 
     */
-    scrollImpliedAxisReferenceIndex = null
-    scrollImpliedAxisPixelOffset = null
+    // scrollImpliedAxisReferenceIndex = null
+    // scrollImpliedAxisPixelOffset = null
 
     onScroll = (e) => {
 
@@ -93,8 +93,11 @@ export default class ScrollHandler {
                             this.cradleParameters.viewportInterruptPropertiesRef.current.elementref.current.scrollLeft
 
                     }
-                    this.scrollImpliedAxisReferenceIndex = itemindex
-                    this.scrollImpliedAxisPixelOffset = axisVisiblePixelOffset
+                    // this.scrollImpliedAxisReferenceIndex = itemindex
+                    // this.scrollImpliedAxisPixelOffset = axisVisiblePixelOffset
+                    // const {cradlePositionData} = scaffoldHandler
+                    cradlePositionData.targetAxisReferenceIndex = itemindex
+                    cradlePositionData.targetAxisPixelOffset = axisVisiblePixelOffset
 
                 }
 
@@ -107,7 +110,8 @@ export default class ScrollHandler {
 
                 // TODO: re-instate the following
                 serviceHandler.serviceCalls.referenceIndexCallbackRef.current && 
-                    serviceHandler.serviceCalls.referenceIndexCallbackRef.current(this.scrollImpliedAxisReferenceIndex,'scrolling', cradleState)
+                    // serviceHandler.serviceCalls.referenceIndexCallbackRef.current(this.scrollImpliedAxisReferenceIndex,'scrolling', cradleState)
+                    serviceHandler.serviceCalls.referenceIndexCallbackRef.current(cradlePositionData.targetAxisReferenceIndex,'scrolling', cradleState)
 
             }
 
@@ -203,14 +207,15 @@ export default class ScrollHandler {
 
         const { cradlePositionData } = scaffoldHandler
 
-        this.scrollImpliedAxisPixelOffset = axisVisiblePixelOffset
+        // this.scrollImpliedAxisPixelOffset = axisVisiblePixelOffset
+        cradlePositionData.targetAxisPixelOffset = axisVisiblePixelOffset
 
         if (!viewportInterruptProperties.isResizing) {
 
-            cradlePositionData.targetAxisReferenceIndex = 
-                this.scrollImpliedAxisReferenceIndex
-            cradlePositionData.targetAxisPixelOffset = 
-                this.scrollImpliedAxisPixelOffset
+            // cradlePositionData.targetAxisReferenceIndex = 
+            //     this.scrollImpliedAxisReferenceIndex
+            // cradlePositionData.targetAxisPixelOffset = 
+            //     this.scrollImpliedAxisPixelOffset
 
             this.updateBlockScrollPos()
 
@@ -276,8 +281,10 @@ export default class ScrollHandler {
         if (axisReferenceIndex == 0) axisPixelOffset = 0 // defensive
 
         const { cradlePositionData } = this.cradleParameters.handlersRef.current.scaffold
-        this.scrollImpliedAxisReferenceIndex = axisReferenceIndex
-        this.scrollImpliedAxisPixelOffset = axisPixelOffset
+        // this.scrollImpliedAxisReferenceIndex = axisReferenceIndex
+        // this.scrollImpliedAxisPixelOffset = axisPixelOffset
+        cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
+        cradlePositionData.targetAxisPixelOffset = axisPixelOffset
 
     }
 
