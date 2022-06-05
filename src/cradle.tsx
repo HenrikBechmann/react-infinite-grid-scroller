@@ -739,8 +739,10 @@ const Cradle = ({
                 cradleContent.headViewComponents = cradleContent.headModelComponents
                 cradleContent.tailViewComponents = cradleContent.tailModelComponents
 
+                const viewportElement = viewportInterruptProperties.elementref.current
                 const cradleReferenceData = scaffoldHandler.cradleReferenceData
-                viewportInterruptProperties.elementref.current[cradleReferenceData.blockScrollProperty] =
+
+                viewportElement[cradleReferenceData.blockScrollProperty] =
                     Math.max(0,cradleReferenceData.blockScrollPos)
 
                 setCradleState('normalizesignals') // call a timeout for ready (or interrupt continuation)
@@ -820,7 +822,7 @@ const Cradle = ({
         const trackerargs = {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
-            axisReferenceIndex,//:scaffoldHandler.cradleReferenceData.scrollImpliedAxisReferenceIndex,
+            axisReferenceIndex,
             listsize,
             styles,
         }

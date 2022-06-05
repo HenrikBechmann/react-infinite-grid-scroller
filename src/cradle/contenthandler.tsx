@@ -75,13 +75,14 @@ export default class ContentHandler {
         // interruptHandler.axisTriggerlinesIntersect.observer.disconnect()
         interruptHandler.signals.pauseTriggerlinesObserver = true
 
+        const { cradleReferenceData } = scaffoldHandler
         const viewportElement = viewportInterruptProperties.elementref.current
 
-        const requestedAxisReferenceIndex = scaffoldHandler.cradleReferenceData.targetAxisReferenceIndex
-        let targetAxisPixelOffset = scaffoldHandler.cradleReferenceData.targetAxisPixelOffset
+        const requestedAxisReferenceIndex = cradleReferenceData.targetAxisReferenceIndex
+        let targetAxisPixelOffset = cradleReferenceData.targetAxisPixelOffset
 
         console.log('==> setCradleContent: scaffoldHandler.cradleReferenceData',
-            Object.assign({},scaffoldHandler.cradleReferenceData))
+            Object.assign({},cradleReferenceData))
 
         const {
             orientation, 
@@ -151,8 +152,6 @@ export default class ContentHandler {
     
         })
 
-        const { cradleReferenceData } = scaffoldHandler
-
         cradleContent.cradleModel = childlist
         cradleContent.headModelComponents = headcontentlist
         cradleContent.tailModelComponents = tailcontentlist
@@ -173,25 +172,27 @@ export default class ContentHandler {
         
         }
 
-        const cradleElements = scaffoldHandler.elements //cradleElementsRef.current
-
         cradleReferenceData.blockScrollPos = 
             scrollblockPixelOffset + targetScrollblockPixelAdjustment
 
+        const cradleElements = scaffoldHandler.elements //cradleElementsRef.current
+        const axisElement = cradleElements.axisRef.current
+        const headElement = cradleElements.headRef.current
+
         if (orientation == 'vertical') {
 
-            cradleElements.axisRef.current.style.top = (axisPixelOffset + targetAxisPixelAdjustment) + 'px'
-            cradleElements.axisRef.current.style.left = 'auto'
-            cradleElements.headRef.current.style.paddingBottom = 
+            axisElement.style.top = (axisPixelOffset + targetAxisPixelAdjustment) + 'px'
+            axisElement.style.left = 'auto'
+            headElement.style.paddingBottom = 
                 headcontentlist.length?
                     gap + 'px':
                     0
 
         } else { // orientation = 'horizontal'
 
-            cradleElements.axisRef.current.style.top = 'auto'
-            cradleElements.axisRef.current.style.left = (axisPixelOffset + targetAxisPixelAdjustment) + 'px'
-            cradleElements.headRef.current.style.paddingRight = 
+            axisElement.style.top = 'auto'
+            axisElement.style.left = (axisPixelOffset + targetAxisPixelAdjustment) + 'px'
+            headElement.style.paddingRight = 
                 headcontentlist.length?
                     gap + 'px':
                     0
@@ -341,16 +342,18 @@ export default class ContentHandler {
 
         // -------------------------------[ 6. set css changes ]-------------------------
 
-        const { cradleReferenceData } = scaffoldHandler
-        cradleReferenceData.blockScrollPos = scrollPos
+        // cradleReferenceData.blockScrollPos = scrollPos
+
+        const axisElement = cradleElements.axisRef.current
+        const headElement = cradleElements.headRef.current
 
         if (cradleInheritedProperties.orientation == 'vertical') {
 
             const top = scrollPos + axisPixelOffset
 
-            cradleElements.axisRef.current.style.top = top + 'px'
-            cradleElements.axisRef.current.style.left = 'auto'
-            cradleElements.headRef.current.style.paddingBottom = 
+            axisElement.style.top = top + 'px'
+            axisElement.style.left = 'auto'
+            headElement.style.paddingBottom = 
                 headcontent.length?
                     cradleInheritedProperties.gap + 'px':
                     0
@@ -359,14 +362,16 @@ export default class ContentHandler {
 
             const left = scrollPos + axisPixelOffset
 
-            cradleElements.axisRef.current.style.top = 'auto'
-            cradleElements.axisRef.current.style.left = left + 'px'
-            cradleElements.headRef.current.style.paddingRight = 
+            axisElement.style.top = 'auto'
+            axisElement.left = left + 'px'
+            headElement.style.paddingRight = 
                 headcontent.length?
                     cradleInheritedProperties.gap + 'px':
                     0
 
         }
+
+        const { cradleReferenceData } = scaffoldHandler
 
         cradleReferenceData.scrollImpliedAxisReferenceIndex = axisReferenceIndex
         cradleReferenceData.scrollImpliedAxisPixelOffset = axisPixelOffset
