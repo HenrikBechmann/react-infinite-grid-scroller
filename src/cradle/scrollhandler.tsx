@@ -217,20 +217,19 @@ export default class ScrollHandler {
 
     updateBlockScrollPos = () => {
 
-        const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+        const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
         const { cradlePositionData } = scaffoldHandler
 
         const viewportElement = viewportInterruptProperties.elementref.current
 
         if (cradleProps.orientation == 'vertical') {
 
-            // scaffoldHandler.cradlePositionData.blockScrollProperty = 'scrollTop'
             cradlePositionData.blockScrollPos = viewportElement.scrollTop
 
         } else {
-            // scaffoldHandler.cradlePositionData.blockScrollProperty = 'scrollLeft'
+
             cradlePositionData.blockScrollPos = viewportElement.scrollLeft
         }
 
