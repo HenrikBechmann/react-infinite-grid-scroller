@@ -218,6 +218,9 @@ export default class ContentHandler {
         console.log('==> CLOSING setCradleContent: scaffoldHandler.cradlePositionData',
             Object.assign({},cradlePositionData))
 
+        interruptHandler.axisTriggerlinesIntersect.resetObserves()
+        interruptHandler.signals.pauseTriggerlinesObserver = false
+
     }
 
     // =============================[ UPDATE through scroll ]===============================

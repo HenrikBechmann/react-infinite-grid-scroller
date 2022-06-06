@@ -526,7 +526,7 @@ const Cradle = ({
         if (viewportInterruptProperties.isResizing) {
 
             const { signals } = interruptHandler
-            // signals.pauseCellObserver = true
+            signals.pauseTriggerlinesObserver = true
             signals.pauseCradleIntersectionObserver = true
             signals.pauseCradleResizeObserver = true
             signals.pauseScrollingEffects = true
