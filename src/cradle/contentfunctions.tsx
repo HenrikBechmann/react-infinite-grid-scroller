@@ -38,6 +38,17 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     } = cradleInternalProperties
     
+    console.log(`getContentListRequirements parameters
+        crosscount,
+        cradleRowcount,
+        runwayRowcount,
+        listRowcount
+        `,
+        crosscount,
+        cradleRowcount,
+        runwayRowcount,
+        listRowcount,
+    )
     // align axis reference to first row item
     targetAxisReferenceIndex -= (targetAxisReferenceIndex % crosscount)
     // derive target row
