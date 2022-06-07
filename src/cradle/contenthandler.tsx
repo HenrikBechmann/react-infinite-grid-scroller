@@ -81,8 +81,8 @@ export default class ContentHandler {
         const requestedAxisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
         let targetAxisPixelOffset = cradlePositionData.targetAxisPixelOffset
 
-        console.log('==> OPENING setCradleContent: scaffoldHandler.cradlePositionData',
-            Object.assign({},cradlePositionData))
+        console.log('==> OPENING setCradleContent: cradleState, scaffoldHandler.cradlePositionData',
+            cradleState, Object.assign({},cradlePositionData))
 
         const {
             orientation, 
@@ -121,7 +121,8 @@ export default class ContentHandler {
             targetAxisReferenceIndex,
             cradleContentCount, 
             scrollblockPixelOffset, 
-            axisPixelOffset`,
+            axisPixelOffset
+            `,
             targetCradleReferenceIndex, 
             targetAxisReferenceIndex,
             cradleContentCount, 
@@ -197,7 +198,7 @@ export default class ContentHandler {
 
         if (orientation == 'vertical') {
 
-            axisElement.style.top = (axisPixelOffset + targetAxisPixelAdjustment) + 'px'
+            axisElement.style.top = (cradlePositionData.blockScrollPos + axisPixelOffset) + 'px'
             axisElement.style.left = 'auto'
             headElement.style.paddingBottom = 
                 headcontentlist.length?
@@ -207,7 +208,7 @@ export default class ContentHandler {
         } else { // orientation = 'horizontal'
 
             axisElement.style.top = 'auto'
-            axisElement.style.left = (axisPixelOffset + targetAxisPixelAdjustment) + 'px'
+            axisElement.style.left = (cradlePositionData.blockScrollPos + targetAxisPixelAdjustment) + 'px'
             headElement.style.paddingRight = 
                 headcontentlist.length?
                     gap + 'px':
