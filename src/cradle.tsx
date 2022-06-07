@@ -683,6 +683,7 @@ const Cradle = ({
 
                 interruptHandler.signals.pauseTriggerlinesObserver = true
 
+                console.log('starting reposition; setting cradle pause to true')
                 // avoid recursive cradle intersection interrupts
                 interruptHandler.signals.pauseCradleIntersectionObserver = true
 
@@ -761,7 +762,7 @@ const Cradle = ({
             /*2*/       if (!interruptHandler.signals.repositioningRequired) { // repositioning short-circuit
 
                             const signals = interruptHandler.signals
-
+                            console.log('resetting signals in normalizesignals')
                             signals.pauseTriggerlinesObserver && (signals.pauseTriggerlinesObserver = false)
                             signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
                             signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)

@@ -74,6 +74,8 @@ export default class InterruptHandler {
 
         if (signals.pauseCradleIntersectionObserver) {
 
+            console.log('returning from cradleIntersection callback for pause = true')
+
             return
         }
 
@@ -130,6 +132,7 @@ export default class InterruptHandler {
                 cradleContent.headViewComponents = []
                 cradleContent.tailViewComponents = []
 
+                console.log('calling startreposition from inerrupthandler')
                 stateHandler.setCradleState('startreposition')
 
             }

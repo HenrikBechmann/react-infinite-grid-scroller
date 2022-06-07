@@ -134,7 +134,10 @@ export default class ContentHandler {
         let targetScrollblockPixelAdjustment = 0
         if (cradleState == 'doreposition' || targetAxisReferenceIndex == 0) {
 
-            targetAxisPixelAdjustment = padding
+            targetAxisPixelAdjustment = 
+                (targetAxisReferenceIndex == 0)?
+                    padding:
+                    gap
 
             targetScrollblockPixelAdjustment =
                 (targetAxisReferenceIndex == 0)?

@@ -138,6 +138,8 @@ export default class ScrollHandler {
 
                 this.updateBlockScrollPos()
                 // stateHandler.setCradleState('finishreposition')
+
+                console.log('scroller setting STATE doreposition')
                 stateHandler.setCradleState('doreposition')
 
                 break
