@@ -68,8 +68,8 @@ export default class InterruptHandler {
 
     private cradleIntersectionObserverCallback = (entries) => {
 
-        console.log('++cradleIntersectionObserverCallback',
-            this.isHeadCradleInView, this.isTailCradleInView, entries)
+        // console.log('++cradleIntersectionObserverCallback',
+        //     this.isHeadCradleInView, this.isTailCradleInView, entries)
 
         const signals = this.signals
         const stateHandler = this.cradleParameters.handlersRef.current.state
@@ -77,7 +77,7 @@ export default class InterruptHandler {
 
         if (signals.pauseCradleIntersectionObserver) {
 
-            console.log('returning from cradleIntersection callback for pause = true')
+            // console.log('returning from cradleIntersection callback for pause = true')
 
             return
         }
@@ -135,7 +135,7 @@ export default class InterruptHandler {
                 cradleContent.headViewComponents = []
                 cradleContent.tailViewComponents = []
 
-                console.log('calling startreposition from inerrupthandler')
+                // console.log('calling startreposition from inerrupthandler')
                 stateHandler.setCradleState('startreposition')
 
             }

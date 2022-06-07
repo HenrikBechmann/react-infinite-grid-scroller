@@ -139,11 +139,11 @@ export default class ScrollHandler {
                 this.updateBlockScrollPos()
                 // stateHandler.setCradleState('finishreposition')
 
-                console.log('scroller setting STATE doreposition')
+                // console.log('scroller setting STATE doreposition')
                 stateHandler.setCradleState('doreposition')
-                const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
-                console.log('scaffold headRef after calling doreposition in scrollhandler',
-                    scaffoldHandler.elements.headRef.current)
+                // const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
+                // console.log('scaffold headRef after calling doreposition in scrollhandler',
+                //     scaffoldHandler.elements.headRef.current)
 
                 break
             }
@@ -170,7 +170,7 @@ export default class ScrollHandler {
         const {scaffold:scaffoldHandler} = this.cradleParameters.handlersRef.current
         const { cradlePositionData } = scaffoldHandler
 
-        console.log('onAfterScroll cradlePositionData',Object.assign({},cradlePositionData))
+        // console.log('onAfterScroll cradlePositionData',Object.assign({},cradlePositionData))
         
     }
 
