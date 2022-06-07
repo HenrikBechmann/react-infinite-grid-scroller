@@ -141,6 +141,9 @@ export default class ScrollHandler {
 
                 console.log('scroller setting STATE doreposition')
                 stateHandler.setCradleState('doreposition')
+                const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
+                console.log('scaffold headRef after calling doreposition in scrollhandler',
+                    scaffoldHandler.elements.headRef.current)
 
                 break
             }

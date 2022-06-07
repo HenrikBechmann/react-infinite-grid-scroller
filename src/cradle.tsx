@@ -495,16 +495,13 @@ const Cradle = ({
         const cradleElements = scaffoldHandler.elements
 
         const cradleintersectobserver = interruptHandler.cradleIntersect.createObserver()
-        cradleintersectobserver.observe(cradleElements.headRef.current)
-        cradleintersectobserver.observe(cradleElements.tailRef.current)
+        interruptHandler.cradleIntersect.connectElements()
 
         const triggerobserver = interruptHandler.axisTriggerlinesIntersect.createObserver()
-        triggerobserver.observe(cradleElements.headTriggerlineRef.current)
-        triggerobserver.observe(cradleElements.tailTriggerlineRef.current)
+        interruptHandler.axisTriggerlinesIntersect.connectElements()
 
         const resizeobserver = interruptHandler.cradleResize.createObserver()
-        resizeobserver.observe(cradleElements.headRef.current)
-        resizeobserver.observe(cradleElements.tailRef.current)
+        interruptHandler.cradleResize.connectElements()
 
         return () => {
 

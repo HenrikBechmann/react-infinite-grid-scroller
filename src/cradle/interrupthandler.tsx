@@ -68,6 +68,9 @@ export default class InterruptHandler {
 
     private cradleIntersectionObserverCallback = (entries) => {
 
+        console.log('++cradleIntersectionObserverCallback',
+            this.isHeadCradleInView, this.isTailCradleInView, entries)
+
         const signals = this.signals
         const stateHandler = this.cradleParameters.handlersRef.current.state
         const contentHandler = this.cradleParameters.handlersRef.current.content
@@ -144,6 +147,12 @@ export default class InterruptHandler {
    cradleResize = {
       observer:null,
       callback:this.cradleresizeobservercallback,
+        connectElements:() => {
+            const observer = this.cradleResize.observer
+            const cradleElements = this.cradleParameters.handlersRef.current.scaffold.elements
+            observer.observe(cradleElements.headRef.current)
+            observer.observe(cradleElements.tailRef.current)
+        },
       createObserver:() => {
 
         this.cradleResize.observer = new ResizeObserver(this.cradleResize.callback)
@@ -155,6 +164,12 @@ export default class InterruptHandler {
    cradleIntersect = {    
         observer:null,    
         callback:this.cradleIntersectionObserverCallback,
+        connectElements:() => {
+            const observer = this.cradleIntersect.observer
+            const cradleElements = this.cradleParameters.handlersRef.current.scaffold.elements
+            observer.observe(cradleElements.headRef.current)
+            observer.observe(cradleElements.tailRef.current)
+        },
         createObserver:() => {
             let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
             this.cradleIntersect.observer = new IntersectionObserver(
@@ -168,7 +183,7 @@ export default class InterruptHandler {
    axisTriggerlinesIntersect = {
         observer:null,
         callback:this.axisTriggerlinesObserverCallback,
-        connectTriggerlines:() => {
+        connectElements:() => {
             const observer = this.axisTriggerlinesIntersect.observer
             const cradleElements = this.cradleParameters.handlersRef.current.scaffold.elements
             observer.observe(cradleElements.headTriggerlineRef.current)
