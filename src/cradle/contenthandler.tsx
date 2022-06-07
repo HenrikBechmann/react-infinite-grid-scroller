@@ -224,7 +224,7 @@ export default class ContentHandler {
         console.log('==> CLOSING setCradleContent: scaffoldHandler.cradlePositionData',
             Object.assign({},cradlePositionData))
 
-        interruptHandler.axisTriggerlinesIntersect.reconnectTriggerlines()
+        interruptHandler.axisTriggerlinesIntersect.connectTriggerlines()
         interruptHandler.signals.pauseTriggerlinesObserver = false
 
     }
@@ -403,7 +403,7 @@ export default class ContentHandler {
         cradlePositionData.targetAxisPixelOffset = axisPixelOffset
 
         // trigger lines have been moved, so observer must be reset
-        interruptHandler.axisTriggerlinesIntersect.reconnectTriggerlines()
+        interruptHandler.axisTriggerlinesIntersect.connectTriggerlines()
         interruptHandler.signals.pauseTriggerlinesObserver = false
 
         stateHandler.setCradleState('renderupdatedcontent')

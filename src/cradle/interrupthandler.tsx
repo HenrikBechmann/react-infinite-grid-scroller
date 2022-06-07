@@ -168,12 +168,7 @@ export default class InterruptHandler {
    axisTriggerlinesIntersect = {
         observer:null,
         callback:this.axisTriggerlinesObserverCallback,
-        resetTriggerlineConnections:() => {
-            const observer = this.axisTriggerlinesIntersect.observer
-            observer.disconnect()
-            this.axisTriggerlinesIntersect.reconnectTriggerlines()
-        },
-        reconnectTriggerlines:() => {
+        connectTriggerlines:() => {
             const observer = this.axisTriggerlinesIntersect.observer
             const cradleElements = this.cradleParameters.handlersRef.current.scaffold.elements
             observer.observe(cradleElements.headTriggerlineRef.current)
