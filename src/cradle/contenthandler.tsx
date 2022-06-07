@@ -72,8 +72,8 @@ export default class ContentHandler {
 
         // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
-        // interruptHandler.axisTriggerlinesIntersect.observer.disconnect()
-        interruptHandler.signals.pauseTriggerlinesObserver = true
+        interruptHandler.axisTriggerlinesIntersect.observer.disconnect()
+        // interruptHandler.signals.pauseTriggerlinesObserver = true
 
         const { cradlePositionData } = scaffoldHandler
         const viewportElement = viewportInterruptProperties.elementref.current
@@ -218,7 +218,7 @@ export default class ContentHandler {
         console.log('==> CLOSING setCradleContent: scaffoldHandler.cradlePositionData',
             Object.assign({},cradlePositionData))
 
-        interruptHandler.axisTriggerlinesIntersect.resetObserves()
+        interruptHandler.axisTriggerlinesIntersect.reconnectTriggerlines()
         interruptHandler.signals.pauseTriggerlinesObserver = false
 
     }
@@ -320,8 +320,8 @@ export default class ContentHandler {
 
         // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
-        // interruptHandler.axisTriggerlinesIntersect.observer.disconnect()
-        interruptHandler.signals.pauseTriggerlinesObserver = true
+        interruptHandler.axisTriggerlinesIntersect.observer.disconnect()
+        // interruptHandler.signals.pauseTriggerlinesObserver = true
 
         // ----------------------------------[ 4. reconfigure cradle content ]--------------------------
 
@@ -397,7 +397,7 @@ export default class ContentHandler {
         cradlePositionData.targetAxisPixelOffset = axisPixelOffset
 
         // trigger lines have been moved, so observer must be reset
-        interruptHandler.axisTriggerlinesIntersect.resetObserves()
+        interruptHandler.axisTriggerlinesIntersect.reconnectTriggerlines()
         interruptHandler.signals.pauseTriggerlinesObserver = false
 
         stateHandler.setCradleState('renderupdatedcontent')
