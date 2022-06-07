@@ -198,7 +198,8 @@ export default class ContentHandler {
 
         if (orientation == 'vertical') {
 
-            axisElement.style.top = (cradlePositionData.blockScrollPos + axisPixelOffset) + 'px'
+            axisElement.style.top = 
+                (cradlePositionData.blockScrollPos + axisPixelOffset + targetAxisPixelAdjustment) + 'px'
             axisElement.style.left = 'auto'
             headElement.style.paddingBottom = 
                 headcontentlist.length?
@@ -208,7 +209,8 @@ export default class ContentHandler {
         } else { // orientation = 'horizontal'
 
             axisElement.style.top = 'auto'
-            axisElement.style.left = (cradlePositionData.blockScrollPos + targetAxisPixelAdjustment) + 'px'
+            axisElement.style.left = 
+                (cradlePositionData.blockScrollPos + axisPixelOffset + targetAxisPixelAdjustment) + 'px'
             headElement.style.paddingRight = 
                 headcontentlist.length?
                     gap + 'px':
