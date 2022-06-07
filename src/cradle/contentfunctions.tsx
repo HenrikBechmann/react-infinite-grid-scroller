@@ -70,8 +70,8 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     // trailing edge
     let targetCradleEndRowOffset = targetCradleRowOffset + (cradleRowcount - 1)
 
-    if (targetCradleEndRowOffset > (listRowcount - 1)) {
-        const diff = ((listRowcount - 1) - targetCradleEndRowOffset)
+    if (targetCradleEndRowOffset > (listEndRowOffset)) {
+        const diff = (listEndRowOffset - targetCradleEndRowOffset)
         targetCradleRowOffset -= diff
         targetCradleEndRowOffset -= diff
     }
@@ -82,9 +82,9 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     let newCradleContentCount = cradleRowcount * crosscount
     if (targetCradleEndRowOffset == listEndRowOffset) {
-        const endrowremaindercount = listsize % crosscount
-        if (endrowremaindercount) {
-            newCradleContentCount -= (crosscount - endrowremaindercount)
+        const endRowRemainderCount = listsize % crosscount
+        if (endRowRemainderCount) {
+            newCradleContentCount -= (crosscount - endRowRemainderCount)
         }
     }
 
