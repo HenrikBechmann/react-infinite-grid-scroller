@@ -127,17 +127,17 @@ export default class ContentHandler {
                 viewportElement:viewportInterruptProperties.elementref.current,
             })
 
-        console.log(`getContentListRequirements return values:
-            targetCradleReferenceIndex, 
-            targetAxisReferenceIndex,
-            cradleContentCount, 
-            scrollblockPixelOffset
-            `,
-            targetCradleReferenceIndex, 
-            targetAxisReferenceIndex,
-            cradleContentCount, 
-            scrollblockPixelOffset, 
-            )
+        // console.log(`getContentListRequirements return values:
+        //     targetCradleReferenceIndex, 
+        //     targetAxisReferenceIndex,
+        //     cradleContentCount, 
+        //     scrollblockPixelOffset
+        //     `,
+        //     targetCradleReferenceIndex, 
+        //     targetAxisReferenceIndex,
+        //     cradleContentCount, 
+        //     scrollblockPixelOffset, 
+        //     )
 
         let scrollPosAdjustment
         if (targetAxisReferenceIndex == 0) {
@@ -205,8 +205,8 @@ export default class ContentHandler {
             const top = (targetAxisRowOffset * rowLength) + padding
             axisElement.style.top = top + 'px'
 
-            console.log('top = targetAxisRowOffset * rowLength) + padding',
-                top,'= (' , targetAxisRowOffset,'*', rowLength,') +' , padding)
+            // console.log('top = targetAxisRowOffset * rowLength) + padding',
+            //     top,'= (' , targetAxisRowOffset,'*', rowLength,') +' , padding)
 
             axisElement.style.left = 'auto'
             headElement.style.paddingBottom = 
@@ -217,8 +217,9 @@ export default class ContentHandler {
         } else { // orientation = 'horizontal'
 
             axisElement.style.top = 'auto'
+            const left = (targetAxisRowOffset * rowLength) + padding
             axisElement.style.left = 
-                (cradlePositionData.blockScrollPos + axisPixelOffset) + 'px'
+                left + 'px'
             headElement.style.paddingRight = 
                 headcontentlist.length?
                     gap + 'px':
