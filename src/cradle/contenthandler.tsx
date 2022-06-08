@@ -143,9 +143,9 @@ export default class ContentHandler {
         if (targetAxisReferenceIndex == 0) {
             scrollPosAdjustment = 0
         } else if (cradleState == 'doreposition') {
-            scrollPosAdjustment = padding
+            scrollPosAdjustment = padding + gap
         } else {
-            scrollPosAdjustment = 0
+            scrollPosAdjustment = padding
         }
 
         const axisPixelOffset = targetAxisPixelOffset
@@ -200,11 +200,13 @@ export default class ContentHandler {
 
         if (orientation == 'vertical') {
 
-            console.log('top = cradlePositionData.blockScrollPos + adjustment + axisPixelOffset',
-                cradlePositionData.blockScrollPos, axisPixelOffset)
             // axisElement.style.top = 
             //     (cradlePositionData.blockScrollPos + axisPixelOffset) + 'px'
-            axisElement.style.top = ((targetAxisRowOffset * rowLength) + padding) + 'px'
+            const top = (targetAxisRowOffset * rowLength) + padding
+            axisElement.style.top = top + 'px'
+
+            console.log('top = targetAxisRowOffset * rowLength) + padding',
+                top,'= (' , targetAxisRowOffset,'*', rowLength,') +' , padding)
 
             axisElement.style.left = 'auto'
             headElement.style.paddingBottom = 
