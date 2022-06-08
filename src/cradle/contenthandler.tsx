@@ -112,7 +112,7 @@ export default class ContentHandler {
 
         const {
             targetCradleReferenceIndex, 
-            targetCradleRowOffset,
+            // targetCradleRowOffset,
             targetAxisReferenceIndex,
             targetAxisRowOffset,
             newCradleContentCount:cradleContentCount, 
