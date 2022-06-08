@@ -27,7 +27,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         cellHeight, 
         cellWidth, 
         gap,
-        listsize
+        listsize,
     } = cradleInheritedProperties
 
     const {
@@ -98,7 +98,9 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     return {
         targetCradleReferenceIndex, 
+        targetCradleRowOffset,
         targetAxisReferenceIndex, 
+        targetAxisRowOffset,
         // targetAxisPixelOffset, 
         targetScrollblockPixelOffset, 
         newCradleContentCount, 

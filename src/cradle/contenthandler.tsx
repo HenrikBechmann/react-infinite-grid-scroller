@@ -95,7 +95,7 @@ export default class ContentHandler {
 
         if (cradleState == 'doreposition')  {
 
-            targetAxisPixelOffset = 0 // default
+            targetAxisPixelOffset = gap // default
 
         }
 
@@ -112,7 +112,9 @@ export default class ContentHandler {
 
         const {
             targetCradleReferenceIndex, 
+            targetCradleRowOffset,
             targetAxisReferenceIndex,
+            targetAxisRowOffset,
             newCradleContentCount:cradleContentCount, 
             targetScrollblockPixelOffset:scrollblockPixelOffset,
         } = 
@@ -136,6 +138,15 @@ export default class ContentHandler {
             cradleContentCount, 
             scrollblockPixelOffset, 
             )
+
+        let scrollPosAdjustment
+        if (targetAxisReferenceIndex == 0) {
+            scrollPosAdjustment = 0
+        } else if (cradleState == 'doreposition') {
+            scrollPosAdjustment = padding
+        } else {
+            scrollPosAdjustment = 0
+        }
 
         const axisPixelOffset = targetAxisPixelOffset
         // returns content constrained by cradleRowcount
@@ -178,7 +189,7 @@ export default class ContentHandler {
         
         }
 
-        cradlePositionData.blockScrollPos = scrollblockPixelOffset
+        cradlePositionData.blockScrollPos = scrollblockPixelOffset + scrollPosAdjustment
 
         viewportElement[cradlePositionData.blockScrollProperty] =
             cradlePositionData.blockScrollPos
@@ -191,8 +202,10 @@ export default class ContentHandler {
 
             console.log('top = cradlePositionData.blockScrollPos + adjustment + axisPixelOffset',
                 cradlePositionData.blockScrollPos, axisPixelOffset)
-            axisElement.style.top = 
-                (cradlePositionData.blockScrollPos + axisPixelOffset) + 'px'
+            // axisElement.style.top = 
+            //     (cradlePositionData.blockScrollPos + axisPixelOffset) + 'px'
+            axisElement.style.top = ((targetAxisRowOffset * rowLength) + padding) + 'px'
+
             axisElement.style.left = 'auto'
             headElement.style.paddingBottom = 
                 headcontentlist.length?
