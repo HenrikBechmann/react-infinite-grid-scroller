@@ -54,9 +54,11 @@ export default class ScaffoldHandler {
         blockScrollPos:null,
 
         /*
-            blockScrollProperty is set by the orientation reconfiguration effect in cradle module.
-            it is used where blockScrollPos is used above.
             values can be "scrollTop" or "scrollLeft" (of the viewport element) depending on orientation
+
+            blockScrollProperty is set by the orientation reconfiguration effect in cradle module.
+
+            it is used where blockScrollPos is used above.
         */
         blockScrollProperty:null,
 
@@ -78,7 +80,7 @@ export default class ScaffoldHandler {
             targetAxisPixelOffset is set by
                 - setCradleContent
                 - updateCradleContent
-                - scaffoldHandler (initialiozation)
+                - scaffoldHandler (initialization)
                 - scrollHandler (during and after scroll)
                 - pivot effect (change of orientation) in cradle module
 

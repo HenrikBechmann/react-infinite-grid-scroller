@@ -132,7 +132,7 @@ export default class ContentHandler {
             )
 
         let targetAxisPixelAdjustment = 0
-        let targetScrollblockPixelAdjustment = 0
+        let targetScrollblockPixelAdjustment = padding
         if (cradleState == 'doreposition' || targetAxisReferenceIndex == 0) {
 
             targetAxisPixelAdjustment = 
@@ -201,6 +201,12 @@ export default class ContentHandler {
         const headElement = cradleElements.headRef.current
 
         if (orientation == 'vertical') {
+
+            console.log('setCradleContent CSS adjustments: \
+                scrollblockPixelOffset,targetScrollblockPixelAdjustment,\
+                axisPixelOffset,targetAxisPixelAdjustment',
+                scrollblockPixelOffset,targetScrollblockPixelAdjustment,
+                axisPixelOffset,targetAxisPixelAdjustment)
 
             axisElement.style.top = 
                 (cradlePositionData.blockScrollPos + axisPixelOffset + targetAxisPixelAdjustment) + 'px'
