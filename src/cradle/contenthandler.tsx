@@ -143,7 +143,7 @@ export default class ContentHandler {
         if (targetAxisReferenceIndex == 0) {
             scrollPosAdjustment = 0
         } else if (cradleState == 'doreposition') {
-            scrollPosAdjustment = padding + gap
+            scrollPosAdjustment = padding //+ gap
         } else {
             scrollPosAdjustment = padding
         }
