@@ -13,6 +13,7 @@ import CellShell from '../cellshell'
 
 export const getContentListRequirements = ({ // called from setCradleContent only
 
+        rowLength,
         cradleInheritedProperties,
         cradleInternalProperties,
         targetAxisReferenceIndex, // from user, or from pivot
@@ -90,12 +91,6 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     // --------------------[ calc css positioning ]-----------------------
 
-    const isVertical = (orientation == 'vertical')
-    const rowLength = 
-        isVertical?
-            (cellHeight + gap):
-            (cellWidth + gap)
-
     const targetScrollblockPixelOffset = 
         (targetAxisRowOffset * rowLength) - (targetAxisPixelOffset)
 
@@ -104,7 +99,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     return {
         targetCradleReferenceIndex, 
         targetAxisReferenceIndex, 
-        targetAxisPixelOffset, 
+        // targetAxisPixelOffset, 
         targetScrollblockPixelOffset, 
         newCradleContentCount, 
     } 

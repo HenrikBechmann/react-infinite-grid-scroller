@@ -82,18 +82,20 @@ export default class ContentHandler {
         const requestedAxisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
         let targetAxisPixelOffset = cradlePositionData.targetAxisPixelOffset
 
-        console.log('==> OPENING setCradleContent: cradleState, scaffoldHandler.cradlePositionData',
-            cradleState, Object.assign({},cradlePositionData))
+        // console.log('==> OPENING setCradleContent: cradleState, scaffoldHandler.cradlePositionData',
+        //     cradleState, Object.assign({},cradlePositionData))
 
         const {
             orientation, 
             gap, 
             padding, 
+            cellHeight,
+            cellWidth
         } = cradleInheritedProperties
 
-        if (cradleState == 'doreposition') {
+        if (cradleState == 'doreposition')  {
 
-            targetAxisPixelOffset = 0
+            targetAxisPixelOffset = 0 // default
 
         }
 
@@ -102,14 +104,20 @@ export default class ContentHandler {
 
         // ----------------------[ 2. get content requirements ]----------------------
 
+        const isVertical = (orientation == 'vertical')
+        const rowLength = 
+            isVertical?
+                (cellHeight + gap):
+                (cellWidth + gap)
+
         const {
             targetCradleReferenceIndex, 
             targetAxisReferenceIndex,
             newCradleContentCount:cradleContentCount, 
-            targetScrollblockPixelOffset:scrollblockPixelOffset, 
-            targetAxisPixelOffset:axisPixelOffset, 
+            targetScrollblockPixelOffset:scrollblockPixelOffset,
         } = 
             getContentListRequirements({
+                rowLength,
                 targetAxisReferenceIndex:requestedAxisReferenceIndex,
                 targetAxisPixelOffset,
                 cradleInheritedProperties,
@@ -121,32 +129,15 @@ export default class ContentHandler {
             targetCradleReferenceIndex, 
             targetAxisReferenceIndex,
             cradleContentCount, 
-            scrollblockPixelOffset, 
-            axisPixelOffset
+            scrollblockPixelOffset
             `,
             targetCradleReferenceIndex, 
             targetAxisReferenceIndex,
             cradleContentCount, 
             scrollblockPixelOffset, 
-            axisPixelOffset, 
             )
 
-        let targetAxisPixelAdjustment = 0
-        let targetScrollblockPixelAdjustment = padding
-        if (cradleState == 'doreposition' || targetAxisReferenceIndex == 0) {
-
-            targetAxisPixelAdjustment = 
-                (targetAxisReferenceIndex == 0)?
-                    padding:
-                    gap
-
-            targetScrollblockPixelAdjustment =
-                (targetAxisReferenceIndex == 0)?
-                    0:
-                    gap
-                    
-        }
-
+        const axisPixelOffset = targetAxisPixelOffset
         // returns content constrained by cradleRowcount
         const [childlist,deleteditems] = getUICellShellList({
 
@@ -187,14 +178,10 @@ export default class ContentHandler {
         
         }
 
-        // const viewportElement = viewportInterruptProperties.elementref.current
-        // const cradlePositionData = scaffoldHandler.cradlePositionData
-
-        cradlePositionData.blockScrollPos = 
-            scrollblockPixelOffset + targetScrollblockPixelAdjustment
+        cradlePositionData.blockScrollPos = scrollblockPixelOffset
 
         viewportElement[cradlePositionData.blockScrollProperty] =
-            Math.max(0,cradlePositionData.blockScrollPos)
+            cradlePositionData.blockScrollPos
 
         const cradleElements = scaffoldHandler.elements //cradleElementsRef.current
         const axisElement = cradleElements.axisRef.current
@@ -202,14 +189,10 @@ export default class ContentHandler {
 
         if (orientation == 'vertical') {
 
-            console.log('setCradleContent CSS adjustments: \
-                scrollblockPixelOffset,targetScrollblockPixelAdjustment,\
-                axisPixelOffset,targetAxisPixelAdjustment',
-                scrollblockPixelOffset,targetScrollblockPixelAdjustment,
-                axisPixelOffset,targetAxisPixelAdjustment)
-
+            console.log('top = cradlePositionData.blockScrollPos + adjustment + axisPixelOffset',
+                cradlePositionData.blockScrollPos, axisPixelOffset)
             axisElement.style.top = 
-                (cradlePositionData.blockScrollPos + axisPixelOffset + targetAxisPixelAdjustment) + 'px'
+                (cradlePositionData.blockScrollPos + axisPixelOffset) + 'px'
             axisElement.style.left = 'auto'
             headElement.style.paddingBottom = 
                 headcontentlist.length?
@@ -220,7 +203,7 @@ export default class ContentHandler {
 
             axisElement.style.top = 'auto'
             axisElement.style.left = 
-                (cradlePositionData.blockScrollPos + axisPixelOffset + targetAxisPixelAdjustment) + 'px'
+                (cradlePositionData.blockScrollPos + axisPixelOffset) + 'px'
             headElement.style.paddingRight = 
                 headcontentlist.length?
                     gap + 'px':
@@ -228,8 +211,8 @@ export default class ContentHandler {
 
         }
 
-        console.log('==> CLOSING setCradleContent: scaffoldHandler.cradlePositionData',
-            Object.assign({},cradlePositionData))
+        // console.log('==> CLOSING setCradleContent: scaffoldHandler.cradlePositionData',
+        //     Object.assign({},cradlePositionData))
 
         interruptHandler.axisTriggerlinesIntersect.connectElements()
         interruptHandler.cradleIntersect.connectElements()
