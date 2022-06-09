@@ -598,7 +598,7 @@ const Cradle = ({
 
         const { signals } = interruptHandler
 
-        // signals.pauseTriggerlinesObserver = true
+        signals.pauseTriggerlinesObserver = true
         signals.pauseScrollingEffects = true
 
         const cradleContent = contentHandler.content
