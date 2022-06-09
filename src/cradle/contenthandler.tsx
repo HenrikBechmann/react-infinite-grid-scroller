@@ -73,7 +73,7 @@ export default class ContentHandler {
         // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
         interruptHandler.axisTriggerlinesIntersect.observer.disconnect()
-        // interruptHandler.signals.pauseTriggerlinesObserver = true
+
         interruptHandler.cradleIntersect.observer.disconnect()
 
         const { cradlePositionData } = scaffoldHandler
@@ -81,9 +81,6 @@ export default class ContentHandler {
 
         const requestedAxisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
         let targetAxisPixelOffset = cradlePositionData.targetAxisPixelOffset
-
-        // console.log('==> OPENING setCradleContent: cradleState, scaffoldHandler.cradlePositionData',
-        //     cradleState, Object.assign({},cradlePositionData))
 
         const {
             orientation, 
@@ -126,18 +123,6 @@ export default class ContentHandler {
                 cradleInternalProperties,
                 viewportElement:viewportInterruptProperties.elementref.current,
             })
-
-        // console.log(`getContentListRequirements return values:
-        //     targetCradleReferenceIndex, 
-        //     targetAxisReferenceIndex,
-        //     cradleContentCount, 
-        //     scrollblockPixelOffset
-        //     `,
-        //     targetCradleReferenceIndex, 
-        //     targetAxisReferenceIndex,
-        //     cradleContentCount, 
-        //     scrollblockPixelOffset, 
-        //     )
 
         let scrollPosAdjustment
         if (targetAxisReferenceIndex == 0) {
@@ -200,13 +185,8 @@ export default class ContentHandler {
 
         if (orientation == 'vertical') {
 
-            // axisElement.style.top = 
-            //     (cradlePositionData.blockScrollPos + axisPixelOffset) + 'px'
             const top = (targetAxisRowOffset * rowLength) + padding
             axisElement.style.top = top + 'px'
-
-            // console.log('top = targetAxisRowOffset * rowLength) + padding',
-            //     top,'= (' , targetAxisRowOffset,'*', rowLength,') +' , padding)
 
             axisElement.style.left = 'auto'
             headElement.style.paddingBottom = 
@@ -226,9 +206,6 @@ export default class ContentHandler {
                     0
 
         }
-
-        // console.log('==> CLOSING setCradleContent: scaffoldHandler.cradlePositionData',
-        //     Object.assign({},cradlePositionData))
 
         interruptHandler.axisTriggerlinesIntersect.connectElements()
         interruptHandler.cradleIntersect.connectElements()
