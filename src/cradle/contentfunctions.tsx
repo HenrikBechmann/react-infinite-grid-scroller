@@ -42,14 +42,14 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     // align axis reference to first row item
     targetAxisReferenceIndex -= (targetAxisReferenceIndex % crosscount)
     // derive target row
-    let targetAxisRowOffset = targetAxisReferenceIndex/crosscount
+    let targetAxisRowOffset = Math.round(targetAxisReferenceIndex/crosscount)
 
     const listEndRowOffset = (listRowcount - 1)
 
     // check for end list out-of-bounds
     if (targetAxisRowOffset > listEndRowOffset) {
         targetAxisRowOffset = listEndRowOffset
-        targetAxisReferenceIndex = targetAxisRowOffset * crosscount
+        targetAxisReferenceIndex = Math.round(targetAxisRowOffset * crosscount)
     }
 
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
@@ -112,11 +112,18 @@ export const getShiftInstruction = ({
             (isIntersecting && (!isScrollingviewportforward) && (triggerlinename == 'triggerline-head'))
     })
 
+    // console.log('getShiftInstruction isScrollingviewportforward, triggerlineEntries.length, triggerlineEntries, entries',
+    //     isScrollingviewportforward, triggerlineEntries.length, triggerlineEntries, entries)
+
     if (entries.length == 0) return 0
 
     if (entries.length > 1) {
         console.log('SYSTEM ISSUE: MORE THAN ONE BREAKLINE OBSERVER ENTRY', triggerlineEntries.length, triggerlineEntries)
     }
+
+    // if (triggerlineEntries.length == 2) {
+    //     debugger
+    // }
 
     const [entry] = entries
     // const isIntersecting = entry.isIntersecting
@@ -163,6 +170,24 @@ export const calcContentShift = ({
         triggerlineOffset,
 
     } = cradleInheritedProperties
+
+    // console.log(`calcContentShift cradleInheritedProperties
+    //     gap,
+    //     orientation,
+    //     cellHeight,
+    //     cellWidth,
+    //     listsize,
+    //     triggerlineOffset,
+    //     isScrollingViewportForward
+    //     `,
+    //     gap,
+    //     orientation,
+    //     cellHeight,
+    //     cellWidth,
+    //     listsize,
+    //     triggerlineOffset,
+    //     isScrollingViewportForward
+    //     )
 
     const axisElement = cradleElements.axisRef.current
 
@@ -332,6 +357,24 @@ export const calcContentShift = ({
     const newAxisPixelOffset = viewportAxisOffset + (axisReferenceRowshift * rowLength)
 
     // ---------------------[ 9. return required values ]-------------------
+
+    // console.log(`calcContentShift return values
+    //     cradleReferenceItemShift, 
+    //     newAxisReferenceIndex, 
+    //     axisReferenceItemShift, 
+    //     newAxisPixelOffset, 
+    //     newCradleContentCount,
+    //     headChangeCount,
+    //     tailChangeCount
+    //     `,
+    //     cradleReferenceItemShift, 
+    //     newAxisReferenceIndex, 
+    //     axisReferenceItemShift, 
+    //     newAxisPixelOffset, 
+    //     newCradleContentCount,
+    //     headChangeCount,
+    //     tailChangeCount
+    //     )
 
     return {
         // newCradleReferenceIndex, 

@@ -225,6 +225,8 @@ const Cradle = ({
 
     const [cradleState, setCradleState] = useState('setup')
 
+    // console.log('running cradle with ', cradleState)
+
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState;
 
@@ -598,14 +600,17 @@ const Cradle = ({
 
         const { signals } = interruptHandler
 
-        // signals.pauseTriggerlinesObserver = true
+        signals.pauseTriggerlinesObserver = true
         signals.pauseScrollingEffects = true
+        signals.pauseCradleIntersectionObserver = true
 
         const cradleContent = contentHandler.content
         cradleContent.headModelComponents = []
         cradleContent.tailModelComponents = []
         cradleContent.headViewComponents = []
         cradleContent.tailViewComponents = []
+
+        // debugger
 
         setCradleState('pivot')
 

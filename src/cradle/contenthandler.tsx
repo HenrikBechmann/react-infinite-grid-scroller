@@ -73,7 +73,6 @@ export default class ContentHandler {
         // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
         interruptHandler.axisTriggerlinesIntersect.observer.disconnect()
-
         interruptHandler.cradleIntersect.observer.disconnect()
 
         const { cradlePositionData } = scaffoldHandler
@@ -123,6 +122,8 @@ export default class ContentHandler {
                 cradleInternalProperties,
                 viewportElement:viewportInterruptProperties.elementref.current,
             })
+
+        // console.log('==> setCradleContent scrollblockPixelOffset',scrollblockPixelOffset)
 
         let scrollPosAdjustment
         if (targetAxisReferenceIndex == 0) {
@@ -234,7 +235,6 @@ export default class ContentHandler {
 
         const scrollPos = scrollPositions.currentupdate
 
-        console.log('scrollPos in updateCradleContent',scrollPos)
         // first abandon option/3; nothing to do
         if ( scrollPos < 0) { // for Safari elastic bounce at top of scroll
 
@@ -253,6 +253,9 @@ export default class ContentHandler {
             this._previousScrollForward = isScrollingviewportforward
 
         }
+
+        // console.log('==> updateCradleContent: scrollPos, isScrollingviewportforward, scrollPositions in updateCradleContent',
+        //     scrollPos, isScrollingviewportforward, Object.assign({},scrollPositions))
 
         // cradle scaffold and user cells
         const cradleElements = scaffoldHandler.elements
@@ -361,25 +364,32 @@ export default class ContentHandler {
 
         if (cradleInheritedProperties.orientation == 'vertical') {
 
-            const top = scrollPos + axisPixelOffset
+            const topPos = scrollPos + axisPixelOffset
 
-            axisElement.style.top = top + 'px'
+            axisElement.style.top = topPos + 'px'
             axisElement.style.left = 'auto'
             headElement.style.paddingBottom = 
                 headcontent.length?
                     cradleInheritedProperties.gap + 'px':
                     0
 
-        } else {
+            // console.log('updateCradleContent VERTICAL: topPos, scrollPos, axisPixelOffset',
+            //     topPos, scrollPos, axisPixelOffset)
 
-            const left = scrollPos + axisPixelOffset
+
+        } else { // 'horizontal'
+
+            const leftPos = scrollPos + axisPixelOffset
 
             axisElement.style.top = 'auto'
-            axisElement.left = left + 'px'
+            axisElement.style.left = leftPos + 'px'
             headElement.style.paddingRight = 
                 headcontent.length?
                     cradleInheritedProperties.gap + 'px':
                     0
+
+            // console.log('updateCradleContent HORIZONTAL: leftPos, scrollPos, axisPixelOffset',
+            //     leftPos, scrollPos, axisPixelOffset)
 
         }
 
