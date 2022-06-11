@@ -232,8 +232,9 @@ export default class ContentHandler {
         // scroll data
         const scrollPositions = scrollHandler.scrollPositions 
 
-        let scrollPos = scrollPositions.currentupdate
+        const scrollPos = scrollPositions.currentupdate
 
+        console.log('scrollPos in updateCradleContent',scrollPos)
         // first abandon option/3; nothing to do
         if ( scrollPos < 0) { // for Safari elastic bounce at top of scroll
 
