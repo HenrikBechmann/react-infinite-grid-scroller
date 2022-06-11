@@ -2,6 +2,7 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
+    BUG: triggerlined does not trigger after reposition in FF
     BUG: reposition chip appears outside viewport when list partly hidden
     BUG: repositioningRender is broken.
     BUG: triggerlineOffset can fail when >= cellLength -- optimize this; impose correction
