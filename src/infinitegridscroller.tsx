@@ -12,6 +12,7 @@
         insert, remove, swap functions
         test changing all scroller parameters
 
+    BUG: resize (rotate device) during active scroll intertia on smart phone
     BUG: axisOffset needs to be recalculated when switching from nested to generic (diff size cells)
     BUG: triggerlineOffset can fail when >= cellLength -- optimize this; impose correction
     TODO:
