@@ -345,8 +345,11 @@ export const calcContentShift = ({
 
     // create head and tail change counts
     const changeOfCradleContentCount = cradlecontentlist.length - newCradleContentCount
-    let headChangeCount = -(cradleReferenceRowshift * crosscount)
-    let tailChangeCount = -headChangeCount - (changeOfCradleContentCount)
+    // const headChangeCount = -(cradleReferenceRowshift * crosscount)
+    // const tailChangeCount = -headChangeCount - (changeOfCradleContentCount)
+    console.log('cradleReferenceItemShift, axisReferenceItemShift',cradleReferenceItemShift, axisReferenceItemShift)
+    const headChangeCount = -(cradleReferenceItemShift)
+    const tailChangeCount = -headChangeCount - (changeOfCradleContentCount)
 
     // -------------[ 8. calculate new axis pixel position ]------------------
 
@@ -355,23 +358,23 @@ export const calcContentShift = ({
     // ---------------------[ 9. return required values ]-------------------
 
 
-    // console.log(`==> calcContentShift return values:
-    //     cradleReferenceItemShift, 
-    //     newAxisReferenceIndex, 
-    //     axisReferenceItemShift, 
-    //     newAxisPixelOffset, 
-    //     newCradleContentCount,
-    //     headChangeCount,
-    //     tailChangeCount
-    //     `,
-    //     cradleReferenceItemShift, 
-    //     newAxisReferenceIndex, 
-    //     axisReferenceItemShift, 
-    //     newAxisPixelOffset, 
-    //     newCradleContentCount,
-    //     headChangeCount,
-    //     tailChangeCount
-    //     )
+    console.log(`==> calcContentShift return values:
+        cradleReferenceItemShift, 
+        newAxisReferenceIndex, 
+        axisReferenceItemShift, 
+        newAxisPixelOffset, 
+        newCradleContentCount,
+        headChangeCount,
+        tailChangeCount
+        `,
+        cradleReferenceItemShift, 
+        newAxisReferenceIndex, 
+        axisReferenceItemShift, 
+        newAxisPixelOffset, 
+        newCradleContentCount,
+        headChangeCount,
+        tailChangeCount
+        )
 
     return {
         // newCradleReferenceIndex, 
