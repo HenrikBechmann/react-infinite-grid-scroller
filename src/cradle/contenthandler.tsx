@@ -138,8 +138,8 @@ export default class ContentHandler {
             cradleInternalProperties,
             cradleContentCount,
             cradleReferenceIndex:targetCradleReferenceIndex,
-            headChangeCount:0,
-            tailChangeCount:cradleContentCount,
+            listStartChangeCount:0,
+            listEndChangeCount:cradleContentCount,
             localContentList,
             callbacks:this.internalCallbacksRef.current,
             instanceIdCounterRef:this.instanceIdCounterRef,
@@ -288,8 +288,8 @@ export default class ContentHandler {
             axisReferenceItemShift:axisItemShift, 
             newAxisPixelOffset:axisPixelOffset, 
             newCradleContentCount:cradleContentCount,
-            headChangeCount,
-            tailChangeCount,
+            listStartChangeCount,
+            listEndChangeCount,
 
         } = calcContentShift({
 
@@ -320,15 +320,15 @@ export default class ContentHandler {
         // collect modified content
         let localContentList, deletedContentItems = []
 
-        if (headChangeCount || tailChangeCount) { // if either is non-0 then modify content
+        if (listStartChangeCount || listEndChangeCount) { // if either is non-0 then modify content
 
             [localContentList,deletedContentItems] = getUICellShellList({
                 cradleInheritedProperties,
                 cradleInternalProperties,
                 cradleContentCount,
                 localContentList:modelcontentlist,
-                headChangeCount,
-                tailChangeCount,
+                listStartChangeCount,
+                listEndChangeCount,
                 cradleReferenceIndex:oldCradleReferenceIndex,
                 callbacks:this.internalCallbacksRef.current,
                 instanceIdCounterRef:this.instanceIdCounterRef,

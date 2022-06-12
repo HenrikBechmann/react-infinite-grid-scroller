@@ -348,8 +348,8 @@ export const calcContentShift = ({
     // const headChangeCount = -(cradleReferenceRowshift * crosscount)
     // const tailChangeCount = -headChangeCount - (changeOfCradleContentCount)
     console.log('cradleReferenceItemShift, axisReferenceItemShift',cradleReferenceItemShift, axisReferenceItemShift)
-    const headChangeCount = -(cradleReferenceItemShift)
-    const tailChangeCount = -headChangeCount - (changeOfCradleContentCount)
+    const listStartChangeCount = -(cradleReferenceItemShift)
+    const listEndChangeCount = -listStartChangeCount - (changeOfCradleContentCount)
 
     // -------------[ 8. calculate new axis pixel position ]------------------
 
@@ -364,16 +364,16 @@ export const calcContentShift = ({
         axisReferenceItemShift, 
         newAxisPixelOffset, 
         newCradleContentCount,
-        headChangeCount,
-        tailChangeCount
+        listStartChangeCount,
+        listEndChangeCount
         `,
         cradleReferenceItemShift, 
         newAxisReferenceIndex, 
         axisReferenceItemShift, 
         newAxisPixelOffset, 
         newCradleContentCount,
-        headChangeCount,
-        tailChangeCount
+        listStartChangeCount,
+        listEndChangeCount
         )
 
     return {
@@ -383,8 +383,8 @@ export const calcContentShift = ({
         axisReferenceItemShift, 
         newAxisPixelOffset, 
         newCradleContentCount,
-        headChangeCount,
-        tailChangeCount
+        listStartChangeCount,
+        listEndChangeCount
     }
 
 }
@@ -400,8 +400,8 @@ export const getUICellShellList = ({
         cradleInternalProperties,
         cradleContentCount,
         cradleReferenceIndex, 
-        headChangeCount, 
-        tailChangeCount, 
+        listStartChangeCount, 
+        listEndChangeCount, 
         localContentList:contentlist,
         callbacks,
         // observer,
@@ -420,14 +420,14 @@ export const getUICellShellList = ({
 
     let headContentlist = []
 
-    let topconstraint = cradleReferenceIndex - headChangeCount,
-    bottomconstraint = (cradleReferenceIndex - headChangeCount) + (cradleContentCount + 1) // TODO: validate "+1"
+    let topconstraint = cradleReferenceIndex - listStartChangeCount,
+    bottomconstraint = (cradleReferenceIndex - listStartChangeCount) + (cradleContentCount + 1) // TODO: validate "+1"
 
     let deletedtailitems = [], deletedheaditems = []
 
-    if (headChangeCount >= 0) {
+    if (listStartChangeCount >= 0) {
 
-        for (let index = cradleReferenceIndex - headChangeCount; index < (cradleReferenceIndex); index++) {
+        for (let index = cradleReferenceIndex - listStartChangeCount; index < (cradleReferenceIndex); index++) {
 
             if (!((index >= topconstraint) && (index <= bottomconstraint))) {
                 continue
@@ -448,15 +448,15 @@ export const getUICellShellList = ({
 
     } else {
 
-        deletedheaditems = localContentlist.splice( 0, -headChangeCount )
+        deletedheaditems = localContentlist.splice( 0, -listStartChangeCount )
 
     }
 
     let tailContentlist = []
 
-    if (tailChangeCount >= 0) {
+    if (listEndChangeCount >= 0) {
 
-        for (let index = tailindexoffset; index < (tailindexoffset + tailChangeCount); index++) {
+        for (let index = tailindexoffset; index < (tailindexoffset + listEndChangeCount); index++) {
 
             if (!((index >= topconstraint) && (index <= bottomconstraint))) {
                 continue
@@ -477,7 +477,7 @@ export const getUICellShellList = ({
 
     } else {
 
-        deletedtailitems = localContentlist.splice(tailChangeCount,-tailChangeCount)
+        deletedtailitems = localContentlist.splice(listEndChangeCount,-listEndChangeCount)
 
     }
 
