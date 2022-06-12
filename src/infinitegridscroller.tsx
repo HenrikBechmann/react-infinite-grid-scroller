@@ -2,6 +2,16 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
+    ROADMAP:
+        Bug
+        setCradleContent draws from cache
+        review code to cradle level
+        suspense?
+        review all code
+        modes: uniform, variable, dynamic
+        insert, remove, swap functions
+        test changing all scroller parameters
+
     BUG: axisOffset needs to be recalculated when switching from nested to generic (diff size cells)
     BUG: triggerlineOffset can fail when >= cellLength -- optimize this; impose correction
     TODO:
