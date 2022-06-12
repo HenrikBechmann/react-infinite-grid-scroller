@@ -40,7 +40,7 @@ export default class ContentHandler {
     }
     private instanceIdMap = new Map()
 
-    private _previousScrollForward = undefined
+    // private _previousScrollForward = undefined
 
     private internalCallbacksRef
 
@@ -232,9 +232,9 @@ export default class ContentHandler {
         } = this.cradleParameters.handlersRef.current
 
         // scroll data
-        const scrollPositions = scrollHandler.scrollPositions 
+        const scrollData = scrollHandler.scrollData 
 
-        const scrollPos = scrollPositions.currentupdate
+        const scrollPos = scrollData.currentupdate
 
         // first abandon option/3; nothing to do
         if ( scrollPos < 0) { // for Safari elastic bounce at top of scroll
@@ -244,19 +244,20 @@ export default class ContentHandler {
         }
 
         let isScrollingviewportforward
-        if (scrollPositions.currentupdate == scrollPositions.previousupdate) { // edge case 
+        if (scrollData.currentupdate == scrollData.previousupdate) { 
 
-            isScrollingviewportforward = this._previousScrollForward
+            isScrollingviewportforward = (scrollData.current > scrollData.previous)
+            // isScrollingviewportforward = this._previousScrollForward
 
         } else {
 
-            isScrollingviewportforward = (scrollPositions.currentupdate > scrollPositions.previousupdate)
-            this._previousScrollForward = isScrollingviewportforward
+            isScrollingviewportforward = (scrollData.currentupdate > scrollData.previousupdate)
+            // this._previousScrollForward = isScrollingviewportforward
 
         }
 
-        console.log('==> updateCradleContent: scrollPos, isScrollingviewportforward, scrollPositions in updateCradleContent',
-            scrollPos, isScrollingviewportforward, Object.assign({},scrollPositions))
+        console.log('==> updateCradleContent: scrollPos, isScrollingviewportforward, scrollData in updateCradleContent',
+            scrollPos, isScrollingviewportforward, Object.assign({},scrollData))
 
         // cradle scaffold and user cells
         const cradleElements = scaffoldHandler.elements

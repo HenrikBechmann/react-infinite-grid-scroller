@@ -13,7 +13,7 @@ export default class ScrollHandler {
 
     cradleParameters
 
-    scrollPositions = {start:0, current:0, previous:0, previousupdate:0, currentupdate:0}
+    scrollData = {start:0, current:0, previous:0, previousupdate:0, currentupdate:0}
 
     private _scrolltimerid = null
 
@@ -47,8 +47,8 @@ export default class ScrollHandler {
 
         if (!this.isScrolling) {
             this.isScrolling = true
-            this.scrollPositions.start = scrollPositionCurrent
-            this.scrollPositions.currentupdate = scrollPositionCurrent
+            this.scrollData.start = scrollPositionCurrent
+            this.scrollData.currentupdate = scrollPositionCurrent
         }
 
         const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
@@ -57,8 +57,8 @@ export default class ScrollHandler {
         // keep up to date in case of reparenting interrupt
         cradlePositionData.blockScrollPos = scrollPositionCurrent
 
-        this.scrollPositions.previous = this.scrollPositions.current
-        this.scrollPositions.current = scrollPositionCurrent
+        this.scrollData.previous = this.scrollData.current
+        this.scrollData.current = scrollPositionCurrent
 
         const stateHandler = this.cradleParameters.handlersRef.current.state
         const cradleState = stateHandler.cradleStateRef.current
@@ -150,8 +150,8 @@ export default class ScrollHandler {
 
             default: {
 
-                if ((this.scrollPositions.start != this.scrollPositions.current) || 
-                    (this.scrollPositions.current != this.scrollPositions.previous)) {
+                if ((this.scrollData.start != this.scrollData.current) || 
+                    (this.scrollData.current != this.scrollData.previous)) {
 
                     if (stateHandler.isMountedRef.current) {
 

@@ -53,12 +53,12 @@ export default class InterruptHandler {
         } = this.cradleParameters.handlersRef.current
 
         if (stateHandler.isMountedRef.current) {
-            const { scrollPositions } = scrollHandler
-            if ((scrollPositions.start != scrollPositions.current) ||
-                (scrollPositions.current != scrollPositions.previous)) {
+            const { scrollData } = scrollHandler
+            if ((scrollData.start != scrollData.current) ||
+                (scrollData.current != scrollData.previous)) {
 
-                scrollPositions.previousupdate = scrollPositions.currentupdate
-                scrollPositions.currentupdate = scrollPositions.current
+                scrollData.previousupdate = scrollData.currentupdate
+                scrollData.currentupdate = scrollData.current
 
                 contentHandler.updateCradleContent(entries,'triggerlinesObserver')
 
