@@ -90,7 +90,6 @@ export default class ScaffoldHandler {
 
         */
         targetAxisPixelOffset:null,
-        targetCradleReferenceIndex:null,
 
     }
 

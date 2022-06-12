@@ -40,8 +40,6 @@ export default class ContentHandler {
     }
     private instanceIdMap = new Map()
 
-    // private _previousScrollForward = undefined
-
     private internalCallbacksRef
 
     // Two public methods - setCradleContent and updateCradleContent
@@ -122,8 +120,6 @@ export default class ContentHandler {
                 cradleInternalProperties,
                 viewportElement:viewportInterruptProperties.elementref.current,
             })
-
-        // console.log('==> setCradleContent scrollblockPixelOffset',scrollblockPixelOffset)
 
         let scrollPosAdjustment
         if (targetAxisReferenceIndex == 0) {
@@ -208,7 +204,6 @@ export default class ContentHandler {
 
         }
 
-        console.log('!!reconnecting trigger elements to intersection observer')
         interruptHandler.axisTriggerlinesIntersect.connectElements()
         interruptHandler.cradleIntersect.connectElements()
         interruptHandler.signals.pauseTriggerlinesObserver = false
@@ -247,17 +242,12 @@ export default class ContentHandler {
         if (scrollData.currentupdate == scrollData.previousupdate) { 
 
             isScrollingviewportforward = (scrollData.current > scrollData.previous)
-            // isScrollingviewportforward = this._previousScrollForward
 
         } else {
 
             isScrollingviewportforward = (scrollData.currentupdate > scrollData.previousupdate)
-            // this._previousScrollForward = isScrollingviewportforward
 
         }
-
-        console.log('==> updateCradleContent: scrollPos, isScrollingviewportforward, scrollData in updateCradleContent',
-            scrollPos, isScrollingviewportforward, Object.assign({},scrollData))
 
         // cradle scaffold and user cells
         const cradleElements = scaffoldHandler.elements
@@ -273,8 +263,6 @@ export default class ContentHandler {
             isScrollingviewportforward,
             triggerlineEntries,
         })
-
-        console.log('shiftinstruction',shiftinstruction)
 
         // second abandon option/3; nothing to do
         if (shiftinstruction == 0) {
@@ -377,10 +365,6 @@ export default class ContentHandler {
                     cradleInheritedProperties.gap + 'px':
                     0
 
-            // console.log('updateCradleContent VERTICAL: topPos, scrollPos, axisPixelOffset',
-            //     topPos, scrollPos, axisPixelOffset)
-
-
         } else { // 'horizontal'
 
             const leftPos = scrollPos + axisPixelOffset
@@ -391,9 +375,6 @@ export default class ContentHandler {
                 headcontent.length?
                     cradleInheritedProperties.gap + 'px':
                     0
-
-            // console.log('updateCradleContent HORIZONTAL: leftPos, scrollPos, axisPixelOffset',
-            //     leftPos, scrollPos, axisPixelOffset)
 
         }
 

@@ -112,9 +112,6 @@ export const getShiftInstruction = ({
             (isIntersecting && (!isScrollingviewportforward) && (triggerlinename == 'triggerline-head'))
     })
 
-    console.log('getShiftInstruction isScrollingviewportforward, triggerlineEntries.length, triggerlineEntries, entries',
-        isScrollingviewportforward, triggerlineEntries.length, triggerlineEntries, entries)
-
     if (entries.length == 0) return 0
 
     if (entries.length > 1) {
@@ -170,24 +167,6 @@ export const calcContentShift = ({
         triggerlineOffset,
 
     } = cradleInheritedProperties
-
-    // console.log(`calcContentShift cradleInheritedProperties
-    //     gap,
-    //     orientation,
-    //     cellHeight,
-    //     cellWidth,
-    //     listsize,
-    //     triggerlineOffset,
-    //     isScrollingViewportForward
-    //     `,
-    //     gap,
-    //     orientation,
-    //     cellHeight,
-    //     cellWidth,
-    //     listsize,
-    //     triggerlineOffset,
-    //     isScrollingViewportForward
-    //     )
 
     const axisElement = cradleElements.axisRef.current
 
@@ -357,24 +336,6 @@ export const calcContentShift = ({
     const newAxisPixelOffset = viewportAxisOffset + (axisReferenceRowshift * rowLength)
 
     // ---------------------[ 9. return required values ]-------------------
-
-    console.log(`calcContentShift return values
-        cradleReferenceItemShift, 
-        newAxisReferenceIndex, 
-        axisReferenceItemShift, 
-        newAxisPixelOffset, 
-        newCradleContentCount,
-        headChangeCount,
-        tailChangeCount
-        `,
-        cradleReferenceItemShift, 
-        newAxisReferenceIndex, 
-        axisReferenceItemShift, 
-        newAxisPixelOffset, 
-        newCradleContentCount,
-        headChangeCount,
-        tailChangeCount
-        )
 
     return {
         // newCradleReferenceIndex, 
