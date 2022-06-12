@@ -43,27 +43,15 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     // align axis reference to first row item
     const origrefindex = targetAxisReferenceIndex
     targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex,listsize - 1)
-    console.log('min of original, listsize',targetAxisReferenceIndex,origrefindex, listsize)
     targetAxisReferenceIndex -= (targetAxisReferenceIndex % crosscount)
-    console.log('adjusted for start of row',targetAxisReferenceIndex)
+
     // derive target row
     let targetAxisRowOffset = Math.ceil(targetAxisReferenceIndex/crosscount)
-    console.log('base targetAxisRowOffset',targetAxisRowOffset)
-    const maxAxisRowOffset = listRowcount - (viewportVisibleRowcount - 1)
+    const maxAxisRowOffset = listRowcount - viewportVisibleRowcount
     if (targetAxisRowOffset > maxAxisRowOffset) {
         targetAxisRowOffset = maxAxisRowOffset
         targetAxisReferenceIndex = targetAxisRowOffset * crosscount
     }
-    console.log('adjusted for maxAxisRowOffset; maxAxisRowOffset, viewportVisibleRowcount, listRowcount',
-        targetAxisRowOffset, maxAxisRowOffset, viewportVisibleRowcount, listRowcount)
-    console.log('revised targetAxisReferenceIndex',targetAxisReferenceIndex)
-    const listEndRowOffset = (listRowcount - 1)
-
-    // check for end list out-of-bounds
-    // if (targetAxisRowOffset > listEndRowOffset) {
-    //     targetAxisRowOffset = listEndRowOffset
-    //     targetAxisReferenceIndex = Math.round(targetAxisRowOffset * crosscount)
-    // }
 
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
     // leading edge
@@ -73,8 +61,10 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     // trailing edge
     let targetCradleEndRowOffset = targetCradleRowOffset + (cradleRowcount - 1)
 
+    const listEndRowOffset = (listRowcount - 1)
+
     if (targetCradleEndRowOffset > (listEndRowOffset)) {
-        const diff = (listEndRowOffset - targetCradleEndRowOffset)
+        const diff = (targetCradleEndRowOffset - listEndRowOffset)
         targetCradleRowOffset -= diff
         targetCradleEndRowOffset -= diff
     }
