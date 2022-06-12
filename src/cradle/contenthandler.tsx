@@ -208,6 +208,7 @@ export default class ContentHandler {
 
         }
 
+        console.log('!!reconnecting trigger elements to intersection observer')
         interruptHandler.axisTriggerlinesIntersect.connectElements()
         interruptHandler.cradleIntersect.connectElements()
         interruptHandler.signals.pauseTriggerlinesObserver = false
@@ -254,8 +255,8 @@ export default class ContentHandler {
 
         }
 
-        // console.log('==> updateCradleContent: scrollPos, isScrollingviewportforward, scrollPositions in updateCradleContent',
-        //     scrollPos, isScrollingviewportforward, Object.assign({},scrollPositions))
+        console.log('==> updateCradleContent: scrollPos, isScrollingviewportforward, scrollPositions in updateCradleContent',
+            scrollPos, isScrollingviewportforward, Object.assign({},scrollPositions))
 
         // cradle scaffold and user cells
         const cradleElements = scaffoldHandler.elements
@@ -271,6 +272,8 @@ export default class ContentHandler {
             isScrollingviewportforward,
             triggerlineEntries,
         })
+
+        console.log('shiftinstruction',shiftinstruction)
 
         // second abandon option/3; nothing to do
         if (shiftinstruction == 0) {

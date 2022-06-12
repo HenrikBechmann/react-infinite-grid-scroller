@@ -112,8 +112,8 @@ export const getShiftInstruction = ({
             (isIntersecting && (!isScrollingviewportforward) && (triggerlinename == 'triggerline-head'))
     })
 
-    // console.log('getShiftInstruction isScrollingviewportforward, triggerlineEntries.length, triggerlineEntries, entries',
-    //     isScrollingviewportforward, triggerlineEntries.length, triggerlineEntries, entries)
+    console.log('getShiftInstruction isScrollingviewportforward, triggerlineEntries.length, triggerlineEntries, entries',
+        isScrollingviewportforward, triggerlineEntries.length, triggerlineEntries, entries)
 
     if (entries.length == 0) return 0
 
@@ -358,23 +358,23 @@ export const calcContentShift = ({
 
     // ---------------------[ 9. return required values ]-------------------
 
-    // console.log(`calcContentShift return values
-    //     cradleReferenceItemShift, 
-    //     newAxisReferenceIndex, 
-    //     axisReferenceItemShift, 
-    //     newAxisPixelOffset, 
-    //     newCradleContentCount,
-    //     headChangeCount,
-    //     tailChangeCount
-    //     `,
-    //     cradleReferenceItemShift, 
-    //     newAxisReferenceIndex, 
-    //     axisReferenceItemShift, 
-    //     newAxisPixelOffset, 
-    //     newCradleContentCount,
-    //     headChangeCount,
-    //     tailChangeCount
-    //     )
+    console.log(`calcContentShift return values
+        cradleReferenceItemShift, 
+        newAxisReferenceIndex, 
+        axisReferenceItemShift, 
+        newAxisPixelOffset, 
+        newCradleContentCount,
+        headChangeCount,
+        tailChangeCount
+        `,
+        cradleReferenceItemShift, 
+        newAxisReferenceIndex, 
+        axisReferenceItemShift, 
+        newAxisPixelOffset, 
+        newCradleContentCount,
+        headChangeCount,
+        tailChangeCount
+        )
 
     return {
         // newCradleReferenceIndex, 
