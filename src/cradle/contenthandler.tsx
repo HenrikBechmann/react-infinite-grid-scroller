@@ -68,7 +68,7 @@ export default class ContentHandler {
 
         } = cradleHandlers
 
-        // the triggerlines will be moved, so disconnect them from their observer.
+        // the triggerlines and cradle wings will be moved, so disconnect them from their observers.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
         interruptHandler.axisTriggerlinesIntersect.observer.disconnect()
         interruptHandler.cradleIntersect.observer.disconnect()
