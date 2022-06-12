@@ -258,8 +258,12 @@ export default class ContentHandler {
 
         // --------------------[ 2. get shift instruction ]-----------------------
 
+        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const orientation = cradleInheritedProperties.orientation
+        console.log('getting shift instructions from scrollPos',scrollPos)
         // -1 is move a row up to the head, +1 is move a row down to the tail, 0 is no shift
         const shiftinstruction = getShiftInstruction({
+            orientation,
             isScrollingviewportforward,
             triggerlineEntries,
         })
@@ -273,7 +277,7 @@ export default class ContentHandler {
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         // cradle properties
-        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
+        // const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
         const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
         const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementref.current
 
@@ -308,7 +312,8 @@ export default class ContentHandler {
         // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
         interruptHandler.axisTriggerlinesIntersect.observer.disconnect()
-        // interruptHandler.signals.pauseTriggerlinesObserver = true
+        // console.log('disabling triggerlines')
+        interruptHandler.signals.pauseTriggerlinesObserver = true
 
         // ----------------------------------[ 4. reconfigure cradle content ]--------------------------
 
@@ -384,6 +389,8 @@ export default class ContentHandler {
         cradlePositionData.targetAxisPixelOffset = axisPixelOffset
 
         // trigger lines have been moved, so observer must be reset
+        // console.log('reenabling triggerlines: axisReferenceIndex, axisPixelOffset, scrollPos',
+        //     axisReferenceIndex, axisPixelOffset, scrollPos)
         interruptHandler.axisTriggerlinesIntersect.connectElements()
         interruptHandler.signals.pauseTriggerlinesObserver = false
 

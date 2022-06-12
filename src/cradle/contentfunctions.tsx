@@ -103,6 +103,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 // -1 = shift row to head. 1 = shift row to tail. 0 = do not shift a row.
 export const getShiftInstruction = ({
 
+    orientation,
     isScrollingviewportforward,
     triggerlineEntries,
 
@@ -111,19 +112,30 @@ export const getShiftInstruction = ({
     const entries = triggerlineEntries.filter(entry => {
         const isIntersecting = entry.isIntersecting
         const triggerlinename = entry.target.dataset.type
-        return ((!isIntersecting) && isScrollingviewportforward && (triggerlinename == 'triggerline-tail')) ||
-            (isIntersecting && (!isScrollingviewportforward) && (triggerlinename == 'triggerline-head'))
+        const rootboundpos = 
+            (orientation == 'vertical')?
+                entry.rootBounds.y:
+                entry.rootBounds.x
+        const entryboundpos = 
+            (orientation == 'vertical')?
+                entry.boundingClientRect.y:
+                entry.boundingClientRect.x
+        // return ((!isIntersecting) && isScrollingviewportforward && (triggerlinename == 'triggerline-tail')) ||
+        //     (isIntersecting && (!isScrollingviewportforward) && (triggerlinename == 'triggerline-head'))
+        console.log('triggerlinename, entryboundpos, rootboundpos',
+            triggerlinename, entryboundpos, rootboundpos)
+        return ((triggerlinename == 'triggerline-tail') && (entryboundpos <= rootboundpos)) || // && isScrollingviewportforward) ||
+            ((triggerlinename == 'triggerline-head') && (entryboundpos >= rootboundpos))// && (!isScrollingviewportforward))
     })
+
+    console.log('isScrollingviewportforward, triggerlineEntries, entries',
+        isScrollingviewportforward, triggerlineEntries, entries)
 
     if (entries.length == 0) return 0
 
     if (entries.length > 1) {
         console.log('SYSTEM ISSUE: MORE THAN ONE BREAKLINE OBSERVER ENTRY', triggerlineEntries.length, triggerlineEntries)
     }
-
-    // if (triggerlineEntries.length == 2) {
-    //     debugger
-    // }
 
     const [entry] = entries
     // const isIntersecting = entry.isIntersecting
@@ -226,6 +238,8 @@ export const calcContentShift = ({
             Math.ceil((triggerAxisOffset?triggerAxisOffset: 1)/rowLength)
 
     let axisReferenceRowshift = -triggerRowShift
+
+    console.log('axisReferenceRowshift',axisReferenceRowshift)
 
     // ------------[ 5. calc new cradle and axis reference row offset ]-------------
 
@@ -339,6 +353,25 @@ export const calcContentShift = ({
     const newAxisPixelOffset = viewportAxisOffset + (axisReferenceRowshift * rowLength)
 
     // ---------------------[ 9. return required values ]-------------------
+
+
+    // console.log(`==> calcContentShift return values:
+    //     cradleReferenceItemShift, 
+    //     newAxisReferenceIndex, 
+    //     axisReferenceItemShift, 
+    //     newAxisPixelOffset, 
+    //     newCradleContentCount,
+    //     headChangeCount,
+    //     tailChangeCount
+    //     `,
+    //     cradleReferenceItemShift, 
+    //     newAxisReferenceIndex, 
+    //     axisReferenceItemShift, 
+    //     newAxisPixelOffset, 
+    //     newCradleContentCount,
+    //     headChangeCount,
+    //     tailChangeCount
+    //     )
 
     return {
         // newCradleReferenceIndex, 
