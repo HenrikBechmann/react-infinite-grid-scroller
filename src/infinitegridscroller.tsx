@@ -2,14 +2,8 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    BUG: triggerlined does not trigger after reposition in FF
-    BUG: reposition chip appears outside viewport when list partly hidden
-    BUG: repositioningRender is broken.
+    BUG: axisOffset needs to be recalculated when switching from nested to generic (diff size cells)
     BUG: triggerlineOffset can fail when >= cellLength -- optimize this; impose correction
-    BUG: in one instance embedded list triggerline failed to trigger start of scroll response
-    BUG: sometimes inaccurate shifting of content type re cradle bounds
-    BUG: occasional position recalculation bugs, particularly in full screen mode
-    BUG: there is a delay in setting triggerline interceptors (or the axis) under heavy load
     TODO:
     - trigger reposition when head or tail are paritially intersecting,not when totally hidden
         - or when both triggerlines are hidden
