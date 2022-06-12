@@ -273,6 +273,7 @@ const Cradle = ({
     const [
         cradleRowcount, 
         viewportRowcount, 
+        viewportVisibleRowcount, // max number of rows completely visible at once
         listRowcount,
         runwayRowcount,
     ] = useMemo(()=> {
@@ -289,6 +290,8 @@ const Cradle = ({
         cellLength += gap
 
         const viewportRowcount = Math.ceil(viewportLength/cellLength)
+
+        const viewportVisibleRowcount = Math.floor(viewportLength/cellLength)
 
         const listRowcount = Math.ceil(listsize/crosscount)
 
@@ -313,6 +316,7 @@ const Cradle = ({
         return [
             cradleRowcount, 
             viewportRowcount, 
+            viewportVisibleRowcount,
             listRowcount,
             runwayRowcount,
         ]
@@ -337,6 +341,7 @@ const Cradle = ({
         crosscount,
         cradleRowcount,
         viewportRowcount,
+        viewportVisibleRowcount,
         listRowcount,
         cradleStateRef,
         setCradleState,

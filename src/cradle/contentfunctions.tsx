@@ -36,21 +36,34 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         cradleRowcount,
         runwayRowcount,
         listRowcount,
+        viewportVisibleRowcount,
 
     } = cradleInternalProperties
     
     // align axis reference to first row item
+    const origrefindex = targetAxisReferenceIndex
+    targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex,listsize - 1)
+    console.log('min of original, listsize',targetAxisReferenceIndex,origrefindex, listsize)
     targetAxisReferenceIndex -= (targetAxisReferenceIndex % crosscount)
+    console.log('adjusted for start of row',targetAxisReferenceIndex)
     // derive target row
-    let targetAxisRowOffset = Math.round(targetAxisReferenceIndex/crosscount)
-
+    let targetAxisRowOffset = Math.ceil(targetAxisReferenceIndex/crosscount)
+    console.log('base targetAxisRowOffset',targetAxisRowOffset)
+    const maxAxisRowOffset = listRowcount - (viewportVisibleRowcount - 1)
+    if (targetAxisRowOffset > maxAxisRowOffset) {
+        targetAxisRowOffset = maxAxisRowOffset
+        targetAxisReferenceIndex = targetAxisRowOffset * crosscount
+    }
+    console.log('adjusted for maxAxisRowOffset; maxAxisRowOffset, viewportVisibleRowcount, listRowcount',
+        targetAxisRowOffset, maxAxisRowOffset, viewportVisibleRowcount, listRowcount)
+    console.log('revised targetAxisReferenceIndex',targetAxisReferenceIndex)
     const listEndRowOffset = (listRowcount - 1)
 
     // check for end list out-of-bounds
-    if (targetAxisRowOffset > listEndRowOffset) {
-        targetAxisRowOffset = listEndRowOffset
-        targetAxisReferenceIndex = Math.round(targetAxisRowOffset * crosscount)
-    }
+    // if (targetAxisRowOffset > listEndRowOffset) {
+    //     targetAxisRowOffset = listEndRowOffset
+    //     targetAxisReferenceIndex = Math.round(targetAxisRowOffset * crosscount)
+    // }
 
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
     // leading edge
