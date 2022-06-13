@@ -284,6 +284,7 @@ export default class ContentHandler {
 
         const {
 
+            newCradleReferenceIndex,
             cradleReferenceItemShift:cradleItemShift, 
             newAxisReferenceIndex:axisReferenceIndex, 
             axisReferenceItemShift:axisItemShift, 

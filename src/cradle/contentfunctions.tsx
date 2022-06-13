@@ -269,6 +269,8 @@ export const calcContentShift = ({
     // base values
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
     let newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowshift
+    console.log('base newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift', 
+        newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift)
 
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
@@ -308,7 +310,7 @@ export const calcContentShift = ({
             cradleReferenceRowshift -= tailrowdiff
 
         }
-    } else { // !isScrollingViewportForward
+    } else { // !isScrollingViewportForward = scroll backward
 
         // c. if scrolling backward (toward head of list), as the cradlerowoffset hits 0, cradle changes have
         // to be adjusted to prevent shortening of cradle content
@@ -317,8 +319,7 @@ export const calcContentShift = ({
 
         if (newCradleReferenceRowOffset < 0) {
 
-            cradleReferenceRowshift += newCradleReferenceRowOffset
-            cradleReferenceRowshift = Math.max(0,cradleReferenceRowshift)
+            cradleReferenceRowshift -= newCradleReferenceRowOffset
             newCradleReferenceRowOffset = 0
 
         }
@@ -340,11 +341,11 @@ export const calcContentShift = ({
 
     // ----------------------[ 7. map rows to item references ]----------------------
 
-    // let newCradleReferenceIndex = (newCradleReferenceRowOffset * crosscount)
-    let cradleReferenceItemShift = (cradleReferenceRowshift * crosscount)
+    const newCradleReferenceIndex = (newCradleReferenceRowOffset * crosscount)
+    const cradleReferenceItemShift = (cradleReferenceRowshift * crosscount)
 
-    let newAxisReferenceIndex = newAxisReferenceRowOffset * crosscount
-    let axisReferenceItemShift = axisReferenceRowshift * crosscount
+    const newAxisReferenceIndex = newAxisReferenceRowOffset * crosscount
+    const axisReferenceItemShift = axisReferenceRowshift * crosscount
 
     let newCradleContentCount = cradleRowcount * crosscount // base count
     const includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount) >= listRowcount)
@@ -373,6 +374,7 @@ export const calcContentShift = ({
 
 
     console.log(`calcContentShift return values:
+        newCradleReferenceIndex,
         cradleReferenceItemShift, 
         newAxisReferenceIndex, 
         axisReferenceItemShift, 
@@ -381,6 +383,7 @@ export const calcContentShift = ({
         listStartChangeCount,
         listEndChangeCount
         `,
+        newCradleReferenceIndex,
         cradleReferenceItemShift, 
         newAxisReferenceIndex, 
         axisReferenceItemShift, 
@@ -391,7 +394,7 @@ export const calcContentShift = ({
         )
 
     return {
-        // newCradleReferenceIndex, 
+        newCradleReferenceIndex, 
         cradleReferenceItemShift, 
         newAxisReferenceIndex, 
         axisReferenceItemShift, 
