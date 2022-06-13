@@ -698,15 +698,6 @@ const Cradle = ({
 
             }
 
-            // case 'finishreposition': {
-
-            //     // scrollHandler.updateBlockScrollPos()
-
-            //     setCradleState('doreposition')
-            //     break
-
-            // }
-
             /*
                 the following 5 cradle states all resolve with
                 a chain starting with 'preparerender', which
@@ -742,12 +733,6 @@ const Cradle = ({
                 const cradleContent = contentHandler.content
                 cradleContent.headViewComponents = cradleContent.headModelComponents
                 cradleContent.tailViewComponents = cradleContent.tailModelComponents
-
-                // const viewportElement = viewportInterruptProperties.elementref.current
-                // const cradlePositionData = scaffoldHandler.cradlePositionData
-
-                // viewportElement[cradlePositionData.blockScrollProperty] =
-                //     Math.max(0,cradlePositionData.blockScrollPos)
 
                 setCradleState('normalizesignals') // call a timeout for ready (or interrupt continuation)
 
