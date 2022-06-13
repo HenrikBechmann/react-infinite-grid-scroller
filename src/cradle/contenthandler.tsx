@@ -238,17 +238,6 @@ export default class ContentHandler {
 
         }
 
-        let isScrollingviewportforward
-        if (scrollData.currentupdate == scrollData.previousupdate) { 
-
-            isScrollingviewportforward = (scrollData.current > scrollData.previous)
-
-        } else {
-
-            isScrollingviewportforward = (scrollData.currentupdate > scrollData.previousupdate)
-
-        }
-
         // cradle scaffold and user cells
         const cradleElements = scaffoldHandler.elements
         const cradleContent = this.content
@@ -260,12 +249,10 @@ export default class ContentHandler {
 
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
         const orientation = cradleInheritedProperties.orientation
-        // console.log('==> getting shift instructions from scrollPos, isScrollingviewportforward',
-        //     scrollPos, isScrollingviewportforward)
+
         // -1 is move a row up to the head, +1 is move a row down to the tail, 0 is no shift
         const shiftinstruction = getShiftInstruction({
             orientation,
-            isScrollingviewportforward,
             triggerlineEntries,
         })
 
@@ -314,7 +301,6 @@ export default class ContentHandler {
         // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
         interruptHandler.axisTriggerlinesIntersect.observer.disconnect()
-        // console.log('disabling triggerlines')
         interruptHandler.signals.pauseTriggerlinesObserver = true
 
         // ----------------------------------[ 4. reconfigure cradle content ]--------------------------
@@ -351,9 +337,6 @@ export default class ContentHandler {
                 axisReferenceIndex, // TODO: BUG: set to 100 for problem
             }
         )
-
-        // console.log('allocated content with axisReferenceIndex:localContentList, headcontent, tailcontent', 
-        //     axisReferenceIndex, localContentList, headcontent, tailcontent)
 
         cradleContent.cradleModel = localContentList
         cradleContent.headViewComponents = cradleContent.headModelComponents = headcontent
@@ -394,8 +377,6 @@ export default class ContentHandler {
         cradlePositionData.targetAxisPixelOffset = axisPixelOffset
 
         // trigger lines have been moved, so observer must be reset
-        // console.log('re-enabling triggerlines: axisReferenceIndex, axisPixelOffset, scrollPos',
-        //     axisReferenceIndex, axisPixelOffset, scrollPos)
         interruptHandler.axisTriggerlinesIntersect.connectElements()
         interruptHandler.signals.pauseTriggerlinesObserver = false
 
