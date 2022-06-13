@@ -107,7 +107,7 @@ export default class InterruptHandler {
                 !(cradleState == 'repositioningRender') && 
                 !(cradleState == 'repositioningContinuation') &&
                 !(cradleState == 'renderupdatedcontent') && // *TEST*
-                !(cradleState == 'finishreposition') &&
+                // !(cradleState == 'finishreposition') &&
                 !(cradleState == 'doreposition') && 
                 !(cradleState == 'pivot')
                 ) 

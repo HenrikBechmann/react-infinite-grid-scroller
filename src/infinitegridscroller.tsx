@@ -4,30 +4,29 @@
 /*
     ROADMAP:
         Bugs
-        setCradleContent draws from cache
         review code to cradle level
-        suspense?
+        setCradleContent draws from cache
+        suspense analog
         review all code
         modes: uniform, variable, dynamic
         insert, remove, swap functions
         test changing all scroller parameters
 
-    BUG: axisOffset needs to be recalculated when switching from nested to generic (diff size cells)
+    BUGS: 
+        axisOffset needs to be recalculated when switching from nested to generic (diff size cells)
+
     TODO:
-    - rationalize normalizesignals without timeout
-    - trigger reposition when head or tail are paritially intersecting,not when totally hidden
-        - or when both triggerlines are hidden
-    - reload from/to for insertions and substitutions
-    - provide user with isReparenting flag to be able to reset scroll
-    - check use of useCallback
-    - resize triggered by root only, unless variable
-    - intersection applied to cradle only
-    - test for two root portals
-    - nested list overflows port boundaries on android FF
-    - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
-    - calc minwidth by form factor
-    - review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
-    - add grid-template-rows: max-content to parent for safari issue grid-auto-flow: column not filling column
+        rationalize normalizesignals without timeout
+        reload from/to for insertions and substitutions
+        provide user with isReparenting flag to be able to reset scroll
+        check use of useCallback
+        resize triggered by root only, unless variable
+        intersection applied to cradle only
+        test for two root portals
+        promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
+        calc minwidth by form factor
+        review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
+        add grid-template-rows: max-content to parent for safari issue grid-auto-flow: column not filling column
 */
 
 'use strict'
@@ -81,7 +80,7 @@ const InfiniteGridScroller = (props) => {
         padding, // the space between the items and the viewport, applied to the cradle
         cellHeight, // the outer pixel height - literal for vertical; approximate for horizontal
         cellWidth, // the outer pixel width - literal for horizontal; approximate for vertical
-        layout, // uniform, variable (don't use axis), dynamic (uses axis)
+        layout, // uniform, variable (doesn't use axis), dynamic (uses axis)
         dense, // boolean (only with preload)
 
         runwaySize, // the number of items outside the view of each side of the viewport 
