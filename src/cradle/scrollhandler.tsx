@@ -152,8 +152,6 @@ export default class ScrollHandler {
 
                         this.updateReferenceData()
                         
-                        // contentHandler.updateCradleContent([], 'endofscroll') // for Safari to compensate for overscroll
-
                     }
 
                 }

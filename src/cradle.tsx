@@ -741,7 +741,7 @@ const Cradle = ({
 
             case 'normalizesignals': {
 
-                normalizeTimerRef.current = setTimeout(()=> {
+                // normalizeTimerRef.current = setTimeout(()=> {
 
                     if (!isMountedRef.current) return
 
@@ -769,7 +769,7 @@ const Cradle = ({
 
                     }
 
-                },NORMALIZE_SIGNALS_TIMEOUT)
+                // },NORMALIZE_SIGNALS_TIMEOUT)
 
                 break 
 

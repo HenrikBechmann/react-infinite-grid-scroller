@@ -16,6 +16,7 @@
     BUG: resize (rotate device) during active scroll intertia on smart phone
     BUG: axisOffset needs to be recalculated when switching from nested to generic (diff size cells)
     TODO:
+    - rationalize normalizesignals without timeout
     - trigger reposition when head or tail are paritially intersecting,not when totally hidden
         - or when both triggerlines are hidden
     - reload from/to for insertions and substitutions
