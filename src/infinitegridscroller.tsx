@@ -3,7 +3,7 @@
 
 /*
     ROADMAP:
-        Bug
+        Bugs
         setCradleContent draws from cache
         review code to cradle level
         suspense?
@@ -12,10 +12,8 @@
         insert, remove, swap functions
         test changing all scroller parameters
 
-    BUG: rapid reversal on android leads to wrong axisRow
     BUG: resize (rotate device) during active scroll intertia on smart phone
     BUG: axisOffset needs to be recalculated when switching from nested to generic (diff size cells)
-    BUG: triggerlineOffset can fail when >= cellLength -- optimize this; impose correction
     TODO:
     - trigger reposition when head or tail are paritially intersecting,not when totally hidden
         - or when both triggerlines are hidden
