@@ -12,8 +12,6 @@
         insert, remove, swap functions
         test changing all scroller parameters
 
-    BUG: reload fails intermittently
-    BUG: resize (rotate device) during active scroll intertia on smart phone
     BUG: axisOffset needs to be recalculated when switching from nested to generic (diff size cells)
     TODO:
     - rationalize normalizesignals without timeout
