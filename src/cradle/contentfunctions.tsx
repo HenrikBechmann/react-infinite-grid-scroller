@@ -109,6 +109,8 @@ export const getShiftInstruction = ({
 
 }) => {
 
+    console.log('triggerlineEntries', triggerlineEntries)
+
     const entries = triggerlineEntries.filter(entry => {
         const isIntersecting = entry.isIntersecting
         const triggerlinename = entry.target.dataset.type
@@ -124,20 +126,32 @@ export const getShiftInstruction = ({
         //     (isIntersecting && (!isScrollingviewportforward) && (triggerlinename == 'triggerline-head'))
         console.log('triggerlinename, entryboundpos, rootboundpos',
             triggerlinename, entryboundpos, rootboundpos)
+        if (triggerlinename == 'triggerline-tail') {
+            if (entryboundpos <= rootboundpos) {
+                console.log('<= succeeds')
+            } else {
+                console.log('<= fails')                
+            }
+        } else if (triggerlinename == 'triggerline-head') {
+            if (entryboundpos >= rootboundpos) {
+                console.log('>= succeeds')
+            } else {
+                console.log('>= fails')
+            }
+        }
         return ((triggerlinename == 'triggerline-tail') && (entryboundpos <= rootboundpos)) || // && isScrollingviewportforward) ||
             ((triggerlinename == 'triggerline-head') && (entryboundpos >= rootboundpos))// && (!isScrollingviewportforward))
     })
 
-    console.log('isScrollingviewportforward, triggerlineEntries, entries',
-        isScrollingviewportforward, triggerlineEntries, entries)
+    console.log('selected entries', entries)
 
     if (entries.length == 0) return 0
 
     if (entries.length > 1) {
-        console.log('SYSTEM ISSUE: MORE THAN ONE BREAKLINE OBSERVER ENTRY', triggerlineEntries.length, triggerlineEntries)
+        console.log('MORE THAN ONE BREAKLINE OBSERVER ENTRY', entries.length, entries)
     }
 
-    const [entry] = entries
+    const entry = entries[entries.length-1] // if more than one take the last
     // const isIntersecting = entry.isIntersecting
     const triggerlinename = entry.target.dataset.type
 
@@ -149,7 +163,7 @@ export const getShiftInstruction = ({
     } else {
         retval = 0 // do not shift a row
     }
-
+    console.log('returning shift instruction', retval)
     return retval
 
 }
@@ -358,7 +372,7 @@ export const calcContentShift = ({
     // ---------------------[ 9. return required values ]-------------------
 
 
-    console.log(`==> calcContentShift return values:
+    console.log(`calcContentShift return values:
         cradleReferenceItemShift, 
         newAxisReferenceIndex, 
         axisReferenceItemShift, 
