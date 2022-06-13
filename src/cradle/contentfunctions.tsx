@@ -109,7 +109,7 @@ export const getShiftInstruction = ({
 
 }) => {
 
-    console.log('triggerlineEntries', triggerlineEntries)
+    // console.log('triggerlineEntries', triggerlineEntries)
 
     const entries = triggerlineEntries.filter(entry => {
         const isIntersecting = entry.isIntersecting
@@ -124,32 +124,32 @@ export const getShiftInstruction = ({
                 entry.boundingClientRect.x
         // return ((!isIntersecting) && isScrollingviewportforward && (triggerlinename == 'triggerline-tail')) ||
         //     (isIntersecting && (!isScrollingviewportforward) && (triggerlinename == 'triggerline-head'))
-        console.log('triggerlinename, entryboundpos, rootboundpos',
-            triggerlinename, entryboundpos, rootboundpos)
-        if (triggerlinename == 'triggerline-tail') {
-            if (entryboundpos <= rootboundpos) {
-                console.log('<= succeeds')
-            } else {
-                console.log('<= fails')                
-            }
-        } else if (triggerlinename == 'triggerline-head') {
-            if (entryboundpos >= rootboundpos) {
-                console.log('>= succeeds')
-            } else {
-                console.log('>= fails')
-            }
-        }
+        // console.log('triggerlinename, entryboundpos, rootboundpos',
+        //     triggerlinename, entryboundpos, rootboundpos)
+        // if (triggerlinename == 'triggerline-tail') {
+        //     if (entryboundpos <= rootboundpos) {
+        //         console.log('<= succeeds')
+        //     } else {
+        //         console.log('<= fails')                
+        //     }
+        // } else if (triggerlinename == 'triggerline-head') {
+        //     if (entryboundpos >= rootboundpos) {
+        //         console.log('>= succeeds')
+        //     } else {
+        //         console.log('>= fails')
+        //     }
+        // }
         return ((triggerlinename == 'triggerline-tail') && (entryboundpos <= rootboundpos)) || // && isScrollingviewportforward) ||
             ((triggerlinename == 'triggerline-head') && (entryboundpos >= rootboundpos))// && (!isScrollingviewportforward))
     })
 
-    console.log('selected entries', entries)
+    // console.log('selected entries', entries)
 
     if (entries.length == 0) return 0
 
-    if (entries.length > 1) {
-        console.log('MORE THAN ONE BREAKLINE OBSERVER ENTRY', entries.length, entries)
-    }
+    // if (entries.length > 1) {
+    //     console.log('MORE THAN ONE BREAKLINE OBSERVER ENTRY', entries.length, entries)
+    // }
 
     const entry = entries[entries.length-1] // if more than one take the last
     // const isIntersecting = entry.isIntersecting
@@ -163,7 +163,7 @@ export const getShiftInstruction = ({
     } else {
         retval = 0 // do not shift a row
     }
-    console.log('returning shift instruction', retval)
+    // console.log('returning shift instruction', retval)
     return retval
 
 }
@@ -253,7 +253,7 @@ export const calcContentShift = ({
 
     let axisReferenceRowshift = -triggerRowShift
 
-    console.log('axisReferenceRowshift',axisReferenceRowshift)
+    // console.log('axisReferenceRowshift',axisReferenceRowshift)
 
     // ------------[ 5. calc new cradle and axis reference row offset ]-------------
 
@@ -269,8 +269,8 @@ export const calcContentShift = ({
     // base values
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
     let newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowshift
-    console.log('base newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift', 
-        newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift)
+    // console.log('base newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift', 
+    //     newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift)
 
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
@@ -362,7 +362,7 @@ export const calcContentShift = ({
     const changeOfCradleContentCount = cradlecontentlist.length - newCradleContentCount
     // const headChangeCount = -(cradleReferenceRowshift * crosscount)
     // const tailChangeCount = -headChangeCount - (changeOfCradleContentCount)
-    console.log('cradleReferenceItemShift, axisReferenceItemShift',cradleReferenceItemShift, axisReferenceItemShift)
+    // console.log('cradleReferenceItemShift, axisReferenceItemShift',cradleReferenceItemShift, axisReferenceItemShift)
     const listStartChangeCount = -(cradleReferenceItemShift)
     const listEndChangeCount = -listStartChangeCount - (changeOfCradleContentCount)
 
@@ -373,25 +373,25 @@ export const calcContentShift = ({
     // ---------------------[ 9. return required values ]-------------------
 
 
-    console.log(`calcContentShift return values:
-        newCradleReferenceIndex,
-        cradleReferenceItemShift, 
-        newAxisReferenceIndex, 
-        axisReferenceItemShift, 
-        newAxisPixelOffset, 
-        newCradleContentCount,
-        listStartChangeCount,
-        listEndChangeCount
-        `,
-        newCradleReferenceIndex,
-        cradleReferenceItemShift, 
-        newAxisReferenceIndex, 
-        axisReferenceItemShift, 
-        newAxisPixelOffset, 
-        newCradleContentCount,
-        listStartChangeCount,
-        listEndChangeCount
-        )
+    // console.log(`calcContentShift return values:
+    //     newCradleReferenceIndex,
+    //     cradleReferenceItemShift, 
+    //     newAxisReferenceIndex, 
+    //     axisReferenceItemShift, 
+    //     newAxisPixelOffset, 
+    //     newCradleContentCount,
+    //     listStartChangeCount,
+    //     listEndChangeCount
+    //     `,
+    //     newCradleReferenceIndex,
+    //     cradleReferenceItemShift, 
+    //     newAxisReferenceIndex, 
+    //     axisReferenceItemShift, 
+    //     newAxisPixelOffset, 
+    //     newCradleContentCount,
+    //     listStartChangeCount,
+    //     listEndChangeCount
+    //     )
 
     return {
         newCradleReferenceIndex, 
