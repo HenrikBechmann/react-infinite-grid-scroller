@@ -552,8 +552,8 @@ const Cradle = ({
 
         const signals = interruptHandler.signals
 
-        // signals.pauseCellObserver = true
-        // signals.pauseTriggerlinesObserver = true
+        signals.pauseCradleIntersectionObserver = true
+        signals.pauseTriggerlinesObserver = true
         signals.pauseScrollingEffects = true
 
         setCradleState('reload')
@@ -602,7 +602,7 @@ const Cradle = ({
         scaffoldHandler.cradlePositionData.targetAxisPixelOffset = Math.round(pivotAxisOffset)
 
         const { signals } = interruptHandler
-
+        
         signals.pauseTriggerlinesObserver = true
         signals.pauseScrollingEffects = true
         signals.pauseCradleIntersectionObserver = true

@@ -52,6 +52,8 @@ export default class ServiceHandler {
         const signals = this.cradleParameters.handlersRef.current.interrupts.signals
         const stateHandler = this.cradleParameters.handlersRef.current.state
 
+        signals.pauseCradleIntersectionObserver = true
+        signals.pauseTriggerlinesObserver = true
         signals.pauseScrollingEffects = true
 
         stateHandler.setCradleState('reload')

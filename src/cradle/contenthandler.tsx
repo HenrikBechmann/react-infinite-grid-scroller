@@ -207,7 +207,7 @@ export default class ContentHandler {
         interruptHandler.axisTriggerlinesIntersect.connectElements()
         interruptHandler.cradleIntersect.connectElements()
         interruptHandler.signals.pauseTriggerlinesObserver = false
-        interruptHandler.signals.pauseCradleIntersectionObserver = false
+        // interruptHandler.signals.pauseCradleIntersectionObserver = false
 
     }
 
