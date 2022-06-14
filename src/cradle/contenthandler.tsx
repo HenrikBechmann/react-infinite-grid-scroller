@@ -45,11 +45,12 @@ export default class ContentHandler {
     // Two public methods - setCradleContent and updateCradleContent
 
     // reset cradle, including allocation between head and tail parts of the cradle
-    // called only from cradle preparerender event
+    // called only from cradle state handler
 
-    // ==========================[ SET CONTENT initially, or after reposition ]===========================
-
-    // setCradleContent does not touch the viewport element's scroll position for the scrollblock
+    // ==========================[ SET CONTENT ]===========================
+     //initially (dosetup), after reposition (doreposition), or with finishresize, pivot, 
+     // or user size param reconfigure or reload
+     // setCradleContent sets the scrollblock's scroll position, as well as config and content
     public setCradleContent = (cradleState) => { 
 
         // ------------------------------[ 1. initialize ]---------------------------
@@ -106,7 +107,6 @@ export default class ContentHandler {
 
         const {
             targetCradleReferenceIndex, 
-            // targetCradleRowOffset,
             targetAxisReferenceIndex,
             targetAxisRowOffset,
             newCradleContentCount:cradleContentCount, 
@@ -131,6 +131,9 @@ export default class ContentHandler {
         }
 
         const axisPixelOffset = targetAxisPixelOffset
+
+        // ----------------------[ 3. get and config content ]----------------------
+        
         // returns content constrained by cradleRowcount
         const [childlist,deleteditems] = getUICellShellList({
 
@@ -171,6 +174,8 @@ export default class ContentHandler {
         
         }
 
+        //  ----------------------[ 4. set CSS ]-----------------------
+
         cradlePositionData.blockScrollPos = scrollblockPixelOffset + scrollPosAdjustment
 
         viewportElement[cradlePositionData.blockScrollProperty] =
@@ -204,6 +209,8 @@ export default class ContentHandler {
 
         }
 
+        //  ----------------------[ 5. reset interrupts ]-----------------------
+
         interruptHandler.axisTriggerlinesIntersect.connectElements()
         interruptHandler.cradleIntersect.connectElements()
         interruptHandler.signals.pauseTriggerlinesObserver = false
@@ -213,6 +220,8 @@ export default class ContentHandler {
 
     // =============================[ UPDATE through scroll ]===============================
 
+    // updateCradleContent does not touch the viewport element's scroll position for the scrollblock
+    // instead it reconfigures elements within the cradle
     public updateCradleContent = (triggerlineEntries, source = 'notifications') => {
 
         // ----------------------[ 1. initialize ]-------------------------
@@ -375,6 +384,8 @@ export default class ContentHandler {
 
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisPixelOffset = axisPixelOffset
+
+        //  ----------------------[ 7. reset interrupts ]-----------------------
 
         // trigger lines have been moved, so observer must be reset
         interruptHandler.axisTriggerlinesIntersect.connectElements()

@@ -499,7 +499,7 @@ const Cradle = ({
         signals.pauseTriggerlinesObserver = true
         signals.pauseScrollingEffects = true
 
-        setCradleState('reload')
+        setCradleState('reconfigure')
 
     },[
         listsize,
@@ -653,6 +653,7 @@ const Cradle = ({
             case 'doreposition':
             case 'finishresize':
             case 'pivot':
+            case 'reconfigure':
             case 'reload': {
 
                 const cradleContent = contentHandler.content
