@@ -156,7 +156,7 @@ const Cradle = ({
 
     }
 
-    // create context
+    // get viewport context
     const viewportInterruptProperties = useContext(ViewportInterrupt)
     const viewportInterruptPropertiesRef = useRef(null)
     viewportInterruptPropertiesRef.current = viewportInterruptProperties // for closures
@@ -165,15 +165,14 @@ const Cradle = ({
     const { height:viewportheight,width:viewportwidth } = viewportDimensions
 
     const [cradleState, setCradleState] = useState('setup')
-
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState;
 
     // controls
     const isMountedRef = useRef(true)
-    const normalizeTimerRef = useRef(null)
+    // const normalizeTimerRef = useRef(null)
 
-    // cradle scaffold elements
+    // cradle scaffold elements refs
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const axisCradleElementRef = useRef(null)
@@ -276,7 +275,7 @@ const Cradle = ({
         crosscount,
     ])
 
-    // bundle configuration properties
+    // bundle configuration properties to share
     const cradleInternalPropertiesRef = useRef(null)
     cradleInternalPropertiesRef.current = {
         crosscount,
@@ -284,23 +283,23 @@ const Cradle = ({
         viewportRowcount,
         viewportVisibleRowcount,
         listRowcount,
+        runwayRowcount,
         cradleStateRef,
         setCradleState,
         isMountedRef,
         cradleElementsRef,
-        runwayRowcount,
     }
 
     // utility to register or unregister cradle item elements
-    const setItemElementData = useCallback((itemElementData, reportType) => {
+    const setItemElementData = useCallback((itemElementData, registrationType) => {
 
         const [index, shellref] = itemElementData
 
-        if (reportType == 'register') {
+        if (registrationType == 'register') {
 
             contentHandler.itemElements.set(index,shellref)
 
-        } else if (reportType == 'unregister') {
+        } else if (registrationType == 'unregister') {
 
             contentHandler.itemElements.delete(index)
 
@@ -319,22 +318,26 @@ const Cradle = ({
 
     const externalCallbacksRef = useRef({referenceIndexCallbackRef})
 
+    // placeholder in cradleParameters to make available individual handlers
+    const handlersRef = useRef(null)
+
     // cradle parameters master bundle
-    const handlersRef = useRef(null) // placeholder in cradleParamters; make available individual handlers
-    const cradleParameters = Object.freeze({
+    const cradleParameters = {
         handlersRef,
         viewportInterruptPropertiesRef,
         cradleInheritedPropertiesRef, 
         cradleInternalPropertiesRef, 
         internalCallbacksRef,
         externalCallbacksRef,
-    })
-
-    const setOfHandlersRef = useRef(null)
-
-    if (!setOfHandlersRef.current) {
-        setOfHandlersRef.current = getCradleHandlers(cradleParameters)
     }
+
+
+    const holdHandlersRef = useRef(null)
+
+    if (!holdHandlersRef.current) {
+        holdHandlersRef.current = getCradleHandlers(cradleParameters)
+    }
+
     // make handlers directly available to cradle code
     const {
         portalHandler,
@@ -345,10 +348,10 @@ const Cradle = ({
         scaffoldHandler,
         serviceHandler,
         stylesHandler,
-    } = setOfHandlersRef.current
+    } = holdHandlersRef.current
 
-    // to instantiate handlersRef for cradleParameters
-    const handlerObjectRef = useRef({
+    // map to instantiate handlersRef for cradleParameters
+    const handlerMapRef = useRef({
         portals:portalHandler,
         interrupts:interruptHandler,
         scroll:scrollHandler,
@@ -359,7 +362,7 @@ const Cradle = ({
         styles:stylesHandler,
     });
 
-    handlersRef.current = handlerObjectRef.current // back-fill cradleParameters property
+    handlersRef.current = handlerMapRef.current // back-fill cradleParameters property
 
     // ===================[ INITIALIZATION effects ]=========================
 
@@ -561,7 +564,7 @@ const Cradle = ({
 
     // =====================[ STYLES ]===========================
 
-    // styles for scaffold
+    // styles for the six scaffold components
     const [
         cradleHeadStyle, 
         cradleTailStyle, 
