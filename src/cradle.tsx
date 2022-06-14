@@ -669,16 +669,16 @@ const Cradle = ({
 
         switch (cradleState) {
 
-            case 'setup': {
+            case 'setup': { // cycle to allow for ref config
 
-                setCradleState('dosetup') // cycle to allow for ref config
+                setCradleState('dosetup') 
 
                 break
 
             }
 
-            // renderupdatedcontent is called from updateCradleContent, 
-            // it is required to set integrate changed DOM configurations before 'ready'
+            // renderupdatedcontent is called from updateCradleContent. 
+            // it is required to integrate changed DOM configurations before 'ready' is displayed
             case 'renderupdatedcontent': {
 
                 setCradleState('ready')
@@ -697,14 +697,16 @@ const Cradle = ({
                 interruptHandler.signals.repositioningRequired = false // because now underway
 
                 setCradleState('repositioningRender')
+
                 break
 
             }
 
             /*
                 the following 5 cradle states all resolve with
-                a chain starting with 'preparerender', which
-                calls setCradleContent
+                a chain starting with setCradleContent, 
+                continuing with 'preparerender', and ending with
+                'normalizesignals'
             */
             case 'dosetup':
             case 'doreposition':
@@ -742,6 +744,7 @@ const Cradle = ({
 
             case 'normalizesignals': {
 
+                // prioritize interrupts
                 if (viewportInterruptPropertiesRef.current.isResizing) {
 
                     setCradleState('resizing')
