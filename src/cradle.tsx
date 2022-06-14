@@ -139,6 +139,7 @@ const Cradle = ({
     const { viewportDimensions } = viewportInterruptProperties
     const { height:viewportheight,width:viewportwidth } = viewportDimensions
 
+    // state
     const [cradleState, setCradleState] = useState('setup')
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState;
