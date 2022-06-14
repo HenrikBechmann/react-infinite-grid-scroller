@@ -16,6 +16,7 @@
         axisOffset needs to be recalculated when switching from nested to generic (diff size cells)
 
     TODO:
+        remove Object.freeze
         rationalize normalizesignals without timeout
         reload from/to for insertions and substitutions
         provide user with isReparenting flag to be able to reset scroll

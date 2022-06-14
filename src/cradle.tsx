@@ -161,8 +161,8 @@ const Cradle = ({
         defaultVisibleIndex, 
         getItem, 
         placeholder, 
-        functions:inheritedfunctions,
-        styles:inheritedstyles,
+        functions,
+        styles,
 
         scrollerName,
         scrollerID,
@@ -183,10 +183,6 @@ const Cradle = ({
         layout,
         dense,
     } = gridSpecs
-
-    // freeze object props
-    const functions = Object.freeze(Object.assign({},inheritedfunctions))
-    const styles = Object.freeze(Object.assign({},inheritedstyles))
 
     // bundle cradle props to pass to handlers
     const cradleInheritedPropertiesRef = useRef(null) // access by closures and support functions
@@ -658,7 +654,7 @@ const Cradle = ({
 
       ])
 
-    // =====================[ STATE management ]==========================
+    // =====================[ state management ]==========================
 
     // this is the core state engine
     // useLayout for suppressing flashes
