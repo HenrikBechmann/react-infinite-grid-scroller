@@ -667,13 +667,9 @@ const Cradle = ({
     // useLayout for suppressing flashes
     useLayoutEffect(()=>{
 
-        const viewportInterruptProperties = viewportInterruptPropertiesRef.current
-        const cradleContent = contentHandler.content
-
         switch (cradleState) {
 
             // renderupdatedcontent is called from triggerlineintersectionobservercallback (interruptHandler), 
-            // and called from onAfterScroll (scrollHandler)
             // it is required to set configurations before 'ready' TODO: specify!
             case 'renderupdatedcontent': {
 
@@ -682,8 +678,6 @@ const Cradle = ({
                 break
 
             }
-            // ----------------------------------------------------------------------
-            // ------------[ reposition when repositioningRequired is true ]---------------
             case 'startreposition': {
 
                 interruptHandler.signals.pauseTriggerlinesObserver = true
@@ -704,7 +698,9 @@ const Cradle = ({
                 calls setCradleContent
             */
             case 'setup': 
-                setCradleState('dosetup') // cycle to allow for config, particlularly ref's
+
+                setCradleState('dosetup') // cycle to allow for ref config
+
                 break
 
             // the following all setCradleContent
@@ -713,6 +709,8 @@ const Cradle = ({
             case 'resized':
             case 'pivot':
             case 'reload': {
+
+                const cradleContent = contentHandler.content
 
                 cradleContent.headModelComponents = []
                 cradleContent.tailModelComponents = []
@@ -731,6 +729,7 @@ const Cradle = ({
             case 'preparerender': {
 
                 const cradleContent = contentHandler.content
+
                 cradleContent.headViewComponents = cradleContent.headModelComponents
                 cradleContent.tailViewComponents = cradleContent.tailModelComponents
 
@@ -741,35 +740,26 @@ const Cradle = ({
 
             case 'normalizesignals': {
 
-                // normalizeTimerRef.current = setTimeout(()=> {
+                if (viewportInterruptPropertiesRef.current.isResizing) {
 
-                    if (!isMountedRef.current) return
+                    setCradleState('resizing')
 
-                    // allow short-circuit fallbacks to continue interrupt responses
-            /*1*/   if (!viewportInterruptProperties.isResizing) { // resize short-circuit
-                        
-            /*2*/       if (!interruptHandler.signals.repositioningRequired) { // repositioning short-circuit
+                } else if (interruptHandler.signals.repositioningRequired) {
 
-                            const signals = interruptHandler.signals
-                            signals.pauseTriggerlinesObserver && (signals.pauseTriggerlinesObserver = false)
-                            signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
-                            signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
+                    setCradleState('startreposition')
 
-            /*default*/     setCradleState('ready')
+                } else {                     
 
-                        } else {
+                    const signals = interruptHandler.signals
 
-            /*2*/           setCradleState('startreposition')
+                    signals.pauseTriggerlinesObserver && (signals.pauseTriggerlinesObserver = false)
+                    signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
 
-                        }
+                    signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
 
-                    } else {
+                    setCradleState('ready')
 
-            /*1*/       setCradleState('resizing')
-
-                    }
-
-                // },NORMALIZE_SIGNALS_TIMEOUT)
+                }
 
                 break 
 
@@ -778,6 +768,39 @@ const Cradle = ({
         }
 
     },[cradleState])
+
+            // normalizeTimerRef.current = setTimeout(()=> {
+
+            //         if (!isMountedRef.current) return
+
+            //         // allow short-circuit fallbacks to continue interrupt responses
+            // /*1*/   if (!viewportInterruptProperties.isResizing) { // resize short-circuit
+                        
+            // /*2*/       if (!interruptHandler.signals.repositioningRequired) { // repositioning short-circuit
+
+            //                 const signals = interruptHandler.signals
+            //                 signals.pauseTriggerlinesObserver && (signals.pauseTriggerlinesObserver = false)
+            //                 signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
+            //                 signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
+
+            // /*default*/     setCradleState('ready')
+
+            //             } else {
+
+            // /*2*/           setCradleState('startreposition')
+
+            //             }
+
+            //         } else {
+
+            // /*1*/       setCradleState('resizing')
+
+            //         }
+
+            //     // },NORMALIZE_SIGNALS_TIMEOUT)
+
+            //     break 
+
 
     // standard processing stages
     useEffect(()=> { // TODO: verify benefit of useLayoutEffect
