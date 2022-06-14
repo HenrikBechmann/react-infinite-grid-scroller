@@ -539,7 +539,7 @@ const Cradle = ({
         // complete resizing mode
         if (!viewportInterruptProperties.isResizing && (cradleStateRef.current == 'resizing')) {
 
-            setCradleState('resized')
+            setCradleState('finishresize')
 
         }
 
@@ -669,8 +669,16 @@ const Cradle = ({
 
         switch (cradleState) {
 
-            // renderupdatedcontent is called from triggerlineintersectionobservercallback (interruptHandler), 
-            // it is required to set configurations before 'ready' TODO: specify!
+            case 'setup': {
+
+                setCradleState('dosetup') // cycle to allow for ref config
+
+                break
+
+            }
+
+            // renderupdatedcontent is called from updateCradleContent, 
+            // it is required to set integrate changed DOM configurations before 'ready'
             case 'renderupdatedcontent': {
 
                 setCradleState('ready')
@@ -678,6 +686,7 @@ const Cradle = ({
                 break
 
             }
+
             case 'startreposition': {
 
                 interruptHandler.signals.pauseTriggerlinesObserver = true
@@ -697,16 +706,9 @@ const Cradle = ({
                 a chain starting with 'preparerender', which
                 calls setCradleContent
             */
-            case 'setup': 
-
-                setCradleState('dosetup') // cycle to allow for ref config
-
-                break
-
-            // the following all setCradleContent
             case 'dosetup':
             case 'doreposition':
-            case 'resized':
+            case 'finishresize':
             case 'pivot':
             case 'reload': {
 
@@ -816,7 +818,7 @@ const Cradle = ({
                 setCradleState('repositioningRender')
                 break
 
-            case 'ready': // to specify no action on ready
+            case 'ready': // no action on ready
                 break
 
         }
