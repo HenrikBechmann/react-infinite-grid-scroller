@@ -644,7 +644,7 @@ const Cradle = ({
             }
 
             /*
-                the following 5 cradle states all resolve with
+                the following 6 cradle states all resolve with
                 a chain starting with setCradleContent, 
                 continuing with 'preparerender', and ending with
                 'normalizesignals'
