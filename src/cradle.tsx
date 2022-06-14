@@ -133,7 +133,7 @@ const Cradle = ({
 
     // bundle cradle props to pass to handlers
     const cradleInheritedPropertiesRef = useRef(null) // access by closures and support functions
-    cradleInheritedPropertiesRef.current =  Object.freeze({
+    cradleInheritedPropertiesRef.current = {
         // gridSpecs
         orientation, 
         gap, 
@@ -154,7 +154,7 @@ const Cradle = ({
         styles,
         triggerlineOffset,
 
-    })
+    }
 
     // create context
     const viewportInterruptProperties = useContext(ViewportInterrupt)
@@ -404,7 +404,7 @@ const Cradle = ({
             reload,
         }
 
-        Object.freeze(callbacks)
+        // Object.freeze(callbacks)
 
         functions.getCallbacks(callbacks)
 
