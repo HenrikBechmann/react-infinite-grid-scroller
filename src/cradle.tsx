@@ -152,8 +152,6 @@ export const CradlePortalsContext = React.createContext(null) // for children
 
 const portalrootstyle = {display:'none'} // static 
 
-const NORMALIZE_SIGNALS_TIMEOUT = 250
-
 // component
 const Cradle = ({ 
         gridSpecs,
@@ -430,6 +428,7 @@ const Cradle = ({
         viewportInterruptProperties.portal.isReparenting = false
 
         const cradlePositionData = scaffoldHandler.cradlePositionData
+
         viewportInterruptProperties.elementref.current[
             cradlePositionData.blockScrollProperty] =
             Math.max(0,cradlePositionData.blockScrollPos)
@@ -613,8 +612,6 @@ const Cradle = ({
         cradleContent.headViewComponents = []
         cradleContent.tailViewComponents = []
 
-        // debugger
-
         setCradleState('pivot')
 
     },[orientation])
@@ -671,7 +668,7 @@ const Cradle = ({
 
             case 'setup': { // cycle to allow for ref config
 
-                setCradleState('dosetup') 
+                setCradleState('dosetup') // load grid
 
                 break
 
@@ -774,47 +771,14 @@ const Cradle = ({
 
     },[cradleState])
 
-            // normalizeTimerRef.current = setTimeout(()=> {
+    // standard rendering states
+    useEffect(()=> { 
 
-            //         if (!isMountedRef.current) return
-
-            //         // allow short-circuit fallbacks to continue interrupt responses
-            // /*1*/   if (!viewportInterruptProperties.isResizing) { // resize short-circuit
-                        
-            // /*2*/       if (!interruptHandler.signals.repositioningRequired) { // repositioning short-circuit
-
-            //                 const signals = interruptHandler.signals
-            //                 signals.pauseTriggerlinesObserver && (signals.pauseTriggerlinesObserver = false)
-            //                 signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
-            //                 signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
-
-            // /*default*/     setCradleState('ready')
-
-            //             } else {
-
-            // /*2*/           setCradleState('startreposition')
-
-            //             }
-
-            //         } else {
-
-            // /*1*/       setCradleState('resizing')
-
-            //         }
-
-            //     // },NORMALIZE_SIGNALS_TIMEOUT)
-
-            //     break 
-
-
-    // standard processing stages
-    useEffect(()=> { // TODO: verify benefit of useLayoutEffect
-
-        // repositioningRender and repositioningContinuation are toggled to generate continuous 
-        //    reposiioning renders
         switch (cradleState) {
 
-            case 'repositioningRender': // to trigger render between scrolls
+            // repositioningRender and repositioningContinuation are toggled to generate continuous 
+            // reposiioning renders
+            case 'repositioningRender':
                 break
 
             case 'repositioningContinuation': // set from onScroll
