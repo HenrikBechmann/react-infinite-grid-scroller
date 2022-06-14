@@ -17,11 +17,11 @@ export default class ServiceHandler {
 
     getVisibleList = () => {
 
-        const contentHandler = this.cradleParameters.handlersRef.current.content        
+        const {contentHandler} = this.cradleParameters.handlersRef.current        
 
         const cradleContent = contentHandler.content
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-        const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
+        const {scaffoldHandler} = this.cradleParameters.handlersRef.current
         const cradleElements = scaffoldHandler.elements
 
         return getVisibleItemsList({
@@ -35,7 +35,7 @@ export default class ServiceHandler {
     }
 
     getContentList = () => {
-        const contentHandler = this.cradleParameters.handlersRef.current.content        
+        const { contentHandler } = this.cradleParameters.handlersRef.current
         const contentlist = Array.from(contentHandler.itemElements)
 
         contentlist.sort((a,b)=>{
@@ -49,8 +49,8 @@ export default class ServiceHandler {
 
     reload = () => {
 
-        const signals = this.cradleParameters.handlersRef.current.interrupts.signals
-        const stateHandler = this.cradleParameters.handlersRef.current.state
+        const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
+        const { stateHandler } = this.cradleParameters.handlersRef.current
 
         signals.pauseCradleIntersectionObserver = true
         signals.pauseTriggerlinesObserver = true
@@ -62,9 +62,8 @@ export default class ServiceHandler {
 
     scrollToItem = (index) => {
 
-        const signals = this.cradleParameters.handlersRef.current.interrupts.signals
-        const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
-        const stateHandler = this.cradleParameters.handlersRef.current.state
+        const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
+        const { scaffoldHandler, stateHandler} = this.cradleParameters.handlersRef.current
 
         signals.pauseScrollingEffects = true
 

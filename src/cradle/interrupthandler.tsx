@@ -47,9 +47,9 @@ export default class InterruptHandler {
         }
 
         const {
-            content:contentHandler,
-            state:stateHandler,
-            scroll:scrollHandler
+            contentHandler,
+            stateHandler,
+            scrollHandler
         } = this.cradleParameters.handlersRef.current
 
         if (stateHandler.isMountedRef.current) {
@@ -69,8 +69,7 @@ export default class InterruptHandler {
     private cradleIntersectionObserverCallback = (entries) => {
 
         const signals = this.signals
-        const stateHandler = this.cradleParameters.handlersRef.current.state
-        const contentHandler = this.cradleParameters.handlersRef.current.content
+        const { stateHandler, contentHandler } = this.cradleParameters.handlersRef.current
 
         if (signals.pauseCradleIntersectionObserver) {
 
@@ -142,7 +141,7 @@ export default class InterruptHandler {
       callback:this.cradleresizeobservercallback,
         connectElements:() => {
             const observer = this.cradleResize.observer
-            const cradleElements = this.cradleParameters.handlersRef.current.scaffold.elements
+            const cradleElements = this.cradleParameters.handlersRef.current.scaffoldHandler.elements
             observer.observe(cradleElements.headRef.current)
             observer.observe(cradleElements.tailRef.current)
         },
@@ -159,7 +158,7 @@ export default class InterruptHandler {
         callback:this.cradleIntersectionObserverCallback,
         connectElements:() => {
             const observer = this.cradleIntersect.observer
-            const cradleElements = this.cradleParameters.handlersRef.current.scaffold.elements
+            const cradleElements = this.cradleParameters.handlersRef.current.scaffoldHandler.elements
             observer.observe(cradleElements.headRef.current)
             observer.observe(cradleElements.tailRef.current)
         },
@@ -178,7 +177,7 @@ export default class InterruptHandler {
         callback:this.axisTriggerlinesObserverCallback,
         connectElements:() => {
             const observer = this.axisTriggerlinesIntersect.observer
-            const cradleElements = this.cradleParameters.handlersRef.current.scaffold.elements
+            const cradleElements = this.cradleParameters.handlersRef.current.scaffoldHandler.elements
             observer.observe(cradleElements.headTriggerlineRef.current)
             observer.observe(cradleElements.tailTriggerlineRef.current)
         },

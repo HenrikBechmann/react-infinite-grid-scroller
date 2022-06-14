@@ -332,10 +332,8 @@ const Cradle = ({
     }
 
     // ongoing source of handlers
-    const holdHandlersRef = useRef(null)
-
-    if (!holdHandlersRef.current) {
-        holdHandlersRef.current = getCradleHandlers(cradleParameters)
+    if (!handlersRef.current) {
+        handlersRef.current = getCradleHandlers(cradleParameters)
     }
 
     // make handlers directly available to cradle code
@@ -348,21 +346,7 @@ const Cradle = ({
         scaffoldHandler,
         serviceHandler,
         stylesHandler,
-    } = holdHandlersRef.current
-
-    // map to instantiate handlersRef for cradleParameters
-    const handlerMapRef = useRef({
-        portals:portalHandler,
-        interrupts:interruptHandler,
-        scroll:scrollHandler,
-        state:stateHandler,
-        content:contentHandler, 
-        scaffold:scaffoldHandler, 
-        service:serviceHandler,
-        styles:stylesHandler,
-    });
-
-    handlersRef.current = handlerMapRef.current // back-fill cradleParameters property
+    } = handlersRef.current
 
     // ===================[ INITIALIZATION effects ]=========================
 
@@ -663,7 +647,7 @@ const Cradle = ({
                 cradleContent.headViewComponents = []
                 cradleContent.tailViewComponents = []
 
-                handlersRef.current.portals.resetScrollerPortalRepository()
+                handlersRef.current.portalHandler.resetScrollerPortalRepository()
                 
                 contentHandler.setCradleContent( cradleState )
 
@@ -764,9 +748,9 @@ const Cradle = ({
     const cradleContent = contentHandler.content
 
     // portalroot is the hidden portal component cache
-    return <CradlePortalsContext.Provider value = {handlersRef.current.portals}>
+    return <CradlePortalsContext.Provider value = {handlersRef.current.portalHandler}>
         {(cradleStateRef.current != 'setup') && <div data-type = 'portalroot' style = { portalrootstyle }>
-            <PortalList scrollerProps = {handlersRef.current.portals.scrollerProps}/>
+            <PortalList scrollerProps = {handlersRef.current.portalHandler.scrollerProps}/>
         </div>}
 
         {((cradleStateRef.current == 'repositioningRender') || (cradleStateRef.current == 'repositioningContinuation'))

@@ -62,10 +62,10 @@ export default class ContentHandler {
 
         const {
 
-            portals:portalHandler,
-            scaffold:scaffoldHandler,
-            service:serviceHandler,
-            interrupts:interruptHandler,
+            portalHandler,
+            scaffoldHandler,
+            serviceHandler,
+            interruptHandler,
 
         } = cradleHandlers
 
@@ -228,11 +228,11 @@ export default class ContentHandler {
 
         // handler support
         const {
-            portals: portalHandler, 
-            scroll: scrollHandler, 
-            scaffold: scaffoldHandler, 
-            state: stateHandler, 
-            interrupts: interruptHandler,
+            portalHandler, 
+            scrollHandler, 
+            scaffoldHandler, 
+            stateHandler, 
+            interruptHandler,
         } = this.cradleParameters.handlersRef.current
 
         // scroll data

@@ -37,7 +37,7 @@ export default class ScrollHandler {
 
         clearTimeout(this._scrolltimerid)
 
-        const signals = this.cradleParameters.handlersRef.current.interrupts.signals
+        const {signals} = this.cradleParameters.handlersRef.current.interruptHandler
 
         if (signals.pauseScrollingEffects) {
 
@@ -51,7 +51,7 @@ export default class ScrollHandler {
             this.scrollData.currentupdate = scrollPositionCurrent
         }
 
-        const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
+        const {scaffoldHandler} = this.cradleParameters.handlersRef.current
         const { cradlePositionData } = scaffoldHandler
 
         // keep up to date in case of reparenting interrupt
@@ -60,11 +60,10 @@ export default class ScrollHandler {
         this.scrollData.previous = this.scrollData.current
         this.scrollData.current = scrollPositionCurrent
 
-        const stateHandler = this.cradleParameters.handlersRef.current.state
+        const {stateHandler} = this.cradleParameters.handlersRef.current
         const cradleState = stateHandler.cradleStateRef.current
 
-        const contentHandler = this.cradleParameters.handlersRef.current.content
-        const serviceHandler = this.cradleParameters.handlersRef.current.service
+        const {contentHandler, serviceHandler} = this.cradleParameters.handlersRef.current
 
         if (!viewportInterruptProperties.isResizing) {
 
@@ -124,8 +123,7 @@ export default class ScrollHandler {
 
         this.isScrolling = false
 
-        const stateHandler = this.cradleParameters.handlersRef.current.state
-        const contentHandler = this.cradleParameters.handlersRef.current.content
+        const {stateHandler, contentHandler} = this.cradleParameters.handlersRef.current
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
 
         const cradleState = stateHandler.cradleStateRef.current
@@ -160,7 +158,7 @@ export default class ScrollHandler {
         }
 
 
-        const {scaffold:scaffoldHandler} = this.cradleParameters.handlersRef.current
+        const {scaffoldHandler} = this.cradleParameters.handlersRef.current
         const { cradlePositionData } = scaffoldHandler
 
     }
@@ -168,12 +166,11 @@ export default class ScrollHandler {
     // after scroll, but not after repositioning
     updateReferenceData = () => {
 
-        const { state:stateHandler, scaffold:scaffoldHandler } 
+        const { stateHandler, scaffoldHandler } 
             = this.cradleParameters.handlersRef.current
 
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-        // const contentHandler = this.cradleParameters.handlersRef.current.content
 
         if (!stateHandler.isMountedRef.current) return
 
@@ -211,7 +208,7 @@ export default class ScrollHandler {
 
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-        const scaffoldHandler = this.cradleParameters.handlersRef.current.scaffold
+        const {scaffoldHandler} = this.cradleParameters.handlersRef.current
         const { cradlePositionData } = scaffoldHandler
 
         const viewportElement = viewportInterruptProperties.elementref.current
@@ -262,7 +259,7 @@ export default class ScrollHandler {
 
         if (axisReferenceIndex == 0) axisPixelOffset = 0 // defensive
 
-        const { cradlePositionData } = this.cradleParameters.handlersRef.current.scaffold
+        const { cradlePositionData } = this.cradleParameters.handlersRef.current.scaffoldHandler
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisPixelOffset = axisPixelOffset
 
