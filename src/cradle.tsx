@@ -131,31 +131,6 @@ const Cradle = ({
         dense,
     } = gridSpecs
 
-    // bundle cradle props to pass to handlers
-    const cradleInheritedPropertiesRef = useRef(null) // access by closures and support functions
-    cradleInheritedPropertiesRef.current = {
-        // gridSpecs
-        orientation, 
-        gap, 
-        padding, 
-        cellHeight, 
-        cellWidth, 
-        layout,
-        dense,
-        // ...rest
-        listsize, 
-        defaultVisibleIndex, 
-        getItem, 
-        placeholder, 
-        scrollerName,
-        scrollerID,
-        // objects
-        functions,
-        styles,
-        triggerlineOffset,
-
-    }
-
     // get viewport context
     const viewportInterruptProperties = useContext(ViewportInterrupt)
     const viewportInterruptPropertiesRef = useRef(null)
@@ -170,7 +145,6 @@ const Cradle = ({
 
     // controls
     const isMountedRef = useRef(true)
-    // const normalizeTimerRef = useRef(null)
 
     // cradle scaffold elements refs
     const headCradleElementRef = useRef(null)
@@ -178,6 +152,8 @@ const Cradle = ({
     const axisCradleElementRef = useRef(null)
     const headTriggerlineCradleElementRef = useRef(null)
     const tailTriggerlineCradleElementRef = useRef(null)
+
+    // scaffold bundle
     const cradleElementsRef = useRef(
         {
             headRef:headCradleElementRef, 
@@ -187,6 +163,8 @@ const Cradle = ({
             tailTriggerlineRef:tailTriggerlineCradleElementRef
         }
     )
+
+    // ------------------------[ calculated data ]------------------------
 
     // configuration calculations
     const crosscount = useMemo(() => {
@@ -275,20 +253,7 @@ const Cradle = ({
         crosscount,
     ])
 
-    // bundle configuration properties to share
-    const cradleInternalPropertiesRef = useRef(null)
-    cradleInternalPropertiesRef.current = {
-        crosscount,
-        cradleRowcount,
-        viewportRowcount,
-        viewportVisibleRowcount,
-        listRowcount,
-        runwayRowcount,
-        cradleStateRef,
-        setCradleState,
-        isMountedRef,
-        cradleElementsRef,
-    }
+    // ======================[ internal and external callbacks ]=====================
 
     // utility to register or unregister cradle item elements
     const setItemElementData = useCallback((itemElementData, registrationType) => {
@@ -318,10 +283,52 @@ const Cradle = ({
 
     const externalCallbacksRef = useRef({referenceIndexCallbackRef})
 
+    // ====================[ bundle parameters for handlers ]===================
+
+    // bundle cradle props to pass to handlers
+    const cradleInheritedPropertiesRef = useRef(null) // access by closures and support functions
+    cradleInheritedPropertiesRef.current = {
+        // gridSpecs
+        orientation, 
+        gap, 
+        padding, 
+        cellHeight, 
+        cellWidth, 
+        layout,
+        dense,
+        // ...rest
+        listsize, 
+        defaultVisibleIndex, 
+        getItem, 
+        placeholder, 
+        scrollerName,
+        scrollerID,
+        // objects
+        functions,
+        styles,
+        triggerlineOffset,
+
+    }
+
+    // bundle configuration properties to share
+    const cradleInternalPropertiesRef = useRef(null)
+    cradleInternalPropertiesRef.current = {
+        crosscount,
+        cradleRowcount,
+        viewportRowcount,
+        viewportVisibleRowcount,
+        listRowcount,
+        runwayRowcount,
+        cradleStateRef,
+        setCradleState,
+        isMountedRef,
+        cradleElementsRef,
+    }
+
     // placeholder in cradleParameters to make available individual handlers
     const handlersRef = useRef(null)
 
-    // cradle parameters master bundle
+    // cradle parameters MASTER BUNDLE
     const cradleParameters = {
         handlersRef,
         viewportInterruptPropertiesRef,
@@ -747,21 +754,22 @@ const Cradle = ({
 
     const cradleContent = contentHandler.content
 
-    // portalroot is the hidden portal component cache
+    // the data-type = portalroot div is the hidden portal component cache
     return <CradlePortalsContext.Provider value = {handlersRef.current.portalHandler}>
         {(cradleStateRef.current != 'setup') && <div data-type = 'portalroot' style = { portalrootstyle }>
             <PortalList scrollerProps = {handlersRef.current.portalHandler.scrollerProps}/>
         </div>}
 
-        {((cradleStateRef.current == 'repositioningRender') || (cradleStateRef.current == 'repositioningContinuation'))
-            ?<ScrollTracker 
+        {((cradleStateRef.current == 'repositioningRender') || 
+            (cradleStateRef.current == 'repositioningContinuation'))?
+            <ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 
                 offset = {scrollTrackerArgs.scrollAxisReferenceIndex} 
                 listsize = {scrollTrackerArgs.listsize}
                 styles = {scrollTrackerArgs.styles}
-            />
-            :<div 
+            />:
+            <div 
                 data-type = 'cradle-axis'
                 style = {cradleAxisStyle} 
                 ref = {axisCradleElementRef}
@@ -779,13 +787,13 @@ const Cradle = ({
                 >
                 </div>
 
-                {true
-                    ?<div 
+                {true?
+                    <div 
                         data-type = 'cradle-divider' 
                         style = {cradleDividerStyle}
                     >
-                    </div>
-                    :null
+                    </div>:
+                    null
                 }
                 <div 
                 
