@@ -350,8 +350,8 @@ const Cradle = ({
 
     // ===================[ INITIALIZATION effects ]=========================
 
-    // this is an immediate response to reparenting. Reparenting resets scroll positions
-    // for nested infinitegridscrollers.
+    // this is an immediate response to reparenting (moving portals). Reparenting resets scroll
+    // positions for nested infinitegridscrollers.
     // the code restores scroll as soon as cradle is invoked after reparenting
     if (viewportInterruptProperties.portal?.isReparenting) { 
 
