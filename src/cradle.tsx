@@ -2,59 +2,6 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-
-    BUGS:
-    - sometimes on android chrome axis gets stuck outside of visible area and 
-        loses intersect norifications
-    - android firefox loses position on fast scroll
-    - safari mac loses place in sublists on rapid backscroll at start of list
-    - Scrolltop is sometimes set to 0 while head overflows above border
-    - context problems develop when rotating phone while scrolling intertia continues
-    - rapid back and forth in middle eventually causes fail of intercepts
-    - cell height not being respected in nested scrollers.
-    - resize sometimes loses correct allocation of head items; leaves blank items
-
-    BUGS:
-    - check styles in scrollTracker args
-    - doreposition gets stuck at a particular number after getting behind on heavy scroll
-        check pauseScrollingEffects
-    - variable cells showing signs of getItem() with portal
-    - Chrome sometimes misses nested cell portals horizontally
-    - reduce computing intensity to avoid battery drainage
-
-    TODO:
-
-    - PLACE SENTINELS (assertions) AT CRITICAL LOCATIONS TO WATCH FOR ANOMALIES
-    - try position fixed during reparenting to preserve scroll position
-
-    - consider eliminating cellintersectobserver in favour of head and tail intersect oberver
-
-    - scroll reset problem recurs with repeated above and below rapid resets
-        the problem comes with update content from endofscroll, after double normalize signals
-        the extra reparenting is inserted during the timeout for normalize signals
-    - try cleartimeout
-
-
-    - fix scroll reset on reparent
-    - review need for setscrollposition
-    - BUG: in FF nested scroller switch from placeholder to content resets scroll position
-    - unmounted warning to do with InPortal
-
-    ObserversHandler
-    WingsAgent
-    MessageAgent ? // message with host environment, such as referenceIndexCallback
-
-    ScrollHandler
-    SignalsHandler
-    StateHandler
-    ContentHandler
-    ScaffoldHandler
-    ServiceHandler // user services
-    StylesHandler
-
-*/
-
-/*
     Description
     -----------
     The GridStroller provides the illusion of infinite scrolling through the use of a data 'cradle' inside a viewport.
