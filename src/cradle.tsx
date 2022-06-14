@@ -407,8 +407,6 @@ const Cradle = ({
             reload,
         }
 
-        // Object.freeze(callbacks)
-
         functions.getCallbacks(callbacks)
 
     },[])
@@ -490,7 +488,7 @@ const Cradle = ({
 
     },[viewportInterruptProperties.isResizing])
 
-    // reload for changed parameters
+    // reload for changed size parameters
     useEffect(()=>{
 
         if (cradleStateRef.current == 'setup') return
