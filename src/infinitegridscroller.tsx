@@ -14,7 +14,6 @@
     BUGS: 
 
     TODO:
-        remove Object.freeze
         rationalize normalizesignals without timeout
         reload from/to for insertions and substitutions
         provide user with isReparenting flag to be able to reset scroll
@@ -146,12 +145,6 @@ const InfiniteGridScroller = (props) => {
         functionsRef.current = functions
     }
 
-    freeze(
-        functionsRef.current,
-        stylesRef.current,
-        gridSpecsRef.current,
-    )
-
     // for mount
     const scrollerSessionIDRef = useRef(null);
 
@@ -215,15 +208,6 @@ const InfiniteGridScroller = (props) => {
 export default InfiniteGridScroller
 
 // utilities
-function freeze(...args) {
-    let [arg, ...rest] = Array.from(arguments)
-    Object.freeze(arg)
-    if (rest.length == 0) {
-        return
-    }
-    freeze(...rest)
-}
-
 function compareProps (obj1,obj2) {
     const keys = Object.keys(obj1)
     let same
