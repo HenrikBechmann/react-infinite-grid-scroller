@@ -400,7 +400,6 @@ export const getUICellShellList = ({
                     {
                         index, 
                         cradleInheritedProperties,
-                        // observer, 
                         callbacks, 
                         instanceIdCounterRef,
                     }
@@ -429,7 +428,6 @@ export const getUICellShellList = ({
                     {
                         index, 
                         cradleInheritedProperties,
-                        // observer, 
                         callbacks, 
                         instanceIdCounterRef,
                     }

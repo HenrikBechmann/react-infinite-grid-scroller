@@ -47,6 +47,7 @@ export default class ServiceHandler {
         return contentlist
     }
 
+    // TODO: adjust axisPixelOffset to match new data
     reload = () => {
 
         const { signals } = this.cradleParameters.handlersRef.current.interruptHandler

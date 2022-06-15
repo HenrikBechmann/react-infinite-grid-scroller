@@ -110,7 +110,7 @@ export default class ScrollHandler {
 
         this._scrolltimerid = setTimeout(() => {
 
-            this._onAfterScroll()
+            this.onAfterScroll()
 
         },SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
 
@@ -119,7 +119,7 @@ export default class ScrollHandler {
     }
 
 
-    private _onAfterScroll = () => {
+    private onAfterScroll = () => {
 
         this.isScrolling = false
 

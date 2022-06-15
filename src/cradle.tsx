@@ -2,6 +2,10 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
+    - check need for both model and view component lists
+*/
+
+/*
     Description
     -----------
     The GridStroller provides the illusion of infinite scrolling through the use of a data 'cradle' inside a viewport.
@@ -95,7 +99,7 @@ import ServiceHandler from './cradle/servicehandler'
 import StylesHandler from './cradle/styleshandler'
 
 // for children
-export const CradlePortalsContext = React.createContext(null) // for children
+export const CradlePortalsContext = React.createContext(null)
 
 const portalrootstyle = {display:'none'} // static 
 
@@ -168,7 +172,7 @@ const Cradle = ({
     // ------------------------[ calculated data ]------------------------
 
     // configuration calculations
-    const crosscount = useMemo(() => {
+    const crosscount = useMemo(() => { // the number of cells crossing orientation
 
         const viewportsize = (orientation == 'horizontal')?viewportheight:viewportwidth
         const crossLength = (orientation == 'horizontal')?cellHeight:cellWidth
@@ -197,20 +201,20 @@ const Cradle = ({
         runwayRowcount,
     ] = useMemo(()=> {
 
-        let viewportLength, cellLength
+        let viewportLength, rowLength
         if (orientation == 'vertical') {
             viewportLength = viewportheight
-            cellLength = cellHeight
+            rowLength = cellHeight
         } else {
             viewportLength = viewportwidth
-            cellLength = cellWidth
+            rowLength = cellWidth
         }
 
-        cellLength += gap
+        rowLength += gap
 
-        const viewportRowcount = Math.ceil(viewportLength/cellLength)
+        const viewportRowcount = Math.ceil(viewportLength/rowLength)
 
-        const viewportVisibleRowcount = Math.floor(viewportLength/cellLength)
+        const viewportVisibleRowcount = Math.floor(viewportLength/rowLength)
 
         const listRowcount = Math.ceil(listsize/crosscount)
 
@@ -288,6 +292,7 @@ const Cradle = ({
 
     // bundle cradle props to pass to handlers
     const cradleInheritedPropertiesRef = useRef(null) // access by closures and support functions
+    // up to data values
     cradleInheritedPropertiesRef.current = {
         // gridSpecs
         orientation, 
@@ -311,7 +316,7 @@ const Cradle = ({
 
     }
 
-    // bundle configuration properties to share
+    // configuration properties to share
     const cradleInternalPropertiesRef = useRef(null)
     cradleInternalPropertiesRef.current = {
         crosscount,
@@ -320,10 +325,11 @@ const Cradle = ({
         viewportVisibleRowcount,
         listRowcount,
         runwayRowcount,
-        cradleStateRef,
-        setCradleState,
         isMountedRef,
         cradleElementsRef,
+        // for stateHandler
+        cradleStateRef,
+        setCradleState,
     }
 
     // placeholder in cradleParameters to make available individual handlers
@@ -383,7 +389,7 @@ const Cradle = ({
 
     },[])
 
-    //initialize host functions properties
+    //send callback functions to host
     useEffect(()=>{
 
         referenceIndexCallbackRef.current = functions?.referenceIndexCallback
@@ -487,6 +493,7 @@ const Cradle = ({
 
         const signals = interruptHandler.signals
 
+        // TODO: bundle these as interruptHandler.pauseEffects(), then interruptHandler.resumeEffects()
         signals.pauseCradleIntersectionObserver = true
         signals.pauseTriggerlinesObserver = true
         signals.pauseScrollingEffects = true
@@ -650,6 +657,7 @@ const Cradle = ({
 
                 const cradleContent = contentHandler.content
 
+                // TODO: retain existing portals to the extent possible
                 cradleContent.headModelComponents = []
                 cradleContent.tailModelComponents = []
                 cradleContent.headViewComponents = []
