@@ -360,14 +360,12 @@ export const calcContentShift = ({
 export const getCellShellList = ({ 
 
         cradleInheritedProperties,
-        // cradleInternalProperties,
         cradleContentCount,
         cradleReferenceIndex, 
         listStartChangeCount, 
         listEndChangeCount, 
         localContentList:contentlist,
         callbacks,
-        // observer,
         instanceIdCounterRef,
     }) => {
 
@@ -385,9 +383,6 @@ export const getCellShellList = ({
 
         for (let newindex = cradleReferenceIndex - listStartChangeCount; newindex < (cradleReferenceIndex); newindex++) {
 
-            // if (!((newindex >= lowerbound) && (newindex <= upperbound))) {
-            //     continue
-            // }
             headContentlist.push(
                 acquireItem(
                     {
@@ -411,9 +406,6 @@ export const getCellShellList = ({
 
         for (let newindex = lastindexoffset + 1; newindex < (lastindexoffset + 1 + listEndChangeCount); newindex++) {
 
-            // if (!((newindex >= lowerbound) && (newindex <= upperbound))) {
-            //     continue
-            // }
             tailContentlist.push(
                 acquireItem(
                     {
@@ -477,31 +469,13 @@ export const deletePortals = (portalHandler, deleteList) => {
 const acquireItem = ({
     index, 
     cradleInheritedProperties,
-    // observer, 
     callbacks, 
     instanceIdCounterRef,
 
 }) => {
-    let instanceID = instanceIdCounterRef.current++
+    const instanceID = instanceIdCounterRef.current++
 
-    return emitItem({
-        index, 
-        cradleInheritedProperties,
-        // observer, 
-        callbacks, 
-        instanceID,
-    })
-}
-
-const emitItem = ({
-    index, 
-    cradleInheritedProperties,
-    // observer, 
-    callbacks, 
-    instanceID,
-}) => {
-
-    let { orientation,
+    const { orientation,
         cellHeight,
         cellWidth,
         getItem,
@@ -523,7 +497,6 @@ const emitItem = ({
         instanceID = {instanceID}
         scrollerName = { scrollerName }
         scrollerID = { scrollerID }
-    />    
+    />
 
 }
-

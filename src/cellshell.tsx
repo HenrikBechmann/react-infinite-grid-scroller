@@ -18,7 +18,6 @@ const CellShell = ({
     cellHeight, 
     cellWidth, 
     index, 
-    // observer, // intersection observer
     callbacks, 
     getItem, 
     listsize, 
