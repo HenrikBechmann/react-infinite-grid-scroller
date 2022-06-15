@@ -88,7 +88,7 @@ export default class ContentHandler {
             cellWidth
         } = cradleInheritedProperties
 
-        if (cradleState == 'doreposition')  {
+        if ((cradleState == 'doreposition') || cradleState == 'reconfigure')  {
 
             targetAxisPixelOffset = gap // default
 

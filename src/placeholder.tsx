@@ -29,7 +29,7 @@ const Placeholder = ({index, listsize, error}) => {
 
     return <div style = {stylesRef.current}>
         { !error?
-            <div style = {itemStylesRef.current}>{index + 1}/{listsize} loading...</div>:
+            <div style = {itemStylesRef.current}>{index + 1}/{listsize} (loading...)</div>:
             <div style = {itemStylesRef.current}>item is not available at this time</div>
         }
         

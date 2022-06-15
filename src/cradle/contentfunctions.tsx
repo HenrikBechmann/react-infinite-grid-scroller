@@ -90,7 +90,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     return {
         targetCradleReferenceIndex, 
-        targetAxisReferenceIndex, 
+        targetAxisReferenceIndex,
         targetAxisRowOffset,
         targetScrollblockPixelOffset, 
         newCradleContentCount, 

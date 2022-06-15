@@ -3,7 +3,6 @@
 
 /*
     ROADMAP:
-        Bugs
         review code to cradle level
         setCradleContent draws from cache
         suspense analog
@@ -13,7 +12,6 @@
         test changing all scroller parameters
 
     BUGS: 
-        axisOffset needs to be recalculated when switching from nested to generic (diff size cells)
 
     TODO:
         remove Object.freeze

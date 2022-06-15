@@ -146,7 +146,7 @@ const Cradle = ({
     // state
     const [cradleState, setCradleState] = useState('setup')
     const cradleStateRef = useRef(null) // access by closures
-    cradleStateRef.current = cradleState;
+    cradleStateRef.current = cradleState
 
     // controls
     const isMountedRef = useRef(true)
@@ -506,6 +506,7 @@ const Cradle = ({
         cellWidth,
         gap,
         padding,
+        triggerlineOffset
     ])
 
     // trigger pivot *only* on change in orientation
