@@ -35,10 +35,10 @@ export default class ScaffoldHandler {
 
     }
 
-    cradleParameters
+    private cradleParameters
 
     // cradlePositionData controls the relative positions of the scaffold elements
-    cradlePositionData = {
+    public cradlePositionData = {
 
         /*
             "block" = cradleblock, which is the element that is scrolled
@@ -93,6 +93,6 @@ export default class ScaffoldHandler {
 
     }
 
-    elements
+    public elements
 
 }

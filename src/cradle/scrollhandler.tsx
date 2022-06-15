@@ -11,15 +11,15 @@ export default class ScrollHandler {
 
     }
 
-    cradleParameters
+    private cradleParameters
 
-    scrollData = {start:0, current:0, previous:0, previousupdate:0, currentupdate:0}
+    public scrollData = {start:0, current:0, previous:0, previousupdate:0, currentupdate:0}
 
     private _scrolltimerid = null
 
     private isScrolling = false
 
-    onScroll = (e) => {
+    public onScroll = (e) => {
 
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const viewportElement = viewportInterruptProperties.elementref.current
@@ -164,7 +164,7 @@ export default class ScrollHandler {
     }
 
     // after scroll, but not after repositioning
-    updateReferenceData = () => {
+    private updateReferenceData = () => {
 
         const { stateHandler, scaffoldHandler } 
             = this.cradleParameters.handlersRef.current

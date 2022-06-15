@@ -11,11 +11,11 @@ export default class ServiceHandler {
 
     }
 
-    cradleParameters
+    private cradleParameters
 
-    serviceCalls
+    public serviceCalls
 
-    getVisibleList = () => {
+    public getVisibleList = () => {
 
         const {contentHandler} = this.cradleParameters.handlersRef.current        
 
@@ -34,7 +34,7 @@ export default class ServiceHandler {
 
     }
 
-    getContentList = () => {
+    public getContentList = () => {
         const { contentHandler } = this.cradleParameters.handlersRef.current
         const contentlist = Array.from(contentHandler.itemElements)
 
@@ -48,7 +48,7 @@ export default class ServiceHandler {
     }
 
     // TODO: adjust axisPixelOffset to match new data
-    reload = () => {
+    public reload = () => {
 
         const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
         const { stateHandler } = this.cradleParameters.handlersRef.current
@@ -61,7 +61,7 @@ export default class ServiceHandler {
 
     }
 
-    scrollToItem = (index) => {
+    public scrollToItem = (index) => {
 
         const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
         const { scaffoldHandler, stateHandler} = this.cradleParameters.handlersRef.current

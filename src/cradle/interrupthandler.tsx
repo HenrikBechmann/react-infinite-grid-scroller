@@ -13,23 +13,23 @@ const ResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
 
 export default class InterruptHandler {
 
-   constructor(cradleParameters) {
+    constructor(cradleParameters) {
 
-      this.cradleParameters = cradleParameters
+       this.cradleParameters = cradleParameters
 
-   }
+    }
 
-   private cradleParameters
+    private cradleParameters
 
-   private isTailCradleInView = false
-   private isHeadCradleInView = false
+    private isTailCradleInView = false
+    private isHeadCradleInView = false
 
-   // TODO: stub
-   private cradleresizeobservercallback = (entries) => {
+    // TODO: stub
+    private cradleresizeobservercallback = (entries) => {
 
        if (this.signals.pauseCradleResizeObserver) return
 
-   }
+    }
 
     private axisTriggerlinesObserverCallback = (entries) => {
 
@@ -136,7 +136,7 @@ export default class InterruptHandler {
     }
 
    // for adjusting to content re-sizing
-   cradleResize = {
+   public cradleResize = {
       observer:null,
       callback:this.cradleresizeobservercallback,
         connectElements:() => {
@@ -153,7 +153,7 @@ export default class InterruptHandler {
       }
    }
 
-   cradleIntersect = {    
+   public cradleIntersect = {    
         observer:null,    
         callback:this.cradleIntersectionObserverCallback,
         connectElements:() => {
@@ -172,7 +172,7 @@ export default class InterruptHandler {
         }
     }
 
-   axisTriggerlinesIntersect = {
+   public axisTriggerlinesIntersect = {
         observer:null,
         callback:this.axisTriggerlinesObserverCallback,
         connectElements:() => {
@@ -191,7 +191,7 @@ export default class InterruptHandler {
         }
     }
 
-    signals = {
+    public signals = {
         repositioningRequired: false,
         pauseTriggerlinesObserver: false, 
         pauseCradleIntersectionObserver:false,

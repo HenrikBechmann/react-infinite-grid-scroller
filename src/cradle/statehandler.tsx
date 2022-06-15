@@ -15,10 +15,10 @@ export default class StateHandler {
        
     }
 
-    cradleParameters
+    private cradleParameters
 
-    cradleStateRef
-    setCradleState
-    isMountedRef
+    public cradleStateRef
+    public setCradleState
+    public isMountedRef
 
 }

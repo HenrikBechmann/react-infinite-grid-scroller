@@ -9,9 +9,9 @@ export default class StylesHandler {
 
     }
 
-    cradleParameters
+    private cradleParameters
 
-    setCradleStyles = ({
+    public setCradleStyles = ({
 
         orientation, 
         cellHeight, 
@@ -114,7 +114,7 @@ export default class StylesHandler {
         
     }
 
-    getHeadStyles = (gap,padding,orientation,userheadstyles) => {
+    private getHeadStyles = (gap,padding,orientation,userheadstyles) => {
 
         let bottom, left, top, right
 
@@ -149,7 +149,7 @@ export default class StylesHandler {
 
     }
 
-    getTailStyles = (gap,padding,orientation,usertailstyles) => {
+    private getTailStyles = (gap,padding,orientation,usertailstyles) => {
 
         let bottom, left, top, right
 
@@ -184,7 +184,7 @@ export default class StylesHandler {
 
     }
 
-    getAxisStyles = (gap, padding, orientation, useraxisstyles) => {
+    private getAxisStyles = (gap, padding, orientation, useraxisstyles) => {
         let top, left, width, height // for axis
 
         if (orientation == 'vertical') {
@@ -210,7 +210,7 @@ export default class StylesHandler {
 
     }
 
-    getTriggerlineTailStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
+    private getTriggerlineTailStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
         let transform // for position relative to axis
         let position = 'absolute',
             // backgroundColor = 'blue',
@@ -236,7 +236,7 @@ export default class StylesHandler {
     }
 
 
-    getTriggerlineHeadStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
+    private getTriggerlineHeadStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
         let transform // for position relative to axis
 
         let position = 'absolute',
