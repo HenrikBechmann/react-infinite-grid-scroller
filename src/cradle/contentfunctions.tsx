@@ -360,7 +360,7 @@ export const calcContentShift = ({
 export const getUICellShellList = ({ 
 
         cradleInheritedProperties,
-        cradleInternalProperties,
+        // cradleInternalProperties,
         cradleContentCount,
         cradleReferenceIndex, 
         listStartChangeCount, 
@@ -371,34 +371,27 @@ export const getUICellShellList = ({
         instanceIdCounterRef,
     }) => {
 
-    let { 
-        crosscount,
-        cradleRowcount 
-    } = cradleInternalProperties
+    const localContentlist = [...contentlist]
+    const lastindexoffset = cradleReferenceIndex + localContentlist.length - 1
 
-    let localContentlist = [...contentlist]
-    let tailindexoffset = cradleReferenceIndex + contentlist.length
-    // let headindexoffset = cradleReferenceIndex
-    // let returnContentlist
+    const headContentlist = [], tailContentlist = []
 
-    let headContentlist = []
-
-    let topconstraint = cradleReferenceIndex - listStartChangeCount,
-    bottomconstraint = (cradleReferenceIndex - listStartChangeCount) + (cradleContentCount + 1) // TODO: validate "+1"
+    const headconstraint = cradleReferenceIndex - listStartChangeCount,
+    tailconstraint = (cradleReferenceIndex - listStartChangeCount) + (cradleContentCount + 1)
 
     let deletedtailitems = [], deletedheaditems = []
 
-    if (listStartChangeCount >= 0) {
+    if (listStartChangeCount >= 0) { // acquire new items
 
-        for (let index = cradleReferenceIndex - listStartChangeCount; index < (cradleReferenceIndex); index++) {
+        for (let newindex = cradleReferenceIndex - listStartChangeCount; newindex < (cradleReferenceIndex); newindex++) {
 
-            if (!((index >= topconstraint) && (index <= bottomconstraint))) {
+            if (!((newindex >= headconstraint) && (newindex <= tailconstraint))) {
                 continue
             }
             headContentlist.push(
                 acquireItem(
                     {
-                        index, 
+                        index:newindex, 
                         cradleInheritedProperties,
                         callbacks, 
                         instanceIdCounterRef,
@@ -414,19 +407,17 @@ export const getUICellShellList = ({
 
     }
 
-    let tailContentlist = []
+    if (listEndChangeCount >= 0) { // acquire new items
 
-    if (listEndChangeCount >= 0) {
+        for (let newindex = lastindexoffset + 1; newindex < (lastindexoffset + 1 + listEndChangeCount); newindex++) {
 
-        for (let index = tailindexoffset; index < (tailindexoffset + listEndChangeCount); index++) {
-
-            if (!((index >= topconstraint) && (index <= bottomconstraint))) {
+            if (!((newindex >= headconstraint) && (newindex <= tailconstraint))) {
                 continue
             }
             tailContentlist.push(
                 acquireItem(
                     {
-                        index, 
+                        index:newindex, 
                         cradleInheritedProperties,
                         callbacks, 
                         instanceIdCounterRef,
@@ -442,11 +433,11 @@ export const getUICellShellList = ({
 
     }
 
-    let deleteditems = deletedheaditems.concat(deletedtailitems)
+    const deletedItems = deletedheaditems.concat(deletedtailitems)
 
-    let componentList = headContentlist.concat(localContentlist,tailContentlist)
+    const componentList = headContentlist.concat(localContentlist,tailContentlist)
 
-    return [componentList,deleteditems]
+    return [componentList,deletedItems]
 
 }
 

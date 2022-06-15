@@ -138,7 +138,7 @@ export default class ContentHandler {
         const [childlist,deleteditems] = getUICellShellList({
 
             cradleInheritedProperties,
-            cradleInternalProperties,
+            // cradleInternalProperties,
             cradleContentCount,
             cradleReferenceIndex:targetCradleReferenceIndex,
             listStartChangeCount:0,
@@ -321,7 +321,7 @@ export default class ContentHandler {
 
             [localContentList,deletedContentItems] = getUICellShellList({
                 cradleInheritedProperties,
-                cradleInternalProperties,
+                // cradleInternalProperties,
                 cradleContentCount,
                 localContentList:modelcontentlist,
                 listStartChangeCount,
