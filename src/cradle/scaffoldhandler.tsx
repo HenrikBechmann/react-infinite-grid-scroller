@@ -48,7 +48,7 @@ export default class ScaffoldHandler {
 
             blockScrollPos is used by
                 - cradle initialization in response to reparenting interrupt
-                - setCradleContent
+                - 'preparerender' state in cradle module after setCradleContent
 
         */
         blockScrollPos:null,

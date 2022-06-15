@@ -551,8 +551,10 @@ const Cradle = ({
         signals.pauseCradleIntersectionObserver = true
 
         const cradleContent = contentHandler.content
-        cradleContent.headCellComponents = []
-        cradleContent.tailCellComponents = []
+        cradleContent.headModelComponents = []
+        cradleContent.tailModelComponents = []
+        cradleContent.headViewComponents = []
+        cradleContent.tailViewComponents = []
 
         setCradleState('pivot')
 
@@ -644,7 +646,8 @@ const Cradle = ({
             /*
                 the following 6 cradle states all resolve with
                 a chain starting with setCradleContent, 
-                and ending with 'normalizesignals'
+                continuing with 'preparerender', and ending with
+                'normalizesignals'
             */
             case 'dosetup':
             case 'doreposition':
@@ -656,14 +659,28 @@ const Cradle = ({
                 const cradleContent = contentHandler.content
 
                 // TODO: retain existing portals to the extent possible
-                cradleContent.headCellComponents = []
-                cradleContent.tailCellComponents = []
+                cradleContent.headModelComponents = []
+                cradleContent.tailModelComponents = []
+                cradleContent.headViewComponents = []
+                cradleContent.tailViewComponents = []
 
                 handlersRef.current.portalHandler.resetScrollerPortalRepository()
                 
                 contentHandler.setCradleContent( cradleState )
 
-                setCradleState('normalizesignals')
+                setCradleState('preparerender')
+
+                break
+            }
+
+            case 'preparerender': {
+
+                const cradleContent = contentHandler.content
+
+                cradleContent.headViewComponents = cradleContent.headModelComponents
+                cradleContent.tailViewComponents = cradleContent.tailModelComponents
+
+                setCradleState('normalizesignals') // call a timeout for ready (or interrupt continuation)
 
                 break
             }
@@ -797,7 +814,7 @@ const Cradle = ({
                 >
                 
                     {(cradleStateRef.current != 'setup')?
-                        cradleContent.headCellComponents:
+                        cradleContent.headViewComponents:
                         null
                     }
                 
@@ -811,7 +828,7 @@ const Cradle = ({
                 >
                 
                     {(cradleStateRef.current != 'setup')?
-                        cradleContent.tailCellComponents:
+                        cradleContent.tailViewComponents:
                         null
                     }
                 

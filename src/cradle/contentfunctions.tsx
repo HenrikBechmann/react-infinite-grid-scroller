@@ -174,8 +174,8 @@ export const calcContentShift = ({
 
     const {
 
-        cradleCellComponents:cradleContentList, 
-        tailCellComponents:tailcontentlist,
+        cradleModel:cradlecontentlist, 
+        tailModelComponents:tailcontentlist,
 
     } = cradleContent
 
@@ -231,7 +231,7 @@ export const calcContentShift = ({
     // base value for cradle reference shift; may change if beyond list bounds
     let cradleReferenceRowshift = axisReferenceRowshift
 
-    const previousCradleReferenceIndex = (cradleContentList[0]?.props.index || 0)
+    const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0)
     const previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)
 
     const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0)
@@ -328,7 +328,7 @@ export const calcContentShift = ({
     }
 
     // create head and tail change counts
-    const changeOfCradleContentCount = cradleContentList.length - newCradleContentCount
+    const changeOfCradleContentCount = cradlecontentlist.length - newCradleContentCount
 
     const listStartChangeCount = -(cradleReferenceItemShift)
     const listEndChangeCount = -listStartChangeCount - (changeOfCradleContentCount)
@@ -357,7 +357,7 @@ export const calcContentShift = ({
 // update content
 // adds itemshells at end of contentlist according to headindexcount and tailindescount,
 // or if indexcount values are <0 removes them.
-export const getCellShellComponentList = ({ 
+export const getCellShellList = ({ 
 
         cradleInheritedProperties,
         cradleContentCount,
@@ -443,12 +443,14 @@ export const allocateContentList = (
     }
 ) => {
 
-    const offsetindex = contentlist[0]?.props.index // TODO: Cannot read property 'props' of undefined
+    let offsetindex = contentlist[0]?.props.index // TODO: Cannot read property 'props' of undefined
 
-    const headitemcount = (axisReferenceIndex - offsetindex)
+    let headitemcount
 
-    const headlist = contentlist.slice(0,headitemcount)
-    const taillist = contentlist.slice(headitemcount)
+    headitemcount = (axisReferenceIndex - offsetindex)
+
+    let headlist = contentlist.slice(0,headitemcount)
+    let taillist = contentlist.slice(headitemcount)
 
     return [headlist,taillist]
 
@@ -462,7 +464,7 @@ export const deletePortals = (portalHandler, deleteList) => {
     if (deleteList.length) portalHandler.renderPortalList()
 }
 
-// =====================[ acquire item ]======================
+// =====================[ acquire item support ]======================
 
 const acquireItem = ({
     index, 
@@ -473,18 +475,14 @@ const acquireItem = ({
 }) => {
     const instanceID = instanceIdCounterRef.current++
 
-    const { 
-
-        orientation,
+    const { orientation,
         cellHeight,
         cellWidth,
         getItem,
         placeholder,
         listsize,
         scrollerName,
-        scrollerID 
-
-    } = cradleInheritedProperties
+        scrollerID } = cradleInheritedProperties
 
     return <CellShell 
         key = {index} 
