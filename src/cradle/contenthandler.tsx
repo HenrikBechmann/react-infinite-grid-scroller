@@ -2,7 +2,7 @@
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
 import { 
-    getUICellShellList, 
+    getCellShellList, 
     calcContentShift,
     getContentListRequirements,
     getShiftInstruction,
@@ -135,7 +135,7 @@ export default class ContentHandler {
         // ----------------------[ 3. get and config content ]----------------------
         
         // returns content constrained by cradleRowcount
-        const [childlist,deleteditems] = getUICellShellList({
+        const [childlist,deleteditems] = getCellShellList({
 
             cradleInheritedProperties,
             // cradleInternalProperties,
@@ -319,7 +319,7 @@ export default class ContentHandler {
 
         if (listStartChangeCount || listEndChangeCount) { // if either is non-0 then modify content
 
-            [localContentList,deletedContentItems] = getUICellShellList({
+            [localContentList,deletedContentItems] = getCellShellList({
                 cradleInheritedProperties,
                 // cradleInternalProperties,
                 cradleContentCount,

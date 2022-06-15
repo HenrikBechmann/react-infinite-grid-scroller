@@ -357,7 +357,7 @@ export const calcContentShift = ({
 // update content
 // adds itemshells at end of contentlist according to headindexcount and tailindescount,
 // or if indexcount values are <0 removes them.
-export const getUICellShellList = ({ 
+export const getCellShellList = ({ 
 
         cradleInheritedProperties,
         // cradleInternalProperties,
