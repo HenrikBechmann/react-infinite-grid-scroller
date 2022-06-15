@@ -3,18 +3,16 @@
 
 /*
     ROADMAP:
-        review code to cradle level
         setCradleContent draws from cache
         suspense analog
         review all code
         modes: uniform, variable, dynamic
         insert, remove, swap functions
-        test changing all scroller parameters
+        test changing all gridscroller parameters
 
     BUGS: 
 
     TODO:
-        rationalize normalizesignals without timeout
         reload from/to for insertions and substitutions
         provide user with isReparenting flag to be able to reset scroll
         check use of useCallback
