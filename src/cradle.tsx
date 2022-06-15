@@ -550,12 +550,6 @@ const Cradle = ({
         signals.pauseScrollingEffects = true
         signals.pauseCradleIntersectionObserver = true
 
-        const cradleContent = contentHandler.content
-        cradleContent.headModelComponents = []
-        cradleContent.tailModelComponents = []
-        cradleContent.headViewComponents = []
-        cradleContent.tailViewComponents = []
-
         setCradleState('pivot')
 
     },[orientation])
@@ -622,6 +616,9 @@ const Cradle = ({
             // it is required to integrate changed DOM configurations before 'ready' is displayed
             case 'renderupdatedcontent': {
 
+                cradleContent.headDisplayComponents = cradleContent.headModelComponents
+                cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
+
                 setCradleState('ready')
 
                 break
@@ -661,8 +658,10 @@ const Cradle = ({
                 // TODO: retain existing portals to the extent possible
                 cradleContent.headModelComponents = []
                 cradleContent.tailModelComponents = []
-                cradleContent.headViewComponents = []
-                cradleContent.tailViewComponents = []
+
+                // register new array id for Object.is for react
+                cradleContent.headDisplayComponents = []
+                cradleContent.tailDisplayComponents = []
 
                 handlersRef.current.portalHandler.resetScrollerPortalRepository()
                 
@@ -677,8 +676,8 @@ const Cradle = ({
 
                 const cradleContent = contentHandler.content
 
-                cradleContent.headViewComponents = cradleContent.headModelComponents
-                cradleContent.tailViewComponents = cradleContent.tailModelComponents
+                cradleContent.headDisplayComponents = cradleContent.headModelComponents
+                cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
                 setCradleState('normalizesignals') // call a timeout for ready (or interrupt continuation)
 
@@ -814,7 +813,7 @@ const Cradle = ({
                 >
                 
                     {(cradleStateRef.current != 'setup')?
-                        cradleContent.headViewComponents:
+                        cradleContent.headDisplayComponents:
                         null
                     }
                 
@@ -828,7 +827,7 @@ const Cradle = ({
                 >
                 
                     {(cradleStateRef.current != 'setup')?
-                        cradleContent.tailViewComponents:
+                        cradleContent.tailDisplayComponents:
                         null
                     }
                 

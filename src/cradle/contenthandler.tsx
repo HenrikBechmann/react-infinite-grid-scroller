@@ -26,8 +26,9 @@ export default class ContentHandler {
       cradleModel: null,
       headModelComponents: null,
       tailModelComponents: null,
-      headViewComponents: [],
-      tailViewComponents: [],
+      // the following two only used in cradle for render
+      headDisplayComponents: [],
+      tailDisplayComponents: [],
 
     }
 
@@ -343,13 +344,13 @@ export default class ContentHandler {
         const [headcontent, tailcontent] = allocateContentList(
             {
                 contentlist:localContentList,
-                axisReferenceIndex, // TODO: BUG: set to 100 for problem
+                axisReferenceIndex,
             }
         )
 
         cradleContent.cradleModel = localContentList
-        cradleContent.headViewComponents = cradleContent.headModelComponents = headcontent
-        cradleContent.tailViewComponents = cradleContent.tailModelComponents = tailcontent
+        cradleContent.headModelComponents = headcontent
+        cradleContent.tailModelComponents = tailcontent
 
         // -------------------------------[ 6. set css changes ]-------------------------
 

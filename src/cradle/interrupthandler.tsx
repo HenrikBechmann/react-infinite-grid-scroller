@@ -122,12 +122,6 @@ export default class InterruptHandler {
                 const width = right - left, height = bottom - top
                 viewportInterruptProperties.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
 
-                const cradleContent = contentHandler.content
-                cradleContent.headModelComponents = []
-                cradleContent.tailModelComponents = []
-                cradleContent.headViewComponents = []
-                cradleContent.tailViewComponents = []
-
                 stateHandler.setCradleState('startreposition')
 
             }
