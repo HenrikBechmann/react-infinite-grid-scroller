@@ -2,7 +2,7 @@
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
 import { 
-    getCellShellList, 
+    getCellShellComponentList, 
     calcContentShift,
     getContentListRequirements,
     getShiftInstruction,
@@ -23,7 +23,7 @@ export default class ContentHandler {
 
    public content = {
 
-      cradleModel: null,
+      cradleModelComponents: null,
       headModelComponents: null,
       tailModelComponents: null,
       // the following two only used in cradle for render
@@ -136,7 +136,7 @@ export default class ContentHandler {
         // ----------------------[ 3. get and config content ]----------------------
         
         // returns content constrained by cradleRowcount
-        const [childlist,deleteditems] = getCellShellList({
+        const [childlist,deleteditems] = getCellShellComponentList({
 
             cradleInheritedProperties,
             // cradleInternalProperties,
@@ -158,7 +158,7 @@ export default class ContentHandler {
     
         })
 
-        cradleContent.cradleModel = childlist
+        cradleContent.cradleModelComponents = childlist
         cradleContent.headModelComponents = headcontentlist
         cradleContent.tailModelComponents = tailcontentlist
 
@@ -252,7 +252,7 @@ export default class ContentHandler {
         const cradleElements = scaffoldHandler.elements
         const cradleContent = this.content
         const itemElements = this.itemElements
-        const modelcontentlist = cradleContent.cradleModel
+        const modelcontentlist = cradleContent.cradleModelComponents
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
         // --------------------[ 2. get shift instruction ]-----------------------
@@ -320,7 +320,7 @@ export default class ContentHandler {
 
         if (listStartChangeCount || listEndChangeCount) { // if either is non-0 then modify content
 
-            [localContentList,deletedContentItems] = getCellShellList({
+            [localContentList,deletedContentItems] = getCellShellComponentList({
                 cradleInheritedProperties,
                 // cradleInternalProperties,
                 cradleContentCount,
@@ -348,7 +348,7 @@ export default class ContentHandler {
             }
         )
 
-        cradleContent.cradleModel = localContentList
+        cradleContent.cradleModelComponents = localContentList
         cradleContent.headModelComponents = headcontent
         cradleContent.tailModelComponents = tailcontent
 
