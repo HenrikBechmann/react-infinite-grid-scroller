@@ -251,7 +251,6 @@ export default class ContentHandler {
         // cradle scaffold and user cells
         const cradleElements = scaffoldHandler.elements
         const cradleContent = this.content
-        const itemElements = this.itemElements
         const modelcontentlist = cradleContent.cradleModelComponents
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
@@ -316,11 +315,11 @@ export default class ContentHandler {
         // ----------------------------------[ 4. reconfigure cradle content ]--------------------------
 
         // collect modified content
-        let localContentList, deletedContentItems = []
+        let updatedContentList, deletedContentItems = []
 
         if (listStartChangeCount || listEndChangeCount) { // if either is non-0 then modify content
 
-            [localContentList,deletedContentItems] = getCellShellComponentList({
+            [updatedContentList,deletedContentItems] = getCellShellComponentList({
                 cradleInheritedProperties,
                 // cradleInternalProperties,
                 cradleContentCount,
@@ -333,7 +332,7 @@ export default class ContentHandler {
             })
         } else {
 
-            localContentList = modelcontentlist
+            updatedContentList = modelcontentlist
 
         }
 
@@ -343,12 +342,12 @@ export default class ContentHandler {
 
         const [headcontent, tailcontent] = allocateContentList(
             {
-                contentlist:localContentList,
+                contentlist:updatedContentList,
                 axisReferenceIndex,
             }
         )
 
-        cradleContent.cradleModelComponents = localContentList
+        cradleContent.cradleModelComponents = updatedContentList
         cradleContent.headModelComponents = headcontent
         cradleContent.tailModelComponents = tailcontent
 

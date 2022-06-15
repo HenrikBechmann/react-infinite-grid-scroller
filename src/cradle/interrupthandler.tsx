@@ -98,7 +98,6 @@ export default class InterruptHandler {
         if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway
         {
             const cradleState = stateHandler.cradleStateRef.current
-            // startreposition, reload, preparecontent, preparerender, normalizesignals, ready
             if (
                 !viewportInterruptProperties.isResizing &&
                 !viewportInterruptProperties.portal?.isReparenting &&
