@@ -174,8 +174,8 @@ export const calcContentShift = ({
 
     const {
 
-        cradleModel:cradlecontentlist, 
-        tailModelComponents:tailcontentlist,
+        cradleCellComponents:cradleContentList, 
+        tailCellComponents:tailcontentlist,
 
     } = cradleContent
 
@@ -231,7 +231,7 @@ export const calcContentShift = ({
     // base value for cradle reference shift; may change if beyond list bounds
     let cradleReferenceRowshift = axisReferenceRowshift
 
-    const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0)
+    const previousCradleReferenceIndex = (cradleContentList[0]?.props.index || 0)
     const previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)
 
     const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0)
@@ -328,7 +328,7 @@ export const calcContentShift = ({
     }
 
     // create head and tail change counts
-    const changeOfCradleContentCount = cradlecontentlist.length - newCradleContentCount
+    const changeOfCradleContentCount = cradleContentList.length - newCradleContentCount
 
     const listStartChangeCount = -(cradleReferenceItemShift)
     const listEndChangeCount = -listStartChangeCount - (changeOfCradleContentCount)
@@ -357,7 +357,7 @@ export const calcContentShift = ({
 // update content
 // adds itemshells at end of contentlist according to headindexcount and tailindescount,
 // or if indexcount values are <0 removes them.
-export const getCellShellList = ({ 
+export const getCellShellComponentList = ({ 
 
         cradleInheritedProperties,
         cradleContentCount,
@@ -483,7 +483,7 @@ const acquireItem = ({
         listsize,
         scrollerName,
         scrollerID 
-        
+
     } = cradleInheritedProperties
 
     return <CellShell 

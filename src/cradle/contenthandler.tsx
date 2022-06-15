@@ -2,7 +2,7 @@
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
 import { 
-    getCellShellList, 
+    getCellShellComponentList, 
     calcContentShift,
     getContentListRequirements,
     getShiftInstruction,
@@ -23,11 +23,9 @@ export default class ContentHandler {
 
    public content = {
 
-      cradleModel: null,
-      headModelComponents: null,
-      tailModelComponents: null,
-      headViewComponents: [],
-      tailViewComponents: [],
+      cradleCellComponents: null,
+      headCellComponents: [],
+      tailCellComponents: [],
 
     }
 
@@ -135,7 +133,7 @@ export default class ContentHandler {
         // ----------------------[ 3. get and config content ]----------------------
         
         // returns content constrained by cradleRowcount
-        const [childlist,deleteditems] = getCellShellList({
+        const [childlist,deleteditems] = getCellShellComponentList({
 
             cradleInheritedProperties,
             // cradleInternalProperties,
@@ -157,9 +155,9 @@ export default class ContentHandler {
     
         })
 
-        cradleContent.cradleModel = childlist
-        cradleContent.headModelComponents = headcontentlist
-        cradleContent.tailModelComponents = tailcontentlist
+        cradleContent.cradleCellComponents = childlist
+        cradleContent.headCellComponents = headcontentlist
+        cradleContent.tailCellComponents = tailcontentlist
 
         cradlePositionData.targetAxisReferenceIndex = targetAxisReferenceIndex
         cradlePositionData.targetAxisPixelOffset = axisPixelOffset
@@ -250,8 +248,7 @@ export default class ContentHandler {
         // cradle scaffold and user cells
         const cradleElements = scaffoldHandler.elements
         const cradleContent = this.content
-        const itemElements = this.itemElements
-        const modelcontentlist = cradleContent.cradleModel
+        const modelcontentlist = cradleContent.cradleCellComponents
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
         // --------------------[ 2. get shift instruction ]-----------------------
@@ -315,11 +312,11 @@ export default class ContentHandler {
         // ----------------------------------[ 4. reconfigure cradle content ]--------------------------
 
         // collect modified content
-        let localContentList, deletedContentItems = []
+        let updatedContentList, deletedContentItems = []
 
         if (listStartChangeCount || listEndChangeCount) { // if either is non-0 then modify content
 
-            [localContentList,deletedContentItems] = getCellShellList({
+            [updatedContentList,deletedContentItems] = getCellShellComponentList({
                 cradleInheritedProperties,
                 // cradleInternalProperties,
                 cradleContentCount,
@@ -332,7 +329,7 @@ export default class ContentHandler {
             })
         } else {
 
-            localContentList = modelcontentlist
+            updatedContentList = modelcontentlist
 
         }
 
@@ -342,14 +339,14 @@ export default class ContentHandler {
 
         const [headcontent, tailcontent] = allocateContentList(
             {
-                contentlist:localContentList,
+                contentlist:updatedContentList,
                 axisReferenceIndex, // TODO: BUG: set to 100 for problem
             }
         )
 
-        cradleContent.cradleModel = localContentList
-        cradleContent.headViewComponents = cradleContent.headModelComponents = headcontent
-        cradleContent.tailViewComponents = cradleContent.tailModelComponents = tailcontent
+        cradleContent.cradleCellComponents = updatedContentList
+        cradleContent.headCellComponents = headcontent
+        cradleContent.tailCellComponents = tailcontent
 
         // -------------------------------[ 6. set css changes ]-------------------------
 

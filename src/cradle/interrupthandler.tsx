@@ -98,7 +98,7 @@ export default class InterruptHandler {
         if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway
         {
             const cradleState = stateHandler.cradleStateRef.current
-            // startreposition, reload, preparecontent, preparerender, normalizesignals, ready
+
             if (
                 !viewportInterruptProperties.isResizing &&
                 !viewportInterruptProperties.portal?.isReparenting &&
@@ -123,10 +123,8 @@ export default class InterruptHandler {
                 viewportInterruptProperties.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
 
                 const cradleContent = contentHandler.content
-                cradleContent.headModelComponents = []
-                cradleContent.tailModelComponents = []
-                cradleContent.headViewComponents = []
-                cradleContent.tailViewComponents = []
+                cradleContent.headCellComponents = []
+                cradleContent.tailCellComponents = []
 
                 stateHandler.setCradleState('startreposition')
 

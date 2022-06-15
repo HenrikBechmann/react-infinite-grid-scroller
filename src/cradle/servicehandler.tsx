@@ -89,7 +89,7 @@ const getVisibleItemsList = ({
     const headElement = cradleElements.headRef.current
     const axisElement = cradleElements.axisRef.current
     const {orientation} = cradleProps
-    const headlist = cradleContent.headViewComponents
+    const headlist = cradleContent.headCellComponents
 
     const itemlistindexes = Array.from(itemElementMap.keys())
     itemlistindexes.sort((a,b)=>{
