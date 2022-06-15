@@ -443,14 +443,12 @@ export const allocateContentList = (
     }
 ) => {
 
-    let offsetindex = contentlist[0]?.props.index // TODO: Cannot read property 'props' of undefined
+    const offsetindex = contentlist[0]?.props.index // TODO: Cannot read property 'props' of undefined
 
-    let headitemcount
+    const headitemcount = (axisReferenceIndex - offsetindex)
 
-    headitemcount = (axisReferenceIndex - offsetindex)
-
-    let headlist = contentlist.slice(0,headitemcount)
-    let taillist = contentlist.slice(headitemcount)
+    const headlist = contentlist.slice(0,headitemcount)
+    const taillist = contentlist.slice(headitemcount)
 
     return [headlist,taillist]
 
@@ -464,7 +462,7 @@ export const deletePortals = (portalHandler, deleteList) => {
     if (deleteList.length) portalHandler.renderPortalList()
 }
 
-// =====================[ acquire item support ]======================
+// =====================[ acquire item ]======================
 
 const acquireItem = ({
     index, 
@@ -475,14 +473,18 @@ const acquireItem = ({
 }) => {
     const instanceID = instanceIdCounterRef.current++
 
-    const { orientation,
+    const { 
+
+        orientation,
         cellHeight,
         cellWidth,
         getItem,
         placeholder,
         listsize,
         scrollerName,
-        scrollerID } = cradleInheritedProperties
+        scrollerID 
+        
+    } = cradleInheritedProperties
 
     return <CellShell 
         key = {index} 
