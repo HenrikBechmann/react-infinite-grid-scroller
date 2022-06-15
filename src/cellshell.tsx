@@ -92,7 +92,7 @@ const CellShell = ({
 
         const { reverseportal } = portaldataRef.current
 
-        contentcomponentRef.current = <OutPortal node = {reverseportal}/>
+        contentPortalRef.current = <OutPortal node = {reverseportal}/>
 
         if (!hasUserContent) {
 
@@ -150,7 +150,7 @@ const CellShell = ({
 
     },[orientation,cellHeight,cellWidth]) 
 
-    const contentcomponentRef = useRef(null)
+    const contentPortalRef = useRef(null)
 
     useEffect(() => {
 
@@ -170,7 +170,7 @@ const CellShell = ({
                             portaldataRef.current = portalHandler.updatePortal(index,usercontent)
                             const reverseportal = portaldataRef.current.reverseportal
                             portaldataRef.current.isReparenting = true
-                            contentcomponentRef.current = <OutPortal node = {reverseportal}/>
+                            contentPortalRef.current = <OutPortal node = {reverseportal}/>
 
                         } else {
 
@@ -200,7 +200,7 @@ const CellShell = ({
         data-instanceid = {instanceID} 
         style = {styles}>
 
-            { (cellStatus != 'setup') && contentcomponentRef.current }
+            { (cellStatus != 'setup') && contentPortalRef.current }
             
         </div>
 
