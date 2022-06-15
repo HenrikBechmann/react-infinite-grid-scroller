@@ -376,8 +376,8 @@ export const getCellShellList = ({
 
     const headContentlist = [], tailContentlist = []
 
-    const headconstraint = cradleReferenceIndex - listStartChangeCount,
-    tailconstraint = (cradleReferenceIndex - listStartChangeCount) + (cradleContentCount + 1)
+    // const lowerbound = cradleReferenceIndex - listStartChangeCount,
+    //     upperbound = (cradleReferenceIndex - listStartChangeCount) + (cradleContentCount + 1)
 
     let deletedtailitems = [], deletedheaditems = []
 
@@ -385,9 +385,9 @@ export const getCellShellList = ({
 
         for (let newindex = cradleReferenceIndex - listStartChangeCount; newindex < (cradleReferenceIndex); newindex++) {
 
-            if (!((newindex >= headconstraint) && (newindex <= tailconstraint))) {
-                continue
-            }
+            // if (!((newindex >= lowerbound) && (newindex <= upperbound))) {
+            //     continue
+            // }
             headContentlist.push(
                 acquireItem(
                     {
@@ -411,9 +411,9 @@ export const getCellShellList = ({
 
         for (let newindex = lastindexoffset + 1; newindex < (lastindexoffset + 1 + listEndChangeCount); newindex++) {
 
-            if (!((newindex >= headconstraint) && (newindex <= tailconstraint))) {
-                continue
-            }
+            // if (!((newindex >= lowerbound) && (newindex <= upperbound))) {
+            //     continue
+            // }
             tailContentlist.push(
                 acquireItem(
                     {
