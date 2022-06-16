@@ -2,7 +2,7 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    - check need for both model and view component lists
+    rationalize pauseScrolling, and other signals
 */
 
 /*
