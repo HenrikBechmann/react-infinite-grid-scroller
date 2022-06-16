@@ -148,13 +148,6 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // if (scrollerID == 0) {
-    //     console.log('running cradle in state',cradleState)
-    // }
-
-    // console.log('CRADLE entering state, scrollerID, scrollerName\n',
-    //     cradleState, scrollerID, scrollerName)
-
     // controls
     const isMountedRef = useRef(true)
 
@@ -379,8 +372,6 @@ const Cradle = ({
 
         if (!isReparentingRef.current) {
             isReparentingRef.current = true
-            // console.log('reacting to isReparenting: cradleState, scrollerID, isResizing\n', 
-            //     cradleState, scrollerID, viewportInterruptProperties.isResizing)
 
             interruptHandler.pauseTriggerlinesObserver = true
             interruptHandler.pauseCradleIntersectionObserver = true
@@ -508,9 +499,6 @@ const Cradle = ({
             signals.pauseCradleIntersectionObserver = true
             signals.pauseCradleResizeObserver = true
             signals.pauseScrollingEffects = true
-
-            // console.log('calling resizing from interrupt: scrollerID\n',
-            //     scrollerID)
 
             setCradleState('resizing')
 
@@ -667,7 +655,6 @@ const Cradle = ({
 
             case 'finishupdatedcontent': {
 
-                // console.log('running finishupdatedcontent')
                 interruptHandler.axisTriggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseTriggerlinesObserver = false
                 setCradleState('ready')
@@ -762,21 +749,9 @@ const Cradle = ({
 
             }
 
-            case 'reparenting': {
-
-                // console.log('calling ready from reparenting: scrollerID, viewport isResizing\n', 
-                //     scrollerID, viewportInterruptProperties.isResizing)
+            case 'reparenting': { // cycle for DOM update
 
                 setCradleState('donereparenting')
-                // setTimeout(()=>{ // give reparenting a chance to complete for heavy cells
-                //     interruptHandler.pauseTriggerlinesObserver = false
-                //     interruptHandler.pauseCradleIntersectionObserver = false
-                //     interruptHandler.pauseCradleResizeObserver = false
-                //     // pauseScrollingEffects: false,
-                //     interruptHandler.pauseViewportResizing = false
-                //     // console.log('calling ready from reparenting')
-                //     setCradleState('ready')
-                // })
 
                 break
 
@@ -788,7 +763,7 @@ const Cradle = ({
                 interruptHandler.pauseCradleResizeObserver = false
                 // pauseScrollingEffects: false,
                 interruptHandler.pauseViewportResizing = false
-                // console.log('calling ready from reparenting')
+
                 setCradleState('ready')
             }
 

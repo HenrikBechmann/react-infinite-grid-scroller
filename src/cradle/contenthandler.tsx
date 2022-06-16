@@ -347,13 +347,6 @@ export default class ContentHandler {
             }
         )
 
-        // if (this.cradleParameters.cradleInheritedPropertiesRef.current.scrollerID == 0) {
-        //     console.log('allocated content: scrollerID, cradleState, axisReferenceIndex, tailcontent[0]\n',
-        //         this.cradleParameters.cradleInheritedPropertiesRef.current.scrollerID, 
-        //         this.cradleParameters.handlersRef.current.stateHandler.cradleStateRef.current,
-        //         axisReferenceIndex, tailcontent)
-        // }
-
         cradleContent.cradleModelComponents = updatedContentList
         cradleContent.headModelComponents = headcontent
         cradleContent.tailModelComponents = tailcontent

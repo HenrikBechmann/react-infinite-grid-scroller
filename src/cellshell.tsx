@@ -94,8 +94,6 @@ const CellShell = ({
 
         contentPortalRef.current = <OutPortal node = {reverseportal}/>
 
-        // console.log('CELLSHELL contentPortalRef.current',contentPortalRef.current)
-
         if (!hasUserContent) {
 
             setCellStatus('getusercontent')
