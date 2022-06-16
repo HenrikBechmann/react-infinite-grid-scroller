@@ -148,6 +148,9 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
+    console.log('CRADLE entering state, scrollerID, scrollerName\n',
+        cradleState, scrollerID, scrollerName)
+
     // controls
     const isMountedRef = useRef(true)
 
@@ -369,10 +372,10 @@ const Cradle = ({
     // the code restores scroll as soon as cradle is invoked after reparenting
     if (viewportInterruptProperties.portal?.isReparenting) { 
 
-        console.log('reacting to isReparenting: isResizing, cradleState', 
-            viewportInterruptProperties.isResizing, cradleState)
+        console.log('reacting to isReparenting: cradleState, scrollerID, isResizing\n', 
+            cradleState, scrollerID, viewportInterruptProperties.isResizing)
 
-        // setCradleState('reparenting')
+        setCradleState('reparenting')
 
         viewportInterruptProperties.portal.isReparenting = false
          // viewportInterruptProperties.isResizing && (viewportInterruptProperties.isResizing = false)
@@ -483,7 +486,8 @@ const Cradle = ({
             signals.pauseCradleResizeObserver = true
             signals.pauseScrollingEffects = true
 
-            console.log('calling resizing from interrupt')
+            console.log('calling resizing from interrupt: scrollerID\n',
+                scrollerID)
 
             setCradleState('resizing')
 
@@ -724,15 +728,14 @@ const Cradle = ({
 
             }
 
-            // case 'reparenting': {
+            case 'reparenting': {
 
-            //     setTimeout(()=>{
-            //         setCradleState('ready')
-            //     },1000)
+                console.log('calling ready from reparenting\n', scrollerID)
+                setCradleState('ready')
 
-            //     break
+                break
 
-            // }
+            }
 
         }
 

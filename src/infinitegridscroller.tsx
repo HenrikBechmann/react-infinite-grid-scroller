@@ -30,7 +30,7 @@
 
 'use strict'
 
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
@@ -39,12 +39,6 @@ import Cradle from './cradle'
 // -------------------[ global session ID generator ]----------------
 
 let globalScrollerID = 0
-
-const getSessionID = () => {
-
-    return globalScrollerID++
-
-}
 
 // ===================================[ INITIALIZE ]===========================
 
@@ -112,6 +106,9 @@ const InfiniteGridScroller = (props) => {
         dense,
     }
 
+    // allow scrollerID to be set by useEffect. Inline setting causes double processing
+    const [scrollerState, setScrollerState] = useState('setup')
+
     // set defaults
     functions ?? (functions = {})
     styles ?? (styles = {})
@@ -152,17 +149,26 @@ const InfiniteGridScroller = (props) => {
     // for mount
     const scrollerSessionIDRef = useRef(null);
 
-    if (scrollerSessionIDRef.current === null) {
-        scrollerSessionIDRef.current = getSessionID()
-    }
+    useEffect (() => {
+        scrollerSessionIDRef.current = globalScrollerID++
+    },[])
 
     const scrollerID = scrollerSessionIDRef.current
 
     // --------------------[ render ]---------------------
 
+    useEffect(() => {
+
+        switch (scrollerState) {
+            case 'setup':
+                setScrollerState('ready')
+        }
+
+    },[scrollerState])
+
     return (
         <React.StrictMode>
-        <Viewport
+        {(scrollerState != 'setup') && <Viewport
 
             gridSpecs = { gridSpecsRef.current }
 
@@ -203,7 +209,7 @@ const InfiniteGridScroller = (props) => {
 
                 />
             </Scrollblock>
-        </Viewport>
+        </Viewport>}
         </React.StrictMode>
 
     )
