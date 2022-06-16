@@ -190,6 +190,7 @@ export default class InterruptHandler {
         pauseCradleIntersectionObserver:false,
         pauseCradleResizeObserver: false,
         pauseScrollingEffects: false,
+        pauseViewportResizing: false,
     }
 
 }

@@ -370,22 +370,39 @@ const Cradle = ({
     // this is an immediate response to reparenting (moving portals). Reparenting resets scroll
     // positions for nested infinitegridscrollers.
     // the code restores scroll as soon as cradle is invoked after reparenting
+    const isReparentingRef = useRef(false)
     if (viewportInterruptProperties.portal?.isReparenting) { 
 
-        console.log('reacting to isReparenting: cradleState, scrollerID, isResizing\n', 
-            cradleState, scrollerID, viewportInterruptProperties.isResizing)
+        if (!isReparentingRef.current) {
+            isReparentingRef.current = true
+            console.log('reacting to isReparenting: cradleState, scrollerID, isResizing\n', 
+                cradleState, scrollerID, viewportInterruptProperties.isResizing)
 
-        setCradleState('reparenting')
+            interruptHandler.pauseTriggerlinesObserver = true
+            interruptHandler.pauseCradleIntersectionObserver = true
+            interruptHandler.pauseCradleResizeObserver = true
+            // pauseScrollingEffects: false,
+            interruptHandler.pauseViewportResizing = true
 
-        viewportInterruptProperties.portal.isReparenting = false
-         // viewportInterruptProperties.isResizing && (viewportInterruptProperties.isResizing = false)
-        const cradlePositionData = scaffoldHandler.cradlePositionData
+             // viewportInterruptProperties.isResizing && (viewportInterruptProperties.isResizing = false)
+            const cradlePositionData = scaffoldHandler.cradlePositionData
 
-        viewportInterruptProperties.elementref.current[
-            cradlePositionData.blockScrollProperty] =
-            Math.max(0,cradlePositionData.blockScrollPos)
+            viewportInterruptProperties.elementref.current[
+                cradlePositionData.blockScrollProperty] =
+                Math.max(0,cradlePositionData.blockScrollPos)
+       }
 
     }
+
+    useLayoutEffect (()=>{
+
+        if (!viewportInterruptProperties.portal?.isReparenting) return
+
+        isReparentingRef.current = false
+        viewportInterruptProperties.portal.isReparenting = false
+        setCradleState('reparenting')
+
+    },[viewportInterruptProperties.portal?.isReparenting])
 
     // clear mounted flag on unmount
     useLayoutEffect(()=>{
@@ -473,6 +490,8 @@ const Cradle = ({
     useEffect(()=>{
 
         if (cradleStateRef.current == 'setup') return
+
+        if (interruptHandler.pauseViewportResizing) return
 
         // if (cradleStateRef.current == 'reparenting') {
         //     return            
@@ -730,8 +749,18 @@ const Cradle = ({
 
             case 'reparenting': {
 
-                console.log('calling ready from reparenting\n', scrollerID)
-                setCradleState('ready')
+                console.log('calling ready from reparenting: scrollerID, viewport isResizing\n', 
+                    scrollerID, viewportInterruptProperties.isResizing)
+
+                setTimeout(()=>{
+                    interruptHandler.pauseTriggerlinesObserver = false
+                    interruptHandler.pauseCradleIntersectionObserver = false
+                    interruptHandler.pauseCradleResizeObserver = false
+                    // pauseScrollingEffects: false,
+                    interruptHandler.pauseViewportResizing = false
+                    console.log('calling ready from reparenting')
+                    setCradleState('ready')
+                })
 
                 break
 
