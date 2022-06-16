@@ -369,8 +369,13 @@ const Cradle = ({
     // the code restores scroll as soon as cradle is invoked after reparenting
     if (viewportInterruptProperties.portal?.isReparenting) { 
 
-        viewportInterruptProperties.portal.isReparenting = false
+        console.log('reacting to isReparenting: isResizing, cradleState', 
+            viewportInterruptProperties.isResizing, cradleState)
 
+        // setCradleState('reparenting')
+
+        viewportInterruptProperties.portal.isReparenting = false
+         // viewportInterruptProperties.isResizing && (viewportInterruptProperties.isResizing = false)
         const cradlePositionData = scaffoldHandler.cradlePositionData
 
         viewportInterruptProperties.elementref.current[
@@ -466,6 +471,10 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
+        // if (cradleStateRef.current == 'reparenting') {
+        //     return            
+        // }
+
         if (viewportInterruptProperties.isResizing) {
 
             const { signals } = interruptHandler
@@ -473,6 +482,9 @@ const Cradle = ({
             signals.pauseCradleIntersectionObserver = true
             signals.pauseCradleResizeObserver = true
             signals.pauseScrollingEffects = true
+
+            console.log('calling resizing from interrupt')
+
             setCradleState('resizing')
 
         }
@@ -710,7 +722,17 @@ const Cradle = ({
 
                 break 
 
-            }          
+            }
+
+            // case 'reparenting': {
+
+            //     setTimeout(()=>{
+            //         setCradleState('ready')
+            //     },1000)
+
+            //     break
+
+            // }
 
         }
 

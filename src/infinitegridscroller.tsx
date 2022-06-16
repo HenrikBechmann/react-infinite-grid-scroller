@@ -11,6 +11,8 @@
         test changing all gridscroller parameters
 
     BUGS: 
+        - check for resize on reparenting
+        - seems to be occasional mismatch of 1 row in reparenting
 
     TODO:
         customizable scrolltracker
