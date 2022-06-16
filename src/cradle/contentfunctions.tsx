@@ -451,12 +451,12 @@ export const allocateContentList = (
 
 }
 
-export const deletePortals = (portalHandler, deleteList) => {
+export const deletePortals = (cacheHandler, deleteList) => {
 
     for (let item of deleteList) {
-        portalHandler.deletePortal(item.props.index)
+        cacheHandler.deletePortal(item.props.index)
     }
-    if (deleteList.length) portalHandler.renderPortalList()
+    if (deleteList.length) cacheHandler.renderPortalList()
 }
 
 // =====================[ acquire item ]======================

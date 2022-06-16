@@ -63,7 +63,7 @@ export default class ContentHandler {
 
         const {
 
-            portalHandler,
+            cacheHandler,
             scaffoldHandler,
             serviceHandler,
             interruptHandler,
@@ -149,7 +149,7 @@ export default class ContentHandler {
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
-        if (deleteditems.length) deletePortals(portalHandler, deleteditems)
+        if (deleteditems.length) deletePortals(cacheHandler, deleteditems)
 
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
@@ -229,7 +229,7 @@ export default class ContentHandler {
 
         // handler support
         const {
-            portalHandler, 
+            cacheHandler, 
             scrollHandler, 
             scaffoldHandler, 
             stateHandler, 
@@ -336,7 +336,7 @@ export default class ContentHandler {
 
         }
 
-        if (deletedContentItems.length) deletePortals(portalHandler, deletedContentItems)
+        if (deletedContentItems.length) deletePortals(cacheHandler, deletedContentItems)
 
         // ----------------------------------[ 5. allocate cradle content ]--------------------------
 

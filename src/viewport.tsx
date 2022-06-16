@@ -14,7 +14,7 @@ export const ViewportInterrupt = React.createContext(null) // for children
 
 import { ResizeObserver as ResizeObserverPollyfill } from '@juggle/resize-observer'
 
-import { CradlePortalsContext as ParentCradlePortalsContext } from './cradle'
+import { CradleCacheContext as ParentCradleCacheContext } from './cradle'
 
 const ResizeObserver = window['ResizeObserver'] || ResizeObserverPollyfill
 
@@ -46,7 +46,7 @@ const Viewport = ({
     viewportStateRef.current = viewportState
 
     // this is only set if viewport is a child of an infiniteScroller
-    const parentPortalHandler = useContext(ParentCradlePortalsContext);
+    const parentPortalHandler = useContext(ParentCradleCacheContext);
 
     const isMountedRef = useRef(true) // monitor for unmounted
 

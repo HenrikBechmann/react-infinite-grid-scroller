@@ -10,7 +10,7 @@ import React, {useState, useEffect, useRef} from 'react'
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
 // global scroller data, organized by session scrollerID
-export class PortalHandler {
+export class CacheHandler {
 
     //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
 

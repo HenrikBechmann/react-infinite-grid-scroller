@@ -89,7 +89,7 @@ import { ViewportInterrupt } from './viewport'
 import ScrollTracker from './scrolltracker'
 
 // support code
-import { PortalHandler, PortalList } from './cradle/portalhandler'
+import { CacheHandler, PortalList } from './cradle/cachehandler'
 import ScrollHandler from './cradle/scrollhandler'
 import StateHandler from './cradle/statehandler'
 import ContentHandler from './cradle/contenthandler'
@@ -99,7 +99,7 @@ import ServiceHandler from './cradle/servicehandler'
 import StylesHandler from './cradle/styleshandler'
 
 // for children
-export const CradlePortalsContext = React.createContext(null)
+export const CradleCacheContext = React.createContext(null)
 
 const portalrootstyle = {display:'none'} // static 
 
@@ -352,7 +352,7 @@ const Cradle = ({
 
     // make handlers directly available to cradle code
     const {
-        portalHandler,
+        cacheHandler,
         interruptHandler,
         scrollHandler,
         stateHandler,
@@ -663,7 +663,7 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = []
                 cradleContent.tailDisplayComponents = []
 
-                handlersRef.current.portalHandler.resetScrollerPortalRepository()
+                handlersRef.current.cacheHandler.resetScrollerPortalRepository()
                 
                 contentHandler.setCradleContent( cradleState )
 
@@ -764,9 +764,9 @@ const Cradle = ({
     const cradleContent = contentHandler.content
 
     // the data-type = portalroot div is the hidden portal component cache
-    return <CradlePortalsContext.Provider value = {handlersRef.current.portalHandler}>
+    return <CradleCacheContext.Provider value = {handlersRef.current.cacheHandler}>
         {(cradleStateRef.current != 'setup') && <div data-type = 'portalroot' style = { portalrootstyle }>
-            <PortalList scrollerProps = {handlersRef.current.portalHandler.scrollerProps}/>
+            <PortalList scrollerProps = {handlersRef.current.cacheHandler.scrollerProps}/>
         </div>}
 
         {((cradleStateRef.current == 'repositioningRender') || 
@@ -835,7 +835,7 @@ const Cradle = ({
             </div>
         }
         
-    </CradlePortalsContext.Provider>
+    </CradleCacheContext.Provider>
 
 } // Cradle
 
@@ -846,7 +846,7 @@ const getCradleHandlers = (cradleParameters) => {
     const createHandler = handler => new handler(cradleParameters)
 
     return {
-        portalHandler:new PortalHandler(),
+        cacheHandler:new CacheHandler(),
         interruptHandler:createHandler(InterruptHandler),
         scrollHandler:createHandler(ScrollHandler),
         stateHandler:createHandler(StateHandler),

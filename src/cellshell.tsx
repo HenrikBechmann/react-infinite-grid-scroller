@@ -9,7 +9,7 @@ import { OutPortal } from 'react-reverse-portal'
 
 import Placeholder from './placeholder'
 
-import { CradlePortalsContext } from './cradle'
+import { CradleCacheContext } from './cradle'
 
 const IDLECALLBACK_TIMEOUT = 8000 // TODO experimentally high!!
 
@@ -27,7 +27,7 @@ const CellShell = ({
     scrollerID,
 }) => {
 
-    const portalHandler = useContext(CradlePortalsContext)
+    const cacheHandler = useContext(CradleCacheContext)
     
     const [styles,saveStyles] = useState({
         overflow:'hidden',
@@ -86,7 +86,7 @@ const CellShell = ({
     // initialize cell content
     useEffect(() => {
 
-        portaldataRef.current = portalHandler.fetchOrCreatePortal(index, placeholderRef.current)
+        portaldataRef.current = cacheHandler.fetchOrCreatePortal(index, placeholderRef.current)
 
         const hasUserContent = !!portaldataRef.current.hasusercontent // previous InPortal creation for index
 
@@ -167,7 +167,7 @@ const CellShell = ({
                         if (usercontent) {
 
                             portaldataRef.current.hasusercontent = true
-                            portaldataRef.current = portalHandler.updatePortal(index,usercontent)
+                            portaldataRef.current = cacheHandler.updatePortal(index,usercontent)
                             const reverseportal = portaldataRef.current.reverseportal
                             portaldataRef.current.isReparenting = true
                             contentPortalRef.current = <OutPortal node = {reverseportal}/>
