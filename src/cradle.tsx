@@ -148,8 +148,12 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    console.log('CRADLE entering state, scrollerID, scrollerName\n',
-        cradleState, scrollerID, scrollerName)
+    // if (scrollerID == 0) {
+    //     console.log('running cradle in state',cradleState)
+    // }
+
+    // console.log('CRADLE entering state, scrollerID, scrollerName\n',
+    //     cradleState, scrollerID, scrollerName)
 
     // controls
     const isMountedRef = useRef(true)
@@ -375,8 +379,8 @@ const Cradle = ({
 
         if (!isReparentingRef.current) {
             isReparentingRef.current = true
-            console.log('reacting to isReparenting: cradleState, scrollerID, isResizing\n', 
-                cradleState, scrollerID, viewportInterruptProperties.isResizing)
+            // console.log('reacting to isReparenting: cradleState, scrollerID, isResizing\n', 
+            //     cradleState, scrollerID, viewportInterruptProperties.isResizing)
 
             interruptHandler.pauseTriggerlinesObserver = true
             interruptHandler.pauseCradleIntersectionObserver = true
@@ -505,8 +509,8 @@ const Cradle = ({
             signals.pauseCradleResizeObserver = true
             signals.pauseScrollingEffects = true
 
-            console.log('calling resizing from interrupt: scrollerID\n',
-                scrollerID)
+            // console.log('calling resizing from interrupt: scrollerID\n',
+            //     scrollerID)
 
             setCradleState('resizing')
 
@@ -651,13 +655,24 @@ const Cradle = ({
             // it is required to integrate changed DOM configurations before 'ready' is displayed
             case 'renderupdatedcontent': {
 
+
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
-                setCradleState('ready')
+                setCradleState('finishupdatedcontent')
 
                 break
 
+            }
+
+            case 'finishupdatedcontent': {
+
+                // console.log('running finishupdatedcontent')
+                interruptHandler.axisTriggerlinesIntersect.connectElements()
+                interruptHandler.signals.pauseTriggerlinesObserver = false
+                setCradleState('ready')
+
+                break
             }
 
             case 'startreposition': {
@@ -749,21 +764,32 @@ const Cradle = ({
 
             case 'reparenting': {
 
-                console.log('calling ready from reparenting: scrollerID, viewport isResizing\n', 
-                    scrollerID, viewportInterruptProperties.isResizing)
+                // console.log('calling ready from reparenting: scrollerID, viewport isResizing\n', 
+                //     scrollerID, viewportInterruptProperties.isResizing)
 
-                setTimeout(()=>{ // give reparenting a chance to complete for heavy cells
-                    interruptHandler.pauseTriggerlinesObserver = false
-                    interruptHandler.pauseCradleIntersectionObserver = false
-                    interruptHandler.pauseCradleResizeObserver = false
-                    // pauseScrollingEffects: false,
-                    interruptHandler.pauseViewportResizing = false
-                    console.log('calling ready from reparenting')
-                    setCradleState('ready')
-                })
+                setCradleState('donereparenting')
+                // setTimeout(()=>{ // give reparenting a chance to complete for heavy cells
+                //     interruptHandler.pauseTriggerlinesObserver = false
+                //     interruptHandler.pauseCradleIntersectionObserver = false
+                //     interruptHandler.pauseCradleResizeObserver = false
+                //     // pauseScrollingEffects: false,
+                //     interruptHandler.pauseViewportResizing = false
+                //     // console.log('calling ready from reparenting')
+                //     setCradleState('ready')
+                // })
 
                 break
 
+            }
+
+            case 'donereparenting': {
+                interruptHandler.pauseTriggerlinesObserver = false
+                interruptHandler.pauseCradleIntersectionObserver = false
+                interruptHandler.pauseCradleResizeObserver = false
+                // pauseScrollingEffects: false,
+                interruptHandler.pauseViewportResizing = false
+                // console.log('calling ready from reparenting')
+                setCradleState('ready')
             }
 
         }

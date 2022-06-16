@@ -92,18 +92,22 @@ export default class InterruptHandler {
         }
 
         this.signals.repositioningRequired = (!this.isHeadCradleInView && !this.isTailCradleInView)
+        // console.log('repositioningRequired SET in cradleIntersectionObserverCallback',
+        //     this.signals.repositioningRequired)
 
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
 
         if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway
         {
             const cradleState = stateHandler.cradleStateRef.current
+            // console.log('cradleState in cradleIntersectionObserverCallback: cradleState',cradleState)
             if (
                 !viewportInterruptProperties.isResizing &&
                 !viewportInterruptProperties.portal?.isReparenting &&
                 !(cradleState == 'repositioningRender') && 
                 !(cradleState == 'repositioningContinuation') &&
                 !(cradleState == 'renderupdatedcontent') && // TODO: *TEST*
+                !(cradleState == 'finishupdatedcontent') &&
                 !(cradleState == 'finishresize') &&
                 !(cradleState == 'doreposition') && 
                 !(cradleState == 'pivot')
