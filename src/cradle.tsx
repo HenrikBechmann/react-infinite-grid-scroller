@@ -641,7 +641,7 @@ const Cradle = ({
 
             // renderupdatedcontent is called from updateCradleContent. 
             // it is required to integrate changed DOM configurations before 'ready' is displayed
-            case 'renderupdatedcontent': {
+            case 'renderupdatedcontent': { // cycle for DOM update
 
 
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
@@ -653,7 +653,7 @@ const Cradle = ({
 
             }
 
-            case 'finishupdatedcontent': {
+            case 'finishupdatedcontent': { // cycle for DOM update
 
                 interruptHandler.axisTriggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseTriggerlinesObserver = false
@@ -709,7 +709,7 @@ const Cradle = ({
                 break
             }
 
-            case 'preparerender': {
+            case 'preparerender': { // cycle for DOM update
 
                 const cradleContent = contentHandler.content
 
@@ -721,7 +721,7 @@ const Cradle = ({
                 break
             }
 
-            case 'normalizesignals': {
+            case 'normalizesignals': { // normalize or resume cycling
 
                 // prioritize interrupts
                 if (viewportInterruptPropertiesRef.current.isResizing) {
@@ -757,7 +757,7 @@ const Cradle = ({
 
             }
 
-            case 'donereparenting': {
+            case 'donereparenting': { // normalize
                 interruptHandler.pauseTriggerlinesObserver = false
                 interruptHandler.pauseCradleIntersectionObserver = false
                 interruptHandler.pauseCradleResizeObserver = false
