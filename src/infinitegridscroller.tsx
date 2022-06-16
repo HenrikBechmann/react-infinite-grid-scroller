@@ -13,6 +13,7 @@
     BUGS: 
 
     TODO:
+        customizable scrolltracker
         reload from/to for insertions and substitutions
         provide user with isReparenting flag to be able to reset scroll
         check use of useCallback
