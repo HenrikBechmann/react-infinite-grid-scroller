@@ -132,9 +132,10 @@ const createInPortal = (content, index) => {
     container.setAttribute('key',index)
 
 
-    return [<InPortal node = {reversePortal}>
-        {content}
-    </InPortal>,reversePortal]
+    return [
+        <InPortal node = {reversePortal}>{content}</InPortal>,
+        reversePortal
+    ]
 
 }     
 
