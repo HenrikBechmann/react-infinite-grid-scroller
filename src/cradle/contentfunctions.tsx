@@ -365,7 +365,7 @@ export const getCellShellComponentList = ({
         listStartChangeCount, 
         listEndChangeCount, 
         localContentList:contentlist,
-        callbacks,
+        // callbacks,
         instanceIdCounterRef,
     }) => {
 
@@ -385,7 +385,7 @@ export const getCellShellComponentList = ({
                     {
                         index:newindex, 
                         cradleInheritedProperties,
-                        callbacks, 
+                        // callbacks, 
                         instanceIdCounterRef,
                     }
                 )
@@ -408,7 +408,7 @@ export const getCellShellComponentList = ({
                     {
                         index:newindex, 
                         cradleInheritedProperties,
-                        callbacks, 
+                        // callbacks, 
                         instanceIdCounterRef,
                     }
                 )
@@ -464,7 +464,7 @@ export const deletePortals = (cacheHandler, deleteList) => {
 const acquireItem = ({
     index, 
     cradleInheritedProperties,
-    callbacks, 
+    // callbacks, 
     instanceIdCounterRef,
 
 }) => {
@@ -489,7 +489,7 @@ const acquireItem = ({
         cellHeight = { cellHeight }
         cellWidth = { cellWidth }
         index = { index }
-        callbacks = {callbacks}
+        // callbacks = {callbacks}
         getItem = {getItem}
         listsize = {listsize}
         placeholder = { placeholder }

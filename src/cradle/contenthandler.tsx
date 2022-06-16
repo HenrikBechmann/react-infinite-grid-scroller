@@ -17,7 +17,7 @@ export default class ContentHandler {
 
       this.cradleParameters = cradleParameters
 
-      this.internalCallbacksRef = cradleParameters.internalCallbacksRef
+      // this.internalCallbacksRef = cradleParameters.internalCallbacksRef
 
    }
 
@@ -32,7 +32,7 @@ export default class ContentHandler {
 
     }
 
-    public itemElements = new Map()
+    // public itemElements = new Map()
 
     private cradleParameters
 
@@ -41,7 +41,7 @@ export default class ContentHandler {
     }
     private instanceIdMap = new Map()
 
-    private internalCallbacksRef
+    // private internalCallbacksRef
 
     // Two public methods - setCradleContent and updateCradleContent
 
@@ -145,7 +145,7 @@ export default class ContentHandler {
             listStartChangeCount:0,
             listEndChangeCount:cradleContentCount,
             localContentList,
-            callbacks:this.internalCallbacksRef.current,
+            // callbacks:this.internalCallbacksRef.current,
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
@@ -327,7 +327,7 @@ export default class ContentHandler {
                 listStartChangeCount,
                 listEndChangeCount,
                 cradleReferenceIndex:oldCradleReferenceIndex,
-                callbacks:this.internalCallbacksRef.current,
+                // callbacks:this.internalCallbacksRef.current,
                 instanceIdCounterRef:this.instanceIdCounterRef,
             })
         } else {

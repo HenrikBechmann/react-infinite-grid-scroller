@@ -261,27 +261,27 @@ const Cradle = ({
     // ======================[ internal and external callbacks ]=====================
 
     // utility to register or unregister cradle item elements
-    const setItemElementData = useCallback((itemElementData, registrationType) => {
+    // const setItemElementData = useCallback((itemElementData, registrationType) => {
 
-        const [index, shellref] = itemElementData
+    //     const [index, shellref] = itemElementData
 
-        if (registrationType == 'register') {
+    //     if (registrationType == 'register') {
 
-            contentHandler.itemElements.set(index,shellref)
+    //         contentHandler.itemElements.set(index,shellref)
 
-        } else if (registrationType == 'unregister') {
+    //     } else if (registrationType == 'unregister') {
 
-            contentHandler.itemElements.delete(index)
+    //         contentHandler.itemElements.delete(index)
 
-        }
+    //     }
 
-    },[])
+    // },[])
 
-    const internalCallbacksRef = useRef({
+    // const internalCallbacksRef = useRef({
 
-        setElementData:setItemElementData
+    //     setElementData:setItemElementData
 
-    })
+    // })
 
     // host callbacks
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
@@ -341,7 +341,7 @@ const Cradle = ({
         viewportInterruptPropertiesRef,
         cradleInheritedPropertiesRef, 
         cradleInternalPropertiesRef, 
-        internalCallbacksRef,
+        // internalCallbacksRef,
         externalCallbacksRef,
     }
 

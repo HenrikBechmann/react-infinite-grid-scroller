@@ -15,37 +15,37 @@ export default class ServiceHandler {
 
     public serviceCalls
 
-    public getVisibleList = () => {
+    // public getVisibleList = () => {
 
-        const {contentHandler} = this.cradleParameters.handlersRef.current        
+    //     const {contentHandler} = this.cradleParameters.handlersRef.current        
 
-        const cradleContent = contentHandler.content
-        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-        const {scaffoldHandler} = this.cradleParameters.handlersRef.current
-        const cradleElements = scaffoldHandler.elements
+    //     const cradleContent = contentHandler.content
+    //     const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+    //     const {scaffoldHandler} = this.cradleParameters.handlersRef.current
+    //     const cradleElements = scaffoldHandler.elements
 
-        return getVisibleItemsList({
-            itemElementMap:contentHandler.itemElements,
-            viewportElement:viewportInterruptProperties.elementref.current,
-            cradleElements, 
-            cradleProps:this.cradleParameters.cradleInheritedPropertiesRef.current,
-            cradleContent,
-        })
+    //     return getVisibleItemsList({
+    //         itemElementMap:contentHandler.itemElements,
+    //         viewportElement:viewportInterruptProperties.elementref.current,
+    //         cradleElements, 
+    //         cradleProps:this.cradleParameters.cradleInheritedPropertiesRef.current,
+    //         cradleContent,
+    //     })
 
-    }
+    // }
 
-    public getContentList = () => {
-        const { contentHandler } = this.cradleParameters.handlersRef.current
-        const contentlist = Array.from(contentHandler.itemElements)
+    // public getContentList = () => {
+    //     const { contentHandler } = this.cradleParameters.handlersRef.current
+    //     const contentlist = Array.from(contentHandler.itemElements)
 
-        contentlist.sort((a,b)=>{
-            return (a[0] < b[0])?
-                -1:
-                1
-        })
+    //     contentlist.sort((a,b)=>{
+    //         return (a[0] < b[0])?
+    //             -1:
+    //             1
+    //     })
 
-        return contentlist
-    }
+    //     return contentlist
+    // }
 
     // TODO: adjust axisPixelOffset to match new data
     public reload = () => {

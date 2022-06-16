@@ -18,7 +18,7 @@ const CellShell = ({
     cellHeight, 
     cellWidth, 
     index, 
-    callbacks, 
+    // callbacks, 
     getItem, 
     listsize, 
     placeholder, 
@@ -123,19 +123,19 @@ const CellShell = ({
     },[])
 
     // initialize callbacks
-    useEffect(() => {
+    // useEffect(() => {
 
-        const localcalls = callbacks
+    //     const localcalls = callbacks
 
-        localcalls.setElementData && localcalls.setElementData(getElementData(),'register')
+    //     localcalls.setElementData && localcalls.setElementData(getElementData(),'register')
 
-        return (()=>{
+    //     return (()=>{
 
-            localcalls.setElementData && localcalls.setElementData(getElementData(),'unregister')
+    //         localcalls.setElementData && localcalls.setElementData(getElementData(),'unregister')
 
-        })
+    //     })
 
-    },[callbacks])
+    // },[callbacks])
 
     // ---------------------[ end of configure observer ]-------------------------
 
