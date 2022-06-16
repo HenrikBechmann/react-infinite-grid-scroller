@@ -752,7 +752,7 @@ const Cradle = ({
                 console.log('calling ready from reparenting: scrollerID, viewport isResizing\n', 
                     scrollerID, viewportInterruptProperties.isResizing)
 
-                setTimeout(()=>{
+                setTimeout(()=>{ // give reparenting a chance to complete for heavy cells
                     interruptHandler.pauseTriggerlinesObserver = false
                     interruptHandler.pauseCradleIntersectionObserver = false
                     interruptHandler.pauseCradleResizeObserver = false
