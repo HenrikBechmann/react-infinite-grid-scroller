@@ -397,15 +397,17 @@ const Cradle = ({
 
         if (!functions.getCallbacks) return
 
-        const {scrollToItem, getVisibleList, getContentList, reload} = serviceHandler
+        // const {scrollToItem, getVisibleList, getContentList, reload} = serviceHandler
+        const {scrollToItem, reload} = serviceHandler
 
         const callbacks = {
             scrollToItem,
-            getVisibleList,
-            getContentList,
+            // getVisibleList,
+            // getContentList,
             reload,
         }
 
+        console.log('sending callbacks', callbacks)
         functions.getCallbacks(callbacks)
 
     },[])

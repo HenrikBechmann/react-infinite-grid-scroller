@@ -11,8 +11,10 @@
         test changing all gridscroller parameters
 
     BUGS: 
-        - check for resize on reparenting
-        - seems to be occasional mismatch of 1 row in reparenting
+        - does portal need to be returned to cache?
+        - nested lists need to have orientation property changed on pivot
+        - clearCache user callback to anticipate different dataset?
+        - or clearCache with new getItem function
 
     TODO:
         customizable scrolltracker
@@ -126,7 +128,7 @@ const InfiniteGridScroller = (props) => {
         orientation = 'vertical'
     }
     if (!['preload','keepload','cradle'].includes(cache)) {
-        cache = 'cradle'
+        cache = 'keepload'
     }
     // TODO: rationalize with cellHeight & cellWidth; must be less than half
     triggerlineOffset ?? (triggerlineOffset = 10) 
