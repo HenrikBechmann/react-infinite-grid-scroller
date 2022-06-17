@@ -114,10 +114,10 @@ const Cradle = ({
         placeholder, 
         functions,
         styles,
-
+        triggerlineOffset,
+        // for debugging
         scrollerName,
         scrollerID,
-        triggerlineOffset,
     }) => {
 
     if (listsize == 0) return // nothing to do
@@ -132,7 +132,6 @@ const Cradle = ({
         cellHeight,
         cellWidth,
         layout,
-        // dense,
     } = gridSpecs
 
     // get viewport context
@@ -301,7 +300,6 @@ const Cradle = ({
         cellHeight, 
         cellWidth, 
         layout,
-        // dense,
         // ...rest
         listsize, 
         defaultVisibleIndex, 
@@ -341,7 +339,7 @@ const Cradle = ({
         viewportInterruptPropertiesRef,
         cradleInheritedPropertiesRef, 
         cradleInternalPropertiesRef, 
-        // internalCallbacksRef,
+        // internalCallbacksRef, // n/a
         externalCallbacksRef,
     }
 
@@ -696,7 +694,7 @@ const Cradle = ({
                 cradleContent.headModelComponents = []
                 cradleContent.tailModelComponents = []
 
-                // register new array id for Object.is for react
+                // register new array id for Object.is to trigger react re-processing
                 cradleContent.headDisplayComponents = []
                 cradleContent.tailDisplayComponents = []
 

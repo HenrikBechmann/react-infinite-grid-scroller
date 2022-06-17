@@ -74,7 +74,6 @@ const InfiniteGridScroller = (props) => {
         cellHeight, // the outer pixel height - literal for vertical; approximate for horizontal
         cellWidth, // the outer pixel width - literal for horizontal; approximate for vertical
         layout, // uniform, variable (doesn't use axis), dynamic (uses axis), dense
-        // dense, // boolean (only with preload)
 
         runwaySize, // the number of items outside the view of each side of the viewport 
             // -- gives time to assemble before display
@@ -103,7 +102,6 @@ const InfiniteGridScroller = (props) => {
         cellHeight,
         cellWidth,
         layout,
-        // dense,
     }
 
     // allow scrollerID to be set by useEffect. Inline setting causes double processing
@@ -120,7 +118,6 @@ const InfiniteGridScroller = (props) => {
     listSize ?? (listSize = 0)
     listSize = Math.max(0,listSize)
     layout ?? (layout = 'uniform')
-    // dense ?? (dense = false)
     cache ?? (cache = 'cradle')
     // constraints
     indexOffset = Math.max(0,indexOffset) // non-negative
