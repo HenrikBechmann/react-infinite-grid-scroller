@@ -149,6 +149,8 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
+    console.log('cradleState, cache',cradleState, cache)
+
     // controls
     const isMountedRef = useRef(true)
 
@@ -492,7 +494,7 @@ const Cradle = ({
 
     },[viewportInterruptProperties.isResizing])
 
-    // reload for changed size parameters
+    // reconfigure for changed size parameters
     useEffect(()=>{
 
         if (cradleStateRef.current == 'setup') return
@@ -679,8 +681,12 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = []
                 cradleContent.tailDisplayComponents = []
 
-                cacheHandler.resetCache()
-                
+                if (cache == 'cradle') {
+                    if ((cradleState == 'doreposition') || (cradleState == 'reload')) {
+                        cacheHandler.resetCache()
+                    }
+                }
+
                 contentHandler.setCradleContent( cradleState )
 
                 setCradleState('preparerender')
