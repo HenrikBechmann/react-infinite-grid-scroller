@@ -17,8 +17,6 @@ export default class ContentHandler {
 
       this.cradleParameters = cradleParameters
 
-      // this.internalCallbacksRef = cradleParameters.internalCallbacksRef
-
    }
 
    public content = {
@@ -40,8 +38,6 @@ export default class ContentHandler {
        current:0
     }
     private instanceIdMap = new Map()
-
-    // private internalCallbacksRef
 
     // Two public methods - setCradleContent and updateCradleContent
 
@@ -86,7 +82,8 @@ export default class ContentHandler {
             gap, 
             padding, 
             cellHeight,
-            cellWidth
+            cellWidth,
+            cache,
         } = cradleInheritedProperties
 
         if ((cradleState == 'doreposition') || cradleState == 'reconfigure')  {
@@ -145,11 +142,12 @@ export default class ContentHandler {
             listStartChangeCount:0,
             listEndChangeCount:cradleContentCount,
             localContentList,
-            // callbacks:this.internalCallbacksRef.current,
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
-        if (deleteditems.length) deletePortals(cacheHandler, deleteditems)
+        if (deleteditems.length && (cache == 'cradle')) {
+            deletePortals(cacheHandler, deleteditems)
+        }
 
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
@@ -257,7 +255,10 @@ export default class ContentHandler {
         // --------------------[ 2. get shift instruction ]-----------------------
 
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const orientation = cradleInheritedProperties.orientation
+        const { 
+            orientation, 
+            cache,
+        } = cradleInheritedProperties
 
         // -1 is move a row up to the head, +1 is move a row down to the tail, 0 is no shift
         const shiftinstruction = getShiftInstruction({
@@ -327,16 +328,20 @@ export default class ContentHandler {
                 listStartChangeCount,
                 listEndChangeCount,
                 cradleReferenceIndex:oldCradleReferenceIndex,
-                // callbacks:this.internalCallbacksRef.current,
                 instanceIdCounterRef:this.instanceIdCounterRef,
             })
+
         } else {
 
             updatedContentList = modelcontentlist
 
         }
 
-        if (deletedContentItems.length) deletePortals(cacheHandler, deletedContentItems)
+        if (deletedContentItems.length && (cache == 'cradle')) {
+
+            deletePortals(cacheHandler, deletedContentItems)
+
+        }
 
         // ----------------------------------[ 5. allocate cradle content ]--------------------------
 

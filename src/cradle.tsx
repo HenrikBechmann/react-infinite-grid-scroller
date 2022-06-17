@@ -259,30 +259,7 @@ const Cradle = ({
         crosscount,
     ])
 
-    // ======================[ internal and external callbacks ]=====================
-
-    // utility to register or unregister cradle item elements
-    // const setItemElementData = useCallback((itemElementData, registrationType) => {
-
-    //     const [index, shellref] = itemElementData
-
-    //     if (registrationType == 'register') {
-
-    //         contentHandler.itemElements.set(index,shellref)
-
-    //     } else if (registrationType == 'unregister') {
-
-    //         contentHandler.itemElements.delete(index)
-
-    //     }
-
-    // },[])
-
-    // const internalCallbacksRef = useRef({
-
-    //     setElementData:setItemElementData
-
-    // })
+    // ======================[ callbacks ]=====================
 
     // host callbacks
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
