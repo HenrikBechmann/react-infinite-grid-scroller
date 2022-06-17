@@ -122,21 +122,6 @@ const CellShell = ({
         
     },[])
 
-    // initialize callbacks
-    // useEffect(() => {
-
-    //     const localcalls = callbacks
-
-    //     localcalls.setElementData && localcalls.setElementData(getElementData(),'register')
-
-    //     return (()=>{
-
-    //         localcalls.setElementData && localcalls.setElementData(getElementData(),'unregister')
-
-    //     })
-
-    // },[callbacks])
-
     // ---------------------[ end of configure observer ]-------------------------
 
     // set styles
