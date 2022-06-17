@@ -115,6 +115,8 @@ const Cradle = ({
         functions,
         styles,
         triggerlineOffset,
+        cache,
+        cacheMax,
         // for debugging
         scrollerName,
         scrollerID,
@@ -302,15 +304,17 @@ const Cradle = ({
         layout,
         // ...rest
         listsize, 
+        cache,
+        cacheMax,
         defaultVisibleIndex, 
         getItem, 
         placeholder, 
+        triggerlineOffset,
         scrollerName,
         scrollerID,
         // objects
         functions,
         styles,
-        triggerlineOffset,
 
     }
 

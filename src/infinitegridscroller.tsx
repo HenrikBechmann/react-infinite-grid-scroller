@@ -3,7 +3,7 @@
 
 /*
     ROADMAP:
-        setCradleContent draws from cache
+        cache management
         suspense analog
         review all code
         modes: uniform, variable, dynamic
@@ -125,6 +125,9 @@ const InfiniteGridScroller = (props) => {
     if (!['horizontal','vertical'].includes(orientation)) {
         orientation = 'vertical'
     }
+    if (!['preload','keepload','cradle'].includes(cache)) {
+        cache = 'cradle'
+    }
     // TODO: rationalize with cellHeight & cellWidth; must be less than half
     triggerlineOffset ?? (triggerlineOffset = 10) 
 
@@ -195,6 +198,8 @@ const InfiniteGridScroller = (props) => {
                     scrollerName = { scrollerName }
 
                     listsize = { listSize }
+                    cache = {cache}
+                    cacheMax = {cacheMax}
 
                     functions = { functionsRef.current }
                     defaultVisibleIndex = { defaultVisibleIndex }
