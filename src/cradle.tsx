@@ -685,7 +685,7 @@ const Cradle = ({
 
                 if (cache == 'cradle') {
                     if ((cradleState == 'doreposition') || (cradleState == 'reload')) {
-                        cacheHandler.resetCache()
+                        cacheHandler.clearCache()
                     }
                 }
 

@@ -24,7 +24,7 @@ export class CacheHandler {
 
     // initialize scroller repository
 
-    resetCache = () => {
+    clearCache = () => {
 
         // keep the setListState callback
         this.scrollerProps.portalMap.clear() 
