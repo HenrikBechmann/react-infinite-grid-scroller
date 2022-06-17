@@ -700,7 +700,7 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = []
                 cradleContent.tailDisplayComponents = []
 
-                handlersRef.current.cacheHandler.resetCache()
+                cacheHandler.resetCache()
                 
                 contentHandler.setCradleContent( cradleState )
 
