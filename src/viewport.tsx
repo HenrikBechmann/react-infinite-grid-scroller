@@ -37,7 +37,7 @@ const Viewport = ({
         cellHeight,
         cellWidth,
         layout,
-        dense,
+        // dense,
     } = gridSpecs
 
     const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, render
