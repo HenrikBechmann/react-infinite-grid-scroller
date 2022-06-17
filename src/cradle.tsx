@@ -132,7 +132,7 @@ const Cradle = ({
         cellHeight,
         cellWidth,
         layout,
-        dense,
+        // dense,
     } = gridSpecs
 
     // get viewport context
@@ -301,7 +301,7 @@ const Cradle = ({
         cellHeight, 
         cellWidth, 
         layout,
-        dense,
+        // dense,
         // ...rest
         listsize, 
         defaultVisibleIndex, 
@@ -380,7 +380,7 @@ const Cradle = ({
             interruptHandler.pauseViewportResizing = true
 
              // viewportInterruptProperties.isResizing && (viewportInterruptProperties.isResizing = false)
-            const cradlePositionData = scaffoldHandler.cradlePositionData
+            const { cradlePositionData } = scaffoldHandler
 
             viewportInterruptProperties.elementref.current[
                 cradlePositionData.blockScrollProperty] =
@@ -700,7 +700,7 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = []
                 cradleContent.tailDisplayComponents = []
 
-                handlersRef.current.cacheHandler.resetScrollerPortalRepository()
+                handlersRef.current.cacheHandler.resetCache()
                 
                 contentHandler.setCradleContent( cradleState )
 
