@@ -350,9 +350,15 @@ const Cradle = ({
     // the code restores scroll as soon as cradle is invoked after reparenting
     const isReparentingRef = useRef(false)
     const dimensions = viewportInterruptProperties.elementref.current.getBoundingClientRect()
+    const {width, height} = dimensions
+    console.log('dimensions for scrollerID, width, height, isReparentingRef.current', scrollerID, width, height, isReparentingRef.current)
     if ((!isReparentingRef.current) && (dimensions.height == 0) && (dimensions.width == 0)) {
         console.log('SETTING isReparentingRef.current to true for scrollerID', scrollerID)
         isReparentingRef.current = true
+    }
+    if ((isReparentingRef.current) && (dimensions.height != 0) && (dimensions.width != 0)) {
+        console.log('UNsetting isReparentingRef.current to true for scrollerID', scrollerID)
+        isReparentingRef.current = false
     }
     // if (viewportInterruptProperties.portal?.isReparenting) { 
     if (isReparentingRef.current) {
@@ -773,12 +779,12 @@ const Cradle = ({
 
             case 'donereparenting': { // normalize
 
-                setTimeout(()=>{
+                // setTimeout(()=>{
                     
                     const dimensions = viewportInterruptPropertiesRef.current.elementref.current.getBoundingClientRect()
 
                     const {width, height} = dimensions
-                    console.log('dimensions width and height in donereparenting', width, height)
+                    console.log('dimensions width and height, scrollerID in DONEREPARENTING', width, height, scrollerID)
 
                     // if (width == 0 && height == 0) {
                     //     setCradleState('reparenting')
@@ -795,7 +801,7 @@ const Cradle = ({
                     interruptHandler.pauseViewportResizing = false
 
                     setCradleState('ready')
-                })
+                // })
 
                 break
             }
@@ -812,6 +818,7 @@ const Cradle = ({
             case 'reparenting': { // cycle for DOM update
 
                 // isReparentingRef.current = false
+                console.log('reparenting state for scrollerID', scrollerID)
                 setCradleState('donereparenting')
 
                 break

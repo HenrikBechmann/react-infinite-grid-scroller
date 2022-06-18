@@ -155,7 +155,8 @@ const CellShell = ({
 
                 if (isPortal) {
 
-                    console.log('fetching portal')
+                    console.log('fetching portal for scrollerID, instanceID, index', 
+                        scrollerID, instanceID, index)
 
                     portaldataRef.current = cacheHandler.fetchPortal(index)
 
