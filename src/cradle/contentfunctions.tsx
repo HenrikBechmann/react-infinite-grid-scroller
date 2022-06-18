@@ -41,7 +41,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     } = cradleInternalProperties
     
     // align axis reference to first row item
-    const origrefindex = targetAxisReferenceIndex
+    // const origrefindex = targetAxisReferenceIndex
     targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex,listsize - 1)
     targetAxisReferenceIndex -= (targetAxisReferenceIndex % crosscount)
 

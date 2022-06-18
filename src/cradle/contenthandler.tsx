@@ -84,14 +84,29 @@ export default class ContentHandler {
             cellHeight,
             cellWidth,
             cache,
+            listsize,
         } = cradleInheritedProperties
+
+        const {crosscount} = cradleInternalProperties
+
+        let workingAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
+        workingAxisReferenceIndex -= (workingAxisReferenceIndex % crosscount)
+
+        // console.log('cradleState in setCradleContent; workingAxisReferenceIndex',
+        //     cradleState, workingAxisReferenceIndex)
 
         if ((cradleState == 'doreposition') || cradleState == 'reconfigure')  {
 
-            targetAxisPixelOffset = gap // default
+            targetAxisPixelOffset = 
+                (workingAxisReferenceIndex == 0)?
+                    padding:
+                    gap // default
 
         }
 
+        // console.log('cradleState in setCradleContent; workingAxisReferenceIndex, targetAxisPixelOffset',
+        //     cradleState, workingAxisReferenceIndex, targetAxisPixelOffset)
+        
         const workingContentList = []
         const cradleContent = this.content
 

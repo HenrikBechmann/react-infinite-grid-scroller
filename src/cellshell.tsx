@@ -155,8 +155,8 @@ const CellShell = ({
 
                 if (isPortal) {
 
-                    console.log('fetching portal for scrollerID, instanceID, index', 
-                        scrollerID, instanceID, index)
+                    // console.log('fetching portal for scrollerID, instanceID, index', 
+                    //     scrollerID, instanceID, index)
 
                     portaldataRef.current = cacheHandler.fetchPortal(index)
 
@@ -191,7 +191,7 @@ const CellShell = ({
 
                         // } else {
 
-                            console.log('fetching new content')
+                            // console.log('fetching new content')
 
                             const usercontent = await getItem(index)
 

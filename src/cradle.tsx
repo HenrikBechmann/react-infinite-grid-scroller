@@ -149,7 +149,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    console.log('ENTERING cradleState, scrollerID',cradleState, scrollerID)
+    console.log('ENTERING cradleState, scrollerID',cradleState, '-' + scrollerID + '-')
 
     // controls
     const isMountedRef = useRef(true)
@@ -351,13 +351,13 @@ const Cradle = ({
     const isReparentingRef = useRef(false)
     const dimensions = viewportInterruptProperties.elementref.current.getBoundingClientRect()
     const {width, height} = dimensions
-    console.log('dimensions for scrollerID, width, height, isReparentingRef.current', scrollerID, width, height, isReparentingRef.current)
+    console.log('dimensions for scrollerID, width, height, isReparentingRef.current', '-' + scrollerID + '-', width, height, isReparentingRef.current)
     if ((!isReparentingRef.current) && (dimensions.height == 0) && (dimensions.width == 0)) {
-        console.log('SETTING isReparentingRef.current to true for scrollerID', scrollerID)
+        console.log('SETTING isReparentingRef.current to true for scrollerID', '-' + scrollerID + '-')
         isReparentingRef.current = true
     }
     if ((isReparentingRef.current) && (dimensions.height != 0) && (dimensions.width != 0)) {
-        console.log('UNsetting isReparentingRef.current to true for scrollerID', scrollerID)
+        console.log('UNsetting isReparentingRef.current to true for scrollerID', '-' + scrollerID + '-')
         isReparentingRef.current = false
     }
     // if (viewportInterruptProperties.portal?.isReparenting) { 
@@ -512,7 +512,7 @@ const Cradle = ({
             signals.pauseCradleResizeObserver = true
             signals.pauseScrollingEffects = true
  
-            console.log('CALLING resizing in isResizing effect, scrollerID', scrollerID)
+            console.log('CALLING resizing in isResizing effect, scrollerID', '-' + scrollerID + '-')
             setCradleState('resizing')
 
         }
@@ -784,7 +784,7 @@ const Cradle = ({
                     const dimensions = viewportInterruptPropertiesRef.current.elementref.current.getBoundingClientRect()
 
                     const {width, height} = dimensions
-                    console.log('dimensions width and height, scrollerID in DONEREPARENTING', width, height, scrollerID)
+                    console.log('dimensions width and height, scrollerID in DONEREPARENTING', width, height, '-' + scrollerID + '-')
 
                     // if (width == 0 && height == 0) {
                     //     setCradleState('reparenting')
@@ -818,7 +818,7 @@ const Cradle = ({
             case 'reparenting': { // cycle for DOM update
 
                 // isReparentingRef.current = false
-                console.log('reparenting state for scrollerID', scrollerID)
+                console.log('reparenting state for scrollerID', '-' + scrollerID + '-')
                 setCradleState('donereparenting')
 
                 break
