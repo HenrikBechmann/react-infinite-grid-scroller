@@ -675,7 +675,6 @@ const Cradle = ({
 
                 const cradleContent = contentHandler.content
 
-                // TODO: retain existing portals to the extent possible
                 cradleContent.headModelComponents = []
                 cradleContent.tailModelComponents = []
 
@@ -683,17 +682,15 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = []
                 cradleContent.tailDisplayComponents = []
 
-                // if (cache == 'cradle') {
-                //     if ((cradleState == 'doreposition') || (cradleState == 'reload')) {
-                //         cacheHandler.clearCache()
-                //     }
-                // }
-
                 if (cradleState == 'reload') {
                     cacheHandler.clearCache()
                 }
 
                 contentHandler.setCradleContent( cradleState )
+
+                // if (cache == 'cradle') {
+                //     cacheHandler.matchCacheToCradle
+                // }
 
                 setCradleState('preparerender')
 

@@ -92,7 +92,7 @@ export default class ContentHandler {
 
         }
 
-        const localContentList = []
+        const workingContentList = []
         const cradleContent = this.content
 
         // ----------------------[ 2. get content requirements ]----------------------
@@ -133,7 +133,7 @@ export default class ContentHandler {
         // ----------------------[ 3. get and config content ]----------------------
         
         // returns content constrained by cradleRowcount
-        const [childlist,deleteditems] = getCellShellComponentList({
+        const [newcontentlist,deleteditems] = getCellShellComponentList({
 
             cradleInheritedProperties,
             // cradleInternalProperties,
@@ -141,7 +141,7 @@ export default class ContentHandler {
             cradleReferenceIndex:targetCradleReferenceIndex,
             listStartChangeCount:0,
             listEndChangeCount:cradleContentCount,
-            localContentList,
+            workingContentList,
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
@@ -151,12 +151,12 @@ export default class ContentHandler {
 
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
-            contentlist:childlist,
+            contentlist:newcontentlist,
             axisReferenceIndex:targetAxisReferenceIndex,
     
         })
 
-        cradleContent.cradleModelComponents = childlist
+        cradleContent.cradleModelComponents = newcontentlist
         cradleContent.headModelComponents = headcontentlist
         cradleContent.tailModelComponents = tailcontentlist
 
@@ -324,7 +324,7 @@ export default class ContentHandler {
                 cradleInheritedProperties,
                 // cradleInternalProperties,
                 cradleContentCount,
-                localContentList:modelcontentlist,
+                workingContentList:modelcontentlist,
                 listStartChangeCount,
                 listEndChangeCount,
                 cradleReferenceIndex:oldCradleReferenceIndex,

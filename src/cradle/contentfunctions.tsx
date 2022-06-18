@@ -364,7 +364,7 @@ export const getCellShellComponentList = ({
         cradleReferenceIndex, 
         listStartChangeCount, 
         listEndChangeCount, 
-        localContentList:contentlist,
+        workingContentList:contentlist,
         // callbacks,
         instanceIdCounterRef,
     }) => {
