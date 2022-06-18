@@ -153,42 +153,42 @@ const CellShell = ({
                 // console.log('cellShell dimensions',dimensions)
                 const isPortal = cacheHandler.hasPortal(index)
 
-                // if (isPortal) {
+                if (isPortal) {
 
-                //     console.log('fetching portal')
+                    console.log('fetching portal')
 
-                //     portaldataRef.current = cacheHandler.fetchPortal(index)
+                    portaldataRef.current = cacheHandler.fetchPortal(index)
 
-                //     const { reverseportal } = portaldataRef.current
+                    const { reverseportal } = portaldataRef.current
 
-                //     portaldataRef.current.isReparenting = true
+                    // portaldataRef.current.isReparenting = true
 
-                //     contentRef.current = <OutPortal node = {reverseportal}/>
+                    contentRef.current = <OutPortal node = {reverseportal}/>
 
-                //     setCellStatus('ready')
+                    setCellStatus('ready')
 
-                // } else {
+                } else {
 
                     setCellStatus('waiting')
 
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
 
-                        if (isPortal) {
+                        // if (isPortal) {
 
-                            console.log('fetching portal')
+                        //     console.log('fetching portal')
 
-                            portaldataRef.current = cacheHandler.fetchPortal(index)
+                        //     portaldataRef.current = cacheHandler.fetchPortal(index)
 
-                            const { reverseportal } = portaldataRef.current
+                        //     const { reverseportal } = portaldataRef.current
 
-                            // portaldataRef.current.isReparenting = true
+                        //     // portaldataRef.current.isReparenting = true
 
-                            contentRef.current = <OutPortal node = {reverseportal}/>
+                        //     contentRef.current = <OutPortal node = {reverseportal}/>
 
-                            setCellStatus('ready')
+                        //     setCellStatus('ready')
 
-                        } else {
+                        // } else {
 
                             console.log('fetching new content')
 
@@ -212,13 +212,13 @@ const CellShell = ({
 
                             }
 
-                        }
+                        // }
 
                         setCellStatus('ready')
 
                     },{timeout:IDLECALLBACK_TIMEOUT})
 
-                // }
+                }
 
                 // console.log('contentRef.current',contentRef.current)
 
