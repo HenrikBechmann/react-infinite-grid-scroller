@@ -149,7 +149,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    console.log('cradleState, cache',cradleState, cache)
+    // console.log('cradleState, cache',cradleState, cache)
 
     // controls
     const isMountedRef = useRef(true)
@@ -407,7 +407,7 @@ const Cradle = ({
             reload,
         }
 
-        console.log('sending callbacks', callbacks)
+        // console.log('sending callbacks', callbacks)
         functions.getCallbacks(callbacks)
 
     },[])

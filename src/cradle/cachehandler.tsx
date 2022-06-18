@@ -49,7 +49,7 @@ export class CacheHandler {
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
     // add a portal list item. The index is the scroller's portal dataset index
-    fetchOrCreatePortal(index, content) { // content is used for new portal only
+    fetchPortal(index, content) { // content is used for new portal only
 
         if (this.hasPortal(index)) {
             return this.getPortal(index)

@@ -50,7 +50,7 @@ export default class ServiceHandler {
     // TODO: adjust axisPixelOffset to match new data
     public reload = () => {
 
-        console.log('calling reload state from serviceHandler')
+        // console.log('calling reload state from serviceHandler')
 
         const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
         const { stateHandler } = this.cradleParameters.handlersRef.current
