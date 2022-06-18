@@ -773,20 +773,29 @@ const Cradle = ({
 
             case 'donereparenting': { // normalize
 
-                const dimensions = viewportInterruptPropertiesRef.current.elementref.current.getBoundingClientRect()
+                setTimeout(()=>{
+                    
+                    const dimensions = viewportInterruptPropertiesRef.current.elementref.current.getBoundingClientRect()
 
-                console.log('dimensions width and height in donereparenting', dimensions.width, dimensions.height)
+                    const {width, height} = dimensions
+                    console.log('dimensions width and height in donereparenting', width, height)
 
-                isReparentingRef.current = false
-                // viewportInterruptPropertiesRef.current.portal.isReparenting = false
+                    // if (width == 0 && height == 0) {
+                    //     setCradleState('reparenting')
+                    //     return
+                    // }
 
-                interruptHandler.pauseTriggerlinesObserver = false
-                interruptHandler.pauseCradleIntersectionObserver = false
-                interruptHandler.pauseCradleResizeObserver = false
-                // pauseScrollingEffects: false,
-                interruptHandler.pauseViewportResizing = false
+                    isReparentingRef.current = false
+                    // viewportInterruptPropertiesRef.current.portal.isReparenting = false
 
-                setCradleState('ready')
+                    interruptHandler.pauseTriggerlinesObserver = false
+                    interruptHandler.pauseCradleIntersectionObserver = false
+                    interruptHandler.pauseCradleResizeObserver = false
+                    // pauseScrollingEffects: false,
+                    interruptHandler.pauseViewportResizing = false
+
+                    setCradleState('ready')
+                })
 
                 break
             }

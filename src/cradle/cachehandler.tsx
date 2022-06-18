@@ -126,8 +126,8 @@ const createInPortal = (content, index) => {
     let container = reversePortal.element
     // container.style.inset = '0px' 
     // container.style.position = 'absolute'
-    container.style.height = '400px'
-    container.style.width = '308px'
+    container.style.height = '100%'
+    container.style.width = '100%'
     container.dataset.type = 'portalcontainer'
     container.dataset.index = index
 
