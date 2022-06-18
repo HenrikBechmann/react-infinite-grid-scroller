@@ -142,7 +142,7 @@ const CellShell = ({
     // const contentPortalRef = useRef(null)
     const contentRef = useRef(null)
 
-    useLayoutEffect(() => {
+    useEffect(() => {
 
         switch (cellStatus) {
             case 'setup':
@@ -168,7 +168,7 @@ const CellShell = ({
                     } else {
 
                         console.log('fetching new content')
-                        
+
                         const usercontent = await getItem(index)
 
                         if (isMountedRef.current) {
@@ -193,6 +193,8 @@ const CellShell = ({
                     }
 
                     setCellStatus('ready')
+
+                    // portaldataRef.current.isReparenting = true
 
                 },{timeout:IDLECALLBACK_TIMEOUT})
 
