@@ -35,7 +35,7 @@ const CellShell = ({
 
     const [cellStatus, setCellStatus] = useState('setup'); 
 
-    console.log('cell instanceID, cellStatus', instanceID, cellStatus)
+    // console.log('cell instanceID, cellStatus', instanceID, cellStatus)
 
     const shellRef = useRef(null)
 
@@ -142,30 +142,34 @@ const CellShell = ({
     // const contentPortalRef = useRef(null)
     const contentRef = useRef(null)
 
-    useEffect(() => {
+    useLayoutEffect(() => {
 
         switch (cellStatus) {
             case 'setup':
                 // no-op
                 break
             case 'getusercontent': {
-                requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
+                const isPortal = cacheHandler.hasPortal(index)
 
-                    portaldataRef.current = cacheHandler.fetchPortal(index, placeholderRef.current)
+                if (isPortal) {
+
+                    console.log('fetching portal')
+
+                    portaldataRef.current = cacheHandler.fetchPortal(index)
 
                     const { reverseportal } = portaldataRef.current
 
-                    const hasUserContent = !!portaldataRef.current.hasusercontent // previous InPortal creation for index
+                    portaldataRef.current.isReparenting = true
 
-                    if (hasUserContent) {
+                    contentRef.current = <OutPortal node = {reverseportal}/>
 
-                        console.log('fetching portal')
+                    setCellStatus('ready')
 
-                        contentRef.current = <OutPortal node = {reverseportal}/>
+                } else {
 
-                        portaldataRef.current.isReparenting = true
+                    setCellStatus('waiting')
 
-                    } else {
+                    requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
                         console.log('fetching new content')
 
@@ -175,11 +179,10 @@ const CellShell = ({
 
                             if (usercontent) {
 
-                                portaldataRef.current.hasusercontent = true
-                                portaldataRef.current = cacheHandler.updatePortal(index,usercontent)
+                                portaldataRef.current = cacheHandler.fetchPortal(index, usercontent)
 
-                                // const reverseportal = portaldataRef.current.reverseportal
-                                portaldataRef.current.isReparenting = true
+                                const { reverseportal } = portaldataRef.current
+
                                 contentRef.current = <OutPortal node = {reverseportal}/>
 
                             } else {
@@ -190,19 +193,24 @@ const CellShell = ({
 
                         }
 
-                    }
+                        setCellStatus('ready')
 
-                    setCellStatus('ready')
+                    },{timeout:IDLECALLBACK_TIMEOUT})
 
-                    // portaldataRef.current.isReparenting = true
+                }
 
-                },{timeout:IDLECALLBACK_TIMEOUT})
+                // console.log('contentRef.current',contentRef.current)
 
-                setCellStatus('waiting')
+                // setCellStatus('acquired')
 
                 break
             }
 
+            case 'waiting': {
+
+                break
+
+            }
         }
 
     }, [cellStatus])
@@ -212,10 +220,8 @@ const CellShell = ({
 
         switch (cellStatus) {
 
-            case 'waiting': {
-                break
-            }
             case 'ready': {
+
                 break
             }
         }

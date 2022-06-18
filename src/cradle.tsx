@@ -353,6 +353,10 @@ const Cradle = ({
 
         if (!isReparentingRef.current) {
             isReparentingRef.current = true
+            viewportInterruptProperties.portal.isReparenting = false
+            // setCradleState('reparenting')
+
+            // isReparentingRef.current = true
 
             interruptHandler.pauseTriggerlinesObserver = true
             interruptHandler.pauseCradleIntersectionObserver = true
@@ -471,9 +475,9 @@ const Cradle = ({
 
         if (interruptHandler.pauseViewportResizing) return
 
-        // if (cradleStateRef.current == 'reparenting') {
-        //     return            
-        // }
+        if (cradleStateRef.current == 'reparenting') {
+            return            
+        }
 
         if (viewportInterruptProperties.isResizing) {
 
