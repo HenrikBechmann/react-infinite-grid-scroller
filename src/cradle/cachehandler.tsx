@@ -77,18 +77,18 @@ export class CacheHandler {
     }
 
     // update the content of a portal list item
-    updatePortal(index, content) {
-        const portalMetadata = this.getPortal(index)
+    // updatePortal(index, content) {
+    //     const portalMetadata = this.getPortal(index)
 
-        const portalComponent = updateInPortal(content, portalMetadata.reverseportal )
+    //     const portalComponent = updateInPortal(content, portalMetadata.reverseportal )
 
-        this.scrollerProps.portalMap.set(index,<PortalWrapper inportal = {portalComponent} key = {index} index = {index}/>)
-        this.scrollerProps.modified = true
+    //     this.scrollerProps.portalMap.set(index,<PortalWrapper inportal = {portalComponent} key = {index} index = {index}/>)
+    //     this.scrollerProps.modified = true
 
-        this.renderPortalList()
+    //     this.renderPortalList()
 
-        return portalMetadata
-    }
+    //     return portalMetadata
+    // }
 
     // delete a portal list item
     deletePortal(index) {
@@ -126,8 +126,8 @@ const createInPortal = (content, index) => {
     let container = reversePortal.element
     // container.style.inset = '0px' 
     // container.style.position = 'absolute'
-    container.style.height = '100%'
-    container.style.width = '100%'
+    container.style.height = '400px'
+    container.style.width = '308px'
     container.dataset.type = 'portalcontainer'
     container.dataset.index = index
 
