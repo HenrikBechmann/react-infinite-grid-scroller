@@ -683,10 +683,14 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = []
                 cradleContent.tailDisplayComponents = []
 
-                if (cache == 'cradle') {
-                    if ((cradleState == 'doreposition') || (cradleState == 'reload')) {
-                        cacheHandler.clearCache()
-                    }
+                // if (cache == 'cradle') {
+                //     if ((cradleState == 'doreposition') || (cradleState == 'reload')) {
+                //         cacheHandler.clearCache()
+                //     }
+                // }
+
+                if (cradleState == 'reload') {
+                    cacheHandler.clearCache()
                 }
 
                 contentHandler.setCradleContent( cradleState )
