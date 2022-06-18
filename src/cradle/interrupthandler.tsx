@@ -101,7 +101,7 @@ export default class InterruptHandler {
 
             if (
                 !viewportInterruptProperties.isResizing &&
-                !viewportInterruptProperties.portal?.isReparenting &&
+                // !viewportInterruptProperties.portal?.isReparenting &&
                 !(cradleState == 'repositioningRender') && 
                 !(cradleState == 'repositioningContinuation') &&
                 !(cradleState == 'renderupdatedcontent') && // TODO: *TEST*

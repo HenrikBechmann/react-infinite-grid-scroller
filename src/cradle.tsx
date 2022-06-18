@@ -149,7 +149,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // console.log('cradleState, cache',cradleState, cache)
+    console.log('ENTERING cradleState, scrollerID',cradleState, scrollerID)
 
     // controls
     const isMountedRef = useRef(true)
@@ -349,10 +349,18 @@ const Cradle = ({
     // positions for nested infinitegridscrollers.
     // the code restores scroll as soon as cradle is invoked after reparenting
     const isReparentingRef = useRef(false)
-    if (viewportInterruptProperties.portal?.isReparenting) { 
+    const dimensions = viewportInterruptProperties.elementref.current.getBoundingClientRect()
+    if ((!isReparentingRef.current) && (dimensions.height == 0) && (dimensions.width == 0)) {
+        console.log('SETTING isReparentingRef.current to true for scrollerID', scrollerID)
+        isReparentingRef.current = true
+    }
+    // if (viewportInterruptProperties.portal?.isReparenting) { 
+    if (isReparentingRef.current) {
 
-        if (!isReparentingRef.current) {
-            isReparentingRef.current = true
+        // if (!isReparentingRef.current) {
+        //     isReparentingRef.current = true
+        //     console.log('setting isReparenting to true: scrollerID, isReparentingRef.current',
+        //         scrollerID, isReparentingRef.current)
             // viewportInterruptProperties.portal.isReparenting = false
             // setCradleState('reparenting')
 
@@ -370,19 +378,20 @@ const Cradle = ({
             viewportInterruptProperties.elementref.current[
                 cradlePositionData.blockScrollProperty] =
                 Math.max(0,cradlePositionData.blockScrollPos)
-       }
+       // }
 
     }
 
     useLayoutEffect (()=>{
 
-        if (!viewportInterruptProperties.portal?.isReparenting) return
+        if (!isReparentingRef.current) return
 
-        isReparentingRef.current = false
-        viewportInterruptProperties.portal.isReparenting = false
+        // isReparentingRef.current = false
+        // viewportInterruptProperties.portal.isReparenting = false
         setCradleState('reparenting')
 
-    },[viewportInterruptProperties.portal?.isReparenting])
+    // },[viewportInterruptPropertiesRef.current.portal?.isReparenting])
+    },[isReparentingRef.current])
 
     // clear mounted flag on unmount
     useLayoutEffect(()=>{
@@ -473,32 +482,43 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        if (interruptHandler.pauseViewportResizing) return
+        if (isReparentingRef.current) return
+
+        // const dimensions = viewportInterruptPropertiesRef.current.elementref.current.getBoundingClientRect()
+        // console.log('inside resizing from isResizing effect:scrollerID, width, height', scrollerID, dimensions.width, dimensions.height)
+
+        // if ((dimensions.width == 0 && dimensions.height == 0)) { // reparenting
+        //     console.log('RETURNING from resize call')
+        //     return
+        // }
+
+        // if (interruptHandler.pauseViewportResizing) return
 
         // if (cradleStateRef.current == 'reparenting') {
         //     return            
         // }
 
-        if (viewportInterruptProperties.isResizing) {
+        if (viewportInterruptPropertiesRef.current.isResizing) {
 
             const { signals } = interruptHandler
             signals.pauseTriggerlinesObserver = true
             signals.pauseCradleIntersectionObserver = true
             signals.pauseCradleResizeObserver = true
             signals.pauseScrollingEffects = true
-
+ 
+            console.log('CALLING resizing in isResizing effect, scrollerID', scrollerID)
             setCradleState('resizing')
 
         }
 
         // complete resizing mode
-        if (!viewportInterruptProperties.isResizing && (cradleStateRef.current == 'resizing')) {
+        if (!viewportInterruptPropertiesRef.current.isResizing && (cradleStateRef.current == 'resizing')) {
 
             setCradleState('finishresize')
 
         }
 
-    },[viewportInterruptProperties.isResizing])
+    },[viewportInterruptPropertiesRef.current.isResizing])
 
     // reconfigure for changed size parameters
     useEffect(()=>{
@@ -716,8 +736,9 @@ const Cradle = ({
             case 'normalizesignals': { // normalize or resume cycling
 
                 // prioritize interrupts
-                if (viewportInterruptPropertiesRef.current.isResizing) {
+                if ((!isReparentingRef.current) && viewportInterruptPropertiesRef.current.isResizing) {
 
+                    console.log('calling resizing from normalizesignals')
                     setCradleState('resizing')
 
                 } else if (interruptHandler.signals.repositioningRequired) {
@@ -741,15 +762,24 @@ const Cradle = ({
 
             }
 
-            case 'reparenting': { // cycle for DOM update
+            // case 'reparenting': { // cycle for DOM update
 
-                setCradleState('donereparenting')
+            //     // isReparentingRef.current = false
+            //     setCradleState('donereparenting')
 
-                break
+            //     break
 
-            }
+            // }
 
             case 'donereparenting': { // normalize
+
+                const dimensions = viewportInterruptPropertiesRef.current.elementref.current.getBoundingClientRect()
+
+                console.log('dimensions width and height in donereparenting', dimensions.width, dimensions.height)
+
+                isReparentingRef.current = false
+                // viewportInterruptPropertiesRef.current.portal.isReparenting = false
+
                 interruptHandler.pauseTriggerlinesObserver = false
                 interruptHandler.pauseCradleIntersectionObserver = false
                 interruptHandler.pauseCradleResizeObserver = false
@@ -757,6 +787,8 @@ const Cradle = ({
                 interruptHandler.pauseViewportResizing = false
 
                 setCradleState('ready')
+
+                break
             }
 
         }
@@ -767,6 +799,15 @@ const Cradle = ({
     useEffect(()=> { 
 
         switch (cradleState) {
+
+            case 'reparenting': { // cycle for DOM update
+
+                // isReparentingRef.current = false
+                setCradleState('donereparenting')
+
+                break
+
+            }
 
             // repositioningRender and repositioningContinuation are toggled to generate continuous 
             // reposiioning renders
