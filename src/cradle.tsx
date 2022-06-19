@@ -421,10 +421,13 @@ const Cradle = ({
 
         console.log('in isInPortalState useEffect:scrollerID, is, was',scrollerID, isInPortalStateRef.current, wasInPortalStateRef.current)
         if (isInPortalStateRef.current && !wasInPortalStateRef.current) {
+
             setCradleState('inportalstate')
+
         } else if (!wasInPortalStateRef.current && !isInPortalStateRef.current){
-            // wasInPortalStateRef.current = false
+
             setCradleState('ready')
+
         }
 
     },[isInPortalStateRef.current, wasInPortalStateRef.current])
@@ -459,7 +462,6 @@ const Cradle = ({
             reload,
         }
 
-        // console.log('sending callbacks', callbacks)
         functions.getCallbacks(callbacks)
 
     },[])
@@ -522,7 +524,7 @@ const Cradle = ({
         if (cradleStateRef.current == 'setup') return
 
         const dimensions = viewportInterruptPropertiesRef.current.elementref.current.getBoundingClientRect()
-        console.log('inside resizing from isResizing effect:scrollerID, width, height', scrollerID, dimensions.width, dimensions.height)
+        // console.log('inside resizing from isResizing effect:scrollerID, width, height', scrollerID, dimensions.width, dimensions.height)
 
         if (isInPortalStateRef.current) {
 
@@ -538,7 +540,7 @@ const Cradle = ({
             signals.pauseCradleResizeObserver = true
             signals.pauseScrollingEffects = true
  
-            console.log('CALLING resizing in isResizing effect, scrollerID', '-' + scrollerID + '-')
+            // console.log('CALLING resizing in isResizing effect, scrollerID', '-' + scrollerID + '-')
             setCradleState('resizing')
 
         }
@@ -672,13 +674,10 @@ const Cradle = ({
     // useLayout for suppressing flashes
     useLayoutEffect(()=>{
 
-        console.log('entering state manager as',cradleState)
-
         switch (cradleState) {
 
             case 'setup': { // cycle to allow for ref config
 
-                console.log('calling dosetup')
                 setCradleState('dosetup') // load grid
 
                 break
@@ -777,7 +776,7 @@ const Cradle = ({
                 // prioritize interrupts
                 if ((!isInPortalStateRef.current) && viewportInterruptPropertiesRef.current.isResizing) {
 
-                    console.log('calling resizing from normalizesignals')
+                    // console.log('calling resizing from normalizesignals')
                     setCradleState('resizing')
 
                 } else if (interruptHandler.signals.repositioningRequired) {
