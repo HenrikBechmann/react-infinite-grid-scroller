@@ -149,8 +149,6 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    console.log('ENTERING cradleState, scrollerID',cradleState, '-' + scrollerID + '-')
-
     // controls
     const isMountedRef = useRef(true)
 
@@ -344,14 +342,16 @@ const Cradle = ({
     } = handlersRef.current
 
     // ===================[ inPortalState management]=======================
-    // when the scroller is unhooked from the DOM but kept in a portal
+    // ... when the scroller is unhooked from the DOM but kept in a portal
 
     // this is an immediate response to reparenting (moving portals). Reparenting resets scroll
     // positions for nested infinitegridscrollers.
     // the code restores scroll as soon as cradle is invoked after reparenting
+
+    console.log('ENTERING cradleState, scrollerID',cradleState, '-' + scrollerID + '-')
     
-    const isInPortalStateRef = useRef(null)
-    const wasInPortalStateRef = useRef(false)
+    const isInPortalStateRef = useRef(false)
+    const wasInPortalStateRef = useRef(null)
     const scrollPosRecoveryPosRef = useRef(null)
     const dimensions = viewportInterruptProperties.elementref.current.getBoundingClientRect()
     const {width:vwidth, height:vheight} = dimensions
@@ -362,11 +362,18 @@ const Cradle = ({
         wasInPortalStateRef.current = isInPortalStateRef.current
         isInPortalStateRef.current = isInPortal
     }
-    console.log('vwidth, vheight, is, was',vwidth, vheight,isInPortalStateRef.current, wasInPortalStateRef.current)
+    console.log('ON ENTER: \n  isInPortal, vwidth, vheight,\n  is, was, isResizing\n',
+        isInPortal, vwidth, vheight,'\n',isInPortalStateRef.current, 
+        wasInPortalStateRef.current,viewportInterruptPropertiesRef.current.isResizing)
 
     const { cradlePositionData } = scaffoldHandler
     if (isInPortalStateRef.current && !wasInPortalStateRef.current) { // change into inPortalState
         scrollPosRecoveryPosRef.current = cradlePositionData.blockScrollPos
+
+        console.log('entering is == true and was == false')
+
+        viewportInterruptPropertiesRef.current.isResizing && 
+            (viewportInterruptPropertiesRef.current.isResizing = false)
 
         interruptHandler.pauseTriggerlinesObserver = true
         interruptHandler.pauseCradleIntersectionObserver = true
@@ -375,27 +382,45 @@ const Cradle = ({
         interruptHandler.pauseViewportResizing = true
 
     } else if ((!isInPortalStateRef.current) && wasInPortalStateRef.current) { // change out of inPortalState
-        console.log('resetting scrollPos')
-        viewportInterruptProperties.elementref.current[
-                cradlePositionData.blockScrollProperty] = scrollPosRecoveryPosRef.current
+        if (viewportInterruptProperties.elementref.current[
+            cradlePositionData.blockScrollProperty] != scrollPosRecoveryPosRef.current) {
 
-        interruptHandler.pauseTriggerlinesObserver = false
-        interruptHandler.pauseCradleIntersectionObserver = false
-        interruptHandler.pauseCradleResizeObserver = false
-        interruptHandler.pauseScrollingEffects = false
-        interruptHandler.pauseViewportResizing = false
+            console.log('entering is == false and was == true; resetting scrollPos')
+
+            viewportInterruptProperties.elementref.current[
+                cradlePositionData.blockScrollProperty] = scrollPosRecoveryPosRef.current
+    
+        }
+
+        if (viewportInterruptPropertiesRef.current.isResizing) {
+
+            wasInPortalStateRef.current = false
+
+            viewportInterruptPropertiesRef.current.isResizing = false                
+
+            interruptHandler.pauseTriggerlinesObserver = false
+            interruptHandler.pauseCradleIntersectionObserver = false
+            interruptHandler.pauseCradleResizeObserver = false
+            interruptHandler.pauseScrollingEffects = false
+            interruptHandler.pauseViewportResizing = false
+
+        }
 
     }
 
     useEffect(()=>{
+
+        if (cradleStateRef.current == 'setup') return // or else 'dosetup' will be passed over in favour of 'ready'
+
         console.log('in isInPortalState useEffect:scrollerID, is, was',scrollerID, isInPortalStateRef.current, wasInPortalStateRef.current)
         if (isInPortalStateRef.current && !wasInPortalStateRef.current) {
             setCradleState('inportalstate')
-        } else if (wasInPortalStateRef.current && !isInPortalStateRef.current){
+        } else if (!wasInPortalStateRef.current && !isInPortalStateRef.current){
+            // wasInPortalStateRef.current = false
             setCradleState('ready')
         }
 
-    },[isInPortalStateRef.current])
+    },[isInPortalStateRef.current, wasInPortalStateRef.current])
 
 
     // console.log('dimensions for scrollerID, width, height, isInPortalStateRef.current', '-' + scrollerID + '-', vwidth, vheight, isInPortalStateRef.current)
@@ -699,10 +724,13 @@ const Cradle = ({
     // useLayout for suppressing flashes
     useLayoutEffect(()=>{
 
+        console.log('entering state manager as',cradleState)
+
         switch (cradleState) {
 
             case 'setup': { // cycle to allow for ref config
 
+                console.log('calling dosetup')
                 setCradleState('dosetup') // load grid
 
                 break
