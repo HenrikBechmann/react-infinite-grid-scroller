@@ -374,8 +374,6 @@ const Cradle = ({
         interruptHandler.pauseScrollingEffects = true,
         interruptHandler.pauseViewportResizing = true
 
-        // setCradleState('inportalstate')
-
     } else if ((!isInPortalStateRef.current) && wasInPortalStateRef.current) { // change out of inPortalState
         console.log('resetting scrollPos')
         viewportInterruptProperties.elementref.current[
@@ -387,12 +385,10 @@ const Cradle = ({
         interruptHandler.pauseScrollingEffects = false
         interruptHandler.pauseViewportResizing = false
 
-        // setCradleState('ready')
-
     }
 
     useEffect(()=>{
-        console.log('in isInPortalState useEffect:is, was',isInPortalStateRef.current, wasInPortalStateRef.current)
+        console.log('in isInPortalState useEffect:scrollerID, is, was',scrollerID, isInPortalStateRef.current, wasInPortalStateRef.current)
         if (isInPortalStateRef.current && !wasInPortalStateRef.current) {
             setCradleState('inportalstate')
         } else if (wasInPortalStateRef.current && !isInPortalStateRef.current){
