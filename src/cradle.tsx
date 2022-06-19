@@ -363,9 +363,9 @@ const Cradle = ({
         wasInPortalStateRef.current = isInPortalStateRef.current
         isInPortalStateRef.current = isInPortal
     }
-    console.log('ON ENTER: \n  isInPortal, vwidth, vheight,\n  is, was, isResizing\n',
-        isInPortal, vwidth, vheight,'\n',isInPortalStateRef.current, 
-        wasInPortalStateRef.current,viewportInterruptPropertiesRef.current.isResizing)
+    // console.log('ON ENTER: \n  isInPortal, vwidth, vheight,\n  is, was, isResizing\n',
+    //     isInPortal, vwidth, vheight,'\n',isInPortalStateRef.current, 
+    //     wasInPortalStateRef.current,viewportInterruptPropertiesRef.current.isResizing)
 
     const { cradlePositionData } = scaffoldHandler
 

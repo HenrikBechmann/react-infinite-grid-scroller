@@ -250,12 +250,15 @@ export default class ContentHandler {
         } = this.cradleParameters.handlersRef.current
 
         // scroll data
-        const scrollData = scrollHandler.scrollData 
+        const { scrollData } = scrollHandler
 
         const scrollPos = scrollData.currentupdate
 
+        console.log('updateCradleContent with scrollPos, blockScrollPos', 
+            scrollPos, scaffoldHandler.cradlePositionData.blockScrollPos)
+
         // first abandon option/3; nothing to do
-        if ( scrollPos < 0) { // for Safari elastic bounce at top of scroll
+        if ( scrollPos < 0) { // for Safari, FF elastic bounce at top of scroll
 
             return
 
