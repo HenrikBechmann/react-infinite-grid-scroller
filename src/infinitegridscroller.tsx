@@ -20,6 +20,7 @@
         - or clearCache with new getItem function
 
     TODO:
+        prioritize fetch cells for visible cells
         customizable scrolltracker
         reload from/to for insertions and substitutions
         provide user with isReparenting flag to be able to reset scroll

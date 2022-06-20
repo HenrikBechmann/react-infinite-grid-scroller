@@ -349,13 +349,19 @@ const Cradle = ({
     // positions for nested infinitegridscrollers.
     // the code restores scroll as soon as cradle is invoked after reparenting to a DOM element
 
-    console.log('ENTERING cradleState, scrollerID',cradleState, '-' + scrollerID + '-')
+    // console.log('ENTERING cradleState, scrollerID',cradleState, '-' + scrollerID + '-')
     
     const isInPortalStateRef = useRef(false)
     const wasInPortalStateRef = useRef(null)
     const scrollPosRecoveryPosRef = useRef(null)
-    const dimensions = viewportInterruptProperties.elementref.current.getBoundingClientRect()
-    const {width:vwidth, height:vheight} = dimensions
+    const viewportElement = viewportInterruptProperties.elementref.current
+    const dimensions = viewportElement.getBoundingClientRect()
+    // const vScrollPos = viewportElement.scrollTop
+    // const {width:vwidth, height:vheight} = dimensions
+
+    const vwidth = viewportElement.clientWidth
+    const vheight = viewportElement.clientHeight
+    console.log('ENTERING cradleState, scrollerID, vScrollPos',cradleState, '-' + scrollerID + '-')
 
     const isInPortal = ((vwidth == 0) && (vheight == 0))
 
@@ -394,6 +400,7 @@ const Cradle = ({
 
             console.log('entering is == false and was == true; resetting scrollPos')
 
+            console.log('setting SCROLLPOS in inPortalState sentinel', scrollPosRecoveryPosRef.current)
             viewportInterruptProperties.elementref.current[
                 cradlePositionData.blockScrollProperty] = scrollPosRecoveryPosRef.current
     

@@ -192,6 +192,7 @@ export default class ContentHandler {
 
         cradlePositionData.blockScrollPos = scrollblockPixelOffset + scrollPosAdjustment
 
+        console.log('setting SCROLLPOS in setCradleContent', cradlePositionData.blockScrollPos)
         viewportElement[cradlePositionData.blockScrollProperty] =
             cradlePositionData.blockScrollPos
 
@@ -382,6 +383,8 @@ export default class ContentHandler {
         if (cradleInheritedProperties.orientation == 'vertical') {
 
             const topPos = scrollPos + axisPixelOffset
+
+            console.log('topPos = scrollPos + axisPixelOffset',topPos,'=',scrollPos,'+',axisPixelOffset)
 
             axisElement.style.top = topPos + 'px'
             axisElement.style.left = 'auto'
