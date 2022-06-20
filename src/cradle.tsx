@@ -351,91 +351,91 @@ const Cradle = ({
 
     // console.log('ENTERING cradleState, scrollerID',cradleState, '-' + scrollerID + '-')
     
-    const isInPortalStateRef = useRef(false)
-    const wasInPortalStateRef = useRef(null)
-    const scrollPosRecoveryPosRef = useRef(null)
-    // const viewportElement = viewportInterruptProperties.elementref.current
-    const dimensions = viewportInterruptProperties.elementref.current.getBoundingClientRect()
-    // const vScrollPos = viewportElement.scrollTop
-    const {width:vwidth, height:vheight} = dimensions
+    // const isInPortalStateRef = useRef(false)
+    // const wasInPortalStateRef = useRef(null)
+    // const scrollPosRecoveryPosRef = useRef(null)
+    // // const viewportElement = viewportInterruptProperties.elementref.current
+    // const dimensions = viewportInterruptProperties.viewportDimensions// viewportElement.getBoundingClientRect()
+    // const {width:vwidth, height:vheight} = dimensions
 
-    console.log('ENTERING cradleState, scrollerID',cradleState, '-' + scrollerID + '-')
+    // console.log('ENTERING cradleState, scrollerID',cradleState, '-' + scrollerID + '-')
+    // console.log('vwidth, vheight, viewportDimensions', vwidth, vheight, viewportInterruptProperties.viewportDimensions)
 
-    const isInPortal = ((vwidth == 0) && (vheight == 0))
+    // const isInPortal = ((vwidth == 0) && (vheight == 0))
 
-    if (isInPortal != isInPortalStateRef.current) { // there's been a change
-        wasInPortalStateRef.current = isInPortalStateRef.current
-        isInPortalStateRef.current = isInPortal
-    }
-    // console.log('ON ENTER: \n  isInPortal, vwidth, vheight,\n  is, was, isResizing\n',
-    //     isInPortal, vwidth, vheight,'\n',isInPortalStateRef.current, 
-    //     wasInPortalStateRef.current,viewportInterruptPropertiesRef.current.isResizing)
+    // if (isInPortal != isInPortalStateRef.current) { // there's been a change
+    //     wasInPortalStateRef.current = isInPortalStateRef.current
+    //     isInPortalStateRef.current = isInPortal
+    // }
+    // // console.log('ON ENTER: \n  isInPortal, vwidth, vheight,\n  is, was, isResizing\n',
+    // //     isInPortal, vwidth, vheight,'\n',isInPortalStateRef.current, 
+    // //     wasInPortalStateRef.current,viewportInterruptPropertiesRef.current.isResizing)
 
-    const { cradlePositionData } = scaffoldHandler
+    // const { cradlePositionData } = scaffoldHandler
 
-    // is, was = false, false, is ignored; is, was = true, true never happens 
-    //     -- only a change causes a trigger
+    // // is, was = false, false, is ignored; is, was = true, true never happens 
+    // //     -- only a change causes a trigger
 
-    // is, was = true, false
-    if (isInPortalStateRef.current && !wasInPortalStateRef.current) { // change into inPortalState
-        scrollPosRecoveryPosRef.current = cradlePositionData.blockScrollPos
+    // // is, was = true, false
+    // if (isInPortalStateRef.current && !wasInPortalStateRef.current) { // change into inPortalState
+    //     scrollPosRecoveryPosRef.current = cradlePositionData.blockScrollPos
 
-        console.log('entering is == true and was == false')
+    //     console.log('entering is == true and was == false')
 
-        viewportInterruptPropertiesRef.current.isResizing && 
-            (viewportInterruptPropertiesRef.current.isResizing = false)
+    //     viewportInterruptPropertiesRef.current.isResizing && 
+    //         (viewportInterruptPropertiesRef.current.isResizing = false)
 
-        interruptHandler.pauseTriggerlinesObserver = true
-        interruptHandler.pauseCradleIntersectionObserver = true
-        interruptHandler.pauseCradleResizeObserver = true
-        interruptHandler.pauseScrollingEffects = true,
-        interruptHandler.pauseViewportResizing = true
+    //     interruptHandler.pauseTriggerlinesObserver = true
+    //     interruptHandler.pauseCradleIntersectionObserver = true
+    //     interruptHandler.pauseCradleResizeObserver = true
+    //     interruptHandler.pauseScrollingEffects = true,
+    //     interruptHandler.pauseViewportResizing = true
 
-    // is, was = false, true
-    } else if ((!isInPortalStateRef.current) && wasInPortalStateRef.current) { // change out of inPortalState
-        if (viewportInterruptProperties.elementref.current[
-            cradlePositionData.blockScrollProperty] != scrollPosRecoveryPosRef.current) {
+    // // is, was = false, true
+    // } else if ((!isInPortalStateRef.current) && wasInPortalStateRef.current) { // change out of inPortalState
+    //     if (viewportInterruptProperties.elementref.current[
+    //         cradlePositionData.blockScrollProperty] != scrollPosRecoveryPosRef.current) {
 
-            console.log('entering is == false and was == true; resetting scrollPos')
+    //         console.log('entering is == false and was == true; resetting scrollPos')
 
-            console.log('setting SCROLLPOS in inPortalState sentinel', scrollPosRecoveryPosRef.current)
-            viewportInterruptProperties.elementref.current[
-                cradlePositionData.blockScrollProperty] = scrollPosRecoveryPosRef.current
+    //         console.log('setting SCROLLPOS in inPortalState sentinel', scrollPosRecoveryPosRef.current)
+    //         viewportInterruptProperties.elementref.current[
+    //             cradlePositionData.blockScrollProperty] = scrollPosRecoveryPosRef.current
     
-        }
+    //     }
 
-        if (viewportInterruptPropertiesRef.current.isResizing) {
+    //     if (viewportInterruptPropertiesRef.current.isResizing) {
 
-            wasInPortalStateRef.current = false
+    //         wasInPortalStateRef.current = false
 
-            viewportInterruptPropertiesRef.current.isResizing = false                
+    //         viewportInterruptPropertiesRef.current.isResizing = false                
 
-            interruptHandler.pauseTriggerlinesObserver = false
-            interruptHandler.pauseCradleIntersectionObserver = false
-            interruptHandler.pauseCradleResizeObserver = false
-            interruptHandler.pauseScrollingEffects = false
-            interruptHandler.pauseViewportResizing = false
+    //         interruptHandler.pauseTriggerlinesObserver = false
+    //         interruptHandler.pauseCradleIntersectionObserver = false
+    //         interruptHandler.pauseCradleResizeObserver = false
+    //         interruptHandler.pauseScrollingEffects = false
+    //         interruptHandler.pauseViewportResizing = false
 
-        }
+    //     }
 
-    }
+    // }
 
-    useEffect(()=>{
+    // useEffect(()=>{
 
-        if (cradleStateRef.current == 'setup') return // or else 'dosetup' will be passed over in favour of 'ready'
+    //     if (cradleStateRef.current == 'setup') return // or else 'dosetup' will be passed over in favour of 'ready'
 
-        console.log('in isInPortalState useEffect:scrollerID, is, was',scrollerID, isInPortalStateRef.current, wasInPortalStateRef.current)
-        if (isInPortalStateRef.current && !wasInPortalStateRef.current) {
+    //     console.log('in isInPortalState useEffect:scrollerID, is, was',scrollerID, isInPortalStateRef.current, wasInPortalStateRef.current)
+    //     if (isInPortalStateRef.current && !wasInPortalStateRef.current) {
 
-            setCradleState('inportalstate')
+    //         setCradleState('inportalstate')
 
-        } else if (!wasInPortalStateRef.current && !isInPortalStateRef.current){
+    //     } else if (!wasInPortalStateRef.current && !isInPortalStateRef.current){
 
-            setCradleState('ready')
+    //         setCradleState('ready')
 
-        }
+    //     }
 
-    },[isInPortalStateRef.current, wasInPortalStateRef.current])
+    // },[isInPortalStateRef.current, wasInPortalStateRef.current])
 
 
     // ===================[ INITIALIZATION effects ]=========================
@@ -528,14 +528,14 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        const dimensions = viewportInterruptPropertiesRef.current.elementref.current.getBoundingClientRect()
-        // console.log('inside resizing from isResizing effect:scrollerID, width, height', scrollerID, dimensions.width, dimensions.height)
+        // const dimensions = viewportInterruptPropertiesRef.current.elementref.current.getBoundingClientRect()
+        // // console.log('inside resizing from isResizing effect:scrollerID, width, height', scrollerID, dimensions.width, dimensions.height)
 
-        if (isInPortalStateRef.current) {
+        // if (isInPortalStateRef.current) {
 
-            return
+        //     return
 
-        }
+        // }
 
         if (viewportInterruptPropertiesRef.current.isResizing) {
 
@@ -564,7 +564,7 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        if (isInPortalStateRef.current) return
+        // if (isInPortalStateRef.current) return
 
         const signals = interruptHandler.signals
 
@@ -592,7 +592,7 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        if (isInPortalStateRef.current) return
+        // if (isInPortalStateRef.current) return
 
         const { 
             cellWidth,
@@ -705,6 +705,11 @@ const Cradle = ({
 
             case 'finishupdatedcontent': { // cycle for DOM update
 
+                const scrollPos = viewportInterruptPropertiesRef.current.elementref.current.scrollTop
+
+                console.log('scrollPos at finishupdatedcontent handling', scrollPos)
+                // debugger
+
                 // interruptHandler.axisTriggerlinesIntersect.connectElements()
                 // interruptHandler.signals.pauseTriggerlinesObserver = false
                 setCradleState('ready')
@@ -778,7 +783,8 @@ const Cradle = ({
             case 'normalizesignals': { // normalize or resume cycling
 
                 // prioritize interrupts
-                if ((!isInPortalStateRef.current) && viewportInterruptPropertiesRef.current.isResizing) {
+                // if ((!isInPortalStateRef.current) && viewportInterruptPropertiesRef.current.isResizing) {
+                if (viewportInterruptPropertiesRef.current.isResizing) {
 
                     // console.log('calling resizing from normalizesignals')
                     setCradleState('resizing')
