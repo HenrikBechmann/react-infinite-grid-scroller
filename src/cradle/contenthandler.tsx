@@ -17,8 +17,6 @@ export default class ContentHandler {
 
       this.cradleParameters = cradleParameters
 
-      // this.internalCallbacksRef = cradleParameters.internalCallbacksRef
-
    }
 
    public content = {
@@ -40,8 +38,6 @@ export default class ContentHandler {
        current:0
     }
     private instanceIdMap = new Map()
-
-    // private internalCallbacksRef
 
     // Two public methods - setCradleContent and updateCradleContent
 
@@ -86,16 +82,32 @@ export default class ContentHandler {
             gap, 
             padding, 
             cellHeight,
-            cellWidth
+            cellWidth,
+            cache,
+            listsize,
         } = cradleInheritedProperties
+
+        const {crosscount} = cradleInternalProperties
+
+        let workingAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
+        workingAxisReferenceIndex -= (workingAxisReferenceIndex % crosscount)
+
+        // console.log('cradleState in setCradleContent; workingAxisReferenceIndex',
+        //     cradleState, workingAxisReferenceIndex)
 
         if ((cradleState == 'doreposition') || cradleState == 'reconfigure')  {
 
-            targetAxisPixelOffset = gap // default
+            targetAxisPixelOffset = 
+                (workingAxisReferenceIndex == 0)?
+                    padding:
+                    gap // default
 
         }
 
-        const localContentList = []
+        // console.log('cradleState in setCradleContent; workingAxisReferenceIndex, targetAxisPixelOffset',
+        //     cradleState, workingAxisReferenceIndex, targetAxisPixelOffset)
+        
+        const workingContentList = []
         const cradleContent = this.content
 
         // ----------------------[ 2. get content requirements ]----------------------
@@ -136,7 +148,7 @@ export default class ContentHandler {
         // ----------------------[ 3. get and config content ]----------------------
         
         // returns content constrained by cradleRowcount
-        const [childlist,deleteditems] = getCellShellComponentList({
+        const [newcontentlist,deleteditems] = getCellShellComponentList({
 
             cradleInheritedProperties,
             // cradleInternalProperties,
@@ -144,21 +156,22 @@ export default class ContentHandler {
             cradleReferenceIndex:targetCradleReferenceIndex,
             listStartChangeCount:0,
             listEndChangeCount:cradleContentCount,
-            workingContentList:localContentList,
-            // callbacks:this.internalCallbacksRef.current,
+            workingContentList,
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
-        if (deleteditems.length) deletePortals(cacheHandler, deleteditems)
+        if (deleteditems.length && (cache == 'cradle')) {
+            deletePortals(cacheHandler, deleteditems)
+        }
 
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
-            contentlist:childlist,
+            contentlist:newcontentlist,
             axisReferenceIndex:targetAxisReferenceIndex,
     
         })
 
-        cradleContent.cradleModelComponents = childlist
+        cradleContent.cradleModelComponents = newcontentlist
         cradleContent.headModelComponents = headcontentlist
         cradleContent.tailModelComponents = tailcontentlist
 
@@ -179,6 +192,7 @@ export default class ContentHandler {
 
         cradlePositionData.blockScrollPos = scrollblockPixelOffset + scrollPosAdjustment
 
+        // console.log('setting SCROLLPOS in setCradleContent', cradlePositionData.blockScrollPos)
         viewportElement[cradlePositionData.blockScrollProperty] =
             cradlePositionData.blockScrollPos
 
@@ -237,12 +251,15 @@ export default class ContentHandler {
         } = this.cradleParameters.handlersRef.current
 
         // scroll data
-        const scrollData = scrollHandler.scrollData 
+        const { scrollData } = scrollHandler
 
         const scrollPos = scrollData.currentupdate
 
+        // console.log('updateCradleContent with scrollPos, blockScrollPos, source', 
+        //     scrollPos, scaffoldHandler.cradlePositionData.blockScrollPos, source)
+
         // first abandon option/3; nothing to do
-        if ( scrollPos < 0) { // for Safari elastic bounce at top of scroll
+        if ( scrollPos < 0) { // for Safari, FF elastic bounce at top of scroll
 
             return
 
@@ -257,7 +274,10 @@ export default class ContentHandler {
         // --------------------[ 2. get shift instruction ]-----------------------
 
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const orientation = cradleInheritedProperties.orientation
+        const { 
+            orientation, 
+            cache,
+        } = cradleInheritedProperties
 
         // -1 is move a row up to the head, +1 is move a row down to the tail, 0 is no shift
         const shiftinstruction = getShiftInstruction({
@@ -327,16 +347,20 @@ export default class ContentHandler {
                 listStartChangeCount,
                 listEndChangeCount,
                 cradleReferenceIndex:oldCradleReferenceIndex,
-                // callbacks:this.internalCallbacksRef.current,
                 instanceIdCounterRef:this.instanceIdCounterRef,
             })
+
         } else {
 
             updatedContentList = modelcontentlist
 
         }
 
-        if (deletedContentItems.length) deletePortals(cacheHandler, deletedContentItems)
+        if (deletedContentItems.length && (cache == 'cradle')) {
+
+            deletePortals(cacheHandler, deletedContentItems)
+
+        }
 
         // ----------------------------------[ 5. allocate cradle content ]--------------------------
 
