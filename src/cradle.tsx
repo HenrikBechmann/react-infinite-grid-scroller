@@ -485,6 +485,7 @@ const Cradle = ({
             signals.pauseCradleResizeObserver = true
             signals.pauseScrollingEffects = true
 
+            // console.log('CALLING resizing in isResizing effect, scrollerID', '-' + scrollerID + '-')
             setCradleState('resizing')
 
         }
@@ -639,6 +640,11 @@ const Cradle = ({
             }
 
             case 'finishupdatedcontent': { // cycle for DOM update
+
+                // const scrollPos = viewportInterruptPropertiesRef.current.elementref.current.scrollTop
+
+                // console.log('scrollPos at finishupdatedcontent handling', scrollPos)
+                // debugger
 
                 interruptHandler.axisTriggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseTriggerlinesObserver = false
