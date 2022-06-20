@@ -115,12 +115,12 @@ const Cradle = ({
         functions,
         styles,
 
-        scrollerName,
-        scrollerID,
         triggerlineOffset,
-
         cache,
         cacheMax,
+        // for debugging
+        scrollerName,
+        scrollerID,
     }) => {
 
     if (listsize == 0) return // nothing to do
