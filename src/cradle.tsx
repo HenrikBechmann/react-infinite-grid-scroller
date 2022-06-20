@@ -673,17 +673,22 @@ const Cradle = ({
 
                 const cradleContent = contentHandler.content
 
-                // TODO: retain existing portals to the extent possible
                 cradleContent.headModelComponents = []
                 cradleContent.tailModelComponents = []
 
-                // register new array id for Object.is for react
+                // register new array id for Object.is to trigger react re-processing
                 cradleContent.headDisplayComponents = []
                 cradleContent.tailDisplayComponents = []
 
-                handlersRef.current.cacheHandler.clearCache()
-                
+                if (cradleState == 'reload') {
+                    cacheHandler.clearCache()
+                }
+
                 contentHandler.setCradleContent( cradleState )
+
+                // if (cache == 'cradle') {
+                //     cacheHandler.matchCacheToCradle
+                // }
 
                 setCradleState('preparerender')
 
@@ -728,24 +733,6 @@ const Cradle = ({
 
                 break 
 
-            }
-
-            case 'reparenting': { // cycle for DOM update
-
-                setCradleState('donereparenting')
-
-                break
-
-            }
-
-            case 'donereparenting': { // normalize
-                interruptHandler.pauseTriggerlinesObserver = false
-                interruptHandler.pauseCradleIntersectionObserver = false
-                interruptHandler.pauseCradleResizeObserver = false
-                // pauseScrollingEffects: false,
-                interruptHandler.pauseViewportResizing = false
-
-                setCradleState('ready')
             }
 
         }
