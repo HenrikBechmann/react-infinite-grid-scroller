@@ -144,7 +144,7 @@ export default class ContentHandler {
             cradleReferenceIndex:targetCradleReferenceIndex,
             listStartChangeCount:0,
             listEndChangeCount:cradleContentCount,
-            localContentList,
+            workingContentList:localContentList,
             // callbacks:this.internalCallbacksRef.current,
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
@@ -323,7 +323,7 @@ export default class ContentHandler {
                 cradleInheritedProperties,
                 // cradleInternalProperties,
                 cradleContentCount,
-                localContentList:modelcontentlist,
+                workingContentList:modelcontentlist,
                 listStartChangeCount,
                 listEndChangeCount,
                 cradleReferenceIndex:oldCradleReferenceIndex,
