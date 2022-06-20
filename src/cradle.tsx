@@ -363,6 +363,21 @@ const Cradle = ({
 
     const isInPortal = ((vwidth == 0) && (vheight == 0))
 
+    if (isInPortal != isInPortalStateRef.current) { // there's been a change
+        wasInPortalStateRef.current = isInPortalStateRef.current
+        isInPortalStateRef.current = isInPortal
+    }
+    // console.log('ON ENTER: \n  isInPortal, vwidth, vheight,\n  is, was, isResizing\n',
+    //     isInPortal, vwidth, vheight,'\n',isInPortalStateRef.current, 
+    //     wasInPortalStateRef.current,viewportInterruptPropertiesRef.current.isResizing)
+
+    const { cradlePositionData } = scaffoldHandler
+
+    // is, was = false, false, is ignored; is, was = true, true never happens 
+    //     -- only a change causes a trigger
+
+    // is, was = true, false
+
     const isReparentingRef = useRef(false)
     if (viewportInterruptProperties.portal?.isReparenting) { 
 
