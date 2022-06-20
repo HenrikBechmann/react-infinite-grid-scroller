@@ -396,12 +396,13 @@ const Cradle = ({
 
         if (!functions.getCallbacks) return
 
-        const {scrollToItem, getVisibleList, getContentList, reload} = serviceHandler
+        // const {scrollToItem, getVisibleList, getContentList, reload} = serviceHandler
+        const {scrollToItem, reload} = serviceHandler
 
         const callbacks = {
             scrollToItem,
-            getVisibleList,
-            getContentList,
+            // getVisibleList,
+            // getContentList,
             reload,
         }
 
@@ -472,7 +473,7 @@ const Cradle = ({
         //     return            
         // }
 
-        if (viewportInterruptProperties.isResizing) {
+        if (viewportInterruptPropertiesRef.current.isResizing) {
 
             const { signals } = interruptHandler
             signals.pauseTriggerlinesObserver = true
@@ -485,13 +486,13 @@ const Cradle = ({
         }
 
         // complete resizing mode
-        if (!viewportInterruptProperties.isResizing && (cradleStateRef.current == 'resizing')) {
+        if (!viewportInterruptPropertiesRef.current.isResizing && (cradleStateRef.current == 'resizing')) {
 
             setCradleState('finishresize')
 
         }
 
-    },[viewportInterruptProperties.isResizing])
+    },[viewportInterruptPropertiesRef.current.isResizing])
 
     // reload for changed size parameters
     useEffect(()=>{
