@@ -35,7 +35,7 @@ export default class InterruptHandler {
 
         if (this.signals.pauseTriggerlinesObserver) { 
 
-            console.log('returning from axisTriggerlinesObserverCallback with pause!')
+            // console.log('returning from axisTriggerlinesObserverCallback with pause!')
 
             return
 

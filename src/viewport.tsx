@@ -37,6 +37,7 @@ const Viewport = ({
         cellHeight,
         cellWidth,
         layout,
+        dense,
     } = gridSpecs
 
     const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, render
@@ -56,7 +57,7 @@ const Viewport = ({
 
     },[])
 
-    const viewportElementRef = useRef(null)
+    const viewportdivRef = useRef(null)
 
     // viewportInterruptPropertiesRef is passed as a resizing interrupt (through context) to children
     // initialize
@@ -81,7 +82,7 @@ const Viewport = ({
 
         // initialize
         resizeObserverRef.current = new ResizeObserver(resizeCallback)
-        resizeObserverRef.current.observe(viewportElementRef.current)
+        resizeObserverRef.current.observe(viewportdivRef.current)
 
         // unmount
         return () => {
@@ -111,15 +112,6 @@ const Viewport = ({
             return
 
         }
-
-        // const dimensions = viewportElementRef.current.getBoundingClientRect()
-
-        // const {width, height} = dimensions
-
-        // if ((width == 0) && (height == 0)) {
-        //     console.log('returning from resize callback:width, height',width, height)
-        //     return // inPortalState
-        // }
 
         // generate interrupt response, if initiating resize
         if (!isResizingRef.current) {
@@ -152,7 +144,7 @@ const Viewport = ({
         if (!parentPortalHandler) return // root viewport; has no portal
 
         let portalindex
-        let element = viewportElementRef.current
+        let element = viewportdivRef.current
 
         while (element) {
             if (element.dataset && (element.dataset.type == 'portalcontainer')) { // set portal & exit
@@ -216,14 +208,14 @@ const Viewport = ({
 
         if (viewportState == 'setup') return viewportInterruptPropertiesRef.current
 
-        const {top, right, bottom, left} = viewportElementRef.current.getBoundingClientRect()
+        const {top, right, bottom, left} = viewportdivRef.current.getBoundingClientRect()
         const width = (right - left)
         const height = (bottom - top)
 
         // TODO this is a duplicate setting procedure with interrupthandler.tsx cradleIntersectionObserverCallback
         const localViewportData = {
             viewportDimensions:{top,right, bottom, left, width, height},
-            elementref:viewportElementRef,
+            elementref:viewportdivRef,
             isResizing:isResizingRef.current,
         }
 
@@ -255,7 +247,7 @@ const Viewport = ({
             data-type = 'viewport'
             data-scrollerid = {scrollerID}
             style = {divlinerstyleRef.current}
-            ref = {viewportElementRef}
+            ref = {viewportdivRef}
         >
             { (viewportState != 'setup') && children }
         </div>

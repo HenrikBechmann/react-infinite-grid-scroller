@@ -64,7 +64,7 @@ export default class ServiceHandler {
 
     public scrollToItem = (index) => {
 
-        console.log('calling scrollToItem: index', index)
+        // console.log('calling scrollToItem: index', index)
 
         const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
         const { scaffoldHandler, stateHandler} = this.cradleParameters.handlersRef.current

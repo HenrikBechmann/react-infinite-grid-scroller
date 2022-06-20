@@ -29,7 +29,7 @@ export default class ScrollHandler {
                 viewportElement.scrollTop:
                 viewportElement.scrollLeft
 
-        console.log('scrollPositionCurrent in onScroll', scrollPositionCurrent)
+        // console.log('scrollPositionCurrent in onScroll', scrollPositionCurrent)
 
         if (scrollPositionCurrent < 0) { // for Safari
 
@@ -61,8 +61,6 @@ export default class ScrollHandler {
 
         this.scrollData.previous = this.scrollData.current
         this.scrollData.current = scrollPositionCurrent
-
-        return
 
         const {stateHandler} = this.cradleParameters.handlersRef.current
         const cradleState = stateHandler.cradleStateRef.current
@@ -183,7 +181,7 @@ export default class ScrollHandler {
 
         const viewportElement = viewportInterruptProperties.elementref.current
         if (cradleProps.orientation == 'vertical') {
-            console.log('scrollTop in updateReferenceData',viewportElement.scrollTop)
+            // console.log('scrollTop in updateReferenceData',viewportElement.scrollTop)
             axisVisiblePixelOffset = cradleElements.axisRef.current.offsetTop - 
                 viewportElement.scrollTop
                 
@@ -242,7 +240,7 @@ export default class ScrollHandler {
 
             scrollPos = viewportElement.scrollTop
             cellLength = cradleProps.cellHeight + cradleProps.gap
-            console.log('scrollPos in calcImpliedRepositioningData', scrollPos)
+            // console.log('scrollPos in calcImpliedRepositioningData', scrollPos)
 
         } else {
 

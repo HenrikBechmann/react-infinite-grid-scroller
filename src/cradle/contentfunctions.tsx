@@ -41,7 +41,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     } = cradleInternalProperties
     
     // align axis reference to first row item
-    // const origrefindex = targetAxisReferenceIndex
+    const origrefindex = targetAxisReferenceIndex
     targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex,listsize - 1)
     targetAxisReferenceIndex -= (targetAxisReferenceIndex % crosscount)
 
@@ -364,7 +364,7 @@ export const getCellShellComponentList = ({
         cradleReferenceIndex, 
         listStartChangeCount, 
         listEndChangeCount, 
-        workingContentList:contentlist,
+        localContentList:contentlist,
         // callbacks,
         instanceIdCounterRef,
     }) => {
@@ -453,7 +453,6 @@ export const allocateContentList = (
 
 export const deletePortals = (cacheHandler, deleteList) => {
 
-    console.log('inside deletePortals',deleteList)
     for (let item of deleteList) {
         cacheHandler.deletePortal(item.props.index)
     }
