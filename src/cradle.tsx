@@ -114,7 +114,6 @@ const Cradle = ({
         placeholder, 
         functions,
         styles,
-
         triggerlineOffset,
         cache,
         cacheMax,
@@ -494,7 +493,7 @@ const Cradle = ({
 
     },[viewportInterruptPropertiesRef.current.isResizing])
 
-    // reload for changed size parameters
+    // reconfigure for changed size parameters
     useEffect(()=>{
 
         if (cradleStateRef.current == 'setup') return
@@ -649,7 +648,6 @@ const Cradle = ({
 
                 // avoid recursive cradle intersection interrupts
                 interruptHandler.signals.pauseCradleIntersectionObserver = true
-
                 interruptHandler.signals.repositioningRequired = false // because now underway
 
                 setCradleState('repositioningRender')
