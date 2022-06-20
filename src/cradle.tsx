@@ -484,7 +484,7 @@ const Cradle = ({
             signals.pauseCradleIntersectionObserver = true
             signals.pauseCradleResizeObserver = true
             signals.pauseScrollingEffects = true
-
+ 
             // console.log('CALLING resizing in isResizing effect, scrollerID', '-' + scrollerID + '-')
             setCradleState('resizing')
 
@@ -721,6 +721,7 @@ const Cradle = ({
                 // prioritize interrupts
                 if (viewportInterruptPropertiesRef.current.isResizing) {
 
+                    // console.log('calling resizing from normalizesignals')
                     setCradleState('resizing')
 
                 } else if (interruptHandler.signals.repositioningRequired) {
