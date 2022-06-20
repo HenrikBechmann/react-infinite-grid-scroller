@@ -341,7 +341,6 @@ const Cradle = ({
         stylesHandler,
     } = handlersRef.current
 
-
     // ===================[ inPortalState sentinel ]=======================
     // ... when the scroller is unhooked from the DOM but kept in a React portal
     // or when the scroller is added to the visible DOM. Either change causes a trigger
