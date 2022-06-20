@@ -349,6 +349,20 @@ const Cradle = ({
     // positions for nested infinitegridscrollers.
     // the code restores scroll as soon as cradle is invoked after reparenting to a DOM element
 
+    console.log('ENTERING cradleState, scrollerID',cradleState, '-' + scrollerID + '-')
+    
+    const isInPortalStateRef = useRef(false)
+    const wasInPortalStateRef = useRef(null)
+    const scrollPosRecoveryPosRef = useRef(null)
+    // const viewportElement = viewportInterruptProperties.elementref.current
+    const dimensions = viewportInterruptProperties.viewportDimensions// viewportElement.getBoundingClientRect()
+    const {width:vwidth, height:vheight} = dimensions
+
+    console.log('ENTERING cradleState, scrollerID',cradleState, '-' + scrollerID + '-')
+    console.log('vwidth, vheight, viewportDimensions', vwidth, vheight, viewportInterruptProperties.viewportDimensions)
+
+    const isInPortal = ((vwidth == 0) && (vheight == 0))
+
     const isReparentingRef = useRef(false)
     if (viewportInterruptProperties.portal?.isReparenting) { 
 
