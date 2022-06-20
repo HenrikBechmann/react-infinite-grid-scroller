@@ -354,14 +354,12 @@ const Cradle = ({
     const isInPortalStateRef = useRef(false)
     const wasInPortalStateRef = useRef(null)
     const scrollPosRecoveryPosRef = useRef(null)
-    const viewportElement = viewportInterruptProperties.elementref.current
-    const dimensions = viewportElement.getBoundingClientRect()
+    // const viewportElement = viewportInterruptProperties.elementref.current
+    const dimensions = viewportInterruptProperties.elementref.current.getBoundingClientRect()
     // const vScrollPos = viewportElement.scrollTop
-    // const {width:vwidth, height:vheight} = dimensions
+    const {width:vwidth, height:vheight} = dimensions
 
-    const vwidth = viewportElement.clientWidth
-    const vheight = viewportElement.clientHeight
-    console.log('ENTERING cradleState, scrollerID, vScrollPos',cradleState, '-' + scrollerID + '-')
+    console.log('ENTERING cradleState, scrollerID',cradleState, '-' + scrollerID + '-')
 
     const isInPortal = ((vwidth == 0) && (vheight == 0))
 
@@ -707,8 +705,8 @@ const Cradle = ({
 
             case 'finishupdatedcontent': { // cycle for DOM update
 
-                interruptHandler.axisTriggerlinesIntersect.connectElements()
-                interruptHandler.signals.pauseTriggerlinesObserver = false
+                // interruptHandler.axisTriggerlinesIntersect.connectElements()
+                // interruptHandler.signals.pauseTriggerlinesObserver = false
                 setCradleState('ready')
 
                 break
@@ -720,7 +718,6 @@ const Cradle = ({
 
                 // avoid recursive cradle intersection interrupts
                 interruptHandler.signals.pauseCradleIntersectionObserver = true
-
                 interruptHandler.signals.repositioningRequired = false // because now underway
 
                 setCradleState('repositioningRender')

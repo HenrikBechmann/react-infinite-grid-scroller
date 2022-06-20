@@ -255,8 +255,8 @@ export default class ContentHandler {
 
         const scrollPos = scrollData.currentupdate
 
-        console.log('updateCradleContent with scrollPos, blockScrollPos', 
-            scrollPos, scaffoldHandler.cradlePositionData.blockScrollPos)
+        console.log('updateCradleContent with scrollPos, blockScrollPos, source', 
+            scrollPos, scaffoldHandler.cradlePositionData.blockScrollPos, source)
 
         // first abandon option/3; nothing to do
         if ( scrollPos < 0) { // for Safari, FF elastic bounce at top of scroll
@@ -384,14 +384,15 @@ export default class ContentHandler {
 
             const topPos = scrollPos + axisPixelOffset
 
-            console.log('topPos = scrollPos + axisPixelOffset',topPos,'=',scrollPos,'+',axisPixelOffset)
-
             axisElement.style.top = topPos + 'px'
             axisElement.style.left = 'auto'
             headElement.style.paddingBottom = 
                 headcontent.length?
                     cradleInheritedProperties.gap + 'px':
                     0
+            viewportElement.scrollTop = scrollPos
+
+            console.log('topPos = scrollPos + axisPixelOffset, viewportElement.scrollTop',topPos,'=',scrollPos,'+',axisPixelOffset, viewportElement.scrollTop)
 
         } else { // 'horizontal'
 

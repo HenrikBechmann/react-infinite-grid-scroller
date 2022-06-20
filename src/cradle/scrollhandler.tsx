@@ -62,6 +62,8 @@ export default class ScrollHandler {
         this.scrollData.previous = this.scrollData.current
         this.scrollData.current = scrollPositionCurrent
 
+        return
+
         const {stateHandler} = this.cradleParameters.handlersRef.current
         const cradleState = stateHandler.cradleStateRef.current
 
