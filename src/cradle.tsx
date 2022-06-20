@@ -342,6 +342,7 @@ const Cradle = ({
     } = handlersRef.current
 
     // ===================[ inPortalState sentinel ]=======================
+
     // ... when the scroller is unhooked from the DOM but kept in a React portal
     // or when the scroller is added to the visible DOM. Either change causes a trigger
 
@@ -354,12 +355,10 @@ const Cradle = ({
     const isInPortalStateRef = useRef(false)
     const wasInPortalStateRef = useRef(null)
     const scrollPosRecoveryPosRef = useRef(null)
-    // const viewportElement = viewportInterruptProperties.elementref.current
-    const dimensions = viewportInterruptProperties.viewportDimensions// viewportElement.getBoundingClientRect()
+    const dimensions = viewportInterruptProperties.viewportDimensions
     const {width:vwidth, height:vheight} = dimensions
 
     console.log('ENTERING cradleState, scrollerID',cradleState, '-' + scrollerID + '-')
-    console.log('vwidth, vheight, viewportDimensions', vwidth, vheight, viewportInterruptProperties.viewportDimensions)
 
     const isInPortal = ((vwidth == 0) && (vheight == 0))
 
@@ -367,9 +366,9 @@ const Cradle = ({
         wasInPortalStateRef.current = isInPortalStateRef.current
         isInPortalStateRef.current = isInPortal
     }
-    // console.log('ON ENTER: \n  isInPortal, vwidth, vheight,\n  is, was, isResizing\n',
-    //     isInPortal, vwidth, vheight,'\n',isInPortalStateRef.current, 
-    //     wasInPortalStateRef.current,viewportInterruptPropertiesRef.current.isResizing)
+    console.log('ON ENTER: \n  isInPortal, vwidth, vheight,\n  is, was, isResizing\n',
+        isInPortal, vwidth, vheight,'\n',isInPortalStateRef.current, 
+        wasInPortalStateRef.current,viewportInterruptPropertiesRef.current.isResizing)
 
     const { cradlePositionData } = scaffoldHandler
 
@@ -377,7 +376,6 @@ const Cradle = ({
     //     -- only a change causes a trigger
 
     // is, was = true, false
-
 
     // >>>>>>>>> OLD VERSION
     // const isReparentingRef = useRef(false)
