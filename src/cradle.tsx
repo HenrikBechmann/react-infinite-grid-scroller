@@ -341,11 +341,15 @@ const Cradle = ({
         stylesHandler,
     } = handlersRef.current
 
-    // ===================[ INITIALIZATION effects ]=========================
+
+    // ===================[ inPortalState sentinel ]=======================
+    // ... when the scroller is unhooked from the DOM but kept in a React portal
+    // or when the scroller is added to the visible DOM. Either change causes a trigger
 
     // this is an immediate response to reparenting (moving portals). Reparenting resets scroll
     // positions for nested infinitegridscrollers.
-    // the code restores scroll as soon as cradle is invoked after reparenting
+    // the code restores scroll as soon as cradle is invoked after reparenting to a DOM element
+
     const isReparentingRef = useRef(false)
     if (viewportInterruptProperties.portal?.isReparenting) { 
 
@@ -377,6 +381,8 @@ const Cradle = ({
         setCradleState('reparenting')
 
     },[viewportInterruptProperties.portal?.isReparenting])
+
+    // ===================[ INITIALIZATION effects ]=========================
 
     // clear mounted flag on unmount
     useLayoutEffect(()=>{
