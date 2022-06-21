@@ -56,9 +56,9 @@ export class CacheHandler {
     //     }
 
     //     // if not found, create new portal
-    //     const [inportal,portalRecord] = createPortal(content, index)
+    //     const [portal,portalRecord] = createPortal(content, index)
 
-    //     this.scrollerProps.portalMap.set(index,<PortalWrapper inportal = {inportal} key = {index} index = {index}/>)
+    //     this.scrollerProps.portalMap.set(index,<PortalWrapper portal = {portal} key = {index} index = {index}/>)
     //     this.scrollerProps.modified = true
 
     //     const portalMetadata = {
@@ -85,14 +85,10 @@ export class CacheHandler {
 
     fetchPortal(index, content, cellWidth, cellHeight) { // content is used for new portal only
 
-        // if (this.hasPortal(index)) {
-        //     return this._getPortal(index)
-        // }
-
         // if not found, create new portal
-        const [inportal,portalRecord] = createPortal({index, content, cellWidth, cellHeight})
+        const [portal,portalRecord] = createPortal({index, content})
 
-        this.scrollerProps.portalMap.set(index,<PortalWrapper inportal = {inportal} key = {index} index = {index}/>)
+        this.scrollerProps.portalMap.set(index,<PortalWrapper portal = {portal} key = {index} index = {index}/>)
         this.scrollerProps.modified = true
 
         const portalMetadata = {
@@ -114,7 +110,7 @@ export class CacheHandler {
 
     //     const portalComponent = updateInPortal(content, portalMetadata.portalRecord )
 
-    //     this.scrollerProps.portalMap.set(index,<PortalWrapper inportal = {portalComponent} key = {index} index = {index}/>)
+    //     this.scrollerProps.portalMap.set(index,<PortalWrapper portal = {portalComponent} key = {index} index = {index}/>)
     //     this.scrollerProps.modified = true
 
     //     this.renderPortalList()
@@ -173,15 +169,16 @@ export class CacheHandler {
 
 // }     
 
-const createPortal = ({index, content, cellWidth, cellHeight}) => {
+const createPortal = ({index, content}) => {
 
+    // TODO: assign width and height to wrapper not container
     const portalRecord = createHtmlPortalNode()
 
     const contentenvelope = portalRecord.element
     // container.style.inset = '0px' 
     contentenvelope.style.position = 'absolute'
-    contentenvelope.style.height = cellHeight + 'px'
-    contentenvelope.style.width = cellWidth + 'px'
+    contentenvelope.style.height = '100%'
+    contentenvelope.style.width = '100%'
     contentenvelope.dataset.type = 'contentenvelope'
     contentenvelope.dataset.index = index
 
@@ -208,10 +205,10 @@ const updateInPortal = (content, portalRecord) => {
 const wrapperstyle = {display:'block'} // static; should take same dimensions as container CellShell
 
 // hidden portal wrapper for clarity and usage of conventional react relisting services
-export const PortalWrapper = ({ inportal, index }) => {
+export const PortalWrapper = ({ portal, index }) => {
 
     return <div data-type = 'portalwrapper' data-index = { index } style = { wrapperstyle } key = { index }>
-        { inportal }
+        { portal }
     </div>
 
 }
