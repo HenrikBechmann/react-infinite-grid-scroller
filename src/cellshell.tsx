@@ -11,7 +11,8 @@ import Placeholder from './placeholder'
 
 import { CradleCacheContext } from './cradle'
 
-const IDLECALLBACK_TIMEOUT = 8000 // TODO experimentally high!!
+const IDLECALLBACK_FETCHTIMEOUT = 8000 // TODO experimentally high!!
+const IDLECALLBACK_CACHETIMEOUT = 1000
 
 const CellShell = ({
     orientation, 
@@ -146,10 +147,11 @@ const CellShell = ({
 
                 if (cached) {
 
+                    requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
                     // console.log('fetching portal for scrollerID, instanceID, index', 
                     //     scrollerID, instanceID, index)
 
-                    portaldataRef.current = cacheHandler.fetchPortal(index)
+                    portaldataRef.current = await cacheHandler.fetchPortal(index)
 
                     const { reverseportal } = portaldataRef.current
 
@@ -158,6 +160,8 @@ const CellShell = ({
                     contentRef.current = <OutPortal node = {reverseportal}/>
 
                     setCellStatus('ready')
+
+                    },{timeout:IDLECALLBACK_CACHETIMEOUT})
 
                 } else {
 
@@ -208,7 +212,7 @@ const CellShell = ({
 
                         setCellStatus('ready')
 
-                    },{timeout:IDLECALLBACK_TIMEOUT})
+                    },{timeout:IDLECALLBACK_FETCHTIMEOUT})
 
                 }
 

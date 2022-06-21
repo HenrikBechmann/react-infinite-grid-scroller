@@ -362,14 +362,20 @@ const Cradle = ({
     if (viewportInterruptProperties.isResizing ||
         viewportInterruptProperties.portal?.isReparenting) {
 
+        const { cradlePositionData } = scaffoldHandler
 
         let isChange = false
         if (viewportInterruptProperties.portal?.isReparenting) {
 
+            console.log('ON REPARENTING CHANGE', '-'+scrollerID+'-')
+
+            viewportInterruptProperties.elementref.current[
+                cradlePositionData.blockScrollProperty] = cradlePositionData.blockScrollPos // scrollPosRecoveryPosRef.current
+
             viewportInterruptProperties.portal.isReparenting = false
-            wasCached.current = true
-            isCached.current = false
-            isChange = true
+            // wasCached.current = true
+            // isCached.current = false
+            // isChange = true
 
         } else {
 
@@ -388,15 +394,13 @@ const Cradle = ({
                 viewportInterruptPropertiesRef.current.isResizing = false                
             }
 
-            console.log('ON CHANGE: \n  isInPortal, vwidth, vheight,\n  is, was, isResizing\n',
-                isInPortal, vwidth, vheight,'\n',isCached.current, 
+            console.log('ON RESIZE CHANGE: scrollerID\n  isInPortal, vwidth, vheight,\n  is, was, isResizing\n',
+                '-'+scrollerID+'-','\n',isInPortal, vwidth, vheight,'\n',isCached.current, 
                 wasCached.current,viewportInterruptPropertiesRef.current.isResizing)
 
         }
 
         if (isChange) {
-
-            const { cradlePositionData } = scaffoldHandler
 
             // is, was = false, false, is ignored; is, was = true, true never happens 
             //     -- only a change causes a trigger
@@ -405,7 +409,7 @@ const Cradle = ({
             if (isCached.current && !wasCached.current) { // change into cached
                 // scrollPosRecoveryPosRef.current = cradlePositionData.blockScrollPos
 
-                console.log('INTO CACHE')
+                console.log('INTO CACHE', '-'+scrollerID+'-')
 
                 interruptHandler.pauseTriggerlinesObserver = true
                 interruptHandler.pauseCradleIntersectionObserver = true
@@ -416,7 +420,7 @@ const Cradle = ({
             // is, was = false, true
             } else if ((!isCached.current) && wasCached.current) { // change out of cached
 
-                console.log('OUT OF CACHE')
+                console.log('OUT OF CACHE', '-'+scrollerID+'-')
 
                 viewportInterruptProperties.elementref.current[
                     cradlePositionData.blockScrollProperty] = cradlePositionData.blockScrollPos // scrollPosRecoveryPosRef.current
@@ -437,16 +441,18 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return // or else 'dosetup' will be passed over in favour of 'ready'
 
-        console.log('in isCached useEffect:scrollerID, is, was','-',scrollerID,'-', isCached.current, wasCached.current)
+        console.log('in isCached useEffect:scrollerID, is, was','-' + scrollerID + '-', isCached.current, wasCached.current)
         if (isCached.current && !wasCached.current) {
 
             setCradleState('cached')
 
-        } else if (!wasCached.current && !isCached.current){
-
-            setCradleState('ready')
-
         }
+
+        // } else if (!wasCached.current && !isCached.current){
+
+        //     setCradleState('ready')
+
+        // }
 
     },[isCached.current, wasCached.current])
 
@@ -701,6 +707,16 @@ const Cradle = ({
 
             }
 
+            case 'cached': {// no op
+
+                if (!wasCached.current && !isCached.current){
+
+                    setCradleState('ready')
+
+                }
+                break
+            }
+
             // renderupdatedcontent is called from updateCradleContent. 
             // it is required to integrate changed DOM configurations before 'ready' is displayed
             case 'renderupdatedcontent': { // cycle for DOM update
@@ -838,9 +854,6 @@ const Cradle = ({
 
             case 'repositioningContinuation': // set from onScroll
                 setCradleState('repositioningRender')
-                break
-
-            case 'cached': // no op
                 break
 
             case 'ready': // no op
