@@ -140,6 +140,10 @@ const CellShell = ({
             case 'setup':
                 // no-op
                 break
+            case 'inserting': {
+                setCellStatus('ready')
+                break
+            }
             case 'getusercontent': {
                 // const dimensions = shellRef.current?.getBoundingClientRect()
                 // console.log('cellShell dimensions',dimensions)
@@ -159,7 +163,7 @@ const CellShell = ({
 
                     contentRef.current = <OutPortal node = {reverseportal}/>
 
-                    setCellStatus('ready')
+                    setCellStatus('inserting')
 
                     },{timeout:IDLECALLBACK_CACHETIMEOUT})
 
@@ -210,7 +214,7 @@ const CellShell = ({
 
                         // }
 
-                        setCellStatus('ready')
+                        setCellStatus('inserting')
 
                     },{timeout:IDLECALLBACK_FETCHTIMEOUT})
 
