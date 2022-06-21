@@ -98,16 +98,7 @@ const CellShell = ({
 
         contentRef.current = placeholderRef.current
 
-        // if (!hasUserContent) {
-
-            setCellStatus('getusercontent')
-
-        // } else {
-
-            // portaldataRef.current.isReparenting = true
-            // if (isMountedRef.current) setCellStatus('ready')
-            
-        // }        
+        setCellStatus('getusercontent')
 
         // unmount
         return () => {
@@ -151,9 +142,9 @@ const CellShell = ({
             case 'getusercontent': {
                 // const dimensions = shellRef.current?.getBoundingClientRect()
                 // console.log('cellShell dimensions',dimensions)
-                const isPortal = cacheHandler.hasPortal(index)
+                const cached = cacheHandler.hasPortal(index)
 
-                if (isPortal) {
+                if (cached) {
 
                     // console.log('fetching portal for scrollerID, instanceID, index', 
                     //     scrollerID, instanceID, index)
@@ -175,7 +166,7 @@ const CellShell = ({
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
 
-                        // if (isPortal) {
+                        // if (cached) {
 
                         //     console.log('fetching portal')
 
