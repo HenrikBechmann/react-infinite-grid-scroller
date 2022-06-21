@@ -173,46 +173,25 @@ const CellShell = ({
 
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
+                        const usercontent = await getItem(index)
 
-                        // if (cached) {
+                        if (isMountedRef.current) {
 
-                        //     console.log('fetching portal')
+                            if (usercontent) {
 
-                        //     portaldataRef.current = cacheHandler.fetchPortal(index)
+                                portaldataRef.current = cacheHandler.fetchPortal(index, usercontent, cellWidth, cellHeight)
 
-                        //     const { reverseportal } = portaldataRef.current
+                                const { reverseportal } = portaldataRef.current
 
-                        //     // portaldataRef.current.isReparenting = true
+                                contentRef.current = <OutPortal node = {reverseportal}/>
 
-                        //     contentRef.current = <OutPortal node = {reverseportal}/>
+                            } else {
 
-                        //     setCellStatus('ready')
-
-                        // } else {
-
-                            // console.log('fetching new content')
-
-                            const usercontent = await getItem(index)
-
-                            if (isMountedRef.current) {
-
-                                if (usercontent) {
-
-                                    portaldataRef.current = cacheHandler.fetchPortal(index, usercontent)
-
-                                    const { reverseportal } = portaldataRef.current
-
-                                    contentRef.current = <OutPortal node = {reverseportal}/>
-
-                                } else {
-
-                                    console.log('ERROR','no content item')
-
-                                }
+                                console.log('ERROR','no content item')
 
                             }
 
-                        // }
+                        }
 
                         setCellStatus('inserting')
 
@@ -221,8 +200,6 @@ const CellShell = ({
                 }
 
                 // console.log('contentRef.current',contentRef.current)
-
-                // setCellStatus('acquired')
 
                 break
             }

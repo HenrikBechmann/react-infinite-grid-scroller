@@ -49,15 +49,40 @@ export class CacheHandler {
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
     // add a portal list item. The index is the scroller's portal dataset index
-    fetchPortal(index, content) { // content is used for new portal only
+    // fetchPortal(index, content) { // content is used for new portal only
+
+    //     if (this.hasPortal(index)) {
+    //         return this.getPortal(index)
+    //     }
+
+    //     // if not found, create new portal
+    //     const [inportal,reverseportal] = createPortal(content, index)
+
+    //     this.scrollerProps.portalMap.set(index,<PortalWrapper inportal = {inportal} key = {index} index = {index}/>)
+    //     this.scrollerProps.modified = true
+
+    //     const portalMetadata = {
+    //         reverseportal, 
+    //         isReparenting:false,
+    //         hasusercontent:false 
+    //     }
+
+    //     this.scrollerProps.portalMetadataMap.set(index, portalMetadata)
+
+    //     this.renderPortalList()
+
+    //     return portalMetadata
+
+    // }
+
+    fetchPortal(index, content, cellWidth, cellHeight) { // content is used for new portal only
 
         if (this.hasPortal(index)) {
             return this.getPortal(index)
         }
 
         // if not found, create new portal
-
-        const [inportal,reverseportal] = createInPortal(content, index)
+        const [inportal,reverseportal] = createPortal({index, content, cellWidth, cellHeight})
 
         this.scrollerProps.portalMap.set(index,<PortalWrapper inportal = {inportal} key = {index} index = {index}/>)
         this.scrollerProps.modified = true
@@ -75,7 +100,6 @@ export class CacheHandler {
         return portalMetadata
 
     }
-
     // update the content of a portal list item
     // updatePortal(index, content) {
     //     const portalMetadata = this.getPortal(index)
@@ -119,32 +143,53 @@ export class CacheHandler {
 
 // get a react-reverse-portal InPortal component, with its metadata
 // with user content and container
-const createInPortal = (content, index) => {
+// const createPortal = (content, index) => {
 
-    let reversePortal = createHtmlPortalNode()
+//     let portalRecord = createHtmlPortalNode()
 
-    let container = reversePortal.element
+//     let container = portalRecord.element
+//     // container.style.inset = '0px' 
+//     container.style.position = 'absolute'
+//     container.style.height = '100px'
+//     container.style.width = '100px'
+//     container.dataset.type = 'contentenvelope'
+//     container.dataset.index = index
+
+//     container.setAttribute('key',index)
+
+
+//     return [
+//         <InPortal node = {portalRecord}>{content}</InPortal>,
+//         portalRecord
+//     ]
+
+// }     
+
+const createPortal = ({index, content, cellWidth, cellHeight}) => {
+
+    const portalRecord = createHtmlPortalNode()
+
+    const contentenvelope = portalRecord.element
     // container.style.inset = '0px' 
-    container.style.position = 'absolute'
-    container.style.height = '100px'
-    container.style.width = '100px'
-    container.dataset.type = 'contentenvelope'
-    container.dataset.index = index
+    contentenvelope.style.position = 'absolute'
+    contentenvelope.style.height = cellHeight + 'px'
+    contentenvelope.style.width = cellWidth + 'px'
+    contentenvelope.dataset.type = 'contentenvelope'
+    contentenvelope.dataset.index = index
 
-    container.setAttribute('key',index)
+    contentenvelope.setAttribute('key',index)
 
 
     return [
-        <InPortal node = {reversePortal}>{content}</InPortal>,
-        reversePortal
+        <InPortal node = {portalRecord}>{content}</InPortal>,
+        portalRecord
     ]
 
 }     
-
 // update an InPortal component's user content
-const updateInPortal = (content, reversePortal) => {
+const updateInPortal = (content, portalRecord) => {
 
-    return <InPortal node = {reversePortal} >
+    return <InPortal node = {portalRecord} >
         { content }
     </InPortal>
 
