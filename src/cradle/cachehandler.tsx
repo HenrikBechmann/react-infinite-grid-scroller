@@ -126,8 +126,8 @@ const createInPortal = (content, index) => {
     let container = reversePortal.element
     // container.style.inset = '0px' 
     container.style.position = 'absolute'
-    container.style.height = '100%'
-    container.style.width = '100%'
+    container.style.height = '100px'
+    container.style.width = '100px'
     container.dataset.type = 'contentenvelope'
     container.dataset.index = index
 
@@ -152,7 +152,7 @@ const updateInPortal = (content, reversePortal) => {
 
 // ========================[ Utility components ]==============================
 
-const wrapperstyle = {display:'none'} // static; should take same dimensions as container CellShell
+const wrapperstyle = {display:'block', height:'200px', width:'200px'} // static; should take same dimensions as container CellShell
 
 // hidden portal wrapper for clarity and usage of conventional react relisting services
 export const PortalWrapper = ({ inportal, index }) => {

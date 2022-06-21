@@ -101,7 +101,7 @@ import StylesHandler from './cradle/styleshandler'
 // for children
 export const CradleCacheContext = React.createContext(null)
 
-const portalrootstyle = {display:'none'} // static 
+const cacherootstyle = {display:'block',transform:'translateX(10000px)'} // static 
 
 // component
 const Cradle = ({ 
@@ -819,6 +819,7 @@ const Cradle = ({
 
                 } else if (interruptHandler.signals.repositioningRequired) {
 
+                    console.log('calling startreposition from normalizesignals', '-' + scrollerID + '-')
                     setCradleState('startreposition')
 
                 } else {                     
@@ -889,12 +890,8 @@ const Cradle = ({
 
     const cradleContent = contentHandler.content
 
-    // the data-type = portalroot div is the hidden portal component cache
+    // the data-type = cacheroot div is the hidden portal component cache
     return <CradleCacheContext.Provider value = {handlersRef.current.cacheHandler}>
-        {(cradleStateRef.current != 'setup') && <div data-type = 'portalroot' style = { portalrootstyle }>
-            <PortalList scrollerProps = {handlersRef.current.cacheHandler.scrollerProps}/>
-        </div>}
-
         {((cradleStateRef.current == 'repositioningRender') || 
             (cradleStateRef.current == 'repositioningContinuation'))?
             <ScrollTracker 
@@ -960,6 +957,10 @@ const Cradle = ({
                 </div>
             </div>
         }
+
+        {(cradleStateRef.current != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
+            <PortalList scrollerProps = {handlersRef.current.cacheHandler.scrollerProps}/>
+        </div>}
         
     </CradleCacheContext.Provider>
 

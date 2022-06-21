@@ -103,7 +103,7 @@ export default class InterruptHandler {
 
             if (
                 !viewportInterruptProperties.isResizing &&
-                // !viewportInterruptProperties.portal?.isReparenting &&
+                !viewportInterruptProperties.portal?.isReparenting &&
                 !(cradleState == 'repositioningRender') && 
                 !(cradleState == 'repositioningContinuation') &&
                 !(cradleState == 'renderupdatedcontent') && // TODO: *TEST*
@@ -114,9 +114,11 @@ export default class InterruptHandler {
                 ) 
             {
                 const element = viewportInterruptProperties.elementref.current
+
+                const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
                 if (!element) {
                     console.log('SYSTEM: viewport element not set in cradleIntersectionObserverCallback',
-                        this.cradleParameters.cradleInheritedPropertiesRef.current.scrollerID,viewportInterruptProperties)
+                        scrollerID,viewportInterruptProperties)
                     return
                 }
                 // TODO this is a duplicate setting procedure with viewport.tsx
@@ -124,6 +126,11 @@ export default class InterruptHandler {
                 const {top, right, bottom, left} = rect
                 const width = right - left, height = bottom - top
                 viewportInterruptProperties.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
+
+                console.log('calling startreposition from cradleIntersectionObserverCallback:scrollerID, entries',
+                 '-' + scrollerID + '-', entries)
+
+                // debugger
 
                 stateHandler.setCradleState('startreposition')
 
