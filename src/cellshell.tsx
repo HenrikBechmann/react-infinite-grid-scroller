@@ -93,9 +93,9 @@ const CellShell = ({
 
         // const hasUserContent = !!portaldataRef.current.hasusercontent // previous InPortal creation for index
 
-        // const { reverseportal } = portaldataRef.current
+        // const { portalRecord } = portaldataRef.current
 
-        // contentPortalRef.current = <OutPortal node = {reverseportal}/>
+        // contentPortalRef.current = <OutPortal node = {portalRecord}/>
 
         contentRef.current = placeholderRef.current
 
@@ -155,13 +155,13 @@ const CellShell = ({
                     // console.log('fetching portal for scrollerID, instanceID, index', 
                     //     scrollerID, instanceID, index)
 
-                    portaldataRef.current = await cacheHandler.fetchPortal(index)
+                    portaldataRef.current = await cacheHandler.getPortal(index)
 
-                    const { reverseportal } = portaldataRef.current
+                    const { portalRecord } = portaldataRef.current
 
                     portaldataRef.current.isReparenting = true
 
-                    contentRef.current = <OutPortal node = {reverseportal}/>
+                    contentRef.current = <OutPortal node = {portalRecord}/>
 
                     setCellStatus('inserting')
 
@@ -181,9 +181,9 @@ const CellShell = ({
 
                                 portaldataRef.current = cacheHandler.fetchPortal(index, usercontent, cellWidth, cellHeight)
 
-                                const { reverseportal } = portaldataRef.current
+                                const { portalRecord } = portaldataRef.current
 
-                                contentRef.current = <OutPortal node = {reverseportal}/>
+                                contentRef.current = <OutPortal node = {portalRecord}/>
 
                             } else {
 

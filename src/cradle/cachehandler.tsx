@@ -56,13 +56,13 @@ export class CacheHandler {
     //     }
 
     //     // if not found, create new portal
-    //     const [inportal,reverseportal] = createPortal(content, index)
+    //     const [inportal,portalRecord] = createPortal(content, index)
 
     //     this.scrollerProps.portalMap.set(index,<PortalWrapper inportal = {inportal} key = {index} index = {index}/>)
     //     this.scrollerProps.modified = true
 
     //     const portalMetadata = {
-    //         reverseportal, 
+    //         portalRecord, 
     //         isReparenting:false,
     //         hasusercontent:false 
     //     }
@@ -75,20 +75,28 @@ export class CacheHandler {
 
     // }
 
-    fetchPortal(index, content, cellWidth, cellHeight) { // content is used for new portal only
+    getPortal(index) {
 
         if (this.hasPortal(index)) {
-            return this.getPortal(index)
+            return this._getPortal(index)
         }
 
+    }
+
+    fetchPortal(index, content, cellWidth, cellHeight) { // content is used for new portal only
+
+        // if (this.hasPortal(index)) {
+        //     return this._getPortal(index)
+        // }
+
         // if not found, create new portal
-        const [inportal,reverseportal] = createPortal({index, content, cellWidth, cellHeight})
+        const [inportal,portalRecord] = createPortal({index, content, cellWidth, cellHeight})
 
         this.scrollerProps.portalMap.set(index,<PortalWrapper inportal = {inportal} key = {index} index = {index}/>)
         this.scrollerProps.modified = true
 
         const portalMetadata = {
-            reverseportal, 
+            portalRecord, 
             isReparenting:false,
             hasusercontent:false 
         }
@@ -104,7 +112,7 @@ export class CacheHandler {
     // updatePortal(index, content) {
     //     const portalMetadata = this.getPortal(index)
 
-    //     const portalComponent = updateInPortal(content, portalMetadata.reverseportal )
+    //     const portalComponent = updateInPortal(content, portalMetadata.portalRecord )
 
     //     this.scrollerProps.portalMap.set(index,<PortalWrapper inportal = {portalComponent} key = {index} index = {index}/>)
     //     this.scrollerProps.modified = true
@@ -131,7 +139,7 @@ export class CacheHandler {
     }
 
     // get a portal list item's meta data
-    getPortal(index) {
+    private _getPortal(index) {
 
         return this.scrollerProps.portalMetadataMap.get(index)
 
