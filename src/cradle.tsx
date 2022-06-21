@@ -2,7 +2,8 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    rationalize pauseScrolling, and other signals
+    BUG: cache is last imort state; should be ready
+    - rationalize pauseScrolling, and other signals
 */
 
 /*
@@ -101,7 +102,7 @@ import StylesHandler from './cradle/styleshandler'
 // for children
 export const CradleCacheContext = React.createContext(null)
 
-const cacherootstyle = {display:'block',transform:'translateX(10000px)'} // static 
+const cacherootstyle = {position:'fixed', left: '10000px', display:'block'} as React.CSSProperties // static, out of view 
 
 // component
 const Cradle = ({ 

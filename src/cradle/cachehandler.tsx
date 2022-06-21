@@ -152,7 +152,7 @@ const updateInPortal = (content, reversePortal) => {
 
 // ========================[ Utility components ]==============================
 
-const wrapperstyle = {display:'block', height:'200px', width:'200px'} // static; should take same dimensions as container CellShell
+const wrapperstyle = {display:'block'} // static; should take same dimensions as container CellShell
 
 // hidden portal wrapper for clarity and usage of conventional react relisting services
 export const PortalWrapper = ({ inportal, index }) => {
