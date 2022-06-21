@@ -155,7 +155,7 @@ const Viewport = ({
         let element = viewportElementRef.current
 
         while (element) {
-            if (element.dataset && (element.dataset.type == 'portalcontainer')) { // set portal & exit
+            if (element.dataset && (element.dataset.type == 'contentenvelope')) { // set portal & exit
                 portalindex = parseInt(element.dataset.index)
                 viewportInterruptPropertiesRef.current.portal = parentPortalHandler.getPortal(portalindex)
                 viewportInterruptPropertiesRef.current.index = portalindex
@@ -166,7 +166,7 @@ const Viewport = ({
         } 
 
         if (!element) {
-            console.log('ERROR: parent portalcontainer not found')
+            console.log('ERROR: parent contentenvelope not found')
             return
         }
 
