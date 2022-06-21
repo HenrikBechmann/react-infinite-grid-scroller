@@ -24,7 +24,7 @@ export class CacheHandler {
 
     // initialize scroller repository
 
-    resetScrollerPortalRepository() {
+    clearCache = () => {
 
         // keep the setListState callback
         this.scrollerProps.portalMap.clear() 
@@ -49,7 +49,7 @@ export class CacheHandler {
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
     // add a portal list item. The index is the scroller's portal dataset index
-    fetchOrCreatePortal(index, content) { // content is used for new portal only
+    fetchPortal(index, content) { // content is used for new portal only
 
         if (this.hasPortal(index)) {
             return this.getPortal(index)
@@ -77,18 +77,18 @@ export class CacheHandler {
     }
 
     // update the content of a portal list item
-    updatePortal(index, content) {
-        const portalMetadata = this.getPortal(index)
+    // updatePortal(index, content) {
+    //     const portalMetadata = this.getPortal(index)
 
-        const portalComponent = updateInPortal(content, portalMetadata.reverseportal )
+    //     const portalComponent = updateInPortal(content, portalMetadata.reverseportal )
 
-        this.scrollerProps.portalMap.set(index,<PortalWrapper inportal = {portalComponent} key = {index} index = {index}/>)
-        this.scrollerProps.modified = true
+    //     this.scrollerProps.portalMap.set(index,<PortalWrapper inportal = {portalComponent} key = {index} index = {index}/>)
+    //     this.scrollerProps.modified = true
 
-        this.renderPortalList()
+    //     this.renderPortalList()
 
-        return portalMetadata
-    }
+    //     return portalMetadata
+    // }
 
     // delete a portal list item
     deletePortal(index) {
@@ -124,9 +124,11 @@ const createInPortal = (content, index) => {
     let reversePortal = createHtmlPortalNode()
 
     let container = reversePortal.element
-    container.style.inset = '0px' 
+    // container.style.inset = '0px' 
     container.style.position = 'absolute'
-    container.dataset.type = 'portalcontainer'
+    container.style.height = '100%'
+    container.style.width = '100%'
+    container.dataset.type = 'contentenvelope'
     container.dataset.index = index
 
     container.setAttribute('key',index)

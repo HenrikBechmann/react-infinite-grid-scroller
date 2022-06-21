@@ -3,7 +3,7 @@
 
 /*
     ROADMAP:
-        setCradleContent draws from cache
+        cache management
         suspense analog
         review all code
         modes: uniform, variable, dynamic
@@ -11,10 +11,16 @@
         test changing all gridscroller parameters
 
     BUGS: 
-        - check for resize on reparenting
-        - seems to be occasional mismatch of 1 row in reparenting
+        - use requestidlecallback for fetch from portal
+        - top padding was lost under heavy cache loads
+        - triggerlines are confounded under heavy cache loads
+        - does portal need to be returned to cache?
+        - nested lists need to have orientation property changed on pivot
+        - clearCache user callback to anticipate different dataset?
+        - or clearCache with new getItem function
 
     TODO:
+        prioritize fetch cells for visible cells
         customizable scrolltracker
         reload from/to for insertions and substitutions
         provide user with isReparenting flag to be able to reset scroll
@@ -73,8 +79,7 @@ const InfiniteGridScroller = (props) => {
         padding, // the space between the items and the viewport, applied to the cradle
         cellHeight, // the outer pixel height - literal for vertical; approximate for horizontal
         cellWidth, // the outer pixel width - literal for horizontal; approximate for vertical
-        layout, // uniform, variable (doesn't use axis), dynamic (uses axis)
-        dense, // boolean (only with preload)
+        layout, // uniform, variable (doesn't use axis), dynamic (uses axis), dense
 
         runwaySize, // the number of items outside the view of each side of the viewport 
             // -- gives time to assemble before display
@@ -103,7 +108,6 @@ const InfiniteGridScroller = (props) => {
         cellHeight,
         cellWidth,
         layout,
-        dense,
     }
 
     // allow scrollerID to be set by useEffect. Inline setting causes double processing
@@ -120,13 +124,15 @@ const InfiniteGridScroller = (props) => {
     listSize ?? (listSize = 0)
     listSize = Math.max(0,listSize)
     layout ?? (layout = 'uniform')
-    dense ?? (dense = false)
-    cache ?? (cache = 'cradle')
+    cache ?? (cache = 'keepload')
     // constraints
     indexOffset = Math.max(0,indexOffset) // non-negative
     indexOffset = Math.min((listSize -1), indexOffset) // not larger than list
     if (!['horizontal','vertical'].includes(orientation)) {
         orientation = 'vertical'
+    }
+    if (!['preload','keepload','cradle'].includes(cache)) {
+        cache = 'cradle'
     }
     // TODO: rationalize with cellHeight & cellWidth; must be less than half
     triggerlineOffset ?? (triggerlineOffset = 10) 
@@ -198,6 +204,8 @@ const InfiniteGridScroller = (props) => {
                     scrollerName = { scrollerName }
 
                     listsize = { listSize }
+                    cache = {cache}
+                    cacheMax = {cacheMax}
 
                     functions = { functionsRef.current }
                     defaultVisibleIndex = { defaultVisibleIndex }

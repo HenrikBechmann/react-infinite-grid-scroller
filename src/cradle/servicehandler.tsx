@@ -50,18 +50,21 @@ export default class ServiceHandler {
     // TODO: adjust axisPixelOffset to match new data
     public reload = () => {
 
+        // console.log('calling reload state from serviceHandler')
+
         const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
         const { stateHandler } = this.cradleParameters.handlersRef.current
 
         signals.pauseCradleIntersectionObserver = true
         signals.pauseTriggerlinesObserver = true
         signals.pauseScrollingEffects = true
-
         stateHandler.setCradleState('reload')
 
     }
 
     public scrollToItem = (index) => {
+
+        // console.log('calling scrollToItem: index', index)
 
         const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
         const { scaffoldHandler, stateHandler} = this.cradleParameters.handlersRef.current

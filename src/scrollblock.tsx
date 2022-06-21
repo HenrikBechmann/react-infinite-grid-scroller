@@ -28,7 +28,6 @@ const Scrollblock = ({
         cellHeight,
         cellWidth,
         layout,
-        dense,
     } = gridSpecs
 
     // -------------------------[ context and state ]-------------------------
