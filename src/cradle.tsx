@@ -153,7 +153,7 @@ const Cradle = ({
     const isMountedRef = useRef(true)
     const isCached = useRef(false)
     const wasCached = useRef(null)
-    const scrollPosRecoveryPosRef = useRef(null)
+    // const scrollPosRecoveryPosRef = useRef(null)
 
     // cradle scaffold elements refs
     const headCradleElementRef = useRef(null)
@@ -311,7 +311,7 @@ const Cradle = ({
         cradleElementsRef,
         isCached,
         wasCached,
-        scrollPosRecoveryPosRef,
+        // scrollPosRecoveryPosRef,
 
         // for stateHandler
         cradleStateRef,
@@ -359,29 +359,42 @@ const Cradle = ({
 
     console.log('ENTERING cradleState, scrollerID',cradleState, '-' + scrollerID + '-')
     
-    if (viewportInterruptPropertiesRef.current.isResizing) {
+    if (viewportInterruptProperties.isResizing ||
+        viewportInterruptProperties.portal?.isReparenting) {
 
-        const dimensions = viewportInterruptProperties.viewportDimensions
-        const {width:vwidth, height:vheight} = dimensions
-
-        const isInPortal = ((vwidth == 0) && (vheight == 0))
 
         let isChange = false
-        if (isInPortal != isCached.current) { // there's been a change
+        if (viewportInterruptProperties.portal?.isReparenting) {
+
+            viewportInterruptProperties.portal.isReparenting = false
+            wasCached.current = true
+            isCached.current = false
             isChange = true
-            wasCached.current = isCached.current
-            isCached.current = isInPortal
-        }
 
-        if (isCached.current || wasCached.current) {
-            viewportInterruptPropertiesRef.current.isResizing = false                
-        }
+        } else {
 
-        if (isChange) {
+            const dimensions = viewportInterruptProperties.viewportDimensions
+            const {width:vwidth, height:vheight} = dimensions
+
+            const isInPortal = ((vwidth == 0) && (vheight == 0))
+
+            if (isInPortal != isCached.current) { // there's been a change
+                isChange = true
+                wasCached.current = isCached.current
+                isCached.current = isInPortal
+            }
+
+            if (isCached.current || wasCached.current) {
+                viewportInterruptPropertiesRef.current.isResizing = false                
+            }
 
             console.log('ON CHANGE: \n  isInPortal, vwidth, vheight,\n  is, was, isResizing\n',
                 isInPortal, vwidth, vheight,'\n',isCached.current, 
                 wasCached.current,viewportInterruptPropertiesRef.current.isResizing)
+
+        }
+
+        if (isChange) {
 
             const { cradlePositionData } = scaffoldHandler
 
@@ -389,9 +402,8 @@ const Cradle = ({
             //     -- only a change causes a trigger
 
             // is, was = true, false
-
             if (isCached.current && !wasCached.current) { // change into cached
-                scrollPosRecoveryPosRef.current = cradlePositionData.blockScrollPos
+                // scrollPosRecoveryPosRef.current = cradlePositionData.blockScrollPos
 
                 console.log('INTO CACHE')
 
@@ -407,7 +419,7 @@ const Cradle = ({
                 console.log('OUT OF CACHE')
 
                 viewportInterruptProperties.elementref.current[
-                    cradlePositionData.blockScrollProperty] = scrollPosRecoveryPosRef.current
+                    cradlePositionData.blockScrollProperty] = cradlePositionData.blockScrollPos // scrollPosRecoveryPosRef.current
             
                 wasCached.current = false
 

@@ -153,7 +153,7 @@ const CellShell = ({
 
                     const { reverseportal } = portaldataRef.current
 
-                    // portaldataRef.current.isReparenting = true
+                    portaldataRef.current.isReparenting = true
 
                     contentRef.current = <OutPortal node = {reverseportal}/>
 
