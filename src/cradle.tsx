@@ -348,7 +348,7 @@ const Cradle = ({
         stylesHandler,
     } = handlersRef.current
 
-    // ===================[ inPortalState sentinel ]=======================
+    // ===================[ cache change sentinel ]=======================
 
     // ... when the scroller is unhooked from the DOM but kept in a React portal
     // or when the scroller is added to the visible DOM. Either change causes a trigger
@@ -364,57 +364,52 @@ const Cradle = ({
         const dimensions = viewportInterruptProperties.viewportDimensions
         const {width:vwidth, height:vheight} = dimensions
 
-        console.log('ENTERING cradleState, scrollerID',cradleState, '-' + scrollerID + '-')
-
         const isInPortal = ((vwidth == 0) && (vheight == 0))
 
+        let isChange = false
         if (isInPortal != isCached.current) { // there's been a change
+            isChange = true
             wasCached.current = isCached.current
             isCached.current = isInPortal
         }
-        console.log('ON ENTER: \n  isInPortal, vwidth, vheight,\n  is, was, isResizing\n',
-            isInPortal, vwidth, vheight,'\n',isCached.current, 
-            wasCached.current,viewportInterruptPropertiesRef.current.isResizing)
 
-        const { cradlePositionData } = scaffoldHandler
+        if (isCached.current || wasCached.current) {
+            viewportInterruptPropertiesRef.current.isResizing = false                
+        }
 
-        // is, was = false, false, is ignored; is, was = true, true never happens 
-        //     -- only a change causes a trigger
+        if (isChange) {
 
-        // is, was = true, false
+            console.log('ON CHANGE: \n  isInPortal, vwidth, vheight,\n  is, was, isResizing\n',
+                isInPortal, vwidth, vheight,'\n',isCached.current, 
+                wasCached.current,viewportInterruptPropertiesRef.current.isResizing)
 
-        if (isCached.current && !wasCached.current) { // change into inPortalState
-            scrollPosRecoveryPosRef.current = cradlePositionData.blockScrollPos
+            const { cradlePositionData } = scaffoldHandler
 
-            console.log('entering is == true and was == false')
+            // is, was = false, false, is ignored; is, was = true, true never happens 
+            //     -- only a change causes a trigger
 
-            viewportInterruptPropertiesRef.current.isResizing && 
-                (viewportInterruptPropertiesRef.current.isResizing = false)
+            // is, was = true, false
 
-            interruptHandler.pauseTriggerlinesObserver = true
-            interruptHandler.pauseCradleIntersectionObserver = true
-            interruptHandler.pauseCradleResizeObserver = true
-            interruptHandler.pauseScrollingEffects = true,
-            interruptHandler.pauseViewportResizing = true
+            if (isCached.current && !wasCached.current) { // change into cached
+                scrollPosRecoveryPosRef.current = cradlePositionData.blockScrollPos
 
-        // is, was = false, true
-        } else if ((!isCached.current) && wasCached.current) { // change out of inPortalState
-            if (viewportInterruptProperties.elementref.current[
-                cradlePositionData.blockScrollProperty] != scrollPosRecoveryPosRef.current) {
+                console.log('INTO CACHE')
 
-                // console.log('entering is == false and was == true; resetting scrollPos')
+                interruptHandler.pauseTriggerlinesObserver = true
+                interruptHandler.pauseCradleIntersectionObserver = true
+                interruptHandler.pauseCradleResizeObserver = true
+                interruptHandler.pauseScrollingEffects = true,
+                interruptHandler.pauseViewportResizing = true
 
-                // console.log('setting SCROLLPOS in inPortalState sentinel', scrollPosRecoveryPosRef.current)
+            // is, was = false, true
+            } else if ((!isCached.current) && wasCached.current) { // change out of cached
+
+                console.log('OUT OF CACHE')
+
                 viewportInterruptProperties.elementref.current[
                     cradlePositionData.blockScrollProperty] = scrollPosRecoveryPosRef.current
-        
-            }
-
-            if (viewportInterruptPropertiesRef.current.isResizing) {
-
+            
                 wasCached.current = false
-
-                viewportInterruptPropertiesRef.current.isResizing = false                
 
                 interruptHandler.pauseTriggerlinesObserver = false
                 interruptHandler.pauseCradleIntersectionObserver = false
@@ -423,7 +418,6 @@ const Cradle = ({
                 interruptHandler.pauseViewportResizing = false
 
             }
-
         }
     }
 
@@ -431,7 +425,7 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return // or else 'dosetup' will be passed over in favour of 'ready'
 
-        console.log('in isInPortalState useEffect:scrollerID, is, was',scrollerID, isCached.current, wasCached.current)
+        console.log('in isCached useEffect:scrollerID, is, was','-',scrollerID,'-', isCached.current, wasCached.current)
         if (isCached.current && !wasCached.current) {
 
             setCradleState('cached')
@@ -537,7 +531,7 @@ const Cradle = ({
         // const dimensions = viewportInterruptPropertiesRef.current.elementref.current.getBoundingClientRect()
         // // console.log('inside resizing from isResizing effect:scrollerID, width, height', scrollerID, dimensions.width, dimensions.height)
 
-        if (isCached.current) {
+        if (isCached.current || wasCached.current) {
 
             return
 
@@ -834,7 +828,10 @@ const Cradle = ({
                 setCradleState('repositioningRender')
                 break
 
-            case 'ready': // no action on ready
+            case 'cached': // no op
+                break
+
+            case 'ready': // no op
                 break
 
         }
