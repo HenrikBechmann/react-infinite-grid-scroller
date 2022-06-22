@@ -5,7 +5,7 @@ import React, {useRef, useEffect, useLayoutEffect, useState, useCallback, useMem
 
 import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
-// import { OutPortal } from 'react-reverse-portal'
+import { OutPortal } from 'react-reverse-portal'
 
 import Placeholder from './placeholder'
 
@@ -191,7 +191,7 @@ const CellShell = ({
     // const contentPortalRef = useRef(null)
     // const contentRef = useRef(null)
 
-    const contentEnvelopeRef = useRef(null)
+    const portalRecordRef = useRef(null)
 
     useLayoutEffect(() => {
 
@@ -220,15 +220,15 @@ const CellShell = ({
 
                     portaldataRef.current = cacheHandler.getPortal(index)
 
-                    contentEnvelopeRef.current = portaldataRef.current.contentenvelope
+                    portalRecordRef.current = portaldataRef.current.portalRecord
                     // contentEnvelopeRef.current.style.display = 'none'
 
-                    console.log('scrollerID, instanceID, index, holderRef', '-'+scrollerID+'-', instanceID, index, 
-                        portaldataRef.current.holderRef)
+                    // console.log('scrollerID, instanceID, index, holderRef', '-'+scrollerID+'-', instanceID, index, 
+                    //     portaldataRef.current.holderRef)
 
                     portaldataRef.current.isReparenting = true
 
-                    shellRef.current.append(contentEnvelopeRef.current)
+                    // shellRef.current.append(contentEnvelopeRef.current)
 
                     // setEnvelopeStatus(contentenvelope)
 
@@ -246,15 +246,15 @@ const CellShell = ({
 
                             if (usercontent) {
 
-                                portaldataRef.current = cacheHandler.fetchPortal(index, usercontent, cellWidth, cellHeight)
+                                portaldataRef.current = cacheHandler.fetchPortal(index, usercontent)
 
-                                contentEnvelopeRef.current  = portaldataRef.current.contentenvelope
+                                portalRecordRef.current  = portaldataRef.current.portalRecord
 
                                 // console.log('FETCHED portalRecord in cellShell', portalRecord, portaldataRef)
 
                                 // contentRef.current = portalRecord// <OutPortal node = {portalRecord}/>
 
-                                shellRef.current.append(contentEnvelopeRef.current)
+                                // shellRef.current.append(contentEnvelopeRef.current)
 
                             } else {
 
@@ -304,7 +304,9 @@ const CellShell = ({
         data-instanceid = {instanceID} 
         style = {styles}>
 
-            { (cellStatus != 'ready') && placeholderRef.current }
+            { (cellStatus != 'ready')?
+                placeholderRef.current:
+                <OutPortal node = {portalRecordRef.current}/>}
             
         </div>
 
