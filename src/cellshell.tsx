@@ -152,15 +152,15 @@ const CellShell = ({
         // unmount
         return () => {
 
-            const envelope = contentEnvelopeRef.current
-            console.log('outgoing envelope',envelope)
-            console.log('outgoing contentEnvelopeRef width, height before append',
-             '-'+scrollerID+'-', envelope.clientWidth, envelope.clientHeight)
+            // const envelope = contentEnvelopeRef.current
+            // console.log('outgoing envelope',envelope)
+            // console.log('outgoing contentEnvelopeRef width, height before append',
+            //  '-'+scrollerID+'-', envelope.clientWidth, envelope.clientHeight)
 
-            portaldataRef.current.holderRef.current.append(envelope) // cache
+            // portaldataRef.current.holderRef.current.append(envelope) // cache
 
-            console.log('outgoing contentEnvelopeRef width, height after append',
-             '-'+scrollerID+'-', envelope.clientWidth, envelope.clientHeight)
+            // console.log('outgoing contentEnvelopeRef width, height after append',
+            //  '-'+scrollerID+'-', envelope.clientWidth, envelope.clientHeight)
             cancelidlecallback(requestIdleCallbackIdRef.current)
 
         }
