@@ -151,11 +151,11 @@ const CellShell = ({
 
                 if (cached) {
 
-                    requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
+                    // requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
                     // console.log('fetching portal for scrollerID, instanceID, index', 
                     //     scrollerID, instanceID, index)
 
-                    portaldataRef.current = await cacheHandler.getPortal(index)
+                    portaldataRef.current = cacheHandler.getPortal(index)
 
                     const portalRecord = portaldataRef.current.contentenvelope
 
@@ -167,7 +167,7 @@ const CellShell = ({
 
                     setCellStatus('inserting')
 
-                    },{timeout:IDLECALLBACK_CACHETIMEOUT})
+                    // },{timeout:IDLECALLBACK_CACHETIMEOUT})
 
                 } else {
 
@@ -185,7 +185,7 @@ const CellShell = ({
 
                                 const portalRecord  = portaldataRef.current.contentenvelope
 
-                                console.log('FETCHED portalRecord in cellShell', portalRecord, portaldataRef)
+                                // console.log('FETCHED portalRecord in cellShell', portalRecord, portaldataRef)
 
                                 contentRef.current = portalRecord// <OutPortal node = {portalRecord}/>
 

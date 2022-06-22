@@ -43,7 +43,7 @@ export class CacheHandler {
             this.scrollerProps.modified = false
         }
 
-        console.log('rendering portal list', this.scrollerProps.portalList, this.scrollerProps.portalMap)
+        // console.log('rendering portal list', this.scrollerProps.portalList, this.scrollerProps.portalMap)
         this.scrollerProps.setListState() // trigger display update
 
     }
@@ -212,7 +212,7 @@ const wrapperstyle = {display:'block'} // static; should take same dimensions as
 // hidden portal wrapper for clarity and usage of conventional react relisting services
 export const PortalWrapper = ({ children, index }) => {
 
-    console.log('PortalWrapper children',children)
+    // console.log('PortalWrapper children',children)
     return  <div data-type = 'portalwrapper' data-index = { index } style = { wrapperstyle } key = { index }>
         { children }
     </div>
@@ -235,7 +235,7 @@ export const PortalList = ({ scrollerProps }) => {
 
     },[]) 
 
-    console.log('portalList',portalList)
+    // console.log('portalList',portalList)
 
     return portalList
 }
