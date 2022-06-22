@@ -14,57 +14,58 @@ import { CradleCacheContext } from './cradle'
 const IDLECALLBACK_FETCHTIMEOUT = 8000 // TODO experimentally high!!
 const IDLECALLBACK_CACHETIMEOUT = 1000
 
-const envelopestyle = {
-    height:'100%',
-    width:'100%',
-    position:'relative',
-} as React.CSSProperties
+// const envelopestyle = {
+//     height:'100%',
+//     width:'100%',
+//     position:'relative',
+// } as React.CSSProperties
 
-const Envelope = ({
-    envelope
-}) => {
+// const Envelope = ({
+//     envelope
+// }) => {
 
-    // const [envelopeContent, setEnvelopeContent] = useState(null)
-    const [envelopeState, setEnvelopeState] = useState('setup')
+//     // const [envelopeContent, setEnvelopeContent] = useState(null)
+//     const [envelopeState, setEnvelopeState] = useState('setup')
 
-    const envelopeRef = useRef(envelope)
+//     const envelopeRef = useRef(envelope)
 
-    const divRef = useRef(null)
+//     const divRef = useRef(null)
 
-    useEffect(()=>{
-        divRef.current.append(envelopeRef.current)
-        console.log
-    },[])
+//     useEffect(()=>{
+//         divRef.current.append(envelopeRef.current)
+//         console.log
+//     },[])
 
-    useEffect(()=>{
-        switch (envelopeState) {
-            case 'setup':{
-                setEnvelopeState('loading')
-                break
-            }
+//     useEffect(()=>{
+//         switch (envelopeState) {
+//             case 'setup':{
+//                 setEnvelopeState('loading')
+//                 break
+//             }
 
-            case 'loading': {
-                divRef.current.append(envelopeRef.current)
-                setEnvelopeState('ready')
-            }
+//             case 'loading': {
+//                 divRef.current.append(envelopeRef.current)
+//                 setEnvelopeState('ready')
+//             }
 
-            case 'ready': {
-                console.log('envelopeRef',envelopeRef)
-                console.log('envelope width, height',
-                    envelopeRef.current.clientWidth, envelopeRef.current.clientHeight)
-                // no-op
-            }
-        }
+//             case 'ready': {
+//                 console.log('envelopeRef',envelopeRef)
+//                 console.log('envelope width, height',
+//                     envelopeRef.current.clientWidth, envelopeRef.current.clientHeight)
+//                 // no-op
+//             }
+//         }
 
-    },[envelopeState])
+//     },[envelopeState])
 
-    return <div
-        style = {envelopestyle}
-        ref = {divRef}
-        >
-    </div>
+//     return <div
+//         data-type = 'contentholder'
+//         style = {envelopestyle}
+//         ref = {divRef}
+//         >
+//     </div>
 
-}
+// }
 
 const CellShell = ({
     orientation, 
@@ -152,9 +153,12 @@ const CellShell = ({
         return () => {
 
             const envelope = contentEnvelopeRef.current
+            console.log('outgoing envelope',envelope)
             console.log('outgoing contentEnvelopeRef width, height before append',
              '-'+scrollerID+'-', envelope.clientWidth, envelope.clientHeight)
+
             portaldataRef.current.holderRef.current.append(envelope) // cache
+
             console.log('outgoing contentEnvelopeRef width, height after append',
              '-'+scrollerID+'-', envelope.clientWidth, envelope.clientHeight)
             cancelidlecallback(requestIdleCallbackIdRef.current)
@@ -224,7 +228,7 @@ const CellShell = ({
 
                     portaldataRef.current.isReparenting = true
 
-                    // shellRef.current.append(contentEnvelopeRef.current)
+                    shellRef.current.append(contentEnvelopeRef.current)
 
                     // setEnvelopeStatus(contentenvelope)
 
@@ -250,7 +254,7 @@ const CellShell = ({
 
                                 // contentRef.current = portalRecord// <OutPortal node = {portalRecord}/>
 
-                                // shellRef.current.append(contentEnvelopeRef.current)
+                                shellRef.current.append(contentEnvelopeRef.current)
 
                             } else {
 
@@ -300,11 +304,7 @@ const CellShell = ({
         data-instanceid = {instanceID} 
         style = {styles}>
 
-            {
-                (cellStatus != 'ready')?
-                    placeholderRef.current:
-                    <Envelope envelope = {contentEnvelopeRef.current} />
-            }
+            { (cellStatus != 'ready') && placeholderRef.current }
             
         </div>
 
