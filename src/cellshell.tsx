@@ -128,17 +128,17 @@ const CellShell = ({
                 break
             case 'inserting': {
 
-                setCellStatus('refreshing')
-
-                break
-
-            }
-            case 'refreshing': {
-
                 setCellStatus('ready')
 
                 break
+
             }
+            // case 'refreshing': {
+
+            //     setCellStatus('ready')
+
+            //     break
+            // }
             case 'getusercontent': {
 
                 const cached = cacheHandler.hasPortal(index)
@@ -178,7 +178,7 @@ const CellShell = ({
 
                         }
 
-                        setCellStatus('refreshing')
+                        setCellStatus('inserting')
 
                     },{timeout:IDLECALLBACK_FETCHTIMEOUT})
 
