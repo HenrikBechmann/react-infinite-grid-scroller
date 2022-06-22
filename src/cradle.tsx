@@ -447,13 +447,13 @@ const Cradle = ({
 
             setCradleState('cached')
 
-        }
-
-        // } else if (!wasCached.current && !isCached.current){
-
-        //     setCradleState('ready')
-
         // }
+
+        } else if (!wasCached.current && !isCached.current){
+
+            setCradleState('ready')
+
+        }
 
     },[isCached.current, wasCached.current])
 
@@ -709,6 +709,8 @@ const Cradle = ({
             }
 
             case 'cached': {// no op
+
+                console.log('processing cached state: was, is','-'+ scrollerID + '-',wasCached.current, isCached.current)
 
                 if (!wasCached.current && !isCached.current){
 

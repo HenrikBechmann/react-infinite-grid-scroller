@@ -14,6 +14,50 @@ import { CradleCacheContext } from './cradle'
 const IDLECALLBACK_FETCHTIMEOUT = 8000 // TODO experimentally high!!
 const IDLECALLBACK_CACHETIMEOUT = 1000
 
+const Envelope = ({
+    envelope
+}) => {
+
+    // const [envelopeContent, setEnvelopeContent] = useState(null)
+    const [envelopeState, setEnvelopeState] = useState('setup')
+
+    const envelopeRef = useRef(envelope)
+
+    const divRef = useRef(null)
+
+    useEffect(()=>{
+        // setTimeout(()=>{
+            divRef.current.append(envelopeRef.current)
+            // setEnvelopeContent(envelopeRef.current)
+        // })
+    },[])
+
+    useEffect(()=>{
+        switch (envelopeState) {
+            case 'setup':{
+                setEnvelopeState('loading')
+                break
+            }
+
+            case 'loading': {
+                divRef.current.append(envelopeRef.current)
+                setEnvelopeState('ready')
+            }
+
+            case 'ready': {
+                // no-op
+            }
+        }
+
+    },[envelopeState])
+
+    return <div
+        ref = {divRef}
+        >
+    </div>
+
+}
+
 const CellShell = ({
     orientation, 
     cellHeight, 
@@ -38,7 +82,7 @@ const CellShell = ({
 
     // const [envelopeStatus, setEnvelopeStatus] = useState(null)
 
-    console.log('cell scrollerID, instanceID, cellStatus','-'+scrollerID+'-' ,instanceID, cellStatus)
+    // console.log('cell scrollerID, instanceID, cellStatus','-'+scrollerID+'-' ,instanceID, cellStatus)
 
     const shellRef = useRef(null)
 
@@ -53,6 +97,7 @@ const CellShell = ({
 
         return () => {
             isMountedRef.current = false
+            // shellRef.current.removeChild(shellRef.current.firstElementChild)
         }
 
     },[])
@@ -91,7 +136,7 @@ const CellShell = ({
     // initialize cell content
     useEffect(() => {
 
-        contentRef.current = placeholderRef.current
+        // contentRef.current = placeholderRef.current
 
         setCellStatus('getusercontent')
 
@@ -126,7 +171,9 @@ const CellShell = ({
     },[orientation,cellHeight,cellWidth]) 
 
     // const contentPortalRef = useRef(null)
-    const contentRef = useRef(null)
+    // const contentRef = useRef(null)
+
+    const contentEnvelopeRef = useRef(null)
 
     useLayoutEffect(() => {
 
@@ -135,6 +182,7 @@ const CellShell = ({
                 // no-op
                 break
             case 'inserting': {
+                // contentEnvelopeRef.current.style.display = 'block'
                 setCellStatus('refreshing')
                 break
             }
@@ -149,16 +197,17 @@ const CellShell = ({
 
                 if (cached) {
 
-                    console.log('getting contentenvelope for scrollerID, instanceID, index', 
-                        '-'+scrollerID+'-', instanceID, index)
+                    // console.log('getting contentenvelope for scrollerID, instanceID, index', 
+                    //     '-'+scrollerID+'-', instanceID, index)
 
                     portaldataRef.current = cacheHandler.getPortal(index)
 
-                    const contentenvelope = portaldataRef.current.contentenvelope
+                    contentEnvelopeRef.current = portaldataRef.current.contentenvelope
+                    // contentEnvelopeRef.current.style.display = 'none'
 
                     portaldataRef.current.isReparenting = true
 
-                    shellRef.current.append(contentenvelope)
+                    // shellRef.current.append(contentEnvelopeRef.current)
 
                     // setEnvelopeStatus(contentenvelope)
 
@@ -178,13 +227,13 @@ const CellShell = ({
 
                                 portaldataRef.current = cacheHandler.fetchPortal(index, usercontent, cellWidth, cellHeight)
 
-                                const portalRecord  = portaldataRef.current.contentenvelope
+                                contentEnvelopeRef.current  = portaldataRef.current.contentenvelope
 
                                 // console.log('FETCHED portalRecord in cellShell', portalRecord, portaldataRef)
 
-                                contentRef.current = portalRecord// <OutPortal node = {portalRecord}/>
+                                // contentRef.current = portalRecord// <OutPortal node = {portalRecord}/>
 
-                                shellRef.current.append(portalRecord)
+                                // shellRef.current.append(contentEnvelopeRef.current)
 
                             } else {
 
@@ -194,7 +243,7 @@ const CellShell = ({
 
                         }
 
-                        setCellStatus('inserting')
+                        setCellStatus('refreshing')
 
                     },{timeout:IDLECALLBACK_FETCHTIMEOUT})
 
@@ -234,7 +283,11 @@ const CellShell = ({
         data-instanceid = {instanceID} 
         style = {styles}>
 
-            {(cellStatus == 'waiting' || cellStatus == 'inserting') && placeholderRef.current}
+            {
+                (cellStatus == 'waiting' || cellStatus == 'inserting')?
+                    placeholderRef.current:
+                    <Envelope envelope = {contentEnvelopeRef.current} />
+            }
             
         </div>
 
