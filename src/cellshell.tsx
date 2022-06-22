@@ -133,12 +133,6 @@ const CellShell = ({
                 break
 
             }
-            // case 'refreshing': {
-
-            //     setCellStatus('ready')
-
-            //     break
-            // }
             case 'getusercontent': {
 
                 const cached = cacheHandler.hasPortal(index)
@@ -201,7 +195,7 @@ const CellShell = ({
 
         switch (cellStatus) {
 
-            case 'ready': {
+            case 'ready': { // no-op
 
                 break
             }
@@ -218,7 +212,8 @@ const CellShell = ({
 
             { (cellStatus != 'ready')?
                 placeholderRef.current:
-                <OutPortal node = {portalRecordRef.current}/>}
+                <OutPortal node = {portalRecordRef.current}/>
+            }
             
         </div>
 

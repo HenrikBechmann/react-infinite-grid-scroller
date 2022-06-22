@@ -65,7 +65,7 @@ export class CacheHandler {
 
         this.scrollerProps.portalMap.set(index,
             <PortalWrapper key = {index} index = {index}>
-                <InPortal node = {portalNode} >{content}</InPortal>
+                <InPortal node = {portalNode} > { content } </InPortal>
             </PortalWrapper>)
         this.scrollerProps.modified = true
 
@@ -135,12 +135,6 @@ const wrapperstyle = {display:'block'} // static; should take same dimensions as
 
 // hidden portal wrapper for clarity and usage of conventional react relisting services
 export const PortalWrapper = ({ index, children }) => {
-
-    // const wrapperstyle = {
-    //     width:width + 'px',
-    //     height:height + 'px',
-    //     position:'relative',
-    // } as React.CSSProperties
 
     return  <div data-type = 'portalwrapper' data-index = { index } key = { index }>
         { children }
