@@ -97,7 +97,7 @@ const Viewport = ({
     // used by resizeObserver; generates interrupt
     const resizeCallback = useCallback((entries)=>{
 
-        console.log('viewport resizeObserver callback', '-'+scrollerID+'-')
+        console.log('VIEWPORT resizeObserver callback', '-'+scrollerID+'-')
         if (viewportStateRef.current == 'setup') {
 
             return
