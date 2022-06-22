@@ -6,8 +6,9 @@
 */
 
 import React, {useState, useEffect, useRef} from 'react'
+import ReactDOM from 'react-dom'
 
-import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
+// import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
 // global scroller data, organized by session scrollerID
 export class CacheHandler {
@@ -42,6 +43,7 @@ export class CacheHandler {
             this.scrollerProps.modified = false
         }
 
+        console.log('rendering portal list', this.scrollerProps.portalList, this.scrollerProps.portalMap)
         this.scrollerProps.setListState() // trigger display update
 
     }
@@ -86,15 +88,16 @@ export class CacheHandler {
     fetchPortal(index, content, cellWidth, cellHeight) { // content is used for new portal only
 
         // if not found, create new portal
-        const [portal,portalRecord] = createPortal({index, content})
+        const [portal, contentenvelope] = createPortal({index, content})
 
-        this.scrollerProps.portalMap.set(index,<PortalWrapper portal = {portal} key = {index} index = {index}/>)
+        this.scrollerProps.portalMap.set(index,<PortalWrapper key = {index} index = {index}>{portal}</PortalWrapper>)
         this.scrollerProps.modified = true
 
         const portalMetadata = {
-            portalRecord, 
+            portalRecord:portal, 
             isReparenting:false,
-            hasusercontent:false 
+            hasusercontent:false,
+            contentenvelope,
         }
 
         this.scrollerProps.portalMetadataMap.set(index, portalMetadata)
@@ -172,9 +175,9 @@ export class CacheHandler {
 const createPortal = ({index, content}) => {
 
     // TODO: assign width and height to wrapper not container
-    const portalRecord = createHtmlPortalNode()
+    // const portalRecord = createHtmlPortalNode()
 
-    const contentenvelope = portalRecord.element
+    const contentenvelope = document.createElement('div') //portalRecord.element
     // container.style.inset = '0px' 
     contentenvelope.style.position = 'absolute'
     contentenvelope.style.height = '100%'
@@ -186,29 +189,32 @@ const createPortal = ({index, content}) => {
 
 
     return [
-        <InPortal node = {portalRecord}>{content}</InPortal>,
-        portalRecord
+        // <InPortal node = {portalRecord}>{content}</InPortal>,
+        ReactDOM.createPortal(content, contentenvelope),
+        // portalRecord,
+        contentenvelope,
     ]
 
 }     
 // update an InPortal component's user content
-const updateInPortal = (content, portalRecord) => {
+// const updateInPortal = (content, portalRecord) => {
 
-    return <InPortal node = {portalRecord} >
-        { content }
-    </InPortal>
+//     return <InPortal node = {portalRecord} >
+//         { content }
+//     </InPortal>
 
-}
+// }
 
 // ========================[ Utility components ]==============================
 
 const wrapperstyle = {display:'block'} // static; should take same dimensions as container CellShell
 
 // hidden portal wrapper for clarity and usage of conventional react relisting services
-export const PortalWrapper = ({ portal, index }) => {
+export const PortalWrapper = ({ children, index }) => {
 
-    return <div data-type = 'portalwrapper' data-index = { index } style = { wrapperstyle } key = { index }>
-        { portal }
+    console.log('PortalWrapper children',children)
+    return  <div data-type = 'portalwrapper' data-index = { index } style = { wrapperstyle } key = { index }>
+        { children }
     </div>
 
 }
@@ -228,6 +234,8 @@ export const PortalList = ({ scrollerProps }) => {
         return () => {isMountedRef.current = false}
 
     },[]) 
+
+    console.log('portalList',portalList)
 
     return portalList
 }

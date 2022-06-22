@@ -381,7 +381,7 @@ export const getCellShellComponentList = ({
         for (let newindex = cradleReferenceIndex - listStartChangeCount; newindex < (cradleReferenceIndex); newindex++) {
 
             headContentlist.push(
-                acquireItem(
+                createCell(
                     {
                         index:newindex, 
                         cradleInheritedProperties,
@@ -404,7 +404,7 @@ export const getCellShellComponentList = ({
         for (let newindex = lastindexoffset + 1; newindex < (lastindexoffset + 1 + listEndChangeCount); newindex++) {
 
             tailContentlist.push(
-                acquireItem(
+                createCell(
                     {
                         index:newindex, 
                         cradleInheritedProperties,
@@ -462,7 +462,7 @@ export const deletePortals = (cacheHandler, deleteList) => {
 
 // =====================[ acquire item ]======================
 
-const acquireItem = ({
+const createCell = ({
     index, 
     cradleInheritedProperties,
     // callbacks, 

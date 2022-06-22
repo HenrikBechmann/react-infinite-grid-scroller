@@ -5,7 +5,7 @@ import React, {useRef, useEffect, useLayoutEffect, useState, useCallback, useMem
 
 import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
-import { OutPortal } from 'react-reverse-portal'
+// import { OutPortal } from 'react-reverse-portal'
 
 import Placeholder from './placeholder'
 
@@ -157,11 +157,13 @@ const CellShell = ({
 
                     portaldataRef.current = await cacheHandler.getPortal(index)
 
-                    const { portalRecord } = portaldataRef.current
+                    const portalRecord = portaldataRef.current.contentenvelope
 
                     portaldataRef.current.isReparenting = true
 
-                    contentRef.current = <OutPortal node = {portalRecord}/>
+                    // contentRef.current = //<OutPortal node = {portalRecord}/>
+
+                    shellRef.current.append(portalRecord)
 
                     setCellStatus('inserting')
 
@@ -181,9 +183,13 @@ const CellShell = ({
 
                                 portaldataRef.current = cacheHandler.fetchPortal(index, usercontent, cellWidth, cellHeight)
 
-                                const { portalRecord } = portaldataRef.current
+                                const portalRecord  = portaldataRef.current.contentenvelope
 
-                                contentRef.current = <OutPortal node = {portalRecord}/>
+                                console.log('FETCHED portalRecord in cellShell', portalRecord, portaldataRef)
+
+                                contentRef.current = portalRecord// <OutPortal node = {portalRecord}/>
+
+                                shellRef.current.append(portalRecord)
 
                             } else {
 
@@ -233,11 +239,12 @@ const CellShell = ({
         data-instanceid = {instanceID} 
         style = {styles}>
 
-            { (cellStatus != 'setup') && contentRef.current }
             
         </div>
 
 } // CellShell
+
+            // { (cellStatus != 'setup') && contentRef.current }
 
 const getShellStyles = (orientation, cellHeight, cellWidth, styles) => {
 
