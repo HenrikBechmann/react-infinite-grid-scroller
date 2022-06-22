@@ -14,6 +14,12 @@ import { CradleCacheContext } from './cradle'
 const IDLECALLBACK_FETCHTIMEOUT = 8000 // TODO experimentally high!!
 const IDLECALLBACK_CACHETIMEOUT = 1000
 
+const envelopestyle = {
+    height:'100%',
+    width:'100%',
+    position:'relative',
+} as React.CSSProperties
+
 const Envelope = ({
     envelope
 }) => {
@@ -26,10 +32,8 @@ const Envelope = ({
     const divRef = useRef(null)
 
     useEffect(()=>{
-        // setTimeout(()=>{
-            divRef.current.append(envelopeRef.current)
-            // setEnvelopeContent(envelopeRef.current)
-        // })
+        divRef.current.append(envelopeRef.current)
+        console.log
     },[])
 
     useEffect(()=>{
@@ -45,6 +49,9 @@ const Envelope = ({
             }
 
             case 'ready': {
+                console.log('envelopeRef',envelopeRef)
+                console.log('envelope width, height',
+                    envelopeRef.current.clientWidth, envelopeRef.current.clientHeight)
                 // no-op
             }
         }
@@ -52,6 +59,7 @@ const Envelope = ({
     },[envelopeState])
 
     return <div
+        style = {envelopestyle}
         ref = {divRef}
         >
     </div>
@@ -143,6 +151,12 @@ const CellShell = ({
         // unmount
         return () => {
 
+            const envelope = contentEnvelopeRef.current
+            console.log('outgoing contentEnvelopeRef width, height before append',
+             '-'+scrollerID+'-', envelope.clientWidth, envelope.clientHeight)
+            portaldataRef.current.holderRef.current.append(envelope) // cache
+            console.log('outgoing contentEnvelopeRef width, height after append',
+             '-'+scrollerID+'-', envelope.clientWidth, envelope.clientHeight)
             cancelidlecallback(requestIdleCallbackIdRef.current)
 
         }
@@ -204,6 +218,9 @@ const CellShell = ({
 
                     contentEnvelopeRef.current = portaldataRef.current.contentenvelope
                     // contentEnvelopeRef.current.style.display = 'none'
+
+                    console.log('scrollerID, instanceID, index, holderRef', '-'+scrollerID+'-', instanceID, index, 
+                        portaldataRef.current.holderRef)
 
                     portaldataRef.current.isReparenting = true
 
@@ -284,7 +301,7 @@ const CellShell = ({
         style = {styles}>
 
             {
-                (cellStatus == 'waiting' || cellStatus == 'inserting')?
+                (cellStatus != 'ready')?
                     placeholderRef.current:
                     <Envelope envelope = {contentEnvelopeRef.current} />
             }
