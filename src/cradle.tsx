@@ -368,15 +368,16 @@ const Cradle = ({
         let isChange = false
         if (viewportInterruptProperties.portal?.isReparenting) {
 
-            console.log('ON REPARENTING CHANGE', '-'+scrollerID+'-')
+            console.log('ON REPARENTING CHANGE,was, is, isResizing', 
+                '-'+scrollerID+'-', wasCached.current, isCached.current,viewportInterruptProperties.isResizing)
 
             viewportInterruptProperties.elementref.current[
                 cradlePositionData.blockScrollProperty] = cradlePositionData.blockScrollPos // scrollPosRecoveryPosRef.current
-
+            viewportInterruptProperties.isResizing && (viewportInterruptProperties.isResizing = false)
             viewportInterruptProperties.portal.isReparenting = false
-            // wasCached.current = true
-            // isCached.current = false
-            // isChange = true
+            wasCached.current = true
+            isCached.current = false
+            isChange = true
 
         } else {
 

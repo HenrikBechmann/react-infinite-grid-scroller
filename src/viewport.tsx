@@ -39,7 +39,9 @@ const Viewport = ({
         layout,
     } = gridSpecs
 
-    const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, render
+    const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, ready
+
+    console.log('VIEWPORT state','-'+scrollerID+'-',viewportState)
 
     const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
     viewportStateRef.current = viewportState
@@ -95,6 +97,7 @@ const Viewport = ({
     // used by resizeObserver; generates interrupt
     const resizeCallback = useCallback((entries)=>{
 
+        console.log('viewport resizeObserver callback', '-'+scrollerID+'-')
         if (viewportStateRef.current == 'setup') {
 
             return
@@ -112,9 +115,11 @@ const Viewport = ({
 
         }
 
-        // const dimensions = viewportElementRef.current.getBoundingClientRect()
+        const dimensions = viewportElementRef.current.getBoundingClientRect()
 
-        // const {width, height} = dimensions
+        const {width, height} = dimensions
+
+        console.log('viewport width, height','-'+scrollerID+'-',width, height)
 
         // if ((width == 0) && (height == 0)) {
         //     console.log('returning from resize callback:width, height',width, height)
@@ -241,7 +246,7 @@ const Viewport = ({
 
             case 'resized':
             case 'setup': {
-                setViewportState('render')
+                setViewportState('ready')
                 break
             }
 
