@@ -58,14 +58,15 @@ export class CacheHandler {
 
     }
 
-    fetchPortal(index, content, width, height) { // content is used for new portal only
+    fetchPortal(index, content) { // content is used for new portal only
 
         // if not found, create new portal
         const portalNode = createPortalNode(index)
 
-        this.scrollerProps.portalMap.set(index,<PortalWrapper width = {width} height = {height} key = {index} index = {index}>
-            <InPortal node = {portalNode} >{content}</InPortal>
-        </PortalWrapper>)
+        this.scrollerProps.portalMap.set(index,
+            <PortalWrapper key = {index} index = {index}>
+                <InPortal node = {portalNode} >{content}</InPortal>
+            </PortalWrapper>)
         this.scrollerProps.modified = true
 
         const portalMetadata = {
@@ -122,8 +123,7 @@ const createPortalNode = (index) => {
     container.dataset.type = 'contentenvelope'
     container.dataset.index = index
 
-    container.setAttribute('key',index)
-
+    // container.setAttribute('key',index)
 
     return portalNode
 
@@ -134,14 +134,15 @@ const createPortalNode = (index) => {
 const wrapperstyle = {display:'block'} // static; should take same dimensions as container CellShell
 
 // hidden portal wrapper for clarity and usage of conventional react relisting services
-export const PortalWrapper = ({ index, children, width, height }) => {
+export const PortalWrapper = ({ index, children }) => {
 
-    const wrapperstyle = {
-        width:width + 'px',
-        height:height + 'px',
-    }
+    // const wrapperstyle = {
+    //     width:width + 'px',
+    //     height:height + 'px',
+    //     position:'relative',
+    // } as React.CSSProperties
 
-    return  <div data-type = 'portalwrapper' data-index = { index } style = { wrapperstyle } key = { index }>
+    return  <div data-type = 'portalwrapper' data-index = { index } key = { index }>
         { children }
     </div>
     

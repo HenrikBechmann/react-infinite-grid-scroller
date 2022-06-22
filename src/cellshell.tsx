@@ -166,7 +166,7 @@ const CellShell = ({
                             if (usercontent) {
 
                                 portaldataRef.current = 
-                                    cacheHandler.fetchPortal(index, usercontent, cellWidth, cellHeight)
+                                    cacheHandler.fetchPortal(index, usercontent)
 
                                 portalRecordRef.current  = portaldataRef.current.portalNode
 
