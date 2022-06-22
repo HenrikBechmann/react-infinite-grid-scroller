@@ -147,7 +147,7 @@ const CellShell = ({
 
                     portaldataRef.current = cacheHandler.getPortal(index)
 
-                    portalRecordRef.current = portaldataRef.current.portalRecord
+                    portalRecordRef.current = portaldataRef.current.portalNode
 
                     portaldataRef.current.isReparenting = true
 
@@ -168,7 +168,7 @@ const CellShell = ({
                                 portaldataRef.current = 
                                     cacheHandler.fetchPortal(index, usercontent, cellWidth, cellHeight)
 
-                                portalRecordRef.current  = portaldataRef.current.portalRecord
+                                portalRecordRef.current  = portaldataRef.current.portalNode
 
                             } else {
 

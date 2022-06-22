@@ -61,15 +61,15 @@ export class CacheHandler {
     fetchPortal(index, content, width, height) { // content is used for new portal only
 
         // if not found, create new portal
-        const [inPortal, portalRecord] = createPortal({index, content})
+        const portalNode = createPortalNode(index)
 
         this.scrollerProps.portalMap.set(index,<PortalWrapper width = {width} height = {height} key = {index} index = {index}>
-            {inPortal} 
+            <InPortal node = {portalNode} >{content}</InPortal>
         </PortalWrapper>)
         this.scrollerProps.modified = true
 
         const portalMetadata = {
-            portalRecord,
+            portalNode,
             isReparenting:false,
         }
 
@@ -110,11 +110,11 @@ export class CacheHandler {
 
 // get a react-reverse-portal InPortal component, with its metadata
 // with user content and container
-const createPortal = ({index, content}) => {
+const createPortalNode = (index) => {
 
-    let portalRecord = createHtmlPortalNode()
+    let portalNode = createHtmlPortalNode()
 
-    let container = portalRecord.element
+    let container = portalNode.element
     // container.style.inset = '0px' 
     container.style.position = 'absolute'
     container.style.height = '100%'
@@ -125,10 +125,7 @@ const createPortal = ({index, content}) => {
     container.setAttribute('key',index)
 
 
-    return [
-        <InPortal node = {portalRecord}>{content}</InPortal>,
-        portalRecord
-    ]
+    return portalNode
 
 }     
 
