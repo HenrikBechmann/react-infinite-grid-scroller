@@ -12,60 +12,6 @@ import Placeholder from './placeholder'
 import { CradleCacheContext } from './cradle'
 
 const IDLECALLBACK_FETCHTIMEOUT = 8000 // TODO experimentally high!!
-const IDLECALLBACK_CACHETIMEOUT = 1000
-
-// const envelopestyle = {
-//     height:'100%',
-//     width:'100%',
-//     position:'relative',
-// } as React.CSSProperties
-
-// const Envelope = ({
-//     envelope
-// }) => {
-
-//     // const [envelopeContent, setEnvelopeContent] = useState(null)
-//     const [envelopeState, setEnvelopeState] = useState('setup')
-
-//     const envelopeRef = useRef(envelope)
-
-//     const divRef = useRef(null)
-
-//     useEffect(()=>{
-//         divRef.current.append(envelopeRef.current)
-//         console.log
-//     },[])
-
-//     useEffect(()=>{
-//         switch (envelopeState) {
-//             case 'setup':{
-//                 setEnvelopeState('loading')
-//                 break
-//             }
-
-//             case 'loading': {
-//                 divRef.current.append(envelopeRef.current)
-//                 setEnvelopeState('ready')
-//             }
-
-//             case 'ready': {
-//                 console.log('envelopeRef',envelopeRef)
-//                 console.log('envelope width, height',
-//                     envelopeRef.current.clientWidth, envelopeRef.current.clientHeight)
-//                 // no-op
-//             }
-//         }
-
-//     },[envelopeState])
-
-//     return <div
-//         data-type = 'contentholder'
-//         style = {envelopestyle}
-//         ref = {divRef}
-//         >
-//     </div>
-
-// }
 
 const CellShell = ({
     orientation, 
@@ -89,10 +35,6 @@ const CellShell = ({
 
     const [cellStatus, setCellStatus] = useState('setup')
 
-    // const [envelopeStatus, setEnvelopeStatus] = useState(null)
-
-    // console.log('cell scrollerID, instanceID, cellStatus','-'+scrollerID+'-' ,instanceID, cellStatus)
-
     const shellRef = useRef(null)
 
     const isMountedRef = useRef(true)
@@ -106,7 +48,6 @@ const CellShell = ({
 
         return () => {
             isMountedRef.current = false
-            // shellRef.current.removeChild(shellRef.current.firstElementChild)
         }
 
     },[])
@@ -145,22 +86,11 @@ const CellShell = ({
     // initialize cell content
     useEffect(() => {
 
-        // contentRef.current = placeholderRef.current
-
         setCellStatus('getusercontent')
 
         // unmount
         return () => {
 
-            // const envelope = contentEnvelopeRef.current
-            // console.log('outgoing envelope',envelope)
-            // console.log('outgoing contentEnvelopeRef width, height before append',
-            //  '-'+scrollerID+'-', envelope.clientWidth, envelope.clientHeight)
-
-            // portaldataRef.current.holderRef.current.append(envelope) // cache
-
-            // console.log('outgoing contentEnvelopeRef width, height after append',
-            //  '-'+scrollerID+'-', envelope.clientWidth, envelope.clientHeight)
             cancelidlecallback(requestIdleCallbackIdRef.current)
 
         }
@@ -188,9 +118,6 @@ const CellShell = ({
 
     },[orientation,cellHeight,cellWidth]) 
 
-    // const contentPortalRef = useRef(null)
-    // const contentRef = useRef(null)
-
     const portalRecordRef = useRef(null)
 
     useLayoutEffect(() => {
@@ -200,37 +127,29 @@ const CellShell = ({
                 // no-op
                 break
             case 'inserting': {
-                // contentEnvelopeRef.current.style.display = 'block'
+
                 setCellStatus('refreshing')
+
                 break
+
             }
             case 'refreshing': {
+
                 setCellStatus('ready')
+
                 break
             }
             case 'getusercontent': {
-                // const dimensions = shellRef.current?.getBoundingClientRect()
-                // console.log('cellShell dimensions',dimensions)
+
                 const cached = cacheHandler.hasPortal(index)
 
                 if (cached) {
 
-                    // console.log('getting contentenvelope for scrollerID, instanceID, index', 
-                    //     '-'+scrollerID+'-', instanceID, index)
-
                     portaldataRef.current = cacheHandler.getPortal(index)
 
                     portalRecordRef.current = portaldataRef.current.portalRecord
-                    // contentEnvelopeRef.current.style.display = 'none'
-
-                    // console.log('scrollerID, instanceID, index, holderRef', '-'+scrollerID+'-', instanceID, index, 
-                    //     portaldataRef.current.holderRef)
 
                     portaldataRef.current.isReparenting = true
-
-                    // shellRef.current.append(contentEnvelopeRef.current)
-
-                    // setEnvelopeStatus(contentenvelope)
 
                     setCellStatus('inserting')
 
@@ -246,15 +165,10 @@ const CellShell = ({
 
                             if (usercontent) {
 
-                                portaldataRef.current = cacheHandler.fetchPortal(index, usercontent)
+                                portaldataRef.current = 
+                                    cacheHandler.fetchPortal(index, usercontent, cellWidth, cellHeight)
 
                                 portalRecordRef.current  = portaldataRef.current.portalRecord
-
-                                // console.log('FETCHED portalRecord in cellShell', portalRecord, portaldataRef)
-
-                                // contentRef.current = portalRecord// <OutPortal node = {portalRecord}/>
-
-                                // shellRef.current.append(contentEnvelopeRef.current)
 
                             } else {
 
@@ -269,8 +183,6 @@ const CellShell = ({
                     },{timeout:IDLECALLBACK_FETCHTIMEOUT})
 
                 }
-
-                // console.log('contentRef.current',contentRef.current)
 
                 break
             }
@@ -311,8 +223,6 @@ const CellShell = ({
         </div>
 
 } // CellShell
-
-            // { (cellStatus != 'setup') && contentRef.current }
 
 const getShellStyles = (orientation, cellHeight, cellWidth, styles) => {
 

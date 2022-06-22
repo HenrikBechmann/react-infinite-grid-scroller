@@ -50,33 +50,6 @@ export class CacheHandler {
 
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
-    // add a portal list item. The index is the scroller's portal dataset index
-    // fetchPortal(index, content) { // content is used for new portal only
-
-    //     if (this.hasPortal(index)) {
-    //         return this.getPortal(index)
-    //     }
-
-    //     // if not found, create new portal
-    //     const [portal,portalRecord] = createPortal(content, index)
-
-    //     this.scrollerProps.portalMap.set(index,<PortalWrapper portal = {portal} key = {index} index = {index}/>)
-    //     this.scrollerProps.modified = true
-
-    //     const portalMetadata = {
-    //         portalRecord, 
-    //         isReparenting:false,
-    //         hasusercontent:false 
-    //     }
-
-    //     this.scrollerProps.portalMetadataMap.set(index, portalMetadata)
-
-    //     this.renderPortalList()
-
-    //     return portalMetadata
-
-    // }
-
     getPortal(index) {
 
         if (this.hasPortal(index)) {
@@ -85,12 +58,12 @@ export class CacheHandler {
 
     }
 
-    fetchPortal(index, content, cellWidth, cellHeight) { // content is used for new portal only
+    fetchPortal(index, content, width, height) { // content is used for new portal only
 
         // if not found, create new portal
         const [inPortal, portalRecord] = createPortal({index, content})
 
-        this.scrollerProps.portalMap.set(index,<PortalWrapper key = {index} index = {index}>
+        this.scrollerProps.portalMap.set(index,<PortalWrapper width = {width} height = {height} key = {index} index = {index}>
             {inPortal} 
         </PortalWrapper>)
         this.scrollerProps.modified = true
@@ -107,19 +80,6 @@ export class CacheHandler {
         return portalMetadata
 
     }
-    // update the content of a portal list item
-    // updatePortal(index, content) {
-    //     const portalMetadata = this.getPortal(index)
-
-    //     const portalComponent = updateInPortal(content, portalMetadata.portalRecord )
-
-    //     this.scrollerProps.portalMap.set(index,<PortalWrapper portal = {portalComponent} key = {index} index = {index}/>)
-    //     this.scrollerProps.modified = true
-
-    //     this.renderPortalList()
-
-    //     return portalMetadata
-    // }
 
     // delete a portal list item
     deletePortal(index) {
@@ -172,47 +132,18 @@ const createPortal = ({index, content}) => {
 
 }     
 
-// const createPortal = ({index, content}) => {
-
-//     // TODO: assign width and height to wrapper not container
-//     // const portalRecord = createHtmlPortalNode()
-
-//     const contentenvelope = document.createElement('div') //portalRecord.element
-//     // container.style.inset = '0px' 
-//     contentenvelope.style.position = 'absolute'
-//     contentenvelope.style.height = '100%'
-//     contentenvelope.style.width = '100%'
-//     contentenvelope.dataset.type = 'contentenvelope'
-//     contentenvelope.dataset.index = index
-
-//     contentenvelope.setAttribute('key',index)
-
-
-//     return [
-//         // <InPortal node = {portalRecord}>{content}</InPortal>,
-//         ReactDOM.createPortal(content, contentenvelope),
-//         // portalRecord,
-//         contentenvelope,
-//     ]
-
-// }     
-// update an InPortal component's user content
-// const updateInPortal = (content, portalRecord) => {
-
-//     return <InPortal node = {portalRecord} >
-//         { content }
-//     </InPortal>
-
-// }
-
 // ========================[ Utility components ]==============================
 
 const wrapperstyle = {display:'block'} // static; should take same dimensions as container CellShell
 
 // hidden portal wrapper for clarity and usage of conventional react relisting services
-export const PortalWrapper = ({ index, children }) => {
+export const PortalWrapper = ({ index, children, width, height }) => {
 
-    // console.log('PortalWrapper children',children)
+    const wrapperstyle = {
+        width:width + 'px',
+        height:height + 'px',
+    }
+
     return  <div data-type = 'portalwrapper' data-index = { index } style = { wrapperstyle } key = { index }>
         { children }
     </div>
@@ -234,8 +165,6 @@ export const PortalList = ({ scrollerProps }) => {
         return () => {isMountedRef.current = false}
 
     },[]) 
-
-    // console.log('portalList',portalList)
 
     return portalList
 }
