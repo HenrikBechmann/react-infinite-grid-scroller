@@ -133,6 +133,10 @@ const CellShell = ({
                 // no-op
                 break
             case 'inserting': {
+                setCellStatus('refreshing')
+                break
+            }
+            case 'refreshing': {
                 setCellStatus('ready')
                 break
             }
