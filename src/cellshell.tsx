@@ -44,6 +44,8 @@ const CellShell = ({
 
     const portaldataRef = useRef(null)
 
+    const placeholderRef = useRef(null)
+
     // for unmount
     useEffect(()=>{
 
@@ -62,8 +64,6 @@ const CellShell = ({
                 null
             
     },[placeholder,listsize])
-
-    const placeholderRef = useRef(null)
 
     placeholderRef.current = useMemo(()=>{
         const placeholder = 
@@ -88,14 +88,6 @@ const CellShell = ({
 
     // initialize cell content
     useEffect(() => {
-
-        // portaldataRef.current = cacheHandler.fetchOrCreatePortal(index, placeholderRef.current)
-
-        // const hasUserContent = !!portaldataRef.current.hasusercontent // previous InPortal creation for index
-
-        // const { portalRecord } = portaldataRef.current
-
-        // contentPortalRef.current = <OutPortal node = {portalRecord}/>
 
         contentRef.current = placeholderRef.current
 
@@ -151,7 +143,6 @@ const CellShell = ({
 
                 if (cached) {
 
-                    // requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
                     // console.log('fetching portal for scrollerID, instanceID, index', 
                     //     scrollerID, instanceID, index)
 
@@ -161,13 +152,9 @@ const CellShell = ({
 
                     portaldataRef.current.isReparenting = true
 
-                    // contentRef.current = //<OutPortal node = {portalRecord}/>
-
                     shellRef.current.append(portalRecord)
 
                     setCellStatus('inserting')
-
-                    // },{timeout:IDLECALLBACK_CACHETIMEOUT})
 
                 } else {
 
@@ -239,6 +226,7 @@ const CellShell = ({
         data-instanceid = {instanceID} 
         style = {styles}>
 
+            {(cellStatus == 'waiting' || cellStatus == 'inserting') && placeholderRef.current}
             
         </div>
 
