@@ -34,9 +34,11 @@ const CellShell = ({
         overflow:'hidden',
     } as React.CSSProperties)
 
-    const [cellStatus, setCellStatus] = useState('setup'); 
+    const [cellStatus, setCellStatus] = useState('setup')
 
-    // console.log('cell instanceID, cellStatus', instanceID, cellStatus)
+    // const [envelopeStatus, setEnvelopeStatus] = useState(null)
+
+    console.log('cell scrollerID, instanceID, cellStatus','-'+scrollerID+'-' ,instanceID, cellStatus)
 
     const shellRef = useRef(null)
 
@@ -147,16 +149,18 @@ const CellShell = ({
 
                 if (cached) {
 
-                    // console.log('fetching portal for scrollerID, instanceID, index', 
-                    //     scrollerID, instanceID, index)
+                    console.log('getting contentenvelope for scrollerID, instanceID, index', 
+                        '-'+scrollerID+'-', instanceID, index)
 
                     portaldataRef.current = cacheHandler.getPortal(index)
 
-                    const portalRecord = portaldataRef.current.contentenvelope
+                    const contentenvelope = portaldataRef.current.contentenvelope
 
                     portaldataRef.current.isReparenting = true
 
-                    shellRef.current.append(portalRecord)
+                    shellRef.current.append(contentenvelope)
+
+                    // setEnvelopeStatus(contentenvelope)
 
                     setCellStatus('inserting')
 
