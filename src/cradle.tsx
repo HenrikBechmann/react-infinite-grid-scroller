@@ -393,8 +393,8 @@ const Cradle = ({
             console.log('ON REPARENTING CHANGE,was, is, isResizing', 
                 '-'+scrollerID+'-', wasCachedRef.current, isCachedRef.current,viewportInterruptProperties.isResizing)
 
-            viewportInterruptProperties.elementref.current[
-                cradlePositionData.blockScrollProperty] = cradlePositionData.blockScrollPos // scrollPosRecoveryPosRef.current
+            // viewportInterruptProperties.elementref.current[
+            //     cradlePositionData.blockScrollProperty] = cradlePositionData.blockScrollPos // scrollPosRecoveryPosRef.current
             viewportInterruptProperties.isResizing && (viewportInterruptProperties.isResizing = false)
             viewportInterruptProperties.portal.isReparenting = false
             wasCachedRef.current = true
@@ -444,11 +444,17 @@ const Cradle = ({
             // is, was = false, true
             } else if ((!isCachedRef.current) && wasCachedRef.current) { // change out of cached
 
-                console.log('OUT OF CACHE', '-'+scrollerID+'-')
+                console.log('OUT OF CACHE, blockScrollPos, blockScrollProperty', 
+                    '-'+scrollerID+'-', cradlePositionData.blockScrollPos, cradlePositionData.blockScrollProperty)
 
-                viewportInterruptProperties.elementref.current[
-                    cradlePositionData.blockScrollProperty] = cradlePositionData.blockScrollPos // scrollPosRecoveryPosRef.current
-            
+                // viewportInterrupdauptPropertiesRef.current.elementref.current[
+                //     cradlePositionData.blockScrollProperty] = cradlePositionData.blockScrollPos // scrollPosRecoveryPosRef.current
+
+                const updatedvalue = viewportInterruptPropertiesRef.current.updateScrollPos(
+                    cradlePositionData.blockScrollProperty,cradlePositionData.blockScrollPos)
+
+                console.log('viewport scroll property after setting', updatedvalue)
+
                 wasCachedRef.current = false
 
                 interruptHandler.pauseTriggerlinesObserver = false

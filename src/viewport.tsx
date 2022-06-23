@@ -72,6 +72,11 @@ const Viewport = ({
         }
     )
 
+    const updateScrollPos = (scrollProperty, scrollPos) => {
+        viewportElementRef.current[scrollProperty] = scrollPos
+        return viewportElementRef.current[scrollProperty]
+    }
+
     // --------------------[ resizer setup ]-----------------------
 
     const resizeTimeridRef = useRef(null)
@@ -241,6 +246,7 @@ const Viewport = ({
             viewportDimensions:{top,right, bottom, left, width, height},
             elementref:viewportElementRef,
             isResizing:isResizingRef.current,
+            updateScrollPos,
         }
 
         // trigger context change with new object
