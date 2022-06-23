@@ -380,7 +380,9 @@ const Cradle = ({
     // positions for nested infinitegridscrollers.
     // the code restores scroll as soon as cradle is invoked after reparenting to a DOM element
 
-    console.log('ENTERING cradleState, scrollerID',cradleState, '-' + scrollerID + '-')
+
+    console.log('ENTERING cradleState, scrollerID',
+        cradleState, '-' + scrollerID + '-')
     
     if (viewportInterruptProperties.isResizing ||
         viewportInterruptProperties.portal?.isReparenting) {
@@ -446,22 +448,29 @@ const Cradle = ({
 
                 console.log('OUT OF CACHE, blockScrollPos, blockScrollProperty', 
                     '-'+scrollerID+'-', cradlePositionData.blockScrollPos, cradlePositionData.blockScrollProperty)
+                const viewportElement = viewportInterruptPropertiesRef.current.elementref.current
 
-                // viewportInterrupdauptPropertiesRef.current.elementref.current[
-                //     cradlePositionData.blockScrollProperty] = cradlePositionData.blockScrollPos // scrollPosRecoveryPosRef.current
+                viewportElement[cradlePositionData.blockScrollProperty] = 
+                    cradlePositionData.blockScrollPos
 
-                const updatedvalue = viewportInterruptPropertiesRef.current.updateScrollPos(
-                    cradlePositionData.blockScrollProperty,cradlePositionData.blockScrollPos)
+                console.log('viewport scroll property after setting', //; scrollWidth, scrollHeight', 
+                    viewportElement[cradlePositionData.blockScrollProperty])
+                    // ,viewportElement.scrollWidth, viewportElement.scrollHeight)
 
-                console.log('viewport scroll property after setting', updatedvalue)
+                if (viewportElement[cradlePositionData.blockScrollProperty] != 
+                    cradlePositionData.blockScrollPos) { // clientHeight/Width hasn't caught up
+                    setCradleState('reparentingtransition')
+                } else {
 
-                wasCachedRef.current = false
+                    wasCachedRef.current = false
 
-                interruptHandler.pauseTriggerlinesObserver = false
-                interruptHandler.pauseCradleIntersectionObserver = false
-                interruptHandler.pauseCradleResizeObserver = false
-                interruptHandler.pauseScrollingEffects = false
-                interruptHandler.pauseViewportResizing = false
+                    interruptHandler.pauseTriggerlinesObserver = false
+                    interruptHandler.pauseCradleIntersectionObserver = false
+                    interruptHandler.pauseCradleResizeObserver = false
+                    interruptHandler.pauseScrollingEffects = false
+                    interruptHandler.pauseViewportResizing = false
+
+                }
 
             }
         }
@@ -728,6 +737,8 @@ const Cradle = ({
     // useLayout for suppressing flashes
     useLayoutEffect(()=>{
 
+        console.log('in state manager scrollerID, cradleState','-'+scrollerID+'-', cradleState)
+
         switch (cradleState) {
 
             case 'setup': { // cycle to allow for ref config
@@ -885,6 +896,35 @@ const Cradle = ({
                 setCradleState('ready')
 
                 break
+            }
+
+            case 'reparentingtransition': {
+
+                setTimeout(()=> {
+
+                    console.log('in reparentingtransition','-'+scrollerID+'-')
+                    const viewportElement = viewportInterruptPropertiesRef.current.elementref.current
+                    const { cradlePositionData } = scaffoldHandler
+
+                    viewportElement[cradlePositionData.blockScrollProperty] = 
+                        cradlePositionData.blockScrollPos
+
+                    console.log('scrollPos, blockScrollPos',
+                        viewportElement[cradlePositionData.blockScrollProperty],cradlePositionData.blockScrollPos)
+
+                    wasCachedRef.current = false
+
+                    interruptHandler.pauseTriggerlinesObserver = false
+                    interruptHandler.pauseCradleIntersectionObserver = false
+                    interruptHandler.pauseCradleResizeObserver = false
+                    interruptHandler.pauseScrollingEffects = false
+                    interruptHandler.pauseViewportResizing = false
+
+                    setCradleState('ready')
+
+                },1000)
+                break
+
             }
 
         }
