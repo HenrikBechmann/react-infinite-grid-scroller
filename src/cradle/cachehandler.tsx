@@ -52,7 +52,7 @@ export class CacheHandler {
 
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
-    newPortal(index, content) { // create new portal
+    createPortal(index, content) { // create new portal
 
         const portalNode = createPortalNode(index)
 
@@ -94,15 +94,8 @@ export class CacheHandler {
     getPortal(index) {
 
         if (this.hasPortal(index)) {
-            return this._getPortal(index)
+            return this.scrollerProps.portalMetadataMap.get(index)
         }
-
-    }
-
-    // get a portal list item's meta data
-    private _getPortal(index) {
-
-        return this.scrollerProps.portalMetadataMap.get(index)
 
     }
 
