@@ -33,6 +33,8 @@ export class CacheHandler {
         this.scrollerProps.portalList = null
         this.scrollerProps.modified = false
 
+        this.scrollerProps.setListState() // trigger display update
+
     }
 
     // set state of the PortalList component of the scroller to trigger render
