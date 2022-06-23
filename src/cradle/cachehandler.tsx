@@ -64,9 +64,9 @@ export class CacheHandler {
         const portalNode = createPortalNode(index)
 
         this.scrollerProps.portalMap.set(index,
-            <PortalWrapper key = {index} index = {index}>
+            <div data-type = 'portalwrapper' data-index = { index } key = { index }>
                 <InPortal node = {portalNode} > { content } </InPortal>
-            </PortalWrapper>)
+            </div>)
         this.scrollerProps.modified = true
 
         const portalMetadata = {
@@ -133,14 +133,14 @@ const createPortalNode = (index) => {
 
 const wrapperstyle = {display:'block'} // static; should take same dimensions as container CellShell
 
-// hidden portal wrapper for clarity and usage of conventional react relisting services
-export const PortalWrapper = ({ index, children }) => {
+// // hidden portal wrapper for clarity and usage of conventional react relisting services
+// export const PortalWrapper = ({ index, children }) => {
 
-    return  <div data-type = 'portalwrapper' data-index = { index } key = { index }>
-        { children }
-    </div>
+//     return  <div data-type = 'portalwrapper' data-index = { index } key = { index }>
+//         { children }
+//     </div>
     
-}
+// }
 
 // portal list component for rapid relisting of updates, using external callback for set state
 export const PortalList = ({ scrollerProps }) => {
