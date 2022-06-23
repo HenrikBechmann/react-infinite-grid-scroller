@@ -52,17 +52,8 @@ export class CacheHandler {
 
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
-    getPortal(index) {
+    newPortal(index, content) { // create new portal
 
-        if (this.hasPortal(index)) {
-            return this._getPortal(index)
-        }
-
-    }
-
-    fetchPortal(index, content) { // content is used for new portal only
-
-        // if not found, create new portal
         const portalNode = createPortalNode(index)
 
         this.scrollerProps.portalMap.set(index,
@@ -100,6 +91,14 @@ export class CacheHandler {
 
     }
 
+    getPortal(index) {
+
+        if (this.hasPortal(index)) {
+            return this._getPortal(index)
+        }
+
+    }
+
     // get a portal list item's meta data
     private _getPortal(index) {
 
@@ -125,24 +124,11 @@ const createPortalNode = (index) => {
     container.dataset.type = 'contentenvelope'
     container.dataset.index = index
 
-    // container.setAttribute('key',index)
-
     return portalNode
 
 }     
 
 // ========================[ Utility components ]==============================
-
-const wrapperstyle = {display:'block'} // static; should take same dimensions as container CellShell
-
-// // hidden portal wrapper for clarity and usage of conventional react relisting services
-// export const PortalWrapper = ({ index, children }) => {
-
-//     return  <div data-type = 'portalwrapper' data-index = { index } key = { index }>
-//         { children }
-//     </div>
-    
-// }
 
 // portal list component for rapid relisting of updates, using external callback for set state
 export const PortalList = ({ scrollerProps }) => {

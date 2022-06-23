@@ -360,10 +360,11 @@ const Cradle = ({
     // positions for nested infinitegridscrollers.
     // the code restores scroll as soon as cradle is invoked after reparenting to a DOM element
 
-    const parentingTransitionRequiredRef = useRef(false)
     // console.log('ENTERING cradleState, scrollerID',
     //     cradleState, '-' + scrollerID + '-')
     
+    const parentingTransitionRequiredRef = useRef(false)
+
     if (viewportInterruptProperties.isResizing ||
         viewportInterruptProperties.portal?.isReparenting) {
 
@@ -417,7 +418,10 @@ const Cradle = ({
                 const viewportElement = viewportInterruptPropertiesRef.current.elementref.current
 
                 if (viewportElement[cradlePositionData.blockScrollProperty] != 
-                    cradlePositionData.blockScrollPos) { // clientHeight/Width hasn't caught up
+                    cradlePositionData.blockScrollPos) { // possibly clientHeight/Width hasn't caught up
+                    // ... so likely requires a render cycle to catch up
+                    // parentingTransitionRequiredRef generates a 'reparentingtransition' cycle
+                    //     before resetting scrollPos
                     parentingTransitionRequiredRef.current = true
 
                 } else {
