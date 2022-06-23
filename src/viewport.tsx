@@ -41,7 +41,7 @@ const Viewport = ({
 
     const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, ready
 
-    console.log('VIEWPORT state','-'+scrollerID+'-',viewportState)
+    // console.log('VIEWPORT state','-'+scrollerID+'-',viewportState)
 
     const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
     viewportStateRef.current = viewportState
@@ -111,9 +111,18 @@ const Viewport = ({
         // first register shouldn't generate interrupt
         if (!target.dataset.initialized) {
 
+            const dimensions = viewportElementRef.current.getBoundingClientRect()
+            const {width, height} = dimensions
+
+            const olddimensions = viewportInterruptPropertiesRef.current.viewportDimensions
+            const {width:oldwidth, height:oldheight} = olddimensions
+            console.log('initializing target element for resize: width, height, oldwidth, oldheight',
+             '-'+scrollerID+'-', width, height, oldwidth, oldheight)
             target.dataset.initialized = true
 
-            return
+            if ((width == oldwidth) && (height == oldheight)) {
+                return
+            }
 
         }
 
@@ -121,7 +130,7 @@ const Viewport = ({
 
         const {width, height} = dimensions
 
-        console.log('viewport width, height','-'+scrollerID+'-',width, height)
+        console.log('viewport scrollerID, width, height','-'+scrollerID+'-',width, height)
 
         // if ((width == 0) && (height == 0)) {
         //     console.log('returning from resize callback:width, height',width, height)

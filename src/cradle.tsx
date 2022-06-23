@@ -179,7 +179,7 @@ const Cradle = ({
     // configuration calculations
     const crosscount = useMemo(() => { // the number of cells crossing orientation
 
-        console.log(`inputs for crosscount
+        console.log(`inputs for crosscount -${scrollerID}-
             orientation, 
             gap, 
             padding, 
