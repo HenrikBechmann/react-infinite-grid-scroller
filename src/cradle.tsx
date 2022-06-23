@@ -380,7 +380,7 @@ const Cradle = ({
     // positions for nested infinitegridscrollers.
     // the code restores scroll as soon as cradle is invoked after reparenting to a DOM element
 
-
+    const parentingRecycleRequiredRef = useRef(false)
     console.log('ENTERING cradleState, scrollerID',
         cradleState, '-' + scrollerID + '-')
     
@@ -459,7 +459,8 @@ const Cradle = ({
 
                 if (viewportElement[cradlePositionData.blockScrollProperty] != 
                     cradlePositionData.blockScrollPos) { // clientHeight/Width hasn't caught up
-                    setCradleState('reparentingtransition')
+                    parentingRecycleRequiredRef.current = true
+
                 } else {
 
                     wasCachedRef.current = false
@@ -475,6 +476,15 @@ const Cradle = ({
             }
         }
     }
+
+    useEffect(()=>{
+
+        if (parentingRecycleRequiredRef.current) {
+            parentingRecycleRequiredRef.current = false            
+            setCradleState('reparentingtransition')
+        }
+
+    },[parentingRecycleRequiredRef.current])
 
     useEffect(()=>{
 
@@ -900,7 +910,7 @@ const Cradle = ({
 
             case 'reparentingtransition': {
 
-                setTimeout(()=> {
+                // setTimeout(()=> {
 
                     console.log('in reparentingtransition','-'+scrollerID+'-')
                     const viewportElement = viewportInterruptPropertiesRef.current.elementref.current
@@ -922,7 +932,7 @@ const Cradle = ({
 
                     setCradleState('ready')
 
-                },1000)
+                // },1000)
                 break
 
             }
