@@ -62,6 +62,15 @@ export default class ServiceHandler {
 
     }
 
+
+    public clearCache = () => {
+
+        const { stateHandler } = this.cradleParameters.handlersRef.current
+
+        stateHandler.setCradleState('clearcache')
+
+    }
+
     public scrollToItem = (index) => {
 
         // console.log('calling scrollToItem: index', index)

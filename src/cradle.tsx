@@ -478,10 +478,11 @@ const Cradle = ({
         if (!functions.getCallbacks) return
 
         // const {scrollToItem, getVisibleList, getContentList, reload} = serviceHandler
-        const {scrollToItem, reload} = serviceHandler
+        const {scrollToItem, reload, clearCache} = serviceHandler
 
         const callbacks = {
             scrollToItem,
+            clearCache,
             // getVisibleList,
             // getContentList,
             reload,
@@ -841,6 +842,21 @@ const Cradle = ({
 
                 break 
 
+            }
+
+            case 'clearcache': {
+                cradleContent.headModelComponents = []
+                cradleContent.tailModelComponents = []
+
+                // register new array id for Object.is to trigger react re-processing
+                cradleContent.headDisplayComponents = []
+                cradleContent.tailDisplayComponents = []
+
+                cacheHandler.clearCache()
+
+                setCradleState('ready')
+
+                break
             }
 
         }
