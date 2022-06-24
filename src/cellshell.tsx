@@ -39,7 +39,7 @@ const CellShell = ({
 
     const isMountedRef = useRef(true)
 
-    const portaldataRef = useRef(null)
+    const portalMetadataRef = useRef(null)
 
     const placeholderRef = useRef(null)
 
@@ -144,11 +144,11 @@ const CellShell = ({
 
                     // requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
-                        portaldataRef.current = cacheHandler.getPortal(index)
+                        portalMetadataRef.current = cacheHandler.getPortal(index)
 
-                        portalRecordRef.current = portaldataRef.current.portalNode
+                        portalRecordRef.current = portalMetadataRef.current.portalNode
 
-                        portaldataRef.current.isReparenting = true
+                        portalMetadataRef.current.isReparenting = true
 
                         setCellStatus('inserting')
 
@@ -166,10 +166,10 @@ const CellShell = ({
 
                             if (usercontent) {
 
-                                portaldataRef.current = 
+                                portalMetadataRef.current = 
                                     cacheHandler.createPortal(index, usercontent)
 
-                                portalRecordRef.current  = portaldataRef.current.portalNode
+                                portalRecordRef.current  = portalMetadataRef.current.portalNode
 
                             } else {
 

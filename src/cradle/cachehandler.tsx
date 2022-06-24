@@ -54,7 +54,7 @@ export class CacheHandler {
 
     createPortal(index, content) { // create new portal
 
-        const portalNode = createPortalNode(index)
+        const {portalNode, container} = createPortalNode(index)
 
         this.scrollerProps.portalMap.set(index,
             <div data-type = 'portalwrapper' data-index = { index } key = { index }>
@@ -63,6 +63,7 @@ export class CacheHandler {
         this.scrollerProps.modified = true
 
         const portalMetadata = {
+            container,
             portalNode,
             isReparenting:false,
         }
@@ -117,9 +118,9 @@ const createPortalNode = (index) => {
     container.dataset.type = 'contentenvelope'
     container.dataset.index = index
 
-    return portalNode
+    return {portalNode, container}
 
-}     
+}
 
 // ========================[ Utility components ]==============================
 
