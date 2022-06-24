@@ -12,7 +12,6 @@ import Placeholder from './placeholder'
 import { CradleCacheContext } from './cradle'
 
 const IDLECALLBACK_FETCHTIMEOUT = 8000 // TODO experimentally high!!
-const IDLECALLBACK_CACHETIMEOUT = 1000
 
 const CellShell = ({
     orientation, 
@@ -34,15 +33,15 @@ const CellShell = ({
         overflow:'hidden',
     } as React.CSSProperties)
 
-    const [cellStatus, setCellStatus] = useState('setup'); 
-
-    // console.log('cell instanceID, cellStatus', instanceID, cellStatus)
+    const [cellStatus, setCellStatus] = useState('setup')
 
     const shellRef = useRef(null)
 
     const isMountedRef = useRef(true)
 
     const portaldataRef = useRef(null)
+
+    const placeholderRef = useRef(null)
 
     // for unmount
     useEffect(()=>{
@@ -62,8 +61,6 @@ const CellShell = ({
                 null
             
     },[placeholder,listsize])
-
-    const placeholderRef = useRef(null)
 
     placeholderRef.current = useMemo(()=>{
         const placeholder = 
@@ -88,16 +85,6 @@ const CellShell = ({
 
     // initialize cell content
     useEffect(() => {
-
-        // portaldataRef.current = cacheHandler.fetchOrCreatePortal(index, placeholderRef.current)
-
-        // const hasUserContent = !!portaldataRef.current.hasusercontent // previous InPortal creation for index
-
-        // const { reverseportal } = portaldataRef.current
-
-        // contentPortalRef.current = <OutPortal node = {reverseportal}/>
-
-        contentRef.current = placeholderRef.current
 
         setCellStatus('getusercontent')
 
@@ -131,8 +118,7 @@ const CellShell = ({
 
     },[orientation,cellHeight,cellWidth]) 
 
-    // const contentPortalRef = useRef(null)
-    const contentRef = useRef(null)
+    const portalRecordRef = useRef(null)
 
     useLayoutEffect(() => {
 
@@ -141,31 +127,32 @@ const CellShell = ({
                 // no-op
                 break
             case 'inserting': {
+
                 setCellStatus('ready')
+
                 break
+
             }
             case 'getusercontent': {
-                // const dimensions = shellRef.current?.getBoundingClientRect()
-                // console.log('cellShell dimensions',dimensions)
+
+
                 const cached = cacheHandler.hasPortal(index)
 
                 if (cached) {
 
-                    requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
-                    // console.log('fetching portal for scrollerID, instanceID, index', 
-                    //     scrollerID, instanceID, index)
+                    // setCellStatus('waiting')
 
-                    portaldataRef.current = await cacheHandler.fetchPortal(index)
+                    // requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
-                    const { reverseportal } = portaldataRef.current
+                        portaldataRef.current = cacheHandler.getPortal(index)
 
-                    portaldataRef.current.isReparenting = true
+                        portalRecordRef.current = portaldataRef.current.portalNode
 
-                    contentRef.current = <OutPortal node = {reverseportal}/>
+                        portaldataRef.current.isReparenting = true
 
-                    setCellStatus('inserting')
+                        setCellStatus('inserting')
 
-                    },{timeout:IDLECALLBACK_CACHETIMEOUT})
+                    // },{timeout:500})
 
                 } else {
 
@@ -173,56 +160,30 @@ const CellShell = ({
 
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
+                        const usercontent = await getItem(index)
 
-                        // if (cached) {
+                        if (isMountedRef.current) {
 
-                        //     console.log('fetching portal')
+                            if (usercontent) {
 
-                        //     portaldataRef.current = cacheHandler.fetchPortal(index)
+                                portaldataRef.current = 
+                                    cacheHandler.createPortal(index, usercontent)
 
-                        //     const { reverseportal } = portaldataRef.current
+                                portalRecordRef.current  = portaldataRef.current.portalNode
 
-                        //     // portaldataRef.current.isReparenting = true
+                            } else {
 
-                        //     contentRef.current = <OutPortal node = {reverseportal}/>
-
-                        //     setCellStatus('ready')
-
-                        // } else {
-
-                            // console.log('fetching new content')
-
-                            const usercontent = await getItem(index)
-
-                            if (isMountedRef.current) {
-
-                                if (usercontent) {
-
-                                    portaldataRef.current = cacheHandler.fetchPortal(index, usercontent)
-
-                                    const { reverseportal } = portaldataRef.current
-
-                                    contentRef.current = <OutPortal node = {reverseportal}/>
-
-                                } else {
-
-                                    console.log('ERROR','no content item')
-
-                                }
+                                console.log('ERROR','no content item')
 
                             }
 
-                        // }
+                        }
 
                         setCellStatus('inserting')
 
                     },{timeout:IDLECALLBACK_FETCHTIMEOUT})
 
                 }
-
-                // console.log('contentRef.current',contentRef.current)
-
-                // setCellStatus('acquired')
 
                 break
             }
@@ -241,7 +202,7 @@ const CellShell = ({
 
         switch (cellStatus) {
 
-            case 'ready': {
+            case 'ready': { // no-op
 
                 break
             }
@@ -256,7 +217,10 @@ const CellShell = ({
         data-instanceid = {instanceID} 
         style = {styles}>
 
-            { (cellStatus != 'setup') && contentRef.current }
+            { (cellStatus != 'ready')?
+                placeholderRef.current:
+                <OutPortal node = {portalRecordRef.current}/>
+            }
             
         </div>
 

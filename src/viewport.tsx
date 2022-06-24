@@ -39,7 +39,7 @@ const Viewport = ({
         layout,
     } = gridSpecs
 
-    const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, render
+    const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, ready
 
     const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
     viewportStateRef.current = viewportState
@@ -95,6 +95,8 @@ const Viewport = ({
     // used by resizeObserver; generates interrupt
     const resizeCallback = useCallback((entries)=>{
 
+        if ((!isMountedRef.current) || (!viewportElementRef.current)) return
+
         if (viewportStateRef.current == 'setup') {
 
             return
@@ -106,20 +108,22 @@ const Viewport = ({
         // first register shouldn't generate interrupt
         if (!target.dataset.initialized) {
 
+            const dimensions = viewportElementRef.current.getBoundingClientRect()
+            const {width, height} = dimensions
+
+            const olddimensions = viewportInterruptPropertiesRef.current.viewportDimensions
+            const {width:oldwidth, height:oldheight} = olddimensions
             target.dataset.initialized = true
 
-            return
+            if ((width == oldwidth) && (height == oldheight)) {
+                return
+            }
 
         }
 
-        // const dimensions = viewportElementRef.current.getBoundingClientRect()
+        const dimensions = viewportElementRef.current.getBoundingClientRect()
 
-        // const {width, height} = dimensions
-
-        // if ((width == 0) && (height == 0)) {
-        //     console.log('returning from resize callback:width, height',width, height)
-        //     return // inPortalState
-        // }
+        const {width, height} = dimensions
 
         // generate interrupt response, if initiating resize
         if (!isResizingRef.current) {
@@ -241,7 +245,7 @@ const Viewport = ({
 
             case 'resized':
             case 'setup': {
-                setViewportState('render')
+                setViewportState('ready')
                 break
             }
 

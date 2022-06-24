@@ -11,13 +11,8 @@
         test changing all gridscroller parameters
 
     BUGS: 
-        - use requestidlecallback for fetch from portal
-        - top padding was lost under heavy cache loads
-        - triggerlines are confounded under heavy cache loads
-        - does portal need to be returned to cache?
         - nested lists need to have orientation property changed on pivot
-        - clearCache user callback to anticipate different dataset?
-        - or clearCache with new getItem function
+        - triggerlines are confounded under heavy cache loads
 
     TODO:
         prioritize fetch cells for visible cells

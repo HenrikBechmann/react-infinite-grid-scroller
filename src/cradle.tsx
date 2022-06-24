@@ -2,7 +2,8 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    rationalize pauseScrolling, and other signals
+    BUG: cache is last imort state; should be ready
+    - rationalize pauseScrolling, and other signals
 */
 
 /*
@@ -81,7 +82,15 @@
 
 'use strict'
 
-import React, { useState, useRef, useContext, useEffect, useCallback, useMemo, useLayoutEffect } from 'react'
+import React, { 
+    useState, 
+    useRef, 
+    useContext, 
+    useEffect, 
+    useLayoutEffect, 
+    useCallback, 
+    useMemo 
+} from 'react'
 
 import { ViewportInterrupt } from './viewport'
 
@@ -101,7 +110,7 @@ import StylesHandler from './cradle/styleshandler'
 // for children
 export const CradleCacheContext = React.createContext(null)
 
-const portalrootstyle = {display:'none'} // static 
+const cacherootstyle = {position:'fixed', left: '10000px', display:'block'} as React.CSSProperties // static, out of view 
 
 // component
 const Cradle = ({ 
@@ -151,9 +160,8 @@ const Cradle = ({
 
     // controls
     const isMountedRef = useRef(true)
-    const isCached = useRef(false)
-    const wasCached = useRef(null)
-    // const scrollPosRecoveryPosRef = useRef(null)
+    const isCachedRef = useRef(false)
+    const wasCachedRef = useRef(null)
 
     // cradle scaffold elements refs
     const headCradleElementRef = useRef(null)
@@ -185,7 +193,9 @@ const Cradle = ({
         let tilelengthforcalc = crossLength + gap
         tilelengthforcalc = Math.min(tilelengthforcalc,viewportlengthforcalc) // result cannot be less than 1
 
-        return Math.floor(viewportlengthforcalc/tilelengthforcalc)
+        const crosscount = Math.floor(viewportlengthforcalc/tilelengthforcalc)
+
+        return crosscount
 
     },[
         orientation, 
@@ -271,9 +281,9 @@ const Cradle = ({
 
     // ====================[ bundle parameters for handlers ]===================
 
-    // bundle cradle props to pass to handlers
+    // bundle cradle props to pass to handlers - ultimately cradleParametersRef (brute force)
     const cradleInheritedPropertiesRef = useRef(null) // access by closures and support functions
-    // up to data values
+    // up to date values
     cradleInheritedPropertiesRef.current = {
         // gridSpecs
         orientation, 
@@ -301,16 +311,18 @@ const Cradle = ({
     // configuration properties to share
     const cradleInternalPropertiesRef = useRef(null)
     cradleInternalPropertiesRef.current = {
+        // updated values
         crosscount,
         cradleRowcount,
         viewportRowcount,
         viewportVisibleRowcount,
         listRowcount,
         runwayRowcount,
+        // the following values are maintained elsewhere
         isMountedRef,
         cradleElementsRef,
-        isCached,
-        wasCached,
+        isCachedRef,
+        wasCachedRef,
         // scrollPosRecoveryPosRef,
 
         // for stateHandler
@@ -331,12 +343,12 @@ const Cradle = ({
         externalCallbacksRef,
     }
 
-    // ongoing source of handlers
+    // ongoing source of handlers - note all Handlers are given all parameters
     if (!handlersRef.current) {
         handlersRef.current = getCradleHandlers(cradleParameters)
     }
 
-    // make handlers directly available to cradle code
+    // make handlers directly available to cradle code below
     const {
         cacheHandler,
         interruptHandler,
@@ -348,122 +360,135 @@ const Cradle = ({
         stylesHandler,
     } = handlersRef.current
 
-    // ===================[ cache change sentinel ]=======================
+    // =======================[ CACHE STATE CHANGE SENTINEL ]=========================
 
-    // ... when the scroller is unhooked from the DOM but kept in a React portal
-    // or when the scroller is added to the visible DOM. Either change causes a trigger
+    // when a portal is cached, including the transition of being moved from one cellShell to another,
+    // (and the infinitegridscroller can be a component that is cached),
+    // the scrollPos (scrollLeft or scrollTop) is reset to 0 (zero). When the scroller is 
+    // moved to a cellShell, this code restores the scrollPos.
+    // The restore action must be the first priority to hide the scrollPos changes from the user
 
-    // this is an immediate response to reparenting (moving portals). Reparenting resets scroll
-    // positions for nested infinitegridscrollers.
-    // the code restores scroll as soon as cradle is invoked after reparenting to a DOM element
-
-    console.log('ENTERING cradleState, scrollerID',cradleState, '-' + scrollerID + '-')
+    // console.log('ENTERING cradleState, scrollerID',
+    //     cradleState, '-' + scrollerID + '-')
     
-    if (viewportInterruptProperties.isResizing ||
-        viewportInterruptProperties.portal?.isReparenting) {
+    const parentingTransitionRequiredRef = useRef(false)
 
-        const { cradlePositionData } = scaffoldHandler
+    // the two circumstances assoicated with being moved to and from the cache
+    if (viewportInterruptProperties.isResizing || // happens with movement into cache
+        viewportInterruptProperties.portal?.isReparenting) { // happens with movement out of cache
 
         let isChange = false
-        if (viewportInterruptProperties.portal?.isReparenting) {
+        if (viewportInterruptProperties.portal?.isReparenting) { // priority
 
-            console.log('ON REPARENTING CHANGE', '-'+scrollerID+'-')
+            // cancel any resizing message - isReparenting takes priority
+            viewportInterruptProperties.isResizing && (viewportInterruptProperties.isResizing = false)
+            viewportInterruptProperties.portal.isReparenting = false // no longer needed
+            wasCachedRef.current = true // must be coming from cache
+            isCachedRef.current = false // must be moved to cellShell
+            isChange = true // in any case a change has occurred
 
-            viewportInterruptProperties.elementref.current[
-                cradlePositionData.blockScrollProperty] = cradlePositionData.blockScrollPos // scrollPosRecoveryPosRef.current
-
-            viewportInterruptProperties.portal.isReparenting = false
-            // wasCached.current = true
-            // isCached.current = false
-            // isChange = true
-
-        } else {
+        } else { // resizing is underway
 
             const dimensions = viewportInterruptProperties.viewportDimensions
             const {width:vwidth, height:vheight} = dimensions
 
-            const isInPortal = ((vwidth == 0) && (vheight == 0))
+            const isInPortal = ((vwidth == 0) && (vheight == 0)) // must be in portal state
 
-            if (isInPortal != isCached.current) { // there's been a change
+            if (isInPortal != isCachedRef.current) { // there's been a change
                 isChange = true
-                wasCached.current = isCached.current
-                isCached.current = isInPortal
+                wasCachedRef.current = isCachedRef.current
+                isCachedRef.current = isInPortal
             }
 
-            if (isCached.current || wasCached.current) {
-                viewportInterruptPropertiesRef.current.isResizing = false                
-            }
+            // resizing from caching requires no further action
+            if (isCachedRef.current || wasCachedRef.current) { 
 
-            console.log('ON RESIZE CHANGE: scrollerID\n  isInPortal, vwidth, vheight,\n  is, was, isResizing\n',
-                '-'+scrollerID+'-','\n',isInPortal, vwidth, vheight,'\n',isCached.current, 
-                wasCached.current,viewportInterruptPropertiesRef.current.isResizing)
+                viewportInterruptPropertiesRef.current.isResizing = false
+
+            }
 
         }
 
         if (isChange) {
 
-            // is, was = false, false, is ignored; is, was = true, true never happens 
-            //     -- only a change causes a trigger
-
-            // is, was = true, false
-            if (isCached.current && !wasCached.current) { // change into cached
-                // scrollPosRecoveryPosRef.current = cradlePositionData.blockScrollPos
-
-                console.log('INTO CACHE', '-'+scrollerID+'-')
+            if (isCachedRef.current && !wasCachedRef.current) { // change into cached
 
                 interruptHandler.pauseTriggerlinesObserver = true
                 interruptHandler.pauseCradleIntersectionObserver = true
                 interruptHandler.pauseCradleResizeObserver = true
-                interruptHandler.pauseScrollingEffects = true,
-                interruptHandler.pauseViewportResizing = true
+                interruptHandler.pauseScrollingEffects = true
 
-            // is, was = false, true
-            } else if ((!isCached.current) && wasCached.current) { // change out of cached
+            } else if ((!isCachedRef.current) && wasCachedRef.current) { // change out of cached
 
-                console.log('OUT OF CACHE', '-'+scrollerID+'-')
+                const viewportElement = viewportInterruptPropertiesRef.current.elementref.current
 
-                viewportInterruptProperties.elementref.current[
-                    cradlePositionData.blockScrollProperty] = cradlePositionData.blockScrollPos // scrollPosRecoveryPosRef.current
-            
-                wasCached.current = false
+                const { cradlePositionData } = scaffoldHandler // maintains history of scrollPos
 
-                interruptHandler.pauseTriggerlinesObserver = false
-                interruptHandler.pauseCradleIntersectionObserver = false
-                interruptHandler.pauseCradleResizeObserver = false
-                interruptHandler.pauseScrollingEffects = false
-                interruptHandler.pauseViewportResizing = false
+                if (viewportElement[cradlePositionData.blockScrollProperty] != 
+                    cradlePositionData.blockScrollPos) { // possibly clientHeight/Width hasn't caught up
+                    // ... so likely requires a render cycle to catch up
+                    // parentingTransitionRequiredRef generates a 'reparentingtransition' cycle
+                    //     before resetting scrollPos
+                    parentingTransitionRequiredRef.current = true
+
+                } else { // no need for reset
+
+                    wasCachedRef.current = false // cancel cache state
+
+                    // cancel pauses
+                    interruptHandler.pauseTriggerlinesObserver = false
+                    interruptHandler.pauseCradleIntersectionObserver = false
+                    interruptHandler.pauseCradleResizeObserver = false
+                    interruptHandler.pauseScrollingEffects = false
+
+                }
 
             }
         }
     }
 
+    // generate state for restoring scrollPos
     useEffect(()=>{
 
-        if (cradleStateRef.current == 'setup') return // or else 'dosetup' will be passed over in favour of 'ready'
-
-        console.log('in isCached useEffect:scrollerID, is, was','-' + scrollerID + '-', isCached.current, wasCached.current)
-        if (isCached.current && !wasCached.current) {
-
-            setCradleState('cached')
-
+        if (parentingTransitionRequiredRef.current) {
+            parentingTransitionRequiredRef.current = false            
+            setCradleState('reparentingtransition')
         }
 
-        // } else if (!wasCached.current && !isCached.current){
+    },[parentingTransitionRequiredRef.current])
 
-        //     setCradleState('ready')
+    // change state for entering or leaving cache
+    useEffect(()=>{
+
+        // disallow 'setup' or else 'dosetup' will be passed over in favour of 'ready'
+        if (cradleStateRef.current == 'setup') return 
+
+        if (isCachedRef.current && !wasCachedRef.current) {
+
+            setCradleState('cached') // replaces 'ready' as steady state
 
         // }
 
-    },[isCached.current, wasCached.current])
+        // movement to and from cache has been resolved
+        } else if (!wasCachedRef.current && !isCachedRef.current){
+
+            setCradleState('ready')
+
+        }
+
+    },[isCachedRef.current, wasCachedRef.current])
 
     // ===================[ INITIALIZATION effects ]=========================
+    // initialization effects are independent of caching
 
     // clear mounted flag on unmount
     useLayoutEffect(()=>{
 
         // unmount
         return () => {
+
             isMountedRef.current = false
+
         }
 
     },[])
@@ -476,10 +501,11 @@ const Cradle = ({
         if (!functions.getCallbacks) return
 
         // const {scrollToItem, getVisibleList, getContentList, reload} = serviceHandler
-        const {scrollToItem, reload} = serviceHandler
+        const {scrollToItem, reload, clearCache} = serviceHandler
 
         const callbacks = {
             scrollToItem,
+            clearCache,
             // getVisibleList,
             // getContentList,
             reload,
@@ -505,27 +531,25 @@ const Cradle = ({
     // observer support
 
     /*
-        There are two interection observers, one for the cradle, and another for triggerlines; 
+        There are two interection observers, one for the cradle wings, and another for triggerlines; 
             both against the viewport.
-        There is also a resize observer for the cradle wings, to respond to size changes of 
+        There is also a resize observer for the cradle wings, to generate responses to size changes of 
             variable cells.
     */    
-
-    // intersection observer for cradle body
-
-    // this sets up an IntersectionObserver of the cradle against the viewport. When the
-    // cradle goes out of the observer scope, the "repositioningRender" cradle state is triggerd.
-    // Also, intersection observer for cradle axis triggerlines, and cradle resizeobserver
     useEffect(()=>{
 
-        const cradleElements = scaffoldHandler.elements
-
+        // intersection observer for cradle body
+        // this sets up an IntersectionObserver of the cradle against the viewport. When the
+        // cradle goes out of the observer scope, the "repositioningRender" cradle state is triggered.
         const cradleintersectobserver = interruptHandler.cradleIntersect.createObserver()
         interruptHandler.cradleIntersect.connectElements()
 
+        // triggerobserver tiggers cradle content updates 
+        //     when triggerlines pass the edge of the viewport
         const triggerobserver = interruptHandler.axisTriggerlinesIntersect.createObserver()
         interruptHandler.axisTriggerlinesIntersect.connectElements()
 
+        // resize observer generates compensation for changes in cell sizes for variable layout mode
         const resizeobserver = interruptHandler.cradleResize.createObserver()
         interruptHandler.cradleResize.connectElements()
 
@@ -540,16 +564,15 @@ const Cradle = ({
     },[])
 
     // =====================[ RECONFIGURATION effects ]======================
+    // resize (UI resize of the viewport), reconfigure, or pivot
 
     // trigger resizing based on viewport state
     useEffect(()=>{
 
         if (cradleStateRef.current == 'setup') return
 
-        // const dimensions = viewportInterruptPropertiesRef.current.elementref.current.getBoundingClientRect()
-        // // console.log('inside resizing from isResizing effect:scrollerID, width, height', scrollerID, dimensions.width, dimensions.height)
-
-        if (isCached.current || wasCached.current) {
+        // movement to and from cache is independent of ui resizing
+        if (isCachedRef.current || wasCachedRef.current) {
 
             return
 
@@ -563,7 +586,6 @@ const Cradle = ({
             signals.pauseCradleResizeObserver = true
             signals.pauseScrollingEffects = true
  
-            // console.log('CALLING resizing in isResizing effect, scrollerID', '-' + scrollerID + '-')
             setCradleState('resizing')
 
         }
@@ -582,7 +604,7 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        if (isCached.current) return
+        if (isCachedRef.current) return
 
         const signals = interruptHandler.signals
 
@@ -602,7 +624,7 @@ const Cradle = ({
         triggerlineOffset
     ])
 
-    // trigger pivot *only* on change in orientation
+    // pivot triggered only on change in orientation
     useEffect(()=> {
 
         scaffoldHandler.cradlePositionData.blockScrollProperty = 
@@ -610,7 +632,7 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        if (isCached.current) return
+        if (isCachedRef.current) return
 
         const { 
             cellWidth,
@@ -694,7 +716,7 @@ const Cradle = ({
     // =====================[ state management ]==========================
 
     // this is the core state engine
-    // useLayout for suppressing flashes
+    // useLayoutEffect for suppressing flashes
     useLayoutEffect(()=>{
 
         switch (cradleState) {
@@ -709,7 +731,7 @@ const Cradle = ({
 
             case 'cached': {// no op
 
-                if (!wasCached.current && !isCached.current){
+                if (!wasCachedRef.current && !isCachedRef.current){
 
                     setCradleState('ready')
 
@@ -732,11 +754,6 @@ const Cradle = ({
             }
 
             case 'finishupdatedcontent': { // cycle for DOM update
-
-                // const scrollPos = viewportInterruptPropertiesRef.current.elementref.current.scrollTop
-
-                // console.log('scrollPos at finishupdatedcontent handling', scrollPos)
-                // debugger
 
                 interruptHandler.axisTriggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseTriggerlinesObserver = false
@@ -787,6 +804,7 @@ const Cradle = ({
 
                 contentHandler.setCradleContent( cradleState )
 
+                // TODO:
                 // if (cache == 'cradle') {
                 //     cacheHandler.matchCacheToCradle
                 // }
@@ -810,11 +828,10 @@ const Cradle = ({
 
             case 'normalizesignals': { // normalize or resume cycling
 
-                // prioritize interrupts
+                // prioritize interrupts TODO: validate this
 
-                if ((!isCached.current) && viewportInterruptPropertiesRef.current.isResizing) {
+                if ((!isCachedRef.current) && viewportInterruptPropertiesRef.current.isResizing) {
 
-                    // console.log('calling resizing from normalizesignals')
                     setCradleState('resizing')
 
                 } else if (interruptHandler.signals.repositioningRequired) {
@@ -835,6 +852,45 @@ const Cradle = ({
                 }
 
                 break 
+
+            }
+
+            // user request
+            case 'clearcache': {
+                cradleContent.headModelComponents = []
+                cradleContent.tailModelComponents = []
+
+                // register new array id for Object.is to trigger react re-processing
+                cradleContent.headDisplayComponents = []
+                cradleContent.tailDisplayComponents = []
+
+                cacheHandler.clearCache()
+
+                setCradleState('ready')
+
+                break
+            }
+
+            // moving out of cache into visible DOM tree (cellShell)
+            // resets scrollPos to last UI value
+            case 'reparentingtransition': {
+
+                    const viewportElement = viewportInterruptPropertiesRef.current.elementref.current
+                    const { cradlePositionData } = scaffoldHandler
+
+                    viewportElement[cradlePositionData.blockScrollProperty] = 
+                        cradlePositionData.blockScrollPos
+
+                    wasCachedRef.current = false
+
+                    interruptHandler.pauseTriggerlinesObserver = false
+                    interruptHandler.pauseCradleIntersectionObserver = false
+                    interruptHandler.pauseCradleResizeObserver = false
+                    interruptHandler.pauseScrollingEffects = false
+
+                    setCradleState('ready')
+
+                break
 
             }
 
@@ -878,23 +934,20 @@ const Cradle = ({
             styles,
         }
         return trackerargs
-    },[
-        cradleState, 
-        viewportDimensions, 
-        scrollAxisReferenceIndex, 
-        listsize,
-        styles,
+    },
+        [
+            cradleState, 
+            viewportDimensions, 
+            scrollAxisReferenceIndex, 
+            listsize,
+            styles,
         ]
     )
 
     const cradleContent = contentHandler.content
 
-    // the data-type = portalroot div is the hidden portal component cache
+    // the data-type = cacheroot div at the end is the hidden portal component cache
     return <CradleCacheContext.Provider value = {handlersRef.current.cacheHandler}>
-        {(cradleStateRef.current != 'setup') && <div data-type = 'portalroot' style = { portalrootstyle }>
-            <PortalList scrollerProps = {handlersRef.current.cacheHandler.scrollerProps}/>
-        </div>}
-
         {((cradleStateRef.current == 'repositioningRender') || 
             (cradleStateRef.current == 'repositioningContinuation'))?
             <ScrollTracker 
@@ -960,6 +1013,10 @@ const Cradle = ({
                 </div>
             </div>
         }
+
+        {(cradleStateRef.current != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
+            <PortalList scrollerProps = {handlersRef.current.cacheHandler.scrollerProps}/>
+        </div>}
         
     </CradleCacheContext.Provider>
 
