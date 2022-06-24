@@ -13,14 +13,21 @@ import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 // global scroller data, organized by session scrollerID
 export class CacheHandler {
 
+    constructor(scrollerID) {
+        this.scrollerProps.scrollerID = scrollerID
+    }
+
     //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
+
+    scrollerID
 
     scrollerProps = {
         setListState:null,
         modified:false,
         portalMetadataMap:new Map(),
         portalMap:new Map(),
-        portalList:null
+        portalList:null,
+        scrollerID:null
     }
 
     // initialize scroller repository
@@ -60,7 +67,7 @@ export class CacheHandler {
             //     <InPortal node = {portalNode} > { content } </InPortal>
             // </div>)
         this.scrollerProps.portalMap.set(index,
-                <InPortal node = {portalNode} > { content } </InPortal>)
+                <InPortal key = {index} node = {portalNode} > { content } </InPortal>)
         this.scrollerProps.modified = true
 
         const portalMetadata = {
@@ -126,6 +133,8 @@ const createPortalNode = (index) => {
 
 // portal list component for rapid relisting of updates, using external callback for set state
 export const PortalList = ({ scrollerProps }) => {
+
+    // console.log('running PORTALLIST', '-'+scrollerProps.scrollerID+'-')
 
     const [portalList, setPortalList] = useState(null)
     const isMountedRef = useRef(true)

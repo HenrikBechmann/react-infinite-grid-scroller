@@ -1029,7 +1029,7 @@ const getCradleHandlers = (cradleParameters) => {
     const createHandler = handler => new handler(cradleParameters)
 
     return {
-        cacheHandler:new CacheHandler(),
+        cacheHandler:new CacheHandler(cradleParameters.cradleInheritedPropertiesRef.current.scrollerID),
         interruptHandler:createHandler(InterruptHandler),
         scrollHandler:createHandler(ScrollHandler),
         stateHandler:createHandler(StateHandler),
