@@ -110,7 +110,7 @@ import StylesHandler from './cradle/styleshandler'
 // for children
 export const CradleCacheContext = React.createContext(null)
 
-const cacherootstyle = {position:'fixed', left: '10000px', display:'block'} as React.CSSProperties // static, out of view 
+// const cacherootstyle = {position:'fixed', left: '10000px', display:'block'} as React.CSSProperties // static, out of view 
 
 // component
 const Cradle = ({ 
@@ -129,6 +129,8 @@ const Cradle = ({
         // for debugging
         scrollerName,
         scrollerID,
+
+        cacheHandler,
     }) => {
 
     if (listsize == 0) return // nothing to do
@@ -305,6 +307,7 @@ const Cradle = ({
         // objects
         functions,
         styles,
+        cacheHandler,
 
     }
 
@@ -350,7 +353,7 @@ const Cradle = ({
 
     // make handlers directly available to cradle code below
     const {
-        cacheHandler,
+        // cacheHandler,
         interruptHandler,
         scrollHandler,
         stateHandler,
@@ -368,8 +371,17 @@ const Cradle = ({
     // moved to a cellShell, this code restores the scrollPos.
     // The restore action must be the first priority to hide the scrollPos changes from the user
 
-    // console.log('ENTERING cradleState, scrollerID',
-    //     cradleState, '-' + scrollerID + '-')
+    // const dimensions = viewportInterruptProperties.viewportDimensions
+    // const {width:vwidth, height:vheight} = dimensions
+    const viewportElement = viewportInterruptProperties.elementref.current
+    const scrollLeft = viewportElement.scrollLeft
+    const scrollTop = viewportElement.scrollTop
+    const { cradlePositionData } = scaffoldHandler // maintains history of scrollPos
+    const { blockScrollPos } = cradlePositionData
+
+    console.log('ENTERING cradleState, scrollerID, scrollLeft, scrollTop, blockScrollPos, isResizing, isReparenting',
+        cradleState, '-' + scrollerID + '-', scrollLeft, scrollTop, blockScrollPos,
+        viewportInterruptProperties.isResizing, viewportInterruptProperties.portal?.isReparenting)
     
     const parentingTransitionRequiredRef = useRef(false)
 
@@ -946,6 +958,8 @@ const Cradle = ({
 
     const cradleContent = contentHandler.content
 
+    // console.log('cacheHandler in cradle',cacheHandler, handlersRef.current)
+
     // the data-type = cacheroot div at the end is the hidden portal component cache
     return <CradleCacheContext.Provider value = {handlersRef.current.cacheHandler}>
         {((cradleStateRef.current == 'repositioningRender') || 
@@ -1004,7 +1018,6 @@ const Cradle = ({
                     style = {cradleTailStyle}
                 
                 >
-                
                     {(cradleStateRef.current != 'setup')?
                         cradleContent.tailDisplayComponents:
                         null
@@ -1014,13 +1027,14 @@ const Cradle = ({
             </div>
         }
 
-        {(cradleStateRef.current != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
-            <PortalList scrollerProps = {handlersRef.current.cacheHandler.scrollerProps}/>
-        </div>}
         
     </CradleCacheContext.Provider>
 
 } // Cradle
+
+        // {(cradleStateRef.current != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
+        //     <PortalList scrollerProps = {handlersRef.current.cacheHandler.scrollerProps}/>
+        // </div>}
 
 // utilities
 
@@ -1029,7 +1043,8 @@ const getCradleHandlers = (cradleParameters) => {
     const createHandler = handler => new handler(cradleParameters)
 
     return {
-        cacheHandler:new CacheHandler(cradleParameters.cradleInheritedPropertiesRef.current.scrollerID),
+        // cacheHandler:new CacheHandler(cradleParameters.cradleInheritedPropertiesRef.current.scrollerID),
+        cacheHandler:cradleParameters.cradleInheritedPropertiesRef.current.cacheHandler,
         interruptHandler:createHandler(InterruptHandler),
         scrollHandler:createHandler(ScrollHandler),
         stateHandler:createHandler(StateHandler),

@@ -37,6 +37,8 @@ import Viewport from './viewport'
 import Scrollblock from './scrollblock'
 import Cradle from './cradle'
 
+import { CacheHandler, PortalList } from './cradle/cachehandler'
+
 // -------------------[ global session ID generator ]----------------
 
 let globalScrollerID = 0
@@ -94,6 +96,7 @@ const InfiniteGridScroller = (props) => {
         scrollerName, // for debugging
         triggerlineOffset,
         indexOffset,
+        portalDataRef
     } = props
 
     const gridSpecs = { // package
@@ -150,11 +153,15 @@ const InfiniteGridScroller = (props) => {
     // for mount
     const scrollerSessionIDRef = useRef(null);
 
+    const cacheHandlerRef = useRef(null)
+
     useEffect (() => {
         scrollerSessionIDRef.current = globalScrollerID++
+        cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current)
     },[])
 
     const scrollerID = scrollerSessionIDRef.current
+    console.log('scroller portalDataRef in scrollerID', '-'+scrollerID+'-',portalDataRef)
 
     // --------------------[ render ]---------------------
 
@@ -176,6 +183,8 @@ const InfiniteGridScroller = (props) => {
             styles = { stylesRef.current }
 
             scrollerID = { scrollerID }
+
+            portalDataRef = {portalDataRef}
         >
         
             <Scrollblock
@@ -210,13 +219,21 @@ const InfiniteGridScroller = (props) => {
 
                     triggerlineOffset = { triggerlineOffset }
 
+                    cacheHandler = {cacheHandlerRef.current}
+
                 />
             </Scrollblock>
         </Viewport>}
+        {(scrollerState != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
+            <PortalList scrollerProps = {cacheHandlerRef.current.scrollerProps}/>
+        </div>}
+
         </React.StrictMode>
 
     )
 }
+
+const cacherootstyle = {position:'fixed', left: '10000px', display:'block'} as React.CSSProperties // static, out of view 
 
 export default InfiniteGridScroller
 
