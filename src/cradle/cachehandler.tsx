@@ -56,10 +56,11 @@ export class CacheHandler {
 
         const portalNode = createPortalNode(index)
 
+            // <div data-type = 'portalwrapper' data-index = { index } key = { index }>
+            //     <InPortal node = {portalNode} > { content } </InPortal>
+            // </div>)
         this.scrollerProps.portalMap.set(index,
-            <div data-type = 'portalwrapper' data-index = { index } key = { index }>
-                <InPortal node = {portalNode} > { content } </InPortal>
-            </div>)
+                <InPortal node = {portalNode} > { content } </InPortal>)
         this.scrollerProps.modified = true
 
         const portalMetadata = {
