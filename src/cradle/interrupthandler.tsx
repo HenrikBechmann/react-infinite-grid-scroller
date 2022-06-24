@@ -127,8 +127,10 @@ export default class InterruptHandler {
                 const width = right - left, height = bottom - top
                 viewportInterruptProperties.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
 
-                // console.log('calling startreposition from cradleIntersectionObserverCallback:scrollerID, entries',
-                //  '-' + scrollerID + '-', entries)
+                console.log('calling startreposition from cradleIntersectionObserverCallback:scrollerID, entries',
+                 '-' + scrollerID + '-', entries)
+
+                // debugger
 
                 stateHandler.setCradleState('startreposition')
 
