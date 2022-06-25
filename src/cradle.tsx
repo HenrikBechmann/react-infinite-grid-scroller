@@ -183,7 +183,7 @@ const Cradle = ({
         }
     )
 
-    // ------------------------[ calculated data ]------------------------
+    // ------------------------[ calculated properties ]------------------------
 
     // configuration calculations
     const crosscount = useMemo(() => { // the number of cells crossing orientation
@@ -385,7 +385,7 @@ const Cradle = ({
     
     const parentingTransitionRequiredRef = useRef(false)
 
-    // the two circumstances assoicated with being moved to and from the cache
+    // the two circumstances associated with being moved to and from the cache
     if (viewportInterruptProperties.isResizing || // happens with movement into cache
         viewportInterruptProperties.portal?.isReparenting) { // happens with movement out of cache
 
@@ -727,7 +727,7 @@ const Cradle = ({
 
     // =====================[ state management ]==========================
 
-    // this is the core state engine
+    // this is the core state engine, using named states
     // useLayoutEffect for suppressing flashes
     useLayoutEffect(()=>{
 
@@ -1032,10 +1032,6 @@ const Cradle = ({
 
 } // Cradle
 
-        // {(cradleStateRef.current != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
-        //     <PortalList scrollerProps = {handlersRef.current.cacheHandler.scrollerProps}/>
-        // </div>}
-
 // utilities
 
 const getCradleHandlers = (cradleParameters) => {
@@ -1043,7 +1039,6 @@ const getCradleHandlers = (cradleParameters) => {
     const createHandler = handler => new handler(cradleParameters)
 
     return {
-        // cacheHandler:new CacheHandler(cradleParameters.cradleInheritedPropertiesRef.current.scrollerID),
         cacheHandler:cradleParameters.cradleInheritedPropertiesRef.current.cacheHandler,
         interruptHandler:createHandler(InterruptHandler),
         scrollHandler:createHandler(ScrollHandler),
