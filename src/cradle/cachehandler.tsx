@@ -19,8 +19,6 @@ export class CacheHandler {
 
     //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
 
-    scrollerID
-
     scrollerProps = {
         setListState:null,
         modified:false,
@@ -52,7 +50,6 @@ export class CacheHandler {
             this.scrollerProps.modified = false
         }
 
-        // console.log('rendering portal list', this.scrollerProps.portalList, this.scrollerProps.portalMap)
         this.scrollerProps.setListState() // trigger display update
 
     }

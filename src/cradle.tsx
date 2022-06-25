@@ -627,7 +627,7 @@ const Cradle = ({
         triggerlineOffset
     ])
 
-    // pivot triggered only on change in orientation
+    // pivot triggered on change in orientation
     useEffect(()=> {
 
         scaffoldHandler.cradlePositionData.blockScrollProperty = 
