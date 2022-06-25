@@ -4,11 +4,11 @@
 /*
     ROADMAP:
         cache management
-        suspense analog
         review all code
         modes: uniform, variable, dynamic
         insert, remove, swap functions
         test changing all gridscroller parameters
+        test config size edge cases - over and under sized cells
 
     BUGS: 
         - nested lists need to have orientation property changed on pivot
