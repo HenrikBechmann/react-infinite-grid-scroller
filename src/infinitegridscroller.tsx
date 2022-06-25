@@ -174,8 +174,7 @@ const InfiniteGridScroller = (props) => {
 
     },[scrollerState])
 
-    return (
-        <React.StrictMode>
+    return (<>
         {(scrollerState != 'setup') && <Viewport
 
             gridSpecs = { gridSpecsRef.current }
@@ -227,10 +226,7 @@ const InfiniteGridScroller = (props) => {
         {(scrollerState != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
             <PortalList scrollerProps = {cacheHandlerRef.current.scrollerProps}/>
         </div>}
-
-        </React.StrictMode>
-
-    )
+        </>)
 }
 
 const cacherootstyle = {position:'fixed', left: '10000px', display:'block'} as React.CSSProperties // static, out of view 

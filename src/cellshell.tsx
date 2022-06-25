@@ -160,7 +160,12 @@ const CellShell = ({
 
                             if (usercontent) {
 
-                                const copy = React.cloneElement(usercontent, {portalDataRef:portaldataRef})
+                                let copy 
+                                if (usercontent.props.hasOwnProperty('portalDataRef')) {
+                                    copy = React.cloneElement(usercontent, {portalDataRef:portaldataRef})
+                                } else {
+                                    copy = usercontent
+                                }
 
                                 portaldataRef.current = 
                                     cacheHandler.createPortal(index, copy)
