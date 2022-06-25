@@ -161,7 +161,8 @@ const InfiniteGridScroller = (props) => {
     },[])
 
     const scrollerID = scrollerSessionIDRef.current
-    // console.log('scroller portalDataRef in scrollerID', '-'+scrollerID+'-',portalDataRef)
+
+    // console.log('infinite scroller scrollerID, scrollerState', '-'+scrollerID+'-',scrollerState)
 
     // --------------------[ render ]---------------------
 

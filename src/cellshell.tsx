@@ -135,7 +135,6 @@ const CellShell = ({
             }
             case 'getusercontent': {
 
-
                 const cached = cacheHandler.hasPortal(index)
 
                 if (cached) {
