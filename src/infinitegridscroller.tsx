@@ -15,6 +15,7 @@
         - triggerlines are confounded under heavy cache loads
 
     TODO:
+        warn usercontent of both resizing and isReparenting
         prioritize fetch cells for visible cells
         customizable scrolltracker
         reload from/to for insertions and substitutions

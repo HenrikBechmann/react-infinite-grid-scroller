@@ -84,6 +84,7 @@ export class CacheHandler {
     }
 
     // delete a portal list item
+    // TODO accept an array of indexes
     deletePortal(index) {
 
         this.scrollerProps.portalMetadataMap.delete(index)
