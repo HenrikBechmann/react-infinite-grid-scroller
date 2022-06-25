@@ -373,7 +373,7 @@ const Cradle = ({
 
     // const dimensions = viewportInterruptProperties.viewportDimensions
     // const {width:vwidth, height:vheight} = dimensions
-    // const viewportElement = viewportInterruptProperties.elementref.current
+    // const viewportElement = viewportInterruptProperties.elementRef.current
     // const scrollLeft = viewportElement.scrollLeft
     // const scrollTop = viewportElement.scrollTop
     // const { cradlePositionData } = scaffoldHandler // maintains history of scrollPos
@@ -432,7 +432,7 @@ const Cradle = ({
 
             } else if ((!isCachedRef.current) && wasCachedRef.current) { // change out of cached
 
-                const viewportElement = viewportInterruptPropertiesRef.current.elementref.current
+                const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
 
                 const { cradlePositionData } = scaffoldHandler // maintains history of scrollPos
 
@@ -530,11 +530,11 @@ const Cradle = ({
     // initialize window scroll listener
     useEffect(() => {
         const viewportdata = viewportInterruptPropertiesRef.current
-        viewportdata.elementref.current.addEventListener('scroll',scrollHandler.onScroll)
+        viewportdata.elementRef.current.addEventListener('scroll',scrollHandler.onScroll)
 
         return () => {
 
-            viewportdata.elementref.current && viewportdata.elementref.current.removeEventListener('scroll',scrollHandler.onScroll)
+            viewportdata.elementRef.current && viewportdata.elementRef.current.removeEventListener('scroll',scrollHandler.onScroll)
 
         }
 
@@ -887,7 +887,7 @@ const Cradle = ({
             // resets scrollPos to last UI value
             case 'reparentingtransition': {
 
-                    const viewportElement = viewportInterruptPropertiesRef.current.elementref.current
+                    const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
                     const { cradlePositionData } = scaffoldHandler
 
                     viewportElement[cradlePositionData.blockScrollProperty] = 

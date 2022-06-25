@@ -71,7 +71,7 @@ const Viewport = ({
             isResizing:false, 
             index:null,
             viewportDimensions:null,
-            elementref:null
+            elementRef:null
         }
     )
 
@@ -213,7 +213,7 @@ const Viewport = ({
         // TODO this is a duplicate setting procedure with interrupthandler.tsx cradleIntersectionObserverCallback
         const localViewportData = {
             viewportDimensions:{top,right, bottom, left, width, height},
-            elementref:viewportElementRef,
+            elementRef:viewportElementRef,
             isResizing:isResizingRef.current,
         }
 

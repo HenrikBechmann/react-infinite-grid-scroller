@@ -72,7 +72,7 @@ export default class ContentHandler {
         interruptHandler.cradleIntersect.observer.disconnect()
 
         const { cradlePositionData } = scaffoldHandler
-        const viewportElement = viewportInterruptProperties.elementref.current
+        const viewportElement = viewportInterruptProperties.elementRef.current
 
         const requestedAxisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
         let targetAxisPixelOffset = cradlePositionData.targetAxisPixelOffset
@@ -131,7 +131,7 @@ export default class ContentHandler {
                 targetAxisPixelOffset,
                 cradleInheritedProperties,
                 cradleInternalProperties,
-                viewportElement:viewportInterruptProperties.elementref.current,
+                viewportElement:viewportInterruptProperties.elementRef.current,
             })
 
         let scrollPosAdjustment
@@ -296,7 +296,7 @@ export default class ContentHandler {
         // cradle properties
         // const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
         const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
-        const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementref.current
+        const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementRef.current
 
         const {
 

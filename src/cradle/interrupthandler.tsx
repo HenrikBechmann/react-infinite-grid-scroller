@@ -113,7 +113,7 @@ export default class InterruptHandler {
                 !(cradleState == 'pivot')
                 ) 
             {
-                const element = viewportInterruptProperties.elementref.current
+                const element = viewportInterruptProperties.elementRef.current
 
                 const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
                 if (!element) {
@@ -170,7 +170,7 @@ export default class InterruptHandler {
             let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
             this.cradleIntersect.observer = new IntersectionObserver(
                 this.cradleIntersect.callback,
-                {root:viewportInterruptProperties.elementref.current, threshold:0}
+                {root:viewportInterruptProperties.elementRef.current, threshold:0}
             )    
             return this.cradleIntersect.observer
         }
@@ -189,7 +189,7 @@ export default class InterruptHandler {
             let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
             this.axisTriggerlinesIntersect.observer = new IntersectionObserver(
                 this.axisTriggerlinesIntersect.callback,
-                {root:viewportInterruptProperties.elementref.current, threshold:0}
+                {root:viewportInterruptProperties.elementRef.current, threshold:0}
             )
             return this.axisTriggerlinesIntersect.observer
         }

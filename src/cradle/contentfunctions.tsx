@@ -479,7 +479,6 @@ const createCell = ({
         getItem,
         placeholder,
         listsize,
-        scrollerName,
         scrollerID 
 
     } = cradleInheritedProperties
@@ -495,7 +494,6 @@ const createCell = ({
         listsize = {listsize}
         placeholder = { placeholder }
         instanceID = {instanceID}
-        scrollerName = { scrollerName }
         scrollerID = { scrollerID }
     />
 
