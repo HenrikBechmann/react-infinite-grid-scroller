@@ -134,7 +134,7 @@ const createPortalNode = (index) => {
 // portal list component for rapid relisting of updates, using external callback for set state
 export const PortalList = ({ scrollerProps }) => {
 
-    console.log('running PORTALLIST', '-'+scrollerProps.scrollerID+'-')
+    // console.log('running PORTALLIST', '-'+scrollerProps.scrollerID+'-')
 
     const [portalList, setPortalList] = useState(null)
     const isMountedRef = useRef(true)
@@ -142,7 +142,7 @@ export const PortalList = ({ scrollerProps }) => {
     useEffect(()=>{
 
         scrollerProps.setListState = ()=>{
-            console.log('running setListState in PORTALLIST', '-'+scrollerProps.scrollerID+'-')
+            // console.log('running setListState in PORTALLIST', '-'+scrollerProps.scrollerID+'-')
             isMountedRef.current && setPortalList(scrollerProps.portalList)
         }
 

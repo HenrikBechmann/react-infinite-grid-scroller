@@ -159,26 +159,6 @@ const Viewport = ({
     useEffect(()=>{
 
         viewportInterruptPropertiesRef.current.portal = portalDataRef?.current
-        // if (!parentPortalHandler) return // root viewport; has no portal
-
-        // let portalindex
-        // let element = viewportElementRef.current
-
-        // while (element) {
-        //     if (element.dataset && (element.dataset.type == 'contentenvelope')) { // set portal & exit
-        //         portalindex = parseInt(element.dataset.index)
-        //         viewportInterruptPropertiesRef.current.portal = parentPortalHandler.getPortal(portalindex)
-        //         viewportInterruptPropertiesRef.current.index = portalindex
-        //         break
-        //     } else {
-        //         element = element.parentElement
-        //     }
-        // } 
-
-        // if (!element) {
-        //     console.log('ERROR: parent contentenvelope not found')
-        //     return
-        // }
 
     },[])
 

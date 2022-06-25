@@ -140,19 +140,13 @@ const CellShell = ({
 
                 if (cached) {
 
-                    // setCellStatus('waiting')
+                    portaldataRef.current = cacheHandler.getPortal(index)
 
-                    // requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
+                    portalRecordRef.current = portaldataRef.current.portalNode
 
-                        portaldataRef.current = cacheHandler.getPortal(index)
+                    portaldataRef.current.isReparenting = true
 
-                        portalRecordRef.current = portaldataRef.current.portalNode
-
-                        portaldataRef.current.isReparenting = true
-
-                        setCellStatus('inserting')
-
-                    // },{timeout:500})
+                    setCellStatus('inserting')
 
                 } else {
 
