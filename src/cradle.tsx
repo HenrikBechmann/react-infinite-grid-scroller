@@ -373,14 +373,14 @@ const Cradle = ({
 
     // const dimensions = viewportInterruptProperties.viewportDimensions
     // const {width:vwidth, height:vheight} = dimensions
-    const viewportElement = viewportInterruptProperties.elementref.current
-    const scrollLeft = viewportElement.scrollLeft
-    const scrollTop = viewportElement.scrollTop
-    const { cradlePositionData } = scaffoldHandler // maintains history of scrollPos
-    const { blockScrollPos } = cradlePositionData
+    // const viewportElement = viewportInterruptProperties.elementref.current
+    // const scrollLeft = viewportElement.scrollLeft
+    // const scrollTop = viewportElement.scrollTop
+    // const { cradlePositionData } = scaffoldHandler // maintains history of scrollPos
+    // const { blockScrollPos } = cradlePositionData
 
-    console.log('ENTERING cradleState, scrollerID, scrollLeft, scrollTop, blockScrollPos, isResizing, isReparenting',
-        cradleState, '-' + scrollerID + '-', scrollLeft, scrollTop, blockScrollPos,
+    console.log('ENTERING cradleState, scrollerID, scrollLeft, scrollTop, blockScrollPos, isResizing, isReparenting\n',
+        cradleState, '-' + scrollerID + '-','\n',//scrollLeft, scrollTop, blockScrollPos,
         viewportInterruptProperties.isResizing, viewportInterruptProperties.portal?.isReparenting)
     
     const parentingTransitionRequiredRef = useRef(false)
