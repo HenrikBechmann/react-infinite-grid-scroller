@@ -15,19 +15,18 @@
         - triggerlines are confounded under heavy cache loads
 
     TODO:
+        cacheMax tolerance percent before triggering rebalance before scroll is over
         warn usercontent of both resizing and isReparenting
         prioritize fetch cells for visible cells
         customizable scrolltracker
         reload from/to for insertions and substitutions
-        provide user with isReparenting flag to be able to reset scroll
         check use of useCallback
-        resize triggered by root only, unless variable
-        intersection applied to cradle only
         test for two root portals
         promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
         calc minwidth by form factor
         review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
         add grid-template-rows: max-content to parent for safari issue grid-auto-flow: column not filling column
+        cross-browser testing
 */
 
 'use strict'
