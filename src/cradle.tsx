@@ -370,18 +370,6 @@ const Cradle = ({
     // the scrollPos (scrollLeft or scrollTop) is reset to 0 (zero). When the scroller is 
     // moved to a cellShell, this code restores the scrollPos.
     // The restore action must be the first priority to hide the scrollPos changes from the user
-
-    // const dimensions = viewportInterruptProperties.viewportDimensions
-    // const {width:vwidth, height:vheight} = dimensions
-    // const viewportElement = viewportInterruptProperties.elementRef.current
-    // const scrollLeft = viewportElement.scrollLeft
-    // const scrollTop = viewportElement.scrollTop
-    // const { cradlePositionData } = scaffoldHandler // maintains history of scrollPos
-    // const { blockScrollPos } = cradlePositionData
-
-    // console.log('ENTERING cradleState, scrollerID, isResizing, isReparenting\n',
-    //     cradleState, '-' + scrollerID + '-','\n',//scrollLeft, scrollTop, blockScrollPos,
-    //     viewportInterruptProperties.isResizing, viewportInterruptProperties.portal?.isReparenting)
     
     const parentingTransitionRequiredRef = useRef(false)
 
@@ -401,10 +389,11 @@ const Cradle = ({
 
         } else { // resizing is underway
 
-            const dimensions = viewportInterruptProperties.viewportDimensions
-            const {width:vwidth, height:vheight} = dimensions
+            // const dimensions = viewportInterruptProperties.viewportDimensions
+            // const {width:vwidth, height:vheight} = dimensions
 
-            const isInPortal = ((vwidth == 0) && (vheight == 0)) // must be in portal state
+            // const isInPortal = ((vwidth == 0) && (vheight == 0)) // must be in portal state
+            const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal state
 
             if (isInPortal != isCachedRef.current) { // there's been a change
                 isChange = true
@@ -415,7 +404,8 @@ const Cradle = ({
             // resizing from caching requires no further action
             if (isCachedRef.current || wasCachedRef.current) { 
 
-                viewportInterruptPropertiesRef.current.isResizing = false
+                // viewportInterruptPropertiesRef.current.isResizing = false
+                viewportInterruptProperties.isResizing = false
 
             }
 
@@ -432,7 +422,8 @@ const Cradle = ({
 
             } else if ((!isCachedRef.current) && wasCachedRef.current) { // change out of cached
 
-                const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
+                // const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
+                const viewportElement = viewportInterruptProperties.elementRef.current
 
                 const { cradlePositionData } = scaffoldHandler // maintains history of scrollPos
 
