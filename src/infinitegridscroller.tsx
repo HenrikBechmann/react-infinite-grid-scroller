@@ -13,6 +13,7 @@
     BUGS: 
         - nested lists need to have orientation property changed on pivot
         - triggerlines are confounded under heavy cache loads
+        - test for memory leaks with Chrome's window.performance.memory property
 
     TODO:
         cacheMax tolerance percent before triggering rebalance before scroll is over
