@@ -171,7 +171,7 @@ const CellShell = ({
                                 portaldataRef.current = 
                                     cacheHandler.createPortal(index, copy)
 
-                                console.log('usercontent, copy', usercontent, copy)
+                                // console.log('usercontent, copy', usercontent, copy)
 
                                 portalRecordRef.current  = portaldataRef.current.portalNode
 
