@@ -379,7 +379,7 @@ const Cradle = ({
     // const { cradlePositionData } = scaffoldHandler // maintains history of scrollPos
     // const { blockScrollPos } = cradlePositionData
 
-    console.log('ENTERING cradleState, scrollerID, scrollLeft, scrollTop, blockScrollPos, isResizing, isReparenting\n',
+    console.log('ENTERING cradleState, scrollerID, isResizing, isReparenting\n',
         cradleState, '-' + scrollerID + '-','\n',//scrollLeft, scrollTop, blockScrollPos,
         viewportInterruptProperties.isResizing, viewportInterruptProperties.portal?.isReparenting)
     
