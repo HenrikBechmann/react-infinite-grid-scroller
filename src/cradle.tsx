@@ -108,7 +108,7 @@ import ServiceHandler from './cradle/servicehandler'
 import StylesHandler from './cradle/styleshandler'
 
 // for children
-export const CradleCacheContext = React.createContext(null)
+export const CradleContext = React.createContext(null)
 
 // const cacherootstyle = {position:'fixed', left: '10000px', display:'block'} as React.CSSProperties // static, out of view 
 
@@ -957,8 +957,10 @@ const Cradle = ({
 
     const cradleContent = contentHandler.content
 
+    const contextvalueRef = useRef({cradleInheritedPropertiesRef, cacheHandler})
+
     // the data-type = cacheroot div at the end is the hidden portal component cache
-    return <CradleCacheContext.Provider value = {handlersRef.current.cacheHandler}>
+    return <CradleContext.Provider value = {contextvalueRef.current}>
         {((cradleStateRef.current == 'repositioningRender') || 
             (cradleStateRef.current == 'repositioningContinuation'))?
             <ScrollTracker 
@@ -1025,7 +1027,7 @@ const Cradle = ({
         }
 
         
-    </CradleCacheContext.Provider>
+    </CradleContext.Provider>
 
 } // Cradle
 

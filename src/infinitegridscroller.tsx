@@ -97,7 +97,7 @@ const InfiniteGridScroller = (props) => {
         scrollerName, // for debugging
         triggerlineOffset,
         indexOffset,
-        portalDataRef
+        scrollerData
     } = props
 
     const gridSpecs = { // package
@@ -185,7 +185,7 @@ const InfiniteGridScroller = (props) => {
 
             scrollerID = { scrollerID }
 
-            portalDataRef = {portalDataRef}
+            scrollerData = {scrollerData}
         >
         
             <Scrollblock
