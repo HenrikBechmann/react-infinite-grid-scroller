@@ -156,8 +156,6 @@ const Viewport = ({
     // sets portal in viewportInterruptPropertiesRef
     useEffect(()=>{
 
-        console.log('scrollerData','-'+scrollerID+'-',scrollerData)
-
         viewportInterruptPropertiesRef.current.portal = scrollerData?.portalDataRef.current
 
     },[])
