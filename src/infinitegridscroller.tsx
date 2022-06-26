@@ -16,8 +16,9 @@
         - test for memory leaks with Chrome's window.performance.memory property
 
     TODO:
+        rationalize scrollData given to user components
         cacheMax tolerance percent before triggering rebalance before scroll is over
-        warn usercontent of both resizing and isReparenting
+        warn usercontent of both resizing (?) and isReparenting
         prioritize fetch cells for visible cells
         customizable scrolltracker
         reload from/to for insertions and substitutions
