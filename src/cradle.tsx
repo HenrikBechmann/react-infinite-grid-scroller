@@ -160,12 +160,17 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    console.log('RUNNING Cradle scrollerID, cradleState','-'+scrollerID+'-', cradleState)
+    // console.log('RUNNING Cradle scrollerID, cradleState','-'+scrollerID+'-', cradleState)
 
     // controls
     const isMountedRef = useRef(true)
     const isCachedRef = useRef(false)
     const wasCachedRef = useRef(null)
+    const triggerlineRecordsRef = useRef({
+        wasViewportScrollingForward:null,
+        driver:null,
+        offset:null,
+    })
 
     // cradle scaffold elements refs
     const headCradleElementRef = useRef(null)
@@ -328,6 +333,7 @@ const Cradle = ({
         cradleElementsRef,
         isCachedRef,
         wasCachedRef,
+        triggerlineRecordsRef,
         // scrollPosRecoveryPosRef,
 
         // for stateHandler

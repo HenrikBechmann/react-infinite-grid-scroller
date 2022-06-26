@@ -105,9 +105,18 @@ export const getShiftInstruction = ({
     isViewportScrollingForward,
     orientation,
     triggerlineEntries,
+    triggerlineRecord,
+    triggerlineSpan,
 
 }) => {
-
+    if (isViewportScrollingForward != triggerlineRecord.wasViewportScrollingForward) {
+        triggerlineRecord.wasViewportScrollingForward = isViewportScrollingForward
+        triggerlineRecord.driver = 
+            isViewportScrollingForward?
+            'triggerline-tail':
+            'triggerline-head'
+        triggerlineRecord.offset = null
+    }
     const entries = triggerlineEntries.filter(entry => {
         // const isIntersecting = entry.isIntersecting
         const triggerlinename = entry.target.dataset.type
@@ -121,8 +130,7 @@ export const getShiftInstruction = ({
             (orientation == 'vertical')?
                 entry.boundingClientRect.y:
                 entry.boundingClientRect.x
-        // return ((triggerlinename == 'triggerline-tail') && (entrypos <= rootpos)) || 
-        //     ((triggerlinename == 'triggerline-head') && (entrypos >= rootpos))
+        entry.viewportoffset = entrypos - rootpos
         return ((isViewportScrollingForward) && (triggerlinename == 'triggerline-tail') && (entrypos <= rootpos)) || 
             ((!isViewportScrollingForward) && (triggerlinename == 'triggerline-head') && (entrypos >= rootpos))
     })
@@ -130,9 +138,44 @@ export const getShiftInstruction = ({
     console.log('isViewportScrollingForward, filtered entries, starting entries', 
         isViewportScrollingForward, entries, triggerlineEntries)
 
-    if (entries.length == 0) return 0
+    if (entries.length == 0 && triggerlineEntries.length == 2) { // reconnecting
 
-    const entry = entries[entries.length-1] // if more than one take the last
+        return 0
+    }
+
+    if (entries.length == 0) {
+
+        // check for implied trigger - trigger can be bypassed with hevy components
+        const counterentry = triggerlineEntries[0]
+        const countertriggerlinename = counterentry.triggerlinename
+
+        let impliedoffset
+        if (countertriggerlinename != triggerlineRecord.driver) { // should always be true
+            if (countertriggerlinename == 'triggerline-head') {
+                impliedoffset = counterentry.viewportoffset + triggerlineSpan
+                if (impliedoffset <= 0) {
+                    triggerlineRecord.offset = impliedoffset
+                    return -1
+                }
+            } else { // countertriggerlinename == 'triggerline-tail'
+                impliedoffset = counterentry.viewportoffset - triggerlineSpan
+                if (impliedoffset >= 0) {
+                    triggerlineRecord.offset = impliedoffset
+                    return 1
+                }
+            }
+        }
+
+        return 0
+
+    }
+
+
+    // const entry = entries[entries.length-1] // if more than one take the last TODO check validity of this
+    const entry = entries[0] // assume one record gets filtered; only paired above on reconnect
+
+    triggerlineRecord.offset = entry.viewportoffset
+
     // const isIntersecting = entry.isIntersecting
     const triggerlinename = entry.target.dataset.type
 
