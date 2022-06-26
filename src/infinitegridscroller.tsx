@@ -4,29 +4,30 @@
 /*
     ROADMAP:
         cache management
-        suspense analog
         review all code
         modes: uniform, variable, dynamic
         insert, remove, swap functions
         test changing all gridscroller parameters
+        test config size edge cases - over and under sized cells
 
     BUGS: 
         - nested lists need to have orientation property changed on pivot
         - triggerlines are confounded under heavy cache loads
+        - test for memory leaks with Chrome's window.performance.memory property
 
     TODO:
+        cacheMax tolerance percent before triggering rebalance before scroll is over
+        warn usercontent of both resizing and isReparenting
         prioritize fetch cells for visible cells
         customizable scrolltracker
         reload from/to for insertions and substitutions
-        provide user with isReparenting flag to be able to reset scroll
         check use of useCallback
-        resize triggered by root only, unless variable
-        intersection applied to cradle only
         test for two root portals
         promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
         calc minwidth by form factor
         review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
         add grid-template-rows: max-content to parent for safari issue grid-auto-flow: column not filling column
+        cross-browser testing
 */
 
 'use strict'
@@ -36,6 +37,8 @@ import React, {useEffect, useState, useRef} from 'react'
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
 import Cradle from './cradle'
+
+import { CacheHandler, PortalList } from './cradle/cachehandler'
 
 // -------------------[ global session ID generator ]----------------
 
@@ -94,6 +97,7 @@ const InfiniteGridScroller = (props) => {
         scrollerName, // for debugging
         triggerlineOffset,
         indexOffset,
+        portalDataRef
     } = props
 
     const gridSpecs = { // package
@@ -150,11 +154,16 @@ const InfiniteGridScroller = (props) => {
     // for mount
     const scrollerSessionIDRef = useRef(null);
 
+    const cacheHandlerRef = useRef(null)
+
     useEffect (() => {
         scrollerSessionIDRef.current = globalScrollerID++
+        cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current)
     },[])
 
     const scrollerID = scrollerSessionIDRef.current
+
+    // console.log('infinite scroller scrollerID, scrollerState', '-'+scrollerID+'-',scrollerState)
 
     // --------------------[ render ]---------------------
 
@@ -167,8 +176,7 @@ const InfiniteGridScroller = (props) => {
 
     },[scrollerState])
 
-    return (
-        <React.StrictMode>
+    return (<>
         {(scrollerState != 'setup') && <Viewport
 
             gridSpecs = { gridSpecsRef.current }
@@ -176,6 +184,8 @@ const InfiniteGridScroller = (props) => {
             styles = { stylesRef.current }
 
             scrollerID = { scrollerID }
+
+            portalDataRef = {portalDataRef}
         >
         
             <Scrollblock
@@ -210,13 +220,18 @@ const InfiniteGridScroller = (props) => {
 
                     triggerlineOffset = { triggerlineOffset }
 
+                    cacheHandler = {cacheHandlerRef.current}
+
                 />
             </Scrollblock>
         </Viewport>}
-        </React.StrictMode>
-
-    )
+        {(scrollerState != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
+            <PortalList scrollerProps = {cacheHandlerRef.current.scrollerProps}/>
+        </div>}
+        </>)
 }
+
+const cacherootstyle = {position:'fixed', left: '10000px', display:'none'} as React.CSSProperties // static, out of view 
 
 export default InfiniteGridScroller
 

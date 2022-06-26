@@ -72,7 +72,7 @@ export default class ContentHandler {
         interruptHandler.cradleIntersect.observer.disconnect()
 
         const { cradlePositionData } = scaffoldHandler
-        const viewportElement = viewportInterruptProperties.elementref.current
+        const viewportElement = viewportInterruptProperties.elementRef.current
 
         const requestedAxisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
         let targetAxisPixelOffset = cradlePositionData.targetAxisPixelOffset
@@ -131,7 +131,7 @@ export default class ContentHandler {
                 targetAxisPixelOffset,
                 cradleInheritedProperties,
                 cradleInternalProperties,
-                viewportElement:viewportInterruptProperties.elementref.current,
+                viewportElement:viewportInterruptProperties.elementRef.current,
             })
 
         let scrollPosAdjustment
@@ -237,7 +237,7 @@ export default class ContentHandler {
 
     // updateCradleContent does not touch the viewport element's scroll position for the scrollblock
     // instead it reconfigures elements within the cradle
-    public updateCradleContent = (triggerlineEntries, source = 'notifications') => {
+    public updateCradleContent = (isViewportScrollingForward, triggerlineEntries, source = 'notifications') => {
 
         // ----------------------[ 1. initialize ]-------------------------
 
@@ -274,20 +274,29 @@ export default class ContentHandler {
         // --------------------[ 2. get shift instruction ]-----------------------
 
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
         const { 
             orientation, 
             cache,
         } = cradleInheritedProperties
 
         // -1 is move a row up to the head, +1 is move a row down to the tail, 0 is no shift
+        const triggerlineRecord = cradleInternalProperties.triggerlineRecordsRef.current
         const shiftinstruction = getShiftInstruction({
+            isViewportScrollingForward,
             orientation,
             triggerlineEntries,
+            triggerlineRecord,
+            triggerlineSpan: scaffoldHandler.triggerlineSpan,
         })
+
+        // console.log('scrollerID, shiftinstruction',
+        //     '-'+cradleInheritedProperties.scrollerID+'-', shiftinstruction)
 
         // second abandon option/3; nothing to do
         if (shiftinstruction == 0) {
 
+            // console.log('triggerlineRecord',triggerlineRecord)
             return
 
         }
@@ -295,8 +304,7 @@ export default class ContentHandler {
 
         // cradle properties
         // const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
-        const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementref.current
+        const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementRef.current
 
         const {
 

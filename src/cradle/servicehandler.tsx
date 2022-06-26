@@ -26,7 +26,7 @@ export default class ServiceHandler {
 
     //     return getVisibleItemsList({
     //         itemElementMap:contentHandler.itemElements,
-    //         viewportElement:viewportInterruptProperties.elementref.current,
+    //         viewportElement:viewportInterruptProperties.elementRef.current,
     //         cradleElements, 
     //         cradleProps:this.cradleParameters.cradleInheritedPropertiesRef.current,
     //         cradleContent,

@@ -22,7 +22,7 @@ export default class ScrollHandler {
     public onScroll = (e) => {
 
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-        const viewportElement = viewportInterruptProperties.elementref.current
+        const viewportElement = viewportInterruptProperties.elementRef.current
 
         const scrollPositionCurrent = 
             (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical')?
@@ -77,7 +77,7 @@ export default class ScrollHandler {
                     let axisVisiblePixelOffset
                     const cradleElements = scaffoldHandler.elements
                     const axisElement = cradleElements.axisRef.current
-                    const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementref.current
+                    const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementRef.current
 
                     if (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical') {
 
@@ -125,7 +125,7 @@ export default class ScrollHandler {
 
         this.isScrolling = false
 
-        const {stateHandler, contentHandler} = this.cradleParameters.handlersRef.current
+        const {stateHandler, contentHandler, cacheHandler} = this.cradleParameters.handlersRef.current
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
 
         const cradleState = stateHandler.cradleStateRef.current
@@ -159,7 +159,6 @@ export default class ScrollHandler {
 
         }
 
-
         const {scaffoldHandler} = this.cradleParameters.handlersRef.current
         const { cradlePositionData } = scaffoldHandler
 
@@ -179,7 +178,7 @@ export default class ScrollHandler {
         let axisVisiblePixelOffset
         const cradleElements = scaffoldHandler.elements
 
-        const viewportElement = viewportInterruptProperties.elementref.current
+        const viewportElement = viewportInterruptProperties.elementRef.current
         if (cradleProps.orientation == 'vertical') {
             // console.log('scrollTop in updateReferenceData',viewportElement.scrollTop)
             axisVisiblePixelOffset = cradleElements.axisRef.current.offsetTop - 
@@ -213,7 +212,7 @@ export default class ScrollHandler {
         const {scaffoldHandler} = this.cradleParameters.handlersRef.current
         const { cradlePositionData } = scaffoldHandler
 
-        const viewportElement = viewportInterruptProperties.elementref.current
+        const viewportElement = viewportInterruptProperties.elementRef.current
 
         if (cradleProps.orientation == 'vertical') {
 
@@ -233,7 +232,7 @@ export default class ScrollHandler {
         const cradleConfig = this.cradleParameters.cradleInternalPropertiesRef.current
 
         const {crosscount} = cradleConfig
-        const viewportElement = viewportInterruptProperties.elementref.current
+        const viewportElement = viewportInterruptProperties.elementRef.current
         const {orientation, listsize} = cradleProps
         let scrollPos, cellLength
         if (orientation == 'vertical') {

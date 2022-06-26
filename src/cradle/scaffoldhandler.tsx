@@ -37,6 +37,8 @@ export default class ScaffoldHandler {
 
     private cradleParameters
 
+    public triggerlineSpan
+
     // cradlePositionData controls the relative positions of the scaffold elements
     public cradlePositionData = {
 

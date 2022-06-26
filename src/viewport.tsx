@@ -26,7 +26,10 @@ const Viewport = ({
     gridSpecs,
     styles,
     scrollerID,
+    portalDataRef
 }) => {
+
+    // console.log('viewport portalDataRef in scrollerID', '-'+scrollerID+'-',portalDataRef)
 
     // -----------------------[ initialize ]------------------
 
@@ -45,7 +48,9 @@ const Viewport = ({
     viewportStateRef.current = viewportState
 
     // this is only set if viewport is a child of an infiniteScroller
-    const parentPortalHandler = useContext(ParentCradleCacheContext);
+    // const parentPortalHandler = useContext(ParentCradleCacheContext)
+
+    // console.log('viewport scrollerID, parentPortalHandler','-'+scrollerID+'-',parentPortalHandler)
 
     const isMountedRef = useRef(true) // monitor for unmounted
 
@@ -66,7 +71,7 @@ const Viewport = ({
             isResizing:false, 
             index:null,
             viewportDimensions:null,
-            elementref:null
+            elementRef:null
         }
     )
 
@@ -153,26 +158,7 @@ const Viewport = ({
     // sets portal in viewportInterruptPropertiesRef
     useEffect(()=>{
 
-        if (!parentPortalHandler) return // root viewport; has no portal
-
-        let portalindex
-        let element = viewportElementRef.current
-
-        while (element) {
-            if (element.dataset && (element.dataset.type == 'contentenvelope')) { // set portal & exit
-                portalindex = parseInt(element.dataset.index)
-                viewportInterruptPropertiesRef.current.portal = parentPortalHandler.getPortal(portalindex)
-                viewportInterruptPropertiesRef.current.index = portalindex
-                break
-            } else {
-                element = element.parentElement
-            }
-        } 
-
-        if (!element) {
-            console.log('ERROR: parent contentenvelope not found')
-            return
-        }
+        viewportInterruptPropertiesRef.current.portal = portalDataRef?.current
 
     },[])
 
@@ -227,7 +213,7 @@ const Viewport = ({
         // TODO this is a duplicate setting procedure with interrupthandler.tsx cradleIntersectionObserverCallback
         const localViewportData = {
             viewportDimensions:{top,right, bottom, left, width, height},
-            elementref:viewportElementRef,
+            elementRef:viewportElementRef,
             isResizing:isResizingRef.current,
         }
 

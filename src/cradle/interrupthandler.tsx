@@ -62,7 +62,14 @@ export default class InterruptHandler {
                 scrollData.previousupdate = scrollData.currentupdate
                 scrollData.currentupdate = scrollData.current
 
-                contentHandler.updateCradleContent(entries,'triggerlinesObserver')
+                let isViewportScrollingForward
+                if (scrollData.previousupdate == scrollData.currentupdate) {
+                    isViewportScrollingForward = scrollData.previous < scrollData.current
+                } else {
+                    isViewportScrollingForward = (scrollData.previousupdate < scrollData.currentupdate)
+                }
+
+                contentHandler.updateCradleContent(isViewportScrollingForward, entries,'triggerlinesObserver')
 
             }
         }
@@ -113,7 +120,7 @@ export default class InterruptHandler {
                 !(cradleState == 'pivot')
                 ) 
             {
-                const element = viewportInterruptProperties.elementref.current
+                const element = viewportInterruptProperties.elementRef.current
 
                 const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
                 if (!element) {
@@ -127,8 +134,8 @@ export default class InterruptHandler {
                 const width = right - left, height = bottom - top
                 viewportInterruptProperties.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
 
-                console.log('calling startreposition from cradleIntersectionObserverCallback:scrollerID, entries',
-                 '-' + scrollerID + '-', entries)
+                // console.log('calling startreposition from cradleIntersectionObserverCallback:scrollerID, entries',
+                //  '-' + scrollerID + '-', entries)
 
                 // debugger
 
@@ -170,7 +177,7 @@ export default class InterruptHandler {
             let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
             this.cradleIntersect.observer = new IntersectionObserver(
                 this.cradleIntersect.callback,
-                {root:viewportInterruptProperties.elementref.current, threshold:0}
+                {root:viewportInterruptProperties.elementRef.current, threshold:0}
             )    
             return this.cradleIntersect.observer
         }
@@ -189,7 +196,7 @@ export default class InterruptHandler {
             let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
             this.axisTriggerlinesIntersect.observer = new IntersectionObserver(
                 this.axisTriggerlinesIntersect.callback,
-                {root:viewportInterruptProperties.elementref.current, threshold:0}
+                {root:viewportInterruptProperties.elementRef.current, threshold:0}
             )
             return this.axisTriggerlinesIntersect.observer
         }

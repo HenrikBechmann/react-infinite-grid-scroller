@@ -11,7 +11,7 @@ import Placeholder from './placeholder'
 
 import { CradleCacheContext } from './cradle'
 
-const IDLECALLBACK_FETCHTIMEOUT = 8000 // TODO experimentally high!!
+const IDLECALLBACK_FETCHTIMEOUT = 8000 // TODO make cofigurable
 
 const CellShell = ({
     orientation, 
@@ -23,7 +23,6 @@ const CellShell = ({
     listsize, 
     placeholder, 
     instanceID, 
-    scrollerName,
     scrollerID,
 }) => {
 
@@ -39,7 +38,7 @@ const CellShell = ({
 
     const isMountedRef = useRef(true)
 
-    const portaldataRef = useRef(null)
+    const portalDataRef = useRef(null)
 
     const placeholderRef = useRef(null)
 
@@ -105,8 +104,6 @@ const CellShell = ({
         
     },[])
 
-    // ---------------------[ end of configure observer ]-------------------------
-
     // set styles
     useEffect(()=>{
 
@@ -118,7 +115,7 @@ const CellShell = ({
 
     },[orientation,cellHeight,cellWidth]) 
 
-    const portalRecordRef = useRef(null)
+    const portalNodeRef = useRef(null)
 
     useLayoutEffect(() => {
 
@@ -135,24 +132,17 @@ const CellShell = ({
             }
             case 'getusercontent': {
 
-
                 const cached = cacheHandler.hasPortal(index)
 
                 if (cached) {
 
-                    // setCellStatus('waiting')
+                    portalDataRef.current = cacheHandler.getPortal(index)
 
-                    // requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
+                    portalNodeRef.current = portalDataRef.current.portalNode
 
-                        portaldataRef.current = cacheHandler.getPortal(index)
+                    portalDataRef.current.isReparenting = true
 
-                        portalRecordRef.current = portaldataRef.current.portalNode
-
-                        portaldataRef.current.isReparenting = true
-
-                        setCellStatus('inserting')
-
-                    // },{timeout:500})
+                    setCellStatus('inserting')
 
                 } else {
 
@@ -166,10 +156,17 @@ const CellShell = ({
 
                             if (usercontent) {
 
-                                portaldataRef.current = 
-                                    cacheHandler.createPortal(index, usercontent)
+                                let content 
+                                if (usercontent.props.hasOwnProperty('portalDataRef')) {
+                                    content = React.cloneElement(usercontent, {portalDataRef})
+                                } else {
+                                    content = usercontent
+                                }
 
-                                portalRecordRef.current  = portaldataRef.current.portalNode
+                                portalDataRef.current = 
+                                    cacheHandler.createPortal(index, content)
+
+                                portalNodeRef.current  = portalDataRef.current.portalNode
 
                             } else {
 
@@ -212,14 +209,15 @@ const CellShell = ({
 
     return <div ref = { shellRef } 
         data-type = 'cellshell' 
-        data-scrollerid = {scrollerID} 
-        data-index = {index} 
-        data-instanceid = {instanceID} 
-        style = {styles}>
+        data-scrollerid = { scrollerID } 
+        data-index = { index } 
+        data-instanceid = { instanceID } 
+        style = { styles }>
 
-            { (cellStatus != 'ready')?
-                placeholderRef.current:
-                <OutPortal node = {portalRecordRef.current}/>
+            { 
+                (cellStatus != 'ready')?
+                    placeholderRef.current:
+                    <OutPortal node = { portalNodeRef.current }/>
             }
             
         </div>
