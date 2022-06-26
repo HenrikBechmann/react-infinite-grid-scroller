@@ -318,6 +318,23 @@ const Cradle = ({
 
     }
 
+    const cradlePassthroughPropertiesRef = useRef(null)
+
+    cradlePassthroughPropertiesRef.current = {
+        orientation, 
+        gap, 
+        padding, 
+        cellHeight, 
+        cellWidth, 
+        layout,
+        // ...rest
+        listsize, 
+        cache,
+        cacheMax,
+        indexOffset:defaultVisibleIndex, 
+        triggerlineOffset,
+    }
+
     // configuration properties to share
     const cradleInternalPropertiesRef = useRef(null)
     cradleInternalPropertiesRef.current = {
@@ -349,6 +366,7 @@ const Cradle = ({
         handlersRef,
         viewportInterruptPropertiesRef,
         cradleInheritedPropertiesRef, 
+        cradlePassthroughPropertiesRef,
         cradleInternalPropertiesRef, 
         // internalCallbacksRef, // n/a
         externalCallbacksRef,
@@ -957,7 +975,7 @@ const Cradle = ({
 
     const cradleContent = contentHandler.content
 
-    const contextvalueRef = useRef({cradleInheritedPropertiesRef, cacheHandler})
+    const contextvalueRef = useRef({cradlePassthroughPropertiesRef, cacheHandler})
 
     // the data-type = cacheroot div at the end is the hidden portal component cache
     return <CradleContext.Provider value = {contextvalueRef.current}>

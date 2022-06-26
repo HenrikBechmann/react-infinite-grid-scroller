@@ -28,7 +28,7 @@ const CellShell = ({
 
     const cradleContext = useContext(CradleContext)
 
-    const { cacheHandler, cradleInheritedPropertiesRef } = cradleContext
+    const { cacheHandler, cradlePassthroughPropertiesRef } = cradleContext
     
     const [styles,saveStyles] = useState({
         overflow:'hidden',
@@ -160,7 +160,7 @@ const CellShell = ({
 
                                 const scrollerData = {
                                     portalDataRef,
-                                    cradleInheritedPropertiesRef,
+                                    cradlePassthroughPropertiesRef,
                                 }
                                 let content 
                                 if (usercontent.props.hasOwnProperty('scrollerData')) {
