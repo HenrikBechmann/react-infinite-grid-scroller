@@ -160,6 +160,8 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
+    console.log('RUNNING Cradle scrollerID, cradleState','-'+scrollerID+'-', cradleState)
+
     // controls
     const isMountedRef = useRef(true)
     const isCachedRef = useRef(false)
@@ -948,8 +950,6 @@ const Cradle = ({
     )
 
     const cradleContent = contentHandler.content
-
-    // console.log('cacheHandler in cradle',cacheHandler, handlersRef.current)
 
     // the data-type = cacheroot div at the end is the hidden portal component cache
     return <CradleCacheContext.Provider value = {handlersRef.current.cacheHandler}>

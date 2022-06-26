@@ -102,7 +102,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
 // -1 = shift row to head. 1 = shift row to tail. 0 = do not shift a row.
 export const getShiftInstruction = ({
-
+    isViewportScrollingForward,
     orientation,
     triggerlineEntries,
 
@@ -111,17 +111,21 @@ export const getShiftInstruction = ({
     const entries = triggerlineEntries.filter(entry => {
         // const isIntersecting = entry.isIntersecting
         const triggerlinename = entry.target.dataset.type
-        const rootboundpos = 
+        const rootpos = 
             (orientation == 'vertical')?
                 entry.rootBounds.y:
                 entry.rootBounds.x
-        const entryboundpos = 
+        const entrypos = 
             (orientation == 'vertical')?
                 entry.boundingClientRect.y:
                 entry.boundingClientRect.x
-        return ((triggerlinename == 'triggerline-tail') && (entryboundpos <= rootboundpos)) || 
-            ((triggerlinename == 'triggerline-head') && (entryboundpos >= rootboundpos))
+        // return ((triggerlinename == 'triggerline-tail') && (entrypos <= rootpos)) || 
+        //     ((triggerlinename == 'triggerline-head') && (entrypos >= rootpos))
+        return ((isViewportScrollingForward) && (triggerlinename == 'triggerline-tail') && (entrypos <= rootpos)) || 
+            ((!isViewportScrollingForward) && (triggerlinename == 'triggerline-head') && (entrypos >= rootpos))
     })
+
+    console.log('isViewportScrollingForward, filtered entries', isViewportScrollingForward, entries)
 
     if (entries.length == 0) return 0
 
@@ -130,13 +134,18 @@ export const getShiftInstruction = ({
     const triggerlinename = entry.target.dataset.type
 
     let retval
-    if (triggerlinename == 'triggerline-tail') {
-        retval = -1 // shift row to head
-    } else if (triggerlinename == 'triggerline-head') {
+    if (!isViewportScrollingForward) {
         retval = 1 // shift row to tail
     } else {
-        retval = 0 // do not shift a row
+        retval = -1 // shift row to head
     }
+    // if (triggerlinename == 'triggerline-tail') {
+    //     retval = -1 // shift row to head
+    // } else if (triggerlinename == 'triggerline-head') {
+    //     retval = 1 // shift row to tail
+    // } else {
+    //     retval = 0 // do not shift a row
+    // }
     return retval
 
 }

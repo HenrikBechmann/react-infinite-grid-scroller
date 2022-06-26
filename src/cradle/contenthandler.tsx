@@ -237,7 +237,7 @@ export default class ContentHandler {
 
     // updateCradleContent does not touch the viewport element's scroll position for the scrollblock
     // instead it reconfigures elements within the cradle
-    public updateCradleContent = (triggerlineEntries, source = 'notifications') => {
+    public updateCradleContent = (isViewportScrollingForward, triggerlineEntries, source = 'notifications') => {
 
         // ----------------------[ 1. initialize ]-------------------------
 
@@ -281,9 +281,13 @@ export default class ContentHandler {
 
         // -1 is move a row up to the head, +1 is move a row down to the tail, 0 is no shift
         const shiftinstruction = getShiftInstruction({
+            isViewportScrollingForward,
             orientation,
             triggerlineEntries,
         })
+
+        console.log('scrollerID, shiftinstruction, triggerlineEntries',
+            '-'+cradleInheritedProperties.scrollerID+'-', shiftinstruction, triggerlineEntries)
 
         // second abandon option/3; nothing to do
         if (shiftinstruction == 0) {
