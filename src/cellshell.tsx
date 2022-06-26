@@ -9,7 +9,7 @@ import { OutPortal } from 'react-reverse-portal'
 
 import Placeholder from './placeholder'
 
-import { CradleCacheContext } from './cradle'
+import { CradleContext } from './cradle'
 
 const IDLECALLBACK_FETCHTIMEOUT = 8000 // TODO make cofigurable
 
@@ -26,7 +26,9 @@ const CellShell = ({
     scrollerID,
 }) => {
 
-    const cacheHandler = useContext(CradleCacheContext)
+    const cradleContext = useContext(CradleContext)
+
+    const { cacheHandler, cradleInheritedPropertiesRef } = cradleContext
     
     const [styles,saveStyles] = useState({
         overflow:'hidden',
@@ -156,9 +158,13 @@ const CellShell = ({
 
                             if (usercontent) {
 
+                                const scrollerData = {
+                                    portalDataRef,
+                                    cradleInheritedPropertiesRef,
+                                }
                                 let content 
-                                if (usercontent.props.hasOwnProperty('portalDataRef')) {
-                                    content = React.cloneElement(usercontent, {portalDataRef})
+                                if (usercontent.props.hasOwnProperty('scrollerData')) {
+                                    content = React.cloneElement(usercontent, {scrollerData})
                                 } else {
                                     content = usercontent
                                 }

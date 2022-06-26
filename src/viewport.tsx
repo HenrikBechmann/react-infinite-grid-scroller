@@ -14,8 +14,6 @@ export const ViewportInterrupt = React.createContext(null) // for children
 
 import { ResizeObserver as ResizeObserverPollyfill } from '@juggle/resize-observer'
 
-import { CradleCacheContext as ParentCradleCacheContext } from './cradle'
-
 const ResizeObserver = window['ResizeObserver'] || ResizeObserverPollyfill
 
 // control constant
@@ -26,7 +24,7 @@ const Viewport = ({
     gridSpecs,
     styles,
     scrollerID,
-    portalDataRef
+    scrollerData,
 }) => {
 
     // console.log('viewport portalDataRef in scrollerID', '-'+scrollerID+'-',portalDataRef)
@@ -158,7 +156,9 @@ const Viewport = ({
     // sets portal in viewportInterruptPropertiesRef
     useEffect(()=>{
 
-        viewportInterruptPropertiesRef.current.portal = portalDataRef?.current
+        console.log('scrollerData','-'+scrollerID+'-',scrollerData)
+
+        viewportInterruptPropertiesRef.current.portal = scrollerData?.portalDataRef.current
 
     },[])
 

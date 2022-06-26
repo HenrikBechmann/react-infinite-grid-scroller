@@ -135,8 +135,8 @@ export const getShiftInstruction = ({
             ((!isViewportScrollingForward) && (triggerlinename == 'triggerline-head') && (entrypos >= rootpos))
     })
 
-    console.log('isViewportScrollingForward, filtered entries, starting entries', 
-        isViewportScrollingForward, entries, triggerlineEntries)
+    // console.log('isViewportScrollingForward, filtered entries, starting entries', 
+    //     isViewportScrollingForward, entries, triggerlineEntries)
 
     if (entries.length == 0 && triggerlineEntries.length == 2) { // reconnecting
 
