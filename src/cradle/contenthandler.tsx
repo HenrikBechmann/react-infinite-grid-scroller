@@ -286,8 +286,8 @@ export default class ContentHandler {
             triggerlineEntries,
         })
 
-        console.log('scrollerID, shiftinstruction, triggerlineEntries',
-            '-'+cradleInheritedProperties.scrollerID+'-', shiftinstruction, triggerlineEntries)
+        console.log('scrollerID, shiftinstruction',
+            '-'+cradleInheritedProperties.scrollerID+'-', shiftinstruction)
 
         // second abandon option/3; nothing to do
         if (shiftinstruction == 0) {

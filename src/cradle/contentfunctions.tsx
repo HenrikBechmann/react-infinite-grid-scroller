@@ -111,6 +111,8 @@ export const getShiftInstruction = ({
     const entries = triggerlineEntries.filter(entry => {
         // const isIntersecting = entry.isIntersecting
         const triggerlinename = entry.target.dataset.type
+        entry.triggerlinename = triggerlinename
+        entry.scrollingforward = isViewportScrollingForward
         const rootpos = 
             (orientation == 'vertical')?
                 entry.rootBounds.y:
@@ -125,7 +127,8 @@ export const getShiftInstruction = ({
             ((!isViewportScrollingForward) && (triggerlinename == 'triggerline-head') && (entrypos >= rootpos))
     })
 
-    console.log('isViewportScrollingForward, filtered entries', isViewportScrollingForward, entries)
+    console.log('isViewportScrollingForward, filtered entries, starting entries', 
+        isViewportScrollingForward, entries, triggerlineEntries)
 
     if (entries.length == 0) return 0
 
