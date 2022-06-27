@@ -54,6 +54,10 @@ export class CacheHandler {
 
     }
 
+    matchCacheToCradle = (modelIndexList) => {
+
+    }
+
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
     createPortal(index, content) { // create new portal
