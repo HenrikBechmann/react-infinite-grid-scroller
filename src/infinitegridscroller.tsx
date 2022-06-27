@@ -95,7 +95,6 @@ const InfiniteGridScroller = (props) => {
         cache, //  = "preload" or "keepload" or "cradle"
         cacheMax, // (always minimum cradle)
         advanced, // technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
-        scrollerName, // for debugging
         triggerlineOffset,
         indexOffset,
         scrollerData
@@ -181,47 +180,36 @@ const InfiniteGridScroller = (props) => {
         {(scrollerState != 'setup') && <Viewport
 
             gridSpecs = { gridSpecsRef.current }
-
             styles = { stylesRef.current }
-
+            scrollerData = {scrollerData}
             scrollerID = { scrollerID }
 
-            scrollerData = {scrollerData}
         >
         
             <Scrollblock
 
                 gridSpecs = { gridSpecsRef.current }
-
                 styles = { stylesRef.current }
-
-                scrollerID = { scrollerID }
-
                 listsize = { listSize }
+                scrollerID = { scrollerID }
                 
             >
                 <Cradle 
 
                     gridSpecs = { gridSpecsRef.current }
-
                     styles = { stylesRef.current }
-
-                    scrollerID = { scrollerID }
-                    scrollerName = { scrollerName }
-
                     listsize = { listSize }
                     cache = {cache}
                     cacheMax = {cacheMax}
-
                     functions = { functionsRef.current }
                     defaultVisibleIndex = { defaultVisibleIndex }
                     getItem = { getItem }
                     placeholder = { placeholder }
-                    runwayRowcountSpec = { runwaySize }
-
+                    runwaySize = { runwaySize }
                     triggerlineOffset = { triggerlineOffset }
 
                     cacheHandler = {cacheHandlerRef.current}
+                    scrollerID = { scrollerID }
 
                 />
             </Scrollblock>
