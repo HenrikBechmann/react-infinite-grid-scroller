@@ -50,7 +50,7 @@
         - the number of runway rows specified in the parameters, times 2 (one et for the head; one for the tail)
         - the number of items is the number of rows times the 'crosscount' the lateral number of cells. 
         - the last row might consist of fewer items than crosscount, to match the maximum listsize
-        - the cradleRowcount (visible default rows + runwayRowcountSpec * 2) and viewpointRowcount (visble rows;typicall one partial)
+        - the cradleRowcount (visible default rows + runwayRowcountProp * 2) and viewpointRowcount (visble rows;typicall one partial)
 
     Item containers:
         Client cell content is contained in CellShell's, which are configured according to GridScroller's input parameters.
@@ -98,7 +98,6 @@ import { ViewportInterrupt } from './viewport'
 import ScrollTracker from './scrolltracker'
 
 // support code
-import { CacheHandler, PortalList } from './cradle/cachehandler'
 import ScrollHandler from './cradle/scrollhandler'
 import StateHandler from './cradle/statehandler'
 import ContentHandler from './cradle/contenthandler'
@@ -110,13 +109,11 @@ import StylesHandler from './cradle/styleshandler'
 // for children
 export const CradleContext = React.createContext(null)
 
-// const cacherootstyle = {position:'fixed', left: '10000px', display:'block'} as React.CSSProperties // static, out of view 
-
 // component
 const Cradle = ({ 
         gridSpecs,
 
-        runwayRowcountSpec, 
+        runwaySize, 
         listsize, 
         defaultVisibleIndex, 
         getItem, 
@@ -127,7 +124,6 @@ const Cradle = ({
         cache,
         cacheMax,
         // for debugging
-        scrollerName,
         scrollerID,
 
         cacheHandler,
@@ -166,13 +162,13 @@ const Cradle = ({
     const isMountedRef = useRef(true)
     const isCachedRef = useRef(false)
     const wasCachedRef = useRef(null)
-    const triggerlineRecordsRef = useRef({
+    const triggerlineRecordsRef = useRef({ // to calculate inferred trigger
         wasViewportScrollingForward:null,
         driver:null,
         offset:null,
     })
 
-    // cradle scaffold elements refs
+    // cradle scaffold element refs
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const axisCradleElementRef = useRef(null)
@@ -241,13 +237,13 @@ const Cradle = ({
 
         const listRowcount = Math.ceil(listsize/crosscount)
 
-        const calculatedCradleRowcount = viewportRowcount + (runwayRowcountSpec * 2)
+        const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
 
         let cradleRowcount = Math.min(listRowcount, calculatedCradleRowcount)
 
         let runwayRowcount
         if (calculatedCradleRowcount >= cradleRowcount) {
-            runwayRowcount = runwayRowcountSpec
+            runwayRowcount = runwaySize
         } else {
             const diff = (cradleRowcount - calculatedCradleRowcount)
             runwayRowcount -= Math.floor(diff/2)
@@ -277,7 +273,7 @@ const Cradle = ({
         viewportwidth,
 
         listsize,
-        runwayRowcountSpec,
+        runwaySize,
         crosscount,
     ])
 
@@ -309,7 +305,6 @@ const Cradle = ({
         getItem, 
         placeholder, 
         triggerlineOffset,
-        scrollerName,
         scrollerID,
         // objects
         functions,
@@ -320,6 +315,7 @@ const Cradle = ({
 
     const cradlePassthroughPropertiesRef = useRef(null)
 
+    // passed to cellShell content if requested
     cradlePassthroughPropertiesRef.current = {
         orientation, 
         gap, 
@@ -327,7 +323,7 @@ const Cradle = ({
         cellHeight, 
         cellWidth, 
         layout,
-        // ...rest
+        runwayRowcount,
         listsize, 
         cache,
         cacheMax,
@@ -372,14 +368,13 @@ const Cradle = ({
         externalCallbacksRef,
     }
 
-    // ongoing source of handlers - note all Handlers are given all parameters
+    // ongoing source of handlers - note all Handlers are given all parameters (cradleParameters)
     if (!handlersRef.current) {
         handlersRef.current = getCradleHandlers(cradleParameters)
     }
 
     // make handlers directly available to cradle code below
-    const {
-        // cacheHandler,
+    const { // cacheHandler already available
         interruptHandler,
         scrollHandler,
         stateHandler,
@@ -399,9 +394,6 @@ const Cradle = ({
     
     const parentingTransitionRequiredRef = useRef(false)
 
-    // console.log('viewportInterruptProperties.isReparentingRef', 
-    //     '-'+scrollerID+'-',viewportInterruptProperties.isReparentingRef)
-
     // the two circumstances associated with being moved to and from the cache
     if (viewportInterruptProperties.isResizing || // happens with movement into cache
         viewportInterruptProperties.isReparentingRef?.current) { // happens with movement out of cache
@@ -418,10 +410,6 @@ const Cradle = ({
 
         } else { // resizing is underway
 
-            // const dimensions = viewportInterruptProperties.viewportDimensions
-            // const {width:vwidth, height:vheight} = dimensions
-
-            // const isInPortal = ((vwidth == 0) && (vheight == 0)) // must be in portal state
             const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal state
 
             if (isInPortal != isCachedRef.current) { // there's been a change
@@ -433,7 +421,6 @@ const Cradle = ({
             // resizing from caching requires no further action
             if (isCachedRef.current || wasCachedRef.current) { 
 
-                // viewportInterruptPropertiesRef.current.isResizing = false
                 viewportInterruptProperties.isResizing = false
 
             }
@@ -451,7 +438,6 @@ const Cradle = ({
 
             } else if ((!isCachedRef.current) && wasCachedRef.current) { // change out of cached
 
-                // const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
                 const viewportElement = viewportInterruptProperties.elementRef.current
 
                 const { cradlePositionData } = scaffoldHandler // maintains history of scrollPos
@@ -492,7 +478,7 @@ const Cradle = ({
     // change state for entering or leaving cache
     useEffect(()=>{
 
-        // disallow 'setup' or else 'dosetup' will be passed over in favour of 'ready'
+        // disallow 'setup' so 'dosetup' won't be passed over
         if (cradleStateRef.current == 'setup') return 
 
         if (isCachedRef.current && !wasCachedRef.current) {
@@ -532,14 +518,11 @@ const Cradle = ({
 
         if (!functions.getCallbacks) return
 
-        // const {scrollToItem, getVisibleList, getContentList, reload} = serviceHandler
         const {scrollToItem, reload, clearCache} = serviceHandler
 
         const callbacks = {
             scrollToItem,
             clearCache,
-            // getVisibleList,
-            // getContentList,
             reload,
         }
 
@@ -581,7 +564,7 @@ const Cradle = ({
         const triggerobserver = interruptHandler.axisTriggerlinesIntersect.createObserver()
         interruptHandler.axisTriggerlinesIntersect.connectElements()
 
-        // resize observer generates compensation for changes in cell sizes for variable layout mode
+        // resize observer generates compensation for changes in cell sizes for variable layout modes
         const resizeobserver = interruptHandler.cradleResize.createObserver()
         interruptHandler.cradleResize.connectElements()
 
@@ -761,7 +744,7 @@ const Cradle = ({
 
             }
 
-            case 'cached': {// no op
+            case 'cached': {
 
                 if (!wasCachedRef.current && !isCachedRef.current){
 
@@ -910,6 +893,7 @@ const Cradle = ({
                     const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
                     const { cradlePositionData } = scaffoldHandler
 
+                    // reset scroll position to previous value
                     viewportElement[cradlePositionData.blockScrollProperty] = 
                         cradlePositionData.blockScrollPos
 
@@ -982,8 +966,8 @@ const Cradle = ({
 
     // the data-type = cacheroot div at the end is the hidden portal component cache
     return <CradleContext.Provider value = {contextvalueRef.current}>
-        {((cradleStateRef.current == 'repositioningRender') || 
-            (cradleStateRef.current == 'repositioningContinuation'))?
+        {((cradleState == 'repositioningRender') || 
+            (cradleState == 'repositioningContinuation'))?
             <ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 
@@ -1025,7 +1009,7 @@ const Cradle = ({
                 
                 >
                 
-                    {(cradleStateRef.current != 'setup')?
+                    {(cradleState != 'setup')?
                         cradleContent.headDisplayComponents:
                         null
                     }
@@ -1038,7 +1022,7 @@ const Cradle = ({
                     style = {cradleTailStyle}
                 
                 >
-                    {(cradleStateRef.current != 'setup')?
+                    {(cradleState != 'setup')?
                         cradleContent.tailDisplayComponents:
                         null
                     }

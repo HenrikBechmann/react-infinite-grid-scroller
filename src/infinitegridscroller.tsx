@@ -4,19 +4,20 @@
 /*
     ROADMAP:
         cache management
+            cacheMax
+            preload
+            keepload
+            cradle
         review all code
-        modes: uniform, variable, dynamic
+        layout: uniform, variable, dynamic, dense
         insert, remove, swap functions
         test changing all gridscroller parameters
         test config size edge cases - over and under sized cells
 
     BUGS: 
-        - nested lists need to have orientation property changed on pivot
-        - triggerlines are confounded under heavy cache loads
         - test for memory leaks with Chrome's window.performance.memory property
 
     TODO:
-        rationalize scrollData given to user components
         cacheMax tolerance percent before triggering rebalance before scroll is over
         warn usercontent of both resizing (?) and isReparenting
         prioritize fetch cells for visible cells
@@ -95,7 +96,6 @@ const InfiniteGridScroller = (props) => {
         cache, //  = "preload" or "keepload" or "cradle"
         cacheMax, // (always minimum cradle)
         advanced, // technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
-        scrollerName, // for debugging
         triggerlineOffset,
         indexOffset,
         scrollerData
@@ -181,47 +181,36 @@ const InfiniteGridScroller = (props) => {
         {(scrollerState != 'setup') && <Viewport
 
             gridSpecs = { gridSpecsRef.current }
-
             styles = { stylesRef.current }
-
+            scrollerData = {scrollerData}
             scrollerID = { scrollerID }
 
-            scrollerData = {scrollerData}
         >
         
             <Scrollblock
 
                 gridSpecs = { gridSpecsRef.current }
-
                 styles = { stylesRef.current }
-
-                scrollerID = { scrollerID }
-
                 listsize = { listSize }
+                scrollerID = { scrollerID }
                 
             >
                 <Cradle 
 
                     gridSpecs = { gridSpecsRef.current }
-
                     styles = { stylesRef.current }
-
-                    scrollerID = { scrollerID }
-                    scrollerName = { scrollerName }
-
                     listsize = { listSize }
                     cache = {cache}
                     cacheMax = {cacheMax}
-
                     functions = { functionsRef.current }
                     defaultVisibleIndex = { defaultVisibleIndex }
                     getItem = { getItem }
                     placeholder = { placeholder }
-                    runwayRowcountSpec = { runwaySize }
-
+                    runwaySize = { runwaySize }
                     triggerlineOffset = { triggerlineOffset }
 
                     cacheHandler = {cacheHandlerRef.current}
+                    scrollerID = { scrollerID }
 
                 />
             </Scrollblock>
