@@ -3,20 +3,18 @@
 
 /*
     ROADMAP:
+        - nested lists need to have orientation property changed on pivot
         cache management
         review all code
-        modes: uniform, variable, dynamic
+        layout: uniform, variable, dynamic, dense
         insert, remove, swap functions
         test changing all gridscroller parameters
         test config size edge cases - over and under sized cells
 
     BUGS: 
-        - nested lists need to have orientation property changed on pivot
-        - triggerlines are confounded under heavy cache loads
         - test for memory leaks with Chrome's window.performance.memory property
 
     TODO:
-        rationalize scrollData given to user components
         cacheMax tolerance percent before triggering rebalance before scroll is over
         warn usercontent of both resizing (?) and isReparenting
         prioritize fetch cells for visible cells
