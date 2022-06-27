@@ -98,7 +98,6 @@ import { ViewportInterrupt } from './viewport'
 import ScrollTracker from './scrolltracker'
 
 // support code
-import { CacheHandler, PortalList } from './cradle/cachehandler'
 import ScrollHandler from './cradle/scrollhandler'
 import StateHandler from './cradle/statehandler'
 import ContentHandler from './cradle/contenthandler'
@@ -316,6 +315,7 @@ const Cradle = ({
 
     const cradlePassthroughPropertiesRef = useRef(null)
 
+    // passed to cellShell content if requested
     cradlePassthroughPropertiesRef.current = {
         orientation, 
         gap, 
@@ -564,7 +564,7 @@ const Cradle = ({
         const triggerobserver = interruptHandler.axisTriggerlinesIntersect.createObserver()
         interruptHandler.axisTriggerlinesIntersect.connectElements()
 
-        // resize observer generates compensation for changes in cell sizes for variable layout mode
+        // resize observer generates compensation for changes in cell sizes for variable layout modes
         const resizeobserver = interruptHandler.cradleResize.createObserver()
         interruptHandler.cradleResize.connectElements()
 
@@ -893,6 +893,7 @@ const Cradle = ({
                     const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
                     const { cradlePositionData } = scaffoldHandler
 
+                    // reset scroll position to previous value
                     viewportElement[cradlePositionData.blockScrollProperty] = 
                         cradlePositionData.blockScrollPos
 
