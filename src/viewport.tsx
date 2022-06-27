@@ -48,7 +48,7 @@ const Viewport = ({
     // this is only set if viewport is a child of an infiniteScroller
     // const parentPortalHandler = useContext(ParentCradleCacheContext)
 
-    // console.log('viewport scrollerID, parentPortalHandler','-'+scrollerID+'-',parentPortalHandler)
+    // console.log('viewport scrollerID, scrollerData','-'+scrollerID+'-',scrollerData)
 
     const isMountedRef = useRef(true) // monitor for unmounted
 
@@ -65,13 +65,15 @@ const Viewport = ({
     // initialize
     const viewportInterruptPropertiesRef = useRef(
         {
-            portal:null, 
+            isReparentingRef:scrollerData?.isReparentingRef, 
             isResizing:false, 
             index:null,
             viewportDimensions:null,
             elementRef:null
         }
     )
+    // console.log('scrollerData, viewportInterruptPropertiesRef in viewport',
+    //     '-'+scrollerID+'-', scrollerData, viewportInterruptPropertiesRef)
 
     // --------------------[ resizer setup ]-----------------------
 
@@ -154,11 +156,12 @@ const Viewport = ({
     // -------------------[ set portal for non-root viewports ]-------------
 
     // sets portal in viewportInterruptPropertiesRef
-    useEffect(()=>{
+    // useEffect(()=>{
 
-        viewportInterruptPropertiesRef.current.portal = scrollerData?.portalDataRef.current
+    //     console.log('adding scrollerData','-'+scrollerID+'-', scrollerData)
+    //     viewportInterruptPropertiesRef.current.isReparentingRef = scrollerData?.isReparentingRef
 
-    },[])
+    // },[])
 
     // ----------------------------------[ calculate config values ]--------------------------------
 

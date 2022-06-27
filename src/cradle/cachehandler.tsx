@@ -69,7 +69,9 @@ export class CacheHandler {
 
         const portalMetadata = {
             portalNode,
-            isReparenting:false,
+            isReparentingRef:{
+                current:false,
+            }
         }
 
         this.scrollerProps.portalMetadataMap.set(index, portalMetadata)
