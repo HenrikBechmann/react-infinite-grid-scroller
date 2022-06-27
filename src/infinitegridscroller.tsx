@@ -3,8 +3,11 @@
 
 /*
     ROADMAP:
-        - nested lists need to have orientation property changed on pivot
         cache management
+            cacheMax
+            preload
+            keepload
+            cradle
         review all code
         layout: uniform, variable, dynamic, dense
         insert, remove, swap functions
