@@ -820,14 +820,14 @@ const Cradle = ({
                 contentHandler.setCradleContent( cradleState )
 
                 // TODO:
-                // if (cache == 'cradle') {
+                if (cache == 'cradle') {
                     const modelComponentList = contentHandler.content.cradleModelComponents
                     const modelIndexList = modelComponentList.map((item)=>{
                         return item.props.index
                     })
-                    console.log('modelIndexList',modelIndexList)
                     cacheHandler.matchCacheToCradle(modelIndexList)
-                // }
+                    cacheHandler.renderPortalList()
+                }
 
                 setCradleState('preparerender')
 

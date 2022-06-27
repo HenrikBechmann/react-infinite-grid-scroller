@@ -160,9 +160,9 @@ export default class ContentHandler {
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
-        if (deleteditems.length && (cache == 'cradle')) {
-            deletePortals(cacheHandler, deleteditems)
-        }
+        // if (deleteditems.length && (cache == 'cradle')) {
+        //     deletePortals(cacheHandler, deleteditems)
+        // }
 
         const [headcontentlist, tailcontentlist] = allocateContentList({
 

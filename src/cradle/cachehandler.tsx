@@ -55,7 +55,10 @@ export class CacheHandler {
     }
 
     matchCacheToCradle = (modelIndexList) => {
-
+        const mapkeys = Array.from(this.scrollerProps.portalMap.keys())
+        mapkeys.filter(key => !modelIndexList.includes(key))
+        // console.log('filtered mapkeys, modelIndexList', mapkeys, modelIndexList)
+        this.deletePortal(mapkeys)
     }
 
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
@@ -64,9 +67,6 @@ export class CacheHandler {
 
         const portalNode = createPortalNode(index)
 
-            // <div data-type = 'portalwrapper' data-index = { index } key = { index }>
-            //     <InPortal node = {portalNode} > { content } </InPortal>
-            // </div>)
         this.scrollerProps.portalMap.set(index,
                 <InPortal key = {index} node = {portalNode} > { content } </InPortal>)
         this.scrollerProps.modified = true
@@ -90,8 +90,18 @@ export class CacheHandler {
     // TODO accept an array of indexes
     deletePortal(index) {
 
-        this.scrollerProps.portalMetadataMap.delete(index)
-        this.scrollerProps.portalMap.delete(index)
+        let indexArray
+        if (!Array.isArray(index)) {
+            indexArray = [index]
+        } else {
+            indexArray = index
+        }
+
+        // console.log('cacheHandler deleting portals', indexArray)
+        for (let i in indexArray) {
+            this.scrollerProps.portalMetadataMap.delete(i)
+            this.scrollerProps.portalMap.delete(i)
+        }
         this.scrollerProps.modified = true
 
     }

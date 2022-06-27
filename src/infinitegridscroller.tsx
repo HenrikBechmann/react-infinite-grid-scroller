@@ -7,7 +7,7 @@
             cacheMax
             preload
             keepload
-            cradle
+            // cradle
         review all code
         layout: uniform, variable, dynamic, dense
         insert, remove, swap functions
@@ -124,7 +124,7 @@ const InfiniteGridScroller = (props) => {
     listSize ?? (listSize = 0)
     listSize = Math.max(0,listSize)
     layout ?? (layout = 'uniform')
-    cache ?? (cache = 'keepload')
+    cache ?? (cache = 'cradle')
     // constraints
     indexOffset = Math.max(0,indexOffset) // non-negative
     indexOffset = Math.min((listSize -1), indexOffset) // not larger than list
