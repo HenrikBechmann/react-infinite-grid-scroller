@@ -399,16 +399,19 @@ const Cradle = ({
     
     const parentingTransitionRequiredRef = useRef(false)
 
+    // console.log('viewportInterruptProperties.isReparentingRef', 
+    //     '-'+scrollerID+'-',viewportInterruptProperties.isReparentingRef)
+
     // the two circumstances associated with being moved to and from the cache
     if (viewportInterruptProperties.isResizing || // happens with movement into cache
-        viewportInterruptProperties.portal?.isReparenting) { // happens with movement out of cache
+        viewportInterruptProperties.isReparentingRef?.current) { // happens with movement out of cache
 
         let isChange = false
-        if (viewportInterruptProperties.portal?.isReparenting) { // priority
+        if (viewportInterruptProperties.isReparentingRef?.current) { // priority
 
             // cancel any resizing message - isReparenting takes priority
             viewportInterruptProperties.isResizing && (viewportInterruptProperties.isResizing = false)
-            viewportInterruptProperties.portal.isReparenting = false // no longer needed
+            viewportInterruptProperties.isReparentingRef.current = false // no longer needed
             wasCachedRef.current = true // must be coming from cache
             isCachedRef.current = false // must be moved to cellShell
             isChange = true // in any case a change has occurred

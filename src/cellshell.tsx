@@ -119,6 +119,10 @@ const CellShell = ({
 
     const portalNodeRef = useRef(null)
 
+    const isReparentingRef = useRef(false)
+
+    const cellShellPropertiesRef = useRef({isReparentingRef})
+
     useLayoutEffect(() => {
 
         switch (cellStatus) {
@@ -142,7 +146,7 @@ const CellShell = ({
 
                     portalNodeRef.current = portalDataRef.current.portalNode
 
-                    portalDataRef.current.isReparenting = true
+                    portalDataRef.current.isReparentingRef.current = true
 
                     setCellStatus('inserting')
 
@@ -158,11 +162,11 @@ const CellShell = ({
 
                             if (usercontent) {
 
+                                let content 
                                 const scrollerData = {
-                                    portalDataRef,
+                                    isReparentingRef:null,
                                     cradlePassthroughPropertiesRef,
                                 }
-                                let content 
                                 if (usercontent.props.hasOwnProperty('scrollerData')) {
                                     content = React.cloneElement(usercontent, {scrollerData})
                                 } else {
@@ -171,8 +175,8 @@ const CellShell = ({
 
                                 portalDataRef.current = 
                                     cacheHandler.createPortal(index, content)
-
                                 portalNodeRef.current  = portalDataRef.current.portalNode
+                                scrollerData.isReparentingRef = portalDataRef.current.isReparentingRef
 
                             } else {
 
