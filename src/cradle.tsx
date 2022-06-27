@@ -163,13 +163,13 @@ const Cradle = ({
     const isMountedRef = useRef(true)
     const isCachedRef = useRef(false)
     const wasCachedRef = useRef(null)
-    const triggerlineRecordsRef = useRef({
+    const triggerlineRecordsRef = useRef({ // to calculate inferred trigger
         wasViewportScrollingForward:null,
         driver:null,
         offset:null,
     })
 
-    // cradle scaffold elements refs
+    // cradle scaffold element refs
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const axisCradleElementRef = useRef(null)
@@ -368,7 +368,7 @@ const Cradle = ({
         externalCallbacksRef,
     }
 
-    // ongoing source of handlers - note all Handlers are given all parameters
+    // ongoing source of handlers - note all Handlers are given all parameters (cradleParameters)
     if (!handlersRef.current) {
         handlersRef.current = getCradleHandlers(cradleParameters)
     }
@@ -744,7 +744,7 @@ const Cradle = ({
 
             }
 
-            case 'cached': {// no op
+            case 'cached': {
 
                 if (!wasCachedRef.current && !isCachedRef.current){
 
