@@ -4,9 +4,9 @@
 /*
     ROADMAP:
         cache management
-            cacheMax
+            cacheMax; cacheMax over-run
             preload
-            keepload
+            // keepload
             // cradle
         review all code
         layout: uniform, variable, dynamic, dense
@@ -128,6 +128,7 @@ const InfiniteGridScroller = (props) => {
     listSize = Math.max(0,listSize)
     layout ?? (layout = 'uniform')
     cache ?? (cache = 'keepload')
+    cacheMax ?? (cacheMax = 100)
     // constraints
     indexOffset = Math.max(0,indexOffset) // non-negative
     indexOffset = Math.min((listSize -1), indexOffset) // not larger than list

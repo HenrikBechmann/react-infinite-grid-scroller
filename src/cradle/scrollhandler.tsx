@@ -162,6 +162,16 @@ export default class ScrollHandler {
         const {scaffoldHandler} = this.cradleParameters.handlersRef.current
         const { cradlePositionData } = scaffoldHandler
 
+        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
+        console.log('cradleInheritedProperties.cache',cradleInheritedProperties.cache)
+        const modelIndexList = 
+            contentHandler.content.cradleModelComponents.map((item)=>item.props.index)
+        if (cradleInheritedProperties.cache == 'keepload') {
+            cacheHandler.pareCacheToMax(
+                cradleInheritedProperties.cacheMax,modelIndexList)
+            cacheHandler.renderPortalList()
+        }
+
     }
 
     // after scroll, but not after repositioning

@@ -61,6 +61,50 @@ export class CacheHandler {
         this.deletePortal(mapkeys)
     }
 
+    pareCacheToMax = (cacheMax, modelIndexList) => {
+
+        const modelLength = modelIndexList.length
+
+        // determine need for paring
+        if ((!cacheMax) || (!modelLength)) return
+
+        const max = Math.max(modelLength, cacheMax)
+
+        const portalMap = this.scrollerProps.portalMap
+
+        if (portalMap.size <= max) return
+
+        // sort the map keys
+        const mapkeys = Array.from(portalMap.keys())
+        mapkeys.sort((a,b) => a - b)
+
+        // get number to pare
+        const mapLength = mapkeys.length
+        const parecount = mapLength - max
+
+        // distribute paring proportionally at front and back
+        const headindex = modelIndexList[0]
+        const tailindex = modelIndexList[modelLength - 1]
+        const headpos = mapkeys.indexOf(headindex)
+        const tailpos = mapkeys.indexOf(tailindex)
+
+        const headroom = headpos
+        const tailroom = mapLength - (tailpos + 1)
+        const pareroom = headroom + tailroom
+
+        const headparecount = Math.floor((headroom/pareroom)*parecount)
+        const tailparecount = parecount - headparecount
+
+        // collect indexes to pare
+        const headlist = mapkeys.slice(0,headparecount)
+        const taillist = mapkeys.slice(mapLength - tailparecount)
+
+        const delList = headlist.concat(taillist)
+
+        this.deletePortal(delList)
+
+    }
+
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
     createPortal(index, content) { // create new portal
@@ -98,7 +142,7 @@ export class CacheHandler {
         }
 
         // console.log('cacheHandler deleting portals', indexArray)
-        for (let i in indexArray) {
+        for (let i of indexArray) {
             this.scrollerProps.portalMetadataMap.delete(i)
             this.scrollerProps.portalMap.delete(i)
         }
