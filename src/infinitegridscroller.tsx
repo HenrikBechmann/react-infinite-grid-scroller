@@ -18,6 +18,7 @@
         - test for memory leaks with Chrome's window.performance.memory property
 
     TODO:
+        replace top/left with transformx/y; try requestanimationframe
         cacheMax tolerance percent before triggering rebalance before scroll is over
         warn usercontent of both resizing (?) and isReparenting
         prioritize fetch cells for visible cells
@@ -124,7 +125,7 @@ const InfiniteGridScroller = (props) => {
     listSize ?? (listSize = 0)
     listSize = Math.max(0,listSize)
     layout ?? (layout = 'uniform')
-    cache ?? (cache = 'cradle')
+    cache ?? (cache = 'keepload')
     // constraints
     indexOffset = Math.max(0,indexOffset) // non-negative
     indexOffset = Math.min((listSize -1), indexOffset) // not larger than list
