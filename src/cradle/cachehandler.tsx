@@ -66,13 +66,13 @@ export class CacheHandler {
         const modelLength = modelIndexList.length
 
         // determine need for paring
-        if ((!cacheMax) || (!modelLength)) return
+        if ((!cacheMax) || (!modelLength)) return false
 
         const max = Math.max(modelLength, cacheMax)
 
         const portalMap = this.scrollerProps.portalMap
 
-        if (portalMap.size <= max) return
+        if (portalMap.size <= max) return false
 
         // sort the map keys
         const mapkeys = Array.from(portalMap.keys())
@@ -102,6 +102,8 @@ export class CacheHandler {
         const delList = headlist.concat(taillist)
 
         this.deletePortal(delList)
+
+        return true
 
     }
 
