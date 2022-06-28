@@ -15,16 +15,16 @@
         test config size edge cases - over and under sized cells
 
     BUGS: 
-        - test for memory leaks with Chrome's window.performance.memory property
         - embedded list loses functional cycles on safari when list axis reference is changed
-            and cached; also on Edge; intermittent
+            and cached; also on Edge; intermittent; suspect cache sentinel
+        - test for memory leaks with Chrome's window.performance.memory property
 
     TODO:
+        surface cache, cacheMax & runway to test options
         replace top/left with transformx/y; try requestanimationframe
-        cacheMax tolerance percent before triggering rebalance before scroll is over
         warn usercontent of both resizing (?) and isReparenting
         prioritize fetch cells for visible cells
-        customizable scrolltracker
+        customizable scrolltracker, or provide callback feature for scroll tracking
         reload from/to for insertions and substitutions
         check use of useCallback
         test for two root portals
