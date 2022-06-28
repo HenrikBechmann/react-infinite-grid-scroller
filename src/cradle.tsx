@@ -770,6 +770,12 @@ const Cradle = ({
 
             case 'finishupdatedcontent': { // cycle for DOM update
 
+                const { cache } = cradleInternalPropertiesRef.current
+                if (cache == 'keepload') {
+
+                    contentHandler.guardAgainstRunawayCaching()
+
+                }
                 interruptHandler.axisTriggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseTriggerlinesObserver = false
                 setCradleState('ready')
@@ -819,12 +825,10 @@ const Cradle = ({
 
                 contentHandler.setCradleContent( cradleState )
 
-                // TODO:
+                const cache = cradleInternalPropertiesRef.current.cache
                 if (cache == 'cradle') {
                     const modelComponentList = contentHandler.content.cradleModelComponents
-                    const modelIndexList = modelComponentList.map((item)=>{
-                        return item.props.index
-                    })
+                    const modelIndexList = modelComponentList.map(item=>item.props.index)
                     cacheHandler.matchCacheToCradle(modelIndexList)
                     cacheHandler.renderPortalList()
                 }

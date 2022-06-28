@@ -10,6 +10,8 @@ import ReactDOM from 'react-dom'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
+const MAX_CACHE_OVER_RUN = 1.5
+
 // global scroller data, organized by session scrollerID
 export class CacheHandler {
 
@@ -104,6 +106,22 @@ export class CacheHandler {
         this.deletePortal(delList)
 
         return true
+
+    }
+
+    guardAgainstRunawayCaching = (cacheMax, modelLength) => {
+
+        if (!cacheMax) return false
+
+        const portalMap = this.scrollerProps.portalMap
+
+        const max = Math.max(modelLength, cacheMax)
+
+        if (portalMap.size <= ((max) * MAX_CACHE_OVER_RUN)) {
+            return false
+        } else {
+            return true
+        }
 
     }
 

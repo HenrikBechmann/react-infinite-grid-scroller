@@ -428,6 +428,17 @@ export default class ContentHandler {
 
     }
 
+    public guardAgainstRunawayCaching = () => { 
+        const { cacheMax } = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const { contentHandler, cacheHandler } = this.cradleParameters.handlersRef.current
+        const modelComponentList = contentHandler.content.cradleModelComponents
+ 
+        if (cacheHandler.guardAgainstRunawayCaching(cacheMax, modelComponentList.length)) {
+
+            this.pareCacheToMax()
+
+        }
+    }
     public pareCacheToMax = () => {
 
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
