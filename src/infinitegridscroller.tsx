@@ -16,6 +16,8 @@
 
     BUGS: 
         - test for memory leaks with Chrome's window.performance.memory property
+        - embedded list loses functional cycles on safari when list axis reference is changed
+            and cached; also on Edge; intermittent
 
     TODO:
         replace top/left with transformx/y; try requestanimationframe
