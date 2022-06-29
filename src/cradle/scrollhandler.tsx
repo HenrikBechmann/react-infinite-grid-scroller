@@ -162,6 +162,8 @@ export default class ScrollHandler {
         const {scaffoldHandler} = this.cradleParameters.handlersRef.current
         const { cradlePositionData } = scaffoldHandler
 
+        contentHandler.pareCacheToMax()
+
     }
 
     // after scroll, but not after repositioning

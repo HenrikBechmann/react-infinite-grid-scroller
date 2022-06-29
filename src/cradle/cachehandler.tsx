@@ -10,6 +10,8 @@ import ReactDOM from 'react-dom'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
+const MAX_CACHE_OVER_RUN = 1.5
+
 // global scroller data, organized by session scrollerID
 export class CacheHandler {
 
@@ -23,6 +25,7 @@ export class CacheHandler {
         setListState:null,
         modified:false,
         portalMetadataMap:new Map(),
+        portalRequestedMap: new Map(), // some portals may have been requested by requestidlecallback, not yet created
         portalMap:new Map(),
         portalList:null,
         scrollerID:null
@@ -45,6 +48,8 @@ export class CacheHandler {
     // set state of the PortalList component of the scroller to trigger render
     renderPortalList = () => {
 
+        // console.log('running renderPortalList', '-'+this.scrollerProps.scrollerID+'-')
+
         if (this.scrollerProps.modified) {
             this.scrollerProps.portalList = Array.from(this.scrollerProps.portalMap.values())
             this.scrollerProps.modified = false
@@ -54,15 +59,109 @@ export class CacheHandler {
 
     }
 
+    matchCacheToCradle = (modelIndexList) => {
+        console.log('running matchCacheToCradle', '-'+this.scrollerProps.scrollerID+'-')
+        const mapkeys = Array.from(this.scrollerProps.portalMap.keys())
+        mapkeys.filter(key => !modelIndexList.includes(key))
+        // console.log('filtered mapkeys, modelIndexList', mapkeys, modelIndexList)
+        this.deletePortal(mapkeys)
+    }
+
+    pareCacheToMax = (cacheMax, modelIndexList) => {
+
+        // console.log('running pareCacheToMax', '-'+this.scrollerProps.scrollerID+'-', cacheMax, modelIndexList)
+
+        const modelLength = modelIndexList.length
+
+        // determine need for paring
+        if ((!cacheMax) || (!modelLength)) return false
+
+        const max = Math.max(modelLength, cacheMax)
+
+        const portalMapList = this.scrollerProps.portalMap
+        const requestedMap = this.scrollerProps.portalRequestedMap
+
+        if ((portalMapList.size + requestedMap.size) <= max) return false
+
+        // sort the map keys
+        const mapkeyslist = Array.from(portalMapList.keys())
+        const requestedkeys = Array.from(requestedMap.keys())
+
+        const mapkeys = mapkeyslist.concat(requestedkeys)
+
+        mapkeys.sort((a,b) => a - b)
+
+        // get number to pare
+        const mapLength = mapkeys.length
+        const parecount = mapLength - max
+
+        // distribute paring proportionally at front and back
+        const headindex = modelIndexList[0]
+        const tailindex = modelIndexList[modelLength - 1]
+        const headpos = mapkeys.indexOf(headindex)
+        const tailpos = mapkeys.indexOf(tailindex)
+
+        const headroom = headpos
+        const tailroom = mapLength - (tailpos + 1)
+        const pareroom = headroom + tailroom
+
+        const headparecount = Math.floor((headroom/pareroom)*parecount)
+        const tailparecount = parecount - headparecount
+
+        // console.log('headpos, tailpos, headroom, tailroom, headparecount, tailparecount, mapLength, mapkeys',
+        //     headpos, tailpos, headroom, tailroom, headparecount, tailparecount, mapLength, mapkeys)
+
+        // collect indexes to pare
+        const headlist = mapkeys.slice(0,headparecount)
+        const taillist = mapkeys.slice(mapLength - tailparecount)
+
+        const delList = headlist.concat(taillist)
+
+        console.log('delete cache item delList, headlist, taillist', '-'+this.scrollerProps.scrollerID+'-', 
+            delList, headlist, taillist)
+
+        this.deletePortal(delList)
+
+        return true
+
+    }
+
+    guardAgainstRunawayCaching = (cacheMax, modelLength) => {
+
+        // console.log('running guardAgainstRunawayCaching', '-'+this.scrollerProps.scrollerID+'-')
+
+        if (!cacheMax) return false
+
+        const portalMap = this.scrollerProps.portalMap
+        const portalRequestedMap = this.scrollerProps.portalRequestedMap
+
+        const max = Math.max(modelLength, cacheMax)
+
+        if ((portalMap.size + portalRequestedMap.size) <= ((max) * MAX_CACHE_OVER_RUN)) {
+            return false
+        } else {
+            return true
+        }
+
+    }
+
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
+
+    registerRequestedPortal(index) {
+        this.scrollerProps.portalRequestedMap.set(index, null)
+    }
+
+    removeRequestedPortal(index) {
+        this.scrollerProps.portalRequestedMap.delete(index)
+    }
 
     createPortal(index, content) { // create new portal
 
+        this.removeRequestedPortal(index)
+
+        // console.log('creating portal for index','-'+this.scrollerProps.scrollerID+'-', index)
         const portalNode = createPortalNode(index)
 
-            // <div data-type = 'portalwrapper' data-index = { index } key = { index }>
-            //     <InPortal node = {portalNode} > { content } </InPortal>
-            // </div>)
         this.scrollerProps.portalMap.set(index,
                 <InPortal key = {index} node = {portalNode} > { content } </InPortal>)
         this.scrollerProps.modified = true
@@ -86,8 +185,18 @@ export class CacheHandler {
     // TODO accept an array of indexes
     deletePortal(index) {
 
-        this.scrollerProps.portalMetadataMap.delete(index)
-        this.scrollerProps.portalMap.delete(index)
+        let indexArray
+        if (!Array.isArray(index)) {
+            indexArray = [index]
+        } else {
+            indexArray = index
+        }
+
+        // console.log('cacheHandler deleting portals', indexArray)
+        for (let i of indexArray) {
+            this.scrollerProps.portalMetadataMap.delete(i)
+            this.scrollerProps.portalMap.delete(i)
+        }
         this.scrollerProps.modified = true
 
     }

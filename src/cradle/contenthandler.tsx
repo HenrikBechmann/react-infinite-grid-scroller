@@ -160,9 +160,9 @@ export default class ContentHandler {
             instanceIdCounterRef:this.instanceIdCounterRef,
         })
 
-        if (deleteditems.length && (cache == 'cradle')) {
-            deletePortals(cacheHandler, deleteditems)
-        }
+        // if (deleteditems.length && (cache == 'cradle')) {
+        //     deletePortals(cacheHandler, deleteditems)
+        // }
 
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
@@ -237,7 +237,8 @@ export default class ContentHandler {
 
     // updateCradleContent does not touch the viewport element's scroll position for the scrollblock
     // instead it reconfigures elements within the cradle
-    public updateCradleContent = (isViewportScrollingForward, triggerlineEntries, source = 'notifications') => {
+    public updateCradleContent = (
+        isViewportScrollingForward, triggerlineEntries, source = 'notifications') => {
 
         // ----------------------[ 1. initialize ]-------------------------
 
@@ -424,6 +425,37 @@ export default class ContentHandler {
         // interruptHandler.signals.pauseTriggerlinesObserver = false
 
         stateHandler.setCradleState('renderupdatedcontent')
+
+    }
+
+    public guardAgainstRunawayCaching = () => { 
+        const { cacheMax } = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const { contentHandler, cacheHandler } = this.cradleParameters.handlersRef.current
+        const modelComponentList = contentHandler.content.cradleModelComponents
+ 
+        if (cacheHandler.guardAgainstRunawayCaching(cacheMax, modelComponentList.length)) {
+
+            this.pareCacheToMax()
+
+        }
+    }
+    public pareCacheToMax = () => {
+
+        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
+
+        if (cradleInheritedProperties.cache == 'keepload') {
+
+            const cradleHandlers = this.cradleParameters.handlersRef.current
+            const { contentHandler, cacheHandler } = cradleHandlers
+
+            const modelIndexList = 
+                contentHandler.content.cradleModelComponents.map((item)=>item.props.index)
+
+            const paring = cacheHandler.pareCacheToMax(
+                cradleInheritedProperties.cacheMax,modelIndexList)
+            if (paring) cacheHandler.renderPortalList()
+                
+        }
 
     }
 

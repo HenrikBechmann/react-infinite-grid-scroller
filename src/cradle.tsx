@@ -393,14 +393,18 @@ const Cradle = ({
     // The restore action must be the first priority to hide the scrollPos changes from the user
     
     const parentingTransitionRequiredRef = useRef(false)
-
     // the two circumstances associated with being moved to and from the cache
     if (viewportInterruptProperties.isResizing || // happens with movement into cache
         viewportInterruptProperties.isReparentingRef?.current) { // happens with movement out of cache
 
+        // console.log('cradle sentinel isResizing, isReparenting\n isCached, wasCached', '-'+scrollerID+'-','\n',
+        //     viewportInterruptProperties.isResizing,viewportInterruptProperties.isReparentingRef?.current,'\n',
+        //     isCachedRef.current, wasCachedRef.current)
+
         let isChange = false
         if (viewportInterruptProperties.isReparentingRef?.current) { // priority
 
+            // console.log('-processing reparenting')
             // cancel any resizing message - isReparenting takes priority
             viewportInterruptProperties.isResizing && (viewportInterruptProperties.isResizing = false)
             viewportInterruptProperties.isReparentingRef.current = false // no longer needed
@@ -410,7 +414,9 @@ const Cradle = ({
 
         } else { // resizing is underway
 
-            const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal state
+            const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal (cache) state
+            // console.log('-processing resizing, isInPortal, isCached, viewportwidth, viewportheight, getViewportDimensions()',
+            //     isInPortal, isCachedRef.current, viewportwidth, viewportheight, scaffoldHandler.getViewportDimensions())
 
             if (isInPortal != isCachedRef.current) { // there's been a change
                 isChange = true
@@ -431,10 +437,11 @@ const Cradle = ({
 
             if (isCachedRef.current && !wasCachedRef.current) { // change into cached
 
-                interruptHandler.pauseTriggerlinesObserver = true
-                interruptHandler.pauseCradleIntersectionObserver = true
-                interruptHandler.pauseCradleResizeObserver = true
-                interruptHandler.pauseScrollingEffects = true
+                const {signals} = interruptHandler
+                signals.pauseTriggerlinesObserver = true
+                signals.pauseCradleIntersectionObserver = true
+                signals.pauseCradleResizeObserver = true
+                signals.pauseScrollingEffects = true
 
             } else if ((!isCachedRef.current) && wasCachedRef.current) { // change out of cached
 
@@ -453,11 +460,13 @@ const Cradle = ({
 
                     wasCachedRef.current = false // cancel cache state
 
+                    const { signals } = interruptHandler
+
                     // cancel pauses
-                    interruptHandler.pauseTriggerlinesObserver = false
-                    interruptHandler.pauseCradleIntersectionObserver = false
-                    interruptHandler.pauseCradleResizeObserver = false
-                    interruptHandler.pauseScrollingEffects = false
+                    signals.pauseTriggerlinesObserver = false
+                    signals.pauseCradleIntersectionObserver = false
+                    signals.pauseCradleResizeObserver = false
+                    signals.pauseScrollingEffects = false
 
                 }
 
@@ -758,6 +767,7 @@ const Cradle = ({
             // it is required to integrate changed DOM configurations before 'ready' is displayed
             case 'renderupdatedcontent': { // cycle for DOM update
 
+                // cacheHandler.renderPortalList()
 
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
@@ -770,6 +780,12 @@ const Cradle = ({
 
             case 'finishupdatedcontent': { // cycle for DOM update
 
+                const { cache } = cradleInternalPropertiesRef.current
+                if (cache == 'keepload') {
+
+                    contentHandler.guardAgainstRunawayCaching()
+
+                }
                 interruptHandler.axisTriggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseTriggerlinesObserver = false
                 setCradleState('ready')
@@ -779,11 +795,13 @@ const Cradle = ({
 
             case 'startreposition': {
 
-                interruptHandler.signals.pauseTriggerlinesObserver = true
+                const { signals } = interruptHandler
+
+                signals.pauseTriggerlinesObserver = true
 
                 // avoid recursive cradle intersection interrupts
-                interruptHandler.signals.pauseCradleIntersectionObserver = true
-                interruptHandler.signals.repositioningRequired = false // because now underway
+                signals.pauseCradleIntersectionObserver = true
+                signals.repositioningRequired = false // because now underway
 
                 setCradleState('repositioningRender')
 
@@ -819,10 +837,13 @@ const Cradle = ({
 
                 contentHandler.setCradleContent( cradleState )
 
-                // TODO:
-                // if (cache == 'cradle') {
-                //     cacheHandler.matchCacheToCradle
-                // }
+                const cache = cradleInternalPropertiesRef.current.cache
+                if (cache == 'cradle') {
+                    const modelComponentList = contentHandler.content.cradleModelComponents
+                    const modelIndexList = modelComponentList.map(item=>item.props.index)
+                    cacheHandler.matchCacheToCradle(modelIndexList)
+                    cacheHandler.renderPortalList()
+                }
 
                 setCradleState('preparerender')
 
@@ -855,7 +876,7 @@ const Cradle = ({
 
                 } else {                     
 
-                    const signals = interruptHandler.signals
+                    const { signals } = interruptHandler
 
                     signals.pauseTriggerlinesObserver && (signals.pauseTriggerlinesObserver = false)
                     signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
@@ -899,10 +920,12 @@ const Cradle = ({
 
                     wasCachedRef.current = false
 
-                    interruptHandler.pauseTriggerlinesObserver = false
-                    interruptHandler.pauseCradleIntersectionObserver = false
-                    interruptHandler.pauseCradleResizeObserver = false
-                    interruptHandler.pauseScrollingEffects = false
+                    const { signals } = interruptHandler
+
+                    signals.pauseTriggerlinesObserver = false
+                    signals.pauseCradleIntersectionObserver = false
+                    signals.pauseCradleResizeObserver = false
+                    signals.pauseScrollingEffects = false
 
                     setCradleState('ready')
 

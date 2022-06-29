@@ -92,6 +92,8 @@ const CellShell = ({
         // unmount
         return () => {
 
+            cacheHandler.removeRequestedPortal(index)
+
             cancelidlecallback(requestIdleCallbackIdRef.current)
 
         }
@@ -153,6 +155,8 @@ const CellShell = ({
                 } else {
 
                     setCellStatus('waiting')
+
+                    cacheHandler.registerRequestedPortal(index)
 
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 

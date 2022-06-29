@@ -509,9 +509,10 @@ export const allocateContentList = (
 export const deletePortals = (cacheHandler, deleteList) => {
 
     // console.log('inside deletePortals',deleteList)
-    for (let item of deleteList) {
-        cacheHandler.deletePortal(item.props.index)
-    }
+    const dlist = deleteList.map((item)=>{
+        return item.props.index
+    })
+    cacheHandler.deletePortal(dlist)
     if (deleteList.length) cacheHandler.renderPortalList()
 }
 

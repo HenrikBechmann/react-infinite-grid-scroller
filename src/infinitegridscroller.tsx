@@ -4,10 +4,10 @@
 /*
     ROADMAP:
         cache management
-            cacheMax
+            // cacheMax; cacheMax over-run
             preload
-            keepload
-            cradle
+            // keepload
+            // cradle
         review all code
         layout: uniform, variable, dynamic, dense
         insert, remove, swap functions
@@ -15,13 +15,17 @@
         test config size edge cases - over and under sized cells
 
     BUGS: 
+        - embedded list loses functional cycles on safari when list axis reference is changed
+            and cached; also on Edge; intermittent; suspect cache sentinel
         - test for memory leaks with Chrome's window.performance.memory property
 
     TODO:
-        cacheMax tolerance percent before triggering rebalance before scroll is over
+        try to reduce need to run renderportallist - try some kind of pagination/grouping
+        surface cache, cacheMax & runway to test options
+        replace top/left with transformx/y; try requestanimationframe
         warn usercontent of both resizing (?) and isReparenting
         prioritize fetch cells for visible cells
-        customizable scrolltracker
+        customizable scrolltracker, or provide callback feature for scroll tracking
         reload from/to for insertions and substitutions
         check use of useCallback
         test for two root portals
@@ -125,6 +129,7 @@ const InfiniteGridScroller = (props) => {
     listSize = Math.max(0,listSize)
     layout ?? (layout = 'uniform')
     cache ?? (cache = 'keepload')
+    cacheMax ?? (cacheMax = 100)
     // constraints
     indexOffset = Math.max(0,indexOffset) // non-negative
     indexOffset = Math.min((listSize -1), indexOffset) // not larger than list
