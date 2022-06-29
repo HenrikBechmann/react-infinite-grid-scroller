@@ -8,6 +8,7 @@
             preload
             // keepload
             // cradle
+        surface cache, cacheMax & runway etc to test options
         review all code
         layout: uniform, variable, dynamic, dense
         insert, remove, swap functions
@@ -15,13 +16,10 @@
         test config size edge cases - over and under sized cells
 
     BUGS: 
-        - embedded list loses functional cycles on safari when list axis reference is changed
-            and cached; also on Edge; intermittent; suspect cache sentinel
         - test for memory leaks with Chrome's window.performance.memory property
 
     TODO:
         try to reduce need to run renderportallist - try some kind of pagination/grouping
-        surface cache, cacheMax & runway to test options
         replace top/left with transformx/y; try requestanimationframe
         warn usercontent of both resizing (?) and isReparenting
         prioritize fetch cells for visible cells
