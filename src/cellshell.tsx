@@ -123,8 +123,6 @@ const CellShell = ({
 
     const isReparentingRef = useRef(false)
 
-    const cellShellPropertiesRef = useRef({isReparentingRef})
-
     useLayoutEffect(() => {
 
         switch (cellStatus) {
@@ -180,6 +178,7 @@ const CellShell = ({
                                 portalDataRef.current = 
                                     cacheHandler.createPortal(index, content)
                                 portalNodeRef.current  = portalDataRef.current.portalNode
+                                // make available to user content
                                 scrollerData.isReparentingRef = portalDataRef.current.isReparentingRef
 
                             } else {
