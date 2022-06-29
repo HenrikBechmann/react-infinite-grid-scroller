@@ -15,6 +15,7 @@
         test config size edge cases - over and under sized cells
 
     BUGS: 
+        - cacheMax causing problems with scroll of gridscroll cells
         - embedded list loses functional cycles on safari when list axis reference is changed
             and cached; also on Edge; intermittent; suspect cache sentinel
         - test for memory leaks with Chrome's window.performance.memory property
