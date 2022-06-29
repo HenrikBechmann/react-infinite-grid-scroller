@@ -117,8 +117,8 @@ export class CacheHandler {
 
         const delList = headlist.concat(taillist)
 
-        console.log('delete cache item delList, headlist, taillist', '-'+this.scrollerProps.scrollerID+'-', 
-            delList, headlist, taillist)
+        // console.log('delete cache item delList, headlist, taillist', '-'+this.scrollerProps.scrollerID+'-', 
+        //     delList, headlist, taillist)
 
         this.deletePortal(delList)
 

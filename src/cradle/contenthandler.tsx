@@ -418,12 +418,6 @@ export default class ContentHandler {
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisPixelOffset = axisPixelOffset
 
-        //  ----------------------[ 7. reset interrupts ]-----------------------
-
-        // trigger lines have been moved, so observer must be reset
-        // interruptHandler.axisTriggerlinesIntersect.connectElements()
-        // interruptHandler.signals.pauseTriggerlinesObserver = false
-
         stateHandler.setCradleState('renderupdatedcontent')
 
     }

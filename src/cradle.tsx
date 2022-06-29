@@ -437,11 +437,12 @@ const Cradle = ({
 
             if (isCachedRef.current && !wasCachedRef.current) { // change into cached
 
-                const {signals} = interruptHandler
-                signals.pauseTriggerlinesObserver = true
-                signals.pauseCradleIntersectionObserver = true
-                signals.pauseCradleResizeObserver = true
-                signals.pauseScrollingEffects = true
+                // const {signals} = interruptHandler
+                interruptHandler.pauseInterrupts()
+                // signals.pauseTriggerlinesObserver = true
+                // signals.pauseCradleIntersectionObserver = true
+                // signals.pauseCradleResizeObserver = true
+                // signals.pauseScrollingEffects = true
 
             } else if ((!isCachedRef.current) && wasCachedRef.current) { // change out of cached
 
@@ -460,13 +461,14 @@ const Cradle = ({
 
                     wasCachedRef.current = false // cancel cache state
 
-                    const { signals } = interruptHandler
+                    // const { signals } = interruptHandler
 
                     // cancel pauses
-                    signals.pauseTriggerlinesObserver = false
-                    signals.pauseCradleIntersectionObserver = false
-                    signals.pauseCradleResizeObserver = false
-                    signals.pauseScrollingEffects = false
+                    interruptHandler.restoreInterrupts()
+                    // signals.pauseTriggerlinesObserver = false
+                    // signals.pauseCradleIntersectionObserver = false
+                    // signals.pauseCradleResizeObserver = false
+                    // signals.pauseScrollingEffects = false
 
                 }
 
@@ -604,11 +606,12 @@ const Cradle = ({
 
         if (viewportInterruptPropertiesRef.current.isResizing) {
 
-            const { signals } = interruptHandler
-            signals.pauseTriggerlinesObserver = true
-            signals.pauseCradleIntersectionObserver = true
-            signals.pauseCradleResizeObserver = true
-            signals.pauseScrollingEffects = true
+            // const { signals } = interruptHandler
+            interruptHandler.pauseInterrupts()
+            // signals.pauseTriggerlinesObserver = true
+            // signals.pauseCradleIntersectionObserver = true
+            // signals.pauseCradleResizeObserver = true
+            // signals.pauseScrollingEffects = true
  
             setCradleState('resizing')
 
@@ -632,10 +635,11 @@ const Cradle = ({
 
         const signals = interruptHandler.signals
 
-        // TODO: bundle these as interruptHandler.pauseEffects(), then interruptHandler.resumeEffects()
-        signals.pauseCradleIntersectionObserver = true
-        signals.pauseTriggerlinesObserver = true
-        signals.pauseScrollingEffects = true
+        interruptHandler.pauseInterrupts()
+
+        // signals.pauseCradleIntersectionObserver = true
+        // signals.pauseTriggerlinesObserver = true
+        // signals.pauseScrollingEffects = true
 
         setCradleState('reconfigure')
 
@@ -685,11 +689,11 @@ const Cradle = ({
         
         scaffoldHandler.cradlePositionData.targetAxisPixelOffset = Math.round(pivotAxisOffset)
 
-        const { signals } = interruptHandler
-        
-        signals.pauseTriggerlinesObserver = true
-        signals.pauseScrollingEffects = true
-        signals.pauseCradleIntersectionObserver = true
+        // const { signals } = interruptHandler
+        interruptHandler.pauseInterrupts()
+        // signals.pauseTriggerlinesObserver = true
+        // signals.pauseScrollingEffects = true
+        // signals.pauseCradleIntersectionObserver = true
 
         setCradleState('pivot')
 
@@ -878,10 +882,10 @@ const Cradle = ({
 
                     const { signals } = interruptHandler
 
-                    signals.pauseTriggerlinesObserver && (signals.pauseTriggerlinesObserver = false)
-                    signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
-
-                    signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
+                    interruptHandler.restoreInterrupts()
+                    // signals.pauseTriggerlinesObserver && (signals.pauseTriggerlinesObserver = false)
+                    // signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
+                    // signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
 
                     setCradleState('ready')
 
@@ -920,12 +924,13 @@ const Cradle = ({
 
                     wasCachedRef.current = false
 
-                    const { signals } = interruptHandler
+                    // const { signals } = interruptHandler
 
-                    signals.pauseTriggerlinesObserver = false
-                    signals.pauseCradleIntersectionObserver = false
-                    signals.pauseCradleResizeObserver = false
-                    signals.pauseScrollingEffects = false
+                    interruptHandler.restoreInterrupts()
+                    // signals.pauseTriggerlinesObserver = false
+                    // signals.pauseCradleIntersectionObserver = false
+                    // signals.pauseCradleResizeObserver = false
+                    // signals.pauseScrollingEffects = false
 
                     setCradleState('ready')
 

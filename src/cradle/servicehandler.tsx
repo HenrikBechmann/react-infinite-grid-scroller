@@ -52,13 +52,16 @@ export default class ServiceHandler {
 
         // console.log('calling reload state from serviceHandler')
 
-        const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
+        // const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
         const { stateHandler } = this.cradleParameters.handlersRef.current
 
-        signals.pauseCradleIntersectionObserver = true
-        signals.pauseTriggerlinesObserver = true
-        signals.pauseScrollingEffects = true
-        stateHandler.setCradleState('reload')
+        const { interruptHandler } = this.cradleParameters.handlersRef.current
+
+        interruptHandler.pauseInterrupts()
+        // signals.pauseCradleIntersectionObserver = true
+        // signals.pauseTriggerlinesObserver = true
+        // signals.pauseScrollingEffects = true
+        // stateHandler.setCradleState('reload')
 
     }
 
