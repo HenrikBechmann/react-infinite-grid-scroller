@@ -16,9 +16,9 @@
         test config size edge cases - over and under sized cells
 
     BUGS: 
-        - test for memory leaks with Chrome's window.performance.memory property
 
     TODO:
+        test for memory leaks with Chrome's window.performance.memory property
         try to reduce need to run renderportallist - try some kind of pagination/grouping
         replace top/left with transformx/y; try requestanimationframe
         warn usercontent of both resizing (?) and isReparenting
