@@ -21,6 +21,7 @@
         - test for memory leaks with Chrome's window.performance.memory property
 
     TODO:
+        try to reduce need to run renderportallist - try some kind of pagination/grouping
         surface cache, cacheMax & runway to test options
         replace top/left with transformx/y; try requestanimationframe
         warn usercontent of both resizing (?) and isReparenting
