@@ -224,7 +224,7 @@ const InfiniteGridScroller = (props) => {
         </>)
 }
 
-const cacherootstyle = {position:'fixed', left: '10000px', display:'none'} as React.CSSProperties // static, out of view 
+const cacherootstyle = {display:'none'} as React.CSSProperties // static, out of view 
 
 export default InfiniteGridScroller
 
