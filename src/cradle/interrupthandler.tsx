@@ -210,6 +210,14 @@ export default class InterruptHandler {
         pauseScrollingEffects: false,
     }
 
+    public pauseInterrupts = () => {
+        const { signals } = this
+        signals.pauseTriggerlinesObserver = true
+        signals.pauseCradleIntersectionObserver = true
+        signals.pauseCradleResizeObserver = true
+        signals.pauseScrollingEffects = true
+    }
+
     public restoreInterrupts = () => {
         const { signals } = this
         signals.pauseTriggerlinesObserver = false
@@ -218,11 +226,4 @@ export default class InterruptHandler {
         signals.pauseScrollingEffects = false
     }
 
-    public pauseInterrupts = () => {
-        const { signals } = this
-        signals.pauseTriggerlinesObserver = true
-        signals.pauseCradleIntersectionObserver = true
-        signals.pauseCradleResizeObserver = true
-        signals.pauseScrollingEffects = true
-    }
 }
