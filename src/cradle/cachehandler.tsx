@@ -60,7 +60,7 @@ export class CacheHandler {
     }
 
     matchCacheToCradle = (modelIndexList) => {
-        console.log('running matchCacheToCradle', '-'+this.scrollerProps.scrollerID+'-')
+        // console.log('running matchCacheToCradle', '-'+this.scrollerProps.scrollerID+'-')
         const mapkeys = Array.from(this.scrollerProps.portalMap.keys())
         mapkeys.filter(key => !modelIndexList.includes(key))
         // console.log('filtered mapkeys, modelIndexList', mapkeys, modelIndexList)
