@@ -386,6 +386,7 @@ const Cradle = ({
 
     // =======================[ CACHE STATE CHANGE SENTINEL ]=========================
 
+    // intercept change in caching status
     // when a portal is cached, including the transition of being moved from one cellShell to another,
     // (and the infinitegridscroller can be a component that is cached),
     // the scrollPos (scrollLeft or scrollTop) is reset to 0 (zero). When the scroller is 
@@ -437,12 +438,7 @@ const Cradle = ({
 
             if (isCachedRef.current && !wasCachedRef.current) { // change into cached
 
-                // const {signals} = interruptHandler
                 interruptHandler.pauseInterrupts()
-                // signals.pauseTriggerlinesObserver = true
-                // signals.pauseCradleIntersectionObserver = true
-                // signals.pauseCradleResizeObserver = true
-                // signals.pauseScrollingEffects = true
 
             } else if ((!isCachedRef.current) && wasCachedRef.current) { // change out of cached
 
@@ -461,14 +457,8 @@ const Cradle = ({
 
                     wasCachedRef.current = false // cancel cache state
 
-                    // const { signals } = interruptHandler
-
                     // cancel pauses
                     interruptHandler.restoreInterrupts()
-                    // signals.pauseTriggerlinesObserver = false
-                    // signals.pauseCradleIntersectionObserver = false
-                    // signals.pauseCradleResizeObserver = false
-                    // signals.pauseScrollingEffects = false
 
                 }
 
@@ -495,8 +485,6 @@ const Cradle = ({
         if (isCachedRef.current && !wasCachedRef.current) {
 
             setCradleState('cached') // replaces 'ready' as steady state
-
-        // }
 
         // movement to and from cache has been resolved
         } else if (!wasCachedRef.current && !isCachedRef.current){
@@ -606,12 +594,7 @@ const Cradle = ({
 
         if (viewportInterruptPropertiesRef.current.isResizing) {
 
-            // const { signals } = interruptHandler
             interruptHandler.pauseInterrupts()
-            // signals.pauseTriggerlinesObserver = true
-            // signals.pauseCradleIntersectionObserver = true
-            // signals.pauseCradleResizeObserver = true
-            // signals.pauseScrollingEffects = true
  
             setCradleState('resizing')
 
@@ -636,10 +619,6 @@ const Cradle = ({
         const signals = interruptHandler.signals
 
         interruptHandler.pauseInterrupts()
-
-        // signals.pauseCradleIntersectionObserver = true
-        // signals.pauseTriggerlinesObserver = true
-        // signals.pauseScrollingEffects = true
 
         setCradleState('reconfigure')
 
@@ -689,11 +668,7 @@ const Cradle = ({
         
         scaffoldHandler.cradlePositionData.targetAxisPixelOffset = Math.round(pivotAxisOffset)
 
-        // const { signals } = interruptHandler
         interruptHandler.pauseInterrupts()
-        // signals.pauseTriggerlinesObserver = true
-        // signals.pauseScrollingEffects = true
-        // signals.pauseCradleIntersectionObserver = true
 
         setCradleState('pivot')
 
@@ -880,12 +855,7 @@ const Cradle = ({
 
                 } else {                     
 
-                    const { signals } = interruptHandler
-
                     interruptHandler.restoreInterrupts()
-                    // signals.pauseTriggerlinesObserver && (signals.pauseTriggerlinesObserver = false)
-                    // signals.pauseCradleIntersectionObserver && (signals.pauseCradleIntersectionObserver = false)
-                    // signals.pauseScrollingEffects && (signals.pauseScrollingEffects = false)
 
                     setCradleState('ready')
 
@@ -927,10 +897,6 @@ const Cradle = ({
                     // const { signals } = interruptHandler
 
                     interruptHandler.restoreInterrupts()
-                    // signals.pauseTriggerlinesObserver = false
-                    // signals.pauseCradleIntersectionObserver = false
-                    // signals.pauseCradleResizeObserver = false
-                    // signals.pauseScrollingEffects = false
 
                     setCradleState('ready')
 
