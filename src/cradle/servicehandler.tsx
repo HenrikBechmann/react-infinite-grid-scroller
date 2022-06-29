@@ -61,7 +61,7 @@ export default class ServiceHandler {
         // signals.pauseCradleIntersectionObserver = true
         // signals.pauseTriggerlinesObserver = true
         // signals.pauseScrollingEffects = true
-        // stateHandler.setCradleState('reload')
+        stateHandler.setCradleState('reload')
 
     }
 
