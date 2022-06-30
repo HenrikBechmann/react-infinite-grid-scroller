@@ -145,6 +145,58 @@ export class CacheHandler {
 
     }
 
+    async preloadItem(index, getItem, cradlePassthroughPropertiesRef) {
+
+        const usercontent = await getItem(index)
+
+        if (usercontent) {
+
+            console.log('index usercontent', index, usercontent)
+
+            let content 
+            const scrollerData = {
+                isReparentingRef:null,
+                cradlePassthroughPropertiesRef,
+            }
+            if (usercontent.props.hasOwnProperty('scrollerData')) {
+                content = React.cloneElement(usercontent, {scrollerData})
+            } else {
+                content = usercontent
+            }
+
+            const portalData = 
+                this.createPortal(index, content)
+            // make available to user content
+            scrollerData.isReparentingRef = portalData.isReparentingRef
+
+        } else {
+
+            console.log('ERROR','no content item for preload index',index)
+
+        }
+
+    }
+
+    preload(cradleParameters) {
+
+        const { cradlePassthroughPropertiesRef } = cradleParameters
+        const { stateHandler } = cradleParameters.handlersRef.current
+
+        const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
+        const { getItem } = cradleInheritedProperties
+        const { listsize } = cradleInheritedProperties
+
+        if (stateHandler.isMountedRef.current) {
+
+            for (let i = 0; i < listsize; i++) {
+                console.log('preloading',i)
+                this.preloadItem(i, getItem, cradlePassthroughPropertiesRef)
+            }
+        }
+
+        console.log(this.scrollerProps.portalMap.size)
+    }
+
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
     registerRequestedPortal(index) {

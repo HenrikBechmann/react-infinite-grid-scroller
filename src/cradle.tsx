@@ -292,6 +292,9 @@ const Cradle = ({
         externalCallbacksRef,
     }
 
+    const cradleParametersRef = useRef(null)
+    cradleParametersRef.current = cradleParameters
+
     // ongoing source of handlers - note all Handlers are given all parameters (cradleParameters)
     if (!handlersRef.current) {
         handlersRef.current = getCradleHandlers(cradleParameters)
@@ -503,6 +506,15 @@ const Cradle = ({
 
     // =====================[ RECONFIGURATION effects ]======================
     // resize (UI resize of the viewport), reconfigure, or pivot
+
+    useEffect(()=> {
+
+        if (cradleStateRef.current != 'setup') return
+        if (cache != 'preload') return
+
+        cacheHandler.preload(cradleParametersRef.current)
+
+    },[cache])
 
     // trigger resizing based on viewport state
     useEffect(()=>{

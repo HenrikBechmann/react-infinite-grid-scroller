@@ -140,6 +140,8 @@ const CellShell = ({
 
                 const cached = cacheHandler.hasPortal(index)
 
+                console.log('is cached', index, cached)
+
                 if (cached) {
 
                     portalDataRef.current = cacheHandler.getPortal(index)
