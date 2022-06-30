@@ -80,7 +80,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // console.log('RUNNING Cradle scrollerID, cradleState','-'+scrollerID+'-', cradleState)
+    console.log('RUNNING Cradle scrollerID, cradleState','-'+scrollerID+'-', cradleState)
 
     // controls
     const isMountedRef = useRef(true)
@@ -444,12 +444,13 @@ const Cradle = ({
 
         if (!functions.getCallbacks) return
 
-        const {scrollToItem, reload, clearCache} = serviceHandler
+        const {scrollToItem, reload, clearCache, preload} = serviceHandler
 
         const callbacks = {
             scrollToItem,
             clearCache,
             reload,
+            preload,
         }
 
         functions.getCallbacks(callbacks)
@@ -509,12 +510,11 @@ const Cradle = ({
 
     useEffect(()=> {
 
-        if (cradleStateRef.current != 'setup') return
         if (cache != 'preload') return
+ 
+        setCradleState('startpreload')
 
-        cacheHandler.preload(cradleParametersRef.current)
-
-    },[cache])
+    },[])
 
     // trigger resizing based on viewport state
     useEffect(()=>{
@@ -662,10 +662,30 @@ const Cradle = ({
 
             case 'setup': { // cycle to allow for ref config
 
-                setCradleState('dosetup') // load grid
+                if (cradleInheritedPropertiesRef.current.cache != 'preload') setCradleState('dosetup') // load grid
 
                 break
 
+            }
+            case 'startpreload':{
+
+                contentHandler.clearCache()
+                setCradleState('dopreload')
+
+                break
+            }
+
+            case 'dopreload': {
+
+                const callback = () => {
+
+                    setCradleState('finishedpreload')
+
+                }
+
+                cacheHandler.preload(cradleParametersRef.current, callback, scrollerID)
+
+                break
             }
 
             case 'cached': {
@@ -731,6 +751,7 @@ const Cradle = ({
                 'normalizesignals'
             */
             case 'dosetup':
+            case 'finishedpreload':
             case 'doreposition':
             case 'finishresize':
             case 'pivot':
@@ -803,15 +824,8 @@ const Cradle = ({
 
             // user request
             case 'clearcache': {
-                cradleContent.headModelComponents = []
-                cradleContent.tailModelComponents = []
 
-                // register new array id for Object.is to trigger react re-processing
-                cradleContent.headDisplayComponents = []
-                cradleContent.tailDisplayComponents = []
-
-                cacheHandler.clearCache()
-
+                contentHandler.clearCache()
                 setCradleState('ready')
 
                 break

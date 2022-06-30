@@ -19,6 +19,9 @@
         test config size edge cases - over and under sized cells
 
     BUGS: 
+        with 'keepload' caching
+        - some nested scrollers do resize when they shouldn't
+        - sometimes scrollPos is not restored
 
     TODO:
         test for memory leaks with Chrome's window.performance.memory property
@@ -127,7 +130,7 @@ const InfiniteGridScroller = (props) => {
     listSize ?? (listSize = 0)
     listSize = Math.max(0,listSize)
     layout ?? (layout = 'uniform')
-    cache ?? (cache = 'preload')
+    cache ?? (cache = 'keepload')
     cacheMax ?? (cacheMax = 100)
     // constraints
     indexOffset = Math.max(0,indexOffset) // non-negative

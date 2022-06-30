@@ -145,13 +145,13 @@ export class CacheHandler {
 
     }
 
-    async preloadItem(index, getItem, cradlePassthroughPropertiesRef) {
+    async preloadItem(index, getItem, cradlePassthroughPropertiesRef, scrollerID) {
 
         const usercontent = await getItem(index)
 
         if (usercontent) {
 
-            console.log('index usercontent', index, usercontent)
+            // console.log('preloading index','-'+scrollerID+'-' ,index )
 
             let content 
             const scrollerData = {
@@ -177,7 +177,7 @@ export class CacheHandler {
 
     }
 
-    preload(cradleParameters) {
+    preload(cradleParameters,callback, scrollerID) {
 
         const { cradlePassthroughPropertiesRef } = cradleParameters
         const { stateHandler } = cradleParameters.handlersRef.current
@@ -186,15 +186,27 @@ export class CacheHandler {
         const { getItem } = cradleInheritedProperties
         const { listsize } = cradleInheritedProperties
 
+        const promises = []
+
         if (stateHandler.isMountedRef.current) {
 
             for (let i = 0; i < listsize; i++) {
-                console.log('preloading',i)
-                this.preloadItem(i, getItem, cradlePassthroughPropertiesRef)
+                // console.log('preloading',i)
+                const promise = this.preloadItem(i, getItem, cradlePassthroughPropertiesRef, scrollerID)
+                promises.push(promise)
             }
         }
 
-        console.log(this.scrollerProps.portalMap.size)
+        Promise.all(promises).then(
+            ()=>{
+                console.log("finished preloading",'-'+scrollerID+'-',+this.scrollerProps.portalMap.size)
+                callback()
+            },
+             ()=>{
+                 console.log("something happened")
+             }
+        )
+
     }
 
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================

@@ -50,5 +50,13 @@ export default class ServiceHandler {
 
     }
 
+    public preload = () => {
+
+        const { stateHandler } = this.cradleParameters.handlersRef.current
+
+        stateHandler.setCradleState('startpreload')
+
+    }
+
 }
 
