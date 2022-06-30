@@ -1,8 +1,6 @@
 // interruptshandler.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-'use strict'
-
 /*
     TODO: trigger reposition if triggerline entries come back with isIntersecting the same for both
 */

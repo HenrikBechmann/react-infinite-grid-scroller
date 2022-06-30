@@ -8,10 +8,13 @@
             preload
             // keepload
             // cradle
+
         surface cache, cacheMax & runway etc to test options
         review all code
+
         layout: uniform, variable, dynamic, dense
         insert, remove, swap functions
+
         test changing all gridscroller parameters
         test config size edge cases - over and under sized cells
 
@@ -20,7 +23,7 @@
     TODO:
         test for memory leaks with Chrome's window.performance.memory property
         try to reduce need to run renderportallist - try some kind of pagination/grouping
-        replace top/left with transformx/y; try requestanimationframe
+        replace top/left with transformx/y
         warn usercontent of both resizing (?) and isReparenting
         prioritize fetch cells for visible cells
         customizable scrolltracker, or provide callback feature for scroll tracking
@@ -33,8 +36,6 @@
         add grid-template-rows: max-content to parent for safari issue grid-auto-flow: column not filling column
         cross-browser testing
 */
-
-'use strict'
 
 import React, {useEffect, useState, useRef} from 'react'
 

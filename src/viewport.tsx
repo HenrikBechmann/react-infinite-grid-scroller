@@ -6,8 +6,6 @@
     and act as the visible screen portal of the list being shown
 */
 
-'use strict'
-
 import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useContext} from 'react'
 
 export const ViewportInterrupt = React.createContext(null) // for children
