@@ -24,6 +24,8 @@
         - sometimes scrollPos is not restored
 
     TODO:
+        callback for user re preload
+        error handling for preload items -- allow recovery
         test for memory leaks with Chrome's window.performance.memory property
         try to reduce need to run renderportallist - try some kind of pagination/grouping
         replace top/left with transformx/y
