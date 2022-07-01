@@ -19,7 +19,7 @@
         test config size edge cases - over and under sized cells
 
     BUGS: 
-        - pivot scroller lists is broken
+        - pivot scroller lists is broken; could be implied orientation of children
         - with horizontal main scroller, sub scrollers restore to wrong position after reparenting
         with 'keepload' caching
         - some nested scrollers do resize when they shouldn't
