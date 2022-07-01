@@ -19,6 +19,7 @@
         test config size edge cases - over and under sized cells
 
     BUGS: 
+        - pivot scroller lists is broken
         - with horizontal main scroller, sub scrollers restore to wrong position after reparenting
         with 'keepload' caching
         - some nested scrollers do resize when they shouldn't
@@ -60,8 +61,8 @@ let globalScrollerID = 0
 /*
     The job of InfiniteGridScroller is to pass parameters to dependents.
     Viewport contains the scrollblock, fullsize for adjusted cell height/width, which in turn contains the cradle 
-        - a component that contains CellShells (which contain displayed items or transitional placeholders). 
-    The CellShells are skeletons which contain the host content components.
+        - a component that contains CellFrames (which contain displayed items or transitional placeholders). 
+    The CellFrames are skeletons which contain the host content components.
 
     Host content is created in a portal cache (via PortalAgent) and then portal'd to its host CellFrame
 
@@ -174,7 +175,8 @@ const InfiniteGridScroller = (props) => {
 
     const scrollerID = scrollerSessionIDRef.current
 
-    // console.log('infinite scroller scrollerID, scrollerState', '-'+scrollerID+'-',scrollerState)
+    console.log('infinite scroller scrollerID, scrollerState, cache, cacheMax', 
+        '-'+scrollerID+'-',scrollerState, cache, cacheMax)
 
     // --------------------[ render ]---------------------
 

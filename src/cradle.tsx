@@ -2,6 +2,8 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
+    consider formalizing state conditions (certain useRefs), together with state actions (useState)
+
     BUG: cache is last imort state; should be ready
     - rationalize pauseScrolling, and other signals
 */
@@ -338,27 +340,28 @@ const Cradle = ({
     // the two circumstances associated with being moved to and from the cache
     if (
         isInPortal || // happens with setup
-        viewportInterruptProperties.isResizing || // happens with movement out of cache
-        viewportInterruptProperties.isReparentingRef?.current // happens with load from cache
+        viewportInterruptProperties.isReparentingRef?.current || // happens with load from cache
+        viewportInterruptProperties.isResizing // happens with movement out of cache
     ) { 
 
         console.log('cradle entering sentinel', '-'+scrollerID+'-','\n','isResizing, isReparenting\n isCached, wasCached, isInPortal\n',
             viewportInterruptProperties.isResizing,viewportInterruptProperties.isReparentingRef?.current,'\n',
             isCachedRef.current, wasCachedRef.current, isInPortal)
 
-        let isChange = false
+        let isCacheChange = false
         if (isInPortal != isCachedRef.current) { // there's been a change
-            isChange = true
+            isCacheChange = true
             wasCachedRef.current = isCachedRef.current
             isCachedRef.current = isInPortal
         }
-        console.log('   assessed change: isChange, is/was cached\n',
-            isChange, isCachedRef.current, wasCachedRef.current)
+        console.log('   assessed change: isCacheChange, is/was cached\n',
+            isCacheChange, isCachedRef.current, wasCachedRef.current)
+
         if (viewportInterruptProperties.isReparentingRef?.current) { // priority
 
             console.log('-processing (cancelling) reparenting; requiring transition;','-'+scrollerID+'-',
-                '\nisInPortal, isChange',
-                '\n' , isInPortal, isChange);
+                '\nisInPortal, isCacheChange',
+                '\n' , isInPortal, isCacheChange);
             // cancel any resizing message - isReparenting takes priority
             // ((!isInPortal) && viewportInterruptProperties.isResizing) && 
             //     (viewportInterruptProperties.isResizing = false)
@@ -367,6 +370,7 @@ const Cradle = ({
             // wasCachedRef.current = true // must be coming from cache
             // isCachedRef.current = false // must be moved to cellFrame
             // isChange = true // in any case a change has occurred
+            // TODO is the following necessary?
             viewportInterruptProperties.isResizing && (viewportInterruptProperties.isResizing = false)
 
         } else if (viewportInterruptProperties.isResizing) { // resizing is underway
@@ -389,9 +393,9 @@ const Cradle = ({
 
         }
 
-        if (isChange) { // into or out of caching
+        if (isCacheChange) { // into or out of caching
 
-            console.log('-processing change','-'+scrollerID+'-',
+            console.log('-processing cache change','-'+scrollerID+'-',
                 '\n is/was cached',
                 isCachedRef.current,wasCachedRef.current)
 
@@ -801,10 +805,10 @@ const Cradle = ({
             case 'dosetup':
             case 'finishedpreload':
             case 'finishparenting':
-            case 'doreposition':
+            case 'doreposition': //
             case 'finishresize':
             case 'pivot':
-            case 'reconfigure':
+            case 'reconfigure': //
             case 'reload': {
 
                 if (isCachedRef.current) { // interrupt until caching is resolved
@@ -868,9 +872,9 @@ const Cradle = ({
 
                 // } else {                     
 
-                    interruptHandler.restoreInterrupts()
+                interruptHandler.restoreInterrupts()
 
-                    setCradleState('ready')
+                setCradleState('ready')
 
                 // }
 
@@ -901,12 +905,12 @@ const Cradle = ({
                             cradlePositionData.blockScrollPos
                     }
 
-                    wasCachedRef.current = false
+                    wasCachedRef.current = false // TODO unnecessary?
 
                     interruptHandler.restoreInterrupts()
 
-                    // setCradleState('finishparenting')
-                    setCradleState('ready')
+                    setCradleState('finishparenting')
+                    // setCradleState('ready')
 
                 break
 

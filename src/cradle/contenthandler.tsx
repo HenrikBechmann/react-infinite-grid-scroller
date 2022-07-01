@@ -2,7 +2,7 @@
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
 import { 
-    getCellShellComponentList, 
+    getCellFrameComponentList, 
     calcContentShift,
     getContentListRequirements,
     getShiftInstruction,
@@ -137,8 +137,8 @@ export default class ContentHandler {
         let scrollPosAdjustment
         if (targetAxisReferenceIndex == 0) {
             scrollPosAdjustment = 0
-        } else if (cradleState == 'doreposition') {
-            scrollPosAdjustment = padding //+ gap
+        // } else if (cradleState == 'doreposition') {
+        //     scrollPosAdjustment = padding //+ gap
         } else {
             scrollPosAdjustment = padding
         }
@@ -148,7 +148,7 @@ export default class ContentHandler {
         // ----------------------[ 3. get and config content ]----------------------
         
         // returns content constrained by cradleRowcount
-        const [newcontentlist,deleteditems] = getCellShellComponentList({
+        const [newcontentlist,deleteditems] = getCellFrameComponentList({
 
             cradleInheritedProperties,
             // cradleInternalProperties,
@@ -348,7 +348,7 @@ export default class ContentHandler {
 
         if (listStartChangeCount || listEndChangeCount) { // if either is non-0 then modify content
 
-            [updatedContentList,deletedContentItems] = getCellShellComponentList({
+            [updatedContentList,deletedContentItems] = getCellFrameComponentList({
                 cradleInheritedProperties,
                 // cradleInternalProperties,
                 cradleContentCount,
