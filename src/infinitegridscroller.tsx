@@ -19,6 +19,7 @@
         test config size edge cases - over and under sized cells
 
     BUGS: 
+        - with horizontal main scroller, sub scrollers restore to wrong position after reparenting
         with 'keepload' caching
         - some nested scrollers do resize when they shouldn't
         - sometimes scrollPos is not restored
