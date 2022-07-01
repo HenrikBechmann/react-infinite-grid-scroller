@@ -116,6 +116,11 @@ const Cradle = ({
     const crosscount = useMemo(() => { // the number of cells crossing orientation
 
         const viewportsize = (orientation == 'horizontal')?viewportheight:viewportwidth
+
+        if (viewportsize == 0) {
+            console.log('viewport size 0 gives crosscount of 0','-'+scrollerID+'-')
+            return 0
+        }
         const crossLength = (orientation == 'horizontal')?cellHeight:cellWidth
 
         const viewportlengthforcalc = viewportsize - (padding * 2) + gap // length of viewport
@@ -329,39 +334,46 @@ const Cradle = ({
     if (viewportInterruptProperties.isResizing || ((viewportwidth == 0) && (viewportheight == 0)) || // happens with movement into cache
         viewportInterruptProperties.isReparentingRef?.current) { // happens with movement out of cache
 
-        console.log('cradle sentinel isResizing, isReparenting\n isCached, wasCached', '-'+scrollerID+'-','\n',
+        const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal (cache) state
+
+        console.log('cradle entering sentinel\n isResizing, isReparenting\n isCached, wasCached, isInPortal', '-'+scrollerID+'-','\n',
             viewportInterruptProperties.isResizing,viewportInterruptProperties.isReparentingRef?.current,'\n',
-            isCachedRef.current, wasCachedRef.current)
+            isCachedRef.current, wasCachedRef.current, isInPortal)
 
         let isChange = false
+        if (isInPortal != isCachedRef.current) { // there's been a change
+            isChange = true
+            wasCachedRef.current = isCachedRef.current
+            isCachedRef.current = isInPortal
+        }
         if (viewportInterruptProperties.isReparentingRef?.current) { // priority
 
-            console.log('-processing reparenting','-'+scrollerID+'-')
+            console.log('-processing reparenting','-'+scrollerID+'-');
             // cancel any resizing message - isReparenting takes priority
-            viewportInterruptProperties.isResizing && (viewportInterruptProperties.isResizing = false)
+            // ((!isInPortal) && viewportInterruptProperties.isResizing) && 
+            //     (viewportInterruptProperties.isResizing = false)
             viewportInterruptProperties.isReparentingRef.current = false // no longer needed
-            wasCachedRef.current = true // must be coming from cache
-            isCachedRef.current = false // must be moved to cellShell
-            isChange = true // in any case a change has occurred
+            // wasCachedRef.current = true // must be coming from cache
+            // isCachedRef.current = false // must be moved to cellShell
+            // isChange = true // in any case a change has occurred
 
-        } else { // starting cached, or resizing is underway
+        } else { // resizing is underway
 
-            const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal (cache) state
             console.log('-processing resizing, isInPortal, isCached, viewportwidth, viewportheight','-'+scrollerID+'-',
                 isInPortal, isCachedRef.current, viewportwidth, viewportheight)
 
-            if (isInPortal != isCachedRef.current) { // there's been a change
-                isChange = true
-                wasCachedRef.current = isCachedRef.current
-                isCachedRef.current = isInPortal
-            }
+            // if (isInPortal != isCachedRef.current) { // there's been a change
+            //     isChange = true
+            //     wasCachedRef.current = isCachedRef.current
+            //     isCachedRef.current = isInPortal
+            // }
 
             // resizing from caching requires no further action
-            if (isCachedRef.current) {//} || wasCachedRef.current) { 
+            // if (isCachedRef.current) {//} || wasCachedRef.current) { 
 
-                viewportInterruptProperties.isResizing = false
+            //     viewportInterruptProperties.isResizing = false
 
-            }
+            // }
 
         }
 
