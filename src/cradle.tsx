@@ -333,9 +333,14 @@ const Cradle = ({
 
     const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal (cache) state
 
+    console.log('isInPortal, is/was cached','-'+scrollerID+'-' ,
+        isInPortal, isCachedRef.current, wasCachedRef.current)
     // the two circumstances associated with being moved to and from the cache
-    if (viewportInterruptProperties.isResizing || isInPortal || // happens with movement into cache
-        viewportInterruptProperties.isReparentingRef?.current) { // happens with movement out of cache
+    if (
+        isInPortal || // happens with setup
+        viewportInterruptProperties.isResizing || // happens with movement out of cache
+        viewportInterruptProperties.isReparentingRef?.current // happens with load from cache
+    ) { 
 
         console.log('cradle entering sentinel', '-'+scrollerID+'-','\n','isResizing, isReparenting\n isCached, wasCached, isInPortal\n',
             viewportInterruptProperties.isResizing,viewportInterruptProperties.isReparentingRef?.current,'\n',
@@ -411,7 +416,7 @@ const Cradle = ({
                     }
 
                 } else { // no need for reset
-
+                    // TODO: never reached?
                     wasCachedRef.current = false // cancel cache state
 
                     // cancel pauses
@@ -788,7 +793,7 @@ const Cradle = ({
             }
 
             /*
-                the following 6 cradle states all resolve with
+                the following 8 cradle states all resolve with
                 a chain starting with setCradleContent, 
                 continuing with 'preparerender', and ending with
                 'normalizesignals'
@@ -802,10 +807,12 @@ const Cradle = ({
             case 'reconfigure':
             case 'reload': {
 
-                if (isCachedRef.current) {
+                if (isCachedRef.current) { // interrupt until caching is resolved
                     setCradleState('cached')
                     break
                 }
+
+                (wasCachedRef.current) && (wasCachedRef.current = false)
 
                 const cradleContent = contentHandler.content
 
