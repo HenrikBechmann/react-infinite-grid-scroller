@@ -410,6 +410,8 @@ const Cradle = ({
     // change state for entering or leaving cache
     useEffect(()=>{
 
+        console.log('responding to is/was cached', 
+            '-'+scrollerID+'-',isCachedRef.current, wasCachedRef.current, cradleStateRef.current)
         // disallow 'setup' so 'dosetup' won't be passed over
         if (cradleStateRef.current == 'setup') return 
 
