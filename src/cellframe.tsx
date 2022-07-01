@@ -182,7 +182,7 @@ const CellFrame = ({
                                 // make available to user content
                                 scrollerData.isReparentingRef = portalDataRef.current.isReparentingRef
 
-                                portalDataRef.current.isReparentingRef.current = true
+                                // portalDataRef.current.isReparentingRef.current = true
 
                             } else {
 

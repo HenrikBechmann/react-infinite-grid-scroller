@@ -360,6 +360,7 @@ const Cradle = ({
             // wasCachedRef.current = true // must be coming from cache
             // isCachedRef.current = false // must be moved to cellFrame
             // isChange = true // in any case a change has occurred
+            viewportInterruptProperties.isResizing && (viewportInterruptProperties.isResizing = false)
 
         } else if (viewportInterruptProperties.isResizing) { // resizing is underway
 
@@ -403,7 +404,9 @@ const Cradle = ({
                     // ... so likely requires a render cycle to catch up
                     // parentingTransitionRequiredRef generates a 'reparentingtransition' cycle
                     //     before resetting scrollPos
-                    parentingTransitionRequiredRef.current = true
+                    if (cradlePositionData.blockScrollPos !== null) {
+                        parentingTransitionRequiredRef.current = true
+                    }
 
                 } else { // no need for reset
 
@@ -437,7 +440,7 @@ const Cradle = ({
         // disallow 'setup' so 'dosetup' won't be passed over
         if (cradleStateRef.current == 'setup') return 
 
-        if (isCachedRef.current && !wasCachedRef.current) {
+        if (isCachedRef.current && !wasCachedRef.current) { // into cache
 
             setCradleState('cached') // replaces 'ready' as steady state
 
@@ -445,6 +448,10 @@ const Cradle = ({
         // } else if (!wasCachedRef.current && !isCachedRef.current){
 
         //     setCradleState('ready')
+
+        } else if (!isCachedRef.current && wasCachedRef.current) {// out of cache
+
+            setCradleState('finishparenting')
 
         }
 
@@ -786,7 +793,7 @@ const Cradle = ({
             */
             case 'dosetup':
             case 'finishedpreload':
-            case 'finishedreparenting':
+            case 'finishparenting':
             case 'doreposition':
             case 'finishresize':
             case 'pivot':
@@ -889,7 +896,7 @@ const Cradle = ({
 
                     interruptHandler.restoreInterrupts()
 
-                    setCradleState('finishedreparenting')
+                    setCradleState('finishparenting')
 
                 break
 
