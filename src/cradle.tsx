@@ -357,7 +357,7 @@ const Cradle = ({
             }
 
             // resizing from caching requires no further action
-            if (isCachedRef.current || wasCachedRef.current) { 
+            if (isCachedRef.current) {//} || wasCachedRef.current) { 
 
                 viewportInterruptProperties.isResizing = false
 

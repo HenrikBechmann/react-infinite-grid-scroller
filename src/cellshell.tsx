@@ -182,6 +182,8 @@ const CellShell = ({
                                 // make available to user content
                                 scrollerData.isReparentingRef = portalDataRef.current.isReparentingRef
 
+                                portalDataRef.current.isReparentingRef.current = true
+
                             } else {
 
                                 console.log('ERROR','no content item')
