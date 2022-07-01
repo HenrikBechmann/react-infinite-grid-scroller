@@ -351,7 +351,9 @@ const Cradle = ({
             isChange, isCachedRef.current, wasCachedRef.current)
         if (viewportInterruptProperties.isReparentingRef?.current) { // priority
 
-            console.log('-processing (cancelling) reparenting; requiring transition','-'+scrollerID+'-');
+            console.log('-processing (cancelling) reparenting; requiring transition;','-'+scrollerID+'-',
+                '\nisInPortal, isChange',
+                '\n' , isInPortal, isChange);
             // cancel any resizing message - isReparenting takes priority
             // ((!isInPortal) && viewportInterruptProperties.isResizing) && 
             //     (viewportInterruptProperties.isResizing = false)
@@ -896,7 +898,8 @@ const Cradle = ({
 
                     interruptHandler.restoreInterrupts()
 
-                    setCradleState('finishparenting')
+                    // setCradleState('finishparenting')
+                    setCradleState('ready')
 
                 break
 
