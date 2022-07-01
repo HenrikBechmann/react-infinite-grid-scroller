@@ -330,11 +330,12 @@ const Cradle = ({
     // const {width:vpwidth, height:vpheight} = scaffoldHandler.getViewportDimensions()
     // console.log('vpwidth, vpheight','-'+scrollerID+'-',vpwidth, vpheight)
     const parentingTransitionRequiredRef = useRef(false)
-    // the two circumstances associated with being moved to and from the cache
-    if (viewportInterruptProperties.isResizing || ((viewportwidth == 0) && (viewportheight == 0)) || // happens with movement into cache
-        viewportInterruptProperties.isReparentingRef?.current) { // happens with movement out of cache
 
-        const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal (cache) state
+    const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal (cache) state
+
+    // the two circumstances associated with being moved to and from the cache
+    if (viewportInterruptProperties.isResizing || isInPortal || // happens with movement into cache
+        viewportInterruptProperties.isReparentingRef?.current) { // happens with movement out of cache
 
         console.log('cradle entering sentinel', '-'+scrollerID+'-','\n','isResizing, isReparenting\n isCached, wasCached, isInPortal\n',
             viewportInterruptProperties.isResizing,viewportInterruptProperties.isReparentingRef?.current,'\n',
@@ -350,7 +351,7 @@ const Cradle = ({
             isChange, isCachedRef.current, wasCachedRef.current)
         if (viewportInterruptProperties.isReparentingRef?.current) { // priority
 
-            console.log('-processing (cancelling) reparenting','-'+scrollerID+'-');
+            console.log('-processing (cancelling) reparenting; requiring transition','-'+scrollerID+'-');
             // cancel any resizing message - isReparenting takes priority
             // ((!isInPortal) && viewportInterruptProperties.isResizing) && 
             //     (viewportInterruptProperties.isResizing = false)
@@ -371,7 +372,7 @@ const Cradle = ({
             //     isCachedRef.current = isInPortal
             // }
 
-            // resizing from caching requires no further action
+            // resizing to or from caching requires no further action
             if (isCachedRef.current || wasCachedRef.current) { 
 
                 viewportInterruptProperties.isResizing = false
@@ -380,16 +381,17 @@ const Cradle = ({
 
         }
 
-        if (isChange) {
+        if (isChange) { // into or out of caching
 
             console.log('-processing change','-'+scrollerID+'-',
                 '\n is/was cached',
                 isCachedRef.current,wasCachedRef.current)
-            if (isCachedRef.current && !wasCachedRef.current) { // change into cached
+
+            if (isCachedRef.current && !wasCachedRef.current) { // change into cache
                 console.log('into caching')
                 interruptHandler.pauseInterrupts()
 
-            } else if ((!isCachedRef.current) && wasCachedRef.current) { // change out of cached
+            } else if ((!isCachedRef.current) && wasCachedRef.current) { // change out of cache
                 console.log('out of caching')
 
                 const viewportElement = viewportInterruptProperties.elementRef.current
@@ -420,6 +422,7 @@ const Cradle = ({
     useEffect(()=>{
 
         if (parentingTransitionRequiredRef.current) {
+
             parentingTransitionRequiredRef.current = false            
             setCradleState('reparentingtransition')
         }
@@ -877,12 +880,12 @@ const Cradle = ({
 
                     console.log('resetting scroll position to','-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
                     // reset scroll position to previous value
-                    viewportElement[cradlePositionData.blockScrollProperty] = 
-                        cradlePositionData.blockScrollPos
+                    if (cradlePositionData.blockScrollPos !== null) {
+                        viewportElement[cradlePositionData.blockScrollProperty] = 
+                            cradlePositionData.blockScrollPos
+                    }
 
                     wasCachedRef.current = false
-
-                    // const { signals } = interruptHandler
 
                     interruptHandler.restoreInterrupts()
 
