@@ -1,4 +1,4 @@
-// cellshell.tsx
+// cellframe.tsx
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 import React, {useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo, useContext } from 'react'
@@ -13,7 +13,7 @@ import { CradleContext } from './cradle'
 
 const IDLECALLBACK_FETCHTIMEOUT = 8000 // TODO make cofigurable
 
-const CellShell = ({
+const CellFrame = ({
     orientation, 
     cellHeight, 
     cellWidth, 
@@ -224,7 +224,7 @@ const CellShell = ({
     }, [cellStatus])
 
     return <div ref = { shellRef } 
-        data-type = 'cellshell' 
+        data-type = 'cellframe' 
         data-scrollerid = { scrollerID } 
         data-index = { index } 
         data-instanceid = { instanceID } 
@@ -238,7 +238,7 @@ const CellShell = ({
             
         </div>
 
-} // CellShell
+} // CellFrame
 
 const getShellStyles = (orientation, cellHeight, cellWidth, styles) => {
 
@@ -265,4 +265,4 @@ const getShellStyles = (orientation, cellHeight, cellWidth, styles) => {
 
 }
 
-export default CellShell
+export default CellFrame

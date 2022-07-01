@@ -62,14 +62,14 @@ let globalScrollerID = 0
         - a component that contains CellShells (which contain displayed items or transitional placeholders). 
     The CellShells are skeletons which contain the host content components.
 
-    Host content is created in a portal cache (via PortalAgent) and then portal'd to its host CellShell
+    Host content is created in a portal cache (via PortalAgent) and then portal'd to its host CellFrame
 
     Scrollblock virtually represents the entirety of the list, and is the scroller
 
     Cradle contains the list items, and is 'virtualized' -- it appears as
       though it is the full scrollblock, but in fact it is only slightly larger than
       the viewport.
-    - individual items are framed by CellShell, managed by Cradle
+    - individual items are framed by CellFrame, managed by Cradle
 
     Overall the infinitegridscroller manages the (often asynchronous) interactions of the 
     components of the mechanism

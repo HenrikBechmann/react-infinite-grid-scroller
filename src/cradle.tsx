@@ -246,7 +246,7 @@ const Cradle = ({
 
     const cradlePassthroughPropertiesRef = useRef(null)
 
-    // passed to cellShell content if requested
+    // passed to cellFrame content if requested
     cradlePassthroughPropertiesRef.current = {
         orientation, 
         gap, 
@@ -321,10 +321,10 @@ const Cradle = ({
     // =======================[ CACHE STATE CHANGE SENTINEL ]=========================
 
     // intercept change in caching status
-    // when a portal is cached, including the transition of being moved from one cellShell to another,
+    // when a portal is cached, including the transition of being moved from one cellFrame to another,
     // (and the infinitegridscroller can be a component that is cached),
     // the scrollPos (scrollLeft or scrollTop) is reset to 0 (zero). When the scroller is 
-    // moved to a cellShell, this code restores the scrollPos.
+    // moved to a cellFrame, this code restores the scrollPos.
     // The restore action must be the first priority to hide the scrollPos changes from the user
     
     // const {width:vpwidth, height:vpheight} = scaffoldHandler.getViewportDimensions()
@@ -357,7 +357,7 @@ const Cradle = ({
             viewportInterruptProperties.isReparentingRef.current = false // no longer needed
             parentingTransitionRequiredRef.current = true
             // wasCachedRef.current = true // must be coming from cache
-            // isCachedRef.current = false // must be moved to cellShell
+            // isCachedRef.current = false // must be moved to cellFrame
             // isChange = true // in any case a change has occurred
 
         } else if (viewportInterruptProperties.isResizing) { // resizing is underway
@@ -868,7 +868,7 @@ const Cradle = ({
                 break
             }
 
-            // moving out of cache into visible DOM tree (cellShell)
+            // moving out of cache into visible DOM tree (cellFrame)
             // resets scrollPos to last UI value
             case 'reparentingtransition': {
 

@@ -2,7 +2,7 @@
 
 /*
     The infinite list scroller stores user cell data in a central hidden portal cache for each
-    infinitegridscroller root, from whence the data is pulled into the relevant CellShell for display
+    infinitegridscroller root, from whence the data is pulled into the relevant CellFrame for display
 */
 
 import React, {useState, useEffect, useRef} from 'react'

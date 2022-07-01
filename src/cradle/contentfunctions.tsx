@@ -7,7 +7,7 @@
 
 import React from 'react'
 
-import CellShell from '../cellshell'
+import CellFrame from '../cellframe'
 
 // ======================[ for setCradleContent ]===========================
 
@@ -539,7 +539,7 @@ const createCell = ({
 
     } = cradleInheritedProperties
 
-    return <CellShell 
+    return <CellFrame 
         key = {index} 
         orientation = { orientation }
         cellHeight = { cellHeight }
