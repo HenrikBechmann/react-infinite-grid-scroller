@@ -371,11 +371,11 @@ const Cradle = ({
             // }
 
             // resizing from caching requires no further action
-            // if (isCachedRef.current) {//} || wasCachedRef.current) { 
+            if (isCachedRef.current || wasCachedRef.current) { 
 
-            //     viewportInterruptProperties.isResizing = false
+                viewportInterruptProperties.isResizing = false
 
-            // }
+            }
 
         }
 
@@ -438,9 +438,9 @@ const Cradle = ({
             setCradleState('cached') // replaces 'ready' as steady state
 
         // movement to and from cache has been resolved
-        } else if (!wasCachedRef.current && !isCachedRef.current){
+        // } else if (!wasCachedRef.current && !isCachedRef.current){
 
-            setCradleState('ready')
+        //     setCradleState('ready')
 
         }
 
@@ -838,21 +838,21 @@ const Cradle = ({
 
                 // prioritize interrupts TODO: validate this
 
-                if ((!isCachedRef.current) && viewportInterruptPropertiesRef.current.isResizing) {
-                    console.log('calling resizing from normalizesignals','-'+scrollerID+'-')
-                    setCradleState('resizing')
+                // if ((!isCachedRef.current) && viewportInterruptPropertiesRef.current.isResizing) {
+                //     console.log('calling resizing from normalizesignals','-'+scrollerID+'-')
+                //     setCradleState('resizing')
 
-                } else if (interruptHandler.signals.repositioningRequired) {
+                // } else if (interruptHandler.signals.repositioningRequired) {
 
-                    setCradleState('startreposition')
+                //     setCradleState('startreposition')
 
-                } else {                     
+                // } else {                     
 
                     interruptHandler.restoreInterrupts()
 
                     setCradleState('ready')
 
-                }
+                // }
 
                 break 
 
