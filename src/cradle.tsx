@@ -336,7 +336,7 @@ const Cradle = ({
 
         const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal (cache) state
 
-        console.log('cradle entering sentinel\n isResizing, isReparenting\n isCached, wasCached, isInPortal', '-'+scrollerID+'-','\n',
+        console.log('cradle entering sentinel', '-'+scrollerID+'-','\n','isResizing, isReparenting\n isCached, wasCached, isInPortal\n',
             viewportInterruptProperties.isResizing,viewportInterruptProperties.isReparentingRef?.current,'\n',
             isCachedRef.current, wasCachedRef.current, isInPortal)
 
@@ -346,9 +346,11 @@ const Cradle = ({
             wasCachedRef.current = isCachedRef.current
             isCachedRef.current = isInPortal
         }
+        console.log('   assessed change: isChange, is/was cached\n',
+            isChange, isCachedRef.current, wasCachedRef.current)
         if (viewportInterruptProperties.isReparentingRef?.current) { // priority
 
-            console.log('-processing reparenting','-'+scrollerID+'-');
+            console.log('-processing (cancelling) reparenting','-'+scrollerID+'-');
             // cancel any resizing message - isReparenting takes priority
             // ((!isInPortal) && viewportInterruptProperties.isResizing) && 
             //     (viewportInterruptProperties.isResizing = false)
@@ -357,9 +359,9 @@ const Cradle = ({
             // isCachedRef.current = false // must be moved to cellShell
             // isChange = true // in any case a change has occurred
 
-        } else { // resizing is underway
+        } else if (viewportInterruptProperties.isResizing) { // resizing is underway
 
-            console.log('-processing resizing, isInPortal, isCached, viewportwidth, viewportheight','-'+scrollerID+'-',
+            console.log('-processing resizing','-'+scrollerID+'-','\nisInPortal, isCached, viewportwidth, viewportheight',
                 isInPortal, isCachedRef.current, viewportwidth, viewportheight)
 
             // if (isInPortal != isCachedRef.current) { // there's been a change
@@ -379,11 +381,15 @@ const Cradle = ({
 
         if (isChange) {
 
+            console.log('-processing change','-'+scrollerID+'-',
+                '\n is/was cached',
+                isCachedRef.current,wasCachedRef.current)
             if (isCachedRef.current && !wasCachedRef.current) { // change into cached
-
+                console.log('into caching')
                 interruptHandler.pauseInterrupts()
 
             } else if ((!isCachedRef.current) && wasCachedRef.current) { // change out of cached
+                console.log('out of caching')
 
                 const viewportElement = viewportInterruptProperties.elementRef.current
 
@@ -681,8 +687,13 @@ const Cradle = ({
 
             case 'setup': { // cycle to allow for ref config
 
-                if (cradleInheritedPropertiesRef.current.cache != 'preload') setCradleState('dosetup') // load grid
-
+                if (cradleInheritedPropertiesRef.current.cache != 'preload') {
+                    if (isCachedRef.current) {
+                        setCradleState('cached')
+                    } else {
+                        setCradleState('dosetup') // load grid
+                    }
+                }
                 break
 
             }
@@ -771,11 +782,17 @@ const Cradle = ({
             */
             case 'dosetup':
             case 'finishedpreload':
+            case 'finishedreparenting':
             case 'doreposition':
             case 'finishresize':
             case 'pivot':
             case 'reconfigure':
             case 'reload': {
+
+                if (isCachedRef.current) {
+                    setCradleState('cached')
+                    break
+                }
 
                 const cradleContent = contentHandler.content
 
@@ -867,7 +884,7 @@ const Cradle = ({
 
                     interruptHandler.restoreInterrupts()
 
-                    setCradleState('ready')
+                    setCradleState('finishedreparenting')
 
                 break
 
