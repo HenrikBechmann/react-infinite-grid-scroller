@@ -355,6 +355,7 @@ const Cradle = ({
             // ((!isInPortal) && viewportInterruptProperties.isResizing) && 
             //     (viewportInterruptProperties.isResizing = false)
             viewportInterruptProperties.isReparentingRef.current = false // no longer needed
+            parentingTransitionRequiredRef.current = true
             // wasCachedRef.current = true // must be coming from cache
             // isCachedRef.current = false // must be moved to cellShell
             // isChange = true // in any case a change has occurred
@@ -874,6 +875,7 @@ const Cradle = ({
                     const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
                     const { cradlePositionData } = scaffoldHandler
 
+                    console.log('resetting scroll position to','-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
                     // reset scroll position to previous value
                     viewportElement[cradlePositionData.blockScrollProperty] = 
                         cradlePositionData.blockScrollPos
