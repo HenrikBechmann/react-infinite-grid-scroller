@@ -108,8 +108,8 @@ const Viewport = ({
             const olddimensions = viewportInterruptPropertiesRef.current.viewportDimensions
             const {width:oldwidth, height:oldheight} = olddimensions
             target.dataset.initialized = true
-
-            if ((width == oldwidth) && (height == oldheight)) {
+            console.log('viewport resizing callback width, oldwidth, height, oldheight','-'+scrollerID+'-' ,width, oldwidth, height, oldheight)
+            if ((width == oldwidth) && (height == oldheight)) { // || ((oldwidth == 0) && (oldheight ==0))) {
                 return
             }
 

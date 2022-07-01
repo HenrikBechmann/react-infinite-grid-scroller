@@ -156,6 +156,7 @@ const CellShell = ({
 
                     cacheHandler.registerRequestedPortal(index)
 
+                    // TODO review implementation of async here
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
                         const usercontent = await getItem(index)

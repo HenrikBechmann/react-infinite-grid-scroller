@@ -97,9 +97,9 @@ export default class ScaffoldHandler {
 
     public elements
 
-    // public getViewportDimensions() {
-    //     const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementRef.current
-    //     return {width:viewportElement.clientWidth, height: viewportElement.clientHeight}
-    // }
+    public getViewportDimensions() {
+        const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementRef.current
+        return {width:viewportElement.clientWidth, height: viewportElement.clientHeight}
+    }
 
 }

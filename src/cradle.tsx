@@ -85,7 +85,7 @@ const Cradle = ({
     // controls
     const isMountedRef = useRef(true)
     const isCachedRef = useRef(false)
-    const wasCachedRef = useRef(null)
+    const wasCachedRef = useRef(false)
     const triggerlineRecordsRef = useRef({ // to calculate inferred trigger
         wasViewportScrollingForward:null,
         driver:null,
@@ -123,6 +123,8 @@ const Cradle = ({
         tilelengthforcalc = Math.min(tilelengthforcalc,viewportlengthforcalc) // result cannot be less than 1
 
         const crosscount = Math.floor(viewportlengthforcalc/tilelengthforcalc)
+        console.log('calculating crosscount, viewportlengthforcalc, tilelengthforcalc, viewportsize, viewportheight, viewportwidth',
+         '-'+scrollerID+'-',crosscount, viewportlengthforcalc, tilelengthforcalc, viewportsize, viewportheight, viewportwidth)
 
         return crosscount
 
@@ -320,19 +322,21 @@ const Cradle = ({
     // moved to a cellShell, this code restores the scrollPos.
     // The restore action must be the first priority to hide the scrollPos changes from the user
     
+    // const {width:vpwidth, height:vpheight} = scaffoldHandler.getViewportDimensions()
+    // console.log('vpwidth, vpheight','-'+scrollerID+'-',vpwidth, vpheight)
     const parentingTransitionRequiredRef = useRef(false)
     // the two circumstances associated with being moved to and from the cache
-    if (viewportInterruptProperties.isResizing || // happens with movement into cache
+    if (viewportInterruptProperties.isResizing || ((viewportwidth == 0) && (viewportheight == 0)) || // happens with movement into cache
         viewportInterruptProperties.isReparentingRef?.current) { // happens with movement out of cache
 
-        // console.log('cradle sentinel isResizing, isReparenting\n isCached, wasCached', '-'+scrollerID+'-','\n',
-        //     viewportInterruptProperties.isResizing,viewportInterruptProperties.isReparentingRef?.current,'\n',
-        //     isCachedRef.current, wasCachedRef.current)
+        console.log('cradle sentinel isResizing, isReparenting\n isCached, wasCached', '-'+scrollerID+'-','\n',
+            viewportInterruptProperties.isResizing,viewportInterruptProperties.isReparentingRef?.current,'\n',
+            isCachedRef.current, wasCachedRef.current)
 
         let isChange = false
         if (viewportInterruptProperties.isReparentingRef?.current) { // priority
 
-            // console.log('-processing reparenting')
+            console.log('-processing reparenting','-'+scrollerID+'-')
             // cancel any resizing message - isReparenting takes priority
             viewportInterruptProperties.isResizing && (viewportInterruptProperties.isResizing = false)
             viewportInterruptProperties.isReparentingRef.current = false // no longer needed
@@ -340,11 +344,11 @@ const Cradle = ({
             isCachedRef.current = false // must be moved to cellShell
             isChange = true // in any case a change has occurred
 
-        } else { // resizing is underway
+        } else { // starting cached, or resizing is underway
 
             const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal (cache) state
-            // console.log('-processing resizing, isInPortal, isCached, viewportwidth, viewportheight, getViewportDimensions()',
-            //     isInPortal, isCachedRef.current, viewportwidth, viewportheight, scaffoldHandler.getViewportDimensions())
+            console.log('-processing resizing, isInPortal, isCached, viewportwidth, viewportheight','-'+scrollerID+'-',
+                isInPortal, isCachedRef.current, viewportwidth, viewportheight)
 
             if (isInPortal != isCachedRef.current) { // there's been a change
                 isChange = true
@@ -532,6 +536,7 @@ const Cradle = ({
 
             interruptHandler.pauseInterrupts()
  
+            console.log('calling resizing from isResizing useEvent','-'+scrollerID+'-')
             setCradleState('resizing')
 
         }
@@ -803,7 +808,7 @@ const Cradle = ({
                 // prioritize interrupts TODO: validate this
 
                 if ((!isCachedRef.current) && viewportInterruptPropertiesRef.current.isResizing) {
-
+                    console.log('calling resizing from normalizesignals','-'+scrollerID+'-')
                     setCradleState('resizing')
 
                 } else if (interruptHandler.signals.repositioningRequired) {
