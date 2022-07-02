@@ -34,9 +34,9 @@ const CellFrame = ({
         overflow:'hidden',
     } as React.CSSProperties)
 
-    const [cellStatus, setCellStatus] = useState('setup')
+    const [frameStatus, setFrameStatus] = useState('setup')
 
-    const shellRef = useRef(null)
+    const frameRef = useRef(null)
 
     const isMountedRef = useRef(true)
 
@@ -61,7 +61,7 @@ const CellFrame = ({
                 React.createElement(placeholder, {index, listsize}):
                 null
             
-    },[placeholder,listsize])
+    },[index, placeholder,listsize])
 
     placeholderRef.current = useMemo(()=>{
         const placeholder = 
@@ -87,7 +87,7 @@ const CellFrame = ({
     // initialize cell content
     useEffect(() => {
 
-        setCellStatus('getusercontent')
+        setFrameStatus('getusercontent')
 
         // unmount
         return () => {
@@ -104,14 +104,14 @@ const CellFrame = ({
     // cradle invariant ondemand callback parameter value
     const getElementData = useCallback(()=>{
 
-        return [index, shellRef]
+        return [index, frameRef]
         
     },[])
 
     // set styles
     useEffect(()=>{
 
-        let newStyles = getShellStyles(orientation, cellHeight, cellWidth, styles)
+        let newStyles = getFrameStyles(orientation, cellHeight, cellWidth, styles)
         
         if (isMountedRef.current) {
             saveStyles(newStyles)
@@ -125,13 +125,13 @@ const CellFrame = ({
 
     useLayoutEffect(() => {
 
-        switch (cellStatus) {
+        switch (frameStatus) {
             case 'setup':
                 // no-op
                 break
             case 'inserting': {
 
-                setCellStatus('ready')
+                setFrameStatus('ready')
 
                 break
 
@@ -148,11 +148,11 @@ const CellFrame = ({
 
                     portalDataRef.current.isReparentingRef.current = true
 
-                    setCellStatus('inserting')
+                    setFrameStatus('inserting')
 
                 } else {
 
-                    setCellStatus('waiting')
+                    setFrameStatus('waiting')
 
                     cacheHandler.registerRequestedPortal(index)
 
@@ -192,7 +192,7 @@ const CellFrame = ({
 
                         }
 
-                        setCellStatus('inserting')
+                        setFrameStatus('inserting')
 
                     },{timeout:IDLECALLBACK_FETCHTIMEOUT})
 
@@ -208,12 +208,12 @@ const CellFrame = ({
             }
         }
 
-    }, [cellStatus])
+    }, [frameStatus])
 
 
     useEffect(()=>{
 
-        switch (cellStatus) {
+        switch (frameStatus) {
 
             case 'ready': { // no-op
 
@@ -221,9 +221,9 @@ const CellFrame = ({
             }
         }
 
-    }, [cellStatus])
+    }, [frameStatus])
 
-    return <div ref = { shellRef } 
+    return <div ref = { frameRef } 
         data-type = 'cellframe' 
         data-scrollerid = { scrollerID } 
         data-index = { index } 
@@ -231,7 +231,7 @@ const CellFrame = ({
         style = { styles }>
 
             { 
-                (cellStatus != 'ready')?
+                (frameStatus != 'ready')?
                     placeholderRef.current:
                     <OutPortal node = { portalNodeRef.current }/>
             }
@@ -240,7 +240,7 @@ const CellFrame = ({
 
 } // CellFrame
 
-const getShellStyles = (orientation, cellHeight, cellWidth, styles) => {
+const getFrameStyles = (orientation, cellHeight, cellWidth, styles) => {
 
     let styleset = Object.assign({position:'relative'},styles)
 

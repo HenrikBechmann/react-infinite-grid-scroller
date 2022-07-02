@@ -58,7 +58,7 @@ const Viewport = ({
         {
             isReparentingRef:scrollerData?.isReparentingRef, 
             isResizing:false, 
-            index:null,
+            // index:null,
             viewportDimensions:null,
             elementRef:null
         }

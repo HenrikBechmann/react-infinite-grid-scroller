@@ -305,7 +305,7 @@ export default class ContentHandler {
 
         // cradle properties
         // const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementRef.current
+        // const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementRef.current
 
         const {
 

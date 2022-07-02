@@ -88,6 +88,7 @@ const Cradle = ({
     const isMountedRef = useRef(true)
     const isCachedRef = useRef(false)
     const wasCachedRef = useRef(false)
+    const parentingTransitionRequiredRef = useRef(false)
     const triggerlineRecordsRef = useRef({ // to calculate inferred trigger
         wasViewportScrollingForward:null,
         driver:null,
@@ -328,8 +329,6 @@ const Cradle = ({
     // moved to a cellFrame, this code restores the scrollPos.
     // The restore action must be the first priority to hide the scrollPos changes from the user
     
-    const parentingTransitionRequiredRef = useRef(false)
-
     const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal (cache) state
 
     const isCacheChange = (isInPortal != isCachedRef.current)
@@ -490,9 +489,6 @@ const Cradle = ({
 
     },[])
 
-    // =====================[ RECONFIGURATION effects ]======================
-    // resize (UI resize of the viewport), reconfigure, or pivot
-
     useEffect(()=> {
 
         if (cache != 'preload') return
@@ -500,6 +496,9 @@ const Cradle = ({
         setCradleState('startpreload')
 
     },[])
+
+    // =====================[ RECONFIGURATION effects ]======================
+    // resize (UI resize of the viewport), reconfigure, or pivot
 
     // trigger resizing based on viewport state
     useEffect(()=>{
@@ -670,7 +669,7 @@ const Cradle = ({
 
                 const callback = () => {
 
-                    setCradleState('finishedpreload')
+                    setCradleState('finishpreload')
 
                 }
 
@@ -742,7 +741,7 @@ const Cradle = ({
                 'normalizesignals'
             */
             case 'dosetup':
-            case 'finishedpreload':
+            case 'finishpreload':
             case 'finishparenting':
             case 'doreposition': //
             case 'finishresize':
@@ -831,7 +830,7 @@ const Cradle = ({
             }
 
             // moving out of cache into visible DOM tree (cellFrame)
-            // resets scrollPos to last UI value
+            // resets scrollPos (scrollLeft/scrollTop) to last UI value
             case 'reparentingtransition': {
 
                     const { cradlePositionData } = scaffoldHandler
