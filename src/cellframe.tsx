@@ -11,7 +11,7 @@ import Placeholder from './placeholder'
 
 import { CradleContext } from './cradle'
 
-const IDLECALLBACK_FETCHTIMEOUT = 8000 // TODO make cofigurable
+const IDLECALLBACK_FETCHTIMEOUT = 4000 // TODO make cofigurable
 
 const CellFrame = ({
     orientation, 
