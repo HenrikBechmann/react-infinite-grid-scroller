@@ -127,6 +127,7 @@ export default class ScrollHandler {
 
         const {stateHandler, contentHandler, cacheHandler} = this.cradleParameters.handlersRef.current
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         const cradleState = stateHandler.cradleStateRef.current
 
@@ -159,10 +160,13 @@ export default class ScrollHandler {
 
         }
 
-        const {scaffoldHandler} = this.cradleParameters.handlersRef.current
-        const { cradlePositionData } = scaffoldHandler
+        // const {scaffoldHandler} = this.cradleParameters.handlersRef.current
+        // const { cradlePositionData } = scaffoldHandler
+        const { cache } = cradleInheritedProperties
 
-        contentHandler.pareCacheToMax()
+        if (cache == 'keepload') {
+            contentHandler.pareCacheToMax()
+        }
 
     }
 

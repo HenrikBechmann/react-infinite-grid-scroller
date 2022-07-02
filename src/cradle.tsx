@@ -82,7 +82,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    console.log('RUNNING cradleState','-'+scrollerID+'-', cradleState)
+    // console.log('RUNNING cradleState','-'+scrollerID+'-', cradleState)
 
     // controls
     const isMountedRef = useRef(true)
@@ -517,7 +517,7 @@ const Cradle = ({
 
             interruptHandler.pauseInterrupts()
  
-            console.log('calling resizing from isResizing useEvent','-'+scrollerID+'-')
+            // console.log('calling resizing from isResizing useEvent','-'+scrollerID+'-')
             setCradleState('resizing')
 
         }
@@ -837,7 +837,7 @@ const Cradle = ({
                     // reset scroll position to previous value
                     if (cradlePositionData.blockScrollPos !== null) {
 
-                        console.log('resetting scroll position to','-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
+                        // console.log('resetting scroll position to','-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
 
                         const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
 

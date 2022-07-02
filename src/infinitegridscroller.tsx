@@ -133,7 +133,7 @@ const InfiniteGridScroller = (props) => {
     listSize ?? (listSize = 0)
     listSize = Math.max(0,listSize)
     layout ?? (layout = 'uniform')
-    cache ?? (cache = 'keepload')
+    cache ?? (cache = 'preload')
     cacheMax ?? (cacheMax = 100)
     // constraints
     indexOffset = Math.max(0,indexOffset) // non-negative

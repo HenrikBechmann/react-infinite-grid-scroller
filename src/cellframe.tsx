@@ -87,6 +87,8 @@ const CellFrame = ({
     // initialize cell content
     useEffect(() => {
 
+        console.log('creating cellFrame','-'+scrollerID+'-',instanceID  )
+
         setFrameStatus('getusercontent')
 
         // unmount
@@ -123,6 +125,12 @@ const CellFrame = ({
 
     const isReparentingRef = useRef(false)
 
+    const fetchFromPortal = useCallback(async () => {
+
+        return await cacheHandler.getPortal(index)
+        
+    },[])
+
     useLayoutEffect(() => {
 
         switch (frameStatus) {
@@ -142,13 +150,32 @@ const CellFrame = ({
 
                 if (cached) {
 
-                    portalDataRef.current = cacheHandler.getPortal(index)
+                    setFrameStatus('waiting')
 
-                    portalNodeRef.current = portalDataRef.current.portalNode
+                    requestIdleCallbackIdRef.current = requestidlecallback(()=>{
 
-                    portalDataRef.current.isReparentingRef.current = true
+                        const promise = fetchFromPortal()
 
-                    setFrameStatus('inserting')
+                        promise.then((item) => {
+
+                            portalDataRef.current = item
+
+                            portalNodeRef.current = portalDataRef.current.portalNode
+
+                            portalDataRef.current.isReparentingRef.current = true
+                            console.log('inserting portal item')
+                            setFrameStatus('inserting')
+
+                        })
+                    },{timeout:1000})
+
+                    // portalDataRef.current = cacheHandler.getPortal(index)
+
+                    // portalNodeRef.current = portalDataRef.current.portalNode
+
+                    // portalDataRef.current.isReparentingRef.current = true
+
+                    // setFrameStatus('inserting')
 
                 } else {
 
@@ -192,6 +219,7 @@ const CellFrame = ({
 
                         }
 
+                        console.log('loading portal item')
                         setFrameStatus('inserting')
 
                     },{timeout:IDLECALLBACK_FETCHTIMEOUT})
