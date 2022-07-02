@@ -189,9 +189,6 @@ export class CacheHandler {
             ()=>{
                 // console.log("finished preloading",'-'+scrollerID+'-',+this.scrollerProps.portalMap.size)
                 callback()
-            },
-            ()=>{
-                console.log("something happened")
             }
         )
 
