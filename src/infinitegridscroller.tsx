@@ -176,8 +176,8 @@ const InfiniteGridScroller = (props) => {
 
     const scrollerID = scrollerSessionIDRef.current
 
-    console.log('infinite scroller scrollerID, scrollerState, cache, cacheMax', 
-        '-'+scrollerID+'-',scrollerState, cache, cacheMax)
+    // console.log('infinite scroller scrollerID, scrollerState, cache, cacheMax', 
+    //     '-'+scrollerID+'-',scrollerState, cache, cacheMax)
 
     // --------------------[ render ]---------------------
 

@@ -91,39 +91,9 @@ const Viewport = ({
 
         if ((!isMountedRef.current) || (!viewportElementRef.current)) return
 
-        if (viewportStateRef.current == 'setup') {
-
-            return
-
-        }
+        if (viewportStateRef.current == 'setup') return
 
         const target = entries[0].target
-
-        const dimensions = viewportElementRef.current.getBoundingClientRect()
-        const {width, height} = dimensions
-        const olddimensions = viewportInterruptPropertiesRef.current.viewportDimensions
-
-        console.log('VIEWPORT resizing callback width, height, olddimensions, initialized, isResizingRef.current',
-            '-'+scrollerID+'-' ,width, height, olddimensions, 
-            target.dataset.initialized, isResizingRef.current)
-
-        // first register shouldn't generate interrupt
-        // if (!target.dataset.initialized) {
-
-            // const dimensions = viewportElementRef.current.getBoundingClientRect()
-            // const {width, height} = dimensions
-
-            // const olddimensions = viewportInterruptPropertiesRef.current.viewportDimensions
-            // const {width:oldwidth, height:oldheight} = olddimensions
-            // target.dataset.initialized = true
-            // console.log('viewport resizing callback width, oldwidth, height, oldheight','-'+scrollerID+'-' ,width, oldwidth, height, oldheight)
-            // if ((width == oldwidth) && (height == oldheight)) { // || ((oldwidth == 0) && (oldheight ==0))) {
-                // return
-            // }
-
-        // }
-
-        // const dimensions = viewportElementRef.current.getBoundingClientRect()
 
         // generate interrupt response, if initiating resize
         if (!isResizingRef.current) {
