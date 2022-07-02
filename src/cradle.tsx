@@ -82,7 +82,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    console.log('RUNNING Cradle scrollerID, cradleState','-'+scrollerID+'-', cradleState)
+    console.log('RUNNING cradleState','-'+scrollerID+'-', cradleState)
 
     // controls
     const isMountedRef = useRef(true)
@@ -320,7 +320,7 @@ const Cradle = ({
         stylesHandler,
     } = handlersRef.current
 
-    // =======================[ CACHE STATE CHANGE SENTINEL ]=========================
+    // =======================[ CACHING STATE CHANGE SENTINEL ]=========================
 
     // intercept change in caching status
     // when a portal is cached, including the transition of being moved from one cellFrame to another,
@@ -334,34 +334,43 @@ const Cradle = ({
     const parentingTransitionRequiredRef = useRef(false)
 
     const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal (cache) state
+    // let isCacheChange = false
+    // if (isInPortal != isCachedRef.current) { // there's been a change
+    //     isCacheChange = true
+    //     wasCachedRef.current = isCachedRef.current
+    //     isCachedRef.current = isInPortal
+    // }
+    const isCacheChange = (isInPortal != isCachedRef.current)
+    if (isCacheChange) {
+        wasCachedRef.current = isCachedRef.current
+        isCachedRef.current = isInPortal
+    }
+    const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
 
-    console.log('isInPortal, is/was cached','-'+scrollerID+'-' ,
-        isInPortal, isCachedRef.current, wasCachedRef.current)
+    console.log('isInPortal, is/was cached, isCachingUnderway','-'+scrollerID+'-' , '\n',
+        isInPortal, isCachedRef.current, wasCachedRef.current, isCachingUnderway)
     // the two circumstances associated with being moved to and from the cache
+    // if (
+    //     isInPortal || // happens with setup
+    //     viewportInterruptProperties.isReparentingRef?.current || // happens with load from cache
+    //     viewportInterruptProperties.isResizing // happens with movement out of cache
+    // ) { 
+
     if (
-        isInPortal || // happens with setup
+        isCacheChange || 
         viewportInterruptProperties.isReparentingRef?.current || // happens with load from cache
-        viewportInterruptProperties.isResizing // happens with movement out of cache
+        (viewportInterruptProperties.isResizing && isCachingUnderway) 
     ) { 
+        console.log('cradle entering sentinel', '-'+scrollerID+'-','\n',
+            'isCacheChange, isCachingUnderway, isResizing, isReparenting\n',
+            isCacheChange, isCachingUnderway,
+            viewportInterruptProperties.isResizing,viewportInterruptProperties.isReparentingRef?.current)
 
-        console.log('cradle entering sentinel', '-'+scrollerID+'-','\n','isResizing, isReparenting\n isCached, wasCached, isInPortal\n',
-            viewportInterruptProperties.isResizing,viewportInterruptProperties.isReparentingRef?.current,'\n',
-            isCachedRef.current, wasCachedRef.current, isInPortal)
+        if (viewportInterruptProperties.isReparentingRef?.current) {
 
-        let isCacheChange = false
-        if (isInPortal != isCachedRef.current) { // there's been a change
-            isCacheChange = true
-            wasCachedRef.current = isCachedRef.current
-            isCachedRef.current = isInPortal
-        }
-        console.log('   assessed change: isCacheChange, is/was cached\n',
-            isCacheChange, isCachedRef.current, wasCachedRef.current)
-
-        if (viewportInterruptProperties.isReparentingRef?.current) { // priority
-
-            console.log('-processing (cancelling) reparenting; requiring transition;','-'+scrollerID+'-',
-                '\nisInPortal, isCacheChange',
-                '\n' , isInPortal, isCacheChange);
+            console.log('-processing (cancelling) reparenting; requiring transition;','-'+scrollerID+'-')
+                // '\nisInPortal, isCacheChange',
+                // '\n' , isInPortal, isCacheChange);
             // cancel any resizing message - isReparenting takes priority
             // ((!isInPortal) && viewportInterruptProperties.isResizing) && 
             //     (viewportInterruptProperties.isResizing = false)
@@ -371,12 +380,13 @@ const Cradle = ({
             // isCachedRef.current = false // must be moved to cellFrame
             // isChange = true // in any case a change has occurred
             // TODO is the following necessary?
-            viewportInterruptProperties.isResizing && (viewportInterruptProperties.isResizing = false)
 
-        } else if (viewportInterruptProperties.isResizing) { // resizing is underway
+        } 
 
-            console.log('-processing resizing','-'+scrollerID+'-','\nisInPortal, isCached, viewportwidth, viewportheight',
-                isInPortal, isCachedRef.current, viewportwidth, viewportheight)
+        if (viewportInterruptProperties.isResizing) { // caching is underway, so cancel
+
+            console.log('-cancelling resizing','-'+scrollerID+'-')//,'\nisInPortal, isCached, viewportwidth, viewportheight',
+                // isInPortal, isCachedRef.current, viewportwidth, viewportheight)
 
             // if (isInPortal != isCachedRef.current) { // there's been a change
             //     isChange = true
@@ -385,50 +395,51 @@ const Cradle = ({
             // }
 
             // resizing to or from caching requires no further action
-            if (isCachedRef.current || wasCachedRef.current) { 
+            // if (isCachedRef.current || wasCachedRef.current) { 
 
                 viewportInterruptProperties.isResizing = false
 
-            }
+            // }
 
         }
 
         if (isCacheChange) { // into or out of caching
 
-            console.log('-processing cache change','-'+scrollerID+'-',
-                '\n is/was cached',
-                isCachedRef.current,wasCachedRef.current)
+            // console.log('-processing cache change','-'+scrollerID+'-',
+            //     '\n is/was cached',
+            //     isCachedRef.current,wasCachedRef.current)
 
             if (isCachedRef.current && !wasCachedRef.current) { // change into cache
-                console.log('into caching')
+                console.log('into caching; pausing interrupts','-'+scrollerID+'-')
                 interruptHandler.pauseInterrupts()
 
             } else if ((!isCachedRef.current) && wasCachedRef.current) { // change out of cache
-                console.log('out of caching')
-
-                const viewportElement = viewportInterruptProperties.elementRef.current
-
-                const { cradlePositionData } = scaffoldHandler // maintains history of scrollPos
-
-                if (viewportElement[cradlePositionData.blockScrollProperty] != 
-                    cradlePositionData.blockScrollPos) { // possibly clientHeight/Width hasn't caught up
-                    // ... so likely requires a render cycle to catch up
-                    // parentingTransitionRequiredRef generates a 'reparentingtransition' cycle
-                    //     before resetting scrollPos
-                    if (cradlePositionData.blockScrollPos !== null) {
-                        parentingTransitionRequiredRef.current = true
-                    }
-
-                } else { // no need for reset
-                    // TODO: never reached?
-                    wasCachedRef.current = false // cancel cache state
-
-                    // cancel pauses
-                    interruptHandler.restoreInterrupts()
-
-                }
-
+                console.log('out of caching; restoring interrupts','-'+scrollerID+'-')
+                interruptHandler.restoreInterrupts()
             }
+                // const viewportElement = viewportInterruptProperties.elementRef.current
+
+                // const { cradlePositionData } = scaffoldHandler // maintains history of scrollPos
+
+                // if (viewportElement[cradlePositionData.blockScrollProperty] != 
+                //     cradlePositionData.blockScrollPos) { // possibly clientHeight/Width hasn't caught up
+                //     // ... so likely requires a render cycle to catch up
+                //     // parentingTransitionRequiredRef generates a 'reparentingtransition' cycle
+                //     //     before resetting scrollPos
+                //     if (cradlePositionData.blockScrollPos !== null) {
+                        // parentingTransitionRequiredRef.current = true
+                    // }
+
+                // } else { // no need for reset
+                //     // TODO: never reached?
+                //     wasCachedRef.current = false // cancel cache state
+
+                //     // cancel pauses
+                //     interruptHandler.restoreInterrupts()
+
+                // }
+
+            // }
         }
     }
 
@@ -446,10 +457,10 @@ const Cradle = ({
     // change state for entering or leaving cache
     useEffect(()=>{
 
-        console.log('responding to is/was cached', 
-            '-'+scrollerID+'-',isCachedRef.current, wasCachedRef.current, cradleStateRef.current)
+        // console.log('responding to is/was cached', 
+        //     '-'+scrollerID+'-',isCachedRef.current, wasCachedRef.current, cradleStateRef.current)
         // disallow 'setup' so 'dosetup' won't be passed over
-        if (cradleStateRef.current == 'setup') return 
+        if (cradleStateRef.current == 'setup') return // nothing to do
 
         if (isCachedRef.current && !wasCachedRef.current) { // into cache
 
@@ -461,7 +472,7 @@ const Cradle = ({
         //     setCradleState('ready')
 
         } else if (!isCachedRef.current && wasCachedRef.current) {// out of cache
-
+            wasCachedRef.current = false
             setCradleState('finishparenting')
 
         }
@@ -816,7 +827,7 @@ const Cradle = ({
                     break
                 }
 
-                (wasCachedRef.current) && (wasCachedRef.current = false)
+                // (wasCachedRef.current) && (wasCachedRef.current = false)
 
                 const cradleContent = contentHandler.content
 
@@ -895,19 +906,19 @@ const Cradle = ({
             // resets scrollPos to last UI value
             case 'reparentingtransition': {
 
-                    const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
                     const { cradlePositionData } = scaffoldHandler
 
-                    console.log('resetting scroll position to','-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
                     // reset scroll position to previous value
                     if (cradlePositionData.blockScrollPos !== null) {
+                        console.log('resetting scroll position to','-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
+                        const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
                         viewportElement[cradlePositionData.blockScrollProperty] = 
                             cradlePositionData.blockScrollPos
                     }
 
-                    wasCachedRef.current = false // TODO unnecessary?
+                    // wasCachedRef.current = false // TODO unnecessary?
 
-                    interruptHandler.restoreInterrupts()
+                    // interruptHandler.restoreInterrupts()
 
                     setCradleState('finishparenting')
                     // setCradleState('ready')

@@ -19,6 +19,7 @@
         test config size edge cases - over and under sized cells
 
     BUGS: 
+        - set preload attribute with preload call
         - pivot scroller lists is broken; could be implied orientation of children
         - with horizontal main scroller, sub scrollers restore to wrong position after reparenting
         with 'keepload' caching
