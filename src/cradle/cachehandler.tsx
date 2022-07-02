@@ -187,7 +187,7 @@ export class CacheHandler {
 
         Promise.all(promises).then(
             ()=>{
-                console.log("finished preloading",'-'+scrollerID+'-',+this.scrollerProps.portalMap.size)
+                // console.log("finished preloading",'-'+scrollerID+'-',+this.scrollerProps.portalMap.size)
                 callback()
             },
             ()=>{

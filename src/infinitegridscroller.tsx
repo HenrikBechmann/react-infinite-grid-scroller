@@ -20,11 +20,10 @@
 
     BUGS: 
         - set preload attribute with preload call
-        - pivot scroller lists is broken; could be implied orientation of children
-        - with horizontal main scroller, sub scrollers restore to wrong position after reparenting
-        with 'keepload' caching
+        - when sublist is in motion when being reparented, block scrollpos is not properly recovered
 
     TODO:
+        review state change chains in cradle
         callback for user re preload
         error handling for preload items -- allow recovery
         test for memory leaks with Chrome's window.performance.memory property

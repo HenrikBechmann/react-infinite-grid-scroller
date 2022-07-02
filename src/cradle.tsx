@@ -400,7 +400,14 @@ const Cradle = ({
 
             wasCachedRef.current = false
 
-            setCradleState('finishparenting')
+            if (cradleStateRef.current == 'cachedwaiting') {
+
+                setCradleState('ready')
+
+            } else {
+
+                setCradleState('setcradlecontent')
+            }
 
         }
 
@@ -679,13 +686,38 @@ const Cradle = ({
                 break
             }
 
-            case 'cached': {
+            case 'cachedwaiting': {
 
                 if (!wasCachedRef.current && !isCachedRef.current){
 
                     setCradleState('ready')
 
                 }
+                break
+            }
+
+            case 'cached': {
+
+                if (!wasCachedRef.current && !isCachedRef.current){
+
+                    setCradleState('setcradlecontent')
+
+                }
+                break
+            }
+
+            case 'finishparenting':{
+
+                if (isCachedRef.current) { // interrupt until caching is resolved
+                    
+                    setCradleState('cachedwaiting')
+
+                } else {
+
+                    setCradleState('ready')
+
+                }
+
                 break
             }
 
@@ -741,9 +773,9 @@ const Cradle = ({
                 continuing with 'preparerender', and ending with
                 'normalizesignals'
             */
+            case 'setcradlecontent':
             case 'dosetup':
             case 'finishpreload':
-            case 'finishparenting':
             case 'doreposition': //
             case 'finishresize':
             case 'pivot':
