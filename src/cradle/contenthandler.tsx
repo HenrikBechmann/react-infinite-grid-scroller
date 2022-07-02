@@ -148,6 +148,7 @@ export default class ContentHandler {
         // ----------------------[ 3. get and config content ]----------------------
         
         // returns content constrained by cradleRowcount
+
         const [newcontentlist,deleteditems] = getCellFrameComponentList({
 
             cradleInheritedProperties,
