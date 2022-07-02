@@ -248,7 +248,7 @@ const Cradle = ({
 
     const cradlePassthroughPropertiesRef = useRef(null)
 
-    // passed to cellFrame content if requested
+    // passed to cellFrame content (user content) if requested
     cradlePassthroughPropertiesRef.current = {
         orientation, 
         gap, 
@@ -489,6 +489,7 @@ const Cradle = ({
 
     },[])
 
+    // initiate preload if requested
     useEffect(()=> {
 
         if (cache != 'preload') return
@@ -639,7 +640,7 @@ const Cradle = ({
 
     // =====================[ state management ]==========================
 
-    // this is the core state engine, using named states
+    // this is the core state engine (19 states), using named states
     // useLayoutEffect for suppressing flashes
     useLayoutEffect(()=>{
 
@@ -754,8 +755,6 @@ const Cradle = ({
                     break
                 }
 
-                // (wasCachedRef.current) && (wasCachedRef.current = false)
-
                 const cradleContent = contentHandler.content
 
                 cradleContent.headModelComponents = []
@@ -791,7 +790,7 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
-                setCradleState('normalizesignals') // call a timeout for ready (or interrupt continuation)
+                setCradleState('normalizesignals') 
 
                 break
             }
@@ -857,7 +856,7 @@ const Cradle = ({
 
     },[cradleState])
 
-    // standard rendering states
+    // standard rendering states (3 states)
     useEffect(()=> { 
 
         switch (cradleState) {

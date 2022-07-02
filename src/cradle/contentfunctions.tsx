@@ -138,14 +138,14 @@ export const getShiftInstruction = ({
     // console.log('isViewportScrollingForward, filtered entries, starting entries', 
     //     isViewportScrollingForward, entries, triggerlineEntries)
 
-    if (entries.length == 0 && triggerlineEntries.length == 2) { // reconnecting
+    if ((entries.length == 0) && (triggerlineEntries.length == 2)) { // reconnecting
 
         return 0
     }
 
     if (entries.length == 0) {
 
-        // check for implied trigger - trigger can be bypassed with hevy components
+        // check for implied trigger - trigger can be bypassed with heavy components
         const counterentry = triggerlineEntries[0]
         const countertriggerlinename = counterentry.triggerlinename
 
@@ -170,14 +170,13 @@ export const getShiftInstruction = ({
 
     }
 
-
     // const entry = entries[entries.length-1] // if more than one take the last TODO check validity of this
     const entry = entries[0] // assume one record gets filtered; only paired above on reconnect
 
     triggerlineRecord.offset = entry.viewportoffset
 
     // const isIntersecting = entry.isIntersecting
-    const triggerlinename = entry.target.dataset.type
+    // const triggerlinename = entry.target.dataset.type
 
     let retval
     if (!isViewportScrollingForward) {

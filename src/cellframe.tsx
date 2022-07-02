@@ -71,7 +71,7 @@ const CellFrame = ({
         return placeholder
     }, [index, customplaceholder, listsize]);
 
-    // ---------------- [ end of placeholder definition ] ------------------------
+    // ---------------- [ requestidlecallback config ] ------------------------
 
     const requestidlecallback = 
         window['requestIdleCallback']?
