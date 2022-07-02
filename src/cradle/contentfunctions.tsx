@@ -545,10 +545,10 @@ const createCell = ({
         cellWidth = { cellWidth }
         index = { index }
         // callbacks = {callbacks}
-        getItem = {getItem}
-        listsize = {listsize}
+        getItem = { getItem }
+        listsize = { listsize }
         placeholder = { placeholder }
-        instanceID = {instanceID}
+        instanceID = { instanceID }
         scrollerID = { scrollerID }
     />
 
