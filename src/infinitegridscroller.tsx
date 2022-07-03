@@ -19,8 +19,11 @@
         test config size edge cases - over and under sized cells
 
     BUGS: 
+        - rapid scrolling up with full cache can lead to overshoot just shy of reposition,
+            with trigger lines out of view
+        - time lag before repositioning the trigger lines - promises?
         - set preload attribute with preload call
-        - when sublist is in motion when being reparented, block scrollpos is not properly recovered
+        - when sublist is in scroll motion when being reparented, block scrollpos is not properly recovered
         - item 400 in 400 item nested list of scrollers crosscount = 3 takes up entire width of viewport
 
     TODO:
