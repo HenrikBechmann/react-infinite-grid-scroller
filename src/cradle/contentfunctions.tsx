@@ -107,6 +107,7 @@ export const getShiftInstruction = ({
     triggerlineEntries,
     triggerlineRecord,
     triggerlineSpan,
+    scrollerID, // for debug
 
 }) => {
     if (isViewportScrollingForward != triggerlineRecord.wasViewportScrollingForward) {
@@ -135,18 +136,21 @@ export const getShiftInstruction = ({
             ((!isViewportScrollingForward) && (triggerlinename == 'triggerline-head') && (entrypos >= rootpos))
     })
 
-    // console.log('isViewportScrollingForward, filtered entries, starting entries', 
-    //     isViewportScrollingForward, entries, triggerlineEntries)
+    // if ((entries.length == 0) && (triggerlineEntries.length == 2)) { // reconnecting
 
-    if ((entries.length == 0) && (triggerlineEntries.length == 2)) { // reconnecting
-
-        return 0
-    }
+    //     return 0
+    // }
 
     if (entries.length == 0) {
 
+        const counterentries = triggerlineEntries.filter(entry => entry.triggerlinename != triggerlineRecord.driver)
+
+        if (counterentries.length == 0) return 0
+
+        // console.log('counterentries','-'+scrollerID+'-', [...counterentries])
+
         // check for implied trigger - trigger can be bypassed with heavy components
-        const counterentry = triggerlineEntries[0]
+        const counterentry =  counterentries.pop() //dtriggerlineEntries[0]
         const countertriggerlinename = counterentry.triggerlinename
 
         let impliedoffset
@@ -155,28 +159,27 @@ export const getShiftInstruction = ({
                 impliedoffset = counterentry.viewportoffset + triggerlineSpan
                 if (impliedoffset <= 0) {
                     triggerlineRecord.offset = impliedoffset
+                    // console.log('returning -1')
                     return -1
                 }
             } else { // countertriggerlinename == 'triggerline-tail'
                 impliedoffset = counterentry.viewportoffset - triggerlineSpan
                 if (impliedoffset >= 0) {
                     triggerlineRecord.offset = impliedoffset
+                    // console.log('returning 1')
                     return 1
                 }
             }
         }
 
+        // console.log('returning 0')
         return 0
 
     }
 
-    // const entry = entries[entries.length-1] // if more than one take the last TODO check validity of this
     const entry = entries[0] // assume one record gets filtered; only paired above on reconnect
 
     triggerlineRecord.offset = entry.viewportoffset
-
-    // const isIntersecting = entry.isIntersecting
-    // const triggerlinename = entry.target.dataset.type
 
     let retval
     if (!isViewportScrollingForward) {
@@ -184,13 +187,6 @@ export const getShiftInstruction = ({
     } else {
         retval = -1 // shift row to head
     }
-    // if (triggerlinename == 'triggerline-tail') {
-    //     retval = -1 // shift row to head
-    // } else if (triggerlinename == 'triggerline-head') {
-    //     retval = 1 // shift row to tail
-    // } else {
-    //     retval = 0 // do not shift a row
-    // }
     return retval
 
 }
