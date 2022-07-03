@@ -344,46 +344,50 @@ export default class ContentHandler {
 
         // ----------------------------------[ 4. reconfigure cradle content ]--------------------------
 
-        // collect modified content
-        let updatedContentList, deletedContentItems = []
+        queueMicrotask(()=>{
 
-        if (listStartChangeCount || listEndChangeCount) { // if either is non-0 then modify content
+            // collect modified content
+            let updatedContentList, deletedContentItems = []
 
-            [updatedContentList,deletedContentItems] = getCellFrameComponentList({
-                cradleInheritedProperties,
-                // cradleInternalProperties,
-                cradleContentCount,
-                workingContentList:modelcontentlist,
-                listStartChangeCount,
-                listEndChangeCount,
-                cradleReferenceIndex:oldCradleReferenceIndex,
-                instanceIdCounterRef:this.instanceIdCounterRef,
-            })
+            if (listStartChangeCount || listEndChangeCount) { // if either is non-0 then modify content
 
-        } else {
+                [updatedContentList,deletedContentItems] = getCellFrameComponentList({
+                    cradleInheritedProperties,
+                    // cradleInternalProperties,
+                    cradleContentCount,
+                    workingContentList:modelcontentlist,
+                    listStartChangeCount,
+                    listEndChangeCount,
+                    cradleReferenceIndex:oldCradleReferenceIndex,
+                    instanceIdCounterRef:this.instanceIdCounterRef,
+                })
 
-            updatedContentList = modelcontentlist
+            } else {
 
-        }
+                updatedContentList = modelcontentlist
 
-        if (deletedContentItems.length && (cache == 'cradle')) {
-
-            deletePortals(cacheHandler, deletedContentItems)
-
-        }
-
-        // ----------------------------------[ 5. allocate cradle content ]--------------------------
-
-        const [headcontent, tailcontent] = allocateContentList(
-            {
-                contentlist:updatedContentList,
-                axisReferenceIndex,
             }
-        )
 
-        cradleContent.cradleModelComponents = updatedContentList
-        cradleContent.headModelComponents = headcontent
-        cradleContent.tailModelComponents = tailcontent
+            if (deletedContentItems.length && (cache == 'cradle')) {
+
+                deletePortals(cacheHandler, deletedContentItems)
+
+            }
+
+            // ----------------------------------[ 5. allocate cradle content ]--------------------------
+
+            const [headcontent, tailcontent] = allocateContentList(
+                {
+                    contentlist:updatedContentList,
+                    axisReferenceIndex,
+                }
+            )
+
+            cradleContent.cradleModelComponents = updatedContentList
+            cradleContent.headModelComponents = headcontent
+            cradleContent.tailModelComponents = tailcontent
+
+        })
 
         // -------------------------------[ 6. set css changes ]-------------------------
 
@@ -397,8 +401,8 @@ export default class ContentHandler {
             axisElement.style.top = topPos + 'px'
             axisElement.style.left = 'auto'
             headElement.style.paddingBottom = 
-                headcontent.length?
-                    cradleInheritedProperties.gap + 'px':
+                // headcontent.length?
+                    // cradleInheritedProperties.gap + 'px':
                     0
 
         } else { // 'horizontal'
@@ -408,8 +412,8 @@ export default class ContentHandler {
             axisElement.style.top = 'auto'
             axisElement.style.left = leftPos + 'px'
             headElement.style.paddingRight = 
-                headcontent.length?
-                    cradleInheritedProperties.gap + 'px':
+                // headcontent.length?
+                    // cradleInheritedProperties.gap + 'px':
                     0
 
         }
