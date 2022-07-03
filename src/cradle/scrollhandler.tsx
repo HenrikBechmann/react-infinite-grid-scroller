@@ -24,12 +24,17 @@ export default class ScrollHandler {
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const viewportElement = viewportInterruptProperties.elementRef.current
 
+        if ((viewportElement.clientWidth == 0  && viewportElement.clientHeight == 0)) {// in cache
+            clearTimeout(this._scrolltimerid)
+            return
+        }
         const scrollPositionCurrent = 
             (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical')?
                 viewportElement.scrollTop:
                 viewportElement.scrollLeft
 
-        // console.log('scrollPositionCurrent in onScroll', scrollPositionCurrent)
+        const scrollerID = this.cradleParameters.cradleInheritedPropertiesRef.current.scrollerID
+        // console.log('scrollPositionCurrent in onScroll','-'+scrollerID+'-' ,scrollPositionCurrent)
 
         if (scrollPositionCurrent < 0) { // for Safari
 
@@ -220,13 +225,16 @@ export default class ScrollHandler {
 
         const viewportElement = viewportInterruptProperties.elementRef.current
 
-        if (cradleProps.orientation == 'vertical') {
+        if (!((viewportElement.clientWidth == 0)  && (viewportElement.clientHeight == 0))) {// in cache
 
-            cradlePositionData.blockScrollPos = viewportElement.scrollTop
+            if (cradleProps.orientation == 'vertical') {
 
-        } else {
+                cradlePositionData.blockScrollPos = viewportElement.scrollTop
 
-            cradlePositionData.blockScrollPos = viewportElement.scrollLeft
+            } else {
+
+                cradlePositionData.blockScrollPos = viewportElement.scrollLeft
+            }
         }
 
     }
