@@ -95,7 +95,7 @@ export default class StylesHandler {
             headstyles.gridTemplateRows = 'none'
             headstyles.gridTemplateColumns = 
                 cellWidth?
-                    `repeat(auto-fit, minmax(${cellWidth}px, 1fr))`:
+                    `repeat(auto-fill, minmax(${cellWidth}px, 1fr))`:
                     'auto'
 
             tailstyles.padding = `0 ${padding}px ${padding}px ${padding}px`
@@ -107,7 +107,7 @@ export default class StylesHandler {
             tailstyles.gridTemplateRows = 'none'
             tailstyles.gridTemplateColumns = 
                 cellWidth?
-                    `repeat(auto-fit, minmax(${cellWidth}px, 1fr))`:
+                    `repeat(auto-fill, minmax(${cellWidth}px, 1fr))`:
                     'auto'
 
         }
