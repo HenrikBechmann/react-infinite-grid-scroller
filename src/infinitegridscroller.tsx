@@ -21,6 +21,7 @@
     BUGS: 
         - set preload attribute with preload call
         - when sublist is in motion when being reparented, block scrollpos is not properly recovered
+        - item 400 in 400 item nested list of scrollers crosscount = 3 takes up entire width of viewport
 
     TODO:
         review state change chains in cradle
