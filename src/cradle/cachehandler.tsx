@@ -2,7 +2,7 @@
 
 /*
     The infinite list scroller stores user cell data in a central hidden portal cache for each
-    infinitegridscroller root, from whence the data is pulled into the relevant CellShell for display
+    infinitegridscroller root, from whence the data is pulled into the relevant CellFrame for display
 */
 
 import React, {useState, useEffect, useRef} from 'react'
@@ -48,8 +48,6 @@ export class CacheHandler {
     // set state of the PortalList component of the scroller to trigger render
     renderPortalList = () => {
 
-        // console.log('running renderPortalList', '-'+this.scrollerProps.scrollerID+'-')
-
         if (this.scrollerProps.modified) {
             this.scrollerProps.portalList = Array.from(this.scrollerProps.portalMap.values())
             this.scrollerProps.modified = false
@@ -60,7 +58,7 @@ export class CacheHandler {
     }
 
     matchCacheToCradle = (modelIndexList) => {
-        console.log('running matchCacheToCradle', '-'+this.scrollerProps.scrollerID+'-')
+        // console.log('running matchCacheToCradle', '-'+this.scrollerProps.scrollerID+'-')
         const mapkeys = Array.from(this.scrollerProps.portalMap.keys())
         mapkeys.filter(key => !modelIndexList.includes(key))
         // console.log('filtered mapkeys, modelIndexList', mapkeys, modelIndexList)
@@ -68,8 +66,6 @@ export class CacheHandler {
     }
 
     pareCacheToMax = (cacheMax, modelIndexList) => {
-
-        // console.log('running pareCacheToMax', '-'+this.scrollerProps.scrollerID+'-', cacheMax, modelIndexList)
 
         const modelLength = modelIndexList.length
 
@@ -108,17 +104,11 @@ export class CacheHandler {
         const headparecount = Math.floor((headroom/pareroom)*parecount)
         const tailparecount = parecount - headparecount
 
-        // console.log('headpos, tailpos, headroom, tailroom, headparecount, tailparecount, mapLength, mapkeys',
-        //     headpos, tailpos, headroom, tailroom, headparecount, tailparecount, mapLength, mapkeys)
-
         // collect indexes to pare
         const headlist = mapkeys.slice(0,headparecount)
         const taillist = mapkeys.slice(mapLength - tailparecount)
 
         const delList = headlist.concat(taillist)
-
-        console.log('delete cache item delList, headlist, taillist', '-'+this.scrollerProps.scrollerID+'-', 
-            delList, headlist, taillist)
 
         this.deletePortal(delList)
 
@@ -127,8 +117,6 @@ export class CacheHandler {
     }
 
     guardAgainstRunawayCaching = (cacheMax, modelLength) => {
-
-        // console.log('running guardAgainstRunawayCaching', '-'+this.scrollerProps.scrollerID+'-')
 
         if (!cacheMax) return false
 
@@ -142,6 +130,67 @@ export class CacheHandler {
         } else {
             return true
         }
+
+    }
+
+    async preloadItem(index, getItem, cradlePassthroughPropertiesRef, scrollerID) {
+
+        const usercontent = await getItem(index)
+
+        if (usercontent) {
+
+            // console.log('preloading index','-'+scrollerID+'-' ,index )
+
+            let content 
+            const scrollerData = {
+                isReparentingRef:null,
+                cradlePassthroughPropertiesRef,
+            }
+            if (usercontent.props.hasOwnProperty('scrollerData')) {
+                content = React.cloneElement(usercontent, {scrollerData})
+            } else {
+                content = usercontent
+            }
+
+            const portalData = 
+                this.createPortal(index, content)
+            // make available to user content
+            scrollerData.isReparentingRef = portalData.isReparentingRef
+
+        } else {
+
+            console.log('ERROR','no content item for preload index',index)
+
+        }
+
+    }
+
+    preload(cradleParameters,callback, scrollerID) {
+
+        const { cradlePassthroughPropertiesRef } = cradleParameters
+        const { stateHandler } = cradleParameters.handlersRef.current
+
+        const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
+        const { getItem } = cradleInheritedProperties
+        const { listsize } = cradleInheritedProperties
+
+        const promises = []
+
+        if (stateHandler.isMountedRef.current) {
+
+            for (let i = 0; i < listsize; i++) {
+                // console.log('preloading',i)
+                const promise = this.preloadItem(i, getItem, cradlePassthroughPropertiesRef, scrollerID)
+                promises.push(promise)
+            }
+        }
+
+        Promise.all(promises).then(
+            ()=>{
+                // console.log("finished preloading",'-'+scrollerID+'-',+this.scrollerProps.portalMap.size)
+                callback()
+            }
+        )
 
     }
 
@@ -182,7 +231,7 @@ export class CacheHandler {
     }
 
     // delete a portal list item
-    // TODO accept an array of indexes
+    // accepts an array of indexes
     deletePortal(index) {
 
         let indexArray
@@ -192,7 +241,6 @@ export class CacheHandler {
             indexArray = index
         }
 
-        // console.log('cacheHandler deleting portals', indexArray)
         for (let i of indexArray) {
             this.scrollerProps.portalMetadataMap.delete(i)
             this.scrollerProps.portalMap.delete(i)
@@ -227,10 +275,10 @@ const createPortalNode = (index) => {
     let portalNode = createHtmlPortalNode()
 
     let container = portalNode.element
-    // container.style.inset = '0px' 
+    container.style.inset = '0px' 
     container.style.position = 'absolute'
-    container.style.height = '100%'
-    container.style.width = '100%'
+    // container.style.height = '100%'
+    // container.style.width = '100%'
     container.dataset.type = 'contentenvelope'
     container.dataset.index = index
 
@@ -251,8 +299,9 @@ export const PortalList = ({ scrollerProps }) => {
     useEffect(()=>{
 
         scrollerProps.setListState = ()=>{
-            // console.log('running setListState in PORTALLIST', '-'+scrollerProps.scrollerID+'-')
+
             isMountedRef.current && setPortalList(scrollerProps.portalList)
+
         }
 
         return () => {isMountedRef.current = false}

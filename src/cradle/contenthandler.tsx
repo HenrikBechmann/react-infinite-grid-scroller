@@ -2,7 +2,7 @@
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
 import { 
-    getCellShellComponentList, 
+    getCellFrameComponentList, 
     calcContentShift,
     getContentListRequirements,
     getShiftInstruction,
@@ -137,8 +137,8 @@ export default class ContentHandler {
         let scrollPosAdjustment
         if (targetAxisReferenceIndex == 0) {
             scrollPosAdjustment = 0
-        } else if (cradleState == 'doreposition') {
-            scrollPosAdjustment = padding //+ gap
+        // } else if (cradleState == 'doreposition') {
+        //     scrollPosAdjustment = padding //+ gap
         } else {
             scrollPosAdjustment = padding
         }
@@ -148,7 +148,8 @@ export default class ContentHandler {
         // ----------------------[ 3. get and config content ]----------------------
         
         // returns content constrained by cradleRowcount
-        const [newcontentlist,deleteditems] = getCellShellComponentList({
+
+        const [newcontentlist,deleteditems] = getCellFrameComponentList({
 
             cradleInheritedProperties,
             // cradleInternalProperties,
@@ -192,7 +193,7 @@ export default class ContentHandler {
 
         cradlePositionData.blockScrollPos = scrollblockPixelOffset + scrollPosAdjustment
 
-        // console.log('setting SCROLLPOS in setCradleContent', cradlePositionData.blockScrollPos)
+        // console.log('setting SCROLLPOS in setCradleContent', '-'+cradleInheritedProperties.scrollerID+'-', cradlePositionData.blockScrollPos)
         viewportElement[cradlePositionData.blockScrollProperty] =
             cradlePositionData.blockScrollPos
 
@@ -284,6 +285,7 @@ export default class ContentHandler {
         // -1 is move a row up to the head, +1 is move a row down to the tail, 0 is no shift
         const triggerlineRecord = cradleInternalProperties.triggerlineRecordsRef.current
         const shiftinstruction = getShiftInstruction({
+            scrollerID: cradleInheritedProperties.scrollerID,
             isViewportScrollingForward,
             orientation,
             triggerlineEntries,
@@ -305,7 +307,7 @@ export default class ContentHandler {
 
         // cradle properties
         // const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementRef.current
+        // const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementRef.current
 
         const {
 
@@ -348,7 +350,7 @@ export default class ContentHandler {
 
         if (listStartChangeCount || listEndChangeCount) { // if either is non-0 then modify content
 
-            [updatedContentList,deletedContentItems] = getCellShellComponentList({
+            [updatedContentList,deletedContentItems] = getCellFrameComponentList({
                 cradleInheritedProperties,
                 // cradleInternalProperties,
                 cradleContentCount,
@@ -418,12 +420,6 @@ export default class ContentHandler {
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisPixelOffset = axisPixelOffset
 
-        //  ----------------------[ 7. reset interrupts ]-----------------------
-
-        // trigger lines have been moved, so observer must be reset
-        // interruptHandler.axisTriggerlinesIntersect.connectElements()
-        // interruptHandler.signals.pauseTriggerlinesObserver = false
-
         stateHandler.setCradleState('renderupdatedcontent')
 
     }
@@ -456,6 +452,22 @@ export default class ContentHandler {
             if (paring) cacheHandler.renderPortalList()
                 
         }
+
+    }
+
+    public clearCache = () => {
+
+        const cradleContent = this.content
+        const { cacheHandler } = this.cradleParameters.handlersRef.current
+
+        cradleContent.headModelComponents = []
+        cradleContent.tailModelComponents = []
+
+        // register new array id for Object.is to trigger react re-processing
+        cradleContent.headDisplayComponents = []
+        cradleContent.tailDisplayComponents = []
+
+        cacheHandler.clearCache()
 
     }
 

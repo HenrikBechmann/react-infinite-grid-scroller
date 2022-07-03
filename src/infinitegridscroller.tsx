@@ -8,21 +8,31 @@
             preload
             // keepload
             // cradle
+
+        surface cache, cacheMax & runway etc to test options
         review all code
+
         layout: uniform, variable, dynamic, dense
         insert, remove, swap functions
+
         test changing all gridscroller parameters
         test config size edge cases - over and under sized cells
 
     BUGS: 
-        - embedded list loses functional cycles on safari when list axis reference is changed
-            and cached; also on Edge; intermittent; suspect cache sentinel
-        - test for memory leaks with Chrome's window.performance.memory property
+        //- rapid scrolling up with full cache can lead to overshoot just shy of reposition,
+        //    with trigger lines out of view
+        - time lag before repositioning the trigger lines - promises?
+       // - when sublist is in scroll motion when being reparented, block scrollpos is not properly recovered
+       // - item 400 in 400 item nested list of scrollers crosscount = 3 takes up entire width of viewport
 
     TODO:
+        - set preload attribute with preload call
+        review state change chains in cradle
+        callback for user re preload
+        error handling for preload items -- allow recovery
+        test for memory leaks with Chrome's window.performance.memory property
         try to reduce need to run renderportallist - try some kind of pagination/grouping
-        surface cache, cacheMax & runway to test options
-        replace top/left with transformx/y; try requestanimationframe
+        replace top/left with transformx/y
         warn usercontent of both resizing (?) and isReparenting
         prioritize fetch cells for visible cells
         customizable scrolltracker, or provide callback feature for scroll tracking
@@ -35,8 +45,6 @@
         add grid-template-rows: max-content to parent for safari issue grid-auto-flow: column not filling column
         cross-browser testing
 */
-
-'use strict'
 
 import React, {useEffect, useState, useRef} from 'react'
 
@@ -55,17 +63,17 @@ let globalScrollerID = 0
 /*
     The job of InfiniteGridScroller is to pass parameters to dependents.
     Viewport contains the scrollblock, fullsize for adjusted cell height/width, which in turn contains the cradle 
-        - a component that contains CellShells (which contain displayed items or transitional placeholders). 
-    The CellShells are skeletons which contain the host content components.
+        - a component that contains CellFrames (which contain displayed items or transitional placeholders). 
+    The CellFrames are skeletons which contain the host content components.
 
-    Host content is created in a portal cache (via PortalAgent) and then portal'd to its host CellShell
+    Host content is created in a portal cache (via PortalAgent) and then portal'd to its host CellFrame
 
     Scrollblock virtually represents the entirety of the list, and is the scroller
 
     Cradle contains the list items, and is 'virtualized' -- it appears as
       though it is the full scrollblock, but in fact it is only slightly larger than
       the viewport.
-    - individual items are framed by CellShell, managed by Cradle
+    - individual items are framed by CellFrame, managed by Cradle
 
     Overall the infinitegridscroller manages the (often asynchronous) interactions of the 
     components of the mechanism
@@ -97,7 +105,7 @@ const InfiniteGridScroller = (props) => {
         styles, // passive style over-rides (eg. color, opacity); has 
             // properties viewport, scrollblock, cradle, or scrolltracker
         // to come...
-        cache, //  = "preload" or "keepload" or "cradle"
+        cache, //  = "preload", "keepload" or "cradle"
         cacheMax, // (always minimum cradle)
         advanced, // technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
         triggerlineOffset,
@@ -128,7 +136,7 @@ const InfiniteGridScroller = (props) => {
     listSize ?? (listSize = 0)
     listSize = Math.max(0,listSize)
     layout ?? (layout = 'uniform')
-    cache ?? (cache = 'keepload')
+    cache ?? (cache = 'preload')
     cacheMax ?? (cacheMax = 100)
     // constraints
     indexOffset = Math.max(0,indexOffset) // non-negative
@@ -169,7 +177,8 @@ const InfiniteGridScroller = (props) => {
 
     const scrollerID = scrollerSessionIDRef.current
 
-    // console.log('infinite scroller scrollerID, scrollerState', '-'+scrollerID+'-',scrollerState)
+    // console.log('infinite scroller scrollerID, scrollerState, cache, cacheMax', 
+    //     '-'+scrollerID+'-',scrollerState, cache, cacheMax)
 
     // --------------------[ render ]---------------------
 
@@ -205,8 +214,8 @@ const InfiniteGridScroller = (props) => {
                     gridSpecs = { gridSpecsRef.current }
                     styles = { stylesRef.current }
                     listsize = { listSize }
-                    cache = {cache}
-                    cacheMax = {cacheMax}
+                    cache = { cache }
+                    cacheMax = { cacheMax }
                     functions = { functionsRef.current }
                     defaultVisibleIndex = { defaultVisibleIndex }
                     getItem = { getItem }
@@ -226,7 +235,7 @@ const InfiniteGridScroller = (props) => {
         </>)
 }
 
-const cacherootstyle = {position:'fixed', left: '10000px', display:'none'} as React.CSSProperties // static, out of view 
+const cacherootstyle = {display:'none'} as React.CSSProperties // static, out of view 
 
 export default InfiniteGridScroller
 

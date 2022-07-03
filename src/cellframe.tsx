@@ -1,4 +1,4 @@
-// cellshell.tsx
+// cellframe.tsx
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 import React, {useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo, useContext } from 'react'
@@ -11,9 +11,9 @@ import Placeholder from './placeholder'
 
 import { CradleContext } from './cradle'
 
-const IDLECALLBACK_FETCHTIMEOUT = 8000 // TODO make cofigurable
+const IDLECALLBACK_FETCHTIMEOUT = 4000 // TODO make cofigurable
 
-const CellShell = ({
+const CellFrame = ({
     orientation, 
     cellHeight, 
     cellWidth, 
@@ -34,9 +34,9 @@ const CellShell = ({
         overflow:'hidden',
     } as React.CSSProperties)
 
-    const [cellStatus, setCellStatus] = useState('setup')
+    const [frameStatus, setFrameStatus] = useState('setup')
 
-    const shellRef = useRef(null)
+    const frameRef = useRef(null)
 
     const isMountedRef = useRef(true)
 
@@ -61,7 +61,7 @@ const CellShell = ({
                 React.createElement(placeholder, {index, listsize}):
                 null
             
-    },[placeholder,listsize])
+    },[index, placeholder,listsize])
 
     placeholderRef.current = useMemo(()=>{
         const placeholder = 
@@ -71,7 +71,7 @@ const CellShell = ({
         return placeholder
     }, [index, customplaceholder, listsize]);
 
-    // ---------------- [ end of placeholder definition ] ------------------------
+    // ---------------- [ requestidlecallback config ] ------------------------
 
     const requestidlecallback = 
         window['requestIdleCallback']?
@@ -87,7 +87,9 @@ const CellShell = ({
     // initialize cell content
     useEffect(() => {
 
-        setCellStatus('getusercontent')
+        // console.log('creating cellFrame','-'+scrollerID+'-',instanceID  )
+
+        setFrameStatus('getusercontent')
 
         // unmount
         return () => {
@@ -104,14 +106,14 @@ const CellShell = ({
     // cradle invariant ondemand callback parameter value
     const getElementData = useCallback(()=>{
 
-        return [index, shellRef]
+        return [index, frameRef]
         
     },[])
 
     // set styles
     useEffect(()=>{
 
-        let newStyles = getShellStyles(orientation, cellHeight, cellWidth, styles)
+        let newStyles = getFrameStyles(orientation, cellHeight, cellWidth, styles)
         
         if (isMountedRef.current) {
             saveStyles(newStyles)
@@ -123,17 +125,15 @@ const CellShell = ({
 
     const isReparentingRef = useRef(false)
 
-    const cellShellPropertiesRef = useRef({isReparentingRef})
-
     useLayoutEffect(() => {
 
-        switch (cellStatus) {
+        switch (frameStatus) {
             case 'setup':
                 // no-op
                 break
             case 'inserting': {
 
-                setCellStatus('ready')
+                setFrameStatus('ready')
 
                 break
 
@@ -150,14 +150,15 @@ const CellShell = ({
 
                     portalDataRef.current.isReparentingRef.current = true
 
-                    setCellStatus('inserting')
+                    setFrameStatus('inserting')
 
                 } else {
 
-                    setCellStatus('waiting')
+                    setFrameStatus('waiting')
 
                     cacheHandler.registerRequestedPortal(index)
 
+                    // TODO review implementation of async here
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
                         const usercontent = await getItem(index)
@@ -180,7 +181,10 @@ const CellShell = ({
                                 portalDataRef.current = 
                                     cacheHandler.createPortal(index, content)
                                 portalNodeRef.current  = portalDataRef.current.portalNode
+                                // make available to user content
                                 scrollerData.isReparentingRef = portalDataRef.current.isReparentingRef
+
+                                // portalDataRef.current.isReparentingRef.current = true
 
                             } else {
 
@@ -190,7 +194,8 @@ const CellShell = ({
 
                         }
 
-                        setCellStatus('inserting')
+                        // console.log('loading portal item')
+                        setFrameStatus('inserting')
 
                     },{timeout:IDLECALLBACK_FETCHTIMEOUT})
 
@@ -206,12 +211,12 @@ const CellShell = ({
             }
         }
 
-    }, [cellStatus])
+    }, [frameStatus])
 
 
     useEffect(()=>{
 
-        switch (cellStatus) {
+        switch (frameStatus) {
 
             case 'ready': { // no-op
 
@@ -219,26 +224,26 @@ const CellShell = ({
             }
         }
 
-    }, [cellStatus])
+    }, [frameStatus])
 
-    return <div ref = { shellRef } 
-        data-type = 'cellshell' 
+    return <div ref = { frameRef } 
+        data-type = 'cellframe' 
         data-scrollerid = { scrollerID } 
         data-index = { index } 
         data-instanceid = { instanceID } 
         style = { styles }>
 
             { 
-                (cellStatus != 'ready')?
+                (frameStatus != 'ready')?
                     placeholderRef.current:
                     <OutPortal node = { portalNodeRef.current }/>
             }
             
         </div>
 
-} // CellShell
+} // CellFrame
 
-const getShellStyles = (orientation, cellHeight, cellWidth, styles) => {
+const getFrameStyles = (orientation, cellHeight, cellWidth, styles) => {
 
     let styleset = Object.assign({position:'relative'},styles)
 
@@ -263,4 +268,4 @@ const getShellStyles = (orientation, cellHeight, cellWidth, styles) => {
 
 }
 
-export default CellShell
+export default CellFrame

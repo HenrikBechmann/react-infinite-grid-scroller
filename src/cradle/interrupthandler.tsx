@@ -1,8 +1,6 @@
 // interruptshandler.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-'use strict'
-
 /*
     TODO: trigger reposition if triggerline entries come back with isIntersecting the same for both
 */
@@ -174,7 +172,7 @@ export default class InterruptHandler {
             observer.observe(cradleElements.tailRef.current)
         },
         createObserver:() => {
-            let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+            const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
             this.cradleIntersect.observer = new IntersectionObserver(
                 this.cradleIntersect.callback,
                 {root:viewportInterruptProperties.elementRef.current, threshold:0}
@@ -193,7 +191,7 @@ export default class InterruptHandler {
             observer.observe(cradleElements.tailTriggerlineRef.current)
         },
         createObserver:() => {
-            let viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+            const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
             this.axisTriggerlinesIntersect.observer = new IntersectionObserver(
                 this.axisTriggerlinesIntersect.callback,
                 {root:viewportInterruptProperties.elementRef.current, threshold:0}
@@ -208,6 +206,22 @@ export default class InterruptHandler {
         pauseCradleIntersectionObserver:false,
         pauseCradleResizeObserver: false,
         pauseScrollingEffects: false,
+    }
+
+    public pauseInterrupts = () => {
+        const { signals } = this
+        signals.pauseTriggerlinesObserver = true
+        signals.pauseCradleIntersectionObserver = true
+        signals.pauseCradleResizeObserver = true
+        signals.pauseScrollingEffects = true
+    }
+
+    public restoreInterrupts = () => {
+        const { signals } = this
+        signals.pauseTriggerlinesObserver = false
+        signals.pauseCradleIntersectionObserver = false
+        signals.pauseCradleResizeObserver = false
+        signals.pauseScrollingEffects = false
     }
 
 }

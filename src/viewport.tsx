@@ -6,8 +6,6 @@
     and act as the visible screen portal of the list being shown
 */
 
-'use strict'
-
 import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useContext} from 'react'
 
 export const ViewportInterrupt = React.createContext(null) // for children
@@ -60,7 +58,7 @@ const Viewport = ({
         {
             isReparentingRef:scrollerData?.isReparentingRef, 
             isResizing:false, 
-            index:null,
+            // index:null,
             viewportDimensions:null,
             elementRef:null
         }
@@ -93,33 +91,9 @@ const Viewport = ({
 
         if ((!isMountedRef.current) || (!viewportElementRef.current)) return
 
-        if (viewportStateRef.current == 'setup') {
-
-            return
-
-        }
+        if (viewportStateRef.current == 'setup') return
 
         const target = entries[0].target
-
-        // first register shouldn't generate interrupt
-        if (!target.dataset.initialized) {
-
-            const dimensions = viewportElementRef.current.getBoundingClientRect()
-            const {width, height} = dimensions
-
-            const olddimensions = viewportInterruptPropertiesRef.current.viewportDimensions
-            const {width:oldwidth, height:oldheight} = olddimensions
-            target.dataset.initialized = true
-
-            if ((width == oldwidth) && (height == oldheight)) {
-                return
-            }
-
-        }
-
-        const dimensions = viewportElementRef.current.getBoundingClientRect()
-
-        const {width, height} = dimensions
 
         // generate interrupt response, if initiating resize
         if (!isResizingRef.current) {
