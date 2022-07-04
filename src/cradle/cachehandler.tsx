@@ -181,7 +181,6 @@ export class CacheHandler {
         const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
         const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
         const { getItem, listsize } = cradleInheritedProperties
-\        const { externalCallbacksRef } = cradleInternalProperties
 
         const promises = []
 
@@ -193,7 +192,7 @@ export class CacheHandler {
                     i, 
                     getItem, 
                     cradlePassthroughPropertiesRef,
-                    externalCallbacksRef.current.preloadIndexCallback,
+                    serviceHandler.callbacks.preloadIndexCallback,
                     scrollerID
                 )
                 promises.push(promise)

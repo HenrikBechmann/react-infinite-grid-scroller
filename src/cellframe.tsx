@@ -18,7 +18,6 @@ const CellFrame = ({
     cellHeight, 
     cellWidth, 
     index, 
-    // callbacks, 
     getItem, 
     listsize, 
     placeholder, 

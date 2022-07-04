@@ -213,12 +213,13 @@ const Cradle = ({
     // ======================[ callbacks ]=====================
 
     // host callbacks
-    const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
-    const preloadIndexCallbackRef = useRef(functions?.preloadIndexCallback)
+    // const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
+    // const preloadIndexCallbackRef = useRef(functions?.preloadIndexCallback)
 
     const externalCallbacksRef = useRef(
-        {referenceIndexCallbackRef,
-            preloadIndexCallbackRef
+        {
+            referenceIndexCallback:functions?.referenceIndexCallback,
+            preloadIndexCallback:functions?.preloadIndexCallback
         }
     )
 
@@ -436,7 +437,7 @@ const Cradle = ({
     //send callback functions to host
     useEffect(()=>{
 
-        referenceIndexCallbackRef.current = functions?.referenceIndexCallback
+        // referenceIndexCallbackRef.current = functions?.referenceIndexCallback
 
         if (!functions.getCallbacks) return
 

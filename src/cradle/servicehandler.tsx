@@ -7,13 +7,13 @@ export default class ServiceHandler {
 
        this.cradleParameters = cradleParameters
 
-       this.serviceCalls = cradleParameters.externalCallbacksRef.current
+       this.callbacks = cradleParameters.externalCallbacksRef.current
 
     }
 
     private cradleParameters
 
-    public serviceCalls
+    public callbacks
 
     // TODO: adjust axisPixelOffset to match new data
     public reload = () => {
@@ -50,6 +50,7 @@ export default class ServiceHandler {
 
     }
 
+    // TODO: for testing only!
     public preload = () => {
 
         const { stateHandler } = this.cradleParameters.handlersRef.current

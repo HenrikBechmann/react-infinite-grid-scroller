@@ -179,11 +179,11 @@ export default class ContentHandler {
         cradlePositionData.targetAxisReferenceIndex = targetAxisReferenceIndex
         cradlePositionData.targetAxisPixelOffset = axisPixelOffset
 
-        if (serviceHandler.serviceCalls.referenceIndexCallbackRef.current) {
+        if (serviceHandler.callbacks.referenceIndexCallback) {
 
             let cstate = cradleState
 
-            serviceHandler.serviceCalls.referenceIndexCallbackRef.current(
+            serviceHandler.callbacks.referenceIndexCallback(
 
                 cradlePositionData.targetAxisReferenceIndex,'setCradleContent', cstate)
         
@@ -388,11 +388,11 @@ export default class ContentHandler {
         cradleContent.tailModelComponents = tailcontent
 
 
-        if (serviceHandler.serviceCalls.referenceIndexCallbackRef.current) {
+        if (serviceHandler.callbacks.referenceIndexCallback) {
 
             let cstate = stateHandler.cradleStateRef.current
 
-            serviceHandler.serviceCalls.referenceIndexCallbackRef.current(
+            serviceHandler.callbacks.referenceIndexCallback(
 
                 scaffoldHandler.cradlePositionData.targetAxisReferenceIndex,'updateCradleContent', cstate)
         
