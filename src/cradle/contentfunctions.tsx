@@ -531,7 +531,7 @@ const createCell = ({
     } = cradleInheritedProperties
 
     return <CellFrame 
-        key = {index} 
+        key = { instanceID } 
         orientation = { orientation }
         cellHeight = { cellHeight }
         cellWidth = { cellWidth }

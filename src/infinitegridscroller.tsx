@@ -32,10 +32,10 @@
         // - item 400 in 400 item nested list of scrollers crosscount = 3 takes up entire width of viewport
 
     TODO:
+        - use sessionID for referencing; index for order
         - review state change chains in cradle
         - check preload intent against state machine handling
         - rationalize await handling everywhere to behave like promises
-        - use sessionID for referencing; index for order
         // - rationalize external callbacks routing
         // callback for user re preload
         error handling for preload items -- allow recovery

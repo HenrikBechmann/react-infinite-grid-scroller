@@ -139,10 +139,14 @@ const CellFrame = ({
             }
             case 'getusercontent': {
 
+                const [newID, knownID] = cacheHandler.getSessionID(index)
+                const sessionID = newID?newID:knownID
+                // const cached = newID?false:cacheHandler.hasPortal(sessionID)
                 const cached = cacheHandler.hasPortal(index)
 
                 if (cached) {
 
+                    // portalDataRef.current = cacheHandler.getPortal(sessionID)
                     portalDataRef.current = cacheHandler.getPortal(index)
 
                     portalNodeRef.current = portalDataRef.current.portalNode
@@ -160,7 +164,7 @@ const CellFrame = ({
                     // TODO review implementation of async here
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
-                        const usercontent = await getItem(index)
+                        const usercontent = await getItem(index, newID, knownID)
 
                         if (isMountedRef.current) {
 
@@ -178,12 +182,10 @@ const CellFrame = ({
                                 }
 
                                 portalDataRef.current = 
-                                    cacheHandler.createPortal(index, content)
+                                    cacheHandler.createPortal(index, content, sessionID)
                                 portalNodeRef.current  = portalDataRef.current.portalNode
                                 // make available to user content
                                 scrollerData.isReparentingRef = portalDataRef.current.isReparentingRef
-
-                                // portalDataRef.current.isReparentingRef.current = true
 
                             } else {
 

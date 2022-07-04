@@ -218,6 +218,14 @@ export class CacheHandler {
         this.scrollerProps.portalRequestedMap.set(index, null)
     }
 
+    getSessionID(index) {
+        const indexMap = this.scrollerProps.portalIndexToSessionIDMap 
+        const knownID = indexMap.get(index)
+        const newID = knownID?null:globalSessionID++
+        if (newID) indexMap.set(index, newID)
+        return [newID, knownID]
+    }
+
     removeRequestedPortal(index) {
         this.scrollerProps.portalRequestedMap.delete(index)
     }
