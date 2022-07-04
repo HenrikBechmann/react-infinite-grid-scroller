@@ -33,7 +33,7 @@
 
     TODO:
         - test and review sessionItemID
-        - implement changeOrder callback for user
+        - implement changeOrder callback for user - cellFrame index prop must be updated
         - use sessionID for referencing; index for order
         - review state change chains in cradle
         - check preload intent against state machine handling
