@@ -32,6 +32,8 @@
         // - item 400 in 400 item nested list of scrollers crosscount = 3 takes up entire width of viewport
 
     TODO:
+        - test and review sessionItemID
+        - implement changeOrder callback for user
         - use sessionID for referencing; index for order
         - review state change chains in cradle
         - check preload intent against state machine handling

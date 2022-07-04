@@ -139,16 +139,13 @@ const CellFrame = ({
             }
             case 'getusercontent': {
 
-                const [newID, knownID] = cacheHandler.getSessionItemID(index)
-                const sessionItemID = newID??knownID
-                // console.log('cellframe newID, knownID, sessionItemID',newID, knownID, sessionItemID)
-                // const cached = newID?false:cacheHandler.hasPortal(sessionID)
-                const cached = cacheHandler.hasPortal(index)
+                const sessionItemID = cacheHandler.getSessionItemID(index)
+                const cached = cacheHandler.hasPortal(sessionItemID)
 
                 if (cached) {
 
-                    // portalDataRef.current = cacheHandler.getPortal(sessionID)
-                    portalDataRef.current = cacheHandler.getPortal(index)
+                    portalDataRef.current = cacheHandler.getPortal(sessionItemID)
+                    // portalDataRef.current = cacheHandler.getPortal(index)
 
                     portalNodeRef.current = portalDataRef.current.portalNode
 
@@ -183,7 +180,7 @@ const CellFrame = ({
                                 }
 
                                 portalDataRef.current = 
-                                    cacheHandler.createPortal(index, content, sessionItemID)
+                                    cacheHandler.createPortal(content, index, sessionItemID)
                                 portalNodeRef.current  = portalDataRef.current.portalNode
                                 // make available to user content
                                 scrollerData.isReparentingRef = portalDataRef.current.isReparentingRef

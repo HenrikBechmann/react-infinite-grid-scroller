@@ -27,11 +27,14 @@ export class CacheHandler {
     scrollerProps = {
         setListState:null,
         modified:false,
+
         portalMetadataMap:new Map(),
         portalRequestedMap: new Map(), // some portals may have been requested by requestidlecallback, not yet created
         portalMap:new Map(),
         portalIndexToSessionIDMap:new Map(),
+
         portalList:null,
+
         scrollerID:null
     }
 
@@ -42,6 +45,8 @@ export class CacheHandler {
         // keep the setListState callback
         this.scrollerProps.portalMap.clear() 
         this.scrollerProps.portalMetadataMap.clear()
+        this.scrollerProps.portalIndexToSessionIDMap.clear()
+        this.scrollerProps.portalRequestedMap.clear()
         this.scrollerProps.portalList = null
         this.scrollerProps.modified = false
 
@@ -63,7 +68,12 @@ export class CacheHandler {
 
     matchCacheToCradle = (modelIndexList) => {
         // console.log('running matchCacheToCradle', '-'+this.scrollerProps.scrollerID+'-')
-        const mapkeys = Array.from(this.scrollerProps.portalMap.keys())
+        // const portalMetadataMap = this.scrollerProps.portalMetadataMap
+        // const mapsessionitemidkeys = Array.from(this.scrollerProps.portalMap.keys())
+        // const mapkeys = mapsessionitemidkeys.map(sessionItemID =>{
+        //     return portalMetadataMap.get(sessionItemID).index
+        // })
+        const mapkeys = Array.from(this.scrollerProps.portalIndexToSessionIDMap.keys())
         mapkeys.filter(key => !modelIndexList.includes(key))
         // console.log('filtered mapkeys, modelIndexList', mapkeys, modelIndexList)
         this.deletePortal(mapkeys)
@@ -78,13 +88,20 @@ export class CacheHandler {
 
         const max = Math.max(modelLength, cacheMax)
 
-        const portalMapList = this.scrollerProps.portalMap
+        // const portalMapList = this.scrollerProps.portalMap
+        const portalIndexList = this.scrollerProps.portalIndexToSessionIDMap
         const requestedMap = this.scrollerProps.portalRequestedMap
+        // const { portalMetadataMap } = this.scrollerProps
 
-        if ((portalMapList.size + requestedMap.size) <= max) return false
+        // if ((portalMapList.size + requestedMap.size) <= max) return false
+        if ((portalIndexList.size + requestedMap.size) <= max) return false
 
         // sort the map keys
-        const mapkeyslist = Array.from(portalMapList.keys())
+        // const mapsessionitemidkeyslist = Array.from(portalMapList.keys())
+        // const mapkeyslist = mapsessionitemidkeyslist.map(sessionItemID =>{
+        //     return portalMetadataMap.get(sessionItemID).index
+        // })
+        const mapkeyslist = Array.from(portalIndexList.keys())
         const requestedkeys = Array.from(requestedMap.keys())
 
         const mapkeys = mapkeyslist.concat(requestedkeys)
@@ -144,14 +161,13 @@ export class CacheHandler {
         scrollerID
     ) {
 
-        const [newID, knownID] = this.getSessionItemID(index)
-        const sessionItemID = newID??knownID
+        const sessionItemID = this.getSessionItemID(index)
 
         const usercontent = await getItem(index, sessionItemID)
 
         if (usercontent) {
 
-            preloadIndexCallback && preloadIndexCallback(index)
+            preloadIndexCallback && preloadIndexCallback(index, sessionItemID)
 
             // console.log('preloading index','-'+scrollerID+'-' ,index )
 
@@ -167,14 +183,14 @@ export class CacheHandler {
             }
 
             const portalData = 
-                this.createPortal(index, content, sessionItemID)
+                this.createPortal(content, index, sessionItemID)
             // make available to user content
             scrollerData.isReparentingRef = portalData.isReparentingRef
 
         } else {
 
-            preloadIndexCallback && preloadIndexCallback(index, 'error')
-            console.log('ERROR','no content item for preload index',index)
+            preloadIndexCallback && preloadIndexCallback(index, sessionItemID, 'error')
+            console.log('ERROR','no content item for preload index, sessionItemID',index, sessionItemID)
 
         }
 
@@ -227,23 +243,23 @@ export class CacheHandler {
         const knownHasValue = knownID??false // deal with falsey 0
         const newID = (knownHasValue === false)?(globalSessionID++):null
         if (knownHasValue === false) indexMap.set(index, newID)
-        return [newID, knownID]
+        return knownID??newID
     }
 
     removeRequestedPortal(index) {
         this.scrollerProps.portalRequestedMap.delete(index)
     }
 
-    createPortal(index, content, sessionItemID) { // create new portal
+    createPortal(content, index, sessionItemID) { // create new portal
 
         this.removeRequestedPortal(index)
 
         // console.log('creating portal for index','-'+this.scrollerProps.scrollerID+'-', index)
-        const portalNode = createPortalNode(index)
+        const portalNode = createPortalNode(index, sessionItemID)
 
         // console.log('creating InPortal node', '-'+this.scrollerProps.scrollerID+'-', sessionItemID)
 
-        this.scrollerProps.portalMap.set(index,
+        this.scrollerProps.portalMap.set(sessionItemID,//index,
                 <InPortal key = {sessionItemID} node = {portalNode} > { content } </InPortal>)
                 // <InPortal key = {index} node = {portalNode} > { content } </InPortal>)
         this.scrollerProps.modified = true
@@ -257,7 +273,7 @@ export class CacheHandler {
             sessionItemID,
         }
 
-        this.scrollerProps.portalMetadataMap.set(index, portalMetadata)
+        this.scrollerProps.portalMetadataMap.set(sessionItemID, portalMetadata)
         this.scrollerProps.portalIndexToSessionIDMap.set(index, sessionItemID)
 
         this.renderPortalList()
@@ -277,26 +293,32 @@ export class CacheHandler {
             indexArray = index
         }
 
+        const { 
+            portalMetadataMap,
+            portalMap,
+            portalIndexToSessionIDMap 
+        } = this.scrollerProps
         for (let i of indexArray) {
-            this.scrollerProps.portalMetadataMap.delete(i)
-            this.scrollerProps.portalMap.delete(i)
-            this.scrollerProps.portalIndexToSessionIDMap.delete(i)
+            const sessionItemID = portalIndexToSessionIDMap.get(i)
+            portalMetadataMap.delete(sessionItemID)
+            portalMap.delete(sessionItemID)
+            portalIndexToSessionIDMap.delete(i)
         }
         this.scrollerProps.modified = true
 
     }
 
     // query existence of a portal list item
-    hasPortal(index) {
+    hasPortal(sessionItemID) {
 
-        return this.scrollerProps.portalMetadataMap.has(index)
+        return this.scrollerProps.portalMetadataMap.has(sessionItemID)
 
     }
 
-    getPortal(index) {
+    getPortal(sessionItemID) {
 
-        if (this.hasPortal(index)) {
-            return this.scrollerProps.portalMetadataMap.get(index)
+        if (this.hasPortal(sessionItemID)) {
+            return this.scrollerProps.portalMetadataMap.get(sessionItemID)
         }
 
     }
@@ -307,7 +329,7 @@ export class CacheHandler {
 
 // get a react-reverse-portal InPortal component, with its metadata
 // with user content and container
-const createPortalNode = (index) => {
+const createPortalNode = (index, sessionItemID) => {
 
     let portalNode = createHtmlPortalNode()
 
@@ -318,6 +340,7 @@ const createPortalNode = (index) => {
     // container.style.width = '100%'
     container.dataset.type = 'contentenvelope'
     container.dataset.index = index
+    container.dataset.sessionitemid = sessionItemID
 
     return portalNode
 
