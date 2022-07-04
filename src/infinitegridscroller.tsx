@@ -35,6 +35,7 @@
         - review state change chains in cradle
         - check preload intent against state machine handling
         - rationalize await handling everywhere to behave like promises
+        - use sessionID for referencing; index for order
         // - rationalize external callbacks routing
         // callback for user re preload
         error handling for preload items -- allow recovery

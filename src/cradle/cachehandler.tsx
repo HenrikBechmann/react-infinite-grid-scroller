@@ -12,6 +12,9 @@ import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
 const MAX_CACHE_OVER_RUN = 1.5
 
+let globalSessionID = 0
+
+
 // global scroller data, organized by session scrollerID
 export class CacheHandler {
 
@@ -27,6 +30,7 @@ export class CacheHandler {
         portalMetadataMap:new Map(),
         portalRequestedMap: new Map(), // some portals may have been requested by requestidlecallback, not yet created
         portalMap:new Map(),
+        portalIndexToSessionIDMap:new Map(),
         portalList:null,
         scrollerID:null
     }
