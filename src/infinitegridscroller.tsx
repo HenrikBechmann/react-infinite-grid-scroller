@@ -2,38 +2,46 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
+    react-infinite-grid-scroller = RIGS
+
     ROADMAP:
-        cache management
+        // cache management
             // cacheMax; cacheMax over-run
-            preload
+            // preload
             // keepload
             // cradle
 
         surface cache, cacheMax & runway etc to test options
+        also surface external callbacks for testing
         review all code
 
         layout: uniform, variable, dynamic, dense
-        insert, remove, swap functions
+        insert, remove, swap functions (create sessionID reference system)
 
         test changing all gridscroller parameters
         test config size edge cases - over and under sized cells
 
+        create demo site - github pages, and sandbox
+        release to npm
+
     BUGS: 
         //- rapid scrolling up with full cache can lead to overshoot just shy of reposition,
         //    with trigger lines out of view
-        - time lag before repositioning the trigger lines - promises?
-       // - when sublist is in scroll motion when being reparented, block scrollpos is not properly recovered
-       // - item 400 in 400 item nested list of scrollers crosscount = 3 takes up entire width of viewport
+        // - time lag before repositioning the trigger lines - promises?
+        // - when sublist is in scroll motion when being reparented, block scrollpos is not properly recovered
+        // - item 400 in 400 item nested list of scrollers crosscount = 3 takes up entire width of viewport
 
     TODO:
-        - set preload attribute with preload call
-        review state change chains in cradle
-        callback for user re preload
+        - review state change chains in cradle
+        - check preload intent against state machine handling
+        - rationalize await handling everywhere to behave like promises
+        - use sessionID for referencing; index for order
+        // - rationalize external callbacks routing
+        // callback for user re preload
         error handling for preload items -- allow recovery
         test for memory leaks with Chrome's window.performance.memory property
         try to reduce need to run renderportallist - try some kind of pagination/grouping
         replace top/left with transformx/y
-        warn usercontent of both resizing (?) and isReparenting
         prioritize fetch cells for visible cells
         customizable scrolltracker, or provide callback feature for scroll tracking
         reload from/to for insertions and substitutions
@@ -86,17 +94,18 @@ const InfiniteGridScroller = (props) => {
     // const props = Object.assign({},args) // args should be immutable
 
     let { 
+        // grid specs
         orientation, // vertical or horizontal
         gap, // space between grid cells, not including the leading and trailing edges
         padding, // the space between the items and the viewport, applied to the cradle
         cellHeight, // the outer pixel height - literal for vertical; approximate for horizontal
         cellWidth, // the outer pixel width - literal for horizontal; approximate for vertical
         layout, // uniform, variable (doesn't use axis), dynamic (uses axis), dense
-
+        // scroller specs
         runwaySize, // the number of items outside the view of each side of the viewport 
             // -- gives time to assemble before display
         listSize, // the exact number of the size of the virtual list; will eventually be changable.
-        indexOffset:defaultVisibleIndex, // the 0-based starting index of the list, when first loaded
+        indexOffset, // the 0-based starting index of the list, when first loaded
         getItem, // function provided by host - parameter is index number, set by system; return value is 
             // host-selected component or promise of a component
         functions, // properties to get direct access to some component utilites, optional
@@ -104,12 +113,11 @@ const InfiniteGridScroller = (props) => {
             // optional, replaces default placeholder
         styles, // passive style over-rides (eg. color, opacity); has 
             // properties viewport, scrollblock, cradle, or scrolltracker
-        // to come...
+        // system specs
         cache, //  = "preload", "keepload" or "cradle"
         cacheMax, // (always minimum cradle)
         advanced, // technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
         triggerlineOffset,
-        indexOffset,
         scrollerData
     } = props
 
@@ -153,6 +161,7 @@ const InfiniteGridScroller = (props) => {
     const gridSpecsRef = useRef(gridSpecs)
     const stylesRef = useRef(styles)
     const functionsRef = useRef(functions)
+    const defaultVisibleIndex = indexOffset
 
     // satisfy React Object.is for attributes
     if (!compareProps(gridSpecs, gridSpecsRef.current)) {

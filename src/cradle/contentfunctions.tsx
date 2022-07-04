@@ -415,7 +415,6 @@ export const getCellFrameComponentList = ({
         listStartChangeCount, 
         listEndChangeCount, 
         workingContentList:contentlist,
-        // callbacks,
         instanceIdCounterRef,
     }) => {
 
@@ -435,7 +434,6 @@ export const getCellFrameComponentList = ({
                     {
                         index:newindex, 
                         cradleInheritedProperties,
-                        // callbacks, 
                         instanceIdCounterRef,
                     }
                 )
@@ -458,7 +456,6 @@ export const getCellFrameComponentList = ({
                     {
                         index:newindex, 
                         cradleInheritedProperties,
-                        // callbacks, 
                         instanceIdCounterRef,
                     }
                 )
@@ -516,7 +513,6 @@ export const deletePortals = (cacheHandler, deleteList) => {
 const createCell = ({
     index, 
     cradleInheritedProperties,
-    // callbacks, 
     instanceIdCounterRef,
 
 }) => {
@@ -540,7 +536,6 @@ const createCell = ({
         cellHeight = { cellHeight }
         cellWidth = { cellWidth }
         index = { index }
-        // callbacks = {callbacks}
         getItem = { getItem }
         listsize = { listsize }
         placeholder = { placeholder }

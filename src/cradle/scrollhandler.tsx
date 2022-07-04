@@ -106,11 +106,6 @@ export default class ScrollHandler {
 
                 }
 
-                // TODO: re-instate the following
-                serviceHandler.serviceCalls.referenceIndexCallbackRef.current && 
-
-                    serviceHandler.serviceCalls.referenceIndexCallbackRef.current(cradlePositionData.targetAxisReferenceIndex,'scrolling', cradleState)
-
             }
 
         }

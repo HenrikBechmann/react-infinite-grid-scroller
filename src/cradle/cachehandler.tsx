@@ -12,6 +12,9 @@ import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
 const MAX_CACHE_OVER_RUN = 1.5
 
+let globalSessionID = 0
+
+
 // global scroller data, organized by session scrollerID
 export class CacheHandler {
 
@@ -27,6 +30,7 @@ export class CacheHandler {
         portalMetadataMap:new Map(),
         portalRequestedMap: new Map(), // some portals may have been requested by requestidlecallback, not yet created
         portalMap:new Map(),
+        portalIndexToSessionIDMap:new Map(),
         portalList:null,
         scrollerID:null
     }
@@ -133,11 +137,18 @@ export class CacheHandler {
 
     }
 
-    async preloadItem(index, getItem, cradlePassthroughPropertiesRef, scrollerID) {
+    async preloadItem(index, 
+        getItem, 
+        cradlePassthroughPropertiesRef, 
+        preloadIndexCallback,
+        scrollerID
+    ) {
 
         const usercontent = await getItem(index)
 
         if (usercontent) {
+
+            preloadIndexCallback && preloadIndexCallback(index)
 
             // console.log('preloading index','-'+scrollerID+'-' ,index )
 
@@ -159,20 +170,21 @@ export class CacheHandler {
 
         } else {
 
+            preloadIndexCallback && preloadIndexCallback(index, 'error')
             console.log('ERROR','no content item for preload index',index)
 
         }
 
     }
 
-    preload(cradleParameters,callback, scrollerID) {
+    preload(cradleParameters, callback, scrollerID) {
 
         const { cradlePassthroughPropertiesRef } = cradleParameters
-        const { stateHandler } = cradleParameters.handlersRef.current
+        const { stateHandler, serviceHandler } = cradleParameters.handlersRef.current
 
         const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
-        const { getItem } = cradleInheritedProperties
-        const { listsize } = cradleInheritedProperties
+        const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
+        const { getItem, listsize } = cradleInheritedProperties
 
         const promises = []
 
@@ -180,7 +192,13 @@ export class CacheHandler {
 
             for (let i = 0; i < listsize; i++) {
                 // console.log('preloading',i)
-                const promise = this.preloadItem(i, getItem, cradlePassthroughPropertiesRef, scrollerID)
+                const promise = this.preloadItem(
+                    i, 
+                    getItem, 
+                    cradlePassthroughPropertiesRef,
+                    serviceHandler.callbacks.preloadIndexCallback,
+                    scrollerID
+                )
                 promises.push(promise)
             }
         }
