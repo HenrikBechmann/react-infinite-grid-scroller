@@ -214,8 +214,13 @@ const Cradle = ({
 
     // host callbacks
     const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
+    const preloadIndexCallbackRef = useRef(functions?.preloadIndexCallback)
 
-    const externalCallbacksRef = useRef({referenceIndexCallbackRef})
+    const externalCallbacksRef = useRef(
+        {referenceIndexCallbackRef,
+            preloadIndexCallbackRef
+        }
+    )
 
     // ====================[ bundle parameters for handlers ]===================
 
@@ -681,6 +686,7 @@ const Cradle = ({
 
                 }
 
+                // TODO: move API to contentHandler
                 cacheHandler.preload(cradleParametersRef.current, callback, scrollerID)
 
                 break

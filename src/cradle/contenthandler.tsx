@@ -250,6 +250,7 @@ export default class ContentHandler {
             scaffoldHandler, 
             stateHandler, 
             interruptHandler,
+            serviceHandler,
         } = this.cradleParameters.handlersRef.current
 
         // scroll data
@@ -385,6 +386,17 @@ export default class ContentHandler {
         cradleContent.cradleModelComponents = updatedContentList
         cradleContent.headModelComponents = headcontent
         cradleContent.tailModelComponents = tailcontent
+
+
+        if (serviceHandler.serviceCalls.referenceIndexCallbackRef.current) {
+
+            let cstate = stateHandler.cradleStateRef.current
+
+            serviceHandler.serviceCalls.referenceIndexCallbackRef.current(
+
+                scaffoldHandler.cradlePositionData.targetAxisReferenceIndex,'updateCradleContent', cstate)
+        
+        }
 
         // -------------------------------[ 6. set css changes ]-------------------------
 

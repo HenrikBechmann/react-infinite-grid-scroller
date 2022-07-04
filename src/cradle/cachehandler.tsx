@@ -133,11 +133,18 @@ export class CacheHandler {
 
     }
 
-    async preloadItem(index, getItem, cradlePassthroughPropertiesRef, scrollerID) {
+    async preloadItem(index, 
+        getItem, 
+        cradlePassthroughPropertiesRef, 
+        preloadIndexCallback,
+        scrollerID
+    ) {
 
         const usercontent = await getItem(index)
 
         if (usercontent) {
+
+            preloadIndexCallback && preloadIndexCallback(index)
 
             // console.log('preloading index','-'+scrollerID+'-' ,index )
 
@@ -159,20 +166,22 @@ export class CacheHandler {
 
         } else {
 
+            preloadIndexCallback && preloadIndexCallback(index, 'error')
             console.log('ERROR','no content item for preload index',index)
 
         }
 
     }
 
-    preload(cradleParameters,callback, scrollerID) {
+    preload(cradleParameters, callback, scrollerID) {
 
         const { cradlePassthroughPropertiesRef } = cradleParameters
-        const { stateHandler } = cradleParameters.handlersRef.current
+        const { stateHandler, serviceHandler } = cradleParameters.handlersRef.current
 
         const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
-        const { getItem } = cradleInheritedProperties
-        const { listsize } = cradleInheritedProperties
+        const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
+        const { getItem, listsize } = cradleInheritedProperties
+\        const { externalCallbacksRef } = cradleInternalProperties
 
         const promises = []
 
@@ -180,7 +189,13 @@ export class CacheHandler {
 
             for (let i = 0; i < listsize; i++) {
                 // console.log('preloading',i)
-                const promise = this.preloadItem(i, getItem, cradlePassthroughPropertiesRef, scrollerID)
+                const promise = this.preloadItem(
+                    i, 
+                    getItem, 
+                    cradlePassthroughPropertiesRef,
+                    externalCallbacksRef.current.preloadIndexCallback,
+                    scrollerID
+                )
                 promises.push(promise)
             }
         }

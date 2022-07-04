@@ -5,11 +5,12 @@
     ROADMAP:
         cache management
             // cacheMax; cacheMax over-run
-            preload
+            // preload
             // keepload
             // cradle
 
         surface cache, cacheMax & runway etc to test options
+        also surface external callbacks for testing
         review all code
 
         layout: uniform, variable, dynamic, dense
@@ -26,6 +27,9 @@
        // - item 400 in 400 item nested list of scrollers crosscount = 3 takes up entire width of viewport
 
     TODO:
+        - check preload intent against state machine handling
+        - rationalize await handling everywhere to behave like promises
+        - rationalize external callbacks routing
         - set preload attribute with preload call
         review state change chains in cradle
         callback for user re preload
