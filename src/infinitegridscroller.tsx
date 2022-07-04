@@ -22,22 +22,20 @@
     BUGS: 
         //- rapid scrolling up with full cache can lead to overshoot just shy of reposition,
         //    with trigger lines out of view
-        - time lag before repositioning the trigger lines - promises?
+        // - time lag before repositioning the trigger lines - promises?
        // - when sublist is in scroll motion when being reparented, block scrollpos is not properly recovered
        // - item 400 in 400 item nested list of scrollers crosscount = 3 takes up entire width of viewport
 
     TODO:
+        - review state change chains in cradle
         - check preload intent against state machine handling
         - rationalize await handling everywhere to behave like promises
-        - rationalize external callbacks routing
-        - set preload attribute with preload call
-        review state change chains in cradle
-        callback for user re preload
+        // - rationalize external callbacks routing
+        // callback for user re preload
         error handling for preload items -- allow recovery
         test for memory leaks with Chrome's window.performance.memory property
         try to reduce need to run renderportallist - try some kind of pagination/grouping
         replace top/left with transformx/y
-        warn usercontent of both resizing (?) and isReparenting
         prioritize fetch cells for visible cells
         customizable scrolltracker, or provide callback feature for scroll tracking
         reload from/to for insertions and substitutions
