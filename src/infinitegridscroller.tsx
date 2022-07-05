@@ -96,41 +96,38 @@ const InfiniteGridScroller = (props) => {
 
     // ------------------[ normalize properties ]--------------------
 
-    // const props = Object.assign({},args) // args should be immutable
-
     let { 
-        // grid specs
+        // grid specs:
         orientation = 'vertical', // vertical or horizontal
         gap = 0, // space between grid cells, not including the leading and trailing edges
         padding = 0, // the space between the items and the viewport, applied to the cradle
-        cellHeight, // the outer pixel height - literal for vertical; approximate for horizontal
-        cellWidth, // the outer pixel width - literal for horizontal; approximate for vertical
+        cellHeight, // required. the outer pixel height - literal for vertical; approximate for horizontal
+        cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
         layout = 'uniform', // uniform, variable (doesn't use axis), dynamic (uses axis), dense
-        // scroller specs
+        // scroller specs:
         runwaySize = 3, // the number of items outside the view of each side of the viewport 
             // -- gives time to assemble before display
         listSize = 0, // the exact number of the size of the virtual list; will eventually be changable.
         indexOffset = 0, // the 0-based starting index of the list, when first loaded
-        getItem, // function provided by host - parameter is index number, set by system; return value is 
+        getItem, // required. function provided by host - parameter is index number, set by system; return value is 
             // host-selected component or promise of a component
-        functions = {}, // properties to get direct access to some component utilites, optional
-        placeholder, // a sparse component to stand in for content until the content arrives; 
+        functions = {}, // optional. properties to get direct access to some component utilites, optional
+        placeholder, // optional. a sparse component to stand in for content until the content arrives; 
             // optional, replaces default placeholder
-        styles = {}, // passive style over-rides (eg. color, opacity); has 
+        styles = {}, // optional. passive style over-rides (eg. color, opacity); has 
             // properties viewport, scrollblock, cradle, or scrolltracker
-        // system specs
+        // system specs:
         cache = 'cradle', // "preload", "keepload" or "cradle"
         cacheMax = 100, // (always minimum cradle)
-        advanced, // technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
+        advanced, // optional. technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
         triggerlineOffset = 10,
-        scrollerData
+        scrollerData // optional
     } = props
 
     // prop constraints
-    runwaySize = Math.max(0,runwaySize)
-    listSize = Math.max(0,listSize)
+    runwaySize = Math.max(0,runwaySize) // non-negative
+    listSize = Math.max(0,listSize) // non-negative
     indexOffset = Math.max(0,indexOffset) // non-negative
-    indexOffset = Math.min((listSize -1), indexOffset) // not larger than list
     if (!['horizontal','vertical'].includes(orientation)) {
         orientation = 'vertical'
     }
