@@ -541,6 +541,7 @@ const createCell = ({
         placeholder = { placeholder }
         instanceID = { instanceID }
         scrollerID = { scrollerID }
+        updatedSessionItemID = {null}
     />
 
 }

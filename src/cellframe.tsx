@@ -23,6 +23,7 @@ const CellFrame = ({
     placeholder, 
     instanceID, 
     scrollerID,
+    updatedSessionItemID, // triggers content refresh if changed
 }) => {
 
     const cradleContext = useContext(CradleContext)
@@ -34,6 +35,8 @@ const CellFrame = ({
     } as React.CSSProperties)
 
     const [frameStatus, setFrameStatus] = useState('setup')
+    const frameStatusRef = useRef(null)
+    frameStatusRef.current = frameStatus
 
     const frameRef = useRef(null)
 
@@ -51,6 +54,13 @@ const CellFrame = ({
         }
 
     },[])
+
+    useEffect(()=>{
+
+        if (frameStatusRef.current == 'setup') return
+        setFrameStatus('getusercontent')
+
+    },[updatedSessionItemID])
 
     // ----------------- [ placeholder definition ] -------------------------
 
