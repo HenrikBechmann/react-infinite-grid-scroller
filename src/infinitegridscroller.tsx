@@ -10,6 +10,7 @@
             // preload
             // keepload
             // cradle
+            cache mapping modification by user
 
         surface cache, cacheMax & runway etc to test options
         also surface external callbacks for testing

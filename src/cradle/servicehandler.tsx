@@ -67,5 +67,10 @@ export default class ServiceHandler {
 
     }
 
+    //TODO implement this
+    public modifyCacheMapping(mappingList) => {
+
+    }
+
 }
 

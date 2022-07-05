@@ -76,7 +76,6 @@ export class CacheHandler {
         const mapkeys = Array.from(this.cacheProps.cacheIndexToItemIDMap.keys())
         mapkeys.filter(key => !modelIndexList.includes(key))
         // console.log('filtered mapkeys, modelIndexList', mapkeys, modelIndexList)
-        // TODO return list of deleted items to user
         this.deletePortal(mapkeys, cacheDeleteListCallback)
     }
 
@@ -132,7 +131,6 @@ export class CacheHandler {
 
         const delList = headlist.concat(taillist)
 
-        // TODO return list of deleted items to user
         this.deletePortal(delList, cacheDeleteListCallback)
 
         return true
@@ -289,7 +287,6 @@ export class CacheHandler {
 
     // delete a portal list item
     // accepts an array of indexes
-    // TODO return list of deleted items to user
     deletePortal(index, cacheDeleteListCallback) {
 
         let indexArray
