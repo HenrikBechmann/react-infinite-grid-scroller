@@ -120,8 +120,8 @@ const InfiniteGridScroller = (props) => {
         cache = 'cradle', // "preload", "keepload" or "cradle"
         cacheMax = 100, // (always minimum cradle)
         advanced, // optional. technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
-        triggerlineOffset = 10,
-        scrollerData // optional
+        triggerlineOffset = 10, // distance from cell head or tail for content shifts above/below axis
+        scrollerData // optional, shares scroller settings with content
     } = props
 
     // prop constraints
