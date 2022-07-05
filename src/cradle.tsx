@@ -448,7 +448,7 @@ const Cradle = ({
             clearCache, 
             getCacheList, 
             modifyCacheMapping,
-            preload, // TODO temporary!!
+            // preload, // TODO temporary!!
         } = serviceHandler
 
         const callbacks = {
@@ -457,7 +457,7 @@ const Cradle = ({
             reload,
             getCacheList,
             modifyCacheMapping,
-            preload,
+            // preload,
         }
 
         functions.getCallbacks(callbacks)

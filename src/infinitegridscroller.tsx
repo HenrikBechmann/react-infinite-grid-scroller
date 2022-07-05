@@ -119,7 +119,7 @@ const InfiniteGridScroller = (props) => {
         styles, // passive style over-rides (eg. color, opacity); has 
             // properties viewport, scrollblock, cradle, or scrolltracker
         // system specs
-        cache, //  = "preload", "keepload" or "cradle"
+        cache, // "preload", "keepload" or "cradle"
         cacheMax, // (always minimum cradle)
         advanced, // technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
         triggerlineOffset,
@@ -149,7 +149,7 @@ const InfiniteGridScroller = (props) => {
     listSize ?? (listSize = 0)
     listSize = Math.max(0,listSize)
     layout ?? (layout = 'uniform')
-    cache ?? (cache = 'preload')
+    cache ?? (cache = 'cradle')
     cacheMax ?? (cacheMax = 100)
     // constraints
     indexOffset = Math.max(0,indexOffset) // non-negative
