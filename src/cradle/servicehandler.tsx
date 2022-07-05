@@ -59,5 +59,13 @@ export default class ServiceHandler {
 
     }
 
+    public getCacheList = () => {
+
+        const { cacheHandler } = this.cradleParameters.handlersRef.current
+
+        return cacheHandler.getCacheList()
+
+    }
+
 }
 

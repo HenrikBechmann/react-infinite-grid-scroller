@@ -498,13 +498,14 @@ export const allocateContentList = (
 
 }
 
-export const deletePortals = (cacheHandler, deleteList) => {
+export const deletePortals = (cacheHandler, deleteList, cacheDeleteListCallback) => {
 
     // console.log('inside deletePortals',deleteList)
     const dlist = deleteList.map((item)=>{
         return item.props.index
     })
-    cacheHandler.deletePortal(dlist)
+    // TODO return list of deleted items to user
+    cacheHandler.deletePortal(dlist, cacheDeleteListCallback)
     if (deleteList.length) cacheHandler.renderPortalList()
 }
 
@@ -541,7 +542,7 @@ const createCell = ({
         placeholder = { placeholder }
         instanceID = { instanceID }
         scrollerID = { scrollerID }
-        updatedSessionItemID = {null}
+        updatedCacheItemID = {null}
     />
 
 }

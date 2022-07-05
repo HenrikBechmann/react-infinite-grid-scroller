@@ -16,7 +16,7 @@
         review all code
 
         layout: uniform, variable, dynamic, dense
-        insert, remove, swap functions (create sessionID reference system)
+        insert, remove, swap functions (create cacheItemID reference system)
 
         test changing all gridscroller parameters
         test config size edge cases - over and under sized cells
@@ -32,9 +32,10 @@
         // - item 400 in 400 item nested list of scrollers crosscount = 3 takes up entire width of viewport
 
     TODO:
-        - test and review sessionItemID
+        - call matchCacheToCradle through contentHandler (?) iac rationalize calls to cacheHandler
+        - test and review cacheItemID
         - implement changeOrder callback for user - cellFrame index prop must be updated
-        - use sessionID for referencing; index for order - cellFrame reload to re-order?
+        - use cacheItemID for referencing; index for order - cellFrame reload to re-order?
         - review state change chains in cradle
         - check preload intent against state machine handling
         - rationalize await handling everywhere to behave like promises
@@ -241,7 +242,7 @@ const InfiniteGridScroller = (props) => {
             </Scrollblock>
         </Viewport>}
         {(scrollerState != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
-            <PortalList scrollerProps = {cacheHandlerRef.current.scrollerProps}/>
+            <PortalList cacheProps = {cacheHandlerRef.current.cacheProps}/>
         </div>}
         </>)
 }

@@ -219,7 +219,8 @@ const Cradle = ({
     const externalCallbacksRef = useRef(
         {
             referenceIndexCallback:functions?.referenceIndexCallback,
-            preloadIndexCallback:functions?.preloadIndexCallback
+            preloadIndexCallback:functions?.preloadIndexCallback,
+            cacheDeleteListCallback:functions?.cacheDeleteListCallback,
         }
     )
 
@@ -441,13 +442,14 @@ const Cradle = ({
 
         if (!functions.getCallbacks) return
 
-        const {scrollToItem, reload, clearCache, preload} = serviceHandler
+        const {scrollToItem, reload, clearCache, preload, getCacheList} = serviceHandler
 
         const callbacks = {
             scrollToItem,
             clearCache,
             reload,
             preload,
+            getCacheList,
         }
 
         functions.getCallbacks(callbacks)
@@ -813,7 +815,7 @@ const Cradle = ({
                 if (cache == 'cradle') {
                     const modelComponentList = contentHandler.content.cradleModelComponents
                     const modelIndexList = modelComponentList.map(item=>item.props.index)
-                    cacheHandler.matchCacheToCradle(modelIndexList)
+                    cacheHandler.matchCacheToCradle(modelIndexList, serviceHandler.callbacks.cacheDeleteListCallback)
                     cacheHandler.renderPortalList()
                 }
 
