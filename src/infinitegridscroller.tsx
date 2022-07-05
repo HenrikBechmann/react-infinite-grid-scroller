@@ -100,31 +100,43 @@ const InfiniteGridScroller = (props) => {
 
     let { 
         // grid specs
-        orientation, // vertical or horizontal
-        gap, // space between grid cells, not including the leading and trailing edges
-        padding, // the space between the items and the viewport, applied to the cradle
+        orientation = 'vertical', // vertical or horizontal
+        gap = 0, // space between grid cells, not including the leading and trailing edges
+        padding = 0, // the space between the items and the viewport, applied to the cradle
         cellHeight, // the outer pixel height - literal for vertical; approximate for horizontal
         cellWidth, // the outer pixel width - literal for horizontal; approximate for vertical
-        layout, // uniform, variable (doesn't use axis), dynamic (uses axis), dense
+        layout = 'uniform', // uniform, variable (doesn't use axis), dynamic (uses axis), dense
         // scroller specs
-        runwaySize, // the number of items outside the view of each side of the viewport 
+        runwaySize = 3, // the number of items outside the view of each side of the viewport 
             // -- gives time to assemble before display
-        listSize, // the exact number of the size of the virtual list; will eventually be changable.
-        indexOffset, // the 0-based starting index of the list, when first loaded
+        listSize = 0, // the exact number of the size of the virtual list; will eventually be changable.
+        indexOffset = 0, // the 0-based starting index of the list, when first loaded
         getItem, // function provided by host - parameter is index number, set by system; return value is 
             // host-selected component or promise of a component
-        functions, // properties to get direct access to some component utilites, optional
+        functions = {}, // properties to get direct access to some component utilites, optional
         placeholder, // a sparse component to stand in for content until the content arrives; 
             // optional, replaces default placeholder
-        styles, // passive style over-rides (eg. color, opacity); has 
+        styles = {}, // passive style over-rides (eg. color, opacity); has 
             // properties viewport, scrollblock, cradle, or scrolltracker
         // system specs
-        cache, // "preload", "keepload" or "cradle"
-        cacheMax, // (always minimum cradle)
+        cache = 'cradle', // "preload", "keepload" or "cradle"
+        cacheMax = 100, // (always minimum cradle)
         advanced, // technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
-        triggerlineOffset,
+        triggerlineOffset = 10,
         scrollerData
     } = props
+
+    // prop constraints
+    runwaySize = Math.max(0,runwaySize)
+    listSize = Math.max(0,listSize)
+    indexOffset = Math.max(0,indexOffset) // non-negative
+    indexOffset = Math.min((listSize -1), indexOffset) // not larger than list
+    if (!['horizontal','vertical'].includes(orientation)) {
+        orientation = 'vertical'
+    }
+    if (!['preload','keepload','cradle'].includes(cache)) {
+        cache = 'cradle'
+    }
 
     const gridSpecs = { // package
         orientation,
@@ -135,33 +147,7 @@ const InfiniteGridScroller = (props) => {
         layout,
     }
 
-    // allow scrollerID to be set by useEffect. Inline setting causes double processing
     const [scrollerState, setScrollerState] = useState('setup')
-
-    // set defaults
-    functions ?? (functions = {})
-    styles ?? (styles = {})
-    gap ?? (gap = 0)
-    padding ?? (padding = 0)
-    runwaySize ?? (runwaySize = 3)
-    runwaySize = Math.max(0,runwaySize)
-    indexOffset ?? (indexOffset = 0)
-    listSize ?? (listSize = 0)
-    listSize = Math.max(0,listSize)
-    layout ?? (layout = 'uniform')
-    cache ?? (cache = 'cradle')
-    cacheMax ?? (cacheMax = 100)
-    // constraints
-    indexOffset = Math.max(0,indexOffset) // non-negative
-    indexOffset = Math.min((listSize -1), indexOffset) // not larger than list
-    if (!['horizontal','vertical'].includes(orientation)) {
-        orientation = 'vertical'
-    }
-    if (!['preload','keepload','cradle'].includes(cache)) {
-        cache = 'cradle'
-    }
-    // TODO: rationalize with cellHeight & cellWidth; must be less than half
-    triggerlineOffset ?? (triggerlineOffset = 10) 
 
     const gridSpecsRef = useRef(gridSpecs)
     const stylesRef = useRef(styles)
