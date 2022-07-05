@@ -442,14 +442,22 @@ const Cradle = ({
 
         if (!functions.getCallbacks) return
 
-        const {scrollToItem, reload, clearCache, preload, getCacheList} = serviceHandler
+        const {
+            scrollToItem, 
+            reload, 
+            clearCache, 
+            getCacheList, 
+            modifyCacheMapping,
+            preload, // TODO temporary!!
+        } = serviceHandler
 
         const callbacks = {
             scrollToItem,
             clearCache,
             reload,
-            preload,
             getCacheList,
+            modifyCacheMapping,
+            preload,
         }
 
         functions.getCallbacks(callbacks)

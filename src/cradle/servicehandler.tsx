@@ -7,7 +7,20 @@ export default class ServiceHandler {
 
        this.cradleParameters = cradleParameters
 
-       this.callbacks = cradleParameters.externalCallbacksRef.current
+       // doing this explicitly here for documentation
+       const {
+           referenceIndexCallback,
+           preloadIndexCallback,
+           cacheDeleteListCallback,
+       } = cradleParameters.externalCallbacksRef.current
+
+       const callbacks = {
+           referenceIndexCallback,
+           preloadIndexCallback,
+           cacheDeleteListCallback,
+       }
+
+       this.callbacks = callbacks
 
     }
 
@@ -68,7 +81,7 @@ export default class ServiceHandler {
     }
 
     //TODO implement this
-    public modifyCacheMapping(mappingList) => {
+    public modifyCacheMapping = (mappingList) => {
 
     }
 
