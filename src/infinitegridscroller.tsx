@@ -32,6 +32,7 @@
         // - item 400 in 400 item nested list of scrollers crosscount = 3 takes up entire width of viewport
 
     TODO:
+        - modifyCacheMapping instruction by user
         - call matchCacheToCradle through contentHandler (?) iac rationalize calls to cacheHandler
         - test and review cacheItemID
         - implement changeOrder callback for user - cellFrame index prop must be updated
