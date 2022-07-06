@@ -88,7 +88,7 @@ export default class ServiceHandler {
     }
 
     //TODO implement this
-    public modifyCacheMap = (mappingList) => {
+    public modifyCacheMap = (modifyMap) => {
 
     }
 
