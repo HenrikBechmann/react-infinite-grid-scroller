@@ -33,15 +33,15 @@
         // - item 400 in 400 item nested list of scrollers crosscount = 3 takes up entire width of viewport
 
     TODO:
-        - review event cycles - they seem slower
-        - try to preload all children, even if cached
-        - return modified cachedItemMap from modify, add, and remove
-
         - add insertCacheItem and removeCacheItem - affects listsize
         - adjust listSize for add and remove
         - add modify listsize callback
         - getItem null return means past list - list size is adjusted;
             undefined means error; reject means error "unable to load"
+
+        - review event cycles - they seem slower
+        - try to preload all children, even if cached
+        - return modified cachedItemMap from modify, add, and remove
 
         - use allSettled instead of all
         - use finally for callback
