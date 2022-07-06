@@ -107,7 +107,7 @@ const InfiniteGridScroller = (props) => {
         // scroller specs:
         runwaySize = 3, // the number of items outside the view of each side of the viewport 
             // -- gives time to assemble before display
-        listSize = 0, // the exact number of the size of the virtual list; will eventually be changable.
+        listSize = 0, // the exact number of the size of the virtual list
         startingIndex = 0, // the 0-based starting index of the list, when first loaded
         getItem, // required. function provided by host - parameter is index number, set by system; return value is 
             // host-selected component or promise of a component
