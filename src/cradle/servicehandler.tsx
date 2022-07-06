@@ -63,14 +63,13 @@ export default class ServiceHandler {
 
     }
 
-    // // TODO: for testing only!
-    // public preload = () => {
+    public getCacheMap = () => {
 
-    //     const { stateHandler } = this.cradleParameters.handlersRef.current
+        const { cacheHandler } = this.cradleParameters.handlersRef.current
 
-    //     stateHandler.setCradleState('startpreload')
+        return cacheHandler.getCacheMap()
 
-    // }
+    }
 
     public getCacheList = () => {
 

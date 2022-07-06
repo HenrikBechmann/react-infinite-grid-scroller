@@ -105,13 +105,12 @@ const InfiniteGridScroller = (props) => {
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
         layout = 'uniform', // uniform, variable (doesn't use axis), dynamic (uses axis), dense
         // scroller specs:
+        listSize = 0, // the exact number of the size of the virtual list
         runwaySize = 3, // the number of items outside the view of each side of the viewport 
             // -- gives time to assemble before display
-        listSize = 0, // the exact number of the size of the virtual list
         startingIndex = 0, // the 0-based starting index of the list, when first loaded
         getItem, // required. function provided by host - parameter is index number, set by system; return value is 
             // host-selected component or promise of a component
-        functions = {}, // optional. properties to get direct access to some component utilites, optional
         placeholder, // optional. a sparse component to stand in for content until the content arrives; 
             // optional, replaces default placeholder
         styles = {}, // optional. passive style over-rides (eg. color, opacity); has 
@@ -119,20 +118,25 @@ const InfiniteGridScroller = (props) => {
         // system specs:
         cache = 'cradle', // "preload", "keepload" or "cradle"
         cacheMax = 100, // (always minimum cradle)
-        advanced, // optional. technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
         triggerlineOffset = 10, // distance from cell head or tail for content shifts above/below axis
-        scrollerData // optional, shares scroller settings with content
+        functions = {}, // optional. properties to get direct access to some component utilites, optional
+        scrollerData, // required for embedded scroller, shares scroller settings with content
+        advanced, // optional. technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
     } = props
 
     // prop constraints
     runwaySize = Math.max(0,runwaySize) // non-negative
     listSize = Math.max(0,listSize) // non-negative
     startingIndex = Math.max(0,startingIndex) // non-negative
-    if (!['horizontal','vertical'].includes(orientation)) {
+    // enums
+    if (!['horizontal','vertical'].includes(orientation)) { 
         orientation = 'vertical'
     }
     if (!['preload','keepload','cradle'].includes(cache)) {
         cache = 'cradle'
+    }
+    if (!['uniform', 'variable', 'dynamic', 'dense'].includes(layout)) {
+        layout = 'uniform'
     }
 
     const gridSpecs = { // package

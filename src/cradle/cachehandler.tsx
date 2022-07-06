@@ -231,8 +231,26 @@ export class CacheHandler {
 
     }
 
+    getCacheMap() {
+        // return this.cacheProps.cacheIndexToItemIDMap.entries()
+        return new Map(this.cacheProps.cacheIndexToItemIDMap)
+    }
+
     getCacheList() {
-        return this.cacheProps.cacheIndexToItemIDMap.entries()
+        const cachelist = new Map()
+        for (const [key, value] of this.cacheProps.portalMetadataMap) {
+                const {
+                    index,
+                    cacheItemID,
+                    component,
+                } = value
+            cachelist.set(key,{
+                index,
+                cacheItemID,
+                component,
+            })
+        }
+        return cachelist
     }
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
@@ -253,7 +271,7 @@ export class CacheHandler {
         this.cacheProps.portalRequestedMap.delete(index)
     }
 
-    createPortal(content, index, cacheItemID) { // create new portal
+    createPortal(component, index, cacheItemID) { // create new portal
 
         this.removeRequestedPortal(index)
 
@@ -263,7 +281,7 @@ export class CacheHandler {
         // console.log('creating InPortal node', '-'+this.cacheProps.scrollerID+'-', cacheItemID)
 
         this.cacheProps.portalMap.set(cacheItemID,//index,
-                <InPortal key = {cacheItemID} node = {portalNode} > { content } </InPortal>)
+                <InPortal key = {cacheItemID} node = {portalNode} > { component } </InPortal>)
                 // <InPortal key = {index} node = {portalNode} > { content } </InPortal>)
         this.cacheProps.modified = true
 
@@ -274,6 +292,7 @@ export class CacheHandler {
             },
             index,
             cacheItemID,
+            component,
         }
 
         this.cacheProps.portalMetadataMap.set(cacheItemID, portalMetadata)

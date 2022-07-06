@@ -446,18 +446,18 @@ const Cradle = ({
             scrollToItem, 
             reload, 
             clearCache, 
-            getCacheList, 
+            getCacheMap, 
+            getCacheList,
             modifyCacheMapping,
-            // preload, // TODO temporary!!
         } = serviceHandler
 
         const callbacks = {
             scrollToItem,
-            clearCache,
             reload,
+            clearCache,
+            getCacheMap,
             getCacheList,
             modifyCacheMapping,
-            // preload,
         }
 
         functions.getCallbacks(callbacks)
