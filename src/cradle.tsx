@@ -438,8 +438,6 @@ const Cradle = ({
     //send callback functions to host
     useEffect(()=>{
 
-        // referenceIndexCallbackRef.current = functions?.referenceIndexCallback
-
         if (!functions.getCallbacks) return
 
         const {
@@ -448,7 +446,8 @@ const Cradle = ({
             clearCache, 
             getCacheMap, 
             getCacheList,
-            modifyCacheMapping,
+            getCradleMap,
+            modifyCacheMap,
         } = serviceHandler
 
         const callbacks = {
@@ -457,7 +456,8 @@ const Cradle = ({
             clearCache,
             getCacheMap,
             getCacheList,
-            modifyCacheMapping,
+            getCradleMap,
+            modifyCacheMap,
         }
 
         functions.getCallbacks(callbacks)

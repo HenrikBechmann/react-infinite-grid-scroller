@@ -79,12 +79,16 @@ export default class ServiceHandler {
 
     }
 
-    public getCradleList = () => {
-        
+    public getCradleMap = () => {
+
+        const { cacheHandler, contentHandler } = this.cradleParameters.handlersRef.current
+
+        const modelIndexList = contentHandler.content.cradleModelComponents.map((item)=>item.props.index)
+        return cacheHandler.getCradleMap(modelIndexList)
     }
 
     //TODO implement this
-    public modifyCacheMapping = (mappingList) => {
+    public modifyCacheMap = (mappingList) => {
 
     }
 

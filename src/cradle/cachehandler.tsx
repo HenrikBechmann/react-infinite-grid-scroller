@@ -232,43 +232,71 @@ export class CacheHandler {
     }
 
     getCacheMap() {
-        // return this.cacheProps.cacheIndexToItemIDMap.entries()
+
         return new Map(this.cacheProps.cacheIndexToItemIDMap)
+
+    }
+
+    getCradleMap(modelIndexList) {
+
+        const cradleMap = new Map()
+        for (const index of modelIndexList) {
+
+            cradleMap.set(index, this.cacheProps.cacheIndexToItemIDMap.get(index))
+
+        }
+
+        return cradleMap
+
     }
 
     getCacheList() {
+
         const cachelist = new Map()
+
         for (const [key, value] of this.cacheProps.portalMetadataMap) {
-                const {
-                    index,
-                    cacheItemID,
-                    component,
-                } = value
+            const {
+                index,
+                cacheItemID,
+                component,
+            } = value
+
             cachelist.set(key,{
                 index,
                 cacheItemID,
                 component,
             })
+
         }
+
         return cachelist
+
     }
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
     registerRequestedPortal(index) {
+
         this.cacheProps.portalRequestedMap.set(index, null)
+
     }
 
     getCacheItemID(index) {
+
         const indexMap = this.cacheProps.cacheIndexToItemIDMap 
         const knownID = indexMap.get(index)
         const knownHasValue = knownID??false // deal with falsey 0
         const newID = (knownHasValue === false)?(globalCacheItemID++):null
+
         if (knownHasValue === false) indexMap.set(index, newID)
+
         return knownID??newID
+
     }
 
     removeRequestedPortal(index) {
+
         this.cacheProps.portalRequestedMap.delete(index)
+        
     }
 
     createPortal(component, index, cacheItemID) { // create new portal
