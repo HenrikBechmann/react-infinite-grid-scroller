@@ -240,9 +240,10 @@ export class CacheHandler {
     getCradleMap(modelIndexList) {
 
         const cradleMap = new Map()
+        const { cacheIndexToItemIDMap } = this.cacheProps
         for (const index of modelIndexList) {
 
-            cradleMap.set(index, this.cacheProps.cacheIndexToItemIDMap.get(index))
+            cradleMap.set(index, cacheIndexToItemIDMap.get(index))
 
         }
 
@@ -296,7 +297,7 @@ export class CacheHandler {
     removeRequestedPortal(index) {
 
         this.cacheProps.portalRequestedMap.delete(index)
-        
+
     }
 
     createPortal(component, index, cacheItemID) { // create new portal
