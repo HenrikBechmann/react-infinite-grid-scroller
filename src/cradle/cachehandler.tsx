@@ -18,8 +18,10 @@ let globalCacheItemID = 0
 // global scroller data, organized by session scrollerID
 export class CacheHandler {
 
-    constructor(scrollerID) {
+    constructor(scrollerID, setListsize, listsizeRef) {
         this.cacheProps.scrollerID = scrollerID
+        this.setListsize = setListsize // passed from infinitegridscroller setListsize(listsize)
+        this.listsizeRef = listsizeRef
     }
 
     //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
@@ -38,6 +40,9 @@ export class CacheHandler {
         scrollerID:null
     }
 
+    setListsize // setListsize(listsize) generates infinitescroller useEvent to update listsize throughout
+
+    listsizeRef
     // initialize scroller repository
 
     clearCache = () => {

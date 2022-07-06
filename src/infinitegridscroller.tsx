@@ -33,21 +33,23 @@
         // - item 400 in 400 item nested list of scrollers crosscount = 3 takes up entire width of viewport
 
     TODO:
+        - review event cycles - they seem slower
         - try to preload all children, even if cached
-        - add insertCacheItem and removeCacheItem
         - return modified cachedItemMap from modify, add, and remove
-        - adjust estimatedListSize for add and remove
-        - use estimated list size?
-        - use allSettled instead of all
-        - use finally for callback
+
+        - add insertCacheItem and removeCacheItem - affects listsize
+        - adjust listSize for add and remove
         - add modify listsize callback
         - getItem null return means past list - list size is adjusted;
             undefined means error; reject means error "unable to load"
+
+        - use allSettled instead of all
+        - use finally for callback
         - provide way to attempt reload of a single cell (change instanceID)
         - modifyCacheMap instruction by user
         - call matchCacheToCradle through contentHandler (?) iac rationalize calls to cacheHandler
         - test and review cacheItemID
-        - implement changeOrder callback for user - cellFrame index prop must be updated
+        - implement changeOrder (by index) callback for user - cellFrame index prop must be updated
         - use cacheItemID for referencing; index for order - cellFrame reload to re-order?
         - review state change chains in cradle
         - check preload intent against state machine handling
@@ -71,7 +73,7 @@
         cross-browser testing
 */
 
-import React, {useEffect, useState, useRef} from 'react'
+import React, {useEffect, useState, useCallback, useRef} from 'react'
 
 import Viewport from './viewport'
 import Scrollblock from './scrollblock'
@@ -194,14 +196,28 @@ const InfiniteGridScroller = (props) => {
 
     useEffect (() => {
         scrollerSessionIDRef.current = globalScrollerID++
-        cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current)
+        cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, setListsize, listsizeRef)
     },[])
 
     const listsizeRef = useRef(estimatedListSize)
 
+    const listsize = listsizeRef.current
+
     // console.log('infinite scroller listsizeRef','-'+scrollerID+'-' , scrollerState, listsizeRef)
     // console.log('infinite scroller scrollerID, scrollerState, cache, cacheMax', 
     //     '-'+scrollerID+'-',scrollerState, cache, cacheMax)
+
+    const setListsize = useCallback((listsize) =>{
+
+        if (listsize == listsizeRef.current) return
+
+        listsizeRef.current = listsize
+
+        // inform the user
+        functionsRef.current.newListsize && functionsRef.current.newListsize(listsize)
+
+        setScrollerState('setlistsize')
+    },[])
 
     // --------------------[ render ]---------------------
 
@@ -209,6 +225,7 @@ const InfiniteGridScroller = (props) => {
 
         switch (scrollerState) {
             case 'setup':
+            case 'setlistsize':
                 setScrollerState('ready')
         }
 
@@ -228,7 +245,7 @@ const InfiniteGridScroller = (props) => {
 
                 gridSpecs = { gridSpecsRef.current }
                 styles = { stylesRef.current }
-                listsizeRef = { listsizeRef }
+                listsize = { listsize }
                 scrollerID = { scrollerID }
                 
             >
@@ -236,7 +253,7 @@ const InfiniteGridScroller = (props) => {
 
                     gridSpecs = { gridSpecsRef.current }
                     styles = { stylesRef.current }
-                    listsizeRef = { listsizeRef }
+                    listsize = { listsize }
                     cache = { cache }
                     cacheMax = { cacheMax }
                     userFunctions = { functionsRef.current }

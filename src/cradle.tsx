@@ -14,7 +14,7 @@ import React, {
     useContext, 
     useEffect, 
     useLayoutEffect, 
-    useCallback, 
+    // useCallback, 
     useMemo 
 } from 'react'
 
@@ -40,7 +40,7 @@ const Cradle = ({
         gridSpecs,
 
         runwaySize, 
-        listsizeRef, 
+        listsize, 
         defaultVisibleIndex, 
         getItem, 
         placeholder, 
@@ -55,7 +55,7 @@ const Cradle = ({
         cacheHandler,
     }) => {
 
-    if (listsizeRef.current == 0) return // nothing to do
+    if (listsize == 0) return // nothing to do
 
     // ========================[ DATA SETUP ]========================
 
@@ -168,7 +168,7 @@ const Cradle = ({
 
         const viewportVisibleRowcount = Math.floor(viewportLength/rowLength)
 
-        const listRowcount = Math.ceil(listsizeRef.current/crosscount)
+        const listRowcount = Math.ceil(listsize/crosscount)
 
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
 
@@ -183,8 +183,8 @@ const Cradle = ({
             runwayRowcount = Math.max(0,runwayRowcount)
         }
         let itemcount = cradleRowcount * crosscount
-        if (itemcount > listsizeRef.current) {
-            itemcount = listsizeRef.current
+        if (itemcount > listsize) {
+            itemcount = listsize
             cradleRowcount = Math.ceil(itemcount/crosscount)
         }
 
@@ -205,7 +205,7 @@ const Cradle = ({
         viewportheight, 
         viewportwidth,
 
-        listsizeRef.current,
+        listsize,
         runwaySize,
         crosscount,
     ])
@@ -278,7 +278,7 @@ const Cradle = ({
         viewportRowcount,
         viewportVisibleRowcount,
         listRowcount,
-        listsize:listsizeRef.current,
+        listsize,
         runwayRowcount,
         // the following values are maintained elsewhere
         isMountedRef,
@@ -447,6 +447,7 @@ const Cradle = ({
             getCacheList,
             getCradleMap,
             modifyCacheMap,
+            setListsize,
         } = serviceHandler
 
         const callbacks = {
@@ -457,6 +458,7 @@ const Cradle = ({
             getCacheList,
             getCradleMap,
             modifyCacheMap,
+            setListsize,
         }
 
         userFunctions.getCallbacks(callbacks)
@@ -567,7 +569,7 @@ const Cradle = ({
         setCradleState('reconfigure')
 
     },[
-        listsizeRef.current,
+        listsize,
         cellHeight,
         cellWidth,
         gap,
@@ -936,7 +938,7 @@ const Cradle = ({
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
             scrollAxisReferenceIndex,
-            listsize:listsizeRef.current,
+            listsize,
             styles,
         }
         return trackerargs
@@ -945,7 +947,7 @@ const Cradle = ({
             cradleState, 
             viewportDimensions, 
             scrollAxisReferenceIndex, 
-            listsizeRef.current,
+            listsize,
             styles,
         ]
     )
