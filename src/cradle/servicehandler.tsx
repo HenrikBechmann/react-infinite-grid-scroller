@@ -79,6 +79,10 @@ export default class ServiceHandler {
 
     }
 
+    public getCradleList = () => {
+        
+    }
+
     //TODO implement this
     public modifyCacheMapping = (mappingList) => {
 
