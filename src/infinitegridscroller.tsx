@@ -141,10 +141,11 @@ const InfiniteGridScroller = (props) => {
     functions = functions??{}
     advanced = advanced??{}
 
-    // prop constraints
-    runwaySize = Math.max(0,runwaySize) // non-negative
-    estimatedListSize = Math.max(0,estimatedListSize) // non-negative
-    startingIndex = Math.max(0,startingIndex) // non-negative
+    // prop constraints - non-negative values
+    runwaySize = Math.max(0,runwaySize)
+    estimatedListSize = Math.max(0,estimatedListSize)
+    startingIndex = Math.max(0,startingIndex)
+
     // enums
     if (!['horizontal','vertical'].includes(orientation)) { 
         orientation = 'vertical'
@@ -178,9 +179,6 @@ const InfiniteGridScroller = (props) => {
     const scrollerID = scrollerSessionIDRef.current
 
     // satisfy React Object.is for attributes
-
-
-    console.log('gridSpecs, gridSpecsRef.current','-'+scrollerID+'-' ,gridSpecs, gridSpecsRef.current)
     if (!compareProps(gridSpecs, gridSpecsRef.current)) {
         gridSpecsRef.current = gridSpecs
     }
@@ -241,7 +239,7 @@ const InfiniteGridScroller = (props) => {
                     listsizeRef = { listsizeRef }
                     cache = { cache }
                     cacheMax = { cacheMax }
-                    functions = { functionsRef.current }
+                    userFunctions = { functionsRef.current }
                     defaultVisibleIndex = { defaultVisibleIndex }
                     getItem = { getItem }
                     placeholder = { placeholder }

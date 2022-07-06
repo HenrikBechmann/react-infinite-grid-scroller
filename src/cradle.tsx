@@ -44,7 +44,7 @@ const Cradle = ({
         defaultVisibleIndex, 
         getItem, 
         placeholder, 
-        functions,
+        userFunctions,
         styles,
         triggerlineOffset,
         cache,
@@ -210,23 +210,6 @@ const Cradle = ({
         crosscount,
     ])
 
-//     console.log('cradle calculated properties','-'+scrollerID+'-\n' ,
-//         `crosscount,
-//         cradleRowcount, 
-//         viewportRowcount, 
-//         viewportVisibleRowcount,
-//         listRowcount,
-//         runwayRowcount,
-// `,
-//         crosscount,
-//         cradleRowcount, 
-//         viewportRowcount, 
-//         viewportVisibleRowcount,
-//         listRowcount,
-//         runwayRowcount,
-
-//         )
-
     // ======================[ callbacks ]=====================
 
     // host callbacks
@@ -235,9 +218,9 @@ const Cradle = ({
 
     const externalCallbacksRef = useRef(
         {
-            referenceIndexCallback:functions?.referenceIndexCallback,
-            preloadIndexCallback:functions?.preloadIndexCallback,
-            cacheDeleteListCallback:functions?.cacheDeleteListCallback,
+            referenceIndexCallback:userFunctions?.referenceIndexCallback,
+            preloadIndexCallback:userFunctions?.preloadIndexCallback,
+            cacheDeleteListCallback:userFunctions?.cacheDeleteListCallback,
         }
     )
 
@@ -263,7 +246,7 @@ const Cradle = ({
         triggerlineOffset,
         scrollerID,
         // objects
-        functions,
+        userFunctions,
         styles,
         cacheHandler,
 
@@ -454,7 +437,7 @@ const Cradle = ({
     //send callback functions to host
     useEffect(()=>{
 
-        if (!functions.getCallbacks) return
+        if (!userFunctions.getCallbacks) return
 
         const {
             scrollToItem, 
@@ -476,7 +459,7 @@ const Cradle = ({
             modifyCacheMap,
         }
 
-        functions.getCallbacks(callbacks)
+        userFunctions.getCallbacks(callbacks)
 
     },[])
 
