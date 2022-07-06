@@ -452,13 +452,13 @@ const Cradle = ({
 
         const callbacks = {
             scrollToItem,
+            setListsize,
             reload,
             clearCache,
             getCacheMap,
             getCacheList,
             getCradleMap,
             modifyCacheMap,
-            setListsize,
         }
 
         userFunctions.getCallbacks(callbacks)
