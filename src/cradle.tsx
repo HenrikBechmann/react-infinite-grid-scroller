@@ -267,7 +267,7 @@ const Cradle = ({
         listsize, 
         cache,
         cacheMax,
-        indexOffset:defaultVisibleIndex, 
+        startingIndex:defaultVisibleIndex, 
         triggerlineOffset,
     }
 
