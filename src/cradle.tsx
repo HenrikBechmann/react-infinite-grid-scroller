@@ -40,7 +40,7 @@ const Cradle = ({
         gridSpecs,
 
         runwaySize, 
-        listsize, 
+        listsizeRef, 
         defaultVisibleIndex, 
         getItem, 
         placeholder, 
@@ -55,7 +55,7 @@ const Cradle = ({
         cacheHandler,
     }) => {
 
-    if (listsize == 0) return // nothing to do
+    if (listsizeRef.current == 0) return // nothing to do
 
     // ========================[ DATA SETUP ]========================
 
@@ -168,7 +168,7 @@ const Cradle = ({
 
         const viewportVisibleRowcount = Math.floor(viewportLength/rowLength)
 
-        const listRowcount = Math.ceil(listsize/crosscount)
+        const listRowcount = Math.ceil(listsizeRef.current/crosscount)
 
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
 
@@ -183,8 +183,8 @@ const Cradle = ({
             runwayRowcount = Math.max(0,runwayRowcount)
         }
         let itemcount = cradleRowcount * crosscount
-        if (itemcount > listsize) {
-            itemcount = listsize
+        if (itemcount > listsizeRef.current) {
+            itemcount = listsizeRef.current
             cradleRowcount = Math.ceil(itemcount/crosscount)
         }
 
@@ -205,10 +205,27 @@ const Cradle = ({
         viewportheight, 
         viewportwidth,
 
-        listsize,
+        listsizeRef.current,
         runwaySize,
         crosscount,
     ])
+
+//     console.log('cradle calculated properties','-'+scrollerID+'-\n' ,
+//         `crosscount,
+//         cradleRowcount, 
+//         viewportRowcount, 
+//         viewportVisibleRowcount,
+//         listRowcount,
+//         runwayRowcount,
+// `,
+//         crosscount,
+//         cradleRowcount, 
+//         viewportRowcount, 
+//         viewportVisibleRowcount,
+//         listRowcount,
+//         runwayRowcount,
+
+//         )
 
     // ======================[ callbacks ]=====================
 
@@ -238,7 +255,6 @@ const Cradle = ({
         cellWidth, 
         layout,
         // ...rest
-        listsize, 
         cache,
         cacheMax,
         defaultVisibleIndex, 
@@ -264,7 +280,6 @@ const Cradle = ({
         cellWidth, 
         layout,
         runwayRowcount,
-        listsize, 
         cache,
         cacheMax,
         startingIndex:defaultVisibleIndex, 
@@ -280,6 +295,7 @@ const Cradle = ({
         viewportRowcount,
         viewportVisibleRowcount,
         listRowcount,
+        listsize:listsizeRef.current,
         runwayRowcount,
         // the following values are maintained elsewhere
         isMountedRef,
@@ -568,7 +584,7 @@ const Cradle = ({
         setCradleState('reconfigure')
 
     },[
-        listsize,
+        listsizeRef.current,
         cellHeight,
         cellWidth,
         gap,
@@ -819,7 +835,7 @@ const Cradle = ({
 
                 contentHandler.setCradleContent( cradleState )
 
-                const cache = cradleInternalPropertiesRef.current.cache
+                const { cache } = cradleInternalPropertiesRef.current
                 if (cache == 'cradle') {
                     const modelComponentList = contentHandler.content.cradleModelComponents
                     const modelIndexList = modelComponentList.map(item=>item.props.index)
@@ -937,7 +953,7 @@ const Cradle = ({
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
             scrollAxisReferenceIndex,
-            listsize,
+            listsize:listsizeRef.current,
             styles,
         }
         return trackerargs
@@ -946,7 +962,7 @@ const Cradle = ({
             cradleState, 
             viewportDimensions, 
             scrollAxisReferenceIndex, 
-            listsize,
+            listsizeRef.current,
             styles,
         ]
     )

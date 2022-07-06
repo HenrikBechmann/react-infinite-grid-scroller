@@ -13,7 +13,7 @@ import { ViewportInterrupt } from './viewport'
 
 const Scrollblock = ({
     children,
-    listsize,
+    listsizeRef,
     gridSpecs, 
     styles,
     scrollerID,
@@ -63,7 +63,7 @@ const Scrollblock = ({
         orientation,
         height,
         width,
-        listsize,
+        listsizeRef.current,
         cellHeight,
         cellWidth,
         gap,
@@ -78,7 +78,7 @@ const Scrollblock = ({
                         orientation,
                         viewportheight:height,
                         viewportwidth:width,
-                        listsize,
+                        listsize:listsizeRef.current,
                         cellHeight,
                         cellWidth,
                         gap,
@@ -92,13 +92,15 @@ const Scrollblock = ({
             orientation,
             height,
             width,
-            listsize,
+            listsizeRef.current,
             cellHeight,
             cellWidth,
             gap,
             padding,
        ]
     )
+
+    // console.log('scrollblock listsizeRef, baseScrollBlockLengthRef','-'+scrollerID+'-' , listsizeRef, baseScrollBlockLengthRef)    
 
     return <div data-type = 'scrollblock' style={divlinerstyleRef.current}>{children}</div>
 

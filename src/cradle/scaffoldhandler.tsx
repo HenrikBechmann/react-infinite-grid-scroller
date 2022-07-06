@@ -24,9 +24,12 @@ export default class ScaffoldHandler {
 
         const {
             defaultVisibleIndex, 
-            listsize, 
             padding
         } = this.cradleParameters.cradleInheritedPropertiesRef.current
+
+        const {
+            listsize,
+        } = this.cradleParameters.cradleInternalPropertiesRef.current
 
         // progression of references: implied->target
         this.cradlePositionData.targetAxisReferenceIndex = 

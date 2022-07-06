@@ -27,7 +27,6 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         cellHeight, 
         cellWidth, 
         gap,
-        listsize,
     } = cradleInheritedProperties
 
     const {
@@ -36,6 +35,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         cradleRowcount,
         runwayRowcount,
         listRowcount,
+        listsize,
         viewportVisibleRowcount,
 
     } = cradleInternalProperties
@@ -215,7 +215,6 @@ export const calcContentShift = ({
         orientation,
         cellHeight,
         cellWidth,
-        listsize,
         triggerlineOffset,
 
     } = cradleInheritedProperties
@@ -233,6 +232,7 @@ export const calcContentShift = ({
 
         crosscount,
         cradleRowcount,
+        listsize,
         listRowcount,
         viewportRowcount,
         runwayRowcount,
@@ -410,6 +410,7 @@ export const calcContentShift = ({
 export const getCellFrameComponentList = ({ 
 
         cradleInheritedProperties,
+        cradleInternalProperties,
         cradleContentCount,
         cradleReferenceIndex, 
         listStartChangeCount, 
@@ -434,6 +435,7 @@ export const getCellFrameComponentList = ({
                     {
                         index:newindex, 
                         cradleInheritedProperties,
+                        cradleInternalProperties,
                         instanceIdCounterRef,
                     }
                 )
@@ -456,6 +458,7 @@ export const getCellFrameComponentList = ({
                     {
                         index:newindex, 
                         cradleInheritedProperties,
+                        cradleInternalProperties,
                         instanceIdCounterRef,
                     }
                 )
@@ -514,6 +517,7 @@ export const deletePortals = (cacheHandler, deleteList, cacheDeleteListCallback)
 const createCell = ({
     index, 
     cradleInheritedProperties,
+    cradleInternalProperties,
     instanceIdCounterRef,
 
 }) => {
@@ -526,10 +530,11 @@ const createCell = ({
         cellWidth,
         getItem,
         placeholder,
-        listsize,
         scrollerID 
 
     } = cradleInheritedProperties
+
+    const { listsize } = cradleInternalProperties
 
     return <CellFrame 
         key = { instanceID } 

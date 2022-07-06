@@ -84,10 +84,9 @@ export default class ContentHandler {
             cellHeight,
             cellWidth,
             cache,
-            listsize,
         } = cradleInheritedProperties
 
-        const {crosscount} = cradleInternalProperties
+        const {crosscount, listsize} = cradleInternalProperties
 
         let workingAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
         workingAxisReferenceIndex -= (workingAxisReferenceIndex % crosscount)
@@ -152,7 +151,7 @@ export default class ContentHandler {
         const [newcontentlist,deleteditems] = getCellFrameComponentList({
 
             cradleInheritedProperties,
-            // cradleInternalProperties,
+            cradleInternalProperties,
             cradleContentCount,
             cradleReferenceIndex:targetCradleReferenceIndex,
             listStartChangeCount:0,
@@ -353,7 +352,7 @@ export default class ContentHandler {
 
             [updatedContentList,deletedContentItems] = getCellFrameComponentList({
                 cradleInheritedProperties,
-                // cradleInternalProperties,
+                cradleInternalProperties,
                 cradleContentCount,
                 workingContentList:modelcontentlist,
                 listStartChangeCount,
@@ -461,7 +460,8 @@ export default class ContentHandler {
                 contentHandler.content.cradleModelComponents.map((item)=>item.props.index)
 
             const paring = cacheHandler.pareCacheToMax(
-                cradleInheritedProperties.cacheMax,modelIndexList, serviceHandler.callbacks.cacheDeleteListCallback)
+                cradleInheritedProperties.cacheMax, modelIndexList, 
+                serviceHandler.callbacks.cacheDeleteListCallback)
             if (paring) cacheHandler.renderPortalList()
                 
         }

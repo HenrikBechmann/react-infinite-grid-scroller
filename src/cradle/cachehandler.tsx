@@ -203,7 +203,8 @@ export class CacheHandler {
 
         const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
         const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
-        const { getItem, listsize } = cradleInheritedProperties
+        const { getItem } = cradleInheritedProperties
+        const { listsize } = cradleInternalProperties
 
         const promises = []
 

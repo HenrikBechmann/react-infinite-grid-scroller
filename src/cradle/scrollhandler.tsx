@@ -240,9 +240,9 @@ export default class ScrollHandler {
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
         const cradleConfig = this.cradleParameters.cradleInternalPropertiesRef.current
 
-        const {crosscount} = cradleConfig
+        const {crosscount, listsize} = cradleConfig
         const viewportElement = viewportInterruptProperties.elementRef.current
-        const {orientation, listsize} = cradleProps
+        const {orientation} = cradleProps
         let scrollPos, cellLength
         if (orientation == 'vertical') {
 
