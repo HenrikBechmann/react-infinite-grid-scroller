@@ -33,6 +33,7 @@
         // - item 400 in 400 item nested list of scrollers crosscount = 3 takes up entire width of viewport
 
     TODO:
+        - cacheMax is also boundary for preload, and for dense, as well as keepload (?)
         - add insertCacheItem and removeCacheItem - affects listsize
         - adjust listSize for add and remove
         - add modify listsize callback
@@ -131,7 +132,7 @@ const InfiniteGridScroller = (props) => {
             // properties viewport, scrollblock, cradle, or scrolltracker
         // system specs:
         cache = 'cradle', // "preload", "keepload" or "cradle"
-        cacheMax = 100, // (always minimum cradle)
+        cacheMax = null, // always minimum cradle null means limited by listsize
         triggerlineOffset = 10, // distance from cell head or tail for content shifts above/below axis
         functions = {}, // optional. properties to get direct access to some component utilites, optional
         scrollerData, // required for embedded scroller, shares scroller settings with content
