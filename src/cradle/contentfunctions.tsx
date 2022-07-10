@@ -411,6 +411,7 @@ export const getCellFrameComponentList = ({
 
         cradleInheritedProperties,
         cradleInternalProperties,
+        cacheHandler,
         cradleContentCount,
         cradleReferenceIndex, 
         listStartChangeCount, 
@@ -437,6 +438,7 @@ export const getCellFrameComponentList = ({
                         cradleInheritedProperties,
                         cradleInternalProperties,
                         instanceIdCounterRef,
+                        cacheHandler,
                     }
                 )
             )
@@ -460,6 +462,7 @@ export const getCellFrameComponentList = ({
                         cradleInheritedProperties,
                         cradleInternalProperties,
                         instanceIdCounterRef,
+                        cacheHandler,
                     }
                 )
             )
@@ -519,6 +522,7 @@ const createCell = ({
     cradleInheritedProperties,
     cradleInternalProperties,
     instanceIdCounterRef,
+    cacheHandler,
 
 }) => {
     const instanceID = instanceIdCounterRef.current++
@@ -536,6 +540,8 @@ const createCell = ({
 
     const { listsize } = cradleInternalProperties
 
+    const cacheItemID = cacheHandler.getCacheItemID(index)
+
     return <CellFrame 
         key = { instanceID } 
         orientation = { orientation }
@@ -545,6 +551,7 @@ const createCell = ({
         getItem = { getItem }
         listsize = { listsize }
         placeholder = { placeholder }
+        cacheItemID = { cacheItemID }
         instanceID = { instanceID }
         scrollerID = { scrollerID }
         updatedCacheItemID = {null}

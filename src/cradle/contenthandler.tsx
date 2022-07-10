@@ -149,7 +149,8 @@ export default class ContentHandler {
         // returns content constrained by cradleRowcount
 
         const [newcontentlist,deleteditems] = getCellFrameComponentList({
-
+            
+            cacheHandler,            
             cradleInheritedProperties,
             cradleInternalProperties,
             cradleContentCount,
@@ -351,6 +352,7 @@ export default class ContentHandler {
         if (listStartChangeCount || listEndChangeCount) { // if either is non-0 then modify content
 
             [updatedContentList,deletedContentItems] = getCellFrameComponentList({
+                cacheHandler,
                 cradleInheritedProperties,
                 cradleInternalProperties,
                 cradleContentCount,

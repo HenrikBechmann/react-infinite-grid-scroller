@@ -17,10 +17,11 @@ const CellFrame = ({
     orientation, 
     cellHeight, 
     cellWidth, 
-    index, 
     getItem, 
     listsize, 
-    placeholder, 
+    placeholder,
+    cacheItemID, 
+    index, 
     instanceID, 
     scrollerID,
     updatedCacheItemID, // triggers content refresh if changed
@@ -46,6 +47,9 @@ const CellFrame = ({
 
     const placeholderRef = useRef(null)
 
+    const cacheItemIDRef = useRef(null)
+    cacheItemIDRef.current = cacheItemID
+
     // for unmount
     useEffect(()=>{
 
@@ -57,10 +61,10 @@ const CellFrame = ({
 
     useEffect(()=>{
 
-        if (frameStatusRef.current == 'setup') return
+        // if (frameStatusRef.current == 'setup') return
         setFrameStatus('getusercontent')
 
-    },[updatedCacheItemID])
+    },[cacheItemID])
 
     // ----------------- [ placeholder definition ] -------------------------
 
@@ -98,7 +102,7 @@ const CellFrame = ({
 
         // console.log('creating cellFrame','-'+scrollerID+'-',instanceID  )
 
-        setFrameStatus('getusercontent')
+        // setFrameStatus('getusercontent')
 
         // unmount
         return () => {
@@ -149,7 +153,7 @@ const CellFrame = ({
             }
             case 'getusercontent': {
 
-                const cacheItemID = cacheHandler.getCacheItemID(index)
+                const cacheItemID = cacheItemIDRef.current // cacheHandler.getCacheItemID(index)
                 const cached = cacheHandler.hasPortal(cacheItemID)
 
                 if (cached) {
