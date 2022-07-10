@@ -41,7 +41,7 @@ const Cradle = ({
 
         runwaySize, 
         listsize, 
-        defaultVisibleIndex, 
+        startingIndex, 
         getItem, 
         placeholder, 
         userFunctions,
@@ -240,7 +240,7 @@ const Cradle = ({
         // ...rest
         cache,
         cacheMax,
-        defaultVisibleIndex, 
+        startingIndex, 
         getItem, 
         placeholder, 
         triggerlineOffset,
@@ -265,7 +265,7 @@ const Cradle = ({
         runwayRowcount,
         cache,
         cacheMax,
-        startingIndex:defaultVisibleIndex, 
+        startingIndex, 
         triggerlineOffset,
     }
 

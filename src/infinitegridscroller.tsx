@@ -140,9 +140,9 @@ const InfiniteGridScroller = (props) => {
     } = props
 
     // avoid null
-    styles = styles??{}
-    functions = functions??{}
-    advanced = advanced??{}
+    styles = styles ?? {}
+    functions = functions ?? {}
+    advanced = advanced ?? {}
 
     // prop constraints - non-negative values
     runwaySize = Math.max(0,runwaySize)
@@ -174,7 +174,6 @@ const InfiniteGridScroller = (props) => {
     const gridSpecsRef = useRef(gridSpecs)
     const stylesRef = useRef(styles)
     const functionsRef = useRef(functions)
-    const defaultVisibleIndex = startingIndex
 
     // for mount
     const scrollerSessionIDRef = useRef(null);
@@ -258,7 +257,7 @@ const InfiniteGridScroller = (props) => {
                     cache = { cache }
                     cacheMax = { cacheMax }
                     userFunctions = { functionsRef.current }
-                    defaultVisibleIndex = { defaultVisibleIndex }
+                    startingIndex = { startingIndex }
                     getItem = { getItem }
                     placeholder = { placeholder }
                     runwaySize = { runwaySize }

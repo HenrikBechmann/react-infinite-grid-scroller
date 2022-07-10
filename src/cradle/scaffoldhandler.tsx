@@ -14,6 +14,7 @@ export default class ScaffoldHandler {
             headTriggerlineRef,
             tailTriggerlineRef
         } = cradleParameters.cradleInternalPropertiesRef.current.cradleElementsRef.current
+        
         this.elements = {
             axisRef,
             headRef,
@@ -23,7 +24,7 @@ export default class ScaffoldHandler {
         }
 
         const {
-            defaultVisibleIndex, 
+            startingIndex, 
             padding
         } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
@@ -33,7 +34,7 @@ export default class ScaffoldHandler {
 
         // progression of references: implied->target
         this.cradlePositionData.targetAxisReferenceIndex = 
-            (Math.min(defaultVisibleIndex,(listsize - 1)) || 0)
+            (Math.min(startingIndex,(listsize - 1)) || 0)
         this.cradlePositionData.targetAxisPixelOffset = 0
 
     }
