@@ -12,12 +12,14 @@ export default class ServiceHandler {
            referenceIndexCallback,
            preloadIndexCallback,
            cacheDeleteListCallback,
+           newListSizeCallback,
        } = cradleParameters.externalCallbacksRef.current
 
        const callbacks = {
            referenceIndexCallback,
            preloadIndexCallback,
            cacheDeleteListCallback,
+           newListSizeCallback,
        }
 
        this.callbacks = callbacks

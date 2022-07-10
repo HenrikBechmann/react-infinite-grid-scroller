@@ -11,6 +11,7 @@
             // keepload
             // cradle
             cache mapping modification by user
+            newListsize callback
 
         surface cache, cacheMax & runway etc to test options
         also surface external callbacks with return values for testing
