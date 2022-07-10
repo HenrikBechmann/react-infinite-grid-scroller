@@ -60,6 +60,12 @@ export class CacheHandler {
         }
     }
 
+    // changeMap is [key, value] pair of [cacheItemID, index]
+    // index = null means delete the item from cache
+    applyMappingChanges = (changeMap) => {
+
+    }
+
     clearCache = () => {
 
         // keep the setListState callback
