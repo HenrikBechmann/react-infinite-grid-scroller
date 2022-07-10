@@ -442,19 +442,22 @@ const Cradle = ({
         const {
             scrollToItem, 
             reload, 
+            setListsize,
             clearCache, 
+
             getCacheMap, 
             getCacheList,
             getCradleMap,
             modifyCacheMap,
-            setListsize,
+
         } = serviceHandler
 
         const callbacks = {
             scrollToItem,
-            setListsize,
             reload,
+            setListsize,
             clearCache,
+            
             getCacheMap,
             getCacheList,
             getCradleMap,

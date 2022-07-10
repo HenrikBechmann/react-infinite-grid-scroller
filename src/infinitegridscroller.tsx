@@ -13,7 +13,7 @@
             cache mapping modification by user
 
         surface cache, cacheMax & runway etc to test options
-        also surface external callbacks for testing
+        also surface external callbacks with return values for testing
         review all code
 
         layout: uniform, variable, dynamic, dense
