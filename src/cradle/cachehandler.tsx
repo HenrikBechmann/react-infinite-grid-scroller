@@ -40,10 +40,14 @@ export class CacheHandler {
         scrollerID:null
     }
 
-    setListsize // setListsize(listsize) generates infinitescroller useEvent to update listsize throughout
-
     listsizeRef
     // initialize scroller repository
+
+    setListsize // setListsize(listsize) generates infinitescroller useEvent to update listsize throughout
+
+    changeListsize = (newlistsize) => {
+        this.setListsize(newlistsize)
+    }
 
     clearCache = () => {
 

@@ -96,7 +96,7 @@ export default class ServiceHandler {
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
 
-        cacheHandler.setListsize(listsize)
+        cacheHandler.changeListsize(listsize)
 
     }
 
