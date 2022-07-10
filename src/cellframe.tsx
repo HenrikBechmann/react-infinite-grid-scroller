@@ -24,7 +24,6 @@ const CellFrame = ({
     index, 
     instanceID, 
     scrollerID,
-    updatedCacheItemID, // triggers content refresh if changed
 }) => {
 
     const cradleContext = useContext(CradleContext)

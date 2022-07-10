@@ -554,7 +554,6 @@ const createCell = ({
         cacheItemID = { cacheItemID }
         instanceID = { instanceID }
         scrollerID = { scrollerID }
-        updatedCacheItemID = {null}
     />
 
 }
