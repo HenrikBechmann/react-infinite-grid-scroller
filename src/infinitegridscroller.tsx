@@ -12,6 +12,7 @@
             // cradle
             cache mapping modification by user
             newListsize callback
+            organize return values of getItem
 
         surface cache, cacheMax & runway etc to test options
         also surface external callbacks with return values for testing
