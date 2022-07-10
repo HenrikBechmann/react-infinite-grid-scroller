@@ -45,8 +45,19 @@ export class CacheHandler {
 
     setListsize // setListsize(listsize) generates infinitescroller useEvent to update listsize throughout
 
-    changeListsize = (newlistsize) => {
+    changeListsize = (newlistsize, cacheDeleteListCallback) => {
         this.setListsize(newlistsize)
+        // match cache to newlistsize
+        const portalIndexList = this.cacheProps.cacheIndexToItemIDMap
+        const mapkeys = Array.from(portalIndexList.keys())
+        mapkeys.sort((a,b) => a - b)
+        const highestindex = mapkeys.at(-1)
+        if (highestindex > (newlistsize -1)) { // pare the cache
+            const parelist = mapkeys.filter((item)=>{
+                return item > (newlistsize -1)
+            })
+            this.deletePortal(parelist, cacheDeleteListCallback)
+        }
     }
 
     clearCache = () => {
@@ -106,10 +117,6 @@ export class CacheHandler {
         if ((portalIndexList.size + requestedMap.size) <= max) return false
 
         // sort the map keys
-        // const mapsessionitemidkeyslist = Array.from(portalMapList.keys())
-        // const mapkeyslist = mapsessionitemidkeyslist.map(cacheItemID =>{
-        //     return portalMetadataMap.get(cacheItemID).index
-        // })
         const mapkeyslist = Array.from(portalIndexList.keys())
         const requestedkeys = Array.from(requestedMap.keys())
 

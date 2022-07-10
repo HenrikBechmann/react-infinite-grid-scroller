@@ -96,7 +96,7 @@ export default class ServiceHandler {
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
 
-        cacheHandler.changeListsize(listsize)
+        cacheHandler.changeListsize(listsize, this.callbacks.cacheDeleteListCallback)
 
     }
 
