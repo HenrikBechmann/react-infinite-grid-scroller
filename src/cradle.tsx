@@ -513,17 +513,47 @@ const Cradle = ({
 
     },[])
 
+    // =====================[ RECONFIGURATION effects ]======================
+    // resize (UI resize of the viewport), reconfigure, or pivot
+
     // initiate preload if requested
     useEffect(()=> {
 
-        if (cache != 'preload') return
- 
-        setCradleState('startpreload')
+        switch (cache) {
 
-    },[])
+            case 'preload': {
+                setCradleState('startpreload')
+                break
 
-    // =====================[ RECONFIGURATION effects ]======================
-    // resize (UI resize of the viewport), reconfigure, or pivot
+            }
+
+            case 'keepload': {
+
+                const modelIndexList = contentHandler.getModelIndexList()
+
+                const cacheDeleteListCallback = serviceHandler.callbacks.cacheDeleteListCallback
+
+                // const cacheMax = cradleParameters.cradleInheritedPropertiesRef.current.cacheMax
+
+                cacheHandler.pareCacheToMax(cacheMax, modelIndexList, cacheDeleteListCallback)
+
+                break
+            }
+
+            case 'cradle': {
+
+                const modelIndexList = contentHandler.getModelIndexList()
+
+                const cacheDeleteListCallback = serviceHandler.callbacks.cacheDeleteListCallback
+
+                cacheHandler.matchCacheToCradle(modelIndexList, cacheDeleteListCallback)
+
+                break
+            }
+
+        }
+
+    },[cache, cacheMax])
 
     // trigger resizing based on viewport state
     useEffect(()=>{
@@ -822,8 +852,7 @@ const Cradle = ({
 
                 const { cache } = cradleInternalPropertiesRef.current
                 if (cache == 'cradle') {
-                    const modelComponentList = contentHandler.content.cradleModelComponents
-                    const modelIndexList = modelComponentList.map(item=>item.props.index)
+                    const modelIndexList = contentHandler.getModelIndexList()
                     cacheHandler.matchCacheToCradle(modelIndexList, serviceHandler.callbacks.cacheDeleteListCallback)
                     cacheHandler.renderPortalList()
                 }

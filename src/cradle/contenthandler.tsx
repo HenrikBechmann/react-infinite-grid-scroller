@@ -454,10 +454,9 @@ export default class ContentHandler {
         if (cradleInheritedProperties.cache == 'keepload') {
 
             const cradleHandlers = this.cradleParameters.handlersRef.current
-            const { contentHandler, cacheHandler, serviceHandler } = cradleHandlers
+            const { cacheHandler, serviceHandler } = cradleHandlers
 
-            const modelIndexList = 
-                contentHandler.content.cradleModelComponents.map((item)=>item.props.index)
+            const modelIndexList = this.getModelIndexList()
 
             const paring = cacheHandler.pareCacheToMax(
                 cradleInheritedProperties.cacheMax, modelIndexList, 
@@ -483,5 +482,18 @@ export default class ContentHandler {
         cacheHandler.clearCache()
 
     }
+
+    getModelIndexList() {
+
+        const { cradleModelComponents } = this.content
+        if (!cradleModelComponents) {
+            return [] 
+        } else {
+            return cradleModelComponents.map((item)=>item.props.index)
+        }
+
+    }
+
+
 
 }

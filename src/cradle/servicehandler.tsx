@@ -83,7 +83,7 @@ export default class ServiceHandler {
 
         const { cacheHandler, contentHandler } = this.cradleParameters.handlersRef.current
 
-        const modelIndexList = contentHandler.content.cradleModelComponents.map((item)=>item.props.index)
+        const modelIndexList = contentHandler.getModelIndexList()
         return cacheHandler.getCradleMap(modelIndexList)
     }
 
