@@ -11,12 +11,12 @@
             // keepload
             // cradle
             cache mapping modification by user
-            newListsize callback
             organize return values of getItem
+            checkmark enable console feedback (for external callbacks)
 
-        surface cache, cacheMax & runway etc to test options
         also surface external callbacks with return values for testing
         review all code
+        newListsize callback
 
         layout: uniform, variable, dynamic, dense
         insert, remove, swap functions (create cacheItemID reference system)
