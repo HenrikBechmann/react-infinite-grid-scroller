@@ -113,11 +113,13 @@ export default class ServiceHandler {
             if (!indexToItemIDMap.has(index)) {
                 ignored.set(index,cacheItemID)
             } else {
-                indexToItemIDMap.set(index,cacheItemID)
-                const value = metadataMap.get(cacheItemID)
-                originalitemindex.set(cacheItemID,value.index)
-                value.index = index
-                processed.set(index,cacheItemID)
+                if (indexToItemIDMap.get(index) != cacheItemID) {
+                    indexToItemIDMap.set(index,cacheItemID)
+                    const value = metadataMap.get(cacheItemID)
+                    originalitemindex.set(cacheItemID,value.index)
+                    value.index = index
+                    processed.set(index,cacheItemID)
+                }
             }
         })
 
@@ -129,6 +131,19 @@ export default class ServiceHandler {
         cacheHandler.renderPortalList()
 
         // eliminate duplicate cacheItemIDs in index map
+
+        originalitemindex.forEach((cacheItemID, index) => {
+            if (indexToItemIDMap.has(index) && (indexToItemIDMap.get(index) == cacheItemID)) {
+                duplicates.set(cacheItemID, index)
+            }
+        })
+
+        if (duplicates.size) {
+            console.log('WARNING: mapping left unchanged by modifyCacheMap created duplicates:\
+                \nduplicates, modifyMap\n',
+                duplicates, modifyMap, 
+                '\nExpect unexpected behaviour. Cached portals must appear only once.')
+        }
 
         // apply changes to extant cellFrames
         const cradleModelComponents = contentHandler.content.cradleModelComponents
