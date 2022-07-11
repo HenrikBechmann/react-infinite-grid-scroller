@@ -281,13 +281,11 @@ export class CacheHandler {
         for (const [key, value] of this.cacheProps.portalMetadataMap) {
             const {
                 index,
-                cacheItemID,
                 component,
             } = value
 
             cachelist.set(key,{
                 index,
-                cacheItemID,
                 component,
             })
 

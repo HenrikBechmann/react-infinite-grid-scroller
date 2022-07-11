@@ -92,6 +92,8 @@ export default class ServiceHandler {
     //TODO implement this
     public modifyCacheMap = (modifyMap) => {
 
+        console.log('modifyMap in serviceHandler',modifyMap)
+
     }
 
     public setListsize = (listsize) => {
