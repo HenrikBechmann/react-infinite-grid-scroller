@@ -60,9 +60,6 @@ const CellFrame = ({
 
     useEffect(()=>{
 
-        // if (frameStatusRef.current != 'setup') {
-        //     console.log('getting new cacheItemID for instanceID', cacheItemID, instanceID)
-        // }
         setFrameStatus('getusercontent')
 
     },[cacheItemID])
@@ -100,10 +97,6 @@ const CellFrame = ({
 
     // initialize cell content
     useEffect(() => {
-
-        // console.log('creating cellFrame','-'+scrollerID+'-',instanceID  )
-
-        // setFrameStatus('getusercontent')
 
         // unmount
         return () => {
@@ -160,7 +153,6 @@ const CellFrame = ({
                 if (cached) {
 
                     portalDataRef.current = cacheHandler.getPortal(cacheItemID)
-                    // portalDataRef.current = cacheHandler.getPortal(index)
 
                     portalNodeRef.current = portalDataRef.current.portalNode
 

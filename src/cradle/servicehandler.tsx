@@ -98,6 +98,7 @@ export default class ServiceHandler {
 
         if (modifyMap.size == 0) return
 
+        // TODO move the cache processing to cacheHandler
         const { cacheHandler, contentHandler } = this.cradleParameters.handlersRef.current
 
         // apply changes to cache index and cacheItemID maps
@@ -146,7 +147,8 @@ export default class ServiceHandler {
         }
 
         // apply changes to extant cellFrames
-        const cradleModelComponents = contentHandler.content.cradleModelComponents
+        // TODO move to contentHandler
+        const { cradleModelComponents } = contentHandler.content
 
         const modifiedCellFrames = new Map()
 

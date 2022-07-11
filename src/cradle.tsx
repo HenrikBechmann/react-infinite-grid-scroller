@@ -221,6 +221,7 @@ const Cradle = ({
             referenceIndexCallback:userFunctions?.referenceIndexCallback,
             preloadIndexCallback:userFunctions?.preloadIndexCallback,
             cacheDeleteListCallback:userFunctions?.cacheDeleteListCallback,
+            newListSizeCallback:userFunctions?.newListSizeCallback,
         }
     )
 
@@ -534,7 +535,7 @@ const Cradle = ({
 
                 const modelIndexList = contentHandler.getModelIndexList()
 
-                const cacheDeleteListCallback = serviceHandler.callbacks.cacheDeleteListCallback
+                const { cacheDeleteListCallback } = serviceHandler.callbacks
 
                 // const cacheMax = cradleParameters.cradleInheritedPropertiesRef.current.cacheMax
 
@@ -547,7 +548,7 @@ const Cradle = ({
 
                 const modelIndexList = contentHandler.getModelIndexList()
 
-                const cacheDeleteListCallback = serviceHandler.callbacks.cacheDeleteListCallback
+                const { cacheDeleteListCallback } = serviceHandler.callbacks
 
                 cacheHandler.matchCacheToCradle(modelIndexList, cacheDeleteListCallback)
 
@@ -703,7 +704,7 @@ const Cradle = ({
 
         switch (cradleState) {
 
-            case 'applycellframechanges': {
+            case 'applycellframechanges': { // user intervention
                 setCradleState('ready')
                 break
             }
