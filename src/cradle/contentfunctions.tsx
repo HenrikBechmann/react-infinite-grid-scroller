@@ -429,7 +429,7 @@ export const getCellFrameComponentList = ({
 
     if (listStartChangeCount >= 0) { // acquire new items
 
-        for (let newindex = cradleReferenceIndex - listStartChangeCount; newindex < (cradleReferenceIndex); newindex++) {
+        for (const newindex = cradleReferenceIndex - listStartChangeCount; newindex < (cradleReferenceIndex); newindex++) {
 
             headContentlist.push(
                 createCell(

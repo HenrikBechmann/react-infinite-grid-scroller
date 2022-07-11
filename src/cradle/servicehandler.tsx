@@ -135,8 +135,7 @@ export default class ServiceHandler {
 
         const modifiedCellFrames = new Map()
 
-        for (const i in cradleModelComponents) {
-            const component = cradleModelComponents[i]
+        cradleModelComponents.forEach((component) => {
             const index = component.props.index
             if (modifyMap.has(index)) {
                 const cacheItemID = component.props.cacheItemID
@@ -149,7 +148,7 @@ export default class ServiceHandler {
 
                 }
             }
-        }
+        })
 
         // console.log('modifiedCellFrames',modifiedCellFrames)
 
