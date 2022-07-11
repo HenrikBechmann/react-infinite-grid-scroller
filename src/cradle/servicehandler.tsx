@@ -1,6 +1,8 @@
 // servicehandler.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
+import React from 'react'
+
 export default class ServiceHandler {
 
     constructor(cradleParameters) {
@@ -90,9 +92,66 @@ export default class ServiceHandler {
     }
 
     //TODO implement this
-    public modifyCacheMap = (modifyMap) => {
+    public modifyCacheMap = (modifyMap) => { // index => cacheItemID
 
         console.log('modifyMap in serviceHandler',modifyMap)
+
+        if (modifyMap.size == 0) return
+
+        const { cacheHandler, contentHandler, stateHandler } = this.cradleParameters.handlersRef.current
+
+        // apply changes to cache index and cacheItemID maps
+        const metadataMap = cacheHandler.cacheProps.metadataMap
+        const indexToItemIDMap = cacheHandler.cacheProps.indexToItemIDMap
+
+        const duplicates = new Map()
+        const processed = new Map()
+        const originalitemindex = new Map()
+        const ignored = new Map()
+
+        modifyMap.forEach((cacheItemID,index) => {
+            if (!indexToItemIDMap.has(index)) {
+                ignored.set(index,cacheItemID)
+            } else {
+                indexToItemIDMap.set(index,cacheItemID)
+                const value = metadataMap.get(cacheItemID)
+                originalitemindex.set(cacheItemID,value.index)
+                value.index = index
+                processed.set(index,cacheItemID)
+            }
+        })
+
+        console.log('ignored,processed',ignored,processed)
+
+        if (processed.size == 0) return
+
+        cacheHandler.cacheProps.modified = true
+        cacheHandler.renderPortalList()
+
+        // eliminate duplicate cacheItemIDs in index map
+
+        // apply changes to extant cellFrames
+        const cradleModelComponents = contentHandler.content.cradleModelComponents
+        let changecount = 0
+        for (const i in cradleModelComponents) {
+            const component = cradleModelComponents[i]
+            const index = component.props.index
+            if (modifyMap.has(index)) {
+                const cacheItemID = component.props.cacheItemID
+                const newCacheItemID = modifyMap.get(index)
+                if ( newCacheItemID != cacheItemID ) {
+                    changecount++
+                    cradleModelComponents[i] = React.cloneElement(component, {cacheItemID})
+
+                }
+            }
+        }
+
+        console.log('changecount',changecount)
+
+        if (changecount) {
+            stateHandler.setCradleState('applycachechanges')
+        }
 
     }
 

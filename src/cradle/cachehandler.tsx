@@ -30,10 +30,10 @@ export class CacheHandler {
         setListState:null,
         modified:false,
 
-        portalMetadataMap:new Map(),
-        portalRequestedMap: new Map(), // some portals may have been requested by requestidlecallback, not yet created
+        metadataMap:new Map(),
+        requestedMap: new Map(), // some portals may have been requested by requestidlecallback, not yet created
         portalMap:new Map(),
-        cacheIndexToItemIDMap:new Map(),
+        indexToItemIDMap:new Map(),
 
         portalList:null,
 
@@ -48,7 +48,7 @@ export class CacheHandler {
     changeListsize = (newlistsize, cacheDeleteListCallback) => {
         this.setListsize(newlistsize)
         // match cache to newlistsize
-        const portalIndexList = this.cacheProps.cacheIndexToItemIDMap
+        const portalIndexList = this.cacheProps.indexToItemIDMap
         const mapkeys = Array.from(portalIndexList.keys())
         mapkeys.sort((a,b) => a - b)
         const highestindex = mapkeys.at(-1)
@@ -70,9 +70,9 @@ export class CacheHandler {
 
         // keep the setListState callback
         this.cacheProps.portalMap.clear() 
-        this.cacheProps.portalMetadataMap.clear()
-        this.cacheProps.cacheIndexToItemIDMap.clear()
-        this.cacheProps.portalRequestedMap.clear()
+        this.cacheProps.metadataMap.clear()
+        this.cacheProps.indexToItemIDMap.clear()
+        this.cacheProps.requestedMap.clear()
         this.cacheProps.portalList = null
         this.cacheProps.modified = false
 
@@ -94,12 +94,12 @@ export class CacheHandler {
 
     matchCacheToCradle = (modelIndexList, cacheDeleteListCallback) => {
         // console.log('running matchCacheToCradle', '-'+this.cacheProps.scrollerID+'-')
-        // const portalMetadataMap = this.cacheProps.portalMetadataMap
+        // const metadataMap = this.cacheProps.metadataMap
         // const mapsessionitemidkeys = Array.from(this.cacheProps.portalMap.keys())
         // const mapkeys = mapsessionitemidkeys.map(cacheItemID =>{
-        //     return portalMetadataMap.get(cacheItemID).index
+        //     return metadataMap.get(cacheItemID).index
         // })
-        const mapkeys = Array.from(this.cacheProps.cacheIndexToItemIDMap.keys())
+        const mapkeys = Array.from(this.cacheProps.indexToItemIDMap.keys())
         mapkeys.filter(key => !modelIndexList.includes(key))
         // console.log('filtered mapkeys, modelIndexList', mapkeys, modelIndexList)
         this.deletePortal(mapkeys, cacheDeleteListCallback)
@@ -115,9 +115,9 @@ export class CacheHandler {
         const max = Math.max(modelLength, cacheMax)
 
         // const portalMapList = this.cacheProps.portalMap
-        const portalIndexList = this.cacheProps.cacheIndexToItemIDMap
-        const requestedMap = this.cacheProps.portalRequestedMap
-        // const { portalMetadataMap } = this.cacheProps
+        const portalIndexList = this.cacheProps.indexToItemIDMap
+        const requestedMap = this.cacheProps.requestedMap
+        // const { metadataMap } = this.cacheProps
 
         // if ((portalMapList.size + requestedMap.size) <= max) return false
         if ((portalIndexList.size + requestedMap.size) <= max) return false
@@ -164,11 +164,11 @@ export class CacheHandler {
         if (!cacheMax) return false
 
         const portalMap = this.cacheProps.portalMap
-        const portalRequestedMap = this.cacheProps.portalRequestedMap
+        const requestedMap = this.cacheProps.requestedMap
 
         const max = Math.max(modelLength, cacheMax)
 
-        if ((portalMap.size + portalRequestedMap.size) <= ((max) * MAX_CACHE_OVER_RUN)) {
+        if ((portalMap.size + requestedMap.size) <= ((max) * MAX_CACHE_OVER_RUN)) {
             return false
         } else {
             return true
@@ -256,17 +256,17 @@ export class CacheHandler {
 
     getCacheMap() {
 
-        return new Map(this.cacheProps.cacheIndexToItemIDMap)
+        return new Map(this.cacheProps.indexToItemIDMap)
 
     }
 
     getCradleMap(modelIndexList) {
 
         const cradleMap = new Map()
-        const { cacheIndexToItemIDMap } = this.cacheProps
+        const { indexToItemIDMap } = this.cacheProps
         for (const index of modelIndexList) {
 
-            cradleMap.set(index, cacheIndexToItemIDMap.get(index))
+            cradleMap.set(index, indexToItemIDMap.get(index))
 
         }
 
@@ -278,7 +278,7 @@ export class CacheHandler {
 
         const cachelist = new Map()
 
-        for (const [key, value] of this.cacheProps.portalMetadataMap) {
+        for (const [key, value] of this.cacheProps.metadataMap) {
             const {
                 index,
                 component,
@@ -298,13 +298,13 @@ export class CacheHandler {
 
     registerRequestedPortal(index) {
 
-        this.cacheProps.portalRequestedMap.set(index, null)
+        this.cacheProps.requestedMap.set(index, null)
 
     }
 
     getCacheItemID(index) {
 
-        const indexMap = this.cacheProps.cacheIndexToItemIDMap 
+        const indexMap = this.cacheProps.indexToItemIDMap 
         const knownID = indexMap.get(index)
         const knownHasValue = knownID??false // deal with falsey 0
         const newID = (knownHasValue === false)?(globalCacheItemID++):null
@@ -317,7 +317,7 @@ export class CacheHandler {
 
     removeRequestedPortal(index) {
 
-        this.cacheProps.portalRequestedMap.delete(index)
+        this.cacheProps.requestedMap.delete(index)
 
     }
 
@@ -345,8 +345,8 @@ export class CacheHandler {
             component,
         }
 
-        this.cacheProps.portalMetadataMap.set(cacheItemID, portalMetadata)
-        this.cacheProps.cacheIndexToItemIDMap.set(index, cacheItemID)
+        this.cacheProps.metadataMap.set(cacheItemID, portalMetadata)
+        this.cacheProps.indexToItemIDMap.set(index, cacheItemID)
 
         this.renderPortalList()
 
@@ -366,17 +366,17 @@ export class CacheHandler {
         }
 
         const { 
-            portalMetadataMap,
+            metadataMap,
             portalMap,
-            cacheIndexToItemIDMap 
+            indexToItemIDMap 
         } = this.cacheProps
         const deleteList = []
         for (let i of indexArray) {
-            const cacheItemID = cacheIndexToItemIDMap.get(i)
+            const cacheItemID = indexToItemIDMap.get(i)
             deleteList.push(cacheItemID)
-            portalMetadataMap.delete(cacheItemID)
+            metadataMap.delete(cacheItemID)
             portalMap.delete(cacheItemID)
-            cacheIndexToItemIDMap.delete(i)
+            indexToItemIDMap.delete(i)
         }
         this.cacheProps.modified = true
 
@@ -387,14 +387,14 @@ export class CacheHandler {
     // query existence of a portal list item
     hasPortal(cacheItemID) {
 
-        return this.cacheProps.portalMetadataMap.has(cacheItemID)
+        return this.cacheProps.metadataMap.has(cacheItemID)
 
     }
 
     getPortal(cacheItemID) {
 
         if (this.hasPortal(cacheItemID)) {
-            return this.cacheProps.portalMetadataMap.get(cacheItemID)
+            return this.cacheProps.metadataMap.get(cacheItemID)
         }
 
     }

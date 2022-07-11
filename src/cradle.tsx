@@ -703,6 +703,11 @@ const Cradle = ({
 
         switch (cradleState) {
 
+            case 'applycachechanges': {
+                setCradleState('ready')
+                break
+            }
+
             case 'setup': { // cycle to allow for ref config
 
                 if (cradleInheritedPropertiesRef.current.cache != 'preload') {
