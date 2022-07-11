@@ -13,6 +13,7 @@
             cache mapping modification by user
             organize return values of getItem
             checkmark enable console feedback (for external callbacks)
+            add swap callback
 
         also surface external callbacks with return values for testing
         review all code
