@@ -4,7 +4,6 @@
 /*
     consider formalizing state conditions (certain useRefs), together with state actions (useState)
 
-    BUG: cache is last imort state; should be ready
     - rationalize pauseScrolling, and other signals
 */
 
