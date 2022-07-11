@@ -16,6 +16,7 @@ let globalCacheItemID = 0
 
 
 // global scroller data, organized by session scrollerID
+// the cache itself is maintained in the root infinitegridscroller component
 export class CacheHandler {
 
     constructor(scrollerID, setListsize, listsizeRef) {
@@ -93,16 +94,13 @@ export class CacheHandler {
     }
 
     matchCacheToCradle = (modelIndexList, cacheDeleteListCallback) => {
-        // console.log('running matchCacheToCradle', '-'+this.cacheProps.scrollerID+'-')
-        // const metadataMap = this.cacheProps.metadataMap
-        // const mapsessionitemidkeys = Array.from(this.cacheProps.portalMap.keys())
-        // const mapkeys = mapsessionitemidkeys.map(cacheItemID =>{
-        //     return metadataMap.get(cacheItemID).index
-        // })
+
         const mapkeys = Array.from(this.cacheProps.indexToItemIDMap.keys())
+
         mapkeys.filter(key => !modelIndexList.includes(key))
-        // console.log('filtered mapkeys, modelIndexList', mapkeys, modelIndexList)
+
         this.deletePortal(mapkeys, cacheDeleteListCallback)
+
     }
 
     pareCacheToMax = (cacheMax, modelIndexList, cacheDeleteListCallback) => {
@@ -114,10 +112,8 @@ export class CacheHandler {
 
         const max = Math.max(modelLength, cacheMax)
 
-        // const portalMapList = this.cacheProps.portalMap
         const portalIndexList = this.cacheProps.indexToItemIDMap
         const requestedMap = this.cacheProps.requestedMap
-        // const { metadataMap } = this.cacheProps
 
         // if ((portalMapList.size + requestedMap.size) <= max) return false
         if ((portalIndexList.size + requestedMap.size) <= max) return false
@@ -172,48 +168,6 @@ export class CacheHandler {
             return false
         } else {
             return true
-        }
-
-    }
-
-    async preloadItem(index, 
-        getItem, 
-        cradlePassthroughPropertiesRef, 
-        preloadIndexCallback,
-        scrollerID
-    ) {
-
-        const cacheItemID = this.getCacheItemID(index)
-
-        const usercontent = await getItem(index, cacheItemID)
-
-        if (usercontent) {
-
-            preloadIndexCallback && preloadIndexCallback(index, cacheItemID)
-
-            // console.log('preloading index','-'+scrollerID+'-' ,index )
-
-            let content 
-            const scrollerData = {
-                isReparentingRef:null,
-                cradlePassthroughPropertiesRef,
-            }
-            if (usercontent.props.hasOwnProperty('scrollerData')) {
-                content = React.cloneElement(usercontent, {scrollerData})
-            } else {
-                content = usercontent
-            }
-
-            const portalData = 
-                this.createPortal(content, index, cacheItemID)
-            // make available to user content
-            scrollerData.isReparentingRef = portalData.isReparentingRef
-
-        } else {
-
-            preloadIndexCallback && preloadIndexCallback(index, cacheItemID, 'error')
-            console.log('ERROR','no content item for preload index, cacheItemID',index, cacheItemID)
-
         }
 
     }
@@ -296,9 +250,17 @@ export class CacheHandler {
     }
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
+    // used for size calculation in pareCacheToMax
+    // registers indexes when requested but before retrieved and entered into cache
     registerRequestedPortal(index) {
 
         this.cacheProps.requestedMap.set(index, null)
+
+    }
+
+    removeRequestedPortal(index) {
+
+        this.cacheProps.requestedMap.delete(index)
 
     }
 
@@ -312,12 +274,6 @@ export class CacheHandler {
         if (knownHasValue === false) indexMap.set(index, newID)
 
         return knownID??newID
-
-    }
-
-    removeRequestedPortal(index) {
-
-        this.cacheProps.requestedMap.delete(index)
 
     }
 
@@ -351,6 +307,48 @@ export class CacheHandler {
         this.renderPortalList()
 
         return portalMetadata
+
+    }
+
+    private async preloadItem(index, 
+        getItem, 
+        cradlePassthroughPropertiesRef, 
+        preloadIndexCallback,
+        scrollerID
+    ) {
+
+        const cacheItemID = this.getCacheItemID(index)
+
+        const usercontent = await getItem(index, cacheItemID)
+
+        if (usercontent) {
+
+            preloadIndexCallback && preloadIndexCallback(index, cacheItemID)
+
+            // console.log('preloading index','-'+scrollerID+'-' ,index )
+
+            let content 
+            const scrollerData = {
+                isReparentingRef:null,
+                cradlePassthroughPropertiesRef,
+            }
+            if (usercontent.props.hasOwnProperty('scrollerData')) {
+                content = React.cloneElement(usercontent, {scrollerData})
+            } else {
+                content = usercontent
+            }
+
+            const portalData = 
+                this.createPortal(content, index, cacheItemID)
+            // make available to user content
+            scrollerData.isReparentingRef = portalData.isReparentingRef
+
+        } else {
+
+            preloadIndexCallback && preloadIndexCallback(index, cacheItemID, 'error')
+            console.log('ERROR','no content item for preload index, cacheItemID',index, cacheItemID)
+
+        }
 
     }
 
@@ -401,7 +399,7 @@ export class CacheHandler {
 
 }
 
-// ==========================[ Utility functions ]============================
+// ==========================[ Utility function ]============================
 
 // get a react-reverse-portal InPortal component, with its metadata
 // with user content and container
@@ -422,7 +420,7 @@ const createPortalNode = (index, cacheItemID) => {
 
 }     
 
-// ========================[ Utility components ]==============================
+// ========================[ Utility component ]==============================
 
 // portal list component for rapid relisting of updates, using external callback for set state
 export const PortalList = ({ cacheProps }) => {
