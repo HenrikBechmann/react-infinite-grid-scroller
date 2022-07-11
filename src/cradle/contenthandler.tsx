@@ -514,29 +514,16 @@ export default class ContentHandler {
         
         } = this.content
 
-        for (const i in cradleModelComponents) {
-            const component = cradleModelComponents[i]
+        function processComponent (component, i, array ) {
             const instanceID = component.props.instanceID
             if (modifiedCellFrameMap.has(instanceID)) {
-                cradleModelComponents[i] = modifiedCellFrameMap.get(instanceID)
+                array[i] = modifiedCellFrameMap.get(instanceID)
             }
         }
 
-        for (const i in headModelComponents) {
-            const component = headModelComponents[i]
-            const instanceID = component.props.instanceID
-            if (modifiedCellFrameMap.has(instanceID)) {
-                headModelComponents[i] = modifiedCellFrameMap.get(instanceID)
-            }
-        }
-
-        for (const i in tailModelComponents) {
-            const component = tailModelComponents[i]
-            const instanceID = component.props.instanceID
-            if (modifiedCellFrameMap.has(instanceID)) {
-                tailModelComponents[i] = modifiedCellFrameMap.get(instanceID)
-            }
-        }
+        cradleModelComponents.forEach(processComponent)
+        headModelComponents.forEach(processComponent)
+        tailModelComponents.forEach(processComponent)
 
         this.content.headDisplayComponents = headModelComponents
         this.content.tailDisplayComponents = tailModelComponents
