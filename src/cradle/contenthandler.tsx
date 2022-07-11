@@ -498,7 +498,7 @@ export default class ContentHandler {
 
     public updateCellFrames(modifiedCellFrameMap) {
 
-        console.log('contentHandler got modifiedCellFrameMap',modifiedCellFrameMap)
+        // console.log('contentHandler got modifiedCellFrameMap',modifiedCellFrameMap)
 
         if (!modifiedCellFrameMap.size) return
 

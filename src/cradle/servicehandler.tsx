@@ -94,7 +94,7 @@ export default class ServiceHandler {
     //TODO implement this
     public modifyCacheMap = (modifyMap) => { // index => cacheItemID
 
-        console.log('modifyMap in serviceHandler',modifyMap)
+        // console.log('modifyMap in serviceHandler',modifyMap)
 
         if (modifyMap.size == 0) return
 
@@ -121,7 +121,7 @@ export default class ServiceHandler {
             }
         })
 
-        console.log('ignored,processed',ignored,processed)
+        // console.log('ignored,processed',ignored,processed)
 
         if (processed.size == 0) return
 
@@ -145,13 +145,13 @@ export default class ServiceHandler {
 
                     const instanceID = component.props.instanceID
                 
-                    modifiedCellFrames.set(instanceID, React.cloneElement(component, {cacheItemID}))
+                    modifiedCellFrames.set(instanceID, React.cloneElement(component, {cacheItemID:newCacheItemID}))
 
                 }
             }
         }
 
-        console.log('modifiedCellFrames',modifiedCellFrames)
+        // console.log('modifiedCellFrames',modifiedCellFrames)
 
         if (modifiedCellFrames.size) {
 

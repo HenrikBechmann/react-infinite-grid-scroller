@@ -60,7 +60,9 @@ const CellFrame = ({
 
     useEffect(()=>{
 
-        // if (frameStatusRef.current == 'setup') return
+        // if (frameStatusRef.current != 'setup') {
+        //     console.log('getting new cacheItemID for instanceID', cacheItemID, instanceID)
+        // }
         setFrameStatus('getusercontent')
 
     },[cacheItemID])
