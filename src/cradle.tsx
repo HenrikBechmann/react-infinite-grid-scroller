@@ -21,7 +21,7 @@ import React, {
 import { ViewportInterrupt } from './viewport'
 
 // popup position tracker for repositioning
-import ScrollTracker from './scrolltracker'
+import ScrollTracker from './cradle/Scrolltracker'
 
 // support code
 import ScrollHandler from './cradle/scrollhandler'
@@ -403,7 +403,7 @@ const Cradle = ({
 
             setCradleState('cached') // replaces 'ready' as steady state
 
-        } else if (!isCachedRef.current && wasCachedRef.current) {// out of cache
+        } else if (!isCachedRef.current && wasCachedRef.current) { // out of cache
 
             wasCachedRef.current = false
 
@@ -471,6 +471,7 @@ const Cradle = ({
 
     // initialize window scroll listener
     useEffect(() => {
+
         const viewportdata = viewportInterruptPropertiesRef.current
         viewportdata.elementRef.current.addEventListener('scroll',scrollHandler.onScroll)
 
@@ -611,7 +612,7 @@ const Cradle = ({
         triggerlineOffset
     ])
 
-    // pivot triggered on change in orientation
+    // pivot triggered on change of orientation
     useEffect(()=> {
 
         scaffoldHandler.cradlePositionData.blockScrollProperty = 
@@ -696,7 +697,7 @@ const Cradle = ({
 
       ])
 
-    // =====================[ state management ]==========================
+    // =====================[ STATE MANAGEMENT ]==========================
 
     // this is the core state engine (19 states), using named states
     // useLayoutEffect for suppressing flashes

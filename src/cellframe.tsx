@@ -7,7 +7,7 @@ import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
 import { OutPortal } from 'react-reverse-portal'
 
-import Placeholder from './placeholder'
+import Placeholder from './cellframe/Placeholder'
 
 import { CradleContext } from './cradle'
 
@@ -138,6 +138,7 @@ const CellFrame = ({
             case 'setup':
                 // no-op
                 break
+
             case 'inserting': {
 
                 setFrameStatus('ready')
@@ -232,20 +233,24 @@ const CellFrame = ({
 
     }, [frameStatus])
 
-    return <div ref = { frameRef } 
+    return <div 
+
+        ref = { frameRef } 
         data-type = 'cellframe' 
         data-scrollerid = { scrollerID } 
         data-index = { index } 
         data-instanceid = { instanceID } 
-        style = { styles }>
+        style = { styles }
 
-            { 
-                (frameStatus != 'ready')?
-                    placeholderRef.current:
-                    <OutPortal node = { portalNodeRef.current }/>
-            }
-            
-        </div>
+    >
+
+        { 
+            (frameStatus != 'ready')?
+                placeholderRef.current:
+                <OutPortal node = { portalNodeRef.current }/>
+        }
+        
+    </div>
 
 } // CellFrame
 
