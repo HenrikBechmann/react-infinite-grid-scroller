@@ -98,7 +98,7 @@ export default class ServiceHandler {
 
         if (modifyMap.size == 0) return
 
-        const { cacheHandler, contentHandler, stateHandler } = this.cradleParameters.handlersRef.current
+        const { cacheHandler, contentHandler } = this.cradleParameters.handlersRef.current
 
         // apply changes to cache index and cacheItemID maps
         const metadataMap = cacheHandler.cacheProps.metadataMap
@@ -132,7 +132,9 @@ export default class ServiceHandler {
 
         // apply changes to extant cellFrames
         const cradleModelComponents = contentHandler.content.cradleModelComponents
-        let changecount = 0
+
+        const modifiedCellFrames = new Map()
+
         for (const i in cradleModelComponents) {
             const component = cradleModelComponents[i]
             const index = component.props.index
@@ -140,17 +142,21 @@ export default class ServiceHandler {
                 const cacheItemID = component.props.cacheItemID
                 const newCacheItemID = modifyMap.get(index)
                 if ( newCacheItemID != cacheItemID ) {
-                    changecount++
-                    cradleModelComponents[i] = React.cloneElement(component, {cacheItemID})
+
+                    const instanceID = component.props.instanceID
+                
+                    modifiedCellFrames.set(instanceID, React.cloneElement(component, {cacheItemID}))
 
                 }
             }
         }
 
-        console.log('changecount',changecount)
+        console.log('modifiedCellFrames',modifiedCellFrames)
 
-        if (changecount) {
-            stateHandler.setCradleState('applycachechanges')
+        if (modifiedCellFrames.size) {
+
+            contentHandler.updateCellFrames(modifiedCellFrames)
+
         }
 
     }

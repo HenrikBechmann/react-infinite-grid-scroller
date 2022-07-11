@@ -703,7 +703,7 @@ const Cradle = ({
 
         switch (cradleState) {
 
-            case 'applycachechanges': {
+            case 'applycellframechanges': {
                 setCradleState('ready')
                 break
             }

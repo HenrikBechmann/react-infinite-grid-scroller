@@ -485,7 +485,7 @@ export default class ContentHandler {
 
     }
 
-    getModelIndexList() {
+    public getModelIndexList() {
 
         const { cradleModelComponents } = this.content
         if (!cradleModelComponents) {
@@ -496,6 +496,53 @@ export default class ContentHandler {
 
     }
 
+    public updateCellFrames(modifiedCellFrameMap) {
 
+        console.log('contentHandler got modifiedCellFrameMap',modifiedCellFrameMap)
+
+        if (!modifiedCellFrameMap.size) return
+
+        const { stateHandler } = this.cradleParameters.handlersRef.current
+
+        const { 
+        
+            cradleModelComponents, 
+            headModelComponents,
+            tailModelComponents,
+            headDisplayComponents,
+            tailDisplayComponents,
+        
+        } = this.content
+
+        for (const i in cradleModelComponents) {
+            const component = cradleModelComponents[i]
+            const instanceID = component.props.instanceID
+            if (modifiedCellFrameMap.has(instanceID)) {
+                cradleModelComponents[i] = modifiedCellFrameMap.get(instanceID)
+            }
+        }
+
+        for (const i in headModelComponents) {
+            const component = headModelComponents[i]
+            const instanceID = component.props.instanceID
+            if (modifiedCellFrameMap.has(instanceID)) {
+                headModelComponents[i] = modifiedCellFrameMap.get(instanceID)
+            }
+        }
+
+        for (const i in tailModelComponents) {
+            const component = tailModelComponents[i]
+            const instanceID = component.props.instanceID
+            if (modifiedCellFrameMap.has(instanceID)) {
+                tailModelComponents[i] = modifiedCellFrameMap.get(instanceID)
+            }
+        }
+
+        this.content.headDisplayComponents = headModelComponents
+        this.content.tailDisplayComponents = tailModelComponents
+
+        stateHandler.setCradleState('applycellframechanges')
+
+    }
 
 }
