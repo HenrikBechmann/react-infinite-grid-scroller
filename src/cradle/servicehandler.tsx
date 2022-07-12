@@ -247,6 +247,8 @@ export default class ServiceHandler {
 
     public swapIndexes = (firstindex, secondindex) => {
 
+        if (firstindex == secondindex) return
+
         console.log('service handler called to swap indexes', firstindex, secondindex)
 
     }
