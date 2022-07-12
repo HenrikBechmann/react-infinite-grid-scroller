@@ -17,12 +17,13 @@
             check behaviour of axis & triggerlines with modify cache map - extra DOM cycle?
             constrain preload by cacheMax!
 
+        insert, remove, swap functions (create cacheItemID reference system)
+
         also surface external callbacks with return values for testing
         review all code
         newListsize callback
 
         layout: uniform, variable, dynamic, dense
-        insert, remove, swap functions (create cacheItemID reference system)
 
         test changing all gridscroller parameters
         test config size edge cases - over and under sized cells
