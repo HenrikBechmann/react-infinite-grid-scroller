@@ -69,6 +69,7 @@ const Cradle = ({
 
     // get viewport context
     const viewportInterruptProperties = useContext(ViewportInterrupt)
+
     const viewportInterruptPropertiesRef = useRef(null)
     viewportInterruptPropertiesRef.current = viewportInterruptProperties // for closures
 

@@ -99,7 +99,46 @@ export default class ServiceHandler {
 
         // console.log('modifyMap in serviceHandler',modifyMap)
 
-        if (modifyMap.size == 0) return
+        const modifymapsize = modifyMap.size
+
+        if (modifymapsize == 0) return true
+
+        const unitIDset = new Set(modifyMap.values())
+
+        const unitidsetsize = unitIDset.size
+
+        if (modifymapsize != unitidsetsize) {
+
+            const modifyUnitIDCount = new Map()
+
+            modifyMap.forEach((cacheUnitID, index) => {
+                if (!modifyUnitIDCount.has(cacheUnitID)) {
+                    modifyUnitIDCount.set(cacheUnitID, 1)
+                } else {
+                    modifyUnitIDCount.set(cacheUnitID, modifyUnitIDCount.get(cacheUnitID) + 1)
+                }
+            })
+
+            modifyUnitIDCount.delete(null) // legitimate
+
+            const duplicateunits = new Map()
+            modifyUnitIDCount.forEach((count,cacheUnitID)=>{
+                if (count > 1) {
+                    duplicateunits.set(cacheUnitID, count)
+                }
+            })
+
+            if (duplicateunits.size) {
+
+                console.log('WARNING: modifyCacheMap rejected: \
+                    duplicate cacheUnitID index assignment values found\
+                    duplicateunits, modifyMap',
+                    duplicateunits, modifyMap)
+                return false
+
+            }
+
+        }
 
         // TODO move the cache processing to cacheHandler
         const { cacheHandler, contentHandler } = this.cradleParameters.handlersRef.current
@@ -197,6 +236,8 @@ export default class ServiceHandler {
             contentHandler.updateCellFrames(modifiedCellFrames)
 
         }
+
+        return true
 
     }
 

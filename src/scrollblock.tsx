@@ -9,7 +9,7 @@
 
 import React, {useContext, useRef, useCallback, useEffect, useLayoutEffect, useState} from 'react'
 
-import { ViewportInterrupt } from './viewport'
+import { ViewportInterrupt } from './Viewport'
 
 const Scrollblock = ({
     children,

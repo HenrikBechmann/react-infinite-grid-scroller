@@ -83,9 +83,9 @@
 
 import React, {useEffect, useState, useCallback, useRef} from 'react'
 
-import Viewport from './viewport'
-import Scrollblock from './scrollblock'
-import Cradle from './cradle'
+import Viewport from './Viewport'
+import Scrollblock from './Scrollblock'
+import Cradle from './Cradle'
 
 import { CacheHandler, PortalList } from './cradle/cachehandler'
 
