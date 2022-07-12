@@ -448,6 +448,9 @@ const Cradle = ({
             getCacheList,
             getCradleMap,
             modifyCacheMap,
+            swapIndexes,
+            insertIndex,
+            removeIndex,
 
         } = serviceHandler
 
@@ -462,6 +465,10 @@ const Cradle = ({
             getCacheList,
             getCradleMap,
             modifyCacheMap,
+            swapIndexes,
+            insertIndex,
+            removeIndex,
+
         }
 
         userFunctions.getCallbacks(callbacks)

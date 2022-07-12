@@ -245,6 +245,23 @@ export default class ServiceHandler {
 
     }
 
+    public swapIndexes = (firstindex, secondindex) => {
+
+        console.log('service handler called to swap indexes', firstindex, secondindex)
+
+    }
+
+    public insertIndex = (index, insertbefore = true) => {
+
+        console.log('service handler called to insert index', index, insertbefore)
+    }
+
+    public removeIndex = (index) => {
+
+        console.log('service handler called to remove index', index)
+
+    }
+
     public setListsize = (listsize) => {
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
