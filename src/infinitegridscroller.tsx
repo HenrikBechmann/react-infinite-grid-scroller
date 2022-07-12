@@ -31,6 +31,7 @@
         release to npm
 
     BUGS: 
+        - select nested lists, then preload -> breaks presentation
         - clear cache after change mapping triggers a setCradleContent event
             - disable/re-enable interrupts?
         //- rapid scrolling up with full cache can lead to overshoot just shy of reposition,
