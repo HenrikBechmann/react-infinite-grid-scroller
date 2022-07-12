@@ -105,34 +105,42 @@ export default class ServiceHandler {
         const { cacheHandler, contentHandler } = this.cradleParameters.handlersRef.current
 
         // apply changes to cache index and cacheItemID maps
-        const metadataMap = cacheHandler.cacheProps.metadataMap
-        const indexToItemIDMap = cacheHandler.cacheProps.indexToItemIDMap
+        const metadataMap = cacheHandler.cacheProps.metadataMap // cacheItemID to portal data
+        const indexToItemIDMap = cacheHandler.cacheProps.indexToItemIDMap // index to cacheItemID
+        const cradleMap = this.getCradleMap() // index to cacheItemID
 
         const duplicates = new Map()
         const processed = new Map()
         const originalitemindex = new Map()
         const ignored = new Map()
+        const pending = new Map()
 
         modifyMap.forEach((cacheItemID,index) => {
-            if (!indexToItemIDMap.has(index)) {
-                ignored.set(index,cacheItemID)
+            if (cacheItemID === null) {
+                pending.set(index, null)
             } else {
-                if (indexToItemIDMap.get(index) != cacheItemID) {
-                    indexToItemIDMap.set(index,cacheItemID)
-                    const value = metadataMap.get(cacheItemID)
-                    originalitemindex.set(cacheItemID,value.index)
-                    value.index = index
-                    processed.set(index,cacheItemID)
+                if (!indexToItemIDMap.has(index)) { // not in cache
+                    ignored.set(index,cacheItemID)
+                } else {
+                    if (indexToItemIDMap.get(index) != cacheItemID) { // modification requested
+                        indexToItemIDMap.set(index,cacheItemID) // modiication applied, part 1
+                        const data = metadataMap.get(cacheItemID)
+                        originalitemindex.set(cacheItemID,data.index)
+                        data.index = index // modification applied, part 2
+                        processed.set(index,cacheItemID)
+                    }
                 }
             }
         })
 
         // console.log('ignored,processed',ignored,processed)
 
-        if (processed.size == 0) return
+        if ((processed.size == 0) && (pending.size == 0)) return
 
-        cacheHandler.cacheProps.modified = true
-        cacheHandler.renderPortalList()
+        if (processed.size) {
+            cacheHandler.cacheProps.modified = true
+            cacheHandler.renderPortalList()
+        }
 
         // eliminate duplicate cacheItemIDs in index map
 
@@ -146,7 +154,16 @@ export default class ServiceHandler {
             console.log('WARNING: mapping left unchanged by modifyCacheMap created duplicates:\
                 \nduplicates, modifyMap\n',
                 duplicates, modifyMap, 
-                '\nExpect unexpected behaviour. Cached portals must appear only once.')
+                '\nDuplicates will be cleared.')
+            duplicates.forEach((index, cacheItemID)=>{
+                pending.set(index,null)
+            })
+        }
+
+        if (pending.size) {
+            pending.forEach((value, index)=>{
+                modifyMap.set(index, value) // set to null
+            })
         }
 
         // apply changes to extant cellFrames
@@ -159,7 +176,10 @@ export default class ServiceHandler {
             const index = component.props.index
             if (modifyMap.has(index)) {
                 const cacheItemID = component.props.cacheItemID
-                const newCacheItemID = modifyMap.get(index)
+                let newCacheItemID = modifyMap.get(index)
+                if (newCacheItemID === null) {
+                    newCacheItemID = cacheHandler.getNewCacheItemID()
+                }
                 if ( newCacheItemID != cacheItemID ) {
 
                     const instanceID = component.props.instanceID

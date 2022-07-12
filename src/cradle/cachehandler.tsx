@@ -264,12 +264,16 @@ export class CacheHandler {
 
     }
 
+    getNewCacheItemID() {
+        return globalCacheItemID++
+    }
+
     getCacheItemID(index) {
 
         const indexMap = this.cacheProps.indexToItemIDMap 
         const knownID = indexMap.get(index)
         const knownHasValue = knownID??false // deal with falsey 0
-        const newID = (knownHasValue === false)?(globalCacheItemID++):null
+        const newID = (knownHasValue === false)?(this.getNewCacheItemID()):null
 
         if (knownHasValue === false) indexMap.set(index, newID)
 

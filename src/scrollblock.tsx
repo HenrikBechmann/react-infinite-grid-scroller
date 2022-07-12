@@ -3,7 +3,7 @@
 
 /*
     TODO
-    update length for cradle adjustments based on variable length changes in cell shells.
+    update length for cradle adjustments based on variable length changes in cell frames.
 
 */
 
