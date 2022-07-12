@@ -13,11 +13,10 @@ import React, {
     useContext, 
     useEffect, 
     useLayoutEffect, 
-    // useCallback, 
     useMemo 
 } from 'react'
 
-import { ViewportInterrupt } from './viewport'
+import { ViewportInterrupt } from './Viewport'
 
 // popup position tracker for repositioning
 import ScrollTracker from './cradle/Scrolltracker'
@@ -50,7 +49,7 @@ const Cradle = ({
         cacheMax,
         // for debugging
         scrollerID,
-
+        // for handler list
         cacheHandler,
     }) => {
 
@@ -209,7 +208,7 @@ const Cradle = ({
         crosscount,
     ])
 
-    // ======================[ callbacks ]=====================
+    // ----------------------[ callbacks ]----------------------------
 
     // host callbacks
     // const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
@@ -224,9 +223,9 @@ const Cradle = ({
         }
     )
 
-    // ====================[ bundle parameters for handlers ]===================
+    // -----------------[ bundle parameters for handlers ]-------------------
 
-    // bundle cradle props to pass to handlers - ultimately cradleParametersRef (brute force)
+    // bundle all cradle props to pass to handlers - ultimately cradleParametersRef
     const cradleInheritedPropertiesRef = useRef(null) // access by closures and support functions
     // up to date values
     cradleInheritedPropertiesRef.current = {
@@ -286,7 +285,6 @@ const Cradle = ({
         isCachedRef,
         wasCachedRef,
         triggerlineRecordsRef,
-        // scrollPosRecoveryPosRef,
 
         // for stateHandler
         cradleStateRef,
@@ -303,7 +301,6 @@ const Cradle = ({
         cradleInheritedPropertiesRef, 
         cradlePassthroughPropertiesRef,
         cradleInternalPropertiesRef, 
-        // internalCallbacksRef, // n/a
         externalCallbacksRef,
     }
 
@@ -440,6 +437,7 @@ const Cradle = ({
         if (!userFunctions.getCallbacks) return
 
         const {
+
             scrollToItem, 
             reload, 
             setListsize,
@@ -453,6 +451,7 @@ const Cradle = ({
         } = serviceHandler
 
         const callbacks = {
+
             scrollToItem,
             reload,
             setListsize,
@@ -518,7 +517,7 @@ const Cradle = ({
     },[])
 
     // =====================[ RECONFIGURATION effects ]======================
-    // resize (UI resize of the viewport), reconfigure, or pivot
+    // change caching, resize (UI resize of the viewport), reconfigure, or pivot
 
     // initiate preload if requested
     useEffect(()=> {
@@ -994,8 +993,8 @@ const Cradle = ({
 
     const contextvalueRef = useRef({cradlePassthroughPropertiesRef, cacheHandler})
 
-    // the data-type = cacheroot div at the end is the hidden portal component cache
     return <CradleContext.Provider value = {contextvalueRef.current}>
+
         {((cradleState == 'repositioningRender') || 
             (cradleState == 'repositioningContinuation'))?
             <ScrollTracker 
@@ -1061,19 +1060,21 @@ const Cradle = ({
             </div>
         }
 
-        
     </CradleContext.Provider>
 
 } // Cradle
 
-// utilities
+// utility
 
 const getCradleHandlers = (cradleParameters) => {
 
     const createHandler = handler => new handler(cradleParameters)
 
+    const { cacheHandler } = cradleParameters.cradleInheritedPropertiesRef.current
+
     return {
-        cacheHandler:cradleParameters.cradleInheritedPropertiesRef.current.cacheHandler,
+
+        cacheHandler,
         interruptHandler:createHandler(InterruptHandler),
         scrollHandler:createHandler(ScrollHandler),
         stateHandler:createHandler(StateHandler),
@@ -1081,7 +1082,9 @@ const getCradleHandlers = (cradleParameters) => {
         scaffoldHandler:createHandler(ScaffoldHandler),
         serviceHandler:createHandler(ServiceHandler),
         stylesHandler:createHandler(StylesHandler),
+
     }
+
 }
 
 export default Cradle
