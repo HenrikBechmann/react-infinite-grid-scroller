@@ -91,7 +91,10 @@ export default class ServiceHandler {
         return cacheHandler.getCradleMap(modelIndexList)
     }
 
-    //TODO implement this
+    //TODO blank index values (cacheItemID) are assigned a new 
+    // cacheItemID if in the cradle, otherwise removed from the cache
+    // duplicate indes itemID pairs have the itemID turned to blank
+    // and are processed by the above rule
     public modifyCacheMap = (modifyMap) => { // index => cacheItemID
 
         // console.log('modifyMap in serviceHandler',modifyMap)

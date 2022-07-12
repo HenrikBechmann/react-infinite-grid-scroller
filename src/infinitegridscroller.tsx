@@ -31,6 +31,8 @@
         release to npm
 
     BUGS: 
+        - clear cache after change mapping triggers a setCradleContent event
+            - disable/re-enable interrupts?
         //- rapid scrolling up with full cache can lead to overshoot just shy of reposition,
         //    with trigger lines out of view
         // - time lag before repositioning the trigger lines - promises?
