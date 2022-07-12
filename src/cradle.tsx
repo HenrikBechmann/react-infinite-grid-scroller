@@ -53,7 +53,7 @@ const Cradle = ({
         cacheHandler,
     }) => {
 
-    if (listsize == 0) return // nothing to do
+    if (listsize == 0) return null// nothing to do
 
     // ========================[ DATA SETUP ]========================
 
