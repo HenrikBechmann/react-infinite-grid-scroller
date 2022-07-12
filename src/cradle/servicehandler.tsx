@@ -131,8 +131,8 @@ export default class ServiceHandler {
             if (duplicateunits.size) {
 
                 console.log('WARNING: modifyCacheMap rejected: \
-                    duplicate cacheUnitID index assignment values found\
-                    duplicateunits, modifyMap',
+                    duplicate cacheUnitID index assignment values found:\
+                    duplicateCacheUnitIDs, modifyMap',
                     duplicateunits, modifyMap)
                 return false
 
@@ -140,12 +140,13 @@ export default class ServiceHandler {
 
         }
 
-        // TODO move the cache processing to cacheHandler
         const { cacheHandler, contentHandler } = this.cradleParameters.handlersRef.current
 
         // apply changes to cache index and cacheItemID maps
-        const metadataMap = cacheHandler.cacheProps.metadataMap // cacheItemID to portal data
-        const indexToItemIDMap = cacheHandler.cacheProps.indexToItemIDMap // index to cacheItemID
+        const { 
+            metadataMap, // cacheItemID to portal data, including index
+            indexToItemIDMap // index to cacheItemID
+        } = cacheHandler.cacheProps 
         const cradleMap = this.getCradleMap() // index to cacheItemID
 
         const duplicates = new Map()
@@ -174,7 +175,7 @@ export default class ServiceHandler {
 
         // console.log('ignored,processed',ignored,processed)
 
-        if ((processed.size == 0) && (pending.size == 0)) return
+        if ((processed.size == 0) && (pending.size == 0)) return true
 
         if (processed.size) {
             cacheHandler.cacheProps.modified = true
@@ -183,30 +184,33 @@ export default class ServiceHandler {
 
         // eliminate duplicate cacheItemIDs in index map
 
+        // if the original index for the re-assigned cache item still maps to the cache item,
+        // then there is a duplicate
         originalitemindex.forEach((cacheItemID, index) => {
             if (indexToItemIDMap.has(index) && (indexToItemIDMap.get(index) == cacheItemID)) {
                 duplicates.set(cacheItemID, index)
             }
         })
-
+        let retval = true
         if (duplicates.size) {
-            console.log('WARNING: mapping left unchanged by modifyCacheMap created duplicates:\
+            retval = false
+            console.log('WARNING: original mapping for re-assigned cache item ID(s) was left \
+                unchanged by modifyCacheMap, creating duplicates:\
                 \nduplicates, modifyMap\n',
                 duplicates, modifyMap, 
-                '\nDuplicates will be cleared.')
+                '\nDuplicates left behind will be cleared.')
             duplicates.forEach((index, cacheItemID)=>{
                 pending.set(index,null)
             })
         }
 
         if (pending.size) {
-            pending.forEach((value, index)=>{
-                modifyMap.set(index, value) // set to null
+            pending.forEach((value, index)=>{ // value is always null
+                modifyMap.set(index, value) // assert null for cacheItemID
             })
         }
 
         // apply changes to extant cellFrames
-        // TODO move to contentHandler
         const { cradleModelComponents } = contentHandler.content
 
         const modifiedCellFrames = new Map()
