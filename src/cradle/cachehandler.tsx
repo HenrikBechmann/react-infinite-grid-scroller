@@ -323,9 +323,9 @@ export class CacheHandler {
         const orderedindexlist = Array.from(indexToItemIDMap.keys())
         orderedindexlist.sort((a,b)=>a-b)
 
+        // TODO continue refactor for range from here!
         const ptr = orderedindexlist.findIndex((value)=> value >= highrange)
 
-        // TODO continue refactor for range from here!
         const processlist = orderedindexlist.slice(ptr)
         const indextoremove = 
             (increment == 1)?
