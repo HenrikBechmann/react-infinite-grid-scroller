@@ -448,7 +448,7 @@ const Cradle = ({
             getCacheList,
             getCradleMap,
             modifyCacheMap,
-            swapIndexes,
+            moveIndex,
             insertIndex,
             removeIndex,
 
@@ -465,7 +465,7 @@ const Cradle = ({
             getCacheList,
             getCradleMap,
             modifyCacheMap,
-            swapIndexes,
+            moveIndex,
             insertIndex,
             removeIndex,
 

@@ -245,80 +245,84 @@ export default class ServiceHandler {
 
     }
 
-    public swapIndexes = (firstindex, secondindex) => {
+    public moveIndex = (fromindex, toindex, movebefore = true) => {
 
-        if (firstindex == secondindex) return
+        console.log('called moveIndex', fromindex, toindex)
 
-        const { cacheHandler, contentHandler, stateHandler } = this.cradleParameters.handlersRef.current
+        return
 
-        const { 
-            metadataMap, // cacheItemID to portal data, including index
-            indexToItemIDMap // index to cacheItemID
-        } = cacheHandler.cacheProps
+        // if (firstindex == secondindex) return
 
-        if (!(indexToItemIDMap.has(firstindex) && indexToItemIDMap.has(secondindex))) return
+        // const { cacheHandler, contentHandler, stateHandler } = this.cradleParameters.handlersRef.current
 
-        const firstItemID = indexToItemIDMap.get(firstindex)
-        const secondItemID = indexToItemIDMap.get(secondindex)
+        // const { 
+        //     metadataMap, // cacheItemID to portal data, including index
+        //     indexToItemIDMap // index to cacheItemID
+        // } = cacheHandler.cacheProps
 
-        indexToItemIDMap.set(firstindex, secondItemID)
-        indexToItemIDMap.set(secondindex,firstItemID)
+        // if (!(indexToItemIDMap.has(firstindex) && indexToItemIDMap.has(secondindex))) return
 
-        const firstdata = metadataMap.get(firstItemID)
-        const seconddata = metadataMap.get(secondItemID)
+        // const firstItemID = indexToItemIDMap.get(firstindex)
+        // const secondItemID = indexToItemIDMap.get(secondindex)
 
-        firstdata.index = secondindex
-        seconddata.index = firstindex
+        // indexToItemIDMap.set(firstindex, secondItemID)
+        // indexToItemIDMap.set(secondindex,firstItemID)
 
-        cacheHandler.cacheProps.modified = true
-        cacheHandler.renderPortalList()
+        // const firstdata = metadataMap.get(firstItemID)
+        // const seconddata = metadataMap.get(secondItemID)
 
-        const { 
-            cradleModelComponents, 
-            headModelComponents, 
-            tailModelComponents 
-        } = contentHandler.content
+        // firstdata.index = secondindex
+        // seconddata.index = firstindex
 
-        const cradlecomponents = new Map()
-        function findSelections(component,i) {
-            if (component.props.index == firstindex) {
-                cradlecomponents.set(firstindex,[component,i])
-            } else if (component.props.index == secondindex) {
-                cradlecomponents.set(secondindex,[component,i])
-            } else {
-                return true
-            }
+        // cacheHandler.cacheProps.modified = true
+        // cacheHandler.renderPortalList()
 
-            return (!(cradlecomponents.size == 2))
-        }
+        // const { 
+        //     cradleModelComponents, 
+        //     headModelComponents, 
+        //     tailModelComponents 
+        // } = contentHandler.content
 
-        const subjectList = {current:cradleModelComponents}
-        function processSelections(data,index){
-            const list = subjectList.current
-            const [component,ptr] = data
-            const subitemid = (index == firstindex)?
-                secondItemID:
-                firstItemID
-            list[ptr] = React.cloneElement(component,{cacheItemID:subitemid})
-        }
+        // const cradlecomponents = new Map()
+        // function findSelections(component,i) {
+        //     if (component.props.index == firstindex) {
+        //         cradlecomponents.set(firstindex,[component,i])
+        //     } else if (component.props.index == secondindex) {
+        //         cradlecomponents.set(secondindex,[component,i])
+        //     } else {
+        //         return true
+        //     }
 
-        cradleModelComponents.every(findSelections)
-        cradlecomponents.forEach(processSelections)
+        //     return (!(cradlecomponents.size == 2))
+        // }
 
-        cradlecomponents.clear()
-        subjectList.current = headModelComponents
-        headModelComponents.every(findSelections)
-        cradlecomponents.forEach(processSelections)
+        // const subjectList = {current:cradleModelComponents}
+        // function processSelections(data,index){
+        //     const list = subjectList.current
+        //     const [component,ptr] = data
+        //     const subitemid = (index == firstindex)?
+        //         secondItemID:
+        //         firstItemID
+        //     list[ptr] = React.cloneElement(component,{cacheItemID:subitemid})
+        // }
 
-        cradlecomponents.clear()
-        subjectList.current = tailModelComponents
-        tailModelComponents.every(findSelections)
-        cradlecomponents.forEach(processSelections)
+        // cradleModelComponents.every(findSelections)
+        // cradlecomponents.forEach(processSelections)
 
-        contentHandler.content.headDisplayComponents = headModelComponents
-        contentHandler.content.tailDisplayComponents = tailModelComponents
+        // cradlecomponents.clear()
+        // subjectList.current = headModelComponents
+        // headModelComponents.every(findSelections)
+        // cradlecomponents.forEach(processSelections)
 
-        stateHandler.setCradleState('applycellframechanges')
+        // cradlecomponents.clear()
+        // subjectList.current = tailModelComponents
+        // tailModelComponents.every(findSelections)
+        // cradlecomponents.forEach(processSelections)
+
+        // contentHandler.content.headDisplayComponents = headModelComponents
+        // contentHandler.content.tailDisplayComponents = tailModelComponents
+
+        // stateHandler.setCradleState('applycellframechanges')
 
     }
 
