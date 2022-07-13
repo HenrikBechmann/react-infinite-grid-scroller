@@ -248,6 +248,46 @@ export class CacheHandler {
         return cachelist
 
     }
+
+    moveIndex(fromindex, toindex) {
+
+        console.log('cachehandler fromindex, toindex',fromindex, toindex)
+
+        if (fromindex == toindex) return
+
+        const {indexToItemIDMap,metadataMap} = this.cacheProps
+
+        if (!(indexToItemIDMap.has(fromindex) && indexToItemIDMap.has(toindex))) return
+
+        const shiftingindex = fromindex
+        const shiftingcacheItemID = indexToItemIDMap.get(shiftingindex)
+
+        const shiftincrement = 
+            (fromindex < toindex)? 
+                -1: // increment down, make room for shiftingindex at top
+                1   // increment up, make room for shiftingindex at bottom
+
+        const startindex = 
+            (shiftincrement == -1)?
+                fromindex:
+                toindex
+
+        const endindex = 
+            (shiftincrement == -1)?
+                toindex:
+                fromindex
+
+        const orderedindexmap = Array.from(indexToItemIDMap.keys())
+        orderedindexmap.sort((a,b)=>a-b)
+        const processmap = orderedindexmap.slice(
+            orderedindexmap.indexOf(startindex),
+            orderedindexmap.indexOf(endindex)
+        )
+
+        console.log('processmap',processmap)
+
+    }
+
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
     // used for size calculation in pareCacheToMax

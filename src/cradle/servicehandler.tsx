@@ -245,15 +245,15 @@ export default class ServiceHandler {
 
     }
 
-    public moveIndex = (fromindex, toindex, movebefore = true) => {
+    public moveIndex = (fromindex, toindex) => {
 
         console.log('called moveIndex', fromindex, toindex)
 
-        return
+        if (fromindex == toindex) return
 
-        // if (firstindex == secondindex) return
+        const { cacheHandler, contentHandler, stateHandler } = this.cradleParameters.handlersRef.current
 
-        // const { cacheHandler, contentHandler, stateHandler } = this.cradleParameters.handlersRef.current
+        cacheHandler.moveIndex(fromindex,toindex)
 
         // const { 
         //     metadataMap, // cacheItemID to portal data, including index
