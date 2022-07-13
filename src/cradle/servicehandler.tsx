@@ -247,6 +247,7 @@ export default class ServiceHandler {
 
     public swapIndexes = (firstindex, secondindex) => {
 
+        // protect against string from UI
         firstindex = parseInt(firstindex)
         secondindex = parseInt(secondindex)
 
