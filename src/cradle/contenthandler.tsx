@@ -532,4 +532,12 @@ export default class ContentHandler {
 
     }
 
+    public moveIndex(fromindex, toindex) {
+
+        console.log('contenthandler fromindex, toindex',fromindex, toindex)
+
+        if (fromindex == toindex) return false
+
+    }
+
 }
