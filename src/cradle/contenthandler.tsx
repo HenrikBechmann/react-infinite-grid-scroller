@@ -538,6 +538,10 @@ export default class ContentHandler {
 
         if (fromindex == toindex) return false
 
+        const modelindexlist = this.getModelIndexList()
+        modelindexlist.sort((a,b)=>a-b)
+        
+
     }
 
 }

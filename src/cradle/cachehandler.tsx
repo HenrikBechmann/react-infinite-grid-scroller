@@ -253,7 +253,7 @@ export class CacheHandler {
 
         console.log('cachehandler fromindex, toindex',fromindex, toindex)
 
-        if (fromindex == toindex) return false
+        if (fromindex == toindex) return []
 
         const {indexToItemIDMap,metadataMap} = this.cacheProps
 
@@ -282,16 +282,21 @@ export class CacheHandler {
             1:
             0
 
-        const orderedindexmap = Array.from(indexToItemIDMap.keys())
-        orderedindexmap.sort((a,b)=>a-b)
-        const processmap = orderedindexmap.slice(
-            orderedindexmap.indexOf(startindex) + sliceincrement,
-            orderedindexmap.indexOf(endindex) + sliceincrement
+        const orderedindexlist = Array.from(indexToItemIDMap.keys())
+        orderedindexlist.sort((a,b)=>a-b)
+        const processlist = orderedindexlist.slice(
+            orderedindexlist.indexOf(startindex) + sliceincrement,
+            orderedindexlist.indexOf(endindex) + sliceincrement
         )
 
-        console.log('shiftincrement, processmap',shiftincrement,processmap)
+        console.log('shiftincrement, startindex, endindex, processmap',
+            shiftincrement,startindex, endindex, processlist)
 
-        return true
+        const processedlist = processlist.concat([fromindex])
+
+        console.log('processedlist', processedlist)
+
+        return processedlist
 
     }
 
