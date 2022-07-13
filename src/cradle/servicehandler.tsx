@@ -254,20 +254,22 @@ export default class ServiceHandler {
         const processedIndexList = cacheHandler.moveIndex(fromindex,toindex)
 
         if (processedIndexList.length) {
+
             cacheHandler.cacheProps.modified = true
             cacheHandler.renderPortalList()
             contentHandler.changeCradleCacheItemIDs(processedIndexList)
             stateHandler.setCradleState('applycellframechanges')
+            
         }
 
     }
 
-    public insertIndex = (index, insertbefore = true) => {
+    public insertIndex = (index, rangehighindex = null) => { // TODO allow for a range?
 
-        console.log('service handler called to insert index', index, insertbefore)
+        console.log('service handler called to insert index', index)
     }
 
-    public removeIndex = (index) => {
+    public removeIndex = (index, rangehighindex = null) => { // TODO allow for a range?
 
         console.log('service handler called to remove index', index)
 

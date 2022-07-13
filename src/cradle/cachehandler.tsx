@@ -305,6 +305,48 @@ export class CacheHandler {
 
     }
 
+    incrementFromIndex(index, highrange, increment) {
+
+        highrange = highrange ?? 0
+
+        highrange = 
+            (highrange > index)?
+                highrange:
+                index
+
+        const rangecount = highrange - index + 1
+
+        const rangeincrement = rangecount * increment
+
+        const {indexToItemIDMap,metadataMap} = this.cacheProps
+
+        const orderedindexlist = Array.from(indexToItemIDMap.keys())
+        orderedindexlist.sort((a,b)=>a-b)
+
+        const ptr = orderedindexlist.findIndex((value)=> value >= highrange)
+
+        // TODO continue refactor for range from here!
+        const processlist = orderedindexlist.slice(ptr)
+        const indextoremove = 
+            (increment == 1)?
+            index:
+            processlist.at(-1)
+        const cacheItemIDtoremove = indexToItemIDMap.get(indextoremove)
+
+        if (increment == 1) processlist.reverse()
+
+        processlist.forEach((cacheItemID, index) => {
+            const newindex = index + increment
+            indexToItemIDMap.set(newindex, cacheItemID)
+            metadataMap.get(cacheItemID).index = newindex
+        })
+
+        // delete remaining duplicate
+        indexToItemIDMap.delete(indextoremove)
+        metadataMap.delete(cacheItemIDtoremove)
+
+    }
+
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
     // used for size calculation in pareCacheToMax
