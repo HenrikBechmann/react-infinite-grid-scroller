@@ -247,82 +247,18 @@ export default class ServiceHandler {
 
     public moveIndex = (fromindex, toindex) => {
 
-        console.log('called moveIndex', fromindex, toindex)
-
         if (fromindex == toindex) return
 
         const { cacheHandler, contentHandler, stateHandler } = this.cradleParameters.handlersRef.current
 
-        cacheHandler.moveIndex(fromindex,toindex)
+        const processedIndexList = cacheHandler.moveIndex(fromindex,toindex)
 
-        // const { 
-        //     metadataMap, // cacheItemID to portal data, including index
-        //     indexToItemIDMap // index to cacheItemID
-        // } = cacheHandler.cacheProps
-
-        // if (!(indexToItemIDMap.has(firstindex) && indexToItemIDMap.has(secondindex))) return
-
-        // const firstItemID = indexToItemIDMap.get(firstindex)
-        // const secondItemID = indexToItemIDMap.get(secondindex)
-
-        // indexToItemIDMap.set(firstindex, secondItemID)
-        // indexToItemIDMap.set(secondindex,firstItemID)
-
-        // const firstdata = metadataMap.get(firstItemID)
-        // const seconddata = metadataMap.get(secondItemID)
-
-        // firstdata.index = secondindex
-        // seconddata.index = firstindex
-
-        // cacheHandler.cacheProps.modified = true
-        // cacheHandler.renderPortalList()
-
-        // const { 
-        //     cradleModelComponents, 
-        //     headModelComponents, 
-        //     tailModelComponents 
-        // } = contentHandler.content
-
-        // const cradlecomponents = new Map()
-        // function findSelections(component,i) {
-        //     if (component.props.index == firstindex) {
-        //         cradlecomponents.set(firstindex,[component,i])
-        //     } else if (component.props.index == secondindex) {
-        //         cradlecomponents.set(secondindex,[component,i])
-        //     } else {
-        //         return true
-        //     }
-
-        //     return (!(cradlecomponents.size == 2))
-        // }
-
-        // const subjectList = {current:cradleModelComponents}
-        // function processSelections(data,index){
-        //     const list = subjectList.current
-        //     const [component,ptr] = data
-        //     const subitemid = (index == firstindex)?
-        //         secondItemID:
-        //         firstItemID
-        //     list[ptr] = React.cloneElement(component,{cacheItemID:subitemid})
-        // }
-
-        // cradleModelComponents.every(findSelections)
-        // cradlecomponents.forEach(processSelections)
-
-        // cradlecomponents.clear()
-        // subjectList.current = headModelComponents
-        // headModelComponents.every(findSelections)
-        // cradlecomponents.forEach(processSelections)
-
-        // cradlecomponents.clear()
-        // subjectList.current = tailModelComponents
-        // tailModelComponents.every(findSelections)
-        // cradlecomponents.forEach(processSelections)
-
-        // contentHandler.content.headDisplayComponents = headModelComponents
-        // contentHandler.content.tailDisplayComponents = tailModelComponents
-
-        // stateHandler.setCradleState('applycellframechanges')
+        if (processedIndexList.length) {
+            cacheHandler.cacheProps.modified = true
+            cacheHandler.renderPortalList()
+            contentHandler.changeCradleCacheItemIDs(processedIndexList)
+            stateHandler.setCradleState('applycellframechanges')
+        }
 
     }
 

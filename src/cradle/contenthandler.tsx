@@ -1,6 +1,8 @@
 // contenthandler.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
+import React from 'react'
+
 import { 
     getCellFrameComponentList, 
     calcContentShift,
@@ -532,15 +534,35 @@ export default class ContentHandler {
 
     }
 
-    public moveIndex(fromindex, toindex) {
+    public changeCradleCacheItemIDs(processindexlist) {
 
-        console.log('contenthandler fromindex, toindex',fromindex, toindex)
+        if (processindexlist.length == 0) return
 
-        if (fromindex == toindex) return false
+        const { cacheHandler } = this.cradleParameters.handlersRef.current
+        const { indexToItemIDMap } = cacheHandler.cacheProps
 
-        const modelindexlist = this.getModelIndexList()
-        modelindexlist.sort((a,b)=>a-b)
-        
+        const {
+            cradleModelComponents,
+            headModelComponents,
+            tailModelComponents,
+        } = this.content
+
+        function processcomponent(component, i, array) {
+            const ptr = processindexlist.indexOf(component.props.index)
+            if (ptr != -1) {
+                const index = processindexlist[ptr]
+                const cacheItemID = indexToItemIDMap.get(index)
+                array[index] = React.cloneElement(component, {cacheItemID})
+            }
+
+        }
+
+        cradleModelComponents.forEach(processcomponent)
+        headModelComponents.forEach(processcomponent)
+        tailModelComponents.forEach(processcomponent)
+
+        this.content.headDisplayComponents = headModelComponents
+        this.content.tailDisplayComponents = tailModelComponents
 
     }
 
