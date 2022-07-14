@@ -249,7 +249,8 @@ export default class ServiceHandler {
 
         if (fromindex == toindex) return
 
-        const { cacheHandler, contentHandler, stateHandler } = this.cradleParameters.handlersRef.current
+        const { cacheHandler, contentHandler, stateHandler } = 
+            this.cradleParameters.handlersRef.current
 
         const processedIndexList = cacheHandler.moveIndex(fromindex,toindex)
 
@@ -264,14 +265,25 @@ export default class ServiceHandler {
 
     }
 
-    public insertIndex = (index, rangehighindex = null) => { // TODO allow for a range?
+    public insertIndex = (index, rangehighindex = null) => {
 
-        console.log('service handler called to insert index', index)
+        console.log('service handler called to insert index', index, rangehighindex)
+
+        const { cacheHandler, contentHandler, stateHandler } = 
+            this.cradleParameters.handlersRef.current
+
+        cacheHandler.incrementFromIndex(index, rangehighindex, +1)
+
     }
 
-    public removeIndex = (index, rangehighindex = null) => { // TODO allow for a range?
+    public removeIndex = (index, rangehighindex = null) => {
 
-        console.log('service handler called to remove index', index)
+        console.log('service handler called to remove index', index, rangehighindex)
+
+        const { cacheHandler, contentHandler, stateHandler } = 
+            this.cradleParameters.handlersRef.current
+
+        cacheHandler.incrementFromIndex(index, rangehighindex, -1)
 
     }
 
