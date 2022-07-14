@@ -269,10 +269,7 @@ export default class ServiceHandler {
 
         console.log('service handler called to insert index', index, rangehighindex)
 
-        const { cacheHandler, contentHandler, stateHandler } = 
-            this.cradleParameters.handlersRef.current
-
-        cacheHandler.incrementFromIndex(index, rangehighindex, +1)
+        this.insertRemoveIndex(index, rangehighindex, +1)
 
     }
 
@@ -280,10 +277,33 @@ export default class ServiceHandler {
 
         console.log('service handler called to remove index', index, rangehighindex)
 
+        this.insertRemoveIndex(index, rangehighindex, -1)
+
+    }
+
+    private insertRemoveIndex = (index, rangehighindex, increment) => {
+
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
+            
+        const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
 
-        cacheHandler.incrementFromIndex(index, rangehighindex, -1)
+        const [processedMap, removedList] = cacheHandler.incrementFromIndex(index, rangehighindex, increment)
+
+        const processedList = Array.from(processedMap.keys())
+
+        console.log('listsize, processedList, removedList',listsize, processedList, removedList)
+
+        contentHandler.changeCradleCacheItemIDs(processedList)
+
+        if (increment == +1) contentHandler.createNewCacheItemIDs(removedList)
+
+        stateHandler.setCradleState('applycellframechanges')
+
+        const changecount = (removedList.length * increment)
+        const newlistsize = listsize + changecount 
+
+        this.setListsize(newlistsize)
 
     }
 

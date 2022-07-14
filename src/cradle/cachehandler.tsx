@@ -343,6 +343,8 @@ export class CacheHandler {
         for (const index of indexestoremove) {
             cacheItemsToRemove.set(index,indexToItemIDMap.get(index))
         }
+
+        const removedList = Array.from(cacheItemsToRemove.keys())
         // const cacheItemIDtoremove = indexToItemIDMap.get(indexestoremove)
 
         if (increment == 1) processlist.reverse()
@@ -350,19 +352,24 @@ export class CacheHandler {
         console.log('cache items index, highrange, increment, rangeincrement, to process, remove', 
             index, highrange, increment, rangeincrement, processlist, cacheItemsToRemove)
 
-        // processlist.forEach((cacheItemID, index) => {
-        //     const newindex = index + rangeincrement
-        //     indexToItemIDMap.set(newindex, cacheItemID)
-        //     metadataMap.get(cacheItemID).index = newindex
-        // })
+        const processedMap = new Map()
+        processlist.forEach((cacheItemID, index) => {
+            const newindex = index + rangeincrement
+            indexToItemIDMap.set(newindex, cacheItemID)
+            metadataMap.get(cacheItemID).index = newindex
+        })
 
-        // // delete remaining duplicates
-        // cacheItemsToRemove.forEach((index, cacheItemID) =>{
+        // delete remaining duplicates
+        cacheItemsToRemove.forEach((index, cacheItemID) =>{
 
-        //     indexToItemIDMap.delete(index)
-        //     metadataMap.delete(cacheItemID)
+            indexToItemIDMap.delete(index)
+            metadataMap.delete(cacheItemID)
 
-        // })
+        })
+
+        console.log('incrementFromIndex processedMap, removedList',processedMap, removedList)
+
+        return [processedMap, removedList]
 
     }
 

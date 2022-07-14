@@ -548,11 +548,42 @@ export default class ContentHandler {
         } = this.content
 
         function processcomponent(component, i, array) {
+
             const ptr = processindexlist.indexOf(component.props.index)
             if (ptr != -1) {
                 const index = processindexlist[ptr]
                 const cacheItemID = indexToItemIDMap.get(index)
-                array[index] = React.cloneElement(component, {cacheItemID})
+                array[i] = React.cloneElement(component, {cacheItemID})
+            }
+
+        }
+
+        cradleModelComponents.forEach(processcomponent)
+        headModelComponents.forEach(processcomponent)
+        tailModelComponents.forEach(processcomponent)
+
+        this.content.headDisplayComponents = headModelComponents
+        this.content.tailDisplayComponents = tailModelComponents
+
+    }
+
+    public createNewCacheItemIDs(processindexlist) {
+
+
+        const { cacheHandler } = this.cradleParameters.handlersRef.current
+        const {
+            cradleModelComponents,
+            headModelComponents,
+            tailModelComponents,
+        } = this.content
+
+        function processcomponent(component, i, array) {
+
+            const ptr = processindexlist.indexOf(component.props.index)
+            if (ptr != -1) {
+                // const index = processindexlist[ptr]
+                const newCacheItemID = cacheHandler.getNewCacheItemID()
+                array[i] = React.cloneElement(component, {newCacheItemID})
             }
 
         }
