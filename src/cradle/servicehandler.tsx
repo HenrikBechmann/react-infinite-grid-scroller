@@ -3,6 +3,7 @@
 
 import React from 'react'
 
+// ServiceHandler handles client service requests
 export default class ServiceHandler {
 
     constructor(cradleParameters) {
@@ -30,9 +31,11 @@ export default class ServiceHandler {
 
     private cradleParameters
 
+    // see above for list
     public callbacks
 
-    // TODO: adjust axisPixelOffset to match new data
+    // ========================[ GENERAL ]============================
+
     public reload = () => {
 
         const { stateHandler } = this.cradleParameters.handlersRef.current
@@ -46,14 +49,6 @@ export default class ServiceHandler {
     }
 
 
-    public clearCache = () => {
-
-        const { stateHandler } = this.cradleParameters.handlersRef.current
-
-        stateHandler.setCradleState('clearcache')
-
-    }
-
     public scrollToItem = (index) => {
 
         const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
@@ -66,6 +61,8 @@ export default class ServiceHandler {
         stateHandler.setCradleState('doreposition')
 
     }
+
+    // ======================[ GET SNAPSHOTS ]========================
 
     public getCacheMap = () => {
 
@@ -91,9 +88,19 @@ export default class ServiceHandler {
         return cacheHandler.getCradleMap(modelIndexList)
     }
 
-    //TODO blank index values (cacheItemID) are assigned a new 
-    // cacheItemID if in the cradle, otherwise removed from the cache
-    // duplicate indes itemID pairs have the itemID turned to blank
+    // =================[ CACHE MANAGEMENT REQUESTS ]==================
+
+    public clearCache = () => {
+
+        const { stateHandler } = this.cradleParameters.handlersRef.current
+
+        stateHandler.setCradleState('clearcache')
+
+    }
+
+    // blank index values (cacheItemID) are assigned a new 
+    // cacheItemID if in the cradle, otherwise removed from the cache.
+    // Duplicate index/itemID pairs have the itemID turned to blank
     // and are processed by the above rule
     public modifyCacheMap = (modifyMap) => { // index => cacheItemID
 
@@ -245,14 +252,16 @@ export default class ServiceHandler {
 
     }
 
-    public moveIndex = (fromindex, toindex) => {
+    // TODO implement hightrange logic
+    public moveIndex = (toindex, fromindex, highrange = null) => {
 
         if (fromindex == toindex) return
 
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
 
-        const processedIndexList = cacheHandler.moveIndex(fromindex,toindex)
+        const processedIndexList = 
+            cacheHandler.moveIndex(toindex, fromindex, highrange)
 
         if (processedIndexList.length) {
 
@@ -281,6 +290,7 @@ export default class ServiceHandler {
 
     }
 
+    // shared logic
     private insertRemoveIndex = (index, rangehighindex, increment) => {
 
         const { cacheHandler, contentHandler, stateHandler } = 

@@ -25,8 +25,6 @@ export class CacheHandler {
         this.listsizeRef = listsizeRef
     }
 
-    //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
-
     cacheProps = {
         setListState:null,
         modified:false,
@@ -42,9 +40,10 @@ export class CacheHandler {
     }
 
     listsizeRef
-    // initialize scroller repository
 
-    setListsize // setListsize(listsize) generates infinitescroller useEvent to update listsize throughout
+    setListsize // setListsize(listsize) generates infinitescroller useState update listsize throughout
+
+    //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
 
     changeListsize = (newlistsize, cacheDeleteListCallback) => {
         this.setListsize(newlistsize)
@@ -59,12 +58,6 @@ export class CacheHandler {
             })
             this.deletePortal(parelist, cacheDeleteListCallback)
         }
-    }
-
-    // changeMap is [key, value] pair of [cacheItemID, index]
-    // index = null means delete the item from cache
-    applyMappingChanges = (changeMap) => {
-
     }
 
     clearCache = () => {
@@ -208,6 +201,8 @@ export class CacheHandler {
 
     }
 
+    // =========================[ SNAPSHOTS ]=========================
+
     getCacheMap() {
 
         return new Map(this.cacheProps.indexToItemIDMap)
@@ -249,7 +244,10 @@ export class CacheHandler {
 
     }
 
-    moveIndex(fromindex, toindex) {
+    // ==========================[ SERVICE SUPPORT ]=========================
+    
+    // TODO implement highrange logic
+    moveIndex(toindex, fromindex, highrange ) {
 
         if (fromindex == toindex) return []
 

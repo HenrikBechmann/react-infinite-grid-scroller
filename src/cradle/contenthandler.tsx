@@ -236,7 +236,7 @@ export default class ContentHandler {
 
     }
 
-    // =============================[ UPDATE through scroll ]===============================
+    // ==================[ UPDATE CONTENT through scroll ]========================
 
     // updateCradleContent does not touch the viewport element's scroll position for the scrollblock
     // instead it reconfigures elements within the cradle
@@ -470,6 +470,8 @@ export default class ContentHandler {
         }
 
     }
+
+    // ==========================[ SERVICE SUPPORT ]=======================
 
     public clearCache = () => {
 
