@@ -42,6 +42,8 @@
         // - item 400 in 400 item nested list of scrollers crosscount = 3 takes up entire width of viewport
 
     TODO:
+        - during modification, assigen cloneElements from main to head/tail, instead of recreating 
+            each for head tail
         - allow range for moveto
         - cacheMax is also boundary for preload, and for dense, as well as keepload (?)
         - add insertCacheItem and removeCacheItem - affects listsize
