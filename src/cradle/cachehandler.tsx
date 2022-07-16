@@ -329,7 +329,7 @@ export class CacheHandler {
         if (ptr == -1) return // nothing to do
 
         // obtain slice above the highvaluerange
-        const processlist = 
+        const processIndexList = 
             (increment == 1)?
                 orderedindexlist.slice(index):
                 orderedindexlist.slice(highrange + 1)
@@ -337,37 +337,37 @@ export class CacheHandler {
             (increment == 1)?
             orderedindexlist.slice(index, ptr + 1):
             orderedindexlist.slice(rangeincrement)
-        const cacheItemsToRemove = new Map()
+        const cacheItemsToRemoveMap = new Map()
         for (const index of indexestoremove) {
-            cacheItemsToRemove.set(index,indexToItemIDMap.get(index))
+            cacheItemsToRemoveMap.set(index,indexToItemIDMap.get(index))
         }
 
-        const removedList = Array.from(cacheItemsToRemove.keys())
-        // const cacheItemIDtoremove = indexToItemIDMap.get(indexestoremove)
+        const removeIndexList = Array.from(cacheItemsToRemoveMap.keys())
 
-        if (increment == 1) processlist.reverse()
+        if (increment == 1) processIndexList.reverse()
 
-        console.log('cache items index, highrange, increment, rangeincrement, to process, remove', 
-            index, highrange, increment, rangeincrement, processlist, cacheItemsToRemove)
+        console.log('cache items index, highrange, increment, rangeincrement, indexes to process, remove', 
+            index, highrange, increment, rangeincrement, processIndexList, cacheItemsToRemoveMap)
 
-        const processedMap = new Map()
-        processlist.forEach((cacheItemID, index) => {
+        for (const index of processIndexList) {
+            const cacheItemID = indexToItemIDMap.get(index)
             const newindex = index + rangeincrement
             indexToItemIDMap.set(newindex, cacheItemID)
             metadataMap.get(cacheItemID).index = newindex
-        })
+        }
 
         // delete remaining duplicates
-        cacheItemsToRemove.forEach((index, cacheItemID) =>{
+        cacheItemsToRemoveMap.forEach((index, cacheItemID) =>{
 
             indexToItemIDMap.delete(index)
             metadataMap.delete(cacheItemID)
 
         })
 
-        console.log('incrementFromIndex processedMap, removedList',processedMap, removedList)
+        console.log('incrementFromIndex processIndexList, removeIndexList',
+            processIndexList, removeIndexList)
 
-        return [processedMap, removedList]
+        return [processIndexList, removeIndexList]
 
     }
 

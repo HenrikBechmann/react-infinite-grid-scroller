@@ -306,11 +306,11 @@ export default class ServiceHandler {
             
         const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
 
-        const [processedMap, removedList] = cacheHandler.incrementFromIndex(index, rangehighindex, increment)
-
-        const processedList = Array.from(processedMap.keys())
+        const [processedList, removedList] = cacheHandler.incrementFromIndex(index, rangehighindex, increment)
 
         console.log('listsize, processedList, removedList',listsize, processedList, removedList)
+
+        return // DEBUG!!
 
         contentHandler.changeCradleCacheItemIDs(processedList)
 
