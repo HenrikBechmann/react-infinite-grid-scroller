@@ -326,7 +326,12 @@ export class CacheHandler {
         // provides value for slice above the range
         const ptr = orderedindexlist.findIndex((value)=> value >= highrange)
 
-        if (ptr == -1) return // nothing to do
+        if (ptr == -1) {
+            highrange = orderedindexlist.at(-1)
+            if (highrange < index) {
+                return []
+            }
+        }
 
         // obtain slice above the highvaluerange
         const processIndexList = 

@@ -310,8 +310,6 @@ export default class ServiceHandler {
 
         console.log('listsize, processedList, removedList',listsize, processedList, removedList)
 
-        return // DEBUG!!
-
         contentHandler.changeCradleCacheItemIDs(processedList)
 
         if (increment == +1) contentHandler.createNewCacheItemIDs(removedList)
