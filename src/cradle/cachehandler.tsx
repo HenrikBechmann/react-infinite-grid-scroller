@@ -321,27 +321,37 @@ export class CacheHandler {
         const orderedindexlist = Array.from(indexToItemIDMap.keys())
         orderedindexlist.sort((a,b)=>a-b)
 
-        // console.log('orderedindexlist length',orderedindexlist.length, orderedindexlist)
+        // highptr provides value for slice above the range
+        let highptr = orderedindexlist.findIndex(value=> value >= highrange)
 
-        // provides value for slice above the range
-        let ptr = orderedindexlist.findIndex((value)=> value >= highrange)
-
-        if (ptr == -1) {
-            ptr = orderedindexlist.length - 1
-            highrange = orderedindexlist.at(ptr)
+        if (highptr == -1) {
+            highptr = orderedindexlist.length - 1
+            highrange = orderedindexlist.at(highptr)
             if (highrange < index) {
                 return []
             }
         }
 
+        const reverseorderedindexlist = orderedindexlist.reverse()
+        // lowvalue provides value for start of remove slice
+        let lowvalue = reverseorderedindexlist.find(value => value <= index)
+        if (lowvalue === undefined) {
+            lowvalue = lowvalue = reverseorderedindexlist.at(-1)
+        }
+        let lowptr = orderedindexlist.indexOf(lowvalue)
+
+        // TODO compare low and high values
+
         // obtain slice above the highvaluerange
         const processIndexList = 
             (increment == 1)?
-                orderedindexlist.slice(index):
-                orderedindexlist.slice(highrange + 1)
+                // orderedindexlist.slice(index):
+                // orderedindexlist.slice(highrange + 1)
+                orderedindexlist.slice(highptr):
+                orderedindexlist.slice(highptr + rangeincrement)
         const indexestoremove = 
             (increment == 1)?
-            orderedindexlist.slice(index, ptr + 1):
+            orderedindexlist.slice(lowptr, highptr + 1):
             orderedindexlist.slice(rangeincrement)
         const cacheItemsToRemoveMap = new Map()
         for (const index of indexestoremove) {
@@ -352,10 +362,10 @@ export class CacheHandler {
 
         if (increment == 1) processIndexList.reverse()
 
-        // console.log('cache items index, highrange, increment, rangeincrement, indexes to process, remove', 
-        //     index, highrange, increment, rangeincrement, processIndexList, cacheItemsToRemoveMap)
+        console.log('cache items index, highrange, increment, rangeincrement, indexes to process, remove', 
+            index, highrange, increment, rangeincrement, processIndexList, cacheItemsToRemoveMap)
 
-        console.log('incrementFromIndex: metadataMap BEFORE\n', new Map(metadataMap))
+        // console.log('incrementFromIndex: metadataMap BEFORE\n', new Map(metadataMap))
         const modifiedList = []
         for (const index of processIndexList) {
             const cacheItemID = indexToItemIDMap.get(index)
