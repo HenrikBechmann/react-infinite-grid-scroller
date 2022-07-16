@@ -334,7 +334,7 @@ export class CacheHandler {
             highptr = orderedIndexList.length - 1
             highrange = orderedIndexList.at(highptr)
             if (highrange < index) {
-                return [[],[]]
+                return [[],[]] // TODO ?????
             }
         }
 
@@ -344,6 +344,8 @@ export class CacheHandler {
             lowptr = orderedIndexList.length - 1
         }
 
+        console.log('highptr, highrange, lowptr, orderedIndexList',
+            highptr, highrange, lowptr, orderedIndexList)
         // ----------- define toProcess and toRemove lists
         // obtain slice above the highvaluerange
         const toProcessIndexList = 
