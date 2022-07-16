@@ -308,7 +308,7 @@ export default class ServiceHandler {
 
         const [changeList, removeList] = cacheHandler.incrementFromIndex(index, rangehighindex, increment)
 
-        console.log('listsize, changeList, removeList',listsize, changeList, removeList)
+        // console.log('insertRemoveIndex: listsize, changeList, removeList',listsize, changeList, removeList)
 
         contentHandler.changeCradleCacheItemIDs(changeList)
 

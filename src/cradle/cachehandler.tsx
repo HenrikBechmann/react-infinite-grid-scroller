@@ -321,7 +321,7 @@ export class CacheHandler {
         const orderedindexlist = Array.from(indexToItemIDMap.keys())
         orderedindexlist.sort((a,b)=>a-b)
 
-        console.log('orderedindexlist length',orderedindexlist.length, orderedindexlist)
+        // console.log('orderedindexlist length',orderedindexlist.length, orderedindexlist)
 
         // provides value for slice above the range
         let ptr = orderedindexlist.findIndex((value)=> value >= highrange)
@@ -352,9 +352,10 @@ export class CacheHandler {
 
         if (increment == 1) processIndexList.reverse()
 
-        console.log('cache items index, highrange, increment, rangeincrement, indexes to process, remove', 
-            index, highrange, increment, rangeincrement, processIndexList, cacheItemsToRemoveMap)
+        // console.log('cache items index, highrange, increment, rangeincrement, indexes to process, remove', 
+        //     index, highrange, increment, rangeincrement, processIndexList, cacheItemsToRemoveMap)
 
+        console.log('incrementFromIndex: metadataMap BEFORE\n', new Map(metadataMap))
         const modifiedList = []
         for (const index of processIndexList) {
             const cacheItemID = indexToItemIDMap.get(index)
@@ -368,14 +369,16 @@ export class CacheHandler {
         cacheItemsToRemoveMap.forEach((index, cacheItemID) =>{
 
             indexToItemIDMap.delete(index)
-            metadataMap.delete(cacheItemID)
+            if (increment == -1) metadataMap.delete(cacheItemID)
 
         })
 
+        console.log('incrementFromIndex: indexToItemIDMap, metadataMap AFTER\n', indexToItemIDMap, new Map(metadataMap))
+
         // const changeIndexList = processIndexList.filter(index=>!removeIndexList.includes(index))
 
-        console.log('processIndexList, removeIndexList, modifiedList',
-            processIndexList, removeIndexList, modifiedList)
+        // console.log('processIndexList, removeIndexList, modifiedList',
+        //     processIndexList, removeIndexList, modifiedList)
 
         return [modifiedList, removeIndexList]
 
