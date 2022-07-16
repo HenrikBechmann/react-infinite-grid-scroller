@@ -305,6 +305,7 @@ export class CacheHandler {
 
     incrementFromIndex(index, highrange, increment) { // increment is +1 or -1
 
+        // ---------- define range parameters: index, highrange, and rangeincrement
         highrange = highrange ?? 0
 
         highrange = 
@@ -318,81 +319,77 @@ export class CacheHandler {
 
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
-        const orderedindexlist = Array.from(indexToItemIDMap.keys())
-        orderedindexlist.sort((a,b)=>a-b)
+        // ---------- define boundaries within ordered index list
+        // high ptr, lowptr within orderedIndexList. Highrange can be revised to actual
+        const orderedIndexList = Array.from(indexToItemIDMap.keys())
+        orderedIndexList.sort((a,b)=>a-b)
 
-        // highptr provides value for slice above the range
-        let highptr = orderedindexlist.findIndex(value=> value >= highrange)
+        // low and high pointers provide values for slices above the range
+        let highptr = orderedIndexList.findIndex(value=> value >= highrange)
 
         if (highptr == -1) {
-            highptr = orderedindexlist.length - 1
-            highrange = orderedindexlist.at(highptr)
+            highptr = orderedIndexList.length - 1
+            highrange = orderedIndexList.at(highptr)
             if (highrange < index) {
                 return []
             }
         }
 
-        // lowvalue provides value for start of remove slice
-        let lowptr = orderedindexlist.find(value => value >= index)
+        let lowptr = orderedIndexList.find(value => value >= index)
 
-        if (lowptr == -1) {
-            lowptr = orderedindexlist.length - 1
+        if (lowptr == -1) { // impossible to be higher than highptr
+            lowptr = orderedIndexList.length - 1
         }
 
+        // ----------- define toProcess and toRemove lists
         // obtain slice above the highvaluerange
         const toProcessIndexList = 
             (increment == 1)?
-                orderedindexlist.slice(lowptr):
-                orderedindexlist.slice(highptr + 1)
-        const indexestoremove = 
+                orderedIndexList.slice(lowptr):
+                orderedIndexList.slice(highptr + 1)
+        const indexesToRemoveList = 
             (increment == 1)?
-            orderedindexlist.slice(lowptr, highptr + 1):
-            orderedindexlist.slice(rangeincrement)
+            orderedIndexList.slice(lowptr, highptr + 1):
+            orderedIndexList.slice(rangeincrement)
 
         const indexesforitemstoremove = 
             (increment == 1)?
             []:
-            orderedindexlist.slice(lowptr, highptr + 1)
+            orderedIndexList.slice(lowptr, highptr + 1)
 
-        const itemstoremove = indexesforitemstoremove.map((index)=>{
+        const itemsToRemoveList = indexesforitemstoremove.map((index)=>{
             return indexToItemIDMap.get(index)
         })
 
+        // ----------- conduct cache operations
         if (increment == 1) toProcessIndexList.reverse()
 
-        // console.log('cache items index, highrange, increment, rangeincrement, indexes to process, indexes to remove, items to remove', 
-        //     index, highrange, increment, rangeincrement, toProcessIndexList, indexestoremove, itemstoremove)
-
-        // console.log('incrementFromIndex: metadataMap BEFORE\n', new Map(metadataMap))
-        const modifiedList = []
+        // modify index-to-itemid map, and metadata map
+        const modifiedIndexList = []
         for (const index of toProcessIndexList) {
             const cacheItemID = indexToItemIDMap.get(index)
             const newIndex = index + rangeincrement
             indexToItemIDMap.set(newIndex, cacheItemID)
             metadataMap.get(cacheItemID).index = newIndex
-            modifiedList.push(newIndex)
+            modifiedIndexList.push(newIndex)
         }
 
         // delete remaining duplicates
-        for (const index of indexestoremove) {
+        for (const index of indexesToRemoveList) {
 
             indexToItemIDMap.delete(index)
 
         }
-        for (const item of itemstoremove) {
+        for (const item of itemsToRemoveList) {
 
             metadataMap.delete(item)
 
         }
 
-        // console.log('incrementFromIndex: indexToItemIDMap, metadataMap AFTER\n', indexToItemIDMap, new Map(metadataMap))
+        const removedIndexList = indexesToRemoveList // semantics
 
-        // const changeIndexList = processIndexList.filter(index=>!removeIndexList.includes(index))
-
-        // console.log('processIndexList, removeIndexList, modifiedList',
-        //     processIndexList, removeIndexList, modifiedList)
-
-        return [modifiedList, indexestoremove]
+        // return values for caller to send to contenthandler for cradle synchronization
+        return [modifiedIndexList, removedIndexList]
 
     }
 
