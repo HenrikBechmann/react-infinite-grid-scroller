@@ -42,6 +42,7 @@
         // - item 400 in 400 item nested list of scrollers crosscount = 3 takes up entire width of viewport
 
     TODO:
+        - add an increment list size internal function
         - during modification, assigen cloneElements from main to head/tail, instead of recreating 
             each for head tail
         - allow range for moveto

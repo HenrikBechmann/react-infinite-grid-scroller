@@ -62,6 +62,14 @@ export default class ServiceHandler {
 
     }
 
+    public setListsize = (listsize) => {
+
+        const { cacheHandler } = this.cradleParameters.handlersRef.current
+
+        cacheHandler.changeListsize(listsize, this.callbacks.cacheDeleteListCallback)
+
+    }
+
     // ======================[ GET SNAPSHOTS ]========================
 
     public getCacheMap = () => {
@@ -314,14 +322,6 @@ export default class ServiceHandler {
         const newlistsize = listsize + changecount 
 
         this.setListsize(newlistsize)
-
-    }
-
-    public setListsize = (listsize) => {
-
-        const { cacheHandler } = this.cradleParameters.handlersRef.current
-
-        cacheHandler.changeListsize(listsize, this.callbacks.cacheDeleteListCallback)
 
     }
 
