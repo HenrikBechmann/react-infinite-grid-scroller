@@ -32,6 +32,7 @@
         release to npm
 
     BUGS: 
+        - insert 100 - 104 doesn't work for some reason
         - select nested lists, then preload -> breaks presentation
         - clear cache after change mapping triggers a setCradleContent event
             - disable/re-enable interrupts?

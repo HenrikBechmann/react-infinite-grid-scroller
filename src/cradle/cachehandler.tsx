@@ -319,6 +319,9 @@ export class CacheHandler {
 
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
+        console.log('==> incrementFromIdex: index, highrange, increment, rangecount, rangeincrement, indexToItemIDMap, metadataMap',
+            index, highrange, increment, rangecount, rangeincrement, indexToItemIDMap, metadataMap)
+
         // ---------- define boundaries within ordered index list
         // high ptr, lowptr within orderedIndexList. Highrange can be revised to actual
         const orderedIndexList = Array.from(indexToItemIDMap.keys())
@@ -331,7 +334,7 @@ export class CacheHandler {
             highptr = orderedIndexList.length - 1
             highrange = orderedIndexList.at(highptr)
             if (highrange < index) {
-                return []
+                return [[],[]]
             }
         }
 
