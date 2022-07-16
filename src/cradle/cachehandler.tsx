@@ -315,52 +315,49 @@ export class CacheHandler {
 
         const rangecount = highrange - index + 1
 
-        const rangeincrement = rangecount * increment
+        const rangeIncrement = rangecount * increment
 
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
-        console.log('==> incrementFromIdex: index, highrange, increment, rangecount, rangeincrement, indexToItemIDMap, metadataMap',
-            index, highrange, increment, rangecount, rangeincrement, indexToItemIDMap, metadataMap)
+        console.log('==> incrementFromIdex: index, highrange, increment, rangecount, rangeIncrement, indexToItemIDMap, metadataMap',
+            index, highrange, increment, rangecount, rangeIncrement, indexToItemIDMap, metadataMap)
 
-        // ---------- define boundaries within ordered index list
+        // ---------- define boundaries within ordered cache index list
         // high ptr, lowptr within orderedIndexList. Highrange can be revised to actual
         const orderedIndexList = Array.from(indexToItemIDMap.keys())
         orderedIndexList.sort((a,b)=>a-b)
 
         // low and high pointers provide values for slices above the range
-        let highptr = orderedIndexList.findIndex(value=> value >= highrange)
+        const highCachePtr = orderedIndexList.findIndex(value=> value >= highrange)
 
-        if (highptr == -1) {
-            highptr = orderedIndexList.length - 1
-            highrange = orderedIndexList.at(highptr)
-            if (highrange < index) {
-                return [[],[]] // TODO ?????
-            }
-        }
+        const lowCachePtr = orderedIndexList.find(value => value >= index)
 
-        let lowptr = orderedIndexList.find(value => value >= index)
-
-        if (lowptr == -1) { // impossible to be higher than highptr
-            lowptr = orderedIndexList.length - 1
-        }
-
-        console.log('highptr, highrange, lowptr, orderedIndexList',
-            highptr, highrange, lowptr, orderedIndexList)
+        console.log('lowCachePtr, highCachePtr, orderedIndexList',
+            lowCachePtr, highCachePtr, orderedIndexList)
         // ----------- define toProcess and toRemove lists
         // obtain slice above the highvaluerange
         const toProcessIndexList = 
             (increment == 1)?
-                orderedIndexList.slice(lowptr):
-                orderedIndexList.slice(highptr + 1)
+                (
+                    (lowCachePtr > -1)?
+                        orderedIndexList.slice(lowCachePtr):
+                        []
+                )
+                :(
+                    (highCachePtr > -1)?
+                        orderedIndexList.slice(highCachePtr + 1):
+                        []
+                )
+        // TODO continue to refactor for open-ended processing
         const indexesToRemoveList = 
             (increment == 1)?
-            orderedIndexList.slice(lowptr, highptr + 1):
-            orderedIndexList.slice(rangeincrement)
+            orderedIndexList.slice(lowCachePtr, highCachePtr + 1):
+            orderedIndexList.slice(rangeIncrement) // negative value, back from end
 
         const indexesforitemstoremove = 
             (increment == 1)?
             []:
-            orderedIndexList.slice(lowptr, highptr + 1)
+            orderedIndexList.slice(lowCachePtr, highCachePtr + 1)
 
         const itemsToRemoveList = indexesforitemstoremove.map((index)=>{
             return indexToItemIDMap.get(index)
@@ -373,7 +370,7 @@ export class CacheHandler {
         const modifiedIndexList = []
         for (const index of toProcessIndexList) {
             const cacheItemID = indexToItemIDMap.get(index)
-            const newIndex = index + rangeincrement
+            const newIndex = index + rangeIncrement
             indexToItemIDMap.set(newIndex, cacheItemID)
             metadataMap.get(cacheItemID).index = newIndex
             modifiedIndexList.push(newIndex)
@@ -394,7 +391,7 @@ export class CacheHandler {
         const removedIndexList = indexesToRemoveList // semantics
 
         // return values for caller to send to contenthandler for cradle synchronization
-        return [modifiedIndexList, removedIndexList]
+        return [modifiedIndexList, removedIndexList, rangeIncrement]
 
     }
 
