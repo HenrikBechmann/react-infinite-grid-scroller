@@ -321,7 +321,7 @@ export class CacheHandler {
         const orderedindexlist = Array.from(indexToItemIDMap.keys())
         orderedindexlist.sort((a,b)=>a-b)
 
-        console.log('orderedindexlist length',orderedindexlist.length)
+        console.log('orderedindexlist length',orderedindexlist.length, orderedindexlist)
 
         // provides value for slice above the range
         let ptr = orderedindexlist.findIndex((value)=> value >= highrange)
@@ -355,11 +355,13 @@ export class CacheHandler {
         console.log('cache items index, highrange, increment, rangeincrement, indexes to process, remove', 
             index, highrange, increment, rangeincrement, processIndexList, cacheItemsToRemoveMap)
 
+        const modifiedList = []
         for (const index of processIndexList) {
             const cacheItemID = indexToItemIDMap.get(index)
-            const newindex = index + rangeincrement
-            indexToItemIDMap.set(newindex, cacheItemID)
-            metadataMap.get(cacheItemID).index = newindex
+            const newIndex = index + rangeincrement
+            indexToItemIDMap.set(newIndex, cacheItemID)
+            metadataMap.get(cacheItemID).index = newIndex
+            modifiedList.push(newIndex)
         }
 
         // delete remaining duplicates
@@ -370,12 +372,12 @@ export class CacheHandler {
 
         })
 
-        const changeIndexList = processIndexList.filter(index=>!removeIndexList.includes(index))
+        // const changeIndexList = processIndexList.filter(index=>!removeIndexList.includes(index))
 
-        console.log('incrementFromIndex processIndexList, removeIndexList, changeIndexList',
-            processIndexList, removeIndexList, changeIndexList)
+        console.log('processIndexList, removeIndexList, modifiedList',
+            processIndexList, removeIndexList, modifiedList)
 
-        return [changeIndexList, removeIndexList]
+        return [modifiedList, removeIndexList]
 
     }
 
