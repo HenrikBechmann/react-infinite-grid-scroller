@@ -306,17 +306,17 @@ export default class ServiceHandler {
             
         const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
 
-        const [processedList, removedList] = cacheHandler.incrementFromIndex(index, rangehighindex, increment)
+        const [changeList, removeList] = cacheHandler.incrementFromIndex(index, rangehighindex, increment)
 
-        console.log('listsize, processedList, removedList',listsize, processedList, removedList)
+        console.log('listsize, changeList, removeList',listsize, changeList, removeList)
 
-        contentHandler.changeCradleCacheItemIDs(processedList)
+        contentHandler.changeCradleCacheItemIDs(changeList)
 
-        if (increment == +1) contentHandler.createNewCacheItemIDs(removedList)
+        if (increment == +1) contentHandler.createNewCacheItemIDs(removeList)
 
         stateHandler.setCradleState('applycellframechanges')
 
-        const changecount = (removedList.length * increment)
+        const changecount = (removeList.length * increment)
         const newlistsize = listsize + changecount 
 
         this.setListsize(newlistsize)

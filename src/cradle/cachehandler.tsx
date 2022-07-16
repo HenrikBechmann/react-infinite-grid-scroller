@@ -324,10 +324,11 @@ export class CacheHandler {
         console.log('orderedindexlist length',orderedindexlist.length)
 
         // provides value for slice above the range
-        const ptr = orderedindexlist.findIndex((value)=> value >= highrange)
+        let ptr = orderedindexlist.findIndex((value)=> value >= highrange)
 
         if (ptr == -1) {
-            highrange = orderedindexlist.at(-1)
+            ptr = orderedindexlist.length - 1
+            highrange = orderedindexlist.at(ptr)
             if (highrange < index) {
                 return []
             }
@@ -369,10 +370,12 @@ export class CacheHandler {
 
         })
 
-        console.log('incrementFromIndex processIndexList, removeIndexList',
-            processIndexList, removeIndexList)
+        const changeIndexList = processIndexList.filter(index=>!removeIndexList.includes(index))
 
-        return [processIndexList, removeIndexList]
+        console.log('incrementFromIndex processIndexList, removeIndexList, changeIndexList',
+            processIndexList, removeIndexList, changeIndexList)
+
+        return [changeIndexList, removeIndexList]
 
     }
 
