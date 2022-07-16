@@ -284,7 +284,7 @@ export default class ServiceHandler {
 
     public insertIndex = (index, rangehighindex = null) => {
 
-        console.log('service handler called to insert index', index, rangehighindex)
+        // console.log('service handler called to insert index', index, rangehighindex)
 
         this.insertRemoveIndex(index, rangehighindex, +1)
 
@@ -292,7 +292,7 @@ export default class ServiceHandler {
 
     public removeIndex = (index, rangehighindex = null) => {
 
-        console.log('service handler called to remove index', index, rangehighindex)
+        // console.log('service handler called to remove index', index, rangehighindex)
 
         this.insertRemoveIndex(index, rangehighindex, -1)
 
@@ -308,9 +308,7 @@ export default class ServiceHandler {
 
         const [changeList, removeList] = cacheHandler.incrementFromIndex(index, rangehighindex, increment)
 
-        console.log('insertRemoveIndex: listsize, changeList, removeList',listsize, changeList, removeList)
-
-        return
+        // console.log('insertRemoveIndex: listsize, changeList, removeList',listsize, changeList, removeList)
 
         contentHandler.changeCradleCacheItemIDs(changeList)
 

@@ -332,42 +332,40 @@ export class CacheHandler {
             }
         }
 
-        const reverseorderedindexlist = orderedindexlist.reverse()
         // lowvalue provides value for start of remove slice
-        let lowvalue = reverseorderedindexlist.find(value => value <= index)
-        if (lowvalue === undefined) {
-            lowvalue = lowvalue = reverseorderedindexlist.at(-1)
-        }
-        let lowptr = orderedindexlist.indexOf(lowvalue)
+        let lowptr = orderedindexlist.find(value => value >= index)
 
-        // TODO compare low and high values
+        if (lowptr == -1) {
+            lowptr = orderedindexlist.length - 1
+        }
 
         // obtain slice above the highvaluerange
-        const processIndexList = 
+        const toProcessIndexList = 
             (increment == 1)?
-                // orderedindexlist.slice(index):
-                // orderedindexlist.slice(highrange + 1)
-                orderedindexlist.slice(highptr):
-                orderedindexlist.slice(highptr + rangeincrement)
+                orderedindexlist.slice(lowptr):
+                orderedindexlist.slice(highptr + 1)
         const indexestoremove = 
             (increment == 1)?
             orderedindexlist.slice(lowptr, highptr + 1):
             orderedindexlist.slice(rangeincrement)
-        const cacheItemsToRemoveMap = new Map()
-        for (const index of indexestoremove) {
-            cacheItemsToRemoveMap.set(index,indexToItemIDMap.get(index))
-        }
 
-        const removeIndexList = Array.from(cacheItemsToRemoveMap.keys())
+        const indexesforitemstoremove = 
+            (increment == 1)?
+            []:
+            orderedindexlist.slice(lowptr, highptr + 1)
 
-        if (increment == 1) processIndexList.reverse()
+        const itemstoremove = indexesforitemstoremove.map((index)=>{
+            return indexToItemIDMap.get(index)
+        })
 
-        console.log('cache items index, highrange, increment, rangeincrement, indexes to process, remove', 
-            index, highrange, increment, rangeincrement, processIndexList, cacheItemsToRemoveMap)
+        if (increment == 1) toProcessIndexList.reverse()
+
+        // console.log('cache items index, highrange, increment, rangeincrement, indexes to process, indexes to remove, items to remove', 
+        //     index, highrange, increment, rangeincrement, toProcessIndexList, indexestoremove, itemstoremove)
 
         // console.log('incrementFromIndex: metadataMap BEFORE\n', new Map(metadataMap))
         const modifiedList = []
-        for (const index of processIndexList) {
+        for (const index of toProcessIndexList) {
             const cacheItemID = indexToItemIDMap.get(index)
             const newIndex = index + rangeincrement
             indexToItemIDMap.set(newIndex, cacheItemID)
@@ -376,21 +374,25 @@ export class CacheHandler {
         }
 
         // delete remaining duplicates
-        cacheItemsToRemoveMap.forEach((index, cacheItemID) =>{
+        for (const index of indexestoremove) {
 
             indexToItemIDMap.delete(index)
-            if (increment == -1) metadataMap.delete(cacheItemID)
 
-        })
+        }
+        for (const item of itemstoremove) {
 
-        console.log('incrementFromIndex: indexToItemIDMap, metadataMap AFTER\n', indexToItemIDMap, new Map(metadataMap))
+            metadataMap.delete(item)
+
+        }
+
+        // console.log('incrementFromIndex: indexToItemIDMap, metadataMap AFTER\n', indexToItemIDMap, new Map(metadataMap))
 
         // const changeIndexList = processIndexList.filter(index=>!removeIndexList.includes(index))
 
         // console.log('processIndexList, removeIndexList, modifiedList',
         //     processIndexList, removeIndexList, modifiedList)
 
-        return [modifiedList, removeIndexList]
+        return [modifiedList, indexestoremove]
 
     }
 
