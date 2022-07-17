@@ -12,7 +12,7 @@ import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
 const MAX_CACHE_OVER_RUN = 1.5
 
-let globalCacheItemID = 0
+let globalItemID = 0
 
 
 // global scroller data, organized by session scrollerID
@@ -256,7 +256,7 @@ export class CacheHandler {
         if (!(indexToItemIDMap.has(fromindex) && indexToItemIDMap.has(toindex))) return
 
         const shiftingindex = fromindex
-        const shiftingcacheItemID = indexToItemIDMap.get(shiftingindex)
+        const shiftingitemID = indexToItemIDMap.get(shiftingindex)
 
         const shiftincrement = 
             (fromindex < toindex)? 
@@ -288,14 +288,14 @@ export class CacheHandler {
         if (shiftincrement == 1) toprocesslist.reverse()
 
         for (const index of toprocesslist) {
-            const cacheItemID = indexToItemIDMap.get(index)
+            const itemID = indexToItemIDMap.get(index)
             const newIndex = index + shiftincrement
-            indexToItemIDMap.set(newIndex,cacheItemID)
-            metadataMap.get(cacheItemID).index = newIndex
+            indexToItemIDMap.set(newIndex,itemID)
+            metadataMap.get(itemID).index = newIndex
         }
 
-        indexToItemIDMap.set(toindex,shiftingcacheItemID)
-        metadataMap.get(shiftingcacheItemID).index = toindex
+        indexToItemIDMap.set(toindex,shiftingitemID)
+        metadataMap.get(shiftingitemID).index = toindex
 
         const processedlist = toprocesslist.concat([fromindex])
 
@@ -369,10 +369,10 @@ export class CacheHandler {
         // modify index-to-itemid map, and metadata map
         const modifiedIndexList = []
         for (const index of toProcessIndexList) {
-            const cacheItemID = indexToItemIDMap.get(index)
+            const itemID = indexToItemIDMap.get(index)
             const newIndex = index + rangeIncrement
-            indexToItemIDMap.set(newIndex, cacheItemID)
-            metadataMap.get(cacheItemID).index = newIndex
+            indexToItemIDMap.set(newIndex, itemID)
+            metadataMap.get(itemID).index = newIndex
             modifiedIndexList.push(newIndex)
         }
 
@@ -411,16 +411,16 @@ export class CacheHandler {
 
     }
 
-    getNewCacheItemID() {
-        return globalCacheItemID++
+    getNewItemID() {
+        return globalItemID++
     }
 
-    getCacheItemID(index) {
+    getItemID(index) {
 
         const indexMap = this.cacheProps.indexToItemIDMap 
         const knownID = indexMap.get(index)
         const knownHasValue = knownID??false // deal with falsey 0
-        const newID = (knownHasValue === false)?(this.getNewCacheItemID()):null
+        const newID = (knownHasValue === false)?(this.getNewItemID()):null
 
         if (knownHasValue === false) indexMap.set(index, newID)
 
@@ -428,17 +428,17 @@ export class CacheHandler {
 
     }
 
-    createPortal(component, index, cacheItemID) { // create new portal
+    createPortal(component, index, itemID) { // create new portal
 
         this.removeRequestedPortal(index)
 
         // console.log('creating portal for index','-'+this.cacheProps.scrollerID+'-', index)
-        const portalNode = createPortalNode(index, cacheItemID)
+        const portalNode = createPortalNode(index, itemID)
 
-        // console.log('creating InPortal node', '-'+this.cacheProps.scrollerID+'-', cacheItemID)
+        // console.log('creating InPortal node', '-'+this.cacheProps.scrollerID+'-', itemID)
 
-        this.cacheProps.portalMap.set(cacheItemID,//index,
-                <InPortal key = {cacheItemID} node = {portalNode} > { component } </InPortal>)
+        this.cacheProps.portalMap.set(itemID,//index,
+                <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>)
                 // <InPortal key = {index} node = {portalNode} > { content } </InPortal>)
         this.cacheProps.modified = true
 
@@ -448,12 +448,12 @@ export class CacheHandler {
                 current:false,
             },
             index,
-            cacheItemID,
+            itemID,
             component,
         }
 
-        this.cacheProps.metadataMap.set(cacheItemID, portalMetadata)
-        this.cacheProps.indexToItemIDMap.set(index, cacheItemID)
+        this.cacheProps.metadataMap.set(itemID, portalMetadata)
+        this.cacheProps.indexToItemIDMap.set(index, itemID)
 
         this.renderPortalList()
 
@@ -468,13 +468,13 @@ export class CacheHandler {
         scrollerID
     ) {
 
-        const cacheItemID = this.getCacheItemID(index)
+        const itemID = this.getItemID(index)
 
-        const usercontent = await getItem(index, cacheItemID)
+        const usercontent = await getItem(index, itemID)
 
         if (usercontent) {
 
-            preloadIndexCallback && preloadIndexCallback(index, cacheItemID)
+            preloadIndexCallback && preloadIndexCallback(index, itemID)
 
             // console.log('preloading index','-'+scrollerID+'-' ,index )
 
@@ -490,14 +490,14 @@ export class CacheHandler {
             }
 
             const portalData = 
-                this.createPortal(content, index, cacheItemID)
+                this.createPortal(content, index, itemID)
             // make available to user content
             scrollerData.isReparentingRef = portalData.isReparentingRef
 
         } else {
 
-            preloadIndexCallback && preloadIndexCallback(index, cacheItemID, 'error')
-            console.log('ERROR','no content item for preload index, cacheItemID',index, cacheItemID)
+            preloadIndexCallback && preloadIndexCallback(index, itemID, 'error')
+            console.log('ERROR','no content item for preload index, itemID',index, itemID)
 
         }
 
@@ -521,10 +521,10 @@ export class CacheHandler {
         } = this.cacheProps
         const deleteList = []
         for (let i of indexArray) {
-            const cacheItemID = indexToItemIDMap.get(i)
-            deleteList.push(cacheItemID)
-            metadataMap.delete(cacheItemID)
-            portalMap.delete(cacheItemID)
+            const itemID = indexToItemIDMap.get(i)
+            deleteList.push(itemID)
+            metadataMap.delete(itemID)
+            portalMap.delete(itemID)
             indexToItemIDMap.delete(i)
         }
         this.cacheProps.modified = true
@@ -534,16 +534,16 @@ export class CacheHandler {
     }
 
     // query existence of a portal list item
-    hasPortal(cacheItemID) {
+    hasPortal(itemID) {
 
-        return this.cacheProps.metadataMap.has(cacheItemID)
+        return this.cacheProps.metadataMap.has(itemID)
 
     }
 
-    getPortal(cacheItemID) {
+    getPortal(itemID) {
 
-        if (this.hasPortal(cacheItemID)) {
-            return this.cacheProps.metadataMap.get(cacheItemID)
+        if (this.hasPortal(itemID)) {
+            return this.cacheProps.metadataMap.get(itemID)
         }
 
     }
@@ -554,7 +554,7 @@ export class CacheHandler {
 
 // get a react-reverse-portal InPortal component, with its metadata
 // with user content and container
-const createPortalNode = (index, cacheItemID) => {
+const createPortalNode = (index, itemID) => {
 
     let portalNode = createHtmlPortalNode()
 
@@ -565,7 +565,7 @@ const createPortalNode = (index, cacheItemID) => {
     // container.style.width = '100%'
     container.dataset.type = 'contentenvelope'
     container.dataset.index = index
-    container.dataset.cacheitemid = cacheItemID
+    container.dataset.cacheitemid = itemID
 
     return portalNode
 

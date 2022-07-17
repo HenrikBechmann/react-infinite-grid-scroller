@@ -106,11 +106,11 @@ export default class ServiceHandler {
 
     }
 
-    // blank index values (cacheItemID) are assigned a new 
-    // cacheItemID if in the cradle, otherwise removed from the cache.
+    // blank index values (itemID) are assigned a new 
+    // itemID if in the cradle, otherwise removed from the cache.
     // Duplicate index/itemID pairs have the itemID turned to blank
     // and are processed by the above rule
-    public modifyCacheMap = (modifyMap) => { // index => cacheItemID
+    public modifyCacheMap = (modifyMap) => { // index => itemID
 
         // console.log('modifyMap in serviceHandler',modifyMap)
 
@@ -157,12 +157,12 @@ export default class ServiceHandler {
 
         const { cacheHandler, contentHandler } = this.cradleParameters.handlersRef.current
 
-        // apply changes to cache index and cacheItemID maps
+        // apply changes to cache index and itemID maps
         const { 
-            metadataMap, // cacheItemID to portal data, including index
-            indexToItemIDMap // index to cacheItemID
+            metadataMap, // itemID to portal data, including index
+            indexToItemIDMap // index to itemID
         } = cacheHandler.cacheProps 
-        // const cradleMap = this.getCradleMap() // index to cacheItemID
+        // const cradleMap = this.getCradleMap() // index to itemID
 
         const duplicates = new Map()
         const processed = new Map()
@@ -170,19 +170,19 @@ export default class ServiceHandler {
         const ignored = new Map()
         const pending = new Map()
 
-        modifyMap.forEach((cacheItemID,index) => {
-            if (cacheItemID === null) {
+        modifyMap.forEach((itemID,index) => {
+            if (itemID === null) {
                 pending.set(index, null)
             } else {
                 if (!indexToItemIDMap.has(index)) { // not in cache
-                    ignored.set(index,cacheItemID)
+                    ignored.set(index,itemID)
                 } else {
-                    if (indexToItemIDMap.get(index) != cacheItemID) { // modification requested
-                        indexToItemIDMap.set(index,cacheItemID) // modiication applied, part 1
-                        const data = metadataMap.get(cacheItemID)
-                        originalitemindex.set(cacheItemID,data.index)
+                    if (indexToItemIDMap.get(index) != itemID) { // modification requested
+                        indexToItemIDMap.set(index,itemID) // modiication applied, part 1
+                        const data = metadataMap.get(itemID)
+                        originalitemindex.set(itemID,data.index)
                         data.index = index // modification applied, part 2
-                        processed.set(index,cacheItemID)
+                        processed.set(index,itemID)
                     }
                 }
             }
@@ -197,13 +197,13 @@ export default class ServiceHandler {
             cacheHandler.renderPortalList()
         }
 
-        // eliminate duplicate cacheItemIDs in index map
+        // eliminate duplicate itemIDs in index map
 
         // if the original index for the re-assigned cache item still maps to the cache item,
         // then there is a duplicate
-        originalitemindex.forEach((cacheItemID, index) => {
-            if (indexToItemIDMap.has(index) && (indexToItemIDMap.get(index) == cacheItemID)) {
-                duplicates.set(cacheItemID, index)
+        originalitemindex.forEach((itemID, index) => {
+            if (indexToItemIDMap.has(index) && (indexToItemIDMap.get(index) == itemID)) {
+                duplicates.set(itemID, index)
             }
         })
         let retval = true
@@ -214,14 +214,14 @@ export default class ServiceHandler {
                 \nduplicates, modifyMap\n',
                 duplicates, modifyMap, 
                 '\nDuplicates left behind will be cleared.')
-            duplicates.forEach((index, cacheItemID)=>{
+            duplicates.forEach((index, itemID)=>{
                 pending.set(index,null)
             })
         }
 
         if (pending.size) {
             pending.forEach((value, index)=>{ // value is always null
-                modifyMap.set(index, value) // assert null for cacheItemID
+                modifyMap.set(index, value) // assert null for itemID
             })
         }
 
@@ -233,16 +233,16 @@ export default class ServiceHandler {
         cradleModelComponents.forEach((component) => {
             const index = component.props.index
             if (modifyMap.has(index)) {
-                const cacheItemID = component.props.cacheItemID
-                let newCacheItemID = modifyMap.get(index)
-                if (newCacheItemID === null) {
-                    newCacheItemID = cacheHandler.getNewCacheItemID()
+                const itemID = component.props.itemID
+                let newItemID = modifyMap.get(index)
+                if (newItemID === null) {
+                    newItemID = cacheHandler.getNewItemID()
                 }
-                if ( newCacheItemID != cacheItemID ) {
+                if ( newItemID != itemID ) {
 
                     const instanceID = component.props.instanceID
                 
-                    modifiedCellFrames.set(instanceID, React.cloneElement(component, {cacheItemID:newCacheItemID}))
+                    modifiedCellFrames.set(instanceID, React.cloneElement(component, {itemID:newItemID}))
 
                 }
             }
@@ -275,7 +275,7 @@ export default class ServiceHandler {
 
             cacheHandler.cacheProps.modified = true
             cacheHandler.renderPortalList()
-            contentHandler.changeCradleCacheItemIDs(processedIndexList)
+            contentHandler.changeCradleItemIDs(processedIndexList)
             stateHandler.setCradleState('applycellframechanges')
             
         }
@@ -310,9 +310,9 @@ export default class ServiceHandler {
 
         // console.log('insertRemoveIndex: listsize, changeList, removeList',listsize, changeList, removeList)
 
-        contentHandler.changeCradleCacheItemIDs(changeList)
+        contentHandler.changeCradleItemIDs(changeList)
 
-        if (increment == +1) contentHandler.createNewCacheItemIDs(removeList)
+        if (increment == +1) contentHandler.createNewItemIDs(removeList)
 
         stateHandler.setCradleState('applycellframechanges')
 

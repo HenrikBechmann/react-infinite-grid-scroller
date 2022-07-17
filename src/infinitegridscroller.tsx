@@ -17,7 +17,7 @@
             check behaviour of axis & triggerlines with modify cache map - extra DOM cycle?
             constrain preload by cacheMax!
 
-        insert, remove, swap functions (create cacheItemID reference system)
+        insert, remove, swap functions (create itemID reference system)
 
         also surface external callbacks with return values for testing
         review all code
@@ -63,9 +63,9 @@
         - provide way to attempt reload of a single cell (change instanceID)
         - modifyCacheMap instruction by user
         - call matchCacheToCradle through contentHandler (?) iac rationalize calls to cacheHandler
-        - test and review cacheItemID
+        - test and review itemID
         - implement changeOrder (by index) callback for user - cellFrame index prop must be updated
-        - use cacheItemID for referencing; index for order - cellFrame reload to re-order?
+        - use itemID for referencing; index for order - cellFrame reload to re-order?
         - review state change chains in cradle
         - check preload intent against state machine handling
         - rationalize await handling everywhere to behave like promises

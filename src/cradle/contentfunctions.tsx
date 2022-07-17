@@ -540,7 +540,7 @@ const createCell = ({
 
     const { listsize } = cradleInternalProperties
 
-    const cacheItemID = cacheHandler.getCacheItemID(index)
+    const itemID = cacheHandler.getItemID(index)
 
     return <CellFrame 
         key = { instanceID } 
@@ -551,7 +551,7 @@ const createCell = ({
         getItem = { getItem }
         listsize = { listsize }
         placeholder = { placeholder }
-        cacheItemID = { cacheItemID }
+        itemID = { itemID }
         instanceID = { instanceID }
         scrollerID = { scrollerID }
     />

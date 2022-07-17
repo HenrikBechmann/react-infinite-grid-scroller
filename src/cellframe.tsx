@@ -20,7 +20,7 @@ const CellFrame = ({
     getItem, 
     listsize, 
     placeholder,
-    cacheItemID, 
+    itemID, 
     index, 
     instanceID, 
     scrollerID,
@@ -46,8 +46,8 @@ const CellFrame = ({
 
     const placeholderRef = useRef(null)
 
-    const cacheItemIDRef = useRef(null)
-    cacheItemIDRef.current = cacheItemID
+    const itemIDRef = useRef(null)
+    itemIDRef.current = itemID
 
     // for unmount
     useEffect(()=>{
@@ -62,7 +62,7 @@ const CellFrame = ({
 
         setFrameStatus('getusercontent')
 
-    },[cacheItemID])
+    },[itemID])
 
     // ----------------- [ placeholder definition ] -------------------------
 
@@ -148,12 +148,12 @@ const CellFrame = ({
             }
             case 'getusercontent': {
 
-                const cacheItemID = cacheItemIDRef.current // cacheHandler.getCacheItemID(index)
-                const cached = cacheHandler.hasPortal(cacheItemID)
+                const itemID = itemIDRef.current // cacheHandler.getItemID(index)
+                const cached = cacheHandler.hasPortal(itemID)
 
                 if (cached) {
 
-                    portalDataRef.current = cacheHandler.getPortal(cacheItemID)
+                    portalDataRef.current = cacheHandler.getPortal(itemID)
 
                     portalNodeRef.current = portalDataRef.current.portalNode
 
@@ -170,7 +170,7 @@ const CellFrame = ({
                     // TODO review implementation of async here
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
-                        const usercontent = await getItem(index, cacheItemID)
+                        const usercontent = await getItem(index, itemID)
 
                         if (isMountedRef.current) {
 
@@ -188,7 +188,7 @@ const CellFrame = ({
                                 }
 
                                 portalDataRef.current = 
-                                    cacheHandler.createPortal(content, index, cacheItemID)
+                                    cacheHandler.createPortal(content, index, itemID)
                                 portalNodeRef.current  = portalDataRef.current.portalNode
                                 // make available to user content
                                 scrollerData.isReparentingRef = portalDataRef.current.isReparentingRef

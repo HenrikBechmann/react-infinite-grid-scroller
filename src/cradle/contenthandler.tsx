@@ -536,14 +536,14 @@ export default class ContentHandler {
 
     }
 
-    public changeCradleCacheItemIDs(changeList) {
+    public changeCradleItemIDs(changeList) {
 
         if (changeList.length == 0) return
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
         const { indexToItemIDMap, metadataMap } = cacheHandler.cacheProps
 
-        // console.log('==> changeCradleCacheItemIDs: changeList, indexToItemIDMap, metadataMap', 
+        // console.log('==> changeCradleItemIDs: changeList, indexToItemIDMap, metadataMap', 
         //     changeList, indexToItemIDMap, metadataMap)
 
         const {
@@ -562,9 +562,9 @@ export default class ContentHandler {
             //     i, index, ptr)
 
             if (ptr != -1) {
-                const cacheItemID = indexToItemIDMap.get(index)
-                // console.log('new cacheItemID, old cacheItemID', cacheItemID, component.props.cacheItemID )
-                array[i] = React.cloneElement(component, {cacheItemID})
+                const itemID = indexToItemIDMap.get(index)
+                // console.log('new itemID, old itemID', itemID, component.props.itemID )
+                array[i] = React.cloneElement(component, {itemID})
             }
 
         }
@@ -578,7 +578,7 @@ export default class ContentHandler {
 
     }
 
-    public createNewCacheItemIDs(newList) {
+    public createNewItemIDs(newList) {
 
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
@@ -593,8 +593,8 @@ export default class ContentHandler {
             const index = component.props.index
             const ptr = newList.indexOf(index)
             if (ptr != -1) {
-                const newCacheItemID = cacheHandler.getNewCacheItemID()
-                array[i] = React.cloneElement(component, {newCacheItemID})
+                const newItemID = cacheHandler.getNewItemID()
+                array[i] = React.cloneElement(component, {newItemID})
             }
 
         }
