@@ -306,7 +306,8 @@ export default class ServiceHandler {
             
         const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
 
-        const [changeList, removeList, rangeincrement] = cacheHandler.incrementFromIndex(index, rangehighindex, increment)
+        const [changeList, removeList, rangeincrement] = 
+            cacheHandler.incrementFromIndex(index, rangehighindex, increment, listsize)
 
         // console.log('insertRemoveIndex: listsize, changeList, removeList',listsize, changeList, removeList)
 

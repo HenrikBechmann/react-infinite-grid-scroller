@@ -303,7 +303,8 @@ export class CacheHandler {
 
     }
 
-    incrementFromIndex(index, highrange, increment) { // increment is +1 or -1
+    // much of this deals with the fact that the cache is sparse.
+    incrementFromIndex(index, highrange, increment, listsize) { // increment is +1 or -1
 
         // ---------- define range parameters: index, highrange, and rangeincrement
         highrange = highrange ?? 0
@@ -317,6 +318,13 @@ export class CacheHandler {
 
         const rangeIncrement = rangecount * increment
 
+        // const baserange = index + rangeIncrement
+
+        const shrinkrange = 
+            (increment == -1)?
+                listsize + rangeIncrement:
+                null
+
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
         console.log('==> incrementFromIdex: index, highrange, increment, rangecount, rangeIncrement, indexToItemIDMap, metadataMap',
@@ -328,47 +336,57 @@ export class CacheHandler {
         orderedIndexList.sort((a,b)=>a-b)
 
         // low and high pointers provide values for slices above the range
-        const highCachePtr = orderedIndexList.findIndex(value=> value >= highrange)
+        const lowPtr = orderedIndexList.findIndex(value => value >= index)
 
-        const lowCachePtr = orderedIndexList.find(value => value >= index)
+        const highPtr = orderedIndexList.findIndex(value=> value >= highrange)
 
-        console.log('lowCachePtr, highCachePtr, orderedIndexList',
-            lowCachePtr, highCachePtr, orderedIndexList)
+        const shrinkPtr = 
+            (increment == -1)?
+                orderedIndexList.findIndex(value => value >= shrinkrange):
+                -1
+
+        console.log('lowPtr, shrinkPtr, basePtr, orderedIndexList',
+            lowPtr, highPtr, shrinkPtr, orderedIndexList)
+
         // ----------- define toProcess and toRemove lists
-        // obtain slice above the highvaluerange
-        const toProcessIndexList = 
-            (increment == 1)?
-                (
-                    (lowCachePtr > -1)?
-                        orderedIndexList.slice(lowCachePtr):
-                        []
-                )
-                :(
-                    (highCachePtr > -1)?
-                        orderedIndexList.slice(highCachePtr + 1):
-                        []
-                )
-        // TODO continue to refactor for open-ended processing
-        const indexesToRemoveList = 
-            (increment == 1)?
-            orderedIndexList.slice(lowCachePtr, highCachePtr + 1):
-            orderedIndexList.slice(rangeIncrement) // negative value, back from end
 
-        const indexesforitemstoremove = 
-            (increment == 1)?
-            []:
-            orderedIndexList.slice(lowCachePtr, highCachePtr + 1)
+        let indexesToProcessList, indexesToRemoveList, itemsToRemoveList
+        if ((lowPtr == -1) && (highPtr == -1)) { // core scope is out of view
+            indexesToProcessList = []
+            if (shrinkPtr != -1 ) {
+                indexesToRemoveList = orderedIndexList.slice(shrinkPtr)
+            } else {
+                indexesToRemoveList = []
+            }
+        } else if (highPtr == -1) { // core scope is partially in view with lowPtr
+            indexesToProcessList = orderedIndexList.slice(lowPtr)
+            if (increment == -1) {
+                if (shrinkPtr != -1) {
+                    indexesToRemoveList = orderedIndexList.slice(shrinkPtr)
+                } else {
+                    indexesToRemoveList = []
+                }
+            } else {
+                indexesToRemoveList = orderedIndexList.slice(lowPtr)
+            }
+        } else { // core scope is fully in view
+            indexesToProcessList = orderedIndexList.slice(lowPtr, highPtr + 1)
+            indexesToRemoveList = 
+                (increment == 1)?
+                    orderedIndexList.slice(lowPtr, highPtr + 1):
+                    orderedIndexList.slice(shrinkPtr)
+        }
 
-        const itemsToRemoveList = indexesforitemstoremove.map((index)=>{
+        itemsToRemoveList = indexesToRemoveList.map((index)=>{
             return indexToItemIDMap.get(index)
         })
 
         // ----------- conduct cache operations
-        if (increment == 1) toProcessIndexList.reverse()
+        if (increment == 1) indexesToProcessList.reverse()
 
         // modify index-to-itemid map, and metadata map
         const modifiedIndexList = []
-        for (const index of toProcessIndexList) {
+        for (const index of indexesToProcessList) {
             const itemID = indexToItemIDMap.get(index)
             const newIndex = index + rangeIncrement
             indexToItemIDMap.set(newIndex, itemID)
@@ -388,10 +406,10 @@ export class CacheHandler {
 
         }
 
-        const removedIndexList = indexesToRemoveList // semantics
+        const indexRemovedList = indexesToRemoveList // semantics
 
         // return values for caller to send to contenthandler for cradle synchronization
-        return [modifiedIndexList, removedIndexList, rangeIncrement]
+        return [modifiedIndexList, indexRemovedList, rangeIncrement]
 
     }
 
