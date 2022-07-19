@@ -600,8 +600,11 @@ export default class ContentHandler {
 
         }
 
+        console.log('processing cradleModel')
         cradleModelComponents.forEach(processcomponent)
+        console.log('processing headModel')
         headModelComponents.forEach(processcomponent)
+        console.log('processing tailModel')
         tailModelComponents.forEach(processcomponent)
 
         this.content.headDisplayComponents = headModelComponents

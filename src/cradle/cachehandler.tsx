@@ -400,8 +400,11 @@ export class CacheHandler {
         for (const index of indexesToProcessList) {
             const itemID = indexToItemIDMap.get(index)
             const newIndex = index + rangeIncrement
+            console.log('changing indexToItemIDMap index => itemID from index/itemID, to newIndex',index, itemID, newIndex)
             indexToItemIDMap.set(newIndex, itemID)
+            console.log('changing metadataMap itemID to newIndex from oldIndex', itemID, newIndex, metadataMap.get(itemID).index)
             metadataMap.get(itemID).index = newIndex
+            console.log('metadataMap itemID, value', itemID, Object.assign({}, metadataMap.get(itemID)))
             indexesModifiedList.push(newIndex)
         }
 
@@ -416,6 +419,8 @@ export class CacheHandler {
             metadataMap.delete(item)
 
         }
+
+        console.log('completed indexToItemIDMap, metadataMap',indexToItemIDMap, metadataMap)
 
         const indexRemovedList = indexesToRemoveList // semantics
 
