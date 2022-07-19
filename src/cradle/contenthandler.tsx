@@ -594,7 +594,8 @@ export default class ContentHandler {
             const ptr = newList.indexOf(index)
             if (ptr != -1) {
                 const newItemID = cacheHandler.getNewItemID()
-                array[i] = React.cloneElement(component, {newItemID})
+                console.log('assigning new itemID: index, newItemID, component',index, newItemID, component)
+                array[i] = React.cloneElement(component, {itemID:newItemID})
             }
 
         }
