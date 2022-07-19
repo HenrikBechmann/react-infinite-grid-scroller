@@ -563,7 +563,7 @@ export default class ContentHandler {
 
             if (ptr != -1) {
                 const itemID = indexToItemIDMap.get(index)
-                // console.log('new itemID, old itemID', itemID, component.props.itemID )
+                console.log('index, new itemID, old itemID', index, itemID, component.props.itemID )
                 array[i] = React.cloneElement(component, {itemID})
             }
 
