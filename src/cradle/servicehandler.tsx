@@ -368,7 +368,7 @@ export default class ServiceHandler {
 
         stateHandler.setCradleState('applycellframechanges')
 
-        const changecount = rangeincrement // (removeList.length * increment)
+        const changecount = rangeincrement
         const newlistsize = listsize + changecount 
 
         this.setListsize(newlistsize)

@@ -16,7 +16,7 @@ import React, {
     useMemo 
 } from 'react'
 
-import { ViewportInterrupt } from './Viewport'
+import { ViewportInterrupt } from './viewport'
 
 // popup position tracker for repositioning
 import ScrollTracker from './cradle/Scrolltracker'

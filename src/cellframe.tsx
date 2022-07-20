@@ -9,7 +9,7 @@ import { OutPortal } from 'react-reverse-portal'
 
 import Placeholder from './cellframe/Placeholder'
 
-import { CradleContext } from './Cradle'
+import { CradleContext } from './cradle'
 
 const IDLECALLBACK_FETCHTIMEOUT = 4000 // TODO make cofigurable
 
