@@ -167,6 +167,8 @@ const CellFrame = ({
 
                     cacheHandler.registerRequestedPortal(index)
 
+                    // console.log('getting new index / itemID', index, itemID)
+
                     // TODO review implementation of async here
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 

@@ -254,6 +254,22 @@ export default class ServiceHandler {
 
             contentHandler.updateCellFrames(modifiedCellFrames)
 
+            const { content } = contentHandler
+
+            const { cradleModelComponents } = content
+            let { 
+                headModelComponents,
+                tailModelComponents, 
+                headDisplayComponents, 
+                tailDisplayComponents 
+            } = content
+                
+            headModelComponents = cradleModelComponents.slice(0,headModelComponents.length)
+            tailModelComponents = cradleModelComponents.slice(headModelComponents.length)
+
+            headDisplayComponents = headModelComponents
+            tailDisplayComponents = tailModelComponents
+
         }
 
         return true
@@ -276,6 +292,23 @@ export default class ServiceHandler {
             cacheHandler.cacheProps.modified = true
             cacheHandler.renderPortalList()
             contentHandler.changeCradleItemIDs(processedIndexList)
+
+            const { content } = contentHandler
+
+            const { cradleModelComponents } = content
+            let { 
+                headModelComponents,
+                tailModelComponents, 
+                headDisplayComponents, 
+                tailDisplayComponents 
+            } = content
+                
+            headModelComponents = cradleModelComponents.slice(0,headModelComponents.length)
+            tailModelComponents = cradleModelComponents.slice(headModelComponents.length)
+
+            headDisplayComponents = headModelComponents
+            tailDisplayComponents = tailModelComponents
+
             stateHandler.setCradleState('applycellframechanges')
             
         }
@@ -303,17 +336,35 @@ export default class ServiceHandler {
 
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
-            
+
         const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
 
         const [changeList, removeList, rangeincrement] = 
             cacheHandler.incrementFromIndex(index, rangehighindex, increment, listsize)
 
-        console.log('insertRemoveIndex: listsize, rangeincrement, changeList, removeList',listsize, rangeincrement, changeList, removeList)
+        cacheHandler.renderPortalList()
+
+        // console.log('insertRemoveIndex: listsize, rangeincrement, changeList, removeList',listsize, rangeincrement, changeList, removeList)
 
         contentHandler.changeCradleItemIDs(changeList)
 
         if (increment == +1) contentHandler.createNewItemIDs(removeList)
+
+        const { content } = contentHandler
+
+        const { cradleModelComponents } = content
+        let { 
+            headModelComponents,
+            tailModelComponents, 
+            headDisplayComponents, 
+            tailDisplayComponents 
+        } = content
+            
+        headModelComponents = cradleModelComponents.slice(0,headModelComponents.length)
+        tailModelComponents = cradleModelComponents.slice(headModelComponents.length)
+
+        headDisplayComponents = headModelComponents
+        tailDisplayComponents = tailModelComponents
 
         stateHandler.setCradleState('applycellframechanges')
 

@@ -526,11 +526,11 @@ export default class ContentHandler {
         }
 
         cradleModelComponents.forEach(processComponent)
-        headModelComponents.forEach(processComponent)
-        tailModelComponents.forEach(processComponent)
+        // headModelComponents.forEach(processComponent)
+        // tailModelComponents.forEach(processComponent)
 
-        this.content.headDisplayComponents = headModelComponents
-        this.content.tailDisplayComponents = tailModelComponents
+        // this.content.headDisplayComponents = headModelComponents
+        // this.content.tailDisplayComponents = tailModelComponents
 
         stateHandler.setCradleState('applycellframechanges')
 
@@ -563,18 +563,18 @@ export default class ContentHandler {
 
             if (ptr != -1) {
                 const itemID = indexToItemIDMap.get(index)
-                console.log('index, new itemID, old itemID', index, itemID, component.props.itemID )
+                // console.log('index, new itemID, old itemID', index, itemID, component.props.itemID )
                 array[i] = React.cloneElement(component, {itemID})
             }
 
         }
 
         cradleModelComponents.forEach(processcomponent)
-        headModelComponents.forEach(processcomponent)
-        tailModelComponents.forEach(processcomponent)
+        // headModelComponents.forEach(processcomponent)
+        // tailModelComponents.forEach(processcomponent)
 
-        this.content.headDisplayComponents = headModelComponents
-        this.content.tailDisplayComponents = tailModelComponents
+        // this.content.headDisplayComponents = headModelComponents
+        // this.content.tailDisplayComponents = tailModelComponents
 
     }
 
@@ -594,21 +594,21 @@ export default class ContentHandler {
             const ptr = newList.indexOf(index)
             if (ptr != -1) {
                 const newItemID = cacheHandler.getNewItemID()
-                console.log('assigning new itemID: index, newItemID, component',index, newItemID, component)
+                // console.log('assigning new itemID: index, newItemID, component',index, newItemID, component)
                 array[i] = React.cloneElement(component, {itemID:newItemID})
             }
 
         }
 
-        console.log('processing cradleModel')
+        // console.log('processing cradleModel')
         cradleModelComponents.forEach(processcomponent)
-        console.log('processing headModel')
-        headModelComponents.forEach(processcomponent)
-        console.log('processing tailModel')
-        tailModelComponents.forEach(processcomponent)
+        // console.log('processing headModel')
+        // headModelComponents.forEach(processcomponent)
+        // // console.log('processing tailModel')
+        // tailModelComponents.forEach(processcomponent)
 
-        this.content.headDisplayComponents = headModelComponents
-        this.content.tailDisplayComponents = tailModelComponents
+        // this.content.headDisplayComponents = headModelComponents
+        // this.content.tailDisplayComponents = tailModelComponents
 
     }
 

@@ -306,7 +306,8 @@ export class CacheHandler {
     // much of this deals with the fact that the cache is sparse.
     incrementFromIndex(index, highrange, increment, listsize) { // increment is +1 or -1
 
-        console.log('inside incrementFromIndex: index, highrange, increment, listsize1', index, highrange, increment, listsize)
+        // console.log('==> inside incrementFromIndex: index, highrange, increment, listsize', 
+        //     index, highrange, increment, listsize)
         // ---------- define range parameters: index, highrange, shrinktorange and rangeincrement
         // high range is the highest index number of the insert/remove operation
         let highrangeindex = highrange ?? 0
@@ -331,10 +332,10 @@ export class CacheHandler {
 
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
-        console.log('==> incrementFromIdex: index, highrangeindex, increment, rangecount, rangeIncrement, \
-            shrinktorangeindex, indexToItemIDMap, metadataMap',
-            index, highrangeindex, increment, rangecount, rangeIncrement, 
-            shrinktorangeindex, indexToItemIDMap, metadataMap)
+//         console.log('index, highrangeindex, increment, rangecount, rangeIncrement, \
+// shrinktorangeindex, indexToItemIDMap, metadataMap',
+//             index, highrangeindex, increment, rangecount, rangeIncrement, 
+//             shrinktorangeindex, indexToItemIDMap, metadataMap)
 
         // ---------- define boundaries within ordered cache index list
         // Ptr = index to array, as opposed to index of virtual list
@@ -352,8 +353,8 @@ export class CacheHandler {
                 orderedIndexList.findIndex(value => value >= shrinktorangeindex):
                 -1
 
-        console.log('lowPtr, highPtr, shrinktoPtr, orderedIndexList',
-            lowPtr, highPtr, shrinktoPtr, orderedIndexList)
+        // console.log('lowPtr, highPtr, shrinktoPtr, orderedIndexList',
+        //     lowPtr, highPtr, shrinktoPtr, orderedIndexList)
 
         // ----------- define indexesToProcess and indexesToRemove lists
 
@@ -384,15 +385,19 @@ export class CacheHandler {
                     orderedIndexList.slice(shrinktoPtr)
         }
 
-        itemsToRemoveList = indexesToRemoveList.map((index)=>{
-            return indexToItemIDMap.get(index)
-        })
+        if (increment == -1) {
+            itemsToRemoveList = indexesToRemoveList.map((index)=>{
+                return indexToItemIDMap.get(index)
+            })
+        } else {
+            itemsToRemoveList = []
+        }
 
         // increment higher from top of list to preserve lower values for subsequent increment
         if (increment == 1) indexesToProcessList.reverse() 
 
-            console.log('indexesToProcessList, indexesToRemoveList',
-                indexesToProcessList, indexesToRemoveList)
+        // console.log('indexesToProcessList, indexesToRemoveList',
+        //     indexesToProcessList, indexesToRemoveList)
 
         // ----------- conduct cache operations
         // modify index-to-itemid map, and metadata map
@@ -400,11 +405,11 @@ export class CacheHandler {
         for (const index of indexesToProcessList) {
             const itemID = indexToItemIDMap.get(index)
             const newIndex = index + rangeIncrement
-            console.log('changing indexToItemIDMap index => itemID from index/itemID, to newIndex',index, itemID, newIndex)
+            // console.log('=changing indexToItemIDMap index => itemID from index/itemID, to newIndex',index, itemID, newIndex)
             indexToItemIDMap.set(newIndex, itemID)
-            console.log('changing metadataMap itemID to newIndex from oldIndex', itemID, newIndex, metadataMap.get(itemID).index)
+            // console.log('changing metadataMap itemID to newIndex from oldIndex', itemID, newIndex, metadataMap.get(itemID).index)
             metadataMap.get(itemID).index = newIndex
-            console.log('metadataMap itemID, value', itemID, Object.assign({}, metadataMap.get(itemID)))
+            // console.log('metadataMap itemID, value', itemID, Object.assign({}, metadataMap.get(itemID)))
             indexesModifiedList.push(newIndex)
         }
 
@@ -420,7 +425,7 @@ export class CacheHandler {
 
         }
 
-        console.log('completed indexToItemIDMap, metadataMap',indexToItemIDMap, metadataMap)
+        // console.log('completed indexToItemIDMap, metadataMap',indexToItemIDMap, metadataMap)
 
         const indexRemovedList = indexesToRemoveList // semantics
 
