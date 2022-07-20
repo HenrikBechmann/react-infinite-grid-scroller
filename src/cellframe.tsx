@@ -7,7 +7,7 @@ import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
 import { OutPortal } from 'react-reverse-portal'
 
-import Placeholder from './cellframe/Placeholder'
+import Placeholder from './cellframe/placeholder'
 
 import { CradleContext } from './cradle'
 

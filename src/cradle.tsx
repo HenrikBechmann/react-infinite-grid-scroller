@@ -19,7 +19,7 @@ import React, {
 import { ViewportInterrupt } from './viewport'
 
 // popup position tracker for repositioning
-import ScrollTracker from './cradle/Scrolltracker'
+import ScrollTracker from './cradle/scrolltracker'
 
 // support code
 import ScrollHandler from './cradle/scrollhandler'
