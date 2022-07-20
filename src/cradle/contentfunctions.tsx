@@ -7,7 +7,7 @@
 
 import React from 'react'
 
-import CellFrame from '../cellframe'
+import CellFrame from '../CellFrame'
 
 // ======================[ for setCradleContent ]===========================
 
