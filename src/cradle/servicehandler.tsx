@@ -110,52 +110,56 @@ export default class ServiceHandler {
     // itemID if in the cradle, otherwise removed from the cache.
     // Duplicate index/itemID pairs have the itemID turned to blank
     // and are processed by the above rule
-    public modifyIndexMap = (modifyMap) => { // index => itemID
+    public changeIndexMap = (changeMap) => { // index => itemID
 
-        const modifymapsize = modifyMap.size
+        // -------------- first, guard against duplicate itemIDs ------------
 
-        if (modifymapsize == 0) return true
+        const mapsize = changeMap.size
 
-        const itemIDset = new Set(modifyMap.values())
+        if (mapsize == 0) return true // nothing to do
 
-        const itemidsetsize = itemIDset.size
+        const itemIDset = new Set(changeMap.values())
 
-        if (modifymapsize != itemidsetsize) {
+        const itemsetsize = itemIDset.size
 
-            const modifyItemIDCount = new Map()
+        if (mapsize != itemsetsize) { // there must be duplicate itemIDs
 
-            modifyMap.forEach((itemID, index) => {
-                if (!modifyItemIDCount.has(itemID)) {
-                    modifyItemIDCount.set(itemID, 1)
+            const itemIDCountMap = new Map()
+
+            changeMap.forEach((itemID, index) => {
+                if (!itemIDCountMap.has(itemID)) {
+                    itemIDCountMap.set(itemID, 1)
                 } else {
-                    modifyItemIDCount.set(itemID, modifyItemIDCount.get(itemID) + 1)
+                    itemIDCountMap.set(itemID, itemIDCountMap.get(itemID) + 1)
                 }
             })
 
-            modifyItemIDCount.delete(null) // legitimate
+            itemIDCountMap.delete(null) // legitimate - means remove item from cache
 
-            const duplicateitems = new Map()
-            modifyItemIDCount.forEach((count,cacheUnitID)=>{
+            const duplicateitemsMap = new Map()
+            itemIDCountMap.forEach((count,itemID)=>{
                 if (count > 1) {
-                    duplicateitems.set(cacheUnitID, count)
+                    duplicateitemsMap.set(itemID, count)
                 }
             })
 
-            if (duplicateitems.size) {
+            if (duplicateitemsMap.size) {
 
-                console.log('WARNING: modifyIndexMap rejected: \
+                console.log('WARNING: changeIndexMap rejected: \
                     duplicate itemID index assignment values found:\
-                    duplicateItemIDs, modifyMap',
-                    duplicateitems, modifyMap)
+                    duplicateItemIDs, changeMap',
+                    duplicateitemsMap, changeMap)
                 return false
 
             }
 
         }
 
-        const { cacheHandler, contentHandler, stateHandler } = this.cradleParameters.handlersRef.current
+        const { cacheHandler, contentHandler, stateHandler } = 
+            this.cradleParameters.handlersRef.current
 
-        // apply changes to cache index and itemID maps
+        // ----------- apply changes to cache index and itemID maps ----------
+
         const { 
             metadataMap, // itemID to portal data, including index
             indexToItemIDMap // index to itemID
@@ -168,7 +172,7 @@ export default class ServiceHandler {
         const ignored = new Map()
         const pending = new Map()
 
-        modifyMap.forEach((itemID,index) => {
+        changeMap.forEach((itemID,index) => {
             if (itemID === null) {
                 pending.set(index, null)
             } else {
@@ -208,9 +212,9 @@ export default class ServiceHandler {
         if (duplicates.size) {
             retval = false
             console.log('WARNING: original mapping for re-assigned cache item ID(s) was left \
-                unchanged by modifyIndexMap, creating duplicates:\
+                unchanged by changeIndexMap, creating duplicates:\
                 \nduplicates, modifyMap\n',
-                duplicates, modifyMap, 
+                duplicates, changeMap, 
                 '\nDuplicates left behind will be cleared.')
             duplicates.forEach((index, itemID)=>{
                 pending.set(index,null)
@@ -219,20 +223,21 @@ export default class ServiceHandler {
 
         if (pending.size) {
             pending.forEach((value, index)=>{ // value is always null
-                modifyMap.set(index, value) // assert null for itemID
+                changeMap.set(index, value) // assert null for itemID
             })
         }
 
-        // apply changes to extant cellFrames
+        // ------------- apply changes to extant cellFrames ------------
+        
         const { cradleModelComponents } = contentHandler.content
 
         const modifiedCellFrames = new Map()
 
         cradleModelComponents.forEach((component) => {
             const index = component.props.index
-            if (modifyMap.has(index)) {
+            if (changeMap.has(index)) {
                 const itemID = component.props.itemID
-                let newItemID = modifyMap.get(index)
+                let newItemID = changeMap.get(index)
                 if (newItemID === null) {
                     newItemID = cacheHandler.getNewItemID()
                 }

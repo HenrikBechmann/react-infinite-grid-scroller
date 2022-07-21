@@ -245,6 +245,10 @@ export class CacheHandler {
     }
 
     // ==========================[ SERVICE SUPPORT ]=========================
+
+    changeIndexMap( ) {
+        
+    }
     
     // TODO implement highrange logic
     moveIndex(toindex, fromindex, highrange ) {

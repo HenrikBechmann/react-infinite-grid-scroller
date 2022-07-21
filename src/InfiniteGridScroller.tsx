@@ -61,7 +61,7 @@
         - use allSettled instead of all
         - use finally for callback
         - provide way to attempt reload of a single cell (change instanceID)
-        - modifyCacheMap instruction by user
+        - modifyIndexMap instruction by user
         - call matchCacheToCradle through contentHandler (?) iac rationalize calls to cacheHandler
         - test and review itemID
         - implement changeOrder (by index) callback for user - cellFrame index prop must be updated
