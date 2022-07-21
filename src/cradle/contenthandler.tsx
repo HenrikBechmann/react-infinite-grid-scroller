@@ -39,7 +39,7 @@ export default class ContentHandler {
     private instanceIdCounterRef = {
        current:0
     }
-    private instanceIdMap = new Map()
+    // private instanceIdMap = new Map()
 
     // Two public methods - setCradleContent and updateCradleContent
 
