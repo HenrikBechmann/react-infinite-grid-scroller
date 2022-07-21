@@ -112,7 +112,7 @@ export default class ServiceHandler {
     // and are processed by the above rule
     public changeIndexMap = (changeMap) => { // index => itemID
 
-        // -------------- first, guard against duplicate itemIDs ------------
+        // -------------- first, guard against duplicate itemIDs in change map ------------
 
         const mapsize = changeMap.size
 
@@ -155,10 +155,10 @@ export default class ServiceHandler {
 
         }
 
+        // ----------- apply changes to cache index and itemID maps ----------
+
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
-
-        // ----------- apply changes to cache index and itemID maps ----------
 
         const { 
             metadataMap, // itemID to portal data, including index
@@ -166,25 +166,25 @@ export default class ServiceHandler {
         } = cacheHandler.cacheProps 
         // const cradleMap = this.getCradleMap() // index to itemID
 
-        const duplicates = new Map()
-        const processed = new Map()
-        const originalitemindex = new Map()
-        const ignored = new Map()
-        const pending = new Map()
+        const pendingMap = new Map() // index => itemID; itemID set to null, pending removal from cache
+        const ignoredMap = new Map() // index => itemID; itemID for index same as changerequest
+        const originalitemindexMap = new Map() // itemID => index; before change
+        const processedMap = new Map() // index => itemID; change has been applied
+        const duplicatesMap = new Map() // itemID => index; unresolved index changes
 
         changeMap.forEach((itemID,index) => {
             if (itemID === null) {
-                pending.set(index, null)
+                pendingMap.set(index, null)
             } else {
                 if (!indexToItemIDMap.has(index)) { // not in cache
-                    ignored.set(index,itemID)
+                    ignoredMap.set(index,itemID)
                 } else {
                     if (indexToItemIDMap.get(index) != itemID) { // modification requested
                         indexToItemIDMap.set(index,itemID) // modiication applied, part 1
                         const data = metadataMap.get(itemID)
-                        originalitemindex.set(itemID,data.index)
+                        originalitemindexMap.set(itemID,data.index)
                         data.index = index // modification applied, part 2
-                        processed.set(index,itemID)
+                        processedMap.set(index,itemID)
                     }
                 }
             }
@@ -192,43 +192,42 @@ export default class ServiceHandler {
 
         // console.log('ignored,processed',ignored,processed)
 
-        if ((processed.size == 0) && (pending.size == 0)) return true
-
-        if (processed.size) {
-            cacheHandler.cacheProps.modified = true
-            cacheHandler.renderPortalList()
-        }
+        if ((processedMap.size == 0) && (pendingMap.size == 0)) return true
 
         // eliminate duplicate itemIDs in index map
 
         // if the original index for the re-assigned cache item still maps to the cache item,
         // then there is a duplicate
-        originalitemindex.forEach((itemID, index) => {
+        originalitemindexMap.forEach((itemID, index) => {
             if (indexToItemIDMap.has(index) && (indexToItemIDMap.get(index) == itemID)) {
-                duplicates.set(itemID, index)
+                if (!pendingMap.has(index)) {
+                    duplicatesMap.set(itemID, index)
+                }
             }
         })
-        let retval = true
-        if (duplicates.size) {
-            retval = false
+
+        if (duplicatesMap.size) {
             console.log('WARNING: original mapping for re-assigned cache item ID(s) was left \
                 unchanged by changeIndexMap, creating duplicates:\
-                \nduplicates, modifyMap\n',
-                duplicates, changeMap, 
-                '\nDuplicates left behind will be cleared.')
-            duplicates.forEach((index, itemID)=>{
-                pending.set(index,null)
+                \nduplicates, changeMap\n',
+                duplicatesMap, changeMap, 
+                '\nDuplicates left behind will be cleared from cache.')
+            duplicatesMap.forEach((index, itemID)=>{
+                pendingMap.set(index,null)
             })
         }
 
-        if (pending.size) {
-            pending.forEach((value, index)=>{ // value is always null
+        if (pendingMap.size) {
+            pendingMap.forEach((value, index)=>{ // value is always null
                 changeMap.set(index, value) // assert null for itemID
             })
         }
 
+        cacheHandler.cacheProps.modified = true
+        cacheHandler.renderPortalList()
+
         // ------------- apply changes to extant cellFrames ------------
-        
+
         const { cradleModelComponents } = contentHandler.content
 
         const modifiedCellFrames = new Map()
@@ -311,6 +310,7 @@ export default class ServiceHandler {
         const [changeList, removeList, rangeincrement] = 
             cacheHandler.incrementFromIndex(index, rangehighindex, increment, listsize)
 
+        cacheHandler.cacheProps.modified = true
         cacheHandler.renderPortalList()
 
         contentHandler.changeCradleItemIDs(changeList)
