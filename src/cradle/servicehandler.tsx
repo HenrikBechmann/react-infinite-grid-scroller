@@ -110,7 +110,7 @@ export default class ServiceHandler {
     // itemID if in the cradle, otherwise removed from the cache.
     // Duplicate index/itemID pairs have the itemID turned to blank
     // and are processed by the above rule
-    public modifyCacheMap = (modifyMap) => { // index => itemID
+    public modifyIndexMap = (modifyMap) => { // index => itemID
 
         const modifymapsize = modifyMap.size
 
@@ -143,7 +143,7 @@ export default class ServiceHandler {
 
             if (duplicateitems.size) {
 
-                console.log('WARNING: modifyCacheMap rejected: \
+                console.log('WARNING: modifyIndexMap rejected: \
                     duplicate itemID index assignment values found:\
                     duplicateItemIDs, modifyMap',
                     duplicateitems, modifyMap)
@@ -208,7 +208,7 @@ export default class ServiceHandler {
         if (duplicates.size) {
             retval = false
             console.log('WARNING: original mapping for re-assigned cache item ID(s) was left \
-                unchanged by modifyCacheMap, creating duplicates:\
+                unchanged by modifyIndexMap, creating duplicates:\
                 \nduplicates, modifyMap\n',
                 duplicates, modifyMap, 
                 '\nDuplicates left behind will be cleared.')
