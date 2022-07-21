@@ -112,6 +112,16 @@ export default class ServiceHandler {
     // and are processed by the above rule
     public changeIndexMap = (changeMap) => { // index => itemID
 
+        const { cacheHandler, contentHandler, stateHandler } = 
+            this.cradleParameters.handlersRef.current
+
+        const { 
+            metadataMap, // itemID to portal data, including index
+            indexToItemIDMap // index to itemID
+        } = cacheHandler.cacheProps 
+
+        // get detail of change
+
         // -------------- first, guard against duplicate itemIDs in change map ------------
 
         const mapsize = changeMap.size
@@ -122,6 +132,7 @@ export default class ServiceHandler {
 
         const itemsetsize = itemIDset.size
 
+        const indexesToDelete = []
         if (mapsize != itemsetsize) { // there must be duplicate itemIDs
 
             const itemIDCountMap = new Map()
@@ -131,6 +142,9 @@ export default class ServiceHandler {
                     itemIDCountMap.set(itemID, 1)
                 } else {
                     itemIDCountMap.set(itemID, itemIDCountMap.get(itemID) + 1)
+                }
+                if (itemID == null) {
+                    indexesToDelete.push(index)
                 }
             })
 
@@ -155,15 +169,22 @@ export default class ServiceHandler {
 
         }
 
+        // --------------- delete indexes and associated itemID's for indexes set to null --------
+
+
+        cacheHandler.deletePortal(indexesToDelete, this.callbacks.cacheDeleteListCallback)
+        for (const index of indexesToDelete) {
+            changeMap.delete(index)
+        }
+
+        const changeDetailMap = new Map()
+
+        changeMap.forEach((itemID, index) => { // now no itemIDs are null
+            changeDetailMap.set(index, {from:indexToItemIDMap.get(index),to:itemID})
+        })
+
         // ----------- apply changes to cache index and itemID maps ----------
 
-        const { cacheHandler, contentHandler, stateHandler } = 
-            this.cradleParameters.handlersRef.current
-
-        const { 
-            metadataMap, // itemID to portal data, including index
-            indexToItemIDMap // index to itemID
-        } = cacheHandler.cacheProps 
         // const cradleMap = this.getCradleMap() // index to itemID
 
         const pendingMap = new Map() // index => itemID; itemID set to null, pending removal from cache
@@ -220,6 +241,7 @@ export default class ServiceHandler {
         if (pendingMap.size) {
             pendingMap.forEach((value, index)=>{ // value is always null
                 changeMap.set(index, value) // assert null for itemID
+                indexToItemIDMap.delete(index)
             })
         }
 
