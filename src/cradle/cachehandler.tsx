@@ -250,17 +250,16 @@ export class CacheHandler {
         
     }
     
-    // TODO implement highrange logic
+    // move is coerced by servicehandler to be within current list bounds
     moveIndex(toindex, fromindex, highrange ) {
-
-        if (fromindex == toindex) return []
 
         const {indexToItemIDMap,metadataMap} = this.cacheProps
 
-        if (!(indexToItemIDMap.has(fromindex) && indexToItemIDMap.has(toindex))) return
-
         const shiftingindex = fromindex
-        const shiftingitemID = indexToItemIDMap.get(shiftingindex)
+        const shiftingitemID = 
+            indexToItemIDMap.has(shiftingindex)?
+                indexToItemIDMap.get(shiftingindex):
+                null
 
         const shiftincrement = 
             (fromindex < toindex)? 

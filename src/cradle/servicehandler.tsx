@@ -242,7 +242,50 @@ export default class ServiceHandler {
     // TODO implement hightrange logic
     public moveIndex = (toindex, fromindex, highrange = null) => {
 
-        if (fromindex == toindex) return
+        const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
+
+        // remove nulls
+        toindex = toindex ?? 0
+        fromindex = fromindex ?? 0
+        highrange = highrange ?? fromindex
+
+        // keep within current list size
+        const listbound = listsize - 1
+
+        toindex = 
+            (toindex > listbound)?
+                listbound:
+                toindex
+
+        fromindex = 
+            (fromindex > listbound)?
+                listbound:
+                fromindex
+
+        highrange = 
+            (highrange > listbound)?
+                listbound:
+                highrange
+
+        // highrange must be >= fromindex
+        highrange = 
+            (highrange >= fromindex)?
+                highrange:
+                fromindex
+
+        if (fromindex == toindex) return // nothing to do
+
+        const rangeincrement = highrange - fromindex + 1
+        const moveincrement = toindex - fromindex
+
+        // move must be in list bounds
+        if (moveincrement > 0) { // move up
+            const targettop = toindex + rangeincrement - 1
+            if (targettop > listbound) return // out of bounds
+        } else { // move down
+            const targetbottom = toindex - rangeincrement - 1
+            if (targetbottom < 0) return
+        }
 
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
