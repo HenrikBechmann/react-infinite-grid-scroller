@@ -606,8 +606,6 @@ const createPortalNode = (index, itemID) => {
     let container = portalNode.element
     container.style.inset = '0px' 
     container.style.position = 'absolute'
-    // container.style.height = '100%'
-    // container.style.width = '100%'
     container.dataset.type = 'contentenvelope'
     container.dataset.index = index
     container.dataset.cacheitemid = itemID

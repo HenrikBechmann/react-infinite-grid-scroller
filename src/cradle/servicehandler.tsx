@@ -112,50 +112,48 @@ export default class ServiceHandler {
     // and are processed by the above rule
     public modifyCacheMap = (modifyMap) => { // index => itemID
 
-        // console.log('modifyMap in serviceHandler',modifyMap)
-
         const modifymapsize = modifyMap.size
 
         if (modifymapsize == 0) return true
 
-        const unitIDset = new Set(modifyMap.values())
+        const itemIDset = new Set(modifyMap.values())
 
-        const unitidsetsize = unitIDset.size
+        const itemidsetsize = itemIDset.size
 
-        if (modifymapsize != unitidsetsize) {
+        if (modifymapsize != itemidsetsize) {
 
-            const modifyUnitIDCount = new Map()
+            const modifyItemIDCount = new Map()
 
-            modifyMap.forEach((cacheUnitID, index) => {
-                if (!modifyUnitIDCount.has(cacheUnitID)) {
-                    modifyUnitIDCount.set(cacheUnitID, 1)
+            modifyMap.forEach((itemID, index) => {
+                if (!modifyItemIDCount.has(itemID)) {
+                    modifyItemIDCount.set(itemID, 1)
                 } else {
-                    modifyUnitIDCount.set(cacheUnitID, modifyUnitIDCount.get(cacheUnitID) + 1)
+                    modifyItemIDCount.set(itemID, modifyItemIDCount.get(itemID) + 1)
                 }
             })
 
-            modifyUnitIDCount.delete(null) // legitimate
+            modifyItemIDCount.delete(null) // legitimate
 
-            const duplicateunits = new Map()
-            modifyUnitIDCount.forEach((count,cacheUnitID)=>{
+            const duplicateitems = new Map()
+            modifyItemIDCount.forEach((count,cacheUnitID)=>{
                 if (count > 1) {
-                    duplicateunits.set(cacheUnitID, count)
+                    duplicateitems.set(cacheUnitID, count)
                 }
             })
 
-            if (duplicateunits.size) {
+            if (duplicateitems.size) {
 
                 console.log('WARNING: modifyCacheMap rejected: \
-                    duplicate cacheUnitID index assignment values found:\
-                    duplicateCacheUnitIDs, modifyMap',
-                    duplicateunits, modifyMap)
+                    duplicate itemID index assignment values found:\
+                    duplicateItemIDs, modifyMap',
+                    duplicateitems, modifyMap)
                 return false
 
             }
 
         }
 
-        const { cacheHandler, contentHandler } = this.cradleParameters.handlersRef.current
+        const { cacheHandler, contentHandler, stateHandler } = this.cradleParameters.handlersRef.current
 
         // apply changes to cache index and itemID maps
         const { 
@@ -254,21 +252,7 @@ export default class ServiceHandler {
 
             contentHandler.updateCellFrames(modifiedCellFrames)
 
-            const { content } = contentHandler
-
-            const { cradleModelComponents } = content
-            let { 
-                headModelComponents,
-                tailModelComponents, 
-                headDisplayComponents, 
-                tailDisplayComponents 
-            } = content
-                
-            headModelComponents = cradleModelComponents.slice(0,headModelComponents.length)
-            tailModelComponents = cradleModelComponents.slice(headModelComponents.length)
-
-            headDisplayComponents = headModelComponents
-            tailDisplayComponents = tailModelComponents
+            stateHandler.setCradleState('applycellframechanges')
 
         }
 
@@ -292,22 +276,6 @@ export default class ServiceHandler {
             cacheHandler.cacheProps.modified = true
             cacheHandler.renderPortalList()
             contentHandler.changeCradleItemIDs(processedIndexList)
-
-            const { content } = contentHandler
-
-            const { cradleModelComponents } = content
-            let { 
-                headModelComponents,
-                tailModelComponents, 
-                headDisplayComponents, 
-                tailDisplayComponents 
-            } = content
-                
-            headModelComponents = cradleModelComponents.slice(0,headModelComponents.length)
-            tailModelComponents = cradleModelComponents.slice(headModelComponents.length)
-
-            headDisplayComponents = headModelComponents
-            tailDisplayComponents = tailModelComponents
 
             stateHandler.setCradleState('applycellframechanges')
             
@@ -345,20 +313,6 @@ export default class ServiceHandler {
         if (increment == +1) contentHandler.createNewItemIDs(removeList)
 
         const { content } = contentHandler
-
-        const { cradleModelComponents } = content
-        let { 
-            headModelComponents,
-            tailModelComponents, 
-            headDisplayComponents, 
-            tailDisplayComponents 
-        } = content
-            
-        headModelComponents = cradleModelComponents.slice(0,headModelComponents.length)
-        tailModelComponents = cradleModelComponents.slice(headModelComponents.length)
-
-        headDisplayComponents = headModelComponents
-        tailDisplayComponents = tailModelComponents
 
         stateHandler.setCradleState('applycellframechanges')
 
