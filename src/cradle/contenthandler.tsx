@@ -500,13 +500,11 @@ export default class ContentHandler {
 
     }
 
-    public updateCellFrames(modifiedCellFrameMap) {
+    public reconcileCellFrames(modifiedIndexesList) {
 
         // console.log('contentHandler got modifiedCellFrameMap',modifiedCellFrameMap)
 
-        if (!modifiedCellFrameMap.size) return
-
-        const { stateHandler } = this.cradleParameters.handlersRef.current
+        if (!modifiedIndexesList.length) return
 
         const { cradleModelComponents } = this.content
         let {
@@ -517,10 +515,20 @@ export default class ContentHandler {
         
         } = this.content
 
+        const { cacheHandler } = this.cradleParameters.handlersRef.current
+
+        const { indexToItemIDMap } = cacheHandler.cacheProps
+
         function processComponent (component, i, array ) {
-            const instanceID = component.props.instanceID
-            if (modifiedCellFrameMap.has(instanceID)) {
-                array[i] = modifiedCellFrameMap.get(instanceID)
+            const { index, itemID } = component.props
+            if (modifiedIndexesList.includes(index)) {
+                const newItemID = 
+                    indexToItemIDMap.has(index)?
+                        indexToItemIDMap.get(index):
+                        cacheHandler.getNewItemID()
+                if (newItemID != itemID) { // TODO verify shouldn't happen
+                    array[i] = React.cloneElement(component, {itemID:newItemID})
+                }
             }
         }
 

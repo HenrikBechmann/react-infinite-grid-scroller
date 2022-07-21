@@ -120,49 +120,54 @@ export default class ServiceHandler {
             indexToItemIDMap // index to itemID
         } = cacheHandler.cacheProps 
 
-        // get detail of change
+        if (changeMap.size == 0) return true // nothing to do
+
+        const indexesToDeleteList = []
+        const changeIndexToItemIDMap = new Map()
+
+        // collect details of change
+
+        changeMap.forEach((itemID, index) =>{
+            if (itemID === null) {
+                indexesToDeleteList.push(index)
+            } else {
+                changeIndexToItemIDMap.set(index, itemID)
+            }
+        })
 
         // -------------- first, guard against duplicate itemIDs in change map ------------
 
-        const mapsize = changeMap.size
+        const mapsize = changeIndexToItemIDMap.size
 
-        if (mapsize == 0) return true // nothing to do
+        const itemIDSet = new Set(changeIndexToItemIDMap.values())
 
-        const itemIDset = new Set(changeMap.values())
+        const itemsetsize = itemIDSet.size
 
-        const itemsetsize = itemIDset.size
-
-        const indexesToDelete = []
         if (mapsize != itemsetsize) { // there must be duplicate itemIDs
 
             const itemIDCountMap = new Map()
 
-            changeMap.forEach((itemID, index) => {
+            changeIndexToItemIDMap.forEach((itemID, index) => {
                 if (!itemIDCountMap.has(itemID)) {
                     itemIDCountMap.set(itemID, 1)
                 } else {
                     itemIDCountMap.set(itemID, itemIDCountMap.get(itemID) + 1)
                 }
-                if (itemID == null) {
-                    indexesToDelete.push(index)
-                }
             })
 
-            itemIDCountMap.delete(null) // legitimate - means remove item from cache
-
-            const duplicateitemsMap = new Map()
+            const duplicateItemsMap = new Map()
             itemIDCountMap.forEach((count,itemID)=>{
                 if (count > 1) {
-                    duplicateitemsMap.set(itemID, count)
+                    duplicateItemsMap.set(itemID, count)
                 }
             })
 
-            if (duplicateitemsMap.size) {
+            if (duplicateItemsMap.size) {
 
                 console.log('WARNING: changeIndexMap rejected: \
                     duplicate itemID index assignment values found:\
                     duplicateItemIDs, changeMap',
-                    duplicateitemsMap, changeMap)
+                    duplicateItemsMap, changeMap)
                 return false
 
             }
@@ -171,116 +176,64 @@ export default class ServiceHandler {
 
         // --------------- delete indexes and associated itemID's for indexes set to null --------
 
-
-        cacheHandler.deletePortal(indexesToDelete, this.callbacks.cacheDeleteListCallback)
-        for (const index of indexesToDelete) {
-            changeMap.delete(index)
-        }
-
-        const changeDetailMap = new Map()
-
-        changeMap.forEach((itemID, index) => { // now no itemIDs are null
-            changeDetailMap.set(index, {from:indexToItemIDMap.get(index),to:itemID})
-        })
+        cacheHandler.deletePortal(indexesToDeleteList, this.callbacks.cacheDeleteListCallback)
 
         // ----------- apply changes to cache index and itemID maps ----------
 
         // const cradleMap = this.getCradleMap() // index to itemID
 
-        const pendingMap = new Map() // index => itemID; itemID set to null, pending removal from cache
-        const ignoredMap = new Map() // index => itemID; itemID for index same as changerequest
         const originalitemindexMap = new Map() // itemID => index; before change
         const processedMap = new Map() // index => itemID; change has been applied
-        const duplicatesMap = new Map() // itemID => index; unresolved index changes
 
-        changeMap.forEach((itemID,index) => {
-            if (itemID === null) {
-                pendingMap.set(index, null)
-            } else {
-                if (!indexToItemIDMap.has(index)) { // not in cache
-                    ignoredMap.set(index,itemID)
-                } else {
-                    if (indexToItemIDMap.get(index) != itemID) { // modification requested
-                        indexToItemIDMap.set(index,itemID) // modiication applied, part 1
-                        const data = metadataMap.get(itemID)
-                        originalitemindexMap.set(itemID,data.index)
-                        data.index = index // modification applied, part 2
-                        processedMap.set(index,itemID)
-                    }
+        changeIndexToItemIDMap.forEach((itemID,index) => {
+
+            if (indexToItemIDMap.has(index)) { // in cache, otherwise ignore
+
+                const existingItemID = indexToItemIDMap.get(index)
+
+                if (existingItemID != itemID) { // modification requested
+
+                    indexToItemIDMap.set(index,itemID) // modiication applied, part 1
+                    const itemdata = metadataMap.get(itemID)
+
+                    originalitemindexMap.set(itemID,itemdata.index)
+                    itemdata.index = index // modification applied, part 2
+
+                    processedMap.set(index,itemID)
+
                 }
             }
         })
-
-        // console.log('ignored,processed',ignored,processed)
-
-        if ((processedMap.size == 0) && (pendingMap.size == 0)) return true
-
-        // eliminate duplicate itemIDs in index map
 
         // if the original index for the re-assigned cache item still maps to the cache item,
         // then there is a duplicate
+        // TODO this needs to be tested!!
+        const orphanedItemIndexesMap = new Map() // itemID => index; unresolved index changes
+
         originalitemindexMap.forEach((itemID, index) => {
             if (indexToItemIDMap.has(index) && (indexToItemIDMap.get(index) == itemID)) {
-                if (!pendingMap.has(index)) {
-                    duplicatesMap.set(itemID, index)
-                }
+                orphanedItemIndexesMap.set(itemID, index)
+                indexToItemIDMap.delete(index)
             }
         })
-
-        if (duplicatesMap.size) {
-            console.log('WARNING: original mapping for re-assigned cache item ID(s) was left \
-                unchanged by changeIndexMap, creating duplicates:\
-                \nduplicates, changeMap\n',
-                duplicatesMap, changeMap, 
-                '\nDuplicates left behind will be cleared from cache.')
-            duplicatesMap.forEach((index, itemID)=>{
-                pendingMap.set(index,null)
-            })
-        }
-
-        if (pendingMap.size) {
-            pendingMap.forEach((value, index)=>{ // value is always null
-                changeMap.set(index, value) // assert null for itemID
-                indexToItemIDMap.delete(index)
-            })
-        }
 
         cacheHandler.cacheProps.modified = true
         cacheHandler.renderPortalList()
 
         // ------------- apply changes to extant cellFrames ------------
 
-        const { cradleModelComponents } = contentHandler.content
+        const modifiedIndexesList = Array.from(
+            new Set( // get unique list
+                Array.from(processedMap.values()).concat(
+                    Array.from(orphanedItemIndexesMap.values()),
+                    indexesToDeleteList
+                )
+            ).values()
+        )
 
-        const modifiedCellFrames = new Map()
+        contentHandler.reconcileCellFrames(modifiedIndexesList)
 
-        cradleModelComponents.forEach((component) => {
-            const index = component.props.index
-            if (changeMap.has(index)) {
-                const itemID = component.props.itemID
-                let newItemID = changeMap.get(index)
-                if (newItemID === null) {
-                    newItemID = cacheHandler.getNewItemID()
-                }
-                if ( newItemID != itemID ) {
-
-                    const instanceID = component.props.instanceID
-                
-                    modifiedCellFrames.set(instanceID, React.cloneElement(component, {itemID:newItemID}))
-
-                }
-            }
-        })
-
-        // console.log('modifiedCellFrames',modifiedCellFrames)
-
-        if (modifiedCellFrames.size) {
-
-            contentHandler.updateCellFrames(modifiedCellFrames)
-
-            stateHandler.setCradleState('applycellframechanges')
-
-        }
+        stateHandler.setCradleState('applycellframechanges')
 
         return true
 
