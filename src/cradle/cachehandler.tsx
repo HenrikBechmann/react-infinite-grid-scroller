@@ -273,41 +273,91 @@ export class CacheHandler {
                 toindex:
                 fromindex
 
-        const highrangeindex = toindex + rangeincrement - 1
+        // const highrangeindex = toindex + rangeincrement - 1
 
         const orderedindexlist = Array.from(indexToItemIDMap.keys())
         orderedindexlist.sort((a,b)=>a-b)
 
         const lowptr = orderedindexlist.findIndex(lowindex)
         const highptr = orderedindexlist.findIndex(highindex)
+        const fromlowptr = orderedindexlist.findIndex(fromindex)
+        const fromhighptr = orderedindexlist.findIndex(highrange)
 
-        let processlist
-        if ((lowptr == -1) && (highptr == -1)) { // entire range is out of scope
+        // ---------------- capture index data to move ----------------
 
-            processlist = []
+        const processtomoveMap = new Map()
+        let processtomoveList
+        if ((fromlowptr == -1) && (fromhighptr == -1)) { // scope is out of view
 
-        } else if (highptr == -1) { // part of range is in scope
+            processtomoveList = []
 
-            processlist = orderedindexlist.slice(lowptr)
+        } else if (fromhighptr == -1) { // scope is partially in view
 
-        } else { // entire range is in scope
+            processtomoveList = orderedindexlist.slice(fromlowptr)
 
-            processlist = orderedindexlist.slice(lowptr, highptr + 1)
+        } else { // scope is entirely in view
+
+            processtomoveList = orderedindexlist.slice(fromlowptr, fromhighptr + 1)
 
         }
 
-        if (shiftdirection == 1) processlist.reverse()
+        const capturemoveindex = (index) => {
 
-        const processindex = (index, i) => {
+            processtomoveMap.set(index, indexToItemIDMap.get(index))
+
+        }
+
+        processtomoveList.forEach(capturemoveindex)
+
+        // ------------- get list of indexes to shift out of the way ---------------
+        
+        let processtoshiftList
+        if ((lowptr == -1) && (highptr == -1)) { // entire range is out of scope
+
+            processtoshiftList = []
+
+        } else if (highptr == -1) { // part of range is in scope
+
+            processtoshiftList = orderedindexlist.slice(lowptr)
+
+        } else { // entire range is in scope
+
+            processtoshiftList = orderedindexlist.slice(lowptr, highptr + 1)
+
+        }
+
+        if (shiftdirection == 1) processtoshiftList.reverse()
+
+        // -------------- move indexes out of the way --------------
+
+        const processedshiftList = []
+        const processshiftindex = (index) => {
             const itemID = indexToItemIDMap.get(index)
             const newIndex = index + moveincrement
             indexToItemIDMap.set(newIndex,itemID)
             metadataMap.get(itemID).index = newIndex
+            processedshiftList.push(newIndex)
         }
 
-        processlist.forEach(processindex)
+        processtoshiftList.forEach(processshiftindex)
 
-        return processlist
+        // ------------ replace shifted indexes with moved indexes ----------
+
+        const processedmoveList = []
+        const processmoveindex = (itemID, index) => {
+            const newIndex = index - moveincrement // swap
+            indexToItemIDMap.set(newIndex, itemID)
+            metadataMap.get(itemID).index = newIndex
+            processedmoveList.push(newIndex)
+        }
+
+        processtomoveMap.forEach(processmoveindex)
+
+        // -----------return list of processed indexes to caller --------
+        // for synchrnization with cradle cellFrames
+        const processedIndexes = processedshiftList.concat(processedmoveList)
+
+        return processedIndexes
 
     }
 
