@@ -255,54 +255,59 @@ export class CacheHandler {
 
         const {indexToItemIDMap,metadataMap} = this.cacheProps
 
-        const shiftingindex = fromindex
-        const shiftingitemID = 
-            indexToItemIDMap.has(shiftingindex)?
-                indexToItemIDMap.get(shiftingindex):
-                null
+        const rangeincrement = highrange - fromindex + 1
+        const moveincrement = toindex - fromindex
 
-        const shiftincrement = 
-            (fromindex < toindex)? 
-                -1: // increment down, make room for shiftingindex at top
-                1   // increment up, make room for shiftingindex at bottom
+        const shiftdirection = 
+            (moveincrement > 0)? // move up in list
+                -1: // shift down, make room for shiftingindex above
+                1   // shift up, make room for shiftingindex below
 
-        const startindex = 
-            (shiftincrement == -1)?
+        const lowindex = 
+            (shiftdirection == -1)?
                 fromindex:
                 toindex
 
-        const endindex = 
-            (shiftincrement == -1)?
+        const highindex = 
+            (shiftdirection == -1)?
                 toindex:
                 fromindex
 
-        const sliceincrement = 
-            (shiftincrement == -1)?
-            1:
-            0
+        const highrangeindex = toindex + rangeincrement - 1
 
         const orderedindexlist = Array.from(indexToItemIDMap.keys())
         orderedindexlist.sort((a,b)=>a-b)
-        const toprocesslist = orderedindexlist.slice(
-            orderedindexlist.indexOf(startindex) + sliceincrement,
-            orderedindexlist.indexOf(endindex) + sliceincrement
-        )
 
-        if (shiftincrement == 1) toprocesslist.reverse()
+        const lowptr = orderedindexlist.findIndex(lowindex)
+        const highptr = orderedindexlist.findIndex(highindex)
 
-        for (const index of toprocesslist) {
+        let processlist
+        if ((lowptr == -1) && (highptr == -1)) { // entire range is out of scope
+
+            processlist = []
+
+        } else if (highptr == -1) { // part of range is in scope
+
+            processlist = orderedindexlist.slice(lowptr)
+
+        } else { // entire range is in scope
+
+            processlist = orderedindexlist.slice(lowptr, highptr + 1)
+
+        }
+
+        if (shiftdirection == 1) processlist.reverse()
+
+        const processindex = (index, i) => {
             const itemID = indexToItemIDMap.get(index)
-            const newIndex = index + shiftincrement
+            const newIndex = index + moveincrement
             indexToItemIDMap.set(newIndex,itemID)
             metadataMap.get(itemID).index = newIndex
         }
 
-        indexToItemIDMap.set(toindex,shiftingitemID)
-        metadataMap.get(shiftingitemID).index = toindex
+        processlist.forEach(processindex)
 
-        const processedlist = toprocesslist.concat([fromindex])
-
-        return processedlist
+        return processlist
 
     }
 
