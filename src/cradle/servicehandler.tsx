@@ -239,8 +239,9 @@ export default class ServiceHandler {
 
     }
 
-    // TODO implement hightrange logic
     public moveIndex = (toindex, fromindex, highrange = null) => {
+
+        // ------------- define parameters ---------------
 
         const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
 
@@ -273,19 +274,26 @@ export default class ServiceHandler {
                 highrange:
                 fromindex
 
-        if (fromindex == toindex) return // nothing to do
-
         const rangeincrement = highrange - fromindex + 1
         const moveincrement = toindex - fromindex
 
+        console.log('==> serviceHandler.moveIndex: toindex, fromindex, highrange, rangeincrement, moveincrement',
+            toindex, fromindex, highrange, rangeincrement, moveincrement)
+
+        // ---------- constrain parameters --------------
+
+        if (fromindex == toindex) return // nothing to do
+
         // move must be in list bounds
         if (moveincrement > 0) { // move up
-            const targettop = toindex + rangeincrement - 1
+            const targettop = toindex + (rangeincrement - 1)
             if (targettop > listbound) return // out of bounds
         } else { // move down
-            const targetbottom = toindex - rangeincrement - 1
+            const targetbottom = toindex - (rangeincrement - 1)
             if (targetbottom < 0) return
         }
+
+        // ----------- perform cache and cradle operations -----------
 
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
@@ -297,6 +305,7 @@ export default class ServiceHandler {
 
             cacheHandler.cacheProps.modified = true
             cacheHandler.renderPortalList()
+
             contentHandler.changeCradleItemIDs(processedIndexList)
 
             stateHandler.setCradleState('applycellframechanges')

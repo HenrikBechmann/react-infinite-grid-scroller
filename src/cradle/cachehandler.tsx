@@ -255,6 +255,8 @@ export class CacheHandler {
 
         const {indexToItemIDMap,metadataMap} = this.cacheProps
 
+        // ----------- define parameters ---------------
+
         const rangeincrement = highrange - fromindex + 1
         const moveincrement = toindex - fromindex
 
@@ -263,44 +265,48 @@ export class CacheHandler {
                 -1: // shift down, make room for shiftingindex above
                 1   // shift up, make room for shiftingindex below
 
-        const lowindex = 
+        const lowmoveindex = 
             (shiftdirection == -1)?
                 fromindex:
                 toindex
 
-        const highindex = 
+        const highmoveindex = 
             (shiftdirection == -1)?
                 toindex:
                 fromindex
 
-        // const highrangeindex = toindex + rangeincrement - 1
+        console.log('==> cacheHandler.moveIndex: toindex, fromindex, highrange, rangeincrement, moveincrement, shiftdirection, lowmoveindex, highmoveindex',
+            toindex, fromindex, highrange, rangeincrement, moveincrement, shiftdirection, lowmoveindex, highmoveindex)
 
         const orderedindexlist = Array.from(indexToItemIDMap.keys())
         orderedindexlist.sort((a,b)=>a-b)
 
-        const lowptr = orderedindexlist.findIndex(lowindex)
-        const highptr = orderedindexlist.findIndex(highindex)
-        const fromlowptr = orderedindexlist.findIndex(fromindex)
-        const fromhighptr = orderedindexlist.findIndex(highrange)
+        const lowmoveindexptr = orderedindexlist.findIndex(value => value >= lowmoveindex)
+        const highmoveindexptr = orderedindexlist.findIndex(value => value >= highmoveindex)
+        const lowrangeindexptr = orderedindexlist.findIndex(value => value >= fromindex)
+        const highrangeindexptr = orderedindexlist.findIndex(value => value >= highrange)
+
+        console.log('lowptr, highptr, fromlowptr, fromhighptr, orderedindexlist', 
+            lowmoveindexptr, highmoveindexptr, lowrangeindexptr, highrangeindexptr, orderedindexlist)
 
         // ---------------- capture index data to move ----------------
 
-        const processtomoveMap = new Map()
         let processtomoveList
-        if ((fromlowptr == -1) && (fromhighptr == -1)) { // scope is out of view
+        if ((lowrangeindexptr == -1) && (highrangeindexptr == -1)) { // scope is out of view
 
             processtomoveList = []
 
-        } else if (fromhighptr == -1) { // scope is partially in view
+        } else if (highrangeindexptr == -1) { // scope is partially in view
 
-            processtomoveList = orderedindexlist.slice(fromlowptr)
+            processtomoveList = orderedindexlist.slice(lowrangeindexptr)
 
         } else { // scope is entirely in view
 
-            processtomoveList = orderedindexlist.slice(fromlowptr, fromhighptr + 1)
+            processtomoveList = orderedindexlist.slice(lowrangeindexptr, highrangeindexptr + 1)
 
         }
 
+        const processtomoveMap = new Map()
         const capturemoveindex = (index) => {
 
             processtomoveMap.set(index, indexToItemIDMap.get(index))
@@ -309,24 +315,36 @@ export class CacheHandler {
 
         processtomoveList.forEach(capturemoveindex)
 
+        console.log('processtomoveList, processtomoveMap',
+            processtomoveList, processtomoveMap)
+
         // ------------- get list of indexes to shift out of the way ---------------
         
         let processtoshiftList
-        if ((lowptr == -1) && (highptr == -1)) { // entire range is out of scope
+        if ((lowmoveindexptr == -1) && (highmoveindexptr == -1)) { // entire range is out of scope
 
             processtoshiftList = []
 
-        } else if (highptr == -1) { // part of range is in scope
-
-            processtoshiftList = orderedindexlist.slice(lowptr)
+        } else if (highmoveindexptr == -1) { // low part of range is in scope
+            if (shiftdirection == -1) { // block is moving higher in list
+                processtoshiftList = []
+            } else { // block is moving lower in list
+                processtoshiftList = orderedindexlist.slice(lowmoveindexptr + 1)
+            }
 
         } else { // entire range is in scope
 
-            processtoshiftList = orderedindexlist.slice(lowptr, highptr + 1)
+            if (shiftdirection == -1) {
+                processtoshiftList = orderedindexlist.slice(lowmoveindexptr + 1, highmoveindexptr + 1)
+            } else {
+                processtoshiftList = orderedindexlist.slice(lowmoveindexptr, highmoveindexptr)
+            }
 
         }
 
         if (shiftdirection == 1) processtoshiftList.reverse()
+
+         console.log('processtoshiftList',processtoshiftList)
 
         // -------------- move indexes out of the way --------------
 
