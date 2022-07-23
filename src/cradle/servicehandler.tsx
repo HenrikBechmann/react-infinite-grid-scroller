@@ -277,7 +277,8 @@ export default class ServiceHandler {
         const rangeincrement = highrange - fromindex + 1
         const moveincrement = toindex - fromindex
 
-        console.log('==> serviceHandler.moveIndex: toindex, fromindex, highrange, rangeincrement, moveincrement',
+        console.log('==> serviceHandler.moveIndex: \
+toindex, fromindex, highrange, rangeincrement, moveincrement',
             toindex, fromindex, highrange, rangeincrement, moveincrement)
 
         // ---------- constrain parameters --------------
@@ -288,9 +289,6 @@ export default class ServiceHandler {
         if (moveincrement > 0) { // move up
             const targettop = toindex + (rangeincrement - 1)
             if (targettop > listbound) return // out of bounds
-        } else { // move down
-            const targetbottom = toindex - (rangeincrement - 1)
-            if (targetbottom < 0) return
         }
 
         // ----------- perform cache and cradle operations -----------
