@@ -310,26 +310,23 @@ export class CacheHandler {
         // ------------- get list of indexes to shift out of the way ---------------
         
         let processtoshiftList = []
-        // if ((lowmoveindexptr == -1) && (highmoveindexptr == -1)) { // entire range is out of scope
-
-        //     processtoshiftList = []
-
-        // } else if (highmoveindexptr == -1) { // low part of range is in scope
-        //     if (shiftdirection == -1) { // block is moving higher in list
-        //         processtoshiftList = []
-        //     } else { // block is moving lower in list
-        //         processtoshiftList = orderedindexlist.slice(lowmoveindexptr + 1)
-        //     }
-
-        // } else { // entire range is in scope
-
-        //     if (shiftdirection == -1) {
-        //         processtoshiftList = orderedindexlist.slice(highrangeindexptr + 1, lowmoveindexptr - (moveincrement -1))
-        //     } else {
-        //         processtoshiftList = orderedindexlist.slice(lowmoveindexptr - (moveincrement -1), highmoveindexptr - (moveincrement - 1))
-        //     }
-
-        // }
+        if (shiftdirection == -1) { // block is moving up, shift is down
+            if (toindexptr == -1 && fromindexptr == -1) {
+                processtoshiftList = []
+            } else if (fromindexptr == -1) {
+                processtoshiftList = orderedindexlist.slice(toindexptr)
+            } else {
+                processtoshiftList = orderedindexlist.slice(toindexptr, fromindexptr)
+            }
+        } else { // block is moving down, shift is up
+            if (toindexptr == -1 && fromindexptr == -1) {
+                processtoshiftList = []
+            } else if (toindexptr == -1) {
+                processtoshiftList = orderedindexlist.slice(fromindexptr)
+            } else {
+                processtoshiftList = orderedindexlist.slice(fromindexptr, toindexptr)
+            }
+        }
 
         if (shiftdirection == 1) processtoshiftList.reverse()
 
