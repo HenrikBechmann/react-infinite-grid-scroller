@@ -273,25 +273,25 @@ export class CacheHandler {
 
         const toindexptr = orderedindexlist.findIndex(value => value >= toindex)
         const fromindexptr = orderedindexlist.findIndex(value => value >= fromindex)
-        const fromhighrangeindexptr = orderedindexlist.findIndex(value => value >= highrange)
+        const fromhighindexptr = orderedindexlist.findIndex(value => value >= highrange)
 
-        console.log('toindexptr, fromindexptr, fromhighrangeindexptr', 
-            toindexptr, fromindexptr, fromhighrangeindexptr, orderedindexlist)
+        console.log('toindexptr, fromindexptr, fromhighindexptr', 
+            toindexptr, fromindexptr, fromhighindexptr, orderedindexlist)
 
         // ---------------- capture index data to move ----------------
 
         let processtomoveList
-        if ((fromindexptr == -1) && (fromhighrangeindexptr == -1)) { // scope is out of view
+        if ((fromindexptr == -1) && (fromhighindexptr == -1)) { // scope is out of view
 
             processtomoveList = []
 
-        } else if (fromhighrangeindexptr == -1) { // scope is partially in view
+        } else if (fromhighindexptr == -1) { // scope is partially in view
 
             processtomoveList = orderedindexlist.slice(fromindexptr)
 
         } else { // scope is entirely in view
 
-            processtomoveList = orderedindexlist.slice(fromindexptr, fromhighrangeindexptr + 1)
+            processtomoveList = orderedindexlist.slice(fromindexptr, fromhighindexptr + 1)
 
         }
 
@@ -313,18 +313,18 @@ export class CacheHandler {
         if (shiftdirection == 1) { // block is moving up, shift is down
             if (toindexptr == -1 && fromindexptr == -1) {
                 processtoshiftList = []
-            } else if (fromindexptr == -1) {
+            } else if (fromhighindexptr == -1) {
                 processtoshiftList = orderedindexlist.slice(toindexptr)
             } else {
                 processtoshiftList = orderedindexlist.slice(toindexptr, fromindexptr)
             }
         } else { // block is moving down, shift is up
-            if (toindexptr == -1 && fromindexptr == -1) {
+            if (toindexptr == -1 && fromhighindexptr == -1) {
                 processtoshiftList = []
             } else if (toindexptr == -1) {
-                processtoshiftList = orderedindexlist.slice(fromindexptr)
+                processtoshiftList = orderedindexlist.slice(fromhighindexptr + 1)
             } else {
-                processtoshiftList = orderedindexlist.slice(fromindexptr, toindexptr)
+                processtoshiftList = orderedindexlist.slice(fromhighindexptr + 1, toindexptr + rangeincrement)
             }
         }
 
