@@ -309,8 +309,8 @@ export class CacheHandler {
 
         // ------------- get list of indexes to shift out of the way ---------------
         
-        let processtoshiftList = []
-        if (shiftdirection == -1) { // block is moving up, shift is down
+        let processtoshiftList
+        if (shiftdirection == 1) { // block is moving up, shift is down
             if (toindexptr == -1 && fromindexptr == -1) {
                 processtoshiftList = []
             } else if (fromindexptr == -1) {
