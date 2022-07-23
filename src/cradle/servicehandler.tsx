@@ -72,28 +72,28 @@ export default class ServiceHandler {
 
     // ======================[ GET SNAPSHOTS ]========================
 
-    public getCacheMap = () => {
+    public getCacheIndexMap = () => {
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
 
-        return cacheHandler.getCacheMap()
+        return cacheHandler.getCacheIndexMap()
 
     }
 
-    public getCacheList = () => {
+    public getCacheItemMap = () => {
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
 
-        return cacheHandler.getCacheList()
+        return cacheHandler.getCacheItemMap()
 
     }
 
-    public getCradleMap = () => {
+    public getCradleIndexMap = () => {
 
         const { cacheHandler, contentHandler } = this.cradleParameters.handlersRef.current
 
         const modelIndexList = contentHandler.getModelIndexList()
-        return cacheHandler.getCradleMap(modelIndexList)
+        return cacheHandler.getCradleIndexMap(modelIndexList)
     }
 
     // =================[ CACHE MANAGEMENT REQUESTS ]==================

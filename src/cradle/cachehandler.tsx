@@ -203,13 +203,13 @@ export class CacheHandler {
 
     // =========================[ SNAPSHOTS ]=========================
 
-    getCacheMap() {
+    getCacheIndexMap() {
 
         return new Map(this.cacheProps.indexToItemIDMap)
 
     }
 
-    getCradleMap(modelIndexList) {
+    getCradleIndexMap(modelIndexList) {
 
         const cradleMap = new Map()
         const { indexToItemIDMap } = this.cacheProps
@@ -223,7 +223,7 @@ export class CacheHandler {
 
     }
 
-    getCacheList() {
+    getCacheItemMap() {
 
         const cachelist = new Map()
 
