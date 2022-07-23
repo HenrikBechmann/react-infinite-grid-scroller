@@ -272,6 +272,7 @@ export class CacheHandler {
         orderedindexlist.sort((a,b)=>a-b)
 
         const toindexptr = orderedindexlist.findIndex(value => value >= toindex)
+        const tohighindexptr = orderedindexlist.findIndex(value => value >= toindexptr + rangeincrement)
         const fromindexptr = orderedindexlist.findIndex(value => value >= fromindex)
         const fromhighindexptr = orderedindexlist.findIndex(value => value >= highrange)
 
@@ -319,12 +320,12 @@ export class CacheHandler {
                 processtoshiftList = orderedindexlist.slice(toindexptr, fromindexptr)
             }
         } else { // block is moving down, shift is up
-            if (toindexptr == -1 && fromhighindexptr == -1) {
+            if (tohighindexptr == -1 && fromhighindexptr == -1) {
                 processtoshiftList = []
             } else if (toindexptr == -1) {
                 processtoshiftList = orderedindexlist.slice(fromhighindexptr + 1)
             } else {
-                processtoshiftList = orderedindexlist.slice(fromhighindexptr + 1, toindexptr + rangeincrement)
+                processtoshiftList = orderedindexlist.slice(fromhighindexptr + 1, tohighindexptr)
             }
         }
 
