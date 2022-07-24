@@ -251,30 +251,36 @@ export class CacheHandler {
     }
     
     // move is coerced by servicehandler to be within current list bounds
-    moveIndex(toindex, fromindex, highrange ) {
+    moveIndex(toindex, fromindex, fromhighindex ) {
+
+        console.log('typeof toindex, fromindex, fromhighindex',
+            typeof toindex, typeof fromindex, typeof fromhighindex)
 
         const {indexToItemIDMap,metadataMap} = this.cacheProps
 
         // ----------- define parameters ---------------
 
-        const rangeincrement = highrange - fromindex + 1
+        const rangeincrement = fromhighindex - fromindex + 1
         const moveincrement = toindex - fromindex
+
+        const tohighindex = toindex + (rangeincrement - 1)
 
         const shiftdirection = 
             (moveincrement > 0)? // move up in list
                 -1: // shift down, make room for shiftingindex above
                 1   // shift up, make room for shiftingindex below
 
-        console.log('==> cacheHandler.moveIndex: toindex, fromindex, highrange, rangeincrement, moveincrement, shiftdirection',
-            toindex, fromindex, highrange, rangeincrement, moveincrement, shiftdirection)
+        console.log('==> cacheHandler.moveIndex: \n\
+toindex, tohighindex, fromindex, fromhighindex, rangeincrement, moveincrement, shiftdirection',
+            toindex, tohighindex, fromindex, fromhighindex, rangeincrement, moveincrement, shiftdirection)
 
         const orderedindexlist = Array.from(indexToItemIDMap.keys())
         orderedindexlist.sort((a,b)=>a-b)
 
         const toindexptr = orderedindexlist.findIndex(value => value >= toindex)
-        const tohighindexptr = orderedindexlist.findIndex(value => value >= toindexptr + rangeincrement)
+        const tohighindexptr = orderedindexlist.findIndex(value => value >= tohighindex)
         const fromindexptr = orderedindexlist.findIndex(value => value >= fromindex)
-        const fromhighindexptr = orderedindexlist.findIndex(value => value >= highrange)
+        const fromhighindexptr = orderedindexlist.findIndex(value => value >= fromhighindex)
 
         console.log('toindexptr, fromindexptr, fromhighindexptr', 
             toindexptr, fromindexptr, fromhighindexptr, orderedindexlist)
@@ -311,21 +317,21 @@ export class CacheHandler {
         // ------------- get list of indexes to shift out of the way ---------------
         
         let processtoshiftList
-        if (shiftdirection == 1) { // block is moving up, shift is down
-            if (toindexptr == -1 && fromindexptr == -1) {
+        if (shiftdirection == 1) { // block is moving down, shift is up; toindex < fromindex
+            if ((toindexptr == -1) && (fromindexptr == -1)) {
                 processtoshiftList = []
-            } else if (fromhighindexptr == -1) {
+            } else if (fromindexptr == -1) {
                 processtoshiftList = orderedindexlist.slice(toindexptr)
             } else {
                 processtoshiftList = orderedindexlist.slice(toindexptr, fromindexptr)
             }
-        } else { // block is moving down, shift is up
+        } else { // shiftdirection == -1; block is moving up, shift is down; fromindex < toindex
             if (tohighindexptr == -1 && fromhighindexptr == -1) {
                 processtoshiftList = []
-            } else if (toindexptr == -1) {
+            } else if (tohighindexptr == -1) {
                 processtoshiftList = orderedindexlist.slice(fromhighindexptr + 1)
             } else {
-                processtoshiftList = orderedindexlist.slice(fromhighindexptr + 1, tohighindexptr)
+                processtoshiftList = orderedindexlist.slice(fromhighindexptr + 1, tohighindexptr + 1)
             }
         }
 
