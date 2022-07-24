@@ -246,6 +246,7 @@ export class CacheHandler {
 
     // ==========================[ SERVICE SUPPORT ]=========================
 
+    // TODO orphan
     changeIndexMap( ) {
         
     }
@@ -368,7 +369,7 @@ export class CacheHandler {
             indexToItemIDMap.set(newIndex, itemID)
             metadataMap.get(itemID).index = newIndex
             processedmoveList.push(newIndex)
-            
+
         }
 
         processtomoveMap.forEach(processmoveindex)
