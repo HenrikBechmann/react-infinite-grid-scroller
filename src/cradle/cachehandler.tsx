@@ -253,9 +253,6 @@ export class CacheHandler {
     // move is coerced by servicehandler to be within current list bounds
     moveIndex(toindex, fromindex, fromhighindex ) {
 
-        console.log('typeof toindex, fromindex, fromhighindex',
-            typeof toindex, typeof fromindex, typeof fromhighindex)
-
         const {indexToItemIDMap,metadataMap} = this.cacheProps
 
         // ----------- define parameters ---------------
@@ -282,7 +279,7 @@ toindex, tohighindex, fromindex, fromhighindex, rangeincrement, moveincrement, s
         const fromindexptr = orderedindexlist.findIndex(value => value >= fromindex)
         const fromhighindexptr = orderedindexlist.findIndex(value => value >= fromhighindex)
 
-        console.log('toindexptr, fromindexptr, fromhighindexptr', 
+        console.log('toindexptr, fromindexptr, fromhighindexptr, orderedindexlist', 
             toindexptr, fromindexptr, fromhighindexptr, orderedindexlist)
 
         // ---------------- capture index data to move ----------------
@@ -344,7 +341,7 @@ toindex, tohighindex, fromindex, fromhighindex, rangeincrement, moveincrement, s
         const processedshiftList = []
         const processshiftindex = (index) => {
             const itemID = indexToItemIDMap.get(index)
-            const newIndex = index + moveincrement
+            const newIndex = index - rangeincrement
             indexToItemIDMap.set(newIndex,itemID)
             metadataMap.get(itemID).index = newIndex
             processedshiftList.push(newIndex)
@@ -356,7 +353,7 @@ toindex, tohighindex, fromindex, fromhighindex, rangeincrement, moveincrement, s
 
         const processedmoveList = []
         const processmoveindex = (itemID, index) => {
-            const newIndex = index - moveincrement // swap
+            const newIndex = index + moveincrement // swap
             indexToItemIDMap.set(newIndex, itemID)
             metadataMap.get(itemID).index = newIndex
             processedmoveList.push(newIndex)
@@ -367,6 +364,9 @@ toindex, tohighindex, fromindex, fromhighindex, rangeincrement, moveincrement, s
         // -----------return list of processed indexes to caller --------
         // for synchrnization with cradle cellFrames
         const processedIndexes = processedshiftList.concat(processedmoveList)
+
+        console.log('processedshiftList, processedmoveList,processedIndexes',
+            processedshiftList, processedmoveList,processedIndexes)
 
         return processedIndexes
 

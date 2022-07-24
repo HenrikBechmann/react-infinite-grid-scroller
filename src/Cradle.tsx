@@ -712,6 +712,7 @@ const Cradle = ({
         switch (cradleState) {
 
             case 'applycellframechanges': { // user intervention
+                console.log('CRADLE useLayoutEffect applycellframechanges')
                 setCradleState('ready')
                 break
             }

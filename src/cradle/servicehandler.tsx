@@ -299,12 +299,18 @@ toindex, fromindex, highrange, rangeincrement, moveincrement',
         const processedIndexList = 
             cacheHandler.moveIndex(toindex, fromindex, highrange)
 
+        console.log('serviceHandler processedIndexList',processedIndexList)
+
         if (processedIndexList.length) {
+
+            console.log('rendering portallist')
 
             cacheHandler.cacheProps.modified = true
             cacheHandler.renderPortalList()
 
             contentHandler.changeCradleItemIDs(processedIndexList)
+
+            console.log('applycellframechanges')
 
             stateHandler.setCradleState('applycellframechanges')
             

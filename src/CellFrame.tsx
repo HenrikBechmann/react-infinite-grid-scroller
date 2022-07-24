@@ -153,6 +153,8 @@ const CellFrame = ({
 
                 if (cached) {
 
+                    console.log('getting cache index / itemID', index, itemID)
+
                     portalDataRef.current = cacheHandler.getPortal(itemID)
 
                     portalNodeRef.current = portalDataRef.current.portalNode
@@ -166,8 +168,6 @@ const CellFrame = ({
                     setFrameStatus('waiting')
 
                     cacheHandler.registerRequestedPortal(index)
-
-                    // console.log('getting new index / itemID', index, itemID)
 
                     // TODO review implementation of async here
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
