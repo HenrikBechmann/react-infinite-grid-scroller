@@ -267,10 +267,6 @@ export class CacheHandler {
                 -1: // shift down, make room for shiftingindex above
                 1   // shift up, make room for shiftingindex below
 
-//         console.log('==> cacheHandler.moveIndex: \n\
-// toindex, tohighindex, fromindex, fromhighindex, rangeabsoluteincrement, movedirectionalincrement, shiftdirection',
-//             toindex, tohighindex, fromindex, fromhighindex, rangeabsoluteincrement, movedirectionalincrement, shiftdirection)
-
         const orderedindexlist = Array.from(indexToItemIDMap.keys())
         orderedindexlist.sort((a,b)=>a-b)
 
@@ -278,9 +274,6 @@ export class CacheHandler {
         const tohighindexptr = orderedindexlist.findIndex(value => value >= tohighindex)
         const fromindexptr = orderedindexlist.findIndex(value => value >= fromindex)
         const fromhighindexptr = orderedindexlist.findIndex(value => value >= fromhighindex)
-
-        // console.log('toindexptr, fromindexptr, fromhighindexptr, orderedindexlist', 
-        //     toindexptr, fromindexptr, fromhighindexptr, orderedindexlist)
 
         // ---------------- capture index data to move ----------------
 
@@ -308,68 +301,82 @@ export class CacheHandler {
 
         processtomoveList.forEach(capturemoveindex)
 
-        // console.log('processtomoveList, processtomoveMap',
-        //     processtomoveList, processtomoveMap)
-
         // ------------- get list of indexes to shift out of the way ---------------
         
         let processtoshiftList
         if (shiftdirection == 1) { // block is moving down, shift is up; toindex < fromindex
+
             if ((toindexptr == -1) && (fromindexptr == -1)) {
+
                 processtoshiftList = []
+
             } else if (fromindexptr == -1) {
+
                 processtoshiftList = orderedindexlist.slice(toindexptr)
+
             } else {
+
                 processtoshiftList = orderedindexlist.slice(toindexptr, fromindexptr)
+
             }
+
         } else { // shiftdirection == -1; block is moving up, shift is down; fromindex < toindex
+
             if (tohighindexptr == -1 && fromhighindexptr == -1) {
+
                 processtoshiftList = []
+
             } else if (tohighindexptr == -1) {
+
                 processtoshiftList = orderedindexlist.slice(fromhighindexptr + 1)
+
             } else {
+
                 processtoshiftList = orderedindexlist.slice(fromhighindexptr + 1, tohighindexptr + 1)
+
             }
         }
 
         if (shiftdirection == 1) processtoshiftList.reverse()
 
-         // console.log('processtoshiftList',processtoshiftList)
-
         // -------------- move indexes out of the way --------------
 
         const processedshiftList = []
         const processshiftindex = (index) => {
+
             const itemID = indexToItemIDMap.get(index)
+
             const newIndex = 
                 (shiftdirection == -1)?
                     index - rangeabsoluteincrement:
                     index + rangeabsoluteincrement
+
             indexToItemIDMap.set(newIndex,itemID)
             metadataMap.get(itemID).index = newIndex
             processedshiftList.push(newIndex)
+
         }
 
         processtoshiftList.forEach(processshiftindex)
 
-        // ------------ replace shifted indexes with moved indexes ----------
+        // ------------ replace shifted index space with moved indexes ----------
 
         const processedmoveList = []
         const processmoveindex = (itemID, index) => {
             const newIndex = index + movedirectionalincrement // swap
+
             indexToItemIDMap.set(newIndex, itemID)
             metadataMap.get(itemID).index = newIndex
             processedmoveList.push(newIndex)
+            
         }
 
         processtomoveMap.forEach(processmoveindex)
 
         // -----------return list of processed indexes to caller --------
         // for synchrnization with cradle cellFrames
-        const processedIndexes = processedshiftList.concat(processedmoveList)
 
-        // console.log('processedshiftList, processedmoveList,processedIndexes',
-        //     processedshiftList, processedmoveList,processedIndexes)
+        const processedIndexes = processedshiftList.concat(processedmoveList)
 
         return processedIndexes
 
