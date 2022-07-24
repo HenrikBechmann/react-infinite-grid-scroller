@@ -239,6 +239,8 @@ export default class ServiceHandler {
 
     }
 
+    // returns true with moved indexes, otherwise false
+    // move must be entirely within list bounds
     public moveIndex = (toindex, fromindex, highrange = null) => {
 
         // ------------- define parameters ---------------
@@ -277,18 +279,14 @@ export default class ServiceHandler {
         const rangeincrement = highrange - fromindex + 1
         const moveincrement = toindex - fromindex
 
-//         console.log('==> serviceHandler.moveIndex: \
-// toindex, fromindex, highrange, rangeincrement, moveincrement',
-//             toindex, fromindex, highrange, rangeincrement, moveincrement)
-
         // ---------- constrain parameters --------------
 
-        if (fromindex == toindex) return // nothing to do
+        if (fromindex == toindex) return false // nothing to do
 
         // move must be in list bounds
         if (moveincrement > 0) { // move up
             const targettop = toindex + (rangeincrement - 1)
-            if (targettop > listbound) return // out of bounds
+            if (targettop > listbound) return false // out of bounds
         }
 
         // ----------- perform cache and cradle operations -----------
@@ -299,22 +297,18 @@ export default class ServiceHandler {
         const processedIndexList = 
             cacheHandler.moveIndex(toindex, fromindex, highrange)
 
-        // console.log('serviceHandler processedIndexList',processedIndexList)
-
         if (processedIndexList.length) {
-
-            // console.log('rendering portallist')
 
             cacheHandler.cacheProps.modified = true
             cacheHandler.renderPortalList()
 
             contentHandler.changeCradleItemIDs(processedIndexList)
 
-            // console.log('applycellframechanges')
-
             stateHandler.setCradleState('applycellframechanges')
             
         }
+
+        return true
 
     }
 
