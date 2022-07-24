@@ -257,19 +257,19 @@ export class CacheHandler {
 
         // ----------- define parameters ---------------
 
-        const rangeincrement = fromhighindex - fromindex + 1
-        const moveincrement = toindex - fromindex
+        const rangeabsoluteincrement = fromhighindex - fromindex + 1
+        const movedirectionalincrement = toindex - fromindex
 
-        const tohighindex = toindex + (rangeincrement - 1)
+        const tohighindex = toindex + (rangeabsoluteincrement - 1)
 
         const shiftdirection = 
-            (moveincrement > 0)? // move up in list
+            (movedirectionalincrement > 0)? // move up in list
                 -1: // shift down, make room for shiftingindex above
                 1   // shift up, make room for shiftingindex below
 
-        console.log('==> cacheHandler.moveIndex: \n\
-toindex, tohighindex, fromindex, fromhighindex, rangeincrement, moveincrement, shiftdirection',
-            toindex, tohighindex, fromindex, fromhighindex, rangeincrement, moveincrement, shiftdirection)
+//         console.log('==> cacheHandler.moveIndex: \n\
+// toindex, tohighindex, fromindex, fromhighindex, rangeabsoluteincrement, movedirectionalincrement, shiftdirection',
+//             toindex, tohighindex, fromindex, fromhighindex, rangeabsoluteincrement, movedirectionalincrement, shiftdirection)
 
         const orderedindexlist = Array.from(indexToItemIDMap.keys())
         orderedindexlist.sort((a,b)=>a-b)
@@ -279,8 +279,8 @@ toindex, tohighindex, fromindex, fromhighindex, rangeincrement, moveincrement, s
         const fromindexptr = orderedindexlist.findIndex(value => value >= fromindex)
         const fromhighindexptr = orderedindexlist.findIndex(value => value >= fromhighindex)
 
-        console.log('toindexptr, fromindexptr, fromhighindexptr, orderedindexlist', 
-            toindexptr, fromindexptr, fromhighindexptr, orderedindexlist)
+        // console.log('toindexptr, fromindexptr, fromhighindexptr, orderedindexlist', 
+        //     toindexptr, fromindexptr, fromhighindexptr, orderedindexlist)
 
         // ---------------- capture index data to move ----------------
 
@@ -308,8 +308,8 @@ toindex, tohighindex, fromindex, fromhighindex, rangeincrement, moveincrement, s
 
         processtomoveList.forEach(capturemoveindex)
 
-        console.log('processtomoveList, processtomoveMap',
-            processtomoveList, processtomoveMap)
+        // console.log('processtomoveList, processtomoveMap',
+        //     processtomoveList, processtomoveMap)
 
         // ------------- get list of indexes to shift out of the way ---------------
         
@@ -334,14 +334,17 @@ toindex, tohighindex, fromindex, fromhighindex, rangeincrement, moveincrement, s
 
         if (shiftdirection == 1) processtoshiftList.reverse()
 
-         console.log('processtoshiftList',processtoshiftList)
+         // console.log('processtoshiftList',processtoshiftList)
 
         // -------------- move indexes out of the way --------------
 
         const processedshiftList = []
         const processshiftindex = (index) => {
             const itemID = indexToItemIDMap.get(index)
-            const newIndex = index - rangeincrement
+            const newIndex = 
+                (shiftdirection == -1)?
+                    index - rangeabsoluteincrement:
+                    index + rangeabsoluteincrement
             indexToItemIDMap.set(newIndex,itemID)
             metadataMap.get(itemID).index = newIndex
             processedshiftList.push(newIndex)
@@ -353,7 +356,7 @@ toindex, tohighindex, fromindex, fromhighindex, rangeincrement, moveincrement, s
 
         const processedmoveList = []
         const processmoveindex = (itemID, index) => {
-            const newIndex = index + moveincrement // swap
+            const newIndex = index + movedirectionalincrement // swap
             indexToItemIDMap.set(newIndex, itemID)
             metadataMap.get(itemID).index = newIndex
             processedmoveList.push(newIndex)
@@ -365,8 +368,8 @@ toindex, tohighindex, fromindex, fromhighindex, rangeincrement, moveincrement, s
         // for synchrnization with cradle cellFrames
         const processedIndexes = processedshiftList.concat(processedmoveList)
 
-        console.log('processedshiftList, processedmoveList,processedIndexes',
-            processedshiftList, processedmoveList,processedIndexes)
+        // console.log('processedshiftList, processedmoveList,processedIndexes',
+        //     processedshiftList, processedmoveList,processedIndexes)
 
         return processedIndexes
 

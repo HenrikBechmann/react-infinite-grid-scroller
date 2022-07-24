@@ -153,7 +153,7 @@ const CellFrame = ({
 
                 if (cached) {
 
-                    console.log('getting cache index / itemID', index, itemID)
+                    // console.log('getting cache index / itemID', index, itemID)
 
                     portalDataRef.current = cacheHandler.getPortal(itemID)
 

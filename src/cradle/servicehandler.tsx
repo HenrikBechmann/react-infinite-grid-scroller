@@ -277,9 +277,9 @@ export default class ServiceHandler {
         const rangeincrement = highrange - fromindex + 1
         const moveincrement = toindex - fromindex
 
-        console.log('==> serviceHandler.moveIndex: \
-toindex, fromindex, highrange, rangeincrement, moveincrement',
-            toindex, fromindex, highrange, rangeincrement, moveincrement)
+//         console.log('==> serviceHandler.moveIndex: \
+// toindex, fromindex, highrange, rangeincrement, moveincrement',
+//             toindex, fromindex, highrange, rangeincrement, moveincrement)
 
         // ---------- constrain parameters --------------
 
@@ -299,18 +299,18 @@ toindex, fromindex, highrange, rangeincrement, moveincrement',
         const processedIndexList = 
             cacheHandler.moveIndex(toindex, fromindex, highrange)
 
-        console.log('serviceHandler processedIndexList',processedIndexList)
+        // console.log('serviceHandler processedIndexList',processedIndexList)
 
         if (processedIndexList.length) {
 
-            console.log('rendering portallist')
+            // console.log('rendering portallist')
 
             cacheHandler.cacheProps.modified = true
             cacheHandler.renderPortalList()
 
             contentHandler.changeCradleItemIDs(processedIndexList)
 
-            console.log('applycellframechanges')
+            // console.log('applycellframechanges')
 
             stateHandler.setCradleState('applycellframechanges')
             
