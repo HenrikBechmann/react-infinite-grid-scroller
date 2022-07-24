@@ -81,7 +81,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // console.log('RUNNING cradleState','-'+scrollerID+'-', cradleState)
+    console.log('RUNNING cradleState','-'+scrollerID+'-', cradleState)
 
     // controls
     const isMountedRef = useRef(true)
@@ -712,6 +712,10 @@ const Cradle = ({
         switch (cradleState) {
 
             case 'applycellframechanges': { // user intervention
+
+                cradleContent.headDisplayComponents = cradleContent.headModelComponents
+                cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
+
                 console.log('CRADLE useLayoutEffect applycellframechanges')
                 setCradleState('ready')
                 break

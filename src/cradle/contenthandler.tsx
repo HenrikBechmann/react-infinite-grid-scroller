@@ -507,13 +507,6 @@ export default class ContentHandler {
         if (!modifiedIndexesList.length) return
 
         const { cradleModelComponents } = this.content
-        let {
-            headModelComponents,
-            tailModelComponents,
-            headDisplayComponents,
-            tailDisplayComponents,
-        
-        } = this.content
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
 
@@ -534,11 +527,8 @@ export default class ContentHandler {
 
         cradleModelComponents.forEach(processComponent)
 
-        headModelComponents = cradleModelComponents.slice(0,headModelComponents.length)
-        tailModelComponents = cradleModelComponents.slice(headModelComponents.length)
-
-        headDisplayComponents = headModelComponents
-        tailDisplayComponents = tailModelComponents
+        this.content.headModelComponents = cradleModelComponents.slice(0,this.content.headModelComponents.length)
+        this.content.tailModelComponents = cradleModelComponents.slice(this.content.headModelComponents.length)
 
     }
 
@@ -553,13 +543,6 @@ export default class ContentHandler {
             changeList, indexToItemIDMap, metadataMap)
 
         const { cradleModelComponents } = this.content
-
-        let { 
-            headModelComponents,
-            tailModelComponents,
-            headDisplayComponents, 
-            tailDisplayComponents 
-        } = this.content
 
         function processcomponent(component, i, array) {
 
@@ -581,11 +564,8 @@ export default class ContentHandler {
 
         cradleModelComponents.forEach(processcomponent)
 
-        headModelComponents = cradleModelComponents.slice(0,headModelComponents.length)
-        tailModelComponents = cradleModelComponents.slice(headModelComponents.length)
-
-        headDisplayComponents = headModelComponents
-        tailDisplayComponents = tailModelComponents
+        this.content.headModelComponents = cradleModelComponents.slice(0,this.content.headModelComponents.length)
+        this.content.tailModelComponents = cradleModelComponents.slice(this.content.headModelComponents.length)
 
     }
 
@@ -594,12 +574,6 @@ export default class ContentHandler {
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
         const { cradleModelComponents } = this.content
-        let {
-            headModelComponents,
-            tailModelComponents,
-            headDisplayComponents, 
-            tailDisplayComponents 
-        } = this.content
 
         function processcomponent(component, i, array) {
 
@@ -615,11 +589,8 @@ export default class ContentHandler {
 
         cradleModelComponents.forEach(processcomponent)
 
-        headModelComponents = cradleModelComponents.slice(0,headModelComponents.length)
-        tailModelComponents = cradleModelComponents.slice(headModelComponents.length)
-
-        headDisplayComponents = headModelComponents
-        tailDisplayComponents = tailModelComponents
+        this.content.headModelComponents = cradleModelComponents.slice(0,this.content.headModelComponents.length)
+        this.content.tailModelComponents = cradleModelComponents.slice(this.content.headModelComponents.length)
 
     }
 
