@@ -17,8 +17,6 @@
             check behaviour of axis & triggerlines with modify cache map - extra DOM cycle?
             constrain preload by cacheMax!
 
-        insert, remove, swap functions (create itemID reference system)
-
         also surface external callbacks with return values for testing
         review all code
         newListsize callback
@@ -32,6 +30,7 @@
         release to npm
 
     BUGS: 
+        - remove items leaves hole near end of cache
         - insert 100 - 104 doesn't work for some reason
         - select nested lists, then preload -> breaks presentation
         - clear cache after change mapping triggers a setCradleContent event
@@ -44,12 +43,7 @@
 
     TODO:
         - add an increment list size internal function
-        - during modification, assigen cloneElements from main to head/tail, instead of recreating 
-            each for head tail
-        - allow range for moveto
         - cacheMax is also boundary for preload, and for dense, as well as keepload (?)
-        - add insertCacheItem and removeCacheItem - affects listsize
-        - adjust listSize for add and remove
         - add modify listsize callback
         - getItem null return means past list - list size is adjusted;
             undefined means error; reject means error "unable to load"
