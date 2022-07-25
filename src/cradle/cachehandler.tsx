@@ -384,7 +384,10 @@ export class CacheHandler {
     }
 
     // much of this deals with the fact that the cache is sparse.
-    incrementFromIndex(index, highrange, increment, listsize) { // increment is +1 or -1
+    insertRemoveIndex(index, highrange, increment, listsize) { // increment is +1 or -1
+
+        console.log('==> cacheHandler.insertRemoveIndex: index, highrange, increment, listsize',
+            index, highrange, increment, listsize)
 
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
@@ -429,6 +432,11 @@ export class CacheHandler {
                 orderedIndexList.findIndex(value => value >= shrinktorangeindex):
                 -1
 
+        console.log('highrangeindex, rangecount, rangeincrement, shrinktorangeindex\n',
+            'lowPtr, highPtr, shrinktoPtr, orderedIndexList\n',
+            highrangeindex, rangecount, rangeincrement, shrinktorangeindex,'\n',
+            lowPtr, highPtr, shrinktoPtr, orderedIndexList)
+
         // ----------- define indexesToProcess, indexesToRemove and itemsToRemove lists --------
 
         let indexesToProcessList, indexesToRemoveList, itemsToRemoveList
@@ -439,9 +447,13 @@ export class CacheHandler {
             indexesToProcessList = []
 
             if (shrinktoPtr != -1 ) {
+
                 indexesToRemoveList = orderedIndexList.slice(shrinktoPtr)
+
             } else {
+
                 indexesToRemoveList = []
+
             }
 
         } else if (highPtr == -1) { // core scope is partially in view with lowPtr
@@ -455,7 +467,9 @@ export class CacheHandler {
                     indexesToRemoveList = []
                 }
             } else {
-                indexesToRemoveList = orderedIndexList.slice(lowPtr)
+
+                indexesToRemoveList = [] //orderedIndexList.slice(lowPtr)
+
             }
 
         } else { // core scope is fully in view
