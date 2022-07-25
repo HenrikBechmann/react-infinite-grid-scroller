@@ -439,49 +439,27 @@ export class CacheHandler {
 
         // ----------- define indexesToProcess, indexesToRemove and itemsToRemove lists --------
 
-        let indexesToProcessList, indexesToRemoveList, itemsToRemoveList
+        let indexesToProcessList, indexesToReplaceList, indexesToRemoveList, itemsToRemoveList
 
         // first, indexesToProcessList and indexesToRemoveList
         if ((lowPtr == -1) && (highPtr == -1)) { // core scope is out of view
 
             indexesToProcessList = []
 
-            if (shrinktoPtr != -1 ) {
+        } else { // core scope is partially or fully in view
 
-                indexesToRemoveList = orderedIndexList.slice(shrinktoPtr)
-
+            if (shrinktoPtr == -1) {
+                indexesToProcessList = orderedIndexList.slice(lowPtr)
             } else {
-
-                indexesToRemoveList = []
-
+                indexesToProcessList = orderedIndexList.slice(lowPtr, shrinktoPtr)
             }
-
-        } else if (highPtr == -1) { // core scope is partially in view with lowPtr
-
-            indexesToProcessList = orderedIndexList.slice(lowPtr)
-
-            if (increment == -1) {
-                if (shrinktoPtr != -1) {
-                    indexesToRemoveList = orderedIndexList.slice(shrinktoPtr)
-                } else {
-                    indexesToRemoveList = []
-                }
-            } else {
-
-                indexesToRemoveList = [] //orderedIndexList.slice(lowPtr)
-
-            }
-
-        } else { // core scope is fully in view
-
-            indexesToProcessList = orderedIndexList.slice(lowPtr)
-
-            indexesToRemoveList = 
-                (increment == 1)?
-                    orderedIndexList.slice(lowPtr, highPtr + 1):
-                    orderedIndexList.slice(shrinktoPtr)
 
         }
+
+        indexesToRemoveList = 
+            (shrinktoPtr != -1 )?
+                orderedIndexList.slice(shrinktoPtr):
+                []
 
         // now, itemsToRemoveList
         if (increment == -1) { // list shrinks with removals
@@ -495,6 +473,9 @@ export class CacheHandler {
             itemsToRemoveList = []
 
         }
+
+        console.log('indexesToProcessList, indexesToRemoveList, itemsToRemoveList',
+            indexesToProcessList, indexesToRemoveList, itemsToRemoveList)
 
         // ----------- conduct cache operations ----------
 
