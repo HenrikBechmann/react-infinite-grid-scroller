@@ -5,6 +5,7 @@
     react-infinite-grid-scroller = RIGS
 
     ROADMAP:
+        add general error handling capability
         organize return values of getItem
         checkmark enable console feedback (for external callbacks)
         constrain preload by cacheMax!
