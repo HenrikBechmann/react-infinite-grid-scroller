@@ -335,18 +335,18 @@ export default class ServiceHandler {
 
         const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
 
-        const [changeList, removeList, rangeincrement] = 
+        const [changeList, replaceList, rangeincrement] = 
             cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize)
 
-        console.log('changeList, removeList, rangeincrement',
-            changeList, removeList, rangeincrement)
+        console.log('changeList, replaceList, rangeincrement',
+            changeList, replaceList, rangeincrement)
 
         cacheHandler.cacheProps.modified = true
         cacheHandler.renderPortalList()
 
         contentHandler.changeCradleItemIDs(changeList)
 
-        if (increment == +1) contentHandler.createNewItemIDs(removeList)
+        if (increment == +1) contentHandler.createNewItemIDs(replaceList)
 
         const { content } = contentHandler
 

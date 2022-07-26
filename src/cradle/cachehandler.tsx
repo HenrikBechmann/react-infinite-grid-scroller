@@ -487,7 +487,7 @@ export class CacheHandler {
         const indexesModifiedList = []
 
         // modify index-to-itemid map, and metadata map
-        for (const index of indexesToProcessList) {
+        const processindex = index => {
 
             const itemID = indexToItemIDMap.get(index)
             const newIndex = index + rangeincrement
@@ -497,6 +497,8 @@ export class CacheHandler {
             indexesModifiedList.push(newIndex)
 
         }
+
+        indexesToProcessList.forEach(processindex)
 
         // delete remaining indexes and items now duplicates
         for (const index of indexesToRemoveList) {
@@ -510,12 +512,25 @@ export class CacheHandler {
 
         }
 
+        // get indexesToReplaceList
+        let shiftBoundaryIndex, shiftBoundaryPtr
+        shiftBoundaryIndex = indexesModifiedList.at(-1)
+        if (increment == -1) {
+            shiftBoundaryPtr = indexesToProcessList.findIndex(value =>value > shiftBoundaryIndex)
+        } else {
+            shiftBoundaryPtr = indexesToProcessList.findIndex(value =>value < shiftBoundaryIndex)
+        }
+
+        indexesToReplaceList = indexesToProcessList.slice(shiftBoundaryPtr)
+
+        console.log('increment, shiftBoundaryIndex, shiftBoundaryPtr, indexesModifiedList, indexesToProcessList, indexesToReplaceList',
+            increment, shiftBoundaryIndex, shiftBoundaryPtr, indexesModifiedList, indexesToProcessList, indexesToReplaceList)
+
         // --------------- returns ---------------
 
-        const indexesRemovedList = indexesToRemoveList // semantics
 
         // return values for caller to send to contenthandler for cradle synchronization
-        return [indexesModifiedList, indexesRemovedList, rangeincrement]
+        return [indexesModifiedList, indexesToReplaceList, rangeincrement]
 
     }
 
