@@ -5,21 +5,13 @@
     react-infinite-grid-scroller = RIGS
 
     ROADMAP:
-        // cache management
-            // cacheMax; cacheMax over-run
-            // preload
-            // keepload
-            // cradle
-            cache mapping modification by user
-            organize return values of getItem
-            checkmark enable console feedback (for external callbacks)
-            add swap callback
-            check behaviour of axis & triggerlines with modify cache map - extra DOM cycle?
-            constrain preload by cacheMax!
+        organize return values of getItem
+        checkmark enable console feedback (for external callbacks)
+        constrain preload by cacheMax!
+        organize feedback for all cache operations
 
         also surface external callbacks with return values for testing
         review all code
-        newListsize callback
 
         layout: uniform, variable, dynamic, dense
 
@@ -30,19 +22,9 @@
         release to npm
 
     BUGS: 
-        - remove items leaves hole near end of cache
-        - insert 100 - 104 doesn't work for some reason
         - select nested lists, then preload -> breaks presentation
-        - clear cache after change mapping triggers a setCradleContent event
-            - disable/re-enable interrupts?
-        //- rapid scrolling up with full cache can lead to overshoot just shy of reposition,
-        //    with trigger lines out of view
-        // - time lag before repositioning the trigger lines - promises?
-        // - when sublist is in scroll motion when being reparented, block scrollpos is not properly recovered
-        // - item 400 in 400 item nested list of scrollers crosscount = 3 takes up entire width of viewport
 
     TODO:
-        - add an increment list size internal function
         - cacheMax is also boundary for preload, and for dense, as well as keepload (?)
         - add modify listsize callback
         - getItem null return means past list - list size is adjusted;
@@ -55,24 +37,18 @@
         - use allSettled instead of all
         - use finally for callback
         - provide way to attempt reload of a single cell (change instanceID)
-        - modifyIndexMap instruction by user
         - call matchCacheToCradle through contentHandler (?) iac rationalize calls to cacheHandler
         - test and review itemID
-        - implement changeOrder (by index) callback for user - cellFrame index prop must be updated
-        - use itemID for referencing; index for order - cellFrame reload to re-order?
         - review state change chains in cradle
         - check preload intent against state machine handling
         - rationalize await handling everywhere to behave like promises
         - check number of passes to scrollblock; consider implementing named states
-        // - rationalize external callbacks routing
-        // callback for user re preload
         error handling for preload items -- allow recovery
         test for memory leaks with Chrome's window.performance.memory property
         try to reduce need to run renderportallist - try some kind of pagination/grouping
         replace top/left with transformx/y
         prioritize fetch cells for visible cells
         customizable scrolltracker, or provide callback feature for scroll tracking
-        reload from/to for insertions and substitutions
         check use of useCallback
         test for two root portals
         promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
