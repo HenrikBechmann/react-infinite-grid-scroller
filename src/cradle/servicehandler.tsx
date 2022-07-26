@@ -327,8 +327,8 @@ export default class ServiceHandler {
     // shared logic
     private insertRemoveIndex = (index, rangehighindex, increment) => {
 
-        console.log('==> serviceHandler.insertRemoveIndex: index, rangehighindex, increment',
-            index, rangehighindex, increment)
+        // console.log('==> serviceHandler.insertRemoveIndex: index, rangehighindex, increment',
+        //     index, rangehighindex, increment)
 
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
@@ -338,8 +338,8 @@ export default class ServiceHandler {
         const [changeList, replaceList, rangeincrement] = 
             cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize)
 
-        console.log('changeList, replaceList, rangeincrement',
-            changeList, replaceList, rangeincrement)
+        // console.log('changeList, replaceList, rangeincrement',
+        //     changeList, replaceList, rangeincrement)
 
         cacheHandler.cacheProps.modified = true
         cacheHandler.renderPortalList()

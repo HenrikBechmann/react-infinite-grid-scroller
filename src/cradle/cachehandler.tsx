@@ -386,8 +386,8 @@ export class CacheHandler {
     // much of this deals with the fact that the cache is sparse.
     insertRemoveIndex(index, highrange, increment, listsize) { // increment is +1 or -1
 
-        console.log('==> cacheHandler.insertRemoveIndex: index, highrange, increment, listsize',
-            index, highrange, increment, listsize)
+        // console.log('==> cacheHandler.insertRemoveIndex: index, highrange, increment, listsize',
+        //     index, highrange, increment, listsize)
 
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
@@ -434,10 +434,10 @@ export class CacheHandler {
                 orderedIndexList.findIndex(value => value >= shrinktorangeindex):
                 -1
 
-        console.log('highrangeindex, rangecount, rangeincrement, shrinktorangeindex\n',
-            'lowPtr, highPtr, shrinktoPtr, orderedIndexList\n',
-            highrangeindex, rangecount, rangeincrement, shrinktorangeindex,'\n',
-            lowPtr, highPtr, shrinktoPtr, orderedIndexList)
+        // console.log('highrangeindex, rangecount, rangeincrement, shrinktorangeindex\n',
+        //     'lowPtr, highPtr, shrinktoPtr, orderedIndexList\n',
+        //     highrangeindex, rangecount, rangeincrement, shrinktorangeindex,'\n',
+        //     lowPtr, highPtr, shrinktoPtr, orderedIndexList)
 
         // ----------- define indexesToProcess, indexesToRemove and itemsToRemove lists --------
 
@@ -476,8 +476,8 @@ export class CacheHandler {
 
         }
 
-        console.log('indexesToProcessList, indexesToRemoveList, itemsToRemoveList',
-            indexesToProcessList, indexesToRemoveList, itemsToRemoveList)
+        // console.log('indexesToProcessList, indexesToRemoveList, itemsToRemoveList',
+        //     indexesToProcessList, indexesToRemoveList, itemsToRemoveList)
 
         // ----------- conduct cache operations ----------
 
@@ -529,8 +529,8 @@ export class CacheHandler {
 
         }
 
-        console.log('increment, shiftBoundaryIndex, shiftBoundaryPtr, indexesModifiedList, indexesToProcessList, indexesToReplaceList',
-            increment, shiftBoundaryIndex, shiftBoundaryPtr, indexesModifiedList, indexesToProcessList, indexesToReplaceList)
+        // console.log('increment, shiftBoundaryIndex, shiftBoundaryPtr, indexesModifiedList, indexesToProcessList, indexesToReplaceList',
+        //     increment, shiftBoundaryIndex, shiftBoundaryPtr, indexesModifiedList, indexesToProcessList, indexesToReplaceList)
 
         // --------------- returns ---------------
 
