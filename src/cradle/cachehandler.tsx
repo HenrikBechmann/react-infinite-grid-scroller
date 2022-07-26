@@ -523,6 +523,12 @@ export class CacheHandler {
 
         indexesToReplaceList = indexesToProcessList.slice(shiftBoundaryPtr)
 
+        for (const index of indexesToReplaceList) {
+            
+            indexToItemIDMap.delete(index)
+
+        }
+
         console.log('increment, shiftBoundaryIndex, shiftBoundaryPtr, indexesModifiedList, indexesToProcessList, indexesToReplaceList',
             increment, shiftBoundaryIndex, shiftBoundaryPtr, indexesModifiedList, indexesToProcessList, indexesToReplaceList)
 
