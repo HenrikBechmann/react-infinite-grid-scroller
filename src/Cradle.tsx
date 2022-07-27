@@ -219,8 +219,8 @@ const Cradle = ({
         {
             referenceIndexCallback:userFunctions?.referenceIndexCallback,
             preloadIndexCallback:userFunctions?.preloadIndexCallback,
-            cacheDeleteListCallback:userFunctions?.cacheDeleteListCallback,
-            newListSizeCallback:userFunctions?.newListSizeCallback,
+            deleteListCallback:userFunctions?.deleteListCallback,
+            changeListsizeCallback:userFunctions?.changeListsizeCallback,
         }
     )
 
@@ -542,11 +542,11 @@ const Cradle = ({
 
                 const modelIndexList = contentHandler.getModelIndexList()
 
-                const { cacheDeleteListCallback } = serviceHandler.callbacks
+                const { deleteListCallback } = serviceHandler.callbacks
 
                 // const cacheMax = cradleParameters.cradleInheritedPropertiesRef.current.cacheMax
 
-                cacheHandler.pareCacheToMax(cacheMax, modelIndexList, cacheDeleteListCallback)
+                cacheHandler.pareCacheToMax(cacheMax, modelIndexList, deleteListCallback)
 
                 break
             }
@@ -555,9 +555,9 @@ const Cradle = ({
 
                 const modelIndexList = contentHandler.getModelIndexList()
 
-                const { cacheDeleteListCallback } = serviceHandler.callbacks
+                const { deleteListCallback } = serviceHandler.callbacks
 
-                cacheHandler.matchCacheToCradle(modelIndexList, cacheDeleteListCallback)
+                cacheHandler.matchCacheToCradle(modelIndexList, deleteListCallback)
 
                 break
             }
@@ -874,7 +874,7 @@ const Cradle = ({
                 const { cache } = cradleInternalPropertiesRef.current
                 if (cache == 'cradle') {
                     const modelIndexList = contentHandler.getModelIndexList()
-                    cacheHandler.matchCacheToCradle(modelIndexList, serviceHandler.callbacks.cacheDeleteListCallback)
+                    cacheHandler.matchCacheToCradle(modelIndexList, serviceHandler.callbacks.deleteListCallback)
                     cacheHandler.renderPortalList()
                 }
 

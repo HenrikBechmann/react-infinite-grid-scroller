@@ -5,7 +5,6 @@
     react-infinite-grid-scroller = RIGS
 
     ROADMAP:
-        add general error handling capability
         organize return values of getItem
         checkmark enable console feedback (for external callbacks)
         constrain preload by cacheMax!
@@ -23,7 +22,6 @@
         release to npm
 
     BUGS: 
-        - select nested lists, then preload -> breaks presentation
 
     TODO:
         - cacheMax is also boundary for preload, and for dense, as well as keepload (?)
@@ -44,19 +42,19 @@
         - check preload intent against state machine handling
         - rationalize await handling everywhere to behave like promises
         - check number of passes to scrollblock; consider implementing named states
-        error handling for preload items -- allow recovery
-        test for memory leaks with Chrome's window.performance.memory property
-        try to reduce need to run renderportallist - try some kind of pagination/grouping
-        replace top/left with transformx/y
-        prioritize fetch cells for visible cells
-        customizable scrolltracker, or provide callback feature for scroll tracking
-        check use of useCallback
-        test for two root portals
-        promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
-        calc minwidth by form factor
-        review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
-        add grid-template-rows: max-content to parent for safari issue grid-auto-flow: column not filling column
-        cross-browser testing
+        - error handling for preload items -- allow recovery
+        - test for memory leaks with Chrome's window.performance.memory property
+        - try to reduce need to run renderportallist - try some kind of pagination/grouping
+        - replace top/left with transformx/y
+        - prioritize fetch cells for visible cells
+        - customizable scrolltracker, or provide callback feature for scroll tracking
+        - check use of useCallback
+        - test for two root portals
+        - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
+        - calc minwidth by form factor
+        - review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
+        - add grid-template-rows: max-content to parent for safari issue grid-auto-flow: column not filling column
+        - cross-browser testing
 */
 
 import React, {useEffect, useState, useCallback, useRef} from 'react'

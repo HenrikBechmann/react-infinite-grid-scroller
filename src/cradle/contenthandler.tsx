@@ -374,7 +374,7 @@ export default class ContentHandler {
         if (deletedContentItems.length && (cache == 'cradle')) {
 
             deletePortals(cacheHandler, deletedContentItems, 
-                serviceHandler.callbacks.cacheDeleteListCallback)
+                serviceHandler.callbacks.deleteListCallback)
 
         }
 
@@ -464,7 +464,7 @@ export default class ContentHandler {
 
             const paring = cacheHandler.pareCacheToMax(
                 cradleInheritedProperties.cacheMax, modelIndexList, 
-                serviceHandler.callbacks.cacheDeleteListCallback)
+                serviceHandler.callbacks.deleteListCallback)
             if (paring) cacheHandler.renderPortalList()
                 
         }

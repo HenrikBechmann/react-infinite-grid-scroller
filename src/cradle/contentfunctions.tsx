@@ -504,14 +504,14 @@ export const allocateContentList = (
 
 }
 
-export const deletePortals = (cacheHandler, deleteList, cacheDeleteListCallback) => {
+export const deletePortals = (cacheHandler, deleteList, deleteListCallback) => {
 
     // console.log('inside deletePortals',deleteList)
     const dlist = deleteList.map((item)=>{
         return item.props.index
     })
     // TODO return list of deleted items to user
-    cacheHandler.deletePortal(dlist, cacheDeleteListCallback)
+    cacheHandler.deletePortal(dlist, deleteListCallback)
     if (deleteList.length) cacheHandler.renderPortalList()
 }
 

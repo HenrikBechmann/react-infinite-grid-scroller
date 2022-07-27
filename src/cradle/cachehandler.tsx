@@ -45,7 +45,7 @@ export class CacheHandler {
 
     //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
 
-    changeListsize = (newlistsize, cacheDeleteListCallback) => {
+    changeListsize = (newlistsize, deleteListCallback) => {
         this.setListsize(newlistsize)
         // match cache to newlistsize
         const portalIndexList = this.cacheProps.indexToItemIDMap
@@ -56,7 +56,7 @@ export class CacheHandler {
             const parelist = mapkeys.filter((item)=>{
                 return item > (newlistsize -1)
             })
-            this.deletePortal(parelist, cacheDeleteListCallback)
+            this.deletePortal(parelist, deleteListCallback)
         }
     }
 
@@ -86,17 +86,17 @@ export class CacheHandler {
 
     }
 
-    matchCacheToCradle = (modelIndexList, cacheDeleteListCallback) => {
+    matchCacheToCradle = (modelIndexList, deleteListCallback) => {
 
         const mapkeys = Array.from(this.cacheProps.indexToItemIDMap.keys())
 
         mapkeys.filter(key => !modelIndexList.includes(key))
 
-        this.deletePortal(mapkeys, cacheDeleteListCallback)
+        this.deletePortal(mapkeys, deleteListCallback)
 
     }
 
-    pareCacheToMax = (cacheMax, modelIndexList, cacheDeleteListCallback) => {
+    pareCacheToMax = (cacheMax, modelIndexList, deleteListCallback) => {
 
         const modelLength = modelIndexList.length
 
@@ -142,7 +142,7 @@ export class CacheHandler {
 
         const delList = headlist.concat(taillist)
 
-        this.deletePortal(delList, cacheDeleteListCallback)
+        this.deletePortal(delList, deleteListCallback)
 
         return true
 
@@ -650,7 +650,7 @@ export class CacheHandler {
 
     // delete a portal list item
     // accepts an array of indexes
-    deletePortal(index, cacheDeleteListCallback) {
+    deletePortal(index, deleteListCallback) {
 
         const indexArray = 
             (!Array.isArray(index))?
@@ -672,7 +672,7 @@ export class CacheHandler {
         }
         this.cacheProps.modified = true
 
-        cacheDeleteListCallback && cacheDeleteListCallback(deleteList)
+        deleteListCallback && deleteListCallback(deleteList)
 
     }
 

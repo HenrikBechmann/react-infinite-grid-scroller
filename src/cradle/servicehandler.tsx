@@ -14,15 +14,16 @@ export default class ServiceHandler {
        const {
            referenceIndexCallback,
            preloadIndexCallback,
-           cacheDeleteListCallback,
-           newListSizeCallback,
+           deleteListCallback,
+           changeListsizeCallback,
+           
        } = cradleParameters.externalCallbacksRef.current
 
        const callbacks = {
            referenceIndexCallback,
            preloadIndexCallback,
-           cacheDeleteListCallback,
-           newListSizeCallback,
+           deleteListCallback,
+           changeListsizeCallback,
        }
 
        this.callbacks = callbacks
@@ -66,7 +67,7 @@ export default class ServiceHandler {
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
 
-        cacheHandler.changeListsize(listsize, this.callbacks.cacheDeleteListCallback)
+        cacheHandler.changeListsize(listsize, this.callbacks.deleteListCallback)
 
     }
 
@@ -176,7 +177,7 @@ export default class ServiceHandler {
 
         // --------------- delete indexes and associated itemID's for indexes set to null --------
 
-        cacheHandler.deletePortal(indexesToDeleteList, this.callbacks.cacheDeleteListCallback)
+        cacheHandler.deletePortal(indexesToDeleteList, this.callbacks.deleteListCallback)
 
         // ----------- apply changes to cache index and itemID maps ----------
 
