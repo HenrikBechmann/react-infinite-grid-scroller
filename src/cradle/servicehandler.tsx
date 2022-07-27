@@ -52,6 +52,8 @@ export default class ServiceHandler {
 
     public scrollToItem = (index) => {
 
+        index = Math.max(0,index)
+
         const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
         const { scaffoldHandler, stateHandler} = this.cradleParameters.handlersRef.current
 
@@ -64,6 +66,8 @@ export default class ServiceHandler {
     }
 
     public setListsize = (listsize) => {
+
+        listsize = Math.max(0,listsize)
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
 
@@ -253,6 +257,10 @@ export default class ServiceHandler {
         fromindex = fromindex ?? 0
         highrange = highrange ?? fromindex
 
+        toindex = Math.max(0,toindex)
+        fromindex = Math.max(0,fromindex)
+        highrange = Math.max(0,highrange)
+
         // keep within current list size
         const listbound = listsize - 1
 
@@ -327,6 +335,12 @@ export default class ServiceHandler {
 
     // shared logic
     private insertRemoveIndex = (index, rangehighindex, increment) => {
+
+        index = index ?? 0
+        rangehighindex = rangehighindex ?? index
+
+        index = Math.max(0,index)
+        rangehighindex = Math.max(rangehighindex, index)
 
         // console.log('==> serviceHandler.insertRemoveIndex: index, rangehighindex, increment',
         //     index, rangehighindex, increment)
