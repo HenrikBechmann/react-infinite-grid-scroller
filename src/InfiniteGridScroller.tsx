@@ -22,6 +22,8 @@
         release to npm
 
     BUGS: 
+        - set listsize to extreme low needs to be rationalized with runway etc.
+        - set listsize to extreme low then normal leads to bad axis position
 
     TODO:
         - cacheMax is also boundary for preload, and for dense, as well as keepload (?)

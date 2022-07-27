@@ -478,6 +478,8 @@ export default class ContentHandler {
         const cradleContent = this.content
         const { cacheHandler } = this.cradleParameters.handlersRef.current
 
+        cradleContent.cradleModelComponents = []
+
         cradleContent.headModelComponents = []
         cradleContent.tailModelComponents = []
 
