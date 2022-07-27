@@ -61,6 +61,18 @@
 
 import React, {useEffect, useState, useCallback, useRef} from 'react'
 
+import {ErrorBoundary} from 'react-error-boundary'
+
+function ErrorFallback({error, resetErrorBoundary}) {
+  return (
+    <div role="alert">
+      <p>Something went wrong inside react-infinite-grid-scroller. Please contact your system administrator.</p>
+      <button onClick={resetErrorBoundary}>Cancel error to continue</button>
+      <pre>{error}</pre>
+    </div>
+  )
+}
+
 import Viewport from './Viewport'
 import Scrollblock from './Scrollblock'
 import Cradle from './Cradle'
@@ -216,7 +228,16 @@ const InfiniteGridScroller = (props) => {
 
     },[scrollerState])
 
-    return (<>
+    return <ErrorBoundary
+        FallbackComponent={ErrorFallback}
+        onReset={() => {
+          // reset the state of your app so the error doesn't happen again
+        }}
+        onError = {(error: Error, info: {componentStack: string}) => {
+            console.log('react-infinite-grid-scroller captured error', error)
+        }}
+    >
+
         {(scrollerState != 'setup') && <Viewport
 
             gridSpecs = { gridSpecsRef.current }
@@ -257,7 +278,7 @@ const InfiniteGridScroller = (props) => {
         {(scrollerState != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
             <PortalList cacheProps = {cacheHandlerRef.current.cacheProps}/>
         </div>}
-        </>)
+    </ErrorBoundary>
 }
 
 const cacherootstyle = {display:'none'} as React.CSSProperties // static, out of view 
