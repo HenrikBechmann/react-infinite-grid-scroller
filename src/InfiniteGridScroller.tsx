@@ -24,6 +24,10 @@
     BUGS: 
         - set listsize to extreme low needs to be rationalized with runway etc.
         - set listsize to extreme low then normal leads to bad axis position
+        - extreme low = less than cradlerows
+        - axisElement reads as null after listsize set below cradlerows
+        - listsize can be set to one below cradlecount, ie number of fullly visible rows
+        - doesn't recover
 
     TODO:
         - cacheMax is also boundary for preload, and for dense, as well as keepload (?)
