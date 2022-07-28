@@ -24,6 +24,7 @@
     BUGS: 
 
     TODO:
+        - test starting index
         - cacheMax is also boundary for preload, and for dense, as well as keepload (?)
         - add modify listsize callback
         - getItem null return means past list - list size is adjusted;
