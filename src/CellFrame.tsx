@@ -34,9 +34,9 @@ const CellFrame = ({
         overflow:'hidden',
     } as React.CSSProperties)
 
-    const [frameStatus, setFrameStatus] = useState('setup')
-    const frameStatusRef = useRef(null)
-    frameStatusRef.current = frameStatus
+    const [frameState, setFrameState] = useState('setup')
+    const frameStateRef = useRef(null)
+    frameStateRef.current = frameState
 
     const frameRef = useRef(null)
 
@@ -53,14 +53,16 @@ const CellFrame = ({
     useEffect(()=>{
 
         return () => {
+
             isMountedRef.current = false
+
         }
 
     },[])
 
     useEffect(()=>{
 
-        setFrameStatus('getusercontent')
+        setFrameState('getusercontent')
 
     },[itemID])
 
@@ -134,14 +136,14 @@ const CellFrame = ({
 
     useLayoutEffect(() => {
 
-        switch (frameStatus) {
+        switch (frameState) {
             case 'setup':
                 // no-op
                 break
 
             case 'inserting': {
 
-                setFrameStatus('ready')
+                setFrameState('ready')
 
                 break
 
@@ -153,19 +155,17 @@ const CellFrame = ({
 
                 if (cached) {
 
-                    // console.log('getting cache index / itemID', index, itemID)
-
                     portalDataRef.current = cacheHandler.getPortal(itemID)
 
                     portalNodeRef.current = portalDataRef.current.portalNode
 
                     portalDataRef.current.isReparentingRef.current = true
 
-                    setFrameStatus('inserting')
+                    setFrameState('inserting')
 
                 } else {
 
-                    setFrameStatus('waiting')
+                    setFrameState('waiting')
 
                     cacheHandler.registerRequestedPortal(index)
 
@@ -203,8 +203,7 @@ const CellFrame = ({
 
                         }
 
-                        // console.log('loading portal item')
-                        setFrameStatus('inserting')
+                        setFrameState('inserting')
 
                     },{timeout:IDLECALLBACK_FETCHTIMEOUT})
 
@@ -220,12 +219,12 @@ const CellFrame = ({
             }
         }
 
-    }, [frameStatus])
+    }, [frameState])
 
 
     useEffect(()=>{
 
-        switch (frameStatus) {
+        switch (frameState) {
 
             case 'ready': { // no-op
 
@@ -233,7 +232,7 @@ const CellFrame = ({
             }
         }
 
-    }, [frameStatus])
+    }, [frameState])
 
     return <div 
 
@@ -247,7 +246,7 @@ const CellFrame = ({
     >
 
         { 
-            (frameStatus != 'ready')?
+            (frameState != 'ready')?
                 placeholderRef.current:
                 <OutPortal node = { portalNodeRef.current }/>
         }

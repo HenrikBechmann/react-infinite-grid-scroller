@@ -64,8 +64,9 @@ import {ErrorBoundary} from 'react-error-boundary'
 function ErrorFallback({error, resetErrorBoundary}) {
   return (
     <div role="alert">
-      <p>Something went wrong inside react-infinite-grid-scroller. Please contact your system administrator.</p>
-      <button onClick={resetErrorBoundary}>Cancel error to continue</button>
+      <p>Oops! Something went wrong inside react-infinite-grid-scroller.</p>
+      <p>Click to cancel the error and continue.</p>
+      <button onClick={resetErrorBoundary}>Cancel error</button>
       <pre>{error}</pre>
     </div>
   )

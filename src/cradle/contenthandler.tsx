@@ -93,10 +93,7 @@ export default class ContentHandler {
         let workingAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
         workingAxisReferenceIndex -= (workingAxisReferenceIndex % crosscount)
 
-        // console.log('cradleState in setCradleContent; workingAxisReferenceIndex',
-        //     cradleState, workingAxisReferenceIndex)
-
-        if ((cradleState == 'doreposition') || cradleState == 'reconfigure')  {
+        if (['doreposition','reconfigure', 'dosetup'].includes(cradleState))  {
 
             targetAxisPixelOffset = 
                 (workingAxisReferenceIndex == 0)?
@@ -435,6 +432,9 @@ export default class ContentHandler {
 
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisPixelOffset = axisPixelOffset
+
+        interruptHandler.axisTriggerlinesIntersect.connectElements()
+        interruptHandler.signals.pauseTriggerlinesObserver = false
 
         stateHandler.setCradleState('renderupdatedcontent')
 

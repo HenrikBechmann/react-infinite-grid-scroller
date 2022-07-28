@@ -577,10 +577,7 @@ export class CacheHandler {
 
         this.removeRequestedPortal(index)
 
-        // console.log('creating portal for index','-'+this.cacheProps.scrollerID+'-', index)
         const portalNode = createPortalNode(index, itemID)
-
-        // console.log('creating InPortal node', '-'+this.cacheProps.scrollerID+'-', itemID)
 
         this.cacheProps.portalMap.set(itemID,//index,
                 <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>)
@@ -600,7 +597,7 @@ export class CacheHandler {
         this.cacheProps.metadataMap.set(itemID, portalMetadata)
         this.cacheProps.indexToItemIDMap.set(index, itemID)
 
-        this.renderPortalList()
+        this.renderPortalList() // TODO check if this can be delayed
 
         return portalMetadata
 

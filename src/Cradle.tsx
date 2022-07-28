@@ -794,8 +794,6 @@ const Cradle = ({
             // it is required to integrate changed DOM configurations before 'ready' is displayed
             case 'renderupdatedcontent': { // cycle for DOM update
 
-                // cacheHandler.renderPortalList()
-
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
@@ -813,8 +811,11 @@ const Cradle = ({
                     contentHandler.guardAgainstRunawayCaching()
 
                 }
-                interruptHandler.axisTriggerlinesIntersect.connectElements()
-                interruptHandler.signals.pauseTriggerlinesObserver = false
+
+                cacheHandler.renderPortalList()
+
+                // interruptHandler.axisTriggerlinesIntersect.connectElements()
+                // interruptHandler.signals.pauseTriggerlinesObserver = false
                 setCradleState('ready')
 
                 break
