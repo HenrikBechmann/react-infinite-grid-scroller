@@ -7,9 +7,9 @@ import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
 
 import { OutPortal } from 'react-reverse-portal'
 
-import Placeholder from './placeholder'
+import Placeholder from './cellframe/Placeholder'
 
-import { CradleContext } from './cradle'
+import { CradleContext } from './Cradle'
 
 const IDLECALLBACK_FETCHTIMEOUT = 4000 // TODO make cofigurable
 
@@ -17,10 +17,11 @@ const CellFrame = ({
     orientation, 
     cellHeight, 
     cellWidth, 
-    index, 
     getItem, 
     listsize, 
-    placeholder, 
+    placeholder,
+    itemID, 
+    index, 
     instanceID, 
     scrollerID,
 }) => {
@@ -34,6 +35,8 @@ const CellFrame = ({
     } as React.CSSProperties)
 
     const [frameStatus, setFrameStatus] = useState('setup')
+    const frameStatusRef = useRef(null)
+    frameStatusRef.current = frameStatus
 
     const frameRef = useRef(null)
 
@@ -43,6 +46,9 @@ const CellFrame = ({
 
     const placeholderRef = useRef(null)
 
+    const itemIDRef = useRef(null)
+    itemIDRef.current = itemID
+
     // for unmount
     useEffect(()=>{
 
@@ -51,6 +57,12 @@ const CellFrame = ({
         }
 
     },[])
+
+    useEffect(()=>{
+
+        setFrameStatus('getusercontent')
+
+    },[itemID])
 
     // ----------------- [ placeholder definition ] -------------------------
 
@@ -85,10 +97,6 @@ const CellFrame = ({
 
     // initialize cell content
     useEffect(() => {
-
-        // console.log('creating cellFrame','-'+scrollerID+'-',instanceID  )
-
-        setFrameStatus('getusercontent')
 
         // unmount
         return () => {
@@ -130,6 +138,7 @@ const CellFrame = ({
             case 'setup':
                 // no-op
                 break
+
             case 'inserting': {
 
                 setFrameStatus('ready')
@@ -139,11 +148,14 @@ const CellFrame = ({
             }
             case 'getusercontent': {
 
-                const cached = cacheHandler.hasPortal(index)
+                const itemID = itemIDRef.current // cacheHandler.getItemID(index)
+                const cached = cacheHandler.hasPortal(itemID)
 
                 if (cached) {
 
-                    portalDataRef.current = cacheHandler.getPortal(index)
+                    // console.log('getting cache index / itemID', index, itemID)
+
+                    portalDataRef.current = cacheHandler.getPortal(itemID)
 
                     portalNodeRef.current = portalDataRef.current.portalNode
 
@@ -160,7 +172,7 @@ const CellFrame = ({
                     // TODO review implementation of async here
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
-                        const usercontent = await getItem(index)
+                        const usercontent = await getItem(index, itemID)
 
                         if (isMountedRef.current) {
 
@@ -178,12 +190,10 @@ const CellFrame = ({
                                 }
 
                                 portalDataRef.current = 
-                                    cacheHandler.createPortal(index, content)
+                                    cacheHandler.createPortal(content, index, itemID)
                                 portalNodeRef.current  = portalDataRef.current.portalNode
                                 // make available to user content
                                 scrollerData.isReparentingRef = portalDataRef.current.isReparentingRef
-
-                                // portalDataRef.current.isReparentingRef.current = true
 
                             } else {
 
@@ -225,20 +235,24 @@ const CellFrame = ({
 
     }, [frameStatus])
 
-    return <div ref = { frameRef } 
+    return <div 
+
+        ref = { frameRef } 
         data-type = 'cellframe' 
         data-scrollerid = { scrollerID } 
         data-index = { index } 
         data-instanceid = { instanceID } 
-        style = { styles }>
+        style = { styles }
 
-            { 
-                (frameStatus != 'ready')?
-                    placeholderRef.current:
-                    <OutPortal node = { portalNodeRef.current }/>
-            }
-            
-        </div>
+    >
+
+        { 
+            (frameStatus != 'ready')?
+                placeholderRef.current:
+                <OutPortal node = { portalNodeRef.current }/>
+        }
+        
+    </div>
 
 } // CellFrame
 

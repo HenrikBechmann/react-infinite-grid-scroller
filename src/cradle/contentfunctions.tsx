@@ -7,7 +7,7 @@
 
 import React from 'react'
 
-import CellFrame from '../cellframe'
+import CellFrame from '../CellFrame'
 
 // ======================[ for setCradleContent ]===========================
 
@@ -27,7 +27,6 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         cellHeight, 
         cellWidth, 
         gap,
-        listsize,
     } = cradleInheritedProperties
 
     const {
@@ -36,6 +35,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         cradleRowcount,
         runwayRowcount,
         listRowcount,
+        listsize,
         viewportVisibleRowcount,
 
     } = cradleInternalProperties
@@ -47,7 +47,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     // derive target row
     let targetAxisRowOffset = Math.ceil(targetAxisReferenceIndex/crosscount)
-    const maxAxisRowOffset = listRowcount - viewportVisibleRowcount
+    const maxAxisRowOffset = Math.max(0,listRowcount - viewportVisibleRowcount)
     if (targetAxisRowOffset > maxAxisRowOffset) {
         targetAxisRowOffset = maxAxisRowOffset
         targetAxisReferenceIndex = targetAxisRowOffset * crosscount
@@ -215,7 +215,6 @@ export const calcContentShift = ({
         orientation,
         cellHeight,
         cellWidth,
-        listsize,
         triggerlineOffset,
 
     } = cradleInheritedProperties
@@ -233,6 +232,7 @@ export const calcContentShift = ({
 
         crosscount,
         cradleRowcount,
+        listsize,
         listRowcount,
         viewportRowcount,
         runwayRowcount,
@@ -410,6 +410,8 @@ export const calcContentShift = ({
 export const getCellFrameComponentList = ({ 
 
         cradleInheritedProperties,
+        cradleInternalProperties,
+        cacheHandler,
         cradleContentCount,
         cradleReferenceIndex, 
         listStartChangeCount, 
@@ -434,7 +436,9 @@ export const getCellFrameComponentList = ({
                     {
                         index:newindex, 
                         cradleInheritedProperties,
+                        cradleInternalProperties,
                         instanceIdCounterRef,
+                        cacheHandler,
                     }
                 )
             )
@@ -456,7 +460,9 @@ export const getCellFrameComponentList = ({
                     {
                         index:newindex, 
                         cradleInheritedProperties,
+                        cradleInternalProperties,
                         instanceIdCounterRef,
+                        cacheHandler,
                     }
                 )
             )
@@ -498,13 +504,14 @@ export const allocateContentList = (
 
 }
 
-export const deletePortals = (cacheHandler, deleteList) => {
+export const deletePortals = (cacheHandler, deleteList, deleteListCallback) => {
 
     // console.log('inside deletePortals',deleteList)
     const dlist = deleteList.map((item)=>{
         return item.props.index
     })
-    cacheHandler.deletePortal(dlist)
+    // TODO return list of deleted items to user
+    cacheHandler.deletePortal(dlist, deleteListCallback)
     if (deleteList.length) cacheHandler.renderPortalList()
 }
 
@@ -513,7 +520,9 @@ export const deletePortals = (cacheHandler, deleteList) => {
 const createCell = ({
     index, 
     cradleInheritedProperties,
+    cradleInternalProperties,
     instanceIdCounterRef,
+    cacheHandler,
 
 }) => {
     const instanceID = instanceIdCounterRef.current++
@@ -525,13 +534,16 @@ const createCell = ({
         cellWidth,
         getItem,
         placeholder,
-        listsize,
         scrollerID 
 
     } = cradleInheritedProperties
 
+    const { listsize } = cradleInternalProperties
+
+    const itemID = cacheHandler.getItemID(index)
+
     return <CellFrame 
-        key = {index} 
+        key = { instanceID } 
         orientation = { orientation }
         cellHeight = { cellHeight }
         cellWidth = { cellWidth }
@@ -539,6 +551,7 @@ const createCell = ({
         getItem = { getItem }
         listsize = { listsize }
         placeholder = { placeholder }
+        itemID = { itemID }
         instanceID = { instanceID }
         scrollerID = { scrollerID }
     />

@@ -3,13 +3,13 @@
 
 /*
     TODO
-    update length for cradle adjustments based on variable length changes in cell shells.
+    update length for cradle adjustments based on variable length changes in cell frames.
 
 */
 
 import React, {useContext, useRef, useCallback, useEffect, useLayoutEffect, useState} from 'react'
 
-import { ViewportInterrupt } from './viewport'
+import { ViewportInterrupt } from './Viewport'
 
 const Scrollblock = ({
     children,
@@ -99,6 +99,8 @@ const Scrollblock = ({
             padding,
        ]
     )
+
+    // console.log('scrollblock listsizeRef, baseScrollBlockLengthRef','-'+scrollerID+'-' , listsizeRef, baseScrollBlockLengthRef)    
 
     return <div data-type = 'scrollblock' style={divlinerstyleRef.current}>{children}</div>
 

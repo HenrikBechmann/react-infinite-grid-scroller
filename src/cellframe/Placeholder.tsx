@@ -1,7 +1,7 @@
 // placeholder.tsx
 // copyright (c) 2020 Henrik Bechmann, Toronto, Licence: MIT
 
-import React, {useRef, useEffect, useState, useCallback } from 'react'
+import React, {useRef } from 'react'
 
 const Placeholder = ({index, listsize, error}) => {
 

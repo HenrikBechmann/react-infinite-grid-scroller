@@ -1,6 +1,8 @@
 // contenthandler.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
+import React from 'react'
+
 import { 
     getCellFrameComponentList, 
     calcContentShift,
@@ -37,7 +39,7 @@ export default class ContentHandler {
     private instanceIdCounterRef = {
        current:0
     }
-    private instanceIdMap = new Map()
+    // private instanceIdMap = new Map()
 
     // Two public methods - setCradleContent and updateCradleContent
 
@@ -84,10 +86,9 @@ export default class ContentHandler {
             cellHeight,
             cellWidth,
             cache,
-            listsize,
         } = cradleInheritedProperties
 
-        const {crosscount} = cradleInternalProperties
+        const {crosscount, listsize} = cradleInternalProperties
 
         let workingAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
         workingAxisReferenceIndex -= (workingAxisReferenceIndex % crosscount)
@@ -150,9 +151,10 @@ export default class ContentHandler {
         // returns content constrained by cradleRowcount
 
         const [newcontentlist,deleteditems] = getCellFrameComponentList({
-
+            
+            cacheHandler,            
             cradleInheritedProperties,
-            // cradleInternalProperties,
+            cradleInternalProperties,
             cradleContentCount,
             cradleReferenceIndex:targetCradleReferenceIndex,
             listStartChangeCount:0,
@@ -234,7 +236,7 @@ export default class ContentHandler {
 
     }
 
-    // =============================[ UPDATE through scroll ]===============================
+    // ==================[ UPDATE CONTENT through scroll ]========================
 
     // updateCradleContent does not touch the viewport element's scroll position for the scrollblock
     // instead it reconfigures elements within the cradle
@@ -352,8 +354,9 @@ export default class ContentHandler {
         if (listStartChangeCount || listEndChangeCount) { // if either is non-0 then modify content
 
             [updatedContentList,deletedContentItems] = getCellFrameComponentList({
+                cacheHandler,
                 cradleInheritedProperties,
-                // cradleInternalProperties,
+                cradleInternalProperties,
                 cradleContentCount,
                 workingContentList:modelcontentlist,
                 listStartChangeCount,
@@ -370,7 +373,8 @@ export default class ContentHandler {
 
         if (deletedContentItems.length && (cache == 'cradle')) {
 
-            deletePortals(cacheHandler, deletedContentItems)
+            deletePortals(cacheHandler, deletedContentItems, 
+                serviceHandler.callbacks.deleteListCallback)
 
         }
 
@@ -454,23 +458,27 @@ export default class ContentHandler {
         if (cradleInheritedProperties.cache == 'keepload') {
 
             const cradleHandlers = this.cradleParameters.handlersRef.current
-            const { contentHandler, cacheHandler } = cradleHandlers
+            const { cacheHandler, serviceHandler } = cradleHandlers
 
-            const modelIndexList = 
-                contentHandler.content.cradleModelComponents.map((item)=>item.props.index)
+            const modelIndexList = this.getModelIndexList()
 
             const paring = cacheHandler.pareCacheToMax(
-                cradleInheritedProperties.cacheMax,modelIndexList)
+                cradleInheritedProperties.cacheMax, modelIndexList, 
+                serviceHandler.callbacks.deleteListCallback)
             if (paring) cacheHandler.renderPortalList()
                 
         }
 
     }
 
+    // ==========================[ SERVICE SUPPORT ]=======================
+
     public clearCache = () => {
 
         const cradleContent = this.content
         const { cacheHandler } = this.cradleParameters.handlersRef.current
+
+        cradleContent.cradleModelComponents = []
 
         cradleContent.headModelComponents = []
         cradleContent.tailModelComponents = []
@@ -480,6 +488,111 @@ export default class ContentHandler {
         cradleContent.tailDisplayComponents = []
 
         cacheHandler.clearCache()
+
+    }
+
+    public getModelIndexList() {
+
+        const { cradleModelComponents } = this.content
+        if (!cradleModelComponents) {
+            return [] 
+        } else {
+            return cradleModelComponents.map((item)=>item.props.index)
+        }
+
+    }
+
+    public reconcileCellFrames(modifiedIndexesList) {
+
+        // console.log('contentHandler got modifiedCellFrameMap',modifiedCellFrameMap)
+
+        if (!modifiedIndexesList.length) return
+
+        const { cradleModelComponents } = this.content
+
+        const { cacheHandler } = this.cradleParameters.handlersRef.current
+
+        const { indexToItemIDMap } = cacheHandler.cacheProps
+
+        function processComponent (component, i, array ) {
+            const { index, itemID } = component.props
+            if (modifiedIndexesList.includes(index)) {
+                const newItemID = 
+                    indexToItemIDMap.has(index)?
+                        indexToItemIDMap.get(index):
+                        cacheHandler.getNewItemID()
+                if (newItemID != itemID) { // TODO verify shouldn't happen
+                    array[i] = React.cloneElement(component, {itemID:newItemID})
+                }
+            }
+        }
+
+        cradleModelComponents.forEach(processComponent)
+
+        this.content.headModelComponents = cradleModelComponents.slice(0,this.content.headModelComponents.length)
+        this.content.tailModelComponents = cradleModelComponents.slice(this.content.headModelComponents.length)
+
+    }
+
+    public changeCradleItemIDs(changeList) {
+
+        if (changeList.length == 0) return
+
+        const { cacheHandler } = this.cradleParameters.handlersRef.current
+        const { indexToItemIDMap, metadataMap } = cacheHandler.cacheProps
+
+        // console.log('==> changeCradleItemIDs: changeList, indexToItemIDMap, metadataMap', 
+        //     changeList, indexToItemIDMap, metadataMap)
+
+        const { cradleModelComponents } = this.content
+
+        function processcomponent(component, i, array) {
+
+            const index = component.props.index
+
+            const ptr = changeList.indexOf(index)
+
+            // console.log('processing array index, cache index, change position', 
+            //     i, index, ptr)
+
+            if (ptr != -1) {
+                const itemID = indexToItemIDMap.get(index)
+                // console.log('index, new itemID, old itemID',
+                 // index, itemID, component.props.itemID )
+                array[i] = React.cloneElement(component, {itemID})
+            }
+
+        }
+
+        cradleModelComponents.forEach(processcomponent)
+
+        this.content.headModelComponents = cradleModelComponents.slice(0,this.content.headModelComponents.length)
+        this.content.tailModelComponents = cradleModelComponents.slice(this.content.headModelComponents.length)
+
+    }
+
+    public createNewItemIDs(newList) {
+
+
+        const { cacheHandler } = this.cradleParameters.handlersRef.current
+        const { cradleModelComponents } = this.content
+
+        function processcomponent(component, i, array) {
+
+            const index = component.props.index
+            const ptr = newList.indexOf(index)
+            if (ptr != -1) {
+                const newItemID = cacheHandler.getNewItemID()
+                // console.log('assigning new itemID: index, newItemID, component',index, newItemID, component)
+                array[i] = React.cloneElement(component, {itemID:newItemID})
+            }
+
+        }
+
+        cradleModelComponents.forEach(processcomponent)
+
+        this.content.headModelComponents = cradleModelComponents.slice(0,this.content.headModelComponents.length)
+        this.content.tailModelComponents = cradleModelComponents.slice(this.content.headModelComponents.length)
 
     }
 
