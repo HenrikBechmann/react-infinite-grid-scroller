@@ -24,13 +24,14 @@
     BUGS: 
 
     TODO:
+        - try to preload all children, even if cached
         - cacheMax is also boundary for preload, and for dense, as well as keepload (?)
+
         - add modify listsize callback
         - getItem null return means past list - list size is adjusted;
             undefined means error; reject means error "unable to load"
 
         - review event cycles - they seem slower
-        - try to preload all children, even if cached
         - return modified cachedItemMap from modify, add, and remove
 
         - use allSettled instead of all
