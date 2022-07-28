@@ -527,7 +527,6 @@ const Cradle = ({
     // =====================[ RECONFIGURATION effects ]======================
     // change caching, resize (UI resize of the viewport), reconfigure, or pivot
 
-    // initiate preload if requested
     useEffect(()=> {
 
         switch (cache) {
@@ -749,7 +748,6 @@ const Cradle = ({
 
                 }
 
-                // TODO: move API to contentHandler
                 cacheHandler.preload(cradleParametersRef.current, callback, scrollerID)
 
                 break
