@@ -270,7 +270,7 @@ export default class ContentHandler {
         // cradle scaffold and user cells
         const cradleElements = scaffoldHandler.elements
         const cradleContent = this.content
-        const modelcontentlist = cradleContent.cradleModelComponents
+        const modelcontentlist = cradleContent.cradleModelComponents || []
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
         // --------------------[ 2. get shift instruction ]-----------------------

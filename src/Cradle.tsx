@@ -532,7 +532,7 @@ const Cradle = ({
         switch (cache) {
 
             case 'preload': {
-                console.log('calling startpreload')
+                // console.log('calling startpreload')
                 setCradleState('startpreload')
                 break
 
@@ -734,7 +734,7 @@ const Cradle = ({
 
             }
             case 'startpreload':{
-                console.log('in startpreload, clearing cache and calling dopreload')
+                // console.log('in startpreload, clearing cache and calling dopreload')
                 contentHandler.clearCache()
                 setCradleState('dopreload')
 
@@ -749,7 +749,7 @@ const Cradle = ({
 
                 }
 
-                console.log('in dopreload, calling cacheHandler.preload')
+                // console.log('in dopreload, calling cacheHandler.preload')
 
                 cacheHandler.preload(cradleParametersRef.current, callback, scrollerID)
 
@@ -853,10 +853,10 @@ const Cradle = ({
             case 'reconfigure': //
             case 'reload': {
 
-                if (isCachedRef.current) { // interrupt until caching is resolved
-                    setCradleState('cached')
-                    break
-                }
+                // if (isCachedRef.current) { // interrupt until caching is resolved
+                //     setCradleState('cached')
+                //     break
+                // }
 
                 const cradleContent = contentHandler.content
 
@@ -913,7 +913,17 @@ const Cradle = ({
 
                 interruptHandler.restoreInterrupts()
 
-                setCradleState('ready')
+                console.log('finishing normalizesignals', '-'+scrollerID+'-')
+                // if (isCachedRef.current) { // interrupt until caching is resolved
+                //     console.log('- calling cached')
+                //     setCradleState('cached')
+                //     // break
+                // } else {
+
+                //     console.log('- calling ready')
+                    setCradleState('ready')
+
+                // }
 
                 // }
 

@@ -136,8 +136,6 @@ const InfiniteGridScroller = (props) => {
         advanced = {}, // optional. technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
     } = props
 
-    console.log('scroller cache',cache)
-
     // avoid null
     styles = styles ?? {}
     functions = functions ?? {}
@@ -178,6 +176,8 @@ const InfiniteGridScroller = (props) => {
     const scrollerSessionIDRef = useRef(null);
 
     const scrollerID = scrollerSessionIDRef.current
+
+    console.log('scroller cache, scrollerState','-' + scrollerID + '-',cache, scrollerState)
 
     // satisfy React Object.is for attributes
     if (!compareProps(gridSpecs, gridSpecsRef.current)) {

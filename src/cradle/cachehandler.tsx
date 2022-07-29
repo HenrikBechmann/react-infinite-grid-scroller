@@ -173,15 +173,24 @@ export class CacheHandler {
 
         const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
         const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
-        const { getItem } = cradleInheritedProperties
+        const { getItem, cacheMax } = cradleInheritedProperties
         const { listsize } = cradleInternalProperties
 
         const promises = []
 
+        let cacheSize = cacheMax ?? 0
+
+        cacheSize = Math.min(cacheSize, listsize)
+
+        const preloadsize = 
+            cacheMax?
+                cacheMax:
+                listsize
+
         if (stateHandler.isMountedRef.current) {
 
-            for (let i = 0; i < listsize; i++) {
-                console.log('preloading',i)
+            for (let i = 0; i < preloadsize; i++) {
+
                 const promise = this.preloadItem(
                     i, 
                     getItem, 
