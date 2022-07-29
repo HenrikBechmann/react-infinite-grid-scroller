@@ -532,6 +532,7 @@ const Cradle = ({
         switch (cache) {
 
             case 'preload': {
+                console.log('calling startpreload')
                 setCradleState('startpreload')
                 break
 
@@ -733,7 +734,7 @@ const Cradle = ({
 
             }
             case 'startpreload':{
-
+                console.log('in startpreload, clearing cache and calling dopreload')
                 contentHandler.clearCache()
                 setCradleState('dopreload')
 
@@ -747,6 +748,8 @@ const Cradle = ({
                     setCradleState('finishpreload')
 
                 }
+
+                console.log('in dopreload, calling cacheHandler.preload')
 
                 cacheHandler.preload(cradleParametersRef.current, callback, scrollerID)
 

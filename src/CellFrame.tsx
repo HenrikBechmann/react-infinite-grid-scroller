@@ -174,6 +174,8 @@ const CellFrame = ({
 
                         const usercontent = await getItem(index, itemID)
 
+                        // const isPromise = v => typeof v === 'object' && typeof v.then === 'function'
+                        
                         if (isMountedRef.current) {
 
                             if (usercontent) {

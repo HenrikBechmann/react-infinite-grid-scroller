@@ -68,9 +68,10 @@ export class CacheHandler {
         this.cacheProps.indexToItemIDMap.clear()
         this.cacheProps.requestedMap.clear()
         this.cacheProps.portalList = null
-        this.cacheProps.modified = false
+        this.cacheProps.modified = true
 
-        this.cacheProps.setListState() // trigger display update
+        // this.cacheProps.setListState() // trigger display update
+        this.renderPortalList() // trigger display update
 
     }
 
@@ -180,7 +181,7 @@ export class CacheHandler {
         if (stateHandler.isMountedRef.current) {
 
             for (let i = 0; i < listsize; i++) {
-                // console.log('preloading',i)
+                console.log('preloading',i)
                 const promise = this.preloadItem(
                     i, 
                     getItem, 
@@ -194,7 +195,7 @@ export class CacheHandler {
 
         Promise.all(promises).then(
             ()=>{
-                // console.log("finished preloading",'-'+scrollerID+'-',+this.cacheProps.portalMap.size)
+                console.log("finished preloading",'-'+scrollerID+'-',+this.cacheProps.portalMap.size)
                 callback()
             }
         )
@@ -618,7 +619,7 @@ export class CacheHandler {
 
             preloadIndexCallback && preloadIndexCallback(index, itemID)
 
-            // console.log('preloading index','-'+scrollerID+'-' ,index )
+            console.log('preloading index','-'+scrollerID+'-' ,index )
 
             let content 
             const scrollerData = {
