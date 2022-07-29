@@ -335,6 +335,11 @@ const Cradle = ({
     
     const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal (cache) state
 
+    console.log(
+        '**>> -'+scrollerID+'-',
+        'isInPortal, viewportwidth, viewportheight\n', 
+        isInPortal, viewportwidth, viewportheight)
+
     const isCacheChange = (isInPortal != isCachedRef.current)
 
     if (isCacheChange) {

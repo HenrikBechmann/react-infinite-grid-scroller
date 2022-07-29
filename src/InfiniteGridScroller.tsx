@@ -24,6 +24,7 @@
     BUGS: 
         - resizing call should not be happening on startup
         - cachedwaiting is invoked in *every other* list when preload is invoked
+            - traced back to 'reparentingtransition' then 'finishedreparenting' invoked every other list
 
     TODO:
         - try to preload all children, even if cached
