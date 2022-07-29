@@ -780,8 +780,7 @@ const Cradle = ({
 
                 if (isCachedRef.current) { // interrupt until caching is resolved
                     
-                    // setCradleState('cachedwaiting')
-                    setCradleState('cached')
+                    setCradleState('cachedwaiting')
 
                 } else {
 
