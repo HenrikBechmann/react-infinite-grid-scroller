@@ -81,7 +81,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // console.log('RUNNING cradleState','-'+scrollerID+'-', cradleState)
+    console.log('==> CRADLE cradleState','-'+scrollerID+'-', cradleState)
 
     // controls
     const isMountedRef = useRef(true)
@@ -780,7 +780,8 @@ const Cradle = ({
 
                 if (isCachedRef.current) { // interrupt until caching is resolved
                     
-                    setCradleState('cachedwaiting')
+                    // setCradleState('cachedwaiting')
+                    setCradleState('cached')
 
                 } else {
 
@@ -913,7 +914,7 @@ const Cradle = ({
 
                 interruptHandler.restoreInterrupts()
 
-                console.log('finishing normalizesignals', '-'+scrollerID+'-')
+                // console.log('finishing normalizesignals', '-'+scrollerID+'-')
                 // if (isCachedRef.current) { // interrupt until caching is resolved
                 //     console.log('- calling cached')
                 //     setCradleState('cached')

@@ -22,6 +22,7 @@
         release to npm
 
     BUGS: 
+        - resizing call should not be happening on startup
 
     TODO:
         - try to preload all children, even if cached
@@ -177,7 +178,7 @@ const InfiniteGridScroller = (props) => {
 
     const scrollerID = scrollerSessionIDRef.current
 
-    console.log('scroller cache, scrollerState','-' + scrollerID + '-',cache, scrollerState)
+    // scrollerID && console.log('==> SCROLLER cache, scrollerState','-' + scrollerID + '-',cache, scrollerState)
 
     // satisfy React Object.is for attributes
     if (!compareProps(gridSpecs, gridSpecsRef.current)) {
