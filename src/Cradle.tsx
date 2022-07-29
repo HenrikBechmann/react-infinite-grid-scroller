@@ -350,6 +350,20 @@ const Cradle = ({
         (viewportInterruptProperties.isResizing && isCachingUnderway) 
     ) { 
 
+        console.log(
+            '-'+scrollerID+'-',
+            'isInPortal', 
+            isInPortal, 
+            '\nisCacheChange, isCachedRef.current, wasCachedRef.current\n',
+            isCacheChange, 
+            isCachedRef.current, 
+            wasCachedRef.current, 
+            '\nisCachingUnderway, isReparentingRef.current, isResizing\n',
+            isCachingUnderway, 
+            viewportInterruptProperties.isReparentingRef?.current, 
+            viewportInterruptProperties.isResizing
+        )
+
         if (viewportInterruptProperties.isReparentingRef?.current) {
 
             viewportInterruptProperties.isReparentingRef.current = false // no longer needed
@@ -404,14 +418,14 @@ const Cradle = ({
 
             wasCachedRef.current = false
 
-            if (cradleStateRef.current == 'cachedwaiting') {
+            // if (cradleStateRef.current == 'cachedwaiting') {
 
-                setCradleState('ready')
+            //     setCradleState('ready')
 
-            } else {
+            // } else {
 
                 setCradleState('setcradlecontent')
-            }
+            // }
 
         }
 

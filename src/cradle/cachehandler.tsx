@@ -204,7 +204,7 @@ export class CacheHandler {
 
         Promise.all(promises).then(
             ()=>{
-                console.log("finished preloading",'-'+scrollerID+'-',+this.cacheProps.portalMap.size)
+                // console.log("finished preloading",'-'+scrollerID+'-',+this.cacheProps.portalMap.size)
                 callback()
             }
         )
@@ -628,7 +628,7 @@ export class CacheHandler {
 
             preloadIndexCallback && preloadIndexCallback(index, itemID)
 
-            console.log('preloading index','-'+scrollerID+'-' ,index )
+            // console.log('preloading index','-'+scrollerID+'-' ,index )
 
             let content 
             const scrollerData = {
