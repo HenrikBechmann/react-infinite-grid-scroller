@@ -81,7 +81,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // console.log('RUNNING cradleState','-'+scrollerID+'-', cradleState)
+    // console.log('==> CRADLE cradleState','-'+scrollerID+'-', cradleState)
 
     // controls
     const isMountedRef = useRef(true)
@@ -335,6 +335,11 @@ const Cradle = ({
     
     const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal (cache) state
 
+    // console.log(
+    //     '**>> -'+scrollerID+'-',
+    //     'isInPortal, viewportwidth, viewportheight\n', 
+    //     isInPortal, viewportwidth, viewportheight)
+
     const isCacheChange = (isInPortal != isCachedRef.current)
 
     if (isCacheChange) {
@@ -349,6 +354,20 @@ const Cradle = ({
         viewportInterruptProperties.isReparentingRef?.current ||
         (viewportInterruptProperties.isResizing && isCachingUnderway) 
     ) { 
+
+        // console.log(
+        //     '-'+scrollerID+'-',
+        //     'isInPortal', 
+        //     isInPortal, 
+        //     '\nisCacheChange, isCachedRef.current, wasCachedRef.current\n',
+        //     isCacheChange, 
+        //     isCachedRef.current, 
+        //     wasCachedRef.current, 
+        //     '\nisCachingUnderway, isReparentingRef.current, isResizing\n',
+        //     isCachingUnderway, 
+        //     viewportInterruptProperties.isReparentingRef?.current, 
+        //     viewportInterruptProperties.isResizing
+        // )
 
         if (viewportInterruptProperties.isReparentingRef?.current) {
 
@@ -404,14 +423,14 @@ const Cradle = ({
 
             wasCachedRef.current = false
 
-            if (cradleStateRef.current == 'cachedwaiting') {
+            // if (cradleStateRef.current == 'cachedwaiting') {
 
-                setCradleState('ready')
+            //     setCradleState('ready')
 
-            } else {
+            // } else {
 
                 setCradleState('setcradlecontent')
-            }
+            // }
 
         }
 
@@ -527,12 +546,12 @@ const Cradle = ({
     // =====================[ RECONFIGURATION effects ]======================
     // change caching, resize (UI resize of the viewport), reconfigure, or pivot
 
-    // initiate preload if requested
     useEffect(()=> {
 
         switch (cache) {
 
             case 'preload': {
+                // console.log('calling startpreload')
                 setCradleState('startpreload')
                 break
 
@@ -734,8 +753,11 @@ const Cradle = ({
 
             }
             case 'startpreload':{
-
-                contentHandler.clearCache()
+                // console.log('in startpreload, clearing cache and calling dopreload')
+                contentHandler.clearCradle()
+                // register new array id for Object.is to trigger react re-processing
+                cradleContent.headDisplayComponents = []
+                cradleContent.tailDisplayComponents = []
                 setCradleState('dopreload')
 
                 break
@@ -749,8 +771,14 @@ const Cradle = ({
 
                 }
 
-                // TODO: move API to contentHandler
-                cacheHandler.preload(cradleParametersRef.current, callback, scrollerID)
+                // console.log('in dopreload, calling cacheHandler.preload with timeout')
+
+                // setTimeout avoids race condition in clearing cellFrames
+                setTimeout(()=>{ // let clearCradle finish in startpreload
+                    // console.log('preload after timeout')
+                    cacheHandler.clearCache()
+                    cacheHandler.preload(cradleParametersRef.current, callback, scrollerID)
+                },1)
 
                 break
             }
@@ -852,10 +880,10 @@ const Cradle = ({
             case 'reconfigure': //
             case 'reload': {
 
-                if (isCachedRef.current) { // interrupt until caching is resolved
-                    setCradleState('cached')
-                    break
-                }
+                // if (isCachedRef.current) { // interrupt until caching is resolved
+                //     setCradleState('cached')
+                //     break
+                // }
 
                 const cradleContent = contentHandler.content
 
@@ -874,6 +902,7 @@ const Cradle = ({
 
                 const { cache } = cradleInternalPropertiesRef.current
                 if (cache == 'cradle') {
+                    console.log('processing cradle content: cache', cache)
                     const modelIndexList = contentHandler.getModelIndexList()
                     cacheHandler.matchCacheToCradle(modelIndexList, serviceHandler.callbacks.deleteListCallback)
                     cacheHandler.renderPortalList()
@@ -912,7 +941,17 @@ const Cradle = ({
 
                 interruptHandler.restoreInterrupts()
 
-                setCradleState('ready')
+                // console.log('finishing normalizesignals', '-'+scrollerID+'-')
+                // if (isCachedRef.current) { // interrupt until caching is resolved
+                //     console.log('- calling cached')
+                //     setCradleState('cached')
+                //     // break
+                // } else {
+
+                //     console.log('- calling ready')
+                    setCradleState('ready')
+
+                // }
 
                 // }
 
@@ -923,7 +962,10 @@ const Cradle = ({
             // user request
             case 'clearcache': {
 
-                contentHandler.clearCache()
+                contentHandler.clearCradle()
+                cradleContent.headDisplayComponents = []
+                cradleContent.tailDisplayComponents = []
+                cacheHandler.clearCache()
                 setCradleState('ready')
 
                 break

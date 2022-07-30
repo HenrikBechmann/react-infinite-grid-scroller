@@ -22,15 +22,20 @@
         release to npm
 
     BUGS: 
+        - reparenting scrollto reset broken under preload; second list
+        - resizing call should not be happening on startup
+        - cachedwaiting is invoked in *every other* list when preload is invoked
+            - traced back to 'reparentingtransition' then 'finishedreparenting' invoked every other list
 
     TODO:
+        - try to preload all children, even if cached
         - cacheMax is also boundary for preload, and for dense, as well as keepload (?)
+
         - add modify listsize callback
         - getItem null return means past list - list size is adjusted;
             undefined means error; reject means error "unable to load"
 
         - review event cycles - they seem slower
-        - try to preload all children, even if cached
         - return modified cachedItemMap from modify, add, and remove
 
         - use allSettled instead of all
@@ -175,6 +180,8 @@ const InfiniteGridScroller = (props) => {
     const scrollerSessionIDRef = useRef(null);
 
     const scrollerID = scrollerSessionIDRef.current
+
+    // scrollerID && console.log('==> SCROLLER cache, scrollerState','-' + scrollerID + '-',cache, scrollerState)
 
     // satisfy React Object.is for attributes
     if (!compareProps(gridSpecs, gridSpecsRef.current)) {

@@ -56,6 +56,10 @@ const CellFrame = ({
 
             isMountedRef.current = false
 
+            cancelidlecallback(requestIdleCallbackIdRef.current)
+
+            cacheHandler.removeRequestedPortal(index)
+
         }
 
     },[])
@@ -98,18 +102,18 @@ const CellFrame = ({
     const requestIdleCallbackIdRef = useRef(null)
 
     // initialize cell content
-    useEffect(() => {
+    // useEffect(() => {
 
-        // unmount
-        return () => {
+    //     // unmount
+    //     return () => {
 
-            cacheHandler.removeRequestedPortal(index)
+    //         cacheHandler.removeRequestedPortal(index)
 
-            cancelidlecallback(requestIdleCallbackIdRef.current)
+    //         cancelidlecallback(requestIdleCallbackIdRef.current)
 
-        }
+    //     }
 
-    },[])
+    // },[])
 
 
     // cradle invariant ondemand callback parameter value
@@ -174,6 +178,10 @@ const CellFrame = ({
 
                         const usercontent = await getItem(index, itemID)
 
+                        // console.log('usercontent', usercontent)
+
+                        // const isPromise = v => typeof v === 'object' && typeof v.then === 'function'
+                        
                         if (isMountedRef.current) {
 
                             if (usercontent) {
@@ -201,9 +209,9 @@ const CellFrame = ({
 
                             }
 
-                        }
+                            setFrameState('inserting')
 
-                        setFrameState('inserting')
+                        }
 
                     },{timeout:IDLECALLBACK_FETCHTIMEOUT})
 
