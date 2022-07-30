@@ -95,6 +95,16 @@ const Viewport = ({
 
         const target = entries[0].target
 
+        if (!target.dataset.initialized) {
+            target.dataset.initialized = 'true'
+            // console.log('viewport clientWidth, clientHeight','-'+scrollerID+'-' ,target.clientWidth, target.clientHeight)
+            // if (!((target.clientHeight == 0) && (target.clientWidth == 0))) {
+            // embedded lists need resizing event for init with up to date viewport dimensions
+            if (scrollerID == 0) {// anti-pattern hack
+                return
+            }
+        }
+
         // generate interrupt response, if initiating resize
         if (!isResizingRef.current) {
 

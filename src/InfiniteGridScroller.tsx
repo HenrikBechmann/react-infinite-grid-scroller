@@ -22,9 +22,10 @@
         release to npm
 
     BUGS: 
-        - resizing call should not be happening on startup
+        - inPortal bug when switching nested lists from preload to cradle
 
     TODO:
+        - change 'setcradlecontent' to 'pending reparenting completion' or some such
         - try to preload all children, even if cached
         - cacheMax is also boundary for preload, and for dense, as well as keepload (?)
 
