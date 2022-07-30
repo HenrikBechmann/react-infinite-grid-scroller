@@ -205,9 +205,9 @@ const CellFrame = ({
 
                             }
 
-                        }
+                            setFrameState('inserting')
 
-                        setFrameState('inserting')
+                        }
 
                     },{timeout:IDLECALLBACK_FETCHTIMEOUT})
 
