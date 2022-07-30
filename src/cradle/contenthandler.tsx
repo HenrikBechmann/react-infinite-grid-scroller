@@ -473,7 +473,7 @@ export default class ContentHandler {
 
     // ==========================[ SERVICE SUPPORT ]=======================
 
-    public clearCache = () => {
+    public clearCradle = () => {
 
         const cradleContent = this.content
         const { cacheHandler } = this.cradleParameters.handlersRef.current
@@ -483,11 +483,11 @@ export default class ContentHandler {
         cradleContent.headModelComponents = []
         cradleContent.tailModelComponents = []
 
-        // register new array id for Object.is to trigger react re-processing
-        cradleContent.headDisplayComponents = []
-        cradleContent.tailDisplayComponents = []
+        // // register new array id for Object.is to trigger react re-processing
+        // cradleContent.headDisplayComponents = []
+        // cradleContent.tailDisplayComponents = []
 
-        cacheHandler.clearCache()
+        // cacheHandler.clearCache()
 
     }
 

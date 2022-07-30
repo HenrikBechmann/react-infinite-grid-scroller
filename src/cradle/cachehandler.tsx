@@ -204,6 +204,7 @@ export class CacheHandler {
 
         Promise.all(promises).then(
             ()=>{
+                this.renderPortalList()
                 // console.log("finished preloading",'-'+scrollerID+'-',+this.cacheProps.portalMap.size)
                 callback()
             }
@@ -583,7 +584,7 @@ export class CacheHandler {
 
     }
 
-    createPortal(component, index, itemID) { // create new portal
+    createPortal(component, index, itemID, isPreload = false) { // create new portal
 
         this.removeRequestedPortal(index)
 
@@ -607,7 +608,7 @@ export class CacheHandler {
         this.cacheProps.metadataMap.set(itemID, portalMetadata)
         this.cacheProps.indexToItemIDMap.set(index, itemID)
 
-        this.renderPortalList() // TODO check if this can be delayed
+        if (!isPreload) this.renderPortalList() // TODO check if this can be delayed
 
         return portalMetadata
 
@@ -642,7 +643,7 @@ export class CacheHandler {
             }
 
             const portalData = 
-                this.createPortal(content, index, itemID)
+                this.createPortal(content, index, itemID, true) // true = isPreload
             // make available to user content
             scrollerData.isReparentingRef = portalData.isReparentingRef
 

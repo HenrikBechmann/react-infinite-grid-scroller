@@ -754,7 +754,10 @@ const Cradle = ({
             }
             case 'startpreload':{
                 // console.log('in startpreload, clearing cache and calling dopreload')
-                contentHandler.clearCache()
+                contentHandler.clearCradle()
+                // register new array id for Object.is to trigger react re-processing
+                cradleContent.headDisplayComponents = []
+                cradleContent.tailDisplayComponents = []
                 setCradleState('dopreload')
 
                 break
@@ -768,9 +771,14 @@ const Cradle = ({
 
                 }
 
-                // console.log('in dopreload, calling cacheHandler.preload')
+                // console.log('in dopreload, calling cacheHandler.preload with timeout')
 
-                cacheHandler.preload(cradleParametersRef.current, callback, scrollerID)
+                // setTimeout avoids race condition in clearing cellFrames
+                setTimeout(()=>{ // let clearCradle finish in startpreload
+                    // console.log('preload after timeout')
+                    cacheHandler.clearCache()
+                    cacheHandler.preload(cradleParametersRef.current, callback, scrollerID)
+                },1)
 
                 break
             }
@@ -954,7 +962,10 @@ const Cradle = ({
             // user request
             case 'clearcache': {
 
-                contentHandler.clearCache()
+                contentHandler.clearCradle()
+                cradleContent.headDisplayComponents = []
+                cradleContent.tailDisplayComponents = []
+                cacheHandler.clearCache()
                 setCradleState('ready')
 
                 break
