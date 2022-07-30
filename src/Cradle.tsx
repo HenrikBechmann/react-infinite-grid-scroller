@@ -81,7 +81,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    console.log('==> CRADLE cradleState','-'+scrollerID+'-', cradleState)
+    // console.log('==> CRADLE cradleState','-'+scrollerID+'-', cradleState)
 
     // controls
     const isMountedRef = useRef(true)
@@ -335,10 +335,10 @@ const Cradle = ({
     
     const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal (cache) state
 
-    console.log(
-        '**>> -'+scrollerID+'-',
-        'isInPortal, viewportwidth, viewportheight\n', 
-        isInPortal, viewportwidth, viewportheight)
+    // console.log(
+    //     '**>> -'+scrollerID+'-',
+    //     'isInPortal, viewportwidth, viewportheight\n', 
+    //     isInPortal, viewportwidth, viewportheight)
 
     const isCacheChange = (isInPortal != isCachedRef.current)
 
@@ -355,19 +355,19 @@ const Cradle = ({
         (viewportInterruptProperties.isResizing && isCachingUnderway) 
     ) { 
 
-        console.log(
-            '-'+scrollerID+'-',
-            'isInPortal', 
-            isInPortal, 
-            '\nisCacheChange, isCachedRef.current, wasCachedRef.current\n',
-            isCacheChange, 
-            isCachedRef.current, 
-            wasCachedRef.current, 
-            '\nisCachingUnderway, isReparentingRef.current, isResizing\n',
-            isCachingUnderway, 
-            viewportInterruptProperties.isReparentingRef?.current, 
-            viewportInterruptProperties.isResizing
-        )
+        // console.log(
+        //     '-'+scrollerID+'-',
+        //     'isInPortal', 
+        //     isInPortal, 
+        //     '\nisCacheChange, isCachedRef.current, wasCachedRef.current\n',
+        //     isCacheChange, 
+        //     isCachedRef.current, 
+        //     wasCachedRef.current, 
+        //     '\nisCachingUnderway, isReparentingRef.current, isResizing\n',
+        //     isCachingUnderway, 
+        //     viewportInterruptProperties.isReparentingRef?.current, 
+        //     viewportInterruptProperties.isResizing
+        // )
 
         if (viewportInterruptProperties.isReparentingRef?.current) {
 
@@ -894,6 +894,7 @@ const Cradle = ({
 
                 const { cache } = cradleInternalPropertiesRef.current
                 if (cache == 'cradle') {
+                    console.log('processing cradle content: cache', cache)
                     const modelIndexList = contentHandler.getModelIndexList()
                     cacheHandler.matchCacheToCradle(modelIndexList, serviceHandler.callbacks.deleteListCallback)
                     cacheHandler.renderPortalList()
