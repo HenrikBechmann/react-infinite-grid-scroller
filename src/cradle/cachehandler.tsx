@@ -93,7 +93,7 @@ export class CacheHandler {
 
         mapkeys.filter(key => !modelIndexList.includes(key))
 
-        this.deletePortal(mapkeys, deleteListCallback)
+        return this.deletePortal(mapkeys, deleteListCallback)
 
     }
 

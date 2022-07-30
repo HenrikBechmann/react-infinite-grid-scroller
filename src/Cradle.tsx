@@ -555,14 +555,16 @@ const Cradle = ({
 
     useEffect(()=> {
 
+        if (cache == 'preload') {
+            // console.log('calling startpreload')
+            setCradleState('startpreload')
+            return
+
+        }
+
+        if (cradleStateRef.current == 'setup') return
+
         switch (cache) {
-
-            case 'preload': {
-                // console.log('calling startpreload')
-                setCradleState('startpreload')
-                break
-
-            }
 
             case 'keepload': {
 
@@ -572,7 +574,12 @@ const Cradle = ({
 
                 // const cacheMax = cradleParameters.cradleInheritedPropertiesRef.current.cacheMax
 
-                cacheHandler.pareCacheToMax(cacheMax, modelIndexList, deleteListCallback)
+                if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, deleteListCallback)) {
+                    cacheHandler.cacheProps.modified = true
+                    cacheHandler.renderPortalList()
+                }
+
+                setCradleState('resetcache')
 
                 break
             }
@@ -583,7 +590,12 @@ const Cradle = ({
 
                 const { deleteListCallback } = serviceHandler.callbacks
 
-                cacheHandler.matchCacheToCradle(modelIndexList, deleteListCallback)
+                if (cacheHandler.matchCacheToCradle(modelIndexList, deleteListCallback)) {
+                    cacheHandler.cacheProps.modified = true
+                    cacheHandler.renderPortalList()
+                }
+
+                setCradleState('resetcache')
 
                 break
             }
@@ -882,6 +894,7 @@ const Cradle = ({
                 continuing with 'preparerender', and ending with
                 'normalizesignals'
             */
+            case 'resetcache':
             case 'resolvependinguncaching':
             case 'dosetup':
             case 'finishpreload':

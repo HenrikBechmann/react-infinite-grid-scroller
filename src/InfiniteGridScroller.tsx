@@ -22,7 +22,7 @@
         release to npm
 
     BUGS: 
-        - inPortal bug when switching nested lists from preload to cradle
+        - changing caching through call has stopped resetting reference position on boundary
 
     TODO:
         - change 'setcradlecontent' to 'pending reparenting completion' or some such
