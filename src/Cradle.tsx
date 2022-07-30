@@ -774,6 +774,7 @@ const Cradle = ({
                 // console.log('in dopreload, calling cacheHandler.preload with timeout')
 
                 // setTimeout avoids race condition in clearing cellFrames
+                // TODO try useLayout for a DOM rewrite instead
                 setTimeout(()=>{ // let clearCradle finish in startpreload
                     // console.log('preload after timeout')
                     cacheHandler.clearCache()
