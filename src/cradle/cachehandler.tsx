@@ -93,9 +93,9 @@ export class CacheHandler {
 
         const mapkeys = Array.from(this.cacheProps.indexToItemIDMap.keys())
 
-        mapkeys.filter(key => !modelIndexList.includes(key))
+        const delkeys = mapkeys.filter(key => !modelIndexList.includes(key))
 
-        return this.deletePortal(mapkeys, deleteListCallback)
+        return this.deletePortal(delkeys, deleteListCallback)
 
     }
 
