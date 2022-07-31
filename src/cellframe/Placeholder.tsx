@@ -27,12 +27,12 @@ const Placeholder = ({index, listsize, error}) => {
         } as React.CSSProperties
     )
 
-    // console.log('placeholder index, error value',index, error)
+    // console.log('placeholder index, error value',index, error.message)
 
     return <div style = {stylesRef.current}>
         { !error?
             <div style = {itemStylesRef.current}>{index + 1}/{listsize} (loading...)</div>:
-            <div style = {itemStylesRef.current}>item is not available</div>
+            <div style = {itemStylesRef.current}>item is not available ({error.message})</div>
         }
         
     </div>
