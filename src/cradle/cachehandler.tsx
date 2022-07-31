@@ -89,11 +89,13 @@ export class CacheHandler {
 
     matchCacheToCradle = (modelIndexList, deleteListCallback) => {
 
+        // console.log('matchCacheToCradle modelIndexList',modelIndexList)
+
         const mapkeys = Array.from(this.cacheProps.indexToItemIDMap.keys())
 
-        mapkeys.filter(key => !modelIndexList.includes(key))
+        const delkeys = mapkeys.filter(key => !modelIndexList.includes(key))
 
-        this.deletePortal(mapkeys, deleteListCallback)
+        return this.deletePortal(delkeys, deleteListCallback)
 
     }
 
@@ -189,16 +191,23 @@ export class CacheHandler {
 
         if (stateHandler.isMountedRef.current) {
 
+            
+            const indexToItemIDMap = this.cacheProps.indexToItemIDMap
+
             for (let i = 0; i < preloadsize; i++) {
 
-                const promise = this.preloadItem(
-                    i, 
-                    getItem, 
-                    cradlePassthroughPropertiesRef,
-                    serviceHandler.callbacks.preloadIndexCallback,
-                    scrollerID
-                )
-                promises.push(promise)
+                if (!indexToItemIDMap.has(i)) {
+
+                    const promise = this.preloadItem(
+                        i, 
+                        getItem, 
+                        cradlePassthroughPropertiesRef,
+                        serviceHandler.callbacks.preloadIndexCallback,
+                        scrollerID
+                    )
+                    promises.push(promise)
+
+                }
             }
         }
 

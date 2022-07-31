@@ -22,14 +22,12 @@
         release to npm
 
     BUGS: 
-        - reparenting scrollto reset broken under preload; second list
-        - resizing call should not be happening on startup
-        - cachedwaiting is invoked in *every other* list when preload is invoked
-            - traced back to 'reparentingtransition' then 'finishedreparenting' invoked every other list
+        - changing caching through call has stopped resetting reference position on boundary
 
     TODO:
+        - for preload, try to keep existing cache
         - try to preload all children, even if cached
-        - cacheMax is also boundary for preload, and for dense, as well as keepload (?)
+        - cacheMax is boundary for preload, dense, and keepload
 
         - add modify listsize callback
         - getItem null return means past list - list size is adjusted;
