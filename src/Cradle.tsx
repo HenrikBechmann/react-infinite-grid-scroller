@@ -572,7 +572,7 @@ const Cradle = ({
 
                 const { deleteListCallback } = serviceHandler.callbacks
 
-                // const cacheMax = cradleParameters.cradleInheritedPropertiesRef.current.cacheMax
+                const cacheMax = cradleParameters.cradleInheritedPropertiesRef.current.cacheMax
 
                 if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, deleteListCallback)) {
                     cacheHandler.cacheProps.modified = true
@@ -779,10 +779,10 @@ const Cradle = ({
             }
             case 'startpreload':{
                 // console.log('in startpreload, clearing cache and calling dopreload')
-                contentHandler.clearCradle()
+                // contentHandler.clearCradle()
                 // register new array id for Object.is to trigger react re-processing
-                cradleContent.headDisplayComponents = []
-                cradleContent.tailDisplayComponents = []
+                // cradleContent.headDisplayComponents = []
+                // cradleContent.tailDisplayComponents = []
                 setCradleState('dopreload')
 
                 break
@@ -792,6 +792,16 @@ const Cradle = ({
 
                 const callback = () => {
 
+                    const modelIndexList = contentHandler.getModelIndexList()
+
+                    const { deleteListCallback } = serviceHandler.callbacks
+
+                    // const cacheMax = cradleParameters.cradleInheritedPropertiesRef.current.cacheMax
+
+                    if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, deleteListCallback)) {
+                        cacheHandler.cacheProps.modified = true
+                        cacheHandler.renderPortalList()
+                    }
                     setCradleState('finishpreload')
 
                 }
@@ -800,11 +810,12 @@ const Cradle = ({
 
                 // setTimeout avoids race condition in clearing cellFrames
                 // TODO try useLayout for a DOM rewrite instead
-                setTimeout(()=>{ // let clearCradle finish in startpreload
+                // setTimeout(()=>{ // let clearCradle finish in startpreload
                     // console.log('preload after timeout')
-                    cacheHandler.clearCache()
+                    // cacheHandler.clearCache()
                     cacheHandler.preload(cradleParametersRef.current, callback, scrollerID)
-                },1)
+
+                // },1)
 
                 break
             }
@@ -924,13 +935,13 @@ const Cradle = ({
 
                 contentHandler.setCradleContent( cradleState )
 
-                const { cache } = cradleInternalPropertiesRef.current
-                if (cache == 'cradle') {
-                    console.log('processing cradle content: cache', cache)
-                    const modelIndexList = contentHandler.getModelIndexList()
-                    cacheHandler.matchCacheToCradle(modelIndexList, serviceHandler.callbacks.deleteListCallback)
-                    cacheHandler.renderPortalList()
-                }
+                // const { cache } = cradleInheritedPropertiesRef.current
+                // if (cache == 'cradle') {
+                //     console.log('processing cradle content: cache', cache)
+                //     const modelIndexList = contentHandler.getModelIndexList()
+                //     cacheHandler.matchCacheToCradle(modelIndexList, serviceHandler.callbacks.deleteListCallback)
+                //     cacheHandler.renderPortalList()
+                // }
 
                 setCradleState('preparerender')
 
