@@ -5,7 +5,6 @@
     react-infinite-grid-scroller = RIGS
 
     ROADMAP:
-        organize return values of getItem
         checkmark enable console feedback (for external callbacks)
         organize feedback for all cache operations
 
@@ -23,7 +22,12 @@
     BUGS: 
 
     TODO:
-        - test for getItem(index) returns a string or number
+        - use allSettled instead of all
+        - rationalize await handling everywhere to behave like promises
+        - use finally for callback
+        - error handling for preload items -- allow recovery - do not preload error items
+        - handle all getItem return options in preload
+
         - try to preload all children, even if cached
         - cacheMax is boundary for preload, dense, and keepload
 
@@ -32,15 +36,11 @@
         - review event cycles - they seem slower
         - return modified cachedItemMap from modify, add, and remove
 
-        - use allSettled instead of all
-        - use finally for callback
         - provide way to attempt reload of a single cell (change instanceID)
         - call matchCacheToCradle through contentHandler (?) iac rationalize calls to cacheHandler
         - test and review itemID
         - review state change chains in cradle
-        - rationalize await handling everywhere to behave like promises
         - check number of passes to scrollblock; consider implementing named states
-        - error handling for preload items -- allow recovery
         - test for memory leaks with Chrome's window.performance.memory property
         - try to reduce need to run renderportallist - try some kind of pagination/grouping
         - replace top/left with transformx/y
@@ -52,7 +52,7 @@
         - calc minwidth by form factor
         - review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
         - add grid-template-rows: max-content to parent for safari issue grid-auto-flow: column not filling column
-        - cross-browser testing
+        - cross-browser testing; smartphone testing
 */
 
 import React, {useEffect, useState, useCallback, useRef} from 'react'
