@@ -23,7 +23,7 @@
     BUGS: 
 
     TODO:
-        - use React.isValidElement(object) in CellFrame to validate getItem's return
+        - test for getItem(index) returns a string or number
         - try to preload all children, even if cached
         - cacheMax is boundary for preload, dense, and keepload
 

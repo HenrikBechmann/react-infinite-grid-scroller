@@ -177,6 +177,15 @@ const CellFrame = ({
 
                         }
 
+                        if ((usercontent !== null) && (usercontent !== undefined)) {
+
+                            if (!React.isValidElement(usercontent)) {
+                                usercontent = undefined
+                                error = new Error('invalid React element')
+                            }
+
+                        }
+
                         // console.log('index, usercontent', index, usercontent)
 
                         if (isMountedRef.current) {
@@ -189,7 +198,7 @@ const CellFrame = ({
                                     isReparentingRef:null,
                                     cradlePassthroughPropertiesRef,
                                 }
-                                if (usercontent.props.hasOwnProperty('scrollerData')) {
+                                if (usercontent.props?.hasOwnProperty('scrollerData')) {
                                     content = React.cloneElement(usercontent, {scrollerData})
                                 } else {
                                     content = usercontent
