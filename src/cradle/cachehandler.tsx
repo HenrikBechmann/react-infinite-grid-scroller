@@ -46,6 +46,7 @@ export class CacheHandler {
     //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
 
     changeListsize = (newlistsize, deleteListCallback) => {
+        // console.log('cacheHandler changelistsize called with newlistsize',newlistsize)
         this.setListsize(newlistsize)
         // match cache to newlistsize
         const portalIndexList = this.cacheProps.indexToItemIDMap

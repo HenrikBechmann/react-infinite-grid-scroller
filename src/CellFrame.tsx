@@ -28,7 +28,7 @@ const CellFrame = ({
 
     const cradleContext = useContext(CradleContext)
 
-    const { cacheHandler, cradlePassthroughPropertiesRef } = cradleContext
+    const { cacheHandler, cradlePassthroughPropertiesRef, setMaxListsize } = cradleContext
     
     const [styles,saveStyles] = useState({
         overflow:'hidden',
@@ -48,6 +48,8 @@ const CellFrame = ({
 
     const itemIDRef = useRef(null)
     itemIDRef.current = itemID
+
+    const errorRef = useRef(false)
 
     // for unmount
     useEffect(()=>{
@@ -75,18 +77,19 @@ const CellFrame = ({
     const customplaceholder = useMemo(() => {
 
             return placeholder?
-                React.createElement(placeholder, {index, listsize}):
+                React.createElement(placeholder, {index, listsize, error:errorRef.current}):
                 null
             
-    },[index, placeholder,listsize])
+    },[index, placeholder,listsize, errorRef.current])
 
     placeholderRef.current = useMemo(()=>{
+        // console.log('refreshing placeholder for index, listsize, customplaceholder', index, listsize, customplaceholder)
         const placeholder = 
             customplaceholder?
                 customplaceholder:
-                <Placeholder index = {index} listsize = {listsize} error = {false}/>
+                <Placeholder index = {index} listsize = {listsize} error = {errorRef.current}/>
         return placeholder
-    }, [index, customplaceholder, listsize]);
+    }, [index, customplaceholder, listsize, errorRef.current]);
 
     // ---------------- [ requestidlecallback config ] ------------------------
 
@@ -100,21 +103,6 @@ const CellFrame = ({
             cancelIdleCallback
 
     const requestIdleCallbackIdRef = useRef(null)
-
-    // initialize cell content
-    // useEffect(() => {
-
-    //     // unmount
-    //     return () => {
-
-    //         cacheHandler.removeRequestedPortal(index)
-
-    //         cancelidlecallback(requestIdleCallbackIdRef.current)
-
-    //     }
-
-    // },[])
-
 
     // cradle invariant ondemand callback parameter value
     const getElementData = useCallback(()=>{
@@ -176,16 +164,26 @@ const CellFrame = ({
                     // TODO review implementation of async here
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
-                        const usercontent = await getItem(index, itemID)
+                        let usercontent
+                        let error
+                        try {
 
-                        // console.log('usercontent', usercontent)
+                            usercontent = await getItem(index, itemID)
 
-                        // const isPromise = v => typeof v === 'object' && typeof v.then === 'function'
-                        
+                        } catch(e) {
+
+                            usercontent = undefined
+                            error = e
+
+                        }
+
+                        // console.log('index, usercontent', index, usercontent)
+
                         if (isMountedRef.current) {
 
-                            if (usercontent) {
+                            if ((usercontent !== null) && (usercontent !== undefined)) {
 
+                                // if usercontent is otherwise disallowed, let error handling deal with it.
                                 let content 
                                 const scrollerData = {
                                     isReparentingRef:null,
@@ -203,13 +201,24 @@ const CellFrame = ({
                                 // make available to user content
                                 scrollerData.isReparentingRef = portalDataRef.current.isReparentingRef
 
-                            } else {
+                                setFrameState('inserting')
 
-                                console.log('ERROR','no content item')
+                            } else { // null or undefined
+
+                                // console.log('processing no-component index',index, usercontent)
+                                if (usercontent === null) {
+                                    // truncate listsize at this index
+                                    // console.log('cellFrame calling setMaxListsize with index', index)
+                                    setMaxListsize(index)
+                                } else { // usercontent === undefined, meaning an error has occurred
+                                    // change placeholder message to error message
+                                    // console.log('updating placeholder with error', error)
+                                    errorRef.current = error
+                                    // placeholderRef.current = React.cloneElement(placeholderRef.current,{error})
+                                    setFrameState('error')
+                                }
 
                             }
-
-                            setFrameState('inserting')
 
                         }
 

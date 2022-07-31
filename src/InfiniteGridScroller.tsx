@@ -7,7 +7,6 @@
     ROADMAP:
         organize return values of getItem
         checkmark enable console feedback (for external callbacks)
-        constrain preload by cacheMax!
         organize feedback for all cache operations
 
         also surface external callbacks with return values for testing
@@ -22,16 +21,13 @@
         release to npm
 
     BUGS: 
-        - changing caching through call has stopped resetting reference position on boundary
 
     TODO:
-        - for preload, try to keep existing cache
+        - use React.isValidElement(object) in CellFrame to validate getItem's return
         - try to preload all children, even if cached
         - cacheMax is boundary for preload, dense, and keepload
 
         - add modify listsize callback
-        - getItem null return means past list - list size is adjusted;
-            undefined means error; reject means error "unable to load"
 
         - review event cycles - they seem slower
         - return modified cachedItemMap from modify, add, and remove
@@ -42,7 +38,6 @@
         - call matchCacheToCradle through contentHandler (?) iac rationalize calls to cacheHandler
         - test and review itemID
         - review state change chains in cradle
-        - check preload intent against state machine handling
         - rationalize await handling everywhere to behave like promises
         - check number of passes to scrollblock; consider implementing named states
         - error handling for preload items -- allow recovery
