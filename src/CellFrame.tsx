@@ -49,6 +49,8 @@ const CellFrame = ({
     const itemIDRef = useRef(null)
     itemIDRef.current = itemID
 
+    const errorRef = useRef(false)
+
     // for unmount
     useEffect(()=>{
 
@@ -75,18 +77,19 @@ const CellFrame = ({
     const customplaceholder = useMemo(() => {
 
             return placeholder?
-                React.createElement(placeholder, {index, listsize}):
+                React.createElement(placeholder, {index, listsize, error:errorRef.current}):
                 null
             
-    },[index, placeholder,listsize])
+    },[index, placeholder,listsize, errorRef.current])
 
     placeholderRef.current = useMemo(()=>{
+        // console.log('refreshing placeholder for index, listsize, customplaceholder', index, listsize, customplaceholder)
         const placeholder = 
             customplaceholder?
                 customplaceholder:
-                <Placeholder index = {index} listsize = {listsize} error = {false}/>
+                <Placeholder index = {index} listsize = {listsize} error = {errorRef.current}/>
         return placeholder
-    }, [index, customplaceholder, listsize]);
+    }, [index, customplaceholder, listsize, errorRef.current]);
 
     // ---------------- [ requestidlecallback config ] ------------------------
 
@@ -162,6 +165,7 @@ const CellFrame = ({
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
                         let usercontent
+                        let error
                         try {
 
                             usercontent = await getItem(index, itemID)
@@ -169,10 +173,11 @@ const CellFrame = ({
                         } catch(e) {
 
                             usercontent = undefined
+                            error = e
 
                         }
 
-                        // console.log('usercontent', usercontent)
+                        // console.log('index, usercontent', index, usercontent)
 
                         if (isMountedRef.current) {
 
@@ -200,11 +205,16 @@ const CellFrame = ({
 
                             } else { // null or undefined
 
+                                // console.log('processing no-component index',index, usercontent)
                                 if (usercontent === null) {
                                     // truncate listsize at this index
                                     setMaxListsize(index)
-                                } else {
+                                } else { // usercontent === undefined, meaning an error has occurred
                                     // change placeholder message to error message
+                                    // console.log('updating placeholder with error', error)
+                                    errorRef.current = error
+                                    // placeholderRef.current = React.cloneElement(placeholderRef.current,{error})
+                                    setFrameState('error')
                                 }
 
                             }
