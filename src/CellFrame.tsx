@@ -208,6 +208,7 @@ const CellFrame = ({
                                 // console.log('processing no-component index',index, usercontent)
                                 if (usercontent === null) {
                                     // truncate listsize at this index
+                                    // console.log('cellFrame calling setMaxListsize with index', index)
                                     setMaxListsize(index)
                                 } else { // usercontent === undefined, meaning an error has occurred
                                     // change placeholder message to error message

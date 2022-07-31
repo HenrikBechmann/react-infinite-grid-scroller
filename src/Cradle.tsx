@@ -449,9 +449,10 @@ const Cradle = ({
 
     const setMaxListsize = useCallback((maxListsize) => {
         const listsize = cradleInternalPropertiesRef.current.listsize
+        // console.log('cradle fielding setMaxlistsize with maxListsize, listsize',maxListsize, listsize)
         if (maxListsize < listsize) {
 
-            cacheHandler.changeListsize(listsize, serviceHandler.callbacks.deleteListCallback)
+            cacheHandler.changeListsize(maxListsize, serviceHandler.callbacks.deleteListCallback)
 
         }
     },[])

@@ -23,12 +23,11 @@
     BUGS: 
 
     TODO:
+        - use React.isValidElement(object) in CellFrame to validate getItem's return
         - try to preload all children, even if cached
         - cacheMax is boundary for preload, dense, and keepload
 
         - add modify listsize callback
-        - getItem null return means past list - list size is adjusted;
-            undefined means error; reject means error "unable to load"
 
         - review event cycles - they seem slower
         - return modified cachedItemMap from modify, add, and remove
