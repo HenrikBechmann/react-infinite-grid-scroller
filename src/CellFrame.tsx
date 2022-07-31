@@ -28,7 +28,7 @@ const CellFrame = ({
 
     const cradleContext = useContext(CradleContext)
 
-    const { cacheHandler, cradlePassthroughPropertiesRef } = cradleContext
+    const { cacheHandler, cradlePassthroughPropertiesRef, setMaxListsize } = cradleContext
     
     const [styles,saveStyles] = useState({
         overflow:'hidden',
@@ -101,21 +101,6 @@ const CellFrame = ({
 
     const requestIdleCallbackIdRef = useRef(null)
 
-    // initialize cell content
-    // useEffect(() => {
-
-    //     // unmount
-    //     return () => {
-
-    //         cacheHandler.removeRequestedPortal(index)
-
-    //         cancelidlecallback(requestIdleCallbackIdRef.current)
-
-    //     }
-
-    // },[])
-
-
     // cradle invariant ondemand callback parameter value
     const getElementData = useCallback(()=>{
 
@@ -176,16 +161,24 @@ const CellFrame = ({
                     // TODO review implementation of async here
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
-                        const usercontent = await getItem(index, itemID)
+                        let usercontent
+                        try {
+
+                            usercontent = await getItem(index, itemID)
+
+                        } catch(e) {
+
+                            usercontent = undefined
+
+                        }
 
                         // console.log('usercontent', usercontent)
 
-                        // const isPromise = v => typeof v === 'object' && typeof v.then === 'function'
-                        
                         if (isMountedRef.current) {
 
-                            if (usercontent) {
+                            if ((usercontent !== null) && (usercontent !== undefined)) {
 
+                                // if usercontent is otherwise disallowed, let error handling deal with it.
                                 let content 
                                 const scrollerData = {
                                     isReparentingRef:null,
@@ -203,13 +196,18 @@ const CellFrame = ({
                                 // make available to user content
                                 scrollerData.isReparentingRef = portalDataRef.current.isReparentingRef
 
-                            } else {
+                                setFrameState('inserting')
 
-                                console.log('ERROR','no content item')
+                            } else { // null or undefined
+
+                                if (usercontent === null) {
+                                    // truncate listsize at this index
+                                    setMaxListsize(index)
+                                } else {
+                                    // change placeholder message to error message
+                                }
 
                             }
-
-                            setFrameState('inserting')
 
                         }
 

@@ -13,7 +13,8 @@ import React, {
     useContext, 
     useEffect, 
     useLayoutEffect, 
-    useMemo 
+    useMemo,
+    useCallback, 
 } from 'react'
 
 import { ViewportInterrupt } from './Viewport'
@@ -445,6 +446,15 @@ const Cradle = ({
 
     // ===================[ INITIALIZATION effects ]=========================
     // initialization effects are independent of caching
+
+    const setMaxListsize = useCallback((maxListsize) => {
+        const listsize = cradleInternalPropertiesRef.current.listsize
+        if (maxListsize < listsize) {
+
+            cacheHandler.changeListsize(listsize, serviceHandler.callbacks.deleteListCallback)
+
+        }
+    },[])
 
     // clear mounted flag on unmount
     useLayoutEffect(()=>{
@@ -1082,7 +1092,7 @@ const Cradle = ({
 
     const cradleContent = contentHandler.content
 
-    const contextvalueRef = useRef({cradlePassthroughPropertiesRef, cacheHandler})
+    const contextvalueRef = useRef({cradlePassthroughPropertiesRef, cacheHandler, setMaxListsize})
 
     return <CradleContext.Provider value = {contextvalueRef.current}>
 
