@@ -343,9 +343,13 @@ const Cradle = ({
     const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal (cache) state
     // const isInPortal = ((vwidth == 0) && (vheight == 0)) // must be in portal (cache) state
 
+    // const viewportElementScrollPos = viewportInterruptPropertiesRef.current.elementRef.current.scrollLeft
+
+    // const viewportScrollPos = scaffoldHandler.getViewportScrollPos()
+
     console.log(
         '**>> -'+scrollerID+'-', cradleState,'\n',
-        'isInPortal, viewportwidth, viewportheight, blockScrollPos\n', 
+        'isInPortal, viewportwidth, viewportheight, blockScrollPos, viewportElementScrollPos\n', 
         isInPortal, viewportwidth, viewportheight, scaffoldHandler.cradlePositionData.blockScrollPos)
 
     const isCacheChange = (isInPortal != isCachedRef.current)

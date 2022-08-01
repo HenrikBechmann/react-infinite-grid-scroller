@@ -49,7 +49,8 @@ export default class InterruptHandler {
         const {
             contentHandler,
             stateHandler,
-            scrollHandler
+            scrollHandler,
+            scaffoldHandler,
         } = this.cradleParameters.handlersRef.current
 
         if (stateHandler.isMountedRef.current) {
@@ -67,6 +68,10 @@ export default class InterruptHandler {
                     isViewportScrollingForward = (scrollData.previousupdate < scrollData.currentupdate)
                 }
 
+                const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
+
+                console.log('axisTriggerlinesObserverCallback: isViewportScrollingForward, blockScrollPos, scrollData', 
+                    '-'+scrollerID+'-',isViewportScrollingForward, scaffoldHandler.cradlePositionData.blockScrollPos, scrollData)
                 contentHandler.updateCradleContent(isViewportScrollingForward, entries,'triggerlinesObserver')
 
             }

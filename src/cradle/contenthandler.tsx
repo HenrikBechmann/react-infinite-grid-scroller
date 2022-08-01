@@ -192,7 +192,7 @@ export default class ContentHandler {
 
         cradlePositionData.blockScrollPos = scrollblockPixelOffset + scrollPosAdjustment
 
-        // console.log('setting SCROLLPOS in setCradleContent', '-'+cradleInheritedProperties.scrollerID+'-', cradlePositionData.blockScrollPos)
+        console.log('setting SCROLLPOS in setCradleContent', '-'+cradleInheritedProperties.scrollerID+'-', cradlePositionData.blockScrollPos)
         viewportElement[cradlePositionData.blockScrollProperty] =
             cradlePositionData.blockScrollPos
 
@@ -295,8 +295,8 @@ export default class ContentHandler {
             triggerlineSpan: scaffoldHandler.triggerlineSpan,
         })
 
-        // console.log('scrollerID, shiftinstruction',
-        //     '-'+cradleInheritedProperties.scrollerID+'-', shiftinstruction)
+        console.log('scrollerID, shiftinstruction',
+            '-'+cradleInheritedProperties.scrollerID+'-', shiftinstruction)
 
         // second abandon option/3; nothing to do
         if (shiftinstruction == 0) {
