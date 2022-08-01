@@ -20,6 +20,11 @@
         release to npm
 
     BUGS: 
+        - reverse Cradle Items is broken for nested lists and variable 
+        - InPortal memory leak warning for nested when scrolled after reverse
+            - keep text from first loading for test checking
+            - keep text for variable for first loading
+        - reverse works incorrectly in mid-scope
 
     TODO:
         - use allSettled instead of all
