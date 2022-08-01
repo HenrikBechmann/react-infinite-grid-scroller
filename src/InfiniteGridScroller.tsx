@@ -25,6 +25,24 @@
             - keep text from first loading for test checking
             - keep text for variable for first loading
         - reverse works incorrectly in mid-scope
+        - one replication:
+            - generic items
+            - go to last
+            - reverse
+            - observe successful change in order
+            - go to first
+            - go to last
+            - reverse
+            - observe no change in order
+            - scroll toward first
+            - observe InPortal problem
+            - scroll to last
+            - attempt to reverse
+            - observe no change in order
+            - scroll to first
+            - reverse
+            - observe no change in order
+            - seems to have stopped working
 
     TODO:
         - use allSettled instead of all
