@@ -397,9 +397,9 @@ const Cradle = ({
                 
                 interruptHandler.pauseInterrupts()
 
-            } else if ((!isCachedRef.current) && wasCachedRef.current) { // change out of cache
+            // } else if ((!isCachedRef.current) && wasCachedRef.current) { // change out of cache
 
-                interruptHandler.restoreInterrupts()
+            //     interruptHandler.restoreInterrupts()
 
             }
 

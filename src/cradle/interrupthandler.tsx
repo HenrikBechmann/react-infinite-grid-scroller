@@ -208,6 +208,16 @@ export default class InterruptHandler {
         pauseScrollingEffects: false,
     }
 
+    /*
+        invoked for 
+        cradle:
+        - change into cache
+        - trigger resizing
+        - trigger reconfiguration
+        - trigger pivot
+        servicehandler:
+        - call reload
+    */
     public pauseInterrupts = () => {
         const { signals } = this
         signals.pauseTriggerlinesObserver = true
@@ -215,7 +225,11 @@ export default class InterruptHandler {
         signals.pauseCradleResizeObserver = true
         signals.pauseScrollingEffects = true
     }
-
+    /*
+        invoked for
+        cradle:
+        - normalizesignals
+    */
     public restoreInterrupts = () => {
         const { signals } = this
         signals.pauseTriggerlinesObserver = false
