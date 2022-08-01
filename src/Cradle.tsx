@@ -89,6 +89,7 @@ const Cradle = ({
     const isCachedRef = useRef(false)
     const wasCachedRef = useRef(false)
     const parentingTransitionRequiredRef = useRef(false)
+    const hasBeenRenderedRef = useRef(false)
     const triggerlineRecordsRef = useRef({ // to calculate inferred trigger
         wasViewportScrollingForward:null,
         driver:null,
@@ -862,7 +863,16 @@ const Cradle = ({
                 // } else {
 
                 interruptHandler.restoreInterrupts()
-                setCradleState('ready')
+
+                if (hasBeenRenderedRef.current) {
+
+                    setCradleState('ready')
+
+                } else {
+
+                    setCradleState('resolvependinguncaching')
+
+                }
 
                 // }
 
@@ -951,6 +961,8 @@ const Cradle = ({
                 }
 
                 contentHandler.setCradleContent( cradleState )
+
+                hasBeenRenderedRef.current = true
 
                 // const { cache } = cradleInheritedPropertiesRef.current
                 // if (cache == 'cradle') {
