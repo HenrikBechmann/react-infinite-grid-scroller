@@ -343,10 +343,10 @@ const Cradle = ({
     const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal (cache) state
     // const isInPortal = ((vwidth == 0) && (vheight == 0)) // must be in portal (cache) state
 
-    // console.log(
-    //     '**>> -'+scrollerID+'-',
-    //     'isInPortal, viewportwidth, viewportheight\n', 
-    //     isInPortal, viewportwidth, viewportheight)
+    console.log(
+        '**>> -'+scrollerID+'-', cradleState,'\n',
+        'isInPortal, viewportwidth, viewportheight, blockScrollPos\n', 
+        isInPortal, viewportwidth, viewportheight, scaffoldHandler.cradlePositionData.blockScrollPos)
 
     const isCacheChange = (isInPortal != isCachedRef.current)
 
@@ -985,6 +985,7 @@ const Cradle = ({
 
                 // } else {                     
 
+                console.log('restoring interrupts from normalizesignals','-'+scrollerID+'-')
                 interruptHandler.restoreInterrupts()
 
                 // console.log('finishing normalizesignals', '-'+scrollerID+'-')
@@ -1022,11 +1023,12 @@ const Cradle = ({
             case 'reparentingtransition': {
 
                     const { cradlePositionData } = scaffoldHandler
+                    console.log('in state machine reparentingtransition', '-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
 
                     // reset scroll position to previous value
                     if (cradlePositionData.blockScrollPos !== null) {
 
-                        // console.log('resetting scroll position to','-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
+                        console.log('resetting scroll position to','-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
 
                         const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
 
