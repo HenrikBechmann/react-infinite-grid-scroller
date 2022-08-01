@@ -20,8 +20,6 @@
         release to npm
 
     BUGS: 
-        - in horizontal nested lists, lists coming from cache sometimes have axis in the 
-            wrong location
 
     TODO:
         - use allSettled instead of all
