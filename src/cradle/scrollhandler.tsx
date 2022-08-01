@@ -21,20 +21,24 @@ export default class ScrollHandler {
 
     public onScroll = (e) => {
 
+        const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const viewportElement = viewportInterruptProperties.elementRef.current
+
+        const scrollPositionCurrent = 
+            (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical')?
+                viewportElement.scrollTop:
+                viewportElement.scrollLeft
+        // console.log('scrollPositionCurrent in onScroll','-'+scrollerID+'-', scrollPositionCurrent)
 
         if ((viewportElement.clientWidth == 0  && viewportElement.clientHeight == 0)) {// in cache
             clearTimeout(this._scrolltimerid)
             return
         }
-        const scrollPositionCurrent = 
-            (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical')?
-                viewportElement.scrollTop:
-                viewportElement.scrollLeft
-
-        const scrollerID = this.cradleParameters.cradleInheritedPropertiesRef.current.scrollerID
-        // console.log('scrollPositionCurrent in onScroll','-'+scrollerID+'-' ,scrollPositionCurrent)
+        // const scrollPositionCurrent = 
+        //     (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical')?
+        //         viewportElement.scrollTop:
+        //         viewportElement.scrollLeft
 
         if (scrollPositionCurrent < 0) { // for Safari
 
@@ -53,6 +57,7 @@ export default class ScrollHandler {
         }
 
         if (!this.isScrolling) {
+            // console.log('scrolling started','-'+scrollerID+'-')
             this.isScrolling = true
             this.scrollData.start = scrollPositionCurrent
             this.scrollData.currentupdate = scrollPositionCurrent
@@ -63,6 +68,7 @@ export default class ScrollHandler {
 
         // keep up to date in case of reparenting interrupt
         cradlePositionData.blockScrollPos = scrollPositionCurrent
+        // console.log('onScroll updated blockScrollPos','-'+scrollerID+'-',cradlePositionData.blockScrollPos)
 
         this.scrollData.previous = this.scrollData.current
         this.scrollData.current = scrollPositionCurrent
@@ -230,6 +236,9 @@ export default class ScrollHandler {
 
                 cradlePositionData.blockScrollPos = viewportElement.scrollLeft
             }
+            const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
+            // console.log('scrollHandler.upateBlockScrollPos updated blockScrollPos','-'+scrollerID+'-',cradlePositionData.blockScrollPos)
+
         }
 
     }

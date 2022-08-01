@@ -203,9 +203,10 @@ export default class ContentHandler {
         if (orientation == 'vertical') {
 
             const top = (targetAxisRowOffset * rowLength) + padding
-            axisElement.style.top = top + 'px'
 
+            axisElement.style.top = top + 'px'
             axisElement.style.left = 'auto'
+
             headElement.style.paddingBottom = 
                 headcontentlist.length?
                     gap + 'px':
@@ -213,10 +214,11 @@ export default class ContentHandler {
 
         } else { // orientation = 'horizontal'
 
-            axisElement.style.top = 'auto'
             const left = (targetAxisRowOffset * rowLength) + padding
-            axisElement.style.left = 
-                left + 'px'
+
+            axisElement.style.top = 'auto'
+            axisElement.style.left = left + 'px'
+
             headElement.style.paddingRight = 
                 headcontentlist.length?
                     gap + 'px':

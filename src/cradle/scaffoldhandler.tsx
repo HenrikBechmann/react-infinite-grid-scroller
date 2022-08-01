@@ -106,4 +106,11 @@ export default class ScaffoldHandler {
         return {width:viewportElement.clientWidth, height: viewportElement.clientHeight}
     }
 
+    public getViewportScrollPos() {
+        const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementRef.current
+        const top = viewportElement.scrollTop
+        const left = viewportElement.scrollLeft
+        return {top,left}
+    }
+
 }

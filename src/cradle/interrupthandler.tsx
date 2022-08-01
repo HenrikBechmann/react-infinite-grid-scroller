@@ -49,7 +49,8 @@ export default class InterruptHandler {
         const {
             contentHandler,
             stateHandler,
-            scrollHandler
+            scrollHandler,
+            scaffoldHandler,
         } = this.cradleParameters.handlersRef.current
 
         if (stateHandler.isMountedRef.current) {
@@ -67,6 +68,10 @@ export default class InterruptHandler {
                     isViewportScrollingForward = (scrollData.previousupdate < scrollData.currentupdate)
                 }
 
+                const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
+
+                // console.log('axisTriggerlinesObserverCallback: isViewportScrollingForward, blockScrollPos, scrollData', 
+                //     '-'+scrollerID+'-',isViewportScrollingForward, scaffoldHandler.cradlePositionData.blockScrollPos, scrollData)
                 contentHandler.updateCradleContent(isViewportScrollingForward, entries,'triggerlinesObserver')
 
             }
@@ -208,6 +213,16 @@ export default class InterruptHandler {
         pauseScrollingEffects: false,
     }
 
+    /*
+        invoked for 
+        cradle:
+        - change into cache
+        - trigger resizing
+        - trigger reconfiguration
+        - trigger pivot
+        servicehandler:
+        - call reload
+    */
     public pauseInterrupts = () => {
         const { signals } = this
         signals.pauseTriggerlinesObserver = true
@@ -215,7 +230,11 @@ export default class InterruptHandler {
         signals.pauseCradleResizeObserver = true
         signals.pauseScrollingEffects = true
     }
-
+    /*
+        invoked for
+        cradle:
+        - normalizesignals
+    */
     public restoreInterrupts = () => {
         const { signals } = this
         signals.pauseTriggerlinesObserver = false
