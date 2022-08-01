@@ -347,10 +347,10 @@ const Cradle = ({
 
     // const viewportScrollPos = scaffoldHandler.getViewportScrollPos()
 
-    console.log(
-        '**>> -'+scrollerID+'-', cradleState,'\n',
-        'isInPortal, viewportwidth, viewportheight, blockScrollPos, viewportElementScrollPos\n', 
-        isInPortal, viewportwidth, viewportheight, scaffoldHandler.cradlePositionData.blockScrollPos)
+    // console.log(
+    //     '**>> -'+scrollerID+'-', cradleState,'\n',
+    //     'isInPortal, viewportwidth, viewportheight, blockScrollPos, viewportElementScrollPos\n', 
+    //     isInPortal, viewportwidth, viewportheight, scaffoldHandler.cradlePositionData.blockScrollPos)
 
     const isCacheChange = (isInPortal != isCachedRef.current)
 
@@ -414,7 +414,7 @@ const Cradle = ({
     // generate state for restoring scrollPos
     useEffect(()=>{
 
-        if (parentingTransitionRequiredRef.current) {
+        if (parentingTransitionRequiredRef.current && !isCachedRef.current) {
 
             parentingTransitionRequiredRef.current = false            
             setCradleState('reparentingtransition')
@@ -435,14 +435,15 @@ const Cradle = ({
 
             wasCachedRef.current = false
 
-            // if (cradleStateRef.current == 'uncachingpending') {
+            if (parentingTransitionRequiredRef.current) {
 
-            //     setCradleState('ready')
+                parentingTransitionRequiredRef.current = false            
+                setCradleState('reparentingtransition')
 
-            // } else {
+            } else {
 
                 setCradleState('resolvependinguncaching')
-            // }
+            }
 
         }
 
@@ -854,15 +855,16 @@ const Cradle = ({
 
             case 'finishparenting':{
 
-                if (isCachedRef.current) { // interrupt until caching is resolved
+                // if (isCachedRef.current) { // interrupt until caching is resolved
                     
-                    setCradleState('uncachingpending')
+                //     setCradleState('uncachingpending')
 
-                } else {
+                // } else {
 
-                    setCradleState('ready')
+                interruptHandler.restoreInterrupts()
+                setCradleState('ready')
 
-                }
+                // }
 
                 break
             }
@@ -989,7 +991,7 @@ const Cradle = ({
 
                 // } else {                     
 
-                console.log('restoring interrupts from normalizesignals','-'+scrollerID+'-')
+                // console.log('restoring interrupts from normalizesignals','-'+scrollerID+'-')
                 interruptHandler.restoreInterrupts()
 
                 // console.log('finishing normalizesignals', '-'+scrollerID+'-')
@@ -1027,12 +1029,12 @@ const Cradle = ({
             case 'reparentingtransition': {
 
                     const { cradlePositionData } = scaffoldHandler
-                    console.log('in state machine reparentingtransition', '-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
+                    // console.log('in state machine reparentingtransition', '-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
 
                     // reset scroll position to previous value
                     if (cradlePositionData.blockScrollPos !== null) {
 
-                        console.log('resetting scroll position to','-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
+                        // console.log('resetting scroll position to','-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
 
                         const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
 
