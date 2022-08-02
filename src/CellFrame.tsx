@@ -170,6 +170,10 @@ const CellFrame = ({
 
                             usercontent = await getItem(index, itemID)
 
+                            if (usercontent === undefined) {
+                                error = new Error('host returned "undefined"')
+                            }
+
                         } catch(e) {
 
                             usercontent = undefined

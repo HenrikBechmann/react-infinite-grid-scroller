@@ -19,11 +19,6 @@
     BUGS: 
 
     TODO:
-        - use allSettled instead of all
-        - rationalize await handling everywhere to behave like promises
-        - use finally for callback
-        - error handling for preload items -- allow recovery - do not preload error items
-        - handle all getItem return options in preload
 
         - for set list size, respond to cache type - ie preload additional
         - cacheMax is boundary for preload, dense, and keepload

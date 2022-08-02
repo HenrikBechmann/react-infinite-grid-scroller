@@ -830,7 +830,7 @@ const Cradle = ({
                 // setTimeout(()=>{ // let clearCradle finish in startpreload
                     // console.log('preload after timeout')
                     // cacheHandler.clearCache()
-                    cacheHandler.preload(cradleParametersRef.current, callback, scrollerID)
+                    cacheHandler.preload(cradleParametersRef.current, callback, setMaxListsize, scrollerID)
 
                 // },1)
 
