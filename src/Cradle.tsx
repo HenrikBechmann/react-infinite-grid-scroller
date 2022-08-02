@@ -328,7 +328,7 @@ const Cradle = ({
         stylesHandler,
     } = handlersRef.current
 
-    // =======================[ CACHING STATE CHANGE SENTINEL ]=========================
+    // =======================[ CACHING STATE CHANGE INTERRUPT ]=========================
 
     // intercept change in caching status
     // when a portal is cached, including the transition of being moved from one cellFrame to another,
