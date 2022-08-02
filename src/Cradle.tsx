@@ -1044,7 +1044,7 @@ const Cradle = ({
         switch (cradleState) {
 
             // repositioningRender and repositioningContinuation are toggled to generate continuous 
-            // reposiioning renders
+            // repositioning renders
             case 'repositioningRender':
                 break
 
