@@ -43,7 +43,7 @@ const Cradle = ({
         startingIndex, 
         getItem, 
         placeholder, 
-        userFunctions,
+        userCallbacks,
         styles,
         triggerlineOffset,
         cache,
@@ -216,22 +216,22 @@ const Cradle = ({
     // ----------------------[ callbacks ]----------------------------
 
     // host callbacks
-    // const referenceIndexCallbackRef = useRef(functions?.referenceIndexCallback)
-    // const preloadIndexCallbackRef = useRef(functions?.preloadIndexCallback)
+    // const referenceIndexCallbackRef = useRef(callbacks?.referenceIndexCallback)
+    // const preloadIndexCallbackRef = useRef(callbacks?.preloadIndexCallback)
 
     const externalCallbacksRef = useRef(
         {
-            referenceIndexCallback:userFunctions?.referenceIndexCallback,
-            preloadIndexCallback:userFunctions?.preloadIndexCallback,
-            deleteListCallback:userFunctions?.deleteListCallback,
-            changeListsizeCallback:userFunctions?.changeListsizeCallback,
+            referenceIndexCallback:userCallbacks?.referenceIndexCallback,
+            preloadIndexCallback:userCallbacks?.preloadIndexCallback,
+            deleteListCallback:userCallbacks?.deleteListCallback,
+            changeListsizeCallback:userCallbacks?.changeListsizeCallback,
         }
     )
 
     // -----------------[ bundle parameters for handlers ]-------------------
 
     // bundle all cradle props to pass to handlers - ultimately cradleParametersRef
-    const cradleInheritedPropertiesRef = useRef(null) // access by closures and support functions
+    const cradleInheritedPropertiesRef = useRef(null) // access by closures and support callbacks
     // up to date values
     cradleInheritedPropertiesRef.current = {
         // gridSpecs
@@ -250,7 +250,7 @@ const Cradle = ({
         triggerlineOffset,
         scrollerID,
         // objects
-        userFunctions,
+        userCallbacks,
         styles,
         cacheHandler,
 
@@ -477,10 +477,10 @@ const Cradle = ({
 
     },[])
 
-    //send callback functions to host
+    //send callback callbacks to host
     useEffect(()=>{
 
-        if (!userFunctions.getCallbacks) return
+        if (!userCallbacks.getFunctions) return
 
         const {
 
@@ -499,7 +499,7 @@ const Cradle = ({
 
         } = serviceHandler
 
-        const callbacks = {
+        const functions = {
 
             scrollToItem,
             reload,
@@ -516,7 +516,7 @@ const Cradle = ({
 
         }
 
-        userFunctions.getCallbacks(callbacks)
+        userCallbacks.getFunctions(functions)
 
     },[])
 

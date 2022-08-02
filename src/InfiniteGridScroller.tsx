@@ -118,14 +118,14 @@ const InfiniteGridScroller = (props) => {
         cache = 'cradle', // "preload", "keepload" or "cradle"
         cacheMax = null, // always minimum cradle null means limited by listsize
         triggerlineOffset = 10, // distance from cell head or tail for content shifts above/below axis
-        functions = {}, // optional. properties to get direct access to some component utilites, optional
+        callbacks = {}, // optional. closures to get direct access to some component utilites
         scrollerData, // required for embedded scroller, shares scroller settings with content
         advanced = {}, // optional. technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
     } = props
 
     // avoid null
     styles = styles ?? {}
-    functions = functions ?? {}
+    callbacks = callbacks ?? {}
     advanced = advanced ?? {}
 
     // prop constraints - non-negative values
@@ -157,7 +157,7 @@ const InfiniteGridScroller = (props) => {
 
     const gridSpecsRef = useRef(gridSpecs)
     const stylesRef = useRef(styles)
-    const functionsRef = useRef(functions)
+    const callbacksRef = useRef(callbacks)
 
     // for mount
     const scrollerSessionIDRef = useRef(null);
@@ -174,8 +174,8 @@ const InfiniteGridScroller = (props) => {
     if (!compareProps(styles, stylesRef.current)) {
         stylesRef.current = styles
     }
-    if (!compareProps(functions, functionsRef.current)) {
-        functionsRef.current = functions
+    if (!compareProps(callbacks, callbacksRef.current)) {
+        callbacksRef.current = callbacks
     }
 
     const cacheHandlerRef = useRef(null)
@@ -200,7 +200,7 @@ const InfiniteGridScroller = (props) => {
         listsizeRef.current = listsize
 
         // inform the user
-        functionsRef.current.newListsize && functionsRef.current.newListsize(listsize)
+        callbacksRef.current.newListsize && callbacksRef.current.newListsize(listsize)
 
         setScrollerState('setlistsize')
     },[])
@@ -251,7 +251,7 @@ const InfiniteGridScroller = (props) => {
                     listsize = { listsize }
                     cache = { cache }
                     cacheMax = { cacheMax }
-                    userFunctions = { functionsRef.current }
+                    userCallbacks = { callbacksRef.current }
                     startingIndex = { startingIndex }
                     getItem = { getItem }
                     placeholder = { placeholder }
