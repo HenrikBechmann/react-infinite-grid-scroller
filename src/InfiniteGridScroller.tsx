@@ -5,13 +5,13 @@
     react-infinite-grid-scroller = RIGS
 
     ROADMAP:
-        checkmark enable console feedback (for external callbacks)
-
         test changing all gridscroller parameters
             test config size edge cases - over and under sized cells
 
         review all code
         layout: uniform, variable, dense
+
+        cross-browser testing; smartphone testing
 
         release to npm
         create demo site - github pages
@@ -23,6 +23,7 @@
         - for set list size, respond to cache type - ie preload additional
         - cacheMax is boundary for preload, dense, and keepload
 
+        - checkmark enable console feedback (for external callbacks)
         - organize feedback for all cache operations
         - also surface external callbacks with return values for testing
             - add modify listsize callback
@@ -45,7 +46,6 @@
         - calc minwidth by form factor
         - review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
         - add grid-template-rows: max-content to parent for safari issue grid-auto-flow: column not filling column
-        - cross-browser testing; smartphone testing
 */
 
 import React, {useEffect, useState, useCallback, useRef} from 'react'

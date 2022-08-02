@@ -447,8 +447,6 @@ export class CacheHandler {
                 listsize + rangeincrement:
                 null
 
-        // TODO look for shiftboundaryindex, at the end for remove, at the start for insert
-
         // ---------- define boundaries within ordered cache index list ------------
         // Ptr = index to array, as opposed to index of virtual list
 
