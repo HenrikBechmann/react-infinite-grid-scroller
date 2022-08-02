@@ -84,12 +84,14 @@ const Cradle = ({
 
     // console.log('==> running CRADLE cradleState','-'+scrollerID+'-', cradleState)
 
-    // controls
+    // flags
     const isMountedRef = useRef(true)
     const isCachedRef = useRef(false)
     const wasCachedRef = useRef(false)
     const parentingTransitionRequiredRef = useRef(false)
     const hasBeenRenderedRef = useRef(false)
+
+    // controls
     const triggerlineRecordsRef = useRef({ // to calculate inferred trigger
         wasViewportScrollingForward:null,
         driver:null,
