@@ -445,7 +445,7 @@ const Cradle = ({
 
             } else {
 
-                setCradleState('resolvependinguncaching')
+                setCradleState('resolvependinguncache')
             }
 
         }
@@ -835,18 +835,18 @@ const Cradle = ({
                 break
             }
 
-            case 'uncachepending': {
+            // case 'uncachepending': {
 
-                // no-op
-                break
+            //     // no-op
+            //     break
 
-            }
+            // }
 
             case 'cached': {
 
                 if (!wasCachedRef.current && !isCachedRef.current){
 
-                    setCradleState('resolvependinguncaching')
+                    setCradleState('resolvependinguncache')
 
                 }
                 break
@@ -868,7 +868,7 @@ const Cradle = ({
 
                 } else {
 
-                    setCradleState('resolvependinguncaching')
+                    setCradleState('resolvependinguncache')
 
                 }
 
@@ -931,7 +931,7 @@ const Cradle = ({
                 'normalizesignals'
             */
             case 'resetcache':
-            case 'resolvependinguncaching':
+            case 'resolvependinguncache':
             case 'dosetup':
             case 'finishpreload':
             case 'doreposition': //
