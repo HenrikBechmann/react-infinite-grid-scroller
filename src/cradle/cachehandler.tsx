@@ -181,6 +181,8 @@ export class CacheHandler {
 
         const promises = []
 
+        console.log('cacheMax', cacheMax)
+
         let cacheSize = cacheMax ?? 0
 
         cacheSize = Math.min(cacheSize, listsize)

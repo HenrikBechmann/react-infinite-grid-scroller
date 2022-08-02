@@ -572,9 +572,12 @@ const Cradle = ({
 
     useEffect(()=> {
 
+        console.log('cradle - handle cache and cacheMax change:', cache, cacheMax)
+
         if (cache == 'preload') {
-            // console.log('calling startpreload')
+
             setCradleState('startpreload')
+
             return
 
         }
