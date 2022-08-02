@@ -117,6 +117,8 @@ export default class ServiceHandler {
     // and are processed by the above rule
     public changeIndexMap = (changeMap) => { // index => itemID
 
+        // console.log('changeIndexMap: changeMap', changeMap)
+
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
 
@@ -229,12 +231,14 @@ export default class ServiceHandler {
 
         const modifiedIndexesList = Array.from(
             new Set( // get unique list
-                Array.from(processedMap.values()).concat(
-                    Array.from(orphanedItemIndexesMap.values()),
+                Array.from(processedMap.keys()).concat(
+                    Array.from(orphanedItemIndexesMap.keys()),
                     indexesToDeleteList
                 )
             ).values()
         )
+
+        // console.log('modifiedIndexesList',modifiedIndexesList)
 
         contentHandler.reconcileCellFrames(modifiedIndexesList)
 

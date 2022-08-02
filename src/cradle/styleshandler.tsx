@@ -31,7 +31,7 @@ export default class StylesHandler {
 
         // TODO: change 'cradle' to 'head' and 'tail' for more granularity
         // TODO: triggerline offset for head styles experimentally set to negative
-        //    to assure a brealline is always available for notification
+        //    to assure a breakline is always available for notification
         const headstyles:React.CSSProperties = this.getHeadStyles(gap, padding, orientation, userstyles.cradle)
         const tailstyles:React.CSSProperties = this.getTailStyles(gap, padding, orientation, userstyles.cradle)
         const axisstyles:React.CSSProperties = this.getAxisStyles(gap, padding, orientation, userstyles.axis)

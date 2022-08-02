@@ -169,7 +169,7 @@ export class CacheHandler {
 
     }
 
-    preload(cradleParameters, callback, scrollerID) {
+    preload(cradleParameters, callback, setMaxListsize, scrollerID) {
 
         const { cradlePassthroughPropertiesRef } = cradleParameters
         const { stateHandler, serviceHandler } = cradleParameters.handlersRef.current
@@ -181,6 +181,8 @@ export class CacheHandler {
 
         const promises = []
 
+        // console.log('cacheMax', cacheMax)
+
         let cacheSize = cacheMax ?? 0
 
         cacheSize = Math.min(cacheSize, listsize)
@@ -189,6 +191,15 @@ export class CacheHandler {
             cacheMax?
                 cacheMax:
                 listsize
+
+        let breakloop = {
+            current:false
+        }
+
+        const maxListsizeInterrupt = (index) => {
+            breakloop.current = true
+            setMaxListsize(index)
+        }
 
         if (stateHandler.isMountedRef.current) {
 
@@ -204,15 +215,18 @@ export class CacheHandler {
                         getItem, 
                         cradlePassthroughPropertiesRef,
                         serviceHandler.callbacks.preloadIndexCallback,
+                        maxListsizeInterrupt,
                         scrollerID
                     )
                     promises.push(promise)
 
                 }
+
+                if (breakloop.current) break
             }
         }
 
-        Promise.all(promises).then(
+        Promise.allSettled(promises).then(
             ()=>{
                 this.renderPortalList()
                 // console.log("finished preloading",'-'+scrollerID+'-',+this.cacheProps.portalMap.size)
@@ -435,8 +449,6 @@ export class CacheHandler {
                 listsize + rangeincrement:
                 null
 
-        // TODO look for shiftboundaryindex, at the end for remove, at the start for insert
-
         // ---------- define boundaries within ordered cache index list ------------
         // Ptr = index to array, as opposed to index of virtual list
 
@@ -618,7 +630,7 @@ export class CacheHandler {
         this.cacheProps.metadataMap.set(itemID, portalMetadata)
         this.cacheProps.indexToItemIDMap.set(index, itemID)
 
-        if (!isPreload) this.renderPortalList() // TODO check if this can be delayed
+        if (!isPreload) this.renderPortalList()
 
         return portalMetadata
 
@@ -628,14 +640,31 @@ export class CacheHandler {
         getItem, 
         cradlePassthroughPropertiesRef, 
         preloadIndexCallback,
+        maxListsizeInterrupt,
         scrollerID
     ) {
 
         const itemID = this.getItemID(index)
 
-        const usercontent = await getItem(index, itemID)
+        let usercontent
+        let error
+        try {
+            usercontent = await getItem(index, itemID)
+        } catch(e) {
+            usercontent = undefined
+            error = e
+        }
 
-        if (usercontent) {
+        if ((usercontent !== null) && (usercontent !== undefined)) {
+
+            if (!React.isValidElement(usercontent)) {
+                usercontent = undefined
+                error = new Error('invalid React element')
+            }
+
+        }
+
+        if ((usercontent !== null) && (usercontent !== undefined)) {
 
             preloadIndexCallback && preloadIndexCallback(index, itemID)
 
@@ -659,8 +688,14 @@ export class CacheHandler {
 
         } else {
 
-            preloadIndexCallback && preloadIndexCallback(index, itemID, 'error')
-            console.log('ERROR','no content item for preload index, itemID',index, itemID)
+            if (usercontent === undefined) {
+
+                preloadIndexCallback && preloadIndexCallback(index, itemID, error)
+                console.log('ERROR','no content item for preload index, itemID',index, itemID)
+
+            } else { // usercontent === null; last item in list
+                maxListsizeInterrupt(index)
+            }
 
         }
 

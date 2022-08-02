@@ -2,8 +2,8 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    TODO
-    update length for cradle adjustments based on variable length changes in cell frames.
+    
+    TODO update length for cradle adjustments based on variable length changes in cell frames.
 
 */
 

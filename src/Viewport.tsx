@@ -100,7 +100,7 @@ const Viewport = ({
             // console.log('viewport clientWidth, clientHeight','-'+scrollerID+'-' ,target.clientWidth, target.clientHeight)
             // if (!((target.clientHeight == 0) && (target.clientWidth == 0))) {
             // embedded lists need resizing event for init with up to date viewport dimensions
-            if (scrollerID == 0) {// anti-pattern hack
+            if (!scrollerData) {
                 return
             }
         }

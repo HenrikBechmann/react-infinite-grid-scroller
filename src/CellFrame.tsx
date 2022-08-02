@@ -161,7 +161,6 @@ const CellFrame = ({
 
                     cacheHandler.registerRequestedPortal(index)
 
-                    // TODO review implementation of async here
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
                         let usercontent
@@ -169,6 +168,10 @@ const CellFrame = ({
                         try {
 
                             usercontent = await getItem(index, itemID)
+
+                            if (usercontent === undefined) {
+                                error = new Error('host returned "undefined"')
+                            }
 
                         } catch(e) {
 

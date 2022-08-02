@@ -572,9 +572,12 @@ const Cradle = ({
 
     useEffect(()=> {
 
+        // console.log('cradle - handle cache and cacheMax change:', cache, cacheMax)
+
         if (cache == 'preload') {
-            // console.log('calling startpreload')
+
             setCradleState('startpreload')
+
             return
 
         }
@@ -825,14 +828,7 @@ const Cradle = ({
 
                 // console.log('in dopreload, calling cacheHandler.preload with timeout')
 
-                // setTimeout avoids race condition in clearing cellFrames
-                // TODO try useLayout for a DOM rewrite instead
-                // setTimeout(()=>{ // let clearCradle finish in startpreload
-                    // console.log('preload after timeout')
-                    // cacheHandler.clearCache()
-                    cacheHandler.preload(cradleParametersRef.current, callback, scrollerID)
-
-                // },1)
+                cacheHandler.preload(cradleParametersRef.current, callback, setMaxListsize, scrollerID)
 
                 break
             }
@@ -991,34 +987,9 @@ const Cradle = ({
 
             case 'normalizesignals': { // normalize or resume cycling
 
-                // prioritize interrupts TODO: validate this
-
-                // if ((!isCachedRef.current) && viewportInterruptPropertiesRef.current.isResizing) {
-                //     console.log('calling resizing from normalizesignals','-'+scrollerID+'-')
-                //     setCradleState('resizing')
-
-                // } else if (interruptHandler.signals.repositioningRequired) {
-
-                //     setCradleState('startreposition')
-
-                // } else {                     
-
-                // console.log('restoring interrupts from normalizesignals','-'+scrollerID+'-')
                 interruptHandler.restoreInterrupts()
 
-                // console.log('finishing normalizesignals', '-'+scrollerID+'-')
-                // if (isCachedRef.current) { // interrupt until caching is resolved
-                //     console.log('- calling cached')
-                //     setCradleState('cached')
-                //     // break
-                // } else {
-
-                //     console.log('- calling ready')
-                    setCradleState('ready')
-
-                // }
-
-                // }
+                setCradleState('ready')
 
                 break 
 
