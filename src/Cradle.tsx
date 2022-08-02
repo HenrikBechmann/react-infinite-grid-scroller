@@ -835,7 +835,7 @@ const Cradle = ({
                 break
             }
 
-            case 'uncachingpending': {
+            case 'uncachepending': {
 
                 // no-op
                 break
@@ -856,7 +856,7 @@ const Cradle = ({
 
                 // if (isCachedRef.current) { // interrupt until caching is resolved
                     
-                //     setCradleState('uncachingpending')
+                //     setCradleState('uncachepending')
 
                 // } else {
 
