@@ -38,6 +38,7 @@
             - review state change chains in cradle
             - try to reduce need to run renderportallist - try some kind of pagination/grouping
 
+        - create random loading delays in test ui
         - provide way to attempt reload of a single cell (change instanceID)
         - call matchCacheToCradle through contentHandler (?) iac rationalize calls to cacheHandler
         - check number of passes to scrollblock; consider implementing named states
