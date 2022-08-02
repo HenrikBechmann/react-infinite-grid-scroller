@@ -6,18 +6,15 @@
 
     ROADMAP:
         checkmark enable console feedback (for external callbacks)
-        organize feedback for all cache operations
-
-        also surface external callbacks with return values for testing
-        review all code
-
-        layout: uniform, variable, dynamic, dense
 
         test changing all gridscroller parameters
-        test config size edge cases - over and under sized cells
+            test config size edge cases - over and under sized cells
 
-        create demo site - github pages, and sandbox
+        review all code
+        layout: uniform, variable, dense
+
         release to npm
+        create demo site - github pages
 
     BUGS: 
 
@@ -29,25 +26,24 @@
         - handle all getItem return options in preload
 
         - for set list size, respond to cache type - ie preload additional
-        - try to preload all children, even if cached
         - cacheMax is boundary for preload, dense, and keepload
 
-        - add modify listsize callback
+        - organize feedback for all cache operations
+        - also surface external callbacks with return values for testing
+            - add modify listsize callback
+            - return modified cachedItemMap from modify, add, and remove
+            - customizable scrolltracker, or provide callback feature for scroll tracking
 
         - review event cycles - they seem slower
-        - return modified cachedItemMap from modify, add, and remove
+            - review state change chains in cradle
+            - try to reduce need to run renderportallist - try some kind of pagination/grouping
 
         - provide way to attempt reload of a single cell (change instanceID)
         - call matchCacheToCradle through contentHandler (?) iac rationalize calls to cacheHandler
-        - test and review itemID
-        - review state change chains in cradle
         - check number of passes to scrollblock; consider implementing named states
         - test for memory leaks with Chrome's window.performance.memory property
-        - try to reduce need to run renderportallist - try some kind of pagination/grouping
         - replace top/left with transformx/y
         - prioritize fetch cells for visible cells
-        - customizable scrolltracker, or provide callback feature for scroll tracking
-        - check use of useCallback
         - test for two root portals
         - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
         - calc minwidth by form factor
@@ -113,7 +109,7 @@ const InfiniteGridScroller = (props) => {
         padding = 0, // the space between the items and the viewport, applied to the cradle
         cellHeight, // required. the outer pixel height - literal for vertical; approximate for horizontal
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
-        layout = 'uniform', // uniform, variable (doesn't use axis), dynamic (uses axis), dense
+        layout = 'uniform', // uniform, variable (uses axis), dense
         // scroller specs:
         estimatedListSize = 0, // the exact number of the size of the virtual list
         runwaySize = 3, // the number of items outside the view of each side of the viewport 
@@ -151,7 +147,7 @@ const InfiniteGridScroller = (props) => {
     if (!['preload','keepload','cradle'].includes(cache)) {
         cache = 'cradle'
     }
-    if (!['uniform', 'variable', 'dynamic', 'dense'].includes(layout)) {
+    if (!['uniform', 'variable', 'dense'].includes(layout)) {
         layout = 'uniform'
     }
 
