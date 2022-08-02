@@ -20,8 +20,6 @@
         release to npm
 
     BUGS: 
-        - scrollerID == 0 won't work to ID root with multiple roots (viewport)
-            - need another way to ID root
 
     TODO:
         - use allSettled instead of all
