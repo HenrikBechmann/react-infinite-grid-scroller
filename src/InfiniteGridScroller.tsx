@@ -20,9 +20,6 @@
 
     TODO:
 
-        - for set list size, respond to cache type - ie preload additional
-        - cacheMax is boundary for preload, dense, and keepload
-
         - checkmark enable console feedback (for external callbacks)
         - organize feedback for all cache operations
         - also surface external callbacks with return values for testing
