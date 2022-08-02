@@ -28,6 +28,7 @@
         - error handling for preload items -- allow recovery - do not preload error items
         - handle all getItem return options in preload
 
+        - for set list size, respond to cache type - ie preload additional
         - try to preload all children, even if cached
         - cacheMax is boundary for preload, dense, and keepload
 
