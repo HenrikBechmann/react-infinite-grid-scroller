@@ -487,10 +487,14 @@ export class CacheHandler {
 
         } else { // core scope is partially or fully in view
 
-            if (shrinktoPtr == -1) {
-                indexesToProcessList = orderedIndexList.slice(lowPtr)
+            if (increment == -1) {
+                if (shrinktoPtr == -1) {
+                    indexesToProcessList = orderedIndexList.slice(highPtr + 1)
+                } else {
+                    indexesToProcessList = orderedIndexList.slice(highPtr + 1, shrinktoPtr)
+                }
             } else {
-                indexesToProcessList = orderedIndexList.slice(lowPtr, shrinktoPtr)
+                indexesToProcessList = orderedIndexList.slice(lowPtr)
             }
 
         }
@@ -662,7 +666,7 @@ export class CacheHandler {
 
             returnvalue = usercontent = undefined
             error = e
-            
+
         }
 
         if ((usercontent !== null) && (usercontent !== undefined)) {
