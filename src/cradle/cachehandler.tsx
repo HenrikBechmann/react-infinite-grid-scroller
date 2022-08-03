@@ -425,8 +425,8 @@ export class CacheHandler {
     // much of this deals with the fact that the cache is sparse.
     insertRemoveIndex(index, highrange, increment, listsize) { // increment is +1 or -1
 
-        // console.log('==> cacheHandler.insertRemoveIndex: index, highrange, increment, listsize',
-        //     index, highrange, increment, listsize)
+        console.log('==> cacheHandler.insertRemoveIndex: \nindex, highrange, increment, listsize\n',
+            index, highrange, increment, listsize)
 
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
@@ -446,43 +446,51 @@ export class CacheHandler {
         // range increment adds sign to rangecount to indicate add/remove
         const rangeincrement = rangecount * increment
 
-        // shrinktorange is the index at the bottom of the indexes to be removed from the top of the list
-        // for the remove operation.
-        const shrinktorangeindex = 
-            (increment == -1)?
-                listsize + rangeincrement:
-                null
-
-        // ---------- define boundaries within ordered cache index list ------------
-        // Ptr = index to array, as opposed to index of virtual list
-
         // highPtr, lowPtr, shrinkPtr within orderedIndexList.
         const orderedIndexList = Array.from(indexToItemIDMap.keys())
         orderedIndexList.sort((a,b)=>a-b)
 
-        // low and high pointers provide values for slices above the range
+        // ---------- define boundaries within ordered cache index list ------------
+        // Ptr = index to array, as opposed to index of virtual list
+
+        // shrinktorange is the index at the bottom of the indexes to be removed from the top of the list
+        // for the remove operation.
+        const shrinktoIndex = 
+            (increment == -1)?
+                listsize + rangeincrement:
+                null
+
+        // shrinkptr is the location of the bottom of the shrink range for removals
+        const shrinktoPtr = 
+            (increment == -1)?
+                orderedIndexList.findIndex(value => value >= shrinktoIndex):
+                -1
+
+        const shiftBoundaryIndex = 
+            (increment == 1)?
+                index + rangeincrement:
+                highrangeindex + rangeincrement
+
+        const shiftBoundaryPtr = orderedIndexList.findIndex(value => value >= shiftBoundaryIndex)
+
         const lowPtr = orderedIndexList.findIndex(value => value >= index)
 
         const highPtr = orderedIndexList.findIndex(value=> value >= highrangeindex)
 
-        // shrinkptr is the location of the bottom of the shrink range for removals
-        const indexShrinktoPtr = 
-            (increment == -1)?
-                orderedIndexList.findIndex(value => value >= shrinktorangeindex):
-                -1
+        console.log('highrangeindex, rangecount, rangeincrement, shrinktoIndex, shiftBoundaryIndex, \n',
+            'lowPtr, highPtr, shrinktoPtr, shiftBoundaryPtr, orderedIndexList\n',
+            highrangeindex, rangecount, rangeincrement, shrinktoIndex,shiftBoundaryIndex,'\n',
+            lowPtr, highPtr, shrinktoPtr, shiftBoundaryPtr, orderedIndexList)
 
-        // console.log('highrangeindex, rangecount, rangeincrement, shrinktorangeindex\n',
-        //     'lowPtr, highPtr, shrinktoPtr, orderedIndexList\n',
-        //     highrangeindex, rangecount, rangeincrement, shrinktorangeindex,'\n',
-        //     lowPtr, highPtr, shrinktoPtr, orderedIndexList)
+        return [[],[],[]] // FOR DEBUG
 
         // ----------- define indexesToProcess, indexesToRemove and itemsToRemove lists --------
 
         let indexesToProcessList, // for either insert or remove
-            indexesToReplaceList = [], // for insert
-            indexesToRemoveList = [], // for remove
-            indexesOfItemsToRemoveList = [], // for remove
-            itemsToRemoveList = [] // for remove
+            indexesToReplaceList = [], // for insert the range being inserted
+            indexesToRemoveList = [], // for remove - end of list, list is shrinking
+            indexesOfItemsToRemoveList = [], // for remove - within the range of indexes being removed
+            itemsToRemoveList = [] // for remove, derived from the previous
 
         // first, indexesToProcessList and indexesOfItemsToRemoveList
         if ((lowPtr == -1) && (highPtr == -1)) { // core scope is out of view
@@ -534,21 +542,21 @@ export class CacheHandler {
 
         indexesToProcessList.forEach(processindex)
 
-        // get indexesToReplaceList
-        let shiftBoundaryIndex, shiftBoundaryPtr
-        if (increment == 1) {
-            shiftBoundaryIndex = indexesModifiedList.at(-1)
-            shiftBoundaryPtr = indexesToProcessList.findIndex(value =>value < shiftBoundaryIndex)
-            if (shiftBoundaryPtr != -1) {
-                indexesToReplaceList = indexesToProcessList.slice(shiftBoundaryPtr)
-            }
-        } else {
-            shiftBoundaryIndex = indexesModifiedList.at(0)
-            shiftBoundaryPtr = indexesToProcessList.findIndex(value =>value > shiftBoundaryIndex)
-            if (shiftBoundaryPtr != -1) {
-                indexesOfItemsToRemoveList = indexesToProcessList.slice(shiftBoundaryPtr)
-            }
-        }
+        // // get indexesToReplaceList
+        // let shiftBoundaryIndex, shiftBoundaryPtr
+        // if (increment == 1) {
+        //     shiftBoundaryIndex = indexesModifiedList.at(-1)
+        //     shiftBoundaryPtr = indexesToProcessList.findIndex(value =>value < shiftBoundaryIndex)
+        //     if (shiftBoundaryPtr != -1) {
+        //         indexesToReplaceList = indexesToProcessList.slice(shiftBoundaryPtr)
+        //     }
+        // } else {
+        //     shiftBoundaryIndex = indexesModifiedList.at(0)
+        //     shiftBoundaryPtr = indexesToProcessList.findIndex(value =>value > shiftBoundaryIndex)
+        //     if (shiftBoundaryPtr != -1) {
+        //         indexesOfItemsToRemoveList = indexesToProcessList.slice(shiftBoundaryPtr)
+        //     }
+        // }
 
         // delete remaining indexes and items now duplicates
         for (const index of indexesToRemoveList) {
