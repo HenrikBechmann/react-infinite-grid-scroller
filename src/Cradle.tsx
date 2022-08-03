@@ -665,15 +665,11 @@ const Cradle = ({
     // reconfigure for changed size parameters
     useEffect(()=>{
 
-        console.log('in reconfigure effect:cradleStateRef.current,isCachedRef.current','='+scrollerID+'-')
+        // console.log('in reconfigure effect:cradleStateRef.current,isCachedRef.current','-'+scrollerID+'-')
 
         if (cradleStateRef.current == 'setup') return
 
-        if (isCachedRef.current) {
-            // hasBeenRenderedRef.current = false
-            return
-
-        }
+        if (isCachedRef.current) return
 
         const signals = interruptHandler.signals
 
