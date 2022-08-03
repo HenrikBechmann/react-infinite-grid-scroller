@@ -367,6 +367,9 @@ const Cradle = ({
     console.log('- isCacheChange, isCachingUnderway, isCachedRef.current, wasCachedRef.current\n',
         isCacheChange, isCachingUnderway, isCachedRef.current, wasCachedRef.current)
 
+    console.log('- viewportInterruptProperties.isReparentingRef?.current, viewportInterruptProperties.isResizing\n',
+        viewportInterruptProperties.isReparentingRef?.current, viewportInterruptProperties.isResizing)
+
     if (
         isCacheChange || 
         viewportInterruptProperties.isReparentingRef?.current ||
@@ -662,9 +665,15 @@ const Cradle = ({
     // reconfigure for changed size parameters
     useEffect(()=>{
 
+        console.log('in reconfigure effect:cradleStateRef.current,isCachedRef.current','='+scrollerID+'-')
+
         if (cradleStateRef.current == 'setup') return
 
-        if (isCachedRef.current) return
+        if (isCachedRef.current) {
+            // hasBeenRenderedRef.current = false
+            return
+
+        }
 
         const signals = interruptHandler.signals
 
