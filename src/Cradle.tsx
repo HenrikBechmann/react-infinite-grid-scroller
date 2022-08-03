@@ -216,9 +216,6 @@ const Cradle = ({
     // ----------------------[ callbacks ]----------------------------
 
     // host callbacks
-    // const referenceIndexCallbackRef = useRef(callbacks?.referenceIndexCallback)
-    // const preloadIndexCallbackRef = useRef(callbacks?.preloadIndexCallback)
-
     const externalCallbacksRef = useRef(
         {
             referenceIndexCallback:userCallbacks?.referenceIndexCallback,
@@ -1101,7 +1098,12 @@ const Cradle = ({
 
     const cradleContent = contentHandler.content
 
-    const contextvalueRef = useRef({scrollerPassthroughPropertiesRef, cacheHandler, setMaxListsize})
+    const contextvalueRef = useRef({
+        scrollerPassthroughPropertiesRef, 
+        cacheHandler, 
+        setMaxListsize,
+        itemExceptionsCallback:serviceHandler.callbacks.itemExceptionsCallback,
+    })
 
     return <CradleContext.Provider value = {contextvalueRef.current}>
 

@@ -16,7 +16,7 @@ export default class ServiceHandler {
            preloadIndexCallback,
            deleteListCallback,
            changeListsizeCallback,
-           itemExceptionsCallback,
+           itemExceptionsCallback, // index, itemID, returnvalue, error, location
            
        } = cradleParameters.externalCallbacksRef.current
 

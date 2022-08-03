@@ -202,20 +202,24 @@ export class CacheHandler {
             setMaxListsize(index)
         }
 
+        // serviceHandler.callbacks.preloadIndexCallback
         if (stateHandler.isMountedRef.current) {
 
             
             const indexToItemIDMap = this.cacheProps.indexToItemIDMap
 
-            for (let i = 0; i < preloadsize; i++) {
+            const { preloadIndexCallback, itemExceptionsCallback } = serviceHandler.callbacks
 
-                if (!indexToItemIDMap.has(i)) {
+            for (let index = 0; index < preloadsize; index++) {
 
+                if (!indexToItemIDMap.has(index)) {
+
+                    preloadIndexCallback && preloadIndexCallback(index)
                     const promise = this.preloadItem(
-                        i, 
+                        index, 
                         getItem, 
                         scrollerPassthroughPropertiesRef,
-                        serviceHandler.callbacks.preloadIndexCallback,
+                        itemExceptionsCallback,
                         maxListsizeInterrupt,
                         scrollerID
                     )
@@ -230,7 +234,6 @@ export class CacheHandler {
         Promise.allSettled(promises).then(
             ()=>{
                 this.renderPortalList()
-                // console.log("finished preloading",'-'+scrollerID+'-',+this.cacheProps.portalMap.size)
                 finalCallback()
             }
         )
@@ -637,28 +640,35 @@ export class CacheHandler {
 
     }
 
-    private async preloadItem(index, 
+    private async preloadItem(
+        index, 
         getItem, 
         scrollerPassthroughPropertiesRef, 
-        preloadIndexCallback,
+        itemExceptionsCallback,
         maxListsizeInterrupt,
         scrollerID
     ) {
 
         const itemID = this.getItemID(index)
 
+        let returnvalue
         let usercontent
         let error
         try {
+
             usercontent = await getItem(index, itemID)
+
         } catch(e) {
-            usercontent = undefined
+
+            returnvalue = usercontent = undefined
             error = e
+            
         }
 
         if ((usercontent !== null) && (usercontent !== undefined)) {
 
             if (!React.isValidElement(usercontent)) {
+                returnvalue = usercontent
                 usercontent = undefined
                 error = new Error('invalid React element')
             }
@@ -666,10 +676,6 @@ export class CacheHandler {
         }
 
         if ((usercontent !== null) && (usercontent !== undefined)) {
-
-            preloadIndexCallback && preloadIndexCallback(index, itemID)
-
-            // console.log('preloading index','-'+scrollerID+'-' ,index )
 
             let content 
             const scrollerData = {
@@ -691,10 +697,11 @@ export class CacheHandler {
 
             if (usercontent === undefined) {
 
-                preloadIndexCallback && preloadIndexCallback(index, itemID, error)
+                itemExceptionsCallback && itemExceptionsCallback(index, itemID, returnvalue, error, 'preload')
 
             } else { // usercontent === null; last item in list
 
+                itemExceptionsCallback && itemExceptionsCallback(index, itemID, returnvalue, 'end of list', 'preload')
                 maxListsizeInterrupt(index)
 
             }

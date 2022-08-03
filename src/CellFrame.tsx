@@ -28,7 +28,7 @@ const CellFrame = ({
 
     const cradleContext = useContext(CradleContext)
 
-    const { cacheHandler, scrollerPassthroughPropertiesRef, setMaxListsize } = cradleContext
+    const { cacheHandler, scrollerPassthroughPropertiesRef, setMaxListsize, itemExceptionsCallback } = cradleContext
     
     const [styles,saveStyles] = useState({
         overflow:'hidden',
@@ -163,6 +163,7 @@ const CellFrame = ({
 
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
+                        let returnvalue
                         let usercontent
                         let error
                         try {
@@ -175,7 +176,7 @@ const CellFrame = ({
 
                         } catch(e) {
 
-                            usercontent = undefined
+                            returnvalue = usercontent = undefined
                             error = e
 
                         }
@@ -183,6 +184,7 @@ const CellFrame = ({
                         if ((usercontent !== null) && (usercontent !== undefined)) {
 
                             if (!React.isValidElement(usercontent)) {
+                                returnvalue = usercontent
                                 usercontent = undefined
                                 error = new Error('invalid React element')
                             }
@@ -221,11 +223,13 @@ const CellFrame = ({
                                 if (usercontent === null) {
                                     // truncate listsize at this index
                                     // console.log('cellFrame calling setMaxListsize with index', index)
+                                    itemExceptionsCallback && itemExceptionsCallback(index, itemID, returnvalue, 'end of list', 'cellFrame')
                                     setMaxListsize(index)
                                 } else { // usercontent === undefined, meaning an error has occurred
                                     // change placeholder message to error message
                                     // console.log('updating placeholder with error', error)
                                     errorRef.current = error
+                                    itemExceptionsCallback && itemExceptionsCallback(index, itemID, returnvalue, error, 'cellFrame')
                                     // placeholderRef.current = React.cloneElement(placeholderRef.current,{error})
                                     setFrameState('error')
                                 }
