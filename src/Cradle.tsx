@@ -367,8 +367,8 @@ const Cradle = ({
     console.log('- isCacheChange, isCachingUnderway, isCachedRef.current, wasCachedRef.current\n',
         isCacheChange, isCachingUnderway, isCachedRef.current, wasCachedRef.current)
 
-    console.log('- viewportInterruptProperties.isReparentingRef?.current, viewportInterruptProperties.isResizing\n',
-        viewportInterruptProperties.isReparentingRef?.current, viewportInterruptProperties.isResizing)
+    console.log('- viewportInterruptProperties.isReparentingRef?.current, viewportInterruptProperties.isResizing, orientation\n',
+        viewportInterruptProperties.isReparentingRef?.current, viewportInterruptProperties.isResizing, orientation)
 
     if (
         isCacheChange || 
@@ -693,12 +693,17 @@ const Cradle = ({
     // pivot triggered on change of orientation
     useEffect(()=> {
 
+        console.log('in pivot effect: orientation, isCachedRef.current\n','-'+scrollerID+'-',orientation, isCachedRef.current)
+
         scaffoldHandler.cradlePositionData.blockScrollProperty = 
             (orientation == "vertical")?"scrollTop":"scrollLeft"
 
         if (cradleStateRef.current == 'setup') return
 
-        if (isCachedRef.current) return
+        if (isCachedRef.current) {
+            hasBeenRenderedRef.current = false
+            return
+        }
 
         const { 
             cellWidth,
