@@ -45,20 +45,21 @@ export class CacheHandler {
 
     //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
 
-    changeListsize = (newlistsize, deleteListCallback) => {
+    changeListsize = (newlistsize, deleteListCallback, changeListsizeCallback) => {
         // console.log('cacheHandler changelistsize called with newlistsize',newlistsize)
         this.setListsize(newlistsize)
         // match cache to newlistsize
-        const portalIndexList = this.cacheProps.indexToItemIDMap
-        const mapkeys = Array.from(portalIndexList.keys())
-        mapkeys.sort((a,b) => a - b)
-        const highestindex = mapkeys.at(-1)
+        const portalIndexMap = this.cacheProps.indexToItemIDMap
+        const mapkeysList = Array.from(portalIndexMap.keys())
+        mapkeysList.sort((a,b) => a - b)
+        const highestindex = mapkeysList.at(-1)
         if (highestindex > (newlistsize -1)) { // pare the cache
-            const parelist = mapkeys.filter((item)=>{
-                return item > (newlistsize -1)
+            const parelist = mapkeysList.filter((index)=>{
+                return index > (newlistsize -1)
             })
             this.deletePortal(parelist, deleteListCallback)
         }
+        changeListsizeCallback && changeListsizeCallback(newlistsize)
     }
 
     clearCache = () => {
@@ -169,7 +170,7 @@ export class CacheHandler {
 
     }
 
-    preload(cradleParameters, callback, setMaxListsize, scrollerID) {
+    preload(cradleParameters, finalCallback, setMaxListsize, scrollerID) {
 
         const { scrollerPassthroughPropertiesRef } = cradleParameters
         const { stateHandler, serviceHandler } = cradleParameters.handlersRef.current
@@ -230,7 +231,7 @@ export class CacheHandler {
             ()=>{
                 this.renderPortalList()
                 // console.log("finished preloading",'-'+scrollerID+'-',+this.cacheProps.portalMap.size)
-                callback()
+                finalCallback()
             }
         )
 
@@ -691,10 +692,11 @@ export class CacheHandler {
             if (usercontent === undefined) {
 
                 preloadIndexCallback && preloadIndexCallback(index, itemID, error)
-                console.log('ERROR','no content item for preload index, itemID',index, itemID)
 
             } else { // usercontent === null; last item in list
+
                 maxListsizeInterrupt(index)
+
             }
 
         }

@@ -71,7 +71,10 @@ export default class ServiceHandler {
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
 
-        cacheHandler.changeListsize(listsize, this.callbacks.deleteListCallback)
+        cacheHandler.changeListsize(listsize, 
+            this.callbacks.deleteListCallback,
+            this.callbacks.changeListsizeCallback
+        )
 
     }
 
@@ -109,6 +112,8 @@ export default class ServiceHandler {
 
         stateHandler.setCradleState('clearcache')
 
+        return true
+
     }
 
     // blank index values (itemID) are assigned a new 
@@ -127,7 +132,7 @@ export default class ServiceHandler {
             indexToItemIDMap // index to itemID
         } = cacheHandler.cacheProps 
 
-        if (changeMap.size == 0) return true // nothing to do
+        if (changeMap.size == 0) return [] // nothing to do
 
         const indexesToDeleteList = []
         const changeIndexToItemIDMap = new Map()
@@ -175,7 +180,7 @@ export default class ServiceHandler {
                     duplicate itemID index assignment values found:\
                     duplicateItemIDs, changeMap',
                     duplicateItemsMap, changeMap)
-                return false
+                return []
 
             }
 
@@ -244,7 +249,7 @@ export default class ServiceHandler {
 
         stateHandler.setCradleState('applycellframechanges')
 
-        return true
+        return modifiedIndexesList
 
     }
 
@@ -294,12 +299,12 @@ export default class ServiceHandler {
 
         // ---------- constrain parameters --------------
 
-        if (fromindex == toindex) return false // nothing to do
+        if (fromindex == toindex) return [] // nothing to do
 
         // move must be in list bounds
         if (moveincrement > 0) { // move up
             const targettop = toindex + (rangeincrement - 1)
-            if (targettop > listbound) return false // out of bounds
+            if (targettop > listbound) return [] // out of bounds
         }
 
         // ----------- perform cache and cradle operations -----------
@@ -321,19 +326,19 @@ export default class ServiceHandler {
             
         }
 
-        return true
+        return processedIndexList
 
     }
 
     public insertIndex = (index, rangehighindex = null) => {
 
-        this.insertRemoveIndex(index, rangehighindex, +1)
+        return this.insertRemoveIndex(index, rangehighindex, +1)
 
     }
 
     public removeIndex = (index, rangehighindex = null) => {
 
-        this.insertRemoveIndex(index, rangehighindex, -1)
+        return this.insertRemoveIndex(index, rangehighindex, -1)
 
     }
 
@@ -375,6 +380,8 @@ export default class ServiceHandler {
         const newlistsize = listsize + changecount 
 
         this.setListsize(newlistsize)
+
+        return [changeList, replaceList]
 
     }
 

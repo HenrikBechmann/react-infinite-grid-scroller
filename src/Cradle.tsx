@@ -466,7 +466,9 @@ const Cradle = ({
         // console.log('cradle fielding setMaxlistsize with maxListsize, listsize',maxListsize, listsize)
         if (maxListsize < listsize) {
 
-            cacheHandler.changeListsize(maxListsize, serviceHandler.callbacks.deleteListCallback)
+            cacheHandler.changeListsize(maxListsize, 
+                serviceHandler.callbacks.deleteListCallback,
+                serviceHandler.callbacks.changeListsizeCallback)
 
         }
     },[])
@@ -825,7 +827,7 @@ const Cradle = ({
 
             case 'dopreload': {
 
-                const callback = () => {
+                const finalCallback = () => {
 
                     const modelIndexList = contentHandler.getModelIndexList()
 
@@ -843,7 +845,7 @@ const Cradle = ({
 
                 // console.log('in dopreload, calling cacheHandler.preload with timeout')
 
-                cacheHandler.preload(cradleParametersRef.current, callback, setMaxListsize, scrollerID)
+                cacheHandler.preload(cradleParametersRef.current, finalCallback, setMaxListsize, scrollerID)
 
                 break
             }
