@@ -95,6 +95,8 @@ const InfiniteGridScroller = (props) => {
 
     // ------------------[ normalize properties ]--------------------
 
+    // console.log('InfiniteGridScroller props', props)
+
     let { 
         // grid specs:
         orientation = 'vertical', // vertical or horizontal
@@ -108,8 +110,8 @@ const InfiniteGridScroller = (props) => {
         runwaySize = 3, // the number of items outside the view of each side of the viewport 
             // -- gives time to assemble before display
         startingIndex = 0, // the 0-based starting index of the list, when first loaded
-        getItem, // required. function provided by host - parameter is index number, set by system; return value is 
-            // host-selected component or promise of a component
+        getItem, // required. function provided by host - parameter is index number, set by system; 
+            // return value is host-selected component or promise of a component, or null or undefined
         placeholder, // optional. a sparse component to stand in for content until the content arrives; 
             // optional, replaces default placeholder
         styles = {}, // optional. passive style over-rides (eg. color, opacity); has 

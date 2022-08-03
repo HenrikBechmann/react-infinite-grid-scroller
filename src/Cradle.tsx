@@ -82,7 +82,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // console.log('==> running CRADLE cradleState','-'+scrollerID+'-', cradleState)
+    console.log('==> running CRADLE cradleState','-'+scrollerID+'-', cradleState)
 
     // flags
     const isMountedRef = useRef(true)
@@ -256,10 +256,10 @@ const Cradle = ({
 
     }
 
-    const cradlePassthroughPropertiesRef = useRef(null)
+    const scrollerPassthroughPropertiesRef = useRef(null)
 
     // passed to cellFrame content (user content) if requested
-    cradlePassthroughPropertiesRef.current = {
+    scrollerPassthroughPropertiesRef.current = {
         orientation, 
         gap, 
         padding, 
@@ -304,7 +304,7 @@ const Cradle = ({
         handlersRef,
         viewportInterruptPropertiesRef,
         cradleInheritedPropertiesRef, 
-        cradlePassthroughPropertiesRef,
+        scrollerPassthroughPropertiesRef,
         cradleInternalPropertiesRef, 
         externalCallbacksRef,
     }
@@ -350,11 +350,6 @@ const Cradle = ({
 
     // const viewportScrollPos = scaffoldHandler.getViewportScrollPos()
 
-    // console.log(
-    //     '**>> -'+scrollerID+'-', cradleState,'\n',
-    //     'isInPortal, viewportwidth, viewportheight, blockScrollPos, viewportElementScrollPos\n', 
-    //     isInPortal, viewportwidth, viewportheight, scaffoldHandler.cradlePositionData.blockScrollPos)
-
     const isCacheChange = (isInPortal != isCachedRef.current)
 
     if (isCacheChange) {
@@ -363,6 +358,14 @@ const Cradle = ({
     }
 
     const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
+
+    console.log(
+        '**>> -'+scrollerID+'-', cradleState,'\n',
+        'isInPortal, viewportwidth, viewportheight, blockScrollPos, viewportElementScrollPos\n', 
+        isInPortal, viewportwidth, viewportheight, scaffoldHandler.cradlePositionData.blockScrollPos)
+
+    console.log('- isCacheChange, isCachingUnderway, isCachedRef.current, wasCachedRef.current\n',
+        isCacheChange, isCachingUnderway, isCachedRef.current, wasCachedRef.current)
 
     if (
         isCacheChange || 
@@ -1086,7 +1089,7 @@ const Cradle = ({
 
     const cradleContent = contentHandler.content
 
-    const contextvalueRef = useRef({cradlePassthroughPropertiesRef, cacheHandler, setMaxListsize})
+    const contextvalueRef = useRef({scrollerPassthroughPropertiesRef, cacheHandler, setMaxListsize})
 
     return <CradleContext.Provider value = {contextvalueRef.current}>
 

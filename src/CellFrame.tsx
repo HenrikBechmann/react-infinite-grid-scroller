@@ -28,7 +28,7 @@ const CellFrame = ({
 
     const cradleContext = useContext(CradleContext)
 
-    const { cacheHandler, cradlePassthroughPropertiesRef, setMaxListsize } = cradleContext
+    const { cacheHandler, scrollerPassthroughPropertiesRef, setMaxListsize } = cradleContext
     
     const [styles,saveStyles] = useState({
         overflow:'hidden',
@@ -199,7 +199,7 @@ const CellFrame = ({
                                 let content 
                                 const scrollerData = {
                                     isReparentingRef:null,
-                                    cradlePassthroughPropertiesRef,
+                                    scrollerPassthroughPropertiesRef,
                                 }
                                 if (usercontent.props?.hasOwnProperty('scrollerData')) {
                                     content = React.cloneElement(usercontent, {scrollerData})

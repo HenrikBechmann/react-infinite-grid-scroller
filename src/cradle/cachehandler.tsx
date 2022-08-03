@@ -171,7 +171,7 @@ export class CacheHandler {
 
     preload(cradleParameters, callback, setMaxListsize, scrollerID) {
 
-        const { cradlePassthroughPropertiesRef } = cradleParameters
+        const { scrollerPassthroughPropertiesRef } = cradleParameters
         const { stateHandler, serviceHandler } = cradleParameters.handlersRef.current
 
         const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
@@ -213,7 +213,7 @@ export class CacheHandler {
                     const promise = this.preloadItem(
                         i, 
                         getItem, 
-                        cradlePassthroughPropertiesRef,
+                        scrollerPassthroughPropertiesRef,
                         serviceHandler.callbacks.preloadIndexCallback,
                         maxListsizeInterrupt,
                         scrollerID
@@ -638,7 +638,7 @@ export class CacheHandler {
 
     private async preloadItem(index, 
         getItem, 
-        cradlePassthroughPropertiesRef, 
+        scrollerPassthroughPropertiesRef, 
         preloadIndexCallback,
         maxListsizeInterrupt,
         scrollerID
@@ -673,7 +673,7 @@ export class CacheHandler {
             let content 
             const scrollerData = {
                 isReparentingRef:null,
-                cradlePassthroughPropertiesRef,
+                scrollerPassthroughPropertiesRef,
             }
             if (usercontent.props.hasOwnProperty('scrollerData')) {
                 content = React.cloneElement(usercontent, {scrollerData})
