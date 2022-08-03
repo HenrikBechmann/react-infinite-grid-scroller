@@ -17,6 +17,7 @@
         create demo site - github pages
 
     BUGS: 
+        - removeIndex returning negative some index numbers in array
 
     TODO:
 
