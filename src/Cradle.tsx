@@ -359,16 +359,16 @@ const Cradle = ({
 
     const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
 
-    console.log(
-        '**>> -'+scrollerID+'-', cradleState,'\n',
-        'isInPortal, viewportwidth, viewportheight, blockScrollPos, viewportElementScrollPos\n', 
-        isInPortal, viewportwidth, viewportheight, scaffoldHandler.cradlePositionData.blockScrollPos)
+    // console.log(
+    //     '**>> -'+scrollerID+'-', cradleState,'\n',
+    //     'isInPortal, viewportwidth, viewportheight, blockScrollPos, viewportElementScrollPos\n', 
+    //     isInPortal, viewportwidth, viewportheight, scaffoldHandler.cradlePositionData.blockScrollPos)
 
-    console.log('- isCacheChange, isCachingUnderway, isCachedRef.current, wasCachedRef.current\n',
-        isCacheChange, isCachingUnderway, isCachedRef.current, wasCachedRef.current)
+    // console.log('- isCacheChange, isCachingUnderway, isCachedRef.current, wasCachedRef.current\n',
+    //     isCacheChange, isCachingUnderway, isCachedRef.current, wasCachedRef.current)
 
-    console.log('- viewportInterruptProperties.isReparentingRef?.current, viewportInterruptProperties.isResizing, orientation\n',
-        viewportInterruptProperties.isReparentingRef?.current, viewportInterruptProperties.isResizing, orientation)
+    // console.log('- viewportInterruptProperties.isReparentingRef?.current, viewportInterruptProperties.isResizing, orientation\n',
+    //     viewportInterruptProperties.isReparentingRef?.current, viewportInterruptProperties.isResizing, orientation)
 
     if (
         isCacheChange || 
@@ -693,7 +693,7 @@ const Cradle = ({
     // pivot triggered on change of orientation
     useEffect(()=> {
 
-        console.log('in pivot effect: orientation, isCachedRef.current\n','-'+scrollerID+'-',orientation, isCachedRef.current)
+        // console.log('in pivot effect: orientation, isCachedRef.current\n','-'+scrollerID+'-',orientation, isCachedRef.current)
 
         scaffoldHandler.cradlePositionData.blockScrollProperty = 
             (orientation == "vertical")?"scrollTop":"scrollLeft"
