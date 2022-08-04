@@ -152,14 +152,14 @@ export class CacheHandler {
 
     }
 
-    guardAgainstRunawayCaching = (cacheMax, modelLength) => {
+    guardAgainstRunawayCaching = (cacheMax, cradleListLength) => {
 
         if (!cacheMax) return false
 
         const portalMap = this.cacheProps.portalMap
         const requestedMap = this.cacheProps.requestedMap
 
-        const max = Math.max(modelLength, cacheMax)
+        const max = Math.max(cradleListLength, cacheMax)
 
         if ((portalMap.size + requestedMap.size) <= ((max) * MAX_CACHE_OVER_RUN)) {
             return false
