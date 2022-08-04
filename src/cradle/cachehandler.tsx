@@ -193,7 +193,7 @@ export class CacheHandler {
                 cacheMax:
                 listsize
 
-        let breakloop = {
+        const breakloop = {
             current:false
         }
 
