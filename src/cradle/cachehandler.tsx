@@ -250,6 +250,7 @@ export class CacheHandler {
 
         const cradleMap = new Map()
         const { indexToItemIDMap } = this.cacheProps
+
         for (const index of cradleIndexList) {
 
             cradleMap.set(index, indexToItemIDMap.get(index))
@@ -728,6 +729,7 @@ export class CacheHandler {
         try {
 
             usercontent = await getItem(index, itemID)
+            if (usercontent === null) returnvalue = usercontent
 
         } catch(e) {
 
