@@ -164,7 +164,7 @@ const CellFrame = ({
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
                         let returnvalue, usercontent, error
-                        
+
                         try {
 
                             usercontent = await getItem(index, itemID)
@@ -222,14 +222,20 @@ const CellFrame = ({
                                 if (usercontent === null) {
                                     // truncate listsize at this index
                                     // console.log('cellFrame calling setMaxListsize with index', index)
-                                    itemExceptionsCallback && itemExceptionsCallback(index, itemID, returnvalue, 'end of list', 'cellFrame')
+                                    itemExceptionsCallback && 
+                                        itemExceptionsCallback(
+                                            index, itemID, returnvalue, 'end of list', 'cellFrame'
+                                        )
                                     setMaxListsize(index)
                                 } else { // usercontent === undefined, meaning an error has occurred
                                     // change placeholder message to error message
                                     // console.log('updating placeholder with error', error)
                                     errorRef.current = error
-                                    itemExceptionsCallback && itemExceptionsCallback(index, itemID, returnvalue, error, 'cellFrame')
-                                    // placeholderRef.current = React.cloneElement(placeholderRef.current,{error})
+                                    itemExceptionsCallback && 
+                                        itemExceptionsCallback(
+                                            index, itemID, returnvalue, error, 'cellFrame'
+                                        )
+
                                     setFrameState('error')
                                 }
 

@@ -724,7 +724,7 @@ export class CacheHandler {
         const itemID = this.getItemID(index)
 
         let returnvalue, usercontent, error
-        
+
         try {
 
             usercontent = await getItem(index, itemID)
@@ -768,11 +768,14 @@ export class CacheHandler {
 
             if (usercontent === undefined) {
 
-                itemExceptionsCallback && itemExceptionsCallback(index, itemID, returnvalue, error, 'preload')
+                itemExceptionsCallback && 
+                    itemExceptionsCallback(index, itemID, returnvalue, error, 'preload')
 
             } else { // usercontent === null; last item in list
 
-                itemExceptionsCallback && itemExceptionsCallback(index, itemID, returnvalue, 'end of list', 'preload')
+                itemExceptionsCallback && 
+                    itemExceptionsCallback(index, itemID, returnvalue, 'end of list', 'preload')
+                    
                 maxListsizeInterrupt(index)
 
             }
