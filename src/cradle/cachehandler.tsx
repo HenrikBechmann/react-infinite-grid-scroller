@@ -428,6 +428,9 @@ export class CacheHandler {
         // console.log('==> cacheHandler.insertRemoveIndex: \nindex, highrange, increment, listsize\n',
         //     index, highrange, increment, listsize)
 
+        const emptyreturn = [[],[],0]
+        if (index > listsize) return emptyreturn
+
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
         // ---------- define range parameters ---------------
@@ -453,18 +456,21 @@ export class CacheHandler {
         // ---------- define boundaries within ordered cache index list ------------
         // Ptr = index to array, as opposed to index of virtual list
 
-        // shrinktorange is the index at the bottom of the indexes to be removed from the top of the list
-        // for the remove operation.
-        const shrinktoIndex = 
-            (increment == -1)?
-                orderedIndexList.at(-1) + (rangeincrement + 1):
-                null
-
         // shrinkptr is the location of the bottom of the shrink range for removals
-        const shrinktoPtr = 
-            (increment == -1)?
-                orderedIndexList.findIndex(value => value >= shrinktoIndex):
-                -1
+        let shrinktoIndex = null
+        let shrinktoPtr = - 1
+        
+        if (increment == - 1) {
+            
+            shrinktoIndex = orderedIndexList.at(-1) + (rangeincrement + 1)
+
+            shrinktoIndex = Math.max(highrangeindex + (rangeincrement +1), shrinktoIndex)
+
+            shrinktoIndex = Math.min(listsize - 1),shrinktoIndex) 
+
+            shrinktoPtr = orderedIndexList.findIndex(value => value >= shrinktoIndex)
+
+        }
 
         const lowPtr = orderedIndexList.findIndex(value => value >= index)
 
@@ -572,7 +578,7 @@ export class CacheHandler {
         //     indexesToProcessList, indexesToReplaceList, indexesToRemoveList, 
         //     indexesOfItemsToRemoveList, itemsToRemoveList)
 
-        // return [[],[],[]] // FOR DEBUG
+        // return [[],[],0] // FOR DEBUG
 
         const indexesModifiedList = []
 

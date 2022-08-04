@@ -17,7 +17,8 @@
         create demo site - github pages
 
     BUGS: 
-        - removeIndex returning negative some index numbers in array
+        - shrinktoIndex must be greater than... highptr?
+            - test new logic; test emptyreturn if out of bounds
 
     TODO:
 
