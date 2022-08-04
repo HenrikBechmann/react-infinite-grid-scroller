@@ -723,9 +723,8 @@ export class CacheHandler {
 
         const itemID = this.getItemID(index)
 
-        let returnvalue
-        let usercontent
-        let error
+        let returnvalue, usercontent, error
+        
         try {
 
             usercontent = await getItem(index, itemID)
