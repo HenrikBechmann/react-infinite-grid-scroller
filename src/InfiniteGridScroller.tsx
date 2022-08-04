@@ -17,11 +17,9 @@
         create demo site - github pages
 
     BUGS: 
-        - shrinktoIndex must be greater than... highptr?
-            - test new logic; test emptyreturn if out of bounds
 
     TODO:
-
+        - add matchCacheToCradle after set and update contents
         - checkmark enable console feedback (for external callbacks)
         - organize feedback for all cache operations
         - also surface external callbacks with return values for testing
