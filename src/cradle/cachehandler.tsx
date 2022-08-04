@@ -425,11 +425,8 @@ export class CacheHandler {
     // much of this deals with the fact that the cache is sparse.
     insertRemoveIndex(index, highrange, increment, listsize) { // increment is +1 or -1
 
-        console.log('==> cacheHandler.insertRemoveIndex: \nindex, highrange, increment, listsize\n',
-            index, highrange, increment, listsize)
-
-        const emptyreturn = [[],[],0]
-        if (index > listsize - 1) return emptyreturn
+        // console.log('==> cacheHandler.insertRemoveIndex: \nindex, highrange, increment, listsize\n',
+        //     index, highrange, increment, listsize)
 
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
@@ -443,18 +440,31 @@ export class CacheHandler {
                 highrangeindex:
                 index
 
+        const emptyreturn = [[],[],0]
+        if (increment == -1) {
+
+            // removal must be entirely within scope of the list
+            if (highrangeindex > (listsize - 1)) return emptyreturn
+
+        } else {
+
+            // addition can at most start at the next index above the current list
+            if (index > listsize) return emptyreturn
+
+        }
+
         // rangecount is the absolute number in the insert/remove range - contiguous
         const rangecount = highrangeindex - index + 1
 
         // range increment adds sign to rangecount to indicate add/remove
         const rangeincrement = rangecount * increment
 
-        // highPtr, lowPtr, shrinkPtr within orderedIndexList.
+        // highPtr, lowPtr, shrinktoPtr within orderedIndexList.
         const orderedIndexList = Array.from(indexToItemIDMap.keys())
         orderedIndexList.sort((a,b)=>a-b)
 
         // ---------- define boundaries within ordered cache index list ------------
-        // Ptr = index to array, as opposed to index of virtual list
+        // Ptr = index into array, as opposed to index of virtual list
 
         // shrinkptr is the location of the bottom of the shrink range for removals
         let shrinktoIndex = null
@@ -476,16 +486,16 @@ export class CacheHandler {
 
         const highPtr = orderedIndexList.findIndex(value=> value >= highrangeindex)
 
-        console.log('highrangeindex, rangecount, rangeincrement, shrinktoIndex, \n',
-            'lowPtr, highPtr, shrinktoPtr, orderedIndexList\n',
-            highrangeindex, rangecount, rangeincrement, shrinktoIndex,'\n',
-            lowPtr, highPtr, shrinktoPtr, orderedIndexList)
+        // console.log('highrangeindex, rangecount, rangeincrement, shrinktoIndex, \n',
+        //     'lowPtr, highPtr, shrinktoPtr, orderedIndexList\n',
+        //     highrangeindex, rangecount, rangeincrement, shrinktoIndex,'\n',
+        //     lowPtr, highPtr, shrinktoPtr, orderedIndexList)
 
-        // ----------- define indexesToProcess, indexesToRemove and itemsToRemove lists --------
+        // ----------- list indexes to process, replace, and remove, and items to remove --------
 
         let indexesToProcessList, // for either insert or remove
             indexesToReplaceList = [], // for insert the range being inserted
-            indexesToRemoveList = [], // for remove - end of list, list is shrinking
+            indexesToRemoveList = [], // for remove - end of list; the list is shrinking
             indexesOfItemsToRemoveList= [], // for remove - within the range of indexes being removed
             itemsToRemoveList = [] // for remove, derived from the previous
 
@@ -574,16 +584,16 @@ export class CacheHandler {
         // increment higher from top of list to preserve lower values for subsequent increment
         if (increment == 1) indexesToProcessList.reverse() 
 
-        console.log('indexesToProcessList, indexesToReplaceList, indexesToRemoveList, indexesOfItemsToRemoveList, itemsToRemoveList',
-            indexesToProcessList, indexesToReplaceList, indexesToRemoveList, 
-            indexesOfItemsToRemoveList, itemsToRemoveList)
+        // console.log('indexesToProcessList, indexesToReplaceList, indexesToRemoveList, indexesOfItemsToRemoveList, itemsToRemoveList',
+        //     indexesToProcessList, indexesToReplaceList, indexesToRemoveList, 
+        //     indexesOfItemsToRemoveList, itemsToRemoveList)
 
         // return [[],[],0] // FOR DEBUG
 
         const indexesModifiedList = []
 
         // modify index-to-itemid map, and metadata map
-        const processindex = index => {
+        const processIndex = index => {
 
             const itemID = indexToItemIDMap.get(index)
             const newIndex = index + rangeincrement
@@ -594,17 +604,18 @@ export class CacheHandler {
 
         }
 
-        indexesToProcessList.forEach(processindex)
+        indexesToProcessList.forEach(processIndex)
 
         // delete remaining indexes and items now duplicates
-        for (const index of indexesToRemoveList) {
 
+        for (const index of indexesToReplaceList) {
+            
             indexToItemIDMap.delete(index)
 
         }
 
-        for (const index of indexesToReplaceList) {
-            
+        for (const index of indexesToRemoveList) {
+
             indexToItemIDMap.delete(index)
 
         }
