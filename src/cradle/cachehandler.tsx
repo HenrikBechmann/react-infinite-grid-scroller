@@ -775,7 +775,7 @@ export class CacheHandler {
 
                 itemExceptionsCallback && 
                     itemExceptionsCallback(index, itemID, returnvalue, 'end of list', 'preload')
-                    
+
                 maxListsizeInterrupt(index)
 
             }
@@ -798,6 +798,7 @@ export class CacheHandler {
             portalMap,
             indexToItemIDMap 
         } = this.cacheProps
+        
         const deleteList = []
         for (let i of indexArray) {
             const itemID = indexToItemIDMap.get(i)
