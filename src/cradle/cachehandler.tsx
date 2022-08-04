@@ -572,7 +572,7 @@ export class CacheHandler {
             indexesToProcessList, indexesToReplaceList, indexesToRemoveList, 
             indexesOfItemsToRemoveList, itemsToRemoveList)
 
-        return [[],[],[]] // FOR DEBUG
+        // return [[],[],[]] // FOR DEBUG
 
         const indexesModifiedList = []
 
@@ -603,11 +603,16 @@ export class CacheHandler {
 
         }
 
-        console.log('increment, indexesModifiedList, indexesToProcessList, indexesToReplaceList',
-            increment, indexesModifiedList, indexesToProcessList, indexesToReplaceList)
+        for (const itemID of itemsToRemoveList) {
+
+            metadataMap.delete(itemID)
+
+        }
+
+        // console.log('increment, indexesModifiedList, indexesToProcessList, indexesToReplaceList',
+        //     increment, indexesModifiedList, indexesToProcessList, indexesToReplaceList)
 
         // --------------- returns ---------------
-
 
         // return values for caller to send to contenthandler for cradle synchronization
         return [indexesModifiedList, indexesToReplaceList, rangeincrement]
