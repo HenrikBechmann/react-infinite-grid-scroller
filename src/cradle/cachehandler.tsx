@@ -425,11 +425,11 @@ export class CacheHandler {
     // much of this deals with the fact that the cache is sparse.
     insertRemoveIndex(index, highrange, increment, listsize) { // increment is +1 or -1
 
-        // console.log('==> cacheHandler.insertRemoveIndex: \nindex, highrange, increment, listsize\n',
-        //     index, highrange, increment, listsize)
+        console.log('==> cacheHandler.insertRemoveIndex: \nindex, highrange, increment, listsize\n',
+            index, highrange, increment, listsize)
 
         const emptyreturn = [[],[],0]
-        if (index > listsize) return emptyreturn
+        if (index > listsize - 1) return emptyreturn
 
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
@@ -462,11 +462,11 @@ export class CacheHandler {
         
         if (increment == - 1) {
             
-            shrinktoIndex = orderedIndexList.at(-1) + (rangeincrement + 1)
+            shrinktoIndex = orderedIndexList.at(-1) + (rangeincrement)
 
-            shrinktoIndex = Math.max(highrangeindex + (rangeincrement +1), shrinktoIndex)
+            shrinktoIndex = Math.max(highrangeindex + (rangeincrement), shrinktoIndex)
 
-            shrinktoIndex = Math.min(listsize - 1),shrinktoIndex) 
+            shrinktoIndex = Math.min(listsize - 1,shrinktoIndex) 
 
             shrinktoPtr = orderedIndexList.findIndex(value => value >= shrinktoIndex)
 
@@ -476,10 +476,10 @@ export class CacheHandler {
 
         const highPtr = orderedIndexList.findIndex(value=> value >= highrangeindex)
 
-        // console.log('highrangeindex, rangecount, rangeincrement, shrinktoIndex, \n',
-        //     'lowPtr, highPtr, shrinktoPtr, orderedIndexList\n',
-        //     highrangeindex, rangecount, rangeincrement, shrinktoIndex,'\n',
-        //     lowPtr, highPtr, shrinktoPtr, orderedIndexList)
+        console.log('highrangeindex, rangecount, rangeincrement, shrinktoIndex, \n',
+            'lowPtr, highPtr, shrinktoPtr, orderedIndexList\n',
+            highrangeindex, rangecount, rangeincrement, shrinktoIndex,'\n',
+            lowPtr, highPtr, shrinktoPtr, orderedIndexList)
 
         // ----------- define indexesToProcess, indexesToRemove and itemsToRemove lists --------
 
@@ -538,7 +538,7 @@ export class CacheHandler {
 
             } else {
 
-                indexesToRemoveList = orderedIndexList.slice(shrinktoPtr)
+                indexesToRemoveList = orderedIndexList.slice(shrinktoPtr + 1)
             }
 
         }
@@ -574,9 +574,9 @@ export class CacheHandler {
         // increment higher from top of list to preserve lower values for subsequent increment
         if (increment == 1) indexesToProcessList.reverse() 
 
-        // console.log('indexesToProcessList, indexesToReplaceList, indexesToRemoveList, indexesOfItemsToRemoveList, itemsToRemoveList',
-        //     indexesToProcessList, indexesToReplaceList, indexesToRemoveList, 
-        //     indexesOfItemsToRemoveList, itemsToRemoveList)
+        console.log('indexesToProcessList, indexesToReplaceList, indexesToRemoveList, indexesOfItemsToRemoveList, itemsToRemoveList',
+            indexesToProcessList, indexesToReplaceList, indexesToRemoveList, 
+            indexesOfItemsToRemoveList, itemsToRemoveList)
 
         // return [[],[],0] // FOR DEBUG
 
