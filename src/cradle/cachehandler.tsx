@@ -482,14 +482,29 @@ export class CacheHandler {
 
         }
 
-        const lowPtr = orderedIndexList.findIndex(value => value >= index)
+        // lowPtr and highPtr must be within low and high range
+        const lowPtr = orderedIndexList.findIndex(value => {
 
-        const highPtr = orderedIndexList.findIndex(value=> value >= highrangeindex)
+            return (value >= index) && (value <= highrangeindex)
+
+        })
+
+        const reverseIndexList = Array.from(orderedIndexList)
+        reverseIndexList.reverse()
+        let highPtr = reverseIndexList.findIndex(value=> {
+
+            return value <= highrangeindex
+
+        })
+        if (highPtr != -1) {
+            highPtr = (orderedIndexList.length - 1) - highPtr
+            if (highPtr < lowPtr) highPtr = -1
+        }
 
         // console.log('highrangeindex, rangecount, rangeincrement, shrinktoIndex, \n',
         //     'lowPtr, highPtr, shrinktoPtr, orderedIndexList\n',
         //     highrangeindex, rangecount, rangeincrement, shrinktoIndex,'\n',
-        //     lowPtr, highPtr, shrinktoPtr, orderedIndexList)
+        //     lowPtr, highPtr, shrinktoPtr, orderedIndexList, reverseIndexList)
 
         // ----------- list indexes to process, replace, and remove, and items to remove --------
 
