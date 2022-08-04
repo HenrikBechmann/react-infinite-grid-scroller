@@ -536,8 +536,9 @@ export class CacheHandler {
 
         }
 
-        // get indexesToReplaceList
         if (increment == 1) {
+
+            // get indexesToReplaceList
             if ((lowPtr == -1) && (highPtr == -1)) { // core scope is out of view
 
                 indexesToReplaceList = []
@@ -551,11 +552,9 @@ export class CacheHandler {
                 indexesToReplaceList = orderedIndexList.slice(lowPtr, highPtr + 1)
             }
 
-        }
+        } else {
 
-        // get indexesToRemoveList
-        if (increment == -1) {
-
+            // get indexesToRemoveList
             if (shrinktoPtr == -1) { // core scope is out of view
 
                 indexesToRemoveList = []
@@ -565,11 +564,7 @@ export class CacheHandler {
                 indexesToRemoveList = orderedIndexList.slice(shrinktoPtr + 1)
             }
 
-        }
-
-        // get indexesOfItemsToRemoveList
-        if (increment == -1) {
-
+            // get indexesOfItemsToRemoveList
             if ((lowPtr == -1) && (highPtr == -1)) { // core scope is out of view
 
                 indexesOfItemsToRemoveList = []
@@ -584,12 +579,12 @@ export class CacheHandler {
 
             }
 
-        }
+            // get itemsToRemoveList
+            for (const index of indexesOfItemsToRemoveList) {
 
-        // get itemsToRemoveList
-        for (const index of indexesOfItemsToRemoveList) {
+                itemsToRemoveList.push(indexToItemIDMap.get(index))
 
-            itemsToRemoveList.push(indexToItemIDMap.get(index))
+            }
 
         }
 
@@ -622,21 +617,27 @@ export class CacheHandler {
 
         // delete remaining indexes and items now duplicates
 
-        for (const index of indexesToReplaceList) {
-            
-            indexToItemIDMap.delete(index)
+        if (increment == 1) {
 
-        }
+            for (const index of indexesToReplaceList) {
+                
+                indexToItemIDMap.delete(index)
 
-        for (const index of indexesToRemoveList) {
+            }
 
-            indexToItemIDMap.delete(index)
+        } else {
 
-        }
+            for (const index of indexesToRemoveList) {
 
-        for (const itemID of itemsToRemoveList) {
+                indexToItemIDMap.delete(index)
 
-            metadataMap.delete(itemID)
+            }
+
+            for (const itemID of itemsToRemoveList) {
+
+                metadataMap.delete(itemID)
+
+            }
 
         }
 
