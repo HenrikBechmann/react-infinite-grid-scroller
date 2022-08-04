@@ -425,8 +425,8 @@ export class CacheHandler {
     // much of this deals with the fact that the cache is sparse.
     insertRemoveIndex(index, highrange, increment, listsize) { // increment is +1 or -1
 
-        console.log('==> cacheHandler.insertRemoveIndex: \nindex, highrange, increment, listsize\n',
-            index, highrange, increment, listsize)
+        // console.log('==> cacheHandler.insertRemoveIndex: \nindex, highrange, increment, listsize\n',
+        //     index, highrange, increment, listsize)
 
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
@@ -457,7 +457,7 @@ export class CacheHandler {
         // for the remove operation.
         const shrinktoIndex = 
             (increment == -1)?
-                listsize + rangeincrement:
+                orderedIndexList.at(-1) + (rangeincrement + 1):
                 null
 
         // shrinkptr is the location of the bottom of the shrink range for removals
@@ -470,10 +470,10 @@ export class CacheHandler {
 
         const highPtr = orderedIndexList.findIndex(value=> value >= highrangeindex)
 
-        console.log('highrangeindex, rangecount, rangeincrement, shrinktoIndex, \n',
-            'lowPtr, highPtr, shrinktoPtr, orderedIndexList\n',
-            highrangeindex, rangecount, rangeincrement, shrinktoIndex,'\n',
-            lowPtr, highPtr, shrinktoPtr, orderedIndexList)
+        // console.log('highrangeindex, rangecount, rangeincrement, shrinktoIndex, \n',
+        //     'lowPtr, highPtr, shrinktoPtr, orderedIndexList\n',
+        //     highrangeindex, rangecount, rangeincrement, shrinktoIndex,'\n',
+        //     lowPtr, highPtr, shrinktoPtr, orderedIndexList)
 
         // ----------- define indexesToProcess, indexesToRemove and itemsToRemove lists --------
 
@@ -568,9 +568,9 @@ export class CacheHandler {
         // increment higher from top of list to preserve lower values for subsequent increment
         if (increment == 1) indexesToProcessList.reverse() 
 
-        console.log('indexesToProcessList, indexesToReplaceList, indexesToRemoveList, indexesOfItemsToRemoveList, itemsToRemoveList',
-            indexesToProcessList, indexesToReplaceList, indexesToRemoveList, 
-            indexesOfItemsToRemoveList, itemsToRemoveList)
+        // console.log('indexesToProcessList, indexesToReplaceList, indexesToRemoveList, indexesOfItemsToRemoveList, itemsToRemoveList',
+        //     indexesToProcessList, indexesToReplaceList, indexesToRemoveList, 
+        //     indexesOfItemsToRemoveList, itemsToRemoveList)
 
         // return [[],[],[]] // FOR DEBUG
 
