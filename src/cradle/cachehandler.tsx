@@ -688,9 +688,9 @@ export class CacheHandler {
 
         const portalNode = createPortalNode(index, itemID)
 
-        this.cacheProps.portalMap.set(itemID,//index,
+        this.cacheProps.portalMap.set(itemID,
                 <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>)
-                // <InPortal key = {index} node = {portalNode} > { content } </InPortal>)
+
         this.cacheProps.modified = true
 
         const portalMetadata = {
