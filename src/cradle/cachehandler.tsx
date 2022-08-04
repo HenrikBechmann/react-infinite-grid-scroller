@@ -14,7 +14,6 @@ const MAX_CACHE_OVER_RUN = 1.5
 
 let globalItemID = 0
 
-
 // global scroller data, organized by session scrollerID
 // the cache itself is maintained in the root infinitegridscroller component
 export class CacheHandler {
@@ -89,21 +88,21 @@ export class CacheHandler {
 
     }
 
-    matchCacheToCradle = (modelIndexList, deleteListCallback) => {
+    matchCacheToCradle = (cradleIndexList, deleteListCallback) => {
 
-        // console.log('matchCacheToCradle modelIndexList',modelIndexList)
+        // console.log('matchCacheToCradle cradleIndexList',cradleIndexList)
 
         const mapkeys = Array.from(this.cacheProps.indexToItemIDMap.keys())
 
-        const delkeys = mapkeys.filter(key => !modelIndexList.includes(key))
+        const delkeys = mapkeys.filter(key => !cradleIndexList.includes(key))
 
         return this.deletePortal(delkeys, deleteListCallback)
 
     }
 
-    pareCacheToMax = (cacheMax, modelIndexList, deleteListCallback) => {
+    pareCacheToMax = (cacheMax, cradleIndexList, deleteListCallback) => {
 
-        const modelLength = modelIndexList.length
+        const modelLength = cradleIndexList.length
 
         // determine need for paring
         if ((!cacheMax) || (!modelLength)) return false
@@ -129,8 +128,8 @@ export class CacheHandler {
         const parecount = mapLength - max
 
         // distribute paring proportionally at front and back
-        const headindex = modelIndexList[0]
-        const tailindex = modelIndexList[modelLength - 1]
+        const headindex = cradleIndexList[0]
+        const tailindex = cradleIndexList[modelLength - 1]
         const headpos = mapkeys.indexOf(headindex)
         const tailpos = mapkeys.indexOf(tailindex)
 
@@ -204,7 +203,6 @@ export class CacheHandler {
 
         // serviceHandler.callbacks.preloadIndexCallback
         if (stateHandler.isMountedRef.current) {
-
             
             const indexToItemIDMap = this.cacheProps.indexToItemIDMap
 
@@ -248,11 +246,11 @@ export class CacheHandler {
 
     }
 
-    getCradleIndexMap(modelIndexList) {
+    getCradleIndexMap(cradleIndexList) {
 
         const cradleMap = new Map()
         const { indexToItemIDMap } = this.cacheProps
-        for (const index of modelIndexList) {
+        for (const index of cradleIndexList) {
 
             cradleMap.set(index, indexToItemIDMap.get(index))
 
