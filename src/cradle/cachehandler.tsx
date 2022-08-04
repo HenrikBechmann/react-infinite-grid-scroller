@@ -1,4 +1,5 @@
-// portalhandler.tsx
+// cachehandler.tsx
+// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     The infinite list scroller stores user cell data in a central hidden portal cache for each
@@ -29,7 +30,7 @@ export class CacheHandler {
         modified:false,
 
         metadataMap:new Map(),
-        requestedMap: new Map(), // some portals may have been requested by requestidlecallback, not yet created
+        requestedMap:new Map(), // some portals may have been requested by requestidlecallback, not yet created
         portalMap:new Map(),
         indexToItemIDMap:new Map(),
 
@@ -798,7 +799,7 @@ export class CacheHandler {
             portalMap,
             indexToItemIDMap 
         } = this.cacheProps
-        
+
         const deleteList = []
         for (let i of indexArray) {
             const itemID = indexToItemIDMap.get(i)
