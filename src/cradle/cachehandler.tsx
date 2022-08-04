@@ -45,20 +45,21 @@ export class CacheHandler {
 
     //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
 
-    changeListsize = (newlistsize, deleteListCallback) => {
+    changeListsize = (newlistsize, deleteListCallback, changeListsizeCallback) => {
         // console.log('cacheHandler changelistsize called with newlistsize',newlistsize)
         this.setListsize(newlistsize)
         // match cache to newlistsize
-        const portalIndexList = this.cacheProps.indexToItemIDMap
-        const mapkeys = Array.from(portalIndexList.keys())
-        mapkeys.sort((a,b) => a - b)
-        const highestindex = mapkeys.at(-1)
+        const portalIndexMap = this.cacheProps.indexToItemIDMap
+        const mapkeysList = Array.from(portalIndexMap.keys())
+        mapkeysList.sort((a,b) => a - b)
+        const highestindex = mapkeysList.at(-1)
         if (highestindex > (newlistsize -1)) { // pare the cache
-            const parelist = mapkeys.filter((item)=>{
-                return item > (newlistsize -1)
+            const parelist = mapkeysList.filter((index)=>{
+                return index > (newlistsize -1)
             })
             this.deletePortal(parelist, deleteListCallback)
         }
+        changeListsizeCallback && changeListsizeCallback(newlistsize)
     }
 
     clearCache = () => {
@@ -169,9 +170,9 @@ export class CacheHandler {
 
     }
 
-    preload(cradleParameters, callback, setMaxListsize, scrollerID) {
+    preload(cradleParameters, finalCallback, setMaxListsize, scrollerID) {
 
-        const { cradlePassthroughPropertiesRef } = cradleParameters
+        const { scrollerPassthroughPropertiesRef } = cradleParameters
         const { stateHandler, serviceHandler } = cradleParameters.handlersRef.current
 
         const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
@@ -201,20 +202,24 @@ export class CacheHandler {
             setMaxListsize(index)
         }
 
+        // serviceHandler.callbacks.preloadIndexCallback
         if (stateHandler.isMountedRef.current) {
 
             
             const indexToItemIDMap = this.cacheProps.indexToItemIDMap
 
-            for (let i = 0; i < preloadsize; i++) {
+            const { preloadIndexCallback, itemExceptionsCallback } = serviceHandler.callbacks
 
-                if (!indexToItemIDMap.has(i)) {
+            for (let index = 0; index < preloadsize; index++) {
 
+                if (!indexToItemIDMap.has(index)) {
+
+                    preloadIndexCallback && preloadIndexCallback(index)
                     const promise = this.preloadItem(
-                        i, 
+                        index, 
                         getItem, 
-                        cradlePassthroughPropertiesRef,
-                        serviceHandler.callbacks.preloadIndexCallback,
+                        scrollerPassthroughPropertiesRef,
+                        itemExceptionsCallback,
                         maxListsizeInterrupt,
                         scrollerID
                     )
@@ -229,8 +234,7 @@ export class CacheHandler {
         Promise.allSettled(promises).then(
             ()=>{
                 this.renderPortalList()
-                // console.log("finished preloading",'-'+scrollerID+'-',+this.cacheProps.portalMap.size)
-                callback()
+                finalCallback()
             }
         )
 
@@ -421,7 +425,7 @@ export class CacheHandler {
     // much of this deals with the fact that the cache is sparse.
     insertRemoveIndex(index, highrange, increment, listsize) { // increment is +1 or -1
 
-        // console.log('==> cacheHandler.insertRemoveIndex: index, highrange, increment, listsize',
+        // console.log('==> cacheHandler.insertRemoveIndex: \nindex, highrange, increment, listsize\n',
         //     index, highrange, increment, listsize)
 
         const { indexToItemIDMap, metadataMap } = this.cacheProps
@@ -442,80 +446,133 @@ export class CacheHandler {
         // range increment adds sign to rangecount to indicate add/remove
         const rangeincrement = rangecount * increment
 
-        // shrinktorange is the index at the bottom of the indexes to be removed from the top of the list
-        // for the remove operation.
-        const shrinktorangeindex = 
-            (increment == -1)?
-                listsize + rangeincrement:
-                null
-
-        // ---------- define boundaries within ordered cache index list ------------
-        // Ptr = index to array, as opposed to index of virtual list
-
         // highPtr, lowPtr, shrinkPtr within orderedIndexList.
         const orderedIndexList = Array.from(indexToItemIDMap.keys())
         orderedIndexList.sort((a,b)=>a-b)
 
-        // low and high pointers provide values for slices above the range
-        const lowPtr = orderedIndexList.findIndex(value => value >= index)
+        // ---------- define boundaries within ordered cache index list ------------
+        // Ptr = index to array, as opposed to index of virtual list
 
-        const highPtr = orderedIndexList.findIndex(value=> value >= highrangeindex)
+        // shrinktorange is the index at the bottom of the indexes to be removed from the top of the list
+        // for the remove operation.
+        const shrinktoIndex = 
+            (increment == -1)?
+                orderedIndexList.at(-1) + (rangeincrement + 1):
+                null
 
         // shrinkptr is the location of the bottom of the shrink range for removals
         const shrinktoPtr = 
             (increment == -1)?
-                orderedIndexList.findIndex(value => value >= shrinktorangeindex):
+                orderedIndexList.findIndex(value => value >= shrinktoIndex):
                 -1
 
-        // console.log('highrangeindex, rangecount, rangeincrement, shrinktorangeindex\n',
+        const lowPtr = orderedIndexList.findIndex(value => value >= index)
+
+        const highPtr = orderedIndexList.findIndex(value=> value >= highrangeindex)
+
+        // console.log('highrangeindex, rangecount, rangeincrement, shrinktoIndex, \n',
         //     'lowPtr, highPtr, shrinktoPtr, orderedIndexList\n',
-        //     highrangeindex, rangecount, rangeincrement, shrinktorangeindex,'\n',
+        //     highrangeindex, rangecount, rangeincrement, shrinktoIndex,'\n',
         //     lowPtr, highPtr, shrinktoPtr, orderedIndexList)
 
         // ----------- define indexesToProcess, indexesToRemove and itemsToRemove lists --------
 
-        let indexesToProcessList, indexesToReplaceList, indexesToRemoveList, itemsToRemoveList
+        let indexesToProcessList, // for either insert or remove
+            indexesToReplaceList = [], // for insert the range being inserted
+            indexesToRemoveList = [], // for remove - end of list, list is shrinking
+            indexesOfItemsToRemoveList= [], // for remove - within the range of indexes being removed
+            itemsToRemoveList = [] // for remove, derived from the previous
 
-        // first, indexesToProcessList and indexesToRemoveList
+        // get indexesToProcessList
         if ((lowPtr == -1) && (highPtr == -1)) { // core scope is out of view
 
             indexesToProcessList = []
 
-        } else { // core scope is partially or fully in view
+        } else { // core scope is partially or fully in view; lowPtr is available
 
-            if (shrinktoPtr == -1) {
+            if (increment == 1) {
+
                 indexesToProcessList = orderedIndexList.slice(lowPtr)
-            } else {
-                indexesToProcessList = orderedIndexList.slice(lowPtr, shrinktoPtr)
+
+            } else if (highPtr == -1) { // increment == -1; lowPtr is available
+
+                indexesToProcessList = []
+
+            } else { // increment == -1; lowPtr and highPtr are available
+
+                indexesToProcessList = orderedIndexList.slice(highPtr + 1)
+
             }
 
         }
 
-        indexesToRemoveList = 
-            (shrinktoPtr != -1 )?
-                orderedIndexList.slice(shrinktoPtr):
-                []
+        // get indexesToReplaceList
+        if (increment == 1) {
+            if ((lowPtr == -1) && (highPtr == -1)) { // core scope is out of view
 
-        // now, itemsToRemoveList
-        if (increment == -1) { // list shrinks with removals
+                indexesToReplaceList = []
 
-            itemsToRemoveList = indexesToRemoveList.map((index)=>{
-                return indexToItemIDMap.get(index)
-            })
+            } else if (highPtr == -1) {
 
-        } else {
+                indexesToReplaceList = orderedIndexList.slice(lowPtr)
 
-            itemsToRemoveList = []
+            } else {
+
+                indexesToReplaceList = orderedIndexList.slice(lowPtr, highPtr + 1)
+            }
 
         }
 
-        // console.log('indexesToProcessList, indexesToRemoveList, itemsToRemoveList',
-        //     indexesToProcessList, indexesToRemoveList, itemsToRemoveList)
+        // get indexesToRemoveList
+        if (increment == -1) {
+
+            if (shrinktoPtr == -1) { // core scope is out of view
+
+                indexesToRemoveList = []
+
+            } else {
+
+                indexesToRemoveList = orderedIndexList.slice(shrinktoPtr)
+            }
+
+        }
+
+        // get indexesOfItemsToRemoveList
+        if (increment == -1) {
+
+            if ((lowPtr == -1) && (highPtr == -1)) { // core scope is out of view
+
+                indexesOfItemsToRemoveList = []
+
+            } else if (highPtr == -1) {
+
+                indexesOfItemsToRemoveList = orderedIndexList.slice(lowPtr)
+
+            } else {
+
+                indexesOfItemsToRemoveList = orderedIndexList.slice(lowPtr, highPtr + 1)
+
+            }
+
+        }
+
+        // get itemsToRemoveList
+        for (const index of indexesOfItemsToRemoveList) {
+
+            itemsToRemoveList.push(indexToItemIDMap.get(index))
+
+        }
 
         // ----------- conduct cache operations ----------
 
         // increment higher from top of list to preserve lower values for subsequent increment
         if (increment == 1) indexesToProcessList.reverse() 
+
+        // console.log('indexesToProcessList, indexesToReplaceList, indexesToRemoveList, indexesOfItemsToRemoveList, itemsToRemoveList',
+        //     indexesToProcessList, indexesToReplaceList, indexesToRemoveList, 
+        //     indexesOfItemsToRemoveList, itemsToRemoveList)
+
+        // return [[],[],[]] // FOR DEBUG
 
         const indexesModifiedList = []
 
@@ -539,22 +596,6 @@ export class CacheHandler {
             indexToItemIDMap.delete(index)
 
         }
-        for (const item of itemsToRemoveList) {
-
-            metadataMap.delete(item)
-
-        }
-
-        // get indexesToReplaceList
-        let shiftBoundaryIndex, shiftBoundaryPtr
-        shiftBoundaryIndex = indexesModifiedList.at(-1)
-        if (increment == -1) {
-            shiftBoundaryPtr = indexesToProcessList.findIndex(value =>value > shiftBoundaryIndex)
-        } else {
-            shiftBoundaryPtr = indexesToProcessList.findIndex(value =>value < shiftBoundaryIndex)
-        }
-
-        indexesToReplaceList = indexesToProcessList.slice(shiftBoundaryPtr)
 
         for (const index of indexesToReplaceList) {
             
@@ -562,11 +603,16 @@ export class CacheHandler {
 
         }
 
-        // console.log('increment, shiftBoundaryIndex, shiftBoundaryPtr, indexesModifiedList, indexesToProcessList, indexesToReplaceList',
-        //     increment, shiftBoundaryIndex, shiftBoundaryPtr, indexesModifiedList, indexesToProcessList, indexesToReplaceList)
+        for (const itemID of itemsToRemoveList) {
+
+            metadataMap.delete(itemID)
+
+        }
+
+        // console.log('increment, indexesModifiedList, indexesToProcessList, indexesToReplaceList',
+        //     increment, indexesModifiedList, indexesToProcessList, indexesToReplaceList)
 
         // --------------- returns ---------------
-
 
         // return values for caller to send to contenthandler for cradle synchronization
         return [indexesModifiedList, indexesToReplaceList, rangeincrement]
@@ -636,28 +682,35 @@ export class CacheHandler {
 
     }
 
-    private async preloadItem(index, 
+    private async preloadItem(
+        index, 
         getItem, 
-        cradlePassthroughPropertiesRef, 
-        preloadIndexCallback,
+        scrollerPassthroughPropertiesRef, 
+        itemExceptionsCallback,
         maxListsizeInterrupt,
         scrollerID
     ) {
 
         const itemID = this.getItemID(index)
 
+        let returnvalue
         let usercontent
         let error
         try {
+
             usercontent = await getItem(index, itemID)
+
         } catch(e) {
-            usercontent = undefined
+
+            returnvalue = usercontent = undefined
             error = e
+
         }
 
         if ((usercontent !== null) && (usercontent !== undefined)) {
 
             if (!React.isValidElement(usercontent)) {
+                returnvalue = usercontent
                 usercontent = undefined
                 error = new Error('invalid React element')
             }
@@ -666,14 +719,10 @@ export class CacheHandler {
 
         if ((usercontent !== null) && (usercontent !== undefined)) {
 
-            preloadIndexCallback && preloadIndexCallback(index, itemID)
-
-            // console.log('preloading index','-'+scrollerID+'-' ,index )
-
             let content 
             const scrollerData = {
                 isReparentingRef:null,
-                cradlePassthroughPropertiesRef,
+                scrollerPassthroughPropertiesRef,
             }
             if (usercontent.props.hasOwnProperty('scrollerData')) {
                 content = React.cloneElement(usercontent, {scrollerData})
@@ -690,11 +739,13 @@ export class CacheHandler {
 
             if (usercontent === undefined) {
 
-                preloadIndexCallback && preloadIndexCallback(index, itemID, error)
-                console.log('ERROR','no content item for preload index, itemID',index, itemID)
+                itemExceptionsCallback && itemExceptionsCallback(index, itemID, returnvalue, error, 'preload')
 
             } else { // usercontent === null; last item in list
+
+                itemExceptionsCallback && itemExceptionsCallback(index, itemID, returnvalue, 'end of list', 'preload')
                 maxListsizeInterrupt(index)
+
             }
 
         }

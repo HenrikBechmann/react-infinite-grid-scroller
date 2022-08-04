@@ -17,6 +17,7 @@
         create demo site - github pages
 
     BUGS: 
+        - removeIndex returning negative some index numbers in array
 
     TODO:
 
@@ -95,6 +96,8 @@ const InfiniteGridScroller = (props) => {
 
     // ------------------[ normalize properties ]--------------------
 
+    // console.log('InfiniteGridScroller props', props)
+
     let { 
         // grid specs:
         orientation = 'vertical', // vertical or horizontal
@@ -108,8 +111,8 @@ const InfiniteGridScroller = (props) => {
         runwaySize = 3, // the number of items outside the view of each side of the viewport 
             // -- gives time to assemble before display
         startingIndex = 0, // the 0-based starting index of the list, when first loaded
-        getItem, // required. function provided by host - parameter is index number, set by system; return value is 
-            // host-selected component or promise of a component
+        getItem, // required. function provided by host - parameter is index number, set by system; 
+            // return value is host-selected component or promise of a component, or null or undefined
         placeholder, // optional. a sparse component to stand in for content until the content arrives; 
             // optional, replaces default placeholder
         styles = {}, // optional. passive style over-rides (eg. color, opacity); has 
@@ -118,14 +121,14 @@ const InfiniteGridScroller = (props) => {
         cache = 'cradle', // "preload", "keepload" or "cradle"
         cacheMax = null, // always minimum cradle null means limited by listsize
         triggerlineOffset = 10, // distance from cell head or tail for content shifts above/below axis
-        functions = {}, // optional. properties to get direct access to some component utilites, optional
+        callbacks = {}, // optional. closures to get direct access to some component utilites
         scrollerData, // required for embedded scroller, shares scroller settings with content
         advanced = {}, // optional. technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
     } = props
 
     // avoid null
     styles = styles ?? {}
-    functions = functions ?? {}
+    callbacks = callbacks ?? {}
     advanced = advanced ?? {}
 
     // prop constraints - non-negative values
@@ -157,7 +160,7 @@ const InfiniteGridScroller = (props) => {
 
     const gridSpecsRef = useRef(gridSpecs)
     const stylesRef = useRef(styles)
-    const functionsRef = useRef(functions)
+    const callbacksRef = useRef(callbacks)
 
     // for mount
     const scrollerSessionIDRef = useRef(null);
@@ -174,8 +177,8 @@ const InfiniteGridScroller = (props) => {
     if (!compareProps(styles, stylesRef.current)) {
         stylesRef.current = styles
     }
-    if (!compareProps(functions, functionsRef.current)) {
-        functionsRef.current = functions
+    if (!compareProps(callbacks, callbacksRef.current)) {
+        callbacksRef.current = callbacks
     }
 
     const cacheHandlerRef = useRef(null)
@@ -200,7 +203,7 @@ const InfiniteGridScroller = (props) => {
         listsizeRef.current = listsize
 
         // inform the user
-        functionsRef.current.newListsize && functionsRef.current.newListsize(listsize)
+        callbacksRef.current.newListsize && callbacksRef.current.newListsize(listsize)
 
         setScrollerState('setlistsize')
     },[])
@@ -251,7 +254,7 @@ const InfiniteGridScroller = (props) => {
                     listsize = { listsize }
                     cache = { cache }
                     cacheMax = { cacheMax }
-                    userFunctions = { functionsRef.current }
+                    userCallbacks = { callbacksRef.current }
                     startingIndex = { startingIndex }
                     getItem = { getItem }
                     placeholder = { placeholder }
