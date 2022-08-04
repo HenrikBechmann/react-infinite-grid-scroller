@@ -188,8 +188,8 @@ export class CacheHandler {
         cacheSize = Math.min(cacheSize, listsize)
 
         const preloadsize = 
-            cacheMax?
-                cacheMax:
+            cacheSize?
+                cacheSize:
                 listsize
 
         const breakloop = {
