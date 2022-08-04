@@ -125,6 +125,8 @@ const InfiniteGridScroller = (props) => {
         advanced = {}, // optional. technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
     } = props
 
+    // console.log('InfiniteGridScroller callbacks',callbacks)
+
     // avoid null
     styles = styles ?? {}
     callbacks = callbacks ?? {}

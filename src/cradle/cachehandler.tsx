@@ -207,11 +207,13 @@ export class CacheHandler {
             const indexToItemIDMap = this.cacheProps.indexToItemIDMap
 
             const { preloadIndexCallback, itemExceptionsCallback } = serviceHandler.callbacks
+            // console.log('cacheHandler: preloadIndexCallback, itemExceptionsCallback',preloadIndexCallback, itemExceptionsCallback)
 
             for (let index = 0; index < preloadsize; index++) {
 
                 if (!indexToItemIDMap.has(index)) {
 
+                    // console.log('preload processing', index)
                     preloadIndexCallback && preloadIndexCallback(index)
                     const promise = this.preloadItem(
                         index, 

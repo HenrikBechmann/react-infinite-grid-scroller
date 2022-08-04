@@ -12,11 +12,11 @@ export default class ServiceHandler {
 
        // doing this explicitly here for documentation
        const {
-           referenceIndexCallback,
-           preloadIndexCallback,
-           deleteListCallback,
-           changeListsizeCallback,
-           itemExceptionsCallback, // index, itemID, returnvalue, error, location
+           referenceIndexCallback, // (index, location, cradleState)
+           preloadIndexCallback, // (index)
+           deleteListCallback, // (deleteList)
+           changeListsizeCallback, // (newlistsize)
+           itemExceptionsCallback, // (index, itemID, returnvalue, error, location)
            
        } = cradleParameters.externalCallbacksRef.current
 
@@ -29,6 +29,8 @@ export default class ServiceHandler {
        }
 
        this.callbacks = callbacks
+
+       // console.log('serviceHandler callbacks', callbacks, this.callbacks)
 
     }
 
