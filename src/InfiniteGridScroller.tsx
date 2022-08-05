@@ -19,7 +19,6 @@
     BUGS: 
 
     TODO:
-        - return reason for deletelist callback
         - cancellable customizable scrolltracker
         
         - add matchCacheToCradle after set and update contents

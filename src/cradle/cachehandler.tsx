@@ -808,7 +808,7 @@ export class CacheHandler {
         const deleteList = []
         for (let i of indexArray) {
             const itemID = indexToItemIDMap.get(i)
-            deleteList.push(itemID)
+            deleteList.push({index:i,itemID})
             metadataMap.delete(itemID)
             portalMap.delete(itemID)
             indexToItemIDMap.delete(i)

@@ -454,9 +454,21 @@ const Cradle = ({
         // console.log('cradle fielding setMaxlistsize with maxListsize, listsize',maxListsize, listsize)
         if (maxListsize < listsize) {
 
+            const { deleteListCallback, changeListsizeCallback } = serviceHandler.callbacks
+
+            let dListCallback
+            if (deleteListCallback) {
+                dListCallback = (deleteList) => {
+
+                    deleteListCallback('getItem returned null',deleteList)
+
+                }
+
+            }
+
             cacheHandler.changeListsize(maxListsize, 
-                serviceHandler.callbacks.deleteListCallback,
-                serviceHandler.callbacks.changeListsizeCallback)
+                dListCallback, // serviceHandler.callbacks.deleteListCallback,
+                changeListsizeCallback)
 
         }
     },[])
@@ -590,9 +602,19 @@ const Cradle = ({
 
                 const { deleteListCallback } = serviceHandler.callbacks
 
+                let dListCallback
+                if (deleteListCallback) {
+                    dListCallback = (deleteList) => {
+
+                        deleteListCallback('pare cache to cacheMax',deleteList)
+
+                    }
+
+                }
+
                 const cacheMax = cradleParameters.cradleInheritedPropertiesRef.current.cacheMax
 
-                if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, deleteListCallback)) {
+                if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, dListCallback)) {
                     cacheHandler.cacheProps.modified = true
                     cacheHandler.renderPortalList()
                 }
@@ -608,7 +630,17 @@ const Cradle = ({
 
                 const { deleteListCallback } = serviceHandler.callbacks
 
-                if (cacheHandler.matchCacheToCradle(modelIndexList, deleteListCallback)) {
+                let dListCallback
+                if (deleteListCallback) {
+                    dListCallback = (deleteList) => {
+
+                        deleteListCallback('match cache to cradle',deleteList)
+
+                    }
+
+                }
+
+                if (cacheHandler.matchCacheToCradle(modelIndexList, dListCallback)) {
                     cacheHandler.cacheProps.modified = true
                     cacheHandler.renderPortalList()
                 }
@@ -823,7 +855,17 @@ const Cradle = ({
 
                     // const cacheMax = cradleParameters.cradleInheritedPropertiesRef.current.cacheMax
 
-                    if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, deleteListCallback)) {
+                    let dListCallback
+                    if (deleteListCallback) {
+                        dListCallback = (deleteList) => {
+
+                            deleteListCallback('pare cache to cacheMax',deleteList)
+
+                        }
+
+                    }
+
+                    if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, dListCallback)) {
                         cacheHandler.cacheProps.modified = true
                         cacheHandler.renderPortalList()
                     }
