@@ -9,17 +9,19 @@
             test config size edge cases - over and under sized cells
 
         review all code
+
         layout: uniform, variable, dense
 
         cross-browser testing; smartphone testing
 
         release to npm
+
         create demo site - github pages
 
     BUGS: 
 
     TODO:
-        - cancellable customizable scrolltracker
+        - cancellable scrolltracker
         - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
         
         - rationalize calls to cacheHandler vs contentHandler or serviceHandler
