@@ -22,6 +22,7 @@
         - cancellable customizable scrolltracker
         
         - add matchCacheToCradle after set and update contents
+        - call matchCacheToCradle through contentHandler (?) iac rationalize calls to cacheHandler
 
         - review event cycles - they seem slower
             - review state change chains in cradle
@@ -29,7 +30,6 @@
 
         - create random loading delays in test ui
         - provide way to attempt reload of a single cell (change instanceID)
-        - call matchCacheToCradle through contentHandler (?) iac rationalize calls to cacheHandler
         - check number of passes to scrollblock; consider implementing named states
         - test for memory leaks with Chrome's window.performance.memory property
         - replace top/left with transformx/y
