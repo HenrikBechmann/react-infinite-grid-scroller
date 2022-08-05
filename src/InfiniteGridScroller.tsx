@@ -22,14 +22,8 @@
 
     TODO:
         - return reason for deletelist callback
-        - add impliedIndexCallback, repositioningCallback streaming
+        - cancellable customizable scrolltracker
         - add matchCacheToCradle after set and update contents
-        - checkmark enable console feedback (for external callbacks)
-        - organize feedback for all cache operations
-        - also surface external callbacks with return values for testing
-            - add modify listsize callback
-            - return modified cachedItemMap from modify, add, and remove
-            - customizable scrolltracker, or provide callback feature for scroll tracking
 
         - review event cycles - they seem slower
             - review state change chains in cradle
