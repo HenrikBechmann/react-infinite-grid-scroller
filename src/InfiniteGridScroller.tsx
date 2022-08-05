@@ -21,8 +21,8 @@
     TODO:
         - cancellable customizable scrolltracker
         
-        - add matchCacheToCradle after set and update contents
-        - call matchCacheToCradle through contentHandler (?) iac rationalize calls to cacheHandler
+        - rationalize calls to cacheHandler vs contentHandler or serviceHandler
+            - particularly for cache paring
 
         - review event cycles - they seem slower
             - review state change chains in cradle

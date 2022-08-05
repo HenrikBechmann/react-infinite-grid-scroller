@@ -1008,13 +1008,29 @@ const Cradle = ({
 
                 hasBeenRenderedRef.current = true
 
-                // const { cache } = cradleInheritedPropertiesRef.current
-                // if (cache == 'cradle') {
-                //     console.log('processing cradle content: cache', cache)
-                //     const modelIndexList = contentHandler.getModelIndexList()
-                //     cacheHandler.matchCacheToCradle(modelIndexList, serviceHandler.callbacks.deleteListCallback)
-                //     cacheHandler.renderPortalList()
-                // }
+                const { cache } = cradleInheritedPropertiesRef.current
+                if (cache == 'cradle') {
+                    // console.log('processing cradle content: cache', cache)
+                    const modelIndexList = contentHandler.getModelIndexList()
+
+                    const { deleteListCallback } = serviceHandler.callbacks
+
+                    let dListCallback
+                    if (deleteListCallback) {
+                        dListCallback = (deleteList) => {
+
+                            deleteListCallback('match cache to cradle',deleteList)
+
+                        }
+
+                    }
+
+                    if (cacheHandler.matchCacheToCradle(modelIndexList, dListCallback)) {
+                        
+                        cacheHandler.renderPortalList()
+
+                    }
+                }
 
                 setCradleState('preparerender')
 

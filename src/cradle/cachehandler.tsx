@@ -97,7 +97,16 @@ export class CacheHandler {
 
         const delkeys = mapkeys.filter(key => !cradleIndexList.includes(key))
 
-        return this.deletePortal(delkeys, deleteListCallback)
+        if (delkeys.length) {
+
+            this.deletePortal(delkeys, deleteListCallback)
+            return true
+
+        } else {
+
+            return false
+
+        }
 
     }
 
