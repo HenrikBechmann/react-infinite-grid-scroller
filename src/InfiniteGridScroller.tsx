@@ -21,6 +21,7 @@
         - referenceIndexCallback gives wrong index number on scroll to top
 
     TODO:
+        - return reason for deletelist callback
         - add impliedIndexCallback, repositioningCallback streaming
         - add matchCacheToCradle after set and update contents
         - checkmark enable console feedback (for external callbacks)

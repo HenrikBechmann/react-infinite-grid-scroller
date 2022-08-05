@@ -14,9 +14,9 @@ export default class ServiceHandler {
        const {
            referenceIndexCallback, // (index, location, cradleState)
            preloadIndexCallback, // (index)
-           deleteListCallback, // (deleteList)
+           deleteListCallback, // (reason, deleteList)
            changeListsizeCallback, // (newlistsize)
-           itemExceptionsCallback, // (index, itemID, returnvalue, error, location)
+           itemExceptionsCallback, // (index, itemID, returnvalue, location, error)
            repositioningIndexCallback, // (index)
            
        } = cradleParameters.externalCallbacksRef.current

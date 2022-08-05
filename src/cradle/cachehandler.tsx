@@ -775,12 +775,12 @@ export class CacheHandler {
             if (usercontent === undefined) {
 
                 itemExceptionsCallback && 
-                    itemExceptionsCallback(index, itemID, returnvalue, error, 'preload')
+                    itemExceptionsCallback(index, itemID, returnvalue, 'preload', error)
 
             } else { // usercontent === null; last item in list
 
                 itemExceptionsCallback && 
-                    itemExceptionsCallback(index, itemID, returnvalue, new Error('end of list'), 'preload')
+                    itemExceptionsCallback(index, itemID, returnvalue, 'preload', new Error('end of list'))
 
                 maxListsizeInterrupt(index)
 

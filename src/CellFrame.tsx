@@ -225,7 +225,7 @@ const CellFrame = ({
                                     // console.log('cellFrame calling setMaxListsize with index', index)
                                     itemExceptionsCallback && 
                                         itemExceptionsCallback(
-                                            index, itemID, returnvalue, new Error('end of list'), 'cellFrame'
+                                            index, itemID, returnvalue, 'cellFrame', new Error('end of list')
                                         )
                                     setMaxListsize(index)
                                 } else { // usercontent === undefined, meaning an error has occurred
@@ -234,7 +234,7 @@ const CellFrame = ({
                                     errorRef.current = error
                                     itemExceptionsCallback && 
                                         itemExceptionsCallback(
-                                            index, itemID, returnvalue, error, 'cellFrame'
+                                            index, itemID, returnvalue, 'cellFrame', error
                                         )
 
                                     setFrameState('error')
