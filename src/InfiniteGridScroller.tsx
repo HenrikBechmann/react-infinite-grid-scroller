@@ -19,6 +19,7 @@
     BUGS: 
 
     TODO:
+        - add impliedIndexCallback, repositioningCallback streaming
         - add matchCacheToCradle after set and update contents
         - checkmark enable console feedback (for external callbacks)
         - organize feedback for all cache operations
