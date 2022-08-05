@@ -754,12 +754,12 @@ export class CacheHandler {
         if ((usercontent !== null) && (usercontent !== undefined)) {
 
             let content 
-            const scrollerData = {
+            const scrollerProperties = {
                 isReparentingRef:null,
                 scrollerPassthroughPropertiesRef,
             }
-            if (usercontent.props.hasOwnProperty('scrollerData')) {
-                content = React.cloneElement(usercontent, {scrollerData})
+            if (usercontent.props.hasOwnProperty('scrollerProperties')) {
+                content = React.cloneElement(usercontent, {scrollerProperties})
             } else {
                 content = usercontent
             }
@@ -767,7 +767,7 @@ export class CacheHandler {
             const portalData = 
                 this.createPortal(content, index, itemID, true) // true = isPreload
             // make available to user content
-            scrollerData.isReparentingRef = portalData.isReparentingRef
+            scrollerProperties.isReparentingRef = portalData.isReparentingRef
 
         } else {
 
@@ -779,7 +779,7 @@ export class CacheHandler {
             } else { // usercontent === null; last item in list
 
                 itemExceptionsCallback && 
-                    itemExceptionsCallback(index, itemID, returnvalue, 'end of list', 'preload')
+                    itemExceptionsCallback(index, itemID, returnvalue, new Error('end of list'), 'preload')
 
                 maxListsizeInterrupt(index)
 

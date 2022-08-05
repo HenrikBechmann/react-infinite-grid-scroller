@@ -199,12 +199,12 @@ const CellFrame = ({
 
                                 // if usercontent is otherwise disallowed, let error handling deal with it.
                                 let content 
-                                const scrollerData = {
+                                const scrollerProperties = {
                                     isReparentingRef:null,
                                     scrollerPassthroughPropertiesRef,
                                 }
-                                if (usercontent.props?.hasOwnProperty('scrollerData')) {
-                                    content = React.cloneElement(usercontent, {scrollerData})
+                                if (usercontent.props?.hasOwnProperty('scrollerProperties')) {
+                                    content = React.cloneElement(usercontent, {scrollerProperties})
                                 } else {
                                     content = usercontent
                                 }
@@ -213,7 +213,7 @@ const CellFrame = ({
                                     cacheHandler.createPortal(content, index, itemID)
                                 portalNodeRef.current  = portalDataRef.current.portalNode
                                 // make available to user content
-                                scrollerData.isReparentingRef = portalDataRef.current.isReparentingRef
+                                scrollerProperties.isReparentingRef = portalDataRef.current.isReparentingRef
 
                                 setFrameState('inserting')
 
@@ -225,7 +225,7 @@ const CellFrame = ({
                                     // console.log('cellFrame calling setMaxListsize with index', index)
                                     itemExceptionsCallback && 
                                         itemExceptionsCallback(
-                                            index, itemID, returnvalue, 'end of list', 'cellFrame'
+                                            index, itemID, returnvalue, new Error('end of list'), 'cellFrame'
                                         )
                                     setMaxListsize(index)
                                 } else { // usercontent === undefined, meaning an error has occurred

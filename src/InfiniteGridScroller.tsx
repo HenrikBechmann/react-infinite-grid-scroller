@@ -121,7 +121,7 @@ const InfiniteGridScroller = (props) => {
         cacheMax = null, // always minimum cradle null means limited by listsize
         triggerlineOffset = 10, // distance from cell head or tail for content shifts above/below axis
         callbacks = {}, // optional. closures to get direct access to some component utilites
-        scrollerData, // required for embedded scroller, shares scroller settings with content
+        scrollerProperties, // required for embedded scroller, shares scroller settings with content
         advanced = {}, // optional. technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
     } = props
 
@@ -235,7 +235,7 @@ const InfiniteGridScroller = (props) => {
 
             gridSpecs = { gridSpecsRef.current }
             styles = { stylesRef.current }
-            scrollerData = {scrollerData}
+            scrollerProperties = {scrollerProperties}
             scrollerID = { scrollerID }
 
         >
