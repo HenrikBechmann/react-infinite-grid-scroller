@@ -17,7 +17,7 @@ export default class ServiceHandler {
            deleteListCallback, // (reason, deleteList)
            changeListsizeCallback, // (newlistsize)
            itemExceptionsCallback, // (index, itemID, returnvalue, location, error)
-           repositioningIndexCallback, // (index)
+           repositioningFlagCallback, // (index)
            
        } = cradleParameters.externalCallbacksRef.current
 
@@ -27,7 +27,7 @@ export default class ServiceHandler {
            deleteListCallback,
            changeListsizeCallback,
            itemExceptionsCallback,
-           repositioningIndexCallback,
+           repositioningFlagCallback,
        }
 
        this.callbacks = callbacks

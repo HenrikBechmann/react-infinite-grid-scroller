@@ -131,7 +131,8 @@ export default class ScrollHandler {
 
         this.isScrolling = false
 
-        const {stateHandler, contentHandler, cacheHandler} = this.cradleParameters.handlersRef.current
+        const {stateHandler, contentHandler, cacheHandler, serviceHandler} = 
+            this.cradleParameters.handlersRef.current
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
 
@@ -145,6 +146,8 @@ export default class ScrollHandler {
 
                 this.updateBlockScrollPos()
 
+                const { repositioningFlagCallback } = serviceHandler.callbacks
+                repositioningFlagCallback && repositioningFlagCallback(false)
                 stateHandler.setCradleState('doreposition')
 
                 break
