@@ -1,4 +1,5 @@
-// portalhandler.tsx
+// cachehandler.tsx
+// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     The infinite list scroller stores user cell data in a central hidden portal cache for each
@@ -6,14 +7,12 @@
 */
 
 import React, {useState, useEffect, useRef} from 'react'
-import ReactDOM from 'react-dom'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
 const MAX_CACHE_OVER_RUN = 1.5
 
 let globalItemID = 0
-
 
 // global scroller data, organized by session scrollerID
 // the cache itself is maintained in the root infinitegridscroller component
@@ -30,7 +29,7 @@ export class CacheHandler {
         modified:false,
 
         metadataMap:new Map(),
-        requestedMap: new Map(), // some portals may have been requested by requestidlecallback, not yet created
+        requestedMap:new Map(), // some portals may have been requested by requestidlecallback, not yet created
         portalMap:new Map(),
         indexToItemIDMap:new Map(),
 
@@ -59,6 +58,7 @@ export class CacheHandler {
             })
             this.deletePortal(parelist, deleteListCallback)
         }
+        // console.log('cacheHandler changeListsizeCallback',changeListsizeCallback)
         changeListsizeCallback && changeListsizeCallback(newlistsize)
     }
 
@@ -89,21 +89,21 @@ export class CacheHandler {
 
     }
 
-    matchCacheToCradle = (modelIndexList, deleteListCallback) => {
+    matchCacheToCradle = (cradleIndexList, deleteListCallback) => {
 
-        // console.log('matchCacheToCradle modelIndexList',modelIndexList)
+        // console.log('matchCacheToCradle cradleIndexList',cradleIndexList)
 
         const mapkeys = Array.from(this.cacheProps.indexToItemIDMap.keys())
 
-        const delkeys = mapkeys.filter(key => !modelIndexList.includes(key))
+        const delkeys = mapkeys.filter(key => !cradleIndexList.includes(key))
 
         return this.deletePortal(delkeys, deleteListCallback)
 
     }
 
-    pareCacheToMax = (cacheMax, modelIndexList, deleteListCallback) => {
+    pareCacheToMax = (cacheMax, cradleIndexList, deleteListCallback) => {
 
-        const modelLength = modelIndexList.length
+        const modelLength = cradleIndexList.length
 
         // determine need for paring
         if ((!cacheMax) || (!modelLength)) return false
@@ -129,8 +129,8 @@ export class CacheHandler {
         const parecount = mapLength - max
 
         // distribute paring proportionally at front and back
-        const headindex = modelIndexList[0]
-        const tailindex = modelIndexList[modelLength - 1]
+        const headindex = cradleIndexList[0]
+        const tailindex = cradleIndexList[modelLength - 1]
         const headpos = mapkeys.indexOf(headindex)
         const tailpos = mapkeys.indexOf(tailindex)
 
@@ -153,14 +153,14 @@ export class CacheHandler {
 
     }
 
-    guardAgainstRunawayCaching = (cacheMax, modelLength) => {
+    guardAgainstRunawayCaching = (cacheMax, cradleListLength) => {
 
         if (!cacheMax) return false
 
         const portalMap = this.cacheProps.portalMap
         const requestedMap = this.cacheProps.requestedMap
 
-        const max = Math.max(modelLength, cacheMax)
+        const max = Math.max(cradleListLength, cacheMax)
 
         if ((portalMap.size + requestedMap.size) <= ((max) * MAX_CACHE_OVER_RUN)) {
             return false
@@ -189,11 +189,11 @@ export class CacheHandler {
         cacheSize = Math.min(cacheSize, listsize)
 
         const preloadsize = 
-            cacheMax?
-                cacheMax:
+            cacheSize?
+                cacheSize:
                 listsize
 
-        let breakloop = {
+        const breakloop = {
             current:false
         }
 
@@ -204,16 +204,17 @@ export class CacheHandler {
 
         // serviceHandler.callbacks.preloadIndexCallback
         if (stateHandler.isMountedRef.current) {
-
             
             const indexToItemIDMap = this.cacheProps.indexToItemIDMap
 
             const { preloadIndexCallback, itemExceptionsCallback } = serviceHandler.callbacks
+            // console.log('cacheHandler: preloadIndexCallback, itemExceptionsCallback',preloadIndexCallback, itemExceptionsCallback)
 
             for (let index = 0; index < preloadsize; index++) {
 
                 if (!indexToItemIDMap.has(index)) {
 
+                    // console.log('preload processing', index)
                     preloadIndexCallback && preloadIndexCallback(index)
                     const promise = this.preloadItem(
                         index, 
@@ -248,11 +249,12 @@ export class CacheHandler {
 
     }
 
-    getCradleIndexMap(modelIndexList) {
+    getCradleIndexMap(cradleIndexList) {
 
         const cradleMap = new Map()
         const { indexToItemIDMap } = this.cacheProps
-        for (const index of modelIndexList) {
+
+        for (const index of cradleIndexList) {
 
             cradleMap.set(index, indexToItemIDMap.get(index))
 
@@ -440,46 +442,77 @@ export class CacheHandler {
                 highrangeindex:
                 index
 
+        const emptyreturn = [[],[],0]
+        if (increment == -1) {
+
+            // removal must be entirely within scope of the list
+            if (highrangeindex > (listsize - 1)) return emptyreturn
+
+        } else {
+
+            // addition can at most start at the next index above the current list
+            if (index > listsize) return emptyreturn
+
+        }
+
         // rangecount is the absolute number in the insert/remove range - contiguous
         const rangecount = highrangeindex - index + 1
 
         // range increment adds sign to rangecount to indicate add/remove
         const rangeincrement = rangecount * increment
 
-        // highPtr, lowPtr, shrinkPtr within orderedIndexList.
+        // highPtr, lowPtr, shrinktoPtr within orderedIndexList.
         const orderedIndexList = Array.from(indexToItemIDMap.keys())
         orderedIndexList.sort((a,b)=>a-b)
 
         // ---------- define boundaries within ordered cache index list ------------
-        // Ptr = index to array, as opposed to index of virtual list
-
-        // shrinktorange is the index at the bottom of the indexes to be removed from the top of the list
-        // for the remove operation.
-        const shrinktoIndex = 
-            (increment == -1)?
-                orderedIndexList.at(-1) + (rangeincrement + 1):
-                null
+        // Ptr = index into array, as opposed to index of virtual list
 
         // shrinkptr is the location of the bottom of the shrink range for removals
-        const shrinktoPtr = 
-            (increment == -1)?
-                orderedIndexList.findIndex(value => value >= shrinktoIndex):
-                -1
+        let shrinktoIndex = null
+        let shrinktoPtr = - 1
+        
+        if (increment == - 1) {
+            
+            shrinktoIndex = orderedIndexList.at(-1) + (rangeincrement)
 
-        const lowPtr = orderedIndexList.findIndex(value => value >= index)
+            shrinktoIndex = Math.max(highrangeindex + (rangeincrement), shrinktoIndex)
 
-        const highPtr = orderedIndexList.findIndex(value=> value >= highrangeindex)
+            shrinktoIndex = Math.min(listsize - 1,shrinktoIndex) 
+
+            shrinktoPtr = orderedIndexList.findIndex(value => value >= shrinktoIndex)
+
+        }
+
+        // lowPtr and highPtr must be within low and high range
+        const lowPtr = orderedIndexList.findIndex(value => {
+
+            return (value >= index) && (value <= highrangeindex)
+
+        })
+
+        const reverseIndexList = Array.from(orderedIndexList)
+        reverseIndexList.reverse()
+        let highPtr = reverseIndexList.findIndex(value=> {
+
+            return value <= highrangeindex
+
+        })
+        if (highPtr != -1) {
+            highPtr = (orderedIndexList.length - 1) - highPtr
+            if (highPtr < lowPtr) highPtr = -1
+        }
 
         // console.log('highrangeindex, rangecount, rangeincrement, shrinktoIndex, \n',
         //     'lowPtr, highPtr, shrinktoPtr, orderedIndexList\n',
         //     highrangeindex, rangecount, rangeincrement, shrinktoIndex,'\n',
-        //     lowPtr, highPtr, shrinktoPtr, orderedIndexList)
+        //     lowPtr, highPtr, shrinktoPtr, orderedIndexList, reverseIndexList)
 
-        // ----------- define indexesToProcess, indexesToRemove and itemsToRemove lists --------
+        // ----------- list indexes to process, replace, and remove, and items to remove --------
 
         let indexesToProcessList, // for either insert or remove
             indexesToReplaceList = [], // for insert the range being inserted
-            indexesToRemoveList = [], // for remove - end of list, list is shrinking
+            indexesToRemoveList = [], // for remove - end of list; the list is shrinking
             indexesOfItemsToRemoveList= [], // for remove - within the range of indexes being removed
             itemsToRemoveList = [] // for remove, derived from the previous
 
@@ -506,8 +539,9 @@ export class CacheHandler {
 
         }
 
-        // get indexesToReplaceList
         if (increment == 1) {
+
+            // get indexesToReplaceList
             if ((lowPtr == -1) && (highPtr == -1)) { // core scope is out of view
 
                 indexesToReplaceList = []
@@ -521,25 +555,19 @@ export class CacheHandler {
                 indexesToReplaceList = orderedIndexList.slice(lowPtr, highPtr + 1)
             }
 
-        }
+        } else {
 
-        // get indexesToRemoveList
-        if (increment == -1) {
-
+            // get indexesToRemoveList
             if (shrinktoPtr == -1) { // core scope is out of view
 
                 indexesToRemoveList = []
 
             } else {
 
-                indexesToRemoveList = orderedIndexList.slice(shrinktoPtr)
+                indexesToRemoveList = orderedIndexList.slice(shrinktoPtr + 1)
             }
 
-        }
-
-        // get indexesOfItemsToRemoveList
-        if (increment == -1) {
-
+            // get indexesOfItemsToRemoveList
             if ((lowPtr == -1) && (highPtr == -1)) { // core scope is out of view
 
                 indexesOfItemsToRemoveList = []
@@ -554,12 +582,12 @@ export class CacheHandler {
 
             }
 
-        }
+            // get itemsToRemoveList
+            for (const index of indexesOfItemsToRemoveList) {
 
-        // get itemsToRemoveList
-        for (const index of indexesOfItemsToRemoveList) {
+                itemsToRemoveList.push(indexToItemIDMap.get(index))
 
-            itemsToRemoveList.push(indexToItemIDMap.get(index))
+            }
 
         }
 
@@ -572,12 +600,12 @@ export class CacheHandler {
         //     indexesToProcessList, indexesToReplaceList, indexesToRemoveList, 
         //     indexesOfItemsToRemoveList, itemsToRemoveList)
 
-        // return [[],[],[]] // FOR DEBUG
+        // return [[],[],0] // FOR DEBUG
 
         const indexesModifiedList = []
 
         // modify index-to-itemid map, and metadata map
-        const processindex = index => {
+        const processIndex = index => {
 
             const itemID = indexToItemIDMap.get(index)
             const newIndex = index + rangeincrement
@@ -588,24 +616,31 @@ export class CacheHandler {
 
         }
 
-        indexesToProcessList.forEach(processindex)
+        indexesToProcessList.forEach(processIndex)
 
         // delete remaining indexes and items now duplicates
-        for (const index of indexesToRemoveList) {
 
-            indexToItemIDMap.delete(index)
+        if (increment == 1) {
 
-        }
+            for (const index of indexesToReplaceList) {
+                
+                indexToItemIDMap.delete(index)
 
-        for (const index of indexesToReplaceList) {
-            
-            indexToItemIDMap.delete(index)
+            }
 
-        }
+        } else {
 
-        for (const itemID of itemsToRemoveList) {
+            for (const index of indexesToRemoveList) {
 
-            metadataMap.delete(itemID)
+                indexToItemIDMap.delete(index)
+
+            }
+
+            for (const itemID of itemsToRemoveList) {
+
+                metadataMap.delete(itemID)
+
+            }
 
         }
 
@@ -658,9 +693,9 @@ export class CacheHandler {
 
         const portalNode = createPortalNode(index, itemID)
 
-        this.cacheProps.portalMap.set(itemID,//index,
+        this.cacheProps.portalMap.set(itemID,
                 <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>)
-                // <InPortal key = {index} node = {portalNode} > { content } </InPortal>)
+
         this.cacheProps.modified = true
 
         const portalMetadata = {
@@ -693,12 +728,12 @@ export class CacheHandler {
 
         const itemID = this.getItemID(index)
 
-        let returnvalue
-        let usercontent
-        let error
+        let returnvalue, usercontent, error
+
         try {
 
             usercontent = await getItem(index, itemID)
+            if (usercontent === null) returnvalue = usercontent
 
         } catch(e) {
 
@@ -720,12 +755,12 @@ export class CacheHandler {
         if ((usercontent !== null) && (usercontent !== undefined)) {
 
             let content 
-            const scrollerData = {
+            const scrollerProperties = {
                 isReparentingRef:null,
                 scrollerPassthroughPropertiesRef,
             }
-            if (usercontent.props.hasOwnProperty('scrollerData')) {
-                content = React.cloneElement(usercontent, {scrollerData})
+            if (usercontent.props.hasOwnProperty('scrollerProperties')) {
+                content = React.cloneElement(usercontent, {scrollerProperties})
             } else {
                 content = usercontent
             }
@@ -733,17 +768,20 @@ export class CacheHandler {
             const portalData = 
                 this.createPortal(content, index, itemID, true) // true = isPreload
             // make available to user content
-            scrollerData.isReparentingRef = portalData.isReparentingRef
+            scrollerProperties.isReparentingRef = portalData.isReparentingRef
 
         } else {
 
             if (usercontent === undefined) {
 
-                itemExceptionsCallback && itemExceptionsCallback(index, itemID, returnvalue, error, 'preload')
+                itemExceptionsCallback && 
+                    itemExceptionsCallback(index, itemID, returnvalue, 'preload', error)
 
             } else { // usercontent === null; last item in list
 
-                itemExceptionsCallback && itemExceptionsCallback(index, itemID, returnvalue, 'end of list', 'preload')
+                itemExceptionsCallback && 
+                    itemExceptionsCallback(index, itemID, returnvalue, 'preload', new Error('end of list'))
+
                 maxListsizeInterrupt(index)
 
             }
@@ -766,6 +804,7 @@ export class CacheHandler {
             portalMap,
             indexToItemIDMap 
         } = this.cacheProps
+
         const deleteList = []
         for (let i of indexArray) {
             const itemID = indexToItemIDMap.get(i)

@@ -12,11 +12,12 @@ export default class ServiceHandler {
 
        // doing this explicitly here for documentation
        const {
-           referenceIndexCallback,
-           preloadIndexCallback,
-           deleteListCallback,
-           changeListsizeCallback,
-           itemExceptionsCallback, // index, itemID, returnvalue, error, location
+           referenceIndexCallback, // (index, location, cradleState)
+           preloadIndexCallback, // (index)
+           deleteListCallback, // (reason, deleteList)
+           changeListsizeCallback, // (newlistsize)
+           itemExceptionsCallback, // (index, itemID, returnvalue, location, error)
+           repositioningFlagCallback, // (index)
            
        } = cradleParameters.externalCallbacksRef.current
 
@@ -26,9 +27,12 @@ export default class ServiceHandler {
            deleteListCallback,
            changeListsizeCallback,
            itemExceptionsCallback,
+           repositioningFlagCallback,
        }
 
        this.callbacks = callbacks
+
+       // console.log('serviceHandler callbacks', callbacks, this.callbacks)
 
     }
 
@@ -63,7 +67,7 @@ export default class ServiceHandler {
 
         scaffoldHandler.cradlePositionData.targetAxisReferenceIndex = index
 
-        stateHandler.setCradleState('doreposition')
+        stateHandler.setCradleState('doscrollto')
 
     }
 

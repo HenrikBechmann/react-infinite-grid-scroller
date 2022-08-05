@@ -17,16 +17,13 @@
         create demo site - github pages
 
     BUGS: 
-        - removeIndex returning negative some index numbers in array
+
+        - referenceIndexCallback gives wrong index number on scroll to top
 
     TODO:
-
-        - checkmark enable console feedback (for external callbacks)
-        - organize feedback for all cache operations
-        - also surface external callbacks with return values for testing
-            - add modify listsize callback
-            - return modified cachedItemMap from modify, add, and remove
-            - customizable scrolltracker, or provide callback feature for scroll tracking
+        - return reason for deletelist callback
+        - cancellable customizable scrolltracker
+        - add matchCacheToCradle after set and update contents
 
         - review event cycles - they seem slower
             - review state change chains in cradle
@@ -122,9 +119,11 @@ const InfiniteGridScroller = (props) => {
         cacheMax = null, // always minimum cradle null means limited by listsize
         triggerlineOffset = 10, // distance from cell head or tail for content shifts above/below axis
         callbacks = {}, // optional. closures to get direct access to some component utilites
-        scrollerData, // required for embedded scroller, shares scroller settings with content
+        scrollerProperties, // required for embedded scroller, shares scroller settings with content
         advanced = {}, // optional. technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
     } = props
+
+    // console.log('InfiniteGridScroller callbacks',callbacks)
 
     // avoid null
     styles = styles ?? {}
@@ -234,7 +233,7 @@ const InfiniteGridScroller = (props) => {
 
             gridSpecs = { gridSpecsRef.current }
             styles = { stylesRef.current }
-            scrollerData = {scrollerData}
+            scrollerProperties = {scrollerProperties}
             scrollerID = { scrollerID }
 
         >

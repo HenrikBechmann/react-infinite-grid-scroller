@@ -77,7 +77,7 @@ export default class InterruptHandler {
     private cradleIntersectionObserverCallback = (entries) => {
 
         const signals = this.signals
-        const { stateHandler, contentHandler } = this.cradleParameters.handlersRef.current
+        const { stateHandler, contentHandler, serviceHandler } = this.cradleParameters.handlersRef.current
 
         if (signals.pauseCradleIntersectionObserver) {
 
@@ -136,8 +136,8 @@ export default class InterruptHandler {
                 // console.log('calling startreposition from cradleIntersectionObserverCallback:scrollerID, entries',
                 //  '-' + scrollerID + '-', entries)
 
-                // debugger
-
+                const { repositioningFlagCallback } = serviceHandler.callbacks
+                repositioningFlagCallback && repositioningFlagCallback(true)
                 stateHandler.setCradleState('startreposition')
 
             }

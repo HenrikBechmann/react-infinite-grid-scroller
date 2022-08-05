@@ -148,6 +148,7 @@ const Cradle = ({
         viewportwidth,
     ])
 
+    // various row counts
     const [
         cradleRowcount, 
         viewportRowcount, 
@@ -219,9 +220,11 @@ const Cradle = ({
     const externalCallbacksRef = useRef(
         {
             referenceIndexCallback:userCallbacks?.referenceIndexCallback,
+            repositioningFlagCallback:userCallbacks?.repositioningFlagCallback,
             preloadIndexCallback:userCallbacks?.preloadIndexCallback,
             deleteListCallback:userCallbacks?.deleteListCallback,
             changeListsizeCallback:userCallbacks?.changeListsizeCallback,
+            itemExceptionsCallback:userCallbacks?.itemExceptionsCallback,
         }
     )
 
@@ -334,18 +337,10 @@ const Cradle = ({
     // moved to a cellFrame, this code restores the scrollPos.
     // The restore action must be the first priority to hide the scrollPos changes from the user
 
-    // const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
-    // const vwidth = viewportElement.clientWidth
-    // const vheight = viewportElement.clientHeight
-
     // console.log('in cradle viewportwidth, viewportheight','-'+scrollerID+'-',viewportwidth, viewportheight)
     
     const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal (cache) state
     // const isInPortal = ((vwidth == 0) && (vheight == 0)) // must be in portal (cache) state
-
-    // const viewportElementScrollPos = viewportInterruptPropertiesRef.current.elementRef.current.scrollLeft
-
-    // const viewportScrollPos = scaffoldHandler.getViewportScrollPos()
 
     const isCacheChange = (isInPortal != isCachedRef.current)
 
@@ -406,10 +401,6 @@ const Cradle = ({
             if (isCachedRef.current && !wasCachedRef.current) { // change into cache
                 
                 interruptHandler.pauseInterrupts()
-
-            // } else if ((!isCachedRef.current) && wasCachedRef.current) { // change out of cache
-
-            //     interruptHandler.restoreInterrupts()
 
             }
 
@@ -937,11 +928,12 @@ const Cradle = ({
             }
 
             /*
-                the following 8 cradle states all resolve with
+                the following 10 cradle states all resolve with
                 a chain starting with setCradleContent, 
                 continuing with 'preparerender', and ending with
                 'normalizesignals'
             */
+            case 'doscrollto':
             case 'resetcache':
             case 'resolvependinguncache':
             case 'dosetup':

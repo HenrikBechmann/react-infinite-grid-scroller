@@ -163,12 +163,12 @@ const CellFrame = ({
 
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
-                        let returnvalue
-                        let usercontent
-                        let error
+                        let returnvalue, usercontent, error
+
                         try {
 
                             usercontent = await getItem(index, itemID)
+                            if (usercontent === null) returnvalue = usercontent
 
                             if (usercontent === undefined) {
                                 error = new Error('host returned "undefined"')
@@ -199,12 +199,12 @@ const CellFrame = ({
 
                                 // if usercontent is otherwise disallowed, let error handling deal with it.
                                 let content 
-                                const scrollerData = {
+                                const scrollerProperties = {
                                     isReparentingRef:null,
                                     scrollerPassthroughPropertiesRef,
                                 }
-                                if (usercontent.props?.hasOwnProperty('scrollerData')) {
-                                    content = React.cloneElement(usercontent, {scrollerData})
+                                if (usercontent.props?.hasOwnProperty('scrollerProperties')) {
+                                    content = React.cloneElement(usercontent, {scrollerProperties})
                                 } else {
                                     content = usercontent
                                 }
@@ -213,7 +213,7 @@ const CellFrame = ({
                                     cacheHandler.createPortal(content, index, itemID)
                                 portalNodeRef.current  = portalDataRef.current.portalNode
                                 // make available to user content
-                                scrollerData.isReparentingRef = portalDataRef.current.isReparentingRef
+                                scrollerProperties.isReparentingRef = portalDataRef.current.isReparentingRef
 
                                 setFrameState('inserting')
 
@@ -223,14 +223,20 @@ const CellFrame = ({
                                 if (usercontent === null) {
                                     // truncate listsize at this index
                                     // console.log('cellFrame calling setMaxListsize with index', index)
-                                    itemExceptionsCallback && itemExceptionsCallback(index, itemID, returnvalue, 'end of list', 'cellFrame')
+                                    itemExceptionsCallback && 
+                                        itemExceptionsCallback(
+                                            index, itemID, returnvalue, 'cellFrame', new Error('end of list')
+                                        )
                                     setMaxListsize(index)
                                 } else { // usercontent === undefined, meaning an error has occurred
                                     // change placeholder message to error message
                                     // console.log('updating placeholder with error', error)
                                     errorRef.current = error
-                                    itemExceptionsCallback && itemExceptionsCallback(index, itemID, returnvalue, error, 'cellFrame')
-                                    // placeholderRef.current = React.cloneElement(placeholderRef.current,{error})
+                                    itemExceptionsCallback && 
+                                        itemExceptionsCallback(
+                                            index, itemID, returnvalue, 'cellFrame', error
+                                        )
+
                                     setFrameState('error')
                                 }
 
