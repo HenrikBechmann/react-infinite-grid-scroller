@@ -20,6 +20,7 @@
 
     TODO:
         - cancellable customizable scrolltracker
+        - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
         
         - rationalize calls to cacheHandler vs contentHandler or serviceHandler
             - particularly for cache paring
@@ -35,7 +36,6 @@
         - replace top/left with transformx/y
         - prioritize fetch cells for visible cells
         - test for two root portals
-        - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
         - calc minwidth by form factor
         - review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
         - add grid-template-rows: max-content to parent for safari issue grid-auto-flow: column not filling column
