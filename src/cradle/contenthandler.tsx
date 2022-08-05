@@ -397,7 +397,7 @@ export default class ContentHandler {
 
             serviceHandler.callbacks.referenceIndexCallback(
 
-                scaffoldHandler.cradlePositionData.targetAxisReferenceIndex,'updateCradleContent', cstate)
+                axisReferenceIndex,'updateCradleContent', cstate)
         
         }
 

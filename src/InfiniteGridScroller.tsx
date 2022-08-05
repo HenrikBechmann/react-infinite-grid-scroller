@@ -18,11 +18,10 @@
 
     BUGS: 
 
-        - referenceIndexCallback gives wrong index number on scroll to top
-
     TODO:
         - return reason for deletelist callback
         - cancellable customizable scrolltracker
+        
         - add matchCacheToCradle after set and update contents
 
         - review event cycles - they seem slower
