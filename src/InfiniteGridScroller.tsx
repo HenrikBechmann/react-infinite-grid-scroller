@@ -21,7 +21,6 @@
     BUGS: 
 
     TODO:
-        - cancellable scrolltracker
         - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
         
         - rationalize calls to cacheHandler vs contentHandler or serviceHandler
@@ -161,6 +160,16 @@ const InfiniteGridScroller = (props) => {
     const stylesRef = useRef(styles)
     const callbacksRef = useRef(callbacks)
 
+    let {
+        useScrollTracker
+    } = advanced
+
+    useScrollTracker = useScrollTracker ?? true
+
+    if (typeof useScrollTracker != 'boolean') {
+        useScrollTracker = true
+    }
+
     // for mount
     const scrollerSessionIDRef = useRef(null);
 
@@ -261,6 +270,7 @@ const InfiniteGridScroller = (props) => {
                     triggerlineOffset = { triggerlineOffset }
 
                     cacheHandler = {cacheHandlerRef.current}
+                    useScrollTracker = {useScrollTracker}
                     scrollerID = { scrollerID }
 
                 />

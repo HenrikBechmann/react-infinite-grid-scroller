@@ -52,6 +52,7 @@ const Cradle = ({
         scrollerID,
         // for handler list
         cacheHandler,
+        useScrollTracker,
     }) => {
 
     if (listsize == 0) return null// nothing to do
@@ -1125,6 +1126,7 @@ const Cradle = ({
 
     const scrollAxisReferenceIndex = scaffoldHandler.cradlePositionData.targetAxisReferenceIndex
     const scrollTrackerArgs = useMemo(() => {
+        if (!useScrollTracker) return null
         if (!(cradleState == 'repositioningContinuation' || cradleState == 'repositioningRender')) {
             return null
         }
@@ -1157,8 +1159,8 @@ const Cradle = ({
 
     return <CradleContext.Provider value = {contextvalueRef.current}>
 
-        {((cradleState == 'repositioningRender') || 
-            (cradleState == 'repositioningContinuation'))?
+        {(((cradleState == 'repositioningRender') || 
+            (cradleState == 'repositioningContinuation')) && useScrollTracker)?
             <ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 
