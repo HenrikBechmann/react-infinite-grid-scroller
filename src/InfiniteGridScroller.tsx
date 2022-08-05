@@ -29,13 +29,15 @@
         - review event cycles - they seem slower
             - review state change chains in cradle
             - try to reduce need to run renderportallist - try some kind of pagination/grouping
+        - check number of passes to scrollblock; consider implementing named states
+
+        - replace top/left with transformx/y
+        
+        - prioritize fetch cells for visible cells
 
         - create random loading delays in test ui
         - provide way to attempt reload of a single cell (change instanceID)
-        - check number of passes to scrollblock; consider implementing named states
         - test for memory leaks with Chrome's window.performance.memory property
-        - replace top/left with transformx/y
-        - prioritize fetch cells for visible cells
         - test for two root portals
         - calc minwidth by form factor
         - review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
