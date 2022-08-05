@@ -18,6 +18,8 @@
 
     BUGS: 
 
+        - referenceIndexCallback gives wrong index number on scroll to top
+
     TODO:
         - add impliedIndexCallback, repositioningCallback streaming
         - add matchCacheToCradle after set and update contents
