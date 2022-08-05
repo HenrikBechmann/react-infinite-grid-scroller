@@ -372,8 +372,19 @@ export default class ContentHandler {
 
         if (deletedContentItems.length && (cache == 'cradle')) {
 
-            deletePortals(cacheHandler, deletedContentItems, 
-                serviceHandler.callbacks.deleteListCallback)
+            const { deleteListCallback } = serviceHandler.callbacks
+
+            let dListCallback
+            if (deleteListCallback) {
+                dListCallback = (deleteList) => {
+
+                    deleteListCallback('pare cache to cradle',deleteList)
+
+                }
+
+            }
+
+            deletePortals(cacheHandler, deletedContentItems, dListCallback)
 
         }
 
@@ -397,7 +408,7 @@ export default class ContentHandler {
 
             serviceHandler.callbacks.referenceIndexCallback(
 
-                scaffoldHandler.cradlePositionData.targetAxisReferenceIndex,'updateCradleContent', cstate)
+                axisReferenceIndex,'updateCradleContent', cstate)
         
         }
 
@@ -464,9 +475,23 @@ export default class ContentHandler {
 
             const modelIndexList = this.getModelIndexList()
 
+
+            const { deleteListCallback } = serviceHandler.callbacks
+
+            let dListCallback
+            if (deleteListCallback) {
+                dListCallback = (deleteList) => {
+
+                    deleteListCallback('pare cache to cacheMax',deleteList)
+
+                }
+
+            }
+
             const paring = cacheHandler.pareCacheToMax(
-                cradleInheritedProperties.cacheMax, modelIndexList, 
-                serviceHandler.callbacks.deleteListCallback)
+
+                cradleInheritedProperties.cacheMax, modelIndexList, dListCallback)
+            
             if (paring) cacheHandler.renderPortalList()
                 
         }
