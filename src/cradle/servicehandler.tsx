@@ -67,7 +67,7 @@ export default class ServiceHandler {
 
         scaffoldHandler.cradlePositionData.targetAxisReferenceIndex = index
 
-        stateHandler.setCradleState('doreposition')
+        stateHandler.setCradleState('doscrollto')
 
     }
 

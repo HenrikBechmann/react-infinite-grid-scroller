@@ -928,11 +928,12 @@ const Cradle = ({
             }
 
             /*
-                the following 9 cradle states all resolve with
+                the following 10 cradle states all resolve with
                 a chain starting with setCradleContent, 
                 continuing with 'preparerender', and ending with
                 'normalizesignals'
             */
+            case 'doscrollto':
             case 'resetcache':
             case 'resolvependinguncache':
             case 'dosetup':
