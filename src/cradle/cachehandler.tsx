@@ -58,6 +58,7 @@ export class CacheHandler {
             })
             this.deletePortal(parelist, deleteListCallback)
         }
+        // console.log('cacheHandler changeListsizeCallback',changeListsizeCallback)
         changeListsizeCallback && changeListsizeCallback(newlistsize)
     }
 

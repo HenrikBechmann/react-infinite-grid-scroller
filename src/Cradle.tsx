@@ -220,6 +220,7 @@ const Cradle = ({
     const externalCallbacksRef = useRef(
         {
             referenceIndexCallback:userCallbacks?.referenceIndexCallback,
+            repositioningIndexCallback:userCallbacks?.repositioningIndexCallback,
             preloadIndexCallback:userCallbacks?.preloadIndexCallback,
             deleteListCallback:userCallbacks?.deleteListCallback,
             changeListsizeCallback:userCallbacks?.changeListsizeCallback,

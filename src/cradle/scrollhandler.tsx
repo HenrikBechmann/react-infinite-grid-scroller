@@ -282,6 +282,10 @@ export default class ScrollHandler {
         const { cradlePositionData } = this.cradleParameters.handlersRef.current.scaffoldHandler
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisPixelOffset = axisPixelOffset
+        const { repositioningIndexCallback } = 
+            this.cradleParameters.handlersRef.current.serviceHandler.callbacks
+        // console.log('scrollHandler: repositioningIndexCallback',repositioningIndexCallback)
+        repositioningIndexCallback && repositioningIndexCallback(axisReferenceIndex)
 
     }
 
