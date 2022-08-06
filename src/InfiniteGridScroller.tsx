@@ -20,6 +20,7 @@
         - problem with changeIndexMap in the presence of undefined item types
 
     TODO:
+        - cradle can contain cells with no cache entry - check for consequences
         - rationalize calls to cacheHandler vs contentHandler or serviceHandler
             - particularly for cache paring
 

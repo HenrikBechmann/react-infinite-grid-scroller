@@ -154,8 +154,10 @@ export default class ServiceHandler {
             this.cradleParameters.handlersRef.current
 
         const { 
+
             metadataMap, // itemID to portal data, including index
             indexToItemIDMap // index to itemID
+
         } = cacheHandler.cacheProps 
 
         const indexesToDeleteList = []
@@ -164,11 +166,17 @@ export default class ServiceHandler {
         // collect details of change
 
         changeMap.forEach((itemID, index) =>{
-            if (itemID === null) {
+
+            if ((itemID === null) || (itemID === undefined)) {
+
                 indexesToDeleteList.push(index)
+
             } else {
+
                 changeIndexToItemIDMap.set(index, itemID)
+
             }
+
         })
 
         // -------------- first, guard against duplicate itemIDs in change map ------------
@@ -185,16 +193,18 @@ export default class ServiceHandler {
 
             changeIndexToItemIDMap.forEach((itemID, index) => {
                 if (!itemIDCountMap.has(itemID)) {
-                    itemIDCountMap.set(itemID, 1)
+                    itemIDCountMap.set(itemID, {count:1})
                 } else {
-                    itemIDCountMap.set(itemID, itemIDCountMap.get(itemID) + 1)
+                    const itemdata = itemIDCountMap.get(itemID)
+                    itemdata.count = itemdata.count + 1
+                    itemIDCountMap.set(itemID, itemdata)
                 }
             })
 
             const duplicateItemsMap = new Map()
-            itemIDCountMap.forEach((count,itemID)=>{
-                if (count > 1) {
-                    duplicateItemsMap.set(itemID, count)
+            itemIDCountMap.forEach((countdata,itemID)=>{
+                if (countdata.count > 1) {
+                    duplicateItemsMap.set(itemID, countdata)
                 }
             })
 
@@ -207,14 +217,24 @@ export default class ServiceHandler {
         }
 
         // --------------- delete indexes and associated itemID's for indexes set to null --------
+        const { deleteListCallback } = this.callbacks
+        let dListCallback
+        if (deleteListCallback) {
+            dListCallback = (deleteList) => {
 
-        cacheHandler.deletePortal(indexesToDeleteList, this.callbacks.deleteListCallback)
+                deleteListCallback('delete indexes mappped to null',deleteList)
+
+            }
+
+        }
+
+        cacheHandler.deletePortal(indexesToDeleteList, dListCallback)
 
         // ----------- apply changes to cache index and itemID maps ----------
 
         // const cradleMap = this.getCradleMap() // index to itemID
 
-        const originalitemindexMap = new Map() // itemID => index; before change
+        const originalItemIDToIndexMap = new Map() // itemID => index; before change
         const processedMap = new Map() // index => itemID; change has been applied
 
         changeIndexToItemIDMap.forEach((itemID,index) => {
@@ -228,7 +248,7 @@ export default class ServiceHandler {
                     indexToItemIDMap.set(index,itemID) // modiication applied, part 1
                     const itemdata = metadataMap.get(itemID)
 
-                    originalitemindexMap.set(itemID,itemdata.index)
+                    originalItemIDToIndexMap.set(itemID,itemdata.index)
                     itemdata.index = index // modification applied, part 2
 
                     processedMap.set(index,itemID)
@@ -242,7 +262,7 @@ export default class ServiceHandler {
         // TODO this needs to be tested!!
         const orphanedItemIndexesMap = new Map() // itemID => index; unresolved index changes
 
-        originalitemindexMap.forEach((itemID, index) => {
+        originalItemIDToIndexMap.forEach((itemID, index) => {
             if (indexToItemIDMap.has(index) && (indexToItemIDMap.get(index) == itemID)) {
                 orphanedItemIndexesMap.set(itemID, index)
                 indexToItemIDMap.delete(index)
@@ -254,14 +274,13 @@ export default class ServiceHandler {
 
         // ------------- apply changes to extant cellFrames ------------
 
-        const modifiedIndexesList = Array.from(
-            new Set( // get unique list
+        const modifiedIndexesList = 
+            Array.from(
+                new Set( // get unique list
                 Array.from(processedMap.keys()).concat(
                     Array.from(orphanedItemIndexesMap.keys()),
-                    indexesToDeleteList
-                )
-            ).values()
-        )
+                    indexesToDeleteList)).values()
+            )
 
         // console.log('modifiedIndexesList',modifiedIndexesList)
 
