@@ -236,10 +236,11 @@ export default class ServiceHandler {
 
         const originalItemIDToIndexMap = new Map() // itemID => index; before change
         const processedMap = new Map() // index => itemID; change has been applied
+        const indexesToReplace = []
 
         changeIndexToItemIDMap.forEach((itemID,index) => {
 
-            if (indexToItemIDMap.has(index)) { // in cache, otherwise ignore
+            if (indexToItemIDMap.has(index)) { // in cache, otherwise list for replace with new id
 
                 const existingItemID = indexToItemIDMap.get(index)
 
@@ -254,6 +255,10 @@ export default class ServiceHandler {
                     processedMap.set(index,itemID)
 
                 }
+            } else {
+
+                indexesToReplace.push(index)
+
             }
         })
 
