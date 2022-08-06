@@ -5,8 +5,6 @@
     react-infinite-grid-scroller = RIGS
 
     ROADMAP:
-        test changing all gridscroller parameters
-            test config size edge cases - over and under sized cells
 
         review all code
 
@@ -29,9 +27,14 @@
             - try to reduce need to run renderportallist - try some kind of pagination/grouping
         - check number of passes to scrollblock; consider implementing named states
 
+        - test changing all gridscroller parameters
+            test config size edge cases - over and under sized cells
+
         - clear out TODO notes
 
         - replace top/left with transformx/y
+
+        ----------------
         
         - prioritize fetch cells for visible cells
 

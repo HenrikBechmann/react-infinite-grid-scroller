@@ -47,9 +47,11 @@ export default class ContentHandler {
     // called only from cradle state handler
 
     // ==========================[ SET CONTENT ]===========================
+
      //initially (dosetup), after reposition (doreposition), or with finishresize, pivot, 
      // or user size param reconfigure or reload
      // setCradleContent sets the scrollblock's scroll position, as well as config and content
+
     public setCradleContent = (cradleState) => { 
 
         // ------------------------------[ 1. initialize ]---------------------------
@@ -239,6 +241,7 @@ export default class ContentHandler {
 
     // updateCradleContent does not touch the viewport element's scroll position for the scrollblock
     // instead it reconfigures elements within the cradle
+
     public updateCradleContent = (
         isViewportScrollingForward, triggerlineEntries, source = 'notifications') => {
 
@@ -423,6 +426,7 @@ export default class ContentHandler {
 
             axisElement.style.top = topPos + 'px'
             axisElement.style.left = 'auto'
+            
             headElement.style.paddingBottom = 
                 headcontent.length?
                     cradleInheritedProperties.gap + 'px':
@@ -434,6 +438,7 @@ export default class ContentHandler {
 
             axisElement.style.top = 'auto'
             axisElement.style.left = leftPos + 'px'
+
             headElement.style.paddingRight = 
                 headcontent.length?
                     cradleInheritedProperties.gap + 'px':
@@ -452,6 +457,8 @@ export default class ContentHandler {
         stateHandler.setCradleState('renderupdatedcontent')
 
     }
+
+    // ========================= [ INTERNAL CONTENT MANAGEMENT SERVICES ]=====================
 
     public guardAgainstRunawayCaching = () => { 
         const { cacheMax } = this.cradleParameters.cradleInheritedPropertiesRef.current
@@ -498,8 +505,9 @@ export default class ContentHandler {
 
     }
 
-    // ==========================[ SERVICE SUPPORT ]=======================
+    // ==========================[ EXTERNAL SERVICE SUPPORT ]=======================
 
+    // supports clearCache
     public clearCradle = () => {
 
         const cradleContent = this.content
@@ -510,28 +518,28 @@ export default class ContentHandler {
         cradleContent.headModelComponents = []
         cradleContent.tailModelComponents = []
 
-        // // register new array id for Object.is to trigger react re-processing
-        // cradleContent.headDisplayComponents = []
-        // cradleContent.tailDisplayComponents = []
-
-        // cacheHandler.clearCache()
-
     }
 
+    // called from serviceHandler getCradleIndexMap
+    // also supports pareCacheToMax, matchCacheToCradle
     public getModelIndexList() {
 
         const { cradleModelComponents } = this.content
+
         if (!cradleModelComponents) {
+
             return [] 
+
         } else {
+
             return cradleModelComponents.map((item)=>item.props.index)
+
         }
 
     }
 
+    // called from service handler's changeIndexMap, as last step
     public reconcileCellFrames(modifiedIndexesList) {
-
-        // console.log('contentHandler got modifiedCellFrameMap',modifiedCellFrameMap)
 
         if (!modifiedIndexesList.length) return
 
@@ -544,12 +552,16 @@ export default class ContentHandler {
         function processComponent (component, i, array ) {
             const { index, itemID } = component.props
             if (modifiedIndexesList.includes(index)) {
+
                 const newItemID = 
                     indexToItemIDMap.has(index)?
                         indexToItemIDMap.get(index):
                         cacheHandler.getNewItemID()
-                if (newItemID != itemID) { // TODO verify shouldn't happen
+
+                if (newItemID != itemID) { // defensive; shouldn't happen
+
                     array[i] = React.cloneElement(component, {itemID:newItemID})
+
                 }
             }
         }
@@ -561,15 +573,13 @@ export default class ContentHandler {
 
     }
 
+    // supports moveIndex and insertRemoveIndex
     public changeCradleItemIDs(changeList) {
 
         if (changeList.length == 0) return
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
         const { indexToItemIDMap, metadataMap } = cacheHandler.cacheProps
-
-        // console.log('==> changeCradleItemIDs: changeList, indexToItemIDMap, metadataMap', 
-        //     changeList, indexToItemIDMap, metadataMap)
 
         const { cradleModelComponents } = this.content
 
@@ -579,13 +589,10 @@ export default class ContentHandler {
 
             const ptr = changeList.indexOf(index)
 
-            // console.log('processing array index, cache index, change position', 
-            //     i, index, ptr)
-
             if (ptr != -1) {
+
                 const itemID = indexToItemIDMap.get(index)
-                // console.log('index, new itemID, old itemID',
-                 // index, itemID, component.props.itemID )
+
                 array[i] = React.cloneElement(component, {itemID})
             }
 
@@ -598,6 +605,7 @@ export default class ContentHandler {
 
     }
 
+    // supports insertRemoveIndex
     public createNewItemIDs(newList) {
 
 
@@ -608,10 +616,12 @@ export default class ContentHandler {
 
             const index = component.props.index
             const ptr = newList.indexOf(index)
+
             if (ptr != -1) {
+
                 const newItemID = cacheHandler.getNewItemID()
-                // console.log('assigning new itemID: index, newItemID, component',index, newItemID, component)
                 array[i] = React.cloneElement(component, {itemID:newItemID})
+
             }
 
         }
