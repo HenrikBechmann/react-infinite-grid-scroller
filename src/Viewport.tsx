@@ -15,7 +15,7 @@ import { ResizeObserver as ResizeObserverPollyfill } from '@juggle/resize-observ
 const ResizeObserver = window['ResizeObserver'] || ResizeObserverPollyfill
 
 // control constant
-const RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = 250
+// const RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = 250
 
 const Viewport = ({
     children, 
@@ -23,6 +23,7 @@ const Viewport = ({
     styles,
     scrollerID,
     scrollerProperties,
+    RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE,
 }) => {
 
     // -----------------------[ initialize ]------------------

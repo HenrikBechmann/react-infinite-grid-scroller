@@ -11,7 +11,7 @@ import Placeholder from './cellframe/Placeholder'
 
 import { CradleContext } from './Cradle'
 
-const IDLECALLBACK_FETCHTIMEOUT = 4000 // TODO make cofigurable
+// const IDLECALLBACK_TIMEOUT = 4000 // TODO make cofigurable
 
 const CellFrame = ({
     orientation, 
@@ -28,7 +28,13 @@ const CellFrame = ({
 
     const cradleContext = useContext(CradleContext)
 
-    const { cacheHandler, scrollerPassthroughPropertiesRef, setMaxListsize, itemExceptionsCallback } = cradleContext
+    const { 
+        cacheHandler, 
+        scrollerPassthroughPropertiesRef, 
+        setMaxListsize, 
+        itemExceptionsCallback,
+        IDLECALLBACK_TIMEOUT,
+    } = cradleContext
     
     const [styles,saveStyles] = useState({
         overflow:'hidden',
@@ -244,7 +250,7 @@ const CellFrame = ({
 
                         }
 
-                    },{timeout:IDLECALLBACK_FETCHTIMEOUT})
+                    },{timeout:IDLECALLBACK_TIMEOUT})
 
                 }
 

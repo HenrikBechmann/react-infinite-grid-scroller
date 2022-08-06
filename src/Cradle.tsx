@@ -52,6 +52,9 @@ const Cradle = ({
         scrollerID,
         // for handler list
         cacheHandler,
+        useScrollTracker,
+        showAxis,
+        IDLECALLBACK_TIMEOUT,
     }) => {
 
     if (listsize == 0) return null// nothing to do
@@ -1008,13 +1011,29 @@ const Cradle = ({
 
                 hasBeenRenderedRef.current = true
 
-                // const { cache } = cradleInheritedPropertiesRef.current
-                // if (cache == 'cradle') {
-                //     console.log('processing cradle content: cache', cache)
-                //     const modelIndexList = contentHandler.getModelIndexList()
-                //     cacheHandler.matchCacheToCradle(modelIndexList, serviceHandler.callbacks.deleteListCallback)
-                //     cacheHandler.renderPortalList()
-                // }
+                const { cache } = cradleInheritedPropertiesRef.current
+                if (cache == 'cradle') {
+                    // console.log('processing cradle content: cache', cache)
+                    const modelIndexList = contentHandler.getModelIndexList()
+
+                    const { deleteListCallback } = serviceHandler.callbacks
+
+                    let dListCallback
+                    if (deleteListCallback) {
+                        dListCallback = (deleteList) => {
+
+                            deleteListCallback('match cache to cradle',deleteList)
+
+                        }
+
+                    }
+
+                    if (cacheHandler.matchCacheToCradle(modelIndexList, dListCallback)) {
+                        
+                        cacheHandler.renderPortalList()
+
+                    }
+                }
 
                 setCradleState('preparerender')
 
@@ -1109,6 +1128,7 @@ const Cradle = ({
 
     const scrollAxisReferenceIndex = scaffoldHandler.cradlePositionData.targetAxisReferenceIndex
     const scrollTrackerArgs = useMemo(() => {
+        if (!useScrollTracker) return null
         if (!(cradleState == 'repositioningContinuation' || cradleState == 'repositioningRender')) {
             return null
         }
@@ -1137,12 +1157,13 @@ const Cradle = ({
         cacheHandler, 
         setMaxListsize,
         itemExceptionsCallback:serviceHandler.callbacks.itemExceptionsCallback,
+        IDLECALLBACK_TIMEOUT,
     })
 
     return <CradleContext.Provider value = {contextvalueRef.current}>
 
-        {((cradleState == 'repositioningRender') || 
-            (cradleState == 'repositioningContinuation'))?
+        {(((cradleState == 'repositioningRender') || 
+            (cradleState == 'repositioningContinuation')) && useScrollTracker)?
             <ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 
@@ -1168,7 +1189,7 @@ const Cradle = ({
                 >
                 </div>
 
-                {true?
+                {showAxis?
                     <div 
                         data-type = 'cradle-divider' 
                         style = {cradleDividerStyle}

@@ -9,33 +9,36 @@
             test config size edge cases - over and under sized cells
 
         review all code
+
         layout: uniform, variable, dense
 
         cross-browser testing; smartphone testing
 
         release to npm
+
         create demo site - github pages
 
     BUGS: 
 
     TODO:
-        - cancellable customizable scrolltracker
-        
-        - add matchCacheToCradle after set and update contents
+        - rationalize calls to cacheHandler vs contentHandler or serviceHandler
+            - particularly for cache paring
 
         - review event cycles - they seem slower
             - review state change chains in cradle
             - try to reduce need to run renderportallist - try some kind of pagination/grouping
+        - check number of passes to scrollblock; consider implementing named states
+
+        - clear out TODO notes
+
+        - replace top/left with transformx/y
+        
+        - prioritize fetch cells for visible cells
 
         - create random loading delays in test ui
         - provide way to attempt reload of a single cell (change instanceID)
-        - call matchCacheToCradle through contentHandler (?) iac rationalize calls to cacheHandler
-        - check number of passes to scrollblock; consider implementing named states
         - test for memory leaks with Chrome's window.performance.memory property
-        - replace top/left with transformx/y
-        - prioritize fetch cells for visible cells
         - test for two root portals
-        - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
         - calc minwidth by form factor
         - review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
         - add grid-template-rows: max-content to parent for safari issue grid-auto-flow: column not filling column
@@ -113,6 +116,7 @@ const InfiniteGridScroller = (props) => {
         styles = {}, // optional. passive style over-rides (eg. color, opacity); has 
             // properties viewport, scrollblock, cradle, or scrolltracker
         // system specs:
+        useScrollTracker = true,
         cache = 'cradle', // "preload", "keepload" or "cradle"
         cacheMax = null, // always minimum cradle null means limited by listsize
         triggerlineOffset = 10, // distance from cell head or tail for content shifts above/below axis
@@ -158,6 +162,24 @@ const InfiniteGridScroller = (props) => {
     const gridSpecsRef = useRef(gridSpecs)
     const stylesRef = useRef(styles)
     const callbacksRef = useRef(callbacks)
+
+    let {
+        showAxis,
+        RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE,
+        IDLECALLBACK_TIMEOUT,
+    } = advanced
+
+    RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE ?? 250
+    IDLECALLBACK_TIMEOUT = IDLECALLBACK_TIMEOUT ?? 4000
+    if (typeof showAxis != 'boolean') {
+        showAxis = true
+    }
+
+    useScrollTracker = useScrollTracker ?? true
+
+    if (typeof useScrollTracker != 'boolean') {
+        useScrollTracker = true
+    }
 
     // for mount
     const scrollerSessionIDRef = useRef(null);
@@ -233,6 +255,7 @@ const InfiniteGridScroller = (props) => {
             styles = { stylesRef.current }
             scrollerProperties = {scrollerProperties}
             scrollerID = { scrollerID }
+            RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = { RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE }
 
         >
         
@@ -259,6 +282,9 @@ const InfiniteGridScroller = (props) => {
                     triggerlineOffset = { triggerlineOffset }
 
                     cacheHandler = {cacheHandlerRef.current}
+                    useScrollTracker = {useScrollTracker}
+                    showAxis = { showAxis }
+                    IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }
                     scrollerID = { scrollerID }
 
                 />
