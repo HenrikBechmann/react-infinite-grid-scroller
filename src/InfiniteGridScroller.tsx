@@ -175,8 +175,6 @@ const InfiniteGridScroller = (props) => {
         showAxis = true
     }
 
-    console.log('root advanced, showAxis',advanced, showAxis, typeof showAxis)
-
     useScrollTracker = useScrollTracker ?? true
 
     if (typeof useScrollTracker != 'boolean') {
