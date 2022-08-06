@@ -296,11 +296,6 @@ export class CacheHandler {
 
     // ==========================[ SERVICE SUPPORT ]=========================
 
-    // TODO orphan
-    changeIndexMap( ) {
-        
-    }
-    
     // move is coerced by servicehandler to be within current list bounds
     moveIndex(toindex, fromindex, fromhighindex ) {
 

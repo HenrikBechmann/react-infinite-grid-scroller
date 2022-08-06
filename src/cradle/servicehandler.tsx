@@ -146,7 +146,9 @@ export default class ServiceHandler {
     // and are processed by the above rule
     public changeIndexMap = (changeMap) => { // index => itemID
 
-        // console.log('changeIndexMap: changeMap', changeMap)
+        console.log('changeIndexMap: changeMap', changeMap)
+
+        if (changeMap.size == 0) return [[],true] // nothing to do
 
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
@@ -155,8 +157,6 @@ export default class ServiceHandler {
             metadataMap, // itemID to portal data, including index
             indexToItemIDMap // index to itemID
         } = cacheHandler.cacheProps 
-
-        if (changeMap.size == 0) return [] // nothing to do
 
         const indexesToDeleteList = []
         const changeIndexToItemIDMap = new Map()
@@ -200,11 +200,7 @@ export default class ServiceHandler {
 
             if (duplicateItemsMap.size) {
 
-                console.log('WARNING: changeIndexMap rejected: \
-                    duplicate itemID index assignment values found:\
-                    duplicateItemIDs, changeMap',
-                    duplicateItemsMap, changeMap)
-                return []
+                return [[],false,duplicateItemsMap, changeMap]
 
             }
 
@@ -273,7 +269,7 @@ export default class ServiceHandler {
 
         stateHandler.setCradleState('applycellframechanges')
 
-        return modifiedIndexesList
+        return [modifiedIndexesList, true]
 
     }
 
