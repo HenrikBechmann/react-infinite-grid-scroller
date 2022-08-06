@@ -31,7 +31,7 @@ const CellFrame = ({
     const { 
         cacheHandler, 
         scrollerPassthroughPropertiesRef, 
-        setMaxListsize, 
+        nullItemSetMaxListsize, 
         itemExceptionsCallback,
         IDLECALLBACK_TIMEOUT,
     } = cradleContext
@@ -228,12 +228,12 @@ const CellFrame = ({
                                 // console.log('processing no-component index',index, usercontent)
                                 if (usercontent === null) {
                                     // truncate listsize at this index
-                                    // console.log('cellFrame calling setMaxListsize with index', index)
+                                    // console.log('cellFrame calling nullItemSetMaxListsize with index', index)
                                     itemExceptionsCallback && 
                                         itemExceptionsCallback(
                                             index, itemID, returnvalue, 'cellFrame', new Error('end of list')
                                         )
-                                    setMaxListsize(index)
+                                    nullItemSetMaxListsize(index)
                                 } else { // usercontent === undefined, meaning an error has occurred
                                     // change placeholder message to error message
                                     // console.log('updating placeholder with error', error)

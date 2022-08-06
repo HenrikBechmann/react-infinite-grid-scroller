@@ -71,13 +71,15 @@ export default class ServiceHandler {
 
     }
 
-    public setListsize = (listsize) => {
+    public setListsize = (newlistsize) => {
 
-        listsize = Math.max(0,listsize)
+        newlistsize = Math.max(0,newlistsize)
 
-        const { cacheHandler } = this.cradleParameters.handlersRef.current
+        const { cacheHandler, stateHandler } = this.cradleParameters.handlersRef.current
 
         const { deleteListCallback, changeListsizeCallback } = this.callbacks
+
+        const { listsize:currentlistsize } = this.cradleParameters.cradleInternalPropertiesRef.current
 
         let dListCallback
         if (deleteListCallback) {
@@ -89,10 +91,14 @@ export default class ServiceHandler {
 
         }
 
-        cacheHandler.changeListsize(listsize, 
+        cacheHandler.changeListsize(newlistsize, 
             dListCallback,
             changeListsizeCallback
         )
+
+        if (newlistsize > currentlistsize) {
+            stateHandler.setCradleState('dopreload')
+        }
 
     }
 

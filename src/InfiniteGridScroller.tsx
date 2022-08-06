@@ -22,6 +22,8 @@
         - rationalize calls to cacheHandler vs contentHandler or serviceHandler
             - particularly for cache paring
 
+        - rationalize cacheProps.modified
+
         - review event cycles - they seem slower
             - review state change chains in cradle
             - try to reduce need to run renderportallist - try some kind of pagination/grouping
