@@ -1189,7 +1189,7 @@ const Cradle = ({
                 >
                 </div>
 
-                {true?
+                {showAxis?
                     <div 
                         data-type = 'cradle-divider' 
                         style = {cradleDividerStyle}
