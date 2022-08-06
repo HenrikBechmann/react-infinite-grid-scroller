@@ -148,7 +148,7 @@ const CellFrame = ({
             }
             case 'getusercontent': {
 
-                const itemID = itemIDRef.current // cacheHandler.getItemID(index)
+                const itemID = itemIDRef.current
                 const cached = cacheHandler.hasPortal(itemID)
 
                 if (cached) {
