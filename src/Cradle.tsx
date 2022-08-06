@@ -53,6 +53,8 @@ const Cradle = ({
         // for handler list
         cacheHandler,
         useScrollTracker,
+        showAxis,
+        IDLECALLBACK_TIMEOUT,
     }) => {
 
     if (listsize == 0) return null// nothing to do
@@ -1155,6 +1157,7 @@ const Cradle = ({
         cacheHandler, 
         setMaxListsize,
         itemExceptionsCallback:serviceHandler.callbacks.itemExceptionsCallback,
+        IDLECALLBACK_TIMEOUT,
     })
 
     return <CradleContext.Provider value = {contextvalueRef.current}>

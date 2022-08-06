@@ -21,8 +21,6 @@
     BUGS: 
 
     TODO:
-        - promote system constants to 'advanced' parameter, eg RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE
-        
         - rationalize calls to cacheHandler vs contentHandler or serviceHandler
             - particularly for cache paring
 
@@ -30,6 +28,8 @@
             - review state change chains in cradle
             - try to reduce need to run renderportallist - try some kind of pagination/grouping
         - check number of passes to scrollblock; consider implementing named states
+
+        - clear out TODO notes
 
         - replace top/left with transformx/y
         
@@ -116,6 +116,7 @@ const InfiniteGridScroller = (props) => {
         styles = {}, // optional. passive style over-rides (eg. color, opacity); has 
             // properties viewport, scrollblock, cradle, or scrolltracker
         // system specs:
+        useScrollTracker = true,
         cache = 'cradle', // "preload", "keepload" or "cradle"
         cacheMax = null, // always minimum cradle null means limited by listsize
         triggerlineOffset = 10, // distance from cell head or tail for content shifts above/below axis
@@ -163,8 +164,16 @@ const InfiniteGridScroller = (props) => {
     const callbacksRef = useRef(callbacks)
 
     let {
-        useScrollTracker
+        showAxis,
+        RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE,
+        IDLECALLBACK_TIMEOUT,
     } = advanced
+
+    RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE ?? 250
+    IDLECALLBACK_TIMEOUT = IDLECALLBACK_TIMEOUT ?? 4000
+    if (typeof showAxis != 'boolean') {
+        showAxis = true
+    }
 
     useScrollTracker = useScrollTracker ?? true
 
@@ -246,6 +255,7 @@ const InfiniteGridScroller = (props) => {
             styles = { stylesRef.current }
             scrollerProperties = {scrollerProperties}
             scrollerID = { scrollerID }
+            RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = { RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE }
 
         >
         
@@ -273,6 +283,8 @@ const InfiniteGridScroller = (props) => {
 
                     cacheHandler = {cacheHandlerRef.current}
                     useScrollTracker = {useScrollTracker}
+                    showAxis = { showAxis }
+                    IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }
                     scrollerID = { scrollerID }
 
                 />
