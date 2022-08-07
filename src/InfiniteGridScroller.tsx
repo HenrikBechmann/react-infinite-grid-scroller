@@ -17,7 +17,7 @@
         create demo site - github pages
 
     BUGS: 
-        - problem with changeIndexMap in the presence of undefined item types
+        - problem with remapIndexes in the presence of undefined item types
 
     TODO:
         - cradle can contain cells with no cache entry - check for consequences

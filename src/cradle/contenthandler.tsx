@@ -538,7 +538,7 @@ export default class ContentHandler {
 
     }
 
-    // called from service handler's changeIndexMap, as last step
+    // called from service handler's remapIndexes, as last step
     public reconcileCellFrames(modifiedIndexesList) {
 
         if (!modifiedIndexesList.length) return

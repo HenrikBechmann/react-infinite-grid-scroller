@@ -140,13 +140,17 @@ export default class ServiceHandler {
 
     }
 
-    // blank index values (itemID) are assigned a new 
-    // itemID if in the cradle, otherwise removed from the cache.
-    // Duplicate index/itemID pairs have the itemID turned to blank
-    // and are processed by the above rule
-    public changeIndexMap = (changeMap) => { // index => itemID
+    /*
+        checks for
+        - duplicates
+        - typeID is string
+        - typeID is null or undefined
+        - Number.isNaN, Number.isInteger
 
-        console.log('changeIndexMap: changeMap', changeMap)
+    */    
+    public remapIndexes = (changeMap) => { // index => itemID
+
+        console.log('remapIndexes: changeMap', changeMap)
 
         if (changeMap.size == 0) return [[],true] // nothing to do
 
@@ -162,8 +166,9 @@ export default class ServiceHandler {
 
         const indexesToDeleteList = []
         const changeIndexToItemIDMap = new Map()
+        const errorEntriesMap = new Map()
 
-        // collect details of change
+        // filter out inoperable itemIDs
 
         changeMap.forEach((itemID, index) =>{
 
@@ -173,13 +178,29 @@ export default class ServiceHandler {
 
             } else {
 
-                changeIndexToItemIDMap.set(index, itemID)
+                if ((typeof itemID) == 'string') {
+
+                    errorEntriesMap.set(index,'itemID is a string')
+
+                } else if (!Number.isInteger(itemID)) {
+
+                    errorEntriesMap.set(index,'itemID is not an integer')
+
+                } else if (indexToItemIDMap.has(index) && indexToItemIDMap.get(index) == itemID) {
+
+                    errorEntriesMap.set(index, 'itemID has not changed')
+
+                } else {
+
+                    changeIndexToItemIDMap.set(index, itemID)
+
+                }
 
             }
 
         })
 
-        // -------------- first, guard against duplicate itemIDs in change map ------------
+        // -------------- first, filter out duplicate itemIDs in change map ------------
 
         const mapsize = changeIndexToItemIDMap.size
 
@@ -192,37 +213,58 @@ export default class ServiceHandler {
             const itemIDCountMap = new Map()
 
             changeIndexToItemIDMap.forEach((itemID, index) => {
+
                 if (!itemIDCountMap.has(itemID)) {
-                    itemIDCountMap.set(itemID, {count:1})
+
+                    itemIDCountMap.set(itemID, 1)
+
                 } else {
-                    const itemdata = itemIDCountMap.get(itemID)
-                    itemdata.count = itemdata.count + 1
-                    itemIDCountMap.set(itemID, itemdata)
+
+                    let count = itemIDCountMap.get(itemID)
+                    itemIDCountMap.set(itemID, count++ )
+
                 }
             })
 
             const duplicateItemsMap = new Map()
-            itemIDCountMap.forEach((countdata,itemID)=>{
-                if (countdata.count > 1) {
-                    duplicateItemsMap.set(itemID, countdata)
+            itemIDCountMap.forEach((count,itemID)=>{
+
+                if (count > 1) {
+                    duplicateItemsMap.set(itemID, count)
                 }
+
             })
 
-            if (duplicateItemsMap.size) {
+            const duplicatesToDeleteList = []
+            changeIndexToItemIDMap.forEach((itemID, index) => {
 
-                return [[],false,duplicateItemsMap, changeMap]
+                if (duplicateItemsMap.has(itemID)) {
+                    duplicatesToDeleteList.push(index)
+                }
 
-            }
+            })
+
+            duplicatesToDeleteList.forEach((index)=>{
+
+                const itemID = changeIndexToItemIDMap.get(index)
+                const count = duplicateItemsMap.get(itemID)
+
+                errorEntriesMap.set(index, `itemID ${itemID} has duplicates (${count})`)
+                changeIndexToItemIDMap.delete(index)
+
+            })
 
         }
 
-        // --------------- delete indexes and associated itemID's for indexes set to null --------
+        // --------------- delete listed indexes and itemID's --------
+        // for indexes set to null or undefined
+
         const { deleteListCallback } = this.callbacks
         let dListCallback
         if (deleteListCallback) {
             dListCallback = (deleteList) => {
 
-                deleteListCallback('delete indexes mappped to null',deleteList)
+                deleteListCallback('delete indexes mappped to null or undefined',deleteList)
 
             }
 
@@ -230,9 +272,8 @@ export default class ServiceHandler {
 
         cacheHandler.deletePortal(indexesToDeleteList, dListCallback)
 
-        // ----------- apply changes to cache index and itemID maps ----------
-
-        // const cradleMap = this.getCradleMap() // index to itemID
+        // ----------- apply filtered changes to cache index and itemID maps ----------
+        // at this point every remaining index listed will change its mapping
 
         const originalItemIDToIndexMap = new Map() // itemID => index; before change
         const processedMap = new Map() // index => itemID; change has been applied
