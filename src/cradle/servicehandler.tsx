@@ -266,10 +266,9 @@ export default class ServiceHandler {
 
         // capture map before changes, from list of changes and list of indexes to be deleted
         const originalIndexToItemIDMap = new Map() // index => itemID; before change
-        changeIndexToItemIDMap.forEach((itemID)=>{
+        changeIndexToItemIDMap.forEach((itemID, index)=>{
 
-            const itemData = metadataMap.get(itemID)
-            originalIndexToItemIDMap.set(itemData.index, itemID)
+            originalIndexToItemIDMap.set(metadataMap.get(itemID).index, itemID)
 
         })
 
@@ -278,6 +277,8 @@ export default class ServiceHandler {
             originalIndexToItemIDMap.set(index, indexToItemIDMap.get(index))
 
         })
+
+        console.log('originalIndexToItemIDMap',originalIndexToItemIDMap)
 
         // --------------- delete listed indexes ---------
         // for indexes set to null or undefined
@@ -313,14 +314,32 @@ export default class ServiceHandler {
 
         // if the original itemID for the re-mapped cache index still maps to the original cache index,
         // then there is a duplicate, because the index was remapped
-        const orphanedItemsIDToIndexMap = new Map() // index => itemID; orphaned index
+        const orphanedItemIDToIndexMap = new Map() // index => itemID; orphaned index
 
         originalIndexToItemIDMap.forEach((itemID, index) => {
-            if (metadataMap.has(itemID) && (metadataMap.get(itemID).index == index)) {
-                orphanedItemsIDToIndexMap.set(itemID, index)
-                metadataMap.delete(itemID)
+            console.log('originalIndexToItemIDMap: itemID, index',itemID, index)
+            if (metadataMap.has(itemID) && (metadataMap.get(itemID).index != index)) {
+
+                if (indexToItemIDMap.has(index) && 
+                    (indexToItemIDMap.get(index) == itemID)) {
+
+                    orphanedItemIDToIndexMap.set(itemID, index)
+                    indexToItemIDMap.delete(index)
+                    console.log('deleting orphaned index', index)
+
+                }
+            }
+            if (metadataMap.has(itemID) && metadataMap.get(itemID).index == index) {
+                if (!indexToItemIDMap.has(index)) {
+                    orphanedItemIDToIndexMap.set(itemID, index)
+                    metadataMap.delete(itemID)
+                    console.log('deleting orphaned item', itemID)
+                }
             }
         })
+
+
+        console.log('orphanedItemIDToIndexMap',orphanedItemIDToIndexMap)
 
         // refresh the modified cache
         cacheHandler.cacheProps.modified = true
@@ -329,8 +348,10 @@ export default class ServiceHandler {
         // ------------- apply changes to extant cellFrames ------------
 
         const processedList = Array.from(processedMap.keys())
-        const orphanedIndexList = Array.from(orphanedItemsIDToIndexMap.values())
-        const orphanedItemsIDList = Array.from(orphanedItemsIDToIndexMap.keys())
+        const orphanedIndexList = Array.from(orphanedItemIDToIndexMap.values())
+        const orphanedItemsIDList = Array.from(orphanedItemIDToIndexMap.keys())
+
+        console.log('processedList, orphanedIndexList, orphanedItemsIDList',processedList, orphanedIndexList, orphanedItemsIDList)
 
         const modifiedIndexesList = 
                 processedList.concat(
