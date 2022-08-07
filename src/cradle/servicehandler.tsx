@@ -264,41 +264,53 @@ export default class ServiceHandler {
 
         }
 
+        // capture map before changes
+        const originalIndexToItemIDMap = new Map() // itemID => index; before change
+        changeIndexToItemIDMap.forEach((itemID, index)=>{
+
+            originalIndexToItemIDMap.set(index, indexToItemIDMap.get(index))
+
+        })        
+
         // --------------- delete listed indexes and itemID's --------
         // for indexes set to null or undefined
 
         if (indexesToDeleteList.length) {
 
-            const { deleteListCallback } = this.callbacks
-            let dListCallback
+            // const { deleteListCallback } = this.callbacks
+            // let dListCallback
 
-            if (deleteListCallback) {
-                dListCallback = (deleteList) => {
+            // if (deleteListCallback) {
+            //     dListCallback = (deleteList) => {
 
-                    deleteListCallback('delete indexes remapped to null or undefined',deleteList)
+            //         deleteListCallback('delete indexes remapped to null or undefined',deleteList)
 
-                }
+            //     }
 
-            }
+            // }
+            indexesToDeleteList.forEach((index) => {
 
-            cacheHandler.deletePortal(indexesToDeleteList, dListCallback)
+                indexToItemIDMap.delete(index)
+
+            })
+
+            // cacheHandler.deletePortal(indexesToDeleteList, dListCallback)
 
         }
 
         // ----------- apply filtered changes to cache index and itemID maps ----------
         // at this point every remaining index listed will change its mapping
 
-        const originalIndexToItemIDMap = new Map() // itemID => index; before change
         const processedMap = new Map() // index => itemID; change has been applied
 
+        // make changes
         changeIndexToItemIDMap.forEach((itemID,index) => {
 
-            const existingItemID = indexToItemIDMap.get(index)
+            const prechangeItemID = indexToItemIDMap.get(index)
 
             indexToItemIDMap.set(index,itemID) // modiication applied, part 1
             const itemdata = metadataMap.get(itemID)
 
-            originalIndexToItemIDMap.set(itemdata.index, existingItemID)
             itemdata.index = index // modification applied, part 2
 
             processedMap.set(index,itemID)
@@ -307,12 +319,12 @@ export default class ServiceHandler {
 
         // if the original index for the re-assigned cache item still maps to the cache item,
         // then there is a duplicate
-        const orphanedIndexesMap = new Map() // index => itemID; orphaned index
+        const orphanedItemsIDMap = new Map() // index => itemID; orphaned index
 
         originalIndexToItemIDMap.forEach((itemID, index) => {
-            if (indexToItemIDMap.has(index) && (indexToItemIDMap.get(index) == itemID)) {
-                orphanedIndexesMap.set(itemID, index)
-                indexToItemIDMap.delete(index)
+            if (metadataMap.has(itemID) && (metadataMap.get(itemID).index == index)) {
+                orphanedItemsIDMap.set(itemID, index)
+                metadataMap.delete(itemID)
             }
         })
 
@@ -321,12 +333,12 @@ export default class ServiceHandler {
 
         // ------------- apply changes to extant cellFrames ------------
 
-        const processedList = Array.from(processedMap.keys()),
-            orphanedIndexesList = Array.from(orphanedIndexesMap.keys())
+        // const processedList = Array.from(processedMap.keys()),
+        //     orphanedIndexesList = Array.from(orphanedIndexesMap.keys())
+        const processedList = Array.from(processedMap.keys())
 
         const modifiedIndexesList = 
                 processedList.concat(
-                    orphanedIndexesList,
                     indexesToDeleteList)
 
         // console.log('modifiedIndexesList',modifiedIndexesList)
@@ -340,10 +352,10 @@ export default class ServiceHandler {
             modifiedIndexesList, 
             processedList, 
             indexesToDeleteList, 
-            orphanedIndexesList, 
+            orphanedItemsIDMap, 
             errorEntriesMap, 
             changeMap
-            
+
         ]
 
     }
