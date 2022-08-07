@@ -257,7 +257,7 @@ export default class ServiceHandler {
                 const itemID = changeIndexToItemIDMap.get(index)
                 const count = duplicateItemsMap.get(itemID)
 
-                errorEntriesMap.set(index, `itemID ${itemID} has duplicates (${count})`)
+                errorEntriesMap.set(index, `target itemID ${itemID} has duplicates (${count})`)
                 changeIndexToItemIDMap.delete(index)
 
             })
@@ -266,9 +266,10 @@ export default class ServiceHandler {
 
         // capture map before changes, from list of changes and list of indexes to be deleted
         const originalIndexToItemIDMap = new Map() // index => itemID; before change
-        changeIndexToItemIDMap.forEach((itemID, index)=>{
+        changeIndexToItemIDMap.forEach((itemID)=>{
 
-            originalIndexToItemIDMap.set(index, indexToItemIDMap.get(index))
+            const itemData = metadataMap.get(itemID)
+            originalIndexToItemIDMap.set(itemData.index, itemID)
 
         })
 
@@ -312,11 +313,11 @@ export default class ServiceHandler {
 
         // if the original itemID for the re-mapped cache index still maps to the original cache index,
         // then there is a duplicate, because the index was remapped
-        const orphanedItemsIDList = [] // index => itemID; orphaned index
+        const orphanedItemsIDToIndexMap = new Map() // index => itemID; orphaned index
 
         originalIndexToItemIDMap.forEach((itemID, index) => {
             if (metadataMap.has(itemID) && (metadataMap.get(itemID).index == index)) {
-                orphanedItemsIDList.push(itemID)
+                orphanedItemsIDToIndexMap.set(itemID, index)
                 metadataMap.delete(itemID)
             }
         })
@@ -328,10 +329,12 @@ export default class ServiceHandler {
         // ------------- apply changes to extant cellFrames ------------
 
         const processedList = Array.from(processedMap.keys())
+        const orphanedIndexList = Array.from(orphanedItemsIDToIndexMap.values())
+        const orphanedItemsIDList = Array.from(orphanedItemsIDToIndexMap.keys())
 
         const modifiedIndexesList = 
                 processedList.concat(
-                    indexesToDeleteList)
+                    indexesToDeleteList, orphanedIndexList)
 
         contentHandler.reconcileCellFrames(modifiedIndexesList)
 
