@@ -168,7 +168,7 @@ export default class ServiceHandler {
         const changeIndexToItemIDMap = new Map()
         const errorEntriesMap = new Map()
 
-        // filter out inoperable itemIDs
+        // filter out inoperable indexes and itemIDs
 
         changeMap.forEach((itemID, index) =>{
 
@@ -196,7 +196,7 @@ export default class ServiceHandler {
 
                 } else if (!metadataMap.has(itemID)) {
 
-                    errorEntriesMap.set(index, 'target itemID not in cache')
+                    errorEntriesMap.set(index, `target itemID ${itemID} not in cache`)
 
                 } else {
 
@@ -208,7 +208,7 @@ export default class ServiceHandler {
 
         })
 
-        // -------------- first, filter out duplicate itemIDs in change map ------------
+        // -------------- filter out duplicate itemIDs ------------
 
         const mapsize = changeIndexToItemIDMap.size
 
@@ -229,7 +229,7 @@ export default class ServiceHandler {
                 } else {
 
                     let count = itemIDCountMap.get(itemID)
-                    itemIDCountMap.set(itemID, count++ )
+                    itemIDCountMap.set(itemID, ++count )
 
                 }
             })
@@ -264,37 +264,32 @@ export default class ServiceHandler {
 
         }
 
-        // capture map before changes
-        const originalIndexToItemIDMap = new Map() // itemID => index; before change
+        // capture map before changes, from list of changes and list of indexes to be deleted
+        const originalIndexToItemIDMap = new Map() // index => itemID; before change
         changeIndexToItemIDMap.forEach((itemID, index)=>{
 
             originalIndexToItemIDMap.set(index, indexToItemIDMap.get(index))
 
-        })        
+        })
 
-        // --------------- delete listed indexes and itemID's --------
+        indexesToDeleteList.forEach((index) => {
+
+            originalIndexToItemIDMap.set(index, indexToItemIDMap.get(index))
+
+        })
+
+        // --------------- delete listed indexes ---------
         // for indexes set to null or undefined
+        // associated itemID's will be orphaned, but could be remapped.
+        // resolved with orphanedItemsIDMap below
 
         if (indexesToDeleteList.length) {
 
-            // const { deleteListCallback } = this.callbacks
-            // let dListCallback
-
-            // if (deleteListCallback) {
-            //     dListCallback = (deleteList) => {
-
-            //         deleteListCallback('delete indexes remapped to null or undefined',deleteList)
-
-            //     }
-
-            // }
             indexesToDeleteList.forEach((index) => {
 
                 indexToItemIDMap.delete(index)
 
             })
-
-            // cacheHandler.deletePortal(indexesToDeleteList, dListCallback)
 
         }
 
@@ -306,8 +301,6 @@ export default class ServiceHandler {
         // make changes
         changeIndexToItemIDMap.forEach((itemID,index) => {
 
-            const prechangeItemID = indexToItemIDMap.get(index)
-
             indexToItemIDMap.set(index,itemID) // modiication applied, part 1
             const itemdata = metadataMap.get(itemID)
 
@@ -317,31 +310,28 @@ export default class ServiceHandler {
 
         })
 
-        // if the original index for the re-assigned cache item still maps to the cache item,
-        // then there is a duplicate
-        const orphanedItemsIDMap = new Map() // index => itemID; orphaned index
+        // if the original itemID for the re-mapped cache index still maps to the original cache index,
+        // then there is a duplicate, because the index was remapped
+        const orphanedItemsIDList = [] // index => itemID; orphaned index
 
         originalIndexToItemIDMap.forEach((itemID, index) => {
             if (metadataMap.has(itemID) && (metadataMap.get(itemID).index == index)) {
-                orphanedItemsIDMap.set(itemID, index)
+                orphanedItemsIDList.push(itemID)
                 metadataMap.delete(itemID)
             }
         })
 
+        // refresh the modified cache
         cacheHandler.cacheProps.modified = true
         cacheHandler.renderPortalList()
 
         // ------------- apply changes to extant cellFrames ------------
 
-        // const processedList = Array.from(processedMap.keys()),
-        //     orphanedIndexesList = Array.from(orphanedIndexesMap.keys())
         const processedList = Array.from(processedMap.keys())
 
         const modifiedIndexesList = 
                 processedList.concat(
                     indexesToDeleteList)
-
-        // console.log('modifiedIndexesList',modifiedIndexesList)
 
         contentHandler.reconcileCellFrames(modifiedIndexesList)
 
@@ -352,7 +342,7 @@ export default class ServiceHandler {
             modifiedIndexesList, 
             processedList, 
             indexesToDeleteList, 
-            orphanedItemsIDMap, 
+            orphanedItemsIDList, 
             errorEntriesMap, 
             changeMap
 
