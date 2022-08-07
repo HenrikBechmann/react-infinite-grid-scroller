@@ -186,9 +186,17 @@ export default class ServiceHandler {
 
                     errorEntriesMap.set(index,'itemID is not an integer')
 
-                } else if (indexToItemIDMap.has(index) && indexToItemIDMap.get(index) == itemID) {
+                } else if (!indexToItemIDMap.has(index)) {
 
-                    errorEntriesMap.set(index, 'itemID has not changed')
+                    errorEntriesMap.set(index, 'index not in cache')
+
+                } else if (indexToItemIDMap.get(index) == itemID) {
+
+                    errorEntriesMap.set(index, 'target itemID has not changed')
+
+                } else if (!metadataMap.has(itemID)) {
+
+                    errorEntriesMap.set(index, 'target itemID not in cache')
 
                 } else {
 
@@ -259,58 +267,51 @@ export default class ServiceHandler {
         // --------------- delete listed indexes and itemID's --------
         // for indexes set to null or undefined
 
-        const { deleteListCallback } = this.callbacks
-        let dListCallback
-        if (deleteListCallback) {
-            dListCallback = (deleteList) => {
+        if (indexesToDeleteList.length) {
 
-                deleteListCallback('delete indexes mappped to null or undefined',deleteList)
+            const { deleteListCallback } = this.callbacks
+            let dListCallback
+
+            if (deleteListCallback) {
+                dListCallback = (deleteList) => {
+
+                    deleteListCallback('delete indexes remapped to null or undefined',deleteList)
+
+                }
 
             }
 
-        }
+            cacheHandler.deletePortal(indexesToDeleteList, dListCallback)
 
-        cacheHandler.deletePortal(indexesToDeleteList, dListCallback)
+        }
 
         // ----------- apply filtered changes to cache index and itemID maps ----------
         // at this point every remaining index listed will change its mapping
 
-        const originalItemIDToIndexMap = new Map() // itemID => index; before change
+        const originalIndexToItemIDMap = new Map() // itemID => index; before change
         const processedMap = new Map() // index => itemID; change has been applied
-        const indexesToReplace = []
 
         changeIndexToItemIDMap.forEach((itemID,index) => {
 
-            if (indexToItemIDMap.has(index)) { // in cache, otherwise list for replace with new id
+            const existingItemID = indexToItemIDMap.get(index)
 
-                const existingItemID = indexToItemIDMap.get(index)
+            indexToItemIDMap.set(index,itemID) // modiication applied, part 1
+            const itemdata = metadataMap.get(itemID)
 
-                if (existingItemID != itemID) { // modification requested
+            originalIndexToItemIDMap.set(itemdata.index, existingItemID)
+            itemdata.index = index // modification applied, part 2
 
-                    indexToItemIDMap.set(index,itemID) // modiication applied, part 1
-                    const itemdata = metadataMap.get(itemID)
+            processedMap.set(index,itemID)
 
-                    originalItemIDToIndexMap.set(itemID,itemdata.index)
-                    itemdata.index = index // modification applied, part 2
-
-                    processedMap.set(index,itemID)
-
-                }
-            } else {
-
-                indexesToReplace.push(index)
-
-            }
         })
 
         // if the original index for the re-assigned cache item still maps to the cache item,
         // then there is a duplicate
-        // TODO this needs to be tested!!
-        const orphanedItemIndexesMap = new Map() // itemID => index; unresolved index changes
+        const orphanedIndexesMap = new Map() // index => itemID; orphaned index
 
-        originalItemIDToIndexMap.forEach((itemID, index) => {
+        originalIndexToItemIDMap.forEach((itemID, index) => {
             if (indexToItemIDMap.has(index) && (indexToItemIDMap.get(index) == itemID)) {
-                orphanedItemIndexesMap.set(itemID, index)
+                orphanedIndexesMap.set(itemID, index)
                 indexToItemIDMap.delete(index)
             }
         })
@@ -320,13 +321,13 @@ export default class ServiceHandler {
 
         // ------------- apply changes to extant cellFrames ------------
 
+        const processedList = Array.from(processedMap.keys()),
+            orphanedIndexesList = Array.from(orphanedIndexesMap.keys())
+
         const modifiedIndexesList = 
-            Array.from(
-                new Set( // get unique list
-                Array.from(processedMap.keys()).concat(
-                    Array.from(orphanedItemIndexesMap.keys()),
-                    indexesToDeleteList)).values()
-            )
+                processedList.concat(
+                    orphanedIndexesList,
+                    indexesToDeleteList)
 
         // console.log('modifiedIndexesList',modifiedIndexesList)
 
@@ -334,7 +335,16 @@ export default class ServiceHandler {
 
         stateHandler.setCradleState('applycellframechanges')
 
-        return [modifiedIndexesList, true]
+        return [
+
+            modifiedIndexesList, 
+            processedList, 
+            indexesToDeleteList, 
+            orphanedIndexesList, 
+            errorEntriesMap, 
+            changeMap
+            
+        ]
 
     }
 

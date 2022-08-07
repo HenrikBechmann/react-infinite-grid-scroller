@@ -23,10 +23,9 @@
         - cradle can contain cells with no cache entry - check for consequences
         - rationalize calls to cacheHandler vs contentHandler or serviceHandler
             - particularly for cache paring
+        - make sure cache is properly pared after setListSize
 
         - rationalize cacheProps.modified
-
-        - test for duplicate instruction in test.controller.handleReverseCradle
 
         - review event cycles - they seem slower
             - review state change chains in cradle
