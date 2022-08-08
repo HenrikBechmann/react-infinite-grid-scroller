@@ -23,7 +23,6 @@
         - cradle can contain cells with no cache entry - check for consequences
         - rationalize calls to cacheHandler vs contentHandler or serviceHandler
             - particularly for cache paring
-        - make sure cache is properly pared after setListSize
 
         - rationalize cacheProps.modified
 
@@ -40,6 +39,7 @@
         - replace top/left with transformx/y
 
         ----------------
+        (after layout...)
         
         - prioritize fetch cells for visible cells
 
