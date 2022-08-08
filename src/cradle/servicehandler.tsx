@@ -355,7 +355,11 @@ export default class ServiceHandler {
         const deletedItemsIDList = Array.from(deletedItemIDToIndexMap.keys())
         const deletedIndexesList = Array.from(deletedIndexToItemIDMap.keys())
 
-        console.log('processedList, orphanedIndexList, orphanedItemsIDList',processedList, deletedItemsIndexList, orphanedItemsIDList)
+        console.log('processedList, orphanedIndexList, deletedItemsIDList, deletedIndexesList',
+            processedList, 
+            deletedItemsIndexList, 
+            deletedItemsIDList,
+            deletedIndexesList)
 
         const modifiedIndexesList = 
                 processedList.concat(
