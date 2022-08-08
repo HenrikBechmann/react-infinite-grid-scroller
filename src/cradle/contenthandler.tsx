@@ -262,9 +262,6 @@ export default class ContentHandler {
 
         const scrollPos = scrollData.currentupdate
 
-        // console.log('updateCradleContent with scrollPos, blockScrollPos, source', 
-        //     scrollPos, scaffoldHandler.cradlePositionData.blockScrollPos, source)
-
         // first abandon option/3; nothing to do
         if ( scrollPos < 0) { // for Safari, FF elastic bounce at top of scroll
 
@@ -297,9 +294,6 @@ export default class ContentHandler {
             triggerlineRecord,
             triggerlineSpan: scaffoldHandler.triggerlineSpan,
         })
-
-        // console.log('scrollerID, shiftinstruction',
-        //     '-'+cradleInheritedProperties.scrollerID+'-', shiftinstruction)
 
         // second abandon option/3; nothing to do
         if (shiftinstruction == 0) {

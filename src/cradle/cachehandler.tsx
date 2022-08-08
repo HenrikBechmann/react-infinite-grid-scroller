@@ -45,21 +45,28 @@ export class CacheHandler {
     //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
 
     changeListsize = (newlistsize, deleteListCallback, changeListsizeCallback) => {
-        // console.log('cacheHandler changelistsize called with newlistsize',newlistsize)
+
         this.setListsize(newlistsize)
+
         // match cache to newlistsize
         const portalIndexMap = this.cacheProps.indexToItemIDMap
         const mapkeysList = Array.from(portalIndexMap.keys())
         mapkeysList.sort((a,b) => a - b)
+
         const highestindex = mapkeysList.at(-1)
+
         if (highestindex > (newlistsize -1)) { // pare the cache
+
             const parelist = mapkeysList.filter((index)=>{
                 return index > (newlistsize -1)
             })
+
             this.deletePortal(parelist, deleteListCallback)
+
         }
-        // console.log('cacheHandler changeListsizeCallback',changeListsizeCallback)
+
         changeListsizeCallback && changeListsizeCallback(newlistsize)
+
     }
 
     clearCache = () => {
@@ -72,7 +79,6 @@ export class CacheHandler {
         this.cacheProps.portalList = null
         this.cacheProps.modified = true
 
-        // this.cacheProps.setListState() // trigger display update
         this.renderPortalList() // trigger display update
 
     }
@@ -90,8 +96,6 @@ export class CacheHandler {
     }
 
     matchCacheToCradle = (cradleIndexList, deleteListCallback) => {
-
-        // console.log('matchCacheToCradle cradleIndexList',cradleIndexList)
 
         const mapkeys = Array.from(this.cacheProps.indexToItemIDMap.keys())
 
@@ -217,7 +221,6 @@ export class CacheHandler {
             const indexToItemIDMap = this.cacheProps.indexToItemIDMap
 
             const { preloadIndexCallback, itemExceptionsCallback } = serviceHandler.callbacks
-            // console.log('cacheHandler: preloadIndexCallback, itemExceptionsCallback',preloadIndexCallback, itemExceptionsCallback)
 
             for (let index = 0; index < preloadsize; index++) {
 
@@ -431,9 +434,6 @@ export class CacheHandler {
     // much of this deals with the fact that the cache is sparse.
     insertRemoveIndex(index, highrange, increment, listsize) { // increment is +1 or -1
 
-        // console.log('==> cacheHandler.insertRemoveIndex: \nindex, highrange, increment, listsize\n',
-        //     index, highrange, increment, listsize)
-
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
         // ---------- define range parameters ---------------
@@ -506,11 +506,6 @@ export class CacheHandler {
             highPtr = (orderedIndexList.length - 1) - highPtr
             if (highPtr < lowPtr) highPtr = -1
         }
-
-        // console.log('highrangeindex, rangecount, rangeincrement, shrinktoIndex, \n',
-        //     'lowPtr, highPtr, shrinktoPtr, orderedIndexList\n',
-        //     highrangeindex, rangecount, rangeincrement, shrinktoIndex,'\n',
-        //     lowPtr, highPtr, shrinktoPtr, orderedIndexList, reverseIndexList)
 
         // ----------- list indexes to process, replace, and remove, and items to remove --------
 
@@ -600,12 +595,6 @@ export class CacheHandler {
         // increment higher from top of list to preserve lower values for subsequent increment
         if (increment == 1) indexesToProcessList.reverse() 
 
-        // console.log('indexesToProcessList, indexesToReplaceList, indexesToRemoveList, indexesOfItemsToRemoveList, itemsToRemoveList',
-        //     indexesToProcessList, indexesToReplaceList, indexesToRemoveList, 
-        //     indexesOfItemsToRemoveList, itemsToRemoveList)
-
-        // return [[],[],0] // FOR DEBUG
-
         const indexesModifiedList = []
 
         // modify index-to-itemid map, and metadata map
@@ -647,9 +636,6 @@ export class CacheHandler {
             }
 
         }
-
-        // console.log('increment, indexesModifiedList, indexesToProcessList, indexesToReplaceList',
-        //     increment, indexesModifiedList, indexesToProcessList, indexesToReplaceList)
 
         // --------------- returns ---------------
 

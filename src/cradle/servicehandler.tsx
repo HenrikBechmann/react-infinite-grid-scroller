@@ -227,7 +227,9 @@ export default class ServiceHandler {
             itemIDCountMap.forEach((count,itemID)=>{
 
                 if (count > 1) {
+
                     duplicateItemsMap.set(itemID, count)
+                    
                 }
 
             })
