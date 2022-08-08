@@ -23,7 +23,8 @@
         - review event cycles - they seem slower
             - review state change chains in cradle
             - try to reduce need to run renderportallist - try some kind of pagination/grouping
-        - check number of passes to scrollblock; consider implementing named states
+        
+        - implement named states in scrollblock
 
         - test changing all gridscroller parameters
             test config size edge cases - over and under sized cells

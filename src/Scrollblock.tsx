@@ -19,6 +19,8 @@ const Scrollblock = ({
     scrollerID,
 }) => {
 
+    // console.log('RUNNING ScrollBlock','-'+scrollerID+'-')
+
     const {
         orientation,
         gap,
@@ -29,11 +31,15 @@ const Scrollblock = ({
     } = gridSpecs
 
     // -------------------------[ context and state ]-------------------------
+
     const viewportInterruptProperties = useContext(ViewportInterrupt)
 
     // -----------------------------------[ data heap ]-------------------------
+
     const baseScrollBlockLengthRef = useRef(null)
     // const scrollblockRef = useRef(null)
+
+    // TODO put object assign into a useEffect - support with useState ('setup')
     const divlinerstyleRef = useRef(
         Object.assign(
         {
@@ -48,6 +54,7 @@ const Scrollblock = ({
 
     const { width, height } = viewportInterruptProperties.viewportDimensions
     
+    // reconfigure
     useLayoutEffect(() => {
 
         updateBaseBlockLength()
@@ -99,8 +106,6 @@ const Scrollblock = ({
             padding,
        ]
     )
-
-    // console.log('scrollblock listsizeRef, baseScrollBlockLengthRef','-'+scrollerID+'-' , listsizeRef, baseScrollBlockLengthRef)    
 
     return <div data-type = 'scrollblock' style={divlinerstyleRef.current}>{children}</div>
 
