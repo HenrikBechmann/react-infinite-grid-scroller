@@ -7,7 +7,7 @@
 
 */
 
-import React, {useContext, useRef, useCallback, useEffect, useLayoutEffect, useState} from 'react'
+import React, {useContext, useRef, useCallback, useLayoutEffect, useState, useMemo} from 'react'
 
 import { ViewportInterrupt } from './Viewport'
 
@@ -19,7 +19,7 @@ const Scrollblock = ({
     scrollerID,
 }) => {
 
-    // console.log('RUNNING ScrollBlock','-'+scrollerID+'-')
+    // console.log('==> RUNNING Scrollblock','-'+scrollerID+'-')
 
     const {
         orientation,
@@ -37,11 +37,10 @@ const Scrollblock = ({
     // -----------------------------------[ data heap ]-------------------------
 
     const baseScrollBlockLengthRef = useRef(null)
-    // const scrollblockRef = useRef(null)
 
-    // TODO put object assign into a useEffect - support with useState ('setup')
-    const divlinerstyleRef = useRef(
-        Object.assign(
+    // just for init
+    const linerStyle = useMemo(() =>{
+        return Object.assign(
         {
 
             backgroundColor:'white',
@@ -49,7 +48,11 @@ const Scrollblock = ({
             
         } as React.CSSProperties, styles.cradle)
 
-    )
+
+    }, [])
+
+    const divlinerstyleRef = useRef(linerStyle)
+
     const [divlinerstyle,saveDivlinerstyle] = useState(divlinerstyleRef.current) // to trigger render
 
     const { width, height } = viewportInterruptProperties.viewportDimensions
@@ -57,7 +60,18 @@ const Scrollblock = ({
     // reconfigure
     useLayoutEffect(() => {
 
-        updateBaseBlockLength()
+        updateBaseBlockLength(
+                    {
+                        orientation,
+                        viewportheight:height,
+                        viewportwidth:width,
+                        listsize,
+                        cellHeight,
+                        cellWidth,
+                        gap,
+                        padding,
+                    }
+            )
         divlinerstyleRef.current = 
             updateScrollblockStyles(
                 orientation,
@@ -78,20 +92,9 @@ const Scrollblock = ({
     ])
 
     const updateBaseBlockLength = useCallback(
-        () => {
-            const basescrollblocklength = 
-                calcBaseScrollblockLength(
-                    {
-                        orientation,
-                        viewportheight:height,
-                        viewportwidth:width,
-                        listsize,
-                        cellHeight,
-                        cellWidth,
-                        gap,
-                        padding,
-                    }
-                )
+        (layoutspecs) => {
+            
+            const basescrollblocklength = calcBaseScrollblockLength(layoutspecs)
 
             baseScrollBlockLengthRef.current = basescrollblocklength
 

@@ -86,7 +86,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // console.log('==> running CRADLE cradleState','-'+scrollerID+'-', cradleState)
+    // console.log('==> RUNNING Cradle','-'+scrollerID+'-', cradleState)
 
     // flags
     const isMountedRef = useRef(true)

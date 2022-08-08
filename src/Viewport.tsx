@@ -36,6 +36,8 @@ const Viewport = ({
 
     const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, ready
 
+    // console.log('==> RUNNING Viewport','-'+scrollerID+'-', viewportState)
+
     const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
     viewportStateRef.current = viewportState
 

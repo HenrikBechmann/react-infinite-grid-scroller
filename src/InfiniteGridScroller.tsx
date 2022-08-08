@@ -20,11 +20,10 @@
 
     TODO:
 
-        - review event cycles - they seem slower
-            - review state change chains in cradle
-            - try to reduce need to run renderportallist - try some kind of pagination/grouping
+        - review state change chains in cradle
+        - try to reduce need to run renderportallist - try some kind of pagination/grouping
         
-        - implement named states in scrollblock
+        - implement named states in scrollblock?
 
         - test changing all gridscroller parameters
             test config size edge cases - over and under sized cells
@@ -128,8 +127,6 @@ const InfiniteGridScroller = (props) => {
         advanced = {}, // optional. technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
     } = props
 
-    // console.log('InfiniteGridScroller callbacks',callbacks)
-
     // avoid null
     styles = styles ?? {}
     callbacks = callbacks ?? {}
@@ -191,6 +188,8 @@ const InfiniteGridScroller = (props) => {
 
     const scrollerID = scrollerSessionIDRef.current
 
+    // console.log('==> RUNNING RIGS','-'+scrollerID+'-', scrollerState)
+
     // satisfy React Object.is for attributes
     if (!compareProps(gridSpecs, gridSpecsRef.current)) {
         gridSpecsRef.current = gridSpecs
@@ -238,7 +237,8 @@ const InfiniteGridScroller = (props) => {
 
     },[scrollerState])
 
-    return <ErrorBoundary
+    return <React.StrictMode>
+        <ErrorBoundary
         FallbackComponent={ErrorFallback}
         onReset={() => {
           // reset the state of your app so the error doesn't happen again
@@ -294,6 +294,7 @@ const InfiniteGridScroller = (props) => {
             <PortalList cacheProps = {cacheHandlerRef.current.cacheProps}/>
         </div>}
     </ErrorBoundary>
+    </React.StrictMode>
 }
 
 const cacherootstyle = {display:'none'} as React.CSSProperties // static, out of view 
