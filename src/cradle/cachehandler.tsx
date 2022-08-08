@@ -179,7 +179,7 @@ export class CacheHandler {
 
     }
 
-    preload(cradleParameters, finalCallback, setMaxListsize, scrollerID) {
+    preload(cradleParameters, finalCallback, nullItemSetMaxListsize, scrollerID) {
 
         const { scrollerPassthroughPropertiesRef } = cradleParameters
         const { stateHandler, serviceHandler } = cradleParameters.handlersRef.current
@@ -208,7 +208,7 @@ export class CacheHandler {
 
         const maxListsizeInterrupt = (index) => {
             breakloop.current = true
-            setMaxListsize(index)
+            nullItemSetMaxListsize(index)
         }
 
         // serviceHandler.callbacks.preloadIndexCallback
@@ -221,10 +221,10 @@ export class CacheHandler {
 
             for (let index = 0; index < preloadsize; index++) {
 
+                preloadIndexCallback && preloadIndexCallback(index)
                 if (!indexToItemIDMap.has(index)) {
 
                     // console.log('preload processing', index)
-                    preloadIndexCallback && preloadIndexCallback(index)
                     const promise = this.preloadItem(
                         index, 
                         getItem, 
@@ -296,11 +296,6 @@ export class CacheHandler {
 
     // ==========================[ SERVICE SUPPORT ]=========================
 
-    // TODO orphan
-    changeIndexMap( ) {
-        
-    }
-    
     // move is coerced by servicehandler to be within current list bounds
     moveIndex(toindex, fromindex, fromhighindex ) {
 
@@ -683,16 +678,17 @@ export class CacheHandler {
         return globalItemID++
     }
 
-    getItemID(index) {
+    // get new or existing itemID for contentfunctions.createCell
+    getNewOrExistingItemID(index) {
 
-        const indexMap = this.cacheProps.indexToItemIDMap 
-        const knownID = indexMap.get(index)
-        const knownHasValue = knownID??false // deal with falsey 0
-        const newID = (knownHasValue === false)?(this.getNewItemID()):null
+        const { indexToItemIDMap } = this.cacheProps
 
-        if (knownHasValue === false) indexMap.set(index, newID)
+        const itemID = 
+            (indexToItemIDMap.has(index))?
+                indexToItemIDMap.get(index):
+                (this.getNewItemID())
 
-        return knownID??newID
+        return itemID
 
     }
 
@@ -726,6 +722,7 @@ export class CacheHandler {
 
     }
 
+    // always for new item
     private async preloadItem(
         index, 
         getItem, 
@@ -735,7 +732,7 @@ export class CacheHandler {
         scrollerID
     ) {
 
-        const itemID = this.getItemID(index)
+        const itemID = this.getNewItemID()
 
         let returnvalue, usercontent, error
 

@@ -5,8 +5,6 @@
     react-infinite-grid-scroller = RIGS
 
     ROADMAP:
-        test changing all gridscroller parameters
-            test config size edge cases - over and under sized cells
 
         review all code
 
@@ -19,19 +17,29 @@
         create demo site - github pages
 
     BUGS: 
+        - problem with remapIndexes in the presence of undefined item types
 
     TODO:
+        - cradle can contain cells with no cache entry - check for consequences
         - rationalize calls to cacheHandler vs contentHandler or serviceHandler
             - particularly for cache paring
+        - make sure cache is properly pared after setListSize
+
+        - rationalize cacheProps.modified
 
         - review event cycles - they seem slower
             - review state change chains in cradle
             - try to reduce need to run renderportallist - try some kind of pagination/grouping
         - check number of passes to scrollblock; consider implementing named states
 
+        - test changing all gridscroller parameters
+            test config size edge cases - over and under sized cells
+
         - clear out TODO notes
 
         - replace top/left with transformx/y
+
+        ----------------
         
         - prioritize fetch cells for visible cells
 

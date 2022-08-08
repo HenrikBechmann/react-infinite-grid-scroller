@@ -452,7 +452,8 @@ const Cradle = ({
     // ===================[ INITIALIZATION effects ]=========================
     // initialization effects are independent of caching
 
-    const setMaxListsize = useCallback((maxListsize) => {
+    // this will always be less than current listsize
+    const nullItemSetMaxListsize = useCallback((maxListsize) => {
         const listsize = cradleInternalPropertiesRef.current.listsize
         // console.log('cradle fielding setMaxlistsize with maxListsize, listsize',maxListsize, listsize)
         if (maxListsize < listsize) {
@@ -468,9 +469,9 @@ const Cradle = ({
                 }
 
             }
-
+            //
             cacheHandler.changeListsize(maxListsize, 
-                dListCallback, // serviceHandler.callbacks.deleteListCallback,
+                dListCallback,
                 changeListsizeCallback)
 
         }
@@ -503,7 +504,7 @@ const Cradle = ({
             getCacheIndexMap, 
             getCacheItemMap,
             getCradleIndexMap,
-            changeIndexMap,
+            remapIndexes,
             moveIndex,
             insertIndex,
             removeIndex,
@@ -520,7 +521,7 @@ const Cradle = ({
             getCacheIndexMap,
             getCacheItemMap,
             getCradleIndexMap,
-            changeIndexMap,
+            remapIndexes,
             moveIndex,
             insertIndex,
             removeIndex,
@@ -878,7 +879,7 @@ const Cradle = ({
 
                 // console.log('in dopreload, calling cacheHandler.preload with timeout')
 
-                cacheHandler.preload(cradleParametersRef.current, finalCallback, setMaxListsize, scrollerID)
+                cacheHandler.preload(cradleParametersRef.current, finalCallback, nullItemSetMaxListsize, scrollerID)
 
                 break
             }
@@ -1155,7 +1156,7 @@ const Cradle = ({
     const contextvalueRef = useRef({
         scrollerPassthroughPropertiesRef, 
         cacheHandler, 
-        setMaxListsize,
+        nullItemSetMaxListsize,
         itemExceptionsCallback:serviceHandler.callbacks.itemExceptionsCallback,
         IDLECALLBACK_TIMEOUT,
     })

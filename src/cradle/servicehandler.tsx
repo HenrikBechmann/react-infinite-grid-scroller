@@ -71,13 +71,15 @@ export default class ServiceHandler {
 
     }
 
-    public setListsize = (listsize) => {
+    public setListsize = (newlistsize) => {
 
-        listsize = Math.max(0,listsize)
+        newlistsize = Math.max(0,newlistsize)
 
-        const { cacheHandler } = this.cradleParameters.handlersRef.current
+        const { cacheHandler, stateHandler } = this.cradleParameters.handlersRef.current
 
         const { deleteListCallback, changeListsizeCallback } = this.callbacks
+
+        const { listsize:currentlistsize } = this.cradleParameters.cradleInternalPropertiesRef.current
 
         let dListCallback
         if (deleteListCallback) {
@@ -89,10 +91,14 @@ export default class ServiceHandler {
 
         }
 
-        cacheHandler.changeListsize(listsize, 
+        cacheHandler.changeListsize(newlistsize, 
             dListCallback,
             changeListsizeCallback
         )
+
+        if (newlistsize > currentlistsize) {
+            stateHandler.setCradleState('dopreload')
+        }
 
     }
 
@@ -134,38 +140,75 @@ export default class ServiceHandler {
 
     }
 
-    // blank index values (itemID) are assigned a new 
-    // itemID if in the cradle, otherwise removed from the cache.
-    // Duplicate index/itemID pairs have the itemID turned to blank
-    // and are processed by the above rule
-    public changeIndexMap = (changeMap) => { // index => itemID
+    /*
+        checks for
+        - duplicates
+        - typeID is string
+        - typeID is null or undefined
+        - Number.isNaN, Number.isInteger
 
-        // console.log('changeIndexMap: changeMap', changeMap)
+    */    
+    public remapIndexes = (changeMap) => { // index => itemID
+
+        // console.log('remapIndexes: changeMap', changeMap)
+
+        if (changeMap.size == 0) return [[],true] // nothing to do
 
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
 
         const { 
+
             metadataMap, // itemID to portal data, including index
             indexToItemIDMap // index to itemID
-        } = cacheHandler.cacheProps 
 
-        if (changeMap.size == 0) return [] // nothing to do
+        } = cacheHandler.cacheProps 
 
         const indexesToDeleteList = []
         const changeIndexToItemIDMap = new Map()
+        const errorEntriesMap = new Map()
 
-        // collect details of change
+        // filter out inoperable indexes and itemIDs
 
         changeMap.forEach((itemID, index) =>{
-            if (itemID === null) {
+
+            if ((itemID === null) || (itemID === undefined)) {
+
                 indexesToDeleteList.push(index)
+
             } else {
-                changeIndexToItemIDMap.set(index, itemID)
+
+                if ((typeof itemID) == 'string') {
+
+                    errorEntriesMap.set(index,'itemID is a string')
+
+                } else if (!Number.isInteger(itemID)) {
+
+                    errorEntriesMap.set(index,'itemID is not an integer')
+
+                } else if (!indexToItemIDMap.has(index)) {
+
+                    errorEntriesMap.set(index, 'index not in cache')
+
+                } else if (indexToItemIDMap.get(index) == itemID) {
+
+                    errorEntriesMap.set(index, 'target itemID has not changed')
+
+                } else if (!metadataMap.has(itemID)) {
+
+                    errorEntriesMap.set(index, `target itemID ${itemID} not in cache`)
+
+                } else {
+
+                    changeIndexToItemIDMap.set(index, itemID)
+
+                }
+
             }
+
         })
 
-        // -------------- first, guard against duplicate itemIDs in change map ------------
+        // -------------- filter out duplicate itemIDs ------------
 
         const mapsize = changeIndexToItemIDMap.size
 
@@ -178,96 +221,168 @@ export default class ServiceHandler {
             const itemIDCountMap = new Map()
 
             changeIndexToItemIDMap.forEach((itemID, index) => {
+
                 if (!itemIDCountMap.has(itemID)) {
+
                     itemIDCountMap.set(itemID, 1)
+
                 } else {
-                    itemIDCountMap.set(itemID, itemIDCountMap.get(itemID) + 1)
+
+                    let count = itemIDCountMap.get(itemID)
+                    itemIDCountMap.set(itemID, ++count )
+
                 }
             })
 
             const duplicateItemsMap = new Map()
             itemIDCountMap.forEach((count,itemID)=>{
+
                 if (count > 1) {
                     duplicateItemsMap.set(itemID, count)
                 }
+
             })
 
-            if (duplicateItemsMap.size) {
+            const duplicatesToDeleteList = []
+            changeIndexToItemIDMap.forEach((itemID, index) => {
 
-                console.log('WARNING: changeIndexMap rejected: \
-                    duplicate itemID index assignment values found:\
-                    duplicateItemIDs, changeMap',
-                    duplicateItemsMap, changeMap)
-                return []
+                if (duplicateItemsMap.has(itemID)) {
+                    duplicatesToDeleteList.push(index)
+                }
 
-            }
+            })
+
+            duplicatesToDeleteList.forEach((index)=>{
+
+                const itemID = changeIndexToItemIDMap.get(index)
+                const count = duplicateItemsMap.get(itemID)
+
+                errorEntriesMap.set(index, `target itemID ${itemID} has duplicates (${count})`)
+                changeIndexToItemIDMap.delete(index)
+
+            })
 
         }
 
-        // --------------- delete indexes and associated itemID's for indexes set to null --------
+        // capture map before changes, from list of changes and list of indexes to be deleted
+        const originalMap = new Map() // index => itemID; before change
+        changeIndexToItemIDMap.forEach((itemID, index)=>{
 
-        cacheHandler.deletePortal(indexesToDeleteList, this.callbacks.deleteListCallback)
+            originalMap.set(index,indexToItemIDMap.get(index))
+            originalMap.set(metadataMap.get(itemID).index,itemID)
 
-        // ----------- apply changes to cache index and itemID maps ----------
+        })
 
-        // const cradleMap = this.getCradleMap() // index to itemID
+        indexesToDeleteList.forEach((index) => {
 
-        const originalitemindexMap = new Map() // itemID => index; before change
+            originalMap.set(index, indexToItemIDMap.get(index))
+
+        })
+
+        // console.log('originalIndexToItemIDMap',originalMap)
+
+        // --------------- delete listed indexes ---------
+        // for indexes set to null or undefined
+        // associated itemID's will be orphaned, but could be remapped.
+        // resolved with orphanedItemsIDMap below
+
+        if (indexesToDeleteList.length) {
+
+            indexesToDeleteList.forEach((index) => {
+
+                indexToItemIDMap.delete(index)
+
+            })
+
+        }
+
+        // ----------- apply filtered changes to cache index and itemID maps ----------
+        // at this point every remaining index listed will change its mapping
+
         const processedMap = new Map() // index => itemID; change has been applied
 
+        // make changes
         changeIndexToItemIDMap.forEach((itemID,index) => {
 
-            if (indexToItemIDMap.has(index)) { // in cache, otherwise ignore
+            indexToItemIDMap.set(index,itemID) // modiication applied, part 1
+            const itemdata = metadataMap.get(itemID)
 
-                const existingItemID = indexToItemIDMap.get(index)
+            itemdata.index = index // modification applied, part 2
 
-                if (existingItemID != itemID) { // modification requested
+            processedMap.set(index,itemID)
 
-                    indexToItemIDMap.set(index,itemID) // modiication applied, part 1
-                    const itemdata = metadataMap.get(itemID)
+        })
 
-                    originalitemindexMap.set(itemID,itemdata.index)
-                    itemdata.index = index // modification applied, part 2
+        // look for index and item orphans
+        // if the original item index has not changed, then it has not been remapped, 
+        //     it is orphaned, and the item is deleted
+        // if the item's index has changed, but the original item index's still points to the item,
+        //     then the index is orphaned (duplicate), and deleted
+        const deletedItemIDToIndexMap = new Map() // index => itemID; orphaned index
+        const deletedIndexToItemIDMap = new Map()
 
-                    processedMap.set(index,itemID)
+        originalMap.forEach((originalItemIDIndex, originalItemID) => {
+            const finalItemIDIndex = metadataMap.get(originalItemID).index
+            // console.log('originalMap: originalItemID, originalIndex, finalItemIDIndex',originalItemID, originalItemIDIndex, finalItemIDIndex)
 
+            if (originalItemIDIndex == finalItemIDIndex) { // not remapped, therefore orphaned
+                deletedItemIDToIndexMap.set(originalItemID, originalItemIDIndex)
+                // console.log('deleting orphaned item', originalItemID)
+                metadataMap.delete(originalItemID)
+            } else { // remapped, check for orphaned index
+                if (indexToItemIDMap.has(originalItemIDIndex)) {
+                    const finalItemID = indexToItemIDMap.get(originalItemIDIndex)
+                    if (finalItemID == originalItemID) { // the index has not been remapped, therefore orphaned
+                        deletedIndexToItemIDMap.set(originalItemIDIndex, originalItemID)
+                        indexToItemIDMap.delete(originalItemIDIndex)
+                    }
                 }
             }
         })
 
-        // if the original index for the re-assigned cache item still maps to the cache item,
-        // then there is a duplicate
-        // TODO this needs to be tested!!
-        const orphanedItemIndexesMap = new Map() // itemID => index; unresolved index changes
 
-        originalitemindexMap.forEach((itemID, index) => {
-            if (indexToItemIDMap.has(index) && (indexToItemIDMap.get(index) == itemID)) {
-                orphanedItemIndexesMap.set(itemID, index)
-                indexToItemIDMap.delete(index)
-            }
-        })
+        // console.log('deletedItemIDToIndexMap',deletedItemIDToIndexMap)
+        // console.log('deletedIndexToItemIDMap',deletedIndexToItemIDMap)
 
+        // refresh the modified cache
         cacheHandler.cacheProps.modified = true
         cacheHandler.renderPortalList()
 
         // ------------- apply changes to extant cellFrames ------------
 
-        const modifiedIndexesList = Array.from(
-            new Set( // get unique list
-                Array.from(processedMap.keys()).concat(
-                    Array.from(orphanedItemIndexesMap.keys()),
-                    indexesToDeleteList
-                )
-            ).values()
-        )
+        const processedList = Array.from(processedMap.keys())
+        const deletedItemsIndexList = Array.from(deletedItemIDToIndexMap.values())
+        const deletedItemsIDList = Array.from(deletedItemIDToIndexMap.keys())
+        const deletedIndexesList = Array.from(deletedIndexToItemIDMap.keys())
 
-        // console.log('modifiedIndexesList',modifiedIndexesList)
+        // console.log('processedList, orphanedIndexList, deletedItemsIDList, deletedIndexesList',
+        //     processedList, 
+        //     deletedItemsIndexList, 
+        //     deletedItemsIDList,
+        //     deletedIndexesList)
+
+        const modifiedIndexesList = 
+                processedList.concat(
+                    indexesToDeleteList, 
+                    deletedItemsIndexList, 
+                    deletedIndexesList
+                )
 
         contentHandler.reconcileCellFrames(modifiedIndexesList)
 
         stateHandler.setCradleState('applycellframechanges')
 
-        return modifiedIndexesList
+        return [
+
+            modifiedIndexesList, 
+            processedList, 
+            indexesToDeleteList, 
+            deletedItemsIDList, 
+            deletedIndexesList,
+            errorEntriesMap, 
+            changeMap
+
+        ]
 
     }
 
