@@ -173,12 +173,12 @@ const InfiniteGridScroller = (props) => {
 
     let {
         showAxis,
-        RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE,
+        VIEWPORT_RESIZE_TIMEOUT,
         IDLECALLBACK_TIMEOUT,
         MAX_CACHE_OVER_RUN,
     } = advanced
 
-    RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE ?? 250
+    VIEWPORT_RESIZE_TIMEOUT = VIEWPORT_RESIZE_TIMEOUT ?? 250
     IDLECALLBACK_TIMEOUT = IDLECALLBACK_TIMEOUT ?? 4000
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
     if (typeof showAxis != 'boolean') {
@@ -195,8 +195,6 @@ const InfiniteGridScroller = (props) => {
     const scrollerSessionIDRef = useRef(null);
 
     const scrollerID = scrollerSessionIDRef.current
-
-    // scrollerID && console.log('==> SCROLLER cache, scrollerState','-' + scrollerID + '-',cache, scrollerState)
 
     // satisfy React Object.is for attributes
     if (!compareProps(gridSpecs, gridSpecsRef.current)) {
@@ -220,10 +218,6 @@ const InfiniteGridScroller = (props) => {
     const listsizeRef = useRef(estimatedListSize)
 
     const listsize = listsizeRef.current
-
-    // console.log('infinite scroller listsizeRef','-'+scrollerID+'-' , scrollerState, listsizeRef)
-    // console.log('infinite scroller scrollerID, scrollerState, cache, cacheMax', 
-    //     '-'+scrollerID+'-',scrollerState, cache, cacheMax)
 
     const setListsize = useCallback((listsize) =>{
 
@@ -265,7 +259,7 @@ const InfiniteGridScroller = (props) => {
             styles = { stylesRef.current }
             scrollerProperties = {scrollerProperties}
             scrollerID = { scrollerID }
-            RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = { RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE }
+            VIEWPORT_RESIZE_TIMEOUT = { VIEWPORT_RESIZE_TIMEOUT }
 
         >
         

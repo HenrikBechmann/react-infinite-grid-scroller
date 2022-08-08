@@ -11,8 +11,6 @@ import Placeholder from './cellframe/Placeholder'
 
 import { CradleContext } from './Cradle'
 
-// const IDLECALLBACK_TIMEOUT = 4000 // TODO make cofigurable
-
 const CellFrame = ({
     orientation, 
     cellHeight, 
@@ -89,12 +87,14 @@ const CellFrame = ({
     },[index, placeholder,listsize, errorRef.current])
 
     placeholderRef.current = useMemo(()=>{
-        // console.log('refreshing placeholder for index, listsize, customplaceholder', index, listsize, customplaceholder)
+
         const placeholder = 
             customplaceholder?
                 customplaceholder:
                 <Placeholder index = {index} listsize = {listsize} error = {errorRef.current}/>
+
         return placeholder
+
     }, [index, customplaceholder, listsize, errorRef.current]);
 
     // ---------------- [ requestidlecallback config ] ------------------------
@@ -103,6 +103,7 @@ const CellFrame = ({
         window['requestIdleCallback']?
             window['requestIdleCallback']:
             requestIdleCallback
+
     const cancelidlecallback = 
         window['cancelIdleCallback']?
             window['cancelIdleCallback']:
@@ -174,10 +175,13 @@ const CellFrame = ({
                         try {
 
                             usercontent = await getItem(index, itemID)
+
                             if (usercontent === null) returnvalue = usercontent
 
                             if (usercontent === undefined) {
+
                                 error = new Error('host returned "undefined"')
+
                             }
 
                         } catch(e) {
@@ -190,14 +194,14 @@ const CellFrame = ({
                         if ((usercontent !== null) && (usercontent !== undefined)) {
 
                             if (!React.isValidElement(usercontent)) {
+
                                 returnvalue = usercontent
                                 usercontent = undefined
                                 error = new Error('invalid React element')
+                                
                             }
 
                         }
-
-                        // console.log('index, usercontent', index, usercontent)
 
                         if (isMountedRef.current) {
 
@@ -225,7 +229,6 @@ const CellFrame = ({
 
                             } else { // null or undefined
 
-                                // console.log('processing no-component index',index, usercontent)
                                 if (usercontent === null) {
                                     // truncate listsize at this index
                                     // console.log('cellFrame calling nullItemSetMaxListsize with index', index)
