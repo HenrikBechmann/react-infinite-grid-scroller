@@ -10,7 +10,7 @@ import React, {useState, useEffect, useRef} from 'react'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
-const MAX_CACHE_OVER_RUN = 1.5
+//  const MAX_CACHE_OVER_RUN = 1.5
 
 let globalItemID = 0
 
@@ -162,7 +162,7 @@ export class CacheHandler {
 
     }
 
-    guardAgainstRunawayCaching = (cacheMax, cradleListLength) => {
+    guardAgainstRunawayCaching = (cacheMax, cradleListLength, MAX_CACHE_OVER_RUN) => {
 
         if (!cacheMax) return false
 

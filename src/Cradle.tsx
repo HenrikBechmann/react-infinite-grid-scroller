@@ -55,6 +55,7 @@ const Cradle = ({
         useScrollTracker,
         showAxis,
         IDLECALLBACK_TIMEOUT,
+        MAX_CACHE_OVER_RUN,
     }) => {
 
     if (listsize == 0) return null// nothing to do
@@ -256,6 +257,7 @@ const Cradle = ({
         userCallbacks,
         styles,
         cacheHandler,
+        MAX_CACHE_OVER_RUN,
 
     }
 

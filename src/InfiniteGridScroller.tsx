@@ -175,10 +175,12 @@ const InfiniteGridScroller = (props) => {
         showAxis,
         RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE,
         IDLECALLBACK_TIMEOUT,
+        MAX_CACHE_OVER_RUN,
     } = advanced
 
     RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE ?? 250
     IDLECALLBACK_TIMEOUT = IDLECALLBACK_TIMEOUT ?? 4000
+    MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
     if (typeof showAxis != 'boolean') {
         showAxis = true
     }
@@ -293,6 +295,7 @@ const InfiniteGridScroller = (props) => {
                     useScrollTracker = {useScrollTracker}
                     showAxis = { showAxis }
                     IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }
+                    MAX_CACHE_OVER_RUN = { MAX_CACHE_OVER_RUN }
                     scrollerID = { scrollerID }
 
                 />

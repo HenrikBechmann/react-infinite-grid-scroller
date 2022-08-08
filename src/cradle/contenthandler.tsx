@@ -465,12 +465,14 @@ export default class ContentHandler {
         const { contentHandler, cacheHandler } = this.cradleParameters.handlersRef.current
         const modelComponentList = contentHandler.content.cradleModelComponents
  
-        if (cacheHandler.guardAgainstRunawayCaching(cacheMax, modelComponentList.length)) {
+        const { MAX_CACHE_OVER_RUN } =  this.cradleParameters.cradleInheritedPropertiesRef.current
+        if (cacheHandler.guardAgainstRunawayCaching(cacheMax, modelComponentList.length, MAX_CACHE_OVER_RUN )) {
 
             this.pareCacheToMax()
 
         }
     }
+    
     public pareCacheToMax = () => {
 
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current

@@ -15,7 +15,7 @@ export default class ServiceHandler {
            deleteListCallback, // (reason, deleteList)
            changeListsizeCallback, // (newlistsize)
            itemExceptionsCallback, // (index, itemID, returnvalue, location, error)
-           repositioningFlagCallback, // (index)
+           repositioningFlagCallback, // (flag) // boolean
            
        } = cradleParameters.externalCallbacksRef.current
 
@@ -76,6 +76,7 @@ export default class ServiceHandler {
         const { deleteListCallback, changeListsizeCallback } = this.callbacks
 
         const { listsize:currentlistsize } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         let dListCallback
         if (deleteListCallback) {
@@ -92,7 +93,7 @@ export default class ServiceHandler {
             changeListsizeCallback
         )
 
-        if (newlistsize > currentlistsize) {
+        if ((cache == 'preload') && (newlistsize > currentlistsize)) {
             stateHandler.setCradleState('dopreload')
         }
 
@@ -307,7 +308,7 @@ export default class ServiceHandler {
 
         })
 
-        // -------------- look for (and delete) item and index orphans --------------------
+        // -------------- look for and delete item and index orphans --------------------
         // if the original item's index has not changed, then it has not been remapped, 
         //     it is orphaned, and the item is deleted
         // if the item's index has changed, but the original item index map still points to the item,
