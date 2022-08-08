@@ -150,7 +150,7 @@ export default class ServiceHandler {
     */    
     public remapIndexes = (changeMap) => { // index => itemID
 
-        console.log('remapIndexes: changeMap', changeMap)
+        // console.log('remapIndexes: changeMap', changeMap)
 
         if (changeMap.size == 0) return [[],true] // nothing to do
 
@@ -279,7 +279,7 @@ export default class ServiceHandler {
 
         })
 
-        console.log('originalIndexToItemIDMap',originalMap)
+        // console.log('originalIndexToItemIDMap',originalMap)
 
         // --------------- delete listed indexes ---------
         // for indexes set to null or undefined
@@ -323,11 +323,11 @@ export default class ServiceHandler {
 
         originalMap.forEach((originalItemIDIndex, originalItemID) => {
             const finalItemIDIndex = metadataMap.get(originalItemID).index
-            console.log('originalMap: originalItemID, originalIndex, finalItemIDIndex',originalItemID, originalItemIDIndex, finalItemIDIndex)
+            // console.log('originalMap: originalItemID, originalIndex, finalItemIDIndex',originalItemID, originalItemIDIndex, finalItemIDIndex)
 
             if (originalItemIDIndex == finalItemIDIndex) { // not remapped, therefore orphaned
                 deletedItemIDToIndexMap.set(originalItemID, originalItemIDIndex)
-                console.log('deleting orphaned item', originalItemID)
+                // console.log('deleting orphaned item', originalItemID)
                 metadataMap.delete(originalItemID)
             } else { // remapped, check for orphaned index
                 if (indexToItemIDMap.has(originalItemIDIndex)) {
@@ -341,8 +341,8 @@ export default class ServiceHandler {
         })
 
 
-        console.log('deletedItemIDToIndexMap',deletedItemIDToIndexMap)
-        console.log('deletedIndexToItemIDMap',deletedIndexToItemIDMap)
+        // console.log('deletedItemIDToIndexMap',deletedItemIDToIndexMap)
+        // console.log('deletedIndexToItemIDMap',deletedIndexToItemIDMap)
 
         // refresh the modified cache
         cacheHandler.cacheProps.modified = true
@@ -355,11 +355,11 @@ export default class ServiceHandler {
         const deletedItemsIDList = Array.from(deletedItemIDToIndexMap.keys())
         const deletedIndexesList = Array.from(deletedIndexToItemIDMap.keys())
 
-        console.log('processedList, orphanedIndexList, deletedItemsIDList, deletedIndexesList',
-            processedList, 
-            deletedItemsIndexList, 
-            deletedItemsIDList,
-            deletedIndexesList)
+        // console.log('processedList, orphanedIndexList, deletedItemsIDList, deletedIndexesList',
+        //     processedList, 
+        //     deletedItemsIndexList, 
+        //     deletedItemsIDList,
+        //     deletedIndexesList)
 
         const modifiedIndexesList = 
                 processedList.concat(
