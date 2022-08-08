@@ -192,7 +192,7 @@ export default class ServiceHandler {
 
                 } else if (indexToItemIDMap.get(index) == itemID) {
 
-                    errorEntriesMap.set(index, 'target itemID ${itemID} has not changed')
+                    errorEntriesMap.set(index, `target itemID ${itemID} has not changed`)
 
                 } else if (!metadataMap.has(itemID)) {
 
