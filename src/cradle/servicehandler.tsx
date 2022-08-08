@@ -1,8 +1,6 @@
 // servicehandler.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-// import React from 'react'
-
 // ServiceHandler handles client service requests
 export default class ServiceHandler {
 
@@ -31,8 +29,6 @@ export default class ServiceHandler {
        }
 
        this.callbacks = callbacks
-
-       // console.log('serviceHandler callbacks', callbacks, this.callbacks)
 
     }
 
@@ -140,14 +136,6 @@ export default class ServiceHandler {
 
     }
 
-    /*
-        checks for
-        - duplicates
-        - typeID is string
-        - typeID is null or undefined
-        - Number.isNaN, Number.isInteger
-
-    */    
     public remapIndexes = (changeMap) => { // index => itemID
 
         if (changeMap.size == 0) return [] // nothing to do
@@ -397,8 +385,8 @@ export default class ServiceHandler {
 
     }
 
-    // returns true with moved indexes, otherwise false
     // move must be entirely within list bounds
+    // returns list of processed indexes
     public moveIndex = (toindex, fromindex, highrange = null) => {
 
         // ------------- define parameters ---------------
@@ -486,7 +474,8 @@ export default class ServiceHandler {
 
     }
 
-    // shared logic
+    // shared logic. Returns lists of items changed, and items replaced (new items for insert)
+    // this operation changes the listsize
     private insertRemoveIndex = (index, rangehighindex, increment) => {
 
         index = index ?? 0
@@ -514,7 +503,7 @@ export default class ServiceHandler {
 
         stateHandler.setCradleState('applycellframechanges')
 
-        const changecount = rangeincrement
+        const changecount = rangeincrement // semantics
         const newlistsize = listsize + changecount 
 
         this.setListsize(newlistsize)
