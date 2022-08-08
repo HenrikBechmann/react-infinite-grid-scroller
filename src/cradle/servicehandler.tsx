@@ -1,7 +1,7 @@
 // servicehandler.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-import React from 'react'
+// import React from 'react'
 
 // ServiceHandler handles client service requests
 export default class ServiceHandler {
@@ -289,7 +289,7 @@ export default class ServiceHandler {
         // --------------- delete listed indexes ---------
         // for indexes set to null or undefined
         // associated itemID's will be orphaned, but could be remapped.
-        // resolved with orphanedItemsIDMap below
+        // orphans are resolved below
 
         if (indexesToDeleteList.length) {
 
@@ -304,6 +304,7 @@ export default class ServiceHandler {
         // ----------- apply filtered changes to cache index map and itemID map ----------
         // at this point every remaining index listed will change its mapping
 
+        // TODO just need an index list here: processedIndexList = []
         const processedMap = new Map() // index => itemID; change has been applied
 
         // make changes
@@ -361,22 +362,22 @@ export default class ServiceHandler {
         // ------------- apply changes to extant cellFrames ------------
 
         // these are used to reconcile cradle cellFrames, and also for return information
-        const processedList = Array.from(processedMap.keys())
-        const deletedItemsIndexList = Array.from(deletedItemIDToIndexMap.values())
-        const deletedIndexesList = Array.from(deletedIndexToItemIDMap.keys())
+        const processedIndexList = Array.from(processedMap.keys())
+        const deletedOrphanedItemIndexList = Array.from(deletedItemIDToIndexMap.values())
+        const deletedOrphanedIndexList = Array.from(deletedIndexToItemIDMap.keys())
         // for return information...
-        const deletedItemsIDList = Array.from(deletedItemIDToIndexMap.keys()) 
+        const deletedOrphanedItemIDList = Array.from(deletedItemIDToIndexMap.keys()) 
 
-        let modifiedIndexesList = 
-                processedList.concat(
+        let modifiedIndexList = 
+                processedIndexList.concat(
                     indexesToDeleteList, 
-                    deletedItemsIndexList, 
-                    deletedIndexesList
+                    deletedOrphanedItemIndexList, 
+                    deletedOrphanedIndexList
                 )
 
-        modifiedIndexesList = Array.from(new Set(modifiedIndexesList.values())) // remove duplicates
+        modifiedIndexList = Array.from(new Set(modifiedIndexList.values())) // remove duplicates
 
-        contentHandler.reconcileCellFrames(modifiedIndexesList)
+        contentHandler.reconcileCellFrames(modifiedIndexList)
 
         stateHandler.setCradleState('applycellframechanges')
 
@@ -384,11 +385,11 @@ export default class ServiceHandler {
 
         return [
 
-            modifiedIndexesList, 
-            processedList, 
+            modifiedIndexList, 
+            processedIndexList, 
             indexesToDeleteList, 
-            deletedItemsIDList, 
-            deletedIndexesList,
+            deletedOrphanedItemIDList, 
+            deletedOrphanedIndexList,
             errorEntriesMap, 
             changeMap
 
@@ -494,9 +495,6 @@ export default class ServiceHandler {
         index = Math.max(0,index)
         rangehighindex = Math.max(rangehighindex, index)
 
-        // console.log('==> serviceHandler.insertRemoveIndex: index, rangehighindex, increment',
-        //     index, rangehighindex, increment)
-
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
 
@@ -504,9 +502,6 @@ export default class ServiceHandler {
 
         const [changeList, replaceList, rangeincrement] = 
             cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize)
-
-        // console.log('changeList, replaceList, rangeincrement',
-        //     changeList, replaceList, rangeincrement)
 
         cacheHandler.cacheProps.modified = true
         cacheHandler.renderPortalList()

@@ -18,7 +18,6 @@
 
     BUGS: 
         - problem with remapIndexes in the presence of undefined item types
-        - duplicate entries in modifiedIndexesList
 
     TODO:
         - cradle can contain cells with no cache entry - check for consequences
