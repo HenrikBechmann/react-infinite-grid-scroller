@@ -150,9 +150,7 @@ export default class ServiceHandler {
     */    
     public remapIndexes = (changeMap) => { // index => itemID
 
-        // console.log('remapIndexes: changeMap', changeMap)
-
-        if (changeMap.size == 0) return [[],true] // nothing to do
+        if (changeMap.size == 0) return [] // nothing to do
 
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
@@ -168,7 +166,9 @@ export default class ServiceHandler {
         const changeIndexToItemIDMap = new Map()
         const errorEntriesMap = new Map()
 
-        // filter out inoperable indexes and itemIDs
+        // =====================[ PREPARATION ]======================
+
+        // ------------ filter out inoperable indexes and itemIDs ------------
 
         changeMap.forEach((itemID, index) =>{
 
@@ -243,16 +243,16 @@ export default class ServiceHandler {
 
             })
 
-            const duplicatesToDeleteList = []
+            const duplicatesToRemoveList = []
             changeIndexToItemIDMap.forEach((itemID, index) => {
 
                 if (duplicateItemsMap.has(itemID)) {
-                    duplicatesToDeleteList.push(index)
+                    duplicatesToRemoveList.push(index)
                 }
 
             })
 
-            duplicatesToDeleteList.forEach((index)=>{
+            duplicatesToRemoveList.forEach((index)=>{
 
                 const itemID = changeIndexToItemIDMap.get(index)
                 const count = duplicateItemsMap.get(itemID)
@@ -264,22 +264,27 @@ export default class ServiceHandler {
 
         }
 
-        // capture map before changes, from list of changes and list of indexes to be deleted
+        // ------------ capture map before changes ----------
+        // ... this map is used later to identify orphaned item and index cache records for deletion
+
+        // from the list of changes
+        // both sides of change map...
         const originalMap = new Map() // index => itemID; before change
         changeIndexToItemIDMap.forEach((itemID, index)=>{
 
-            originalMap.set(index,indexToItemIDMap.get(index))
-            originalMap.set(metadataMap.get(itemID).index,itemID)
+            originalMap.set(index,indexToItemIDMap.get(index)) // index to be mapped
+            originalMap.set(metadataMap.get(itemID).index,itemID) // target itemID
 
         })
 
+        // ... and from the list of indexes to be deleted
         indexesToDeleteList.forEach((index) => {
 
             originalMap.set(index, indexToItemIDMap.get(index))
 
         })
 
-        // console.log('originalIndexToItemIDMap',originalMap)
+        // ======================[ CACHE OPERATIONS ]================
 
         // --------------- delete listed indexes ---------
         // for indexes set to null or undefined
@@ -296,7 +301,7 @@ export default class ServiceHandler {
 
         }
 
-        // ----------- apply filtered changes to cache index and itemID maps ----------
+        // ----------- apply filtered changes to cache index map and itemID map ----------
         // at this point every remaining index listed will change its mapping
 
         const processedMap = new Map() // index => itemID; change has been applied
@@ -313,37 +318,41 @@ export default class ServiceHandler {
 
         })
 
-        // look for index and item orphans
-        // if the original item index has not changed, then it has not been remapped, 
+        // -------------- look for (and delete) item and index orphans --------------------
+        // if the original item's index has not changed, then it has not been remapped, 
         //     it is orphaned, and the item is deleted
-        // if the item's index has changed, but the original item index's still points to the item,
+        // if the item's index has changed, but the original item index map still points to the item,
         //     then the index is orphaned (duplicate), and deleted
+
         const deletedItemIDToIndexMap = new Map() // index => itemID; orphaned index
         const deletedIndexToItemIDMap = new Map()
 
         originalMap.forEach((originalItemID, originalItemIDIndex) => {
-            // console.log('originalItemIDIndex, originalItemID', originalItemIDIndex, originalItemID)
+
             const finalItemIDIndex = metadataMap.get(originalItemID).index
-            // console.log('originalMap: originalItemID, originalIndex, finalItemIDIndex',originalItemID, originalItemIDIndex, finalItemIDIndex)
 
             if (originalItemIDIndex == finalItemIDIndex) { // not remapped, therefore orphaned
+
                 deletedItemIDToIndexMap.set(originalItemID, originalItemIDIndex)
-                // console.log('deleting orphaned item', originalItemID)
+
                 metadataMap.delete(originalItemID)
+
             } else { // remapped, check for orphaned index
+
                 if (indexToItemIDMap.has(originalItemIDIndex)) {
+
                     const finalItemID = indexToItemIDMap.get(originalItemIDIndex)
+
                     if (finalItemID == originalItemID) { // the index has not been remapped, therefore orphaned
+
                         deletedIndexToItemIDMap.set(originalItemIDIndex, originalItemID)
+
                         indexToItemIDMap.delete(originalItemIDIndex)
+
                     }
                 }
             }
         })
-
-
-        // console.log('deletedItemIDToIndexMap',deletedItemIDToIndexMap)
-        // console.log('deletedIndexToItemIDMap',deletedIndexToItemIDMap)
 
         // refresh the modified cache
         cacheHandler.cacheProps.modified = true
@@ -351,16 +360,12 @@ export default class ServiceHandler {
 
         // ------------- apply changes to extant cellFrames ------------
 
+        // these are used to reconcile cradle cellFrames, and also for return information
         const processedList = Array.from(processedMap.keys())
         const deletedItemsIndexList = Array.from(deletedItemIDToIndexMap.values())
-        const deletedItemsIDList = Array.from(deletedItemIDToIndexMap.keys())
         const deletedIndexesList = Array.from(deletedIndexToItemIDMap.keys())
-
-        // console.log('processedList, orphanedIndexList, deletedItemsIDList, deletedIndexesList',
-        //     processedList, 
-        //     deletedItemsIndexList, 
-        //     deletedItemsIDList,
-        //     deletedIndexesList)
+        // for return information...
+        const deletedItemsIDList = Array.from(deletedItemIDToIndexMap.keys()) 
 
         let modifiedIndexesList = 
                 processedList.concat(
@@ -371,11 +376,11 @@ export default class ServiceHandler {
 
         modifiedIndexesList = Array.from(new Set(modifiedIndexesList.values())) // remove duplicates
 
-        // console.log('compacted modifiedIndexesList',modifiedIndexesList)
-
         contentHandler.reconcileCellFrames(modifiedIndexesList)
 
         stateHandler.setCradleState('applycellframechanges')
+
+        // ---------- returns for user information --------------------
 
         return [
 
