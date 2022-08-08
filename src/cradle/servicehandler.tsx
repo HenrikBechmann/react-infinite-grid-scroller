@@ -192,7 +192,7 @@ export default class ServiceHandler {
 
                 } else if (indexToItemIDMap.get(index) == itemID) {
 
-                    errorEntriesMap.set(index, 'target itemID has not changed')
+                    errorEntriesMap.set(index, 'target itemID ${itemID} has not changed')
 
                 } else if (!metadataMap.has(itemID)) {
 
@@ -321,7 +321,8 @@ export default class ServiceHandler {
         const deletedItemIDToIndexMap = new Map() // index => itemID; orphaned index
         const deletedIndexToItemIDMap = new Map()
 
-        originalMap.forEach((originalItemIDIndex, originalItemID) => {
+        originalMap.forEach((originalItemID, originalItemIDIndex) => {
+            // console.log('originalItemIDIndex, originalItemID', originalItemIDIndex, originalItemID)
             const finalItemIDIndex = metadataMap.get(originalItemID).index
             // console.log('originalMap: originalItemID, originalIndex, finalItemIDIndex',originalItemID, originalItemIDIndex, finalItemIDIndex)
 
@@ -361,12 +362,16 @@ export default class ServiceHandler {
         //     deletedItemsIDList,
         //     deletedIndexesList)
 
-        const modifiedIndexesList = 
+        let modifiedIndexesList = 
                 processedList.concat(
                     indexesToDeleteList, 
                     deletedItemsIndexList, 
                     deletedIndexesList
                 )
+
+        modifiedIndexesList = Array.from(new Set(modifiedIndexesList.values())) // remove duplicates
+
+        // console.log('compacted modifiedIndexesList',modifiedIndexesList)
 
         contentHandler.reconcileCellFrames(modifiedIndexesList)
 
