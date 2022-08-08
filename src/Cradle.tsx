@@ -1139,14 +1139,14 @@ const Cradle = ({
     return <CradleContext.Provider value = {contextvalueRef.current}>
 
         {(((cradleState == 'repositioningRender') || 
-            (cradleState == 'repositioningContinuation')) && useScrollTracker)?
-            <ScrollTracker 
+            (cradleState == 'repositioningContinuation')))?
+            useScrollTracker?<ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 
                 offset = {scrollTrackerArgs.scrollAxisReferenceIndex} 
                 listsize = {scrollTrackerArgs.listsize}
                 styles = {scrollTrackerArgs.styles}
-            />:
+            />:null:
             <div 
                 data-type = 'cradle-axis'
                 style = {cradleAxisStyle} 
