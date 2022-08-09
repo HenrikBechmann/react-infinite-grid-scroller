@@ -146,7 +146,8 @@ export default class ServiceHandler {
 
         const { 
 
-            metadataMap, // itemID to portal data, including index
+            metadataMap, // itemID to component data, including index
+            portalMap, // twinned with metadataMap for portal
             indexToItemIDMap // index to itemID
 
         } = cacheHandler.cacheProps 
@@ -328,6 +329,7 @@ export default class ServiceHandler {
                 deletedItemIDToIndexMap.set(originalItemID, originalItemIDIndex)
 
                 metadataMap.delete(originalItemID)
+                portalMap.delete(originalItemID)
 
             } else { // remapped, check for orphaned index
 
