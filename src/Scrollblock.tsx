@@ -38,7 +38,7 @@ const Scrollblock = ({
         const abortController = new AbortController()
 
         return () => {
-            abortController.abort()
+            abortController.abort() // defensive
         }
 
     },[])

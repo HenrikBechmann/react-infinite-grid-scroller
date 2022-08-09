@@ -870,14 +870,17 @@ export const PortalList = ({ cacheProps }) => {
         cacheProps.setListState = ()=>{
 
             portalArrayRef.current = cacheProps.portalList
-            isMountedRef.current && setPortalList(counter++)
+
+            isMountedRef.current && setPortalList(counter++) // light contents
 
         }
 
         return () => {
+
             isMountedRef.current = false
-            // cachedivRef.current?.remove()
-            abortController.abort()
+
+            abortController.abort() // defensive
+
         }
 
     },[]) 

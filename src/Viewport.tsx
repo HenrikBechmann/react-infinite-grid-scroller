@@ -51,7 +51,7 @@ const Viewport = ({
         return () => {
 
             isMountedRef.current = false
-            abortController.abort()
+            abortController.abort()  // defensive
         }
 
     },[])

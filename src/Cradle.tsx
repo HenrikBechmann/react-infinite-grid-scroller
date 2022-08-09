@@ -64,7 +64,7 @@ const Cradle = ({
 
         const abortController = new AbortController()
         return () => {
-            abortController.abort()
+            abortController.abort()  // defensive
         }
 
     },[])

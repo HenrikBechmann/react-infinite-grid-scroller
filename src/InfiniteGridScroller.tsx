@@ -220,7 +220,7 @@ const InfiniteGridScroller = (props) => {
 
             // element?.remove()
 
-            abortController.abort()
+            abortController.abort() // defensive
             
         }
     },[])

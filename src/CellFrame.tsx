@@ -72,7 +72,7 @@ const CellFrame = ({
 
             cacheHandler.removeRequestedPortal(index)
 
-            abortController.abort()
+            abortController.abort() // defensive
 
         }
 
