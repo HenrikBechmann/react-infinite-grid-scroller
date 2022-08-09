@@ -7,7 +7,7 @@
 
 */
 
-import React, {useContext, useRef, useCallback, useLayoutEffect, useState, useMemo} from 'react'
+import React, {useContext, useRef, useCallback, useEffect, useLayoutEffect, useState, useMemo} from 'react'
 
 import { ViewportInterrupt } from './Viewport'
 
@@ -20,6 +20,7 @@ const Scrollblock = ({
 }) => {
 
     // console.log('==> RUNNING Scrollblock','-'+scrollerID+'-')
+    // console.log('performance.memory',performance['memory'])
 
     const {
         orientation,
@@ -31,6 +32,16 @@ const Scrollblock = ({
     } = gridSpecs
 
     // -------------------------[ context and state ]-------------------------
+
+    useEffect(()=>{
+
+        const abortController = new AbortController()
+
+        return () => {
+            abortController.abort()
+        }
+
+    },[])
 
     const viewportInterruptProperties = useContext(ViewportInterrupt)
 

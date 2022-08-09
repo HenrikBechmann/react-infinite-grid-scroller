@@ -60,6 +60,15 @@ const Cradle = ({
 
     if (listsize == 0) return null// nothing to do
 
+    useEffect(()=>{
+
+        const abortController = new AbortController()
+        return () => {
+            abortController.abort()
+        }
+
+    },[])
+
     // ========================[ DATA SETUP ]========================
 
     // unpack gridSpecs

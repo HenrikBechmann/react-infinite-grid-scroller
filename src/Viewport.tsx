@@ -37,6 +37,7 @@ const Viewport = ({
     const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, ready
 
     // console.log('==> RUNNING Viewport','-'+scrollerID+'-', viewportState)
+    // console.log('performance.memory',performance['memory'])
 
     const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
     viewportStateRef.current = viewportState
@@ -45,8 +46,13 @@ const Viewport = ({
 
     useEffect(() => {
 
+        const abortController = new AbortController()
         // unmount
-        return () => {isMountedRef.current = false}
+        return () => {
+
+            isMountedRef.current = false
+            abortController.abort()
+        }
 
     },[])
 

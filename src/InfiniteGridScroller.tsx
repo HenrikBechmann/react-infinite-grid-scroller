@@ -42,7 +42,6 @@
 
         - create random loading delays in test ui
         - provide way to attempt reload of a single cell (change instanceID)
-        - test for memory leaks with Chrome's window.performance.memory property
         - test for two root portals
         - calc minwidth by form factor
         - review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
@@ -208,8 +207,16 @@ const InfiniteGridScroller = (props) => {
     const cacheHandlerRef = useRef(null)
 
     useEffect (() => {
+        const abortController = new AbortController()
+
         scrollerSessionIDRef.current = globalScrollerID++
         cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, setListsize, listsizeRef)
+
+        return () => {
+
+            abortController.abort()
+            
+        }
     },[])
 
     const listsizeRef = useRef(estimatedListSize)
