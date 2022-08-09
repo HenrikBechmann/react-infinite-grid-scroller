@@ -55,6 +55,8 @@ const CellFrame = ({
 
     const errorRef = useRef(false)
 
+    const messageRef = useRef(null)
+
     // for unmount
     useEffect(()=>{
 
@@ -81,7 +83,8 @@ const CellFrame = ({
     const customplaceholder = useMemo(() => {
 
             return placeholder?
-                React.createElement(placeholder, {index, listsize, error:errorRef.current}):
+                React.createElement(placeholder, 
+                    {index, listsize, message:messageRef.current, error:errorRef.current}):
                 null
             
     },[index, placeholder,listsize, errorRef.current])
@@ -91,7 +94,12 @@ const CellFrame = ({
         const placeholder = 
             customplaceholder?
                 customplaceholder:
-                <Placeholder index = {index} listsize = {listsize} error = {errorRef.current}/>
+                <Placeholder 
+                    index = {index} 
+                    listsize = {listsize} 
+                    message = {messageRef.current}
+                    error = {errorRef.current}
+                />
 
         return placeholder
 
@@ -154,7 +162,13 @@ const CellFrame = ({
 
                 if (cached) {
 
-                    portalDataRef.current = cacheHandler.getPortal(itemID)
+                    messageRef.current = '(retrieving from cache)'
+
+                    // console.log(messageRef.current)
+
+                    const portalRecord = cacheHandler.getPortal(itemID)
+
+                    portalDataRef.current = portalRecord
 
                     portalNodeRef.current = portalDataRef.current.portalNode
 
@@ -162,7 +176,29 @@ const CellFrame = ({
 
                     setFrameState('inserting')
 
+                    // distribute processing a bit
+                    // if (isMountedRef.current) {
+                    //     Promise.resolve(cacheHandler.getPortal(itemID)).then
+                    //     (
+                    //         (portalRecord) => {
+
+                    //             portalDataRef.current = portalRecord
+
+                    //             portalNodeRef.current = portalDataRef.current.portalNode
+
+                    //             portalDataRef.current.isReparentingRef.current = true
+
+                    //             setFrameState('inserting')
+
+                    //         }
+                    //     )
+                    // }
+
                 } else {
+
+                    messageRef.current = '(loading)'
+
+                    // console.log(messageRef.current)
 
                     setFrameState('waiting')
 

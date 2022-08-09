@@ -18,6 +18,9 @@
 
     BUGS: 
 
+        - unmounted component error in CellFrame with keepload caching
+        - preload on both master and nested lists fails to refresh - leads to blank lists
+
     TODO:
 
         - review state change chains in cradle

@@ -3,7 +3,7 @@
 
 import React, {useRef } from 'react'
 
-const Placeholder = ({index, listsize, error}) => {
+const Placeholder = ({index, listsize, message, error}) => {
 
     const stylesRef = useRef({
         position:'relative',
@@ -29,9 +29,11 @@ const Placeholder = ({index, listsize, error}) => {
 
     // console.log('placeholder index, error value',index, error.message)
 
+    message = message ?? '(loading...)'
+
     return <div style = {stylesRef.current}>
         { !error?
-            <div style = {itemStylesRef.current}>{index + 1}/{listsize} (loading...)</div>:
+            <div style = {itemStylesRef.current}>{index + 1}/{listsize} {message}</div>:
             <div style = {itemStylesRef.current}>item is not available ({error.message})</div>
         }
         
