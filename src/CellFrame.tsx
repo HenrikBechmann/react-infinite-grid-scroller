@@ -42,7 +42,7 @@ const CellFrame = ({
     const frameStateRef = useRef(null)
     frameStateRef.current = frameState
 
-    console.log('==> RUNNING CellFrame','-'+scrollerID+'-','['+itemID+']','_'+instanceID+'_',frameState)
+    // console.log('==> RUNNING CellFrame','-'+scrollerID+'-','['+itemID+']','_'+instanceID+'_',frameState)
 
     const frameRef = useRef(null)
 
@@ -166,8 +166,8 @@ const CellFrame = ({
                 const itemID = itemIDRef.current
                 const cached = cacheHandler.hasPortal(itemID)
 
-                console.log('==> CellFrame getusercontent: scrollerID, itemID, instanceID, cached',
-                    '-'+scrollerID+'-', '['+itemID+']','_'+instanceID+'_', cached)
+                // console.log('==> CellFrame getusercontent: scrollerID, itemID, instanceID, cached',
+                //     '-'+scrollerID+'-', '['+itemID+']','_'+instanceID+'_', cached)
 
                 if (cached) {
 

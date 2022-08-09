@@ -997,7 +997,11 @@ const Cradle = ({
 
                 contentHandler.setCradleContent( cradleState )
 
-                hasBeenRenderedRef.current = true
+                if (cradleState != 'finishpreload') {
+
+                    hasBeenRenderedRef.current = true
+                    
+                }
 
                 const { cache } = cradleInheritedPropertiesRef.current
                 if (cache == 'cradle') {

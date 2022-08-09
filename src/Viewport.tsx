@@ -36,7 +36,7 @@ const Viewport = ({
 
     const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, ready
 
-    console.log('==> RUNNING Viewport','-'+scrollerID+'-', viewportState)
+    // console.log('==> RUNNING Viewport','-'+scrollerID+'-', viewportState)
     // console.log('performance.memory',performance['memory'])
 
     const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
@@ -191,7 +191,7 @@ const Viewport = ({
             isResizing:isResizingRef.current,
         }
 
-        console.log('viewport new localViewportData', '-'+scrollerID+'-',localViewportData)
+        // console.log('viewport new localViewportData', '-'+scrollerID+'-',localViewportData)
 
         // trigger context change with new object
         const viewportdataobject = Object.assign({},viewportInterruptPropertiesRef.current, localViewportData) 
