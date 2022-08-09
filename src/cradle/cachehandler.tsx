@@ -861,7 +861,7 @@ export const PortalList = ({ cacheProps }) => {
     const [portalList, setPortalList] = useState(null)
     const isMountedRef = useRef(true)
     const portalArrayRef = useRef(null)
-    const cachedivRef = useRef(null)
+    // const cachedivRef = useRef(null)
 
     useEffect(()=>{
 
@@ -876,15 +876,12 @@ export const PortalList = ({ cacheProps }) => {
 
         return () => {
             isMountedRef.current = false
-            cachedivRef.current?.remove()
+            // cachedivRef.current?.remove()
             abortController.abort()
         }
 
     },[]) 
 
-    return <div ref = {cachedivRef}>
+    return portalArrayRef.current
 
-        {portalArrayRef.current}
-
-    </div>
 }

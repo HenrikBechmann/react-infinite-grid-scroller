@@ -20,6 +20,7 @@
 
         - unmounted component error in CellFrame with keepload caching
         - preload on both master and nested lists fails to refresh - leads to blank lists
+        - switch from keepload to cradle caching fails to release memory
 
     TODO:
 
@@ -164,7 +165,7 @@ const InfiniteGridScroller = (props) => {
     const gridSpecsRef = useRef(gridSpecs)
     const stylesRef = useRef(styles)
     const callbacksRef = useRef(callbacks)
-    const cacheRef = useRef(null)
+    // const cacheRef = useRef(null)
 
     let {
         showAxis,
@@ -215,9 +216,9 @@ const InfiniteGridScroller = (props) => {
 
         return () => {
 
-            const element = cacheRef?.current
+            // const element = cacheRef?.current
 
-            element?.remove()
+            // element?.remove()
 
             abortController.abort()
             
@@ -305,7 +306,7 @@ const InfiniteGridScroller = (props) => {
                 />
             </Scrollblock>
         </Viewport>}
-        {(scrollerState != 'setup') && <div ref = {cacheRef} data-type = 'cacheroot' style = { cacherootstyle }>
+        {(scrollerState != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
             <PortalList cacheProps = {cacheHandlerRef.current.cacheProps}/>
         </div>}
     </ErrorBoundary>
