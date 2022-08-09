@@ -20,6 +20,7 @@
 
         - synch of portalMap with metadataMap causes InPortal error
             - reproduce with load generic followed by test remap indexes
+            - caused by portalMap.delete x 2 to match metadataMap.delete
         - opening blockscrollpos is wrong for root list
         - viewportelementscrollpos is NaN
 
