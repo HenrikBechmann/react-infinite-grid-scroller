@@ -114,7 +114,9 @@ export class CacheHandler {
 
     }
 
-    pareCacheToMax = (cacheMax, cradleIndexList, deleteListCallback) => {
+    pareCacheToMax = (cacheMax, cradleIndexList, deleteListCallback, scrollerID = undefined) => {
+
+        console.log('pareCacheToMax: cacheMax, cradleIndexList','-'+scrollerID+'-',cacheMax, cradleIndexList)
 
         const modelLength = cradleIndexList.length
 
@@ -246,6 +248,7 @@ export class CacheHandler {
 
         Promise.allSettled(promises).then(
             ()=>{
+                this.cacheProps.modified = true
                 this.renderPortalList()
                 finalCallback()
             }

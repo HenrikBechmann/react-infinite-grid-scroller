@@ -95,7 +95,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // console.log('==> RUNNING Cradle','-'+scrollerID+'-', cradleState)
+    console.log('==> RUNNING Cradle','-'+scrollerID+'-', cradleState)
     // console.log('performance.memory',performance['memory'])
 
     // flags
@@ -366,16 +366,16 @@ const Cradle = ({
 
     const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
 
-    // console.log(
-    //     '**>> -'+scrollerID+'-', cradleState,'\n',
-    //     'isInPortal, viewportwidth, viewportheight, blockScrollPos, viewportElementScrollPos\n', 
-    //     isInPortal, viewportwidth, viewportheight, scaffoldHandler.cradlePositionData.blockScrollPos)
+    console.log(
+        '**>> -'+scrollerID+'-', cradleState,'\n',
+        'isInPortal, viewportwidth, viewportheight, blockScrollPos, blockScrollPos\n', 
+        isInPortal, viewportwidth, viewportheight, scaffoldHandler.cradlePositionData.blockScrollPos)
 
-    // console.log('- isCacheChange, isCachingUnderway, isCachedRef.current, wasCachedRef.current\n',
-    //     isCacheChange, isCachingUnderway, isCachedRef.current, wasCachedRef.current)
+    console.log('- isCacheChange, isCachingUnderway, isCachedRef.current, wasCachedRef.current\n',
+        isCacheChange, isCachingUnderway, isCachedRef.current, wasCachedRef.current)
 
-    // console.log('- viewportInterruptProperties.isReparentingRef?.current, viewportInterruptProperties.isResizing, orientation\n',
-    //     viewportInterruptProperties.isReparentingRef?.current, viewportInterruptProperties.isResizing, orientation)
+    console.log('- viewportInterruptProperties.isReparentingRef?.current, viewportInterruptProperties.isResizing, orientation\n',
+        viewportInterruptProperties.isReparentingRef?.current, viewportInterruptProperties.isResizing, orientation)
 
     if (
         isCacheChange || 
@@ -602,7 +602,7 @@ const Cradle = ({
 
         if (cache == 'preload') {
 
-            setCradleState('startpreload')
+            setCradleState('dopreload')
 
             return
 
@@ -630,7 +630,7 @@ const Cradle = ({
 
                 const cacheMax = cradleParameters.cradleInheritedPropertiesRef.current.cacheMax
 
-                if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, dListCallback)) {
+                if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, dListCallback, scrollerID)) {
                     cacheHandler.cacheProps.modified = true
                     cacheHandler.renderPortalList()
                 }
@@ -709,7 +709,7 @@ const Cradle = ({
 
         if (isCachedRef.current) return
 
-        const signals = interruptHandler.signals
+        // const signals = interruptHandler.signals
 
         interruptHandler.pauseInterrupts()
 
@@ -850,15 +850,15 @@ const Cradle = ({
                 break
 
             }
-            case 'startpreload':{
+            // case 'startpreload':{
 
-                // register new array id for Object.is to trigger react re-processing
-                // cradleContent.headDisplayComponents = []
-                // cradleContent.tailDisplayComponents = []
-                setCradleState('dopreload')
+            //     // register new array id for Object.is to trigger react re-processing
+            //     // cradleContent.headDisplayComponents = []
+            //     // cradleContent.tailDisplayComponents = []
+            //     setCradleState('dopreload')
 
-                break
-            }
+            //     break
+            // }
 
             case 'dopreload': {
 
@@ -878,7 +878,7 @@ const Cradle = ({
 
                     }
 
-                    if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, dListCallback)) {
+                    if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, dListCallback, scrollerID)) {
                         cacheHandler.cacheProps.modified = true
                         cacheHandler.renderPortalList()
                     }
