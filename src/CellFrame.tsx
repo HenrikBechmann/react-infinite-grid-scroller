@@ -80,7 +80,7 @@ const CellFrame = ({
 
     useEffect(()=>{
 
-        setFrameState('getusercontent')
+        if (isMountedRef.current) setFrameState('getusercontent')
 
     },[itemID])
 
@@ -175,17 +175,19 @@ const CellFrame = ({
                     // setFrameState('waiting')
                     // setTimeout(()=>{
 
-                        // if (!isMountedRef.current) return
+                        if (!isMountedRef.current) {
 
-                        const portalRecord = cacheHandler.getPortal(itemID)
+                            const portalRecord = cacheHandler.getPortal(itemID)
 
-                        portalDataRef.current = portalRecord
+                            portalDataRef.current = portalRecord
 
-                        portalNodeRef.current = portalDataRef.current.portalNode
+                            portalNodeRef.current = portalDataRef.current.portalNode
 
-                        portalDataRef.current.isReparentingRef.current = true
+                            portalDataRef.current.isReparentingRef.current = true
 
-                        setFrameState('inserting')
+                            setFrameState('inserting')
+                            
+                        }
 
                     // },1)
 

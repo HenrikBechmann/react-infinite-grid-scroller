@@ -18,17 +18,13 @@
 
     BUGS: 
 
-        - unmounted component error in CellFrame with keepload caching
         - preload on both master and nested lists fails to refresh - leads to blank lists
-        - switch from keepload to cradle caching fails to release memory
 
     TODO:
 
         - review state change chains in cradle
         - try to reduce need to run renderportallist - try some kind of pagination/grouping
         
-        - implement named states in scrollblock?
-
         - test changing all gridscroller parameters
             test config size edge cases - over and under sized cells
 
@@ -215,10 +211,6 @@ const InfiniteGridScroller = (props) => {
         cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, setListsize, listsizeRef)
 
         return () => {
-
-            // const element = cacheRef?.current
-
-            // element?.remove()
 
             abortController.abort() // defensive
             
