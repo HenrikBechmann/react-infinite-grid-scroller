@@ -131,7 +131,7 @@ export default class ScrollHandler {
 
         this.isScrolling = false
 
-        const {stateHandler, contentHandler, cacheHandler, serviceHandler} = 
+        const {stateHandler, contentHandler, serviceHandler} = 
             this.cradleParameters.handlersRef.current
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current

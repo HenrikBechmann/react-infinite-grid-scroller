@@ -1,8 +1,6 @@
 // servicehandler.tsx
 // copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
 
-import React from 'react'
-
 // ServiceHandler handles client service requests
 export default class ServiceHandler {
 
@@ -17,7 +15,7 @@ export default class ServiceHandler {
            deleteListCallback, // (reason, deleteList)
            changeListsizeCallback, // (newlistsize)
            itemExceptionsCallback, // (index, itemID, returnvalue, location, error)
-           repositioningFlagCallback, // (index)
+           repositioningFlagCallback, // (flag) // boolean
            
        } = cradleParameters.externalCallbacksRef.current
 
@@ -31,8 +29,6 @@ export default class ServiceHandler {
        }
 
        this.callbacks = callbacks
-
-       // console.log('serviceHandler callbacks', callbacks, this.callbacks)
 
     }
 
@@ -80,6 +76,7 @@ export default class ServiceHandler {
         const { deleteListCallback, changeListsizeCallback } = this.callbacks
 
         const { listsize:currentlistsize } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         let dListCallback
         if (deleteListCallback) {
@@ -96,7 +93,7 @@ export default class ServiceHandler {
             changeListsizeCallback
         )
 
-        if (newlistsize > currentlistsize) {
+        if ((cache == 'preload') && (newlistsize > currentlistsize)) {
             stateHandler.setCradleState('dopreload')
         }
 
@@ -140,19 +137,9 @@ export default class ServiceHandler {
 
     }
 
-    /*
-        checks for
-        - duplicates
-        - typeID is string
-        - typeID is null or undefined
-        - Number.isNaN, Number.isInteger
-
-    */    
     public remapIndexes = (changeMap) => { // index => itemID
 
-        // console.log('remapIndexes: changeMap', changeMap)
-
-        if (changeMap.size == 0) return [[],true] // nothing to do
+        if (changeMap.size == 0) return [] // nothing to do
 
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
@@ -168,7 +155,9 @@ export default class ServiceHandler {
         const changeIndexToItemIDMap = new Map()
         const errorEntriesMap = new Map()
 
-        // filter out inoperable indexes and itemIDs
+        // =====================[ PREPARATION ]======================
+
+        // ------------ filter out inoperable indexes and itemIDs ------------
 
         changeMap.forEach((itemID, index) =>{
 
@@ -192,7 +181,7 @@ export default class ServiceHandler {
 
                 } else if (indexToItemIDMap.get(index) == itemID) {
 
-                    errorEntriesMap.set(index, 'target itemID has not changed')
+                    errorEntriesMap.set(index, `target itemID ${itemID} has not changed`)
 
                 } else if (!metadataMap.has(itemID)) {
 
@@ -238,21 +227,23 @@ export default class ServiceHandler {
             itemIDCountMap.forEach((count,itemID)=>{
 
                 if (count > 1) {
+
                     duplicateItemsMap.set(itemID, count)
+                    
                 }
 
             })
 
-            const duplicatesToDeleteList = []
+            const duplicatesToRemoveList = []
             changeIndexToItemIDMap.forEach((itemID, index) => {
 
                 if (duplicateItemsMap.has(itemID)) {
-                    duplicatesToDeleteList.push(index)
+                    duplicatesToRemoveList.push(index)
                 }
 
             })
 
-            duplicatesToDeleteList.forEach((index)=>{
+            duplicatesToRemoveList.forEach((index)=>{
 
                 const itemID = changeIndexToItemIDMap.get(index)
                 const count = duplicateItemsMap.get(itemID)
@@ -264,27 +255,32 @@ export default class ServiceHandler {
 
         }
 
-        // capture map before changes, from list of changes and list of indexes to be deleted
+        // ------------ capture map before changes ----------
+        // ... this map is used later to identify orphaned item and index cache records for deletion
+
+        // from the list of changes
+        // both sides of change map...
         const originalMap = new Map() // index => itemID; before change
         changeIndexToItemIDMap.forEach((itemID, index)=>{
 
-            originalMap.set(index,indexToItemIDMap.get(index))
-            originalMap.set(metadataMap.get(itemID).index,itemID)
+            originalMap.set(index,indexToItemIDMap.get(index)) // index to be mapped
+            originalMap.set(metadataMap.get(itemID).index,itemID) // target itemID
 
         })
 
+        // ... and from the list of indexes to be deleted
         indexesToDeleteList.forEach((index) => {
 
             originalMap.set(index, indexToItemIDMap.get(index))
 
         })
 
-        // console.log('originalIndexToItemIDMap',originalMap)
+        // ======================[ CACHE OPERATIONS ]================
 
         // --------------- delete listed indexes ---------
         // for indexes set to null or undefined
         // associated itemID's will be orphaned, but could be remapped.
-        // resolved with orphanedItemsIDMap below
+        // orphans are resolved below
 
         if (indexesToDeleteList.length) {
 
@@ -296,9 +292,10 @@ export default class ServiceHandler {
 
         }
 
-        // ----------- apply filtered changes to cache index and itemID maps ----------
+        // ----------- apply filtered changes to cache index map and itemID map ----------
         // at this point every remaining index listed will change its mapping
 
+        // TODO just need an index list here: processedIndexList = []
         const processedMap = new Map() // index => itemID; change has been applied
 
         // make changes
@@ -313,36 +310,41 @@ export default class ServiceHandler {
 
         })
 
-        // look for index and item orphans
-        // if the original item index has not changed, then it has not been remapped, 
+        // -------------- look for and delete item and index orphans --------------------
+        // if the original item's index has not changed, then it has not been remapped, 
         //     it is orphaned, and the item is deleted
-        // if the item's index has changed, but the original item index's still points to the item,
+        // if the item's index has changed, but the original item index map still points to the item,
         //     then the index is orphaned (duplicate), and deleted
+
         const deletedItemIDToIndexMap = new Map() // index => itemID; orphaned index
         const deletedIndexToItemIDMap = new Map()
 
-        originalMap.forEach((originalItemIDIndex, originalItemID) => {
+        originalMap.forEach((originalItemID, originalItemIDIndex) => {
+
             const finalItemIDIndex = metadataMap.get(originalItemID).index
-            // console.log('originalMap: originalItemID, originalIndex, finalItemIDIndex',originalItemID, originalItemIDIndex, finalItemIDIndex)
 
             if (originalItemIDIndex == finalItemIDIndex) { // not remapped, therefore orphaned
+
                 deletedItemIDToIndexMap.set(originalItemID, originalItemIDIndex)
-                // console.log('deleting orphaned item', originalItemID)
+
                 metadataMap.delete(originalItemID)
+
             } else { // remapped, check for orphaned index
+
                 if (indexToItemIDMap.has(originalItemIDIndex)) {
+
                     const finalItemID = indexToItemIDMap.get(originalItemIDIndex)
+
                     if (finalItemID == originalItemID) { // the index has not been remapped, therefore orphaned
+
                         deletedIndexToItemIDMap.set(originalItemIDIndex, originalItemID)
+
                         indexToItemIDMap.delete(originalItemIDIndex)
+
                     }
                 }
             }
         })
-
-
-        // console.log('deletedItemIDToIndexMap',deletedItemIDToIndexMap)
-        // console.log('deletedIndexToItemIDMap',deletedIndexToItemIDMap)
 
         // refresh the modified cache
         cacheHandler.cacheProps.modified = true
@@ -350,35 +352,35 @@ export default class ServiceHandler {
 
         // ------------- apply changes to extant cellFrames ------------
 
-        const processedList = Array.from(processedMap.keys())
-        const deletedItemsIndexList = Array.from(deletedItemIDToIndexMap.values())
-        const deletedItemsIDList = Array.from(deletedItemIDToIndexMap.keys())
-        const deletedIndexesList = Array.from(deletedIndexToItemIDMap.keys())
+        // these are used to reconcile cradle cellFrames, and also for return information
+        const processedIndexList = Array.from(processedMap.keys())
+        const deletedOrphanedItemIndexList = Array.from(deletedItemIDToIndexMap.values())
+        const deletedOrphanedIndexList = Array.from(deletedIndexToItemIDMap.keys())
+        // for return information...
+        const deletedOrphanedItemIDList = Array.from(deletedItemIDToIndexMap.keys()) 
 
-        // console.log('processedList, orphanedIndexList, deletedItemsIDList, deletedIndexesList',
-        //     processedList, 
-        //     deletedItemsIndexList, 
-        //     deletedItemsIDList,
-        //     deletedIndexesList)
-
-        const modifiedIndexesList = 
-                processedList.concat(
+        let modifiedIndexList = 
+                processedIndexList.concat(
                     indexesToDeleteList, 
-                    deletedItemsIndexList, 
-                    deletedIndexesList
+                    deletedOrphanedItemIndexList, 
+                    deletedOrphanedIndexList
                 )
 
-        contentHandler.reconcileCellFrames(modifiedIndexesList)
+        modifiedIndexList = Array.from(new Set(modifiedIndexList.values())) // remove duplicates
+
+        contentHandler.reconcileCellFrames(modifiedIndexList)
 
         stateHandler.setCradleState('applycellframechanges')
 
+        // ---------- returns for user information --------------------
+
         return [
 
-            modifiedIndexesList, 
-            processedList, 
+            modifiedIndexList, 
+            processedIndexList, 
             indexesToDeleteList, 
-            deletedItemsIDList, 
-            deletedIndexesList,
+            deletedOrphanedItemIDList, 
+            deletedOrphanedIndexList,
             errorEntriesMap, 
             changeMap
 
@@ -386,8 +388,8 @@ export default class ServiceHandler {
 
     }
 
-    // returns true with moved indexes, otherwise false
     // move must be entirely within list bounds
+    // returns list of processed indexes
     public moveIndex = (toindex, fromindex, highrange = null) => {
 
         // ------------- define parameters ---------------
@@ -475,7 +477,8 @@ export default class ServiceHandler {
 
     }
 
-    // shared logic
+    // shared logic. Returns lists of items changed, and items replaced (new items for insert)
+    // this operation changes the listsize
     private insertRemoveIndex = (index, rangehighindex, increment) => {
 
         index = index ?? 0
@@ -484,9 +487,6 @@ export default class ServiceHandler {
         index = Math.max(0,index)
         rangehighindex = Math.max(rangehighindex, index)
 
-        // console.log('==> serviceHandler.insertRemoveIndex: index, rangehighindex, increment',
-        //     index, rangehighindex, increment)
-
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
 
@@ -494,9 +494,6 @@ export default class ServiceHandler {
 
         const [changeList, replaceList, rangeincrement] = 
             cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize)
-
-        // console.log('changeList, replaceList, rangeincrement',
-        //     changeList, replaceList, rangeincrement)
 
         cacheHandler.cacheProps.modified = true
         cacheHandler.renderPortalList()
@@ -509,7 +506,7 @@ export default class ServiceHandler {
 
         stateHandler.setCradleState('applycellframechanges')
 
-        const changecount = rangeincrement
+        const changecount = rangeincrement // semantics
         const newlistsize = listsize + changecount 
 
         this.setListsize(newlistsize)

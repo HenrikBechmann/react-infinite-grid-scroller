@@ -11,8 +11,6 @@ import Placeholder from './cellframe/Placeholder'
 
 import { CradleContext } from './Cradle'
 
-// const IDLECALLBACK_TIMEOUT = 4000 // TODO make cofigurable
-
 const CellFrame = ({
     orientation, 
     cellHeight, 
@@ -44,6 +42,8 @@ const CellFrame = ({
     const frameStateRef = useRef(null)
     frameStateRef.current = frameState
 
+    // console.log('==> RUNNING CellFrame','-'+scrollerID+'-','_'+instanceID+'_',frameState)
+
     const frameRef = useRef(null)
 
     const isMountedRef = useRef(true)
@@ -57,8 +57,12 @@ const CellFrame = ({
 
     const errorRef = useRef(false)
 
+    const messageRef = useRef(null)
+
     // for unmount
     useEffect(()=>{
+
+        const abortController = new AbortController()        
 
         return () => {
 
@@ -67,6 +71,8 @@ const CellFrame = ({
             cancelidlecallback(requestIdleCallbackIdRef.current)
 
             cacheHandler.removeRequestedPortal(index)
+
+            abortController.abort() // defensive
 
         }
 
@@ -83,19 +89,27 @@ const CellFrame = ({
     const customplaceholder = useMemo(() => {
 
             return placeholder?
-                React.createElement(placeholder, {index, listsize, error:errorRef.current}):
+                React.createElement(placeholder, 
+                    {index, listsize, message:messageRef.current, error:errorRef.current}):
                 null
             
     },[index, placeholder,listsize, errorRef.current])
 
     placeholderRef.current = useMemo(()=>{
-        // console.log('refreshing placeholder for index, listsize, customplaceholder', index, listsize, customplaceholder)
+
         const placeholder = 
             customplaceholder?
                 customplaceholder:
-                <Placeholder index = {index} listsize = {listsize} error = {errorRef.current}/>
+                <Placeholder 
+                    index = {index} 
+                    listsize = {listsize} 
+                    message = {messageRef.current}
+                    error = {errorRef.current}
+                />
+
         return placeholder
-    }, [index, customplaceholder, listsize, errorRef.current]);
+
+    }, [index, customplaceholder, listsize, messageRef.current, errorRef.current]);
 
     // ---------------- [ requestidlecallback config ] ------------------------
 
@@ -103,6 +117,7 @@ const CellFrame = ({
         window['requestIdleCallback']?
             window['requestIdleCallback']:
             requestIdleCallback
+
     const cancelidlecallback = 
         window['cancelIdleCallback']?
             window['cancelIdleCallback']:
@@ -153,15 +168,32 @@ const CellFrame = ({
 
                 if (cached) {
 
-                    portalDataRef.current = cacheHandler.getPortal(itemID)
+                    messageRef.current = '(retrieving from cache)'
 
-                    portalNodeRef.current = portalDataRef.current.portalNode
+                    // console.log(messageRef.current)
 
-                    portalDataRef.current.isReparentingRef.current = true
+                    // setFrameState('waiting')
+                    // setTimeout(()=>{
 
-                    setFrameState('inserting')
+                        // if (!isMountedRef.current) return
+
+                        const portalRecord = cacheHandler.getPortal(itemID)
+
+                        portalDataRef.current = portalRecord
+
+                        portalNodeRef.current = portalDataRef.current.portalNode
+
+                        portalDataRef.current.isReparentingRef.current = true
+
+                        setFrameState('inserting')
+
+                    // },1)
 
                 } else {
+
+                    messageRef.current = '(loading...)'
+
+                    // console.log(messageRef.current)
 
                     setFrameState('waiting')
 
@@ -174,10 +206,13 @@ const CellFrame = ({
                         try {
 
                             usercontent = await getItem(index, itemID)
+
                             if (usercontent === null) returnvalue = usercontent
 
                             if (usercontent === undefined) {
+
                                 error = new Error('host returned "undefined"')
+
                             }
 
                         } catch(e) {
@@ -190,14 +225,14 @@ const CellFrame = ({
                         if ((usercontent !== null) && (usercontent !== undefined)) {
 
                             if (!React.isValidElement(usercontent)) {
+
                                 returnvalue = usercontent
                                 usercontent = undefined
                                 error = new Error('invalid React element')
+                                
                             }
 
                         }
-
-                        // console.log('index, usercontent', index, usercontent)
 
                         if (isMountedRef.current) {
 
@@ -225,7 +260,6 @@ const CellFrame = ({
 
                             } else { // null or undefined
 
-                                // console.log('processing no-component index',index, usercontent)
                                 if (usercontent === null) {
                                     // truncate listsize at this index
                                     // console.log('cellFrame calling nullItemSetMaxListsize with index', index)

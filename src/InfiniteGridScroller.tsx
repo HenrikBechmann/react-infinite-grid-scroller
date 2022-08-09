@@ -17,20 +17,17 @@
         create demo site - github pages
 
     BUGS: 
-        - problem with remapIndexes in the presence of undefined item types
+
+        - unmounted component error in CellFrame with keepload caching
+        - preload on both master and nested lists fails to refresh - leads to blank lists
+        - switch from keepload to cradle caching fails to release memory
 
     TODO:
-        - cradle can contain cells with no cache entry - check for consequences
-        - rationalize calls to cacheHandler vs contentHandler or serviceHandler
-            - particularly for cache paring
-        - make sure cache is properly pared after setListSize
 
-        - rationalize cacheProps.modified
-
-        - review event cycles - they seem slower
-            - review state change chains in cradle
-            - try to reduce need to run renderportallist - try some kind of pagination/grouping
-        - check number of passes to scrollblock; consider implementing named states
+        - review state change chains in cradle
+        - try to reduce need to run renderportallist - try some kind of pagination/grouping
+        
+        - implement named states in scrollblock?
 
         - test changing all gridscroller parameters
             test config size edge cases - over and under sized cells
@@ -40,12 +37,12 @@
         - replace top/left with transformx/y
 
         ----------------
+        (after layout...)
         
         - prioritize fetch cells for visible cells
 
         - create random loading delays in test ui
         - provide way to attempt reload of a single cell (change instanceID)
-        - test for memory leaks with Chrome's window.performance.memory property
         - test for two root portals
         - calc minwidth by form factor
         - review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
@@ -133,8 +130,6 @@ const InfiniteGridScroller = (props) => {
         advanced = {}, // optional. technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
     } = props
 
-    // console.log('InfiniteGridScroller callbacks',callbacks)
-
     // avoid null
     styles = styles ?? {}
     callbacks = callbacks ?? {}
@@ -170,15 +165,18 @@ const InfiniteGridScroller = (props) => {
     const gridSpecsRef = useRef(gridSpecs)
     const stylesRef = useRef(styles)
     const callbacksRef = useRef(callbacks)
+    // const cacheRef = useRef(null)
 
     let {
         showAxis,
-        RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE,
+        VIEWPORT_RESIZE_TIMEOUT,
         IDLECALLBACK_TIMEOUT,
+        MAX_CACHE_OVER_RUN,
     } = advanced
 
-    RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE ?? 250
+    VIEWPORT_RESIZE_TIMEOUT = VIEWPORT_RESIZE_TIMEOUT ?? 250
     IDLECALLBACK_TIMEOUT = IDLECALLBACK_TIMEOUT ?? 4000
+    MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
     if (typeof showAxis != 'boolean') {
         showAxis = true
     }
@@ -194,7 +192,7 @@ const InfiniteGridScroller = (props) => {
 
     const scrollerID = scrollerSessionIDRef.current
 
-    // scrollerID && console.log('==> SCROLLER cache, scrollerState','-' + scrollerID + '-',cache, scrollerState)
+    // console.log('==> RUNNING RIGS','-'+scrollerID+'-', scrollerState)
 
     // satisfy React Object.is for attributes
     if (!compareProps(gridSpecs, gridSpecsRef.current)) {
@@ -211,17 +209,25 @@ const InfiniteGridScroller = (props) => {
     const cacheHandlerRef = useRef(null)
 
     useEffect (() => {
+        const abortController = new AbortController()
+
         scrollerSessionIDRef.current = globalScrollerID++
         cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, setListsize, listsizeRef)
+
+        return () => {
+
+            // const element = cacheRef?.current
+
+            // element?.remove()
+
+            abortController.abort() // defensive
+            
+        }
     },[])
 
     const listsizeRef = useRef(estimatedListSize)
 
     const listsize = listsizeRef.current
-
-    // console.log('infinite scroller listsizeRef','-'+scrollerID+'-' , scrollerState, listsizeRef)
-    // console.log('infinite scroller scrollerID, scrollerState, cache, cacheMax', 
-    //     '-'+scrollerID+'-',scrollerState, cache, cacheMax)
 
     const setListsize = useCallback((listsize) =>{
 
@@ -247,7 +253,8 @@ const InfiniteGridScroller = (props) => {
 
     },[scrollerState])
 
-    return <ErrorBoundary
+    return <React.StrictMode>
+        <ErrorBoundary
         FallbackComponent={ErrorFallback}
         onReset={() => {
           // reset the state of your app so the error doesn't happen again
@@ -263,7 +270,7 @@ const InfiniteGridScroller = (props) => {
             styles = { stylesRef.current }
             scrollerProperties = {scrollerProperties}
             scrollerID = { scrollerID }
-            RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = { RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE }
+            VIEWPORT_RESIZE_TIMEOUT = { VIEWPORT_RESIZE_TIMEOUT }
 
         >
         
@@ -293,6 +300,7 @@ const InfiniteGridScroller = (props) => {
                     useScrollTracker = {useScrollTracker}
                     showAxis = { showAxis }
                     IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }
+                    MAX_CACHE_OVER_RUN = { MAX_CACHE_OVER_RUN }
                     scrollerID = { scrollerID }
 
                 />
@@ -302,6 +310,7 @@ const InfiniteGridScroller = (props) => {
             <PortalList cacheProps = {cacheHandlerRef.current.cacheProps}/>
         </div>}
     </ErrorBoundary>
+    </React.StrictMode>
 }
 
 const cacherootstyle = {display:'none'} as React.CSSProperties // static, out of view 

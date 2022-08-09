@@ -14,16 +14,13 @@ import { ResizeObserver as ResizeObserverPollyfill } from '@juggle/resize-observ
 
 const ResizeObserver = window['ResizeObserver'] || ResizeObserverPollyfill
 
-// control constant
-// const RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE = 250
-
 const Viewport = ({
     children, 
     gridSpecs,
     styles,
     scrollerID,
     scrollerProperties,
-    RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE,
+    VIEWPORT_RESIZE_TIMEOUT,
 }) => {
 
     // -----------------------[ initialize ]------------------
@@ -39,6 +36,9 @@ const Viewport = ({
 
     const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, ready
 
+    // console.log('==> RUNNING Viewport','-'+scrollerID+'-', viewportState)
+    // console.log('performance.memory',performance['memory'])
+
     const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
     viewportStateRef.current = viewportState
 
@@ -46,8 +46,13 @@ const Viewport = ({
 
     useEffect(() => {
 
+        const abortController = new AbortController()
         // unmount
-        return () => {isMountedRef.current = false}
+        return () => {
+
+            isMountedRef.current = false
+            abortController.abort()  // defensive
+        }
 
     },[])
 
@@ -97,12 +102,14 @@ const Viewport = ({
         const target = entries[0].target
 
         if (!target.dataset.initialized) {
+
             target.dataset.initialized = 'true'
-            // console.log('viewport clientWidth, clientHeight','-'+scrollerID+'-' ,target.clientWidth, target.clientHeight)
-            // if (!((target.clientHeight == 0) && (target.clientWidth == 0))) {
+
             // embedded lists need resizing event for init with up to date viewport dimensions
             if (!scrollerProperties) {
+
                 return
+                
             }
         }
 
@@ -125,7 +132,7 @@ const Viewport = ({
                 setViewportState('resized')
             }
 
-        },RESIZE_TIMEOUT_FOR_ONAFTERSRESIZE)
+        },VIEWPORT_RESIZE_TIMEOUT)
 
     },[])
 

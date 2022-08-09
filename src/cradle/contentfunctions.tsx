@@ -528,12 +528,12 @@ export const allocateContentList = (
 export const deletePortals = (cacheHandler, deleteList, deleteListCallback) => {
 
     const dlist = deleteList.map((item)=>{
+
         return item.props.index
+        
     })
-    // TODO return list of deleted items to user
+
     cacheHandler.deletePortal(dlist, deleteListCallback)
-    // if (deleteList.length) cacheHandler.renderPortalList() // give InPortals time to clear
-    // is run in batches later
 }
 
 // =====================[ acquire item ]======================

@@ -55,9 +55,19 @@ const Cradle = ({
         useScrollTracker,
         showAxis,
         IDLECALLBACK_TIMEOUT,
+        MAX_CACHE_OVER_RUN,
     }) => {
 
     if (listsize == 0) return null// nothing to do
+
+    useEffect(()=>{
+
+        const abortController = new AbortController()
+        return () => {
+            abortController.abort()  // defensive
+        }
+
+    },[])
 
     // ========================[ DATA SETUP ]========================
 
@@ -85,7 +95,8 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // console.log('==> running CRADLE cradleState','-'+scrollerID+'-', cradleState)
+    // console.log('==> RUNNING Cradle','-'+scrollerID+'-', cradleState)
+    // console.log('performance.memory',performance['memory'])
 
     // flags
     const isMountedRef = useRef(true)
@@ -256,6 +267,7 @@ const Cradle = ({
         userCallbacks,
         styles,
         cacheHandler,
+        MAX_CACHE_OVER_RUN,
 
     }
 
@@ -839,8 +851,7 @@ const Cradle = ({
 
             }
             case 'startpreload':{
-                // console.log('in startpreload, clearing cache and calling dopreload')
-                // contentHandler.clearCradle()
+
                 // register new array id for Object.is to trigger react re-processing
                 // cradleContent.headDisplayComponents = []
                 // cradleContent.tailDisplayComponents = []
@@ -856,8 +867,6 @@ const Cradle = ({
                     const modelIndexList = contentHandler.getModelIndexList()
 
                     const { deleteListCallback } = serviceHandler.callbacks
-
-                    // const cacheMax = cradleParameters.cradleInheritedPropertiesRef.current.cacheMax
 
                     let dListCallback
                     if (deleteListCallback) {
@@ -877,19 +886,10 @@ const Cradle = ({
 
                 }
 
-                // console.log('in dopreload, calling cacheHandler.preload with timeout')
-
                 cacheHandler.preload(cradleParametersRef.current, finalCallback, nullItemSetMaxListsize, scrollerID)
 
                 break
             }
-
-            // case 'uncachepending': {
-
-            //     // no-op
-            //     break
-
-            // }
 
             case 'cached': {
 
@@ -903,12 +903,6 @@ const Cradle = ({
 
             case 'finishparenting':{
 
-                // if (isCachedRef.current) { // interrupt until caching is resolved
-                    
-                //     setCradleState('uncachepending')
-
-                // } else {
-
                 interruptHandler.restoreInterrupts()
 
                 if (hasBeenRenderedRef.current) {
@@ -920,8 +914,6 @@ const Cradle = ({
                     setCradleState('resolvependinguncache')
 
                 }
-
-                // }
 
                 break
             }
@@ -989,11 +981,6 @@ const Cradle = ({
             case 'pivot':
             case 'reconfigure': //
             case 'reload': {
-
-                // if (isCachedRef.current) { // interrupt until caching is resolved
-                //     setCradleState('cached')
-                //     break
-                // }
 
                 const cradleContent = contentHandler.content
 
@@ -1085,8 +1072,6 @@ const Cradle = ({
                     // reset scroll position to previous value
                     if (cradlePositionData.blockScrollPos !== null) {
 
-                        // console.log('resetting scroll position to','-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
-
                         const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
 
                         viewportElement[cradlePositionData.blockScrollProperty] = 
@@ -1164,14 +1149,14 @@ const Cradle = ({
     return <CradleContext.Provider value = {contextvalueRef.current}>
 
         {(((cradleState == 'repositioningRender') || 
-            (cradleState == 'repositioningContinuation')) && useScrollTracker)?
-            <ScrollTracker 
+            (cradleState == 'repositioningContinuation')))?
+            useScrollTracker?<ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 
                 offset = {scrollTrackerArgs.scrollAxisReferenceIndex} 
                 listsize = {scrollTrackerArgs.listsize}
                 styles = {scrollTrackerArgs.styles}
-            />:
+            />:null:
             <div 
                 data-type = 'cradle-axis'
                 style = {cradleAxisStyle} 
