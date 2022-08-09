@@ -18,8 +18,6 @@
 
     BUGS: 
 
-        - preload on both master and nested lists fails to refresh 
-            - leads to blank lists after cradle
         - opening blockscrollpos is wrong for root list
         - viewportelementscrollpos is NaN
 

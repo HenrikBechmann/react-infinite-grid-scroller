@@ -95,7 +95,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    console.log('==> RUNNING Cradle','-'+scrollerID+'-', cradleState)
+    // console.log('==> RUNNING Cradle','-'+scrollerID+'-', cradleState)
     // console.log('performance.memory',performance['memory'])
 
     // flags
@@ -366,16 +366,16 @@ const Cradle = ({
 
     const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
 
-    console.log(
-        '**>> -'+scrollerID+'-', cradleState,'\n',
-        'isInPortal, viewportwidth, viewportheight, blockScrollPos, blockScrollPos\n', 
-        isInPortal, viewportwidth, viewportheight, scaffoldHandler.cradlePositionData.blockScrollPos)
+    // console.log(
+    //     '**>> -'+scrollerID+'-', cradleState,'\n',
+    //     'isInPortal, viewportwidth, viewportheight, blockScrollPos, blockScrollPos\n', 
+    //     isInPortal, viewportwidth, viewportheight, scaffoldHandler.cradlePositionData.blockScrollPos)
 
-    console.log('- isCacheChange, isCachingUnderway, isCachedRef.current, wasCachedRef.current\n',
-        isCacheChange, isCachingUnderway, isCachedRef.current, wasCachedRef.current)
+    // console.log('- isCacheChange, isCachingUnderway, isCachedRef.current, wasCachedRef.current\n',
+    //     isCacheChange, isCachingUnderway, isCachedRef.current, wasCachedRef.current)
 
-    console.log('- viewportInterruptProperties.isReparentingRef?.current, viewportInterruptProperties.isResizing, orientation\n',
-        viewportInterruptProperties.isReparentingRef?.current, viewportInterruptProperties.isResizing, orientation)
+    // console.log('- viewportInterruptProperties.isReparentingRef?.current, viewportInterruptProperties.isResizing, orientation\n',
+    //     viewportInterruptProperties.isReparentingRef?.current, viewportInterruptProperties.isResizing, orientation)
 
     if (
         isCacheChange || 
@@ -882,7 +882,16 @@ const Cradle = ({
                         cacheHandler.cacheProps.modified = true
                         cacheHandler.renderPortalList()
                     }
-                    setCradleState('finishpreload')
+
+                    if (!isCachedRef.current) {
+
+                        setCradleState('finishpreload')
+
+                    } else {
+
+                        setCradleState('cached')
+
+                    }
 
                 }
 

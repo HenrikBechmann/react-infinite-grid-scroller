@@ -116,7 +116,7 @@ export class CacheHandler {
 
     pareCacheToMax = (cacheMax, cradleIndexList, deleteListCallback, scrollerID = undefined) => {
 
-        console.log('pareCacheToMax: cacheMax, cradleIndexList','-'+scrollerID+'-',cacheMax, cradleIndexList)
+        // console.log('pareCacheToMax: cacheMax, cradleIndexList','-'+scrollerID+'-',cacheMax, cradleIndexList)
 
         const modelLength = cradleIndexList.length
 
