@@ -684,8 +684,11 @@ export class CacheHandler {
 
         const portalNode = createPortalNode(index, itemID)
 
+        // div wrapper to avoid memory leak
         this.cacheProps.portalMap.set(itemID,
-                <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>)
+                <div data-type = {'portalwrapper'} key = {itemID} data-itemid = {itemID} data-index = {index}>
+                    <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>
+                </div>)
 
         this.cacheProps.modified = true
 
@@ -849,6 +852,7 @@ const createPortalNode = (index, itemID) => {
 
 // ========================[ Utility component ]==============================
 
+let counter = 0
 // portal list component for rapid relisting of updates, using external callback for set state
 export const PortalList = ({ cacheProps }) => {
 
@@ -856,18 +860,31 @@ export const PortalList = ({ cacheProps }) => {
 
     const [portalList, setPortalList] = useState(null)
     const isMountedRef = useRef(true)
+    const portalArrayRef = useRef(null)
+    const cachedivRef = useRef(null)
 
     useEffect(()=>{
 
+        const abortController = new AbortController()
+
         cacheProps.setListState = ()=>{
 
-            isMountedRef.current && setPortalList(cacheProps.portalList)
+            portalArrayRef.current = cacheProps.portalList
+            isMountedRef.current && setPortalList(counter++)
 
         }
 
-        return () => {isMountedRef.current = false}
+        return () => {
+            isMountedRef.current = false
+            cachedivRef.current?.remove()
+            abortController.abort()
+        }
 
     },[]) 
 
-    return portalList
+    return <div ref = {cachedivRef}>
+
+        {portalArrayRef.current}
+
+    </div>
 }

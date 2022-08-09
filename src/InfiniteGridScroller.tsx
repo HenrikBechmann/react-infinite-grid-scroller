@@ -164,6 +164,7 @@ const InfiniteGridScroller = (props) => {
     const gridSpecsRef = useRef(gridSpecs)
     const stylesRef = useRef(styles)
     const callbacksRef = useRef(callbacks)
+    const cacheRef = useRef(null)
 
     let {
         showAxis,
@@ -213,6 +214,10 @@ const InfiniteGridScroller = (props) => {
         cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, setListsize, listsizeRef)
 
         return () => {
+
+            const element = cacheRef?.current
+
+            element?.remove()
 
             abortController.abort()
             
@@ -300,7 +305,7 @@ const InfiniteGridScroller = (props) => {
                 />
             </Scrollblock>
         </Viewport>}
-        {(scrollerState != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
+        {(scrollerState != 'setup') && <div ref = {cacheRef} data-type = 'cacheroot' style = { cacherootstyle }>
             <PortalList cacheProps = {cacheHandlerRef.current.cacheProps}/>
         </div>}
     </ErrorBoundary>
