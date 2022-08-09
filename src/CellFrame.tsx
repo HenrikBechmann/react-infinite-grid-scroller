@@ -42,6 +42,8 @@ const CellFrame = ({
     const frameStateRef = useRef(null)
     frameStateRef.current = frameState
 
+    // console.log('==> RUNNING CellFrame','-'+scrollerID+'-','_'+instanceID+'_',frameState)
+
     const frameRef = useRef(null)
 
     const isMountedRef = useRef(true)
@@ -103,7 +105,7 @@ const CellFrame = ({
 
         return placeholder
 
-    }, [index, customplaceholder, listsize, errorRef.current]);
+    }, [index, customplaceholder, listsize, messageRef.current, errorRef.current]);
 
     // ---------------- [ requestidlecallback config ] ------------------------
 
@@ -166,37 +168,26 @@ const CellFrame = ({
 
                     // console.log(messageRef.current)
 
-                    const portalRecord = cacheHandler.getPortal(itemID)
+                    // setFrameState('waiting')
+                    // setTimeout(()=>{
 
-                    portalDataRef.current = portalRecord
+                        // if (!isMountedRef.current) return
 
-                    portalNodeRef.current = portalDataRef.current.portalNode
+                        const portalRecord = cacheHandler.getPortal(itemID)
 
-                    portalDataRef.current.isReparentingRef.current = true
+                        portalDataRef.current = portalRecord
 
-                    setFrameState('inserting')
+                        portalNodeRef.current = portalDataRef.current.portalNode
 
-                    // distribute processing a bit
-                    // if (isMountedRef.current) {
-                    //     Promise.resolve(cacheHandler.getPortal(itemID)).then
-                    //     (
-                    //         (portalRecord) => {
+                        portalDataRef.current.isReparentingRef.current = true
 
-                    //             portalDataRef.current = portalRecord
+                        setFrameState('inserting')
 
-                    //             portalNodeRef.current = portalDataRef.current.portalNode
-
-                    //             portalDataRef.current.isReparentingRef.current = true
-
-                    //             setFrameState('inserting')
-
-                    //         }
-                    //     )
-                    // }
+                    // },1)
 
                 } else {
 
-                    messageRef.current = '(loading)'
+                    messageRef.current = '(loading...)'
 
                     // console.log(messageRef.current)
 
