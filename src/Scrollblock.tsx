@@ -98,16 +98,7 @@ const Scrollblock = ({
 
             baseScrollBlockLengthRef.current = basescrollblocklength
 
-        },[
-            orientation,
-            height,
-            width,
-            listsize,
-            cellHeight,
-            cellWidth,
-            gap,
-            padding,
-       ]
+        },[]
     )
 
     return <div data-type = 'scrollblock' style={divlinerstyleRef.current}>{children}</div>
