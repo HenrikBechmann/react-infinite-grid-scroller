@@ -42,7 +42,7 @@ const CellFrame = ({
     const frameStateRef = useRef(null)
     frameStateRef.current = frameState
 
-    // console.log('==> RUNNING CellFrame','-'+scrollerID+'-','_'+instanceID+'_',frameState)
+    // console.log('==> RUNNING CellFrame','-'+scrollerID+'-','['+itemID+']','_'+instanceID+'_',frameState)
 
     const frameRef = useRef(null)
 
@@ -80,7 +80,7 @@ const CellFrame = ({
 
     useEffect(()=>{
 
-        setFrameState('getusercontent')
+        if (isMountedRef.current) setFrameState('getusercontent')
 
     },[itemID])
 
@@ -166,6 +166,9 @@ const CellFrame = ({
                 const itemID = itemIDRef.current
                 const cached = cacheHandler.hasPortal(itemID)
 
+                // console.log('==> CellFrame getusercontent: scrollerID, itemID, instanceID, cached',
+                //     '-'+scrollerID+'-', '['+itemID+']','_'+instanceID+'_', cached)
+
                 if (cached) {
 
                     messageRef.current = '(retrieving from cache)'
@@ -175,7 +178,7 @@ const CellFrame = ({
                     // setFrameState('waiting')
                     // setTimeout(()=>{
 
-                        // if (!isMountedRef.current) return
+                    if (isMountedRef.current) {
 
                         const portalRecord = cacheHandler.getPortal(itemID)
 
@@ -186,6 +189,8 @@ const CellFrame = ({
                         portalDataRef.current.isReparentingRef.current = true
 
                         setFrameState('inserting')
+
+                    }
 
                     // },1)
 

@@ -467,7 +467,8 @@ export default class ContentHandler {
 
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        if (cradleInheritedProperties.cache == 'keepload') {
+        const { cache, scrollerID } = cradleInheritedProperties
+        if (cache == 'keepload') {
 
             const cradleHandlers = this.cradleParameters.handlersRef.current
             const { cacheHandler, serviceHandler } = cradleHandlers
@@ -489,7 +490,7 @@ export default class ContentHandler {
 
             const paring = cacheHandler.pareCacheToMax(
 
-                cradleInheritedProperties.cacheMax, modelIndexList, dListCallback)
+                cradleInheritedProperties.cacheMax, modelIndexList, dListCallback, scrollerID)
             
             if (paring) cacheHandler.renderPortalList()
                 

@@ -191,6 +191,8 @@ const Viewport = ({
             isResizing:isResizingRef.current,
         }
 
+        // console.log('viewport new localViewportData', '-'+scrollerID+'-',localViewportData)
+
         // trigger context change with new object
         const viewportdataobject = Object.assign({},viewportInterruptPropertiesRef.current, localViewportData) 
 
