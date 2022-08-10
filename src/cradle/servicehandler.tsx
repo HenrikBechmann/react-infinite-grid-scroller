@@ -320,6 +320,8 @@ export default class ServiceHandler {
         const deletedItemIDToIndexMap = new Map() // index => itemID; orphaned index
         const deletedIndexToItemIDMap = new Map()
 
+        const portalHoldList = [] // hold deleted portals for deletion until after cradle synch
+
         originalMap.forEach((originalItemID, originalItemIDIndex) => {
 
             const finalItemIDIndex = metadataMap.get(originalItemID).index
@@ -329,7 +331,7 @@ export default class ServiceHandler {
                 deletedItemIDToIndexMap.set(originalItemID, originalItemIDIndex)
 
                 metadataMap.delete(originalItemID)
-                portalMap.delete(originalItemID)
+                portalHoldList.push(originalItemID)
 
             } else { // remapped, check for orphaned index
 
@@ -371,6 +373,7 @@ export default class ServiceHandler {
         modifiedIndexList = Array.from(new Set(modifiedIndexList.values())) // remove duplicates
 
         contentHandler.reconcileCellFrames(modifiedIndexList)
+        cacheHandler.portalHoldList = portalHoldList
 
         stateHandler.setCradleState('applycellframechanges')
 
@@ -494,11 +497,12 @@ export default class ServiceHandler {
 
         const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
 
-        const [changeList, replaceList, rangeincrement] = 
+        const [changeList, replaceList, rangeincrement, portalHoldList] = 
             cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize)
 
         cacheHandler.cacheProps.modified = true
         cacheHandler.renderPortalList()
+        cacheHandler.portalHoldList = portalHoldList
 
         contentHandler.changeCradleItemIDs(changeList)
 

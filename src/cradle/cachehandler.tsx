@@ -39,6 +39,8 @@ export class CacheHandler {
         scrollerID:null
     }
 
+    portalHoldList
+
     listsizeRef
 
     setListsize // setListsize(listsize) generates infinitescroller useState update listsize throughout
@@ -541,6 +543,8 @@ export class CacheHandler {
 
         }
 
+        const portalHoldList = [] // hold portals for deletion until after after cradle synch
+
         if (increment == 1) {
 
             // get indexesToReplaceList
@@ -635,7 +639,7 @@ export class CacheHandler {
             for (const itemID of itemsToRemoveList) {
 
                 metadataMap.delete(itemID)
-                portalMap.delete(itemID)
+                portalHoldList.push(itemID)
 
             }
 
@@ -644,7 +648,7 @@ export class CacheHandler {
         // --------------- returns ---------------
 
         // return values for caller to send to contenthandler for cradle synchronization
-        return [indexesModifiedList, indexesToReplaceList, rangeincrement]
+        return [indexesModifiedList, indexesToReplaceList, rangeincrement, portalHoldList]
 
     }
 

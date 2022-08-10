@@ -837,8 +837,21 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
-                // console.log('CRADLE useLayoutEffect applycellframechanges')
+                const { portalHoldList } = cacheHandler
+                const { portalMap } = cacheHandler.cacheProps
+
+                if (portalHoldList && portalHoldList.length) {
+
+                    for (const itemID of portalHoldList) {
+
+                        portalMap.delete(itemID)
+                        
+                    }
+
+                }
+
                 setCradleState('ready')
+
                 break
             }
 
