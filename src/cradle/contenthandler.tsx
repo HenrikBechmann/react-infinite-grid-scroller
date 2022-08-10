@@ -79,7 +79,7 @@ export default class ContentHandler {
         const viewportElement = viewportInterruptProperties.elementRef.current
 
         const requestedAxisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
-        let targetAxisPixelOffset = cradlePositionData.targetAxisPixelOffset
+        let targetAxisViewportPixelOffset = cradlePositionData.targetAxisViewportPixelOffset
 
         const {
             orientation, 
@@ -98,15 +98,15 @@ export default class ContentHandler {
         // reposition at row boundary
         if (['doreposition','reconfigure', 'dosetup', 'doscrollto'].includes(cradleState))  {
 
-            targetAxisPixelOffset = 
+            targetAxisViewportPixelOffset = 
                 (workingAxisReferenceIndex == 0)?
                     padding:
                     gap // default
 
         }
 
-        console.log('cradleState in setCradleContent; workingAxisReferenceIndex, targetAxisPixelOffset',
-            cradleState, workingAxisReferenceIndex, targetAxisPixelOffset)
+        console.log('cradleState in setCradleContent; workingAxisReferenceIndex, targetAxisViewportPixelOffset',
+            cradleState, workingAxisReferenceIndex, targetAxisViewportPixelOffset)
         
         const workingContentList = []
         const cradleContent = this.content
@@ -129,22 +129,13 @@ export default class ContentHandler {
             getContentListRequirements({
                 rowLength,
                 targetAxisReferenceIndex:requestedAxisReferenceIndex,
-                targetAxisPixelOffset,
+                targetAxisViewportPixelOffset,
                 cradleInheritedProperties,
                 cradleInternalProperties,
                 viewportElement:viewportInterruptProperties.elementRef.current,
             })
 
-        // let scrollPosAdjustment
-        // if (targetAxisReferenceIndex == 0) {
-        //     scrollPosAdjustment = 0
-        // // } else if (cradleState == 'doreposition') {
-        // //     scrollPosAdjustment = padding //+ gap
-        // } else {
-        //     scrollPosAdjustment = padding
-        // }
-
-        const axisViewportPixelOffset = targetAxisPixelOffset
+        const axisViewportPixelOffset = targetAxisViewportPixelOffset
 
         // ----------------------[ 3. get and config content ]----------------------
         
@@ -175,7 +166,7 @@ export default class ContentHandler {
         cradleContent.tailModelComponents = tailcontentlist
 
         cradlePositionData.targetAxisReferenceIndex = targetAxisReferenceIndex
-        cradlePositionData.targetAxisPixelOffset = axisViewportPixelOffset
+        cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
         if (serviceHandler.callbacks.referenceIndexCallback) {
 
@@ -203,9 +194,16 @@ export default class ContentHandler {
         const axisElement = cradleElements.axisRef.current
         const headElement = cradleElements.headRef.current
 
-        const AxisScrollblockPixelOffset = (targetAxisRowOffset * rowLength) + axisViewportPixelOffset
-        console.log('setCradleContent: AxisScrollblockPixelOffset, axisViewportPixelOffset',
-            AxisScrollblockPixelOffset, axisViewportPixelOffset)
+        // const axisViewportPixelAdjustment = 
+        //     (targetAxisRowOffset == 0)?
+        //         0:
+        //         padding
+
+        const AxisScrollblockPixelOffset = 
+            scrollblockPixelOffset + axisViewportPixelOffset
+            // (targetAxisRowOffset * rowLength) + axisViewportPixelOffset + axisViewportPixelAdjustment
+        console.log('setCradleContent: AxisScrollblockPixelOffset, scrollblockPixelOffset, axisViewportPixelOffset',
+            AxisScrollblockPixelOffset, scrollblockPixelOffset, axisViewportPixelOffset)
         if (orientation == 'vertical') {
 
             // const top = (targetAxisRowOffset * rowLength) + axisPixelOffset
@@ -451,7 +449,7 @@ export default class ContentHandler {
         const { cradlePositionData } = scaffoldHandler
 
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
-        cradlePositionData.targetAxisPixelOffset = axisPixelOffset
+        cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
 
         interruptHandler.axisTriggerlinesIntersect.connectElements()
         interruptHandler.signals.pauseTriggerlinesObserver = false

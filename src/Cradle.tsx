@@ -756,7 +756,7 @@ const Cradle = ({
                 cellHeight)
             + gap
 
-        const previousAxisOffset = scaffoldHandler.cradlePositionData.targetAxisPixelOffset
+        const previousAxisOffset = scaffoldHandler.cradlePositionData.targetAxisViewportPixelOffset
 
         const previousratio = previousAxisOffset/previousCellPixelLength
 
@@ -768,7 +768,7 @@ const Cradle = ({
 
         const pivotAxisOffset = previousratio * pivotCellPixelLength
         
-        scaffoldHandler.cradlePositionData.targetAxisPixelOffset = Math.round(pivotAxisOffset)
+        scaffoldHandler.cradlePositionData.targetAxisViewportPixelOffset = Math.round(pivotAxisOffset)
 
         interruptHandler.pauseInterrupts()
 
