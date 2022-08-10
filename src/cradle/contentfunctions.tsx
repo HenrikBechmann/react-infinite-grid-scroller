@@ -27,6 +27,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         cellHeight, 
         cellWidth, 
         gap,
+        padding,
     } = cradleInheritedProperties
 
     const {
@@ -83,12 +84,18 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     // --------------------[ calc css positioning ]-----------------------
 
+    // const targetScrollblockPixelAdjustment = 
+    //     (targetAxisRowOffset == 0)?
+    //         0:
+    //         padding
+
     const targetScrollblockPixelOffset = 
-        (targetAxisRowOffset * rowLength) - (targetAxisPixelOffset)
+        // (targetAxisRowOffset * rowLength) + targetScrollblockPixelAdjustment - targetAxisPixelOffset
+        (targetAxisRowOffset * rowLength) + padding - targetAxisPixelOffset
 
     console.log('getContentListRequirements: targetScrollblockPixelOffset = \
-        (targetAxisRowOffset * rowLength) - (targetAxisPixelOffset)',
-        targetScrollblockPixelOffset, targetAxisRowOffset, rowLength, targetAxisPixelOffset)
+        (targetAxisRowOffset * rowLength) + padding - targetAxisPixelOffset',
+        targetScrollblockPixelOffset, targetAxisRowOffset, rowLength, padding, targetAxisPixelOffset)
 
     // ----------------------[ return required values ]---------------------
 
