@@ -88,6 +88,7 @@ export default class ContentHandler {
             cellHeight,
             cellWidth,
             cache,
+            scrollerID,
         } = cradleInheritedProperties
 
         const {crosscount, listsize} = cradleInternalProperties
@@ -134,6 +135,9 @@ export default class ContentHandler {
 
             })
 
+        console.log('setCradleContent: cradleState, scrollblockViewportPixelOffset, targetAxisReferenceIndex',
+            '-'+scrollerID+'-', cradleState, scrollblockViewportPixelOffset, targetAxisReferenceIndex)
+
         const axisViewportPixelOffset = targetAxisViewportPixelOffset
 
         // ----------------------[ 3. get and config content ]----------------------
@@ -178,7 +182,7 @@ export default class ContentHandler {
 
         //  ----------------------[ 4. set CSS ]-----------------------
 
-        cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset // + scrollPosAdjustment
+        cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset
 
         viewportElement[cradlePositionData.blockScrollProperty] =
             cradlePositionData.blockScrollPos

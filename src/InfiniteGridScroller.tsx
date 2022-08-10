@@ -18,8 +18,8 @@
 
     BUGS: 
 
-        - opening blockscrollpos is wrong for root list
-        - viewportelementscrollpos is NaN
+        - opening scrollPos for nested lists is wrong
+            - test for starting Pos
 
     TODO:
 
@@ -131,6 +131,9 @@ const InfiniteGridScroller = (props) => {
     styles = styles ?? {}
     callbacks = callbacks ?? {}
     advanced = advanced ?? {}
+    startingIndex = startingIndex ?? 0
+    estimatedListSize = estimatedListSize ?? 0
+    runwaySize = runwaySize ?? 3
 
     // prop constraints - non-negative values
     runwaySize = Math.max(0,runwaySize)
