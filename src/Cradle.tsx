@@ -1097,7 +1097,7 @@ const Cradle = ({
             case 'reparentingtransition': {
 
                     const { cradlePositionData } = scaffoldHandler
-                    // console.log('in state machine reparentingtransition', '-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
+                    console.log('in state machine reparentingtransition', '-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
 
                     // reset scroll position to previous value
                     if (cradlePositionData.blockScrollPos !== null) {

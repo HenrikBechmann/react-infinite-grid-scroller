@@ -68,7 +68,7 @@ export default class ScrollHandler {
 
         // keep up to date in case of reparenting interrupt
         cradlePositionData.blockScrollPos = scrollPositionCurrent
-        // console.log('onScroll updated blockScrollPos','-'+scrollerID+'-',cradlePositionData.blockScrollPos)
+        console.log('onScroll updated blockScrollPos','-'+scrollerID+'-',cradlePositionData.blockScrollPos)
 
         this.scrollData.previous = this.scrollData.current
         this.scrollData.current = scrollPositionCurrent
@@ -240,7 +240,7 @@ export default class ScrollHandler {
                 cradlePositionData.blockScrollPos = viewportElement.scrollLeft
             }
             const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
-            // console.log('scrollHandler.upateBlockScrollPos updated blockScrollPos','-'+scrollerID+'-',cradlePositionData.blockScrollPos)
+            console.log('scrollHandler.upateBlockScrollPos updated blockScrollPos','-'+scrollerID+'-',cradlePositionData.blockScrollPos)
 
         }
 

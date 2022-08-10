@@ -189,6 +189,9 @@ export default class ContentHandler {
         //  ----------------------[ 4. set CSS ]-----------------------
 
         cradlePositionData.blockScrollPos = scrollblockPixelOffset + scrollPosAdjustment
+        console.log('setCradleContent: setting blockScrollPos with scrollblockPixelOffset + scrollPosAdjustment',
+            '-'+cradleInheritedProperties.scrollerID+'-',
+            cradlePositionData.blockScrollPos, scrollblockPixelOffset, scrollPosAdjustment)
 
         // console.log('setting SCROLLPOS in setCradleContent', '-'+cradleInheritedProperties.scrollerID+'-', cradlePositionData.blockScrollPos)
         viewportElement[cradlePositionData.blockScrollProperty] =
