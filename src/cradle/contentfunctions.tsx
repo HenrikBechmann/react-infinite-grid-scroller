@@ -18,7 +18,6 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         cradleInternalProperties,
         targetAxisReferenceIndex, // from user, or from pivot
         targetAxisViewportPixelOffset,
-        viewportElement,
 
     }) => {
 
@@ -84,18 +83,8 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     // --------------------[ calc css positioning ]-----------------------
 
-    // const targetScrollblockPixelAdjustment = 
-    //     (targetAxisRowOffset == 0)?
-    //         0:
-    //         padding
-
-    const targetScrollblockPixelOffset = 
-        // (targetAxisRowOffset * rowLength) + targetScrollblockPixelAdjustment - targetAxisViewportPixelOffset
+    const targetScrollblockViewportPixelOffset = 
         (targetAxisRowOffset * rowLength) + padding - targetAxisViewportPixelOffset
-
-    // console.log('getContentListRequirements: targetScrollblockPixelOffset = \
-    //     (targetAxisRowOffset * rowLength) + padding - targetAxisViewportPixelOffset',
-    //     targetScrollblockPixelOffset, targetAxisRowOffset, rowLength, padding, targetAxisViewportPixelOffset)
 
     // ----------------------[ return required values ]---------------------
 
@@ -103,7 +92,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         targetCradleReferenceIndex, 
         targetAxisReferenceIndex,
         targetAxisRowOffset,
-        targetScrollblockPixelOffset, 
+        targetScrollblockViewportPixelOffset, 
         newCradleContentCount, 
     } 
 

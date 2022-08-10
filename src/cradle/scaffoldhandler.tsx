@@ -57,7 +57,7 @@ export default class ScaffoldHandler {
                 - setCradleContent
 
         */
-        blockScrollPos:null,
+        blockScrollPos:null, // the edge of the viewport
 
         /*
             values can be "scrollTop" or "scrollLeft" (of the viewport element) depending on orientation
@@ -95,7 +95,7 @@ export default class ScaffoldHandler {
                 - setCradleContent
 
         */
-        targetAxisViewportPixelOffset:null,
+        targetAxisViewportPixelOffset:null, // into the viewport
 
     }
 
