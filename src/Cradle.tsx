@@ -1025,7 +1025,7 @@ const Cradle = ({
                     cacheHandler.clearCache()
                 }
 
-                contentHandler.setCradleContent( cradleState )
+                contentHandler.setCradleContent( cradleState, hasBeenRenderedRef.current )
 
                 if (cradleState != 'finishpreload') {
 

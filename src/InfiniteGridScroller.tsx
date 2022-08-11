@@ -18,9 +18,6 @@
 
     BUGS: 
 
-        - opening scrollPos for nested lists is wrong
-            - test for starting Pos
-
     TODO:
 
         - review state change chains in cradle
