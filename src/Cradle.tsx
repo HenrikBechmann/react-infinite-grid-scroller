@@ -429,7 +429,7 @@ const Cradle = ({
         if (parentingTransitionRequiredRef.current && !isCachedRef.current) {
 
             parentingTransitionRequiredRef.current = false            
-            setCradleState('reparentingtransition')
+            setCradleState('parentingtransition')
         }
 
     },[parentingTransitionRequiredRef.current])
@@ -450,11 +450,19 @@ const Cradle = ({
             if (parentingTransitionRequiredRef.current) {
 
                 parentingTransitionRequiredRef.current = false            
-                setCradleState('reparentingtransition')
+                setCradleState('parentingtransition')
 
             } else {
 
-                setCradleState('resolvependinguncache')
+                if (hasBeenRenderedRef.current) {
+
+                    setCradleState('renderfromcache')
+
+                } else {
+
+                    setCradleState('firstrenderfromcache')
+
+                }
             }
 
         }
@@ -602,7 +610,7 @@ const Cradle = ({
 
         if (cache == 'preload') {
 
-            setCradleState('dopreload')
+            setCradleState('startpreload')
 
             return
 
@@ -865,23 +873,13 @@ const Cradle = ({
                     if (isCachedRef.current) {
                         setCradleState('cached')
                     } else {
-                        setCradleState('dosetup') // load grid
+                        setCradleState('firstrender') // load grid
                     }
                 }
                 break
 
             }
-            // case 'startpreload':{
-
-            //     // register new array id for Object.is to trigger react re-processing
-            //     // cradleContent.headDisplayComponents = []
-            //     // cradleContent.tailDisplayComponents = []
-            //     setCradleState('dopreload')
-
-            //     break
-            // }
-
-            case 'dopreload': {
+            case 'startpreload': {
 
                 const finalCallback = () => {
 
@@ -925,7 +923,15 @@ const Cradle = ({
 
                 if (!wasCachedRef.current && !isCachedRef.current){
 
-                    setCradleState('resolvependinguncache')
+                    if (hasBeenRenderedRef.current) {
+
+                        setCradleState('renderfromcache')
+
+                    } else {
+
+                        setCradleState('firstrenderfromcache')
+
+                    }
 
                 }
                 break
@@ -941,7 +947,7 @@ const Cradle = ({
 
                 } else {
 
-                    setCradleState('resolvependinguncache')
+                    setCradleState('firstrenderfromcache')
 
                 }
 
@@ -996,20 +1002,21 @@ const Cradle = ({
             }
 
             /*
-                the following 10 cradle states all resolve with
+                the following 11 cradle states all resolve with
                 a chain starting with setCradleContent, 
                 continuing with 'preparerender', and ending with
                 'normalizesignals'
             */
-            case 'doscrollto':
+            case 'firstrender':
+            case 'firstrenderfromcache':
+            case 'renderfromcache':
+            case 'scrollto':
             case 'resetcache':
-            case 'resolvependinguncache':
-            case 'dosetup':
             case 'finishpreload':
-            case 'doreposition': //
+            case 'reposition':
             case 'finishresize':
             case 'pivot':
-            case 'reconfigure': //
+            case 'reconfigure':
             case 'reload': {
 
                 const cradleContent = contentHandler.content
@@ -1025,7 +1032,7 @@ const Cradle = ({
                     cacheHandler.clearCache()
                 }
 
-                contentHandler.setCradleContent( cradleState, hasBeenRenderedRef.current )
+                contentHandler.setCradleContent( cradleState )
 
                 if (cradleState != 'finishpreload') {
 
@@ -1098,10 +1105,10 @@ const Cradle = ({
 
             // moving out of cache into visible DOM tree (cellFrame)
             // resets scrollPos (scrollLeft/scrollTop) to last UI value
-            case 'reparentingtransition': {
+            case 'parentingtransition': {
 
                     const { cradlePositionData } = scaffoldHandler
-                    // console.log('in state machine reparentingtransition', '-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
+                    // console.log('in state machine parentingtransition', '-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
 
                     // reset scroll position to previous value
                     if (cradlePositionData.blockScrollPos !== null) {

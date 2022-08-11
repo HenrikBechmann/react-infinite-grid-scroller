@@ -48,11 +48,11 @@ export default class ContentHandler {
 
     // ==========================[ SET CONTENT ]===========================
 
-     //initially (dosetup), after reposition (doreposition), or with finishresize, pivot, 
+     //initially (dosetup), after reposition (reposition), or with finishresize, pivot, 
      // or user size param reconfigure or reload
      // setCradleContent sets the scrollblock's scroll position, as well as config and content
 
-    public setCradleContent = (cradleState, hasBeenRendered ) => { 
+    public setCradleContent = ( cradleState ) => { 
 
         // ------------------------------[ 1. initialize ]---------------------------
 
@@ -97,9 +97,13 @@ export default class ContentHandler {
         workingAxisReferenceIndex -= (workingAxisReferenceIndex % crosscount)
 
         // reposition at row boundary
-        if (['doreposition', 'reconfigure', 'dosetup', 'doscrollto'].includes(cradleState)
-            || ((cradleState == 'resolvependinguncache') && !hasBeenRendered)
-        ) {
+        if ([
+            'firstrender', 
+            'firstrenderfromcache',
+            'reposition', 
+            'reconfigure', 
+            'scrollto', 
+        ].includes(cradleState)) {
 
             targetAxisViewportPixelOffset = 
                 (workingAxisReferenceIndex == 0)?
@@ -485,12 +489,14 @@ export default class ContentHandler {
 
             }
 
-            const paring = cacheHandler.pareCacheToMax(
-
-                cradleInheritedProperties.cacheMax, modelIndexList, dListCallback, scrollerID)
+            if (cacheHandler.pareCacheToMax(
+                cradleInheritedProperties.cacheMax, modelIndexList, dListCallback, scrollerID)) {
             
-            if (paring) cacheHandler.renderPortalList()
+                cacheHandler.cacheProps.modified = true
+                cacheHandler.renderPortalList()
                 
+            }
+                            
         }
 
     }
