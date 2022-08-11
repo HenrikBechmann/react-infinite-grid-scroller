@@ -20,8 +20,6 @@
 
     TODO:
 
-        - try to reduce need to run renderportallist - try some kind of pagination/grouping
-
         - test changing all gridscroller parameters
             test config size edge cases - over and under sized cells
 

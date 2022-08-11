@@ -95,7 +95,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    console.log('==> RUNNING Cradle','-'+scrollerID+'-', cradleState)
+    // console.log('==> RUNNING Cradle','-'+scrollerID+'-', cradleState)
     // console.log('performance.memory',performance['memory'])
 
     // flags
