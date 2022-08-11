@@ -489,12 +489,14 @@ export default class ContentHandler {
 
             }
 
-            const paring = cacheHandler.pareCacheToMax(
-
-                cradleInheritedProperties.cacheMax, modelIndexList, dListCallback, scrollerID)
+            if (cacheHandler.pareCacheToMax(
+                cradleInheritedProperties.cacheMax, modelIndexList, dListCallback, scrollerID)) {
             
-            if (paring) cacheHandler.renderPortalList()
+                cacheHandler.cacheProps.modified = true
+                cacheHandler.renderPortalList()
                 
+            }
+                            
         }
 
     }
