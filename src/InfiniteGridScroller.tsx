@@ -18,14 +18,11 @@
 
     BUGS: 
 
-        - opening blockscrollpos is wrong for root list
-        - viewportelementscrollpos is NaN
-
     TODO:
 
         - review state change chains in cradle
         - try to reduce need to run renderportallist - try some kind of pagination/grouping
-        
+
         - test changing all gridscroller parameters
             test config size edge cases - over and under sized cells
 
@@ -131,6 +128,9 @@ const InfiniteGridScroller = (props) => {
     styles = styles ?? {}
     callbacks = callbacks ?? {}
     advanced = advanced ?? {}
+    startingIndex = startingIndex ?? 0
+    estimatedListSize = estimatedListSize ?? 0
+    runwaySize = runwaySize ?? 3
 
     // prop constraints - non-negative values
     runwaySize = Math.max(0,runwaySize)

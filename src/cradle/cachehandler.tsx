@@ -28,15 +28,18 @@ export class CacheHandler {
         setListState:null,
         modified:false,
 
-        metadataMap:new Map(),
-        requestedMap:new Map(), // some portals may have been requested by requestidlecallback, not yet created
-        portalMap:new Map(),
+        metadataMap:new Map(), // item => {index, component}
+        // some portals may have been requested by requestidlecallback, not yet created
+        requestedSet:new Set(), // index => item TODO s/b requestedSet of indexes
+        portalMap:new Map(), // index => InPortal
         indexToItemIDMap:new Map(),
 
         portalList:null,
 
         scrollerID:null
     }
+
+    portalHoldList
 
     listsizeRef
 
@@ -75,7 +78,7 @@ export class CacheHandler {
         this.cacheProps.portalMap.clear() 
         this.cacheProps.metadataMap.clear()
         this.cacheProps.indexToItemIDMap.clear()
-        this.cacheProps.requestedMap.clear()
+        this.cacheProps.requestedSet.clear()
         this.cacheProps.portalList = null
         this.cacheProps.modified = true
 
@@ -126,14 +129,13 @@ export class CacheHandler {
         const max = Math.max(modelLength, cacheMax)
 
         const portalIndexList = this.cacheProps.indexToItemIDMap
-        const requestedMap = this.cacheProps.requestedMap
+        const requestedSet = this.cacheProps.requestedSet
 
-        // if ((portalMapList.size + requestedMap.size) <= max) return false
-        if ((portalIndexList.size + requestedMap.size) <= max) return false
+        if ((portalIndexList.size + requestedSet.size) <= max) return false
 
         // sort the map keys
         const mapkeyslist = Array.from(portalIndexList.keys())
-        const requestedkeys = Array.from(requestedMap.keys())
+        const requestedkeys = Array.from(requestedSet.keys())
 
         const mapkeys = mapkeyslist.concat(requestedkeys)
 
@@ -173,11 +175,11 @@ export class CacheHandler {
         if (!cacheMax) return false
 
         const portalMap = this.cacheProps.portalMap
-        const requestedMap = this.cacheProps.requestedMap
+        const requestedSet = this.cacheProps.requestedSet
 
         const max = Math.max(cradleListLength, cacheMax)
 
-        if ((portalMap.size + requestedMap.size) <= ((max) * MAX_CACHE_OVER_RUN)) {
+        if ((portalMap.size + requestedSet.size) <= ((max) * MAX_CACHE_OVER_RUN)) {
             return false
         } else {
             return true
@@ -437,7 +439,7 @@ export class CacheHandler {
     // much of this deals with the fact that the cache is sparse.
     insertRemoveIndex(index, highrange, increment, listsize) { // increment is +1 or -1
 
-        const { indexToItemIDMap, metadataMap } = this.cacheProps
+        const { indexToItemIDMap, metadataMap, portalMap } = this.cacheProps
 
         // ---------- define range parameters ---------------
 
@@ -541,6 +543,8 @@ export class CacheHandler {
 
         }
 
+        const portalHoldList = [] // hold portals for deletion until after after cradle synch
+
         if (increment == 1) {
 
             // get indexesToReplaceList
@@ -635,6 +639,7 @@ export class CacheHandler {
             for (const itemID of itemsToRemoveList) {
 
                 metadataMap.delete(itemID)
+                portalHoldList.push(itemID)
 
             }
 
@@ -643,7 +648,7 @@ export class CacheHandler {
         // --------------- returns ---------------
 
         // return values for caller to send to contenthandler for cradle synchronization
-        return [indexesModifiedList, indexesToReplaceList, rangeincrement]
+        return [indexesModifiedList, indexesToReplaceList, rangeincrement, portalHoldList]
 
     }
 
@@ -653,13 +658,13 @@ export class CacheHandler {
     // registers indexes when requested but before retrieved and entered into cache
     registerRequestedPortal(index) {
 
-        this.cacheProps.requestedMap.set(index, null)
+        this.cacheProps.requestedSet.add(index)
 
     }
 
     removeRequestedPortal(index) {
 
-        this.cacheProps.requestedMap.delete(index)
+        this.cacheProps.requestedSet.delete(index)
 
     }
 

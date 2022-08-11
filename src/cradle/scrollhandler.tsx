@@ -101,7 +101,7 @@ export default class ScrollHandler {
                     }
 
                     // cradlePositionData.targetAxisReferenceIndex = itemindex
-                    cradlePositionData.targetAxisPixelOffset = axisVisiblePixelOffset
+                    cradlePositionData.targetAxisViewportPixelOffset = axisVisiblePixelOffset
 
                 }
 
@@ -208,7 +208,7 @@ export default class ScrollHandler {
 
         const { cradlePositionData } = scaffoldHandler
 
-        cradlePositionData.targetAxisPixelOffset = axisVisiblePixelOffset
+        cradlePositionData.targetAxisViewportPixelOffset = axisVisiblePixelOffset
 
         if (!viewportInterruptProperties.isResizing) {
 
@@ -284,7 +284,7 @@ export default class ScrollHandler {
 
         const { cradlePositionData } = this.cradleParameters.handlersRef.current.scaffoldHandler
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
-        cradlePositionData.targetAxisPixelOffset = axisPixelOffset
+        cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
         const { repositioningIndexCallback } = 
             this.cradleParameters.handlersRef.current.serviceHandler.callbacks
         // console.log('scrollHandler: repositioningIndexCallback',repositioningIndexCallback)

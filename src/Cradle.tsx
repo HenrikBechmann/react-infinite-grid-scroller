@@ -631,8 +631,10 @@ const Cradle = ({
                 const cacheMax = cradleParameters.cradleInheritedPropertiesRef.current.cacheMax
 
                 if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, dListCallback, scrollerID)) {
+
                     cacheHandler.cacheProps.modified = true
                     cacheHandler.renderPortalList()
+                    
                 }
 
                 setCradleState('resetcache')
@@ -657,8 +659,10 @@ const Cradle = ({
                 }
 
                 if (cacheHandler.matchCacheToCradle(modelIndexList, dListCallback)) {
+
                     cacheHandler.cacheProps.modified = true
                     cacheHandler.renderPortalList()
+
                 }
 
                 setCradleState('resetcache')
@@ -732,7 +736,11 @@ const Cradle = ({
         scaffoldHandler.cradlePositionData.blockScrollProperty = 
             (orientation == "vertical")?"scrollTop":"scrollLeft"
 
-        if (cradleStateRef.current == 'setup') return
+        if (cradleStateRef.current == 'setup') {
+            scaffoldHandler.cradlePositionData.blockScrollPos = 0
+            return
+
+        }
 
         if (isCachedRef.current) {
             hasBeenRenderedRef.current = false
@@ -752,7 +760,7 @@ const Cradle = ({
                 cellHeight)
             + gap
 
-        const previousAxisOffset = scaffoldHandler.cradlePositionData.targetAxisPixelOffset
+        const previousAxisOffset = scaffoldHandler.cradlePositionData.targetAxisViewportPixelOffset
 
         const previousratio = previousAxisOffset/previousCellPixelLength
 
@@ -764,7 +772,7 @@ const Cradle = ({
 
         const pivotAxisOffset = previousratio * pivotCellPixelLength
         
-        scaffoldHandler.cradlePositionData.targetAxisPixelOffset = Math.round(pivotAxisOffset)
+        scaffoldHandler.cradlePositionData.targetAxisViewportPixelOffset = Math.round(pivotAxisOffset)
 
         interruptHandler.pauseInterrupts()
 
@@ -833,8 +841,21 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
-                // console.log('CRADLE useLayoutEffect applycellframechanges')
+                const { portalHoldList } = cacheHandler
+                const { portalMap } = cacheHandler.cacheProps
+
+                if (portalHoldList && portalHoldList.length) {
+
+                    for (const itemID of portalHoldList) {
+
+                        portalMap.delete(itemID)
+                        
+                    }
+
+                }
+
                 setCradleState('ready')
+
                 break
             }
 
@@ -1004,7 +1025,7 @@ const Cradle = ({
                     cacheHandler.clearCache()
                 }
 
-                contentHandler.setCradleContent( cradleState )
+                contentHandler.setCradleContent( cradleState, hasBeenRenderedRef.current )
 
                 if (cradleState != 'finishpreload') {
 

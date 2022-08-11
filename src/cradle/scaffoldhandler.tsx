@@ -35,7 +35,7 @@ export default class ScaffoldHandler {
         // progression of references: implied->target
         this.cradlePositionData.targetAxisReferenceIndex = 
             (Math.min(startingIndex,(listsize - 1)) || 0)
-        this.cradlePositionData.targetAxisPixelOffset = 0
+        this.cradlePositionData.targetAxisViewportPixelOffset = 0
 
     }
 
@@ -57,7 +57,7 @@ export default class ScaffoldHandler {
                 - setCradleContent
 
         */
-        blockScrollPos:null,
+        blockScrollPos:null, // the edge of the viewport
 
         /*
             values can be "scrollTop" or "scrollLeft" (of the viewport element) depending on orientation
@@ -83,19 +83,19 @@ export default class ScaffoldHandler {
         targetAxisReferenceIndex:null,
 
         /*
-            targetAxisPixelOffset is set by
+            targetAxisViewportPixelOffset is set by
                 - setCradleContent
                 - updateCradleContent
                 - scaffoldHandler (initialization)
                 - scrollHandler (during and after scroll)
                 - pivot effect (change of orientation) in cradle module
 
-            targetAxisPixelOffset is used by
+            targetAxisViewportPixelOffset is used by
                 - previousAxisOffset in pivot effect
                 - setCradleContent
 
         */
-        targetAxisPixelOffset:null,
+        targetAxisViewportPixelOffset:null, // into the viewport
 
     }
 
