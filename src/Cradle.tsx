@@ -454,7 +454,15 @@ const Cradle = ({
 
             } else {
 
-                setCradleState('resolvependinguncache')
+                if (hasBeenRenderedRef.current) {
+
+                    setCradleState('renderfromcache')
+
+                } else {
+
+                    setCradleState('firstrenderfromcache')
+
+                }
             }
 
         }
@@ -925,7 +933,15 @@ const Cradle = ({
 
                 if (!wasCachedRef.current && !isCachedRef.current){
 
-                    setCradleState('resolvependinguncache')
+                    if (hasBeenRenderedRef.current) {
+
+                        setCradleState('renderfromcache')
+
+                    } else {
+
+                        setCradleState('firstrenderfromcache')
+
+                    }
 
                 }
                 break
@@ -941,7 +957,7 @@ const Cradle = ({
 
                 } else {
 
-                    setCradleState('resolvependinguncache')
+                    setCradleState('firstrenderfromcache')
 
                 }
 
@@ -1003,7 +1019,8 @@ const Cradle = ({
             */
             case 'doscrollto':
             case 'resetcache':
-            case 'resolvependinguncache':
+            case 'firstrenderfromcache':
+            case 'renderfromcache':
             case 'dosetup':
             case 'finishpreload':
             case 'doreposition': //
@@ -1025,7 +1042,7 @@ const Cradle = ({
                     cacheHandler.clearCache()
                 }
 
-                contentHandler.setCradleContent( cradleState, hasBeenRenderedRef.current )
+                contentHandler.setCradleContent( cradleState )
 
                 if (cradleState != 'finishpreload') {
 

@@ -52,7 +52,7 @@ export default class ContentHandler {
      // or user size param reconfigure or reload
      // setCradleContent sets the scrollblock's scroll position, as well as config and content
 
-    public setCradleContent = (cradleState, hasBeenRendered ) => { 
+    public setCradleContent = ( cradleState ) => { 
 
         // ------------------------------[ 1. initialize ]---------------------------
 
@@ -97,9 +97,12 @@ export default class ContentHandler {
         workingAxisReferenceIndex -= (workingAxisReferenceIndex % crosscount)
 
         // reposition at row boundary
-        if (['doreposition', 'reconfigure', 'dosetup', 'doscrollto'].includes(cradleState)
-            || ((cradleState == 'resolvependinguncache') && !hasBeenRendered)
-        ) {
+        if (['doreposition', 
+            'reconfigure', 
+            'dosetup', 
+            'doscrollto', 
+            'firstrenderfromcache'
+        ].includes(cradleState)) {
 
             targetAxisViewportPixelOffset = 
                 (workingAxisReferenceIndex == 0)?
