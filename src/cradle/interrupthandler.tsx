@@ -113,7 +113,7 @@ export default class InterruptHandler {
                 !(cradleState == 'renderupdatedcontent') && // TODO: *TEST*
                 !(cradleState == 'finishupdatedcontent') &&
                 !(cradleState == 'finishresize') &&
-                !(cradleState == 'doreposition') && 
+                !(cradleState == 'reposition') && 
                 !(cradleState == 'pivot')
                 ) 
             {

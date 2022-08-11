@@ -63,7 +63,7 @@ export default class ServiceHandler {
 
         scaffoldHandler.cradlePositionData.targetAxisReferenceIndex = index
 
-        stateHandler.setCradleState('doscrollto')
+        stateHandler.setCradleState('scrollto')
 
     }
 
@@ -94,7 +94,7 @@ export default class ServiceHandler {
         )
 
         if ((cache == 'preload') && (newlistsize > currentlistsize)) {
-            stateHandler.setCradleState('dopreload')
+            stateHandler.setCradleState('startpreload')
         }
 
     }

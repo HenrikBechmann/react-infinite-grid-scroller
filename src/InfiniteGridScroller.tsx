@@ -20,7 +20,6 @@
 
     TODO:
 
-        - review state change chains in cradle
         - try to reduce need to run renderportallist - try some kind of pagination/grouping
 
         - test changing all gridscroller parameters
