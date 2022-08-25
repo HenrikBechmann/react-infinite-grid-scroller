@@ -18,9 +18,13 @@
 
     BUGS: 
     
-        runwaysize 0 has a bug scrolling down
+        - runwaysize 0 has is inconsistent from top and bottom
+        - cell width/height less than breakline offset causes problems
+        - cellheight greater than viewport height causes problems
 
     TODO:
+
+        - allow configurable breakline offset
 
         - test changing all gridscroller parameters
             test config size edge cases - over and under sized cells
