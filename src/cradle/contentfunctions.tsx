@@ -111,11 +111,11 @@ export const getShiftInstruction = ({
     isViewportScrollingForward,
     orientation,
     triggerlineEntries,
-    // triggerlineRecord,
     triggerlineSpan,
     scrollerID, // for debug
 
 }) => {
+
     const driver = 
         isViewportScrollingForward?
             'triggerline-axis':
@@ -137,20 +137,21 @@ export const getShiftInstruction = ({
                 entry.boundingClientRect.y:
                 entry.boundingClientRect.x
 
-        entry.viewportoffset = entrypos - rootpos
+        const viewportoffset = entrypos - rootpos
+        entry.viewportoffset = viewportoffset
 
-        // substitute logic for isIntersecting in case of overshoot
+        // axis needs to be moved if:
         return (
 
-            (isViewportScrollingForward) && 
-            (triggerlinename == 'triggerline-axis') && 
-            (entrypos <= rootpos)
+            // - axis triggerline goes out of scope, or...
+            driver == 'triggerline-axis' &&
+            viewportoffset <= 0
 
         ) || (
 
-            (!isViewportScrollingForward) && 
-            (triggerlinename == 'triggerline-head') && 
-            (entrypos >= rootpos)
+            // ... - head triggerline comes into scope
+            driver == 'triggerline-head' &&
+            viewportoffset > 0
 
         )
 
@@ -198,12 +199,19 @@ export const getShiftInstruction = ({
         const entry = entries[0] // assume one record gets filtered; only paired above on reconnect
 
         if (!isViewportScrollingForward) {
+
             retval = 1 // shift row to tail
+
         } else {
+
             retval = -1 // shift row to head
+
         }
 
     }
+
+    // console.log('==> getShiftInstruction: isViewportScrollingForward, driver, instruction, triggerlineEntries, filteredEntries','-'+scrollerID+'-',
+    //     '\n',isViewportScrollingForward, driver, retval,'\n' , triggerlineEntries, entries)
 
     return retval
 }
