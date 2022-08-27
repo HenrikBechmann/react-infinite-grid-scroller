@@ -1204,13 +1204,15 @@ const Cradle = ({
                 ref = {axisCradleElementRef}
             >
                 <div
-                    data-type = 'triggerline-backward-head'
+                    data-type = 'triggerline-head'
+                    data-direction = 'backward'
                     style = {triggerlineHeadStyle}
                     ref = {headTriggerlineCradleElementRef}
                 >
                 </div>
                 <div
-                    data-type = 'triggerline-backward-tail'
+                    data-type = 'triggerline-tail'
+                    data-direction = 'backward'
                     style = {triggerlineTailStyle}
                     ref = {tailTriggerlineCradleElementRef}
                 >
