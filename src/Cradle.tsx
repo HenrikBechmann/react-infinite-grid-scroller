@@ -105,19 +105,12 @@ const Cradle = ({
     const parentingTransitionRequiredRef = useRef(false)
     const hasBeenRenderedRef = useRef(false)
 
-    // controls
-    // const triggerlineRecordsRef = useRef({ // to calculate inferred trigger
-    //     // wasViewportScrollingForward:null,
-    //     driver:null,
-    //     // offset:null,
-    // })
-
     // cradle scaffold element refs
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const axisCradleElementRef = useRef(null)
     const headTriggerlineCradleElementRef = useRef(null)
-    const tailTriggerlineCradleElementRef = useRef(null)
+    const axisTriggerlineCradleElementRef = useRef(null)
 
     // scaffold bundle
     const cradleElementsRef = useRef(
@@ -126,7 +119,7 @@ const Cradle = ({
             tailRef:tailCradleElementRef, 
             axisRef:axisCradleElementRef,
             headTriggerlineRef:headTriggerlineCradleElementRef,
-            tailTriggerlineRef:tailTriggerlineCradleElementRef
+            axisTriggerlineRef:axisTriggerlineCradleElementRef
         }
     )
 
@@ -304,7 +297,6 @@ const Cradle = ({
         cradleElementsRef,
         isCachedRef,
         wasCachedRef,
-        // triggerlineRecordsRef,
 
         // for stateHandler
         cradleStateRef,
@@ -584,8 +576,8 @@ const Cradle = ({
 
         // triggerobserver tiggers cradle content updates 
         //     when triggerlines pass the edge of the viewport
-        const triggerobserver = interruptHandler.axisTriggerlinesIntersect.createObserver()
-        interruptHandler.axisTriggerlinesIntersect.connectElements()
+        const triggerobserver = interruptHandler.triggerlinesIntersect.createObserver()
+        interruptHandler.triggerlinesIntersect.connectElements()
 
         // resize observer generates compensation for changes in cell sizes for variable layout modes
         const resizeobserver = interruptHandler.cradleResize.createObserver()
@@ -796,7 +788,7 @@ const Cradle = ({
         cradleTailStyle, 
         cradleAxisStyle, 
         triggerlineHeadStyle, 
-        triggerlineTailStyle,
+        triggerlineAxisStyle,
         cradleDividerStyle
     ] = useMemo(()=> {
 
@@ -978,7 +970,7 @@ const Cradle = ({
 
                 cacheHandler.renderPortalList()
 
-                // interruptHandler.axisTriggerlinesIntersect.connectElements()
+                // interruptHandler.triggerlinesIntersect.connectElements()
                 // interruptHandler.signals.pauseTriggerlinesObserver = false
                 setCradleState('ready')
 
@@ -1210,9 +1202,9 @@ const Cradle = ({
                 >
                 </div>
                 <div
-                    data-type = 'triggerline-tail'
-                    style = {triggerlineTailStyle}
-                    ref = {tailTriggerlineCradleElementRef}
+                    data-type = 'triggerline-axis'
+                    style = {triggerlineAxisStyle}
+                    ref = {axisTriggerlineCradleElementRef}
                 >
                 </div>
 

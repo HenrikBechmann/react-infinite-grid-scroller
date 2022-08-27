@@ -118,18 +118,8 @@ export const getShiftInstruction = ({
 }) => {
     const driver = 
         isViewportScrollingForward?
-            'triggerline-tail':
+            'triggerline-axis':
             'triggerline-head'
-
-    // update triggerlineRecord
-    // if (isViewportScrollingForward != triggerlineRecord.wasViewportScrollingForward) {
-    //     triggerlineRecord.wasViewportScrollingForward = isViewportScrollingForward
-    //     triggerlineRecord.driver = 
-    //         isViewportScrollingForward?
-    //         'triggerline-tail':
-    //         'triggerline-head'
-    //     // triggerlineRecord.offset = null
-    // }
 
     const entries = triggerlineEntries.filter(entry => {
         // const isIntersecting = entry.isIntersecting
@@ -153,7 +143,7 @@ export const getShiftInstruction = ({
         return (
 
             (isViewportScrollingForward) && 
-            (triggerlinename == 'triggerline-tail') && 
+            (triggerlinename == 'triggerline-axis') && 
             (entrypos <= rootpos)
 
         ) || (
@@ -175,24 +165,30 @@ export const getShiftInstruction = ({
         if (counterentries.length == 0) return 0
 
         // check for implied trigger - trigger can be bypassed with heavy components
-        const counterentry =  counterentries.pop() //dtriggerlineEntries[0]
+        const counterentry =  counterentries.pop()
         const countertriggerlinename = counterentry.triggerlinename
 
         let impliedoffset
-        if (countertriggerlinename != driver) { // should always be true
-            if (countertriggerlinename == 'triggerline-head') {
-                impliedoffset = counterentry.viewportoffset + triggerlineSpan
-                if (impliedoffset <= 0) {
-                    // triggerlineRecord.offset = impliedoffset
-                    retval = -1
-                }
-            } else { // countertriggerlinename == 'triggerline-tail'
-                impliedoffset = counterentry.viewportoffset - triggerlineSpan
-                if (impliedoffset >= 0) {
-                    // triggerlineRecord.offset = impliedoffset
-                    retval = 1
-                }
+        if (countertriggerlinename == 'triggerline-head') {
+
+            impliedoffset = counterentry.viewportoffset + triggerlineSpan
+
+            if (impliedoffset <= 0) {
+
+                retval = -1
+
             }
+
+        } else { // countertriggerlinename == 'triggerline-axis'
+
+            impliedoffset = counterentry.viewportoffset - triggerlineSpan
+
+            if (impliedoffset >= 0) {
+
+                retval = 1
+
+            }
+
         }
 
         retval = 0
@@ -200,8 +196,6 @@ export const getShiftInstruction = ({
     } else { // complete the evaluation
 
         const entry = entries[0] // assume one record gets filtered; only paired above on reconnect
-
-        // triggerlineRecord.offset = entry.viewportoffset
 
         if (!isViewportScrollingForward) {
             retval = 1 // shift row to tail
