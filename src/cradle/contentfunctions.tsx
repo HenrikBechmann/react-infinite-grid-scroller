@@ -159,6 +159,10 @@ export const getShiftInstruction = ({
 
     let retval
 
+    // the triggerline might have passed through the viewport completely without the
+    // change being triggered, eg. not intersecting, passing through viewport, then
+    //    not intersecting again before being intercepted
+    // in this case we rely on the counter entry to provide information
     if (entries.length == 0) { // short-circuit the evaluation
 
         const counterentries = triggerlineEntries.filter(entry => entry.triggerlinename != driver)
@@ -184,7 +188,7 @@ export const getShiftInstruction = ({
 
             impliedoffset = counterentry.viewportoffset - triggerlineSpan
 
-            if (impliedoffset >= 0) {
+            if (impliedoffset > 0) {
 
                 retval = 1
 
@@ -198,7 +202,8 @@ export const getShiftInstruction = ({
 
         const entry = entries[0] // assume one record gets filtered; only paired above on reconnect
 
-        if (!isViewportScrollingForward) {
+        // if (!isViewportScrollingForward) {
+        if (driver == 'triggerline-head') {
 
             retval = 1 // shift row to tail
 
