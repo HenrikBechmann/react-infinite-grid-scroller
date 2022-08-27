@@ -109,7 +109,7 @@ const Cradle = ({
     const triggerlineRecordsRef = useRef({ // to calculate inferred trigger
         wasViewportScrollingForward:null,
         driver:null,
-        offset:null,
+        // offset:null,
     })
 
     // cradle scaffold element refs
