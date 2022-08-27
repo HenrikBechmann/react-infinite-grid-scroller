@@ -100,6 +100,12 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
 // ======================[ for updateCradleContent ]===========================
 
+/*
+    - If the top of the cell row moves beyond the viewport boundary, then the 
+        content should push the cell boundary up
+    - If the top of the cell row moves into the viewport boundary, then the
+        content should push the cell boundary down
+*/
 // -1 = shift row to head. 1 = shift row to tail. 0 = do not shift a row.
 export const getShiftInstruction = ({
     isViewportScrollingForward,
@@ -130,7 +136,7 @@ export const getShiftInstruction = ({
             (orientation == 'vertical')?
                 entry.rootBounds.y:
                 entry.rootBounds.x
-                
+
         const entrypos = 
             (orientation == 'vertical')?
                 entry.boundingClientRect.y:
