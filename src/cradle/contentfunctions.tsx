@@ -137,21 +137,21 @@ export const getShiftInstruction = ({
                 entry.boundingClientRect.y:
                 entry.boundingClientRect.x
 
-        const viewportoffset = entrypos - rootpos
-        entry.viewportoffset = viewportoffset
+        const viewportoffsethead = entrypos - rootpos
+        entry.viewportoffsethead = viewportoffsethead
 
         // axis needs to be moved if:
         return (
 
             // - axis triggerline goes out of scope, or...
             driver == 'triggerline-axis' &&
-            viewportoffset <= 0
+            viewportoffsethead <= 0
 
         ) || (
 
             // ... - head triggerline comes into scope
             driver == 'triggerline-head' &&
-            viewportoffset > 0
+            viewportoffsethead > 0
 
         )
 
@@ -173,12 +173,12 @@ export const getShiftInstruction = ({
         const counterentry =  counterentries.pop()
         const countertriggerlinename = counterentry.triggerlinename
 
-        let impliedoffset
+        let impliedoffsethead
         if (countertriggerlinename == 'triggerline-head') {
 
-            impliedoffset = counterentry.viewportoffset + triggerlineSpan
+            impliedoffsethead = counterentry.viewportoffsethead + triggerlineSpan
 
-            if (impliedoffset <= 0) {
+            if (impliedoffsethead <= 0) {
 
                 retval = -1
 
@@ -186,9 +186,9 @@ export const getShiftInstruction = ({
 
         } else { // countertriggerlinename == 'triggerline-axis'
 
-            impliedoffset = counterentry.viewportoffset - triggerlineSpan
+            impliedoffsethead = counterentry.viewportoffsethead - triggerlineSpan
 
-            if (impliedoffset > 0) {
+            if (impliedoffsethead > 0) {
 
                 retval = 1
 
