@@ -23,8 +23,6 @@
 
     TODO:
 
-        - allow configurable breakline offset
-
         - test changing all gridscroller parameters
             test config size edge cases - over and under sized cells
 
