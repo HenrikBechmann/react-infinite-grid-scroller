@@ -282,13 +282,13 @@ export default class ContentHandler {
         } = cradleInheritedProperties
 
         // -1 is move a row up to the head, +1 is move a row down to the tail, 0 is no shift
-        const triggerlineRecord = cradleInternalProperties.triggerlineRecordsRef.current
+        // const triggerlineRecord = cradleInternalProperties.triggerlineRecordsRef.current
         const shiftinstruction = getShiftInstruction({
             scrollerID: cradleInheritedProperties.scrollerID,
             isViewportScrollingForward,
             orientation,
             triggerlineEntries,
-            triggerlineRecord,
+            // triggerlineRecord,
             triggerlineSpan: scaffoldHandler.triggerlineSpan,
         })
 

@@ -106,11 +106,11 @@ const Cradle = ({
     const hasBeenRenderedRef = useRef(false)
 
     // controls
-    const triggerlineRecordsRef = useRef({ // to calculate inferred trigger
-        wasViewportScrollingForward:null,
-        driver:null,
-        // offset:null,
-    })
+    // const triggerlineRecordsRef = useRef({ // to calculate inferred trigger
+    //     // wasViewportScrollingForward:null,
+    //     driver:null,
+    //     // offset:null,
+    // })
 
     // cradle scaffold element refs
     const headCradleElementRef = useRef(null)
@@ -304,7 +304,7 @@ const Cradle = ({
         cradleElementsRef,
         isCachedRef,
         wasCachedRef,
-        triggerlineRecordsRef,
+        // triggerlineRecordsRef,
 
         // for stateHandler
         cradleStateRef,

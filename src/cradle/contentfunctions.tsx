@@ -111,20 +111,25 @@ export const getShiftInstruction = ({
     isViewportScrollingForward,
     orientation,
     triggerlineEntries,
-    triggerlineRecord,
+    // triggerlineRecord,
     triggerlineSpan,
     scrollerID, // for debug
 
 }) => {
-    // update triggerlineRecord
-    if (isViewportScrollingForward != triggerlineRecord.wasViewportScrollingForward) {
-        triggerlineRecord.wasViewportScrollingForward = isViewportScrollingForward
-        triggerlineRecord.driver = 
-            isViewportScrollingForward?
+    const driver = 
+        isViewportScrollingForward?
             'triggerline-tail':
             'triggerline-head'
-        // triggerlineRecord.offset = null
-    }
+
+    // update triggerlineRecord
+    // if (isViewportScrollingForward != triggerlineRecord.wasViewportScrollingForward) {
+    //     triggerlineRecord.wasViewportScrollingForward = isViewportScrollingForward
+    //     triggerlineRecord.driver = 
+    //         isViewportScrollingForward?
+    //         'triggerline-tail':
+    //         'triggerline-head'
+    //     // triggerlineRecord.offset = null
+    // }
 
     const entries = triggerlineEntries.filter(entry => {
         // const isIntersecting = entry.isIntersecting
@@ -165,7 +170,7 @@ export const getShiftInstruction = ({
 
     if (entries.length == 0) { // short-circuit the evaluation
 
-        const counterentries = triggerlineEntries.filter(entry => entry.triggerlinename != triggerlineRecord.driver)
+        const counterentries = triggerlineEntries.filter(entry => entry.triggerlinename != driver)
 
         if (counterentries.length == 0) return 0
 
@@ -174,7 +179,7 @@ export const getShiftInstruction = ({
         const countertriggerlinename = counterentry.triggerlinename
 
         let impliedoffset
-        if (countertriggerlinename != triggerlineRecord.driver) { // should always be true
+        if (countertriggerlinename != driver) { // should always be true
             if (countertriggerlinename == 'triggerline-head') {
                 impliedoffset = counterentry.viewportoffset + triggerlineSpan
                 if (impliedoffset <= 0) {
