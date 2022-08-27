@@ -325,11 +325,14 @@ export const calcContentShift = ({
         const targetCradleReferenceRowOffset = 
             Math.max(0, 
                 (
-                    newAxisReferenceRowOffset - 
-                        runwayRowcount + 
-                        (runwayRowcount?-1:0) // one row is visible, not runway
+                    newAxisReferenceRowOffset - runwayRowcount - 1
+                        // runwayRowcount + 
+                        // (runwayRowcount?-1:0) // one row is visible, not runway
                 )
             )
+
+        // console.log('calcContentShift: targetCradleReferenceRowOffset, newAxisReferenceRowOffset, runwayRowcount',
+        //     targetCradleReferenceRowOffset, newAxisReferenceRowOffset, runwayRowcount)
 
         const headrowDiff = newCradleReferenceRowOffset - targetCradleReferenceRowOffset
         if (headrowDiff > 0) {
@@ -347,6 +350,7 @@ export const calcContentShift = ({
             cradleReferenceRowshift -= tailrowdiff
 
         }
+
     } else { // !isScrollingViewportForward = scroll backward
 
         // c. if scrolling backward (toward head of list), as the cradlerowoffset hits 0, cradle changes have

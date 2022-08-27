@@ -18,9 +18,8 @@
 
     BUGS: 
     
-        - runwaysize 0 has is inconsistent from top and bottom
-        - cell width/height less than breakline offset causes problems
         - cellheight greater than viewport height causes problems
+        - cell width/height less than breakline offset causes problems
 
     TODO:
 
