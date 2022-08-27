@@ -114,8 +114,8 @@ export const getShiftInstruction = ({
         triggerlineRecord.wasViewportScrollingForward = isViewportScrollingForward
         triggerlineRecord.driver = 
             isViewportScrollingForward?
-            'triggerline-tail':
-            'triggerline-head'
+            'triggerline-backward-tail':
+            'triggerline-backward-head'
         triggerlineRecord.offset = null
     }
     const entries = triggerlineEntries.filter(entry => {
@@ -132,8 +132,8 @@ export const getShiftInstruction = ({
                 entry.boundingClientRect.y:
                 entry.boundingClientRect.x
         entry.viewportoffset = entrypos - rootpos
-        return ((isViewportScrollingForward) && (triggerlinename == 'triggerline-tail') && (entrypos <= rootpos)) || 
-            ((!isViewportScrollingForward) && (triggerlinename == 'triggerline-head') && (entrypos >= rootpos))
+        return ((isViewportScrollingForward) && (triggerlinename == 'triggerline-backward-tail') && (entrypos <= rootpos)) || 
+            ((!isViewportScrollingForward) && (triggerlinename == 'triggerline-backward-head') && (entrypos >= rootpos))
     })
 
     // if ((entries.length == 0) && (triggerlineEntries.length == 2)) { // reconnecting
@@ -155,14 +155,14 @@ export const getShiftInstruction = ({
 
         let impliedoffset
         if (countertriggerlinename != triggerlineRecord.driver) { // should always be true
-            if (countertriggerlinename == 'triggerline-head') {
+            if (countertriggerlinename == 'triggerline-backward-head') {
                 impliedoffset = counterentry.viewportoffset + triggerlineSpan
                 if (impliedoffset <= 0) {
                     triggerlineRecord.offset = impliedoffset
                     // console.log('returning -1')
                     return -1
                 }
-            } else { // countertriggerlinename == 'triggerline-tail'
+            } else { // countertriggerlinename == 'triggerline-backward-tail'
                 impliedoffset = counterentry.viewportoffset - triggerlineSpan
                 if (impliedoffset >= 0) {
                     triggerlineRecord.offset = impliedoffset

@@ -17,8 +17,14 @@
         create demo site - github pages
 
     BUGS: 
+    
+        - runwaysize 0 has is inconsistent from top and bottom
+        - cell width/height less than breakline offset causes problems
+        - cellheight greater than viewport height causes problems
 
     TODO:
+
+        - allow configurable breakline offset
 
         - test changing all gridscroller parameters
             test config size edge cases - over and under sized cells
@@ -162,15 +168,18 @@ const InfiniteGridScroller = (props) => {
     // const cacheRef = useRef(null)
 
     let {
+
         showAxis,
         VIEWPORT_RESIZE_TIMEOUT,
         IDLECALLBACK_TIMEOUT,
         MAX_CACHE_OVER_RUN,
+
     } = advanced
 
     VIEWPORT_RESIZE_TIMEOUT = VIEWPORT_RESIZE_TIMEOUT ?? 250
     IDLECALLBACK_TIMEOUT = IDLECALLBACK_TIMEOUT ?? 4000
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
+
     if (typeof showAxis != 'boolean') {
         showAxis = true
     }
