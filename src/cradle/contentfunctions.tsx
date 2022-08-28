@@ -140,7 +140,7 @@ export const getShiftInstruction = ({
         const viewportoffsethead = entrypos - rootpos
         entry.viewportoffsethead = viewportoffsethead
 
-        if (triggerlinename == 'triggerline-tail') {
+        if (triggerlinename == 'triggerline-tail') { // calculated early for debug availability
             const rootpostail = 
                 (orientation == 'vertical')?
                     entry.rootBounds.y + entry.rootBounds.height:
@@ -162,7 +162,7 @@ export const getShiftInstruction = ({
 
             // - head triggerline comes into scope
             driver == 'triggerline-head' &&
-            viewportoffsethead > 0
+            viewportoffsethead >= 0
 
         )
 
@@ -216,7 +216,7 @@ export const getShiftInstruction = ({
 
                 impliedoffsethead = counterentry.viewportoffsethead - triggerlineSpan
 
-                if (impliedoffsethead > 0) {
+                if (impliedoffsethead >= 0) {
 
                     retval = 1
 
