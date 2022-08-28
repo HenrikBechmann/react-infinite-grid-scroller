@@ -140,6 +140,17 @@ export const getShiftInstruction = ({
         const viewportoffsethead = entrypos - rootpos
         entry.viewportoffsethead = viewportoffsethead
 
+        if (triggerlinename == 'triggerline-tail') {
+            const rootpostail = 
+                (orientation == 'vertical')?
+                    entry.rootBounds.y + entry.rootBounds.height:
+                    entry.rootBounds.x + entry.rootBounds.width
+
+            const viewportoffsettail = rootpostail - entrypos
+            entry.viewportoffsettail = viewportoffsettail
+
+        }
+
         // axis needs to be moved if:
         return (
 
@@ -149,7 +160,7 @@ export const getShiftInstruction = ({
 
         ) || (
 
-            // ... - head triggerline comes into scope
+            // - head triggerline comes into scope
             driver == 'triggerline-head' &&
             viewportoffsethead > 0
 
@@ -165,32 +176,51 @@ export const getShiftInstruction = ({
     // in this case we rely on the counter entry to provide information
     if (entries.length == 0) { // short-circuit the evaluation
 
-        const counterentries = triggerlineEntries.filter(entry => entry.triggerlinename != driver)
+        const counterdriver = 
+        (!isViewportScrollingForward)?
+            'triggerline-axis':
+            'triggerline-head'        
 
-        if (counterentries.length == 0) return 0
+        const counterentries = triggerlineEntries.filter(entry => entry.triggerlinename == counterdriver)
 
-        // check for implied trigger - trigger can be bypassed with heavy components
-        const counterentry =  counterentries.pop()
-        const countertriggerlinename = counterentry.triggerlinename
+        if (counterentries.length == 0) {
 
-        let impliedoffsethead
-        if (countertriggerlinename == 'triggerline-head') {
+            retval = 0
 
-            impliedoffsethead = counterentry.viewportoffsethead + triggerlineSpan
+            const backupdriver = 'triggerline-tail'
 
-            if (impliedoffsethead <= 0) {
+            const backupentries = triggerlineEntries.filter(entry => entry.triggerlinename == backupdriver)
 
-                retval = -1
-
+            if (backupentries.length != 0) {
+                const entry = backupentries.pop()
             }
 
-        } else { // countertriggerlinename == 'triggerline-axis'
+        } else {
 
-            impliedoffsethead = counterentry.viewportoffsethead - triggerlineSpan
+            // check for implied trigger - trigger can be bypassed with heavy components
+            const counterentry =  counterentries.pop()
+            const countertriggerlinename = counterentry.triggerlinename
 
-            if (impliedoffsethead > 0) {
+            let impliedoffsethead
+            if (countertriggerlinename == 'triggerline-head') {
 
-                retval = 1
+                impliedoffsethead = counterentry.viewportoffsethead + triggerlineSpan
+
+                if (impliedoffsethead <= 0) {
+
+                    retval = -1
+
+                }
+
+            } else { // countertriggerlinename == 'triggerline-axis'
+
+                impliedoffsethead = counterentry.viewportoffsethead - triggerlineSpan
+
+                if (impliedoffsethead > 0) {
+
+                    retval = 1
+
+                }
 
             }
 
@@ -215,8 +245,8 @@ export const getShiftInstruction = ({
 
     }
 
-    // console.log('==> getShiftInstruction: isViewportScrollingForward, driver, instruction, triggerlineEntries, filteredEntries','-'+scrollerID+'-',
-    //     '\n',isViewportScrollingForward, driver, retval,'\n' , triggerlineEntries, entries)
+    console.log('==> getShiftInstruction: isViewportScrollingForward, driver, instruction, triggerlineEntries, filteredEntries','-'+scrollerID+'-',
+        '\n',isViewportScrollingForward, driver, retval,'\n' , triggerlineEntries, entries)
 
     return retval
 }

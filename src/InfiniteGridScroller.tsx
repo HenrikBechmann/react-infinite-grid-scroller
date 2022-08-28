@@ -18,6 +18,7 @@
 
     BUGS: 
     
+        - first row sometimes doesn't move axis to first position
         - cellheight greater than viewport height causes problems
         - cell width/height less than breakline offset causes problems
 
