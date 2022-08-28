@@ -19,6 +19,7 @@
     BUGS: 
     
         - cell width/height less than breakline offset causes problems
+        - runwaysize 0 with oversize cells breaks scrolling
 
     TODO:
 
