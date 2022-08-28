@@ -12,6 +12,7 @@ export default class StylesHandler {
     private cradleParameters
 
     private headTriggerlineOffset
+    private axisTriggerlineOffset
     private tailTriggerlineOffset
 
     public setCradleStyles = ({
@@ -39,6 +40,8 @@ export default class StylesHandler {
         const { scaffoldHandler } = this.cradleParameters.handlersRef.current
         const triggerlineheadstyles:React.CSSProperties = 
             this.getTriggerlineHeadStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
+        const triggerlineaxisstyles:React.CSSProperties = 
+            this.getTriggerlineAxisStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
         const triggerlinetailstyles:React.CSSProperties = 
             this.getTriggerlineTailStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
         scaffoldHandler.triggerlineSpan = this.tailTriggerlineOffset - this.headTriggerlineOffset
@@ -117,6 +120,7 @@ export default class StylesHandler {
             tailstyles,
             axisstyles,
             triggerlineheadstyles,
+            triggerlineaxisstyles,
             triggerlinetailstyles,
             cradledividerstyles
         ]
@@ -219,13 +223,13 @@ export default class StylesHandler {
 
     }
 
-    private getTriggerlineTailStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
+    private getTriggerlineAxisStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
         let transform // for position relative to axis
         const position = 'absolute',
             width = '100%',
             height = '100%'
 
-        this.tailTriggerlineOffset = triggerlineOffset
+        this.axisTriggerlineOffset = triggerlineOffset
 
         if (orientation == 'horizontal') {
             transform = `translateX(${triggerlineOffset + 'px'})`
@@ -253,6 +257,28 @@ export default class StylesHandler {
         } else {
             this.headTriggerlineOffset = -(cellHeight + gap -triggerlineOffset)
             transform = `translateY(${this.headTriggerlineOffset + 'px'})`
+        }
+        return { ...{
+            position,
+            width,
+            height,
+            transform,
+        } as React.CSSProperties}
+    }
+
+
+    private getTriggerlineTailStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
+        let transform // for position relative to axis
+
+        let position = 'absolute',
+            width = '100%',
+            height = '100%'
+        if (orientation == 'horizontal') {
+            this.tailTriggerlineOffset = (cellWidth + gap -triggerlineOffset)
+            transform = `translateX(${this.tailTriggerlineOffset + 'px'})`
+        } else {
+            this.tailTriggerlineOffset = (cellHeight + gap -triggerlineOffset)
+            transform = `translateY(${this.tailTriggerlineOffset + 'px'})`
         }
         return { ...{
             position,

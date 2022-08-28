@@ -12,7 +12,8 @@ export default class ScaffoldHandler {
             headRef, 
             tailRef,
             headTriggerlineRef,
-            axisTriggerlineRef
+            axisTriggerlineRef,
+            tailTriggerlineRef,
         } = cradleParameters.cradleInternalPropertiesRef.current.cradleElementsRef.current
         
         this.elements = {
@@ -20,7 +21,8 @@ export default class ScaffoldHandler {
             headRef,
             tailRef,
             headTriggerlineRef,
-            axisTriggerlineRef
+            axisTriggerlineRef,
+            tailTriggerlineRef,
         }
 
         const {
