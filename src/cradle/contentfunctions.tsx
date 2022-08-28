@@ -113,8 +113,25 @@ export const getShiftInstruction = ({
     triggerlineEntries,
     triggerlineSpan,
     scrollerID, // for debug
+    // for oversized (overflow) cells
+    oldAxisReferenceIndex,
+    viewportVisibleRowcount,
+    crosscount,
+    listsize,
 
 }) => {
+
+//     console.log(`
+// oldAxisReferenceIndex,
+// viewportVisibleRowcount,
+// crosscount,
+// listsize,
+// `,
+//         oldAxisReferenceIndex,
+//         viewportVisibleRowcount,
+//         crosscount,
+//         listsize,
+//     )
 
     const driver = 
         isViewportScrollingForward?
@@ -139,17 +156,6 @@ export const getShiftInstruction = ({
 
         const viewportoffsethead = entrypos - rootpos
         entry.viewportoffsethead = viewportoffsethead
-
-        if (triggerlinename == 'triggerline-tail') { // calculated early for debug availability
-            const rootpostail = 
-                (orientation == 'vertical')?
-                    entry.rootBounds.y + entry.rootBounds.height:
-                    entry.rootBounds.x + entry.rootBounds.width
-
-            const viewportoffsettail = rootpostail - entrypos
-            entry.viewportoffsettail = viewportoffsettail
-
-        }
 
         // axis needs to be moved if:
         return (
@@ -183,20 +189,7 @@ export const getShiftInstruction = ({
 
         const counterentries = triggerlineEntries.filter(entry => entry.triggerlinename == counterdriver)
 
-        if (counterentries.length == 0) {
-
-            retval = 0
-
-            const backupdriver = 'triggerline-tail'
-
-            const backupentries = triggerlineEntries.filter(entry => entry.triggerlinename == backupdriver)
-
-            if (backupentries.length != 0) {
-                const entry = backupentries.pop()
-            }
-
-        } else {
-
+        if (counterentries.length != 0) {
             // check for implied trigger - trigger can be bypassed with heavy components
             const counterentry =  counterentries.pop()
             const countertriggerlinename = counterentry.triggerlinename
@@ -245,8 +238,16 @@ export const getShiftInstruction = ({
 
     }
 
-    console.log('==> getShiftInstruction: isViewportScrollingForward, driver, instruction, triggerlineEntries, filteredEntries','-'+scrollerID+'-',
-        '\n',isViewportScrollingForward, driver, retval,'\n' , triggerlineEntries, entries)
+    if ((retval !=0) && (isViewportScrollingForward) && (viewportVisibleRowcount == 0)) {// check for last oversize row
+        if ((listsize - crosscount) <= oldAxisReferenceIndex) {
+
+            retval = 0
+
+        }
+    }
+
+    // console.log('==> getShiftInstruction: isViewportScrollingForward, driver, instruction, triggerlineEntries, filteredEntries','-'+scrollerID+'-',
+    //     '\n',isViewportScrollingForward, driver, retval,'\n' , triggerlineEntries, entries)
 
     return retval
 }
@@ -452,26 +453,26 @@ export const calcContentShift = ({
 
     // ---------------------[ 9. return required values ]-------------------
 
-    console.log('calcContentShift',
-`
-        newCradleReferenceIndex, 
-        cradleReferenceItemShift, 
-        newAxisReferenceIndex, 
-        axisReferenceItemShift, 
-        newAxisPixelOffset, 
-        newCradleContentCount,
-        listStartChangeCount,
-        listEndChangeCount
-`,
-        newCradleReferenceIndex, 
-        cradleReferenceItemShift, 
-        newAxisReferenceIndex, 
-        axisReferenceItemShift, 
-        newAxisPixelOffset, 
-        newCradleContentCount,
-        listStartChangeCount,
-        listEndChangeCount
-)
+//     console.log('calcContentShift',
+// `
+//         newCradleReferenceIndex, 
+//         cradleReferenceItemShift, 
+//         newAxisReferenceIndex, 
+//         axisReferenceItemShift, 
+//         newAxisPixelOffset, 
+//         newCradleContentCount,
+//         listStartChangeCount,
+//         listEndChangeCount
+// `,
+//         newCradleReferenceIndex, 
+//         cradleReferenceItemShift, 
+//         newAxisReferenceIndex, 
+//         axisReferenceItemShift, 
+//         newAxisPixelOffset, 
+//         newCradleContentCount,
+//         listStartChangeCount,
+//         listEndChangeCount
+// )
 
     return {
         newCradleReferenceIndex, 

@@ -271,6 +271,7 @@ export default class ContentHandler {
         const cradleContent = this.content
         const modelcontentlist = cradleContent.cradleModelComponents || []
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
+        const oldAxisReferenceIndex = (cradleContent.tailModelComponents[0]?.props.index || 0)
 
         // --------------------[ 2. get shift instruction ]-----------------------
 
@@ -281,6 +282,13 @@ export default class ContentHandler {
             cache,
         } = cradleInheritedProperties
 
+        const { 
+            viewportVisibleRowcount,
+            crosscount,
+            // listRowcount,
+            listsize,
+        } = cradleInternalProperties
+
         // -1 is move a row up to the head, +1 is move a row down to the tail, 0 is no shift
         const shiftinstruction = getShiftInstruction({
             scrollerID: cradleInheritedProperties.scrollerID,
@@ -288,6 +296,11 @@ export default class ContentHandler {
             orientation,
             triggerlineEntries,
             triggerlineSpan: scaffoldHandler.triggerlineSpan,
+            // for oversized (overflow) cells
+            oldAxisReferenceIndex,
+            viewportVisibleRowcount,
+            crosscount,
+            listsize,
         })
 
         // second abandon option/3; nothing to do

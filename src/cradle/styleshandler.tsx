@@ -13,7 +13,6 @@ export default class StylesHandler {
 
     private headTriggerlineOffset
     private axisTriggerlineOffset
-    private tailTriggerlineOffset
 
     public setCradleStyles = ({
 
@@ -42,9 +41,7 @@ export default class StylesHandler {
             this.getTriggerlineHeadStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
         const triggerlineaxisstyles:React.CSSProperties = 
             this.getTriggerlineAxisStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
-        const triggerlinetailstyles:React.CSSProperties = 
-            this.getTriggerlineTailStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
-        scaffoldHandler.triggerlineSpan = this.tailTriggerlineOffset - this.headTriggerlineOffset
+        scaffoldHandler.triggerlineSpan = this.axisTriggerlineOffset - this.headTriggerlineOffset
 
         const cradledividerstyles:React.CSSProperties = 
             {
@@ -121,7 +118,6 @@ export default class StylesHandler {
             axisstyles,
             triggerlineheadstyles,
             triggerlineaxisstyles,
-            triggerlinetailstyles,
             cradledividerstyles
         ]
         
@@ -266,25 +262,4 @@ export default class StylesHandler {
         } as React.CSSProperties}
     }
 
-
-    private getTriggerlineTailStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
-        let transform // for position relative to axis
-
-        let position = 'absolute',
-            width = '100%',
-            height = '100%'
-        if (orientation == 'horizontal') {
-            this.tailTriggerlineOffset = (cellWidth + gap -triggerlineOffset)
-            transform = `translateX(${this.tailTriggerlineOffset + 'px'})`
-        } else {
-            this.tailTriggerlineOffset = (cellHeight + gap -triggerlineOffset)
-            transform = `translateY(${this.tailTriggerlineOffset + 'px'})`
-        }
-        return { ...{
-            position,
-            width,
-            height,
-            transform,
-        } as React.CSSProperties}
-    }
 }

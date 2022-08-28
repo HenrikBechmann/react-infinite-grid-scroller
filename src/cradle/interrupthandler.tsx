@@ -188,7 +188,6 @@ export default class InterruptHandler {
             const cradleElements = this.cradleParameters.handlersRef.current.scaffoldHandler.elements
             observer.observe(cradleElements.headTriggerlineRef.current)
             observer.observe(cradleElements.axisTriggerlineRef.current)
-            observer.observe(cradleElements.tailTriggerlineRef.current)
         },
         createObserver:() => {
             const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current

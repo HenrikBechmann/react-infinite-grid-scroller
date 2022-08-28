@@ -18,13 +18,14 @@
 
     BUGS: 
     
-        - cellheight greater than viewport height causes problems
         - cell width/height less than breakline offset causes problems
 
     TODO:
 
         - test changing all gridscroller parameters
             test config size edge cases - over and under sized cells
+
+        - test vertical resize, particularly around cell size boundaries
 
         - clear out TODO notes
 

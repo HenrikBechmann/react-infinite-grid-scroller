@@ -111,7 +111,6 @@ const Cradle = ({
     const axisCradleElementRef = useRef(null)
     const headTriggerlineCradleElementRef = useRef(null)
     const axisTriggerlineCradleElementRef = useRef(null)
-    const tailTriggerlineCradleElementRef = useRef(null)
 
     // scaffold bundle
     const cradleElementsRef = useRef(
@@ -121,7 +120,6 @@ const Cradle = ({
             axisRef:axisCradleElementRef,
             headTriggerlineRef:headTriggerlineCradleElementRef,
             axisTriggerlineRef:axisTriggerlineCradleElementRef,
-            tailTriggerlineRef:tailTriggerlineCradleElementRef
         }
     )
 
@@ -791,7 +789,6 @@ const Cradle = ({
         cradleAxisStyle, 
         triggerlineHeadStyle, 
         triggerlineAxisStyle,
-        triggerlineTailStyle,
         cradleDividerStyle
     ] = useMemo(()=> {
 
@@ -1208,12 +1205,6 @@ const Cradle = ({
                     data-type = 'triggerline-axis'
                     style = {triggerlineAxisStyle}
                     ref = {axisTriggerlineCradleElementRef}
-                >
-                </div>
-                <div
-                    data-type = 'triggerline-tail'
-                    style = {triggerlineTailStyle}
-                    ref = {tailTriggerlineCradleElementRef}
                 >
                 </div>
 
