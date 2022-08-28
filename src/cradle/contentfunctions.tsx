@@ -261,7 +261,6 @@ export const calcContentShift = ({
     cradleContent,
     cradleElements,
     scrollPos, // of cradle against viewport; where the cradle motion intersects the viewport
-    // viewportElement,
 
 }) => {
 
@@ -453,26 +452,26 @@ export const calcContentShift = ({
 
     // ---------------------[ 9. return required values ]-------------------
 
-//     console.log('calcContentShift',
-// `
-//         newCradleReferenceIndex, 
-//         cradleReferenceItemShift, 
-//         newAxisReferenceIndex, 
-//         axisReferenceItemShift, 
-//         newAxisPixelOffset, 
-//         newCradleContentCount,
-//         listStartChangeCount,
-//         listEndChangeCount
-// `,
-//         newCradleReferenceIndex, 
-//         cradleReferenceItemShift, 
-//         newAxisReferenceIndex, 
-//         axisReferenceItemShift, 
-//         newAxisPixelOffset, 
-//         newCradleContentCount,
-//         listStartChangeCount,
-//         listEndChangeCount
-// )
+    console.log('calcContentShift',
+`
+        newCradleReferenceIndex, 
+        cradleReferenceItemShift, 
+        newAxisReferenceIndex, 
+        axisReferenceItemShift, 
+        newAxisPixelOffset, 
+        newCradleContentCount,
+        listStartChangeCount,
+        listEndChangeCount
+`,
+        newCradleReferenceIndex, 
+        cradleReferenceItemShift, 
+        newAxisReferenceIndex, 
+        axisReferenceItemShift, 
+        newAxisPixelOffset, 
+        newCradleContentCount,
+        listStartChangeCount,
+        listEndChangeCount
+)
 
     return {
         newCradleReferenceIndex, 
