@@ -56,7 +56,7 @@ const Scrollblock = ({
         return Object.assign(
         {
 
-            backgroundColor:'white',
+            // backgroundColor:'white',
             position:'relative',
             
         } as React.CSSProperties, styles.cradle)
