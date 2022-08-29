@@ -100,95 +100,144 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
 // ======================[ for updateCradleContent ]===========================
 
+/*
+    - If the top of the cell row moves beyond the viewport boundary, then the 
+        content should push the cell boundary up
+    - If the top of the cell row moves into the viewport boundary, then the
+        content should push the cell boundary down
+*/
 // -1 = shift row to head. 1 = shift row to tail. 0 = do not shift a row.
 export const getShiftInstruction = ({
     isViewportScrollingForward,
     orientation,
     triggerlineEntries,
-    triggerlineRecord,
     triggerlineSpan,
     scrollerID, // for debug
+    // for oversized (overflow) cells
+    oldAxisReferenceIndex,
+    viewportVisibleRowcount,
+    crosscount,
+    listsize,
 
 }) => {
-    if (isViewportScrollingForward != triggerlineRecord.wasViewportScrollingForward) {
-        triggerlineRecord.wasViewportScrollingForward = isViewportScrollingForward
-        triggerlineRecord.driver = 
-            isViewportScrollingForward?
-            'triggerline-backward-tail':
-            'triggerline-backward-head'
-        triggerlineRecord.offset = null
-    }
+
+    const driver = 
+        isViewportScrollingForward?
+            'triggerline-axis':
+            'triggerline-head'
+
     const entries = triggerlineEntries.filter(entry => {
         // const isIntersecting = entry.isIntersecting
         const triggerlinename = entry.target.dataset.type
-        entry.triggerlinename = triggerlinename
-        entry.scrollingforward = isViewportScrollingForward
+        entry.triggerlinename = triggerlinename // memo for processing and console
+        entry.scrollingforward = isViewportScrollingForward // memo for console
+
         const rootpos = 
             (orientation == 'vertical')?
                 entry.rootBounds.y:
                 entry.rootBounds.x
+
         const entrypos = 
             (orientation == 'vertical')?
                 entry.boundingClientRect.y:
                 entry.boundingClientRect.x
-        entry.viewportoffset = entrypos - rootpos
-        return ((isViewportScrollingForward) && (triggerlinename == 'triggerline-backward-tail') && (entrypos <= rootpos)) || 
-            ((!isViewportScrollingForward) && (triggerlinename == 'triggerline-backward-head') && (entrypos >= rootpos))
+
+        const viewportoffsethead = entrypos - rootpos
+        entry.viewportoffsethead = viewportoffsethead
+
+        // axis needs to be moved if:
+        return (
+
+            // - axis triggerline goes out of scope, or...
+            driver == 'triggerline-axis' &&
+            viewportoffsethead <= 0
+
+        ) || (
+
+            // - head triggerline comes into scope
+            driver == 'triggerline-head' &&
+            viewportoffsethead >= 0
+
+        )
+
     })
 
-    // if ((entries.length == 0) && (triggerlineEntries.length == 2)) { // reconnecting
+    let retval
 
-    //     return 0
-    // }
+    // the triggerline might have passed through the viewport completely without the
+    // change being triggered, eg. not intersecting, passing through viewport, then
+    //    not intersecting again before being intercepted
+    // in this case we rely on the counter entry to provide information
+    if (entries.length == 0) { // short-circuit the evaluation
 
-    if (entries.length == 0) {
+        const counterdriver = 
+        (!isViewportScrollingForward)?
+            'triggerline-axis':
+            'triggerline-head'        
 
-        const counterentries = triggerlineEntries.filter(entry => entry.triggerlinename != triggerlineRecord.driver)
+        const counterentries = triggerlineEntries.filter(entry => entry.triggerlinename == counterdriver)
 
-        if (counterentries.length == 0) return 0
+        if (counterentries.length != 0) {
+            // check for implied trigger - trigger can be bypassed with heavy components
+            const counterentry =  counterentries.pop()
+            const countertriggerlinename = counterentry.triggerlinename
 
-        // console.log('counterentries','-'+scrollerID+'-', [...counterentries])
+            let impliedoffsethead
+            if (countertriggerlinename == 'triggerline-head') {
 
-        // check for implied trigger - trigger can be bypassed with heavy components
-        const counterentry =  counterentries.pop() //dtriggerlineEntries[0]
-        const countertriggerlinename = counterentry.triggerlinename
+                impliedoffsethead = counterentry.viewportoffsethead + triggerlineSpan
 
-        let impliedoffset
-        if (countertriggerlinename != triggerlineRecord.driver) { // should always be true
-            if (countertriggerlinename == 'triggerline-backward-head') {
-                impliedoffset = counterentry.viewportoffset + triggerlineSpan
-                if (impliedoffset <= 0) {
-                    triggerlineRecord.offset = impliedoffset
-                    // console.log('returning -1')
-                    return -1
+                if (impliedoffsethead <= 0) {
+
+                    retval = -1
+
                 }
-            } else { // countertriggerlinename == 'triggerline-backward-tail'
-                impliedoffset = counterentry.viewportoffset - triggerlineSpan
-                if (impliedoffset >= 0) {
-                    triggerlineRecord.offset = impliedoffset
-                    // console.log('returning 1')
-                    return 1
+
+            } else { // countertriggerlinename == 'triggerline-axis'
+
+                impliedoffsethead = counterentry.viewportoffsethead - triggerlineSpan
+
+                if (impliedoffsethead >= 0) {
+
+                    retval = 1
+
                 }
+
             }
+
         }
 
-        // console.log('returning 0')
-        return 0
+        retval = 0
+
+    } else { // complete the evaluation
+
+        const entry = entries[0] // assume one record gets filtered; only paired above on reconnect
+
+        // if (!isViewportScrollingForward) {
+        if (driver == 'triggerline-head') {
+
+            retval = 1 // shift row to tail
+
+        } else {
+
+            retval = -1 // shift row to head
+
+        }
 
     }
 
-    const entry = entries[0] // assume one record gets filtered; only paired above on reconnect
+    if ((retval !=0) && (isViewportScrollingForward) && (viewportVisibleRowcount == 0)) {// check for last oversize row
+        if ((listsize - crosscount) <= oldAxisReferenceIndex) {
 
-    triggerlineRecord.offset = entry.viewportoffset
+            retval = 0
 
-    let retval
-    if (!isViewportScrollingForward) {
-        retval = 1 // shift row to tail
-    } else {
-        retval = -1 // shift row to head
+        }
     }
+
+    // console.log('==> getShiftInstruction: isViewportScrollingForward, driver, instruction, triggerlineEntries, filteredEntries','-'+scrollerID+'-',
+    //     '\n',isViewportScrollingForward, driver, retval,'\n' , triggerlineEntries, entries)
+
     return retval
-
 }
 
 // A negative shift instruction is into the head, a positive shift is into the tail.
@@ -201,7 +250,6 @@ export const calcContentShift = ({
     cradleContent,
     cradleElements,
     scrollPos, // of cradle against viewport; where the cradle motion intersects the viewport
-    // viewportElement,
 
 }) => {
 
@@ -307,11 +355,14 @@ export const calcContentShift = ({
         const targetCradleReferenceRowOffset = 
             Math.max(0, 
                 (
-                    newAxisReferenceRowOffset - 
-                        runwayRowcount + 
-                        (runwayRowcount?-1:0) // one row is visible, not runway
+                    newAxisReferenceRowOffset - runwayRowcount - 1
+                        // runwayRowcount + 
+                        // (runwayRowcount?-1:0) // one row is visible, not runway
                 )
             )
+
+        // console.log('calcContentShift: targetCradleReferenceRowOffset, newAxisReferenceRowOffset, runwayRowcount',
+        //     targetCradleReferenceRowOffset, newAxisReferenceRowOffset, runwayRowcount)
 
         const headrowDiff = newCradleReferenceRowOffset - targetCradleReferenceRowOffset
         if (headrowDiff > 0) {
@@ -329,6 +380,7 @@ export const calcContentShift = ({
             cradleReferenceRowshift -= tailrowdiff
 
         }
+
     } else { // !isScrollingViewportForward = scroll backward
 
         // c. if scrolling backward (toward head of list), as the cradlerowoffset hits 0, cradle changes have

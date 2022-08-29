@@ -12,7 +12,7 @@ export default class StylesHandler {
     private cradleParameters
 
     private headTriggerlineOffset
-    private tailTriggerlineOffset
+    private axisTriggerlineOffset
 
     public setCradleStyles = ({
 
@@ -39,9 +39,9 @@ export default class StylesHandler {
         const { scaffoldHandler } = this.cradleParameters.handlersRef.current
         const triggerlineheadstyles:React.CSSProperties = 
             this.getTriggerlineHeadStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
-        const triggerlinetailstyles:React.CSSProperties = 
-            this.getTriggerlineTailStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
-        scaffoldHandler.triggerlineSpan = this.tailTriggerlineOffset - this.headTriggerlineOffset
+        const triggerlineaxisstyles:React.CSSProperties = 
+            this.getTriggerlineAxisStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
+        scaffoldHandler.triggerlineSpan = this.axisTriggerlineOffset - this.headTriggerlineOffset
 
         const cradledividerstyles:React.CSSProperties = 
             {
@@ -117,7 +117,7 @@ export default class StylesHandler {
             tailstyles,
             axisstyles,
             triggerlineheadstyles,
-            triggerlinetailstyles,
+            triggerlineaxisstyles,
             cradledividerstyles
         ]
         
@@ -219,13 +219,13 @@ export default class StylesHandler {
 
     }
 
-    private getTriggerlineTailStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
+    private getTriggerlineAxisStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
         let transform // for position relative to axis
         const position = 'absolute',
             width = '100%',
             height = '100%'
 
-        this.tailTriggerlineOffset = triggerlineOffset
+        this.axisTriggerlineOffset = triggerlineOffset
 
         if (orientation == 'horizontal') {
             transform = `translateX(${triggerlineOffset + 'px'})`
@@ -261,4 +261,5 @@ export default class StylesHandler {
             transform,
         } as React.CSSProperties}
     }
+
 }

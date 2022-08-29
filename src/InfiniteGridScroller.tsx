@@ -18,16 +18,14 @@
 
     BUGS: 
     
-        - runwaysize 0 has is inconsistent from top and bottom
         - cell width/height less than breakline offset causes problems
-        - cellheight greater than viewport height causes problems
 
     TODO:
 
-        - allow configurable breakline offset
-
         - test changing all gridscroller parameters
             test config size edge cases - over and under sized cells
+
+        - test vertical resize, particularly around cell size boundaries
 
         - clear out TODO notes
 
@@ -99,6 +97,7 @@ const InfiniteGridScroller = (props) => {
     // console.log('InfiniteGridScroller props', props)
 
     let { 
+
         // grid specs:
         orientation = 'vertical', // vertical or horizontal
         gap = 0, // space between grid cells, not including the leading and trailing edges
@@ -106,6 +105,7 @@ const InfiniteGridScroller = (props) => {
         cellHeight, // required. the outer pixel height - literal for vertical; approximate for horizontal
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
         layout = 'uniform', // uniform, variable (uses axis), dense
+
         // scroller specs:
         estimatedListSize = 0, // the exact number of the size of the virtual list
         runwaySize = 3, // the number of items outside the view of each side of the viewport 
@@ -117,13 +117,14 @@ const InfiniteGridScroller = (props) => {
             // optional, replaces default placeholder
         styles = {}, // optional. passive style over-rides (eg. color, opacity); has 
             // properties viewport, scrollblock, cradle, or scrolltracker
+
         // system specs:
         useScrollTracker = true,
         cache = 'cradle', // "preload", "keepload" or "cradle"
         cacheMax = null, // always minimum cradle null means limited by listsize
         triggerlineOffset = 10, // distance from cell head or tail for content shifts above/below axis
         callbacks = {}, // optional. closures to get direct access to some component utilites
-        scrollerProperties, // required for embedded scroller, shares scroller settings with content
+        scrollerProperties, // required for embedded scroller; shares scroller settings with content
         advanced = {}, // optional. technical settings like useRequestIdleCallback, and RequestIdleCallbackTimeout
     } = props
 
@@ -134,9 +135,11 @@ const InfiniteGridScroller = (props) => {
     startingIndex = startingIndex ?? 0
     estimatedListSize = estimatedListSize ?? 0
     runwaySize = runwaySize ?? 3
+    useScrollTracker = useScrollTracker ?? true
+
 
     // prop constraints - non-negative values
-    runwaySize = Math.max(0,runwaySize)
+    runwaySize = Math.max(1,runwaySize) // runwaysize must be at least 1
     estimatedListSize = Math.max(0,estimatedListSize)
     startingIndex = Math.max(0,startingIndex)
 
@@ -160,12 +163,12 @@ const InfiniteGridScroller = (props) => {
         layout,
     }
 
+    const gridSpecsRef = useRef(gridSpecs)
+
     const [scrollerState, setScrollerState] = useState('setup')
 
-    const gridSpecsRef = useRef(gridSpecs)
     const stylesRef = useRef(styles)
     const callbacksRef = useRef(callbacks)
-    // const cacheRef = useRef(null)
 
     let {
 
@@ -183,8 +186,6 @@ const InfiniteGridScroller = (props) => {
     if (typeof showAxis != 'boolean') {
         showAxis = true
     }
-
-    useScrollTracker = useScrollTracker ?? true
 
     if (typeof useScrollTracker != 'boolean') {
         useScrollTracker = true
@@ -238,6 +239,7 @@ const InfiniteGridScroller = (props) => {
         callbacksRef.current.newListsize && callbacksRef.current.newListsize(listsize)
 
         setScrollerState('setlistsize')
+
     },[])
 
     // --------------------[ render ]---------------------
@@ -252,6 +254,7 @@ const InfiniteGridScroller = (props) => {
 
     },[scrollerState])
 
+    // component calls are deferred to give cacheHanle a chance to initialize
     return <React.StrictMode>
         <ErrorBoundary
         FallbackComponent={ErrorFallback}

@@ -72,7 +72,7 @@ export default class ContentHandler {
 
         // the triggerlines and cradle wings will be moved, so disconnect them from their observers.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
-        interruptHandler.axisTriggerlinesIntersect.observer.disconnect()
+        interruptHandler.triggerlinesIntersect.observer.disconnect()
         interruptHandler.cradleIntersect.observer.disconnect()
 
         const { cradlePositionData } = scaffoldHandler
@@ -228,7 +228,7 @@ export default class ContentHandler {
 
         //  ----------------------[ 5. reset interrupts ]-----------------------
 
-        interruptHandler.axisTriggerlinesIntersect.connectElements()
+        interruptHandler.triggerlinesIntersect.connectElements()
         interruptHandler.cradleIntersect.connectElements()
         interruptHandler.signals.pauseTriggerlinesObserver = false
 
@@ -271,6 +271,7 @@ export default class ContentHandler {
         const cradleContent = this.content
         const modelcontentlist = cradleContent.cradleModelComponents || []
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
+        const oldAxisReferenceIndex = (cradleContent.tailModelComponents[0]?.props.index || 0)
 
         // --------------------[ 2. get shift instruction ]-----------------------
 
@@ -281,21 +282,30 @@ export default class ContentHandler {
             cache,
         } = cradleInheritedProperties
 
+        const { 
+            viewportVisibleRowcount,
+            crosscount,
+            // listRowcount,
+            listsize,
+        } = cradleInternalProperties
+
         // -1 is move a row up to the head, +1 is move a row down to the tail, 0 is no shift
-        const triggerlineRecord = cradleInternalProperties.triggerlineRecordsRef.current
         const shiftinstruction = getShiftInstruction({
             scrollerID: cradleInheritedProperties.scrollerID,
             isViewportScrollingForward,
             orientation,
             triggerlineEntries,
-            triggerlineRecord,
             triggerlineSpan: scaffoldHandler.triggerlineSpan,
+            // for oversized (overflow) cells
+            oldAxisReferenceIndex,
+            viewportVisibleRowcount,
+            crosscount,
+            listsize,
         })
 
         // second abandon option/3; nothing to do
         if (shiftinstruction == 0) {
 
-            // console.log('triggerlineRecord',triggerlineRecord)
             return
 
         }
@@ -336,7 +346,7 @@ export default class ContentHandler {
 
         // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
-        interruptHandler.axisTriggerlinesIntersect.observer.disconnect()
+        interruptHandler.triggerlinesIntersect.observer.disconnect()
         interruptHandler.signals.pauseTriggerlinesObserver = true
 
         // ----------------------------------[ 4. reconfigure cradle content ]--------------------------
@@ -442,7 +452,7 @@ export default class ContentHandler {
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
 
-        interruptHandler.axisTriggerlinesIntersect.connectElements()
+        interruptHandler.triggerlinesIntersect.connectElements()
         interruptHandler.signals.pauseTriggerlinesObserver = false
 
         stateHandler.setCradleState('renderupdatedcontent')
