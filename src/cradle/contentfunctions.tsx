@@ -108,11 +108,13 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 */
 // -1 = shift row to head. 1 = shift row to tail. 0 = do not shift a row.
 export const getShiftInstruction = ({
+
     isViewportScrollingForward,
     orientation,
     triggerlineEntries,
     triggerlineSpan,
     scrollerID, // for debug
+    
     // for oversized (overflow) cells
     oldAxisReferenceIndex,
     viewportVisibleRowcount,

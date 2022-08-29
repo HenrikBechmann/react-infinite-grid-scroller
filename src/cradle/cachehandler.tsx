@@ -10,8 +10,6 @@ import React, {useState, useEffect, useRef} from 'react'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
-//  const MAX_CACHE_OVER_RUN = 1.5
-
 let globalItemID = 0
 
 // global scroller data, organized by session scrollerID
@@ -669,7 +667,9 @@ export class CacheHandler {
     }
 
     getNewItemID() {
+
         return globalItemID++
+
     }
 
     // get new or existing itemID for contentfunctions.createCell
@@ -866,7 +866,8 @@ export const PortalList = ({ cacheProps }) => {
 
     // console.log('running PORTALLIST', '-'+cacheProps.scrollerID+'-')
 
-    const [portalList, setPortalList] = useState(null)
+    const [portalListCounter, setPortalListCounter] = useState(null)
+
     const isMountedRef = useRef(true)
     const portalArrayRef = useRef(null)
     // const cachedivRef = useRef(null)
@@ -879,7 +880,7 @@ export const PortalList = ({ cacheProps }) => {
 
             portalArrayRef.current = cacheProps.portalList
 
-            isMountedRef.current && setPortalList(counter++) // light contents
+            isMountedRef.current && setPortalListCounter(counter++) // force render
 
         }
 
