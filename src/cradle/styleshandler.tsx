@@ -139,7 +139,7 @@ export default class StylesHandler {
         return {...{
 
             position: 'absolute',
-            backgroundColor: 'blue',
+            // backgroundColor: 'blue',
             display: 'grid',
             gridGap: gap + 'px',
             padding: padding + 'px',
@@ -174,7 +174,7 @@ export default class StylesHandler {
         return {...{
 
             position: 'absolute',
-            backgroundColor: 'blue',
+            // backgroundColor: 'blue',
             display: 'grid',
             gridGap: gap + 'px',
             padding: padding + 'px',
@@ -191,18 +191,16 @@ export default class StylesHandler {
     }
 
     private getAxisStyles = (gap, padding, orientation, useraxisstyles) => {
-        let /*transform,*/ top, left, width, height // for axis
+        let top, left, width, height // for axis
 
         if (orientation == 'vertical') {
             top = padding + 'px'
             left = 'auto'
-            // transform = `translateY(${padding + 'px'})`
             width = '100%'
             height = 'auto'
         } else {
             top = 'auto'
             left = padding + 'px'
-            // transform = `translateX(${padding + 'px'})`
             width = 0
             height = '100%'
         }
@@ -211,7 +209,6 @@ export default class StylesHandler {
             position: 'relative',
             top,
             left,
-            // transform,
             width,
             height,
 
