@@ -60,8 +60,6 @@ const CellFrame = ({
     // for unmount
     useEffect(()=>{
 
-        const abortController = new AbortController()        
-
         return () => {
 
             isMountedRef.current = false
@@ -69,8 +67,6 @@ const CellFrame = ({
             cancelidlecallback(requestIdleCallbackIdRef.current)
 
             cacheHandler.removeRequestedPortal(index)
-
-            abortController.abort() // defensive
 
         }
 

@@ -63,16 +63,6 @@ const Viewport = ({
     const isResizingRef = useRef(false)
     const resizeObserverRef = useRef(null);    
 
-    useEffect(()=>{
-
-        const abortController = new AbortController()
-
-        return () => {
-            abortController.abort() // defensive
-        }
-
-    },[])
-
     // set up resizeObserver
     useEffect(()=>{
 

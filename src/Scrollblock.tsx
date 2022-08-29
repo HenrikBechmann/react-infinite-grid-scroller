@@ -32,16 +32,6 @@ const Scrollblock = ({
 
     // -------------------------[ context and state ]-------------------------
 
-    useEffect(()=>{
-
-        const abortController = new AbortController()
-
-        return () => {
-            abortController.abort() // defensive
-        }
-
-    },[])
-
     const viewportInterruptProperties = useContext(ViewportInterrupt)
 
     // -----------------------------------[ data heap ]-------------------------

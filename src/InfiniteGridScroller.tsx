@@ -20,7 +20,7 @@
     
     TODO:
 
-        review use of AbortController, check major components' use
+        test for memory leaks window.performance.memory
         ----------------
         (after layout...)
         
@@ -203,16 +203,10 @@ const InfiniteGridScroller = (props) => {
     const cacheHandlerRef = useRef(null)
 
     useEffect (() => {
-        const abortController = new AbortController()
 
         scrollerSessionIDRef.current = globalScrollerID++
         cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, setListsize, listsizeRef)
 
-        return () => {
-
-            abortController.abort() // defensive
-            
-        }
     },[])
 
     const listsizeRef = useRef(estimatedListSize)

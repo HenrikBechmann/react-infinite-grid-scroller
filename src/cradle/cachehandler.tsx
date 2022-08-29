@@ -867,8 +867,6 @@ export const PortalList = ({ cacheProps }) => {
 
     useEffect(()=>{
 
-        const abortController = new AbortController()
-
         cacheProps.setListState = ()=>{
 
             portalArrayRef.current = cacheProps.portalList
@@ -880,8 +878,6 @@ export const PortalList = ({ cacheProps }) => {
         return () => {
 
             isMountedRef.current = false
-
-            abortController.abort() // defensive
 
         }
 
