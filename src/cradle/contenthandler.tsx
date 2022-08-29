@@ -141,9 +141,6 @@ export default class ContentHandler {
 
             })
 
-        // console.log('setCradleContent: cradleState, scrollblockViewportPixelOffset, targetAxisReferenceIndex',
-        //     '-'+scrollerID+'-', cradleState, scrollblockViewportPixelOffset, targetAxisReferenceIndex)
-
         const axisViewportPixelOffset = targetAxisViewportPixelOffset
 
         // ----------------------[ 3. get and config content ]----------------------
@@ -430,9 +427,6 @@ export default class ContentHandler {
 
             axisElement.style.top = topPos + 'px'
             axisElement.style.left = 'auto'
-            // transform = `translateY(${topPos + 'px'})`
-            // console.log('topPos, scrollPos, axisPixelOffset, transform',
-            //     topPos,scrollPos,axisPixelOffset,transform)
             axisElement.style.transform = transform
             
             headElement.style.paddingBottom = 
@@ -446,8 +440,6 @@ export default class ContentHandler {
 
             axisElement.style.top = 'auto'
             axisElement.style.left = leftPos + 'px'
-            // transform = `translateX(${leftPos + 'px'})`
-            // axisElement.style.transform = transform
 
             headElement.style.paddingRight = 
                 headcontent.length?

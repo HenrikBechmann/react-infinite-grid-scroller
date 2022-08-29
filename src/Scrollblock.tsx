@@ -19,9 +19,6 @@ const Scrollblock = ({
     scrollerID,
 }) => {
 
-    // console.log('==> RUNNING Scrollblock','-'+scrollerID+'-')
-    // console.log('performance.memory',performance['memory'])
-
     const {
 
         orientation,

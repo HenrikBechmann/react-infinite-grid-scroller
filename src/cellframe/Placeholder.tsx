@@ -27,8 +27,6 @@ const Placeholder = ({index, listsize, message, error}) => {
         } as React.CSSProperties
     )
 
-    // console.log('placeholder index, error value',index, error.message)
-
     message = message ?? '(loading...)'
 
     return <div style = {stylesRef.current}>

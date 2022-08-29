@@ -236,9 +236,6 @@ export const getShiftInstruction = ({
         }
     }
 
-    // console.log('==> getShiftInstruction: isViewportScrollingForward, driver, instruction, triggerlineEntries, filteredEntries','-'+scrollerID+'-',
-    //     '\n',isViewportScrollingForward, driver, retval,'\n' , triggerlineEntries, entries)
-
     return retval
 }
 
@@ -355,16 +352,7 @@ export const calcContentShift = ({
         // of cradle content.
 
         const targetCradleReferenceRowOffset = 
-            Math.max(0, 
-                (
-                    newAxisReferenceRowOffset - runwayRowcount - 1
-                        // runwayRowcount + 
-                        // (runwayRowcount?-1:0) // one row is visible, not runway
-                )
-            )
-
-        // console.log('calcContentShift: targetCradleReferenceRowOffset, newAxisReferenceRowOffset, runwayRowcount',
-        //     targetCradleReferenceRowOffset, newAxisReferenceRowOffset, runwayRowcount)
+            Math.max(0, (newAxisReferenceRowOffset - runwayRowcount - 1) )
 
         const headrowDiff = newCradleReferenceRowOffset - targetCradleReferenceRowOffset
         if (headrowDiff > 0) {
@@ -442,27 +430,6 @@ export const calcContentShift = ({
     const newAxisPixelOffset = viewportAxisOffset + (axisReferenceRowshift * rowLength)
 
     // ---------------------[ 9. return required values ]-------------------
-
-//     console.log('calcContentShift',
-// `
-//         newCradleReferenceIndex, 
-//         cradleReferenceItemShift, 
-//         newAxisReferenceIndex, 
-//         axisReferenceItemShift, 
-//         newAxisPixelOffset, 
-//         newCradleContentCount,
-//         listStartChangeCount,
-//         listEndChangeCount
-// `,
-//         newCradleReferenceIndex, 
-//         cradleReferenceItemShift, 
-//         newAxisReferenceIndex, 
-//         axisReferenceItemShift, 
-//         newAxisPixelOffset, 
-//         newCradleContentCount,
-//         listStartChangeCount,
-//         listEndChangeCount
-// )
 
     return {
         newCradleReferenceIndex, 

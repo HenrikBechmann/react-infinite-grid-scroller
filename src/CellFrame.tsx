@@ -42,8 +42,6 @@ const CellFrame = ({
     const frameStateRef = useRef(null)
     frameStateRef.current = frameState
 
-    // console.log('==> RUNNING CellFrame','-'+scrollerID+'-','['+itemID+']','_'+instanceID+'_',frameState)
-
     const frameRef = useRef(null)
 
     const isMountedRef = useRef(true)
@@ -167,17 +165,9 @@ const CellFrame = ({
                 const itemID = itemIDRef.current
                 const cached = cacheHandler.hasPortal(itemID)
 
-                // console.log('==> CellFrame getusercontent: scrollerID, itemID, instanceID, cached',
-                //     '-'+scrollerID+'-', '['+itemID+']','_'+instanceID+'_', cached)
-
                 if (cached) {
 
                     messageRef.current = '(retrieving from cache)'
-
-                    // console.log(messageRef.current)
-
-                    // setFrameState('waiting')
-                    // setTimeout(()=>{
 
                     if (isMountedRef.current) {
 
@@ -193,13 +183,9 @@ const CellFrame = ({
 
                     }
 
-                    // },1)
-
                 } else {
 
                     messageRef.current = '(loading...)'
-
-                    // console.log(messageRef.current)
 
                     setFrameState('waiting')
 
@@ -267,16 +253,17 @@ const CellFrame = ({
                             } else { // null or undefined
 
                                 if (usercontent === null) {
+
                                     // truncate listsize at this index
-                                    // console.log('cellFrame calling nullItemSetMaxListsize with index', index)
                                     itemExceptionsCallback && 
                                         itemExceptionsCallback(
                                             index, itemID, returnvalue, 'cellFrame', new Error('end of list')
                                         )
                                     nullItemSetMaxListsize(index)
+
                                 } else { // usercontent === undefined, meaning an error has occurred
+
                                     // change placeholder message to error message
-                                    // console.log('updating placeholder with error', error)
                                     errorRef.current = error
                                     itemExceptionsCallback && 
                                         itemExceptionsCallback(

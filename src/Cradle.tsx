@@ -97,9 +97,6 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // console.log('==> RUNNING Cradle','-'+scrollerID+'-', cradleState)
-    // console.log('performance.memory',performance['memory'])
-
     // flags
     const isMountedRef = useRef(true)
     const isCachedRef = useRef(false)
@@ -445,7 +442,7 @@ const Cradle = ({
     // invoked if getItem returns null
     const nullItemSetMaxListsize = useCallback((maxListsize) => {
         const listsize = cradleInternalPropertiesRef.current.listsize
-        // console.log('cradle fielding setMaxlistsize with maxListsize, listsize',maxListsize, listsize)
+
         if (maxListsize < listsize) {
 
             const { deleteListCallback, changeListsizeCallback } = serviceHandler.callbacks
@@ -577,8 +574,6 @@ const Cradle = ({
     // caching change
     useEffect(()=> {
 
-        // console.log('cradle - handle cache and cacheMax change:', cache, cacheMax)
-
         if (cache == 'preload') {
 
             setCradleState('startpreload')
@@ -669,7 +664,6 @@ const Cradle = ({
 
             interruptHandler.pauseInterrupts()
  
-            // console.log('calling resizing from isResizing useEvent','-'+scrollerID+'-')
             setCradleState('resizing')
 
         }
@@ -685,8 +679,6 @@ const Cradle = ({
 
     // reconfigure for changed size parameters
     useEffect(()=>{
-
-        // console.log('in reconfigure effect:cradleStateRef.current,isCachedRef.current','-'+scrollerID+'-')
 
         if (cradleStateRef.current == 'setup') return
 
@@ -709,8 +701,6 @@ const Cradle = ({
 
     // pivot triggered on change of orientation
     useEffect(()=> {
-
-        // console.log('in pivot effect: orientation, isCachedRef.current\n','-'+scrollerID+'-',orientation, isCachedRef.current)
 
         scaffoldHandler.cradlePositionData.blockScrollProperty = 
             (orientation == "vertical")?"scrollTop":"scrollLeft"
@@ -1013,7 +1003,7 @@ const Cradle = ({
 
                 const { cache } = cradleInheritedPropertiesRef.current
                 if (cache == 'cradle') {
-                    // console.log('processing cradle content: cache', cache)
+
                     const modelIndexList = contentHandler.getModelIndexList()
 
                     const { deleteListCallback } = serviceHandler.callbacks
@@ -1079,7 +1069,6 @@ const Cradle = ({
             case 'parentingtransition': {
 
                     const { cradlePositionData } = scaffoldHandler
-                    // console.log('in state machine parentingtransition', '-'+scrollerID+'-' , cradlePositionData.blockScrollPos)
 
                     // reset scroll position to previous value
                     if (cradlePositionData.blockScrollPos !== null) {

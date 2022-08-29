@@ -84,8 +84,6 @@ const InfiniteGridScroller = (props) => {
 
     // ------------------[ normalize properties ]--------------------
 
-    // console.log('InfiniteGridScroller props', props)
-
     let { 
 
         // grid specs:

@@ -117,8 +117,6 @@ export class CacheHandler {
 
     pareCacheToMax = (cacheMax, cradleIndexList, deleteListCallback, scrollerID = undefined) => {
 
-        // console.log('pareCacheToMax: cacheMax, cradleIndexList','-'+scrollerID+'-',cacheMax, cradleIndexList)
-
         const modelLength = cradleIndexList.length
 
         // determine need for paring
@@ -197,8 +195,6 @@ export class CacheHandler {
 
         const promises = []
 
-        // console.log('cacheMax', cacheMax)
-
         let cacheSize = cacheMax ?? 0
 
         cacheSize = Math.min(cacheSize, listsize)
@@ -229,7 +225,6 @@ export class CacheHandler {
                 preloadIndexCallback && preloadIndexCallback(index)
                 if (!indexToItemIDMap.has(index)) {
 
-                    // console.log('preload processing', index)
                     const promise = this.preloadItem(
                         index, 
                         getItem, 
@@ -863,8 +858,6 @@ const createPortalNode = (index, itemID) => {
 let counter = 0
 // portal list component for rapid relisting of updates, using external callback for set state
 export const PortalList = ({ cacheProps }) => {
-
-    // console.log('running PORTALLIST', '-'+cacheProps.scrollerID+'-')
 
     const [portalListCounter, setPortalListCounter] = useState(null)
 
