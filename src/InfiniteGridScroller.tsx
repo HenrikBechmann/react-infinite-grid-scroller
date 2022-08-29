@@ -19,8 +19,6 @@
     BUGS: 
     
         - cell width/height less than breakline offset causes problems
-        - reconfiguration (such as cell size) should adjust cradle contents
-        - runwaysize 0 with oversize cells breaks scrolling
 
     TODO:
 
@@ -141,7 +139,7 @@ const InfiniteGridScroller = (props) => {
 
 
     // prop constraints - non-negative values
-    runwaySize = Math.max(0,runwaySize)
+    runwaySize = Math.max(1,runwaySize) // runwaysize must be at least 1
     estimatedListSize = Math.max(0,estimatedListSize)
     startingIndex = Math.max(0,startingIndex)
 
