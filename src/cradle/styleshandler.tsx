@@ -1,5 +1,5 @@
 // styleshandler.tsx
-// copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 export default class StylesHandler { 
 

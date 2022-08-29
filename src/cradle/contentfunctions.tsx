@@ -1,8 +1,8 @@
 // contentfunctions.tsx
-// copyright (c) 2020 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /******************************************************************************************
- ------------------------------------[ SUPPORTING FUNCTIONS ]------------------------------
+ --------------------------------[ CONTENT SUPPORTING FUNCTIONS ]--------------------------
 *******************************************************************************************/
 
 import React from 'react'

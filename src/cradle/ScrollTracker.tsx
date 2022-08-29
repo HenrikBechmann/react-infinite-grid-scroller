@@ -1,5 +1,5 @@
 // scrolltracker.tsx
-// copyright (c) 2020 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 import React, {useRef} from 'react'
 

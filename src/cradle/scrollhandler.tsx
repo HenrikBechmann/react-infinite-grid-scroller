@@ -1,5 +1,5 @@
 // scrollhandler.tsx
-// copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 500
 

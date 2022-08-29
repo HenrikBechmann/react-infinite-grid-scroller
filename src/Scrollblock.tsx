@@ -1,4 +1,4 @@
-// scrollblock.tsx
+// Scrollblock.tsx
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
