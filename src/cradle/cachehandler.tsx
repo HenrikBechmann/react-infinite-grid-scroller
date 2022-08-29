@@ -30,7 +30,7 @@ export class CacheHandler {
 
         metadataMap:new Map(), // item => {index, component}
         // some portals may have been requested by requestidlecallback, not yet created
-        requestedSet:new Set(), // index => item TODO s/b requestedSet of indexes
+        requestedSet:new Set(), // requestedSet of indexes
         portalMap:new Map(), // index => InPortal
         indexToItemIDMap:new Map(),
 

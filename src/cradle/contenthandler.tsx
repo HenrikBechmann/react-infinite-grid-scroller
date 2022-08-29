@@ -338,7 +338,7 @@ export default class ContentHandler {
         })
 
         // third abandon option/3; nothing to do
-        if ((axisItemShift == 0 && cradleItemShift == 0)) { // TODO: is this possible?
+        if ((axisItemShift == 0 && cradleItemShift == 0)) { // defensive
 
             return
 

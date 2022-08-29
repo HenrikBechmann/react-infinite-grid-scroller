@@ -156,24 +156,23 @@ const Viewport = ({
 
     },[styles.viewport])
 
-    // update with config values
-    divlinerstyleRef.current = useMemo(() => {
+    // // update with config values
+    // divlinerstyleRef.current = useMemo(() => {
 
-        // TODO: gap
-        let mincrosslength = calcMinViewportCrossLength(orientation, cellWidth, cellHeight, gap, padding)
-        let styles = Object.assign({},divlinerstyleRef.current) // avoid readonly
+    //     let mincrosslength = calcMinViewportCrossLength(orientation, cellWidth, cellHeight, gap, padding)
+    //     let styles = Object.assign({},divlinerstyleRef.current) // avoid readonly
 
-        if (orientation == 'vertical') {
-            styles.minWidth = mincrosslength + 'px'
-            styles.minHeight = 'auto'
-        } else {
-            styles.minWidth = 'auto'
-            styles.minHeight = mincrosslength + 'px'
-        }
+    //     if (orientation == 'vertical') {
+    //         styles.minWidth = mincrosslength + 'px'
+    //         styles.minHeight = 'auto'
+    //     } else {
+    //         styles.minWidth = 'auto'
+    //         styles.minHeight = mincrosslength + 'px'
+    //     }
 
-        return styles
+    //     return styles
 
-    },[orientation, cellWidth, cellHeight, gap, padding])
+    // },[orientation, cellWidth, cellHeight, gap, padding])
 
     // update viewportInterruptPropertiesRef; add viewport dimensions
     viewportInterruptPropertiesRef.current = useMemo(() => {
@@ -184,7 +183,8 @@ const Viewport = ({
         const width = (right - left)
         const height = (bottom - top)
 
-        // TODO this is a duplicate setting procedure with interrupthandler.tsx cradleIntersectionObserverCallback
+        // this is a dimension update procedure for resize. 
+        // See also interrupthandler.tsx cradleIntersectionObserverCallback for cradle intersection update
         const localViewportData = {
             viewportDimensions:{top,right, bottom, left, width, height},
             elementRef:viewportElementRef,
