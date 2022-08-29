@@ -105,12 +105,13 @@ export default class InterruptHandler {
         {
             const cradleState = stateHandler.cradleStateRef.current
 
+            // TODO examine to see if could be more concise
             if (
                 !viewportInterruptProperties.isResizing &&
                 !viewportInterruptProperties.isReparentingRef?.current &&
                 !(cradleState == 'repositioningRender') && 
                 !(cradleState == 'repositioningContinuation') &&
-                !(cradleState == 'renderupdatedcontent') && // TODO: *TEST*
+                !(cradleState == 'renderupdatedcontent') && 
                 !(cradleState == 'finishupdatedcontent') &&
                 !(cradleState == 'finishresize') &&
                 !(cradleState == 'reposition') && 
@@ -125,7 +126,7 @@ export default class InterruptHandler {
                         scrollerID,viewportInterruptProperties)
                     return
                 }
-                // TODO this is a duplicate setting procedure with viewport.tsx
+                // update dimensions with cradle intersection. See also dimension update in viewport.tsx for resize
                 const rect = element.getBoundingClientRect()
                 const {top, right, bottom, left} = rect
                 const width = right - left, height = bottom - top

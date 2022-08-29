@@ -566,7 +566,7 @@ export const allocateContentList = (
     }
 ) => {
 
-    const offsetindex = contentlist[0]?.props.index // TODO: Cannot read property 'props' of undefined
+    const offsetindex = contentlist[0]?.props.index
 
     const headitemcount = (axisReferenceIndex - offsetindex)
 

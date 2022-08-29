@@ -206,6 +206,7 @@ export default class ContentHandler {
 
             axisElement.style.top = top + 'px'
             axisElement.style.left = 'auto'
+            // axisElement.style.transform = `translateY(${top + 'px'})`
 
             headElement.style.paddingBottom = 
                 headcontentlist.length?
@@ -218,6 +219,7 @@ export default class ContentHandler {
 
             axisElement.style.top = 'auto'
             axisElement.style.left = left + 'px'
+            // axisElement.style.transform = `translateX(${left + 'px'})`
 
             headElement.style.paddingRight = 
                 headcontentlist.length?
@@ -338,7 +340,7 @@ export default class ContentHandler {
         })
 
         // third abandon option/3; nothing to do
-        if ((axisItemShift == 0 && cradleItemShift == 0)) { // TODO: is this possible?
+        if ((axisItemShift == 0 && cradleItemShift == 0)) { // defensive
 
             return
 
@@ -421,12 +423,17 @@ export default class ContentHandler {
         const axisElement = cradleElements.axisRef.current
         const headElement = cradleElements.headRef.current
 
+        let transform
         if (cradleInheritedProperties.orientation == 'vertical') {
 
             const topPos = scrollPos + axisPixelOffset
 
             axisElement.style.top = topPos + 'px'
             axisElement.style.left = 'auto'
+            // transform = `translateY(${topPos + 'px'})`
+            // console.log('topPos, scrollPos, axisPixelOffset, transform',
+            //     topPos,scrollPos,axisPixelOffset,transform)
+            axisElement.style.transform = transform
             
             headElement.style.paddingBottom = 
                 headcontent.length?
@@ -439,6 +446,8 @@ export default class ContentHandler {
 
             axisElement.style.top = 'auto'
             axisElement.style.left = leftPos + 'px'
+            // transform = `translateX(${leftPos + 'px'})`
+            // axisElement.style.transform = transform
 
             headElement.style.paddingRight = 
                 headcontent.length?

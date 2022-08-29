@@ -296,8 +296,8 @@ export default class ServiceHandler {
         // ----------- apply filtered changes to cache index map and itemID map ----------
         // at this point every remaining index listed will change its mapping
 
-        // TODO just need an index list here: processedIndexList = []
-        const processedMap = new Map() // index => itemID; change has been applied
+        // const processedMap = new Map() // index => itemID; change has been applied
+        const processedIndexList = []
 
         // make changes
         changeIndexToItemIDMap.forEach((itemID,index) => {
@@ -307,7 +307,8 @@ export default class ServiceHandler {
 
             itemdata.index = index // modification applied, part 2
 
-            processedMap.set(index,itemID)
+            // processedMap.set(index,itemID)
+            processedIndexList.push(index)
 
         })
 
@@ -357,7 +358,7 @@ export default class ServiceHandler {
         // ------------- apply changes to extant cellFrames ------------
 
         // these are used to reconcile cradle cellFrames, and also for return information
-        const processedIndexList = Array.from(processedMap.keys())
+        // const processedIndexList = Array.from(processedMap.keys())
         const deletedOrphanedItemIndexList = Array.from(deletedItemIDToIndexMap.values())
         const deletedOrphanedIndexList = Array.from(deletedIndexToItemIDMap.keys())
         // for return information...

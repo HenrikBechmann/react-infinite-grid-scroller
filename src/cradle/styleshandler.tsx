@@ -29,9 +29,6 @@ export default class StylesHandler {
 
     }) => {
 
-        // TODO: change 'cradle' to 'head' and 'tail' for more granularity
-        // TODO: triggerline offset for head styles experimentally set to negative
-        //    to assure a breakline is always available for notification
         const headstyles:React.CSSProperties = this.getHeadStyles(gap, padding, orientation, userstyles.cradle)
         const tailstyles:React.CSSProperties = this.getTailStyles(gap, padding, orientation, userstyles.cradle)
         const axisstyles:React.CSSProperties = this.getAxisStyles(gap, padding, orientation, userstyles.axis)
@@ -194,16 +191,18 @@ export default class StylesHandler {
     }
 
     private getAxisStyles = (gap, padding, orientation, useraxisstyles) => {
-        let top, left, width, height // for axis
+        let /*transform,*/ top, left, width, height // for axis
 
         if (orientation == 'vertical') {
             top = padding + 'px'
             left = 'auto'
+            // transform = `translateY(${padding + 'px'})`
             width = '100%'
             height = 'auto'
         } else {
             top = 'auto'
             left = padding + 'px'
+            // transform = `translateX(${padding + 'px'})`
             width = 0
             height = '100%'
         }
@@ -212,6 +211,7 @@ export default class StylesHandler {
             position: 'relative',
             top,
             left,
+            // transform,
             width,
             height,
 
