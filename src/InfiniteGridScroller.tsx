@@ -20,6 +20,7 @@
     
     TODO:
 
+        review use of AbortController, check major components' use
         ----------------
         (after layout...)
         
@@ -173,19 +174,21 @@ const InfiniteGridScroller = (props) => {
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
 
     if (typeof showAxis != 'boolean') {
-        showAxis = true
+
+        showAxis = false
+
     }
 
     if (typeof useScrollTracker != 'boolean') {
+
         useScrollTracker = true
+
     }
 
     // for mount
     const scrollerSessionIDRef = useRef(null);
 
     const scrollerID = scrollerSessionIDRef.current
-
-    // console.log('==> RUNNING RIGS','-'+scrollerID+'-', scrollerState)
 
     // satisfy React Object.is for attributes
     if (!compareProps(gridSpecs, gridSpecsRef.current)) {
@@ -243,7 +246,7 @@ const InfiniteGridScroller = (props) => {
 
     },[scrollerState])
 
-    // component calls are deferred to give cacheHanle a chance to initialize
+    // component calls are deferred to give cacheHandler a chance to initialize
     return <React.StrictMode>
         <ErrorBoundary
         FallbackComponent={ErrorFallback}

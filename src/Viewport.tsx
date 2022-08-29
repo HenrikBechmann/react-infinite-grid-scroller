@@ -26,12 +26,14 @@ const Viewport = ({
     // -----------------------[ initialize ]------------------
 
     const {
+
         orientation,
         gap,
         padding,
         cellHeight,
         cellWidth,
         layout,
+
     } = gridSpecs
 
     const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, ready
@@ -43,18 +45,6 @@ const Viewport = ({
     viewportStateRef.current = viewportState
 
     const isMountedRef = useRef(true) // monitor for unmounted
-
-    useEffect(() => {
-
-        const abortController = new AbortController()
-        // unmount
-        return () => {
-
-            isMountedRef.current = false
-            abortController.abort()  // defensive
-        }
-
-    },[])
 
     const viewportElementRef = useRef(null)
 
@@ -156,24 +146,6 @@ const Viewport = ({
 
     },[styles.viewport])
 
-    // // update with config values
-    // divlinerstyleRef.current = useMemo(() => {
-
-    //     let mincrosslength = calcMinViewportCrossLength(orientation, cellWidth, cellHeight, gap, padding)
-    //     let styles = Object.assign({},divlinerstyleRef.current) // avoid readonly
-
-    //     if (orientation == 'vertical') {
-    //         styles.minWidth = mincrosslength + 'px'
-    //         styles.minHeight = 'auto'
-    //     } else {
-    //         styles.minWidth = 'auto'
-    //         styles.minHeight = mincrosslength + 'px'
-    //     }
-
-    //     return styles
-
-    // },[orientation, cellWidth, cellHeight, gap, padding])
-
     // update viewportInterruptPropertiesRef; add viewport dimensions
     viewportInterruptPropertiesRef.current = useMemo(() => {
 
@@ -228,22 +200,5 @@ const Viewport = ({
     </ViewportInterrupt.Provider>
     
 } // Viewport
-
-// establish minimum width/height for the viewport -- approximately one item
-// gap only applies with multi-width items, therefore not used in calculations
-const calcMinViewportCrossLength = (orientation, cellWidth, cellHeight, gap, padding) => {
-
-    let crosslength, cellLength
-    
-    if (orientation == 'vertical') {
-        cellLength = cellWidth 
-    } else {
-        cellLength = cellHeight
-    }
-    crosslength = cellLength + (padding * 2)
-
-    return crosslength
-
-}
 
 export default Viewport

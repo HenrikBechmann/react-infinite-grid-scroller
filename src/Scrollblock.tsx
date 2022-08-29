@@ -23,12 +23,14 @@ const Scrollblock = ({
     // console.log('performance.memory',performance['memory'])
 
     const {
+
         orientation,
         gap,
         padding,
         cellHeight,
         cellWidth,
         layout,
+        
     } = gridSpecs
 
     // -------------------------[ context and state ]-------------------------
