@@ -121,18 +121,6 @@ export const getShiftInstruction = ({
 
 }) => {
 
-//     console.log(`
-// oldAxisReferenceIndex,
-// viewportVisibleRowcount,
-// crosscount,
-// listsize,
-// `,
-//         oldAxisReferenceIndex,
-//         viewportVisibleRowcount,
-//         crosscount,
-//         listsize,
-//     )
-
     const driver = 
         isViewportScrollingForward?
             'triggerline-axis':
@@ -246,8 +234,8 @@ export const getShiftInstruction = ({
         }
     }
 
-    // console.log('==> getShiftInstruction: isViewportScrollingForward, driver, instruction, triggerlineEntries, filteredEntries','-'+scrollerID+'-',
-    //     '\n',isViewportScrollingForward, driver, retval,'\n' , triggerlineEntries, entries)
+    console.log('==> getShiftInstruction: isViewportScrollingForward, driver, instruction, triggerlineEntries, filteredEntries','-'+scrollerID+'-',
+        '\n',isViewportScrollingForward, driver, retval,'\n' , triggerlineEntries, entries)
 
     return retval
 }
@@ -453,26 +441,26 @@ export const calcContentShift = ({
 
     // ---------------------[ 9. return required values ]-------------------
 
-//     console.log('calcContentShift',
-// `
-//         newCradleReferenceIndex, 
-//         cradleReferenceItemShift, 
-//         newAxisReferenceIndex, 
-//         axisReferenceItemShift, 
-//         newAxisPixelOffset, 
-//         newCradleContentCount,
-//         listStartChangeCount,
-//         listEndChangeCount
-// `,
-//         newCradleReferenceIndex, 
-//         cradleReferenceItemShift, 
-//         newAxisReferenceIndex, 
-//         axisReferenceItemShift, 
-//         newAxisPixelOffset, 
-//         newCradleContentCount,
-//         listStartChangeCount,
-//         listEndChangeCount
-// )
+    console.log('calcContentShift',
+`
+        newCradleReferenceIndex, 
+        cradleReferenceItemShift, 
+        newAxisReferenceIndex, 
+        axisReferenceItemShift, 
+        newAxisPixelOffset, 
+        newCradleContentCount,
+        listStartChangeCount,
+        listEndChangeCount
+`,
+        newCradleReferenceIndex, 
+        cradleReferenceItemShift, 
+        newAxisReferenceIndex, 
+        axisReferenceItemShift, 
+        newAxisPixelOffset, 
+        newCradleContentCount,
+        listStartChangeCount,
+        listEndChangeCount
+)
 
     return {
         newCradleReferenceIndex, 

@@ -19,6 +19,7 @@
     BUGS: 
     
         - cell width/height less than breakline offset causes problems
+        - reconfiguration (such as cell size) should adjust cradle contents
         - runwaysize 0 with oversize cells breaks scrolling
 
     TODO:
