@@ -33,12 +33,12 @@ export default class StylesHandler {
         const tailstyles:React.CSSProperties = this.getTailStyles(gap, padding, orientation, userstyles.cradle)
         const axisstyles:React.CSSProperties = this.getAxisStyles(gap, padding, orientation, userstyles.axis)
 
-        const { scaffoldHandler } = this.cradleParameters.handlersRef.current
+        const { layoutHandler } = this.cradleParameters.handlersRef.current
         const triggerlineheadstyles:React.CSSProperties = 
             this.getTriggerlineHeadStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
         const triggerlineaxisstyles:React.CSSProperties = 
             this.getTriggerlineAxisStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
-        scaffoldHandler.triggerlineSpan = this.axisTriggerlineOffset - this.headTriggerlineOffset
+        layoutHandler.triggerlineSpan = this.axisTriggerlineOffset - this.headTriggerlineOffset
 
         const cradledividerstyles:React.CSSProperties = 
             {

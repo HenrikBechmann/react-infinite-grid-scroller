@@ -51,7 +51,7 @@ export default class InterruptHandler {
             contentHandler,
             stateHandler,
             scrollHandler,
-            scaffoldHandler,
+            layoutHandler,
         } = this.cradleParameters.handlersRef.current
 
         if (stateHandler.isMountedRef.current) {
@@ -152,7 +152,7 @@ export default class InterruptHandler {
       callback:this.cradleResizeObserverCallback,
         connectElements:() => {
             const observer = this.cradleResize.observer
-            const cradleElements = this.cradleParameters.handlersRef.current.scaffoldHandler.elements
+            const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
             observer.observe(cradleElements.headRef.current)
             observer.observe(cradleElements.tailRef.current)
         },
@@ -169,7 +169,7 @@ export default class InterruptHandler {
         callback:this.cradleIntersectionObserverCallback,
         connectElements:() => {
             const observer = this.cradleIntersect.observer
-            const cradleElements = this.cradleParameters.handlersRef.current.scaffoldHandler.elements
+            const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
             observer.observe(cradleElements.headRef.current)
             observer.observe(cradleElements.tailRef.current)
         },
@@ -188,7 +188,7 @@ export default class InterruptHandler {
         callback:this.axisTriggerlinesObserverCallback,
         connectElements:() => {
             const observer = this.triggerlinesIntersect.observer
-            const cradleElements = this.cradleParameters.handlersRef.current.scaffoldHandler.elements
+            const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
             observer.observe(cradleElements.headTriggerlineRef.current)
             observer.observe(cradleElements.axisTriggerlineRef.current)
         },

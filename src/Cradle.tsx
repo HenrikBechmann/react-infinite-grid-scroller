@@ -26,7 +26,7 @@ import ScrollTracker from './cradle/ScrollTracker'
 import ScrollHandler from './cradle/scrollhandler'
 import StateHandler from './cradle/statehandler'
 import ContentHandler from './cradle/contenthandler'
-import ScaffoldHandler from './cradle/scaffoldhandler'
+import LayoutHandler from './cradle/layouthandler'
 import InterruptHandler from './cradle/interrupthandler'
 import ServiceHandler from './cradle/servicehandler'
 import StylesHandler from './cradle/styleshandler'
@@ -331,7 +331,7 @@ const Cradle = ({
         scrollHandler,
         stateHandler,
         contentHandler,
-        scaffoldHandler,
+        layoutHandler,
         serviceHandler,
         stylesHandler,
     } = handlersRef.current
@@ -702,11 +702,11 @@ const Cradle = ({
     // pivot triggered on change of orientation
     useEffect(()=> {
 
-        scaffoldHandler.cradlePositionData.blockScrollProperty = 
+        layoutHandler.cradlePositionData.blockScrollProperty = 
             (orientation == "vertical")?"scrollTop":"scrollLeft"
 
         if (cradleStateRef.current == 'setup') {
-            scaffoldHandler.cradlePositionData.blockScrollPos = 0
+            layoutHandler.cradlePositionData.blockScrollPos = 0
             return
 
         }
@@ -729,7 +729,7 @@ const Cradle = ({
                 cellHeight)
             + gap
 
-        const previousAxisOffset = scaffoldHandler.cradlePositionData.targetAxisViewportPixelOffset
+        const previousAxisOffset = layoutHandler.cradlePositionData.targetAxisViewportPixelOffset
 
         const previousratio = previousAxisOffset/previousCellPixelLength
 
@@ -741,7 +741,7 @@ const Cradle = ({
 
         const pivotAxisOffset = previousratio * pivotCellPixelLength
         
-        scaffoldHandler.cradlePositionData.targetAxisViewportPixelOffset = Math.round(pivotAxisOffset)
+        layoutHandler.cradlePositionData.targetAxisViewportPixelOffset = Math.round(pivotAxisOffset)
 
         interruptHandler.pauseInterrupts()
 
@@ -1068,7 +1068,7 @@ const Cradle = ({
             // resets scrollPos (scrollLeft/scrollTop) to last UI value
             case 'parentingtransition': {
 
-                    const { cradlePositionData } = scaffoldHandler
+                    const { cradlePositionData } = layoutHandler
 
                     // reset scroll position to previous value
                     if (cradlePositionData.blockScrollPos !== null) {
@@ -1126,7 +1126,7 @@ const Cradle = ({
 
     // ==========================[ RENDER ]===========================
 
-    const scrollAxisReferenceIndex = scaffoldHandler.cradlePositionData.targetAxisReferenceIndex
+    const scrollAxisReferenceIndex = layoutHandler.cradlePositionData.targetAxisReferenceIndex
     const scrollTrackerArgs = useMemo(() => {
         if (!useScrollTracker) return null
         if (!(cradleState == 'repositioningContinuation' || cradleState == 'repositioningRender')) {
@@ -1246,7 +1246,7 @@ const getCradleHandlers = (cradleParameters) => {
         scrollHandler:createHandler(ScrollHandler),
         stateHandler:createHandler(StateHandler),
         contentHandler:createHandler(ContentHandler),
-        scaffoldHandler:createHandler(ScaffoldHandler),
+        layoutHandler:createHandler(LayoutHandler),
         serviceHandler:createHandler(ServiceHandler),
         stylesHandler:createHandler(StylesHandler),
 

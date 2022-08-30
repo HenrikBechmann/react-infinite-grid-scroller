@@ -64,7 +64,7 @@ export default class ContentHandler {
         const {
 
             cacheHandler,
-            scaffoldHandler,
+            layoutHandler,
             serviceHandler,
             interruptHandler,
 
@@ -75,7 +75,7 @@ export default class ContentHandler {
         interruptHandler.triggerlinesIntersect.observer.disconnect()
         interruptHandler.cradleIntersect.observer.disconnect()
 
-        const { cradlePositionData } = scaffoldHandler
+        const { cradlePositionData } = layoutHandler
         const viewportElement = viewportInterruptProperties.elementRef.current
 
         const requestedAxisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
@@ -190,7 +190,7 @@ export default class ContentHandler {
         viewportElement[cradlePositionData.blockScrollProperty] =
             cradlePositionData.blockScrollPos
 
-        const cradleElements = scaffoldHandler.elements //cradleElementsRef.current
+        const cradleElements = layoutHandler.elements //cradleElementsRef.current
         const axisElement = cradleElements.axisRef.current
         const headElement = cradleElements.headRef.current
 
@@ -247,7 +247,7 @@ export default class ContentHandler {
         const {
             cacheHandler, 
             scrollHandler, 
-            scaffoldHandler, 
+            layoutHandler, 
             stateHandler, 
             interruptHandler,
             serviceHandler,
@@ -266,7 +266,7 @@ export default class ContentHandler {
         }
 
         // cradle scaffold and user cells
-        const cradleElements = scaffoldHandler.elements
+        const cradleElements = layoutHandler.elements
         const cradleContent = this.content
         const modelcontentlist = cradleContent.cradleModelComponents || []
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
@@ -294,7 +294,7 @@ export default class ContentHandler {
             isViewportScrollingForward,
             orientation,
             triggerlineEntries,
-            triggerlineSpan: scaffoldHandler.triggerlineSpan,
+            triggerlineSpan: layoutHandler.triggerlineSpan,
             // for oversized (overflow) cells
             oldAxisReferenceIndex,
             viewportVisibleRowcount,
@@ -448,7 +448,7 @@ export default class ContentHandler {
 
         }
 
-        const { cradlePositionData } = scaffoldHandler
+        const { cradlePositionData } = layoutHandler
 
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
