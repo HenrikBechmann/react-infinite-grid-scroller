@@ -53,7 +53,7 @@
     components of the mechanism
 */
 
-import React, {useEffect, useState, useCallback, useRef} from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 
 // defensive
 import { ErrorBoundary } from 'react-error-boundary' // www.npmjs.com/package/react-error-boundary
@@ -163,7 +163,7 @@ const InfiniteGridScroller = (props) => {
 
     const gridSpecsRef = useRef(gridSpecs)
 
-    const [scrollerState, setScrollerState] = useState('setup')
+    const [scrollerState, setScrollerState] = useState('setup') // setup, setlistsize, ready
 
     const stylesRef = useRef(styles)
     const callbacksRef = useRef(callbacks)

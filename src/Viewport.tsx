@@ -3,10 +3,21 @@
 
 /*
     The role of viewport is to provide data to its children (scrollblock and cradle),
-    and act as the visible screen portal of the list being shown
+    and act as the visible screen portal of the list being shown.
+    If it is resized, it notifies the Cradle to reconfigure.
 */
 
-import React, {useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback, useContext} from 'react'
+import React, {
+
+    useState, 
+    useRef, 
+    useEffect, 
+    useLayoutEffect, 
+    useMemo, 
+    useCallback, 
+    useContext
+
+} from 'react'
 
 export const ViewportInterrupt = React.createContext(null) // for children
 
@@ -15,12 +26,14 @@ import { ResizeObserver as ResizeObserverPollyfill } from '@juggle/resize-observ
 const ResizeObserver = window['ResizeObserver'] || ResizeObserverPollyfill
 
 const Viewport = ({
+
     children, 
     gridSpecs,
     styles,
     scrollerID,
     scrollerProperties,
     VIEWPORT_RESIZE_TIMEOUT,
+    
 }) => {
 
     // -----------------------[ initialize ]------------------
@@ -51,7 +64,6 @@ const Viewport = ({
         {
             isReparentingRef:scrollerProperties?.isReparentingRef, 
             isResizing:false, 
-            // index:null,
             viewportDimensions:null,
             elementRef:null
         }
