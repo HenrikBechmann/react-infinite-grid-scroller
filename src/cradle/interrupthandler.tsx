@@ -19,9 +19,16 @@ export default class InterruptHandler {
     private isHeadCradleInView = false
 
     // TODO: stub
-    private cradleresizeobservercallback = (entries) => {
+    private cradleResizeObserverCallback = (entries) => {
 
-       if (this.signals.pauseCradleResizeObserver) return
+       // console.log('cradleResizeObserverCallback')
+
+        const {
+            stateHandler,
+        } = this.cradleParameters.handlersRef.current
+
+        // stateHandler.setCradleResizeState('resizecradle')
+        if (this.signals.pauseCradleResizeObserver) return
 
     }
 
@@ -142,7 +149,7 @@ export default class InterruptHandler {
    // for adjusting to content re-sizing
    public cradleResize = {
       observer:null,
-      callback:this.cradleresizeobservercallback,
+      callback:this.cradleResizeObserverCallback,
         connectElements:() => {
             const observer = this.cradleResize.observer
             const cradleElements = this.cradleParameters.handlersRef.current.scaffoldHandler.elements

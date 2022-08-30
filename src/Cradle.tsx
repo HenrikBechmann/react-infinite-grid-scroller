@@ -88,6 +88,13 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
+    const [cradleResizeState, setCradleResizeState] = useState('resizeready')
+    const cradleResizeStateRef = useRef(null) // access by closures
+    cradleResizeStateRef.current = cradleResizeState
+
+    // console.log('==> cradleState',cradleState)
+    // console.log(' cradleResizeState',cradleResizeState)
+
     // flags
     const isMountedRef = useRef(true)
     const isCachedRef = useRef(false)
@@ -293,6 +300,8 @@ const Cradle = ({
         // for stateHandler
         cradleStateRef,
         setCradleState,
+        cradleResizeStateRef,
+        setCradleResizeState,
     }
 
     // placeholder in cradleParameters to make available individual handlers
@@ -1080,6 +1089,19 @@ const Cradle = ({
         }
 
     },[cradleState])
+
+    useLayoutEffect(()=>{
+
+        switch (cradleResizeState) {
+
+            case 'resizeready':
+                break
+            case 'resizecradle':
+                setCradleResizeState('resizeready')
+                break
+        }
+
+    },[cradleResizeState])
 
     // standard rendering states (3 states)
     useEffect(()=> { 
