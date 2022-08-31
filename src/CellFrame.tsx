@@ -120,12 +120,12 @@ const CellFrame = ({
 
     const requestIdleCallbackIdRef = useRef(null)
 
-    // cradle invariant ondemand callback parameter value
-    const getElementData = useCallback(()=>{
+    // // cradle invariant ondemand callback parameter value
+    // const getElementData = useCallback(()=>{
 
-        return [index, frameRef]
+    //     return [index, frameRef]
         
-    },[])
+    // },[])
 
     // set styles
     useEffect(()=>{
