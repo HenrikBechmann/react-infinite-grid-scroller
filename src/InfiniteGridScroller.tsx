@@ -153,7 +153,8 @@ const InfiniteGridScroller = (props) => {
         layout = 'uniform'
     }
 
-    const gridSpecs = { // package
+    // package
+    const gridSpecs = {
         orientation,
         gap,
         padding,
@@ -164,8 +165,10 @@ const InfiniteGridScroller = (props) => {
 
     const gridSpecsRef = useRef(gridSpecs)
 
+    // state
     const [scrollerState, setScrollerState] = useState('setup') // setup, setlistsize, ready
 
+    // system
     const stylesRef = useRef(styles)
     const callbacksRef = useRef(callbacks)
 
@@ -186,9 +189,16 @@ const InfiniteGridScroller = (props) => {
 
     if (typeof useScrollTracker != 'boolean') useScrollTracker = true
 
-    // for mount
+    // for mount version
     const scrollerSessionIDRef = useRef(null)
     const scrollerID = scrollerSessionIDRef.current
+
+    // for children
+    const cacheHandlerRef = useRef(null)
+
+    const listsizeRef = useRef(estimatedListSize)
+
+    const listsize = listsizeRef.current
 
     // test React Object.is for attributes; avoid re-renders with no change
     if (!compareProps(gridSpecs, gridSpecsRef.current)) {
@@ -201,12 +211,6 @@ const InfiniteGridScroller = (props) => {
     if (!compareProps(callbacks, callbacksRef.current)) {
         callbacksRef.current = callbacks
     }
-
-    const cacheHandlerRef = useRef(null)
-
-    const listsizeRef = useRef(estimatedListSize)
-
-    const listsize = listsizeRef.current
 
     // -------------------------[ Initialization ]-------------------------------
 
