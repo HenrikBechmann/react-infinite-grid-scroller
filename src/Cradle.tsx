@@ -52,7 +52,7 @@ const Cradle = ({
         MAX_CACHE_OVER_RUN,
     }) => {
 
-    if (listsize == 0) return null// nothing to do
+    if (listsize == 0) return null // nothing to do
 
     // ========================[ DATA SETUP ]========================
 
@@ -470,7 +470,7 @@ const Cradle = ({
 
     },[])
 
-    //send callback callbacks to host
+    //send callin functions to host
     useEffect(()=>{
 
         if (!userCallbacks.getFunctions) return
