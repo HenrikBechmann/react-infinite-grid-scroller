@@ -147,7 +147,6 @@ const Viewport = ({
             position:'absolute',
             inset:0,
             overflow:'auto',
-            // backgroundColor:'red',
         }, styles.viewport)
 
     },[styles.viewport])

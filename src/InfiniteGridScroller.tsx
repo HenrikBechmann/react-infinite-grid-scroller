@@ -135,7 +135,6 @@ const InfiniteGridScroller = (props) => {
     runwaySize = runwaySize ?? 3
     useScrollTracker = useScrollTracker ?? true
 
-
     // prop constraints - non-negative values
     runwaySize = Math.max(1,runwaySize) // runwaysize must be at least 1
     estimatedListSize = Math.max(0,estimatedListSize)

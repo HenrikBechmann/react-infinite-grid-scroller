@@ -1,12 +1,6 @@
 // Cradle.tsx
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
-/*
-    consider formalizing state conditions (certain useRefs), together with state actions (useState)
-
-    - rationalize pauseScrolling, and other signals
-*/
-
 import React, { 
     useState, 
     useRef, 

@@ -105,7 +105,7 @@ const Scrollblock = ({
 
 } // Scrollblock
 
-// all the parameters can affect the length
+// any of the parameters can affect the length
 const calcBaseScrollblockLength = ({
         orientation,
         viewportheight,
