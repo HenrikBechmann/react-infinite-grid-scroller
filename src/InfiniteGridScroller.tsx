@@ -37,20 +37,22 @@
 
     The job of InfiniteGridScroller is to pass parameters to dependents.
     Viewport contains the scrollblock, fullsize for adjusted cell height/width, which in turn contains the cradle 
-        - a component that contains CellFrames (which contain displayed items or transitional placeholders). 
+        - a component that contains CellFrames (which contain displayed items or transitional placeholders. 
     The CellFrames are skeletons which contain the host content components.
 
-    Host content is created in a portal cache (via PortalHandler) and then portal'd to its host CellFrame
+    Host content is instantiated in a portal cache (via PortalHandler) 
+    and then portal'd to its host CellFrame. The cach can be configured to hold many more items
+    than cradle, allowing a range of host content to maintain state.
 
-    Scrollblock virtually represents the entirety of the list, and is the scroller
+    Scrollblock by size represents the entirety of the list, and is the scroller
 
     Cradle contains the list items, and is 'virtualized' -- it appears as
       though it is the full scrollblock, but in fact it is only slightly larger than
       the viewport.
-    - individual items are framed by CellFrame, managed by Cradle
+    - individual host items are framed by CellFrame, managed by Cradle
 
-    Overall the infinitegridscroller manages the (often asynchronous) interactions of the 
-    components of the mechanism
+    Overall the infinitegridscroller as a package manages the often asynchronous interactions of the 
+    components of the mechanism. Most of the work occurs in the Cradle component.
 */
 
 import React, { useEffect, useState, useCallback, useRef } from 'react'
