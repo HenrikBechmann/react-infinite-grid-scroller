@@ -6,7 +6,7 @@
 
         review all code
 
-        layout: uniform, variable, dense
+        layout: uniform, variable
 
         cross-browser testing; smartphone testing
 
@@ -100,7 +100,7 @@ const InfiniteGridScroller = (props) => {
             // base for variable layout
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
             // base for variable layout
-        layout = 'uniform', // uniform, variable, dense
+        layout = 'uniform', // uniform, variable
 
         // ** scroller specs:
         estimatedListSize = 0, // the exact number of the size of the virtual list. can be modified
@@ -149,7 +149,7 @@ const InfiniteGridScroller = (props) => {
     if (!['preload','keepload','cradle'].includes(cache)) {
         cache = 'cradle'
     }
-    if (!['uniform', 'variable', 'dense'].includes(layout)) {
+    if (!['uniform', 'variable'].includes(layout)) {
         layout = 'uniform'
     }
 
