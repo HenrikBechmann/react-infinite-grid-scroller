@@ -18,7 +18,7 @@
     
     TODO:
 
-        test for memory leaks window.performance.memory
+        re-test for memory leaks window.performance.memory
         ----------------
         (after layout...)
         

@@ -470,7 +470,7 @@ const Cradle = ({
 
     },[])
 
-    //send callin functions to host
+    //send call-in functions to host
     useEffect(()=>{
 
         if (!userCallbacks.getFunctions) return
