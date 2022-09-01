@@ -189,8 +189,8 @@ export default class InterruptHandler {
         connectElements:() => {
             const observer = this.triggerlinesIntersect.observer
             const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
-            observer.observe(cradleElements.headTriggerlineRef.current)
-            observer.observe(cradleElements.axisTriggerlineRef.current)
+            observer.observe(cradleElements.backwardTriggerlineRef.current)
+            observer.observe(cradleElements.forwardTriggerlineRef.current)
         },
         createObserver:() => {
             const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current

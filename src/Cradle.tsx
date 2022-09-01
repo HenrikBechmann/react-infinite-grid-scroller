@@ -100,8 +100,8 @@ const Cradle = ({
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const axisCradleElementRef = useRef(null)
-    const headTriggerlineCradleElementRef = useRef(null)
-    const axisTriggerlineCradleElementRef = useRef(null)
+    const backwardTriggerlineCradleElementRef = useRef(null)
+    const forwardTriggerlineCradleElementRef = useRef(null)
 
     // scaffold bundle
     const cradleElementsRef = useRef(
@@ -109,8 +109,8 @@ const Cradle = ({
             headRef:headCradleElementRef, 
             tailRef:tailCradleElementRef, 
             axisRef:axisCradleElementRef,
-            headTriggerlineRef:headTriggerlineCradleElementRef,
-            axisTriggerlineRef:axisTriggerlineCradleElementRef,
+            backwardTriggerlineRef:backwardTriggerlineCradleElementRef,
+            forwardTriggerlineRef:forwardTriggerlineCradleElementRef,
         }
     )
 
@@ -750,12 +750,12 @@ const Cradle = ({
         cradleHeadStyle, 
         cradleTailStyle, 
         cradleAxisStyle, 
-        triggerlineHeadStyle, 
-        triggerlineAxisStyle,
+        triggerlineBackwardStyle, 
+        triggerlineForwardStyle,
         cradleDividerStyle
     ] = useMemo(()=> {
 
-        return stylesHandler.setCradleStyles({
+        return stylesHandler.getCradleStyles({
 
             orientation, 
             cellHeight, 
@@ -1171,15 +1171,15 @@ const Cradle = ({
                 ref = {axisCradleElementRef}
             >
                 <div
-                    data-type = 'triggerline-head'
-                    style = {triggerlineHeadStyle}
-                    ref = {headTriggerlineCradleElementRef}
+                    data-type = 'triggerline-backward'
+                    style = {triggerlineBackwardStyle}
+                    ref = {backwardTriggerlineCradleElementRef}
                 >
                 </div>
                 <div
-                    data-type = 'triggerline-axis'
-                    style = {triggerlineAxisStyle}
-                    ref = {axisTriggerlineCradleElementRef}
+                    data-type = 'triggerline-forward'
+                    style = {triggerlineForwardStyle}
+                    ref = {forwardTriggerlineCradleElementRef}
                 >
                 </div>
 
