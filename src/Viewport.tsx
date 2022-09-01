@@ -69,6 +69,15 @@ const Viewport = ({
         }
     )
 
+    // mark as unmounted
+    useEffect(() =>{
+        return () => {
+
+            isMountedRef.current = false
+
+        }
+    })
+
     // --------------------[ viewport resizer interrupt ]-----------------------
 
     const resizeTimeridRef = useRef(null)
@@ -104,18 +113,19 @@ const Viewport = ({
 
             target.dataset.initialized = 'true'
 
-            // embedded lists need resizing event for init with up to date viewport dimensions
-            if (!scrollerProperties) {
+            if (!scrollerProperties) { // not an embedded list
 
                 return
                 
             }
+            // embedded lists need resizing event for init with up to date viewport dimensions
         }
 
         // generate interrupt response, if initiating resize
         if (!isResizingRef.current) {
 
             viewportInterruptPropertiesRef.current.isResizing = isResizingRef.current = true 
+
             // new object creation triggers a realtime interrupt message to cradle through context
             viewportInterruptPropertiesRef.current = {...viewportInterruptPropertiesRef.current}
 
@@ -123,6 +133,7 @@ const Viewport = ({
 
         }
 
+        // finalize resizing after timeout
         clearTimeout(resizeTimeridRef.current)
         resizeTimeridRef.current = setTimeout(() => {
 
@@ -137,6 +148,7 @@ const Viewport = ({
 
     // ----------------------------------[ calculate config values ]--------------------------------
 
+    // styles
     const divlinerstyleRef = useRef(null)
 
     // initialize with inherited styles
