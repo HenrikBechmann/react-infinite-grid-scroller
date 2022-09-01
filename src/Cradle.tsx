@@ -122,7 +122,10 @@ const Cradle = ({
     // crosscount (also calculated by Scrollblock for deriving Scrollblock length)
     const crosscount = useMemo(() => { // the number of cells crossing orientation
 
-        const viewportcrosslength = (orientation == 'horizontal')?viewportheight:viewportwidth
+        const viewportcrosslength = 
+            (orientation == 'horizontal')?
+                viewportheight:
+                viewportwidth
 
         if (viewportcrosslength == 0) {
 
