@@ -18,6 +18,7 @@
     
     TODO:
 
+        allow usercolor for default placeholder
         re-test for memory leaks window.performance.memory
         ----------------
         (after layout...)
@@ -249,7 +250,7 @@ const InfiniteGridScroller = (props) => {
 
     // --------------------[ Render ]---------------------
 
-    // component calls are deferred  by scrollerState to give cacheHandler a chance to initialize
+    // component calls are deferred by scrollerState to give cacheHandler a chance to initialize
     return <React.StrictMode>
         <ErrorBoundary
         FallbackComponent= { ErrorFallback }

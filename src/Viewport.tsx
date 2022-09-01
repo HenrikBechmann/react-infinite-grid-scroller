@@ -69,7 +69,7 @@ const Viewport = ({
         }
     )
 
-    // --------------------[ resizer setup ]-----------------------
+    // --------------------[ viewport resizer interrupt ]-----------------------
 
     const resizeTimeridRef = useRef(null)
     const isResizingRef = useRef(false)
@@ -117,7 +117,7 @@ const Viewport = ({
 
             viewportInterruptPropertiesRef.current.isResizing = isResizingRef.current = true 
             // new object creation triggers a realtime interrupt message to cradle through context
-            viewportInterruptPropertiesRef.current = Object.assign({},viewportInterruptPropertiesRef.current) 
+            viewportInterruptPropertiesRef.current = {...viewportInterruptPropertiesRef.current}// Object.assign({},viewportInterruptPropertiesRef.current) 
 
             if (isMountedRef.current) setViewportState('resizing')
 
@@ -142,12 +142,18 @@ const Viewport = ({
     // initialize with inherited styles
     divlinerstyleRef.current = useMemo(() => {
 
-        return Object.assign(
-        {
+        // return Object.assign(
+        // {
+        //     position:'absolute',
+        //     inset:0,
+        //     overflow:'auto',
+        // }, styles.viewport)
+
+        return {
             position:'absolute',
             inset:0,
             overflow:'auto',
-        }, styles.viewport)
+            ...styles.viewport}
 
     },[styles.viewport])
 
@@ -169,7 +175,7 @@ const Viewport = ({
         }
 
         // trigger context change with new object
-        const viewportdataobject = Object.assign({},viewportInterruptPropertiesRef.current, localViewportData) 
+        const viewportdataobject = {...viewportInterruptPropertiesRef.current, ...localViewportData}// Object.assign({},viewportInterruptPropertiesRef.current, localViewportData) 
 
         return  viewportdataobject
 
