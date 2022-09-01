@@ -487,7 +487,7 @@ const Cradle = ({
 
                 if (hasBeenRenderedRef.current) {
 
-                    setCradleState('renderfromcache')
+                    setCradleState('rerenderfromcache')
 
                 } else {
 
@@ -676,7 +676,7 @@ const Cradle = ({
                     
                 }
 
-                setCradleState('resetcache')
+                setCradleState('changecaching')
 
                 break
             }
@@ -704,7 +704,7 @@ const Cradle = ({
 
                 }
 
-                setCradleState('resetcache')
+                setCradleState('changecaching')
 
                 break
             }
@@ -713,12 +713,12 @@ const Cradle = ({
 
     },[cache, cacheMax])
 
-    // trigger resizing operation based on viewport state
+    // trigger viewportresizing operation based on viewport state
     useEffect(()=>{
 
         if (cradleStateRef.current == 'setup') return
 
-        // movement to and from cache is independent of ui resizing
+        // movement to and from cache is independent of ui viewportresizing
         if (isCachedRef.current || wasCachedRef.current) {
 
             return
@@ -729,14 +729,14 @@ const Cradle = ({
 
             interruptHandler.pauseInterrupts()
  
-            setCradleState('resizing')
+            setCradleState('viewportresizing')
 
         }
 
-        // complete resizing mode
+        // complete viewportresizing mode
         if (!viewportInterruptPropertiesRef.current.isResizing && (cradleStateRef.current == 'resizing')) {
 
-            setCradleState('finishresize')
+            setCradleState('finishviewportresize')
 
         }
 
@@ -862,32 +862,11 @@ const Cradle = ({
 
         switch (cradleState) {
 
-            case 'resizing': {
+            // --------------[ precursors to setCradleContent ]---------------
+
+            case 'viewportresizing': {
 
                 // no-op
-                break
-            }
-
-            case 'applycellframechanges': { // user intervention
-
-                cradleContent.headDisplayComponents = cradleContent.headModelComponents
-                cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
-
-                const { portalHoldList } = cacheHandler
-                const { portalMap } = cacheHandler.cacheProps
-
-                if (portalHoldList && portalHoldList.length) {
-
-                    for (const itemID of portalHoldList) {
-
-                        portalMap.delete(itemID)
-                        
-                    }
-
-                }
-
-                setCradleState('ready')
-
                 break
             }
 
@@ -949,7 +928,7 @@ const Cradle = ({
 
                     if (hasBeenRenderedRef.current) {
 
-                        setCradleState('renderfromcache')
+                        setCradleState('rerenderfromcache')
 
                     } else {
 
@@ -958,7 +937,30 @@ const Cradle = ({
                     }
 
                 }
+                
                 break
+            }
+
+            // moving out of cache into visible DOM tree (cellFrame)
+            // resets scrollPos (scrollLeft/scrollTop) to last UI value
+            case 'parentingtransition': {
+
+                    const { cradlePositionData } = layoutHandler
+
+                    // reset scroll position to previous value
+                    if (cradlePositionData.blockScrollPos !== null) {
+
+                        const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
+
+                        viewportElement[cradlePositionData.blockScrollProperty] = 
+                            cradlePositionData.blockScrollPos
+
+                    }
+
+                    setCradleState('finishparenting')
+
+                break
+
             }
 
             case 'finishparenting':{
@@ -974,37 +976,6 @@ const Cradle = ({
                     setCradleState('firstrenderfromcache')
 
                 }
-
-                break
-            }
-
-            // renderupdatedcontent is called from updateCradleContent. 
-            // it is required to integrate changed DOM configurations before 'ready' is displayed
-            case 'renderupdatedcontent': { // cycle for DOM update
-
-                cradleContent.headDisplayComponents = cradleContent.headModelComponents
-                cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
-
-                setCradleState('finishupdatedcontent')
-
-                break
-
-            }
-
-            case 'finishupdatedcontent': { // cycle for DOM update
-
-                const { cache } = cradleInternalPropertiesRef.current
-                if (cache == 'keepload') {
-
-                    contentHandler.guardAgainstRunawayCaching()
-
-                }
-
-                cacheHandler.renderPortalList()
-
-                // interruptHandler.triggerlinesIntersect.connectElements()
-                // interruptHandler.signals.pauseTriggerlinesObserver = false
-                setCradleState('ready')
 
                 break
             }
@@ -1025,6 +996,8 @@ const Cradle = ({
 
             }
 
+            // -------------------[ setCradleContent ]------------------
+
             /*
                 the following 11 cradle states all resolve with
                 a chain starting with setCradleContent, 
@@ -1033,12 +1006,12 @@ const Cradle = ({
             */
             case 'firstrender':
             case 'firstrenderfromcache':
-            case 'renderfromcache':
+            case 'rerenderfromcache':
             case 'scrollto':
-            case 'resetcache':
+            case 'changecaching':
             case 'finishpreload':
-            case 'reposition':
-            case 'finishresize':
+            case 'finishreposition':
+            case 'finishviewportresize':
             case 'pivot':
             case 'reconfigure':
             case 'reload': {
@@ -1115,7 +1088,64 @@ const Cradle = ({
 
             }
 
-            // user request
+            // ----------------------[ followup from updateCradleContent ]------------
+
+            // renderupdatedcontent is called from updateCradleContent. 
+            // it is required to integrate changed DOM configurations before 'ready' is displayed
+            case 'renderupdatedcontent': { // cycle for DOM update
+
+                cradleContent.headDisplayComponents = cradleContent.headModelComponents
+                cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
+
+                setCradleState('finishupdatedcontent')
+
+                break
+
+            }
+
+            case 'finishupdatedcontent': { // cycle for DOM update
+
+                const { cache } = cradleInternalPropertiesRef.current
+                if (cache == 'keepload') {
+
+                    contentHandler.guardAgainstRunawayCaching()
+
+                }
+
+                cacheHandler.renderPortalList()
+
+                // interruptHandler.triggerlinesIntersect.connectElements()
+                // interruptHandler.signals.pauseTriggerlinesObserver = false
+                setCradleState('ready')
+
+                break
+            }
+
+            // ----------------[ user requests ]-------------
+
+            case 'applycellframechanges': { // user intervention
+
+                cradleContent.headDisplayComponents = cradleContent.headModelComponents
+                cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
+
+                const { portalHoldList } = cacheHandler
+                const { portalMap } = cacheHandler.cacheProps
+
+                if (portalHoldList && portalHoldList.length) {
+
+                    for (const itemID of portalHoldList) {
+
+                        portalMap.delete(itemID)
+                        
+                    }
+
+                }
+
+                setCradleState('ready')
+
+                break
+            }
+
             case 'clearcache': {
 
                 contentHandler.clearCradle()
@@ -1125,28 +1155,6 @@ const Cradle = ({
                 setCradleState('ready')
 
                 break
-            }
-
-            // moving out of cache into visible DOM tree (cellFrame)
-            // resets scrollPos (scrollLeft/scrollTop) to last UI value
-            case 'parentingtransition': {
-
-                    const { cradlePositionData } = layoutHandler
-
-                    // reset scroll position to previous value
-                    if (cradlePositionData.blockScrollPos !== null) {
-
-                        const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
-
-                        viewportElement[cradlePositionData.blockScrollProperty] = 
-                            cradlePositionData.blockScrollPos
-
-                    }
-
-                    setCradleState('finishparenting')
-
-                break
-
             }
 
         }

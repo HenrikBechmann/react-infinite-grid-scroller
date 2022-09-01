@@ -118,8 +118,8 @@ export default class InterruptHandler {
                 !(cradleState == 'repositioningContinuation') &&
                 !(cradleState == 'renderupdatedcontent') && 
                 !(cradleState == 'finishupdatedcontent') &&
-                !(cradleState == 'finishresize') &&
-                !(cradleState == 'reposition') && 
+                !(cradleState == 'finishviewportresize') &&
+                !(cradleState == 'finishreposition') && 
                 !(cradleState == 'pivot')
                 ) 
             {
@@ -214,7 +214,7 @@ export default class InterruptHandler {
         invoked for 
         cradle:
         - change into cache
-        - trigger resizing
+        - trigger cradleresizing
         - trigger reconfiguration
         - trigger pivot
         servicehandler:

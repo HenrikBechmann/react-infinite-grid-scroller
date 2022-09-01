@@ -143,7 +143,7 @@ export default class ScrollHandler {
 
                 const { repositioningFlagCallback } = serviceHandler.callbacks
                 repositioningFlagCallback && repositioningFlagCallback(false)
-                stateHandler.setCradleState('reposition')
+                stateHandler.setCradleState('finishreposition')
 
                 break
             }

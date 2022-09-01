@@ -48,7 +48,7 @@ export default class ContentHandler {
 
     // ==========================[ SET CONTENT ]===========================
 
-     //initially (dosetup), after reposition (reposition), or with finishresize, pivot, 
+     //initially (dosetup), after reposition (reposition), or with finishviewportresize, pivot, 
      // or user size param reconfigure or reload
      // setCradleContent sets the scrollblock's scroll position, as well as config and content
 
@@ -100,7 +100,7 @@ export default class ContentHandler {
         if ([
             'firstrender', 
             'firstrenderfromcache',
-            'reposition', 
+            'finishreposition', 
             'reconfigure', 
             'scrollto', 
         ].includes(cradleState)) {
