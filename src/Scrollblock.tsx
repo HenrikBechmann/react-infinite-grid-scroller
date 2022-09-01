@@ -2,12 +2,14 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    
-    TODO update length for cradle adjustments based on variable length changes in cell frames.
+
+    The scrollblock provides the scrollable element of the infinite grid scroller.
+    It is sized according to the given cell size and row counts, adjusted for variable cradle content.
+    Its only state change is change of styles.
 
 */
 
-import React, {useContext, useRef, useCallback, useEffect, useLayoutEffect, useState, useMemo} from 'react'
+import React, {useContext, useRef, useCallback, useLayoutEffect, useState, useMemo} from 'react'
 
 import { ViewportInterrupt } from './Viewport'
 
@@ -58,17 +60,17 @@ const Scrollblock = ({
     useLayoutEffect(() => {
 
         updateBaseBlockLength(
-                    {
-                        orientation,
-                        viewportheight:height,
-                        viewportwidth:width,
-                        listsize,
-                        cellHeight,
-                        cellWidth,
-                        gap,
-                        padding,
-                    }
-            )
+            {
+                orientation,
+                viewportheight:height,
+                viewportwidth:width,
+                listsize,
+                cellHeight,
+                cellWidth,
+                gap,
+                padding,
+            }
+        )
         divlinerstyleRef.current = 
             updateScrollblockStyles(
                 orientation,
