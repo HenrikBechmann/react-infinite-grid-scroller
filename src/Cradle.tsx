@@ -400,14 +400,17 @@ const Cradle = ({
 
     // =======================[ INTERCEPT CACHING STATE CHANGE ]=========================
 
-    // intercept change in caching status
-    // when a portal is cached, including the transition of being moved from one cellFrame to another,
-    // (and the infinitegridscroller can be a component that is cached),
-    // the scrollPos (scrollLeft or scrollTop) is reset to 0 (zero). When the scroller is 
-    // moved to a cellFrame, this code restores the scrollPos.
-    // The restore action must be the first priority to hide the scrollPos changes from the user
-
-    const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) // must be in portal (cache) state
+/*    
+    Intercept change in caching status:
+    when a portal is cached, including the transition of being moved from one cellFrame to another,
+    (and the infinitegridscroller can be a component that is cached),
+    the scrollPos (scrollLeft or scrollTop) is reset to 0 (zero). When the scroller is 
+    moved to a cellFrame, this code triggers restoration the scrollPos (see case 'parentingtransition'
+    in the state management section below).
+    The restore action must be the first priority to hide the scrollPos changes from the user
+*/
+    // zero width and height means the component must be in portal (cache) state
+    const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) 
 
     const isCacheChange = (isInPortal != isCachedRef.current)
 
@@ -453,7 +456,7 @@ const Cradle = ({
     // generate state for restoring scrollPos
     useEffect(()=>{
 
-        // if is cached, then the next effect has another turn
+        // if is cached, then the next effect (for entering or leaving cache) has another turn
         if (parentingTransitionRequiredRef.current && !isCachedRef.current) {
 
             parentingTransitionRequiredRef.current = false            
@@ -598,7 +601,7 @@ const Cradle = ({
     // observer support
 
     /*
-        There are two interection observers, one for the cradle wings, and another for triggerlines; 
+        There are two interection observers: one for the cradle wings, and another for triggerlines; 
             both against the viewport.
         There is also a resize observer for the cradle wings, to generate responses to size changes of 
             variable cells.
@@ -607,7 +610,7 @@ const Cradle = ({
 
         // intersection observer for cradle body
         // this sets up an IntersectionObserver of the cradle against the viewport. When the
-        // cradle goes out of the observer scope, the "repositioningRender" cradle state is triggered.
+        // cradle goes out of the observer scope, the 'repositioningRender' cradle state is triggered.
         const cradleintersectobserver = interruptHandler.cradleIntersect.createObserver()
         interruptHandler.cradleIntersect.connectElements()
 
@@ -745,8 +748,6 @@ const Cradle = ({
         if (cradleStateRef.current == 'setup') return
 
         if (isCachedRef.current) return
-
-        // const signals = interruptHandler.signals
 
         interruptHandler.pauseInterrupts()
 
