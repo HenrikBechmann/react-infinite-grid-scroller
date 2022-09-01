@@ -41,7 +41,7 @@
         If the overscroll is such that the cradle has entirely passed out of the viewport, then the Cradle
         is replaced by a ScrollTracker (or by null if the host takes responsibility for feedback). 
         The ScrollTracker shows the relative location in the virtual list at the edge of the viewport 
-        during repositioning. When the scrolling stops Cradle recreates the cradle content according to 
+        during repositioning. When the scrolling stops Cradle recreates the cradle content,       s according to 
         the final position of the repositioning process.
 
     Cradle is activated by interrupts:
@@ -54,7 +54,7 @@
         - cradle grid resizing responding to variable cell length changes (in 'variable' layout mode) 
             which triggers reconfiguration
     - pivot - change of orientation
-    - host changes of other configuration specs
+    - host changes of configuration specs through property changes or direct service calls
 */
 
 import React, { 
