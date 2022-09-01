@@ -4,12 +4,12 @@
 import React from 'react'
 
 import { 
-    getCellFrameComponentList, 
-    calcContentShift,
     getContentListRequirements,
     getShiftInstruction,
+    calcContentShift,
     allocateContentList,
     deletePortals,
+    getCellFrameComponentList, 
 
 } from './contentfunctions'
 
