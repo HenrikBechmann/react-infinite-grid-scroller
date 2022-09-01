@@ -29,18 +29,18 @@ export default class StylesHandler {
 
     }) => {
 
-        const headstyles:React.CSSProperties = this.getHeadStyles(gap, padding, orientation, userstyles.cradle)
-        const tailstyles:React.CSSProperties = this.getTailStyles(gap, padding, orientation, userstyles.cradle)
-        const axisstyles:React.CSSProperties = this.getAxisStyles(gap, padding, orientation, userstyles.axis)
+        const headstyles = this.getHeadStyles(gap, padding, orientation, userstyles.cradle)
+        const tailstyles = this.getTailStyles(gap, padding, orientation, userstyles.cradle)
+        const axisstyles = this.getAxisStyles(gap, padding, orientation, userstyles.axis)
 
         const { layoutHandler } = this.cradleParameters.handlersRef.current
-        const triggerlineheadstyles:React.CSSProperties = 
+        const triggerlineheadstyles = 
             this.getTriggerlineHeadStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
-        const triggerlineaxisstyles:React.CSSProperties = 
+        const triggerlineaxisstyles = 
             this.getTriggerlineAxisStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
         layoutHandler.triggerlineSpan = this.axisTriggerlineOffset - this.headTriggerlineOffset
 
-        const cradledividerstyles:React.CSSProperties = 
+        const cradledividerstyles = 
             {
                 zIndex:1, 
                 position:'absolute',
@@ -136,10 +136,26 @@ export default class StylesHandler {
             top = 0
         }
 
-        return {...{
+        // return {...{
 
+        //     position: 'absolute',
+        //     // backgroundColor: 'blue',
+        //     display: 'grid',
+        //     gridGap: gap + 'px',
+        //     padding: padding + 'px',
+        //     justifyContent:'start',
+        //     alignContent:'start',
+        //     boxSizing:'border-box',
+        //     bottom,
+        //     left,
+        //     right,
+        //     top,
+
+        // } as React.CSSProperties,...userheadstyles}
+
+        return {
+            ...userheadstyles,
             position: 'absolute',
-            // backgroundColor: 'blue',
             display: 'grid',
             gridGap: gap + 'px',
             padding: padding + 'px',
@@ -150,9 +166,7 @@ export default class StylesHandler {
             left,
             right,
             top,
-
-        } as React.CSSProperties,...userheadstyles}
-
+        }
     }
 
     private getTailStyles = (gap,padding,orientation,usertailstyles) => {
@@ -171,8 +185,25 @@ export default class StylesHandler {
             top = 0
         }
 
-        return {...{
+        // return {...{
 
+        //     position: 'absolute',
+        //     // backgroundColor: 'blue',
+        //     display: 'grid',
+        //     gridGap: gap + 'px',
+        //     padding: padding + 'px',
+        //     justifyContent:'start',
+        //     alignContent:'start',
+        //     boxSizing:'border-box',
+        //     top,
+        //     left,
+        //     right,
+        //     bottom,
+
+        // } as React.CSSProperties,...usertailstyles}
+
+        return {
+            ...usertailstyles,
             position: 'absolute',
             // backgroundColor: 'blue',
             display: 'grid',
@@ -185,9 +216,7 @@ export default class StylesHandler {
             left,
             right,
             bottom,
-
-        } as React.CSSProperties,...usertailstyles}
-
+        } 
     }
 
     private getAxisStyles = (gap, padding, orientation, useraxisstyles) => {
@@ -205,14 +234,15 @@ export default class StylesHandler {
             height = '100%'
         }
 
-        return { ...{
+        return {
+            ...useraxisstyles,
             position: 'relative',
             top,
             left,
             width,
             height,
 
-        } as React.CSSProperties,...useraxisstyles}
+        }
 
     }
 
@@ -229,12 +259,12 @@ export default class StylesHandler {
         } else {
             transform = `translateY(${triggerlineOffset + 'px'})`
         }
-        return { ...{
+        return {
             position,
             width,
             height,
             transform,
-        } as React.CSSProperties}
+        }
     }
 
 
@@ -251,12 +281,12 @@ export default class StylesHandler {
             this.headTriggerlineOffset = -(cellHeight + gap -triggerlineOffset)
             transform = `translateY(${this.headTriggerlineOffset + 'px'})`
         }
-        return { ...{
+        return {
             position,
             width,
             height,
             transform,
-        } as React.CSSProperties}
+        }
     }
 
 }

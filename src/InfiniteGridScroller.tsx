@@ -19,6 +19,8 @@
     TODO:
 
         allow usercolor for default placeholder
+        trace all user styles assignments
+        replace concat with sprad operator
         re-test for memory leaks window.performance.memory
         ----------------
         (after layout...)
@@ -315,7 +317,7 @@ export default InfiniteGridScroller
 
 // ----------------------------[ Support ]------------------------------
 
-const cacherootstyle = {display:'none'} as React.CSSProperties // static, out of view 
+const cacherootstyle = {display:'none'}// as React.CSSProperties // static, out of view 
 
 // utilities
 function compareProps (obj1,obj2) {

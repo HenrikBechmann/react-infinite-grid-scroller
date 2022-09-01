@@ -36,7 +36,8 @@ const CellFrame = ({
     
     const [styles,saveStyles] = useState({
         overflow:'hidden',
-    } as React.CSSProperties)
+    })
+    // } as React.CSSProperties)
 
     const [frameState, setFrameState] = useState('setup')
     const frameStateRef = useRef(null)

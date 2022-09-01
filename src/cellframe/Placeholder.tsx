@@ -11,7 +11,7 @@ const Placeholder = ({index, listsize, message, error}) => {
         backgroundColor:'cyan',
         border:'2px solid black',
         height:'100%',
-        width:'100%'
+        width:'100%',
     } as React.CSSProperties)
     const itemStylesRef = useRef(
         {
@@ -31,8 +31,8 @@ const Placeholder = ({index, listsize, message, error}) => {
 
     return <div style = {stylesRef.current}>
         { !error?
-            <div style = {itemStylesRef.current}>{index + 1}/{listsize} {message}</div>:
-            <div style = {itemStylesRef.current}>item is not available ({error.message})</div>
+            <div style = { itemStylesRef.current }>{index + 1}/{listsize} {message}</div>:
+            <div style = { itemStylesRef.current }>item is not available ({error.message})</div>
         }
         
     </div>
