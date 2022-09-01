@@ -16,8 +16,8 @@
 
     The position of the cradle is controlled by an 'axis' which is a 0px height/width div
     (along the medial - ScrollBlock can be verticsl or horizontal). The purpose of the axis is to 
-    act as a 'fold', above which cell content expands 'upwards' in the Cradle, and below which the 
-    cell content expands 'downwards'. The Cradle content is held in two CSS grids (children of the axis): 
+    act as a 'fold', above which cradle content expands 'upwards' in the Cradle, and below which the 
+    cradle content expands 'downwards'. The Cradle content is held in two CSS grids (children of the axis): 
     one above, and one below the position of the axis.
 
     The axis is always kept near the leading (headward) edge of the visible cellrows of the viewport
@@ -41,7 +41,7 @@
         If the overscroll is such that the cradle has entirely passed out of the viewport, then the Cradle
         is replaced by a ScrollTracker (or by null if the host takes responsibility for feedback). 
         The ScrollTracker shows the relative location in the virtual list at the edge of the viewport 
-        during repositioning. When the scrolling stops Cradle recreates the cradle content,       s according to 
+        during repositioning. When the scrolling stops Cradle recreates the cradle content, according to 
         the final position of the repositioning process.
 
     Cradle is activated by interrupts:
