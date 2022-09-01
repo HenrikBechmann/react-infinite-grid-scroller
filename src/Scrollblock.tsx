@@ -116,7 +116,10 @@ const calcBaseScrollblockLength = ({
         padding,
     }) => {
 
-    // dependents of orientation
+    // ---------------[ calculate crosscount ]------------------
+    //crosscount is also calculated by Cradle
+
+    // values depend on orientation
     let crosslength
     let cellLength
     let viewportcrosslength
@@ -135,20 +138,23 @@ const calcBaseScrollblockLength = ({
     }
     // adjustments to viewportcrosslength
     viewportcrosslength -= (padding * 2)
-    viewportcrosslength += gap
+    viewportcrosslength += gap // to match crossLength
 
     if (viewportcrosslength < crosslength) viewportcrosslength = crosslength // must be at least one
-    let crosscount = Math.floor(viewportcrosslength/crosslength)
 
-    let listlength = Math.ceil(listsize/crosscount)
+    const crosscount = Math.floor(viewportcrosslength/crosslength)
 
-    let straightlength = (listlength * cellLength) - 
-        ((listlength > 0)?
-            gap:
+    // -------------------[ calculate scrollblock length ]-----------------
+
+    const listrowcount = Math.ceil(listsize/crosscount)
+
+    const baselength = (listrowcount * cellLength) - 
+        ((listrowcount > 0)?
+            gap: // final cell has no trailing gap
             0) 
-        + (padding * 2)
+        + (padding * 2) // leading and trailing padding
 
-    return straightlength
+    return baselength
 
 }
 

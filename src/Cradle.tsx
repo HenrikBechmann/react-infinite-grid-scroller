@@ -117,24 +117,31 @@ const Cradle = ({
     )
 
     // ------------------------[ calculated properties ]------------------------
-
     // configuration calculations
+
+    // crosscount (also calculated by Scrollblock for deriving Scrollblock length)
     const crosscount = useMemo(() => { // the number of cells crossing orientation
 
-        const viewportsize = (orientation == 'horizontal')?viewportheight:viewportwidth
+        const viewportcrosslength = (orientation == 'horizontal')?viewportheight:viewportwidth
 
-        if (viewportsize == 0) {
+        if (viewportcrosslength == 0) {
 
             return 0
 
         }
-        const crossLength = (orientation == 'horizontal')?cellHeight:cellWidth
 
-        const viewportlengthforcalc = viewportsize - (padding * 2) + gap // length of viewport
-        let tilelengthforcalc = crossLength + gap
-        tilelengthforcalc = Math.min(tilelengthforcalc,viewportlengthforcalc) // result cannot be less than 1
+        // cross length of viewport (gap to match crossLength)
+        const viewportcrosslengthforcalc = viewportcrosslength - (padding * 2) + gap 
 
-        const crosscount = Math.floor(viewportlengthforcalc/tilelengthforcalc)
+        const cellcrosslength = 
+            (orientation == 'horizontal')?
+                cellHeight + gap:
+                cellWidth + gap
+
+        const cellcrosslengthforcalc = 
+            Math.min(cellcrosslength,viewportcrosslengthforcalc) // result cannot be less than 1
+
+        const crosscount = Math.floor(viewportcrosslengthforcalc/cellcrosslengthforcalc)
 
         return crosscount
 
