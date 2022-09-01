@@ -1,6 +1,62 @@
 // Cradle.tsx
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+    The Cradle does the bulk of the work for the infinite grid scroller. It does so with the help of
+    eight process handlers, and one main sub-component - the CellFrame.
+
+    Cradle's main responsibility is to manage the state change flows of the content.
+
+    The illusion of infinite content is maintained by synchronizing changes in cradle content with the
+    Cradle location inside the Scrollblock, such that as the Scrollblock is moved, the cradle moves 
+    oppositely to stay visible within the viewport.
+
+    The Scrollblock is sized to approximate the list being viewed, so as to have a scroll thumb size 
+    and position which realistically reflects the size of the list being shown.
+
+    The position of the cradle is controlled by an 'axis' which is a 0px height/width div
+    (along the medial - ScrollBlock can be verticsl or horizontal). The purpose of the axis is to 
+    act as a 'fold', above which cell content expands 'upwards' in the Cradle, and below which the 
+    cell content expands 'downwards'. The Cradle content is held in two CSS grids (children of the axis): 
+    one above, and one below the position of the axis.
+
+    The axis is always kept near the leading (headward) edge of the visible cellrows of the viewport
+    (there are some edge-case exceptions).
+
+    Technically, there are several key reference points tracked by the Cradle. These are:
+        - axisReferenceIndex is the virtual index of the item controlling the location of the axis.
+            The axisReferenceIndex is also used to allocate items above (lower index value) and below 
+            (same or higher index value) the axis fold. The axisRefernceIndex is the first item in the 
+            tail section of the Cradle.
+        - (cradleReferenceIndex is inferred from the axisReferenceIndex, and is the virtual index of 
+            the item defining the leading bound of the cradle content. The cradleReferenceIndex is the 
+            fist item in the head section of the Cradle)
+        - axisPixelOffset (pixels that place the axis in relation to the viewport's leading edge)
+        - the blockScrollPos, which is the amount of scroll of the ScrollBlock
+    
+    Overscroll handling:
+        Owing to the potential rapidity of scrolling, which in the case of large lists and heavy content 
+        can be too fast for the system to keep up, there is an overscroll protocol called 'repositioning'.
+
+        If the overscroll is such that the cradle has entirely passed out of the viewport, then the Cradle
+        is replaced by a ScrollTracker (or by null if the host takes responsibility for feedback). 
+        The ScrollTracker shows the relative location in the virtual list at the edge of the viewport 
+        during repositioning. When the scrolling stops Cradle recreates the cradle content according to 
+        the final position of the repositioning process.
+
+    Cradle is activated by interrupts:
+    - scrolling
+    - resizing of the viewport
+    - observer callbacks:
+        - cradle/viewport intersection for repositioning when the cradle races out of scope
+        - two 'triggerline'/viewport intersections which trigger rolling of content
+            - rolling content triggers re-allocation of content between cradle head and tail grids
+        - cradle grid resizing responding to variable cell length changes (in 'variable' layout mode) 
+            which triggers reconfiguration
+    - pivot - change of orientation
+    - host changes of other configuration specs
+*/
+
 import React, { 
     useState, 
     useRef, 
@@ -16,7 +72,7 @@ import { ViewportInterrupt } from './Viewport'
 // popup position tracker for repositioning
 import ScrollTracker from './cradle/ScrollTracker'
 
-// support code
+// support code; process handlers
 import ScrollHandler from './cradle/scrollhandler'
 import StateHandler from './cradle/statehandler'
 import ContentHandler from './cradle/contenthandler'
@@ -24,7 +80,7 @@ import LayoutHandler from './cradle/layouthandler'
 import InterruptHandler from './cradle/interrupthandler'
 import ServiceHandler from './cradle/servicehandler'
 import StylesHandler from './cradle/styleshandler'
-// cacheHandler is imported as a property
+// cacheHandler is imported as a property; instantiated at the root
 
 // for children
 export const CradleContext = React.createContext(null)
