@@ -104,6 +104,8 @@ const Scrollblock = ({
 
 } // Scrollblock
 
+export default Scrollblock
+
 // any of the parameters can affect the length
 const calcBaseScrollblockLength = ({
         orientation,
@@ -135,7 +137,7 @@ const calcBaseScrollblockLength = ({
         viewportcrosslength = viewportheight
 
     }
-    
+
     // adjustments to viewportcrosslength
     viewportcrosslength -= (padding * 2)
     viewportcrosslength += gap // to match crossLength
@@ -158,9 +160,9 @@ const calcBaseScrollblockLength = ({
 
 }
 
-const updateScrollblockStyles = (orientation,stylesRef,baseScrollblocklengthRef) => {
+const updateScrollblockStyles = (orientation, stylesRef, baseScrollblocklengthRef) => {
 
-    let localstyles = {...stylesRef.current}
+    let localstyles = {...stylesRef.current} // new object
     let height 
     let width
     if (orientation == 'horizontal') {
@@ -175,5 +177,3 @@ const updateScrollblockStyles = (orientation,stylesRef,baseScrollblocklengthRef)
 
     return localstyles
 }
-
-export default Scrollblock

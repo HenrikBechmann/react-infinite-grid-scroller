@@ -1238,6 +1238,8 @@ const Cradle = ({
 
 } // Cradle
 
+export default Cradle
+
 // utility
 
 const getCradleHandlers = (cradleParameters) => {
@@ -1260,5 +1262,3 @@ const getCradleHandlers = (cradleParameters) => {
     }
 
 }
-
-export default Cradle
