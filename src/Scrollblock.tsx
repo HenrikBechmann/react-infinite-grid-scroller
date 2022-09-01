@@ -48,8 +48,8 @@ const Scrollblock = ({
         // } as React.CSSProperties, styles.scrollblock)
 
         return {
-            position:'relative',
-            ...styles.scrollblock
+            ...styles.scrollblock,
+            position:'relative'
         }
 
     }, [])

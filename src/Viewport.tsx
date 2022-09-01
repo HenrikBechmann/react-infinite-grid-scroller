@@ -150,10 +150,11 @@ const Viewport = ({
         // }, styles.viewport)
 
         return {
+            ...styles.viewport,
             position:'absolute',
             inset:0,
             overflow:'auto',
-            ...styles.viewport}
+        }
 
     },[styles.viewport])
 

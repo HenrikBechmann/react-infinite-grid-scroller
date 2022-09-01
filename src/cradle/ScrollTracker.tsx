@@ -29,7 +29,8 @@ const ScrollTracker = ({ top, left, offset, listsize, styles }) => {
         borderRadius:'10px',
         fontSize:'smaller',
         padding:'3px',
-        ...styles.scrolltracker})
+        ...styles.scrolltracker
+    })
 
     return <div data-name = 'scrolltracker' style = {styleRef.current} >{trackdata}</div>
 }
