@@ -364,12 +364,17 @@ export default class ServiceHandler {
         // for return information...
         const deletedOrphanedItemIDList = Array.from(deletedItemIDToIndexMap.keys()) 
 
-        let modifiedIndexList = 
-                processedIndexList.concat(
-                    indexesToDeleteList, 
-                    deletedOrphanedItemIndexList, 
-                    deletedOrphanedIndexList
-                )
+        let modifiedIndexList = [
+            ...processedIndexList,
+            ...indexesToDeleteList, 
+            ...deletedOrphanedItemIndexList, 
+            ...deletedOrphanedIndexList
+        ]
+                // processedIndexList.concat(
+                //     indexesToDeleteList, 
+                //     deletedOrphanedItemIndexList, 
+                //     deletedOrphanedIndexList
+                // )
 
         modifiedIndexList = Array.from(new Set(modifiedIndexList.values())) // remove duplicates
 

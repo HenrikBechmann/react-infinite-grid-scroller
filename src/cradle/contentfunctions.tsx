@@ -517,9 +517,9 @@ export const getCellFrameComponentList = ({
 
     }
 
-    const deletedItems = deletedheaditems.concat(deletedtailitems)
+    const deletedItems = [...deletedheaditems,...deletedtailitems] //deletedheaditems.concat(deletedtailitems)
 
-    const componentList = headContentlist.concat(localContentlist,tailContentlist)
+    const componentList = [...headContentlist,...localContentlist,...tailContentlist] // headContentlist.concat(localContentlist,tailContentlist)
 
     return [componentList,deletedItems]
 
