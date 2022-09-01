@@ -144,9 +144,6 @@ const Cradle = ({
     const cradleResizeStateRef = useRef(null) // access by closures
     cradleResizeStateRef.current = cradleResizeState
 
-    // console.log('==> cradleState',cradleState)
-    // console.log(' cradleResizeState',cradleResizeState)
-
     // flags
     const isMountedRef = useRef(true)
     const isCachedRef = useRef(false)
@@ -937,7 +934,7 @@ const Cradle = ({
                     }
 
                 }
-                
+
                 break
             }
 

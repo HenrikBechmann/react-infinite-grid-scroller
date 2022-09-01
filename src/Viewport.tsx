@@ -76,7 +76,7 @@ const Viewport = ({
             isMountedRef.current = false
 
         }
-    })
+    },[])
 
     // --------------------[ viewport resizer interrupt ]-----------------------
 
