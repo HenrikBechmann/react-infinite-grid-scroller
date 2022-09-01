@@ -133,7 +133,7 @@ export class CacheHandler {
         const mapkeyslist = Array.from(portalIndexList.keys())
         const requestedkeys = Array.from(requestedSet.keys())
 
-        const mapkeys = [...mapkeyslist,...requestedkeys] // mapkeyslist.concat(requestedkeys)
+        const mapkeys = [...mapkeyslist,...requestedkeys]
 
         mapkeys.sort((a,b) => a - b)
 
@@ -158,7 +158,7 @@ export class CacheHandler {
         const headlist = mapkeys.slice(0,headparecount)
         const taillist = mapkeys.slice(mapLength - tailparecount)
 
-        const delList = [...headlist,...taillist]// headlist.concat(taillist)
+        const delList = [...headlist,...taillist]
 
         this.deletePortal(delList, deleteListCallback)
 
@@ -423,7 +423,7 @@ export class CacheHandler {
         // -----------return list of processed indexes to caller --------
         // for synchrnization with cradle cellFrames
 
-        const processedIndexes = [...processedshiftList,...processedmoveList]//processedshiftList.concat(processedmoveList)
+        const processedIndexes = [...processedshiftList,...processedmoveList]
 
         return processedIndexes
 

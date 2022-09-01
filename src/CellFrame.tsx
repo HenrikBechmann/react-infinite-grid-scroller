@@ -326,7 +326,7 @@ const CellFrame = ({
 
 const getFrameStyles = (orientation, cellHeight, cellWidth, styles) => {
 
-    let styleset = {...styles,position:'relative'} // Object.assign({position:'relative'},styles)
+    let styleset = {...styles,position:'relative'}
 
     if (orientation == 'horizontal') {
         styleset.width = 

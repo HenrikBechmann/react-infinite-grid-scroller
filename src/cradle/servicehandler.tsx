@@ -370,11 +370,6 @@ export default class ServiceHandler {
             ...deletedOrphanedItemIndexList, 
             ...deletedOrphanedIndexList
         ]
-                // processedIndexList.concat(
-                //     indexesToDeleteList, 
-                //     deletedOrphanedItemIndexList, 
-                //     deletedOrphanedIndexList
-                // )
 
         modifiedIndexList = Array.from(new Set(modifiedIndexList.values())) // remove duplicates
 

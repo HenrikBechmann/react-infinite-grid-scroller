@@ -40,16 +40,10 @@ const Scrollblock = ({
 
     // just for init
     const linerStyle = useMemo(() =>{
-        // return Object.assign(
-        // {
-
-        //     position:'relative',
-            
-        // } as React.CSSProperties, styles.scrollblock)
 
         return {
             ...styles.scrollblock,
-            position:'relative'
+            position:'relative',
         }
 
     }, [])
@@ -158,7 +152,7 @@ const calcBaseScrollblockLength = ({
 
 const updateScrollblockStyles = (orientation,stylesRef,baseScrollblocklengthRef) => {
 
-    let localstyles = {...stylesRef.current} // Object.assign({},stylesRef.current) as React.CSSProperties
+    let localstyles = {...stylesRef.current}
     let height 
     let width
     if (orientation == 'horizontal') {

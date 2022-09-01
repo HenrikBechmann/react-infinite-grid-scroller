@@ -20,7 +20,6 @@
 
         allow usercolor for default placeholder
         trace all user styles assignments
-        replace concat with spread operator
         re-test for memory leaks window.performance.memory
         retest concat replacements
         ----------------
