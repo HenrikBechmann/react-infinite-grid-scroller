@@ -24,6 +24,7 @@ import LayoutHandler from './cradle/layouthandler'
 import InterruptHandler from './cradle/interrupthandler'
 import ServiceHandler from './cradle/servicehandler'
 import StylesHandler from './cradle/styleshandler'
+// cacheHandler is imported as a property
 
 // for children
 export const CradleContext = React.createContext(null)
@@ -46,6 +47,7 @@ const Cradle = ({
         scrollerID,
         // for handler list
         cacheHandler,
+        // system
         useScrollTracker,
         showAxis,
         IDLECALLBACK_TIMEOUT,
@@ -450,7 +452,7 @@ const Cradle = ({
                 }
 
             }
-            //
+
             cacheHandler.changeListsize(maxListsize, 
                 dListCallback,
                 changeListsizeCallback)
@@ -459,7 +461,7 @@ const Cradle = ({
     },[])
 
     // clear mounted flag on unmount
-    useLayoutEffect(()=>{
+    useEffect(()=>{
 
         // unmount
         return () => {
@@ -1084,6 +1086,7 @@ const Cradle = ({
 
     },[cradleState])
 
+    // for cradle resize events
     useLayoutEffect(()=>{
 
         switch (cradleResizeState) {
