@@ -1,11 +1,43 @@
 // CellFrame.tsx
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
-import React, {useRef, useEffect, useLayoutEffect, useState, useCallback, useMemo, useContext } from 'react'
+/*
+    The role of CellFrame is to fetch user content from the cache, or from the host (using getItem).
+    While an item is being fetched, CellFrame presents a placeholder (either the default or an 
+    imported custom version). If there is an error in fetching content then the placeholder is used
+    to present the error to the user. If a new itemID is set by the parent, then CellFrame replaces the
+    old item with the new item.
 
-import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback'
+    getItem (which is a function provided by the host) can return one of several values:
+        - a React component
+        - a promise of a component
+        - null
+        - undefined
+    if a promise is returned, then the promise returns a React component, null or undefined.
 
-import { OutPortal } from 'react-reverse-portal'
+    If a valid react component is returned, then it is instantiated in the cache, and rendered in the
+    CellFrame. If null is returned, then CellFrame sends a message to its parent that the host has 
+    indicated the the item being fetched instead represents the end of the list, and the listsize should
+    be adjusted accordingly. Any other value that is returned is treated as an error, and presented
+    as such to the user through the placeholder component.
+
+    getItem sends the index (logical position in the list) and session itemID to the host, so that
+    the host can sync its own tracking with the scroller.
+*/
+
+import React, {
+    useRef, 
+    useEffect, 
+    useLayoutEffect, 
+    useState, 
+    useCallback, 
+    useMemo, 
+    useContext 
+} from 'react'
+
+import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback' // polyfill if needed
+
+import { OutPortal } from 'react-reverse-portal' // fetch from cache
 
 import Placeholder from './cellframe/Placeholder'
 
@@ -15,47 +47,51 @@ const CellFrame = ({
     orientation, 
     cellHeight, 
     cellWidth, 
-    getItem, 
-    listsize, 
-    placeholder,
-    itemID, 
+    getItem, // function provided by host
+    listsize, // for feedback in placeholder
+    placeholder, // optionally provided by host
+    itemID, // session itemID
     index, 
-    instanceID, 
-    scrollerID,
+    instanceID, // CellFrame session ID
+    scrollerID, // scroller ID (for debugging)
 }) => {
+
+    // ----------------------[ setup ]----------------------
 
     const cradleContext = useContext(CradleContext)
 
     const { 
         cacheHandler, 
-        scrollerPassthroughPropertiesRef, 
-        nullItemSetMaxListsize, 
-        itemExceptionsCallback,
-        IDLECALLBACK_TIMEOUT,
+        scrollerPassthroughPropertiesRef, // for the user content, if requested
+        nullItemSetMaxListsize, // for internal notification of end-of-list
+        itemExceptionsCallback, // or notification to host of error
+        IDLECALLBACK_TIMEOUT, // to optimize requestIdleCallback
     } = cradleContext
     
+    // style change generates state refresh
     const [styles,saveStyles] = useState({
         overflow:'hidden',
     })
-    // } as React.CSSProperties)
 
+    // processing state
     const [frameState, setFrameState] = useState('setup')
     const frameStateRef = useRef(null)
     frameStateRef.current = frameState
 
+    // DOM ref
     const frameRef = useRef(null)
-
+    // to track unmount interrupt
     const isMountedRef = useRef(true)
-
+    // cache data
     const portalDataRef = useRef(null)
-
+    // the placeholder to use
     const placeholderRef = useRef(null)
-
+    // the session itemID to use; could be updated by parent
     const itemIDRef = useRef(null)
     itemIDRef.current = itemID
-
+    // fetch error
     const errorRef = useRef(false)
-
+    // placeholder message
     const messageRef = useRef(null)
 
     // for unmount
@@ -105,7 +141,13 @@ const CellFrame = ({
 
         return placeholder
 
-    }, [index, customplaceholder, listsize, messageRef.current, errorRef.current]);
+    }, [
+        index, 
+        customplaceholder, 
+        listsize, 
+        messageRef.current, 
+        errorRef.current
+    ])
 
     // ---------------- [ requestidlecallback config ] ------------------------
 
@@ -121,12 +163,7 @@ const CellFrame = ({
 
     const requestIdleCallbackIdRef = useRef(null)
 
-    // // cradle invariant ondemand callback parameter value
-    // const getElementData = useCallback(()=>{
-
-    //     return [index, frameRef]
-        
-    // },[])
+    // --------------------[ processing ]-----------------
 
     // set styles
     useEffect(()=>{
@@ -167,13 +204,11 @@ const CellFrame = ({
                     messageRef.current = '(retrieving from cache)'
 
                     if (isMountedRef.current) {
-
-                        const portalRecord = cacheHandler.getPortal(itemID)
-
-                        portalDataRef.current = portalRecord
-
+                        // get cache data
+                        portalDataRef.current = cacheHandler.getPortal(itemID)
+                        // get OutPortal node
                         portalNodeRef.current = portalDataRef.current.portalNode
-
+                        // notify fetched component that reparenting is underway
                         portalDataRef.current.isReparentingRef.current = true
 
                         setFrameState('inserting')
@@ -186,12 +221,13 @@ const CellFrame = ({
 
                     setFrameState('waiting')
 
+                    // reserve space in the cache
                     cacheHandler.registerRequestedPortal(index)
-
+                    // enqueue the fetch
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
                         let returnvalue, usercontent, error
-
+                        // process the fetch
                         try {
 
                             usercontent = await getItem(index, itemID)
@@ -210,7 +246,7 @@ const CellFrame = ({
                             error = e
 
                         }
-
+                        // process the return value
                         if ((usercontent !== null) && (usercontent !== undefined)) {
 
                             if (!React.isValidElement(usercontent)) {
@@ -224,7 +260,7 @@ const CellFrame = ({
                         }
 
                         if (isMountedRef.current) {
-
+                            // prepare the content
                             if ((usercontent !== null) && (usercontent !== undefined)) {
 
                                 // if usercontent is otherwise disallowed, let error handling deal with it.
@@ -247,7 +283,7 @@ const CellFrame = ({
 
                                 setFrameState('inserting')
 
-                            } else { // null or undefined
+                            } else { // null or undefined; handle non-component value
 
                                 if (usercontent === null) {
 
@@ -262,6 +298,7 @@ const CellFrame = ({
 
                                     // change placeholder message to error message
                                     errorRef.current = error
+                                    // notify the host
                                     itemExceptionsCallback && 
                                         itemExceptionsCallback(
                                             index, itemID, returnvalue, 'cellFrame', error
@@ -324,24 +361,25 @@ const CellFrame = ({
 
 } // CellFrame
 
+// utility
 const getFrameStyles = (orientation, cellHeight, cellWidth, styles) => {
 
     let styleset = {...styles,position:'relative'}
 
     if (orientation == 'horizontal') {
-        styleset.width = 
-            cellWidth?
-                (cellWidth + 'px'):
-                'auto'
+        styleset.width = cellWidth + 'px'
+            // cellWidth?
+            //     (cellWidth + 'px'):
+            //     'auto'
         styleset.height = 'auto'
 
     } else if (orientation === 'vertical') {
 
         styleset.width = 'auto'
-        styleset.height = 
-            cellHeight?
-                (cellHeight + 'px'):
-                'auto'
+        styleset.height = cellHeight + 'px'
+            // cellHeight?
+            //     (cellHeight + 'px'):
+            //     'auto'
         
     }
 
