@@ -1,13 +1,15 @@
-// scrollblock.tsx
+// Scrollblock.tsx
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    
-    TODO update length for cradle adjustments based on variable length changes in cell frames.
+
+    The scrollblock provides the scrollable element of the infinite grid scroller.
+    It is sized according to the given cell size and row counts, adjusted for variable cradle content.
+    Its only state change is change of styles.
 
 */
 
-import React, {useContext, useRef, useCallback, useEffect, useLayoutEffect, useState, useMemo} from 'react'
+import React, {useContext, useRef, useCallback, useLayoutEffect, useState, useMemo} from 'react'
 
 import { ViewportInterrupt } from './Viewport'
 
@@ -19,29 +21,18 @@ const Scrollblock = ({
     scrollerID,
 }) => {
 
-    // console.log('==> RUNNING Scrollblock','-'+scrollerID+'-')
-    // console.log('performance.memory',performance['memory'])
-
     const {
+
         orientation,
         gap,
         padding,
         cellHeight,
         cellWidth,
         layout,
+        
     } = gridSpecs
 
     // -------------------------[ context and state ]-------------------------
-
-    useEffect(()=>{
-
-        const abortController = new AbortController()
-
-        return () => {
-            abortController.abort() // defensive
-        }
-
-    },[])
 
     const viewportInterruptProperties = useContext(ViewportInterrupt)
 
@@ -51,14 +42,11 @@ const Scrollblock = ({
 
     // just for init
     const linerStyle = useMemo(() =>{
-        return Object.assign(
-        {
 
-            backgroundColor:'white',
+        return {
+            ...styles.scrollblock,
             position:'relative',
-            
-        } as React.CSSProperties, styles.cradle)
-
+        }
 
     }, [])
 
@@ -72,17 +60,17 @@ const Scrollblock = ({
     useLayoutEffect(() => {
 
         updateBaseBlockLength(
-                    {
-                        orientation,
-                        viewportheight:height,
-                        viewportwidth:width,
-                        listsize,
-                        cellHeight,
-                        cellWidth,
-                        gap,
-                        padding,
-                    }
-            )
+            {
+                orientation,
+                viewportheight:height,
+                viewportwidth:width,
+                listsize,
+                cellHeight,
+                cellWidth,
+                gap,
+                padding,
+            }
+        )
         divlinerstyleRef.current = 
             updateScrollblockStyles(
                 orientation,
@@ -116,7 +104,9 @@ const Scrollblock = ({
 
 } // Scrollblock
 
-// all the parameters can affect the length
+export default Scrollblock
+
+// any of the parameters can affect the length
 const calcBaseScrollblockLength = ({
         orientation,
         viewportheight,
@@ -128,7 +118,9 @@ const calcBaseScrollblockLength = ({
         padding,
     }) => {
 
-    // dependents of orientation
+    // ---------------[ calculate crosscount ]------------------
+    //crosscount is also calculated by Cradle
+
     let crosslength
     let cellLength
     let viewportcrosslength
@@ -145,28 +137,32 @@ const calcBaseScrollblockLength = ({
         viewportcrosslength = viewportheight
 
     }
+
     // adjustments to viewportcrosslength
     viewportcrosslength -= (padding * 2)
-    viewportcrosslength += gap
+    viewportcrosslength += gap // to match crossLength
 
     if (viewportcrosslength < crosslength) viewportcrosslength = crosslength // must be at least one
-    let crosscount = Math.floor(viewportcrosslength/crosslength)
 
-    let listlength = Math.ceil(listsize/crosscount)
+    const crosscount = Math.floor(viewportcrosslength/crosslength)
 
-    let straightlength = (listlength * cellLength) - 
-        ((listlength > 0)?
-            gap:
+    // -------------------[ calculate scrollblock length ]-----------------
+
+    const listrowcount = Math.ceil(listsize/crosscount)
+
+    const baselength = (listrowcount * cellLength) - 
+        ((listrowcount > 0)?
+            gap: // final cell has no trailing gap
             0) 
-        + (padding * 2)
+        + (padding * 2) // leading and trailing padding
 
-    return straightlength
+    return baselength
 
 }
 
-const updateScrollblockStyles = (orientation,stylesRef,baseScrollblocklengthRef) => {
+const updateScrollblockStyles = (orientation, stylesRef, baseScrollblocklengthRef) => {
 
-    let localstyles = Object.assign({},stylesRef.current) as React.CSSProperties
+    let localstyles = {...stylesRef.current} // new object
     let height 
     let width
     if (orientation == 'horizontal') {
@@ -181,5 +177,3 @@ const updateScrollblockStyles = (orientation,stylesRef,baseScrollblocklengthRef)
 
     return localstyles
 }
-
-export default Scrollblock

@@ -10,8 +10,6 @@ import React, {useState, useEffect, useRef} from 'react'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
-//  const MAX_CACHE_OVER_RUN = 1.5
-
 let globalItemID = 0
 
 // global scroller data, organized by session scrollerID
@@ -119,8 +117,6 @@ export class CacheHandler {
 
     pareCacheToMax = (cacheMax, cradleIndexList, deleteListCallback, scrollerID = undefined) => {
 
-        // console.log('pareCacheToMax: cacheMax, cradleIndexList','-'+scrollerID+'-',cacheMax, cradleIndexList)
-
         const modelLength = cradleIndexList.length
 
         // determine need for paring
@@ -137,7 +133,7 @@ export class CacheHandler {
         const mapkeyslist = Array.from(portalIndexList.keys())
         const requestedkeys = Array.from(requestedSet.keys())
 
-        const mapkeys = mapkeyslist.concat(requestedkeys)
+        const mapkeys = [...mapkeyslist,...requestedkeys]
 
         mapkeys.sort((a,b) => a - b)
 
@@ -162,7 +158,7 @@ export class CacheHandler {
         const headlist = mapkeys.slice(0,headparecount)
         const taillist = mapkeys.slice(mapLength - tailparecount)
 
-        const delList = headlist.concat(taillist)
+        const delList = [...headlist,...taillist]
 
         this.deletePortal(delList, deleteListCallback)
 
@@ -199,8 +195,6 @@ export class CacheHandler {
 
         const promises = []
 
-        // console.log('cacheMax', cacheMax)
-
         let cacheSize = cacheMax ?? 0
 
         cacheSize = Math.min(cacheSize, listsize)
@@ -231,7 +225,6 @@ export class CacheHandler {
                 preloadIndexCallback && preloadIndexCallback(index)
                 if (!indexToItemIDMap.has(index)) {
 
-                    // console.log('preload processing', index)
                     const promise = this.preloadItem(
                         index, 
                         getItem, 
@@ -430,7 +423,7 @@ export class CacheHandler {
         // -----------return list of processed indexes to caller --------
         // for synchrnization with cradle cellFrames
 
-        const processedIndexes = processedshiftList.concat(processedmoveList)
+        const processedIndexes = [...processedshiftList,...processedmoveList]
 
         return processedIndexes
 
@@ -669,10 +662,12 @@ export class CacheHandler {
     }
 
     getNewItemID() {
+
         return globalItemID++
+
     }
 
-    // get new or existing itemID for contentfunctions.createCell
+    // get new or existing itemID for contentfunctions.createCellFrame
     getNewOrExistingItemID(index) {
 
         const { indexToItemIDMap } = this.cacheProps
@@ -864,30 +859,25 @@ let counter = 0
 // portal list component for rapid relisting of updates, using external callback for set state
 export const PortalList = ({ cacheProps }) => {
 
-    // console.log('running PORTALLIST', '-'+cacheProps.scrollerID+'-')
+    const [portalListCounter, setPortalListCounter] = useState(null)
 
-    const [portalList, setPortalList] = useState(null)
     const isMountedRef = useRef(true)
     const portalArrayRef = useRef(null)
     // const cachedivRef = useRef(null)
 
     useEffect(()=>{
 
-        const abortController = new AbortController()
-
         cacheProps.setListState = ()=>{
 
             portalArrayRef.current = cacheProps.portalList
 
-            isMountedRef.current && setPortalList(counter++) // light contents
+            isMountedRef.current && setPortalListCounter(counter++) // force render
 
         }
 
         return () => {
 
             isMountedRef.current = false
-
-            abortController.abort() // defensive
 
         }
 

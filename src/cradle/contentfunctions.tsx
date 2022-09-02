@@ -1,9 +1,19 @@
 // contentfunctions.tsx
-// copyright (c) 2020 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
-/******************************************************************************************
- ------------------------------------[ SUPPORTING FUNCTIONS ]------------------------------
-*******************************************************************************************/
+/*
+    This module supports the contenthandler module. The functions in this module perform
+    the detailed calculations and processes required by the contenthandler.
+
+    getContentListRequirements is called by the contenthandler's setCradleContent function.
+
+    getShiftInstruction and calcContentShift are called by contentHandler's updateCradleContent
+    function. 
+    
+    getCellFrameComponentList, allocateContentList, and deletePortals functions are shared by both. 
+
+    createCellFrame is called internally by getCellFrameComponentList as needed.
+*/
 
 import React from 'react'
 
@@ -54,6 +64,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     }
 
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
+
     // leading edge
     // let targetCradleReferenceIndex = Math.max(0,targetAxisReferenceIndex - leadingrunwayitemcount)
     let targetCradleRowOffset = Math.max(0,targetAxisRowOffset - runwayRowcount)
@@ -108,11 +119,13 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 */
 // -1 = shift row to head. 1 = shift row to tail. 0 = do not shift a row.
 export const getShiftInstruction = ({
+
     isViewportScrollingForward,
     orientation,
     triggerlineEntries,
     triggerlineSpan,
     scrollerID, // for debug
+    
     // for oversized (overflow) cells
     oldAxisReferenceIndex,
     viewportVisibleRowcount,
@@ -123,8 +136,8 @@ export const getShiftInstruction = ({
 
     const driver = 
         isViewportScrollingForward?
-            'triggerline-axis':
-            'triggerline-head'
+            'triggerline-forward':
+            'triggerline-backward'
 
     const entries = triggerlineEntries.filter(entry => {
         // const isIntersecting = entry.isIntersecting
@@ -149,13 +162,13 @@ export const getShiftInstruction = ({
         return (
 
             // - axis triggerline goes out of scope, or...
-            driver == 'triggerline-axis' &&
+            driver == 'triggerline-forward' &&
             viewportoffsethead <= 0
 
         ) || (
 
             // - head triggerline comes into scope
-            driver == 'triggerline-head' &&
+            driver == 'triggerline-backward' &&
             viewportoffsethead >= 0
 
         )
@@ -172,8 +185,8 @@ export const getShiftInstruction = ({
 
         const counterdriver = 
         (!isViewportScrollingForward)?
-            'triggerline-axis':
-            'triggerline-head'        
+            'triggerline-forward':
+            'triggerline-backward'        
 
         const counterentries = triggerlineEntries.filter(entry => entry.triggerlinename == counterdriver)
 
@@ -183,7 +196,7 @@ export const getShiftInstruction = ({
             const countertriggerlinename = counterentry.triggerlinename
 
             let impliedoffsethead
-            if (countertriggerlinename == 'triggerline-head') {
+            if (countertriggerlinename == 'triggerline-backward') {
 
                 impliedoffsethead = counterentry.viewportoffsethead + triggerlineSpan
 
@@ -193,7 +206,7 @@ export const getShiftInstruction = ({
 
                 }
 
-            } else { // countertriggerlinename == 'triggerline-axis'
+            } else { // countertriggerlinename == 'triggerline-forward'
 
                 impliedoffsethead = counterentry.viewportoffsethead - triggerlineSpan
 
@@ -214,7 +227,7 @@ export const getShiftInstruction = ({
         const entry = entries[0] // assume one record gets filtered; only paired above on reconnect
 
         // if (!isViewportScrollingForward) {
-        if (driver == 'triggerline-head') {
+        if (driver == 'triggerline-backward') {
 
             retval = 1 // shift row to tail
 
@@ -226,16 +239,14 @@ export const getShiftInstruction = ({
 
     }
 
-    if ((retval !=0) && (isViewportScrollingForward) && (viewportVisibleRowcount == 0)) {// check for last oversize row
+    // check for last oversize row
+    if ((retval !=0) && (isViewportScrollingForward) && (viewportVisibleRowcount == 0)) {
         if ((listsize - crosscount) <= oldAxisReferenceIndex) {
 
             retval = 0
 
         }
     }
-
-    // console.log('==> getShiftInstruction: isViewportScrollingForward, driver, instruction, triggerlineEntries, filteredEntries','-'+scrollerID+'-',
-    //     '\n',isViewportScrollingForward, driver, retval,'\n' , triggerlineEntries, entries)
 
     return retval
 }
@@ -324,7 +335,7 @@ export const calcContentShift = ({
 
     let axisReferenceRowshift = -triggerRowShift
 
-    // ------------[ 5. calc new cradle and axis reference row offset ]-------------
+    // ------------[ 5. calc new cradle and axis reference row offsets ]-------------
 
     // base value for cradle reference shift; may change if beyond list bounds
     let cradleReferenceRowshift = axisReferenceRowshift
@@ -353,16 +364,7 @@ export const calcContentShift = ({
         // of cradle content.
 
         const targetCradleReferenceRowOffset = 
-            Math.max(0, 
-                (
-                    newAxisReferenceRowOffset - runwayRowcount - 1
-                        // runwayRowcount + 
-                        // (runwayRowcount?-1:0) // one row is visible, not runway
-                )
-            )
-
-        // console.log('calcContentShift: targetCradleReferenceRowOffset, newAxisReferenceRowOffset, runwayRowcount',
-        //     targetCradleReferenceRowOffset, newAxisReferenceRowOffset, runwayRowcount)
+            Math.max(0, (newAxisReferenceRowOffset - runwayRowcount - 1) )
 
         const headrowDiff = newCradleReferenceRowOffset - targetCradleReferenceRowOffset
         if (headrowDiff > 0) {
@@ -385,7 +387,7 @@ export const calcContentShift = ({
 
         // c. if scrolling backward (toward head of list), as the cradlerowoffset hits 0, cradle changes have
         // to be adjusted to prevent shortening of cradle content
-        // d. if scrolling backward near the end of the list, cradle changes has to be adjusted to accomodate
+        // d. if scrolling backward near the start of the list, cradle changes have to be adjusted to accomodate
         // the trailing runway
 
         if (newCradleReferenceRowOffset < 0) {
@@ -441,27 +443,6 @@ export const calcContentShift = ({
 
     // ---------------------[ 9. return required values ]-------------------
 
-//     console.log('calcContentShift',
-// `
-//         newCradleReferenceIndex, 
-//         cradleReferenceItemShift, 
-//         newAxisReferenceIndex, 
-//         axisReferenceItemShift, 
-//         newAxisPixelOffset, 
-//         newCradleContentCount,
-//         listStartChangeCount,
-//         listEndChangeCount
-// `,
-//         newCradleReferenceIndex, 
-//         cradleReferenceItemShift, 
-//         newAxisReferenceIndex, 
-//         axisReferenceItemShift, 
-//         newAxisPixelOffset, 
-//         newCradleContentCount,
-//         listStartChangeCount,
-//         listEndChangeCount
-// )
-
     return {
         newCradleReferenceIndex, 
         cradleReferenceItemShift, 
@@ -505,7 +486,7 @@ export const getCellFrameComponentList = ({
         for (let newindex = cradleReferenceIndex - listStartChangeCount; newindex < (cradleReferenceIndex); newindex++) {
 
             headContentlist.push(
-                createCell(
+                createCellFrame(
                     {
                         index:newindex, 
                         cradleInheritedProperties,
@@ -529,7 +510,7 @@ export const getCellFrameComponentList = ({
         for (let newindex = lastindexoffset + 1; newindex < (lastindexoffset + 1 + listEndChangeCount); newindex++) {
 
             tailContentlist.push(
-                createCell(
+                createCellFrame(
                     {
                         index:newindex, 
                         cradleInheritedProperties,
@@ -548,9 +529,9 @@ export const getCellFrameComponentList = ({
 
     }
 
-    const deletedItems = deletedheaditems.concat(deletedtailitems)
+    const deletedItems = [...deletedheaditems,...deletedtailitems]
 
-    const componentList = headContentlist.concat(localContentlist,tailContentlist)
+    const componentList = [...headContentlist,...localContentlist,...tailContentlist]
 
     return [componentList,deletedItems]
 
@@ -588,9 +569,9 @@ export const deletePortals = (cacheHandler, deleteList, deleteListCallback) => {
     cacheHandler.deletePortal(dlist, deleteListCallback)
 }
 
-// =====================[ acquire item ]======================
+// =====================[ internal, acquire item ]======================
 
-const createCell = ({
+const createCellFrame = ({
     index, 
     cradleInheritedProperties,
     cradleInternalProperties,

@@ -1,5 +1,5 @@
 // servicehandler.tsx
-// copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 // ServiceHandler handles client service requests
 export default class ServiceHandler {
@@ -57,11 +57,11 @@ export default class ServiceHandler {
         index = Math.max(0,index)
 
         const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
-        const { scaffoldHandler, stateHandler} = this.cradleParameters.handlersRef.current
+        const { layoutHandler, stateHandler} = this.cradleParameters.handlersRef.current
 
         signals.pauseScrollingEffects = true
 
-        scaffoldHandler.cradlePositionData.targetAxisReferenceIndex = index
+        layoutHandler.cradlePositionData.targetAxisReferenceIndex = index
 
         stateHandler.setCradleState('scrollto')
 
@@ -364,12 +364,12 @@ export default class ServiceHandler {
         // for return information...
         const deletedOrphanedItemIDList = Array.from(deletedItemIDToIndexMap.keys()) 
 
-        let modifiedIndexList = 
-                processedIndexList.concat(
-                    indexesToDeleteList, 
-                    deletedOrphanedItemIndexList, 
-                    deletedOrphanedIndexList
-                )
+        let modifiedIndexList = [
+            ...processedIndexList,
+            ...indexesToDeleteList, 
+            ...deletedOrphanedItemIndexList, 
+            ...deletedOrphanedIndexList
+        ]
 
         modifiedIndexList = Array.from(new Set(modifiedIndexList.values())) // remove duplicates
 

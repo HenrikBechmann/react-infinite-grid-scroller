@@ -1,6 +1,7 @@
 // webpack.config.js
 var webpack = require('webpack');
 var path = require('path');
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
   // devtool: 'source-map',
@@ -29,5 +30,9 @@ module.exports = {
   externals: {
       react: 'react',
       "react-dom": 'react-dom'
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin()],
   },
 };

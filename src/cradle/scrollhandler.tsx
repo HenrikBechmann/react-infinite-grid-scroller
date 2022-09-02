@@ -1,5 +1,5 @@
 // scrollhandler.tsx
-// copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 500
 
@@ -29,16 +29,11 @@ export default class ScrollHandler {
             (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical')?
                 viewportElement.scrollTop:
                 viewportElement.scrollLeft
-        // console.log('scrollPositionCurrent in onScroll','-'+scrollerID+'-', scrollPositionCurrent)
 
         if ((viewportElement.clientWidth == 0  && viewportElement.clientHeight == 0)) {// in cache
             clearTimeout(this._scrolltimerid)
             return
         }
-        // const scrollPositionCurrent = 
-        //     (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical')?
-        //         viewportElement.scrollTop:
-        //         viewportElement.scrollLeft
 
         if (scrollPositionCurrent < 0) { // for Safari
 
@@ -57,18 +52,18 @@ export default class ScrollHandler {
         }
 
         if (!this.isScrolling) {
-            // console.log('scrolling started','-'+scrollerID+'-')
+
             this.isScrolling = true
             this.scrollData.start = scrollPositionCurrent
             this.scrollData.currentupdate = scrollPositionCurrent
+
         }
 
-        const {scaffoldHandler} = this.cradleParameters.handlersRef.current
-        const { cradlePositionData } = scaffoldHandler
+        const {layoutHandler} = this.cradleParameters.handlersRef.current
+        const { cradlePositionData } = layoutHandler
 
         // keep up to date in case of reparenting interrupt
         cradlePositionData.blockScrollPos = scrollPositionCurrent
-        // console.log('onScroll updated blockScrollPos','-'+scrollerID+'-',cradlePositionData.blockScrollPos)
 
         this.scrollData.previous = this.scrollData.current
         this.scrollData.current = scrollPositionCurrent
@@ -86,7 +81,7 @@ export default class ScrollHandler {
 
                     // const itemindex = cradlePositionData.targetAxisReferenceIndex
                     let axisVisiblePixelOffset
-                    const cradleElements = scaffoldHandler.elements
+                    const cradleElements = layoutHandler.elements
                     const axisElement = cradleElements.axisRef.current
                     const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementRef.current
 
@@ -148,7 +143,7 @@ export default class ScrollHandler {
 
                 const { repositioningFlagCallback } = serviceHandler.callbacks
                 repositioningFlagCallback && repositioningFlagCallback(false)
-                stateHandler.setCradleState('reposition')
+                stateHandler.setCradleState('finishreposition')
 
                 break
             }
@@ -169,8 +164,8 @@ export default class ScrollHandler {
 
         }
 
-        // const {scaffoldHandler} = this.cradleParameters.handlersRef.current
-        // const { cradlePositionData } = scaffoldHandler
+        // const {layoutHandler} = this.cradleParameters.handlersRef.current
+        // const { cradlePositionData } = layoutHandler
         const { cache } = cradleInheritedProperties
 
         if (cache == 'keepload') {
@@ -182,7 +177,7 @@ export default class ScrollHandler {
     // after scroll, but not after repositioning
     private updateReferenceData = () => {
 
-        const { stateHandler, scaffoldHandler } 
+        const { stateHandler, layoutHandler } 
             = this.cradleParameters.handlersRef.current
 
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
@@ -191,11 +186,11 @@ export default class ScrollHandler {
         if (!stateHandler.isMountedRef.current) return
 
         let axisVisiblePixelOffset
-        const cradleElements = scaffoldHandler.elements
+        const cradleElements = layoutHandler.elements
 
         const viewportElement = viewportInterruptProperties.elementRef.current
         if (cradleProps.orientation == 'vertical') {
-            // console.log('scrollTop in updateReferenceData',viewportElement.scrollTop)
+
             axisVisiblePixelOffset = cradleElements.axisRef.current.offsetTop - 
                 viewportElement.scrollTop
                 
@@ -206,7 +201,7 @@ export default class ScrollHandler {
 
         }
 
-        const { cradlePositionData } = scaffoldHandler
+        const { cradlePositionData } = layoutHandler
 
         cradlePositionData.targetAxisViewportPixelOffset = axisVisiblePixelOffset
 
@@ -224,8 +219,8 @@ export default class ScrollHandler {
 
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-        const {scaffoldHandler} = this.cradleParameters.handlersRef.current
-        const { cradlePositionData } = scaffoldHandler
+        const {layoutHandler} = this.cradleParameters.handlersRef.current
+        const { cradlePositionData } = layoutHandler
 
         const viewportElement = viewportInterruptProperties.elementRef.current
 
@@ -240,7 +235,6 @@ export default class ScrollHandler {
                 cradlePositionData.blockScrollPos = viewportElement.scrollLeft
             }
             const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
-            // console.log('scrollHandler.upateBlockScrollPos updated blockScrollPos','-'+scrollerID+'-',cradlePositionData.blockScrollPos)
 
         }
 
@@ -260,7 +254,6 @@ export default class ScrollHandler {
 
             scrollPos = viewportElement.scrollTop
             cellLength = cradleProps.cellHeight + cradleProps.gap
-            // console.log('scrollPos in calcImpliedRepositioningData', scrollPos)
 
         } else {
 
@@ -282,12 +275,11 @@ export default class ScrollHandler {
 
         if (axisReferenceIndex == 0) axisPixelOffset = 0 // defensive
 
-        const { cradlePositionData } = this.cradleParameters.handlersRef.current.scaffoldHandler
+        const { cradlePositionData } = this.cradleParameters.handlersRef.current.layoutHandler
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
         const { repositioningIndexCallback } = 
             this.cradleParameters.handlersRef.current.serviceHandler.callbacks
-        // console.log('scrollHandler: repositioningIndexCallback',repositioningIndexCallback)
         repositioningIndexCallback && repositioningIndexCallback(axisReferenceIndex)
 
     }

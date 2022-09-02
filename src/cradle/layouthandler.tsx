@@ -1,7 +1,7 @@
-// cradlehandler.tsx
-// copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
+// layouthandler.tsx
+// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
-export default class ScaffoldHandler { 
+export default class LayoutHandler { 
 
     constructor(cradleParameters) {
 
@@ -11,16 +11,16 @@ export default class ScaffoldHandler {
             axisRef, 
             headRef, 
             tailRef,
-            headTriggerlineRef,
-            axisTriggerlineRef,
+            backwardTriggerlineRef,
+            forwardTriggerlineRef,
         } = cradleParameters.cradleInternalPropertiesRef.current.cradleElementsRef.current
         
         this.elements = {
             axisRef,
             headRef,
             tailRef,
-            headTriggerlineRef,
-            axisTriggerlineRef,
+            backwardTriggerlineRef,
+            forwardTriggerlineRef,
         }
 
         const {
@@ -72,7 +72,7 @@ export default class ScaffoldHandler {
             targetAxisReferenceIndex is set by
                 - setCradleContent
                 - updateCradleContent
-                - scaffoldHandler (initialization)
+                - layoutHandler (initialization)
                 - scrollHandler (during and after scroll)
                 - host scrollToItem call
 
@@ -86,7 +86,7 @@ export default class ScaffoldHandler {
             targetAxisViewportPixelOffset is set by
                 - setCradleContent
                 - updateCradleContent
-                - scaffoldHandler (initialization)
+                - layoutHandler (initialization)
                 - scrollHandler (during and after scroll)
                 - pivot effect (change of orientation) in cradle module
 
@@ -100,17 +100,5 @@ export default class ScaffoldHandler {
     }
 
     public elements
-
-    public getViewportDimensions() {
-        const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementRef.current
-        return {width:viewportElement.clientWidth, height: viewportElement.clientHeight}
-    }
-
-    public getViewportScrollPos() {
-        const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementRef.current
-        const top = viewportElement.scrollTop
-        const left = viewportElement.scrollLeft
-        return {top,left}
-    }
 
 }

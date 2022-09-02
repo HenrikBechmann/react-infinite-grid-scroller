@@ -1,5 +1,5 @@
-// placeholder.tsx
-// copyright (c) 2020 Henrik Bechmann, Toronto, Licence: MIT
+// Placeholder.tsx
+// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 import React, {useRef } from 'react'
 
@@ -11,7 +11,7 @@ const Placeholder = ({index, listsize, message, error}) => {
         backgroundColor:'cyan',
         border:'2px solid black',
         height:'100%',
-        width:'100%'
+        width:'100%',
     } as React.CSSProperties)
     const itemStylesRef = useRef(
         {
@@ -27,14 +27,12 @@ const Placeholder = ({index, listsize, message, error}) => {
         } as React.CSSProperties
     )
 
-    // console.log('placeholder index, error value',index, error.message)
-
     message = message ?? '(loading...)'
 
     return <div style = {stylesRef.current}>
         { !error?
-            <div style = {itemStylesRef.current}>{index + 1}/{listsize} {message}</div>:
-            <div style = {itemStylesRef.current}>item is not available ({error.message})</div>
+            <div style = { itemStylesRef.current }>{index + 1}/{listsize} {message}</div>:
+            <div style = { itemStylesRef.current }>item is not available ({error.message})</div>
         }
         
     </div>

@@ -1,15 +1,36 @@
 // contenthandler.tsx
-// copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
+
+/*
+    This module supports the setup and rollover of content in the Cradle. There are two key functions
+    in this module: setCradleContent, and updateCradleContent. There are also a few functions which 
+    support synchronization of Cradle content with cache content (see internal and external services
+    below).
+
+    setCradleContent is called directly from Cradle (in the state manager), and instantiates new Cradle
+    content in response to the scroller setup, or changes to its configuration. setCradleContent
+    creates a list of Cradle content CellFrames, and allocates those to the two Cradle grids. This 
+    process occurs in response to many state changes, such as finishreposition, pivot, a host scrollto
+    request, and more.
+
+    updateCradleContent rolls over the Cradle content in response to user scrolling. When scrolling 
+    forward, content is removed from the Cradle head and added to the Cradle tail. When scrolling 
+    backward, the reverse occurs.
+
+    The Cradle (through the contentfunctions module) delegates fetching content items to the CellFrame.
+
+    This module is supported primarily by the contentfunctions module.
+*/
 
 import React from 'react'
 
 import { 
-    getCellFrameComponentList, 
-    calcContentShift,
     getContentListRequirements,
     getShiftInstruction,
+    calcContentShift,
     allocateContentList,
     deletePortals,
+    getCellFrameComponentList, 
 
 } from './contentfunctions'
 
@@ -32,54 +53,49 @@ export default class ContentHandler {
 
     }
 
-    // public itemElements = new Map()
-
     private cradleParameters
 
     private instanceIdCounterRef = {
+
        current:0
+
     }
-    // private instanceIdMap = new Map()
-
-    // Two public methods - setCradleContent and updateCradleContent
-
-    // reset cradle, including allocation between head and tail parts of the cradle
-    // called only from cradle state handler
+    // Two main public methods - setCradleContent and updateCradleContent
 
     // ==========================[ SET CONTENT ]===========================
 
-     //initially (dosetup), after reposition (reposition), or with finishresize, pivot, 
-     // or user size param reconfigure or reload
-     // setCradleContent sets the scrollblock's scroll position, as well as config and content
+    // reset the cradle with new content, including allocation between head and tail parts of the cradle
+    // - called only from the Cradle state handler
 
-    public setCradleContent = ( cradleState ) => { 
+    public setCradleContent = ( cradleState ) => { // cradleState influences some behaviour
 
         // ------------------------------[ 1. initialize ]---------------------------
 
-        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
-        const cradleHandlers = this.cradleParameters.handlersRef.current
+        const { cradleParameters } = this
+        const viewportInterruptProperties = cradleParameters.viewportInterruptPropertiesRef.current
+        const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
+        const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
+        const cradleHandlers = cradleParameters.handlersRef.current
 
         const {
 
             cacheHandler,
-            scaffoldHandler,
+            layoutHandler,
             serviceHandler,
             interruptHandler,
 
         } = cradleHandlers
 
-        // the triggerlines and cradle wings will be moved, so disconnect them from their observers.
+        // the triggerlines and cradle grids will be moved, so disconnect them from their observers.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
         interruptHandler.triggerlinesIntersect.observer.disconnect()
         interruptHandler.cradleIntersect.observer.disconnect()
 
-        const { cradlePositionData } = scaffoldHandler
+        const { cradlePositionData } = layoutHandler
         const viewportElement = viewportInterruptProperties.elementRef.current
 
         const requestedAxisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
-        let targetAxisViewportPixelOffset = cradlePositionData.targetAxisViewportPixelOffset
+        let { targetAxisViewportPixelOffset } = cradlePositionData
 
         const {
             orientation, 
@@ -100,7 +116,7 @@ export default class ContentHandler {
         if ([
             'firstrender', 
             'firstrenderfromcache',
-            'reposition', 
+            'finishreposition', 
             'reconfigure', 
             'scrollto', 
         ].includes(cradleState)) {
@@ -122,6 +138,7 @@ export default class ContentHandler {
                 (cellHeight + gap):
                 (cellWidth + gap)
 
+        // note that targetAxisReferenceIndex replaces requestedAxisReferenceIndex here
         const {
 
             targetCradleReferenceIndex, 
@@ -130,8 +147,7 @@ export default class ContentHandler {
             newCradleContentCount:cradleContentCount, 
             targetScrollblockViewportPixelOffset:scrollblockViewportPixelOffset,
 
-        } = 
-            getContentListRequirements({
+        } = getContentListRequirements({
 
                 rowLength,
                 targetAxisReferenceIndex:requestedAxisReferenceIndex,
@@ -141,10 +157,7 @@ export default class ContentHandler {
 
             })
 
-        // console.log('setCradleContent: cradleState, scrollblockViewportPixelOffset, targetAxisReferenceIndex',
-        //     '-'+scrollerID+'-', cradleState, scrollblockViewportPixelOffset, targetAxisReferenceIndex)
-
-        const axisViewportPixelOffset = targetAxisViewportPixelOffset
+        const axisViewportPixelOffset = targetAxisViewportPixelOffset // semantics
 
         // ----------------------[ 3. get and config content ]----------------------
         
@@ -193,7 +206,7 @@ export default class ContentHandler {
         viewportElement[cradlePositionData.blockScrollProperty] =
             cradlePositionData.blockScrollPos
 
-        const cradleElements = scaffoldHandler.elements //cradleElementsRef.current
+        const cradleElements = layoutHandler.elements
         const axisElement = cradleElements.axisRef.current
         const headElement = cradleElements.headRef.current
 
@@ -239,10 +252,14 @@ export default class ContentHandler {
     // ==================[ UPDATE CONTENT through scroll ]========================
 
     // updateCradleContent does not touch the viewport element's scroll position for the scrollblock
-    // instead it reconfigures elements within the cradle
+    // instead it reconfigures elements within the cradle. It is called solely from
+    // axisTriggerlinesObserverCallback of interruptHandler
 
     public updateCradleContent = (
-        isViewportScrollingForward, triggerlineEntries, source = 'notifications') => {
+        isViewportScrollingForward, 
+        triggerlineEntries, 
+        source = 'notifications'
+    ) => {
 
         // ----------------------[ 1. initialize ]-------------------------
 
@@ -250,7 +267,7 @@ export default class ContentHandler {
         const {
             cacheHandler, 
             scrollHandler, 
-            scaffoldHandler, 
+            layoutHandler, 
             stateHandler, 
             interruptHandler,
             serviceHandler,
@@ -269,7 +286,7 @@ export default class ContentHandler {
         }
 
         // cradle scaffold and user cells
-        const cradleElements = scaffoldHandler.elements
+        const cradleElements = layoutHandler.elements
         const cradleContent = this.content
         const modelcontentlist = cradleContent.cradleModelComponents || []
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
@@ -287,7 +304,6 @@ export default class ContentHandler {
         const { 
             viewportVisibleRowcount,
             crosscount,
-            // listRowcount,
             listsize,
         } = cradleInternalProperties
 
@@ -297,7 +313,7 @@ export default class ContentHandler {
             isViewportScrollingForward,
             orientation,
             triggerlineEntries,
-            triggerlineSpan: scaffoldHandler.triggerlineSpan,
+            triggerlineSpan: layoutHandler.triggerlineSpan,
             // for oversized (overflow) cells
             oldAxisReferenceIndex,
             viewportVisibleRowcount,
@@ -423,17 +439,12 @@ export default class ContentHandler {
         const axisElement = cradleElements.axisRef.current
         const headElement = cradleElements.headRef.current
 
-        let transform
         if (cradleInheritedProperties.orientation == 'vertical') {
 
             const topPos = scrollPos + axisPixelOffset
 
             axisElement.style.top = topPos + 'px'
             axisElement.style.left = 'auto'
-            // transform = `translateY(${topPos + 'px'})`
-            // console.log('topPos, scrollPos, axisPixelOffset, transform',
-            //     topPos,scrollPos,axisPixelOffset,transform)
-            axisElement.style.transform = transform
             
             headElement.style.paddingBottom = 
                 headcontent.length?
@@ -446,8 +457,6 @@ export default class ContentHandler {
 
             axisElement.style.top = 'auto'
             axisElement.style.left = leftPos + 'px'
-            // transform = `translateX(${leftPos + 'px'})`
-            // axisElement.style.transform = transform
 
             headElement.style.paddingRight = 
                 headcontent.length?
@@ -456,7 +465,7 @@ export default class ContentHandler {
 
         }
 
-        const { cradlePositionData } = scaffoldHandler
+        const { cradlePositionData } = layoutHandler
 
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
@@ -471,11 +480,13 @@ export default class ContentHandler {
     // ========================= [ INTERNAL CONTENT MANAGEMENT SERVICES ]=====================
 
     public guardAgainstRunawayCaching = () => { 
-        const { cacheMax } = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const { contentHandler, cacheHandler } = this.cradleParameters.handlersRef.current
-        const modelComponentList = contentHandler.content.cradleModelComponents
+
+        const { cacheMax, MAX_CACHE_OVER_RUN } = this.cradleParameters.cradleInheritedPropertiesRef.current
+
+        const { cacheHandler } = this.cradleParameters.handlersRef.current
+
+        const modelComponentList = this.content.cradleModelComponents
  
-        const { MAX_CACHE_OVER_RUN } =  this.cradleParameters.cradleInheritedPropertiesRef.current
         if (cacheHandler.guardAgainstRunawayCaching(cacheMax, modelComponentList.length, MAX_CACHE_OVER_RUN )) {
 
             this.pareCacheToMax()
@@ -488,13 +499,13 @@ export default class ContentHandler {
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         const { cache, scrollerID } = cradleInheritedProperties
+        
         if (cache == 'keepload') {
 
             const cradleHandlers = this.cradleParameters.handlersRef.current
             const { cacheHandler, serviceHandler } = cradleHandlers
 
             const modelIndexList = this.getModelIndexList()
-
 
             const { deleteListCallback } = serviceHandler.callbacks
 

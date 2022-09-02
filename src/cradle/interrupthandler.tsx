@@ -1,5 +1,5 @@
 // interruptshandler.tsx
-// copyright (c) 2021 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 import { ResizeObserver as ResizeObserverPolyfill} from '@juggle/resize-observer'
 
@@ -19,17 +19,22 @@ export default class InterruptHandler {
     private isHeadCradleInView = false
 
     // TODO: stub
-    private cradleresizeobservercallback = (entries) => {
+    private cradleResizeObserverCallback = (entries) => {
 
-       if (this.signals.pauseCradleResizeObserver) return
+       // console.log('cradleResizeObserverCallback')
+
+        const {
+            stateHandler,
+        } = this.cradleParameters.handlersRef.current
+
+        // stateHandler.setCradleResizeState('resizecradle')
+        if (this.signals.pauseCradleResizeObserver) return
 
     }
 
     private axisTriggerlinesObserverCallback = (entries) => {
 
         if (this.signals.pauseTriggerlinesObserver) { 
-
-            // console.log('returning from axisTriggerlinesObserverCallback with pause!')
 
             return
 
@@ -46,7 +51,7 @@ export default class InterruptHandler {
             contentHandler,
             stateHandler,
             scrollHandler,
-            scaffoldHandler,
+            layoutHandler,
         } = this.cradleParameters.handlersRef.current
 
         if (stateHandler.isMountedRef.current) {
@@ -113,8 +118,8 @@ export default class InterruptHandler {
                 !(cradleState == 'repositioningContinuation') &&
                 !(cradleState == 'renderupdatedcontent') && 
                 !(cradleState == 'finishupdatedcontent') &&
-                !(cradleState == 'finishresize') &&
-                !(cradleState == 'reposition') && 
+                !(cradleState == 'finishviewportresize') &&
+                !(cradleState == 'finishreposition') && 
                 !(cradleState == 'pivot')
                 ) 
             {
@@ -132,9 +137,6 @@ export default class InterruptHandler {
                 const width = right - left, height = bottom - top
                 viewportInterruptProperties.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
 
-                // console.log('calling startreposition from cradleIntersectionObserverCallback:scrollerID, entries',
-                //  '-' + scrollerID + '-', entries)
-
                 const { repositioningFlagCallback } = serviceHandler.callbacks
                 repositioningFlagCallback && repositioningFlagCallback(true)
                 stateHandler.setCradleState('startreposition')
@@ -147,10 +149,10 @@ export default class InterruptHandler {
    // for adjusting to content re-sizing
    public cradleResize = {
       observer:null,
-      callback:this.cradleresizeobservercallback,
+      callback:this.cradleResizeObserverCallback,
         connectElements:() => {
             const observer = this.cradleResize.observer
-            const cradleElements = this.cradleParameters.handlersRef.current.scaffoldHandler.elements
+            const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
             observer.observe(cradleElements.headRef.current)
             observer.observe(cradleElements.tailRef.current)
         },
@@ -167,7 +169,7 @@ export default class InterruptHandler {
         callback:this.cradleIntersectionObserverCallback,
         connectElements:() => {
             const observer = this.cradleIntersect.observer
-            const cradleElements = this.cradleParameters.handlersRef.current.scaffoldHandler.elements
+            const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
             observer.observe(cradleElements.headRef.current)
             observer.observe(cradleElements.tailRef.current)
         },
@@ -186,9 +188,9 @@ export default class InterruptHandler {
         callback:this.axisTriggerlinesObserverCallback,
         connectElements:() => {
             const observer = this.triggerlinesIntersect.observer
-            const cradleElements = this.cradleParameters.handlersRef.current.scaffoldHandler.elements
-            observer.observe(cradleElements.headTriggerlineRef.current)
-            observer.observe(cradleElements.axisTriggerlineRef.current)
+            const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
+            observer.observe(cradleElements.backwardTriggerlineRef.current)
+            observer.observe(cradleElements.forwardTriggerlineRef.current)
         },
         createObserver:() => {
             const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
@@ -212,7 +214,7 @@ export default class InterruptHandler {
         invoked for 
         cradle:
         - change into cache
-        - trigger resizing
+        - trigger cradleresizing
         - trigger reconfiguration
         - trigger pivot
         servicehandler:
