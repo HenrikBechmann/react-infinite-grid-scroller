@@ -2,8 +2,35 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    The infinite list scroller stores user cell data in a central hidden portal cache for each
-    infinitegridscroller root, from whence the data is pulled into the relevant CellFrame for display
+    This module manages the InfiniteGridScroller limited (sparse) cache. It also provides support for 
+    services which allow the host to actively manage many aspects of the cache. See documentation
+    about the user getFunctions callback for details.
+
+    The infinite grid scroller stores user cell content (components) in a central hidden portal cache 
+    for each InfiniteGridScroller root, from whence the components are pulled into the relevant CellFrames 
+    for display. The user components are stored in React portals, with each portal instantiated in
+    a container div. The container divs are included in a standard React component list.
+    The contained portals themselves are not part of the real DOM, but are part of React's virtual DOM.
+
+    See https://reactjs.org/docs/portals.html for general information about React portals.
+    See https://www.npmjs.com/package/react-reverse-portal for the utility that InfiniteGridScroller
+    uses to manage portals.
+
+    This caching has many advantages, notably the ability to maintain state for complex components 
+    which move beyond the scope of the content of the Cradle. But there is an important side effect.
+    Instantiated components which are removed from the real DOM (into the portal of the virtual DOM)
+    have their scroll positions, width, and height set to zero. Therefore if components rely on these 
+    values for configuration, they must have a way of storing those values in state (notably the 
+    Scroll Pos - scrollLeft or scrollTop), recognizing when the component comes out of the portal cache 
+    into the real DOM (width and height are typically no longer both 0), and responding to change in 
+    cache state appropriately. See the INTERCEPT CACHING STATE CHANGE section of the Cradle component 
+    for how the InfiniteGridScroller deals with this situation when it is nested.
+
+    In particular user components can create an undefined property 'scrollerProperties', which will 
+    cause CellFrame to populate the property with an object containing isReparentingRef (as well as 
+    scrollerPassthroughPropertiesRef). isReparentingRef.current provides an up-to-date boolean
+    indicating whether the component is currently being 'reparented' into the real DOM. Set the value
+    back to false once you've detected it.
 */
 
 import React, {useState, useEffect, useRef} from 'react'
@@ -41,9 +68,13 @@ export class CacheHandler {
 
     listsizeRef
 
-    setListsize // setListsize(listsize) generates infinitescroller useState update listsize throughout
+    // setListsize(listsize) causes an InfiniteGridScroller useState update
+    // of the listsize throughout
+    setListsize 
 
     //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
+
+    // ----------------------------[ basic operations ]--------------------------
 
     changeListsize = (newlistsize, deleteListCallback, changeListsizeCallback) => {
 
@@ -95,6 +126,8 @@ export class CacheHandler {
         this.cacheProps.setListState() // trigger display update
 
     }
+
+    // ----------------------[ cache size limit enforceent ]------------------
 
     matchCacheToCradle = (cradleIndexList, deleteListCallback) => {
 
@@ -182,6 +215,8 @@ export class CacheHandler {
         }
 
     }
+
+    // --------------------------------[ preload ]--------------------------------
 
     preload(cradleParameters, finalCallback, nullItemSetMaxListsize, scrollerID) {
 
@@ -429,7 +464,7 @@ export class CacheHandler {
 
     }
 
-    // much of this deals with the fact that the cache is sparse.
+    // insert or remove indexes: much of this deals with the fact that the cache is sparse.
     insertRemoveIndex(index, highrange, increment, listsize) { // increment is +1 or -1
 
         const { indexToItemIDMap, metadataMap, portalMap } = this.cacheProps
@@ -681,7 +716,8 @@ export class CacheHandler {
 
     }
 
-    createPortal(component, index, itemID, isPreload = false) { // create new portal
+     // create new portal
+    createPortal(component, index, itemID, isPreload = false) {
 
         this.removeRequestedPortal(index)
 
@@ -689,7 +725,7 @@ export class CacheHandler {
 
         // div wrapper to avoid memory leak
         this.cacheProps.portalMap.set(itemID,
-                <div data-type = {'portalwrapper'} key = {itemID} data-itemid = {itemID} data-index = {index}>
+                <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID} data-index = {index}>
                     <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>
                 </div>)
 
@@ -714,7 +750,7 @@ export class CacheHandler {
 
     }
 
-    // always for new item
+    // used for preloading new item
     private async preloadItem(
         index, 
         getItem, 

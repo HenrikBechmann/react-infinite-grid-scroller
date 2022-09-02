@@ -22,6 +22,7 @@
         trace all user styles assignments
         re-test for memory leaks window.performance.memory
         retest concat replacements
+        find a way to generate a rerender in host components when reparented. rerendercounter?
         ----------------
         (after layout...)
         
