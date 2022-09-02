@@ -2,7 +2,7 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /******************************************************************************************
- --------------------------------[ CONTENT SUPPORTING FUNCTIONS ]--------------------------
+ --------------------------------[ CONTENT SUPPORT FUNCTIONS ]-----------------------------
 *******************************************************************************************/
 
 import React from 'react'
@@ -557,7 +557,7 @@ export const deletePortals = (cacheHandler, deleteList, deleteListCallback) => {
     cacheHandler.deletePortal(dlist, deleteListCallback)
 }
 
-// =====================[ acquire item ]======================
+// =====================[ internal, acquire item ]======================
 
 const createCell = ({
     index, 

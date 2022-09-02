@@ -39,8 +39,6 @@ export default class ContentHandler {
     private instanceIdCounterRef = {
        current:0
     }
-    // private instanceIdMap = new Map()
-
     // Two public methods - setCradleContent and updateCradleContent
 
     // reset cradle, including allocation between head and tail parts of the cradle
@@ -463,11 +461,10 @@ export default class ContentHandler {
     // ========================= [ INTERNAL CONTENT MANAGEMENT SERVICES ]=====================
 
     public guardAgainstRunawayCaching = () => { 
-        const { cacheMax } = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const { contentHandler, cacheHandler } = this.cradleParameters.handlersRef.current
-        const modelComponentList = contentHandler.content.cradleModelComponents
+        const { cacheMax, MAX_CACHE_OVER_RUN } = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const { cacheHandler } = this.cradleParameters.handlersRef.current
+        const modelComponentList = this.content.cradleModelComponents
  
-        const { MAX_CACHE_OVER_RUN } =  this.cradleParameters.cradleInheritedPropertiesRef.current
         if (cacheHandler.guardAgainstRunawayCaching(cacheMax, modelComponentList.length, MAX_CACHE_OVER_RUN )) {
 
             this.pareCacheToMax()
@@ -486,7 +483,6 @@ export default class ContentHandler {
             const { cacheHandler, serviceHandler } = cradleHandlers
 
             const modelIndexList = this.getModelIndexList()
-
 
             const { deleteListCallback } = serviceHandler.callbacks
 
