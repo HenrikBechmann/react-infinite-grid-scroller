@@ -5,8 +5,8 @@
     The role of CellFrame is to fetch user content from the cache, or from the host (using getItem).
     While an item is being fetched, CellFrame presents a placeholder (either the default or an 
     imported custom version). If there is an error in fetching content then the placeholder is used
-    to present the error to the user. If a new itemID is set by the parent, then CellFrame replaces the
-    old item with the new item.
+    to present the error to the user. If a new itemID is set by the parent (to synchromize with an altered
+    cache), then CellFrame replaces the old item with the new item.
 
     getItem (which is a function provided by the host) can return one of several values:
         - a React component
@@ -39,7 +39,7 @@ import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback' // p
 
 import { OutPortal } from 'react-reverse-portal' // fetch from cache
 
-import Placeholder from './cellframe/Placeholder'
+import Placeholder from './cellframe/Placeholder' // default
 
 import { CradleContext } from './Cradle'
 
@@ -51,7 +51,7 @@ const CellFrame = ({
     listsize, // for feedback in placeholder
     placeholder, // optionally provided by host
     itemID, // session itemID
-    index, 
+    index, // logical position in infinite list
     instanceID, // CellFrame session ID
     scrollerID, // scroller ID (for debugging)
 }) => {
