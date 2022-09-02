@@ -4,13 +4,15 @@
 /*
     This module manages the InfiniteGridScroller limited (sparse) cache. It also provides support for 
     services which allow the host to actively manage many aspects of the cache. See documentation
-    about the user getFunctions callback for details.
+    about the user getFunctions callback for details. Note that large caches of complex components
+    can impair performance. This can be optimized with cacheMax.
 
     The infinite grid scroller stores user cell content (components) in a central hidden portal cache 
     for each InfiniteGridScroller root, from whence the components are pulled into the relevant CellFrames 
     for display. The user components are stored in React portals, with each portal instantiated in
-    a container div. The container divs are included in a standard React component list.
-    The contained portals themselves are not part of the real DOM, but are part of React's virtual DOM.
+    a container div ('portalwrapper'). These container divs are included in a standard React component 
+    list in the real DOM. The contained portals themselves are not part of the real DOM, but are part of 
+    React's virtual DOM.
 
     See https://reactjs.org/docs/portals.html for general information about React portals.
     See https://www.npmjs.com/package/react-reverse-portal for the utility that InfiniteGridScroller
