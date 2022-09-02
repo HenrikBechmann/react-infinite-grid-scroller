@@ -500,32 +500,6 @@ const Cradle = ({
     // ===================[ INITIALIZATION effects ]=========================
     // initialization effects are independent of caching
 
-    // the new list size will always be less than current listsize
-    // invoked if getItem returns null
-    const nullItemSetMaxListsize = useCallback((maxListsize) => {
-        const listsize = cradleInternalPropertiesRef.current.listsize
-
-        if (maxListsize < listsize) {
-
-            const { deleteListCallback, changeListsizeCallback } = serviceHandler.callbacks
-
-            let dListCallback
-            if (deleteListCallback) {
-                dListCallback = (deleteList) => {
-
-                    deleteListCallback('getItem returned null',deleteList)
-
-                }
-
-            }
-
-            cacheHandler.changeListsize(maxListsize, 
-                dListCallback,
-                changeListsizeCallback)
-
-        }
-    },[])
-
     // clear mounted flag on unmount
     useEffect(()=>{
 
@@ -631,7 +605,33 @@ const Cradle = ({
     },[])
 
     // =====================[ RECONFIGURATION effects ]======================
-    // change caching, resize (UI resize of the viewport), reconfigure, or pivot
+    // change listsize, caching, resize (UI resize of the viewport), reconfigure, or pivot
+
+    // callback: the new list size will always be less than current listsize
+    // invoked if getItem returns null
+    const nullItemSetMaxListsize = useCallback((maxListsize) => {
+        const listsize = cradleInternalPropertiesRef.current.listsize
+
+        if (maxListsize < listsize) {
+
+            const { deleteListCallback, changeListsizeCallback } = serviceHandler.callbacks
+
+            let dListCallback
+            if (deleteListCallback) {
+                dListCallback = (deleteList) => {
+
+                    deleteListCallback('getItem returned null',deleteList)
+
+                }
+
+            }
+
+            cacheHandler.changeListsize(maxListsize, 
+                dListCallback,
+                changeListsizeCallback)
+
+        }
+    },[])
 
     // caching change
     useEffect(()=> {
@@ -710,7 +710,7 @@ const Cradle = ({
 
     },[cache, cacheMax])
 
-    // trigger viewportresizing operation based on viewport state
+    // trigger viewportresizing response based on viewport state
     useEffect(()=>{
 
         if (cradleStateRef.current == 'setup') return
@@ -861,12 +861,6 @@ const Cradle = ({
 
             // --------------[ precursors to setCradleContent ]---------------
 
-            case 'viewportresizing': {
-
-                // no-op
-                break
-            }
-
             case 'setup': { // cycle to allow for ref config
 
                 if (cradleInheritedPropertiesRef.current.cache != 'preload') {
@@ -879,6 +873,13 @@ const Cradle = ({
                 break
 
             }
+
+            case 'viewportresizing': {
+
+                // no-op
+                break
+            }
+
             case 'startpreload': {
 
                 const finalCallback = () => {
@@ -1120,6 +1121,7 @@ const Cradle = ({
 
             // ----------------[ user requests ]-------------
 
+            // support for various host service requests; syncs cradle content with cache changes
             case 'applycellframechanges': { // user intervention
 
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
@@ -1229,6 +1231,7 @@ const Cradle = ({
         IDLECALLBACK_TIMEOUT,
     })
 
+    // display the cradle components, the ScrollTracker, or null
     return <CradleContext.Provider value = {contextvalueRef.current}>
 
         {(((cradleState == 'repositioningRender') || 
@@ -1258,7 +1261,7 @@ const Cradle = ({
                 >
                 </div>
 
-                {showAxis?
+                {showAxis? // for debug
                     <div 
                         data-type = 'cradle-divider' 
                         style = {cradleDividerStyle}
