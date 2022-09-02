@@ -64,6 +64,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     }
 
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
+
     // leading edge
     // let targetCradleReferenceIndex = Math.max(0,targetAxisReferenceIndex - leadingrunwayitemcount)
     let targetCradleRowOffset = Math.max(0,targetAxisRowOffset - runwayRowcount)
@@ -238,7 +239,8 @@ export const getShiftInstruction = ({
 
     }
 
-    if ((retval !=0) && (isViewportScrollingForward) && (viewportVisibleRowcount == 0)) {// check for last oversize row
+    // check for last oversize row
+    if ((retval !=0) && (isViewportScrollingForward) && (viewportVisibleRowcount == 0)) {
         if ((listsize - crosscount) <= oldAxisReferenceIndex) {
 
             retval = 0
@@ -333,7 +335,7 @@ export const calcContentShift = ({
 
     let axisReferenceRowshift = -triggerRowShift
 
-    // ------------[ 5. calc new cradle and axis reference row offset ]-------------
+    // ------------[ 5. calc new cradle and axis reference row offsets ]-------------
 
     // base value for cradle reference shift; may change if beyond list bounds
     let cradleReferenceRowshift = axisReferenceRowshift
@@ -385,7 +387,7 @@ export const calcContentShift = ({
 
         // c. if scrolling backward (toward head of list), as the cradlerowoffset hits 0, cradle changes have
         // to be adjusted to prevent shortening of cradle content
-        // d. if scrolling backward near the end of the list, cradle changes has to be adjusted to accomodate
+        // d. if scrolling backward near the start of the list, cradle changes have to be adjusted to accomodate
         // the trailing runway
 
         if (newCradleReferenceRowOffset < 0) {
