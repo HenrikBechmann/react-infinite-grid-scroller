@@ -1,6 +1,27 @@
 // contenthandler.tsx
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+    This module supports the setup and rollover of content in the Cradle. There are two key functions
+    in this module: setCradleContent, and updateCradleContent. There are also a few functions which 
+    support synchronization of Cradle content with cache content (see internal and external services
+    below).
+
+    setCradleContent is called directly from Cradle (in the state manager), and instantiates new Cradle
+    content in response to the scroller setup, or changes to its configuration. setCradleContent
+    creates a list of Cradle content CellFrames, and allocates those to the two Cradle grids. This 
+    process occurs in response to many state changes, such as finishreposition, pivot, a host scrollto
+    request, and more.
+
+    updateCradleContent rolls Cradle content in response to user scrolling. When scrolling forward, 
+    content is removed from the Cradle head and added to the Cradle tail. When scrolling backward,
+    the reverse occurs.
+
+    The cradle delegates fetching content items to the CellFrame.
+
+    This module is supported primarily by the contentfunctions module.
+*/
+
 import React from 'react'
 
 import { 

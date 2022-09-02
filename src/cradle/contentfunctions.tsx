@@ -1,9 +1,19 @@
 // contentfunctions.tsx
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
-/******************************************************************************************
- --------------------------------[ CONTENT SUPPORT FUNCTIONS ]-----------------------------
-*******************************************************************************************/
+/*
+    This module supports the contenthandler module. The functions in this module perform
+    the detailed calculations and processes required by the contenthandler.
+
+    getContentListRequirements is called by the contenthandler's setCradleContent function.
+
+    getShiftInstruction and calcContentShift are called by contentHandler's updateCradleContent
+    function. 
+    
+    getCellFrameComponentList, allocateContentList, and deletePortals functions are shared by both. 
+
+    createCell is called internally by getCellFrameComponentList as needed.
+*/
 
 import React from 'react'
 

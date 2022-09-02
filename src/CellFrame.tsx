@@ -5,7 +5,7 @@
     The role of CellFrame is to fetch user content from the cache, or from the host (using getItem).
     While an item is being fetched, CellFrame presents a placeholder (either the default or an 
     imported custom version). If there is an error in fetching content then the placeholder is used
-    to present the error to the user. If a new itemID is set by the parent (to synchromize with an altered
+    to present the error to the user. If a new itemID is set by the parent (to synchronize with an altered
     cache), then CellFrame replaces the old item with the new item.
 
     getItem (which is a function provided by the host) can return one of several values:
@@ -13,6 +13,7 @@
         - a promise of a component
         - null
         - undefined
+        - anything else is treated as an error
     if a promise is returned, then the promise returns a React component, null or undefined.
 
     If a valid react component is returned, then it is instantiated in the cache, and rendered in the
