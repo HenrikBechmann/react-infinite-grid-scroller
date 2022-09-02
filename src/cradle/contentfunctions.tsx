@@ -12,7 +12,7 @@
     
     getCellFrameComponentList, allocateContentList, and deletePortals functions are shared by both. 
 
-    createCell is called internally by getCellFrameComponentList as needed.
+    createCellFrame is called internally by getCellFrameComponentList as needed.
 */
 
 import React from 'react'
@@ -484,7 +484,7 @@ export const getCellFrameComponentList = ({
         for (let newindex = cradleReferenceIndex - listStartChangeCount; newindex < (cradleReferenceIndex); newindex++) {
 
             headContentlist.push(
-                createCell(
+                createCellFrame(
                     {
                         index:newindex, 
                         cradleInheritedProperties,
@@ -508,7 +508,7 @@ export const getCellFrameComponentList = ({
         for (let newindex = lastindexoffset + 1; newindex < (lastindexoffset + 1 + listEndChangeCount); newindex++) {
 
             tailContentlist.push(
-                createCell(
+                createCellFrame(
                     {
                         index:newindex, 
                         cradleInheritedProperties,
@@ -569,7 +569,7 @@ export const deletePortals = (cacheHandler, deleteList, deleteListCallback) => {
 
 // =====================[ internal, acquire item ]======================
 
-const createCell = ({
+const createCellFrame = ({
     index, 
     cradleInheritedProperties,
     cradleInternalProperties,

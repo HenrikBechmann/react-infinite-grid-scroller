@@ -667,7 +667,7 @@ export class CacheHandler {
 
     }
 
-    // get new or existing itemID for contentfunctions.createCell
+    // get new or existing itemID for contentfunctions.createCellFrame
     getNewOrExistingItemID(index) {
 
         const { indexToItemIDMap } = this.cacheProps

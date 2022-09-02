@@ -13,11 +13,11 @@
     process occurs in response to many state changes, such as finishreposition, pivot, a host scrollto
     request, and more.
 
-    updateCradleContent rolls Cradle content in response to user scrolling. When scrolling forward, 
-    content is removed from the Cradle head and added to the Cradle tail. When scrolling backward,
-    the reverse occurs.
+    updateCradleContent rolls over the Cradle content in response to user scrolling. When scrolling 
+    forward, content is removed from the Cradle head and added to the Cradle tail. When scrolling 
+    backward, the reverse occurs.
 
-    The cradle delegates fetching content items to the CellFrame.
+    The Cradle (through the contentfunctions module) delegates fetching content items to the CellFrame.
 
     This module is supported primarily by the contentfunctions module.
 */
