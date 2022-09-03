@@ -190,8 +190,6 @@ const CellFrame = ({
 
             case 'inserting': {
 
-                portalMetadataRef.current.parentingcount += 1
-                console.log('inserting itemID parentingcount','-'+itemID+'-' , portalMetadataRef.current.parentingcount)
                 setFrameState('ready')
 
                 break
@@ -276,7 +274,6 @@ const CellFrame = ({
                                     content = React.cloneElement(usercontent, 
                                         {
                                             scrollerProperties,
-                                            parentingcount:null,
                                         }
                                     )
                                 } else {
@@ -362,7 +359,7 @@ const CellFrame = ({
         { 
             (!['inserting','ready'].includes(frameState))?
                 placeholderRef.current:
-                <OutPortal parentingcount = {portalMetadataRef.current.parentingcount} node = { portalNodeRef.current }/>
+                <OutPortal node = { portalNodeRef.current }/>
         }
         
     </div>

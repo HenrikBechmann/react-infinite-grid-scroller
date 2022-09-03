@@ -21,8 +21,6 @@ export default class InterruptHandler {
     // TODO: stub
     private cradleResizeObserverCallback = (entries) => {
 
-       // console.log('cradleResizeObserverCallback')
-
         const {
             stateHandler,
         } = this.cradleParameters.handlersRef.current

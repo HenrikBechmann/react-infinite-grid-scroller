@@ -128,7 +128,6 @@ const InfiniteGridScroller = (props) => {
             // can contain getFunctions, which provides access to internal scroller functions (mostly cache management)
         advanced = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
-        parentingcount,
     } = props
 
     // ---------------------[ Data setup ]----------------------
@@ -304,7 +303,6 @@ const InfiniteGridScroller = (props) => {
                     IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }
                     MAX_CACHE_OVER_RUN = { MAX_CACHE_OVER_RUN }
                     scrollerID = { scrollerID }
-                    parentingcount = {parentingcount}
 
                 />
             </Scrollblock>
