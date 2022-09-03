@@ -191,7 +191,7 @@ const CellFrame = ({
             case 'inserting': {
 
                 portalMetadataRef.current.parentingcount += 1
-                // console.log('parentingcount', portalMetadataRef.current.parentingcount)
+                console.log('inserting itemID parentingcount','-'+itemID+'-' , portalMetadataRef.current.parentingcount)
                 setFrameState('ready')
 
                 break
