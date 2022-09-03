@@ -84,7 +84,7 @@ const CellFrame = ({
     // to track unmount interrupt
     const isMountedRef = useRef(true)
     // cache data
-    const portalDataRef = useRef(null)
+    const portalMetadataRef = useRef(null)
     // the placeholder to use
     const placeholderRef = useRef(null)
     // the session itemID to use; could be updated by parent
@@ -190,6 +190,8 @@ const CellFrame = ({
 
             case 'inserting': {
 
+                portalMetadataRef.current.parentingcount += 1
+                // console.log('parentingcount', portalMetadataRef.current.parentingcount)
                 setFrameState('ready')
 
                 break
@@ -206,11 +208,11 @@ const CellFrame = ({
 
                     if (isMountedRef.current) {
                         // get cache data
-                        portalDataRef.current = cacheHandler.getPortal(itemID)
+                        portalMetadataRef.current = cacheHandler.getPortal(itemID)
                         // get OutPortal node
-                        portalNodeRef.current = portalDataRef.current.portalNode
+                        portalNodeRef.current = portalMetadataRef.current.portalNode
                         // notify fetched component that reparenting is underway
-                        portalDataRef.current.isReparentingRef.current = true
+                        portalMetadataRef.current.isReparentingRef.current = true
 
                         setFrameState('inserting')
 
@@ -271,16 +273,21 @@ const CellFrame = ({
                                     scrollerPassthroughPropertiesRef,
                                 }
                                 if (usercontent.props?.hasOwnProperty('scrollerProperties')) {
-                                    content = React.cloneElement(usercontent, {scrollerProperties})
+                                    content = React.cloneElement(usercontent, 
+                                        {
+                                            scrollerProperties,
+                                            parentingcount:null,
+                                        }
+                                    )
                                 } else {
                                     content = usercontent
                                 }
 
-                                portalDataRef.current = 
+                                portalMetadataRef.current = 
                                     cacheHandler.createPortal(content, index, itemID)
-                                portalNodeRef.current  = portalDataRef.current.portalNode
+                                portalNodeRef.current  = portalMetadataRef.current.portalNode
                                 // make available to user content
-                                scrollerProperties.isReparentingRef = portalDataRef.current.isReparentingRef
+                                scrollerProperties.isReparentingRef = portalMetadataRef.current.isReparentingRef
 
                                 setFrameState('inserting')
 
@@ -353,9 +360,9 @@ const CellFrame = ({
     >
 
         { 
-            (frameState != 'ready')?
+            (!['inserting','ready'].includes(frameState))?
                 placeholderRef.current:
-                <OutPortal node = { portalNodeRef.current }/>
+                <OutPortal parentingcount = {portalMetadataRef.current.parentingcount} node = { portalNodeRef.current }/>
         }
         
     </div>

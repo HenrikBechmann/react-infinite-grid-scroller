@@ -126,8 +126,9 @@ const InfiniteGridScroller = (props) => {
         triggerlineOffset = 10, // distance from cell head or tail for content shifts above/below axis
         callbacks = {}, // optional. closures to get direct information streams of some component utilites
             // can contain getFunctions, which provides access to internal scroller functions (mostly cache management)
-        scrollerProperties, // required for embedded scroller; shares scroller settings with content
         advanced = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
+        scrollerProperties, // required for embedded scroller; shares scroller settings with content
+        parentingcount,
     } = props
 
     // ---------------------[ Data setup ]----------------------
@@ -303,6 +304,7 @@ const InfiniteGridScroller = (props) => {
                     IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }
                     MAX_CACHE_OVER_RUN = { MAX_CACHE_OVER_RUN }
                     scrollerID = { scrollerID }
+                    parentingcount = {parentingcount}
 
                 />
             </Scrollblock>

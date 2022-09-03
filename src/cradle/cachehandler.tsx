@@ -735,6 +735,7 @@ export class CacheHandler {
 
         const portalMetadata = {
             portalNode,
+            parentingcount:0,
             isReparentingRef:{
                 current:false,
             },

@@ -113,11 +113,11 @@ const Viewport = ({
 
             target.dataset.initialized = 'true'
 
-            if (!scrollerProperties) { // not an embedded list
+            // if (!scrollerProperties) { // not an embedded list
 
                 return
                 
-            }
+            // }
             // embedded lists need resizing event for init with up to date viewport dimensions
         }
 

@@ -108,6 +108,7 @@ const Cradle = ({
         showAxis,
         IDLECALLBACK_TIMEOUT,
         MAX_CACHE_OVER_RUN,
+        parentingcount,
     }) => {
 
     if (listsize == 0) return null // nothing to do
@@ -143,6 +144,8 @@ const Cradle = ({
     const [cradleResizeState, setCradleResizeState] = useState('resizeready')
     const cradleResizeStateRef = useRef(null) // access by closures
     cradleResizeStateRef.current = cradleResizeState
+
+    console.log('Cradle: cradleState, parentingcount','-'+scrollerID+'-',cradleState, parentingcount)
 
     // flags
     const isMountedRef = useRef(true)
