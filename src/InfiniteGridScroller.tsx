@@ -19,10 +19,8 @@
     TODO:
 
         allow usercolor for default placeholder
-        trace all user styles assignments
         re-test for memory leaks window.performance.memory
         retest concat replacements
-        find a way to generate a rerender in host components when reparented. parentingcounter?
         ----------------
         (after layout...)
         
