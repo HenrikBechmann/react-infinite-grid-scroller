@@ -1,6 +1,13 @@
 // scrolltracker.tsx
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+    The role of ScrollTracker is to provide feedback to the user of the relative position in the
+    virtual list during repositiong.
+
+    ScrollTracker can be suppressed by the host (in favour of the host's own location feedback)
+*/
+
 import React, {useRef} from 'react'
 
 const ScrollTracker = ({ top, left, offset, listsize, styles }) => {
