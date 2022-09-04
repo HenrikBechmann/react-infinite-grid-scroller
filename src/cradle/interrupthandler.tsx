@@ -1,6 +1,19 @@
 // interruptshandler.tsx
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+    This module holds the callbacks for the Cradle structure listeners:
+    - cradleResizeObserverCallback // responds to resize of the two cradle grids
+        when the cradle is in variable layout
+    - cradleIntersectionObserverCallback // responds to move of both cradle grids outside viewport
+        this initiates the repositioning protocol
+    - axisTriggerlinesObserverCallback // responds to crossing of forward and backward triggerlines
+        in relation to the viewport, and triggers rollover and re-allocation of cradle content
+
+    viewportResizing is handled by viewport
+    scrolling interrupts handled by scrollHandler
+*/
+
 import { ResizeObserver as ResizeObserverPolyfill} from '@juggle/resize-observer'
 
 const ResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
@@ -108,32 +121,35 @@ export default class InterruptHandler {
         {
             const cradleState = stateHandler.cradleStateRef.current
 
-            // TODO examine to see if could be more concise
             if (
-                !viewportInterruptProperties.isResizing &&
                 !viewportInterruptProperties.isReparentingRef?.current &&
+
                 !(cradleState == 'repositioningRender') && 
                 !(cradleState == 'repositioningContinuation') &&
+                !(cradleState == 'finishreposition') && 
+
                 !(cradleState == 'renderupdatedcontent') && 
                 !(cradleState == 'finishupdatedcontent') &&
-                !(cradleState == 'finishviewportresize') &&
-                !(cradleState == 'finishreposition') && 
-                !(cradleState == 'pivot')
+
+                !viewportInterruptProperties.isResizing &&
+                !(cradleState == 'finishviewportresize')
+
                 ) 
             {
-                const element = viewportInterruptProperties.elementRef.current
+                const viewportelement = viewportInterruptProperties.elementRef.current
 
                 const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
-                if (!element) {
+                if (!viewportelement) {
                     console.log('SYSTEM: viewport element not set in cradleIntersectionObserverCallback',
                         scrollerID,viewportInterruptProperties)
                     return
                 }
                 // update dimensions with cradle intersection. See also dimension update in viewport.tsx for resize
-                const rect = element.getBoundingClientRect()
+                const rect = viewportelement.getBoundingClientRect()
                 const {top, right, bottom, left} = rect
                 const width = right - left, height = bottom - top
-                viewportInterruptProperties.viewportDimensions = {top, right, bottom, left, width, height} // update for scrolltracker
+                // update for scrolltracker
+                viewportInterruptProperties.viewportDimensions = {top, right, bottom, left, width, height} 
 
                 const { repositioningFlagCallback } = serviceHandler.callbacks
                 repositioningFlagCallback && repositioningFlagCallback(true)

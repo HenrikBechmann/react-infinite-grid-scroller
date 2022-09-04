@@ -373,18 +373,12 @@ const getFrameStyles = (orientation, cellHeight, cellWidth, styles) => {
 
     if (orientation == 'horizontal') {
         styleset.width = cellWidth + 'px'
-            // cellWidth?
-            //     (cellWidth + 'px'):
-            //     'auto'
         styleset.height = 'auto'
 
     } else if (orientation === 'vertical') {
 
         styleset.width = 'auto'
         styleset.height = cellHeight + 'px'
-            // cellHeight?
-            //     (cellHeight + 'px'):
-            //     'auto'
         
     }
 
