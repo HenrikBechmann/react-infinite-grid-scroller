@@ -106,6 +106,7 @@ const Cradle = ({
         // system
         useScrollTracker,
         showAxis,
+        SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
         IDLECALLBACK_TIMEOUT,
         MAX_CACHE_OVER_RUN,
     }) => {
@@ -316,6 +317,7 @@ const Cradle = ({
         userCallbacks,
         styles,
         cacheHandler,
+        SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
         MAX_CACHE_OVER_RUN,
 
     }

@@ -1,6 +1,19 @@
 // layouthandler.tsx
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+    This module holds references to 
+    - the structural elements of the cradle
+    - the key control values of the cradle
+
+    The structural elements are the axis, head (grid), tail (grid), 
+        and the forward and backward triggerlines
+    The key control values are the blockScrollPos (scrollTop or scrollLeft), the block scroll
+        property ("scrollTop" or "scrollLeft"), the targetAxisReferenceIndex (first index of the
+        tail block), and the targetAxisViewportPixelOffset (pixels offset from the edge of the 
+        viewport)
+*/
+
 export default class LayoutHandler { 
 
     constructor(cradleParameters) {

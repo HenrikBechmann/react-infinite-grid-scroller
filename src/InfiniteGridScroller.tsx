@@ -180,12 +180,14 @@ const InfiniteGridScroller = (props) => {
 
         showAxis, // for debug
         VIEWPORT_RESIZE_TIMEOUT,
+        SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
         IDLECALLBACK_TIMEOUT,
         MAX_CACHE_OVER_RUN,
 
     } = advanced
 
     VIEWPORT_RESIZE_TIMEOUT = VIEWPORT_RESIZE_TIMEOUT ?? 250
+    SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = SCROLL_TIMEOUT_FOR_ONAFTERSCROLL ?? 500
     IDLECALLBACK_TIMEOUT = IDLECALLBACK_TIMEOUT ?? 4000
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
 
@@ -300,6 +302,7 @@ const InfiniteGridScroller = (props) => {
                     cacheHandler = {cacheHandlerRef.current}
                     useScrollTracker = {useScrollTracker}
                     showAxis = { showAxis }
+                    SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = { SCROLL_TIMEOUT_FOR_ONAFTERSCROLL }
                     IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }
                     MAX_CACHE_OVER_RUN = { MAX_CACHE_OVER_RUN }
                     scrollerID = { scrollerID }

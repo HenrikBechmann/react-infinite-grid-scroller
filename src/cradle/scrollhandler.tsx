@@ -1,8 +1,6 @@
 // scrollhandler.tsx
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
-const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 500
-
 export default class ScrollHandler {
 
     constructor(cradleParameters) {
@@ -21,7 +19,10 @@ export default class ScrollHandler {
 
     public onScroll = (e) => {
 
-        const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const { scrollerID, SCROLL_TIMEOUT_FOR_ONAFTERSCROLL } = this.cradleParameters.cradleInheritedPropertiesRef.current
+
+        console.log('SCROLL_TIMEOUT_FOR_ONAFTERSCROLL',SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
+
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const viewportElement = viewportInterruptProperties.elementRef.current
 
