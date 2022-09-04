@@ -21,8 +21,6 @@ export default class ScrollHandler {
 
         const { scrollerID, SCROLL_TIMEOUT_FOR_ONAFTERSCROLL } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        console.log('SCROLL_TIMEOUT_FOR_ONAFTERSCROLL',SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
-
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const viewportElement = viewportInterruptProperties.elementRef.current
 
