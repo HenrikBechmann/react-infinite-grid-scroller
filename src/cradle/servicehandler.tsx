@@ -1,7 +1,33 @@
 // servicehandler.tsx
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
-// ServiceHandler handles client service requests
+/*
+    This module fields service requests from the host. There are two forms
+    - streaming from the scroller to the host
+    - function calls from the user to the scroller
+
+    For the list of data streas, see the constructor.
+
+    The function calls avaiable to the host are:
+        scrollToItem, 
+        reload, 
+        setListsize,
+        clearCache, 
+
+        getCacheIndexMap, 
+        getCacheItemMap,
+        getCradleIndexMap,
+        remapIndexes,
+        moveIndex,
+        insertIndex,
+        removeIndex,
+    
+    The functions listed are defined in this module.
+
+    There are important supporting functions in cacheHandler and contentHandler. stateHandler is
+    often invoked to change state upon servicing requests.
+*/
+
 export default class ServiceHandler {
 
     constructor(cradleParameters) {
