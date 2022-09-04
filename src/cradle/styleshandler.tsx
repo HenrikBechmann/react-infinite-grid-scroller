@@ -1,6 +1,17 @@
 // styleshandler.tsx
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+    This module provides the Cradle component with one key function: getCradleStyles.
+    It returns an array of style objects for
+        headstyles,
+        tailstyles,
+        axisstyles,
+        triggerlinebackwardstyles,
+        triggerlineforwardstyles,
+        cradledividerstyles
+*/
+
 export default class StylesHandler { 
 
    constructor(cradleParameters) {

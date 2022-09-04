@@ -19,7 +19,6 @@
     TODO:
 
         allow usercolor for default placeholder
-        trace all user styles assignments
         re-test for memory leaks window.performance.memory
         retest concat replacements
         ----------------
@@ -116,7 +115,8 @@ const InfiniteGridScroller = (props) => {
         placeholder, // optional. a sparse component to stand in for content until the content arrives; 
             // replaces default placeholder if present
         styles = {}, // optional. passive style over-rides (eg. color, opacity); has 
-            // properties viewport, scrollblock, cradle, or scrolltracker. Do not make structural changes!
+            // properties viewport, scrollblock, cradle, scrolltracker, placeholderframe, or
+            // placeholdercontent. Do not make structural changes!
 
         // ** system specs:
         useScrollTracker = true, // the internal use feedback for repositioning
@@ -125,8 +125,8 @@ const InfiniteGridScroller = (props) => {
         triggerlineOffset = 10, // distance from cell head or tail for content shifts above/below axis
         callbacks = {}, // optional. closures to get direct information streams of some component utilites
             // can contain getFunctions, which provides access to internal scroller functions (mostly cache management)
-        scrollerProperties, // required for embedded scroller; shares scroller settings with content
         advanced = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
+        scrollerProperties, // required for embedded scroller; shares scroller settings with content
     } = props
 
     // ---------------------[ Data setup ]----------------------
@@ -179,12 +179,14 @@ const InfiniteGridScroller = (props) => {
 
         showAxis, // for debug
         VIEWPORT_RESIZE_TIMEOUT,
+        SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
         IDLECALLBACK_TIMEOUT,
         MAX_CACHE_OVER_RUN,
 
     } = advanced
 
     VIEWPORT_RESIZE_TIMEOUT = VIEWPORT_RESIZE_TIMEOUT ?? 250
+    SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = SCROLL_TIMEOUT_FOR_ONAFTERSCROLL ?? 500
     IDLECALLBACK_TIMEOUT = IDLECALLBACK_TIMEOUT ?? 4000
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
 
@@ -299,6 +301,7 @@ const InfiniteGridScroller = (props) => {
                     cacheHandler = {cacheHandlerRef.current}
                     useScrollTracker = {useScrollTracker}
                     showAxis = { showAxis }
+                    SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = { SCROLL_TIMEOUT_FOR_ONAFTERSCROLL }
                     IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }
                     MAX_CACHE_OVER_RUN = { MAX_CACHE_OVER_RUN }
                     scrollerID = { scrollerID }

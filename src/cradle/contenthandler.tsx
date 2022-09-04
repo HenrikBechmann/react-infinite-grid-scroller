@@ -105,6 +105,7 @@ export default class ContentHandler {
             cellWidth,
             cache,
             scrollerID,
+            styles,
         } = cradleInheritedProperties
 
         const {crosscount, listsize} = cradleInternalProperties
@@ -173,6 +174,7 @@ export default class ContentHandler {
             listEndChangeCount:cradleContentCount,
             workingContentList,
             instanceIdCounterRef:this.instanceIdCounterRef,
+            styles,
         })
 
         const [headcontentlist, tailcontentlist] = allocateContentList({
@@ -299,6 +301,7 @@ export default class ContentHandler {
         const { 
             orientation, 
             cache,
+            styles,
         } = cradleInheritedProperties
 
         const { 
@@ -384,6 +387,7 @@ export default class ContentHandler {
                 listEndChangeCount,
                 cradleReferenceIndex:oldCradleReferenceIndex,
                 instanceIdCounterRef:this.instanceIdCounterRef,
+                styles,
             })
 
         } else {

@@ -109,16 +109,13 @@ const Viewport = ({
 
         const target = entries[0].target
 
+        // no need to trigger interrupt on first resize notification
         if (!target.dataset.initialized) {
 
             target.dataset.initialized = 'true'
 
-            if (!scrollerProperties) { // not an embedded list
-
                 return
                 
-            }
-            // embedded lists need resizing event for init with up to date viewport dimensions
         }
 
         // generate interrupt response, if initiating resize

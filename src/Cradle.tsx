@@ -106,6 +106,7 @@ const Cradle = ({
         // system
         useScrollTracker,
         showAxis,
+        SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
         IDLECALLBACK_TIMEOUT,
         MAX_CACHE_OVER_RUN,
     }) => {
@@ -316,6 +317,7 @@ const Cradle = ({
         userCallbacks,
         styles,
         cacheHandler,
+        SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
         MAX_CACHE_OVER_RUN,
 
     }
@@ -432,7 +434,7 @@ const Cradle = ({
 
         } 
 
-        if (viewportInterruptProperties.isResizing) { // caching is underway, so cancel
+        if (viewportInterruptProperties.isResizing) { // caching op is underway, so cancel
 
             viewportInterruptProperties.isResizing = false
 
@@ -1200,7 +1202,7 @@ const Cradle = ({
     const scrollAxisReferenceIndex = layoutHandler.cradlePositionData.targetAxisReferenceIndex
     const scrollTrackerArgs = useMemo(() => {
         if (!useScrollTracker) return null
-        if (!(cradleState == 'repositioningContinuation' || cradleState == 'repositioningRender')) {
+        if (!['repositioningContinuation','repositioningRender'].includes(cradleState)) {
             return null
         }
         const trackerargs = {
@@ -1234,8 +1236,7 @@ const Cradle = ({
     // display the cradle components, the ScrollTracker, or null
     return <CradleContext.Provider value = {contextvalueRef.current}>
 
-        {(((cradleState == 'repositioningRender') || 
-            (cradleState == 'repositioningContinuation')))?
+        {(['repositioningContinuation','repositioningRender'].includes(cradleState))?
             useScrollTracker?<ScrollTracker 
                 top = {scrollTrackerArgs.top} 
                 left = {scrollTrackerArgs.left} 

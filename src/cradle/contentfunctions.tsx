@@ -472,6 +472,7 @@ export const getCellFrameComponentList = ({
         listEndChangeCount, 
         workingContentList:contentlist,
         instanceIdCounterRef,
+        styles,
     }) => {
 
     const localContentlist = [...contentlist]
@@ -493,6 +494,8 @@ export const getCellFrameComponentList = ({
                         cradleInternalProperties,
                         instanceIdCounterRef,
                         cacheHandler,
+                        placeholderFrameStyles:styles.placeholderframe,
+                        placeholderContentStyles:styles.placeholdercontent,
                     }
                 )
             )
@@ -517,6 +520,8 @@ export const getCellFrameComponentList = ({
                         cradleInternalProperties,
                         instanceIdCounterRef,
                         cacheHandler,
+                        placeholderFrameStyles:styles.placeholderframe,
+                        placeholderContentStyles:styles.placeholdercontent,
                     }
                 )
             )
@@ -577,7 +582,8 @@ const createCellFrame = ({
     cradleInternalProperties,
     instanceIdCounterRef,
     cacheHandler,
-
+    placeholderFrameStyles,
+    placeholderContentStyles,
 }) => {
     const instanceID = instanceIdCounterRef.current++
 
@@ -609,6 +615,8 @@ const createCellFrame = ({
         itemID = { itemID }
         instanceID = { instanceID }
         scrollerID = { scrollerID }
+        placeholderFrameStyles = { placeholderFrameStyles }
+        placeholderContentStyles = { placeholderContentStyles }
     />
 
 }

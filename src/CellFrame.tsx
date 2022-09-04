@@ -55,6 +55,8 @@ const CellFrame = ({
     index, // logical position in infinite list
     instanceID, // CellFrame session ID
     scrollerID, // scroller ID (for debugging)
+    placeholderFrameStyles,
+    placeholderContentStyles,
 }) => {
 
     // ----------------------[ setup ]----------------------
@@ -84,7 +86,7 @@ const CellFrame = ({
     // to track unmount interrupt
     const isMountedRef = useRef(true)
     // cache data
-    const portalDataRef = useRef(null)
+    const portalMetadataRef = useRef(null)
     // the placeholder to use
     const placeholderRef = useRef(null)
     // the session itemID to use; could be updated by parent
@@ -134,10 +136,12 @@ const CellFrame = ({
             customplaceholder?
                 customplaceholder:
                 <Placeholder 
-                    index = {index} 
-                    listsize = {listsize} 
-                    message = {messageRef.current}
-                    error = {errorRef.current}
+                    index = { index } 
+                    listsize = { listsize } 
+                    message = { messageRef.current }
+                    error = { errorRef.current }
+                    userFrameStyles = { placeholderFrameStyles }
+                    userContentStyles = { placeholderContentStyles }
                 />
 
         return placeholder
@@ -206,11 +210,11 @@ const CellFrame = ({
 
                     if (isMountedRef.current) {
                         // get cache data
-                        portalDataRef.current = cacheHandler.getPortal(itemID)
+                        portalMetadataRef.current = cacheHandler.getPortal(itemID)
                         // get OutPortal node
-                        portalNodeRef.current = portalDataRef.current.portalNode
+                        portalNodeRef.current = portalMetadataRef.current.portalNode
                         // notify fetched component that reparenting is underway
-                        portalDataRef.current.isReparentingRef.current = true
+                        portalMetadataRef.current.isReparentingRef.current = true
 
                         setFrameState('inserting')
 
@@ -271,16 +275,20 @@ const CellFrame = ({
                                     scrollerPassthroughPropertiesRef,
                                 }
                                 if (usercontent.props?.hasOwnProperty('scrollerProperties')) {
-                                    content = React.cloneElement(usercontent, {scrollerProperties})
+                                    content = React.cloneElement(usercontent, 
+                                        {
+                                            scrollerProperties,
+                                        }
+                                    )
                                 } else {
                                     content = usercontent
                                 }
 
-                                portalDataRef.current = 
+                                portalMetadataRef.current = 
                                     cacheHandler.createPortal(content, index, itemID)
-                                portalNodeRef.current  = portalDataRef.current.portalNode
+                                portalNodeRef.current  = portalMetadataRef.current.portalNode
                                 // make available to user content
-                                scrollerProperties.isReparentingRef = portalDataRef.current.isReparentingRef
+                                scrollerProperties.isReparentingRef = portalMetadataRef.current.isReparentingRef
 
                                 setFrameState('inserting')
 
@@ -341,6 +349,10 @@ const CellFrame = ({
 
     }, [frameState])
 
+    // with 'inserting' the content is still in cache
+    // the content re-renders with 'ready' when the height/width have returned to normal after-cache
+    // React re-renders on diff between the two (virtual vs real DOM)
+    // this gives the content component a chance to respond to uncaching
     return <div 
 
         ref = { frameRef } 
@@ -353,7 +365,7 @@ const CellFrame = ({
     >
 
         { 
-            (frameState != 'ready')?
+            (!['inserting','ready'].includes(frameState))?
                 placeholderRef.current:
                 <OutPortal node = { portalNodeRef.current }/>
         }
@@ -369,18 +381,12 @@ const getFrameStyles = (orientation, cellHeight, cellWidth, styles) => {
 
     if (orientation == 'horizontal') {
         styleset.width = cellWidth + 'px'
-            // cellWidth?
-            //     (cellWidth + 'px'):
-            //     'auto'
         styleset.height = 'auto'
 
     } else if (orientation === 'vertical') {
 
         styleset.width = 'auto'
         styleset.height = cellHeight + 'px'
-            // cellHeight?
-            //     (cellHeight + 'px'):
-            //     'auto'
         
     }
 

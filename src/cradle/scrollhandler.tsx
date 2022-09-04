@@ -1,7 +1,11 @@
 // scrollhandler.tsx
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
-const SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = 500
+/*
+    This module holds the response to scrolling. It also triggers an onAfterScroll event (after a timeout)
+    It's main job is to maintain records of scrollPos, targetAxisReferenceIndex, and 
+        targetAxisViewportPixelOffset
+*/
 
 export default class ScrollHandler {
 
@@ -21,7 +25,8 @@ export default class ScrollHandler {
 
     public onScroll = (e) => {
 
-        const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const { scrollerID, SCROLL_TIMEOUT_FOR_ONAFTERSCROLL } = this.cradleParameters.cradleInheritedPropertiesRef.current
+
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const viewportElement = viewportInterruptProperties.elementRef.current
 
@@ -71,7 +76,7 @@ export default class ScrollHandler {
         const {stateHandler} = this.cradleParameters.handlersRef.current
         const cradleState = stateHandler.cradleStateRef.current
 
-        const {contentHandler, serviceHandler} = this.cradleParameters.handlersRef.current
+        const { contentHandler, serviceHandler } = this.cradleParameters.handlersRef.current
 
         if (!viewportInterruptProperties.isResizing) {
 
@@ -79,7 +84,6 @@ export default class ScrollHandler {
 
                 if (cradleState == 'ready') {
 
-                    // const itemindex = cradlePositionData.targetAxisReferenceIndex
                     let axisVisiblePixelOffset
                     const cradleElements = layoutHandler.elements
                     const axisElement = cradleElements.axisRef.current
@@ -95,7 +99,6 @@ export default class ScrollHandler {
 
                     }
 
-                    // cradlePositionData.targetAxisReferenceIndex = itemindex
                     cradlePositionData.targetAxisViewportPixelOffset = axisVisiblePixelOffset
 
                 }
@@ -164,8 +167,6 @@ export default class ScrollHandler {
 
         }
 
-        // const {layoutHandler} = this.cradleParameters.handlersRef.current
-        // const { cradlePositionData } = layoutHandler
         const { cache } = cradleInheritedProperties
 
         if (cache == 'keepload') {
@@ -234,7 +235,6 @@ export default class ScrollHandler {
 
                 cradlePositionData.blockScrollPos = viewportElement.scrollLeft
             }
-            const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         }
 
@@ -246,9 +246,9 @@ export default class ScrollHandler {
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
         const cradleConfig = this.cradleParameters.cradleInternalPropertiesRef.current
 
-        const {crosscount, listsize} = cradleConfig
+        const { crosscount, listsize } = cradleConfig
         const viewportElement = viewportInterruptProperties.elementRef.current
-        const {orientation} = cradleProps
+        const { orientation } = cradleProps
         let scrollPos, cellLength
         if (orientation == 'vertical') {
 
