@@ -345,6 +345,10 @@ const CellFrame = ({
 
     }, [frameState])
 
+    // with 'inserting' the content is still in cache
+    // the content re-renders with 'ready' when the height/width have returned to normal after-cache
+    // React re-renders on diff between the two (virtual vs real DOM)
+    // this gives the content component a chance to respond to uncaching
     return <div 
 
         ref = { frameRef } 
