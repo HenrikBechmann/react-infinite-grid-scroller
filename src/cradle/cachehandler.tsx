@@ -5,7 +5,7 @@
     This module manages the InfiniteGridScroller limited (sparse) cache. It also provides support for 
     services which allow the host to actively manage many aspects of the cache. See documentation
     about the user getFunctions callback for details. Note that large caches of complex components
-    can impair performance. This can be optimized with cacheMax.
+    can impair performance. This can be optimized with the cacheMax property.
 
     The infinite grid scroller stores user cell content (components) in a central hidden portal cache 
     for each InfiniteGridScroller root, from whence the components are pulled into the relevant CellFrames 
@@ -18,21 +18,26 @@
     See https://www.npmjs.com/package/react-reverse-portal for the utility that InfiniteGridScroller
     uses to manage portals.
 
-    This caching has many advantages, notably the ability to maintain state for complex components 
+    This caching has many advantages, notably the ability to move cells back and forth between the
+    head and tail sections of the Cradle, and the ability to maintain state for complex components 
     which move beyond the scope of the content of the Cradle. But there is an important side effect.
     Instantiated components which are removed from the real DOM (into the portal of the virtual DOM)
     have their scroll positions, width, and height set to zero. Therefore if components rely on these 
-    values for configuration, they must have a way of storing those values in state (notably the 
+    values for configuration, they must have a way of storing values in state (notably the 
     Scroll Pos - scrollLeft or scrollTop), recognizing when the component comes out of the portal cache 
     into the real DOM (width and height are typically no longer both 0), and responding to change in 
-    cache state appropriately. See the INTERCEPT CACHING STATE CHANGE section of the Cradle component 
-    for how the InfiniteGridScroller deals with this situation when it is nested.
+    cache state appropriately.
 
-    In particular user components can create an undefined property 'scrollerProperties', which will 
-    cause CellFrame to populate the property with an object containing isReparentingRef (as well as 
-    scrollerPassthroughPropertiesRef). isReparentingRef.current provides an up-to-date boolean
-    indicating whether the component is currently being 'reparented' into the real DOM. Set the value
-    back to false once you've detected it.
+    Tips:
+        - your component is in cache when both width and height = 0
+        - your component is out of cache when both width and height are back to normal
+        - if you create an empty 'scrollerProperties' property for your component, CellFrame will
+            set it to an object containing isReparentingRef and scrollerPassthroughPropertiesRef
+        - isReparentingRef.current provides an up-to-date boolean indicating whether the component is 
+            currently being 'reparented' into the real DOM. Set the value back to false once you've 
+            detected it. After reparenting (when the width and height are back to normal) is when
+            you should restore scrollPos (scrollTop or scrollLeft to what it was)
+        - if your component does not scroll, there should be no issues.
 */
 
 import React, {useState, useEffect, useRef} from 'react'
