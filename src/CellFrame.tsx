@@ -55,6 +55,8 @@ const CellFrame = ({
     index, // logical position in infinite list
     instanceID, // CellFrame session ID
     scrollerID, // scroller ID (for debugging)
+    placeholderFrameStyles,
+    placeholderContentStyles,
 }) => {
 
     // ----------------------[ setup ]----------------------
@@ -134,10 +136,12 @@ const CellFrame = ({
             customplaceholder?
                 customplaceholder:
                 <Placeholder 
-                    index = {index} 
-                    listsize = {listsize} 
-                    message = {messageRef.current}
-                    error = {errorRef.current}
+                    index = { index } 
+                    listsize = { listsize } 
+                    message = { messageRef.current }
+                    error = { errorRef.current }
+                    userFrameStyles = { placeholderFrameStyles }
+                    userContentStyles = { placeholderContentStyles }
                 />
 
         return placeholder
