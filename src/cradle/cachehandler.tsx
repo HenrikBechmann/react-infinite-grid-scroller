@@ -19,7 +19,7 @@
     uses to manage portals.
 
     This caching has many advantages, notably the ability to move cells back and forth between the
-    head and tail sections of the Cradle, and the ability to maintain state for complex components 
+    head and tail grids of the Cradle, and the ability to maintain state for complex components 
     which move beyond the scope of the content of the Cradle. But there is an important side effect.
     Instantiated components which are removed from the real DOM (into the portal of the virtual DOM)
     have their scroll positions, width, and height set to zero. Therefore if components rely on these 
@@ -35,8 +35,8 @@
             set it to an object containing isReparentingRef and scrollerPassthroughPropertiesRef
         - isReparentingRef.current provides an up-to-date boolean indicating whether the component is 
             currently being 'reparented' into the real DOM. Set the value back to false once you've 
-            detected it. After reparenting (when the width and height are back to normal) is when
-            you should restore scrollPos (scrollTop or scrollLeft to what it was)
+            detected it. After reparenting (after the width and height are back to normal) is when
+            you should restore scrollPos (scrollTop or scrollLeft) to what it was.
         - if your component does not scroll, there should be no issues.
 */
 
