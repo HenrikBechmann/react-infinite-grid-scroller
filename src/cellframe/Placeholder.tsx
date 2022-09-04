@@ -1,6 +1,14 @@
 // Placeholder.tsx
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+    The role of the default PlaceHolder is to hold the content display until the host content
+    is received. The placeholder presents a waiting message, or an error message if the load
+    of the host content failed.
+
+    The default placeholder can be replaced by a placeholder provided by the host.
+*/
+
 import React, {useRef } from 'react'
 
 const Placeholder = ({index, listsize, message, error, userFrameStyles, userContentStyles}) => {

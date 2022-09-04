@@ -494,8 +494,8 @@ export const getCellFrameComponentList = ({
                         cradleInternalProperties,
                         instanceIdCounterRef,
                         cacheHandler,
-                        placeholderFrameStyles:styles.placeholderFrameStyles,
-                        placeholderContentStyles:styles.placeholderContentStyles,
+                        placeholderFrameStyles:styles.placeholderframe,
+                        placeholderContentStyles:styles.placeholdercontent,
                     }
                 )
             )
@@ -520,8 +520,8 @@ export const getCellFrameComponentList = ({
                         cradleInternalProperties,
                         instanceIdCounterRef,
                         cacheHandler,
-                        placeholderFrameStyles:styles.placeholderFrameStyles,
-                        placeholderContentStyles:styles.placeholderContentStyles,
+                        placeholderFrameStyles:styles.placeholderframe,
+                        placeholderContentStyles:styles.placeholdercontent,
                     }
                 )
             )

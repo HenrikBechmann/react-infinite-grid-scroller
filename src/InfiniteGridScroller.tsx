@@ -115,7 +115,8 @@ const InfiniteGridScroller = (props) => {
         placeholder, // optional. a sparse component to stand in for content until the content arrives; 
             // replaces default placeholder if present
         styles = {}, // optional. passive style over-rides (eg. color, opacity); has 
-            // properties viewport, scrollblock, cradle, or scrolltracker. Do not make structural changes!
+            // properties viewport, scrollblock, cradle, scrolltracker, placeholderframe, or
+            // placeholdercontent. Do not make structural changes!
 
         // ** system specs:
         useScrollTracker = true, // the internal use feedback for repositioning
