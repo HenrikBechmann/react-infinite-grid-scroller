@@ -71,6 +71,8 @@ export class CacheHandler {
         scrollerID:null
     }
 
+    cradleParameters
+
     portalHoldList
 
     listsizeRef
@@ -728,7 +730,9 @@ export class CacheHandler {
 
         this.removeRequestedPortal(index)
 
-        const portalNode = createPortalNode(index, itemID)
+        const { layout } = this.cradleParameters.cradleInheritedPropertiesRef.current
+
+        const portalNode = createPortalNode(index, itemID, layout)
 
         // div wrapper to avoid memory leak
         this.cacheProps.portalMap.set(itemID,
@@ -881,13 +885,15 @@ export class CacheHandler {
 
 // get a react-reverse-portal InPortal component, with its metadata
 // with user content and container
-const createPortalNode = (index, itemID) => {
+const createPortalNode = (index, itemID, layout) => {
 
     let portalNode = createHtmlPortalNode()
 
     let container = portalNode.element
-    container.style.inset = '0px' 
-    container.style.position = 'absolute'
+    if (layout == 'uniform') {
+        container.style.inset = '0px' 
+        container.style.position = 'absolute'
+    }
     container.dataset.type = 'contentenvelope'
     container.dataset.index = index
     container.dataset.cacheitemid = itemID

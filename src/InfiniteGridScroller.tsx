@@ -4,8 +4,6 @@
 /*
     ROADMAP:
 
-        review all code
-
         layout: uniform, variable
 
         cross-browser testing; smartphone testing
@@ -18,7 +16,6 @@
     
     TODO:
 
-        allow usercolor for default placeholder
         re-test for memory leaks window.performance.memory
         retest concat replacements
         ----------------

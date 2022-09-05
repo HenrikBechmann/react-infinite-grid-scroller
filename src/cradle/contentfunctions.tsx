@@ -594,7 +594,8 @@ const createCellFrame = ({
         cellWidth,
         getItem,
         placeholder,
-        scrollerID 
+        scrollerID,
+        layout, 
 
     } = cradleInheritedProperties
 
@@ -608,6 +609,7 @@ const createCellFrame = ({
         orientation = { orientation }
         cellHeight = { cellHeight }
         cellWidth = { cellWidth }
+        layout = { layout }
         index = { index }
         getItem = { getItem }
         listsize = { listsize }

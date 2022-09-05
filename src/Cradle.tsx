@@ -1114,8 +1114,6 @@ const Cradle = ({
 
                 cacheHandler.renderPortalList()
 
-                // interruptHandler.triggerlinesIntersect.connectElements()
-                // interruptHandler.signals.pauseTriggerlinesObserver = false
                 setCradleState('ready')
 
                 break
@@ -1313,6 +1311,8 @@ const getCradleHandlers = (cradleParameters) => {
     const createHandler = handler => new handler(cradleParameters)
 
     const { cacheHandler } = cradleParameters.cradleInheritedPropertiesRef.current
+
+    cacheHandler.cradleParameters = cradleParameters
 
     return {
 
