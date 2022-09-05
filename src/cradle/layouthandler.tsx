@@ -24,16 +24,16 @@ export default class LayoutHandler {
             axisRef, 
             headRef, 
             tailRef,
-            backwardTriggerlineRef,
-            forwardTriggerlineRef,
+            axisTriggerlineRef,
+            headTriggerlineRef,
         } = cradleParameters.cradleInternalPropertiesRef.current.cradleElementsRef.current
         
         this.elements = {
             axisRef,
             headRef,
             tailRef,
-            backwardTriggerlineRef,
-            forwardTriggerlineRef,
+            axisTriggerlineRef,
+            headTriggerlineRef,
         }
 
         const {

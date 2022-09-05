@@ -136,8 +136,8 @@ export const getShiftInstruction = ({
 
     const driver = 
         isViewportScrollingForward?
-            'triggerline-forward':
-            'triggerline-backward'
+            'triggerline-head':
+            'triggerline-axis'
 
     const entries = triggerlineEntries.filter(entry => {
         // const isIntersecting = entry.isIntersecting
@@ -162,13 +162,13 @@ export const getShiftInstruction = ({
         return (
 
             // - axis triggerline goes out of scope, or...
-            driver == 'triggerline-forward' &&
+            driver == 'triggerline-head' &&
             viewportoffsethead <= 0
 
         ) || (
 
             // - head triggerline comes into scope
-            driver == 'triggerline-backward' &&
+            driver == 'triggerline-axis' &&
             viewportoffsethead >= 0
 
         )
@@ -185,8 +185,8 @@ export const getShiftInstruction = ({
 
         const counterdriver = 
         (!isViewportScrollingForward)?
-            'triggerline-forward':
-            'triggerline-backward'        
+            'triggerline-head':
+            'triggerline-axis'        
 
         const counterentries = triggerlineEntries.filter(entry => entry.triggerlinename == counterdriver)
 
@@ -196,7 +196,7 @@ export const getShiftInstruction = ({
             const countertriggerlinename = counterentry.triggerlinename
 
             let impliedoffsethead
-            if (countertriggerlinename == 'triggerline-backward') {
+            if (countertriggerlinename == 'triggerline-axis') {
 
                 impliedoffsethead = counterentry.viewportoffsethead + triggerlineSpan
 
@@ -206,7 +206,7 @@ export const getShiftInstruction = ({
 
                 }
 
-            } else { // countertriggerlinename == 'triggerline-forward'
+            } else { // countertriggerlinename == 'triggerline-head'
 
                 impliedoffsethead = counterentry.viewportoffsethead - triggerlineSpan
 
@@ -227,7 +227,7 @@ export const getShiftInstruction = ({
         const entry = entries[0] // assume one record gets filtered; only paired above on reconnect
 
         // if (!isViewportScrollingForward) {
-        if (driver == 'triggerline-backward') {
+        if (driver == 'triggerline-axis') {
 
             retval = 1 // shift row to tail
 

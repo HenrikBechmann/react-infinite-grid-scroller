@@ -13,6 +13,10 @@
         create demo site - github pages
 
     BUGS: 
+
+        resize can cause axis to be on third visible row (should be second)
+            still triggers for some reason (trailing crosses lower edge)
+        - reproduce from many wide to fewer wide
     
     TODO:
 

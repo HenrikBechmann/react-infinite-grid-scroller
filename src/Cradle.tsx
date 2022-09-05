@@ -158,8 +158,8 @@ const Cradle = ({
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const axisCradleElementRef = useRef(null)
-    const backwardTriggerlineCradleElementRef = useRef(null)
-    const forwardTriggerlineCradleElementRef = useRef(null)
+    const axisTriggerlineCradleElementRef = useRef(null)
+    const headTriggerlineCradleElementRef = useRef(null)
 
     // scaffold bundle
     const cradleElementsRef = useRef(
@@ -167,8 +167,8 @@ const Cradle = ({
             headRef:headCradleElementRef, 
             tailRef:tailCradleElementRef, 
             axisRef:axisCradleElementRef,
-            backwardTriggerlineRef:backwardTriggerlineCradleElementRef,
-            forwardTriggerlineRef:forwardTriggerlineCradleElementRef,
+            axisTriggerlineRef:axisTriggerlineCradleElementRef,
+            headTriggerlineRef:headTriggerlineCradleElementRef,
         }
     )
 
@@ -820,8 +820,8 @@ const Cradle = ({
         cradleHeadStyle, 
         cradleTailStyle, 
         cradleAxisStyle, 
-        triggerlineBackwardStyle, 
-        triggerlineForwardStyle,
+        triggerlineAxisStyle, 
+        triggerlineHeadStyle,
         cradleDividerStyle
     ] = useMemo(()=> {
 
@@ -1250,15 +1250,15 @@ const Cradle = ({
                 ref = {axisCradleElementRef}
             >
                 <div
-                    data-type = 'triggerline-backward'
-                    style = {triggerlineBackwardStyle}
-                    ref = {backwardTriggerlineCradleElementRef}
+                    data-type = 'triggerline-axis'
+                    style = {triggerlineAxisStyle}
+                    ref = {axisTriggerlineCradleElementRef}
                 >
                 </div>
                 <div
-                    data-type = 'triggerline-forward'
-                    style = {triggerlineForwardStyle}
-                    ref = {forwardTriggerlineCradleElementRef}
+                    data-type = 'triggerline-head'
+                    style = {triggerlineHeadStyle}
+                    ref = {headTriggerlineCradleElementRef}
                 >
                 </div>
 
