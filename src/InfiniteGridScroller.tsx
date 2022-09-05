@@ -18,6 +18,7 @@
 
         re-test for memory leaks window.performance.memory
         retest concat replacements
+        integrate cradleParameters object availability into cachehandler
         ----------------
         (after layout...)
         
