@@ -145,6 +145,8 @@ const Cradle = ({
     const cradleResizeStateRef = useRef(null) // access by closures
     cradleResizeStateRef.current = cradleResizeState
 
+    // console.log('==> craldeState','-'+scrollerID+'-',cradleState)
+
     // flags
     const isMountedRef = useRef(true)
     const isCachedRef = useRef(false)
@@ -733,7 +735,7 @@ const Cradle = ({
         }
 
         // complete viewportresizing mode
-        if (!viewportInterruptPropertiesRef.current.isResizing && (cradleStateRef.current == 'resizing')) {
+        if (!viewportInterruptPropertiesRef.current.isResizing && (cradleStateRef.current == 'viewportresizing')) {
 
             setCradleState('finishviewportresize')
 
