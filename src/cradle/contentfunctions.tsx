@@ -139,10 +139,17 @@ export const getShiftInstruction = ({
             'triggerline-head':
             'triggerline-axis'
 
+    const direction = 
+        isViewportScrollingForward?
+            'forward':
+            'backward'
+
     const entries = triggerlineEntries.filter(entry => {
         // const isIntersecting = entry.isIntersecting
         const triggerlinename = entry.target.dataset.type
         entry.triggerlinename = triggerlinename // memo for processing and console
+        const triggerlinedirection = entry.target.dataset.direction
+        entry.triggerlinedirection = triggerlinedirection
         entry.scrollingforward = isViewportScrollingForward // memo for console
 
         const rootpos = 
@@ -162,13 +169,15 @@ export const getShiftInstruction = ({
         return (
 
             // - axis triggerline goes out of scope, or...
-            driver == 'triggerline-head' &&
+            direction == 'forward' &&
+            // driver == 'triggerline-head' &&
             viewportoffsethead <= 0
 
         ) || (
 
             // - head triggerline comes into scope
-            driver == 'triggerline-axis' &&
+            direction == 'backward' &&
+            // driver == 'triggerline-axis' &&
             viewportoffsethead >= 0
 
         )
@@ -188,15 +197,23 @@ export const getShiftInstruction = ({
             'triggerline-head':
             'triggerline-axis'        
 
-        const counterentries = triggerlineEntries.filter(entry => entry.triggerlinename == counterdriver)
+        const counterdirection = 
+        (!isViewportScrollingForward)?
+            'backward':
+            'forward'        
+
+        // const counterentries = triggerlineEntries.filter(entry => entry.triggerlinename == counterdriver)
+        const counterentries = triggerlineEntries.filter(entry => entry.triggerdirection == counterdirection)
 
         if (counterentries.length != 0) {
             // check for implied trigger - trigger can be bypassed with heavy components
             const counterentry =  counterentries.pop()
-            const countertriggerlinename = counterentry.triggerlinename
+            // const countertriggerlinename = counterentry.triggerlinename
+            const countertriggerlinedirection = counterentry.triggerlinedirection
 
             let impliedoffsethead
-            if (countertriggerlinename == 'triggerline-axis') {
+            // if (countertriggerlinename == 'triggerline-axis') {
+            if (countertriggerlinedirection == 'backward') {
 
                 impliedoffsethead = counterentry.viewportoffsethead + triggerlineSpan
 
@@ -206,7 +223,7 @@ export const getShiftInstruction = ({
 
                 }
 
-            } else { // countertriggerlinename == 'triggerline-head'
+            } else { // countertriggerlinename == 'triggerline-head'; direction == forward
 
                 impliedoffsethead = counterentry.viewportoffsethead - triggerlineSpan
 
@@ -227,7 +244,8 @@ export const getShiftInstruction = ({
         const entry = entries[0] // assume one record gets filtered; only paired above on reconnect
 
         // if (!isViewportScrollingForward) {
-        if (driver == 'triggerline-axis') {
+        // if (driver == 'triggerline-axis') {
+        if (direction == 'backward') {
 
             retval = 1 // shift row to tail
 
