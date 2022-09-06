@@ -219,7 +219,8 @@ scrollblockViewportPixelOffset`,
         //  ----------------------[ 4. set CSS ]-----------------------
 
         cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset
-        scrollHandler.resetScrollData(scrollblockViewportPixelOffset)
+        // avoid bogus call to updateCradleContent
+        scrollHandler.resetScrollData(scrollblockViewportPixelOffset) 
 
         viewportElement[cradlePositionData.blockScrollProperty] =
             cradlePositionData.blockScrollPos
