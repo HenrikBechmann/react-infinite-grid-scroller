@@ -102,7 +102,6 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     return {
         targetCradleReferenceIndex, 
         targetAxisReferenceIndex,
-        targetAxisRowOffset,
         targetScrollblockViewportPixelOffset, 
         newCradleContentCount, 
     } 
@@ -134,10 +133,12 @@ export const getShiftInstruction = ({
 
 }) => {
 
+    console.log('getShiftInstruction: isViewportScrollingForward', isViewportScrollingForward)
+
     const driver = 
         isViewportScrollingForward?
-            'triggerline-head':
-            'triggerline-axis'
+            'triggerline-axis':
+            'triggerline-head'
 
     const direction = 
         isViewportScrollingForward?

@@ -23,6 +23,15 @@ export default class ScrollHandler {
 
     private isScrolling = false
 
+    public resetScrollData = (scrollPosition) => {
+        const { scrollData } = this
+        scrollData.start = 
+        scrollData.current = 
+        scrollData.previous = 
+        scrollData.previousupdate = 
+        scrollData.currentupdate = scrollPosition
+    }
+
     public onScroll = (e) => {
 
         const { scrollerID, SCROLL_TIMEOUT_FOR_ONAFTERSCROLL } = this.cradleParameters.cradleInheritedPropertiesRef.current

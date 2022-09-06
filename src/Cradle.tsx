@@ -145,7 +145,7 @@ const Cradle = ({
     const cradleResizeStateRef = useRef(null) // access by closures
     cradleResizeStateRef.current = cradleResizeState
 
-    // console.log('==> craldeState','-'+scrollerID+'-',cradleState)
+    console.log('==> craldeState','-'+scrollerID+'-',cradleState)
 
     // flags
     const isMountedRef = useRef(true)
@@ -722,11 +722,13 @@ const Cradle = ({
         // movement to and from cache is independent of ui viewportresizing
         if (isCachedRef.current || wasCachedRef.current) {
 
+            console.log('returning from resize effect for caching state')
             return
 
         }
 
-        if (viewportInterruptPropertiesRef.current.isResizing) {
+        if ((viewportInterruptPropertiesRef.current.isResizing) && 
+                (cradleStateRef.current != 'viewportresizing')) {
 
             interruptHandler.pauseInterrupts()
  
@@ -1083,6 +1085,8 @@ const Cradle = ({
             case 'normalizesignals': { // normalize or resume cycling
 
                 interruptHandler.restoreInterrupts()
+                interruptHandler.triggerlinesIntersect.connectElements()
+                interruptHandler.cradleIntersect.connectElements()
 
                 setCradleState('ready')
 
@@ -1250,16 +1254,16 @@ const Cradle = ({
                 ref = {axisCradleElementRef}
             >
                 <div
-                    data-type = 'triggerline-axis'
+                    data-type = 'triggerline-head'
                     data-direction = 'backward'
-                    style = {triggerlineAxisStyle}
+                    style = {triggerlineHeadStyle}
                     ref = {axisTriggerlineCradleElementRef}
                 >
                 </div>
                 <div
-                    data-type = 'triggerline-head'
+                    data-type = 'triggerline-axis'
                     data-direction = 'forward'
-                    style = {triggerlineHeadStyle}
+                    style = {triggerlineAxisStyle}
                     ref = {headTriggerlineCradleElementRef}
                 >
                 </div>

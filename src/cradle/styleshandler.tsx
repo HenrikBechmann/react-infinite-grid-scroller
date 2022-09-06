@@ -223,7 +223,7 @@ export default class StylesHandler {
 
     }
 
-    private getTriggerlineHeadStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
+    private getTriggerlineAxisStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
 
         const position = 'absolute',
             width = '100%',
@@ -245,7 +245,7 @@ export default class StylesHandler {
     }
 
 
-    private getTriggerlineAxisStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
+    private getTriggerlineHeadStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
 
         const position = 'absolute',
             width = '100%',
