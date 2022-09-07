@@ -1087,6 +1087,7 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
+                // this can be pre-empted by reparenting
                 setCradleState('normalizesignals') 
 
                 break
