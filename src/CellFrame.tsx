@@ -56,6 +56,7 @@ const CellFrame = ({
     index, // logical position in infinite list
     instanceID, // CellFrame session ID
     scrollerID, // scroller ID (for debugging)
+    isCellTrigger,
     placeholderFrameStyles,
     placeholderContentStyles,
 }) => {
