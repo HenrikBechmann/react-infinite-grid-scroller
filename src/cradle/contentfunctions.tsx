@@ -57,8 +57,8 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     // derive target row
     let targetAxisRowOffset = Math.ceil(targetAxisReferenceIndex/crosscount)
-    console.log('getContentListRequirements: first targetAxisRowOffset, targetAxisReferenceIndex, crosscount, targetAxisViewportPixelOffset', 
-        targetAxisRowOffset, targetAxisReferenceIndex, crosscount, targetAxisViewportPixelOffset)
+    // console.log('getContentListRequirements: first targetAxisRowOffset, targetAxisReferenceIndex, crosscount, targetAxisViewportPixelOffset', 
+    //     targetAxisRowOffset, targetAxisReferenceIndex, crosscount, targetAxisViewportPixelOffset)
     const maxAxisRowOffset = Math.max(0,listRowcount - viewportVisibleRowcount)
     if (targetAxisRowOffset > maxAxisRowOffset) {
         targetAxisRowOffset = maxAxisRowOffset
