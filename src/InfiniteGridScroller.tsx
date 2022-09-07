@@ -14,13 +14,8 @@
 
     BUGS: 
 
-        resize can cause axis to be on third visible row (should be second)
-            still triggers for some reason (trailing crosses lower edge)
-        - reproduce from many wide to fewer wide
-    
     TODO:
 
-        verify that reparent interrupt does not need to check for resizing
         define a triggercell (first tail cell or last head cell) to hold triggerlines
             - 'triggercell-healine', 'triggercell-tailline'
         re-test for memory leaks window.performance.memory
