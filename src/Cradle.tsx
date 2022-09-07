@@ -1244,14 +1244,6 @@ const Cradle = ({
 
     const cradleContent = contentHandler.content
 
-    const contextvalueRef = useRef({
-        scrollerPassthroughPropertiesRef, 
-        cacheHandler, 
-        nullItemSetMaxListsize,
-        itemExceptionsCallback:serviceHandler.callbacks.itemExceptionsCallback,
-        IDLECALLBACK_TIMEOUT,
-    })
-
     const triggerCellTriggerLinesRef = useRef(null)
     triggerCellTriggerLinesRef.current = useMemo(()=>{
 
@@ -1276,6 +1268,16 @@ const Cradle = ({
         triggerCellTriggerlineHeadStyle,
         triggerCellTriggerlineTailStyle
     ])
+
+    const contextvalueRef = useRef({
+        scrollerPassthroughPropertiesRef, 
+        cacheHandler, 
+        nullItemSetMaxListsize,
+        itemExceptionsCallback:serviceHandler.callbacks.itemExceptionsCallback,
+        IDLECALLBACK_TIMEOUT,
+        triggerCellTriggerLinesRef,
+    })
+
 
     // display the cradle components, the ScrollTracker, or null
     return <CradleContext.Provider value = {contextvalueRef.current}>
