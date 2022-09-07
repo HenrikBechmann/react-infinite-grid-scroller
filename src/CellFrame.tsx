@@ -291,7 +291,7 @@ const CellFrame = ({
                                 // make available to user content
                                 scrollerProperties.isReparentingRef = portalMetadataRef.current.isReparentingRef
 
-                                setFrameState('inserting')
+                                isMountedRef.current && setFrameState('inserting')
 
                             } else { // null or undefined; handle non-component value
 
@@ -314,7 +314,7 @@ const CellFrame = ({
                                             index, itemID, returnvalue, 'cellFrame', error
                                         )
 
-                                    setFrameState('error')
+                                    isMountedRef.current && setFrameState('error')
                                 }
 
                             }

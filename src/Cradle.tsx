@@ -422,12 +422,12 @@ const Cradle = ({
         isCachedRef.current = isInPortal
     }
 
-    // const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
+    const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
 
     if (
         isCacheChange || 
-        viewportInterruptProperties.isReparentingRef?.current // ||
-        // (viewportInterruptProperties.isResizing && isCachingUnderway) 
+        viewportInterruptProperties.isReparentingRef?.current ||
+        (viewportInterruptProperties.isResizing && isCachingUnderway) 
     ) { 
 
         if (viewportInterruptProperties.isReparentingRef?.current) {
@@ -438,11 +438,11 @@ const Cradle = ({
 
         } 
 
-        // if (viewportInterruptProperties.isResizing) { // caching op is underway, so cancel
+        if (viewportInterruptProperties.isResizing) { // caching op is underway, so cancel
 
-        //     viewportInterruptProperties.isResizing = false
+            viewportInterruptProperties.isResizing = false
 
-        // }
+        }
 
         if (isCacheChange) { // into or out of caching
 
@@ -980,6 +980,7 @@ const Cradle = ({
                 if (hasBeenRenderedRef.current) {
 
                     setCradleState('ready')
+                    // setCradleState('normalizesignals')
 
                 } else {
 
@@ -1071,6 +1072,9 @@ const Cradle = ({
                     }
                 }
 
+                interruptHandler.triggerlinesIntersect.connectElements()
+                interruptHandler.cradleIntersect.connectElements()
+
                 setCradleState('preparerender')
 
                 break
@@ -1091,8 +1095,6 @@ const Cradle = ({
             case 'normalizesignals': { // normalize or resume cycling
 
                 interruptHandler.restoreInterrupts()
-                interruptHandler.triggerlinesIntersect.connectElements()
-                interruptHandler.cradleIntersect.connectElements()
 
                 setCradleState('ready')
 
