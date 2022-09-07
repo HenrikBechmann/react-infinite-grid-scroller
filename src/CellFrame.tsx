@@ -48,6 +48,7 @@ const CellFrame = ({
     orientation, 
     cellHeight, 
     cellWidth, 
+    layout,
     getItem, // function provided by host
     listsize, // for feedback in placeholder
     placeholder, // optionally provided by host
@@ -173,7 +174,7 @@ const CellFrame = ({
     // set styles
     useEffect(()=>{
 
-        let newStyles = getFrameStyles(orientation, cellHeight, cellWidth, styles)
+        let newStyles = getFrameStyles(orientation, cellHeight, cellWidth, layout, styles)
         
         if (isMountedRef.current) {
             saveStyles(newStyles)
@@ -375,18 +376,24 @@ const CellFrame = ({
 } // CellFrame
 
 // utility
-const getFrameStyles = (orientation, cellHeight, cellWidth, styles) => {
+const getFrameStyles = (orientation, cellHeight, cellWidth, layout, styles) => {
 
     let styleset = {...styles,position:'relative'}
 
     if (orientation == 'horizontal') {
-        styleset.width = cellWidth + 'px'
+        styleset.width = 
+            (layout == 'uniform')?
+                cellWidth + 'px':
+                'auto'
         styleset.height = 'auto'
 
     } else if (orientation === 'vertical') {
 
         styleset.width = 'auto'
-        styleset.height = cellHeight + 'px'
+        styleset.height = 
+            (layout == 'uniform')?
+                cellHeight + 'px':
+                'auto'
         
     }
 

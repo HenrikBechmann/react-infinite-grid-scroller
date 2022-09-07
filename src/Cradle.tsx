@@ -145,6 +145,8 @@ const Cradle = ({
     const cradleResizeStateRef = useRef(null) // access by closures
     cradleResizeStateRef.current = cradleResizeState
 
+    // console.log('==> craldeState','-'+scrollerID+'-',cradleState)
+
     // flags
     const isMountedRef = useRef(true)
     const isCachedRef = useRef(false)
@@ -156,8 +158,8 @@ const Cradle = ({
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const axisCradleElementRef = useRef(null)
-    const backwardTriggerlineCradleElementRef = useRef(null)
-    const forwardTriggerlineCradleElementRef = useRef(null)
+    const axisTriggerlineCradleElementRef = useRef(null)
+    const headTriggerlineCradleElementRef = useRef(null)
 
     // scaffold bundle
     const cradleElementsRef = useRef(
@@ -165,8 +167,8 @@ const Cradle = ({
             headRef:headCradleElementRef, 
             tailRef:tailCradleElementRef, 
             axisRef:axisCradleElementRef,
-            backwardTriggerlineRef:backwardTriggerlineCradleElementRef,
-            forwardTriggerlineRef:forwardTriggerlineCradleElementRef,
+            axisTriggerlineRef:axisTriggerlineCradleElementRef,
+            headTriggerlineRef:headTriggerlineCradleElementRef,
         }
     )
 
@@ -175,7 +177,7 @@ const Cradle = ({
 
     // crosscount (also calculated by Scrollblock for deriving Scrollblock length)
     const crosscount = useMemo(() => { // the number of cells crossing orientation
-
+        // console.log('recalculating crosscount')
         const viewportcrosslength = 
             (orientation == 'horizontal')?
                 viewportheight:
@@ -220,6 +222,8 @@ const Cradle = ({
         listRowcount,
         runwayRowcount,
     ] = useMemo(()=> {
+
+        // console.log('recalculating row counts')
 
         let viewportLength, rowLength
         if (orientation == 'vertical') {
@@ -418,12 +422,12 @@ const Cradle = ({
         isCachedRef.current = isInPortal
     }
 
-    const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
+    // const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
 
     if (
         isCacheChange || 
-        viewportInterruptProperties.isReparentingRef?.current ||
-        (viewportInterruptProperties.isResizing && isCachingUnderway) 
+        viewportInterruptProperties.isReparentingRef?.current // ||
+        // (viewportInterruptProperties.isResizing && isCachingUnderway) 
     ) { 
 
         if (viewportInterruptProperties.isReparentingRef?.current) {
@@ -434,11 +438,11 @@ const Cradle = ({
 
         } 
 
-        if (viewportInterruptProperties.isResizing) { // caching op is underway, so cancel
+        // if (viewportInterruptProperties.isResizing) { // caching op is underway, so cancel
 
-            viewportInterruptProperties.isResizing = false
+        //     viewportInterruptProperties.isResizing = false
 
-        }
+        // }
 
         if (isCacheChange) { // into or out of caching
 
@@ -717,14 +721,20 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
+        // console.log('isResizing useEffect: cradleState, isResizing, isCached, wasCached',
+        //     cradleStateRef.current,viewportInterruptPropertiesRef.current.isResizing,
+        //     isCachedRef.current, wasCachedRef.current)
+
         // movement to and from cache is independent of ui viewportresizing
         if (isCachedRef.current || wasCachedRef.current) {
 
+            // console.log('returning from resize effect for caching state')
             return
 
         }
 
-        if (viewportInterruptPropertiesRef.current.isResizing) {
+        if ((viewportInterruptPropertiesRef.current.isResizing) && 
+                (cradleStateRef.current != 'viewportresizing')) {
 
             interruptHandler.pauseInterrupts()
  
@@ -733,7 +743,7 @@ const Cradle = ({
         }
 
         // complete viewportresizing mode
-        if (!viewportInterruptPropertiesRef.current.isResizing && (cradleStateRef.current == 'resizing')) {
+        if (!viewportInterruptPropertiesRef.current.isResizing && (cradleStateRef.current == 'viewportresizing')) {
 
             setCradleState('finishviewportresize')
 
@@ -818,8 +828,8 @@ const Cradle = ({
         cradleHeadStyle, 
         cradleTailStyle, 
         cradleAxisStyle, 
-        triggerlineBackwardStyle, 
-        triggerlineForwardStyle,
+        triggerlineAxisStyle, 
+        triggerlineHeadStyle,
         cradleDividerStyle
     ] = useMemo(()=> {
 
@@ -1081,6 +1091,8 @@ const Cradle = ({
             case 'normalizesignals': { // normalize or resume cycling
 
                 interruptHandler.restoreInterrupts()
+                interruptHandler.triggerlinesIntersect.connectElements()
+                interruptHandler.cradleIntersect.connectElements()
 
                 setCradleState('ready')
 
@@ -1114,8 +1126,6 @@ const Cradle = ({
 
                 cacheHandler.renderPortalList()
 
-                // interruptHandler.triggerlinesIntersect.connectElements()
-                // interruptHandler.signals.pauseTriggerlinesObserver = false
                 setCradleState('ready')
 
                 break
@@ -1250,15 +1260,17 @@ const Cradle = ({
                 ref = {axisCradleElementRef}
             >
                 <div
-                    data-type = 'triggerline-backward'
-                    style = {triggerlineBackwardStyle}
-                    ref = {backwardTriggerlineCradleElementRef}
+                    data-type = 'triggerline-head'
+                    data-direction = 'backward'
+                    style = {triggerlineHeadStyle}
+                    ref = {axisTriggerlineCradleElementRef}
                 >
                 </div>
                 <div
-                    data-type = 'triggerline-forward'
-                    style = {triggerlineForwardStyle}
-                    ref = {forwardTriggerlineCradleElementRef}
+                    data-type = 'triggerline-axis'
+                    data-direction = 'forward'
+                    style = {triggerlineAxisStyle}
+                    ref = {headTriggerlineCradleElementRef}
                 >
                 </div>
 
@@ -1313,6 +1325,8 @@ const getCradleHandlers = (cradleParameters) => {
     const createHandler = handler => new handler(cradleParameters)
 
     const { cacheHandler } = cradleParameters.cradleInheritedPropertiesRef.current
+
+    cacheHandler.cradleParameters = cradleParameters
 
     return {
 

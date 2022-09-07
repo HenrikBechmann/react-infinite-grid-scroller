@@ -4,8 +4,6 @@
 /*
     ROADMAP:
 
-        review all code
-
         layout: uniform, variable
 
         cross-browser testing; smartphone testing
@@ -15,12 +13,19 @@
         create demo site - github pages
 
     BUGS: 
+
+        resize can cause axis to be on third visible row (should be second)
+            still triggers for some reason (trailing crosses lower edge)
+        - reproduce from many wide to fewer wide
     
     TODO:
 
-        allow usercolor for default placeholder
+        verify that reparent interrupt does not need to check for resizing
+        define a triggercell (first tail cell or last head cell) to hold triggerlines
+            - 'triggercell-healine', 'triggercell-tailline'
         re-test for memory leaks window.performance.memory
         retest concat replacements
+        integrate cradleParameters object availability into cachehandler
         ----------------
         (after layout...)
         

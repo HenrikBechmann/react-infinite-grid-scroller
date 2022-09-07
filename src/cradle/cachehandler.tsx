@@ -71,6 +71,8 @@ export class CacheHandler {
         scrollerID:null
     }
 
+    cradleParameters
+
     portalHoldList
 
     listsizeRef
@@ -728,7 +730,9 @@ export class CacheHandler {
 
         this.removeRequestedPortal(index)
 
-        const portalNode = createPortalNode(index, itemID)
+        const { layout } = this.cradleParameters.cradleInheritedPropertiesRef.current
+
+        const portalNode = createPortalNode(index, itemID, layout)
 
         // div wrapper to avoid memory leak
         this.cacheProps.portalMap.set(itemID,
@@ -881,13 +885,15 @@ export class CacheHandler {
 
 // get a react-reverse-portal InPortal component, with its metadata
 // with user content and container
-const createPortalNode = (index, itemID) => {
+const createPortalNode = (index, itemID, layout) => {
 
     let portalNode = createHtmlPortalNode()
 
     let container = portalNode.element
-    container.style.inset = '0px' 
-    container.style.position = 'absolute'
+    if (layout == 'uniform') {
+        container.style.inset = '0px' 
+        container.style.position = 'absolute'
+    }
     container.dataset.type = 'contentenvelope'
     container.dataset.index = index
     container.dataset.cacheitemid = itemID
@@ -898,11 +904,13 @@ const createPortalNode = (index, itemID) => {
 
 // ========================[ Utility component ]==============================
 
-let counter = 0
 // portal list component for rapid relisting of updates, using external callback for set state
 export const PortalList = ({ cacheProps }) => {
 
-    const [portalListCounter, setPortalListCounter] = useState(null)
+    const [portalListCounter, setPortalListCounter] = useState(0)
+
+    const counterRef = useRef(null)
+    counterRef.current = portalListCounter
 
     const isMountedRef = useRef(true)
     const portalArrayRef = useRef(null)
@@ -914,7 +922,7 @@ export const PortalList = ({ cacheProps }) => {
 
             portalArrayRef.current = cacheProps.portalList
 
-            isMountedRef.current && setPortalListCounter(counter++) // force render
+            isMountedRef.current && setPortalListCounter(++counterRef.current) // force render
 
         }
 

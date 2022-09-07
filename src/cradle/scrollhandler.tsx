@@ -23,6 +23,15 @@ export default class ScrollHandler {
 
     private isScrolling = false
 
+    public resetScrollData = (scrollPosition) => {
+        const { scrollData } = this
+        scrollData.start = 
+        scrollData.current = 
+        scrollData.previous = 
+        scrollData.previousupdate = 
+        scrollData.currentupdate = scrollPosition
+    }
+
     public onScroll = (e) => {
 
         const { scrollerID, SCROLL_TIMEOUT_FOR_ONAFTERSCROLL } = this.cradleParameters.cradleInheritedPropertiesRef.current
@@ -35,9 +44,12 @@ export default class ScrollHandler {
                 viewportElement.scrollTop:
                 viewportElement.scrollLeft
 
+        clearTimeout(this._scrolltimerid)
+
         if ((viewportElement.clientWidth == 0  && viewportElement.clientHeight == 0)) {// in cache
-            clearTimeout(this._scrolltimerid)
+
             return
+
         }
 
         if (scrollPositionCurrent < 0) { // for Safari
@@ -45,8 +57,6 @@ export default class ScrollHandler {
             return 
 
         }
-
-        clearTimeout(this._scrolltimerid)
 
         const {signals} = this.cradleParameters.handlersRef.current.interruptHandler
 
@@ -80,28 +90,30 @@ export default class ScrollHandler {
 
         if (!viewportInterruptProperties.isResizing) {
 
-            if ((cradleState == 'ready') || (cradleState == 'repositioningRender') || (cradleState == 'repositioningContinuation')) {
+            // if ((cradleState == 'ready') || (cradleState == 'repositioningRender') || (cradleState == 'repositioningContinuation')) {
 
-                if (cradleState == 'ready') {
+                // if (cradleState == 'ready') {
 
-                    let axisVisiblePixelOffset
-                    const cradleElements = layoutHandler.elements
-                    const axisElement = cradleElements.axisRef.current
-                    const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementRef.current
+                //     let axisVisiblePixelOffset
+                //     const cradleElements = layoutHandler.elements
+                //     const axisElement = cradleElements.axisRef.current
+                //     const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementRef.current
 
-                    if (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical') {
+                //     if (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical') {
 
-                        axisVisiblePixelOffset = axisElement.offsetTop - viewportElement.scrollTop
+                //         axisVisiblePixelOffset = axisElement.offsetTop - viewportElement.scrollTop
                             
-                    } else {
+                //     } else {
 
-                        axisVisiblePixelOffset = axisElement.offsetLeft - viewportElement.scrollLeft
+                //         axisVisiblePixelOffset = axisElement.offsetLeft - viewportElement.scrollLeft
 
-                    }
+                //     }
 
-                    cradlePositionData.targetAxisViewportPixelOffset = axisVisiblePixelOffset
+                //     console.log('onScroll setting targetAxisViewportPixelOffset', axisVisiblePixelOffset)
 
-                }
+                //     cradlePositionData.targetAxisViewportPixelOffset = axisVisiblePixelOffset
+
+                // }
 
                 if ((cradleState == 'repositioningRender') || (cradleState == 'repositioningContinuation')) {
 
@@ -110,7 +122,7 @@ export default class ScrollHandler {
 
                 }
 
-            }
+            // }
 
         }
 
@@ -188,22 +200,23 @@ export default class ScrollHandler {
 
         let axisVisiblePixelOffset
         const cradleElements = layoutHandler.elements
+        const axisElement = cradleElements.axisRef.current
 
         const viewportElement = viewportInterruptProperties.elementRef.current
         if (cradleProps.orientation == 'vertical') {
 
-            axisVisiblePixelOffset = cradleElements.axisRef.current.offsetTop - 
-                viewportElement.scrollTop
+            axisVisiblePixelOffset = axisElement.offsetTop - viewportElement.scrollTop
                 
         } else {
 
-            axisVisiblePixelOffset = cradleElements.axisRef.current.offsetLeft - 
-                viewportElement.scrollLeft
+            axisVisiblePixelOffset = axisElement.offsetLeft - viewportElement.scrollLeft
 
         }
 
         const { cradlePositionData } = layoutHandler
 
+        // console.log('scrollHandler.updateReferenceData setting targetAxisViewportPixelOffset',
+        //     axisVisiblePixelOffset)
         cradlePositionData.targetAxisViewportPixelOffset = axisVisiblePixelOffset
 
         if (!viewportInterruptProperties.isResizing) {
@@ -277,6 +290,8 @@ export default class ScrollHandler {
 
         const { cradlePositionData } = this.cradleParameters.handlersRef.current.layoutHandler
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
+        // console.log('scrollHandler.calcImpliedRepositioningData setting targetAxisViewportPixelOffset',
+        //     axisPixelOffset)
         cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
         const { repositioningIndexCallback } = 
             this.cradleParameters.handlersRef.current.serviceHandler.callbacks

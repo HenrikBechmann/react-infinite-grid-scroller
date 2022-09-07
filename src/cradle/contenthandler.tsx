@@ -83,6 +83,7 @@ export default class ContentHandler {
             layoutHandler,
             serviceHandler,
             interruptHandler,
+            scrollHandler,
 
         } = cradleHandlers
 
@@ -110,8 +111,8 @@ export default class ContentHandler {
 
         const {crosscount, listsize} = cradleInternalProperties
 
-        let workingAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
-        workingAxisReferenceIndex -= (workingAxisReferenceIndex % crosscount)
+        let workingRequestAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
+        workingRequestAxisReferenceIndex -= (workingRequestAxisReferenceIndex % crosscount)
 
         // reposition at row boundary
         if ([
@@ -123,7 +124,7 @@ export default class ContentHandler {
         ].includes(cradleState)) {
 
             targetAxisViewportPixelOffset = 
-                (workingAxisReferenceIndex == 0)?
+                (workingRequestAxisReferenceIndex == 0)?
                     padding:
                     gap // default
 
@@ -139,24 +140,36 @@ export default class ContentHandler {
                 (cellHeight + gap):
                 (cellWidth + gap)
 
+        // console.log('setCradleContent: workingRequestAxisReferenceIndex',workingRequestAxisReferenceIndex)
+
         // note that targetAxisReferenceIndex replaces requestedAxisReferenceIndex here
         const {
 
             targetCradleReferenceIndex, 
             targetAxisReferenceIndex,
-            targetAxisRowOffset,
             newCradleContentCount:cradleContentCount, 
             targetScrollblockViewportPixelOffset:scrollblockViewportPixelOffset,
 
         } = getContentListRequirements({
 
                 rowLength,
-                targetAxisReferenceIndex:requestedAxisReferenceIndex,
+                targetAxisReferenceIndex:workingRequestAxisReferenceIndex,
                 targetAxisViewportPixelOffset,
                 cradleInheritedProperties,
                 cradleInternalProperties,
 
             })
+
+//         console.log(`setCradleContent: 
+// targetCradleReferenceIndex, 
+// targetAxisReferenceIndex,
+// cradleContentCount, 
+// scrollblockViewportPixelOffset`,
+//             targetCradleReferenceIndex, 
+//             targetAxisReferenceIndex,
+//             cradleContentCount, 
+//             scrollblockViewportPixelOffset
+//         )
 
         const axisViewportPixelOffset = targetAxisViewportPixelOffset // semantics
 
@@ -184,11 +197,14 @@ export default class ContentHandler {
     
         })
 
+        // console.log('setCradleContent: allocateContentList - headcontentlist, tailcontentlist', headcontentlist, tailcontentlist)
+
         cradleContent.cradleModelComponents = newcontentlist
         cradleContent.headModelComponents = headcontentlist
         cradleContent.tailModelComponents = tailcontentlist
 
         cradlePositionData.targetAxisReferenceIndex = targetAxisReferenceIndex
+        // console.log('setCradleContent: setting targetAxisViewportPixelOffset', axisViewportPixelOffset)
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
         if (serviceHandler.callbacks.referenceIndexCallback) {
@@ -204,6 +220,8 @@ export default class ContentHandler {
         //  ----------------------[ 4. set CSS ]-----------------------
 
         cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset
+        // avoid bogus call to updateCradleContent
+        scrollHandler.resetScrollData(scrollblockViewportPixelOffset) 
 
         viewportElement[cradlePositionData.blockScrollProperty] =
             cradlePositionData.blockScrollPos
@@ -215,13 +233,16 @@ export default class ContentHandler {
         const AxisScrollblockPixelOffset = 
             scrollblockViewportPixelOffset + axisViewportPixelOffset
 
+        // console.log('setCradleContent: AxisScrollblockPixelOffset, scrollblockViewportPixelOffset, \
+        //     axisViewportPixelOffset',AxisScrollblockPixelOffset, scrollblockViewportPixelOffset,
+        //     axisViewportPixelOffset)
+
         if (orientation == 'vertical') {
 
             const top = AxisScrollblockPixelOffset 
 
             axisElement.style.top = top + 'px'
             axisElement.style.left = 'auto'
-            // axisElement.style.transform = `translateY(${top + 'px'})`
 
             headElement.style.paddingBottom = 
                 headcontentlist.length?
@@ -234,7 +255,6 @@ export default class ContentHandler {
 
             axisElement.style.top = 'auto'
             axisElement.style.left = left + 'px'
-            // axisElement.style.transform = `translateX(${left + 'px'})`
 
             headElement.style.paddingRight = 
                 headcontentlist.length?
@@ -245,9 +265,9 @@ export default class ContentHandler {
 
         //  ----------------------[ 5. reset interrupts ]-----------------------
 
-        interruptHandler.triggerlinesIntersect.connectElements()
-        interruptHandler.cradleIntersect.connectElements()
-        interruptHandler.signals.pauseTriggerlinesObserver = false
+        // interruptHandler.triggerlinesIntersect.connectElements()
+        // interruptHandler.cradleIntersect.connectElements()
+        // interruptHandler.signals.pauseTriggerlinesObserver = false
 
     }
 
@@ -330,6 +350,9 @@ export default class ContentHandler {
             return
 
         }
+
+        // console.log('updateCradleContent: shiftinstruction',shiftinstruction)
+
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         // cradle properties
@@ -472,6 +495,7 @@ export default class ContentHandler {
         const { cradlePositionData } = layoutHandler
 
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
+        // console.log('updateCradleContent setting targetAxisViewportPixelOffset', axisPixelOffset)
         cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
 
         interruptHandler.triggerlinesIntersect.connectElements()
