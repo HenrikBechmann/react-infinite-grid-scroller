@@ -904,11 +904,13 @@ const createPortalNode = (index, itemID, layout) => {
 
 // ========================[ Utility component ]==============================
 
-let counter = 0
 // portal list component for rapid relisting of updates, using external callback for set state
 export const PortalList = ({ cacheProps }) => {
 
-    const [portalListCounter, setPortalListCounter] = useState(null)
+    const [portalListCounter, setPortalListCounter] = useState(0)
+
+    const counterRef = useRef(null)
+    counterRef.current = portalListCounter
 
     const isMountedRef = useRef(true)
     const portalArrayRef = useRef(null)
@@ -920,7 +922,7 @@ export const PortalList = ({ cacheProps }) => {
 
             portalArrayRef.current = cacheProps.portalList
 
-            isMountedRef.current && setPortalListCounter(counter++) // force render
+            isMountedRef.current && setPortalListCounter(++counterRef.current) // force render
 
         }
 
