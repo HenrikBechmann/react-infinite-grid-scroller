@@ -139,10 +139,10 @@ export const getShiftInstruction = ({
 
     // console.log('getShiftInstruction: isViewportScrollingForward', isViewportScrollingForward)
 
-    const driver = 
-        isViewportScrollingForward?
-            'triggerline-axis':
-            'triggerline-head'
+    // const driver = 
+    //     isViewportScrollingForward?
+    //         'triggerline-axis':
+    //         'triggerline-head'
 
     const direction = 
         isViewportScrollingForward?
@@ -197,10 +197,10 @@ export const getShiftInstruction = ({
     // in this case we rely on the counter entry to provide information
     if (entries.length == 0) { // short-circuit the evaluation
 
-        const counterdriver = 
-        (!isViewportScrollingForward)?
-            'triggerline-head':
-            'triggerline-axis'        
+        // const counterdriver = 
+        // (!isViewportScrollingForward)?
+        //     'triggerline-head':
+        //     'triggerline-axis'        
 
         const counterdirection = 
         (!isViewportScrollingForward)?

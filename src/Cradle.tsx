@@ -160,8 +160,10 @@ const Cradle = ({
     const axisCradleElementRef = useRef(null)
     const axisTriggerlineCradleElementRef = useRef(null)
     const headTriggerlineCradleElementRef = useRef(null)
+    const triggerCellTriggerlineHeadElementRef = useRef(null)
+    const triggerCellTriggerlineTailElementRef = useRef(null)
 
-    // scaffold bundle
+    // layout bundle
     const cradleElementsRef = useRef(
         {
             headRef:headCradleElementRef, 
@@ -169,6 +171,8 @@ const Cradle = ({
             axisRef:axisCradleElementRef,
             axisTriggerlineRef:axisTriggerlineCradleElementRef,
             headTriggerlineRef:headTriggerlineCradleElementRef,
+            triggerCellTriggerlineHeadRef:triggerCellTriggerlineHeadElementRef,
+            triggerCellTriggerlineTailRef:triggerCellTriggerlineTailElementRef,
         }
     )
 
@@ -830,7 +834,9 @@ const Cradle = ({
         cradleAxisStyle, 
         triggerlineAxisStyle, 
         triggerlineHeadStyle,
-        cradleDividerStyle
+        cradleDividerStyle,
+        triggerCellTriggerlineHeadStyle,
+        triggerCellTriggerlineTailStyle,
     ] = useMemo(()=> {
 
         return stylesHandler.getCradleStyles({
@@ -1245,6 +1251,31 @@ const Cradle = ({
         itemExceptionsCallback:serviceHandler.callbacks.itemExceptionsCallback,
         IDLECALLBACK_TIMEOUT,
     })
+
+    const triggerCellTriggerLinesRef = useRef(null)
+    triggerCellTriggerLinesRef.current = useMemo(()=>{
+
+        return [
+            <div
+                data-type = 'triggercell-triggerline-head'
+                data-direction = 'backward'
+                style = {triggerCellTriggerlineHeadStyle}
+                ref = {triggerCellTriggerlineHeadElementRef}
+            >
+            </div>,
+            <div
+                data-type = 'triggercell-triggerline-tail'
+                data-direction = 'forward'
+                style = {triggerCellTriggerlineTailStyle}
+                ref = {triggerCellTriggerlineTailElementRef}
+            >
+            </div>
+        ]
+
+    },[
+        triggerCellTriggerlineHeadStyle,
+        triggerCellTriggerlineTailStyle
+    ])
 
     // display the cradle components, the ScrollTracker, or null
     return <CradleContext.Provider value = {contextvalueRef.current}>
