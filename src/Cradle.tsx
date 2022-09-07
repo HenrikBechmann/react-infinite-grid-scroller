@@ -145,7 +145,7 @@ const Cradle = ({
     const cradleResizeStateRef = useRef(null) // access by closures
     cradleResizeStateRef.current = cradleResizeState
 
-    console.log('==> craldeState','-'+scrollerID+'-',cradleState)
+    // console.log('==> craldeState','-'+scrollerID+'-',cradleState)
 
     // flags
     const isMountedRef = useRef(true)
@@ -177,7 +177,7 @@ const Cradle = ({
 
     // crosscount (also calculated by Scrollblock for deriving Scrollblock length)
     const crosscount = useMemo(() => { // the number of cells crossing orientation
-
+        // console.log('recalculating crosscount')
         const viewportcrosslength = 
             (orientation == 'horizontal')?
                 viewportheight:
@@ -222,6 +222,8 @@ const Cradle = ({
         listRowcount,
         runwayRowcount,
     ] = useMemo(()=> {
+
+        // console.log('recalculating row counts')
 
         let viewportLength, rowLength
         if (orientation == 'vertical') {
@@ -420,12 +422,12 @@ const Cradle = ({
         isCachedRef.current = isInPortal
     }
 
-    const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
+    // const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
 
     if (
         isCacheChange || 
-        viewportInterruptProperties.isReparentingRef?.current ||
-        (viewportInterruptProperties.isResizing && isCachingUnderway) 
+        viewportInterruptProperties.isReparentingRef?.current // ||
+        // (viewportInterruptProperties.isResizing && isCachingUnderway) 
     ) { 
 
         if (viewportInterruptProperties.isReparentingRef?.current) {
@@ -436,11 +438,11 @@ const Cradle = ({
 
         } 
 
-        if (viewportInterruptProperties.isResizing) { // caching op is underway, so cancel
+        // if (viewportInterruptProperties.isResizing) { // caching op is underway, so cancel
 
-            viewportInterruptProperties.isResizing = false
+        //     viewportInterruptProperties.isResizing = false
 
-        }
+        // }
 
         if (isCacheChange) { // into or out of caching
 
@@ -722,7 +724,7 @@ const Cradle = ({
         // movement to and from cache is independent of ui viewportresizing
         if (isCachedRef.current || wasCachedRef.current) {
 
-            console.log('returning from resize effect for caching state')
+            // console.log('returning from resize effect for caching state')
             return
 
         }

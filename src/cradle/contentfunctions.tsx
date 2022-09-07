@@ -57,11 +57,15 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     // derive target row
     let targetAxisRowOffset = Math.ceil(targetAxisReferenceIndex/crosscount)
+    // console.log('getContentListRequirements: first targetAxisRowOffset, targetAxisReferenceIndex, crosscount', 
+    //     targetAxisRowOffset, targetAxisReferenceIndex, crosscount)
     const maxAxisRowOffset = Math.max(0,listRowcount - viewportVisibleRowcount)
     if (targetAxisRowOffset > maxAxisRowOffset) {
         targetAxisRowOffset = maxAxisRowOffset
         targetAxisReferenceIndex = targetAxisRowOffset * crosscount
     }
+    // console.log('revised targetAxisRowOffset; maxAxisRowOffset, listRowcount, viewportVisibleRowcount', 
+    //     targetAxisRowOffset, maxAxisRowOffset, listRowcount, viewportVisibleRowcount)
 
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
 
@@ -133,7 +137,7 @@ export const getShiftInstruction = ({
 
 }) => {
 
-    console.log('getShiftInstruction: isViewportScrollingForward', isViewportScrollingForward)
+    // console.log('getShiftInstruction: isViewportScrollingForward', isViewportScrollingForward)
 
     const driver = 
         isViewportScrollingForward?

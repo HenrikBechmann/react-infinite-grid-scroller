@@ -140,7 +140,7 @@ export default class ContentHandler {
                 (cellHeight + gap):
                 (cellWidth + gap)
 
-        console.log('setCradleContent: workingRequestAxisReferenceIndex',workingRequestAxisReferenceIndex)
+        // console.log('setCradleContent: workingRequestAxisReferenceIndex',workingRequestAxisReferenceIndex)
 
         // note that targetAxisReferenceIndex replaces requestedAxisReferenceIndex here
         const {
@@ -160,16 +160,16 @@ export default class ContentHandler {
 
             })
 
-        console.log(`setCradleContent: 
-targetCradleReferenceIndex, 
-targetAxisReferenceIndex,
-cradleContentCount, 
-scrollblockViewportPixelOffset`,
-            targetCradleReferenceIndex, 
-            targetAxisReferenceIndex,
-            cradleContentCount, 
-            scrollblockViewportPixelOffset
-        )
+//         console.log(`setCradleContent: 
+// targetCradleReferenceIndex, 
+// targetAxisReferenceIndex,
+// cradleContentCount, 
+// scrollblockViewportPixelOffset`,
+//             targetCradleReferenceIndex, 
+//             targetAxisReferenceIndex,
+//             cradleContentCount, 
+//             scrollblockViewportPixelOffset
+//         )
 
         const axisViewportPixelOffset = targetAxisViewportPixelOffset // semantics
 
@@ -232,9 +232,9 @@ scrollblockViewportPixelOffset`,
         const AxisScrollblockPixelOffset = 
             scrollblockViewportPixelOffset + axisViewportPixelOffset
 
-        console.log('setCradleContent: AxisScrollblockPixelOffset, scrollblockViewportPixelOffset, \
-            axisViewportPixelOffset',AxisScrollblockPixelOffset, scrollblockViewportPixelOffset,
-            axisViewportPixelOffset)
+        // console.log('setCradleContent: AxisScrollblockPixelOffset, scrollblockViewportPixelOffset, \
+        //     axisViewportPixelOffset',AxisScrollblockPixelOffset, scrollblockViewportPixelOffset,
+        //     axisViewportPixelOffset)
 
         if (orientation == 'vertical') {
 
@@ -350,7 +350,7 @@ scrollblockViewportPixelOffset`,
 
         }
 
-        console.log('updateCradleContent: shiftinstruction',shiftinstruction)
+        // console.log('updateCradleContent: shiftinstruction',shiftinstruction)
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
