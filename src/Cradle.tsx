@@ -145,7 +145,7 @@ const Cradle = ({
     const cradleResizeStateRef = useRef(null) // access by closures
     cradleResizeStateRef.current = cradleResizeState
 
-    // console.log('==> craldeState','-'+scrollerID+'-',cradleState)
+    console.log('==> craldeState','-'+scrollerID+'-',cradleState)
 
     // flags
     const isMountedRef = useRef(true)
@@ -720,6 +720,10 @@ const Cradle = ({
     useEffect(()=>{
 
         if (cradleStateRef.current == 'setup') return
+
+        console.log('isResizing useEffect: cradleState, isResizing, isCached, wasCached',
+            cradleStateRef.current,viewportInterruptPropertiesRef.current.isResizing,
+            isCachedRef.current, wasCachedRef.current)
 
         // movement to and from cache is independent of ui viewportresizing
         if (isCachedRef.current || wasCachedRef.current) {

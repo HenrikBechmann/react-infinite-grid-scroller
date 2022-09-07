@@ -204,6 +204,7 @@ export default class ContentHandler {
         cradleContent.tailModelComponents = tailcontentlist
 
         cradlePositionData.targetAxisReferenceIndex = targetAxisReferenceIndex
+        console.log('setCradleContent: setting targetAxisViewportPixelOffset', axisViewportPixelOffset)
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
         if (serviceHandler.callbacks.referenceIndexCallback) {
@@ -494,6 +495,7 @@ export default class ContentHandler {
         const { cradlePositionData } = layoutHandler
 
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
+        console.log('updateCradleContent setting targetAxisViewportPixelOffset', axisPixelOffset)
         cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
 
         interruptHandler.triggerlinesIntersect.connectElements()

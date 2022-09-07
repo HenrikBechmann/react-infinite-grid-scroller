@@ -103,6 +103,7 @@ const Viewport = ({
     // used by resizeObserver; generates interrupt
     const resizeCallback = useCallback((entries)=>{
 
+        console.log('Viewport: resizeCallback')
         if ((!isMountedRef.current) || (!viewportElementRef.current)) return
 
         if (viewportStateRef.current == 'setup') return

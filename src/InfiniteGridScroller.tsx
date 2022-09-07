@@ -20,6 +20,7 @@
     
     TODO:
 
+        verify that reparent interrupt does not need to check for resizing
         define a triggercell (first tail cell or last head cell) to hold triggerlines
             - 'triggercell-healine', 'triggercell-tailline'
         re-test for memory leaks window.performance.memory
