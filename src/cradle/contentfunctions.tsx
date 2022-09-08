@@ -571,13 +571,36 @@ export const allocateContentList = (
 
         contentlist, // of cradle, in items (React components)
         axisReferenceIndex, // first tail item
+        layoutHandler,
 
     }
 ) => {
 
+    const { triggercellIndex } = layoutHandler
+
     const offsetindex = contentlist[0]?.props.index
+    const highindex = offsetindex + contentlist.length
 
     const headitemcount = (axisReferenceIndex - offsetindex)
+
+    const targetTriggercellIndex = 
+        (headitemcount == 0)?
+            axisReferenceIndex:
+            axisReferenceIndex - 1
+
+    if ((triggercellIndex !== undefined) && (triggercellIndex != targetTriggercellIndex)) {
+        if ((triggercellIndex >= offsetindex) && (triggercellIndex <= highindex)) {
+            const triggercellPtr = triggercellIndex - offsetindex
+            const triggercellComponent = contentlist[triggercellPtr]
+            contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:false})
+        }
+    }
+    if ((triggercellIndex === undefined) || (triggercellIndex != targetTriggercellIndex)) {    
+        const triggercellPtr = targetTriggercellIndex - offsetindex
+        const triggercellComponent = contentlist[triggercellPtr]
+        contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:true})
+        layoutHandler.triggercellIndex = targetTriggercellIndex
+    }
 
     const headlist = contentlist.slice(0,headitemcount)
     const taillist = contentlist.slice(headitemcount)

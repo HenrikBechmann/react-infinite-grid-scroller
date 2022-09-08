@@ -194,6 +194,7 @@ export default class ContentHandler {
 
             contentlist:newcontentlist,
             axisReferenceIndex:targetAxisReferenceIndex,
+            layoutHandler,
     
         })
 
@@ -443,6 +444,7 @@ export default class ContentHandler {
             {
                 contentlist:updatedContentList,
                 axisReferenceIndex,
+                layoutHandler,
             }
         )
 
