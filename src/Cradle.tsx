@@ -1301,20 +1301,20 @@ const Cradle = ({
                 style = {cradleAxisStyle} 
                 ref = {axisCradleElementRef}
             >
-                <div
+                {false? <div
                     data-type = 'triggerline-head'
                     data-direction = 'backward'
                     style = {triggerlineHeadStyle}
                     ref = {axisTriggerlineCradleElementRef}
                 >
-                </div>
-                <div
+                </div>:null}
+                { false? <div
                     data-type = 'triggerline-axis'
                     data-direction = 'forward'
                     style = {triggerlineAxisStyle}
                     ref = {headTriggerlineCradleElementRef}
                 >
-                </div>
+                </div>:null }
 
                 {showAxis? // for debug
                     <div 

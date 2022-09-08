@@ -304,7 +304,7 @@ export default class StylesHandler {
             width,
             height,
             top,
-            left
+            left,
         }
     }
     private getTriggercellTriggerlineTailStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
@@ -317,12 +317,12 @@ export default class StylesHandler {
             height = '100%'
             width = '0px'
             bottom = 'auto'
-            right = - (triggerlineOffset + gap) + 'px'
+            right = triggerlineOffset + 'px'
 
         } else {
             height = '0px'
             width = '100%'
-            bottom = - (triggerlineOffset + gap) + 'px'
+            bottom = triggerlineOffset + 'px'
             right = 'auto'
         }
                 
@@ -331,7 +331,7 @@ export default class StylesHandler {
             width,
             height,
             bottom,
-            right
+            right,
         }
     }
 }

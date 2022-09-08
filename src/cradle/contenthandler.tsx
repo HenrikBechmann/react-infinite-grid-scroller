@@ -89,6 +89,7 @@ export default class ContentHandler {
 
         // the triggerlines and cradle grids will be moved, so disconnect them from their observers.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
+        console.log('disconnecting triggers in setCradleContent')
         interruptHandler.triggerlinesIntersect.observer.disconnect()
         interruptHandler.cradleIntersect.observer.disconnect()
 
@@ -384,6 +385,7 @@ export default class ContentHandler {
 
         })
 
+        console.log('updateCradleContent: axisItemShift, cradleItemShift',axisItemShift, cradleItemShift)
         // third abandon option/3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) { // defensive
 
@@ -393,6 +395,7 @@ export default class ContentHandler {
 
         // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
+        console.log('disconnecting triggers in updateCradleContent')
         interruptHandler.triggerlinesIntersect.observer.disconnect()
         interruptHandler.signals.pauseTriggerlinesObserver = true
 
