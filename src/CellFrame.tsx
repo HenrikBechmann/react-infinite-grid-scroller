@@ -76,7 +76,7 @@ const CellFrame = ({
     
     // style change generates state refresh
     const [styles,saveStyles] = useState({
-        overflow:'hidden',
+        overflow:'visible',
     })
 
     // processing state

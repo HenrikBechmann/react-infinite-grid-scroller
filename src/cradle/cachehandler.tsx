@@ -890,6 +890,7 @@ const createPortalNode = (index, itemID, layout) => {
     let portalNode = createHtmlPortalNode()
 
     let container = portalNode.element
+    container.style.overflow = 'hidden'
     if (layout == 'uniform') {
         container.style.inset = '0px' 
         container.style.position = 'absolute'
