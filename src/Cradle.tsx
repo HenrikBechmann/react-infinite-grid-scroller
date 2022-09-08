@@ -597,8 +597,9 @@ const Cradle = ({
 
         // triggerobserver tiggers cradle content updates 
         //     when triggerlines pass the edge of the viewport
+        // defer connectElements until triggercell triggerlines have been assigned
         const triggerobserver = interruptHandler.triggerlinesIntersect.createObserver()
-        interruptHandler.triggerlinesIntersect.connectElements()
+        // interruptHandler.triggerlinesIntersect.connectElements()
 
         // resize observer generates compensation for changes in cell sizes for variable layout modes
         const cradleresizeobserver = interruptHandler.cradleResize.createObserver()
@@ -1078,8 +1079,9 @@ const Cradle = ({
                     }
                 }
 
-                interruptHandler.triggerlinesIntersect.connectElements()
-                interruptHandler.cradleIntersect.connectElements()
+                // feed the cycle for preparerender
+                cradleContent.headDisplayComponents = cradleContent.headModelComponents
+                cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
                 setCradleState('preparerender')
 
@@ -1088,10 +1090,9 @@ const Cradle = ({
 
             case 'preparerender': { // cycle for DOM update
 
-                const cradleContent = contentHandler.content
-
-                cradleContent.headDisplayComponents = cradleContent.headModelComponents
-                cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
+                // delayed to provide a cycle for triggercell triggerlines to be rendered
+                interruptHandler.triggerlinesIntersect.connectElements()
+                interruptHandler.cradleIntersect.connectElements()
 
                 // this can be pre-empted by reparenting
                 setCradleState('normalizesignals') 
