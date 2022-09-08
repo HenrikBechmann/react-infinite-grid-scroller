@@ -16,8 +16,9 @@
 
     TODO:
 
-        define a triggercell (first tail cell or last head cell) to hold triggerlines
-            - 'triggercell-headline', 'triggercell-tailline'
+        review counterdirection logic in getShiftInstruction
+        review axisOffset in calcContentShift
+
         re-test for memory leaks window.performance.memory
         retest concat replacements
         integrate cradleParameters object availability into cachehandler
