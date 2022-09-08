@@ -1127,6 +1127,9 @@ const Cradle = ({
 
             case 'finishupdatedcontent': { // cycle for DOM update
 
+                interruptHandler.triggerlinesIntersect.connectElements()
+                interruptHandler.signals.pauseTriggerlinesObserver = false
+
                 const { cache } = cradleInternalPropertiesRef.current
                 if (cache == 'keepload') {
 

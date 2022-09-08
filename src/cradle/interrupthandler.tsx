@@ -45,6 +45,8 @@ export default class InterruptHandler {
 
     private axisTriggerlinesObserverCallback = (entries) => {
 
+        console.log('interruptHandler triggerlinecallback', entries)
+
         if (this.signals.pauseTriggerlinesObserver) { 
 
             return
@@ -205,6 +207,11 @@ export default class InterruptHandler {
             const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
             observer.observe(cradleElements.axisTriggerlineRef.current)
             observer.observe(cradleElements.headTriggerlineRef.current)
+            console.log('connect triggerline elements',
+                cradleElements.triggercellTriggerlineHeadRef.current,
+                cradleElements.triggercellTriggerlineTailRef.current)
+            // observer.observe(cradleElements.triggercellTriggerlineHeadRef.current)
+            // observer.observe(cradleElements.triggercellTriggerlineTailRef.current)
         },
         createObserver:() => {
             const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current

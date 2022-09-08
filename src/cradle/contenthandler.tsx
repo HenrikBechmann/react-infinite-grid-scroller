@@ -343,6 +343,8 @@ export default class ContentHandler {
             viewportVisibleRowcount,
             crosscount,
             listsize,
+
+            reverseDirection:layoutHandler.triggercellIsInTail,
         })
 
         // second abandon option/3; nothing to do
@@ -500,8 +502,8 @@ export default class ContentHandler {
         // console.log('updateCradleContent setting targetAxisViewportPixelOffset', axisPixelOffset)
         cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
 
-        interruptHandler.triggerlinesIntersect.connectElements()
-        interruptHandler.signals.pauseTriggerlinesObserver = false
+        // interruptHandler.triggerlinesIntersect.connectElements()
+        // interruptHandler.signals.pauseTriggerlinesObserver = false
 
         stateHandler.setCradleState('renderupdatedcontent')
 

@@ -135,9 +135,12 @@ export const getShiftInstruction = ({
     crosscount,
     listsize,
 
+    reverseDirection,
+
 }) => {
 
-    // console.log('getShiftInstruction: isViewportScrollingForward', isViewportScrollingForward)
+    console.log('getShiftInstruction: reverseDirection, isViewportScrollingForward, triggerlineEntries', 
+        reverseDirection, isViewportScrollingForward, triggerlineEntries)
 
     // const driver = 
     //     isViewportScrollingForward?
@@ -148,6 +151,15 @@ export const getShiftInstruction = ({
         isViewportScrollingForward?
             'forward':
             'backward'
+
+    // const direction = 
+    //     reverseDirection?
+    //         (isViewportScrollingForward?
+    //             'backward':
+    //             'forward'):
+    //         (isViewportScrollingForward?
+    //             'forward':
+    //             'backward')
 
     const entries = triggerlineEntries.filter(entry => {
         // const isIntersecting = entry.isIntersecting
@@ -167,8 +179,11 @@ export const getShiftInstruction = ({
                 entry.boundingClientRect.y:
                 entry.boundingClientRect.x
 
-        const viewportoffsethead = entrypos - rootpos
-        entry.viewportoffsethead = viewportoffsethead
+        const viewportoffset = entrypos - rootpos
+        entry.viewportoffset = viewportoffset
+
+        console.log('triggerlinename, triggerlinedirection, direction, viewportoffset',
+            triggerlinename, triggerlinedirection, direction, viewportoffset)
 
         // axis needs to be moved if:
         return (
@@ -176,18 +191,20 @@ export const getShiftInstruction = ({
             // - axis triggerline goes out of scope, or...
             direction == 'forward' &&
             // driver == 'triggerline-head' &&
-            viewportoffsethead <= 0
+            viewportoffset <= 0
 
         ) || (
 
             // - head triggerline comes into scope
             direction == 'backward' &&
             // driver == 'triggerline-axis' &&
-            viewportoffsethead >= 0
+            viewportoffset >= 0
 
         )
 
     })
+
+    console.log('filtered entries', entries)
 
     let retval
 
@@ -207,6 +224,15 @@ export const getShiftInstruction = ({
             'backward':
             'forward'        
 
+        // const counterdirection = 
+        //     reverseDirection?
+        //         (!isViewportScrollingForward)?
+        //             'forward':
+        //             'backward':
+        //         (!isViewportScrollingForward)?
+        //             'backward':
+        //             'forward'        
+
         // const counterentries = triggerlineEntries.filter(entry => entry.triggerlinename == counterdriver)
         const counterentries = triggerlineEntries.filter(entry => entry.triggerdirection == counterdirection)
 
@@ -216,13 +242,13 @@ export const getShiftInstruction = ({
             // const countertriggerlinename = counterentry.triggerlinename
             const countertriggerlinedirection = counterentry.triggerlinedirection
 
-            let impliedoffsethead
+            let impliedoffset
             // if (countertriggerlinename == 'triggerline-axis') {
             if (countertriggerlinedirection == 'backward') {
 
-                impliedoffsethead = counterentry.viewportoffsethead + triggerlineSpan
+                impliedoffset = counterentry.viewportoffsethead + triggerlineSpan
 
-                if (impliedoffsethead <= 0) {
+                if (impliedoffset <= 0) {
 
                     retval = -1
 
@@ -230,9 +256,9 @@ export const getShiftInstruction = ({
 
             } else { // countertriggerlinename == 'triggerline-head'; direction == forward
 
-                impliedoffsethead = counterentry.viewportoffsethead - triggerlineSpan
+                impliedoffset = counterentry.viewportoffsethead - triggerlineSpan
 
-                if (impliedoffsethead >= 0) {
+                if (impliedoffset >= 0) {
 
                     retval = 1
 
@@ -262,6 +288,8 @@ export const getShiftInstruction = ({
 
     }
 
+    console.log('first retval from getShiftInstruction', retval)
+
     // check for last oversize row
     if ((retval !=0) && (isViewportScrollingForward) && (viewportVisibleRowcount == 0)) {
         if ((listsize - crosscount) <= oldAxisReferenceIndex) {
@@ -270,6 +298,8 @@ export const getShiftInstruction = ({
 
         }
     }
+
+    console.log('retval from getShiftInstruction', retval)
 
     return retval
 }
