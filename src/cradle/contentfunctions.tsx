@@ -640,7 +640,7 @@ const createCellFrame = ({
         itemID = { itemID }
         instanceID = { instanceID }
         scrollerID = { scrollerID }
-        isTriggercell = { true }
+        isTriggercell = { false }
         placeholderFrameStyles = { placeholderFrameStyles }
         placeholderContentStyles = { placeholderContentStyles }
     />
