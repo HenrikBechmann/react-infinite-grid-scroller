@@ -830,10 +830,10 @@ const Cradle = ({
 
     // styles for the six scaffold components
     const [
-        cradleHeadStyle, 
-        cradleTailStyle, 
-        cradleAxisStyle, 
-        triggerlineAxisStyle, 
+        cradleHeadStyle,
+        cradleTailStyle,
+        cradleAxisStyle,
+        triggerlineAxisStyle,
         triggerlineHeadStyle,
         cradleDividerStyle,
         triggercellTriggerlineHeadStyle,
@@ -1250,6 +1250,8 @@ const Cradle = ({
 
     const triggercellTriggerlinesRef = useRef(null)
     triggercellTriggerlinesRef.current = useMemo(()=>{
+
+        // console.log('generating triggercell triggerlines')
 
         return [
             <div

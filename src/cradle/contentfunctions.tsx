@@ -139,8 +139,8 @@ export const getShiftInstruction = ({
 
 }) => {
 
-    console.log('getShiftInstruction: reverseDirection, isViewportScrollingForward, triggerlineEntries', 
-        reverseDirection, isViewportScrollingForward, triggerlineEntries)
+    // console.log('getShiftInstruction: reverseDirection, isViewportScrollingForward, triggerlineEntries', 
+    //     reverseDirection, isViewportScrollingForward, triggerlineEntries)
 
     // const driver = 
     //     isViewportScrollingForward?
@@ -182,8 +182,8 @@ export const getShiftInstruction = ({
         const viewportoffset = entrypos - rootpos
         entry.viewportoffset = viewportoffset
 
-        console.log('triggerlinename, triggerlinedirection, direction, viewportoffset',
-            triggerlinename, triggerlinedirection, direction, viewportoffset)
+        // console.log('triggerlinename, triggerlinedirection, direction, viewportoffset',
+        //     triggerlinename, triggerlinedirection, direction, viewportoffset)
 
         // axis needs to be moved if:
         return (
@@ -204,7 +204,7 @@ export const getShiftInstruction = ({
 
     })
 
-    console.log('filtered entries', entries)
+    // console.log('filtered entries', entries)
 
     let retval
 
@@ -288,7 +288,7 @@ export const getShiftInstruction = ({
 
     }
 
-    console.log('first retval from getShiftInstruction', retval)
+    // console.log('first retval from getShiftInstruction', retval)
 
     // check for last oversize row
     if ((retval !=0) && (isViewportScrollingForward) && (viewportVisibleRowcount == 0)) {
@@ -299,7 +299,7 @@ export const getShiftInstruction = ({
         }
     }
 
-    console.log('retval from getShiftInstruction', retval)
+    // console.log('retval from getShiftInstruction', retval)
 
     return retval
 }
@@ -630,9 +630,10 @@ export const allocateContentList = (
             contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:false})
         }
     }
-    if ((triggercellIndex === undefined) || (triggercellIndex != targetTriggercellIndex)) {    
-        const triggercellPtr = targetTriggercellIndex - offsetindex
-        const triggercellComponent = contentlist[triggercellPtr]
+    const triggercellPtr = targetTriggercellIndex - offsetindex
+    const triggercellComponent = contentlist[triggercellPtr]
+    if ((triggercellIndex === undefined) || (triggercellIndex != targetTriggercellIndex  ||
+        !triggercellComponent.props.isTriggecell)) {    
         contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:true})
         layoutHandler.triggercellIndex = targetTriggercellIndex
     }
