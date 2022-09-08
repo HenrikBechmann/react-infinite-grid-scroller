@@ -61,6 +61,7 @@ export default class LayoutHandler {
     public triggerlineSpan
 
     public triggercellIndex
+    public triggercellIsFirst
 
     // cradlePositionData controls the relative positions of the scaffold elements
     public cradlePositionData = {

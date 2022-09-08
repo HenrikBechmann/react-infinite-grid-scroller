@@ -588,6 +588,11 @@ export const allocateContentList = (
             axisReferenceIndex:
             axisReferenceIndex - 1
 
+    layoutHandler.triggercellIsFirst = 
+        (targetTriggercellIndex == axisReferenceIndex)?
+            true:
+            false
+
     if ((triggercellIndex !== undefined) && (triggercellIndex != targetTriggercellIndex)) {
         if ((triggercellIndex >= offsetindex) && (triggercellIndex <= highindex)) {
             const triggercellPtr = triggercellIndex - offsetindex
