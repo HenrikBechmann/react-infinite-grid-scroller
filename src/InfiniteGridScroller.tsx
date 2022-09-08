@@ -17,7 +17,7 @@
     TODO:
 
         define a triggercell (first tail cell or last head cell) to hold triggerlines
-            - 'triggercell-healine', 'triggercell-tailline'
+            - 'triggercell-headline', 'triggercell-tailline'
         re-test for memory leaks window.performance.memory
         retest concat replacements
         integrate cradleParameters object availability into cachehandler

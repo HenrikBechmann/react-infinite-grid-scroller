@@ -160,8 +160,8 @@ const Cradle = ({
     const axisCradleElementRef = useRef(null)
     const axisTriggerlineCradleElementRef = useRef(null)
     const headTriggerlineCradleElementRef = useRef(null)
-    const triggerCellTriggerlineHeadElementRef = useRef(null)
-    const triggerCellTriggerlineTailElementRef = useRef(null)
+    const triggercellTriggerlineHeadElementRef = useRef(null)
+    const triggercellTriggerlineTailElementRef = useRef(null)
 
     // layout bundle
     const cradleElementsRef = useRef(
@@ -171,8 +171,8 @@ const Cradle = ({
             axisRef:axisCradleElementRef,
             axisTriggerlineRef:axisTriggerlineCradleElementRef,
             headTriggerlineRef:headTriggerlineCradleElementRef,
-            triggerCellTriggerlineHeadRef:triggerCellTriggerlineHeadElementRef,
-            triggerCellTriggerlineTailRef:triggerCellTriggerlineTailElementRef,
+            triggercellTriggerlineHeadRef:triggercellTriggerlineHeadElementRef,
+            triggercellTriggerlineTailRef:triggercellTriggerlineTailElementRef,
         }
     )
 
@@ -835,8 +835,8 @@ const Cradle = ({
         triggerlineAxisStyle, 
         triggerlineHeadStyle,
         cradleDividerStyle,
-        triggerCellTriggerlineHeadStyle,
-        triggerCellTriggerlineTailStyle,
+        triggercellTriggerlineHeadStyle,
+        triggercellTriggerlineTailStyle,
     ] = useMemo(()=> {
 
         return stylesHandler.getCradleStyles({
@@ -1244,29 +1244,29 @@ const Cradle = ({
 
     const cradleContent = contentHandler.content
 
-    const triggerCellTriggerLinesRef = useRef(null)
-    triggerCellTriggerLinesRef.current = useMemo(()=>{
+    const triggercellTriggerlinesRef = useRef(null)
+    triggercellTriggerlinesRef.current = useMemo(()=>{
 
         return [
             <div
                 data-type = 'triggercell-triggerline-head'
                 data-direction = 'backward'
-                style = {triggerCellTriggerlineHeadStyle}
-                ref = {triggerCellTriggerlineHeadElementRef}
+                style = {triggercellTriggerlineHeadStyle}
+                ref = {triggercellTriggerlineHeadElementRef}
             >
             </div>,
             <div
                 data-type = 'triggercell-triggerline-tail'
                 data-direction = 'forward'
-                style = {triggerCellTriggerlineTailStyle}
-                ref = {triggerCellTriggerlineTailElementRef}
+                style = {triggercellTriggerlineTailStyle}
+                ref = {triggercellTriggerlineTailElementRef}
             >
             </div>
         ]
 
     },[
-        triggerCellTriggerlineHeadStyle,
-        triggerCellTriggerlineTailStyle
+        triggercellTriggerlineHeadStyle,
+        triggercellTriggerlineTailStyle
     ])
 
     const contextvalueRef = useRef({
@@ -1275,7 +1275,7 @@ const Cradle = ({
         nullItemSetMaxListsize,
         itemExceptionsCallback:serviceHandler.callbacks.itemExceptionsCallback,
         IDLECALLBACK_TIMEOUT,
-        triggerCellTriggerLinesRef,
+        triggercellTriggerlinesRef,
     })
 
 
