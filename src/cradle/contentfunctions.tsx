@@ -190,14 +190,14 @@ export const getShiftInstruction = ({
 
             // - axis triggerline goes out of scope, or...
             direction == 'forward' &&
-            // driver == 'triggerline-head' &&
+            (reverseDirection?(triggerlinedirection == 'backward'):(triggerlinedirection == 'forward')) &&
             viewportoffset <= 0
 
         ) || (
 
             // - head triggerline comes into scope
             direction == 'backward' &&
-            // driver == 'triggerline-axis' &&
+            (reverseDirection?(triggerlinedirection == 'forward'):(triggerlinedirection == 'backward')) &&
             viewportoffset >= 0
 
         )
