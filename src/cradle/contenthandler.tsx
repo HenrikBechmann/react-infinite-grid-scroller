@@ -135,7 +135,7 @@ export default class ContentHandler {
 
         // ----------------------[ 2. get content requirements ]----------------------
 
-        const rowLength = 
+        const baseRowLength = 
             (orientation == 'vertical')?
                 (cellHeight + gap):
                 (cellWidth + gap)
@@ -152,7 +152,7 @@ export default class ContentHandler {
 
         } = getContentListRequirements({
 
-                rowLength,
+                baseRowLength,
                 targetAxisReferenceIndex:workingRequestAxisReferenceIndex,
                 targetAxisViewportPixelOffset,
                 cradleInheritedProperties,

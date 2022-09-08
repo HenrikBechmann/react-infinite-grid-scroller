@@ -229,20 +229,20 @@ const Cradle = ({
 
         // console.log('recalculating row counts')
 
-        let viewportLength, rowLength
+        let viewportLength, baseRowLength
         if (orientation == 'vertical') {
             viewportLength = viewportheight
-            rowLength = cellHeight
+            baseRowLength = cellHeight
         } else {
             viewportLength = viewportwidth
-            rowLength = cellWidth
+            baseRowLength = cellWidth
         }
 
-        rowLength += gap
+        baseRowLength += gap
 
-        const viewportRowcount = Math.ceil(viewportLength/rowLength)
+        const viewportRowcount = Math.ceil(viewportLength/baseRowLength)
 
-        const viewportVisibleRowcount = Math.floor(viewportLength/rowLength)
+        const viewportVisibleRowcount = Math.floor(viewportLength/baseRowLength)
 
         const listRowcount = Math.ceil(listsize/crosscount)
 

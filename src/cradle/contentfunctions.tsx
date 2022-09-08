@@ -23,7 +23,7 @@ import CellFrame from '../CellFrame'
 
 export const getContentListRequirements = ({ // called from setCradleContent only
 
-        rowLength,
+        baseRowLength,
         cradleInheritedProperties,
         cradleInternalProperties,
         targetAxisReferenceIndex, // from user, or from pivot
@@ -99,7 +99,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     // --------------------[ calc css positioning ]-----------------------
 
     const targetScrollblockViewportPixelOffset = 
-        (targetAxisRowOffset * rowLength) + padding - targetAxisViewportPixelOffset
+        (targetAxisRowOffset * baseRowLength) + padding - targetAxisViewportPixelOffset
 
     // ----------------------[ return required values ]---------------------
 
@@ -321,7 +321,7 @@ export const calcContentShift = ({
 
     } = cradleInternalProperties
 
-    const rowLength = 
+    const baseRowLength = 
         ((orientation == 'vertical')?
             cellHeight:
             cellWidth) 
@@ -346,15 +346,15 @@ export const calcContentShift = ({
             viewportAxisOffset + triggerlineOffset:
             // scrollbackward engages the head triggerline which is above the axis
             // the head triggerline muse be placed not to intersect to retrigger
-            viewportAxisOffset - (rowLength - triggerlineOffset)
+            viewportAxisOffset - (baseRowLength - triggerlineOffset)
 
     // negative for moving rows out of head into tail;
     // positive for moving rows out of tail into head
     // +/- 1 gurantees boundary location results in move
     const triggerRowShift = 
         (isScrollingViewportForward)?
-            Math.floor((triggerAxisOffset?triggerAxisOffset: -1)/rowLength):
-            Math.ceil((triggerAxisOffset?triggerAxisOffset: 1)/rowLength)
+            Math.floor((triggerAxisOffset?triggerAxisOffset: -1)/baseRowLength):
+            Math.ceil((triggerAxisOffset?triggerAxisOffset: 1)/baseRowLength)
 
     let axisReferenceRowshift = -triggerRowShift
 
@@ -462,7 +462,7 @@ export const calcContentShift = ({
 
     // -------------[ 8. calculate new axis pixel position ]------------------
 
-    const newAxisPixelOffset = viewportAxisOffset + (axisReferenceRowshift * rowLength)
+    const newAxisPixelOffset = viewportAxisOffset + (axisReferenceRowshift * baseRowLength)
 
     // ---------------------[ 9. return required values ]-------------------
 
