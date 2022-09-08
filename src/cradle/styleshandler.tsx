@@ -316,14 +316,14 @@ export default class StylesHandler {
 
             height = '100%'
             width = '0px'
-            bottom = triggerlineOffset + 'px'
-            right = 'auto'
+            bottom = 'auto'
+            right = - (triggerlineOffset + gap) + 'px'
 
         } else {
             height = '0px'
             width = '100%'
-            bottom = 'auto'
-            right = triggerlineOffset + 'px'
+            bottom = - (triggerlineOffset + gap) + 'px'
+            right = 'auto'
         }
                 
         return {

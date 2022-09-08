@@ -1249,6 +1249,7 @@ const Cradle = ({
 
         return [
             <div
+                key = 'head'
                 data-type = 'triggercell-triggerline-head'
                 data-direction = 'backward'
                 style = {triggercellTriggerlineHeadStyle}
@@ -1256,6 +1257,7 @@ const Cradle = ({
             >
             </div>,
             <div
+                key = 'tail'
                 data-type = 'triggercell-triggerline-tail'
                 data-direction = 'forward'
                 style = {triggercellTriggerlineTailStyle}

@@ -56,7 +56,7 @@ const CellFrame = ({
     index, // logical position in infinite list
     instanceID, // CellFrame session ID
     scrollerID, // scroller ID (for debugging)
-    isCellTrigger,
+    isTriggercell,
     placeholderFrameStyles,
     placeholderContentStyles,
 }) => {
@@ -71,6 +71,7 @@ const CellFrame = ({
         nullItemSetMaxListsize, // for internal notification of end-of-list
         itemExceptionsCallback, // or notification to host of error
         IDLECALLBACK_TIMEOUT, // to optimize requestIdleCallback
+        triggercellTriggerlinesRef,
     } = cradleContext
     
     // style change generates state refresh
@@ -370,6 +371,11 @@ const CellFrame = ({
             (!['inserting','ready'].includes(frameState))?
                 placeholderRef.current:
                 <OutPortal node = { portalNodeRef.current }/>
+        }
+        {
+            isTriggercell?
+                triggercellTriggerlinesRef.current:
+                null
         }
         
     </div>
