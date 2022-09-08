@@ -24,6 +24,8 @@ export default class StylesHandler {
 
     private headTriggerlineOffset
     private axisTriggerlineOffset
+    private headTriggercellTriggerlineOffset
+    private tailTriggercellTriggerlineOffset
 
     public getCradleStyles = ({
 
@@ -49,6 +51,13 @@ export default class StylesHandler {
             this.getTriggerlineAxisStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
         const triggerlineheadstyles = 
             this.getTriggerlineHeadStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
+
+        const triggercelltriggerlineheadstyles =
+            this.getTriggercellTriggerlineHeadStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
+        const triggercelltriggerlinetailstyles = 
+            this.getTriggercellTriggerlineTailStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
+
+
         layoutHandler.triggerlineSpan = this.axisTriggerlineOffset - this.headTriggerlineOffset
 
         const cradledividerstyles = 
@@ -126,7 +135,9 @@ export default class StylesHandler {
             axisstyles,
             triggerlineaxisstyles,
             triggerlineheadstyles,
-            cradledividerstyles
+            cradledividerstyles,
+            triggercelltriggerlineheadstyles,
+            triggercelltriggerlinetailstyles,
         ]
         
     }
@@ -269,4 +280,58 @@ export default class StylesHandler {
         }
     }
 
+    private getTriggercellTriggerlineHeadStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
+
+        const position = 'absolute'
+
+        let width, height, top, left
+        if (orientation == 'horizontal') {
+
+            height = '100%'
+            width = '0px'
+            left = triggerlineOffset + 'px'
+            top = 'auto'
+
+        } else {
+            height = '0px'
+            width = '100%'
+            left = 'auto'
+            top = triggerlineOffset + 'px'
+        }
+                
+        return {
+            position,
+            width,
+            height,
+            top,
+            left
+        }
+    }
+    private getTriggercellTriggerlineTailStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
+
+        const position = 'absolute'
+
+        let width, height, bottom, right
+        if (orientation == 'horizontal') {
+
+            height = '100%'
+            width = '0px'
+            bottom = triggerlineOffset + 'px'
+            right = 'auto'
+
+        } else {
+            height = '0px'
+            width = '100%'
+            bottom = 'auto'
+            right = triggerlineOffset + 'px'
+        }
+                
+        return {
+            position,
+            width,
+            height,
+            bottom,
+            right
+        }
+    }
 }
