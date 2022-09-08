@@ -588,8 +588,8 @@ export const allocateContentList = (
             axisReferenceIndex:
             axisReferenceIndex - 1
 
-    layoutHandler.triggercellIsFirst = 
-        (targetTriggercellIndex == axisReferenceIndex)?
+    layoutHandler.triggercellIsInTail = 
+        (headitemcount == 0)?
             true:
             false
 
