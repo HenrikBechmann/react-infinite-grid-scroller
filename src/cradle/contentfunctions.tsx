@@ -630,6 +630,7 @@ export const allocateContentList = (
             contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:false})
         }
     }
+
     const triggercellPtr = targetTriggercellIndex - offsetindex
     const triggercellComponent = contentlist[triggercellPtr]
     if ((triggercellIndex === undefined) || (triggercellIndex != targetTriggercellIndex  ||
@@ -641,7 +642,7 @@ export const allocateContentList = (
     const headlist = contentlist.slice(0,headitemcount)
     const taillist = contentlist.slice(headitemcount)
 
-    return [headlist,taillist]
+    return [ headlist, taillist ]
 
 }
 
