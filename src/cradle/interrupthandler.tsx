@@ -1,4 +1,4 @@
-// interruptshandler.tsx
+// interrupthandler.tsx
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
@@ -251,7 +251,7 @@ export default class InterruptHandler {
     /*
         invoked for
         cradle:
-        - normalizesignals
+        - restoreinterrupts
     */
     public restoreInterrupts = () => {
         const { signals } = this

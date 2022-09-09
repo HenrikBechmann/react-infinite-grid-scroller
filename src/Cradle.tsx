@@ -987,7 +987,7 @@ const Cradle = ({
                 if (hasBeenRenderedRef.current) {
 
                     setCradleState('ready')
-                    // setCradleState('normalizesignals')
+                    // setCradleState('restoreinterrupts')
 
                 } else {
 
@@ -1020,7 +1020,7 @@ const Cradle = ({
                 the following 11 cradle states all resolve with
                 a chain starting with setCradleContent, 
                 continuing with 'preparerender', and ending with
-                'normalizesignals'
+                'restoreinterrupts'
             */
             case 'firstrender':
             case 'firstrenderfromcache':
@@ -1081,7 +1081,7 @@ const Cradle = ({
                     }
                 }
 
-                // feed the cycle for preparerender
+                // prepare the cycle for preparerender
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
@@ -1093,17 +1093,18 @@ const Cradle = ({
 
             case 'preparerender': { // cycle for DOM update
 
-                // delayed to provide a cycle for triggercell triggerlines to be rendered
+                // triggerlines will have been assigned to a new triggerCell by now.
+                // connectElements delayed for a cycle to render triggercell triggerlines
                 interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.cradleIntersect.connectElements()
 
                 // this can be pre-empted by reparenting, which itself restores interrupts
-                setCradleState('normalizesignals') 
+                setCradleState('restoreinterrupts') // to restore interrupts
 
                 break
             }
 
-            case 'normalizesignals': { // normalize or resume cycling
+            case 'restoreinterrupts': { // normalize or resume cycling
 
                 interruptHandler.restoreInterrupts()
 
@@ -1132,7 +1133,7 @@ const Cradle = ({
 
             case 'finishupdatedcontent': { // cycle for DOM update
 
-                // re-activate triggers
+                // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
                 interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseTriggerlinesObserver = false
 
@@ -1213,14 +1214,14 @@ const Cradle = ({
 
             // repositioningRender and repositioningContinuation are toggled to generate continuous 
             // repositioning renders
-            case 'repositioningRender':
+            case 'repositioningRender': // no-op
                 break
 
             case 'repositioningContinuation': // set from onScroll
                 setCradleState('repositioningRender')
                 break
 
-            case 'ready': // no op
+            case 'ready': // no-op
                 break
 
         }
@@ -1310,13 +1311,13 @@ const Cradle = ({
                 style = {cradleAxisStyle} 
                 ref = {axisCradleElementRef}
             >
-                {false? <div
+                { false? <div
                     data-type = 'triggerline-head'
                     data-direction = 'backward'
                     style = {triggerlineHeadStyle}
                     ref = {axisTriggerlineCradleElementRef}
                 >
-                </div>:null}
+                </div>:null }
                 { false? <div
                     data-type = 'triggerline-axis'
                     data-direction = 'forward'
