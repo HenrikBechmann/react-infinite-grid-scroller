@@ -879,6 +879,8 @@ const Cradle = ({
         switch (cradleState) {
 
             // --------------[ precursors to setCradleContent ]---------------
+            // these are all workflow related, but
+            // resize could be asynchronous when rotating phone during scroll intertia
 
             case 'setup': { // cycle to allow for ref assignments
 
@@ -1193,7 +1195,7 @@ const Cradle = ({
 
     },[cradleState])
 
-    // for cradle resize events
+    // for cradle resize events; these are asynchronous
     useLayoutEffect(()=>{
 
         switch (cradleResizeState) {

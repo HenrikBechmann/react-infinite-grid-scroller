@@ -17,12 +17,15 @@
     TODO:
 
         review counterdirection logic in getShiftInstruction
-        review axisOffset in calcContentShift
+        review axisOffset in calcContentShift - use node.childNodes
         calculate triggerlineSpan
+        review all code where varible mode changes positioning calculations
+        use cradleResize to capture async variable cell updates between state cycles
 
         re-test for memory leaks window.performance.memory
         retest concat replacements
         integrate cradleParameters object availability into cachehandler
+        test phone rotation for resize during scroll intertia
         ----------------
         (after layout...)
         
