@@ -880,7 +880,7 @@ const Cradle = ({
 
             // --------------[ precursors to setCradleContent ]---------------
 
-            case 'setup': { // cycle to allow for ref config
+            case 'setup': { // cycle to allow for ref assignments
 
                 if (cradleInheritedPropertiesRef.current.cache != 'preload') {
                     if (isCachedRef.current) {
@@ -895,7 +895,7 @@ const Cradle = ({
 
             case 'viewportresizing': {
 
-                // no-op
+                // no-op, wait for resizing to end
                 break
             }
 
@@ -953,7 +953,7 @@ const Cradle = ({
 
                     }
 
-                }
+                } // else wait for reparenting
 
                 break
             }
@@ -1008,7 +1008,7 @@ const Cradle = ({
                 signals.pauseCradleIntersectionObserver = true
                 signals.repositioningRequired = false // because now underway
 
-                setCradleState('repositioningRender')
+                setCradleState('repositioningRender') // toggles with repositioningContinuation
 
                 break
 
@@ -1047,6 +1047,7 @@ const Cradle = ({
                     cacheHandler.clearCache()
                 }
 
+                // set data
                 contentHandler.setCradleContent( cradleState )
 
                 if (cradleState != 'finishpreload') {
@@ -1055,6 +1056,7 @@ const Cradle = ({
                     
                 }
 
+                // synchronize cache if necessary
                 const { cache } = cradleInheritedPropertiesRef.current
                 if (cache == 'cradle') {
 
@@ -1083,6 +1085,7 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
+                // update virtual DOM
                 setCradleState('preparerender')
 
                 break
@@ -1094,7 +1097,7 @@ const Cradle = ({
                 interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.cradleIntersect.connectElements()
 
-                // this can be pre-empted by reparenting
+                // this can be pre-empted by reparenting, which itself restores interrupts
                 setCradleState('normalizesignals') 
 
                 break
@@ -1111,6 +1114,7 @@ const Cradle = ({
             }
 
             // ----------------------[ followup from updateCradleContent ]------------
+            // scroll effects
 
             // renderupdatedcontent is called from updateCradleContent. 
             // it is required to integrate changed DOM configurations before 'ready' is displayed
@@ -1119,6 +1123,7 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
+                // update virtual DOM
                 setCradleState('finishupdatedcontent')
 
                 break
@@ -1127,9 +1132,11 @@ const Cradle = ({
 
             case 'finishupdatedcontent': { // cycle for DOM update
 
+                // re-activate triggers
                 interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseTriggerlinesObserver = false
 
+                // synchronize cache
                 const { cache } = cradleInternalPropertiesRef.current
                 if (cache == 'keepload') {
 

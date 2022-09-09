@@ -18,6 +18,7 @@
 
         review counterdirection logic in getShiftInstruction
         review axisOffset in calcContentShift
+        calculate triggerlineSpan
 
         re-test for memory leaks window.performance.memory
         retest concat replacements
