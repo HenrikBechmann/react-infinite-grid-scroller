@@ -357,13 +357,11 @@ export const calcContentShift = ({
     const [rowLengths, rowSpans] = getRowLengths(
         isScrollingViewportForward, cradleElements, crosscount, orientation, gap)
 
-    const baseRowLength = //rowlengths[0]
+    const baseRowLength =
         ((orientation == 'vertical')?
             cellHeight:
             cellWidth) 
         + gap
-
-    const observedFirstRowLength = rowLengths[0]
 
     // -----------[ 2. calculate axis reference row shift ]-------------------
     // extra gaps can be caused by rapid scrolling
@@ -377,32 +375,17 @@ export const calcContentShift = ({
     const viewportAxisOffset = // the pixel distance between the viewport frame and the axis, toward the head
         cradleAxisOffset - scrollPos
 
-    const calcRowLength = observedFirstRowLength ?? baseRowLength
-
-    const logicalViewportAxisOffset = 
-        (observedFirstRowLength === undefined)?
-        calcRowLength - viewportAxisOffset:
-        viewportAxisOffset
-
-    console.log('baseRowLength, observedFirstRowLength, calcRowLength, triggerlineOffset, rowLengths, rowSpans',
-        baseRowLength, observedFirstRowLength, calcRowLength, triggerlineOffset, rowLengths, rowSpans)
+    console.log('viewportAxisOffset, cradleAxisOffset, scrollPos',
+        viewportAxisOffset, cradleAxisOffset, scrollPos)
 
     const triggerAxisOffset = 
         (isScrollingViewportForward)?
             // scroll forward engages the tail triggerline which is below the axis
             // the tail triggerline must be placed to intersect to re-trigger
             viewportAxisOffset + triggerlineOffset:
-            // CHANGE
-            // logicalViewportAxisOffset + triggerlineOffset:
             // scrollbackward engages the head triggerline which is above the axis
             // the head triggerline muse be placed not to intersect to retrigger
-            // viewportAxisOffset - (baseRowLength - triggerlineOffset)
-            viewportAxisOffset - (calcRowLength - triggerlineOffset)
-            // CHANGE
-            // logicalViewportAxisOffset - (calcRowLength - triggerlineOffset)
-
-    console.log('triggerAxisOffset, viewportAxisOffset, logicalViewportAxisOffset \n',
-        triggerAxisOffset, viewportAxisOffset, logicalViewportAxisOffset)
+            viewportAxisOffset - (baseRowLength - triggerlineOffset)
 
     // negative for moving rows out of head into tail;
     // positive for moving rows out of tail into head
@@ -411,11 +394,6 @@ export const calcContentShift = ({
         (isScrollingViewportForward)?
             Math.floor((triggerAxisOffset?triggerAxisOffset: -1)/baseRowLength):
             Math.ceil((triggerAxisOffset?triggerAxisOffset: 1)/baseRowLength)
-            // CHANGE
-            // Math.floor((triggerAxisOffset?triggerAxisOffset: -1)/calcRowLength):
-            // Math.ceil((triggerAxisOffset?triggerAxisOffset: 1)/calcRowLength)
-
-    console.log('triggerRowShift', triggerRowShift)
 
     let axisReferenceRowshift = -triggerRowShift
 
