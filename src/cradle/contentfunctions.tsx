@@ -400,10 +400,10 @@ export const calcContentShift = ({
 
     const spanRowPtr = 
         (isScrollingViewportForward)?
-            rowSpans.findIndex((span) => -span < triggerPos):
-            rowSpans.findIndex((span) => span > triggerPos)
+            rowSpans.findIndex((span) => -(span - triggerlineOffset) < triggerPos):
+            rowSpans.findIndex((span) => (span - triggerlineOffset) > triggerPos)
 
-    console.log('triggerAxisOffset, triggerPos, rowPtr\n',triggerAxisOffset, triggerPos, spanRowPtr)
+    console.log('triggerAxisOffset, triggerPos, rowPtr\n', triggerAxisOffset, triggerPos, spanRowPtr)
 
     // negative for moving rows out of head into tail;
     // positive for moving rows out of tail into head
