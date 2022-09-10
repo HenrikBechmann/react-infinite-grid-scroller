@@ -540,6 +540,10 @@ const getRowLengths = (
         element = elementList[elementPtr]
     }
 
+    if (!isScrollingViewportForward) {
+        rowLengths.reverse()
+    }
+
     return rowLengths
 }
 
