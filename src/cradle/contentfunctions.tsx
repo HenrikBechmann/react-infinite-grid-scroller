@@ -357,11 +357,11 @@ export const calcContentShift = ({
     const rowlengths = getRowLengths(
         isScrollingViewportForward, cradleElements, crosscount, orientation, gap)
 
-    const baseRowLength = 
-        ((orientation == 'vertical')?
-            cellHeight:
-            cellWidth) 
-        + gap
+    const baseRowLength = rowlengths[0]
+        // ((orientation == 'vertical')?
+        //     cellHeight:
+        //     cellWidth) 
+        // + gap
 
     // -----------[ 2. calculate axis reference row shift ]-------------------
     // extra gaps can be caused by rapid scrolling
