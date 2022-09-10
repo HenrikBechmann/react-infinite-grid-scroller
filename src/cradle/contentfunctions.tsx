@@ -244,7 +244,10 @@ export const getShiftInstruction = ({
 
             let impliedoffset
             // if (countertriggerlinename == 'triggerline-axis') {
-            if (countertriggerlinedirection == 'backward') {
+            if ((countertriggerlinedirection == 'backward') &&
+                (reverseDirection?(direction == 'forward'):(direction == 'backward')))
+
+            {
 
                 impliedoffset = counterentry.viewportoffsethead + triggerlineSpan
 
@@ -254,7 +257,7 @@ export const getShiftInstruction = ({
 
                 }
 
-            } else { // countertriggerlinename == 'triggerline-head'; direction == forward
+            } else { 
 
                 impliedoffset = counterentry.viewportoffsethead - triggerlineSpan
 
