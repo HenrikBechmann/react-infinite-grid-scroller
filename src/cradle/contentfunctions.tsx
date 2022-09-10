@@ -354,6 +354,9 @@ export const calcContentShift = ({
 
     } = cradleInternalProperties
 
+    const rowlengths = getRowLengths(
+        isScrollingViewportForward, cradleElements, crosscount, orientation, gap)
+
     const baseRowLength = 
         ((orientation == 'vertical')?
             cellHeight:
@@ -510,6 +513,34 @@ export const calcContentShift = ({
         listEndChangeCount
     }
 
+}
+
+const getRowLengths = (
+    isScrollingViewportForward, cradleElements, crosscount, orientation, gap
+) => {
+    const rowLengths = []
+    const gridElement = 
+        isScrollingViewportForward?
+            cradleElements.tailRef.current:
+            cradleElements.headRef.current
+
+    const elementList = gridElement.childNodes
+
+    let elementPtr = 0
+    let element = elementList[elementPtr]
+
+    while (element) {
+        const rowlength = 
+            ((orientation == 'vertical')?
+                element.offsetHeight:
+                element.offsetWidth) 
+            + gap
+        rowLengths.push(rowlength)
+        elementPtr += crosscount
+        element = elementList[elementPtr]
+    }
+
+    return rowLengths
 }
 
 // =====================[ shared by both setCradleContent and updateCradleContent ]====================

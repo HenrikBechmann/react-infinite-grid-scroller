@@ -16,7 +16,6 @@
 
     TODO:
 
-        review counterdirection logic in getShiftInstruction
         review axisOffset in calcContentShift - use node.childNodes
         calculate triggerlineSpan
         review all code where varible mode changes positioning calculations
