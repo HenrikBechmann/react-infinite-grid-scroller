@@ -377,8 +377,8 @@ export const calcContentShift = ({
     const viewportAxisOffset = // the pixel distance between the viewport frame and the axis, toward the head
         cradleAxisOffset - scrollPos
 
-    console.log('viewportAxisOffset, cradleAxisOffset, scrollPos',
-        viewportAxisOffset, cradleAxisOffset, scrollPos)
+    // console.log('viewportAxisOffset, cradleAxisOffset, scrollPos',
+    //     viewportAxisOffset, cradleAxisOffset, scrollPos)
 
     const triggerAxisOffset = 
 
@@ -403,17 +403,28 @@ export const calcContentShift = ({
             rowSpans.findIndex((span) => -(span - triggerlineOffset) < triggerPos):
             rowSpans.findIndex((span) => (span - triggerlineOffset) > triggerPos)
 
-    console.log('triggerAxisOffset, triggerPos, rowPtr\n', triggerAxisOffset, triggerPos, spanRowPtr)
+    const spanAxisPixelShift = 
+        (isScrollingViewportForward)?
+            rowSpans[spanRowPtr]:
+            -rowSpans[spanRowPtr]
+    // console.log('triggerAxisOffset, triggerPos, rowPtr\n', triggerAxisOffset, triggerPos, spanRowPtr)
+
+    const spanRowShift = 
+        (isScrollingViewportForward)?
+            spanRowPtr + 1:
+            -(spanRowPtr + 1)
 
     // negative for moving rows out of head into tail;
     // positive for moving rows out of tail into head
     // +/- 1 gurantees boundary location results in move
-    const triggerRowShift = 
-        (isScrollingViewportForward)?
-            Math.floor((triggerAxisOffset?triggerAxisOffset: -1)/baseRowLength):
-            Math.ceil((triggerAxisOffset?triggerAxisOffset: 1)/baseRowLength)
+    // const triggerRowShift = 
+    //     (isScrollingViewportForward)?
+    //         Math.floor((triggerAxisOffset?triggerAxisOffset: -1)/baseRowLength):
+    //         Math.ceil((triggerAxisOffset?triggerAxisOffset: 1)/baseRowLength)
 
-    let axisReferenceRowshift = -triggerRowShift
+    // console.log('triggerRowShift, -spanRowShift', triggerRowShift, -spanRowShift)
+
+    let axisReferenceRowshift = spanRowShift // -triggerRowShift
 
     // ------------[ 5. calc new cradle and axis reference row offsets ]-------------
 
@@ -519,11 +530,12 @@ export const calcContentShift = ({
 
     // -------------[ 8. calculate new axis pixel position ]------------------
 
-    console.log('axisReferenceRowshift',axisReferenceRowshift)
-    const newAxisPixelOffset = viewportAxisOffset + (axisReferenceRowshift * baseRowLength)
+    const newAxisPixelOffset = viewportAxisOffset + spanAxisPixelShift //(axisReferenceRowshift * baseRowLength)
     // CHANGE
     // const newAxisPixelOffset = logicalViewportAxisOffset + (axisReferenceRowshift * calcRowLength)
 
+    console.log('axisReferenceRowshift, newAxisPixelOffset',
+        axisReferenceRowshift, newAxisPixelOffset)
     // ---------------------[ 9. return required values ]-------------------
 
     return {
