@@ -354,7 +354,7 @@ export const calcContentShift = ({
 
     } = cradleInternalProperties
 
-    const observedRowlengths = getRowLengths(
+    const [observedRowlengths, observedRowSpans] = getRowLengths(
         isScrollingViewportForward, cradleElements, crosscount, orientation, gap)
 
     const baseRowLength = //rowlengths[0]
@@ -521,6 +521,7 @@ const getRowLengths = (
     isScrollingViewportForward, cradleElements, crosscount, orientation, gap
 ) => {
     const rowLengths = []
+    const rowSpans = []
     const gridElement = 
         isScrollingViewportForward?
             cradleElements.tailRef.current:
@@ -530,6 +531,7 @@ const getRowLengths = (
 
     let elementPtr = 0
     let element = elementList[elementPtr]
+    let span = 0
 
     while (element) {
         const rowlength = 
@@ -546,7 +548,12 @@ const getRowLengths = (
         rowLengths.reverse()
     }
 
-    return rowLengths
+    rowLengths.forEach((value) => {
+        span += value
+        rowSpans.push(span)
+    })
+
+    return [rowLengths, rowSpans]
 }
 
 // =====================[ shared by both setCradleContent and updateCradleContent ]====================
