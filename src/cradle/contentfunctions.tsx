@@ -357,6 +357,8 @@ export const calcContentShift = ({
     const [rowLengths, rowSpans] = getRowLengths(
         isScrollingViewportForward, cradleElements, crosscount, orientation, gap)
 
+    const firstRowLength = rowLengths[0]
+
     const baseRowLength =
         ((orientation == 'vertical')?
             cellHeight:
@@ -379,6 +381,8 @@ export const calcContentShift = ({
         viewportAxisOffset, cradleAxisOffset, scrollPos)
 
     const triggerAxisOffset = 
+
+
         (isScrollingViewportForward)?
             // scroll forward engages the tail triggerline which is below the axis
             // the tail triggerline must be placed to intersect to re-trigger
@@ -386,6 +390,20 @@ export const calcContentShift = ({
             // scrollbackward engages the head triggerline which is above the axis
             // the head triggerline muse be placed not to intersect to retrigger
             viewportAxisOffset - (baseRowLength - triggerlineOffset)
+
+    const triggerPos = 
+        (isScrollingViewportForward)?
+            viewportAxisOffset + triggerlineOffset:
+            (firstRowLength === undefined)?
+                viewportAxisOffset + triggerlineOffset:
+                viewportAxisOffset - (firstRowLength - triggerlineOffset)        
+
+    const spanRowPtr = 
+        (isScrollingViewportForward)?
+            rowSpans.findIndex((span) => -span < triggerPos):
+            rowSpans.findIndex((span) => span > triggerPos)
+
+    console.log('triggerAxisOffset, triggerPos, rowPtr\n',triggerAxisOffset, triggerPos, spanRowPtr)
 
     // negative for moving rows out of head into tail;
     // positive for moving rows out of tail into head
@@ -501,6 +519,7 @@ export const calcContentShift = ({
 
     // -------------[ 8. calculate new axis pixel position ]------------------
 
+    console.log('axisReferenceRowshift',axisReferenceRowshift)
     const newAxisPixelOffset = viewportAxisOffset + (axisReferenceRowshift * baseRowLength)
     // CHANGE
     // const newAxisPixelOffset = logicalViewportAxisOffset + (axisReferenceRowshift * calcRowLength)
