@@ -265,7 +265,7 @@ export const getShiftInstruction = ({
     return retval
 }
 
-// A negative shift instruction is into the head, a positive shift is into the tail.
+// A negative shift instruction is movement into the head, a positive shift is movement into the tail.
 // called only from updateCradleContent
 export const calcContentShift = ({
 
@@ -335,11 +335,7 @@ export const calcContentShift = ({
     const viewportAxisOffset = // the pixel distance between the viewport frame and the axis, toward the head
         cradleAxisOffset - scrollPos
 
-    // console.log('viewportAxisOffset, cradleAxisOffset, scrollPos',
-    //     viewportAxisOffset, cradleAxisOffset, scrollPos)
-
     const triggerAxisOffset = 
-
 
         (isScrollingViewportForward)?
             // scroll forward engages the tail triggerline which is below the axis
@@ -361,24 +357,57 @@ export const calcContentShift = ({
             rowSpans.findIndex((span) => -(span - triggerlineOffset) < triggerPos):
             rowSpans.findIndex((span) => (span - triggerlineOffset) > triggerPos)
 
-    const spanAxisPixelShift = 
-        (isScrollingViewportForward)?
-            rowSpans[spanRowPtr]:
-            -rowSpans[spanRowPtr]
-    // console.log('triggerAxisOffset, triggerPos, rowPtr\n', triggerAxisOffset, triggerPos, spanRowPtr)
+    let spanPtr, // used to calc spanRowShift below
+        spanAxisPixelShift // used to calc newAxisPixelOffset below
+    if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
 
-    const spanRowShift = 
-        (isScrollingViewportForward)?
-            spanRowPtr + 1:
-            -(spanRowPtr + 1)
+        spanPtr = rowSpans.length - 1
 
+        let overshootPixelShift = // set base of working total
+            (isScrollingViewportForward)?
+                -(rowSpans.at(-1) - triggerlineOffset): // positive value
+                rowSpans.at(-1) - triggerlineOffset // negative value
+
+        if (isScrollingViewportForward) {
+
+            while (overshootPixelShift > triggerPos) {
+                overshootPixelShift -= baseRowLength
+                ++spanPtr
+            }
+
+            spanAxisPixelShift = overshootPixelShift + triggerlineOffset
+
+        } else {
+
+            while (overshootPixelShift < triggerPos) {
+                overshootPixelShift += baseRowLength
+                ++spanPtr
+            }
+
+            spanAxisPixelShift = overshootPixelShift - triggerlineOffset
+        }
+
+    } else { // final values found in instantiated rows
+
+        spanPtr = spanRowPtr
+        spanAxisPixelShift = 
+            (isScrollingViewportForward)?
+                rowSpans[spanPtr]:
+                -rowSpans[spanPtr]
+
+    }
+
+    const spanRowShift = // pick up row shift with or without overshoot
+        (isScrollingViewportForward)?
+            spanPtr + 1:
+            -(spanPtr + 1)
+
+    // the following two values, and no other calcs, are carried forward
+    // for axisReferenceRowshift:
     // negative for moving rows out of head into tail;
     // positive for moving rows out of tail into head
-    // +/- 1 gurantees boundary location results in move
-
-    // console.log('triggerRowShift, -spanRowShift', triggerRowShift, -spanRowShift)
-
-    let axisReferenceRowshift = spanRowShift // -triggerRowShift
+    const axisReferenceRowshift = spanRowShift
+    const axisPixelShift = spanAxisPixelShift 
 
     // ------------[ 5. calc new cradle and axis reference row offsets ]-------------
 
@@ -395,6 +424,7 @@ export const calcContentShift = ({
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
     let newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowshift
 
+    // sections 6 and 7 deal entirely with row calculations; no pixels
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
 
@@ -484,10 +514,7 @@ export const calcContentShift = ({
 
     // -------------[ 8. calculate new axis pixel position ]------------------
 
-    const newAxisPixelOffset = viewportAxisOffset + spanAxisPixelShift //(axisReferenceRowshift * baseRowLength)
-
-    // console.log('axisReferenceRowshift, newAxisPixelOffset',
-    //     axisReferenceRowshift, newAxisPixelOffset)
+    const newAxisPixelOffset = viewportAxisOffset + axisPixelShift
 
     // ---------------------[ 9. return required values ]-------------------
 
