@@ -691,13 +691,12 @@ export const allocateContentList = (
             true:
             false
 
-    // TODO investigate why triggercellComponent can come up undefined
     if ((triggercellIndex !== undefined) && (offsetindex !== undefined) && 
        (triggercellIndex != targetTriggercellIndex)) {
         if ((triggercellIndex >= offsetindex) && (triggercellIndex <= highindex)) {
             const triggercellPtr = triggercellIndex - offsetindex
             const triggercellComponent = contentlist[triggercellPtr]
-            if (triggercellComponent) { // otherwise has been cleared
+            if (triggercellComponent) { // otherwise has been asynchronously cleared
                 contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:false})
             }
         }
