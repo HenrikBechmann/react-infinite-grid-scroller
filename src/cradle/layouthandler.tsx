@@ -24,8 +24,6 @@ export default class LayoutHandler {
             axisRef, 
             headRef, 
             tailRef,
-            // axisTriggerlineRef,
-            // headTriggerlineRef,
             triggercellTriggerlineHeadRef,
             triggercellTriggerlineTailRef,
         } = cradleParameters.cradleInternalPropertiesRef.current.cradleElementsRef.current
@@ -34,8 +32,6 @@ export default class LayoutHandler {
             axisRef,
             headRef,
             tailRef,
-            // axisTriggerlineRef,
-            // headTriggerlineRef,
             triggercellTriggerlineHeadRef,
             triggercellTriggerlineTailRef,
         }

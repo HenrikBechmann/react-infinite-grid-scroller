@@ -51,26 +51,21 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     } = cradleInternalProperties
     
     // align axis reference to first row item
-    // const origrefindex = targetAxisReferenceIndex
     targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex,listsize - 1)
     targetAxisReferenceIndex -= (targetAxisReferenceIndex % crosscount)
 
     // derive target row
     let targetAxisRowOffset = Math.ceil(targetAxisReferenceIndex/crosscount)
-    // console.log('getContentListRequirements: first targetAxisRowOffset, targetAxisReferenceIndex, crosscount, targetAxisViewportPixelOffset', 
-    //     targetAxisRowOffset, targetAxisReferenceIndex, crosscount, targetAxisViewportPixelOffset)
+
     const maxAxisRowOffset = Math.max(0,listRowcount - viewportVisibleRowcount)
     if (targetAxisRowOffset > maxAxisRowOffset) {
         targetAxisRowOffset = maxAxisRowOffset
         targetAxisReferenceIndex = targetAxisRowOffset * crosscount
     }
-    // console.log('revised targetAxisRowOffset; maxAxisRowOffset, listRowcount, viewportVisibleRowcount', 
-    //     targetAxisRowOffset, maxAxisRowOffset, listRowcount, viewportVisibleRowcount)
 
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
 
     // leading edge
-    // let targetCradleReferenceIndex = Math.max(0,targetAxisReferenceIndex - leadingrunwayitemcount)
     let targetCradleRowOffset = Math.max(0,targetAxisRowOffset - runwayRowcount)
 
     // trailing edge
@@ -142,24 +137,10 @@ export const getShiftInstruction = ({
     // console.log('getShiftInstruction: reverseDirection, isViewportScrollingForward, triggerlineEntries', 
     //     reverseDirection, isViewportScrollingForward, triggerlineEntries)
 
-    // const driver = 
-    //     isViewportScrollingForward?
-    //         'triggerline-axis':
-    //         'triggerline-head'
-
     const direction = 
         isViewportScrollingForward?
             'forward':
             'backward'
-
-    // const direction = 
-    //     reverseDirection?
-    //         (isViewportScrollingForward?
-    //             'backward':
-    //             'forward'):
-    //         (isViewportScrollingForward?
-    //             'forward':
-    //             'backward')
 
     const entries = triggerlineEntries.filter(entry => {
         // const isIntersecting = entry.isIntersecting
@@ -214,36 +195,19 @@ export const getShiftInstruction = ({
     // in this case we rely on the counter entry to provide information
     if (entries.length == 0) { // short-circuit the evaluation
 
-        // const counterdriver = 
-        // (!isViewportScrollingForward)?
-        //     'triggerline-head':
-        //     'triggerline-axis'        
-
         const counterdirection = 
         (!isViewportScrollingForward)?
             'backward':
             'forward'        
 
-        // const counterdirection = 
-        //     reverseDirection?
-        //         (!isViewportScrollingForward)?
-        //             'forward':
-        //             'backward':
-        //         (!isViewportScrollingForward)?
-        //             'backward':
-        //             'forward'        
-
-        // const counterentries = triggerlineEntries.filter(entry => entry.triggerlinename == counterdriver)
         const counterentries = triggerlineEntries.filter(entry => entry.triggerdirection == counterdirection)
 
         if (counterentries.length != 0) {
             // check for implied trigger - trigger can be bypassed with heavy components
             const counterentry =  counterentries.pop()
-            // const countertriggerlinename = counterentry.triggerlinename
             const countertriggerlinedirection = counterentry.triggerlinedirection
 
             let impliedoffset
-            // if (countertriggerlinename == 'triggerline-axis') {
             if ((countertriggerlinedirection == 'backward') &&
                 (reverseDirection?(direction == 'forward'):(direction == 'backward')))
 
@@ -277,8 +241,6 @@ export const getShiftInstruction = ({
 
         const entry = entries[0] // assume one record gets filtered; only paired above on reconnect
 
-        // if (!isViewportScrollingForward) {
-        // if (driver == 'triggerline-axis') {
         if (direction == 'backward') {
 
             retval = 1 // shift row to tail
@@ -291,8 +253,6 @@ export const getShiftInstruction = ({
 
     }
 
-    // console.log('first retval from getShiftInstruction', retval)
-
     // check for last oversize row
     if ((retval !=0) && (isViewportScrollingForward) && (viewportVisibleRowcount == 0)) {
         if ((listsize - crosscount) <= oldAxisReferenceIndex) {
@@ -301,8 +261,6 @@ export const getShiftInstruction = ({
 
         }
     }
-
-    // console.log('retval from getShiftInstruction', retval)
 
     return retval
 }
@@ -417,10 +375,6 @@ export const calcContentShift = ({
     // negative for moving rows out of head into tail;
     // positive for moving rows out of tail into head
     // +/- 1 gurantees boundary location results in move
-    // const triggerRowShift = 
-    //     (isScrollingViewportForward)?
-    //         Math.floor((triggerAxisOffset?triggerAxisOffset: -1)/baseRowLength):
-    //         Math.ceil((triggerAxisOffset?triggerAxisOffset: 1)/baseRowLength)
 
     // console.log('triggerRowShift, -spanRowShift', triggerRowShift, -spanRowShift)
 
@@ -531,11 +485,10 @@ export const calcContentShift = ({
     // -------------[ 8. calculate new axis pixel position ]------------------
 
     const newAxisPixelOffset = viewportAxisOffset + spanAxisPixelShift //(axisReferenceRowshift * baseRowLength)
-    // CHANGE
-    // const newAxisPixelOffset = logicalViewportAxisOffset + (axisReferenceRowshift * calcRowLength)
 
     // console.log('axisReferenceRowshift, newAxisPixelOffset',
     //     axisReferenceRowshift, newAxisPixelOffset)
+
     // ---------------------[ 9. return required values ]-------------------
 
     return {

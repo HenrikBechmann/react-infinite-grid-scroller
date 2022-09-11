@@ -22,11 +22,6 @@ export default class StylesHandler {
 
     private cradleParameters
 
-    // private headTriggerlineOffset
-    // private axisTriggerlineOffset
-    // private headTriggercellTriggerlineOffset
-    // private tailTriggercellTriggerlineOffset
-
     public getCradleStyles = ({
 
         orientation, 
@@ -45,12 +40,6 @@ export default class StylesHandler {
         const headstyles = this.getHeadStyles(gap, padding, orientation, userstyles.cradle)
         const tailstyles = this.getTailStyles(gap, padding, orientation, userstyles.cradle)
         const axisstyles = this.getAxisStyles(gap, padding, orientation, userstyles.axis)
-
-        // const { layoutHandler } = this.cradleParameters.handlersRef.current
-        // const triggerlineaxisstyles = 
-        //     this.getTriggerlineAxisStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
-        // const triggerlineheadstyles = 
-        //     this.getTriggerlineHeadStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
 
         const triggercelltriggerlineheadstyles =
             this.getTriggercellTriggerlineHeadStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
@@ -133,8 +122,6 @@ export default class StylesHandler {
             headstyles,
             tailstyles,
             axisstyles,
-            // triggerlineaxisstyles,
-            // triggerlineheadstyles,
             cradledividerstyles,
             triggercelltriggerlineheadstyles,
             triggercelltriggerlinetailstyles,
@@ -233,52 +220,6 @@ export default class StylesHandler {
         }
 
     }
-
-    // private getTriggerlineAxisStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
-
-    //     const position = 'absolute',
-    //         width = '100%',
-    //         height = '100%'
-
-    //     this.axisTriggerlineOffset = triggerlineOffset
-
-    //     const transform = // for position relative to axis
-    //         (orientation == 'horizontal')?
-    //             `translateX(${triggerlineOffset + 'px'})`:
-    //             `translateY(${triggerlineOffset + 'px'})`
-
-    //     return {
-    //         position,
-    //         width,
-    //         height,
-    //         transform,
-    //     }
-    // }
-
-
-    // private getTriggerlineHeadStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
-
-    //     const position = 'absolute',
-    //         width = '100%',
-    //         height = '100%'
-
-    //     this.headTriggerlineOffset = 
-    //         (orientation == 'horizontal')?
-    //             -(cellWidth + gap -triggerlineOffset):
-    //             -(cellHeight + gap -triggerlineOffset)
-                
-    //     const transform = // for position relative to axis
-    //         (orientation == 'horizontal')?
-    //             `translateX(${this.headTriggerlineOffset + 'px'})`:
-    //             `translateY(${this.headTriggerlineOffset + 'px'})`
-
-    //     return {
-    //         position,
-    //         width,
-    //         height,
-    //         transform,
-    //     }
-    // }
 
     private getTriggercellTriggerlineHeadStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
 
