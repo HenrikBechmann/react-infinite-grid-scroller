@@ -360,32 +360,39 @@ export const calcContentShift = ({
     let spanPtr, // used to calc spanRowShift below
         spanAxisPixelShift // used to calc newAxisPixelOffset below
     if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
-
-        spanPtr = rowSpans.length - 1
-
-        let overshootPixelShift = // set base of working total
-            (isScrollingViewportForward)?
-                -(rowSpans.at(-1) - triggerlineOffset): // positive value
-                rowSpans.at(-1) - triggerlineOffset // negative value
-
-        if (isScrollingViewportForward) {
-
-            while (overshootPixelShift > triggerPos) {
-                overshootPixelShift -= baseRowLength
-                ++spanPtr
-            }
-
-            spanAxisPixelShift = overshootPixelShift + triggerlineOffset
-
+        if (rowSpans.length == 0) {
+            spanPtr = -1
+            spanAxisPixelShift = 0
         } else {
 
-            while (overshootPixelShift < triggerPos) {
-                overshootPixelShift += baseRowLength
-                ++spanPtr
+            spanPtr = rowSpans.length - 1
+
+            let overshootPixelShift = // set base of working total
+                (isScrollingViewportForward)?
+                    -(rowSpans.at(-1) - triggerlineOffset): // positive value
+                    rowSpans.at(-1) - triggerlineOffset // negative value
+
+            if (isScrollingViewportForward) {
+
+                while (overshootPixelShift > triggerPos) {
+                    overshootPixelShift -= baseRowLength
+                    ++spanPtr
+                }
+
+                spanAxisPixelShift = overshootPixelShift + triggerlineOffset
+
+            } else {
+
+                while (overshootPixelShift < triggerPos) {
+                    overshootPixelShift += baseRowLength
+                    ++spanPtr
+                }
+
+                spanAxisPixelShift = overshootPixelShift - triggerlineOffset
             }
 
-            spanAxisPixelShift = overshootPixelShift - triggerlineOffset
         }
+        console.log('calculating overshoot: spanRowShift, spanAxisPixelShift', spanPtr + 1, spanAxisPixelShift)
 
     } else { // final values found in instantiated rows
 
@@ -684,11 +691,15 @@ export const allocateContentList = (
             true:
             false
 
-    if ((triggercellIndex !== undefined) && (triggercellIndex != targetTriggercellIndex)) {
+    // TODO investigate why triggercellComponent can come up undefined
+    if ((triggercellIndex !== undefined) && (offsetindex !== undefined) && 
+       (triggercellIndex != targetTriggercellIndex)) {
         if ((triggercellIndex >= offsetindex) && (triggercellIndex <= highindex)) {
             const triggercellPtr = triggercellIndex - offsetindex
             const triggercellComponent = contentlist[triggercellPtr]
-            contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:false})
+            if (triggercellComponent) { // otherwise has been cleared
+                contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:false})
+            }
         }
     }
 

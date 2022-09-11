@@ -155,7 +155,7 @@ export default class InterruptHandler {
 
                 const { repositioningFlagCallback } = serviceHandler.callbacks
                 repositioningFlagCallback && repositioningFlagCallback(true)
-                stateHandler.setCradleState('startreposition')
+                if (stateHandler.isMountedRef.current) stateHandler.setCradleState('startreposition')
 
             }
         }
