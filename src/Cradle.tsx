@@ -1024,6 +1024,7 @@ const Cradle = ({
                 continuing with 'preparerender', and ending with
                 'restoreinterrupts'
             */
+            case 'resetafterscroll':
             case 'firstrender':
             case 'firstrenderfromcache':
             case 'rerenderfromcache':

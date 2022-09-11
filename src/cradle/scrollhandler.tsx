@@ -139,6 +139,8 @@ export default class ScrollHandler {
 
     private onAfterScroll = () => {
 
+        console.log('ONAFTERSCROLL')
+
         this.isScrolling = false
 
         const {stateHandler, contentHandler, serviceHandler} = 
@@ -179,10 +181,15 @@ export default class ScrollHandler {
 
         }
 
-        const { cache } = cradleInheritedProperties
+        const { cache, layout } = cradleInheritedProperties
 
         if (cache == 'keepload') {
             contentHandler.pareCacheToMax()
+        }
+
+        if (!['repositioningRender','repositioningContinuation'].includes(cradleState) &&
+            (layout == 'variable')) {
+            stateHandler.setCradleState('resetafterscroll')
         }
 
     }
