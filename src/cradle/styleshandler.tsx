@@ -24,8 +24,8 @@ export default class StylesHandler {
 
     // private headTriggerlineOffset
     // private axisTriggerlineOffset
-    private headTriggercellTriggerlineOffset
-    private tailTriggercellTriggerlineOffset
+    // private headTriggercellTriggerlineOffset
+    // private tailTriggercellTriggerlineOffset
 
     public getCradleStyles = ({
 

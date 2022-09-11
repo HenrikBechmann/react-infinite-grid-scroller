@@ -158,8 +158,8 @@ const Cradle = ({
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const axisCradleElementRef = useRef(null)
-    const axisTriggerlineCradleElementRef = useRef(null)
-    const headTriggerlineCradleElementRef = useRef(null)
+    // const axisTriggerlineCradleElementRef = useRef(null)
+    // const headTriggerlineCradleElementRef = useRef(null)
     const triggercellTriggerlineHeadElementRef = useRef(null)
     const triggercellTriggerlineTailElementRef = useRef(null)
 
@@ -169,8 +169,8 @@ const Cradle = ({
             headRef:headCradleElementRef, 
             tailRef:tailCradleElementRef, 
             axisRef:axisCradleElementRef,
-            axisTriggerlineRef:axisTriggerlineCradleElementRef,
-            headTriggerlineRef:headTriggerlineCradleElementRef,
+            // axisTriggerlineRef:axisTriggerlineCradleElementRef,
+            // headTriggerlineRef:headTriggerlineCradleElementRef,
             triggercellTriggerlineHeadRef:triggercellTriggerlineHeadElementRef,
             triggercellTriggerlineTailRef:triggercellTriggerlineTailElementRef,
         }
