@@ -534,8 +534,8 @@ export const calcContentShift = ({
     // CHANGE
     // const newAxisPixelOffset = logicalViewportAxisOffset + (axisReferenceRowshift * calcRowLength)
 
-    console.log('axisReferenceRowshift, newAxisPixelOffset',
-        axisReferenceRowshift, newAxisPixelOffset)
+    // console.log('axisReferenceRowshift, newAxisPixelOffset',
+    //     axisReferenceRowshift, newAxisPixelOffset)
     // ---------------------[ 9. return required values ]-------------------
 
     return {

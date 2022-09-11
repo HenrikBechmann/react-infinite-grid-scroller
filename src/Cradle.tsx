@@ -833,8 +833,8 @@ const Cradle = ({
         cradleHeadStyle,
         cradleTailStyle,
         cradleAxisStyle,
-        triggerlineAxisStyle,
-        triggerlineHeadStyle,
+        // triggerlineAxisStyle,
+        // triggerlineHeadStyle,
         cradleDividerStyle,
         triggercellTriggerlineHeadStyle,
         triggercellTriggerlineTailStyle,
@@ -1314,22 +1314,7 @@ const Cradle = ({
                 style = {cradleAxisStyle} 
                 ref = {axisCradleElementRef}
             >
-                { false? <div
-                    data-type = 'triggerline-head'
-                    data-direction = 'backward'
-                    style = {triggerlineHeadStyle}
-                    ref = {axisTriggerlineCradleElementRef}
-                >
-                </div>:null }
-                { false? <div
-                    data-type = 'triggerline-axis'
-                    data-direction = 'forward'
-                    style = {triggerlineAxisStyle}
-                    ref = {headTriggerlineCradleElementRef}
-                >
-                </div>:null }
-
-                {showAxis? // for debug
+                { showAxis? // for debug
                     <div 
                         data-type = 'cradle-divider' 
                         style = {cradleDividerStyle}
@@ -1370,6 +1355,21 @@ const Cradle = ({
     </CradleContext.Provider>
 
 } // Cradle
+
+// { false? <div
+//     data-type = 'triggerline-head'
+//     data-direction = 'backward'
+//     style = {triggerlineHeadStyle}
+//     ref = {axisTriggerlineCradleElementRef}
+// >
+// </div>:null }
+// { false? <div
+//     data-type = 'triggerline-axis'
+//     data-direction = 'forward'
+//     style = {triggerlineAxisStyle}
+//     ref = {headTriggerlineCradleElementRef}
+// >
+// </div>:null }
 
 export default Cradle
 

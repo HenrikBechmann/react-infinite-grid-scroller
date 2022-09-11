@@ -139,8 +139,6 @@ export default class ScrollHandler {
 
     private onAfterScroll = () => {
 
-        console.log('ONAFTERSCROLL')
-
         this.isScrolling = false
 
         const {stateHandler, contentHandler, serviceHandler} = 

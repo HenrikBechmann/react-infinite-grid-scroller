@@ -42,7 +42,7 @@ export default class LayoutHandler {
 
         const {
             startingIndex, 
-            padding
+            // padding
         } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         const {
@@ -58,7 +58,20 @@ export default class LayoutHandler {
 
     private cradleParameters
 
-    public triggerlineSpan
+    public get triggerlineSpan() {
+
+        const {
+            orientation, 
+            // padding
+        } = this.cradleParameters.cradleInheritedPropertiesRef.current
+
+        return (orientation == 'vertical')?
+            this.elements.triggercellTriggerlineTailRef.current.offsetTop - 
+            this.elements.triggercellTriggerlineHeadRef.current.offsetTop:
+            // horizontal
+            this.elements.triggercellTriggerlineTailRef.current.offsetLeft - 
+            this.elements.triggercellTriggerlineHeadRef.current.offsetLeft
+    }
 
     public triggercellIndex
     public triggercellIsInTail = false
