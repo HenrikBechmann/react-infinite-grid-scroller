@@ -392,7 +392,6 @@ export const calcContentShift = ({
             }
 
         }
-        console.log('calculating overshoot: spanRowShift, spanAxisPixelShift', spanPtr + 1, spanAxisPixelShift)
 
     } else { // final values found in instantiated rows
 
