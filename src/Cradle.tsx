@@ -1024,7 +1024,6 @@ const Cradle = ({
                 continuing with 'preparerender', and ending with
                 'restoreinterrupts'
             */
-            case 'resetafterscroll':
             case 'firstrender':
             case 'firstrenderfromcache':
             case 'rerenderfromcache':
@@ -1091,6 +1090,12 @@ const Cradle = ({
                 // update virtual DOM
                 setCradleState('preparerender')
 
+                break
+            }
+
+            case 'resetafterscroll': {
+                contentHandler.resetScrollPosition()
+                setCradleState('ready')
                 break
             }
 

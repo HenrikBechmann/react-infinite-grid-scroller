@@ -234,7 +234,7 @@ export default class ContentHandler {
         const axisElement = cradleElements.axisRef.current
         const headElement = cradleElements.headRef.current
 
-        const AxisScrollblockPixelOffset = 
+        const axisScrollblockPixelOffset = 
             scrollblockViewportPixelOffset + axisViewportPixelOffset
 
         // console.log('setCradleContent: AxisScrollblockPixelOffset, scrollblockViewportPixelOffset, \
@@ -243,7 +243,7 @@ export default class ContentHandler {
 
         if (orientation == 'vertical') {
 
-            const top = AxisScrollblockPixelOffset 
+            const top = axisScrollblockPixelOffset 
 
             axisElement.style.top = top + 'px'
             axisElement.style.left = 'auto'
@@ -255,7 +255,7 @@ export default class ContentHandler {
 
         } else { // orientation = 'horizontal'
 
-            const left = AxisScrollblockPixelOffset
+            const left = axisScrollblockPixelOffset
 
             axisElement.style.top = 'auto'
             axisElement.style.left = left + 'px'
@@ -264,6 +264,91 @@ export default class ContentHandler {
                 headcontentlist.length?
                     gap + 'px':
                     0
+
+        }
+
+    }
+
+    public resetScrollPosition = () => {
+
+        // ------------------------[ setup ]-----------------------
+
+        const { cradleParameters } = this
+        const cradleHandlers = cradleParameters.handlersRef.current
+        const { layoutHandler, scrollHandler } = cradleHandlers
+        const viewportInterruptProperties = cradleParameters.viewportInterruptPropertiesRef.current
+        const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
+        const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
+
+        const { cradlePositionData } = layoutHandler
+        const viewportElement = viewportInterruptProperties.elementRef.current
+
+        const axisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
+        const axisViewportPixelOffset = cradlePositionData.targetAxisViewportPixelOffset
+
+        const {
+            orientation, 
+            gap, 
+            padding, 
+            cellHeight,
+            cellWidth,
+        } = cradleInheritedProperties
+
+        const cradleElements = layoutHandler.elements
+        const axisElement = cradleElements.axisRef.current
+        // const headElement = cradleElements.headRef.current
+
+        const { crosscount } = cradleInternalProperties
+
+        // const headcontentlist = this.content.headModelComponents
+
+        // -------------------------[ calculations ]------------------
+
+        const baseRowLength = 
+            (orientation == 'vertical')?
+                (cellHeight + gap):
+                (cellWidth + gap)
+
+        const targetAxisRowOffset = Math.ceil(axisReferenceIndex/crosscount)
+
+        const scrollblockViewportPixelOffset = 
+            (targetAxisRowOffset * baseRowLength) + padding - axisViewportPixelOffset
+
+        const axisScrollblockPixelOffset = 
+            scrollblockViewportPixelOffset + axisViewportPixelOffset
+
+        // ---------------------[ application ]--------------------------
+
+        cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset
+        // avoid bogus call to updateCradleContent
+        scrollHandler.resetScrollData(scrollblockViewportPixelOffset) 
+
+        viewportElement[cradlePositionData.blockScrollProperty] =
+            cradlePositionData.blockScrollPos
+
+        if (orientation == 'vertical') {
+
+            const top = axisScrollblockPixelOffset 
+
+            axisElement.style.top = top + 'px'
+            axisElement.style.left = 'auto'
+
+            // headElement.style.paddingBottom = 
+            //     headcontentlist.length?
+            //         gap + 'px':
+            //         0
+
+        } else { // orientation = 'horizontal'
+
+            const left = axisScrollblockPixelOffset
+
+            axisElement.style.top = 'auto'
+            axisElement.style.left = left + 'px'
+
+            // headElement.style.paddingRight = 
+            //     headcontentlist.length?
+            //         gap + 'px':
+            //         0
 
         }
 
