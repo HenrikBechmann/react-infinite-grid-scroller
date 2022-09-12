@@ -275,16 +275,20 @@ export default class ContentHandler {
 
         const { cradleParameters } = this
         const cradleHandlers = cradleParameters.handlersRef.current
-        const { layoutHandler, scrollHandler } = cradleHandlers
         const viewportInterruptProperties = cradleParameters.viewportInterruptPropertiesRef.current
         const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
         const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
 
+        const { layoutHandler, scrollHandler } = cradleHandlers
         const { cradlePositionData } = layoutHandler
-        const viewportElement = viewportInterruptProperties.elementRef.current
+        const cradleElements = layoutHandler.elements
+        
+        const axisElement = cradleElements.axisRef.current
 
         const axisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
         const axisViewportPixelOffset = cradlePositionData.targetAxisViewportPixelOffset
+        
+        const viewportElement = viewportInterruptProperties.elementRef.current
 
         const {
             orientation, 
@@ -294,13 +298,7 @@ export default class ContentHandler {
             cellWidth,
         } = cradleInheritedProperties
 
-        const cradleElements = layoutHandler.elements
-        const axisElement = cradleElements.axisRef.current
-        // const headElement = cradleElements.headRef.current
-
         const { crosscount } = cradleInternalProperties
-
-        // const headcontentlist = this.content.headModelComponents
 
         // -------------------------[ calculations ]------------------
 
@@ -333,22 +331,12 @@ export default class ContentHandler {
             axisElement.style.top = top + 'px'
             axisElement.style.left = 'auto'
 
-            // headElement.style.paddingBottom = 
-            //     headcontentlist.length?
-            //         gap + 'px':
-            //         0
-
         } else { // orientation = 'horizontal'
 
             const left = axisScrollblockPixelOffset
 
             axisElement.style.top = 'auto'
             axisElement.style.left = left + 'px'
-
-            // headElement.style.paddingRight = 
-            //     headcontentlist.length?
-            //         gap + 'px':
-            //         0
 
         }
 
