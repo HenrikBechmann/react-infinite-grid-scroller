@@ -265,12 +265,6 @@ export default class ContentHandler {
 
         }
 
-        //  ----------------------[ 5. reset interrupts ]-----------------------
-
-        // interruptHandler.triggerlinesIntersect.connectElements()
-        // interruptHandler.cradleIntersect.connectElements()
-        // interruptHandler.signals.pauseTriggerlinesObserver = false
-
     }
 
     // ==================[ UPDATE CONTENT through scroll ]========================

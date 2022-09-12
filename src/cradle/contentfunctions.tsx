@@ -408,7 +408,7 @@ export const calcContentShift = ({
             spanPtr + 1:
             -(spanPtr + 1)
 
-    // the following two values, and no other calcs, are carried forward
+    // the following two values, and no other calcs, are carried forward.
     // for axisReferenceRowshift:
     // negative for moving rows out of head into tail;
     // positive for moving rows out of tail into head
@@ -445,7 +445,7 @@ export const calcContentShift = ({
         // of cradle content.
 
         const targetCradleReferenceRowOffset = 
-            Math.max(0, (newAxisReferenceRowOffset - runwayRowcount - 1) )
+            Math.max(0, (newAxisReferenceRowOffset - runwayRowcount - 1))
 
         const headrowDiff = newCradleReferenceRowOffset - targetCradleReferenceRowOffset
         if (headrowDiff > 0) {
