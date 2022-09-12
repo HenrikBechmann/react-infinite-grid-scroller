@@ -269,79 +269,6 @@ export default class ContentHandler {
 
     }
 
-    public resetScrollPosition = () => {
-
-        // ------------------------[ setup ]-----------------------
-
-        const { cradleParameters } = this
-        const cradleHandlers = cradleParameters.handlersRef.current
-        const viewportInterruptProperties = cradleParameters.viewportInterruptPropertiesRef.current
-        const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
-        const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
-
-        const { layoutHandler, scrollHandler } = cradleHandlers
-        const { cradlePositionData } = layoutHandler
-        const cradleElements = layoutHandler.elements
-        
-        const axisElement = cradleElements.axisRef.current
-
-        const axisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
-        const axisViewportPixelOffset = cradlePositionData.targetAxisViewportPixelOffset
-        
-        const viewportElement = viewportInterruptProperties.elementRef.current
-
-        const {
-            orientation, 
-            gap, 
-            padding, 
-            cellHeight,
-            cellWidth,
-        } = cradleInheritedProperties
-
-        const { crosscount } = cradleInternalProperties
-
-        // -------------------------[ calculations ]------------------
-
-        const baseRowLength = 
-            (orientation == 'vertical')?
-                (cellHeight + gap):
-                (cellWidth + gap)
-
-        const targetAxisRowOffset = Math.ceil(axisReferenceIndex/crosscount)
-
-        const scrollblockViewportPixelOffset = 
-            (targetAxisRowOffset * baseRowLength) + padding - axisViewportPixelOffset
-
-        const axisScrollblockPixelOffset = 
-            scrollblockViewportPixelOffset + axisViewportPixelOffset
-
-        // ---------------------[ application ]--------------------------
-
-        cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset
-        // avoid bogus call to updateCradleContent
-        scrollHandler.resetScrollData(scrollblockViewportPixelOffset) 
-
-        viewportElement[cradlePositionData.blockScrollProperty] =
-            cradlePositionData.blockScrollPos
-
-        if (orientation == 'vertical') {
-
-            const top = axisScrollblockPixelOffset 
-
-            axisElement.style.top = top + 'px'
-            axisElement.style.left = 'auto'
-
-        } else { // orientation = 'horizontal'
-
-            const left = axisScrollblockPixelOffset
-
-            axisElement.style.top = 'auto'
-            axisElement.style.left = left + 'px'
-
-        }
-
-    }
-
     // ==================[ UPDATE CONTENT through scroll ]========================
 
     // updateCradleContent does not touch the viewport element's scroll position for the scrollblock
@@ -578,6 +505,81 @@ export default class ContentHandler {
         // interruptHandler.signals.pauseTriggerlinesObserver = false
 
         stateHandler.setCradleState('renderupdatedcontent')
+
+    }
+
+    // ==============================[ RESPOSITION VARIABLE CONTENT ]==========================
+
+    public resetScrollPosition = () => {
+
+        // ------------------------[ setup ]-----------------------
+
+        const { cradleParameters } = this
+        const cradleHandlers = cradleParameters.handlersRef.current
+        const viewportInterruptProperties = cradleParameters.viewportInterruptPropertiesRef.current
+        const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
+        const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
+
+        const { layoutHandler, scrollHandler } = cradleHandlers
+        const { cradlePositionData } = layoutHandler
+        const cradleElements = layoutHandler.elements
+
+        const axisElement = cradleElements.axisRef.current
+
+        const axisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
+        const axisViewportPixelOffset = cradlePositionData.targetAxisViewportPixelOffset
+        
+        const viewportElement = viewportInterruptProperties.elementRef.current
+
+        const {
+            orientation, 
+            gap, 
+            padding, 
+            cellHeight,
+            cellWidth,
+        } = cradleInheritedProperties
+
+        const { crosscount } = cradleInternalProperties
+
+        // -------------------------[ calculations ]------------------
+
+        const baseRowLength = 
+            (orientation == 'vertical')?
+                (cellHeight + gap):
+                (cellWidth + gap)
+
+        const targetAxisRowOffset = Math.ceil(axisReferenceIndex/crosscount)
+
+        const scrollblockViewportPixelOffset = 
+            (targetAxisRowOffset * baseRowLength) + padding - axisViewportPixelOffset
+
+        const axisScrollblockPixelOffset = 
+            scrollblockViewportPixelOffset + axisViewportPixelOffset
+
+        // ---------------------[ application ]--------------------------
+
+        cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset
+        // avoid bogus call to updateCradleContent
+        scrollHandler.resetScrollData(scrollblockViewportPixelOffset) 
+
+        viewportElement[cradlePositionData.blockScrollProperty] =
+            cradlePositionData.blockScrollPos
+
+        if (orientation == 'vertical') {
+
+            const top = axisScrollblockPixelOffset 
+
+            axisElement.style.top = top + 'px'
+            axisElement.style.left = 'auto'
+
+        } else { // orientation = 'horizontal'
+
+            const left = axisScrollblockPixelOffset
+
+            axisElement.style.top = 'auto'
+            axisElement.style.left = left + 'px'
+
+        }
 
     }
 
