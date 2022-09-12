@@ -75,7 +75,7 @@ export default class InterruptHandler {
                 scrollData.previousupdate = scrollData.currentupdate
                 scrollData.currentupdate = scrollData.current
 
-                const isViewportScrollingForward = scrollData.previous < scrollData.current
+                const isViewportScrollingForward = (scrollData.previous < scrollData.current)
 
                 contentHandler.updateCradleContent(isViewportScrollingForward, entries,'triggerlinesObserver')
 

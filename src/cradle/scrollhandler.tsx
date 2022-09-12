@@ -184,6 +184,8 @@ export default class ScrollHandler {
         if (cradleProps.orientation == 'vertical') {
 
             axisVisiblePixelOffset = axisElement.offsetTop - viewportElement.scrollTop
+            // console.log('scrollHandler: updating targetAxisViewportPixelOffset, axisElement.offsetTop, viewportElement.scrollTop', 
+            //     axisVisiblePixelOffset, axisElement.offsetTop, viewportElement.scrollTop)
                 
         } else {
 

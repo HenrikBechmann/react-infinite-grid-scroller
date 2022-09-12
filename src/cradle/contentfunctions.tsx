@@ -262,6 +262,8 @@ export const getShiftInstruction = ({
         }
     }
 
+    // console.log('returning shift instruction', retval)
+
     return retval
 }
 

@@ -115,6 +115,8 @@ export default class ContentHandler {
         let workingRequestAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
         workingRequestAxisReferenceIndex -= (workingRequestAxisReferenceIndex % crosscount)
 
+        // console.log('workingRequestAxisReferenceIndex', workingRequestAxisReferenceIndex)
+
         // reposition at row boundary
         if ([
             'firstrender', 
