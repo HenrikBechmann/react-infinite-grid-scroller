@@ -1093,7 +1093,7 @@ const Cradle = ({
                 break
             }
 
-            case 'resetafterscroll': {
+            case 'resetaftervariablescroll': {
 
                 contentHandler.resetScrollPosition()
                 setCradleState('ready')

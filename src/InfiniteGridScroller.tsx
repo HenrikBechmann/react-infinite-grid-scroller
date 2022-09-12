@@ -18,7 +18,7 @@
 
         review all code where variable mode changes positioning calculations
         use cradleResize to capture async variable cell updates between state cycles
-        consider just repositioning rather than resetting for resetafterscroll
+        consider just repositioning rather than resetting for resetaftervariablescroll
 
         re-test for memory leaks window.performance.memory
         retest concat replacements

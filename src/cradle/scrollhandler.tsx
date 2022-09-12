@@ -164,7 +164,7 @@ export default class ScrollHandler {
             if ((this.scrollData.start != this.scrollData.current) || 
                 (this.scrollData.current != this.scrollData.previous)) {
 
-                stateHandler.setCradleState('resetafterscroll')
+                stateHandler.setCradleState('resetaftervariablescroll')
 
             }
         }
