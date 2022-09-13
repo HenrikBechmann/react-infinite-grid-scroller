@@ -584,17 +584,17 @@ export default class ContentHandler {
         const headGridScrollBlockOffset = axisScrollblockPixelOffset - headGridLength
         const tailGridScrollBlockOffset = scrollblockLength - (axisScrollblockPixelOffset + tailGridLength)
 
-        console.log('headGridScrollBlockOffset, tailGridScrollBlockOffset',
-            headGridScrollBlockOffset, tailGridScrollBlockOffset)
+        // console.log('axisScrollblockPixelOffset, headGridScrollBlockOffset, tailGridScrollBlockOffset',
+        //     axisScrollblockPixelOffset, headGridScrollBlockOffset, tailGridScrollBlockOffset)
 
         if (headGridScrollBlockOffset < 0) {
 
             scrollblockViewportPixelOffset -= headGridScrollBlockOffset
-            axisScrollblockPixelOffset += headGridScrollBlockOffset
+            axisScrollblockPixelOffset -= headGridScrollBlockOffset
 
         } else if (tailGridScrollBlockOffset < 0) {
 
-            scrollblockViewportPixelOffset -= tailGridScrollBlockOffset
+            scrollblockViewportPixelOffset += tailGridScrollBlockOffset
             axisScrollblockPixelOffset += tailGridScrollBlockOffset
 
         }
