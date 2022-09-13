@@ -14,14 +14,16 @@
 
     BUGS: 
 
-        - assigntriggercell fails with list tail end undershoot
-            - happens when accumulated variance exceeds cradle grid sizes
+        - pivot is broken
+        - FF sets axis to past last item on variable layout
+        - Edge fails to set scrollPos so at bottom so that last item is at end of scrollblock
 
     TODO:
 
-        - adjust bottom of list for undershoot?
         - review all code where variable mode changes positioning calculations
         - use cradleResize to capture async variable cell updates between state cycles
+        - change scroll bounce behaviour if supported on all browsers
+        - set CellFrame max to cellWidth/cellHeight for variable layout
 
         re-test for memory leaks window.performance.memory
         retest concat replacements

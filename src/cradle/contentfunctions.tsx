@@ -728,8 +728,9 @@ export const allocateContentList = (
 
     const triggercellPtr = targetTriggercellIndex - offsetindex
     const triggercellComponent = contentlist[triggercellPtr]
-    if ((triggercellIndex === undefined) || (triggercellIndex != targetTriggercellIndex  ||
-        !triggercellComponent.props.isTriggecell)) {    
+    // if !triggercellComponent temporarily out of scope. Will recycle
+    if (triggercellComponent && ((triggercellIndex === undefined) || (triggercellIndex != targetTriggercellIndex  ||
+        !triggercellComponent.props.isTriggecell))) {    
         contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:true})
         layoutHandler.triggercellIndex = targetTriggercellIndex
     }
