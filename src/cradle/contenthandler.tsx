@@ -384,6 +384,7 @@ export default class ContentHandler {
         })
 
         // console.log('updateCradleContent: axisItemShift, cradleItemShift',axisItemShift, cradleItemShift)
+        console.log('updateCradleContent: axisPixelOffset',axisPixelOffset)
         // third abandon option/3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) { // defensive
 
@@ -560,6 +561,8 @@ export default class ContentHandler {
 
         const axisViewportOffset = cradlePositionData.targetAxisViewportPixelOffset
         const { blockScrollPos } = cradlePositionData
+
+        console.log('axisViewportOffset,blockScrollPos',axisViewportOffset,blockScrollPos)
 
         let measuredHeadLength, measuredTailLength
         if (orientation == 'vertical') {

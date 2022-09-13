@@ -337,6 +337,8 @@ export const calcContentShift = ({
     const viewportAxisOffset = // the pixel distance between the viewport frame and the axis, toward the head
         cradleAxisOffset - scrollPos
 
+    console.log('calcContentShift:viewportAxisOffset',viewportAxisOffset)
+
     const triggerAxisOffset = 
 
         (isScrollingViewportForward)?
