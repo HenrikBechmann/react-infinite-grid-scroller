@@ -17,6 +17,7 @@
         - pivot is broken
         - FF sets axis to past last item on variable layout
         - Edge fails to set scrollPos so at bottom so that last item is at end of scrollblock
+        - bottom of list adjustments are broken
 
     TODO:
 
