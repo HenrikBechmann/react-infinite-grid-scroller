@@ -24,6 +24,7 @@
         retest concat replacements
         integrate cradleParameters object availability into cachehandler
         test phone rotation for resize during scroll intertia
+        require variable settings: min/max for height/width (?)
         ----------------
         (after layout...)
         

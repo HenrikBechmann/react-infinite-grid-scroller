@@ -31,6 +31,8 @@ import {
     allocateContentList,
     deletePortals,
     getCellFrameComponentList, 
+    getGridRowLengths,
+    getGridRowSpans,
 
 } from './contentfunctions'
 
@@ -523,13 +525,19 @@ export default class ContentHandler {
         const { layoutHandler, scrollHandler } = cradleHandlers
         const { cradlePositionData } = layoutHandler
         const cradleElements = layoutHandler.elements
+        const { content } = this
 
         const axisElement = cradleElements.axisRef.current
+        const headGrid = cradleElements.headRef.current
+        const tailGrid = cradleElements.tailRef.current
+        const headList = content.headModelComponents
+        const tailList = content.tailModelComponents
 
         const axisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
         const axisViewportPixelOffset = cradlePositionData.targetAxisViewportPixelOffset
         
         const viewportElement = viewportInterruptProperties.elementRef.current
+        const scrollblockElement = viewportElement.firstChild
 
         const {
             orientation, 
@@ -539,7 +547,7 @@ export default class ContentHandler {
             cellWidth,
         } = cradleInheritedProperties
 
-        const { crosscount } = cradleInternalProperties
+        const { crosscount, listsize } = cradleInternalProperties
 
         // -------------------------[ calculations ]------------------
 
@@ -555,6 +563,28 @@ export default class ContentHandler {
 
         const axisScrollblockPixelOffset = 
             scrollblockViewportPixelOffset + axisViewportPixelOffset
+
+        // adjustments for start and end of list
+
+        const headGridLength = 
+            ( orientation == 'vertical')?
+                headGrid.offsetHeight:
+                headGrid.offsetWidth
+
+        const tailGridLength = 
+            ( orientation == 'vertical')?
+                tailGrid.offsetHeight:
+                tailGrid.offsetWidth
+
+        const scrollblockLength = 
+            ( orientation == 'vertical' )?
+                scrollblockElement.offsetHeight:
+                scrollblockElement.offsetWidth
+
+        const headGridScrollBlockOffset = axisScrollblockPixelOffset - headGridLength
+        const tailGridScrollBlockOffset = scrollblockLength - (axisScrollblockPixelOffset + tailGridLength)
+
+
 
         // ---------------------[ application ]--------------------------
 

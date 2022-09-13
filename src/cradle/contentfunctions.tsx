@@ -539,17 +539,37 @@ export const calcContentShift = ({
 
 }
 
+// called by calcContentShifts above
 const getRowLengths = (
-    isScrollingViewportForward, cradleElements, crosscount, orientation, gap
+    
+    isScrollingViewportForward, 
+    cradleElements, 
+    crosscount, 
+    orientation, 
+    gap
+
 ) => {
-    const rowLengths = []
-    const rowSpans = []
+
     const gridElement = 
         isScrollingViewportForward?
             cradleElements.tailRef.current:
             cradleElements.headRef.current
 
-    const elementList = gridElement.childNodes
+    const rowLengths = getGridRowLengths(gridElement, orientation, crosscount, gap)
+
+    if (!isScrollingViewportForward) {
+        rowLengths.reverse()
+    }
+
+    const rowSpans = getGridRowSpans(rowLengths)
+
+    return [rowLengths, rowSpans]
+}
+
+export const getGridRowLengths = (grid, orientation, crosscount, gap) => {
+
+    const rowLengths = []
+    const elementList = grid.childNodes
 
     let elementPtr = 0
     let element = elementList[elementPtr]
@@ -566,16 +586,19 @@ const getRowLengths = (
         element = elementList[elementPtr]
     }
 
-    if (!isScrollingViewportForward) {
-        rowLengths.reverse()
-    }
+    return rowLengths
+}
 
+export const getGridRowSpans = (rowLengths) => {
+
+    const rowSpans = []
+    let span
     rowLengths.forEach((value) => {
         span += value
         rowSpans.push(span)
     })
 
-    return [rowLengths, rowSpans]
+    return rowSpans
 }
 
 // =====================[ shared by both setCradleContent and updateCradleContent ]====================
