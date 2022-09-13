@@ -541,7 +541,7 @@ export const calcContentShift = ({
 
 // called by calcContentShifts above
 const getRowLengths = (
-    
+
     isScrollingViewportForward, 
     cradleElements, 
     crosscount, 
@@ -592,7 +592,7 @@ export const getGridRowLengths = (grid, orientation, crosscount, gap) => {
 export const getGridRowSpans = (rowLengths) => {
 
     const rowSpans = []
-    let span
+    let span = 0
     rowLengths.forEach((value) => {
         span += value
         rowSpans.push(span)

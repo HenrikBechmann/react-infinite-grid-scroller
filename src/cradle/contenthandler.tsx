@@ -558,10 +558,10 @@ export default class ContentHandler {
 
         const targetAxisRowOffset = Math.ceil(axisReferenceIndex/crosscount)
 
-        const scrollblockViewportPixelOffset = 
+        let scrollblockViewportPixelOffset = 
             (targetAxisRowOffset * baseRowLength) + padding - axisViewportPixelOffset
 
-        const axisScrollblockPixelOffset = 
+        let axisScrollblockPixelOffset = 
             scrollblockViewportPixelOffset + axisViewportPixelOffset
 
         // adjustments for start and end of list
@@ -584,7 +584,20 @@ export default class ContentHandler {
         const headGridScrollBlockOffset = axisScrollblockPixelOffset - headGridLength
         const tailGridScrollBlockOffset = scrollblockLength - (axisScrollblockPixelOffset + tailGridLength)
 
+        console.log('headGridScrollBlockOffset, tailGridScrollBlockOffset',
+            headGridScrollBlockOffset, tailGridScrollBlockOffset)
 
+        if (headGridScrollBlockOffset < 0) {
+
+            scrollblockViewportPixelOffset -= headGridScrollBlockOffset
+            axisScrollblockPixelOffset += headGridScrollBlockOffset
+
+        } else if (tailGridScrollBlockOffset < 0) {
+
+            scrollblockViewportPixelOffset -= tailGridScrollBlockOffset
+            axisScrollblockPixelOffset += tailGridScrollBlockOffset
+
+        }
 
         // ---------------------[ application ]--------------------------
 
