@@ -39,6 +39,10 @@ export default class ScrollHandler {
         const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
         const viewportElement = viewportInterruptProperties.elementRef.current
 
+        // const scrollblockElement = viewportElement.firstChild
+        // const top = scrollblockElement.offsetTop
+        // scrollblockElement.style.top = (top + 5) + 'px'
+
         const scrollPositionCurrent = 
             (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical')?
                 viewportElement.scrollTop:
@@ -158,16 +162,16 @@ export default class ScrollHandler {
             contentHandler.pareCacheToMax()
         }
 
-        if (!['repositioningRender','repositioningContinuation'].includes(cradleState) &&
-            (layout == 'variable')) {
+        // if (!['repositioningRender','repositioningContinuation'].includes(cradleState) &&
+        //     (layout == 'variable')) {
 
-            if ((this.scrollData.start != this.scrollData.current) || 
-                (this.scrollData.current != this.scrollData.previous)) {
+        //     if ((this.scrollData.start != this.scrollData.current) || 
+        //         (this.scrollData.current != this.scrollData.previous)) {
 
-                stateHandler.setCradleState('resetaftervariablescroll')
+        //         stateHandler.setCradleState('resetaftervariablescroll')
 
-            }
-        }
+        //     }
+        // }
 
     }
 

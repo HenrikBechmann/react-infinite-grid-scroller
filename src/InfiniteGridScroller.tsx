@@ -20,6 +20,7 @@
 
     TODO:
 
+        - try changing scrollblock length/top during scroll
         - review all code where variable mode changes positioning calculations
         - use cradleResize to capture async variable cell updates between state cycles
         - change scroll bounce behaviour if supported on all browsers

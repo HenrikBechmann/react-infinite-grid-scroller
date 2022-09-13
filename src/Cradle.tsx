@@ -1093,13 +1093,18 @@ const Cradle = ({
                 break
             }
 
-            case 'resetaftervariablescroll': {
+            // case 'resetaftervariablescroll': {
 
-                contentHandler.resetScrollPosition()
-                setCradleState('ready')
+            //     // const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
+            //     // const scrollblockElement = viewportElement.firstChild
+            //     // const top = scrollblockElement.offsetTop
+            //     // scrollblockElement.style.top = (top + 5) + 'px'
 
-                break
-            }
+            //     // contentHandler.resetScrollPosition()
+            //     setCradleState('ready')
+
+            //     break
+            // }
 
             case 'preparerender': { // cycle for DOM update
 
@@ -1143,6 +1148,7 @@ const Cradle = ({
 
             case 'finishupdatedcontent': { // cycle for DOM update
 
+
                 // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
                 interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseTriggerlinesObserver = false
@@ -1157,10 +1163,18 @@ const Cradle = ({
 
                 cacheHandler.renderPortalList()
 
-                setCradleState('ready')
+                setCradleState('adjustforvariability')
 
                 break
             }
+
+            case 'adjustforvariability':
+
+                contentHandler.adjustScrollblockForVariability()
+
+                setCradleState('ready')
+
+                break
 
             // ----------------[ user requests ]-------------
 
