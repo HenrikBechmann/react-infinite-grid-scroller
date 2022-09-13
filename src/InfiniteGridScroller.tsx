@@ -14,11 +14,14 @@
 
     BUGS: 
 
+        - assigntriggercell fails with list tail end undershoot
+            - happens when accumulated variance exceeds cradle grid sizes
+
     TODO:
 
-        review all code where variable mode changes positioning calculations
-        use cradleResize to capture async variable cell updates between state cycles
-        consider just repositioning rather than resetting for resetaftervariablescroll
+        - adjust bottom of list for undershoot?
+        - review all code where variable mode changes positioning calculations
+        - use cradleResize to capture async variable cell updates between state cycles
 
         re-test for memory leaks window.performance.memory
         retest concat replacements

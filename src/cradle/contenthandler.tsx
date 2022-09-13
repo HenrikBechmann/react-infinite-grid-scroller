@@ -599,6 +599,8 @@ export default class ContentHandler {
 
         }
 
+        // TODO: add adjustment where 
+
         // ---------------------[ application ]--------------------------
 
         cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset
