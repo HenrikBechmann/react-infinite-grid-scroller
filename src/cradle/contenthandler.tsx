@@ -542,6 +542,8 @@ export default class ContentHandler {
 
         const { crosscount, listsize } = cradleInternalProperties
 
+        const { cradlePositionData } = layoutHandler
+
         // ------------------------[ calculations ]------------------------
 
         const headRowCount = Math.ceil(headGrid.childNodes.length/crosscount)
@@ -556,15 +558,16 @@ export default class ContentHandler {
         const baseHeadLength = (headRowCount * cellLength) + padding
         const baseTailLength = (tailRowCount * cellLength) + padding - gap
 
-        let measuredHeadLength, measuredTailLength, axisOffset
+        const axisViewportOffset = cradlePositionData.targetAxisViewportPixelOffset
+        const { blockScrollPos } = cradlePositionData
+
+        let measuredHeadLength, measuredTailLength
         if (orientation == 'vertical') {
             measuredHeadLength = headGrid.offsetHeight
             measuredTailLength = tailGrid.offsetHeight
-            axisOffset = axisElement.offsetTop
         } else {
             measuredHeadLength = headGrid.offsetWidth
             measuredTailLength = tailGrid.offsetWidth
-            axisOffset = axisElement.offsetLeft
         }
 
         console.log('headRowCount, baseHeadLength, measuredHeadLength',
@@ -587,13 +590,17 @@ export default class ContentHandler {
         console.log('baseblocklength', baseblocklength)
 
         if (orientation == 'vertical') {
+
             scrollblockElement.style.top = headDiff + 'px'
             scrollblockElement.style.height = (baseblocklength - tailDiff) + 'px'
-            axisElement.style.top = (axisOffset - headDiff) + 'px'
+            axisElement.style.top = (blockScrollPos + axisViewportOffset - headDiff) + 'px'
+
         } else {
-            scrollblockElement.style.left = tailDiff + 'px'
+
+            scrollblockElement.style.left = headDiff + 'px'
             scrollblockElement.style.width = (baseblocklength - tailDiff) + 'px'
-            axisElement.style.left = (axisOffset - tailDiff) + 'px'
+            axisElement.style.left = (blockScrollPos + axisViewportOffset - headDiff) + 'px'
+
         }
 
     }
