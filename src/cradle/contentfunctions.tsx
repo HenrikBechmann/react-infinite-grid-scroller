@@ -277,6 +277,7 @@ export const calcContentShift = ({
     cradleContent,
     cradleElements,
     scrollPos, // of cradle against viewport; where the cradle motion intersects the viewport
+    viewportElement,
 
 }) => {
 
@@ -333,9 +334,14 @@ export const calcContentShift = ({
             axisElement.offsetTop:
             axisElement.offsetLeft
 
+    const scrollblockElement = viewportElement.firstChild
+    const scrollblockOffset = // to capture current adjustment for variable layout
+        (orientation == 'vertical')?
+            scrollblockElement.offsetTop:
+            scrollblockElement.offsetLeft
     // viewportAxisOffset will be negative for scroll forward and positive for scroll backward
     const viewportAxisOffset = // the pixel distance between the viewport frame and the axis, toward the head
-        cradleAxisOffset - scrollPos
+        cradleAxisOffset + scrollblockOffset - scrollPos
 
     console.log('calcContentShift:viewportAxisOffset',viewportAxisOffset)
 
