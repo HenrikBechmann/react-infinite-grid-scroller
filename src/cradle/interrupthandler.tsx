@@ -198,9 +198,6 @@ export default class InterruptHandler {
         connectElements:() => {
             const observer = this.triggerlinesIntersect.observer
             const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
-            // console.log('connect triggerline elements',
-            //     cradleElements.triggercellTriggerlineHeadRef.current,
-            //     cradleElements.triggercellTriggerlineTailRef.current)
             if (cradleElements.triggercellTriggerlineHeadRef.current &&
                 cradleElements.triggercellTriggerlineTailRef.current) {
                 observer.observe(cradleElements.triggercellTriggerlineHeadRef.current)

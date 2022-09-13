@@ -599,7 +599,7 @@ export default class ContentHandler {
 
         }
 
-        // TODO: add adjustment where 
+        // TODO: add adjustment where grids at list start/end do not contain first/last item
 
         // ---------------------[ application ]--------------------------
 
