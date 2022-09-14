@@ -19,6 +19,8 @@
         - Edge fails to set scrollPos so at bottom so that last item is at end of scrollblock
         - bottom of list adjustments are broken
         - reposition is broken
+        - Uncaught TypeError: Cannot assign to read only property 'minHeight' of object '#<Object>'
+            at eval (test.controller.tsx?4638:335:17)        
 
     TODO:
 

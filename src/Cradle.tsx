@@ -1108,9 +1108,23 @@ const Cradle = ({
 
             case 'restoreinterrupts': { // normalize or resume cycling
 
-                interruptHandler.restoreInterrupts()
+                // interruptHandler.restoreInterrupts()
 
-                setCradleState('ready')
+                const { layout } = cradleInheritedPropertiesRef.current
+
+                if (layout == 'uniform') {
+
+                    interruptHandler.restoreInterrupts()
+
+                    setCradleState('ready')
+
+                } else {
+
+                    setCradleState('updateDOMforvariability')
+
+                }
+
+                // setCradleState('ready')
 
                 break 
 
@@ -1176,6 +1190,8 @@ const Cradle = ({
             case 'adjustforvariability': {
 
                 contentHandler.adjustScrollblockForVariability()
+
+                interruptHandler.restoreInterrupts()
 
                 setCradleState('ready')
 
