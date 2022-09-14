@@ -1163,18 +1163,26 @@ const Cradle = ({
 
                 cacheHandler.renderPortalList()
 
-                setCradleState('adjustforvariability')
+                setCradleState('updateDOMforvariability')
 
                 break
             }
 
-            case 'adjustforvariability':
+            case 'updateDOMforvariability': {
+
+                setCradleState('adjustforvariability')
+
+                break
+
+            }
+
+            case 'adjustforvariability': {
 
                 contentHandler.adjustScrollblockForVariability()
 
                 setCradleState('ready')
 
-                break
+            }
 
             // ----------------[ user requests ]-------------
 
@@ -1246,6 +1254,7 @@ const Cradle = ({
                 break
 
             case 'ready': // no-op
+
                 break
 
         }

@@ -579,10 +579,10 @@ export default class ContentHandler {
         console.log('tailRowCount, baseTailLength, measuredTailLength',
             tailRowCount, baseTailLength, measuredTailLength)
 
-        const headDiff = baseHeadLength - measuredHeadLength
-        const tailDiff = baseTailLength - measuredTailLength
+        const headDelta = baseHeadLength - measuredHeadLength
+        const tailDelta = baseTailLength - measuredTailLength
 
-        console.log('headDiff, tailDiff', headDiff, tailDiff)
+        console.log('headDiff, tailDiff', headDelta, tailDelta)
 
         // -----------------------[ application ]-------------------------
 
@@ -591,21 +591,24 @@ export default class ContentHandler {
         const baseblocklength = (listrowcount * cellLength) - gap
             + (padding * 2) // leading and trailing padding
 
-        console.log('baseblocklength', baseblocklength)
-
         if (orientation == 'vertical') {
 
-            scrollblockElement.style.top = headDiff + 'px'
-            scrollblockElement.style.height = (baseblocklength - tailDiff) + 'px'
-            axisElement.style.top = (blockScrollPos + axisViewportOffset - headDiff) + 'px'
+            // the scrollblock top is moved to compensate for the headDelta
+            scrollblockElement.style.top = -headDelta + 'px'
+            // the axis is moved in the opposite direction to maintain viewport position
+            axisElement.style.top = (blockScrollPos + axisViewportOffset + headDelta) + 'px'
+            // the height is adjusted by both deltas, as it controls the scroll length
+            scrollblockElement.style.height = (baseblocklength - headDelta - tailDelta) + 'px'
 
         } else {
 
-            scrollblockElement.style.left = headDiff + 'px'
-            scrollblockElement.style.width = (baseblocklength - tailDiff) + 'px'
-            axisElement.style.left = (blockScrollPos + axisViewportOffset - headDiff) + 'px'
+            scrollblockElement.style.left = -headDelta + 'px'
+            axisElement.style.left = (blockScrollPos + axisViewportOffset + headDelta) + 'px'
+            scrollblockElement.style.width = (baseblocklength - headDelta - tailDelta) + 'px'
 
         }
+
+        console.log('baseblocklength, headDiff, tailDiff', baseblocklength, headDelta, tailDelta)
 
     }
 
