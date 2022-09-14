@@ -109,6 +109,7 @@ const Cradle = ({
         SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
         IDLECALLBACK_TIMEOUT,
         MAX_CACHE_OVER_RUN,
+        TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
     }) => {
 
     if (listsize == 0) return null // nothing to do
@@ -145,7 +146,7 @@ const Cradle = ({
     const cradleResizeStateRef = useRef(null) // access by closures
     cradleResizeStateRef.current = cradleResizeState
 
-    // console.log('==> cradleState','-'+scrollerID+'-',cradleState)
+    console.log('==> cradleState','-'+scrollerID+'-',cradleState)
 
     // flags
     const isMountedRef = useRef(true)
@@ -1042,8 +1043,8 @@ const Cradle = ({
                 cradleContent.tailModelComponents = []
 
                 // register new array id for Object.is to trigger react re-processing
-                cradleContent.headDisplayComponents = []
-                cradleContent.tailDisplayComponents = []
+                // cradleContent.headDisplayComponents = []
+                // cradleContent.tailDisplayComponents = []
 
                 if (cradleState == 'reload') {
                     cacheHandler.clearCache()
@@ -1095,7 +1096,7 @@ const Cradle = ({
 
                 } else {
 
-                        setCradleState('prepareDOMforvariablerender')
+                    setCradleState('prepareDOMforvariablerender')
 
                 }
 
@@ -1112,13 +1113,14 @@ const Cradle = ({
 
             case 'prepareforvariablerender': {
 
+                console.log('-->setTimeout for setContent', cradleState)
                 setTimeout(() => { // need for this is worrisome
 
                     contentHandler.adjustScrollblockForVariability()
 
                     setCradleState('preparerender')
 
-                },100)
+                },TIMEOUT_FOR_VARIABLE_MEASUREMENTS)
                 
                 break
 
@@ -1206,9 +1208,9 @@ const Cradle = ({
 
             case 'adjustforvariability': {
 
-                contentHandler.adjustScrollblockForVariability()
+                console.log('-->call for updateContent', cradleState)
 
-                // interruptHandler.restoreInterrupts()
+                contentHandler.adjustScrollblockForVariability()
 
                 setCradleState('ready')
 
@@ -1415,21 +1417,6 @@ const Cradle = ({
     </CradleContext.Provider>
 
 } // Cradle
-
-// { false? <div
-//     data-type = 'triggerline-head'
-//     data-direction = 'backward'
-//     style = {triggerlineHeadStyle}
-//     ref = {axisTriggerlineCradleElementRef}
-// >
-// </div>:null }
-// { false? <div
-//     data-type = 'triggerline-axis'
-//     data-direction = 'forward'
-//     style = {triggerlineAxisStyle}
-//     ref = {headTriggerlineCradleElementRef}
-// >
-// </div>:null }
 
 export default Cradle
 

@@ -195,6 +195,7 @@ const InfiniteGridScroller = (props) => {
         VIEWPORT_RESIZE_TIMEOUT,
         SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
         IDLECALLBACK_TIMEOUT,
+        TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
         MAX_CACHE_OVER_RUN,
 
     } = advanced
@@ -202,6 +203,7 @@ const InfiniteGridScroller = (props) => {
     VIEWPORT_RESIZE_TIMEOUT = VIEWPORT_RESIZE_TIMEOUT ?? 250
     SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = SCROLL_TIMEOUT_FOR_ONAFTERSCROLL ?? 100
     IDLECALLBACK_TIMEOUT = IDLECALLBACK_TIMEOUT ?? 4000
+    TIMEOUT_FOR_VARIABLE_MEASUREMENTS = TIMEOUT_FOR_VARIABLE_MEASUREMENTS ?? 100
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
 
     if (typeof showAxis != 'boolean') showAxis = false
@@ -318,6 +320,7 @@ const InfiniteGridScroller = (props) => {
                     SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = { SCROLL_TIMEOUT_FOR_ONAFTERSCROLL }
                     IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }
                     MAX_CACHE_OVER_RUN = { MAX_CACHE_OVER_RUN }
+                    TIMEOUT_FOR_VARIABLE_MEASUREMENTS = { TIMEOUT_FOR_VARIABLE_MEASUREMENTS }
                     scrollerID = { scrollerID }
 
                 />
