@@ -145,7 +145,7 @@ const Cradle = ({
     const cradleResizeStateRef = useRef(null) // access by closures
     cradleResizeStateRef.current = cradleResizeState
 
-    // console.log('==> cradleState','-'+scrollerID+'-',cradleState)
+    console.log('==> cradleState','-'+scrollerID+'-',cradleState)
 
     // flags
     const isMountedRef = useRef(true)
@@ -876,6 +876,7 @@ const Cradle = ({
     // useLayoutEffect for suppressing flashes
     useLayoutEffect(()=>{
 
+        console.log('inside useLayoutEffect for cradleState', cradleState)
         switch (cradleState) {
 
             // --------------[ precursors to setCradleContent ]---------------
@@ -1088,9 +1089,42 @@ const Cradle = ({
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
                 // update virtual DOM
-                setCradleState('preparerender')
+                const { layout } = cradleInheritedPropertiesRef.current
+                if (layout == 'uniform') {
+    
+                    setCradleState('preparerender')
+
+                } else {
+
+                        setCradleState('prepareDOMforvariablerender')
+
+                }
 
                 break
+            }
+
+            case 'prepareDOMforvariablerender': {
+
+                // cacheHandler.renderPortalList()
+
+                setCradleState('prepareforvariablerender')
+
+                break
+
+            }
+
+            case 'prepareforvariablerender': {
+
+                setTimeout(() => { // need for this is worrisome
+
+                    contentHandler.adjustScrollblockForVariability()
+
+                    setCradleState('preparerender')
+
+                },100)
+                
+                break
+
             }
 
             case 'preparerender': { // cycle for DOM update
@@ -1108,23 +1142,9 @@ const Cradle = ({
 
             case 'restoreinterrupts': { // normalize or resume cycling
 
-                // interruptHandler.restoreInterrupts()
+                interruptHandler.restoreInterrupts()
 
-                const { layout } = cradleInheritedPropertiesRef.current
-
-                if (layout == 'uniform') {
-
-                    interruptHandler.restoreInterrupts()
-
-                    setCradleState('ready')
-
-                } else {
-
-                    setCradleState('updateDOMforvariability')
-
-                }
-
-                // setCradleState('ready')
+                setCradleState('ready')
 
                 break 
 
@@ -1156,7 +1176,6 @@ const Cradle = ({
 
                 // synchronize cache
                 const { cache } = cradleInternalPropertiesRef.current
-                const { layout } = cradleInheritedPropertiesRef.current
                 if (cache == 'keepload') {
 
                     contentHandler.guardAgainstRunawayCaching()
@@ -1165,6 +1184,7 @@ const Cradle = ({
 
                 cacheHandler.renderPortalList()
 
+                const { layout } = cradleInheritedPropertiesRef.current
                 if (layout == 'uniform') {
 
                     setCradleState('ready')
@@ -1191,7 +1211,7 @@ const Cradle = ({
 
                 contentHandler.adjustScrollblockForVariability()
 
-                interruptHandler.restoreInterrupts()
+                // interruptHandler.restoreInterrupts()
 
                 setCradleState('ready')
 

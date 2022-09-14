@@ -568,7 +568,7 @@ export default class ContentHandler {
 
         } = cradlePositionData
 
-        // console.log('axisViewportOffset,blockScrollPos',axisViewportOffset,blockScrollPos)
+        console.log('axisViewportOffset,blockScrollPos',axisViewportOffset,blockScrollPos)
 
         let measuredHeadLength, measuredTailLength
         if (orientation == 'vertical') {
@@ -579,10 +579,10 @@ export default class ContentHandler {
             measuredTailLength = tailGrid.offsetWidth
         }
 
-        // console.log('headRowCount, baseHeadLength, measuredHeadLength',
-        //     headRowCount, baseHeadLength, measuredHeadLength)
-        // console.log('tailRowCount, baseTailLength, measuredTailLength',
-        //     tailRowCount, baseTailLength, measuredTailLength)
+        console.log('headRowCount, baseHeadLength, measuredHeadLength',
+            headRowCount, baseHeadLength, measuredHeadLength)
+        console.log('tailRowCount, baseTailLength, measuredTailLength',
+            tailRowCount, baseTailLength, measuredTailLength)
 
         const headDelta = baseHeadLength - measuredHeadLength
         const tailDelta = baseTailLength - measuredTailLength
@@ -600,8 +600,8 @@ export default class ContentHandler {
         const baseAxisScrollblockOffset = (axisReferenceRow * cellLength) + padding
         const axisScrollblockOffsetDelta = baseAxisScrollblockOffset - axisScrollblockOffset
 
-        // console.log('axisReferenceRow,axisScrollblockOffset,baseAxisScrollblockOffset, axisScrollblockOffsetDelta',
-        //     axisReferenceRow,axisScrollblockOffset,baseAxisScrollblockOffset, axisScrollblockOffsetDelta)
+        console.log('axisReferenceRow,axisScrollblockOffset,baseAxisScrollblockOffset, axisScrollblockOffsetDelta',
+            axisReferenceRow,axisScrollblockOffset,baseAxisScrollblockOffset, axisScrollblockOffsetDelta)
 
         const scrollblockHeight = baseblocklength - headDelta - tailDelta - axisScrollblockOffsetDelta
         // const scrollblockHeight = baseblocklength - tailDelta - axisScrollblockOffsetDelta
@@ -625,8 +625,8 @@ export default class ContentHandler {
 
         }
 
-        // console.log('baseblocklength, headDelta, tailDelta, axisScrollblockOffsetDelta, scrollblockHeight', 
-        //     baseblocklength, headDelta, tailDelta, axisScrollblockOffsetDelta, scrollblockHeight)
+        console.log('baseblocklength, headDelta, tailDelta, axisScrollblockOffsetDelta, scrollblockHeight', 
+            baseblocklength, headDelta, tailDelta, axisScrollblockOffsetDelta, scrollblockHeight)
 
     }
 
