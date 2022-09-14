@@ -145,7 +145,7 @@ const Cradle = ({
     const cradleResizeStateRef = useRef(null) // access by closures
     cradleResizeStateRef.current = cradleResizeState
 
-    console.log('==> cradleState','-'+scrollerID+'-',cradleState)
+    // console.log('==> cradleState','-'+scrollerID+'-',cradleState)
 
     // flags
     const isMountedRef = useRef(true)
@@ -876,7 +876,6 @@ const Cradle = ({
     // useLayoutEffect for suppressing flashes
     useLayoutEffect(()=>{
 
-        console.log('inside useLayoutEffect for cradleState', cradleState)
         switch (cradleState) {
 
             // --------------[ precursors to setCradleContent ]---------------
