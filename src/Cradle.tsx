@@ -1104,8 +1104,6 @@ const Cradle = ({
 
             case 'prepareDOMforvariablerender': {
 
-                // cacheHandler.renderPortalList()
-
                 setCradleState('prepareforvariablerender')
 
                 break
