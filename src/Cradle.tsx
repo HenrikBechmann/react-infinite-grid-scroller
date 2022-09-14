@@ -1093,19 +1093,6 @@ const Cradle = ({
                 break
             }
 
-            // case 'resetaftervariablescroll': {
-
-            //     // const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
-            //     // const scrollblockElement = viewportElement.firstChild
-            //     // const top = scrollblockElement.offsetTop
-            //     // scrollblockElement.style.top = (top + 5) + 'px'
-
-            //     // contentHandler.resetScrollPosition()
-            //     setCradleState('ready')
-
-            //     break
-            // }
-
             case 'preparerender': { // cycle for DOM update
 
                 // triggerlines will have been assigned to a new triggerCell by now.
@@ -1155,6 +1142,7 @@ const Cradle = ({
 
                 // synchronize cache
                 const { cache } = cradleInternalPropertiesRef.current
+                const { layout } = cradleInheritedPropertiesRef.current
                 if (cache == 'keepload') {
 
                     contentHandler.guardAgainstRunawayCaching()
@@ -1163,13 +1151,22 @@ const Cradle = ({
 
                 cacheHandler.renderPortalList()
 
-                setCradleState('updateDOMforvariability')
+                if (layout == 'uniform') {
+
+                    setCradleState('ready')
+
+                } else {
+
+                    setCradleState('updateDOMforvariability')
+
+                }
 
                 break
             }
 
             case 'updateDOMforvariability': {
 
+                // extra cycle needed to sunchronize DOM with grid changes
                 setCradleState('adjustforvariability')
 
                 break
