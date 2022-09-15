@@ -146,7 +146,7 @@ const Cradle = ({
     const cradleResizeStateRef = useRef(null) // access by closures
     cradleResizeStateRef.current = cradleResizeState
 
-    // console.log('==> cradleState','-'+scrollerID+'-',cradleState)
+    console.log('==> cradleState','-'+scrollerID+'-',cradleState)
 
     // flags
     const isMountedRef = useRef(true)
@@ -1025,6 +1025,7 @@ const Cradle = ({
                 continuing with 'preparerender', and ending with
                 'restoreinterrupts'
             */
+            case 'resetforvariability':
             case 'firstrender':
             case 'firstrenderfromcache':
             case 'rerenderfromcache':
@@ -1210,9 +1211,18 @@ const Cradle = ({
 
                 console.log('-->call for updateContent', cradleState)
 
-                contentHandler.adjustScrollblockForVariability()
+                if (contentHandler.adjustScrollblockForVariability()) {
 
-                setCradleState('ready')
+                    setCradleState('ready')
+
+                } else {
+
+                    console.log('===>> calling resetforvariability')
+                    stateHandler.setCradleState('resetforvariability')
+
+                }
+
+                break
 
             }
 

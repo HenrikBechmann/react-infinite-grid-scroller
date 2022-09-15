@@ -73,6 +73,8 @@ export default class ContentHandler {
 
         // ------------------------------[ 1. initialize ]---------------------------
 
+        console.log('setCradleContent: cradleState',cradleState)
+
         const { cradleParameters } = this
         const viewportInterruptProperties = cradleParameters.viewportInterruptPropertiesRef.current
         const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
@@ -122,6 +124,7 @@ export default class ContentHandler {
 
         // reposition at row boundary
         if ([
+            'resetforvariability',
             'firstrender', 
             'firstrenderfromcache',
             'finishreposition', 
@@ -543,7 +546,7 @@ export default class ContentHandler {
         const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
         const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
 
-        const { layoutHandler } = cradleHandlers
+        const { layoutHandler, stateHandler } = cradleHandlers
         const cradleElements = layoutHandler.elements
 
         const headGrid = cradleElements.headRef.current
@@ -565,6 +568,19 @@ export default class ContentHandler {
 
         const { cradlePositionData } = layoutHandler
 
+        const { 
+
+            blockScrollPos,
+            targetAxisViewportPixelOffset:axisViewportOffset,
+            targetAxisReferenceIndex:axisReferenceIndex 
+
+        } = cradlePositionData
+
+        if (axisReferenceIndex == 0) {
+            // TODO consider changing scrollPos etc directly instead
+            return false
+        }
+
         // ------------------------[ calculations ]------------------------
 
         const scrollblockOffset = 
@@ -583,14 +599,6 @@ export default class ContentHandler {
 
         const baseHeadLength = (headRowCount * cellLength) + padding
         const baseTailLength = (tailRowCount * cellLength) + padding - gap
-
-        const { 
-
-            blockScrollPos,
-            targetAxisViewportPixelOffset:axisViewportOffset,
-            targetAxisReferenceIndex:axisReferenceIndex 
-
-        } = cradlePositionData
 
         console.log('axisViewportOffset,blockScrollPos',axisViewportOffset,blockScrollPos)
 
@@ -651,6 +659,8 @@ export default class ContentHandler {
 
         console.log('baseblocklength, headDelta, tailDelta, axisScrollblockOffsetDelta, scrollblockHeight', 
             baseblocklength, headDelta, tailDelta, axisScrollblockOffsetDelta, scrollblockHeight)
+
+        return true
 
     }
 
