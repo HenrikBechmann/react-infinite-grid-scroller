@@ -14,17 +14,21 @@
 
     BUGS: 
 
-        - scrolling back from goto second row overscrolls or underscrolls
         - axis can jump on load variable data
         - pivot is broken
         - FF sets axis to past last item on variable layout
         - Edge fails to set scrollPos so at bottom so that last item is at end of scrollblock
         - bottom of list adjustments are broken
-        - reposition is broken
+        - reposition is flaky with variable
         - goto fails from blank cradle
+        - reposition to start with variable sometimes ends up blank (content below viewport)
+        - possible reset layout reference values on reposition
 
     TODO:
 
+        - calcalate end of list by actual lengths (both set and update)
+        - consider resetting positions on after scroll
+        - reset scrollPos etc directly in adjustScrollblockForVariability when axisRefIndex == 0
         - try performance without cradle resizeobserver
         - try changing scrollblock length/top during scroll
         - review all code where variable mode changes positioning calculations
