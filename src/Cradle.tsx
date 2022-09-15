@@ -1089,42 +1089,42 @@ const Cradle = ({
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
                 // update virtual DOM
-                const { layout } = cradleInheritedPropertiesRef.current
-                if (layout == 'uniform') {
+                // const { layout } = cradleInheritedPropertiesRef.current
+                // if (layout == 'uniform') {
     
                     setCradleState('preparerender')
 
-                } else {
+                // } else {
 
-                    setCradleState('prepareDOMforvariablerender')
+                //     setCradleState('prepareDOMforvariablerender')
 
-                }
+                // }
 
                 break
             }
 
-            case 'prepareDOMforvariablerender': {
+            // case 'prepareDOMforvariablerender': {
 
-                setCradleState('prepareforvariablerender')
+            //     setCradleState('prepareforvariablerender')
 
-                break
+            //     break
 
-            }
+            // }
 
-            case 'prepareforvariablerender': {
+            // case 'prepareforvariablerender': {
 
-                console.log('-->setTimeout for setContent', cradleState)
-                setTimeout(() => { // need for this is worrisome
+            //     console.log('-->setTimeout for setContent', cradleState)
+            //     setTimeout(() => { // need for this is worrisome
 
-                    contentHandler.adjustScrollblockForVariability()
+            //         contentHandler.adjustScrollblockForVariability()
 
-                    setCradleState('preparerender')
+            //         setCradleState('preparerender')
 
-                },TIMEOUT_FOR_VARIABLE_MEASUREMENTS)
+            //     },TIMEOUT_FOR_VARIABLE_MEASUREMENTS)
                 
-                break
+            //     break
 
-            }
+            // }
 
             case 'preparerender': { // cycle for DOM update
 

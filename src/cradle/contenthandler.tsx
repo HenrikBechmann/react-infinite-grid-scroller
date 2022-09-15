@@ -110,6 +110,7 @@ export default class ContentHandler {
             cache,
             scrollerID,
             styles,
+            layout,
         } = cradleInheritedProperties
 
         const {crosscount, listsize} = cradleInternalProperties
@@ -176,7 +177,23 @@ export default class ContentHandler {
 //             scrollblockViewportPixelOffset
 //         )
 
-        const axisViewportPixelOffset = targetAxisViewportPixelOffset // semantics
+        // reset scrollblockOffset
+        const scrollblockElement = viewportElement.firstChild
+        const scrollblockOffset =
+            (layout == 'uniform')?
+                0:
+                (orientation == 'vertical')?
+                    scrollblockElement.offsetTop:
+                    scrollblockElement.offsetHeight
+        if (orientation == 'vertical') {
+            scrollblockElement.top = '0px'
+        } else {
+            scrollblockElement.left = '0px'
+        }
+
+        // console.log('setCradleContent: scrollblockOffset', scrollblockOffset)
+
+        const axisViewportPixelOffset = targetAxisViewportPixelOffset // + scrollblockOffset// semantics
 
         // ----------------------[ 3. get and config content ]----------------------
         
@@ -225,12 +242,14 @@ export default class ContentHandler {
 
         //  ----------------------[ 4. set CSS ]-----------------------
 
+        // const adjustedScrollblockViewportPixelOffset = scrollblockViewportPixelOffset + scrollblockOffset
+
         cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset
         // avoid bogus call to updateCradleContent
         scrollHandler.resetScrollData(scrollblockViewportPixelOffset) 
 
         viewportElement[cradlePositionData.blockScrollProperty] =
-            cradlePositionData.blockScrollPos
+            cradlePositionData.blockScrollPos 
 
         const cradleElements = layoutHandler.elements
         const axisElement = cradleElements.axisRef.current
@@ -548,6 +567,11 @@ export default class ContentHandler {
 
         // ------------------------[ calculations ]------------------------
 
+        const scrollblockOffset = 
+            (orientation == 'vertical')?
+                scrollblockElement.offsetTop:
+                scrollblockElement.offsetLeft
+
         const headRowCount = Math.ceil(headGrid.childNodes.length/crosscount)
         const tailRowCount = Math.ceil(tailGrid.childNodes.length/crosscount)
 
@@ -611,7 +635,7 @@ export default class ContentHandler {
         if (orientation == 'vertical') {
 
             // the scrollblock top is moved to compensate for the headDelta
-            scrollblockElement.style.top = -headDelta + 'px'
+            scrollblockElement.style.top = -headDelta + 'px'// -scrollblockOffset + axisScrollblockOffsetDelta -headDelta + 'px'
             // the axis is moved in the opposite direction to maintain viewport position
             axisElement.style.top = axisScrollblockOffset + 'px'
             // the height is adjusted by both deltas, as it controls the scroll length

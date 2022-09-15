@@ -20,9 +20,11 @@
         - Edge fails to set scrollPos so at bottom so that last item is at end of scrollblock
         - bottom of list adjustments are broken
         - reposition is broken
+        - goto fails from blank cradle
 
     TODO:
 
+        - try performance without cradle resizeobserver
         - try changing scrollblock length/top during scroll
         - review all code where variable mode changes positioning calculations
         - use cradleResize to capture async variable cell updates between state cycles
