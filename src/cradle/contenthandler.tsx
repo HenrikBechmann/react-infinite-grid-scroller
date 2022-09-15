@@ -635,7 +635,7 @@ export default class ContentHandler {
         if (orientation == 'vertical') {
 
             // the scrollblock top is moved to compensate for the headDelta
-            scrollblockElement.style.top = -headDelta - scrollblockOffset + 'px'// -scrollblockOffset + axisScrollblockOffsetDelta -headDelta + 'px'
+            scrollblockElement.style.top = - headDelta - scrollblockOffset + 'px'
             // the axis is moved in the opposite direction to maintain viewport position
             axisElement.style.top = axisScrollblockOffset + 'px'
             // the height is adjusted by both deltas, as it controls the scroll length
@@ -643,7 +643,7 @@ export default class ContentHandler {
 
         } else {
 
-            scrollblockElement.style.left = -headDelta + 'px'
+            scrollblockElement.style.left = -headDelta - scrollblockOffset + 'px'
             axisElement.style.left = axisScrollblockOffset + 'px'
             scrollblockElement.style.width = scrollblockHeight + 'px'
 
