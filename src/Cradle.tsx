@@ -109,7 +109,7 @@ const Cradle = ({
         SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
         IDLECALLBACK_TIMEOUT,
         MAX_CACHE_OVER_RUN,
-        TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
+        // TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
     }) => {
 
     if (listsize == 0) return null // nothing to do

@@ -179,16 +179,16 @@ export default class ContentHandler {
 
         // reset scrollblockOffset
         const scrollblockElement = viewportElement.firstChild
-        const scrollblockOffset =
-            (layout == 'uniform')?
-                0:
-                (orientation == 'vertical')?
-                    scrollblockElement.offsetTop:
-                    scrollblockElement.offsetHeight
+        // const scrollblockOffset =
+        //     (layout == 'uniform')?
+        //         0:
+        //         (orientation == 'vertical')?
+        //             scrollblockElement.offsetTop:
+        //             scrollblockElement.offsetHeight
         if (orientation == 'vertical') {
-            scrollblockElement.top = '0px'
+            scrollblockElement.style.top = '0px'
         } else {
-            scrollblockElement.left = '0px'
+            scrollblockElement.style.left = '0px'
         }
 
         // console.log('setCradleContent: scrollblockOffset', scrollblockOffset)
@@ -244,9 +244,9 @@ export default class ContentHandler {
 
         // const adjustedScrollblockViewportPixelOffset = scrollblockViewportPixelOffset + scrollblockOffset
 
-        cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset
+        cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset // - scrollblockOffset
         // avoid bogus call to updateCradleContent
-        scrollHandler.resetScrollData(scrollblockViewportPixelOffset) 
+        scrollHandler.resetScrollData(scrollblockViewportPixelOffset) // - scrollblockOffset) 
 
         viewportElement[cradlePositionData.blockScrollProperty] =
             cradlePositionData.blockScrollPos 
@@ -620,7 +620,7 @@ export default class ContentHandler {
 
         // calculate axis offset delta
         const axisReferenceRow = Math.ceil(axisReferenceIndex/crosscount)
-        const axisScrollblockOffset = blockScrollPos + axisViewportOffset + headDelta
+        const axisScrollblockOffset = blockScrollPos + axisViewportOffset + headDelta + scrollblockOffset
         const baseAxisScrollblockOffset = (axisReferenceRow * cellLength) + padding
         const axisScrollblockOffsetDelta = baseAxisScrollblockOffset - axisScrollblockOffset
 
@@ -635,7 +635,7 @@ export default class ContentHandler {
         if (orientation == 'vertical') {
 
             // the scrollblock top is moved to compensate for the headDelta
-            scrollblockElement.style.top = -headDelta + 'px'// -scrollblockOffset + axisScrollblockOffsetDelta -headDelta + 'px'
+            scrollblockElement.style.top = -headDelta - scrollblockOffset + 'px'// -scrollblockOffset + axisScrollblockOffsetDelta -headDelta + 'px'
             // the axis is moved in the opposite direction to maintain viewport position
             axisElement.style.top = axisScrollblockOffset + 'px'
             // the height is adjusted by both deltas, as it controls the scroll length
