@@ -135,14 +135,14 @@ export default class StylesHandler {
 
         if (orientation == 'vertical') {
             bottom = 0
-            left = 0
-            right = 0
+            left = 'auto'
+            right = 'auto'
             top = 'auto'
         } else {
-            bottom = 0
+            bottom = 'auto'
             left = 'auto'
             right = 0
-            top = 0
+            top = 'auto'
         }
 
         return {
@@ -167,14 +167,14 @@ export default class StylesHandler {
 
         if (orientation == 'vertical') {
             bottom = 'auto'
-            left = 0
-            right = 0
-            top = 0
-        } else {
-            bottom = 0
-            left = 0
+            left = 'auto'
             right = 'auto'
             top = 0
+        } else {
+            bottom = 'auto'
+            left = 0
+            right = 'auto'
+            top = 'auto'
         }
 
         return {
