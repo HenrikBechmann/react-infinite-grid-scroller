@@ -210,7 +210,9 @@ const InfiniteGridScroller = (props) => {
     let {
 
         showAxis, // for debug
-        minMaxDeltaRatio,
+        // varMin + ((cellLength - varMin) * minMaxDeltaRation) used 
+        //     to calculate virtual position in scrollblock
+        minMaxDeltaRatio, 
         VIEWPORT_RESIZE_TIMEOUT,
         SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
         IDLECALLBACK_TIMEOUT,
