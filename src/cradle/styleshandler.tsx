@@ -27,6 +27,8 @@ export default class StylesHandler {
         orientation, 
         cellHeight, 
         cellWidth, 
+        varHeightMin,
+        varWidthMin,
         gap,
         padding, 
         crosscount, 
