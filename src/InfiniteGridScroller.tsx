@@ -26,6 +26,7 @@
 
     TODO:
 
+        - provide minHeight for placeholders for variable
         - calcalate end of list by actual lengths (both set and update)
         - consider resetting positions on after scroll
         - reset scrollPos etc directly in adjustScrollblockForVariability when axisRefIndex == 0
@@ -122,6 +123,8 @@ const InfiniteGridScroller = (props) => {
             // base for variable layout
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
             // base for variable layout
+        varHeightMin = 0, // for layout == 'variable' && orientation == 'vertical'
+        varWidthMin = 0, // for layout == 'variable' && orientation == 'horizontal'
         layout = 'uniform', // uniform, variable
 
         // ** scroller specs:
@@ -139,7 +142,7 @@ const InfiniteGridScroller = (props) => {
             // placeholdercontent. Do not make structural changes!
 
         // ** system specs:
-        useScrollTracker = true, // the internal use feedback for repositioning
+        useScrollTracker = true, // the internal component to give feedback for repositioning
         cache = 'cradle', // "preload", "keepload" or "cradle"
         cacheMax = null, // always minimum cradle; null means limited by listsize
         triggerlineOffset = 10, // distance from cell head or tail for content shifts above/below axis
@@ -148,6 +151,11 @@ const InfiniteGridScroller = (props) => {
         advanced = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
     } = props
+
+    if (!(cellWidth && cellHeight && getItem )) {
+        console.log('RIGS: cellWidth, cellHeight and getItem are required')
+        return null
+    }
 
     // ---------------------[ Data setup ]----------------------
 
@@ -159,6 +167,8 @@ const InfiniteGridScroller = (props) => {
     estimatedListSize = estimatedListSize ?? 0
     runwaySize = runwaySize ?? 3
     useScrollTracker = useScrollTracker ?? true
+    varHeightMin = varHeightMin ?? 0
+    varWidthMin = varWidthMin ?? 0
 
     // prop constraints - non-negative values
     runwaySize = Math.max(1,runwaySize) // runwaysize must be at least 1
@@ -183,6 +193,8 @@ const InfiniteGridScroller = (props) => {
         padding,
         cellHeight,
         cellWidth,
+        varHeightMin,
+        varWidthMin,
         layout,
     }
 
@@ -198,10 +210,11 @@ const InfiniteGridScroller = (props) => {
     let {
 
         showAxis, // for debug
+        minMaxDeltaRatio,
         VIEWPORT_RESIZE_TIMEOUT,
         SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
         IDLECALLBACK_TIMEOUT,
-        // TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
+        TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
         MAX_CACHE_OVER_RUN,
 
     } = advanced
@@ -209,8 +222,10 @@ const InfiniteGridScroller = (props) => {
     VIEWPORT_RESIZE_TIMEOUT = VIEWPORT_RESIZE_TIMEOUT ?? 250
     SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = SCROLL_TIMEOUT_FOR_ONAFTERSCROLL ?? 100
     IDLECALLBACK_TIMEOUT = IDLECALLBACK_TIMEOUT ?? 4000
-    // TIMEOUT_FOR_VARIABLE_MEASUREMENTS = TIMEOUT_FOR_VARIABLE_MEASUREMENTS ?? 100
+    TIMEOUT_FOR_VARIABLE_MEASUREMENTS = TIMEOUT_FOR_VARIABLE_MEASUREMENTS ?? 100
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
+
+    minMaxDeltaRatio = minMaxDeltaRatio ?? 0.5
 
     if (typeof showAxis != 'boolean') showAxis = false
 
@@ -323,10 +338,11 @@ const InfiniteGridScroller = (props) => {
                     cacheHandler = {cacheHandlerRef.current}
                     useScrollTracker = {useScrollTracker}
                     showAxis = { showAxis }
+                    minMaxDeltaRatio = { minMaxDeltaRatio }
                     SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = { SCROLL_TIMEOUT_FOR_ONAFTERSCROLL }
                     IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }
                     MAX_CACHE_OVER_RUN = { MAX_CACHE_OVER_RUN }
-                    // TIMEOUT_FOR_VARIABLE_MEASUREMENTS = { TIMEOUT_FOR_VARIABLE_MEASUREMENTS }
+                    TIMEOUT_FOR_VARIABLE_MEASUREMENTS = { TIMEOUT_FOR_VARIABLE_MEASUREMENTS }
                     scrollerID = { scrollerID }
 
                 />
@@ -345,7 +361,7 @@ export default InfiniteGridScroller
 
 const cacherootstyle = {display:'none'}// as React.CSSProperties // static, out of view 
 
-// utilities
+// utility
 function compareProps (obj1,obj2) {
     const keys = Object.keys(obj1)
     let same
