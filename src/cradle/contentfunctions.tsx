@@ -779,6 +779,8 @@ const createCellFrame = ({
         orientation,
         cellHeight,
         cellWidth,
+        varHeightMin,
+        varWidthMin,
         getItem,
         placeholder,
         scrollerID,
@@ -796,6 +798,8 @@ const createCellFrame = ({
         orientation = { orientation }
         cellHeight = { cellHeight }
         cellWidth = { cellWidth }
+        varHeightMin = { varHeightMin }
+        varWidthMin = { varWidthMin }
         layout = { layout }
         index = { index }
         getItem = { getItem }
