@@ -228,26 +228,30 @@ export default class StylesHandler {
         const position = 'absolute'
 
         let width, height, top, left
-        if (orientation == 'horizontal') {
+        if (orientation == 'vertical') {
+
+            height = '0px'
+            width = '100%'
+            left = 'auto'
+            top = triggerlineOffset + 'px'
+
+        } else {
 
             height = '100%'
             width = '0px'
             left = triggerlineOffset + 'px'
             top = 'auto'
 
-        } else {
-            height = '0px'
-            width = '100%'
-            left = 'auto'
-            top = triggerlineOffset + 'px'
         }
                 
         return {
+
             position,
             width,
             height,
             top,
             left,
+
         }
     }
     private getTriggercellTriggerlineTailStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
@@ -255,26 +259,30 @@ export default class StylesHandler {
         const position = 'absolute'
 
         let width, height, bottom, right
-        if (orientation == 'horizontal') {
+        if (orientation == 'vertical') {
+
+            height = '0px'
+            width = '100%'
+            bottom = -(triggerlineOffset + gap) + 'px'
+            right = 'auto'
+
+        } else {
 
             height = '100%'
             width = '0px'
             bottom = 'auto'
             right = -(triggerlineOffset + gap) + 'px'
 
-        } else {
-            height = '0px'
-            width = '100%'
-            bottom = -(triggerlineOffset + gap) + 'px'
-            right = 'auto'
         }
                 
         return {
+
             position,
             width,
             height,
             bottom,
             right,
+            
         }
     }
 }
