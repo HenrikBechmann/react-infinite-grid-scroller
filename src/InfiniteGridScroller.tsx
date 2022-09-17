@@ -14,16 +14,16 @@
 
     BUGS: 
 
-        - gap is inconsistent in first rows
         - axis can jump on load variable data
-        - pivot is broken
-        - FF sets axis to past last item on variable layout
-        - Edge fails to set scrollPos so at bottom so that last item is at end of scrollblock
         - bottom of list adjustments are broken
         - reposition is flaky with variable
         - goto fails from blank cradle
         - reposition to start with variable sometimes ends up blank (content below viewport)
         - possible reset layout reference values on reposition
+
+        - pivot is broken
+        - FF sets axis to past last item on variable layout
+        - Edge fails to set scrollPos so at bottom so that last item is at end of scrollblock
 
     TODO:
 
