@@ -1035,7 +1035,7 @@ const Cradle = ({
                 continuing with 'preparerender', and ending with
                 'restoreinterrupts'
             */
-            case 'resetupdateforvariability':
+            // case 'resetupdateforvariability':
             case 'firstrender':
             case 'firstrenderfromcache':
             case 'rerenderfromcache':
@@ -1210,7 +1210,7 @@ const Cradle = ({
 
             case 'refreshDOMupdateforvariability': {
 
-                console.log('==> cradleState: refreshDOMupdateforvariability')
+                // console.log('==> cradleState: refreshDOMupdateforvariability')
 
                 // extra cycle needed to allow time to synchronize DOM with grid changes
 
@@ -1222,19 +1222,12 @@ const Cradle = ({
 
             case 'adjustupdateforvariability': {
 
-                console.log('--> cradleState: adjustupdateforvariability')
-                console.log('--> calling function adjustScrollblockForVariability', cradleState)
+                // console.log('--> cradleState: adjustupdateforvariability')
+                // console.log('--> calling function adjustScrollblockForVariability', cradleState)
 
-                if (contentHandler.adjustScrollblockForVariability()) {
+                contentHandler.adjustScrollblockForVariability()
 
-                    setCradleState('ready')
-
-                } else {
-
-                    console.log('--> setting cradleState resetupdateforvariability')
-                    stateHandler.setCradleState('resetupdateforvariability')
-
-                }
+                setCradleState('ready')
 
                 break
 

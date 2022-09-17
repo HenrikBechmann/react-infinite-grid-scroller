@@ -124,7 +124,7 @@ export default class ContentHandler {
 
         // reposition at row boundary
         if ([
-            'resetupdateforvariability',
+            // 'resetupdateforvariability',
             'firstrender', 
             'firstrenderfromcache',
             'finishreposition', 
@@ -194,9 +194,9 @@ export default class ContentHandler {
         const scrollblockElement = viewportElement.firstChild
 
         if (orientation == 'vertical') {
-            scrollblockElement.style.top = '0px'
+            scrollblockElement.style.top = 'unset'
         } else {
-            scrollblockElement.style.left = '0px'
+            scrollblockElement.style.left = 'unset'
         }
 
         // console.log('setCradleContent: scrollblockOffset', scrollblockOffset)
@@ -560,14 +560,7 @@ export default class ContentHandler {
         const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
 
         const { layoutHandler } = cradleHandlers
-        const { elements:cradleElements, cradlePositionData } = layoutHandler.elements
-        const { 
-
-            blockScrollPos,
-            targetAxisViewportPixelOffset:axisViewportOffset,
-            targetAxisReferenceIndex:axisReferenceIndex 
-
-        } = cradlePositionData
+        const { elements:cradleElements, cradlePositionData } = layoutHandler
 
         const headGrid = cradleElements.headRef.current
         const tailGrid = cradleElements.tailRef.current
@@ -586,19 +579,41 @@ export default class ContentHandler {
 
         const { crosscount, listsize } = cradleInternalProperties
 
-        // redirect
-
-        if (axisReferenceIndex == 0) { // trigger setContent reset
-            // TODO consider changing scrollPos etc directly instead
-            return false
-        }
-
-        // ------------------------[ calculations ]------------------------
-
-        const scrollblockOffset = // from previous adjustments
+        let scrollblockOffset = // from previous adjustments
             (orientation == 'vertical')?
                 scrollblockElement.offsetTop:
                 scrollblockElement.offsetLeft
+
+        const { 
+
+            targetAxisReferenceIndex:axisReferenceIndex,
+
+        } = cradlePositionData
+
+        if (axisReferenceIndex == 0) { // trigger setContent reset
+
+            const blockScrollPos = padding - cradlePositionData.targetAxisViewportPixelOffset
+
+            cradlePositionData.blockScrollPos = blockScrollPos
+
+            if (orientation == 'vertical') {
+                scrollblockElement.style.top = 'unset'
+            } else {
+                scrollblockElement.style.left = 'unset'
+            }
+
+            scrollblockOffset = 0
+
+        }
+
+        const { 
+
+            targetAxisViewportPixelOffset:axisViewportOffset,
+            blockScrollPos,
+
+        } = cradlePositionData
+
+        // ------------------------[ calculations ]------------------------
 
         const headRowCount = Math.ceil(headGrid.childNodes.length/crosscount)
         const tailRowCount = Math.ceil(tailGrid.childNodes.length/crosscount)
@@ -612,8 +627,6 @@ export default class ContentHandler {
         const baseHeadLength = (headRowCount * baseCellLength) + padding
         const baseTailLength = (tailRowCount * baseCellLength) + padding - gap
 
-        // console.log('axisViewportOffset,blockScrollPos',axisViewportOffset,blockScrollPos)
-
         let measuredHeadLength, measuredTailLength
         if (orientation == 'vertical') {
             measuredHeadLength = headGrid.offsetHeight
@@ -623,15 +636,8 @@ export default class ContentHandler {
             measuredTailLength = tailGrid.offsetWidth
         }
 
-        // console.log('headRowCount, baseHeadLength, measuredHeadLength',
-        //     headRowCount, baseHeadLength, measuredHeadLength)
-        // console.log('tailRowCount, baseTailLength, measuredTailLength',
-        //     tailRowCount, baseTailLength, measuredTailLength)
-
         const headDelta = baseHeadLength - measuredHeadLength
         const tailDelta = baseTailLength - measuredTailLength
-
-        // console.log('headDiff, tailDiff', headDelta, tailDelta)
 
         const listrowcount = Math.ceil(listsize/crosscount)
 
@@ -640,18 +646,21 @@ export default class ContentHandler {
 
         // calculate axis offset delta
         const axisReferenceRow = Math.ceil(axisReferenceIndex/crosscount)
-        const axisScrollblockOffset = blockScrollPos + axisViewportOffset + headDelta + scrollblockOffset
+        const axisScrollblockOffset = 
+            blockScrollPos + axisViewportOffset + headDelta + scrollblockOffset
 
         const baseAxisScrollblockOffset = (axisReferenceRow * baseCellLength) + padding
         const axisScrollblockOffsetDelta = baseAxisScrollblockOffset - axisScrollblockOffset
 
-        // console.log('axisReferenceRow,axisScrollblockOffset,baseAxisScrollblockOffset, axisScrollblockOffsetDelta',
-        //     axisReferenceRow,axisScrollblockOffset,baseAxisScrollblockOffset, axisScrollblockOffsetDelta)
-
         const scrollblockHeight = baseblocklength - headDelta - tailDelta - axisScrollblockOffsetDelta
-        // const scrollblockHeight = baseblocklength - tailDelta - axisScrollblockOffsetDelta
 
         // -----------------------[ application ]-------------------------
+
+        if (axisReferenceIndex == 0) {
+
+            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+
+        }
 
         if (orientation == 'vertical') {
 
@@ -669,9 +678,6 @@ export default class ContentHandler {
             scrollblockElement.style.width = scrollblockHeight + 'px'
 
         }
-
-        // console.log('baseblocklength, headDelta, tailDelta, axisScrollblockOffsetDelta, scrollblockHeight', 
-        //     baseblocklength, headDelta, tailDelta, axisScrollblockOffsetDelta, scrollblockHeight)
 
         return true
 
