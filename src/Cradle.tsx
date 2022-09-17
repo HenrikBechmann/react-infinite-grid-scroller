@@ -1035,7 +1035,7 @@ const Cradle = ({
                 continuing with 'preparerender', and ending with
                 'restoreinterrupts'
             */
-            case 'resetforvariability':
+            case 'resetupdateforvariability':
             case 'firstrender':
             case 'firstrenderfromcache':
             case 'rerenderfromcache':
@@ -1231,8 +1231,8 @@ const Cradle = ({
 
                 } else {
 
-                    console.log('--> setting cradleState resetforvariability')
-                    stateHandler.setCradleState('resetforvariability')
+                    console.log('--> setting cradleState resetupdateforvariability')
+                    stateHandler.setCradleState('resetupdateforvariability')
 
                 }
 

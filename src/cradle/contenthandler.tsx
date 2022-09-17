@@ -124,7 +124,7 @@ export default class ContentHandler {
 
         // reposition at row boundary
         if ([
-            'resetforvariability',
+            'resetupdateforvariability',
             'firstrender', 
             'firstrenderfromcache',
             'finishreposition', 
@@ -547,6 +547,8 @@ export default class ContentHandler {
 
     // ==============================[ RESPOSITION VARIABLE CONTENT ]==========================
 
+    // all DOM elements should be rendered at this point
+    // sets CSS: scrollblockElement top and height (or left and width), and axisElement top (or left)
     public adjustScrollblockForVariability = () => {
 
         // ----------------------[ setup ]------------------------
@@ -557,8 +559,15 @@ export default class ContentHandler {
         const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
         const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
 
-        const { layoutHandler, stateHandler } = cradleHandlers
-        const cradleElements = layoutHandler.elements
+        const { layoutHandler } = cradleHandlers
+        const { elements:cradleElements, cradlePositionData } = layoutHandler.elements
+        const { 
+
+            blockScrollPos,
+            targetAxisViewportPixelOffset:axisViewportOffset,
+            targetAxisReferenceIndex:axisReferenceIndex 
+
+        } = cradlePositionData
 
         const headGrid = cradleElements.headRef.current
         const tailGrid = cradleElements.tailRef.current
@@ -577,24 +586,16 @@ export default class ContentHandler {
 
         const { crosscount, listsize } = cradleInternalProperties
 
-        const { cradlePositionData } = layoutHandler
+        // redirect
 
-        const { 
-
-            blockScrollPos,
-            targetAxisViewportPixelOffset:axisViewportOffset,
-            targetAxisReferenceIndex:axisReferenceIndex 
-
-        } = cradlePositionData
-
-        if (axisReferenceIndex == 0) {
+        if (axisReferenceIndex == 0) { // trigger setContent reset
             // TODO consider changing scrollPos etc directly instead
             return false
         }
 
         // ------------------------[ calculations ]------------------------
 
-        const scrollblockOffset = 
+        const scrollblockOffset = // from previous adjustments
             (orientation == 'vertical')?
                 scrollblockElement.offsetTop:
                 scrollblockElement.offsetLeft
@@ -602,14 +603,14 @@ export default class ContentHandler {
         const headRowCount = Math.ceil(headGrid.childNodes.length/crosscount)
         const tailRowCount = Math.ceil(tailGrid.childNodes.length/crosscount)
 
-        const cellLength = 
+        const baseCellLength = 
             ((orientation == 'vertical')?
                 cellHeight:
                 cellWidth
             ) + gap
 
-        const baseHeadLength = (headRowCount * cellLength) + padding
-        const baseTailLength = (tailRowCount * cellLength) + padding - gap
+        const baseHeadLength = (headRowCount * baseCellLength) + padding
+        const baseTailLength = (tailRowCount * baseCellLength) + padding - gap
 
         // console.log('axisViewportOffset,blockScrollPos',axisViewportOffset,blockScrollPos)
 
@@ -634,13 +635,14 @@ export default class ContentHandler {
 
         const listrowcount = Math.ceil(listsize/crosscount)
 
-        const baseblocklength = (listrowcount * cellLength) - gap
+        const baseblocklength = (listrowcount * baseCellLength) - gap // no gap below last row
             + (padding * 2) // leading and trailing padding
 
         // calculate axis offset delta
         const axisReferenceRow = Math.ceil(axisReferenceIndex/crosscount)
         const axisScrollblockOffset = blockScrollPos + axisViewportOffset + headDelta + scrollblockOffset
-        const baseAxisScrollblockOffset = (axisReferenceRow * cellLength) + padding
+
+        const baseAxisScrollblockOffset = (axisReferenceRow * baseCellLength) + padding
         const axisScrollblockOffsetDelta = baseAxisScrollblockOffset - axisScrollblockOffset
 
         // console.log('axisReferenceRow,axisScrollblockOffset,baseAxisScrollblockOffset, axisScrollblockOffsetDelta',
