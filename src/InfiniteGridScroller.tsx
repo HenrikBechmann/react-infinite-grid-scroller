@@ -27,6 +27,7 @@
 
     TODO:
 
+        - try to remove need for viewportVisibleRowcount
         - provide minHeight for placeholders for variable
         - calcalate end of list by actual lengths (both set and update)
         - consider resetting positions on after scroll
