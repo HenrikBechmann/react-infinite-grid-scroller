@@ -154,16 +154,26 @@ export default class ContentHandler {
         // note that targetAxisReferenceIndex replaces requestedAxisReferenceIndex here
         const {
 
+            // by index
             targetCradleReferenceIndex, 
             targetAxisReferenceIndex,
+
+            // counts
             newCradleContentCount:cradleContentCount, 
+
+            // target scrollPos by pixels
             targetScrollblockViewportPixelOffset:scrollblockViewportPixelOffset,
 
         } = getContentListRequirements({
 
+                // pixel
                 baseRowLength,
-                targetAxisReferenceIndex:workingRequestAxisReferenceIndex,
                 targetAxisViewportPixelOffset,
+
+                // index
+                targetAxisReferenceIndex:workingRequestAxisReferenceIndex,
+
+                // resources
                 cradleInheritedProperties,
                 cradleInternalProperties,
 
@@ -182,12 +192,7 @@ export default class ContentHandler {
 
         // reset scrollblockOffset
         const scrollblockElement = viewportElement.firstChild
-        // const scrollblockOffset =
-        //     (layout == 'uniform')?
-        //         0:
-        //         (orientation == 'vertical')?
-        //             scrollblockElement.offsetTop:
-        //             scrollblockElement.offsetHeight
+
         if (orientation == 'vertical') {
             scrollblockElement.style.top = '0px'
         } else {
@@ -366,6 +371,7 @@ export default class ContentHandler {
             listsize,
 
             reverseDirection:layoutHandler.triggercellIsInTail,
+
         })
 
         // second abandon option/3; nothing to do
@@ -385,14 +391,19 @@ export default class ContentHandler {
 
         const {
 
+            // by index
             newCradleReferenceIndex,
             cradleReferenceItemShift:cradleItemShift, 
             newAxisReferenceIndex:axisReferenceIndex, 
             axisReferenceItemShift:axisItemShift, 
-            newAxisPixelOffset:axisPixelOffset, 
+
+            // counts
             newCradleContentCount:cradleContentCount,
             listStartChangeCount,
             listEndChangeCount,
+
+            // pixels
+            newAxisPixelOffset:axisPixelOffset, 
 
         } = calcContentShift({
 

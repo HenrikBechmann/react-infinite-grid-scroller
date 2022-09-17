@@ -1107,22 +1107,22 @@ const Cradle = ({
 
                 // } else {
 
-                //     setCradleState('prepareDOMforvariablerender')
+                //     setCradleState('refreshDOMsetforvariablerender')
 
                 // }
 
                 break
             }
 
-            // case 'prepareDOMforvariablerender': {
+            // case 'refreshDOMsetforvariablerender': {
 
-            //     setCradleState('prepareforvariablerender')
+            //     setCradleState('preparesetforvariablerender')
 
             //     break
 
             // }
 
-            // case 'prepareforvariablerender': {
+            // case 'preparesetforvariablerender': {
 
             //     console.log('-->setTimeout for setContent', cradleState)
             //     setTimeout(() => { // need for this is worrisome

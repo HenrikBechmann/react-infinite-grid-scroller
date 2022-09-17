@@ -23,19 +23,22 @@ import CellFrame from '../CellFrame'
 
 export const getContentListRequirements = ({ // called from setCradleContent only
 
+        // index
+        targetAxisReferenceIndex, // from user, or from pivot
+        // pixels
         baseRowLength,
+        targetAxisViewportPixelOffset,
+        // resources
         cradleInheritedProperties,
         cradleInternalProperties,
-        targetAxisReferenceIndex, // from user, or from pivot
-        targetAxisViewportPixelOffset,
 
     }) => {
 
     const { 
-        orientation, 
-        cellHeight, 
-        cellWidth, 
-        gap,
+        // orientation, 
+        // cellHeight, 
+        // cellWidth, 
+        // gap,
         padding,
     } = cradleInheritedProperties
 
