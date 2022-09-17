@@ -894,6 +894,9 @@ const createPortalNode = (index, itemID, layout) => {
     if (layout == 'uniform') {
         container.style.inset = '0px' 
         container.style.position = 'absolute'
+    } else {
+        container.style.inset = null 
+        container.style.position = 'static'
     }
     container.dataset.type = 'contentenvelope'
     container.dataset.index = index
