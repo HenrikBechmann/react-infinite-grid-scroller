@@ -14,6 +14,7 @@
 
     BUGS: 
 
+        - gap is inconsistent in first rows
         - axis can jump on load variable data
         - pivot is broken
         - FF sets axis to past last item on variable layout

@@ -1219,7 +1219,7 @@ const Cradle = ({
 
             case 'adjustforvariability': {
 
-                console.log('-->call for updateContent', cradleState)
+                // console.log('-->call for updateContent', cradleState)
 
                 if (contentHandler.adjustScrollblockForVariability()) {
 
@@ -1227,7 +1227,7 @@ const Cradle = ({
 
                 } else {
 
-                    console.log('===>> calling resetforvariability')
+                    // console.log('===>> calling resetforvariability')
                     stateHandler.setCradleState('resetforvariability')
 
                 }
