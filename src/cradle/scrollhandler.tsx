@@ -36,8 +36,8 @@ export default class ScrollHandler {
 
         const { scrollerID, SCROLL_TIMEOUT_FOR_ONAFTERSCROLL } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
-        const viewportElement = viewportInterruptProperties.elementRef.current
+        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
+        const viewportElement = ViewportContextProperties.elementRef.current
 
         // const scrollblockElement = viewportElement.firstChild
         // const top = scrollblockElement.offsetTop
@@ -92,7 +92,7 @@ export default class ScrollHandler {
 
         const { contentHandler, serviceHandler } = this.cradleParameters.handlersRef.current
 
-        if (!viewportInterruptProperties.isResizing) {
+        if (!ViewportContextProperties.isResizing) {
 
             if ((cradleState == 'repositioningRender') || (cradleState == 'repositioningContinuation')) {
 
@@ -120,7 +120,7 @@ export default class ScrollHandler {
 
         const {stateHandler, contentHandler, serviceHandler} = 
             this.cradleParameters.handlersRef.current
-        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         const cradleState = stateHandler.cradleStateRef.current
@@ -182,7 +182,7 @@ export default class ScrollHandler {
             = this.cradleParameters.handlersRef.current
 
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
 
         if (!stateHandler.isMountedRef.current) return
 
@@ -190,7 +190,7 @@ export default class ScrollHandler {
         const cradleElements = layoutHandler.elements
         const axisElement = cradleElements.axisRef.current
 
-        const viewportElement = viewportInterruptProperties.elementRef.current
+        const viewportElement = ViewportContextProperties.elementRef.current
         if (cradleProps.orientation == 'vertical') {
 
             axisVisiblePixelOffset = axisElement.offsetTop - viewportElement.scrollTop
@@ -207,7 +207,7 @@ export default class ScrollHandler {
 
         cradlePositionData.targetAxisViewportPixelOffset = axisVisiblePixelOffset
 
-        if (!viewportInterruptProperties.isResizing) {
+        if (!ViewportContextProperties.isResizing) {
 
             this.updateBlockScrollPos()
 
@@ -220,11 +220,11 @@ export default class ScrollHandler {
     private updateBlockScrollPos = () => {
 
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
         const {layoutHandler} = this.cradleParameters.handlersRef.current
         const { cradlePositionData } = layoutHandler
 
-        const viewportElement = viewportInterruptProperties.elementRef.current
+        const viewportElement = ViewportContextProperties.elementRef.current
 
         if (!((viewportElement.clientWidth == 0)  && (viewportElement.clientHeight == 0))) {// in cache
 
@@ -243,12 +243,12 @@ export default class ScrollHandler {
 
     private calcImpliedRepositioningData = () => {
 
-        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
         const cradleConfig = this.cradleParameters.cradleInternalPropertiesRef.current
 
         const { crosscount, listsize } = cradleConfig
-        const viewportElement = viewportInterruptProperties.elementRef.current
+        const viewportElement = ViewportContextProperties.elementRef.current
         const { orientation } = cradleProps
         let scrollPos, cellLength
         if (orientation == 'vertical') {

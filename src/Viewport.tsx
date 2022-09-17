@@ -19,7 +19,7 @@ import React, {
 
 } from 'react'
 
-export const ViewportInterrupt = React.createContext(null) // for children
+export const ViewportContext = React.createContext(null) // for children
 
 import { ResizeObserver as ResizeObserverPollyfill } from '@juggle/resize-observer'
 
@@ -58,9 +58,9 @@ const Viewport = ({
 
     const viewportElementRef = useRef(null)
 
-    // viewportInterruptPropertiesRef is passed as a resizing interrupt (through context) to children
+    // ViewportContextPropertiesRef is passed as a resizing interrupt (through context) to children
     // initialize
-    const viewportInterruptPropertiesRef = useRef(
+    const ViewportContextPropertiesRef = useRef(
         {
             isReparentingRef:scrollerProperties?.isReparentingRef, 
             isResizing:false, 
@@ -122,10 +122,10 @@ const Viewport = ({
         // generate interrupt response, if initiating resize
         if (!isResizingRef.current) {
 
-            viewportInterruptPropertiesRef.current.isResizing = isResizingRef.current = true 
+            ViewportContextPropertiesRef.current.isResizing = isResizingRef.current = true 
 
             // new object creation triggers a realtime interrupt message to cradle through context
-            viewportInterruptPropertiesRef.current = {...viewportInterruptPropertiesRef.current}
+            ViewportContextPropertiesRef.current = {...ViewportContextPropertiesRef.current}
 
             if (isMountedRef.current) setViewportState('resizing')
 
@@ -161,10 +161,10 @@ const Viewport = ({
 
     },[styles.viewport])
 
-    // update viewportInterruptPropertiesRef; add viewport dimensions
-    viewportInterruptPropertiesRef.current = useMemo(() => {
+    // update ViewportContextPropertiesRef; add viewport dimensions
+    ViewportContextPropertiesRef.current = useMemo(() => {
 
-        if (viewportState == 'setup') return viewportInterruptPropertiesRef.current
+        if (viewportState == 'setup') return ViewportContextPropertiesRef.current
 
         const {top, right, bottom, left} = viewportElementRef.current.getBoundingClientRect()
         const width = (right - left)
@@ -179,7 +179,7 @@ const Viewport = ({
         }
 
         // trigger context change with new object
-        const viewportdataobject = {...viewportInterruptPropertiesRef.current, ...localViewportData}
+        const viewportdataobject = {...ViewportContextPropertiesRef.current, ...localViewportData}
 
         return  viewportdataobject
 
@@ -201,7 +201,7 @@ const Viewport = ({
 
     // ----------------------[ render ]--------------------------------
 
-    return <ViewportInterrupt.Provider value = { viewportInterruptPropertiesRef.current }>
+    return <ViewportContext.Provider value = { ViewportContextPropertiesRef.current }>
         <div 
             data-type = 'viewport'
             data-scrollerid = {scrollerID}
@@ -210,7 +210,7 @@ const Viewport = ({
         >
             { (viewportState != 'setup') && children }
         </div>
-    </ViewportInterrupt.Provider>
+    </ViewportContext.Provider>
     
 } // Viewport
 

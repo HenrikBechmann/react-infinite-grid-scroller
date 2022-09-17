@@ -110,14 +110,14 @@ export default class InterruptHandler {
 
         this.signals.repositioningRequired = (!this.isHeadCradleInView && !this.isTailCradleInView)
 
-        const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
 
         if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway
         {
             const cradleState = stateHandler.cradleStateRef.current
 
             if (
-                !viewportInterruptProperties.isReparentingRef?.current &&
+                !ViewportContextProperties.isReparentingRef?.current &&
 
                 !(cradleState == 'repositioningRender') && 
                 !(cradleState == 'repositioningContinuation') &&
@@ -126,17 +126,17 @@ export default class InterruptHandler {
                 !(cradleState == 'renderupdatedcontent') && 
                 !(cradleState == 'finishupdatedcontent') &&
 
-                !viewportInterruptProperties.isResizing &&
+                !ViewportContextProperties.isResizing &&
                 !(cradleState == 'finishviewportresize')
 
                 ) 
             {
-                const viewportelement = viewportInterruptProperties.elementRef.current
+                const viewportelement = ViewportContextProperties.elementRef.current
 
                 const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
                 if (!viewportelement) {
                     console.log('SYSTEM: viewport element not set in cradleIntersectionObserverCallback',
-                        scrollerID,viewportInterruptProperties)
+                        scrollerID,ViewportContextProperties)
                     return
                 }
                 // update dimensions with cradle intersection. See also dimension update in viewport.tsx for resize
@@ -144,7 +144,7 @@ export default class InterruptHandler {
                 const {top, right, bottom, left} = rect
                 const width = right - left, height = bottom - top
                 // update for scrolltracker
-                viewportInterruptProperties.viewportDimensions = {top, right, bottom, left, width, height} 
+                ViewportContextProperties.viewportDimensions = {top, right, bottom, left, width, height} 
 
                 const { repositioningFlagCallback } = serviceHandler.callbacks
                 repositioningFlagCallback && repositioningFlagCallback(true)
@@ -183,10 +183,10 @@ export default class InterruptHandler {
             observer.observe(cradleElements.tailRef.current)
         },
         createObserver:() => {
-            const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+            const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
             this.cradleIntersect.observer = new IntersectionObserver(
                 this.cradleIntersect.callback,
-                {root:viewportInterruptProperties.elementRef.current, threshold:0}
+                {root:ViewportContextProperties.elementRef.current, threshold:0}
             )    
             return this.cradleIntersect.observer
         }
@@ -205,10 +205,10 @@ export default class InterruptHandler {
             }
         },
         createObserver:() => {
-            const viewportInterruptProperties = this.cradleParameters.viewportInterruptPropertiesRef.current
+            const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
             this.triggerlinesIntersect.observer = new IntersectionObserver(
                 this.triggerlinesIntersect.callback,
-                {root:viewportInterruptProperties.elementRef.current, threshold:0}
+                {root:ViewportContextProperties.elementRef.current, threshold:0}
             )
             return this.triggerlinesIntersect.observer
         }

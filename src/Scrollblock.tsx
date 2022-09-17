@@ -11,7 +11,7 @@
 
 import React, {useContext, useRef, useCallback, useLayoutEffect, useState, useMemo} from 'react'
 
-import { ViewportInterrupt } from './Viewport'
+import { ViewportContext } from './Viewport'
 
 const Scrollblock = ({
     children,
@@ -34,7 +34,7 @@ const Scrollblock = ({
 
     // -------------------------[ context and state ]-------------------------
 
-    const viewportInterruptProperties = useContext(ViewportInterrupt)
+    const ViewportContextProperties = useContext(ViewportContext)
 
     // -----------------------------------[ data heap ]-------------------------
 
@@ -54,7 +54,7 @@ const Scrollblock = ({
 
     const [divlinerstyle,saveDivlinerstyle] = useState(divlinerstyleRef.current) // to trigger render
 
-    const { width, height } = viewportInterruptProperties.viewportDimensions
+    const { width, height } = ViewportContextProperties.viewportDimensions
     
     // reconfigure
     useLayoutEffect(() => {

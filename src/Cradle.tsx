@@ -67,7 +67,7 @@ import React, {
     useCallback, 
 } from 'react'
 
-import { ViewportInterrupt } from './Viewport'
+import { ViewportContext } from './Viewport'
 
 // popup position tracker for repositioning
 import ScrollTracker from './cradle/ScrollTracker'
@@ -132,12 +132,12 @@ const Cradle = ({
     } = gridSpecs
 
     // get viewport context
-    const viewportInterruptProperties = useContext(ViewportInterrupt)
+    const ViewportContextProperties = useContext(ViewportContext)
 
-    const viewportInterruptPropertiesRef = useRef(null)
-    viewportInterruptPropertiesRef.current = viewportInterruptProperties // for closures
+    const ViewportContextPropertiesRef = useRef(null)
+    ViewportContextPropertiesRef.current = ViewportContextProperties // for closures
 
-    const { viewportDimensions } = viewportInterruptProperties
+    const { viewportDimensions } = ViewportContextProperties
     const { height:viewportheight,width:viewportwidth } = viewportDimensions
 
     // state
@@ -388,7 +388,7 @@ const Cradle = ({
     // cradle parameters MASTER BUNDLE
     const cradleParameters = {
         handlersRef,
-        viewportInterruptPropertiesRef,
+        ViewportContextPropertiesRef,
         cradleInheritedPropertiesRef, 
         scrollerPassthroughPropertiesRef,
         cradleInternalPropertiesRef, 
@@ -439,21 +439,21 @@ const Cradle = ({
 
     if (
         isCacheChange || 
-        viewportInterruptProperties.isReparentingRef?.current ||
-        (viewportInterruptProperties.isResizing && isCachingUnderway) 
+        ViewportContextProperties.isReparentingRef?.current ||
+        (ViewportContextProperties.isResizing && isCachingUnderway) 
     ) { 
 
-        if (viewportInterruptProperties.isReparentingRef?.current) {
+        if (ViewportContextProperties.isReparentingRef?.current) {
 
-            viewportInterruptProperties.isReparentingRef.current = false // no longer needed
+            ViewportContextProperties.isReparentingRef.current = false // no longer needed
 
             parentingTransitionRequiredRef.current = true
 
         } 
 
-        if (viewportInterruptProperties.isResizing) { // caching op is underway, so cancel
+        if (ViewportContextProperties.isResizing) { // caching op is underway, so cancel
 
-            viewportInterruptProperties.isResizing = false
+            ViewportContextProperties.isResizing = false
 
         }
 
@@ -577,7 +577,7 @@ const Cradle = ({
     // initialize window scroll listener
     useEffect(() => {
 
-        const viewportdata = viewportInterruptPropertiesRef.current
+        const viewportdata = ViewportContextPropertiesRef.current
         viewportdata.elementRef.current.addEventListener('scroll',scrollHandler.onScroll)
 
         return () => {
@@ -736,7 +736,7 @@ const Cradle = ({
         if (cradleStateRef.current == 'setup') return
 
         // console.log('isResizing useEffect: cradleState, isResizing, isCached, wasCached',
-        //     cradleStateRef.current,viewportInterruptPropertiesRef.current.isResizing,
+        //     cradleStateRef.current,ViewportContextPropertiesRef.current.isResizing,
         //     isCachedRef.current, wasCachedRef.current)
 
         // movement to and from cache is independent of ui viewportresizing
@@ -747,7 +747,7 @@ const Cradle = ({
 
         }
 
-        if ((viewportInterruptPropertiesRef.current.isResizing) && 
+        if ((ViewportContextPropertiesRef.current.isResizing) && 
                 (cradleStateRef.current != 'viewportresizing')) {
 
             interruptHandler.pauseInterrupts()
@@ -757,13 +757,13 @@ const Cradle = ({
         }
 
         // complete viewportresizing mode
-        if (!viewportInterruptPropertiesRef.current.isResizing && (cradleStateRef.current == 'viewportresizing')) {
+        if (!ViewportContextPropertiesRef.current.isResizing && (cradleStateRef.current == 'viewportresizing')) {
 
             setCradleState('finishviewportresize')
 
         }
 
-    },[viewportInterruptPropertiesRef.current.isResizing])
+    },[ViewportContextPropertiesRef.current.isResizing])
 
     // reconfigure for changed size parameters
     useEffect(()=>{
@@ -980,7 +980,7 @@ const Cradle = ({
                     // reset scroll position to previous value
                     if (cradlePositionData.blockScrollPos !== null) {
 
-                        const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
+                        const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
                         viewportElement[cradlePositionData.blockScrollProperty] = 
                             cradlePositionData.blockScrollPos

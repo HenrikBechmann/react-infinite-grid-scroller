@@ -76,7 +76,7 @@ export default class ContentHandler {
         // console.log('setCradleContent: cradleState',cradleState)
 
         const { cradleParameters } = this
-        const viewportInterruptProperties = cradleParameters.viewportInterruptPropertiesRef.current
+        const ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current
         const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
         const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
         const cradleHandlers = cradleParameters.handlersRef.current
@@ -98,7 +98,7 @@ export default class ContentHandler {
         interruptHandler.cradleIntersect.observer.disconnect()
 
         const { cradlePositionData } = layoutHandler
-        const viewportElement = viewportInterruptProperties.elementRef.current
+        const viewportElement = ViewportContextProperties.elementRef.current
 
         const requestedAxisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
         let { targetAxisViewportPixelOffset } = cradlePositionData
@@ -387,7 +387,7 @@ export default class ContentHandler {
 
         // cradle properties
         // const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const viewportElement = this.cradleParameters.viewportInterruptPropertiesRef.current.elementRef.current
+        const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
 
         const {
 
@@ -553,7 +553,7 @@ export default class ContentHandler {
 
         const { cradleParameters } = this
         const cradleHandlers = cradleParameters.handlersRef.current
-        const viewportInterruptProperties = cradleParameters.viewportInterruptPropertiesRef.current
+        const ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current
         const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
         const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
 
@@ -564,7 +564,7 @@ export default class ContentHandler {
         const tailGrid = cradleElements.tailRef.current
         const axisElement = cradleElements.axisRef.current
 
-        const viewportElement = viewportInterruptProperties.elementRef.current
+        const viewportElement = ViewportContextProperties.elementRef.current
         const scrollblockElement = viewportElement.firstChild
 
         const {
