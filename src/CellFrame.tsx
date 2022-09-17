@@ -390,22 +390,7 @@ const getFrameStyles = (orientation, cellHeight, cellWidth, varHeightMin, varWid
 
     let styleset = {...styles,position:'relative'}
 
-    if (orientation == 'horizontal') {
-        styleset.width = 
-            (layout == 'uniform')?
-                cellWidth + 'px':
-                'unset'
-        styleset.height = 'auto'
-        styleset.minWidth =
-            (layout = 'variable')?
-                varWidthMin + 'px':
-                'unset'
-        styleset.maxWidth =
-            (layout = 'variable')?
-                cellWidth + 'px':
-                'unset'
-
-    } else if (orientation === 'vertical') {
+    if (orientation === 'vertical') {
 
         styleset.width = 'unset'
         styleset.height = 
@@ -421,6 +406,22 @@ const getFrameStyles = (orientation, cellHeight, cellWidth, varHeightMin, varWid
                 cellHeight + 'px':
                 'unset'
         
+    } else { // horizontal
+
+        styleset.width = 
+            (layout == 'uniform')?
+                cellWidth + 'px':
+                'unset'
+        styleset.height = 'unset'
+        styleset.minWidth =
+            (layout = 'variable')?
+                varWidthMin + 'px':
+                'unset'
+        styleset.maxWidth =
+            (layout = 'variable')?
+                cellWidth + 'px':
+                'unset'
+
     }
 
     return styleset

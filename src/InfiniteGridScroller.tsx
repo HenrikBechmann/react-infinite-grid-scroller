@@ -28,16 +28,13 @@
     TODO:
 
         - try to remove need for viewportVisibleRowcount
-        - provide minHeight for placeholders for variable
         - calcalate end of list by actual lengths (both set and update)
         - consider resetting positions on after scroll
-        - reset scrollPos etc directly in adjustScrollblockForVariability when axisRefIndex == 0
+
         - try performance without cradle resizeobserver
-        - try changing scrollblock length/top during scroll
         - review all code where variable mode changes positioning calculations
         - use cradleResize to capture async variable cell updates between state cycles
         - change scroll bounce behaviour if supported on all browsers
-        - set CellFrame max to cellWidth/cellHeight for variable layout
 
         re-test for memory leaks window.performance.memory
         retest concat replacements
