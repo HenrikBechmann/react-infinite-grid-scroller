@@ -1210,9 +1210,9 @@ const Cradle = ({
 
             case 'refreshDOMupdateforvariability': {
 
-                console.log('--> cradleState: refreshDOMupdateforvariability')
+                console.log('==> cradleState: refreshDOMupdateforvariability')
 
-                // extra cycle needed to sunchronize DOM with grid changes
+                // extra cycle needed to allow time to synchronize DOM with grid changes
 
                 setCradleState('adjustupdateforvariability')
 
