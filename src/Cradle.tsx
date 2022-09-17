@@ -149,7 +149,7 @@ const Cradle = ({
     const cradleResizeStateRef = useRef(null) // access by closures
     cradleResizeStateRef.current = cradleResizeState
 
-    console.log('==> cradleState','-'+scrollerID+'-',cradleState)
+    // console.log('==> cradleState','-'+scrollerID+'-',cradleState)
 
     // flags
     const isMountedRef = useRef(true)
@@ -1201,25 +1201,29 @@ const Cradle = ({
 
                 } else {
 
-                    setCradleState('updateDOMforvariability')
+                    setCradleState('refreshDOMupdateforvariability')
 
                 }
 
                 break
             }
 
-            case 'updateDOMforvariability': {
+            case 'refreshDOMupdateforvariability': {
+
+                console.log('--> cradleState: refreshDOMupdateforvariability')
 
                 // extra cycle needed to sunchronize DOM with grid changes
-                setCradleState('adjustforvariability')
+
+                setCradleState('adjustupdateforvariability')
 
                 break
 
             }
 
-            case 'adjustforvariability': {
+            case 'adjustupdateforvariability': {
 
-                // console.log('-->call for updateContent', cradleState)
+                console.log('--> cradleState: adjustupdateforvariability')
+                console.log('--> calling function adjustScrollblockForVariability', cradleState)
 
                 if (contentHandler.adjustScrollblockForVariability()) {
 
@@ -1227,7 +1231,7 @@ const Cradle = ({
 
                 } else {
 
-                    // console.log('===>> calling resetforvariability')
+                    console.log('--> setting cradleState resetforvariability')
                     stateHandler.setCradleState('resetforvariability')
 
                 }
