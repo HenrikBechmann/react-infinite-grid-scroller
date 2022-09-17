@@ -115,26 +115,28 @@ const InfiniteGridScroller = (props) => {
 
     let { 
 
-        // ** grid specs:
-        orientation = 'vertical', // vertical or horizontal
-        gap = 0, // space between grid cells, not including the leading and trailing padding
-        padding = 0, // the border space between the items and the viewport, applied to the cradle
+        // required
         cellHeight, // required. the outer pixel height - literal for vertical; approximate for horizontal
             // base for variable layout
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
             // base for variable layout
-        varHeightMin = 0, // for layout == 'variable' && orientation == 'vertical'
-        varWidthMin = 0, // for layout == 'variable' && orientation == 'horizontal'
-        layout = 'uniform', // uniform, variable
-
-        // ** scroller specs:
-        estimatedListSize = 0, // the exact number of the size of the virtual list. can be modified
-        runwaySize = 3, // the number of items outside the view of each side of the viewport 
-            // -- gives time to assemble cellFrames before display
-        startingIndex = 0, // the 0-based starting index of the list, when first loaded
+        estimatedListSize = 0, // the estimated number of the items in the virtual list. can be modified
         getItem, // required. function provided by host - parameters are index number, set by system,
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
+
+        // ** grid specs:
+        orientation = 'vertical', // vertical or horizontal
+        gap = 0, // space between grid cells, not including the leading and trailing padding
+        padding = 0, // the border space between the items and the viewport, applied to the cradle
+        layout = 'uniform', // uniform, variable
+        varHeightMin = 0, // for layout == 'variable' && orientation == 'vertical'
+        varWidthMin = 0, // for layout == 'variable' && orientation == 'horizontal'
+
+        // ** scroller specs:
+        runwaySize = 3, // the number of items outside the view of each side of the viewport 
+            // -- gives time to assemble cellFrames before display
+        startingIndex = 0, // the 0-based starting index of the list, when first loaded
         placeholder, // optional. a sparse component to stand in for content until the content arrives; 
             // replaces default placeholder if present
         styles = {}, // optional. passive style over-rides (eg. color, opacity); has 
@@ -149,7 +151,10 @@ const InfiniteGridScroller = (props) => {
         callbacks = {}, // optional. closures to get direct information streams of some component utilites
             // can contain getFunctions, which provides access to internal scroller functions (mostly cache management)
         advanced = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
+
+        // ** information for host cell content
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
+
     } = props
 
     if (!(cellWidth && cellHeight && getItem )) {
@@ -209,15 +214,18 @@ const InfiniteGridScroller = (props) => {
 
     let {
 
-        showAxis, // for debug
-        // varMin + ((cellLength - varMin) * minMaxDeltaRation) used 
-        //     to calculate virtual position in scrollblock
-        minMaxDeltaRatio, 
+        showAxis, // axis made visible for debug
+        // timeouts
         VIEWPORT_RESIZE_TIMEOUT,
         SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
         IDLECALLBACK_TIMEOUT,
         TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
-        MAX_CACHE_OVER_RUN,
+        // ratios:
+        // MIN_MAX_DELTA_RATIO = 
+        //    var[length]Min + ((cell[Length] - var[Length]Min) * MIN_MAX_DELTA_RATIO) used 
+        //     to calculate virtual position in scrollblock (where [Length] = Width/Height)
+        MIN_MAX_DELTA_RATIO, 
+        MAX_CACHE_OVER_RUN, // max streaming over-run as ratio to cacheMax
 
     } = advanced
 
@@ -225,9 +233,12 @@ const InfiniteGridScroller = (props) => {
     SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = SCROLL_TIMEOUT_FOR_ONAFTERSCROLL ?? 100
     IDLECALLBACK_TIMEOUT = IDLECALLBACK_TIMEOUT ?? 4000
     TIMEOUT_FOR_VARIABLE_MEASUREMENTS = TIMEOUT_FOR_VARIABLE_MEASUREMENTS ?? 100
+    
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
-
-    minMaxDeltaRatio = minMaxDeltaRatio ?? 0.5
+    MIN_MAX_DELTA_RATIO = MIN_MAX_DELTA_RATIO ?? 0.5
+    if ( (MIN_MAX_DELTA_RATIO < 0) || (MIN_MAX_DELTA_RATIO > 1) ) {
+        MIN_MAX_DELTA_RATIO = 0.5
+    }
 
     if (typeof showAxis != 'boolean') showAxis = false
 
@@ -340,7 +351,7 @@ const InfiniteGridScroller = (props) => {
                     cacheHandler = {cacheHandlerRef.current}
                     useScrollTracker = {useScrollTracker}
                     showAxis = { showAxis }
-                    minMaxDeltaRatio = { minMaxDeltaRatio }
+                    MIN_MAX_DELTA_RATIO = { MIN_MAX_DELTA_RATIO }
                     SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = { SCROLL_TIMEOUT_FOR_ONAFTERSCROLL }
                     IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }
                     MAX_CACHE_OVER_RUN = { MAX_CACHE_OVER_RUN }
