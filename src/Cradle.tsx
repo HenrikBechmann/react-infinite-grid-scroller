@@ -1236,6 +1236,16 @@ const Cradle = ({
 
             }
 
+            case 'adjustupdateforvariabilityafterscroll': {
+
+                contentHandler.adjustScrollblockForVariability('afterscroll')
+
+                setCradleState('ready')
+
+                break
+
+            }
+
             case 'finishupdateforvariability': {
 
 

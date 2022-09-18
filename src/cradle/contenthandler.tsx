@@ -548,7 +548,7 @@ export default class ContentHandler {
 
     // all DOM elements should be rendered at this point
     // sets CSS: scrollblockElement top and height (or left and width), and axisElement top (or left)
-    public adjustScrollblockForVariability = () => {
+    public adjustScrollblockForVariability = (source = 'standard') => {
 
         // ----------------------[ setup ]------------------------
 
@@ -583,11 +583,28 @@ export default class ContentHandler {
                 scrollblockElement.offsetTop:
                 scrollblockElement.offsetLeft
 
+        // console.log('-->> adjustScrollblockForVariability: source, scrollblockOffset, cradlePositionData',
+        //     source, scrollblockOffset, cradlePositionData)
+
         const { 
 
             targetAxisReferenceIndex:axisReferenceIndex,
 
         } = cradlePositionData
+
+        if (source == 'afterscroll') { // rebalance scrollblockOffset and blockScrollPos
+
+            if (orientation == 'vertical') {
+                scrollblockElement.style.top = 'unset'
+            } else {
+                scrollblockElement.style.left = 'unset'
+            }
+            const blockScrollPos = cradlePositionData.blockScrollPos -= scrollblockOffset
+
+            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+
+            return
+        }
 
         if (axisReferenceIndex == 0) { // trigger scrollblockOffset reset; change blockScrollPos
 
