@@ -27,6 +27,9 @@
 
     TODO:
 
+        - check visibiliy hidden for portallist (instead of display none)
+        - allow pixel parameters to be expresse in text alternative eg. em
+            - then convert internally to pixels using getComputedStyles (or let user do that)
         - try to remove need for viewportVisibleRowcount
         - calcalate end of list by actual lengths (both set and update)
         - consider resetting positions on after scroll

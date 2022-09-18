@@ -589,7 +589,7 @@ export default class ContentHandler {
 
         } = cradlePositionData
 
-        if (axisReferenceIndex == 0) { // trigger setContent reset
+        if (axisReferenceIndex == 0) { // trigger scrollblockOffset reset; change blockScrollPos
 
             const blockScrollPos = padding - cradlePositionData.targetAxisViewportPixelOffset
 
@@ -677,8 +677,6 @@ export default class ContentHandler {
             scrollblockElement.style.width = scrollblockHeight + 'px'
 
         }
-
-        return true
 
     }
 
