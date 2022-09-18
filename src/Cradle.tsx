@@ -1179,10 +1179,6 @@ const Cradle = ({
             case 'finishupdatedcontent': { // cycle for DOM update
 
 
-                // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
-                interruptHandler.triggerlinesIntersect.connectElements()
-                interruptHandler.signals.pauseTriggerlinesObserver = false
-
                 // synchronize cache
                 const { cache } = cradleInternalPropertiesRef.current
                 if (cache == 'keepload') {
@@ -1195,6 +1191,10 @@ const Cradle = ({
 
                 const { layout } = cradleInheritedPropertiesRef.current
                 if (layout == 'uniform') {
+
+                    // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
+                    interruptHandler.triggerlinesIntersect.connectElements()
+                    interruptHandler.signals.pauseTriggerlinesObserver = false
 
                     setCradleState('ready')
 
@@ -1221,10 +1221,21 @@ const Cradle = ({
 
             case 'adjustupdateforvariability': {
 
-                // console.log('--> cradleState: adjustupdateforvariability')
-                // console.log('--> calling function adjustScrollblockForVariability', cradleState)
-
                 contentHandler.adjustScrollblockForVariability()
+
+                setCradleState('finishupdateforvariability')
+
+                break
+
+            }
+
+            case 'finishupdateforvariability': {
+
+
+                // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
+                interruptHandler.triggerlinesIntersect.connectElements()
+                interruptHandler.signals.pauseTriggerlinesObserver = false
+
 
                 setCradleState('ready')
 
