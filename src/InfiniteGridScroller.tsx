@@ -16,7 +16,8 @@
 
         - scroll toward top sometimes loses position; can's scroll all the way; hard to reproduce
             - may relate to undersized elements
-            - triggerline reconnect apparently didn't happen in one case
+            - triggerline reconnect apparently didn't happen (or failed) in one case (!)
+        - settriggercell apparently fails rarely - new triggerline cell going out of scope?
         - axis can jump on load variable data
         - bottom of list adjustments are broken
         - reposition is flaky with variable
@@ -30,6 +31,7 @@
 
     TODO:
 
+        - make disconnect methods of interrupthandler
         - check visibiliy hidden for portallist (instead of display none)
         - allow pixel parameters to be expresse in text alternative eg. em
             - then convert internally to pixels using getComputedStyles (or let user do that)

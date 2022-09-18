@@ -335,15 +335,16 @@ export default class ContentHandler {
 
         // cradle scaffold and user cells
         const cradleElements = layoutHandler.elements
-        const cradleContent = this.content
-        const modelcontentlist = cradleContent.cradleModelComponents || []
-        const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
-        const oldAxisReferenceIndex = (cradleContent.tailModelComponents[0]?.props.index || 0)
 
-        // --------------------[ 2. get shift instruction ]-----------------------
+        const cradleContent = this.content,
+            modelcontentlist = cradleContent.cradleModelComponents || [],
+            oldAxisReferenceIndex = (cradleContent.tailModelComponents[0]?.props.index || 0)
+
+        const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
         const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
+        
         const { 
             orientation, 
             cache,
@@ -355,6 +356,8 @@ export default class ContentHandler {
             crosscount,
             listsize,
         } = cradleInternalProperties
+
+        // --------------------[ 2. get shift instruction ]-----------------------
 
         // -1 is move a row up to the head, +1 is move a row down to the tail, 0 is no shift
         const shiftinstruction = getShiftInstruction({
@@ -552,21 +555,21 @@ export default class ContentHandler {
 
         // ----------------------[ setup ]------------------------
 
-        const { cradleParameters } = this
-        const cradleHandlers = cradleParameters.handlersRef.current
-        const ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current
-        const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
-        const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
+        const { cradleParameters } = this,
+            cradleHandlers = cradleParameters.handlersRef.current,
+            ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current,
+            cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
 
-        const { layoutHandler } = cradleHandlers
-        const { elements:cradleElements, cradlePositionData } = layoutHandler
+        const { layoutHandler } = cradleHandlers,
+            { elements:cradleElements, cradlePositionData } = layoutHandler
 
-        const headGrid = cradleElements.headRef.current
-        const tailGrid = cradleElements.tailRef.current
-        const axisElement = cradleElements.axisRef.current
+        const headGrid = cradleElements.headRef.current,
+            tailGrid = cradleElements.tailRef.current,
+            axisElement = cradleElements.axisRef.current
 
-        const viewportElement = ViewportContextProperties.elementRef.current
-        const scrollblockElement = viewportElement.firstChild
+        const viewportElement = ViewportContextProperties.elementRef.current,
+            scrollblockElement = viewportElement.firstChild
 
         const {
             orientation, 

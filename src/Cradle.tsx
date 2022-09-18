@@ -598,21 +598,27 @@ const Cradle = ({
     */    
     useEffect(()=>{
 
+        const {
+            cradleIntersect,
+            triggerlinesIntersect,
+            cradleResize,
+        } = interruptHandler
+
         // intersection observer for cradle body
         // this sets up an IntersectionObserver of the cradle against the viewport. When the
         // cradle goes out of the observer scope, the 'repositioningRender' cradle state is triggered.
-        const cradleintersectobserver = interruptHandler.cradleIntersect.createObserver()
-        interruptHandler.cradleIntersect.connectElements()
+        const cradleintersectobserver = cradleIntersect.createObserver()
+        cradleIntersect.connectElements()
 
         // triggerobserver tiggers cradle content updates 
         //     when triggerlines pass the edge of the viewport
         // defer connectElements until triggercell triggerlines have been assigned
-        const triggerobserver = interruptHandler.triggerlinesIntersect.createObserver()
+        const triggerobserver = triggerlinesIntersect.createObserver()
         // interruptHandler.triggerlinesIntersect.connectElements()
 
         // resize observer generates compensation for changes in cell sizes for variable layout modes
-        const cradleresizeobserver = interruptHandler.cradleResize.createObserver()
-        interruptHandler.cradleResize.connectElements()
+        const cradleresizeobserver = cradleResize.createObserver()
+        cradleResize.connectElements()
 
         return () => {
 
