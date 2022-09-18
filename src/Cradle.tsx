@@ -1035,7 +1035,6 @@ const Cradle = ({
                 continuing with 'preparerender', and ending with
                 'restoreinterrupts'
             */
-            // case 'resetupdateforvariability':
             case 'firstrender':
             case 'firstrenderfromcache':
             case 'rerenderfromcache':
@@ -1107,22 +1106,22 @@ const Cradle = ({
 
                 // } else {
 
-                //     setCradleState('refreshDOMsetforvariablerender')
+                //     setCradleState('refreshDOMsetforvariability')
 
                 // }
 
                 break
             }
 
-            // case 'refreshDOMsetforvariablerender': {
+            // case 'refreshDOMsetforvariability': {
 
-            //     setCradleState('preparesetforvariablerender')
+            //     setCradleState('preparesetforvariability')
 
             //     break
 
             // }
 
-            // case 'preparesetforvariablerender': {
+            // case 'preparesetforvariability': {
 
             //     console.log('-->setTimeout for setContent', cradleState)
             //     setTimeout(() => { // need for this is worrisome

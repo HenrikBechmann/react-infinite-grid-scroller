@@ -124,7 +124,6 @@ export default class ContentHandler {
 
         // reposition at row boundary
         if ([
-            // 'resetupdateforvariability',
             'firstrender', 
             'firstrenderfromcache',
             'finishreposition', 
