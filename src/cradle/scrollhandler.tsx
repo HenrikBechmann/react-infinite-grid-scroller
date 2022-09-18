@@ -152,6 +152,8 @@ export default class ScrollHandler {
                     }
 
                 }
+
+                break
             }
 
         }
@@ -162,16 +164,16 @@ export default class ScrollHandler {
             contentHandler.pareCacheToMax()
         }
 
-        // if (!['repositioningRender','repositioningContinuation'].includes(cradleState) &&
-        //     (layout == 'variable')) {
+        if (!['repositioningRender','repositioningContinuation'].includes(cradleState) &&
+            (layout == 'variable')) {
 
-        //     if ((this.scrollData.start != this.scrollData.current) || 
-        //         (this.scrollData.current != this.scrollData.previous)) {
+            if ((this.scrollData.start != this.scrollData.current) || 
+                (this.scrollData.current != this.scrollData.previous)) {
 
-        //         stateHandler.setCradleState('resetaftervariablescroll')
+                stateHandler.setCradleState('refreshDOMupdateforvariability')
 
-        //     }
-        // }
+            }
+        }
 
     }
 

@@ -149,7 +149,7 @@ const Cradle = ({
     const cradleResizeStateRef = useRef(null) // access by closures
     cradleResizeStateRef.current = cradleResizeState
 
-    // console.log('==> cradleState','-'+scrollerID+'-',cradleState)
+    console.log('==> cradleState','-'+scrollerID+'-',cradleState)
 
     // flags
     const isMountedRef = useRef(true)
@@ -1099,42 +1099,49 @@ const Cradle = ({
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
                 // update virtual DOM
-                // const { layout } = cradleInheritedPropertiesRef.current
-                // if (layout == 'uniform') {
+                const { layout } = cradleInheritedPropertiesRef.current
+                if (layout == 'uniform') {
     
                     setCradleState('preparerender')
 
-                // } else {
+                } else {
 
-                //     setCradleState('refreshDOMsetforvariability')
+                    setCradleState('refreshDOMsetforvariability')
 
-                // }
+                }
 
                 break
             }
 
-            // case 'refreshDOMsetforvariability': {
+            case 'refreshDOMsetforvariability': {
 
-            //     setCradleState('preparesetforvariability')
+                setCradleState('preparesetforvariability')
 
-            //     break
+                break
 
-            // }
+            }
 
-            // case 'preparesetforvariability': {
+            case 'preparesetforvariability': {
 
-            //     console.log('-->setTimeout for setContent', cradleState)
-            //     setTimeout(() => { // need for this is worrisome
+                console.log('-->setTimeout for setContent', cradleState)
+                setTimeout(() => { // need for this is worrisome
 
-            //         contentHandler.adjustScrollblockForVariability()
+                    contentHandler.adjustScrollblockForVariability()
 
-            //         setCradleState('preparerender')
+                    setCradleState('finishsetforvariability')
 
-            //     },TIMEOUT_FOR_VARIABLE_MEASUREMENTS)
+                },TIMEOUT_FOR_VARIABLE_MEASUREMENTS)
                 
-            //     break
+                break
 
-            // }
+            }
+
+            case 'finishsetforvariability': {
+
+                setCradleState('preparerender')
+                
+                break
+            }
 
             case 'preparerender': { // cycle for DOM update
 
