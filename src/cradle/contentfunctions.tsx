@@ -318,10 +318,10 @@ export const calcContentShift = ({
 
     } = cradleInternalProperties
 
-    const [rowLengths, rowSpans] = getRowLengths(
+    const [gridRowLengths, gridRowSpans] = getDirectionalGridRowLengths(
         isScrollingViewportForward, cradleElements, crosscount, orientation, gap)
 
-    const firstRowLength = rowLengths[0]
+    const firstRowLength = gridRowLengths[0]
 
     const baseRowLength =
         ((orientation == 'vertical')?
@@ -367,23 +367,23 @@ export const calcContentShift = ({
 
     const spanRowPtr = 
         (isScrollingViewportForward)?
-            rowSpans.findIndex((span) => -(span - triggerlineOffset) < triggerPos):
-            rowSpans.findIndex((span) => (span - triggerlineOffset) > triggerPos)
+            gridRowSpans.findIndex((span) => -(span - triggerlineOffset) < triggerPos):
+            gridRowSpans.findIndex((span) => (span - triggerlineOffset) > triggerPos)
 
     let spanPtr, // used to calc spanRowShift below
         spanAxisPixelShift // used to calc newAxisPixelOffset below
     if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
-        if (rowSpans.length == 0) {
+        if (gridRowSpans.length == 0) {
             spanPtr = -1
             spanAxisPixelShift = 0
         } else {
 
-            spanPtr = rowSpans.length - 1
+            spanPtr = gridRowSpans.length - 1
 
             let overshootPixelShift = // set base of working total
                 (isScrollingViewportForward)?
-                    -(rowSpans.at(-1) - triggerlineOffset): // positive value
-                    rowSpans.at(-1) - triggerlineOffset // negative value
+                    -(gridRowSpans.at(-1) - triggerlineOffset): // positive value
+                    gridRowSpans.at(-1) - triggerlineOffset // negative value
 
             if (isScrollingViewportForward) {
 
@@ -411,8 +411,8 @@ export const calcContentShift = ({
         spanPtr = spanRowPtr
         spanAxisPixelShift = 
             (isScrollingViewportForward)?
-                rowSpans[spanPtr]:
-                -rowSpans[spanPtr]
+                gridRowSpans[spanPtr]:
+                -gridRowSpans[spanPtr]
 
     }
 
@@ -551,7 +551,7 @@ export const calcContentShift = ({
 }
 
 // called by calcContentShifts above
-const getRowLengths = (
+const getDirectionalGridRowLengths = (
 
     isScrollingViewportForward, 
     cradleElements, 

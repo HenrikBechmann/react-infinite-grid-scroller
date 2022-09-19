@@ -31,6 +31,7 @@
 
     TODO:
 
+        - add logic for last item in list visible in adjustScrollblockForVariability
         - make disconnect methods of interrupthandler
         - check visibiliy hidden for portallist (instead of display none)
         - allow pixel parameters to be expresse in text alternative eg. em
