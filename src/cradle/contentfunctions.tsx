@@ -298,7 +298,9 @@ export const calcContentShift = ({
 
     } = cradleInheritedProperties
 
-    const axisElement = cradleElements.axisRef.current
+    const axisElement = cradleElements.axisRef.current,
+        headGridElement = cradleElements.headRef.current,
+        tailGridElement = cradleElements.tailRef.current
 
     const {
 
@@ -318,8 +320,18 @@ export const calcContentShift = ({
 
     } = cradleInternalProperties
 
-    const [gridRowLengths, gridRowSpans] = getDirectionalGridRowLengths(
-        isScrollingViewportForward, cradleElements, crosscount, orientation, gap)
+    const referenceGridElement = 
+        isScrollingViewportForward?
+            tailGridElement:
+            headGridElement
+
+
+    const gridRowLengths = getGridRowLengths(referenceGridElement, orientation, crosscount, gap)
+
+    if (!isScrollingViewportForward)
+        gridRowLengths.reverse()
+
+    const gridRowSpans = getGridRowSpans(gridRowLengths)
 
     const firstRowLength = gridRowLengths[0]
 
@@ -330,7 +342,7 @@ export const calcContentShift = ({
         + gap
 
     // -----------[ 2. calculate axis reference row shift ]-------------------
-    // extra gaps can be caused by rapid scrolling
+    // gaps beyond rendered rows can be caused by rapid scrolling
 
     const cradleAxisOffset = 
         (orientation == 'vertical')?
@@ -347,16 +359,6 @@ export const calcContentShift = ({
         cradleAxisOffset + scrollblockOffset - scrollPos
 
     // console.log('calcContentShift:viewportAxisOffset',viewportAxisOffset)
-
-    const triggerAxisOffset = 
-
-        (isScrollingViewportForward)?
-            // scroll forward engages the tail triggerline which is below the axis
-            // the tail triggerline must be placed to intersect to re-trigger
-            viewportAxisOffset + triggerlineOffset:
-            // scrollbackward engages the head triggerline which is above the axis
-            // the head triggerline muse be placed not to intersect to retrigger
-            viewportAxisOffset - (baseRowLength - triggerlineOffset)
 
     const triggerPos = 
         (isScrollingViewportForward)?
@@ -548,33 +550,6 @@ export const calcContentShift = ({
         listEndChangeCount
     }
 
-}
-
-// called by calcContentShifts above
-const getDirectionalGridRowLengths = (
-
-    isScrollingViewportForward, 
-    cradleElements, 
-    crosscount, 
-    orientation, 
-    gap
-
-) => {
-
-    const gridElement = 
-        isScrollingViewportForward?
-            cradleElements.tailRef.current:
-            cradleElements.headRef.current
-
-    const rowLengths = getGridRowLengths(gridElement, orientation, crosscount, gap)
-
-    if (!isScrollingViewportForward) {
-        rowLengths.reverse()
-    }
-
-    const rowSpans = getGridRowSpans(rowLengths)
-
-    return [rowLengths, rowSpans]
 }
 
 export const getGridRowLengths = (grid, orientation, crosscount, gap) => {

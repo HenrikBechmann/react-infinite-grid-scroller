@@ -105,6 +105,8 @@ export default class ScrollHandler {
 
         this._scrolltimerid = setTimeout(() => {
 
+            console.log('calling onAfterScroll',SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
+
             this.onAfterScroll()
 
         },SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)

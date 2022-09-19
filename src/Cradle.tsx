@@ -1242,6 +1242,8 @@ const Cradle = ({
 
             }
 
+            // called from onAfterScroll. 
+            // This can be called twice in succession with short onAfterScroll timeout
             case 'adjustupdateforvariabilityafterscroll': {
 
                 contentHandler.adjustScrollblockForVariability('afterscroll')
