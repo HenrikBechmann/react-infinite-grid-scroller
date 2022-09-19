@@ -133,7 +133,9 @@ export const getShiftInstruction = ({
     crosscount,
     listsize,
 
-    reverseDirection,
+    // reverseDirection is true if the triggerlines are with the first tail row instead of the
+    // last headrow. That happens (workaround) when there are no head rows
+    reverseDirection, 
 
 }) => {
 
@@ -149,9 +151,11 @@ export const getShiftInstruction = ({
         // const isIntersecting = entry.isIntersecting
         const triggerlinename = entry.target.dataset.type
         entry.triggerlinename = triggerlinename // memo for processing and console
+
         const triggerlinedirection = entry.target.dataset.direction
         entry.triggerlinedirection = triggerlinedirection
-        entry.scrollingforward = !isBlockScrollingForward // memo for console
+
+        entry.scrollingforward = isBlockScrollingForward // memo for console
 
         const rootpos = 
             (orientation == 'vertical')?
@@ -163,8 +167,9 @@ export const getShiftInstruction = ({
                 entry.boundingClientRect.y:
                 entry.boundingClientRect.x
 
-        const viewportoffset = entrypos - rootpos
-        entry.viewportoffset = viewportoffset
+        // trigger is negative is block is scrolling backward, otherwise positive
+        const viewportTriggerOffset = entrypos - rootpos
+        entry.viewportoffset = viewportTriggerOffset
 
         // console.log('triggerlinename, triggerlinedirection, direction, viewportoffset',
         //     triggerlinename, triggerlinedirection, direction, viewportoffset)
@@ -175,14 +180,14 @@ export const getShiftInstruction = ({
             // - axis triggerline goes out of scope, or...
             direction == 'backward' &&
             (reverseDirection?(triggerlinedirection == 'forward'):(triggerlinedirection == 'backward')) &&
-            viewportoffset <= 0
+            viewportTriggerOffset <= 0
 
         ) || (
 
             // - head triggerline comes into scope
             direction == 'forward' &&
             (reverseDirection?(triggerlinedirection == 'backward'):(triggerlinedirection == 'forward')) &&
-            viewportoffset >= 0
+            viewportTriggerOffset >= 0
 
         )
 
@@ -195,7 +200,7 @@ export const getShiftInstruction = ({
     // the triggerline might have passed through the viewport completely without the
     // change being triggered, eg. not intersecting, passing through viewport, then
     //    not intersecting again before being intercepted
-    // in this case we rely on the counter entry to provide information
+    // in this case we rely on the counterentry to provide information
     if (entries.length == 0) { // short-circuit the evaluation
 
         const counterdirection = 
@@ -256,7 +261,8 @@ export const getShiftInstruction = ({
 
     }
 
-    // check for last oversize row
+    // check for last oversize row when scrollbock scrolling toward end
+    // TODO review this logic
     if ((retval !=0) && (!isBlockScrollingForward) && (viewportVisibleRowcount == 0)) {
         if ((listsize - crosscount) <= oldAxisReferenceIndex) {
 
