@@ -333,13 +333,13 @@ export const calcContentShift = ({
 
     const gridRowSpans = getGridRowSpans(gridRowLengths)
 
-    const firstRowLength = gridRowLengths[0]
-
     const baseRowLength =
         ((orientation == 'vertical')?
             cellHeight:
             cellWidth) 
         + gap
+
+    const firstRowLength = gridRowLengths[0] ?? baseRowLength // base rowlength for start of list
 
     // -----------[ 2. calculate axis reference row shift ]-------------------
     // gaps beyond rendered rows can be caused by rapid scrolling
@@ -365,8 +365,8 @@ export const calcContentShift = ({
     const notionalActiveTriggerPos = 
         (isBlockScrollingBackward)?
             currentViewportAxisOffset + triggerlineOffset:
-            (firstRowLength === undefined)?
-                currentViewportAxisOffset + triggerlineOffset:
+            // (firstRowLength === undefined)?
+            //     currentViewportAxisOffset + triggerlineOffset:
                 currentViewportAxisOffset - (firstRowLength - triggerlineOffset)        
 
     console.log('calcContentShift:isBlockScrollingBackward, currentViewportAxisOffset, notionalActiveTriggerPos',

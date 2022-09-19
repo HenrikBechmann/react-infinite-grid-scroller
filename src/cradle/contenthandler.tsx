@@ -419,7 +419,7 @@ export default class ContentHandler {
 
         })
 
-        console.log('updateCradleContent: axisItemShift, cradleItemShift',axisItemShift, cradleItemShift)
+        // console.log('updateCradleContent: axisItemShift, cradleItemShift',axisItemShift, cradleItemShift)
         // console.log('updateCradleContent: axisPixelOffset',axisPixelOffset)
         // third abandon option/3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) { // can happen first row
