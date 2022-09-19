@@ -304,7 +304,7 @@ export default class ContentHandler {
     // axisTriggerlinesObserverCallback of interruptHandler
 
     public updateCradleContent = (
-        isViewportScrollingForward, 
+        isBlockScrollingBackward, 
         triggerlineEntries, 
         source = 'notifications'
     ) => {
@@ -362,7 +362,7 @@ export default class ContentHandler {
         // -1 is move a row up to the head, +1 is move a row down to the tail, 0 is no shift
         const shiftinstruction = getShiftInstruction({
             scrollerID: cradleInheritedProperties.scrollerID,
-            isViewportScrollingForward,
+            isBlockScrollingBackward,
             orientation,
             triggerlineEntries,
             triggerlineSpan: layoutHandler.triggerlineSpan,
@@ -419,10 +419,10 @@ export default class ContentHandler {
 
         })
 
-        // console.log('updateCradleContent: axisItemShift, cradleItemShift',axisItemShift, cradleItemShift)
+        console.log('updateCradleContent: axisItemShift, cradleItemShift',axisItemShift, cradleItemShift)
         // console.log('updateCradleContent: axisPixelOffset',axisPixelOffset)
         // third abandon option/3; nothing to do
-        if ((axisItemShift == 0 && cradleItemShift == 0)) { // defensive
+        if ((axisItemShift == 0 && cradleItemShift == 0)) { // can happen first row
 
             return
 

@@ -121,7 +121,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 // -1 = shift row to head. 1 = shift row to tail. 0 = do not shift a row.
 export const getShiftInstruction = ({
 
-    isViewportScrollingForward,
+    isBlockScrollingBackward,
     orientation,
     triggerlineEntries,
     triggerlineSpan,
@@ -137,11 +137,11 @@ export const getShiftInstruction = ({
 
 }) => {
 
-    // console.log('getShiftInstruction: reverseDirection, isViewportScrollingForward, triggerlineEntries', 
-    //     reverseDirection, isViewportScrollingForward, triggerlineEntries)
+    // console.log('getShiftInstruction: reverseDirection, isBlockScrollingBackward, triggerlineEntries', 
+    //     reverseDirection, isBlockScrollingBackward, triggerlineEntries)
 
     const direction = 
-        isViewportScrollingForward?
+        isBlockScrollingBackward?
             'forward':
             'backward'
 
@@ -151,7 +151,7 @@ export const getShiftInstruction = ({
         entry.triggerlinename = triggerlinename // memo for processing and console
         const triggerlinedirection = entry.target.dataset.direction
         entry.triggerlinedirection = triggerlinedirection
-        entry.scrollingforward = isViewportScrollingForward // memo for console
+        entry.scrollingforward = isBlockScrollingBackward // memo for console
 
         const rootpos = 
             (orientation == 'vertical')?
@@ -199,7 +199,7 @@ export const getShiftInstruction = ({
     if (entries.length == 0) { // short-circuit the evaluation
 
         const counterdirection = 
-        (!isViewportScrollingForward)?
+        (!isBlockScrollingBackward)?
             'backward':
             'forward'        
 
@@ -257,7 +257,7 @@ export const getShiftInstruction = ({
     }
 
     // check for last oversize row
-    if ((retval !=0) && (isViewportScrollingForward) && (viewportVisibleRowcount == 0)) {
+    if ((retval !=0) && (isBlockScrollingBackward) && (viewportVisibleRowcount == 0)) {
         if ((listsize - crosscount) <= oldAxisReferenceIndex) {
 
             retval = 0
@@ -286,7 +286,7 @@ export const calcContentShift = ({
 
     // ------------------------[ 1. initialize ]-----------------------
 
-    const isScrollingViewportForward = (shiftinstruction < 0)
+    const isBlockScrollingBackward = (shiftinstruction < 0)
 
     const { 
 
@@ -321,14 +321,14 @@ export const calcContentShift = ({
     } = cradleInternalProperties
 
     const referenceGridElement = 
-        isScrollingViewportForward?
+        isBlockScrollingBackward?
             tailGridElement:
             headGridElement
 
 
     const gridRowLengths = getGridRowLengths(referenceGridElement, orientation, crosscount, gap)
 
-    if (!isScrollingViewportForward)
+    if (!isBlockScrollingBackward)
         gridRowLengths.reverse()
 
     const gridRowSpans = getGridRowSpans(gridRowLengths)
@@ -344,33 +344,39 @@ export const calcContentShift = ({
     // -----------[ 2. calculate axis reference row shift ]-------------------
     // gaps beyond rendered rows can be caused by rapid scrolling
 
-    const cradleAxisOffset = 
+    const scrollblockAxisOffset = 
         (orientation == 'vertical')?
             axisElement.offsetTop:
             axisElement.offsetLeft
 
     const scrollblockElement = viewportElement.firstChild
-    const scrollblockOffset = // to capture current adjustment for variable layout
+    const scrollblockOffset = // to capture current top/left adjustment to viewport for variable layout
         (orientation == 'vertical')?
             scrollblockElement.offsetTop:
             scrollblockElement.offsetLeft
-    // viewportAxisOffset will be negative for scroll forward and positive for scroll backward
-    const viewportAxisOffset = // the pixel distance between the viewport frame and the axis, toward the head
-        cradleAxisOffset + scrollblockOffset - scrollPos
 
-    // console.log('calcContentShift:viewportAxisOffset',viewportAxisOffset)
+    // currentViewportAxisOffset will be negative (above viewport edge) for scroll block backward 
+    //     and positive for scroll block forward
+    // the pixel distance between the viewport frame and the axis, toward the head
+    const currentViewportAxisOffset = 
+        scrollblockAxisOffset + scrollblockOffset - scrollPos
 
-    const triggerPos = 
-        (isScrollingViewportForward)?
-            viewportAxisOffset + triggerlineOffset:
+    // the location of the active trigger
+    const notionalActiveTriggerPos = 
+        (isBlockScrollingBackward)?
+            currentViewportAxisOffset + triggerlineOffset:
             (firstRowLength === undefined)?
-                viewportAxisOffset + triggerlineOffset:
-                viewportAxisOffset - (firstRowLength - triggerlineOffset)        
+                currentViewportAxisOffset + triggerlineOffset:
+                currentViewportAxisOffset - (firstRowLength - triggerlineOffset)        
+
+    console.log('calcContentShift:isBlockScrollingBackward, currentViewportAxisOffset, notionalActiveTriggerPos',
+        isBlockScrollingBackward, currentViewportAxisOffset, notionalActiveTriggerPos)
+
 
     const spanRowPtr = 
-        (isScrollingViewportForward)?
-            gridRowSpans.findIndex((span) => -(span - triggerlineOffset) < triggerPos):
-            gridRowSpans.findIndex((span) => (span - triggerlineOffset) > triggerPos)
+        (isBlockScrollingBackward)?
+            gridRowSpans.findIndex((span) => -(span - triggerlineOffset) < notionalActiveTriggerPos):
+            gridRowSpans.findIndex((span) => (span - triggerlineOffset) > notionalActiveTriggerPos)
 
     let spanPtr, // used to calc spanRowShift below
         spanAxisPixelShift // used to calc newAxisPixelOffset below
@@ -383,13 +389,13 @@ export const calcContentShift = ({
             spanPtr = gridRowSpans.length - 1
 
             let overshootPixelShift = // set base of working total
-                (isScrollingViewportForward)?
+                (isBlockScrollingBackward)?
                     -(gridRowSpans.at(-1) - triggerlineOffset): // positive value
                     gridRowSpans.at(-1) - triggerlineOffset // negative value
 
-            if (isScrollingViewportForward) {
+            if (isBlockScrollingBackward) {
 
-                while (overshootPixelShift > triggerPos) {
+                while (overshootPixelShift > notionalActiveTriggerPos) {
                     overshootPixelShift -= baseRowLength
                     ++spanPtr
                 }
@@ -398,7 +404,7 @@ export const calcContentShift = ({
 
             } else {
 
-                while (overshootPixelShift < triggerPos) {
+                while (overshootPixelShift < notionalActiveTriggerPos) {
                     overshootPixelShift += baseRowLength
                     ++spanPtr
                 }
@@ -412,14 +418,14 @@ export const calcContentShift = ({
 
         spanPtr = spanRowPtr
         spanAxisPixelShift = 
-            (isScrollingViewportForward)?
+            (isBlockScrollingBackward)?
                 gridRowSpans[spanPtr]:
                 -gridRowSpans[spanPtr]
 
     }
 
     const spanRowShift = // pick up row shift with or without overshoot
-        (isScrollingViewportForward)?
+        (isBlockScrollingBackward)?
             spanPtr + 1:
             -(spanPtr + 1)
 
@@ -451,7 +457,7 @@ export const calcContentShift = ({
 
     const listEndrowOffset = (listRowcount - 1)
 
-    if (isScrollingViewportForward) {
+    if (isBlockScrollingBackward) {
 
         // a. if scrolling forward near the start of the list, new cradle row offset and
         // cradle row shift count has to be adjusted to accommodate the leading runway
@@ -479,7 +485,7 @@ export const calcContentShift = ({
 
         }
 
-    } else { // !isScrollingViewportForward = scroll backward
+    } else { // !isBlockScrollingBackward = scroll backward
 
         // c. if scrolling backward (toward head of list), as the cradlerowoffset hits 0, cradle changes have
         // to be adjusted to prevent shortening of cradle content
@@ -535,7 +541,7 @@ export const calcContentShift = ({
 
     // -------------[ 8. calculate new axis pixel position ]------------------
 
-    const newAxisPixelOffset = viewportAxisOffset + axisPixelShift
+    const newAxisPixelOffset = currentViewportAxisOffset + axisPixelShift
 
     // ---------------------[ 9. return required values ]-------------------
 
