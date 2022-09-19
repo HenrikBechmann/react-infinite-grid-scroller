@@ -141,7 +141,7 @@ export const getShiftInstruction = ({
     //     reverseDirection, !isBlockScrollingForward, triggerlineEntries)
 
     const direction = 
-        !isBlockScrollingForward?
+        isBlockScrollingForward?
             'forward':
             'backward'
 
@@ -173,15 +173,15 @@ export const getShiftInstruction = ({
         return (
 
             // - axis triggerline goes out of scope, or...
-            direction == 'forward' &&
-            (reverseDirection?(triggerlinedirection == 'backward'):(triggerlinedirection == 'forward')) &&
+            direction == 'backward' &&
+            (reverseDirection?(triggerlinedirection == 'forward'):(triggerlinedirection == 'backward')) &&
             viewportoffset <= 0
 
         ) || (
 
             // - head triggerline comes into scope
-            direction == 'backward' &&
-            (reverseDirection?(triggerlinedirection == 'forward'):(triggerlinedirection == 'backward')) &&
+            direction == 'forward' &&
+            (reverseDirection?(triggerlinedirection == 'backward'):(triggerlinedirection == 'forward')) &&
             viewportoffset >= 0
 
         )
@@ -200,8 +200,8 @@ export const getShiftInstruction = ({
 
         const counterdirection = 
         (isBlockScrollingForward)?
-            'backward':
-            'forward'        
+            'backward':        
+            'forward'
 
         const counterentries = triggerlineEntries.filter(entry => entry.triggerdirection == counterdirection)
 
@@ -211,8 +211,8 @@ export const getShiftInstruction = ({
             const countertriggerlinedirection = counterentry.triggerlinedirection
 
             let impliedoffset
-            if ((countertriggerlinedirection == 'backward') &&
-                (reverseDirection?(direction == 'forward'):(direction == 'backward')))
+            if ((countertriggerlinedirection == 'forward') &&
+                (reverseDirection?(direction == 'backward'):(direction == 'forward')))
 
             {
 
@@ -244,7 +244,7 @@ export const getShiftInstruction = ({
 
         const entry = entries[0] // assume one record gets filtered; only paired above on reconnect
 
-        if (direction == 'backward') {
+        if (direction == 'forward') {
 
             retval = 1 // shift row to tail
 
