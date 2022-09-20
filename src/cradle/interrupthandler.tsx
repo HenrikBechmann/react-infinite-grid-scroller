@@ -32,16 +32,16 @@ export default class InterruptHandler {
     private isHeadCradleInView = false
 
     // TODO: stub
-    private cradleResizeObserverCallback = (entries) => {
+    // private cradleResizeObserverCallback = (entries) => {
 
-        const {
-            stateHandler,
-        } = this.cradleParameters.handlersRef.current
+    //     const {
+    //         stateHandler,
+    //     } = this.cradleParameters.handlersRef.current
 
-        // stateHandler.setCradleResizeState('resizecradle')
-        if (this.signals.pauseCradleResizeObserver) return
+    //     // stateHandler.setCradleResizeState('resizecradle')
+    //     if (this.signals.pauseCradleResizeObserver) return
 
-    }
+    // }
 
     private axisTriggerlinesObserverCallback = (entries) => {
 
@@ -172,22 +172,22 @@ export default class InterruptHandler {
     }
 
    // for adjusting to content re-sizing
-   public cradleResize = {
-      observer:null,
-      callback:this.cradleResizeObserverCallback,
-        connectElements:() => {
-            const observer = this.cradleResize.observer
-            const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
-            observer.observe(cradleElements.headRef.current)
-            observer.observe(cradleElements.tailRef.current)
-        },
-      createObserver:() => {
+   // public cradleResize = {
+   //    observer:null,
+   //    callback:this.cradleResizeObserverCallback,
+   //      connectElements:() => {
+   //          const observer = this.cradleResize.observer
+   //          const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
+   //          observer.observe(cradleElements.headRef.current)
+   //          observer.observe(cradleElements.tailRef.current)
+   //      },
+   //    createObserver:() => {
 
-        this.cradleResize.observer = new ResizeObserver(this.cradleResize.callback)
-        return this.cradleResize.observer
+   //      this.cradleResize.observer = new ResizeObserver(this.cradleResize.callback)
+   //      return this.cradleResize.observer
 
-      }
-   }
+   //    }
+   // }
 
    public cradleIntersect = {    
         observer:null,    

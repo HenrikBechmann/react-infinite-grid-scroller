@@ -601,7 +601,7 @@ const Cradle = ({
         const {
             cradleIntersect,
             triggerlinesIntersect,
-            cradleResize,
+            // cradleResize,
         } = interruptHandler
 
         // intersection observer for cradle body
@@ -617,14 +617,14 @@ const Cradle = ({
         // interruptHandler.triggerlinesIntersect.connectElements()
 
         // resize observer generates compensation for changes in cell sizes for variable layout modes
-        const cradleresizeobserver = cradleResize.createObserver()
-        cradleResize.connectElements()
+        // const cradleresizeobserver = cradleResize.createObserver()
+        // cradleResize.connectElements()
 
         return () => {
 
             cradleintersectobserver.disconnect()
             triggerobserver.disconnect()
-            cradleresizeobserver.disconnect()
+            // cradleresizeobserver.disconnect()
 
         }
 
