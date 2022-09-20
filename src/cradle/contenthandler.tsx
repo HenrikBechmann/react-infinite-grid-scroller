@@ -362,17 +362,11 @@ export default class ContentHandler {
         // --------------------[ 2. get shift instruction ]-----------------------
 
         // -1 is move a row down to the taIL, +1 is move a row up to the head, 0 is no shift
-        const shiftinstruction = getShiftInstruction({
+        const [shiftinstruction, triggerData] = getShiftInstruction({
             scrollerID: cradleInheritedProperties.scrollerID,
-            // blockScrollingDirection,
             orientation,
             triggerlineEntries,
             triggerlineSpan: layoutHandler.triggerlineSpan,
-            // for oversized (overflow) cells
-            // oldAxisReferenceIndex,
-            // viewportVisibleRowcount,
-            // crosscount,
-            // listsize,
 
             isFirstRowTriggerConfig:layoutHandler.triggercellIsInTail,
 

@@ -127,26 +127,16 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
 export const getShiftInstruction = ({
 
-    // blockScrollingDirection:direction,
     orientation,
     triggerlineEntries,
     triggerlineSpan,
     scrollerID, // for debug
     
-    // for oversized (overflow) cells
-    // oldAxisReferenceIndex,
-    // viewportVisibleRowcount,
-    // crosscount,
-    // listsize,
-
     // isFirstRowTriggerConfig is true if the triggerlines are with the first tail row instead of the
     // last headrow. That happens (workaround) when there are no head rows
     isFirstRowTriggerConfig, 
 
 }) => {
-
-    // console.log('getShiftInstruction: isFirstRowTriggerConfig, blockScrollingDirection, triggerlineEntries', 
-    //     isFirstRowTriggerConfig, blockScrollingDirection, triggerlineEntries)
 
     const triggerData = {
         headOffset:null,
@@ -170,7 +160,6 @@ export const getShiftInstruction = ({
             entry.boundingClientRect.y:
             entry.boundingClientRect.x
 
-    // trigger is negative is block is scrolling headward, otherwise positive
     const viewportTriggerOffset = entrypos - rootpos
 
     if (referencename == 'headtrigger') {
@@ -184,9 +173,6 @@ export const getShiftInstruction = ({
         triggerData.headOffset = viewportTriggerOffset - span
 
     }
-
-    // console.log('entrypos, rootpos, viewportTriggerOffset, triggerData, entry', 
-    //     entrypos, rootpos, viewportTriggerOffset, triggerData, entry)
 
     let shiftinstruction
     
@@ -204,12 +190,10 @@ export const getShiftInstruction = ({
 
     } else {
 
-        // if ((triggerData.headOffset <=0) && (triggerData.tailOffset <=0)) {
         if (triggerData.tailOffset <=0) {
 
             shiftinstruction = 'totail'
 
-        // } else if ((triggerData.headOffset >=0) && (triggerData.tailOffset >=0)) {
         } else if (triggerData.headOffset >=0) {
 
             shiftinstruction = 'tohead'
@@ -222,167 +206,10 @@ export const getShiftInstruction = ({
 
     }
 
-    // console.log('shiftinstruction', shiftinstruction)
-
-    return shiftinstruction
+    return [shiftinstruction, triggerData]
 
 }
 
-
-// export const getShiftInstruction = ({
-
-//     blockScrollingDirection:direction,
-//     orientation,
-//     triggerlineEntries,
-//     triggerlineSpan,
-//     scrollerID, // for debug
-    
-//     // for oversized (overflow) cells
-//     oldAxisReferenceIndex,
-//     viewportVisibleRowcount,
-//     crosscount,
-//     listsize,
-
-//     // isFirstRowTriggerConfig is true if the triggerlines are with the first tail row instead of the
-//     // last headrow. That happens (workaround) when there are no head rows
-//     isFirstRowTriggerConfig, 
-
-// }) => {
-
-//     // console.log('getShiftInstruction: isFirstRowTriggerConfig, blockScrollingDirection, triggerlineEntries', 
-//     //     isFirstRowTriggerConfig, blockScrollingDirection, triggerlineEntries)
-
-//     const entries = triggerlineEntries.filter(entry => {
-//         // const isIntersecting = entry.isIntersecting
-//         const triggerlinename = entry.target.dataset.type
-//         entry.triggerlinename = triggerlinename // memo for processing and console
-
-//         const triggerlinedirection = entry.target.dataset.direction
-//         entry.triggerlinedirection = triggerlinedirection
-
-//         entry.scrollingdirection = direction // memo for console
-
-//         const rootpos = 
-//             (orientation == 'vertical')?
-//                 entry.rootBounds.y:
-//                 entry.rootBounds.x
-
-//         const entrypos = 
-//             (orientation == 'vertical')?
-//                 entry.boundingClientRect.y:
-//                 entry.boundingClientRect.x
-
-//         // trigger is negative is block is scrolling headward, otherwise positive
-//         const viewportTriggerOffset = entrypos - rootpos
-//         entry.viewportoffset = viewportTriggerOffset
-
-//         // console.log('triggerlinename, triggerlinedirection, direction, viewportoffset',
-//         //     triggerlinename, triggerlinedirection, direction, viewportoffset)
-
-//         // axis needs to be moved if:
-//         return (
-
-//             // - axis triggerline goes out of scope, or...
-//             direction == 'headward' &&
-//             (isFirstRowTriggerConfig?(triggerlinedirection == 'tailward'):(triggerlinedirection == 'headward')) &&
-//             viewportTriggerOffset <= 0
-
-//         ) || (
-
-//             // - head triggerline comes into scope
-//             direction == 'tailward' &&
-//             (isFirstRowTriggerConfig?(triggerlinedirection == 'headward'):(triggerlinedirection == 'tailward')) &&
-//             viewportTriggerOffset >= 0
-
-//         )
-
-//     })
-
-//     // console.log('filtered entries', entries)
-
-//     let shiftinstruction
-
-//     // the triggerline might have passed through the viewport completely without the
-//     // change being triggered, eg. not intersecting, passing through viewport, then
-//     //    not intersecting again before being intercepted
-//     // in this case we rely on the counterentry to provide information
-//     if (entries.length == 0) { // short-circuit the evaluation
-
-//         const counterdirection = 
-//             (direction == 'tailward')?
-//             'headward':        
-//             'tailward'
-
-//         const counterentries = triggerlineEntries.filter(entry => entry.triggerdirection == counterdirection)
-
-//         if (counterentries.length != 0) {
-//             // check for implied trigger - trigger can be bypassed with heavy components
-//             const counterentry =  counterentries.pop()
-//             const countertriggerlinedirection = counterentry.triggerlinedirection
-
-//             let impliedoffset
-//             if ((countertriggerlinedirection == 'tailward') &&
-//                 (isFirstRowTriggerConfig?(direction == 'headward'):(direction == 'tailward')))
-
-//             {
-
-//                 impliedoffset = counterentry.viewportoffsethead + triggerlineSpan
-
-//                 if (impliedoffset <= 0) {
-
-//                     shiftinstruction = 'totail' 
-
-//                 }
-
-//             } else { 
-
-//                 impliedoffset = counterentry.viewportoffsethead - triggerlineSpan
-
-//                 if (impliedoffset >= 0) {
-
-//                     shiftinstruction = 'tohead' 
-
-//                 }
-
-//             }
-
-//         }
-
-//         shiftinstruction = 'none' // 0
-
-//     } else { // complete the evaluation
-
-//         const entry = entries[0] // assume one record gets filtered; only paired above on reconnect
-
-//         if (direction == 'tailward') {
-
-//             shiftinstruction = 'tohead' 
-
-//         } else { // headward
-
-//             shiftinstruction = 'totail' 
-
-//         }
-
-//     }
-
-//     // check for last oversize row when scrollbock scrolling toward end
-//     // TODO review this logic
-//     if ((shiftinstruction !='none') && (direction == 'headward') && (viewportVisibleRowcount == 0)) {
-//         if ((listsize - crosscount) <= oldAxisReferenceIndex) {
-
-//             shiftinstruction = 'none' // 0
-
-//         }
-//     }
-
-//     console.log('shiftinstruction', shiftinstruction)
-
-//     return shiftinstruction
-// }
-
-// A negative shift instruction is movement into the head, a positive shift is movement into the tail.
-// called only from updateCradleContent
 export const calcContentShift = ({
 
     shiftinstruction,
