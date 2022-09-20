@@ -225,7 +225,7 @@ export const getShiftInstruction = ({
 
                 if (impliedoffset <= 0) {
 
-                    shiftinstruction = -1
+                    shiftinstruction = 'totail' // -1
 
                 }
 
@@ -235,7 +235,7 @@ export const getShiftInstruction = ({
 
                 if (impliedoffset >= 0) {
 
-                    shiftinstruction = 1
+                    shiftinstruction = 'tohead' // 1
 
                 }
 
@@ -243,7 +243,7 @@ export const getShiftInstruction = ({
 
         }
 
-        shiftinstruction = 0
+        shiftinstruction = 'none' // 0
 
     } else { // complete the evaluation
 
@@ -251,11 +251,11 @@ export const getShiftInstruction = ({
 
         if (direction == 'forward') {
 
-            shiftinstruction = 1 // shift row to head
+            shiftinstruction = 'tohead' // 1 // shift row to head
 
         } else { // backward
 
-            shiftinstruction = -1 // shift row to tail
+            shiftinstruction = 'totail' // -1 // shift row to tail
 
         }
 
@@ -263,10 +263,10 @@ export const getShiftInstruction = ({
 
     // check for last oversize row when scrollbock scrolling toward end
     // TODO review this logic
-    if ((shiftinstruction !=0) && (blockScrollingDirection == 'backward') && (viewportVisibleRowcount == 0)) {
+    if ((shiftinstruction !='none') && (blockScrollingDirection == 'backward') && (viewportVisibleRowcount == 0)) {
         if ((listsize - crosscount) <= oldAxisReferenceIndex) {
 
-            shiftinstruction = 0
+            shiftinstruction = 'none' // 0
 
         }
     }
@@ -293,7 +293,8 @@ export const calcContentShift = ({
     // ------------------------[ 1. initialize ]-----------------------
 
     const blockScrollingDirection = 
-        (shiftinstruction > 0)?
+        // (shiftinstruction > 0)?
+        (shiftinstruction == 'tohead')?
             'forward':
             'backward'
 
@@ -378,8 +379,8 @@ export const calcContentShift = ({
             //     currentViewportAxisOffset + triggerlineOffset:
                 currentViewportAxisOffset - (firstRowLength - triggerlineOffset)        
 
-    console.log('calcContentShift:blockScrollingDirection, currentViewportAxisOffset, notionalActiveTriggerPos',
-        blockScrollingDirection, currentViewportAxisOffset, notionalActiveTriggerPos)
+    // console.log('calcContentShift:blockScrollingDirection, currentViewportAxisOffset, notionalActiveTriggerPos',
+    //     blockScrollingDirection, currentViewportAxisOffset, notionalActiveTriggerPos)
 
     const spanRowPtr = 
         (blockScrollingDirection == 'backward')?
