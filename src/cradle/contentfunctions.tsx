@@ -292,11 +292,11 @@ export const calcContentShift = ({
 
     // ------------------------[ 1. initialize ]-----------------------
 
-    const blockScrollingDirection = 
-        // (shiftinstruction > 0)?
-        (shiftinstruction == 'tohead')?
-            'forward':
-            'backward'
+    // const blockScrollingDirection = 
+    //     // (shiftinstruction > 0)?
+    //     (shiftinstruction == 'tohead')?
+    //         'forward':
+    //         'backward'
 
     const { 
 
@@ -331,14 +331,16 @@ export const calcContentShift = ({
     } = cradleInternalProperties
 
     const referenceGridElement = 
-        (blockScrollingDirection == 'backward')?
+        // (blockScrollingDirection == 'backward')?
+        (shiftinstruction == 'totail')?
             tailGridElement:
             headGridElement
 
 
     const gridRowLengths = getGridRowLengths(referenceGridElement, orientation, crosscount, gap)
 
-    if (blockScrollingDirection == 'forward')
+    // if (blockScrollingDirection == 'forward')
+    if (shiftinstruction == 'tohead')
         gridRowLengths.reverse()
 
     const gridRowSpans = getGridRowSpans(gridRowLengths)
@@ -373,7 +375,8 @@ export const calcContentShift = ({
 
     // the location of the active trigger
     const notionalActiveTriggerPos = 
-        (blockScrollingDirection == 'backward')?
+        // (blockScrollingDirection == 'backward')?
+        (shiftinstruction == 'totail')?
             currentViewportAxisOffset + triggerlineOffset:
             // (firstRowLength === undefined)?
             //     currentViewportAxisOffset + triggerlineOffset:
@@ -383,7 +386,8 @@ export const calcContentShift = ({
     //     blockScrollingDirection, currentViewportAxisOffset, notionalActiveTriggerPos)
 
     const spanRowPtr = 
-        (blockScrollingDirection == 'backward')?
+        // (blockScrollingDirection == 'backward')?
+        (shiftinstruction == 'totail')?
             gridRowSpans.findIndex((span) => -(span - triggerlineOffset) < notionalActiveTriggerPos):
             gridRowSpans.findIndex((span) => (span - triggerlineOffset) > notionalActiveTriggerPos)
 
@@ -398,11 +402,13 @@ export const calcContentShift = ({
             spanPtr = gridRowSpans.length - 1
 
             let overshootPixelShift = // set base of working total
-                (blockScrollingDirection == 'backward')?
+                // (blockScrollingDirection == 'backward')?
+                (shiftinstruction == 'totail')?
                     -(gridRowSpans.at(-1) - triggerlineOffset): // positive value
                     gridRowSpans.at(-1) - triggerlineOffset // negative value
 
-            if (blockScrollingDirection == 'backward') {
+            // if (blockScrollingDirection == 'backward') {
+            if (shiftinstruction == 'totail') {
 
                 while (overshootPixelShift > notionalActiveTriggerPos) {
                     overshootPixelShift -= baseRowLength
@@ -427,14 +433,16 @@ export const calcContentShift = ({
 
         spanPtr = spanRowPtr
         spanAxisPixelShift = 
-            (blockScrollingDirection == 'backward')?
+            // (blockScrollingDirection == 'backward')?
+            (shiftinstruction == 'totail')?
                 gridRowSpans[spanPtr]:
                 -gridRowSpans[spanPtr]
 
     }
 
     const spanRowShift = // pick up row shift with or without overshoot
-        (blockScrollingDirection == 'backward')?
+        // (blockScrollingDirection == 'backward')?
+        (shiftinstruction == 'totail')?
             spanPtr + 1:
             -(spanPtr + 1)
 
@@ -466,7 +474,8 @@ export const calcContentShift = ({
 
     const listEndrowOffset = (listRowcount - 1)
 
-    if (blockScrollingDirection == 'backward') {
+    // if (blockScrollingDirection == 'backward') {
+    if (shiftinstruction == 'totail') {
 
         // a. if scrolling forward near the start of the list, new cradle row offset and
         // cradle row shift count has to be adjusted to accommodate the leading runway
