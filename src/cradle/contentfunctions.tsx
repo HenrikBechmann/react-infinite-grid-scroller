@@ -124,7 +124,6 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
 */
 
-
 export const getShiftInstruction = ({
 
     orientation,
