@@ -1381,7 +1381,7 @@ const Cradle = ({
         return [
             <div
                 key = 'head'
-                data-type = 'triggerline-head'
+                data-type = 'headtrigger'
                 data-direction = 'tailward'
                 style = {triggercellTriggerlineHeadStyle}
                 ref = {triggercellTriggerlineHeadElementRef}
@@ -1389,7 +1389,7 @@ const Cradle = ({
             </div>,
             <div
                 key = 'tail'
-                data-type = 'triggerline-tail'
+                data-type = 'tailtrigger'
                 data-direction = 'headward'
                 style = {triggercellTriggerlineTailStyle}
                 ref = {triggercellTriggerlineTailElementRef}

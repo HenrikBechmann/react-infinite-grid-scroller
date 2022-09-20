@@ -304,7 +304,7 @@ export default class ContentHandler {
     // axisTriggerlinesObserverCallback of interruptHandler
 
     public updateCradleContent = (
-        blockScrollingDirection, 
+        // blockScrollingDirection, 
         triggerlineEntries, 
         source = 'notifications'
     ) => {
@@ -364,15 +364,15 @@ export default class ContentHandler {
         // -1 is move a row down to the taIL, +1 is move a row up to the head, 0 is no shift
         const shiftinstruction = getShiftInstruction({
             scrollerID: cradleInheritedProperties.scrollerID,
-            blockScrollingDirection,
+            // blockScrollingDirection,
             orientation,
             triggerlineEntries,
             triggerlineSpan: layoutHandler.triggerlineSpan,
             // for oversized (overflow) cells
-            oldAxisReferenceIndex,
-            viewportVisibleRowcount,
-            crosscount,
-            listsize,
+            // oldAxisReferenceIndex,
+            // viewportVisibleRowcount,
+            // crosscount,
+            // listsize,
 
             isFirstRowTriggerConfig:layoutHandler.triggercellIsInTail,
 

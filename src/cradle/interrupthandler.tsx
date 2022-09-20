@@ -70,21 +70,22 @@ export default class InterruptHandler {
         if (stateHandler.isMountedRef.current) {
             const { scrollData } = scrollHandler
 
-            const blockScrollingDirection = 
-                ((scrollData.start == scrollData.current) &&
-                (scrollData.current == scrollData.previous))?
-                // intercept could be triggered with change of cell size and no scrolling
-                'none':
-                    (scrollData.previous > scrollData.current)?
-                        'tailward': // scrollblock moving down or right in relation to viewport
-                                    // (scrollPos -- scrollTop or scrollLeft -- diminishing)
-                        'headward' // scrollblock moving up or left in relation to viewport
-                                    // (scrollPos -- scrollTop or scrollLeft -- increasing)
+            // const blockScrollingDirection = 
+            //     ((scrollData.start == scrollData.current) &&
+            //     (scrollData.current == scrollData.previous))?
+            //     // intercept could be triggered with change of cell size and no scrolling
+            //     'none':
+            //         (scrollData.previous > scrollData.current)?
+            //             'tailward': // scrollblock moving down or right in relation to viewport
+            //                         // (scrollPos -- scrollTop or scrollLeft -- diminishing)
+            //             'headward' // scrollblock moving up or left in relation to viewport
+            //                         // (scrollPos -- scrollTop or scrollLeft -- increasing)
 
             // if ((scrollData.start != scrollData.current) ||
             //     (scrollData.current != scrollData.previous)) {
-            if (blockScrollingDirection != 'none') { 
+            // if (blockScrollingDirection != 'none') { 
 
+                // TODO check if this is still needed
                 scrollData.previousupdate = scrollData.currentupdate
                 scrollData.currentupdate = scrollData.current
 
@@ -93,9 +94,10 @@ export default class InterruptHandler {
                 //         'tailward':
                 //         'headward'
 
-                contentHandler.updateCradleContent(blockScrollingDirection, entries,'triggerlinesObserver')
+                // contentHandler.updateCradleContent(blockScrollingDirection, entries,'triggerlinesObserver')
+                contentHandler.updateCradleContent(entries,'triggerlinesObserver')
 
-            }
+            // }
         }
     }
 

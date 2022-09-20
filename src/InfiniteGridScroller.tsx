@@ -31,6 +31,7 @@
 
     TODO:
 
+        - see if scrollData still needed; probably for filtering scroll adjustments
         - allow updateCradleContent without scrollmovement
             - change blockScrollingDirection to scrollDirection ('tailward', 'headward','none')
         - add logic for last item in list visible in adjustScrollblockForVariability
