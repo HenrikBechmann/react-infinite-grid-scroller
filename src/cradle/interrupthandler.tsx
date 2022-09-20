@@ -73,6 +73,7 @@ export default class InterruptHandler {
             const blockScrollingDirection = 
                 ((scrollData.start == scrollData.current) &&
                 (scrollData.current == scrollData.previous))?
+                // intercept could be triggered with change of size and no scrolling
                 'none':
                     (scrollData.previous > scrollData.current)?
                         'forward':
@@ -80,7 +81,7 @@ export default class InterruptHandler {
 
             // if ((scrollData.start != scrollData.current) ||
             //     (scrollData.current != scrollData.previous)) {
-            if (blockScrollingDirection != 'none') {
+            if (blockScrollingDirection != 'none') { 
 
                 scrollData.previousupdate = scrollData.currentupdate
                 scrollData.currentupdate = scrollData.current
