@@ -374,7 +374,7 @@ export default class ContentHandler {
             crosscount,
             listsize,
 
-            reverseDirection:layoutHandler.triggercellIsInTail,
+            isFirstRowTriggerConfig:layoutHandler.triggercellIsInTail,
 
         })
 

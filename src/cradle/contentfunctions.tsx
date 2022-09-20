@@ -137,14 +137,14 @@ export const getShiftInstruction = ({
     crosscount,
     listsize,
 
-    // reverseDirection is true if the triggerlines are with the first tail row instead of the
+    // isFirstRowTriggerConfig is true if the triggerlines are with the first tail row instead of the
     // last headrow. That happens (workaround) when there are no head rows
-    reverseDirection, 
+    isFirstRowTriggerConfig, 
 
 }) => {
 
-    // console.log('getShiftInstruction: reverseDirection, blockScrollingDirection, triggerlineEntries', 
-    //     reverseDirection, blockScrollingDirection, triggerlineEntries)
+    // console.log('getShiftInstruction: isFirstRowTriggerConfig, blockScrollingDirection, triggerlineEntries', 
+    //     isFirstRowTriggerConfig, blockScrollingDirection, triggerlineEntries)
 
     const entries = triggerlineEntries.filter(entry => {
         // const isIntersecting = entry.isIntersecting
@@ -178,14 +178,14 @@ export const getShiftInstruction = ({
 
             // - axis triggerline goes out of scope, or...
             direction == 'backward' &&
-            (reverseDirection?(triggerlinedirection == 'forward'):(triggerlinedirection == 'backward')) &&
+            (isFirstRowTriggerConfig?(triggerlinedirection == 'forward'):(triggerlinedirection == 'backward')) &&
             viewportTriggerOffset <= 0
 
         ) || (
 
             // - head triggerline comes into scope
             direction == 'forward' &&
-            (reverseDirection?(triggerlinedirection == 'backward'):(triggerlinedirection == 'forward')) &&
+            (isFirstRowTriggerConfig?(triggerlinedirection == 'backward'):(triggerlinedirection == 'forward')) &&
             viewportTriggerOffset >= 0
 
         )
@@ -216,7 +216,7 @@ export const getShiftInstruction = ({
 
             let impliedoffset
             if ((countertriggerlinedirection == 'forward') &&
-                (reverseDirection?(direction == 'backward'):(direction == 'forward')))
+                (isFirstRowTriggerConfig?(direction == 'backward'):(direction == 'forward')))
 
             {
 
