@@ -76,8 +76,10 @@ export default class InterruptHandler {
                 // intercept could be triggered with change of size and no scrolling
                 'none':
                     (scrollData.previous > scrollData.current)?
-                        'forward':
-                        'backward'
+                        'forward': // scrollblock moving down or right in relation to viewport
+                                    // (scrollPos - scrollTop or scrollLeft - diminishing)
+                        'backward' // scrollblock moving up or left in relation to viewport
+                                    // (scrollPos - scrollTop or scrollLeft increasing)
 
             // if ((scrollData.start != scrollData.current) ||
             //     (scrollData.current != scrollData.previous)) {
