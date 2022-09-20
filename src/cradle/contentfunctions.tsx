@@ -166,7 +166,7 @@ export const getShiftInstruction = ({
                 entry.boundingClientRect.y:
                 entry.boundingClientRect.x
 
-        // trigger is negative is block is scrolling backward, otherwise positive
+        // trigger is negative is block is scrolling headward, otherwise positive
         const viewportTriggerOffset = entrypos - rootpos
         entry.viewportoffset = viewportTriggerOffset
 
@@ -177,15 +177,15 @@ export const getShiftInstruction = ({
         return (
 
             // - axis triggerline goes out of scope, or...
-            direction == 'backward' &&
-            (isFirstRowTriggerConfig?(triggerlinedirection == 'forward'):(triggerlinedirection == 'backward')) &&
+            direction == 'headward' &&
+            (isFirstRowTriggerConfig?(triggerlinedirection == 'tailward'):(triggerlinedirection == 'headward')) &&
             viewportTriggerOffset <= 0
 
         ) || (
 
             // - head triggerline comes into scope
-            direction == 'forward' &&
-            (isFirstRowTriggerConfig?(triggerlinedirection == 'backward'):(triggerlinedirection == 'forward')) &&
+            direction == 'tailward' &&
+            (isFirstRowTriggerConfig?(triggerlinedirection == 'headward'):(triggerlinedirection == 'tailward')) &&
             viewportTriggerOffset >= 0
 
         )
@@ -203,9 +203,9 @@ export const getShiftInstruction = ({
     if (entries.length == 0) { // short-circuit the evaluation
 
         const counterdirection = 
-            (direction == 'forward')?
-            'backward':        
-            'forward'
+            (direction == 'tailward')?
+            'headward':        
+            'tailward'
 
         const counterentries = triggerlineEntries.filter(entry => entry.triggerdirection == counterdirection)
 
@@ -215,8 +215,8 @@ export const getShiftInstruction = ({
             const countertriggerlinedirection = counterentry.triggerlinedirection
 
             let impliedoffset
-            if ((countertriggerlinedirection == 'forward') &&
-                (isFirstRowTriggerConfig?(direction == 'backward'):(direction == 'forward')))
+            if ((countertriggerlinedirection == 'tailward') &&
+                (isFirstRowTriggerConfig?(direction == 'headward'):(direction == 'tailward')))
 
             {
 
@@ -248,11 +248,11 @@ export const getShiftInstruction = ({
 
         const entry = entries[0] // assume one record gets filtered; only paired above on reconnect
 
-        if (direction == 'forward') {
+        if (direction == 'tailward') {
 
             shiftinstruction = 'tohead' 
 
-        } else { // backward
+        } else { // headward
 
             shiftinstruction = 'totail' 
 
@@ -262,7 +262,7 @@ export const getShiftInstruction = ({
 
     // check for last oversize row when scrollbock scrolling toward end
     // TODO review this logic
-    if ((shiftinstruction !='none') && (direction == 'backward') && (viewportVisibleRowcount == 0)) {
+    if ((shiftinstruction !='none') && (direction == 'headward') && (viewportVisibleRowcount == 0)) {
         if ((listsize - crosscount) <= oldAxisReferenceIndex) {
 
             shiftinstruction = 'none' // 0
@@ -356,8 +356,8 @@ export const calcContentShift = ({
             scrollblockElement.offsetTop:
             scrollblockElement.offsetLeft
 
-    // currentViewportAxisOffset will be negative (above viewport edge) for scroll block backward 
-    //     and positive for scroll block forward
+    // currentViewportAxisOffset will be negative (above viewport edge) for scroll block headward 
+    //     and positive for scroll block tailward
     // the pixel distance between the viewport frame and the axis, toward the head
     const currentViewportAxisOffset = 
         scrollblockAxisOffset + scrollblockOffset - scrollPos
@@ -429,7 +429,7 @@ export const calcContentShift = ({
             spanPtr + 1:
             -(spanPtr + 1)
 
-    // the following two values, and no other calcs, are carried forward.
+    // the following two values, and no other calcs, are carried tailward.
     // for axisReferenceRowshift:
     // negative for moving rows out of head into tail;
     // positive for moving rows out of tail into head
@@ -459,9 +459,9 @@ export const calcContentShift = ({
 
     if (shiftinstruction == 'totail') {
 
-        // a. if scrolling forward near the start of the list, new cradle row offset and
+        // a. if scrolling tailward near the start of the list, new cradle row offset and
         // cradle row shift count has to be adjusted to accommodate the leading runway
-        // b. if scrolling forward (toward tail of list), as the cradle last row offset approaches 
+        // b. if scrolling tailward (toward tail of list), as the cradle last row offset approaches 
         // listrow new cradle offset and cradle row shift have to be adjusted to prevent shortening 
         // of cradle content.
 
@@ -485,11 +485,11 @@ export const calcContentShift = ({
 
         }
 
-    } else { // blockScrollingDirection = forward
+    } else { // blockScrollingDirection = tailward
 
-        // c. if scrolling backward (toward head of list), as the cradlerowoffset hits 0, cradle changes have
+        // c. if scrolling headward (toward head of list), as the cradlerowoffset hits 0, cradle changes have
         // to be adjusted to prevent shortening of cradle content
-        // d. if scrolling backward near the start of the list, cradle changes have to be adjusted to accomodate
+        // d. if scrolling headward near the start of the list, cradle changes have to be adjusted to accomodate
         // the trailing runway
 
         if (newCradleReferenceRowOffset < 0) {

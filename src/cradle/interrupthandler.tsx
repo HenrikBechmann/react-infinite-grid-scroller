@@ -7,7 +7,7 @@
         when the cradle is in variable layout
     - cradleIntersectionObserverCallback // responds to move of both cradle grids outside viewport
         this initiates the repositioning protocol
-    - axisTriggerlinesObserverCallback // responds to crossing of forward and backward triggerlines
+    - axisTriggerlinesObserverCallback // responds to crossing of tailward and headward triggerlines
         in relation to the viewport, and triggers rollover and re-allocation of cradle content
 
     viewportResizing is handled by viewport
@@ -76,9 +76,9 @@ export default class InterruptHandler {
                 // intercept could be triggered with change of cell size and no scrolling
                 'none':
                     (scrollData.previous > scrollData.current)?
-                        'forward': // scrollblock moving down or right in relation to viewport
+                        'tailward': // scrollblock moving down or right in relation to viewport
                                     // (scrollPos -- scrollTop or scrollLeft -- diminishing)
-                        'backward' // scrollblock moving up or left in relation to viewport
+                        'headward' // scrollblock moving up or left in relation to viewport
                                     // (scrollPos -- scrollTop or scrollLeft -- increasing)
 
             // if ((scrollData.start != scrollData.current) ||
@@ -90,8 +90,8 @@ export default class InterruptHandler {
 
                 // const blockScrollingDirection = 
                 //     (scrollData.previous > scrollData.current)?
-                //         'forward':
-                //         'backward'
+                //         'tailward':
+                //         'headward'
 
                 contentHandler.updateCradleContent(blockScrollingDirection, entries,'triggerlinesObserver')
 

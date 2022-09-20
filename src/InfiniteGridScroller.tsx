@@ -32,7 +32,7 @@
     TODO:
 
         - allow updateCradleContent without scrollmovement
-            - change blockScrollingDirection to scrollDirection ('forward', 'backward','none')
+            - change blockScrollingDirection to scrollDirection ('tailward', 'headward','none')
         - add logic for last item in list visible in adjustScrollblockForVariability
         - make disconnect methods of interrupthandler
         - check visibiliy hidden for portallist (instead of display none)

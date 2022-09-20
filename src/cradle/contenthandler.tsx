@@ -14,8 +14,8 @@
     request, and more.
 
     updateCradleContent rolls over the Cradle content in response to user scrolling. When scrolling 
-    forward, content is removed from the Cradle head and added to the Cradle tail. When scrolling 
-    backward, the reverse occurs.
+    tailward, content is removed from the Cradle head and added to the Cradle tail. When scrolling 
+    headward, the reverse occurs.
 
     The Cradle (through the contentfunctions module) delegates fetching content items to the CellFrame.
 
