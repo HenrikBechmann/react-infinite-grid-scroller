@@ -204,11 +204,13 @@ export const getShiftInstruction = ({
 
     } else {
 
-        if ((triggerData.headOffset <=0) && (triggerData.tailOffset <=0)) {
+        // if ((triggerData.headOffset <=0) && (triggerData.tailOffset <=0)) {
+        if (triggerData.tailOffset <=0) {
 
             shiftinstruction = 'totail'
 
-        } else if ((triggerData.headOffset >=0) && (triggerData.tailOffset >=0)) {
+        // } else if ((triggerData.headOffset >=0) && (triggerData.tailOffset >=0)) {
+        } else if (triggerData.headOffset >=0) {
 
             shiftinstruction = 'tohead'
 
