@@ -359,7 +359,7 @@ export default class ContentHandler {
 
         // --------------------[ 2. get shift instruction ]-----------------------
 
-        // -1 is move a row up to the head, +1 is move a row down to the tail, 0 is no shift
+        // -1 is move a row down to the taIL, +1 is move a row up to the head, 0 is no shift
         const shiftinstruction = getShiftInstruction({
             scrollerID: cradleInheritedProperties.scrollerID,
             blockScrollingDirection,
@@ -383,7 +383,7 @@ export default class ContentHandler {
 
         }
 
-        // console.log('updateCradleContent: shiftinstruction',shiftinstruction)
+        console.log('updateCradleContent: blockScrollingDirection, shiftinstruction',blockScrollingDirection, shiftinstruction)
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 

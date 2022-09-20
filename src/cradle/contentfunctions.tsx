@@ -118,7 +118,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     - If the top of the cell row moves into the viewport boundary, then the
         content should push the cell boundary down
 */
-// -1 = shift row to head. 1 = shift row to tail. 0 = do not shift a row.
+// -1 = shift row from head to tail. 1 = shift row from tail to head. 0 = do not shift a row.
 export const getShiftInstruction = ({
 
     blockScrollingDirection,
@@ -195,7 +195,7 @@ export const getShiftInstruction = ({
 
     // console.log('filtered entries', entries)
 
-    let retval
+    let shiftinstruction
 
     // the triggerline might have passed through the viewport completely without the
     // change being triggered, eg. not intersecting, passing through viewport, then
@@ -225,7 +225,7 @@ export const getShiftInstruction = ({
 
                 if (impliedoffset <= 0) {
 
-                    retval = -1
+                    shiftinstruction = -1
 
                 }
 
@@ -235,7 +235,7 @@ export const getShiftInstruction = ({
 
                 if (impliedoffset >= 0) {
 
-                    retval = 1
+                    shiftinstruction = 1
 
                 }
 
@@ -243,7 +243,7 @@ export const getShiftInstruction = ({
 
         }
 
-        retval = 0
+        shiftinstruction = 0
 
     } else { // complete the evaluation
 
@@ -251,11 +251,11 @@ export const getShiftInstruction = ({
 
         if (direction == 'forward') {
 
-            retval = 1 // shift row to tail
+            shiftinstruction = 1 // shift row to head
 
-        } else {
+        } else { // backward
 
-            retval = -1 // shift row to head
+            shiftinstruction = -1 // shift row to tail
 
         }
 
@@ -263,17 +263,17 @@ export const getShiftInstruction = ({
 
     // check for last oversize row when scrollbock scrolling toward end
     // TODO review this logic
-    if ((retval !=0) && (blockScrollingDirection == 'backward') && (viewportVisibleRowcount == 0)) {
+    if ((shiftinstruction !=0) && (blockScrollingDirection == 'backward') && (viewportVisibleRowcount == 0)) {
         if ((listsize - crosscount) <= oldAxisReferenceIndex) {
 
-            retval = 0
+            shiftinstruction = 0
 
         }
     }
 
     // console.log('returning shift instruction', retval)
 
-    return retval
+    return shiftinstruction
 }
 
 // A negative shift instruction is movement into the head, a positive shift is movement into the tail.
