@@ -121,7 +121,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 // -1 = shift row from head to tail. 1 = shift row from tail to head. 0 = do not shift a row.
 export const getShiftInstruction = ({
 
-    blockScrollingDirection,
+    blockScrollingDirection:direction,
     orientation,
     triggerlineEntries,
     triggerlineSpan,
@@ -142,11 +142,6 @@ export const getShiftInstruction = ({
     // console.log('getShiftInstruction: reverseDirection, blockScrollingDirection, triggerlineEntries', 
     //     reverseDirection, blockScrollingDirection, triggerlineEntries)
 
-    const direction = 
-        blockScrollingDirection //?
-            // 'forward':
-            // 'backward'
-
     const entries = triggerlineEntries.filter(entry => {
         // const isIntersecting = entry.isIntersecting
         const triggerlinename = entry.target.dataset.type
@@ -155,7 +150,7 @@ export const getShiftInstruction = ({
         const triggerlinedirection = entry.target.dataset.direction
         entry.triggerlinedirection = triggerlinedirection
 
-        entry.scrollingdirection = blockScrollingDirection // memo for console
+        entry.scrollingdirection = direction // memo for console
 
         const rootpos = 
             (orientation == 'vertical')?
@@ -204,7 +199,7 @@ export const getShiftInstruction = ({
     if (entries.length == 0) { // short-circuit the evaluation
 
         const counterdirection = 
-        (blockScrollingDirection == 'forward')?
+            (direction == 'forward')?
             'backward':        
             'forward'
 
@@ -225,7 +220,7 @@ export const getShiftInstruction = ({
 
                 if (impliedoffset <= 0) {
 
-                    shiftinstruction = 'totail' // -1
+                    shiftinstruction = 'totail' 
 
                 }
 
@@ -235,7 +230,7 @@ export const getShiftInstruction = ({
 
                 if (impliedoffset >= 0) {
 
-                    shiftinstruction = 'tohead' // 1
+                    shiftinstruction = 'tohead' 
 
                 }
 
@@ -251,11 +246,11 @@ export const getShiftInstruction = ({
 
         if (direction == 'forward') {
 
-            shiftinstruction = 'tohead' // 1 // shift row to head
+            shiftinstruction = 'tohead' 
 
         } else { // backward
 
-            shiftinstruction = 'totail' // -1 // shift row to tail
+            shiftinstruction = 'totail' 
 
         }
 
@@ -263,15 +258,13 @@ export const getShiftInstruction = ({
 
     // check for last oversize row when scrollbock scrolling toward end
     // TODO review this logic
-    if ((shiftinstruction !='none') && (blockScrollingDirection == 'backward') && (viewportVisibleRowcount == 0)) {
+    if ((shiftinstruction !='none') && (direction == 'backward') && (viewportVisibleRowcount == 0)) {
         if ((listsize - crosscount) <= oldAxisReferenceIndex) {
 
             shiftinstruction = 'none' // 0
 
         }
     }
-
-    // console.log('returning shift instruction', retval)
 
     return shiftinstruction
 }
@@ -291,12 +284,6 @@ export const calcContentShift = ({
 }) => {
 
     // ------------------------[ 1. initialize ]-----------------------
-
-    // const blockScrollingDirection = 
-    //     // (shiftinstruction > 0)?
-    //     (shiftinstruction == 'tohead')?
-    //         'forward':
-    //         'backward'
 
     const { 
 
@@ -331,7 +318,6 @@ export const calcContentShift = ({
     } = cradleInternalProperties
 
     const referenceGridElement = 
-        // (blockScrollingDirection == 'backward')?
         (shiftinstruction == 'totail')?
             tailGridElement:
             headGridElement
@@ -339,7 +325,6 @@ export const calcContentShift = ({
 
     const gridRowLengths = getGridRowLengths(referenceGridElement, orientation, crosscount, gap)
 
-    // if (blockScrollingDirection == 'forward')
     if (shiftinstruction == 'tohead')
         gridRowLengths.reverse()
 
@@ -375,7 +360,6 @@ export const calcContentShift = ({
 
     // the location of the active trigger
     const notionalActiveTriggerPos = 
-        // (blockScrollingDirection == 'backward')?
         (shiftinstruction == 'totail')?
             currentViewportAxisOffset + triggerlineOffset:
             // (firstRowLength === undefined)?
@@ -386,7 +370,6 @@ export const calcContentShift = ({
     //     blockScrollingDirection, currentViewportAxisOffset, notionalActiveTriggerPos)
 
     const spanRowPtr = 
-        // (blockScrollingDirection == 'backward')?
         (shiftinstruction == 'totail')?
             gridRowSpans.findIndex((span) => -(span - triggerlineOffset) < notionalActiveTriggerPos):
             gridRowSpans.findIndex((span) => (span - triggerlineOffset) > notionalActiveTriggerPos)
@@ -402,12 +385,10 @@ export const calcContentShift = ({
             spanPtr = gridRowSpans.length - 1
 
             let overshootPixelShift = // set base of working total
-                // (blockScrollingDirection == 'backward')?
                 (shiftinstruction == 'totail')?
                     -(gridRowSpans.at(-1) - triggerlineOffset): // positive value
                     gridRowSpans.at(-1) - triggerlineOffset // negative value
 
-            // if (blockScrollingDirection == 'backward') {
             if (shiftinstruction == 'totail') {
 
                 while (overshootPixelShift > notionalActiveTriggerPos) {
@@ -433,7 +414,6 @@ export const calcContentShift = ({
 
         spanPtr = spanRowPtr
         spanAxisPixelShift = 
-            // (blockScrollingDirection == 'backward')?
             (shiftinstruction == 'totail')?
                 gridRowSpans[spanPtr]:
                 -gridRowSpans[spanPtr]
@@ -441,7 +421,6 @@ export const calcContentShift = ({
     }
 
     const spanRowShift = // pick up row shift with or without overshoot
-        // (blockScrollingDirection == 'backward')?
         (shiftinstruction == 'totail')?
             spanPtr + 1:
             -(spanPtr + 1)
@@ -474,7 +453,6 @@ export const calcContentShift = ({
 
     const listEndrowOffset = (listRowcount - 1)
 
-    // if (blockScrollingDirection == 'backward') {
     if (shiftinstruction == 'totail') {
 
         // a. if scrolling forward near the start of the list, new cradle row offset and
