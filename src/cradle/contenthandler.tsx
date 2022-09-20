@@ -309,6 +309,8 @@ export default class ContentHandler {
         source = 'notifications'
     ) => {
 
+        // console.log('triggerlineEntries', triggerlineEntries)
+
         // ----------------------[ 1. initialize ]-------------------------
 
         // handler support
@@ -383,7 +385,7 @@ export default class ContentHandler {
 
         }
 
-        console.log('updateCradleContent: blockScrollingDirection, shiftinstruction',blockScrollingDirection, shiftinstruction)
+        // console.log('updateCradleContent: blockScrollingDirection, shiftinstruction',blockScrollingDirection, shiftinstruction)
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
