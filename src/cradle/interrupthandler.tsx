@@ -75,9 +75,12 @@ export default class InterruptHandler {
                 scrollData.previousupdate = scrollData.currentupdate
                 scrollData.currentupdate = scrollData.current
 
-                const isBlockScrollingForward = (scrollData.previous > scrollData.current)
+                const blockScrollingDirection = 
+                    (scrollData.previous > scrollData.current)?
+                        'forward':
+                        'backward'
 
-                contentHandler.updateCradleContent(isBlockScrollingForward, entries,'triggerlinesObserver')
+                contentHandler.updateCradleContent(blockScrollingDirection, entries,'triggerlinesObserver')
 
             }
         }

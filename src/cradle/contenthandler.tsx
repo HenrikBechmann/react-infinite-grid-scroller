@@ -304,7 +304,7 @@ export default class ContentHandler {
     // axisTriggerlinesObserverCallback of interruptHandler
 
     public updateCradleContent = (
-        isBlockScrollingForward, 
+        blockScrollingDirection, 
         triggerlineEntries, 
         source = 'notifications'
     ) => {
@@ -362,7 +362,7 @@ export default class ContentHandler {
         // -1 is move a row up to the head, +1 is move a row down to the tail, 0 is no shift
         const shiftinstruction = getShiftInstruction({
             scrollerID: cradleInheritedProperties.scrollerID,
-            isBlockScrollingForward,
+            blockScrollingDirection,
             orientation,
             triggerlineEntries,
             triggerlineSpan: layoutHandler.triggerlineSpan,

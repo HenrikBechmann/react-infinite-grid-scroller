@@ -121,7 +121,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 // -1 = shift row to head. 1 = shift row to tail. 0 = do not shift a row.
 export const getShiftInstruction = ({
 
-    isBlockScrollingForward,
+    blockScrollingDirection,
     orientation,
     triggerlineEntries,
     triggerlineSpan,
@@ -139,13 +139,13 @@ export const getShiftInstruction = ({
 
 }) => {
 
-    // console.log('getShiftInstruction: reverseDirection, !isBlockScrollingForward, triggerlineEntries', 
-    //     reverseDirection, !isBlockScrollingForward, triggerlineEntries)
+    // console.log('getShiftInstruction: reverseDirection, blockScrollingDirection, triggerlineEntries', 
+    //     reverseDirection, blockScrollingDirection, triggerlineEntries)
 
     const direction = 
-        isBlockScrollingForward?
-            'forward':
-            'backward'
+        blockScrollingDirection //?
+            // 'forward':
+            // 'backward'
 
     const entries = triggerlineEntries.filter(entry => {
         // const isIntersecting = entry.isIntersecting
@@ -155,7 +155,7 @@ export const getShiftInstruction = ({
         const triggerlinedirection = entry.target.dataset.direction
         entry.triggerlinedirection = triggerlinedirection
 
-        entry.scrollingforward = isBlockScrollingForward // memo for console
+        entry.scrollingdirection = blockScrollingDirection // memo for console
 
         const rootpos = 
             (orientation == 'vertical')?
@@ -204,7 +204,7 @@ export const getShiftInstruction = ({
     if (entries.length == 0) { // short-circuit the evaluation
 
         const counterdirection = 
-        (isBlockScrollingForward)?
+        (blockScrollingDirection == 'forward')?
             'backward':        
             'forward'
 
@@ -263,7 +263,7 @@ export const getShiftInstruction = ({
 
     // check for last oversize row when scrollbock scrolling toward end
     // TODO review this logic
-    if ((retval !=0) && (!isBlockScrollingForward) && (viewportVisibleRowcount == 0)) {
+    if ((retval !=0) && (blockScrollingDirection == 'backward') && (viewportVisibleRowcount == 0)) {
         if ((listsize - crosscount) <= oldAxisReferenceIndex) {
 
             retval = 0
@@ -292,7 +292,10 @@ export const calcContentShift = ({
 
     // ------------------------[ 1. initialize ]-----------------------
 
-    const isBlockScrollingForward = (shiftinstruction > 0)
+    const blockScrollingDirection = 
+        (shiftinstruction > 0)?
+            'forward':
+            'backward'
 
     const { 
 
@@ -327,14 +330,14 @@ export const calcContentShift = ({
     } = cradleInternalProperties
 
     const referenceGridElement = 
-        !isBlockScrollingForward?
+        (blockScrollingDirection == 'backward')?
             tailGridElement:
             headGridElement
 
 
     const gridRowLengths = getGridRowLengths(referenceGridElement, orientation, crosscount, gap)
 
-    if (isBlockScrollingForward)
+    if (blockScrollingDirection == 'forward')
         gridRowLengths.reverse()
 
     const gridRowSpans = getGridRowSpans(gridRowLengths)
@@ -369,17 +372,17 @@ export const calcContentShift = ({
 
     // the location of the active trigger
     const notionalActiveTriggerPos = 
-        (!isBlockScrollingForward)?
+        (blockScrollingDirection == 'backward')?
             currentViewportAxisOffset + triggerlineOffset:
             // (firstRowLength === undefined)?
             //     currentViewportAxisOffset + triggerlineOffset:
                 currentViewportAxisOffset - (firstRowLength - triggerlineOffset)        
 
-    console.log('calcContentShift:!isBlockScrollingForward, currentViewportAxisOffset, notionalActiveTriggerPos',
-        !isBlockScrollingForward, currentViewportAxisOffset, notionalActiveTriggerPos)
+    console.log('calcContentShift:blockScrollingDirection, currentViewportAxisOffset, notionalActiveTriggerPos',
+        blockScrollingDirection, currentViewportAxisOffset, notionalActiveTriggerPos)
 
     const spanRowPtr = 
-        (!isBlockScrollingForward)?
+        (blockScrollingDirection == 'backward')?
             gridRowSpans.findIndex((span) => -(span - triggerlineOffset) < notionalActiveTriggerPos):
             gridRowSpans.findIndex((span) => (span - triggerlineOffset) > notionalActiveTriggerPos)
 
@@ -394,11 +397,11 @@ export const calcContentShift = ({
             spanPtr = gridRowSpans.length - 1
 
             let overshootPixelShift = // set base of working total
-                (!isBlockScrollingForward)?
+                (blockScrollingDirection == 'backward')?
                     -(gridRowSpans.at(-1) - triggerlineOffset): // positive value
                     gridRowSpans.at(-1) - triggerlineOffset // negative value
 
-            if (!isBlockScrollingForward) {
+            if (blockScrollingDirection == 'backward') {
 
                 while (overshootPixelShift > notionalActiveTriggerPos) {
                     overshootPixelShift -= baseRowLength
@@ -423,14 +426,14 @@ export const calcContentShift = ({
 
         spanPtr = spanRowPtr
         spanAxisPixelShift = 
-            (!isBlockScrollingForward)?
+            (blockScrollingDirection == 'backward')?
                 gridRowSpans[spanPtr]:
                 -gridRowSpans[spanPtr]
 
     }
 
     const spanRowShift = // pick up row shift with or without overshoot
-        (!isBlockScrollingForward)?
+        (blockScrollingDirection == 'backward')?
             spanPtr + 1:
             -(spanPtr + 1)
 
@@ -462,7 +465,7 @@ export const calcContentShift = ({
 
     const listEndrowOffset = (listRowcount - 1)
 
-    if (!isBlockScrollingForward) {
+    if (blockScrollingDirection == 'backward') {
 
         // a. if scrolling forward near the start of the list, new cradle row offset and
         // cradle row shift count has to be adjusted to accommodate the leading runway
@@ -490,7 +493,7 @@ export const calcContentShift = ({
 
         }
 
-    } else { // isBlockScrollingForward = scroll backward
+    } else { // blockScrollingDirection = forward
 
         // c. if scrolling backward (toward head of list), as the cradlerowoffset hits 0, cradle changes have
         // to be adjusted to prevent shortening of cradle content
