@@ -113,12 +113,16 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 // ======================[ for updateCradleContent ]===========================
 
 /*
-    - If the top of the cell row moves beyond the viewport boundary, then the 
-        content should push the cell boundary up
-    - If the top of the cell row moves into the viewport boundary, then the
-        content should push the cell boundary down
+
+    the two triggerlines must straddle the head of the viewport (top or left) so that
+    cradle motion can be detected. Motion is most often caused by scrolling, but
+    can also occur with change of size of cradle content rows.
+
+    getShiftInstruction determines whether items should be moved between head and tail 
+    ('tohead' or 'totail') or if no shift ('none') is required, to restore the straddling
+    position of the two trigger lines.
+
 */
-// -1 = shift row from head to tail. 1 = shift row from tail to head. 0 = do not shift a row.
 export const getShiftInstruction = ({
 
     blockScrollingDirection:direction,
