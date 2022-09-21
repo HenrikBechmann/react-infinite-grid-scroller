@@ -301,11 +301,11 @@ export const calcContentShift = ({
     let spanRowPtr
     if (shiftinstruction == 'tohead') {
 
-        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos - span) <=0 )
+        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos - (span - triggerlineOffset)) <=0 )
     
     } else {
 
-        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos + span) >=0 )
+        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos + (span - triggerlineOffset)) >=0 )
 
     }
 
@@ -319,11 +319,10 @@ export const calcContentShift = ({
         } else {
 
             spanPtr = gridRowSpans.length - 1
-
             let overshootPixelShift = // set base of working total
                 (shiftinstruction == 'totail')?
-                    -gridRowSpans.at(-1):// - triggerlineOffset): // positive value
-                    gridRowSpans.at(-1)// - triggerlineOffset // negative value
+                    -gridRowSpans.at(-1) - triggerlineOffset: // positive value
+                    gridRowSpans.at(-1) + triggerlineOffset // negative value
 
             if (shiftinstruction == 'totail') {
 
@@ -332,7 +331,7 @@ export const calcContentShift = ({
                     ++spanPtr
                 }
 
-                spanAxisPixelShift = overshootPixelShift //+ triggerlineOffset
+                spanAxisPixelShift = overshootPixelShift + triggerlineOffset
 
             } else {
 
@@ -341,7 +340,7 @@ export const calcContentShift = ({
                     ++spanPtr
                 }
 
-                spanAxisPixelShift = overshootPixelShift// - triggerlineOffset
+                spanAxisPixelShift = overshootPixelShift - triggerlineOffset
             }
 
         }
@@ -352,7 +351,7 @@ export const calcContentShift = ({
 
         spanAxisPixelShift = 
             (shiftinstruction == 'totail')?
-                gridRowSpans[spanRowPtr]:
+                gridRowSpans[spanRowPtr] :
                 -gridRowSpans[spanRowPtr]
 
     }
@@ -369,8 +368,10 @@ export const calcContentShift = ({
     const axisReferenceRowshift = spanRowShift
     const axisPixelShift = spanAxisPixelShift 
 
-    // console.log('shiftinstruction, spanRowPtr, triggerReferencePos, gridRowSpans',
-    //     shiftinstruction, spanRowPtr, triggerReferencePos, gridRowSpans)
+    console.log('shiftinstruction, spanRowPtr, \ntriggerReferencePos, gridRowSpans, \n(triggerlineOffset = 10)\n\
+        axisReferenceRowshift, axisPixelShift\n',
+        shiftinstruction, spanRowPtr, triggerReferencePos, gridRowSpans,'\n',
+        axisReferenceRowshift, axisPixelShift)
 
     // -----------[ 3. calculate current viewport axis offset ]-------------------
     // gaps beyond rendered rows can be caused by rapid scrolling
