@@ -296,64 +296,27 @@ export const calcContentShift = ({
         triggerData.headOffset:
         triggerData.tailOffset
 
-    let spanPtr
+    // ----------------------------[ calculate base row shift ]--------------------------
+
+    let spanRowPtr
     if (shiftinstruction == 'tohead') {
 
-        spanPtr = gridRowSpans.findIndex((span) => (triggerReferencePos - span) <=0 )
+        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos - span) <=0 )
     
     } else {
 
-        spanPtr = gridRowSpans.findIndex((span) => (triggerReferencePos + span) >=0 )
+        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos + span) >=0 )
 
     }
 
     // TODO insert overflow logic with baseRowLength here, where rowPtr = -1.
 
-    console.log('shiftinstruction, spanPtr, triggerReferencePos, gridRowSpans',
-        shiftinstruction, spanPtr, triggerReferencePos, gridRowSpans)
-
-    // -----------[ 2. calculate axis reference row shift ]-------------------
-    // gaps beyond rendered rows can be caused by rapid scrolling
-
-    const scrollblockAxisOffset = 
-        (orientation == 'vertical')?
-            axisElement.offsetTop:
-            axisElement.offsetLeft
-
-    // // const scrollblockElement = viewportElement.firstChild
-    const scrollblockOffset = // to capture current top/left adjustment to viewport for variable layout
-        (orientation == 'vertical')?
-            scrollblockElement.offsetTop:
-            scrollblockElement.offsetLeft
-
-    // // currentViewportAxisOffset will be negative (above viewport edge) for scroll block headward 
-    // //     and positive for scroll block tailward
-    // // the pixel distance between the viewport frame and the axis, toward the head
-    const currentViewportAxisOffset = 
-        scrollblockAxisOffset + scrollblockOffset - scrollPos
-
-    // // the location of the active trigger
-    // const notionalActiveTriggerPos = 
-    //     (shiftinstruction == 'totail')?
-    //         currentViewportAxisOffset + triggerlineOffset:
-    //         // (firstRowLength === undefined)?
-    //         //     currentViewportAxisOffset + triggerlineOffset:
-    //             currentViewportAxisOffset - (firstRowLength - triggerlineOffset)        
-
-    // // console.log('calcContentShift:blockScrollingDirection, currentViewportAxisOffset, notionalActiveTriggerPos',
-    // //     blockScrollingDirection, currentViewportAxisOffset, notionalActiveTriggerPos)
-
-    // const spanRowPtr = 
-    //     (shiftinstruction == 'totail')?
-    //         gridRowSpans.findIndex((span) => -(span - triggerlineOffset) < notionalActiveTriggerPos):
-    //         gridRowSpans.findIndex((span) => (span - triggerlineOffset) > notionalActiveTriggerPos)
-
-    // let spanPtr, // used to calc spanRowShift below
-    //     spanAxisPixelShift // used to calc newAxisPixelOffset below
     // if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
+        let spanPtr
     //     if (gridRowSpans.length == 0) {
     //         spanPtr = -1
     //         spanAxisPixelShift = 0
+
     //     } else {
 
     //         spanPtr = gridRowSpans.length - 1
@@ -386,23 +349,40 @@ export const calcContentShift = ({
 
     // } else { // final values found in instantiated rows
 
-    //     spanPtr = spanRowPtr
         const spanAxisPixelShift = 
             (shiftinstruction == 'totail')?
-                gridRowSpans[spanPtr]:
-                -gridRowSpans[spanPtr]
+                gridRowSpans[spanRowPtr]:
+                -gridRowSpans[spanRowPtr]
 
     // }
 
-    // const spanRowShift = // pick up row shift with or without overshoot
-    //     (shiftinstruction == 'totail')?
-    //         spanPtr + 1:
-    //         -(spanPtr + 1)
-
     const spanRowShift = // pick up row shift with or without overshoot
         (shiftinstruction == 'totail')?
-            spanPtr + 1:
-            -(spanPtr + 1)
+            spanRowPtr + 1:
+            -(spanRowPtr + 1)
+
+    console.log('shiftinstruction, spanRowPtr, triggerReferencePos, gridRowSpans',
+        shiftinstruction, spanRowPtr, triggerReferencePos, gridRowSpans)
+
+    // -----------[ 2. calculate axis reference row shift ]-------------------
+    // gaps beyond rendered rows can be caused by rapid scrolling
+
+    const scrollblockAxisOffset = 
+        (orientation == 'vertical')?
+            axisElement.offsetTop:
+            axisElement.offsetLeft
+
+    // // const scrollblockElement = viewportElement.firstChild
+    const scrollblockOffset = // to capture current top/left adjustment to viewport for variable layout
+        (orientation == 'vertical')?
+            scrollblockElement.offsetTop:
+            scrollblockElement.offsetLeft
+
+    // // currentViewportAxisOffset will be negative (above viewport edge) for scroll block headward 
+    // //     and positive for scroll block tailward
+    // // the pixel distance between the viewport frame and the axis, toward the head
+    const currentViewportAxisOffset = 
+        scrollblockAxisOffset + scrollblockOffset - scrollPos
 
     // the following two values, and no other calcs, are carried tailward.
     // for axisReferenceRowshift:
