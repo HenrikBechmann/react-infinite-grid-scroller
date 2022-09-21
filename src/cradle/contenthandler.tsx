@@ -406,12 +406,14 @@ export default class ContentHandler {
         } = calcContentShift({
 
             shiftinstruction,
+            triggerData,
+            scrollPos,
+            scrollblockElement:viewportElement.firstChild,
+
             cradleInheritedProperties,
             cradleInternalProperties,
             cradleContent,
             cradleElements,
-            scrollPos,
-            viewportElement,
 
         })
 
