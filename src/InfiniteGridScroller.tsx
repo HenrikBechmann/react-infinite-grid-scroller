@@ -26,6 +26,7 @@
 
     TODO:
 
+        - verify intersection boundary on zero; check edge case of both triggerlines intersecting
         - see if scrollData still needed; probably for filtering scroll adjustments
         - allow updateCradleContent without scrollmovement
             - change blockScrollingDirection to scrollDirection ('tailward', 'headward','none')
