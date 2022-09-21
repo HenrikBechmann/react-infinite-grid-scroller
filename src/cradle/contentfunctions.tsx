@@ -176,7 +176,7 @@ export const getShiftInstruction = ({
     
     if (isFirstRowTriggerConfig) {
 
-        if (triggerData.headOffset <= 0) {
+        if (triggerData.headOffset < 0) {
 
             shiftinstruction = 'totail'
 
@@ -188,7 +188,7 @@ export const getShiftInstruction = ({
 
     } else {
 
-        if (triggerData.tailOffset <=0) {
+        if (triggerData.tailOffset <0) {
 
             shiftinstruction = 'totail'
 
@@ -203,6 +203,8 @@ export const getShiftInstruction = ({
         }
 
     }
+
+    console.log('shiftinstruction', shiftinstruction)
 
     return [shiftinstruction, triggerData]
 
@@ -242,7 +244,7 @@ export const calcContentShift = ({
         orientation,
         cellHeight,
         cellWidth,
-        triggerlineOffset, // TODO may be needed for relocation calculations
+        // triggerlineOffset, // TODO may be needed for relocation calculations
 
     } = cradleInheritedProperties
 
@@ -301,16 +303,17 @@ export const calcContentShift = ({
     let spanRowPtr
     if (shiftinstruction == 'tohead') {
 
-        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos - (span - triggerlineOffset)) <=0 )
+        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos - span) <0 )
     
     } else {
 
-        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos + (span - triggerlineOffset)) >=0 )
+        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos + span) >0 )
 
     }
 
     let spanAxisPixelShift
     if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
+        console.log('CALCULATING OVERSHOOT')
         let spanPtr
         if (gridRowSpans.length == 0) { // must be list boundary
             spanPtr = -1
@@ -321,8 +324,8 @@ export const calcContentShift = ({
             spanPtr = gridRowSpans.length - 1
             let overshootPixelShift = // set base of working total
                 (shiftinstruction == 'totail')?
-                    -gridRowSpans.at(-1) - triggerlineOffset: // positive value
-                    gridRowSpans.at(-1) + triggerlineOffset // negative value
+                    -gridRowSpans.at(-1):// - triggerlineOffset: // positive value
+                    gridRowSpans.at(-1)// + triggerlineOffset // negative value
 
             if (shiftinstruction == 'totail') {
 
@@ -331,7 +334,7 @@ export const calcContentShift = ({
                     ++spanPtr
                 }
 
-                spanAxisPixelShift = overshootPixelShift + triggerlineOffset
+                spanAxisPixelShift = overshootPixelShift //+ triggerlineOffset
 
             } else {
 
@@ -340,7 +343,7 @@ export const calcContentShift = ({
                     ++spanPtr
                 }
 
-                spanAxisPixelShift = overshootPixelShift - triggerlineOffset
+                spanAxisPixelShift = overshootPixelShift //- triggerlineOffset
             }
 
         }
@@ -368,10 +371,13 @@ export const calcContentShift = ({
     const axisReferenceRowshift = spanRowShift
     const axisPixelShift = spanAxisPixelShift 
 
-    console.log('shiftinstruction, spanRowPtr, \ntriggerReferencePos, gridRowSpans, \n(triggerlineOffset = 10)\n\
-        axisReferenceRowshift, axisPixelShift\n',
-        shiftinstruction, spanRowPtr, triggerReferencePos, gridRowSpans,'\n',
-        axisReferenceRowshift, axisPixelShift)
+    console.log('shiftinstruction,',
+        // spanRowPtr, \ntriggerReferencePos, gridRowSpans, \n(triggerlineOffset = 10)\n\
+        'axisReferenceRowshift, axisPixelShift, gridRowSpans\n',
+        //shiftinstruction, spanRowPtr, triggerReferencePos, 
+        shiftinstruction, axisReferenceRowshift, axisPixelShift,'\n',
+        gridRowSpans
+        )
 
     // -----------[ 3. calculate current viewport axis offset ]-------------------
     // gaps beyond rendered rows can be caused by rapid scrolling
