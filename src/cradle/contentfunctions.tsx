@@ -242,7 +242,7 @@ export const calcContentShift = ({
         orientation,
         cellHeight,
         cellWidth,
-        // triggerlineOffset,
+        triggerlineOffset, // TODO may be needed for relocation calculations
 
     } = cradleInheritedProperties
 
@@ -369,8 +369,8 @@ export const calcContentShift = ({
     const axisReferenceRowshift = spanRowShift
     const axisPixelShift = spanAxisPixelShift 
 
-    console.log('shiftinstruction, spanRowPtr, triggerReferencePos, gridRowSpans',
-        shiftinstruction, spanRowPtr, triggerReferencePos, gridRowSpans)
+    // console.log('shiftinstruction, spanRowPtr, triggerReferencePos, gridRowSpans',
+    //     shiftinstruction, spanRowPtr, triggerReferencePos, gridRowSpans)
 
     // -----------[ 3. calculate current viewport axis offset ]-------------------
     // gaps beyond rendered rows can be caused by rapid scrolling

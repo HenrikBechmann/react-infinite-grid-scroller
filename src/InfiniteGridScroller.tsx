@@ -14,6 +14,8 @@
 
     BUGS: 
 
+        - shorten body of last head item does not relocate axis as expected
+        - rapid scroll block down on very short (1-line) cellFrame causes unexpected jump in axis location
         - scroll toward top sometimes loses position; can's scroll all the way; hard to reproduce
             - may relate to undersized elements
             - triggerline reconnect apparently didn't happen (or failed) in one case (!)
