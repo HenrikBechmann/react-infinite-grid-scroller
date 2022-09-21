@@ -208,6 +208,18 @@ export const getShiftInstruction = ({
 
 }
 
+/*
+
+    The basic goal here is to determine the number and direction of rows to shift between
+    the head and tail grids (which dtermines the new location of the axis), and also to
+    calculate the rolling addition and deletion of cradle content to accommodate the changes.
+
+    The number of rows to shift is determined by the pixel shift required to restore the 
+    triggerlines to their straddle configuration around the head (top or left) of the viewport.
+
+    Adjustments are made to accommodate special requirements at the start and end of the virtual list.
+
+*/
 export const calcContentShift = ({
 
     shiftinstruction,
@@ -263,8 +275,11 @@ export const calcContentShift = ({
 
     const gridRowLengths = getGridRowLengths(referenceGridElement, orientation, crosscount, gap)
 
-    if (shiftinstruction == 'tohead')
+    if (shiftinstruction == 'tohead') {
+
         gridRowLengths.reverse()
+
+    }
 
     const gridRowSpans = getGridRowSpans(gridRowLengths)
 
@@ -276,6 +291,27 @@ export const calcContentShift = ({
 
     const firstRowLength = gridRowLengths[0] ?? baseRowLength // baseRowLength for start of list
 
+    const triggerReferencePos = 
+        (shiftinstruction == 'tohead')? // block scrolling tailward
+        triggerData.headOffset:
+        triggerData.tailOffset
+
+    let spanPtr
+    if (shiftinstruction == 'tohead') {
+
+        spanPtr = gridRowSpans.findIndex((span) => (triggerReferencePos - span) <=0 )
+    
+    } else {
+
+        spanPtr = gridRowSpans.findIndex((span) => (triggerReferencePos + span) >=0 )
+
+    }
+
+    // TODO insert overflow logic with baseRowLength here, where rowPtr = -1.
+
+    console.log('shiftinstruction, spanPtr, triggerReferencePos, gridRowSpans',
+        shiftinstruction, spanPtr, triggerReferencePos, gridRowSpans)
+
     // -----------[ 2. calculate axis reference row shift ]-------------------
     // gaps beyond rendered rows can be caused by rapid scrolling
 
@@ -284,79 +320,84 @@ export const calcContentShift = ({
             axisElement.offsetTop:
             axisElement.offsetLeft
 
-    // const scrollblockElement = viewportElement.firstChild
+    // // const scrollblockElement = viewportElement.firstChild
     const scrollblockOffset = // to capture current top/left adjustment to viewport for variable layout
         (orientation == 'vertical')?
             scrollblockElement.offsetTop:
             scrollblockElement.offsetLeft
 
-    // currentViewportAxisOffset will be negative (above viewport edge) for scroll block headward 
-    //     and positive for scroll block tailward
-    // the pixel distance between the viewport frame and the axis, toward the head
+    // // currentViewportAxisOffset will be negative (above viewport edge) for scroll block headward 
+    // //     and positive for scroll block tailward
+    // // the pixel distance between the viewport frame and the axis, toward the head
     const currentViewportAxisOffset = 
         scrollblockAxisOffset + scrollblockOffset - scrollPos
 
-    // the location of the active trigger
-    const notionalActiveTriggerPos = 
-        (shiftinstruction == 'totail')?
-            currentViewportAxisOffset + triggerlineOffset:
-            // (firstRowLength === undefined)?
-            //     currentViewportAxisOffset + triggerlineOffset:
-                currentViewportAxisOffset - (firstRowLength - triggerlineOffset)        
+    // // the location of the active trigger
+    // const notionalActiveTriggerPos = 
+    //     (shiftinstruction == 'totail')?
+    //         currentViewportAxisOffset + triggerlineOffset:
+    //         // (firstRowLength === undefined)?
+    //         //     currentViewportAxisOffset + triggerlineOffset:
+    //             currentViewportAxisOffset - (firstRowLength - triggerlineOffset)        
 
-    // console.log('calcContentShift:blockScrollingDirection, currentViewportAxisOffset, notionalActiveTriggerPos',
-    //     blockScrollingDirection, currentViewportAxisOffset, notionalActiveTriggerPos)
+    // // console.log('calcContentShift:blockScrollingDirection, currentViewportAxisOffset, notionalActiveTriggerPos',
+    // //     blockScrollingDirection, currentViewportAxisOffset, notionalActiveTriggerPos)
 
-    const spanRowPtr = 
-        (shiftinstruction == 'totail')?
-            gridRowSpans.findIndex((span) => -(span - triggerlineOffset) < notionalActiveTriggerPos):
-            gridRowSpans.findIndex((span) => (span - triggerlineOffset) > notionalActiveTriggerPos)
+    // const spanRowPtr = 
+    //     (shiftinstruction == 'totail')?
+    //         gridRowSpans.findIndex((span) => -(span - triggerlineOffset) < notionalActiveTriggerPos):
+    //         gridRowSpans.findIndex((span) => (span - triggerlineOffset) > notionalActiveTriggerPos)
 
-    let spanPtr, // used to calc spanRowShift below
-        spanAxisPixelShift // used to calc newAxisPixelOffset below
-    if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
-        if (gridRowSpans.length == 0) {
-            spanPtr = -1
-            spanAxisPixelShift = 0
-        } else {
+    // let spanPtr, // used to calc spanRowShift below
+    //     spanAxisPixelShift // used to calc newAxisPixelOffset below
+    // if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
+    //     if (gridRowSpans.length == 0) {
+    //         spanPtr = -1
+    //         spanAxisPixelShift = 0
+    //     } else {
 
-            spanPtr = gridRowSpans.length - 1
+    //         spanPtr = gridRowSpans.length - 1
 
-            let overshootPixelShift = // set base of working total
-                (shiftinstruction == 'totail')?
-                    -(gridRowSpans.at(-1) - triggerlineOffset): // positive value
-                    gridRowSpans.at(-1) - triggerlineOffset // negative value
+    //         let overshootPixelShift = // set base of working total
+    //             (shiftinstruction == 'totail')?
+    //                 -(gridRowSpans.at(-1) - triggerlineOffset): // positive value
+    //                 gridRowSpans.at(-1) - triggerlineOffset // negative value
 
-            if (shiftinstruction == 'totail') {
+    //         if (shiftinstruction == 'totail') {
 
-                while (overshootPixelShift > notionalActiveTriggerPos) {
-                    overshootPixelShift -= baseRowLength
-                    ++spanPtr
-                }
+    //             while (overshootPixelShift > notionalActiveTriggerPos) {
+    //                 overshootPixelShift -= baseRowLength
+    //                 ++spanPtr
+    //             }
 
-                spanAxisPixelShift = overshootPixelShift + triggerlineOffset
+    //             spanAxisPixelShift = overshootPixelShift + triggerlineOffset
 
-            } else {
+    //         } else {
 
-                while (overshootPixelShift < notionalActiveTriggerPos) {
-                    overshootPixelShift += baseRowLength
-                    ++spanPtr
-                }
+    //             while (overshootPixelShift < notionalActiveTriggerPos) {
+    //                 overshootPixelShift += baseRowLength
+    //                 ++spanPtr
+    //             }
 
-                spanAxisPixelShift = overshootPixelShift - triggerlineOffset
-            }
+    //             spanAxisPixelShift = overshootPixelShift - triggerlineOffset
+    //         }
 
-        }
+    //     }
 
-    } else { // final values found in instantiated rows
+    // } else { // final values found in instantiated rows
 
-        spanPtr = spanRowPtr
-        spanAxisPixelShift = 
+    //     spanPtr = spanRowPtr
+        const spanAxisPixelShift = 
             (shiftinstruction == 'totail')?
                 gridRowSpans[spanPtr]:
                 -gridRowSpans[spanPtr]
 
-    }
+    // }
+
+    // const spanRowShift = // pick up row shift with or without overshoot
+    //     (shiftinstruction == 'totail')?
+    //         spanPtr + 1:
+    //         -(spanPtr + 1)
 
     const spanRowShift = // pick up row shift with or without overshoot
         (shiftinstruction == 'totail')?
@@ -480,11 +521,13 @@ export const calcContentShift = ({
     // ---------------------[ 9. return required values ]-------------------
 
     return {
+
         newCradleReferenceIndex, 
         cradleReferenceItemShift, 
         newAxisReferenceIndex, 
         axisReferenceItemShift, 
-        newAxisPixelOffset, 
+        newAxisPixelOffset,
+
         newCradleContentCount,
         listStartChangeCount,
         listEndChangeCount
