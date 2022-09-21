@@ -137,14 +137,14 @@ export default class StylesHandler {
 
         if (orientation == 'vertical') {
             bottom = 0
-            left = 'auto'
-            right = 'auto'
-            top = 'auto'
+            left = null
+            right = null
+            top = null
         } else {
-            bottom = 'auto'
-            left = 'auto'
+            bottom = null
+            left = null
             right = 0
-            top = 'auto'
+            top = null
         }
 
         return {
@@ -168,15 +168,15 @@ export default class StylesHandler {
         let bottom, left, top, right
 
         if (orientation == 'vertical') {
-            bottom = 'auto'
-            left = 'auto'
-            right = 'auto'
+            bottom = null
+            left = null
+            right = null
             top = 0
         } else {
-            bottom = 'auto'
+            bottom = null
             left = 0
-            right = 'auto'
-            top = 'auto'
+            right = null
+            top = null
         }
 
         return {

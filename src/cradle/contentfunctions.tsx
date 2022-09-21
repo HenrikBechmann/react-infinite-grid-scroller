@@ -176,7 +176,7 @@ export const getShiftInstruction = ({
     
     if (isFirstRowTriggerConfig) {
 
-        if (triggerData.headOffset < 0) {
+        if (triggerData.headOffset <= 0) {
 
             shiftinstruction = 'totail'
 
@@ -188,7 +188,7 @@ export const getShiftInstruction = ({
 
     } else {
 
-        if (triggerData.tailOffset <0) {
+        if (triggerData.tailOffset <=0) {
 
             shiftinstruction = 'totail'
 
@@ -204,7 +204,7 @@ export const getShiftInstruction = ({
 
     }
 
-    console.log('shiftinstruction', shiftinstruction)
+    // console.log('shiftinstruction', shiftinstruction)
 
     return [shiftinstruction, triggerData]
 
@@ -303,11 +303,11 @@ export const calcContentShift = ({
     let spanRowPtr
     if (shiftinstruction == 'tohead') {
 
-        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos - span) <0 )
+        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos - span) <=0 )
     
     } else {
 
-        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos + span) >0 )
+        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos + span) >=0 )
 
     }
 
@@ -371,13 +371,13 @@ export const calcContentShift = ({
     const axisReferenceRowshift = spanRowShift
     const axisPixelShift = spanAxisPixelShift 
 
-    console.log('shiftinstruction,',
-        // spanRowPtr, \ntriggerReferencePos, gridRowSpans, \n(triggerlineOffset = 10)\n\
-        'axisReferenceRowshift, axisPixelShift, gridRowSpans\n',
-        //shiftinstruction, spanRowPtr, triggerReferencePos, 
-        shiftinstruction, axisReferenceRowshift, axisPixelShift,'\n',
-        gridRowSpans
-        )
+    // console.log('shiftinstruction,',
+    //     // spanRowPtr, \ntriggerReferencePos, gridRowSpans, \n(triggerlineOffset = 10)\n\
+    //     'axisReferenceRowshift, axisPixelShift, gridRowSpans\n',
+    //     //shiftinstruction, spanRowPtr, triggerReferencePos, 
+    //     shiftinstruction, axisReferenceRowshift, axisPixelShift,'\n',
+    //     gridRowSpans
+    //     )
 
     // -----------[ 3. calculate current viewport axis offset ]-------------------
     // gaps beyond rendered rows can be caused by rapid scrolling

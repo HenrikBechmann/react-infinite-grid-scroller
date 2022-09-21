@@ -895,21 +895,21 @@ const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWi
         container.style.inset = '0px' 
         container.style.position = 'absolute'
     } else {
-        container.style.inset = 'unset' 
-        container.style.position = 'unset'
+        container.style.inset = null 
+        container.style.position = null
     }
     const maxWidth = 
     container.style.maxWidth = 
         (orientation == 'horizontal')?
             (layout == 'variable')?
                 cellWidth + 'px':
-                'unset'
-            :'unset'
+                null
+            :null
     container.style.maxHeight = 
         (orientation == 'vertical')?
             (layout == 'variable')?
                 cellHeight + 'px':
-                'unset'
+                null
             :'unset'
     container.dataset.type = 'contentenvelope'
     container.dataset.index = index
