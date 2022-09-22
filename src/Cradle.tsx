@@ -1123,8 +1123,8 @@ const Cradle = ({
 
             case 'preparesetforvariability': {
 
-                console.log('-->setTimeout for setContent', cradleState)
-                setTimeout(() => { // need for this is worrisome
+                // console.log('-->setTimeout for setContent', cradleState)
+                setTimeout(() => { // give time for DOM to produce layout
 
                     contentHandler.adjustScrollblockForVariability()
 

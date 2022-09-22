@@ -14,6 +14,12 @@
 
     BUGS: 
 
+        - thumb bounces way too much scrolling back from 200 - some kind of regression
+        - standing start (var) scroll a few pixels, scroll back, scrollblock (prob scrollPos) out of position
+        - scrollto 200 from standing start, narrow browser 1 column on variable, causes infinite loop
+            presumably in getShiftInstruction -- of by one on target axis pos?
+        - scrollto 200 fails in various ways
+        - reset scrollblock for goto - set -- not just scrollblockOffset but also length
         - bottom of list adjustments are broken
         - reposition is flaky with variable
         - goto fails from blank cradle

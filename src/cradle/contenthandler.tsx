@@ -115,7 +115,7 @@ export default class ContentHandler {
             layout,
         } = cradleInheritedProperties
 
-        const {crosscount, listsize} = cradleInternalProperties
+        const {crosscount, listsize, listRowcount} = cradleInternalProperties
 
         let workingRequestAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
         workingRequestAxisReferenceIndex -= (workingRequestAxisReferenceIndex % crosscount)
@@ -189,13 +189,21 @@ export default class ContentHandler {
 //             scrollblockViewportPixelOffset
 //         )
 
-        // reset scrollblockOffset
+        // reset scrollblock Offset and length
         const scrollblockElement = viewportElement.firstChild
+
+        const baselength = (listRowcount * baseRowLength) - 
+            ((listRowcount > 0)?
+                gap: // final cell has no trailing gap
+                0) 
+            + (padding * 2) // leading and trailing padding
 
         if (orientation == 'vertical') {
             scrollblockElement.style.top = null
+            scrollblockElement.style.height = baselength + 'px'
         } else {
             scrollblockElement.style.left = null
+            scrollblockElement.style.width = baselength + 'px'
         }
 
         // console.log('setCradleContent: scrollblockOffset', scrollblockOffset)
