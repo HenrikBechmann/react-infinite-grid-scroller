@@ -541,8 +541,9 @@ export default class ContentHandler {
 
     // ===================[ RECONFIGURE THE SCROLLBLOCK FOR VARIABLE CONTENT ]=======================
 
-    // all DOM elements should be rendered at this point
+    // all DOM elements should have been rendered at this point
     // sets CSS: scrollblockElement top and height (or left and width), and axisElement top (or left)
+    // this to get closer to natural proportions to minimize janky scroll thumb
     public adjustScrollblockForVariability = (source = 'standard') => {
 
         // ----------------------[ setup ]------------------------
@@ -564,11 +565,13 @@ export default class ContentHandler {
             scrollblockElement = viewportElement.firstChild
 
         const {
+
             orientation, 
             gap, 
             padding, 
             cellHeight,
             cellWidth,
+
         } = cradleInheritedProperties
 
         const { crosscount, listsize } = cradleInternalProperties
@@ -590,30 +593,20 @@ export default class ContentHandler {
         if (source == 'afterscroll') { // rebalance scrollblockOffset and blockScrollPos
 
             if (orientation == 'vertical') {
-                scrollblockElement.style.top = 'unset'
+
+                scrollblockElement.style.top = null
+
             } else {
-                scrollblockElement.style.left = 'unset'
+
+                scrollblockElement.style.left = null
+
             }
+
             const blockScrollPos = cradlePositionData.blockScrollPos -= scrollblockOffset
 
             viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
 
             return
-        }
-
-        if (axisReferenceIndex == 0) { // trigger scrollblockOffset reset; change blockScrollPos
-
-            const blockScrollPos = padding - cradlePositionData.targetAxisViewportPixelOffset
-
-            cradlePositionData.blockScrollPos = blockScrollPos
-
-            if (orientation == 'vertical') {
-                scrollblockElement.style.top = 'unset'
-            } else {
-                scrollblockElement.style.left = 'unset'
-            }
-
-            scrollblockOffset = 0
 
         }
 
@@ -624,8 +617,32 @@ export default class ContentHandler {
 
         } = cradlePositionData
 
-        // ------------------------[ calculations ]------------------------
+        // ---------------[ eliminate scrollblock top/left adjustment for start of list]--------------
 
+        if (axisReferenceIndex == 0) { // trigger scrollblockOffset reset; change blockScrollPos
+
+            const blockScrollPos = padding - cradlePositionData.targetAxisViewportPixelOffset
+
+            cradlePositionData.blockScrollPos = blockScrollPos
+
+            if (orientation == 'vertical') {
+
+                scrollblockElement.style.top = null
+
+            } else {
+
+                scrollblockElement.style.left = null
+
+            }
+
+            scrollblockOffset = 0
+
+        }
+
+        // ------------------------[ calculations ]------------------------
+        // derive 1. headDelta, 2. axisScrollblockOffset, and 3. scrollblockLength
+
+        // 1. derive headDelta
         const headRowCount = Math.ceil(headGrid.childNodes.length/crosscount)
         const tailRowCount = Math.ceil(tailGrid.childNodes.length/crosscount)
 
@@ -636,36 +653,51 @@ export default class ContentHandler {
             ) + gap
 
         const baseHeadLength = (headRowCount * baseCellLength) + padding
+        // used to derive scrollblocklength
         const baseTailLength = (tailRowCount * baseCellLength) + padding - gap
 
         let measuredHeadLength, measuredTailLength
         if (orientation == 'vertical') {
+
             measuredHeadLength = headGrid.offsetHeight
+            // used to derive scrollblocklength below
             measuredTailLength = tailGrid.offsetHeight
+
         } else {
+
             measuredHeadLength = headGrid.offsetWidth
+            // used to derive scrollblocklength below
             measuredTailLength = tailGrid.offsetWidth
+
         }
 
+        // result
         const headDelta = baseHeadLength - measuredHeadLength
-        const tailDelta = baseTailLength - measuredTailLength
 
+        // 2. derive axisScrollblockOffset
         const listrowcount = Math.ceil(listsize/crosscount)
 
+        const axisReferenceRow = Math.ceil(axisReferenceIndex/crosscount)
+
+        // result
+        const axisScrollblockOffset = 
+            blockScrollPos + axisViewportOffset + headDelta + scrollblockOffset
+
+        // 3. derive scrollblockLength
         const baseblocklength = (listrowcount * baseCellLength) - gap // no gap below last row
             + (padding * 2) // leading and trailing padding
 
-        // calculate axis offset delta
-        const axisReferenceRow = Math.ceil(axisReferenceIndex/crosscount)
-        const axisScrollblockOffset = 
-            blockScrollPos + axisViewportOffset + headDelta + scrollblockOffset
+        const tailDelta = baseTailLength - measuredTailLength
 
         const baseAxisScrollblockOffset = (axisReferenceRow * baseCellLength) + padding
         const axisScrollblockOffsetDelta = baseAxisScrollblockOffset - axisScrollblockOffset
 
-        const scrollblockHeight = baseblocklength - headDelta - tailDelta - axisScrollblockOffsetDelta
+        // result
+        const scrollblockLength = baseblocklength - headDelta - tailDelta - axisScrollblockOffsetDelta
 
         // -----------------------[ application ]-------------------------
+        // change scrollblockElement top and height, or left and width,
+        //    and axisElement top or left
 
         if (axisReferenceIndex == 0) {
 
@@ -680,13 +712,13 @@ export default class ContentHandler {
             // the axis is moved in the opposite direction to maintain viewport position
             axisElement.style.top = axisScrollblockOffset + 'px'
             // the height is adjusted by both deltas, as it controls the scroll length
-            scrollblockElement.style.height = scrollblockHeight + 'px'
+            scrollblockElement.style.height = scrollblockLength + 'px'
 
         } else {
 
             scrollblockElement.style.left = -headDelta - scrollblockOffset + 'px'
             axisElement.style.left = axisScrollblockOffset + 'px'
-            scrollblockElement.style.width = scrollblockHeight + 'px'
+            scrollblockElement.style.width = scrollblockLength + 'px'
 
         }
 
