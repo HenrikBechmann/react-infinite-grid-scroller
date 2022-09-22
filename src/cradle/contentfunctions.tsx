@@ -304,18 +304,18 @@ export const calcContentShift = ({
     if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
         console.log('CALCULATING OVERSHOOT')
 
-        const baseRowLength =
-            ((orientation == 'vertical')?
-                cellHeight:
-                cellWidth) 
-            + gap
-
         let spanPtr
         if (gridRowSpans.length == 0) { // must be list boundary
             spanPtr = -1
             spanAxisPixelShift = 0
 
         } else {
+
+            const baseRowLength =
+                ((orientation == 'vertical')?
+                    cellHeight:
+                    cellWidth) 
+                + gap
 
             spanPtr = gridRowSpans.length - 1
             let overshootPixelShift = // set base of working total
@@ -367,14 +367,6 @@ export const calcContentShift = ({
     const axisReferenceRowshift = spanRowShift
     const axisPixelShift = spanAxisPixelShift 
 
-    // console.log('shiftinstruction,',
-    //     // spanRowPtr, \ntriggerReferencePos, gridRowSpans, \n(triggerlineOffset = 10)\n\
-    //     'axisReferenceRowshift, axisPixelShift, gridRowSpans\n',
-    //     //shiftinstruction, spanRowPtr, triggerReferencePos, 
-    //     shiftinstruction, axisReferenceRowshift, axisPixelShift,'\n',
-    //     gridRowSpans
-    //     )
-
     // -----------[ 3. calculate current viewport axis offset ]-------------------
     // gaps beyond rendered rows can be caused by rapid scrolling
 
@@ -409,7 +401,8 @@ export const calcContentShift = ({
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
     let newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowshift
 
-    // sections 5 and 6 deal entirely with row calculations; no pixels
+    // Note: sections 5 and 6 deal entirely with row calculations; no pixels
+
     // --------[ 5. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
 
@@ -417,14 +410,15 @@ export const calcContentShift = ({
 
     if (shiftinstruction == 'totail') {
 
-        // a. if scrolling tailward near the start of the list, new cradle row offset and
+        // a. if scrolling the block headward near the start of the list, new cradle row offset and
         // cradle row shift count has to be adjusted to accommodate the leading runway
-        // b. if scrolling tailward (toward tail of list), as the cradle last row offset approaches 
-        // listrow new cradle offset and cradle row shift have to be adjusted to prevent shortening 
-        // of cradle content.
+        // b. if scrolling the block headward (revealing tail of list), as the cradle last row offset 
+        // approaches max listrow, new cradle offset and cradle row shift have to be adjusted to prevent 
+        // shortening of cradle content.
 
+        // start of list adjustment
         const targetCradleReferenceRowOffset = 
-            Math.max(0, (newAxisReferenceRowOffset - runwayRowcount - 1))
+            Math.max(0, (newAxisReferenceRowOffset - runwayRowcount - 1)) // extra row for visibility
 
         const headrowDiff = newCradleReferenceRowOffset - targetCradleReferenceRowOffset
         if (headrowDiff > 0) {
@@ -433,7 +427,7 @@ export const calcContentShift = ({
             cradleReferenceRowshift -= headrowDiff
 
         }
-        // case of being in bounds of trailing runway (end of list)
+        // end of list adjustment: case of being in bounds of trailing runway (end of list)
         const targetCradleEndrowOffset = newCradleReferenceRowOffset + (cradleRowcount - 1)
         const tailrowdiff = Math.max(0,targetCradleEndrowOffset - listEndrowOffset)
         if (tailrowdiff > 0) {
@@ -443,10 +437,10 @@ export const calcContentShift = ({
 
         }
 
-    } else { // blockScrollingDirection = tailward
+    } else { // shiftinstruction == 'tohead' 
 
-        // c. if scrolling headward (toward head of list), as the cradlerowoffset hits 0, cradle changes have
-        // to be adjusted to prevent shortening of cradle content
+        // c. if scrolling the block tailward (toward revealing head of list), as the cradlerowoffset hits 0, 
+        // cradle changes have to be adjusted to prevent shortening of cradle content
         // d. if scrolling headward near the start of the list, cradle changes have to be adjusted to accomodate
         // the trailing runway
 
@@ -459,9 +453,9 @@ export const calcContentShift = ({
         // case of in bounds of trailing runway (end of list)
         const computedNextCradleEndrowOffset = 
             (previousCradleRowOffset + (cradleRowcount -1) + cradleReferenceRowshift)
-        const targetcradleEndrowoffset = Math.min(listEndrowOffset, 
+        const targetCradleEndrowoffset = Math.min(listEndrowOffset, 
             (newAxisReferenceRowOffset + (viewportRowcount - 1) + (runwayRowcount - 1)))
-        const tailrowdiff = Math.max(0, targetcradleEndrowoffset - computedNextCradleEndrowOffset)
+        const tailrowdiff = Math.max(0, targetCradleEndrowoffset - computedNextCradleEndrowOffset)
 
         if (tailrowdiff > 0) {
 
@@ -495,7 +489,7 @@ export const calcContentShift = ({
     const changeOfCradleContentCount = cradlecontentlist.length - newCradleContentCount
 
     const listStartChangeCount = -(cradleReferenceItemShift)
-    const listEndChangeCount = -listStartChangeCount - (changeOfCradleContentCount)
+    const listEndChangeCount = -listStartChangeCount - changeOfCradleContentCount
 
     // -------------[ 7. calculate new axis pixel position ]------------------
 
