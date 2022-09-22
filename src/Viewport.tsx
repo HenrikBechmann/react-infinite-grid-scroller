@@ -157,7 +157,7 @@ const Viewport = ({
             position:'absolute',
             inset:0,
             overflow:'auto',
-            overflowAnchor:'none'
+            overflowAnchor:'none' // crucial!
         }
 
     },[styles.viewport])

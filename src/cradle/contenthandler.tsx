@@ -193,9 +193,9 @@ export default class ContentHandler {
         const scrollblockElement = viewportElement.firstChild
 
         if (orientation == 'vertical') {
-            scrollblockElement.style.top = 'unset'
+            scrollblockElement.style.top = null
         } else {
-            scrollblockElement.style.left = 'unset'
+            scrollblockElement.style.left = null
         }
 
         // console.log('setCradleContent: scrollblockOffset', scrollblockOffset)
@@ -417,22 +417,6 @@ export default class ContentHandler {
 
         })
 
-        // } = calcContentShift({
-
-        //     shiftinstruction,
-        //     // triggerData,
-        //     scrollPos,
-        //     viewportElement,
-        //     // scrollblockElement:viewportElement.firstChild,
-
-        //     cradleInheritedProperties,
-        //     cradleInternalProperties,
-        //     cradleContent,
-        //     cradleElements,
-
-        // })
-        // console.log('updateCradleContent: axisItemShift, cradleItemShift',axisItemShift, cradleItemShift)
-        // console.log('updateCradleContent: axisPixelOffset',axisPixelOffset)
         // third abandon option/3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) { // can happen first row
 
@@ -549,17 +533,13 @@ export default class ContentHandler {
         const { cradlePositionData } = layoutHandler
 
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
-        // console.log('updateCradleContent setting targetAxisViewportPixelOffset', axisPixelOffset)
         cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
-
-        // interruptHandler.triggerlinesIntersect.connectElements()
-        // interruptHandler.signals.pauseTriggerlinesObserver = false
 
         stateHandler.setCradleState('renderupdatedcontent')
 
     }
 
-    // ==============================[ RESPOSITION VARIABLE CONTENT ]==========================
+    // ===================[ RECONFIGURE THE SCROLLBLOCK FOR VARIABLE CONTENT ]=======================
 
     // all DOM elements should be rendered at this point
     // sets CSS: scrollblockElement top and height (or left and width), and axisElement top (or left)

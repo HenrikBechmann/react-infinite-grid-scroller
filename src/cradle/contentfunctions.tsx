@@ -282,14 +282,6 @@ export const calcContentShift = ({
 
     const gridRowSpans = getGridRowSpans(gridRowLengths)
 
-    const baseRowLength =
-        ((orientation == 'vertical')?
-            cellHeight:
-            cellWidth) 
-        + gap
-
-    // const firstRowLength = gridRowLengths[0] ?? baseRowLength // baseRowLength for start of list
-
     const triggerReferencePos = 
         (shiftinstruction == 'tohead')? // block scrolling tailward
         triggerData.headOffset:
@@ -311,6 +303,13 @@ export const calcContentShift = ({
     let spanAxisPixelShift
     if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
         console.log('CALCULATING OVERSHOOT')
+
+        const baseRowLength =
+            ((orientation == 'vertical')?
+                cellHeight:
+                cellWidth) 
+            + gap
+
         let spanPtr
         if (gridRowSpans.length == 0) { // must be list boundary
             spanPtr = -1
@@ -361,7 +360,7 @@ export const calcContentShift = ({
             spanRowPtr + 1:
             -(spanRowPtr + 1)
 
-    // the following two values, and no other calcs, are carried tailward.
+    // the following two values, and no other calcs, are carried forward in the function.
     // for axisReferenceRowshift:
     // negative for moving rows out of head into tail;
     // positive for moving rows out of tail into head
@@ -510,6 +509,7 @@ export const calcContentShift = ({
         cradleReferenceItemShift, 
         newAxisReferenceIndex, 
         axisReferenceItemShift, 
+
         newAxisPixelOffset,
 
         newCradleContentCount,
@@ -687,7 +687,7 @@ export const allocateContentList = (
         !triggercellComponent.props.isTriggecell))) {    
         contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:true})
         layoutHandler.triggercellIndex = targetTriggercellIndex
-    } else {
+    } else { // defensive
         console.log('FAILURE TO REGISTER TRIGGERCELL: \n',
             'triggercellComponent, triggercellIndex, targetTriggercellIndex, triggercellComponent?.props.isTriggecell\n', 
             triggercellComponent, triggercellIndex, targetTriggercellIndex, triggercellComponent?.props.isTriggecell)

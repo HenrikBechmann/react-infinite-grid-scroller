@@ -162,8 +162,6 @@ const Cradle = ({
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const axisCradleElementRef = useRef(null)
-    // const axisTriggerlineCradleElementRef = useRef(null)
-    // const headTriggerlineCradleElementRef = useRef(null)
     const triggercellTriggerlineHeadElementRef = useRef(null)
     const triggercellTriggerlineTailElementRef = useRef(null)
 
@@ -173,8 +171,6 @@ const Cradle = ({
             headRef:headCradleElementRef, 
             tailRef:tailCradleElementRef, 
             axisRef:axisCradleElementRef,
-            // axisTriggerlineRef:axisTriggerlineCradleElementRef,
-            // headTriggerlineRef:headTriggerlineCradleElementRef,
             triggercellTriggerlineHeadRef:triggercellTriggerlineHeadElementRef,
             triggercellTriggerlineTailRef:triggercellTriggerlineTailElementRef,
         }
@@ -230,8 +226,6 @@ const Cradle = ({
         listRowcount,
         runwayRowcount,
     ] = useMemo(()=> {
-
-        // console.log('recalculating row counts')
 
         let viewportLength, baseRowLength
         if (orientation == 'vertical') {
@@ -1309,6 +1303,7 @@ const Cradle = ({
 
     },[cradleState])
 
+    // TODO redundant
     // for cradle resize events; these are asynchronous
     useLayoutEffect(()=>{
 
@@ -1413,25 +1408,25 @@ const Cradle = ({
 
 
     // display the cradle components, the ScrollTracker, or null
-    return <CradleContext.Provider value = {contextvalueRef.current}>
+    return <CradleContext.Provider value = { contextvalueRef.current }>
 
         {(['repositioningContinuation','repositioningRender'].includes(cradleState))?
             useScrollTracker?<ScrollTracker 
-                top = {scrollTrackerArgs.top} 
-                left = {scrollTrackerArgs.left} 
-                offset = {scrollTrackerArgs.scrollAxisReferenceIndex} 
-                listsize = {scrollTrackerArgs.listsize}
-                styles = {scrollTrackerArgs.styles}
+                top = { scrollTrackerArgs.top } 
+                left = { scrollTrackerArgs.left } 
+                offset = { scrollTrackerArgs.scrollAxisReferenceIndex } 
+                listsize = { scrollTrackerArgs.listsize }
+                styles = { scrollTrackerArgs.styles }
             />:null:
             <div 
                 data-type = 'cradle-axis'
-                style = {cradleAxisStyle} 
-                ref = {axisCradleElementRef}
+                style = { cradleAxisStyle } 
+                ref = { axisCradleElementRef }
             >
                 { showAxis? // for debug
                     <div 
                         data-type = 'cradle-divider' 
-                        style = {cradleDividerStyle}
+                        style = { cradleDividerStyle }
                     >
                     </div>:
                     null
@@ -1439,8 +1434,8 @@ const Cradle = ({
                 <div 
                 
                     data-type = 'head'
-                    ref = {headCradleElementRef} 
-                    style = {cradleHeadStyle}
+                    ref = { headCradleElementRef }
+                    style = { cradleHeadStyle }
                 
                 >
                 
@@ -1453,8 +1448,8 @@ const Cradle = ({
                 <div 
                 
                     data-type = 'tail'
-                    ref = {tailCradleElementRef} 
-                    style = {cradleTailStyle}
+                    ref = { tailCradleElementRef } 
+                    style = { cradleTailStyle }
                 
                 >
                     {(cradleState != 'setup')?
