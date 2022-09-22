@@ -617,7 +617,7 @@ export default class ContentHandler {
 
         } = cradlePositionData
 
-        // ---------------[ eliminate scrollblock top/left adjustment for start of list]--------------
+        // ---------------[ eliminate scrollblock top/left adjustment when at start of list]--------------
 
         if (axisReferenceIndex == 0) { // trigger scrollblockOffset reset; change blockScrollPos
 
@@ -640,9 +640,9 @@ export default class ContentHandler {
         }
 
         // ------------------------[ calculations ]------------------------
-        // derive 1. headDelta, 2. axisScrollblockOffset, and 3. scrollblockLength
+        // derive 1. newScrollblockOffset, 2. axisScrollblockOffset, and 3. scrollblockLength
 
-        // 1. derive headDelta
+        // 1. derive newScrollblockOffset
         const headRowCount = Math.ceil(headGrid.childNodes.length/crosscount)
         const tailRowCount = Math.ceil(tailGrid.childNodes.length/crosscount)
 
@@ -671,8 +671,12 @@ export default class ContentHandler {
 
         }
 
-        // result
         const headDelta = baseHeadLength - measuredHeadLength
+        // used to derive scrollblockLength
+        const tailDelta = baseTailLength - measuredTailLength
+
+        // result
+        const newScrollblockOffset = (-headDelta - scrollblockOffset) || null // null if 0
 
         // 2. derive axisScrollblockOffset
         const listrowcount = Math.ceil(listsize/crosscount)
@@ -686,8 +690,6 @@ export default class ContentHandler {
         // 3. derive scrollblockLength
         const baseblocklength = (listrowcount * baseCellLength) - gap // no gap below last row
             + (padding * 2) // leading and trailing padding
-
-        const tailDelta = baseTailLength - measuredTailLength
 
         const baseAxisScrollblockOffset = (axisReferenceRow * baseCellLength) + padding
         const axisScrollblockOffsetDelta = baseAxisScrollblockOffset - axisScrollblockOffset
@@ -708,7 +710,7 @@ export default class ContentHandler {
         if (orientation == 'vertical') {
 
             // the scrollblock top is moved to compensate for the headDelta
-            scrollblockElement.style.top = - headDelta - scrollblockOffset + 'px'
+            scrollblockElement.style.top = newScrollblockOffset + 'px'
             // the axis is moved in the opposite direction to maintain viewport position
             axisElement.style.top = axisScrollblockOffset + 'px'
             // the height is adjusted by both deltas, as it controls the scroll length
@@ -716,7 +718,7 @@ export default class ContentHandler {
 
         } else {
 
-            scrollblockElement.style.left = -headDelta - scrollblockOffset + 'px'
+            scrollblockElement.style.left = newScrollblockOffset + 'px'
             axisElement.style.left = axisScrollblockOffset + 'px'
             scrollblockElement.style.width = scrollblockLength + 'px'
 
