@@ -26,22 +26,14 @@
 
     TODO:
 
-        - verify intersection boundary on zero; check edge case of both triggerlines intersecting
-        - see if scrollData still needed; probably for filtering scroll adjustments
-        - allow updateCradleContent without scrollmovement
-            - change blockScrollingDirection to scrollDirection ('tailward', 'headward','none')
         - add logic for last item in list visible in adjustScrollblockForVariability
         - make disconnect methods of interrupthandler
-        - check visibiliy hidden for portallist (instead of display none)
         - allow pixel parameters to be expresse in text alternative eg. em
             - then convert internally to pixels using getComputedStyles (or let user do that)
         - try to remove need for viewportVisibleRowcount
         - calcalate end of list by actual lengths (both set and update)
         - consider resetting positions on after scroll
 
-        - try performance without cradle resizeobserver
-        - review all code where variable mode changes positioning calculations
-        - use cradleResize to capture async variable cell updates between state cycles
         - change scroll bounce behaviour if supported on all browsers
 
         re-test for memory leaks window.performance.memory
