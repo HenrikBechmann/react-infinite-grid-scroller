@@ -757,7 +757,7 @@ export default class ContentHandler {
 
                 newScrollblockOffset += scrollblockOffset
 
-                newAxisScrollblockOffset -= scrollblockOffset
+                newAxisScrollblockOffset += scrollblockOffset
 
                 scrollblockLength -= scrollblockOffset
 
