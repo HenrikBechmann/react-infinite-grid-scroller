@@ -195,15 +195,19 @@ export default class ScrollHandler {
         const axisElement = cradleElements.axisRef.current
 
         const viewportElement = ViewportContextProperties.elementRef.current
+        const scrollblockElement = viewportElement.firstChild
+
         if (cradleProps.orientation == 'vertical') {
 
-            axisVisiblePixelOffset = axisElement.offsetTop - viewportElement.scrollTop
+            axisVisiblePixelOffset = 
+                axisElement.offsetTop + scrollblockElement.offsetTop - viewportElement.scrollTop
             // console.log('scrollHandler: updating targetAxisViewportPixelOffset, axisElement.offsetTop, viewportElement.scrollTop', 
             //     axisVisiblePixelOffset, axisElement.offsetTop, viewportElement.scrollTop)
                 
         } else {
 
-            axisVisiblePixelOffset = axisElement.offsetLeft - viewportElement.scrollLeft
+            axisVisiblePixelOffset = 
+                axisElement.offsetLeft - scrollblockElement.offsetLeft - viewportElement.scrollLeft
 
         }
 
@@ -253,21 +257,24 @@ export default class ScrollHandler {
 
         const { crosscount, listsize } = cradleConfig
         const viewportElement = ViewportContextProperties.elementRef.current
+        const scrollblockElement = viewportElement.firstChild
         const { orientation } = cradleProps
-        let scrollPos, cellLength
+        let scrollPos, cellLength, scrollblockOffset
         if (orientation == 'vertical') {
 
             scrollPos = viewportElement.scrollTop
             cellLength = cradleProps.cellHeight + cradleProps.gap
+            scrollblockOffset = scrollblockElement.offsetTop
 
         } else {
 
             scrollPos = viewportElement.scrollLeft
             cellLength = cradleProps.cellWidth + cradleProps.gap
+            scrollblockOffset = scrollblockElement.offsetLeft
 
         }
 
-        let axisPixelOffset = cellLength - (scrollPos % cellLength)
+        let axisPixelOffset = cellLength - ((scrollPos + scrollblockOffset) % cellLength)
         if (axisPixelOffset == (cellLength + cradleProps.padding)) {
             axisPixelOffset = 0
         }
