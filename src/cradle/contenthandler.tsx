@@ -659,6 +659,8 @@ export default class ContentHandler {
         const preCradleRowCount = cradleReferenceRow
         const postCradleRowCount = listLastReferenceRow - cradleLastReferenceRow
 
+        console.log('axisReferenceRow', axisReferenceRow)
+
         // base pixel values
         const baseCellLength = 
             ((orientation == 'vertical')?
@@ -717,7 +719,7 @@ export default class ContentHandler {
         // ------------------------[ change calculations ]----------------------
 
         // const newScrollblockOffset = (-headDeltaPixels - scrollblockOffset) || null // null if 0
-        let newScrollblockOffset = (deltaPreAxisPixelLength - scrollblockOffset) || null // null if 0
+        let newScrollblockOffset = (deltaPreAxisPixelLength - scrollblockOffset)
 
         let newAxisScrollblockOffset = 
             // blockScrollPos + axisViewportOffset + headDeltaPixels + scrollblockOffset
