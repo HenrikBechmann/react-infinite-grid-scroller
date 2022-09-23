@@ -551,6 +551,12 @@ export default class ContentHandler {
     // this to get closer to natural proportions to minimize janky scroll thumb
     public adjustScrollblockForVariability = (source = 'standard') => {
 
+
+        // TODO TEMP
+        if (source == 'afterscroll') {
+            return
+        }
+
         // ----------------------[ setup ]------------------------
 
         const { cradleParameters } = this,
@@ -559,8 +565,22 @@ export default class ContentHandler {
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
 
+        const { layoutHandler } = cradleHandlers,
+            { elements:cradleElements, cradlePositionData } = layoutHandler
+
         const viewportElement = ViewportContextProperties.elementRef.current,
-            scrollblockElement = viewportElement.firstChild
+            scrollblockElement = viewportElement.firstChild,
+            headGridElement = cradleElements.headRef.current,
+            tailGridElement = cradleElements.tailRef.current,
+            axisElement = cradleElements.axisRef.current
+
+        const { 
+
+            targetAxisReferenceIndex: axisReferenceIndex,
+            targetAxisViewportPixelOffset: axisViewportOffset,
+            blockScrollPos,
+
+        } = cradlePositionData
 
         const {
 
@@ -572,86 +592,83 @@ export default class ContentHandler {
 
         } = cradleInheritedProperties
 
-        const { layoutHandler } = cradleHandlers,
-            { elements:cradleElements, cradlePositionData } = layoutHandler
+        const { 
+
+            crosscount, 
+            listRowcount 
+
+        } = cradleInternalProperties
 
         let scrollblockOffset = // from previous adjustments
             (orientation == 'vertical')?
                 scrollblockElement.offsetTop:
                 scrollblockElement.offsetLeft
 
-        if (source == 'afterscroll') { // rebalance scrollblockOffset and blockScrollPos
+        // if (source == 'afterscroll') { // rebalance scrollblockOffset and blockScrollPos
 
-            if (orientation == 'vertical') {
+        //     if (orientation == 'vertical') {
 
-                scrollblockElement.style.top = null
+        //         scrollblockElement.style.top = null
 
-            } else {
+        //     } else {
 
-                scrollblockElement.style.left = null
+        //         scrollblockElement.style.left = null
 
-            }
+        //     }
 
-            const blockScrollPos = cradlePositionData.blockScrollPos -= scrollblockOffset
+        //     const blockScrollPos = cradlePositionData.blockScrollPos -= scrollblockOffset
 
-            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+        //     viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
 
-            return
+        //     return
 
-        }
-
-        const headGrid = cradleElements.headRef.current,
-            tailGrid = cradleElements.tailRef.current,
-            axisElement = cradleElements.axisRef.current
-
-        const { crosscount, listsize } = cradleInternalProperties
+        // }
 
         // console.log('-->> adjustScrollblockForVariability: source, scrollblockOffset, cradlePositionData',
         //     source, scrollblockOffset, cradlePositionData)
 
-        const { 
-
-            targetAxisReferenceIndex:axisReferenceIndex,
-
-        } = cradlePositionData
+        // rowcounts and row offsets for positioning
+        // listRowcount taken from internal properties above
+        const headRowCount = Math.ceil(headGridElement.childNodes.length/crosscount)
+        const tailRowCount = Math.ceil(tailGridElement.childNodes.length/crosscount)
+        const axisReferenceRow = Math.ceil(axisReferenceIndex/crosscount)
+        const cradleReferenceRow = axisReferenceRow - headRowCount
+        const cradleLastReferenceRow = axisReferenceRow + (tailRowCount - 1)
 
         // ---------------[ eliminate scrollblock top/left adjustment when at start of list]--------------
 
-        if (axisReferenceIndex == 0) { // trigger scrollblockOffset reset; change blockScrollPos
+        // if (axisReferenceIndex == 0) { // trigger scrollblockOffset reset; change blockScrollPos
 
-            const blockScrollPos = padding - cradlePositionData.targetAxisViewportPixelOffset
+        //     const blockScrollPos = padding - cradlePositionData.targetAxisViewportPixelOffset
 
-            cradlePositionData.blockScrollPos = blockScrollPos
+        //     cradlePositionData.blockScrollPos = blockScrollPos
 
-            if (orientation == 'vertical') {
+        //     if (orientation == 'vertical') {
 
-                scrollblockElement.style.top = null
+        //         scrollblockElement.style.top = null
 
-            } else {
+        //     } else {
 
-                scrollblockElement.style.left = null
+        //         scrollblockElement.style.left = null
 
-            }
+        //     }
 
-            scrollblockOffset = 0
+        //     scrollblockOffset = 0
 
-        }
+        // }
 
         // wait until blockScrollPos adjustment above to pick this up
-        const { 
+        // const { 
 
-            targetAxisViewportPixelOffset:axisViewportOffset,
-            blockScrollPos,
+        //     targetAxisViewportPixelOffset:axisViewportOffset,
+        //     blockScrollPos,
 
-        } = cradlePositionData
+        // } = cradlePositionData
 
         // ------------------------[ calculations ]------------------------
         // derive 1. newScrollblockOffset, 2. axisScrollblockOffset, and 3. scrollblockLength
 
         // 1. derive newScrollblockOffset
-        const headRowCount = Math.ceil(headGrid.childNodes.length/crosscount)
-        const tailRowCount = Math.ceil(tailGrid.childNodes.length/crosscount)
-
         const baseCellLength = 
             ((orientation == 'vertical')?
                 cellHeight:
@@ -665,15 +682,15 @@ export default class ContentHandler {
         let measuredHeadLength, measuredTailLength
         if (orientation == 'vertical') {
 
-            measuredHeadLength = headGrid.offsetHeight
+            measuredHeadLength = headGridElement.offsetHeight
             // used to derive scrollblocklength below
-            measuredTailLength = tailGrid.offsetHeight
+            measuredTailLength = tailGridElement.offsetHeight
 
         } else {
 
-            measuredHeadLength = headGrid.offsetWidth
+            measuredHeadLength = headGridElement.offsetWidth
             // used to derive scrollblocklength below
-            measuredTailLength = tailGrid.offsetWidth
+            measuredTailLength = tailGridElement.offsetWidth
 
         }
 
@@ -681,26 +698,17 @@ export default class ContentHandler {
         // used to derive scrollblockLength
         const tailDelta = baseTailLength - measuredTailLength
 
-        // result
         const newScrollblockOffset = (-headDelta - scrollblockOffset) || null // null if 0
 
-        // 2. derive axisScrollblockOffset
-        const listrowcount = Math.ceil(listsize/crosscount)
-
-        const axisReferenceRow = Math.ceil(axisReferenceIndex/crosscount)
-
-        // result
         const axisScrollblockOffset = 
             blockScrollPos + axisViewportOffset + headDelta + scrollblockOffset
 
-        // 3. derive scrollblockLength
-        const baseblocklength = (listrowcount * baseCellLength) - gap // no gap below last row
+        const baseblocklength = (listRowcount * baseCellLength) - gap // no gap below last row
             + (padding * 2) // leading and trailing padding
 
         const baseAxisScrollblockOffset = (axisReferenceRow * baseCellLength) + padding
         const axisScrollblockOffsetDelta = baseAxisScrollblockOffset - axisScrollblockOffset
 
-        // result
         const scrollblockLength = baseblocklength - headDelta - tailDelta - axisScrollblockOffsetDelta
 
         // -----------------------[ application ]-------------------------
