@@ -725,12 +725,6 @@ export default class ContentHandler {
         // change scrollblockElement top and height, or left and width,
         //    and axisElement top or left
 
-        if (axisReferenceIndex == 0) {
-
-            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-
-        }
-
         if (orientation == 'vertical') {
 
             // the scrollblock top is moved to compensate for the headDelta
@@ -745,6 +739,13 @@ export default class ContentHandler {
             scrollblockElement.style.left = newScrollblockOffset + 'px'
             axisElement.style.left = axisScrollblockOffset + 'px'
             scrollblockElement.style.width = scrollblockLength + 'px'
+
+        }
+
+        // after scrolling, update viewport blockScrollPos
+        if (axisReferenceIndex == 0) {
+
+            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
 
         }
 
