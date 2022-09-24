@@ -734,42 +734,64 @@ export default class ContentHandler {
         let scrollblockLength = computedScrollblockLength - axisScrollblockOffsetDelta
 
         // -----------------------[ application ]-------------------------
-        // if (source == 'afterscroll') { // rebalance scrollblockOffset and blockScrollPos
+        if (source == 'afterscroll') { // rebalance scrollblockOffset and blockScrollPos
 
-        //     if (-scrollblockOffset < blockScrollPos) {
+            const testScrollblockOffset = scrollblockOffset,
+                testBlockScrollPos = blockScrollPos
+            if (-testScrollblockOffset < testBlockScrollPos) {
 
-        //         console.log('--> modifying afterscroll configuration: scrollblockOffset < blockScrollPos',
-        //             scrollblockOffset, blockScrollPos)
 
-        //         if (orientation == 'vertical') {
+                console.log('--> modifying afterscroll configuration: scrollblockOffset < blockScrollPos',
+                    testScrollblockOffset, testBlockScrollPos)
 
-        //             scrollblockElement.style.top = null
+                // if (orientation == 'vertical') {
 
-        //         } else {
+                //     scrollblockElement.style.top = null
 
-        //             scrollblockElement.style.left = null
+                // } else {
 
-        //         }
+                //     scrollblockElement.style.left = null
 
-        //         blockScrollPos = cradlePositionData.blockScrollPos += scrollblockOffset
+                // }
 
-        //         viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+                // blockScrollPos = cradlePositionData.blockScrollPos -= scrollblockOffset
 
-        //         newScrollblockOffset += scrollblockOffset
+                const xblockScrollPos = cradlePositionData.blockScrollPos - testScrollblockOffset
 
-        //         newAxisScrollblockOffset -= scrollblockOffset
+                // viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
 
-        //         scrollblockLength -= scrollblockOffset
+                const xnewScrollblockOffset = newScrollblockOffset // + testScrollblockOffset
+                // newScrollblockOffset += scrollblockOffset
 
-        //     }
+                const xnewAxisScrollblockOffset = newAxisScrollblockOffset - testScrollblockOffset
+                // newAxisScrollblockOffset -= scrollblockOffset
 
-        //     // return
+                const xscrollblockLength = scrollblockLength + testScrollblockOffset
+                // scrollblockLength += scrollblockOffset
 
-        // }
+                const xAxisViewportOffset = 
+                    xnewAxisScrollblockOffset + xnewScrollblockOffset - xblockScrollPos
+
+                console.log('*** xAxisViewportOffset =  xnewAxisScrollblockOffset + xnewScrollblockOffset - xblockScrollPos\n',
+                    xAxisViewportOffset, xnewAxisScrollblockOffset, xnewScrollblockOffset, xblockScrollPos)
+
+                // console.log('modified values: xblockScrollPos, xnewScrollblockOffset, xnewAxisScrollblockOffset, xscrollblockLength\n',
+                //     xblockScrollPos, xnewScrollblockOffset, xnewAxisScrollblockOffset, xscrollblockLength)
+
+            }
+
+            // return
+
+        }
 
         console.log('==>source,\n blockScrollPos, newScrollblockOffset, newAxisScrollblockOffset,\n scrollblockLength\n', 
             source,'\n', cradlePositionData.blockScrollPos,
             newScrollblockOffset, newAxisScrollblockOffset,'\n', scrollblockLength)
+
+        const computedAxisViewportOffset = 
+            newAxisScrollblockOffset + newScrollblockOffset - blockScrollPos
+        console.log('COMPUTED computedAxisViewportOffset = blockScrollPos + newScrollblockOffset + newAxisScrollblockOffset\n',
+            computedAxisViewportOffset, newAxisScrollblockOffset, newScrollblockOffset, blockScrollPos)
 
         if (source == 'afterscroll') console.log('========[ after scroll result ]===========')
 
@@ -794,7 +816,7 @@ export default class ContentHandler {
         }
 
         // after scrolling, update viewport blockScrollPos
-        // if (axisReferenceIndex == 0) {
+        // if (source == 'afterscroll') {
 
         //     viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
 
