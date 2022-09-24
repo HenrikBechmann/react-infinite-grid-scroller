@@ -566,7 +566,7 @@ export default class ContentHandler {
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
 
-        const { layoutHandler } = cradleHandlers,
+        const { layoutHandler, scrollHandler } = cradleHandlers,
             { 
 
                 elements: cradleElements, 
@@ -754,26 +754,27 @@ export default class ContentHandler {
 
                 // }
 
-                // blockScrollPos = cradlePositionData.blockScrollPos -= scrollblockOffset
+                blockScrollPos = cradlePositionData.blockScrollPos -= scrollblockOffset
 
-                const xblockScrollPos = cradlePositionData.blockScrollPos - testScrollblockOffset
+                // const xblockScrollPos = cradlePositionData.blockScrollPos - testScrollblockOffset
 
-                // viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+                viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+                scrollHandler.resetScrollData(blockScrollPos)
 
-                const xnewScrollblockOffset = newScrollblockOffset // + testScrollblockOffset
+                // const xnewScrollblockOffset = newScrollblockOffset // + testScrollblockOffset
                 // newScrollblockOffset += scrollblockOffset
 
-                const xnewAxisScrollblockOffset = newAxisScrollblockOffset - testScrollblockOffset
-                // newAxisScrollblockOffset -= scrollblockOffset
+                // const xnewAxisScrollblockOffset = newAxisScrollblockOffset - testScrollblockOffset
+                newAxisScrollblockOffset -= scrollblockOffset
 
-                const xscrollblockLength = scrollblockLength + testScrollblockOffset
-                // scrollblockLength += scrollblockOffset
+                // const xscrollblockLength = scrollblockLength + testScrollblockOffset
+                scrollblockLength += scrollblockOffset
 
-                const xAxisViewportOffset = 
-                    xnewAxisScrollblockOffset + xnewScrollblockOffset - xblockScrollPos
+                // const xAxisViewportOffset = 
+                //     xnewAxisScrollblockOffset + xnewScrollblockOffset - xblockScrollPos
 
-                console.log('*** xAxisViewportOffset =  xnewAxisScrollblockOffset + xnewScrollblockOffset - xblockScrollPos\n',
-                    xAxisViewportOffset, xnewAxisScrollblockOffset, xnewScrollblockOffset, xblockScrollPos)
+                // console.log('*** xAxisViewportOffset =  xnewAxisScrollblockOffset + xnewScrollblockOffset - xblockScrollPos\n',
+                //     xAxisViewportOffset, xnewAxisScrollblockOffset, xnewScrollblockOffset, xblockScrollPos)
 
                 // console.log('modified values: xblockScrollPos, xnewScrollblockOffset, xnewAxisScrollblockOffset, xscrollblockLength\n',
                 //     xblockScrollPos, xnewScrollblockOffset, xnewAxisScrollblockOffset, xscrollblockLength)
