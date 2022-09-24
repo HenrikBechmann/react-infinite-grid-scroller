@@ -14,6 +14,8 @@
 
     BUGS: 
 
+        - afterscroll modification leads to infinite loop
+        
         - thumb bounces way too much scrolling back from 200 - some kind of regression
         - standing start (var) scroll a few pixels, scroll back, scrollblock (prob scrollPos) out of position
         - scrollto 200 from standing start, narrow browser 1 column on variable, causes infinite loop
