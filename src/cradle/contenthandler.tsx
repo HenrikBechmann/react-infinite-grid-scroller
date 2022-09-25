@@ -736,52 +736,21 @@ export default class ContentHandler {
         // -----------------------[ application ]-------------------------
         if (source == 'afterscroll') { // rebalance scrollblockOffset and blockScrollPos
 
-            const testScrollblockOffset = scrollblockOffset,
-                testBlockScrollPos = blockScrollPos
-            if (-testScrollblockOffset < testBlockScrollPos) {
-
+            if (-scrollblockOffset < blockScrollPos) {
 
                 console.log('--> modifying afterscroll configuration: scrollblockOffset < blockScrollPos',
-                    testScrollblockOffset, testBlockScrollPos)
-
-                // if (orientation == 'vertical') {
-
-                //     scrollblockElement.style.top = null
-
-                // } else {
-
-                //     scrollblockElement.style.left = null
-
-                // }
+                    scrollblockOffset, blockScrollPos)
 
                 blockScrollPos = cradlePositionData.blockScrollPos -= scrollblockOffset
-
-                // const xblockScrollPos = cradlePositionData.blockScrollPos - testScrollblockOffset
 
                 viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
                 scrollHandler.resetScrollData(blockScrollPos)
 
-                // const xnewScrollblockOffset = newScrollblockOffset // + testScrollblockOffset
-                // newScrollblockOffset += scrollblockOffset
-
-                // const xnewAxisScrollblockOffset = newAxisScrollblockOffset - testScrollblockOffset
                 newAxisScrollblockOffset -= scrollblockOffset
 
-                // const xscrollblockLength = scrollblockLength + testScrollblockOffset
                 scrollblockLength += scrollblockOffset
 
-                // const xAxisViewportOffset = 
-                //     xnewAxisScrollblockOffset + xnewScrollblockOffset - xblockScrollPos
-
-                // console.log('*** xAxisViewportOffset =  xnewAxisScrollblockOffset + xnewScrollblockOffset - xblockScrollPos\n',
-                //     xAxisViewportOffset, xnewAxisScrollblockOffset, xnewScrollblockOffset, xblockScrollPos)
-
-                // console.log('modified values: xblockScrollPos, xnewScrollblockOffset, xnewAxisScrollblockOffset, xscrollblockLength\n',
-                //     xblockScrollPos, xnewScrollblockOffset, xnewAxisScrollblockOffset, xscrollblockLength)
-
             }
-
-            // return
 
         }
 
