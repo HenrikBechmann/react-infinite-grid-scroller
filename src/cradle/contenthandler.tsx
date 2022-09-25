@@ -608,7 +608,7 @@ export default class ContentHandler {
 
         } = cradleInternalProperties
 
-        const scrollblockOffset = // from previous adjustments
+        let scrollblockOffset = // from previous adjustments
             (orientation == 'vertical')?
                 scrollblockElement.offsetTop:
                 scrollblockElement.offsetLeft
@@ -646,6 +646,26 @@ export default class ContentHandler {
 
         // } = cradlePositionData
 
+        // if (source = 'afterscroll') {
+        //     let scrollPosAdjustment = scrollblockOffset
+        //     const adjustedBlockScrollPos = blockScrollPos + scrollblockOffset
+            
+        //     console.log('AFTERSCROLL blockScrollPos, scrollblockOffset, adjustedBlockScrollPos',
+        //         blockScrollPos, scrollblockOffset, adjustedBlockScrollPos)
+
+        //     if (adjustedBlockScrollPos < 0) {
+        //         scrollPosAdjustment -= adjustedBlockScrollPos
+        //     }
+        //     blockScrollPos += scrollPosAdjustment
+        //     scrollblockOffset -= scrollPosAdjustment
+
+        //     console.log('scrollPosAdjustment; adjusted -> blockScrollPos, scrollblockOffset', 
+        //         scrollPosAdjustment, blockScrollPos, scrollblockOffset)
+        //     viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+        //     scrollHandler.resetScrollData(blockScrollPos)
+
+        // }
+
         // ------------------------[ precursor calculations ]------------------------
 
         // rowcounts and row offsets for positioning
@@ -659,7 +679,7 @@ export default class ContentHandler {
         const preCradleRowCount = cradleReferenceRow
         const postCradleRowCount = listLastReferenceRow - cradleLastReferenceRow
 
-        console.log('axisReferenceRow', axisReferenceRow)
+        console.log('1. axisReferenceRow', axisReferenceRow)
 
         // base pixel values
         const baseCellLength = 
@@ -700,7 +720,7 @@ export default class ContentHandler {
         const postCradlePixelLength = postCradleRowCount * baseCellLength
 
         const computedPreAxisPixelLength = preCradlePixelLength + measuredHeadLength
-        console.log('computedPreAxisPixelLength = preCradlePixelLength + measuredHeadLength',
+        console.log('2. computedPreAxisPixelLength = preCradlePixelLength + measuredHeadLength',
             computedPreAxisPixelLength, preCradlePixelLength, measuredHeadLength)
         const computedPostAxisPixelLength = postCradlePixelLength + measuredTailLength
 
@@ -712,7 +732,7 @@ export default class ContentHandler {
         const baseScrollblockLength = basePreAxisPixelLength + basePostAxisPixelLength
 
         const deltaPreAxisPixelLength = computedPreAxisPixelLength - basePreAxisPixelLength
-        console.log('deltaPreAxisPixelLength = computedPreAxisPixelLength - basePreAxisPixelLength',
+        console.log('3. deltaPreAxisPixelLength = computedPreAxisPixelLength - basePreAxisPixelLength',
             deltaPreAxisPixelLength, computedPreAxisPixelLength, basePreAxisPixelLength)
         const deltaPostAxisPixelLength = computedPostAxisPixelLength - basePostAxisPixelLength
 
@@ -721,11 +741,14 @@ export default class ContentHandler {
         // const newScrollblockOffset = (-headDeltaPixels - scrollblockOffset) || null // null if 0
         let newScrollblockOffset = (deltaPreAxisPixelLength - scrollblockOffset)
 
+        const scrollblockOffsetDelta = blockScrollPos + newScrollblockOffset
+        newScrollblockOffset = Math.min(0,scrollblockOffsetDelta)
+
         let newAxisScrollblockOffset = 
             // blockScrollPos + axisViewportOffset + headDeltaPixels + scrollblockOffset
             blockScrollPos + axisViewportOffset - newScrollblockOffset // - deltaPreAxisPixelLength - scrollblockOffset
 
-        console.log('-> before: blockScrollPos, scrollblockOffset, axisViewportOffset, newScrollblockOffset, axisScrollblockOffset\n',
+        console.log('4. -> before: blockScrollPos, scrollblockOffset, axisViewportOffset, newScrollblockOffset, axisScrollblockOffset\n',
             blockScrollPos, scrollblockOffset, axisViewportOffset, newScrollblockOffset, newAxisScrollblockOffset)
 
         const axisScrollblockOffsetDelta = baseAxisScrollblockOffset - newAxisScrollblockOffset
@@ -735,49 +758,49 @@ export default class ContentHandler {
 
         // -----------------------[ application ]-------------------------
 
-        if (source == 'afterscroll') { // rebalance scrollblockOffset and blockScrollPos
+        // if (source == 'afterscroll') { // rebalance scrollblockOffset and blockScrollPos
 
-            // const scrollblockOffsetAdjustment = -Math.max(-newScrollblockOffset, blockScrollPos)
-            // if (-scrollblockOffset < blockScrollPos) {
+        //     // const scrollblockOffsetAdjustment = -Math.max(-newScrollblockOffset, blockScrollPos)
+        //     // if (-scrollblockOffset < blockScrollPos) {
 
-            console.log('--> modifying afterscroll configuration: \
-                scrollblockOffset, blockScrollPos, newScrollblockOffset',
-                scrollblockOffset, blockScrollPos, newScrollblockOffset)
+        //     console.log('aftersroll 1. --> modifying afterscroll configuration: \
+        //         scrollblockOffset, blockScrollPos, newScrollblockOffset',
+        //         scrollblockOffset, blockScrollPos, newScrollblockOffset)
 
-            blockScrollPos = cradlePositionData.blockScrollPos -= newScrollblockOffset
+        //     blockScrollPos = cradlePositionData.blockScrollPos -= newScrollblockOffset
 
-            // viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-            // scrollHandler.resetScrollData(blockScrollPos)
+        //     // viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+        //     // scrollHandler.resetScrollData(blockScrollPos)
 
-            // newScrollblockOffset = 0
+        //     // newScrollblockOffset = 0
 
-            // let modifiedAxisScrollblockOffset
-            // if (orientation == 'vertical') {
+        //     // let modifiedAxisScrollblockOffset
+        //     // if (orientation == 'vertical') {
 
-                // scrollblockElement.style.top = null
-                // modifiedAxisScrollblockOffset = axisElement.offsetTop - scrollblockOffset
-                // axisElement.style.top = modifiedAxisScrollblockOffset + 'px'
+        //         // scrollblockElement.style.top = null
+        //         // modifiedAxisScrollblockOffset = axisElement.offsetTop - scrollblockOffset
+        //         // axisElement.style.top = modifiedAxisScrollblockOffset + 'px'
 
-            // } else {
+        //     // } else {
 
-                // scrollblockElement.style.left = null
-                // modifiedAxisScrollblockOffset = axisElement.offsetLeft - scrollblockOffset
-                // axisElement.style.left = modifiedAxisScrollblockOffset + 'px'
+        //         // scrollblockElement.style.left = null
+        //         // modifiedAxisScrollblockOffset = axisElement.offsetLeft - scrollblockOffset
+        //         // axisElement.style.left = modifiedAxisScrollblockOffset + 'px'
 
-            // }
+        //     // }
 
-            console.log('new values: blockScrollPos, newScrollblockOffset',
-               blockScrollPos, newScrollblockOffset)
+        //     console.log('afterscroll 2. new values: blockScrollPos, newScrollblockOffset',
+        //        blockScrollPos, newScrollblockOffset)
 
-            // newScrollblockLength += scrollblockOffset
+        //     // newScrollblockLength += scrollblockOffset
 
-            // }
+        //     // }
 
-        }
+        // }
 
-        console.log('blockScrollPos, newScrollblockOffset, newAxisScrollblockOffset,\n newScrollblockLength\n', 
-            cradlePositionData.blockScrollPos, newScrollblockOffset, newAxisScrollblockOffset,'\n', 
-                newScrollblockLength)
+        console.log('5. blockScrollPos, newScrollblockOffset, newAxisScrollblockOffset',// \n newScrollblockLength\n', 
+            cradlePositionData.blockScrollPos, newScrollblockOffset, newAxisScrollblockOffset)//,'\n', 
+                // newScrollblockLength)
 
         // change scrollblockElement top and height, or left and width,
         //    and axisElement top or left
