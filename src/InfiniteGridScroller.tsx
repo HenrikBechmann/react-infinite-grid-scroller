@@ -34,7 +34,7 @@
         - Edge fails to set scrollPos so at bottom so that last item is at end of scrollblock
 
     TODO:
-
+        - ! re-establish triggercell if it has been replace by some cache management routine
         - add logic for last item in list visible in adjustScrollblockForVariability
         - make disconnect methods of interrupthandler
         - allow pixel parameters to be expresse in text alternative eg. em
