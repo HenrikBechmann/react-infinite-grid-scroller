@@ -685,15 +685,16 @@ export default class ContentHandler {
 
         // ------------------------[ change calculations ]----------------------
 
-        let newScrollblockOffset = (deltaPreAxisPixelLength - scrollblockOffset)
+        // let newScrollblockOffset = (deltaPreAxisPixelLength - scrollblockOffset)
+        let newScrollblockOffset = deltaPreAxisPixelLength
 
         // adjust newScrollblockOffset to be absorbed by blockScrollPos if possible
-        const scrollblockOffsetDelta = blockScrollPos + newScrollblockOffset
-        newScrollblockOffset = Math.min(0,scrollblockOffsetDelta)
+        // const scrollblockOffsetDelta = blockScrollPos + newScrollblockOffset
+        // newScrollblockOffset = Math.min(0,scrollblockOffsetDelta)
 
         let newAxisScrollblockOffset = 
             // blockScrollPos + axisViewportOffset + headDeltaPixels + scrollblockOffset
-            blockScrollPos + axisViewportOffset - newScrollblockOffset // - deltaPreAxisPixelLength - scrollblockOffset
+            blockScrollPos + axisViewportOffset - newScrollblockOffset // - scrollblockOffset
 
         console.log('4. -> before: blockScrollPos, scrollblockOffset, axisViewportOffset, newScrollblockOffset, axisScrollblockOffset\n',
             blockScrollPos, scrollblockOffset, axisViewportOffset, newScrollblockOffset, newAxisScrollblockOffset)
@@ -707,28 +708,28 @@ export default class ContentHandler {
 
         if (source == 'afterscroll') {
 
-            console.log('AFTERSCROLL preCradlePixelLength, measuredHeadLength, \nnewScrollblockOffset, blockScrollPos, newAxisScrollblockOffset\n', 
-                preCradlePixelLength, measuredHeadLength,'\n', newScrollblockOffset, blockScrollPos, newAxisScrollblockOffset)
+            // console.log('AFTERSCROLL preCradlePixelLength, measuredHeadLength, \nnewScrollblockOffset, blockScrollPos, newAxisScrollblockOffset\n', 
+            //     preCradlePixelLength, measuredHeadLength,'\n', newScrollblockOffset, blockScrollPos, newAxisScrollblockOffset)
 
             if (preCradlePixelLength == 0) { // measurements are known
 
-                let measuredDelta = newAxisScrollblockOffset - measuredHeadLength
-                console.log('measuredDelta, new blockScrollPos. newAxisScrollblockOffset\n', 
-                    measuredDelta,blockScrollPos - measuredDelta, newAxisScrollblockOffset - measuredDelta)
-                if (measuredDelta > 0) {
-                    blockScrollPos -= measuredDelta
-                    if (blockScrollPos < 0) {
-                        console.log('adjusting measureDelta by', blockScrollPos)
-                        measuredDelta -= blockScrollPos
-                        blockScrollPos = 0
-                    }
-                    cradlePositionData.blockScrollPos = blockScrollPos
-                    viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-                    scrollHandler.resetScrollData(blockScrollPos)
-                    newAxisScrollblockOffset -= measuredDelta
-                }
-                console.log('applied measuredDelta, blockScrollPos, newAxisScrollblockOffset\n',
-                    measuredDelta, blockScrollPos, newAxisScrollblockOffset)
+                // let measuredDelta = newAxisScrollblockOffset - measuredHeadLength
+                // console.log('measuredDelta, new blockScrollPos. newAxisScrollblockOffset\n', 
+                //     measuredDelta,blockScrollPos - measuredDelta, newAxisScrollblockOffset - measuredDelta)
+                // if (measuredDelta > 0) {
+                //     blockScrollPos -= measuredDelta
+                //     if (blockScrollPos < 0) {
+                //         console.log('adjusting measureDelta by', blockScrollPos)
+                //         measuredDelta -= blockScrollPos
+                //         blockScrollPos = 0
+                //     }
+                //     cradlePositionData.blockScrollPos = blockScrollPos
+                //     viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+                //     scrollHandler.resetScrollData(blockScrollPos)
+                //     newAxisScrollblockOffset -= measuredDelta
+                // }
+                // console.log('applied measuredDelta, blockScrollPos, newAxisScrollblockOffset\n',
+                //     measuredDelta, blockScrollPos, newAxisScrollblockOffset)
             }
 
         }
