@@ -613,59 +613,6 @@ export default class ContentHandler {
                 scrollblockElement.offsetTop:
                 scrollblockElement.offsetLeft
 
-        // console.log('-->> adjustScrollblockForVariability: source, scrollblockOffset, cradlePositionData',
-        //     source, scrollblockOffset, cradlePositionData)
-
-        // ---------------[ eliminate scrollblock top/left adjustment when at start of list]--------------
-
-        // if (axisReferenceIndex == 0) { // trigger scrollblockOffset reset; change blockScrollPos
-
-        //     const blockScrollPos = padding - cradlePositionData.targetAxisViewportPixelOffset
-
-        //     cradlePositionData.blockScrollPos = blockScrollPos
-
-        //     if (orientation == 'vertical') {
-
-        //         scrollblockElement.style.top = null
-
-        //     } else {
-
-        //         scrollblockElement.style.left = null
-
-        //     }
-
-        //     scrollblockOffset = 0
-
-        // }
-
-        // wait until blockScrollPos adjustment above to pick this up
-        // const { 
-
-        //     targetAxisViewportPixelOffset:axisViewportOffset,
-        //     blockScrollPos,
-
-        // } = cradlePositionData
-
-        // if (source = 'afterscroll') {
-        //     let scrollPosAdjustment = scrollblockOffset
-        //     const adjustedBlockScrollPos = blockScrollPos + scrollblockOffset
-            
-        //     console.log('AFTERSCROLL blockScrollPos, scrollblockOffset, adjustedBlockScrollPos',
-        //         blockScrollPos, scrollblockOffset, adjustedBlockScrollPos)
-
-        //     if (adjustedBlockScrollPos < 0) {
-        //         scrollPosAdjustment -= adjustedBlockScrollPos
-        //     }
-        //     blockScrollPos += scrollPosAdjustment
-        //     scrollblockOffset -= scrollPosAdjustment
-
-        //     console.log('scrollPosAdjustment; adjusted -> blockScrollPos, scrollblockOffset', 
-        //         scrollPosAdjustment, blockScrollPos, scrollblockOffset)
-        //     viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-        //     scrollHandler.resetScrollData(blockScrollPos)
-
-        // }
-
         // ------------------------[ precursor calculations ]------------------------
 
         // rowcounts and row offsets for positioning
@@ -741,6 +688,7 @@ export default class ContentHandler {
         // const newScrollblockOffset = (-headDeltaPixels - scrollblockOffset) || null // null if 0
         let newScrollblockOffset = (deltaPreAxisPixelLength - scrollblockOffset)
 
+        // adjust newScrollblockOffset to be absorbed by blockScrollPos if possible
         const scrollblockOffsetDelta = blockScrollPos + newScrollblockOffset
         newScrollblockOffset = Math.min(0,scrollblockOffsetDelta)
 
@@ -757,46 +705,6 @@ export default class ContentHandler {
         let newScrollblockLength = computedScrollblockLength - axisScrollblockOffsetDelta
 
         // -----------------------[ application ]-------------------------
-
-        // if (source == 'afterscroll') { // rebalance scrollblockOffset and blockScrollPos
-
-        //     // const scrollblockOffsetAdjustment = -Math.max(-newScrollblockOffset, blockScrollPos)
-        //     // if (-scrollblockOffset < blockScrollPos) {
-
-        //     console.log('aftersroll 1. --> modifying afterscroll configuration: \
-        //         scrollblockOffset, blockScrollPos, newScrollblockOffset',
-        //         scrollblockOffset, blockScrollPos, newScrollblockOffset)
-
-        //     blockScrollPos = cradlePositionData.blockScrollPos -= newScrollblockOffset
-
-        //     // viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-        //     // scrollHandler.resetScrollData(blockScrollPos)
-
-        //     // newScrollblockOffset = 0
-
-        //     // let modifiedAxisScrollblockOffset
-        //     // if (orientation == 'vertical') {
-
-        //         // scrollblockElement.style.top = null
-        //         // modifiedAxisScrollblockOffset = axisElement.offsetTop - scrollblockOffset
-        //         // axisElement.style.top = modifiedAxisScrollblockOffset + 'px'
-
-        //     // } else {
-
-        //         // scrollblockElement.style.left = null
-        //         // modifiedAxisScrollblockOffset = axisElement.offsetLeft - scrollblockOffset
-        //         // axisElement.style.left = modifiedAxisScrollblockOffset + 'px'
-
-        //     // }
-
-        //     console.log('afterscroll 2. new values: blockScrollPos, newScrollblockOffset',
-        //        blockScrollPos, newScrollblockOffset)
-
-        //     // newScrollblockLength += scrollblockOffset
-
-        //     // }
-
-        // }
 
         console.log('5. blockScrollPos, newScrollblockOffset, newAxisScrollblockOffset',// \n newScrollblockLength\n', 
             cradlePositionData.blockScrollPos, newScrollblockOffset, newAxisScrollblockOffset)//,'\n', 
