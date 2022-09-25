@@ -706,6 +706,13 @@ export default class ContentHandler {
 
         // -----------------------[ application ]-------------------------
 
+        if (source == 'afterscroll') {
+
+            console.log('AFTERSCROLL headDeltaPixels, baseHeadLength, measuredHeadLength', 
+                headDeltaPixels, baseHeadLength,  measuredHeadLength)
+
+        }
+
         console.log('5. blockScrollPos, newScrollblockOffset, newAxisScrollblockOffset',// \n newScrollblockLength\n', 
             cradlePositionData.blockScrollPos, newScrollblockOffset, newAxisScrollblockOffset)//,'\n', 
                 // newScrollblockLength)
