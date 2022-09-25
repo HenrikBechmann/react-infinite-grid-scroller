@@ -580,7 +580,7 @@ export default class ContentHandler {
             tailGridElement = cradleElements.tailRef.current,
             axisElement = cradleElements.axisRef.current
 
-        console.log('cradlePositionData',{...cradlePositionData})
+        // console.log('cradlePositionData',{...cradlePositionData})
 
         const { 
 
@@ -626,7 +626,7 @@ export default class ContentHandler {
         const preCradleRowCount = cradleReferenceRow
         const postCradleRowCount = listLastReferenceRow - cradleLastReferenceRow
 
-        console.log('1. axisReferenceRow', axisReferenceRow)
+        // console.log('1. axisReferenceRow', axisReferenceRow)
 
         // base pixel values
         const baseCellLength = 
@@ -667,8 +667,8 @@ export default class ContentHandler {
         const postCradlePixelLength = postCradleRowCount * baseCellLength
 
         const computedPreAxisPixelLength = preCradlePixelLength + measuredHeadLength
-        console.log('2. computedPreAxisPixelLength = preCradlePixelLength + measuredHeadLength',
-            computedPreAxisPixelLength, preCradlePixelLength, measuredHeadLength)
+        // console.log('2. computedPreAxisPixelLength = preCradlePixelLength + measuredHeadLength',
+        //     computedPreAxisPixelLength, preCradlePixelLength, measuredHeadLength)
         const computedPostAxisPixelLength = postCradlePixelLength + measuredTailLength
 
         const computedScrollblockLength = computedPreAxisPixelLength + computedPostAxisPixelLength
@@ -685,7 +685,6 @@ export default class ContentHandler {
 
         // ------------------------[ change calculations ]----------------------
 
-        // const newScrollblockOffset = (-headDeltaPixels - scrollblockOffset) || null // null if 0
         let newScrollblockOffset = (deltaPreAxisPixelLength - scrollblockOffset)
 
         // adjust newScrollblockOffset to be absorbed by blockScrollPos if possible
@@ -708,13 +707,34 @@ export default class ContentHandler {
 
         if (source == 'afterscroll') {
 
-            console.log('AFTERSCROLL headDeltaPixels, baseHeadLength, measuredHeadLength', 
-                headDeltaPixels, baseHeadLength,  measuredHeadLength)
+            console.log('AFTERSCROLL preCradlePixelLength, measuredHeadLength, \nnewScrollblockOffset, blockScrollPos, newAxisScrollblockOffset\n', 
+                preCradlePixelLength, measuredHeadLength,'\n', newScrollblockOffset, blockScrollPos, newAxisScrollblockOffset)
+
+            if (preCradlePixelLength == 0) { // measurements are known
+
+                let measuredDelta = newAxisScrollblockOffset - measuredHeadLength
+                console.log('measuredDelta, new blockScrollPos. newAxisScrollblockOffset\n', 
+                    measuredDelta,blockScrollPos - measuredDelta, newAxisScrollblockOffset - measuredDelta)
+                if (measuredDelta > 0) {
+                    blockScrollPos -= measuredDelta
+                    if (blockScrollPos < 0) {
+                        console.log('adjusting measureDelta by', blockScrollPos)
+                        measuredDelta -= blockScrollPos
+                        blockScrollPos = 0
+                    }
+                    cradlePositionData.blockScrollPos = blockScrollPos
+                    viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+                    scrollHandler.resetScrollData(blockScrollPos)
+                    newAxisScrollblockOffset -= measuredDelta
+                }
+                console.log('applied measuredDelta, blockScrollPos, newAxisScrollblockOffset\n',
+                    measuredDelta, blockScrollPos, newAxisScrollblockOffset)
+            }
 
         }
 
-        console.log('5. blockScrollPos, newScrollblockOffset, newAxisScrollblockOffset',// \n newScrollblockLength\n', 
-            cradlePositionData.blockScrollPos, newScrollblockOffset, newAxisScrollblockOffset)//,'\n', 
+        console.log('Final: newScrollblockOffset, blockScrollPos, newAxisScrollblockOffset\n',// \n newScrollblockLength\n', 
+            newScrollblockOffset, cradlePositionData.blockScrollPos, newAxisScrollblockOffset )//,'\n', 
                 // newScrollblockLength)
 
         // change scrollblockElement top and height, or left and width,
