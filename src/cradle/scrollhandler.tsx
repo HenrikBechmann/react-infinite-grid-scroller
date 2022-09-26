@@ -78,7 +78,7 @@ export default class ScrollHandler {
 
         }
 
-        const {layoutHandler} = this.cradleParameters.handlersRef.current
+        const { layoutHandler } = this.cradleParameters.handlersRef.current
         const { cradlePositionData } = layoutHandler
 
         // keep up to date in case of reparenting interrupt

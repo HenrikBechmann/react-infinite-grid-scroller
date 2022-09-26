@@ -695,6 +695,7 @@ export default class ContentHandler {
         console.log('::: -> before: oldScrollblockOffset, axisViewportOffset, blockScrollPos, newScrollblockOffset, newAxisScrollblockOffset\n',
             oldScrollblockOffset, axisViewportOffset,'\n' ,blockScrollPos, newScrollblockOffset, '=', newAxisScrollblockOffset)
 
+        let resetscroll = false
         if (!preCradlePixelLength) {
             let scrollblockOffsetDelta = (basePreAxisPixelLength - newAxisScrollblockOffset) //* 2
             console.log('/\\>>> in head grid: scrollblockOffsetDelta = basePreAxisPixelLength - newAxisScrollblockOffset\n',
@@ -702,17 +703,21 @@ export default class ContentHandler {
             // scrollblockOffsetDelta = Math.min(0,scrollblockOffsetDelta)
             // console.log('Math.min(0,scrollblockOffsetDelta)',scrollblockOffsetDelta)
             newAxisScrollblockOffset += scrollblockOffsetDelta
-            // if (newAxisScrollblockOffset < blockScrollPos) {
-            //     scrollblockOffsetDelta -= newAxisScrollblockOffset - blockScrollPos
-            //     newAxisScrollblockOffset = blockScrollPos
-            // }
+            if (newAxisScrollblockOffset < blockScrollPos) {
+                scrollblockOffsetDelta -= newAxisScrollblockOffset - blockScrollPos
+                newAxisScrollblockOffset = blockScrollPos
+            }
             newScrollblockOffset -= scrollblockOffsetDelta
             if (newScrollblockOffset > 0) {
                 newAxisScrollblockOffset += newScrollblockOffset
                 newScrollblockOffset = 0
             }
-            if (newAxisScrollblockOffset > (blockScrollPos + padding)) {
-                newAxisScrollblockOffset = blockScrollPos + padding
+            if (axisReferenceRow == 0) {
+                if (newScrollblockOffset > 0 || newAxisScrollblockOffset > padding ) {
+                    newScrollblockOffset = 0
+                    newAxisScrollblockOffset = padding
+                    resetscroll = true
+                }
             }
         } else {
             console.log('>>>pre head grid')
@@ -775,6 +780,10 @@ export default class ContentHandler {
             axisElement.style.left = newAxisScrollblockOffset + 'px'
             scrollblockElement.style.width = newScrollblockLength + 'px'
 
+        }
+
+        if (resetscroll) {
+            viewportElement.scrollTo(0,0)
         }
 
     }
