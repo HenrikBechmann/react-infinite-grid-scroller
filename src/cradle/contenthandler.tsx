@@ -689,15 +689,23 @@ export default class ContentHandler {
 
         // let newScrollblockOffset = (deltaPreAxisPixelLength - scrollblockOffset)
         // adjust newScrollblockOffset to be absorbed by blockScrollPos if possible
-        // const scrollblockOffsetDelta = blockScrollPos + newScrollblockOffset
-        // newScrollblockOffset = Math.min(0,scrollblockOffsetDelta)
+        // newScrollblockOffset = Math.min(deltaPreAxisPixelLength,scrollblockOffsetDelta)
 
         let newAxisScrollblockOffset = 
             // blockScrollPos + axisViewportOffset + headDeltaPixels + scrollblockOffset
             blockScrollPos + axisViewportOffset - newScrollblockOffset // - scrollblockOffset
 
-        console.log('4. -> before: blockScrollPos, scrollblockOffset, axisViewportOffset, newScrollblockOffset, axisScrollblockOffset\n',
-            blockScrollPos, scrollblockOffset, axisViewportOffset, newScrollblockOffset, newAxisScrollblockOffset)
+        console.log('4. -> before: scrollblockOffset, axisViewportOffset, newScrollblockOffset, blockScrollPos, newAxisScrollblockOffset\n',
+            scrollblockOffset, axisViewportOffset, newScrollblockOffset, blockScrollPos, newAxisScrollblockOffset)
+
+        if (!preCradlePixelLength) {
+            let scrollblockOffsetDelta = (basePreAxisPixelLength - newAxisScrollblockOffset)
+            console.log('scrollblockOffsetDelta = basePreAxisPixelLength - newAxisScrollblockOffset',
+                scrollblockOffsetDelta, basePreAxisPixelLength, newAxisScrollblockOffset)
+            scrollblockOffsetDelta = Math.min(0,scrollblockOffsetDelta)
+            console.log('Math.min(0,scrollblockOffsetDelta)',scrollblockOffsetDelta)
+            // newScrollblockOffset += scrollblockOffsetDelta
+        }
 
         const axisScrollblockOffsetDelta = baseAxisScrollblockOffset - newAxisScrollblockOffset
 
