@@ -603,11 +603,6 @@ export default class ContentHandler {
 
         } = cradleInternalProperties
 
-        let oldScrollblockOffset = // from previous adjustments
-            (orientation == 'vertical')?
-                scrollblockElement.offsetTop:
-                scrollblockElement.offsetLeft
-
         // ------------------------[ precursor calculations ]------------------------
 
         // rowcounts and row offsets for positioning
@@ -621,8 +616,6 @@ export default class ContentHandler {
         const preCradleRowCount = cradleReferenceRow
         const postCradleRowCount = listLastReferenceRow - cradleLastReferenceRow
 
-        // console.log('1. axisReferenceRow', axisReferenceRow)
-
         // base pixel values
         const baseCellLength = 
             ((orientation == 'vertical')?
@@ -635,9 +628,6 @@ export default class ContentHandler {
 
         const baseBlockLength = baseHeadLength + baseTailLength
 
-        // const baseblocklength = (listRowcount * baseCellLength) - gap // no gap below last row
-        //     + (padding * 2) // leading and trailing padding
-
         const baseAxisScrollblockOffset = (axisReferenceRow * baseCellLength) + padding
 
         // measured pixel cradle grid values
@@ -645,27 +635,19 @@ export default class ContentHandler {
         if (orientation == 'vertical') {
 
             measuredHeadLength = headGridElement.offsetHeight
-            // used to derive scrollblocklength below
             measuredTailLength = tailGridElement.offsetHeight
 
         } else {
 
             measuredHeadLength = headGridElement.offsetWidth
-            // used to derive scrollblocklength below
             measuredTailLength = tailGridElement.offsetWidth
 
         }
-
-        // pixel measures
-        const headDeltaPixels = baseHeadLength - measuredHeadLength
-        const tailDeltaPixels = baseTailLength - measuredTailLength
 
         const preCradlePixelLength = (preCradleRowCount * baseCellLength) //+ padding
         const postCradlePixelLength = postCradleRowCount * baseCellLength //+ padding - gap
 
         const computedPreAxisPixelLength = preCradlePixelLength + measuredHeadLength
-        // console.log('2. computedPreAxisPixelLength = preCradlePixelLength + measuredHeadLength',
-        //     computedPreAxisPixelLength, preCradlePixelLength, measuredHeadLength)
         const computedPostAxisPixelLength = postCradlePixelLength + measuredTailLength
 
         const computedScrollblockLength = computedPreAxisPixelLength + computedPostAxisPixelLength
@@ -675,43 +657,38 @@ export default class ContentHandler {
 
         const baseScrollblockLength = basePreAxisPixelLength + basePostAxisPixelLength
 
+        // ------------------------[ change calculations ]----------------------
+
         const deltaPreAxisPixelLength = computedPreAxisPixelLength - basePreAxisPixelLength
-        console.log('3. deltaPreAxisPixelLength = computedPreAxisPixelLength - basePreAxisPixelLength\n',
-            deltaPreAxisPixelLength, computedPreAxisPixelLength,'=' , basePreAxisPixelLength)
+        // console.log('3. deltaPreAxisPixelLength = computedPreAxisPixelLength - basePreAxisPixelLength\n',
+        //     deltaPreAxisPixelLength, computedPreAxisPixelLength,'=' , basePreAxisPixelLength)
         const deltaPostAxisPixelLength = computedPostAxisPixelLength - basePostAxisPixelLength
 
         let newScrollblockOffset = deltaPreAxisPixelLength
 
-        // ------------------------[ change calculations ]----------------------
-
-        // let newScrollblockOffset = (deltaPreAxisPixelLength - oldScrollblockOffset)
-        // adjust newScrollblockOffset to be absorbed by blockScrollPos if possible
-        // newScrollblockOffset = Math.min(deltaPreAxisPixelLength,scrollblockOffsetDelta)
-
-        let newAxisScrollblockOffset = 
-            // blockScrollPos + axisViewportOffset + headDeltaPixels + oldScrollblockOffset
-            blockScrollPos + axisViewportOffset - newScrollblockOffset // - oldScrollblockOffset
-
-        console.log('::: -> before: oldScrollblockOffset, axisViewportOffset, blockScrollPos, newScrollblockOffset, newAxisScrollblockOffset\n',
-            oldScrollblockOffset, axisViewportOffset,'\n' ,blockScrollPos, newScrollblockOffset, '=', newAxisScrollblockOffset)
+        let newAxisScrollblockOffset = blockScrollPos + axisViewportOffset - newScrollblockOffset
 
         let resetscroll = false
         if (!preCradlePixelLength) {
+
             let scrollblockOffsetDelta = (basePreAxisPixelLength - newAxisScrollblockOffset) //* 2
             console.log('/\\>>> in head grid: scrollblockOffsetDelta = basePreAxisPixelLength - newAxisScrollblockOffset\n',
                 scrollblockOffsetDelta, basePreAxisPixelLength,'=' ,newAxisScrollblockOffset)
-            // scrollblockOffsetDelta = Math.min(0,scrollblockOffsetDelta)
-            // console.log('Math.min(0,scrollblockOffsetDelta)',scrollblockOffsetDelta)
+
             newAxisScrollblockOffset += scrollblockOffsetDelta
+
             if (newAxisScrollblockOffset < blockScrollPos) {
                 scrollblockOffsetDelta -= newAxisScrollblockOffset - blockScrollPos
                 newAxisScrollblockOffset = blockScrollPos
             }
+
             newScrollblockOffset -= scrollblockOffsetDelta
+
             if (newScrollblockOffset > 0) {
                 newAxisScrollblockOffset += newScrollblockOffset
                 newScrollblockOffset = 0
             }
+
             if (axisReferenceRow == 0) {
                 if (newScrollblockOffset > 0 || newAxisScrollblockOffset > padding ) {
                     newScrollblockOffset = 0
@@ -719,48 +696,17 @@ export default class ContentHandler {
                     resetscroll = true
                 }
             }
-        } else {
-            console.log('>>>pre head grid')
+
         }
 
         const axisScrollblockOffsetDelta = baseAxisScrollblockOffset - newAxisScrollblockOffset
 
-        // const scrollblockLength = baseblocklength - headDeltaPixels - tailDeltaPixels - axisScrollblockOffsetDelta
         let newScrollblockLength = computedScrollblockLength - axisScrollblockOffsetDelta
 
         // -----------------------[ application ]-------------------------
 
-        // if (source == 'afterscroll') {
-
-            // console.log('AFTERSCROLL preCradlePixelLength, measuredHeadLength, \nnewScrollblockOffset, blockScrollPos, newAxisScrollblockOffset\n', 
-            //     preCradlePixelLength, measuredHeadLength,'\n', newScrollblockOffset, blockScrollPos, newAxisScrollblockOffset)
-
-            // if (preCradlePixelLength == 0) { // measurements are known
-
-                // let measuredDelta = newAxisScrollblockOffset - measuredHeadLength
-                // console.log('measuredDelta, new blockScrollPos. newAxisScrollblockOffset\n', 
-                //     measuredDelta,blockScrollPos - measuredDelta, newAxisScrollblockOffset - measuredDelta)
-                // if (measuredDelta > 0) {
-                //     blockScrollPos -= measuredDelta
-                //     if (blockScrollPos < 0) {
-                //         console.log('adjusting measureDelta by', blockScrollPos)
-                //         measuredDelta -= blockScrollPos
-                //         blockScrollPos = 0
-                //     }
-                //     cradlePositionData.blockScrollPos = blockScrollPos
-                //     viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-                //     scrollHandler.resetScrollData(blockScrollPos)
-                //     newAxisScrollblockOffset -= measuredDelta
-                // }
-                // console.log('applied measuredDelta, blockScrollPos, newAxisScrollblockOffset\n',
-                //     measuredDelta, blockScrollPos, newAxisScrollblockOffset)
-            // }
-
-        // }
-
         console.log('::: blockScrollPos, newScrollblockOffset, newAxisScrollblockOffset\n',// \n newScrollblockLength\n', 
-             blockScrollPos, newScrollblockOffset,'=' , newAxisScrollblockOffset )//,'\n', 
-                // newScrollblockLength)
+             blockScrollPos, newScrollblockOffset,'=' , newAxisScrollblockOffset )
 
         // change scrollblockElement top and height, or left and width,
         //    and axisElement top or left
@@ -783,7 +729,9 @@ export default class ContentHandler {
         }
 
         if (resetscroll) {
+
             viewportElement.scrollTo(0,0)
+
         }
 
     }
