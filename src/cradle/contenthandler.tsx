@@ -551,11 +551,6 @@ export default class ContentHandler {
     // this to get closer to natural proportions to minimize janky scroll thumb
     public adjustScrollblockForVariability = (source) => {
 
-        // TODO TEMP
-        // if (source == 'afterscroll') {
-        //     return
-        // }
-
         // ----------------------[ setup base values and references ]------------------------
 
         console.log('-> =============[START ADJUSTMENT (source)]============', source)
@@ -580,7 +575,7 @@ export default class ContentHandler {
             tailGridElement = cradleElements.tailRef.current,
             axisElement = cradleElements.axisRef.current
 
-        // console.log('cradlePositionData',{...cradlePositionData})
+        console.log('cradlePositionData',{...cradlePositionData})
 
         const { 
 
@@ -638,8 +633,10 @@ export default class ContentHandler {
         const baseHeadLength = (headRowCount * baseCellLength) + padding
         const baseTailLength = (tailRowCount * baseCellLength) + padding - gap
 
-        const baseblocklength = (listRowcount * baseCellLength) - gap // no gap below last row
-            + (padding * 2) // leading and trailing padding
+        const baseBlockLength = baseHeadLength + baseTailLength
+
+        // const baseblocklength = (listRowcount * baseCellLength) - gap // no gap below last row
+        //     + (padding * 2) // leading and trailing padding
 
         const baseAxisScrollblockOffset = (axisReferenceRow * baseCellLength) + padding
 
@@ -663,8 +660,8 @@ export default class ContentHandler {
         const headDeltaPixels = baseHeadLength - measuredHeadLength
         const tailDeltaPixels = baseTailLength - measuredTailLength
 
-        const preCradlePixelLength = (preCradleRowCount * baseCellLength) + padding
-        const postCradlePixelLength = postCradleRowCount * baseCellLength + padding - gap
+        const preCradlePixelLength = (preCradleRowCount * baseCellLength) //+ padding
+        const postCradlePixelLength = postCradleRowCount * baseCellLength //+ padding - gap
 
         const computedPreAxisPixelLength = preCradlePixelLength + measuredHeadLength
         // console.log('2. computedPreAxisPixelLength = preCradlePixelLength + measuredHeadLength',
@@ -673,8 +670,8 @@ export default class ContentHandler {
 
         const computedScrollblockLength = computedPreAxisPixelLength + computedPostAxisPixelLength
 
-        const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) //+ padding
-        const basePostAxisPixelLength = (postCradleRowCount + tailRowCount) * baseCellLength
+        const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding 
+        const basePostAxisPixelLength = (postCradleRowCount + tailRowCount) * baseCellLength + padding - gap
 
         const baseScrollblockLength = basePreAxisPixelLength + basePostAxisPixelLength
 
@@ -705,13 +702,17 @@ export default class ContentHandler {
             // scrollblockOffsetDelta = Math.min(0,scrollblockOffsetDelta)
             // console.log('Math.min(0,scrollblockOffsetDelta)',scrollblockOffsetDelta)
             newAxisScrollblockOffset += scrollblockOffsetDelta
-            if (newAxisScrollblockOffset < blockScrollPos) {
-                scrollblockOffsetDelta -= newAxisScrollblockOffset - blockScrollPos
-                newAxisScrollblockOffset = blockScrollPos
-            }
+            // if (newAxisScrollblockOffset < blockScrollPos) {
+            //     scrollblockOffsetDelta -= newAxisScrollblockOffset - blockScrollPos
+            //     newAxisScrollblockOffset = blockScrollPos
+            // }
             newScrollblockOffset -= scrollblockOffsetDelta
             if (newScrollblockOffset > 0) {
+                newAxisScrollblockOffset += newScrollblockOffset
                 newScrollblockOffset = 0
+            }
+            if (newAxisScrollblockOffset > (blockScrollPos + padding)) {
+                newAxisScrollblockOffset = blockScrollPos + padding
             }
         } else {
             console.log('>>>pre head grid')
