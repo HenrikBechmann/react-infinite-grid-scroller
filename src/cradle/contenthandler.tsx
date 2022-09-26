@@ -673,8 +673,8 @@ export default class ContentHandler {
 
         const computedScrollblockLength = computedPreAxisPixelLength + computedPostAxisPixelLength
 
-        const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding
-        const basePostAxisPixelLength = ((postCradleRowCount + tailRowCount) * baseCellLength - gap + padding)
+        const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) //+ padding
+        const basePostAxisPixelLength = (postCradleRowCount + tailRowCount) * baseCellLength
 
         const baseScrollblockLength = basePreAxisPixelLength + basePostAxisPixelLength
 
@@ -699,7 +699,7 @@ export default class ContentHandler {
             oldScrollblockOffset, axisViewportOffset,'\n' ,blockScrollPos, newScrollblockOffset, '=', newAxisScrollblockOffset)
 
         if (!preCradlePixelLength) {
-            let scrollblockOffsetDelta = (basePreAxisPixelLength - newAxisScrollblockOffset)
+            let scrollblockOffsetDelta = (basePreAxisPixelLength - newAxisScrollblockOffset) //* 2
             console.log('/\\>>> in head grid: scrollblockOffsetDelta = basePreAxisPixelLength - newAxisScrollblockOffset\n',
                 scrollblockOffsetDelta, basePreAxisPixelLength,'=' ,newAxisScrollblockOffset)
             // scrollblockOffsetDelta = Math.min(0,scrollblockOffsetDelta)
@@ -724,12 +724,12 @@ export default class ContentHandler {
 
         // -----------------------[ application ]-------------------------
 
-        if (source == 'afterscroll') {
+        // if (source == 'afterscroll') {
 
             // console.log('AFTERSCROLL preCradlePixelLength, measuredHeadLength, \nnewScrollblockOffset, blockScrollPos, newAxisScrollblockOffset\n', 
             //     preCradlePixelLength, measuredHeadLength,'\n', newScrollblockOffset, blockScrollPos, newAxisScrollblockOffset)
 
-            if (preCradlePixelLength == 0) { // measurements are known
+            // if (preCradlePixelLength == 0) { // measurements are known
 
                 // let measuredDelta = newAxisScrollblockOffset - measuredHeadLength
                 // console.log('measuredDelta, new blockScrollPos. newAxisScrollblockOffset\n', 
@@ -748,9 +748,9 @@ export default class ContentHandler {
                 // }
                 // console.log('applied measuredDelta, blockScrollPos, newAxisScrollblockOffset\n',
                 //     measuredDelta, blockScrollPos, newAxisScrollblockOffset)
-            }
+            // }
 
-        }
+        // }
 
         console.log('::: blockScrollPos, newScrollblockOffset, newAxisScrollblockOffset\n',// \n newScrollblockLength\n', 
              blockScrollPos, newScrollblockOffset,'=' , newAxisScrollblockOffset )//,'\n', 
