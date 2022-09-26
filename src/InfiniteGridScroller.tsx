@@ -14,6 +14,8 @@
 
     BUGS: 
 
+        - infinite scrolling at the bottom with FF
+
         - afterscroll modification leads to infinite loop
         - afterscroll modification distors blockScrollPos
 
