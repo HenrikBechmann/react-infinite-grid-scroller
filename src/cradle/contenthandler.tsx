@@ -683,11 +683,11 @@ export default class ContentHandler {
             deltaPreAxisPixelLength, computedPreAxisPixelLength, basePreAxisPixelLength)
         const deltaPostAxisPixelLength = computedPostAxisPixelLength - basePostAxisPixelLength
 
+        let newScrollblockOffset = deltaPreAxisPixelLength
+
         // ------------------------[ change calculations ]----------------------
 
         // let newScrollblockOffset = (deltaPreAxisPixelLength - scrollblockOffset)
-        let newScrollblockOffset = deltaPreAxisPixelLength
-
         // adjust newScrollblockOffset to be absorbed by blockScrollPos if possible
         // const scrollblockOffsetDelta = blockScrollPos + newScrollblockOffset
         // newScrollblockOffset = Math.min(0,scrollblockOffsetDelta)
