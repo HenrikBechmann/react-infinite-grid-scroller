@@ -700,11 +700,16 @@ export default class ContentHandler {
 
         if (!preCradlePixelLength) {
             let scrollblockOffsetDelta = (basePreAxisPixelLength - newAxisScrollblockOffset)
-            console.log('scrollblockOffsetDelta = basePreAxisPixelLength - newAxisScrollblockOffset',
+            console.log('/\\scrollblockOffsetDelta = basePreAxisPixelLength - newAxisScrollblockOffset',
                 scrollblockOffsetDelta, basePreAxisPixelLength, newAxisScrollblockOffset)
-            scrollblockOffsetDelta = Math.min(0,scrollblockOffsetDelta)
-            console.log('Math.min(0,scrollblockOffsetDelta)',scrollblockOffsetDelta)
-            // newScrollblockOffset += scrollblockOffsetDelta
+            // scrollblockOffsetDelta = Math.min(0,scrollblockOffsetDelta)
+            // console.log('Math.min(0,scrollblockOffsetDelta)',scrollblockOffsetDelta)
+            newScrollblockOffset -= scrollblockOffsetDelta
+            // if (newScrollblockOffset > 0) {
+            //     scrollblockOffsetDelta += newScrollblockOffset
+            //     newScrollblockOffset = 0
+            // }
+            newAxisScrollblockOffset += scrollblockOffsetDelta
         }
 
         const axisScrollblockOffsetDelta = baseAxisScrollblockOffset - newAxisScrollblockOffset
