@@ -14,7 +14,8 @@
 
     BUGS: 
 
-        - infinite scrolling at the bottom with FF
+        - infinite scrolling at the bottom with FF desktop
+        - messed up calc at bottom of list with FF mobile
 
         - afterscroll modification leads to infinite loop
         - afterscroll modification distors blockScrollPos
@@ -26,6 +27,8 @@
         - Edge fails to set scrollPos so at bottom so that last item is at end of scrollblock
 
     TODO:
+        - add minHeight/width to test parameters on demo page
+        - apply minHeight for various browsers
         - verify handling of end of list for variable
         - isolate variable behaviour everywhere
         - ! re-establish triggercell if it has been replace by some cache management routine
