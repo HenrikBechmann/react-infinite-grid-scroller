@@ -392,35 +392,35 @@ const getFrameStyles = (orientation, cellHeight, cellWidth, cellHeightMin, cellW
 
     if (orientation === 'vertical') {
 
-        styleset.width = 'unset'
+        styleset.width = null
         styleset.height = 
             (layout == 'uniform')?
                 cellHeight + 'px':
-                'unset'
+                null
         styleset.minHeight =
             (layout = 'variable')?
                 cellHeightMin + 'px':
-                'unset'
+                null
         styleset.maxHeight =
             (layout = 'variable')?
                 cellHeight + 'px':
-                'unset'
+                null
         
     } else { // horizontal
 
         styleset.width = 
             (layout == 'uniform')?
                 cellWidth + 'px':
-                'unset'
-        styleset.height = 'unset'
+                null
+        styleset.height = null
         styleset.minWidth =
             (layout = 'variable')?
                 cellWidthMin + 'px':
-                'unset'
+                null
         styleset.maxWidth =
             (layout = 'variable')?
                 cellWidth + 'px':
-                'unset'
+                null
 
     }
 

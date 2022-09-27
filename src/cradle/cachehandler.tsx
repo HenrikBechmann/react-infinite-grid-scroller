@@ -910,7 +910,7 @@ const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWi
             (layout == 'variable')?
                 cellHeight + 'px':
                 null
-            :'unset'
+            :null
     container.dataset.type = 'contentenvelope'
     container.dataset.index = index
     container.dataset.cacheitemid = itemID

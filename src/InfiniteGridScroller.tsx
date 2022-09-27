@@ -29,7 +29,6 @@
     TODO:
         - consider replacing assignments to scrollTop/Left with scrollTo()
         - add minHeight/width to test parameters on demo page
-        - apply minHeight for various browsers
         - verify handling of end of list for variable
         - isolate variable behaviour everywhere
         - ! re-establish triggercell if it has been replace by some cache management routine
