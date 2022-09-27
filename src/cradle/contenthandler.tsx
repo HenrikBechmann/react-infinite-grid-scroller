@@ -530,6 +530,7 @@ export default class ContentHandler {
     // all DOM elements should have been rendered at this point
     // sets CSS: scrollblockElement top and height (or left and width), and axisElement top (or left)
     // this to get closer to natural proportions to minimize janky scroll thumb
+    // newAxisScrollblockOffset = basePreAxisPixelLength + deltaPreAxisPixelLength
     public adjustScrollblockForVariability = (source) => {
 
         // ----------------------[ setup base values and references ]------------------------
@@ -645,8 +646,6 @@ export default class ContentHandler {
         // ------------------------[ change calculations ]----------------------
 
         const deltaPreAxisPixelLength = computedPreAxisPixelLength - basePreAxisPixelLength
-        // console.log('3. deltaPreAxisPixelLength = computedPreAxisPixelLength - basePreAxisPixelLength\n',
-        //     deltaPreAxisPixelLength, computedPreAxisPixelLength,'=' , basePreAxisPixelLength)
         const deltaPostAxisPixelLength = computedPostAxisPixelLength - basePostAxisPixelLength
 
         let newScrollblockOffset = deltaPreAxisPixelLength
@@ -695,6 +694,9 @@ export default class ContentHandler {
 
         // change scrollblockElement top and height, or left and width,
         //    and axisElement top or left
+
+        // newAxisScrollblockOffset + newScrollblockOffset - blockScrollPos = axisViewportOffset
+        // newAxisScrollblockOffset + newScrollblockOffset - axisViewportOffset = blockScrollPos
 
         if (orientation == 'vertical') {
 
