@@ -18,7 +18,7 @@
         - messed up calc at bottom of list with FF mobile
 
         - afterscroll modification leads to infinite loop
-        - afterscroll modification distors blockScrollPos
+        - afterscroll modification distorts blockScrollPos
 
         - goto fails from blank cradle
 
@@ -27,6 +27,7 @@
         - Edge fails to set scrollPos so at bottom so that last item is at end of scrollblock
 
     TODO:
+        - consider replacing assignments to scrollTop/Left with scrollTo()
         - add minHeight/width to test parameters on demo page
         - apply minHeight for various browsers
         - verify handling of end of list for variable
