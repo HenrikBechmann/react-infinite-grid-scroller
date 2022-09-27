@@ -530,7 +530,8 @@ export default class ContentHandler {
     // all DOM elements should have been rendered at this point
     // sets CSS: scrollblockElement top and height (or left and width), and axisElement top (or left)
     // this to get closer to natural proportions to minimize janky scroll thumb
-    // newAxisScrollblockOffset = basePreAxisPixelLength + deltaPreAxisPixelLength
+    // newAxisScrollblockOffset = basePreAxisPixelLength + axisViewportOffset - blockScrollPos
+    // newScrollblockOffset = deltaPreAxisPixelLength
     public adjustScrollblockForVariability = (source) => {
 
         // ----------------------[ setup base values and references ]------------------------
