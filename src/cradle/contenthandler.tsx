@@ -649,7 +649,6 @@ export default class ContentHandler {
         const deltaPreAxisPixelLength = computedPreAxisPixelLength - basePreAxisPixelLength
         const deltaPostAxisPixelLength = computedPostAxisPixelLength - basePostAxisPixelLength
 
-        // let variableAdjustment = deltaPreAxisPixelLength
         let variableAdjustment = blockScrollPos + axisViewportOffset - basePreAxisPixelLength
 
         if (source == 'afterscroll') {
@@ -657,6 +656,7 @@ export default class ContentHandler {
             variableAdjustment = 0
             viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
             cradlePositionData.blockScrollPos = blockScrollPos
+            scrollHandler.resetScrollData(blockScrollPos)
         }
 
         let newAxisScrollblockOffset = blockScrollPos + axisViewportOffset - variableAdjustment
@@ -665,40 +665,13 @@ export default class ContentHandler {
         //     newAxisScrollblockOffset, axisViewportOffset, basePreAxisPixelLength, padding, blockScrollPos)
 
         let resetscroll = false
-        // if (!preCradlePixelLength) {
-
-        //     let scrollblockOffsetDelta = (basePreAxisPixelLength - newAxisScrollblockOffset) //* 2
-        //     console.log('/\\>>> in head grid: scrollblockOffsetDelta = basePreAxisPixelLength - newAxisScrollblockOffset\n',
-        //         scrollblockOffsetDelta, basePreAxisPixelLength,'=' ,newAxisScrollblockOffset)
-
-        //     // align newAxisScrollblockOffset with basePreAxisPixelLength
-        //     newAxisScrollblockOffset += scrollblockOffsetDelta
-
-        //     if (newAxisScrollblockOffset < blockScrollPos) {
-        //         scrollblockOffsetDelta -= (newAxisScrollblockOffset - blockScrollPos)
-        //         newAxisScrollblockOffset = blockScrollPos
-        //     }
-
-        //     variableAdjustment -= scrollblockOffsetDelta
-
-        //     if (variableAdjustment > 0) {
-        //         newAxisScrollblockOffset += variableAdjustment
-        //         variableAdjustment = 0
-        //     }
-
-            if (axisReferenceRow == 0) {
-                if (variableAdjustment > 0 || newAxisScrollblockOffset > padding ) {
-                    variableAdjustment = 0
-                    newAxisScrollblockOffset = padding
-                    resetscroll = true
-                }
+        if (axisReferenceRow == 0) {
+            if (variableAdjustment > 0 || newAxisScrollblockOffset > padding ) {
+                variableAdjustment = 0
+                newAxisScrollblockOffset = padding
+                resetscroll = true
             }
-
-        // }
-
-        // const axisScrollblockOffsetDelta = baseAxisScrollblockOffset - newAxisScrollblockOffset
-
-        // let newScrollblockLength = computedScrollblockLength - axisScrollblockOffsetDelta
+        }
 
         // -----------------------[ application ]-------------------------
 
@@ -712,9 +685,6 @@ export default class ContentHandler {
 
         // change scrollblockElement top and height, or left and width,
         //    and axisElement top or left
-
-        // newAxisScrollblockOffset + variableAdjustment - blockScrollPos = axisViewportOffset
-        // newAxisScrollblockOffset + variableAdjustment - axisViewportOffset = blockScrollPos
 
         if (orientation == 'vertical') {
 
