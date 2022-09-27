@@ -14,6 +14,8 @@
 
     BUGS:
 
+        - on repositioning, MS Edge & Safari gets CALCULATING OVERSHOOT, FAILURE TO REGISTER TRIGGERCELL
+            - negative target triggercellIndex
         - repositioning to head of list in one case caused top of scrollblock to be below first item
             - blockScrollPos can get to zero before headgrid gets to list border
             - consider scrollTo after set
@@ -32,6 +34,7 @@
         - Edge fails to set scrollPos so at bottom so that last item is at end of scrollblock
 
     TODO:
+        - try resetting scroll position for start of repositioning
         - consider replacing assignments to scrollTop/Left with scrollTo()
         - add minHeight/width to test parameters on demo page
         - verify handling of end of list for variable

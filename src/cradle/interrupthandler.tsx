@@ -67,7 +67,14 @@ export default class InterruptHandler {
     private cradleIntersectionObserverCallback = (entries) => {
 
         const signals = this.signals
-        const { stateHandler, serviceHandler, scrollHandler } = this.cradleParameters.handlersRef.current
+        const { 
+
+            stateHandler, 
+            serviceHandler, 
+            scrollHandler, 
+            layoutHandler 
+
+        } = this.cradleParameters.handlersRef.current
 
         if (signals.pauseCradleIntersectionObserver) {
 
@@ -130,7 +137,7 @@ export default class InterruptHandler {
                         scrollerID,ViewportContextProperties)
                     return
                 }
-                const {listRowcount } = this.cradleParameters.cradleInternalPropertiesRef.current
+                const { listRowcount, crosscount } = this.cradleParameters.cradleInternalPropertiesRef.current
                 // update dimensions with cradle intersection. See also dimension update in viewport.tsx for resize
                 const rect = viewportElement.getBoundingClientRect()
                 const {top, right, bottom, left} = rect
@@ -166,6 +173,15 @@ export default class InterruptHandler {
 
                     }
 
+                    const { cradlePositionData } = layoutHandler
+                    const axisReference = cradlePositionData.targetAxisReferenceIndex
+                    const rowOffset = Math.ceil(axisReference/crosscount)
+                    const calculatedBlockScrollPos = 
+                        (rowOffset * cellLength) + padding
+
+                    viewportElement[cradlePositionData.blockScrollProperty] = calculatedBlockScrollPos
+                    cradlePositionData.blockScrollPos = calculatedBlockScrollPos
+                    
                     scrollHandler.calcImpliedRepositioningData()
 
                 }
