@@ -136,8 +136,8 @@ const InfiniteGridScroller = (props) => {
         gap = 0, // space between grid cells, not including the leading and trailing padding
         padding = 0, // the border space between the items and the viewport, applied to the cradle
         layout = 'uniform', // uniform, variable
-        varHeightMin = 0, // for layout == 'variable' && orientation == 'vertical'
-        varWidthMin = 0, // for layout == 'variable' && orientation == 'horizontal'
+        cellHeightMin = 0, // for layout == 'variable' && orientation == 'vertical'
+        cellWidthMin = 0, // for layout == 'variable' && orientation == 'horizontal'
 
         // ** scroller specs:
         runwaySize = 3, // the number of items outside the view of each side of the viewport 
@@ -178,8 +178,8 @@ const InfiniteGridScroller = (props) => {
     estimatedListSize = estimatedListSize ?? 0
     runwaySize = runwaySize ?? 3
     useScrollTracker = useScrollTracker ?? true
-    varHeightMin = varHeightMin ?? 0
-    varWidthMin = varWidthMin ?? 0
+    cellHeightMin = cellHeightMin ?? 0
+    cellWidthMin = cellWidthMin ?? 0
 
     // prop constraints - non-negative values
     runwaySize = Math.max(1,runwaySize) // runwaysize must be at least 1
@@ -204,8 +204,8 @@ const InfiniteGridScroller = (props) => {
         padding,
         cellHeight,
         cellWidth,
-        varHeightMin,
-        varWidthMin,
+        cellHeightMin,
+        cellWidthMin,
         layout,
     }
 
@@ -227,10 +227,6 @@ const InfiniteGridScroller = (props) => {
         IDLECALLBACK_TIMEOUT,
         TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
         // ratios:
-        // MIN_MAX_DELTA_RATIO = 
-        //    var[length]Min + ((cell[Length] - var[Length]Min) * MIN_MAX_DELTA_RATIO) used 
-        //     to calculate virtual position in scrollblock (where [Length] = Width/Height)
-        MIN_MAX_DELTA_RATIO, 
         MAX_CACHE_OVER_RUN, // max streaming over-run as ratio to cacheMax
 
     } = advanced
@@ -241,10 +237,6 @@ const InfiniteGridScroller = (props) => {
     TIMEOUT_FOR_VARIABLE_MEASUREMENTS = TIMEOUT_FOR_VARIABLE_MEASUREMENTS ?? 100
     
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
-    MIN_MAX_DELTA_RATIO = MIN_MAX_DELTA_RATIO ?? 0.5
-    if ( (MIN_MAX_DELTA_RATIO < 0) || (MIN_MAX_DELTA_RATIO > 1) ) {
-        MIN_MAX_DELTA_RATIO = 0.5
-    }
 
     if (typeof showAxis != 'boolean') showAxis = false
 
@@ -357,7 +349,6 @@ const InfiniteGridScroller = (props) => {
                     cacheHandler = {cacheHandlerRef.current}
                     useScrollTracker = {useScrollTracker}
                     showAxis = { showAxis }
-                    MIN_MAX_DELTA_RATIO = { MIN_MAX_DELTA_RATIO }
                     SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = { SCROLL_TIMEOUT_FOR_ONAFTERSCROLL }
                     IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }
                     MAX_CACHE_OVER_RUN = { MAX_CACHE_OVER_RUN }
