@@ -652,6 +652,12 @@ export default class ContentHandler {
         let newScrollblockOffset = deltaPreAxisPixelLength
 
         let newAxisScrollblockOffset = blockScrollPos + axisViewportOffset - newScrollblockOffset
+        // const newAxisScrollblockOffset = axisViewportOffset + basePreAxisPixelLength
+        //     - padding // double counted
+        //     - blockScrollPos //+ newScrollblockOffset
+
+        console.log('newAxisScrollblockOffset = axisViewportOffset + basePreAxisPixelLength - padding -blockScrollPos',
+            newAxisScrollblockOffset, axisViewportOffset, basePreAxisPixelLength, padding, blockScrollPos)
 
         let resetscroll = false
         if (!preCradlePixelLength) {
@@ -706,13 +712,13 @@ export default class ContentHandler {
             // the axis is moved in the opposite direction to maintain viewport position
             axisElement.style.top = newAxisScrollblockOffset + 'px'
             // the height is adjusted by both deltas, as it controls the scroll length
-            scrollblockElement.style.height = newScrollblockLength + 'px'
+            // scrollblockElement.style.height = newScrollblockLength + 'px'
 
         } else {
 
             scrollblockElement.style.left = newScrollblockOffset + 'px'
             axisElement.style.left = newAxisScrollblockOffset + 'px'
-            scrollblockElement.style.width = newScrollblockLength + 'px'
+            // scrollblockElement.style.width = newScrollblockLength + 'px'
 
         }
 
