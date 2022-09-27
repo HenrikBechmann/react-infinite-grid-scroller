@@ -48,8 +48,8 @@ const CellFrame = ({
     orientation, 
     cellHeight, 
     cellWidth, 
-    cellHeightMin,
-    cellWidthMin,
+    cellMinHeight,
+    cellMinWidth,
     layout,
     getItem, // function provided by host
     listsize, // for feedback in placeholder
@@ -179,7 +179,7 @@ const CellFrame = ({
     useEffect(()=>{
 
         let newStyles = getFrameStyles(
-            orientation, cellHeight, cellWidth, cellHeightMin, cellWidthMin, layout, styles)
+            orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, styles)
         
         if (isMountedRef.current) {
             saveStyles(newStyles)
@@ -386,7 +386,7 @@ const CellFrame = ({
 } // CellFrame
 
 // utility
-const getFrameStyles = (orientation, cellHeight, cellWidth, cellHeightMin, cellWidthMin, layout, styles) => {
+const getFrameStyles = (orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, styles) => {
 
     let styleset = {...styles,position:'relative'}
 
@@ -399,7 +399,7 @@ const getFrameStyles = (orientation, cellHeight, cellWidth, cellHeightMin, cellW
                 null
         styleset.minHeight =
             (layout = 'variable')?
-                cellHeightMin + 'px':
+                cellMinHeight + 'px':
                 null
         styleset.maxHeight =
             (layout = 'variable')?
@@ -415,7 +415,7 @@ const getFrameStyles = (orientation, cellHeight, cellWidth, cellHeightMin, cellW
         styleset.height = null
         styleset.minWidth =
             (layout = 'variable')?
-                cellWidthMin + 'px':
+                cellMinWidth + 'px':
                 null
         styleset.maxWidth =
             (layout = 'variable')?

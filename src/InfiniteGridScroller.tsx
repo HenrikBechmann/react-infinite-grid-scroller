@@ -135,8 +135,8 @@ const InfiniteGridScroller = (props) => {
         gap = 0, // space between grid cells, not including the leading and trailing padding
         padding = 0, // the border space between the items and the viewport, applied to the cradle
         layout = 'uniform', // uniform, variable
-        cellHeightMin = 0, // for layout == 'variable' && orientation == 'vertical'
-        cellWidthMin = 0, // for layout == 'variable' && orientation == 'horizontal'
+        cellMinHeight = 0, // for layout == 'variable' && orientation == 'vertical'
+        cellMinWidth = 0, // for layout == 'variable' && orientation == 'horizontal'
 
         // ** scroller specs:
         runwaySize = 3, // the number of items outside the view of each side of the viewport 
@@ -177,8 +177,8 @@ const InfiniteGridScroller = (props) => {
     estimatedListSize = estimatedListSize ?? 0
     runwaySize = runwaySize ?? 3
     useScrollTracker = useScrollTracker ?? true
-    cellHeightMin = cellHeightMin ?? 0
-    cellWidthMin = cellWidthMin ?? 0
+    cellMinHeight = cellMinHeight ?? 0
+    cellMinWidth = cellMinWidth ?? 0
 
     // prop constraints - non-negative values
     runwaySize = Math.max(1,runwaySize) // runwaysize must be at least 1
@@ -203,8 +203,8 @@ const InfiniteGridScroller = (props) => {
         padding,
         cellHeight,
         cellWidth,
-        cellHeightMin,
-        cellWidthMin,
+        cellMinHeight,
+        cellMinWidth,
         layout,
     }
 
