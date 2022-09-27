@@ -144,9 +144,10 @@ export default class ContentHandler {
         // ----------------------[ 2. get content requirements ]----------------------
 
         const baseRowLength = 
-            (orientation == 'vertical')?
-                (cellHeight + gap):
-                (cellWidth + gap)
+            ((orientation == 'vertical')?
+                cellHeight:
+                cellWidth)
+            + gap
 
         // console.log('setCradleContent: workingRequestAxisReferenceIndex',workingRequestAxisReferenceIndex)
 
@@ -178,17 +179,6 @@ export default class ContentHandler {
 
             })
 
-//         console.log(`setCradleContent: 
-// targetCradleReferenceIndex, 
-// targetAxisReferenceIndex,
-// cradleContentCount, 
-// scrollblockViewportPixelOffset`,
-//             targetCradleReferenceIndex, 
-//             targetAxisReferenceIndex,
-//             cradleContentCount, 
-//             scrollblockViewportPixelOffset
-//         )
-
         // reset scrollblock Offset and length
         const scrollblockElement = viewportElement.firstChild
 
@@ -203,9 +193,7 @@ export default class ContentHandler {
             scrollblockElement.style.width = baselength + 'px'
         }
 
-        // console.log('setCradleContent: scrollblockOffset', scrollblockOffset)
-
-        const axisViewportPixelOffset = targetAxisViewportPixelOffset // + scrollblockOffset// semantics
+        const axisViewportPixelOffset = targetAxisViewportPixelOffset // semantics
 
         // ----------------------[ 3. get and config content ]----------------------
         
@@ -239,7 +227,6 @@ export default class ContentHandler {
         cradleContent.tailModelComponents = tailcontentlist
 
         cradlePositionData.targetAxisReferenceIndex = targetAxisReferenceIndex
-        // console.log('setCradleContent: setting targetAxisViewportPixelOffset', axisViewportPixelOffset)
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
         if (serviceHandler.callbacks.referenceIndexCallback) {
@@ -254,8 +241,6 @@ export default class ContentHandler {
 
         //  ----------------------[ 4. set CSS ]-----------------------
 
-        // const adjustedScrollblockViewportPixelOffset = scrollblockViewportPixelOffset + scrollblockOffset
-
         cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset // - scrollblockOffset
         // avoid bogus call to updateCradleContent
         scrollHandler.resetScrollData(scrollblockViewportPixelOffset) // - scrollblockOffset) 
@@ -269,10 +254,6 @@ export default class ContentHandler {
 
         const axisScrollblockPixelOffset = 
             scrollblockViewportPixelOffset + axisViewportPixelOffset
-
-        // console.log('setCradleContent: AxisScrollblockPixelOffset, scrollblockViewportPixelOffset, \
-        //     axisViewportPixelOffset',AxisScrollblockPixelOffset, scrollblockViewportPixelOffset,
-        //     axisViewportPixelOffset)
 
         if (orientation == 'vertical') {
 
@@ -584,7 +565,11 @@ export default class ContentHandler {
 
         } = cradlePositionData
 
-        let { blockScrollPos } = cradlePositionData
+        let { 
+        
+            blockScrollPos 
+
+        } = cradlePositionData
 
         const {
 

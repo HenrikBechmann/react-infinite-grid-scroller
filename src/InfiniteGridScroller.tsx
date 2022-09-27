@@ -12,8 +12,13 @@
 
         create demo site - github pages
 
-    BUGS: 
+    BUGS:
 
+        - repositioning to head of list in one case caused top of scrollblock to be below first item
+            - blockScrollPos can get to zero before headgrid gets to list border
+            - consider scrollTo after set
+            - compare goto 9 with captured console
+            - failure to set blockScrollPos correctly
         - infinite scrolling at the bottom with FF desktop
         - messed up calc at bottom of list with FF mobile
 

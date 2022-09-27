@@ -31,21 +31,7 @@ export default class InterruptHandler {
     private isTailCradleInView = false
     private isHeadCradleInView = false
 
-    // TODO: stub
-    // private cradleResizeObserverCallback = (entries) => {
-
-    //     const {
-    //         stateHandler,
-    //     } = this.cradleParameters.handlersRef.current
-
-    //     // stateHandler.setCradleResizeState('resizecradle')
-    //     if (this.signals.pauseCradleResizeObserver) return
-
-    // }
-
     private axisTriggerlinesObserverCallback = (entries) => {
-
-        // console.log('interruptHandler triggerlinecallback', entries)
 
         if (this.signals.pauseTriggerlinesObserver) { 
 
@@ -70,41 +56,18 @@ export default class InterruptHandler {
         if (stateHandler.isMountedRef.current) {
             const { scrollData } = scrollHandler
 
-            // const blockScrollingDirection = 
-            //     ((scrollData.start == scrollData.current) &&
-            //     (scrollData.current == scrollData.previous))?
-            //     // intercept could be triggered with change of cell size and no scrolling
-            //     'none':
-            //         (scrollData.previous > scrollData.current)?
-            //             'tailward': // scrollblock moving down or right in relation to viewport
-            //                         // (scrollPos -- scrollTop or scrollLeft -- diminishing)
-            //             'headward' // scrollblock moving up or left in relation to viewport
-            //                         // (scrollPos -- scrollTop or scrollLeft -- increasing)
+            scrollData.previousupdate = scrollData.currentupdate
+            scrollData.currentupdate = scrollData.current
 
-            // if ((scrollData.start != scrollData.current) ||
-            //     (scrollData.current != scrollData.previous)) {
-            // if (blockScrollingDirection != 'none') { 
+            contentHandler.updateCradleContent(entries,'triggerlinesObserver')
 
-                // TODO check if this is still needed
-                scrollData.previousupdate = scrollData.currentupdate
-                scrollData.currentupdate = scrollData.current
-
-                // const blockScrollingDirection = 
-                //     (scrollData.previous > scrollData.current)?
-                //         'tailward':
-                //         'headward'
-
-                // contentHandler.updateCradleContent(blockScrollingDirection, entries,'triggerlinesObserver')
-                contentHandler.updateCradleContent(entries,'triggerlinesObserver')
-
-            // }
         }
     }
 
     private cradleIntersectionObserverCallback = (entries) => {
 
         const signals = this.signals
-        const { stateHandler, serviceHandler } = this.cradleParameters.handlersRef.current
+        const { stateHandler, serviceHandler, scrollHandler } = this.cradleParameters.handlersRef.current
 
         if (signals.pauseCradleIntersectionObserver) {
 
@@ -149,16 +112,27 @@ export default class InterruptHandler {
 
                 ) 
             {
-                const viewportelement = ViewportContextProperties.elementRef.current
+                const viewportElement = ViewportContextProperties.elementRef.current
 
-                const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
-                if (!viewportelement) {
+                const { 
+
+                    scrollerID, 
+                    orientation, 
+                    padding, 
+                    gap,
+                    cellHeight,
+                    cellWidth,
+                    layout 
+
+                } = this.cradleParameters.cradleInheritedPropertiesRef.current
+                if (!viewportElement) {
                     console.log('SYSTEM: viewport element not set in cradleIntersectionObserverCallback',
                         scrollerID,ViewportContextProperties)
                     return
                 }
+                const {listRowcount } = this.cradleParameters.cradleInternalPropertiesRef.current
                 // update dimensions with cradle intersection. See also dimension update in viewport.tsx for resize
-                const rect = viewportelement.getBoundingClientRect()
+                const rect = viewportElement.getBoundingClientRect()
                 const {top, right, bottom, left} = rect
                 const width = right - left, height = bottom - top
                 // update for scrolltracker
@@ -166,30 +140,42 @@ export default class InterruptHandler {
 
                 const { repositioningFlagCallback } = serviceHandler.callbacks
                 repositioningFlagCallback && repositioningFlagCallback(true)
+
+                if (layout == 'variable') { // restore base config to scrollblock
+
+                    const scrollblockElement = viewportElement.firstChild
+
+                    const cellLength = 
+                        ((orientation == 'vertical')?
+                            cellHeight:
+                            cellWidth)
+                        + gap
+
+                    const baselength = (listRowcount * cellLength) - gap // final cell has no trailing gap
+                        + (padding * 2) // leading and trailing padding
+
+                    if (orientation == 'vertical') {
+
+                        scrollblockElement.style.top = null
+                        scrollblockElement.style.height = baselength + 'px'
+
+                    } else {
+
+                        scrollblockElement.style.left = null
+                        scrollblockElement.style.width = baselength + 'px'
+
+                    }
+
+                    scrollHandler.calcImpliedRepositioningData()
+
+                }
+
                 if (stateHandler.isMountedRef.current) stateHandler.setCradleState('startreposition')
 
             }
         }
 
     }
-
-   // for adjusting to content re-sizing
-   // public cradleResize = {
-   //    observer:null,
-   //    callback:this.cradleResizeObserverCallback,
-   //      connectElements:() => {
-   //          const observer = this.cradleResize.observer
-   //          const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
-   //          observer.observe(cradleElements.headRef.current)
-   //          observer.observe(cradleElements.tailRef.current)
-   //      },
-   //    createObserver:() => {
-
-   //      this.cradleResize.observer = new ResizeObserver(this.cradleResize.callback)
-   //      return this.cradleResize.observer
-
-   //    }
-   // }
 
    public cradleIntersect = {    
         observer:null,    

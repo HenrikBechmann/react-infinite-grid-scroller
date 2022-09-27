@@ -249,7 +249,7 @@ export default class ScrollHandler {
 
     }
 
-    private calcImpliedRepositioningData = () => {
+    public calcImpliedRepositioningData = () => {
 
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
         const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
