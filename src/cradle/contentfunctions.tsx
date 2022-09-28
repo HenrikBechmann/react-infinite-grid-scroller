@@ -242,6 +242,7 @@ export const calcContentShift = ({
         orientation,
         cellHeight,
         cellWidth,
+        layout,
 
     } = cradleInheritedProperties
 
@@ -386,6 +387,8 @@ export const calcContentShift = ({
     const currentViewportAxisOffset = 
         scrollblockAxisOffset + scrollblockOffset - scrollPos
 
+    const newAxisPixelOffset = currentViewportAxisOffset + axisPixelShift
+
     // Note: sections 4, 5 and 6 deal entirely with row calculations; no pixels
 
     // ------------[ 4. calc new cradle and axis reference row offsets ]-------------
@@ -444,7 +447,7 @@ export const calcContentShift = ({
 
         // c. if scrolling the block tailward (toward revealing head of list), as the cradlerowoffset 
         // hits 0, cradle changes have to be adjusted to prevent shortening of cradle content
-        
+
         // d. if scrolling headward near the end of the list, cradle changes have to be adjusted to 
         // accomodate the trailing runway
 
@@ -460,15 +463,32 @@ export const calcContentShift = ({
         const computedNextCradleEndrowOffset = 
             (previousCradleRowOffset + (cradleRowcount -1) + cradleReferenceRowshift)
 
-        const targetCradleEndrowoffset = Math.min(listEndrowOffset, 
+        const targetCradleEndrowOffset = Math.min(listEndrowOffset, 
             (newAxisReferenceRowOffset + (viewportRowcount - 1) + (runwayRowcount - 1)))
 
-        const tailrowdiff = Math.max(0, targetCradleEndrowoffset - computedNextCradleEndrowOffset)
+        const tailrowdiff = Math.max(0, targetCradleEndrowOffset - computedNextCradleEndrowOffset)
 
         if (tailrowdiff > 0) {
 
             cradleReferenceRowshift += tailrowdiff
             newCradleReferenceRowOffset += tailrowdiff
+
+        }
+
+        // check for variable row undershoot
+        console.log('targetCradleEndrowOffset, listEndrowOffset\n',
+            targetCradleEndrowOffset, listEndrowOffset)
+        if ((layout == 'variable') && (targetCradleEndrowOffset == listEndrowOffset) ) {
+            console.log('target end row and list end row are the same')
+            const tailGridRows = getGridRowLengths(tailGridElement, orientation, crosscount, gap)
+            const tailRowCount = tailGridRows.length
+            console.log('previousAxisRowOffset, tailRowCount - 1, listEndrowOffset\n', 
+                previousAxisRowOffset, tailRowCount - 1, listEndrowOffset)
+            if ((previousAxisRowOffset + (tailRowCount - 1)) == listEndrowOffset) {
+
+                console.log('final row pixels are available')
+
+            }
 
         }
 
@@ -501,7 +521,7 @@ export const calcContentShift = ({
 
     // -------------[ 7. calculate new axis pixel position ]------------------
 
-    const newAxisPixelOffset = currentViewportAxisOffset + axisPixelShift
+    // const newAxisPixelOffset = currentViewportAxisOffset + axisPixelShift
 
     // ---------------------[ 8. return required values ]-------------------
 
