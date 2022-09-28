@@ -538,6 +538,7 @@ export default class ContentHandler {
 
         console.log('-> =============[START ADJUSTMENT (source)]============', source)
 
+        // resources...
         const { cradleParameters } = this,
             cradleHandlers = cradleParameters.handlersRef.current,
             ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current,
@@ -552,6 +553,7 @@ export default class ContentHandler {
 
             } = layoutHandler
 
+        // element references...
         const viewportElement = ViewportContextProperties.elementRef.current,
             scrollblockElement = viewportElement.firstChild,
             headGridElement = cradleElements.headRef.current,
@@ -560,6 +562,7 @@ export default class ContentHandler {
 
         console.log('cradlePositionData',{...cradlePositionData})
 
+        // current configurations...
         const { 
 
             targetAxisReferenceIndex: axisReferenceIndex,
@@ -637,7 +640,7 @@ export default class ContentHandler {
         const computedPreAxisPixelLength = preCradlePixelLength + measuredHeadLength
         const computedPostAxisPixelLength = postCradlePixelLength + measuredTailLength
 
-        const computedScrollblockLength = computedPreAxisPixelLength + computedPostAxisPixelLength
+        const computedScrollblockLength = preCradlePixelLength + baseHeadLength + computedPostAxisPixelLength
 
         const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding 
         const basePostAxisPixelLength = (postCradleRowCount + tailRowCount) * baseCellLength + padding - gap
@@ -676,6 +679,8 @@ export default class ContentHandler {
             }
         }
 
+        const newScrollblockLength = computedScrollblockLength + variableAdjustment
+
         // -----------------------[ application ]-------------------------
 
         // console.log('::: blockScrollPos, variableAdjustment, newAxisScrollblockOffset\n',// \n newScrollblockLength\n', 
@@ -684,7 +689,8 @@ export default class ContentHandler {
         console.log('::: newAxisScrollblockOffset = blockScrollPos + axisViewportOffset  \n',// \n newScrollblockLength\n', 
              newAxisScrollblockOffset, blockScrollPos, axisViewportOffset )
 
-        console.log('-- variableAdjustment', variableAdjustment)
+        console.log('-- variableAdjustment, newAxisScrollblockOffset, newScrollblockLength, computedPreAxisPixelLength, computedPostAxisPixelLength\n', 
+            variableAdjustment, newAxisScrollblockOffset, newScrollblockLength, computedPreAxisPixelLength, computedPostAxisPixelLength)
 
         // change scrollblockElement top and height, or left and width,
         //    and axisElement top or left
@@ -692,17 +698,20 @@ export default class ContentHandler {
         if (orientation == 'vertical') {
 
             // the scrollblock top is moved to compensate for the headDelta
-            scrollblockElement.style.top = variableAdjustment + 'px'
+            scrollblockElement.style.top = 
+                !variableAdjustment?
+                    null:
+                    variableAdjustment + 'px'
             // the axis is moved in the opposite direction to maintain viewport position
             axisElement.style.top = newAxisScrollblockOffset + 'px'
             // the height is adjusted by both deltas, as it controls the scroll length
-            // scrollblockElement.style.height = newScrollblockLength + 'px'
+            scrollblockElement.style.height = newScrollblockLength + 'px'
 
         } else {
 
             scrollblockElement.style.left = variableAdjustment + 'px'
             axisElement.style.left = newAxisScrollblockOffset + 'px'
-            // scrollblockElement.style.width = newScrollblockLength + 'px'
+            scrollblockElement.style.width = newScrollblockLength + 'px'
 
         }
 

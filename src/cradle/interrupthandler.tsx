@@ -182,6 +182,7 @@ export default class InterruptHandler {
                     viewportElement[cradlePositionData.blockScrollProperty] = calculatedBlockScrollPos
                     cradlePositionData.blockScrollPos = calculatedBlockScrollPos
                     scrollHandler.resetScrollData(calculatedBlockScrollPos)
+                    
                     scrollHandler.calcImpliedRepositioningData()
 
                 }
