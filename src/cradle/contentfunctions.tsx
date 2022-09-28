@@ -386,6 +386,8 @@ export const calcContentShift = ({
     const currentViewportAxisOffset = 
         scrollblockAxisOffset + scrollblockOffset - scrollPos
 
+    // Note: sections 4, 5 and 6 deal entirely with row calculations; no pixels
+
     // ------------[ 4. calc new cradle and axis reference row offsets ]-------------
 
     // base value for cradle reference shift; may change if beyond list bounds
@@ -400,8 +402,6 @@ export const calcContentShift = ({
     // base values
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
     let newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowshift
-
-    // Note: sections 5 and 6 deal entirely with row calculations; no pixels
 
     // --------[ 5. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
