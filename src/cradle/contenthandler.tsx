@@ -290,23 +290,24 @@ export default class ContentHandler {
     // axisTriggerlinesObserverCallback of interruptHandler
 
     public updateCradleContent = (
-        // blockScrollingDirection, 
+
         triggerlineEntries, 
         source = 'notifications'
-    ) => {
 
-        // console.log('triggerlineEntries', triggerlineEntries)
+    ) => {
 
         // ----------------------[ 1. initialize ]-------------------------
 
         // handler support
         const {
+
             cacheHandler, 
             scrollHandler, 
             layoutHandler, 
             stateHandler, 
             interruptHandler,
             serviceHandler,
+            
         } = this.cradleParameters.handlersRef.current
 
         // scroll data
@@ -364,8 +365,6 @@ export default class ContentHandler {
             return
 
         }
-
-        // console.log('updateCradleContent: blockScrollingDirection, shiftinstruction',blockScrollingDirection, shiftinstruction)
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
