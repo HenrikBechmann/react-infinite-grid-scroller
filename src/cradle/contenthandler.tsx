@@ -596,14 +596,17 @@ export default class ContentHandler {
 
         // rowcounts and row offsets for positioning
         // listRowcount taken from internal properties above
-        const headRowCount = Math.ceil(headGridElement.childNodes.length/crosscount)
-        const tailRowCount = Math.ceil(tailGridElement.childNodes.length/crosscount)
-        const axisReferenceRow = Math.ceil(axisReferenceIndex/crosscount)
-        const cradleReferenceRow = axisReferenceRow - headRowCount
-        const cradleLastReferenceRow = axisReferenceRow + (tailRowCount - 1)
-        const listLastReferenceRow = listRowcount - 1
-        const preCradleRowCount = cradleReferenceRow
-        const postCradleRowCount = listLastReferenceRow - cradleLastReferenceRow
+        const headRowCount = Math.ceil(headGridElement.childNodes.length/crosscount),
+            tailRowCount = Math.ceil(tailGridElement.childNodes.length/crosscount)
+
+        // reference rows - cradle first/last; axis; list end
+        const axisReferenceRow = Math.ceil(axisReferenceIndex/crosscount),
+            cradleReferenceRow = axisReferenceRow - headRowCount,
+            cradleLastReferenceRow = axisReferenceRow + (tailRowCount - 1),
+            listLastReferenceRow = listRowcount - 1
+
+        const preCradleRowCount = cradleReferenceRow,
+            postCradleRowCount = listLastReferenceRow - cradleLastReferenceRow
 
         // base pixel values
         const baseCellLength = 
@@ -612,12 +615,11 @@ export default class ContentHandler {
                 cellWidth
             ) + gap
 
-        const baseHeadLength = (headRowCount * baseCellLength) + padding
-        const baseTailLength = (tailRowCount * baseCellLength) + padding - gap
+        const baseHeadLength = (headRowCount * baseCellLength) + padding,
+            baseTailLength = (tailRowCount * baseCellLength) + padding - gap
 
-        const baseBlockLength = baseHeadLength + baseTailLength
-
-        const baseAxisScrollblockOffset = (axisReferenceRow * baseCellLength) + padding
+        // const baseBlockLength = baseHeadLength + baseTailLength
+        // const baseAxisScrollblockOffset = (axisReferenceRow * baseCellLength) + padding
 
         // measured pixel cradle grid values
         let measuredHeadLength, measuredTailLength
@@ -633,27 +635,28 @@ export default class ContentHandler {
 
         }
 
-        const preCradlePixelLength = (preCradleRowCount * baseCellLength) //+ padding
-        const postCradlePixelLength = postCradleRowCount * baseCellLength //+ padding - gap
+        const preCradlePixelLength = (preCradleRowCount * baseCellLength),
+            postCradlePixelLength = postCradleRowCount * baseCellLength
 
-        const computedPreAxisPixelLength = preCradlePixelLength + measuredHeadLength
-        const computedPostAxisPixelLength = postCradlePixelLength + measuredTailLength
+        const computedPreAxisPixelLength = preCradlePixelLength + measuredHeadLength,
+            computedPostAxisPixelLength = postCradlePixelLength + measuredTailLength
 
         // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
         const computedScrollblockLength = preCradlePixelLength + baseHeadLength + computedPostAxisPixelLength
 
-        const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding 
-        const basePostAxisPixelLength = (postCradleRowCount + tailRowCount) * baseCellLength + padding - gap
+        const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding,
+            basePostAxisPixelLength = (postCradleRowCount + tailRowCount) * baseCellLength + padding - gap
 
-        const baseScrollblockLength = basePreAxisPixelLength + basePostAxisPixelLength
+        // const baseScrollblockLength = basePreAxisPixelLength + basePostAxisPixelLength
 
         // ------------------------[ change calculations ]----------------------
 
-        const deltaPreAxisPixelLength = computedPreAxisPixelLength - basePreAxisPixelLength
-        const deltaPostAxisPixelLength = computedPostAxisPixelLength - basePostAxisPixelLength
+        // const deltaPreAxisPixelLength = computedPreAxisPixelLength - basePreAxisPixelLength,
+        // const deltaPostAxisPixelLength = computedPostAxisPixelLength - basePostAxisPixelLength
 
         let variableAdjustment = blockScrollPos + axisViewportOffset - basePreAxisPixelLength
 
+        // change blockScrollPos
         if (source == 'afterscroll') {
             
             blockScrollPos -= variableAdjustment
