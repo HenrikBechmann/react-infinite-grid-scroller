@@ -652,11 +652,14 @@ export default class ContentHandler {
         let variableAdjustment = blockScrollPos + axisViewportOffset - basePreAxisPixelLength
 
         if (source == 'afterscroll') {
+            
             blockScrollPos -= variableAdjustment
             variableAdjustment = 0
+
             viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
             cradlePositionData.blockScrollPos = blockScrollPos
             scrollHandler.resetScrollData(blockScrollPos)
+
         }
 
         let newAxisScrollblockOffset = blockScrollPos + axisViewportOffset - variableAdjustment
