@@ -234,6 +234,9 @@ export const calcContentShift = ({
 
 }) => {
 
+    console.log('=============[ STARTING CALC CONTENT SHIFT] ===============')
+    console.log('calc content shift: shiftinstruction',shiftinstruction)
+
     // ------------------------[ 1. initialize ]-----------------------
 
     const { 
@@ -433,13 +436,32 @@ export const calcContentShift = ({
         }
 
         // --- end of list adjustment: case of being in bounds of trailing runway (end of list)
-        const targetCradleEndrowOffset = newCradleReferenceRowOffset + (cradleRowcount - 1)
+        let targetCradleEndrowOffset = newCradleReferenceRowOffset + (cradleRowcount - 1)
         const tailrowdiff = Math.max(0,targetCradleEndrowOffset - listEndrowOffset)
 
         if (tailrowdiff > 0) {
 
             newCradleReferenceRowOffset -= tailrowdiff
             cradleReferenceRowshift -= tailrowdiff
+            targetCradleEndrowOffset -= tailrowdiff
+
+        }
+
+        // check for variable row undershoot
+        console.log('================ [CHECKING SHIFT END OF LIST] ==============')
+        console.log('targetCradleEndrowOffset, listEndrowOffset\n',
+            targetCradleEndrowOffset, listEndrowOffset)
+        if ((layout == 'variable') && (targetCradleEndrowOffset == listEndrowOffset) ) {
+            console.log('target end row and list end row are the same')
+            const tailGridRows = getGridRowLengths(tailGridElement, orientation, crosscount, gap)
+            const tailRowCount = tailGridRows.length
+            console.log('previousAxisRowOffset, tailRowCount - 1, listEndrowOffset\n', 
+                previousAxisRowOffset, tailRowCount - 1, listEndrowOffset)
+            if ((previousAxisRowOffset + (tailRowCount - 1)) == listEndrowOffset) {
+
+                console.log('final row pixels are available')
+
+            }
 
         }
 
@@ -472,23 +494,6 @@ export const calcContentShift = ({
 
             cradleReferenceRowshift += tailrowdiff
             newCradleReferenceRowOffset += tailrowdiff
-
-        }
-
-        // check for variable row undershoot
-        console.log('targetCradleEndrowOffset, listEndrowOffset\n',
-            targetCradleEndrowOffset, listEndrowOffset)
-        if ((layout == 'variable') && (targetCradleEndrowOffset == listEndrowOffset) ) {
-            console.log('target end row and list end row are the same')
-            const tailGridRows = getGridRowLengths(tailGridElement, orientation, crosscount, gap)
-            const tailRowCount = tailGridRows.length
-            console.log('previousAxisRowOffset, tailRowCount - 1, listEndrowOffset\n', 
-                previousAxisRowOffset, tailRowCount - 1, listEndrowOffset)
-            if ((previousAxisRowOffset + (tailRowCount - 1)) == listEndrowOffset) {
-
-                console.log('final row pixels are available')
-
-            }
 
         }
 

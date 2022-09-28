@@ -14,6 +14,8 @@
 
     BUGS:
 
+        - pictured scroll down causes double shift calls, but shouldn't; height 139
+
         - on repositioning, MS Edge & Safari gets CALCULATING OVERSHOOT, FAILURE TO REGISTER TRIGGERCELL
             - negative target triggercellIndex
         - repositioning to head of list in one case caused top of scrollblock to be below first item
