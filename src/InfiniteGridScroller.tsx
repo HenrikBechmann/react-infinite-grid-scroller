@@ -34,6 +34,7 @@
         - Edge fails to set scrollPos so at bottom so that last item is at end of scrollblock
 
     TODO:
+        - test asynchronous changes in variable cells
         - verify handling of end of list for variable
         - isolate variable behaviour everywhere
         - ! re-establish triggercell if it has been replace by some cache management routine
