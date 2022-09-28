@@ -408,15 +408,16 @@ export const calcContentShift = ({
 
     const listEndrowOffset = (listRowcount - 1)
 
-    if (shiftinstruction == 'totail') {
+    if (shiftinstruction == 'totail') { // scrolling toward head
 
         // a. if scrolling the block headward near the start of the list, new cradle row offset and
         // cradle row shift count has to be adjusted to accommodate the leading runway
+
         // b. if scrolling the block headward (revealing tail of list), as the cradle last row offset 
         // approaches max listrow, new cradle offset and cradle row shift have to be adjusted to prevent 
         // shortening of cradle content.
 
-        // start of list adjustment
+        // --- start of list adjustment
         const targetCradleReferenceRowOffset = 
             Math.max(0, (newAxisReferenceRowOffset - runwayRowcount - 1)) // extra row for visibility
 
@@ -427,9 +428,11 @@ export const calcContentShift = ({
             cradleReferenceRowshift -= headrowDiff
 
         }
-        // end of list adjustment: case of being in bounds of trailing runway (end of list)
+
+        // --- end of list adjustment: case of being in bounds of trailing runway (end of list)
         const targetCradleEndrowOffset = newCradleReferenceRowOffset + (cradleRowcount - 1)
         const tailrowdiff = Math.max(0,targetCradleEndrowOffset - listEndrowOffset)
+
         if (tailrowdiff > 0) {
 
             newCradleReferenceRowOffset -= tailrowdiff
@@ -437,24 +440,29 @@ export const calcContentShift = ({
 
         }
 
-    } else { // shiftinstruction == 'tohead' 
+    } else { // shiftinstruction == 'tohead'; scrolling toward tail 
 
-        // c. if scrolling the block tailward (toward revealing head of list), as the cradlerowoffset hits 0, 
-        // cradle changes have to be adjusted to prevent shortening of cradle content
-        // d. if scrolling headward near the start of the list, cradle changes have to be adjusted to accomodate
-        // the trailing runway
+        // c. if scrolling the block tailward (toward revealing head of list), as the cradlerowoffset 
+        // hits 0, cradle changes have to be adjusted to prevent shortening of cradle content
+        
+        // d. if scrolling headward near the end of the list, cradle changes have to be adjusted to 
+        // accomodate the trailing runway
 
+        // --- start of list adjustment
         if (newCradleReferenceRowOffset < 0) {
 
             cradleReferenceRowshift -= newCradleReferenceRowOffset
             newCradleReferenceRowOffset = 0
 
         }
-        // case of in bounds of trailing runway (end of list)
+
+        // --- end of list adjustment; case of in bounds of trailing runway
         const computedNextCradleEndrowOffset = 
             (previousCradleRowOffset + (cradleRowcount -1) + cradleReferenceRowshift)
+
         const targetCradleEndrowoffset = Math.min(listEndrowOffset, 
             (newAxisReferenceRowOffset + (viewportRowcount - 1) + (runwayRowcount - 1)))
+
         const tailrowdiff = Math.max(0, targetCradleEndrowoffset - computedNextCradleEndrowOffset)
 
         if (tailrowdiff > 0) {
