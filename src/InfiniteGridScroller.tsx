@@ -34,19 +34,13 @@
         - Edge fails to set scrollPos so at bottom so that last item is at end of scrollblock
 
     TODO:
-        - try resetting scroll position for start of repositioning
-        - consider replacing assignments to scrollTop/Left with scrollTo()
-        - add minHeight/width to test parameters on demo page
         - verify handling of end of list for variable
         - isolate variable behaviour everywhere
         - ! re-establish triggercell if it has been replace by some cache management routine
         - add logic for last item in list visible in adjustScrollblockForVariability
-        - make disconnect methods of interrupthandler
-        - allow pixel parameters to be expresse in text alternative eg. em
-            - then convert internally to pixels using getComputedStyles (or let user do that)
+        - make disconnect methods for interrupthandler to track state of connect
         - try to remove need for viewportVisibleRowcount
         - calcalate end of list by actual lengths (both set and update)
-        - consider resetting positions on after scroll
 
         - change scroll bounce behaviour if supported on all browsers
 
