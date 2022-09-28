@@ -639,6 +639,7 @@ export default class ContentHandler {
         const computedPreAxisPixelLength = preCradlePixelLength + measuredHeadLength
         const computedPostAxisPixelLength = postCradlePixelLength + measuredTailLength
 
+        // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
         const computedScrollblockLength = preCradlePixelLength + baseHeadLength + computedPostAxisPixelLength
 
         const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding 
