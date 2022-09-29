@@ -521,8 +521,6 @@ export default class ContentHandler {
     // all DOM elements should have been rendered at this point
     // sets CSS: scrollblockElement top and height (or left and width), and axisElement top (or left)
     // this to get closer to natural proportions to minimize janky scroll thumb
-    // newAxisScrollblockOffset = basePreAxisPixelLength + axisViewportOffset - blockScrollPos
-    // variableAdjustment = deltaPreAxisPixelLength
     public adjustScrollblockForVariability = (source) => {
 
         // ----------------------[ setup base values and references ]------------------------
@@ -603,22 +601,16 @@ export default class ContentHandler {
                 cellWidth
             ) + gap
 
-        const baseHeadLength = (headRowCount * baseCellLength) + padding,
-            baseTailLength = (tailRowCount * baseCellLength) + padding - gap
-
-        // const baseBlockLength = baseHeadLength + baseTailLength
-        // const baseAxisScrollblockOffset = (axisReferenceRow * baseCellLength) + padding
+        const baseHeadLength = (headRowCount * baseCellLength) + padding
 
         // measured pixel cradle grid values
-        let measuredHeadLength, measuredTailLength
+        let measuredTailLength
         if (orientation == 'vertical') {
 
-            measuredHeadLength = headGridElement.offsetHeight
             measuredTailLength = tailGridElement.offsetHeight
 
         } else {
 
-            measuredHeadLength = headGridElement.offsetWidth
             measuredTailLength = tailGridElement.offsetWidth
 
         }
@@ -626,14 +618,12 @@ export default class ContentHandler {
         const preCradlePixelLength = (preCradleRowCount * baseCellLength),
             postCradlePixelLength = postCradleRowCount * baseCellLength
 
-        const computedPreAxisPixelLength = preCradlePixelLength + measuredHeadLength,
-            computedPostAxisPixelLength = postCradlePixelLength + measuredTailLength
+        const computedPostAxisPixelLength = postCradlePixelLength + measuredTailLength
 
         // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
         const computedScrollblockLength = preCradlePixelLength + baseHeadLength + computedPostAxisPixelLength
 
-        const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding,
-            basePostAxisPixelLength = (postCradleRowCount + tailRowCount) * baseCellLength + padding - gap
+        const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding
 
         // ------------------------[ change calculations ]----------------------
 
@@ -669,7 +659,7 @@ export default class ContentHandler {
         //    and axisElement top or left
         if (orientation == 'vertical') {
 
-            // the scrollblock top is moved to compensate for the headDelta
+            // the scrollblock top is moved to compensate for the cumulative variability
             scrollblockElement.style.top = 
                 !variableAdjustment?
                     null:
@@ -690,11 +680,13 @@ export default class ContentHandler {
         if (resetscroll) { // top of list
 
             viewportElement.scrollTo(0,0)
+            viewportElement[cradlePositionData.blockScrollProperty] = 0
+            scrollHandler.resetScrollData(0)
 
         }
 
-        // after length is updated
-        if (reposition) {
+        // must be after length is updated
+        if (reposition) { // reset blockScrollPos afterscroll
 
             cradlePositionData.blockScrollPos = blockScrollPos
             viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos

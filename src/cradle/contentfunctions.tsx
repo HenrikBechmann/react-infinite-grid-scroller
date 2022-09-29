@@ -395,11 +395,13 @@ export const calcContentShift = ({
     const currentViewportAxisOffset = 
         scrollblockAxisOffset + scrollblockOffset - scrollPos
 
+    // -------------[ 4. calculate new axis pixel position ]------------------
+
     const newAxisPixelOffset = currentViewportAxisOffset + axisPixelShift
 
-    // Note: sections 4, 5 and 6 deal entirely with row calculations; no pixels
+    // Note: sections 5, 6 and 7 deal entirely with row calculations; no pixels
 
-    // ------------[ 4. calc new cradle and axis reference row offsets ]-------------
+    // ------------[ 5. calc new cradle and axis reference row offsets ]-------------
 
     // base value for cradle reference shift; may change if beyond list bounds
     let cradleReferenceRowshift = axisReferenceRowShift
@@ -408,7 +410,7 @@ export const calcContentShift = ({
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
     let newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowShift
 
-    // --------[ 5. adjust cradle contents for start and end of list ]-------
+    // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
 
     const listEndrowOffset = (listRowcount - 1)
@@ -480,7 +482,7 @@ export const calcContentShift = ({
 
     }
 
-    // ----------------------[ 6. map rows to item references ]----------------------
+    // ----------------------[ 7. map rows to item references ]----------------------
 
     const newCradleReferenceIndex = (newCradleReferenceRowOffset * crosscount)
     const cradleReferenceItemShift = (cradleReferenceRowshift * crosscount)
@@ -504,10 +506,6 @@ export const calcContentShift = ({
 
     const listStartChangeCount = -(cradleReferenceItemShift)
     const listEndChangeCount = -listStartChangeCount - changeOfCradleContentCount
-
-    // -------------[ 7. calculate new axis pixel position ]------------------
-
-    // const newAxisPixelOffset = currentViewportAxisOffset + axisPixelShift
 
     // ---------------------[ 8. return required values ]-------------------
 
