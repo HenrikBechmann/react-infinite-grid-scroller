@@ -227,12 +227,27 @@ const Cradle = ({
     ] = useMemo(()=> {
 
         let viewportLength, baseRowLength
-        if (orientation == 'vertical') {
-            viewportLength = viewportheight
-            baseRowLength = cellHeight
-        } else {
-            viewportLength = viewportwidth
-            baseRowLength = cellWidth
+
+        if (layout == 'uniform') {
+
+            if (orientation == 'vertical') {
+                viewportLength = viewportheight
+                baseRowLength = cellHeight
+            } else {
+                viewportLength = viewportwidth
+                baseRowLength = cellWidth
+            }
+
+        } else { // layout == 'variable'
+
+            if (orientation == 'vertical') {
+                viewportLength = viewportheight
+                baseRowLength = cellMinHeight
+            } else {
+                viewportLength = viewportwidth
+                baseRowLength = cellMinWidth
+            }
+
         }
 
         baseRowLength += gap
@@ -274,13 +289,16 @@ const Cradle = ({
         gap, 
         // padding,
         cellWidth, 
-        cellHeight, 
+        cellHeight,
+        cellMinWidth,
+        cellMinHeight, 
         viewportheight, 
         viewportwidth,
 
         listsize,
         runwaySize,
         crosscount,
+        layout,
     ])
 
     // ----------------------[ callbacks ]----------------------------
