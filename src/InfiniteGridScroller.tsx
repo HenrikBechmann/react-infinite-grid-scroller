@@ -14,6 +14,7 @@
 
     BUGS:
 
+        - FF desktop infinite loop to bottom at list bottom - bottom leaves cradle pixels in view
         - pivot is broken
 
     TODO:
