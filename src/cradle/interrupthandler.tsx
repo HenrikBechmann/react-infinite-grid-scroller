@@ -106,8 +106,8 @@ export default class InterruptHandler {
             // CHANGE
             // console.log('xxx ===> repositioning required')
 
-            this.signals.repositioningRequired = false
-            return
+            // this.signals.repositioningRequired = false
+            // return
 
             const cradleState = stateHandler.cradleStateRef.current
 
