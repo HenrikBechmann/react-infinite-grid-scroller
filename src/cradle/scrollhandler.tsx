@@ -105,8 +105,6 @@ export default class ScrollHandler {
 
         this._scrolltimerid = setTimeout(() => {
 
-            // console.log('calling onAfterScroll',SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
-
             this.onAfterScroll()
 
         },SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
@@ -201,8 +199,6 @@ export default class ScrollHandler {
 
             axisVisiblePixelOffset = 
                 axisElement.offsetTop + scrollblockElement.offsetTop - viewportElement.scrollTop
-            // console.log('scrollHandler: updating targetAxisViewportPixelOffset, axisElement.offsetTop, viewportElement.scrollTop', 
-            //     axisVisiblePixelOffset, axisElement.offsetTop, viewportElement.scrollTop)
                 
         } else {
 
@@ -289,8 +285,6 @@ export default class ScrollHandler {
 
         const { cradlePositionData } = this.cradleParameters.handlersRef.current.layoutHandler
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
-        // console.log('scrollHandler.calcImpliedRepositioningData setting targetAxisViewportPixelOffset',
-        //     axisPixelOffset)
         cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
         const { repositioningIndexCallback } = 
             this.cradleParameters.handlersRef.current.serviceHandler.callbacks

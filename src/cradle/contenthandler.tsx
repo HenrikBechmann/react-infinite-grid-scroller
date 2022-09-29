@@ -73,8 +73,6 @@ export default class ContentHandler {
 
         // ------------------------------[ 1. initialize ]---------------------------
 
-        // console.log('setCradleContent: cradleState',cradleState)
-
         const { cradleParameters } = this
         const ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current
         const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
@@ -93,7 +91,6 @@ export default class ContentHandler {
 
         // the triggerlines and cradle grids will be moved, so disconnect them from their observers.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
-        // console.log('disconnecting triggers in setCradleContent')
         interruptHandler.triggerlinesIntersect.observer.disconnect()
         interruptHandler.cradleIntersect.observer.disconnect()
         interruptHandler.signals.pauseTriggerlinesObserver = true
@@ -122,8 +119,6 @@ export default class ContentHandler {
         let workingRequestAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
         workingRequestAxisReferenceIndex -= (workingRequestAxisReferenceIndex % crosscount)
 
-        // console.log('workingRequestAxisReferenceIndex', workingRequestAxisReferenceIndex)
-
         // reposition at row boundary
         if ([
             'firstrender', 
@@ -150,8 +145,6 @@ export default class ContentHandler {
                 cellHeight:
                 cellWidth)
             + gap
-
-        // console.log('setCradleContent: workingRequestAxisReferenceIndex',workingRequestAxisReferenceIndex)
 
         // note that targetAxisReferenceIndex replaces requestedAxisReferenceIndex here
         const {
@@ -221,8 +214,6 @@ export default class ContentHandler {
             layoutHandler,
     
         })
-
-        // console.log('setCradleContent: allocateContentList - headcontentlist, tailcontentlist', headcontentlist, tailcontentlist)
 
         cradleContent.cradleModelComponents = newcontentlist
         cradleContent.headModelComponents = headcontentlist
@@ -413,7 +404,6 @@ export default class ContentHandler {
 
         // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
-        // console.log('disconnecting triggers in updateCradleContent')
         interruptHandler.triggerlinesIntersect.observer.disconnect()
         interruptHandler.signals.pauseTriggerlinesObserver = true
 
@@ -537,8 +527,6 @@ export default class ContentHandler {
 
         // ----------------------[ setup base values and references ]------------------------
 
-        // console.log('-> =============[START ADJUSTMENT (source)]============', source)
-
         // resources...
         const { cradleParameters } = this,
             cradleHandlers = cradleParameters.handlersRef.current,
@@ -560,8 +548,6 @@ export default class ContentHandler {
             headGridElement = cradleElements.headRef.current,
             tailGridElement = cradleElements.tailRef.current,
             axisElement = cradleElements.axisRef.current
-
-        // console.log('cradlePositionData',{...cradlePositionData})
 
         // current configurations...
         const { 
@@ -649,38 +635,22 @@ export default class ContentHandler {
         const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding,
             basePostAxisPixelLength = (postCradleRowCount + tailRowCount) * baseCellLength + padding - gap
 
-        // const baseScrollblockLength = basePreAxisPixelLength + basePostAxisPixelLength
-
         // ------------------------[ change calculations ]----------------------
 
-        // const deltaPreAxisPixelLength = computedPreAxisPixelLength - basePreAxisPixelLength,
-        // const deltaPostAxisPixelLength = computedPostAxisPixelLength - basePostAxisPixelLength
-
         let variableAdjustment = blockScrollPos + axisViewportOffset - basePreAxisPixelLength
-
-        // console.log('variableAdjustment = blockScrollPos + axisViewportOffset - basePreAxisPixelLength\n',
-        //     variableAdjustment, blockScrollPos, axisViewportOffset, basePreAxisPixelLength)
 
         // change blockScrollPos
         let reposition = false
         if (source == 'afterscroll') {
             
-            // console.log('afterscroll, before changes: blockScrollPos, variableAdjustment\n',
-            //     blockScrollPos, variableAdjustment)
-
             blockScrollPos -= variableAdjustment
             variableAdjustment = 0
-
-            // console.log('repositioning axisReferenceIndex to blockScrollPos\n',axisReferenceIndex, blockScrollPos)
 
             reposition = true
  
         }
 
         let newAxisScrollblockOffset = blockScrollPos + axisViewportOffset - variableAdjustment
-
-        // console.log('newAxisScrollblockOffset = axisViewportOffset + basePreAxisPixelLength - padding -blockScrollPos',
-        //     newAxisScrollblockOffset, axisViewportOffset, basePreAxisPixelLength, padding, blockScrollPos)
 
         let resetscroll = false
         if (axisReferenceRow == 0) {
@@ -694,15 +664,6 @@ export default class ContentHandler {
         const newScrollblockLength = computedScrollblockLength + variableAdjustment
 
         // -----------------------[ application ]-------------------------
-
-        // console.log('::: blockScrollPos, variableAdjustment, newAxisScrollblockOffset\n',// \n newScrollblockLength\n', 
-        //      blockScrollPos, variableAdjustment,'=' , newAxisScrollblockOffset )
-
-        // console.log('::: newAxisScrollblockOffset = blockScrollPos + axisViewportOffset  \n',// \n newScrollblockLength\n', 
-        //      newAxisScrollblockOffset, blockScrollPos, axisViewportOffset )
-
-        // console.log('-- variableAdjustment, newAxisScrollblockOffset, newScrollblockLength, computedPreAxisPixelLength, computedPostAxisPixelLength\n', 
-        //     variableAdjustment, newAxisScrollblockOffset, newScrollblockLength, computedPreAxisPixelLength, computedPostAxisPixelLength)
 
         // change scrollblockElement top and height, or left and width,
         //    and axisElement top or left
@@ -725,8 +686,6 @@ export default class ContentHandler {
             scrollblockElement.style.width = newScrollblockLength + 'px'
 
         }
-
-        // console.log('resetscroll, reposition',resetscroll, reposition)
 
         if (resetscroll) { // top of list
 

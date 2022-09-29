@@ -234,9 +234,6 @@ export const calcContentShift = ({
 
 }) => {
 
-    // console.log('=============[ STARTING CALC CONTENT SHIFT] ===============')
-    // console.log('calc content shift: shiftinstruction',shiftinstruction)
-
     // ------------------------[ 1. initialize ]-----------------------
 
     const { 
@@ -312,8 +309,6 @@ export const calcContentShift = ({
 
     let spanAxisPixelShift
     if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
-        // console.log('CALCULATING OVERSHOOT: shiftinstruction, triggerReferencePos, triggerData', 
-        //     shiftinstruction, triggerReferencePos, triggerData)
 
         let spanPtr
         if (gridRowSpans.length == 0) { // must be list boundary
@@ -356,8 +351,6 @@ export const calcContentShift = ({
                 spanAxisPixelShift = -overshootPixelShift
             }
 
-            // console.log('spanPtr, spanAxisPixelShift', spanPtr, spanAxisPixelShift)
-
         }
 
         spanRowPtr = spanPtr
@@ -382,9 +375,6 @@ export const calcContentShift = ({
     // positive for moving rows out of tail into head
     const axisReferenceRowShift = spanRowShift
     const axisPixelShift = spanAxisPixelShift 
-
-    // console.log('spanRowPtr, spanRowShift, axisReferenceRowShift, axisPixelShift\n',
-    //     spanRowPtr, spanRowShift, axisReferenceRowShift, axisPixelShift)
 
     // -----------[ 3. calculate current viewport axis offset ]-------------------
     // gaps beyond rendered rows can be caused by rapid scrolling
@@ -455,24 +445,6 @@ export const calcContentShift = ({
             targetCradleEndrowOffset -= tailrowdiff
 
         }
-
-        // // check for variable row undershoot
-        // console.log('================ [CHECKING SHIFT END OF LIST] ==============')
-        // console.log('targetCradleEndrowOffset, listEndrowOffset\n',
-        //     targetCradleEndrowOffset, listEndrowOffset)
-        // if ((layout == 'variable') && (targetCradleEndrowOffset == listEndrowOffset) ) {
-        //     console.log('target end row and list end row are the same')
-        //     const tailGridRows = getGridRowLengths(tailGridElement, orientation, crosscount, gap)
-        //     const tailRowCount = tailGridRows.length
-        //     console.log('previousAxisRowOffset, tailRowCount - 1, listEndrowOffset\n', 
-        //         previousAxisRowOffset, tailRowCount - 1, listEndrowOffset)
-        //     if ((previousAxisRowOffset + (tailRowCount - 1)) == listEndrowOffset) {
-
-        //         console.log('final row pixels are available')
-
-        //     }
-
-        // }
 
     } else { // shiftinstruction == 'tohead'; scrolling toward tail 
 

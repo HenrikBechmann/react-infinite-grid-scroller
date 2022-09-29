@@ -180,7 +180,7 @@ const Cradle = ({
 
     // crosscount (also calculated by Scrollblock for deriving Scrollblock length)
     const crosscount = useMemo(() => { // the number of cells crossing orientation
-        // console.log('recalculating crosscount')
+
         const viewportcrosslength = 
             (orientation == 'horizontal')?
                 viewportheight:
@@ -733,14 +733,9 @@ const Cradle = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        // console.log('isResizing useEffect: cradleState, isResizing, isCached, wasCached',
-        //     cradleStateRef.current,ViewportContextPropertiesRef.current.isResizing,
-        //     isCachedRef.current, wasCachedRef.current)
-
         // movement to and from cache is independent of ui viewportresizing
         if (isCachedRef.current || wasCachedRef.current) {
 
-            // console.log('returning from resize effect for caching state')
             return
 
         }
@@ -1121,7 +1116,6 @@ const Cradle = ({
 
             case 'preparesetforvariability': {
 
-                // console.log('-->setTimeout for setContent', cradleState)
                 setTimeout(() => { // give time for DOM to produce layout
             
                     contentHandler.adjustScrollblockForVariability('setcradle')
@@ -1213,8 +1207,6 @@ const Cradle = ({
             }
 
             case 'refreshDOMupdateforvariability': {
-
-                // console.log('==> cradleState: refreshDOMupdateforvariability')
 
                 // extra cycle needed to allow time to synchronize DOM with grid changes
 
@@ -1366,8 +1358,6 @@ const Cradle = ({
 
     const triggercellTriggerlinesRef = useRef(null)
     triggercellTriggerlinesRef.current = useMemo(()=>{
-
-        // console.log('generating triggercell triggerlines')
 
         return [
             <div

@@ -14,14 +14,7 @@
 
     BUGS:
 
-        - overshoot scroll up goes negative axisreferenceindex
-
-        - infinite scrolling at the bottom with FF desktop
-        - messed up calc at bottom of list with FF mobile
-
         - pivot is broken
-        - FF sets axis to past last item on variable layout
-        - Edge fails to set scrollPos so at bottom so that last item is at end of scrollblock
 
     TODO:
         - check connect and disconnect
