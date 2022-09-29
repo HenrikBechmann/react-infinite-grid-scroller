@@ -306,8 +306,8 @@ export const calcContentShift = ({
 
     let spanAxisPixelShift
     if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
-        console.log('CALCULATING OVERSHOOT: triggerReferencePos, triggerData', 
-            triggerReferencePos, triggerData)
+        console.log('CALCULATING OVERSHOOT: shiftinstruction, triggerReferencePos, triggerData', 
+            shiftinstruction, triggerReferencePos, triggerData)
 
         let spanPtr
         if (gridRowSpans.length == 0) { // must be list boundary
@@ -325,27 +325,29 @@ export const calcContentShift = ({
             spanPtr = gridRowSpans.length - 1
             let overshootPixelShift = // set base of working total
                 (shiftinstruction == 'totail')?
-                    -gridRowSpans.at(-1):// - triggerlineOffset: // positive value
-                    gridRowSpans.at(-1)// + triggerlineOffset // negative value
+                    -gridRowSpans.at(-1):
+                    gridRowSpans.at(-1)
 
-            if (shiftinstruction == 'totail') {
+            if (shiftinstruction == 'totail') { // scrolling down
 
                 while (overshootPixelShift > triggerReferencePos) {
                     overshootPixelShift -= baseRowLength
                     ++spanPtr
                 }
 
-                spanAxisPixelShift = overshootPixelShift //+ triggerlineOffset
+                spanAxisPixelShift = -overshootPixelShift
 
-            } else {
+            } else { // tohead; scrolling up
 
                 while (overshootPixelShift < triggerReferencePos) {
                     overshootPixelShift += baseRowLength
                     ++spanPtr
                 }
 
-                spanAxisPixelShift = overshootPixelShift //- triggerlineOffset
+                spanAxisPixelShift = -overshootPixelShift
             }
+
+            console.log('spanPtr, spanAxisPixelShift', spanPtr, spanAxisPixelShift)
 
         }
 
@@ -369,8 +371,11 @@ export const calcContentShift = ({
     // for axisReferenceRowshift:
     // negative for moving rows out of head into tail;
     // positive for moving rows out of tail into head
-    const axisReferenceRowshift = spanRowShift
+    const axisReferenceRowShift = spanRowShift
     const axisPixelShift = spanAxisPixelShift 
+
+    console.log('spanRowPtr, spanRowShift, axisReferenceRowShift, axisPixelShift\n',
+        spanRowPtr, spanRowShift, axisReferenceRowShift, axisPixelShift)
 
     // -----------[ 3. calculate current viewport axis offset ]-------------------
     // gaps beyond rendered rows can be caused by rapid scrolling
@@ -398,7 +403,7 @@ export const calcContentShift = ({
     // ------------[ 4. calc new cradle and axis reference row offsets ]-------------
 
     // base value for cradle reference shift; may change if beyond list bounds
-    let cradleReferenceRowshift = axisReferenceRowshift
+    let cradleReferenceRowshift = axisReferenceRowShift
 
     const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0)
     const previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)
@@ -408,7 +413,7 @@ export const calcContentShift = ({
 
     // base values
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
-    let newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowshift
+    let newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowShift
 
     // --------[ 5. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
@@ -506,7 +511,7 @@ export const calcContentShift = ({
     const cradleReferenceItemShift = (cradleReferenceRowshift * crosscount)
 
     const newAxisReferenceIndex = newAxisReferenceRowOffset * crosscount
-    const axisReferenceItemShift = axisReferenceRowshift * crosscount
+    const axisReferenceItemShift = axisReferenceRowShift * crosscount
 
     let newCradleContentCount = cradleRowcount * crosscount // base count
     const includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount) >= listRowcount)
