@@ -102,6 +102,13 @@ export default class InterruptHandler {
 
         if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway
         {
+
+            // CHANGE
+            console.log('xxx ===> repositioning required')
+
+            this.signals.repositioningRequired = false
+            return
+
             const cradleState = stateHandler.cradleStateRef.current
 
             if (
@@ -113,6 +120,9 @@ export default class InterruptHandler {
 
                 !(cradleState == 'renderupdatedcontent') && 
                 !(cradleState == 'finishupdatedcontent') &&
+
+                !(cradleState == 'adjustupdateforvariability') &&
+                !(cradleState == 'adjustupdateforvariabilityafterscroll') &&
 
                 !ViewportContextProperties.isResizing &&
                 !(cradleState == 'finishviewportresize')

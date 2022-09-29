@@ -96,6 +96,8 @@ export default class ContentHandler {
         // console.log('disconnecting triggers in setCradleContent')
         interruptHandler.triggerlinesIntersect.observer.disconnect()
         interruptHandler.cradleIntersect.observer.disconnect()
+        interruptHandler.signals.pauseTriggerlinesObserver = true
+        interruptHandler.signals.pauseCradleIntersectionObserver = true
 
         const { cradlePositionData } = layoutHandler
         const viewportElement = ViewportContextProperties.elementRef.current
@@ -656,16 +658,23 @@ export default class ContentHandler {
 
         let variableAdjustment = blockScrollPos + axisViewportOffset - basePreAxisPixelLength
 
+        console.log('variableAdjustment = blockScrollPos + axisViewportOffset - basePreAxisPixelLength\n',
+            variableAdjustment, blockScrollPos, axisViewportOffset, basePreAxisPixelLength)
+
         // change blockScrollPos
+        let reposition = false
         if (source == 'afterscroll') {
             
+            console.log('afterscroll, before changes: blockScrollPos, variableAdjustment\n',
+                blockScrollPos, variableAdjustment)
+
             blockScrollPos -= variableAdjustment
             variableAdjustment = 0
 
-            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-            cradlePositionData.blockScrollPos = blockScrollPos
-            scrollHandler.resetScrollData(blockScrollPos)
+            console.log('repositioning axisReferenceIndex to blockScrollPos\n',axisReferenceIndex, blockScrollPos)
 
+            reposition = true
+ 
         }
 
         let newAxisScrollblockOffset = blockScrollPos + axisViewportOffset - variableAdjustment
@@ -697,7 +706,6 @@ export default class ContentHandler {
 
         // change scrollblockElement top and height, or left and width,
         //    and axisElement top or left
-
         if (orientation == 'vertical') {
 
             // the scrollblock top is moved to compensate for the headDelta
@@ -718,9 +726,19 @@ export default class ContentHandler {
 
         }
 
+        console.log('resetscroll, reposition',resetscroll, reposition)
+
         if (resetscroll) {
 
             viewportElement.scrollTo(0,0)
+
+        }
+
+        if (reposition) {
+
+            cradlePositionData.blockScrollPos = blockScrollPos
+            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+            scrollHandler.resetScrollData(blockScrollPos)
 
         }
 

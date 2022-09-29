@@ -14,7 +14,19 @@
 
     BUGS:
 
+        - fix problem with change scrollpos on after scroll - going to blank screen
+
+        - check CHANGED
+        - check connect and disconnect triggers and cradle intersect
+
         - pictured scroll down causes double shift calls, but shouldn't; height 139
+
+
+        - figure out why setCradleContent is being called on reposition adjustment for variable
+
+        - try resetting scroll after adjustment in same code group as other adjustments
+            - to avoid calling setCradleContent after major reposition after scroll
+            - suppress cradleintersect until adjustment is complete
 
         - on repositioning, MS Edge & Safari gets CALCULATING OVERSHOOT, FAILURE TO REGISTER TRIGGERCELL
             - negative target triggercellIndex

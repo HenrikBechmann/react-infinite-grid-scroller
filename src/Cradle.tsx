@@ -148,7 +148,7 @@ const Cradle = ({
     const cradleResizeStateRef = useRef(null) // access by closures
     cradleResizeStateRef.current = cradleResizeState
 
-    // console.log('==> cradleState','-'+scrollerID+'-',cradleState)
+    console.log('==> cradleState','-'+scrollerID+'-',cradleState)
 
     // flags
     const isMountedRef = useRef(true)
@@ -1123,7 +1123,7 @@ const Cradle = ({
 
                 // console.log('-->setTimeout for setContent', cradleState)
                 setTimeout(() => { // give time for DOM to produce layout
-
+            
                     contentHandler.adjustScrollblockForVariability('setcradle')
 
                     setCradleState('finishsetforvariability')
@@ -1240,7 +1240,7 @@ const Cradle = ({
 
                 contentHandler.adjustScrollblockForVariability('afterscroll')
 
-                setCradleState('ready')
+                setCradleState('finishupdateforvariability')
 
                 break
 
@@ -1248,11 +1248,9 @@ const Cradle = ({
 
             case 'finishupdateforvariability': {
 
-
                 // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
                 interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseTriggerlinesObserver = false
-
 
                 setCradleState('ready')
 
