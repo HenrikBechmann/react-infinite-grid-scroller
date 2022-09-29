@@ -14,8 +14,7 @@
 
     BUGS:
 
-        - on repositioning, MS Edge & Safari gets CALCULATING OVERSHOOT, FAILURE TO REGISTER TRIGGERCELL
-            - negative target triggercellIndex
+        - overshoot scroll up goes negative axisreferenceindex
 
         - infinite scrolling at the bottom with FF desktop
         - messed up calc at bottom of list with FF mobile
