@@ -14,16 +14,14 @@
 
     BUGS:
 
-        - overshoot scroll up goes negative axisreferenceindex
-
-        - infinite scrolling at the bottom with FF desktop
-        - messed up calc at bottom of list with FF mobile
-
         - pivot is broken
-        - FF sets axis to past last item on variable layout
-        - Edge fails to set scrollPos so at bottom so that last item is at end of scrollblock
 
     TODO:
+        - use min values to calculate cradle size for variable layout
+        - impose min values (using a ratio of max values) when absent
+        - deal with shrinkage of content at end of list; effect on visible scrollblock
+            regarding async content changes
+        - reconsider grid resize notices between user actions
         - check connect and disconnect
         - test asynchronous changes in variable cells
         - verify handling of end of list for variable
@@ -173,6 +171,9 @@ const InfiniteGridScroller = (props) => {
     useScrollTracker = useScrollTracker ?? true
     cellMinHeight = cellMinHeight ?? 0
     cellMinWidth = cellMinWidth ?? 0
+
+    cellMinHeight = Math.max(cellMinHeight, 25)
+    cellMinWidth = Math.max(cellMinWidth, 25)
 
     // prop constraints - non-negative values
     runwaySize = Math.max(1,runwaySize) // runwaysize must be at least 1
