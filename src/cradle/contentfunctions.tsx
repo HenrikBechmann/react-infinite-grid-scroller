@@ -291,6 +291,12 @@ export const calcContentShift = ({
         triggerData.headOffset:
         triggerData.tailOffset
 
+    const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0),
+        previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)
+
+    const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0),
+        previousAxisRowOffset = Math.ceil(previousAxisReferenceIndex/crosscount)
+
     // ----------------------------[ 2. calculate base row shift ]--------------------------
 
     let spanRowPtr
@@ -306,8 +312,8 @@ export const calcContentShift = ({
 
     let spanAxisPixelShift
     if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
-        console.log('CALCULATING OVERSHOOT: shiftinstruction, triggerReferencePos, triggerData', 
-            shiftinstruction, triggerReferencePos, triggerData)
+        // console.log('CALCULATING OVERSHOOT: shiftinstruction, triggerReferencePos, triggerData', 
+        //     shiftinstruction, triggerReferencePos, triggerData)
 
         let spanPtr
         if (gridRowSpans.length == 0) { // must be list boundary
@@ -342,12 +348,15 @@ export const calcContentShift = ({
                 while (overshootPixelShift < triggerReferencePos) {
                     overshootPixelShift += baseRowLength
                     ++spanPtr
+                    if ((previousAxisRowOffset - spanPtr) == 0) {
+                        break
+                    }
                 }
 
                 spanAxisPixelShift = -overshootPixelShift
             }
 
-            console.log('spanPtr, spanAxisPixelShift', spanPtr, spanAxisPixelShift)
+            // console.log('spanPtr, spanAxisPixelShift', spanPtr, spanAxisPixelShift)
 
         }
 
@@ -374,8 +383,8 @@ export const calcContentShift = ({
     const axisReferenceRowShift = spanRowShift
     const axisPixelShift = spanAxisPixelShift 
 
-    console.log('spanRowPtr, spanRowShift, axisReferenceRowShift, axisPixelShift\n',
-        spanRowPtr, spanRowShift, axisReferenceRowShift, axisPixelShift)
+    // console.log('spanRowPtr, spanRowShift, axisReferenceRowShift, axisPixelShift\n',
+    //     spanRowPtr, spanRowShift, axisReferenceRowShift, axisPixelShift)
 
     // -----------[ 3. calculate current viewport axis offset ]-------------------
     // gaps beyond rendered rows can be caused by rapid scrolling
@@ -404,12 +413,6 @@ export const calcContentShift = ({
 
     // base value for cradle reference shift; may change if beyond list bounds
     let cradleReferenceRowshift = axisReferenceRowShift
-
-    const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0)
-    const previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)
-
-    const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0)
-    const previousAxisRowOffset = Math.ceil(previousAxisReferenceIndex/crosscount)
 
     // base values
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
