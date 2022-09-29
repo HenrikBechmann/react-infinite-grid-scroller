@@ -15,6 +15,12 @@
     BUGS:
 
         - FF desktop infinite loop to bottom at list bottom - bottom leaves cradle pixels in view
+            - also in chrome mobile - only shows index 198, not 199
+            - seems to depend on aggregation pixels of tail grid
+            - apparently has to do with runway calculations - short runway leads to problems
+                - runway of 1 on variable provides lots of problems
+                - aslo shortened content leads to problems
+
         - pivot is broken
 
     TODO:
