@@ -24,6 +24,8 @@
         - pivot is broken
 
     TODO:
+        - use min values to calculate cradle size for variable layout
+        - impose min values (using a ratio of max values) when absent
         - check connect and disconnect
         - test asynchronous changes in variable cells
         - verify handling of end of list for variable
