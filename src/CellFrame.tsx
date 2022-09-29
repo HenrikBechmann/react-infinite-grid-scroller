@@ -48,6 +48,8 @@ const CellFrame = ({
     orientation, 
     cellHeight, 
     cellWidth, 
+    cellMinHeight,
+    cellMinWidth,
     layout,
     getItem, // function provided by host
     listsize, // for feedback in placeholder
@@ -56,6 +58,7 @@ const CellFrame = ({
     index, // logical position in infinite list
     instanceID, // CellFrame session ID
     scrollerID, // scroller ID (for debugging)
+    isTriggercell,
     placeholderFrameStyles,
     placeholderContentStyles,
 }) => {
@@ -70,11 +73,12 @@ const CellFrame = ({
         nullItemSetMaxListsize, // for internal notification of end-of-list
         itemExceptionsCallback, // or notification to host of error
         IDLECALLBACK_TIMEOUT, // to optimize requestIdleCallback
+        triggercellTriggerlinesRef,
     } = cradleContext
     
     // style change generates state refresh
     const [styles,saveStyles] = useState({
-        overflow:'hidden',
+        overflow:'visible',
     })
 
     // processing state
@@ -174,7 +178,8 @@ const CellFrame = ({
     // set styles
     useEffect(()=>{
 
-        let newStyles = getFrameStyles(orientation, cellHeight, cellWidth, layout, styles)
+        let newStyles = getFrameStyles(
+            orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, styles)
         
         if (isMountedRef.current) {
             saveStyles(newStyles)
@@ -370,31 +375,53 @@ const CellFrame = ({
                 placeholderRef.current:
                 <OutPortal node = { portalNodeRef.current }/>
         }
+        {
+            isTriggercell?
+                triggercellTriggerlinesRef.current:
+                null
+        }
         
     </div>
 
 } // CellFrame
 
 // utility
-const getFrameStyles = (orientation, cellHeight, cellWidth, layout, styles) => {
+const getFrameStyles = (orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, styles) => {
 
     let styleset = {...styles,position:'relative'}
 
-    if (orientation == 'horizontal') {
-        styleset.width = 
-            (layout == 'uniform')?
-                cellWidth + 'px':
-                'auto'
-        styleset.height = 'auto'
+    if (orientation === 'vertical') {
 
-    } else if (orientation === 'vertical') {
-
-        styleset.width = 'auto'
+        styleset.width = null
         styleset.height = 
             (layout == 'uniform')?
                 cellHeight + 'px':
-                'auto'
+                null
+        styleset.minHeight =
+            (layout = 'variable')?
+                cellMinHeight + 'px':
+                null
+        styleset.maxHeight =
+            (layout = 'variable')?
+                cellHeight + 'px':
+                null
         
+    } else { // horizontal
+
+        styleset.width = 
+            (layout == 'uniform')?
+                cellWidth + 'px':
+                null
+        styleset.height = null
+        styleset.minWidth =
+            (layout = 'variable')?
+                cellMinWidth + 'px':
+                null
+        styleset.maxWidth =
+            (layout = 'variable')?
+                cellWidth + 'px':
+                null
+
     }
 
     return styleset

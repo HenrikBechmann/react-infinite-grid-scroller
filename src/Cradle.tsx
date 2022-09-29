@@ -67,7 +67,7 @@ import React, {
     useCallback, 
 } from 'react'
 
-import { ViewportInterrupt } from './Viewport'
+import { ViewportContext } from './Viewport'
 
 // popup position tracker for repositioning
 import ScrollTracker from './cradle/ScrollTracker'
@@ -109,6 +109,7 @@ const Cradle = ({
         SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
         IDLECALLBACK_TIMEOUT,
         MAX_CACHE_OVER_RUN,
+        TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
     }) => {
 
     if (listsize == 0) return null // nothing to do
@@ -123,17 +124,19 @@ const Cradle = ({
         padding,
         cellHeight,
         cellWidth,
+        cellMinHeight,
+        cellMinWidth,
         layout,
 
     } = gridSpecs
 
     // get viewport context
-    const viewportInterruptProperties = useContext(ViewportInterrupt)
+    const ViewportContextProperties = useContext(ViewportContext)
 
-    const viewportInterruptPropertiesRef = useRef(null)
-    viewportInterruptPropertiesRef.current = viewportInterruptProperties // for closures
+    const ViewportContextPropertiesRef = useRef(null)
+    ViewportContextPropertiesRef.current = ViewportContextProperties // for closures
 
-    const { viewportDimensions } = viewportInterruptProperties
+    const { viewportDimensions } = ViewportContextProperties
     const { height:viewportheight,width:viewportwidth } = viewportDimensions
 
     // state
@@ -145,7 +148,7 @@ const Cradle = ({
     const cradleResizeStateRef = useRef(null) // access by closures
     cradleResizeStateRef.current = cradleResizeState
 
-    // console.log('==> craldeState','-'+scrollerID+'-',cradleState)
+    // console.log('==> cradleState','-'+scrollerID+'-',cradleState)
 
     // flags
     const isMountedRef = useRef(true)
@@ -158,17 +161,17 @@ const Cradle = ({
     const headCradleElementRef = useRef(null)
     const tailCradleElementRef = useRef(null)
     const axisCradleElementRef = useRef(null)
-    const axisTriggerlineCradleElementRef = useRef(null)
-    const headTriggerlineCradleElementRef = useRef(null)
+    const triggercellTriggerlineHeadElementRef = useRef(null)
+    const triggercellTriggerlineTailElementRef = useRef(null)
 
-    // scaffold bundle
+    // layout bundle
     const cradleElementsRef = useRef(
         {
             headRef:headCradleElementRef, 
             tailRef:tailCradleElementRef, 
             axisRef:axisCradleElementRef,
-            axisTriggerlineRef:axisTriggerlineCradleElementRef,
-            headTriggerlineRef:headTriggerlineCradleElementRef,
+            triggercellTriggerlineHeadRef:triggercellTriggerlineHeadElementRef,
+            triggercellTriggerlineTailRef:triggercellTriggerlineTailElementRef,
         }
     )
 
@@ -223,22 +226,20 @@ const Cradle = ({
         runwayRowcount,
     ] = useMemo(()=> {
 
-        // console.log('recalculating row counts')
-
-        let viewportLength, rowLength
+        let viewportLength, baseRowLength
         if (orientation == 'vertical') {
             viewportLength = viewportheight
-            rowLength = cellHeight
+            baseRowLength = cellHeight
         } else {
             viewportLength = viewportwidth
-            rowLength = cellWidth
+            baseRowLength = cellWidth
         }
 
-        rowLength += gap
+        baseRowLength += gap
 
-        const viewportRowcount = Math.ceil(viewportLength/rowLength)
+        const viewportRowcount = Math.ceil(viewportLength/baseRowLength)
 
-        const viewportVisibleRowcount = Math.floor(viewportLength/rowLength)
+        const viewportVisibleRowcount = Math.floor(viewportLength/baseRowLength)
 
         const listRowcount = Math.ceil(listsize/crosscount)
 
@@ -308,6 +309,8 @@ const Cradle = ({
         padding, 
         cellHeight, 
         cellWidth, 
+        cellMinHeight,
+        cellMinWidth,
         layout,
         // ...rest
         cache,
@@ -334,7 +337,9 @@ const Cradle = ({
         gap, 
         padding, 
         cellHeight, 
-        cellWidth, 
+        cellWidth,
+        cellMinHeight,
+        cellMinWidth, 
         layout,
         runwayRowcount,
         cache,
@@ -375,7 +380,7 @@ const Cradle = ({
     // cradle parameters MASTER BUNDLE
     const cradleParameters = {
         handlersRef,
-        viewportInterruptPropertiesRef,
+        ViewportContextPropertiesRef,
         cradleInheritedPropertiesRef, 
         scrollerPassthroughPropertiesRef,
         cradleInternalPropertiesRef, 
@@ -426,21 +431,21 @@ const Cradle = ({
 
     if (
         isCacheChange || 
-        viewportInterruptProperties.isReparentingRef?.current ||
-        (viewportInterruptProperties.isResizing && isCachingUnderway) 
+        ViewportContextProperties.isReparentingRef?.current ||
+        (ViewportContextProperties.isResizing && isCachingUnderway) 
     ) { 
 
-        if (viewportInterruptProperties.isReparentingRef?.current) {
+        if (ViewportContextProperties.isReparentingRef?.current) {
 
-            viewportInterruptProperties.isReparentingRef.current = false // no longer needed
+            ViewportContextProperties.isReparentingRef.current = false // no longer needed
 
             parentingTransitionRequiredRef.current = true
 
         } 
 
-        if (viewportInterruptProperties.isResizing) { // caching op is underway, so cancel
+        if (ViewportContextProperties.isResizing) { // caching op is underway, so cancel
 
-            viewportInterruptProperties.isResizing = false
+            ViewportContextProperties.isResizing = false
 
         }
 
@@ -564,7 +569,7 @@ const Cradle = ({
     // initialize window scroll listener
     useEffect(() => {
 
-        const viewportdata = viewportInterruptPropertiesRef.current
+        const viewportdata = ViewportContextPropertiesRef.current
         viewportdata.elementRef.current.addEventListener('scroll',scrollHandler.onScroll)
 
         return () => {
@@ -585,26 +590,33 @@ const Cradle = ({
     */    
     useEffect(()=>{
 
+        const {
+            cradleIntersect,
+            triggerlinesIntersect,
+            // cradleResize,
+        } = interruptHandler
+
         // intersection observer for cradle body
         // this sets up an IntersectionObserver of the cradle against the viewport. When the
         // cradle goes out of the observer scope, the 'repositioningRender' cradle state is triggered.
-        const cradleintersectobserver = interruptHandler.cradleIntersect.createObserver()
-        interruptHandler.cradleIntersect.connectElements()
+        const cradleintersectobserver = cradleIntersect.createObserver()
+        cradleIntersect.connectElements()
 
         // triggerobserver tiggers cradle content updates 
         //     when triggerlines pass the edge of the viewport
-        const triggerobserver = interruptHandler.triggerlinesIntersect.createObserver()
-        interruptHandler.triggerlinesIntersect.connectElements()
+        // defer connectElements until triggercell triggerlines have been assigned
+        const triggerobserver = triggerlinesIntersect.createObserver()
+        // interruptHandler.triggerlinesIntersect.connectElements()
 
         // resize observer generates compensation for changes in cell sizes for variable layout modes
-        const cradleresizeobserver = interruptHandler.cradleResize.createObserver()
-        interruptHandler.cradleResize.connectElements()
+        // const cradleresizeobserver = cradleResize.createObserver()
+        // cradleResize.connectElements()
 
         return () => {
 
             cradleintersectobserver.disconnect()
             triggerobserver.disconnect()
-            cradleresizeobserver.disconnect()
+            // cradleresizeobserver.disconnect()
 
         }
 
@@ -722,7 +734,7 @@ const Cradle = ({
         if (cradleStateRef.current == 'setup') return
 
         // console.log('isResizing useEffect: cradleState, isResizing, isCached, wasCached',
-        //     cradleStateRef.current,viewportInterruptPropertiesRef.current.isResizing,
+        //     cradleStateRef.current,ViewportContextPropertiesRef.current.isResizing,
         //     isCachedRef.current, wasCachedRef.current)
 
         // movement to and from cache is independent of ui viewportresizing
@@ -733,7 +745,7 @@ const Cradle = ({
 
         }
 
-        if ((viewportInterruptPropertiesRef.current.isResizing) && 
+        if ((ViewportContextPropertiesRef.current.isResizing) && 
                 (cradleStateRef.current != 'viewportresizing')) {
 
             interruptHandler.pauseInterrupts()
@@ -743,13 +755,13 @@ const Cradle = ({
         }
 
         // complete viewportresizing mode
-        if (!viewportInterruptPropertiesRef.current.isResizing && (cradleStateRef.current == 'viewportresizing')) {
+        if (!ViewportContextPropertiesRef.current.isResizing && (cradleStateRef.current == 'viewportresizing')) {
 
             setCradleState('finishviewportresize')
 
         }
 
-    },[viewportInterruptPropertiesRef.current.isResizing])
+    },[ViewportContextPropertiesRef.current.isResizing])
 
     // reconfigure for changed size parameters
     useEffect(()=>{
@@ -825,12 +837,12 @@ const Cradle = ({
 
     // styles for the six scaffold components
     const [
-        cradleHeadStyle, 
-        cradleTailStyle, 
-        cradleAxisStyle, 
-        triggerlineAxisStyle, 
-        triggerlineHeadStyle,
-        cradleDividerStyle
+        cradleHeadStyle,
+        cradleTailStyle,
+        cradleAxisStyle,
+        cradleDividerStyle,
+        triggercellTriggerlineHeadStyle,
+        triggercellTriggerlineTailStyle,
     ] = useMemo(()=> {
 
         return stylesHandler.getCradleStyles({
@@ -838,6 +850,8 @@ const Cradle = ({
             orientation, 
             cellHeight, 
             cellWidth, 
+            cellMinHeight,
+            cellMinWidth,
             gap,
             padding,
             viewportheight, 
@@ -853,6 +867,8 @@ const Cradle = ({
         orientation,
         cellHeight,
         cellWidth,
+        cellMinHeight,
+        cellMinWidth,
         gap,
         padding,
         viewportheight,
@@ -872,8 +888,10 @@ const Cradle = ({
         switch (cradleState) {
 
             // --------------[ precursors to setCradleContent ]---------------
+            // these are all workflow related, but
+            // resize could be asynchronous when rotating phone during scroll intertia
 
-            case 'setup': { // cycle to allow for ref config
+            case 'setup': { // cycle to allow for ref assignments
 
                 if (cradleInheritedPropertiesRef.current.cache != 'preload') {
                     if (isCachedRef.current) {
@@ -888,7 +906,7 @@ const Cradle = ({
 
             case 'viewportresizing': {
 
-                // no-op
+                // no-op, wait for resizing to end
                 break
             }
 
@@ -946,7 +964,7 @@ const Cradle = ({
 
                     }
 
-                }
+                } // else wait for reparenting
 
                 break
             }
@@ -960,7 +978,7 @@ const Cradle = ({
                     // reset scroll position to previous value
                     if (cradlePositionData.blockScrollPos !== null) {
 
-                        const viewportElement = viewportInterruptPropertiesRef.current.elementRef.current
+                        const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
                         viewportElement[cradlePositionData.blockScrollProperty] = 
                             cradlePositionData.blockScrollPos
@@ -980,7 +998,7 @@ const Cradle = ({
                 if (hasBeenRenderedRef.current) {
 
                     setCradleState('ready')
-                    // setCradleState('normalizesignals')
+                    // setCradleState('restoreinterrupts')
 
                 } else {
 
@@ -1001,7 +1019,7 @@ const Cradle = ({
                 signals.pauseCradleIntersectionObserver = true
                 signals.repositioningRequired = false // because now underway
 
-                setCradleState('repositioningRender')
+                setCradleState('repositioningRender') // toggles with repositioningContinuation
 
                 break
 
@@ -1013,7 +1031,7 @@ const Cradle = ({
                 the following 11 cradle states all resolve with
                 a chain starting with setCradleContent, 
                 continuing with 'preparerender', and ending with
-                'normalizesignals'
+                'restoreinterrupts'
             */
             case 'firstrender':
             case 'firstrenderfromcache':
@@ -1033,13 +1051,14 @@ const Cradle = ({
                 cradleContent.tailModelComponents = []
 
                 // register new array id for Object.is to trigger react re-processing
-                cradleContent.headDisplayComponents = []
-                cradleContent.tailDisplayComponents = []
+                // cradleContent.headDisplayComponents = []
+                // cradleContent.tailDisplayComponents = []
 
                 if (cradleState == 'reload') {
                     cacheHandler.clearCache()
                 }
 
+                // set data
                 contentHandler.setCradleContent( cradleState )
 
                 if (cradleState != 'finishpreload') {
@@ -1048,6 +1067,7 @@ const Cradle = ({
                     
                 }
 
+                // synchronize cache if necessary
                 const { cache } = cradleInheritedPropertiesRef.current
                 if (cache == 'cradle') {
 
@@ -1072,27 +1092,69 @@ const Cradle = ({
                     }
                 }
 
-                interruptHandler.triggerlinesIntersect.connectElements()
-                interruptHandler.cradleIntersect.connectElements()
+                // prepare the cycle for preparerender
+                cradleContent.headDisplayComponents = cradleContent.headModelComponents
+                cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
+
+                // update virtual DOM
+                const { layout } = cradleInheritedPropertiesRef.current
+                if (layout == 'uniform') {
+    
+                    setCradleState('preparerender')
+
+                } else {
+
+                    setCradleState('refreshDOMsetforvariability')
+
+                }
+
+                break
+            }
+
+            case 'refreshDOMsetforvariability': {
+
+                setCradleState('preparesetforvariability')
+
+                break
+
+            }
+
+            case 'preparesetforvariability': {
+
+                // console.log('-->setTimeout for setContent', cradleState)
+                setTimeout(() => { // give time for DOM to produce layout
+            
+                    contentHandler.adjustScrollblockForVariability('setcradle')
+
+                    setCradleState('finishsetforvariability')
+
+                },TIMEOUT_FOR_VARIABLE_MEASUREMENTS)
+                
+                break
+
+            }
+
+            case 'finishsetforvariability': {
 
                 setCradleState('preparerender')
-
+                
                 break
             }
 
             case 'preparerender': { // cycle for DOM update
 
-                const cradleContent = contentHandler.content
+                // triggerlines will have been assigned to a new triggerCell by now.
+                // connectElements delayed for a cycle to render triggercell triggerlines
+                interruptHandler.triggerlinesIntersect.connectElements()
+                interruptHandler.cradleIntersect.connectElements()
 
-                cradleContent.headDisplayComponents = cradleContent.headModelComponents
-                cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
-
-                setCradleState('normalizesignals') 
+                // this can be pre-empted by reparenting, which itself restores interrupts
+                setCradleState('restoreinterrupts') // to restore interrupts
 
                 break
             }
 
-            case 'normalizesignals': { // normalize or resume cycling
+            case 'restoreinterrupts': { // normalize or resume cycling
 
                 interruptHandler.restoreInterrupts()
 
@@ -1103,6 +1165,7 @@ const Cradle = ({
             }
 
             // ----------------------[ followup from updateCradleContent ]------------
+            // scroll effects
 
             // renderupdatedcontent is called from updateCradleContent. 
             // it is required to integrate changed DOM configurations before 'ready' is displayed
@@ -1111,6 +1174,7 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
+                // update virtual DOM
                 setCradleState('finishupdatedcontent')
 
                 break
@@ -1119,6 +1183,8 @@ const Cradle = ({
 
             case 'finishupdatedcontent': { // cycle for DOM update
 
+
+                // synchronize cache
                 const { cache } = cradleInternalPropertiesRef.current
                 if (cache == 'keepload') {
 
@@ -1128,9 +1194,68 @@ const Cradle = ({
 
                 cacheHandler.renderPortalList()
 
+                const { layout } = cradleInheritedPropertiesRef.current
+                if (layout == 'uniform') {
+
+                    // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
+                    interruptHandler.triggerlinesIntersect.connectElements()
+                    interruptHandler.signals.pauseTriggerlinesObserver = false
+
+                    setCradleState('ready')
+
+                } else {
+
+                    setCradleState('refreshDOMupdateforvariability')
+
+                }
+
+                break
+            }
+
+            case 'refreshDOMupdateforvariability': {
+
+                // console.log('==> cradleState: refreshDOMupdateforvariability')
+
+                // extra cycle needed to allow time to synchronize DOM with grid changes
+
+                setCradleState('adjustupdateforvariability')
+
+                break
+
+            }
+
+            case 'adjustupdateforvariability': {
+
+                contentHandler.adjustScrollblockForVariability('updatecradle')
+
+                setCradleState('finishupdateforvariability')
+
+                break
+
+            }
+
+            // called from onAfterScroll. 
+            // This can be called twice in succession with short onAfterScroll timeout
+            case 'adjustupdateforvariabilityafterscroll': {
+
+                contentHandler.adjustScrollblockForVariability('afterscroll')
+
+                setCradleState('finishupdateforvariability')
+
+                break
+
+            }
+
+            case 'finishupdateforvariability': {
+
+                // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
+                interruptHandler.triggerlinesIntersect.connectElements()
+                interruptHandler.signals.pauseTriggerlinesObserver = false
+
                 setCradleState('ready')
 
                 break
+
             }
 
             // ----------------[ user requests ]-------------
@@ -1174,7 +1299,8 @@ const Cradle = ({
 
     },[cradleState])
 
-    // for cradle resize events
+    // TODO redundant
+    // for cradle resize events; these are asynchronous
     useLayoutEffect(()=>{
 
         switch (cradleResizeState) {
@@ -1195,14 +1321,15 @@ const Cradle = ({
 
             // repositioningRender and repositioningContinuation are toggled to generate continuous 
             // repositioning renders
-            case 'repositioningRender':
+            case 'repositioningRender': // no-op
                 break
 
             case 'repositioningContinuation': // set from onScroll
                 setCradleState('repositioningRender')
                 break
 
-            case 'ready': // no op
+            case 'ready': // no-op
+
                 break
 
         }
@@ -1237,49 +1364,65 @@ const Cradle = ({
 
     const cradleContent = contentHandler.content
 
+    const triggercellTriggerlinesRef = useRef(null)
+    triggercellTriggerlinesRef.current = useMemo(()=>{
+
+        // console.log('generating triggercell triggerlines')
+
+        return [
+            <div
+                key = 'head'
+                data-type = 'headtrigger'
+                data-direction = 'tailward'
+                style = {triggercellTriggerlineHeadStyle}
+                ref = {triggercellTriggerlineHeadElementRef}
+            >
+            </div>,
+            <div
+                key = 'tail'
+                data-type = 'tailtrigger'
+                data-direction = 'headward'
+                style = {triggercellTriggerlineTailStyle}
+                ref = {triggercellTriggerlineTailElementRef}
+            >
+            </div>
+        ]
+
+    },[
+        triggercellTriggerlineHeadStyle,
+        triggercellTriggerlineTailStyle
+    ])
+
     const contextvalueRef = useRef({
         scrollerPassthroughPropertiesRef, 
         cacheHandler, 
         nullItemSetMaxListsize,
         itemExceptionsCallback:serviceHandler.callbacks.itemExceptionsCallback,
         IDLECALLBACK_TIMEOUT,
+        triggercellTriggerlinesRef,
     })
 
+
     // display the cradle components, the ScrollTracker, or null
-    return <CradleContext.Provider value = {contextvalueRef.current}>
+    return <CradleContext.Provider value = { contextvalueRef.current }>
 
         {(['repositioningContinuation','repositioningRender'].includes(cradleState))?
             useScrollTracker?<ScrollTracker 
-                top = {scrollTrackerArgs.top} 
-                left = {scrollTrackerArgs.left} 
-                offset = {scrollTrackerArgs.scrollAxisReferenceIndex} 
-                listsize = {scrollTrackerArgs.listsize}
-                styles = {scrollTrackerArgs.styles}
+                top = { scrollTrackerArgs.top } 
+                left = { scrollTrackerArgs.left } 
+                offset = { scrollTrackerArgs.scrollAxisReferenceIndex } 
+                listsize = { scrollTrackerArgs.listsize }
+                styles = { scrollTrackerArgs.styles }
             />:null:
             <div 
                 data-type = 'cradle-axis'
-                style = {cradleAxisStyle} 
-                ref = {axisCradleElementRef}
+                style = { cradleAxisStyle } 
+                ref = { axisCradleElementRef }
             >
-                <div
-                    data-type = 'triggerline-head'
-                    data-direction = 'backward'
-                    style = {triggerlineHeadStyle}
-                    ref = {axisTriggerlineCradleElementRef}
-                >
-                </div>
-                <div
-                    data-type = 'triggerline-axis'
-                    data-direction = 'forward'
-                    style = {triggerlineAxisStyle}
-                    ref = {headTriggerlineCradleElementRef}
-                >
-                </div>
-
-                {showAxis? // for debug
+                { showAxis? // for debug
                     <div 
                         data-type = 'cradle-divider' 
-                        style = {cradleDividerStyle}
+                        style = { cradleDividerStyle }
                     >
                     </div>:
                     null
@@ -1287,8 +1430,8 @@ const Cradle = ({
                 <div 
                 
                     data-type = 'head'
-                    ref = {headCradleElementRef} 
-                    style = {cradleHeadStyle}
+                    ref = { headCradleElementRef }
+                    style = { cradleHeadStyle }
                 
                 >
                 
@@ -1301,8 +1444,8 @@ const Cradle = ({
                 <div 
                 
                     data-type = 'tail'
-                    ref = {tailCradleElementRef} 
-                    style = {cradleTailStyle}
+                    ref = { tailCradleElementRef } 
+                    style = { cradleTailStyle }
                 
                 >
                     {(cradleState != 'setup')?

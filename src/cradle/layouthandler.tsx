@@ -7,7 +7,7 @@
     - the key control values of the cradle
 
     The structural elements are the axis, head (grid), tail (grid), 
-        and the forward and backward triggerlines
+        and the tailward and headward triggerlines
     The key control values are the blockScrollPos (scrollTop or scrollLeft), the block scroll
         property ("scrollTop" or "scrollLeft"), the targetAxisReferenceIndex (first index of the
         tail block), and the targetAxisViewportPixelOffset (pixels offset from the edge of the 
@@ -24,21 +24,21 @@ export default class LayoutHandler {
             axisRef, 
             headRef, 
             tailRef,
-            axisTriggerlineRef,
-            headTriggerlineRef,
+            triggercellTriggerlineHeadRef,
+            triggercellTriggerlineTailRef,
         } = cradleParameters.cradleInternalPropertiesRef.current.cradleElementsRef.current
         
         this.elements = {
             axisRef,
             headRef,
             tailRef,
-            axisTriggerlineRef,
-            headTriggerlineRef,
+            triggercellTriggerlineHeadRef,
+            triggercellTriggerlineTailRef,
         }
 
         const {
             startingIndex, 
-            padding
+            // padding
         } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         const {
@@ -54,7 +54,23 @@ export default class LayoutHandler {
 
     private cradleParameters
 
-    public triggerlineSpan
+    public get triggerlineSpan() {
+
+        const {
+            orientation, 
+            // padding
+        } = this.cradleParameters.cradleInheritedPropertiesRef.current
+
+        return (orientation == 'vertical')?
+            this.elements.triggercellTriggerlineTailRef.current.offsetTop - 
+            this.elements.triggercellTriggerlineHeadRef.current.offsetTop:
+            // horizontal
+            this.elements.triggercellTriggerlineTailRef.current.offsetLeft - 
+            this.elements.triggercellTriggerlineHeadRef.current.offsetLeft
+    }
+
+    public triggercellIndex
+    public triggercellIsInTail = false
 
     // cradlePositionData controls the relative positions of the scaffold elements
     public cradlePositionData = {

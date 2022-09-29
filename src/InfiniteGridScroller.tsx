@@ -12,15 +12,35 @@
 
         create demo site - github pages
 
-    BUGS: 
+    BUGS:
+
+        - overshoot scroll up goes negative axisreferenceindex
+
+        - infinite scrolling at the bottom with FF desktop
+        - messed up calc at bottom of list with FF mobile
+
+        - pivot is broken
+        - FF sets axis to past last item on variable layout
+        - Edge fails to set scrollPos so at bottom so that last item is at end of scrollblock
 
     TODO:
+        - check connect and disconnect
+        - test asynchronous changes in variable cells
+        - verify handling of end of list for variable
+        - isolate variable behaviour everywhere
+        - ! re-establish triggercell if it has been replace by some cache management routine
+        - add logic for last item in list visible in adjustScrollblockForVariability
+        - make disconnect methods for interrupthandler to track state of connect
+        - try to remove need for viewportVisibleRowcount
+        - calcalate end of list by actual lengths (both set and update)
 
-        define a triggercell (first tail cell or last head cell) to hold triggerlines
-            - 'triggercell-healine', 'triggercell-tailline'
+        - change scroll bounce behaviour if supported on all browsers
+
         re-test for memory leaks window.performance.memory
         retest concat replacements
         integrate cradleParameters object availability into cachehandler
+        test phone rotation for resize during scroll intertia
+        require variable settings: min/max for height/width (?)
         ----------------
         (after layout...)
         
@@ -94,24 +114,28 @@ const InfiniteGridScroller = (props) => {
 
     let { 
 
-        // ** grid specs:
-        orientation = 'vertical', // vertical or horizontal
-        gap = 0, // space between grid cells, not including the leading and trailing padding
-        padding = 0, // the border space between the items and the viewport, applied to the cradle
+        // required
         cellHeight, // required. the outer pixel height - literal for vertical; approximate for horizontal
             // base for variable layout
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
             // base for variable layout
-        layout = 'uniform', // uniform, variable
-
-        // ** scroller specs:
-        estimatedListSize = 0, // the exact number of the size of the virtual list. can be modified
-        runwaySize = 3, // the number of items outside the view of each side of the viewport 
-            // -- gives time to assemble cellFrames before display
-        startingIndex = 0, // the 0-based starting index of the list, when first loaded
+        estimatedListSize = 0, // the estimated number of the items in the virtual list. can be modified
         getItem, // required. function provided by host - parameters are index number, set by system,
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
+
+        // ** grid specs:
+        orientation = 'vertical', // vertical or horizontal
+        gap = 0, // space between grid cells, not including the leading and trailing padding
+        padding = 0, // the border space between the items and the viewport, applied to the cradle
+        layout = 'uniform', // uniform, variable
+        cellMinHeight = 0, // for layout == 'variable' && orientation == 'vertical'
+        cellMinWidth = 0, // for layout == 'variable' && orientation == 'horizontal'
+
+        // ** scroller specs:
+        runwaySize = 3, // the number of items outside the view of each side of the viewport 
+            // -- gives time to assemble cellFrames before display
+        startingIndex = 0, // the 0-based starting index of the list, when first loaded
         placeholder, // optional. a sparse component to stand in for content until the content arrives; 
             // replaces default placeholder if present
         styles = {}, // optional. passive style over-rides (eg. color, opacity); has 
@@ -119,15 +143,23 @@ const InfiniteGridScroller = (props) => {
             // placeholdercontent. Do not make structural changes!
 
         // ** system specs:
-        useScrollTracker = true, // the internal use feedback for repositioning
+        useScrollTracker = true, // the internal component to give feedback for repositioning
         cache = 'cradle', // "preload", "keepload" or "cradle"
         cacheMax = null, // always minimum cradle; null means limited by listsize
         triggerlineOffset = 10, // distance from cell head or tail for content shifts above/below axis
         callbacks = {}, // optional. closures to get direct information streams of some component utilites
             // can contain getFunctions, which provides access to internal scroller functions (mostly cache management)
         advanced = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
+
+        // ** information for host cell content
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
+
     } = props
+
+    if (!(cellWidth && cellHeight && getItem )) {
+        console.log('RIGS: cellWidth, cellHeight and getItem are required')
+        return null
+    }
 
     // ---------------------[ Data setup ]----------------------
 
@@ -139,6 +171,8 @@ const InfiniteGridScroller = (props) => {
     estimatedListSize = estimatedListSize ?? 0
     runwaySize = runwaySize ?? 3
     useScrollTracker = useScrollTracker ?? true
+    cellMinHeight = cellMinHeight ?? 0
+    cellMinWidth = cellMinWidth ?? 0
 
     // prop constraints - non-negative values
     runwaySize = Math.max(1,runwaySize) // runwaysize must be at least 1
@@ -163,6 +197,8 @@ const InfiniteGridScroller = (props) => {
         padding,
         cellHeight,
         cellWidth,
+        cellMinHeight,
+        cellMinWidth,
         layout,
     }
 
@@ -177,17 +213,22 @@ const InfiniteGridScroller = (props) => {
 
     let {
 
-        showAxis, // for debug
+        showAxis, // axis made visible for debug
+        // timeouts
         VIEWPORT_RESIZE_TIMEOUT,
         SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
         IDLECALLBACK_TIMEOUT,
-        MAX_CACHE_OVER_RUN,
+        TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
+        // ratios:
+        MAX_CACHE_OVER_RUN, // max streaming over-run as ratio to cacheMax
 
     } = advanced
 
     VIEWPORT_RESIZE_TIMEOUT = VIEWPORT_RESIZE_TIMEOUT ?? 250
-    SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = SCROLL_TIMEOUT_FOR_ONAFTERSCROLL ?? 500
+    SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = SCROLL_TIMEOUT_FOR_ONAFTERSCROLL ?? 100
     IDLECALLBACK_TIMEOUT = IDLECALLBACK_TIMEOUT ?? 4000
+    TIMEOUT_FOR_VARIABLE_MEASUREMENTS = TIMEOUT_FOR_VARIABLE_MEASUREMENTS ?? 100
+    
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
 
     if (typeof showAxis != 'boolean') showAxis = false
@@ -304,6 +345,7 @@ const InfiniteGridScroller = (props) => {
                     SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = { SCROLL_TIMEOUT_FOR_ONAFTERSCROLL }
                     IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }
                     MAX_CACHE_OVER_RUN = { MAX_CACHE_OVER_RUN }
+                    TIMEOUT_FOR_VARIABLE_MEASUREMENTS = { TIMEOUT_FOR_VARIABLE_MEASUREMENTS }
                     scrollerID = { scrollerID }
 
                 />
@@ -322,7 +364,7 @@ export default InfiniteGridScroller
 
 const cacherootstyle = {display:'none'}// as React.CSSProperties // static, out of view 
 
-// utilities
+// utility
 function compareProps (obj1,obj2) {
     const keys = Object.keys(obj1)
     let same
