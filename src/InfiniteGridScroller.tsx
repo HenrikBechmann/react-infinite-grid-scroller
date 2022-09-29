@@ -26,6 +26,9 @@
     TODO:
         - use min values to calculate cradle size for variable layout
         - impose min values (using a ratio of max values) when absent
+        - deal with shrinkage of content at end of list; effect on visible scrollblock
+            regarding async content changes
+        - reconsider grid resize notices between user actions
         - check connect and disconnect
         - test asynchronous changes in variable cells
         - verify handling of end of list for variable
