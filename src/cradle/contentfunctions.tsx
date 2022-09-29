@@ -306,7 +306,8 @@ export const calcContentShift = ({
 
     let spanAxisPixelShift
     if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
-        console.log('CALCULATING OVERSHOOT')
+        console.log('CALCULATING OVERSHOOT: triggerReferencePos, triggerData', 
+            triggerReferencePos, triggerData)
 
         let spanPtr
         if (gridRowSpans.length == 0) { // must be list boundary
