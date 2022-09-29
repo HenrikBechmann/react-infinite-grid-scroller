@@ -234,8 +234,8 @@ export const calcContentShift = ({
 
 }) => {
 
-    console.log('=============[ STARTING CALC CONTENT SHIFT] ===============')
-    console.log('calc content shift: shiftinstruction',shiftinstruction)
+    // console.log('=============[ STARTING CALC CONTENT SHIFT] ===============')
+    // console.log('calc content shift: shiftinstruction',shiftinstruction)
 
     // ------------------------[ 1. initialize ]-----------------------
 
@@ -447,23 +447,23 @@ export const calcContentShift = ({
 
         }
 
-        // check for variable row undershoot
-        console.log('================ [CHECKING SHIFT END OF LIST] ==============')
-        console.log('targetCradleEndrowOffset, listEndrowOffset\n',
-            targetCradleEndrowOffset, listEndrowOffset)
-        if ((layout == 'variable') && (targetCradleEndrowOffset == listEndrowOffset) ) {
-            console.log('target end row and list end row are the same')
-            const tailGridRows = getGridRowLengths(tailGridElement, orientation, crosscount, gap)
-            const tailRowCount = tailGridRows.length
-            console.log('previousAxisRowOffset, tailRowCount - 1, listEndrowOffset\n', 
-                previousAxisRowOffset, tailRowCount - 1, listEndrowOffset)
-            if ((previousAxisRowOffset + (tailRowCount - 1)) == listEndrowOffset) {
+        // // check for variable row undershoot
+        // console.log('================ [CHECKING SHIFT END OF LIST] ==============')
+        // console.log('targetCradleEndrowOffset, listEndrowOffset\n',
+        //     targetCradleEndrowOffset, listEndrowOffset)
+        // if ((layout == 'variable') && (targetCradleEndrowOffset == listEndrowOffset) ) {
+        //     console.log('target end row and list end row are the same')
+        //     const tailGridRows = getGridRowLengths(tailGridElement, orientation, crosscount, gap)
+        //     const tailRowCount = tailGridRows.length
+        //     console.log('previousAxisRowOffset, tailRowCount - 1, listEndrowOffset\n', 
+        //         previousAxisRowOffset, tailRowCount - 1, listEndrowOffset)
+        //     if ((previousAxisRowOffset + (tailRowCount - 1)) == listEndrowOffset) {
 
-                console.log('final row pixels are available')
+        //         console.log('final row pixels are available')
 
-            }
+        //     }
 
-        }
+        // }
 
     } else { // shiftinstruction == 'tohead'; scrolling toward tail 
 

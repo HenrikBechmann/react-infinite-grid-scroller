@@ -537,7 +537,7 @@ export default class ContentHandler {
 
         // ----------------------[ setup base values and references ]------------------------
 
-        console.log('-> =============[START ADJUSTMENT (source)]============', source)
+        // console.log('-> =============[START ADJUSTMENT (source)]============', source)
 
         // resources...
         const { cradleParameters } = this,
@@ -561,7 +561,7 @@ export default class ContentHandler {
             tailGridElement = cradleElements.tailRef.current,
             axisElement = cradleElements.axisRef.current
 
-        console.log('cradlePositionData',{...cradlePositionData})
+        // console.log('cradlePositionData',{...cradlePositionData})
 
         // current configurations...
         const { 
@@ -658,20 +658,20 @@ export default class ContentHandler {
 
         let variableAdjustment = blockScrollPos + axisViewportOffset - basePreAxisPixelLength
 
-        console.log('variableAdjustment = blockScrollPos + axisViewportOffset - basePreAxisPixelLength\n',
-            variableAdjustment, blockScrollPos, axisViewportOffset, basePreAxisPixelLength)
+        // console.log('variableAdjustment = blockScrollPos + axisViewportOffset - basePreAxisPixelLength\n',
+        //     variableAdjustment, blockScrollPos, axisViewportOffset, basePreAxisPixelLength)
 
         // change blockScrollPos
         let reposition = false
         if (source == 'afterscroll') {
             
-            console.log('afterscroll, before changes: blockScrollPos, variableAdjustment\n',
-                blockScrollPos, variableAdjustment)
+            // console.log('afterscroll, before changes: blockScrollPos, variableAdjustment\n',
+            //     blockScrollPos, variableAdjustment)
 
             blockScrollPos -= variableAdjustment
             variableAdjustment = 0
 
-            console.log('repositioning axisReferenceIndex to blockScrollPos\n',axisReferenceIndex, blockScrollPos)
+            // console.log('repositioning axisReferenceIndex to blockScrollPos\n',axisReferenceIndex, blockScrollPos)
 
             reposition = true
  
@@ -698,11 +698,11 @@ export default class ContentHandler {
         // console.log('::: blockScrollPos, variableAdjustment, newAxisScrollblockOffset\n',// \n newScrollblockLength\n', 
         //      blockScrollPos, variableAdjustment,'=' , newAxisScrollblockOffset )
 
-        console.log('::: newAxisScrollblockOffset = blockScrollPos + axisViewportOffset  \n',// \n newScrollblockLength\n', 
-             newAxisScrollblockOffset, blockScrollPos, axisViewportOffset )
+        // console.log('::: newAxisScrollblockOffset = blockScrollPos + axisViewportOffset  \n',// \n newScrollblockLength\n', 
+        //      newAxisScrollblockOffset, blockScrollPos, axisViewportOffset )
 
-        console.log('-- variableAdjustment, newAxisScrollblockOffset, newScrollblockLength, computedPreAxisPixelLength, computedPostAxisPixelLength\n', 
-            variableAdjustment, newAxisScrollblockOffset, newScrollblockLength, computedPreAxisPixelLength, computedPostAxisPixelLength)
+        // console.log('-- variableAdjustment, newAxisScrollblockOffset, newScrollblockLength, computedPreAxisPixelLength, computedPostAxisPixelLength\n', 
+        //     variableAdjustment, newAxisScrollblockOffset, newScrollblockLength, computedPreAxisPixelLength, computedPostAxisPixelLength)
 
         // change scrollblockElement top and height, or left and width,
         //    and axisElement top or left
@@ -726,14 +726,15 @@ export default class ContentHandler {
 
         }
 
-        console.log('resetscroll, reposition',resetscroll, reposition)
+        // console.log('resetscroll, reposition',resetscroll, reposition)
 
-        if (resetscroll) {
+        if (resetscroll) { // top of list
 
             viewportElement.scrollTo(0,0)
 
         }
 
+        // after length is updated
         if (reposition) {
 
             cradlePositionData.blockScrollPos = blockScrollPos

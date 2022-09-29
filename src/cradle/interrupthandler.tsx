@@ -104,7 +104,7 @@ export default class InterruptHandler {
         {
 
             // CHANGE
-            console.log('xxx ===> repositioning required')
+            // console.log('xxx ===> repositioning required')
 
             this.signals.repositioningRequired = false
             return
@@ -121,8 +121,8 @@ export default class InterruptHandler {
                 !(cradleState == 'renderupdatedcontent') && 
                 !(cradleState == 'finishupdatedcontent') &&
 
-                !(cradleState == 'adjustupdateforvariability') &&
-                !(cradleState == 'adjustupdateforvariabilityafterscroll') &&
+                // !(cradleState == 'adjustupdateforvariability') &&
+                // !(cradleState == 'adjustupdateforvariabilityafterscroll') &&
 
                 !ViewportContextProperties.isResizing &&
                 !(cradleState == 'finishviewportresize')

@@ -14,40 +14,18 @@
 
     BUGS:
 
-        - fix problem with change scrollpos on after scroll - going to blank screen
-
-        - check CHANGED
-        - check connect and disconnect triggers and cradle intersect
-
-        - pictured scroll down causes double shift calls, but shouldn't; height 139
-
-
-        - figure out why setCradleContent is being called on reposition adjustment for variable
-
-        - try resetting scroll after adjustment in same code group as other adjustments
-            - to avoid calling setCradleContent after major reposition after scroll
-            - suppress cradleintersect until adjustment is complete
-
         - on repositioning, MS Edge & Safari gets CALCULATING OVERSHOOT, FAILURE TO REGISTER TRIGGERCELL
             - negative target triggercellIndex
-        - repositioning to head of list in one case caused top of scrollblock to be below first item
-            - blockScrollPos can get to zero before headgrid gets to list border
-            - consider scrollTo after set
-            - compare goto 9 with captured console
-            - failure to set blockScrollPos correctly
+
         - infinite scrolling at the bottom with FF desktop
         - messed up calc at bottom of list with FF mobile
-
-        - afterscroll modification leads to infinite loop
-        - afterscroll modification distorts blockScrollPos
-
-        - goto fails from blank cradle
 
         - pivot is broken
         - FF sets axis to past last item on variable layout
         - Edge fails to set scrollPos so at bottom so that last item is at end of scrollblock
 
     TODO:
+        - check connect and disconnect
         - test asynchronous changes in variable cells
         - verify handling of end of list for variable
         - isolate variable behaviour everywhere
