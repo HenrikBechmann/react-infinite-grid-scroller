@@ -17,28 +17,16 @@
         - pivot is broken
 
     TODO:
-        - use min values to calculate cradle size for variable layout
-        - impose min values (using a ratio of max values) when absent
-        - deal with shrinkage of content at end of list; effect on visible scrollblock
-            regarding async content changes
-        - reconsider grid resize notices between user actions
         - check connect and disconnect
-        - test asynchronous changes in variable cells
-        - verify handling of end of list for variable
         - isolate variable behaviour everywhere
         - ! re-establish triggercell if it has been replace by some cache management routine
-        - add logic for last item in list visible in adjustScrollblockForVariability
-        - make disconnect methods for interrupthandler to track state of connect
         - try to remove need for viewportVisibleRowcount
-        - calcalate end of list by actual lengths (both set and update)
-
-        - change scroll bounce behaviour if supported on all browsers
+        - test asynchronous changes in variable cells
 
         re-test for memory leaks window.performance.memory
         retest concat replacements
         integrate cradleParameters object availability into cachehandler
-        test phone rotation for resize during scroll intertia
-        require variable settings: min/max for height/width (?)
+        test smartphone rotation for resize during scroll intertia
         ----------------
         (after layout...)
         
