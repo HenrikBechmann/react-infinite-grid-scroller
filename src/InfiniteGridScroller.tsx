@@ -14,7 +14,8 @@
 
     BUGS:
 
-        - pivot is broken
+        - pivot does not stick with change of demo
+        - failure to register trigger cell with horizontal variable
 
     TODO:
         - check connect and disconnect
