@@ -78,7 +78,7 @@ const CellFrame = ({
     
     // style change generates state refresh
     const [styles,saveStyles] = useState({
-        overflow:'visible',
+        // overflow:'visible',
     })
 
     // processing state
@@ -388,7 +388,7 @@ const CellFrame = ({
 // utility
 const getFrameStyles = (orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, styles) => {
 
-    let styleset = {...styles,position:'relative'}
+    let styleset = {...styles,position:'relative', overflow:'visible'}
 
     if (orientation === 'vertical') {
 

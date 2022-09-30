@@ -888,7 +888,6 @@ export class CacheHandler {
 
 const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWidth) => {
 
-    console.log('orientation in createPortalNode', orientation)
     let portalNode = createHtmlPortalNode()
 
     let container = portalNode.element
