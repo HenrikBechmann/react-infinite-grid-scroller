@@ -284,9 +284,9 @@ export const calcContentShift = ({
     const gridRowSpans = getGridRowSpans(gridRowLengths)
 
     const triggerReferencePos = 
-        (shiftinstruction == 'tohead')? // block scrolling tailward
-        triggerData.headOffset:
-        triggerData.tailOffset
+        (shiftinstruction == 'totail')? // block scrolling tailward
+        triggerData.tailOffset:
+        triggerData.headOffset
 
     const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0),
         previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)
@@ -297,13 +297,13 @@ export const calcContentShift = ({
     // ----------------------------[ 2. calculate base row shift ]--------------------------
 
     let spanRowPtr
-    if (shiftinstruction == 'tohead') {
+    if (shiftinstruction == 'totail') {
 
-        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos - span) <=0 )
+        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos + span) >=0 )
     
     } else {
 
-        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos + span) >=0 )
+        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos - span) <=0 )
 
     }
 
