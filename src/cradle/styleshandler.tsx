@@ -64,7 +64,33 @@ export default class StylesHandler {
 
         tailstyles.gridGap = gap + 'px'
 
-        if (orientation == 'horizontal') {
+        if (orientation == 'vertical') {
+
+            headstyles.padding = `${padding}px ${padding}px 0 ${padding}px`
+
+            headstyles.width = '100%'
+            headstyles.height = 'auto'
+            headstyles.gridAutoFlow = 'row'
+            
+            headstyles.gridTemplateRows = 'none'
+            headstyles.gridTemplateColumns = 
+                cellWidth?
+                    `repeat(auto-fill, minmax(${cellWidth}px, 1fr))`:
+                    'auto'
+
+            tailstyles.padding = `0 ${padding}px ${padding}px ${padding}px`
+
+            tailstyles.width = '100%'
+            tailstyles.height = 'auto'
+            tailstyles.gridAutoFlow = 'row'
+            
+            tailstyles.gridTemplateRows = 'none'
+            tailstyles.gridTemplateColumns = 
+                cellWidth?
+                    `repeat(auto-fill, minmax(${cellWidth}px, 1fr))`:
+                    'auto'
+
+        } else { // orientation == 'horizontal'
 
             headstyles.padding = `${padding}px 0 ${padding}px ${padding}px`
 
@@ -91,33 +117,7 @@ export default class StylesHandler {
                     `repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:
                     'auto'
             tailstyles.gridTemplateColumns = 'none'
-
-        } else if (orientation == 'vertical') {
-
-            headstyles.padding = `${padding}px ${padding}px 0 ${padding}px`
-
-            headstyles.width = '100%'
-            headstyles.height = 'auto'
-            headstyles.gridAutoFlow = 'row'
             
-            headstyles.gridTemplateRows = 'none'
-            headstyles.gridTemplateColumns = 
-                cellWidth?
-                    `repeat(auto-fill, minmax(${cellWidth}px, 1fr))`:
-                    'auto'
-
-            tailstyles.padding = `0 ${padding}px ${padding}px ${padding}px`
-
-            tailstyles.width = '100%'
-            tailstyles.height = 'auto'
-            tailstyles.gridAutoFlow = 'row'
-            
-            tailstyles.gridTemplateRows = 'none'
-            tailstyles.gridTemplateColumns = 
-                cellWidth?
-                    `repeat(auto-fill, minmax(${cellWidth}px, 1fr))`:
-                    'auto'
-
         }
 
         return [

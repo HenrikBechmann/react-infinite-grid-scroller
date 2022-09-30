@@ -900,17 +900,19 @@ const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWi
     }
     const maxWidth = 
     container.style.maxWidth = 
-        (orientation == 'horizontal')?
+        (orientation == 'vartical')?
+            null:
             (layout == 'variable')?
                 cellWidth + 'px':
                 null
-            :null
+
     container.style.maxHeight = 
         (orientation == 'vertical')?
             (layout == 'variable')?
                 cellHeight + 'px':
                 null
             :null
+
     container.dataset.type = 'contentenvelope'
     container.dataset.index = index
     container.dataset.cacheitemid = itemID

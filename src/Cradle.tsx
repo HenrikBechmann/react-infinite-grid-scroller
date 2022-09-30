@@ -178,9 +178,9 @@ const Cradle = ({
     const crosscount = useMemo(() => { // the number of cells crossing orientation
 
         const viewportcrosslength = 
-            (orientation == 'horizontal')?
-                viewportheight:
-                viewportwidth
+            (orientation == 'vertical')?
+                viewportwidth:
+                viewportheight
 
         if (viewportcrosslength == 0) {
 
@@ -192,9 +192,9 @@ const Cradle = ({
         const viewportcrosslengthforcalc = viewportcrosslength - (padding * 2) + gap 
 
         const cellcrosslength = 
-            (orientation == 'horizontal')?
-                cellHeight + gap:
-                cellWidth + gap
+            (orientation == 'vertical')?
+                cellWidth + gap:
+                cellHeight + gap
 
         const cellcrosslengthforcalc = 
             Math.min(cellcrosslength,viewportcrosslengthforcalc) // result cannot be less than 1
