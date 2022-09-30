@@ -885,8 +885,10 @@ export class CacheHandler {
 
 // get a react-reverse-portal InPortal component, with its metadata
 // with user content and container
+
 const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWidth) => {
 
+    console.log('orientation in createPortalNode', orientation)
     let portalNode = createHtmlPortalNode()
 
     let container = portalNode.element
@@ -894,24 +896,20 @@ const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWi
     if (layout == 'uniform') {
         container.style.inset = '0px' 
         container.style.position = 'absolute'
-    } else {
+        container.style.maxWidth = null
+        container.style.maxHeight = null
+    } else { // variable
         container.style.inset = null 
         container.style.position = null
-    }
-    const maxWidth = 
-    container.style.maxWidth = 
-        (orientation == 'vartical')?
-            null:
-            (layout == 'variable')?
-                cellWidth + 'px':
-                null
-
-    container.style.maxHeight = 
-        (orientation == 'vertical')?
-            (layout == 'variable')?
+        container.style.maxWidth = 
+            (orientation == 'vertical')?
+                null:
+                cellWidth + 'px'
+        container.style.maxHeight = 
+            (orientation == 'vertical')?
                 cellHeight + 'px':
                 null
-            :null
+    }
 
     container.dataset.type = 'contentenvelope'
     container.dataset.index = index

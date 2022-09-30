@@ -28,6 +28,8 @@
         test smartphone rotation for resize during scroll momentum
         ----------------
         (after layout...)
+
+        - make testing checklist
         
         - prioritize fetch cells for visible cells
 

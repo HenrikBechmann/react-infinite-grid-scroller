@@ -398,11 +398,11 @@ const getFrameStyles = (orientation, cellHeight, cellWidth, cellMinHeight, cellM
                 cellHeight + 'px':
                 null
         styleset.minHeight =
-            (layout = 'variable')?
+            (layout == 'variable')?
                 cellMinHeight + 'px':
                 null
         styleset.maxHeight =
-            (layout = 'variable')?
+            (layout == 'variable')?
                 cellHeight + 'px':
                 null
         
@@ -414,11 +414,11 @@ const getFrameStyles = (orientation, cellHeight, cellWidth, cellMinHeight, cellM
                 null
         styleset.height = null
         styleset.minWidth =
-            (layout = 'variable')?
+            (layout == 'variable')?
                 cellMinWidth + 'px':
                 null
         styleset.maxWidth =
-            (layout = 'variable')?
+            (layout == 'variable')?
                 cellWidth + 'px':
                 null
 
