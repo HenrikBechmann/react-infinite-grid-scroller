@@ -102,6 +102,7 @@ export default class StylesHandler {
             headstyles.gridTemplateRows = 
                 cellHeight?
                     `repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:
+                    // `repeat(auto-fill, minmax(${cellHeight}px, 1fr))`:
                     'auto'
             headstyles.gridTemplateColumns = 'none'
 
@@ -115,6 +116,7 @@ export default class StylesHandler {
             tailstyles.gridTemplateRows = 
                 cellHeight?
                     `repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:
+                    // `repeat(auto-fill, minmax(${cellHeight}px, 1fr))`:
                     'auto'
             tailstyles.gridTemplateColumns = 'none'
             
