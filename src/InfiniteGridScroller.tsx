@@ -4,8 +4,6 @@
 /*
     ROADMAP:
 
-        layout: uniform, variable
-
         cross-browser testing; smartphone testing
 
         release to npm
@@ -27,7 +25,7 @@
         re-test for memory leaks window.performance.memory
         retest concat replacements
         integrate cradleParameters object availability into cachehandler
-        test smartphone rotation for resize during scroll intertia
+        test smartphone rotation for resize during scroll momentum
         ----------------
         (after layout...)
         
