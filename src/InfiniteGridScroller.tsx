@@ -12,6 +12,10 @@
 
     BUGS:
 
+        - with short content, vertical, content jumps out of view at start of list
+        - failure to register triggercell; target trigger cell index is negative
+        - strings 51 and 52 is a different problem, but also short content horizontally
+
         - pivot does not stick with change of demo
         - failure to register trigger cell with horizontal variable
         - axis jump with variable horizontal cells
