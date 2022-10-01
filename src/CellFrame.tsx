@@ -232,7 +232,7 @@ const CellFrame = ({
                         portalMetadataRef.current = cacheHandler.getPortal(itemID)
                         // get OutPortal node
                         portalNodeRef.current = portalMetadataRef.current.portalNode
-                        applyContainerStyles(
+                        setContainerStyles(
                             portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
                         // notify fetched component that reparenting is underway
                         portalMetadataRef.current.isReparentingRef.current = true
@@ -308,7 +308,7 @@ const CellFrame = ({
                                 portalMetadataRef.current = 
                                     cacheHandler.createPortal(content, index, itemID)
                                 portalNodeRef.current = portalMetadataRef.current.portalNode
-                                applyContainerStyles(
+                                setContainerStyles(
                                     portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
                                 // make available to user content
                                 scrollerProperties.isReparentingRef = portalMetadataRef.current.isReparentingRef
@@ -402,7 +402,9 @@ const CellFrame = ({
 
 } // CellFrame
 
-// utility
+export default CellFrame
+
+// utilities
 const getFrameStyles = (orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, styles) => {
 
     let styleset = {...styles,position:'relative', overflow:'visible'}
@@ -410,34 +412,36 @@ const getFrameStyles = (orientation, cellHeight, cellWidth, cellMinHeight, cellM
     if (orientation === 'vertical') {
 
         styleset.width = null
-        styleset.height = 
-            (layout == 'uniform')?
-                cellHeight + 'px':
-                null
-        styleset.minHeight =
-            (layout == 'variable')?
-                cellMinHeight + 'px':
-                null
-        styleset.maxHeight =
-            (layout == 'variable')?
-                cellHeight + 'px':
-                null
+        if (layout == 'uniform') {
+
+            styleset.height = cellHeight + 'px'
+            styleset.minHeight =null
+            styleset.maxHeight = null
+
+        } else {
+
+            styleset.height = null
+            styleset.minHeight = cellMinHeight + 'px'
+            styleset.maxHeight = cellHeight + 'px'
+
+        }
         
     } else { // horizontal
 
-        styleset.width = 
-            (layout == 'uniform')?
-                cellWidth + 'px':
-                null
         styleset.height = null
-        styleset.minWidth =
-            (layout == 'variable')?
-                cellMinWidth + 'px':
-                null
-        styleset.maxWidth =
-            (layout == 'variable')?
-                cellWidth + 'px':
-                null
+        if (layout == 'uniform') {
+
+            styleset.width = cellWidth + 'px'
+            styleset.minWidth =null
+            styleset.maxWidth = null
+
+        } else {
+
+            styleset.width = null
+            styleset.minWidth = cellMinWidth + 'px'
+            styleset.maxWidth = cellWidth + 'px'
+
+        }
 
     }
 
@@ -445,7 +449,7 @@ const getFrameStyles = (orientation, cellHeight, cellWidth, cellMinHeight, cellM
 
 }
 
-const applyContainerStyles = (container, layout, orientation, cellWidth, cellHeight) => {
+const setContainerStyles = (container, layout, orientation, cellWidth, cellHeight) => {
 
     container.style.overflow = 'hidden'
 
@@ -462,24 +466,23 @@ const applyContainerStyles = (container, layout, orientation, cellWidth, cellHei
 
         container.style.inset = null 
         container.style.position = null
-        container.style.width =
-            (orientation == 'vertical')?
-                '100%':
-                null
-        container.style.height =
-            (orientation == 'vertical')?
-                null:
-                '100%'
-        container.style.maxWidth = 
-            (orientation == 'vertical')?
-                null:
-                cellWidth + 'px'
-        container.style.maxHeight = 
-            (orientation == 'vertical')?
-                cellHeight + 'px':
-                null
+
+        if (orientation == 'vertical') {
+
+            container.style.width = '100%'
+            container.style.height = null
+            container.style.maxWidth = null
+            container.style.maxHeight = cellHeight + 'px'
+
+        } else {
+
+            container.style.width = null
+            container.style.height = '100%'
+            container.style.maxWidth = cellWidth + 'px'
+            container.style.maxHeight = null
+
+        }
 
     }
 }
 
-export default CellFrame
