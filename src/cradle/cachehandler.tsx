@@ -892,24 +892,24 @@ const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWi
 
     let container = portalNode.element
     container.style.overflow = 'hidden'
-    if (layout == 'uniform') {
-        container.style.inset = '0px' 
-        container.style.position = 'absolute'
-        // container.style.maxWidth = null
-        // container.style.maxHeight = null
-        container.style.height = null
-        container.style.width = null
-    } else { // variable
-        container.style.inset = null 
-        container.style.position = null
-        container.style.width =
-            (orientation == 'vertical')?
-                null:
-                '100%'
-        container.style.height =
-            (orientation == 'vertical')?
-                '100%':
-                null
+    // if (layout == 'uniform') {
+    //     container.style.inset = '0px' 
+    //     container.style.position = 'absolute'
+    //     // container.style.maxWidth = null
+    //     // container.style.maxHeight = null
+    //     container.style.height = null
+    //     container.style.width = null
+    // } else { // variable
+    //     container.style.inset = null 
+    //     container.style.position = null
+    //     container.style.width =
+    //         (orientation == 'vertical')?
+    //             null:
+    //             '100%'
+    //     container.style.height =
+    //         (orientation == 'vertical')?
+    //             '100%':
+    //             null
         // container.style.maxWidth = 
         //     (orientation == 'vertical')?
         //         null:
@@ -918,7 +918,7 @@ const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWi
         //     (orientation == 'vertical')?
         //         cellHeight + 'px':
         //         null
-    }
+    // }
 
     container.dataset.type = 'contentenvelope'
     container.dataset.index = index

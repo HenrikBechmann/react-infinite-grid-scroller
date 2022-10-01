@@ -66,7 +66,9 @@ const CellFrame = ({
     const coreConfigRef = useRef(null)
     coreConfigRef.current = {
         layout,
-        orientation
+        orientation,
+        cellWidth,
+        cellHeight
     }
 
     // ----------------------[ setup ]----------------------
@@ -217,7 +219,9 @@ const CellFrame = ({
                 const cached = cacheHandler.hasPortal(itemID)
                 const {
                     layout,
-                    orientation
+                    orientation,
+                    cellWidth,
+                    cellHeight,
                 } = coreConfigRef.current
                 if (cached) {
 
@@ -228,7 +232,8 @@ const CellFrame = ({
                         portalMetadataRef.current = cacheHandler.getPortal(itemID)
                         // get OutPortal node
                         portalNodeRef.current = portalMetadataRef.current.portalNode
-                        applyContainerStyles(portalNodeRef.current.element, layout, orientation)
+                        applyContainerStyles(
+                            portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
                         // notify fetched component that reparenting is underway
                         portalMetadataRef.current.isReparentingRef.current = true
 
@@ -303,7 +308,8 @@ const CellFrame = ({
                                 portalMetadataRef.current = 
                                     cacheHandler.createPortal(content, index, itemID)
                                 portalNodeRef.current = portalMetadataRef.current.portalNode
-                                applyContainerStyles(portalNodeRef.current.element, layout, orientation)
+                                applyContainerStyles(
+                                    portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
                                 // make available to user content
                                 scrollerProperties.isReparentingRef = portalMetadataRef.current.isReparentingRef
 
@@ -439,7 +445,7 @@ const getFrameStyles = (orientation, cellHeight, cellWidth, cellMinHeight, cellM
 
 }
 
-const applyContainerStyles = (container, layout, orientation) => {
+const applyContainerStyles = (container, layout, orientation, cellWidth, cellHeight) => {
 
     container.style.overflow = 'hidden'
 
@@ -447,8 +453,8 @@ const applyContainerStyles = (container, layout, orientation) => {
 
         container.style.inset = '0px' 
         container.style.position = 'absolute'
-        // container.style.maxWidth = null
-        // container.style.maxHeight = null
+        container.style.maxWidth = null
+        container.style.maxHeight = null
         container.style.height = null
         container.style.width = null
 
@@ -464,6 +470,14 @@ const applyContainerStyles = (container, layout, orientation) => {
             (orientation == 'vertical')?
                 null:
                 '100%'
+        container.style.maxWidth = 
+            (orientation == 'vertical')?
+                null:
+                cellWidth + 'px'
+        container.style.maxHeight = 
+            (orientation == 'vertical')?
+                cellHeight + 'px':
+                null
 
     }
 }
