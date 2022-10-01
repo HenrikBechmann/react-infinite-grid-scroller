@@ -82,7 +82,8 @@ export default class StylesHandler {
                     'max-content'
             headstyles.gridTemplateColumns = 
                 cellWidth?
-                    `repeat(auto-fill, minmax(${cellWidth}px, 1fr))`:
+                    // `repeat(auto-fill, minmax(${cellWidth}px, 1fr))`:
+                    `repeat(${crosscount}, minmax(${cellWidth}px, 1fr))`:
                     'auto'
 
             // tailgrid
@@ -100,7 +101,8 @@ export default class StylesHandler {
                     'max-content'
             tailstyles.gridTemplateColumns = 
                 cellWidth?
-                    `repeat(auto-fill, minmax(${cellWidth}px, 1fr))`:
+                    // `repeat(auto-fill, minmax(${cellWidth}px, 1fr))`:
+                    `repeat(${crosscount}, minmax(${cellWidth}px, 1fr))`:
                     'auto'
 
         } else { // orientation == 'horizontal'
