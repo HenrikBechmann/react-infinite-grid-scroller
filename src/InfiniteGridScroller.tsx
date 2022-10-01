@@ -16,6 +16,7 @@
         - failure to register trigger cell with horizontal variable
 
     TODO:
+        - use GRID-AUTO-COLUMNS
         - check connect and disconnect
         - isolate variable behaviour everywhere
         - ! re-establish triggercell if it has been replace by some cache management routine

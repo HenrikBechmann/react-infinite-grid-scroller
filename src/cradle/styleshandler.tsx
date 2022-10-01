@@ -73,7 +73,9 @@ export default class StylesHandler {
             headstyles.height = 'auto'
             headstyles.gridAutoFlow = 'row'
             
-            headstyles.gridTemplateRows = 'none'
+            headstyles.gridTemplateRows = null
+            headstyles.gridAutoColumns = null    
+            headstyles.gridAutoRows = 'max-content'
             headstyles.gridTemplateColumns = 
                 cellWidth?
                     `repeat(auto-fill, minmax(${cellWidth}px, 1fr))`:
@@ -85,7 +87,9 @@ export default class StylesHandler {
             tailstyles.height = 'auto'
             tailstyles.gridAutoFlow = 'row'
             
-            tailstyles.gridTemplateRows = 'none'
+            tailstyles.gridTemplateRows = null
+            tailstyles.gridAutoColumns = null    
+            tailstyles.gridAutoRows = 'max-content'
             tailstyles.gridTemplateColumns = 
                 cellWidth?
                     `repeat(auto-fill, minmax(${cellWidth}px, 1fr))`:
@@ -105,10 +109,10 @@ export default class StylesHandler {
                     `repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:
                     // `repeat(auto-fill, minmax(${cellHeight}px, 1fr))`:
                     'auto'
-            headstyles.gridTemplateColumns =
-                (layout == 'uniform')?
-                    'none':
-                    'repeat(auto-fill,max-content)'
+            headstyles.gridTemplateColumns = null
+
+            headstyles.gridAutoColumns = 'max-content'
+            headstyles.gridAutoRows = null
 
             tailstyles.padding = `${padding}px ${padding}px ${padding}px 0`
 
@@ -122,10 +126,9 @@ export default class StylesHandler {
                     `repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:
                     // `repeat(auto-fill, minmax(${cellHeight}px, 1fr))`:
                     'auto'
-            tailstyles.gridTemplateColumns = 
-                (layout == 'uniform')?
-                    'none':
-                    'repeat(auto-fill,max-content)'
+            tailstyles.gridTemplateColumns = null
+            tailstyles.gridAutoColumns = 'max-content'
+            tailstyles.gridAutoRows = null
             
         }
 
