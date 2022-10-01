@@ -449,6 +449,7 @@ const getFrameStyles = (orientation, cellHeight, cellWidth, cellMinHeight, cellM
 
 }
 
+// see also some base styles set in cachehandler
 const setContainerStyles = (container, layout, orientation, cellWidth, cellHeight) => {
 
     container.style.overflow = 'hidden'
