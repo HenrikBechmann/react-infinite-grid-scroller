@@ -885,12 +885,12 @@ export class CacheHandler {
 
 // get a react-reverse-portal InPortal component, with its metadata
 // with user content and container
+// see also some styles set in CellFrame
 
 const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWidth) => {
 
     let portalNode = createHtmlPortalNode()
 
-    // see also some styles set in CellFrame
     let container = portalNode.element
     container.style.overflow = 'hidden'
 

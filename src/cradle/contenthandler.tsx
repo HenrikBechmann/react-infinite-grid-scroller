@@ -671,7 +671,11 @@ export default class ContentHandler {
 
         } else {
 
-            scrollblockElement.style.left = variableAdjustment + 'px'
+            scrollblockElement.style.left = 
+                !variableAdjustment?
+                    null:
+                    variableAdjustment + 'px'
+            // scrollblockElement.style.left = variableAdjustment + 'px'
             axisElement.style.left = newAxisScrollblockOffset + 'px'
             scrollblockElement.style.width = newScrollblockLength + 'px'
 
