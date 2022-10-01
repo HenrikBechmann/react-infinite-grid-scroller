@@ -67,6 +67,7 @@ export default class StylesHandler {
 
         if (orientation == 'vertical') {
 
+            // headgrid
             headstyles.padding = `${padding}px ${padding}px 0 ${padding}px`
 
             headstyles.width = '100%'
@@ -74,13 +75,17 @@ export default class StylesHandler {
             headstyles.gridAutoFlow = 'row'
             
             headstyles.gridTemplateRows = null
-            headstyles.gridAutoColumns = null    
-            headstyles.gridAutoRows = 'max-content'
+            headstyles.gridAutoColumns = null
+            headstyles.gridAutoRows = 
+                (layout == 'uniform')?
+                    null:
+                    'max-content'
             headstyles.gridTemplateColumns = 
                 cellWidth?
                     `repeat(auto-fill, minmax(${cellWidth}px, 1fr))`:
                     'auto'
 
+            // tailgrid
             tailstyles.padding = `0 ${padding}px ${padding}px ${padding}px`
 
             tailstyles.width = '100%'
@@ -89,7 +94,10 @@ export default class StylesHandler {
             
             tailstyles.gridTemplateRows = null
             tailstyles.gridAutoColumns = null    
-            tailstyles.gridAutoRows = 'max-content'
+            tailstyles.gridAutoRows = 
+                (layout == 'uniform')?
+                    null:
+                    'max-content'
             tailstyles.gridTemplateColumns = 
                 cellWidth?
                     `repeat(auto-fill, minmax(${cellWidth}px, 1fr))`:
@@ -97,37 +105,41 @@ export default class StylesHandler {
 
         } else { // orientation == 'horizontal'
 
+            // headgrid
             headstyles.padding = `${padding}px 0 ${padding}px ${padding}px`
 
             headstyles.width = 'auto'
             headstyles.height = '100%'
             headstyles.gridAutoFlow = 'column'
-            // explict crosscount next line as workaround for FF problem - 
-            //     sets length of horiz cradle items in one line (row), not multi-row config
+            // explict crosscount next line for some browsers - 
             headstyles.gridTemplateRows = 
                 cellHeight?
                     `repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:
-                    // `repeat(auto-fill, minmax(${cellHeight}px, 1fr))`:
                     'auto'
             headstyles.gridTemplateColumns = null
 
-            headstyles.gridAutoColumns = 'max-content'
+            headstyles.gridAutoColumns = 
+                (layout == 'uniform')?
+                    null:
+                    'max-content'
             headstyles.gridAutoRows = null
 
+            // tailgrid
             tailstyles.padding = `${padding}px ${padding}px ${padding}px 0`
 
             tailstyles.width = 'auto'
             tailstyles.height = '100%'
             tailstyles.gridAutoFlow = 'column'
-            // explict crosscount next line as workaround for FF problem - 
-            //     sets length of horiz cradle items in one line (row), not multi-row config
+            // explict crosscount next line for some browsers - 
             tailstyles.gridTemplateRows = 
                 cellHeight?
                     `repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:
-                    // `repeat(auto-fill, minmax(${cellHeight}px, 1fr))`:
                     'auto'
             tailstyles.gridTemplateColumns = null
-            tailstyles.gridAutoColumns = 'max-content'
+            tailstyles.gridAutoColumns = 
+                (layout == 'uniform')?
+                    null:
+                    'max-content'
             tailstyles.gridAutoRows = null
             
         }

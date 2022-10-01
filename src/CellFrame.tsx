@@ -63,6 +63,12 @@ const CellFrame = ({
     placeholderContentStyles,
 }) => {
 
+    const coreConfigRef = useRef(null)
+    coreConfigRef.current = {
+        layout,
+        orientation
+    }
+
     // ----------------------[ setup ]----------------------
 
     const cradleContext = useContext(CradleContext)
@@ -185,7 +191,7 @@ const CellFrame = ({
             saveStyles(newStyles)
         }
 
-    },[orientation,cellHeight,cellWidth]) 
+    },[orientation,cellHeight,cellWidth, cellMinHeight, cellMinWidth, layout]) 
 
     const portalNodeRef = useRef(null)
 
@@ -209,7 +215,10 @@ const CellFrame = ({
 
                 const itemID = itemIDRef.current
                 const cached = cacheHandler.hasPortal(itemID)
-
+                const {
+                    layout,
+                    orientation
+                } = coreConfigRef.current
                 if (cached) {
 
                     messageRef.current = '(retrieving from cache)'
@@ -219,6 +228,7 @@ const CellFrame = ({
                         portalMetadataRef.current = cacheHandler.getPortal(itemID)
                         // get OutPortal node
                         portalNodeRef.current = portalMetadataRef.current.portalNode
+                        applyContainerStyles(portalNodeRef.current.element, layout, orientation)
                         // notify fetched component that reparenting is underway
                         portalMetadataRef.current.isReparentingRef.current = true
 
@@ -292,7 +302,8 @@ const CellFrame = ({
 
                                 portalMetadataRef.current = 
                                     cacheHandler.createPortal(content, index, itemID)
-                                portalNodeRef.current  = portalMetadataRef.current.portalNode
+                                portalNodeRef.current = portalMetadataRef.current.portalNode
+                                applyContainerStyles(portalNodeRef.current.element, layout, orientation)
                                 // make available to user content
                                 scrollerProperties.isReparentingRef = portalMetadataRef.current.isReparentingRef
 
@@ -426,6 +437,35 @@ const getFrameStyles = (orientation, cellHeight, cellWidth, cellMinHeight, cellM
 
     return styleset
 
+}
+
+const applyContainerStyles = (container, layout, orientation) => {
+
+    container.style.overflow = 'hidden'
+
+    if (layout == 'uniform') {
+
+        container.style.inset = '0px' 
+        container.style.position = 'absolute'
+        // container.style.maxWidth = null
+        // container.style.maxHeight = null
+        container.style.height = null
+        container.style.width = null
+
+    } else { // variable
+
+        container.style.inset = null 
+        container.style.position = null
+        container.style.width =
+            (orientation == 'vertical')?
+                '100%':
+                null
+        container.style.height =
+            (orientation == 'vertical')?
+                null:
+                '100%'
+
+    }
 }
 
 export default CellFrame
