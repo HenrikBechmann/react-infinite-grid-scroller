@@ -167,6 +167,7 @@ export default class ScrollHandler {
         if (!['repositioningRender','repositioningContinuation'].includes(cradleState) &&
             (layout == 'variable')) {
 
+            // TODO check reasoning for this
             if ((this.scrollData.start != this.scrollData.current) || 
                 (this.scrollData.current != this.scrollData.previous)) {
 
