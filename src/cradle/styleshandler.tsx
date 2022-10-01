@@ -36,6 +36,7 @@ export default class StylesHandler {
         viewportwidth,
         userstyles,
         triggerlineOffset,
+        layout,
 
     }) => {
 
@@ -104,7 +105,10 @@ export default class StylesHandler {
                     `repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:
                     // `repeat(auto-fill, minmax(${cellHeight}px, 1fr))`:
                     'auto'
-            headstyles.gridTemplateColumns = 'none'
+            headstyles.gridTemplateColumns =
+                (layout == 'uniform')?
+                    'none':
+                    'repeat(auto-fill,max-content)'
 
             tailstyles.padding = `${padding}px ${padding}px ${padding}px 0`
 
@@ -118,7 +122,10 @@ export default class StylesHandler {
                     `repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:
                     // `repeat(auto-fill, minmax(${cellHeight}px, 1fr))`:
                     'auto'
-            tailstyles.gridTemplateColumns = 'none'
+            tailstyles.gridTemplateColumns = 
+                (layout == 'uniform')?
+                    'none':
+                    'repeat(auto-fill,max-content)'
             
         }
 

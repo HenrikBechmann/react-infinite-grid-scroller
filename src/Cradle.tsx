@@ -874,6 +874,7 @@ const Cradle = ({
             crosscount, 
             userstyles:styles,
             triggerlineOffset,
+            layout,
 
         })
 
@@ -891,6 +892,7 @@ const Cradle = ({
         crosscount,
         styles,
         triggerlineOffset,
+        layout,
 
       ])
 
