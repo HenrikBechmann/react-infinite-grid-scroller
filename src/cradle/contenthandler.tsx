@@ -341,7 +341,6 @@ export default class ContentHandler {
 
         // --------------------[ 2. get shift instruction ]-----------------------
 
-        // -1 is move a row down to the taIL, +1 is move a row up to the head, 0 is no shift
         const [shiftinstruction, triggerData] = getShiftInstruction({
             scrollerID: cradleInheritedProperties.scrollerID,
             orientation,
@@ -394,6 +393,9 @@ export default class ContentHandler {
             cradleElements,
 
         })
+
+        console.log('axisItemShift, axisReferenceIndex, cradleItemShift, listStartChangeCount, listEndChangeCount',
+            axisItemShift, axisReferenceIndex, cradleItemShift, listStartChangeCount, listEndChangeCount)
 
         // third abandon option/3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) { // can happen first row
@@ -461,6 +463,8 @@ export default class ContentHandler {
             }
         )
 
+        console.log('headcontent, tailcontent',headcontent, tailcontent)
+
         cradleContent.cradleModelComponents = updatedContentList
         cradleContent.headModelComponents = headcontent
         cradleContent.tailModelComponents = tailcontent
@@ -522,6 +526,8 @@ export default class ContentHandler {
     // sets CSS: scrollblockElement top and height (or left and width), and axisElement top (or left)
     // this to get closer to natural proportions to minimize janky scroll thumb
     public adjustScrollblockForVariability = (source) => {
+
+        console.log('adjustScrollblockForVariability: source',source)
 
         // ----------------------[ setup base values and references ]------------------------
 
@@ -681,6 +687,9 @@ export default class ContentHandler {
 
         }
 
+        console.log('==> adjustments: variableAdjustment, newAxisScrollblockOffset, newScrollblockLength',
+            variableAdjustment, newAxisScrollblockOffset, newScrollblockLength)
+
         if (resetscroll) { // top of list
 
             viewportElement.scrollTo(0,0)
@@ -697,6 +706,8 @@ export default class ContentHandler {
             scrollHandler.resetScrollData(blockScrollPos)
 
         }
+
+        console.log('adjust: cradlePositionData',{...cradlePositionData})
 
     }
 

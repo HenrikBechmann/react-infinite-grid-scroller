@@ -204,6 +204,8 @@ export const getShiftInstruction = ({
 
     }
 
+    console.log('SHIFTINSTRUCTION, triggerData',shiftinstruction, triggerData)
+
     return [shiftinstruction, triggerData]
 
 }
@@ -532,7 +534,6 @@ export const getGridRowLengths = (grid, orientation, crosscount, gap) => {
 
     let elementPtr = 0
     let element = elementList[elementPtr]
-    let span = 0
 
     while (element) {
         const rowlength = 
@@ -674,8 +675,8 @@ export const allocateContentList = (
             true:
             false
 
-    if ((triggercellIndex !== undefined) && (offsetindex !== undefined) && 
-       (triggercellIndex != targetTriggercellIndex)) {
+    if ((triggercellIndex !== undefined) && (offsetindex !== undefined)) { //&& 
+       // (triggercellIndex != targetTriggercellIndex)) {
         if ((triggercellIndex >= offsetindex) && (triggercellIndex <= highindex)) {
             const triggercellPtr = triggercellIndex - offsetindex
             const triggercellComponent = contentlist[triggercellPtr]
@@ -686,11 +687,13 @@ export const allocateContentList = (
     }
 
     const triggercellPtr = targetTriggercellIndex - offsetindex
+    console.log('allocateContentList: triggercellPtr = targetTriggercellIndex - offsetindex',
+        triggercellPtr, targetTriggercellIndex, offsetindex)
     const triggercellComponent = contentlist[triggercellPtr]
     // if !triggercellComponent, is temporarily out of scope; will recycle
-    if (triggercellComponent && ((triggercellIndex === undefined) || 
-        (triggercellIndex != targetTriggercellIndex  ||
-        !triggercellComponent.props.isTriggecell))) {    
+    if (triggercellComponent) {// && ((triggercellIndex === undefined) || 
+        // (triggercellIndex != targetTriggercellIndex  ||
+        // !triggercellComponent.props.isTriggecell))) {    
         contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:true})
         layoutHandler.triggercellIndex = targetTriggercellIndex
     } else { // defensive
