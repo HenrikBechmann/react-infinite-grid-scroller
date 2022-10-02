@@ -7,8 +7,8 @@
         headstyles,
         tailstyles,
         axisstyles,
-        triggerlineaxisstyles,
-        triggerlineheadstyles,
+        triggercelltriggerlineheadstyles,
+        triggercelltriggerlinetailstyles,
         cradledividerstyles
 */
 
