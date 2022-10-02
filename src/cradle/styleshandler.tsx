@@ -40,17 +40,14 @@ export default class StylesHandler {
 
     }) => {
 
-        const headstyles = this.getHeadStyles(gap, padding, orientation, userstyles.cradle)
-        const tailstyles = this.getTailStyles(gap, padding, orientation, userstyles.cradle)
+        const headstyles = this.getBaseHeadStyles(gap, padding, orientation, userstyles.cradle)
+        const tailstyles = this.getBaseTailStyles(gap, padding, orientation, userstyles.cradle)
         const axisstyles = this.getAxisStyles(gap, padding, orientation, userstyles.axis)
 
         const triggercelltriggerlineheadstyles =
             this.getTriggercellTriggerlineHeadStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
         const triggercelltriggerlinetailstyles = 
             this.getTriggercellTriggerlineTailStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
-
-
-        // layoutHandler.triggerlineSpan = this.axisTriggerlineOffset - this.headTriggerlineOffset
 
         const cradledividerstyles = 
             {
@@ -72,38 +69,34 @@ export default class StylesHandler {
 
             headstyles.width = '100%'
             headstyles.height = 'auto'
-            headstyles.gridAutoFlow = 'row'
-            
+
             headstyles.gridTemplateRows = null
-            headstyles.gridAutoColumns = null
+            headstyles.gridTemplateColumns = 
+                    `repeat(${crosscount}, minmax(${cellWidth}px, 1fr))`
+
+            headstyles.gridAutoFlow = 'row'
             headstyles.gridAutoRows = 
                 (layout == 'uniform')?
                     null:
                     'max-content'
-            headstyles.gridTemplateColumns = 
-                cellWidth?
-                    // `repeat(auto-fill, minmax(${cellWidth}px, 1fr))`:
-                    `repeat(${crosscount}, minmax(${cellWidth}px, 1fr))`:
-                    'auto'
+            headstyles.gridAutoColumns = null
 
             // tailgrid
             tailstyles.padding = `0 ${padding}px ${padding}px ${padding}px`
 
             tailstyles.width = '100%'
             tailstyles.height = 'auto'
-            tailstyles.gridAutoFlow = 'row'
-            
+
             tailstyles.gridTemplateRows = null
-            tailstyles.gridAutoColumns = null    
+            tailstyles.gridTemplateColumns = 
+                    `repeat(${crosscount}, minmax(${cellWidth}px, 1fr))`
+
+            tailstyles.gridAutoFlow = 'row'
             tailstyles.gridAutoRows = 
                 (layout == 'uniform')?
                     null:
                     'max-content'
-            tailstyles.gridTemplateColumns = 
-                cellWidth?
-                    // `repeat(auto-fill, minmax(${cellWidth}px, 1fr))`:
-                    `repeat(${crosscount}, minmax(${cellWidth}px, 1fr))`:
-                    'auto'
+            tailstyles.gridAutoColumns = null    
 
         } else { // orientation == 'horizontal'
 
@@ -112,37 +105,34 @@ export default class StylesHandler {
 
             headstyles.width = 'auto'
             headstyles.height = '100%'
-            headstyles.gridAutoFlow = 'column'
-            // explict crosscount next line for some browsers - 
+
             headstyles.gridTemplateRows = 
-                cellHeight?
-                    `repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:
-                    'auto'
+                    `repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`
             headstyles.gridTemplateColumns = null
 
+            headstyles.gridAutoFlow = 'column'
+            headstyles.gridAutoRows = null
             headstyles.gridAutoColumns = 
                 (layout == 'uniform')?
                     null:
                     'max-content'
-            headstyles.gridAutoRows = null
 
             // tailgrid
             tailstyles.padding = `${padding}px ${padding}px ${padding}px 0`
 
             tailstyles.width = 'auto'
             tailstyles.height = '100%'
-            tailstyles.gridAutoFlow = 'column'
-            // explict crosscount next line for some browsers - 
+
             tailstyles.gridTemplateRows = 
-                cellHeight?
-                    `repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:
-                    'auto'
+                    `repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`
             tailstyles.gridTemplateColumns = null
+
+            tailstyles.gridAutoFlow = 'column'
+            tailstyles.gridAutoRows = null
             tailstyles.gridAutoColumns = 
                 (layout == 'uniform')?
                     null:
                     'max-content'
-            tailstyles.gridAutoRows = null
             
         }
 
@@ -157,7 +147,7 @@ export default class StylesHandler {
         
     }
 
-    private getHeadStyles = (gap,padding,orientation,userheadstyles) => {
+    private getBaseHeadStyles = (gap,padding,orientation,userheadstyles) => {
 
         let bottom, left, top, right
 
@@ -189,7 +179,7 @@ export default class StylesHandler {
         }
     }
 
-    private getTailStyles = (gap,padding,orientation,usertailstyles) => {
+    private getBaseTailStyles = (gap,padding,orientation,usertailstyles) => {
 
         let bottom, left, top, right
 
