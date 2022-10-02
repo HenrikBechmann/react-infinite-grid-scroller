@@ -378,7 +378,7 @@ export default class ContentHandler {
             listEndChangeCount,
 
             // pixels
-            newAxisPixelOffset:axisPixelOffset, 
+            newAxisViewportPixelOffset:axisViewportPixelOffset, 
 
         } = calcContentShift({
 
@@ -393,9 +393,6 @@ export default class ContentHandler {
             cradleElements,
 
         })
-
-        console.log('axisItemShift, axisReferenceIndex, cradleItemShift, listStartChangeCount, listEndChangeCount',
-            axisItemShift, axisReferenceIndex, cradleItemShift, listStartChangeCount, listEndChangeCount)
 
         // third abandon option/3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) { // can happen first row
@@ -463,8 +460,6 @@ export default class ContentHandler {
             }
         )
 
-        console.log('headcontent, tailcontent',headcontent, tailcontent)
-
         cradleContent.cradleModelComponents = updatedContentList
         cradleContent.headModelComponents = headcontent
         cradleContent.tailModelComponents = tailcontent
@@ -487,7 +482,7 @@ export default class ContentHandler {
 
         if (cradleInheritedProperties.orientation == 'vertical') {
 
-            const topPos = scrollPos + axisPixelOffset
+            const topPos = scrollPos + axisViewportPixelOffset
 
             axisElement.style.top = topPos + 'px'
             axisElement.style.left = 'auto'
@@ -499,7 +494,7 @@ export default class ContentHandler {
 
         } else { // 'horizontal'
 
-            const leftPos = scrollPos + axisPixelOffset
+            const leftPos = scrollPos + axisViewportPixelOffset
 
             axisElement.style.top = 'auto'
             axisElement.style.left = leftPos + 'px'
@@ -514,7 +509,7 @@ export default class ContentHandler {
         const { cradlePositionData } = layoutHandler
 
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
-        cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
+        cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
         stateHandler.setCradleState('renderupdatedcontent')
 
@@ -526,8 +521,6 @@ export default class ContentHandler {
     // sets CSS: scrollblockElement top and height (or left and width), and axisElement top (or left)
     // this to get closer to natural proportions to minimize janky scroll thumb
     public adjustScrollblockForVariability = (source) => {
-
-        console.log('adjustScrollblockForVariability: source',source)
 
         // ----------------------[ setup base values and references ]------------------------
 
@@ -640,7 +633,6 @@ export default class ContentHandler {
         if (source == 'afterscroll') {
             
             blockScrollPos -= variableAdjustment
-            variableAdjustment = 0
 
             reposition = true
  
@@ -687,9 +679,6 @@ export default class ContentHandler {
 
         }
 
-        console.log('==> adjustments: variableAdjustment, newAxisScrollblockOffset, newScrollblockLength',
-            variableAdjustment, newAxisScrollblockOffset, newScrollblockLength)
-
         if (resetscroll) { // top of list
 
             viewportElement.scrollTo(0,0)
@@ -706,8 +695,6 @@ export default class ContentHandler {
             scrollHandler.resetScrollData(blockScrollPos)
 
         }
-
-        console.log('adjust: cradlePositionData',{...cradlePositionData})
 
     }
 

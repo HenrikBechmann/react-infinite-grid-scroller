@@ -204,7 +204,7 @@ export default class ScrollHandler {
         } else {
 
             axisVisiblePixelOffset = 
-                axisElement.offsetLeft - scrollblockElement.offsetLeft - viewportElement.scrollLeft
+                axisElement.offsetLeft + scrollblockElement.offsetLeft - viewportElement.scrollLeft
 
         }
 

@@ -204,8 +204,6 @@ export const getShiftInstruction = ({
 
     }
 
-    console.log('SHIFTINSTRUCTION, triggerData',shiftinstruction, triggerData)
-
     return [shiftinstruction, triggerData]
 
 }
@@ -399,7 +397,7 @@ export const calcContentShift = ({
 
     // -------------[ 4. calculate new axis pixel position ]------------------
 
-    const newAxisPixelOffset = currentViewportAxisOffset + axisPixelShift
+    const newAxisViewportPixelOffset = currentViewportAxisOffset + axisPixelShift
 
     // Note: sections 5, 6 and 7 deal entirely with row calculations; no pixels
 
@@ -518,7 +516,7 @@ export const calcContentShift = ({
         newAxisReferenceIndex, 
         axisReferenceItemShift, 
 
-        newAxisPixelOffset,
+        newAxisViewportPixelOffset,
 
         newCradleContentCount,
         listStartChangeCount,
@@ -687,8 +685,6 @@ export const allocateContentList = (
     }
 
     const triggercellPtr = targetTriggercellIndex - offsetindex
-    console.log('allocateContentList: triggercellPtr = targetTriggercellIndex - offsetindex',
-        triggercellPtr, targetTriggercellIndex, offsetindex)
     const triggercellComponent = contentlist[triggercellPtr]
     // if !triggercellComponent, is temporarily out of scope; will recycle
     if (triggercellComponent) {// && ((triggercellIndex === undefined) || 
