@@ -124,7 +124,9 @@ export default class StylesHandler {
         
     }
 
-    private getBaseHeadStyles = (gap,padding,orientation,userheadstyles) => {
+    // the top, right, bottom, left setting determine the direction of expansion of the grid block
+    private getBaseHeadStyles = 
+        (gap,padding,orientation,userheadstyles) => {
 
         let bottom, left, top, right
 
@@ -146,8 +148,6 @@ export default class StylesHandler {
             display: 'grid',
             gridGap: gap + 'px',
             padding: padding + 'px',
-            // justifyContent:'start',
-            // alignContent:'start',
             boxSizing:'border-box',
             bottom,
             left,
@@ -156,7 +156,9 @@ export default class StylesHandler {
         }
     }
 
-    private getBaseTailStyles = (gap,padding,orientation,usertailstyles) => {
+    // the top, right, bottom, left setting determine the direction of expansion of the grid block
+    private getBaseTailStyles = 
+        (gap,padding,orientation,usertailstyles) => {
 
         let bottom, left, top, right
 
@@ -175,12 +177,9 @@ export default class StylesHandler {
         return {
             ...usertailstyles,
             position: 'absolute',
-            // backgroundColor: 'blue',
             display: 'grid',
             gridGap: gap + 'px',
             padding: padding + 'px',
-            // justifyContent:'start',
-            // alignContent:'start',
             boxSizing:'border-box',
             top,
             left,
@@ -189,19 +188,25 @@ export default class StylesHandler {
         } 
     }
 
-    private getAxisStyles = (gap, padding, orientation, useraxisstyles) => {
+    private getAxisStyles = 
+        (gap, padding, orientation, useraxisstyles) => {
+
         let top, left, width, height // for axis
 
         if (orientation == 'vertical') {
+
             top = padding + 'px'
             left = 'auto'
             width = '100%'
-            height = 'auto'
+            height = 0
+
         } else {
+
             top = 'auto'
             left = padding + 'px'
             width = 0
             height = '100%'
+
         }
 
         return {
@@ -216,14 +221,15 @@ export default class StylesHandler {
 
     }
 
-    private getTriggercellTriggerlineHeadStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
+    private getTriggercellTriggerlineHeadStyles = 
+        (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
 
         const position = 'absolute'
 
         let width, height, top, left
         if (orientation == 'vertical') {
 
-            height = '0px'
+            height = 0
             width = '100%'
             left = 'auto'
             top = triggerlineOffset + 'px'
@@ -231,7 +237,7 @@ export default class StylesHandler {
         } else {
 
             height = '100%'
-            width = '0px'
+            width = 0
             left = triggerlineOffset + 'px'
             top = 'auto'
 
@@ -247,14 +253,15 @@ export default class StylesHandler {
 
         }
     }
-    private getTriggercellTriggerlineTailStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
+    private getTriggercellTriggerlineTailStyles = 
+        (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
 
         const position = 'absolute'
 
         let width, height, bottom, right
         if (orientation == 'vertical') {
 
-            height = '0px'
+            height = 0
             width = '100%'
             bottom = -(triggerlineOffset + gap) + 'px'
             right = 'auto'
@@ -262,7 +269,7 @@ export default class StylesHandler {
         } else {
 
             height = '100%'
-            width = '0px'
+            width = 0
             bottom = 'auto'
             right = -(triggerlineOffset + gap) + 'px'
 
