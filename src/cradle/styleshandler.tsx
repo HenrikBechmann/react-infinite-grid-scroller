@@ -45,9 +45,11 @@ export default class StylesHandler {
         const axisstyles = this.getAxisStyles(gap, padding, orientation, userstyles.axis)
 
         const triggercelltriggerlineheadstyles =
-            this.getTriggercellTriggerlineHeadStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
+            this.getTriggercellTriggerlineHeadStyles(
+                orientation,cellHeight, cellWidth, triggerlineOffset, gap)
         const triggercelltriggerlinetailstyles = 
-            this.getTriggercellTriggerlineTailStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
+            this.getTriggercellTriggerlineTailStyles(
+                orientation,cellHeight, cellWidth, triggerlineOffset, gap)
 
         const cradledividerstyles = 
             {
@@ -58,77 +60,52 @@ export default class StylesHandler {
                 boxShadow:'0 0 5px 3px red'
             }
 
-        headstyles.gridGap = gap + 'px'
-
-        tailstyles.gridGap = gap + 'px'
+        headstyles.gap = tailstyles.gap = gap + 'px'
 
         if (orientation == 'vertical') {
 
-            // headgrid
+            // padding varies
             headstyles.padding = `${padding}px ${padding}px 0 ${padding}px`
-
-            headstyles.width = '100%'
-            headstyles.height = 'auto'
-
-            headstyles.gridTemplateRows = null
-            headstyles.gridTemplateColumns = 
-                    `repeat(${crosscount}, minmax(${cellWidth}px, 1fr))`
-
-            headstyles.gridAutoFlow = 'row'
-            headstyles.gridAutoRows = 
-                (layout == 'uniform')?
-                    null:
-                    'max-content'
-            headstyles.gridAutoColumns = null
-
-            // tailgrid
             tailstyles.padding = `0 ${padding}px ${padding}px ${padding}px`
 
-            tailstyles.width = '100%'
-            tailstyles.height = 'auto'
+            // the following are identical for head and tail
+            headstyles.width = tailstyles.width = '100%'
+            headstyles.height = tailstyles.height = 'auto'
 
-            tailstyles.gridTemplateRows = null
+            headstyles.gridTemplateRows = tailstyles.gridTemplateRows = null
+
+            headstyles.gridTemplateColumns = 
             tailstyles.gridTemplateColumns = 
                     `repeat(${crosscount}, minmax(${cellWidth}px, 1fr))`
 
-            tailstyles.gridAutoFlow = 'row'
-            tailstyles.gridAutoRows = 
+            headstyles.gridAutoFlow = tailstyles.gridAutoFlow = 'row'
+
+            headstyles.gridAutoRows = 
+            tailstyles.gridAutoRows =
                 (layout == 'uniform')?
                     null:
                     'max-content'
-            tailstyles.gridAutoColumns = null    
+
+            headstyles.gridAutoColumns = tailstyles.gridAutoColumns = null
 
         } else { // orientation == 'horizontal'
 
-            // headgrid
             headstyles.padding = `${padding}px 0 ${padding}px ${padding}px`
-
-            headstyles.width = 'auto'
-            headstyles.height = '100%'
-
-            headstyles.gridTemplateRows = 
-                    `repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`
-            headstyles.gridTemplateColumns = null
-
-            headstyles.gridAutoFlow = 'column'
-            headstyles.gridAutoRows = null
-            headstyles.gridAutoColumns = 
-                (layout == 'uniform')?
-                    null:
-                    'max-content'
-
-            // tailgrid
             tailstyles.padding = `${padding}px ${padding}px ${padding}px 0`
 
-            tailstyles.width = 'auto'
-            tailstyles.height = '100%'
+            headstyles.width = tailstyles.width = 'auto'
+            headstyles.height = tailstyles.height = '100%'
 
+            headstyles.gridTemplateRows = 
             tailstyles.gridTemplateRows = 
                     `repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`
-            tailstyles.gridTemplateColumns = null
 
-            tailstyles.gridAutoFlow = 'column'
-            tailstyles.gridAutoRows = null
+            headstyles.gridTemplateColumns = tailstyles.gridTemplateColumns = null
+
+            headstyles.gridAutoFlow = tailstyles.gridAutoFlow = 'column'
+            headstyles.gridAutoRows = tailstyles.gridAutoRows = null
+
+            headstyles.gridAutoColumns = 
             tailstyles.gridAutoColumns = 
                 (layout == 'uniform')?
                     null:
