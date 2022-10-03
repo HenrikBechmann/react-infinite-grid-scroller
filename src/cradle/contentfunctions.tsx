@@ -118,9 +118,16 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     cradle motion can be detected. Motion is most often caused by scrolling, but
     can also occur with change of size of cradle content rows.
 
-    getShiftInstruction determines whether items (and/or the axis) should be moved to the head or tail 
-    ('axistotail' or 'axistohead') or if no shift ('none') is required, to restore the straddling
-    position of the two trigger lines.
+    getShiftInstruction determines whether the axis should be moved toward the head or tail
+        to restore the straddling position of the two trigger lines.
+
+    'axistotail' (scrolling up) means moving the axis down, adjacent items up to the head, 
+        dropping trailing head items, and adding leading tail items
+
+    'axistohead' (scrolling down) means moving the axis up, adjacent items to the tail, 
+        dropping trailing tail items, and adding leading head items
+        
+    'none' means no shift is required
 
 */
 
