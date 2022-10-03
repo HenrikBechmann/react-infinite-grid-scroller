@@ -130,6 +130,74 @@ export default class LayoutHandler {
 
     }
 
+    // called by interruptHandler
+    public restoreBaseScrollblockConfig = () => {
+
+        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
+        const viewportElement = ViewportContextProperties.elementRef.current
+        const scrollblockElement = viewportElement.firstChild
+
+        const { 
+
+            // scrollerID, 
+            orientation, 
+            padding, 
+            gap,
+            cellHeight,
+            cellWidth,
+            // layout 
+
+        } = this.cradleParameters.cradleInheritedPropertiesRef.current
+
+        const {
+            listRowcount,
+            crosscount,
+        } = this.cradleParameters.cradleInternalPropertiesRef.current
+
+        const { 
+
+            // stateHandler, 
+            // serviceHandler, 
+            scrollHandler, 
+            layoutHandler 
+
+        } = this.cradleParameters.handlersRef.current
+
+        const cellLength = 
+            ((orientation == 'vertical')?
+                cellHeight:
+                cellWidth)
+            + gap
+
+        const baselength = (listRowcount * cellLength) - gap // final cell has no trailing gap
+            + (padding * 2) // leading and trailing padding
+
+        if (orientation == 'vertical') {
+
+            scrollblockElement.style.top = null
+            scrollblockElement.style.height = baselength + 'px'
+
+        } else {
+
+            scrollblockElement.style.left = null
+            scrollblockElement.style.width = baselength + 'px'
+
+        }
+
+        const { cradlePositionData } = layoutHandler
+        const axisReference = cradlePositionData.targetAxisReferenceIndex
+        const rowOffset = Math.ceil(axisReference/crosscount)
+        const calculatedBlockScrollPos = 
+            (rowOffset * cellLength) + padding
+
+        viewportElement[cradlePositionData.blockScrollProperty] = calculatedBlockScrollPos
+        cradlePositionData.blockScrollPos = calculatedBlockScrollPos
+        scrollHandler.resetScrollData(calculatedBlockScrollPos)
+        
+        scrollHandler.calcImpliedRepositioningData()
+
+    }
+
     public elements
 
 }

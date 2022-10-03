@@ -839,8 +839,10 @@ const Cradle = ({
             + gap
 
         const pivotAxisOffset = previousratio * pivotCellPixelLength
+
+        const { cradlePositionData } = layoutHandler
         
-        layoutHandler.cradlePositionData.targetAxisViewportPixelOffset = Math.round(pivotAxisOffset)
+        cradlePositionData.targetAxisViewportPixelOffset = Math.round(pivotAxisOffset)
 
         interruptHandler.pauseInterrupts()
 

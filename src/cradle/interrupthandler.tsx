@@ -154,40 +154,7 @@ export default class InterruptHandler {
 
                 if (layout == 'variable') { // restore base config to scrollblock
 
-                    const scrollblockElement = viewportElement.firstChild
-
-                    const cellLength = 
-                        ((orientation == 'vertical')?
-                            cellHeight:
-                            cellWidth)
-                        + gap
-
-                    const baselength = (listRowcount * cellLength) - gap // final cell has no trailing gap
-                        + (padding * 2) // leading and trailing padding
-
-                    if (orientation == 'vertical') {
-
-                        scrollblockElement.style.top = null
-                        scrollblockElement.style.height = baselength + 'px'
-
-                    } else {
-
-                        scrollblockElement.style.left = null
-                        scrollblockElement.style.width = baselength + 'px'
-
-                    }
-
-                    const { cradlePositionData } = layoutHandler
-                    const axisReference = cradlePositionData.targetAxisReferenceIndex
-                    const rowOffset = Math.ceil(axisReference/crosscount)
-                    const calculatedBlockScrollPos = 
-                        (rowOffset * cellLength) + padding
-
-                    viewportElement[cradlePositionData.blockScrollProperty] = calculatedBlockScrollPos
-                    cradlePositionData.blockScrollPos = calculatedBlockScrollPos
-                    scrollHandler.resetScrollData(calculatedBlockScrollPos)
-                    
-                    scrollHandler.calcImpliedRepositioningData()
+                    layoutHandler.restoreBaseScrollblockConfig()
 
                 }
 

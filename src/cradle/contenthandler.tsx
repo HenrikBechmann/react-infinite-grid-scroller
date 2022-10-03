@@ -180,6 +180,13 @@ export default class ContentHandler {
         const baselength = (listRowcount * baseRowLength) - gap // final cell has no trailing gap
             + (padding * 2) // leading and trailing padding
 
+        if (cradleState == 'pivot') {
+            if (orientation == 'vertical') {
+                scrollblockElement.style.left = null
+            } else {
+                scrollblockElement.style.top = null
+            }
+        }
         if (orientation == 'vertical') {
             scrollblockElement.style.top = null
             scrollblockElement.style.height = baselength + 'px'

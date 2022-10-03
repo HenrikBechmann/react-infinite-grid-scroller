@@ -14,10 +14,6 @@
 
     BUGS:
 
-        - failure to register trigger cell showed up in variable horizontal scroll
-        - going from vertical to horizontal on variable after vertical scroll fails
-            - something needs to be reset
-            - succeeds if back to vertical then again to horizontal
         - pivot does not stick with change of demo
 
     TODO:
