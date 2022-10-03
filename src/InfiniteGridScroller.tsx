@@ -16,8 +16,11 @@
 
         - fast scroll to top left cradle stranded in reposition; did not setCradleContent
             - rare! associated with failure to register triggercell, 
-                triggerCellIndex == 7, targetTriggerCellIndex == -5
+            - case: triggerCellIndex == 7, targetTriggerCellIndex == -5
                 full screen, variable, crosscount == 4, vertical
+            - always at top
+            - case: triggerCellIndes == 1, targetTriggerCellIndes = -2
+                crosscount == 1, vertical, variable
 
         - pivot does not stick with change of demo
 
