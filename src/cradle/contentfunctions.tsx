@@ -243,6 +243,9 @@ export const calcContentShift = ({
 
 }) => {
 
+    console.log('=========================================================')
+    console.log('starting CALCCONTENTSHIFT, shiftinstruction, triggerData\n', 
+        shiftinstruction, triggerData)
     // ------------------------[ 1. initialize ]-----------------------
 
     const { 
@@ -323,13 +326,14 @@ export const calcContentShift = ({
     let spanAxisPixelShift // in relation to viewport head boundary
     if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
 
-        let totalRowShiftCount
+        let totalRowShift
         if (gridRowSpans.length == 0) { // must be list boundary
-            totalRowShiftCount = -1
+
+            totalRowShift = 0
             spanAxisPixelShift = 0
 
         } else {
-            console.log('calculating OVERSHOOT amounts')
+            console.log('calculating OVERSHOOT amounts', shiftinstruction)
             const baseRowLength =
                 ((orientation == 'vertical')?
                     cellHeight:
@@ -337,7 +341,7 @@ export const calcContentShift = ({
                 + gap
 
             const countedRowShift = gridRowSpans.length - 1
-            totalRowShiftCount = countedRowShift // base
+            totalRowShift = countedRowShift // base
             let totalPixelShift = gridRowSpans.at(-1) // set base of working overshoot
                 // (shiftinstruction == 'axistailward')?
                 //     gridRowSpans.at(-1):
@@ -348,7 +352,7 @@ export const calcContentShift = ({
                 // while (overshootPixelShift < triggerViewportReferencePos) {
                 while ((triggerViewportReferencePos + totalPixelShift < 0)) {
                     totalPixelShift += baseRowLength
-                    ++totalRowShiftCount
+                    ++totalRowShift
                     // if ((previousAxisRowOffset + totalRowShiftCount) == 0) {
                     //     break
                     // }
@@ -360,18 +364,20 @@ export const calcContentShift = ({
 
                 while ((triggerViewportReferencePos - totalPixelShift) > 0) {
                     totalPixelShift += baseRowLength
-                    ++totalRowShiftCount
-                    // if ((previousAxisRowOffset - totalRowShiftCount) == 0) {
-                    //     break
-                    // }
+                    ++totalRowShift
+                    if ((previousAxisRowOffset - totalRowShift) == 0) {
+                        break
+                    }
                 }
+                console.log('previousAxisRowOffset, totalRowShift, totalPixelShift',
+                    previousAxisRowOffset, totalRowShift, totalPixelShift)
 
                 spanAxisPixelShift = -totalPixelShift
             }
 
         }
 
-        spanRowPtr = totalRowShiftCount // notional spanRowPtr
+        spanRowPtr = (totalRowShift + 1)// notional spanRowPtr
 
     } else { // final values found in instantiated rows
 
@@ -526,6 +532,9 @@ export const calcContentShift = ({
     const listEndChangeCount = -listStartChangeCount - changeOfCradleContentCount
 
     // ---------------------[ 8. return required values ]-------------------
+
+    console.log('returning newAxisReferenceIndex, newAxisViewportPixelOffset\n',
+        newAxisReferenceIndex, newAxisViewportPixelOffset)
 
     return {
 

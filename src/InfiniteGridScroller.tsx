@@ -19,8 +19,10 @@
             - case: triggerCellIndex == 7, targetTriggerCellIndex == -5
                 full screen, variable, crosscount == 4, vertical
             - always at top
-            - case: triggerCellIndes == 1, targetTriggerCellIndes = -2
+            - case: triggerCellIndex == 1, targetTriggerellIndes = -2
                 crosscount == 1, vertical, variable
+            - case: triggerCellIndex == 17, targetTriggerellIndes = -4
+                crosscount == 3, vertical, variable
 
         - pivot does not stick with change of demo
 
