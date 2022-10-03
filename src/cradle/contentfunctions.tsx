@@ -119,7 +119,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     can also occur with change of size of cradle content rows.
 
     getShiftInstruction determines whether items (and/or the axis) should be moved to the head or tail 
-    ('axixtohead' or 'axistotail') or if no shift ('none') is required, to restore the straddling
+    ('axistotail' or 'axistohead') or if no shift ('none') is required, to restore the straddling
     position of the two trigger lines.
 
 */
@@ -178,7 +178,7 @@ export const getShiftInstruction = ({
 
         if (triggerData.headOffset <= 0) {
 
-            shiftinstruction = 'axistotail'
+            shiftinstruction = 'axistohead'
 
         } else {
 
@@ -190,11 +190,11 @@ export const getShiftInstruction = ({
 
         if (triggerData.tailOffset <=0) {
 
-            shiftinstruction = 'axistotail'
+            shiftinstruction = 'axistohead'
 
         } else if (triggerData.headOffset >=0) {
 
-            shiftinstruction = 'axixtohead'
+            shiftinstruction = 'axistotail'
 
         } else {
 
@@ -269,13 +269,13 @@ export const calcContentShift = ({
     } = cradleInternalProperties
 
     const referenceGridElement = 
-        (shiftinstruction == 'axistotail')?
+        (shiftinstruction == 'axistohead')?
             tailGridElement:
             headGridElement
 
     const gridRowLengths = getGridRowLengths(referenceGridElement, orientation, crosscount, gap)
 
-    if (shiftinstruction == 'axixtohead') {
+    if (shiftinstruction == 'axistotail') {
 
         gridRowLengths.reverse()
 
@@ -284,7 +284,7 @@ export const calcContentShift = ({
     const gridRowSpans = getGridRowSpans(gridRowLengths)
 
     const triggerReferencePos = 
-        (shiftinstruction == 'axistotail')? // block scrolling tailward
+        (shiftinstruction == 'axistohead')? // block scrolling headward
         triggerData.tailOffset:
         triggerData.headOffset
 
@@ -297,7 +297,7 @@ export const calcContentShift = ({
     // ----------------------------[ 2. calculate base row shift ]--------------------------
 
     let spanRowPtr
-    if (shiftinstruction == 'axistotail') {
+    if (shiftinstruction == 'axistohead') {
 
         spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos + span) >=0 )
     
@@ -324,12 +324,12 @@ export const calcContentShift = ({
                 + gap
 
             spanPtr = gridRowSpans.length - 1
-            let overshootPixelShift = // set base of working total
-                (shiftinstruction == 'axistotail')?
+            let overshootPixelShift = // set base of working overshoot
+                (shiftinstruction == 'axistohead')?
                     -gridRowSpans.at(-1):
                     gridRowSpans.at(-1)
 
-            if (shiftinstruction == 'axistotail') { // scrolling down
+            if (shiftinstruction == 'axistohead') { // scrolling up
 
                 while (overshootPixelShift > triggerReferencePos) {
                     overshootPixelShift -= baseRowLength
@@ -341,11 +341,14 @@ export const calcContentShift = ({
 
                 spanAxisPixelShift = -overshootPixelShift
 
-            } else { // axixtohead; scrolling up
+            } else { // axistotail; scrolling down
 
                 while (overshootPixelShift < triggerReferencePos) {
                     overshootPixelShift += baseRowLength
                     ++spanPtr
+                    if ((previousAxisRowOffset + spanPtr) == 0) {
+                        break
+                    }
                 }
 
                 spanAxisPixelShift = -overshootPixelShift
@@ -358,14 +361,14 @@ export const calcContentShift = ({
     } else { // final values found in instantiated rows
 
         spanAxisPixelShift = 
-            (shiftinstruction == 'axistotail')?
+            (shiftinstruction == 'axistohead')?
                 gridRowSpans[spanRowPtr] :
                 -gridRowSpans[spanRowPtr]
 
     }
 
     const spanRowShift = // pick up row shift with or without overshoot
-        (shiftinstruction == 'axistotail')?
+        (shiftinstruction == 'axistohead')?
             spanRowPtr + 1:
             -(spanRowPtr + 1)
 
@@ -415,7 +418,7 @@ export const calcContentShift = ({
 
     const listEndrowOffset = (listRowcount - 1)
 
-    if (shiftinstruction == 'axistotail') { // scrolling toward head
+    if (shiftinstruction == 'axistohead') { // scrolling toward head
 
         // a. if scrolling the block headward near the start of the list, new cradle row offset and
         // cradle row shift count has to be adjusted to accommodate the leading runway
@@ -448,7 +451,7 @@ export const calcContentShift = ({
 
         }
 
-    } else { // shiftinstruction == 'axixtohead'; scrolling toward tail 
+    } else { // shiftinstruction == 'axistotail'; scrolling toward tail 
 
         // c. if scrolling the block tailward (toward revealing head of list), as the cradlerowoffset 
         // hits 0, cradle changes have to be adjusted to prevent shortening of cradle content
