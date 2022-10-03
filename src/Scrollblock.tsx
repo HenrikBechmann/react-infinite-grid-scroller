@@ -165,12 +165,12 @@ const updateScrollblockStyles = (orientation, stylesRef, baseScrollblocklengthRe
     let localstyles = {...stylesRef.current} // new object
     let height 
     let width
-    if (orientation == 'horizontal') {
-        height = '100%'
-        width = baseScrollblocklengthRef.current + 'px'
-    } else if (orientation == 'vertical') {
+    if (orientation == 'vertical') {
         height = baseScrollblocklengthRef.current + 'px'
         width = '100%'
+    } else { // orientation == 'horizontal'
+        height = '100%'
+        width = baseScrollblocklengthRef.current + 'px'
     }
     localstyles.height = height
     localstyles.width = width

@@ -885,32 +885,15 @@ export class CacheHandler {
 
 // get a react-reverse-portal InPortal component, with its metadata
 // with user content and container
+// see also some styles set in CellFrame
+
 const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWidth) => {
 
     let portalNode = createHtmlPortalNode()
 
     let container = portalNode.element
     container.style.overflow = 'hidden'
-    if (layout == 'uniform') {
-        container.style.inset = '0px' 
-        container.style.position = 'absolute'
-    } else {
-        container.style.inset = null 
-        container.style.position = null
-    }
-    const maxWidth = 
-    container.style.maxWidth = 
-        (orientation == 'horizontal')?
-            (layout == 'variable')?
-                cellWidth + 'px':
-                null
-            :null
-    container.style.maxHeight = 
-        (orientation == 'vertical')?
-            (layout == 'variable')?
-                cellHeight + 'px':
-                null
-            :null
+
     container.dataset.type = 'contentenvelope'
     container.dataset.index = index
     container.dataset.cacheitemid = itemID

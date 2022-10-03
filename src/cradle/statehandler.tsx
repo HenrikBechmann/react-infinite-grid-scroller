@@ -17,8 +17,6 @@ export default class StateHandler {
 
        this.setCradleState = internalProperties.setCradleState
        this.cradleStateRef = internalProperties.cradleStateRef
-       this.setCradleResizeState = internalProperties.setCradleResizeState
-       this.cradleResizeStateRef = internalProperties.cradleResizeStateRef
        this.isMountedRef = internalProperties.isMountedRef
        
     }
@@ -27,8 +25,6 @@ export default class StateHandler {
 
     public cradleStateRef
     public setCradleState
-    public cradleResizeStateRef
-    public setCradleResizeState
     public isMountedRef
 
 }

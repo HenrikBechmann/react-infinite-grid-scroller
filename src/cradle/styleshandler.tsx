@@ -7,8 +7,8 @@
         headstyles,
         tailstyles,
         axisstyles,
-        triggerlineaxisstyles,
-        triggerlineheadstyles,
+        triggercelltriggerlineheadstyles,
+        triggercelltriggerlinetailstyles,
         cradledividerstyles
 */
 
@@ -36,20 +36,20 @@ export default class StylesHandler {
         viewportwidth,
         userstyles,
         triggerlineOffset,
+        layout,
 
     }) => {
 
-        const headstyles = this.getHeadStyles(gap, padding, orientation, userstyles.cradle)
-        const tailstyles = this.getTailStyles(gap, padding, orientation, userstyles.cradle)
+        const headstyles = this.getBaseHeadStyles(gap, padding, orientation, userstyles.cradle)
+        const tailstyles = this.getBaseTailStyles(gap, padding, orientation, userstyles.cradle)
         const axisstyles = this.getAxisStyles(gap, padding, orientation, userstyles.axis)
 
         const triggercelltriggerlineheadstyles =
-            this.getTriggercellTriggerlineHeadStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
+            this.getTriggercellTriggerlineHeadStyles(
+                orientation,cellHeight, cellWidth, triggerlineOffset, gap)
         const triggercelltriggerlinetailstyles = 
-            this.getTriggercellTriggerlineTailStyles(orientation,cellHeight, cellWidth, triggerlineOffset, gap)
-
-
-        // layoutHandler.triggerlineSpan = this.axisTriggerlineOffset - this.headTriggerlineOffset
+            this.getTriggercellTriggerlineTailStyles(
+                orientation,cellHeight, cellWidth, triggerlineOffset, gap)
 
         const cradledividerstyles = 
             {
@@ -60,64 +60,57 @@ export default class StylesHandler {
                 boxShadow:'0 0 5px 3px red'
             }
 
-        headstyles.gridGap = gap + 'px'
+        headstyles.gap = tailstyles.gap = gap + 'px'
 
-        tailstyles.gridGap = gap + 'px'
+        if (orientation == 'vertical') {
 
-        if (orientation == 'horizontal') {
-
-            headstyles.padding = `${padding}px 0 ${padding}px ${padding}px`
-
-            headstyles.width = 'auto'
-            headstyles.height = '100%'
-            headstyles.gridAutoFlow = 'column'
-            // explict crosscount next line as workaround for FF problem - 
-            //     sets length of horiz cradle items in one line (row), not multi-row config
-            headstyles.gridTemplateRows = 
-                cellHeight?
-                    `repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:
-                    'auto'
-            headstyles.gridTemplateColumns = 'none'
-
-            tailstyles.padding = `${padding}px ${padding}px ${padding}px 0`
-
-            tailstyles.width = 'auto'
-            tailstyles.height = '100%'
-            tailstyles.gridAutoFlow = 'column'
-            // explict crosscount next line as workaround for FF problem - 
-            //     sets length of horiz cradle items in one line (row), not multi-row config
-            tailstyles.gridTemplateRows = 
-                cellHeight?
-                    `repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`:
-                    'auto'
-            tailstyles.gridTemplateColumns = 'none'
-
-        } else if (orientation == 'vertical') {
-
+            // padding varies
             headstyles.padding = `${padding}px ${padding}px 0 ${padding}px`
-
-            headstyles.width = '100%'
-            headstyles.height = 'auto'
-            headstyles.gridAutoFlow = 'row'
-            
-            headstyles.gridTemplateRows = 'none'
-            headstyles.gridTemplateColumns = 
-                cellWidth?
-                    `repeat(auto-fill, minmax(${cellWidth}px, 1fr))`:
-                    'auto'
-
             tailstyles.padding = `0 ${padding}px ${padding}px ${padding}px`
 
-            tailstyles.width = '100%'
-            tailstyles.height = 'auto'
-            tailstyles.gridAutoFlow = 'row'
-            
-            tailstyles.gridTemplateRows = 'none'
-            tailstyles.gridTemplateColumns = 
-                cellWidth?
-                    `repeat(auto-fill, minmax(${cellWidth}px, 1fr))`:
-                    'auto'
+            // the following are identical for head and tail
+            headstyles.width = tailstyles.width = '100%'
+            headstyles.height = tailstyles.height = 'auto'
 
+            headstyles.gridTemplateRows = tailstyles.gridTemplateRows = null
+
+            headstyles.gridTemplateColumns = 
+            tailstyles.gridTemplateColumns = 
+                    `repeat(${crosscount}, minmax(${cellWidth}px, 1fr))`
+
+            headstyles.gridAutoFlow = tailstyles.gridAutoFlow = 'row'
+
+            headstyles.gridAutoRows = 
+            tailstyles.gridAutoRows =
+                (layout == 'uniform')?
+                    null:
+                    'max-content'
+
+            headstyles.gridAutoColumns = tailstyles.gridAutoColumns = null
+
+        } else { // orientation == 'horizontal'
+
+            headstyles.padding = `${padding}px 0 ${padding}px ${padding}px`
+            tailstyles.padding = `${padding}px ${padding}px ${padding}px 0`
+
+            headstyles.width = tailstyles.width = 'auto'
+            headstyles.height = tailstyles.height = '100%'
+
+            headstyles.gridTemplateRows = 
+            tailstyles.gridTemplateRows = 
+                    `repeat(${crosscount}, minmax(${cellHeight}px, 1fr))`
+
+            headstyles.gridTemplateColumns = tailstyles.gridTemplateColumns = null
+
+            headstyles.gridAutoFlow = tailstyles.gridAutoFlow = 'column'
+            headstyles.gridAutoRows = tailstyles.gridAutoRows = null
+
+            headstyles.gridAutoColumns = 
+            tailstyles.gridAutoColumns = 
+                (layout == 'uniform')?
+                    null:
+                    'max-content'
+            
         }
 
         return [
@@ -131,7 +124,9 @@ export default class StylesHandler {
         
     }
 
-    private getHeadStyles = (gap,padding,orientation,userheadstyles) => {
+    // the top, right, bottom, left setting determine the direction of expansion of the grid block
+    private getBaseHeadStyles = 
+        (gap,padding,orientation,userheadstyles) => {
 
         let bottom, left, top, right
 
@@ -153,8 +148,6 @@ export default class StylesHandler {
             display: 'grid',
             gridGap: gap + 'px',
             padding: padding + 'px',
-            justifyContent:'start',
-            alignContent:'start',
             boxSizing:'border-box',
             bottom,
             left,
@@ -163,7 +156,9 @@ export default class StylesHandler {
         }
     }
 
-    private getTailStyles = (gap,padding,orientation,usertailstyles) => {
+    // the top, right, bottom, left setting determine the direction of expansion of the grid block
+    private getBaseTailStyles = 
+        (gap,padding,orientation,usertailstyles) => {
 
         let bottom, left, top, right
 
@@ -182,12 +177,9 @@ export default class StylesHandler {
         return {
             ...usertailstyles,
             position: 'absolute',
-            // backgroundColor: 'blue',
             display: 'grid',
             gridGap: gap + 'px',
             padding: padding + 'px',
-            justifyContent:'start',
-            alignContent:'start',
             boxSizing:'border-box',
             top,
             left,
@@ -196,19 +188,25 @@ export default class StylesHandler {
         } 
     }
 
-    private getAxisStyles = (gap, padding, orientation, useraxisstyles) => {
+    private getAxisStyles = 
+        (gap, padding, orientation, useraxisstyles) => {
+
         let top, left, width, height // for axis
 
         if (orientation == 'vertical') {
+
             top = padding + 'px'
             left = 'auto'
             width = '100%'
-            height = 'auto'
+            height = 0
+
         } else {
+
             top = 'auto'
             left = padding + 'px'
             width = 0
             height = '100%'
+
         }
 
         return {
@@ -223,14 +221,15 @@ export default class StylesHandler {
 
     }
 
-    private getTriggercellTriggerlineHeadStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
+    private getTriggercellTriggerlineHeadStyles = 
+        (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
 
         const position = 'absolute'
 
         let width, height, top, left
         if (orientation == 'vertical') {
 
-            height = '0px'
+            height = 0
             width = '100%'
             left = 'auto'
             top = triggerlineOffset + 'px'
@@ -238,7 +237,7 @@ export default class StylesHandler {
         } else {
 
             height = '100%'
-            width = '0px'
+            width = 0
             left = triggerlineOffset + 'px'
             top = 'auto'
 
@@ -254,14 +253,15 @@ export default class StylesHandler {
 
         }
     }
-    private getTriggercellTriggerlineTailStyles = (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
+    private getTriggercellTriggerlineTailStyles = 
+        (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
 
         const position = 'absolute'
 
         let width, height, bottom, right
         if (orientation == 'vertical') {
 
-            height = '0px'
+            height = 0
             width = '100%'
             bottom = -(triggerlineOffset + gap) + 'px'
             right = 'auto'
@@ -269,7 +269,7 @@ export default class StylesHandler {
         } else {
 
             height = '100%'
-            width = '0px'
+            width = 0
             bottom = 'auto'
             right = -(triggerlineOffset + gap) + 'px'
 

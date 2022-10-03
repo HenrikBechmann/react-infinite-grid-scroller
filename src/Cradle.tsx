@@ -144,10 +144,6 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    const [cradleResizeState, setCradleResizeState] = useState('resizeready')
-    const cradleResizeStateRef = useRef(null) // access by closures
-    cradleResizeStateRef.current = cradleResizeState
-
     // console.log('==> cradleState','-'+scrollerID+'-',cradleState)
 
     // flags
@@ -182,9 +178,9 @@ const Cradle = ({
     const crosscount = useMemo(() => { // the number of cells crossing orientation
 
         const viewportcrosslength = 
-            (orientation == 'horizontal')?
-                viewportheight:
-                viewportwidth
+            (orientation == 'vertical')?
+                viewportwidth:
+                viewportheight
 
         if (viewportcrosslength == 0) {
 
@@ -196,9 +192,9 @@ const Cradle = ({
         const viewportcrosslengthforcalc = viewportcrosslength - (padding * 2) + gap 
 
         const cellcrosslength = 
-            (orientation == 'horizontal')?
-                cellHeight + gap:
-                cellWidth + gap
+            (orientation == 'vertical')?
+                cellWidth + gap:
+                cellHeight + gap
 
         const cellcrosslengthforcalc = 
             Math.min(cellcrosslength,viewportcrosslengthforcalc) // result cannot be less than 1
@@ -226,26 +222,34 @@ const Cradle = ({
         runwayRowcount,
     ] = useMemo(()=> {
 
-        let viewportLength, baseRowLength
+        const viewportLength = 
+            (orientation == 'vertical')?
+                viewportheight:
+                viewportwidth
 
+        let baseRowLength
         if (layout == 'uniform') {
 
             if (orientation == 'vertical') {
-                viewportLength = viewportheight
+
                 baseRowLength = cellHeight
+
             } else {
-                viewportLength = viewportwidth
+
                 baseRowLength = cellWidth
+
             }
 
         } else { // layout == 'variable'
 
             if (orientation == 'vertical') {
-                viewportLength = viewportheight
+
                 baseRowLength = cellMinHeight
+
             } else {
-                viewportLength = viewportwidth
+
                 baseRowLength = cellMinWidth
+
             }
 
         }
@@ -264,16 +268,23 @@ const Cradle = ({
 
         let runwayRowcount
         if (calculatedCradleRowcount >= cradleRowcount) {
+
             runwayRowcount = runwaySize
+
         } else {
+
             const diff = (cradleRowcount - calculatedCradleRowcount)
             runwayRowcount -= Math.floor(diff/2)
             runwayRowcount = Math.max(0,runwayRowcount)
+
         }
+
         let itemcount = cradleRowcount * crosscount
         if (itemcount > listsize) {
+
             itemcount = listsize
             cradleRowcount = Math.ceil(itemcount/crosscount)
+
         }
 
         return [
@@ -342,6 +353,7 @@ const Cradle = ({
         userCallbacks,
         styles,
         cacheHandler,
+        // control values
         SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
         MAX_CACHE_OVER_RUN,
 
@@ -388,8 +400,8 @@ const Cradle = ({
         // for stateHandler
         cradleStateRef,
         setCradleState,
-        cradleResizeStateRef,
-        setCradleResizeState,
+        // cradleResizeStateRef,
+        // setCradleResizeState,
     }
 
     // placeholder in cradleParameters to make available individual handlers
@@ -410,7 +422,9 @@ const Cradle = ({
 
     // ongoing source of handlers - note all Handlers are given all parameters (cradleParameters)
     if (!handlersRef.current) {
+
         handlersRef.current = getCradleHandlers(cradleParameters)
+
     }
 
     // make handlers directly available to cradle code below
@@ -447,11 +461,9 @@ const Cradle = ({
 
     const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
 
-    if (
-        isCacheChange || 
+    if (isCacheChange || 
         ViewportContextProperties.isReparentingRef?.current ||
-        (ViewportContextProperties.isResizing && isCachingUnderway) 
-    ) { 
+        (ViewportContextProperties.isResizing && isCachingUnderway)) { 
 
         if (ViewportContextProperties.isReparentingRef?.current) {
 
@@ -599,19 +611,15 @@ const Cradle = ({
     },[])
 
     // observer support
-
     /*
         There are two interection observers: one for the cradle wings, and another for triggerlines; 
             both against the viewport.
-        There is also a resize observer for the cradle wings, to generate responses to size changes of 
-            variable cells.
     */    
     useEffect(()=>{
 
         const {
             cradleIntersect,
             triggerlinesIntersect,
-            // cradleResize,
         } = interruptHandler
 
         // intersection observer for cradle body
@@ -624,17 +632,11 @@ const Cradle = ({
         //     when triggerlines pass the edge of the viewport
         // defer connectElements until triggercell triggerlines have been assigned
         const triggerobserver = triggerlinesIntersect.createObserver()
-        // interruptHandler.triggerlinesIntersect.connectElements()
-
-        // resize observer generates compensation for changes in cell sizes for variable layout modes
-        // const cradleresizeobserver = cradleResize.createObserver()
-        // cradleResize.connectElements()
 
         return () => {
 
             cradleintersectobserver.disconnect()
             triggerobserver.disconnect()
-            // cradleresizeobserver.disconnect()
 
         }
 
@@ -837,8 +839,10 @@ const Cradle = ({
             + gap
 
         const pivotAxisOffset = previousratio * pivotCellPixelLength
+
+        const { cradlePositionData } = layoutHandler
         
-        layoutHandler.cradlePositionData.targetAxisViewportPixelOffset = Math.round(pivotAxisOffset)
+        cradlePositionData.targetAxisViewportPixelOffset = Math.round(pivotAxisOffset)
 
         interruptHandler.pauseInterrupts()
 
@@ -872,6 +876,7 @@ const Cradle = ({
             crosscount, 
             userstyles:styles,
             triggerlineOffset,
+            layout,
 
         })
 
@@ -889,12 +894,13 @@ const Cradle = ({
         crosscount,
         styles,
         triggerlineOffset,
+        layout,
 
       ])
 
     // =====================[ STATE MANAGEMENT ]==========================
 
-    // this is the core state engine (19 states), using named states
+    // this is the core state engine (about 30 states), using named states
     // useLayoutEffect for suppressing flashes
     useLayoutEffect(()=>{
 
@@ -1062,10 +1068,6 @@ const Cradle = ({
 
                 cradleContent.headModelComponents = []
                 cradleContent.tailModelComponents = []
-
-                // register new array id for Object.is to trigger react re-processing
-                // cradleContent.headDisplayComponents = []
-                // cradleContent.tailDisplayComponents = []
 
                 if (cradleState == 'reload') {
                     cacheHandler.clearCache()
@@ -1308,21 +1310,6 @@ const Cradle = ({
         }
 
     },[cradleState])
-
-    // TODO redundant
-    // for cradle resize events; these are asynchronous
-    useLayoutEffect(()=>{
-
-        switch (cradleResizeState) {
-
-            case 'resizeready':
-                break
-            case 'resizecradle':
-                setCradleResizeState('resizeready')
-                break
-        }
-
-    },[cradleResizeState])
 
     // standard rendering states (3 states)
     useEffect(()=> { 

@@ -284,9 +284,9 @@ export const calcContentShift = ({
     const gridRowSpans = getGridRowSpans(gridRowLengths)
 
     const triggerReferencePos = 
-        (shiftinstruction == 'tohead')? // block scrolling tailward
-        triggerData.headOffset:
-        triggerData.tailOffset
+        (shiftinstruction == 'totail')? // block scrolling tailward
+        triggerData.tailOffset:
+        triggerData.headOffset
 
     const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0),
         previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)
@@ -297,13 +297,13 @@ export const calcContentShift = ({
     // ----------------------------[ 2. calculate base row shift ]--------------------------
 
     let spanRowPtr
-    if (shiftinstruction == 'tohead') {
+    if (shiftinstruction == 'totail') {
 
-        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos - span) <=0 )
+        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos + span) >=0 )
     
     } else {
 
-        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos + span) >=0 )
+        spanRowPtr = gridRowSpans.findIndex((span) => (triggerReferencePos - span) <=0 )
 
     }
 
@@ -395,11 +395,13 @@ export const calcContentShift = ({
     const currentViewportAxisOffset = 
         scrollblockAxisOffset + scrollblockOffset - scrollPos
 
-    const newAxisPixelOffset = currentViewportAxisOffset + axisPixelShift
+    // -------------[ 4. calculate new axis pixel position ]------------------
 
-    // Note: sections 4, 5 and 6 deal entirely with row calculations; no pixels
+    const newAxisViewportPixelOffset = currentViewportAxisOffset + axisPixelShift
 
-    // ------------[ 4. calc new cradle and axis reference row offsets ]-------------
+    // Note: sections 5, 6 and 7 deal entirely with row calculations; no pixels
+
+    // ------------[ 5. calc new cradle and axis reference row offsets ]-------------
 
     // base value for cradle reference shift; may change if beyond list bounds
     let cradleReferenceRowshift = axisReferenceRowShift
@@ -408,7 +410,7 @@ export const calcContentShift = ({
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
     let newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowShift
 
-    // --------[ 5. adjust cradle contents for start and end of list ]-------
+    // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
 
     const listEndrowOffset = (listRowcount - 1)
@@ -480,7 +482,7 @@ export const calcContentShift = ({
 
     }
 
-    // ----------------------[ 6. map rows to item references ]----------------------
+    // ----------------------[ 7. map rows to item references ]----------------------
 
     const newCradleReferenceIndex = (newCradleReferenceRowOffset * crosscount)
     const cradleReferenceItemShift = (cradleReferenceRowshift * crosscount)
@@ -505,10 +507,6 @@ export const calcContentShift = ({
     const listStartChangeCount = -(cradleReferenceItemShift)
     const listEndChangeCount = -listStartChangeCount - changeOfCradleContentCount
 
-    // -------------[ 7. calculate new axis pixel position ]------------------
-
-    // const newAxisPixelOffset = currentViewportAxisOffset + axisPixelShift
-
     // ---------------------[ 8. return required values ]-------------------
 
     return {
@@ -518,7 +516,7 @@ export const calcContentShift = ({
         newAxisReferenceIndex, 
         axisReferenceItemShift, 
 
-        newAxisPixelOffset,
+        newAxisViewportPixelOffset,
 
         newCradleContentCount,
         listStartChangeCount,
@@ -534,7 +532,6 @@ export const getGridRowLengths = (grid, orientation, crosscount, gap) => {
 
     let elementPtr = 0
     let element = elementList[elementPtr]
-    let span = 0
 
     while (element) {
         const rowlength = 
@@ -676,8 +673,8 @@ export const allocateContentList = (
             true:
             false
 
-    if ((triggercellIndex !== undefined) && (offsetindex !== undefined) && 
-       (triggercellIndex != targetTriggercellIndex)) {
+    if ((triggercellIndex !== undefined) && (offsetindex !== undefined)) { //&& 
+       // (triggercellIndex != targetTriggercellIndex)) {
         if ((triggercellIndex >= offsetindex) && (triggercellIndex <= highindex)) {
             const triggercellPtr = triggercellIndex - offsetindex
             const triggercellComponent = contentlist[triggercellPtr]
@@ -690,9 +687,9 @@ export const allocateContentList = (
     const triggercellPtr = targetTriggercellIndex - offsetindex
     const triggercellComponent = contentlist[triggercellPtr]
     // if !triggercellComponent, is temporarily out of scope; will recycle
-    if (triggercellComponent && ((triggercellIndex === undefined) || 
-        (triggercellIndex != targetTriggercellIndex  ||
-        !triggercellComponent.props.isTriggecell))) {    
+    if (triggercellComponent) {// && ((triggercellIndex === undefined) || 
+        // (triggercellIndex != targetTriggercellIndex  ||
+        // !triggercellComponent.props.isTriggecell))) {    
         contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:true})
         layoutHandler.triggercellIndex = targetTriggercellIndex
     } else { // defensive
