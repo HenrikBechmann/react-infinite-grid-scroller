@@ -121,11 +121,11 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     getShiftInstruction determines whether the axis should be moved toward the head or tail
         to restore the straddling position of the two trigger lines.
 
-    'axistowardhead' (scrolling down or right) means moving the axis up or left, adjacent items down
+    'axisheadward' (scrolling down or right) means moving the axis up or left, adjacent items down
          or right to the tail, dropping trailing tail items, and adding leading head items as necessary
          to maintain number of cradle rows of content constant.
 
-    'axistowardtail' (scrolling up or left) means moving the axis down or right, adjacent items up
+    'axistailward' (scrolling up or left) means moving the axis down or right, adjacent items up
          or left to the head, dropping trailing head items, and adding leading tail items as necessary
          to maintain number of cradle rows of content constant.
 
@@ -187,7 +187,7 @@ export const getShiftInstruction = ({
 
         if (triggerData.headOffset <= 0) {
 
-            shiftinstruction = 'axistowardtail'
+            shiftinstruction = 'axistailward'
 
         } else {
 
@@ -199,11 +199,11 @@ export const getShiftInstruction = ({
 
         if (triggerData.tailOffset <= 0) {
 
-            shiftinstruction = 'axistowardtail'
+            shiftinstruction = 'axistailward'
 
         } else if (triggerData.headOffset >= 0) {
 
-            shiftinstruction = 'axistowardhead'
+            shiftinstruction = 'axisheadward'
 
         } else {
 
@@ -278,13 +278,13 @@ export const calcContentShift = ({
     } = cradleInternalProperties
 
     const referenceGridElement = // moving axis (and triggers) toward the reference grid element
-        (shiftinstruction == 'axistowardtail')? // scrolling up or left
+        (shiftinstruction == 'axistailward')? // scrolling up or left
             tailGridElement:
             headGridElement
 
     const gridRowLengths = getGridRowLengths(referenceGridElement, orientation, crosscount, gap)
 
-    if (shiftinstruction == 'axistowardhead') { // scrolling down or right; move triggerlines up or left
+    if (shiftinstruction == 'axisheadward') { // scrolling down or right; move triggerlines up or left
 
         gridRowLengths.reverse() // head row lengths listed from axis toward head
 
@@ -293,7 +293,7 @@ export const calcContentShift = ({
     const gridRowSpans = getGridRowSpans(gridRowLengths)
 
     const triggerViewportReferencePos = 
-        (shiftinstruction == 'axistowardtail')? // block scrolling up or left
+        (shiftinstruction == 'axistailward')? // block scrolling up or left
         triggerData.tailOffset: // needs to move down or right toward tail
         triggerData.headOffset // needs to move up or left toward head
 
@@ -306,7 +306,7 @@ export const calcContentShift = ({
     // ----------------------------[ 2. calculate base row shift ]--------------------------
 
     let spanRowPtr
-    if (shiftinstruction == 'axistowardtail') { 
+    if (shiftinstruction == 'axistailward') { 
 
         // tail trigger needs to move down or right until position relative to viewport top or left is positive
         spanRowPtr = gridRowSpans.findIndex((movementspan) => 
@@ -323,67 +323,70 @@ export const calcContentShift = ({
     let spanAxisPixelShift // in relation to viewport head boundary
     if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
 
-        let totalRowShiftCount
+        let totalRowShift
         if (gridRowSpans.length == 0) { // must be list boundary
-            totalRowShiftCount = -1
+
+            totalRowShift = 0
             spanAxisPixelShift = 0
 
         } else {
-            console.log('calculating OVERSHOOT amounts')
             const baseRowLength =
                 ((orientation == 'vertical')?
                     cellHeight:
                     cellWidth) 
                 + gap
 
-            const countedRowShift = gridRowSpans.length - 1
-            totalRowShiftCount = countedRowShift // base
+            const countedRowShift = gridRowSpans.length - 1 // anticipate increment
+            totalRowShift = countedRowShift // base
             let totalPixelShift = gridRowSpans.at(-1) // set base of working overshoot
-                // (shiftinstruction == 'axistowardtail')?
+                // (shiftinstruction == 'axistailward')?
                 //     gridRowSpans.at(-1):
                 //     -gridRowSpans.at(-1)
 
-            if (shiftinstruction == 'axistowardtail') { // scrolling up
+            if (shiftinstruction == 'axistailward') { // scrolling up
 
                 // while (overshootPixelShift < triggerViewportReferencePos) {
                 while ((triggerViewportReferencePos + totalPixelShift < 0)) {
+
                     totalPixelShift += baseRowLength
-                    ++totalRowShiftCount
-                    // if ((previousAxisRowOffset + totalRowShiftCount) == 0) {
-                    //     break
-                    // }
+                    ++totalRowShift
+
                 }
 
                 spanAxisPixelShift = totalPixelShift
 
-            } else { // axistowardhead; scrolling down
+                console.log('shiftinstruction, previousAxisRowOffset, totalRowShift, totalPixelShift',
+                    shiftinstruction, previousAxisRowOffset, totalRowShift, totalPixelShift)
+
+            } else { // axisheadward; scrolling down
 
                 while ((triggerViewportReferencePos - totalPixelShift) > 0) {
                     totalPixelShift += baseRowLength
-                    ++totalRowShiftCount
-                    // if ((previousAxisRowOffset - totalRowShiftCount) == 0) {
-                    //     break
-                    // }
+                    ++totalRowShift
+                    if ((previousAxisRowOffset - totalRowShift) == 0) {
+                        break
+                    }
                 }
 
                 spanAxisPixelShift = -totalPixelShift
+
             }
 
         }
 
-        spanRowPtr = totalRowShiftCount // notional spanRowPtr
+        spanRowPtr = totalRowShift - 1// notional spanRowPtr
 
     } else { // final values found in instantiated rows
 
         spanAxisPixelShift = 
-            (shiftinstruction == 'axistowardtail')?
+            (shiftinstruction == 'axistailward')?
                 gridRowSpans[spanRowPtr] : // move toward tail from viewport boundary (positive)
                 -gridRowSpans[spanRowPtr] // move toward head from viewport boundary (negative)
 
     }
 
     const spanRowShift = // pick up row shift with or without overshoot
-        (shiftinstruction == 'axistowardtail')?
+        (shiftinstruction == 'axistailward')?
             spanRowPtr + 1:
             -(spanRowPtr + 1)
 
@@ -433,7 +436,7 @@ export const calcContentShift = ({
 
     const listEndrowOffset = (listRowcount - 1)
 
-    if (shiftinstruction == 'axistowardtail') { // scrolling toward head
+    if (shiftinstruction == 'axistailward') { // scrolling toward head
 
         // a. if scrolling the block headward near the start of the list, new cradle row offset and
         // cradle row shift count has to be adjusted to accommodate the leading runway
@@ -466,7 +469,7 @@ export const calcContentShift = ({
 
         }
 
-    } else { // shiftinstruction == 'axistowardhead'; scrolling toward tail 
+    } else { // shiftinstruction == 'axisheadward'; scrolling toward tail 
 
         // c. if scrolling the block tailward (toward revealing head of list), as the cradlerowoffset 
         // hits 0, cradle changes have to be adjusted to prevent shortening of cradle content

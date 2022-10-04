@@ -14,18 +14,9 @@
 
     BUGS:
 
-        - fast scroll to top left cradle stranded in reposition; did not setCradleContent
-            - rare! associated with failure to register triggercell, 
-            - case: triggerCellIndex == 7, targetTriggerCellIndex == -5
-                full screen, variable, crosscount == 4, vertical
-            - always at top
-            - case: triggerCellIndes == 1, targetTriggerCellIndes = -2
-                crosscount == 1, vertical, variable
-
         - pivot does not stick with change of demo
 
     TODO:
-        - make sure overshootPixelShift in calcContentShift never points to a negative row
         - check connect and disconnect
         - isolate variable behaviour everywhere
         - ! re-establish triggercell if it has been replace by some cache management routine

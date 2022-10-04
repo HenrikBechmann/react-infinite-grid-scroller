@@ -1038,7 +1038,15 @@ const Cradle = ({
                 signals.pauseCradleIntersectionObserver = true
                 signals.repositioningRequired = false // because now underway
 
-                setCradleState('repositioningRender') // toggles with repositioningContinuation
+                if (scrollHandler.isScrolling) {
+
+                    setCradleState('repositioningRender') // toggles with repositioningContinuation
+
+                } else {
+
+                    setCradleState('finishreposition')
+
+                }
 
                 break
 
