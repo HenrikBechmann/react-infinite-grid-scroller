@@ -119,7 +119,7 @@ const InfiniteGridScroller = (props) => {
         cellMinWidth = 0, // for layout == 'variable' && orientation == 'horizontal'
 
         // ** scroller specs:
-        runwaySize = 3, // the number of items outside the view of each side of the viewport 
+        runwaySize = 3, // the number of rows outside the view of each side of the viewport 
             // -- gives time to assemble cellFrames before display
         startingIndex = 0, // the 0-based starting index of the list, when first loaded
         placeholder, // optional. a sparse component to stand in for content until the content arrives; 
