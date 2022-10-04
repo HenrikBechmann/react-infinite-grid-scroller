@@ -213,8 +213,6 @@ export const getShiftInstruction = ({
 
     }
 
-    console.log('getShiftInstruction', shiftinstruction, triggerData)
-
     return [shiftinstruction, triggerData]
 
 }
@@ -353,7 +351,7 @@ export const calcContentShift = ({
 
                 } while ((triggerViewportReferencePos + totalPixelShift) < 0) 
 
-                spanAxisPixelShift = totalPixelShift
+                spanAxisPixelShift = (totalPixelShift - baseRowLength) // an approximation
 
             } else { // axisheadward; scrolling down
 
@@ -362,19 +360,19 @@ export const calcContentShift = ({
                     totalPixelShift += baseRowLength
                     notionalRowPtr++
 
-                    if ((previousAxisRowOffset - notionalRowPtr) == 0) { // limit to rowshift
+                    if ((previousAxisRowOffset - (notionalRowPtr + 1)) < 0) { // stop cycling at limit
                         break
                     }
 
                 } while ((triggerViewportReferencePos - totalPixelShift) > 0)
 
-                spanAxisPixelShift = -totalPixelShift
+                spanAxisPixelShift = -(totalPixelShift - baseRowLength) // an approximation
 
             }
 
         }
 
-        spanRowPtr = notionalRowPtr - 1
+        spanRowPtr = notionalRowPtr - 1 // an approximation
 
     } else { // final values found in instantiated rows
 

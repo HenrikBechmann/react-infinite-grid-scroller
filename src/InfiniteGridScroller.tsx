@@ -14,8 +14,6 @@
 
     BUGS:
 
-        scrolling of overflow variable vertical fails
-
     TODO:
         - simplify scrollerProperties usage
         - review overshoot logic in calcContentShift

@@ -568,9 +568,6 @@ export default class ContentHandler {
 
         } = cradlePositionData
 
-        console.log('adjustScrollblockForVariability: source, axisReferenceIndex, axisReferenceIndex\n',
-             source, axisReferenceIndex, axisReferenceIndex)
-
         const {
 
             orientation, 
