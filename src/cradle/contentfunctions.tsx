@@ -243,9 +243,6 @@ export const calcContentShift = ({
 
 }) => {
 
-    console.log('=========================================================')
-    console.log('starting CALCCONTENTSHIFT, shiftinstruction, triggerData\n', 
-        shiftinstruction, triggerData)
     // ------------------------[ 1. initialize ]-----------------------
 
     const { 
@@ -333,14 +330,13 @@ export const calcContentShift = ({
             spanAxisPixelShift = 0
 
         } else {
-            console.log('calculating OVERSHOOT amounts', shiftinstruction)
             const baseRowLength =
                 ((orientation == 'vertical')?
                     cellHeight:
                     cellWidth) 
                 + gap
 
-            const countedRowShift = gridRowSpans.length - 1
+            const countedRowShift = gridRowSpans.length - 1 // anticipate increment
             totalRowShift = countedRowShift // base
             let totalPixelShift = gridRowSpans.at(-1) // set base of working overshoot
                 // (shiftinstruction == 'axistailward')?
@@ -351,14 +347,16 @@ export const calcContentShift = ({
 
                 // while (overshootPixelShift < triggerViewportReferencePos) {
                 while ((triggerViewportReferencePos + totalPixelShift < 0)) {
+
                     totalPixelShift += baseRowLength
                     ++totalRowShift
-                    // if ((previousAxisRowOffset + totalRowShiftCount) == 0) {
-                    //     break
-                    // }
+
                 }
 
                 spanAxisPixelShift = totalPixelShift
+
+                console.log('shiftinstruction, previousAxisRowOffset, totalRowShift, totalPixelShift',
+                    shiftinstruction, previousAxisRowOffset, totalRowShift, totalPixelShift)
 
             } else { // axisheadward; scrolling down
 
@@ -369,15 +367,14 @@ export const calcContentShift = ({
                         break
                     }
                 }
-                console.log('previousAxisRowOffset, totalRowShift, totalPixelShift',
-                    previousAxisRowOffset, totalRowShift, totalPixelShift)
 
                 spanAxisPixelShift = -totalPixelShift
+
             }
 
         }
 
-        spanRowPtr = (totalRowShift + 1)// notional spanRowPtr
+        spanRowPtr = totalRowShift - 1// notional spanRowPtr
 
     } else { // final values found in instantiated rows
 
@@ -532,9 +529,6 @@ export const calcContentShift = ({
     const listEndChangeCount = -listStartChangeCount - changeOfCradleContentCount
 
     // ---------------------[ 8. return required values ]-------------------
-
-    console.log('returning newAxisReferenceIndex, newAxisViewportPixelOffset\n',
-        newAxisReferenceIndex, newAxisViewportPixelOffset)
 
     return {
 
