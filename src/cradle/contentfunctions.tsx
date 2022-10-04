@@ -323,10 +323,10 @@ export const calcContentShift = ({
     let spanAxisPixelShift // in relation to viewport head boundary
     if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
 
-        let totalRowShift
+        let notionalRowPtr
         if (gridRowSpans.length == 0) { // must be list boundary
 
-            totalRowShift = 0
+            notionalRowPtr = 0
             spanAxisPixelShift = 0
 
         } else {
@@ -336,34 +336,28 @@ export const calcContentShift = ({
                     cellWidth) 
                 + gap
 
-            const countedRowShift = gridRowSpans.length - 1 // anticipate increment
-            totalRowShift = countedRowShift // base
+            const baseRowPtr = gridRowSpans.length - 1
+            notionalRowPtr = baseRowPtr // base
             let totalPixelShift = gridRowSpans.at(-1) // set base of working overshoot
-                // (shiftinstruction == 'axistailward')?
-                //     gridRowSpans.at(-1):
-                //     -gridRowSpans.at(-1)
 
             if (shiftinstruction == 'axistailward') { // scrolling up
 
                 // while (overshootPixelShift < triggerViewportReferencePos) {
-                while ((triggerViewportReferencePos + totalPixelShift < 0)) {
+                while ((triggerViewportReferencePos + totalPixelShift) < 0) {
 
                     totalPixelShift += baseRowLength
-                    ++totalRowShift
+                    ++notionalRowPtr
 
                 }
 
                 spanAxisPixelShift = totalPixelShift
 
-                console.log('shiftinstruction, previousAxisRowOffset, totalRowShift, totalPixelShift',
-                    shiftinstruction, previousAxisRowOffset, totalRowShift, totalPixelShift)
-
             } else { // axisheadward; scrolling down
 
                 while ((triggerViewportReferencePos - totalPixelShift) > 0) {
                     totalPixelShift += baseRowLength
-                    ++totalRowShift
-                    if ((previousAxisRowOffset - totalRowShift) == 0) {
+                    ++notionalRowPtr
+                    if ((previousAxisRowOffset - notionalRowPtr) == 0) {
                         break
                     }
                 }
@@ -374,7 +368,7 @@ export const calcContentShift = ({
 
         }
 
-        spanRowPtr = totalRowShift - 1// notional spanRowPtr
+        spanRowPtr = notionalRowPtr - 1// notional spanRowPtr; anticipate increment
 
     } else { // final values found in instantiated rows
 

@@ -17,6 +17,7 @@
         - pivot does not stick with change of demo
 
     TODO:
+        - review overshoot logic in calcContentShift
         - check connect and disconnect
         - isolate variable behaviour everywhere
         - ! re-establish triggercell if it has been replace by some cache management routine
