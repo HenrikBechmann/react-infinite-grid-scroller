@@ -17,6 +17,7 @@
         scrolling of overflow variable vertical fails
 
     TODO:
+        - simplify scrollerProperties usage
         - review overshoot logic in calcContentShift
         - check connect and disconnect
         - isolate variable behaviour everywhere

@@ -213,6 +213,8 @@ export const getShiftInstruction = ({
 
     }
 
+    console.log('getShiftInstruction', shiftinstruction, triggerData)
+
     return [shiftinstruction, triggerData]
 
 }
@@ -347,7 +349,7 @@ export const calcContentShift = ({
                 do {
 
                     totalPixelShift += baseRowLength
-                    ++notionalRowPtr
+                    notionalRowPtr++
 
                 } while ((triggerViewportReferencePos + totalPixelShift) < 0) 
 
@@ -358,12 +360,12 @@ export const calcContentShift = ({
                 do {
 
                     totalPixelShift += baseRowLength
-                    ++notionalRowPtr
+                    notionalRowPtr++
 
-                    if ((previousAxisRowOffset - notionalRowPtr) == 0) { // limit so rowshift
+                    if ((previousAxisRowOffset - notionalRowPtr) == 0) { // limit to rowshift
                         break
                     }
-                    
+
                 } while ((triggerViewportReferencePos - totalPixelShift) > 0)
 
                 spanAxisPixelShift = -totalPixelShift
@@ -378,8 +380,8 @@ export const calcContentShift = ({
 
         spanAxisPixelShift = 
             (shiftinstruction == 'axistailward')?
-                gridRowSpans[spanRowPtr] : // move toward tail from viewport boundary (positive)
-                -gridRowSpans[spanRowPtr] // move toward head from viewport boundary (negative)
+                gridRowSpans[spanRowPtr] : // move axis toward tail from viewport boundary (positive)
+                -gridRowSpans[spanRowPtr] // move axis toward head from viewport boundary (negative)
 
     }
 
