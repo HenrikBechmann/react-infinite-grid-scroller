@@ -229,6 +229,9 @@ export const getShiftInstruction = ({
     Adjustments are made to accommodate special requirements at the start and end of the virtual list.
 
 */
+
+// rowshift is at least 1 by the time this function is reached
+// ie. a shiftinstruction of 'axisheadward' or 'axistailward'
 export const calcContentShift = ({
 
     shiftinstruction,
@@ -336,31 +339,32 @@ export const calcContentShift = ({
                     cellWidth) 
                 + gap
 
-            const baseRowPtr = gridRowSpans.length - 1
-            notionalRowPtr = baseRowPtr // base
+            notionalRowPtr = gridRowSpans.length - 1 // base: final, failed measured row ptr
             let totalPixelShift = gridRowSpans.at(-1) // set base of working overshoot
 
             if (shiftinstruction == 'axistailward') { // scrolling up
-
-                // while (overshootPixelShift < triggerViewportReferencePos) {
-                while ((triggerViewportReferencePos + totalPixelShift) < 0) {
+                
+                do {
 
                     totalPixelShift += baseRowLength
                     ++notionalRowPtr
 
-                }
+                } while ((triggerViewportReferencePos + totalPixelShift) < 0) 
 
                 spanAxisPixelShift = totalPixelShift
 
             } else { // axisheadward; scrolling down
 
-                while ((triggerViewportReferencePos - totalPixelShift) > 0) {
+                do {
+
                     totalPixelShift += baseRowLength
                     ++notionalRowPtr
-                    if ((previousAxisRowOffset - notionalRowPtr) == 0) {
+
+                    if ((previousAxisRowOffset - notionalRowPtr) == 0) { // limit so rowshift
                         break
                     }
-                }
+                    
+                } while ((triggerViewportReferencePos - totalPixelShift) > 0)
 
                 spanAxisPixelShift = -totalPixelShift
 
@@ -368,7 +372,7 @@ export const calcContentShift = ({
 
         }
 
-        spanRowPtr = notionalRowPtr - 1// notional spanRowPtr; anticipate increment
+        spanRowPtr = notionalRowPtr - 1
 
     } else { // final values found in instantiated rows
 
