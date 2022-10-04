@@ -14,7 +14,6 @@
 
     BUGS:
 
-        - pivot does not stick with change of demo
 
     TODO:
         - review overshoot logic in calcContentShift
@@ -38,9 +37,7 @@
         - create random loading delays in test ui
         - provide way to attempt reload of a single cell (change instanceID)
         - test for two root portals
-        - calc minwidth by form factor
-        - review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
-        - add grid-template-rows: max-content to parent for safari issue grid-auto-flow: column not filling column
+        - calc viewport minwidth by form factor
 */
 
 /*
