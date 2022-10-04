@@ -561,6 +561,7 @@ export default class ContentHandler {
 
         } = cradlePositionData
 
+
         let { 
         
             blockScrollPos 

@@ -359,10 +359,10 @@ const Cradle = ({
 
     }
 
-    const scrollerPassthroughPropertiesRef = useRef(null)
+    const scrollerPropertiesRef = useRef(null)
 
     // passed to cellFrame content (user content) if requested
-    scrollerPassthroughPropertiesRef.current = {
+    scrollerPropertiesRef.current = {
         orientation, 
         gap, 
         padding, 
@@ -412,7 +412,7 @@ const Cradle = ({
         handlersRef,
         ViewportContextPropertiesRef,
         cradleInheritedPropertiesRef, 
-        scrollerPassthroughPropertiesRef,
+        scrollerPropertiesRef,
         cradleInternalPropertiesRef, 
         externalCallbacksRef,
     }
@@ -1397,7 +1397,7 @@ const Cradle = ({
     ])
 
     const contextvalueRef = useRef({
-        scrollerPassthroughPropertiesRef, 
+        scrollerPropertiesRef, 
         cacheHandler, 
         nullItemSetMaxListsize,
         itemExceptionsCallback:serviceHandler.callbacks.itemExceptionsCallback,

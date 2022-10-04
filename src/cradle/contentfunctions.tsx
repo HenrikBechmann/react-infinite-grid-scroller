@@ -229,6 +229,9 @@ export const getShiftInstruction = ({
     Adjustments are made to accommodate special requirements at the start and end of the virtual list.
 
 */
+
+// rowshift is at least 1 by the time this function is reached
+// ie. a shiftinstruction of 'axisheadward' or 'axistailward'
 export const calcContentShift = ({
 
     shiftinstruction,
@@ -323,10 +326,10 @@ export const calcContentShift = ({
     let spanAxisPixelShift // in relation to viewport head boundary
     if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
 
-        let totalRowShift
+        let notionalRowPtr
         if (gridRowSpans.length == 0) { // must be list boundary
 
-            totalRowShift = 0
+            notionalRowPtr = 0
             spanAxisPixelShift = 0
 
         } else {
@@ -336,52 +339,47 @@ export const calcContentShift = ({
                     cellWidth) 
                 + gap
 
-            const countedRowShift = gridRowSpans.length - 1 // anticipate increment
-            totalRowShift = countedRowShift // base
+            notionalRowPtr = gridRowSpans.length - 1 // base: final, failed measured row ptr
             let totalPixelShift = gridRowSpans.at(-1) // set base of working overshoot
-                // (shiftinstruction == 'axistailward')?
-                //     gridRowSpans.at(-1):
-                //     -gridRowSpans.at(-1)
 
             if (shiftinstruction == 'axistailward') { // scrolling up
-
-                // while (overshootPixelShift < triggerViewportReferencePos) {
-                while ((triggerViewportReferencePos + totalPixelShift < 0)) {
+                
+                do {
 
                     totalPixelShift += baseRowLength
-                    ++totalRowShift
+                    notionalRowPtr++
 
-                }
+                } while ((triggerViewportReferencePos + totalPixelShift) < 0) 
 
-                spanAxisPixelShift = totalPixelShift
-
-                console.log('shiftinstruction, previousAxisRowOffset, totalRowShift, totalPixelShift',
-                    shiftinstruction, previousAxisRowOffset, totalRowShift, totalPixelShift)
+                spanAxisPixelShift = (totalPixelShift - baseRowLength) // an approximation
 
             } else { // axisheadward; scrolling down
 
-                while ((triggerViewportReferencePos - totalPixelShift) > 0) {
+                do {
+
                     totalPixelShift += baseRowLength
-                    ++totalRowShift
-                    if ((previousAxisRowOffset - totalRowShift) == 0) {
+                    notionalRowPtr++
+
+                    if ((previousAxisRowOffset - (notionalRowPtr + 1)) < 0) { // stop cycling at limit
                         break
                     }
-                }
 
-                spanAxisPixelShift = -totalPixelShift
+                } while ((triggerViewportReferencePos - totalPixelShift) > 0)
+
+                spanAxisPixelShift = -(totalPixelShift - baseRowLength) // an approximation
 
             }
 
         }
 
-        spanRowPtr = totalRowShift - 1// notional spanRowPtr
+        spanRowPtr = notionalRowPtr - 1 // an approximation
 
     } else { // final values found in instantiated rows
 
         spanAxisPixelShift = 
             (shiftinstruction == 'axistailward')?
-                gridRowSpans[spanRowPtr] : // move toward tail from viewport boundary (positive)
-                -gridRowSpans[spanRowPtr] // move toward head from viewport boundary (negative)
+                gridRowSpans[spanRowPtr] : // move axis toward tail from viewport boundary (positive)
+                -gridRowSpans[spanRowPtr] // move axis toward head from viewport boundary (negative)
 
     }
 

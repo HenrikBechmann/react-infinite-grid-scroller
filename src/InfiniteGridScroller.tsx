@@ -14,9 +14,9 @@
 
     BUGS:
 
-        - pivot does not stick with change of demo
-
     TODO:
+        - simplify scrollerProperties usage
+        - review overshoot logic in calcContentShift
         - check connect and disconnect
         - isolate variable behaviour everywhere
         - ! re-establish triggercell if it has been replace by some cache management routine
@@ -37,9 +37,7 @@
         - create random loading delays in test ui
         - provide way to attempt reload of a single cell (change instanceID)
         - test for two root portals
-        - calc minwidth by form factor
-        - review scroller-frame for appropriate dimensions - s/b inset:0;position:absolute
-        - add grid-template-rows: max-content to parent for safari issue grid-auto-flow: column not filling column
+        - calc viewport minwidth by form factor
 */
 
 /*
@@ -121,7 +119,7 @@ const InfiniteGridScroller = (props) => {
         cellMinWidth = 0, // for layout == 'variable' && orientation == 'horizontal'
 
         // ** scroller specs:
-        runwaySize = 3, // the number of items outside the view of each side of the viewport 
+        runwaySize = 3, // the number of rows outside the view of each side of the viewport 
             // -- gives time to assemble cellFrames before display
         startingIndex = 0, // the 0-based starting index of the list, when first loaded
         placeholder, // optional. a sparse component to stand in for content until the content arrives; 

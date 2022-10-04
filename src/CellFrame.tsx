@@ -77,7 +77,7 @@ const CellFrame = ({
 
     const { 
         cacheHandler, 
-        scrollerPassthroughPropertiesRef, // for the user content, if requested
+        scrollerPropertiesRef, // for the user content, if requested
         nullItemSetMaxListsize, // for internal notification of end-of-list
         itemExceptionsCallback, // or notification to host of error
         IDLECALLBACK_TIMEOUT, // to optimize requestIdleCallback
@@ -293,7 +293,7 @@ const CellFrame = ({
                                 let content 
                                 const scrollerProperties = {
                                     isReparentingRef:null,
-                                    scrollerPassthroughPropertiesRef,
+                                    scrollerPropertiesRef,
                                 }
                                 if (usercontent.props?.hasOwnProperty('scrollerProperties')) {
                                     content = React.cloneElement(usercontent, 

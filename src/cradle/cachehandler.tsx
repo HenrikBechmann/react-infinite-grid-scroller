@@ -32,7 +32,7 @@
         - your component is in cache when both width and height = 0
         - your component is out of cache when both width and height are back to normal
         - if you create an empty 'scrollerProperties' property for your component, CellFrame will
-            set it to an object containing isReparentingRef and scrollerPassthroughPropertiesRef
+            set it to an object containing isReparentingRef and scrollerPropertiesRef
         - isReparentingRef.current provides an up-to-date boolean indicating whether the component is 
             currently being 'reparented' into the real DOM. Set the value back to false once you've 
             detected it. After reparenting (after the width and height are back to normal) is when
@@ -229,7 +229,7 @@ export class CacheHandler {
 
     preload(cradleParameters, finalCallback, nullItemSetMaxListsize, scrollerID) {
 
-        const { scrollerPassthroughPropertiesRef } = cradleParameters
+        const { scrollerPropertiesRef } = cradleParameters
         const { stateHandler, serviceHandler } = cradleParameters.handlersRef.current
 
         const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
@@ -272,7 +272,7 @@ export class CacheHandler {
                     const promise = this.preloadItem(
                         index, 
                         getItem, 
-                        scrollerPassthroughPropertiesRef,
+                        scrollerPropertiesRef,
                         itemExceptionsCallback,
                         maxListsizeInterrupt,
                         scrollerID
@@ -765,7 +765,7 @@ export class CacheHandler {
     private async preloadItem(
         index, 
         getItem, 
-        scrollerPassthroughPropertiesRef, 
+        scrollerPropertiesRef, 
         itemExceptionsCallback,
         maxListsizeInterrupt,
         scrollerID
@@ -802,7 +802,7 @@ export class CacheHandler {
             let content 
             const scrollerProperties = {
                 isReparentingRef:null,
-                scrollerPassthroughPropertiesRef,
+                scrollerPropertiesRef,
             }
             if (usercontent.props.hasOwnProperty('scrollerProperties')) {
                 content = React.cloneElement(usercontent, {scrollerProperties})
