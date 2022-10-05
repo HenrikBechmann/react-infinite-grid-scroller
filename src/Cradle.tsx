@@ -3,9 +3,9 @@
 
 /*
     The Cradle does the bulk of the work for the infinite grid scroller. It does so with the help of
-    eight process handlers, and one main sub-component - the CellFrame.
+    eight process handlers (class instances), and one main sub-component - the CellFrame.
 
-    Cradle's main responsibility is to manage the state change flows of the content.
+    Cradle's main responsibility is to manage the ~30 state changes of the system.
 
     The illusion of infinite content is maintained by synchronizing changes in cradle content with the
     Cradle location inside the Scrollblock, such that as the Scrollblock is moved, the cradle moves 
@@ -15,12 +15,13 @@
     and position which realistically reflects the size of the list being shown.
 
     The position of the cradle is controlled by an 'axis' which is a 0px height/width div
-    (along the medial - ScrollBlock can be verticsl or horizontal). The purpose of the axis is to 
-    act as a 'fold', above which cradle content expands 'upwards' in the Cradle, and below which the 
-    cradle content expands 'downwards'. The Cradle content is held in two CSS grids (children of the axis): 
-    one above, and one below the position of the axis.
+    (along the medial - ScrollBlock can be vertical or horizontal). The purpose of the axis is to 
+    act as a 'fold', above which cradle content expands 'headwards' (up or left) in the Cradle, and 
+    below which the cradle content expands 'tailwards' (doen or right). The Cradle content is held in 
+    two CSS grids (children of the axis): one above or left (the 'head' grid), and one below or right, 
+    of the position of the axis (the 'tail' grid).
 
-    The axis is always kept near the leading (headward) edge of the visible cellrows of the viewport
+    The axis is always kept near the leading (headward) edge of the visible cell rows of the Viewport
     (there are some edge-case exceptions).
 
     Technically, there are several key reference points tracked by the Cradle. These are:
@@ -29,20 +30,23 @@
             (same or higher index value) the axis fold. The axisRefernceIndex is the first item in the 
             tail section of the Cradle.
         - (cradleReferenceIndex is inferred from the axisReferenceIndex, and is the virtual index of 
-            the item defining the leading bound of the cradle content. The cradleReferenceIndex is the 
-            fist item in the head section of the Cradle)
-        - axisPixelOffset (pixels that place the axis in relation to the viewport's leading edge)
-        - the blockScrollPos, which is the amount of scroll of the ScrollBlock
+            the item defining the leading bound of the cradle content. The cradleReferenceIndex is usually 
+            the first item in the head section of the Cradle, unless the cradle shows the very top of the
+            list, in which case the cradleReferenceIndex is the same as the AxisReferenceIndex)
+        - axisViewportPixelOffset (pixels that place the axis in relation to the viewport's leading edge)
+        - the blockScrollPos, which is the amount of scroll (Viewport scrollTop or scrollLeft) of the 
+            ScrollBlock
     
-    Overscroll handling:
+    Overscroll handling (repositioning):
         Owing to the potential rapidity of scrolling, which in the case of large lists and heavy content 
         can be too fast for the system to keep up, there is an overscroll protocol called 'repositioning'.
 
-        If the overscroll is such that the cradle has entirely passed out of the viewport, then the Cradle
-        is replaced by a ScrollTracker (or by null if the host takes responsibility for feedback). 
-        The ScrollTracker shows the relative location in the virtual list at the edge of the viewport 
-        during repositioning. When the scrolling stops Cradle recreates the cradle content, according to 
-        the final position of the repositioning process.
+        If the overscroll is such that the cradle (including its two content grids) has entirely passed 
+        out of the viewport, then the Cradle component is replaced by a ScrollTracker (or by null if 
+        the host takes responsibility for feedback). The ScrollTracker displays to the user the relative 
+        location in the virtual list at the edge of the viewport during repositioning. When the scrolling
+        stops Cradle recreates the cradle content, according to the final position of the repositioning 
+        process.
 
     Cradle is activated by interrupts:
     - scrolling
@@ -51,8 +55,6 @@
         - cradle/viewport intersection for repositioning when the cradle races out of scope
         - two 'triggerline'/viewport intersections which trigger rolling of content
             - rolling content triggers re-allocation of content between cradle head and tail grids
-        - cradle grid resizing responding to variable cell length changes (in 'variable' layout mode) 
-            which triggers reconfiguration
     - pivot - change of orientation
     - host changes of configuration specs through property changes or direct service calls
 */
@@ -217,7 +219,7 @@ const Cradle = ({
     const [
         cradleRowcount, 
         viewportRowcount, 
-        viewportVisibleRowcount, // max number of rows completely visible at once
+        viewportVisibleRowcount, // maximum number of rows completely visible at once
         listRowcount,
         runwayRowcount,
     ] = useMemo(()=> {
@@ -360,7 +362,6 @@ const Cradle = ({
     }
 
     const scrollerPropertiesRef = useRef(null)
-
     // passed to cellFrame content (user content) if requested
     scrollerPropertiesRef.current = {
         orientation, 
@@ -400,8 +401,6 @@ const Cradle = ({
         // for stateHandler
         cradleStateRef,
         setCradleState,
-        // cradleResizeStateRef,
-        // setCradleResizeState,
     }
 
     // placeholder in cradleParameters to make available individual handlers
@@ -442,12 +441,16 @@ const Cradle = ({
 
 /*    
     Intercept change in caching status:
-    when a portal is cached, including the transition of being moved from one cellFrame to another,
-    (and the infinitegridscroller can be a component that is cached),
+    when a component is is cached in a portal (in the React virtual DOM), including the transition of 
+    being moved from one cellFrame to another when crossing the Cradle axis, 
     the scrollPos (scrollLeft or scrollTop) is reset to 0 (zero). When the scroller is 
     moved to a cellFrame, this code triggers restoration the scrollPos (see case 'parentingtransition'
     in the state management section below).
-    The restore action must be the first priority to hide the scrollPos changes from the user
+
+    Not that InfiniteGridScroller components can themselves be cached as content.
+
+    The restore scrollPos action must be the first priority to hide these scrollPos adjustments
+    from the user.
 */
     // zero width and height means the component must be in portal (cache) state
     const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) 
