@@ -341,7 +341,7 @@ export default class ContentHandler {
         } = cradleInheritedProperties
 
         const { 
-            viewportVisibleRowcount,
+            // viewportVisibleRowcount,
             crosscount,
             listsize,
         } = cradleInternalProperties

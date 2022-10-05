@@ -964,7 +964,7 @@ const Cradle = ({
 
                 }
 
-                cacheHandler.preload(cradleParametersRef.current, finalCallback, nullItemSetMaxListsize, scrollerID)
+                cacheHandler.preload(finalCallback, nullItemSetMaxListsize, scrollerID)
 
                 break
             }
