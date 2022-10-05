@@ -15,7 +15,7 @@
     BUGS:
 
         nested intermittently (rare) lists missing their final column with horizontal
-            - probably a config transition issue
+            - probably a config transition issue (watching)
 
     STAGE
 
