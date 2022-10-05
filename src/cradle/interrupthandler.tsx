@@ -3,8 +3,6 @@
 
 /*
     This module holds the callbacks for the Cradle structure listeners:
-    - cradleResizeObserverCallback // responds to resize of the two cradle grids
-        when the cradle is in variable layout
     - cradleIntersectionObserverCallback // responds to move of both cradle grids outside viewport
         this initiates the repositioning protocol
     - axisTriggerlinesObserverCallback // responds to crossing of tailward and headward triggerlines
@@ -13,10 +11,6 @@
     viewportResizing is handled by viewport
     scrolling interrupts handled by scrollHandler
 */
-
-import { ResizeObserver as ResizeObserverPolyfill} from '@juggle/resize-observer'
-
-const ResizeObserver = window['ResizeObserver'] || ResizeObserverPolyfill
 
 export default class InterruptHandler {
 
