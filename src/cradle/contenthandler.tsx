@@ -2,10 +2,13 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    This module supports the setup and rollover of content in the Cradle. There are two key functions
-    in this module: setCradleContent, and updateCradleContent. There are also a few functions which 
-    support synchronization of Cradle content with cache content (see internal and external services
-    below).
+    This module supports the setup and rollover and positioning of content in the Cradle. 
+
+    There are three key functions in this module: setCradleContent, updateCradleContent, and
+    adjustScrollblockForVariability.
+
+    There are also a few functions which support synchronization of Cradle content with cache 
+    content (see internal and external services below).
 
     setCradleContent is called directly from Cradle (in the state manager), and instantiates new Cradle
     content in response to the scroller setup, or changes to its configuration. setCradleContent
@@ -17,9 +20,12 @@
     tailward, content is removed from the Cradle head and added to the Cradle tail. When scrolling 
     headward, the reverse occurs.
 
+    adjustScrollblockForVariability reconfigures the scrollblock to accommodate variable sized grid rows.
+
     The Cradle (through the contentfunctions module) delegates fetching content items to the CellFrame.
 
     This module is supported primarily by the contentfunctions module.
+
 */
 
 import React from 'react'
@@ -74,10 +80,11 @@ export default class ContentHandler {
         // ------------------------------[ 1. initialize ]---------------------------
 
         const { cradleParameters } = this
-        const ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current
-        const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
-        const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
-        const cradleHandlers = cradleParameters.handlersRef.current
+
+        const ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current,
+            cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+            cradleHandlers = cradleParameters.handlersRef.current
 
         const {
 
@@ -212,6 +219,7 @@ export default class ContentHandler {
             workingContentList,
             instanceIdCounterRef:this.instanceIdCounterRef,
             styles,
+
         })
 
         const [headcontentlist, tailcontentlist] = allocateContentList({
@@ -249,8 +257,9 @@ export default class ContentHandler {
             cradlePositionData.blockScrollPos 
 
         const cradleElements = layoutHandler.elements
-        const axisElement = cradleElements.axisRef.current
-        const headElement = cradleElements.headRef.current
+
+        const axisElement = cradleElements.axisRef.current,
+            headElement = cradleElements.headRef.current
 
         const axisScrollblockPixelOffset = 
             scrollblockViewportPixelOffset + axisViewportPixelOffset
@@ -331,8 +340,8 @@ export default class ContentHandler {
 
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
-        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
+        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current,
+            cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
         
         const { 
             orientation, 
