@@ -339,7 +339,7 @@ export const calcContentShift = ({
                     cellWidth) 
                 + gap
 
-            notionalRowPtr = gridRowSpans.length - 1 // base: final, failed measured row ptr
+            notionalRowPtr = gridRowSpans.length - 1 // base: failed measured row ptr
             let totalPixelShift = gridRowSpans.at(-1) // set base of working overshoot
 
             if (shiftinstruction == 'axistailward') { // scrolling up
@@ -351,7 +351,7 @@ export const calcContentShift = ({
 
                 } while ((triggerViewportReferencePos + totalPixelShift) < 0) 
 
-                spanAxisPixelShift = (totalPixelShift - baseRowLength) // an approximation
+                spanAxisPixelShift = (totalPixelShift - baseRowLength)
 
             } else { // axisheadward; scrolling down
 
@@ -366,19 +366,19 @@ export const calcContentShift = ({
 
                 } while ((triggerViewportReferencePos - totalPixelShift) > 0)
 
-                spanAxisPixelShift = -(totalPixelShift - baseRowLength) // an approximation
+                spanAxisPixelShift = -(totalPixelShift - baseRowLength)
 
             }
 
         }
 
-        spanRowPtr = notionalRowPtr - 1 // an approximation
+        spanRowPtr = notionalRowPtr - 1
 
     } else { // final values found in instantiated rows
 
         spanAxisPixelShift = 
             (shiftinstruction == 'axistailward')?
-                gridRowSpans[spanRowPtr] : // move axis toward tail from viewport boundary (positive)
+                gridRowSpans[spanRowPtr]: // move axis toward tail from viewport boundary (positive)
                 -gridRowSpans[spanRowPtr] // move axis toward head from viewport boundary (negative)
 
     }
