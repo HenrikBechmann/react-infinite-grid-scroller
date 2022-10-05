@@ -14,6 +14,8 @@
 
     BUGS:
 
+        nested lists missing their final column with horizontal
+
     TODO:
         - simplify scrollerProperties usage
         - review overshoot logic in calcContentShift
