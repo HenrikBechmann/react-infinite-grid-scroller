@@ -14,17 +14,26 @@
 
     BUGS:
 
-        nested lists missing their final column with horizontal
+        nested intermittently (rare) lists missing their final column with horizontal
+            - probably a config transition issue
+
+    STAGE
+
+        - create README documentation
+        - create CHANGELOG documentation
 
     TEST
 
+        - make testing checklist
+        
+        - test and fix test interface issues
         - test asynchronous changes in variable cells - promises, dynamic reloading
         - re-test for memory leaks window.performance.memory
         - retest concat replacements
         - test smartphone rotation for resize during scroll momentum
         - test for two root portals
 
-    TODO:
+    DEV:
         - check connect and disconnect
         - isolate variable behaviour everywhere
         - ! re-establish triggercell if it has been replace by some cache management routine
@@ -32,8 +41,6 @@
 
         integrate cradleParameters object availability into cachehandler
 
-        - make testing checklist
-        
         - prioritize fetch cells for visible cells
 
         - provide way to attempt reload of a single cell (change instanceID)
