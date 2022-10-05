@@ -2,40 +2,6 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    ROADMAP:
-
-        review all code
-
-        cross-browser testing; smartphone testing
-
-        release to npm
-
-        create demo site - github pages
-
-    BUGS:
-
-        nested intermittently (rare) lists missing their final column with horizontal
-            - probably a config transition issue (watching)
-
-    STAGE
-
-        - create README documentation
-        - create CHANGELOG documentation
-
-    TEST
-
-        - make testing checklist
-        
-        - test and fix test interface issues
-        - test asynchronous changes in variable cells - promises, dynamic reloading
-        - re-test for memory leaks window.performance.memory
-        - retest concat replacements
-        - test smartphone rotation for resize during scroll momentum
-        - test for two root portals
-
-    DEV:
-
-/*
     react-infinite-grid-scroller = RIGS
 
     The job of InfiniteGridScroller is to pass parameters to dependents.
