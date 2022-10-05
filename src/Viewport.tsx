@@ -202,9 +202,9 @@ const Viewport = ({
     return <ViewportContext.Provider value = { ViewportContextPropertiesRef.current }>
         <div 
             data-type = 'viewport'
-            data-scrollerid = {scrollerID}
-            style = {divlinerstyleRef.current}
-            ref = {viewportElementRef}
+            data-scrollerid = { scrollerID }
+            style = { divlinerstyleRef.current }
+            ref = { viewportElementRef }
         >
             { (viewportState != 'setup') && children }
         </div>
