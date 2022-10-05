@@ -16,29 +16,27 @@
 
         nested lists missing their final column with horizontal
 
+    TEST
+
+        - test asynchronous changes in variable cells - promises, dynamic reloading
+        - re-test for memory leaks window.performance.memory
+        - retest concat replacements
+        - test smartphone rotation for resize during scroll momentum
+        - test for two root portals
+
     TODO:
-        - simplify scrollerProperties usage
-        - review overshoot logic in calcContentShift
         - check connect and disconnect
         - isolate variable behaviour everywhere
         - ! re-establish triggercell if it has been replace by some cache management routine
         - try to remove need for viewportVisibleRowcount
-        - test asynchronous changes in variable cells
 
-        re-test for memory leaks window.performance.memory
-        retest concat replacements
         integrate cradleParameters object availability into cachehandler
-        test smartphone rotation for resize during scroll momentum
-        ----------------
-        (after layout...)
 
         - make testing checklist
         
         - prioritize fetch cells for visible cells
 
-        - create random loading delays in test ui
         - provide way to attempt reload of a single cell (change instanceID)
-        - test for two root portals
         - calc viewport minwidth by form factor
 */
 
