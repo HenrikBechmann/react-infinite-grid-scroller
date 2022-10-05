@@ -35,10 +35,6 @@
 
     DEV:
 
-        integrate cradleParameters object availability into cachehandler
-
-        - prioritize fetch cells for visible cells
-
         - calc viewport minwidth by form factor
 */
 

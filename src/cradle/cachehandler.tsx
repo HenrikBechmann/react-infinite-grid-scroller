@@ -227,7 +227,9 @@ export class CacheHandler {
 
     // --------------------------------[ preload ]--------------------------------
 
-    preload(cradleParameters, finalCallback, nullItemSetMaxListsize, scrollerID) {
+    preload(finalCallback, nullItemSetMaxListsize, scrollerID) {
+
+        const { cradleParameters } = this
 
         const { scrollerPropertiesRef } = cradleParameters
         const { stateHandler, serviceHandler } = cradleParameters.handlersRef.current
