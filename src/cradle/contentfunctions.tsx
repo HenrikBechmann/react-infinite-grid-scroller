@@ -115,7 +115,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     can also occur with change of size of cradle content rows.
 
     getShiftInstruction determines whether the axis should be moved toward the head or tail
-        to restore the straddling position of the two trigger lines.
+        to restore the straddling position of the two trigger lines. Lots of relative motion.
 
     'axisheadward' (scrolling down or right) means moving the axis up or left, adjacent items down
          or right to the tail, dropping trailing tail items, and adding leading head items as necessary
@@ -223,6 +223,9 @@ export const getShiftInstruction = ({
     triggerlines to their straddle configuration around the head (top or left) of the viewport.
 
     Adjustments are made to accommodate special requirements at the start and end of the virtual list.
+
+    DOM measurements are used where available (to accommodate variable dimension rows), and standard
+    units (cellHeight, cellWidth) used where necessary.
 
 */
 
@@ -404,9 +407,9 @@ export const calcContentShift = ({
             scrollblockElement.offsetTop:
             scrollblockElement.offsetLeft
 
-    // // currentViewportAxisOffset will be negative (above viewport edge) for scroll block headward 
-    // //     and positive for scroll block tailward
-    // // the pixel distance between the viewport frame and the axis, toward the head
+    // currentViewportAxisOffset will be negative (above viewport edge) for scroll block headward 
+    //     and positive for scroll block tailward
+    // the pixel distance between the viewport frame and the axis, toward the head
     const currentViewportAxisOffset = 
         scrollblockAxisOffset + scrollblockOffset - scrollPos
 
@@ -673,8 +676,8 @@ export const allocateContentList = (
 
     const { triggercellIndex } = layoutHandler
 
-    const offsetindex = contentlist[0]?.props.index
-    const highindex = offsetindex + contentlist.length
+    const offsetindex = contentlist[0]?.props.index,
+        highindex = offsetindex + contentlist.length
 
     const headitemcount = (axisReferenceIndex - offsetindex)
 
@@ -703,14 +706,16 @@ export const allocateContentList = (
     const triggercellComponent = contentlist[triggercellPtr]
     // if !triggercellComponent, is temporarily out of scope; will recycle
     if (triggercellComponent) {// && ((triggercellIndex === undefined) || 
-        // (triggercellIndex != targetTriggercellIndex  ||
-        // !triggercellComponent.props.isTriggecell))) {    
+
         contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:true})
         layoutHandler.triggercellIndex = targetTriggercellIndex
+
     } else { // defensive
+
         console.log('FAILURE TO REGISTER TRIGGERCELL: \n',
             'triggercellComponent, triggercellIndex, targetTriggercellIndex, triggercellComponent?.props.isTriggecell\n', 
             triggercellComponent, triggercellIndex, targetTriggercellIndex, triggercellComponent?.props.isTriggecell)
+
     }
 
     const headlist = contentlist.slice(0,headitemcount)
