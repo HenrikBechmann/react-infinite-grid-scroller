@@ -35,9 +35,6 @@
 
     DEV:
 
-        - calc viewport minwidth by form factor
-*/
-
 /*
     react-infinite-grid-scroller = RIGS
 
