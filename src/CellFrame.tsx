@@ -24,6 +24,9 @@
 
     getItem sends the index (logical position in the list) and session itemID to the host, so that
     the host can sync its own tracking with the scroller.
+
+    One CellFrame at a time is desgnated as the host of the two triggerLines (which trigger an update 
+    of the Cradle), with the isTriggerCell flag.
 */
 
 import React, {

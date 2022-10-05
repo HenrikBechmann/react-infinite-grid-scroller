@@ -3,7 +3,7 @@
 
 /*
 
-    The scrollblock provides the scrollable element of the infinite grid scroller.
+    The scrollblock provides the scrollable element (scrolled by Viewport) of the infinite grid scroller.
     It is sized according to the given cell size and row counts, adjusted for variable cradle content.
     Its only state change is change of styles.
 

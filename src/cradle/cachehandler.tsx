@@ -4,7 +4,7 @@
 /*
     This module manages the InfiniteGridScroller limited (sparse) cache. It also provides support for 
     services which allow the host to actively manage many aspects of the cache. See documentation
-    about the user getFunctions callback for details. Note that large caches of complex components
+    about the user getFunctions callback for details. Note that overly large caches of complex components
     can impair performance. This can be optimized with the cacheMax property.
 
     The infinite grid scroller stores user cell content (components) in a central hidden portal cache 
@@ -19,8 +19,10 @@
     uses to manage portals.
 
     This caching has many advantages, notably the ability to move cells back and forth between the
-    head and tail grids of the Cradle, and the ability to maintain state for complex components 
-    which move beyond the scope of the content of the Cradle. But there is an important side effect.
+    head and tail grids of the Cradle without losing state, and the ability to maintain state for 
+    complex components which move beyond the scope of the content of the Cradle. But there is an
+    important side effect.
+
     Instantiated components which are removed from the real DOM (into the portal of the virtual DOM)
     have their scroll positions, width, and height set to zero. Therefore if components rely on these 
     values for configuration, they must have a way of storing values in state (notably the 
@@ -166,39 +168,39 @@ export class CacheHandler {
 
         const max = Math.max(modelLength, cacheMax)
 
-        const portalIndexList = this.cacheProps.indexToItemIDMap
-        const requestedSet = this.cacheProps.requestedSet
+        const portalIndexList = this.cacheProps.indexToItemIDMap,
+            requestedSet = this.cacheProps.requestedSet
 
         if ((portalIndexList.size + requestedSet.size) <= max) return false
 
         // sort the map keys
-        const mapkeyslist = Array.from(portalIndexList.keys())
-        const requestedkeys = Array.from(requestedSet.keys())
+        const mapkeyslist = Array.from(portalIndexList.keys()),
+            requestedkeys = Array.from(requestedSet.keys())
 
         const mapkeys = [...mapkeyslist,...requestedkeys]
 
         mapkeys.sort((a,b) => a - b)
 
         // get number to pare
-        const mapLength = mapkeys.length
-        const parecount = mapLength - max
+        const mapLength = mapkeys.length,
+            parecount = mapLength - max
 
         // distribute paring proportionally at front and back
-        const headindex = cradleIndexList[0]
-        const tailindex = cradleIndexList[modelLength - 1]
-        const headpos = mapkeys.indexOf(headindex)
-        const tailpos = mapkeys.indexOf(tailindex)
+        const headindex = cradleIndexList[0],
+            tailindex = cradleIndexList[modelLength - 1],
+            headpos = mapkeys.indexOf(headindex),
+            tailpos = mapkeys.indexOf(tailindex)
 
-        const headroom = headpos
-        const tailroom = mapLength - (tailpos + 1)
-        const pareroom = headroom + tailroom
+        const headroom = headpos,
+            tailroom = mapLength - (tailpos + 1),
+            pareroom = headroom + tailroom
 
-        const headparecount = Math.floor((headroom/pareroom)*parecount)
-        const tailparecount = parecount - headparecount
+        const headparecount = Math.floor((headroom/pareroom)*parecount),
+            tailparecount = parecount - headparecount
 
         // collect indexes to pare
-        const headlist = mapkeys.slice(0,headparecount)
-        const taillist = mapkeys.slice(mapLength - tailparecount)
+        const headlist = mapkeys.slice(0,headparecount),
+            taillist = mapkeys.slice(mapLength - tailparecount)
 
         const delList = [...headlist,...taillist]
 
@@ -212,15 +214,21 @@ export class CacheHandler {
 
         if (!cacheMax) return false
 
-        const portalMap = this.cacheProps.portalMap
-        const requestedSet = this.cacheProps.requestedSet
+        const {
+            portalMap,
+            requestedSet 
+        } = this.cacheProps
 
         const max = Math.max(cradleListLength, cacheMax)
 
         if ((portalMap.size + requestedSet.size) <= ((max) * MAX_CACHE_OVER_RUN)) {
+
             return false
+
         } else {
+
             return true
+
         }
 
     }
@@ -232,12 +240,13 @@ export class CacheHandler {
         const { cradleParameters } = this
 
         const { scrollerPropertiesRef } = cradleParameters
-        const { stateHandler, serviceHandler } = cradleParameters.handlersRef.current
 
-        const cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current
-        const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
-        const { getItem, cacheMax } = cradleInheritedProperties
-        const { listsize } = cradleInternalProperties
+        const { stateHandler, serviceHandler } = cradleParameters.handlersRef.current,
+            cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
+
+        const { getItem, cacheMax } = cradleInheritedProperties,
+            { listsize } = cradleInternalProperties
 
         const promises = []
 
@@ -307,8 +316,8 @@ export class CacheHandler {
 
     getCradleIndexMap(cradleIndexList) {
 
-        const cradleMap = new Map()
-        const { indexToItemIDMap } = this.cacheProps
+        const cradleMap = new Map(),
+            { indexToItemIDMap } = this.cacheProps
 
         for (const index of cradleIndexList) {
 
@@ -350,10 +359,9 @@ export class CacheHandler {
 
         // ----------- define parameters ---------------
 
-        const rangeabsoluteincrement = fromhighindex - fromindex + 1
-        const movedirectionalincrement = toindex - fromindex
-
-        const tohighindex = toindex + (rangeabsoluteincrement - 1)
+        const rangeabsoluteincrement = fromhighindex - fromindex + 1,
+            movedirectionalincrement = toindex - fromindex,
+            tohighindex = toindex + (rangeabsoluteincrement - 1)
 
         const shiftdirection = 
             (movedirectionalincrement > 0)? // move up in list
@@ -363,10 +371,10 @@ export class CacheHandler {
         const orderedindexlist = Array.from(indexToItemIDMap.keys())
         orderedindexlist.sort((a,b)=>a-b)
 
-        const toindexptr = orderedindexlist.findIndex(value => value >= toindex)
-        const tohighindexptr = orderedindexlist.findIndex(value => value >= tohighindex)
-        const fromindexptr = orderedindexlist.findIndex(value => value >= fromindex)
-        const fromhighindexptr = orderedindexlist.findIndex(value => value >= fromhighindex)
+        const toindexptr = orderedindexlist.findIndex(value => value >= toindex),
+            tohighindexptr = orderedindexlist.findIndex(value => value >= tohighindex),
+            fromindexptr = orderedindexlist.findIndex(value => value >= fromindex),
+            fromhighindexptr = orderedindexlist.findIndex(value => value >= fromhighindex)
 
         // ---------------- capture index data to move ----------------
 
@@ -732,9 +740,11 @@ export class CacheHandler {
 
         this.removeRequestedPortal(index)
 
-        const { layout, cellHeight, cellWidth, orientation } = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const { layout, cellHeight, cellWidth, orientation } = 
+            this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        const portalNode = createPortalNode(index, itemID, layout, orientation, cellHeight, cellWidth)
+        const portalNode = createPortalNode(
+                index, itemID, layout, orientation, cellHeight, cellWidth)
 
         // div wrapper to avoid memory leak
         this.cacheProps.portalMap.set(itemID,
@@ -854,12 +864,16 @@ export class CacheHandler {
 
         const deleteList = []
         for (let i of indexArray) {
+
             const itemID = indexToItemIDMap.get(i)
+
             deleteList.push({index:i,itemID})
             metadataMap.delete(itemID)
             portalMap.delete(itemID)
             indexToItemIDMap.delete(i)
+
         }
+        
         this.cacheProps.modified = true
 
         deleteListCallback && deleteListCallback(deleteList)

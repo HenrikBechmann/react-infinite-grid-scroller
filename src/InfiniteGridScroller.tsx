@@ -2,60 +2,31 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    ROADMAP:
-
-        review all code
-
-        cross-browser testing; smartphone testing
-
-        release to npm
-
-        create demo site - github pages
-
-    BUGS:
-
-        nested intermittently (rare) lists missing their final column with horizontal
-            - probably a config transition issue
-
-    STAGE
-
-        - create README documentation
-        - create CHANGELOG documentation
-
-    TEST
-
-        - make testing checklist
-        
-        - test and fix test interface issues
-        - test asynchronous changes in variable cells - promises, dynamic reloading
-        - re-test for memory leaks window.performance.memory
-        - retest concat replacements
-        - test smartphone rotation for resize during scroll momentum
-        - test for two root portals
-
-    DEV:
-
-/*
     react-infinite-grid-scroller = RIGS
 
     The job of InfiniteGridScroller is to pass parameters to dependents.
-    Viewport contains the scrollblock, fullsize for adjusted cell height/width, which in turn contains the cradle 
-        - a component that contains CellFrames (which contain displayed items or transitional placeholders. 
-    The CellFrames are skeletons which contain the host content components.
+    Viewport contains the Scrollblock, which is full size for listsize of given cell height/width.
+    Scrollblock in turn contains the Cradle - a component that contains CellFrames, which contain 
+    displayed user content (items) or transitional placeholders. 
 
-    Host content is instantiated in a portal cache (via PortalHandler) 
-    and then portal'd to its host CellFrame. The cach can be configured to hold many more items
-    than cradle, allowing a range of host content to maintain state.
+    Host content is instantiated in a cache of React portals (via cacheHandler). content is then 
+    portal'd to host CellFrames. The cache can be configured to hold many more items
+    than the Cradle (limited by device memory, and some eventual performance degradation), allowing 
+    cached host content to maintain state.
 
-    Scrollblock by size represents the entirety of the list, and is the scroller
+    Scrollblock by size represents the entirety of the list, and is the object that is scrolled.
 
     Cradle contains the list items, and is 'virtualized' -- it appears as
-      though it is the full scrollblock, but in fact it is only slightly larger than
-      the viewport.
-    - individual host items are framed by CellFrame, managed by Cradle
+    though it scrolls over a filled scrollblock, but in fact it is only slightly larger than
+    the viewport. Content is rotated in and out of the cradle (through the cache)
+    
+    Individual host items are framed by CellFrame, managed by Cradle
 
-    Overall the infinitegridscroller as a package manages the often asynchronous interactions of the 
+    Overall the InfiniteGridScroller as a package manages the asynchronous interactions of the 
     components of the mechanism. Most of the work occurs in the Cradle component.
+
+    The Rigs liner is set with 'display:absolute' and 'inset:0', so the user containing block should
+    be styles accordingly.
 */
 
 import React, { useEffect, useState, useCallback, useRef } from 'react'
@@ -199,7 +170,7 @@ const InfiniteGridScroller = (props) => {
 
     let {
 
-        showAxis, // axis made visible for debug
+        showAxis, // boolean; axis can be made visible for debug
         // timeouts
         VIEWPORT_RESIZE_TIMEOUT,
         SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
@@ -232,7 +203,7 @@ const InfiniteGridScroller = (props) => {
 
     const listsize = listsizeRef.current
 
-    // test React Object.is for attributes; avoid re-renders with no change
+    // tests for React with Object.is for changed properties; avoid re-renders with no change
     if (!compareProps(gridSpecs, gridSpecsRef.current)) {
         gridSpecsRef.current = gridSpecs
     }
@@ -253,7 +224,7 @@ const InfiniteGridScroller = (props) => {
 
     },[])
 
-    // called when getItem returns null, or direct call from user (see servicehandler)
+    // called when getItem returns null, or direct call from user (see serviceHandler)
     const setListsize = useCallback((listsize) =>{
 
         if (listsize == listsizeRef.current) return
