@@ -34,16 +34,11 @@
         - test for two root portals
 
     DEV:
-        - check connect and disconnect
-        - isolate variable behaviour everywhere
-        - ! re-establish triggercell if it has been replace by some cache management routine
-        - try to remove need for viewportVisibleRowcount
 
         integrate cradleParameters object availability into cachehandler
 
         - prioritize fetch cells for visible cells
 
-        - provide way to attempt reload of a single cell (change instanceID)
         - calc viewport minwidth by form factor
 */
 
