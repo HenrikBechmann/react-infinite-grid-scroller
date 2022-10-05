@@ -77,7 +77,6 @@ export default class ServiceHandler {
 
     }
 
-
     public scrollToItem = (index) => {
 
         index = Math.max(0,index)
@@ -182,7 +181,7 @@ export default class ServiceHandler {
         const changeIndexToItemIDMap = new Map()
         const errorEntriesMap = new Map()
 
-        // =====================[ PREPARATION ]======================
+        // =====================[ PREPARE ]======================
 
         // ------------ filter out inoperable indexes and itemIDs ------------
 
@@ -549,4 +548,3 @@ export default class ServiceHandler {
     }
 
 }
-
