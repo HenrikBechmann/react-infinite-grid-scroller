@@ -798,7 +798,8 @@ const Cradle = ({
         cellWidth,
         gap,
         padding,
-        triggerlineOffset
+        triggerlineOffset,
+        layout,
     ])
 
     // pivot triggered on change of orientation
