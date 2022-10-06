@@ -12,7 +12,7 @@ Vertical or horizontal infinite scroller using css grid layout
 - single or multiple rows or columns
 - repositioning mode when rapidly scrolling (such as by using the scroll thumb)
 - dynamic pivot (horizontal/vertical back and forth) while maintaining position in list
-- automatic reconfiguration with page resize
+- automatic reconfiguration with viewport resize
 - dynamic recalibration with async content refresh
 - nested lists
 
