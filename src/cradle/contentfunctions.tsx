@@ -360,7 +360,7 @@ export const calcContentShift = ({
                     totalPixelShift += baseRowLength
                     notionalRowPtr++
 
-                    if ((previousAxisRowOffset - (notionalRowPtr + 1)) < 0) { // stop cycling at head limit
+                    if ((previousAxisRowOffset - notionalRowPtr) == 0) { // stop cycling at head limit
                         // accommodate isFirstRowTriggerConfig
                         notionalRowPtr -= 1
                         totalPixelShift -= baseRowLength
