@@ -1,18 +1,20 @@
 # react-infinite-grid-scroller
-Vertical or horizontal infinite scroll using css grid layout
+Vertical or horizontal infinite scroller using css grid layout
 
 [![npm](https://img.shields.io/badge/npm-1.0.0--Beta--1-brightgreen)](https://www.npmjs.com/package/react-infinite-grid-scroller) ![version](https://img.shields.io/badge/version-1.0.0--Beta--1-blue) [![licence](https://img.shields.io/badge/licence-MIT-green)](https://github.com/HenrikBechmann/react-infinite-grid-scroller/blob/master/LICENSE.md)
 
-# Features
+# Key Features
 
+- designed for "heavy" or "light" cell content
+- supports both uniform and variable cell lengths (vertical or horizontal)
 - rapid infinite scroll, horizontal or vertical
+- limited sparse memory cache, to preserve content state, with an API
 - single or multiple rows or columns
-- rapid repositioning in large lists (through scroll thumb or programmatically)
+- repositioning mode when rapidly scrolling (such as by using the scroll thumb)
 - dynamic pivot (horizontal/vertical back and forth) while maintaining position in list
 - automatic reconfiguration with page resize
+- dynamic recalibration with async content refresh
 - nested lists
-
-This utility supports both uniform and variable length cells.
 
 # Technology
 
