@@ -513,7 +513,7 @@ const Cradle = ({
 
         if (isCachedRef.current && !wasCachedRef.current) { // into cache
 
-            setCradleState('cached') // replaces 'ready' as steady state
+            setCradleState('cachechange')
 
         } else if (!isCachedRef.current && wasCachedRef.current) { // out of cache
 
@@ -798,7 +798,8 @@ const Cradle = ({
         cellWidth,
         gap,
         padding,
-        triggerlineOffset
+        triggerlineOffset,
+        layout,
     ])
 
     // pivot triggered on change of orientation
@@ -917,7 +918,7 @@ const Cradle = ({
 
                 if (cradleInheritedPropertiesRef.current.cache != 'preload') {
                     if (isCachedRef.current) {
-                        setCradleState('cached')
+                        setCradleState('cachechange')
                     } else {
                         setCradleState('firstrender') // load grid
                     }
@@ -961,7 +962,7 @@ const Cradle = ({
 
                     } else {
 
-                        setCradleState('cached')
+                        setCradleState('cachechange')
 
                     }
 
@@ -972,7 +973,7 @@ const Cradle = ({
                 break
             }
 
-            case 'cached': {
+            case 'cachechange': {
 
                 if (!wasCachedRef.current && !isCachedRef.current){
 
@@ -1020,7 +1021,6 @@ const Cradle = ({
                 if (hasBeenRenderedRef.current) {
 
                     setCradleState('ready')
-                    // setCradleState('restoreinterrupts')
 
                 } else {
 
@@ -1061,7 +1061,8 @@ const Cradle = ({
                 the following 11 cradle states all resolve with
                 a chain starting with setCradleContent, 
                 continuing with 'preparerender', and ending with
-                'restoreinterrupts'
+                'restoreinterrupts', with a detour for variable layout 
+                to reconfigure the scrollblock
             */
             case 'firstrender':
             case 'firstrenderfromcache':

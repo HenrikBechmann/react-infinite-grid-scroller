@@ -296,7 +296,9 @@ export default class ContentHandler {
 
     // updateCradleContent does not touch the viewport element's scroll position for the scrollblock
     // instead it reconfigures elements within the cradle. It is called solely from
-    // axisTriggerlinesObserverCallback of interruptHandler
+    // axisTriggerlinesObserverCallback of interruptHandler.
+    // typically called for scroll action, but can also be called if the triggerLineCell changes
+    // size with variant layout.
 
     public updateCradleContent = (
 
@@ -324,8 +326,39 @@ export default class ContentHandler {
 
         const scrollPos = scrollData.currentupdate
 
+        const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
+        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current,
+            cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
+        
+        const { 
+            orientation, 
+            cache,
+            styles,
+        } = cradleInheritedProperties
+
+        const { 
+            // viewportVisibleRowcount,
+            crosscount,
+            listsize,
+
+        } = cradleInternalProperties
+
+        const contentLength = 
+            (orientation == 'vertical')?
+                viewportElement.scrollHeight:
+                viewportElement.scrollWidth
+
+        const viewportLength = 
+            (orientation == 'vertical')?
+                viewportElement.offsetHeight:
+                viewportElement.offsetWidth
+
+        // console.log('OVERSCROLL scrollPos, viewportLength, scrollPos + viewportLength, contentLength',
+        //     scrollPos, viewportLength, scrollPos + viewportLength, contentLength)
+
         // first abandon option/3; nothing to do
-        if ( scrollPos < 0) { // for Safari, FF elastic bounce at top of scroll
+        // for browser top or bottom bounce
+        if ( (scrollPos < 0) || ((scrollPos + viewportLength) > contentLength)) { 
 
             return
 
@@ -340,21 +373,6 @@ export default class ContentHandler {
 
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
-        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current,
-            cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
-        
-        const { 
-            orientation, 
-            cache,
-            styles,
-        } = cradleInheritedProperties
-
-        const { 
-            // viewportVisibleRowcount,
-            crosscount,
-            listsize,
-        } = cradleInternalProperties
-
         // --------------------[ 2. get shift instruction ]-----------------------
 
         const [shiftinstruction, triggerData] = getShiftInstruction({
@@ -368,7 +386,7 @@ export default class ContentHandler {
         })
 
         // second abandon option/3; nothing to do
-        if (shiftinstruction == 'none') { // 0) {
+        if (shiftinstruction == 'none') { 
 
             return
 
@@ -377,9 +395,6 @@ export default class ContentHandler {
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         // cradle properties
-        // const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
-
         const {
 
             // by index
@@ -533,7 +548,7 @@ export default class ContentHandler {
 
     // ===================[ RECONFIGURE THE SCROLLBLOCK FOR VARIABLE CONTENT ]=======================
 
-    // all DOM elements should have been rendered at this point
+    // Called for variale layout only. All DOM elements should have been rendered at this point
     // sets CSS: scrollblockElement top and height (or left and width), and axisElement top (or left)
     // this to get closer to natural proportions to minimize janky scroll thumb
     public adjustScrollblockForVariability = (source) => {
@@ -569,7 +584,6 @@ export default class ContentHandler {
             targetAxisViewportPixelOffset: axisViewportOffset,
 
         } = cradlePositionData
-
 
         let { 
         
@@ -684,7 +698,7 @@ export default class ContentHandler {
             // the height is adjusted by both deltas, as it controls the scroll length
             scrollblockElement.style.height = newScrollblockLength + 'px'
 
-        } else {
+        } else { // 'horizontal'
 
             scrollblockElement.style.left = 
                 !variableAdjustment?
@@ -704,7 +718,7 @@ export default class ContentHandler {
 
         }
 
-        // must be after length is updated
+        // must be done after length is updated
         if (reposition) { // reset blockScrollPos afterscroll
 
             cradlePositionData.blockScrollPos = blockScrollPos
