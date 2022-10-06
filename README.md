@@ -29,7 +29,7 @@ This scroller uses leading edge technologies:
 Therefore it is best suited for modern browsers.
 
 # Architecture
-
+![Architecture](demo/Architecture.png)
 # Usage
 
 ```JSX
