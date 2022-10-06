@@ -109,7 +109,6 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 // ======================[ for updateCradleContent ]===========================
 
 /*
-
     the two triggerlines must straddle the head of the viewport (top or left) so that
     cradle motion can be detected. Motion is most often caused by scrolling, but
     can also occur with change of size of cradle content rows.
@@ -126,7 +125,6 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
          to maintain number of cradle rows of content constant.
 
     'none' means no shift is required
-
 */
 
 export const getShiftInstruction = ({
@@ -361,7 +359,8 @@ export const calcContentShift = ({
                     notionalRowPtr++
 
                     if ((previousAxisRowOffset - notionalRowPtr) == 0) { // stop cycling at head limit
-                        // accommodate isFirstRowTriggerConfig
+                        // accommodate isFirstRowTriggerConfig exception in placing trigger lines
+                        // in first row after axis, rather than first row before axis
                         notionalRowPtr -= 1
                         totalPixelShift -= baseRowLength
                         break
@@ -669,7 +668,7 @@ export const getCellFrameComponentList = ({
 
 }
 
-// butterfly model. Leading (head) all or partially hidden; tail, visible plus following hidden
+// Leading (head) all or partially hidden; tail, visible plus trailing hidden
 export const allocateContentList = (
     {
 
@@ -698,7 +697,6 @@ export const allocateContentList = (
             false
 
     if ((triggercellIndex !== undefined) && (offsetindex !== undefined)) { //&& 
-       // (triggercellIndex != targetTriggercellIndex)) {
         if ((triggercellIndex >= offsetindex) && (triggercellIndex <= highindex)) {
             const triggercellPtr = triggercellIndex - offsetindex
             const triggercellComponent = contentlist[triggercellPtr]
@@ -710,13 +708,12 @@ export const allocateContentList = (
 
     const triggercellPtr = targetTriggercellIndex - offsetindex
     const triggercellComponent = contentlist[triggercellPtr]
-    // if !triggercellComponent, is temporarily out of scope; will recycle
-    if (triggercellComponent) {// && ((triggercellIndex === undefined) || 
+    if (triggercellComponent) {
 
         contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:true})
         layoutHandler.triggercellIndex = targetTriggercellIndex
 
-    } else { // defensive
+    } else { // defensive; shouldn't happen
 
         console.log('FAILURE TO REGISTER TRIGGERCELL: \n',
             'triggercellComponent, triggercellIndex, targetTriggercellIndex, triggercellComponent?.props.isTriggecell\n', 

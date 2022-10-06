@@ -296,7 +296,9 @@ export default class ContentHandler {
 
     // updateCradleContent does not touch the viewport element's scroll position for the scrollblock
     // instead it reconfigures elements within the cradle. It is called solely from
-    // axisTriggerlinesObserverCallback of interruptHandler
+    // axisTriggerlinesObserverCallback of interruptHandler.
+    // typically called for scroll action, but can also be called if the triggerLineCell changes
+    // size with variant layout.
 
     public updateCradleContent = (
 
@@ -533,7 +535,7 @@ export default class ContentHandler {
 
     // ===================[ RECONFIGURE THE SCROLLBLOCK FOR VARIABLE CONTENT ]=======================
 
-    // all DOM elements should have been rendered at this point
+    // Called for variale layout only. All DOM elements should have been rendered at this point
     // sets CSS: scrollblockElement top and height (or left and width), and axisElement top (or left)
     // this to get closer to natural proportions to minimize janky scroll thumb
     public adjustScrollblockForVariability = (source) => {
@@ -569,7 +571,6 @@ export default class ContentHandler {
             targetAxisViewportPixelOffset: axisViewportOffset,
 
         } = cradlePositionData
-
 
         let { 
         
