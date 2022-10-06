@@ -241,6 +241,8 @@ export const calcContentShift = ({
 
 }) => {
 
+    // console.log('-----------------------------------')
+
     // ------------------------[ 1. initialize ]-----------------------
 
     const { 
@@ -318,6 +320,8 @@ export const calcContentShift = ({
 
     }
 
+    const listEndrowOffset = (listRowcount - 1)
+
     let spanAxisPixelShift // in relation to viewport head boundary
     if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
 
@@ -338,12 +342,19 @@ export const calcContentShift = ({
             notionalRowPtr = gridRowSpans.length - 1 // base: failed measured row ptr
             let totalPixelShift = gridRowSpans[notionalRowPtr] // set base of working overshoot
 
-            if (shiftinstruction == 'axistailward') { // scrolling up
-                
+            if (shiftinstruction == 'axistailward') { // scrolling up 
+
                 do {
 
                     totalPixelShift += baseRowLength
                     notionalRowPtr++
+
+                    // if (listEndrowOffset == notionalRowPtr) {
+                    //     console.log('breaking overflow axistailward listEndrowOffset, notionalRowPtr',
+                    //         listEndrowOffset, notionalRowPtr)
+                    //     break
+
+                    // }
 
                 } while ((triggerViewportReferencePos + totalPixelShift) < 0) 
 
@@ -429,10 +440,11 @@ export const calcContentShift = ({
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
     let newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowShift
 
+    // console.log('previousAxisRowOffset, axisReferenceRowShift, newAxisReferenceRowOffset',
+    //     previousAxisRowOffset, axisReferenceRowShift, newAxisReferenceRowOffset)
+
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
-
-    const listEndrowOffset = (listRowcount - 1)
 
     if (shiftinstruction == 'axistailward') { // scrolling toward head
 
@@ -459,11 +471,19 @@ export const calcContentShift = ({
         let targetCradleEndrowOffset = newCradleReferenceRowOffset + (cradleRowcount - 1)
         const tailrowdiff = Math.max(0,targetCradleEndrowOffset - listEndrowOffset)
 
+        // console.log('targetCradleEndrowOffset = newCradleReferenceRowOffset + (cradleRowcount - 1)',
+        //     targetCradleEndrowOffset, newCradleReferenceRowOffset, cradleRowcount)
+
+        // console.log('tailrowdiff, listEndrowOffset', tailrowdiff, listEndrowOffset)
+
         if (tailrowdiff > 0) {
 
             newCradleReferenceRowOffset -= tailrowdiff
             cradleReferenceRowshift -= tailrowdiff
             targetCradleEndrowOffset -= tailrowdiff
+
+            // console.log('adjusted newCradleReferenceRowOffset, cradleReferenceRowshift, targetCradleEndrowOffset',
+            //     newCradleReferenceRowOffset, cradleReferenceRowshift, targetCradleEndrowOffset)
 
         }
 
@@ -527,6 +547,8 @@ export const calcContentShift = ({
     const listEndChangeCount = -listStartChangeCount - changeOfCradleContentCount
 
     // ---------------------[ 8. return required values ]-------------------
+
+    // console.log('newAxisReferenceIndex', newAxisReferenceIndex)
 
     return {
 

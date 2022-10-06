@@ -326,22 +326,7 @@ export default class ContentHandler {
 
         const scrollPos = scrollData.currentupdate
 
-        // first abandon option/3; nothing to do
-        if ( scrollPos < 0) { // for Safari, FF elastic bounce at top of scroll
-
-            return
-
-        }
-
-        // cradle scaffold and user cells
-        const cradleElements = layoutHandler.elements
-
-        const cradleContent = this.content,
-            modelcontentlist = cradleContent.cradleModelComponents || [],
-            oldAxisReferenceIndex = (cradleContent.tailModelComponents[0]?.props.index || 0)
-
-        const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
-
+        const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
         
@@ -355,7 +340,38 @@ export default class ContentHandler {
             // viewportVisibleRowcount,
             crosscount,
             listsize,
+
         } = cradleInternalProperties
+
+        const contentLength = 
+            (orientation == 'vertical')?
+                viewportElement.scrollHeight:
+                viewportElement.scrollWidth
+
+        const viewportLength = 
+            (orientation == 'vertical')?
+                viewportElement.offsetHeight:
+                viewportElement.offsetWidth
+
+        // console.log('OVERSCROLL scrollPos, viewportLength, scrollPos + viewportLength, contentLength',
+        //     scrollPos, viewportLength, scrollPos + viewportLength, contentLength)
+
+        // first abandon option/3; nothing to do
+        // for browser top or bottom bounce
+        if ( (scrollPos < 0) || ((scrollPos + viewportLength) > contentLength)) { 
+
+            return
+
+        }
+
+        // cradle scaffold and user cells
+        const cradleElements = layoutHandler.elements
+
+        const cradleContent = this.content,
+            modelcontentlist = cradleContent.cradleModelComponents || [],
+            oldAxisReferenceIndex = (cradleContent.tailModelComponents[0]?.props.index || 0)
+
+        const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
         // --------------------[ 2. get shift instruction ]-----------------------
 
@@ -379,9 +395,6 @@ export default class ContentHandler {
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         // cradle properties
-        // const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
-        const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
-
         const {
 
             // by index

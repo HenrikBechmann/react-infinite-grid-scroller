@@ -150,11 +150,14 @@ const Viewport = ({
     divlinerstyleRef.current = useMemo(() => {
 
         return {
+
             ...styles.viewport,
             position:'absolute',
             inset:0,
             overflow:'auto',
-            overflowAnchor:'none' // crucial!
+            overflowAnchor:'none', // crucial!
+            // overscrollBehavior:'none'
+            
         }
 
     },[styles.viewport])
