@@ -329,7 +329,7 @@ export const calcContentShift = ({
         if (gridRowSpans.length == 0) { // must be list boundary
 
             // notionalRowPtr = 0
-            notionalRowPtr = -1
+            notionalRowPtr = -1 // "not found"
             spanAxisPixelShift = 0
 
         } else {
@@ -362,15 +362,18 @@ export const calcContentShift = ({
                     totalPixelShift += baseRowLength
                     notionalRowPtr++
 
-                    if ((previousAxisRowOffset - (notionalRowPtr + 1)) < 0) { // stop cycling at limit
+                    if ((previousAxisRowOffset - (notionalRowPtr + 1)) < 0) { // stop cycling at head limit
+                        // accommodate isFirstRowTriggerConfig
+                        notionalRowPtr -= 1
+                        totalPixelShift -= baseRowLength
                         break
                     }
 
                 } while ((triggerViewportReferencePos - totalPixelShift) > 0)
 
-                // backtrack 1 row; already in header
-                notionalRowPtr--
-                spanAxisPixelShift = -(totalPixelShift - baseRowLength)
+                // notionalRowPtr--
+                // spanAxisPixelShift = -(totalPixelShift - baseRowLength)
+                spanAxisPixelShift = -totalPixelShift
 
             }
 
