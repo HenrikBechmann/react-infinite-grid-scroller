@@ -408,7 +408,8 @@ const CellFrame = ({
 export default CellFrame
 
 // utilities
-const getFrameStyles = (orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, styles) => {
+const getFrameStyles = 
+    (orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, styles) => {
 
     let styleset = {...styles,position:'relative', overflow:'visible'}
 
@@ -418,10 +419,10 @@ const getFrameStyles = (orientation, cellHeight, cellWidth, cellMinHeight, cellM
         if (layout == 'uniform') {
 
             styleset.height = cellHeight + 'px'
-            styleset.minHeight =null
+            styleset.minHeight = null
             styleset.maxHeight = null
 
-        } else {
+        } else { // 'variable'
 
             styleset.height = null
             styleset.minHeight = cellMinHeight + 'px'
@@ -429,16 +430,16 @@ const getFrameStyles = (orientation, cellHeight, cellWidth, cellMinHeight, cellM
 
         }
         
-    } else { // horizontal
+    } else { // 'horizontal'
 
         styleset.height = null
         if (layout == 'uniform') {
 
             styleset.width = cellWidth + 'px'
-            styleset.minWidth =null
+            styleset.minWidth = null
             styleset.maxWidth = null
 
-        } else {
+        } else { // 'variable'
 
             styleset.width = null
             styleset.minWidth = cellMinWidth + 'px'
