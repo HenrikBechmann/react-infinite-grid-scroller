@@ -1,4 +1,4 @@
-# react-infinite-grid-scroller
+# react-infinite-grid-scroller (RIGS)
 Vertical or horizontal infinite scroller using css grid layout
 
 [![npm](https://img.shields.io/badge/npm-1.0.0--Beta--1-brightgreen)](https://www.npmjs.com/package/react-infinite-grid-scroller) ![version](https://img.shields.io/badge/version-1.0.0--Beta--1-blue) [![licence](https://img.shields.io/badge/licence-MIT-green)](https://github.com/HenrikBechmann/react-infinite-grid-scroller/blob/master/LICENSE.md)
