@@ -685,7 +685,7 @@ export default class ContentHandler {
             // the height is adjusted by both deltas, as it controls the scroll length
             scrollblockElement.style.height = newScrollblockLength + 'px'
 
-        } else {
+        } else { // 'horizontal'
 
             scrollblockElement.style.left = 
                 !variableAdjustment?
@@ -705,7 +705,7 @@ export default class ContentHandler {
 
         }
 
-        // must be after length is updated
+        // must be done after length is updated
         if (reposition) { // reset blockScrollPos afterscroll
 
             cradlePositionData.blockScrollPos = blockScrollPos
