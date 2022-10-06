@@ -32,6 +32,8 @@ Therefore it is best suited for modern browsers.
 ![Architecture](demo/Architecture.png)
 # Usage
 
+This is the minimum configuration.
+
 ```JSX
 import Scroller from 'react-infinite-grid-scroller'
 
@@ -39,23 +41,14 @@ import Scroller from 'react-infinite-grid-scroller'
 
 <div style = {containerstyle}>
   <Scroller 
-      orientation = { orientation } 
-      gap = { gap }
-      padding = { padding }
       cellHeight = { cellHeight }
       cellWidth = { cellWidth }
-      runway = { runway }
-      offset = { offset }
-      listsize = { listsize }
-      layout = { layout }
-      getItem = { getItem }
-      placeholder = { placeholder }
-      styles = { styles }
-      functions = { functions }
+      estimatedListSize = { estimatedListSize }
+      getItem = { getItem } // a function called by RIGS to obtain a specified user component by index
   />
 </div>
 ```
-The scroller's highest level component, the viewport, is a `div` with `position:absolute`, and `top`, `right`, `bottom`, `left` set to 0 (zero). Therefore the host container should be a block element with `position:absolute` or `position:relative`.
+The scroller's highest level component, the viewport, is a `div` with `position:absolute`, and `inset:0`, so the host container should be styled accordingly.
 
 # Options
 | property | options | notes |
