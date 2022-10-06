@@ -1021,7 +1021,6 @@ const Cradle = ({
                 if (hasBeenRenderedRef.current) {
 
                     setCradleState('ready')
-                    // setCradleState('restoreinterrupts')
 
                 } else {
 
@@ -1062,7 +1061,8 @@ const Cradle = ({
                 the following 11 cradle states all resolve with
                 a chain starting with setCradleContent, 
                 continuing with 'preparerender', and ending with
-                'restoreinterrupts'
+                'restoreinterrupts', with a detour for variable layout 
+                to reconfigure the scrollblock
             */
             case 'firstrender':
             case 'firstrenderfromcache':

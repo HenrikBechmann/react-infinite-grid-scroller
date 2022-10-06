@@ -212,9 +212,8 @@ export const getShiftInstruction = ({
 }
 
 /*
-
     The basic goal here is to determine the number and direction of rows to shift between
-    the head and tail grids (which dtermines the new location of the axis), and also to
+    the head and tail grids (which determines the new location of the axis), and also to
     calculate the rolling addition and deletion of cradle content to accommodate the changes.
 
     The number of rows to shift is determined by the pixel shift required to restore the 
@@ -223,8 +222,7 @@ export const getShiftInstruction = ({
     Adjustments are made to accommodate special requirements at the start and end of the virtual list.
 
     DOM measurements are used where available (to accommodate variable dimension rows), and standard
-    units (cellHeight, cellWidth) used where necessary.
-
+    units (cellHeight, cellWidth) used for estimates where necessary.
 */
 
 // rowshift is at least 1 by the time this function is reached

@@ -370,7 +370,7 @@ export default class ContentHandler {
         })
 
         // second abandon option/3; nothing to do
-        if (shiftinstruction == 'none') { // 0) {
+        if (shiftinstruction == 'none') { 
 
             return
 
