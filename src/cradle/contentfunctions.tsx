@@ -308,13 +308,13 @@ export const calcContentShift = ({
     // ----------------------------[ 2. calculate base row shift ]--------------------------
 
     let spanRowPtr
-    if (shiftinstruction == 'axistailward') { 
+    if (shiftinstruction == 'axistailward') { // scroll up
 
         // tail trigger needs to move down or right until position relative to viewport top or left is positive
         spanRowPtr = gridRowSpans.findIndex((movementspan) => 
             (triggerViewportReferencePos + movementspan) >= 0 )
     
-    } else {
+    } else { // 'axisheadward', scrolldown
 
         // head trigger needs to move up or left until position relative to viewport top or left is negative
         spanRowPtr = gridRowSpans.findIndex((movementspan) => 
@@ -328,7 +328,8 @@ export const calcContentShift = ({
         let notionalRowPtr
         if (gridRowSpans.length == 0) { // must be list boundary
 
-            notionalRowPtr = 0
+            // notionalRowPtr = 0
+            notionalRowPtr = -1 // "not found"
             spanAxisPixelShift = 0
 
         } else {
@@ -339,7 +340,7 @@ export const calcContentShift = ({
                 + gap
 
             notionalRowPtr = gridRowSpans.length - 1 // base: failed measured row ptr
-            let totalPixelShift = gridRowSpans.at(-1) // set base of working overshoot
+            let totalPixelShift = gridRowSpans[notionalRowPtr] // set base of working overshoot
 
             if (shiftinstruction == 'axistailward') { // scrolling up
                 
@@ -350,7 +351,7 @@ export const calcContentShift = ({
 
                 } while ((triggerViewportReferencePos + totalPixelShift) < 0) 
 
-                spanAxisPixelShift = (totalPixelShift - baseRowLength)
+                spanAxisPixelShift = totalPixelShift
 
             } else { // axisheadward; scrolling down
 
@@ -359,19 +360,22 @@ export const calcContentShift = ({
                     totalPixelShift += baseRowLength
                     notionalRowPtr++
 
-                    if ((previousAxisRowOffset - (notionalRowPtr + 1)) < 0) { // stop cycling at limit
+                    if ((previousAxisRowOffset - (notionalRowPtr + 1)) < 0) { // stop cycling at head limit
+                        // accommodate isFirstRowTriggerConfig
+                        notionalRowPtr -= 1
+                        totalPixelShift -= baseRowLength
                         break
                     }
 
                 } while ((triggerViewportReferencePos - totalPixelShift) > 0)
 
-                spanAxisPixelShift = -(totalPixelShift - baseRowLength)
+                spanAxisPixelShift = -totalPixelShift
 
             }
 
         }
 
-        spanRowPtr = notionalRowPtr - 1
+        spanRowPtr = notionalRowPtr
 
     } else { // final values found in instantiated rows
 
@@ -543,7 +547,8 @@ export const calcContentShift = ({
 
 }
 
-export const getGridRowLengths = (grid, orientation, crosscount, gap) => {
+// supports calcContentShift above
+const getGridRowLengths = (grid, orientation, crosscount, gap) => {
 
     const rowLengths = []
     const elementList = grid.childNodes
@@ -565,7 +570,8 @@ export const getGridRowLengths = (grid, orientation, crosscount, gap) => {
     return rowLengths
 }
 
-export const getGridRowSpans = (rowLengths) => {
+// supports calcContentShift above
+const getGridRowSpans = (rowLengths) => {
 
     const rowSpans = []
     let span = 0

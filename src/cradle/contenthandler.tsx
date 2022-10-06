@@ -37,8 +37,8 @@ import {
     allocateContentList,
     deletePortals,
     getCellFrameComponentList, 
-    getGridRowLengths,
-    getGridRowSpans,
+    // getGridRowLengths,
+    // getGridRowSpans,
 
 } from './contentfunctions'
 
