@@ -20,7 +20,8 @@ Vertical or horizontal infinite scroller using css grid layout
 
 This scroller uses leading edge technologies:
 - [css grid layout](https://css-tricks.com/snippets/css/complete-guide-grid/)
-- [react hooks](https://reactjs.org/docs/hooks-intro.html)
+- [React hooks](https://reactjs.org/docs/hooks-intro.html)
+- [React portals](https://www.npmjs.com/package/react-reverse-portal)
 - [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
 - [ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver)
 - [requestIdleCallback](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback)
