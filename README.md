@@ -129,7 +129,7 @@ Here are details about the callbacks:
 
 |callback|parameters:datatypes|notes|
 |---|---|---|
-|getFunctions|functions: object|see below for details|
+|getFunctions|functions: object|the object returned contains `Cradle` functions that the host can call directly. This is the API. See below for details|
 |referenceIndexCallback|index: integer, location: string, cradleState: string|location can be 'setCradleContent', 'updateCradleContent'. Keeps the host up to date on the index number adjacent to the `Cradle` axis, and the state change that triggered the update|
 |preloadIndexCallback|index: integer|during a preload operation, this stream gives the index number being preloaded|
 |deleteListCallback|reason: string, deleteList: array|gives an array of indexes that have been deleted from the cache, and text of the reason|
