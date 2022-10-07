@@ -88,10 +88,10 @@ Create a style object for each of the elements you want to modify. The styles ar
 
 ~~~javascript
 styles = {
-  viewport:{}, 
-  scrollblock:{}, 
-  cradle:{},
-  scrolltracker:{},
+  viewport: {}, 
+  scrollblock: {}, 
+  cradle: {},
+  scrolltracker: {},
   placeholderframe: {},
   placeholderliner: {},
 }
