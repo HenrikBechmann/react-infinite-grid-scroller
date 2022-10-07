@@ -120,7 +120,7 @@ const scrollerFunctionsRef = useRef(null)
 
 const getFunctions = (functions) => {
 
-    scrollerFunctionsRef.current = functions // assign the functions object
+    scrollerFunctionsRef.current = functions // assign the functions object to a local Ref
 
 }
 ~~~
