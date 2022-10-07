@@ -124,6 +124,10 @@ const getFunctions = (functions) => {
     scrollerFunctionsRef.current = functions // assign the functions object to a local Ref
 
 }
+
+//...
+
+scrollerFunctionsRef.current.scrollToIndex(targetIndex)
 ~~~
 Here are details about the callbacks:
 
