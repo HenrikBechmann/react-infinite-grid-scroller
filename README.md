@@ -101,7 +101,7 @@ The scrolltracker is the small rectangular component that appears at the top lef
 The placeholder styles are applied only to the default placeholder.
 
 ### `callbacks` details
-Callbacks are host defined closure functions which the `Cradle` calls to provide data back to the host. The following are recognized by the `Cradle`:
+Callbacks are host defined closure functions which the `Cradle` calls to provide data back to the host. Include the callbacks in the callbacks object that you want the `Cradle` to use. The following are recognized by the `Cradle`:
 ~~~javascript
 callbacks: {
      getFunctions, // (functions)
