@@ -30,6 +30,9 @@ Therefore RIGS is best suited for modern browsers.
 
 # Architecture
 ![Architecture](demo/Architecture.png)
+
+Notes: The `Cradle` is kept in view of the `Viewport`, such that the `axis` is always near the top or left of the `Viewport` (depending on vertical or horizontal orientation). There are two CSS grids in the `Cradle`, one on each side of the `axis`. The grid on the left expands toward the top or left of the `Scrollblock` (depending on orientation), and the grid on the right expands toward the bottom or right of the `Scrollblock`. `CellFrame`s are created and destroyed on a rolling basis as the `Cradle` moves around the `Scrollblock` to stay in view. `CellFrame`s fetch user components from the internal cache (portals in the React virtual DOM) or from the host through the user-supplied `getItem` function, as needed.
+
 # Usage
 
 This is the minimum configuration.
