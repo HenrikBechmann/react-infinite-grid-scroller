@@ -59,16 +59,16 @@ The scroller's highest level component, the `Viewport`, is a `div` with `positio
 # RIGS properties
 | property | options | notes |
 |---|---|---|
+|cellHeight|integer: number of pixels for cell height|required. literal for "vertical"; approximate for "horizontal"|
+|cellWidth|integer: number of pixels for cell width|required. literal for "horizontal"; approximate for "vertical"|
+|estimatedListSize|integer: the estimated number of items in the virtual list|required. Can be modified|
+|getItem|host-provided function: parameter = index number (0 based), and session itemID for tracking and matching|must return a component or promise of a component, or undefined = unavailable, or null = end-of-list|
 |orientation|string:"vertical" (default) or "horizontal"||
 |gap|integer: number of pixels between cells|there is no gap at either end of a row or column; default = 0|
 |padding|integer:number of pixels padding the "cradle"|the "cradle" holds the rolling content; default = 0|
-|cellHeight|integer: number of pixels for cell height|required. literal for "vertical"; approximate for "horizontal"|
-|cellWidth|integer: number of pixels for cell width|required. literal for "horizontal"; approximate for "vertical"|
 |runway|integer: number of cells just out of view at head and tail of list|default = 0 (not recommended)|
 |offset|integer: starting index when the scroller loads|default = 0|
-|listsize|integer: number of items in list|required|
 |layout|string: 'uniform' (default) or 'variable'|refers to medial length of cells, or rows/columns of cells|
-|getItem|host-provided function: parameter = index number (0 based)|must return a component or promise of a component for the calling grid item|
 |placeholder|sparse component for the cell to load while waiting for the intended cell component|optional. parameters are index, listsize, error string|
 |styles|simple object:collection of styles for scroller components|these should be "passive" styles like backgroundColor|
 |functions|simple object: collection of functions for interactions with scroller components|functions for which properties are not included in the object are ignored|
