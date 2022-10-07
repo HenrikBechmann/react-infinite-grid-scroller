@@ -101,7 +101,7 @@ The scrolltracker is the small rectangular component that appears at the top lef
 The placeholder styles are applied only to the default placeholder.
 
 ### `callbacks` details
-Functions provide utility interactions with the scroller (specifically with the `cradle`). The following are available:
+Callbacks provide utility interactions with the scroller (specifically with the `cradle`). The following are available:
 ~~~javascript
 callbacks: {
     scrollToItem:null, // provided by scroller
