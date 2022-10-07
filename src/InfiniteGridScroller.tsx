@@ -108,8 +108,8 @@ const InfiniteGridScroller = (props) => {
 
     } = props
 
-    if (!(cellWidth && cellHeight && getItem )) {
-        console.log('RIGS: cellWidth, cellHeight and getItem are required')
+    if (!(cellWidth && cellHeight && estimatedListSize && getItem )) {
+        console.log('RIGS: cellWidth, cellHeight, estimatedListSize and getItem are required')
         return null
     }
 
