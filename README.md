@@ -120,38 +120,6 @@ Here are details about the functions:
 |reload|functions.reload()|causes a reload of all cradle content items (visible or invisible). Useful if you want content of those items to be reset on the fly -- this re-triggers `getItem` for each of those cells |
 |reportReferenceIndex|assign your callback function to this property|called by scroller (with `index`, `reason` parameters) whenever the reference item index changes -- that's the item visible at the top left of the viewport|
 
-`getContentList` returns an array of items currently in the cradle. Each array item is an array of two items:
-
-```javascript
-0:<index>
-1:{current:<HTMLElement>}
-```
-The `index` corresponds to the `index` sent to the host with `getItem`. the `HTMLElement` is the scroller `ItemShell` DOM element (set by the `ref` attribute). Your content would be children of this element.
-
-`getVisibleList` returns an array of data about fully or partially visible items currently in the cradle, which are items fully or partially within the boundaries of the viewport of the scroller. Each array item is an object with the following properties (shows example data):
-
-```javascript
-{
-  index: 150, // the index used to request the item
-  isVisible: true, // always true
-  top: 185, // offset from head of the cradle
-  right: 198, // offset from the right of the cradle
-  bottom: 225, // offset from the bottom of the cradle
-  left: 5, // offset from the left of the cradle
-  width: 193, // actual width
-  height: 40, // actual height
-  itemTopOffset: -15, // offset from the top of the viewport
-  itemBottomOffset: 25, // offset of the bottom from the top of the viewport
-  topPortion: -15, // measure of the top portion of the cell (negative is invisible)
-  bottomPortion: 25, // measure of the bottom portion of the cell (negative is invisible)
-  itemLeftOffset: 5, // offset from the left of the viewport
-  itemRightOffset: 198, // offset of the right from the left of the viewport
-  leftPortion: 193, // measure of the left portion of the cell (negative is invisible)
-  rightPortion: 0, // measure of the right portion of the cell (negative is invisible)
-  verticalRatio: 0.625, // the portion of the cell that is visible vertically
-  horizontalRatio: 1, // the portion of the cell that is visible horizontally
-}
-```
 ### Notes
 
 The ItemShell for each grid cell is a `div`, controlled by the grid layout, with `position:relative`. Your content can be anything that works in this context. Your content should be slightly liquid to accommodate adjustments that the grid will make to fit cells into the crosslength of the viewport. These adjustments can be slightly variable width for 'vertical' orientation and slightly variable height for 'horizontal' orientation.
