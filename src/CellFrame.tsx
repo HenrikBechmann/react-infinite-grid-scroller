@@ -63,7 +63,7 @@ const CellFrame = ({
     scrollerID, // scroller ID (for debugging)
     isTriggercell,
     placeholderFrameStyles,
-    placeholderContentStyles,
+    placeholderLinerStyles,
 }) => {
 
     const coreConfigRef = useRef(null)
@@ -157,7 +157,7 @@ const CellFrame = ({
                     message = { messageRef.current }
                     error = { errorRef.current }
                     userFrameStyles = { placeholderFrameStyles }
-                    userContentStyles = { placeholderContentStyles }
+                    userLinerStyles = { placeholderLinerStyles }
                 />
 
         return placeholder

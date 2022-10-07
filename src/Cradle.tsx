@@ -563,7 +563,7 @@ const Cradle = ({
 
         const {
 
-            scrollToItem, 
+            scrollToIndex, 
             reload, 
             setListsize,
             clearCache, 
@@ -580,7 +580,7 @@ const Cradle = ({
 
         const functions = {
 
-            scrollToItem,
+            scrollToIndex,
             reload,
             setListsize,
             clearCache,

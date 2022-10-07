@@ -99,7 +99,7 @@ const InfiniteGridScroller = (props) => {
         // *** objects
         styles = {}, // optional. passive style over-rides (eg. color, opacity); has 
             // properties viewport, scrollblock, cradle, scrolltracker, placeholderframe, or
-            // placeholdercontent. Do not make structural changes!
+            // placeholderliner. Do not make structural changes!
         callbacks = {}, // optional. closures to get direct information streams of some component utilites
             // can contain getFunctions, which provides access to internal scroller functions 
             //(mostly cache management)

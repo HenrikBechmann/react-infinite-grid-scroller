@@ -11,7 +11,7 @@
 
 import React, {useRef } from 'react'
 
-const Placeholder = ({index, listsize, message, error, userFrameStyles, userContentStyles}) => {
+const Placeholder = ({index, listsize, message, error, userFrameStyles, userLinerStyles}) => {
 
     const frameStylesRef = useRef({
         border:'2px solid black',
@@ -22,7 +22,7 @@ const Placeholder = ({index, listsize, message, error, userFrameStyles, userCont
         height:'100%',
         width:'100%',
     })
-    const contentStylesRef = useRef({
+    const linerStylesRef = useRef({
         position:'absolute',
         top:0,
         left:0,
@@ -32,15 +32,15 @@ const Placeholder = ({index, listsize, message, error, userFrameStyles, userCont
         backgroundColor:'white', 
         margin:'3px',
         fontSize:'smaller',
-        ...userContentStyles,
+        ...userLinerStyles,
     })
 
     message = message ?? '(loading...)'
 
-    return <div style = {frameStylesRef.current}>
+    return <div data-type = 'placeholderframe' style = {frameStylesRef.current}>
         { !error?
-            <div style = { contentStylesRef.current }>{index + 1}/{listsize} {message}</div>:
-            <div style = { contentStylesRef.current }>item is not available ({error.message})</div>
+            <div data-type = 'placeholderliner' style = { linerStylesRef.current }>{index + 1}/{listsize} {message}</div>:
+            <div data-type = 'placeholderliner' style = { linerStylesRef.current }>item is not available ({error.message})</div>
         }
         
     </div>

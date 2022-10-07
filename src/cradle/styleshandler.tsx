@@ -42,7 +42,7 @@ export default class StylesHandler {
 
         const headstyles = this.getBaseHeadStyles(gap, padding, orientation, userstyles.cradle)
         const tailstyles = this.getBaseTailStyles(gap, padding, orientation, userstyles.cradle)
-        const axisstyles = this.getAxisStyles(gap, padding, orientation, userstyles.axis)
+        const axisstyles = this.getAxisStyles(gap, padding, orientation)
 
         const triggercelltriggerlineheadstyles =
             this.getTriggercellTriggerlineHeadStyles(
@@ -189,13 +189,13 @@ export default class StylesHandler {
     }
 
     private getAxisStyles = 
-        (gap, padding, orientation, useraxisstyles) => {
+        (gap, padding, orientation) => {
 
         let top, left, width, height // for axis
 
         if (orientation == 'vertical') {
 
-            top = padding + 'px'
+            top = padding + 'px' // default
             left = 'auto'
             width = '100%'
             height = 0
@@ -203,14 +203,14 @@ export default class StylesHandler {
         } else {
 
             top = 'auto'
-            left = padding + 'px'
+            left = padding + 'px' // default
             width = 0
             height = '100%'
 
         }
 
         return {
-            ...useraxisstyles,
+
             position: 'relative',
             top,
             left,

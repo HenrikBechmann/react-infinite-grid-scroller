@@ -9,7 +9,8 @@
     For the list of data streas, see the constructor.
 
     The function calls avaiable to the host are:
-        scrollToItem, 
+
+        scrollToIndex, 
         reload, 
         setListsize,
         clearCache, 
@@ -17,10 +18,11 @@
         getCacheIndexMap, 
         getCacheItemMap,
         getCradleIndexMap,
-        remapIndexes,
-        moveIndex,
+
         insertIndex,
         removeIndex,
+        moveIndex,
+        remapIndexes,
     
     The functions listed are defined in this module.
 
@@ -77,7 +79,7 @@ export default class ServiceHandler {
 
     }
 
-    public scrollToItem = (index) => {
+    public scrollToIndex = (index) => {
 
         index = Math.max(0,index)
 
