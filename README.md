@@ -116,6 +116,8 @@ callbacks: {
 
 Here's an example of a closure you could write:
 ~~~javascript
+const scrollerFunctionsRef = useRef(null)
+
 const getFunctions = (functions) => {
 
     scrollerFunctionsRef.current = functions // assign the functions object
