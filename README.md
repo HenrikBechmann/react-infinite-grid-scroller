@@ -134,7 +134,7 @@ Here are details about the callbacks:
 |deleteListCallback|reason: string, deleteList: array|gives an array of indexes that have been deleted from the cache, and text of the reason|
 |changeListsizeCallback|newlistsize: integer|notification of a change of list size. Could be from getItem returning null indicating end-of-list, or an API call that results in change of list size|
 |itemExceptionsCallback|index: integer, itemID: integer, returnvalue: any, location: string, error: Error|triggered whenever getItem does not return a valid React component|
-|repositioningFlagCallback|flag: boolean| set to `true` when repositioning starts, and `false` when repositioning ends|
+|repositioningFlagCallback|flag: boolean| called with `true` when repositioning starts, and `false` when repositioning ends|
 
 Here are details about the functions returned by getFunctions
 
