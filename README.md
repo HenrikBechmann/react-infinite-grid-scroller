@@ -59,8 +59,8 @@ The scroller's highest level component, the `Viewport`, is a `div` with `positio
 # RIGS properties
 | property | value | notes |
 |---|---|---|
-|cellHeight|integer: number of pixels for cell height|required. Literal for 'uniform' layout, 'vertical' orientation.  Maximum for 'variable' layout, 'vertical' orientation. Approximate for 'horizontal' orientation |
-|cellWidth|integer: number of pixels for cell width|required. Literal for 'uniform' layout, 'horizontal' orientation. Maximum for 'variable' layout, 'horizontal' orientation. Approximate for 'vertical' orientation|
+|cellHeight|integer: number of pixels for cell height|required. Literal, applied to `height` for 'uniform' layout, 'vertical' orientation. Applied to `max-height` for 'variable' layout, 'vertical' orientation. Approximate for 'horizontal' orientation |
+|cellWidth|integer: number of pixels for cell width|required. Literal, applied to `width` for 'uniform' layout, 'horizontal' orientation. Applied to `min-width` for 'variable' layout, 'horizontal' orientation. Approximate for 'vertical' orientation|
 |estimatedListSize|integer: the estimated number of items in the virtual list|required. Can be modified at runtime|
 |getItem|host-provided function. Parameters: `index` (integer, 0 based), and session `itemID` for tracking and matching. Arguments provided by system|required. Must return a React component or promise of a component (`React.isValidElement`), or `undefined` = unavailable, or `null` = end-of-list|
 |orientation|string: 'vertical' (default) or 'horizontal'|direction of scroll|
