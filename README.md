@@ -16,9 +16,9 @@ Vertical or horizontal infinite scroller using css grid layout
 - dynamic recalibration with async content refresh
 - nested lists
 
-# Technology
+# Key Technologies
 
-This scroller uses leading edge technologies:
+This scroller uses these key technologies:
 - [css grid layout](https://css-tricks.com/snippets/css/complete-guide-grid/)
 - [React hooks](https://reactjs.org/docs/hooks-intro.html)
 - [React portals](https://www.npmjs.com/package/react-reverse-portal)
@@ -26,7 +26,7 @@ This scroller uses leading edge technologies:
 - [ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver)
 - [requestIdleCallback](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback)
 
-Therefore it is best suited for modern browsers.
+Therefore RIGS is best suited for modern browsers.
 
 # Architecture
 ![Architecture](demo/Architecture.png)
