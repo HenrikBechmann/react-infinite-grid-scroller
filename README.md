@@ -115,7 +115,7 @@ callbacks: {
 ~~~
 
 Here's an example of a closure you could write:
-~~~javascript
+~~~typescript
 const scrollerFunctionsRef = useRef(null)
 
 const getFunctions = (functions) => {
