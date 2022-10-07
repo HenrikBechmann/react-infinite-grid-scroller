@@ -103,7 +103,7 @@ The placeholder styles are applied only to the default placeholder.
 ### `callbacks` details
 Functions provide utility interactions with the scroller (specifically with the `cradle`). The following are available:
 ~~~javascript
-functions: {
+callbacks: {
     scrollToItem:null, // provided by scroller
     getContentList:null, // provided by scroller
     getVisibleList:null, // provided by scroller
