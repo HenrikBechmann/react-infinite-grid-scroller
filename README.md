@@ -126,13 +126,13 @@ Here are details about the callbacks:
 
 |callback|parameters|notes|
 |---|---|---|
-|getFunctions|, // (functions)||
-|referenceIndexCallback|, // (index, location, cradleState)||
-|preloadIndexCallback|, // (index)||
-|deleteListCallback|, // (reason, deleteList)||
-|changeListsizeCallback|, // (newlistsize)||
-|itemExceptionsCallback|, // (index, itemID, returnvalue, location, error)||
-|repositioningFlagCallback|, // (flag) // boolean||
+|getFunctions|functions||
+|referenceIndexCallback|index, location, cradleState||
+|preloadIndexCallback|index||
+|deleteListCallback|reason, deleteList||
+|changeListsizeCallback|newlistsize||
+|itemExceptionsCallback|index, itemID, returnvalue, location, error||
+|repositioningFlagCallback|flag:boolean||
 
 Here are details about the functions returned by getFunctions
 
