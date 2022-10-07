@@ -128,13 +128,13 @@ Here are details about the callbacks:
 
 |callback|parameters:datatypes|notes|
 |---|---|---|
-|getFunctions|functions: object||
-|referenceIndexCallback|index: integer, location: string, cradleState: string||
-|preloadIndexCallback|index: integer||
-|deleteListCallback|reason: string, deleteList: array||
-|changeListsizeCallback|newlistsize: integer||
-|itemExceptionsCallback|index: integer, itemID: integer, returnvalue: any, location: string, error: Error||
-|repositioningFlagCallback|flag: boolean||
+|getFunctions|functions: object|see below for details|
+|referenceIndexCallback|index: integer, location: string, cradleState: string|location can be 'setCradleContent','updateCradleContent'. Keeps the host up to date on the index number adjacent to the `Cradle` axis, and the state change that triggered the update|
+|preloadIndexCallback|index: integer|during a preload operation, this stream gives the index number being preloaded|
+|deleteListCallback|reason: string, deleteList: array|gives a list of indexes that have been deleted from the cache, and text of the reason|
+|changeListsizeCallback|newlistsize: integer|notification of a change of list size. Could be from getItem returning null indicating end-of-list, or an API call that results in change of list size|
+|itemExceptionsCallback|index: integer, itemID: integer, returnvalue: any, location: string, error: Error|triggered whenever getItem does not return a valid React component|
+|repositioningFlagCallback|flag: boolean| set to `true` when repositioning starts, and `false` when repositioning ends|
 
 Here are details about the functions returned by getFunctions
 
