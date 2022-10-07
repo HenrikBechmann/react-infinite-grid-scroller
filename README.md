@@ -149,7 +149,7 @@ Here are details about the functions provided by getFunctions
 |scrollToIndex|index:integer|_void_|places the requested index item at the top visible row or left visible column of the scroller, depending on orientation|
 |reload|_none_|_void_||
 |setListsize|index:integer|||
-|clearCache|_none_|||
+|clearCache|_none_|_void_||
 |getCacheIndexMap|_none_|||
 |getCacheItemMap|_none_|||
 |getCradleIndexMap|_none_|||
