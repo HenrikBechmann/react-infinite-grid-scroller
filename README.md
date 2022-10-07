@@ -33,6 +33,8 @@ Therefore RIGS is best suited for modern browsers.
 
 Notes: The `Cradle` is kept in view of the `Viewport`, such that the `axis` is always near the top or left of the `Viewport` (depending on vertical or horizontal orientation). There are two CSS grids in the `Cradle`, one on each side of the `axis`. The grid on the left expands toward the top or left of the `Scrollblock` (depending on orientation), and the grid on the right expands toward the bottom or right of the `Scrollblock`. `CellFrame`s are created and destroyed on a rolling basis as the `Cradle` moves around the `Scrollblock` to stay in view. `CellFrame`s fetch user components from the internal cache (portals in the React virtual DOM) or from the host through the user-supplied `getItem` function, as needed.
 
+Not shown are two triggerlines (0 width or height `div`s, depending on orientation) which straddle the top or left edge of the `Viewport`. Whenever one of these triggerlines crosses the `Viewport` edge (through scrolling), an `IntersectionObserver` sends an interrupt to the `Cradle` to update its content.
+
 # Usage
 
 This is the minimum configuration.
