@@ -138,7 +138,7 @@ Here are details about the callbacks:
 
 Here are details about the functions returned by getFunctions
 
-|functions|parameters|return values|notes|
+|functions|parameters|return value|notes|
 |---|---|---|---|
 |scrollToIndex|callbacks.scrollToIndex(index)||places the requested index at the top left of the list|
 |getContentList|callbacks.getContentList()||returns an array of current content data, where the content includes both visible items and items that are invisible in the *runways* at the head and tail of lists|
