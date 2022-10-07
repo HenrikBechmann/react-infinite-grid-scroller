@@ -128,7 +128,7 @@ Here are details about the callbacks:
 
 |callback|parameters:datatypes|notes|
 |---|---|---|
-|getFunctions|functions:object||
+|getFunctions|functions: object||
 |referenceIndexCallback|index: integer, location: string, cradleState: string||
 |preloadIndexCallback|index: integer||
 |deleteListCallback|reason: string, deleteList: array||
