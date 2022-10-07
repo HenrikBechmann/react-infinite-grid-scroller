@@ -64,11 +64,11 @@ The scroller's highest level component, the `Viewport`, is a `div` with `positio
 |estimatedListSize|integer: the estimated number of items in the virtual list|required. Can be modified|
 |getItem|host-provided function. Parameters: `index` number (0 based), and session `itemID` for tracking and matching|must return a component or promise of a component, or `undefined` = unavailable, or `null` = end-of-list|
 |orientation|string:"vertical" (default) or "horizontal"||
-|gap|integer: number of pixels between cells|there is no gap at either end of a row or column; default = 0|
-|padding|integer:number of pixels padding the "cradle"|the "cradle" holds the rolling content; default = 0|
+|gap|integer: number of pixels between cells|there is no gap at start or end of rows or columns; default = 0|
+|padding|integer:number of pixels padding the `Cradle`|the `Cradle` holds the rolling content; default = 0|
+|layout|string: 'uniform' (default) or 'variable'|refers to medial length of cells, or rows/columns of cells|
 |runway|integer: number of cells just out of view at head and tail of list|default = 0 (not recommended)|
 |offset|integer: starting index when the scroller loads|default = 0|
-|layout|string: 'uniform' (default) or 'variable'|refers to medial length of cells, or rows/columns of cells|
 |placeholder|sparse component for the cell to load while waiting for the intended cell component|optional. parameters are index, listsize, error string|
 |styles|simple object:collection of styles for scroller components|these should be "passive" styles like backgroundColor|
 |functions|simple object: collection of functions for interactions with scroller components|functions for which properties are not included in the object are ignored|
