@@ -321,6 +321,7 @@ const Cradle = ({
         {
             referenceIndexCallback:userCallbacks?.referenceIndexCallback,
             repositioningFlagCallback:userCallbacks?.repositioningFlagCallback,
+            repositioningIndexCallback:userCallbacks?.repositioningIndexCallback,
             preloadIndexCallback:userCallbacks?.preloadIndexCallback,
             deleteListCallback:userCallbacks?.deleteListCallback,
             changeListsizeCallback:userCallbacks?.changeListsizeCallback,
@@ -571,6 +572,7 @@ const Cradle = ({
             getCacheIndexMap, 
             getCacheItemMap,
             getCradleIndexMap,
+
             remapIndexes,
             moveIndex,
             insertIndex,
@@ -1353,6 +1355,8 @@ const Cradle = ({
         if (!['repositioningContinuation','repositioningRender'].includes(cradleState)) {
             return null
         }
+        const { repositioningIndexCallback } = serviceHandler.callbacks
+        repositioningIndexCallback && repositioningIndexCallback(scrollAxisReferenceIndex)
         const trackerargs = {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,

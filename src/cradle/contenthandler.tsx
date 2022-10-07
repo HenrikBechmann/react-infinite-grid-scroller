@@ -239,7 +239,7 @@ export default class ContentHandler {
 
         if (serviceHandler.callbacks.referenceIndexCallback) {
 
-            let cstate = cradleState
+            const cstate = cradleState
 
             serviceHandler.callbacks.referenceIndexCallback(
 
