@@ -66,7 +66,7 @@ The scroller's highest level component, the `Viewport`, is a `div` with `positio
 |orientation|string:"vertical" (default) or "horizontal"||
 |gap|integer: number of pixels between cells|there is no gap at start or end of rows or columns; default = 0|
 |padding|integer:number of pixels padding the `Cradle`| default = 0|
-|layout|string: 'uniform' (default) or 'variable'|controls handling of the height or width of cells, depending on orientation. 'variable' is constrained by cellHeight/cellWidth (maximum) and cellMinHeight/cellMinHeight (minimum)|
+|layout|string: 'uniform' (default) or 'variable'|specifies handling of the height or width of cells, depending on orientation. 'uniform' is fixed height/width. 'variable' is constrained by cellHeight/cellWidth (maximum) and cellMinHeight/cellMinWidth (minimum)|
 |runway|integer: number of cells just out of view at head and tail of list|default = 0 (not recommended)|
 |offset|integer: starting index when the scroller loads|default = 0|
 |placeholder|sparse component for the cell to load while waiting for the intended cell component|optional. parameters are index, listsize, error string|
