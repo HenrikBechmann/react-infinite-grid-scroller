@@ -57,7 +57,7 @@ import Scroller from 'react-infinite-grid-scroller'
 The scroller's highest level component, the `Viewport`, is a `div` with `position:absolute`, and `inset:0`, so the host container should be styled accordingly.
 
 # RIGS properties
-| property | options | notes |
+| property | value | notes |
 |---|---|---|
 |cellHeight|integer: number of pixels for cell height|required. Literal for 'uniform' layout, 'vertical' orientation.  Maximum for 'variable' layout, 'vertical' orientation. Approximate for 'horizontal' orientation |
 |cellWidth|integer: number of pixels for cell width|required. Literal for 'uniform' layout, 'horizontal' orientation. Maximum for 'variable' layout, 'horizontal' orientation. Approximate for 'vertical' orientation|
