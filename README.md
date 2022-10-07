@@ -126,14 +126,14 @@ const getFunctions = (functions) => {
 ~~~
 Here are details about the callbacks:
 
-|callback|parameters|notes|
+|callback|parameters:datatypes|notes|
 |---|---|---|
-|getFunctions|functions||
-|referenceIndexCallback|index, location, cradleState||
-|preloadIndexCallback|index||
-|deleteListCallback|reason, deleteList||
-|changeListsizeCallback|newlistsize||
-|itemExceptionsCallback|index, itemID, returnvalue, location, error||
+|getFunctions|functions:object||
+|referenceIndexCallback|index:integer, location:string, cradleState:string||
+|preloadIndexCallback|index:integer||
+|deleteListCallback|reason, deleteList:array||
+|changeListsizeCallback|newlistsize:integer||
+|itemExceptionsCallback|index:integer, itemID:integer, returnvalue:any, location:string, error:Error||
 |repositioningFlagCallback|flag:boolean||
 
 Here are details about the functions returned by getFunctions
