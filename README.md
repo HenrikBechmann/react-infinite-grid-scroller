@@ -129,12 +129,12 @@ Here are details about the callbacks:
 |callback|parameters:datatypes|notes|
 |---|---|---|
 |getFunctions|functions:object||
-|referenceIndexCallback|index:integer, location:string, cradleState:string||
-|preloadIndexCallback|index:integer||
-|deleteListCallback|reason, deleteList:array||
-|changeListsizeCallback|newlistsize:integer||
-|itemExceptionsCallback|index:integer, itemID:integer, returnvalue:any, location:string, error:Error||
-|repositioningFlagCallback|flag:boolean||
+|referenceIndexCallback|index: integer, location: string, cradleState: string||
+|preloadIndexCallback|index: integer||
+|deleteListCallback|reason: string, deleteList: array||
+|changeListsizeCallback|newlistsize: integer||
+|itemExceptionsCallback|index: integer, itemID: integer, returnvalue: any, location: string, error: Error||
+|repositioningFlagCallback|flag: boolean||
 
 Here are details about the functions returned by getFunctions
 
