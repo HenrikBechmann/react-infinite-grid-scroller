@@ -75,8 +75,10 @@ The scroller's highest level component, the `Viewport`, is a `div` with `positio
 |cacheMax|integer: at minimum (maintained by system) the number of user components in the `Cradle`|allows optimization of cache size for memory limits and performance|
 |placeholder|sparse React component for the cell to load while waiting for the intended cell component|optional (replaces default placeholder). parameters are index, listsize, message, error. Arguments set by system|
 |useScrollTracker|boolean: default = `true`|allows suppression of system feedback on position within list while in reposition mode, if the host wants to provide alternative feedback based on data from callbacks |
-|styles|simple object:collection of styles for scroller components|these should be "passive" styles like backgroundColor|
-|functions|simple object: collection of functions for interactions with scroller components|functions for which properties are not included in the object are ignored|
+|styles|object: collection of styles for scroller components|these should be "passive" styles like backgroundColor. See below for details|
+|callbacks|object: collection of functions for feddback and interactions with scroller components|see below for details|
+|advanced|object: collection of values used to control system behaviour|use with caution. See below for details|
+|scrollerProperties|requested by user components by being set to null by user, instantiated with an object by system|required for nested RIGS. Contains key scroller settings. See below for details|
 
 ### `styles` details
 
