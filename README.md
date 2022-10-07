@@ -101,38 +101,47 @@ The scrolltracker is the small rectangular component that appears at the top lef
 The placeholder styles are applied only to the default placeholder.
 
 ### `callbacks` details
-Callbacks provide utility interactions with the scroller (specifically with the `cradle`). The following are available:
+Callbacks are host defined closure functions which the `Cradle` calls to provide data back to the host. The following are available:
 ~~~javascript
 callbacks: {
-    scrollToIndex:null, // provided by scroller
-    getContentList:null, // provided by scroller
-    getVisibleList:null, // provided by scroller
-    reload:null, // provided by scroller
-    reportReferenceIndex:null // provided by host
+     getFunctions, // (functions)
+     referenceIndexCallback, // (index, location, cradleState)
+     preloadIndexCallback, // (index)
+     deleteListCallback, // (reason, deleteList)
+     changeListsizeCallback, // (newlistsize)
+     itemExceptionsCallback, // (index, itemID, returnvalue, location, error)
+     repositioningFlagCallback, // (flag) // boolean
 }
 ~~~
-To get access to the first four functions, include the property for each in the functions object, set to null. The scroller will instantiate these properties with the appropriate functions on initialization. If the properties are absent the functions are not set.
 
-For reportReferenceIndex, the host must provide the function, like so:
+Here's an example of a closure you could write:
 ~~~javascript
-const reportReferenceIndex = (index, reason, cradlestate) => {
+const getFunctions = (functions) => {
 
-    console.log('reporting reference index', index, reason, cradlestate)
+    scrollerFunctionsRef.current = functions // assign the functions object
 
 }
 ~~~
-Then assign your function to `functions.reportReferenceIndex`.
+Here are details about the callbacks:
 
-The reference `index` is the calculated item index (0-based) at the top left of the viewport. The `reason` can be 'scrolling' or 'setCradleContent'. The `cradlestate` for scrolling can be 'ready' (normal) or 'repositioning' for rapid repositioning. For 'setCradleContent' `cradlestate` is the triggered state that causes a reset of the cradle's contents. The triggering state can be 'setup', 'resize', 'pivot', 'reload' or 'reposition'. Note that `reportReferenceIndex` returns a *firehose* of data with scrolling.
-
-Here are details about the functions:
-
-|function|usage|notes|
+|callback|parameters|notes|
 |---|---|---|
-|scrollToIndex|callbacks.scrollToIndex(index)|places the requested index at the top left of the list|
-|getContentList|callbacks.getContentList()|returns an array of current content data, where the content includes both visible items and items that are invisible in the *runways* at the head and tail of lists|
-|reload|callbacks.reload()|causes a reload of all cradle content items (visible or invisible). Useful if you want content of those items to be reset on the fly -- this re-triggers `getItem` for each of those cells |
-|reportReferenceIndex|assign your callback function to this property|called by scroller (with `index`, `reason` parameters) whenever the reference item index changes -- that's the item visible at the top left of the viewport|
+|getFunctions|, // (functions)||
+|referenceIndexCallback|, // (index, location, cradleState)||
+|preloadIndexCallback|, // (index)||
+|deleteListCallback|, // (reason, deleteList)||
+|changeListsizeCallback|, // (newlistsize)||
+|itemExceptionsCallback|, // (index, itemID, returnvalue, location, error)||
+|repositioningFlagCallback|, // (flag) // boolean||
+
+Here are details about the functions returned by getFunctions
+
+|functions|parameters|return values|notes|
+|---|---|---|---|
+|scrollToIndex|callbacks.scrollToIndex(index)||places the requested index at the top left of the list|
+|getContentList|callbacks.getContentList()||returns an array of current content data, where the content includes both visible items and items that are invisible in the *runways* at the head and tail of lists|
+|reload|callbacks.reload()||causes a reload of all cradle content items (visible or invisible). Useful if you want content of those items to be reset on the fly -- this re-triggers `getItem` for each of those cells |
+|reportReferenceIndex|assign your callback function to this property||called by scroller (with `index`, `reason` parameters) whenever the reference item index changes -- that's the item visible at the top left of the viewport|
 
 ### `advanced` details
 
