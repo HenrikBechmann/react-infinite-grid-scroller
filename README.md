@@ -49,7 +49,7 @@ import Scroller from 'react-infinite-grid-scroller'
       cellHeight = { cellHeight }
       cellWidth = { cellWidth }
       estimatedListSize = { estimatedListSize } // this constitutes a virtual 0-based array
-      getItem = { getItem } // a function called by RIGS to obtain a specified user component by index
+      getItem = { getItem } // a function called by RIGS to obtain a specified user component by index number
   />
 </div>
 ```
