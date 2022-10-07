@@ -48,12 +48,12 @@ import Scroller from 'react-infinite-grid-scroller'
   <Scroller 
       cellHeight = { cellHeight }
       cellWidth = { cellWidth }
-      estimatedListSize = { estimatedListSize }
+      estimatedListSize = { estimatedListSize } // this constitutes a virtual 0-based array
       getItem = { getItem } // a function called by RIGS to obtain a specified user component by index
   />
 </div>
 ```
-The scroller's highest level component, the viewport, is a `div` with `position:absolute`, and `inset:0`, so the host container should be styled accordingly.
+The scroller's highest level component, the `Viewport`, is a `div` with `position:absolute`, and `inset:0`, so the host container should be styled accordingly.
 
 # RIGS properties
 | property | options | notes |
