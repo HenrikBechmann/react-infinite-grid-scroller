@@ -59,11 +59,11 @@ The scroller's highest level component, the `Viewport`, is a `div` with `positio
 # RIGS properties
 | property | options | notes |
 |---|---|---|
-|cellHeight|integer: number of pixels for cell height|required. literal for "vertical"; approximate for "horizontal"|
-|cellWidth|integer: number of pixels for cell width|required. literal for "horizontal"; approximate for "vertical"|
+|cellHeight|integer: number of pixels for cell height|required. Literal for 'uniform' layout, 'vertical' orientation.  Maximum for 'variable' layout, 'vertical' orientation. Approximate for 'horizontal' orientation. |
+|cellWidth|integer: number of pixels for cell width|required. literal for 'horizontal'; approximate for 'vertical'|
 |estimatedListSize|integer: the estimated number of items in the virtual list|required. Can be modified|
 |getItem|host-provided function. Parameters: `index` number (0 based), and session `itemID` for tracking and matching|must return a component or promise of a component, or `undefined` = unavailable, or `null` = end-of-list|
-|orientation|string:"vertical" (default) or "horizontal"|direction of scroll|
+|orientation|string:'vertical' (default) or 'horizontal'|direction of scroll|
 |gap|integer: number of pixels between cells|there is no gap at start or end of rows or columns; default = 0|
 |padding|integer:number of pixels padding the `Cradle`| default = 0|
 |layout|string: 'uniform' (default) or 'variable'|specifies handling of the height or width of cells, depending on orientation. 'uniform' is fixed height/width. 'variable' is constrained by cellHeight/cellWidth (maximum) and cellMinHeight/cellMinWidth (minimum)|
