@@ -1380,7 +1380,6 @@ const Cradle = ({
             <div
                 key = 'head'
                 data-type = 'headtrigger'
-                data-direction = 'tailward'
                 style = {triggercellTriggerlineHeadStyle}
                 ref = {triggercellTriggerlineHeadElementRef}
             >
@@ -1388,7 +1387,6 @@ const Cradle = ({
             <div
                 key = 'tail'
                 data-type = 'tailtrigger'
-                data-direction = 'headward'
                 style = {triggercellTriggerlineTailStyle}
                 ref = {triggercellTriggerlineTailElementRef}
             >
