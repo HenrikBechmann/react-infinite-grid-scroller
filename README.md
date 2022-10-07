@@ -18,7 +18,7 @@ Vertical or horizontal infinite scroller using css grid layout
 
 # Key Technologies
 
-This scroller uses these key technologies:
+RIGS uses these key technologies:
 - [css grid layout](https://css-tricks.com/snippets/css/complete-guide-grid/)
 - [React hooks](https://reactjs.org/docs/hooks-intro.html)
 - [React portals](https://www.npmjs.com/package/react-reverse-portal)
