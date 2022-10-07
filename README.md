@@ -46,7 +46,7 @@ import Scroller from 'react-infinite-grid-scroller'
 
 // ...
 
-<div style = {containerstyle}>
+<div style = { containerstyle }>
   <Scroller 
       cellHeight = { cellHeight }
       cellWidth = { cellWidth }
