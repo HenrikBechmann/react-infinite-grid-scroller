@@ -97,6 +97,9 @@ styles = {
 }
 ~~~
 The scrolltracker is the small rectangular component that appears at the top left of the viewport when the list is being rapidly repositioned. The scrolltracker gives the user the current index and total listsize during the repositioning process.
+
+The placeholder styles are applied only to the default placeholder.
+
 ### `callbacks` details
 Functions provide utility interactions with the scroller (specifically with the `cradle`). The following are available:
 ~~~javascript
