@@ -140,7 +140,7 @@ Here are details about the callbacks:
 
 Here are details about the functions provided by getFunctions
 
-|function|parameters:datatypes|return value|notes|
+|function|parameters:datatypes|return value:datatype|notes|
 |---|---|---|---|
 |scrollToIndex|index:integer||places the requested index item at the top visible row or left visible column of the scroller, depending on orientation|
 |reload||||
