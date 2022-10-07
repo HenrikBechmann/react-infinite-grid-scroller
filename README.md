@@ -140,8 +140,19 @@ Here are details about the callbacks:
 
 Here are details about the functions provided by getFunctions
 
-|functions|parameters|return value|notes|
+|function|parameters|return value|notes|
 |---|---|---|---|
+|scrollToIndex||||
+|reload||||
+|setListsize||||
+|clearCache||||
+|getCacheIndexMap||||
+|getCacheItemMap||||
+|getCradleIndexMap||||
+|insertIndex||||
+|removeIndex||||
+|moveIndex||||
+|remapIndexes||||
 |scrollToIndex|callbacks.scrollToIndex(index)||places the requested index at the top left of the list|
 |getContentList|callbacks.getContentList()||returns an array of current content data, where the content includes both visible items and items that are invisible in the *runways* at the head and tail of lists|
 |reload|callbacks.reload()||causes a reload of all cradle content items (visible or invisible). Useful if you want content of those items to be reset on the fly -- this re-triggers `getItem` for each of those cells |
