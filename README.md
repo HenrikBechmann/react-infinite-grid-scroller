@@ -78,7 +78,7 @@ The scroller's highest level component, the `Viewport`, is a `div` with `positio
 |styles|object: collection of styles for scroller components|optional. These should be "passive" styles like backgroundColor. See below for details|
 |callbacks|object: collection of functions for feedback and interactions with scroller components|optional. See below for details|
 |advanced|object: collection of values used to control system behaviour|use with caution. optional. See below for details|
-|scrollerProperties|requested by user components by being set to null by user, instantiated with an object by system|required for nested RIGS. Contains key scroller settings. See below for details|
+|scrollerProperties|requested by user components by being set to null by user, instantiated with an object by system|required for nested RIGS; available for all user components. Contains key scroller settings. See below for details|
 
 ### `styles` details
 
