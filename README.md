@@ -150,9 +150,9 @@ Here are details about the functions provided by getFunctions
 |reload|_none_|_void_||
 |setListsize|index:integer|_void_||
 |clearCache|_none_|_void_||
-|getCacheIndexMap|_none_|||
-|getCacheItemMap|_none_|||
-|getCradleIndexMap|_none_|||
+|getCacheIndexMap|_none_||snapshot|
+|getCacheItemMap|_none_||snapshot|
+|getCradleIndexMap|_none_||snapshot|
 |insertIndex||||
 |removeIndex||||
 |moveIndex||||
