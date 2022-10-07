@@ -140,9 +140,9 @@ Here are details about the callbacks:
 
 Here are details about the functions provided by getFunctions
 
-|function|parameters|return value|notes|
+|function|parameters:datatypes|return value|notes|
 |---|---|---|---|
-|scrollToIndex||||
+|scrollToIndex|index:integer||places the requested index item at the top visible row or left visible column of the scroller, depending on orientation|
 |reload||||
 |setListsize||||
 |clearCache||||
@@ -153,10 +153,6 @@ Here are details about the functions provided by getFunctions
 |removeIndex||||
 |moveIndex||||
 |remapIndexes||||
-|scrollToIndex|callbacks.scrollToIndex(index)||places the requested index at the top left of the list|
-|getContentList|callbacks.getContentList()||returns an array of current content data, where the content includes both visible items and items that are invisible in the *runways* at the head and tail of lists|
-|reload|callbacks.reload()||causes a reload of all cradle content items (visible or invisible). Useful if you want content of those items to be reset on the fly -- this re-triggers `getItem` for each of those cells |
-|reportReferenceIndex|assign your callback function to this property||called by scroller (with `index`, `reason` parameters) whenever the reference item index changes -- that's the item visible at the top left of the viewport|
 
 ### `advanced` details
 
