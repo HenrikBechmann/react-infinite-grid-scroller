@@ -91,7 +91,9 @@ styles = {
   viewport:{}, 
   scrollblock:{}, 
   cradle:{},
-  scrolltracker:{}
+  scrolltracker:{},
+  placeholderframe: {},
+  placeholderliner: {},
 }
 ~~~
 The scrolltracker is the small rectangular component that appears at the top left of the viewport when the list is being rapidly repositioned. The scrolltracker gives the user the current index and total listsize during the repositioning process.
