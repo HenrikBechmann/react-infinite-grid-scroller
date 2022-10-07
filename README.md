@@ -86,7 +86,7 @@ Notes:
 
 Create a style object for each of the elements you want to modify. The styles are not screened, though the RIGS essential styles pre-empt user styles. Be careful to only include "passive" styles (like color, backgroundColor) so as not to confuse the scroller. Do not add structural items like borders, padding etc.
 
-~~~javascript
+~~~typescript
 styles = {
   viewport: {}, 
   scrollblock: {}, 
@@ -102,7 +102,7 @@ The placeholder styles are applied only to the default placeholder.
 
 ### `callbacks` details
 Callbacks are host defined closure functions which the `Cradle` calls to provide data back to the host. Include the callbacks in the callbacks object that you want the `Cradle` to use. The following are recognized by the `Cradle`:
-~~~javascript
+~~~typescript
 callbacks: {
      getFunctions, // (functions)
      referenceIndexCallback, // (index, location, cradleState)
