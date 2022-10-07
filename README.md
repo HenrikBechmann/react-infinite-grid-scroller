@@ -80,6 +80,8 @@ The scroller's highest level component, the `Viewport`, is a `div` with `positio
 |advanced|object: collection of values used to control system behaviour|use with caution. optional. See below for details|
 |scrollerProperties|requested by user components by being set to null by user, instantiated with an object by system|required for nested RIGS; available for all user components. Contains key scroller settings. See below for details|
 
+Notes:
+
 ### `styles` details
 
 Create a style object for each of the components you want to modify. Be careful to only include passive styles (like color, backgroundColor) so as not to confuse the scroller. Do not add structural items like borders, padding etc.
@@ -93,7 +95,7 @@ styles = {
 }
 ~~~
 The scrolltracker is the small rectangular component that appears at the top left of the viewport when the list is being rapidly repositioned. The scrolltracker gives the user the current index and total listsize during the repositioning process.
-### `functions` details
+### `callbacks` details
 Functions provide utility interactions with the scroller (specifically with the `cradle`). The following are available:
 ~~~javascript
 functions: {
@@ -127,6 +129,10 @@ Here are details about the functions:
 |getVisibleList|functions.getVisibleList()|returns an array of current content data, where the content includes items that are fully or partially visible to the user|
 |reload|functions.reload()|causes a reload of all cradle content items (visible or invisible). Useful if you want content of those items to be reset on the fly -- this re-triggers `getItem` for each of those cells |
 |reportReferenceIndex|assign your callback function to this property|called by scroller (with `index`, `reason` parameters) whenever the reference item index changes -- that's the item visible at the top left of the viewport|
+
+### `advanced` details
+
+### `scrollerProperties` details
 
 ### Notes
 
