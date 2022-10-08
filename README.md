@@ -177,7 +177,7 @@ Here are details about the functions returned by `functionsCallback`:
 |insertIndex||||
 |removeIndex||||
 |moveIndex||||
-|remapIndexes||||
+|remapIndexes|changeMap:Map|modifiedIndexList:array, processedIndexList:array, indexesToDeleteList:array, deletedOrphanedItemIDList:array, deletedOrphanedIndexList:array, errorEntriesMap:Map, changeMap:Map (same as input parameter)|changeMap is index (=key) to itemID (=value) map. indexes or itemIDs not in the cache are ignored. `itemID`s are assigned to the new indexes|
 
 ### `technical` object
 
