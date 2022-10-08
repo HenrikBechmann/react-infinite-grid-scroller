@@ -70,7 +70,7 @@ The scroller's highest level component, the `Viewport`, is a `div` with `positio
 |layout|string: 'uniform' (default) or 'variable'|specifies handling of the height or width of cells, depending on orientation. 'uniform' is fixed cellHeight/cellWidth. 'variable' is constrained by cellHeight/cellWidth (maximum) and cellMinHeight/cellMinWidth (minimum)|
 |startingIndex|integer: starting index when the scroller first loads|default = 0|
 |padding|integer: number of pixels padding the `Cradle`| default = 0|
-|[_**+CELL OPTIONS**_]|
+|[_**MORE CELL OPTIONS**_]|
 |gap|integer: number of pixels between cells|there is no gap at start or end of rows or columns; default = 0|
 |cellMinHeight|integer: default = 25, minimum = 25, maximum = cellHeight|used for 'variable' layout with 'vertical' orientation. Applied to `min-height`|
 |cellMinWidth|integer: default = 25, minimum = 25, maximum = cellWidth|used for 'variable' layout with 'horizontal' orientation. Applied to `min-width`|
