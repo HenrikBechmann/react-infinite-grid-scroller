@@ -210,11 +210,11 @@ Nested RIGS require this property (to be informed when portal reparenting is tak
 
 The `scrollerProperties` object contains the following properties, which are identical to the properties set for the scroller:
 
-orientation, gap, padding, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, cache, cacheMax, startingIndex
+_orientation, gap, padding, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, cache, cacheMax, startingIndex_
 
 It also contains the following property, which may have been slightly altered by the scroller:
 
-runwayRowcount
+_runwayRowcount_
 
 # Licence
 
