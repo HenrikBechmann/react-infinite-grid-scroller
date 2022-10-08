@@ -153,7 +153,7 @@ Here are details about the callbacks:
 |deleteListCallback|reason: string, deleteList: array|gives an array of indexes that have been deleted from the cache, and text of the reason|
 |repositioningFlagCallback|flag: boolean| called with `true` when repositioning starts, and `false` when repositioning ends. Useful for feedback to user when host sets `useScrollTracker` property to false|
 
-### API 
+### functions 
 
 Here are details about the functions returned by `functionsCallback`:
 
