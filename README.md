@@ -29,6 +29,7 @@ RIGS uses these key technologies:
 Therefore RIGS is best suited for modern browsers.
 
 # Architecture
+
 ![Architecture](demo/Architecture.png)
 
 Notes: The `Cradle` is kept in view of the `Viewport`, such that the `axis` is always near the top or left of the `Viewport` (depending on vertical or horizontal orientation). There are two CSS grids in the `Cradle`, one on each side of the `axis`. As `CellFrame`s are added to or removed from the grids, the grid on the left expands toward or contracts away from the top or left of the `Scrollblock` (depending on orientation), and the grid on the right expands toward or contracts away from the bottom or right of the `Scrollblock`. 
@@ -62,6 +63,7 @@ Note that scroller-generated elements show a `data-type` attribute in browser in
 User components loaded to CellFrames are placed in a `data-type` = 'contentenvelope' `div`. In 'uniform' layout this has `position` = 'absolute' and `inset` = 0. In 'variable' layout it has `width` = '100%' and a `max-height` = cellHeight for 'vertical' orientation, and `height` = '100%' and `max-width` = cellWidth for 'horizontal' orientation. In any case it has `overflow` = 'hidden'.
 
 # Scroller properties
+
 | property | value | notes |
 |---|---|---|
 |[_**REQUIRED**_]|
@@ -111,6 +113,7 @@ The scrolltracker is the small rectangular component that appears at the top lef
 The placeholder styles are applied only to the default placeholder.
 
 ### `callbacks` object
+
 Callbacks are host defined closure functions which the `Cradle` calls to provide data back to the host. `Cradle` returns data by setting the arguments of the callbacks. Include only the callbacks in the `callbacks` object that you want the `Cradle` to use. The following are recognized by the `Cradle`:
 ~~~typescript
 callbacks: {
@@ -164,7 +167,7 @@ Details about the callbacks:
 
 ### returned `functions` object
 
-Details about the functions returned by `functionsCallback`:
+Details about the functions returned in an object by `functionsCallback`:
 
 |function|parameters: datatypes|return value: datatype|notes|
 |---|---|---|---|
