@@ -235,7 +235,7 @@ The `scrollerPropertiesRef.current` object contains the following properties, wh
 
 _orientation, gap, padding, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, cache, cacheMax, startingIndex_
 
-It also contains the following property, which may have been slightly altered by the scroller:
+It also contains the following property, which may have been slightly altered from the original `runwaySize` value by the scroller:
 
 _runwayRowcount_
 
