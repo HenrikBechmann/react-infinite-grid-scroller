@@ -108,6 +108,11 @@ const CellFrame = ({
     // the session itemID to use; could be updated by parent
     const itemIDRef = useRef(null)
     itemIDRef.current = itemID
+    const cellFrameDataRef = useRef(null)
+    cellFrameDataRef.current = {
+        itemID,
+        index
+    }
     // fetch error
     const errorRef = useRef(false)
     // placeholder message
@@ -296,6 +301,7 @@ const CellFrame = ({
                                 let content 
                                 const scrollerProperties = {
                                     isReparentingRef:null,
+                                    cellFrameDataRef,
                                     scrollerPropertiesRef,
                                 }
                                 if (usercontent.props?.hasOwnProperty('scrollerProperties')) {
