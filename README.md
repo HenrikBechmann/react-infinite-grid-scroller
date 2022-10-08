@@ -195,6 +195,20 @@ Notes: cache management functions operate on indexes and items in the cache, and
 
 ### `scrollerProperties` object
 
+orientation, 
+gap, 
+padding, 
+cellHeight, 
+cellWidth,
+cellMinHeight,
+cellMinWidth, 
+layout,
+cache,
+cacheMax,
+startingIndex, 
+
+runwayRowcount,
+
 # Licence
 
 MIT &copy; 2020 [Henrik Bechmann](https://twitter.com/HenrikBechmann)
