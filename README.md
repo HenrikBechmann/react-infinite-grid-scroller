@@ -113,7 +113,7 @@ callbacks: {
      referenceIndexCallback, // (index, location, cradleState) - change of index adjacent to the axis
      repositioningIndexCallback, // (index) - current virtual index number during rapid repositioning
      preloadIndexCallback, // (index) - current index being preloaded
-     itemExceptionsCallback, // (index, itemID, returnvalue, location, error) - details about failed getItem call
+     itemExceptionsCallback, // (index, itemID, returnvalue, location, error) - details about failed getItem calls
 
      // operations tracking, called when triggered
      changeListsizeCallback, // (newlistsize) - triggered when the listsize changes for any reason
