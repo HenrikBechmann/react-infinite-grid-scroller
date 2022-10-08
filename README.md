@@ -86,7 +86,7 @@ The scroller's highest level component, the `Viewport`, is a `div` with `positio
 |technical|object: collection of values used to control system behaviour|use with caution. optional. See below for details|
 |scrollerProperties|requested by user components by being set to null by user, instantiated with an object by system|required for nested RIGS; available for all user components. Contains key scroller settings. See below for details|
 
-Notes:
+Notes: A unique session **`itemID`** (integer) is assigned to a user component as soon as it enters the cache. The itemID is retired as soon as the user component is removed from the cache. If the same component is re-introduced to the cache, it is assigned a new and different itemID. The `itemID` for a user component is given to the host with the getItem call to obtain the component, so that the host can track the user component in the cache. If the user component is assigned to a new index number (see **returned function object** cache management section) the host will still be able to track the user component with the itemID. The host can track removal of a user component and its itemID from the cache through the deleteListCallback return value.
 
 ### `styles` object
 
