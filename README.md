@@ -170,8 +170,8 @@ Here are details about the functions returned by `functionsCallback`:
 |reload|_none_|_void_|clears the cache and reloads the `Cradle` at its current position in the virtual list|
 |clearCache|_none_|_void_|clears the cache and the `Cradle` (leaving nothing to display)|
 |[_**SNAPSHOTS**_]|
-|getCacheIndexMap|_none_||snapshot|
-|getCacheItemMap|_none_||snapshot|
+|getCacheIndexMap|_none_|map: Map|snapshot of cache index (=key) to itemID (=value) map|
+|getCacheItemMap|_none_|map: Map|snapshot of cache itemID (=key) to objecct (=value) map. Object = {index, component} where component = user component|
 |getCradleIndexMap|_none_||snapshot|
 |[_**CACHE MANAGEMENT**_]|
 |insertIndex||||
