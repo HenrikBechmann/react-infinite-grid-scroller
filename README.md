@@ -190,6 +190,8 @@ Notes: cache management functions operate on indexes and items in the cache, and
 
 ### `technical` object
 
+These properties would rarely be changed.
+
 |property|value|notes|
 |---|---|---|
 |showAxis |boolean, default = false |axis can be made visible for debug|
