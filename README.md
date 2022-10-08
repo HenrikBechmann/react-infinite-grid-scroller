@@ -107,16 +107,17 @@ Callbacks are host defined closure functions which the `Cradle` calls to provide
 callbacks: {
 
      // called at setup...
-     functionsCallback, // (functions)
+     functionsCallback, // (functions) - api functions
      
      // called when triggered...
-     referenceIndexCallback, // (index, location, cradleState)
-     preloadIndexCallback, // (index)
-     deleteListCallback, // (reason, deleteList)
-     changeListsizeCallback, // (newlistsize)
-     itemExceptionsCallback, // (index, itemID, returnvalue, location, error)
-     repositioningFlagCallback, // (flag)
-     repositioningIndexCallback, // (index)
+     referenceIndexCallback, // (index, location, cradleState) - change if index adjacent to the axis
+     repositioningIndexCallback, // (index) - current virtual index number during rapid repositioning
+     preloadIndexCallback, // (index) - current index being preloaded
+     itemExceptionsCallback, // (index, itemID, returnvalue, location, error) - details about failed getItem call
+
+     changeListsizeCallback, // (newlistsize) - triggered when the listsize changes for any reason
+     deleteListCallback, // (reason, deleteList) - data about which items have been deleted from the cache
+     repositioningFlagCallback, // (flag) - notification of start (true) or end (false) of rapid repositioning
      
 }
 ~~~
