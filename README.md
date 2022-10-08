@@ -208,7 +208,29 @@ the `scrollerProperties` property is requested by user components by being set t
 
 Nested RIGS require this property (to be informed when portal reparenting is taking place).
 
-The `scrollerProperties` object contains the following properties, which are identical to the properties set for the scroller:
+the scrollerProperties object contains three properties:
+
+~~~typescript
+{
+  isReparentingRef,
+  cellFrameDataRef,
+  scrollerPropertiesRef
+}
+~~~
+
+Each of these if a _reference_ object, with values found in `propertyRef.current`.
+
+The `isParentingRef.current` property is boolean, where `true` indicates that the component is being 'reparented' (moved from portal cache to a rendered cell). If your component depends on this, then set it back to false once you've taken the true reading.
+
+The `cellFrameDataRef.current` object contains two properties:
+
+~~~typescript
+{
+  itemID, // session cache itemID
+  index // place in virtual list
+}
+
+The `scrollerPropertiesRef.current` object contains the following properties, which are identical to the properties set for the scroller:
 
 _orientation, gap, padding, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, cache, cacheMax, startingIndex_
 
