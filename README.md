@@ -60,26 +60,26 @@ The scroller's highest level component, the `Viewport`, is a `div` with `positio
 # Scroller properties
 | property | value | notes |
 |---|---|---|
-|[_REQUIRED_]|
+|[_**REQUIRED**_]|
 |cellHeight|integer: number of pixels for cell height|required. Applied to `height` for 'uniform' layout, 'vertical' orientation. Applied to `max-height` for 'variable' layout, 'vertical' orientation. Approximate, used for `fr` (fractional allocation) for 'horizontal' orientation |
 |cellWidth|integer: number of pixels for cell width|required. Applied to `width` for 'uniform' layout, 'horizontal' orientation. Applied to `max-width` for 'variable' layout, 'horizontal' orientation. Approximate, used for `fr` (fractional allocation) for 'vertical' orientation|
 |estimatedListSize|integer: the estimated number of items in the virtual list|required. Can be modified at runtime. Constitutes a 0-based virtual array|
 |getItem|host-provided function. Parameters: `index` (integer, 0 based), and session `itemID` (integer) for tracking and matching. Arguments provided by system|required. Must return a React component or promise of a component (`React.isValidElement`), or `undefined` = unavailable, or `null` = end-of-list|
-|[_OPTIONS_]|
+|[_**OPTIONS**_]|
 |orientation|string: 'vertical' (default) or 'horizontal'|direction of scroll|
+|layout|string: 'uniform' (default) or 'variable'|specifies handling of the height or width of cells, depending on orientation. 'uniform' is fixed cellHeight/cellWidth. 'variable' is constrained by cellHeight/cellWidth (maximum) and cellMinHeight/cellMinWidth (minimum)|
+|startingIndex|integer: starting index when the scroller first loads|default = 0|
 |gap|integer: number of pixels between cells|there is no gap at start or end of rows or columns; default = 0|
 |padding|integer: number of pixels padding the `Cradle`| default = 0|
-|layout|string: 'uniform' (default) or 'variable'|specifies handling of the height or width of cells, depending on orientation. 'uniform' is fixed cellHeight/cellWidth. 'variable' is constrained by cellHeight/cellWidth (maximum) and cellMinHeight/cellMinWidth (minimum)|
 |cellMinHeight|integer: default = 25, minimum = 25, maximum = cellHeight|used for 'variable' layout with 'vertical' orientation. Applied to `min-height`|
 |cellMinWidth|integer: default = 25, minimum = 25, maximum = cellWidth|used for 'variable' layout with 'horizontal' orientation. Applied to `min-width`|
-|startingIndex|integer: starting index when the scroller first loads|default = 0|
-|[_SYSTEM_]|
+|[_**SYSTEM**_]|
 |runwaySize|integer: number of rows in the `Cradle` just out of view at head and tail of list|default = 1. minimum = 1. Gives time to assemble cellFrames before display
 |cache|string: 'cradle' (default), 'keepload', 'preload'|'cradle' matches the cache to the contents of the `Cradle`. 'keepload' keeps user components in the cache as loaded, up to `cacheMax` (and always `Cradle` user components). 'preload' loads user components up to `cacheMax`, then adjusts cache such that `Cradle` user components are always in the cache|
 |cacheMax|integer: at minimum (maintained by system) the number of user components in the `Cradle`|allows optimization of cache size for memory limits and performance|
 |placeholder|a lightweight React component for `cellFrame`s to load while waiting for the intended `cellFrame` components|optional (replaces default placeholder). parameters are index, listsize, message, error. Arguments set by system|
 |useScrollTracker|boolean: default = `true`|allows suppression of system feedback on position within list while in reposition mode, if the host wants to provide alternative feedback based on data from callbacks |
-|[_OBJECTS_]|
+|[_**OBJECTS**_]|
 |styles|object: collection of styles for scroller components|optional. These should be "passive" styles like backgroundColor. See below for details|
 |callbacks|object: collection of functions for feedback, and interactions with scroller components|optional. See below for details|
 |advanced|object: collection of values used to control system behaviour|use with caution. optional. See below for details|
