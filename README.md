@@ -110,7 +110,7 @@ callbacks: {
      functionsCallback, // (functions) - api functions
      
      // called when triggered...
-     referenceIndexCallback, // (index, location, cradleState) - change if index adjacent to the axis
+     referenceIndexCallback, // (index, location, cradleState) - change of index adjacent to the axis
      repositioningIndexCallback, // (index) - current virtual index number during rapid repositioning
      preloadIndexCallback, // (index) - current index being preloaded
      itemExceptionsCallback, // (index, itemID, returnvalue, location, error) - details about failed getItem call
