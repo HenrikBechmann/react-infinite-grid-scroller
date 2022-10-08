@@ -103,7 +103,7 @@ const InfiniteGridScroller = (props) => {
         callbacks = {}, // optional. closures to get direct information streams of some component utilites
             // can contain functionsCallback, which provides access to internal scroller functions 
             //(mostly cache management)
-        advanced = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
+        technical = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
 
         // ** information for host cell content
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
@@ -120,7 +120,7 @@ const InfiniteGridScroller = (props) => {
     // avoid null/undefined
     styles = styles ?? {}
     callbacks = callbacks ?? {}
-    advanced = advanced ?? {}
+    technical = technical ?? {}
     startingIndex = startingIndex ?? 0
     estimatedListSize = estimatedListSize ?? 0
     runwaySize = runwaySize ?? 3
@@ -182,7 +182,7 @@ const InfiniteGridScroller = (props) => {
         // ratios:
         MAX_CACHE_OVER_RUN, // max streaming over-run as ratio to cacheMax
 
-    } = advanced
+    } = technical
 
     VIEWPORT_RESIZE_TIMEOUT = VIEWPORT_RESIZE_TIMEOUT ?? 250
     SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = SCROLL_TIMEOUT_FOR_ONAFTERSCROLL ?? 100
