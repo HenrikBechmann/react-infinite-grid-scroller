@@ -104,7 +104,7 @@ The placeholder styles are applied only to the default placeholder.
 Callbacks are host defined closure functions which the `Cradle` calls to provide data back to the host. The data is returned by setting the arguments of the callback. Include the callbacks in the callbacks object that you want the `Cradle` to use. The following are recognized by the `Cradle`:
 ~~~typescript
 callbacks: {
-     getFunctions, // (functions)
+     functionsCallback, // (functions)
      referenceIndexCallback, // (index, location, cradleState)
      preloadIndexCallback, // (index)
      deleteListCallback, // (reason, deleteList)
@@ -115,11 +115,11 @@ callbacks: {
 }
 ~~~
 
-Here's an example of a closure you could write (`getFunctions`):
+Here's an example of a closure you could write (`functionsCallback`):
 ~~~typescript
 const scrollerFunctionsRef = useRef(null)
 
-const getFunctions = (functions) => {
+const functionsCallback = (functions) => {
 
     scrollerFunctionsRef.current = functions // assign the functions object to a local Ref
 
@@ -133,7 +133,7 @@ Here are details about the callbacks:
 
 |callback|parameters:datatypes|notes|
 |---|---|---|
-|getFunctions|functions: object|the object returned contains `Cradle` functions that the host can call directly. This is the API. `getFunctions` is called by RIGS once on startup. See below for details|
+|functionsCallback|functions: object|the object returned contains `Cradle` functions that the host can call directly. This is the API. `functionsCallback` is called by RIGS once on startup. See below for details|
 |referenceIndexCallback|index: integer, location: string, cradleState: string|location can be 'setCradleContent', 'updateCradleContent'. Keeps the host up to date on the index number adjacent to the `Cradle` axis, and the state change that triggered the update|
 |preloadIndexCallback|index: integer|during a preload operation, this stream gives the index number being preloaded|
 |deleteListCallback|reason: string, deleteList: array|gives an array of indexes that have been deleted from the cache, and text of the reason|
@@ -144,7 +144,7 @@ Here are details about the callbacks:
 
 ### API details
 
-Here are details about the functions provided by getFunctions:
+Here are details about the functions provided by functionsCallback:
 
 |function|parameters: datatypes|return value: datatype|notes|
 |---|---|---|---|
