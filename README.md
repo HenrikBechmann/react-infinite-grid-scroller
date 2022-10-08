@@ -167,8 +167,8 @@ Here are details about the functions returned by `functionsCallback`:
 |[_**OPERATIONS**_]|
 |scrollToIndex|index:integer|_void_|places the requested index item at the top visible row or left visible column of the scroller, depending on orientation|
 |setListsize|index:integer|_void_|changes the list size|
-|reload|_none_|_void_||
-|clearCache|_none_|_void_||
+|reload|_none_|_void_|clears the cache and reloads the `Cradle` at its current position in the virtual list|
+|clearCache|_none_|_void_|clears the cache and the `Cradle` (leaving nothing to display)|
 |[_**SNAPSHOTS**_]|
 |getCacheIndexMap|_none_||snapshot|
 |getCacheItemMap|_none_||snapshot|
