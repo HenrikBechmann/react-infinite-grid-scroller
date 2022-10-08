@@ -128,7 +128,7 @@ callbacks: {
 }
 ~~~
 
-An example of a closure (`functionsCallback`):
+An example of a callack closure (`functionsCallback`):
 ~~~typescript
 const scrollerFunctionsRef = useRef(null)
 
