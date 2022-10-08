@@ -119,7 +119,7 @@ Callbacks are host defined closure functions which the `Cradle` calls to provide
 callbacks: {
 
      // called at setup...
-     functionsCallback, // (functions) - get api functions
+     functionsCallback, // (functions) - get an object that has api functions
      
      // index tracking, called when triggered...
      referenceIndexCallback, // (index, location, cradleState) - change of index adjacent to the axis
