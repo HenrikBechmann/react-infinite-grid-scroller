@@ -377,7 +377,6 @@ const Cradle = ({
         cache,
         cacheMax,
         startingIndex, 
-        triggerlineOffset,
     }
 
     // configuration properties to share with handlers
