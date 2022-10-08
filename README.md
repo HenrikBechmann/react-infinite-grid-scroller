@@ -204,7 +204,7 @@ These properties would rarely be changed.
 
 ### `scrollerProperties` object
 
-the `scrollerProperties` property is requested by user components by being set to null. It is then instantiated with an object by system.
+the `scrollerProperties` object is requested by user components by initializing `scrollerProperties` to null. The property is then instantiated with an object by the system on loading of the component.
 
 Nested RIGS require this property (to be informed when portal reparenting is taking place).
 
@@ -231,7 +231,7 @@ The `cellFrameDataRef.current` object contains two properties:
 }
 ~~~
 
-The `scrollerPropertiesRef.current` object contains the following properties, which are identical to the properties set for the scroller:
+The `scrollerPropertiesRef.current` object contains the following properties, which are identical to the properties set for the scroller (they are passed through):
 
 _orientation, gap, padding, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, cache, cacheMax, startingIndex_
 
