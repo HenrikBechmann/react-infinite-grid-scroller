@@ -109,12 +109,13 @@ callbacks: {
      // called at setup...
      functionsCallback, // (functions) - api functions
      
-     // called when triggered...
+     // index tracking, called when triggered...
      referenceIndexCallback, // (index, location, cradleState) - change of index adjacent to the axis
      repositioningIndexCallback, // (index) - current virtual index number during rapid repositioning
      preloadIndexCallback, // (index) - current index being preloaded
      itemExceptionsCallback, // (index, itemID, returnvalue, location, error) - details about failed getItem call
 
+     // operations tracking, called when triggered
      changeListsizeCallback, // (newlistsize) - triggered when the listsize changes for any reason
      deleteListCallback, // (reason, deleteList) - data about which items have been deleted from the cache
      repositioningFlagCallback, // (flag) - notification of start (true) or end (false) of rapid repositioning
