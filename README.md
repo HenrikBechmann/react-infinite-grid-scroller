@@ -143,14 +143,12 @@ Here are details about the callbacks:
 |---|---|---|
 |[API]|
 |functionsCallback|functions: object|the object returned contains `Cradle` functions that the host can call directly. This is the API. `functionsCallback` is called by RIGS once on startup. See below for details|
-||
-|INDEX TRACKING|
+|[INDEX TRACKING]|
 |referenceIndexCallback|index: integer, location: string, cradleState: string|location can be 'setCradleContent', 'updateCradleContent'. Keeps the host up to date on the index number adjacent to the `Cradle` axis, and the state change that triggered the update|
 |repositioningIndexCallback|index: integer|the current index during repositioning. Useful for feedback to user when host sets `useScrollTracker` property to false|
 |preloadIndexCallback|index: integer|during a preload operation, this stream gives the index number being preloaded|
 |itemExceptionsCallback|index: integer, itemID: integer, returnvalue: any, location: string, error: Error|triggered whenever getItem does not return a valid React component|
-||
-|OPERATIONS TRACKING|
+|[OPERATIONS TRACKING]|
 |changeListsizeCallback|newlistsize: integer|notification of a change of list size. Could be from getItem returning null indicating end-of-list, or an API call that results in change of list size|
 |deleteListCallback|reason: string, deleteList: array|gives an array of indexes that have been deleted from the cache, and text of the reason|
 |repositioningFlagCallback|flag: boolean| called with `true` when repositioning starts, and `false` when repositioning ends. Useful for feedback to user when host sets `useScrollTracker` property to false|
@@ -161,18 +159,16 @@ Here are details about the functions returned by `functionsCallback`:
 
 |function|parameters: datatypes|return value: datatype|notes|
 |---|---|---|---|
-|OPERATIONS|
+|[OPERATIONS]|
 |scrollToIndex|index:integer|_void_|places the requested index item at the top visible row or left visible column of the scroller, depending on orientation|
 |setListsize|index:integer|_void_||
 |reload|_none_|_void_||
 |clearCache|_none_|_void_||
-||
-|SNAPSHOTS|
+|[SNAPSHOTS]|
 |getCacheIndexMap|_none_||snapshot|
 |getCacheItemMap|_none_||snapshot|
 |getCradleIndexMap|_none_||snapshot|
-||
-|CACHE MANAGEMENT|
+|[CACHE MANAGEMENT]|
 |insertIndex||||
 |removeIndex||||
 |moveIndex||||
