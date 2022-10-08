@@ -162,52 +162,6 @@ Here are details about the functions provided by getFunctions:
 
 ### `scrollerProperties` details
 
-### Notes
-
-The ItemShell for each grid cell is a `div`, controlled by the grid layout, with `position:relative`. Your content can be anything that works in this context. Your content should be slightly liquid to accommodate adjustments that the grid will make to fit cells into the crosslength of the viewport. These adjustments can be slightly variable width for 'vertical' orientation and slightly variable height for 'horizontal' orientation.
-
-# Design
-
-The scroller consists of the following components:
-
-### InfiniteGridScroller
-
-The API. Distributes parameters to Viewport, Scrollblock, and Cradle. 
-
-Contains Viewport.
-
-### Viewport
-
-The top level component. `position:absolute`; `top`, `right`, `bottom`, `left` all set to 0. Requires a container. Responds to component resize based on [ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver). 
-
-Contains Scrollblock.
-
-### Scrollblock
-
-Scrolled by viewport. Length is set by item medial length (`CellHeight` for 'vertical' orientation and `CellWdith` for 'horizontal' orientation x number of items (adjusted for gap and padding). 
-
-Contains Cradle.
-
-### Cradle
-
-This provides the illusion of infitite scroll by dropping items that scroll outside the cradle scope, and replacing those items with added items at the other, incoming, end of the cradle. The cradle scope includes the length or width of the viewport, plus the length or width of the runways at either end. The runways allow for formation of grid cells outside the view of the user. This dynamic is triggered by IntersectionObserver, which watches the flow of ItemShell components in relation to the Viewport.
-
-The Cradle is also observed by IntersectionObserver. When the cradle is scrolled so fast that its operations cause a lag of motion, and this lag causes the Cradle to fall completely outside the viewport, then the scroller gives up on updating content, and instead brings into view a ScrollTracker, which informs the user that repoistioning is underway. The scrolltracker provides the user with index information. The host can optionally track these positions, and can ehance the context cues by providing, for example, grouping information. When that scroll operation is completed, then Cradle reconstitutes its contents according to its new position.
-
-Contains ItemShells.
-
-### ItemShell
-
-This implements the cell components of the grid. It manages its own contents: a placeholder on initialization, replaced by a user component as fetched by `getItem`. The `getItem` function must be provided by the host. It is given an index number, and returns either a component or a promise of a component.
-
-### ScrollTracker
-
-This is the small rectangle that appears when the user rapidly repositions, using the thumb of the scrollbar or very rapid swipes. The scrolltracker shows the user the item number (at top left = index + 1) against the size of the list. It only appears during rapid scrolling.
-
-### Placeholder
-
-The default placeholder, showing the item number (index + 1) and the length of the list.
-
 # Licence
 
 MIT &copy; 2020 [Henrik Bechmann](https://twitter.com/HenrikBechmann)
