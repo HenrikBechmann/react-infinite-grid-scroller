@@ -88,7 +88,7 @@ The scroller's highest level component, the `Viewport`, is a `div` with `positio
 
 Notes:
 
-### `styles`
+### `styles` object
 
 Create a style object for each of the elements you want to modify. The styles are not screened, though the RIGS essential styles pre-empt user styles. Be careful to only include "passive" styles (like color, backgroundColor) so as not to confuse the scroller. Do not add structural items like borders, padding etc.
 
@@ -106,7 +106,7 @@ The scrolltracker is the small rectangular component that appears at the top lef
 
 The placeholder styles are applied only to the default placeholder.
 
-### `callbacks`
+### `callbacks` object
 Callbacks are host defined closure functions which the `Cradle` calls to provide data back to the host. `Cradle` returns data by setting the arguments of the callbacks. Include only the callbacks in the `callbacks` object that you want the `Cradle` to use. The following are recognized by the `Cradle`:
 ~~~typescript
 callbacks: {
@@ -158,7 +158,7 @@ Here are details about the callbacks:
 |deleteListCallback|reason: string, deleteList: array|gives an array of indexes that have been deleted from the cache, and text of the reason|
 |repositioningFlagCallback|flag: boolean| called with `true` when repositioning starts, and `false` when repositioning ends. Useful for feedback to user when host sets `useScrollTracker` property to false|
 
-### functions API
+### returned functions object
 
 Here are details about the functions returned by `functionsCallback`:
 
@@ -179,9 +179,9 @@ Here are details about the functions returned by `functionsCallback`:
 |moveIndex||||
 |remapIndexes||||
 
-### `technical` 
+### `technical` object
 
-### `scrollerProperties` 
+### `scrollerProperties` object
 
 # Licence
 
