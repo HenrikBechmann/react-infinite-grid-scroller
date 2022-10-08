@@ -174,9 +174,9 @@ Here are details about the functions returned by `functionsCallback`:
 |getCacheItemMap|_none_|map: Map|snapshot of cache itemID (=key) to object (=value) map. Object = {index, component} where component = user component|
 |getCradleIndexMap|_none_|map: Map|snapshot of `Cradle` index (=key) to itemID (=value) map|
 |[_**CACHE MANAGEMENT**_]|
-|insertIndex||||
-|removeIndex||||
-|moveIndex||||
+|insertIndex|index:integer, rangehighindex = null:integer or null|changeList:array, replaceList:array|changes the list size|
+|removeIndex|index:integer, rangehighindex = null:integer or null|changeList:array, replaceList:array|changes the list size|
+|moveIndex|toindex:integer, fromindex:integer, highrange = null:integer or null|processedIndexList:array||
 |remapIndexes|changeMap:Map|modifiedIndexList:array, processedIndexList:array, indexesToDeleteList:array, deletedOrphanedItemIDList:array, deletedOrphanedIndexList:array, errorEntriesMap:Map, changeMap:Map (same as input parameter)|changeMap is index (=key) to itemID (=value) map. indexes or itemIDs not in the cache are ignored. `itemID`s are assigned to the new indexes|
 
 ### `technical` object
