@@ -141,7 +141,7 @@ Here are details about the callbacks:
 
 |callback|parameters:datatypes|notes|
 |---|---|---|
-|[API]|
+|[GET FUNCTIONS]|
 |functionsCallback|functions: object|the object returned contains `Cradle` functions that the host can call directly. This is the API. `functionsCallback` is called once at startup. See below for details|
 |[INDEX TRACKING]|
 |referenceIndexCallback|index: integer, location: string, cradleState: string|location can be 'setCradleContent', 'updateCradleContent'. Keeps the host up to date on the index number adjacent to the `Cradle` axis, and the state change that triggered the update|
