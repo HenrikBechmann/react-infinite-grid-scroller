@@ -57,6 +57,10 @@ import Scroller from 'react-infinite-grid-scroller'
 ```
 The scroller's highest level component, the `Viewport`, is a `div` with `position:absolute`, and `inset:0`, so the host container should be styled accordingly.
 
+Note that scroller-generated elements show a `data-type` attribute in browser inspectors (eg. 'viewport').
+
+User components loaded to CellFrames are placed in a `data-type` = 'contentenvelope' `div`. In 'uniform' layout they have `position` = 'absolute' and `inset` = 0. In 'variable' layout they have `width` = '100%' and a `max-height` = cellHeight for 'vertical' orientation, and `height` = '100%' and `max-width` = cellWidth for 'horizontal' orientation.
+
 # Scroller properties
 | property | value | notes |
 |---|---|---|
