@@ -108,7 +108,7 @@ styles = {
   placeholderliner: {},
 }
 ~~~
-The scrolltracker is the small rectangular component that appears at the top left of the viewport when the list is being rapidly repositioned. The scrolltracker shows the user the current index and total listsize during the repositioning process.
+The scrolltracker is the small rectangular component that appears at the top left of the viewport when the list is being rapidly repositioned. The scrolltracker shows the user the current virtual index and total listsize during the repositioning process.
 
 The placeholder styles are applied only to the default placeholder.
 
