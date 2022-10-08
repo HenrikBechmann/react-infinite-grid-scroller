@@ -4,7 +4,7 @@
 /*
     This module manages the InfiniteGridScroller limited (sparse) cache. It also provides support for 
     services which allow the host to actively manage many aspects of the cache. See documentation
-    about the user getFunctions callback for details. Note that overly large caches of complex components
+    about the user functionsCallback callback for details. Note that overly large caches of complex components
     can impair performance. This can be optimized with the cacheMax property.
 
     The infinite grid scroller stores user cell content (components) in a central hidden portal cache 

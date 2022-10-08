@@ -101,7 +101,7 @@ const InfiniteGridScroller = (props) => {
             // properties viewport, scrollblock, cradle, scrolltracker, placeholderframe, or
             // placeholderliner. Do not make structural changes!
         callbacks = {}, // optional. closures to get direct information streams of some component utilites
-            // can contain getFunctions, which provides access to internal scroller functions 
+            // can contain functionsCallback, which provides access to internal scroller functions 
             //(mostly cache management)
         advanced = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
 

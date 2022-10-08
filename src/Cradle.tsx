@@ -560,7 +560,7 @@ const Cradle = ({
     //send call-in functions to host
     useEffect(()=>{
 
-        if (!userCallbacks.getFunctions) return
+        if (!userCallbacks.functionsCallback) return
 
         const {
 
@@ -597,7 +597,7 @@ const Cradle = ({
 
         }
 
-        userCallbacks.getFunctions(functions)
+        userCallbacks.functionsCallback(functions)
 
     },[])
 

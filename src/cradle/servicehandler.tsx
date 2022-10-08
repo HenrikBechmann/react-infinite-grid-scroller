@@ -162,8 +162,6 @@ export default class ServiceHandler {
 
         stateHandler.setCradleState('clearcache')
 
-        return true
-
     }
 
     public remapIndexes = (changeMap) => { // index => itemID
