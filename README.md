@@ -204,21 +204,17 @@ These properties would rarely be changed.
 
 ### `scrollerProperties` object
 
+the `scrollerProperties` property is requested by user components by being set to null. It is then instantiated with an object by system.
+
 Nested RIGS require this property (to be informed when portal reparenting is taking place).
 
-orientation, 
-gap, 
-padding, 
-cellHeight, 
-cellWidth,
-cellMinHeight,
-cellMinWidth, 
-layout,
-cache,
-cacheMax,
-startingIndex, 
+The `scrollerProperties` object contains the following properties, which are identical to the properties set for the scroller:
 
-runwayRowcount,
+orientation, gap, padding, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, cache, cacheMax, startingIndex
+
+It also contains the following property, which may have been slightly altered by the scroller:
+
+runwayRowcount
 
 # Licence
 
