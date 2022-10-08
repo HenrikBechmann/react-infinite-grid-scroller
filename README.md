@@ -183,6 +183,16 @@ Notes: cache management functions operate on indexes and items in the cache, and
 
 ### `technical` object
 
+|property|value|notes|
+|---|---|---|
+|showAxis |boolean, default = false |axis can be made visible for debug|
+|triggerlineOffset|integer, default = 10| distance from cell head or tail for content shifts above/below axis|
+|VIEWPORT_RESIZE_TIMEOUT|integer, default = 250||
+|SCROLL_TIMEOUT_FOR_ONAFTERSCROLL|integer, default = 100||
+|IDLECALLBACK_TIMEOUT|integer, default = 4000||
+|TIMEOUT_FOR_VARIABLE_MEASUREMENTS|integer, default = 100||
+|MAX_CACHE_OVER_RUN|number, default = 1.5|max streaming over-run as ratio to cacheMax|
+
 ### `scrollerProperties` object
 
 # Licence
