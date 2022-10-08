@@ -196,11 +196,11 @@ These properties would rarely be changed.
 |---|---|---|
 |showAxis |boolean, default = false |axis can be made visible for debug|
 |triggerlineOffset|integer, default = 10| distance from cell head or tail for content shifts above/below axis|
-|VIEWPORT_RESIZE_TIMEOUT|integer, default = 250||
-|SCROLL_TIMEOUT_FOR_ONAFTERSCROLL|integer, default = 100||
-|IDLECALLBACK_TIMEOUT|integer, default = 4000||
-|TIMEOUT_FOR_VARIABLE_MEASUREMENTS|integer, default = 100||
-|MAX_CACHE_OVER_RUN|number, default = 1.5|max streaming over-run as ratio to cacheMax|
+|VIEWPORT_RESIZE_TIMEOUT|integer, default = 250|milliseconds before the Viewport resizing state is cleared|
+|SCROLL_TIMEOUT_FOR_ONAFTERSCROLL|integer, default = 100|milliseconds after last scroll event before onAfter scroll event is fired|
+|IDLECALLBACK_TIMEOUT|integer, default = 4000|milliseconds timeout for requestIdleCallback|
+|TIMEOUT_FOR_VARIABLE_MEASUREMENTS|integer, default = 100|milliseconds to allow setCradleContent changes to render before being measured for 'variable' layout|
+|MAX_CACHE_OVER_RUN|number, default = 1.5|max streaming cache size over-run (while scrolling) as ratio to cacheMax|
 
 ### `scrollerProperties` object
 
