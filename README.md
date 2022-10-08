@@ -166,7 +166,7 @@ Here are details about the functions returned by `functionsCallback`:
 |---|---|---|---|
 |[_**OPERATIONS**_]|
 |scrollToIndex|index:integer|_void_|places the requested index item at the top visible row or left visible column of the scroller, depending on orientation|
-|setListsize|index:integer|_void_||
+|setListsize|index:integer|_void_|changes the list size|
 |reload|_none_|_void_||
 |clearCache|_none_|_void_||
 |[_**SNAPSHOTS**_]|
