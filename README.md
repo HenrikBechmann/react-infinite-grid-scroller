@@ -156,14 +156,16 @@ Here are details about the functions returned by `functionsCallback`:
 
 |function|parameters: datatypes|return value: datatype|notes|
 |---|---|---|---|
-|operations|
+|OPERATIONS|
 |scrollToIndex|index:integer|_void_|places the requested index item at the top visible row or left visible column of the scroller, depending on orientation|
 |setListsize|index:integer|_void_||
 |reload|_none_|_void_||
 |clearCache|_none_|_void_||
+|SNAPSHOTS|
 |getCacheIndexMap|_none_||snapshot|
 |getCacheItemMap|_none_||snapshot|
 |getCradleIndexMap|_none_||snapshot|
+|CACHE MANAGEMENT|
 |insertIndex||||
 |removeIndex||||
 |moveIndex||||
