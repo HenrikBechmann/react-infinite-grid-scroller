@@ -142,6 +142,8 @@ Here are details about the callbacks:
 |repositioningFlagCallback|flag: boolean| called with `true` when repositioning starts, and `false` when repositioning ends. Useful for feedback to user when host sets `useScrollTracker` property to false|
 |repositioningIndexCallback|index: integer|the current index during repositioning. Useful for feedback to user when host sets `useScrollTracker` property to false|
 
+### API details
+
 Here are details about the functions provided by getFunctions:
 
 |function|parameters: datatypes|return value: datatype|notes|
