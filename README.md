@@ -204,6 +204,8 @@ These properties would rarely be changed.
 
 ### `scrollerProperties` object
 
+Nested RIGS require this property (to be informed when portal reparenting is taking place).
+
 orientation, 
 gap, 
 padding, 
