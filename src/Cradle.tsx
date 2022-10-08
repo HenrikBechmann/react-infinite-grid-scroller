@@ -321,6 +321,7 @@ const Cradle = ({
         {
             referenceIndexCallback:userCallbacks?.referenceIndexCallback,
             repositioningFlagCallback:userCallbacks?.repositioningFlagCallback,
+            repositioningIndexCallback:userCallbacks?.repositioningIndexCallback,
             preloadIndexCallback:userCallbacks?.preloadIndexCallback,
             deleteListCallback:userCallbacks?.deleteListCallback,
             changeListsizeCallback:userCallbacks?.changeListsizeCallback,
@@ -376,7 +377,6 @@ const Cradle = ({
         cache,
         cacheMax,
         startingIndex, 
-        triggerlineOffset,
     }
 
     // configuration properties to share with handlers
@@ -559,11 +559,11 @@ const Cradle = ({
     //send call-in functions to host
     useEffect(()=>{
 
-        if (!userCallbacks.getFunctions) return
+        if (!userCallbacks.functionsCallback) return
 
         const {
 
-            scrollToItem, 
+            scrollToIndex, 
             reload, 
             setListsize,
             clearCache, 
@@ -571,6 +571,7 @@ const Cradle = ({
             getCacheIndexMap, 
             getCacheItemMap,
             getCradleIndexMap,
+
             remapIndexes,
             moveIndex,
             insertIndex,
@@ -580,7 +581,7 @@ const Cradle = ({
 
         const functions = {
 
-            scrollToItem,
+            scrollToIndex,
             reload,
             setListsize,
             clearCache,
@@ -595,7 +596,7 @@ const Cradle = ({
 
         }
 
-        userCallbacks.getFunctions(functions)
+        userCallbacks.functionsCallback(functions)
 
     },[])
 
@@ -1353,6 +1354,8 @@ const Cradle = ({
         if (!['repositioningContinuation','repositioningRender'].includes(cradleState)) {
             return null
         }
+        const { repositioningIndexCallback } = serviceHandler.callbacks
+        repositioningIndexCallback && repositioningIndexCallback(scrollAxisReferenceIndex)
         const trackerargs = {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
@@ -1380,7 +1383,6 @@ const Cradle = ({
             <div
                 key = 'head'
                 data-type = 'headtrigger'
-                data-direction = 'tailward'
                 style = {triggercellTriggerlineHeadStyle}
                 ref = {triggercellTriggerlineHeadElementRef}
             >
@@ -1388,7 +1390,6 @@ const Cradle = ({
             <div
                 key = 'tail'
                 data-type = 'tailtrigger'
-                data-direction = 'headward'
                 style = {triggercellTriggerlineTailStyle}
                 ref = {triggercellTriggerlineTailElementRef}
             >

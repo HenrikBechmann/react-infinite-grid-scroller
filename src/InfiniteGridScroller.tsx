@@ -71,8 +71,8 @@ const InfiniteGridScroller = (props) => {
             // base for variable layout
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
             // base for variable layout
-        estimatedListSize = 0, // the estimated number of the items in the virtual list. can be modified
-        getItem, // required. function provided by host - parameters are index number, set by system,
+        estimatedListSize = 0, // the estimated number of items in the virtual list. can be modified
+        getItem, // required. function provided by host - parameters set by system are index number
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
 
@@ -81,35 +81,37 @@ const InfiniteGridScroller = (props) => {
         gap = 0, // space between grid cells, not including the leading and trailing padding
         padding = 0, // the border space between the items and the viewport, applied to the cradle
         layout = 'uniform', // uniform, variable
-        cellMinHeight = 0, // for layout == 'variable' && orientation == 'vertical'
-        cellMinWidth = 0, // for layout == 'variable' && orientation == 'horizontal'
+        cellMinHeight = 25, // for layout == 'variable' && orientation == 'vertical'
+        cellMinWidth = 25, // for layout == 'variable' && orientation == 'horizontal'
 
         // ** scroller specs:
         runwaySize = 3, // the number of rows outside the view of each side of the viewport 
             // -- gives time to assemble cellFrames before display
         startingIndex = 0, // the 0-based starting index of the list, when first loaded
-        placeholder, // optional. a sparse component to stand in for content until the content arrives; 
-            // replaces default placeholder if present
-        styles = {}, // optional. passive style over-rides (eg. color, opacity); has 
-            // properties viewport, scrollblock, cradle, scrolltracker, placeholderframe, or
-            // placeholdercontent. Do not make structural changes!
 
         // ** system specs:
-        useScrollTracker = true, // the internal component to give feedback for repositioning
         cache = 'cradle', // "preload", "keepload" or "cradle"
         cacheMax = null, // always minimum cradle; null means limited by listsize
-        triggerlineOffset = 10, // distance from cell head or tail for content shifts above/below axis
+        placeholder, // optional. a sparse component to stand in for content until the content arrives; 
+            // replaces default placeholder if present
+        useScrollTracker = true, // the internal component to give feedback for repositioning
+
+        // *** objects
+        styles = {}, // optional. passive style over-rides (eg. color, opacity); has 
+            // properties viewport, scrollblock, cradle, scrolltracker, placeholderframe, or
+            // placeholderliner. Do not make structural changes!
         callbacks = {}, // optional. closures to get direct information streams of some component utilites
-            // can contain getFunctions, which provides access to internal scroller functions (mostly cache management)
-        advanced = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
+            // can contain functionsCallback, which provides access to internal scroller functions 
+            //(mostly cache management)
+        technical = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
 
         // ** information for host cell content
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
 
     } = props
 
-    if (!(cellWidth && cellHeight && getItem )) {
-        console.log('RIGS: cellWidth, cellHeight and getItem are required')
+    if (!(cellWidth && cellHeight && estimatedListSize && getItem )) {
+        console.log('RIGS: cellWidth, cellHeight, estimatedListSize and getItem are required')
         return null
     }
 
@@ -118,7 +120,7 @@ const InfiniteGridScroller = (props) => {
     // avoid null/undefined
     styles = styles ?? {}
     callbacks = callbacks ?? {}
-    advanced = advanced ?? {}
+    technical = technical ?? {}
     startingIndex = startingIndex ?? 0
     estimatedListSize = estimatedListSize ?? 0
     runwaySize = runwaySize ?? 3
@@ -171,6 +173,7 @@ const InfiniteGridScroller = (props) => {
     let {
 
         showAxis, // boolean; axis can be made visible for debug
+        triggerlineOffset, // distance from cell head or tail for content shifts above/below axis
         // timeouts
         VIEWPORT_RESIZE_TIMEOUT,
         SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
@@ -179,7 +182,7 @@ const InfiniteGridScroller = (props) => {
         // ratios:
         MAX_CACHE_OVER_RUN, // max streaming over-run as ratio to cacheMax
 
-    } = advanced
+    } = technical
 
     VIEWPORT_RESIZE_TIMEOUT = VIEWPORT_RESIZE_TIMEOUT ?? 250
     SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = SCROLL_TIMEOUT_FOR_ONAFTERSCROLL ?? 100
@@ -189,6 +192,8 @@ const InfiniteGridScroller = (props) => {
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
 
     if (typeof showAxis != 'boolean') showAxis = false
+
+    triggerlineOffset = triggerlineOffset ?? 10
 
     if (typeof useScrollTracker != 'boolean') useScrollTracker = true
 

@@ -105,7 +105,7 @@ export default class LayoutHandler {
                 - updateCradleContent
                 - layoutHandler (initialization)
                 - scrollHandler (during and after scroll)
-                - host scrollToItem call
+                - host scrollToIndex call
 
             targetAxisReferenceIndex is used by
                 - scrollTrackerArgs in cradle module

@@ -641,7 +641,7 @@ export const getCellFrameComponentList = ({
                         instanceIdCounterRef,
                         cacheHandler,
                         placeholderFrameStyles:styles.placeholderframe,
-                        placeholderContentStyles:styles.placeholdercontent,
+                        placeholderLinerStyles:styles.placeholderliner,
                     }
                 )
             )
@@ -667,7 +667,7 @@ export const getCellFrameComponentList = ({
                         instanceIdCounterRef,
                         cacheHandler,
                         placeholderFrameStyles:styles.placeholderframe,
-                        placeholderContentStyles:styles.placeholdercontent,
+                        placeholderLinerStyles:styles.placeholderliner,
                     }
                 )
             )
@@ -768,7 +768,7 @@ const createCellFrame = ({
     instanceIdCounterRef,
     cacheHandler,
     placeholderFrameStyles,
-    placeholderContentStyles,
+    placeholderLinerStyles,
 }) => {
     const instanceID = instanceIdCounterRef.current++
 
@@ -808,7 +808,7 @@ const createCellFrame = ({
         scrollerID = { scrollerID }
         isTriggercell = { false }
         placeholderFrameStyles = { placeholderFrameStyles }
-        placeholderContentStyles = { placeholderContentStyles }
+        placeholderLinerStyles = { placeholderLinerStyles }
     />
 
 }

@@ -9,7 +9,8 @@
     For the list of data streas, see the constructor.
 
     The function calls avaiable to the host are:
-        scrollToItem, 
+
+        scrollToIndex, 
         reload, 
         setListsize,
         clearCache, 
@@ -17,10 +18,11 @@
         getCacheIndexMap, 
         getCacheItemMap,
         getCradleIndexMap,
-        remapIndexes,
-        moveIndex,
+
         insertIndex,
         removeIndex,
+        moveIndex,
+        remapIndexes,
     
     The functions listed are defined in this module.
 
@@ -42,6 +44,7 @@ export default class ServiceHandler {
            changeListsizeCallback, // (newlistsize)
            itemExceptionsCallback, // (index, itemID, returnvalue, location, error)
            repositioningFlagCallback, // (flag) // boolean
+           repositioningIndexCallback,
            
        } = cradleParameters.externalCallbacksRef.current
 
@@ -52,6 +55,7 @@ export default class ServiceHandler {
            changeListsizeCallback,
            itemExceptionsCallback,
            repositioningFlagCallback,
+           repositioningIndexCallback
        }
 
        this.callbacks = callbacks
@@ -77,7 +81,7 @@ export default class ServiceHandler {
 
     }
 
-    public scrollToItem = (index) => {
+    public scrollToIndex = (index) => {
 
         index = Math.max(0,index)
 
@@ -157,8 +161,6 @@ export default class ServiceHandler {
         const { stateHandler } = this.cradleParameters.handlersRef.current
 
         stateHandler.setCradleState('clearcache')
-
-        return true
 
     }
 
