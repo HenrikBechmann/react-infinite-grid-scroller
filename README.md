@@ -142,7 +142,7 @@ const functionsCallback = (functions) => {
 
 scrollerFunctionsRef.current.scrollToIndex(targetIndex)
 ~~~
-Here are details about the callbacks:
+Details about the callbacks:
 
 |callback|parameters:datatypes|notes|
 |---|---|---|
@@ -160,7 +160,7 @@ Here are details about the callbacks:
 
 ### returned `functions` object
 
-Here are details about the functions returned by `functionsCallback`:
+Details about the functions returned by `functionsCallback`:
 
 |function|parameters: datatypes|return value: datatype|notes|
 |---|---|---|---|
