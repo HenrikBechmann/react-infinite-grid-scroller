@@ -218,7 +218,7 @@ the scrollerProperties object contains three properties:
 }
 ~~~
 
-Each of these if a _reference_ object, with values found in `propertyRef.current`.
+Each of these is a _reference_ object, with values found in `propertyRef.current`.
 
 The `isParentingRef.current` property is boolean, where `true` indicates that the component is being 'reparented' (moved from portal cache to a rendered cell). If your component depends on this, then set it back to `false` once you've taken the `true` reading.
 
