@@ -150,7 +150,7 @@ Here are details about the callbacks:
 
 ### API details
 
-Here are details about the functions provided by `functionsCallback`:
+Here are details about the functions returned by `functionsCallback`:
 
 |function|parameters: datatypes|return value: datatype|notes|
 |---|---|---|---|
