@@ -186,7 +186,7 @@ Details about the functions returned in an object by `functionsCallback`:
 |moveIndex|toindex:integer, fromindex:integer, highrange = null:integer or null|processedIndexList:array|a range of indexes can be moved. Displaced and higher indexes are renumbered. Changes the list size; synchronizes to the `Cradle`|
 |remapIndexes|changeMap:Map|modifiedIndexList:array, processedIndexList:array, indexesToDeleteList:array, deletedOrphanedItemIDList:array, deletedOrphanedIndexList:array, errorEntriesMap:Map, changeMap:Map (same as input parameter)|changeMap is index (=key) to itemID (=value) map. indexes or itemIDs not in the cache are ignored. `itemID`s are assigned to the new indexes; synchronizes to the `Cradle`|
 
-Notes: cache management functions operate on indexes and items in the cache, and generally ignore indexes and items that are not in the cache. This is a sparse cache, and indexes in the cache are not guaranteed to be contiguous.
+Notes: cache management functions are provided to support drag-n-drop, sorting, and filtering operations. Cache management functions operate on indexes and items in the cache, and generally ignore indexes and items that are not in the cache. This is a sparse cache, and indexes in the cache are not guaranteed to be contiguous.
 
 ### `technical` object
 
