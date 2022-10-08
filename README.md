@@ -134,7 +134,7 @@ const scrollerFunctionsRef = useRef(null)
 
 const functionsCallback = (functions) => {
 
-    scrollerFunctionsRef.current = functions // assign the functions object to a local Ref
+    scrollerFunctionsRef.current = functions // assign the returned functions object to a local Ref
 
 }
 
