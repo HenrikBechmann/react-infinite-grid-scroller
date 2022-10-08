@@ -229,6 +229,7 @@ The `cellFrameDataRef.current` object contains two properties:
   itemID, // session cache itemID
   index // place in virtual list
 }
+~~~
 
 The `scrollerPropertiesRef.current` object contains the following properties, which are identical to the properties set for the scroller:
 
