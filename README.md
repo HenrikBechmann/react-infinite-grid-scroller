@@ -171,8 +171,8 @@ Here are details about the functions returned by `functionsCallback`:
 |clearCache|_none_|_void_|clears the cache and the `Cradle` (leaving nothing to display)|
 |[_**SNAPSHOTS**_]|
 |getCacheIndexMap|_none_|map: Map|snapshot of cache index (=key) to itemID (=value) map|
-|getCacheItemMap|_none_|map: Map|snapshot of cache itemID (=key) to objecct (=value) map. Object = {index, component} where component = user component|
-|getCradleIndexMap|_none_||snapshot|
+|getCacheItemMap|_none_|map: Map|snapshot of cache itemID (=key) to object (=value) map. Object = {index, component} where component = user component|
+|getCradleIndexMap|_none_|map: Map|snapshot of `Cradle` index (=key) to itemID (=value) map|
 |[_**CACHE MANAGEMENT**_]|
 |insertIndex||||
 |removeIndex||||
