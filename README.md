@@ -7,7 +7,7 @@ Vertical or horizontal infinite scroller using simple css grid layout
 
 - vertical or horizontal scrolling
 - designed for "heavy" or "light" cell content (React components)
-- supports both uniform and variable cell lengths (vertical or horizontal)
+- supports both uniform and variable cell lengths (for both vertical and horizontal)
 - single or multiple rows or columns
 - limited sparse memory cache, to preserve content state, with an API
 - repositioning mode when rapidly scrolling (such as by using the scroll thumb)
