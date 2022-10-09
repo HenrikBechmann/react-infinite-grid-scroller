@@ -197,7 +197,7 @@ Notes: cache management functions are provided to support drag-n-drop, sorting, 
 
 Cache management functions operate on indexes and items in the cache, and generally ignore indexes and items that are not in the cache. 
 
-This is a sparse cache, and indexes in the cache are not guaranteed to be contiguous.
+This is a sparse in-memory cache, and indexes in the cache are not guaranteed to be contiguous.
 
 ### `technical` object
 
