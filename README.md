@@ -241,4 +241,4 @@ _runwayRowcount_
 
 # Licence
 
-MIT &copy; 2020-2022 [Henrik Bechmann](https://twitter.com/HenrikBechmann)
+[MIT](LICENSE.md) &copy; 2020-2022 [Henrik Bechmann](https://twitter.com/HenrikBechmann)
