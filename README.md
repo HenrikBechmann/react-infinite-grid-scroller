@@ -132,7 +132,7 @@ callbacks: {
      referenceIndexCallback, // (index, location, cradleState) - change of index adjacent to the axis
      repositioningIndexCallback, // (index) - current virtual index number during rapid repositioning
      preloadIndexCallback, // (index) - current index being preloaded
-     itemExceptionsCallback, // (index, itemID, returnvalue, location, error) - details about failed getItem calls
+     itemExceptionCallback, // (index, itemID, returnvalue, location, error) - details about failed getItem calls
 
      // operations tracking, called when triggered
      changeListsizeCallback, // (newlistsize) - triggered when the listsize changes for any reason
@@ -166,7 +166,7 @@ Details about the callbacks:
 |referenceIndexCallback|index: integer, location: string, cradleState: string|location can be 'setCradleContent', 'updateCradleContent'. Keeps the host up to date on the index number adjacent to the `Cradle` axis, and the state change that triggered the update|
 |repositioningIndexCallback|index: integer|the current index during repositioning. Useful for feedback to user when host sets `useScrollTracker` property to false|
 |preloadIndexCallback|index: integer|during a preload operation, this stream gives the index number being preloaded|
-|itemExceptionsCallback|index: integer, itemID: integer, returnvalue: any, location: string, error: Error|triggered whenever getItem does not return a valid React component|
+|itemExceptionCallback|index: integer, itemID: integer, returnvalue: any, location: string, error: Error|triggered whenever getItem does not return a valid React component|
 |[_**TRACK OPERATIONS**_]|
 |changeListsizeCallback|newlistsize: integer|notification of a change of list size. Could be from getItem returning null indicating end-of-list, or an API call that results in change of list size|
 |deleteListCallback|reason: string, deleteList: array|gives an array of indexes that have been deleted from the cache, and text of the reason|
