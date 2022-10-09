@@ -42,7 +42,7 @@ export default class ServiceHandler {
            preloadIndexCallback, // (index)
            deleteListCallback, // (reason, deleteList)
            changeListsizeCallback, // (newlistsize)
-           itemExceptionsCallback, // (index, itemID, returnvalue, location, error)
+           itemExceptionCallback, // (index, itemID, returnvalue, location, error)
            repositioningFlagCallback, // (flag) // boolean
            repositioningIndexCallback,
            
@@ -53,7 +53,7 @@ export default class ServiceHandler {
            preloadIndexCallback,
            deleteListCallback,
            changeListsizeCallback,
-           itemExceptionsCallback,
+           itemExceptionCallback,
            repositioningFlagCallback,
            repositioningIndexCallback
        }

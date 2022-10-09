@@ -273,7 +273,7 @@ export class CacheHandler {
             
             const indexToItemIDMap = this.cacheProps.indexToItemIDMap
 
-            const { preloadIndexCallback, itemExceptionsCallback } = serviceHandler.callbacks
+            const { preloadIndexCallback, itemExceptionCallback } = serviceHandler.callbacks
 
             for (let index = 0; index < preloadsize; index++) {
 
@@ -284,7 +284,7 @@ export class CacheHandler {
                         index, 
                         getItem, 
                         scrollerPropertiesRef,
-                        itemExceptionsCallback,
+                        itemExceptionCallback,
                         maxListsizeInterrupt,
                         scrollerID
                     )
@@ -778,7 +778,7 @@ export class CacheHandler {
         index, 
         getItem, 
         scrollerPropertiesRef, 
-        itemExceptionsCallback,
+        itemExceptionCallback,
         maxListsizeInterrupt,
         scrollerID
     ) {
@@ -831,13 +831,13 @@ export class CacheHandler {
 
             if (usercontent === undefined) {
 
-                itemExceptionsCallback && 
-                    itemExceptionsCallback(index, itemID, returnvalue, 'preload', error)
+                itemExceptionCallback && 
+                    itemExceptionCallback(index, itemID, returnvalue, 'preload', error)
 
             } else { // usercontent === null; last item in list
 
-                itemExceptionsCallback && 
-                    itemExceptionsCallback(index, itemID, returnvalue, 'preload', new Error('end of list'))
+                itemExceptionCallback && 
+                    itemExceptionCallback(index, itemID, returnvalue, 'preload', new Error('end of list'))
 
                 maxListsizeInterrupt(index)
 
