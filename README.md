@@ -214,7 +214,7 @@ These properties would rarely be changed.
 
 ### `scrollerProperties` object
 
-the `scrollerProperties` object is requested by user components by initializing a `scrollerProperties` component property to `null`. The property is then instantiated with an object by the system on loading of the component.
+the `scrollerProperties` object is requested by user components by initializing a `scrollerProperties` component property to `null`. The property is then instantiated with an object by the system on loading of the component to a CellFrame.
 
 Nested RIGS require this property (to be informed when portal reparenting is taking place).
 
