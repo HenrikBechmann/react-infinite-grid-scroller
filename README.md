@@ -195,7 +195,7 @@ Details about the functions returned in an object by `functionsCallback`:
 
 Notes: cache management functions are provided to support drag-n-drop, sorting, and filtering operations. 
 
-Cache management functions operate on indexes and items in the cache, and generally ignore indexes and items that are not in the cache. 
+Cache management functions operate on indexes and itemIDs in the cache, and generally ignore indexes and itemIDs that are not in the cache. 
 
 This is a sparse in-memory cache, and indexes in the cache are not guaranteed to be contiguous.
 
