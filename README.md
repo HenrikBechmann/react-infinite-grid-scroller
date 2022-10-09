@@ -9,7 +9,8 @@ Vertical or horizontal infinite scroller using simple css grid layout
 - designed for both "heavy" and "light" cell content (React components)
 - supports both uniform and variable cell lengths (for both vertical and horizontal)
 - single or multiple rows or columns
-- limited sparse memory cache, to preserve content state, with an API
+- dynamically variable virtual list size
+- limited sparse in-memory cache, to preserve content state, with an API
 - repositioning mode when rapidly scrolling (such as by using the scroll thumb)
 - dynamic pivot (horizontal/vertical back and forth) while maintaining position in list
 - automatic reconfiguration with viewport resize
@@ -19,7 +20,7 @@ Vertical or horizontal infinite scroller using simple css grid layout
 # Key Technologies
 
 RIGS uses these key technologies:
-- [css grid layout](https://css-tricks.com/snippets/css/complete-guide-grid/)
+- [CSS grid](https://css-tricks.com/snippets/css/complete-guide-grid/)
 - [React hooks](https://reactjs.org/docs/hooks-intro.html)
 - [React portals](https://www.npmjs.com/package/react-reverse-portal)
 - [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
@@ -131,7 +132,7 @@ callbacks: {
      referenceIndexCallback, // (index, location, cradleState) - change of index adjacent to the axis
      repositioningIndexCallback, // (index) - current virtual index number during rapid repositioning
      preloadIndexCallback, // (index) - current index being preloaded
-     itemExceptionsCallback, // (index, itemID, returnvalue, location, error) - details about failed getItem calls
+     itemExceptionCallback, // (index, itemID, returnvalue, location, error) - details about failed getItem calls
 
      // operations tracking, called when triggered
      changeListsizeCallback, // (newlistsize) - triggered when the listsize changes for any reason
@@ -165,7 +166,7 @@ Details about the callbacks:
 |referenceIndexCallback|index: integer, location: string, cradleState: string|location can be 'setCradleContent', 'updateCradleContent'. Keeps the host up to date on the index number adjacent to the `Cradle` axis, and the state change that triggered the update|
 |repositioningIndexCallback|index: integer|the current index during repositioning. Useful for feedback to user when host sets `useScrollTracker` property to false|
 |preloadIndexCallback|index: integer|during a preload operation, this stream gives the index number being preloaded|
-|itemExceptionsCallback|index: integer, itemID: integer, returnvalue: any, location: string, error: Error|triggered whenever getItem does not return a valid React component|
+|itemExceptionCallback|index: integer, itemID: integer, returnvalue: any, location: string, error: Error|triggered whenever getItem does not return a valid React component|
 |[_**TRACK OPERATIONS**_]|
 |changeListsizeCallback|newlistsize: integer|notification of a change of list size. Could be from getItem returning null indicating end-of-list, or an API call that results in change of list size|
 |deleteListCallback|reason: string, deleteList: array|gives an array of indexes that have been deleted from the cache, and text of the reason|
@@ -194,9 +195,9 @@ Details about the functions returned in an object by `functionsCallback`:
 
 Notes: cache management functions are provided to support drag-n-drop, sorting, and filtering operations. 
 
-Cache management functions operate on indexes and items in the cache, and generally ignore indexes and items that are not in the cache. 
+Cache management functions operate on indexes and itemIDs in the cache, and generally ignore indexes and itemIDs that are not in the cache. 
 
-This is a sparse cache, and indexes in the cache are not guaranteed to be contiguous.
+This is a sparse in-memory cache, and indexes in the cache are not guaranteed to be contiguous.
 
 ### `technical` object
 
@@ -214,7 +215,7 @@ These properties would rarely be changed.
 
 ### `scrollerProperties` object
 
-the `scrollerProperties` object is requested by user components by initializing a `scrollerProperties` component property to `null`. The property is then instantiated with an object by the system on loading of the component.
+the `scrollerProperties` object is requested by user components by initializing a `scrollerProperties` component property to `null`. The property is then instantiated with an object by the system on loading of the component to a CellFrame.
 
 Nested RIGS require this property (to be informed when portal reparenting is taking place).
 
