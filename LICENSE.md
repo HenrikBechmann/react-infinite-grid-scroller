@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2020 Henrik Bechmann
+Copyright (c) 2020-2022 Henrik Bechmann, Toronto, Canada
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
