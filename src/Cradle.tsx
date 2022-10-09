@@ -325,7 +325,7 @@ const Cradle = ({
             preloadIndexCallback:userCallbacks?.preloadIndexCallback,
             deleteListCallback:userCallbacks?.deleteListCallback,
             changeListsizeCallback:userCallbacks?.changeListsizeCallback,
-            itemExceptionsCallback:userCallbacks?.itemExceptionsCallback,
+            itemExceptionCallback:userCallbacks?.itemExceptionCallback,
         }
     )
 
@@ -1405,7 +1405,7 @@ const Cradle = ({
         scrollerPropertiesRef, 
         cacheHandler, 
         nullItemSetMaxListsize,
-        itemExceptionsCallback:serviceHandler.callbacks.itemExceptionsCallback,
+        itemExceptionCallback:serviceHandler.callbacks.itemExceptionCallback,
         IDLECALLBACK_TIMEOUT,
         triggercellTriggerlinesRef,
     })

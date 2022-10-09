@@ -82,7 +82,7 @@ const CellFrame = ({
         cacheHandler, 
         scrollerPropertiesRef, // for the user content, if requested
         nullItemSetMaxListsize, // for internal notification of end-of-list
-        itemExceptionsCallback, // or notification to host of error
+        itemExceptionCallback, // or notification to host of error
         IDLECALLBACK_TIMEOUT, // to optimize requestIdleCallback
         triggercellTriggerlinesRef,
     } = cradleContext
@@ -329,8 +329,8 @@ const CellFrame = ({
                                 if (usercontent === null) {
 
                                     // truncate listsize at this index
-                                    itemExceptionsCallback && 
-                                        itemExceptionsCallback(
+                                    itemExceptionCallback && 
+                                        itemExceptionCallback(
                                             index, itemID, returnvalue, 'cellFrame', new Error('end of list')
                                         )
                                     nullItemSetMaxListsize(index)
@@ -340,8 +340,8 @@ const CellFrame = ({
                                     // change placeholder message to error message
                                     errorRef.current = error
                                     // notify the host
-                                    itemExceptionsCallback && 
-                                        itemExceptionsCallback(
+                                    itemExceptionCallback && 
+                                        itemExceptionCallback(
                                             index, itemID, returnvalue, 'cellFrame', error
                                         )
 
