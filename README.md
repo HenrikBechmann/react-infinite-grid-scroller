@@ -20,7 +20,7 @@ Vertical or horizontal infinite scroller using simple css grid layout
 # Key Technologies
 
 RIGS uses these key technologies:
-- [css grid](https://css-tricks.com/snippets/css/complete-guide-grid/)
+- [CSS grid](https://css-tricks.com/snippets/css/complete-guide-grid/)
 - [React hooks](https://reactjs.org/docs/hooks-intro.html)
 - [React portals](https://www.npmjs.com/package/react-reverse-portal)
 - [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
