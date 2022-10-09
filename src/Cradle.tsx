@@ -803,6 +803,17 @@ const Cradle = ({
         layout,
     ])
 
+    // a new getItem function implies the need to reload
+    useEffect(() => {
+
+        if (cradleStateRef.current == 'setup') return
+
+        interruptHandler.pauseInterrupts()
+
+        setCradleState('reload')
+
+    },[getItem])
+
     // pivot triggered on change of orientation
     useEffect(()=> {
 
