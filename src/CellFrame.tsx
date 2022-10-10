@@ -149,7 +149,7 @@ const CellFrame = ({
                     {index, listsize, message:messageRef.current, error:errorRef.current}):
                 null
             
-    },[index, placeholder,listsize, errorRef.current])
+    },[index, placeholder,listsize, messageRef.current, errorRef.current])
 
     placeholderRef.current = useMemo(()=>{
 
