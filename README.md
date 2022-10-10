@@ -116,7 +116,7 @@ styles = {
 }
 ~~~
 
-You may want to add `overscrollBehavior:'none'` to the viewport styles to prevent inadvertent reloading of your app in certain browsers when users scroll past the top of a list.
+You may want to add `overscrollBehavior:'none'` to the viewport styles to prevent inadvertent reloading of your app in certain browsers when users scroll past the top of a vertical list.
 
 The scrolltracker is the small rectangular component that appears at the top left of the viewport when the list is being rapidly repositioned. The scrolltracker shows the user the current virtual index and total listsize during the repositioning process.
 
