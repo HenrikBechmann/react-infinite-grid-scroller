@@ -64,6 +64,7 @@ const CellFrame = ({
     isTriggercell,
     placeholderFrameStyles,
     placeholderLinerStyles,
+    usePlaceholder,
 }) => {
 
     const coreConfigRef = useRef(null)
@@ -144,14 +145,25 @@ const CellFrame = ({
 
     const customplaceholder = useMemo(() => {
 
-            return placeholder?
-                React.createElement(placeholder, 
-                    {index, listsize, message:messageRef.current, error:errorRef.current}):
-                null
+        if (!usePlaceholder) return null        
+
+        return placeholder?
+            React.createElement(placeholder, 
+                {index, listsize, message:messageRef.current, error:errorRef.current}):
+            null
             
-    },[index, placeholder,listsize, messageRef.current, errorRef.current])
+    },[
+        index, 
+        placeholder,
+        listsize, 
+        messageRef.current, 
+        errorRef.current, 
+        usePlaceholder
+    ])
 
     placeholderRef.current = useMemo(()=>{
+
+        if (!usePlaceholder) return null
 
         const placeholder = 
             customplaceholder?
@@ -172,7 +184,8 @@ const CellFrame = ({
         customplaceholder, 
         listsize, 
         messageRef.current, 
-        errorRef.current
+        errorRef.current,
+        usePlaceholder,
     ])
 
     // ---------------- [ requestidlecallback config ] ------------------------

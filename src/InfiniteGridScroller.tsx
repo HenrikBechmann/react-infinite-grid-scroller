@@ -96,6 +96,7 @@ const InfiniteGridScroller = (props) => {
         cacheMax = null, // always minimum cradle; null means limited by listsize
         placeholder, // optional. a sparse component to stand in for content until the content arrives; 
             // replaces default placeholder if present
+        usePlaceholder = true,
         useScrollTracker = true, // the internal component to give feedback for repositioning
 
         // *** objects
@@ -126,6 +127,7 @@ const InfiniteGridScroller = (props) => {
     startingIndex = startingIndex ?? 0
     estimatedListSize = estimatedListSize ?? 0
     runwaySize = runwaySize ?? 3
+    usePlaceholder = usePlaceholder ?? true
     useScrollTracker = useScrollTracker ?? true
     cellMinHeight = cellMinHeight ?? 0
     cellMinWidth = cellMinWidth ?? 0
@@ -197,6 +199,7 @@ const InfiniteGridScroller = (props) => {
 
     triggerlineOffset = triggerlineOffset ?? 10
 
+    if (typeof usePlaceholder != 'boolean') usePlaceholder = true
     if (typeof useScrollTracker != 'boolean') useScrollTracker = true
 
     // for mount version
@@ -303,8 +306,9 @@ const InfiniteGridScroller = (props) => {
                     runwaySize = { runwaySize }
                     triggerlineOffset = { triggerlineOffset }
 
-                    cacheHandler = {cacheHandlerRef.current}
-                    useScrollTracker = {useScrollTracker}
+                    cacheHandler = { cacheHandlerRef.current }
+                    usePlaceholder = { usePlaceholder }
+                    useScrollTracker = { useScrollTracker }
                     showAxis = { showAxis }
                     SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = { SCROLL_TIMEOUT_FOR_ONAFTERSCROLL }
                     IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }

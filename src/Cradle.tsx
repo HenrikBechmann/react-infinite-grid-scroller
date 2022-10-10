@@ -106,6 +106,7 @@ const Cradle = ({
         // for handler list
         cacheHandler,
         // system
+        usePlaceholder,
         useScrollTracker,
         showAxis,
         SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
@@ -352,6 +353,7 @@ const Cradle = ({
         placeholder, 
         triggerlineOffset,
         scrollerID,
+        usePlaceholder,
         // objects
         userCallbacks,
         styles,
@@ -1382,6 +1384,7 @@ const Cradle = ({
             scrollAxisReferenceIndex, 
             listsize,
             styles,
+            useScrollTracker,
         ]
     )
 
