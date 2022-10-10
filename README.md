@@ -15,7 +15,7 @@ Vertical or horizontal infinite scroller using simple css grid layout
 - dynamic pivot (horizontal/vertical back and forth) while maintaining position in list
 - automatic reconfiguration with viewport resize
 - dynamic recalibration with async content refresh
-- supports nested lists
+- supports nested scrollers
 
 # Key Technologies
 
