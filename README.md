@@ -101,6 +101,8 @@ The host can track removal of a user component and its `itemID` from the cache t
 
 Most of the time the `itemID` can be ignored.
 
+Also, note that the cache is reloaded with a new getItem function.
+
 ### `styles` object
 
 Create a style object for each of the elements you want to modify. The styles are not screened, though the RIGS essential styles pre-empt user styles. Be careful to only include "passive" styles (like color, backgroundColor) so as not to confuse the scroller. Do not add structural items like borders, padding etc.
