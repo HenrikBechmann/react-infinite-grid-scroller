@@ -87,6 +87,7 @@ User components loaded to `CellFrame`s are placed in a `data-type = 'contentenve
 |cacheMax|integer: at minimum (maintained by system) the number of user components in the `Cradle`|allows optimization of cache size for memory limits and performance|
 |useScrollTracker|boolean: default = `true`|allows suppression of system feedback on position within list while in reposition mode, if the host wants to provide alternative feedback based on data from callbacks |
 |placeholder|a lightweight React component for `cellFrame`s to load while waiting for the intended `cellFrame` components|optional (replaces default placeholder). parameters are index, listsize, message, error. Arguments set by system|
+|usePlaceholder|boolean: default = true|allows suppression of use of default or custom placeholder. Placeholders show messages to the user while user components are fetched, and report errors|
 |[_**OBJECTS**_]|
 |styles|object: collection of styles for scroller components|optional. These should be "passive" styles like backgroundColor. See below for details|
 |callbacks|object: collection of functions for feedback, and interactions with scroller components|optional. See below for details|
