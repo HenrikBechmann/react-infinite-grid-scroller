@@ -65,7 +65,7 @@ User components loaded to `CellFrame`s are placed in a `data-type = 'contentenve
 
 # Video
 
-![video](demo/RIGSDemo.mp4)
+![video](demo/RIGSDemo.gif)
 
 # Scroller properties
 
