@@ -63,6 +63,10 @@ Note that scroller-generated elements show a `data-type` attribute in browser in
 
 User components loaded to `CellFrame`s are placed in a `data-type = 'contentenvelope'` `div`. In 'uniform' layout this has `position:absolute` and `inset:0`. In 'variable' layout it has `width:100%` and `max-height` = `cellHeight` for 'vertical' orientation, and `height:100%` and `max-width` = `cellWidth` for 'horizontal' orientation. In any case it has `overflow:hidden`.
 
+# Video
+
+![video](demo/RIGSDemo.mp4)
+
 # Scroller properties
 
 | property | value | notes |
