@@ -783,6 +783,7 @@ const createCellFrame = ({
         placeholder,
         scrollerID,
         layout, 
+        usePlaceholder,
 
     } = cradleInheritedProperties
 
@@ -809,6 +810,7 @@ const createCellFrame = ({
         isTriggercell = { false }
         placeholderFrameStyles = { placeholderFrameStyles }
         placeholderLinerStyles = { placeholderLinerStyles }
+        usePlaceholder = { usePlaceholder }
     />
 
 }

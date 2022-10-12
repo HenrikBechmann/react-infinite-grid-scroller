@@ -106,6 +106,7 @@ const Cradle = ({
         // for handler list
         cacheHandler,
         // system
+        usePlaceholder,
         useScrollTracker,
         showAxis,
         SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
@@ -352,6 +353,7 @@ const Cradle = ({
         placeholder, 
         triggerlineOffset,
         scrollerID,
+        usePlaceholder,
         // objects
         userCallbacks,
         styles,
@@ -802,6 +804,17 @@ const Cradle = ({
         triggerlineOffset,
         layout,
     ])
+
+    // a new getItem function implies the need to reload
+    useEffect(() => {
+
+        if (cradleStateRef.current == 'setup') return
+
+        interruptHandler.pauseInterrupts()
+
+        setCradleState('reload')
+
+    },[getItem])
 
     // pivot triggered on change of orientation
     useEffect(()=> {
@@ -1371,6 +1384,7 @@ const Cradle = ({
             scrollAxisReferenceIndex, 
             listsize,
             styles,
+            useScrollTracker,
         ]
     )
 
