@@ -279,12 +279,16 @@ const CellFrame = ({
                     cacheHandler.registerRequestedPortal(index)
                     // enqueue the fetch
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
-
+                        rigsdebug && console.log('starting idle callback', index)
                         let returnvalue, usercontent, error
                         // process the fetch
                         try {
 
+                            rigsdebug && console.log('about to call getItem for', index)
+
                             usercontent = await getItem(index, itemID)
+
+                            rigsdebug && console.log('retrieved usercontent for', index, usercontent)
 
                             if (usercontent === null) returnvalue = usercontent
 
@@ -371,6 +375,7 @@ const CellFrame = ({
                             }
 
                         }
+                        rigsdebug && console.log('completed idle callback', index)
 
                     },{timeout:IDLECALLBACK_TIMEOUT})
 
