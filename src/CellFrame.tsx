@@ -86,6 +86,7 @@ const CellFrame = ({
         itemExceptionCallback, // or notification to host of error
         IDLECALLBACK_TIMEOUT, // to optimize requestIdleCallback
         triggercellTriggerlinesRef,
+        rigsdebug,
     } = cradleContext
     
     // style change generates state refresh
@@ -97,6 +98,8 @@ const CellFrame = ({
     const [frameState, setFrameState] = useState('setup')
     const frameStateRef = useRef(null)
     frameStateRef.current = frameState
+
+    rigsdebug && console.log('CellFrame frameState',frameState)
 
     // DOM ref
     const frameRef = useRef(null)
@@ -248,6 +251,8 @@ const CellFrame = ({
 
                     messageRef.current = '(retrieving from cache)'
 
+                    rigsdebug && console.log('message from ', index, messageRef.current)
+
                     if (isMountedRef.current) {
                         // get cache data
                         portalMetadataRef.current = cacheHandler.getPortal(itemID)
@@ -265,6 +270,8 @@ const CellFrame = ({
                 } else {
 
                     messageRef.current = '(loading...)'
+
+                    rigsdebug && console.log('message from ', index, messageRef.current)
 
                     setFrameState('waiting')
 
