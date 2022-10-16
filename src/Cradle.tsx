@@ -113,6 +113,8 @@ const Cradle = ({
         IDLECALLBACK_TIMEOUT,
         MAX_CACHE_OVER_RUN,
         TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
+
+        rigsdebug,
     }) => {
 
     if (listsize == 0) return null // nothing to do
@@ -1422,6 +1424,7 @@ const Cradle = ({
         itemExceptionCallback:serviceHandler.callbacks.itemExceptionCallback,
         IDLECALLBACK_TIMEOUT,
         triggercellTriggerlinesRef,
+        rigsdebug,
     })
 
 
