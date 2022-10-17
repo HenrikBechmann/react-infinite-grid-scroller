@@ -62,8 +62,6 @@ let globalScrollerID = 0
 
 const InfiniteGridScroller = (props) => {
 
-    // console.log('InfiniteGridScroller',props)
-
     // ------------------[ normalize properties ]--------------------
 
     let { 
@@ -169,7 +167,6 @@ const InfiniteGridScroller = (props) => {
 
     // state
     const [scrollerState, setScrollerState] = useState('setup') // setup, setlistsize, ready
-    // console.log('scrollerState',scrollerState)
     // system
     const stylesRef = useRef(styles)
     const callbacksRef = useRef(callbacks)
