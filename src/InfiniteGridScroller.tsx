@@ -264,8 +264,7 @@ const InfiniteGridScroller = (props) => {
     // --------------------[ Render ]---------------------
 
     // component calls are deferred by scrollerState to give cacheHandler a chance to initialize
-    return <React.StrictMode>
-        <ErrorBoundary
+    return <ErrorBoundary
         FallbackComponent= { ErrorFallback }
         onReset= { () => {
           // response tbd; there may not need to be one
@@ -325,7 +324,6 @@ const InfiniteGridScroller = (props) => {
             <PortalList cacheProps = { cacheHandlerRef.current.cacheProps }/>
         </div>}
     </ErrorBoundary>
-    </React.StrictMode>
 }
 
 export default InfiniteGridScroller

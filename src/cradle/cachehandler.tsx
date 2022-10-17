@@ -928,7 +928,10 @@ export const PortalList = ({ cacheProps }) => {
     const counterRef = useRef(null)
     counterRef.current = portalListCounter
 
+    const [isMounted, setIsMounted] = useState(true)
     const isMountedRef = useRef(true)
+    isMountedRef.current = isMounted
+
     const portalArrayRef = useRef(null)
     // const cachedivRef = useRef(null)
 
@@ -944,7 +947,8 @@ export const PortalList = ({ cacheProps }) => {
 
         return () => {
 
-            isMountedRef.current = false
+            // isMountedRef.current = false
+            setIsMounted(false)
 
         }
 

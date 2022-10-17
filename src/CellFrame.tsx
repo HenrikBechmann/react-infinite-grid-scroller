@@ -104,7 +104,9 @@ const CellFrame = ({
     // DOM ref
     const frameRef = useRef(null)
     // to track unmount interrupt
+    const [isMounted, setIsMounted] = useState(true)
     const isMountedRef = useRef(true)
+    isMountedRef.current = isMounted
     // cache data
     const portalMetadataRef = useRef(null)
     // the placeholder to use
@@ -122,13 +124,24 @@ const CellFrame = ({
     // placeholder message
     const messageRef = useRef(null)
 
+    useEffect(()=>{
+
+        return () => {
+
+            rigsdebug && console.log('unmounting for index',index)
+            // isMountedRef.current = false
+            setIsMounted(false)
+
+        }
+
+    },[])
+
     // for unmount
     useEffect(()=>{
 
         return () => {
 
-            isMountedRef.current = false
-
+            rigsdebug && console.log('cancelling idle callcack for', index)
             cancelidlecallback(requestIdleCallbackIdRef.current)
 
             cacheHandler.removeRequestedPortal(index)
@@ -307,7 +320,9 @@ const CellFrame = ({
                         // process the return value
                         if ((usercontent !== null) && (usercontent !== undefined)) {
 
-                            if (!React.isValidElement(usercontent)) {
+                            const isValidElement = React.isValidElement(usercontent)
+                            rigsdebug && console.log('isValidElement for', index, isValidElement)
+                            if (!isValidElement) {
 
                                 returnvalue = usercontent
                                 usercontent = undefined
@@ -317,6 +332,7 @@ const CellFrame = ({
 
                         }
 
+                        rigsdebug && console.log('about to prepare content for index with isMountedRef.current, usercontent, error', index, isMountedRef.current, usercontent, error)
                         if (isMountedRef.current) {
                             // prepare the content
                             if ((usercontent !== null) && (usercontent !== undefined)) {
