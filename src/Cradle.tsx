@@ -152,9 +152,7 @@ const Cradle = ({
     // console.log('==> cradleState','-'+scrollerID+'-',cradleState)
 
     // flags
-    const [isMounted, setIsMounted] = useState(true)
     const isMountedRef = useRef(true)
-    isMountedRef.current = isMounted
     const isCachedRef = useRef(false)
     const wasCachedRef = useRef(false)
     const parentingTransitionRequiredRef = useRef(false)
@@ -553,11 +551,11 @@ const Cradle = ({
     // clear mounted flag on unmount
     useEffect(()=>{
 
+        isMountedRef.current = true
         // unmount
         return () => {
 
-            // isMountedRef.current = false
-            setIsMounted(false)
+            isMountedRef.current = false
 
         }
 

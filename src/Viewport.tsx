@@ -54,10 +54,7 @@ const Viewport = ({
     const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
     viewportStateRef.current = viewportState
 
-    // const isMountedRef = useRef(true) // monitor for unmounted
-    const [isMounted, setIsMounted] = useState(true)
     const isMountedRef = useRef(true)
-    isMountedRef.current = isMounted
 
     const viewportElementRef = useRef(null)
 
@@ -74,10 +71,12 @@ const Viewport = ({
 
     // mark as unmounted
     useEffect(() =>{
+
+        isMountedRef.current = true
+
         return () => {
 
-            // isMountedRef.current = false
-            setIsMounted(false)
+            isMountedRef.current = false
 
         }
     },[])

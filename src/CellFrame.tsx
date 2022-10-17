@@ -104,9 +104,7 @@ const CellFrame = ({
     // DOM ref
     const frameRef = useRef(null)
     // to track unmount interrupt
-    const [isMounted, setIsMounted] = useState(true)
     const isMountedRef = useRef(true)
-    isMountedRef.current = isMounted
     // cache data
     const portalMetadataRef = useRef(null)
     // the placeholder to use
@@ -126,11 +124,12 @@ const CellFrame = ({
 
     useEffect(()=>{
 
+        isMountedRef.current = true
+
         return () => {
 
             rigsdebug && console.log('unmounting for index',index)
-            // isMountedRef.current = false
-            setIsMounted(false)
+            isMountedRef.current = false
 
         }
 
