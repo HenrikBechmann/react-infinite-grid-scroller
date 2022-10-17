@@ -70,7 +70,6 @@ const CellFrame = ({
     const coreConfigRef = useRef(null)
     coreConfigRef.current = {
         layout,
-        orientation,
         cellWidth,
         cellHeight
     }
@@ -86,7 +85,6 @@ const CellFrame = ({
         itemExceptionCallback, // or notification to host of error
         IDLECALLBACK_TIMEOUT, // to optimize requestIdleCallback
         triggercellTriggerlinesRef,
-        rigsdebug,
     } = cradleContext
     
     // style change generates state refresh
@@ -98,8 +96,6 @@ const CellFrame = ({
     const [frameState, setFrameState] = useState('setup')
     const frameStateRef = useRef(null)
     frameStateRef.current = frameState
-
-    rigsdebug && console.log('CellFrame frameState',frameState)
 
     // DOM ref
     const frameRef = useRef(null)
@@ -128,7 +124,6 @@ const CellFrame = ({
 
         return () => {
 
-            rigsdebug && console.log('unmounting for index',index)
             isMountedRef.current = false
 
         }
@@ -140,7 +135,6 @@ const CellFrame = ({
 
         return () => {
 
-            rigsdebug && console.log('cancelling idle callcack for', index)
             cancelidlecallback(requestIdleCallbackIdRef.current)
 
             cacheHandler.removeRequestedPortal(index)
@@ -263,8 +257,6 @@ const CellFrame = ({
 
                     messageRef.current = '(retrieving from cache)'
 
-                    rigsdebug && console.log('message from ', index, messageRef.current)
-
                     if (isMountedRef.current) {
                         // get cache data
                         portalMetadataRef.current = cacheHandler.getPortal(itemID)
@@ -283,24 +275,18 @@ const CellFrame = ({
 
                     messageRef.current = '(loading...)'
 
-                    rigsdebug && console.log('message from ', index, messageRef.current)
-
                     setFrameState('waiting')
 
                     // reserve space in the cache
                     cacheHandler.registerRequestedPortal(index)
                     // enqueue the fetch
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
-                        rigsdebug && console.log('starting idle callback', index)
+
                         let returnvalue, usercontent, error
                         // process the fetch
                         try {
 
-                            rigsdebug && console.log('about to call getItem for', index)
-
                             usercontent = await getItem(index, itemID)
-
-                            rigsdebug && console.log('retrieved usercontent for', index, usercontent)
 
                             if (usercontent === null) returnvalue = usercontent
 
@@ -320,7 +306,6 @@ const CellFrame = ({
                         if ((usercontent !== null) && (usercontent !== undefined)) {
 
                             const isValidElement = React.isValidElement(usercontent)
-                            rigsdebug && console.log('isValidElement for', index, isValidElement)
                             if (!isValidElement) {
 
                                 returnvalue = usercontent
@@ -331,7 +316,6 @@ const CellFrame = ({
 
                         }
 
-                        rigsdebug && console.log('about to prepare content for index with isMountedRef.current, usercontent, error', index, isMountedRef.current, usercontent, error)
                         if (isMountedRef.current) {
                             // prepare the content
                             if ((usercontent !== null) && (usercontent !== undefined)) {
@@ -390,7 +374,6 @@ const CellFrame = ({
                             }
 
                         }
-                        rigsdebug && console.log('completed idle callback', index)
 
                     },{timeout:IDLECALLBACK_TIMEOUT})
 

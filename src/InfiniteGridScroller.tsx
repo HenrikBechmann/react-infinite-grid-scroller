@@ -185,7 +185,6 @@ const InfiniteGridScroller = (props) => {
         TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
         // ratios:
         MAX_CACHE_OVER_RUN, // max streaming over-run as ratio to cacheMax
-        rigsdebug,
 
     } = technical
 
@@ -315,7 +314,6 @@ const InfiniteGridScroller = (props) => {
                     MAX_CACHE_OVER_RUN = { MAX_CACHE_OVER_RUN }
                     TIMEOUT_FOR_VARIABLE_MEASUREMENTS = { TIMEOUT_FOR_VARIABLE_MEASUREMENTS }
                     scrollerID = { scrollerID }
-                    rigsdebug = { rigsdebug }
 
                 />
             </Scrollblock>
