@@ -130,6 +130,16 @@ const InfiniteGridScroller = (props) => {
     cellMinHeight = cellMinHeight ?? 0
     cellMinWidth = cellMinWidth ?? 0
 
+    cellHeight = +cellHeight
+    cellWidth = +cellWidth
+    cellMinHeight = +cellMinHeight
+    cellMinWidth = +cellMinWidth
+    estimatedListSize = +estimatedListSize
+    gap = +gap
+    padding = +padding
+    runwaySize = +runwaySize
+    startingIndex = +startingIndex
+
     cellMinHeight = Math.max(cellMinHeight, 25)
     cellMinWidth = Math.max(cellMinWidth, 25)
     cellMinHeight = Math.min(cellHeight, cellMinHeight)
