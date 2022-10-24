@@ -260,8 +260,7 @@ _orientation, gap, padding, cellHeight, cellWidth, cellMinHeight, cellMinWidth, 
 
 It also contains the following property, which may have been slightly altered from the original `runwaySize` value by the scroller:
 
-_runwayRowcount_
-
+_runwayRowcount, listsize_
 # Licence
 
 [MIT](LICENSE.md) &copy; 2020-2022 [Henrik Bechmann](https://twitter.com/HenrikBechmann)
