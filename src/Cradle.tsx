@@ -376,6 +376,7 @@ const Cradle = ({
         cellMinHeight,
         cellMinWidth, 
         layout,
+        listsize,
         runwayRowcount,
         cache,
         cacheMax,
