@@ -114,7 +114,6 @@ const Cradle = ({
         MAX_CACHE_OVER_RUN,
         TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
 
-        rigsdebug,
     }) => {
 
     if (listsize == 0) return null // nothing to do
@@ -198,8 +197,8 @@ const Cradle = ({
 
         const cellcrosslength = 
             (orientation == 'vertical')?
-                cellWidth + gap:
-                cellHeight + gap
+                (cellWidth + gap):
+                (cellHeight + gap);
 
         const cellcrosslengthforcalc = 
             Math.min(cellcrosslength,viewportcrosslengthforcalc) // result cannot be less than 1
@@ -377,6 +376,7 @@ const Cradle = ({
         cellMinHeight,
         cellMinWidth, 
         layout,
+        listsize,
         runwayRowcount,
         cache,
         cacheMax,
@@ -1425,7 +1425,6 @@ const Cradle = ({
         itemExceptionCallback:serviceHandler.callbacks.itemExceptionCallback,
         IDLECALLBACK_TIMEOUT,
         triggercellTriggerlinesRef,
-        rigsdebug,
     })
 
 

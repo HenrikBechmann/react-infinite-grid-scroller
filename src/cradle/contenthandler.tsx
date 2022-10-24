@@ -353,9 +353,6 @@ export default class ContentHandler {
                 viewportElement.offsetHeight:
                 viewportElement.offsetWidth
 
-        // console.log('OVERSCROLL scrollPos, viewportLength, scrollPos + viewportLength, contentLength',
-        //     scrollPos, viewportLength, scrollPos + viewportLength, contentLength)
-
         // first abandon option/3; nothing to do
         // for browser top or bottom bounce
         if ( (scrollPos < 0) || ((scrollPos + viewportLength) > contentLength)) { 

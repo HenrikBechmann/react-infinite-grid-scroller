@@ -62,8 +62,6 @@ let globalScrollerID = 0
 
 const InfiniteGridScroller = (props) => {
 
-    // console.log('InfiniteGridScroller',props)
-
     // ------------------[ normalize properties ]--------------------
 
     let { 
@@ -132,6 +130,16 @@ const InfiniteGridScroller = (props) => {
     cellMinHeight = cellMinHeight ?? 0
     cellMinWidth = cellMinWidth ?? 0
 
+    cellHeight = +cellHeight
+    cellWidth = +cellWidth
+    cellMinHeight = +cellMinHeight
+    cellMinWidth = +cellMinWidth
+    estimatedListSize = +estimatedListSize
+    gap = +gap
+    padding = +padding
+    runwaySize = +runwaySize
+    startingIndex = +startingIndex
+
     cellMinHeight = Math.max(cellMinHeight, 25)
     cellMinWidth = Math.max(cellMinWidth, 25)
     cellMinHeight = Math.min(cellHeight, cellMinHeight)
@@ -169,7 +177,6 @@ const InfiniteGridScroller = (props) => {
 
     // state
     const [scrollerState, setScrollerState] = useState('setup') // setup, setlistsize, ready
-    // console.log('scrollerState',scrollerState)
     // system
     const stylesRef = useRef(styles)
     const callbacksRef = useRef(callbacks)
@@ -185,7 +192,6 @@ const InfiniteGridScroller = (props) => {
         TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
         // ratios:
         MAX_CACHE_OVER_RUN, // max streaming over-run as ratio to cacheMax
-        rigsdebug,
 
     } = technical
 
@@ -230,10 +236,12 @@ const InfiniteGridScroller = (props) => {
 
     useEffect (() => {
 
-        scrollerSessionIDRef.current = globalScrollerID++
-        cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, setListsize, listsizeRef)
+        if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
+            scrollerSessionIDRef.current = globalScrollerID++
+            cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, setListsize, listsizeRef)
+        }
 
-    },[])
+    },[]);
 
     // called when getItem returns null, or direct call from user (see serviceHandler)
     const setListsize = useCallback((listsize) =>{
@@ -315,7 +323,6 @@ const InfiniteGridScroller = (props) => {
                     MAX_CACHE_OVER_RUN = { MAX_CACHE_OVER_RUN }
                     TIMEOUT_FOR_VARIABLE_MEASUREMENTS = { TIMEOUT_FOR_VARIABLE_MEASUREMENTS }
                     scrollerID = { scrollerID }
-                    rigsdebug = { rigsdebug }
 
                 />
             </Scrollblock>

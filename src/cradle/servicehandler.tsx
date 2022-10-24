@@ -158,8 +158,6 @@ export default class ServiceHandler {
 
     public clearCache = () => {
 
-        // console.log('serviceHandler clearCache')
-
         const { stateHandler } = this.cradleParameters.handlersRef.current
 
         stateHandler.setCradleState('clearcache')
