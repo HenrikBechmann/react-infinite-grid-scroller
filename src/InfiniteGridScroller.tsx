@@ -129,6 +129,7 @@ const InfiniteGridScroller = (props) => {
     useScrollTracker = useScrollTracker ?? true
     cellMinHeight = cellMinHeight ?? 0
     cellMinWidth = cellMinWidth ?? 0
+    cacheMax = cacheMax ?? 0
 
     cellHeight = +cellHeight
     cellWidth = +cellWidth
@@ -139,6 +140,9 @@ const InfiniteGridScroller = (props) => {
     padding = +padding
     runwaySize = +runwaySize
     startingIndex = +startingIndex
+    cacheMax = +cacheMax
+
+    // TODO error with any NaN
 
     cellMinHeight = Math.max(cellMinHeight, 25)
     cellMinWidth = Math.max(cellMinWidth, 25)
