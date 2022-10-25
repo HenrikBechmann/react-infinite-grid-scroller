@@ -770,6 +770,8 @@ const createCellFrame = ({
     // get new or existing itemID
     const itemID = cacheHandler.getNewOrExistingItemID(index)
 
+    // console.log('creating CellFrame','-'+index+'-','_'+instanceID+'_')
+
     return <CellFrame 
         key = { instanceID } 
         orientation = { orientation }
