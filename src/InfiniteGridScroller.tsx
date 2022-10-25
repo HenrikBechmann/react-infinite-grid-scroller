@@ -118,6 +118,19 @@ const InfiniteGridScroller = (props) => {
 
     // ---------------------[ Data setup ]----------------------
 
+    const originalValues = {
+        cellHeight,
+        cellWidth,
+        cellMinHeight,
+        cellMinWidth,
+        gap,
+        padding,
+        startingIndex,
+        estimatedListSize,
+        runwaySize,
+        cacheMax,
+    }
+
     // avoid null/undefined
     styles = styles ?? {}
     callbacks = callbacks ?? {}
@@ -129,6 +142,7 @@ const InfiniteGridScroller = (props) => {
     useScrollTracker = useScrollTracker ?? true
     cellMinHeight = cellMinHeight ?? 0
     cellMinWidth = cellMinWidth ?? 0
+    cacheMax = cacheMax ?? 0
 
     cellHeight = +cellHeight
     cellWidth = +cellWidth
@@ -139,6 +153,33 @@ const InfiniteGridScroller = (props) => {
     padding = +padding
     runwaySize = +runwaySize
     startingIndex = +startingIndex
+    cacheMax = +cacheMax
+
+    const verifiedValues = {
+        cellHeight,
+        cellWidth,
+        cellMinHeight,
+        cellMinWidth,
+        gap,
+        padding,
+        startingIndex,
+        estimatedListSize,
+        runwaySize,
+        cacheMax,        
+    }
+
+    let problems = 0
+    for (const prop in verifiedValues) {
+        if (isNaN(verifiedValues[prop])) {
+            problems++
+        } 
+    }
+
+    if (problems) {
+        console.error('Error: invalid number - compare originalValues and verifiedValues', 
+            originalValues, verifiedValues)
+        return <div>error: see console.</div>
+    }
 
     cellMinHeight = Math.max(cellMinHeight, 25)
     cellMinWidth = Math.max(cellMinWidth, 25)

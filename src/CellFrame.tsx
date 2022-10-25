@@ -88,14 +88,15 @@ const CellFrame = ({
     } = cradleContext
     
     // style change generates state refresh
-    const [styles,saveStyles] = useState({
-        // overflow:'visible',
-    })
+    // const [styles,saveStyles] = useState({})
+    const stylesRef = useRef({})
 
     // processing state
     const [frameState, setFrameState] = useState('setup')
     const frameStateRef = useRef(null)
     frameStateRef.current = frameState
+
+    // console.log('RUNNING frameState','-'+index+'-' ,typeof index ,'_'+instanceID+'_', frameState)
 
     // DOM ref
     const frameRef = useRef(null)
@@ -108,6 +109,7 @@ const CellFrame = ({
     // the session itemID to use; could be updated by parent
     const itemIDRef = useRef(null)
     itemIDRef.current = itemID
+    const latestItemIDRef = useRef(null)
     const cellFrameDataRef = useRef(null)
     cellFrameDataRef.current = {
         itemID,
@@ -145,6 +147,12 @@ const CellFrame = ({
 
     // refresh content if itemID changes
     useEffect(()=>{
+
+        // if (latestItemIDRef.current == itemID) return
+
+        // console.log('calling getusercontent','-'+cellFrameDataRef.current.index + '-','_'+instanceID+'_',itemID, latestItemIDRef.current)
+
+        // latestItemIDRef.current = itemID
 
         if (isMountedRef.current) setFrameState('getusercontent')
 
@@ -216,11 +224,13 @@ const CellFrame = ({
     // set styles
     useEffect(()=>{
 
+        // console.log('getting styles')
         let newStyles = getFrameStyles(
-            orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, styles)
+            orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, stylesRef.current)
         
         if (isMountedRef.current) {
-            saveStyles(newStyles)
+            // saveStyles(newStyles)
+            stylesRef.current = newStyles
         }
 
     },[orientation,cellHeight,cellWidth, cellMinHeight, cellMinWidth, layout]) 
@@ -232,17 +242,11 @@ const CellFrame = ({
     useLayoutEffect(() => {
 
         switch (frameState) {
-            case 'setup':
-                // no-op
+            case 'setup': {
+                setFrameState('working')
                 break
-
-            case 'inserting': {
-
-                setFrameState('ready')
-
-                break
-
             }
+
             case 'getusercontent': {
 
                 const itemID = itemIDRef.current
@@ -267,7 +271,7 @@ const CellFrame = ({
                         // notify fetched component that reparenting is underway
                         portalMetadataRef.current.isReparentingRef.current = true
 
-                        setFrameState('inserting')
+                        setFrameState('retrieved')
 
                     }
 
@@ -275,7 +279,7 @@ const CellFrame = ({
 
                     messageRef.current = '(loading...)'
 
-                    setFrameState('waiting')
+                    setFrameState('fetching')
 
                     // reserve space in the cache
                     cacheHandler.registerRequestedPortal(index)
@@ -387,22 +391,31 @@ const CellFrame = ({
                 break
 
             }
-        }
+            case 'retrieved':
+            case 'inserting': {
 
-    }, [frameState])
-
-
-    useEffect(()=>{
-
-        switch (frameState) {
-
-            case 'ready': { // no-op
+                setFrameState('ready')
 
                 break
+
             }
         }
 
     }, [frameState])
+
+
+    // useEffect(()=>{
+
+    //     switch (frameState) {
+
+    //         case 'ready': { // no-op
+
+    //             break
+    //         }
+
+    //     }
+
+    // }, [frameState])
 
     // with 'inserting' the content is still in cache
     // the content re-renders with 'ready' when the height/width have returned to normal after-cache
@@ -415,12 +428,12 @@ const CellFrame = ({
         data-scrollerid = { scrollerID } 
         data-index = { index } 
         data-instanceid = { instanceID } 
-        style = { styles }
+        style = { stylesRef.current }
 
     >
 
         { 
-            (!['inserting','ready'].includes(frameState))?
+            (frameState != 'ready')?
                 placeholderRef.current:
                 <OutPortal node = { portalNodeRef.current }/>
         }
