@@ -141,16 +141,24 @@ const Cradle = ({
     const ViewportContextPropertiesRef = useRef(null)
     ViewportContextPropertiesRef.current = ViewportContextProperties // for closures
 
+    const getViewportDimensions = () => {
+        const viewportElement = ViewportContextProperties.elementRef.current
+        return {
+            width:viewportElement.offsetWidth,
+            height:viewportElement.offsetHeight
+        }
+    }
+
     const { viewportDimensions } = ViewportContextProperties
-    const { height:viewportheight,width:viewportwidth } = viewportDimensions
+    const { height:viewportheight,width:viewportwidth } = getViewportDimensions() // viewportDimensions
 
     // state
     const [cradleState, setCradleState] = useState('setup')
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    console.log('==> cradleState','-'+scrollerID+'-',
-        '~'+scrollerProperties?.cellFrameDataRef.current.index+'~', cradleState)
+    // console.log('==> cradleState','-'+scrollerID+'-',
+    //     '~'+scrollerProperties?.cellFrameDataRef.current.index+'~', cradleState)
 
     // flags
     const isMountedRef = useRef(true)
@@ -180,8 +188,6 @@ const Cradle = ({
     // ------------------------[ calculated properties ]------------------------
     // configuration calculations
 
-    console.log('viewportwidth, viewportheight',viewportwidth, viewportheight )
-
     // crosscount (also calculated by Scrollblock for deriving Scrollblock length)
     const crosscount = useMemo(() => { // the number of cells crossing orientation
 
@@ -190,7 +196,7 @@ const Cradle = ({
                 viewportwidth:
                 viewportheight
 
-        console.log('viewportcrosslength', viewportcrosslength)
+        // console.log('viewportcrosslength', viewportcrosslength)
         if (viewportcrosslength == 0) {
 
             return 0
@@ -222,7 +228,7 @@ const Cradle = ({
         viewportwidth,
     ])
 
-    console.log('crosscount', crosscount)
+    // console.log('crosscount', crosscount)
 
     // various row counts
     const [
@@ -447,6 +453,8 @@ const Cradle = ({
         serviceHandler,
         stylesHandler,
     } = handlersRef.current
+
+    // console.log('viewportwidth, viewportheight',viewportwidth, viewportheight )
 
     // =======================[ INTERCEPT CACHING STATE CHANGE ]=========================
 
@@ -1148,10 +1156,10 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
-                console.log('cradleContent TAIL length', 
-                    '-'+scrollerID+'-',
-                    '~'+scrollerProperties?.cellFrameDataRef.current.index+'~',
-                    cradleContent.tailDisplayComponents.length)
+                // console.log('cradleContent TAIL length', 
+                //     '-'+scrollerID+'-',
+                //     '~'+scrollerProperties?.cellFrameDataRef.current.index+'~',
+                //     cradleContent.tailDisplayComponents.length)
 
                 // update virtual DOM
                 const { layout } = cradleInheritedPropertiesRef.current
