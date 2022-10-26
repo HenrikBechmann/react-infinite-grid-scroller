@@ -107,6 +107,7 @@ export default class ContentHandler {
         const viewportElement = ViewportContextProperties.elementRef.current
 
         const requestedAxisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
+        // console.log('setCradleContent 1: requestedAxisReferenceIndex',requestedAxisReferenceIndex)
         let { targetAxisViewportPixelOffset } = cradlePositionData
 
         const {
@@ -123,8 +124,13 @@ export default class ContentHandler {
 
         const {crosscount, listsize, listRowcount} = cradleInternalProperties
 
+        // if (crosscount == 0) return // TODO check validity
+
         let workingRequestAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
         workingRequestAxisReferenceIndex -= (workingRequestAxisReferenceIndex % crosscount)
+
+        // console.log('setCradleContent 2: workingRequestAxisReferenceIndex, requestedAxisReferenceIndex, listsize, crosscount, cradlePositionData',
+        //     workingRequestAxisReferenceIndex, requestedAxisReferenceIndex, listsize, crosscount, cradlePositionData)
 
         // reposition at row boundary
         if ([
@@ -222,6 +228,9 @@ export default class ContentHandler {
 
         })
 
+        // console.log('setCradleContent 3: cradleState, cradleContentCount, newcontentlist, deleteditems, targetAxisReferenceIndex',
+        //     cradleState, cradleContentCount, newcontentlist, deleteditems, targetAxisReferenceIndex)
+
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
             contentlist:newcontentlist,
@@ -249,6 +258,7 @@ export default class ContentHandler {
 
         //  ----------------------[ 4. set CSS ]-----------------------
 
+        // console.log('setCradleContent 4: scrollblockViewportPixelOffset',scrollblockViewportPixelOffset)
         cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset // - scrollblockOffset
         // avoid bogus call to updateCradleContent
         scrollHandler.resetScrollData(scrollblockViewportPixelOffset) // - scrollblockOffset) 

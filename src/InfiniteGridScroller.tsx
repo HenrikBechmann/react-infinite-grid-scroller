@@ -354,6 +354,7 @@ const InfiniteGridScroller = (props) => {
                     placeholder = { placeholder }
                     runwaySize = { runwaySize }
                     triggerlineOffset = { triggerlineOffset }
+                    scrollerProperties = { scrollerProperties }
 
                     cacheHandler = { cacheHandlerRef.current }
                     usePlaceholder = { usePlaceholder }

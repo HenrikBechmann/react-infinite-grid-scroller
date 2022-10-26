@@ -113,6 +113,7 @@ const Cradle = ({
         IDLECALLBACK_TIMEOUT,
         MAX_CACHE_OVER_RUN,
         TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
+        scrollerProperties,
 
     }) => {
 
@@ -148,7 +149,8 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // console.log('==> cradleState','-'+scrollerID+'-',cradleState)
+    console.log('==> cradleState','-'+scrollerID+'-',
+        '~'+scrollerProperties?.cellFrameDataRef.current.index+'~', cradleState)
 
     // flags
     const isMountedRef = useRef(true)
@@ -178,6 +180,8 @@ const Cradle = ({
     // ------------------------[ calculated properties ]------------------------
     // configuration calculations
 
+    console.log('viewportwidth, viewportheight',viewportwidth, viewportheight )
+
     // crosscount (also calculated by Scrollblock for deriving Scrollblock length)
     const crosscount = useMemo(() => { // the number of cells crossing orientation
 
@@ -186,6 +190,7 @@ const Cradle = ({
                 viewportwidth:
                 viewportheight
 
+        console.log('viewportcrosslength', viewportcrosslength)
         if (viewportcrosslength == 0) {
 
             return 0
@@ -216,6 +221,8 @@ const Cradle = ({
         viewportheight, 
         viewportwidth,
     ])
+
+    console.log('crosscount', crosscount)
 
     // various row counts
     const [
@@ -1015,13 +1022,14 @@ const Cradle = ({
 
                     const { cradlePositionData } = layoutHandler
 
+                    // console.log('Cradle: parentingtransition: cradlePositionData',cradlePositionData)
                     // reset scroll position to previous value
-                    if (cradlePositionData.blockScrollPos !== null) {
+                    const blockScrollPos = cradlePositionData.blockScrollPos
+                    if (blockScrollPos !== null) {
 
                         const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
-                        viewportElement[cradlePositionData.blockScrollProperty] = 
-                            cradlePositionData.blockScrollPos
+                        viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
 
                     }
 
@@ -1139,6 +1147,11 @@ const Cradle = ({
                 // prepare the cycle for preparerender
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
+
+                console.log('cradleContent TAIL length', 
+                    '-'+scrollerID+'-',
+                    '~'+scrollerProperties?.cellFrameDataRef.current.index+'~',
+                    cradleContent.tailDisplayComponents.length)
 
                 // update virtual DOM
                 const { layout } = cradleInheritedPropertiesRef.current
