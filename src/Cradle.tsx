@@ -141,6 +141,14 @@ const Cradle = ({
     const ViewportContextPropertiesRef = useRef(null)
     ViewportContextPropertiesRef.current = ViewportContextProperties // for closures
 
+    // flags
+    const isMountedRef = useRef(true)
+    const isCachedRef = useRef(false)
+    const wasCachedRef = useRef(false)
+    const parentingTransitionRequiredRef = useRef(false)
+    const hasBeenRenderedRef = useRef(false)
+
+    //  viewport dimensions and cached state
     const getViewportDimensions = () => {
         const viewportElement = ViewportContextProperties.elementRef.current
         return {
@@ -149,23 +157,28 @@ const Cradle = ({
         }
     }
 
-    const { viewportDimensions } = ViewportContextProperties
+    const { viewportDimensions } = ViewportContextProperties // for scrollTracker
     const { height:viewportheight,width:viewportwidth } = getViewportDimensions() // viewportDimensions
 
-    // state
+    // zero width and height means the component must be in portal (cache) state
+    const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) 
+
+    const isCacheChange = (isInPortal != isCachedRef.current)
+
+    if (isCacheChange) {
+        wasCachedRef.current = isCachedRef.current
+        isCachedRef.current = isInPortal
+    }
+
+    // console.log('immediate width/height', viewportwidth,viewportheight)
+
+    // cradle state
     const [cradleState, setCradleState] = useState('setup')
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
     // console.log('==> cradleState','-'+scrollerID+'-',
     //     '~'+scrollerProperties?.cellFrameDataRef.current.index+'~', cradleState)
-
-    // flags
-    const isMountedRef = useRef(true)
-    const isCachedRef = useRef(false)
-    const wasCachedRef = useRef(false)
-    const parentingTransitionRequiredRef = useRef(false)
-    const hasBeenRenderedRef = useRef(false)
 
     // cradle scaffold element refs
     const headCradleElementRef = useRef(null)
@@ -191,17 +204,19 @@ const Cradle = ({
     // crosscount (also calculated by Scrollblock for deriving Scrollblock length)
     const crosscount = useMemo(() => { // the number of cells crossing orientation
 
+        if (isCachedRef.current) return 0
+
         const viewportcrosslength = 
             (orientation == 'vertical')?
                 viewportwidth:
                 viewportheight
 
         // console.log('viewportcrosslength', viewportcrosslength)
-        if (viewportcrosslength == 0) {
+        // if (viewportcrosslength == 0) {
 
-            return 0
+        //     return 0
 
-        }
+        // }
 
         // cross length of viewport (gap to match crossLength)
         const viewportcrosslengthforcalc = viewportcrosslength - (padding * 2) + gap 
@@ -471,15 +486,15 @@ const Cradle = ({
     The restore scrollPos action must be the first priority to hide these scrollPos adjustments
     from the user.
 */
-    // zero width and height means the component must be in portal (cache) state
-    const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) 
+    // // zero width and height means the component must be in portal (cache) state
+    // const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) 
 
-    const isCacheChange = (isInPortal != isCachedRef.current)
+    // const isCacheChange = (isInPortal != isCachedRef.current)
 
-    if (isCacheChange) {
-        wasCachedRef.current = isCachedRef.current
-        isCachedRef.current = isInPortal
-    }
+    // if (isCacheChange) {
+    //     wasCachedRef.current = isCachedRef.current
+    //     isCachedRef.current = isInPortal
+    // }
 
     const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
 
@@ -532,7 +547,7 @@ const Cradle = ({
 
         if (isCachedRef.current && !wasCachedRef.current) { // into cache
 
-            setCradleState('cachechange')
+            setCradleState('incache')
 
         } else if (!isCachedRef.current && wasCachedRef.current) { // out of cache
 
@@ -950,7 +965,7 @@ const Cradle = ({
 
                 if (cradleInheritedPropertiesRef.current.cache != 'preload') {
                     if (isCachedRef.current) {
-                        setCradleState('cachechange')
+                        setCradleState('incache')
                     } else {
                         setCradleState('firstrender') // load grid
                     }
@@ -994,7 +1009,7 @@ const Cradle = ({
 
                     } else {
 
-                        setCradleState('cachechange')
+                        setCradleState('incache')
 
                     }
 
@@ -1005,7 +1020,7 @@ const Cradle = ({
                 break
             }
 
-            case 'cachechange': {
+            case 'incache': {
 
                 if (!wasCachedRef.current && !isCachedRef.current){
 
@@ -1108,6 +1123,11 @@ const Cradle = ({
             case 'pivot':
             case 'reconfigure':
             case 'reload': {
+
+                if (isCachedRef.current) {
+                    setCradleState('incache')
+                    break
+                }
 
                 const cradleContent = contentHandler.content
 

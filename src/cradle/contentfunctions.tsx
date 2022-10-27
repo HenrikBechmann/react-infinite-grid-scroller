@@ -716,7 +716,7 @@ export const allocateContentList = (
 
     } else { // defensive; shouldn't happen
 
-        console.warn('FAILURE TO REGISTER TRIGGERCELL: \n',
+        console.log('FAILURE TO REGISTER TRIGGERCELL: \n',
             'triggercellComponent, triggercellIndex, targetTriggercellIndex, triggercellComponent?.props.isTriggecell\n', 
             triggercellComponent, triggercellIndex, targetTriggercellIndex, triggercellComponent?.props.isTriggecell, 
                 contentlist, axisReferenceIndex)
