@@ -137,6 +137,7 @@ export default class InterruptHandler {
                 }
                 const { listRowcount, crosscount } = this.cradleParameters.cradleInternalPropertiesRef.current
                 // update dimensions with cradle intersection. See also dimension update in viewport.tsx for resize
+                // and getViewportDimensions in Cradle for width/height
                 const rect = viewportElement.getBoundingClientRect()
                 const {top, right, bottom, left} = rect
                 const width = right - left, height = bottom - top
