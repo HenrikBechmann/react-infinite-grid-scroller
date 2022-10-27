@@ -48,6 +48,7 @@ export default class LayoutHandler {
         // progression of references: implied->target
         this.cradlePositionData.targetAxisReferenceIndex = 
             (Math.min(startingIndex,(listsize - 1)) || 0)
+        // console.log('layouthandler init: cradlePositionData',this.cradlePositionData)
         this.cradlePositionData.targetAxisViewportPixelOffset = 0
 
     }
@@ -201,3 +202,4 @@ export default class LayoutHandler {
     public elements
 
 }
+

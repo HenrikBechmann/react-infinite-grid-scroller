@@ -148,12 +148,6 @@ const CellFrame = ({
     // refresh content if itemID changes
     useEffect(()=>{
 
-        // if (latestItemIDRef.current == itemID) return
-
-        // console.log('calling getusercontent','-'+cellFrameDataRef.current.index + '-','_'+instanceID+'_',itemID, latestItemIDRef.current)
-
-        // latestItemIDRef.current = itemID
-
         if (isMountedRef.current) setFrameState('getusercontent')
 
     },[itemID])
@@ -386,11 +380,6 @@ const CellFrame = ({
                 break
             }
 
-            case 'waiting': {
-
-                break
-
-            }
             case 'retrieved':
             case 'inserting': {
 
@@ -402,20 +391,6 @@ const CellFrame = ({
         }
 
     }, [frameState])
-
-
-    // useEffect(()=>{
-
-    //     switch (frameState) {
-
-    //         case 'ready': { // no-op
-
-    //             break
-    //         }
-
-    //     }
-
-    // }, [frameState])
 
     // with 'inserting' the content is still in cache
     // the content re-renders with 'ready' when the height/width have returned to normal after-cache

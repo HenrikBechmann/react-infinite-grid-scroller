@@ -148,11 +148,11 @@ const InfiniteGridScroller = (props) => {
     cellWidth = +cellWidth
     cellMinHeight = +cellMinHeight
     cellMinWidth = +cellMinWidth
-    estimatedListSize = +estimatedListSize
     gap = +gap
     padding = +padding
-    runwaySize = +runwaySize
     startingIndex = +startingIndex
+    estimatedListSize = +estimatedListSize
+    runwaySize = +runwaySize
     cacheMax = +cacheMax
 
     const verifiedValues = {
@@ -354,6 +354,7 @@ const InfiniteGridScroller = (props) => {
                     placeholder = { placeholder }
                     runwaySize = { runwaySize }
                     triggerlineOffset = { triggerlineOffset }
+                    scrollerProperties = { scrollerProperties }
 
                     cacheHandler = { cacheHandlerRef.current }
                     usePlaceholder = { usePlaceholder }

@@ -34,6 +34,9 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     }) => {
 
+    // console.log('getContentListRequirements: targetAxisReferenceIndex, baseRowLength',
+    //     targetAxisReferenceIndex, baseRowLength)
+
     const { 
         padding,
     } = cradleInheritedProperties
@@ -715,7 +718,8 @@ export const allocateContentList = (
 
         console.log('FAILURE TO REGISTER TRIGGERCELL: \n',
             'triggercellComponent, triggercellIndex, targetTriggercellIndex, triggercellComponent?.props.isTriggecell\n', 
-            triggercellComponent, triggercellIndex, targetTriggercellIndex, triggercellComponent?.props.isTriggecell)
+            triggercellComponent, triggercellIndex, targetTriggercellIndex, triggercellComponent?.props.isTriggecell, 
+                contentlist, axisReferenceIndex)
 
     }
 
