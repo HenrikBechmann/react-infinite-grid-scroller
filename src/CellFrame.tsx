@@ -241,6 +241,10 @@ const CellFrame = ({
                 break
             }
 
+            case 'working': {
+                setFrameState('preparing') // delay paint while working
+            }
+
             case 'getusercontent': {
 
                 const itemID = itemIDRef.current
@@ -408,9 +412,9 @@ const CellFrame = ({
     >
 
         { 
-            (frameState != 'ready')?
+           (frameState != 'setup') && ((frameState != 'ready')?
                 placeholderRef.current:
-                <OutPortal node = { portalNodeRef.current }/>
+                <OutPortal node = { portalNodeRef.current }/>)
         }
         {
             isTriggercell?
