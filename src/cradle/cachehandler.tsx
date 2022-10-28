@@ -126,7 +126,7 @@ export class CacheHandler {
 
     }
 
-    // set state of the PortalList component of the scroller to trigger render
+    // set state of the PortalPartition component of the scroller to trigger render
     renderPortalList = () => {
 
         if (this.cacheProps.modified) {
@@ -922,7 +922,7 @@ const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWi
 // ========================[ Utility component ]==============================
 
 // portal list component for rapid relisting of updates, using external callback for set state
-export const PortalList = ({ cacheProps }) => {
+export const PortalPartition = ({ cacheProps }) => {
 
     const [portalListCounter, setPortalListCounter] = useState(0)
 
@@ -944,6 +944,41 @@ export const PortalList = ({ cacheProps }) => {
             isMountedRef.current && setPortalListCounter(++counterRef.current) // force render
 
         }
+
+        return () => {
+
+            isMountedRef.current = false
+
+        }
+
+    },[]) 
+
+    return portalArrayRef.current
+
+}
+
+export const CachePartitions = ({ cacheProps }) => {
+
+    const [portalListCounter, setPortalListCounter] = useState(0)
+
+    const counterRef = useRef(null)
+    counterRef.current = portalListCounter
+
+    const isMountedRef = useRef(true)
+
+    const portalArrayRef = useRef(null)
+
+    useEffect(()=>{
+
+        isMountedRef.current = true
+
+        // cacheProps.setListState = ()=>{
+
+        //     portalArrayRef.current = cacheProps.portalList
+
+        //     isMountedRef.current && setPortalListCounter(++counterRef.current) // force render
+
+        // }
 
         return () => {
 
