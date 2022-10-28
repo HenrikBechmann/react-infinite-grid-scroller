@@ -96,6 +96,7 @@ This is a random screenshare, showing async content update while still scrolling
 |usePlaceholder|boolean: default = true|allows suppression of use of default or custom placeholder. Placeholders show messages to the user while user components are fetched, and report errors|
 |[_**OBJECTS**_]|
 |styles|object: collection of styles for scroller components|optional. These should be "passive" styles like backgroundColor. See below for details|
+|placeholderMessages|object: messages presented by the placeholder|optional, to replace default messages. See below for details|
 |callbacks|object: collection of functions for feedback, and interactions with scroller components|optional. See below for details|
 |technical|object: collection of values used to control system behaviour|use with caution. optional. See below for details|
 |scrollerProperties|requested by user components by being set to null by user, instantiated with an object by system|required for nested RIGS; available for all user components. Contains key scroller settings. See below for details|
@@ -122,6 +123,8 @@ styles = {
   scrolltracker: {},
   placeholderframe: {},
   placeholderliner: {},
+  placeholdererrorframe: {},
+  placeholdererrorliner: {},
 }
 ~~~
 
@@ -130,6 +133,20 @@ You may want to add `overscrollBehavior:'none'` to the viewport styles to preven
 The scrolltracker is the small rectangular component that appears at the top left of the viewport when the list is being rapidly repositioned. The scrolltracker shows the user the current virtual index and total listsize during the repositioning process.
 
 The placeholder styles are applied only to the default placeholder.
+
+### `placeholderMessages` object
+
+Replace any of the default messages used by the placeholder.
+
+~~~typescript
+const placeholderMessages = {
+    loading:'(loading...)',
+    retrieving:'(retrieving from cache)',
+    null:'end of list', // is returned with itemExceptionCallback
+    undefined:'host returned "undefined"', // displayed, and returned with itemExceptionCallback
+    invalid:'invalid React element', // displayed, and returned with itemExceptionCallback
+}
+~~~
 
 ### `callbacks` object
 
