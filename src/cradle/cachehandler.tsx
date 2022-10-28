@@ -57,6 +57,7 @@ export class CacheHandler {
         this.cacheProps.scrollerID = scrollerID
         this.setListsize = setListsize // passed from infinitegridscroller setListsize(listsize)
         this.listsizeRef = listsizeRef
+
         this.cacheProps.partitionMap.set(0,
             <CachePartition key = {0} cacheProps = {this.cacheProps} />)
         this.cacheProps.partitionList = Array.from(this.cacheProps.partitionMap)
@@ -72,10 +73,9 @@ export class CacheHandler {
         requestedSet:new Set(), // requestedSet of indexes
         portalMap:new Map(), // index => InPortal
         indexToItemIDMap:new Map(),
-        partitionMap: new Map(),
-
         portalList:null,
 
+        partitionMap: new Map(),
         partitionList:null,
 
         scrollerID:null
@@ -83,7 +83,7 @@ export class CacheHandler {
 
     cradleParameters
 
-    CACHE_PARTITION_SIZE,
+    CACHE_PARTITION_SIZE
 
     portalHoldList
 
@@ -773,6 +773,7 @@ export class CacheHandler {
             itemID,
             scrollerProperties,
             component,
+            partitionID:null,
         }
 
         this.cacheProps.metadataMap.set(itemID, portalMetadata)
