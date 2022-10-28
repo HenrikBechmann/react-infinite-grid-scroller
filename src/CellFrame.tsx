@@ -47,6 +47,14 @@ import Placeholder from './cellframe/Placeholder' // default
 
 import { CradleContext } from './Cradle'
 
+const defaultPlaceholderMessages = {
+    loading:'(loading...)',
+    retrieving:'(retrieving from cache)',
+    null:'end of list',
+    undefined:'host returned "undefined"',
+    invalid:'invalid React element',
+}
+
 const CellFrame = ({
     orientation, 
     cellHeight, 
@@ -64,6 +72,9 @@ const CellFrame = ({
     isTriggercell,
     placeholderFrameStyles,
     placeholderLinerStyles,
+    placeholderErrorFrameStyles,
+    placeholderErrorLinerStyles,
+    placeholderMessages,
     usePlaceholder,
 }) => {
 
@@ -90,6 +101,15 @@ const CellFrame = ({
     // style change generates state refresh
     // const [styles,saveStyles] = useState({})
     const stylesRef = useRef({})
+
+    const placeholderMessagesRef = useRef(null)
+
+   placeholderMessagesRef.current = useMemo(() => {
+        const newMessages = {...defaultPlaceholderMessages,...placeholderMessages}
+        // console.log('defaultPlaceholderMessages, placeholderMessages, newMessages',
+            // defaultPlaceholderMessages, placeholderMessages, newMessages)
+        return newMessages
+    },[placeholderMessages])
 
     // processing state
     const [frameState, setFrameState] = useState('setup')
@@ -186,6 +206,8 @@ const CellFrame = ({
                     error = { errorRef.current }
                     userFrameStyles = { placeholderFrameStyles }
                     userLinerStyles = { placeholderLinerStyles }
+                    userErrorFrameStyles = { placeholderErrorFrameStyles }
+                    userErrorLinerStyles = { placeholderErrorLinerStyles }
                 />
 
         return placeholder
@@ -241,6 +263,10 @@ const CellFrame = ({
                 break
             }
 
+            case 'working': {
+                setFrameState('preparing') // delay paint while working
+            }
+
             case 'getusercontent': {
 
                 const itemID = itemIDRef.current
@@ -253,12 +279,13 @@ const CellFrame = ({
                 } = coreConfigRef.current
                 if (cached) {
 
-                    messageRef.current = '(retrieving from cache)'
+                    messageRef.current = placeholderMessagesRef.current.retrieving
 
                     if (isMountedRef.current) {
                         // get cache data
                         portalMetadataRef.current = cacheHandler.getPortal(itemID)
                         // get OutPortal node
+                        portalMetadataRef.current.scrollerProperties.cellFrameDataRef = cellFrameDataRef
                         portalNodeRef.current = portalMetadataRef.current.portalNode
                         setContainerStyles(
                             portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
@@ -271,7 +298,8 @@ const CellFrame = ({
 
                 } else {
 
-                    messageRef.current = '(loading...)'
+                    // console.log('placeholderMessagesRef', placeholderMessagesRef)
+                    messageRef.current = placeholderMessagesRef.current.loading
 
                     setFrameState('fetching')
 
@@ -290,7 +318,7 @@ const CellFrame = ({
 
                             if (usercontent === undefined) {
 
-                                error = new Error('host returned "undefined"')
+                                error = new Error(placeholderMessagesRef.current.undefined)
 
                             }
 
@@ -308,7 +336,7 @@ const CellFrame = ({
 
                                 returnvalue = usercontent
                                 usercontent = undefined
-                                error = new Error('invalid React element')
+                                error = new Error(placeholderMessagesRef.current.invalid)
                                 
                             }
 
@@ -336,7 +364,7 @@ const CellFrame = ({
                                 }
 
                                 portalMetadataRef.current = 
-                                    cacheHandler.createPortal(content, index, itemID)
+                                    cacheHandler.createPortal(content, index, itemID, scrollerProperties)
                                 portalNodeRef.current = portalMetadataRef.current.portalNode
                                 setContainerStyles(
                                     portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
@@ -352,7 +380,8 @@ const CellFrame = ({
                                     // truncate listsize at this index
                                     itemExceptionCallback && 
                                         itemExceptionCallback(
-                                            index, itemID, returnvalue, 'cellFrame', new Error('end of list')
+                                            index, itemID, returnvalue, 'cellFrame', 
+                                                new Error(placeholderMessagesRef.current.null)
                                         )
                                     nullItemSetMaxListsize(index)
 
@@ -408,9 +437,9 @@ const CellFrame = ({
     >
 
         { 
-            (frameState != 'ready')?
+           (frameState != 'setup') && ((frameState != 'ready')?
                 placeholderRef.current:
-                <OutPortal node = { portalNodeRef.current }/>
+                <OutPortal node = { portalNodeRef.current }/>)
         }
         {
             isTriggercell?

@@ -96,6 +96,7 @@ const Cradle = ({
         startingIndex, 
         getItem, 
         placeholder, 
+        placeholderMessages,
         userCallbacks,
         styles,
         triggerlineOffset,
@@ -197,6 +198,8 @@ const Cradle = ({
             triggercellTriggerlineTailRef:triggercellTriggerlineTailElementRef,
         }
     )
+
+    // console.log('Cradle scrollerProperties.cellFrameDataRef',scrollerProperties?.cellFrameDataRef)
 
     // ------------------------[ calculated properties ]------------------------
     // configuration calculations
@@ -380,6 +383,7 @@ const Cradle = ({
         startingIndex, 
         getItem, 
         placeholder, 
+        placeholderMessages,
         triggerlineOffset,
         scrollerID,
         usePlaceholder,
@@ -547,7 +551,7 @@ const Cradle = ({
 
         if (isCachedRef.current && !wasCachedRef.current) { // into cache
 
-            setCradleState('incache')
+            setCradleState('cached')
 
         } else if (!isCachedRef.current && wasCachedRef.current) { // out of cache
 
@@ -965,7 +969,7 @@ const Cradle = ({
 
                 if (cradleInheritedPropertiesRef.current.cache != 'preload') {
                     if (isCachedRef.current) {
-                        setCradleState('incache')
+                        setCradleState('cached')
                     } else {
                         setCradleState('firstrender') // load grid
                     }
@@ -1009,7 +1013,7 @@ const Cradle = ({
 
                     } else {
 
-                        setCradleState('incache')
+                        setCradleState('cached')
 
                     }
 
@@ -1020,7 +1024,7 @@ const Cradle = ({
                 break
             }
 
-            case 'incache': {
+            case 'cached': {
 
                 if (!wasCachedRef.current && !isCachedRef.current){
 
@@ -1125,7 +1129,7 @@ const Cradle = ({
             case 'reload': {
 
                 if (isCachedRef.current) {
-                    setCradleState('incache')
+                    setCradleState('cached')
                     break
                 }
 
