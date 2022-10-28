@@ -600,6 +600,7 @@ export const getCellFrameComponentList = ({
         workingContentList:contentlist,
         instanceIdCounterRef,
         styles,
+        placeholderMessages,
     }) => {
 
     const localContentlist = [...contentlist]
@@ -623,6 +624,9 @@ export const getCellFrameComponentList = ({
                         cacheHandler,
                         placeholderFrameStyles:styles.placeholderframe,
                         placeholderLinerStyles:styles.placeholderliner,
+                        placeholderErrorFrameStyles:styles.placeholdererrorframe,
+                        placeholderErrorLinerStyles:styles.placeholdererrorliner,
+                        placeholderMessages,
                     }
                 )
             )
@@ -649,6 +653,9 @@ export const getCellFrameComponentList = ({
                         cacheHandler,
                         placeholderFrameStyles:styles.placeholderframe,
                         placeholderLinerStyles:styles.placeholderliner,
+                        placeholderErrorFrameStyles:{},
+                        placeholderErrorLinerStyles:{},
+                        placeholderMessages:{},
                     }
                 )
             )
@@ -751,6 +758,9 @@ const createCellFrame = ({
     cacheHandler,
     placeholderFrameStyles,
     placeholderLinerStyles,
+    placeholderErrorFrameStyles,
+    placeholderErrorLinerStyles,
+    placeholderMessages,
 }) => {
     const instanceID = instanceIdCounterRef.current++
 
@@ -794,6 +804,9 @@ const createCellFrame = ({
         isTriggercell = { false }
         placeholderFrameStyles = { placeholderFrameStyles }
         placeholderLinerStyles = { placeholderLinerStyles }
+        placeholderErrorFrameStyles = { placeholderErrorFrameStyles }
+        placeholderErrorLinerStyles = { placeholderErrorLinerStyles }
+        placeholderMessages = { placeholderMessages }
         usePlaceholder = { usePlaceholder }
     />
 

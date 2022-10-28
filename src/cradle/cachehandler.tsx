@@ -736,7 +736,7 @@ export class CacheHandler {
     }
 
      // create new portal
-    createPortal(component, index, itemID, isPreload = false) {
+    createPortal(component, index, itemID, scrollerProperties, isPreload = false) {
 
         this.removeRequestedPortal(index)
 
@@ -761,6 +761,7 @@ export class CacheHandler {
             },
             index,
             itemID,
+            scrollerProperties,
             component,
         }
 
@@ -823,7 +824,7 @@ export class CacheHandler {
             }
 
             const portalData = 
-                this.createPortal(content, index, itemID, true) // true = isPreload
+                this.createPortal(content, index, itemID, scrollerProperties, true) // true = isPreload
             // make available to user content
             scrollerProperties.isReparentingRef = portalData.isReparentingRef
 
