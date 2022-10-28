@@ -47,6 +47,7 @@ import React, {useState, useEffect, useRef} from 'react'
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
 let globalItemID = 0
+let globalPartitionID = 0
 
 // global scroller data, organized by session scrollerID
 // the cache itself is maintained in the root infinitegridscroller component
@@ -56,6 +57,9 @@ export class CacheHandler {
         this.cacheProps.scrollerID = scrollerID
         this.setListsize = setListsize // passed from infinitegridscroller setListsize(listsize)
         this.listsizeRef = listsizeRef
+        this.cacheProps.partitionMap.set(0,
+            <CachePartition key = {0} cacheProps = {this.cacheProps} />)
+        this.cacheProps.partitionList = Array.from(this.cacheProps.partitionMap)
     }
 
     cacheProps = {
@@ -67,8 +71,11 @@ export class CacheHandler {
         requestedSet:new Set(), // requestedSet of indexes
         portalMap:new Map(), // index => InPortal
         indexToItemIDMap:new Map(),
+        partitionMap: new Map(),
 
         portalList:null,
+
+        partitionList:null,
 
         scrollerID:null
     }
@@ -126,7 +133,7 @@ export class CacheHandler {
 
     }
 
-    // set state of the PortalPartition component of the scroller to trigger render
+    // set state of the CachePartition component of the scroller to trigger render
     renderPortalList = () => {
 
         if (this.cacheProps.modified) {
@@ -168,13 +175,13 @@ export class CacheHandler {
 
         const max = Math.max(modelLength, cacheMax)
 
-        const portalIndexList = this.cacheProps.indexToItemIDMap,
+        const portalIndexMap = this.cacheProps.indexToItemIDMap,
             requestedSet = this.cacheProps.requestedSet
 
-        if ((portalIndexList.size + requestedSet.size) <= max) return false
+        if ((portalIndexMap.size + requestedSet.size) <= max) return false
 
         // sort the map keys
-        const mapkeyslist = Array.from(portalIndexList.keys()),
+        const mapkeyslist = Array.from(portalIndexMap.keys()),
             requestedkeys = Array.from(requestedSet.keys())
 
         const mapkeys = [...mapkeyslist,...requestedkeys]
@@ -922,7 +929,7 @@ const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWi
 // ========================[ Utility component ]==============================
 
 // portal list component for rapid relisting of updates, using external callback for set state
-export const PortalPartition = ({ cacheProps }) => {
+export const CachePartition = ({ cacheProps }) => {
 
     const [portalListCounter, setPortalListCounter] = useState(0)
 
@@ -957,28 +964,28 @@ export const PortalPartition = ({ cacheProps }) => {
 
 }
 
-export const CachePartitions = ({ cacheProps }) => {
+export const PortalCache = ({ cacheProps }) => {
 
-    const [portalListCounter, setPortalListCounter] = useState(0)
+    const [portalCacheCounter, setPortalCacheCounter] = useState(0)
 
     const counterRef = useRef(null)
-    counterRef.current = portalListCounter
+    counterRef.current = portalCacheCounter
 
     const isMountedRef = useRef(true)
 
-    const portalArrayRef = useRef(null)
+    const partitionArrayRef = useRef(cacheProps.partitionList)
 
     useEffect(()=>{
 
         isMountedRef.current = true
+        partitionArrayRef.current = cacheProps.partitionList
+        cacheProps.setPortalCacheState = ()=>{
 
-        // cacheProps.setListState = ()=>{
+            partitionArrayRef.current = cacheProps.partitionList
 
-        //     portalArrayRef.current = cacheProps.portalList
+            isMountedRef.current && setPortalCacheCounter(++counterRef.current) // force render
 
-        //     isMountedRef.current && setPortalListCounter(++counterRef.current) // force render
-
-        // }
+        }
 
         return () => {
 
@@ -988,6 +995,6 @@ export const CachePartitions = ({ cacheProps }) => {
 
     },[]) 
 
-    return portalArrayRef.current
+    return partitionArrayRef.current
 
 }
