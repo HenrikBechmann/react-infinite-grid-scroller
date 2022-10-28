@@ -11,7 +11,16 @@
 
 import React, {useRef } from 'react'
 
-const Placeholder = ({index, listsize, message, error, userFrameStyles, userLinerStyles}) => {
+const Placeholder = ({
+    index, 
+    listsize, 
+    message, 
+    error, 
+    userFrameStyles, 
+    userLinerStyles,
+    userErrorFrameStyles, 
+    userErrorLinerStyles
+}) => {
 
     const frameStylesRef = useRef({
         border:'2px solid black',

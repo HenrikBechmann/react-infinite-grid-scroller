@@ -101,6 +101,7 @@ const InfiniteGridScroller = (props) => {
         styles = {}, // optional. passive style over-rides (eg. color, opacity); has 
             // properties viewport, scrollblock, cradle, scrolltracker, placeholderframe, or
             // placeholderliner. Do not make structural changes!
+        placeholderMessages = {},
         callbacks = {}, // optional. closures to get direct information streams of some component utilites
             // can contain functionsCallback, which provides access to internal scroller functions 
             //(mostly cache management)
@@ -221,6 +222,7 @@ const InfiniteGridScroller = (props) => {
     // system
     const stylesRef = useRef(styles)
     const callbacksRef = useRef(callbacks)
+    const placeholderMessagesRef = useRef(placeholderMessages)
 
     let {
 
@@ -271,6 +273,9 @@ const InfiniteGridScroller = (props) => {
     }
     if (!compareProps(callbacks, callbacksRef.current)) {
         callbacksRef.current = callbacks
+    }
+    if (!compareProps(placeholderMessages, placeholderMessagesRef.current)) {
+        placeholderMessagesRef.current = callbacks
     }
 
     // -------------------------[ Initialization ]-------------------------------
@@ -352,6 +357,7 @@ const InfiniteGridScroller = (props) => {
                     startingIndex = { startingIndex }
                     getItem = { getItem }
                     placeholder = { placeholder }
+                    placeholderMessages = { placeholderMessagesRef.current }
                     runwaySize = { runwaySize }
                     triggerlineOffset = { triggerlineOffset }
                     scrollerProperties = { scrollerProperties }

@@ -120,6 +120,7 @@ export default class ContentHandler {
             scrollerID,
             styles,
             layout,
+            placeholderMessages,
         } = cradleInheritedProperties
 
         const {crosscount, listsize, listRowcount} = cradleInternalProperties
@@ -225,6 +226,7 @@ export default class ContentHandler {
             workingContentList,
             instanceIdCounterRef:this.instanceIdCounterRef,
             styles,
+            placeholderMessages,
 
         })
 
@@ -344,6 +346,7 @@ export default class ContentHandler {
             orientation, 
             cache,
             styles,
+            placeholderMessages,
         } = cradleInheritedProperties
 
         const { 
@@ -462,6 +465,7 @@ export default class ContentHandler {
                 cradleReferenceIndex:oldCradleReferenceIndex,
                 instanceIdCounterRef:this.instanceIdCounterRef,
                 styles,
+                placeholderMessages,
             })
 
         } else {

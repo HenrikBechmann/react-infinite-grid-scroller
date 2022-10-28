@@ -96,6 +96,7 @@ const Cradle = ({
         startingIndex, 
         getItem, 
         placeholder, 
+        placeholderMessages,
         userCallbacks,
         styles,
         triggerlineOffset,
@@ -197,6 +198,8 @@ const Cradle = ({
             triggercellTriggerlineTailRef:triggercellTriggerlineTailElementRef,
         }
     )
+
+    // console.log('Cradle scrollerProperties.cellFrameDataRef',scrollerProperties?.cellFrameDataRef)
 
     // ------------------------[ calculated properties ]------------------------
     // configuration calculations
@@ -380,6 +383,7 @@ const Cradle = ({
         startingIndex, 
         getItem, 
         placeholder, 
+        placeholderMessages,
         triggerlineOffset,
         scrollerID,
         usePlaceholder,
