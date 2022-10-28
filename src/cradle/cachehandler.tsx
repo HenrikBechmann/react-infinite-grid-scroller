@@ -53,13 +53,14 @@ let globalPartitionID = 0
 // the cache itself is maintained in the root infinitegridscroller component
 export class CacheHandler {
 
-    constructor(scrollerID, setListsize, listsizeRef) {
+    constructor(scrollerID, setListsize, listsizeRef, CACHE_PARTITION_SIZE) {
         this.cacheProps.scrollerID = scrollerID
         this.setListsize = setListsize // passed from infinitegridscroller setListsize(listsize)
         this.listsizeRef = listsizeRef
         this.cacheProps.partitionMap.set(0,
             <CachePartition key = {0} cacheProps = {this.cacheProps} />)
         this.cacheProps.partitionList = Array.from(this.cacheProps.partitionMap)
+        this.CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE
     }
 
     cacheProps = {
@@ -81,6 +82,8 @@ export class CacheHandler {
     }
 
     cradleParameters
+
+    CACHE_PARTITION_SIZE,
 
     portalHoldList
 

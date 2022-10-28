@@ -235,6 +235,7 @@ const InfiniteGridScroller = (props) => {
         TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
         // ratios:
         MAX_CACHE_OVER_RUN, // max streaming over-run as ratio to cacheMax
+        CACHE_PARTITION_SIZE, 
 
     } = technical
 
@@ -244,6 +245,7 @@ const InfiniteGridScroller = (props) => {
     TIMEOUT_FOR_VARIABLE_MEASUREMENTS = TIMEOUT_FOR_VARIABLE_MEASUREMENTS ?? 100
     
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
+    CACHE_PARTITION_SIZE ?? 25
 
     if (typeof showAxis != 'boolean') showAxis = false
 
@@ -284,7 +286,8 @@ const InfiniteGridScroller = (props) => {
 
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
             scrollerSessionIDRef.current = globalScrollerID++
-            cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, setListsize, listsizeRef)
+            cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, setListsize, listsizeRef, 
+                CACHE_PARTITION_SIZE)
         }
 
     },[]);
