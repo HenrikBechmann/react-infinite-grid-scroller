@@ -993,7 +993,7 @@ export const CachePartition = ({ cacheProps }) => {
 
 }
 
-export const PortalCache = ({ cacheProps }) => {
+export const PortalMasterCache = ({ cacheProps }) => {
 
     const [portalCacheCounter, setPortalCacheCounter] = useState(0)
 

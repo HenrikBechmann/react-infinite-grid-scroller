@@ -52,7 +52,7 @@ import Scrollblock from './Scrollblock'
 import Cradle from './Cradle'
 
 // loaded here to minimize redundant renders in Cradle
-import { CacheHandler, CachePartition, PortalCache } from './cradle/cachehandler'
+import { CacheHandler, CachePartition, PortalMasterCache } from './cradle/cachehandler'
 
 // -------------------[ global session ID generator ]----------------
 
@@ -379,7 +379,7 @@ const InfiniteGridScroller = (props) => {
             </Scrollblock>
         </Viewport>}
         {(scrollerState != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
-            <PortalCache cacheProps = {cacheHandlerRef.current.cacheProps} />
+            <PortalMasterCache cacheProps = {cacheHandlerRef.current.cacheProps} />
         </div>}
     </ErrorBoundary>
 }
