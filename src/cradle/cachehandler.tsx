@@ -59,7 +59,7 @@ export class CacheHandler {
         this.listsizeRef = listsizeRef // current list size
 
         this.cacheProps.partitionMap.set(0,
-            <CachePartition key = {0} cacheProps = {this.cacheProps}/>)
+            <CachePartition key = {0} cacheProps = {this.cacheProps} partitionID = {0}/>)
         this.cacheProps.partitionRenderList = Array.from(this.cacheProps.partitionMap)
         this.cacheProps.partitionMetadataMap.set(0,
             {
@@ -975,7 +975,7 @@ const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWi
 // ========================[ Utility component ]==============================
 
 // portal list component for rapid relisting of updates, using external callback for set state
-export const CachePartition = ({ cacheProps }) => {
+export const CachePartition = ({ cacheProps, partitionID }) => {
 
     const [portalListCounter, setPortalListCounter] = useState(0)
 
@@ -1006,7 +1006,9 @@ export const CachePartition = ({ cacheProps }) => {
 
     },[]) 
 
-    return portalArrayRef.current
+    return <div key = {partitionID} data-type = 'cachepartition' data-partitionid = {partitionID}>
+        {portalArrayRef.current}
+    </div>
 
 }
 
