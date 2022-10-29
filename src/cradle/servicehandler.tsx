@@ -347,7 +347,7 @@ export default class ServiceHandler {
         const deletedItemIDToIndexMap = new Map() // index => itemID; orphaned index
         const deletedIndexToItemIDMap = new Map()
 
-        const portalItemHoldList = [] // hold deleted portals for deletion until after cradle synch
+        const portalItemHoldForDeleteList = [] // hold deleted portals for deletion until after cradle synch
 
         originalMap.forEach((originalItemID, originalItemIDIndex) => {
 
@@ -358,7 +358,7 @@ export default class ServiceHandler {
                 deletedItemIDToIndexMap.set(originalItemID, originalItemIDIndex)
 
                 const { partitionID } = metadataMap.get(originalItemID)
-                portalItemHoldList.push({itemID:originalItemID, partitionID})
+                portalItemHoldForDeleteList.push({itemID:originalItemID, partitionID})
                 metadataMap.delete(originalItemID)
 
             } else { // remapped, check for orphaned index
@@ -401,7 +401,7 @@ export default class ServiceHandler {
         modifiedIndexList = Array.from(new Set(modifiedIndexList.values())) // remove duplicates
 
         contentHandler.reconcileCellFrames(modifiedIndexList)
-        cacheHandler.portalItemHoldList = portalItemHoldList
+        cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList
 
         stateHandler.setCradleState('applycellframechanges')
 
@@ -525,12 +525,12 @@ export default class ServiceHandler {
 
         const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
 
-        const [changeList, replaceList, rangeincrement, portalItemHoldList] = 
+        const [changeList, replaceList, rangeincrement, portalItemHoldForDeleteList] = 
             cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize)
 
         cacheHandler.cacheProps.partitionModified = true
         cacheHandler.renderPortalList()
-        cacheHandler.portalItemHoldList = portalItemHoldList
+        cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList
 
         contentHandler.changeCradleItemIDs(changeList)
 

@@ -749,7 +749,7 @@ const Cradle = ({
 
                 if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, dListCallback, scrollerID)) {
 
-                    cacheHandler.cacheProps.partitionModified = true
+                    // cacheHandler.cacheProps.partitionModified = true
                     cacheHandler.renderPortalList()
                     
                 }
@@ -777,7 +777,7 @@ const Cradle = ({
 
                 if (cacheHandler.matchCacheToCradle(modelIndexList, dListCallback)) {
 
-                    cacheHandler.cacheProps.partitionModified = true
+                    // cacheHandler.cacheProps.partitionModified = true
                     cacheHandler.renderPortalList()
 
                 }
@@ -1003,7 +1003,7 @@ const Cradle = ({
                     }
 
                     if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, dListCallback, scrollerID)) {
-                        cacheHandler.cacheProps.partitionModified = true
+                        // cacheHandler.cacheProps.partitionModified = true
                         cacheHandler.renderPortalList()
                     }
 
@@ -1352,14 +1352,13 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
-                const { portalItemHoldList } = cacheHandler
-                const { partitionPortalMap } = cacheHandler.cacheProps
+                const { portalItemHoldForDeleteList } = cacheHandler
 
-                if (portalItemHoldList && portalItemHoldList.length) {
+                if (portalItemHoldForDeleteList && portalItemHoldForDeleteList.length) {
 
-                    for (const item of portalItemHoldList) {
+                    for (const item of portalItemHoldForDeleteList) {
 
-                        partitionPortalMap.delete(item.itemID)
+                        cacheHandler.removePartitionPortal(item.partitionID, item.itemID)
                         
                     }
 
