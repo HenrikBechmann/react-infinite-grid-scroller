@@ -83,6 +83,7 @@ export class CacheHandler {
         partitionMap: new Map(),
         partitionRenderList:null,
         partitionMetadataMap:new Map(),
+        partitionPtr:null, // active partition, for followup
 
         // TODO move to partition metadata
         partitionPortalMap:new Map(), // index => InPortal
