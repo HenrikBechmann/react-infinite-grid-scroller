@@ -59,7 +59,7 @@ export class CacheHandler {
         this.listsizeRef = listsizeRef
 
         this.cacheProps.partitionMap.set(0,
-            <CachePartition key = {0} cacheProps = {this.cacheProps} />)
+            <CachePartition key = {0} cacheProps = {this.cacheProps}/>)
         this.cacheProps.partitionList = Array.from(this.cacheProps.partitionMap)
         this.cacheProps.partitionMetadataMap.set(0,{partitionPortalMap:null})
         this.CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE
