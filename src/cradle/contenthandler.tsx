@@ -449,7 +449,7 @@ export default class ContentHandler {
 
         // ----------------------------------[ 4. reconfigure cradle content ]--------------------------
 
-        // collect modified content
+        // collect changed content
         let updatedContentList, deletedContentItems = []
 
         if (listStartChangeCount || listEndChangeCount) { // if either is non-0 then modify content
@@ -785,7 +785,7 @@ export default class ContentHandler {
             if (cacheHandler.pareCacheToMax(
                 cradleInheritedProperties.cacheMax, modelIndexList, dListCallback, scrollerID)) {
             
-                cacheHandler.cacheProps.modified = true
+                cacheHandler.cacheProps.partitionModified = true
                 cacheHandler.renderPortalList()
                 
             }

@@ -749,7 +749,7 @@ const Cradle = ({
 
                 if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, dListCallback, scrollerID)) {
 
-                    cacheHandler.cacheProps.modified = true
+                    cacheHandler.cacheProps.partitionModified = true
                     cacheHandler.renderPortalList()
                     
                 }
@@ -777,7 +777,7 @@ const Cradle = ({
 
                 if (cacheHandler.matchCacheToCradle(modelIndexList, dListCallback)) {
 
-                    cacheHandler.cacheProps.modified = true
+                    cacheHandler.cacheProps.partitionModified = true
                     cacheHandler.renderPortalList()
 
                 }
@@ -1003,7 +1003,7 @@ const Cradle = ({
                     }
 
                     if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, dListCallback, scrollerID)) {
-                        cacheHandler.cacheProps.modified = true
+                        cacheHandler.cacheProps.partitionModified = true
                         cacheHandler.renderPortalList()
                     }
 

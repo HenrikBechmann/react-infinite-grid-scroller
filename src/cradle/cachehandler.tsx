@@ -67,14 +67,14 @@ export class CacheHandler {
 
     cacheProps = {
         setListState:null,
-        modified:false,
+        partitionModified:false,
 
         metadataMap:new Map(), // item => {index, component}
         // some portals may have been requested by requestidlecallback, not yet created
         requestedSet:new Set(), // requestedSet of indexes
         partitionPortalMap:new Map(), // index => InPortal
         indexToItemIDMap:new Map(),
-        portalList:null,
+        partitionPortalList:null,
 
         partitionMap: new Map(),
         partitionList:null,
@@ -146,15 +146,17 @@ export class CacheHandler {
 
     }
 
+    // TODO clear partitions
     clearCache = () => {
 
         // keep the setListState callback
         this.cacheProps.partitionPortalMap.clear() 
+        this.cacheProps.partitionPortalList = null
+
         this.cacheProps.metadataMap.clear()
         this.cacheProps.indexToItemIDMap.clear()
         this.cacheProps.requestedSet.clear()
-        this.cacheProps.portalList = null
-        this.cacheProps.modified = true
+        this.cacheProps.partitionModified = true
 
         this.renderPortalList() // trigger display update
 
@@ -163,9 +165,9 @@ export class CacheHandler {
     // set state of the CachePartition component of the scroller to trigger render
     renderPortalList = () => {
 
-        if (this.cacheProps.modified) {
-            this.cacheProps.portalList = Array.from(this.cacheProps.partitionPortalMap.values())
-            this.cacheProps.modified = false
+        if (this.cacheProps.partitionModified) {
+            this.cacheProps.partitionPortalList = Array.from(this.cacheProps.partitionPortalMap.values())
+            this.cacheProps.partitionModified = false
         }
 
         this.cacheProps.setListState() // trigger display update
@@ -332,7 +334,7 @@ export class CacheHandler {
 
         Promise.allSettled(promises).then(
             ()=>{
-                this.cacheProps.modified = true
+                this.cacheProps.partitionModified = true
                 this.renderPortalList()
                 finalCallback()
             }
@@ -787,7 +789,7 @@ export class CacheHandler {
                     <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>
                 </div>)
 
-        this.cacheProps.modified = true
+        this.cacheProps.partitionModified = true
 
         const portalMetadata = {
             portalNode,
@@ -911,7 +913,7 @@ export class CacheHandler {
 
         }
         
-        this.cacheProps.modified = true
+        this.cacheProps.partitionModified = true
 
         deleteListCallback && deleteListCallback(deleteList)
 
@@ -975,7 +977,7 @@ export const CachePartition = ({ cacheProps }) => {
 
         cacheProps.setListState = ()=>{
 
-            portalArrayRef.current = cacheProps.portalList
+            portalArrayRef.current = cacheProps.partitionPortalList
 
             isMountedRef.current && setPortalListCounter(++counterRef.current) // force render
 
