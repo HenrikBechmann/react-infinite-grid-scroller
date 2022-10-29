@@ -74,16 +74,22 @@ export class CacheHandler {
     }
 
     cacheProps = {
+
+        // item data
         metadataMap:new Map(), // item => {index, component}
-        // some portals may have been requested by requestidlecallback, not yet created
         indexToItemIDMap:new Map(),
+
+        // some portals may have been requested by requestidlecallback, not yet created
         requestedSet:new Set(), // requestedSet of indexes (transitional)
 
-        partitionRepoForceUpdate:null,
-        partitionMap: new Map(),
-        partitionModifiedSet: new Set(),
-        partitionRenderList:null,
+        // partition data
         partitionMetadataMap:new Map(),
+        // for rendering portals...
+        partitionMap: new Map(),
+        partitionRenderList:null,
+        partitionRepoForceUpdate:null,
+        partitionModifiedSet: new Set(),
+
         partitionPtr:null, // active partition, for followup
 
         // TODO move to partition metadata
@@ -129,8 +135,6 @@ export class CacheHandler {
 
         partitionMetadata.portalMap.set(itemID,portal)
 
-        // this.cacheProps.partitionPortalMap.set(itemID,portal)
-        // this.cacheProps.partitionModified = true,
         this.cacheProps.partitionModifiedSet.add(partitionID)
 
     }
@@ -138,32 +142,34 @@ export class CacheHandler {
     removePartitionPortal = (partitionID, itemID) => {
 
         const partitionMetadata = this.cacheProps.partitionMetadataMap.get(partitionID)
+
         partitionMetadata.portalMap.delete(itemID)
 
-        // this.cacheProps.partitionPortalMap.delete(itemID)
-        // this.cacheProps.partitionModified = true
         this.cacheProps.partitionModifiedSet.add(partitionID)
 
     }
 
     renderPartition = (partitionID) => {
+
             const partitionMetadata = this.cacheProps.partitionMetadataMap.get(partitionID)
+
             partitionMetadata.portalRenderList =  Array.from(partitionMetadata.portalMap.values())
+
             partitionMetadata.forceUpdate()
+
     }
 
     // set state of the CachePartition component of the scroller to trigger render
     renderPortalLists = () => {
 
         const { partitionModifiedSet } = this.cacheProps
+
         if (partitionModifiedSet.size) {
 
             partitionModifiedSet.forEach((partitionID) => {
                 this.renderPartition(partitionID)
             })            
-            // this.cacheProps.partitionPortalRenderList = Array.from(this.cacheProps.partitionPortalMap.values())
-            // this.cacheProps.partitionModified = false
-            // this.cacheProps.partitionListForceUpdate() // trigger display update
+
             this.cacheProps.partitionModifiedSet.clear()
 
         }
@@ -519,6 +525,7 @@ export class CacheHandler {
         // -------------- move indexes out of the way --------------
 
         const processedshiftList = []
+        
         const processshiftindex = (index) => {
 
             const itemID = indexToItemIDMap.get(index)
@@ -960,12 +967,6 @@ export class CacheHandler {
 
         }
         
-        // if (indexArray.length) {
-
-        //     this.cacheProps.partitionModified = true
-
-        // }
-
         deleteListCallback && deleteListCallback(deleteList)
 
     }
