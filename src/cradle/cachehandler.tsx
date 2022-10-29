@@ -157,6 +157,22 @@ export class CacheHandler {
 
     }
 
+    // TODO clear partitions, by clearing partitionMap, and forceUpdate of master
+    clearCache = () => {
+
+        // keep the partitionListForceUpdate callback
+        this.cacheProps.partitionPortalMap.clear() 
+        this.cacheProps.partitionPortalRenderList = null
+
+        this.cacheProps.metadataMap.clear()
+        this.cacheProps.indexToItemIDMap.clear()
+        this.cacheProps.requestedSet.clear()
+        this.cacheProps.partitionModified = true
+
+        this.renderPortalLists() // trigger display update
+
+    }
+
     //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
 
     // ----------------------------[ basic operations ]--------------------------
@@ -183,22 +199,6 @@ export class CacheHandler {
         }
 
         changeListsizeCallback && changeListsizeCallback(newlistsize)
-
-    }
-
-    // TODO clear partitions
-    clearCache = () => {
-
-        // keep the partitionListForceUpdate callback
-        this.cacheProps.partitionPortalMap.clear() 
-        this.cacheProps.partitionPortalRenderList = null
-
-        this.cacheProps.metadataMap.clear()
-        this.cacheProps.indexToItemIDMap.clear()
-        this.cacheProps.requestedSet.clear()
-        this.cacheProps.partitionModified = true
-
-        this.renderPortalLists() // trigger display update
 
     }
 
