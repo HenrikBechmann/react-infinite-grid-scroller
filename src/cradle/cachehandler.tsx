@@ -66,7 +66,8 @@ export class CacheHandler {
                 portalMap:null, 
                 portalRenderList:null, 
                 modified:false,
-                forceUpdate:null
+                forceUpdate:null,
+                partitionID:null,
             })
 
         this.CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE
