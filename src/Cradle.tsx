@@ -1352,14 +1352,14 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
-                const { portalHoldList } = cacheHandler
-                const { portalMap } = cacheHandler.cacheProps
+                const { portalItemHoldList } = cacheHandler
+                const { partitionPortalMap } = cacheHandler.cacheProps
 
-                if (portalHoldList && portalHoldList.length) {
+                if (portalItemHoldList && portalItemHoldList.length) {
 
-                    for (const itemID of portalHoldList) {
+                    for (const item of portalItemHoldList) {
 
-                        portalMap.delete(itemID)
+                        partitionPortalMap.delete(item.itemID)
                         
                     }
 

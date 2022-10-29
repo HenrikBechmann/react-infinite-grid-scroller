@@ -283,7 +283,7 @@ const CellFrame = ({
 
                     if (isMountedRef.current) {
                         // get cache data
-                        portalMetadataRef.current = cacheHandler.getPortal(itemID)
+                        portalMetadataRef.current = cacheHandler.getPortalMetadata(itemID)
                         // get OutPortal node
                         portalMetadataRef.current.scrollerProperties.cellFrameDataRef = cellFrameDataRef
                         portalNodeRef.current = portalMetadataRef.current.portalNode

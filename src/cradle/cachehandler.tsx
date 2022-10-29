@@ -61,6 +61,7 @@ export class CacheHandler {
         this.cacheProps.partitionMap.set(0,
             <CachePartition key = {0} cacheProps = {this.cacheProps} />)
         this.cacheProps.partitionList = Array.from(this.cacheProps.partitionMap)
+        this.cacheProps.partitionMetadataMap.set(0,{partitionPortalMap:null})
         this.CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE
     }
 
@@ -71,12 +72,13 @@ export class CacheHandler {
         metadataMap:new Map(), // item => {index, component}
         // some portals may have been requested by requestidlecallback, not yet created
         requestedSet:new Set(), // requestedSet of indexes
-        portalMap:new Map(), // index => InPortal
+        partitionPortalMap:new Map(), // index => InPortal
         indexToItemIDMap:new Map(),
         portalList:null,
 
         partitionMap: new Map(),
         partitionList:null,
+        partitionMetadataMap:new Map(),
 
         scrollerID:null
     }
@@ -85,13 +87,35 @@ export class CacheHandler {
 
     CACHE_PARTITION_SIZE
 
-    portalHoldList
+    portalItemHoldList // array of {itemID,partitionID}
 
     listsizeRef
 
     // setListsize(listsize) causes an InfiniteGridScroller useState update
     // of the listsize throughout
     setListsize 
+
+    // ===========================[ PARTITION MANAGEMENT ]===============================
+
+    addPartition = () => {
+
+    }
+
+    removePartition = () => {
+
+    }
+
+    findPartition = () => {
+
+    }
+
+    addPartitionItem = (partitionID, itemID, portal) => {
+
+    }
+
+    removePartitionItem = (partitionID,itemID) => {
+
+    }
 
     //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
 
@@ -125,7 +149,7 @@ export class CacheHandler {
     clearCache = () => {
 
         // keep the setListState callback
-        this.cacheProps.portalMap.clear() 
+        this.cacheProps.partitionPortalMap.clear() 
         this.cacheProps.metadataMap.clear()
         this.cacheProps.indexToItemIDMap.clear()
         this.cacheProps.requestedSet.clear()
@@ -140,7 +164,7 @@ export class CacheHandler {
     renderPortalList = () => {
 
         if (this.cacheProps.modified) {
-            this.cacheProps.portalList = Array.from(this.cacheProps.portalMap.values())
+            this.cacheProps.portalList = Array.from(this.cacheProps.partitionPortalMap.values())
             this.cacheProps.modified = false
         }
 
@@ -225,13 +249,13 @@ export class CacheHandler {
         if (!cacheMax) return false
 
         const {
-            portalMap,
+            partitionPortalMap,
             requestedSet 
         } = this.cacheProps
 
         const max = Math.max(cradleListLength, cacheMax)
 
-        if ((portalMap.size + requestedSet.size) <= ((max) * MAX_CACHE_OVER_RUN)) {
+        if ((partitionPortalMap.size + requestedSet.size) <= ((max) * MAX_CACHE_OVER_RUN)) {
 
             return false
 
@@ -496,7 +520,7 @@ export class CacheHandler {
     // insert or remove indexes: much of this deals with the fact that the cache is sparse.
     insertRemoveIndex(index, highrange, increment, listsize) { // increment is +1 or -1
 
-        const { indexToItemIDMap, metadataMap, portalMap } = this.cacheProps
+        const { indexToItemIDMap, metadataMap, partitionPortalMap } = this.cacheProps
 
         // ---------- define range parameters ---------------
 
@@ -600,7 +624,7 @@ export class CacheHandler {
 
         }
 
-        const portalHoldList = [] // hold portals for deletion until after after cradle synch
+        const portalItemHoldList = [] // hold portals for deletion until after after cradle synch
 
         if (increment == 1) {
 
@@ -695,8 +719,9 @@ export class CacheHandler {
 
             for (const itemID of itemsToRemoveList) {
 
+                const { partitionID } = metadataMap.get(itemID)
+                portalItemHoldList.push({itemID, partitionID})
                 metadataMap.delete(itemID)
-                portalHoldList.push(itemID)
 
             }
 
@@ -705,7 +730,7 @@ export class CacheHandler {
         // --------------- returns ---------------
 
         // return values for caller to send to contenthandler for cradle synchronization
-        return [indexesModifiedList, indexesToReplaceList, rangeincrement, portalHoldList]
+        return [indexesModifiedList, indexesToReplaceList, rangeincrement, portalItemHoldList]
 
     }
 
@@ -757,7 +782,7 @@ export class CacheHandler {
                 index, itemID, layout, orientation, cellHeight, cellWidth)
 
         // div wrapper to avoid memory leak
-        this.cacheProps.portalMap.set(itemID,
+        this.cacheProps.partitionPortalMap.set(itemID,
                 <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID} data-index = {index}>
                     <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>
                 </div>)
@@ -870,7 +895,7 @@ export class CacheHandler {
 
         const { 
             metadataMap,
-            portalMap,
+            partitionPortalMap,
             indexToItemIDMap 
         } = this.cacheProps
 
@@ -881,7 +906,7 @@ export class CacheHandler {
 
             deleteList.push({index:i,itemID})
             metadataMap.delete(itemID)
-            portalMap.delete(itemID)
+            partitionPortalMap.delete(itemID)
             indexToItemIDMap.delete(i)
 
         }
@@ -899,7 +924,7 @@ export class CacheHandler {
 
     }
 
-    getPortal(itemID) {
+    getPortalMetadata(itemID) {
 
         if (this.hasPortal(itemID)) {
             return this.cacheProps.metadataMap.get(itemID)
