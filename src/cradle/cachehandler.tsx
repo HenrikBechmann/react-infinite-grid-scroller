@@ -84,19 +84,13 @@ export class CacheHandler {
 
         // partition data
         partitionMetadataMap:new Map(),
-        // for rendering portals...
+        // for rendering partitions...
         partitionMap: new Map(),
         partitionRenderList:null,
         partitionRepoForceUpdate:null,
         partitionModifiedSet: new Set(),
 
         partitionPtr:null, // active partition, for followup
-
-        // TODO move to partition metadata
-        // partitionPortalMap:new Map(), // index => InPortal
-        // partitionPortalRenderList:null,
-        // partitionModified:false,
-        // partitionListForceUpdate:null,
 
         scrollerID:null
     }
@@ -525,7 +519,7 @@ export class CacheHandler {
         // -------------- move indexes out of the way --------------
 
         const processedshiftList = []
-        
+
         const processshiftindex = (index) => {
 
             const itemID = indexToItemIDMap.get(index)
