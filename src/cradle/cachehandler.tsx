@@ -87,10 +87,10 @@ export class CacheHandler {
         partitionPtr:null, // active partition, for followup
 
         // TODO move to partition metadata
-        partitionPortalMap:new Map(), // index => InPortal
-        partitionPortalRenderList:null,
-        partitionModified:false,
-        partitionListForceUpdate:null,
+        // partitionPortalMap:new Map(), // index => InPortal
+        // partitionPortalRenderList:null,
+        // partitionModified:false,
+        // partitionListForceUpdate:null,
 
         scrollerID:null
     }
@@ -125,32 +125,45 @@ export class CacheHandler {
 
     addPartitionPortal = (partitionID, itemID, portal) => {
 
-        this.cacheProps.partitionPortalMap.set(itemID,portal)
-        this.cacheProps.partitionModified = true,
+        const partitionMetadata = this.cacheProps.partitionMetadataMap.get(partitionID)
+
+        partitionMetadata.portalMap.set(itemID,portal)
+
+        // this.cacheProps.partitionPortalMap.set(itemID,portal)
+        // this.cacheProps.partitionModified = true,
         this.cacheProps.partitionModifiedSet.add(partitionID)
 
     }
 
     removePartitionPortal = (partitionID, itemID) => {
 
-        this.cacheProps.partitionPortalMap.delete(itemID)
-        this.cacheProps.partitionModified = true
+        const partitionMetadata = this.cacheProps.partitionMetadataMap.get(partitionID)
+        partitionMetadata.portalMap.delete(itemID)
+
+        // this.cacheProps.partitionPortalMap.delete(itemID)
+        // this.cacheProps.partitionModified = true
         this.cacheProps.partitionModifiedSet.add(partitionID)
 
     }
 
     renderPartition = (partitionID) => {
-
+            const partitionMetadata = this.cacheProps.partitionMetadataMap.get(partitionID)
+            partitionMetadata.portalRenderList =  Array.from(partitionMetadata.portalMap.values())
+            partitionMetadata.forceUpdate()
     }
 
     // set state of the CachePartition component of the scroller to trigger render
     renderPortalLists = () => {
 
-        if (this.cacheProps.partitionModified) {
+        const { partitionModifiedSet } = this.cacheProps
+        if (partitionModifiedSet.size) {
 
-            this.cacheProps.partitionPortalRenderList = Array.from(this.cacheProps.partitionPortalMap.values())
-            this.cacheProps.partitionModified = false
-            this.cacheProps.partitionListForceUpdate() // trigger display update
+            partitionModifiedSet.forEach((partitionID) => {
+                this.renderPartition(partitionID)
+            })            
+            // this.cacheProps.partitionPortalRenderList = Array.from(this.cacheProps.partitionPortalMap.values())
+            // this.cacheProps.partitionModified = false
+            // this.cacheProps.partitionListForceUpdate() // trigger display update
             this.cacheProps.partitionModifiedSet.clear()
 
         }
@@ -161,13 +174,13 @@ export class CacheHandler {
     clearCache = () => {
 
         // keep the partitionListForceUpdate callback
-        this.cacheProps.partitionPortalMap.clear() 
-        this.cacheProps.partitionPortalRenderList = null
+        // this.cacheProps.partitionPortalMap.clear() 
+        // this.cacheProps.partitionPortalRenderList = null
 
         this.cacheProps.metadataMap.clear()
         this.cacheProps.indexToItemIDMap.clear()
         this.cacheProps.requestedSet.clear()
-        this.cacheProps.partitionModified = true
+        // this.cacheProps.partitionModified = true
 
         this.renderPortalLists() // trigger display update
 
@@ -1013,9 +1026,13 @@ export const CachePartition = ({ cacheProps, partitionID }) => {
 
         isMountedRef.current = true
 
-        cacheProps.partitionListForceUpdate = ()=>{
+        const partitionMetadata = cacheProps.partitionMetadataMap.get(partitionID)
+        // cacheProps.partitionListForceUpdate = ()=>{
 
-            portalArrayRef.current = cacheProps.partitionPortalRenderList
+        partitionMetadata.forceUpdate = () => {
+
+            const partitionMetadata = cacheProps.partitionMetadataMap.get(partitionID)
+            portalArrayRef.current = partitionMetadata.portalRenderList
 
             isMountedRef.current && setPortalListCounter(++counterRef.current) // force render
 
