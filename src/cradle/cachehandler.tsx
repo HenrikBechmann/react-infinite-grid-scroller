@@ -58,18 +58,6 @@ export class CacheHandler {
         this.setListsize = setListsize // passed from InfiniteGridScroller.setListsize(listsize)
         this.listsizeRef = listsizeRef // current list size
 
-        // this.cacheProps.partitionMap.set(0,
-        //     <CachePartition key = {0} cacheProps = {this.cacheProps} partitionID = {0}/>)
-        // this.cacheProps.partitionRenderList = Array.from(this.cacheProps.partitionMap)
-        // this.cacheProps.partitionMetadataMap.set(0,
-        //     {
-        //         portalMap:new Map(), 
-        //         portalRenderList:null, 
-        //         modified:false,
-        //         forceUpdate:null,
-        //         partitionID:null,
-        //     })
-
         this.CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE
     }
 
@@ -150,8 +138,6 @@ export class CacheHandler {
 
         const { CACHE_PARTITION_SIZE } = this
 
-        console.log('CACHE_PARTITION_SIZE',CACHE_PARTITION_SIZE)
-
         const { partitionMetadataMap } = this.cacheProps
         let { partitionPtr } = this.cacheProps
 
@@ -218,9 +204,9 @@ export class CacheHandler {
 
         partitionMetadata.portalRenderList =  Array.from(partitionMetadata.portalMap.values())
 
-        console.log('renderPartition: partitionMetadata',{...partitionMetadata})
+        console.log('renderPartition: partitionMetadata',{...partitionMetadata});
 
-        partitionMetadata.forceUpdate()
+        partitionMetadata.forceUpdate && partitionMetadata.forceUpdate() // TODO existence check just a workaround
 
     }
 
