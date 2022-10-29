@@ -749,8 +749,7 @@ const Cradle = ({
 
                 if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, dListCallback, scrollerID)) {
 
-                    // cacheHandler.cacheProps.partitionModified = true
-                    cacheHandler.renderPortalList()
+                    cacheHandler.renderPortalLists()
                     
                 }
 
@@ -777,8 +776,7 @@ const Cradle = ({
 
                 if (cacheHandler.matchCacheToCradle(modelIndexList, dListCallback)) {
 
-                    // cacheHandler.cacheProps.partitionModified = true
-                    cacheHandler.renderPortalList()
+                    cacheHandler.renderPortalLists()
 
                 }
 
@@ -1003,8 +1001,9 @@ const Cradle = ({
                     }
 
                     if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, dListCallback, scrollerID)) {
-                        // cacheHandler.cacheProps.partitionModified = true
-                        cacheHandler.renderPortalList()
+
+                        cacheHandler.renderPortalLists()
+
                     }
 
                     if (!isCachedRef.current) {
@@ -1171,7 +1170,7 @@ const Cradle = ({
 
                     if (cacheHandler.matchCacheToCradle(modelIndexList, dListCallback)) {
                         
-                        cacheHandler.renderPortalList()
+                        cacheHandler.renderPortalLists()
 
                     }
                 }
@@ -1280,7 +1279,7 @@ const Cradle = ({
 
                 }
 
-                cacheHandler.renderPortalList()
+                cacheHandler.renderPortalLists()
 
                 const { layout } = cradleInheritedPropertiesRef.current
                 if (layout == 'uniform') {
@@ -1361,6 +1360,7 @@ const Cradle = ({
                         cacheHandler.removePartitionPortal(item.partitionID, item.itemID)
                         
                     }
+                    cacheHandler.renderPortalLists()
 
                 }
 

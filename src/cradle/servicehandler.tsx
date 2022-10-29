@@ -379,8 +379,8 @@ export default class ServiceHandler {
         })
 
         // refresh the changed cache
-        cacheHandler.cacheProps.partitionModified = true
-        cacheHandler.renderPortalList()
+        // cacheHandler.cacheProps.partitionModified = true
+        // cacheHandler.renderPortalLists()
 
         // ------------- apply changes to extant cellFrames ------------
 
@@ -485,8 +485,8 @@ export default class ServiceHandler {
 
         if (processedIndexList.length) {
 
-            cacheHandler.cacheProps.partitionModified = true
-            cacheHandler.renderPortalList()
+            // cacheHandler.cacheProps.partitionModified = true
+            // cacheHandler.renderPortalLists()
 
             contentHandler.changeCradleItemIDs(processedIndexList)
 
@@ -528,8 +528,8 @@ export default class ServiceHandler {
         const [changeList, replaceList, rangeincrement, portalItemHoldForDeleteList] = 
             cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize)
 
-        cacheHandler.cacheProps.partitionModified = true
-        cacheHandler.renderPortalList()
+        // cacheHandler.cacheProps.partitionModified = true
+        // cacheHandler.renderPortalLists()
         cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList
 
         contentHandler.changeCradleItemIDs(changeList)

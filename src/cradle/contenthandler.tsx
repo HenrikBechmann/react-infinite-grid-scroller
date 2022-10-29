@@ -785,8 +785,7 @@ export default class ContentHandler {
             if (cacheHandler.pareCacheToMax(
                 cradleInheritedProperties.cacheMax, modelIndexList, dListCallback, scrollerID)) {
             
-                // cacheHandler.cacheProps.partitionModified = true
-                cacheHandler.renderPortalList()
+                cacheHandler.renderPortalLists()
                 
             }
                             

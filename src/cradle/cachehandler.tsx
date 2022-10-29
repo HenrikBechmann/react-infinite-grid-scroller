@@ -81,6 +81,7 @@ export class CacheHandler {
 
         partitionRepoForceUpdate:null,
         partitionMap: new Map(),
+        partitionModifiedSet: new Set(),
         partitionRenderList:null,
         partitionMetadataMap:new Map(),
         partitionPtr:null, // active partition, for followup
@@ -117,23 +118,42 @@ export class CacheHandler {
     }
 
     findPartitionWithRoom = () => {
+
         return 0
+
     }
 
     addPartitionPortal = (partitionID, itemID, portal) => {
 
         this.cacheProps.partitionPortalMap.set(itemID,portal)
+        this.cacheProps.partitionModified = true,
+        this.cacheProps.partitionModifiedSet.add(partitionID)
 
     }
 
     removePartitionPortal = (partitionID, itemID) => {
 
-        const {partitionPortalMap} = this.cacheProps
-        partitionPortalMap.delete(itemID)
+        this.cacheProps.partitionPortalMap.delete(itemID)
+        this.cacheProps.partitionModified = true
+        this.cacheProps.partitionModifiedSet.add(partitionID)
 
     }
 
     renderPartition = (partitionID) => {
+
+    }
+
+    // set state of the CachePartition component of the scroller to trigger render
+    renderPortalLists = () => {
+
+        if (this.cacheProps.partitionModified) {
+
+            this.cacheProps.partitionPortalRenderList = Array.from(this.cacheProps.partitionPortalMap.values())
+            this.cacheProps.partitionModified = false
+            this.cacheProps.partitionListForceUpdate() // trigger display update
+            this.cacheProps.partitionModifiedSet.clear()
+
+        }
 
     }
 
@@ -178,19 +198,7 @@ export class CacheHandler {
         this.cacheProps.requestedSet.clear()
         this.cacheProps.partitionModified = true
 
-        this.renderPortalList() // trigger display update
-
-    }
-
-    // set state of the CachePartition component of the scroller to trigger render
-    renderPortalList = () => {
-
-        if (this.cacheProps.partitionModified) {
-            this.cacheProps.partitionPortalRenderList = Array.from(this.cacheProps.partitionPortalMap.values())
-            this.cacheProps.partitionModified = false
-        }
-
-        this.cacheProps.partitionListForceUpdate() // trigger display update
+        this.renderPortalLists() // trigger display update
 
     }
 
@@ -354,8 +362,7 @@ export class CacheHandler {
 
         Promise.allSettled(promises).then(
             ()=>{
-                this.cacheProps.partitionModified = true
-                this.renderPortalList()
+                this.renderPortalLists()
                 finalCallback()
             }
         )
@@ -812,8 +819,6 @@ export class CacheHandler {
 
         this.addPartitionPortal(partitionID, itemID, portal)
 
-        this.cacheProps.partitionModified = true
-
         const portalMetadata = {
             portalNode,
             isReparentingRef:{
@@ -829,7 +834,7 @@ export class CacheHandler {
         this.cacheProps.metadataMap.set(itemID, portalMetadata)
         this.cacheProps.indexToItemIDMap.set(index, itemID)
 
-        if (!isPreload) this.renderPortalList()
+        if (!isPreload) this.renderPortalLists()
 
         return portalMetadata
 
@@ -942,11 +947,11 @@ export class CacheHandler {
 
         }
         
-        if (indexArray.length) {
+        // if (indexArray.length) {
 
-            this.cacheProps.partitionModified = true
+        //     this.cacheProps.partitionModified = true
 
-        }
+        // }
 
         deleteListCallback && deleteListCallback(deleteList)
 
