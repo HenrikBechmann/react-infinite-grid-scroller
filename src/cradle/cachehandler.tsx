@@ -54,31 +54,40 @@ let globalPartitionID = 0
 export class CacheHandler {
 
     constructor(scrollerID, setListsize, listsizeRef, CACHE_PARTITION_SIZE) {
-        this.cacheProps.scrollerID = scrollerID
-        this.setListsize = setListsize // passed from infinitegridscroller setListsize(listsize)
-        this.listsizeRef = listsizeRef
+        this.cacheProps.scrollerID = scrollerID // for debug
+        this.setListsize = setListsize // passed from InfiniteGridScroller.setListsize(listsize)
+        this.listsizeRef = listsizeRef // current list size
 
         this.cacheProps.partitionMap.set(0,
             <CachePartition key = {0} cacheProps = {this.cacheProps}/>)
-        this.cacheProps.partitionList = Array.from(this.cacheProps.partitionMap)
-        this.cacheProps.partitionMetadataMap.set(0,{partitionPortalMap:null})
+        this.cacheProps.partitionRenderList = Array.from(this.cacheProps.partitionMap)
+        this.cacheProps.partitionMetadataMap.set(0,
+            {
+                portalMap:null, 
+                portalRenderList:null, 
+                modified:false,
+                forceUpdate:null
+            })
+
         this.CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE
     }
 
     cacheProps = {
-        setListState:null,
-        partitionModified:false,
-
         metadataMap:new Map(), // item => {index, component}
         // some portals may have been requested by requestidlecallback, not yet created
-        requestedSet:new Set(), // requestedSet of indexes
-        partitionPortalMap:new Map(), // index => InPortal
         indexToItemIDMap:new Map(),
-        partitionPortalList:null,
+        requestedSet:new Set(), // requestedSet of indexes (transitional)
 
+        masterCacheForceUpdate:null,
         partitionMap: new Map(),
-        partitionList:null,
+        partitionRenderList:null,
         partitionMetadataMap:new Map(),
+
+        // TODO move to partition metadata
+        partitionPortalMap:new Map(), // index => InPortal
+        partitionPortalRenderList:null,
+        partitionModified:false,
+        partitionListForceUpdate:null,
 
         scrollerID:null
     }
@@ -101,11 +110,11 @@ export class CacheHandler {
 
     }
 
-    removePartition = () => {
+    removePartition = (partitionID) => {
 
     }
 
-    findPartition = () => {
+    findPartitionWithRoom = () => {
 
     }
 
@@ -113,7 +122,11 @@ export class CacheHandler {
 
     }
 
-    removePartitionItem = (partitionID,itemID) => {
+    removePartitionItem = (partitionID, itemID) => {
+
+    }
+
+    renderPartition = (partitionID) => {
 
     }
 
@@ -149,9 +162,9 @@ export class CacheHandler {
     // TODO clear partitions
     clearCache = () => {
 
-        // keep the setListState callback
+        // keep the partitionListForceUpdate callback
         this.cacheProps.partitionPortalMap.clear() 
-        this.cacheProps.partitionPortalList = null
+        this.cacheProps.partitionPortalRenderList = null
 
         this.cacheProps.metadataMap.clear()
         this.cacheProps.indexToItemIDMap.clear()
@@ -166,11 +179,11 @@ export class CacheHandler {
     renderPortalList = () => {
 
         if (this.cacheProps.partitionModified) {
-            this.cacheProps.partitionPortalList = Array.from(this.cacheProps.partitionPortalMap.values())
+            this.cacheProps.partitionPortalRenderList = Array.from(this.cacheProps.partitionPortalMap.values())
             this.cacheProps.partitionModified = false
         }
 
-        this.cacheProps.setListState() // trigger display update
+        this.cacheProps.partitionListForceUpdate() // trigger display update
 
     }
 
@@ -975,9 +988,9 @@ export const CachePartition = ({ cacheProps }) => {
 
         isMountedRef.current = true
 
-        cacheProps.setListState = ()=>{
+        cacheProps.partitionListForceUpdate = ()=>{
 
-            portalArrayRef.current = cacheProps.partitionPortalList
+            portalArrayRef.current = cacheProps.partitionPortalRenderList
 
             isMountedRef.current && setPortalListCounter(++counterRef.current) // force render
 
@@ -1004,15 +1017,15 @@ export const PortalMasterCache = ({ cacheProps }) => {
 
     const isMountedRef = useRef(true)
 
-    const partitionArrayRef = useRef(cacheProps.partitionList)
+    const partitionArrayRef = useRef(cacheProps.partitionRenderList)
 
     useEffect(()=>{
 
         isMountedRef.current = true
-        partitionArrayRef.current = cacheProps.partitionList
-        cacheProps.setPortalCacheState = ()=>{
+        partitionArrayRef.current = cacheProps.partitionRenderList
+        cacheProps.masterCacheForceUpdate = ()=>{
 
-            partitionArrayRef.current = cacheProps.partitionList
+            partitionArrayRef.current = cacheProps.partitionRenderList
 
             isMountedRef.current && setPortalCacheCounter(++counterRef.current) // force render
 
