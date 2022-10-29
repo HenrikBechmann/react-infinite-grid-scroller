@@ -58,17 +58,17 @@ export class CacheHandler {
         this.setListsize = setListsize // passed from InfiniteGridScroller.setListsize(listsize)
         this.listsizeRef = listsizeRef // current list size
 
-        this.cacheProps.partitionMap.set(0,
-            <CachePartition key = {0} cacheProps = {this.cacheProps} partitionID = {0}/>)
-        this.cacheProps.partitionRenderList = Array.from(this.cacheProps.partitionMap)
-        this.cacheProps.partitionMetadataMap.set(0,
-            {
-                portalMap:new Map(), 
-                portalRenderList:null, 
-                modified:false,
-                forceUpdate:null,
-                partitionID:null,
-            })
+        // this.cacheProps.partitionMap.set(0,
+        //     <CachePartition key = {0} cacheProps = {this.cacheProps} partitionID = {0}/>)
+        // this.cacheProps.partitionRenderList = Array.from(this.cacheProps.partitionMap)
+        // this.cacheProps.partitionMetadataMap.set(0,
+        //     {
+        //         portalMap:new Map(), 
+        //         portalRenderList:null, 
+        //         modified:false,
+        //         forceUpdate:null,
+        //         partitionID:null,
+        //     })
 
         this.CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE
     }
@@ -107,19 +107,78 @@ export class CacheHandler {
     // of the listsize throughout
     setListsize 
 
-    // ===========================[ PARTITION MANAGEMENT ]===============================
+    // ===========================[ CACHE PARTITION MANAGEMENT ]===============================
+
+    renderPartitionRepo = () => {
+
+        this.cacheProps.partitionRenderList = Array.from(this.cacheProps.partitionMap.values())
+        console.log('rendering partition repo',[...this.cacheProps.partitionRenderList])
+        this.cacheProps.partitionRepoForceUpdate()
+
+    }
 
     addPartition = () => {
+
+        const partitionID = globalPartitionID++
+        this.cacheProps.partitionMetadataMap.set(partitionID,
+            {
+                portalMap:new Map(), 
+                portalRenderList:null, 
+                modified:false,
+                forceUpdate:null,
+                partitionID,
+            })
+        this.cacheProps.partitionMap.set(partitionID,
+            <CachePartition key = {partitionID} cacheProps = {this.cacheProps} partitionID = {partitionID}/>)
+
+        this.renderPartitionRepo()
+
+        return partitionID
 
     }
 
     removePartition = (partitionID) => {
 
+        this.cacheProps.partitionMetadataMap.delete(partitionID)
+        this.cacheProps.partitionMap.delete(partitionID)
+
+        this.renderPartitionRepo()
+
     }
 
     findPartitionWithRoom = () => {
 
-        return 0
+        const { CACHE_PARTITION_SIZE } = this
+
+        console.log('CACHE_PARTITION_SIZE',CACHE_PARTITION_SIZE)
+
+        const { partitionMetadataMap } = this.cacheProps
+        let { partitionPtr } = this.cacheProps
+
+        let partitionMetadata
+        if (partitionPtr !== null) {
+            partitionMetadata = partitionMetadataMap.get(partitionPtr)
+            if (partitionMetadata.portalMap.size < CACHE_PARTITION_SIZE) {
+                return partitionPtr
+            }
+        }
+
+        partitionPtr = null
+        for (const [partitionID, partitionMetadata] of partitionMetadataMap) {
+            // console.log('findPartitionWithRoom: partitionMetadata, partitionID', partitionMetadata, partitionID)
+            if (partitionMetadata.portalMap.size < CACHE_PARTITION_SIZE) {
+                partitionPtr = partitionID
+                break
+            }
+        }
+
+        if (partitionPtr === null) {
+            partitionPtr = this.addPartition()
+        }
+
+        this.cacheProps.partitionPtr = partitionPtr
+
+        return partitionPtr
 
     }
 
@@ -139,17 +198,29 @@ export class CacheHandler {
 
         partitionMetadata.portalMap.delete(itemID)
 
-        this.cacheProps.partitionModifiedSet.add(partitionID)
+        if (!partitionMetadata.portalMap.size) {
+
+            this.removePartition(partitionID)
+
+        } else {
+
+            this.cacheProps.partitionModifiedSet.add(partitionID)
+
+        }
 
     }
 
     renderPartition = (partitionID) => {
 
-            const partitionMetadata = this.cacheProps.partitionMetadataMap.get(partitionID)
+        const partitionMetadata = this.cacheProps.partitionMetadataMap.get(partitionID)
 
-            partitionMetadata.portalRenderList =  Array.from(partitionMetadata.portalMap.values())
+        if (!partitionMetadata) return
 
-            partitionMetadata.forceUpdate()
+        partitionMetadata.portalRenderList =  Array.from(partitionMetadata.portalMap.values())
+
+        console.log('renderPartition: partitionMetadata',{...partitionMetadata})
+
+        partitionMetadata.forceUpdate()
 
     }
 
@@ -170,19 +241,18 @@ export class CacheHandler {
 
     }
 
-    // TODO clear partitions, by clearing partitionMap, and forceUpdate of master
     clearCache = () => {
 
-        // keep the partitionListForceUpdate callback
-        // this.cacheProps.partitionPortalMap.clear() 
-        // this.cacheProps.partitionPortalRenderList = null
-
+        // clear base data
         this.cacheProps.metadataMap.clear()
         this.cacheProps.indexToItemIDMap.clear()
         this.cacheProps.requestedSet.clear()
-        // this.cacheProps.partitionModified = true
-
-        this.renderPortalLists() // trigger display update
+        // clear cache partitions
+        this.cacheProps.partitionMetadataMap.clear()
+        this.cacheProps.partitionMap.clear()
+        this.cacheProps.partitionRenderList = []
+        this.cacheProps.partitionModifiedSet.clear()
+        this.cacheProps.partitionRepoForceUpdate()
 
     }
 
@@ -826,6 +896,8 @@ export class CacheHandler {
 
         const partitionID = this.findPartitionWithRoom()
 
+        console.log('createPortal: findPartitionWithRoom',partitionID)
+
         const portal = 
             <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID} data-index = {index}>
                 <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>
@@ -1022,7 +1094,6 @@ export const CachePartition = ({ cacheProps, partitionID }) => {
         isMountedRef.current = true
 
         const partitionMetadata = cacheProps.partitionMetadataMap.get(partitionID)
-        // cacheProps.partitionListForceUpdate = ()=>{
 
         partitionMetadata.forceUpdate = () => {
 
