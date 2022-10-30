@@ -52,7 +52,7 @@ import Scrollblock from './Scrollblock'
 import Cradle from './Cradle'
 
 // loaded here to minimize redundant renders in Cradle
-import { CacheHandler, PortalList } from './cradle/cachehandler'
+import { CacheHandler, CachePartition, PortalMasterCache } from './cradle/cachehandler'
 
 // -------------------[ global session ID generator ]----------------
 
@@ -71,7 +71,7 @@ const InfiniteGridScroller = (props) => {
             // base for variable layout
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
             // base for variable layout
-        estimatedListSize = 0, // the estimated number of items in the virtual list. can be modified
+        estimatedListSize = 0, // the estimated number of items in the virtual list. can be changed
         getItem, // required. function provided by host - parameters set by system are index number
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
@@ -235,15 +235,17 @@ const InfiniteGridScroller = (props) => {
         TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
         // ratios:
         MAX_CACHE_OVER_RUN, // max streaming over-run as ratio to cacheMax
+        CACHE_PARTITION_SIZE, 
 
     } = technical
 
     VIEWPORT_RESIZE_TIMEOUT = VIEWPORT_RESIZE_TIMEOUT ?? 250
     SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = SCROLL_TIMEOUT_FOR_ONAFTERSCROLL ?? 100
-    IDLECALLBACK_TIMEOUT = IDLECALLBACK_TIMEOUT ?? 4000
+    IDLECALLBACK_TIMEOUT = IDLECALLBACK_TIMEOUT ?? 175
     TIMEOUT_FOR_VARIABLE_MEASUREMENTS = TIMEOUT_FOR_VARIABLE_MEASUREMENTS ?? 100
     
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
+    CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE ?? 30
 
     if (typeof showAxis != 'boolean') showAxis = false
 
@@ -284,7 +286,8 @@ const InfiniteGridScroller = (props) => {
 
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
             scrollerSessionIDRef.current = globalScrollerID++
-            cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, setListsize, listsizeRef)
+            cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, setListsize, listsizeRef, 
+                CACHE_PARTITION_SIZE)
         }
 
     },[]);
@@ -376,11 +379,14 @@ const InfiniteGridScroller = (props) => {
             </Scrollblock>
         </Viewport>}
         {(scrollerState != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
-            <PortalList cacheProps = { cacheHandlerRef.current.cacheProps }/>
+            <PortalMasterCache cacheProps = {cacheHandlerRef.current.cacheProps} />
         </div>}
     </ErrorBoundary>
 }
 
+        // {(scrollerState != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
+        //     <CachePartition cacheProps = { cacheHandlerRef.current.cacheProps }/>
+        // </div>}
 export default InfiniteGridScroller
 
 // ----------------------------[ Support ]------------------------------

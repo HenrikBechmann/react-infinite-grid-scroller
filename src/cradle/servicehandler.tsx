@@ -174,7 +174,6 @@ export default class ServiceHandler {
         const { 
 
             metadataMap, // itemID to component data, including index
-            portalMap, // twinned with metadataMap for portal
             indexToItemIDMap // index to itemID
 
         } = cacheHandler.cacheProps 
@@ -348,7 +347,7 @@ export default class ServiceHandler {
         const deletedItemIDToIndexMap = new Map() // index => itemID; orphaned index
         const deletedIndexToItemIDMap = new Map()
 
-        const portalHoldList = [] // hold deleted portals for deletion until after cradle synch
+        const portalItemHoldForDeleteList = [] // hold deleted portals for deletion until after cradle synch
 
         originalMap.forEach((originalItemID, originalItemIDIndex) => {
 
@@ -358,8 +357,9 @@ export default class ServiceHandler {
 
                 deletedItemIDToIndexMap.set(originalItemID, originalItemIDIndex)
 
+                const { partitionID } = metadataMap.get(originalItemID)
+                portalItemHoldForDeleteList.push({itemID:originalItemID, partitionID})
                 metadataMap.delete(originalItemID)
-                portalHoldList.push(originalItemID)
 
             } else { // remapped, check for orphaned index
 
@@ -378,9 +378,9 @@ export default class ServiceHandler {
             }
         })
 
-        // refresh the modified cache
-        cacheHandler.cacheProps.modified = true
-        cacheHandler.renderPortalList()
+        // refresh the changed cache
+        // cacheHandler.cacheProps.partitionModified = true
+        // cacheHandler.renderPortalLists()
 
         // ------------- apply changes to extant cellFrames ------------
 
@@ -401,7 +401,7 @@ export default class ServiceHandler {
         modifiedIndexList = Array.from(new Set(modifiedIndexList.values())) // remove duplicates
 
         contentHandler.reconcileCellFrames(modifiedIndexList)
-        cacheHandler.portalHoldList = portalHoldList
+        cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList
 
         stateHandler.setCradleState('applycellframechanges')
 
@@ -485,8 +485,8 @@ export default class ServiceHandler {
 
         if (processedIndexList.length) {
 
-            cacheHandler.cacheProps.modified = true
-            cacheHandler.renderPortalList()
+            // cacheHandler.cacheProps.partitionModified = true
+            // cacheHandler.renderPortalLists()
 
             contentHandler.changeCradleItemIDs(processedIndexList)
 
@@ -525,12 +525,12 @@ export default class ServiceHandler {
 
         const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
 
-        const [changeList, replaceList, rangeincrement, portalHoldList] = 
+        const [changeList, replaceList, rangeincrement, portalItemHoldForDeleteList] = 
             cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize)
 
-        cacheHandler.cacheProps.modified = true
-        cacheHandler.renderPortalList()
-        cacheHandler.portalHoldList = portalHoldList
+        // cacheHandler.cacheProps.partitionModified = true
+        // cacheHandler.renderPortalLists()
+        cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList
 
         contentHandler.changeCradleItemIDs(changeList)
 
