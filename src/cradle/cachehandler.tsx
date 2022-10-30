@@ -968,15 +968,10 @@ export class CacheHandler {
                 content = usercontent
             }
 
-            const callback = (portalData) => {
-
-                scrollerProperties.isReparentingRef = portalData.isReparentingRef
-
-            }
-
-            const portalData = await
-                this.createPortal(content, index, itemID, scrollerProperties, true) // true = isPreload
+            const portalData = 
+                await this.createPortal(content, index, itemID, scrollerProperties, true) // true = isPreload
             // make available to user content
+            scrollerProperties.isReparentingRef = portalData.isReparentingRef
 
         } else {
 
@@ -1073,7 +1068,7 @@ const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWi
 
 }     
 
-// ========================[ Utility component ]==============================
+// ========================[ Utility components ]==============================
 
 // portal list component for rapid relisting of updates, using external callback for set state
 export const CachePartition = ({ cacheProps, partitionID, callback }) => {
@@ -1117,7 +1112,6 @@ export const CachePartition = ({ cacheProps, partitionID, callback }) => {
     useEffect(()=>{
 
         switch (partitionState) {
-            // case 'update': 
             case 'setup': {
                 setPartitionState('ready')
                 break
@@ -1169,7 +1163,6 @@ export const PortalMasterCache = ({ cacheProps }) => {
 
         switch (masterState) {
             case 'setup': {
-            // case 'update': {
                 setMasterState('ready')
             }
         }
