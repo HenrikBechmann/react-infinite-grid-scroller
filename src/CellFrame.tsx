@@ -303,6 +303,7 @@ const CellFrame = ({
                     // reserve space in the cache
                     cacheHandler.registerRequestedPortal(index)
                     // enqueue the fetch
+
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
                         let returnvalue, usercontent, error
@@ -406,14 +407,15 @@ const CellFrame = ({
                 break
             }
 
-            case 'retrieved':
-            case 'inserting': {
+            case 'inserting':
+            case 'retrieved': {
 
                 setFrameState('ready')
 
                 break
 
             }
+
         }
 
     }, [frameState])

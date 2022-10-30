@@ -225,7 +225,9 @@ export class CacheHandler {
         if (partitionModifiedSet.size) {
 
             partitionModifiedSet.forEach((partitionID) => {
+
                 this.renderPartition(partitionID)
+
             })            
 
             this.cacheProps.partitionModifiedSet.clear()
@@ -1078,6 +1080,8 @@ export const CachePartition = ({ cacheProps, partitionID, callback }) => {
 
     const [portalListCounter, setPortalListCounter] = useState(0)
 
+    const [partitionState, setPartitionState] = useState('setup')
+
     const counterRef = useRef(portalListCounter)
 
     const isMountedRef = useRef(true)
@@ -1110,6 +1114,18 @@ export const CachePartition = ({ cacheProps, partitionID, callback }) => {
 
     },[]) 
 
+    useEffect(()=>{
+
+        switch (partitionState) {
+            // case 'update': 
+            case 'setup': {
+                setPartitionState('ready')
+                break
+            }
+        }
+
+    },[partitionState])
+
     return <div key = {partitionID} data-type = 'cachepartition' data-partitionid = {partitionID}>
         {portalArrayRef.current}
     </div>
@@ -1120,6 +1136,8 @@ export const PortalMasterCache = ({ cacheProps }) => {
 
     const [portalCacheCounter, setPortalCacheCounter] = useState(0)
     const counterRef = useRef(portalCacheCounter)
+
+    const [masterState, setMasterState] = useState('setup')
 
     const isMountedRef = useRef(true)
 
@@ -1147,6 +1165,17 @@ export const PortalMasterCache = ({ cacheProps }) => {
 
     },[]) 
 
-    return partitionArrayRef.current
+    useEffect(()=>{
+
+        switch (masterState) {
+            case 'setup': {
+            // case 'update': {
+                setMasterState('ready')
+            }
+        }
+
+    },[masterState])
+
+    return <div data-type = 'portal-master'>{partitionArrayRef.current}</div>
 
 }
