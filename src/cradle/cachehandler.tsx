@@ -207,8 +207,8 @@ export class CacheHandler {
         // console.log('renderPartition: forceUpdate, partitionMetadata.portalRenderList',
             // partitionMetadata.forceUpdate, [...partitionMetadata.portalRenderList]);
 
-        partitionMetadata.forceUpdate(partitionMetadata.portalRenderList)
-        // partitionMetadata.forceUpdate && partitionMetadata.forceUpdate(partitionMetadata.portalRenderList) // TODO existence check is just a workaround
+        // partitionMetadata.forceUpdate(partitionMetadata.portalRenderList)
+        partitionMetadata.forceUpdate && partitionMetadata.forceUpdate(partitionMetadata.portalRenderList) // TODO existence check is just a workaround
 
     }
 
@@ -1113,7 +1113,7 @@ export const PortalMasterCache = ({ cacheProps }) => {
     const [portalCacheCounter, setPortalCacheCounter] = useState(0)
     const counterRef = useRef(portalCacheCounter)
 
-    console.log('RUNNING PortalMasterCache: portalCacheCounter, counterRef',portalCacheCounter, counterRef)
+    // console.log('RUNNING PortalMasterCache: portalCacheCounter, counterRef',portalCacheCounter, counterRef)
 
     const isMountedRef = useRef(true)
 
@@ -1121,8 +1121,8 @@ export const PortalMasterCache = ({ cacheProps }) => {
 
     const partitionRepoForceUpdate = useCallback((partitionRenderList) => {
 
-        console.log('partitionRepoForceUpdate: isMountedRef.current, counterRef.current, partitionRenderList',
-            isMountedRef.current, counterRef.current, partitionRenderList)
+        // console.log('partitionRepoForceUpdate: isMountedRef.current, counterRef.current, partitionRenderList',
+        //     isMountedRef.current, counterRef.current, partitionRenderList)
 
         partitionArrayRef.current = partitionRenderList
 
@@ -1144,7 +1144,7 @@ export const PortalMasterCache = ({ cacheProps }) => {
 
     },[]) 
 
-    console.log('RENDERING PortalMasterCache',partitionArrayRef.current)
+    // console.log('RENDERING PortalMasterCache',partitionArrayRef.current)
 
     return partitionArrayRef.current
 
