@@ -171,8 +171,6 @@ const Cradle = ({
         isCachedRef.current = isInPortal
     }
 
-    // console.log('immediate width/height', viewportwidth,viewportheight)
-
     // cradle state
     const [cradleState, setCradleState] = useState('setup')
     const cradleStateRef = useRef(null) // access by closures
@@ -198,8 +196,6 @@ const Cradle = ({
             triggercellTriggerlineTailRef:triggercellTriggerlineTailElementRef,
         }
     )
-
-    // console.log('Cradle scrollerProperties.cellFrameDataRef',scrollerProperties?.cellFrameDataRef)
 
     // ------------------------[ calculated properties ]------------------------
     // configuration calculations
@@ -245,8 +241,6 @@ const Cradle = ({
         viewportheight, 
         viewportwidth,
     ])
-
-    // console.log('crosscount', crosscount)
 
     // various row counts
     const [
@@ -472,8 +466,6 @@ const Cradle = ({
         serviceHandler,
         stylesHandler,
     } = handlersRef.current
-
-    // console.log('viewportwidth, viewportheight',viewportwidth, viewportheight )
 
     // =======================[ INTERCEPT CACHING STATE CHANGE ]=========================
 
@@ -749,8 +741,7 @@ const Cradle = ({
 
                 if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, dListCallback, scrollerID)) {
 
-                    cacheHandler.cacheProps.modified = true
-                    cacheHandler.renderPortalList()
+                    cacheHandler.renderPortalLists()
                     
                 }
 
@@ -777,8 +768,7 @@ const Cradle = ({
 
                 if (cacheHandler.matchCacheToCradle(modelIndexList, dListCallback)) {
 
-                    cacheHandler.cacheProps.modified = true
-                    cacheHandler.renderPortalList()
+                    cacheHandler.renderPortalLists()
 
                 }
 
@@ -1003,8 +993,9 @@ const Cradle = ({
                     }
 
                     if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, dListCallback, scrollerID)) {
-                        cacheHandler.cacheProps.modified = true
-                        cacheHandler.renderPortalList()
+
+                        cacheHandler.renderPortalLists()
+
                     }
 
                     if (!isCachedRef.current) {
@@ -1049,8 +1040,6 @@ const Cradle = ({
 
                     const { cradlePositionData } = layoutHandler
 
-                    // console.log('Cradle: parentingtransition: cradlePositionData',cradlePositionData)
-                    // reset scroll position to previous value
                     const blockScrollPos = cradlePositionData.blockScrollPos
                     if (blockScrollPos !== null) {
 
@@ -1171,7 +1160,7 @@ const Cradle = ({
 
                     if (cacheHandler.matchCacheToCradle(modelIndexList, dListCallback)) {
                         
-                        cacheHandler.renderPortalList()
+                        cacheHandler.renderPortalLists()
 
                     }
                 }
@@ -1179,11 +1168,6 @@ const Cradle = ({
                 // prepare the cycle for preparerender
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
-
-                // console.log('cradleContent TAIL length', 
-                //     '-'+scrollerID+'-',
-                //     '~'+scrollerProperties?.cellFrameDataRef.current.index+'~',
-                //     cradleContent.tailDisplayComponents.length)
 
                 // update virtual DOM
                 const { layout } = cradleInheritedPropertiesRef.current
@@ -1280,7 +1264,7 @@ const Cradle = ({
 
                 }
 
-                cacheHandler.renderPortalList()
+                cacheHandler.renderPortalLists()
 
                 const { layout } = cradleInheritedPropertiesRef.current
                 if (layout == 'uniform') {
@@ -1352,16 +1336,16 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
-                const { portalHoldList } = cacheHandler
-                const { portalMap } = cacheHandler.cacheProps
+                const { portalItemHoldForDeleteList } = cacheHandler
 
-                if (portalHoldList && portalHoldList.length) {
+                if (portalItemHoldForDeleteList && portalItemHoldForDeleteList.length) {
 
-                    for (const itemID of portalHoldList) {
+                    for (const item of portalItemHoldForDeleteList) {
 
-                        portalMap.delete(itemID)
+                        cacheHandler.removePartitionPortal(item.partitionID, item.itemID)
                         
                     }
+                    cacheHandler.renderPortalLists()
 
                 }
 

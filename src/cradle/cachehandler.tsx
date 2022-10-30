@@ -42,46 +42,212 @@
         - if your component does not scroll, there should be no issues.
 */
 
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect, useRef, useCallback} from 'react'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
 let globalItemID = 0
+let globalPartitionID = 0
 
 // global scroller data, organized by session scrollerID
 // the cache itself is maintained in the root infinitegridscroller component
 export class CacheHandler {
 
-    constructor(scrollerID, setListsize, listsizeRef) {
-        this.cacheProps.scrollerID = scrollerID
-        this.setListsize = setListsize // passed from infinitegridscroller setListsize(listsize)
-        this.listsizeRef = listsizeRef
+    constructor(scrollerID, setListsize, listsizeRef, CACHE_PARTITION_SIZE) {
+        this.cacheProps.scrollerID = scrollerID // for debug
+        this.setListsize = setListsize // passed from InfiniteGridScroller.setListsize(listsize)
+        this.listsizeRef = listsizeRef // current list size
+
+        this.CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE
     }
 
     cacheProps = {
-        setListState:null,
-        modified:false,
 
+        // item data
         metadataMap:new Map(), // item => {index, component}
-        // some portals may have been requested by requestidlecallback, not yet created
-        requestedSet:new Set(), // requestedSet of indexes
-        portalMap:new Map(), // index => InPortal
         indexToItemIDMap:new Map(),
 
-        portalList:null,
+        // some portals may have been requested by requestidlecallback, not yet created
+        requestedSet:new Set(), // requestedSet of indexes (transitional)
+
+        // partition data
+        partitionMetadataMap:new Map(),
+        // for rendering partitions...
+        partitionMap: new Map(),
+        partitionRenderList:null,
+        partitionRepoForceUpdate:null,
+        partitionModifiedSet: new Set(),
+
+        partitionPtr:null, // active partition, for followup
 
         scrollerID:null
     }
 
     cradleParameters
 
-    portalHoldList
+    CACHE_PARTITION_SIZE
+
+    portalItemHoldForDeleteList // array of {itemID,partitionID}
 
     listsizeRef
 
     // setListsize(listsize) causes an InfiniteGridScroller useState update
     // of the listsize throughout
     setListsize 
+
+    // ===========================[ CACHE PARTITION MANAGEMENT ]===============================
+
+    // partitions are added but not removed
+
+    renderPartitionRepo = () => {
+
+        this.cacheProps.partitionRenderList = Array.from(this.cacheProps.partitionMap.values())
+
+        this.cacheProps.partitionRepoForceUpdate(this.cacheProps.partitionRenderList)
+
+    }
+
+    addPartition = () => {
+
+        const partitionID = globalPartitionID++
+        this.cacheProps.partitionMetadataMap.set(partitionID,
+            {
+                portalMap:new Map(), 
+                portalRenderList:null, 
+                modified:false,
+                forceUpdate:null,
+                partitionID,
+            })
+
+        const resolvefunc = {
+            current:null
+        }
+
+        const promise = new Promise((resolve, reject) => {
+            resolvefunc.current = resolve
+        })
+
+        const callback = () => {
+
+            resolvefunc.current(partitionID)
+            
+        }
+
+        this.cacheProps.partitionMap.set(partitionID,
+            <CachePartition 
+                key = {partitionID} 
+                cacheProps = {this.cacheProps} 
+                partitionID = {partitionID} 
+                callback = { callback } />)
+
+        this.renderPartitionRepo()
+
+        return promise
+
+    }
+
+    async findPartitionWithRoom() {
+
+        const { CACHE_PARTITION_SIZE } = this
+
+        const { partitionMetadataMap } = this.cacheProps
+        let { partitionPtr } = this.cacheProps
+
+        let partitionMetadata
+        if (partitionPtr !== null) {
+            partitionMetadata = partitionMetadataMap.get(partitionPtr)
+            if (partitionMetadata.portalMap.size < CACHE_PARTITION_SIZE) {
+                return partitionPtr
+            }
+        }
+
+        partitionPtr = null
+        for (const [partitionID, partitionMetadata] of partitionMetadataMap) {
+
+            if (partitionMetadata.portalMap.size < CACHE_PARTITION_SIZE) {
+                partitionPtr = partitionID
+                break
+            }
+
+        }
+
+        if (partitionPtr === null) {
+
+            partitionPtr = await this.addPartition()
+
+        }
+
+        this.cacheProps.partitionPtr = partitionPtr
+
+        return partitionPtr
+
+    }
+
+    addPartitionPortal = (partitionID, itemID, portal) => {
+
+        const partitionMetadata = this.cacheProps.partitionMetadataMap.get(partitionID)
+
+        partitionMetadata.portalMap.set(itemID,portal)
+
+        this.cacheProps.partitionModifiedSet.add(partitionID)
+
+    }
+
+    removePartitionPortal = (partitionID, itemID) => {
+
+        const partitionMetadata = this.cacheProps.partitionMetadataMap.get(partitionID)
+
+        partitionMetadata.portalMap.delete(itemID)
+
+
+        this.cacheProps.partitionModifiedSet.add(partitionID)
+
+    }
+
+    renderPartition = (partitionID) => {
+
+        const partitionMetadata = this.cacheProps.partitionMetadataMap.get(partitionID)
+
+        if (!partitionMetadata) return
+
+        partitionMetadata.portalRenderList =  Array.from(partitionMetadata.portalMap.values())
+
+        // if forceUpdate has not yet been assigned, it is in the works from first call of partition
+        partitionMetadata.forceUpdate && partitionMetadata.forceUpdate(partitionMetadata.portalRenderList)
+
+    }
+
+    // set state of the CachePartition component of the scroller to trigger render
+    renderPortalLists = () => {
+
+        const { partitionModifiedSet } = this.cacheProps
+
+        if (partitionModifiedSet.size) {
+
+            partitionModifiedSet.forEach((partitionID) => {
+                this.renderPartition(partitionID)
+            })            
+
+            this.cacheProps.partitionModifiedSet.clear()
+
+        }
+
+    }
+
+    clearCache = () => {
+
+        // clear base data
+        this.cacheProps.metadataMap.clear()
+        this.cacheProps.indexToItemIDMap.clear()
+        this.cacheProps.requestedSet.clear()
+        // clear cache partitions
+        this.cacheProps.partitionMetadataMap.clear()
+        this.cacheProps.partitionMap.clear()
+        this.cacheProps.partitionRenderList = []
+        this.cacheProps.partitionModifiedSet.clear()
+        this.cacheProps.partitionRepoForceUpdate(null)
+
+    }
 
     //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
 
@@ -109,32 +275,6 @@ export class CacheHandler {
         }
 
         changeListsizeCallback && changeListsizeCallback(newlistsize)
-
-    }
-
-    clearCache = () => {
-
-        // keep the setListState callback
-        this.cacheProps.portalMap.clear() 
-        this.cacheProps.metadataMap.clear()
-        this.cacheProps.indexToItemIDMap.clear()
-        this.cacheProps.requestedSet.clear()
-        this.cacheProps.portalList = null
-        this.cacheProps.modified = true
-
-        this.renderPortalList() // trigger display update
-
-    }
-
-    // set state of the PortalList component of the scroller to trigger render
-    renderPortalList = () => {
-
-        if (this.cacheProps.modified) {
-            this.cacheProps.portalList = Array.from(this.cacheProps.portalMap.values())
-            this.cacheProps.modified = false
-        }
-
-        this.cacheProps.setListState() // trigger display update
 
     }
 
@@ -168,13 +308,13 @@ export class CacheHandler {
 
         const max = Math.max(modelLength, cacheMax)
 
-        const portalIndexList = this.cacheProps.indexToItemIDMap,
+        const portalIndexMap = this.cacheProps.indexToItemIDMap,
             requestedSet = this.cacheProps.requestedSet
 
-        if ((portalIndexList.size + requestedSet.size) <= max) return false
+        if ((portalIndexMap.size + requestedSet.size) <= max) return false
 
         // sort the map keys
-        const mapkeyslist = Array.from(portalIndexList.keys()),
+        const mapkeyslist = Array.from(portalIndexMap.keys()),
             requestedkeys = Array.from(requestedSet.keys())
 
         const mapkeys = [...mapkeyslist,...requestedkeys]
@@ -215,13 +355,13 @@ export class CacheHandler {
         if (!cacheMax) return false
 
         const {
-            portalMap,
+            indexToItemIDMap,
             requestedSet 
         } = this.cacheProps
 
         const max = Math.max(cradleListLength, cacheMax)
 
-        if ((portalMap.size + requestedSet.size) <= ((max) * MAX_CACHE_OVER_RUN)) {
+        if ((indexToItemIDMap.size + requestedSet.size) <= ((max) * MAX_CACHE_OVER_RUN)) {
 
             return false
 
@@ -298,8 +438,7 @@ export class CacheHandler {
 
         Promise.allSettled(promises).then(
             ()=>{
-                this.cacheProps.modified = true
-                this.renderPortalList()
+                this.renderPortalLists()
                 finalCallback()
             }
         )
@@ -443,6 +582,7 @@ export class CacheHandler {
         // -------------- move indexes out of the way --------------
 
         const processedshiftList = []
+
         const processshiftindex = (index) => {
 
             const itemID = indexToItemIDMap.get(index)
@@ -486,7 +626,7 @@ export class CacheHandler {
     // insert or remove indexes: much of this deals with the fact that the cache is sparse.
     insertRemoveIndex(index, highrange, increment, listsize) { // increment is +1 or -1
 
-        const { indexToItemIDMap, metadataMap, portalMap } = this.cacheProps
+        const { indexToItemIDMap, metadataMap } = this.cacheProps
 
         // ---------- define range parameters ---------------
 
@@ -590,7 +730,7 @@ export class CacheHandler {
 
         }
 
-        const portalHoldList = [] // hold portals for deletion until after after cradle synch
+        const portalItemHoldForDeleteList = [] // hold portals for deletion until after after cradle synch
 
         if (increment == 1) {
 
@@ -685,8 +825,9 @@ export class CacheHandler {
 
             for (const itemID of itemsToRemoveList) {
 
+                const { partitionID } = metadataMap.get(itemID)
+                portalItemHoldForDeleteList.push({itemID, partitionID})
                 metadataMap.delete(itemID)
-                portalHoldList.push(itemID)
 
             }
 
@@ -695,7 +836,7 @@ export class CacheHandler {
         // --------------- returns ---------------
 
         // return values for caller to send to contenthandler for cradle synchronization
-        return [indexesModifiedList, indexesToReplaceList, rangeincrement, portalHoldList]
+        return [indexesModifiedList, indexesToReplaceList, rangeincrement, portalItemHoldForDeleteList]
 
     }
 
@@ -736,7 +877,7 @@ export class CacheHandler {
     }
 
      // create new portal
-    createPortal(component, index, itemID, scrollerProperties, isPreload = false) {
+    async createPortal(component, index, itemID, scrollerProperties, isPreload = false) {
 
         this.removeRequestedPortal(index)
 
@@ -746,13 +887,14 @@ export class CacheHandler {
         const portalNode = createPortalNode(
                 index, itemID, layout, orientation, cellHeight, cellWidth)
 
-        // div wrapper to avoid memory leak
-        this.cacheProps.portalMap.set(itemID,
-                <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID} data-index = {index}>
-                    <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>
-                </div>)
+        const partitionID = await this.findPartitionWithRoom()
 
-        this.cacheProps.modified = true
+        const portal = 
+            <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID} data-index = {index}>
+                <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>
+            </div>
+
+        this.addPartitionPortal(partitionID, itemID, portal)
 
         const portalMetadata = {
             portalNode,
@@ -763,12 +905,13 @@ export class CacheHandler {
             itemID,
             scrollerProperties,
             component,
+            partitionID,
         }
 
         this.cacheProps.metadataMap.set(itemID, portalMetadata)
         this.cacheProps.indexToItemIDMap.set(index, itemID)
 
-        if (!isPreload) this.renderPortalList()
+        if (!isPreload) this.renderPortalLists()
 
         return portalMetadata
 
@@ -823,10 +966,15 @@ export class CacheHandler {
                 content = usercontent
             }
 
-            const portalData = 
+            const callback = (portalData) => {
+
+                scrollerProperties.isReparentingRef = portalData.isReparentingRef
+
+            }
+
+            const portalData = await
                 this.createPortal(content, index, itemID, scrollerProperties, true) // true = isPreload
             // make available to user content
-            scrollerProperties.isReparentingRef = portalData.isReparentingRef
 
         } else {
 
@@ -859,24 +1007,28 @@ export class CacheHandler {
 
         const { 
             metadataMap,
-            portalMap,
             indexToItemIDMap 
         } = this.cacheProps
 
+        const { removePartitionPortal } = this
+
         const deleteList = []
-        for (let i of indexArray) {
+        for (const index of indexArray) {
 
-            const itemID = indexToItemIDMap.get(i)
+            const itemID = indexToItemIDMap.get(index)
 
-            deleteList.push({index:i,itemID})
+            if (itemID === undefined) continue // async mismatch
+
+            deleteList.push({index,itemID})
+            const { partitionID } = metadataMap.get(itemID)
+
+            removePartitionPortal(partitionID,itemID)
+
             metadataMap.delete(itemID)
-            portalMap.delete(itemID)
-            indexToItemIDMap.delete(i)
+            indexToItemIDMap.delete(index)
 
         }
         
-        this.cacheProps.modified = true
-
         deleteListCallback && deleteListCallback(deleteList)
 
     }
@@ -888,7 +1040,7 @@ export class CacheHandler {
 
     }
 
-    getPortal(itemID) {
+    getPortalMetadata(itemID) {
 
         if (this.hasPortal(itemID)) {
             return this.cacheProps.metadataMap.get(itemID)
@@ -922,28 +1074,33 @@ const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWi
 // ========================[ Utility component ]==============================
 
 // portal list component for rapid relisting of updates, using external callback for set state
-export const PortalList = ({ cacheProps }) => {
+export const CachePartition = ({ cacheProps, partitionID, callback }) => {
 
     const [portalListCounter, setPortalListCounter] = useState(0)
 
-    const counterRef = useRef(null)
-    counterRef.current = portalListCounter
+    const counterRef = useRef(portalListCounter)
 
     const isMountedRef = useRef(true)
 
     const portalArrayRef = useRef(null)
 
+    const partitionMetadata = cacheProps.partitionMetadataMap.get(partitionID)
+
+    const forceUpdate = useCallback((portalRenderList) => {
+
+        portalArrayRef.current = portalRenderList
+
+        isMountedRef.current && setPortalListCounter(++counterRef.current) // force render
+
+    },[])
+
     useEffect(()=>{
 
         isMountedRef.current = true
 
-        cacheProps.setListState = ()=>{
+        partitionMetadata.forceUpdate = forceUpdate
 
-            portalArrayRef.current = cacheProps.portalList
-
-            isMountedRef.current && setPortalListCounter(++counterRef.current) // force render
-
-        }
+        callback()
 
         return () => {
 
@@ -953,6 +1110,43 @@ export const PortalList = ({ cacheProps }) => {
 
     },[]) 
 
-    return portalArrayRef.current
+    return <div key = {partitionID} data-type = 'cachepartition' data-partitionid = {partitionID}>
+        {portalArrayRef.current}
+    </div>
+
+}
+
+export const PortalMasterCache = ({ cacheProps }) => {
+
+    const [portalCacheCounter, setPortalCacheCounter] = useState(0)
+    const counterRef = useRef(portalCacheCounter)
+
+    const isMountedRef = useRef(true)
+
+    const partitionArrayRef = useRef(null)
+
+    const partitionRepoForceUpdate = useCallback((partitionRenderList) => {
+
+        partitionArrayRef.current = partitionRenderList
+
+        isMountedRef.current && setPortalCacheCounter(++counterRef.current) // force render
+
+    },[])
+
+    useEffect(()=>{
+
+        isMountedRef.current = true
+
+        cacheProps.partitionRepoForceUpdate = partitionRepoForceUpdate
+
+        return () => {
+
+            isMountedRef.current = false
+
+        }
+
+    },[]) 
+
+    return partitionArrayRef.current
 
 }
