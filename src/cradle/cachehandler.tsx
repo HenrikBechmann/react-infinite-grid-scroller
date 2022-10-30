@@ -117,20 +117,30 @@ export class CacheHandler {
                 partitionID,
             })
 
+        const resolvefunc = {
+            current:null
+        }
+
+        const promise = new Promise((resolve, reject) => {
+            resolvefunc.current = resolve
+        })
+
+        const callback = () => {
+            // console.log('callback from CachePartition: partitionID', partitionID)
+            resolvefunc.current(partitionID)
+            
+        }
+
         this.cacheProps.partitionMap.set(partitionID,
-            <CachePartition key = {partitionID} cacheProps = {this.cacheProps} partitionID = {partitionID} />)
+            <CachePartition 
+                key = {partitionID} 
+                cacheProps = {this.cacheProps} 
+                partitionID = {partitionID} 
+                callback = { callback } />)
 
         this.renderPartitionRepo()
 
-        const promise = new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(partitionID)
-            },100)
-        })
-
         return promise
-
-        // return partitionID
 
     }
 
@@ -170,7 +180,6 @@ export class CacheHandler {
         if (partitionPtr === null) {
 
             partitionPtr = await this.addPartition()
-            console.log('after await',partitionPtr)
 
         }
 
@@ -196,15 +205,15 @@ export class CacheHandler {
 
         partitionMetadata.portalMap.delete(itemID)
 
-        if (!partitionMetadata.portalMap.size) {
+        // if (!partitionMetadata.portalMap.size) {
 
-            this.removePartition(partitionID)
+        //     this.removePartition(partitionID)
 
-        } else {
+        // } else {
 
             this.cacheProps.partitionModifiedSet.add(partitionID)
 
-        }
+        // }
 
     }
 
@@ -216,8 +225,10 @@ export class CacheHandler {
 
         partitionMetadata.portalRenderList =  Array.from(partitionMetadata.portalMap.values())
 
-        partitionMetadata.forceUpdate(partitionMetadata.portalRenderList)
-        // partitionMetadata.forceUpdate && partitionMetadata.forceUpdate(partitionMetadata.portalRenderList) // TODO existence check is just a workaround
+        // console.log('calling forceUpdate for partitionID', partitionID, {...partitionMetadata})
+
+        // if forceUpdate has not yet been assigned, it is in the works from first call of partition
+        partitionMetadata.forceUpdate && partitionMetadata.forceUpdate(partitionMetadata.portalRenderList)
 
     }
 
@@ -881,7 +892,7 @@ export class CacheHandler {
     }
 
      // create new portal
-    createPortal(component, index, itemID, scrollerProperties, callback, isPreload = false) {
+    async createPortal(component, index, itemID, scrollerProperties, isPreload = false) {
 
         this.removeRequestedPortal(index)
 
@@ -891,42 +902,35 @@ export class CacheHandler {
         const portalNode = createPortalNode(
                 index, itemID, layout, orientation, cellHeight, cellWidth)
 
-        // const partitionID = this.findPartitionWithRoom()
-        const promise = this.findPartitionWithRoom()
+        const partitionID = await this.findPartitionWithRoom()
 
-        promise.then((partitionID) =>{
+        // console.log('in createPortal: partitionID',partitionID)
 
-            console.log('createPortal: partitionID', partitionID)
+        const portal = 
+            <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID} data-index = {index}>
+                <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>
+            </div>
 
-            const portal = 
-                <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID} data-index = {index}>
-                    <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>
-                </div>
+        this.addPartitionPortal(partitionID, itemID, portal)
 
-            this.addPartitionPortal(partitionID, itemID, portal)
+        const portalMetadata = {
+            portalNode,
+            isReparentingRef:{
+                current:false,
+            },
+            index,
+            itemID,
+            scrollerProperties,
+            component,
+            partitionID,
+        }
 
-            const portalMetadata = {
-                portalNode,
-                isReparentingRef:{
-                    current:false,
-                },
-                index,
-                itemID,
-                scrollerProperties,
-                component,
-                partitionID,
-            }
+        this.cacheProps.metadataMap.set(itemID, portalMetadata)
+        this.cacheProps.indexToItemIDMap.set(index, itemID)
 
-            this.cacheProps.metadataMap.set(itemID, portalMetadata)
-            this.cacheProps.indexToItemIDMap.set(index, itemID)
+        if (!isPreload) this.renderPortalLists()
 
-            if (!isPreload) this.renderPortalLists()
-
-            callback(portalMetadata)
-
-        })
-
-        // return portalMetadata
+        return portalMetadata
 
     }
 
@@ -985,8 +989,8 @@ export class CacheHandler {
 
             }
 
-            // const portalData = 
-                this.createPortal(content, index, itemID, scrollerProperties, callback, true) // true = isPreload
+            const portalData = await
+                this.createPortal(content, index, itemID, scrollerProperties, true) // true = isPreload
             // make available to user content
 
         } else {
@@ -1087,7 +1091,7 @@ const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWi
 // ========================[ Utility component ]==============================
 
 // portal list component for rapid relisting of updates, using external callback for set state
-export const CachePartition = ({ cacheProps, partitionID }) => {
+export const CachePartition = ({ cacheProps, partitionID, callback }) => {
 
     const [portalListCounter, setPortalListCounter] = useState(0)
 
@@ -1114,6 +1118,8 @@ export const CachePartition = ({ cacheProps, partitionID }) => {
         isMountedRef.current = true
 
         partitionMetadata.forceUpdate = forceUpdate
+
+        callback()
 
         return () => {
 

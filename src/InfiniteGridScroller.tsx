@@ -379,7 +379,7 @@ const InfiniteGridScroller = (props) => {
             </Scrollblock>
         </Viewport>}
         {(scrollerState != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
-            <PortalMasterCache key = "master" cacheProps = {cacheHandlerRef.current.cacheProps} />
+            <PortalMasterCache cacheProps = {cacheHandlerRef.current.cacheProps} />
         </div>}
     </ErrorBoundary>
 }
