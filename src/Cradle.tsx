@@ -210,13 +210,6 @@ const Cradle = ({
                 viewportwidth:
                 viewportheight
 
-        // console.log('viewportcrosslength', viewportcrosslength)
-        // if (viewportcrosslength == 0) {
-
-        //     return 0
-
-        // }
-
         // cross length of viewport (gap to match crossLength)
         const viewportcrosslengthforcalc = viewportcrosslength - (padding * 2) + gap 
 
