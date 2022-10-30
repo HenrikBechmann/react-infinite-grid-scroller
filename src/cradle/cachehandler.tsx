@@ -42,7 +42,7 @@
         - if your component does not scroll, there should be no issues.
 */
 
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect, useRef, useCallback} from 'react'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
@@ -100,8 +100,8 @@ export class CacheHandler {
     renderPartitionRepo = () => {
 
         this.cacheProps.partitionRenderList = Array.from(this.cacheProps.partitionMap.values())
-        console.log('rendering partition repo',[...this.cacheProps.partitionRenderList])
-        this.cacheProps.partitionRepoForceUpdate()
+        // console.log('rendering partition repo',[...this.cacheProps.partitionRenderList])
+        this.cacheProps.partitionRepoForceUpdate(this.cacheProps.partitionRenderList)
 
     }
 
@@ -204,9 +204,11 @@ export class CacheHandler {
 
         partitionMetadata.portalRenderList =  Array.from(partitionMetadata.portalMap.values())
 
-        console.log('renderPartition: partitionMetadata',{...partitionMetadata});
+        // console.log('renderPartition: forceUpdate, partitionMetadata.portalRenderList',
+            // partitionMetadata.forceUpdate, [...partitionMetadata.portalRenderList]);
 
-        partitionMetadata.forceUpdate && partitionMetadata.forceUpdate() // TODO existence check just a workaround
+        partitionMetadata.forceUpdate(partitionMetadata.portalRenderList)
+        // partitionMetadata.forceUpdate && partitionMetadata.forceUpdate(partitionMetadata.portalRenderList) // TODO existence check is just a workaround
 
     }
 
@@ -238,7 +240,7 @@ export class CacheHandler {
         this.cacheProps.partitionMap.clear()
         this.cacheProps.partitionRenderList = []
         this.cacheProps.partitionModifiedSet.clear()
-        this.cacheProps.partitionRepoForceUpdate()
+        this.cacheProps.partitionRepoForceUpdate(null)
 
     }
 
@@ -882,7 +884,7 @@ export class CacheHandler {
 
         const partitionID = this.findPartitionWithRoom()
 
-        console.log('createPortal: findPartitionWithRoom',partitionID)
+        // console.log('createPortal: findPartitionWithRoom',partitionID)
 
         const portal = 
             <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID} data-index = {index}>
@@ -1068,27 +1070,29 @@ export const CachePartition = ({ cacheProps, partitionID }) => {
 
     const [portalListCounter, setPortalListCounter] = useState(0)
 
-    const counterRef = useRef(null)
-    counterRef.current = portalListCounter
+    const counterRef = useRef(portalListCounter)
 
     const isMountedRef = useRef(true)
 
     const portalArrayRef = useRef(null)
 
+    const partitionMetadata = cacheProps.partitionMetadataMap.get(partitionID)
+
+    // console.log('RUNNING CachePartition', partitionID, {...partitionMetadata})
+
+    const forceUpdate = useCallback((portalRenderList) => {
+
+        portalArrayRef.current = portalRenderList
+
+        isMountedRef.current && setPortalListCounter(++counterRef.current) // force render
+
+    },[])
+
     useEffect(()=>{
 
         isMountedRef.current = true
 
-        const partitionMetadata = cacheProps.partitionMetadataMap.get(partitionID)
-
-        partitionMetadata.forceUpdate = () => {
-
-            const partitionMetadata = cacheProps.partitionMetadataMap.get(partitionID)
-            portalArrayRef.current = partitionMetadata.portalRenderList
-
-            isMountedRef.current && setPortalListCounter(++counterRef.current) // force render
-
-        }
+        partitionMetadata.forceUpdate = forceUpdate
 
         return () => {
 
@@ -1107,25 +1111,30 @@ export const CachePartition = ({ cacheProps, partitionID }) => {
 export const PortalMasterCache = ({ cacheProps }) => {
 
     const [portalCacheCounter, setPortalCacheCounter] = useState(0)
+    const counterRef = useRef(portalCacheCounter)
 
-    const counterRef = useRef(null)
-    counterRef.current = portalCacheCounter
+    console.log('RUNNING PortalMasterCache: portalCacheCounter, counterRef',portalCacheCounter, counterRef)
 
     const isMountedRef = useRef(true)
 
-    const partitionArrayRef = useRef(cacheProps.partitionRenderList)
+    const partitionArrayRef = useRef(null)
+
+    const partitionRepoForceUpdate = useCallback((partitionRenderList) => {
+
+        console.log('partitionRepoForceUpdate: isMountedRef.current, counterRef.current, partitionRenderList',
+            isMountedRef.current, counterRef.current, partitionRenderList)
+
+        partitionArrayRef.current = partitionRenderList
+
+        isMountedRef.current && setPortalCacheCounter(++counterRef.current) // force render
+
+    },[])
 
     useEffect(()=>{
 
         isMountedRef.current = true
-        partitionArrayRef.current = cacheProps.partitionRenderList
-        cacheProps.partitionRepoForceUpdate = ()=>{
 
-            partitionArrayRef.current = cacheProps.partitionRenderList
-
-            isMountedRef.current && setPortalCacheCounter(++counterRef.current) // force render
-
-        }
+        cacheProps.partitionRepoForceUpdate = partitionRepoForceUpdate
 
         return () => {
 
@@ -1134,6 +1143,8 @@ export const PortalMasterCache = ({ cacheProps }) => {
         }
 
     },[]) 
+
+    console.log('RENDERING PortalMasterCache',partitionArrayRef.current)
 
     return partitionArrayRef.current
 
