@@ -116,12 +116,21 @@ export class CacheHandler {
                 forceUpdate:null,
                 partitionID,
             })
+
         this.cacheProps.partitionMap.set(partitionID,
-            <CachePartition key = {partitionID} cacheProps = {this.cacheProps} partitionID = {partitionID}/>)
+            <CachePartition key = {partitionID} cacheProps = {this.cacheProps} partitionID = {partitionID} />)
 
         this.renderPartitionRepo()
 
-        return partitionID
+        const promise = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(partitionID)
+            },100)
+        })
+
+        return promise
+
+        // return partitionID
 
     }
 
@@ -134,7 +143,7 @@ export class CacheHandler {
 
     }
 
-    findPartitionWithRoom = () => {
+    async findPartitionWithRoom() {
 
         const { CACHE_PARTITION_SIZE } = this
 
@@ -159,7 +168,10 @@ export class CacheHandler {
         }
 
         if (partitionPtr === null) {
-            partitionPtr = this.addPartition()
+
+            partitionPtr = await this.addPartition()
+            console.log('after await',partitionPtr)
+
         }
 
         this.cacheProps.partitionPtr = partitionPtr
@@ -204,11 +216,8 @@ export class CacheHandler {
 
         partitionMetadata.portalRenderList =  Array.from(partitionMetadata.portalMap.values())
 
-        // console.log('renderPartition: forceUpdate, partitionMetadata.portalRenderList',
-            // partitionMetadata.forceUpdate, [...partitionMetadata.portalRenderList]);
-
-        // partitionMetadata.forceUpdate(partitionMetadata.portalRenderList)
-        partitionMetadata.forceUpdate && partitionMetadata.forceUpdate(partitionMetadata.portalRenderList) // TODO existence check is just a workaround
+        partitionMetadata.forceUpdate(partitionMetadata.portalRenderList)
+        // partitionMetadata.forceUpdate && partitionMetadata.forceUpdate(partitionMetadata.portalRenderList) // TODO existence check is just a workaround
 
     }
 
@@ -872,7 +881,7 @@ export class CacheHandler {
     }
 
      // create new portal
-    createPortal(component, index, itemID, scrollerProperties, isPreload = false) {
+    createPortal(component, index, itemID, scrollerProperties, callback, isPreload = false) {
 
         this.removeRequestedPortal(index)
 
@@ -882,35 +891,42 @@ export class CacheHandler {
         const portalNode = createPortalNode(
                 index, itemID, layout, orientation, cellHeight, cellWidth)
 
-        const partitionID = this.findPartitionWithRoom()
+        // const partitionID = this.findPartitionWithRoom()
+        const promise = this.findPartitionWithRoom()
 
-        // console.log('createPortal: findPartitionWithRoom',partitionID)
+        promise.then((partitionID) =>{
 
-        const portal = 
-            <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID} data-index = {index}>
-                <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>
-            </div>
+            console.log('createPortal: partitionID', partitionID)
 
-        this.addPartitionPortal(partitionID, itemID, portal)
+            const portal = 
+                <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID} data-index = {index}>
+                    <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>
+                </div>
 
-        const portalMetadata = {
-            portalNode,
-            isReparentingRef:{
-                current:false,
-            },
-            index,
-            itemID,
-            scrollerProperties,
-            component,
-            partitionID,
-        }
+            this.addPartitionPortal(partitionID, itemID, portal)
 
-        this.cacheProps.metadataMap.set(itemID, portalMetadata)
-        this.cacheProps.indexToItemIDMap.set(index, itemID)
+            const portalMetadata = {
+                portalNode,
+                isReparentingRef:{
+                    current:false,
+                },
+                index,
+                itemID,
+                scrollerProperties,
+                component,
+                partitionID,
+            }
 
-        if (!isPreload) this.renderPortalLists()
+            this.cacheProps.metadataMap.set(itemID, portalMetadata)
+            this.cacheProps.indexToItemIDMap.set(index, itemID)
 
-        return portalMetadata
+            if (!isPreload) this.renderPortalLists()
+
+            callback(portalMetadata)
+
+        })
+
+        // return portalMetadata
 
     }
 
@@ -963,10 +979,15 @@ export class CacheHandler {
                 content = usercontent
             }
 
-            const portalData = 
-                this.createPortal(content, index, itemID, scrollerProperties, true) // true = isPreload
+            const callback = (portalData) => {
+
+                scrollerProperties.isReparentingRef = portalData.isReparentingRef
+
+            }
+
+            // const portalData = 
+                this.createPortal(content, index, itemID, scrollerProperties, callback, true) // true = isPreload
             // make available to user content
-            scrollerProperties.isReparentingRef = portalData.isReparentingRef
 
         } else {
 
@@ -1121,9 +1142,6 @@ export const PortalMasterCache = ({ cacheProps }) => {
 
     const partitionRepoForceUpdate = useCallback((partitionRenderList) => {
 
-        // console.log('partitionRepoForceUpdate: isMountedRef.current, counterRef.current, partitionRenderList',
-        //     isMountedRef.current, counterRef.current, partitionRenderList)
-
         partitionArrayRef.current = partitionRenderList
 
         isMountedRef.current && setPortalCacheCounter(++counterRef.current) // force render
@@ -1143,8 +1161,6 @@ export const PortalMasterCache = ({ cacheProps }) => {
         }
 
     },[]) 
-
-    // console.log('RENDERING PortalMasterCache',partitionArrayRef.current)
 
     return partitionArrayRef.current
 

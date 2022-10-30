@@ -363,15 +363,22 @@ const CellFrame = ({
                                     content = usercontent
                                 }
 
-                                portalMetadataRef.current = 
-                                    cacheHandler.createPortal(content, index, itemID, scrollerProperties)
-                                portalNodeRef.current = portalMetadataRef.current.portalNode
-                                setContainerStyles(
-                                    portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
-                                // make available to user content
-                                scrollerProperties.isReparentingRef = portalMetadataRef.current.isReparentingRef
+                                const callback = (metaData) => {
 
-                                isMountedRef.current && setFrameState('inserting')
+                                    portalMetadataRef.current = metaData
+
+                                    portalNodeRef.current = portalMetadataRef.current.portalNode
+                                    setContainerStyles(
+                                        portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
+                                    // make available to user content
+                                    scrollerProperties.isReparentingRef = portalMetadataRef.current.isReparentingRef
+
+                                    isMountedRef.current && setFrameState('inserting')
+
+                                }
+
+                                    cacheHandler.createPortal(content, index, itemID, scrollerProperties, callback)
+
 
                             } else { // null or undefined; handle non-component value
 
