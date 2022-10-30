@@ -105,18 +105,17 @@ const CellFrame = ({
     const placeholderMessagesRef = useRef(null)
 
    placeholderMessagesRef.current = useMemo(() => {
+
         const newMessages = {...defaultPlaceholderMessages,...placeholderMessages}
-        // console.log('defaultPlaceholderMessages, placeholderMessages, newMessages',
-            // defaultPlaceholderMessages, placeholderMessages, newMessages)
+
         return newMessages
+
     },[placeholderMessages])
 
     // processing state
     const [frameState, setFrameState] = useState('setup')
     const frameStateRef = useRef(null)
     frameStateRef.current = frameState
-
-    // console.log('RUNNING frameState','-'+index+'-' ,typeof index ,'_'+instanceID+'_', frameState)
 
     // DOM ref
     const frameRef = useRef(null)
@@ -240,7 +239,6 @@ const CellFrame = ({
     // set styles
     useEffect(()=>{
 
-        // console.log('getting styles')
         let newStyles = getFrameStyles(
             orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, stylesRef.current)
         
@@ -298,7 +296,6 @@ const CellFrame = ({
 
                 } else {
 
-                    // console.log('placeholderMessagesRef', placeholderMessagesRef)
                     messageRef.current = placeholderMessagesRef.current.loading
 
                     setFrameState('fetching')

@@ -34,9 +34,6 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     }) => {
 
-    // console.log('getContentListRequirements: targetAxisReferenceIndex, baseRowLength',
-    //     targetAxisReferenceIndex, baseRowLength)
-
     const { 
         padding,
     } = cradleInheritedProperties
@@ -783,8 +780,6 @@ const createCellFrame = ({
 
     // get new or existing itemID
     const itemID = cacheHandler.getNewOrExistingItemID(index)
-
-    // console.log('creating CellFrame','-'+index+'-','_'+instanceID+'_')
 
     return <CellFrame 
         key = { instanceID } 

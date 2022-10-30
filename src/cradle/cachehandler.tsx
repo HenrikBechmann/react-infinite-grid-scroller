@@ -97,10 +97,12 @@ export class CacheHandler {
 
     // ===========================[ CACHE PARTITION MANAGEMENT ]===============================
 
+    // partitions are added but not removed
+
     renderPartitionRepo = () => {
 
         this.cacheProps.partitionRenderList = Array.from(this.cacheProps.partitionMap.values())
-        // console.log('rendering partition repo',[...this.cacheProps.partitionRenderList])
+
         this.cacheProps.partitionRepoForceUpdate(this.cacheProps.partitionRenderList)
 
     }
@@ -126,7 +128,7 @@ export class CacheHandler {
         })
 
         const callback = () => {
-            // console.log('callback from CachePartition: partitionID', partitionID)
+
             resolvefunc.current(partitionID)
             
         }
@@ -141,15 +143,6 @@ export class CacheHandler {
         this.renderPartitionRepo()
 
         return promise
-
-    }
-
-    removePartition = (partitionID) => {
-
-        this.cacheProps.partitionMetadataMap.delete(partitionID)
-        this.cacheProps.partitionMap.delete(partitionID)
-
-        this.renderPartitionRepo()
 
     }
 
@@ -170,11 +163,12 @@ export class CacheHandler {
 
         partitionPtr = null
         for (const [partitionID, partitionMetadata] of partitionMetadataMap) {
-            // console.log('findPartitionWithRoom: partitionMetadata, partitionID', partitionMetadata, partitionID)
+
             if (partitionMetadata.portalMap.size < CACHE_PARTITION_SIZE) {
                 partitionPtr = partitionID
                 break
             }
+
         }
 
         if (partitionPtr === null) {
@@ -205,15 +199,8 @@ export class CacheHandler {
 
         partitionMetadata.portalMap.delete(itemID)
 
-        // if (!partitionMetadata.portalMap.size) {
 
-        //     this.removePartition(partitionID)
-
-        // } else {
-
-            this.cacheProps.partitionModifiedSet.add(partitionID)
-
-        // }
+        this.cacheProps.partitionModifiedSet.add(partitionID)
 
     }
 
@@ -224,8 +211,6 @@ export class CacheHandler {
         if (!partitionMetadata) return
 
         partitionMetadata.portalRenderList =  Array.from(partitionMetadata.portalMap.values())
-
-        // console.log('calling forceUpdate for partitionID', partitionID, {...partitionMetadata})
 
         // if forceUpdate has not yet been assigned, it is in the works from first call of partition
         partitionMetadata.forceUpdate && partitionMetadata.forceUpdate(partitionMetadata.portalRenderList)
@@ -904,8 +889,6 @@ export class CacheHandler {
 
         const partitionID = await this.findPartitionWithRoom()
 
-        // console.log('in createPortal: partitionID',partitionID)
-
         const portal = 
             <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID} data-index = {index}>
                 <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>
@@ -1103,8 +1086,6 @@ export const CachePartition = ({ cacheProps, partitionID, callback }) => {
 
     const partitionMetadata = cacheProps.partitionMetadataMap.get(partitionID)
 
-    // console.log('RUNNING CachePartition', partitionID, {...partitionMetadata})
-
     const forceUpdate = useCallback((portalRenderList) => {
 
         portalArrayRef.current = portalRenderList
@@ -1139,8 +1120,6 @@ export const PortalMasterCache = ({ cacheProps }) => {
 
     const [portalCacheCounter, setPortalCacheCounter] = useState(0)
     const counterRef = useRef(portalCacheCounter)
-
-    // console.log('RUNNING PortalMasterCache: portalCacheCounter, counterRef',portalCacheCounter, counterRef)
 
     const isMountedRef = useRef(true)
 

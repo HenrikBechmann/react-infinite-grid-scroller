@@ -171,8 +171,6 @@ const Cradle = ({
         isCachedRef.current = isInPortal
     }
 
-    // console.log('immediate width/height', viewportwidth,viewportheight)
-
     // cradle state
     const [cradleState, setCradleState] = useState('setup')
     const cradleStateRef = useRef(null) // access by closures
@@ -198,8 +196,6 @@ const Cradle = ({
             triggercellTriggerlineTailRef:triggercellTriggerlineTailElementRef,
         }
     )
-
-    // console.log('Cradle scrollerProperties.cellFrameDataRef',scrollerProperties?.cellFrameDataRef)
 
     // ------------------------[ calculated properties ]------------------------
     // configuration calculations
@@ -245,8 +241,6 @@ const Cradle = ({
         viewportheight, 
         viewportwidth,
     ])
-
-    // console.log('crosscount', crosscount)
 
     // various row counts
     const [
@@ -472,8 +466,6 @@ const Cradle = ({
         serviceHandler,
         stylesHandler,
     } = handlersRef.current
-
-    // console.log('viewportwidth, viewportheight',viewportwidth, viewportheight )
 
     // =======================[ INTERCEPT CACHING STATE CHANGE ]=========================
 
@@ -1048,8 +1040,6 @@ const Cradle = ({
 
                     const { cradlePositionData } = layoutHandler
 
-                    // console.log('Cradle: parentingtransition: cradlePositionData',cradlePositionData)
-                    // reset scroll position to previous value
                     const blockScrollPos = cradlePositionData.blockScrollPos
                     if (blockScrollPos !== null) {
 
@@ -1178,11 +1168,6 @@ const Cradle = ({
                 // prepare the cycle for preparerender
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
-
-                // console.log('cradleContent TAIL length', 
-                //     '-'+scrollerID+'-',
-                //     '~'+scrollerProperties?.cellFrameDataRef.current.index+'~',
-                //     cradleContent.tailDisplayComponents.length)
 
                 // update virtual DOM
                 const { layout } = cradleInheritedPropertiesRef.current
