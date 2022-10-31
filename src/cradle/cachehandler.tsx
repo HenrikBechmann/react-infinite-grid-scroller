@@ -113,6 +113,7 @@ export class CacheHandler {
         this.cacheProps.partitionMetadataMap.set(partitionID,
             {
                 portalMap:new Map(), 
+                mapcount:0, // portalMap update can be async, so mapcount is used
                 portalRenderList:null, 
                 modified:false,
                 forceUpdate:null,
@@ -156,7 +157,8 @@ export class CacheHandler {
         let partitionMetadata
         if (partitionPtr !== null) {
             partitionMetadata = partitionMetadataMap.get(partitionPtr)
-            if (partitionMetadata.portalMap.size < CACHE_PARTITION_SIZE) {
+            if (partitionMetadata.mapcount < CACHE_PARTITION_SIZE) {
+                partitionMetadata.mapcount += 1 
                 return partitionPtr
             }
         }
@@ -164,7 +166,8 @@ export class CacheHandler {
         partitionPtr = null
         for (const [partitionID, partitionMetadata] of partitionMetadataMap) {
 
-            if (partitionMetadata.portalMap.size < CACHE_PARTITION_SIZE) {
+            if (partitionMetadata.mapcount < CACHE_PARTITION_SIZE) {
+                partitionMetadata.mapcount += 1 
                 partitionPtr = partitionID
                 break
             }
@@ -174,6 +177,8 @@ export class CacheHandler {
         if (partitionPtr === null) {
 
             partitionPtr = await this.addPartition()
+            partitionMetadata = partitionMetadataMap.get(partitionPtr)
+            partitionMetadata.mapcount += 1 
 
         }
 
@@ -198,6 +203,7 @@ export class CacheHandler {
         const partitionMetadata = this.cacheProps.partitionMetadataMap.get(partitionID)
 
         partitionMetadata.portalMap.delete(itemID)
+        partitionMetadata.mapcount -= 1 
 
 
         this.cacheProps.partitionModifiedSet.add(partitionID)
@@ -914,6 +920,7 @@ export class CacheHandler {
         this.cacheProps.indexToItemIDMap.set(index, itemID)
 
         if (!isPreload) this.renderPortalLists()
+        // this.renderPortalLists()
 
         return portalMetadata
 
