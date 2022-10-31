@@ -80,6 +80,7 @@ const CellFrame = ({
 
     const coreConfigRef = useRef(null)
     coreConfigRef.current = {
+        orientation,
         layout,
         cellWidth,
         cellHeight
