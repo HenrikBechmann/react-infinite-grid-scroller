@@ -157,9 +157,11 @@ export class CacheHandler {
         let partitionMetadata
         if (partitionPtr !== null) {
             partitionMetadata = partitionMetadataMap.get(partitionPtr)
-            if (partitionMetadata.mapcount < CACHE_PARTITION_SIZE) {
-                partitionMetadata.mapcount += 1 
-                return partitionPtr
+            if (partitionMetadata) {
+                if (partitionMetadata.mapcount < CACHE_PARTITION_SIZE) {
+                    partitionMetadata.mapcount += 1 
+                    return partitionPtr
+                }
             }
         }
 
@@ -253,6 +255,7 @@ export class CacheHandler {
         this.cacheProps.partitionMap.clear()
         this.cacheProps.partitionRenderList = []
         this.cacheProps.partitionModifiedSet.clear()
+        this.cacheProps.partitionPtr = null
         this.cacheProps.partitionRepoForceUpdate(null)
 
     }
