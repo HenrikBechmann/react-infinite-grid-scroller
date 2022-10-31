@@ -275,6 +275,7 @@ const CellFrame = ({
                     cellWidth,
                     cellHeight,
                 } = coreConfigRef.current
+
                 if (cached) {
 
                     messageRef.current = placeholderMessagesRef.current.retrieving
@@ -302,8 +303,8 @@ const CellFrame = ({
 
                     // reserve space in the cache
                     cacheHandler.registerRequestedPortal(index)
-                    // enqueue the fetch
 
+                    // enqueue the fetch
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
                         let returnvalue, usercontent, error

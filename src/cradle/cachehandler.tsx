@@ -113,6 +113,7 @@ export class CacheHandler {
         this.cacheProps.partitionMetadataMap.set(partitionID,
             {
                 portalMap:new Map(), 
+                mapcount:0, // portalMap update can be async, so mapcount is used
                 portalRenderList:null, 
                 modified:false,
                 forceUpdate:null,
@@ -156,7 +157,8 @@ export class CacheHandler {
         let partitionMetadata
         if (partitionPtr !== null) {
             partitionMetadata = partitionMetadataMap.get(partitionPtr)
-            if (partitionMetadata.portalMap.size < CACHE_PARTITION_SIZE) {
+            if (partitionMetadata.mapcount < CACHE_PARTITION_SIZE) {
+                partitionMetadata.mapcount += 1 
                 return partitionPtr
             }
         }
@@ -164,7 +166,8 @@ export class CacheHandler {
         partitionPtr = null
         for (const [partitionID, partitionMetadata] of partitionMetadataMap) {
 
-            if (partitionMetadata.portalMap.size < CACHE_PARTITION_SIZE) {
+            if (partitionMetadata.mapcount < CACHE_PARTITION_SIZE) {
+                partitionMetadata.mapcount += 1 
                 partitionPtr = partitionID
                 break
             }
@@ -174,6 +177,8 @@ export class CacheHandler {
         if (partitionPtr === null) {
 
             partitionPtr = await this.addPartition()
+            partitionMetadata = partitionMetadataMap.get(partitionPtr)
+            partitionMetadata.mapcount += 1 
 
         }
 
@@ -198,6 +203,7 @@ export class CacheHandler {
         const partitionMetadata = this.cacheProps.partitionMetadataMap.get(partitionID)
 
         partitionMetadata.portalMap.delete(itemID)
+        partitionMetadata.mapcount -= 1 
 
 
         this.cacheProps.partitionModifiedSet.add(partitionID)
@@ -914,6 +920,7 @@ export class CacheHandler {
         this.cacheProps.indexToItemIDMap.set(index, itemID)
 
         if (!isPreload) this.renderPortalLists()
+        // this.renderPortalLists()
 
         return portalMetadata
 
@@ -968,15 +975,10 @@ export class CacheHandler {
                 content = usercontent
             }
 
-            const callback = (portalData) => {
-
-                scrollerProperties.isReparentingRef = portalData.isReparentingRef
-
-            }
-
-            const portalData = await
-                this.createPortal(content, index, itemID, scrollerProperties, true) // true = isPreload
+            const portalData = 
+                await this.createPortal(content, index, itemID, scrollerProperties, true) // true = isPreload
             // make available to user content
+            scrollerProperties.isReparentingRef = portalData.isReparentingRef
 
         } else {
 
@@ -1073,7 +1075,7 @@ const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWi
 
 }     
 
-// ========================[ Utility component ]==============================
+// ========================[ Utility components ]==============================
 
 // portal list component for rapid relisting of updates, using external callback for set state
 export const CachePartition = ({ cacheProps, partitionID, callback }) => {
@@ -1117,7 +1119,6 @@ export const CachePartition = ({ cacheProps, partitionID, callback }) => {
     useEffect(()=>{
 
         switch (partitionState) {
-            // case 'update': 
             case 'setup': {
                 setPartitionState('ready')
                 break
@@ -1169,7 +1170,6 @@ export const PortalMasterCache = ({ cacheProps }) => {
 
         switch (masterState) {
             case 'setup': {
-            // case 'update': {
                 setMasterState('ready')
             }
         }
