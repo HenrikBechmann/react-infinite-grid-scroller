@@ -1189,9 +1189,13 @@ const Cradle = ({
 
                 setTimeout(() => { // give time for DOM to produce layout
             
-                    contentHandler.adjustScrollblockForVariability('setcradle')
+                    if (isMountedRef.current) {
 
-                    setCradleState('finishsetforvariability')
+                        contentHandler.adjustScrollblockForVariability('setcradle')
+
+                        setCradleState('finishsetforvariability')
+                        
+                    }
 
                 },TIMEOUT_FOR_VARIABLE_MEASUREMENTS)
                 
