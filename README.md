@@ -217,9 +217,9 @@ Details about the functions returned in an object by `functionsCallback`:
 |getCacheItemMap|_none_|map: Map|snapshot of cache itemID (=key) to object (=value) map. Object = {index, component} where component = user component|
 |getCradleIndexMap|_none_|map: Map|snapshot of `Cradle` index (=key) to itemID (=value) map|
 |[_**CACHE MANAGEMENT**_]|
-|insertIndex|index:integer, rangehighindex = null:integer or null|changeList:array, replaceList:array|can insert a range of indexes. Displaced indexes, and higher indexes, are renumbered. Changes the list size; synchronizes the `Cradle`|
-|removeIndex|index:integer, rangehighindex = null:integer or null|changeList:array, replaceList:array|a range of indexes can be removed. Higher indexes are renumbered. Changes the list size; synchronizes to the `Cradle`|
-|moveIndex|toindex:integer, fromindex:integer, fromhighrange = null:integer or null|processedIndexList:array|a range of indexes can be moved. Displaced and higher indexes are renumbered. Changes the list size; synchronizes to the `Cradle`|
+|insertIndex|index:integer, rangehighindex = integer or null|changeList:array, replaceList:array|can insert a range of indexes. Displaced indexes, and higher indexes, are renumbered. Changes the list size; synchronizes the `Cradle`|
+|removeIndex|index:integer, rangehighindex = integer or null|changeList:array, replaceList:array|a range of indexes can be removed. Higher indexes are renumbered. Changes the list size; synchronizes to the `Cradle`|
+|moveIndex|toindex:integer, fromindex:integer, fromhighrange = integer or null|processedIndexList:array|a range of indexes can be moved. Displaced and higher indexes are renumbered. Changes the list size; synchronizes to the `Cradle`|
 |remapIndexes|changeMap:Map|modifiedIndexList:array, processedIndexList:array, deletedIndexList:array, deletedOrphanedItemIDList:array, deletedOrphanedIndexList:array, errorEntriesMap:Map, <br />changeMap:Map (same as input parameter)|changeMap is index (=key) to itemID (=value) map. indexes or itemIDs not in the cache are ignored. indexes with values set to `null` or `undefined` are deleted. `itemID`s are assigned to the new indexes; synchronizes to the `Cradle`. List size is adjusted as necessary|
 
 Notes: cache management functions are provided to support drag-n-drop, sorting, and filtering operations. 
