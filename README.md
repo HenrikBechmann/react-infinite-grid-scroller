@@ -67,7 +67,7 @@ User components loaded to `CellFrame`s are placed in a `data-type = 'contentenve
 
 This is a random screenshare, showing async content update while still scrolling, dynamic pivot, and nested scrollers.
 
-![gif](demo/RIGSDemo.gif)
+![animation](demo/RIGSDemo.gif)
 
 # Scroller properties
 
