@@ -96,6 +96,8 @@ export default class InterruptHandler {
 
         if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway
         {
+            // console.log('cradleIntersectionObserverCallback: this.signals.repositioningRequired', 
+            //     this.signals.repositioningRequired)
 
             const cradleState = stateHandler.cradleStateRef.current
 
@@ -152,7 +154,8 @@ export default class InterruptHandler {
                     layoutHandler.restoreBaseScrollblockConfig()
 
                 }
-
+                // console.log('stateHandler.isMountedRef.current; startreposition',stateHandler.isMountedRef.current)
+                this.signals.pauseTriggerlinesObserver = true
                 if (stateHandler.isMountedRef.current) stateHandler.setCradleState('startreposition')
 
             }
