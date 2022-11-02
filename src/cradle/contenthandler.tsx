@@ -332,6 +332,11 @@ export default class ContentHandler {
         const scrollPos = scrollData.currentupdate
 
         const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
+
+        // if (viewportElement === null) return // defensive; unmounted
+
+        // console.log('updateCradleContent: source, viewportElement === null', source, viewportElement === null)
+
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
         

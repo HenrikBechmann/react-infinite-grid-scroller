@@ -80,7 +80,7 @@ export class CacheHandler {
 
         partitionPtr:null, // active partition, for followup
 
-        scrollerID:null
+        scrollerID:null // for debug
     }
 
     cradleParameters
@@ -157,12 +157,12 @@ export class CacheHandler {
         let partitionMetadata
         if (partitionPtr !== null) {
             partitionMetadata = partitionMetadataMap.get(partitionPtr)
-            if (partitionMetadata) {
+            // if (partitionMetadata) { // defensive
                 if (partitionMetadata.mapcount < CACHE_PARTITION_SIZE) {
                     partitionMetadata.mapcount += 1 
                     return partitionPtr
                 }
-            }
+            // }
         }
 
         partitionPtr = null

@@ -30,6 +30,62 @@
     often invoked to change state upon servicing requests.
 */
 
+const isBlank = (value:any) => {
+    const testvalue = value ?? ''
+    return testvalue === ''
+}
+
+const isNumber = (value:any) => {
+
+    return ( 
+        (!isNaN(Number(value))) && 
+        (!isNaN(parseInt(value))) 
+    )
+
+}
+
+const isInteger = (value:any) => {
+
+    const test = +value
+
+    return (isNumber(value) && (Math.floor(test) == test))
+
+}
+
+const minValue = (value:any, minValue:any) => {
+
+    if (!isInteger(value) || !isInteger(minValue)) return false
+
+    const testvalue = +value
+    const testMinValue = +minValue
+
+    return testvalue >= testMinValue
+
+}
+
+const maxValue = (value:any, maxValue:any) => {
+
+    if (!isInteger(value) || !isInteger(maxValue)) return false
+
+    const testvalue = +value
+    const testMaxValue = +maxValue
+
+    return testvalue <= testMaxValue
+
+}
+
+const errorMessages = {
+    scrollToIndex:'integer: required, greater than or equal to 0',
+    setListsize:'integer: required, greater than or equal to 0',
+    insertFrom:'insertFrom - integer: required, greater than or equal to 0',
+    insertRange:'insertRange - blank, or integer greater than or equal to the "from" index',
+    removeFrom:'removeFrom - integer: required, greater than or equal to 0',
+    removeRange:'removeRange - blank, or integer greater than or equal to the "from" index',
+    moveFrom:'moveFrom - integer: required, greater than or equal to 0',
+    moveRange:'moveRange - blank, or integer greater than or equal to the "from" index',
+    moveTo:'moveTo - integer: required, greater than or equal to 0',
+}
+
 export default class ServiceHandler {
 
     constructor(cradleParameters) {
@@ -83,7 +139,16 @@ export default class ServiceHandler {
 
     public scrollToIndex = (index) => {
 
-        index = Math.max(0,index)
+        const isInvalid = (!isInteger(index) || !minValue(index, 0))
+
+        index = +index
+
+        if (isInvalid) {
+
+            console.log('RIGS ERROR scrollToIndex(index)):', index, errorMessages.scrollToIndex)
+            return
+
+        }
 
         const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
         const { layoutHandler, stateHandler} = this.cradleParameters.handlersRef.current
@@ -98,7 +163,16 @@ export default class ServiceHandler {
 
     public setListsize = (newlistsize) => {
 
-        newlistsize = Math.max(0,newlistsize)
+        const isInvalid = (!isInteger(newlistsize) || !minValue(newlistsize, 0))
+
+        newlistsize = +newlistsize
+
+        if (isInvalid) {
+
+            console.log('RIGS ERROR setListsize(newlistsize)', newlistsize, errorMessages.setListsize)
+            return
+
+        }
 
         const { cacheHandler, stateHandler } = this.cradleParameters.handlersRef.current
 
@@ -425,18 +499,30 @@ export default class ServiceHandler {
     // returns list of processed indexes
     public moveIndex = (toindex, fromindex, highrange = null) => {
 
+
+        const isToindexInvalid = (!isInteger(toindex) || !minValue(toindex, 0))
+        const isFromindexInvalid = (!isInteger(fromindex) || !minValue(fromindex, 0))
+        let isHighrangeInvalid = false
+        if ((!isBlank(highrange)) && (!isFromindexInvalid)) {
+            isHighrangeInvalid = !minValue(highrange,fromindex)
+        }
+
+        toindex = +toindex
+        fromindex = +fromindex
+        highrange = highrange ?? fromindex
+        highrange = +highrange
+
+        if (isToindexInvalid || isFromindexInvalid || isHighrangeInvalid) {
+            console.log('RIGS ERROR moveIndex(toindex, fromindex, highrange)')
+            isToindexInvalid && console.log(toindex, errorMessages.moveTo)
+            isFromindexInvalid && console.log(fromindex, errorMessages.moveFrom)
+            isHighrangeInvalid && console.log(highrange, errorMessages.moveRange)
+            return null
+        }
+
         // ------------- define parameters ---------------
 
         const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
-
-        // remove nulls
-        toindex = toindex ?? 0
-        fromindex = fromindex ?? 0
-        highrange = highrange ?? fromindex
-
-        toindex = Math.max(0,toindex)
-        fromindex = Math.max(0,fromindex)
-        highrange = Math.max(0,highrange)
 
         // keep within current list size
         const listbound = listsize - 1
@@ -500,11 +586,45 @@ export default class ServiceHandler {
 
     public insertIndex = (index, rangehighindex = null) => {
 
+        const isIndexInvalid = (!isInteger(index) || !minValue(index, 0))
+        let isHighrangeInvalid = false
+        if ((!isBlank(rangehighindex)) && (!isIndexInvalid)) {
+            isHighrangeInvalid = !minValue(rangehighindex, index)
+        }
+
+        index = +index
+        rangehighindex = rangehighindex ?? index
+        rangehighindex = +rangehighindex
+
+        if (isIndexInvalid || isHighrangeInvalid) {
+            console.log('RIGS ERROR insertIndex(index, rangehighindex)')
+            isIndexInvalid && console.log(index, errorMessages.insertFrom)
+            isHighrangeInvalid && console.log(rangehighindex, errorMessages.insertRange)
+            return null
+        }
+
         return this.insertRemoveIndex(index, rangehighindex, +1)
 
     }
 
     public removeIndex = (index, rangehighindex = null) => {
+
+        const isIndexInvalid = (!isInteger(index) || !minValue(index, 0))
+        let isHighrangeInvalid = false
+        if ((!isBlank(rangehighindex)) && (!isIndexInvalid)) {
+            isHighrangeInvalid = !minValue(rangehighindex, index)
+        }
+
+        index = +index
+        rangehighindex = rangehighindex ?? index
+        rangehighindex = +rangehighindex
+
+        if (isIndexInvalid || isHighrangeInvalid) {
+            console.log('RIGS ERROR moveIndex(index, rangehighindex)')
+            isIndexInvalid && console.log(index, errorMessages.removeFrom)
+            isHighrangeInvalid && console.log(rangehighindex, errorMessages.removeRange)
+            return null
+        }
 
         return this.insertRemoveIndex(index, rangehighindex, -1)
 

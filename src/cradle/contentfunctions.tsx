@@ -720,10 +720,12 @@ export const allocateContentList = (
 
     } else { // defensive; shouldn't happen
 
-        console.log('FAILURE TO REGISTER TRIGGERCELL: \n',
-            'triggercellComponent, triggercellIndex, targetTriggercellIndex, triggercellComponent?.props.isTriggecell\n', 
-            triggercellComponent, triggercellIndex, targetTriggercellIndex, triggercellComponent?.props.isTriggecell, 
-                contentlist, axisReferenceIndex)
+        console.log('FAILURE TO REGISTER TRIGGERCELL:')
+        console.log('axisReferenceIndex, triggercellIndex, offsetindex, highindex, headitemcount, targetTriggercellIndex',
+            axisReferenceIndex, triggercellIndex, offsetindex, highindex, headitemcount, targetTriggercellIndex)
+        console.log('triggercellPtr, triggercellComponent, triggercellComponent?.props.isTriggecell, contentlist\n', 
+            triggercellPtr, triggercellComponent, triggercellComponent?.props.isTriggecell, 
+                {...contentlist})
 
     }
 
