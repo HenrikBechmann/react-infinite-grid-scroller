@@ -176,8 +176,11 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // console.log('==> cradleState','-'+scrollerID+'-',
-    //     '~'+scrollerProperties?.cellFrameDataRef.current.index+'~', cradleState)
+    // const scrollerIndex = scrollerProperties?.cellFrameDataRef.current.index
+    // if (scrollerIndex === undefined) {
+    //     console.log('==> cradleState','-'+scrollerID+'-',
+    //         '~'+scrollerProperties?.cellFrameDataRef.current.index+'~', cradleState)
+    // }
 
     // cradle scaffold element refs
     const headCradleElementRef = useRef(null)
@@ -1391,13 +1394,17 @@ const Cradle = ({
     // ==========================[ RENDER ]===========================
 
     const scrollAxisReferenceIndex = layoutHandler.cradlePositionData.targetAxisReferenceIndex
+    const scrollIndexRef = useRef(scrollAxisReferenceIndex)
     const scrollTrackerArgs = useMemo(() => {
         if (!useScrollTracker) return null
         if (!['repositioningContinuation','repositioningRender'].includes(cradleState)) {
             return null
         }
-        const { repositioningIndexCallback } = serviceHandler.callbacks
-        repositioningIndexCallback && repositioningIndexCallback(scrollAxisReferenceIndex)
+        if (scrollAxisReferenceIndex != scrollIndexRef.current) {
+            scrollIndexRef.current = scrollAxisReferenceIndex
+            const { repositioningIndexCallback } = serviceHandler.callbacks
+            repositioningIndexCallback && repositioningIndexCallback(scrollAxisReferenceIndex)
+        }
         const trackerargs = {
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
