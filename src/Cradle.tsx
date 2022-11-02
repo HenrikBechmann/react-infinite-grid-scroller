@@ -176,11 +176,11 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // const scrollerIndex = scrollerProperties?.cellFrameDataRef.current.index
-    // if (scrollerIndex === undefined) {
-    //     console.log('==> cradleState','-'+scrollerID+'-',
-    //         '~'+scrollerProperties?.cellFrameDataRef.current.index+'~', cradleState)
-    // }
+    const scrollerIndex = scrollerProperties?.cellFrameDataRef.current.index
+    if (scrollerIndex === undefined) {
+        console.log('==> cradleState','-'+scrollerID+'-',
+            '~'+scrollerProperties?.cellFrameDataRef.current.index+'~', cradleState)
+    }
 
     // cradle scaffold element refs
     const headCradleElementRef = useRef(null)
