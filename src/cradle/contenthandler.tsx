@@ -121,6 +121,7 @@ export default class ContentHandler {
             styles,
             layout,
             placeholderMessages,
+            scrollerProperties, // FOR DEBUG
         } = cradleInheritedProperties
 
         const {crosscount, listsize, listRowcount} = cradleInternalProperties
@@ -329,13 +330,9 @@ export default class ContentHandler {
         // scroll data
         const { scrollData } = scrollHandler
 
-        const scrollPos = scrollData.currentupdate
+        // const scrollPos = scrollData.currentupdate
 
         const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
-
-        // if (viewportElement === null) return // defensive; unmounted
-
-        // console.log('updateCradleContent: source, viewportElement === null', source, viewportElement === null)
 
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
@@ -345,6 +342,7 @@ export default class ContentHandler {
             cache,
             styles,
             placeholderMessages,
+            scrollerProperties, // FOR DEBUG
         } = cradleInheritedProperties
 
         const { 
@@ -353,6 +351,11 @@ export default class ContentHandler {
             listsize,
 
         } = cradleInternalProperties
+
+        const scrollPos = 
+            (orientation == 'vertical')?
+                viewportElement.scrollTop:
+                viewportElement.scrollLeft
 
         const contentLength = 
             (orientation == 'vertical')?
@@ -366,7 +369,12 @@ export default class ContentHandler {
 
         // first abandon option/3; nothing to do
         // for browser top or bottom bounce
-        if ( (scrollPos < 0) || ((scrollPos + viewportLength) > contentLength)) { 
+
+       // (!scrollerProperties) && console.log('measured scrollPos, contentLength, viewportLength, scrollPos + viwportLength',
+       //      scrollPos, contentLength, viewportLength, scrollPos + viewportLength)
+
+        // fractional pixels can cause this to fail, hence Math.floor)
+        if ( (scrollPos < 0) || (Math.floor(scrollPos + viewportLength) > contentLength)) { 
 
             return
 
@@ -392,6 +400,9 @@ export default class ContentHandler {
             isFirstRowTriggerConfig:layoutHandler.triggercellIsInTail,
 
         })
+
+        // (!scrollerProperties) && console.log('updateCradleContent: shiftinstruction, triggerData',
+        //     shiftinstruction, triggerData)
 
         // second abandon option/3; nothing to do
         if (shiftinstruction == 'none') { 
@@ -432,6 +443,11 @@ export default class ContentHandler {
             cradleElements,
 
         })
+
+        // (!scrollerProperties) && console.log('newCradleReferenceIndex, cradleItemShift, axisReferenceIndex, axisItemShift',
+        //     newCradleReferenceIndex, cradleItemShift, axisReferenceIndex, axisItemShift);
+        // (!scrollerProperties) && console.log('cradleContentCount, listStartChangeCount, listEndChangeCount, axisViewportPixelOffset',
+        //     cradleContentCount, listStartChangeCount, listEndChangeCount, axisViewportPixelOffset);
 
         // third abandon option/3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) { // can happen first row
@@ -520,9 +536,10 @@ export default class ContentHandler {
         const axisElement = cradleElements.axisRef.current
         const headElement = cradleElements.headRef.current
 
+        let topPos, leftPos // available for debug
         if (cradleInheritedProperties.orientation == 'vertical') {
 
-            const topPos = scrollPos + axisViewportPixelOffset
+            topPos = scrollPos + axisViewportPixelOffset
 
             axisElement.style.top = topPos + 'px'
             axisElement.style.left = 'auto'
@@ -534,7 +551,7 @@ export default class ContentHandler {
 
         } else { // 'horizontal'
 
-            const leftPos = scrollPos + axisViewportPixelOffset
+            leftPos = scrollPos + axisViewportPixelOffset
 
             axisElement.style.top = 'auto'
             axisElement.style.left = leftPos + 'px'
@@ -545,6 +562,9 @@ export default class ContentHandler {
                     0
 
         }
+
+        // (!scrollerProperties) && console.log('cradleInheritedProperties.orientation, scrollPos, topPos, leftPos',
+        //     cradleInheritedProperties.orientation, scrollPos, topPos, leftPos)
 
         const { cradlePositionData } = layoutHandler
 

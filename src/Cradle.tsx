@@ -176,8 +176,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // const scrollerIndex = scrollerProperties?.cellFrameDataRef.current.index
-    // if (scrollerIndex === undefined) {
+    // if (!scrollerProperties) {
     //     console.log('==> cradleState','-'+scrollerID+'-',
     //         '~'+scrollerProperties?.cellFrameDataRef.current.index+'~', cradleState)
     // }
@@ -384,6 +383,7 @@ const Cradle = ({
         // control values
         SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
         MAX_CACHE_OVER_RUN,
+        scrollerProperties,
 
     }
 

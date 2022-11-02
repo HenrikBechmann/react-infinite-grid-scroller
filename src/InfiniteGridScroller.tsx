@@ -245,8 +245,9 @@ const InfiniteGridScroller = (props) => {
     TIMEOUT_FOR_VARIABLE_MEASUREMENTS = TIMEOUT_FOR_VARIABLE_MEASUREMENTS ?? 100
     
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
-    CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE ?? 30
+    CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE ?? 30;
 
+    (!scrollerProperties) && (showAxis = true) // DEBUG!!
     if (typeof showAxis != 'boolean') showAxis = false
 
     triggerlineOffset = triggerlineOffset ?? 10
