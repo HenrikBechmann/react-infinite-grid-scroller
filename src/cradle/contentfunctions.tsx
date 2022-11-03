@@ -153,13 +153,13 @@ export const getShiftInstruction = ({
 
     const rootpos = 
         (orientation == 'vertical')?
-            entry.rootBounds.y:
-            entry.rootBounds.x
+            Math.floor(entry.rootBounds.y):
+            Math.floor(entry.rootBounds.x)
 
     const entrypos = 
         (orientation == 'vertical')?
-            entry.boundingClientRect.y:
-            entry.boundingClientRect.x
+            Math.floor(entry.boundingClientRect.y):
+            Math.floor(entry.boundingClientRect.x)
 
     const viewportTriggerOffset = entrypos - rootpos
 
@@ -418,7 +418,7 @@ export const calcContentShift = ({
 
     // -------------[ 4. calculate new axis pixel position ]------------------
 
-    const newAxisViewportPixelOffset = currentViewportAxisOffset + axisPixelShift
+    const newAxisViewportPixelOffset = Math.floor(currentViewportAxisOffset + axisPixelShift)
 
     // Note: sections 5, 6 and 7 deal entirely with row calculations; no pixels
 
@@ -615,7 +615,7 @@ export const getCellFrameComponentList = ({
             changeCount = cradleContentCount
         }
 
-        for (let newindex = referenceIndex - changeCount; newindex < (referenceIndex); newindex++) {
+        for (let newindex = referenceIndex - changeCount; newindex < referenceIndex; newindex++) {
 
             headContentlist.push(
                 createCellFrame(
