@@ -82,11 +82,13 @@ export default class InterruptHandler {
                     (entry.isIntersecting || 
                         ((entry.rootBounds.width == 0) && (entry.rootBounds.height == 0)) // reparenting
                 )
+                // console.log('measuring isHeadCradleInView', this.isHeadCradleInView)
             } else {
                 this.isTailCradleInView = 
                     (entry.isIntersecting  || 
                         ((entry.rootBounds.width == 0) && (entry.rootBounds.height == 0)) // reparenting
                 )
+                // console.log('measuring isTailCradleInView', this.isTailCradleInView)
             }
         }
 
@@ -96,26 +98,26 @@ export default class InterruptHandler {
 
         if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway
         {
-            // console.log('cradleIntersectionObserverCallback: this.signals.repositioningRequired', 
-            //     this.signals.repositioningRequired)
 
             const cradleState = stateHandler.cradleStateRef.current
 
             if (
                 !ViewportContextProperties.isReparentingRef?.current &&
+                (!['repositioningRender','repositioningContinuation','finishreposition',
+                    'renderupdatedcontent','finishupdatedcontent',
+                    'finishviewportresize'].includes(cradleState)) &&
+                // !(cradleState == 'repositioningRender') && 
+                // !(cradleState == 'repositioningContinuation') &&
+                // !(cradleState == 'finishreposition') && 
 
-                !(cradleState == 'repositioningRender') && 
-                !(cradleState == 'repositioningContinuation') &&
-                !(cradleState == 'finishreposition') && 
-
-                !(cradleState == 'renderupdatedcontent') && 
-                !(cradleState == 'finishupdatedcontent') &&
+                // !(cradleState == 'renderupdatedcontent') && 
+                // !(cradleState == 'finishupdatedcontent') &&
 
                 // !(cradleState == 'adjustupdateforvariability') &&
                 // !(cradleState == 'adjustupdateforvariabilityafterscroll') &&
 
-                !ViewportContextProperties.isResizing &&
-                !(cradleState == 'finishviewportresize')
+                !ViewportContextProperties.isResizing // &&
+                // !(cradleState == 'finishviewportresize')
 
                 ) 
             {
@@ -154,10 +156,12 @@ export default class InterruptHandler {
                     layoutHandler.restoreBaseScrollblockConfig()
 
                 }
-                // console.log('stateHandler.isMountedRef.current; startreposition',stateHandler.isMountedRef.current)
+                // console.log('startreposition:cradleState,isMounted',cradleState,stateHandler.isMountedRef.current)
                 this.signals.pauseTriggerlinesObserver = true
                 if (stateHandler.isMountedRef.current) stateHandler.setCradleState('startreposition')
 
+            } else {
+                this.signals.repositioningRequired = false
             }
         }
 

@@ -608,8 +608,14 @@ export const getCellFrameComponentList = ({
     let deletedtailitems = [], deletedheaditems = []
 
     if (listStartChangeCount >= 0) { // acquire new items
+        let referenceIndex = cradleReferenceIndex
+        let changeCount = listStartChangeCount
+        if (listStartChangeCount > cradleContentCount) {
+            referenceIndex = cradleReferenceIndex - (listStartChangeCount - cradleContentCount)
+            changeCount = cradleContentCount
+        }
 
-        for (let newindex = cradleReferenceIndex - listStartChangeCount; newindex < (cradleReferenceIndex); newindex++) {
+        for (let newindex = referenceIndex - changeCount; newindex < (referenceIndex); newindex++) {
 
             headContentlist.push(
                 createCellFrame(
@@ -638,7 +644,13 @@ export const getCellFrameComponentList = ({
 
     if (listEndChangeCount >= 0) { // acquire new items
 
-        for (let newindex = lastindexoffset + 1; newindex < (lastindexoffset + 1 + listEndChangeCount); newindex++) {
+        let referenceIndex = lastindexoffset
+        let changeCount = listEndChangeCount
+        if (listEndChangeCount > cradleContentCount) {
+            referenceIndex = lastindexoffset + (listEndChangeCount - cradleContentCount)
+            changeCount = cradleContentCount
+        }
+        for (let newindex = referenceIndex + 1; newindex < (referenceIndex + 1 + changeCount); newindex++) {
 
             tailContentlist.push(
                 createCellFrame(
