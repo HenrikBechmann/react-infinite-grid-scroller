@@ -1395,19 +1395,30 @@ const Cradle = ({
 
     const scrollAxisReferenceIndex = layoutHandler.cradlePositionData.targetAxisReferenceIndex
     const scrollIndexRef = useRef(scrollAxisReferenceIndex)
+<<<<<<< HEAD
 
     const updateCallback = useCallback((scrollAxisReferenceIndex)=>{
+=======
+    const scrollTrackerArgs = useMemo(() => {
+        if (!['repositioningContinuation','repositioningRender'].includes(cradleState)) {
+            return null
+        }
+>>>>>>> staging
         if (scrollAxisReferenceIndex != scrollIndexRef.current) {
             scrollIndexRef.current = scrollAxisReferenceIndex
             const { repositioningIndexCallback } = serviceHandler.callbacks
-            repositioningIndexCallback && repositioningIndexCallback(scrollAxisReferenceIndex)
+            repositioningIndexCallback && repositioningIndexCallback(scrollAxisReferenceIndex);
         }
+<<<<<<< HEAD
     },[serviceHandler])
     const scrollTrackerArgs = useMemo(() => {
         if (!['repositioningContinuation','repositioningRender'].includes(cradleState)) {
             return null
         }
         updateCallback(scrollAxisReferenceIndex)
+=======
+        
+>>>>>>> staging
         if (!useScrollTracker) return null
         const trackerargs = {
             top:viewportDimensions.top + 3,

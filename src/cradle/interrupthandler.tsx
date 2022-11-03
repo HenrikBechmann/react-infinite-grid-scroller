@@ -96,40 +96,30 @@ export default class InterruptHandler {
 
         if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway
         {
-            // console.log('cradleIntersectionObserverCallback: this.signals.repositioningRequired', 
-            //     this.signals.repositioningRequired)
 
             const cradleState = stateHandler.cradleStateRef.current
 
             if (
-                !ViewportContextProperties.isReparentingRef?.current &&
 
-                !(cradleState == 'repositioningRender') && 
-                !(cradleState == 'repositioningContinuation') &&
-                !(cradleState == 'finishreposition') && 
+                    !ViewportContextProperties.isReparentingRef?.current &&
 
-                !(cradleState == 'renderupdatedcontent') && 
-                !(cradleState == 'finishupdatedcontent') &&
+                    !['repositioningRender','repositioningContinuation','finishreposition',
+                        'renderupdatedcontent','finishupdatedcontent',
+                        'finishviewportresize'].includes(cradleState) &&
 
-                // !(cradleState == 'adjustupdateforvariability') &&
-                // !(cradleState == 'adjustupdateforvariabilityafterscroll') &&
-
-                !ViewportContextProperties.isResizing &&
-                !(cradleState == 'finishviewportresize')
+                    !ViewportContextProperties.isResizing
 
                 ) 
             {
+                
                 const viewportElement = ViewportContextProperties.elementRef.current
 
                 const { 
 
                     scrollerID, 
-                    orientation, 
-                    padding, 
-                    gap,
-                    cellHeight,
-                    cellWidth,
-                    layout 
+                    layout, orientation, 
+                    padding, gap,
+                    cellHeight, cellWidth,
 
                 } = this.cradleParameters.cradleInheritedPropertiesRef.current
                 if (!viewportElement) {
@@ -138,11 +128,13 @@ export default class InterruptHandler {
                     return
                 }
                 const { listRowcount, crosscount } = this.cradleParameters.cradleInternalPropertiesRef.current
+
                 // update dimensions with cradle intersection. See also dimension update in viewport.tsx for resize
                 // and getViewportDimensions in Cradle for width/height
                 const rect = viewportElement.getBoundingClientRect()
                 const {top, right, bottom, left} = rect
                 const width = right - left, height = bottom - top
+
                 // update for scrolltracker
                 ViewportContextProperties.viewportDimensions = {top, right, bottom, left, width, height} 
 
@@ -154,10 +146,13 @@ export default class InterruptHandler {
                     layoutHandler.restoreBaseScrollblockConfig()
 
                 }
-                // console.log('stateHandler.isMountedRef.current; startreposition',stateHandler.isMountedRef.current)
                 this.signals.pauseTriggerlinesObserver = true
                 if (stateHandler.isMountedRef.current) stateHandler.setCradleState('startreposition')
 
+            } else {
+
+                this.signals.repositioningRequired = false
+                
             }
         }
 
