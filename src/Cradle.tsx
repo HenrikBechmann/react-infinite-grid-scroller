@@ -1218,7 +1218,7 @@ const Cradle = ({
                 // triggerlines will have been assigned to a new triggerCell by now.
                 // connectElements delayed for a cycle to render triggercell triggerlines
                 interruptHandler.triggerlinesIntersect.connectElements()
-                // interruptHandler.cradleIntersect.connectElements()
+                interruptHandler.cradleIntersect.connectElements()
 
                 // this can be pre-empted by reparenting, which itself restores interrupts
                 setCradleState('restoreinterrupts') // to restore interrupts
