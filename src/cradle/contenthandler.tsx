@@ -370,9 +370,6 @@ export default class ContentHandler {
         // first abandon option/3; nothing to do
         // for browser top or bottom bounce
 
-       // (!scrollerProperties) && console.log('measured scrollPos, contentLength, viewportLength, scrollPos + viwportLength',
-       //      scrollPos, contentLength, viewportLength, scrollPos + viewportLength)
-
         // fractional pixels can cause this to fail, hence Math.floor)
         if ( (scrollPos < 0) || (Math.floor(scrollPos + viewportLength) > contentLength)) { 
 
@@ -400,9 +397,6 @@ export default class ContentHandler {
             isFirstRowTriggerConfig:layoutHandler.triggercellIsInTail,
 
         })
-
-        // (!scrollerProperties) && console.log('updateCradleContent: shiftinstruction, triggerData',
-        //     shiftinstruction, triggerData)
 
         // second abandon option/3; nothing to do
         if (shiftinstruction == 'none') { 
@@ -443,11 +437,6 @@ export default class ContentHandler {
             cradleElements,
 
         })
-
-        // (!scrollerProperties) && console.log('newCradleReferenceIndex, cradleItemShift, axisReferenceIndex, axisItemShift',
-        //     newCradleReferenceIndex, cradleItemShift, axisReferenceIndex, axisItemShift);
-        // (!scrollerProperties) && console.log('cradleContentCount, listStartChangeCount, listEndChangeCount, axisViewportPixelOffset',
-        //     cradleContentCount, listStartChangeCount, listEndChangeCount, axisViewportPixelOffset);
 
         // third abandon option/3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) { // can happen first row
@@ -520,8 +509,6 @@ export default class ContentHandler {
         cradleContent.headModelComponents = headcontent
         cradleContent.tailModelComponents = tailcontent
 
-        // (!scrollerProperties) && console.log('updateCradleContent: source, axisReferenceIndex',source, axisReferenceIndex)
-
         if (serviceHandler.callbacks.referenceIndexCallback) {
 
             let cstate = stateHandler.cradleStateRef.current
@@ -563,9 +550,6 @@ export default class ContentHandler {
                     0
 
         }
-
-        // (!scrollerProperties) && console.log('cradleInheritedProperties.orientation, scrollPos, topPos, leftPos',
-        //     cradleInheritedProperties.orientation, scrollPos, topPos, leftPos)
 
         const { cradlePositionData } = layoutHandler
 

@@ -1405,8 +1405,6 @@ const Cradle = ({
             repositioningIndexCallback && repositioningIndexCallback(scrollAxisReferenceIndex);
         }
         
-        // (!scrollerProperties) && console.log('repositioning render: scrollAxisReferenceIndex', scrollAxisReferenceIndex)
-
         if (!useScrollTracker) return null
         const trackerargs = {
             top:viewportDimensions.top + 3,

@@ -82,13 +82,11 @@ export default class InterruptHandler {
                     (entry.isIntersecting || 
                         ((entry.rootBounds.width == 0) && (entry.rootBounds.height == 0)) // reparenting
                 )
-                // console.log('measuring isHeadCradleInView', this.isHeadCradleInView)
             } else {
                 this.isTailCradleInView = 
                     (entry.isIntersecting  || 
                         ((entry.rootBounds.width == 0) && (entry.rootBounds.height == 0)) // reparenting
                 )
-                // console.log('measuring isTailCradleInView', this.isTailCradleInView)
             }
         }
 
@@ -148,7 +146,6 @@ export default class InterruptHandler {
                     layoutHandler.restoreBaseScrollblockConfig()
 
                 }
-                // console.log('startreposition:cradleState,isMounted',cradleState,stateHandler.isMountedRef.current)
                 this.signals.pauseTriggerlinesObserver = true
                 if (stateHandler.isMountedRef.current) stateHandler.setCradleState('startreposition')
 
