@@ -279,7 +279,7 @@ const InfiniteGridScroller = (props) => {
         callbacksRef.current = callbacks
     }
     if (!compareProps(placeholderMessages, placeholderMessagesRef.current)) {
-        placeholderMessagesRef.current = callbacks
+        placeholderMessagesRef.current = placeholderMessages
     }
 
     // -------------------------[ Initialization ]-------------------------------
@@ -397,6 +397,7 @@ const cacherootstyle = {display:'none'}// as React.CSSProperties // static, out 
 
 // utility
 function compareProps (obj1,obj2) {
+    if (!obj1 || !obj2) return false
     const keys = Object.keys(obj1)
     let same
     for (let key of keys) {

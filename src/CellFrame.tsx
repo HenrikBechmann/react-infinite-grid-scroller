@@ -219,6 +219,10 @@ const CellFrame = ({
         messageRef.current, 
         errorRef.current,
         usePlaceholder,
+        placeholderFrameStyles,
+        placeholderLinerStyles,
+        placeholderErrorFrameStyles,
+        placeholderErrorLinerStyles,
     ])
 
     // ---------------- [ requestidlecallback config ] ------------------------
