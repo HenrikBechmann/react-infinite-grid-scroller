@@ -62,6 +62,7 @@ let globalScrollerID = 0
 
 const InfiniteGridScroller = (props) => {
 
+
     // ------------------[ normalize properties ]--------------------
 
     let { 
@@ -169,19 +170,6 @@ const InfiniteGridScroller = (props) => {
         cacheMax,        
     }
 
-    let problems = 0
-    for (const prop in verifiedValues) {
-        if (isNaN(verifiedValues[prop])) {
-            problems++
-        } 
-    }
-
-    if (problems) {
-        console.error('Error: invalid number - compare originalValues and verifiedValues', 
-            originalValues, verifiedValues)
-        return <div>error: see console.</div>
-    }
-
     cellMinHeight = Math.max(cellMinHeight, 25)
     cellMinWidth = Math.max(cellMinWidth, 25)
     cellMinHeight = Math.min(cellHeight, cellMinHeight)
@@ -191,17 +179,6 @@ const InfiniteGridScroller = (props) => {
     runwaySize = Math.max(1,runwaySize) // runwaysize must be at least 1
     estimatedListSize = Math.max(0,estimatedListSize)
     startingIndex = Math.max(0,startingIndex)
-
-    // enums
-    if (!['horizontal','vertical'].includes(orientation)) { 
-        orientation = 'vertical'
-    }
-    if (!['preload','keepload','cradle'].includes(cache)) {
-        cache = 'cradle'
-    }
-    if (!['uniform', 'variable'].includes(layout)) {
-        layout = 'uniform'
-    }
 
     // package
     const gridSpecs = {
@@ -216,6 +193,30 @@ const InfiniteGridScroller = (props) => {
     }
 
     const gridSpecsRef = useRef(gridSpecs)
+
+    let problems = 0
+    for (const prop in verifiedValues) {
+        if (isNaN(verifiedValues[prop])) {
+            problems++
+        } 
+    }
+
+    if (problems) {
+        console.error('Error: invalid number - compare originalValues and verifiedValues', 
+            originalValues, verifiedValues)
+        return <div>error: see console.</div>
+    }
+
+    // enums
+    if (!['horizontal','vertical'].includes(orientation)) { 
+        orientation = 'vertical'
+    }
+    if (!['preload','keepload','cradle'].includes(cache)) {
+        cache = 'cradle'
+    }
+    if (!['uniform', 'variable'].includes(layout)) {
+        layout = 'uniform'
+    }
 
     // state
     const [scrollerState, setScrollerState] = useState('setup') // setup, setlistsize, ready
