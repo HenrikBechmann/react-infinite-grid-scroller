@@ -663,9 +663,9 @@ export const getCellFrameComponentList = ({
                         cacheHandler,
                         placeholderFrameStyles:styles.placeholderframe,
                         placeholderLinerStyles:styles.placeholderliner,
-                        placeholderErrorFrameStyles:{},
-                        placeholderErrorLinerStyles:{},
-                        placeholderMessages:{},
+                        placeholderErrorFrameStyles:styles.placeholdererrorframe,
+                        placeholderErrorLinerStyles:styles.placeholdererrorliner,
+                        placeholderMessages,
                     }
                 )
             )
