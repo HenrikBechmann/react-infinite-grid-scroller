@@ -9,7 +9,7 @@
     The default placeholder can be replaced by a placeholder provided by the host.
 */
 
-import React, {useRef } from 'react'
+import React, {useRef, useMemo} from 'react'
 
 const Placeholder = ({
     index, 
@@ -22,34 +22,54 @@ const Placeholder = ({
     userErrorLinerStyles
 }) => {
 
-    const frameStylesRef = useRef({
-        border:'2px solid black',
-        backgroundColor:'cyan',
-        ...userFrameStyles,
-        position:'relative',
-        boxSizing:'border-box',
-        height:'100%',
-        width:'100%',
-    })
-    const linerStylesRef = useRef({
-        position:'absolute',
-        top:0,
-        left:0,
-        padding:'3px',
-        opacity:.5,
-        borderRadius:'8px',
-        backgroundColor:'white', 
-        margin:'3px',
-        fontSize:'smaller',
-        ...userLinerStyles,
-    })
+    const [frameStyles, linerStyles] = useMemo(()=>{
+
+        const uFrameStyles = 
+            (!error)?
+                userFrameStyles:
+                userErrorFrameStyles
+
+        const uLinerStyles = 
+            (!error)?
+                userLinerStyles:
+                userErrorLinerStyles
+
+        const frameStyles = {
+            border:'2px solid black',
+            backgroundColor:'cyan',
+            ...uFrameStyles,
+            position:'relative',
+            boxSizing:'border-box',
+            height:'100%',
+            width:'100%',
+        }
+        const linerStyles = {
+            position:'absolute',
+            top:0,
+            left:0,
+            padding:'3px',
+            margin:'3px',
+            fontSize:'smaller',
+            ...uLinerStyles,
+        }
+
+        return [frameStyles, linerStyles]
+
+    }, [
+        error,
+        userFrameStyles, 
+        userLinerStyles,
+        userErrorFrameStyles, 
+        userErrorLinerStyles,
+    ])
+
 
     message = message ?? '(loading...)'
 
-    return <div data-type = 'placeholderframe' style = {frameStylesRef.current}>
+    return <div data-type = 'placeholderframe' style = {frameStyles}>
         { !error?
-            <div data-type = 'placeholderliner' style = { linerStylesRef.current }>{index + 1}/{listsize} {message}</div>:
-            <div data-type = 'placeholderliner' style = { linerStylesRef.current }>item is not available ({error.message})</div>
+            <div data-type = 'placeholderliner' style = { linerStyles }>{index + 1}/{listsize} {message}</div>:
+            <div data-type = 'placeholderliner' style = { linerStyles }>item is not available ({error.message})</div>
         }
         
     </div>
