@@ -138,6 +138,8 @@ export const getShiftInstruction = ({
     // last headrow. That happens (workaround) when there are no head rows
     isFirstRowTriggerConfig, 
 
+    viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
+
 }) => {
 
     const triggerData = {
@@ -149,12 +151,23 @@ export const getShiftInstruction = ({
 
     const entry = triggerlineEntries.at(-1) // most recent; either triggerline will do
     const referencename = entry.target.dataset.type
+    entry.referencename = referencename
     const span = triggerlineSpan
 
-    const rootpos = 
+    const intersectrootpos = 
         (orientation == 'vertical')?
             Math.floor(entry.rootBounds.y):
             Math.floor(entry.rootBounds.x)
+
+    const boundingrootpos =
+        (orientation == 'vertical')?
+            Math.floor(viewportBoundingRect.y):
+            Math.floor(viewportBoundingRect.x)
+
+    const rootpos = 
+        (intersectrootpos == boundingrootpos)?
+        intersectrootpos:
+        boundingrootpos // we're in Safari, zoomed
 
     const entrypos = 
         (orientation == 'vertical')?
