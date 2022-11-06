@@ -55,6 +55,11 @@ const defaultPlaceholderMessages = {
     invalid:'invalid React element',
 }
 
+const triggerholderstyle:React.CSSProperties = {
+    position:'absolute',
+    inset:0,
+}
+
 const CellFrame = ({
     orientation, 
     cellHeight, 
@@ -200,6 +205,7 @@ const CellFrame = ({
             customplaceholder?
                 customplaceholder:
                 <Placeholder 
+                    key = 'placeholder'
                     index = { index } 
                     listsize = { listsize } 
                     message = { messageRef.current }
@@ -430,6 +436,8 @@ const CellFrame = ({
     // the content re-renders with 'ready' when the height/width have returned to normal after-cache
     // React re-renders on diff between the two (virtual vs real DOM)
     // this gives the content component a chance to respond to uncaching
+    // Note: the contentholder type layer is included to prevent Safari from moving the triggers into the 
+    //   contentenvelope of the OutPortal
     return <div 
 
         ref = { frameRef } 
@@ -441,17 +449,14 @@ const CellFrame = ({
 
     >
 
-        { 
-           (frameState != 'setup') && ((frameState != 'ready')?
+            <div data-type = 'contentholder' style = {triggerholderstyle}> 
+                {(frameState != 'setup') && ((frameState != 'ready')?
                 placeholderRef.current:
-                <OutPortal node = { portalNodeRef.current }/>)
-        }
-        {
-            isTriggercell?
+                <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}</div>
+            {(isTriggercell?
                 triggercellTriggerlinesRef.current:
-                null
-        }
-        
+                null)}
+
     </div>
 
 } // CellFrame
