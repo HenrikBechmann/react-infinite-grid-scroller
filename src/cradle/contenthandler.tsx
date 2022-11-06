@@ -367,6 +367,8 @@ export default class ContentHandler {
                 viewportElement.offsetHeight:
                 viewportElement.offsetWidth
 
+        const viewportBoundingRect = viewportElement.getBoundingClientRect()
+
         // first abandon option/3; nothing to do
         // for browser top or bottom bounce
 
@@ -395,6 +397,8 @@ export default class ContentHandler {
             triggerlineSpan: layoutHandler.triggerlineSpan,
 
             isFirstRowTriggerConfig:layoutHandler.triggercellIsInTail,
+
+            viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
 
         })
 
