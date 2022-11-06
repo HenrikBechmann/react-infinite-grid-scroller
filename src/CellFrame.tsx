@@ -55,11 +55,6 @@ const defaultPlaceholderMessages = {
     invalid:'invalid React element',
 }
 
-const triggerholderstyle:React.CSSProperties = {
-    position:'absolute',
-    inset:0,
-}
-
 const CellFrame = ({
     orientation, 
     cellHeight, 
@@ -107,6 +102,7 @@ const CellFrame = ({
     // style change generates state refresh
     // const [styles,saveStyles] = useState({})
     const stylesRef = useRef({})
+    const holderStylesRef = useRef({})
 
     const placeholderMessagesRef = useRef(null)
 
@@ -250,13 +246,17 @@ const CellFrame = ({
     // set styles
     useEffect(()=>{
 
-        let newStyles = getFrameStyles(
+        const newStyles = getFrameStyles(
             orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, stylesRef.current)
         
+        const newHolderStyles = getContentHolderStyles(layout, orientation, cellMinWidth, cellMinHeight)
+
         if (isMountedRef.current) {
             // saveStyles(newStyles)
             stylesRef.current = newStyles
+            holderStylesRef.current = newHolderStyles
         }
+
 
     },[orientation,cellHeight,cellWidth, cellMinHeight, cellMinWidth, layout]) 
 
@@ -449,7 +449,7 @@ const CellFrame = ({
 
     >
 
-            <div data-type = 'contentholder' style = {triggerholderstyle}> 
+            <div data-type = 'contentholder' style = {holderStylesRef.current}> 
                 {(frameState != 'setup') && ((frameState != 'ready')?
                 placeholderRef.current:
                 <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}</div>
@@ -507,6 +507,35 @@ const getFrameStyles =
 
     return styleset
 
+}
+
+const getContentHolderStyles = (layout,orientation,cellMinWidth, cellMinHeight ) => {
+    let styles:React.CSSProperties = {}
+    if (layout == 'uniform') {
+        styles = {
+            inset:'0px',
+            position:'absolute',
+            height:null,
+            width:null,
+            minWidth:null,
+            minHeight:null,
+        }
+    } else { // variable
+        styles.inset = null
+        styles.position = null
+        if (orientation = 'vertical') {
+            styles.width = '100%'
+            styles.height = null
+            styles.minWidth = null
+            styles.minHeight = cellMinHeight + 'px'
+        } else {
+            styles.width = null
+            styles.height = '100%'
+            styles.minWidth = cellMinWidth + 'px'
+            styles.minHeight = null
+        }
+    }
+    return styles
 }
 
 // see also some base styles set in cachehandler
