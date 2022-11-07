@@ -19,7 +19,7 @@ Vertical or horizontal heavy-duty infinite scroller using simple css grid layout
 
 # Demo Site
 
-See the [demo site](https://henrikbechmann.github.io/rigs-demo/)
+See the [demo site](https://henrikbechmann.github.io/rigs-demo/).
 
 # Key Technologies
 
