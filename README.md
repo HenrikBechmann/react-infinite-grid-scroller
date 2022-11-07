@@ -15,7 +15,11 @@ Vertical or horizontal heavy-duty infinite scroller using simple css grid layout
 - dynamic pivot (horizontal/vertical back and forth) while maintaining position in list
 - automatic reconfiguration with viewport resize
 - dynamic recalibration with async content refresh
-- supports nested RIGS scrollers
+- supports nested RIGS scrollers()
+
+# Demo Site
+
+See the [demo site](https://henrikbechmann.github.io/rigs-demo/).
 
 # Key Technologies
 
