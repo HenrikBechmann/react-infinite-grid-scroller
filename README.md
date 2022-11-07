@@ -1,5 +1,5 @@
 # react-infinite-grid-scroller (RIGS)
-Vertical or horizontal heavy-duty infinite scroller using simple css grid layout
+Heavy-duty vertical or horizontal infinite scroller
 
 [![npm](https://img.shields.io/badge/npm-1.0.0--Beta--3-brightgreen)](https://www.npmjs.com/package/react-infinite-grid-scroller) [![licence](https://img.shields.io/badge/licence-MIT-green)](LICENSE.md)
 
