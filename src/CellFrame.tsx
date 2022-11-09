@@ -436,8 +436,7 @@ const CellFrame = ({
     // the content re-renders with 'ready' when the height/width have returned to normal after-cache
     // React re-renders on diff between the two (virtual vs real DOM)
     // this gives the content component a chance to respond to uncaching
-    // Note: the contentholder type layer is included to prevent Safari from moving the triggers into the 
-    //   contentenvelope of the OutPortal
+    // Note: the contentholder type layer is included to provide an anchor for the triggerlines.
     return <div 
 
         ref = { frameRef } 
@@ -452,7 +451,8 @@ const CellFrame = ({
             <div data-type = 'contentholder' style = {holderStylesRef.current}> 
                 {(frameState != 'setup') && ((frameState != 'ready')?
                 placeholderRef.current:
-                <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}</div>
+                <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
+            </div>
             {(isTriggercell?
                 triggercellTriggerlinesRef.current:
                 null)}

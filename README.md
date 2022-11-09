@@ -15,7 +15,7 @@ Heavy-duty vertical or horizontal infinite scroller
 - dynamic pivot (horizontal/vertical back and forth) while maintaining position in list
 - automatic reconfiguration with viewport resize
 - dynamic recalibration with async content refresh
-- supports nested RIGS scrollers()
+- supports nested RIGS scrollers
 
 # Demo Site
 
