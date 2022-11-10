@@ -39,8 +39,14 @@ export default class ScrollHandler {
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
         const viewportElement = ViewportContextProperties.elementRef.current
 
+        const orientation = this.cradleParameters.cradleInheritedPropertiesRef.current.orientation
         const scrollPositionCurrent = 
-            (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical')?
+            (orientation == 'vertical')?
+                viewportElement.scrollTop:
+                viewportElement.scrollLeft
+
+        const scrollXPositionCurrent = 
+            (orientation == 'horizontal')?
                 viewportElement.scrollTop:
                 viewportElement.scrollLeft
 
@@ -79,6 +85,7 @@ export default class ScrollHandler {
 
         // keep up to date in case of reparenting interrupt
         cradlePositionData.blockScrollPos = scrollPositionCurrent
+        cradlePositionData.blockXScrollPos = scrollXPositionCurrent
 
         this.scrollData.previous = this.scrollData.current
         this.scrollData.current = scrollPositionCurrent
@@ -233,10 +240,13 @@ export default class ScrollHandler {
             if (cradleProps.orientation == 'vertical') {
 
                 cradlePositionData.blockScrollPos = viewportElement.scrollTop
+                cradlePositionData.blockXScrollPos = viewportElement.scrollLeft
 
             } else {
 
                 cradlePositionData.blockScrollPos = viewportElement.scrollLeft
+                cradlePositionData.blockXScrollPos = viewportElement.scrollTop
+
             }
 
         }

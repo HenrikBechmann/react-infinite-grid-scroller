@@ -75,7 +75,9 @@ const Scrollblock = ({
             updateScrollblockStyles(
                 orientation,
                 divlinerstyleRef,
-                baseScrollBlockLengthRef
+                baseScrollBlockLengthRef,
+                cellWidth,
+                cellHeight
             )
         saveDivlinerstyle(divlinerstyleRef.current)
 
@@ -160,20 +162,26 @@ const calcBaseScrollblockLength = ({
 
 }
 
-const updateScrollblockStyles = (orientation, stylesRef, baseScrollblocklengthRef) => {
+const updateScrollblockStyles = (orientation, stylesRef, baseScrollblocklengthRef, cellWidth, cellHeight) => {
 
     let localstyles = {...stylesRef.current} // new object
-    let height 
-    let width
+    let height, width, minHeight, minWidth
     if (orientation == 'vertical') {
         height = baseScrollblocklengthRef.current + 'px'
         width = '100%'
+        minWidth = cellWidth
+        minHeight = null
     } else { // orientation == 'horizontal'
         height = '100%'
         width = baseScrollblocklengthRef.current + 'px'
+        minHeight = cellHeight
+        minWidth = null
     }
     localstyles.height = height
     localstyles.width = width
+    localstyles.minHeight = minHeight
+    localstyles.minWidth = minWidth
 
     return localstyles
+
 }

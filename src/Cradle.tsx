@@ -843,10 +843,18 @@ const Cradle = ({
     useEffect(()=> {
 
         layoutHandler.cradlePositionData.blockScrollProperty = 
-            (orientation == "vertical")?"scrollTop":"scrollLeft"
+            (orientation == "vertical")?
+                "scrollTop":
+                "scrollLeft"
+
+        layoutHandler.cradlePositionData.blockXScrollProperty = 
+            (orientation == "horizontal")?
+                "scrollTop":
+                "scrollLeft"
 
         if (cradleStateRef.current == 'setup') {
             layoutHandler.cradlePositionData.blockScrollPos = 0
+            layoutHandler.cradlePositionData.blockXScrollPos = 0
             return
 
         }
@@ -1037,11 +1045,13 @@ const Cradle = ({
                     const { cradlePositionData } = layoutHandler
 
                     const blockScrollPos = cradlePositionData.blockScrollPos
+                    const blockXScrollPos = cradlePositionData.blockXScrollPos
                     if (blockScrollPos !== null) {
 
                         const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
                         viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+                        viewportElement[cradlePositionData.blockXScrollProperty] = blockXScrollPos
 
                     }
 
