@@ -22,8 +22,8 @@ export default class InterruptHandler {
 
     private cradleParameters
 
-    private isTailCradleInView = false
     private isHeadCradleInView = false
+    private isTailCradleInView = false
 
     private axisTriggerlinesObserverCallback = (entries) => {
 
