@@ -99,7 +99,7 @@ export default class ScrollHandler {
 
             if ((cradleState == 'repositioningRender') || (cradleState == 'repositioningContinuation')) {
 
-                this.calcImpliedRepositioningData()
+                this.calcImpliedRepositioningData('onScroll')
                 if (cradleState == 'repositioningRender') stateHandler.setCradleState('repositioningContinuation')
 
             }
@@ -253,7 +253,7 @@ export default class ScrollHandler {
 
     }
 
-    public calcImpliedRepositioningData = () => {
+    public calcImpliedRepositioningData = (source) => {
 
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
             cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current,
@@ -300,7 +300,7 @@ export default class ScrollHandler {
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
 
-        console.log('calcImpliedRepositioningData', cradlePositionData)
+        console.log('calcImpliedRepositioningData: source, cradlePositionData',source, cradlePositionData)
         
     }
 

@@ -1051,7 +1051,7 @@ const Cradle = ({
                         const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
                         viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-                        viewportElement[cradlePositionData.blockScrollXProperty] = blockXScrollPos
+                        viewportElement[cradlePositionData.blockXScrollProperty] = blockXScrollPos
 
                     }
 

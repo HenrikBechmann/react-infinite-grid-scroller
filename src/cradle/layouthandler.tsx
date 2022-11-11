@@ -199,7 +199,7 @@ export default class LayoutHandler {
 
         console.log('restoreBaseScrollblockConfig:calculatedBlockScrollPos',calculatedBlockScrollPos)
         
-        scrollHandler.calcImpliedRepositioningData()
+        scrollHandler.calcImpliedRepositioningData('restoreBaseScrollblockConfig')
 
     }
 
