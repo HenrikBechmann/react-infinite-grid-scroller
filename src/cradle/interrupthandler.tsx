@@ -22,8 +22,8 @@ export default class InterruptHandler {
 
     private cradleParameters
 
-    private isHeadCradleInView = false
-    private isTailCradleInView = false
+    private isHeadCradleInView = true
+    private isTailCradleInView = true
 
     private axisTriggerlinesObserverCallback = (entries) => {
 
@@ -97,6 +97,8 @@ export default class InterruptHandler {
         if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway
         {
 
+            this.isHeadCradleInView = true
+            this.isTailCradleInView = true
             const cradleState = stateHandler.cradleStateRef.current
 
             if (
@@ -112,6 +114,8 @@ export default class InterruptHandler {
                 ) 
             {
                 
+                console.log('repositioningRequired and triggered: cradleState',cradleState)
+
                 const viewportElement = ViewportContextProperties.elementRef.current
 
                 const { 

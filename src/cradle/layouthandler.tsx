@@ -90,7 +90,7 @@ export default class LayoutHandler {
 
         */
         blockScrollPos:null, // the edge of the viewport
-        blockScrollXPos:null, // the cross position for oversized scrollBlock
+        blockXScrollPos:null, // the cross position for oversized scrollBlock
 
         /*
             values can be "scrollTop" or "scrollLeft" (of the viewport element) depending on orientation
@@ -100,7 +100,7 @@ export default class LayoutHandler {
             it is used where blockScrollPos is used above.
         */
         blockScrollProperty: null,
-        blockScrollXProperty: null,
+        blockXScrollProperty: null,
 
         /*
             targetAxisReferenceIndex is set by
@@ -196,6 +196,8 @@ export default class LayoutHandler {
         viewportElement[cradlePositionData.blockScrollProperty] = calculatedBlockScrollPos
         cradlePositionData.blockScrollPos = calculatedBlockScrollPos
         scrollHandler.resetScrollData(calculatedBlockScrollPos)
+
+        console.log('restoreBaseScrollblockConfig:calculatedBlockScrollPos',calculatedBlockScrollPos)
         
         scrollHandler.calcImpliedRepositioningData()
 

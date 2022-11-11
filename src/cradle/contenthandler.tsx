@@ -580,7 +580,7 @@ export default class ContentHandler {
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
 
-        const { layoutHandler, scrollHandler } = cradleHandlers,
+        const { layoutHandler, scrollHandler, interruptHandler } = cradleHandlers,
             { 
 
                 elements: cradleElements, 
@@ -602,6 +602,8 @@ export default class ContentHandler {
             targetAxisViewportPixelOffset: axisViewportOffset,
 
         } = cradlePositionData
+
+        console.log('adjustScrollblockForVariability:source, axisReferenceIndex', source, axisReferenceIndex)
 
         let { 
         
@@ -739,6 +741,7 @@ export default class ContentHandler {
         // must be done after length is updated
         if (reposition) { // reset blockScrollPos afterscroll
 
+            interruptHandler.signals.pauseCradleIntersectionObserver = true
             cradlePositionData.blockScrollPos = blockScrollPos
             viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
             scrollHandler.resetScrollData(blockScrollPos)

@@ -1051,7 +1051,7 @@ const Cradle = ({
                         const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
                         viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-                        viewportElement[cradlePositionData.blockXScrollProperty] = blockXScrollPos
+                        viewportElement[cradlePositionData.blockScrollXProperty] = blockXScrollPos
 
                     }
 
@@ -1331,6 +1331,7 @@ const Cradle = ({
                 // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
                 interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseTriggerlinesObserver = false
+                interruptHandler.signals.pauseCradleIntersectionObserver = false
 
                 setCradleState('ready')
 
