@@ -39,8 +39,14 @@ export default class ScrollHandler {
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
         const viewportElement = ViewportContextProperties.elementRef.current
 
+        const orientation = this.cradleParameters.cradleInheritedPropertiesRef.current.orientation
         const scrollPositionCurrent = 
-            (this.cradleParameters.cradleInheritedPropertiesRef.current.orientation == 'vertical')?
+            (orientation == 'vertical')?
+                viewportElement.scrollTop:
+                viewportElement.scrollLeft
+
+        const scrollXPositionCurrent = 
+            (orientation == 'horizontal')?
                 viewportElement.scrollTop:
                 viewportElement.scrollLeft
 
@@ -79,6 +85,7 @@ export default class ScrollHandler {
 
         // keep up to date in case of reparenting interrupt
         cradlePositionData.blockScrollPos = scrollPositionCurrent
+        cradlePositionData.blockXScrollPos = scrollXPositionCurrent
 
         this.scrollData.previous = this.scrollData.current
         this.scrollData.current = scrollPositionCurrent
@@ -92,7 +99,7 @@ export default class ScrollHandler {
 
             if ((cradleState == 'repositioningRender') || (cradleState == 'repositioningContinuation')) {
 
-                this.calcImpliedRepositioningData()
+                this.calcImpliedRepositioningData('onScroll')
                 if (cradleState == 'repositioningRender') stateHandler.setCradleState('repositioningContinuation')
 
             }
@@ -233,17 +240,20 @@ export default class ScrollHandler {
             if (cradleProps.orientation == 'vertical') {
 
                 cradlePositionData.blockScrollPos = viewportElement.scrollTop
+                cradlePositionData.blockXScrollPos = viewportElement.scrollLeft
 
             } else {
 
                 cradlePositionData.blockScrollPos = viewportElement.scrollLeft
+                cradlePositionData.blockXScrollPos = viewportElement.scrollTop
+
             }
 
         }
 
     }
 
-    public calcImpliedRepositioningData = () => {
+    public calcImpliedRepositioningData = (source) => {
 
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
             cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current,
@@ -289,10 +299,6 @@ export default class ScrollHandler {
 
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
-        
-        // const { repositioningIndexCallback } = 
-        //     this.cradleParameters.handlersRef.current.serviceHandler.callbacks
-        // repositioningIndexCallback && repositioningIndexCallback(axisReferenceIndex)
 
     }
 
