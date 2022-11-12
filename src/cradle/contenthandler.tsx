@@ -603,8 +603,6 @@ export default class ContentHandler {
 
         } = cradlePositionData
 
-        console.log('adjustScrollblockForVariability:source, axisReferenceIndex', source, axisReferenceIndex)
-
         let { 
         
             blockScrollPos 
@@ -704,6 +702,9 @@ export default class ContentHandler {
 
         // -----------------------[ application ]-------------------------
 
+        console.log('adjustScrollblockForVariability:source, axisReferenceIndex, blockScrollPos, variableAdjustment', 
+            source, axisReferenceIndex, blockScrollPos, variableAdjustment)
+
         // change scrollblockElement top and height, or left and width,
         //    and axisElement top or left
         if (orientation == 'vertical') {
@@ -740,7 +741,6 @@ export default class ContentHandler {
 
         // must be done after length is updated
         if (reposition) { // reset blockScrollPos afterscroll
-
             interruptHandler.signals.pauseCradleIntersectionObserver = true
             cradlePositionData.blockScrollPos = blockScrollPos
             viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos

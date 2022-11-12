@@ -177,8 +177,9 @@ const Cradle = ({
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) {
-    //     console.log('==> cradleState','-'+scrollerID+'-',
-    //         '~'+scrollerProperties?.cellFrameDataRef.current.index+'~', cradleState)
+        console.log('==> cradleState','-'+scrollerID+'-',
+            // '~'+scrollerProperties?.cellFrameDataRef.current.index+'~', cradleState)
+            cradleState)
     // }
 
     // cradle scaffold element refs
@@ -1333,10 +1334,17 @@ const Cradle = ({
                 interruptHandler.signals.pauseTriggerlinesObserver = false
                 interruptHandler.signals.pauseCradleIntersectionObserver = false
 
-                setCradleState('ready')
+                setCradleState('prepareforupdatevariabilitycompletion')
 
                 break
 
+            }
+
+            case 'prepareforupdatevariabilitycompletion': { // FOR DEBUG
+
+                setCradleState('ready')
+
+                break
             }
 
             // ----------------[ user requests ]-------------
