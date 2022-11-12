@@ -671,9 +671,11 @@ export default class ContentHandler {
 
         // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
         // const computedScrollblockLength = preCradleBasePixelLength + baseHeadLength + computedPostAxisPixelLength
-        const computedScrollblockLength = computedPreAxisPixelLength + computedPostAxisPixelLength
+        const computedScrollblockLength = 
+            (computedPreAxisPixelLength + computedPostAxisPixelLength)
 
         const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding
+        const basePostAxisPixelLength = ((postCradleRowCount + tailRowCount) * baseCellLength) + padding
 
         // ------------------------[ change calculations ]----------------------
 
@@ -682,7 +684,10 @@ export default class ContentHandler {
             0:
             (blockScrollPos + axisViewportOffset - basePreAxisPixelLength)
 
-        let blockLengthAdjustment = 0
+        let blockLengthAdjustment = 
+            postCradleRowCount?
+                0:
+                (computedPostAxisPixelLength - basePostAxisPixelLength)
 
         // after scroll, restore blockScrollPos to reach Axis without adjustment
         let reposition = false
@@ -691,7 +696,7 @@ export default class ContentHandler {
             // blockScrollPos -= blockScrollPosAdjustment
             blockScrollPos = 
                 preCradleRowCount?
-                preCradleBasePixelLength:
+                preCradleBasePixelLength + padding:
                 (blockScrollPos - blockScrollPosAdjustment)
 
             blockScrollPosAdjustment = 0
@@ -715,7 +720,9 @@ export default class ContentHandler {
             }
         }
 
-        const newScrollblockLength = computedScrollblockLength + blockScrollPosAdjustment
+        // const newScrollblockLength = computedScrollblockLength + blockScrollPosAdjustment
+        // const newScrollblockLength = basePreAxisPixelLength + basePostAxisPixelLength + blockLengthAdjustment
+        const newScrollblockLength = computedScrollblockLength + (padding * 2)
 
         // -----------------------[ application ]-------------------------
 
