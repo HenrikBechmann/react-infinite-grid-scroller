@@ -242,13 +242,19 @@ export const getShiftInstruction = ({
 // ie. a shiftinstruction of 'axisheadward' or 'axistailward'
 export const calcContentShift = ({
 
+    // direction of change
     shiftinstruction,
     triggerData,
+
+    // positional
     scrollPos,
     scrollblockElement,
 
+    // property repos
     cradleInheritedProperties,
     cradleInternalProperties,
+
+    // cradle repos
     cradleContent,
     cradleElements,
 
@@ -256,6 +262,7 @@ export const calcContentShift = ({
 
     // ------------------------[ 1. initialize ]-----------------------
 
+    // configuration data
     const { 
 
         gap,
@@ -266,10 +273,12 @@ export const calcContentShift = ({
 
     } = cradleInheritedProperties
 
+    // cradle elements
     const axisElement = cradleElements.axisRef.current,
         headGridElement = cradleElements.headRef.current,
         tailGridElement = cradleElements.tailRef.current
 
+    // cradle contents
     const {
 
         cradleModelComponents:cradlecontentlist, 
@@ -277,6 +286,7 @@ export const calcContentShift = ({
 
     } = cradleContent
 
+    // more config data
     const { 
 
         crosscount,
@@ -297,12 +307,13 @@ export const calcContentShift = ({
 
     if (shiftinstruction == 'axisheadward') { // scrolling down or right; move triggerlines up or left
 
-        gridRowLengths.reverse() // head row lengths listed from axis toward head
+        gridRowLengths.reverse() // head grid row lengths listed from axis toward head
 
     }
 
-    const gridRowSpans = getGridRowSpans(gridRowLengths)
+    const gridRowAggregateSpans = getGridRowAggregateSpans(gridRowLengths) // count pixels where available
 
+    // triggerline position
     const triggerViewportReferencePos = 
         (shiftinstruction == 'axistailward')? // block scrolling up or left
         triggerData.tailOffset: // needs to move down or right toward tail
@@ -316,42 +327,43 @@ export const calcContentShift = ({
 
     // ----------------------------[ 2. calculate base row shift ]--------------------------
 
+    // first try to find position based on known (instantiated) rows
     let spanRowPtr
     if (shiftinstruction == 'axistailward') { // scroll up
 
         // tail trigger needs to move down or right until position relative to viewport top or left is positive
-        spanRowPtr = gridRowSpans.findIndex((movementspan) => 
-            (triggerViewportReferencePos + movementspan) >= 0 )
+        spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
+            (triggerViewportReferencePos + aggregatespan) >= 0 )
     
     } else { // 'axisheadward', scrolldown
 
         // head trigger needs to move up or left until position relative to viewport top or left is negative
-        spanRowPtr = gridRowSpans.findIndex((movementspan) => 
-            (triggerViewportReferencePos - movementspan) <= 0 )
+        spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
+            (triggerViewportReferencePos - aggregatespan) <= 0 )
 
     }
 
     const listEndrowOffset = (listRowcount - 1)
+    const baseRowLength =
+        ((orientation == 'vertical')?
+            cellHeight:
+            cellWidth) 
+        + gap
 
     let spanAxisPixelShift // in relation to viewport head boundary
     if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
 
         let notionalRowPtr
-        if (gridRowSpans.length == 0) { // must be list boundary
+        if (gridRowAggregateSpans.length == 0) { // must be list boundary
 
             // notionalRowPtr = 0
             notionalRowPtr = -1 // "not found"
             spanAxisPixelShift = 0
 
         } else {
-            const baseRowLength =
-                ((orientation == 'vertical')?
-                    cellHeight:
-                    cellWidth) 
-                + gap
 
-            notionalRowPtr = gridRowSpans.length - 1 // base: failed measured row ptr
-            let totalPixelShift = gridRowSpans[notionalRowPtr] // set base of working overshoot
+            notionalRowPtr = gridRowAggregateSpans.length - 1 // base: failed measured row ptr
+            let totalPixelShift = gridRowAggregateSpans[notionalRowPtr] // set base of working overshoot
 
             if (shiftinstruction == 'axistailward') { // scrolling up 
 
@@ -393,8 +405,8 @@ export const calcContentShift = ({
 
         spanAxisPixelShift = 
             (shiftinstruction == 'axistailward')?
-                gridRowSpans[spanRowPtr]: // move axis toward tail from viewport boundary (positive)
-                -gridRowSpans[spanRowPtr] // move axis toward head from viewport boundary (negative)
+                gridRowAggregateSpans[spanRowPtr]: // move axis toward tail from viewport boundary (positive)
+                -gridRowAggregateSpans[spanRowPtr] // move axis toward head from viewport boundary (negative)
 
     }
 
@@ -407,8 +419,16 @@ export const calcContentShift = ({
     // for axisReferenceRowshift:
     // negative for moving rows out of head into tail;
     // positive for moving rows out of tail into head
-    const axisReferenceRowShift = spanRowShift
-    const axisPixelShift = spanAxisPixelShift 
+    let axisReferenceRowShift = spanRowShift,
+        axisPixelShift = spanAxisPixelShift 
+
+    // this can only happen with oversized cellLength (ie > viewportLength)
+    //     and only using baseRowLength
+    // axis must be no farther than 1 back of the last row end position
+    if (previousAxisRowOffset + axisReferenceRowShift > listEndrowOffset) {
+        axisReferenceRowShift -= 1
+        axisPixelShift -= baseRowLength
+    }
 
     // -----------[ 3. calculate current viewport axis offset ]-------------------
     // gaps beyond rendered rows can be caused by rapid scrolling
@@ -582,7 +602,7 @@ const getGridRowLengths = (grid, orientation, crosscount, gap) => {
 }
 
 // supports calcContentShift above
-const getGridRowSpans = (rowLengths) => {
+const getGridRowAggregateSpans = (rowLengths) => {
 
     const rowSpans = []
     let span = 0
