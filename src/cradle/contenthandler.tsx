@@ -686,13 +686,13 @@ export default class ContentHandler {
                 0:
                 (blockScrollPos + axisViewportOffset - basePreAxisPixelLength)
 
-        let tailPosAdjustment = 
-            postCradleRowCount?
-                0:
-                measuredTailLength - baseTailLength -800
+        // let tailPosAdjustment = 
+        //     postCradleRowCount?
+        //         0:
+        //         measuredTailLength - baseTailLength
 
-        console.log('measuredHeadLength, measuredTailLength, baseHeadLength, baseTailLength, tailPosAdjustment, headPosAdjustment\n',
-            measuredHeadLength, measuredTailLength, baseHeadLength, baseTailLength, tailPosAdjustment, headPosAdjustment)
+        // console.log('measuredHeadLength, measuredTailLength, baseHeadLength, baseTailLength, tailPosAdjustment, headPosAdjustment\n',
+        //     measuredHeadLength, measuredTailLength, baseHeadLength, baseTailLength, tailPosAdjustment, headPosAdjustment)
 
         // after scroll, restore blockScrollPos to reach Axis without adjustment
         let reposition = false
@@ -710,7 +710,7 @@ export default class ContentHandler {
         }
 
         // in relation to the scrollblock
-        let newAxisScrollblockOffset = blockScrollPos + axisViewportOffset - headPosAdjustment - tailPosAdjustment
+        let newAxisScrollblockOffset = blockScrollPos + axisViewportOffset - headPosAdjustment // - tailPosAdjustment
 
         // let newAxisScrollblockOffset = basePreAxisPixelLength - blockScrollPosAdjustment + axisViewportOffset
 
@@ -729,9 +729,9 @@ export default class ContentHandler {
         // change scrollblockElement top and height, or left and width,
         //    and axisElement top or left
         const scrollblockAdjustment = 
-            (!headPosAdjustment && !tailPosAdjustment)?
+            (!headPosAdjustment)?// && !tailPosAdjustment)?
                 null:
-                (headPosAdjustment + tailPosAdjustment) + 'px'
+                (headPosAdjustment + 'px')// + tailPosAdjustment) + 'px'
         
         console.log('blockScrollPos, computedScrollblockLength, scrollblockAdjustment, newAxisScrollblockOffset\n',
             blockScrollPos, computedScrollblockLength, scrollblockAdjustment, newAxisScrollblockOffset)
