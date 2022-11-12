@@ -197,8 +197,6 @@ export default class LayoutHandler {
         cradlePositionData.blockScrollPos = calculatedBlockScrollPos
         scrollHandler.resetScrollData(calculatedBlockScrollPos)
 
-        // console.log('restoreBaseScrollblockConfig:calculatedBlockScrollPos',calculatedBlockScrollPos)
-        
         scrollHandler.calcImpliedRepositioningData('restoreBaseScrollblockConfig')
 
     }

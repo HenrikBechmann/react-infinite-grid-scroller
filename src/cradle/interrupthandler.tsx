@@ -114,8 +114,6 @@ export default class InterruptHandler {
                 ) 
             {
                 
-                // console.log('repositioningRequired and triggered: cradleState',cradleState)
-
                 const viewportElement = ViewportContextProperties.elementRef.current
 
                 const { 

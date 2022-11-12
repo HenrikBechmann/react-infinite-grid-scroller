@@ -650,8 +650,6 @@ export default class ContentHandler {
                 cellWidth
             ) + gap
 
-        // const baseHeadLength = (headRowCount * baseCellLength) + padding
-
         // measured pixel cradle grid values
         const measuredHeadLength = 
             (orientation == 'vertical')?
@@ -686,14 +684,6 @@ export default class ContentHandler {
                 0:
                 (blockScrollPos + axisViewportOffset - basePreAxisPixelLength)
 
-        // let tailPosAdjustment = 
-        //     postCradleRowCount?
-        //         0:
-        //         measuredTailLength - baseTailLength
-
-        // console.log('measuredHeadLength, measuredTailLength, baseHeadLength, baseTailLength, tailPosAdjustment, headPosAdjustment\n',
-        //     measuredHeadLength, measuredTailLength, baseHeadLength, baseTailLength, tailPosAdjustment, headPosAdjustment)
-
         // after scroll, restore blockScrollPos to reach Axis without adjustment
         let reposition = false
         if (source == 'afterscroll') {
@@ -712,16 +702,28 @@ export default class ContentHandler {
         // in relation to the scrollblock
         let newAxisScrollblockOffset = blockScrollPos + axisViewportOffset - headPosAdjustment // - tailPosAdjustment
 
-        // let newAxisScrollblockOffset = basePreAxisPixelLength - blockScrollPosAdjustment + axisViewportOffset
-
         // always adjust top to align axis and scrollblock
-        let resetscroll = false
+        let resetheadscroll = false
         if (axisReferenceRow == 0) {
             if (headPosAdjustment > 0 || newAxisScrollblockOffset > padding ) {
                 headPosAdjustment = 0
                 newAxisScrollblockOffset = padding
-                resetscroll = true
+                resetheadscroll = true
             }
+        }
+
+        const viewportLength = 
+            (orientation == 'vertical')?
+                viewportElement.clientHeight:
+                viewportElement.clientWidth
+
+        if ((!postCradleRowCount) && 
+            ((measuredTailLength <= viewportLength) || (axisReferenceRow == listLastRow))) {
+
+            newAxisScrollblockOffset = computedScrollblockLength - measuredTailLength
+            blockScrollPos = computedScrollblockLength - viewportLength
+            reposition = true
+
         }
 
         // -----------------------[ application ]-------------------------
@@ -732,9 +734,6 @@ export default class ContentHandler {
             (!headPosAdjustment)?// && !tailPosAdjustment)?
                 null:
                 (headPosAdjustment + 'px')// + tailPosAdjustment) + 'px'
-        
-        console.log('blockScrollPos, computedScrollblockLength, scrollblockAdjustment, newAxisScrollblockOffset\n',
-            blockScrollPos, computedScrollblockLength, scrollblockAdjustment, newAxisScrollblockOffset)
         
         if (orientation == 'vertical') {
 
@@ -753,7 +752,7 @@ export default class ContentHandler {
 
         }
 
-        if (resetscroll) { // top of list
+        if (resetheadscroll) { // top of list
 
             viewportElement.scrollTo(0,0)
             viewportElement[cradlePositionData.blockScrollProperty] = 0
