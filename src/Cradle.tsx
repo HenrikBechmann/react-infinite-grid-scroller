@@ -1334,17 +1334,10 @@ const Cradle = ({
                 interruptHandler.signals.pauseTriggerlinesObserver = false
                 interruptHandler.signals.pauseCradleIntersectionObserver = false
 
-                setCradleState('prepareforupdatevariabilitycompletion')
-
-                break
-
-            }
-
-            case 'prepareforupdatevariabilitycompletion': { // FOR DEBUG
-
                 setCradleState('ready')
 
                 break
+
             }
 
             // ----------------[ user requests ]-------------

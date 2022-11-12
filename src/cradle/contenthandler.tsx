@@ -702,8 +702,8 @@ export default class ContentHandler {
 
         // -----------------------[ application ]-------------------------
 
-        console.log('adjustScrollblockForVariability:source, axisReferenceIndex, blockScrollPos, variableAdjustment', 
-            source, axisReferenceIndex, blockScrollPos, variableAdjustment)
+        // console.log('adjustScrollblockForVariability:source, axisReferenceIndex, blockScrollPos, variableAdjustment', 
+        //     source, axisReferenceIndex, blockScrollPos, variableAdjustment)
 
         // change scrollblockElement top and height, or left and width,
         //    and axisElement top or left
