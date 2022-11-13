@@ -402,7 +402,7 @@ export default class ContentHandler {
 
         })
 
-        console.log('shiftinstruction, triggerData', shiftinstruction, triggerData)
+        // console.log('shiftinstruction, triggerData', shiftinstruction, triggerData)
 
         // second abandon option/3; nothing to do
         if (shiftinstruction == 'none') { 
@@ -663,24 +663,26 @@ export default class ContentHandler {
                 tailGridElement.offsetHeight:
                 tailGridElement.offsetWidth
 
-        const baseHeadLength = (headRowCount * baseCellLength)
-        const baseTailLength = (tailRowCount * baseCellLength)
+        // const baseHeadLength = (headRowCount * baseCellLength)
+        // const baseTailLength = (tailRowCount * baseCellLength)
 
-        const preCradleBasePixelLength = preCradleRowCount * baseCellLength,
-            postCradleBasePixelLength = postCradleRowCount * baseCellLength
+        const basePreCradlePixelLength = preCradleRowCount * baseCellLength,
+            basePostCradlePixelLength = postCradleRowCount * baseCellLength
 
-        const computedPreAxisPixelLength = preCradleBasePixelLength + measuredHeadLength
-        const computedPostAxisPixelLength = postCradleBasePixelLength + measuredTailLength
+        const computedPreAxisPixelLength = basePreCradlePixelLength + measuredHeadLength
+        const computedPostAxisPixelLength = basePostCradlePixelLength + measuredTailLength
 
         // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
         const computedScrollblockLength = 
             (computedPreAxisPixelLength + computedPostAxisPixelLength) + (padding * 2)
 
         const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding
-        const basePostAxisPixelLength = ((postCradleRowCount + tailRowCount) * baseCellLength) + padding
+        // const basePostAxisPixelLength = ((postCradleRowCount + tailRowCount) * baseCellLength) + padding
 
         // ------------------------[ change calculations ]----------------------
 
+        // the pixels by which the pre-axis Scrollblock is shorter than the base length
+        //    this allows for smooth scrolling before a scrolling interruption
         let headPosAdjustment = 
             preCradleRowCount?
                 0:
@@ -690,9 +692,9 @@ export default class ContentHandler {
         let reposition = false
         if (source == 'afterscroll') {
             
-            blockScrollPos = 
+            blockScrollPos = // standard blockScrollPos takes us to the edge of the viewport
                 preCradleRowCount?
-                preCradleBasePixelLength + padding:
+                basePreAxisPixelLength - axisViewportOffset + padding:
                 (blockScrollPos - headPosAdjustment)
 
             headPosAdjustment = 0
@@ -702,9 +704,9 @@ export default class ContentHandler {
         }
 
         // in relation to the scrollblock
-        let newAxisScrollblockOffset = blockScrollPos + axisViewportOffset - headPosAdjustment // - tailPosAdjustment
+        let newAxisScrollblockOffset = blockScrollPos + axisViewportOffset - headPosAdjustment
 
-        // always adjust top to align axis and scrollblock
+        // start of list - adjust top to align axis and scrollblock
         let resetheadscroll = false
         if (axisReferenceRow == 0) {
             if (headPosAdjustment > 0 || newAxisScrollblockOffset > padding ) {
@@ -714,17 +716,24 @@ export default class ContentHandler {
             }
         }
 
+        // anticipate end of list condition
         const viewportLength = 
             (orientation == 'vertical')?
                 viewportElement.clientHeight:
                 viewportElement.clientWidth
 
-        if ((!postCradleRowCount) && // place variable at end of list
-            ((measuredTailLength <= viewportLength) || (axisReferenceRow == listLastRow))) {
+        // end of list - adjust bottom to align end of cradle and scrollblock
+        if ((!postCradleRowCount) && // place variable content at end of list
+            ((measuredTailLength <= viewportLength) || // entire tail fits inside viewport
+                (axisReferenceRow == listLastRow))) // or oversize lastrow is larger than viewport
+        {
 
-            newAxisScrollblockOffset = computedScrollblockLength - measuredTailLength
-            blockScrollPos = computedScrollblockLength - viewportLength
+            blockScrollPos = computedScrollblockLength - viewportLength // takes us to viewport edge
+            newAxisScrollblockOffset = computedScrollblockLength - measuredTailLength // axis leaves room for tail
+
+            // register revised viewportPixelOffset
             cradlePositionData.targetAxisViewportPixelOffset = viewportLength - measuredTailLength - padding
+            // flag processing requiremets after DOM is updated
             reposition = true
 
         }
