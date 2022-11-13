@@ -402,6 +402,8 @@ export default class ContentHandler {
 
         })
 
+        console.log('shiftinstruction, triggerData', shiftinstruction, triggerData)
+
         // second abandon option/3; nothing to do
         if (shiftinstruction == 'none') { 
 

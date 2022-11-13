@@ -177,9 +177,9 @@ const Cradle = ({
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) {
-        // console.log('==> cradleState','-'+scrollerID+'-',
+        console.log('==> cradleState','-'+scrollerID+'-',
             // '~'+scrollerProperties?.cellFrameDataRef.current.index+'~', cradleState)
-            // cradleState)
+            cradleState)
     // }
 
     // cradle scaffold element refs
