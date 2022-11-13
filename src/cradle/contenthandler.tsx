@@ -719,11 +719,12 @@ export default class ContentHandler {
                 viewportElement.clientHeight:
                 viewportElement.clientWidth
 
-        if ((!postCradleRowCount) && 
+        if ((!postCradleRowCount) && // place variable at end of list
             ((measuredTailLength <= viewportLength) || (axisReferenceRow == listLastRow))) {
 
             newAxisScrollblockOffset = computedScrollblockLength - measuredTailLength
             blockScrollPos = computedScrollblockLength - viewportLength
+            cradlePositionData.targetAxisViewportPixelOffset = viewportLength - measuredTailLength - padding
             reposition = true
 
         }
