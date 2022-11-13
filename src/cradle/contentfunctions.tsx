@@ -45,7 +45,7 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         runwayRowcount,
         listRowcount,
         listsize,
-        viewportVisibleRowcount,
+        // viewportVisibleRowcount,
 
     } = cradleInternalProperties
     
@@ -67,8 +67,8 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         targetAxisRowOffset = maxAxisRowOffset
         targetAxisReferenceIndex = targetAxisRowOffset * crosscount
     }
-    console.log('getContentListRequirements: targetAxisReferenceIndex, viewportVisibleRowcount', 
-        targetAxisReferenceIndex, viewportVisibleRowcount)
+    console.log('getContentListRequirements: targetAxisReferenceIndex', 
+        targetAxisReferenceIndex)
 
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
 
