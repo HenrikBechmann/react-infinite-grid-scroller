@@ -62,13 +62,14 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     //     targetAxisReferenceIndex = targetAxisRowOffset * crosscount
     // }
 
+    // update will compensate if this is too high
     const maxAxisRowOffset = Math.max(0,listRowcount - 1)
     if (targetAxisRowOffset > maxAxisRowOffset) {
         targetAxisRowOffset = maxAxisRowOffset
         targetAxisReferenceIndex = targetAxisRowOffset * crosscount
     }
-    console.log('getContentListRequirements: targetAxisReferenceIndex', 
-        targetAxisReferenceIndex)
+    // console.log('getContentListRequirements: targetAxisReferenceIndex', 
+    //     targetAxisReferenceIndex)
 
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
 
@@ -416,6 +417,8 @@ export const calcContentShift = ({
                 gridRowAggregateSpans[spanRowPtr]: // move axis toward tail from viewport boundary (positive)
                 -gridRowAggregateSpans[spanRowPtr] // move axis toward head from viewport boundary (negative)
 
+        console.log('calcContentShift: spanAxisPixelShift',spanAxisPixelShift)
+
     }
 
     const spanRowShift = // pick up row shift with or without overshoot
@@ -461,6 +464,8 @@ export const calcContentShift = ({
 
     // const newAxisViewportPixelOffset = Math.floor(currentViewportAxisOffset + axisPixelShift)
     const newAxisViewportPixelOffset = currentViewportAxisOffset + axisPixelShift
+    console.log('newAxisViewportPixelOffset, currentViewportAxisOffset, axisPixelShift',
+        newAxisViewportPixelOffset, currentViewportAxisOffset, axisPixelShift)
 
     // Note: sections 5, 6 and 7 deal entirely with row calculations; no pixels
 

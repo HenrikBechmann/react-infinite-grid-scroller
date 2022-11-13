@@ -129,8 +129,8 @@ export default class ContentHandler {
         let workingRequestAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
         workingRequestAxisReferenceIndex -= (workingRequestAxisReferenceIndex % crosscount)
 
-        console.log('setCradleContent: requestedAxisReferenceIndex, workingRequestAxisReferenceIndex',
-            requestedAxisReferenceIndex, workingRequestAxisReferenceIndex)
+        // console.log('setCradleContent: requestedAxisReferenceIndex, workingRequestAxisReferenceIndex',
+        //     requestedAxisReferenceIndex, workingRequestAxisReferenceIndex)
 
         // reposition at row boundary
         if ([
@@ -187,7 +187,7 @@ export default class ContentHandler {
 
             })
 
-        console.log('targetAxisReferenceIndex',targetAxisReferenceIndex)
+        // console.log('targetAxisReferenceIndex',targetAxisReferenceIndex)
 
         // reset scrollblock Offset and length
         const scrollblockElement = viewportElement.firstChild
@@ -565,6 +565,8 @@ export default class ContentHandler {
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
+        console.log('updateCradleContent: cradlePositionData',cradlePositionData)
+
         stateHandler.setCradleState('renderupdatedcontent')
 
     }
@@ -631,6 +633,9 @@ export default class ContentHandler {
             listRowcount 
 
         } = cradleInternalProperties
+
+        console.log('adjustScrollblockForVariability: axisReferenceIndex, axisViewportOffset',
+            axisReferenceIndex, axisViewportOffset)
 
         // ------------------------[ precursor calculations ]------------------------
 
@@ -731,12 +736,14 @@ export default class ContentHandler {
                 (axisReferenceRow == listLastRow))) // or oversize lastrow is larger than viewport
         {
 
-            const testBlockScrollPos = computedScrollblockLength - viewportLength // takes us to viewport edge
+            const testBlockScrollPos = computedScrollblockLength - viewportLength // - padding // takes us to viewport edge
             if (testBlockScrollPos > blockScrollPos) {
 
                 blockScrollPos = testBlockScrollPos
 
                 newAxisScrollblockOffset = computedScrollblockLength - measuredTailLength // axis leaves room for tail
+
+                console.log('adjusted newAxisScrollblockOffset')
 
                 // register revised viewportPixelOffset
                 cradlePositionData.targetAxisViewportPixelOffset = viewportLength - measuredTailLength - padding
