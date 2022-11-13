@@ -100,8 +100,8 @@ export default class ContentHandler {
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
         interruptHandler.triggerlinesIntersect.observer.disconnect()
         interruptHandler.cradleIntersect.observer.disconnect()
-        interruptHandler.signals.pauseTriggerlinesObserver = true
-        interruptHandler.signals.pauseCradleIntersectionObserver = true
+        // interruptHandler.signals.pauseTriggerlinesObserver = true
+        // interruptHandler.signals.pauseCradleIntersectionObserver = true
 
         const { cradlePositionData } = layoutHandler
         const viewportElement = ViewportContextProperties.elementRef.current
@@ -126,10 +126,11 @@ export default class ContentHandler {
 
         const {crosscount, listsize, listRowcount} = cradleInternalProperties
 
-        // if (crosscount == 0) return // TODO check validity
-
         let workingRequestAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
         workingRequestAxisReferenceIndex -= (workingRequestAxisReferenceIndex % crosscount)
+
+        console.log('setCradleContent: requestedAxisReferenceIndex, workingRequestAxisReferenceIndex',
+            requestedAxisReferenceIndex, workingRequestAxisReferenceIndex)
 
         // reposition at row boundary
         if ([
@@ -185,6 +186,8 @@ export default class ContentHandler {
                 cradleInternalProperties,
 
             })
+
+        console.log('targetAxisReferenceIndex',targetAxisReferenceIndex)
 
         // reset scrollblock Offset and length
         const scrollblockElement = viewportElement.firstChild

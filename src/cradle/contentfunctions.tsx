@@ -62,6 +62,9 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         targetAxisReferenceIndex = targetAxisRowOffset * crosscount
     }
 
+    console.log('getContentListRequirements: targetAxisReferenceIndex, viewportVisibleRowcount', 
+        targetAxisReferenceIndex, viewportVisibleRowcount)
+
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
 
     // leading edge
