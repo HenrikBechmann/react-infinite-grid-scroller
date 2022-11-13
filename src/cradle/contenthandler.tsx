@@ -731,13 +731,19 @@ export default class ContentHandler {
                 (axisReferenceRow == listLastRow))) // or oversize lastrow is larger than viewport
         {
 
-            blockScrollPos = computedScrollblockLength - viewportLength // takes us to viewport edge
-            newAxisScrollblockOffset = computedScrollblockLength - measuredTailLength // axis leaves room for tail
+            const testBlockScrollPos = computedScrollblockLength - viewportLength // takes us to viewport edge
+            if (testBlockScrollPos > blockScrollPos) {
 
-            // register revised viewportPixelOffset
-            cradlePositionData.targetAxisViewportPixelOffset = viewportLength - measuredTailLength - padding
-            // flag processing requiremets after DOM is updated
-            reposition = true
+                blockScrollPos = testBlockScrollPos
+
+                newAxisScrollblockOffset = computedScrollblockLength - measuredTailLength // axis leaves room for tail
+
+                // register revised viewportPixelOffset
+                cradlePositionData.targetAxisViewportPixelOffset = viewportLength - measuredTailLength - padding
+                // flag processing requiremets after DOM is updated
+                reposition = true
+
+            }
 
         }
 
