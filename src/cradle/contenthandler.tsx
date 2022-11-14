@@ -796,10 +796,11 @@ export default class ContentHandler {
 
         // change scrollblockElement top and height, or left and width,
         //    and axisElement top or left
+        
         const scrollblockAdjustment = // 0
             (!headPosAdjustment)?// && !tailPosAdjustment)?
                 null:
-                (headPosAdjustment + 'px')// + tailPosAdjustment) + 'px'
+                headPosAdjustment + 'px' // + tailPosAdjustment) + 'px'
         
         if (orientation == 'vertical') {
 

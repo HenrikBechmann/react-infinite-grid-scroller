@@ -342,13 +342,13 @@ export const calcContentShift = ({
 
         // tail trigger needs to move down or right until position relative to viewport top or left is positive
         spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
-            (triggerViewportReferencePos + aggregatespan) > 0 ) // >= 0 )
+            (triggerViewportReferencePos + aggregatespan) >= 0 ) // >= 0 )
     
     } else { // 'axisheadward', scrolldown
 
         // head trigger needs to move up or left until position relative to viewport top or left is negative
         spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
-            (triggerViewportReferencePos - aggregatespan) < 0 ) // <= 0 )
+            (triggerViewportReferencePos - aggregatespan) <= 0) // <= 0 )
 
     }
 
