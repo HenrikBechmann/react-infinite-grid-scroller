@@ -744,10 +744,15 @@ export default class ContentHandler {
         }
 
         // anticipate end of list condition
-        // const viewportLength = 
-        //     (orientation == 'vertical')?
-        //         viewportElement.clientHeight:
-        //         viewportElement.clientWidth
+        const viewportLength = 
+            (orientation == 'vertical')?
+                viewportElement.clientHeight:
+                viewportElement.clientWidth
+
+        const scrollblockLength = 
+            (orientation == 'vertical')?
+                scrollblockElement.clientHeight:
+                scrollblockElement.clientWidth        
 
         // end of list - constrain bottom to align end of cradle and scrollblock
         if (!postCradleRowCount) {
@@ -765,7 +770,13 @@ export default class ContentHandler {
                 reposition = true
             }
 
-            newAxisScrollblockOffset = blockScrollPos + axisViewportOffset - headPosAdjustment
+            newAxisScrollblockOffset = blockScrollPos + axisViewportOffset // - headPosAdjustment
+
+            // console.log('variable adjustment: blockScrollPos, viewportLength, sum, scrollblockLength',
+            //     blockScrollPos, viewportLength, blockScrollPos + viewportLength, scrollblockLength)
+            // if ((blockScrollPos + viewportLength) == scrollblockLength) {
+            //     cradlePositionData.targetAxisViewportPixelOffset = viewportLength - measuredTailLength - padding
+            // }
 
             computedScrollblockLength = newAxisScrollblockOffset + measuredTailLength
 
