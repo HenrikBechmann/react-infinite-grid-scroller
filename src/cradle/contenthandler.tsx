@@ -710,7 +710,10 @@ export default class ContentHandler {
 
         // the pixels by which the pre-axis Scrollblock is shorter than the base length
         //    this allows for smooth scrolling before a scrolling interruption
-        let headPosAdjustment = computedPreAxisPixelLength - basePreAxisPixelLength
+        let headPosAdjustment = 
+            !preCradleRowCount?
+                computedPreAxisPixelLength - basePreAxisPixelLength:
+                0
 
         // // after scroll, restore blockScrollPos to reach Axis without adjustment
         let reposition = false
@@ -741,19 +744,21 @@ export default class ContentHandler {
         }
 
         // anticipate end of list condition
-        const viewportLength = 
-            (orientation == 'vertical')?
-                viewportElement.clientHeight:
-                viewportElement.clientWidth
+        // const viewportLength = 
+        //     (orientation == 'vertical')?
+        //         viewportElement.clientHeight:
+        //         viewportElement.clientWidth
 
         // end of list - constrain bottom to align end of cradle and scrollblock
         if (!postCradleRowCount) {
 
+            headPosAdjustment = 0
+
             const targetScrollblockPos = 
                 computedScrollblockLength + headPosAdjustment - measuredTailLength + axisViewportOffset
 
-            console.log('!postCradleRowCount: source, targetScrollblockPos = computedScrollblockLength - measuredTailLength + headPosAdjustment, axisViewportOffset\n',
-                source, targetScrollblockPos, computedScrollblockLength, measuredTailLength, headPosAdjustment, axisViewportOffset)
+            // console.log('!postCradleRowCount: source, targetScrollblockPos = computedScrollblockLength - measuredTailLength + headPosAdjustment, axisViewportOffset\n',
+            //     source, targetScrollblockPos, computedScrollblockLength, measuredTailLength, headPosAdjustment, axisViewportOffset)
 
             if (blockScrollPos != targetScrollblockPos) {
                 blockScrollPos = targetScrollblockPos
