@@ -187,7 +187,7 @@ export default class ContentHandler {
 
             })
 
-        // console.log('targetAxisReferenceIndex',targetAxisReferenceIndex)
+        console.log('setCradleContent: targetAxisReferenceIndex',targetAxisReferenceIndex)
 
         // reset scrollblock Offset and length
         const scrollblockElement = viewportElement.firstChild
@@ -405,8 +405,6 @@ export default class ContentHandler {
 
         })
 
-        // console.log('shiftinstruction, triggerData', shiftinstruction, triggerData)
-
         // second abandon option/3; nothing to do
         if (shiftinstruction == 'none') { 
 
@@ -446,6 +444,11 @@ export default class ContentHandler {
             cradleElements,
 
         })
+
+        // console.log('updateCradleContent: shiftinstruction, triggerData, axisReferenceIndex', 
+        //     shiftinstruction, triggerData, '\n', axisReferenceIndex)
+
+        console.log('updateCradleContent: axisReferenceIndex', axisReferenceIndex)
 
         // third abandon option/3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) { // can happen first row
@@ -565,7 +568,7 @@ export default class ContentHandler {
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
-        console.log('updateCradleContent: cradlePositionData',cradlePositionData)
+        // console.log('updateCradleContent: cradlePositionData',cradlePositionData)
 
         stateHandler.setCradleState('renderupdatedcontent')
 
@@ -573,9 +576,25 @@ export default class ContentHandler {
 
     // ===================[ RECONFIGURE THE SCROLLBLOCK FOR VARIABLE CONTENT ]=======================
 
-    // Called for variale layout only. All DOM elements should have been rendered at this point
-    // sets CSS: scrollblockElement top and height (or left and width), and axisElement top (or left)
-    // this to get closer to natural proportions to minimize janky scroll thumb
+
+/*  
+    blockScrollPos is the amount the scrollBlock is scrolled to reveal the centre of the Cradle
+        at the edge of the Viewport
+    
+    newAxisScrollblockOffset is the exact offset of blockScrollPos, plus the axisViewportOffset
+    
+    axisViewportOffset is the amount the axis is ahead of the Viewport edge
+    
+    headPosAdjustment adjusts the position of the Scrollblock by the amount the measured head length
+        differs from the base head length
+
+    the length of the Scrollblock is shortened by the amount the measured tail length differs from the 
+        base tail length
+
+    Called for variable layout only. All DOM elements should have been rendered at this point
+    sets CSS: scrollblockElement top and height (or left and width), and axisElement top (or left)
+    this to get closer to natural proportions to minimize janky scroll thumb
+*/    
     public adjustScrollblockForVariability = (source) => {
 
         // ----------------------[ setup base values and references ]------------------------
@@ -634,8 +653,8 @@ export default class ContentHandler {
 
         } = cradleInternalProperties
 
-        console.log('adjustScrollblockForVariability: axisReferenceIndex, axisViewportOffset',
-            axisReferenceIndex, axisViewportOffset)
+        // console.log('adjustScrollblockForVariability: axisReferenceIndex, axisViewportOffset',
+        //     axisReferenceIndex, axisViewportOffset)
 
         // ------------------------[ precursor calculations ]------------------------
 
@@ -677,14 +696,14 @@ export default class ContentHandler {
         const basePreCradlePixelLength = preCradleRowCount * baseCellLength,
             basePostCradlePixelLength = postCradleRowCount * baseCellLength
 
-        const computedPreAxisPixelLength = basePreCradlePixelLength + measuredHeadLength
-        const computedPostAxisPixelLength = basePostCradlePixelLength + measuredTailLength
+        const computedPreAxisPixelLength = basePreCradlePixelLength + measuredHeadLength + padding
+        const computedPostAxisPixelLength = basePostCradlePixelLength + measuredTailLength + padding
 
         // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
-        const computedScrollblockLength = 
-            (computedPreAxisPixelLength + computedPostAxisPixelLength) + (padding * 2)
-
+        // const computedScrollblockLength = computedPreAxisPixelLength + computedPostAxisPixelLength
         const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding
+        const computedScrollblockLength = basePreAxisPixelLength + computedPostAxisPixelLength
+
         // const basePostAxisPixelLength = ((postCradleRowCount + tailRowCount) * baseCellLength) + padding
 
         // ------------------------[ change calculations ]----------------------
@@ -692,11 +711,12 @@ export default class ContentHandler {
         // the pixels by which the pre-axis Scrollblock is shorter than the base length
         //    this allows for smooth scrolling before a scrolling interruption
         let headPosAdjustment = 
-            preCradleRowCount?
-                0:
-                (blockScrollPos + axisViewportOffset - basePreAxisPixelLength)
+            // preCradleRowCount?
+            //     0:
+            //     (blockScrollPos + axisViewportOffset - basePreAxisPixelLength)
+            computedPreAxisPixelLength - basePreAxisPixelLength
 
-        // after scroll, restore blockScrollPos to reach Axis without adjustment
+        // // after scroll, restore blockScrollPos to reach Axis without adjustment
         let reposition = false
         if (source == 'afterscroll') {
             
@@ -730,35 +750,28 @@ export default class ContentHandler {
                 viewportElement.clientHeight:
                 viewportElement.clientWidth
 
-        // end of list - adjust bottom to align end of cradle and scrollblock
-        if ((!postCradleRowCount) && // place variable content at end of list
-            ((measuredTailLength <= viewportLength) || // entire tail fits inside viewport
-                (axisReferenceRow == listLastRow))) // or oversize lastrow is larger than viewport
+        // end of list - constrain bottom to align end of cradle and scrollblock
+        if (!postCradleRowCount) // && // place variable content at end of list
         {
 
-            const testBlockScrollPos = computedScrollblockLength - viewportLength // - padding // takes us to viewport edge
-            if (testBlockScrollPos > blockScrollPos) {
 
-                blockScrollPos = testBlockScrollPos
+            const maxScrollblockPos = computedScrollblockLength - measuredTailLength + headPosAdjustment + axisViewportOffset
 
-                newAxisScrollblockOffset = computedScrollblockLength - measuredTailLength // axis leaves room for tail
+            console.log('!postCradleRowCount: source, maxScrollblockPos = computedScrollblockLength - measuredTailLength + headPosAdjustment\n',
+                source, maxScrollblockPos, computedScrollblockLength, measuredTailLength, headPosAdjustment)
 
-                console.log('adjusted newAxisScrollblockOffset')
-
-                // register revised viewportPixelOffset
-                cradlePositionData.targetAxisViewportPixelOffset = viewportLength - measuredTailLength - padding
-                // flag processing requiremets after DOM is updated
+            if (blockScrollPos > maxScrollblockPos) {
+                blockScrollPos = maxScrollblockPos
+                newAxisScrollblockOffset = blockScrollPos + axisViewportOffset - headPosAdjustment
                 reposition = true
-
             }
-
         }
 
         // -----------------------[ application ]-------------------------
 
         // change scrollblockElement top and height, or left and width,
         //    and axisElement top or left
-        const scrollblockAdjustment = 
+        const scrollblockAdjustment = // 0
             (!headPosAdjustment)?// && !tailPosAdjustment)?
                 null:
                 (headPosAdjustment + 'px')// + tailPosAdjustment) + 'px'

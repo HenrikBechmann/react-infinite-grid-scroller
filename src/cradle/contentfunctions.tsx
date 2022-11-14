@@ -342,13 +342,13 @@ export const calcContentShift = ({
 
         // tail trigger needs to move down or right until position relative to viewport top or left is positive
         spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
-            (triggerViewportReferencePos + aggregatespan) >= 0 )
+            (triggerViewportReferencePos + aggregatespan) > 0 ) // >= 0 )
     
     } else { // 'axisheadward', scrolldown
 
         // head trigger needs to move up or left until position relative to viewport top or left is negative
         spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
-            (triggerViewportReferencePos - aggregatespan) <= 0 )
+            (triggerViewportReferencePos - aggregatespan) < 0 ) // <= 0 )
 
     }
 
@@ -417,7 +417,7 @@ export const calcContentShift = ({
                 gridRowAggregateSpans[spanRowPtr]: // move axis toward tail from viewport boundary (positive)
                 -gridRowAggregateSpans[spanRowPtr] // move axis toward head from viewport boundary (negative)
 
-        console.log('calcContentShift: spanAxisPixelShift',spanAxisPixelShift)
+        // console.log('calcContentShift: spanAxisPixelShift',spanAxisPixelShift)
 
     }
 
@@ -464,8 +464,8 @@ export const calcContentShift = ({
 
     // const newAxisViewportPixelOffset = Math.floor(currentViewportAxisOffset + axisPixelShift)
     const newAxisViewportPixelOffset = currentViewportAxisOffset + axisPixelShift
-    console.log('newAxisViewportPixelOffset, currentViewportAxisOffset, axisPixelShift',
-        newAxisViewportPixelOffset, currentViewportAxisOffset, axisPixelShift)
+    // console.log('newAxisViewportPixelOffset, currentViewportAxisOffset, axisPixelShift',
+    //     newAxisViewportPixelOffset, currentViewportAxisOffset, axisPixelShift)
 
     // Note: sections 5, 6 and 7 deal entirely with row calculations; no pixels
 
