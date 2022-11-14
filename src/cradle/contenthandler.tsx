@@ -710,11 +710,7 @@ export default class ContentHandler {
 
         // the pixels by which the pre-axis Scrollblock is shorter than the base length
         //    this allows for smooth scrolling before a scrolling interruption
-        let headPosAdjustment = 
-            // preCradleRowCount?
-            //     0:
-            //     (blockScrollPos + axisViewportOffset - basePreAxisPixelLength)
-            computedPreAxisPixelLength - basePreAxisPixelLength
+        let headPosAdjustment = computedPreAxisPixelLength - basePreAxisPixelLength
 
         // // after scroll, restore blockScrollPos to reach Axis without adjustment
         let reposition = false
