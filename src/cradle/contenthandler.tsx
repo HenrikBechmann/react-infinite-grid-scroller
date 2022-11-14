@@ -702,7 +702,7 @@ export default class ContentHandler {
         // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
         // const computedScrollblockLength = computedPreAxisPixelLength + computedPostAxisPixelLength
         const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding
-        const computedScrollblockLength = basePreAxisPixelLength + computedPostAxisPixelLength
+        let computedScrollblockLength = basePreAxisPixelLength + computedPostAxisPixelLength
 
         // const basePostAxisPixelLength = ((postCradleRowCount + tailRowCount) * baseCellLength) + padding
 
@@ -747,20 +747,23 @@ export default class ContentHandler {
                 viewportElement.clientWidth
 
         // end of list - constrain bottom to align end of cradle and scrollblock
-        if (!postCradleRowCount) // && // place variable content at end of list
-        {
+        if (!postCradleRowCount) {
 
+            const targetScrollblockPos = 
+                computedScrollblockLength + headPosAdjustment - measuredTailLength + axisViewportOffset
 
-            const maxScrollblockPos = computedScrollblockLength - measuredTailLength + headPosAdjustment + axisViewportOffset
+            console.log('!postCradleRowCount: source, targetScrollblockPos = computedScrollblockLength - measuredTailLength + headPosAdjustment, axisViewportOffset\n',
+                source, targetScrollblockPos, computedScrollblockLength, measuredTailLength, headPosAdjustment, axisViewportOffset)
 
-            console.log('!postCradleRowCount: source, maxScrollblockPos = computedScrollblockLength - measuredTailLength + headPosAdjustment\n',
-                source, maxScrollblockPos, computedScrollblockLength, measuredTailLength, headPosAdjustment)
-
-            if (blockScrollPos > maxScrollblockPos) {
-                blockScrollPos = maxScrollblockPos
-                newAxisScrollblockOffset = blockScrollPos + axisViewportOffset - headPosAdjustment
+            if (blockScrollPos != targetScrollblockPos) {
+                blockScrollPos = targetScrollblockPos
                 reposition = true
             }
+
+            newAxisScrollblockOffset = blockScrollPos + axisViewportOffset - headPosAdjustment
+
+            computedScrollblockLength = newAxisScrollblockOffset + measuredTailLength
+
         }
 
         // -----------------------[ application ]-------------------------
