@@ -464,8 +464,8 @@ export const calcContentShift = ({
 
     // const newAxisViewportPixelOffset = Math.floor(currentViewportAxisOffset + axisPixelShift)
     const newAxisViewportPixelOffset = currentViewportAxisOffset + axisPixelShift
-    // console.log('newAxisViewportPixelOffset, currentViewportAxisOffset, axisPixelShift',
-    //     newAxisViewportPixelOffset, currentViewportAxisOffset, axisPixelShift)
+    console.log('calcContentShift: newAxisViewportPixelOffset, currentViewportAxisOffset, axisPixelShift',
+        newAxisViewportPixelOffset, currentViewportAxisOffset, axisPixelShift)
 
     // Note: sections 5, 6 and 7 deal entirely with row calculations; no pixels
 

@@ -448,7 +448,8 @@ export default class ContentHandler {
         // console.log('updateCradleContent: shiftinstruction, triggerData, axisReferenceIndex', 
         //     shiftinstruction, triggerData, '\n', axisReferenceIndex)
 
-        console.log('updateCradleContent: axisReferenceIndex', axisReferenceIndex)
+        console.log('updateCradleContent: axisReferenceIndex, axisViewportPixelOffset', 
+            axisReferenceIndex, axisViewportPixelOffset)
 
         // third abandon option/3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) { // can happen first row
@@ -782,9 +783,12 @@ export default class ContentHandler {
 
             // console.log('viewportLength', viewportLength, computedScrollblockLength - blockScrollPos)
 
-            // if (viewportLength == (computedScrollblockLength - blockScrollPos)) {
-            //     cradlePositionData.targetAxisViewportPixelOffset = viewportLength - measuredTailLength
-            // }
+            console.log('adjustScrollblockForVariability: source axisViewportOffset',source, axisViewportOffset, )
+
+            if (viewportLength == (computedScrollblockLength - blockScrollPos)) {
+                console.log('final calculated targetAxisViewportPixelOffset', viewportLength - measuredTailLength)
+                // cradlePositionData.targetAxisViewportPixelOffset = viewportLength - measuredTailLength
+            }
 
         }
 
