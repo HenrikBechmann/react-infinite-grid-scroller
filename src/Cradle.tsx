@@ -150,7 +150,7 @@ const Cradle = ({
     const hasBeenRenderedRef = useRef(false)
 
     // trigger control
-    const triggerHistoryRef = useRef({
+    const triggerZeroHistoryRef = useRef({
         previousReferenceName:null,
     })
 
@@ -424,7 +424,7 @@ const Cradle = ({
         cradleElementsRef,
         isCachedRef,
         wasCachedRef,
-        triggerHistoryRef,
+        triggerZeroHistoryRef,
 
         // for stateHandler
         cradleStateRef,

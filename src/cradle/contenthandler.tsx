@@ -351,7 +351,7 @@ export default class ContentHandler {
         const { 
             crosscount,
             listsize,
-            triggerHistoryRef,
+            triggerZeroHistoryRef,
 
         } = cradleInternalProperties
 
@@ -403,8 +403,7 @@ export default class ContentHandler {
 
             viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
 
-            triggerHistoryRef,
-            // scrollPos,
+            triggerZeroHistoryRef,
 
         })
 

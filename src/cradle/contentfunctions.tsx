@@ -141,7 +141,7 @@ export const getShiftInstruction = ({
     isFirstRowTriggerConfig, 
 
     viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
-    triggerHistoryRef,
+    triggerZeroHistoryRef,
     // scrollPos,
 
 }) => {
@@ -194,35 +194,34 @@ export const getShiftInstruction = ({
 
     let shiftinstruction
     
-    const triggerHistory = triggerHistoryRef.current
+    const triggerZeroHistory = triggerZeroHistoryRef.current
 
     // since triggers are moved and can share the 0 (zero) offset, in infinite loop can occur
     // between the head and tail triggers. The following short-circuits that.
     if (triggerData.headOffset == 0 || triggerData.tailOffset == 0) {
 
-        if (triggerHistory.previousReferenceName) {
+        if (triggerZeroHistory.previousReferenceName) {
 
-            if ((triggerHistory.previousReferenceName == 'headtrigger' && triggerData.tailOffset == 0) ||
-                (triggerHistory.previousReferenceName == 'tailtrigger' && triggerData.headOffset == 0)) {
+            if ((triggerZeroHistory.previousReferenceName == 'headtrigger' && triggerData.tailOffset == 0) ||
+                (triggerZeroHistory.previousReferenceName == 'tailtrigger' && triggerData.headOffset == 0)) {
 
                 shiftinstruction = 'none'
 
             } else {
 
-                triggerHistory.previousReferenceName = null
+                triggerZeroHistory.previousReferenceName = null
 
             }
+            
         } else {
-
-            // triggerHistory.previousScrollPos = scrollPos
 
             if (triggerData.headOffset == 0) {
 
-                triggerHistory.previousReferenceName = 'headtrigger'
+                triggerZeroHistory.previousReferenceName = 'headtrigger'
 
             } else {
 
-                triggerHistory.previousReferenceName = 'tailtrigger'
+                triggerZeroHistory.previousReferenceName = 'tailtrigger'
 
             }
 
@@ -230,16 +229,17 @@ export const getShiftInstruction = ({
 
     } else {
 
-        if (triggerHistory.previousReferenceName) {
+        if (triggerZeroHistory.previousReferenceName) {
 
-            triggerHistory.previousReferenceName = null
+            triggerZeroHistory.previousReferenceName = null
 
         }
     }
 
     if (shiftinstruction) {
 
-        triggerHistory.previousReferenceName = null
+        triggerZeroHistory.previousReferenceName = null
+
         return shiftinstruction
 
     }
