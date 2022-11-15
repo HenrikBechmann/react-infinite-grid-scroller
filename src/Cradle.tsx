@@ -149,6 +149,11 @@ const Cradle = ({
     const parentingTransitionRequiredRef = useRef(false)
     const hasBeenRenderedRef = useRef(false)
 
+    // trigger control
+    const triggerHistoryRef = useRef({
+        previousReferenceName:null,
+    })
+
     //  viewport dimensions and cached state
     const getViewportDimensions = () => {
         const viewportElement = ViewportContextProperties.elementRef.current
@@ -178,8 +183,8 @@ const Cradle = ({
 
     // if (!scrollerProperties) {
         // console.log('==> cradleState','-'+scrollerID+'-',
+        //     cradleState)
             // '~'+scrollerProperties?.cellFrameDataRef.current.index+'~', cradleState)
-            // cradleState)
     // }
 
     // cradle scaffold element refs
@@ -242,7 +247,6 @@ const Cradle = ({
     const [
         cradleRowcount, 
         viewportRowcount, 
-        viewportVisibleRowcount, // maximum number of rows completely visible at once
         listRowcount,
         runwayRowcount,
     ] = useMemo(()=> {
@@ -283,8 +287,6 @@ const Cradle = ({
 
         const viewportRowcount = Math.ceil(viewportLength/baseRowLength)
 
-        const viewportVisibleRowcount = Math.floor(viewportLength/baseRowLength)
-
         const listRowcount = Math.ceil(listsize/crosscount)
 
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
@@ -315,7 +317,6 @@ const Cradle = ({
         return [
             cradleRowcount, 
             viewportRowcount, 
-            viewportVisibleRowcount,
             listRowcount,
             runwayRowcount,
         ]
@@ -414,7 +415,6 @@ const Cradle = ({
         crosscount,
         cradleRowcount,
         viewportRowcount,
-        viewportVisibleRowcount,
         listRowcount,
         listsize,
         runwayRowcount,
@@ -424,6 +424,7 @@ const Cradle = ({
         cradleElementsRef,
         isCachedRef,
         wasCachedRef,
+        triggerHistoryRef,
 
         // for stateHandler
         cradleStateRef,
