@@ -1322,17 +1322,24 @@ const Cradle = ({
 
                 contentHandler.adjustScrollblockForVariability('afterscroll')
 
-                setCradleState('finishupdateforvariability')
+                setCradleState('doDOMupdateforvariability')
 
                 break
 
             }
 
+            case 'doDOMupdateforvariablility': {
+
+                setCradleState('finishupdateforvariability')
+
+                break
+            }
+
             case 'finishupdateforvariability': {
 
                 // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
-                interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseTriggerlinesObserver = false
+                interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseCradleIntersectionObserver = false
 
                 setCradleState('ready')

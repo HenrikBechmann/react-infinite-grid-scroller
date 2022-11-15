@@ -168,17 +168,19 @@ export default class ScrollHandler {
             contentHandler.pareCacheToMax()
         }
 
-        if (!['repositioningRender','repositioningContinuation'].includes(cradleState) &&
-            (layout == 'variable')) {
+        // console.log('onAfterScroll: cradleState, layout',cradleState, layout)
 
-            // TODO check reasoning for this
-            if ((this.scrollData.start != this.scrollData.current) || 
-                (this.scrollData.current != this.scrollData.previous)) {
+        // if (!['repositioningRender','repositioningContinuation'].includes(cradleState) &&
+        //     (layout == 'variable')) {
 
-                stateHandler.setCradleState('adjustupdateforvariabilityafterscroll')
+        //     // TODO check reasoning for this
+        //     if ((this.scrollData.start != this.scrollData.current) || 
+        //         (this.scrollData.current != this.scrollData.previous)) {
 
-            }
-        }
+        //         stateHandler.setCradleState('adjustupdateforvariabilityafterscroll')
+
+        //     }
+        // }
 
     }
 
