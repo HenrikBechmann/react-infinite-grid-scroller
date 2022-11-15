@@ -349,9 +349,9 @@ export default class ContentHandler {
         } = cradleInheritedProperties
 
         const { 
-            // viewportVisibleRowcount,
             crosscount,
             listsize,
+            triggerHistoryRef,
 
         } = cradleInternalProperties
 
@@ -403,6 +403,9 @@ export default class ContentHandler {
 
             viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
 
+            triggerHistoryRef,
+            // scrollPos,
+
         })
 
         // second abandon option/3; nothing to do
@@ -448,8 +451,8 @@ export default class ContentHandler {
         // console.log('updateCradleContent: shiftinstruction, triggerData, axisReferenceIndex', 
         //     shiftinstruction, triggerData, '\n', axisReferenceIndex)
 
-        console.log('updateCradleContent: axisReferenceIndex, axisViewportPixelOffset', 
-            axisReferenceIndex, axisViewportPixelOffset)
+        // console.log('updateCradleContent: axisReferenceIndex, axisViewportPixelOffset', 
+        //     axisReferenceIndex, axisViewportPixelOffset)
 
         // third abandon option/3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) { // can happen first row
@@ -783,10 +786,10 @@ export default class ContentHandler {
 
             // console.log('viewportLength', viewportLength, computedScrollblockLength - blockScrollPos)
 
-            console.log('adjustScrollblockForVariability: source axisViewportOffset',source, axisViewportOffset, )
+            // console.log('adjustScrollblockForVariability: source axisViewportOffset',source, axisViewportOffset, )
 
             if (viewportLength == (computedScrollblockLength - blockScrollPos)) {
-                console.log('final calculated targetAxisViewportPixelOffset', viewportLength - measuredTailLength)
+                // console.log('final calculated targetAxisViewportPixelOffset', viewportLength - measuredTailLength)
                 // cradlePositionData.targetAxisViewportPixelOffset = viewportLength - measuredTailLength
             }
 

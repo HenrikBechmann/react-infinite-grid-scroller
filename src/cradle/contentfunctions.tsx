@@ -45,7 +45,6 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         runwayRowcount,
         listRowcount,
         listsize,
-        // viewportVisibleRowcount,
 
     } = cradleInternalProperties
     
@@ -55,12 +54,6 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
 
     // derive target row
     let targetAxisRowOffset = Math.ceil(targetAxisReferenceIndex/crosscount)
-
-    // const maxAxisRowOffset = Math.max(0,listRowcount - viewportVisibleRowcount)
-    // if (targetAxisRowOffset > maxAxisRowOffset) {
-    //     targetAxisRowOffset = maxAxisRowOffset
-    //     targetAxisReferenceIndex = targetAxisRowOffset * crosscount
-    // }
 
     // update will compensate if this is too high
     const maxAxisRowOffset = Math.max(0,listRowcount - 1)
@@ -148,6 +141,8 @@ export const getShiftInstruction = ({
     isFirstRowTriggerConfig, 
 
     viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
+    triggerHistoryRef,
+    // scrollPos,
 
 }) => {
 
@@ -199,6 +194,56 @@ export const getShiftInstruction = ({
 
     let shiftinstruction
     
+    const triggerHistory = triggerHistoryRef.current
+
+    // since triggers are moved and can share the 0 (zero) offset, in infinite loop can occur
+    // between the head and tail triggers. The following short-circuits that.
+    if (triggerData.headOffset == 0 || triggerData.tailOffset == 0) {
+
+        if (triggerHistory.previousReferenceName) {
+
+            if ((triggerHistory.previousReferenceName == 'headtrigger' && triggerData.tailOffset == 0) ||
+                (triggerHistory.previousReferenceName == 'tailtrigger' && triggerData.headOffset == 0)) {
+
+                shiftinstruction = 'none'
+
+            } else {
+
+                triggerHistory.previousReferenceName = null
+
+            }
+        } else {
+
+            // triggerHistory.previousScrollPos = scrollPos
+
+            if (triggerData.headOffset == 0) {
+
+                triggerHistory.previousReferenceName = 'headtrigger'
+
+            } else {
+
+                triggerHistory.previousReferenceName = 'tailtrigger'
+
+            }
+
+        }
+
+    } else {
+
+        if (triggerHistory.previousReferenceName) {
+
+            triggerHistory.previousReferenceName = null
+
+        }
+    }
+
+    if (shiftinstruction) {
+
+        triggerHistory.previousReferenceName = null
+        return shiftinstruction
+
+    }
+
     if (isFirstRowTriggerConfig) {
 
         if (triggerData.headOffset <= 0) {
@@ -464,8 +509,8 @@ export const calcContentShift = ({
 
     // const newAxisViewportPixelOffset = Math.floor(currentViewportAxisOffset + axisPixelShift)
     const newAxisViewportPixelOffset = currentViewportAxisOffset + axisPixelShift
-    console.log('calcContentShift: newAxisViewportPixelOffset, currentViewportAxisOffset, axisPixelShift',
-        newAxisViewportPixelOffset, currentViewportAxisOffset, axisPixelShift)
+    // console.log('calcContentShift: newAxisViewportPixelOffset, currentViewportAxisOffset, axisPixelShift',
+    //     newAxisViewportPixelOffset, currentViewportAxisOffset, axisPixelShift)
 
     // Note: sections 5, 6 and 7 deal entirely with row calculations; no pixels
 
