@@ -159,7 +159,6 @@ const Viewport = ({
             inset:0,
             overflow:'auto',
             overflowAnchor:'none', // crucial!
-            // overscrollBehavior:'none'
             
         }
 

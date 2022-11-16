@@ -150,7 +150,7 @@ const Cradle = ({
     const hasBeenRenderedRef = useRef(false)
 
     // trigger control
-    const triggerHistoryRef = useRef({
+    const triggerZeroHistoryRef = useRef({
         previousReferenceName:null,
     })
 
@@ -424,7 +424,7 @@ const Cradle = ({
         cradleElementsRef,
         isCachedRef,
         wasCachedRef,
-        triggerHistoryRef,
+        triggerZeroHistoryRef,
 
         // for stateHandler
         cradleStateRef,
@@ -1331,8 +1331,8 @@ const Cradle = ({
             case 'finishupdateforvariability': {
 
                 // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
-                interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseTriggerlinesObserver = false
+                interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseCradleIntersectionObserver = false
 
                 setCradleState('ready')
