@@ -129,9 +129,6 @@ export default class ContentHandler {
         let workingRequestAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
         workingRequestAxisReferenceIndex -= (workingRequestAxisReferenceIndex % crosscount)
 
-        // console.log('setCradleContent: requestedAxisReferenceIndex, workingRequestAxisReferenceIndex',
-        //     requestedAxisReferenceIndex, workingRequestAxisReferenceIndex)
-
         // reposition at row boundary
         if ([
             'firstrender', 
@@ -186,8 +183,6 @@ export default class ContentHandler {
                 cradleInternalProperties,
 
             })
-
-        // console.log('setCradleContent: cradleState, targetAxisReferenceIndex',cradleState, targetAxisReferenceIndex)
 
         // reset scrollblock Offset and length
         const scrollblockElement = viewportElement.firstChild
@@ -414,9 +409,6 @@ export default class ContentHandler {
 
         }
 
-        // console.log('updateCradleContent: source, shiftinstruction, oldAxisReferenceIndex\n', 
-        //     source, shiftinstruction, oldAxisReferenceIndex)
-
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         // cradle properties
@@ -449,12 +441,6 @@ export default class ContentHandler {
             cradleElements,
 
         })
-
-        // console.log('updateCradleContent: shiftinstruction, triggerData, axisReferenceIndex', 
-        //     shiftinstruction, triggerData, '\n', axisReferenceIndex)
-
-        // console.log('updateCradleContent: source, axisReferenceIndex, axisViewportPixelOffset\n', 
-        //     source, axisReferenceIndex, axisViewportPixelOffset)
 
         // third abandon option/3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) { // can happen first row
@@ -573,8 +559,6 @@ export default class ContentHandler {
 
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
-
-        // console.log('updateCradleContent: cradlePositionData',cradlePositionData)
 
         stateHandler.setCradleState('renderupdatedcontent')
 
@@ -758,11 +742,6 @@ export default class ContentHandler {
         let adjustBlockScrollPos = false
         if (!postCradleRowCount) {
 
-            // const viewportLength = 
-            //     (orientation == 'vertical')?
-            //         viewportElement.offsetHeight:
-            //         viewportElement.offsetWidth
-
             headPosAdjustment = 0
 
             const targetBlockcrollPos = 
@@ -776,9 +755,6 @@ export default class ContentHandler {
             newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
 
             computedScrollblockLength = newAxisScrollblockOffset + measuredTailLength
-
-            // console.log('==> computedScrollblockLength - (blockScrollPos + viewportLength)\n',
-            //     computedScrollblockLength - (blockScrollPos + viewportLength))
 
         }
 
