@@ -1218,22 +1218,14 @@ const Cradle = ({
             
                     if (isMountedRef.current) {
 
-                        setCradleState('adjustDOMsetforvariability')
+                        contentHandler.adjustScrollblockForVariability('setcradle')
+
+                        setCradleState('finishsetforvariability')
                         
                     }
 
                 }, TIMEOUT_FOR_VARIABLE_MEASUREMENTS)
                 
-                break
-
-            }
-
-            case 'adjustDOMsetforvariability': {
-
-                contentHandler.adjustScrollblockForVariability('setcradle')
-
-                setCradleState('finishsetforvariability')
-
                 break
 
             }
