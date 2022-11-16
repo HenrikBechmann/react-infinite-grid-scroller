@@ -862,9 +862,20 @@ export default class ContentHandler {
 
                 if (alignedEndPosDiff < -400) {
                     console.log('scrolling by',alignedEndPosDiff)
-                    setTimeout(()=> {
-                        viewportElement.scrollBy(0, alignedEndPosDiff)
-                    },100)
+                    // setTimeout(()=> {
+                        const scrollbyY = 
+                            (orientation == 'vertical')?
+                                alignedEndPosDiff:
+                                0
+
+                        const scrollbyX =
+                            (orientation == 'vertical')?
+                                0:
+                                alignedEndPosDiff
+
+                        viewportElement.scrollBy(scrollbyX, scrollbyY)
+
+                    // })
                 }
 
             }
