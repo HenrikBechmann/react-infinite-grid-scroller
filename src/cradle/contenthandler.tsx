@@ -328,8 +328,6 @@ export default class ContentHandler {
         // scroll data
         const { scrollData } = scrollHandler
 
-        // const scrollPos = scrollData.currentupdate
-
         const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
 
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current,
@@ -386,6 +384,8 @@ export default class ContentHandler {
 
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
+        // console.log('==> udpateCradleContent: source, oldAxisReferenceIndex\n',source, oldAxisReferenceIndex)
+
         // --------------------[ 2. get shift instruction ]-----------------------
 
         const [shiftinstruction, triggerData] = getShiftInstruction({
@@ -401,6 +401,8 @@ export default class ContentHandler {
             triggerZeroHistoryRef,
 
         })
+
+        // console.log('-- shiftinstruction', shiftinstruction)
 
         // second abandon option/3; nothing to do
         if (shiftinstruction == 'none') { 
@@ -441,6 +443,9 @@ export default class ContentHandler {
             cradleElements,
 
         })
+
+        // console.log('-- after calcContentShift: axisReferenceIndex, axisViewportPixelOffset\n',
+        //     axisReferenceIndex, axisViewportPixelOffset)
 
         // third abandon option/3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) { // can happen first row
@@ -643,8 +648,8 @@ export default class ContentHandler {
 
         } = cradleInternalProperties
 
-        // console.log('adjustScrollblockForVariability: axisReferenceIndex, axisViewportOffset',
-        //     axisReferenceIndex, axisViewportOffset)
+        // console.log('==> adjustScrollblockForVariability: source, axisReferenceIndex, axisViewportOffset\n',
+        //     source, axisReferenceIndex, axisViewportOffset)
 
         // ------------------------[ precursor calculations ]------------------------
 
@@ -740,19 +745,32 @@ export default class ContentHandler {
 
         // end of list - remaining rows are known; constrain bottom to align end of cradle and scrollblock
         let adjustBlockScrollPos = false
+        // let alignedScrollblockPos
         if (!postCradleRowCount) {
 
             headPosAdjustment = 0
 
-            const targetBlockcrollPos = 
-                computedScrollblockLength - measuredTailLength + axisViewportOffset
+            const viewportLength = 
+                (orientation == 'vertical')?
+                    viewportElement.offsetHeight:
+                    viewportElement.offsetWidth
 
-            if (blockScrollPos != targetBlockcrollPos) {
-                blockScrollPos = targetBlockcrollPos
+            // alignedScrollblockPos = computedScrollblockLength - viewportLength
+
+            const targetScrollblockPos = 
+                computedScrollblockLength - measuredTailLength + axisViewportOffset
+                // Math.min(alignedScrollblockPos,computedScrollblockLength - measuredTailLength + axisViewportOffset)
+
+            if (blockScrollPos != targetScrollblockPos) {
+                blockScrollPos = targetScrollblockPos
                 adjustBlockScrollPos = true
             }
 
-            newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
+            // if (blockScrollPos == alignedScrollblockPos) {
+            //     newAxisScrollblockOffset = alignedScrollblockPos + viewportLength - measuredTailLength
+            // } else {
+                newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
+            // }
 
             computedScrollblockLength = newAxisScrollblockOffset + measuredTailLength
 
@@ -767,6 +785,8 @@ export default class ContentHandler {
             (!headPosAdjustment)?// && !tailPosAdjustment)?
                 null:
                 headPosAdjustment + 'px' // + tailPosAdjustment) + 'px'
+
+
         
         if (orientation == 'vertical') {
 
@@ -814,16 +834,10 @@ export default class ContentHandler {
             const computedAxisViewportOffset = axisElementOffset - viewportElementScrollPos
             const axisViewportOffsetDiff = computedAxisViewportOffset - axisViewportOffset
 
-            // console.log('==>source, computedAxisViewportOffset, axisViewportOffset, axisViewportOffsetDiff, \n',
-            //     source, computedAxisViewportOffset, axisViewportOffset, axisViewportOffsetDiff)
+            // console.log('blockScrollPos, alignedScrollblockPos, viewportElementScrollPos, computedAxisViewportOffset\n',
+            //     blockScrollPos, alignedScrollblockPos, viewportElementScrollPos, computedAxisViewportOffset)
 
-            // console.log('--viewportElementScrollPos, blockScrollPos, diff\n',
-            //     viewportElementScrollPos, blockScrollPos, viewportElementScrollPos - blockScrollPos)
-
-            // console.log('--computedScrollblockLength, measuredScrollblockLength, diff\n',
-            //     computedScrollblockLength, scrollblockElement.offsetHeight, computedScrollblockLength - scrollblockElement.offsetHeight)
-
-            if (axisViewportOffsetDiff) {
+            if (axisViewportOffsetDiff) {// && !(alignedScrollblockPos == blockScrollPos)) {
 
                 const scrollblockOffset = 
                     (orientation == 'vertical')?
@@ -832,13 +846,16 @@ export default class ContentHandler {
 
                 const scrollblockPos = (scrollblockOffset - axisViewportOffsetDiff) + 'px'
 
-                // console.log('changing scrollBlock offset', scrollblockPos)
+                // console.log('changing scrollBlock offset, axisViewportOffsetDiff\n', 
+                //     scrollblockPos, axisViewportOffsetDiff)
 
                 if (orientation == 'vertical') {
                     scrollblockElement.style.top = scrollblockPos
                 } else {
                     scrollblockElement.style.left = scrollblockPos
                 }
+            // } else {
+            //     cradlePositionData.targetAxisViewportPixelOffset = computedAxisViewportOffset
             }
 
         }
