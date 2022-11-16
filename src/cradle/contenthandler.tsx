@@ -750,11 +750,6 @@ export default class ContentHandler {
 
             headPosAdjustment = 0
 
-            const viewportLength = 
-                (orientation == 'vertical')?
-                    viewportElement.offsetHeight:
-                    viewportElement.offsetWidth
-
             // alignedScrollblockPos = computedScrollblockLength - viewportLength
 
             const targetScrollblockPos = 
@@ -837,6 +832,8 @@ export default class ContentHandler {
             // console.log('blockScrollPos, alignedScrollblockPos, viewportElementScrollPos, computedAxisViewportOffset\n',
             //     blockScrollPos, alignedScrollblockPos, viewportElementScrollPos, computedAxisViewportOffset)
 
+            console.log('axisViewportOffsetDiff',axisViewportOffsetDiff)
+
             if (axisViewportOffsetDiff) {// && !(alignedScrollblockPos == blockScrollPos)) {
 
                 const scrollblockOffset = 
@@ -844,18 +841,32 @@ export default class ContentHandler {
                         scrollblockElement.offsetTop:
                         scrollblockElement.offsetLeft
 
-                const scrollblockPos = (scrollblockOffset - axisViewportOffsetDiff) + 'px'
-
-                // console.log('changing scrollBlock offset, axisViewportOffsetDiff\n', 
-                //     scrollblockPos, axisViewportOffsetDiff)
+                const targetScrollblockPos = (scrollblockOffset - axisViewportOffsetDiff)
 
                 if (orientation == 'vertical') {
-                    scrollblockElement.style.top = scrollblockPos
+                    scrollblockElement.style.top = targetScrollblockPos + 'px'
                 } else {
-                    scrollblockElement.style.left = scrollblockPos
+                    scrollblockElement.style.left = targetScrollblockPos + 'px'
                 }
-            // } else {
-            //     cradlePositionData.targetAxisViewportPixelOffset = computedAxisViewportOffset
+
+                const viewportLength = 
+                    (orientation == 'vertical')?
+                        viewportElement.offsetHeight:
+                        viewportElement.offsetWidth
+
+                // computedScrollblockLength
+                const alignedEndPosDiff = (viewportElementScrollPos + targetScrollblockPos + axisViewportOffset + measuredTailLength) - 
+                    (viewportElementScrollPos + targetScrollblockPos + viewportLength)
+
+                console.log('calculating alignedEndPosDiff', alignedEndPosDiff)
+
+                if (alignedEndPosDiff < -400) {
+                    console.log('scrolling by',alignedEndPosDiff)
+                    setTimeout(()=> {
+                        viewportElement.scrollBy(0, alignedEndPosDiff)
+                    },100)
+                }
+
             }
 
         }
