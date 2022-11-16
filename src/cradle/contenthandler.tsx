@@ -835,22 +835,32 @@ export default class ContentHandler {
             const computedAxisViewportOffset = axisElementOffset - viewportElementScrollPos
             const axisViewportOffsetDiff = computedAxisViewportOffset - axisViewportOffset
 
-            console.log('==>computedAxisViewportOffset, axisViewportOffset, axisViewportOffsetDiff, \n',
-                computedAxisViewportOffset, axisViewportOffset, axisViewportOffsetDiff)
+            // console.log('==>source, computedAxisViewportOffset, axisViewportOffset, axisViewportOffsetDiff, \n',
+            //     source, computedAxisViewportOffset, axisViewportOffset, axisViewportOffsetDiff)
 
-            console.log('viewportElementScrollPos, blockScrollPos\n',
-                viewportElementScrollPos, blockScrollPos)
+            // console.log('--viewportElementScrollPos, blockScrollPos, diff\n',
+            //     viewportElementScrollPos, blockScrollPos, viewportElementScrollPos - blockScrollPos)
 
-            // if (axisViewportOffsetDiff) {
+            // console.log('--computedScrollblockLength, measuredScrollblockLength, diff\n',
+            //     computedScrollblockLength, scrollblockElement.offsetHeight, computedScrollblockLength - scrollblockElement.offsetHeight)
 
-            //     const newPos = (axisElementOffset - axisViewportOffsetDiff) + 'px'
-            //     console.log('changing axisElement offset, newPos, newAxisScrollblockOffset\n', newPos, newAxisScrollblockOffset)
-            //     if (orientation == ' vertical') {
-            //         axisElement.style.top = newPos
-            //     } else {
-            //         axisElement.style.left = newPos
-            //     }
-            // }
+            if (axisViewportOffsetDiff) {
+
+                const scrollblockOffset = 
+                    (orientation == 'vertical')?
+                        scrollblockElement.offsetTop:
+                        scrollblockElement.offsetLeft
+
+                const scrollblockPos = (scrollblockOffset - axisViewportOffsetDiff) + 'px'
+
+                // console.log('changing scrollBlock offset', scrollblockPos)
+
+                if (orientation == 'vertical') {
+                    scrollblockElement.style.top = scrollblockPos
+                } else {
+                    scrollblockElement.style.left = scrollblockPos
+                }
+            }
 
         }
 
