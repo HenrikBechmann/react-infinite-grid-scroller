@@ -240,7 +240,7 @@ export const getShiftInstruction = ({
 
         triggerZeroHistory.previousReferenceName = null
 
-        return shiftinstruction
+        return [shiftinstruction, triggerData]
 
     }
 
@@ -273,6 +273,8 @@ export const getShiftInstruction = ({
         }
 
     }
+
+    // console.log('getShiftInstruction: shiftinstruction', shiftinstruction)
 
     return [shiftinstruction, triggerData]
 

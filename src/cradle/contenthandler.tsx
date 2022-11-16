@@ -187,7 +187,7 @@ export default class ContentHandler {
 
             })
 
-        console.log('setCradleContent: cradleState, targetAxisReferenceIndex',cradleState, targetAxisReferenceIndex)
+        // console.log('setCradleContent: cradleState, targetAxisReferenceIndex',cradleState, targetAxisReferenceIndex)
 
         // reset scrollblock Offset and length
         const scrollblockElement = viewportElement.firstChild
@@ -413,6 +413,9 @@ export default class ContentHandler {
             return
 
         }
+
+        // console.log('updateCradleContent: source, shiftinstruction, oldAxisReferenceIndex\n', 
+        //     source, shiftinstruction, oldAxisReferenceIndex)
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
