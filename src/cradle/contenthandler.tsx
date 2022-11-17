@@ -789,11 +789,11 @@ export default class ContentHandler {
         }
 
         // -----------------------[ adjustments ]-------------------------
-        // change of blockScrollPos must take place after length is updated
+        // adjustments of blockScrollPos must take place here, to be after length is updated
 
         if (resetHeadscroll) { // top of list
 
-            // avoid cross-shift of oversize cells
+            // apply both x and y, as sc scrollblock may be oversized cross-length
             const scrollToX = 
                 (orientation == 'vertical')?
                     0:
@@ -830,7 +830,7 @@ export default class ContentHandler {
                     viewportElement.scrollLeft                
 
             // 2. for updatecradle, there's a mysterious diff that opens up on first shift from end toward head
-            // ... also targetScrollBlockOffset is used for the gotoIndex adjustment next
+            // ... also headPosAdjustment is used for the gotoIndex adjustment next
             const computedAxisViewportOffset = axisElementOffset - viewportScrollPos
             const axisViewportOffsetDiff = computedAxisViewportOffset - axisViewportOffset
 
@@ -868,7 +868,7 @@ export default class ContentHandler {
                 const alignedEndPosDiff = 
                     viewportScrollPos + headPosAdjustment + viewportLength - viewportContentLength
 
-                if (alignedEndPosDiff < 0) { // fill the bottom of the viewport
+                if (alignedEndPosDiff < 0) { // fill the bottom of the viewport using scrollBy
 
                     const scrollbyY = 
                         (orientation == 'vertical')?
