@@ -45,7 +45,6 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
         runwayRowcount,
         listRowcount,
         listsize,
-        viewportVisibleRowcount,
 
     } = cradleInternalProperties
     
@@ -56,7 +55,8 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     // derive target row
     let targetAxisRowOffset = Math.ceil(targetAxisReferenceIndex/crosscount)
 
-    const maxAxisRowOffset = Math.max(0,listRowcount - viewportVisibleRowcount)
+    // update will compensate if this is too high
+    const maxAxisRowOffset = Math.max(0,listRowcount - 1)
     if (targetAxisRowOffset > maxAxisRowOffset) {
         targetAxisRowOffset = maxAxisRowOffset
         targetAxisReferenceIndex = targetAxisRowOffset * crosscount
@@ -139,6 +139,8 @@ export const getShiftInstruction = ({
     isFirstRowTriggerConfig, 
 
     viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
+    triggerZeroHistoryRef,
+    // scrollPos,
 
 }) => {
 
@@ -190,6 +192,56 @@ export const getShiftInstruction = ({
 
     let shiftinstruction
     
+    const triggerZeroHistory = triggerZeroHistoryRef.current
+
+    // since triggers are moved and can share the 0 (zero) offset, in infinite loop can occur
+    // between the head and tail triggers. The following short-circuits that.
+    if (triggerData.headOffset == 0 || triggerData.tailOffset == 0) {
+
+        if (triggerZeroHistory.previousReferenceName) {
+
+            if ((triggerZeroHistory.previousReferenceName == 'headtrigger' && triggerData.tailOffset == 0) ||
+                (triggerZeroHistory.previousReferenceName == 'tailtrigger' && triggerData.headOffset == 0)) {
+
+                shiftinstruction = 'none'
+
+            } else {
+
+                triggerZeroHistory.previousReferenceName = null
+
+            }
+            
+        } else {
+
+            if (triggerData.headOffset == 0) {
+
+                triggerZeroHistory.previousReferenceName = 'headtrigger'
+
+            } else {
+
+                triggerZeroHistory.previousReferenceName = 'tailtrigger'
+
+            }
+
+        }
+
+    } else {
+
+        if (triggerZeroHistory.previousReferenceName) {
+
+            triggerZeroHistory.previousReferenceName = null
+
+        }
+    }
+
+    if (shiftinstruction) {
+
+        triggerZeroHistory.previousReferenceName = null
+
+        return [shiftinstruction, triggerData]
+
+    }
+
     if (isFirstRowTriggerConfig) {
 
         if (triggerData.headOffset <= 0) {
@@ -219,6 +271,8 @@ export const getShiftInstruction = ({
         }
 
     }
+
+    // console.log('==> getShiftInstruction: shiftinstruction', shiftinstruction, {...triggerData})
 
     return [shiftinstruction, triggerData]
 
@@ -339,9 +393,12 @@ export const calcContentShift = ({
 
         // head trigger needs to move up or left until position relative to viewport top or left is negative
         spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
-            (triggerViewportReferencePos - aggregatespan) <= 0 )
+            (triggerViewportReferencePos - aggregatespan) <= 0)
 
     }
+
+    // console.log('==> getShiftInstruction: triggerViewportReferencePos, spanRowPtr, gridRowAggregateSpans, gridRowLengths\n',
+    //     triggerViewportReferencePos, spanRowPtr, [...gridRowAggregateSpans], [...gridRowLengths])
 
     const listEndrowOffset = (listRowcount - 1)
     const baseRowLength =

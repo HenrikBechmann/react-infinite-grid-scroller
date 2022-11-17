@@ -149,6 +149,11 @@ const Cradle = ({
     const parentingTransitionRequiredRef = useRef(false)
     const hasBeenRenderedRef = useRef(false)
 
+    // trigger control
+    const triggerZeroHistoryRef = useRef({
+        previousReferenceName:null,
+    })
+
     //  viewport dimensions and cached state
     const getViewportDimensions = () => {
         const viewportElement = ViewportContextProperties.elementRef.current
@@ -178,8 +183,8 @@ const Cradle = ({
 
     // if (!scrollerProperties) {
         // console.log('==> cradleState','-'+scrollerID+'-',
+        //     cradleState)
             // '~'+scrollerProperties?.cellFrameDataRef.current.index+'~', cradleState)
-            // cradleState)
     // }
 
     // cradle scaffold element refs
@@ -242,7 +247,6 @@ const Cradle = ({
     const [
         cradleRowcount, 
         viewportRowcount, 
-        viewportVisibleRowcount, // maximum number of rows completely visible at once
         listRowcount,
         runwayRowcount,
     ] = useMemo(()=> {
@@ -283,8 +287,6 @@ const Cradle = ({
 
         const viewportRowcount = Math.ceil(viewportLength/baseRowLength)
 
-        const viewportVisibleRowcount = Math.floor(viewportLength/baseRowLength)
-
         const listRowcount = Math.ceil(listsize/crosscount)
 
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
@@ -315,7 +317,6 @@ const Cradle = ({
         return [
             cradleRowcount, 
             viewportRowcount, 
-            viewportVisibleRowcount,
             listRowcount,
             runwayRowcount,
         ]
@@ -414,7 +415,6 @@ const Cradle = ({
         crosscount,
         cradleRowcount,
         viewportRowcount,
-        viewportVisibleRowcount,
         listRowcount,
         listsize,
         runwayRowcount,
@@ -424,6 +424,7 @@ const Cradle = ({
         cradleElementsRef,
         isCachedRef,
         wasCachedRef,
+        triggerZeroHistoryRef,
 
         // for stateHandler
         cradleStateRef,
@@ -865,34 +866,43 @@ const Cradle = ({
             return
         }
 
-        const { 
-            cellWidth,
-            cellHeight,
-            gap,
-        } = cradleInheritedPropertiesRef.current
-
-        // get previous ratio
-        const previousCellPixelLength = 
-            ((orientation == 'vertical')?
-                cellWidth:
-                cellHeight)
-            + gap
-
-        const previousAxisOffset = layoutHandler.cradlePositionData.targetAxisViewportPixelOffset
-
-        const previousratio = previousAxisOffset/previousCellPixelLength
-
-        const pivotCellPixelLength = 
-            ((orientation == 'vertical')?
-                cellHeight:
-                cellWidth)
-            + gap
-
-        const pivotAxisOffset = previousratio * pivotCellPixelLength
-
+        const { layout, gap } = cradleInheritedPropertiesRef.current
         const { cradlePositionData } = layoutHandler
         
-        cradlePositionData.targetAxisViewportPixelOffset = Math.round(pivotAxisOffset)
+        if (layout == 'uniform') {
+
+            const { 
+                cellWidth,
+                cellHeight,
+                gap,
+            } = cradleInheritedPropertiesRef.current
+
+            // get previous ratio
+            const previousCellPixelLength = 
+                ((orientation == 'vertical')?
+                    cellWidth:
+                    cellHeight)
+                + gap
+
+            const previousAxisOffset = layoutHandler.cradlePositionData.targetAxisViewportPixelOffset
+
+            const previousratio = previousAxisOffset/previousCellPixelLength
+
+            const pivotCellPixelLength = 
+                ((orientation == 'vertical')?
+                    cellHeight:
+                    cellWidth)
+                + gap
+
+            const pivotAxisOffset = previousratio * pivotCellPixelLength
+
+            cradlePositionData.targetAxisViewportPixelOffset = Math.round(pivotAxisOffset)
+
+        } else {
+
+            cradlePositionData.targetAxisViewportPixelOffset = gap
+
+        }
 
         interruptHandler.pauseInterrupts()
 
@@ -1134,6 +1144,24 @@ const Cradle = ({
                 cradleContent.headModelComponents = []
                 cradleContent.tailModelComponents = []
 
+                const { layout } = cradleInheritedPropertiesRef.current
+
+                interruptHandler.triggerlinesIntersect.observer.disconnect()
+                interruptHandler.cradleIntersect.observer.disconnect()
+                // interruptHandler.signals.pauseTriggerlinesObserver = true
+                // interruptHandler.signals.pauseCradleIntersectionObserver = true
+
+                if (layout == 'variable') { // restore base config to scrollblock
+
+                    // already done for reposition
+                    (cradleState != 'finishreposition') && layoutHandler.restoreBaseScrollblockConfig()
+
+                    if (cradleState == 'finishviewportresize') {
+                        interruptHandler.finishingVariableResize = true
+                    }
+
+                }
+
                 if (cradleState == 'reload') {
                     cacheHandler.clearCache()
                 }
@@ -1177,7 +1205,6 @@ const Cradle = ({
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
                 // update virtual DOM
-                const { layout } = cradleInheritedPropertiesRef.current
                 if (layout == 'uniform') {
     
                     setCradleState('preparerender')
@@ -1211,7 +1238,7 @@ const Cradle = ({
                         
                     }
 
-                },TIMEOUT_FOR_VARIABLE_MEASUREMENTS)
+                }, TIMEOUT_FOR_VARIABLE_MEASUREMENTS)
                 
                 break
 
@@ -1330,8 +1357,8 @@ const Cradle = ({
             case 'finishupdateforvariability': {
 
                 // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
-                interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseTriggerlinesObserver = false
+                interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseCradleIntersectionObserver = false
 
                 setCradleState('ready')

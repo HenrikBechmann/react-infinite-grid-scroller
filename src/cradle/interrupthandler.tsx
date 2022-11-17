@@ -146,6 +146,7 @@ export default class InterruptHandler {
                 if (layout == 'variable') { // restore base config to scrollblock
 
                     layoutHandler.restoreBaseScrollblockConfig()
+                    scrollHandler.calcImpliedRepositioningData('restoreBaseScrollblockConfig')
 
                 }
                 this.signals.pauseTriggerlinesObserver = true
@@ -238,5 +239,7 @@ export default class InterruptHandler {
         signals.pauseCradleResizeObserver = false
         signals.pauseScrollingEffects = false
     }
+
+    public finishingVariableResize = false
 
 }
