@@ -272,7 +272,7 @@ export const getShiftInstruction = ({
 
     }
 
-    // console.log('==> getShiftInstruction: shiftinstruction', shiftinstruction)
+    // console.log('==> getShiftInstruction: shiftinstruction', shiftinstruction, {...triggerData})
 
     return [shiftinstruction, triggerData]
 

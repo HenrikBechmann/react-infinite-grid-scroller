@@ -866,34 +866,43 @@ const Cradle = ({
             return
         }
 
-        const { 
-            cellWidth,
-            cellHeight,
-            gap,
-        } = cradleInheritedPropertiesRef.current
-
-        // get previous ratio
-        const previousCellPixelLength = 
-            ((orientation == 'vertical')?
-                cellWidth:
-                cellHeight)
-            + gap
-
-        const previousAxisOffset = layoutHandler.cradlePositionData.targetAxisViewportPixelOffset
-
-        const previousratio = previousAxisOffset/previousCellPixelLength
-
-        const pivotCellPixelLength = 
-            ((orientation == 'vertical')?
-                cellHeight:
-                cellWidth)
-            + gap
-
-        const pivotAxisOffset = previousratio * pivotCellPixelLength
-
+        const { layout, gap } = cradleInheritedPropertiesRef.current
         const { cradlePositionData } = layoutHandler
         
-        cradlePositionData.targetAxisViewportPixelOffset = Math.round(pivotAxisOffset)
+        if (layout == 'uniform') {
+
+            const { 
+                cellWidth,
+                cellHeight,
+                gap,
+            } = cradleInheritedPropertiesRef.current
+
+            // get previous ratio
+            const previousCellPixelLength = 
+                ((orientation == 'vertical')?
+                    cellWidth:
+                    cellHeight)
+                + gap
+
+            const previousAxisOffset = layoutHandler.cradlePositionData.targetAxisViewportPixelOffset
+
+            const previousratio = previousAxisOffset/previousCellPixelLength
+
+            const pivotCellPixelLength = 
+                ((orientation == 'vertical')?
+                    cellHeight:
+                    cellWidth)
+                + gap
+
+            const pivotAxisOffset = previousratio * pivotCellPixelLength
+
+            cradlePositionData.targetAxisViewportPixelOffset = Math.round(pivotAxisOffset)
+
+        } else {
+
+            cradlePositionData.targetAxisViewportPixelOffset = gap
+
+        }
 
         interruptHandler.pauseInterrupts()
 
@@ -1144,7 +1153,12 @@ const Cradle = ({
 
                 if (layout == 'variable') { // restore base config to scrollblock
 
+                    // already done for reposition
                     (cradleState != 'finishreposition') && layoutHandler.restoreBaseScrollblockConfig()
+
+                    if (cradleState == 'finishviewportresize') {
+                        interruptHandler.finishingVariableResize = true
+                    }
 
                 }
 
