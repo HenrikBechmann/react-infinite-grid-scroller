@@ -110,6 +110,9 @@ export default class ContentHandler {
 
         let { targetAxisViewportPixelOffset } = cradlePositionData
 
+        console.log('==> setCradleContent: cradleState, requestedAxisReferenceIndex, targetAxisViewportPixelOffset\n',
+            cradleState, requestedAxisReferenceIndex, targetAxisViewportPixelOffset)
+
         const {
             orientation, 
             gap, 
@@ -384,7 +387,7 @@ export default class ContentHandler {
 
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
-        // console.log('==> udpateCradleContent: source, oldAxisReferenceIndex\n',source, oldAxisReferenceIndex)
+        console.log('==> udpateCradleContent: source, oldAxisReferenceIndex\n',source, oldAxisReferenceIndex)
 
         // --------------------[ 2. get shift instruction ]-----------------------
 
@@ -648,8 +651,8 @@ export default class ContentHandler {
 
         } = cradleInternalProperties
 
-        // console.log('==> adjustScrollblockForVariability: source, axisReferenceIndex, axisViewportOffset\n',
-        //     source, axisReferenceIndex, axisViewportOffset)
+        console.log('==> adjustScrollblockForVariability: source, axisReferenceIndex, axisViewportOffset\n',
+            source, axisReferenceIndex, axisViewportOffset)
 
         // ------------------------[ precursor calculations ]------------------------
 
