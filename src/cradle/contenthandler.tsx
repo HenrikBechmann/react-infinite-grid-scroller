@@ -793,7 +793,18 @@ export default class ContentHandler {
 
         if (resetHeadscroll) { // top of list
 
-            viewportElement.scrollTo(0,0)
+            // avoid cross-shift of oversize cells
+            const scrollToX = 
+                (orientation == 'vertical')?
+                    0:
+                    viewportElement.scrollTop
+
+            const scrollToY = 
+                (orientation == 'vertical')?
+                    viewportElement.scrollLeft:
+                    0                    
+
+            viewportElement.scrollTo(scrollToX,scrollToY)
             viewportElement[cradlePositionData.blockScrollProperty] = 0
             scrollHandler.resetScrollData(0)
 
@@ -801,6 +812,7 @@ export default class ContentHandler {
 
         if (resetTailscroll) { // bottom of list
 
+            // 1. apply previously calculated blockScrollPos
             interruptHandler.signals.pauseCradleIntersectionObserver = true
 
             cradlePositionData.blockScrollPos = blockScrollPos
@@ -817,12 +829,12 @@ export default class ContentHandler {
                     viewportElement.scrollTop:
                     viewportElement.scrollLeft                
 
+            // 2. for updatecradle, there's a mysterious diff that opens up on first shift from end toward head
+            // ... also targetScrollBlockOffset is used for the gotoIndex adjustment next
             const computedAxisViewportOffset = axisElementOffset - viewportScrollPos
             const axisViewportOffsetDiff = computedAxisViewportOffset - axisViewportOffset
 
-            // for updatecradle, there's a mysterious diff that opens up on first shift from end toward head
-            // for setcradle, gotoIndex can land on an item beyond the normal axis
-                        
+            headPosAdjustment = 0
             if (axisViewportOffsetDiff) {
 
                 const scrollblockOffset = 
@@ -830,44 +842,45 @@ export default class ContentHandler {
                         scrollblockElement.offsetTop:
                         scrollblockElement.offsetLeft
 
-                const targetScrollblockOffset = (scrollblockOffset - axisViewportOffsetDiff)
+                headPosAdjustment = (scrollblockOffset - axisViewportOffsetDiff)
 
                 if (orientation == 'vertical') {
-                    scrollblockElement.style.top = targetScrollblockOffset + 'px'
+                    scrollblockElement.style.top = headPosAdjustment + 'px'
                 } else {
-                    scrollblockElement.style.left = targetScrollblockOffset + 'px'
+                    scrollblockElement.style.left = headPosAdjustment + 'px'
                 }
 
-                if (source == 'setcradle') { // for gotoIndex
+            }
 
-                    const viewportLength = 
+            // 3. for setcradle, gotoIndex can land on an item beyond the normal axis
+            if (source == 'setcradle') { // for gotoIndex
+
+                const viewportLength = 
+                    (orientation == 'vertical')?
+                        viewportElement.offsetHeight:
+                        viewportElement.offsetWidth
+
+                const viewportContentLength = 
+                    (orientation == 'vertical')?
+                        viewportElement.scrollHeight:
+                        viewportElement.scrollWidth
+
+                const alignedEndPosDiff = 
+                    viewportScrollPos + headPosAdjustment + viewportLength - viewportContentLength
+
+                if (alignedEndPosDiff < 0) { // fill the bottom of the viewport
+
+                    const scrollbyY = 
                         (orientation == 'vertical')?
-                            viewportElement.offsetHeight:
-                            viewportElement.offsetWidth
+                            alignedEndPosDiff:
+                            0
 
-                    const viewportContentLength = 
+                    const scrollbyX =
                         (orientation == 'vertical')?
-                            viewportElement.scrollHeight:
-                            viewportElement.scrollWidth
+                            0:
+                            alignedEndPosDiff
 
-                    const alignedEndPosDiff = 
-                        viewportScrollPos + targetScrollblockOffset + viewportLength - viewportContentLength
-
-                    if (alignedEndPosDiff < 0) {
-
-                        const scrollbyY = 
-                            (orientation == 'vertical')?
-                                alignedEndPosDiff:
-                                0
-
-                        const scrollbyX =
-                            (orientation == 'vertical')?
-                                0:
-                                alignedEndPosDiff
-
-                        viewportElement.scrollBy(scrollbyX, scrollbyY)
-
-                    }
+                    viewportElement.scrollBy(scrollbyX, scrollbyY)
 
                 }
 
