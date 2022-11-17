@@ -832,9 +832,9 @@ export default class ContentHandler {
             // console.log('blockScrollPos, alignedScrollblockPos, viewportElementScrollPos, computedAxisViewportOffset\n',
             //     blockScrollPos, alignedScrollblockPos, viewportElementScrollPos, computedAxisViewportOffset)
 
-            console.log('axisViewportOffsetDiff',axisViewportOffsetDiff)
+            // console.log('axisViewportOffsetDiff',axisViewportOffsetDiff)
 
-            if (axisViewportOffsetDiff) {// && !(alignedScrollblockPos == blockScrollPos)) {
+            if (axisViewportOffsetDiff) {
 
                 const scrollblockOffset = 
                     (orientation == 'vertical')?
@@ -864,28 +864,26 @@ export default class ContentHandler {
                 //     (viewportScrollPos + targetScrollblockPos + viewportLength)
 
                 const alignedEndPosDiff = 
-                    viewportScrollPos + targetScrollblockOffset + axisViewportOffsetDiff + 
+                    viewportScrollPos + targetScrollblockOffset +
                     viewportLength - viewportContentLength
 
-                console.log('calculating alignedEndPosDiff, viewportScrollPos, targetScrollblockOffset, viewportLength, viewportContentLength\n', 
-                    alignedEndPosDiff, viewportScrollPos, targetScrollblockOffset, viewportLength, viewportContentLength)
+                // console.log('source, calculating alignedEndPosDiff, viewportScrollPos, targetScrollblockOffset, viewportLength, viewportContentLength\n', 
+                //     source, alignedEndPosDiff, viewportScrollPos, targetScrollblockOffset, viewportLength, viewportContentLength)
 
-                if (alignedEndPosDiff < 0) {
-                    console.log('scrolling by',alignedEndPosDiff)
-                //     // setTimeout(()=> {
-                        const scrollbyY = 
-                            (orientation == 'vertical')?
-                                alignedEndPosDiff:
-                                0
+                if (alignedEndPosDiff < 0 && source == 'setcradle') {
+                    // console.log('scrolling by',alignedEndPosDiff)
+                    const scrollbyY = 
+                        (orientation == 'vertical')?
+                            alignedEndPosDiff:
+                            0
 
-                        const scrollbyX =
-                            (orientation == 'vertical')?
-                                0:
-                                alignedEndPosDiff
+                    const scrollbyX =
+                        (orientation == 'vertical')?
+                            0:
+                            alignedEndPosDiff
 
-                        viewportElement.scrollBy(scrollbyX, scrollbyY)
+                    viewportElement.scrollBy(scrollbyX, scrollbyY)
 
-                //     // })
                 }
 
             }
