@@ -1135,6 +1135,19 @@ const Cradle = ({
                 cradleContent.headModelComponents = []
                 cradleContent.tailModelComponents = []
 
+                const { layout } = cradleInheritedPropertiesRef.current
+
+                interruptHandler.triggerlinesIntersect.observer.disconnect()
+                interruptHandler.cradleIntersect.observer.disconnect()
+                // interruptHandler.signals.pauseTriggerlinesObserver = true
+                // interruptHandler.signals.pauseCradleIntersectionObserver = true
+
+                if (layout == 'variable') { // restore base config to scrollblock
+
+                    (cradleState != 'finishreposition') && layoutHandler.restoreBaseScrollblockConfig()
+
+                }
+
                 if (cradleState == 'reload') {
                     cacheHandler.clearCache()
                 }
@@ -1178,7 +1191,6 @@ const Cradle = ({
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
                 // update virtual DOM
-                const { layout } = cradleInheritedPropertiesRef.current
                 if (layout == 'uniform') {
     
                     setCradleState('preparerender')
@@ -1212,7 +1224,7 @@ const Cradle = ({
                         
                     }
 
-                },TIMEOUT_FOR_VARIABLE_MEASUREMENTS)
+                }, TIMEOUT_FOR_VARIABLE_MEASUREMENTS)
                 
                 break
 
