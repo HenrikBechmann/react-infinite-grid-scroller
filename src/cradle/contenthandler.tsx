@@ -110,8 +110,8 @@ export default class ContentHandler {
 
         let { targetAxisViewportPixelOffset } = cradlePositionData
 
-        console.log('==> setCradleContent: cradleState, requestedAxisReferenceIndex, targetAxisViewportPixelOffset\n',
-            cradleState, requestedAxisReferenceIndex, targetAxisViewportPixelOffset)
+        // console.log('==> setCradleContent: cradleState, requestedAxisReferenceIndex, targetAxisViewportPixelOffset\n',
+        //     cradleState, requestedAxisReferenceIndex, targetAxisViewportPixelOffset)
 
         const {
             orientation, 
@@ -328,6 +328,8 @@ export default class ContentHandler {
             
         } = this.cradleParameters.handlersRef.current
 
+        const cradleState = stateHandler.cradleStateRef.current
+
         // scroll data
         const { scrollData } = scrollHandler
 
@@ -387,7 +389,8 @@ export default class ContentHandler {
 
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
-        console.log('==> udpateCradleContent: source, oldAxisReferenceIndex\n',source, oldAxisReferenceIndex)
+        // console.log('==> udpateCradleContent: cradleState, source, oldAxisReferenceIndex\n',
+        //     cradleState, source, oldAxisReferenceIndex)
 
         // --------------------[ 2. get shift instruction ]-----------------------
 
@@ -568,6 +571,9 @@ export default class ContentHandler {
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
+        // console.log('-- new axisReferenceIndex, axisViewportPixelOffset\n',
+        //     axisReferenceIndex, axisViewportPixelOffset)
+
         stateHandler.setCradleState('renderupdatedcontent')
 
     }
@@ -604,7 +610,7 @@ export default class ContentHandler {
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
 
-        const { layoutHandler, scrollHandler, interruptHandler } = cradleHandlers
+        const { layoutHandler, scrollHandler, interruptHandler, stateHandler } = cradleHandlers
 
         const { 
 
@@ -651,8 +657,8 @@ export default class ContentHandler {
 
         } = cradleInternalProperties
 
-        console.log('==> adjustScrollblockForVariability: source, axisReferenceIndex, axisViewportOffset\n',
-            source, axisReferenceIndex, axisViewportOffset)
+        // console.log('==> adjustScrollblockForVariability: source, axisReferenceIndex, axisViewportOffset\n',
+        //     source, axisReferenceIndex, axisViewportOffset)
 
         // ------------------------[ precursor calculations ]------------------------
 
@@ -832,62 +838,74 @@ export default class ContentHandler {
                     viewportElement.scrollTop:
                     viewportElement.scrollLeft                
 
-            // 2. for updatecradle, there's a mysterious diff that opens up on first shift from end toward head
-            // ... also headPosAdjustment is used for the gotoIndex adjustment next
-            const computedAxisViewportOffset = axisElementOffset - viewportScrollPos
-            const axisViewportOffsetDiff = computedAxisViewportOffset - axisViewportOffset
+            if (!interruptHandler.finishingVariableResize) { // avoid responding to random browser reconfigurations
 
-            headPosAdjustment = 0
-            if (axisViewportOffsetDiff) {
+                // 2. for updatecradle, there's a mysterious diff that opens up on first shift from end toward head
+                // ... also headPosAdjustment is used for the gotoIndex adjustment next
+                const computedAxisViewportOffset = axisElementOffset - viewportScrollPos
+                const axisViewportOffsetDiff = computedAxisViewportOffset - axisViewportOffset
 
-                const scrollblockOffset = 
-                    (orientation == 'vertical')?
-                        scrollblockElement.offsetTop:
-                        scrollblockElement.offsetLeft
+                headPosAdjustment = 0
+                if (axisViewportOffsetDiff) {
 
-                headPosAdjustment = (scrollblockOffset - axisViewportOffsetDiff)
+                    const scrollblockOffset = 
+                        (orientation == 'vertical')?
+                            scrollblockElement.offsetTop:
+                            scrollblockElement.offsetLeft
 
-                if (orientation == 'vertical') {
-                    scrollblockElement.style.top = headPosAdjustment + 'px'
-                } else {
-                    scrollblockElement.style.left = headPosAdjustment + 'px'
+                    headPosAdjustment = (scrollblockOffset - axisViewportOffsetDiff)
+
+                    if (orientation == 'vertical') {
+                        scrollblockElement.style.top = headPosAdjustment + 'px'
+                    } else {
+                        scrollblockElement.style.left = headPosAdjustment + 'px'
+                    }
+
+                }
+
+                // 3. for setcradle, gotoIndex can land on an item beyond the normal axis
+                if (source == 'setcradle') { // for gotoIndex
+
+                    const viewportLength = 
+                        (orientation == 'vertical')?
+                            viewportElement.offsetHeight:
+                            viewportElement.offsetWidth
+
+                    const viewportContentLength = 
+                        (orientation == 'vertical')?
+                            viewportElement.scrollHeight:
+                            viewportElement.scrollWidth
+
+                    const alignedEndPosDiff = 
+                        viewportScrollPos + headPosAdjustment + viewportLength - viewportContentLength
+
+                    if (alignedEndPosDiff < 0) { // fill the bottom of the viewport using scrollBy
+
+                        const scrollByY = 
+                            (orientation == 'vertical')?
+                                alignedEndPosDiff:
+                                0
+
+                        const scrollByX =
+                            (orientation == 'vertical')?
+                                0:
+                                alignedEndPosDiff
+
+                        // console.log('-- scrollByX, scrollByY', scrollByX, scrollByY)
+
+                        viewportElement.scrollBy(scrollByX, scrollByY)
+
+                    }
+
                 }
 
             }
 
-            // 3. for setcradle, gotoIndex can land on an item beyond the normal axis
-            if (source == 'setcradle') { // for gotoIndex
+        }
 
-                const viewportLength = 
-                    (orientation == 'vertical')?
-                        viewportElement.offsetHeight:
-                        viewportElement.offsetWidth
+        if (interruptHandler.finishingVariableResize) {
 
-                const viewportContentLength = 
-                    (orientation == 'vertical')?
-                        viewportElement.scrollHeight:
-                        viewportElement.scrollWidth
-
-                const alignedEndPosDiff = 
-                    viewportScrollPos + headPosAdjustment + viewportLength - viewportContentLength
-
-                if (alignedEndPosDiff < 0) { // fill the bottom of the viewport using scrollBy
-
-                    const scrollbyY = 
-                        (orientation == 'vertical')?
-                            alignedEndPosDiff:
-                            0
-
-                    const scrollbyX =
-                        (orientation == 'vertical')?
-                            0:
-                            alignedEndPosDiff
-
-                    viewportElement.scrollBy(scrollbyX, scrollbyY)
-
-                }
-
-            }
+            interruptHandler.finishingVariableResize = false
 
         }
 

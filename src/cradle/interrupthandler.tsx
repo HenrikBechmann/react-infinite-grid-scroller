@@ -240,4 +240,6 @@ export default class InterruptHandler {
         signals.pauseScrollingEffects = false
     }
 
+    public finishingVariableResize = false
+
 }
