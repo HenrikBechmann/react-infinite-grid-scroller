@@ -715,19 +715,19 @@ export default class ContentHandler {
                 0
 
         // // after scroll, restore blockScrollPos to reach Axis without adjustment
-        // let reposition = false
-        // if (source == 'afterscroll') {
+        let resetAfterscroll = false
+        if ((source == 'afterscroll') && postCradleRowCount && preCradleRowCount) {
             
-        //     blockScrollPos = // standard blockScrollPos takes us to the edge of the viewport
-        //         preCradleRowCount?
-        //         basePreAxisPixelLength - axisViewportOffset + padding:
-        //         (blockScrollPos - headPosAdjustment)
+            blockScrollPos = // standard blockScrollPos takes us to the edge of the viewport
+                preCradleRowCount?
+                basePreAxisPixelLength - axisViewportOffset + padding:
+                (blockScrollPos - headPosAdjustment)
 
-        //     headPosAdjustment = 0
+            headPosAdjustment = 0
 
-        //     reposition = true
+            resetAfterscroll = true
  
-        // }
+        }
 
         // in relation to the scrollblock
         let newAxisScrollblockOffset = blockScrollPos + axisViewportOffset - headPosAdjustment
@@ -816,6 +816,16 @@ export default class ContentHandler {
             viewportElement.scrollTo(scrollToX,scrollToY)
             viewportElement[cradlePositionData.blockScrollProperty] = 0
             scrollHandler.resetScrollData(0)
+
+        }
+
+        if (resetAfterscroll) {
+
+            interruptHandler.signals.pauseCradleIntersectionObserver = true
+
+            cradlePositionData.blockScrollPos = blockScrollPos
+            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+            scrollHandler.resetScrollData(blockScrollPos)
 
         }
 
