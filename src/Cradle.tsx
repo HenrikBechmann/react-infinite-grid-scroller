@@ -110,10 +110,10 @@ const Cradle = ({
         usePlaceholder,
         useScrollTracker,
         showAxis,
-        SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
+        ONAFTERSCROLL_TIMEOUT,
         IDLECALLBACK_TIMEOUT,
         MAX_CACHE_OVER_RUN,
-        TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
+        VARIABLE_MEASUREMENTS_TIMEOUT,
         scrollerProperties,
 
     }) => {
@@ -384,7 +384,7 @@ const Cradle = ({
         styles,
         cacheHandler,
         // control values
-        SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
+        ONAFTERSCROLL_TIMEOUT,
         MAX_CACHE_OVER_RUN,
         scrollerProperties,
 
@@ -1229,7 +1229,7 @@ const Cradle = ({
                         
                     }
 
-                }, TIMEOUT_FOR_VARIABLE_MEASUREMENTS)
+                }, VARIABLE_MEASUREMENTS_TIMEOUT)
                 
                 break
 
