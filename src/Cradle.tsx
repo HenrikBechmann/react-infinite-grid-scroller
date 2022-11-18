@@ -222,9 +222,10 @@ const Cradle = ({
         const viewportcrosslengthforcalc = viewportcrosslength - (padding * 2) + gap 
 
         const cellcrosslength = 
-            (orientation == 'vertical')?
-                (cellWidth + gap):
-                (cellHeight + gap);
+            ((orientation == 'vertical')?
+                cellWidth:
+                cellHeight) 
+            + gap
 
         const cellcrosslengthforcalc = 
             Math.min(cellcrosslength,viewportcrosslengthforcalc) // result cannot be less than 1
