@@ -72,7 +72,7 @@ const InfiniteGridScroller = (props) => {
             // base for variable layout
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
             // base for variable layout
-        estimatedListSize = 0, // the estimated number of items in the virtual list. can be changed
+        startingListSize = 0, // the estimated number of items in the virtual list. can be changed
         getItem, // required. function provided by host - parameters set by system are index number
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
@@ -113,8 +113,8 @@ const InfiniteGridScroller = (props) => {
 
     } = props
 
-    if (!(cellWidth && cellHeight && estimatedListSize && getItem )) {
-        console.log('RIGS: cellWidth, cellHeight, estimatedListSize and getItem are required')
+    if (!(cellWidth && cellHeight && startingListSize && getItem )) {
+        console.log('RIGS: cellWidth, cellHeight, startingListSize and getItem are required')
         return null
     }
 
@@ -128,7 +128,7 @@ const InfiniteGridScroller = (props) => {
         gap,
         padding,
         startingIndex,
-        estimatedListSize,
+        startingListSize,
         runwaySize,
         cacheMax,
     }
@@ -138,7 +138,7 @@ const InfiniteGridScroller = (props) => {
     callbacks = callbacks ?? {}
     technical = technical ?? {}
     startingIndex = startingIndex ?? 0
-    estimatedListSize = estimatedListSize ?? 0
+    startingListSize = startingListSize ?? 0
     runwaySize = runwaySize ?? 3
     usePlaceholder = usePlaceholder ?? true
     useScrollTracker = useScrollTracker ?? true
@@ -153,7 +153,7 @@ const InfiniteGridScroller = (props) => {
     gap = +gap
     padding = +padding
     startingIndex = +startingIndex
-    estimatedListSize = +estimatedListSize
+    startingListSize = +startingListSize
     runwaySize = +runwaySize
     cacheMax = +cacheMax
 
@@ -165,7 +165,7 @@ const InfiniteGridScroller = (props) => {
         gap,
         padding,
         startingIndex,
-        estimatedListSize,
+        startingListSize,
         runwaySize,
         cacheMax,        
     }
@@ -177,7 +177,7 @@ const InfiniteGridScroller = (props) => {
 
     // prop constraints - non-negative values
     runwaySize = Math.max(1,runwaySize) // runwaysize must be at least 1
-    estimatedListSize = Math.max(0,estimatedListSize)
+    startingListSize = Math.max(0,startingListSize)
     startingIndex = Math.max(0,startingIndex)
 
     // package
@@ -263,7 +263,7 @@ const InfiniteGridScroller = (props) => {
     // for children
     const cacheHandlerRef = useRef(null)
 
-    const listsizeRef = useRef(estimatedListSize)
+    const listsizeRef = useRef(startingListSize)
 
     const listsize = listsizeRef.current
 
@@ -386,9 +386,6 @@ const InfiniteGridScroller = (props) => {
     </ErrorBoundary>
 }
 
-        // {(scrollerState != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
-        //     <CachePartition cacheProps = { cacheHandlerRef.current.cacheProps }/>
-        // </div>}
 export default InfiniteGridScroller
 
 // ----------------------------[ Support ]------------------------------

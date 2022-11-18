@@ -100,7 +100,6 @@ const CellFrame = ({
     } = cradleContext
     
     // style change generates state refresh
-    // const [styles,saveStyles] = useState({})
     const stylesRef = useRef({})
     const holderStylesRef = useRef({})
 
