@@ -226,20 +226,24 @@ export default class StylesHandler {
 
         const position = 'absolute'
 
-        let width, height, top, left
+        let width, height, top, right, bottom, left
         if (orientation == 'vertical') {
 
-            height = 0
             width = '100%'
-            left = 'auto'
+            height = 0
             top = triggerlineOffset + 'px'
+            right = '0px'
+            bottom = null
+            left = '0px'
 
         } else {
 
-            height = '100%'
             width = 0
+            height = '100%'
+            top = '0px'
+            right = null
+            bottom = '0px'
             left = triggerlineOffset + 'px'
-            top = 'auto'
 
         }
                 
@@ -249,6 +253,8 @@ export default class StylesHandler {
             width,
             height,
             top,
+            right,
+            bottom,
             left,
 
         }
@@ -258,20 +264,24 @@ export default class StylesHandler {
 
         const position = 'absolute'
 
-        let width, height, bottom, right
+        let width, height, top, right, bottom, left
         if (orientation == 'vertical') {
 
-            height = 0
             width = '100%'
+            height = 0
+            top = null
+            right = '0px'
             bottom = -(triggerlineOffset + gap) + 'px'
-            right = 'auto'
+            left = '0px'
 
         } else {
 
-            height = '100%'
             width = 0
-            bottom = 'auto'
+            height = '100%'
+            top = '0px'
             right = -(triggerlineOffset + gap) + 'px'
+            bottom = '0px'
+            left = null
 
         }
                 
@@ -280,8 +290,10 @@ export default class StylesHandler {
             position,
             width,
             height,
-            bottom,
+            top,
             right,
+            bottom,
+            left,
             
         }
     }

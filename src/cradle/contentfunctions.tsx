@@ -140,7 +140,6 @@ export const getShiftInstruction = ({
 
     viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
     triggerZeroHistoryRef,
-    // scrollPos,
 
 }) => {
 
@@ -272,8 +271,6 @@ export const getShiftInstruction = ({
 
     }
 
-    // console.log('==> getShiftInstruction: shiftinstruction', shiftinstruction, {...triggerData})
-
     return [shiftinstruction, triggerData]
 
 }
@@ -396,9 +393,6 @@ export const calcContentShift = ({
             (triggerViewportReferencePos - aggregatespan) <= 0)
 
     }
-
-    // console.log('==> getShiftInstruction: triggerViewportReferencePos, spanRowPtr, gridRowAggregateSpans, gridRowLengths\n',
-    //     triggerViewportReferencePos, spanRowPtr, [...gridRowAggregateSpans], [...gridRowLengths])
 
     const listEndrowOffset = (listRowcount - 1)
     const baseRowLength =
@@ -902,12 +896,12 @@ const createCellFrame = ({
         instanceID = { instanceID }
         scrollerID = { scrollerID }
         isTriggercell = { false }
+        usePlaceholder = { usePlaceholder }
         placeholderFrameStyles = { placeholderFrameStyles }
         placeholderLinerStyles = { placeholderLinerStyles }
         placeholderErrorFrameStyles = { placeholderErrorFrameStyles }
         placeholderErrorLinerStyles = { placeholderErrorLinerStyles }
         placeholderMessages = { placeholderMessages }
-        usePlaceholder = { usePlaceholder }
     />
 
 }

@@ -222,9 +222,10 @@ const Cradle = ({
         const viewportcrosslengthforcalc = viewportcrosslength - (padding * 2) + gap 
 
         const cellcrosslength = 
-            (orientation == 'vertical')?
-                (cellWidth + gap):
-                (cellHeight + gap);
+            ((orientation == 'vertical')?
+                cellWidth:
+                cellHeight) 
+            + gap
 
         const cellcrosslengthforcalc = 
             Math.min(cellcrosslength,viewportcrosslengthforcalc) // result cannot be less than 1
@@ -480,16 +481,6 @@ const Cradle = ({
     The restore scrollPos action must be the first priority to hide these scrollPos adjustments
     from the user.
 */
-    // // zero width and height means the component must be in portal (cache) state
-    // const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) 
-
-    // const isCacheChange = (isInPortal != isCachedRef.current)
-
-    // if (isCacheChange) {
-    //     wasCachedRef.current = isCachedRef.current
-    //     isCachedRef.current = isInPortal
-    // }
-
     const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
 
     if (isCacheChange || 
