@@ -386,9 +386,6 @@ const InfiniteGridScroller = (props) => {
     </ErrorBoundary>
 }
 
-        // {(scrollerState != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
-        //     <CachePartition cacheProps = { cacheHandlerRef.current.cacheProps }/>
-        // </div>}
 export default InfiniteGridScroller
 
 // ----------------------------[ Support ]------------------------------

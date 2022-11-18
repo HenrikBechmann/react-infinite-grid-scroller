@@ -140,7 +140,6 @@ export const getShiftInstruction = ({
 
     viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
     triggerZeroHistoryRef,
-    // scrollPos,
 
 }) => {
 
@@ -897,12 +896,12 @@ const createCellFrame = ({
         instanceID = { instanceID }
         scrollerID = { scrollerID }
         isTriggercell = { false }
+        usePlaceholder = { usePlaceholder }
         placeholderFrameStyles = { placeholderFrameStyles }
         placeholderLinerStyles = { placeholderLinerStyles }
         placeholderErrorFrameStyles = { placeholderErrorFrameStyles }
         placeholderErrorLinerStyles = { placeholderErrorLinerStyles }
         placeholderMessages = { placeholderMessages }
-        usePlaceholder = { usePlaceholder }
     />
 
 }
