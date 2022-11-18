@@ -96,22 +96,12 @@ export default class ContentHandler {
 
         } = cradleHandlers
 
-        // the triggerlines and cradle grids will be moved, so disconnect them from their observers.
-        // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
-        // interruptHandler.triggerlinesIntersect.observer.disconnect()
-        // interruptHandler.cradleIntersect.observer.disconnect()
-        // interruptHandler.signals.pauseTriggerlinesObserver = true
-        // interruptHandler.signals.pauseCradleIntersectionObserver = true
-
         const { cradlePositionData } = layoutHandler
         const viewportElement = ViewportContextProperties.elementRef.current
 
         const requestedAxisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
 
         let { targetAxisViewportPixelOffset } = cradlePositionData
-
-        // console.log('==> setCradleContent: cradleState, requestedAxisReferenceIndex, targetAxisViewportPixelOffset\n',
-        //     cradleState, requestedAxisReferenceIndex, targetAxisViewportPixelOffset)
 
         const {
             orientation, 
@@ -389,9 +379,6 @@ export default class ContentHandler {
 
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
-        // console.log('==> udpateCradleContent: cradleState, source, oldAxisReferenceIndex\n',
-        //     cradleState, source, oldAxisReferenceIndex)
-
         // --------------------[ 2. get shift instruction ]-----------------------
 
         const [shiftinstruction, triggerData] = getShiftInstruction({
@@ -407,8 +394,6 @@ export default class ContentHandler {
             triggerZeroHistoryRef,
 
         })
-
-        // console.log('-- shiftinstruction', shiftinstruction)
 
         // second abandon option/3; nothing to do
         if (shiftinstruction == 'none') { 
@@ -449,9 +434,6 @@ export default class ContentHandler {
             cradleElements,
 
         })
-
-        // console.log('-- after calcContentShift: axisReferenceIndex, axisViewportPixelOffset\n',
-        //     axisReferenceIndex, axisViewportPixelOffset)
 
         // third abandon option/3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) { // can happen first row
@@ -571,9 +553,6 @@ export default class ContentHandler {
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
-        // console.log('-- new axisReferenceIndex, axisViewportPixelOffset\n',
-        //     axisReferenceIndex, axisViewportPixelOffset)
-
         stateHandler.setCradleState('renderupdatedcontent')
 
     }
@@ -656,9 +635,6 @@ export default class ContentHandler {
             listRowcount 
 
         } = cradleInternalProperties
-
-        // console.log('==> adjustScrollblockForVariability: source, axisReferenceIndex, axisViewportOffset\n',
-        //     source, axisReferenceIndex, axisViewportOffset)
 
         // ------------------------[ precursor calculations ]------------------------
 
@@ -900,8 +876,6 @@ export default class ContentHandler {
                             (orientation == 'vertical')?
                                 0:
                                 alignedEndPosDiff
-
-                        // console.log('-- scrollByX, scrollByY', scrollByX, scrollByY)
 
                         viewportElement.scrollBy(scrollByX, scrollByY)
 

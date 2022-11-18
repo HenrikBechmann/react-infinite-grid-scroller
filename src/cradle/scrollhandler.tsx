@@ -168,8 +168,6 @@ export default class ScrollHandler {
             contentHandler.pareCacheToMax()
         }
 
-        // console.log('onAfterScroll: cradleState, layout',cradleState, layout)
-
         if (!['repositioningRender','repositioningContinuation'].includes(cradleState) &&
             (layout == 'variable')) {
 

@@ -272,8 +272,6 @@ export const getShiftInstruction = ({
 
     }
 
-    // console.log('==> getShiftInstruction: shiftinstruction', shiftinstruction, {...triggerData})
-
     return [shiftinstruction, triggerData]
 
 }
@@ -396,9 +394,6 @@ export const calcContentShift = ({
             (triggerViewportReferencePos - aggregatespan) <= 0)
 
     }
-
-    // console.log('==> getShiftInstruction: triggerViewportReferencePos, spanRowPtr, gridRowAggregateSpans, gridRowLengths\n',
-    //     triggerViewportReferencePos, spanRowPtr, [...gridRowAggregateSpans], [...gridRowLengths])
 
     const listEndrowOffset = (listRowcount - 1)
     const baseRowLength =
