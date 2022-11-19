@@ -121,7 +121,7 @@ export default class ScrollHandler {
 
         this.isScrolling = false
 
-        const {stateHandler, contentHandler, serviceHandler} = 
+        const {stateHandler, contentHandler, serviceHandler, interruptHandler} = 
             this.cradleParameters.handlersRef.current
 
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
@@ -171,7 +171,11 @@ export default class ScrollHandler {
         if (!['repositioningRender','repositioningContinuation'].includes(cradleState) &&
             (layout == 'variable')) {
 
-            stateHandler.setCradleState('adjustupdateforvariabilityafterscroll')
+            if (!interruptHandler.finishingSetForVariability) {
+
+                stateHandler.setCradleState('adjustupdateforvariabilityafterscroll')
+
+            }
 
         }
 
