@@ -168,16 +168,16 @@ export default class ScrollHandler {
             contentHandler.pareCacheToMax()
         }
 
-        if (!['repositioningRender','repositioningContinuation'].includes(cradleState) &&
-            (layout == 'variable')) {
+        // if (!['repositioningRender','repositioningContinuation'].includes(cradleState) &&
+        //     (layout == 'variable')) {
 
-            if (!interruptHandler.finishingSetForVariability) {
+        //     if (!interruptHandler.finishingSetForVariability) {
 
-                stateHandler.setCradleState('adjustupdateforvariabilityafterscroll')
+        //         stateHandler.setCradleState('adjustupdateforvariabilityafterscroll')
 
-            }
+        //     }
 
-        }
+        // }
 
     }
 
