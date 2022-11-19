@@ -1139,8 +1139,6 @@ const Cradle = ({
 
                 interruptHandler.triggerlinesIntersect.observer.disconnect()
                 interruptHandler.cradleIntersect.observer.disconnect()
-                // interruptHandler.signals.pauseTriggerlinesObserver = true
-                // interruptHandler.signals.pauseCradleIntersectionObserver = true
 
                 if (layout == 'variable') { // restore base config to scrollblock
 
@@ -1218,6 +1216,9 @@ const Cradle = ({
             }
 
             case 'preparesetforvariability': {
+
+                // avoid state generation conflict from possible scroll from blockScrollPos change
+                interruptHandler.signals.pauseScrollingEffects = true
 
                 setTimeout(() => { // give time for DOM to produce layout
             
