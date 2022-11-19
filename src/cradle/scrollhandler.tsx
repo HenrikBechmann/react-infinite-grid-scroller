@@ -34,7 +34,7 @@ export default class ScrollHandler {
 
     public onScroll = (e) => {
 
-        const { scrollerID, SCROLL_TIMEOUT_FOR_ONAFTERSCROLL } = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const { scrollerID, ONAFTERSCROLL_TIMEOUT } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
         const viewportElement = ViewportContextProperties.elementRef.current
@@ -110,7 +110,7 @@ export default class ScrollHandler {
 
             this.onAfterScroll()
 
-        },SCROLL_TIMEOUT_FOR_ONAFTERSCROLL)
+        },ONAFTERSCROLL_TIMEOUT)
 
         return false
 

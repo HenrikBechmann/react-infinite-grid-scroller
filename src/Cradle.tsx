@@ -110,10 +110,10 @@ const Cradle = ({
         usePlaceholder,
         useScrollTracker,
         showAxis,
-        SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
+        ONAFTERSCROLL_TIMEOUT,
         IDLECALLBACK_TIMEOUT,
         MAX_CACHE_OVER_RUN,
-        TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
+        VARIABLE_MEASUREMENTS_TIMEOUT,
         scrollerProperties,
 
     }) => {
@@ -384,7 +384,7 @@ const Cradle = ({
         styles,
         cacheHandler,
         // control values
-        SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
+        ONAFTERSCROLL_TIMEOUT,
         MAX_CACHE_OVER_RUN,
         scrollerProperties,
 
@@ -1139,8 +1139,6 @@ const Cradle = ({
 
                 interruptHandler.triggerlinesIntersect.observer.disconnect()
                 interruptHandler.cradleIntersect.observer.disconnect()
-                // interruptHandler.signals.pauseTriggerlinesObserver = true
-                // interruptHandler.signals.pauseCradleIntersectionObserver = true
 
                 if (layout == 'variable') { // restore base config to scrollblock
 
@@ -1219,6 +1217,9 @@ const Cradle = ({
 
             case 'preparesetforvariability': {
 
+                // avoid state generation conflict from possible scroll from blockScrollPos change
+                interruptHandler.signals.pauseScrollingEffects = true
+
                 setTimeout(() => { // give time for DOM to produce layout
             
                     if (isMountedRef.current) {
@@ -1229,7 +1230,7 @@ const Cradle = ({
                         
                     }
 
-                }, TIMEOUT_FOR_VARIABLE_MEASUREMENTS)
+                }, VARIABLE_MEASUREMENTS_TIMEOUT)
                 
                 break
 
