@@ -474,6 +474,8 @@ export default class ServiceHandler {
 
         modifiedIndexList = Array.from(new Set(modifiedIndexList.values())) // remove duplicates
 
+        // call contentHandler.createNewItemIDs for 'undefined' items
+
         contentHandler.reconcileCellFrames(modifiedIndexList)
         cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList
 
