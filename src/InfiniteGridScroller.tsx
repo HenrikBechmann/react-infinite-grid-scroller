@@ -231,9 +231,9 @@ const InfiniteGridScroller = (props) => {
         triggerlineOffset, // distance from cell head or tail for content shifts above/below axis
         // timeouts
         VIEWPORT_RESIZE_TIMEOUT,
-        SCROLL_TIMEOUT_FOR_ONAFTERSCROLL,
+        ONAFTERSCROLL_TIMEOUT,
         IDLECALLBACK_TIMEOUT,
-        TIMEOUT_FOR_VARIABLE_MEASUREMENTS,
+        VARIABLE_MEASUREMENTS_TIMEOUT,
         // ratios:
         MAX_CACHE_OVER_RUN, // max streaming over-run as ratio to cacheMax
         CACHE_PARTITION_SIZE, 
@@ -241,9 +241,9 @@ const InfiniteGridScroller = (props) => {
     } = technical
 
     VIEWPORT_RESIZE_TIMEOUT = VIEWPORT_RESIZE_TIMEOUT ?? 250
-    SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = SCROLL_TIMEOUT_FOR_ONAFTERSCROLL ?? 100
+    ONAFTERSCROLL_TIMEOUT = ONAFTERSCROLL_TIMEOUT ?? 100
     IDLECALLBACK_TIMEOUT = IDLECALLBACK_TIMEOUT ?? 175
-    TIMEOUT_FOR_VARIABLE_MEASUREMENTS = TIMEOUT_FOR_VARIABLE_MEASUREMENTS ?? 100
+    VARIABLE_MEASUREMENTS_TIMEOUT = VARIABLE_MEASUREMENTS_TIMEOUT ?? 100
     
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
     CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE ?? 30
@@ -371,10 +371,10 @@ const InfiniteGridScroller = (props) => {
                     usePlaceholder = { usePlaceholder }
                     useScrollTracker = { useScrollTracker }
                     showAxis = { showAxis }
-                    SCROLL_TIMEOUT_FOR_ONAFTERSCROLL = { SCROLL_TIMEOUT_FOR_ONAFTERSCROLL }
+                    ONAFTERSCROLL_TIMEOUT = { ONAFTERSCROLL_TIMEOUT }
                     IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }
                     MAX_CACHE_OVER_RUN = { MAX_CACHE_OVER_RUN }
-                    TIMEOUT_FOR_VARIABLE_MEASUREMENTS = { TIMEOUT_FOR_VARIABLE_MEASUREMENTS }
+                    VARIABLE_MEASUREMENTS_TIMEOUT = { VARIABLE_MEASUREMENTS_TIMEOUT }
                     scrollerID = { scrollerID }
 
                 />
