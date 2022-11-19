@@ -253,6 +253,8 @@ export default class ServiceHandler {
         } = cacheHandler.cacheProps 
 
         const indexesToDeleteList = []
+        const indexesForNewItemID = []
+        const itemsToReplaceList = []
         const changeIndexToItemIDMap = new Map()
         const errorEntriesMap = new Map()
 
@@ -260,7 +262,22 @@ export default class ServiceHandler {
 
         // ------------ filter out inoperable indexes and itemIDs ------------
 
-        changeMap.forEach((itemID, index) =>{
+        const workingChangeMap = new Map()
+        changeMap.forEach((itemID, index) => {
+            if (itemID === undefined) {
+                indexesForNewItemID.push(index)
+                const cacheItemID = indexToItemIDMap.get(index)
+                if (!(cacheItemID === undefined)) {
+                    itemsToReplaceList.push(cacheItemID)
+                }
+            } else {
+                workingChangeMap.set(index, itemID)
+            }
+        })
+
+        const itemsToReplaceSet = new Set(itemsToReplaceList.values())
+
+        workingChangeMap.forEach((itemID, index) =>{
 
             if ((itemID === null) || (itemID === undefined)) {
 
@@ -284,9 +301,9 @@ export default class ServiceHandler {
 
                     errorEntriesMap.set(index, `target itemID ${itemID} has not changed`)
 
-                } else if (!metadataMap.has(itemID)) {
+                } else if (!metadataMap.has(itemID) || itemsToReplaceSet.has(itemID)) {
 
-                    errorEntriesMap.set(index, `target itemID ${itemID} not in cache`)
+                    errorEntriesMap.set(index, `target itemID ${itemID} not in cache, or has been removed`)
 
                 } else {
 
@@ -477,7 +494,8 @@ export default class ServiceHandler {
         // call contentHandler.createNewItemIDs for 'undefined' items
 
         contentHandler.reconcileCellFrames(modifiedIndexList)
-        cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList
+
+        cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList.concat(itemsToReplaceList)
 
         stateHandler.setCradleState('applycellframechanges')
 
@@ -488,6 +506,7 @@ export default class ServiceHandler {
             modifiedIndexList, 
             processedIndexList, 
             indexesToDeleteList, 
+            itemsToReplaceList,
             deletedOrphanedItemIDList, 
             deletedOrphanedIndexList,
             errorEntriesMap, 
@@ -573,9 +592,6 @@ export default class ServiceHandler {
 
         if (processedIndexList.length) {
 
-            // cacheHandler.cacheProps.partitionModified = true
-            // cacheHandler.renderPortalLists()
-
             contentHandler.changeCradleItemIDs(processedIndexList)
 
             stateHandler.setCradleState('applycellframechanges')
@@ -650,8 +666,6 @@ export default class ServiceHandler {
         const [changeList, replaceList, rangeincrement, portalItemHoldForDeleteList] = 
             cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize)
 
-        // cacheHandler.cacheProps.partitionModified = true
-        // cacheHandler.renderPortalLists()
         cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList
 
         contentHandler.changeCradleItemIDs(changeList)
