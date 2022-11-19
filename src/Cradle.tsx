@@ -182,8 +182,8 @@ const Cradle = ({
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) {
-        // console.log('==> cradleState','-'+scrollerID+'-',
-        //     cradleState)
+        console.log('==> cradleState','-'+scrollerID+'-',
+            cradleState)
             // '~'+scrollerProperties?.cellFrameDataRef.current.index+'~', cradleState)
     // }
 
@@ -1217,12 +1217,12 @@ const Cradle = ({
 
             case 'preparesetforvariability': {
 
-                // avoid state generation conflict from possible scroll from blockScrollPos change
-                interruptHandler.signals.pauseScrollingEffects = true
-
                 setTimeout(() => { // give time for DOM to produce layout
             
                     if (isMountedRef.current) {
+
+                        // avoid state generation conflict from possible scroll from blockScrollPos change
+                        // interruptHandler.signals.pauseScrollingEffects = true
 
                         contentHandler.adjustScrollblockForVariability('setcradle')
 
