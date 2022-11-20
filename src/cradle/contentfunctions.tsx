@@ -195,7 +195,7 @@ export const getShiftInstruction = ({
 
     // since triggers are moved and can share the 0 (zero) offset, an infinite loop can occur
     // between the head and tail triggers. The following short-circuits that.
-    if (triggerData.headOffset == 0 || triggerData.tailOffset == 0) {
+    if (Math.trunc(triggerData.headOffset) == 0 || Math.trunc(triggerData.tailOffset) == 0) {
 
         if (triggerZeroHistory.previousReferenceName) {
 
