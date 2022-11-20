@@ -687,6 +687,7 @@ export default class ContentHandler {
         //    this allows for smooth scrolling before a scrolling interruption
         let headPosAdjustment = 0
         let resetHeadscroll = false
+        // TODO this can interrupt momentun in FF
         if (!preCradleRowCount) {
 
             // the naturalScrollblockPos must match the blockScrollPos
@@ -697,11 +698,12 @@ export default class ContentHandler {
                 resetHeadscroll = true
                 headPosAdjustment = 0
             }
-            console.log('==> measuredHeadLength, axisViewportOffset, naturalScrollblockPos, blockScrollPos, headPosAdjustment\n',
-                measuredHeadLength, axisViewportOffset,'[', naturalScrollblockPos, blockScrollPos,']', headPosAdjustment)
+            // console.log('==> measuredHeadLength, axisViewportOffset, naturalScrollblockPos, blockScrollPos, headPosAdjustment\n',
+            //     measuredHeadLength, axisViewportOffset,'[', naturalScrollblockPos, blockScrollPos,']', headPosAdjustment)
 
         }
 
+        // TODO computedPreAxisPixelLength has padding; measuredHeadLength does not
         let resetBodyScroll = false
         if (preCradleRowCount && postCradleRowCount) {
             const naturalScrollblockPos = computedPreAxisPixelLength - axisViewportOffset
@@ -788,17 +790,7 @@ export default class ContentHandler {
 
         // -----------------------[ adjustments ]-------------------------
         // adjustments of blockScrollPos must take place here, to be after length is updated
-        if (resetHeadscroll) { // top of list
-
-            interruptHandler.signals.pauseCradleIntersectionObserver = true
-
-            cradlePositionData.blockScrollPos = blockScrollPos
-            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-            scrollHandler.resetScrollData(blockScrollPos)
-
-        }
-
-        if (resetBodyScroll) {
+        if (resetHeadscroll || resetBodyScroll) { // top of list
 
             interruptHandler.signals.pauseCradleIntersectionObserver = true
 
