@@ -46,9 +46,6 @@ import React, {useState, useEffect, useRef, useCallback} from 'react'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
-let globalItemID = 0
-let globalPartitionID = 0
-
 // global scroller data, organized by session scrollerID
 // the cache itself is maintained in the root infinitegridscroller component
 export class CacheHandler {
@@ -60,6 +57,9 @@ export class CacheHandler {
 
         this.CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE
     }
+
+    globalItemID = 0
+    globalPartitionID = 0
 
     cacheProps = {
 
@@ -109,7 +109,7 @@ export class CacheHandler {
 
     addPartition = () => {
 
-        const partitionID = globalPartitionID++
+        const partitionID = this.globalPartitionID++
         this.cacheProps.partitionMetadataMap.set(partitionID,
             {
                 portalMap:new Map(), 
@@ -869,7 +869,7 @@ export class CacheHandler {
 
     getNewItemID() {
 
-        return globalItemID++
+        return this.globalItemID++
 
     }
 

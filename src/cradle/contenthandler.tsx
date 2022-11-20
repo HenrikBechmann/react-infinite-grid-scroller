@@ -685,43 +685,58 @@ export default class ContentHandler {
 
         // the pixels by which the pre-axis Scrollblock is shorter than the base length
         //    this allows for smooth scrolling before a scrolling interruption
-        let headPosAdjustment = 
-            !preCradleRowCount?
-                computedPreAxisPixelLength - basePreAxisPixelLength:
-                0
+        let headPosAdjustment = 0
+        let resetHeadscroll = false
+        // TODO this can interrupt momentun in FF
+        if (!preCradleRowCount) {
 
-        // // after scroll, restore blockScrollPos to reach Axis without adjustment
-        let resetAfterscroll = false
-        if ((source == 'afterscroll') && postCradleRowCount && preCradleRowCount) {
-            
-            blockScrollPos = // standard blockScrollPos takes us to the edge of the viewport
-                preCradleRowCount?
-                basePreAxisPixelLength - axisViewportOffset + padding:
-                (blockScrollPos - headPosAdjustment)
+            // the naturalScrollblockPos must match the blockScrollPos
+            const naturalScrollblockPos = measuredHeadLength - axisViewportOffset
+            headPosAdjustment = naturalScrollblockPos - blockScrollPos
+            blockScrollPos += headPosAdjustment
+            if (headPosAdjustment != 0) {
+                resetHeadscroll = true
+                headPosAdjustment = 0
+            }
+            // console.log('==> measuredHeadLength, axisViewportOffset, naturalScrollblockPos, blockScrollPos, headPosAdjustment\n',
+            //     measuredHeadLength, axisViewportOffset,'[', naturalScrollblockPos, blockScrollPos,']', headPosAdjustment)
 
-            headPosAdjustment = 0
-
-            resetAfterscroll = true
- 
         }
 
-        // in relation to the scrollblock
-        let newAxisScrollblockOffset = blockScrollPos + axisViewportOffset - headPosAdjustment
-
-        // start of list - adjust top to align axis and scrollblock
-        let resetHeadscroll = false
-        if (axisReferenceRow == 0) {
-            if (headPosAdjustment > 0 || newAxisScrollblockOffset > padding ) {
-                headPosAdjustment = 0
-                newAxisScrollblockOffset = padding
+        // TODO computedPreAxisPixelLength has padding; measuredHeadLength does not
+        let resetBodyScroll = false
+        if (preCradleRowCount && postCradleRowCount) {
+            const naturalScrollblockPos = computedPreAxisPixelLength - axisViewportOffset
+            headPosAdjustment = naturalScrollblockPos - blockScrollPos
+            blockScrollPos += headPosAdjustment
+            if (headPosAdjustment != 0) {
                 resetHeadscroll = true
+                headPosAdjustment = 0
             }
         }
 
-        const scrollblockLength = 
-            (orientation == 'vertical')?
-                scrollblockElement.scrollHeight:
-                scrollblockElement.scrollWidth        
+        let newAxisScrollblockOffset = blockScrollPos - headPosAdjustment + axisViewportOffset
+
+        // console.log('blockScrollPos, headPosAdjustment, newAxisScrollblockOffset, axisViewportOffset\n',
+        //     blockScrollPos, headPosAdjustment, newAxisScrollblockOffset, axisViewportOffset)
+
+        // after scroll, restore blockScrollPos to reach Axis without adjustment
+        // let resetAfterscroll = false
+        // if ((source == 'afterscroll') && postCradleRowCount && preCradleRowCount) {
+            
+        //     blockScrollPos = // standard blockScrollPos takes us to the edge of the viewport
+        //         preCradleRowCount?
+        //         basePreAxisPixelLength - axisViewportOffset + padding:
+        //         (blockScrollPos - headPosAdjustment)
+
+        //     headPosAdjustment = 0
+
+        //     resetAfterscroll = true
+ 
+        // }
+
+        // in relation to the scrollblock
+        // start of list - adjust top to align axis and scrollblock
 
         // end of list - remaining rows are known; constrain bottom to align end of cradle and scrollblock
         let resetTailscroll = false
@@ -775,27 +790,7 @@ export default class ContentHandler {
 
         // -----------------------[ adjustments ]-------------------------
         // adjustments of blockScrollPos must take place here, to be after length is updated
-
-        if (resetHeadscroll) { // top of list
-
-            // apply both x and y, as sc scrollblock may be oversized cross-length
-            const scrollToX = 
-                (orientation == 'vertical')?
-                    0:
-                    viewportElement.scrollTop
-
-            const scrollToY = 
-                (orientation == 'vertical')?
-                    viewportElement.scrollLeft:
-                    0                    
-
-            viewportElement.scrollTo(scrollToX,scrollToY)
-            viewportElement[cradlePositionData.blockScrollProperty] = 0
-            scrollHandler.resetScrollData(0)
-
-        }
-
-        if (resetAfterscroll) {
+        if (resetHeadscroll || resetBodyScroll) { // top of list
 
             interruptHandler.signals.pauseCradleIntersectionObserver = true
 
@@ -804,6 +799,16 @@ export default class ContentHandler {
             scrollHandler.resetScrollData(blockScrollPos)
 
         }
+
+        // if (resetAfterscroll) {
+
+        //     interruptHandler.signals.pauseCradleIntersectionObserver = true
+
+        //     cradlePositionData.blockScrollPos = blockScrollPos
+        //     viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+        //     scrollHandler.resetScrollData(blockScrollPos)
+
+        // }
 
         if (resetTailscroll) { // bottom of list
 
