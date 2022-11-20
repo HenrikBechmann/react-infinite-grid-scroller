@@ -686,17 +686,23 @@ export default class ContentHandler {
         // the pixels by which the pre-axis Scrollblock is shorter than the base length
         //    this allows for smooth scrolling before a scrolling interruption
         let headPosAdjustment = 0
+        let resetHeadscroll = false
         if (!preCradleRowCount) {
 
             // the naturalScrollblockPos cannot be greater than the blockScrollPos
             const naturalScrollblockPos = measuredHeadLength - axisViewportOffset
             headPosAdjustment = naturalScrollblockPos - blockScrollPos
-            const diff = blockScrollPos + headPosAdjustment
-            console.log('==> measuredHeadLength, axisViewportOffset, naturalScrollblockPos, blockScrollPos, headPosAdjustment, diff\n',
-                measuredHeadLength, axisViewportOffset,'[', naturalScrollblockPos, blockScrollPos,']', headPosAdjustment, diff)
-            if (diff < 0) {
-                headPosAdjustment -= diff
+            blockScrollPos -+ headPosAdjustment
+            if (headPosAdjustment != 0) {
+                resetHeadscroll = true
+                headPosAdjustment = 0
             }
+            // const diff = blockScrollPos + headPosAdjustment
+            console.log('==> measuredHeadLength, axisViewportOffset, naturalScrollblockPos, blockScrollPos, headPosAdjustment\n',
+                measuredHeadLength, axisViewportOffset,'[', naturalScrollblockPos, blockScrollPos,']', headPosAdjustment)
+            // if (diff < 0) {
+            //     headPosAdjustment -= diff
+            // } 
 
         }
 
@@ -706,7 +712,7 @@ export default class ContentHandler {
             blockScrollPos, headPosAdjustment, newAxisScrollblockOffset, axisViewportOffset)
 
         // after scroll, restore blockScrollPos to reach Axis without adjustment
-        let resetAfterscroll = false
+        // let resetAfterscroll = false
         // if ((source == 'afterscroll') && postCradleRowCount && preCradleRowCount) {
             
         //     blockScrollPos = // standard blockScrollPos takes us to the edge of the viewport
@@ -723,7 +729,7 @@ export default class ContentHandler {
         // in relation to the scrollblock
         // start of list - adjust top to align axis and scrollblock
 
-        let resetHeadscroll = false
+        // let resetHeadscroll = false
         // if (axisReferenceRow == 0) {
         //     if (headPosAdjustment > 0 || newAxisScrollblockOffset > padding ) {
         //         headPosAdjustment = 0
@@ -791,21 +797,26 @@ export default class ContentHandler {
         // adjustments of blockScrollPos must take place here, to be after length is updated
         if (resetHeadscroll) { // top of list
 
+            interruptHandler.signals.pauseCradleIntersectionObserver = true
+
+            cradlePositionData.blockScrollPos = blockScrollPos
+            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+            scrollHandler.resetScrollData(blockScrollPos)
             // apply both x and y, as sc scrollblock may be oversized cross-length
-            const scrollToX = 
-                (orientation == 'vertical')?
-                    0:
-                    viewportElement.scrollTop
+            // const scrollToX = 
+            //     (orientation == 'vertical')?
+            //         0:
+            //         viewportElement.scrollTop
 
-            const scrollToY = 
-                (orientation == 'vertical')?
-                    viewportElement.scrollLeft:
-                    0                    
+            // const scrollToY = 
+            //     (orientation == 'vertical')?
+            //         viewportElement.scrollLeft:
+            //         0                    
 
-            // console.log('-- scrollToX,scrollToY', scrollToX,scrollToY)
-            viewportElement.scrollTo(scrollToX,scrollToY)
-            viewportElement[cradlePositionData.blockScrollProperty] = 0
-            scrollHandler.resetScrollData(0)
+            // // console.log('-- scrollToX,scrollToY', scrollToX,scrollToY)
+            // viewportElement.scrollTo(scrollToX,scrollToY)
+            // viewportElement[cradlePositionData.blockScrollProperty] = 0
+            // scrollHandler.resetScrollData(0)
 
         }
 
