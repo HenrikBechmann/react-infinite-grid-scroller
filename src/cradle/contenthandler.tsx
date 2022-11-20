@@ -702,10 +702,21 @@ export default class ContentHandler {
 
         }
 
+        let resetBodyScroll = false
+        if (preCradleRowCount && postCradleRowCount) {
+            const naturalScrollblockPos = computedPreAxisPixelLength - axisViewportOffset
+            headPosAdjustment = naturalScrollblockPos - blockScrollPos
+            blockScrollPos += headPosAdjustment
+            if (headPosAdjustment != 0) {
+                resetHeadscroll = true
+                headPosAdjustment = 0
+            }
+        }
+
         let newAxisScrollblockOffset = blockScrollPos - headPosAdjustment + axisViewportOffset
 
-        console.log('blockScrollPos, headPosAdjustment, newAxisScrollblockOffset, axisViewportOffset\n',
-            blockScrollPos, headPosAdjustment, newAxisScrollblockOffset, axisViewportOffset)
+        // console.log('blockScrollPos, headPosAdjustment, newAxisScrollblockOffset, axisViewportOffset\n',
+        //     blockScrollPos, headPosAdjustment, newAxisScrollblockOffset, axisViewportOffset)
 
         // after scroll, restore blockScrollPos to reach Axis without adjustment
         // let resetAfterscroll = false
@@ -778,6 +789,16 @@ export default class ContentHandler {
         // -----------------------[ adjustments ]-------------------------
         // adjustments of blockScrollPos must take place here, to be after length is updated
         if (resetHeadscroll) { // top of list
+
+            interruptHandler.signals.pauseCradleIntersectionObserver = true
+
+            cradlePositionData.blockScrollPos = blockScrollPos
+            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+            scrollHandler.resetScrollData(blockScrollPos)
+
+        }
+
+        if (resetBodyScroll) {
 
             interruptHandler.signals.pauseCradleIntersectionObserver = true
 
