@@ -686,27 +686,20 @@ export default class ContentHandler {
         // the pixels by which the pre-axis Scrollblock is shorter than the base length
         //    this allows for smooth scrolling before a scrolling interruption
         let headPosAdjustment = 0
-        let newAxisScrollblockOffset
+        // let newAxisScrollblockOffset
         if (!preCradleRowCount) {
 
-            // blockScrollPos = -(computedPreAxisPixelLength - basePreAxisPixelLength)
-            // headPosAdjustment = computedPreAxisPixelLength - basePreAxisPixelLength
-            // blockScrollPos = -headPosAdjustment
-            // headPosAdjustment = blockScrollPos - measuredHeadLength - axisViewportOffset)
-            // newAxisScrollblockOffset = -headPosAdjustment + axisViewportOffset
-
-            headPosAdjustment = measuredHeadLength - axisViewportOffset - blockScrollPos
-
-            console.log('calculated headPosAdjustment',headPosAdjustment)
+            const naturalScrollblockPos = -(axisViewportOffset - measuredHeadLength)
+            headPosAdjustment = blockScrollPos - naturalScrollblockPos
 
         }
-        // } else {
 
-            newAxisScrollblockOffset = blockScrollPos + axisViewportOffset - headPosAdjustment
+        console.log('blockScrollPos, headPosAdjustment\n',
+            blockScrollPos, headPosAdjustment)
 
-        // }
+        let newAxisScrollblockOffset = blockScrollPos - headPosAdjustment + axisViewportOffset
 
-        // // // after scroll, restore blockScrollPos to reach Axis without adjustment
+        // after scroll, restore blockScrollPos to reach Axis without adjustment
         let resetAfterscroll = false
         // if ((source == 'afterscroll') && postCradleRowCount && preCradleRowCount) {
             
@@ -722,9 +715,6 @@ export default class ContentHandler {
         // }
 
         // in relation to the scrollblock
-        console.log('axisReferenceRow, preCradleRowCount, blockScrollPos, headPosAdjustment, axisViewportOffset, newAxisScrollblockOffset\n',
-            axisReferenceRow, preCradleRowCount, blockScrollPos, headPosAdjustment, axisViewportOffset, newAxisScrollblockOffset)
-
         // start of list - adjust top to align axis and scrollblock
         let resetHeadscroll = false
         if (axisReferenceRow == 0) {
@@ -792,7 +782,6 @@ export default class ContentHandler {
 
         // -----------------------[ adjustments ]-------------------------
         // adjustments of blockScrollPos must take place here, to be after length is updated
-        console.log('==> adjustScrollblockForVariability: headPosAdjustment', headPosAdjustment)
         if (resetHeadscroll) { // top of list
 
             // apply both x and y, as sc scrollblock may be oversized cross-length
@@ -806,7 +795,7 @@ export default class ContentHandler {
                     viewportElement.scrollLeft:
                     0                    
 
-            console.log('-- scrollToX,scrollToY', scrollToX,scrollToY)
+            // console.log('-- scrollToX,scrollToY', scrollToX,scrollToY)
             viewportElement.scrollTo(scrollToX,scrollToY)
             viewportElement[cradlePositionData.blockScrollProperty] = 0
             scrollHandler.resetScrollData(0)
