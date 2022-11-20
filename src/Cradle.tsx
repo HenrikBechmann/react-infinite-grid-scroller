@@ -1217,9 +1217,8 @@ const Cradle = ({
 
             case 'preparesetforvariability': {
 
-                // avoid state generation conflict from possible scroll from blockScrollPos change
-                interruptHandler.signals.pauseScrollingEffects = true
-
+                // avoid state conflice from onAfterScroll
+                interruptHandler.finishingSetForVariability = true
                 setTimeout(() => { // give time for DOM to produce layout
             
                     if (isMountedRef.current) {
@@ -1238,6 +1237,7 @@ const Cradle = ({
 
             case 'finishsetforvariability': {
 
+                interruptHandler.finishingSetForVariability = false
                 setCradleState('preparerender')
                 
                 break

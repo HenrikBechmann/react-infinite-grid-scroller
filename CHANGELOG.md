@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0-Beta-3 Novemver 8, 2022
+## 1.0.0-Beta-3 November 8, 2022
 
 - better stability
 - demo site established for exploration and testing
