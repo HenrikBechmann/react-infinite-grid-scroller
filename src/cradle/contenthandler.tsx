@@ -689,20 +689,16 @@ export default class ContentHandler {
         let resetHeadscroll = false
         if (!preCradleRowCount) {
 
-            // the naturalScrollblockPos cannot be greater than the blockScrollPos
+            // the naturalScrollblockPos must match the blockScrollPos
             const naturalScrollblockPos = measuredHeadLength - axisViewportOffset
             headPosAdjustment = naturalScrollblockPos - blockScrollPos
-            blockScrollPos -+ headPosAdjustment
+            blockScrollPos += headPosAdjustment
             if (headPosAdjustment != 0) {
                 resetHeadscroll = true
                 headPosAdjustment = 0
             }
-            // const diff = blockScrollPos + headPosAdjustment
             console.log('==> measuredHeadLength, axisViewportOffset, naturalScrollblockPos, blockScrollPos, headPosAdjustment\n',
                 measuredHeadLength, axisViewportOffset,'[', naturalScrollblockPos, blockScrollPos,']', headPosAdjustment)
-            // if (diff < 0) {
-            //     headPosAdjustment -= diff
-            // } 
 
         }
 
@@ -728,20 +724,6 @@ export default class ContentHandler {
 
         // in relation to the scrollblock
         // start of list - adjust top to align axis and scrollblock
-
-        // let resetHeadscroll = false
-        // if (axisReferenceRow == 0) {
-        //     if (headPosAdjustment > 0 || newAxisScrollblockOffset > padding ) {
-        //         headPosAdjustment = 0
-        //         newAxisScrollblockOffset = padding
-        //         resetHeadscroll = true
-        //     }
-        // }
-
-        // const scrollblockLength = 
-        //     (orientation == 'vertical')?
-        //         scrollblockElement.scrollHeight:
-        //         scrollblockElement.scrollWidth        
 
         // end of list - remaining rows are known; constrain bottom to align end of cradle and scrollblock
         let resetTailscroll = false
@@ -802,21 +784,6 @@ export default class ContentHandler {
             cradlePositionData.blockScrollPos = blockScrollPos
             viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
             scrollHandler.resetScrollData(blockScrollPos)
-            // apply both x and y, as sc scrollblock may be oversized cross-length
-            // const scrollToX = 
-            //     (orientation == 'vertical')?
-            //         0:
-            //         viewportElement.scrollTop
-
-            // const scrollToY = 
-            //     (orientation == 'vertical')?
-            //         viewportElement.scrollLeft:
-            //         0                    
-
-            // // console.log('-- scrollToX,scrollToY', scrollToX,scrollToY)
-            // viewportElement.scrollTo(scrollToX,scrollToY)
-            // viewportElement[cradlePositionData.blockScrollProperty] = 0
-            // scrollHandler.resetScrollData(0)
 
         }
 
