@@ -1207,42 +1207,6 @@ const Cradle = ({
                 break
             }
 
-            case 'refreshDOMsetforvariability': {
-
-                setCradleState('preparesetforvariability')
-
-                break
-
-            }
-
-            case 'preparesetforvariability': {
-
-                // avoid state conflice from onAfterScroll
-                interruptHandler.finishingSetForVariability = true
-                setTimeout(() => { // give time for DOM to produce layout
-            
-                    if (isMountedRef.current) {
-
-                        contentHandler.adjustScrollblockForVariability('setcradle')
-
-                        setCradleState('finishsetforvariability')
-                        
-                    }
-
-                }, VARIABLE_MEASUREMENTS_TIMEOUT)
-                
-                break
-
-            }
-
-            case 'finishsetforvariability': {
-
-                interruptHandler.finishingSetForVariability = false
-                setCradleState('preparerender')
-                
-                break
-            }
-
             case 'preparerender': { // cycle for DOM update
 
                 // triggerlines will have been assigned to a new triggerCell by now.
@@ -1301,7 +1265,7 @@ const Cradle = ({
 
                     // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
                     interruptHandler.triggerlinesIntersect.connectElements()
-                    interruptHandler.signals.pauseTriggerlinesObserver = false
+                    // interruptHandler.signals.pauseTriggerlinesObserver = false
 
                     setCradleState('ready')
 
@@ -1313,6 +1277,46 @@ const Cradle = ({
 
                 break
             }
+
+            // ---------------------[ adjust scrollblock for set variable content ]--------------
+
+            case 'refreshDOMsetforvariability': {
+
+                setCradleState('preparesetforvariability')
+
+                break
+
+            }
+
+            case 'preparesetforvariability': {
+
+                // avoid state conflice from onAfterScroll
+                interruptHandler.finishingSetForVariability = true
+                setTimeout(() => { // give time for DOM to produce layout
+            
+                    if (isMountedRef.current) {
+
+                        contentHandler.adjustScrollblockForVariability('setcradle')
+
+                        setCradleState('finishsetforvariability')
+                        
+                    }
+
+                }, VARIABLE_MEASUREMENTS_TIMEOUT)
+                
+                break
+
+            }
+
+            case 'finishsetforvariability': {
+
+                interruptHandler.finishingSetForVariability = false
+                setCradleState('preparerender')
+                
+                break
+            }
+
+            // ------------------------[ adjust scrollblock for update variable content ]--------------
 
             case 'refreshDOMupdateforvariability': {
 
@@ -1349,7 +1353,7 @@ const Cradle = ({
             case 'finishupdateforvariability': {
 
                 // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
-                interruptHandler.signals.pauseTriggerlinesObserver = false
+                // interruptHandler.signals.pauseTriggerlinesObserver = false
                 interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseCradleIntersectionObserver = false
 
