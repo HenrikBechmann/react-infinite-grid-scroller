@@ -686,18 +686,24 @@ export default class ContentHandler {
         // the pixels by which the pre-axis Scrollblock is shorter than the base length
         //    this allows for smooth scrolling before a scrolling interruption
         let headPosAdjustment = 0
-        // let newAxisScrollblockOffset
         if (!preCradleRowCount) {
 
-            const naturalScrollblockPos = -(axisViewportOffset - measuredHeadLength)
-            headPosAdjustment = blockScrollPos - naturalScrollblockPos
+            // the naturalScrollblockPos cannot be greater than the blockScrollPos
+            const naturalScrollblockPos = measuredHeadLength - axisViewportOffset
+            headPosAdjustment = naturalScrollblockPos - blockScrollPos
+            const diff = blockScrollPos + headPosAdjustment
+            console.log('==> measuredHeadLength, axisViewportOffset, naturalScrollblockPos, blockScrollPos, headPosAdjustment, diff\n',
+                measuredHeadLength, axisViewportOffset,'[', naturalScrollblockPos, blockScrollPos,']', headPosAdjustment, diff)
+            if (diff < 0) {
+                headPosAdjustment -= diff
+            }
 
         }
 
-        console.log('blockScrollPos, headPosAdjustment\n',
-            blockScrollPos, headPosAdjustment)
-
         let newAxisScrollblockOffset = blockScrollPos - headPosAdjustment + axisViewportOffset
+
+        console.log('blockScrollPos, headPosAdjustment, newAxisScrollblockOffset, axisViewportOffset\n',
+            blockScrollPos, headPosAdjustment, newAxisScrollblockOffset, axisViewportOffset)
 
         // after scroll, restore blockScrollPos to reach Axis without adjustment
         let resetAfterscroll = false
@@ -716,14 +722,15 @@ export default class ContentHandler {
 
         // in relation to the scrollblock
         // start of list - adjust top to align axis and scrollblock
+
         let resetHeadscroll = false
-        if (axisReferenceRow == 0) {
-            if (headPosAdjustment > 0 || newAxisScrollblockOffset > padding ) {
-                headPosAdjustment = 0
-                newAxisScrollblockOffset = padding
-                resetHeadscroll = true
-            }
-        }
+        // if (axisReferenceRow == 0) {
+        //     if (headPosAdjustment > 0 || newAxisScrollblockOffset > padding ) {
+        //         headPosAdjustment = 0
+        //         newAxisScrollblockOffset = padding
+        //         resetHeadscroll = true
+        //     }
+        // }
 
         // const scrollblockLength = 
         //     (orientation == 'vertical')?
