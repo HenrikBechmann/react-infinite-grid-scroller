@@ -694,9 +694,12 @@ export default class ContentHandler {
             const naturalScrollblockPos = measuredHeadLength - axisViewportOffset
             headPosAdjustment = naturalScrollblockPos - blockScrollPos
             blockScrollPos += headPosAdjustment
+            
             if (headPosAdjustment != 0) {
+
                 resetHeadscroll = true
                 headPosAdjustment = 0
+
             }
             // console.log('==> measuredHeadLength, axisViewportOffset, naturalScrollblockPos, blockScrollPos, headPosAdjustment\n',
             //     measuredHeadLength, axisViewportOffset,'[', naturalScrollblockPos, blockScrollPos,']', headPosAdjustment)
@@ -706,13 +709,17 @@ export default class ContentHandler {
         // TODO computedPreAxisPixelLength has padding; measuredHeadLength does not
         let resetBodyScroll = false
         if (preCradleRowCount && postCradleRowCount) {
+
             const naturalScrollblockPos = computedPreAxisPixelLength - axisViewportOffset
             headPosAdjustment = naturalScrollblockPos - blockScrollPos
             blockScrollPos += headPosAdjustment
             if (headPosAdjustment != 0) {
+
                 resetHeadscroll = true
                 headPosAdjustment = 0
+
             }
+
         }
 
         let newAxisScrollblockOffset = blockScrollPos - headPosAdjustment + axisViewportOffset
@@ -769,8 +776,6 @@ export default class ContentHandler {
                 null:
                 headPosAdjustment + 'px'
 
-
-        
         if (orientation == 'vertical') {
 
             // the scrollblock top is moved to compensate for the cumulative variability
