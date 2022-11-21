@@ -6,7 +6,7 @@
     - streaming from the scroller to the host
     - function calls from the user to the scroller
 
-    For the list of data streas, see the constructor.
+    For the list of data streams, see the constructor.
 
     The function calls avaiable to the host are:
 
@@ -26,8 +26,8 @@
     
     The functions listed are defined in this module.
 
-    There are important supporting functions in cacheHandler and contentHandler. stateHandler is
-    often invoked to change state upon servicing requests.
+    There are important supporting functions for these in cacheHandler and contentHandler. stateHandler is
+    often invoked by service functions to change Cradle state upon servicing requests.
 */
 
 const isBlank = (value:any) => {

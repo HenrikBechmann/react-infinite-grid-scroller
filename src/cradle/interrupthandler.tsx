@@ -3,13 +3,12 @@
 
 /*
     This module holds the callbacks for the Cradle structure listeners:
-    - cradleIntersectionObserverCallback // responds to move of both cradle grids outside viewport
+    - cradleIntersectionObserverCallback: responds to the move of both cradle grids outside viewport
         this initiates the repositioning protocol
-    - axisTriggerlinesObserverCallback // responds to crossing of tailward and headward triggerlines
+    - axisTriggerlinesObserverCallback: responds to crossing of tailward or headward triggerlines
         in relation to the viewport, and triggers rollover and re-allocation of cradle content
 
-    viewportResizing is handled by viewport
-    scrolling interrupts handled by scrollHandler
+    viewportResizing interrupts are handled by viewport
 */
 
 export default class InterruptHandler {

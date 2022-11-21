@@ -8,7 +8,7 @@
 
     The structural elements are the axis, head (grid), tail (grid), 
         and the head and tail triggerlines
-    The key control values are the blockScrollPos (scrollTop or scrollLeft), the block scroll
+    The key control values are the blockScrollPos & blockXScrollPos (scrollTop or scrollLeft), the block scroll
         property ("scrollTop" or "scrollLeft"), the targetAxisReferenceIndex (first index of the
         tail block), and the targetAxisViewportPixelOffset (pixels offset from the edge of the 
         viewport)

@@ -701,8 +701,6 @@ export default class ContentHandler {
                 headPosAdjustment = 0
 
             }
-            // console.log('==> measuredHeadLength, axisViewportOffset, naturalScrollblockPos, blockScrollPos, headPosAdjustment\n',
-            //     measuredHeadLength, axisViewportOffset,'[', naturalScrollblockPos, blockScrollPos,']', headPosAdjustment)
 
         }
 
@@ -723,27 +721,6 @@ export default class ContentHandler {
         }
 
         let newAxisScrollblockOffset = blockScrollPos - headPosAdjustment + axisViewportOffset
-
-        // console.log('blockScrollPos, headPosAdjustment, newAxisScrollblockOffset, axisViewportOffset\n',
-        //     blockScrollPos, headPosAdjustment, newAxisScrollblockOffset, axisViewportOffset)
-
-        // after scroll, restore blockScrollPos to reach Axis without adjustment
-        // let resetAfterscroll = false
-        // if ((source == 'afterscroll') && postCradleRowCount && preCradleRowCount) {
-            
-        //     blockScrollPos = // standard blockScrollPos takes us to the edge of the viewport
-        //         preCradleRowCount?
-        //         basePreAxisPixelLength - axisViewportOffset + padding:
-        //         (blockScrollPos - headPosAdjustment)
-
-        //     headPosAdjustment = 0
-
-        //     resetAfterscroll = true
- 
-        // }
-
-        // in relation to the scrollblock
-        // start of list - adjust top to align axis and scrollblock
 
         // end of list - remaining rows are known; constrain bottom to align end of cradle and scrollblock
         let resetTailscroll = false
@@ -804,16 +781,6 @@ export default class ContentHandler {
             scrollHandler.resetScrollData(blockScrollPos)
 
         }
-
-        // if (resetAfterscroll) {
-
-        //     interruptHandler.signals.pauseCradleIntersectionObserver = true
-
-        //     cradlePositionData.blockScrollPos = blockScrollPos
-        //     viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-        //     scrollHandler.resetScrollData(blockScrollPos)
-
-        // }
 
         if (resetTailscroll) { // bottom of list
 
