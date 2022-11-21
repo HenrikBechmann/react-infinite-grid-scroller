@@ -9,24 +9,23 @@
     Scrollblock in turn contains the Cradle - a component that contains CellFrames, which contain 
     displayed user content (items) or transitional placeholders. 
 
-    Host content is instantiated in a cache of React portals (via cacheHandler). content is then 
-    portal'd to host CellFrames. The cache can be configured to hold many more items
-    than the Cradle (limited by device memory, and some eventual performance degradation), allowing 
-    cached host content to maintain state.
+    Host content is instantiated in a cache of React portals (via cacheHandler). Content is then 
+    portal'd to CellFrames. The cache can be configured to hold more items than the Cradle (limited by 
+    device memory). Caching allows host content to maintain state.
 
-    Scrollblock by size represents the entirety of the list, and is the object that is scrolled.
+    Scrollblock represents the entirety of the list (and is sized accordingly). It is the object that is scrolled.
 
-    Cradle contains the list items, and is 'virtualized' -- it appears as
-    though it scrolls over a filled scrollblock, but in fact it is only slightly larger than
-    the viewport. Content is rotated in and out of the cradle (through the cache)
+    Cradle contains the list items, and is 'virtualized' -- it appears as though it scrolls through a filled 
+    scrollblock, but in fact it is only slightly larger than the viewport. Content is rotated in and out of the 
+    cradle through the cache.
     
-    Individual host items are framed by CellFrame, managed by Cradle
+    Individual host items are framed by CellFrame, which are managed by Cradle.
 
     Overall the InfiniteGridScroller as a package manages the asynchronous interactions of the 
     components of the mechanism. Most of the work occurs in the Cradle component.
 
-    The Rigs liner is set with 'display:absolute' and 'inset:0', so the user containing block should
-    be styles accordingly.
+    The Rigs liner (the top level Viewport element) is set with 'display:absolute' and 'inset:0', so the user 
+    containing block should be styles accordingly.
 */
 
 import React, { useEffect, useState, useCallback, useRef } from 'react'
@@ -69,15 +68,15 @@ const InfiniteGridScroller = (props) => {
 
         // required
         cellHeight, // required. the outer pixel height - literal for vertical; approximate for horizontal
-            // base for variable layout
+            // max for variable layout
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
-            // base for variable layout
-        startingListSize = 0, // the estimated number of items in the virtual list. can be changed
+            // max for variable layout
+        startingListSize = 0, // the starging number of items in the virtual list. can be changed
         getItem, // required. function provided by host - parameters set by system are index number
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
 
-        // ** grid specs:
+        // grid specs:
         orientation = 'vertical', // vertical or horizontal
         gap = 0, // space between grid cells, not including the leading and trailing padding
         padding = 0, // the border space between the items and the viewport, applied to the cradle
@@ -85,30 +84,30 @@ const InfiniteGridScroller = (props) => {
         cellMinHeight = 25, // for layout == 'variable' && orientation == 'vertical'
         cellMinWidth = 25, // for layout == 'variable' && orientation == 'horizontal'
 
-        // ** scroller specs:
+        // scroller specs:
         runwaySize = 3, // the number of rows outside the view of each side of the viewport 
             // -- gives time to assemble cellFrames before display
         startingIndex = 0, // the 0-based starting index of the list, when first loaded
 
-        // ** system specs:
+        // system specs:
         cache = 'cradle', // "preload", "keepload" or "cradle"
-        cacheMax = null, // always minimum cradle; null means limited by listsize
+        cacheMax = null, // always minimum cradle content size; falsey means limited by listsize
         placeholder, // optional. a sparse component to stand in for content until the content arrives; 
             // replaces default placeholder if present
-        usePlaceholder = true,
+        usePlaceholder = true, // no placeholder rendered if false
         useScrollTracker = true, // the internal component to give feedback for repositioning
 
-        // *** objects
+        // advanced objects
         styles = {}, // optional. passive style over-rides (eg. color, opacity); has 
-            // properties viewport, scrollblock, cradle, scrolltracker, placeholderframe, or
-            // placeholderliner. Do not make structural changes!
-        placeholderMessages = {},
+            // properties viewport, scrollblock, cradle, scrolltracker, placeholderframe, 
+            // placeholdererrorframe, placeholderliner or placeholdererrorliner. Do not make structural changes!
+        placeholderMessages = {}, // messages presented by default placeholder. See documentation
         callbacks = {}, // optional. closures to get direct information streams of some component utilites
             // can contain functionsCallback, which provides access to internal scroller functions 
             //(mostly cache management)
         technical = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
 
-        // ** information for host cell content
+        // information for host cell content
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
 
     } = props
@@ -248,7 +247,6 @@ const InfiniteGridScroller = (props) => {
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
     CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE ?? 30
 
-    // (!scrollerProperties) && (showAxis = true) // DEBUG!!
     if (typeof showAxis != 'boolean') showAxis = false
 
     triggerlineOffset = triggerlineOffset ?? 10
