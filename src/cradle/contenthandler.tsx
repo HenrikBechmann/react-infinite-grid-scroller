@@ -354,7 +354,7 @@ export default class ContentHandler {
 
         const viewportBoundingRect = viewportElement.getBoundingClientRect()
 
-        // first abandon option/3; nothing to do
+        // first abandon option of 3; nothing to do
         // for browser top or bottom bounce
 
         // fractional pixels can cause this to fail, hence Math.floor)
@@ -389,7 +389,7 @@ export default class ContentHandler {
 
         })
 
-        // second abandon option/3; nothing to do
+        // second abandon option of 3; nothing to do
         if (shiftinstruction == 'none') { 
 
             return
@@ -429,7 +429,7 @@ export default class ContentHandler {
 
         })
 
-        // third abandon option/3; nothing to do
+        // third abandon option of 3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) { // can happen first row
 
             return
@@ -437,9 +437,9 @@ export default class ContentHandler {
         }
 
         // the triggerlines will be moved, so disconnect them from their observer.
-        // they are reconnected with 'renderupdatedcontent' state in cradle.tsx
+        // they are reconnected with 'renderupdatedcontent' state in cradle.tsx, or at 'finishupdateforvariability'
+        //    for variable content
         interruptHandler.triggerlinesIntersect.observer.disconnect()
-        // interruptHandler.signals.pauseTriggerlinesObserver = true
 
         // ----------------------------------[ 4. reconfigure cradle content ]--------------------------
 
@@ -562,15 +562,15 @@ export default class ContentHandler {
     
     axisViewportOffset is the amount the axis is ahead of the Viewport edge
     
-    headPosAdjustment adjusts the position of the Scrollblock by the amount the measured head length
-        differs from the base head length
+    headPosAdjustment adjusts the position of the Scrollblock by an amount to compensate for variant 
+    length differences, such as the amount the measured head length differs from the base head length
 
     the length of the Scrollblock is shortened by the amount the measured tail length differs from the 
         base tail length
 
     Called for variable layout only. All DOM elements should have been rendered at this point
     sets CSS: scrollblockElement top and height (or left and width), and axisElement top (or left)
-    this to get closer to natural proportions to minimize janky scroll thumb
+    to get closer to natural proportions to minimize janky scroll thumb
 */    
     public adjustScrollblockForVariability = (source) => {
 
@@ -667,7 +667,7 @@ export default class ContentHandler {
         const basePreCradlePixelLength = preCradleRowCount * baseCellLength,
             basePostCradlePixelLength = postCradleRowCount * baseCellLength
 
-        const computedPreAxisPixelLength = basePreCradlePixelLength + measuredHeadLength + padding
+        const computedPreAxisPixelLength = basePreCradlePixelLength + measuredHeadLength // + padding
         const computedPostAxisPixelLength = basePostCradlePixelLength + measuredTailLength + padding
 
         // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
@@ -680,41 +680,23 @@ export default class ContentHandler {
         // the pixels by which the pre-axis Scrollblock is shorter than the base length
         //    this allows for smooth scrolling before a scrolling interruption
         let headPosAdjustment = 0
-        let resetHeadscroll = false
-        // TODO this can interrupt momentun in FF
-        if (!preCradleRowCount) {
 
-            // the naturalScrollblockPos must match the blockScrollPos
-            const naturalScrollblockPos = measuredHeadLength - axisViewportOffset
-            headPosAdjustment = naturalScrollblockPos - blockScrollPos
-            blockScrollPos += headPosAdjustment
-            
-            if (headPosAdjustment != 0) {
-
-                resetHeadscroll = true
-                headPosAdjustment = 0
-
-            }
-
-        }
-
-        // TODO computedPreAxisPixelLength has padding; measuredHeadLength does not
         let resetBodyScroll = false
-        if (preCradleRowCount && postCradleRowCount) {
+
+        if (postCradleRowCount) {
 
             const naturalScrollblockPos = computedPreAxisPixelLength - axisViewportOffset
             headPosAdjustment = naturalScrollblockPos - blockScrollPos
             blockScrollPos += headPosAdjustment
+
             if (headPosAdjustment != 0) {
 
-                resetHeadscroll = true
+                resetBodyScroll = true
                 headPosAdjustment = 0
 
             }
 
         }
-
-        let newAxisScrollblockOffset = blockScrollPos - headPosAdjustment + axisViewportOffset
 
         // end of list - remaining rows are known; constrain bottom to align end of cradle and scrollblock
         let resetTailscroll = false
@@ -731,11 +713,11 @@ export default class ContentHandler {
                 resetTailscroll = true
             }
 
-            newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
-
-            computedScrollblockLength = newAxisScrollblockOffset + measuredTailLength
+            computedScrollblockLength = blockScrollPos + axisViewportOffset + measuredTailLength
 
         }
+
+        let newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
 
         // -----------------------[ application ]-------------------------
 
@@ -766,7 +748,7 @@ export default class ContentHandler {
 
         // -----------------------[ adjustments ]-------------------------
         // adjustments of blockScrollPos must take place here, to be after length is updated
-        if (resetHeadscroll || resetBodyScroll) { // top of list
+        if (resetBodyScroll) { // top of list
 
             interruptHandler.signals.pauseCradleIntersectionObserver = true
 
