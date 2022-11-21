@@ -68,7 +68,7 @@ export default class ContentHandler {
        current:0
 
     }
-    // Two main public methods - setCradleContent and updateCradleContent
+    // Three main public methods - setCradleContent, updateCradleContent, and adjustScrollblockForVariability
 
     // ==========================[ SET CONTENT ]===========================
 
@@ -310,18 +310,12 @@ export default class ContentHandler {
         const {
 
             cacheHandler, 
-            scrollHandler, 
             layoutHandler, 
             stateHandler, 
             interruptHandler,
             serviceHandler,
             
         } = this.cradleParameters.handlersRef.current
-
-        const cradleState = stateHandler.cradleStateRef.current
-
-        // scroll data
-        const { scrollData } = scrollHandler
 
         const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
 
@@ -593,10 +587,10 @@ export default class ContentHandler {
 
         const { 
 
-                elements: cradleElements, 
-                cradlePositionData 
+            elements: cradleElements, 
+            cradlePositionData 
 
-            } = layoutHandler
+        } = layoutHandler
 
         // element references...
         const viewportElement = ViewportContextProperties.elementRef.current,
