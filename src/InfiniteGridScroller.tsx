@@ -9,24 +9,23 @@
     Scrollblock in turn contains the Cradle - a component that contains CellFrames, which contain 
     displayed user content (items) or transitional placeholders. 
 
-    Host content is instantiated in a cache of React portals (via cacheHandler). content is then 
-    portal'd to host CellFrames. The cache can be configured to hold many more items
-    than the Cradle (limited by device memory, and some eventual performance degradation), allowing 
-    cached host content to maintain state.
+    Host content is instantiated in a cache of React portals (via cacheHandler). Content is then 
+    portal'd to CellFrames. The cache can be configured to hold more items than the Cradle (limited by 
+    device memory). Caching allows host content to maintain state.
 
-    Scrollblock by size represents the entirety of the list, and is the object that is scrolled.
+    Scrollblock represents the entirety of the list (and is sized accordingly). It is the object that is scrolled.
 
-    Cradle contains the list items, and is 'virtualized' -- it appears as
-    though it scrolls over a filled scrollblock, but in fact it is only slightly larger than
-    the viewport. Content is rotated in and out of the cradle (through the cache)
+    Cradle contains the list items, and is 'virtualized' -- it appears as though it scrolls through a filled 
+    scrollblock, but in fact it is only slightly larger than the viewport. Content is rotated in and out of the 
+    cradle through the cache.
     
-    Individual host items are framed by CellFrame, managed by Cradle
+    Individual host items are framed by CellFrame, which are managed by Cradle.
 
     Overall the InfiniteGridScroller as a package manages the asynchronous interactions of the 
     components of the mechanism. Most of the work occurs in the Cradle component.
 
-    The Rigs liner is set with 'display:absolute' and 'inset:0', so the user containing block should
-    be styles accordingly.
+    The Rigs liner (the top level Viewport element) is set with 'display:absolute' and 'inset:0', so the user 
+    containing block should be styles accordingly.
 */
 
 import React, { useEffect, useState, useCallback, useRef } from 'react'

@@ -129,7 +129,7 @@ export default class LayoutHandler {
                 - setCradleContent
 
         */
-        targetAxisViewportPixelOffset:null, // into the viewport
+        targetAxisViewportPixelOffset:null, // pixels into the viewport
 
     }
 

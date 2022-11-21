@@ -13,20 +13,21 @@
         - a promise of a component
         - null
         - undefined
-        - anything else is treated as an error
+    Anything else is treated as an error
+
     if a promise is returned, then the promise returns a React component, null or undefined.
 
-    If a valid react component is returned, then it is instantiated in the cache, and rendered in the
-    CellFrame. If null is returned, then CellFrame sends a message to its parent that the host has 
+    If a valid react component is returned from getItem, then it is instantiated in the cache, and rendered in the
+    CellFrame. If null is returned, then CellFrame sends a message to its scroller that the host has 
     indicated the the item being fetched instead represents the end of the list, and the listsize should
     be adjusted accordingly. Any other value that is returned is treated as an error, and presented
     as such to the user through the placeholder component.
 
-    getItem sends the index (logical position in the list) and session itemID to the host, so that
+    getItem sends the index (logical position in the list) and a session itemID to the host, so that
     the host can sync its own tracking with the scroller.
 
-    One CellFrame at a time is desgnated as the host of the two triggerLines (which trigger an update 
-    of the Cradle), with the isTriggerCell flag.
+    One CellFrame at a time is designated as the host of the two triggerLines with the isTriggerCell flag. 
+    The triggerlines trigger an update of the Cradle through an IntersectionObserver.
 */
 
 import React, {

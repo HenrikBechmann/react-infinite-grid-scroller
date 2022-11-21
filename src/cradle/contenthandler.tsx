@@ -2,7 +2,7 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    This module supports the setup and rollover and positioning of content in the Cradle. 
+    This module supports the setup, rollover and positioning of content in the Cradle. 
 
     There are three key functions in this module: setCradleContent, updateCradleContent, and
     adjustScrollblockForVariability.
@@ -17,8 +17,8 @@
     request, and more.
 
     updateCradleContent rolls over the Cradle content in response to user scrolling. When scrolling 
-    tailward, content is removed from the Cradle head and added to the Cradle tail. When scrolling 
-    headward, the reverse occurs.
+    down (or right), content is removed from the Cradle tail and added to the Cradle head (thus moving the 
+    Cradle axis), while new content is added to the tail. When scrolling up (or left), the reverse occurs.
 
     adjustScrollblockForVariability reconfigures the scrollblock to accommodate variable sized grid rows.
 

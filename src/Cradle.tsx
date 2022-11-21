@@ -21,8 +21,7 @@
     two CSS grids (children of the axis): one above or left (the 'head' grid), and one below or right, 
     of the position of the axis (the 'tail' grid).
 
-    The axis is always kept near the leading (headward) edge of the visible cell rows of the Viewport
-    (there are some edge-case exceptions).
+    The axis is kept near the leading (headward) edge of the visible cell rows of the Viewport
 
     Technically, there are several key reference points tracked by the Cradle. These are:
         - axisReferenceIndex is the virtual index of the item controlling the location of the axis.
@@ -48,7 +47,7 @@
         stops Cradle recreates the cradle content, according to the final position of the repositioning 
         process.
 
-    Cradle is activated by interrupts:
+    Cradle changes are activated by interrupts:
     - scrolling
     - resizing of the viewport
     - observer callbacks:
@@ -90,7 +89,7 @@ export const CradleContext = React.createContext(null)
 // component
 const Cradle = ({ 
         gridSpecs,
-
+        // basics
         runwaySize, 
         listsize, 
         startingIndex, 

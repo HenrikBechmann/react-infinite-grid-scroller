@@ -2,9 +2,9 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    The role of viewport is to provide data to its children (scrollblock and cradle),
-    and act as the visible screen portal of the list being shown.
-    If it is resized, it notifies the Cradle to reconfigure.
+    The role of viewport is to provide viewport data to its children (scrollblock and cradle) through the
+    ViewportContext object, and act as the visible screen portal of the list being shown.
+    If Viewport is resized, it notifies the Cradle to reconfigure.
 */
 
 import React, {

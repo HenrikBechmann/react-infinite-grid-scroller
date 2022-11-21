@@ -238,6 +238,7 @@ export default class ServiceHandler {
 
     }
 
+    // TODO delete cache indextoitemmap entries for undefined (as well as the associated itemID entries)
     public remapIndexes = (changeMap) => { // index => itemID
 
         if (changeMap.size == 0) return [] // nothing to do
