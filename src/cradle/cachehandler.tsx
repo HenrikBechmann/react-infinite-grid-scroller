@@ -38,13 +38,14 @@
             detected it. After reparenting (after the width and height are back to normal) is when
             you should restore scrollPos (scrollTop or scrollLeft) to what it was.
         - if your component does not scroll, there should be no issues.
+
+    Note that in the following, scrollerID is provided as a paramter to some functions for debug purposes, but not used.
 */
 
 import React, {useState, useEffect, useRef, useCallback} from 'react'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
-// global scroller data, organized by session scrollerID
 // the cache itself is maintained in the root infinitegridscroller component
 export class CacheHandler {
 
@@ -91,7 +92,7 @@ export class CacheHandler {
 
     // setListsize(listsize) causes an InfiniteGridScroller useState update
     // of the listsize throughout
-    setListsize 
+    setListsize // function passed from InfiniteGridScroller
 
     // ===========================[ CACHE PARTITION MANAGEMENT ]===============================
 
@@ -154,13 +155,16 @@ export class CacheHandler {
 
         let partitionMetadata
         if (partitionPtr !== null) {
+
             partitionMetadata = partitionMetadataMap.get(partitionPtr)
-            // if (partitionMetadata) { // defensive
-                if (partitionMetadata.mapcount < CACHE_PARTITION_SIZE) {
-                    partitionMetadata.mapcount += 1 
-                    return partitionPtr
-                }
-            // }
+
+            if (partitionMetadata.mapcount < CACHE_PARTITION_SIZE) {
+
+                partitionMetadata.mapcount += 1 
+                return partitionPtr
+
+            }
+
         }
 
         partitionPtr = null
@@ -417,7 +421,6 @@ export class CacheHandler {
             nullItemSetMaxListsize(index)
         }
 
-        // serviceHandler.callbacks.preloadIndexCallback
         if (stateHandler.isMountedRef.current) {
             
             const indexToItemIDMap = this.cacheProps.indexToItemIDMap

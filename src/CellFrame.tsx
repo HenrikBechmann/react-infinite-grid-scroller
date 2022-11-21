@@ -95,7 +95,7 @@ const CellFrame = ({
         cacheHandler, 
         scrollerPropertiesRef, // for the user content, if requested
         nullItemSetMaxListsize, // for internal notification of end-of-list
-        itemExceptionCallback, // or notification to host of error
+        itemExceptionCallback, // for notification to host of error
         IDLECALLBACK_TIMEOUT, // to optimize requestIdleCallback
         triggercellTriggerlinesRef,
     } = cradleContext
@@ -432,10 +432,6 @@ const CellFrame = ({
 
     }, [frameState])
 
-    // with 'inserting' the content is still in cache
-    // the content re-renders with 'ready' when the height/width have returned to normal after-cache
-    // React re-renders on diff between the two (virtual vs real DOM)
-    // this gives the content component a chance to respond to uncaching
     // Note: the contentholder type layer is included to provide an anchor for the triggerlines.
     return <div 
 

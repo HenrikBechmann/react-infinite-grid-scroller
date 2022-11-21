@@ -68,15 +68,15 @@ const InfiniteGridScroller = (props) => {
 
         // required
         cellHeight, // required. the outer pixel height - literal for vertical; approximate for horizontal
-            // base for variable layout
+            // max for variable layout
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
-            // base for variable layout
-        startingListSize = 0, // the estimated number of items in the virtual list. can be changed
+            // max for variable layout
+        startingListSize = 0, // the starging number of items in the virtual list. can be changed
         getItem, // required. function provided by host - parameters set by system are index number
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
 
-        // ** grid specs:
+        // grid specs:
         orientation = 'vertical', // vertical or horizontal
         gap = 0, // space between grid cells, not including the leading and trailing padding
         padding = 0, // the border space between the items and the viewport, applied to the cradle
@@ -84,30 +84,30 @@ const InfiniteGridScroller = (props) => {
         cellMinHeight = 25, // for layout == 'variable' && orientation == 'vertical'
         cellMinWidth = 25, // for layout == 'variable' && orientation == 'horizontal'
 
-        // ** scroller specs:
+        // scroller specs:
         runwaySize = 3, // the number of rows outside the view of each side of the viewport 
             // -- gives time to assemble cellFrames before display
         startingIndex = 0, // the 0-based starting index of the list, when first loaded
 
-        // ** system specs:
+        // system specs:
         cache = 'cradle', // "preload", "keepload" or "cradle"
-        cacheMax = null, // always minimum cradle; null means limited by listsize
+        cacheMax = null, // always minimum cradle content size; falsey means limited by listsize
         placeholder, // optional. a sparse component to stand in for content until the content arrives; 
             // replaces default placeholder if present
-        usePlaceholder = true,
+        usePlaceholder = true, // no placeholder rendered if false
         useScrollTracker = true, // the internal component to give feedback for repositioning
 
-        // *** objects
+        // advanced objects
         styles = {}, // optional. passive style over-rides (eg. color, opacity); has 
-            // properties viewport, scrollblock, cradle, scrolltracker, placeholderframe, or
-            // placeholderliner. Do not make structural changes!
-        placeholderMessages = {},
+            // properties viewport, scrollblock, cradle, scrolltracker, placeholderframe, 
+            // placeholdererrorframe, placeholderliner or placeholdererrorliner. Do not make structural changes!
+        placeholderMessages = {}, // messages presented by default placeholder. See documentation
         callbacks = {}, // optional. closures to get direct information streams of some component utilites
             // can contain functionsCallback, which provides access to internal scroller functions 
             //(mostly cache management)
         technical = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
 
-        // ** information for host cell content
+        // information for host cell content
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
 
     } = props
@@ -247,7 +247,6 @@ const InfiniteGridScroller = (props) => {
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
     CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE ?? 30
 
-    // (!scrollerProperties) && (showAxis = true) // DEBUG!!
     if (typeof showAxis != 'boolean') showAxis = false
 
     triggerlineOffset = triggerlineOffset ?? 10

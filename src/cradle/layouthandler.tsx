@@ -45,7 +45,6 @@ export default class LayoutHandler {
             listsize,
         } = this.cradleParameters.cradleInternalPropertiesRef.current
 
-        // progression of references: implied->target
         this.cradlePositionData.targetAxisReferenceIndex = 
             (Math.min(startingIndex,(listsize - 1)) || 0)
 

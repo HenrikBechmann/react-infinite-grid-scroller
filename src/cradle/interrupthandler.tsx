@@ -240,6 +240,5 @@ export default class InterruptHandler {
     }
 
     public finishingVariableResize = false
-    public finishingSetForVariability = false
 
 }
