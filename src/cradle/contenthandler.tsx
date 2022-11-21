@@ -553,7 +553,6 @@ export default class ContentHandler {
 
     // ===================[ RECONFIGURE THE SCROLLBLOCK FOR VARIABLE CONTENT ]=======================
 
-
 /*  
     blockScrollPos is the amount the scrollBlock is scrolled to reveal the centre of the Cradle
         at the edge of the Viewport
@@ -571,7 +570,8 @@ export default class ContentHandler {
     Called for variable layout only. All DOM elements should have been rendered at this point
     sets CSS: scrollblockElement top and height (or left and width), and axisElement top (or left)
     to get closer to natural proportions to minimize janky scroll thumb
-*/    
+*/
+
     public adjustScrollblockForVariability = (source) => {
 
         // ----------------------[ setup base values and references ]------------------------
