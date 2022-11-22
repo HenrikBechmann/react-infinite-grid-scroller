@@ -681,48 +681,50 @@ export default class ContentHandler {
 
         // ------------------------[ change calculations ]----------------------
 
-        let adjustmentProcess
+        // let adjustmentProcess
 
-        if (!preCradleRowCount && !postCradleRowCount) {
-            adjustmentProcess = 'neither'
-        } else if (!preCradleRowCount && postCradleRowCount) {
-            adjustmentProcess = 'noprecradle'
-        } else if (preCradleRowCount && !postCradleRowCount) {
-            adjustmentProcess = 'nopostcradle'
-        } else { // preCradleRowCount && postCradleRowCount
-            adjustmentProcess = 'both'
-        }
+        // if (!preCradleRowCount && !postCradleRowCount) {
+        //     adjustmentProcess = 'neither'
+        // } else if (!preCradleRowCount && postCradleRowCount) {
+        //     adjustmentProcess = 'noprecradle'
+        // } else if (preCradleRowCount && !postCradleRowCount) {
+        //     adjustmentProcess = 'nopostcradle'
+        // } else { // preCradleRowCount && postCradleRowCount
+        //     adjustmentProcess = 'both'
+        // }
 
         // console.log('axisViewportOffset',axisViewportOffset)
 
         let newAxisScrollblockOffset
-        let resetBodyScroll = false
-        switch (adjustmentProcess) {
-            case 'neither': { // neither pre nor post cradle rows
+        // let resetBodyScroll = true
+        blockScrollPos = basePreAxisPixelLength - axisViewportOffset
+        newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
+        // switch (adjustmentProcess) {
+        //     case 'neither': { // neither pre nor post cradle rows
 
 
-                break
-            }
-            case 'noprecradle': {
-                blockScrollPos = basePreAxisPixelLength - axisViewportOffset // measuredHeadLength - axisViewportOffset
-                newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
-                resetBodyScroll = true
-                break
-            }
-            case 'nopostcradle': { // handled below
-                blockScrollPos = basePreAxisPixelLength - axisViewportOffset
-                newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
-                resetBodyScroll = true
-                break
+        //         break
+        //     }
+        //     case 'noprecradle': {
+        //         blockScrollPos = basePreAxisPixelLength - axisViewportOffset // measuredHeadLength - axisViewportOffset
+        //         newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
+        //         resetBodyScroll = true
+        //         break
+        //     }
+        //     case 'nopostcradle': { // handled below
+        //         blockScrollPos = basePreAxisPixelLength - axisViewportOffset
+        //         newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
+        //         resetBodyScroll = true
+        //         break
 
-            }
-            case 'both': { // both pre and post cradle rows
-                blockScrollPos = basePreAxisPixelLength - axisViewportOffset
-                newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
-                resetBodyScroll = true
-                break
-            }
-        }
+        //     }
+        //     case 'both': { // both pre and post cradle rows
+        //         blockScrollPos = basePreAxisPixelLength - axisViewportOffset
+        //         newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
+        //         resetBodyScroll = true
+        //         break
+        //     }
+        // }
 
         /*
             - blockscrollPos
@@ -811,7 +813,7 @@ export default class ContentHandler {
 
         // -----------------------[ adjustments ]-------------------------
         // adjustments of blockScrollPos must take place here, to be after length is updated
-        if (resetBodyScroll) { // top of list
+        // if (resetBodyScroll) { // top of list
 
             interruptHandler.signals.pauseCradleIntersectionObserver = true
 
@@ -819,7 +821,7 @@ export default class ContentHandler {
             viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
             scrollHandler.resetScrollData(blockScrollPos)
 
-        }
+        // }
 
         // if (resetTailscroll) { // bottom of list
 
