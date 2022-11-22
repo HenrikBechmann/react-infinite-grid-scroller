@@ -246,9 +246,9 @@ export default class ContentHandler {
 
         //  ----------------------[ 4. set CSS ]-----------------------
 
-        cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset // - scrollblockOffset
+        cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset 
         // avoid bogus call to updateCradleContent
-        scrollHandler.resetScrollData(scrollblockViewportPixelOffset) // - scrollblockOffset) 
+        scrollHandler.resetScrollData(scrollblockViewportPixelOffset) 
 
         viewportElement[cradlePositionData.blockScrollProperty] =
             cradlePositionData.blockScrollPos 
