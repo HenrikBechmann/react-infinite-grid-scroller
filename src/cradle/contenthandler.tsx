@@ -681,8 +681,6 @@ export default class ContentHandler {
 
         // ------------------------[ change calculations ]----------------------
 
-        // console.log('axisViewportOffset',axisViewportOffset)
-
         let newAxisScrollblockOffset
         // let resetBodyScroll = true
         blockScrollPos = basePreAxisPixelLength - axisViewportOffset
@@ -690,7 +688,6 @@ export default class ContentHandler {
 
         if (orientation == 'vertical') {
 
-            // scrollblockElement.style.top = scrollblockOffsetPx
             // the axis is moved in the opposite direction to maintain viewport position
             axisElement.style.top = newAxisScrollblockOffset + 'px'
             // the height is adjusted by both deltas, as it controls the scroll length
@@ -698,7 +695,6 @@ export default class ContentHandler {
 
         } else { // 'horizontal'
 
-            // scrollblockElement.style.left = scrollblockOffsetPx
             axisElement.style.left = newAxisScrollblockOffset + 'px'
             scrollblockElement.style.width = computedScrollblockLength + 'px'
 
@@ -706,15 +702,12 @@ export default class ContentHandler {
 
         // -----------------------[ adjustments ]-------------------------
         // adjustments of blockScrollPos must take place here, to be after length is updated
-        // if (resetBodyScroll) { // top of list
 
-            interruptHandler.signals.pauseCradleIntersectionObserver = true
+        interruptHandler.signals.pauseCradleIntersectionObserver = true
 
-            cradlePositionData.blockScrollPos = blockScrollPos
-            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-            scrollHandler.resetScrollData(blockScrollPos)
-
-        // }
+        cradlePositionData.blockScrollPos = blockScrollPos
+        viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+        scrollHandler.resetScrollData(blockScrollPos)
 
         // if (resetTailscroll) { // bottom of list
 
