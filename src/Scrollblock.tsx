@@ -163,7 +163,8 @@ const calcBaseScrollblockLength = ({
 
 }
 
-const updateScrollblockStyles = (orientation, stylesRef, baseScrollblocklengthRef, cellWidth, cellHeight, padding) => {
+const updateScrollblockStyles = (
+    orientation, stylesRef, baseScrollblocklengthRef, cellWidth, cellHeight, padding) => {
 
     let localstyles = {...stylesRef.current} // new object
     let height, width, minHeight, minWidth

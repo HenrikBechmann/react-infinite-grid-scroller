@@ -8,7 +8,7 @@
 
     The structural elements are the axis, head (grid), tail (grid), 
         and the head and tail triggerlines
-    The key control values are the blockScrollPos (scrollTop or scrollLeft), the block scroll
+    The key control values are the blockScrollPos & blockXScrollPos (scrollTop or scrollLeft), the block scroll
         property ("scrollTop" or "scrollLeft"), the targetAxisReferenceIndex (first index of the
         tail block), and the targetAxisViewportPixelOffset (pixels offset from the edge of the 
         viewport)
@@ -45,7 +45,6 @@ export default class LayoutHandler {
             listsize,
         } = this.cradleParameters.cradleInternalPropertiesRef.current
 
-        // progression of references: implied->target
         this.cradlePositionData.targetAxisReferenceIndex = 
             (Math.min(startingIndex,(listsize - 1)) || 0)
 
@@ -129,7 +128,7 @@ export default class LayoutHandler {
                 - setCradleContent
 
         */
-        targetAxisViewportPixelOffset:null, // into the viewport
+        targetAxisViewportPixelOffset:null, // pixels into the viewport
 
     }
 

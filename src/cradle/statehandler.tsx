@@ -2,8 +2,7 @@
 // copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-   This module provides access to the cradle state (cradleState) and the state setting 
-   function (setCradleState) for other handlers.
+   This module provides access to the cradle state and the state setting for other handlers.
    It also provides access to the isMountedRef reference.
 */
 

@@ -6,7 +6,7 @@
     - streaming from the scroller to the host
     - function calls from the user to the scroller
 
-    For the list of data streas, see the constructor.
+    For the list of data streams, see the constructor.
 
     The function calls avaiable to the host are:
 
@@ -26,8 +26,8 @@
     
     The functions listed are defined in this module.
 
-    There are important supporting functions in cacheHandler and contentHandler. stateHandler is
-    often invoked to change state upon servicing requests.
+    There are important supporting functions for these in cacheHandler and contentHandler. stateHandler is
+    often invoked by service functions to change Cradle state upon servicing requests.
 */
 
 const isBlank = (value:any) => {
@@ -254,13 +254,13 @@ export default class ServiceHandler {
 
         const indexesToDeleteList = []
         const indexesForNewItemID = []
-        const itemsToReplaceList = []
+        const partitionItemsToReplaceList = []
         const changeIndexToItemIDMap = new Map()
         const errorEntriesMap = new Map()
 
         // =====================[ PREPARE ]======================
 
-        // ------------ filter out inoperable indexes and itemIDs ------------
+        // -----------------------[ isolate indexes for which items should be replaced ]--------------
 
         const workingChangeMap = new Map()
         changeMap.forEach((itemID, index) => {
@@ -268,14 +268,28 @@ export default class ServiceHandler {
                 indexesForNewItemID.push(index)
                 const cacheItemID = indexToItemIDMap.get(index)
                 if (!(cacheItemID === undefined)) {
-                    itemsToReplaceList.push(cacheItemID)
+
+                    const { partitionID } = metadataMap.get(cacheItemID)
+
+                    partitionItemsToReplaceList.push({partitionID, itemID:cacheItemID})
                 }
             } else {
                 workingChangeMap.set(index, itemID)
             }
         })
 
-        const itemsToReplaceSet = new Set(itemsToReplaceList.values())
+        indexesForNewItemID.forEach((index) => {
+            indexToItemIDMap.delete(index)
+        })
+
+        // ------------ filter out inoperable indexes and itemIDs ------------
+
+        const itemsToReplaceSet = new Set()
+        partitionItemsToReplaceList.forEach((obj) => {
+            itemsToReplaceSet.add(obj.itemID)
+        })
+
+        const itemsToReplaceList = Array.from(itemsToReplaceSet)
 
         workingChangeMap.forEach((itemID, index) =>{
 
@@ -491,11 +505,11 @@ export default class ServiceHandler {
 
         modifiedIndexList = Array.from(new Set(modifiedIndexList.values())) // remove duplicates
 
-        // call contentHandler.createNewItemIDs for 'undefined' items
+        contentHandler.createNewItemIDs(indexesForNewItemID)
 
         contentHandler.reconcileCellFrames(modifiedIndexList)
 
-        cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList.concat(itemsToReplaceList)
+        cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList.concat(partitionItemsToReplaceList)
 
         stateHandler.setCradleState('applycellframechanges')
 

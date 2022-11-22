@@ -7,9 +7,9 @@
         headstyles,
         tailstyles,
         axisstyles,
+        cradledividerstyles
         triggercelltriggerlineheadstyles,
         triggercelltriggerlinetailstyles,
-        cradledividerstyles
 */
 
 export default class StylesHandler { 

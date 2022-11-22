@@ -138,7 +138,8 @@ export const getShiftInstruction = ({
     // last headrow. That happens (workaround) when there are no head rows
     isFirstRowTriggerConfig, 
 
-    viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
+    // Safari doesn't measure zoomed values for rootbounds in triggerlineEntries, so we take a direct reading
+    viewportBoundingRect, 
     triggerZeroHistoryRef,
 
 }) => {
@@ -165,6 +166,7 @@ export const getShiftInstruction = ({
             Math.floor(viewportBoundingRect.y):
             Math.floor(viewportBoundingRect.x)
 
+    // this selection is redundant, but documents what's going on
     const rootpos = 
         (intersectrootpos == boundingrootpos)?
         intersectrootpos:
@@ -196,24 +198,26 @@ export const getShiftInstruction = ({
     // since triggers are moved and can share the 0 (zero) offset, an infinite loop can occur
     // between the head and tail triggers. The following short-circuits that.
     // the range (>= -1 && <= 1) is used to accommodate FF mobile (v107.1)
-    console.log('getShiftInstruction: triggerData', triggerData)
+    // console.log('triggerData', triggerData)
     if (((triggerData.headOffset >= -1) && (triggerData.headOffset <= 1)) || 
         ((triggerData.tailOffset >= -1) && (triggerData.tailOffset <= 1))) {
 
+        // FF has shown an infinite loop with the same previousReferenceName;
+        // usually alternates
         if (triggerZeroHistory.previousReferenceName) {
 
-            if ((triggerZeroHistory.previousReferenceName == 'headtrigger' && 
-                    ((triggerData.tailOffset >= -1) && triggerData.tailOffset <=1 )) ||
-                (triggerZeroHistory.previousReferenceName == 'tailtrigger' && 
-                    (triggerData.headOffset >= -1) && (triggerData.headOffset <= 1))) {
+            // if ((triggerZeroHistory.previousReferenceName == 'headtrigger' && 
+            //         ((triggerData.tailOffset >= -1) && triggerData.tailOffset <=1 )) ||
+            //     (triggerZeroHistory.previousReferenceName == 'tailtrigger' && 
+            //         (triggerData.headOffset >= -1) && (triggerData.headOffset <= 1))) {
 
                 shiftinstruction = 'none'
 
-            } else {
+            // } else {
 
-                triggerZeroHistory.previousReferenceName = null
+            //     triggerZeroHistory.previousReferenceName = null
 
-            }
+            // }
             
         } else {
 
@@ -281,7 +285,7 @@ export const getShiftInstruction = ({
 }
 
 /*
-    The basic goal here is to determine the number and direction of rows to shift between
+    The basic goal of calcContentShoft is to determine the number and direction of rows to shift between
     the head and tail grids (which determines the new location of the axis), and also to
     calculate the rolling addition and deletion of cradle content to accommodate the changes.
 
@@ -313,6 +317,8 @@ export const calcContentShift = ({
     // cradle repos
     cradleContent,
     cradleElements,
+
+    // layoutHandler,
 
 }) => {
 
@@ -371,9 +377,9 @@ export const calcContentShift = ({
 
     // triggerline position
     const triggerViewportReferencePos = 
-        (shiftinstruction == 'axistailward')? // block scrolling up or left
-        triggerData.tailOffset: // needs to move down or right toward tail
-        triggerData.headOffset // needs to move up or left toward head
+        (shiftinstruction == 'axistailward')? // block is scrolling up or left
+            triggerData.tailOffset: // needs to move down or right toward tail
+            triggerData.headOffset // needs to move up or left toward head
 
     const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0),
         previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)
@@ -412,7 +418,6 @@ export const calcContentShift = ({
         let notionalRowPtr
         if (gridRowAggregateSpans.length == 0) { // must be list boundary
 
-            // notionalRowPtr = 0
             notionalRowPtr = -1 // "not found"
             spanAxisPixelShift = 0
 
@@ -471,7 +476,8 @@ export const calcContentShift = ({
             spanRowPtr + 1:
             -(spanRowPtr + 1)
 
-    // the following two values, and no other calcs, are carried forward in the function.
+    // the following two values (axisReferenceRowShift & axisPixelShift), and no other calcs, 
+    //     are carried forward in this function.
     // for axisReferenceRowshift:
     // negative for moving rows out of head into tail;
     // positive for moving rows out of tail into head
@@ -507,7 +513,6 @@ export const calcContentShift = ({
 
     // -------------[ 4. calculate new axis pixel position ]------------------
 
-    // const newAxisViewportPixelOffset = Math.floor(currentViewportAxisOffset + axisPixelShift)
     const newAxisViewportPixelOffset = currentViewportAxisOffset + axisPixelShift
 
     // Note: sections 5, 6 and 7 deal entirely with row calculations; no pixels
@@ -524,7 +529,8 @@ export const calcContentShift = ({
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
 
-    if (shiftinstruction == 'axistailward') { // scrolling toward head
+    // console.log('==> calcContentShift: shiftinstruction', shiftinstruction)
+    if (shiftinstruction == 'axistailward') { // scrolling down/right
 
         // a. if scrolling the block headward near the start of the list, new cradle row offset and
         // cradle row shift count has to be adjusted to accommodate the leading runway
@@ -546,18 +552,17 @@ export const calcContentShift = ({
         }
 
         // --- end of list adjustment: case of being in bounds of trailing runway (end of list)
-        let targetCradleEndrowOffset = newCradleReferenceRowOffset + (cradleRowcount - 1)
+        const targetCradleEndrowOffset = newCradleReferenceRowOffset + (cradleRowcount - 1)
         const tailrowdiff = Math.max(0,targetCradleEndrowOffset - listEndrowOffset)
 
         if (tailrowdiff > 0) {
 
-            newCradleReferenceRowOffset -= tailrowdiff
             cradleReferenceRowshift -= tailrowdiff
-            targetCradleEndrowOffset -= tailrowdiff
+            newCradleReferenceRowOffset -= tailrowdiff
 
         }
 
-    } else { // shiftinstruction == 'axisheadward'; scrolling toward tail 
+    } else { // shiftinstruction == 'axisheadward'; scrolling up/left
 
         // c. if scrolling the block tailward (toward revealing head of list), as the cradlerowoffset 
         // hits 0, cradle changes have to be adjusted to prevent shortening of cradle content
@@ -585,8 +590,13 @@ export const calcContentShift = ({
         if (tailrowdiff > 0) {
 
             cradleReferenceRowshift += tailrowdiff
-            newCradleReferenceRowOffset += tailrowdiff
-
+            newCradleReferenceRowOffset -= tailrowdiff
+            // newAxisViewportPixelOffset 
+            // console.log('--tailrowdiff, cradleReferenceRowshift, newAxisViewportPixelOffset\n', 
+            //     tailrowdiff, cradleReferenceRowshift, newAxisViewportPixelOffset)
+            // if (layout == 'variable') {
+            //     layoutHandler.restoreBaseScrollblockConfig()
+            // }
         }
 
     }
@@ -673,7 +683,7 @@ const getGridRowAggregateSpans = (rowLengths) => {
 // =====================[ shared by both setCradleContent and updateCradleContent ]====================
 
 // update content
-// adds itemshells at end of contentlist according to headindexcount and tailindescount,
+// adds CellFrames at end of contentlist according to headindexcount and tailindexcount,
 // or if indexcount values are <0 removes them.
 export const getCellFrameComponentList = ({ 
 

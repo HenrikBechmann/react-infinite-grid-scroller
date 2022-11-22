@@ -168,17 +168,6 @@ export default class ScrollHandler {
             contentHandler.pareCacheToMax()
         }
 
-        // if (!['repositioningRender','repositioningContinuation'].includes(cradleState) &&
-        //     (layout == 'variable')) {
-
-        //     if (!interruptHandler.finishingSetForVariability) {
-
-        //         stateHandler.setCradleState('adjustupdateforvariabilityafterscroll')
-
-        //     }
-
-        // }
-
     }
 
     // after scroll, but not after repositioning

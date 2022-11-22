@@ -21,8 +21,7 @@
     two CSS grids (children of the axis): one above or left (the 'head' grid), and one below or right, 
     of the position of the axis (the 'tail' grid).
 
-    The axis is always kept near the leading (headward) edge of the visible cell rows of the Viewport
-    (there are some edge-case exceptions).
+    The axis is kept near the leading (headward) edge of the visible cell rows of the Viewport
 
     Technically, there are several key reference points tracked by the Cradle. These are:
         - axisReferenceIndex is the virtual index of the item controlling the location of the axis.
@@ -48,7 +47,7 @@
         stops Cradle recreates the cradle content, according to the final position of the repositioning 
         process.
 
-    Cradle is activated by interrupts:
+    Cradle changes are activated by interrupts:
     - scrolling
     - resizing of the viewport
     - observer callbacks:
@@ -90,7 +89,7 @@ export const CradleContext = React.createContext(null)
 // component
 const Cradle = ({ 
         gridSpecs,
-
+        // basics
         runwaySize, 
         listsize, 
         startingIndex, 
@@ -163,6 +162,7 @@ const Cradle = ({
         }
     }
 
+    // two sources; could use some reconciliation
     const { viewportDimensions } = ViewportContextProperties // for scrollTracker
     const { height:viewportheight,width:viewportwidth } = getViewportDimensions() // viewportDimensions
 
@@ -182,9 +182,8 @@ const Cradle = ({
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) {
-        // console.log('==> cradleState','-'+scrollerID+'-',
-        //     cradleState)
-            // '~'+scrollerProperties?.cellFrameDataRef.current.index+'~', cradleState)
+        // console.log('==> cradleState','-'+scrollerID+'-', cradleState)
+        // console.log('-- index',~'+scrollerProperties?.cellFrameDataRef.current.index+'~')
     // }
 
     // cradle scaffold element refs
@@ -247,7 +246,7 @@ const Cradle = ({
     // various row counts
     const [
         cradleRowcount, 
-        viewportRowcount, 
+        viewportRowcount, // TODO investigate removing the need for this
         listRowcount,
         runwayRowcount,
     ] = useMemo(()=> {
@@ -357,6 +356,7 @@ const Cradle = ({
     // -----------------[ bundle properties for handlers ]-------------------
 
     // bundle all cradle props to pass to handlers - ultimately cradleParametersRef
+
     const cradleInheritedPropertiesRef = useRef(null) // access by closures and support callbacks
     // up to date values
     cradleInheritedPropertiesRef.current = {
@@ -470,13 +470,13 @@ const Cradle = ({
 
 /*    
     Intercept change in caching status:
-    when a component is is cached in a portal (in the React virtual DOM), including the transition of 
+    when a component is cached in a portal (in the React virtual DOM), including the transition of 
     being moved from one cellFrame to another when crossing the Cradle axis, 
     the scrollPos (scrollLeft or scrollTop) is reset to 0 (zero). When the scroller is 
     moved to a cellFrame, this code triggers restoration the scrollPos (see case 'parentingtransition'
     in the state management section below).
 
-    Not that InfiniteGridScroller components can themselves be cached as content.
+    This supports InfiniteGridScroller components to be cached as content.
 
     The restore scrollPos action must be the first priority to hide these scrollPos adjustments
     from the user.
@@ -636,7 +636,7 @@ const Cradle = ({
 
     // observer support
     /*
-        There are two interection observers: one for the cradle wings, and another for triggerlines; 
+        There are two interection observers: one for the two cradle grids, and another for triggerlines; 
             both against the viewport.
     */    
     useEffect(()=>{
@@ -652,7 +652,7 @@ const Cradle = ({
         const cradleintersectobserver = cradleIntersect.createObserver()
         cradleIntersect.connectElements()
 
-        // triggerobserver tiggers cradle content updates 
+        // triggerobserver triggers cradle content updates 
         //     when triggerlines pass the edge of the viewport
         // defer connectElements until triggercell triggerlines have been assigned
         const triggerobserver = triggerlinesIntersect.createObserver()
@@ -1145,10 +1145,6 @@ const Cradle = ({
                     // already done for reposition
                     (cradleState != 'finishreposition') && layoutHandler.restoreBaseScrollblockConfig()
 
-                    if (cradleState == 'finishviewportresize') {
-                        interruptHandler.finishingVariableResize = true
-                    }
-
                 }
 
                 if (cradleState == 'reload') {
@@ -1210,7 +1206,7 @@ const Cradle = ({
             case 'preparerender': { // cycle for DOM update
 
                 // triggerlines will have been assigned to a new triggerCell by now.
-                // connectElements delayed for a cycle to render triggercell triggerlines
+                // connectElements was delayed for a cycle to render triggercell triggerlines
                 interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.cradleIntersect.connectElements()
 
@@ -1220,7 +1216,7 @@ const Cradle = ({
                 break
             }
 
-            case 'restoreinterrupts': { // normalize or resume cycling
+            case 'restoreinterrupts': { // normalize
 
                 interruptHandler.restoreInterrupts()
 
@@ -1265,11 +1261,10 @@ const Cradle = ({
 
                     // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
                     interruptHandler.triggerlinesIntersect.connectElements()
-                    // interruptHandler.signals.pauseTriggerlinesObserver = false
 
                     setCradleState('ready')
 
-                } else {
+                } else { // 'variable' content requiring reconfiguration
 
                     setCradleState('refreshDOMupdateforvariability')
 
@@ -1290,8 +1285,6 @@ const Cradle = ({
 
             case 'preparesetforvariability': {
 
-                // avoid state conflice from onAfterScroll
-                interruptHandler.finishingSetForVariability = true
                 setTimeout(() => { // give time for DOM to produce layout
             
                     if (isMountedRef.current) {
@@ -1310,7 +1303,6 @@ const Cradle = ({
 
             case 'finishsetforvariability': {
 
-                interruptHandler.finishingSetForVariability = false
                 setCradleState('preparerender')
                 
                 break
@@ -1331,18 +1323,6 @@ const Cradle = ({
             case 'adjustupdateforvariability': {
 
                 contentHandler.adjustScrollblockForVariability('updatecradle')
-
-                setCradleState('finishupdateforvariability')
-
-                break
-
-            }
-
-            // called from onAfterScroll. 
-            // This can be called twice in succession with short onAfterScroll timeout
-            case 'adjustupdateforvariabilityafterscroll': {
-
-                contentHandler.adjustScrollblockForVariability('afterscroll')
 
                 setCradleState('finishupdateforvariability')
 
