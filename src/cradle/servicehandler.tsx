@@ -238,7 +238,6 @@ export default class ServiceHandler {
 
     }
 
-    // TODO delete cache indextoitemmap entries for undefined (as well as the associated itemID entries)
     public remapIndexes = (changeMap) => { // index => itemID
 
         if (changeMap.size == 0) return [] // nothing to do
@@ -261,7 +260,7 @@ export default class ServiceHandler {
 
         // =====================[ PREPARE ]======================
 
-        // ------------ filter out inoperable indexes and itemIDs ------------
+        // -----------------------[ isolate indexes for which items should be replaced ]--------------
 
         const workingChangeMap = new Map()
         changeMap.forEach((itemID, index) => {
@@ -275,6 +274,12 @@ export default class ServiceHandler {
                 workingChangeMap.set(index, itemID)
             }
         })
+
+        indexesForNewItemID.forEach((index) => {
+            indexToItemIDMap.delete(index)
+        })
+
+        // ------------ filter out inoperable indexes and itemIDs ------------
 
         const itemsToReplaceSet = new Set(itemsToReplaceList.values())
 

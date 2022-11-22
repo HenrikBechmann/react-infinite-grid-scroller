@@ -564,9 +564,6 @@ export default class ContentHandler {
     
     axisViewportOffset is the amount the axis is ahead of the Viewport edge
     
-    headPosAdjustment adjusts the position of the Scrollblock by an amount to compensate for variant 
-    length differences, such as the amount the measured head length differs from the base head length
-
     the length of the Scrollblock is shortened by the amount the measured tail length differs from the 
         base tail length
 
