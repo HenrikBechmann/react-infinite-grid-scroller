@@ -673,7 +673,7 @@ export default class ContentHandler {
             basePostCradlePixelLength = postCradleRowCount * baseCellLength
 
         const computedPreAxisPixelLength = basePreCradlePixelLength + measuredHeadLength + padding
-        const computedPostAxisPixelLength = basePostCradlePixelLength + measuredTailLength + padding
+        const computedPostAxisPixelLength = basePostCradlePixelLength + measuredTailLength //+ padding
 
         // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
         const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding
@@ -681,120 +681,13 @@ export default class ContentHandler {
 
         // ------------------------[ change calculations ]----------------------
 
-        // let adjustmentProcess
-
-        // if (!preCradleRowCount && !postCradleRowCount) {
-        //     adjustmentProcess = 'neither'
-        // } else if (!preCradleRowCount && postCradleRowCount) {
-        //     adjustmentProcess = 'noprecradle'
-        // } else if (preCradleRowCount && !postCradleRowCount) {
-        //     adjustmentProcess = 'nopostcradle'
-        // } else { // preCradleRowCount && postCradleRowCount
-        //     adjustmentProcess = 'both'
-        // }
-
         // console.log('axisViewportOffset',axisViewportOffset)
 
         let newAxisScrollblockOffset
         // let resetBodyScroll = true
         blockScrollPos = basePreAxisPixelLength - axisViewportOffset
         newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
-        // switch (adjustmentProcess) {
-        //     case 'neither': { // neither pre nor post cradle rows
 
-
-        //         break
-        //     }
-        //     case 'noprecradle': {
-        //         blockScrollPos = basePreAxisPixelLength - axisViewportOffset // measuredHeadLength - axisViewportOffset
-        //         newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
-        //         resetBodyScroll = true
-        //         break
-        //     }
-        //     case 'nopostcradle': { // handled below
-        //         blockScrollPos = basePreAxisPixelLength - axisViewportOffset
-        //         newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
-        //         resetBodyScroll = true
-        //         break
-
-        //     }
-        //     case 'both': { // both pre and post cradle rows
-        //         blockScrollPos = basePreAxisPixelLength - axisViewportOffset
-        //         newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
-        //         resetBodyScroll = true
-        //         break
-        //     }
-        // }
-
-        /*
-            - blockscrollPos
-            - newAxisScrollblockOffset
-
-            cases:
-                - 'neither' !preCradleRowCount && !postCradleRowCount
-                - 'noprecradle' !preCradleRowCount && postCradleRowCount
-                - 'nopostcradle' preCradleRowCount && !postCradleRowCount
-                - 'both' preCradleRowCount && postCradleRowCount
-
-
-        */
-
-        // the pixels by which the pre-axis Scrollblock is shorter than the base length
-        //    this allows for smooth scrolling before a scrolling interruption
-
-        // let scrollblockAdjustment = 0
-        // if (postCradleRowCount) {
-
-        //     const naturalScrollblockPos = computedPreAxisPixelLength - padding - axisViewportOffset
-        //     let scrollPosAdjustment = naturalScrollblockPos - blockScrollPos
-
-        //     console.log('-- naturalScrollblockPos, blockScrollPos, computedPreAxisPixelLength - padding, measuredHeadLength, axisViewportOffset, scrollPosAdjustment\n',
-        //         naturalScrollblockPos, blockScrollPos, computedPreAxisPixelLength - padding, measuredHeadLength, axisViewportOffset, scrollPosAdjustment)
-
-        //     blockScrollPos += scrollPosAdjustment
-        //     if (blockScrollPos < 0) {
-        //         scrollblockAdjustment = blockScrollPos
-        //         blockScrollPos = 0
-        //         scrollPosAdjustment -= blockScrollPos
-        //     }
-
-        //     console.log('adjusted blockScrollPos', blockScrollPos)
-
-        //     if (scrollPosAdjustment != 0) {
-
-        //         resetBodyScroll = true
-
-        //     }
-
-        // }
-
-        // end of list - remaining rows are known; constrain bottom to align end of cradle and scrollblock
-        // let resetTailscroll = false
-
-        // if (!postCradleRowCount) {
-
-        //     const targetScrollblockPos = 
-        //         computedScrollblockLength - measuredTailLength + axisViewportOffset
-
-        //     if (blockScrollPos != targetScrollblockPos) {
-        //         blockScrollPos = targetScrollblockPos
-        //         resetTailscroll = true
-        //     }
-
-        //     computedScrollblockLength = blockScrollPos + axisViewportOffset + measuredTailLength
-
-        // }
-
-        // newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
-
-        // -----------------------[ application ]-------------------------
-
-        // change scrollblockElement top and height, or left and width, and length;
-        //    and axisElement top or left
-        // const scrollblockOffsetPx = 
-        //     (scrollblockAdjustment == 0)?
-        //         null:
-        //         scrollblockAdjustment + 'px'
         if (orientation == 'vertical') {
 
             // scrollblockElement.style.top = scrollblockOffsetPx
