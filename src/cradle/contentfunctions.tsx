@@ -198,7 +198,7 @@ export const getShiftInstruction = ({
     // since triggers are moved and can share the 0 (zero) offset, an infinite loop can occur
     // between the head and tail triggers. The following short-circuits that.
     // the range (>= -1 && <= 1) is used to accommodate FF mobile (v107.1)
-    console.log('triggerData', triggerData)
+    // console.log('triggerData', triggerData)
     if (((triggerData.headOffset >= -1) && (triggerData.headOffset <= 1)) || 
         ((triggerData.tailOffset >= -1) && (triggerData.tailOffset <= 1))) {
 
