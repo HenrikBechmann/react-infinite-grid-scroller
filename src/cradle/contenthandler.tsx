@@ -586,7 +586,7 @@ export default class ContentHandler {
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
 
-        const { layoutHandler, scrollHandler, interruptHandler, stateHandler } = cradleHandlers
+        const { layoutHandler, scrollHandler, interruptHandler } = cradleHandlers
 
         const { 
 
@@ -633,11 +633,6 @@ export default class ContentHandler {
 
         } = cradleInternalProperties
 
-        const scrollblockLength = 
-            (orientation == 'vertical')?
-                scrollblockElement.offsetHeight:
-                scrollblockElement.offsetWidth
-
         // ------------------------[ precursor calculations ]------------------------
 
         // rowcounts and row offsets for positioning
@@ -661,21 +656,13 @@ export default class ContentHandler {
                 cellWidth
             ) + gap
 
-        // measured pixel cradle grid values
-        const measuredHeadLength = 
-            (orientation == 'vertical')?
-                headGridElement.offsetHeight:
-                headGridElement.offsetWidth
-
         const measuredTailLength = 
             (orientation == 'vertical')?
                 tailGridElement.offsetHeight:
                 tailGridElement.offsetWidth
 
-        const basePreCradlePixelLength = preCradleRowCount * baseCellLength,
-            basePostCradlePixelLength = postCradleRowCount * baseCellLength
+        const basePostCradlePixelLength = postCradleRowCount * baseCellLength
 
-        const computedPreAxisPixelLength = basePreCradlePixelLength + measuredHeadLength + padding
         const computedPostAxisPixelLength = basePostCradlePixelLength + measuredTailLength //+ padding
 
         // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
@@ -684,16 +671,8 @@ export default class ContentHandler {
 
         // ------------------------[ change calculations ]----------------------
 
-        // console.log('==>adjustScrollblockForVariability: axisViewportOffset, blockScrollPos, computedScrollblockLength\n', 
-        //     axisViewportOffset, blockScrollPos, computedScrollblockLength)
-
-        // let newAxisScrollblockOffset
-        // let resetBodyScroll = true
         blockScrollPos = basePreAxisPixelLength - axisViewportOffset
         const newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
-
-        // console.log('-- axisViewportOffset, blockScrollPos, newAxisScrollblockOffset\n', 
-        //     axisViewportOffset, blockScrollPos, newAxisScrollblockOffset)
 
         if (orientation == 'vertical') {
 
@@ -717,9 +696,6 @@ export default class ContentHandler {
         cradlePositionData.blockScrollPos = blockScrollPos
         viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
         scrollHandler.resetScrollData(blockScrollPos)
-
-        // console.log('-- results: axisElement.offsetTop, scrollblockElement.offsetHeight, viewportElement.scrollTop\n', 
-        //     axisElement.offsetTop, scrollblockElement.offsetHeight, viewportElement.scrollTop)
 
         // anomaly: returning from bottom of list sometimes results in diff between actual and targeted
         //    ... presumably from resetting the content length
