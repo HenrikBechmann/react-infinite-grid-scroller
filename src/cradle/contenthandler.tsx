@@ -710,9 +710,11 @@ export default class ContentHandler {
                 break
             }
             case 'nopostcradle': { // handled below
-
-
+                blockScrollPos = basePreAxisPixelLength - axisViewportOffset
+                newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
+                resetBodyScroll = true
                 break
+
             }
             case 'both': { // both pre and post cradle rows
                 blockScrollPos = basePreAxisPixelLength - axisViewportOffset
@@ -765,23 +767,23 @@ export default class ContentHandler {
         // }
 
         // end of list - remaining rows are known; constrain bottom to align end of cradle and scrollblock
-        let resetTailscroll = false
+        // let resetTailscroll = false
 
-        if (!postCradleRowCount) {
+        // if (!postCradleRowCount) {
 
-            const targetScrollblockPos = 
-                computedScrollblockLength - measuredTailLength + axisViewportOffset
+        //     const targetScrollblockPos = 
+        //         computedScrollblockLength - measuredTailLength + axisViewportOffset
 
-            if (blockScrollPos != targetScrollblockPos) {
-                blockScrollPos = targetScrollblockPos
-                resetTailscroll = true
-            }
+        //     if (blockScrollPos != targetScrollblockPos) {
+        //         blockScrollPos = targetScrollblockPos
+        //         resetTailscroll = true
+        //     }
 
-            computedScrollblockLength = blockScrollPos + axisViewportOffset + measuredTailLength
+        //     computedScrollblockLength = blockScrollPos + axisViewportOffset + measuredTailLength
 
-        }
+        // }
 
-        newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
+        // newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
 
         // -----------------------[ application ]-------------------------
 
@@ -819,93 +821,93 @@ export default class ContentHandler {
 
         }
 
-        if (resetTailscroll) { // bottom of list
+        // if (resetTailscroll) { // bottom of list
 
-            // 1. apply previously calculated blockScrollPos
-            interruptHandler.signals.pauseCradleIntersectionObserver = true
+        //     // 1. apply previously calculated blockScrollPos
+        //     interruptHandler.signals.pauseCradleIntersectionObserver = true
 
-            cradlePositionData.blockScrollPos = blockScrollPos
-            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-            scrollHandler.resetScrollData(blockScrollPos)
+        //     cradlePositionData.blockScrollPos = blockScrollPos
+        //     viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+        //     scrollHandler.resetScrollData(blockScrollPos)
 
-            const axisElementOffset = 
-                (orientation == 'vertical')?
-                    axisElement.offsetTop:
-                    axisElement.offsetLeft
+        //     const axisElementOffset = 
+        //         (orientation == 'vertical')?
+        //             axisElement.offsetTop:
+        //             axisElement.offsetLeft
 
-            const viewportScrollPos = 
-                (orientation == 'vertical')?
-                    viewportElement.scrollTop:
-                    viewportElement.scrollLeft                
+        //     const viewportScrollPos = 
+        //         (orientation == 'vertical')?
+        //             viewportElement.scrollTop:
+        //             viewportElement.scrollLeft                
 
-            if (!interruptHandler.finishingVariableResize) { // avoid responding to random browser reconfigurations
+        //     if (!interruptHandler.finishingVariableResize) { // avoid responding to random browser reconfigurations
 
-                // 2. for updatecradle, there's a mysterious diff that opens up on first shift from end toward head
-                // ... also headPosAdjustment is used for the gotoIndex adjustment next
-                const computedAxisViewportOffset = axisElementOffset - viewportScrollPos
-                const axisViewportOffsetDiff = computedAxisViewportOffset - axisViewportOffset
+        //         // 2. for updatecradle, there's a mysterious diff that opens up on first shift from end toward head
+        //         // ... also headPosAdjustment is used for the gotoIndex adjustment next
+        //         const computedAxisViewportOffset = axisElementOffset - viewportScrollPos
+        //         const axisViewportOffsetDiff = computedAxisViewportOffset - axisViewportOffset
 
-                let blockPosAdjustment = 0
-                if (axisViewportOffsetDiff) {
+        //         let blockPosAdjustment = 0
+        //         if (axisViewportOffsetDiff) {
 
-                    const scrollblockOffset = 
-                        (orientation == 'vertical')?
-                            scrollblockElement.offsetTop:
-                            scrollblockElement.offsetLeft
+        //             const scrollblockOffset = 
+        //                 (orientation == 'vertical')?
+        //                     scrollblockElement.offsetTop:
+        //                     scrollblockElement.offsetLeft
 
-                    blockPosAdjustment = (scrollblockOffset - axisViewportOffsetDiff)
+        //             blockPosAdjustment = (scrollblockOffset - axisViewportOffsetDiff)
 
-                    if (orientation == 'vertical') {
-                        scrollblockElement.style.top = blockPosAdjustment + 'px'
-                    } else {
-                        scrollblockElement.style.left = blockPosAdjustment + 'px'
-                    }
+        //             if (orientation == 'vertical') {
+        //                 scrollblockElement.style.top = blockPosAdjustment + 'px'
+        //             } else {
+        //                 scrollblockElement.style.left = blockPosAdjustment + 'px'
+        //             }
 
-                }
+        //         }
 
-                // 3. for setcradle, gotoIndex can land on an item beyond the normal axis
-                if (source == 'setcradle') { // for gotoIndex
+        //         // 3. for setcradle, gotoIndex can land on an item beyond the normal axis
+        //         if (source == 'setcradle') { // for gotoIndex
 
-                    const viewportLength = 
-                        (orientation == 'vertical')?
-                            viewportElement.offsetHeight:
-                            viewportElement.offsetWidth
+        //             const viewportLength = 
+        //                 (orientation == 'vertical')?
+        //                     viewportElement.offsetHeight:
+        //                     viewportElement.offsetWidth
 
-                    const viewportContentLength = 
-                        (orientation == 'vertical')?
-                            viewportElement.scrollHeight:
-                            viewportElement.scrollWidth
+        //             const viewportContentLength = 
+        //                 (orientation == 'vertical')?
+        //                     viewportElement.scrollHeight:
+        //                     viewportElement.scrollWidth
 
-                    const alignedEndPosDiff = 
-                        viewportScrollPos + blockPosAdjustment + viewportLength - viewportContentLength
+        //             const alignedEndPosDiff = 
+        //                 viewportScrollPos + blockPosAdjustment + viewportLength - viewportContentLength
 
-                    if (alignedEndPosDiff < 0) { // fill the bottom of the viewport using scrollBy
+        //             if (alignedEndPosDiff < 0) { // fill the bottom of the viewport using scrollBy
 
-                        const scrollByY = 
-                            (orientation == 'vertical')?
-                                alignedEndPosDiff:
-                                0
+        //                 const scrollByY = 
+        //                     (orientation == 'vertical')?
+        //                         alignedEndPosDiff:
+        //                         0
 
-                        const scrollByX =
-                            (orientation == 'vertical')?
-                                0:
-                                alignedEndPosDiff
+        //                 const scrollByX =
+        //                     (orientation == 'vertical')?
+        //                         0:
+        //                         alignedEndPosDiff
 
-                        viewportElement.scrollBy(scrollByX, scrollByY)
+        //                 viewportElement.scrollBy(scrollByX, scrollByY)
 
-                    }
+        //             }
 
-                }
+        //         }
 
-            }
+        //     }
 
-        }
+        // }
 
-        if (interruptHandler.finishingVariableResize) {
+        // if (interruptHandler.finishingVariableResize) {
 
-            interruptHandler.finishingVariableResize = false
+        //     interruptHandler.finishingVariableResize = false
 
-        }
+        // }
 
     }
 
