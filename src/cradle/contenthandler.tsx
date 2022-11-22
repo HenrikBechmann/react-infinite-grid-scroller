@@ -426,6 +426,7 @@ export default class ContentHandler {
             cradleInternalProperties,
             cradleContent,
             cradleElements,
+            // layoutHandler,
 
         })
 
@@ -544,6 +545,8 @@ export default class ContentHandler {
 
         const { cradlePositionData } = layoutHandler
 
+        // console.log('updateCradleContent: assign axisViewportPixelOffset, axisReferenceIndex\n',
+        //     axisViewportPixelOffset, axisReferenceIndex)
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
@@ -677,14 +680,20 @@ export default class ContentHandler {
 
         // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
         const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding
-        let computedScrollblockLength = basePreAxisPixelLength + computedPostAxisPixelLength
+        const computedScrollblockLength = basePreAxisPixelLength + computedPostAxisPixelLength
 
         // ------------------------[ change calculations ]----------------------
 
-        let newAxisScrollblockOffset
+        // console.log('==>adjustScrollblockForVariability: axisViewportOffset, blockScrollPos, computedScrollblockLength\n', 
+        //     axisViewportOffset, blockScrollPos, computedScrollblockLength)
+
+        // let newAxisScrollblockOffset
         // let resetBodyScroll = true
         blockScrollPos = basePreAxisPixelLength - axisViewportOffset
-        newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
+        const newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
+
+        // console.log('-- axisViewportOffset, blockScrollPos, newAxisScrollblockOffset\n', 
+        //     axisViewportOffset, blockScrollPos, newAxisScrollblockOffset)
 
         if (orientation == 'vertical') {
 
@@ -708,6 +717,20 @@ export default class ContentHandler {
         cradlePositionData.blockScrollPos = blockScrollPos
         viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
         scrollHandler.resetScrollData(blockScrollPos)
+
+        // console.log('-- results: axisElement.offsetTop, scrollblockElement.offsetHeight, viewportElement.scrollTop\n', 
+        //     axisElement.offsetTop, scrollblockElement.offsetHeight, viewportElement.scrollTop)
+
+        // anomaly: returning from bottom of list sometimes results in diff between actual and targeted
+        //    ... presumably from resetting the content length
+        // this is a hacky workaround        
+        const newBlockScrollPos = viewportElement.scrollTop
+        if (newBlockScrollPos != blockScrollPos) {
+            const diff = blockScrollPos - newBlockScrollPos
+            scrollblockElement.style.height = (scrollblockElement.offsetHeight + diff) + 'px'
+            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+            // console.log('corrected blockScrollPos', viewportElement.scrollTop)
+        }
 
         // if (resetTailscroll) { // bottom of list
 

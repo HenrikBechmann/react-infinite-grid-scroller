@@ -318,6 +318,8 @@ export const calcContentShift = ({
     cradleContent,
     cradleElements,
 
+    // layoutHandler,
+
 }) => {
 
     // ------------------------[ 1. initialize ]-----------------------
@@ -527,7 +529,8 @@ export const calcContentShift = ({
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
 
-    if (shiftinstruction == 'axistailward') { // scrolling toward head
+    // console.log('==> calcContentShift: shiftinstruction', shiftinstruction)
+    if (shiftinstruction == 'axistailward') { // scrolling down/right
 
         // a. if scrolling the block headward near the start of the list, new cradle row offset and
         // cradle row shift count has to be adjusted to accommodate the leading runway
@@ -559,7 +562,7 @@ export const calcContentShift = ({
 
         }
 
-    } else { // shiftinstruction == 'axisheadward'; scrolling toward tail 
+    } else { // shiftinstruction == 'axisheadward'; scrolling up/left
 
         // c. if scrolling the block tailward (toward revealing head of list), as the cradlerowoffset 
         // hits 0, cradle changes have to be adjusted to prevent shortening of cradle content
@@ -587,8 +590,13 @@ export const calcContentShift = ({
         if (tailrowdiff > 0) {
 
             cradleReferenceRowshift += tailrowdiff
-            newCradleReferenceRowOffset += tailrowdiff
-
+            newCradleReferenceRowOffset -= tailrowdiff
+            // newAxisViewportPixelOffset 
+            // console.log('--tailrowdiff, cradleReferenceRowshift, newAxisViewportPixelOffset\n', 
+            //     tailrowdiff, cradleReferenceRowshift, newAxisViewportPixelOffset)
+            // if (layout == 'variable') {
+            //     layoutHandler.restoreBaseScrollblockConfig()
+            // }
         }
 
     }
