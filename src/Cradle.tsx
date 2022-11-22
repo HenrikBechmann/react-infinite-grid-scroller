@@ -1145,10 +1145,6 @@ const Cradle = ({
                     // already done for reposition
                     (cradleState != 'finishreposition') && layoutHandler.restoreBaseScrollblockConfig()
 
-                    if (cradleState == 'finishviewportresize') {
-                        interruptHandler.finishingVariableResize = true
-                    }
-
                 }
 
                 if (cradleState == 'reload') {

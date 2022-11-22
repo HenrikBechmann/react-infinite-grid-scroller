@@ -739,58 +739,16 @@ export default class ContentHandler {
             viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
         }
 
-        if ((source == 'setcradle') && !postCradleRowCount && !interruptHandler.finishingVariableResize) { // avoid responding to random browser reconfigurations
-
-            const axisElementOffset = 
-                (orientation == 'vertical')?
-                    axisElement.offsetTop:
-                    axisElement.offsetLeft
-
-            const viewportScrollPos = 
-                (orientation == 'vertical')?
-                    viewportElement.scrollTop:
-                    viewportElement.scrollLeft                
-
-            // 2. for updatecradle, there's a mysterious diff that opens up on first shift from end toward head
-            // ... also headPosAdjustment is used for the gotoIndex adjustment next
-            const computedAxisViewportOffset = axisElementOffset - viewportScrollPos
-            const axisViewportOffsetDiff = computedAxisViewportOffset - axisViewportOffset
-
-            let blockPosAdjustment = 0
-            if (axisViewportOffsetDiff) {
-
-                const scrollblockOffset = 
-                    (orientation == 'vertical')?
-                        scrollblockElement.offsetTop:
-                        scrollblockElement.offsetLeft
-
-                blockPosAdjustment = (scrollblockOffset - axisViewportOffsetDiff)
-
-                // if (orientation == 'vertical') {
-                //     scrollblockElement.style.top = blockPosAdjustment + 'px'
-                // } else {
-                //     scrollblockElement.style.left = blockPosAdjustment + 'px'
-                // }
-
-            }
-
-            // 3. for setcradle, gotoIndex can land on an item beyond the normal axis
-            // if (source == 'setcradle') { // for gotoIndex
+        // check for gotoIndex or resize overshoot
+        if ((source == 'setcradle') && !postCradleRowCount) { 
 
             const viewportLength = 
                 (orientation == 'vertical')?
                     viewportElement.offsetHeight:
                     viewportElement.offsetWidth
 
-            const viewportContentLength = 
-                (orientation == 'vertical')?
-                    viewportElement.scrollHeight:
-                    viewportElement.scrollWidth
-
             const alignedEndPosDiff = 
-                viewportScrollPos + blockPosAdjustment + viewportLength - viewportContentLength
-
-            console.log('alignedEndPosDiff', alignedEndPosDiff)
+                axisViewportOffset + measuredTailLength - viewportLength
 
             if (alignedEndPosDiff < 0) { // fill the bottom of the viewport using scrollBy
 
@@ -807,12 +765,6 @@ export default class ContentHandler {
                 viewportElement.scrollBy(scrollByX, scrollByY)
 
             }
-
-        }
-
-        if (interruptHandler.finishingVariableResize) {
-
-            interruptHandler.finishingVariableResize = false
 
         }
 
