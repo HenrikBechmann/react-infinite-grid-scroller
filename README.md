@@ -243,7 +243,7 @@ These properties would rarely be changed.
 |VIEWPORT_RESIZE_TIMEOUT|integer, default = 250|milliseconds before the Viewport resizing state is cleared|
 |ONAFTERSCROLL_TIMEOUT|integer, default = 100|milliseconds after last scroll event before onAfter scroll event is fired|
 |IDLECALLBACK_TIMEOUT|integer, default = 175|milliseconds timeout for requestIdleCallback|
-|VARIABLE_MEASUREMENTS_TIMEOUT|integer, default = 100|milliseconds to allow setCradleContent changes to render before being measured for 'variable' layout|
+|VARIABLE_MEASUREMENTS_TIMEOUT|integer, default = 250|milliseconds to allow setCradleContent changes to render before being measured for 'variable' layout|
 |CACHE_PARTITION_SIZE|integer, default = 30|the cache is partitioned for performance reasons|
 |MAX_CACHE_OVER_RUN|number, default = 1.5|max streaming cache size over-run (while scrolling) as ratio to cacheMax|
 
