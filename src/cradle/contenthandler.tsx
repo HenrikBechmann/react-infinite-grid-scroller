@@ -700,7 +700,7 @@ export default class ContentHandler {
 
         }
 
-        // -----------------------[ adjustments ]-------------------------
+        // -----------------------[ scrollPos adjustment ]-------------------------
         // adjustments of blockScrollPos must take place here, to be after length is updated
 
         interruptHandler.signals.pauseCradleIntersectionObserver = true

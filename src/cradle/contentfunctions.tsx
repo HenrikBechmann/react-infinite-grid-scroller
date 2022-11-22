@@ -549,14 +549,13 @@ export const calcContentShift = ({
         }
 
         // --- end of list adjustment: case of being in bounds of trailing runway (end of list)
-        let targetCradleEndrowOffset = newCradleReferenceRowOffset + (cradleRowcount - 1)
+        const targetCradleEndrowOffset = newCradleReferenceRowOffset + (cradleRowcount - 1)
         const tailrowdiff = Math.max(0,targetCradleEndrowOffset - listEndrowOffset)
 
         if (tailrowdiff > 0) {
 
-            newCradleReferenceRowOffset -= tailrowdiff
             cradleReferenceRowshift -= tailrowdiff
-            targetCradleEndrowOffset -= tailrowdiff
+            newCradleReferenceRowOffset -= tailrowdiff
 
         }
 
