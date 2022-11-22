@@ -899,7 +899,6 @@ export default class ContentHandler {
     // supports insertRemoveIndex
     public createNewItemIDs(newList) {
 
-
         const { cacheHandler } = this.cradleParameters.handlersRef.current
         const { cradleModelComponents } = this.content
 
