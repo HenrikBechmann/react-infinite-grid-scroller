@@ -238,7 +238,6 @@ export default class ServiceHandler {
 
     }
 
-    // TODO delete cache indextoitemmap entries for undefined (as well as the associated itemID entries)
     public remapIndexes = (changeMap) => { // index => itemID
 
         if (changeMap.size == 0) return [] // nothing to do
@@ -255,13 +254,13 @@ export default class ServiceHandler {
 
         const indexesToDeleteList = []
         const indexesForNewItemID = []
-        const itemsToReplaceList = []
+        const partitionItemsToReplaceList = []
         const changeIndexToItemIDMap = new Map()
         const errorEntriesMap = new Map()
 
         // =====================[ PREPARE ]======================
 
-        // ------------ filter out inoperable indexes and itemIDs ------------
+        // -----------------------[ isolate indexes for which items should be replaced ]--------------
 
         const workingChangeMap = new Map()
         changeMap.forEach((itemID, index) => {
@@ -269,14 +268,28 @@ export default class ServiceHandler {
                 indexesForNewItemID.push(index)
                 const cacheItemID = indexToItemIDMap.get(index)
                 if (!(cacheItemID === undefined)) {
-                    itemsToReplaceList.push(cacheItemID)
+
+                    const { partitionID } = metadataMap.get(cacheItemID)
+
+                    partitionItemsToReplaceList.push({partitionID, itemID:cacheItemID})
                 }
             } else {
                 workingChangeMap.set(index, itemID)
             }
         })
 
-        const itemsToReplaceSet = new Set(itemsToReplaceList.values())
+        indexesForNewItemID.forEach((index) => {
+            indexToItemIDMap.delete(index)
+        })
+
+        // ------------ filter out inoperable indexes and itemIDs ------------
+
+        const itemsToReplaceSet = new Set()
+        partitionItemsToReplaceList.forEach((obj) => {
+            itemsToReplaceSet.add(obj.itemID)
+        })
+
+        const itemsToReplaceList = Array.from(itemsToReplaceSet)
 
         workingChangeMap.forEach((itemID, index) =>{
 
@@ -492,11 +505,11 @@ export default class ServiceHandler {
 
         modifiedIndexList = Array.from(new Set(modifiedIndexList.values())) // remove duplicates
 
-        // call contentHandler.createNewItemIDs for 'undefined' items
+        contentHandler.createNewItemIDs(indexesForNewItemID)
 
         contentHandler.reconcileCellFrames(modifiedIndexList)
 
-        cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList.concat(itemsToReplaceList)
+        cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList.concat(partitionItemsToReplaceList)
 
         stateHandler.setCradleState('applycellframechanges')
 
