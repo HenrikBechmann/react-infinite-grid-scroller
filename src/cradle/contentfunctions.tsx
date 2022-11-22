@@ -202,6 +202,8 @@ export const getShiftInstruction = ({
     if (((triggerData.headOffset >= -1) && (triggerData.headOffset <= 1)) || 
         ((triggerData.tailOffset >= -1) && (triggerData.tailOffset <= 1))) {
 
+        // FF has shown an infinite loop with the same previousReferenceName;
+        // usually alternates
         if (triggerZeroHistory.previousReferenceName) {
 
             // if ((triggerZeroHistory.previousReferenceName == 'headtrigger' && 
