@@ -269,17 +269,26 @@ export default class ServiceHandler {
         const workingChangeMap = new Map()
         changeMap.forEach((itemID, index) => {
             if (itemID === undefined) {
-                const cacheItemID = indexToItemIDMap.get(index)
-                if (!(cacheItemID === undefined)) { // ignore non-existent indexes
+                if (indexToItemIDMap.has(index)) {
+                    const cacheItemID = indexToItemIDMap.get(index)
 
                     indexesToReplaceItemIDList.push(index)
 
-                    const { partitionID } = metadataMap.get(cacheItemID)
+                    if (!(cacheItemID === undefined)) { // ignore non-existent indexes
 
-                    partitionItemsToReplaceList.push({partitionID, itemID:cacheItemID})
+                        const { partitionID } = metadataMap.get(cacheItemID)
+
+                        partitionItemsToReplaceList.push({partitionID, itemID:cacheItemID})
+                    }
+                } else {
+
+                    errorEntriesMap.set(index, 'index to replace is not in cache')
+
                 }
             } else {
+
                 workingChangeMap.set(index, itemID)
+
             }
         })
 
