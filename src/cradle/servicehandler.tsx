@@ -269,9 +269,10 @@ export default class ServiceHandler {
         const workingChangeMap = new Map()
         changeMap.forEach((itemID, index) => {
             if (itemID === undefined) {
-                indexesToReplaceItemIDList.push(index)
                 const cacheItemID = indexToItemIDMap.get(index)
-                if (!(cacheItemID === undefined)) {
+                if (!(cacheItemID === undefined)) { // ignore non-existent indexes
+
+                    indexesToReplaceItemIDList.push(index)
 
                     const { partitionID } = metadataMap.get(cacheItemID)
 
