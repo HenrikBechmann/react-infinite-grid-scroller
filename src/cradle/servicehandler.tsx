@@ -253,7 +253,7 @@ export default class ServiceHandler {
         } = cacheHandler.cacheProps 
 
         const indexesToDeleteList = []
-        const indexesForNewItemID = []
+        const indexesToReplaceItemID = []
         const partitionItemsToReplaceList = []
         const changeIndexToItemIDMap = new Map()
         const errorEntriesMap = new Map()
@@ -265,7 +265,7 @@ export default class ServiceHandler {
         const workingChangeMap = new Map()
         changeMap.forEach((itemID, index) => {
             if (itemID === undefined) {
-                indexesForNewItemID.push(index)
+                indexesToReplaceItemID.push(index)
                 const cacheItemID = indexToItemIDMap.get(index)
                 if (!(cacheItemID === undefined)) {
 
@@ -278,7 +278,7 @@ export default class ServiceHandler {
             }
         })
 
-        indexesForNewItemID.forEach((index) => {
+        indexesToReplaceItemID.forEach((index) => {
             indexToItemIDMap.delete(index)
         })
 
@@ -505,7 +505,7 @@ export default class ServiceHandler {
 
         modifiedIndexList = Array.from(new Set(modifiedIndexList.values())) // remove duplicates
 
-        contentHandler.createNewItemIDs(indexesForNewItemID)
+        contentHandler.createNewItemIDs(indexesToReplaceItemID)
 
         contentHandler.reconcileCellFrames(modifiedIndexList)
 
@@ -520,7 +520,7 @@ export default class ServiceHandler {
             modifiedIndexList, 
             processedIndexList, 
             indexesToDeleteList, 
-            itemsToReplaceList,
+            indexesToReplaceItemID,
             deletedOrphanedItemIDList, 
             deletedOrphanedIndexList,
             errorEntriesMap, 
