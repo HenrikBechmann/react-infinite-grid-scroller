@@ -238,6 +238,10 @@ export default class ServiceHandler {
 
     }
 
+    // itemID set to null deletes the indexed item
+    // itemID set to undefined replaces the indexed item
+    // the main purpose is to allow itemsIDs to be remapped to new indexes
+    // operations are on existing cache items only
     public remapIndexes = (changeMap) => { // index => itemID
 
         if (changeMap.size == 0) return [] // nothing to do
@@ -253,7 +257,7 @@ export default class ServiceHandler {
         } = cacheHandler.cacheProps 
 
         const indexesToDeleteList = []
-        const indexesToReplaceItemID = []
+        const indexesToReplaceItemIDList = []
         const partitionItemsToReplaceList = []
         const changeIndexToItemIDMap = new Map()
         const errorEntriesMap = new Map()
@@ -265,7 +269,7 @@ export default class ServiceHandler {
         const workingChangeMap = new Map()
         changeMap.forEach((itemID, index) => {
             if (itemID === undefined) {
-                indexesToReplaceItemID.push(index)
+                indexesToReplaceItemIDList.push(index)
                 const cacheItemID = indexToItemIDMap.get(index)
                 if (!(cacheItemID === undefined)) {
 
@@ -278,7 +282,7 @@ export default class ServiceHandler {
             }
         })
 
-        indexesToReplaceItemID.forEach((index) => {
+        indexesToReplaceItemIDList.forEach((index) => {
             indexToItemIDMap.delete(index)
         })
 
@@ -505,9 +509,11 @@ export default class ServiceHandler {
 
         modifiedIndexList = Array.from(new Set(modifiedIndexList.values())) // remove duplicates
 
-        contentHandler.createNewItemIDs(indexesToReplaceItemID)
+        contentHandler.createNewItemIDs(indexesToReplaceItemIDList)
 
         contentHandler.reconcileCellFrames(modifiedIndexList)
+
+        modifiedIndexList = modifiedIndexList.concat(indexesToReplaceItemIDList)
 
         cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList.concat(partitionItemsToReplaceList)
 
@@ -520,7 +526,7 @@ export default class ServiceHandler {
             modifiedIndexList, 
             processedIndexList, 
             indexesToDeleteList, 
-            indexesToReplaceItemID,
+            indexesToReplaceItemIDList,
             deletedOrphanedItemIDList, 
             deletedOrphanedIndexList,
             errorEntriesMap, 
