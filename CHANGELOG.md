@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0-Beta-4 November 24m, 2022
+## 1.0.0-Beta-4 November 24, 2022
 
 Many issues were identified and resolved, thanks mostly to testing with the demo site.
 
