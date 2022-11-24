@@ -545,8 +545,6 @@ export default class ContentHandler {
 
         const { cradlePositionData } = layoutHandler
 
-        // console.log('updateCradleContent: assign axisViewportPixelOffset, axisReferenceIndex\n',
-        //     axisViewportPixelOffset, axisReferenceIndex)
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
