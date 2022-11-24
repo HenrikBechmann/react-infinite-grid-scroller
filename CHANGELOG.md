@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0-Beta-4 November 24m, 2022
+
+Many issues were identified and resolved, thanks mostly to testing with the demo site.
+
+Beta 4 should be the last testing cycle before the product is promoted to Release Candidate status.
+
 ## 1.0.0-Beta-3 November 8, 2022
 
 - better stability
