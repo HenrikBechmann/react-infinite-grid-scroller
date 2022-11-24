@@ -246,7 +246,7 @@ const Cradle = ({
     // various row counts
     const [
         cradleRowcount, 
-        viewportRowcount, // TODO investigate removing the need for this
+        viewportRowcount,
         listRowcount,
         runwayRowcount,
     ] = useMemo(()=> {
@@ -361,31 +361,19 @@ const Cradle = ({
     // up to date values
     cradleInheritedPropertiesRef.current = {
         // gridSpecs
-        orientation, 
-        gap, 
-        padding, 
-        cellHeight, 
-        cellWidth, 
-        cellMinHeight,
-        cellMinWidth,
-        layout,
+        orientation, gap, padding, layout,
+        cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         // ...rest
-        cache,
-        cacheMax,
+        cache, cacheMax,
         startingIndex, 
         getItem, 
-        placeholder, 
-        placeholderMessages,
+        placeholder, placeholderMessages, usePlaceholder,
         triggerlineOffset,
         scrollerID,
-        usePlaceholder,
         // objects
-        userCallbacks,
-        styles,
-        cacheHandler,
+        userCallbacks, styles, cacheHandler,
         // control values
-        ONAFTERSCROLL_TIMEOUT,
-        MAX_CACHE_OVER_RUN,
+        ONAFTERSCROLL_TIMEOUT, MAX_CACHE_OVER_RUN, 
         scrollerProperties,
 
     }
@@ -393,14 +381,8 @@ const Cradle = ({
     const scrollerPropertiesRef = useRef(null)
     // passed to cellFrame content (user content) if requested
     scrollerPropertiesRef.current = {
-        orientation, 
-        gap, 
-        padding, 
-        cellHeight, 
-        cellWidth,
-        cellMinHeight,
-        cellMinWidth, 
-        layout,
+        orientation, gap, padding, layout,
+        cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         listsize,
         runwayRowcount,
         cache,
