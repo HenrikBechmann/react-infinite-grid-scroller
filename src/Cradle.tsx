@@ -405,7 +405,8 @@ const Cradle = ({
         runwayRowcount,
         cache,
         cacheMax,
-        startingIndex, 
+        startingIndex,
+        crosscount,
     }
 
     // configuration properties to share with handlers
@@ -819,6 +820,7 @@ const Cradle = ({
         padding,
         triggerlineOffset,
         layout,
+        runwaySize,
     ])
 
     // a new getItem function implies the need to reload
