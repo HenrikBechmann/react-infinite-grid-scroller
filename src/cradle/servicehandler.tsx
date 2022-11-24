@@ -238,6 +238,10 @@ export default class ServiceHandler {
 
     }
 
+    // itemID set to null deletes the indexed item
+    // itemID set to undefined replaces the indexed item
+    // the main purpose is to allow itemsIDs to be remapped to new indexes
+    // operations are on existing cache items only
     public remapIndexes = (changeMap) => { // index => itemID
 
         if (changeMap.size == 0) return [] // nothing to do
@@ -253,7 +257,7 @@ export default class ServiceHandler {
         } = cacheHandler.cacheProps 
 
         const indexesToDeleteList = []
-        const indexesForNewItemID = []
+        const indexesToReplaceItemIDList = []
         const partitionItemsToReplaceList = []
         const changeIndexToItemIDMap = new Map()
         const errorEntriesMap = new Map()
@@ -265,20 +269,30 @@ export default class ServiceHandler {
         const workingChangeMap = new Map()
         changeMap.forEach((itemID, index) => {
             if (itemID === undefined) {
-                indexesForNewItemID.push(index)
-                const cacheItemID = indexToItemIDMap.get(index)
-                if (!(cacheItemID === undefined)) {
+                if (indexToItemIDMap.has(index)) {
+                    const cacheItemID = indexToItemIDMap.get(index)
 
-                    const { partitionID } = metadataMap.get(cacheItemID)
+                    indexesToReplaceItemIDList.push(index)
 
-                    partitionItemsToReplaceList.push({partitionID, itemID:cacheItemID})
+                    if (!(cacheItemID === undefined)) { // ignore non-existent indexes
+
+                        const { partitionID } = metadataMap.get(cacheItemID)
+
+                        partitionItemsToReplaceList.push({partitionID, itemID:cacheItemID})
+                    }
+                } else {
+
+                    errorEntriesMap.set(index, 'index to replace is not in cache')
+
                 }
             } else {
+
                 workingChangeMap.set(index, itemID)
+
             }
         })
 
-        indexesForNewItemID.forEach((index) => {
+        indexesToReplaceItemIDList.forEach((index) => {
             indexToItemIDMap.delete(index)
         })
 
@@ -505,9 +519,11 @@ export default class ServiceHandler {
 
         modifiedIndexList = Array.from(new Set(modifiedIndexList.values())) // remove duplicates
 
-        contentHandler.createNewItemIDs(indexesForNewItemID)
+        contentHandler.createNewItemIDs(indexesToReplaceItemIDList)
 
         contentHandler.reconcileCellFrames(modifiedIndexList)
+
+        modifiedIndexList = modifiedIndexList.concat(indexesToReplaceItemIDList)
 
         cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList.concat(partitionItemsToReplaceList)
 
@@ -520,7 +536,7 @@ export default class ServiceHandler {
             modifiedIndexList, 
             processedIndexList, 
             indexesToDeleteList, 
-            itemsToReplaceList,
+            indexesToReplaceItemIDList,
             deletedOrphanedItemIDList, 
             deletedOrphanedIndexList,
             errorEntriesMap, 
