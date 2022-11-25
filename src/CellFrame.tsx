@@ -270,13 +270,13 @@ const CellFrame = ({
 
         switch (frameState) {
             case 'setup': {
-                // setFrameState('working')
+                setFrameState('working')
                 break
             }
 
-            // case 'working': {
-            //     setFrameState('preparing') // delay paint while working
-            // }
+            case 'working': {
+                setFrameState('preparing') // delay paint while working
+            }
 
             case 'getusercontent': {
 
