@@ -167,7 +167,7 @@ const CellFrame = ({
     },[])
 
     // refresh content if itemID changes
-    useEffect(()=>{
+    useLayoutEffect(()=>{
 
         if (isMountedRef.current) setFrameState('getusercontent')
 
