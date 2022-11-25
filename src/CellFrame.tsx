@@ -119,6 +119,8 @@ const CellFrame = ({
     const frameStateRef = useRef(null)
     frameStateRef.current = frameState
 
+    // console.log('frameState',frameState)
+
     // DOM ref
     const frameRef = useRef(null)
     // to track unmount interrupt
@@ -268,13 +270,13 @@ const CellFrame = ({
 
         switch (frameState) {
             case 'setup': {
-                setFrameState('working')
+                // setFrameState('working')
                 break
             }
 
-            case 'working': {
-                setFrameState('preparing') // delay paint while working
-            }
+            // case 'working': {
+            //     setFrameState('preparing') // delay paint while working
+            // }
 
             case 'getusercontent': {
 
