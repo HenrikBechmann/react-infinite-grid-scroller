@@ -513,40 +513,42 @@ export default class ContentHandler {
 
         // -------------------------------[ 6. set css changes ]-------------------------
 
-        const axisElement = cradleElements.axisRef.current
-        const headElement = cradleElements.headRef.current
+        // const axisElement = cradleElements.axisRef.current
+        // const headElement = cradleElements.headRef.current
 
-        let topPos, leftPos // available for debug
-        if (cradleInheritedProperties.orientation == 'vertical') {
+        // let topPos, leftPos // available for debug
+        // if (cradleInheritedProperties.orientation == 'vertical') {
 
-            topPos = scrollPos + axisViewportPixelOffset
+        //     topPos = scrollPos + axisViewportPixelOffset
 
-            axisElement.style.top = topPos + 'px'
-            axisElement.style.left = 'auto'
+        //     axisElement.style.top = topPos + 'px'
+        //     axisElement.style.left = 'auto'
             
-            headElement.style.paddingBottom = 
-                headcontent.length?
-                    cradleInheritedProperties.gap + 'px':
-                    0
+        //     headElement.style.paddingBottom = 
+        //         headcontent.length?
+        //             cradleInheritedProperties.gap + 'px':
+        //             0
 
-        } else { // 'horizontal'
+        // } else { // 'horizontal'
 
-            leftPos = scrollPos + axisViewportPixelOffset
+        //     leftPos = scrollPos + axisViewportPixelOffset
 
-            axisElement.style.top = 'auto'
-            axisElement.style.left = leftPos + 'px'
+        //     axisElement.style.top = 'auto'
+        //     axisElement.style.left = leftPos + 'px'
 
-            headElement.style.paddingRight = 
-                headcontent.length?
-                    cradleInheritedProperties.gap + 'px':
-                    0
+        //     headElement.style.paddingRight = 
+        //         headcontent.length?
+        //             cradleInheritedProperties.gap + 'px':
+        //             0
 
-        }
+        // }
 
         const { cradlePositionData } = layoutHandler
 
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
+
+        // console.log('updateCradleContent:')
 
         stateHandler.setCradleState('renderupdatedcontent')
 

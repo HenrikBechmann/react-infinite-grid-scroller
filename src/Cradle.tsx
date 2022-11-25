@@ -1217,6 +1217,50 @@ const Cradle = ({
             // it is required to integrate changed DOM configurations before 'ready' is displayed
             case 'renderupdatedcontent': { // cycle for DOM update
 
+                const { cradlePositionData, elements:cradleElements } = layoutHandler
+
+                const axisElement = cradleElements.axisRef.current
+                const headElement = cradleElements.headRef.current
+
+                const axisViewportPixelOffset = cradlePositionData.targetAxisViewportPixelOffset
+                const headcontent = cradleContent.headModelComponents
+
+                const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
+
+                const scrollPos = 
+                    (orientation == 'vertical')?
+                        viewportElement.scrollTop:
+                        viewportElement.scrollLeft
+
+                let topPos, leftPos // available for debug
+                const cradleInheritedProperties = cradleInheritedPropertiesRef.current
+                if (cradleInheritedProperties.orientation == 'vertical') {
+
+                    topPos = scrollPos + axisViewportPixelOffset
+
+                    axisElement.style.top = topPos + 'px'
+                    axisElement.style.left = 'auto'
+                    
+                    headElement.style.paddingBottom = 
+                        headcontent.length?
+                            cradleInheritedProperties.gap + 'px':
+                            0
+
+                } else { // 'horizontal'
+
+                    leftPos = scrollPos + axisViewportPixelOffset
+
+                    axisElement.style.top = 'auto'
+                    axisElement.style.left = leftPos + 'px'
+
+                    headElement.style.paddingRight = 
+                        headcontent.length?
+                            cradleInheritedProperties.gap + 'px':
+                            0
+
+                }
+
+
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
@@ -1229,6 +1273,8 @@ const Cradle = ({
 
             case 'finishupdatedcontent': { // cycle for DOM update
 
+                // cradleContent.headDisplayComponents = cradleContent.headModelComponents
+                // cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
                 // synchronize cache
                 const { cache } = cradleInternalPropertiesRef.current
@@ -1244,15 +1290,22 @@ const Cradle = ({
                 if (layout == 'uniform') {
 
                     // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
-                    interruptHandler.triggerlinesIntersect.connectElements()
-
-                    setCradleState('ready')
+                    setCradleState('reconnectupdatedcontent')
 
                 } else { // 'variable' content requiring reconfiguration
 
                     setCradleState('refreshDOMupdateforvariability')
 
                 }
+
+                break
+            }
+
+            case 'reconnectupdatedcontent': {
+
+                interruptHandler.triggerlinesIntersect.connectElements()
+
+                setCradleState('ready')
 
                 break
             }
