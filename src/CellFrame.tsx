@@ -231,12 +231,12 @@ const CellFrame = ({
 
     // ---------------- [ requestidlecallback config ] ------------------------
 
-    const requestidlecallback = 
+    const requestidlecallback = // requestIdleCallback
         window['requestIdleCallback']?
             window['requestIdleCallback']:
             requestIdleCallback
 
-    const cancelidlecallback = 
+    const cancelidlecallback = // cancelIdleCallback
         window['cancelIdleCallback']?
             window['cancelIdleCallback']:
             cancelIdleCallback

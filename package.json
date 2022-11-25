@@ -39,7 +39,6 @@
   },
   "homepage": "https://github.com/HenrikBechmann/react-infinite-grid-scroller#readme",
   "dependencies": {
-    "@juggle/resize-observer": "^3.3.1",
     "react-error-boundary": "^3.1.4",
     "react-reverse-portal": "^2.0.1",
     "requestidlecallback": "^0.3.0"

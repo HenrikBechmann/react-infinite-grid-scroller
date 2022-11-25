@@ -21,9 +21,9 @@ import React, {
 
 export const ViewportContext = React.createContext(null) // for children
 
-import { ResizeObserver as ResizeObserverPollyfill } from '@juggle/resize-observer'
+// import { ResizeObserver as ResizeObserverPollyfill } from '@juggle/resize-observer'
 
-const ResizeObserver = window['ResizeObserver'] || ResizeObserverPollyfill
+// const ResizeObserver = window['ResizeObserver'] || ResizeObserverPollyfill
 
 const Viewport = ({
 
