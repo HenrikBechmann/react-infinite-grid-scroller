@@ -198,6 +198,9 @@ export default class LayoutHandler {
 
     }
 
+    transientScrollPos = 0
+    transientAxisViewportPixelOffset = 0
+
     public elements
 
 }

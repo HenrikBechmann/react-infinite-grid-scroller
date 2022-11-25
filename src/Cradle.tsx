@@ -1217,6 +1217,9 @@ const Cradle = ({
             // it is required to integrate changed DOM configurations before 'ready' is displayed
             case 'renderupdatedcontent': { // cycle for DOM update
 
+                // CSS changes moved here from updateCradleContent to avoid Safari double paint
+                // before and after application of changes
+
                 const { cradlePositionData, elements:cradleElements } = layoutHandler
 
                 const axisElement = cradleElements.axisRef.current
@@ -1227,10 +1230,13 @@ const Cradle = ({
 
                 const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
-                const scrollPos = 
-                    (orientation == 'vertical')?
-                        viewportElement.scrollTop:
-                        viewportElement.scrollLeft
+                const scrollPos = layoutHandler.transientScrollPos // cradlePositionData.blockScrollPos
+                    // (orientation == 'vertical')?
+                    //     viewportElement.scrollTop:
+                    //     viewportElement.scrollLeft
+
+                // console.log('renderupdatedcontent: axisViewportPixelOffset, scrollPos\n',
+                //     axisViewportPixelOffset, scrollPos)
 
                 let topPos, leftPos // available for debug
                 const cradleInheritedProperties = cradleInheritedPropertiesRef.current

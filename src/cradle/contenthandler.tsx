@@ -548,7 +548,14 @@ export default class ContentHandler {
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
-        // console.log('updateCradleContent:')
+        // the CSS changes had to be moved from here to 'renderupdatedcontent' in useEvent
+        // to avoid double paint in safari. The scrollPos value can change from here to there
+        // and axisPos is paired here for logical consistency.
+        layoutHandler.transientScrollPos = scrollPos
+        layoutHandler.transientAxisViewportPixelOffset = axisViewportPixelOffset
+
+        // console.log('updateCradleContent: axisViewportPixelOffset, scrollPos, blockScrollPos\n', 
+        //     axisViewportPixelOffset, scrollPos, cradlePositionData.blockScrollPos)
 
         stateHandler.setCradleState('renderupdatedcontent')
 
