@@ -1226,21 +1226,31 @@ const Cradle = ({
                 const headElement = cradleElements.headRef.current
 
                 const headcontent = cradleContent.headModelComponents
-                const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
+                // const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
+                const { gap, orientation } = cradleInheritedPropertiesRef.current
 
-                const axisViewportPixelOffset = layoutHandler.transientAxisViewportPixelOffset // cradlePositionData.targetAxisViewportPixelOffset
-                const scrollPos = layoutHandler.transientScrollPos // cradlePositionData.blockScrollPos
-                    // (orientation == 'vertical')?
-                    //     viewportElement.scrollTop:
-                    //     viewportElement.scrollLeft
+                // const measuredScrollPos = 
+                //     (orientation == 'vertical')?
+                //         viewportElement.scrollTop:
+                //         viewportElement.scrollLeft
 
-                // console.log('renderupdatedcontent: axisViewportPixelOffset, scrollPos\n',
+                let axisViewportPixelOffset = layoutHandler.transientAxisViewportPixelOffset // cradlePositionData.targetAxisViewportPixelOffset
+                let scrollPos = layoutHandler.transientScrollPos // cradlePositionData.blockScrollPos
+
+                // console.log('renderupdatedcontent: axisViewportPixelOffset, scrollPos\n', 
                 //     axisViewportPixelOffset, scrollPos)
+
+                // const scrollPosDiff = scrollPos - measuredScrollPos
+
+                // axisViewportPixelOffset += scrollPosDiff
+                // scrollPos -= scrollPosDiff
+
+                // console.log('renderupdatedcontent: measuredScrollPos, scrollPos\n',
+                //     measuredScrollPos, scrollPos, scrollPosDiff)
 
                 // apply CSS changes
                 let topPos, leftPos // available for debug
-                const cradleInheritedProperties = cradleInheritedPropertiesRef.current
-                if (cradleInheritedProperties.orientation == 'vertical') {
+                if (orientation == 'vertical') {
 
                     topPos = scrollPos + axisViewportPixelOffset
 
@@ -1249,7 +1259,7 @@ const Cradle = ({
                     
                     headElement.style.paddingBottom = 
                         headcontent.length?
-                            cradleInheritedProperties.gap + 'px':
+                            gap + 'px':
                             0
 
                 } else { // 'horizontal'
@@ -1261,7 +1271,7 @@ const Cradle = ({
 
                     headElement.style.paddingRight = 
                         headcontent.length?
-                            cradleInheritedProperties.gap + 'px':
+                            gap + 'px':
                             0
 
                 }
