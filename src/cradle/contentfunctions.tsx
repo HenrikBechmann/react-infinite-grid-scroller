@@ -158,13 +158,17 @@ export const getShiftInstruction = ({
 
     const intersectrootpos = 
         (orientation == 'vertical')?
-            Math.floor(entry.rootBounds.y):
-            Math.floor(entry.rootBounds.x)
+            // Math.floor(entry.rootBounds.y):
+            // Math.floor(entry.rootBounds.x)
+            entry.rootBounds.y:
+            entry.rootBounds.x
 
     const boundingrootpos =
         (orientation == 'vertical')?
-            Math.floor(viewportBoundingRect.y):
-            Math.floor(viewportBoundingRect.x)
+            // Math.floor(viewportBoundingRect.y):
+            // Math.floor(viewportBoundingRect.x)
+            viewportBoundingRect.y:
+            viewportBoundingRect.x
 
     // this selection is redundant, but documents what's going on
     const rootpos = 
@@ -174,8 +178,10 @@ export const getShiftInstruction = ({
 
     const entrypos = 
         (orientation == 'vertical')?
-            Math.floor(entry.boundingClientRect.y):
-            Math.floor(entry.boundingClientRect.x)
+            // Math.floor(entry.boundingClientRect.y):
+            // Math.floor(entry.boundingClientRect.x)
+            entry.boundingClientRect.y:
+            entry.boundingClientRect.x
 
     const viewportTriggerOffset = entrypos - rootpos
 
