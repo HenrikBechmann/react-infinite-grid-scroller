@@ -511,7 +511,7 @@ export default class ContentHandler {
         
         }
 
-        // -------------------------------[ 6. set css changes ]-------------------------
+        // -------------------------------[ 6. anticipate css changes ]-------------------------
 
         // const axisElement = cradleElements.axisRef.current
         // const headElement = cradleElements.headRef.current
@@ -548,14 +548,16 @@ export default class ContentHandler {
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
-        // the CSS changes had to be moved from here to 'renderupdatedcontent' in useEvent
-        // to avoid double paint in safari. The scrollPos value can change from here to there
-        // and axisPos is paired here for logical consistency.
+        // the CSS changes had to be deferred from here to 'renderupdatedcontent' in useEvent
+        // to avoid double paint (with bad flicker) in Safari. The scrollPos value can change from here to there
+        // and axisViewportPixelOffset is paired here for logical consistency.
         layoutHandler.transientScrollPos = scrollPos
         layoutHandler.transientAxisViewportPixelOffset = axisViewportPixelOffset
 
         // console.log('updateCradleContent: axisViewportPixelOffset, scrollPos, blockScrollPos\n', 
         //     axisViewportPixelOffset, scrollPos, cradlePositionData.blockScrollPos)
+
+        cacheHandler.renderPortalLists()
 
         stateHandler.setCradleState('renderupdatedcontent')
 
