@@ -198,6 +198,11 @@ export default class LayoutHandler {
 
     }
 
+    // to allow transfer of data from updateCradleContent to 'renderupdatedcontent' for avoiding Safari flicker
+    transientScrollPos = 0
+    transientAxisViewportPixelOffset = 0
+    transientAxisReferenceIndex = 0
+
     public elements
 
 }

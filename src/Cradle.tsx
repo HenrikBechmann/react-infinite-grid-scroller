@@ -246,7 +246,7 @@ const Cradle = ({
     // various row counts
     const [
         cradleRowcount, 
-        viewportRowcount, // TODO investigate removing the need for this
+        viewportRowcount,
         listRowcount,
         runwayRowcount,
     ] = useMemo(()=> {
@@ -361,31 +361,19 @@ const Cradle = ({
     // up to date values
     cradleInheritedPropertiesRef.current = {
         // gridSpecs
-        orientation, 
-        gap, 
-        padding, 
-        cellHeight, 
-        cellWidth, 
-        cellMinHeight,
-        cellMinWidth,
-        layout,
+        orientation, gap, padding, layout,
+        cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         // ...rest
-        cache,
-        cacheMax,
+        cache, cacheMax,
         startingIndex, 
         getItem, 
-        placeholder, 
-        placeholderMessages,
+        placeholder, placeholderMessages, usePlaceholder,
         triggerlineOffset,
         scrollerID,
-        usePlaceholder,
         // objects
-        userCallbacks,
-        styles,
-        cacheHandler,
+        userCallbacks, styles, cacheHandler,
         // control values
-        ONAFTERSCROLL_TIMEOUT,
-        MAX_CACHE_OVER_RUN,
+        ONAFTERSCROLL_TIMEOUT, MAX_CACHE_OVER_RUN, 
         scrollerProperties,
 
     }
@@ -393,14 +381,8 @@ const Cradle = ({
     const scrollerPropertiesRef = useRef(null)
     // passed to cellFrame content (user content) if requested
     scrollerPropertiesRef.current = {
-        orientation, 
-        gap, 
-        padding, 
-        cellHeight, 
-        cellWidth,
-        cellMinHeight,
-        cellMinWidth, 
-        layout,
+        orientation, gap, padding, layout,
+        cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         listsize,
         runwayRowcount,
         cache,
@@ -1235,6 +1217,70 @@ const Cradle = ({
             // it is required to integrate changed DOM configurations before 'ready' is displayed
             case 'renderupdatedcontent': { // cycle for DOM update
 
+                // CSS changes moved here from updateCradleContent to avoid Safari double paint (with bad flicker)
+
+                // assemble resources
+                const { cradlePositionData, elements:cradleElements } = layoutHandler
+
+                const axisElement = cradleElements.axisRef.current
+                const headElement = cradleElements.headRef.current
+
+                const headcontent = cradleContent.headModelComponents
+
+
+                const { layout, cellHeight, cellWidth, padding, gap, orientation } = cradleInheritedPropertiesRef.current
+
+                let axisViewportPixelOffset = layoutHandler.transientUpdateAxisViewportPixelOffset // cradlePositionData.targetAxisViewportPixelOffset
+                let scrollPos = layoutHandler.transientUpdateScrollPos // cradlePositionData.blockScrollPos
+
+                // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
+                if (layout == 'uniform') {
+                    const { crosscount } = cradleInternalPropertiesRef.current
+                    const axisReferenceIndex = layoutHandler.transientUpdateAxisReferenceIndex 
+                    const preAxisRows = Math.ceil(axisReferenceIndex/crosscount)
+                    const baseCellLength = 
+                        ((orientation == 'vertical')?
+                            cellHeight:
+                            cellWidth)
+                        + gap
+
+                    const testScrollPos = baseCellLength * preAxisRows + padding - axisViewportPixelOffset
+                    const scrollDiff = testScrollPos - scrollPos
+
+                    if (scrollDiff) {
+                        axisViewportPixelOffset += scrollDiff
+                    }
+                }
+
+                // apply CSS changes
+                let topPos, leftPos // available for debug
+                if (orientation == 'vertical') {
+
+                    topPos = scrollPos + axisViewportPixelOffset
+
+                    axisElement.style.top = topPos + 'px'
+                    axisElement.style.left = 'auto'
+                    
+                    headElement.style.paddingBottom = 
+                        headcontent.length?
+                            gap + 'px':
+                            0
+
+                } else { // 'horizontal'
+
+                    leftPos = scrollPos + axisViewportPixelOffset
+
+                    axisElement.style.top = 'auto'
+                    axisElement.style.left = leftPos + 'px'
+
+                    headElement.style.paddingRight = 
+                        headcontent.length?
+                            gap + 'px':
+                            0
+
+                }
+
+                // load new display data
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
@@ -1247,6 +1293,8 @@ const Cradle = ({
 
             case 'finishupdatedcontent': { // cycle for DOM update
 
+                // cradleContent.headDisplayComponents = cradleContent.headModelComponents
+                // cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
                 // synchronize cache
                 const { cache } = cradleInternalPropertiesRef.current
@@ -1256,21 +1304,28 @@ const Cradle = ({
 
                 }
 
-                cacheHandler.renderPortalLists()
+                // cacheHandler.renderPortalLists() // TODO ??
 
                 const { layout } = cradleInheritedPropertiesRef.current
                 if (layout == 'uniform') {
 
                     // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
-                    interruptHandler.triggerlinesIntersect.connectElements()
-
-                    setCradleState('ready')
+                    setCradleState('reconnectupdatedcontent')
 
                 } else { // 'variable' content requiring reconfiguration
 
                     setCradleState('refreshDOMupdateforvariability')
 
                 }
+
+                break
+            }
+
+            case 'reconnectupdatedcontent': {
+
+                interruptHandler.triggerlinesIntersect.connectElements()
+
+                setCradleState('ready')
 
                 break
             }

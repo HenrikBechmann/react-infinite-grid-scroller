@@ -119,6 +119,8 @@ const CellFrame = ({
     const frameStateRef = useRef(null)
     frameStateRef.current = frameState
 
+    // console.log('frameState',frameState)
+
     // DOM ref
     const frameRef = useRef(null)
     // to track unmount interrupt
@@ -167,7 +169,7 @@ const CellFrame = ({
     },[])
 
     // refresh content if itemID changes
-    useEffect(()=>{
+    useLayoutEffect(()=>{
 
         if (isMountedRef.current) setFrameState('getusercontent')
 
@@ -229,12 +231,12 @@ const CellFrame = ({
 
     // ---------------- [ requestidlecallback config ] ------------------------
 
-    const requestidlecallback = 
+    const requestidlecallback = // requestIdleCallback
         window['requestIdleCallback']?
             window['requestIdleCallback']:
             requestIdleCallback
 
-    const cancelidlecallback = 
+    const cancelidlecallback = // cancelIdleCallback
         window['cancelIdleCallback']?
             window['cancelIdleCallback']:
             cancelIdleCallback

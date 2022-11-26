@@ -511,44 +511,54 @@ export default class ContentHandler {
         
         }
 
-        // -------------------------------[ 6. set css changes ]-------------------------
+        // -------------------------------[ 6. anticipate css changes ]-------------------------
 
-        const axisElement = cradleElements.axisRef.current
-        const headElement = cradleElements.headRef.current
+        // const axisElement = cradleElements.axisRef.current
+        // const headElement = cradleElements.headRef.current
 
-        let topPos, leftPos // available for debug
-        if (cradleInheritedProperties.orientation == 'vertical') {
+        // let topPos, leftPos // available for debug
+        // if (cradleInheritedProperties.orientation == 'vertical') {
 
-            topPos = scrollPos + axisViewportPixelOffset
+        //     topPos = scrollPos + axisViewportPixelOffset
 
-            axisElement.style.top = topPos + 'px'
-            axisElement.style.left = 'auto'
+        //     axisElement.style.top = topPos + 'px'
+        //     axisElement.style.left = 'auto'
             
-            headElement.style.paddingBottom = 
-                headcontent.length?
-                    cradleInheritedProperties.gap + 'px':
-                    0
+        //     headElement.style.paddingBottom = 
+        //         headcontent.length?
+        //             cradleInheritedProperties.gap + 'px':
+        //             0
 
-        } else { // 'horizontal'
+        // } else { // 'horizontal'
 
-            leftPos = scrollPos + axisViewportPixelOffset
+        //     leftPos = scrollPos + axisViewportPixelOffset
 
-            axisElement.style.top = 'auto'
-            axisElement.style.left = leftPos + 'px'
+        //     axisElement.style.top = 'auto'
+        //     axisElement.style.left = leftPos + 'px'
 
-            headElement.style.paddingRight = 
-                headcontent.length?
-                    cradleInheritedProperties.gap + 'px':
-                    0
+        //     headElement.style.paddingRight = 
+        //         headcontent.length?
+        //             cradleInheritedProperties.gap + 'px':
+        //             0
 
-        }
+        // }
 
         const { cradlePositionData } = layoutHandler
 
-        // console.log('updateCradleContent: assign axisViewportPixelOffset, axisReferenceIndex\n',
-        //     axisViewportPixelOffset, axisReferenceIndex)
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
+
+        // the CSS changes had to be deferred from here to 'renderupdatedcontent' in useEvent
+        // to avoid double paint (with bad flicker) in Safari. The scrollPos value can change from here to there
+        // and axisViewportPixelOffset is paired here for logical consistency.
+        layoutHandler.transientUpdateScrollPos = scrollPos
+        layoutHandler.transientUpdateAxisViewportPixelOffset = axisViewportPixelOffset
+        layoutHandler.transientUpdateAxisReferenceIndex = axisReferenceIndex
+
+        // console.log('updateCradleContent: axisViewportPixelOffset, scrollPos, blockScrollPos\n', 
+        //     axisViewportPixelOffset, scrollPos, cradlePositionData.blockScrollPos)
+
+        cacheHandler.renderPortalLists()
 
         stateHandler.setCradleState('renderupdatedcontent')
 
