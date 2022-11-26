@@ -1227,11 +1227,11 @@ const Cradle = ({
 
                 const headcontent = cradleContent.headModelComponents
 
+                const { layout, cellHeight, cellWidth, padding, gap, orientation } = 
+                    cradleInheritedPropertiesRef.current
 
-                const { layout, cellHeight, cellWidth, padding, gap, orientation } = cradleInheritedPropertiesRef.current
-
-                let axisViewportPixelOffset = layoutHandler.transientUpdateAxisViewportPixelOffset // cradlePositionData.targetAxisViewportPixelOffset
-                let scrollPos = layoutHandler.transientUpdateScrollPos // cradlePositionData.blockScrollPos
+                let axisViewportPixelOffset = layoutHandler.transientUpdateAxisViewportPixelOffset
+                let scrollPos = layoutHandler.transientUpdateScrollPos
 
                 // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
                 if (layout == 'uniform') {
@@ -1292,9 +1292,6 @@ const Cradle = ({
             }
 
             case 'finishupdatedcontent': { // cycle for DOM update
-
-                // cradleContent.headDisplayComponents = cradleContent.headModelComponents
-                // cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
                 // synchronize cache
                 const { cache } = cradleInternalPropertiesRef.current
