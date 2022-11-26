@@ -551,9 +551,9 @@ export default class ContentHandler {
         // the CSS changes had to be deferred from here to 'renderupdatedcontent' in useEvent
         // to avoid double paint (with bad flicker) in Safari. The scrollPos value can change from here to there
         // and axisViewportPixelOffset is paired here for logical consistency.
-        layoutHandler.transientScrollPos = scrollPos
-        layoutHandler.transientAxisViewportPixelOffset = axisViewportPixelOffset
-        layoutHandler.transientAxisReferenceIndex = axisReferenceIndex
+        layoutHandler.transientUpdateScrollPos = scrollPos
+        layoutHandler.transientUpdateAxisViewportPixelOffset = axisViewportPixelOffset
+        layoutHandler.transientUpdateAxisReferenceIndex = axisReferenceIndex
 
         // console.log('updateCradleContent: axisViewportPixelOffset, scrollPos, blockScrollPos\n', 
         //     axisViewportPixelOffset, scrollPos, cradlePositionData.blockScrollPos)

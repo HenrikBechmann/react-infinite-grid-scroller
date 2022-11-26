@@ -1230,13 +1230,13 @@ const Cradle = ({
 
                 const { layout, cellHeight, cellWidth, padding, gap, orientation } = cradleInheritedPropertiesRef.current
 
-                let axisViewportPixelOffset = layoutHandler.transientAxisViewportPixelOffset // cradlePositionData.targetAxisViewportPixelOffset
-                let scrollPos = layoutHandler.transientScrollPos // cradlePositionData.blockScrollPos
+                let axisViewportPixelOffset = layoutHandler.transientUpdateAxisViewportPixelOffset // cradlePositionData.targetAxisViewportPixelOffset
+                let scrollPos = layoutHandler.transientUpdateScrollPos // cradlePositionData.blockScrollPos
 
-                // Safari when zoomed drifts. This is a hack to correct that.
+                // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
                 if (layout == 'uniform') {
                     const { crosscount } = cradleInternalPropertiesRef.current
-                    const axisReferenceIndex = layoutHandler.transientAxisReferenceIndex 
+                    const axisReferenceIndex = layoutHandler.transientUpdateAxisReferenceIndex 
                     const preAxisRows = Math.ceil(axisReferenceIndex/crosscount)
                     const baseCellLength = 
                         ((orientation == 'vertical')?
@@ -1250,6 +1250,7 @@ const Cradle = ({
                     if (scrollDiff) {
                         axisViewportPixelOffset += scrollDiff
                     }
+                }
 
                 // apply CSS changes
                 let topPos, leftPos // available for debug
