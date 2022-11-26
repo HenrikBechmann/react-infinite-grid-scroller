@@ -241,7 +241,7 @@ const InfiniteGridScroller = (props) => {
 
     VIEWPORT_RESIZE_TIMEOUT = VIEWPORT_RESIZE_TIMEOUT ?? 250
     ONAFTERSCROLL_TIMEOUT = ONAFTERSCROLL_TIMEOUT ?? 100
-    IDLECALLBACK_TIMEOUT = IDLECALLBACK_TIMEOUT ?? 175
+    IDLECALLBACK_TIMEOUT = IDLECALLBACK_TIMEOUT ?? 250
     VARIABLE_MEASUREMENTS_TIMEOUT = VARIABLE_MEASUREMENTS_TIMEOUT ?? 250
     
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
@@ -335,7 +335,7 @@ const InfiniteGridScroller = (props) => {
 
             gridSpecs = { gridSpecsRef.current }
             styles = { stylesRef.current }
-            scrollerProperties = {scrollerProperties}
+            scrollerProperties = { scrollerProperties }
             scrollerID = { scrollerID }
             VIEWPORT_RESIZE_TIMEOUT = { VIEWPORT_RESIZE_TIMEOUT }
 

@@ -158,13 +158,17 @@ export const getShiftInstruction = ({
 
     const intersectrootpos = 
         (orientation == 'vertical')?
-            Math.floor(entry.rootBounds.y):
-            Math.floor(entry.rootBounds.x)
+            // Math.floor(entry.rootBounds.y):
+            // Math.floor(entry.rootBounds.x)
+            entry.rootBounds.y:
+            entry.rootBounds.x
 
     const boundingrootpos =
         (orientation == 'vertical')?
-            Math.floor(viewportBoundingRect.y):
-            Math.floor(viewportBoundingRect.x)
+            // Math.floor(viewportBoundingRect.y):
+            // Math.floor(viewportBoundingRect.x)
+            viewportBoundingRect.y:
+            viewportBoundingRect.x
 
     // this selection is redundant, but documents what's going on
     const rootpos = 
@@ -174,8 +178,10 @@ export const getShiftInstruction = ({
 
     const entrypos = 
         (orientation == 'vertical')?
-            Math.floor(entry.boundingClientRect.y):
-            Math.floor(entry.boundingClientRect.x)
+            // Math.floor(entry.boundingClientRect.y):
+            // Math.floor(entry.boundingClientRect.x)
+            entry.boundingClientRect.y:
+            entry.boundingClientRect.x
 
     const viewportTriggerOffset = entrypos - rootpos
 
@@ -198,7 +204,6 @@ export const getShiftInstruction = ({
     // since triggers are moved and can share the 0 (zero) offset, an infinite loop can occur
     // between the head and tail triggers. The following short-circuits that.
     // the range (>= -1 && <= 1) is used to accommodate FF mobile (v107.1)
-    // console.log('triggerData', triggerData)
     if (((triggerData.headOffset >= -1) && (triggerData.headOffset <= 1)) || 
         ((triggerData.tailOffset >= -1) && (triggerData.tailOffset <= 1))) {
 
@@ -529,7 +534,6 @@ export const calcContentShift = ({
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
 
-    // console.log('==> calcContentShift: shiftinstruction', shiftinstruction)
     if (shiftinstruction == 'axistailward') { // scrolling down/right
 
         // a. if scrolling the block headward near the start of the list, new cradle row offset and
@@ -591,12 +595,7 @@ export const calcContentShift = ({
 
             cradleReferenceRowshift += tailrowdiff
             newCradleReferenceRowOffset -= tailrowdiff
-            // newAxisViewportPixelOffset 
-            // console.log('--tailrowdiff, cradleReferenceRowshift, newAxisViewportPixelOffset\n', 
-            //     tailrowdiff, cradleReferenceRowshift, newAxisViewportPixelOffset)
-            // if (layout == 'variable') {
-            //     layoutHandler.restoreBaseScrollblockConfig()
-            // }
+
         }
 
     }
