@@ -1226,27 +1226,30 @@ const Cradle = ({
                 const headElement = cradleElements.headRef.current
 
                 const headcontent = cradleContent.headModelComponents
-                // const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
-                const { gap, orientation } = cradleInheritedPropertiesRef.current
 
-                // const measuredScrollPos = 
-                //     (orientation == 'vertical')?
-                //         viewportElement.scrollTop:
-                //         viewportElement.scrollLeft
+
+                const { layout, cellHeight, cellWidth, padding, gap, orientation } = cradleInheritedPropertiesRef.current
 
                 let axisViewportPixelOffset = layoutHandler.transientAxisViewportPixelOffset // cradlePositionData.targetAxisViewportPixelOffset
                 let scrollPos = layoutHandler.transientScrollPos // cradlePositionData.blockScrollPos
 
-                // console.log('renderupdatedcontent: axisViewportPixelOffset, scrollPos\n', 
-                //     axisViewportPixelOffset, scrollPos)
+                // Safari when zoomed drifts. This is a hack to correct that.
+                if (layout == 'uniform') {
+                    const { crosscount } = cradleInternalPropertiesRef.current
+                    const axisReferenceIndex = layoutHandler.transientAxisReferenceIndex 
+                    const preAxisRows = Math.ceil(axisReferenceIndex/crosscount)
+                    const baseCellLength = 
+                        ((orientation == 'vertical')?
+                            cellHeight:
+                            cellWidth)
+                        + gap
 
-                // const scrollPosDiff = scrollPos - measuredScrollPos
+                    const testScrollPos = baseCellLength * preAxisRows + padding - axisViewportPixelOffset
+                    const scrollDiff = testScrollPos - scrollPos
 
-                // axisViewportPixelOffset += scrollPosDiff
-                // scrollPos -= scrollPosDiff
-
-                // console.log('renderupdatedcontent: measuredScrollPos, scrollPos\n',
-                //     measuredScrollPos, scrollPos, scrollPosDiff)
+                    if (scrollDiff) {
+                        axisViewportPixelOffset += scrollDiff
+                    }
 
                 // apply CSS changes
                 let topPos, leftPos // available for debug
@@ -1276,8 +1279,7 @@ const Cradle = ({
 
                 }
 
-                // cacheHandler.renderPortalLists()
-
+                // load new display data
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 

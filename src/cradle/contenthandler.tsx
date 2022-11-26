@@ -553,6 +553,7 @@ export default class ContentHandler {
         // and axisViewportPixelOffset is paired here for logical consistency.
         layoutHandler.transientScrollPos = scrollPos
         layoutHandler.transientAxisViewportPixelOffset = axisViewportPixelOffset
+        layoutHandler.transientAxisReferenceIndex = axisReferenceIndex
 
         // console.log('updateCradleContent: axisViewportPixelOffset, scrollPos, blockScrollPos\n', 
         //     axisViewportPixelOffset, scrollPos, cradlePositionData.blockScrollPos)
