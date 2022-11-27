@@ -268,10 +268,10 @@ export default class ContentHandler {
             axisElement.style.top = top + 'px'
             axisElement.style.left = 'auto'
 
-            headElement.style.paddingBottom = 
+            headElement.style.padding = 
                 headcontentlist.length?
-                    gap + 'px':
-                    0
+                    `${padding}px ${padding}px ${gap}px ${padding}px`:
+                    `${padding}px ${padding}px 0px ${padding}px`
 
         } else { // orientation = 'horizontal'
 
@@ -282,8 +282,8 @@ export default class ContentHandler {
 
             headElement.style.paddingRight = 
                 headcontentlist.length?
-                    gap + 'px':
-                    0
+                    `${padding}px ${gap}px ${padding}px ${padding}px`:
+                    `${padding}px 0px ${padding}px ${padding}px`
 
         }
 
@@ -325,13 +325,13 @@ export default class ContentHandler {
             styles,
             placeholderMessages,
             scrollerProperties, // FOR DEBUG
+            layout, cellHeight, cellWidth, padding, gap
         } = cradleInheritedProperties
 
         const { 
             crosscount,
             listsize,
             // triggerZeroHistoryRef,
-            layout, cellHeight, cellWidth, padding, gap
         } = cradleInternalProperties
 
         const scrollPos = 
@@ -506,10 +506,15 @@ export default class ContentHandler {
             axisElement.style.top = topPos + 'px'
             axisElement.style.left = 'auto'
             
-            headElement.style.paddingBottom = 
+            // headElement.style.paddingBottom = 
+            //     headcontent.length?
+            //         gap + 'px':
+            //         0
+
+            headElement.style.padding = 
                 headcontent.length?
-                    gap + 'px':
-                    0
+                    `${padding}px ${padding}px ${gap}px ${padding}px`:
+                    `${padding}px ${padding}px 0px ${padding}px`
 
         } else { // 'horizontal'
 
@@ -518,16 +523,20 @@ export default class ContentHandler {
             axisElement.style.top = 'auto'
             axisElement.style.left = leftPos + 'px'
 
-            headElement.style.paddingRight = 
-                headcontent.length?
-                    gap + 'px':
-                    0
+            // headElement.style.paddingRight = 
+            //     headcontent.length?
+            //         gap + 'px':
+            //         0
 
+            headElement.style.padding = 
+                headcontent.length?
+                    `${padding}px ${gap}px ${padding}px ${padding}px`:
+                    `${padding}px 0px ${padding}px ${padding}px`
         }
 
-        // load new display data
-        cradleContent.headDisplayComponents = cradleContent.headModelComponents
-        cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
+        // // load new display data
+        // cradleContent.headDisplayComponents = cradleContent.headModelComponents
+        // cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
     }
 

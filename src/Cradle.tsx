@@ -1153,10 +1153,11 @@ const Cradle = ({
 
                 contentHandler.updateCradleContent()
 
-               // update virtual DOM
                 setCradleState('finishupdatedcontent')
 
-                // })
+                // load new display data
+                cradleContent.headDisplayComponents = cradleContent.headModelComponents
+                cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
                 break
 
@@ -1175,7 +1176,7 @@ const Cradle = ({
                 const { layout } = cradleInheritedPropertiesRef.current
                 if (layout == 'uniform') {
 
-                    console.log('connecting trigger elements')
+                    // console.log('connecting trigger elements')
 
                     interruptHandler.triggerlinesIntersect.connectElements()
 
