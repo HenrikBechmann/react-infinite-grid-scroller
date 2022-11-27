@@ -1217,7 +1217,12 @@ const Cradle = ({
             // it is required to integrate changed DOM configurations before 'ready' is displayed
             case 'renderupdatedcontent': { // cycle for DOM update
 
+                const cradleContent = contentHandler.content
+
                 // CSS changes moved here from updateCradleContent to avoid Safari double paint (with bad flicker)
+                // load new display data
+                // cradleContent.headDisplayComponents = cradleContent.headModelComponents
+                // cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
                 // assemble resources
                 const { cradlePositionData, elements:cradleElements } = layoutHandler
