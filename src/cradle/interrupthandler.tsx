@@ -52,8 +52,50 @@ export default class InterruptHandler {
             scrollData.previousupdate = scrollData.currentupdate
             scrollData.currentupdate = scrollData.current
 
-            contentHandler.updateCradleContent(entries,'triggerlinesObserver')
+            const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
 
+            const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current//,
+                // cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
+            
+            const { 
+                orientation, 
+                // cache,
+                // styles,
+                // placeholderMessages,
+                // scrollerProperties, // FOR DEBUG
+            } = cradleInheritedProperties
+
+            // const { 
+            //     crosscount,
+            //     listsize,
+            //     triggerZeroHistoryRef,
+
+            // } = cradleInternalProperties
+
+            const scrollPos = 
+                (orientation == 'vertical')?
+                    viewportElement.scrollTop:
+                    viewportElement.scrollLeft
+
+            const contentLength = 
+                (orientation == 'vertical')?
+                    viewportElement.scrollHeight:
+                    viewportElement.scrollWidth
+
+            const viewportLength = 
+                (orientation == 'vertical')?
+                    viewportElement.offsetHeight:
+                    viewportElement.offsetWidth
+
+            // first abandon option of 3; nothing to do
+            // for browser top or bottom bounce
+
+            // fractional pixels can cause this to fail, hence Math.floor)
+            if ( (scrollPos >= 0) || (Math.floor(scrollPos + viewportLength) <= contentLength)) { 
+
+                contentHandler.updateCradleContent(entries,'triggerlinesObserver')
+
+            }
         }
     }
 

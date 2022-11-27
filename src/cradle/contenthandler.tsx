@@ -342,25 +342,25 @@ export default class ContentHandler {
                 viewportElement.scrollTop:
                 viewportElement.scrollLeft
 
-        const contentLength = 
-            (orientation == 'vertical')?
-                viewportElement.scrollHeight:
-                viewportElement.scrollWidth
+        // const contentLength = 
+        //     (orientation == 'vertical')?
+        //         viewportElement.scrollHeight:
+        //         viewportElement.scrollWidth
 
-        const viewportLength = 
-            (orientation == 'vertical')?
-                viewportElement.offsetHeight:
-                viewportElement.offsetWidth
+        // const viewportLength = 
+        //     (orientation == 'vertical')?
+        //         viewportElement.offsetHeight:
+        //         viewportElement.offsetWidth
 
         // first abandon option of 3; nothing to do
         // for browser top or bottom bounce
 
         // fractional pixels can cause this to fail, hence Math.floor)
-        if ( (scrollPos < 0) || (Math.floor(scrollPos + viewportLength) > contentLength)) { 
+        // if ( (scrollPos < 0) || (Math.floor(scrollPos + viewportLength) > contentLength)) { 
 
-            return
+        //     return
 
-        }
+        // }
 
         const viewportBoundingRect = viewportElement.getBoundingClientRect()
 
