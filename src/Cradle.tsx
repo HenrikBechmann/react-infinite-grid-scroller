@@ -1284,14 +1284,22 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
+                // setTimeout(()=>{
+
                 // update virtual DOM
                 setCradleState('finishupdatedcontent')
+
+                // })
 
                 break
 
             }
 
             case 'finishupdatedcontent': { // cycle for DOM update
+
+                // load new display data
+                // cradleContent.headDisplayComponents = cradleContent.headModelComponents
+                // cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
                 // synchronize cache
                 const { cache } = cradleInternalPropertiesRef.current
@@ -1306,8 +1314,11 @@ const Cradle = ({
                 const { layout } = cradleInheritedPropertiesRef.current
                 if (layout == 'uniform') {
 
+                    interruptHandler.triggerlinesIntersect.connectElements()
+
                     // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
-                    setCradleState('reconnectupdatedcontent')
+                    // setCradleState('reconnectupdatedcontent')
+                    setCradleState('ready')
 
                 } else { // 'variable' content requiring reconfiguration
 
@@ -1318,14 +1329,14 @@ const Cradle = ({
                 break
             }
 
-            case 'reconnectupdatedcontent': {
+            // case 'reconnectupdatedcontent': {
 
-                interruptHandler.triggerlinesIntersect.connectElements()
+            //     interruptHandler.triggerlinesIntersect.connectElements()
 
-                setCradleState('ready')
+            //     setCradleState('ready')
 
-                break
-            }
+            //     break
+            // }
 
             // ---------------------[ adjust scrollblock for set variable content ]--------------
 
@@ -1576,6 +1587,7 @@ const Cradle = ({
                     style = { cradleTailStyle }
                 
                 >
+                
                     {(cradleState != 'setup')?
                         cradleContent.tailDisplayComponents:
                         null
