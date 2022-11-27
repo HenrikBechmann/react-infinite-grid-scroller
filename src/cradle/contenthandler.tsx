@@ -352,8 +352,6 @@ export default class ContentHandler {
                 viewportElement.offsetHeight:
                 viewportElement.offsetWidth
 
-        const viewportBoundingRect = viewportElement.getBoundingClientRect()
-
         // first abandon option of 3; nothing to do
         // for browser top or bottom bounce
 
@@ -363,6 +361,8 @@ export default class ContentHandler {
             return
 
         }
+
+        const viewportBoundingRect = viewportElement.getBoundingClientRect()
 
         // cradle scaffold and user cells
         const cradleElements = layoutHandler.elements
@@ -512,36 +512,6 @@ export default class ContentHandler {
         }
 
         // -------------------------------[ 6. anticipate css changes ]-------------------------
-
-        // const axisElement = cradleElements.axisRef.current
-        // const headElement = cradleElements.headRef.current
-
-        // let topPos, leftPos // available for debug
-        // if (cradleInheritedProperties.orientation == 'vertical') {
-
-        //     topPos = scrollPos + axisViewportPixelOffset
-
-        //     axisElement.style.top = topPos + 'px'
-        //     axisElement.style.left = 'auto'
-            
-        //     headElement.style.paddingBottom = 
-        //         headcontent.length?
-        //             cradleInheritedProperties.gap + 'px':
-        //             0
-
-        // } else { // 'horizontal'
-
-        //     leftPos = scrollPos + axisViewportPixelOffset
-
-        //     axisElement.style.top = 'auto'
-        //     axisElement.style.left = leftPos + 'px'
-
-        //     headElement.style.paddingRight = 
-        //         headcontent.length?
-        //             cradleInheritedProperties.gap + 'px':
-        //             0
-
-        // }
 
         const { cradlePositionData } = layoutHandler
 

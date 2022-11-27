@@ -464,49 +464,73 @@ const Cradle = ({
     The restore scrollPos action must be the first priority to hide these scrollPos adjustments
     from the user.
 */
-    const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
+    
 
-    if (isCacheChange || 
-        ViewportContextProperties.isReparentingRef?.current ||
-        (ViewportContextProperties.isResizing && isCachingUnderway)) { 
+    const restoreScrollPos = () => {
 
-        if (ViewportContextProperties.isReparentingRef?.current) {
+        const { cradlePositionData } = layoutHandler
 
-            ViewportContextProperties.isReparentingRef.current = false // no longer needed
+        const blockScrollPos = cradlePositionData.blockScrollPos
+        const blockXScrollPos = cradlePositionData.blockXScrollPos
+        if (blockScrollPos !== null) {
 
-            parentingTransitionRequiredRef.current = true
+            const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
-        } 
-
-        if (ViewportContextProperties.isResizing) { // caching op is underway, so cancel
-
-            ViewportContextProperties.isResizing = false
-
-        }
-
-        if (isCacheChange) { // into or out of caching
-
-            if (isCachedRef.current && !wasCachedRef.current) { // change into cache
-                
-                interruptHandler.pauseInterrupts()
-
-            }
+            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+            viewportElement[cradlePositionData.blockXScrollProperty] = blockXScrollPos
 
         }
 
     }
 
+    const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
+
+    if (isCacheChange && !isCachedRef.current) {
+        // wasCachedRef.current = false
+        restoreScrollPos()        
+    }
+
+    // if (isCacheChange || 
+    //     ViewportContextProperties.isReparentingRef?.current ||
+    //     (ViewportContextProperties.isResizing && isCachingUnderway)) { 
+
+    //     if (ViewportContextProperties.isReparentingRef?.current) {
+
+    //         ViewportContextProperties.isReparentingRef.current = false // no longer needed
+    //         // restoreScrollPos()
+    //         // parentingTransitionRequiredRef.current = true
+
+    //     } 
+
+    //     if (ViewportContextProperties.isResizing) { // caching op is underway, so cancel
+
+    //         ViewportContextProperties.isResizing = false
+
+    //     }
+
+    //     if (isCacheChange) { // into or out of caching
+
+    //         if (isCachedRef.current && !wasCachedRef.current) { // change into cache
+                
+    //             interruptHandler.pauseInterrupts()
+
+    //         }
+
+    //     }
+
+    // }
+
     // generate state for restoring scrollPos
-    useEffect(()=>{
+    // useEffect(()=>{
 
-        // if is cached, then the next effect (for entering or leaving cache) has another turn
-        if (parentingTransitionRequiredRef.current && !isCachedRef.current) {
+    //     // if is cached, then the next effect (for entering or leaving cache) has another turn
+    //     if (parentingTransitionRequiredRef.current && !isCachedRef.current) {
 
-            parentingTransitionRequiredRef.current = false            
-            setCradleState('parentingtransition')
-        }
+    //         parentingTransitionRequiredRef.current = false            
+    //         setCradleState('parentingtransition')
+    //     }
 
-    },[parentingTransitionRequiredRef.current])
+    // },[parentingTransitionRequiredRef.current])
 
     // change state for entering or leaving cache
     useEffect(()=>{
@@ -521,12 +545,12 @@ const Cradle = ({
 
             wasCachedRef.current = false
 
-            if (parentingTransitionRequiredRef.current) {
+            // if (parentingTransitionRequiredRef.current) {
 
-                parentingTransitionRequiredRef.current = false            
-                setCradleState('parentingtransition')
+            //     parentingTransitionRequiredRef.current = false            
+            //     setCradleState('parentingtransition')
 
-            } else {
+            // } else {
 
                 if (hasBeenRenderedRef.current) {
 
@@ -537,7 +561,7 @@ const Cradle = ({
                     setCradleState('firstrenderfromcache')
 
                 }
-            }
+            // }
 
         }
 
@@ -1026,43 +1050,45 @@ const Cradle = ({
 
             // moving out of cache into visible DOM tree (cellFrame)
             // resets scrollPos (scrollLeft/scrollTop) to last UI value
-            case 'parentingtransition': {
+            // case 'parentingtransition': {
 
-                    const { cradlePositionData } = layoutHandler
+                    // const { cradlePositionData } = layoutHandler
 
-                    const blockScrollPos = cradlePositionData.blockScrollPos
-                    const blockXScrollPos = cradlePositionData.blockXScrollPos
-                    if (blockScrollPos !== null) {
+                    // const blockScrollPos = cradlePositionData.blockScrollPos
+                    // const blockXScrollPos = cradlePositionData.blockXScrollPos
+                    // if (blockScrollPos !== null) {
 
-                        const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
+                    //     const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
-                        viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-                        viewportElement[cradlePositionData.blockXScrollProperty] = blockXScrollPos
+                    //     viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+                    //     viewportElement[cradlePositionData.blockXScrollProperty] = blockXScrollPos
 
-                    }
+                    // }
 
-                    setCradleState('finishparenting')
+                    // restoreScrollPos()
 
-                break
+            //         setCradleState('finishparenting')
 
-            }
+            //     break
 
-            case 'finishparenting':{
+            // }
 
-                interruptHandler.restoreInterrupts()
+            // case 'finishparenting':{
 
-                if (hasBeenRenderedRef.current) {
+            //     interruptHandler.restoreInterrupts()
 
-                    setCradleState('ready')
+            //     if (hasBeenRenderedRef.current) {
 
-                } else {
+            //         setCradleState('ready')
 
-                    setCradleState('firstrenderfromcache')
+            //     } else {
 
-                }
+            //         setCradleState('firstrenderfromcache')
 
-                break
-            }
+            //     }
+
+            //     break
+            // }
 
             case 'startreposition': {
 
@@ -1217,7 +1243,12 @@ const Cradle = ({
             // it is required to integrate changed DOM configurations before 'ready' is displayed
             case 'renderupdatedcontent': { // cycle for DOM update
 
+                const cradleContent = contentHandler.content
+
                 // CSS changes moved here from updateCradleContent to avoid Safari double paint (with bad flicker)
+                // load new display data
+                // cradleContent.headDisplayComponents = cradleContent.headModelComponents
+                // cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
                 // assemble resources
                 const { cradlePositionData, elements:cradleElements } = layoutHandler
@@ -1227,11 +1258,11 @@ const Cradle = ({
 
                 const headcontent = cradleContent.headModelComponents
 
+                const { layout, cellHeight, cellWidth, padding, gap, orientation } = 
+                    cradleInheritedPropertiesRef.current
 
-                const { layout, cellHeight, cellWidth, padding, gap, orientation } = cradleInheritedPropertiesRef.current
-
-                let axisViewportPixelOffset = layoutHandler.transientUpdateAxisViewportPixelOffset // cradlePositionData.targetAxisViewportPixelOffset
-                let scrollPos = layoutHandler.transientUpdateScrollPos // cradlePositionData.blockScrollPos
+                let axisViewportPixelOffset = layoutHandler.transientUpdateAxisViewportPixelOffset
+                let scrollPos = layoutHandler.transientUpdateScrollPos
 
                 // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
                 if (layout == 'uniform') {
@@ -1284,8 +1315,12 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
+                // setTimeout(()=>{
+
                 // update virtual DOM
                 setCradleState('finishupdatedcontent')
+
+                // })
 
                 break
 
@@ -1293,6 +1328,7 @@ const Cradle = ({
 
             case 'finishupdatedcontent': { // cycle for DOM update
 
+                // load new display data
                 // cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 // cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
@@ -1309,8 +1345,11 @@ const Cradle = ({
                 const { layout } = cradleInheritedPropertiesRef.current
                 if (layout == 'uniform') {
 
+                    interruptHandler.triggerlinesIntersect.connectElements()
+
                     // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
-                    setCradleState('reconnectupdatedcontent')
+                    // setCradleState('reconnectupdatedcontent')
+                    setCradleState('ready')
 
                 } else { // 'variable' content requiring reconfiguration
 
@@ -1321,14 +1360,14 @@ const Cradle = ({
                 break
             }
 
-            case 'reconnectupdatedcontent': {
+            // case 'reconnectupdatedcontent': {
 
-                interruptHandler.triggerlinesIntersect.connectElements()
+            //     interruptHandler.triggerlinesIntersect.connectElements()
 
-                setCradleState('ready')
+            //     setCradleState('ready')
 
-                break
-            }
+            //     break
+            // }
 
             // ---------------------[ adjust scrollblock for set variable content ]--------------
 
@@ -1579,6 +1618,7 @@ const Cradle = ({
                     style = { cradleTailStyle }
                 
                 >
+                
                     {(cradleState != 'setup')?
                         cradleContent.tailDisplayComponents:
                         null
