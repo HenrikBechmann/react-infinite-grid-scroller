@@ -512,7 +512,7 @@ export default class ContentHandler {
 
         cacheHandler.renderPortalLists()
 
-        stateHandler.setCradleState('renderupdatedcontent')
+        // stateHandler.setCradleState('renderupdatedcontent')
 
     }
 

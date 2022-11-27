@@ -1243,6 +1243,8 @@ const Cradle = ({
             // it is required to integrate changed DOM configurations before 'ready' is displayed
             case 'renderupdatedcontent': { // cycle for DOM update
 
+                contentHandler.updateCradleContent()
+
                 const cradleContent = contentHandler.content
 
                 // CSS changes moved here from updateCradleContent to avoid Safari double paint (with bad flicker)
