@@ -249,23 +249,20 @@ These properties would rarely be changed.
 
 ### `scrollerProperties` object
 
-the `scrollerProperties` object is requested by user components by initializing a `scrollerProperties` component property to `null`. The property is then instantiated with an object by the system on loading of the component to a CellFrame.
+Cell components can get access to current RIGS properties, by requesting the scrollerProperties object.
 
-Nested RIGS require this property (to be informed when portal reparenting is taking place).
+The `scrollerProperties` object is requested by user components by initializing a `scrollerProperties` component property to `null`. The property is then recognized by rigs and set to the scrollerProperties object by the system on loading of the component to a CellFrame.
 
 the scrollerProperties object contains three properties:
 
 ~~~typescript
 {
-  isReparentingRef,
   cellFrameDataRef,
   scrollerPropertiesRef
 }
 ~~~
 
 Each of these is a _reference_ object, with values found in `propertyRef.current`.
-
-The `isParentingRef.current` property is boolean, where `true` indicates that the component is being 'reparented' (moved from portal cache to a rendered cell). If your component depends on this, then set it back to `false` once you've taken the `true` reading.
 
 The `cellFrameDataRef.current` object contains two properties:
 
@@ -280,7 +277,7 @@ The `scrollerPropertiesRef.current` object contains the following properties, wh
 
 _orientation, gap, padding, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, cache, cacheMax, startingIndex_
 
-It also contains the following properties, which may have been altered from the source values by the scroller:
+It also contains the _crosscount_ property, which is calculated interrnally, and the following properties, which may have been altered from the source values by the scroller:
 
 _runwayRowcount, listsize_
 # Licence
