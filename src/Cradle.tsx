@@ -464,49 +464,73 @@ const Cradle = ({
     The restore scrollPos action must be the first priority to hide these scrollPos adjustments
     from the user.
 */
-    const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
+    
 
-    if (isCacheChange || 
-        ViewportContextProperties.isReparentingRef?.current ||
-        (ViewportContextProperties.isResizing && isCachingUnderway)) { 
+    const restoreScrollPos = () => {
 
-        if (ViewportContextProperties.isReparentingRef?.current) {
+        const { cradlePositionData } = layoutHandler
 
-            ViewportContextProperties.isReparentingRef.current = false // no longer needed
+        const blockScrollPos = cradlePositionData.blockScrollPos
+        const blockXScrollPos = cradlePositionData.blockXScrollPos
+        if (blockScrollPos !== null) {
 
-            parentingTransitionRequiredRef.current = true
+            const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
-        } 
-
-        if (ViewportContextProperties.isResizing) { // caching op is underway, so cancel
-
-            ViewportContextProperties.isResizing = false
-
-        }
-
-        if (isCacheChange) { // into or out of caching
-
-            if (isCachedRef.current && !wasCachedRef.current) { // change into cache
-                
-                interruptHandler.pauseInterrupts()
-
-            }
+            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+            viewportElement[cradlePositionData.blockXScrollProperty] = blockXScrollPos
 
         }
 
     }
 
+    const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
+
+    if (isCacheChange && !isCachedRef.current) {
+        // wasCachedRef.current = false
+        restoreScrollPos()        
+    }
+
+    // if (isCacheChange || 
+    //     ViewportContextProperties.isReparentingRef?.current ||
+    //     (ViewportContextProperties.isResizing && isCachingUnderway)) { 
+
+    //     if (ViewportContextProperties.isReparentingRef?.current) {
+
+    //         ViewportContextProperties.isReparentingRef.current = false // no longer needed
+    //         // restoreScrollPos()
+    //         // parentingTransitionRequiredRef.current = true
+
+    //     } 
+
+    //     if (ViewportContextProperties.isResizing) { // caching op is underway, so cancel
+
+    //         ViewportContextProperties.isResizing = false
+
+    //     }
+
+    //     if (isCacheChange) { // into or out of caching
+
+    //         if (isCachedRef.current && !wasCachedRef.current) { // change into cache
+                
+    //             interruptHandler.pauseInterrupts()
+
+    //         }
+
+    //     }
+
+    // }
+
     // generate state for restoring scrollPos
-    useEffect(()=>{
+    // useEffect(()=>{
 
-        // if is cached, then the next effect (for entering or leaving cache) has another turn
-        if (parentingTransitionRequiredRef.current && !isCachedRef.current) {
+    //     // if is cached, then the next effect (for entering or leaving cache) has another turn
+    //     if (parentingTransitionRequiredRef.current && !isCachedRef.current) {
 
-            parentingTransitionRequiredRef.current = false            
-            setCradleState('parentingtransition')
-        }
+    //         parentingTransitionRequiredRef.current = false            
+    //         setCradleState('parentingtransition')
+    //     }
 
-    },[parentingTransitionRequiredRef.current])
+    // },[parentingTransitionRequiredRef.current])
 
     // change state for entering or leaving cache
     useEffect(()=>{
@@ -521,12 +545,12 @@ const Cradle = ({
 
             wasCachedRef.current = false
 
-            if (parentingTransitionRequiredRef.current) {
+            // if (parentingTransitionRequiredRef.current) {
 
-                parentingTransitionRequiredRef.current = false            
-                setCradleState('parentingtransition')
+            //     parentingTransitionRequiredRef.current = false            
+            //     setCradleState('parentingtransition')
 
-            } else {
+            // } else {
 
                 if (hasBeenRenderedRef.current) {
 
@@ -537,7 +561,7 @@ const Cradle = ({
                     setCradleState('firstrenderfromcache')
 
                 }
-            }
+            // }
 
         }
 
@@ -1026,43 +1050,45 @@ const Cradle = ({
 
             // moving out of cache into visible DOM tree (cellFrame)
             // resets scrollPos (scrollLeft/scrollTop) to last UI value
-            case 'parentingtransition': {
+            // case 'parentingtransition': {
 
-                    const { cradlePositionData } = layoutHandler
+                    // const { cradlePositionData } = layoutHandler
 
-                    const blockScrollPos = cradlePositionData.blockScrollPos
-                    const blockXScrollPos = cradlePositionData.blockXScrollPos
-                    if (blockScrollPos !== null) {
+                    // const blockScrollPos = cradlePositionData.blockScrollPos
+                    // const blockXScrollPos = cradlePositionData.blockXScrollPos
+                    // if (blockScrollPos !== null) {
 
-                        const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
+                    //     const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
-                        viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-                        viewportElement[cradlePositionData.blockXScrollProperty] = blockXScrollPos
+                    //     viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+                    //     viewportElement[cradlePositionData.blockXScrollProperty] = blockXScrollPos
 
-                    }
+                    // }
 
-                    setCradleState('finishparenting')
+                    // restoreScrollPos()
 
-                break
+            //         setCradleState('finishparenting')
 
-            }
+            //     break
 
-            case 'finishparenting':{
+            // }
 
-                interruptHandler.restoreInterrupts()
+            // case 'finishparenting':{
 
-                if (hasBeenRenderedRef.current) {
+            //     interruptHandler.restoreInterrupts()
 
-                    setCradleState('ready')
+            //     if (hasBeenRenderedRef.current) {
 
-                } else {
+            //         setCradleState('ready')
 
-                    setCradleState('firstrenderfromcache')
+            //     } else {
 
-                }
+            //         setCradleState('firstrenderfromcache')
 
-                break
-            }
+            //     }
+
+            //     break
+            // }
 
             case 'startreposition': {
 

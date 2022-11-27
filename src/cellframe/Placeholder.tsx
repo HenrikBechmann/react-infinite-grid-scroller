@@ -42,6 +42,7 @@ const Placeholder = ({
             boxSizing:'border-box',
             height:'100%',
             width:'100%',
+            overflow:'hidden',
         }
         const linerStyles = {
             position:'absolute',
