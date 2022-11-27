@@ -119,8 +119,6 @@ const CellFrame = ({
     const frameStateRef = useRef(null)
     frameStateRef.current = frameState
 
-    // console.log('frameState',frameState)
-
     // DOM ref
     const frameRef = useRef(null)
     // to track unmount interrupt
@@ -254,13 +252,13 @@ const CellFrame = ({
         const newHolderStyles = getContentHolderStyles(layout, orientation, cellMinWidth, cellMinHeight)
 
         if (isMountedRef.current) {
-            // saveStyles(newStyles)
+
             stylesRef.current = newStyles
             holderStylesRef.current = newHolderStyles
+
         }
 
-
-    },[orientation,cellHeight,cellWidth, cellMinHeight, cellMinWidth, layout]) 
+    },[orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout]) 
 
     const portalNodeRef = useRef(null)
 
@@ -269,13 +267,19 @@ const CellFrame = ({
     useLayoutEffect(() => {
 
         switch (frameState) {
+
             case 'setup': {
+
                 setFrameState('working')
+
                 break
+
             }
 
             case 'working': {
+
                 setFrameState('preparing') // delay paint while working
+                
             }
 
             case 'getusercontent': {
