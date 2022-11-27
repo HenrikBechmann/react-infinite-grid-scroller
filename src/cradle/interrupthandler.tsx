@@ -114,14 +114,20 @@ export default class InterruptHandler {
                 // second abandon option of 3; nothing to do
                 if (shiftinstruction != 'none') { 
 
+                    this.shiftinstruction = shiftinstruction
+                    this.triggerViewportReferencePos = triggerViewportReferencePos
                     // contentHandler.updateCradleContent(entries,'triggerlinesObserver', shiftinstruction, triggerViewportReferencePos)
-                    contentHandler.updateCradleContent(shiftinstruction, triggerViewportReferencePos)
+                    // contentHandler.updateCradleContent(shiftinstruction, triggerViewportReferencePos)
+                    contentHandler.updateCradleContent()
 
                 }
 
             }
         }
     }
+
+    shiftinstruction
+    triggerViewportReferencePos
 
     private cradleIntersectionObserverCallback = (entries) => {
 

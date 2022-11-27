@@ -301,7 +301,7 @@ export default class ContentHandler {
 
         // triggerlineEntries, 
         // source = 'notifications',
-        shiftinstruction, triggerViewportReferencePos
+        // shiftinstruction, triggerViewportReferencePos
     ) => {
 
         // ----------------------[ 1. initialize ]-------------------------
@@ -316,6 +316,8 @@ export default class ContentHandler {
             serviceHandler,
             
         } = this.cradleParameters.handlersRef.current
+
+        const {shiftinstruction, triggerViewportReferencePos} = interruptHandler
 
         const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
 
@@ -348,8 +350,8 @@ export default class ContentHandler {
         const cradleElements = layoutHandler.elements
 
         const cradleContent = this.content,
-            modelcontentlist = cradleContent.cradleModelComponents || [],
-            oldAxisReferenceIndex = (cradleContent.tailModelComponents[0]?.props.index || 0)
+            modelcontentlist = cradleContent.cradleModelComponents || []
+            // oldAxisReferenceIndex = (cradleContent.tailModelComponents[0]?.props.index || 0)
 
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
