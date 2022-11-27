@@ -342,26 +342,6 @@ export default class ContentHandler {
                 viewportElement.scrollTop:
                 viewportElement.scrollLeft
 
-        // const contentLength = 
-        //     (orientation == 'vertical')?
-        //         viewportElement.scrollHeight:
-        //         viewportElement.scrollWidth
-
-        // const viewportLength = 
-        //     (orientation == 'vertical')?
-        //         viewportElement.offsetHeight:
-        //         viewportElement.offsetWidth
-
-        // first abandon option of 3; nothing to do
-        // for browser top or bottom bounce
-
-        // fractional pixels can cause this to fail, hence Math.floor)
-        // if ( (scrollPos < 0) || (Math.floor(scrollPos + viewportLength) > contentLength)) { 
-
-        //     return
-
-        // }
-
         const viewportBoundingRect = viewportElement.getBoundingClientRect()
 
         // cradle scaffold and user cells
@@ -375,7 +355,7 @@ export default class ContentHandler {
 
         // --------------------[ 2. get shift instruction ]-----------------------
 
-        const [shiftinstruction, triggerData] = getShiftInstruction({
+        const [shiftinstruction, triggerViewportReferencePos] = getShiftInstruction({
             scrollerID: cradleInheritedProperties.scrollerID,
             orientation,
             triggerlineEntries,
@@ -418,7 +398,7 @@ export default class ContentHandler {
         } = calcContentShift({
 
             shiftinstruction,
-            triggerData,
+            triggerViewportReferencePos,
             scrollPos,
             scrollblockElement:viewportElement.firstChild,
 

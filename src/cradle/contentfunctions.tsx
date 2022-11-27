@@ -247,11 +247,16 @@ export const getShiftInstruction = ({
         }
     }
 
+    const triggerViewportReferencePos = 
+        (shiftinstruction == 'axistailward')? // block is scrolling up or left
+            triggerData.tailOffset: // needs to move down or right toward tail
+            triggerData.headOffset // needs to move up or left toward head
+
     if (shiftinstruction) {
 
         triggerZeroHistory.previousReferenceName = null
 
-        return [shiftinstruction, triggerData]
+        return [shiftinstruction, triggerViewportReferencePos]
 
     }
 
@@ -285,7 +290,7 @@ export const getShiftInstruction = ({
 
     }
 
-    return [shiftinstruction, triggerData]
+    return [shiftinstruction, triggerViewportReferencePos]
 
 }
 
@@ -309,7 +314,7 @@ export const calcContentShift = ({
 
     // direction of change
     shiftinstruction,
-    triggerData,
+    triggerViewportReferencePos,
 
     // positional
     scrollPos,
@@ -381,10 +386,10 @@ export const calcContentShift = ({
     const gridRowAggregateSpans = getGridRowAggregateSpans(gridRowLengths) // count pixels where available
 
     // triggerline position
-    const triggerViewportReferencePos = 
-        (shiftinstruction == 'axistailward')? // block is scrolling up or left
-            triggerData.tailOffset: // needs to move down or right toward tail
-            triggerData.headOffset // needs to move up or left toward head
+    // const triggerViewportReferencePos = 
+    //     (shiftinstruction == 'axistailward')? // block is scrolling up or left
+    //         triggerData.tailOffset: // needs to move down or right toward tail
+    //         triggerData.headOffset // needs to move up or left toward head
 
     const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0),
         previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)
