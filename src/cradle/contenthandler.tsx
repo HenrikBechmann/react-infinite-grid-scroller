@@ -506,11 +506,6 @@ export default class ContentHandler {
             axisElement.style.top = topPos + 'px'
             axisElement.style.left = 'auto'
             
-            // headElement.style.paddingBottom = 
-            //     headcontent.length?
-            //         gap + 'px':
-            //         0
-
             headElement.style.padding = 
                 headcontent.length?
                     `${padding}px ${padding}px ${gap}px ${padding}px`:
@@ -534,9 +529,9 @@ export default class ContentHandler {
                     `${padding}px 0px ${padding}px ${padding}px`
         }
 
-        // // load new display data
-        // cradleContent.headDisplayComponents = cradleContent.headModelComponents
-        // cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
+        // load new display data
+        cradleContent.headDisplayComponents = cradleContent.headModelComponents
+        cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
     }
 

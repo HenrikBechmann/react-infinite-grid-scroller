@@ -1153,11 +1153,11 @@ const Cradle = ({
 
                 contentHandler.updateCradleContent()
 
-                setCradleState('finishupdatedcontent')
-
                 // load new display data
-                cradleContent.headDisplayComponents = cradleContent.headModelComponents
-                cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
+                // cradleContent.headDisplayComponents = cradleContent.headModelComponents
+                // cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
+
+                setCradleState('finishupdatedcontent')
 
                 break
 
