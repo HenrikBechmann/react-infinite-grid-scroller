@@ -11,6 +11,8 @@
     viewportResizing interrupts are handled by viewport
 */
 
+import { getShiftInstruction} from './contentfunctions'
+
 export default class InterruptHandler {
 
     constructor(cradleParameters) {
@@ -54,8 +56,8 @@ export default class InterruptHandler {
 
             const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
 
-            const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current//,
-                // cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
+            const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current,
+                cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
             
             const { 
                 orientation, 
@@ -65,12 +67,12 @@ export default class InterruptHandler {
                 // scrollerProperties, // FOR DEBUG
             } = cradleInheritedProperties
 
-            // const { 
+            const { 
             //     crosscount,
             //     listsize,
-            //     triggerZeroHistoryRef,
+                triggerZeroHistoryRef,
 
-            // } = cradleInternalProperties
+            } = cradleInternalProperties
 
             const scrollPos = 
                 (orientation == 'vertical')?
@@ -93,7 +95,29 @@ export default class InterruptHandler {
             // fractional pixels can cause this to fail, hence Math.floor)
             if ( (scrollPos >= 0) || (Math.floor(scrollPos + viewportLength) <= contentLength)) { 
 
-                contentHandler.updateCradleContent(entries,'triggerlinesObserver')
+                const viewportBoundingRect = viewportElement.getBoundingClientRect()
+
+                const [shiftinstruction, triggerViewportReferencePos] = getShiftInstruction({
+                    scrollerID: cradleInheritedProperties.scrollerID,
+                    orientation,
+                    triggerlineEntries:entries,
+                    triggerlineSpan: layoutHandler.triggerlineSpan,
+
+                    isFirstRowTriggerConfig:layoutHandler.triggercellIsInTail,
+
+                    viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
+
+                    triggerZeroHistoryRef,
+
+                })
+
+                // second abandon option of 3; nothing to do
+                if (shiftinstruction != 'none') { 
+
+                    // contentHandler.updateCradleContent(entries,'triggerlinesObserver', shiftinstruction, triggerViewportReferencePos)
+                    contentHandler.updateCradleContent(shiftinstruction, triggerViewportReferencePos)
+
+                }
 
             }
         }

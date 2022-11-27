@@ -299,9 +299,9 @@ export default class ContentHandler {
 
     public updateCradleContent = (
 
-        triggerlineEntries, 
-        source = 'notifications'
-
+        // triggerlineEntries, 
+        // source = 'notifications',
+        shiftinstruction, triggerViewportReferencePos
     ) => {
 
         // ----------------------[ 1. initialize ]-------------------------
@@ -333,7 +333,7 @@ export default class ContentHandler {
         const { 
             crosscount,
             listsize,
-            triggerZeroHistoryRef,
+            // triggerZeroHistoryRef,
 
         } = cradleInternalProperties
 
@@ -342,7 +342,7 @@ export default class ContentHandler {
                 viewportElement.scrollTop:
                 viewportElement.scrollLeft
 
-        const viewportBoundingRect = viewportElement.getBoundingClientRect()
+        // const viewportBoundingRect = viewportElement.getBoundingClientRect()
 
         // cradle scaffold and user cells
         const cradleElements = layoutHandler.elements
@@ -355,26 +355,26 @@ export default class ContentHandler {
 
         // --------------------[ 2. get shift instruction ]-----------------------
 
-        const [shiftinstruction, triggerViewportReferencePos] = getShiftInstruction({
-            scrollerID: cradleInheritedProperties.scrollerID,
-            orientation,
-            triggerlineEntries,
-            triggerlineSpan: layoutHandler.triggerlineSpan,
+        // const [shiftinstruction, triggerViewportReferencePos] = getShiftInstruction({
+        //     scrollerID: cradleInheritedProperties.scrollerID,
+        //     orientation,
+        //     triggerlineEntries,
+        //     triggerlineSpan: layoutHandler.triggerlineSpan,
 
-            isFirstRowTriggerConfig:layoutHandler.triggercellIsInTail,
+        //     isFirstRowTriggerConfig:layoutHandler.triggercellIsInTail,
 
-            viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
+        //     viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
 
-            triggerZeroHistoryRef,
+        //     triggerZeroHistoryRef,
 
-        })
+        // })
 
         // second abandon option of 3; nothing to do
-        if (shiftinstruction == 'none') { 
+        // if (shiftinstruction == 'none') { 
 
-            return
+        //     return
 
-        }
+        // }
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
