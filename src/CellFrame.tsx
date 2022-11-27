@@ -119,8 +119,6 @@ const CellFrame = ({
     const frameStateRef = useRef(null)
     frameStateRef.current = frameState
 
-    // console.log('frameState',frameState)
-
     // DOM ref
     const frameRef = useRef(null)
     // to track unmount interrupt
@@ -254,28 +252,34 @@ const CellFrame = ({
         const newHolderStyles = getContentHolderStyles(layout, orientation, cellMinWidth, cellMinHeight)
 
         if (isMountedRef.current) {
-            // saveStyles(newStyles)
+
             stylesRef.current = newStyles
             holderStylesRef.current = newHolderStyles
+
         }
 
-
-    },[orientation,cellHeight,cellWidth, cellMinHeight, cellMinWidth, layout]) 
+    },[orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout]) 
 
     const portalNodeRef = useRef(null)
 
-    const isReparentingRef = useRef(false)
+    // const isReparentingRef = useRef(false)
 
     useLayoutEffect(() => {
 
         switch (frameState) {
+
             case 'setup': {
-                setFrameState('working')
+
+                setFrameState('working') // 'getusercontent' will be called
+
                 break
+
             }
 
             case 'working': {
+
                 setFrameState('preparing') // delay paint while working
+                
             }
 
             case 'getusercontent': {
@@ -294,6 +298,7 @@ const CellFrame = ({
                     messageRef.current = placeholderMessagesRef.current.retrieving
 
                     if (isMountedRef.current) {
+
                         // get cache data
                         portalMetadataRef.current = cacheHandler.getPortalMetadata(itemID)
                         // get OutPortal node
@@ -302,7 +307,7 @@ const CellFrame = ({
                         setContainerStyles(
                             portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
                         // notify fetched component that reparenting is underway
-                        portalMetadataRef.current.isReparentingRef.current = true
+                        // portalMetadataRef.current.isReparentingRef.current = true
 
                         setFrameState('retrieved')
 
@@ -312,7 +317,7 @@ const CellFrame = ({
 
                     messageRef.current = placeholderMessagesRef.current.loading
 
-                    setFrameState('fetching')
+                    // setFrameState('fetching')
 
                     // reserve space in the cache
                     cacheHandler.registerRequestedPortal(index)
@@ -361,7 +366,7 @@ const CellFrame = ({
                                 // if usercontent is otherwise disallowed, let error handling deal with it.
                                 let content 
                                 const scrollerProperties = {
-                                    isReparentingRef:null,
+                                    // isReparentingRef:null,
                                     cellFrameDataRef,
                                     scrollerPropertiesRef,
                                 }
@@ -381,7 +386,7 @@ const CellFrame = ({
                                 setContainerStyles(
                                     portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
                                 // make available to user content
-                                scrollerProperties.isReparentingRef = portalMetadataRef.current.isReparentingRef
+                                // scrollerProperties.isReparentingRef = portalMetadataRef.current.isReparentingRef
 
                                 isMountedRef.current && setFrameState('inserting')
 
@@ -446,19 +451,21 @@ const CellFrame = ({
 
     >
 
-            <div data-type = 'contentholder' style = {holderStylesRef.current}> 
-                {(frameState != 'setup') && ((frameState != 'ready')?
+        {(frameState != 'setup')?
+            (<div data-type = 'contentholder' style = {holderStylesRef.current}> 
+                {((frameState != 'ready')?
                 placeholderRef.current:
                 <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
-            </div>
-            {(isTriggercell?
-                triggercellTriggerlinesRef.current:
-                null)}
+            </div>):<div></div>}
+        {(isTriggercell?
+            triggercellTriggerlinesRef.current:
+            null)
+        }
 
     </div>
 
 } // CellFrame
-
+//(frameState != 'setup') && 
 export default CellFrame
 
 // utilities

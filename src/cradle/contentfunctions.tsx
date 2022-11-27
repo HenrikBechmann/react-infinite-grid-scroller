@@ -211,18 +211,7 @@ export const getShiftInstruction = ({
         // usually alternates
         if (triggerZeroHistory.previousReferenceName) {
 
-            // if ((triggerZeroHistory.previousReferenceName == 'headtrigger' && 
-            //         ((triggerData.tailOffset >= -1) && triggerData.tailOffset <=1 )) ||
-            //     (triggerZeroHistory.previousReferenceName == 'tailtrigger' && 
-            //         (triggerData.headOffset >= -1) && (triggerData.headOffset <= 1))) {
-
-                shiftinstruction = 'none'
-
-            // } else {
-
-            //     triggerZeroHistory.previousReferenceName = null
-
-            // }
+            shiftinstruction = 'none'
             
         } else {
 
@@ -247,11 +236,16 @@ export const getShiftInstruction = ({
         }
     }
 
+    const triggerViewportReferencePos = 
+        (shiftinstruction == 'axistailward')? // block is scrolling up or left
+            triggerData.tailOffset: // needs to move down or right toward tail
+            triggerData.headOffset // needs to move up or left toward head
+
     if (shiftinstruction) {
 
         triggerZeroHistory.previousReferenceName = null
 
-        return [shiftinstruction, triggerData]
+        return [shiftinstruction, triggerViewportReferencePos]
 
     }
 
@@ -285,7 +279,7 @@ export const getShiftInstruction = ({
 
     }
 
-    return [shiftinstruction, triggerData]
+    return [shiftinstruction, triggerViewportReferencePos]
 
 }
 
@@ -309,7 +303,7 @@ export const calcContentShift = ({
 
     // direction of change
     shiftinstruction,
-    triggerData,
+    triggerViewportReferencePos,
 
     // positional
     scrollPos,
@@ -379,12 +373,6 @@ export const calcContentShift = ({
     }
 
     const gridRowAggregateSpans = getGridRowAggregateSpans(gridRowLengths) // count pixels where available
-
-    // triggerline position
-    const triggerViewportReferencePos = 
-        (shiftinstruction == 'axistailward')? // block is scrolling up or left
-            triggerData.tailOffset: // needs to move down or right toward tail
-            triggerData.headOffset // needs to move up or left toward head
 
     const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0),
         previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)

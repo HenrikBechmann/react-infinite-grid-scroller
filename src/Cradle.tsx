@@ -166,6 +166,7 @@ const Cradle = ({
     const { viewportDimensions } = ViewportContextProperties // for scrollTracker
     const { height:viewportheight,width:viewportwidth } = getViewportDimensions() // viewportDimensions
 
+    // cache test
     // zero width and height means the component must be in portal (cache) state
     const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) 
 
@@ -464,49 +465,30 @@ const Cradle = ({
     The restore scrollPos action must be the first priority to hide these scrollPos adjustments
     from the user.
 */
-    const isCachingUnderway = (isCachedRef.current || wasCachedRef.current)
+    
 
-    if (isCacheChange || 
-        ViewportContextProperties.isReparentingRef?.current ||
-        (ViewportContextProperties.isResizing && isCachingUnderway)) { 
+    const restoreScrollPos = () => {
 
-        if (ViewportContextProperties.isReparentingRef?.current) {
+        const { cradlePositionData } = layoutHandler
 
-            ViewportContextProperties.isReparentingRef.current = false // no longer needed
+        const blockScrollPos = cradlePositionData.blockScrollPos
+        const blockXScrollPos = cradlePositionData.blockXScrollPos
+        if (blockScrollPos !== null) {
 
-            parentingTransitionRequiredRef.current = true
+            const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
-        } 
-
-        if (ViewportContextProperties.isResizing) { // caching op is underway, so cancel
-
-            ViewportContextProperties.isResizing = false
-
-        }
-
-        if (isCacheChange) { // into or out of caching
-
-            if (isCachedRef.current && !wasCachedRef.current) { // change into cache
-                
-                interruptHandler.pauseInterrupts()
-
-            }
+            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+            viewportElement[cradlePositionData.blockXScrollProperty] = blockXScrollPos
 
         }
 
     }
 
-    // generate state for restoring scrollPos
-    useEffect(()=>{
+    if (isCacheChange && !isCachedRef.current) {
 
-        // if is cached, then the next effect (for entering or leaving cache) has another turn
-        if (parentingTransitionRequiredRef.current && !isCachedRef.current) {
+        restoreScrollPos()        
 
-            parentingTransitionRequiredRef.current = false            
-            setCradleState('parentingtransition')
-        }
-
-    },[parentingTransitionRequiredRef.current])
+    }
 
     // change state for entering or leaving cache
     useEffect(()=>{
@@ -521,22 +503,14 @@ const Cradle = ({
 
             wasCachedRef.current = false
 
-            if (parentingTransitionRequiredRef.current) {
+            if (hasBeenRenderedRef.current) {
 
-                parentingTransitionRequiredRef.current = false            
-                setCradleState('parentingtransition')
+                setCradleState('rerenderfromcache')
 
             } else {
 
-                if (hasBeenRenderedRef.current) {
+                setCradleState('firstrenderfromcache')
 
-                    setCradleState('rerenderfromcache')
-
-                } else {
-
-                    setCradleState('firstrenderfromcache')
-
-                }
             }
 
         }
@@ -1024,46 +998,6 @@ const Cradle = ({
                 break
             }
 
-            // moving out of cache into visible DOM tree (cellFrame)
-            // resets scrollPos (scrollLeft/scrollTop) to last UI value
-            case 'parentingtransition': {
-
-                    const { cradlePositionData } = layoutHandler
-
-                    const blockScrollPos = cradlePositionData.blockScrollPos
-                    const blockXScrollPos = cradlePositionData.blockXScrollPos
-                    if (blockScrollPos !== null) {
-
-                        const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
-
-                        viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-                        viewportElement[cradlePositionData.blockXScrollProperty] = blockXScrollPos
-
-                    }
-
-                    setCradleState('finishparenting')
-
-                break
-
-            }
-
-            case 'finishparenting':{
-
-                interruptHandler.restoreInterrupts()
-
-                if (hasBeenRenderedRef.current) {
-
-                    setCradleState('ready')
-
-                } else {
-
-                    setCradleState('firstrenderfromcache')
-
-                }
-
-                break
-            }
-
             case 'startreposition': {
 
                 const { signals } = interruptHandler
@@ -1217,74 +1151,12 @@ const Cradle = ({
             // it is required to integrate changed DOM configurations before 'ready' is displayed
             case 'renderupdatedcontent': { // cycle for DOM update
 
-                // CSS changes moved here from updateCradleContent to avoid Safari double paint (with bad flicker)
-
-                // assemble resources
-                const { cradlePositionData, elements:cradleElements } = layoutHandler
-
-                const axisElement = cradleElements.axisRef.current
-                const headElement = cradleElements.headRef.current
-
-                const headcontent = cradleContent.headModelComponents
-
-
-                const { layout, cellHeight, cellWidth, padding, gap, orientation } = cradleInheritedPropertiesRef.current
-
-                let axisViewportPixelOffset = layoutHandler.transientUpdateAxisViewportPixelOffset // cradlePositionData.targetAxisViewportPixelOffset
-                let scrollPos = layoutHandler.transientUpdateScrollPos // cradlePositionData.blockScrollPos
-
-                // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
-                if (layout == 'uniform') {
-                    const { crosscount } = cradleInternalPropertiesRef.current
-                    const axisReferenceIndex = layoutHandler.transientUpdateAxisReferenceIndex 
-                    const preAxisRows = Math.ceil(axisReferenceIndex/crosscount)
-                    const baseCellLength = 
-                        ((orientation == 'vertical')?
-                            cellHeight:
-                            cellWidth)
-                        + gap
-
-                    const testScrollPos = baseCellLength * preAxisRows + padding - axisViewportPixelOffset
-                    const scrollDiff = testScrollPos - scrollPos
-
-                    if (scrollDiff) {
-                        axisViewportPixelOffset += scrollDiff
-                    }
-                }
-
-                // apply CSS changes
-                let topPos, leftPos // available for debug
-                if (orientation == 'vertical') {
-
-                    topPos = scrollPos + axisViewportPixelOffset
-
-                    axisElement.style.top = topPos + 'px'
-                    axisElement.style.left = 'auto'
-                    
-                    headElement.style.paddingBottom = 
-                        headcontent.length?
-                            gap + 'px':
-                            0
-
-                } else { // 'horizontal'
-
-                    leftPos = scrollPos + axisViewportPixelOffset
-
-                    axisElement.style.top = 'auto'
-                    axisElement.style.left = leftPos + 'px'
-
-                    headElement.style.paddingRight = 
-                        headcontent.length?
-                            gap + 'px':
-                            0
-
-                }
+                contentHandler.updateCradleContent()
 
                 // load new display data
-                cradleContent.headDisplayComponents = cradleContent.headModelComponents
-                cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
+                // cradleContent.headDisplayComponents = cradleContent.headModelComponents
+                // cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
-                // update virtual DOM
                 setCradleState('finishupdatedcontent')
 
                 break
@@ -1292,9 +1164,6 @@ const Cradle = ({
             }
 
             case 'finishupdatedcontent': { // cycle for DOM update
-
-                // cradleContent.headDisplayComponents = cradleContent.headModelComponents
-                // cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
                 // synchronize cache
                 const { cache } = cradleInternalPropertiesRef.current
@@ -1304,28 +1173,22 @@ const Cradle = ({
 
                 }
 
-                // cacheHandler.renderPortalLists() // TODO ??
-
                 const { layout } = cradleInheritedPropertiesRef.current
                 if (layout == 'uniform') {
 
+                    // console.log('connecting trigger elements')
+
+                    interruptHandler.triggerlinesIntersect.connectElements()
+
                     // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
-                    setCradleState('reconnectupdatedcontent')
+                    // setCradleState('reconnectupdatedcontent')
+                    setCradleState('ready')
 
                 } else { // 'variable' content requiring reconfiguration
 
                     setCradleState('refreshDOMupdateforvariability')
 
                 }
-
-                break
-            }
-
-            case 'reconnectupdatedcontent': {
-
-                interruptHandler.triggerlinesIntersect.connectElements()
-
-                setCradleState('ready')
 
                 break
             }
@@ -1578,6 +1441,7 @@ const Cradle = ({
                     style = { cradleTailStyle }
                 
                 >
+                
                     {(cradleState != 'setup')?
                         cradleContent.tailDisplayComponents:
                         null
