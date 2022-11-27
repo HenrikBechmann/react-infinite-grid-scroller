@@ -336,7 +336,7 @@ export default class ContentHandler {
             crosscount,
             listsize,
             // triggerZeroHistoryRef,
-
+            layout, cellHeight, cellWidth, padding, gap
         } = cradleInternalProperties
 
         const scrollPos = 
@@ -395,7 +395,7 @@ export default class ContentHandler {
             listEndChangeCount,
 
             // pixels
-            newAxisViewportPixelOffset:axisViewportPixelOffset, 
+            newAxisViewportPixelOffset, //:axisViewportPixelOffset, 
 
         } = calcContentShift({
 
@@ -411,6 +411,8 @@ export default class ContentHandler {
             // layoutHandler,
 
         })
+
+        let axisViewportPixelOffset = newAxisViewportPixelOffset
 
         // third abandon option of 3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) { // can happen first row
@@ -493,7 +495,7 @@ export default class ContentHandler {
         
         }
 
-        // -------------------------------[ 6. anticipate css changes ]-------------------------
+        // -------------------------------[ 6. css changes ]-------------------------
 
         const { cradlePositionData } = layoutHandler
 
@@ -503,14 +505,87 @@ export default class ContentHandler {
         // the CSS changes had to be deferred from here to 'renderupdatedcontent' in useEvent
         // to avoid double paint (with bad flicker) in Safari. The scrollPos value can change from here to there
         // and axisViewportPixelOffset is paired here for logical consistency.
-        layoutHandler.transientUpdateScrollPos = scrollPos
-        layoutHandler.transientUpdateAxisViewportPixelOffset = axisViewportPixelOffset
-        layoutHandler.transientUpdateAxisReferenceIndex = axisReferenceIndex
+        // layoutHandler.transientUpdateScrollPos = scrollPos
+        // layoutHandler.transientUpdateAxisViewportPixelOffset = axisViewportPixelOffset
+        // layoutHandler.transientUpdateAxisReferenceIndex = axisReferenceIndex
 
         // console.log('updateCradleContent: axisViewportPixelOffset, scrollPos, blockScrollPos\n', 
         //     axisViewportPixelOffset, scrollPos, cradlePositionData.blockScrollPos)
 
         cacheHandler.renderPortalLists()
+
+
+        // const cradleContent = contentHandler.content
+
+        // CSS changes moved here from updateCradleContent to avoid Safari double paint (with bad flicker)
+        // load new display data
+        // cradleContent.headDisplayComponents = cradleContent.headModelComponents
+        // cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
+
+        // assemble resources
+        // const { cradlePositionData, elements:cradleElements } = layoutHandler
+
+        const axisElement = cradleElements.axisRef.current
+        const headElement = cradleElements.headRef.current
+
+        // const headcontent = cradleContent.headModelComponents
+
+        // const { layout, cellHeight, cellWidth, padding, gap, orientation } = 
+        //     cradleInheritedProperties.current
+
+        // let axisViewportPixelOffset = layoutHandler.transientUpdateAxisViewportPixelOffset
+        // let scrollPos = layoutHandler.transientUpdateScrollPos
+
+        // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
+        if (layout == 'uniform') {
+            // const { crosscount } = cradleInternalPropertiesRef.current
+            const axisReferenceIndex = layoutHandler.transientUpdateAxisReferenceIndex 
+            const preAxisRows = Math.ceil(axisReferenceIndex/crosscount)
+            const baseCellLength = 
+                ((orientation == 'vertical')?
+                    cellHeight:
+                    cellWidth)
+                + gap
+
+            const testScrollPos = baseCellLength * preAxisRows + padding - axisViewportPixelOffset
+            const scrollDiff = testScrollPos - scrollPos
+
+            if (scrollDiff) {
+                axisViewportPixelOffset += scrollDiff
+            }
+        }
+
+        // apply CSS changes
+        let topPos, leftPos // available for debug
+        if (orientation == 'vertical') {
+
+            topPos = scrollPos + axisViewportPixelOffset
+
+            axisElement.style.top = topPos + 'px'
+            axisElement.style.left = 'auto'
+            
+            headElement.style.paddingBottom = 
+                headcontent.length?
+                    gap + 'px':
+                    0
+
+        } else { // 'horizontal'
+
+            leftPos = scrollPos + axisViewportPixelOffset
+
+            axisElement.style.top = 'auto'
+            axisElement.style.left = leftPos + 'px'
+
+            headElement.style.paddingRight = 
+                headcontent.length?
+                    gap + 'px':
+                    0
+
+        }
+
+        // load new display data
+        cradleContent.headDisplayComponents = cradleContent.headModelComponents
+        cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
         // stateHandler.setCradleState('renderupdatedcontent')
 

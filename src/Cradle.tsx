@@ -182,7 +182,7 @@ const Cradle = ({
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) {
-        console.log('==> cradleState','-'+scrollerID+'-', cradleState)
+        // console.log('==> cradleState','-'+scrollerID+'-', cradleState)
         // console.log('-- index',~'+scrollerProperties?.cellFrameDataRef.current.index+'~')
     // }
 
@@ -1245,77 +1245,77 @@ const Cradle = ({
 
                 contentHandler.updateCradleContent()
 
-                const cradleContent = contentHandler.content
+                // const cradleContent = contentHandler.content
 
-                // CSS changes moved here from updateCradleContent to avoid Safari double paint (with bad flicker)
-                // load new display data
+                // // CSS changes moved here from updateCradleContent to avoid Safari double paint (with bad flicker)
+                // // load new display data
+                // // cradleContent.headDisplayComponents = cradleContent.headModelComponents
+                // // cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
+
+                // // assemble resources
+                // const { cradlePositionData, elements:cradleElements } = layoutHandler
+
+                // const axisElement = cradleElements.axisRef.current
+                // const headElement = cradleElements.headRef.current
+
+                // const headcontent = cradleContent.headModelComponents
+
+                // const { layout, cellHeight, cellWidth, padding, gap, orientation } = 
+                //     cradleInheritedPropertiesRef.current
+
+                // let axisViewportPixelOffset = layoutHandler.transientUpdateAxisViewportPixelOffset
+                // let scrollPos = layoutHandler.transientUpdateScrollPos
+
+                // // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
+                // if (layout == 'uniform') {
+                //     const { crosscount } = cradleInternalPropertiesRef.current
+                //     const axisReferenceIndex = layoutHandler.transientUpdateAxisReferenceIndex 
+                //     const preAxisRows = Math.ceil(axisReferenceIndex/crosscount)
+                //     const baseCellLength = 
+                //         ((orientation == 'vertical')?
+                //             cellHeight:
+                //             cellWidth)
+                //         + gap
+
+                //     const testScrollPos = baseCellLength * preAxisRows + padding - axisViewportPixelOffset
+                //     const scrollDiff = testScrollPos - scrollPos
+
+                //     if (scrollDiff) {
+                //         axisViewportPixelOffset += scrollDiff
+                //     }
+                // }
+
+                // // apply CSS changes
+                // let topPos, leftPos // available for debug
+                // if (orientation == 'vertical') {
+
+                //     topPos = scrollPos + axisViewportPixelOffset
+
+                //     axisElement.style.top = topPos + 'px'
+                //     axisElement.style.left = 'auto'
+                    
+                //     headElement.style.paddingBottom = 
+                //         headcontent.length?
+                //             gap + 'px':
+                //             0
+
+                // } else { // 'horizontal'
+
+                //     leftPos = scrollPos + axisViewportPixelOffset
+
+                //     axisElement.style.top = 'auto'
+                //     axisElement.style.left = leftPos + 'px'
+
+                //     headElement.style.paddingRight = 
+                //         headcontent.length?
+                //             gap + 'px':
+                //             0
+
+                // }
+
+                // // load new display data
                 // cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 // cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
-
-                // assemble resources
-                const { cradlePositionData, elements:cradleElements } = layoutHandler
-
-                const axisElement = cradleElements.axisRef.current
-                const headElement = cradleElements.headRef.current
-
-                const headcontent = cradleContent.headModelComponents
-
-                const { layout, cellHeight, cellWidth, padding, gap, orientation } = 
-                    cradleInheritedPropertiesRef.current
-
-                let axisViewportPixelOffset = layoutHandler.transientUpdateAxisViewportPixelOffset
-                let scrollPos = layoutHandler.transientUpdateScrollPos
-
-                // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
-                if (layout == 'uniform') {
-                    const { crosscount } = cradleInternalPropertiesRef.current
-                    const axisReferenceIndex = layoutHandler.transientUpdateAxisReferenceIndex 
-                    const preAxisRows = Math.ceil(axisReferenceIndex/crosscount)
-                    const baseCellLength = 
-                        ((orientation == 'vertical')?
-                            cellHeight:
-                            cellWidth)
-                        + gap
-
-                    const testScrollPos = baseCellLength * preAxisRows + padding - axisViewportPixelOffset
-                    const scrollDiff = testScrollPos - scrollPos
-
-                    if (scrollDiff) {
-                        axisViewportPixelOffset += scrollDiff
-                    }
-                }
-
-                // apply CSS changes
-                let topPos, leftPos // available for debug
-                if (orientation == 'vertical') {
-
-                    topPos = scrollPos + axisViewportPixelOffset
-
-                    axisElement.style.top = topPos + 'px'
-                    axisElement.style.left = 'auto'
-                    
-                    headElement.style.paddingBottom = 
-                        headcontent.length?
-                            gap + 'px':
-                            0
-
-                } else { // 'horizontal'
-
-                    leftPos = scrollPos + axisViewportPixelOffset
-
-                    axisElement.style.top = 'auto'
-                    axisElement.style.left = leftPos + 'px'
-
-                    headElement.style.paddingRight = 
-                        headcontent.length?
-                            gap + 'px':
-                            0
-
-                }
-
-                // load new display data
-                cradleContent.headDisplayComponents = cradleContent.headModelComponents
-                cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
                 // setTimeout(()=>{
 
