@@ -518,11 +518,6 @@ export default class ContentHandler {
             axisElement.style.top = 'auto'
             axisElement.style.left = leftPos + 'px'
 
-            // headElement.style.paddingRight = 
-            //     headcontent.length?
-            //         gap + 'px':
-            //         0
-
             headElement.style.padding = 
                 headcontent.length?
                     `${padding}px ${gap}px ${padding}px ${padding}px`:
