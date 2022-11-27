@@ -175,7 +175,7 @@ export default class InterruptHandler {
 
             if (
 
-                    !ViewportContextProperties.isReparentingRef?.current &&
+                    // !ViewportContextProperties.isReparentingRef?.current &&
 
                     !['repositioningRender','repositioningContinuation','finishreposition',
                         'renderupdatedcontent','finishupdatedcontent',

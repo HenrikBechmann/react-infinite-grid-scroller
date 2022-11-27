@@ -297,12 +297,7 @@ export default class ContentHandler {
     // typically called for scroll action, but can also be called if the triggerLineCell changes
     // size with variant layout.
 
-    public updateCradleContent = (
-
-        // triggerlineEntries, 
-        // source = 'notifications',
-        // shiftinstruction, triggerViewportReferencePos
-    ) => {
+    public updateCradleContent = () => {
 
         // ----------------------[ 1. initialize ]-------------------------
 
@@ -355,29 +350,6 @@ export default class ContentHandler {
 
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
-        // --------------------[ 2. get shift instruction ]-----------------------
-
-        // const [shiftinstruction, triggerViewportReferencePos] = getShiftInstruction({
-        //     scrollerID: cradleInheritedProperties.scrollerID,
-        //     orientation,
-        //     triggerlineEntries,
-        //     triggerlineSpan: layoutHandler.triggerlineSpan,
-
-        //     isFirstRowTriggerConfig:layoutHandler.triggercellIsInTail,
-
-        //     viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
-
-        //     triggerZeroHistoryRef,
-
-        // })
-
-        // second abandon option of 3; nothing to do
-        // if (shiftinstruction == 'none') { 
-
-        //     return
-
-        // }
-
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         // cradle properties
@@ -395,7 +367,7 @@ export default class ContentHandler {
             listEndChangeCount,
 
             // pixels
-            newAxisViewportPixelOffset, //:axisViewportPixelOffset, 
+            newAxisViewportPixelOffset, 
 
         } = calcContentShift({
 
@@ -408,7 +380,6 @@ export default class ContentHandler {
             cradleInternalProperties,
             cradleContent,
             cradleElements,
-            // layoutHandler,
 
         })
 
@@ -502,39 +473,10 @@ export default class ContentHandler {
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
-        // the CSS changes had to be deferred from here to 'renderupdatedcontent' in useEvent
-        // to avoid double paint (with bad flicker) in Safari. The scrollPos value can change from here to there
-        // and axisViewportPixelOffset is paired here for logical consistency.
-        // layoutHandler.transientUpdateScrollPos = scrollPos
-        // layoutHandler.transientUpdateAxisViewportPixelOffset = axisViewportPixelOffset
-        // layoutHandler.transientUpdateAxisReferenceIndex = axisReferenceIndex
-
-        // console.log('updateCradleContent: axisViewportPixelOffset, scrollPos, blockScrollPos\n', 
-        //     axisViewportPixelOffset, scrollPos, cradlePositionData.blockScrollPos)
-
         cacheHandler.renderPortalLists()
-
-
-        // const cradleContent = contentHandler.content
-
-        // CSS changes moved here from updateCradleContent to avoid Safari double paint (with bad flicker)
-        // load new display data
-        // cradleContent.headDisplayComponents = cradleContent.headModelComponents
-        // cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
-
-        // assemble resources
-        // const { cradlePositionData, elements:cradleElements } = layoutHandler
 
         const axisElement = cradleElements.axisRef.current
         const headElement = cradleElements.headRef.current
-
-        // const headcontent = cradleContent.headModelComponents
-
-        // const { layout, cellHeight, cellWidth, padding, gap, orientation } = 
-        //     cradleInheritedProperties.current
-
-        // let axisViewportPixelOffset = layoutHandler.transientUpdateAxisViewportPixelOffset
-        // let scrollPos = layoutHandler.transientUpdateScrollPos
 
         // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
         if (layout == 'uniform') {
@@ -586,8 +528,6 @@ export default class ContentHandler {
         // load new display data
         cradleContent.headDisplayComponents = cradleContent.headModelComponents
         cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
-
-        // stateHandler.setCradleState('renderupdatedcontent')
 
     }
 
