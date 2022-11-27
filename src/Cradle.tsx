@@ -182,7 +182,7 @@ const Cradle = ({
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) {
-        // console.log('==> cradleState','-'+scrollerID+'-', cradleState)
+        console.log('==> cradleState','-'+scrollerID+'-', cradleState)
         // console.log('-- index',~'+scrollerProperties?.cellFrameDataRef.current.index+'~')
     // }
 
@@ -1346,6 +1346,8 @@ const Cradle = ({
 
                 const { layout } = cradleInheritedPropertiesRef.current
                 if (layout == 'uniform') {
+
+                    console.log('connecting trigger elements')
 
                     interruptHandler.triggerlinesIntersect.connectElements()
 
