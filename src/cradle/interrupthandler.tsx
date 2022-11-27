@@ -11,6 +11,8 @@
     viewportResizing interrupts are handled by viewport
 */
 
+import { getShiftInstruction} from './contentfunctions'
+
 export default class InterruptHandler {
 
     constructor(cradleParameters) {
@@ -52,10 +54,81 @@ export default class InterruptHandler {
             scrollData.previousupdate = scrollData.currentupdate
             scrollData.currentupdate = scrollData.current
 
-            contentHandler.updateCradleContent(entries,'triggerlinesObserver')
+            const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
 
+            const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current,
+                cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
+            
+            const { 
+                orientation, 
+                // cache,
+                // styles,
+                // placeholderMessages,
+                // scrollerProperties, // FOR DEBUG
+            } = cradleInheritedProperties
+
+            const { 
+            //     crosscount,
+            //     listsize,
+                triggerZeroHistoryRef,
+
+            } = cradleInternalProperties
+
+            const scrollPos = 
+                (orientation == 'vertical')?
+                    viewportElement.scrollTop:
+                    viewportElement.scrollLeft
+
+            const contentLength = 
+                (orientation == 'vertical')?
+                    viewportElement.scrollHeight:
+                    viewportElement.scrollWidth
+
+            const viewportLength = 
+                (orientation == 'vertical')?
+                    viewportElement.offsetHeight:
+                    viewportElement.offsetWidth
+
+            // first abandon option of 3; nothing to do
+            // for browser top or bottom bounce
+
+            // fractional pixels can cause this to fail, hence Math.floor)
+            if ( (scrollPos >= 0) || (Math.floor(scrollPos + viewportLength) <= contentLength)) { 
+
+                const viewportBoundingRect = viewportElement.getBoundingClientRect()
+
+                const [shiftinstruction, triggerViewportReferencePos] = getShiftInstruction({
+                    scrollerID: cradleInheritedProperties.scrollerID,
+                    orientation,
+                    triggerlineEntries:entries,
+                    triggerlineSpan: layoutHandler.triggerlineSpan,
+
+                    isFirstRowTriggerConfig:layoutHandler.triggercellIsInTail,
+
+                    viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
+
+                    triggerZeroHistoryRef,
+
+                })
+
+                // second abandon option of 3; nothing to do
+                if (shiftinstruction != 'none') { 
+
+                    this.shiftinstruction = shiftinstruction
+                    this.triggerViewportReferencePos = triggerViewportReferencePos
+                    // contentHandler.updateCradleContent(entries,'triggerlinesObserver', shiftinstruction, triggerViewportReferencePos)
+                    // contentHandler.updateCradleContent(shiftinstruction, triggerViewportReferencePos)
+                    // contentHandler.updateCradleContent()
+                    stateHandler.setCradleState('renderupdatedcontent')
+
+                }
+
+            }
         }
     }
+
+    shiftinstruction
+    triggerViewportReferencePos
 
     private cradleIntersectionObserverCallback = (entries) => {
 
@@ -102,7 +175,7 @@ export default class InterruptHandler {
 
             if (
 
-                    !ViewportContextProperties.isReparentingRef?.current &&
+                    // !ViewportContextProperties.isReparentingRef?.current &&
 
                     !['repositioningRender','repositioningContinuation','finishreposition',
                         'renderupdatedcontent','finishupdatedcontent',

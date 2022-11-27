@@ -32,11 +32,7 @@
         - your component is in cache when both width and height = 0
         - your component is out of cache when both width and height are back to normal
         - if you create an empty 'scrollerProperties' property for your component, CellFrame will
-            set it to an object containing isReparentingRef, scrollerPropertiesRef and cellFrameDataRef
-        - isReparentingRef.current provides an up-to-date boolean indicating whether the component is 
-            currently being 'reparented' into the real DOM. Set the value back to false once you've 
-            detected it. After reparenting (after the width and height are back to normal) is when
-            you should restore scrollPos (scrollTop or scrollLeft) to what it was.
+            set it to an object containing scrollerPropertiesRef and cellFrameDataRef
         - if your component does not scroll, there should be no issues.
 
     Note that in the following, scrollerID is provided as a paramter to some functions for debug purposes, but not used.
@@ -910,9 +906,9 @@ export class CacheHandler {
 
         const portalMetadata = {
             portalNode,
-            isReparentingRef:{
-                current:false,
-            },
+            // isReparentingRef:{
+            //     current:false,
+            // },
             index,
             itemID,
             scrollerProperties,
@@ -970,7 +966,7 @@ export class CacheHandler {
 
             let content 
             const scrollerProperties = {
-                isReparentingRef:null,
+                // isReparentingRef:null,
                 scrollerPropertiesRef,
             }
             if (usercontent.props.hasOwnProperty('scrollerProperties')) {
@@ -982,7 +978,7 @@ export class CacheHandler {
             const portalData = 
                 await this.createPortal(content, index, itemID, scrollerProperties, true) // true = isPreload
             // make available to user content
-            scrollerProperties.isReparentingRef = portalData.isReparentingRef
+            // scrollerProperties.isReparentingRef = portalData.isReparentingRef
 
         } else {
 

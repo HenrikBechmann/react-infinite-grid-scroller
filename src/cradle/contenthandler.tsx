@@ -268,10 +268,10 @@ export default class ContentHandler {
             axisElement.style.top = top + 'px'
             axisElement.style.left = 'auto'
 
-            headElement.style.paddingBottom = 
+            headElement.style.padding = 
                 headcontentlist.length?
-                    gap + 'px':
-                    0
+                    `${padding}px ${padding}px ${gap}px ${padding}px`:
+                    `${padding}px ${padding}px 0px ${padding}px`
 
         } else { // orientation = 'horizontal'
 
@@ -282,8 +282,8 @@ export default class ContentHandler {
 
             headElement.style.paddingRight = 
                 headcontentlist.length?
-                    gap + 'px':
-                    0
+                    `${padding}px ${gap}px ${padding}px ${padding}px`:
+                    `${padding}px 0px ${padding}px ${padding}px`
 
         }
 
@@ -297,12 +297,7 @@ export default class ContentHandler {
     // typically called for scroll action, but can also be called if the triggerLineCell changes
     // size with variant layout.
 
-    public updateCradleContent = (
-
-        triggerlineEntries, 
-        source = 'notifications'
-
-    ) => {
+    public updateCradleContent = () => {
 
         // ----------------------[ 1. initialize ]-------------------------
 
@@ -317,6 +312,8 @@ export default class ContentHandler {
             
         } = this.cradleParameters.handlersRef.current
 
+        const {shiftinstruction, triggerViewportReferencePos} = interruptHandler
+
         const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
 
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current,
@@ -328,13 +325,13 @@ export default class ContentHandler {
             styles,
             placeholderMessages,
             scrollerProperties, // FOR DEBUG
+            layout, cellHeight, cellWidth, padding, gap
         } = cradleInheritedProperties
 
         const { 
             crosscount,
             listsize,
-            triggerZeroHistoryRef,
-
+            // triggerZeroHistoryRef,
         } = cradleInternalProperties
 
         const scrollPos = 
@@ -342,59 +339,16 @@ export default class ContentHandler {
                 viewportElement.scrollTop:
                 viewportElement.scrollLeft
 
-        const contentLength = 
-            (orientation == 'vertical')?
-                viewportElement.scrollHeight:
-                viewportElement.scrollWidth
-
-        const viewportLength = 
-            (orientation == 'vertical')?
-                viewportElement.offsetHeight:
-                viewportElement.offsetWidth
-
-        // first abandon option of 3; nothing to do
-        // for browser top or bottom bounce
-
-        // fractional pixels can cause this to fail, hence Math.floor)
-        if ( (scrollPos < 0) || (Math.floor(scrollPos + viewportLength) > contentLength)) { 
-
-            return
-
-        }
-
-        const viewportBoundingRect = viewportElement.getBoundingClientRect()
+        // const viewportBoundingRect = viewportElement.getBoundingClientRect()
 
         // cradle scaffold and user cells
         const cradleElements = layoutHandler.elements
 
         const cradleContent = this.content,
-            modelcontentlist = cradleContent.cradleModelComponents || [],
-            oldAxisReferenceIndex = (cradleContent.tailModelComponents[0]?.props.index || 0)
+            modelcontentlist = cradleContent.cradleModelComponents || []
+            // oldAxisReferenceIndex = (cradleContent.tailModelComponents[0]?.props.index || 0)
 
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
-
-        // --------------------[ 2. get shift instruction ]-----------------------
-
-        const [shiftinstruction, triggerData] = getShiftInstruction({
-            scrollerID: cradleInheritedProperties.scrollerID,
-            orientation,
-            triggerlineEntries,
-            triggerlineSpan: layoutHandler.triggerlineSpan,
-
-            isFirstRowTriggerConfig:layoutHandler.triggercellIsInTail,
-
-            viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
-
-            triggerZeroHistoryRef,
-
-        })
-
-        // second abandon option of 3; nothing to do
-        if (shiftinstruction == 'none') { 
-
-            return
-
-        }
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
@@ -413,12 +367,12 @@ export default class ContentHandler {
             listEndChangeCount,
 
             // pixels
-            newAxisViewportPixelOffset:axisViewportPixelOffset, 
+            newAxisViewportPixelOffset, 
 
         } = calcContentShift({
 
             shiftinstruction,
-            triggerData,
+            triggerViewportReferencePos,
             scrollPos,
             scrollblockElement:viewportElement.firstChild,
 
@@ -426,9 +380,10 @@ export default class ContentHandler {
             cradleInternalProperties,
             cradleContent,
             cradleElements,
-            // layoutHandler,
 
         })
+
+        let axisViewportPixelOffset = newAxisViewportPixelOffset
 
         // third abandon option of 3; nothing to do
         if ((axisItemShift == 0 && cradleItemShift == 0)) { // can happen first row
@@ -511,26 +466,67 @@ export default class ContentHandler {
         
         }
 
-        // -------------------------------[ 6. anticipate css changes ]-------------------------
+        // -------------------------------[ 6. css changes ]-------------------------
 
         const { cradlePositionData } = layoutHandler
 
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
-        // the CSS changes had to be deferred from here to 'renderupdatedcontent' in useEvent
-        // to avoid double paint (with bad flicker) in Safari. The scrollPos value can change from here to there
-        // and axisViewportPixelOffset is paired here for logical consistency.
-        layoutHandler.transientUpdateScrollPos = scrollPos
-        layoutHandler.transientUpdateAxisViewportPixelOffset = axisViewportPixelOffset
-        layoutHandler.transientUpdateAxisReferenceIndex = axisReferenceIndex
-
-        // console.log('updateCradleContent: axisViewportPixelOffset, scrollPos, blockScrollPos\n', 
-        //     axisViewportPixelOffset, scrollPos, cradlePositionData.blockScrollPos)
-
         cacheHandler.renderPortalLists()
 
-        stateHandler.setCradleState('renderupdatedcontent')
+        const axisElement = cradleElements.axisRef.current
+        const headElement = cradleElements.headRef.current
+
+        // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
+        if (layout == 'uniform') {
+            // const { crosscount } = cradleInternalPropertiesRef.current
+            const axisReferenceIndex = layoutHandler.transientUpdateAxisReferenceIndex 
+            const preAxisRows = Math.ceil(axisReferenceIndex/crosscount)
+            const baseCellLength = 
+                ((orientation == 'vertical')?
+                    cellHeight:
+                    cellWidth)
+                + gap
+
+            const testScrollPos = baseCellLength * preAxisRows + padding - axisViewportPixelOffset
+            const scrollDiff = testScrollPos - scrollPos
+
+            if (scrollDiff) {
+                axisViewportPixelOffset += scrollDiff
+            }
+        }
+
+        // apply CSS changes
+        let topPos, leftPos // available for debug
+        if (orientation == 'vertical') {
+
+            topPos = scrollPos + axisViewportPixelOffset
+
+            axisElement.style.top = topPos + 'px'
+            axisElement.style.left = 'auto'
+            
+            headElement.style.padding = 
+                headcontent.length?
+                    `${padding}px ${padding}px ${gap}px ${padding}px`:
+                    `${padding}px ${padding}px 0px ${padding}px`
+
+        } else { // 'horizontal'
+
+            leftPos = scrollPos + axisViewportPixelOffset
+
+            axisElement.style.top = 'auto'
+            axisElement.style.left = leftPos + 'px'
+
+            headElement.style.padding = 
+                headcontent.length?
+                    `${padding}px ${gap}px ${padding}px ${padding}px`:
+                    `${padding}px 0px ${padding}px ${padding}px`
+        }
+
+        // load new display data
+        cradleContent.headDisplayComponents = cradleContent.headModelComponents
+        cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
     }
 

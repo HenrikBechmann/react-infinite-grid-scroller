@@ -65,7 +65,7 @@ export default class StylesHandler {
         if (orientation == 'vertical') {
 
             // padding varies
-            headstyles.padding = `${padding}px ${padding}px 0 ${padding}px`
+            // headstyles.padding = `${padding}px ${padding}px {gap}px ${padding}px`
             tailstyles.padding = `0 ${padding}px ${padding}px ${padding}px`
 
             // the following are identical for head and tail
@@ -90,7 +90,7 @@ export default class StylesHandler {
 
         } else { // orientation == 'horizontal'
 
-            headstyles.padding = `${padding}px 0 ${padding}px ${padding}px`
+            // headstyles.padding = `${padding}px ${gap}px ${padding}px ${padding}px`
             tailstyles.padding = `${padding}px ${padding}px ${padding}px 0`
 
             headstyles.width = tailstyles.width = 'auto'
