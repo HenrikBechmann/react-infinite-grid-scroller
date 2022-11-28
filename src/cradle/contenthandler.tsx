@@ -316,8 +316,8 @@ export default class ContentHandler {
 
         const {shiftinstruction, triggerViewportReferencePos} = interruptHandler
 
-        // console.log('shiftinstruction, triggerViewportReferencePos\n',
-        //     shiftinstruction, triggerViewportReferencePos)
+        console.log('==> udpateCradleContent: shiftinstruction, triggerViewportReferencePos\n',
+            shiftinstruction, triggerViewportReferencePos)
 
         const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
 
@@ -390,11 +390,15 @@ export default class ContentHandler {
 
         let axisViewportPixelOffset = newAxisViewportPixelOffset
 
-        console.log('==> udpateCradleContent: axisReferenceIndex, axisViewportPixelOffset, axisItemShift, cradleItemShift\n',
+        console.log('-- axisReferenceIndex, axisViewportPixelOffset, axisItemShift, cradleItemShift\n',
             axisReferenceIndex, axisViewportPixelOffset, axisItemShift, cradleItemShift)
+
+        const { cradlePositionData } = layoutHandler
 
         // third abandon option of 3; nothing to do
         if ((axisItemShift == 0) && (cradleItemShift == 0)) { // can happen first row; oversized last row
+    
+            cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
             return
 
@@ -477,8 +481,6 @@ export default class ContentHandler {
         }
 
         // -------------------------------[ 6. css changes ]-------------------------
-
-        const { cradlePositionData } = layoutHandler
 
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
@@ -592,6 +594,9 @@ export default class ContentHandler {
             targetAxisViewportPixelOffset: axisViewportOffset,
 
         } = cradlePositionData
+
+        console.log('==> adjustScrollblockForVariability: axisReferenceIndex, axisViewportOffset\n',
+            axisReferenceIndex, axisViewportOffset)
 
         const {
 

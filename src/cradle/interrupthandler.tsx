@@ -119,9 +119,7 @@ export default class InterruptHandler {
 
                     this.shiftinstruction = shiftinstruction
                     this.triggerViewportReferencePos = triggerViewportReferencePos
-                    // contentHandler.updateCradleContent(entries,'triggerlinesObserver', shiftinstruction, triggerViewportReferencePos)
-                    // contentHandler.updateCradleContent(shiftinstruction, triggerViewportReferencePos)
-                    // contentHandler.updateCradleContent()
+
                     stateHandler.setCradleState('renderupdatedcontent')
 
                 }
