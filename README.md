@@ -73,9 +73,13 @@ This is a random screenshare, showing nested scrollers in a resized browser (33%
 
 ![animation](demo/RIGSDemo.gif)
 
+# Compatible browsers
+
+RIGS works on Chrome, Microsoft Edge, and Firefox. It works on Safari MacOS, but not as well as on the other browsers.
+
 # Known issue
 
-RIGS does not work on Safari iOS (mobile), owing to Safari iOS's non-standard approach to scrolling. RIGS works on Safari MacOS, but not as well as on the other major browsers on MacOS (Chrome, MS Edge, and Firefox).
+RIGS does not work on Safari iOS (mobile), owing to Safari iOS's non-standard approach to scrolling.
 
 There are no plans to address this issue in the short run.
 
