@@ -314,6 +314,9 @@ export default class ContentHandler {
 
         const {shiftinstruction, triggerViewportReferencePos} = interruptHandler
 
+        // console.log('shiftinstruction, triggerViewportReferencePos\n',
+        //     shiftinstruction, triggerViewportReferencePos)
+
         const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
 
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current,
@@ -331,7 +334,7 @@ export default class ContentHandler {
         const { 
             crosscount,
             listsize,
-            // triggerZeroHistoryRef,
+            // triggerHistoryRef,
         } = cradleInternalProperties
 
         const scrollPos = 

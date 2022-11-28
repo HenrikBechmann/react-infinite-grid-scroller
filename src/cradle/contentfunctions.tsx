@@ -140,7 +140,7 @@ export const getShiftInstruction = ({
 
     // Safari doesn't measure zoomed values for rootbounds in triggerlineEntries, so we take a direct reading
     viewportBoundingRect, 
-    triggerZeroHistoryRef,
+    triggerHistoryRef,
 
 }) => {
 
@@ -197,9 +197,12 @@ export const getShiftInstruction = ({
 
     }
 
+    // console.log('--getShiftInstruction: triggerData\n',
+    //     triggerData)
+
     let shiftinstruction
     
-    const triggerZeroHistory = triggerZeroHistoryRef.current
+    const triggerHistory = triggerHistoryRef.current
 
     // since triggers are moved and can share the 0 (zero) offset, an infinite loop can occur
     // between the head and tail triggers. The following short-circuits that.
@@ -209,7 +212,7 @@ export const getShiftInstruction = ({
 
         // FF has shown an infinite loop with the same previousReferenceName;
         // usually alternates
-        if (triggerZeroHistory.previousReferenceName) {
+        if (triggerHistory.previousReferenceName) {
 
             shiftinstruction = 'none'
             
@@ -217,11 +220,11 @@ export const getShiftInstruction = ({
 
             if ((triggerData.headOffset >= -1) && (triggerData.headOffset <= 1)) {
 
-                triggerZeroHistory.previousReferenceName = 'headtrigger'
+                triggerHistory.previousReferenceName = 'headtrigger'
 
             } else {
 
-                triggerZeroHistory.previousReferenceName = 'tailtrigger'
+                triggerHistory.previousReferenceName = 'tailtrigger'
 
             }
 
@@ -229,21 +232,21 @@ export const getShiftInstruction = ({
 
     } else {
 
-        if (triggerZeroHistory.previousReferenceName) {
+        if (triggerHistory.previousReferenceName) {
 
-            triggerZeroHistory.previousReferenceName = null
+            triggerHistory.previousReferenceName = null
 
         }
     }
 
     const triggerViewportReferencePos = 
         (shiftinstruction == 'axistailward')? // block is scrolling up or left
-            triggerData.tailOffset: // needs to move down or right toward tail
-            triggerData.headOffset // needs to move up or left toward head
+            triggerData.headOffset: // needs to move down or right toward tail
+            triggerData.tailOffset // needs to move up or left toward head
 
     if (shiftinstruction) {
 
-        triggerZeroHistory.previousReferenceName = null
+        triggerHistory.previousReferenceName = null
 
         return [shiftinstruction, triggerViewportReferencePos]
 

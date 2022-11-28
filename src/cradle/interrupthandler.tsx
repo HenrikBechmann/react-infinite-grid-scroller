@@ -70,7 +70,7 @@ export default class InterruptHandler {
             const { 
             //     crosscount,
             //     listsize,
-                triggerZeroHistoryRef,
+                triggerHistoryRef,
 
             } = cradleInternalProperties
 
@@ -78,6 +78,9 @@ export default class InterruptHandler {
                 (orientation == 'vertical')?
                     viewportElement.scrollTop:
                     viewportElement.scrollLeft
+
+            // const blockScrollPos = layoutHandler.cradlePositionData.blockScrollPos
+            // console.log('==> trigger interrupt: scrollPos, blockScrollPos\n', scrollPos, blockScrollPos)
 
             const contentLength = 
                 (orientation == 'vertical')?
@@ -107,7 +110,7 @@ export default class InterruptHandler {
 
                     viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
 
-                    triggerZeroHistoryRef,
+                    triggerHistoryRef,
 
                 })
 
