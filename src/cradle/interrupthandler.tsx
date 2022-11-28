@@ -237,11 +237,20 @@ export default class InterruptHandler {
    public cradleIntersect = {    
         observer:null,    
         callback:this.cradleIntersectionObserverCallback,
+        disconnected:true,
         connectElements:() => {
+            if (!this.cradleIntersect.disconnected) {
+                return
+            }
             const observer = this.cradleIntersect.observer
             const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
             observer.observe(cradleElements.headRef.current)
             observer.observe(cradleElements.tailRef.current)
+            this.cradleIntersect.disconnected = false
+        },
+        disconnect:() => {
+            this.cradleIntersect.observer.disconnect()
+            this.cradleIntersect.disconnected = true
         },
         createObserver:() => {
             const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
@@ -256,7 +265,11 @@ export default class InterruptHandler {
    public triggerlinesIntersect = {
         observer:null,
         callback:this.axisTriggerlinesObserverCallback,
+        disconnected:true,
         connectElements:() => {
+            if (!this.triggerlinesIntersect.disconnected) {
+                return
+            }
             const observer = this.triggerlinesIntersect.observer
             const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
             if (cradleElements.triggercellTriggerlineHeadRef.current &&
@@ -264,6 +277,11 @@ export default class InterruptHandler {
                 observer.observe(cradleElements.triggercellTriggerlineHeadRef.current)
                 observer.observe(cradleElements.triggercellTriggerlineTailRef.current)
             }
+            this.triggerlinesIntersect.disconnected = false
+        },
+        disconnect:() => {
+            this.triggerlinesIntersect.observer.disconnect()
+            this.triggerlinesIntersect.disconnected = true
         },
         createObserver:() => {
             const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current

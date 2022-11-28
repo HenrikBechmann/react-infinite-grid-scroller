@@ -1055,8 +1055,8 @@ const Cradle = ({
 
                 const { layout } = cradleInheritedPropertiesRef.current
 
-                interruptHandler.triggerlinesIntersect.observer.disconnect()
-                interruptHandler.cradleIntersect.observer.disconnect()
+                interruptHandler.triggerlinesIntersect.disconnect()
+                interruptHandler.cradleIntersect.disconnect()
 
                 if (layout == 'variable') { // restore base config to scrollblock
 

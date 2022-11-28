@@ -395,21 +395,23 @@ export default class ContentHandler {
 
         const { cradlePositionData } = layoutHandler
 
+        let isShift = !((axisItemShift == 0) && (cradleItemShift == 0))
         // third abandon option of 3; nothing to do
-        if ((axisItemShift == 0) && (cradleItemShift == 0)) { // can happen first row; oversized last row
+        // if (!isShift) { // can happen first row; oversized last row
     
-            cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
+        //     cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
-            return
+        //     return
 
-        }
+        // }
 
-        console.log('-- continuing with updateCradleContent')
+        console.log('-- continuing with updateCradleContent: isShift, listStartChangeCount, listEndChangeCount\n', 
+            isShift, listStartChangeCount, listEndChangeCount)
 
         // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx, or at 'finishupdateforvariability'
         //    for variable content
-        interruptHandler.triggerlinesIntersect.observer.disconnect()
+        if (isShift) interruptHandler.triggerlinesIntersect.disconnect()
 
         // ----------------------------------[ 4. reconfigure cradle content ]--------------------------
 
@@ -458,17 +460,26 @@ export default class ContentHandler {
 
         // ----------------------------------[ 5. allocate cradle content ]--------------------------
 
-        const [headcontent, tailcontent] = allocateContentList(
-            {
-                contentlist:updatedContentList,
-                axisReferenceIndex,
-                layoutHandler,
-            }
-        )
 
-        cradleContent.cradleModelComponents = updatedContentList
-        cradleContent.headModelComponents = headcontent
-        cradleContent.tailModelComponents = tailcontent
+
+        let headcontent, tailcontent
+        if (isShift) {
+            [headcontent, tailcontent] = allocateContentList(
+                {
+                    contentlist:updatedContentList,
+                    axisReferenceIndex,
+                    layoutHandler,
+                }
+            )
+
+            cradleContent.cradleModelComponents = updatedContentList
+            cradleContent.headModelComponents = headcontent
+            cradleContent.tailModelComponents = tailcontent
+
+        } else {
+            headcontent = cradleContent.headModelComponents
+            tailcontent = cradleContent.tailModelComponents
+        }
 
         if (serviceHandler.callbacks.referenceIndexCallback) {
 
@@ -485,7 +496,7 @@ export default class ContentHandler {
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
-        cacheHandler.renderPortalLists()
+        if (isShift) cacheHandler.renderPortalLists()
 
         const axisElement = cradleElements.axisRef.current
         const headElement = cradleElements.headRef.current
