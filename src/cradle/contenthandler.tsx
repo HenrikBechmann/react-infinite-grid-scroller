@@ -77,6 +77,8 @@ export default class ContentHandler {
 
     public setCradleContent = ( cradleState ) => { // cradleState influences some behaviour
 
+        console.log('==> setCradleContent: cradleState', cradleState)
+
         // ------------------------------[ 1. initialize ]---------------------------
 
         const { cradleParameters } = this
@@ -388,12 +390,17 @@ export default class ContentHandler {
 
         let axisViewportPixelOffset = newAxisViewportPixelOffset
 
+        console.log('==> udpateCradleContent: axisReferenceIndex, axisViewportPixelOffset, axisItemShift, cradleItemShift\n',
+            axisReferenceIndex, axisViewportPixelOffset, axisItemShift, cradleItemShift)
+
         // third abandon option of 3; nothing to do
-        if ((axisItemShift == 0 && cradleItemShift == 0)) { // can happen first row
+        if ((axisItemShift == 0) && (cradleItemShift == 0)) { // can happen first row; oversized last row
 
             return
 
         }
+
+        console.log('-- continuing with updateCradleContent')
 
         // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx, or at 'finishupdateforvariability'

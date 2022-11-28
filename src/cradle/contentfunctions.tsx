@@ -244,7 +244,7 @@ export const getShiftInstruction = ({
             triggerData.headOffset: // needs to move down or right toward tail
             triggerData.tailOffset // needs to move up or left toward head
 
-    if (shiftinstruction) {
+    if (shiftinstruction) { // will be 'none'
 
         triggerHistory.previousReferenceName = null
 
@@ -281,6 +281,9 @@ export const getShiftInstruction = ({
         }
 
     }
+
+    console.log('==> getShiftInstruction: shiftinstruction\n',
+        shiftinstruction)
 
     return [shiftinstruction, triggerViewportReferencePos]
 
