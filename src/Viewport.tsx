@@ -158,8 +158,8 @@ const Viewport = ({
             inset:0,
             overflow:'auto',
             overflowAnchor:'none', // crucial!
-            // webkitTransform: 'translateZ(0)', experiment to try to stop Safari flicker
-            
+            scrollBehavior:'auto'
+
         }
 
     },[styles.viewport])
