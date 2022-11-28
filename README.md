@@ -73,6 +73,10 @@ This is a random screenshare, showing nested scrollers in a resized browser (33%
 
 ![animation](demo/RIGSDemo.gif)
 
+# Known issue
+
+This utility does not work on Safari iOS (mobile). It works on Safari MacOS, but not as well as on the other major browsers on MacOS (Chrome, MS Edge, and Firefox).
+
 # Scroller properties
 
 | property | value | notes |
@@ -280,10 +284,6 @@ _orientation, gap, padding, cellHeight, cellWidth, cellMinHeight, cellMinWidth, 
 It also contains the _crosscount_ property, which is calculated interrnally, and the following properties, which may have been altered from the source values by the scroller:
 
 _runwayRowcount, listsize_
-
-# Known issue
-
-This utility does not work on Safari iOS (mobile). It works on Sarari MacOS, but not as well as on the other major browsers (Chrome, MS Edge, and Firefox).
 
 # Licence
 
