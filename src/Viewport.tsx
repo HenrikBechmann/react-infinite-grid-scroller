@@ -158,7 +158,8 @@ const Viewport = ({
             inset:0,
             overflow:'auto',
             overflowAnchor:'none', // crucial!
-            scrollBehavior:'auto'
+            scrollBehavior:'auto',
+            // webkitOverflowScrolling: 'touch',
 
         }
 
