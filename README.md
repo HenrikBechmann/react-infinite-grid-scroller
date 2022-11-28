@@ -77,6 +77,8 @@ This is a random screenshare, showing nested scrollers in a resized browser (33%
 
 RIGS does not work on Safari iOS (mobile), owing to Safari iOS's non-standard approach to scrolling. RIGS works on Safari MacOS, but not as well as on the other major browsers on MacOS (Chrome, MS Edge, and Firefox).
 
+There are no plans to address this issue in the short run.
+
 # Scroller properties
 
 | property | value | notes |
