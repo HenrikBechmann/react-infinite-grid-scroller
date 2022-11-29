@@ -204,6 +204,9 @@ export default class ScrollHandler {
 
         cradlePositionData.targetAxisViewportPixelOffset = axisVisiblePixelOffset
 
+        // console.log('==> updateReferenceData: axisVisiblePixelOffset\n',
+        //     axisVisiblePixelOffset)
+
         if (!ViewportContextProperties.isResizing) {
 
             this.updateBlockScrollPos()
@@ -287,6 +290,9 @@ export default class ScrollHandler {
 
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
+
+        // console.log('==> calcImpliedRepositioningData: axisReferenceIndex, axisPixelOffset\n',
+        //     axisReferenceIndex, axisPixelOffset)
 
     }
 

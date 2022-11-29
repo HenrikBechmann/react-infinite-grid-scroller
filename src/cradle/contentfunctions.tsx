@@ -140,7 +140,7 @@ export const getShiftInstruction = ({
 
     // Safari doesn't measure zoomed values for rootbounds in triggerlineEntries, so we take a direct reading
     viewportBoundingRect, 
-    triggerZeroHistoryRef,
+    triggerHistoryRef,
 
 }) => {
 
@@ -197,9 +197,12 @@ export const getShiftInstruction = ({
 
     }
 
+    // console.log('--getShiftInstruction: triggerData\n',
+    //     triggerData)
+
     let shiftinstruction
     
-    const triggerZeroHistory = triggerZeroHistoryRef.current
+    const triggerHistory = triggerHistoryRef.current
 
     // since triggers are moved and can share the 0 (zero) offset, an infinite loop can occur
     // between the head and tail triggers. The following short-circuits that.
@@ -209,7 +212,7 @@ export const getShiftInstruction = ({
 
         // FF has shown an infinite loop with the same previousReferenceName;
         // usually alternates
-        if (triggerZeroHistory.previousReferenceName) {
+        if (triggerHistory.previousReferenceName) {
 
             shiftinstruction = 'none'
             
@@ -217,11 +220,11 @@ export const getShiftInstruction = ({
 
             if ((triggerData.headOffset >= -1) && (triggerData.headOffset <= 1)) {
 
-                triggerZeroHistory.previousReferenceName = 'headtrigger'
+                triggerHistory.previousReferenceName = 'headtrigger'
 
             } else {
 
-                triggerZeroHistory.previousReferenceName = 'tailtrigger'
+                triggerHistory.previousReferenceName = 'tailtrigger'
 
             }
 
@@ -229,21 +232,21 @@ export const getShiftInstruction = ({
 
     } else {
 
-        if (triggerZeroHistory.previousReferenceName) {
+        if (triggerHistory.previousReferenceName) {
 
-            triggerZeroHistory.previousReferenceName = null
+            triggerHistory.previousReferenceName = null
 
         }
     }
 
     const triggerViewportReferencePos = 
         (shiftinstruction == 'axistailward')? // block is scrolling up or left
-            triggerData.tailOffset: // needs to move down or right toward tail
-            triggerData.headOffset // needs to move up or left toward head
+            triggerData.headOffset: // needs to move down or right toward tail
+            triggerData.tailOffset // needs to move up or left toward head
 
-    if (shiftinstruction) {
+    if (shiftinstruction) { // will be 'none'
 
-        triggerZeroHistory.previousReferenceName = null
+        triggerHistory.previousReferenceName = null
 
         return [shiftinstruction, triggerViewportReferencePos]
 
@@ -278,6 +281,9 @@ export const getShiftInstruction = ({
         }
 
     }
+
+    // console.log('==> getShiftInstruction: shiftinstruction\n',
+    //     shiftinstruction)
 
     return [shiftinstruction, triggerViewportReferencePos]
 
@@ -480,9 +486,11 @@ export const calcContentShift = ({
     // this can only happen with oversized cellLength (ie > viewportLength)
     //     and only using baseRowLength
     // axis must be no farther than 1 back of the last row end position
-    if (previousAxisRowOffset + axisReferenceRowShift > listEndrowOffset) {
+    if ((previousAxisRowOffset + axisReferenceRowShift) > listEndrowOffset) {
+        // console.log('++calcContentShift:(previousAxisRowOffset + axisReferenceRowShift) > listEndrowOffset, axisPixelShift, baseRowLength\n',
+        //     previousAxisRowOffset + axisReferenceRowShift, listEndrowOffset, axisPixelShift, gridRowLengths.at(-1))
         axisReferenceRowShift -= 1
-        axisPixelShift -= baseRowLength
+        axisPixelShift -= gridRowLengths.at(-1)// baseRowLength
     }
 
     // -----------[ 3. calculate current viewport axis offset ]-------------------
@@ -522,7 +530,7 @@ export const calcContentShift = ({
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
 
-    if (shiftinstruction == 'axistailward') { // scrolling down/right
+    if (shiftinstruction == 'axistailward') { // scrolling up/left
 
         // a. if scrolling the block headward near the start of the list, new cradle row offset and
         // cradle row shift count has to be adjusted to accommodate the leading runway
@@ -554,9 +562,9 @@ export const calcContentShift = ({
 
         }
 
-    } else { // shiftinstruction == 'axisheadward'; scrolling up/left
+    } else { // shiftinstruction == 'axisheadward'; scrolling down/right
 
-        // c. if scrolling the block tailward (toward revealing head of list), as the cradlerowoffset 
+        // c. if scrolling the block down or right (toward revealing head of list), as the cradlerowoffset 
         // hits 0, cradle changes have to be adjusted to prevent shortening of cradle content
 
         // d. if scrolling headward near the end of the list, cradle changes have to be adjusted to 
