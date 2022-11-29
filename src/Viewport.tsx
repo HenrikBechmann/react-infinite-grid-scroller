@@ -156,9 +156,9 @@ const Viewport = ({
             ...styles.viewport,
             position:'absolute',
             inset:0,
-            overflow:'auto',
+            overflow:'scroll',//'auto', 'scroll' for iOS Safari
+            WebkitOverflowScrolling: 'touch',// for iOS Safari
             overflowAnchor:'none', // crucial!
-            // webkitTransform: 'translateZ(0)', experiment to try to stop Safari flicker
             
         }
 

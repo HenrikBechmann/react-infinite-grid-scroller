@@ -210,7 +210,7 @@ export const getShiftInstruction = ({
     if (((triggerData.headOffset >= -1) && (triggerData.headOffset <= 1)) || 
         ((triggerData.tailOffset >= -1) && (triggerData.tailOffset <= 1))) {
 
-        // FF has shown an infinite loop with the same previousReferenceName;
+        // some browsers do an infinite loop with the same previousReferenceName;
         // usually alternates
         if (triggerHistory.previousReferenceName) {
 
@@ -425,7 +425,7 @@ export const calcContentShift = ({
             notionalRowPtr = gridRowAggregateSpans.length - 1 // base: failed measured row ptr
             let totalPixelShift = gridRowAggregateSpans[notionalRowPtr] // set base of working overshoot
 
-            if (shiftinstruction == 'axistailward') { // scrolling up 
+            if (shiftinstruction == 'axistailward') { // scrolling up/left
 
                 do {
 
@@ -436,7 +436,7 @@ export const calcContentShift = ({
 
                 spanAxisPixelShift = totalPixelShift
 
-            } else { // axisheadward; scrolling down
+            } else { // axisheadward; scrolling down/right
 
                 do {
 
@@ -484,13 +484,13 @@ export const calcContentShift = ({
         axisPixelShift = spanAxisPixelShift 
 
     // this can only happen with oversized cellLength (ie > viewportLength)
-    //     and only using baseRowLength
+    //     and only using measured length
     // axis must be no farther than 1 back of the last row end position
     if ((previousAxisRowOffset + axisReferenceRowShift) > listEndrowOffset) {
         // console.log('++calcContentShift:(previousAxisRowOffset + axisReferenceRowShift) > listEndrowOffset, axisPixelShift, baseRowLength\n',
         //     previousAxisRowOffset + axisReferenceRowShift, listEndrowOffset, axisPixelShift, gridRowLengths.at(-1))
         axisReferenceRowShift -= 1
-        axisPixelShift -= gridRowLengths.at(-1)// baseRowLength
+        axisPixelShift -= gridRowLengths.at(-1)
     }
 
     // -----------[ 3. calculate current viewport axis offset ]-------------------
