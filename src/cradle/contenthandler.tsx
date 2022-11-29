@@ -77,7 +77,7 @@ export default class ContentHandler {
 
     public setCradleContent = ( cradleState ) => { // cradleState influences some behaviour
 
-        console.log('==> setCradleContent: cradleState', cradleState)
+        // console.log('==> setCradleContent: cradleState', cradleState)
 
         // ------------------------------[ 1. initialize ]---------------------------
 
@@ -316,8 +316,8 @@ export default class ContentHandler {
 
         const {shiftinstruction, triggerViewportReferencePos} = interruptHandler
 
-        console.log('==> udpateCradleContent: shiftinstruction, triggerViewportReferencePos\n',
-            shiftinstruction, triggerViewportReferencePos)
+        // console.log('==> udpateCradleContent: shiftinstruction, triggerViewportReferencePos\n',
+        //     shiftinstruction, triggerViewportReferencePos)
 
         const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
 
@@ -390,28 +390,35 @@ export default class ContentHandler {
 
         let axisViewportPixelOffset = newAxisViewportPixelOffset
 
-        console.log('-- axisReferenceIndex, axisViewportPixelOffset, axisItemShift, cradleItemShift\n',
-            axisReferenceIndex, axisViewportPixelOffset, axisItemShift, cradleItemShift)
+        // console.log('-- axisReferenceIndex, axisViewportPixelOffset, axisItemShift, cradleItemShift\n',
+        //     axisReferenceIndex, axisViewportPixelOffset, axisItemShift, cradleItemShift)
 
         const { cradlePositionData } = layoutHandler
 
         let isShift = !((axisItemShift == 0) && (cradleItemShift == 0))
+        const axisElement = cradleElements.axisRef.current
+        const headElement = cradleElements.headRef.current
+
         // third abandon option of 3; nothing to do
-        // if (!isShift) { // can happen first row; oversized last row
+        if (!isShift) { // can happen first row; oversized last row
     
-        //     cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
+            cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
+            this.applyStyling(
+                orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
+                axisElement, headElement, cradleContent.headModelComponents)
 
-        //     return
+            return
 
-        // }
+        }
 
-        console.log('-- continuing with updateCradleContent: isShift, listStartChangeCount, listEndChangeCount\n', 
-            isShift, listStartChangeCount, listEndChangeCount)
+        // console.log('-- continuing with updateCradleContent: isShift, listStartChangeCount, listEndChangeCount\n', 
+        //     isShift, listStartChangeCount, listEndChangeCount)
 
         // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx, or at 'finishupdateforvariability'
         //    for variable content
-        if (isShift) interruptHandler.triggerlinesIntersect.disconnect()
+        // if (isShift) interruptHandler.triggerlinesIntersect.disconnect()
+        interruptHandler.triggerlinesIntersect.disconnect()
 
         // ----------------------------------[ 4. reconfigure cradle content ]--------------------------
 
@@ -462,9 +469,9 @@ export default class ContentHandler {
 
 
 
-        let headcontent, tailcontent
-        if (isShift) {
-            [headcontent, tailcontent] = allocateContentList(
+        // let headcontent, tailcontent
+        // if (isShift) {
+        const [headcontent, tailcontent] = allocateContentList(
                 {
                     contentlist:updatedContentList,
                     axisReferenceIndex,
@@ -476,10 +483,10 @@ export default class ContentHandler {
             cradleContent.headModelComponents = headcontent
             cradleContent.tailModelComponents = tailcontent
 
-        } else {
-            headcontent = cradleContent.headModelComponents
-            tailcontent = cradleContent.tailModelComponents
-        }
+        // } else {
+        //     headcontent = cradleContent.headModelComponents
+        //     tailcontent = cradleContent.tailModelComponents
+        // }
 
         if (serviceHandler.callbacks.referenceIndexCallback) {
 
@@ -497,9 +504,6 @@ export default class ContentHandler {
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
         if (isShift) cacheHandler.renderPortalLists()
-
-        const axisElement = cradleElements.axisRef.current
-        const headElement = cradleElements.headRef.current
 
         // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
         if (layout == 'uniform') {
@@ -520,7 +524,47 @@ export default class ContentHandler {
             }
         }
 
+        this.applyStyling(
+            orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
+            axisElement, headElement, headcontent)
+
         // apply CSS changes
+        // let topPos, leftPos // available for debug
+        // if (orientation == 'vertical') {
+
+        //     topPos = scrollPos + axisViewportPixelOffset
+
+        //     axisElement.style.top = topPos + 'px'
+        //     axisElement.style.left = 'auto'
+            
+        //     headElement.style.padding = 
+        //         headcontent.length?
+        //             `${padding}px ${padding}px ${gap}px ${padding}px`:
+        //             `${padding}px ${padding}px 0px ${padding}px`
+
+        // } else { // 'horizontal'
+
+        //     leftPos = scrollPos + axisViewportPixelOffset
+
+        //     axisElement.style.top = 'auto'
+        //     axisElement.style.left = leftPos + 'px'
+
+        //     headElement.style.padding = 
+        //         headcontent.length?
+        //             `${padding}px ${gap}px ${padding}px ${padding}px`:
+        //             `${padding}px 0px ${padding}px ${padding}px`
+        // }
+
+        // load new display data
+        cradleContent.headDisplayComponents = cradleContent.headModelComponents
+        cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
+
+    }
+
+    applyStyling = (
+        orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
+        axisElement, headElement, headcontent) => {
+        
         let topPos, leftPos // available for debug
         if (orientation == 'vertical') {
 
@@ -546,10 +590,6 @@ export default class ContentHandler {
                     `${padding}px ${gap}px ${padding}px ${padding}px`:
                     `${padding}px 0px ${padding}px ${padding}px`
         }
-
-        // load new display data
-        cradleContent.headDisplayComponents = cradleContent.headModelComponents
-        cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
     }
 
@@ -606,8 +646,8 @@ export default class ContentHandler {
 
         } = cradlePositionData
 
-        console.log('==> adjustScrollblockForVariability: axisReferenceIndex, axisViewportOffset\n',
-            axisReferenceIndex, axisViewportOffset)
+        // console.log('==> adjustScrollblockForVariability: axisReferenceIndex, axisViewportOffset\n',
+        //     axisReferenceIndex, axisViewportOffset)
 
         const {
 
