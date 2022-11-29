@@ -157,7 +157,7 @@ const Viewport = ({
             position:'absolute',
             inset:0,
             overflow:'scroll',//'auto', 'scroll' for iOS Safari
-            webkitOverflowScrolling: 'touch',// for iOS Safari
+            WebkitOverflowScrolling: 'touch',// for iOS Safari
             overflowAnchor:'none', // crucial!
             
         }

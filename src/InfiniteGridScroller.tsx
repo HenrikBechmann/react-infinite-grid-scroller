@@ -33,6 +33,13 @@ import React, { useEffect, useState, useCallback, useRef } from 'react'
 // defensive
 import { ErrorBoundary } from 'react-error-boundary' // www.npmjs.com/package/react-error-boundary
 
+const isSafariIOS = () => {
+    const
+        is_ios = /iP(ad|od|hone)/i.test(window.navigator.userAgent),
+        is_safari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)
+    return ( is_ios && is_safari ) 
+}
+
 // based on module template
 function ErrorFallback({error, resetErrorBoundary}) {
   return (
@@ -180,19 +187,6 @@ const InfiniteGridScroller = (props) => {
     startingIndex = Math.max(0,startingIndex)
 
     // package
-    const gridSpecs = {
-        orientation,
-        gap,
-        padding,
-        cellHeight,
-        cellWidth,
-        cellMinHeight,
-        cellMinWidth,
-        layout,
-    }
-
-    const gridSpecsRef = useRef(gridSpecs)
-
     let problems = 0
     for (const prop in verifiedValues) {
         if (isNaN(verifiedValues[prop])) {
@@ -216,6 +210,23 @@ const InfiniteGridScroller = (props) => {
     if (!['uniform', 'variable'].includes(layout)) {
         layout = 'uniform'
     }
+
+    if (isSafariIOS()) {
+        layout = 'uniform'
+    }
+
+    const gridSpecs = {
+        orientation,
+        gap,
+        padding,
+        cellHeight,
+        cellWidth,
+        cellMinHeight,
+        cellMinWidth,
+        layout,
+    }
+
+    const gridSpecsRef = useRef(gridSpecs)
 
     // state
     const [scrollerState, setScrollerState] = useState('setup') // setup, setlistsize, ready
