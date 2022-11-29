@@ -75,7 +75,7 @@ This is a random screenshare, showing nested scrollers in a resized browser (33%
 
 # Compatible browsers
 
-RIGS works on Chrome, Microsoft Edge, and Firefox and Safari\*.
+RIGS works on Chrome, Microsoft Edge, Firefox and Safari\*.
 
 ![chrome](demo/chromelogo.png) ![edge](demo/edgelogo.png) ![firefox](demo/firefoxlogo.png) ![safari](demo/safarilogo.png)
 
