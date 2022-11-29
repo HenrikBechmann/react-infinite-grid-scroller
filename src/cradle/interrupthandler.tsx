@@ -70,7 +70,7 @@ export default class InterruptHandler {
             const { 
             //     crosscount,
             //     listsize,
-                triggerZeroHistoryRef,
+                triggerHistoryRef,
 
             } = cradleInternalProperties
 
@@ -78,6 +78,9 @@ export default class InterruptHandler {
                 (orientation == 'vertical')?
                     viewportElement.scrollTop:
                     viewportElement.scrollLeft
+
+            // const blockScrollPos = layoutHandler.cradlePositionData.blockScrollPos
+            // console.log('==> trigger interrupt: scrollPos, blockScrollPos\n', scrollPos, blockScrollPos)
 
             const contentLength = 
                 (orientation == 'vertical')?
@@ -107,7 +110,7 @@ export default class InterruptHandler {
 
                     viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
 
-                    triggerZeroHistoryRef,
+                    triggerHistoryRef,
 
                 })
 
@@ -116,9 +119,7 @@ export default class InterruptHandler {
 
                     this.shiftinstruction = shiftinstruction
                     this.triggerViewportReferencePos = triggerViewportReferencePos
-                    // contentHandler.updateCradleContent(entries,'triggerlinesObserver', shiftinstruction, triggerViewportReferencePos)
-                    // contentHandler.updateCradleContent(shiftinstruction, triggerViewportReferencePos)
-                    // contentHandler.updateCradleContent()
+
                     stateHandler.setCradleState('renderupdatedcontent')
 
                 }
@@ -236,11 +237,20 @@ export default class InterruptHandler {
    public cradleIntersect = {    
         observer:null,    
         callback:this.cradleIntersectionObserverCallback,
+        disconnected:true,
         connectElements:() => {
+            if (!this.cradleIntersect.disconnected) {
+                return
+            }
             const observer = this.cradleIntersect.observer
             const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
             observer.observe(cradleElements.headRef.current)
             observer.observe(cradleElements.tailRef.current)
+            this.cradleIntersect.disconnected = false
+        },
+        disconnect:() => {
+            this.cradleIntersect.observer.disconnect()
+            this.cradleIntersect.disconnected = true
         },
         createObserver:() => {
             const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
@@ -255,7 +265,11 @@ export default class InterruptHandler {
    public triggerlinesIntersect = {
         observer:null,
         callback:this.axisTriggerlinesObserverCallback,
+        disconnected:true,
         connectElements:() => {
+            if (!this.triggerlinesIntersect.disconnected) {
+                return
+            }
             const observer = this.triggerlinesIntersect.observer
             const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
             if (cradleElements.triggercellTriggerlineHeadRef.current &&
@@ -263,6 +277,11 @@ export default class InterruptHandler {
                 observer.observe(cradleElements.triggercellTriggerlineHeadRef.current)
                 observer.observe(cradleElements.triggercellTriggerlineTailRef.current)
             }
+            this.triggerlinesIntersect.disconnected = false
+        },
+        disconnect:() => {
+            this.triggerlinesIntersect.observer.disconnect()
+            this.triggerlinesIntersect.disconnected = true
         },
         createObserver:() => {
             const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current

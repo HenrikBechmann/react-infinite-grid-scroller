@@ -73,6 +73,16 @@ This is a random screenshare, showing nested scrollers in a resized browser (33%
 
 ![animation](demo/RIGSDemo.gif)
 
+# Compatible browsers
+
+RIGS works on Chrome, Microsoft Edge, and Firefox. It works on Safari MacOS, but not as well as on the other browsers.
+
+# Known issue
+
+RIGS does not work on Safari iOS (mobile), owing to Safari iOS's non-standard approach to scrolling.
+
+There are no plans to address this issue in the short run.
+
 # Scroller properties
 
 | property | value | notes |
@@ -280,6 +290,7 @@ _orientation, gap, padding, cellHeight, cellWidth, cellMinHeight, cellMinWidth, 
 It also contains the _crosscount_ property, which is calculated interrnally, and the following properties, which may have been altered from the source values by the scroller:
 
 _runwayRowcount, listsize_
+
 # Licence
 
 [MIT](LICENSE.md) &copy; 2020-2022 [Henrik Bechmann](https://twitter.com/HenrikBechmann)

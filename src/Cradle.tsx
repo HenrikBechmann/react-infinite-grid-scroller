@@ -149,7 +149,7 @@ const Cradle = ({
     const hasBeenRenderedRef = useRef(false)
 
     // trigger control
-    const triggerZeroHistoryRef = useRef({
+    const triggerHistoryRef = useRef({
         previousReferenceName:null,
     })
 
@@ -409,7 +409,7 @@ const Cradle = ({
         cradleElementsRef,
         isCachedRef,
         wasCachedRef,
-        triggerZeroHistoryRef,
+        triggerHistoryRef,
 
         // for stateHandler
         cradleStateRef,
@@ -1055,8 +1055,8 @@ const Cradle = ({
 
                 const { layout } = cradleInheritedPropertiesRef.current
 
-                interruptHandler.triggerlinesIntersect.observer.disconnect()
-                interruptHandler.cradleIntersect.observer.disconnect()
+                interruptHandler.triggerlinesIntersect.disconnect()
+                interruptHandler.cradleIntersect.disconnect()
 
                 if (layout == 'variable') { // restore base config to scrollblock
 
@@ -1151,11 +1151,17 @@ const Cradle = ({
             // it is required to integrate changed DOM configurations before 'ready' is displayed
             case 'renderupdatedcontent': { // cycle for DOM update
 
-                contentHandler.updateCradleContent()
+                // const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
-                // load new display data
-                // cradleContent.headDisplayComponents = cradleContent.headModelComponents
-                // cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
+                // const scrollPos = 
+                //     (orientation == 'vertical')?
+                //         viewportElement.scrollTop:
+                //         viewportElement.scrollLeft
+
+                // const blockScrollPos = layoutHandler.cradlePositionData.blockScrollPos
+                // console.log('renderupdatedcontent: scrollPos, blockScrollPos\n', scrollPos, blockScrollPos)
+
+                contentHandler.updateCradleContent()
 
                 setCradleState('finishupdatedcontent')
 
