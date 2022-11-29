@@ -643,14 +643,20 @@ export default class ContentHandler {
                 cellWidth
             ) + gap
 
+        const measuredHeadLength = 
+            (orientation == 'vertical')?
+                headGridElement.offsetHeight:
+                headGridElement.offsetWidth
+
         const measuredTailLength = 
             (orientation == 'vertical')?
                 tailGridElement.offsetHeight:
                 tailGridElement.offsetWidth
 
+        const basePreCradlePixelLength = preCradleRowCount * baseCellLength
         const basePostCradlePixelLength = postCradleRowCount * baseCellLength
 
-        const computedPostAxisPixelLength = basePostCradlePixelLength + measuredTailLength //+ padding
+        const computedPostAxisPixelLength = basePostCradlePixelLength + measuredTailLength
 
         // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
         const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding
