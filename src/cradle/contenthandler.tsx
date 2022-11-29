@@ -316,9 +316,6 @@ export default class ContentHandler {
 
         const {shiftinstruction, triggerViewportReferencePos} = interruptHandler
 
-        // console.log('==> udpateCradleContent: shiftinstruction, triggerViewportReferencePos\n',
-        //     shiftinstruction, triggerViewportReferencePos)
-
         const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
 
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current,
@@ -336,7 +333,6 @@ export default class ContentHandler {
         const { 
             crosscount,
             listsize,
-            // triggerHistoryRef,
         } = cradleInternalProperties
 
         const scrollPos = 
@@ -344,14 +340,11 @@ export default class ContentHandler {
                 viewportElement.scrollTop:
                 viewportElement.scrollLeft
 
-        // const viewportBoundingRect = viewportElement.getBoundingClientRect()
-
         // cradle scaffold and user cells
         const cradleElements = layoutHandler.elements
 
         const cradleContent = this.content,
             modelcontentlist = cradleContent.cradleModelComponents || []
-            // oldAxisReferenceIndex = (cradleContent.tailModelComponents[0]?.props.index || 0)
 
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
@@ -390,16 +383,13 @@ export default class ContentHandler {
 
         let axisViewportPixelOffset = newAxisViewportPixelOffset
 
-        // console.log('-- axisReferenceIndex, axisViewportPixelOffset, axisItemShift, cradleItemShift\n',
-        //     axisReferenceIndex, axisViewportPixelOffset, axisItemShift, cradleItemShift)
-
         const { cradlePositionData } = layoutHandler
 
         let isShift = !((axisItemShift == 0) && (cradleItemShift == 0))
         const axisElement = cradleElements.axisRef.current
         const headElement = cradleElements.headRef.current
 
-        // third abandon option of 3; nothing to do
+        // abandon option; nothing to do but reposition
         if (!isShift) { // can happen first row; oversized last row
     
             cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
@@ -411,13 +401,9 @@ export default class ContentHandler {
 
         }
 
-        // console.log('-- continuing with updateCradleContent: isShift, listStartChangeCount, listEndChangeCount\n', 
-        //     isShift, listStartChangeCount, listEndChangeCount)
-
         // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx, or at 'finishupdateforvariability'
         //    for variable content
-        // if (isShift) interruptHandler.triggerlinesIntersect.disconnect()
         interruptHandler.triggerlinesIntersect.disconnect()
 
         // ----------------------------------[ 4. reconfigure cradle content ]--------------------------
@@ -469,24 +455,17 @@ export default class ContentHandler {
 
 
 
-        // let headcontent, tailcontent
-        // if (isShift) {
         const [headcontent, tailcontent] = allocateContentList(
-                {
-                    contentlist:updatedContentList,
-                    axisReferenceIndex,
-                    layoutHandler,
-                }
-            )
+            {
+                contentlist:updatedContentList,
+                axisReferenceIndex,
+                layoutHandler,
+            }
+        )
 
-            cradleContent.cradleModelComponents = updatedContentList
-            cradleContent.headModelComponents = headcontent
-            cradleContent.tailModelComponents = tailcontent
-
-        // } else {
-        //     headcontent = cradleContent.headModelComponents
-        //     tailcontent = cradleContent.tailModelComponents
-        // }
+        cradleContent.cradleModelComponents = updatedContentList
+        cradleContent.headModelComponents = headcontent
+        cradleContent.tailModelComponents = tailcontent
 
         if (serviceHandler.callbacks.referenceIndexCallback) {
 
@@ -507,7 +486,6 @@ export default class ContentHandler {
 
         // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
         if (layout == 'uniform') {
-            // const { crosscount } = cradleInternalPropertiesRef.current
             const axisReferenceIndex = layoutHandler.transientUpdateAxisReferenceIndex 
             const preAxisRows = Math.ceil(axisReferenceIndex/crosscount)
             const baseCellLength = 
@@ -618,9 +596,6 @@ export default class ContentHandler {
             targetAxisViewportPixelOffset: axisViewportOffset,
 
         } = cradlePositionData
-
-        // console.log('==> adjustScrollblockForVariability: axisReferenceIndex, axisViewportOffset\n',
-        //     axisReferenceIndex, axisViewportOffset)
 
         const {
 
