@@ -64,7 +64,7 @@ export default class ScrollHandler {
 
         }
 
-        const {signals} = this.cradleParameters.handlersRef.current.interruptHandler
+        const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
 
         if (signals.pauseScrollingEffects) {
 
@@ -187,25 +187,25 @@ export default class ScrollHandler {
             viewportElement = ViewportContextProperties.elementRef.current,
             scrollblockElement = viewportElement.firstChild
 
-        let axisVisiblePixelOffset
+        let axisViewportPixelOffset
         if (cradleProps.orientation == 'vertical') {
 
-            axisVisiblePixelOffset = 
+            axisViewportPixelOffset = 
                 axisElement.offsetTop + scrollblockElement.offsetTop - viewportElement.scrollTop
                 
         } else {
 
-            axisVisiblePixelOffset = 
+            axisViewportPixelOffset = 
                 axisElement.offsetLeft + scrollblockElement.offsetLeft - viewportElement.scrollLeft
 
         }
 
         const { cradlePositionData } = layoutHandler
 
-        cradlePositionData.targetAxisViewportPixelOffset = axisVisiblePixelOffset
+        cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
-        // console.log('==> updateReferenceData: axisVisiblePixelOffset\n',
-        //     axisVisiblePixelOffset)
+        // console.log('==> updateReferenceData: axisViewportPixelOffset\n',
+        //     axisViewportPixelOffset)
 
         if (!ViewportContextProperties.isResizing) {
 
