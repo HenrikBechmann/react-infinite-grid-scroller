@@ -528,33 +528,6 @@ export default class ContentHandler {
             orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
             axisElement, headElement, headcontent)
 
-        // apply CSS changes
-        // let topPos, leftPos // available for debug
-        // if (orientation == 'vertical') {
-
-        //     topPos = scrollPos + axisViewportPixelOffset
-
-        //     axisElement.style.top = topPos + 'px'
-        //     axisElement.style.left = 'auto'
-            
-        //     headElement.style.padding = 
-        //         headcontent.length?
-        //             `${padding}px ${padding}px ${gap}px ${padding}px`:
-        //             `${padding}px ${padding}px 0px ${padding}px`
-
-        // } else { // 'horizontal'
-
-        //     leftPos = scrollPos + axisViewportPixelOffset
-
-        //     axisElement.style.top = 'auto'
-        //     axisElement.style.left = leftPos + 'px'
-
-        //     headElement.style.padding = 
-        //         headcontent.length?
-        //             `${padding}px ${gap}px ${padding}px ${padding}px`:
-        //             `${padding}px 0px ${padding}px ${padding}px`
-        // }
-
         // load new display data
         cradleContent.headDisplayComponents = cradleContent.headModelComponents
         cradleContent.tailDisplayComponents = cradleContent.tailModelComponents

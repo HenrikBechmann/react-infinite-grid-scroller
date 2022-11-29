@@ -1151,16 +1151,6 @@ const Cradle = ({
             // it is required to integrate changed DOM configurations before 'ready' is displayed
             case 'renderupdatedcontent': { // cycle for DOM update
 
-                // const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
-
-                // const scrollPos = 
-                //     (orientation == 'vertical')?
-                //         viewportElement.scrollTop:
-                //         viewportElement.scrollLeft
-
-                // const blockScrollPos = layoutHandler.cradlePositionData.blockScrollPos
-                // console.log('renderupdatedcontent: scrollPos, blockScrollPos\n', scrollPos, blockScrollPos)
-
                 contentHandler.updateCradleContent()
 
                 setCradleState('finishupdatedcontent')
