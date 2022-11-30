@@ -79,7 +79,7 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari\*.
 
 ![chrome](demo/chromelogo.png) ![edge](demo/edgelogo.png) ![firefox](demo/firefoxlogo.png) ![safari](demo/safarilogo.png)
 
-\* RIGS on Safari iOS only supports 'uniform' (not 'variable') cells.
+\* RIGS on Safari iOS supports 'uniform' but not 'variable' cells.
 
 # Scroller properties
 
