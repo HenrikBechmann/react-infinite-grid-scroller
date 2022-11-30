@@ -1172,8 +1172,6 @@ const Cradle = ({
                 const { layout } = cradleInheritedPropertiesRef.current
                 if (layout == 'uniform') {
 
-                    // console.log('connecting trigger elements')
-
                     interruptHandler.triggerlinesIntersect.connectElements()
 
                     // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.

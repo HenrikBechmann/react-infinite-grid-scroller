@@ -79,7 +79,7 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari\*.
 
 ![chrome](demo/chromelogo.png) ![edge](demo/edgelogo.png) ![firefox](demo/firefoxlogo.png) ![safari](demo/safarilogo.png)
 
-\* RIGS on Safari iOS only supports 'uniform' (not 'variable') cells.
+\* RIGS on Safari mobile (iOS) supports 'uniform' but not 'variable' cells. RIGS on Safari desktop (MacOS), however, supports both 'uniform' and 'variable' cells.
 
 # Scroller properties
 
@@ -113,7 +113,7 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari\*.
 |technical|object: collection of values used to control system behaviour|use with caution. optional. See below for details|
 |scrollerProperties|requested by user components by being set to null by user, instantiated with an object by system|required for nested RIGS; available for all user components. Contains key scroller settings. See below for details|
 
-Notes: For explicit cache management capability, a unique session **`itemID`** (integer) is assigned to a user component as soon as it enters the cache. The `itemID` is retired as soon as the user component is removed from the cache. If the same component is re-introduced to the cache, it is assigned a new session-unique `itemID`. 
+Notes: For explicit cache management capability, a unique session `itemID` (integer) is assigned to a user component as soon as it enters the cache. The `itemID` is retired as soon as the user component is removed from the cache. If the same component is re-introduced into the cache, it is assigned a new session-unique `itemID`. 
 
 The `itemID` for a user component is given to the host with the `getItem` call to obtain the component, so that the host can track the user component in the cache. If the user component is assigned to a new `index` number (see the **returned function object** cache management section below) the host will still be able to track the user component with the `itemID`. 
 
@@ -288,6 +288,89 @@ _orientation, gap, padding, cellHeight, cellWidth, cellMinHeight, cellMinWidth, 
 It also contains the _crosscount_ property, which is calculated interrnally, and the following properties, which may have been altered from the source values by the scroller:
 
 _runwayRowcount, listsize_
+
+# Restoring scroll positions coming out of cache
+
+This is only of concern if your cell components support scrolling.
+
+RIGS loads components into a cache (React portals), and into `Cradle` cells from there. Moreover RIGS moves components from one side of the (hidden) axis to the other through the cache during scrolling. Plus caching can be extended (by RIGS property settings) beyond the `Cradle`. So going into and out of cache happens a lot for components. While in cache, the component elements have their `scrollTop`, `scrollLeft`, `width`, and `height` values set to 0 by browsers. `width` and `height` values are restored by browsers when moved back into the visible DOM area, but scroll positions have to be manually restored.
+
+Here is one way of restoring scroll positions. Basically, save scroll positions on an ongoing basis, detect going into cache when `width` and `height` values are both zero, and detect coming out of cache when `width` and `height` are no longer zero. When coming out of cache, restore the saved scroll positions.
+
+This code is Typescript, in a function component.
+
+~~~typescript
+    // ------------------------[ handle scroll position recovery ]---------------------
+
+    // define required data repo
+    const scrollerElementRef = useRef<any>(null),
+        scrollPositionsRef = useRef({scrollTop:0, scrollLeft:0}),
+        wasCachedRef = useRef(false)
+
+    // define the scroll event handler
+    const scrollerEventHandler = (event:React.UIEvent<HTMLElement>) => {
+
+        const scrollerElement = event.currentTarget
+
+        // save scroll positions if the scroller element is not cached
+        if (!(!scrollerElement.offsetHeight && !scrollerElement.offsetWidth)) {
+
+            const scrollPositions = scrollPositionsRef.current
+
+            scrollPositions.scrollTop = scrollerElement.scrollTop
+            scrollPositions.scrollLeft = scrollerElement.scrollLeft
+
+        }
+
+    }
+
+    // register the scroll event handler
+    useEffect(()=>{
+
+        const scrollerElement = scrollerElementRef.current
+
+        scrollerElement.addEventListener('scroll', scrollerEventHandler)
+
+        // unmount
+        return () => {
+            scrollerElement.removeEventListener('scroll', scrollerEventHandler)
+        }
+
+    },[])
+
+    // define the cache sentinel
+    const cacheSentinel = () => {
+        const scrollerElement = scrollerElementRef.current
+
+        if (!scrollerElement) return // first iteration
+
+        const isCached = (!scrollerElement.offsetWidth && !scrollerElement.offsetHeight) // zero values == cached
+
+        if (isCached != wasCachedRef.current) { // there's been a change
+
+            wasCachedRef.current = isCached
+
+            if (!isCached) { // restore scroll positions
+
+                const {scrollTop, scrollLeft} = scrollPositionsRef.current
+
+                scrollerElement.scrollTop = scrollTop
+                scrollerElement.scrollLeft = scrollLeft
+
+            }
+
+        }
+
+    }
+
+    // run the cache sentinel on every iteration
+    cacheSentinel()
+
+    // register the scroller element with the ref attribute
+    return <div ref = {scrollerElementRef} style = {scrollerstyles}>
+        {scrollercontent}
+    </div>
+~~~
 
 # Licence
 
