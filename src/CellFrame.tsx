@@ -262,8 +262,6 @@ const CellFrame = ({
 
     const portalNodeRef = useRef(null)
 
-    // const isReparentingRef = useRef(false)
-
     useLayoutEffect(() => {
 
         switch (frameState) {
@@ -306,8 +304,6 @@ const CellFrame = ({
                         portalNodeRef.current = portalMetadataRef.current.portalNode
                         setContainerStyles(
                             portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
-                        // notify fetched component that reparenting is underway
-                        // portalMetadataRef.current.isReparentingRef.current = true
 
                         setFrameState('retrieved')
 
@@ -366,7 +362,6 @@ const CellFrame = ({
                                 // if usercontent is otherwise disallowed, let error handling deal with it.
                                 let content 
                                 const scrollerProperties = {
-                                    // isReparentingRef:null,
                                     cellFrameDataRef,
                                     scrollerPropertiesRef,
                                 }
@@ -386,7 +381,6 @@ const CellFrame = ({
                                 setContainerStyles(
                                     portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
                                 // make available to user content
-                                // scrollerProperties.isReparentingRef = portalMetadataRef.current.isReparentingRef
 
                                 isMountedRef.current && setFrameState('inserting')
 

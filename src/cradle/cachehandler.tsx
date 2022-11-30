@@ -205,7 +205,6 @@ export class CacheHandler {
         partitionMetadata.portalMap.delete(itemID)
         partitionMetadata.mapcount -= 1 
 
-
         this.cacheProps.partitionModifiedSet.add(partitionID)
 
     }
@@ -625,7 +624,7 @@ export class CacheHandler {
         // -----------return list of processed indexes to caller --------
         // for synchrnization with cradle cellFrames
 
-        const processedIndexes = [...processedshiftList,...processedmoveList]
+        const processedIndexes = [...processedshiftList, ...processedmoveList]
 
         return processedIndexes
 
@@ -906,9 +905,6 @@ export class CacheHandler {
 
         const portalMetadata = {
             portalNode,
-            // isReparentingRef:{
-            //     current:false,
-            // },
             index,
             itemID,
             scrollerProperties,
@@ -920,7 +916,6 @@ export class CacheHandler {
         this.cacheProps.indexToItemIDMap.set(index, itemID)
 
         if (!isPreload) this.renderPortalLists()
-        // this.renderPortalLists()
 
         return portalMetadata
 
@@ -966,7 +961,6 @@ export class CacheHandler {
 
             let content 
             const scrollerProperties = {
-                // isReparentingRef:null,
                 scrollerPropertiesRef,
             }
             if (usercontent.props.hasOwnProperty('scrollerProperties')) {
