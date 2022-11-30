@@ -307,7 +307,7 @@ This code is Typescript, in a function component.
         scrollPositionsRef = useRef({scrollTop:0, scrollLeft:0}),
         wasCachedRef = useRef(false)
 
-    // define the scroll event handler
+    // define the scroll event handler - save scroll positions
     const scrollerEventHandler = (event:React.UIEvent<HTMLElement>) => {
 
         const scrollerElement = event.currentTarget
@@ -338,7 +338,7 @@ This code is Typescript, in a function component.
 
     },[])
 
-    // define the cache sentinel
+    // define the cache sentinel - restore scroll positions
     const cacheSentinel = () => {
         const scrollerElement = scrollerElementRef.current
 
