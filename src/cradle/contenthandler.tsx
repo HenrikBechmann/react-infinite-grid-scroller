@@ -77,8 +77,6 @@ export default class ContentHandler {
 
     public setCradleContent = ( cradleState ) => { // cradleState influences some behaviour
 
-        // console.log('==> setCradleContent: cradleState', cradleState)
-
         // ------------------------------[ 1. initialize ]---------------------------
 
         const { cradleParameters } = this
@@ -116,7 +114,6 @@ export default class ContentHandler {
             styles,
             layout,
             placeholderMessages,
-            scrollerProperties, // FOR DEBUG
         } = cradleInheritedProperties
 
         const {crosscount, listsize, listRowcount} = cradleInternalProperties
@@ -326,7 +323,6 @@ export default class ContentHandler {
             cache,
             styles,
             placeholderMessages,
-            scrollerProperties, // FOR DEBUG
             layout, cellHeight, cellWidth, padding, gap
         } = cradleInheritedProperties
 
@@ -607,12 +603,6 @@ export default class ContentHandler {
 
         } = cradleInheritedProperties
 
-        let { 
-        
-            blockScrollPos
-
-        } = cradlePositionData
-
         const { 
 
             crosscount, 
@@ -643,17 +633,11 @@ export default class ContentHandler {
                 cellWidth
             ) + gap
 
-        const measuredHeadLength = 
-            (orientation == 'vertical')?
-                headGridElement.offsetHeight:
-                headGridElement.offsetWidth
-
         const measuredTailLength = 
             (orientation == 'vertical')?
                 tailGridElement.offsetHeight:
                 tailGridElement.offsetWidth
 
-        const basePreCradlePixelLength = preCradleRowCount * baseCellLength
         const basePostCradlePixelLength = postCradleRowCount * baseCellLength
 
         const computedPostAxisPixelLength = basePostCradlePixelLength + measuredTailLength
@@ -662,16 +646,14 @@ export default class ContentHandler {
         const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding
         const computedScrollblockLength = basePreAxisPixelLength + computedPostAxisPixelLength
 
-        // ------------------------[ change calculations ]----------------------
+        // ------------------------[ layout adjustments ]----------------------
 
-        blockScrollPos = basePreAxisPixelLength - axisViewportOffset
-        const newAxisScrollblockOffset = blockScrollPos + axisViewportOffset
+        const blockScrollPos = basePreAxisPixelLength - axisViewportOffset
+        const newAxisScrollblockOffset = blockScrollPos + axisViewportOffset // basePreAxisPixelLength, but semantics
 
         if (orientation == 'vertical') {
 
-            // the axis is moved in the opposite direction to maintain viewport position
             axisElement.style.top = newAxisScrollblockOffset + 'px'
-            // the height is adjusted by both deltas, as it controls the scroll length
             scrollblockElement.style.height = computedScrollblockLength + 'px'
 
         } else { // 'horizontal'
@@ -682,13 +664,14 @@ export default class ContentHandler {
         }
 
         // -----------------------[ scrollPos adjustment ]-------------------------
-        // adjustments of blockScrollPos must take place here, to be after length is updated
 
         interruptHandler.signals.pauseCradleIntersectionObserver = true
 
         cradlePositionData.blockScrollPos = blockScrollPos
         viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
         scrollHandler.resetScrollData(blockScrollPos)
+
+        // -----------------------[ edge cases ]-------------------------
 
         // anomaly: returning from bottom of list sometimes results in diff between actual and targeted
         //    ... presumably from resetting the content length

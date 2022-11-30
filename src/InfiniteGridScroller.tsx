@@ -213,6 +213,7 @@ const InfiniteGridScroller = (props) => {
 
     if (isSafariIOS()) {
         layout = 'uniform'
+        console.log('Please note that the RIGS scroller does not support "variable" cells on Safari for iOS')
     }
 
     const gridSpecs = {

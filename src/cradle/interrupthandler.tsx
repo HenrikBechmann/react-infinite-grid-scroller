@@ -79,9 +79,6 @@ export default class InterruptHandler {
                     viewportElement.scrollTop:
                     viewportElement.scrollLeft
 
-            // const blockScrollPos = layoutHandler.cradlePositionData.blockScrollPos
-            // console.log('==> trigger interrupt: scrollPos, blockScrollPos\n', scrollPos, blockScrollPos)
-
             const contentLength = 
                 (orientation == 'vertical')?
                     viewportElement.scrollHeight:
@@ -128,6 +125,7 @@ export default class InterruptHandler {
         }
     }
 
+    // data transfer to updateCradleContent triggered by closing axisTriggerlinesObserverCallback setCradleState call
     shiftinstruction
     triggerViewportReferencePos
 
