@@ -289,7 +289,15 @@ It also contains the _crosscount_ property, which is calculated interrnally, and
 
 _runwayRowcount, listsize_
 
-# Restoring scroll position coming out of cache
+# Restoring scroll positions coming out of cache
+
+This is only of concern if your cell components support scrolling.
+
+RIGS loads components into a cache (React portals), and into `Cradle` cells from there. Moreover RIGS moves components from one side of the (hidden) axis to the other through the cache during scrolling. Plus caching can be extended by RIGS setting behond the `Cradle`. So going into and out of cache happens a lot for components. While in cache, the component elements have their `scrollTop`, `scrollLeft`, `width`, and `height` values set to 0. `width` and `height` values are restored by browsers when moved back into the visible DOM area, but scroll positions have to be manually restored.
+
+Here is one way of restoring scroll positions. Basically, save scroll positions on an ongoing basis, detect going into cache when `width` and `height` values are both 0 (zero), and detect coming out of cache when `width` and `height` are no longer zero. When coming out of cache, restore the saved scroll positions.
+
+This code is Typescript, in a a function component.
 
 # Licence
 
