@@ -297,7 +297,7 @@ RIGS loads components into a cache (React portals), and into `Cradle` cells from
 
 Here is one way of restoring scroll positions. Basically, save scroll positions on an ongoing basis, detect going into cache when `width` and `height` values are both 0, and detect coming out of cache when `width` and `height` are no longer zero. When coming out of cache, restore the saved scroll positions.
 
-This code is Typescript, in a a function component.
+This code is Typescript, in a function component.
 
 # Licence
 
