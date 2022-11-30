@@ -367,7 +367,7 @@ This code is Typescript, in a function component.
     // run the cache sentinel on every iteration
     cacheSentinel()
 
-    // register the scroller element
+    // register the scroller element with the ref attribute
     return <div ref = {scrollerElementRef} style = {scrollerstyles}>
         {scrollercontent}
     </div>
