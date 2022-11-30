@@ -329,6 +329,7 @@ This code is Typescript, in a function component.
     useEffect(()=>{
 
         const scrollerElement = scrollerElementRef.current
+        
         scrollerElement.addEventListener('scroll', scrollerEventHandler)
 
         // unmount
