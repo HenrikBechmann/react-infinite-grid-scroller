@@ -197,9 +197,6 @@ export const getShiftInstruction = ({
 
     }
 
-    // console.log('--getShiftInstruction: triggerData\n',
-    //     triggerData)
-
     let shiftinstruction
     
     const triggerHistory = triggerHistoryRef.current
@@ -281,9 +278,6 @@ export const getShiftInstruction = ({
         }
 
     }
-
-    // console.log('==> getShiftInstruction: shiftinstruction\n',
-    //     shiftinstruction)
 
     return [shiftinstruction, triggerViewportReferencePos]
 
@@ -487,10 +481,10 @@ export const calcContentShift = ({
     //     and only using measured length
     // axis must be no farther than 1 back of the last row end position
     if ((previousAxisRowOffset + axisReferenceRowShift) > listEndrowOffset) {
-        // console.log('++calcContentShift:(previousAxisRowOffset + axisReferenceRowShift) > listEndrowOffset, axisPixelShift, baseRowLength\n',
-        //     previousAxisRowOffset + axisReferenceRowShift, listEndrowOffset, axisPixelShift, gridRowLengths.at(-1))
+
         axisReferenceRowShift -= 1
         axisPixelShift -= gridRowLengths.at(-1)
+
     }
 
     // -----------[ 3. calculate current viewport axis offset ]-------------------
