@@ -289,6 +289,8 @@ It also contains the _crosscount_ property, which is calculated interrnally, and
 
 _runwayRowcount, listsize_
 
+# Restoring scroll position coming out of cache
+
 # Licence
 
 [MIT](LICENSE.md) &copy; 2020-2022 [Henrik Bechmann](https://twitter.com/HenrikBechmann)
