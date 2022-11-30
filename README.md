@@ -305,7 +305,6 @@ This code is Typescript, in a function component.
     // define required data repo
     const scrollerElementRef = useRef<any>(null),
         scrollPositionsRef = useRef({scrollTop:0, scrollLeft:0}),
-        isCachedRef = useRef(false),
         wasCachedRef = useRef(false)
 
     // define the scroll event handler
@@ -326,10 +325,10 @@ This code is Typescript, in a function component.
     }
 
     // register the scroll event handler
-    useEffect(() => {
+    useEffect(()=>{
 
         const scrollerElement = scrollerElementRef.current
-        
+
         scrollerElement.addEventListener('scroll', scrollerEventHandler)
 
         // unmount
@@ -349,8 +348,7 @@ This code is Typescript, in a function component.
 
         if (isCached != wasCachedRef.current) { // there's been a change
 
-            wasCachedRef.current = isCachedRef.current
-            isCachedRef.current = isCached
+            wasCachedRef.current = isCached
 
             if (!isCached) { // restore scroll positions
 
