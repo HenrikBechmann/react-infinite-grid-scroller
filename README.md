@@ -303,10 +303,10 @@ This code is Typescript, in a function component.
     // ------------------------[ handle scroll position recovery ]---------------------
 
     // define required data repo
-    const scrollerElementRef = useRef<any>(null)
-    const scrollPositionsRef = useRef({scrollTop:0, scrollLeft:0})
-    const isCachedRef = useRef(false)
-    const wasCachedRef = useRef(false)
+    const scrollerElementRef = useRef<any>(null),
+        scrollPositionsRef = useRef({scrollTop:0, scrollLeft:0}),
+        isCachedRef = useRef(false),
+        wasCachedRef = useRef(false)
 
     // define the scroll event handler
     const scrollerEventHandler = (event:React.UIEvent<HTMLElement>) => {
