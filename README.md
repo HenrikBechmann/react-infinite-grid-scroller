@@ -326,7 +326,7 @@ This code is Typescript, in a function component.
     }
 
     // register the scroll event handler
-    useEffect(()=>{
+    useEffect(() => {
 
         const scrollerElement = scrollerElementRef.current
         
