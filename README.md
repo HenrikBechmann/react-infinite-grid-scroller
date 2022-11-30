@@ -299,6 +299,80 @@ Here is one way of restoring scroll positions. Basically, save scroll positions 
 
 This code is Typescript, in a function component.
 
+~~~typescript
+    // ------------------------[ handle scroll position recovery ]---------------------
+
+    // define required data repo
+    const scrollerElementRef = useRef<any>(null)
+    const scrollPositionsRef = useRef({scrollTop:0, scrollLeft:0})
+    const isCachedRef = useRef(false)
+    const wasCachedRef = useRef(false)
+
+    // define the scroll event handler
+    const scrollerEventHandler = (event:React.UIEvent<HTMLElement>) => {
+
+        const scrollerElement = event.currentTarget
+
+        // save scroll positions if the scroller element is not cached
+        if (!(!scrollerElement.offsetHeight && !scrollerElement.offsetWidth)) {
+
+            const scrollPositions = scrollPositionsRef.current
+
+            scrollPositions.scrollTop = scrollerElement.scrollTop
+            scrollPositions.scrollLeft = scrollerElement.scrollLeft
+
+        }
+
+    }
+
+    // register the scroll event handler
+    useEffect(()=>{
+
+        const scrollerElement = scrollerElementRef.current
+        scrollerElement.addEventListener('scroll', scrollerEventHandler)
+
+        // unmount
+        return () => {
+            scrollerElement.removeEventListener('scroll', scrollerEventHandler)
+        }
+
+    },[])
+
+    // define the cache sentinel
+    const cacheSentinel = () => {
+        const scrollerElement = scrollerElementRef.current
+
+        if (!scrollerElement) return // first iteration
+
+        const isCached = (!scrollerElement.offsetWidth && !scrollerElement.offsetHeight) // zero values == cached
+
+        if (isCached != wasCachedRef.current) { // there's been a change
+
+            wasCachedRef.current = isCachedRef.current
+            isCachedRef.current = isCached
+
+            if (!isCached) { // restore scroll positions
+
+                const {scrollTop, scrollLeft} = scrollPositionsRef.current
+
+                scrollerElement.scrollTop = scrollTop
+                scrollerElement.scrollLeft = scrollLeft
+
+            }
+
+        }
+
+    }
+
+    // run the cache sentinel on every iteration
+    cacheSentinel()
+
+    // register the scroller element
+    return <div ref = {scrollerElementRef} style = {scrollerstyles}>
+        {scrollercontent}
+    </div>
+~~~
+
 # Licence
 
 [MIT](LICENSE.md) &copy; 2020-2022 [Henrik Bechmann](https://twitter.com/HenrikBechmann)
