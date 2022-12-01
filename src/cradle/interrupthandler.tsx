@@ -60,13 +60,16 @@ export default class InterruptHandler {
                 cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
             
             const { 
-
                 orientation, 
-
+                // cache,
+                // styles,
+                // placeholderMessages,
+                // scrollerProperties, // FOR DEBUG
             } = cradleInheritedProperties
 
             const { 
-
+            //     crosscount,
+            //     listsize,
                 triggerHistoryRef,
 
             } = cradleInternalProperties
@@ -86,7 +89,9 @@ export default class InterruptHandler {
                     viewportElement.offsetHeight:
                     viewportElement.offsetWidth
 
-            // nothing to do for browser top or bottom bounce
+            // first abandon option of 3; nothing to do
+            // for browser top or bottom bounce
+
             // fractional pixels can cause this to fail, hence Math.floor)
             if ( (scrollPos >= 0) || (Math.floor(scrollPos + viewportLength) <= contentLength)) { 
 
@@ -100,13 +105,13 @@ export default class InterruptHandler {
 
                     isFirstRowTriggerConfig:layoutHandler.triggercellIsInTail,
 
-                    viewportBoundingRect, // Safari doesn't correctly measure zoom for rootbounds in triggerlineEntries
+                    viewportBoundingRect, // Safari doesn't measure zoom for rootbounds in triggerlineEntries
 
                     triggerHistoryRef,
 
                 })
 
-                // second abandon option
+                // second abandon option of 3; nothing to do
                 if (shiftinstruction != 'none') { 
 
                     this.shiftinstruction = shiftinstruction
@@ -168,6 +173,8 @@ export default class InterruptHandler {
             const cradleState = stateHandler.cradleStateRef.current
 
             if (
+
+                    // !ViewportContextProperties.isReparentingRef?.current &&
 
                     !['repositioningRender','repositioningContinuation','finishreposition',
                         'renderupdatedcontent','finishupdatedcontent',

@@ -145,6 +145,7 @@ const Cradle = ({
     const isMountedRef = useRef(true)
     const isCachedRef = useRef(false)
     const wasCachedRef = useRef(false)
+    const parentingTransitionRequiredRef = useRef(false)
     const hasBeenRenderedRef = useRef(false)
 
     // trigger control
@@ -1127,6 +1128,7 @@ const Cradle = ({
                 interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.cradleIntersect.connectElements()
 
+                // this can be pre-empted by reparenting, which itself restores interrupts
                 setCradleState('restoreinterrupts') // to restore interrupts
 
                 break
@@ -1234,13 +1236,9 @@ const Cradle = ({
 
             case 'adjustupdateforvariability': {
 
-                // setTimeout(()=>{ // tentative; give DOM a chance to catch up
+                contentHandler.adjustScrollblockForVariability('updatecradle')
 
-                    contentHandler.adjustScrollblockForVariability('updatecradle')
-
-                    setCradleState('finishupdateforvariability')
-
-                // },0)
+                setCradleState('finishupdateforvariability')
 
                 break
 
