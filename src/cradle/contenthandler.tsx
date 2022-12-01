@@ -645,7 +645,7 @@ export default class ContentHandler {
         // ------------------------[ layout adjustments ]----------------------
 
         const blockScrollPos = basePreAxisPixelLength - axisViewportOffset
-        const newAxisScrollblockOffset = blockScrollPos + axisViewportOffset // basePreAxisPixelLength, but semantics
+        const newAxisScrollblockOffset = basePreAxisPixelLength // ie. blockScrollPos + axisViewportOffset
 
         if (orientation == 'vertical') {
 
