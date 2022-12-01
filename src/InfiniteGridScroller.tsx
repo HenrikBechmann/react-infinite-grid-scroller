@@ -33,7 +33,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react'
 // defensive
 import { ErrorBoundary } from 'react-error-boundary' // www.npmjs.com/package/react-error-boundary
 
-const isSafariIOS = () => {
+export const isSafariIOS = () => {
     const
         is_ios = /iP(ad|od|hone)/i.test(window.navigator.userAgent),
         is_safari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)
@@ -211,10 +211,10 @@ const InfiniteGridScroller = (props) => {
         layout = 'uniform'
     }
 
-    if (isSafariIOS()) {
-        layout = 'uniform'
-        console.log('Please note that the RIGS scroller does not support "variable" cells on Safari for iOS')
-    }
+    // if (isSafariIOS()) {
+    //     layout = 'uniform'
+    //     console.log('Please note that the RIGS scroller does not support "variable" cells on Safari for iOS')
+    // }
 
     const gridSpecs = {
         orientation,
