@@ -1234,13 +1234,13 @@ const Cradle = ({
 
             case 'adjustupdateforvariability': {
 
-                setTimeout(()=>{ // tentative; give DOM a chance to catch up
+                // setTimeout(()=>{ // tentative; give DOM a chance to catch up
 
                     contentHandler.adjustScrollblockForVariability('updatecradle')
 
                     setCradleState('finishupdateforvariability')
 
-                },0)
+                // },0)
 
                 break
 
