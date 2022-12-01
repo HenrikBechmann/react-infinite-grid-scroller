@@ -205,7 +205,6 @@ export class CacheHandler {
         partitionMetadata.portalMap.delete(itemID)
         partitionMetadata.mapcount -= 1 
 
-
         this.cacheProps.partitionModifiedSet.add(partitionID)
 
     }
@@ -906,9 +905,6 @@ export class CacheHandler {
 
         const portalMetadata = {
             portalNode,
-            // isReparentingRef:{
-            //     current:false,
-            // },
             index,
             itemID,
             scrollerProperties,
@@ -920,7 +916,6 @@ export class CacheHandler {
         this.cacheProps.indexToItemIDMap.set(index, itemID)
 
         if (!isPreload) this.renderPortalLists()
-        // this.renderPortalLists()
 
         return portalMetadata
 
@@ -966,7 +961,6 @@ export class CacheHandler {
 
             let content 
             const scrollerProperties = {
-                // isReparentingRef:null,
                 scrollerPropertiesRef,
             }
             if (usercontent.props.hasOwnProperty('scrollerProperties')) {
@@ -977,8 +971,6 @@ export class CacheHandler {
 
             const portalData = 
                 await this.createPortal(content, index, itemID, scrollerProperties, true) // true = isPreload
-            // make available to user content
-            // scrollerProperties.isReparentingRef = portalData.isReparentingRef
 
         } else {
 

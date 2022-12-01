@@ -37,8 +37,6 @@ import {
     allocateContentList,
     deletePortals,
     getCellFrameComponentList, 
-    // getGridRowLengths,
-    // getGridRowSpans,
 
 } from './contentfunctions'
 
@@ -449,8 +447,6 @@ export default class ContentHandler {
 
         // ----------------------------------[ 5. allocate cradle content ]--------------------------
 
-
-
         const [headcontent, tailcontent] = allocateContentList(
             {
                 contentlist:updatedContentList,
@@ -649,7 +645,7 @@ export default class ContentHandler {
         // ------------------------[ layout adjustments ]----------------------
 
         const blockScrollPos = basePreAxisPixelLength - axisViewportOffset
-        const newAxisScrollblockOffset = blockScrollPos + axisViewportOffset // basePreAxisPixelLength, but semantics
+        const newAxisScrollblockOffset = blockScrollPos + axisViewportOffset // ie. basePreAxisPixelLength, but semantics
 
         if (orientation == 'vertical') {
 
