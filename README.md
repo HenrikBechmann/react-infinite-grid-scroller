@@ -75,11 +75,9 @@ This is a random screenshare, showing nested scrollers in a resized browser (33%
 
 # Compatible browsers
 
-RIGS works on Chrome, Microsoft Edge, Firefox and Safari\*.
+RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 
 ![chrome](demo/chromelogo.png) ![edge](demo/edgelogo.png) ![firefox](demo/firefoxlogo.png) ![safari](demo/safarilogo.png)
-
-\* RIGS on Safari mobile (iOS) supports 'uniform' but not 'variable' cells. RIGS on Safari desktop (MacOS), however, supports both 'uniform' and 'variable' cells.
 
 # Scroller properties
 
@@ -307,7 +305,7 @@ This code is Typescript, in a function component.
         scrollPositionsRef = useRef({scrollTop:0, scrollLeft:0}),
         wasCachedRef = useRef(false)
 
-    // define the scroll event handler
+    // define the scroll event handler - save scroll positions
     const scrollerEventHandler = (event:React.UIEvent<HTMLElement>) => {
 
         const scrollerElement = event.currentTarget
@@ -325,7 +323,7 @@ This code is Typescript, in a function component.
     }
 
     // register the scroll event handler
-    useEffect(()=>{
+    useEffect( () => {
 
         const scrollerElement = scrollerElementRef.current
 
@@ -338,7 +336,7 @@ This code is Typescript, in a function component.
 
     },[])
 
-    // define the cache sentinel
+    // define the cache sentinel - restore scroll positions
     const cacheSentinel = () => {
         const scrollerElement = scrollerElementRef.current
 

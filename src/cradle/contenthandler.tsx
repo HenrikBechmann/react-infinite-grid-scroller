@@ -37,10 +37,10 @@ import {
     allocateContentList,
     deletePortals,
     getCellFrameComponentList, 
-    // getGridRowLengths,
-    // getGridRowSpans,
 
 } from './contentfunctions'
+
+import { isSafariIOS } from '../InfiniteGridScroller'
 
 export default class ContentHandler {
 
@@ -449,8 +449,6 @@ export default class ContentHandler {
 
         // ----------------------------------[ 5. allocate cradle content ]--------------------------
 
-
-
         const [headcontent, tailcontent] = allocateContentList(
             {
                 contentlist:updatedContentList,
@@ -649,7 +647,7 @@ export default class ContentHandler {
         // ------------------------[ layout adjustments ]----------------------
 
         const blockScrollPos = basePreAxisPixelLength - axisViewportOffset
-        const newAxisScrollblockOffset = blockScrollPos + axisViewportOffset // basePreAxisPixelLength, but semantics
+        const newAxisScrollblockOffset = blockScrollPos + axisViewportOffset // ie. basePreAxisPixelLength, but semantics
 
         if (orientation == 'vertical') {
 
@@ -662,33 +660,58 @@ export default class ContentHandler {
             scrollblockElement.style.width = computedScrollblockLength + 'px'
 
         }
-
         // -----------------------[ scrollPos adjustment ]-------------------------
 
         interruptHandler.signals.pauseCradleIntersectionObserver = true
 
-        cradlePositionData.blockScrollPos = blockScrollPos
-        viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-        scrollHandler.resetScrollData(blockScrollPos)
+        if (!isSafariIOS()) { // adjust blockScrollPos directly - most browsers including Safari desktop
 
-        // -----------------------[ edge cases ]-------------------------
-
-        // anomaly: returning from bottom of list sometimes results in diff between actual and targeted
-        //    ... presumably from resetting the content length
-        // this is a hacky workaround        
-        const newBlockScrollPos = 
-            (orientation == 'vertical')?
-                viewportElement.scrollTop:
-                viewportElement.scrollLeft
-
-        if (newBlockScrollPos != blockScrollPos) {
-            const diff = blockScrollPos - newBlockScrollPos
-            if (orientation == 'vertical') {
-                scrollblockElement.style.height = (scrollblockElement.offsetHeight + diff) + 'px'
-            } else {
-                scrollblockElement.style.width = (scrollblockElement.offsetWiith + diff) + 'px'
-            }
+            cradlePositionData.blockScrollPos = blockScrollPos
             viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+            scrollHandler.resetScrollData(blockScrollPos)
+
+            // -----------------------[ edge cases ]-------------------------
+
+            // anomaly: returning from bottom of list sometimes results in diff between actual and targeted
+            //    ... presumably from resetting the content length
+            // this is a hacky workaround        
+            const newBlockScrollPos = 
+                (orientation == 'vertical')?
+                    viewportElement.scrollTop:
+                    viewportElement.scrollLeft
+
+            if (newBlockScrollPos != blockScrollPos) {
+                const diff = blockScrollPos - newBlockScrollPos
+                if (orientation == 'vertical') {
+                    scrollblockElement.style.height = (scrollblockElement.offsetHeight + diff) + 'px'
+                } else {
+                    scrollblockElement.style.width = (scrollblockElement.offsetWiith + diff) + 'px'
+                }
+                viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+            }
+
+        } else { // for Safari iOS
+
+            // temporarily adjust scrollblockElement offset; iOSonAfterScroll transfers shift to blockScrollPos
+            // direct change of scrollTop/ScrollLeft in Safari iOS is overwritten by the browser momentum engine
+
+            const startingScrollPos = 
+                (orientation == 'vertical')?
+                    viewportElement.scrollTop:
+                    viewportElement.scrollLeft
+
+            const scrollDiff = blockScrollPos - startingScrollPos
+
+            if (orientation == 'vertical') {
+
+                scrollblockElement.style.top = -scrollDiff + 'px'
+
+            } else {
+
+                scrollblockElement.style.left = -scrollDiff + 'px'
+
+            }
+
         }
 
         // check for gotoIndex or resize overshoot

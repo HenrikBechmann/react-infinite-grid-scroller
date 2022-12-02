@@ -83,6 +83,8 @@ import ServiceHandler from './cradle/servicehandler'
 import StylesHandler from './cradle/styleshandler'
 // cacheHandler is imported as a property; instantiated at the root
 
+import { isSafariIOS } from './InfiniteGridScroller'
+
 // for children
 export const CradleContext = React.createContext(null)
 
@@ -145,7 +147,6 @@ const Cradle = ({
     const isMountedRef = useRef(true)
     const isCachedRef = useRef(false)
     const wasCachedRef = useRef(false)
-    const parentingTransitionRequiredRef = useRef(false)
     const hasBeenRenderedRef = useRef(false)
 
     // trigger control
@@ -580,12 +581,31 @@ const Cradle = ({
     // initialize window scroll listener
     useEffect(() => {
 
-        const viewportdata = ViewportContextPropertiesRef.current
-        viewportdata.elementRef.current.addEventListener('scroll',scrollHandler.onScroll)
+        const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
+        viewportElement.addEventListener('scroll',scrollHandler.onScroll)
 
         return () => {
 
-            viewportdata.elementRef.current && viewportdata.elementRef.current.removeEventListener('scroll',scrollHandler.onScroll)
+            viewportElement && 
+                viewportElement.removeEventListener('scroll',scrollHandler.onScroll)
+
+        }
+
+    },[])
+
+    useEffect(() => {
+
+        const { layout } = cradleInheritedPropertiesRef.current
+
+        if (!isSafariIOS() || (layout == 'uniform')) return
+
+        const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
+        viewportElement.addEventListener('scroll',scrollHandler.iOSonScroll)
+
+        return () => {
+
+            viewportElement && 
+                viewportElement.removeEventListener('scroll',scrollHandler.iOSonScroll)
 
         }
 
@@ -1128,7 +1148,6 @@ const Cradle = ({
                 interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.cradleIntersect.connectElements()
 
-                // this can be pre-empted by reparenting, which itself restores interrupts
                 setCradleState('restoreinterrupts') // to restore interrupts
 
                 break
@@ -1236,9 +1255,13 @@ const Cradle = ({
 
             case 'adjustupdateforvariability': {
 
-                contentHandler.adjustScrollblockForVariability('updatecradle')
+                // setTimeout(()=>{
 
-                setCradleState('finishupdateforvariability')
+                    contentHandler.adjustScrollblockForVariability('updatecradle')
+
+                    setCradleState('finishupdateforvariability')
+
+                // },0)
 
                 break
 

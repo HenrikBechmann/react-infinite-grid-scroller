@@ -15,6 +15,117 @@ export default class ScrollHandler {
 
     }
 
+    private _iOSscrolltimerid
+    private _iOSsetTimeoutTimerid
+
+    private _onIOSonAfterScrollTimeout
+
+    private _isIOSscrolling = false
+
+    public iOSonScroll = (e) => {
+
+        const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
+
+        if (signals.pauseScrollingEffects) {
+
+            return
+
+        }
+
+        if (!this._isIOSscrolling) {
+
+            this._isIOSscrolling = true
+
+            this._onIOSonAfterScrollTimeout = 1000 // iOS sometimes likes to pause before commencing scrolling
+
+            clearTimeout(this._onIOSonAfterScrollTimeout)
+
+            this._iOSsetTimeoutTimerid = setTimeout(()=>{
+                this._onIOSonAfterScrollTimeout = 250 // back to more responsive once underway
+            },900)
+
+        }
+
+        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
+        const viewportElement = ViewportContextProperties.elementRef.current
+
+        clearTimeout(this._iOSscrolltimerid)
+
+        const orientation = this.cradleParameters.cradleInheritedPropertiesRef.current.orientation
+        const scrollblockElement = viewportElement.firstChild
+
+        let scrollblockLength, viewportLength, blockScrollPos, scrollblockOffset
+        
+        if (orientation == 'vertical') {
+
+            scrollblockLength = viewportElement.scrollHeight
+            viewportLength =  viewportElement.offsetHeight
+            blockScrollPos = viewportElement.scrollTop
+            scrollblockOffset = scrollblockElement.offsetTop
+
+        } else {
+
+            scrollblockLength = viewportElement.scrollWidth
+            viewportLength =  viewportElement.offsetWidth
+            blockScrollPos = viewportElement.scrollLeft
+            scrollblockOffset = scrollblockElement.offsetLeft
+
+        }
+
+        if ((( blockScrollPos - scrollblockOffset) < 0) || // overshoot start
+            (scrollblockLength < (blockScrollPos - scrollblockOffset + viewportLength))) { // overshoot end
+
+            this.iOSonAfterScroll() // immediate halt and adjust
+
+        } else {
+
+            this._iOSscrolltimerid = setTimeout(() => {
+
+                this.iOSonAfterScroll() // deferred halt and adjust
+
+            },this._onIOSonAfterScrollTimeout)
+
+        }
+    }
+
+    private iOSonAfterScroll = () => {
+
+        this._isIOSscrolling = false
+
+        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
+        const viewportElement = ViewportContextProperties.elementRef.current
+        const scrollblockElement = viewportElement.firstChild
+
+        const orientation = this.cradleParameters.cradleInheritedPropertiesRef.current.orientation
+
+        const scrollblockOffset = 
+            (orientation == 'vertical')?
+                scrollblockElement.offsetTop:
+                scrollblockElement.offsetLeft
+
+        const blockScrollPos =
+            (orientation == 'vertical')?
+                viewportElement.scrollTop:
+                viewportElement.scrollLeft
+
+        viewportElement.style.overflow = 'hidden'
+
+        if (orientation == 'vertical') {
+
+            viewportElement.scrollTop = blockScrollPos - scrollblockOffset
+            scrollblockElement.style.top = null
+
+        } else { // orientation == horizontal
+
+            viewportElement.scrollLeft = blockScrollPos - scrollblockOffset
+            scrollblockElement.style.left = null
+
+        }
+
+        viewportElement.style.overflow = 'scroll'
+
+    }
+
     private cradleParameters
 
     public scrollData = {start:0, current:0, previous:0, previousupdate:0, currentupdate:0}

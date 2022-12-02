@@ -61,7 +61,6 @@ const Viewport = ({
     // ViewportContextPropertiesRef is passed as a resizing interrupt (through context) to children
     const ViewportContextPropertiesRef = useRef(
         {
-            // isReparentingRef:scrollerProperties?.isReparentingRef, 
             isResizing:false, 
             viewportDimensions:null,
             elementRef:null

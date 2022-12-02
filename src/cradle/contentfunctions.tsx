@@ -158,15 +158,11 @@ export const getShiftInstruction = ({
 
     const intersectrootpos = 
         (orientation == 'vertical')?
-            // Math.floor(entry.rootBounds.y):
-            // Math.floor(entry.rootBounds.x)
             entry.rootBounds.y:
             entry.rootBounds.x
 
     const boundingrootpos =
         (orientation == 'vertical')?
-            // Math.floor(viewportBoundingRect.y):
-            // Math.floor(viewportBoundingRect.x)
             viewportBoundingRect.y:
             viewportBoundingRect.x
 
