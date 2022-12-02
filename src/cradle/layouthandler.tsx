@@ -14,6 +14,8 @@
         viewport)
 */
 
+import { isSafariIOS } from '../InfiniteGridScroller'
+
 export default class LayoutHandler { 
 
     constructor(cradleParameters) {
@@ -192,7 +194,32 @@ export default class LayoutHandler {
         const calculatedBlockScrollPos = 
             (rowOffset * cellLength) + padding
 
-        viewportElement[cradlePositionData.blockScrollProperty] = calculatedBlockScrollPos
+
+        if (isSafariIOS()) { // scrollPos overwritten by Safari iOS momentum engine
+
+            const originalScrollPos = 
+                (orientation == 'vertical')?
+                    viewportElement.scrollTop:
+                    viewportElement.scrollLeft
+
+            const scrollShift = calculatedBlockScrollPos - originalScrollPos
+
+            if (orientation == 'vertical') {
+
+                scrollblockElement.style.top = scrollShift
+
+            } else {
+
+                scrollblockElement.style.left = scrollShift
+
+            }
+
+
+        } else {
+
+            viewportElement[cradlePositionData.blockScrollProperty] = calculatedBlockScrollPos
+
+        }
         cradlePositionData.blockScrollPos = calculatedBlockScrollPos
         scrollHandler.resetScrollData(calculatedBlockScrollPos)
 

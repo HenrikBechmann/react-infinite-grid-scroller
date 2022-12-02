@@ -664,7 +664,7 @@ export default class ContentHandler {
 
         interruptHandler.signals.pauseCradleIntersectionObserver = true
 
-        if (!isSafariIOS()) {
+        if (!isSafariIOS()) { // adjust blockScrollPos directly - most browsers including Safari desktop
 
             cradlePositionData.blockScrollPos = blockScrollPos
             viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
@@ -690,7 +690,10 @@ export default class ContentHandler {
                 viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
             }
 
-        } else {
+        } else { // for Safari iOS
+
+            // temporarily adjust scrollblockElement offset; iOSonAfterScroll transfers shift to blockScrollPos
+            // direct change of scrollTop/ScrollLeft in Safari iOS is overwritten by the browser momentum engine
 
             const startingScrollPos = 
                 (orientation == 'vertical')?

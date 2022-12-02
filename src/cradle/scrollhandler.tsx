@@ -16,6 +16,11 @@ export default class ScrollHandler {
     }
 
     private _iOSscrolltimerid
+    private _iOSsetTimeoutTimerid
+
+    private _onIOSonAfterScrollTimeout
+
+    private _isIOSscrolling = false
 
     public iOSonScroll = (e) => {
 
@@ -24,6 +29,20 @@ export default class ScrollHandler {
         if (signals.pauseScrollingEffects) {
 
             return
+
+        }
+
+        if (!this._isIOSscrolling) {
+
+            this._isIOSscrolling = true
+
+            this._onIOSonAfterScrollTimeout = 1000 // iOS sometimes likes to pause before commencing scrolling
+
+            clearTimeout(this._onIOSonAfterScrollTimeout)
+
+            this._iOSsetTimeoutTimerid = setTimeout(()=>{
+                this._onIOSonAfterScrollTimeout = 250 // back to more responsive once underway
+            },900)
 
         }
 
@@ -64,12 +83,14 @@ export default class ScrollHandler {
 
                 this.iOSonAfterScroll() // deferred halt and adjust
 
-            },250)
+            },this._onIOSonAfterScrollTimeout)
 
         }
     }
 
     private iOSonAfterScroll = () => {
+
+        this._isIOSscrolling = false
 
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
         const viewportElement = ViewportContextProperties.elementRef.current
