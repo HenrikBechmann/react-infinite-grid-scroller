@@ -19,6 +19,14 @@ export default class ScrollHandler {
 
     public iOSonScroll = (e) => {
 
+        const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
+
+        if (signals.pauseScrollingEffects) {
+
+            return
+
+        }
+
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
         const viewportElement = ViewportContextProperties.elementRef.current
         // console.log('iOSonScroll', viewportElement.scrollTop)
@@ -26,8 +34,13 @@ export default class ScrollHandler {
         clearTimeout(this._iOSscrolltimerid)
 
         const orientation = this.cradleParameters.cradleInheritedPropertiesRef.current.orientation
+        const { layoutHandler } = this.cradleParameters.handlersRef.current
 
-        const scrollLength = 
+        const { elements: cradleElements } = layoutHandler
+        const tailElement = cradleElements.tailRef.current
+        const axisElement = cradleElements.axisRef.current
+
+        const scrollblockLength = 
             (orientation == 'vertical')?
                 viewportElement.scrollHeight:
                 viewportElement.scrollWidth
@@ -49,8 +62,28 @@ export default class ScrollHandler {
                 scrollblockElement.offsetTop:
                 scrollblockElement.offsetLeft
 
-        if (( blockScrollPos - scrollblockOffset) < 0 || 
-            (blockScrollPos - scrollblockOffset + scrollLength) < (blockScrollPos + viewportLength) ) {
+        const axisOffset = 
+            (orientation == 'vertical')?
+                axisElement.offsetTop:
+                axisElement.offsetLeft
+
+        const measuredTailLength = 
+            (orientation == 'vertical')?
+                tailElement.offsetHeight:
+                tailElement.offsetWidth
+
+        // console.log('==> blockScrollPos, scrollblockOffset, axisOffset, measuredTailLength,scrollblockLength, viewportLength\n',
+        //     blockScrollPos, scrollblockOffset, axisOffset, measuredTailLength, scrollblockLength, viewportLength)
+
+        // console.log('scrollblock based, viewport based\n',
+        //     scrollblockLength, 
+        //     blockScrollPos + scrollblockOffset + viewportLength)
+
+        if ((( blockScrollPos - scrollblockOffset) < 0) || 
+            // ((blockScrollPos + scrollblockOffset + axisOffset + measuredTailLength) < 
+            //     (blockScrollPos - scrollblockOffset + viewportLength))) {
+            ((axisOffset + measuredTailLength) < 
+                (blockScrollPos - scrollblockOffset) + viewportLength)) {
 
             this.iOSonAfterScroll()
 
