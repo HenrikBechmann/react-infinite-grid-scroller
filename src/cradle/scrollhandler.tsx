@@ -29,70 +29,40 @@ export default class ScrollHandler {
 
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
         const viewportElement = ViewportContextProperties.elementRef.current
-        // console.log('iOSonScroll', viewportElement.scrollTop)
 
         clearTimeout(this._iOSscrolltimerid)
 
         const orientation = this.cradleParameters.cradleInheritedPropertiesRef.current.orientation
-        const { layoutHandler } = this.cradleParameters.handlersRef.current
-
-        const { elements: cradleElements } = layoutHandler
-        const tailElement = cradleElements.tailRef.current
-        const axisElement = cradleElements.axisRef.current
-
-        const scrollblockLength = 
-            (orientation == 'vertical')?
-                viewportElement.scrollHeight:
-                viewportElement.scrollWidth
-
-        const viewportLength = 
-            (orientation == 'vertical')?
-                viewportElement.offsetHeight:
-                viewportElement.offsetWidth
-
-        const blockScrollPos = 
-            (orientation == 'vertical')?
-                viewportElement.scrollTop:
-                viewportElement.scrollLeft
-
         const scrollblockElement = viewportElement.firstChild
 
-        const scrollblockOffset = 
-            (orientation == 'vertical')?
-                scrollblockElement.offsetTop:
-                scrollblockElement.offsetLeft
+        let scrollblockLength, viewportLength, blockScrollPos, scrollblockOffset
+        
+        if (orientation == 'vertical') {
 
-        const axisOffset = 
-            (orientation == 'vertical')?
-                axisElement.offsetTop:
-                axisElement.offsetLeft
+            scrollblockLength = viewportElement.scrollHeight
+            viewportLength =  viewportElement.offsetHeight
+            blockScrollPos = viewportElement.scrollTop
+            scrollblockOffset = scrollblockElement.offsetTop
 
-        const measuredTailLength = 
-            (orientation == 'vertical')?
-                tailElement.offsetHeight:
-                tailElement.offsetWidth
+        } else {
 
-        // console.log('==> blockScrollPos, scrollblockOffset, axisOffset, measuredTailLength,scrollblockLength, viewportLength\n',
-        //     blockScrollPos, scrollblockOffset, axisOffset, measuredTailLength, scrollblockLength, viewportLength)
+            scrollblockLength = viewportElement.scrollWidth
+            viewportLength =  viewportElement.offsetWidth
+            blockScrollPos = viewportElement.scrollLeft
+            scrollblockOffset = scrollblockElement.offsetLeft
 
-        // console.log('scrollblock based, viewport based\n',
-        //     scrollblockLength, 
-        //     blockScrollPos + scrollblockOffset + viewportLength)
+        }
 
-        if ((( blockScrollPos - scrollblockOffset) < 0) || 
-            // ((blockScrollPos + scrollblockOffset + axisOffset + measuredTailLength) < 
-            //     (blockScrollPos - scrollblockOffset + viewportLength))) {
-            // ((axisOffset + measuredTailLength) < 
-            ((scrollblockLength) < 
-                (blockScrollPos - scrollblockOffset) + viewportLength)) {
+        if ((( blockScrollPos - scrollblockOffset) < 0) || // overshoot start
+            (scrollblockLength < (blockScrollPos - scrollblockOffset + viewportLength))) { // overshoot end
 
-            this.iOSonAfterScroll()
+            this.iOSonAfterScroll() // immediate halt and adjust
 
         } else {
 
             this._iOSscrolltimerid = setTimeout(() => {
 
-                this.iOSonAfterScroll()
+                this.iOSonAfterScroll() // deferred halt and adjust
 
             },250)
 
@@ -100,8 +70,6 @@ export default class ScrollHandler {
     }
 
     private iOSonAfterScroll = () => {
-
-        // console.log('==> iOSonAfterScroll')
 
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
         const viewportElement = ViewportContextProperties.elementRef.current
@@ -120,9 +88,6 @@ export default class ScrollHandler {
                 viewportElement.scrollLeft
 
         viewportElement.style.overflow = 'hidden'
-
-        // console.log('-- blockScrollPos, scrollblockOffset\n',
-        //     blockScrollPos, scrollblockOffset)
 
         if (orientation == 'vertical') {
 
