@@ -586,7 +586,8 @@ const Cradle = ({
 
         return () => {
 
-            viewportElement && viewportElement.removeEventListener('scroll',scrollHandler.onScroll)
+            viewportElement && 
+                viewportElement.removeEventListener('scroll',scrollHandler.onScroll)
 
         }
 
@@ -597,8 +598,6 @@ const Cradle = ({
         const { layout } = cradleInheritedPropertiesRef.current
 
         if (!isSafariIOS() || (layout == 'uniform')) return
-
-        console.log('setting safariIOS scrolllistener')
 
         const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
         viewportElement.addEventListener('scroll',scrollHandler.iOSonScroll)
