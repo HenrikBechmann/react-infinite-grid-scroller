@@ -6,7 +6,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 module.exports = {
   // devtool: 'source-map',
   entry: {
-    main:'./src/infinitegridscroller.tsx'
+    main:'./src/InfiniteGridScroller.tsx'
   },
   output: {
     filename: 'build.js',
