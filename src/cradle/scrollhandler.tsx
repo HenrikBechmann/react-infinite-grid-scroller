@@ -15,6 +15,64 @@ export default class ScrollHandler {
 
     }
 
+    private _iOSscrolltimerid
+
+    public iOSonScroll = (e) => {
+
+        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
+        const viewportElement = ViewportContextProperties.elementRef.current
+        // console.log('iOSonScroll', viewportElement.scrollTop)
+
+        clearTimeout(this._iOSscrolltimerid)
+
+        this._iOSscrolltimerid = setTimeout(() => {
+
+            this.iOSonAfterScroll()
+
+        },1000)
+    }
+
+    private iOSonAfterScroll = () => {
+
+        // console.log('==> iOSonAfterScroll')
+
+        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
+        const viewportElement = ViewportContextProperties.elementRef.current
+        const scrollblockElement = viewportElement.firstChild
+
+        const orientation = this.cradleParameters.cradleInheritedPropertiesRef.current.orientation
+
+        const scrollblockOffset = 
+            (orientation == 'vertical')?
+                scrollblockElement.offsetTop:
+                scrollblockElement.offsetLeft
+
+        const blockScrollPos =
+            (orientation == 'vertical')?
+                viewportElement.scrollTop:
+                viewportElement.scrollLeft
+
+        viewportElement.style.overflow = 'hidden'
+
+        // console.log('-- blockScrollPos, scrollblockOffset\n',
+        //     blockScrollPos, scrollblockOffset)
+
+        if (orientation == 'vertical') {
+
+            viewportElement.scrollTop = blockScrollPos - scrollblockOffset
+            scrollblockElement.style.top = null
+
+        } else { // orientation == horizontal
+
+            viewportElement.scrollLeft = blockScrollPos - scrollblockOffset
+            scrollblockElement.style.left = null
+
+        }
+
+        viewportElement.style.overflow = 'scroll'
+
+    }
+
     private cradleParameters
 
     public scrollData = {start:0, current:0, previous:0, previousupdate:0, currentupdate:0}
