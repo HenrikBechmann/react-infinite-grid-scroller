@@ -29,7 +29,7 @@ export default class ScrollHandler {
 
             this.iOSonAfterScroll()
 
-        },1000)
+        },250)
     }
 
     private iOSonAfterScroll = () => {
