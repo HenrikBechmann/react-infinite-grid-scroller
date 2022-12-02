@@ -25,11 +25,44 @@ export default class ScrollHandler {
 
         clearTimeout(this._iOSscrolltimerid)
 
-        this._iOSscrolltimerid = setTimeout(() => {
+        const orientation = this.cradleParameters.cradleInheritedPropertiesRef.current.orientation
+
+        const scrollLength = 
+            (orientation == 'vertical')?
+                viewportElement.scrollHeight:
+                viewportElement.scrollWidth
+
+        const viewportLength = 
+            (orientation == 'vertical')?
+                viewportElement.offsetHeight:
+                viewportElement.offsetWidth
+
+        const blockScrollPos = 
+            (orientation == 'vertical')?
+                viewportElement.scrollTop:
+                viewportElement.scrollLeft
+
+        const scrollblockElement = viewportElement.firstChild
+
+        const scrollblockOffset = 
+            (orientation == 'vertical')?
+                scrollblockElement.offsetTop:
+                scrollblockElement.offsetLeft
+
+        if (( blockScrollPos - scrollblockOffset) < 0 || 
+            (blockScrollPos - scrollblockOffset + scrollLength) < (blockScrollPos + viewportLength) ) {
 
             this.iOSonAfterScroll()
 
-        },250)
+        } else {
+
+            this._iOSscrolltimerid = setTimeout(() => {
+
+                this.iOSonAfterScroll()
+
+            },250)
+
+        }
     }
 
     private iOSonAfterScroll = () => {
