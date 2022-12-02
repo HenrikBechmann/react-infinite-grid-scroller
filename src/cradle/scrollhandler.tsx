@@ -82,7 +82,8 @@ export default class ScrollHandler {
         if ((( blockScrollPos - scrollblockOffset) < 0) || 
             // ((blockScrollPos + scrollblockOffset + axisOffset + measuredTailLength) < 
             //     (blockScrollPos - scrollblockOffset + viewportLength))) {
-            ((axisOffset + measuredTailLength) < 
+            // ((axisOffset + measuredTailLength) < 
+            ((scrollblockLength) < 
                 (blockScrollPos - scrollblockOffset) + viewportLength)) {
 
             this.iOSonAfterScroll()
