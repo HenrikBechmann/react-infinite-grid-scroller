@@ -670,9 +670,7 @@ export default class ContentHandler {
             viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
             scrollHandler.resetScrollData(blockScrollPos)
 
-            // -----------------------[ edge cases ]-------------------------
-
-            // anomaly: returning from bottom of list sometimes results in diff between actual and targeted
+            // edge case anomaly: returning from bottom of list sometimes results in diff between actual and targeted
             //    ... presumably from resetting the content length
             // this is a hacky workaround        
             const newBlockScrollPos = 

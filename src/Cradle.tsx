@@ -578,7 +578,7 @@ const Cradle = ({
 
     },[])
 
-    // initialize window scroll listener
+    // initialize window scroll listeners
     useEffect(() => {
 
         const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
@@ -593,6 +593,7 @@ const Cradle = ({
 
     },[])
 
+    // iOS Safari requires special handling - it ignores assignments to scrollLeft/scrollTop during scrolling
     useEffect(() => {
 
         const { layout } = cradleInheritedPropertiesRef.current
@@ -646,7 +647,7 @@ const Cradle = ({
     // =====================[ RECONFIGURATION effects ]======================
     // change listsize, caching, resize (UI resize of the viewport), reconfigure, or pivot
 
-    // callback: the new list size will always be less than current listsize
+    // inernal callback: the new list size will always be less than current listsize
     // invoked if getItem returns null
     const nullItemSetMaxListsize = useCallback((maxListsize) => {
         const listsize = cradleInternalPropertiesRef.current.listsize
@@ -1245,7 +1246,7 @@ const Cradle = ({
 
             case 'refreshDOMupdateforvariability': {
 
-                // extra cycle needed to allow time to synchronize DOM with grid changes
+                // extra cycle to allow for DOM synchronizion with grid changes
 
                 setCradleState('adjustupdateforvariability')
 
@@ -1255,13 +1256,9 @@ const Cradle = ({
 
             case 'adjustupdateforvariability': {
 
-                // setTimeout(()=>{
+                contentHandler.adjustScrollblockForVariability('updatecradle')
 
-                    contentHandler.adjustScrollblockForVariability('updatecradle')
-
-                    setCradleState('finishupdateforvariability')
-
-                // },0)
+                setCradleState('finishupdateforvariability')
 
                 break
 
@@ -1270,7 +1267,6 @@ const Cradle = ({
             case 'finishupdateforvariability': {
 
                 // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
-                // interruptHandler.signals.pauseTriggerlinesObserver = false
                 interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseCradleIntersectionObserver = false
 
