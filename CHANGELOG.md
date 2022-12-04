@@ -4,7 +4,7 @@
 
 Many issues were identified and resolved, thanks mostly to testing with the demo site.
 
-Beta 4 should be the last testing cycle before the product is promoted to Release Candidate status.
+Beta 4 should be the last testing cycle before the product is promoted to Release Candidate status. Focussing on cross-browser testing.
 
 ## 1.0.0-Beta-3 November 8, 2022
 

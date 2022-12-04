@@ -642,10 +642,10 @@ export default class ContentHandler {
 
         // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
         const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding
-        const computedScrollblockLength = basePreAxisPixelLength + computedPostAxisPixelLength
 
         // ------------------------[ layout adjustments ]----------------------
 
+        const computedScrollblockLength = basePreAxisPixelLength + computedPostAxisPixelLength
         const blockScrollPos = basePreAxisPixelLength - axisViewportOffset
         const newAxisScrollblockOffset = blockScrollPos + axisViewportOffset // ie. basePreAxisPixelLength, but semantics
 
@@ -670,9 +670,7 @@ export default class ContentHandler {
             viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
             scrollHandler.resetScrollData(blockScrollPos)
 
-            // -----------------------[ edge cases ]-------------------------
-
-            // anomaly: returning from bottom of list sometimes results in diff between actual and targeted
+            // edge case anomaly: returning from bottom of list sometimes results in diff between actual and targeted
             //    ... presumably from resetting the content length
             // this is a hacky workaround        
             const newBlockScrollPos = 
@@ -693,7 +691,7 @@ export default class ContentHandler {
         } else { // for Safari iOS
 
             // temporarily adjust scrollblockElement offset; iOSonAfterScroll transfers shift to blockScrollPos
-            // direct change of scrollTop/ScrollLeft in Safari iOS is overwritten by the browser momentum engine
+            // direct change of scrollTop/ScrollLeft in Safari iOS is ignored by the browser momentum engine
 
             const startingScrollPos = 
                 (orientation == 'vertical')?
