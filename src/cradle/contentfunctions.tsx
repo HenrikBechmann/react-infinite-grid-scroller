@@ -151,7 +151,8 @@ export const getShiftInstruction = ({
         isFirstRowTriggerConfig
     }
 
-    const entry = triggerlineEntries.at(-1) // most recent; either triggerline will do
+    // most recent; either triggerline will do
+    const entry = triggerlineEntries[triggerlineEntries.length - 1] //.at(-1) at not available in iOS 15
     const referencename = entry.target.dataset.type
     entry.referencename = referencename
     const span = triggerlineSpan
