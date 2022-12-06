@@ -23,7 +23,7 @@
     be adjusted accordingly. Any other value that is returned is treated as an error, and presented
     as such to the user through the placeholder component.
 
-    getItem sends the index (logical index in the list) and a session itemID to the host, so that
+    getItem sends the listposition (logical listposition in the list) and a session itemID to the host, so that
     the host can sync its own tracking with the scroller.
 
     One CellFrame at a time is designated as the host of the two triggerLines with the isTriggerCell flag. 
@@ -67,7 +67,7 @@ const CellFrame = ({
     listsize, // for feedback in placeholder
     placeholder, // optionally provided by host
     itemID, // session itemID
-    index, // logical index in infinite list
+    listposition, // logical listposition in infinite list
     instanceID, // CellFrame session ID
     scrollerID, // scroller ID (for debugging)
     isTriggercell,
@@ -134,7 +134,7 @@ const CellFrame = ({
     const cellFrameDataRef = useRef(null)
     cellFrameDataRef.current = {
         itemID,
-        index
+        listposition
     }
     // fetch error
     const errorRef = useRef(false)
@@ -160,7 +160,7 @@ const CellFrame = ({
 
             cancelidlecallback(requestIdleCallbackIdRef.current)
 
-            cacheHandler.removeRequestedPortal(index)
+            cacheHandler.removeRequestedPortal(listposition)
 
         }
 
@@ -181,11 +181,11 @@ const CellFrame = ({
 
         return placeholder?
             React.createElement(placeholder, 
-                {index, listsize, message:messageRef.current, error:errorRef.current}):
+                {listposition, listsize, message:messageRef.current, error:errorRef.current}):
             null
             
     },[
-        index, 
+        listposition, 
         placeholder,
         listsize, 
         messageRef.current, 
@@ -202,7 +202,7 @@ const CellFrame = ({
                 customplaceholder:
                 <Placeholder 
                     key = 'placeholder'
-                    index = { index } 
+                    listposition = { listposition } 
                     listsize = { listsize } 
                     message = { messageRef.current }
                     error = { errorRef.current }
@@ -215,7 +215,7 @@ const CellFrame = ({
         return placeholder
 
     }, [
-        index, 
+        listposition, 
         customplaceholder, 
         listsize, 
         messageRef.current, 
@@ -316,7 +316,7 @@ const CellFrame = ({
                     // setFrameState('fetching')
 
                     // reserve space in the cache
-                    cacheHandler.registerRequestedPortal(index)
+                    cacheHandler.registerRequestedPortal(listposition)
 
                     // enqueue the fetch
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
@@ -325,7 +325,7 @@ const CellFrame = ({
                         // process the fetch
                         try {
 
-                            usercontent = await getItem(index, itemID)
+                            usercontent = await getItem(listposition, itemID)
 
                             if (usercontent === null) returnvalue = usercontent
 
@@ -375,7 +375,7 @@ const CellFrame = ({
                                     content = usercontent
                                 }
 
-                                portalMetadataRef.current = await cacheHandler.createPortal(content, index, itemID, scrollerProperties)
+                                portalMetadataRef.current = await cacheHandler.createPortal(content, listposition, itemID, scrollerProperties)
 
                                 portalNodeRef.current = portalMetadataRef.current.portalNode
                                 setContainerStyles(
@@ -387,13 +387,13 @@ const CellFrame = ({
 
                                 if (usercontent === null) {
 
-                                    // truncate listsize at this index
+                                    // truncate listsize at this listposition
                                     itemExceptionCallback && 
                                         itemExceptionCallback(
-                                            index, itemID, returnvalue, 'cellFrame', 
+                                            listposition, itemID, returnvalue, 'cellFrame', 
                                                 new Error(placeholderMessagesRef.current.null)
                                         )
-                                    nullItemSetMaxListsize(index)
+                                    nullItemSetMaxListsize(listposition)
 
                                 } else { // usercontent === undefined, meaning an error has occurred
 
@@ -402,7 +402,7 @@ const CellFrame = ({
                                     // notify the host
                                     itemExceptionCallback && 
                                         itemExceptionCallback(
-                                            index, itemID, returnvalue, 'cellFrame', error
+                                            listposition, itemID, returnvalue, 'cellFrame', error
                                         )
 
                                     isMountedRef.current && setFrameState('error')
@@ -438,7 +438,7 @@ const CellFrame = ({
         ref = { frameRef } 
         data-type = 'cellframe' 
         data-scrollerid = { scrollerID } 
-        data-index = { index } 
+        data-listposition = { listposition } 
         data-instanceid = { instanceID } 
         style = { stylesRef.current }
 

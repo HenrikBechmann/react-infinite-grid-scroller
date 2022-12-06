@@ -23,7 +23,7 @@ import CellFrame from '../CellFrame'
 
 export const getContentListRequirements = ({ // called from setCradleContent only
 
-        // index
+        // listposition
         targetAxisReferenceIndex, // from user, or from pivot
         // pixels
         baseRowLength,
@@ -371,10 +371,10 @@ export const calcContentShift = ({
 
     const gridRowAggregateSpans = getGridRowAggregateSpans(gridRowLengths) // count pixels where available
 
-    const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0),
+    const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.listposition || 0),
         previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)
 
-    const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0),
+    const previousAxisReferenceIndex = (tailcontentlist[0]?.props.listposition || 0),
         previousAxisRowOffset = Math.ceil(previousAxisReferenceIndex/crosscount)
 
     // ----------------------------[ 2. calculate base row shift ]--------------------------
@@ -706,7 +706,7 @@ export const getCellFrameComponentList = ({
             headContentlist.push(
                 createCellFrame(
                     {
-                        index:newindex, 
+                        listposition:newindex, 
                         cradleInheritedProperties,
                         cradleInternalProperties,
                         instanceIdCounterRef,
@@ -741,7 +741,7 @@ export const getCellFrameComponentList = ({
             tailContentlist.push(
                 createCellFrame(
                     {
-                        index:newindex, 
+                        listposition:newindex, 
                         cradleInheritedProperties,
                         cradleInternalProperties,
                         instanceIdCounterRef,
@@ -784,7 +784,7 @@ export const allocateContentList = (
 
     const { triggercellIndex } = layoutHandler
 
-    const offsetindex = contentlist[0]?.props.index,
+    const offsetindex = contentlist[0]?.props.listposition,
         highindex = offsetindex + contentlist.length
 
     const headitemcount = (axisReferenceIndex - offsetindex)
@@ -838,7 +838,7 @@ export const deletePortals = (cacheHandler, deleteList, deleteListCallback) => {
 
     const dlist = deleteList.map((item)=>{
 
-        return item.props.index
+        return item.props.listposition
         
     })
 
@@ -848,7 +848,7 @@ export const deletePortals = (cacheHandler, deleteList, deleteListCallback) => {
 // =====================[ internal, acquire item ]======================
 
 const createCellFrame = ({
-    index, 
+    listposition, 
     cradleInheritedProperties,
     cradleInternalProperties,
     instanceIdCounterRef,
@@ -879,7 +879,7 @@ const createCellFrame = ({
     const { listsize } = cradleInternalProperties
 
     // get new or existing itemID
-    const itemID = cacheHandler.getNewOrExistingItemID(index)
+    const itemID = cacheHandler.getNewOrExistingItemID(listposition)
 
     return <CellFrame 
         key = { instanceID } 
@@ -889,7 +889,7 @@ const createCellFrame = ({
         cellMinHeight = { cellMinHeight }
         cellMinWidth = { cellMinWidth }
         layout = { layout }
-        index = { index }
+        listposition = { listposition }
         getItem = { getItem }
         listsize = { listsize }
         placeholder = { placeholder }

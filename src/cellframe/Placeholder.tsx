@@ -12,7 +12,7 @@
 import React, {useRef, useMemo} from 'react'
 
 const Placeholder = ({
-    index, 
+    listposition, 
     listsize, 
     message, 
     error, 
@@ -69,7 +69,7 @@ const Placeholder = ({
 
     return <div data-type = 'placeholderframe' style = {frameStyles}>
         { !error?
-            <div data-type = 'placeholderliner' style = { linerStyles }>{index + 1}/{listsize} {message}</div>:
+            <div data-type = 'placeholderliner' style = { linerStyles }>{listposition + 1}/{listsize} {message}</div>:
             <div data-type = 'placeholderliner' style = { linerStyles }>item is not available ({error.message})</div>
         }
         

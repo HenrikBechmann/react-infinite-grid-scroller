@@ -151,7 +151,7 @@ export default class ContentHandler {
         // note that targetAxisReferenceIndex replaces requestedAxisReferenceIndex here
         const {
 
-            // by index
+            // by listposition
             targetCradleReferenceIndex, 
             targetAxisReferenceIndex,
 
@@ -167,7 +167,7 @@ export default class ContentHandler {
                 baseRowLength,
                 targetAxisViewportPixelOffset,
 
-                // index
+                // listposition
                 targetAxisReferenceIndex:workingRequestAxisReferenceIndex,
 
                 // resources
@@ -342,14 +342,14 @@ export default class ContentHandler {
         const cradleContent = this.content,
             modelcontentlist = cradleContent.cradleModelComponents || []
 
-        const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
+        const oldCradleReferenceIndex = (modelcontentlist[0]?.props.listposition || 0)
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         // cradle properties
         const {
 
-            // by index
+            // by listposition
             newCradleReferenceIndex,
             cradleReferenceItemShift:cradleItemShift, 
             newAxisReferenceIndex:axisReferenceIndex, 
@@ -823,7 +823,7 @@ export default class ContentHandler {
 
         } else {
 
-            return cradleModelComponents.map((item)=>item.props.index)
+            return cradleModelComponents.map((item)=>item.props.listposition)
 
         }
 
@@ -841,12 +841,12 @@ export default class ContentHandler {
         const { indexToItemIDMap } = cacheHandler.cacheProps
 
         function processComponent (component, i, array ) {
-            const { index, itemID } = component.props
-            if (modifiedIndexesList.includes(index)) {
+            const { listposition, itemID } = component.props
+            if (modifiedIndexesList.includes(listposition)) {
 
                 const newItemID = 
-                    indexToItemIDMap.has(index)?
-                        indexToItemIDMap.get(index):
+                    indexToItemIDMap.has(listposition)?
+                        indexToItemIDMap.get(listposition):
                         cacheHandler.getNewItemID()
 
                 if (newItemID != itemID) { // defensive; shouldn't happen
@@ -876,13 +876,13 @@ export default class ContentHandler {
 
         function processcomponent(component, i, array) {
 
-            const index = component.props.index
+            const listposition = component.props.listposition
 
-            const ptr = changeList.indexOf(index)
+            const ptr = changeList.indexOf(listposition)
 
             if (ptr != -1) {
 
-                const itemID = indexToItemIDMap.get(index)
+                const itemID = indexToItemIDMap.get(listposition)
 
                 array[i] = React.cloneElement(component, {itemID})
             }
@@ -904,8 +904,8 @@ export default class ContentHandler {
 
         function processcomponent(component, i, array) {
 
-            const index = component.props.index
-            const ptr = newList.indexOf(index)
+            const listposition = component.props.listposition
+            const ptr = newList.indexOf(listposition)
 
             if (ptr != -1) {
 
