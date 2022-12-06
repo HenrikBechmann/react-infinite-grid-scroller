@@ -24,11 +24,11 @@
     The axis is kept near the leading (headward) edge of the visible cell rows of the Viewport
 
     Technically, there are several key reference points tracked by the Cradle. These are:
-        - axisReferenceIndex is the virtual listposition of the item controlling the location of the axis.
-            The axisReferenceIndex is also used to allocate items above (lower listposition value) and below 
-            (same or higher listposition value) the axis fold. The axisRefernceIndex is the first item in the 
+        - axisReferenceIndex is the virtual index of the item controlling the location of the axis.
+            The axisReferenceIndex is also used to allocate items above (lower index value) and below 
+            (same or higher index value) the axis fold. The axisRefernceIndex is the first item in the 
             tail section of the Cradle.
-        - (cradleReferenceIndex is inferred from the axisReferenceIndex, and is the virtual listposition of 
+        - (cradleReferenceIndex is inferred from the axisReferenceIndex, and is the virtual index of 
             the item defining the leading bound of the cradle content. The cradleReferenceIndex is usually 
             the first item in the head section of the Cradle, unless the cradle shows the very top of the
             list, in which case the cradleReferenceIndex is the same as the AxisReferenceIndex)
@@ -94,7 +94,7 @@ const Cradle = ({
         // basics
         runwaySize, 
         listsize, 
-        startingListPosition, 
+        startingIndex, 
         getItem, 
         placeholder, 
         placeholderMessages,
@@ -185,7 +185,7 @@ const Cradle = ({
 
     // if (!scrollerProperties) {
         // console.log('==> cradleState','-'+scrollerID+'-', cradleState)
-        // console.log('-- listposition',~'+scrollerProperties?.cellFrameDataRef.current.listposition+'~')
+        // console.log('-- index',~'+scrollerProperties?.cellFrameDataRef.current.index+'~')
     // }
 
     // cradle scaffold element refs
@@ -367,7 +367,7 @@ const Cradle = ({
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         // ...rest
         cache, cacheMax,
-        startingListPosition, 
+        startingIndex, 
         getItem, 
         placeholder, placeholderMessages, usePlaceholder,
         triggerlineOffset,
@@ -389,7 +389,7 @@ const Cradle = ({
         runwayRowcount,
         cache,
         cacheMax,
-        startingListPosition,
+        startingIndex,
         crosscount,
     }
 

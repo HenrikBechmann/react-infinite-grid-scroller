@@ -59,7 +59,7 @@ export class CacheHandler {
     cacheProps = {
 
         // item data
-        metadataMap:new Map(), // item => {listposition, component}
+        metadataMap:new Map(), // item => {index, component}
         indexToItemIDMap:new Map(),
 
         // some portals may have been requested by requestidlecallback, not yet created
@@ -274,8 +274,8 @@ export class CacheHandler {
 
         if (highestindex > (newlistsize -1)) { // pare the cache
 
-            const parelist = mapkeysList.filter((listposition)=>{
-                return listposition > (newlistsize -1)
+            const parelist = mapkeysList.filter((index)=>{
+                return index > (newlistsize -1)
             })
 
             this.deletePortal(parelist, deleteListCallback)
@@ -411,9 +411,9 @@ export class CacheHandler {
             current:false
         }
 
-        const maxListsizeInterrupt = (listposition) => {
+        const maxListsizeInterrupt = (index) => {
             breakloop.current = true
-            nullItemSetMaxListsize(listposition)
+            nullItemSetMaxListsize(index)
         }
 
         if (stateHandler.isMountedRef.current) {
@@ -422,13 +422,13 @@ export class CacheHandler {
 
             const { preloadIndexCallback, itemExceptionCallback } = serviceHandler.callbacks
 
-            for (let listposition = 0; listposition < preloadsize; listposition++) {
+            for (let index = 0; index < preloadsize; index++) {
 
-                preloadIndexCallback && preloadIndexCallback(listposition)
-                if (!indexToItemIDMap.has(listposition)) {
+                preloadIndexCallback && preloadIndexCallback(index)
+                if (!indexToItemIDMap.has(index)) {
 
                     const promise = this.preloadItem(
-                        listposition, 
+                        index, 
                         getItem, 
                         scrollerPropertiesRef,
                         itemExceptionCallback,
@@ -465,9 +465,9 @@ export class CacheHandler {
         const cradleMap = new Map(),
             { indexToItemIDMap } = this.cacheProps
 
-        for (const listposition of cradleIndexList) {
+        for (const index of cradleIndexList) {
 
-            cradleMap.set(listposition, indexToItemIDMap.get(listposition))
+            cradleMap.set(index, indexToItemIDMap.get(index))
 
         }
 
@@ -481,12 +481,12 @@ export class CacheHandler {
 
         for (const [key, value] of this.cacheProps.metadataMap) {
             const {
-                listposition,
+                index,
                 component,
             } = value
 
             cachelist.set(key,{
-                listposition,
+                index,
                 component,
             })
 
@@ -522,7 +522,7 @@ export class CacheHandler {
             fromindexptr = orderedindexlist.findIndex(value => value >= fromindex),
             fromhighindexptr = orderedindexlist.findIndex(value => value >= fromhighindex)
 
-        // ---------------- capture listposition data to move ----------------
+        // ---------------- capture index data to move ----------------
 
         let processtomoveList
         if ((fromindexptr == -1) && (fromhighindexptr == -1)) { // scope is out of view
@@ -540,9 +540,9 @@ export class CacheHandler {
         }
 
         const processtomoveMap = new Map()
-        const capturemoveindex = (listposition) => {
+        const capturemoveindex = (index) => {
 
-            processtomoveMap.set(listposition, indexToItemIDMap.get(listposition))
+            processtomoveMap.set(index, indexToItemIDMap.get(index))
 
         }
 
@@ -590,31 +590,31 @@ export class CacheHandler {
 
         const processedshiftList = []
 
-        const processshiftindex = (listposition) => {
+        const processshiftindex = (index) => {
 
-            const itemID = indexToItemIDMap.get(listposition)
+            const itemID = indexToItemIDMap.get(index)
 
             const newIndex = 
                 (shiftdirection == -1)?
-                    listposition - rangeabsoluteincrement:
-                    listposition + rangeabsoluteincrement
+                    index - rangeabsoluteincrement:
+                    index + rangeabsoluteincrement
 
             indexToItemIDMap.set(newIndex,itemID)
-            metadataMap.get(itemID).listposition = newIndex
+            metadataMap.get(itemID).index = newIndex
             processedshiftList.push(newIndex)
 
         }
 
         processtoshiftList.forEach(processshiftindex)
 
-        // ------------ replace shifted listposition space with moved indexes ----------
+        // ------------ replace shifted index space with moved indexes ----------
 
         const processedmoveList = []
-        const processmoveindex = (itemID, listposition) => {
-            const newIndex = listposition + movedirectionalincrement // swap
+        const processmoveindex = (itemID, index) => {
+            const newIndex = index + movedirectionalincrement // swap
 
             indexToItemIDMap.set(newIndex, itemID)
-            metadataMap.get(itemID).listposition = newIndex
+            metadataMap.get(itemID).index = newIndex
             processedmoveList.push(newIndex)
 
         }
@@ -631,19 +631,19 @@ export class CacheHandler {
     }
 
     // insert or remove indexes: much of this deals with the fact that the cache is sparse.
-    insertRemoveIndex(listposition, highrange, increment, listsize) { // increment is +1 or -1
+    insertRemoveIndex(index, highrange, increment, listsize) { // increment is +1 or -1
 
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
         // ---------- define range parameters ---------------
 
-        // high range is the highest listposition number of the insert/remove operation
+        // high range is the highest index number of the insert/remove operation
         let highrangeindex = highrange ?? 0
 
         highrangeindex = 
-            (highrangeindex > listposition)?
+            (highrangeindex > index)?
                 highrangeindex:
-                listposition
+                index
 
         const emptyreturn = [[],[],0]
         if (increment == -1) {
@@ -653,13 +653,13 @@ export class CacheHandler {
 
         } else {
 
-            // addition can at most start at the next listposition above the current list
-            if (listposition > listsize) return emptyreturn
+            // addition can at most start at the next index above the current list
+            if (index > listsize) return emptyreturn
 
         }
 
         // rangecount is the absolute number in the insert/remove range - contiguous
-        const rangecount = highrangeindex - listposition + 1
+        const rangecount = highrangeindex - index + 1
 
         // range increment adds sign to rangecount to indicate add/remove
         const rangeincrement = rangecount * increment
@@ -668,8 +668,8 @@ export class CacheHandler {
         const orderedIndexList = Array.from(indexToItemIDMap.keys())
         orderedIndexList.sort((a,b)=>a-b)
 
-        // ---------- define boundaries within ordered cache listposition list ------------
-        // Ptr = listposition into array, as opposed to listposition of virtual list
+        // ---------- define boundaries within ordered cache index list ------------
+        // Ptr = index into array, as opposed to index of virtual list
 
         // shrinkptr is the location of the bottom of the shrink range for removals
         let shrinktoIndex = null
@@ -690,7 +690,7 @@ export class CacheHandler {
         // lowPtr and highPtr must be within low and high range
         const lowPtr = orderedIndexList.findIndex(value => {
 
-            return (value >= listposition) && (value <= highrangeindex)
+            return (value >= index) && (value <= highrangeindex)
 
         })
 
@@ -783,9 +783,9 @@ export class CacheHandler {
             }
 
             // get itemsToRemoveList
-            for (const listposition of indexesOfItemsToRemoveList) {
+            for (const index of indexesOfItemsToRemoveList) {
 
-                itemsToRemoveList.push(indexToItemIDMap.get(listposition))
+                itemsToRemoveList.push(indexToItemIDMap.get(index))
 
             }
 
@@ -798,14 +798,14 @@ export class CacheHandler {
 
         const indexesModifiedList = []
 
-        // modify listposition-to-itemid map, and metadata map
-        const processIndex = listposition => {
+        // modify index-to-itemid map, and metadata map
+        const processIndex = index => {
 
-            const itemID = indexToItemIDMap.get(listposition)
-            const newIndex = listposition + rangeincrement
+            const itemID = indexToItemIDMap.get(index)
+            const newIndex = index + rangeincrement
 
             indexToItemIDMap.set(newIndex, itemID)
-            metadataMap.get(itemID).listposition = newIndex
+            metadataMap.get(itemID).index = newIndex
             indexesModifiedList.push(newIndex)
 
         }
@@ -816,17 +816,17 @@ export class CacheHandler {
 
         if (increment == 1) {
 
-            for (const listposition of indexesToReplaceList) {
+            for (const index of indexesToReplaceList) {
                 
-                indexToItemIDMap.delete(listposition)
+                indexToItemIDMap.delete(index)
 
             }
 
         } else {
 
-            for (const listposition of indexesToRemoveList) {
+            for (const index of indexesToRemoveList) {
 
-                indexToItemIDMap.delete(listposition)
+                indexToItemIDMap.delete(index)
 
             }
 
@@ -851,15 +851,15 @@ export class CacheHandler {
 
     // used for size calculation in pareCacheToMax
     // registers indexes when requested but before retrieved and entered into cache
-    registerRequestedPortal(listposition) {
+    registerRequestedPortal(index) {
 
-        this.cacheProps.requestedSet.add(listposition)
+        this.cacheProps.requestedSet.add(index)
 
     }
 
-    removeRequestedPortal(listposition) {
+    removeRequestedPortal(index) {
 
-        this.cacheProps.requestedSet.delete(listposition)
+        this.cacheProps.requestedSet.delete(index)
 
     }
 
@@ -870,13 +870,13 @@ export class CacheHandler {
     }
 
     // get new or existing itemID for contentfunctions.createCellFrame
-    getNewOrExistingItemID(listposition) {
+    getNewOrExistingItemID(index) {
 
         const { indexToItemIDMap } = this.cacheProps
 
         const itemID = 
-            (indexToItemIDMap.has(listposition))?
-                indexToItemIDMap.get(listposition):
+            (indexToItemIDMap.has(index))?
+                indexToItemIDMap.get(index):
                 (this.getNewItemID())
 
         return itemID
@@ -884,20 +884,20 @@ export class CacheHandler {
     }
 
      // create new portal
-    async createPortal(component, listposition, itemID, scrollerProperties, isPreload = false) {
+    async createPortal(component, index, itemID, scrollerProperties, isPreload = false) {
 
-        this.removeRequestedPortal(listposition)
+        this.removeRequestedPortal(index)
 
         const { layout, cellHeight, cellWidth, orientation } = 
             this.cradleParameters.cradleInheritedPropertiesRef.current
 
         const portalNode = createPortalNode(
-                listposition, itemID, layout, orientation, cellHeight, cellWidth)
+                index, itemID, layout, orientation, cellHeight, cellWidth)
 
         const partitionID = await this.findPartitionWithRoom()
 
         const portal = 
-            <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID} data-listposition = {listposition}>
+            <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID} data-index = {index}>
                 <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>
             </div>
 
@@ -905,7 +905,7 @@ export class CacheHandler {
 
         const portalMetadata = {
             portalNode,
-            listposition,
+            index,
             itemID,
             scrollerProperties,
             component,
@@ -913,7 +913,7 @@ export class CacheHandler {
         }
 
         this.cacheProps.metadataMap.set(itemID, portalMetadata)
-        this.cacheProps.indexToItemIDMap.set(listposition, itemID)
+        this.cacheProps.indexToItemIDMap.set(index, itemID)
 
         if (!isPreload) this.renderPortalLists()
 
@@ -923,7 +923,7 @@ export class CacheHandler {
 
     // used for preloading new item
     private async preloadItem(
-        listposition, 
+        index, 
         getItem, 
         scrollerPropertiesRef, 
         itemExceptionCallback,
@@ -937,7 +937,7 @@ export class CacheHandler {
 
         try {
 
-            usercontent = await getItem(listposition, itemID)
+            usercontent = await getItem(index, itemID)
             if (usercontent === null) returnvalue = usercontent
 
         } catch(e) {
@@ -970,21 +970,21 @@ export class CacheHandler {
             }
 
             const portalData = 
-                await this.createPortal(content, listposition, itemID, scrollerProperties, true) // true = isPreload
+                await this.createPortal(content, index, itemID, scrollerProperties, true) // true = isPreload
 
         } else {
 
             if (usercontent === undefined) {
 
                 itemExceptionCallback && 
-                    itemExceptionCallback(listposition, itemID, returnvalue, 'preload', error)
+                    itemExceptionCallback(index, itemID, returnvalue, 'preload', error)
 
             } else { // usercontent === null; last item in list
 
                 itemExceptionCallback && 
-                    itemExceptionCallback(listposition, itemID, returnvalue, 'preload', new Error('end of list'))
+                    itemExceptionCallback(index, itemID, returnvalue, 'preload', new Error('end of list'))
 
-                maxListsizeInterrupt(listposition)
+                maxListsizeInterrupt(index)
 
             }
 
@@ -994,12 +994,12 @@ export class CacheHandler {
 
     // delete a portal list item
     // accepts an array of indexes
-    deletePortal(listposition, deleteListCallback) {
+    deletePortal(index, deleteListCallback) {
 
         const indexArray = 
-            (!Array.isArray(listposition))?
-                [listposition]:
-                listposition
+            (!Array.isArray(index))?
+                [index]:
+                index
 
         const { 
             metadataMap,
@@ -1009,19 +1009,19 @@ export class CacheHandler {
         const { removePartitionPortal } = this
 
         const deleteList = []
-        for (const listposition of indexArray) {
+        for (const index of indexArray) {
 
-            const itemID = indexToItemIDMap.get(listposition)
+            const itemID = indexToItemIDMap.get(index)
 
             if (itemID === undefined) continue // async mismatch
 
-            deleteList.push({listposition,itemID})
+            deleteList.push({index,itemID})
             const { partitionID } = metadataMap.get(itemID)
 
             removePartitionPortal(partitionID,itemID)
 
             metadataMap.delete(itemID)
-            indexToItemIDMap.delete(listposition)
+            indexToItemIDMap.delete(index)
 
         }
         
@@ -1052,7 +1052,7 @@ export class CacheHandler {
 // with user content and container
 // see also some styles set in CellFrame
 
-const createPortalNode = (listposition, itemID, layout, orientation, cellHeight, cellWidth) => {
+const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWidth) => {
 
     let portalNode = createHtmlPortalNode()
 
@@ -1060,7 +1060,7 @@ const createPortalNode = (listposition, itemID, layout, orientation, cellHeight,
     container.style.overflow = 'hidden'
 
     container.dataset.type = 'contentenvelope'
-    container.dataset.listposition = listposition
+    container.dataset.index = index
     container.dataset.cacheitemid = itemID
 
     return portalNode

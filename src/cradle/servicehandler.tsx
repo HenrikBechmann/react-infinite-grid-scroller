@@ -78,11 +78,11 @@ const errorMessages = {
     scrollToIndex:'integer: required, greater than or equal to 0',
     setListsize:'integer: required, greater than or equal to 0',
     insertFrom:'insertFrom - integer: required, greater than or equal to 0',
-    insertRange:'insertRange - blank, or integer greater than or equal to the "from" listposition',
+    insertRange:'insertRange - blank, or integer greater than or equal to the "from" index',
     removeFrom:'removeFrom - integer: required, greater than or equal to 0',
-    removeRange:'removeRange - blank, or integer greater than or equal to the "from" listposition',
+    removeRange:'removeRange - blank, or integer greater than or equal to the "from" index',
     moveFrom:'moveFrom - integer: required, greater than or equal to 0',
-    moveRange:'moveRange - blank, or integer greater than or equal to the "from" listposition',
+    moveRange:'moveRange - blank, or integer greater than or equal to the "from" index',
     moveTo:'moveTo - integer: required, greater than or equal to 0',
 }
 
@@ -94,11 +94,11 @@ export default class ServiceHandler {
 
        // doing this explicitly here for documentation
        const {
-           referenceIndexCallback, // (listposition, location, cradleState)
-           preloadIndexCallback, // (listposition)
+           referenceIndexCallback, // (index, location, cradleState)
+           preloadIndexCallback, // (index)
            deleteListCallback, // (reason, deleteList)
            changeListsizeCallback, // (newlistsize)
-           itemExceptionCallback, // (listposition, itemID, returnvalue, location, error)
+           itemExceptionCallback, // (index, itemID, returnvalue, location, error)
            repositioningFlagCallback, // (flag) // boolean
            repositioningIndexCallback,
            
@@ -137,15 +137,15 @@ export default class ServiceHandler {
 
     }
 
-    public scrollToIndex = (listposition) => {
+    public scrollToIndex = (index) => {
 
-        const isInvalid = (!isInteger(listposition) || !minValue(listposition, 0))
+        const isInvalid = (!isInteger(index) || !minValue(index, 0))
 
-        listposition = +listposition
+        index = +index
 
         if (isInvalid) {
 
-            console.log('RIGS ERROR scrollToIndex(listposition)):', listposition, errorMessages.scrollToIndex)
+            console.log('RIGS ERROR scrollToIndex(index)):', index, errorMessages.scrollToIndex)
             return
 
         }
@@ -155,7 +155,7 @@ export default class ServiceHandler {
 
         signals.pauseScrollingEffects = true
 
-        layoutHandler.cradlePositionData.targetAxisReferenceIndex = listposition
+        layoutHandler.cradlePositionData.targetAxisReferenceIndex = index
 
         stateHandler.setCradleState('scrollto')
 
@@ -242,7 +242,7 @@ export default class ServiceHandler {
     // itemID set to undefined replaces the indexed item
     // the main purpose is to allow itemsIDs to be remapped to new indexes
     // operations are on existing cache items only
-    public remapIndexes = (changeMap) => { // listposition => itemID
+    public remapIndexes = (changeMap) => { // index => itemID
 
         if (changeMap.size == 0) return [] // nothing to do
 
@@ -251,8 +251,8 @@ export default class ServiceHandler {
 
         const { 
 
-            metadataMap, // itemID to component data, including listposition
-            indexToItemIDMap // listposition to itemID
+            metadataMap, // itemID to component data, including index
+            indexToItemIDMap // index to itemID
 
         } = cacheHandler.cacheProps 
 
@@ -267,12 +267,12 @@ export default class ServiceHandler {
         // -----------------------[ isolate indexes for which items should be replaced ]--------------
 
         const workingChangeMap = new Map()
-        changeMap.forEach((itemID, listposition) => {
+        changeMap.forEach((itemID, index) => {
             if (itemID === undefined) {
-                if (indexToItemIDMap.has(listposition)) {
-                    const cacheItemID = indexToItemIDMap.get(listposition)
+                if (indexToItemIDMap.has(index)) {
+                    const cacheItemID = indexToItemIDMap.get(index)
 
-                    indexesToReplaceItemIDList.push(listposition)
+                    indexesToReplaceItemIDList.push(index)
 
                     if (!(cacheItemID === undefined)) { // ignore non-existent indexes
 
@@ -282,18 +282,18 @@ export default class ServiceHandler {
                     }
                 } else {
 
-                    errorEntriesMap.set(listposition, 'listposition to replace is not in cache')
+                    errorEntriesMap.set(index, 'index to replace is not in cache')
 
                 }
             } else {
 
-                workingChangeMap.set(listposition, itemID)
+                workingChangeMap.set(index, itemID)
 
             }
         })
 
-        indexesToReplaceItemIDList.forEach((listposition) => {
-            indexToItemIDMap.delete(listposition)
+        indexesToReplaceItemIDList.forEach((index) => {
+            indexToItemIDMap.delete(index)
         })
 
         // ------------ filter out inoperable indexes and itemIDs ------------
@@ -305,37 +305,37 @@ export default class ServiceHandler {
 
         const itemsToReplaceList = Array.from(itemsToReplaceSet)
 
-        workingChangeMap.forEach((itemID, listposition) =>{
+        workingChangeMap.forEach((itemID, index) =>{
 
             if ((itemID === null) || (itemID === undefined)) {
 
-                indexesToDeleteList.push(listposition)
+                indexesToDeleteList.push(index)
 
             } else {
 
                 if ((typeof itemID) == 'string') {
 
-                    errorEntriesMap.set(listposition,'itemID is a string')
+                    errorEntriesMap.set(index,'itemID is a string')
 
                 } else if (!Number.isInteger(itemID)) {
 
-                    errorEntriesMap.set(listposition,'itemID is not an integer')
+                    errorEntriesMap.set(index,'itemID is not an integer')
 
-                } else if (!indexToItemIDMap.has(listposition)) {
+                } else if (!indexToItemIDMap.has(index)) {
 
-                    errorEntriesMap.set(listposition, 'listposition not in cache')
+                    errorEntriesMap.set(index, 'index not in cache')
 
-                } else if (indexToItemIDMap.get(listposition) == itemID) {
+                } else if (indexToItemIDMap.get(index) == itemID) {
 
-                    errorEntriesMap.set(listposition, `target itemID ${itemID} has not changed`)
+                    errorEntriesMap.set(index, `target itemID ${itemID} has not changed`)
 
                 } else if (!metadataMap.has(itemID) || itemsToReplaceSet.has(itemID)) {
 
-                    errorEntriesMap.set(listposition, `target itemID ${itemID} not in cache, or has been removed`)
+                    errorEntriesMap.set(index, `target itemID ${itemID} not in cache, or has been removed`)
 
                 } else {
 
-                    changeIndexToItemIDMap.set(listposition, itemID)
+                    changeIndexToItemIDMap.set(index, itemID)
 
                 }
 
@@ -355,7 +355,7 @@ export default class ServiceHandler {
 
             const itemIDCountMap = new Map()
 
-            changeIndexToItemIDMap.forEach((itemID, listposition) => {
+            changeIndexToItemIDMap.forEach((itemID, index) => {
 
                 if (!itemIDCountMap.has(itemID)) {
 
@@ -381,43 +381,43 @@ export default class ServiceHandler {
             })
 
             const duplicatesToRemoveList = []
-            changeIndexToItemIDMap.forEach((itemID, listposition) => {
+            changeIndexToItemIDMap.forEach((itemID, index) => {
 
                 if (duplicateItemsMap.has(itemID)) {
-                    duplicatesToRemoveList.push(listposition)
+                    duplicatesToRemoveList.push(index)
                 }
 
             })
 
-            duplicatesToRemoveList.forEach((listposition)=>{
+            duplicatesToRemoveList.forEach((index)=>{
 
-                const itemID = changeIndexToItemIDMap.get(listposition)
+                const itemID = changeIndexToItemIDMap.get(index)
                 const count = duplicateItemsMap.get(itemID)
 
-                errorEntriesMap.set(listposition, `target itemID ${itemID} has duplicates (${count})`)
-                changeIndexToItemIDMap.delete(listposition)
+                errorEntriesMap.set(index, `target itemID ${itemID} has duplicates (${count})`)
+                changeIndexToItemIDMap.delete(index)
 
             })
 
         }
 
         // ------------ capture map before changes ----------
-        // ... this map is used later to identify orphaned item and listposition cache records for deletion
+        // ... this map is used later to identify orphaned item and index cache records for deletion
 
         // from the list of changes
         // both sides of change map...
-        const originalMap = new Map() // listposition => itemID; before change
-        changeIndexToItemIDMap.forEach((itemID, listposition)=>{
+        const originalMap = new Map() // index => itemID; before change
+        changeIndexToItemIDMap.forEach((itemID, index)=>{
 
-            originalMap.set(listposition,indexToItemIDMap.get(listposition)) // listposition to be mapped
-            originalMap.set(metadataMap.get(itemID).listposition,itemID) // target itemID
+            originalMap.set(index,indexToItemIDMap.get(index)) // index to be mapped
+            originalMap.set(metadataMap.get(itemID).index,itemID) // target itemID
 
         })
 
         // ... and from the list of indexes to be deleted
-        indexesToDeleteList.forEach((listposition) => {
+        indexesToDeleteList.forEach((index) => {
 
-            originalMap.set(listposition, indexToItemIDMap.get(listposition))
+            originalMap.set(index, indexToItemIDMap.get(index))
 
         })
 
@@ -430,47 +430,47 @@ export default class ServiceHandler {
 
         if (indexesToDeleteList.length) {
 
-            indexesToDeleteList.forEach((listposition) => {
+            indexesToDeleteList.forEach((index) => {
 
-                indexToItemIDMap.delete(listposition)
+                indexToItemIDMap.delete(index)
 
             })
 
         }
 
-        // ----------- apply filtered changes to cache listposition map and itemID map ----------
-        // at this point every remaining listposition listed will change its mapping
+        // ----------- apply filtered changes to cache index map and itemID map ----------
+        // at this point every remaining index listed will change its mapping
 
-        // const processedMap = new Map() // listposition => itemID; change has been applied
+        // const processedMap = new Map() // index => itemID; change has been applied
         const processedIndexList = []
 
         // make changes
-        changeIndexToItemIDMap.forEach((itemID,listposition) => {
+        changeIndexToItemIDMap.forEach((itemID,index) => {
 
-            indexToItemIDMap.set(listposition,itemID) // modiication applied, part 1
+            indexToItemIDMap.set(index,itemID) // modiication applied, part 1
             const itemdata = metadataMap.get(itemID)
 
-            itemdata.listposition = listposition // modification applied, part 2
+            itemdata.index = index // modification applied, part 2
 
-            // processedMap.set(listposition,itemID)
-            processedIndexList.push(listposition)
+            // processedMap.set(index,itemID)
+            processedIndexList.push(index)
 
         })
 
-        // -------------- look for and delete item and listposition orphans --------------------
-        // if the original item's listposition has not changed, then it has not been remapped, 
+        // -------------- look for and delete item and index orphans --------------------
+        // if the original item's index has not changed, then it has not been remapped, 
         //     it is orphaned, and the item is deleted
-        // if the item's listposition has changed, but the original item listposition map still points to the item,
-        //     then the listposition is orphaned (duplicate), and deleted
+        // if the item's index has changed, but the original item index map still points to the item,
+        //     then the index is orphaned (duplicate), and deleted
 
-        const deletedItemIDToIndexMap = new Map() // listposition => itemID; orphaned listposition
+        const deletedItemIDToIndexMap = new Map() // index => itemID; orphaned index
         const deletedIndexToItemIDMap = new Map()
 
         const portalItemHoldForDeleteList = [] // hold deleted portals for deletion until after cradle synch
 
         originalMap.forEach((originalItemID, originalItemIDIndex) => {
 
-            const finalItemIDIndex = metadataMap.get(originalItemID).listposition
+            const finalItemIDIndex = metadataMap.get(originalItemID).index
 
             if (originalItemIDIndex == finalItemIDIndex) { // not remapped, therefore orphaned
 
@@ -480,13 +480,13 @@ export default class ServiceHandler {
                 portalItemHoldForDeleteList.push({itemID:originalItemID, partitionID})
                 metadataMap.delete(originalItemID)
 
-            } else { // remapped, check for orphaned listposition
+            } else { // remapped, check for orphaned index
 
                 if (indexToItemIDMap.has(originalItemIDIndex)) {
 
                     const finalItemID = indexToItemIDMap.get(originalItemIDIndex)
 
-                    if (finalItemID == originalItemID) { // the listposition has not been remapped, therefore orphaned
+                    if (finalItemID == originalItemID) { // the index has not been remapped, therefore orphaned
 
                         deletedIndexToItemIDMap.set(originalItemIDIndex, originalItemID)
 
@@ -632,61 +632,61 @@ export default class ServiceHandler {
 
     }
 
-    public insertIndex = (listposition, rangehighindex = null) => {
+    public insertIndex = (index, rangehighindex = null) => {
 
-        const isIndexInvalid = (!isInteger(listposition) || !minValue(listposition, 0))
+        const isIndexInvalid = (!isInteger(index) || !minValue(index, 0))
         let isHighrangeInvalid = false
         if ((!isBlank(rangehighindex)) && (!isIndexInvalid)) {
-            isHighrangeInvalid = !minValue(rangehighindex, listposition)
+            isHighrangeInvalid = !minValue(rangehighindex, index)
         }
 
-        listposition = +listposition
-        rangehighindex = rangehighindex ?? listposition
+        index = +index
+        rangehighindex = rangehighindex ?? index
         rangehighindex = +rangehighindex
 
         if (isIndexInvalid || isHighrangeInvalid) {
-            console.log('RIGS ERROR insertIndex(listposition, rangehighindex)')
-            isIndexInvalid && console.log(listposition, errorMessages.insertFrom)
+            console.log('RIGS ERROR insertIndex(index, rangehighindex)')
+            isIndexInvalid && console.log(index, errorMessages.insertFrom)
             isHighrangeInvalid && console.log(rangehighindex, errorMessages.insertRange)
             return null
         }
 
-        return this.insertRemoveIndex(listposition, rangehighindex, +1)
+        return this.insertRemoveIndex(index, rangehighindex, +1)
 
     }
 
-    public removeIndex = (listposition, rangehighindex = null) => {
+    public removeIndex = (index, rangehighindex = null) => {
 
-        const isIndexInvalid = (!isInteger(listposition) || !minValue(listposition, 0))
+        const isIndexInvalid = (!isInteger(index) || !minValue(index, 0))
         let isHighrangeInvalid = false
         if ((!isBlank(rangehighindex)) && (!isIndexInvalid)) {
-            isHighrangeInvalid = !minValue(rangehighindex, listposition)
+            isHighrangeInvalid = !minValue(rangehighindex, index)
         }
 
-        listposition = +listposition
-        rangehighindex = rangehighindex ?? listposition
+        index = +index
+        rangehighindex = rangehighindex ?? index
         rangehighindex = +rangehighindex
 
         if (isIndexInvalid || isHighrangeInvalid) {
-            console.log('RIGS ERROR moveIndex(listposition, rangehighindex)')
-            isIndexInvalid && console.log(listposition, errorMessages.removeFrom)
+            console.log('RIGS ERROR moveIndex(index, rangehighindex)')
+            isIndexInvalid && console.log(index, errorMessages.removeFrom)
             isHighrangeInvalid && console.log(rangehighindex, errorMessages.removeRange)
             return null
         }
 
-        return this.insertRemoveIndex(listposition, rangehighindex, -1)
+        return this.insertRemoveIndex(index, rangehighindex, -1)
 
     }
 
     // shared logic. Returns lists of items changed, and items replaced (new items for insert)
     // this operation changes the listsize
-    private insertRemoveIndex = (listposition, rangehighindex, increment) => {
+    private insertRemoveIndex = (index, rangehighindex, increment) => {
 
-        listposition = listposition ?? 0
-        rangehighindex = rangehighindex ?? listposition
+        index = index ?? 0
+        rangehighindex = rangehighindex ?? index
 
-        listposition = Math.max(0,listposition)
-        rangehighindex = Math.max(rangehighindex, listposition)
+        index = Math.max(0,index)
+        rangehighindex = Math.max(rangehighindex, index)
 
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
@@ -694,7 +694,7 @@ export default class ServiceHandler {
         const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
 
         const [changeList, replaceList, rangeincrement, portalItemHoldForDeleteList] = 
-            cacheHandler.insertRemoveIndex(listposition, rangehighindex, increment, listsize)
+            cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize)
 
         cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList
 

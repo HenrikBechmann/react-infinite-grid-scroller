@@ -79,7 +79,7 @@ const InfiniteGridScroller = (props) => {
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
             // max for variable layout
         startingListSize = 0, // the starging number of items in the virtual list. can be changed
-        getItem, // required. function provided by host - parameters set by system are listposition number
+        getItem, // required. function provided by host - parameters set by system are index number
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
 
@@ -94,7 +94,7 @@ const InfiniteGridScroller = (props) => {
         // scroller specs:
         runwaySize = 3, // the number of rows outside the view of each side of the viewport 
             // -- gives time to assemble cellFrames before display
-        startingListPosition = 0, // the 0-based starting listposition of the list, when first loaded
+        startingIndex = 0, // the 0-based starting index of the list, when first loaded
 
         // system specs:
         cache = 'cradle', // "preload", "keepload" or "cradle"
@@ -133,7 +133,7 @@ const InfiniteGridScroller = (props) => {
         cellMinWidth,
         gap,
         padding,
-        startingListPosition,
+        startingIndex,
         startingListSize,
         runwaySize,
         cacheMax,
@@ -143,7 +143,7 @@ const InfiniteGridScroller = (props) => {
     styles = styles ?? {}
     callbacks = callbacks ?? {}
     technical = technical ?? {}
-    startingListPosition = startingListPosition ?? 0
+    startingIndex = startingIndex ?? 0
     startingListSize = startingListSize ?? 0
     runwaySize = runwaySize ?? 3
     usePlaceholder = usePlaceholder ?? true
@@ -158,7 +158,7 @@ const InfiniteGridScroller = (props) => {
     cellMinWidth = +cellMinWidth
     gap = +gap
     padding = +padding
-    startingListPosition = +startingListPosition
+    startingIndex = +startingIndex
     startingListSize = +startingListSize
     runwaySize = +runwaySize
     cacheMax = +cacheMax
@@ -170,7 +170,7 @@ const InfiniteGridScroller = (props) => {
         cellMinWidth,
         gap,
         padding,
-        startingListPosition,
+        startingIndex,
         startingListSize,
         runwaySize,
         cacheMax,        
@@ -184,7 +184,7 @@ const InfiniteGridScroller = (props) => {
     // prop constraints - non-negative values
     runwaySize = Math.max(1,runwaySize) // runwaysize must be at least 1
     startingListSize = Math.max(0,startingListSize)
-    startingListPosition = Math.max(0,startingListPosition)
+    startingIndex = Math.max(0,startingIndex)
 
     // package
     let problems = 0
@@ -364,7 +364,7 @@ const InfiniteGridScroller = (props) => {
                     cache = { cache }
                     cacheMax = { cacheMax }
                     userCallbacks = { callbacksRef.current }
-                    startingListPosition = { startingListPosition }
+                    startingIndex = { startingIndex }
                     getItem = { getItem }
                     placeholder = { placeholder }
                     placeholderMessages = { placeholderMessagesRef.current }
