@@ -67,6 +67,8 @@ Note that scroller-generated elements show a `data-type` attribute in browser in
 
 User components loaded to `CellFrame`s are placed in a `data-type = 'contentenvelope'` `div`. In 'uniform' layout this has `position:absolute` and `inset:0`. In 'variable' layout it has `width:100%` and `max-height` = `cellHeight` for 'vertical' orientation, and `height:100%` and `max-width` = `cellWidth` for 'horizontal' orientation. In any case it has `overflow:hidden`.
 
+See the "Content Types" section of the [demodata.tsx](https://github.com/HenrikBechmann/rigs-demo/blob/master/src/demodata.tsx) module of the demo site for more code examples.
+
 # Animated GIF
 
 This is a random screenshare, showing nested scrollers in a resized browser (33% normal).
