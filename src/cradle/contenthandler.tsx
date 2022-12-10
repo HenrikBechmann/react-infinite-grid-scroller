@@ -385,11 +385,13 @@ export default class ContentHandler {
         const axisElement = cradleElements.axisRef.current
         const headElement = cradleElements.headRef.current
 
+        interruptHandler.triggerlinesIntersect.disconnect()
+
         // abandon option; nothing to do but reposition
         if (!isShift) { // can happen first row; oversized last row
     
             cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
-            this.applyStyling(
+            this.applyStyling(layout,
                 orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
                 axisElement, headElement, cradleContent.headModelComponents)
 
@@ -400,7 +402,7 @@ export default class ContentHandler {
         // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx, or at 'finishupdateforvariability'
         //    for variable content
-        interruptHandler.triggerlinesIntersect.disconnect()
+        // interruptHandler.triggerlinesIntersect.disconnect()
 
         // ----------------------------------[ 4. reconfigure cradle content ]--------------------------
 
@@ -496,7 +498,7 @@ export default class ContentHandler {
             }
         }
 
-        this.applyStyling(
+        this.applyStyling(layout,
             orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
             axisElement, headElement, headcontent)
 
@@ -506,10 +508,13 @@ export default class ContentHandler {
 
     }
 
-    applyStyling = (
+    // move the offset of the axis
+    applyStyling = (layout,
         orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
         axisElement, headElement, headcontent) => {
         
+        if (layout == 'variable') return // leave CSS to adjustScrollblockForVariability
+
         let topPos, leftPos // available for debug
         if (orientation == 'vertical') {
 
@@ -590,6 +595,9 @@ export default class ContentHandler {
             targetAxisViewportPixelOffset: axisViewportOffset,
 
         } = cradlePositionData
+
+        console.log('==> adjustScrollblockForVariability: source, axisViewportOffset, axisReferenceIndex\n', 
+            source, axisViewportOffset, axisReferenceIndex)
 
         const {
 
@@ -740,6 +748,9 @@ export default class ContentHandler {
             }
 
         }
+
+        console.log('-- axisElement.offsetTop, blockScrollPos, axisElement.offsetTop - blockScrollPos\n',
+            axisElement.offsetTop, blockScrollPos, axisElement.offsetTop - blockScrollPos)
 
     }
 

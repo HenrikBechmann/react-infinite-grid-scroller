@@ -159,13 +159,17 @@ export const getShiftInstruction = ({
 
     const intersectrootpos = 
         (orientation == 'vertical')?
-            entry.rootBounds.y:
-            entry.rootBounds.x
+            Math.trunc(entry.rootBounds.y):
+            Math.trunc(entry.rootBounds.x)
+            // entry.rootBounds.y:
+            // entry.rootBounds.x
 
     const boundingrootpos =
         (orientation == 'vertical')?
-            viewportBoundingRect.y:
-            viewportBoundingRect.x
+            Math.trunc(viewportBoundingRect.y):
+            Math.trunc(viewportBoundingRect.x)
+            // viewportBoundingRect.y:
+            // viewportBoundingRect.x
 
     // this selection is redundant, but documents what's going on
     const rootpos = 
@@ -175,10 +179,10 @@ export const getShiftInstruction = ({
 
     const entrypos = 
         (orientation == 'vertical')?
-            // Math.floor(entry.boundingClientRect.y):
-            // Math.floor(entry.boundingClientRect.x)
-            entry.boundingClientRect.y:
-            entry.boundingClientRect.x
+            Math.trunc(entry.boundingClientRect.y):
+            Math.trunc(entry.boundingClientRect.x)
+            // entry.boundingClientRect.y:
+            // entry.boundingClientRect.x
 
     const viewportTriggerOffset = entrypos - rootpos
 
@@ -238,7 +242,11 @@ export const getShiftInstruction = ({
             triggerData.headOffset: // needs to move down or right toward tail
             triggerData.tailOffset // needs to move up or left toward head
 
+
     if (shiftinstruction) { // will be 'none'
+
+        // console.log('INTERRUPT shiftinstruction, triggerData, triggerHistory\n',
+        //     shiftinstruction, triggerViewportReferencePos, triggerData, triggerHistory)
 
         triggerHistory.previousReferenceName = null
 
@@ -275,6 +283,9 @@ export const getShiftInstruction = ({
         }
 
     }
+
+    // console.log('shiftinstruction, triggerViewportReferencePos, triggerData, triggerHistory\n',
+    //     shiftinstruction, triggerViewportReferencePos, triggerData, triggerHistory)
 
     return [shiftinstruction, triggerViewportReferencePos]
 
@@ -503,10 +514,15 @@ export const calcContentShift = ({
     const currentViewportAxisOffset = 
         scrollblockAxisOffset + scrollblockOffset - scrollPos
 
+    console.log('==> calcContentShift: currentViewportAxisOffset, scrollblockAxisOffset, scrollblockOffset, scrollPos\n',
+        currentViewportAxisOffset, scrollblockAxisOffset, scrollblockOffset, scrollPos)
+
     // -------------[ 4. calculate new axis pixel position ]------------------
 
     const newAxisViewportPixelOffset = currentViewportAxisOffset + axisPixelShift
 
+    console.log( '-- shiftinstruction, newAxisViewportPixelOffset, currentViewportAxisOffset, axisPixelShift\n',
+        shiftinstruction, newAxisViewportPixelOffset, currentViewportAxisOffset, axisPixelShift)
     // Note: sections 5, 6 and 7 deal entirely with row calculations; no pixels
 
     // ------------[ 5. calc new cradle and axis reference row offsets ]-------------
@@ -520,6 +536,9 @@ export const calcContentShift = ({
 
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
+
+    console.log('-- newCradleReferenceRowOffset, newAxisReferenceRowOffset\n',
+        newCradleReferenceRowOffset, newAxisReferenceRowOffset)
 
     if (shiftinstruction == 'axistailward') { // scrolling up/left
 
