@@ -580,6 +580,9 @@ export const calcContentShift = ({
             newCradleReferenceRowOffset = 0
 
         }
+        if (newAxisReferenceRowOffset == 0) {
+            newAxisViewportPixelOffset = padding
+        }
 
         // --- end of list adjustment; case of in bounds of trailing runway
         const computedNextCradleEndrowOffset = 
@@ -606,10 +609,6 @@ export const calcContentShift = ({
 
     const newAxisReferenceIndex = newAxisReferenceRowOffset * crosscount
     const axisReferenceItemShift = axisReferenceRowShift * crosscount
-
-    if (newAxisReferenceIndex == 0) {
-        newAxisViewportPixelOffset = padding
-    }
 
     let newCradleContentCount = cradleRowcount * crosscount // base count
     const includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount) >= listRowcount)
