@@ -335,6 +335,7 @@ export const calcContentShift = ({
     const { 
 
         gap,
+        padding,
         orientation,
         cellHeight,
         cellWidth,
@@ -514,15 +515,10 @@ export const calcContentShift = ({
     const currentViewportAxisOffset = 
         scrollblockAxisOffset + scrollblockOffset - scrollPos
 
-    console.log('==> calcContentShift: currentViewportAxisOffset, scrollblockAxisOffset, scrollblockOffset, scrollPos\n',
-        currentViewportAxisOffset, scrollblockAxisOffset, scrollblockOffset, scrollPos)
-
     // -------------[ 4. calculate new axis pixel position ]------------------
 
-    const newAxisViewportPixelOffset = currentViewportAxisOffset + axisPixelShift
+    let newAxisViewportPixelOffset = currentViewportAxisOffset + axisPixelShift
 
-    console.log( '-- shiftinstruction, newAxisViewportPixelOffset, currentViewportAxisOffset, axisPixelShift\n',
-        shiftinstruction, newAxisViewportPixelOffset, currentViewportAxisOffset, axisPixelShift)
     // Note: sections 5, 6 and 7 deal entirely with row calculations; no pixels
 
     // ------------[ 5. calc new cradle and axis reference row offsets ]-------------
@@ -536,9 +532,6 @@ export const calcContentShift = ({
 
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
-
-    console.log('-- newCradleReferenceRowOffset, newAxisReferenceRowOffset\n',
-        newCradleReferenceRowOffset, newAxisReferenceRowOffset)
 
     if (shiftinstruction == 'axistailward') { // scrolling up/left
 
@@ -613,6 +606,10 @@ export const calcContentShift = ({
 
     const newAxisReferenceIndex = newAxisReferenceRowOffset * crosscount
     const axisReferenceItemShift = axisReferenceRowShift * crosscount
+
+    if (newAxisReferenceIndex == 0) {
+        newAxisViewportPixelOffset = padding
+    }
 
     let newCradleContentCount = cradleRowcount * crosscount // base count
     const includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount) >= listRowcount)

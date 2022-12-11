@@ -513,8 +513,6 @@ export default class ContentHandler {
         orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
         axisElement, headElement, headcontent) => {
         
-        if (layout == 'variable') return // leave CSS to adjustScrollblockForVariability
-
         let topPos, leftPos // available for debug
         if (orientation == 'vertical') {
 
@@ -595,9 +593,6 @@ export default class ContentHandler {
             targetAxisViewportPixelOffset: axisViewportOffset,
 
         } = cradlePositionData
-
-        console.log('==> adjustScrollblockForVariability: source, axisViewportOffset, axisReferenceIndex\n', 
-            source, axisViewportOffset, axisReferenceIndex)
 
         const {
 
@@ -691,7 +686,7 @@ export default class ContentHandler {
                 if (orientation == 'vertical') {
                     scrollblockElement.style.height = (scrollblockElement.offsetHeight + diff) + 'px'
                 } else {
-                    scrollblockElement.style.width = (scrollblockElement.offsetWiith + diff) + 'px'
+                    scrollblockElement.style.width = (scrollblockElement.offsetWidth + diff) + 'px'
                 }
                 viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
             }
@@ -748,9 +743,6 @@ export default class ContentHandler {
             }
 
         }
-
-        console.log('-- axisElement.offsetTop, blockScrollPos, axisElement.offsetTop - blockScrollPos\n',
-            axisElement.offsetTop, blockScrollPos, axisElement.offsetTop - blockScrollPos)
 
     }
 
