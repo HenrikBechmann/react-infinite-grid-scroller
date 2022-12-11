@@ -648,6 +648,8 @@ export default class ContentHandler {
 
         // ------------------------[ layout adjustments ]----------------------
 
+        interruptHandler.signals.pauseCradleIntersectionObserver = true
+
         const computedScrollblockLength = basePreAxisPixelLength + computedPostAxisPixelLength
         const blockScrollPos = basePreAxisPixelLength - axisViewportOffset
         const newAxisScrollblockOffset = blockScrollPos + axisViewportOffset // ie. basePreAxisPixelLength, but semantics
@@ -665,7 +667,8 @@ export default class ContentHandler {
         }
         // -----------------------[ scrollPos adjustment ]-------------------------
 
-        interruptHandler.signals.pauseCradleIntersectionObserver = true
+        console.log('==> adjustScrollblockForVariability: blockScrollPos, newAxisScrollblockOffset, computedScrollblockLength\n',
+            blockScrollPos, newAxisScrollblockOffset, computedScrollblockLength)
 
         if (!isSafariIOS()) { // adjust blockScrollPos directly - most browsers including Safari desktop
 
@@ -675,7 +678,7 @@ export default class ContentHandler {
 
             // edge case anomaly: returning from bottom of list sometimes results in diff between actual and targeted
             //    ... presumably from resetting the content length
-            // this is a hacky workaround        
+            // this is a hacky workaround; adjust the length, and do it again
             const newBlockScrollPos = 
                 (orientation == 'vertical')?
                     viewportElement.scrollTop:
@@ -683,6 +686,9 @@ export default class ContentHandler {
 
             if (newBlockScrollPos != blockScrollPos) {
                 const diff = blockScrollPos - newBlockScrollPos
+
+                console.log(' -- blockScrollPos & length adjustment',diff)
+
                 if (orientation == 'vertical') {
                     scrollblockElement.style.height = (scrollblockElement.offsetHeight + diff) + 'px'
                 } else {
