@@ -509,7 +509,7 @@ export default class ContentHandler {
     }
 
     // move the offset of the axis
-    applyStyling = (layout,
+    private applyStyling = (layout,
         orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
         axisElement, headElement, headcontent) => {
         
@@ -669,6 +669,9 @@ export default class ContentHandler {
 
         console.log('==> adjustScrollblockForVariability: blockScrollPos, newAxisScrollblockOffset, computedScrollblockLength\n',
             blockScrollPos, newAxisScrollblockOffset, computedScrollblockLength)
+
+        console.log('-- viewportElement.offsetHeight, measuredTailLength, viewportElement.scrollHeight, viewportElement.scrollTop\n',
+            viewportElement.offsetHeight, measuredTailLength, viewportElement.scrollHeight, viewportElement.scrollTop)
 
         if (!isSafariIOS()) { // adjust blockScrollPos directly - most browsers including Safari desktop
 
