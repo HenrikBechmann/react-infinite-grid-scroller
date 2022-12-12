@@ -336,6 +336,8 @@ export default class ContentHandler {
                 viewportElement.scrollTop:
                 viewportElement.scrollLeft
 
+        console.log('==> updateCradleContent: scrollPos', scrollPos)
+
         // cradle scaffold and user cells
         const cradleElements = layoutHandler.elements
 
@@ -513,6 +515,8 @@ export default class ContentHandler {
         orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
         axisElement, headElement, headcontent) => {
         
+        if (layout == 'variable') return
+
         let topPos, leftPos // available for debug
         if (orientation == 'vertical') {
 
@@ -591,6 +595,7 @@ export default class ContentHandler {
 
             targetAxisReferenceIndex: axisReferenceIndex,
             targetAxisViewportPixelOffset: axisViewportOffset,
+            blockScrollPos:scrollRecordScrollPos, 
 
         } = cradlePositionData
 
@@ -656,19 +661,35 @@ export default class ContentHandler {
 
         if (orientation == 'vertical') {
 
+            scrollblockElement.style.height = (computedScrollblockLength) + 'px'
             axisElement.style.top = newAxisScrollblockOffset + 'px'
-            scrollblockElement.style.height = computedScrollblockLength + 'px'
 
         } else { // 'horizontal'
 
-            axisElement.style.left = newAxisScrollblockOffset + 'px'
             scrollblockElement.style.width = computedScrollblockLength + 'px'
+            axisElement.style.left = newAxisScrollblockOffset + 'px'
 
         }
         // -----------------------[ scrollPos adjustment ]-------------------------
 
-        console.log('==> adjustScrollblockForVariability: newAxisScrollblockOffset, computedScrollblockLength, blockScrollPos\n',
-            newAxisScrollblockOffset, computedScrollblockLength, blockScrollPos)
+        console.log('==> adjustScrollblockForVariability: scrollRecordScrollPos, newAxisScrollblockOffset, computedScrollblockLength, blockScrollPos\n',
+            scrollRecordScrollPos, newAxisScrollblockOffset, computedScrollblockLength, blockScrollPos)
+
+        if (orientation == 'vertical') {
+
+            headGridElement.style.padding = 
+                headRowCount?
+                    `${padding}px ${padding}px ${gap}px ${padding}px`:
+                    `${padding}px ${padding}px 0px ${padding}px`
+
+        } else {
+
+            headGridElement.style.padding = 
+                headRowCount?
+                    `${padding}px ${gap}px ${padding}px ${padding}px`:
+                    `${padding}px 0px ${padding}px ${padding}px`
+
+        }
 
         if (!isSafariIOS()) { // adjust blockScrollPos directly - most browsers including Safari desktop
 

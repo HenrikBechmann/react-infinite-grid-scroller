@@ -148,7 +148,9 @@ export default class ScrollHandler {
         const { scrollerID, ONAFTERSCROLL_TIMEOUT } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
-        const viewportElement = ViewportContextProperties.elementRef.current
+        // const viewportElement = ViewportContextProperties.elementRef.current
+
+        const viewportElement = e.currentTarget
 
         const orientation = this.cradleParameters.cradleInheritedPropertiesRef.current.orientation
         const scrollPositionCurrent = 
@@ -182,6 +184,8 @@ export default class ScrollHandler {
             return
 
         }
+
+        console.log('isScrolling',this.isScrolling, scrollPositionCurrent)
 
         if (!this.isScrolling) {
 
