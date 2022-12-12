@@ -667,11 +667,8 @@ export default class ContentHandler {
         }
         // -----------------------[ scrollPos adjustment ]-------------------------
 
-        console.log('==> adjustScrollblockForVariability: blockScrollPos, newAxisScrollblockOffset, computedScrollblockLength\n',
-            blockScrollPos, newAxisScrollblockOffset, computedScrollblockLength)
-
-        console.log('-- viewportElement.offsetHeight, measuredTailLength, viewportElement.scrollHeight, viewportElement.scrollTop\n',
-            viewportElement.offsetHeight, measuredTailLength, viewportElement.scrollHeight, viewportElement.scrollTop)
+        console.log('==> adjustScrollblockForVariability: newAxisScrollblockOffset, computedScrollblockLength, blockScrollPos\n',
+            newAxisScrollblockOffset, computedScrollblockLength, blockScrollPos)
 
         if (!isSafariIOS()) { // adjust blockScrollPos directly - most browsers including Safari desktop
 
@@ -723,6 +720,9 @@ export default class ContentHandler {
             }
 
         }
+
+        console.log('-- measuredTailLength, viewportElement.offsetHeight, viewportElement.scrollHeight, viewportElement.scrollTop\n',
+            measuredTailLength, viewportElement.offsetHeight, viewportElement.scrollHeight, viewportElement.scrollTop)
 
         // check for gotoIndex or resize overshoot
         if ((source == 'setcradle') && !postCradleRowCount) { 

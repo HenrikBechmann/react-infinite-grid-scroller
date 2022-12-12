@@ -1271,7 +1271,7 @@ const Cradle = ({
             case 'finishupdateforvariability': {
 
                 // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
-                interruptHandler.triggerlinesIntersect.connectElements()
+                // interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseCradleIntersectionObserver = false
 
                 setCradleState('ready')
