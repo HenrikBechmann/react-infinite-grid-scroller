@@ -329,6 +329,8 @@ export const calcContentShift = ({
 
 }) => {
 
+    // console.log('==> calcContentShift: shiftinstruction', shiftinstruction)
+
     // ------------------------[ 1. initialize ]-----------------------
 
     // configuration data
