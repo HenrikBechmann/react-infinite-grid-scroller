@@ -336,7 +336,7 @@ export default class ContentHandler {
                 viewportElement.scrollTop:
                 viewportElement.scrollLeft
 
-        console.log('==> updateCradleContent: scrollPos', scrollPos)
+        // console.log('==> updateCradleContent: scrollPos', scrollPos)
 
         // cradle scaffold and user cells
         const cradleElements = layoutHandler.elements
