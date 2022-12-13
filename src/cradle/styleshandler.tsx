@@ -210,7 +210,7 @@ export default class StylesHandler {
 
         return {
 
-            position: 'relative',
+            position: 'absolute', // 'relative',
             top,
             left,
             width,
