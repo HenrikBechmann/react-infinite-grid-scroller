@@ -329,7 +329,8 @@ export const calcContentShift = ({
 
 }) => {
 
-    // console.log('==> calcContentShift: shiftinstruction', shiftinstruction)
+    console.log('==> calcContentShift: shiftinstruction, triggerViewportReferencePos\n',
+        shiftinstruction, triggerViewportReferencePos)
 
     // ------------------------[ 1. initialize ]-----------------------
 
@@ -355,6 +356,7 @@ export const calcContentShift = ({
 
         cradleModelComponents:cradlecontentlist, 
         tailModelComponents:tailcontentlist,
+        headModelComponents:headcontentlist
 
     } = cradleContent
 
@@ -370,65 +372,80 @@ export const calcContentShift = ({
 
     } = cradleInternalProperties
 
-    const referenceGridElement = // moving axis (and triggers) toward the reference grid element
-        (shiftinstruction == 'axistailward')? // scrolling up or left
-            tailGridElement:
-            headGridElement
-
-    const gridRowLengths = getGridRowLengths(referenceGridElement, orientation, crosscount, gap)
-
-    if (shiftinstruction == 'axisheadward') { // scrolling down or right; move triggerlines up or left
-
-        gridRowLengths.reverse() // head grid row lengths listed from axis toward head
-
-    }
-
-    const gridRowAggregateSpans = getGridRowAggregateSpans(gridRowLengths) // count pixels where available
-
     const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0),
         previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)
 
     const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0),
         previousAxisRowOffset = Math.ceil(previousAxisReferenceIndex/crosscount)
 
-    // ----------------------------[ 2. calculate base row shift ]--------------------------
-
-    // first try to find position based on known (instantiated) rows
+    const listEndrowOffset = (listRowcount - 1)
     let spanRowPtr
-    if (shiftinstruction == 'axistailward') { // scroll up
+    let spanAxisPixelShift = 0 // in relation to viewport head boundary
+    let gridRowAggregateSpans
+    let gridRowLengths
+    if (layout == 'variable') {
 
-        // tail trigger needs to move down or right until position relative to viewport top or left is positive
-        spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
-            (triggerViewportReferencePos + aggregatespan) >= 0 )
-    
-    } else { // 'axisheadward', scrolldown
+        const referenceGridElement = // moving axis (and triggers) toward the reference grid element
+            (shiftinstruction == 'axistailward')? // scrolling up or left
+                tailGridElement:
+                headGridElement
 
-        // head trigger needs to move up or left until position relative to viewport top or left is negative
-        spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
-            (triggerViewportReferencePos - aggregatespan) <= 0)
+        gridRowLengths = getGridRowLengths(referenceGridElement, orientation, crosscount, gap)
 
+        if (shiftinstruction == 'axisheadward') { // scrolling down or right; move triggerlines up or left
+
+            gridRowLengths.reverse() // head grid row lengths listed from axis toward head
+
+        }
+
+        gridRowAggregateSpans = getGridRowAggregateSpans(gridRowLengths) // count pixels where available
+
+        // ----------------------------[ 2. calculate base row shift ]--------------------------
+
+        // first try to find position based on known (instantiated) rows
+        if (shiftinstruction == 'axistailward') { // scroll up
+
+            // tail trigger needs to move down or right until position relative to viewport top or left is positive
+            spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
+                (triggerViewportReferencePos + aggregatespan) >= 0 )
+        
+        } else { // 'axisheadward', scrolldown
+
+            // head trigger needs to move up or left until position relative to viewport top or left is negative
+            spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
+                (triggerViewportReferencePos - aggregatespan) <= 0)
+
+        }
+
+    } else { // layout == 'uniform'
+
+        spanRowPtr = -1 // "not found", ie not applicable
     }
 
-    const listEndrowOffset = (listRowcount - 1)
     const baseRowLength =
         ((orientation == 'vertical')?
             cellHeight:
             cellWidth) 
         + gap
 
-    let spanAxisPixelShift // in relation to viewport head boundary
-    if (spanRowPtr == -1 ) { // overshoot of instantiated rows; continue with virtual rows
+    if (spanRowPtr == -1 ) { // uniform layout, or overshoot of instantiated rows; continue with virtual rows
 
-        let notionalRowPtr
-        if (gridRowAggregateSpans.length == 0) { // must be list boundary
+        let notionalRowPtr = 0
+        if (layout == 'variable' && gridRowAggregateSpans.length == 0) { // must be list boundary
 
             notionalRowPtr = -1 // "not found"
-            spanAxisPixelShift = 0
+            // spanAxisPixelShift = 0
 
-        } else {
+        } else { 
 
-            notionalRowPtr = gridRowAggregateSpans.length - 1 // base: failed measured row ptr
-            let totalPixelShift = gridRowAggregateSpans[notionalRowPtr] // set base of working overshoot
+            let totalPixelShift
+            if (layout == 'variable') {
+                notionalRowPtr = gridRowAggregateSpans.length - 1 // base: failed measured row ptr
+                totalPixelShift = gridRowAggregateSpans[notionalRowPtr] // set base of working overshoot
+            } else {
+                notionalRowPtr = 0
+                totalPixelShift = 0
+            }
 
             if (shiftinstruction == 'axistailward') { // scrolling up/left
 
@@ -448,11 +465,13 @@ export const calcContentShift = ({
                     totalPixelShift += baseRowLength
                     notionalRowPtr++
 
+                    console.log('axisheadward: previousAxisRowOffset, notionalRowPtr\n',
+                        previousAxisRowOffset, notionalRowPtr)
                     if ((previousAxisRowOffset - notionalRowPtr) == 0) { // stop cycling at head limit
-                        // accommodate isFirstRowTriggerConfig exception in placing trigger lines
-                        // in first row after axis, rather than first row before axis
-                        notionalRowPtr -= 1
-                        totalPixelShift -= baseRowLength
+                    //     // accommodate isFirstRowTriggerConfig exception in placing trigger lines
+                    //     // in first row after axis, rather than first row before axis
+                    //     notionalRowPtr -= 1
+                    //     totalPixelShift -= baseRowLength
                         break
                     }
 
@@ -468,17 +487,24 @@ export const calcContentShift = ({
 
     } else { // final values found in instantiated rows
 
-        spanAxisPixelShift = 
-            (shiftinstruction == 'axistailward')?
-                gridRowAggregateSpans[spanRowPtr]: // move axis toward tail from viewport boundary (positive)
-                -gridRowAggregateSpans[spanRowPtr] // move axis toward head from viewport boundary (negative)
+        if (layout == 'variable') {
+            spanAxisPixelShift = 
+                (shiftinstruction == 'axistailward')?
+                    gridRowAggregateSpans[spanRowPtr]: // move axis toward tail from viewport boundary (positive)
+                    -gridRowAggregateSpans[spanRowPtr] // move axis toward head from viewport boundary (negative)
+        } else {
+            spanAxisPixelShift = 0
+        }
 
     }
 
     const spanRowShift = // pick up row shift with or without overshoot
         (shiftinstruction == 'axistailward')?
-            spanRowPtr + 1:
-            -(spanRowPtr + 1)
+            spanRowPtr: // + 1:
+            -spanRowPtr // + 1)
+
+    console.log('-- counted spanRowShift, spanAxisPixelShift\n',
+        spanRowShift, spanAxisPixelShift)
 
     // the following two values (axisReferenceRowShift & axisPixelShift), and no other calcs, 
     //     are carried forward in this function.
@@ -494,7 +520,11 @@ export const calcContentShift = ({
     if ((previousAxisRowOffset + axisReferenceRowShift) > listEndrowOffset) {
 
         axisReferenceRowShift -= 1
-        axisPixelShift -= gridRowLengths.at(-1)
+        if (layout == 'variable') {
+            axisPixelShift -= gridRowLengths.at(-1)
+        } else {
+            axisPixelShift -= baseRowLength
+        }
 
     }
 
@@ -630,6 +660,9 @@ export const calcContentShift = ({
     const listEndChangeCount = -listStartChangeCount - changeOfCradleContentCount
 
     // ---------------------[ 8. return required values ]-------------------
+
+    console.log(' -- newAxisReferenceIndex, newAxisViewportPixelOffset',
+        newAxisReferenceIndex, newAxisViewportPixelOffset)
 
     return {
 
