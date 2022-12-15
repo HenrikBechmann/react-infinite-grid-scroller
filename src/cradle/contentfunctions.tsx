@@ -245,9 +245,6 @@ export const getShiftInstruction = ({
 
     if (shiftinstruction) { // will be 'none'
 
-        // console.log('INTERRUPT shiftinstruction, triggerData, triggerHistory\n',
-        //     shiftinstruction, triggerViewportReferencePos, triggerData, triggerHistory)
-
         triggerHistory.previousReferenceName = null
 
         return [shiftinstruction, triggerViewportReferencePos]
@@ -283,9 +280,6 @@ export const getShiftInstruction = ({
         }
 
     }
-
-    // console.log('shiftinstruction, triggerViewportReferencePos, triggerData, triggerHistory\n',
-    //     shiftinstruction, triggerViewportReferencePos, triggerData, triggerHistory)
 
     return [shiftinstruction, triggerViewportReferencePos]
 
@@ -326,9 +320,6 @@ export const calcShiftSpecs = ({
     cradleElements,
 
 }) => {
-
-    // console.log('==> calcContentShift: shiftinstruction, triggerViewportReferencePos\n',
-    //     shiftinstruction, triggerViewportReferencePos)
 
     // ------------------------[ 1. initialize ]-----------------------
 
@@ -444,9 +435,6 @@ export const calcShiftSpecs = ({
 
         }
 
-        // console.log('-- variable calculation: spanRowPtr, spanAxisPixelShift, isListBoundary, inProcessRowPtr, totalPixelShift\n', 
-        //     spanRowPtr, spanAxisPixelShift, isListBoundary, inProcessRowPtr, totalPixelShift)
-
     } else { // layout == 'uniform'; use only defined lengths
 
         spanRowPtr = -1 // "not found", ie not applicable
@@ -479,9 +467,6 @@ export const calcShiftSpecs = ({
                     totalPixelShift += baseRowLength
                     inProcessRowPtr++
 
-                    // console.log('axisheadward: previousAxisRowOffset, inProcessRowPtr\n',
-                    //     previousAxisRowOffset, inProcessRowPtr)
-
                     if ((previousAxisRowOffset - inProcessRowPtr) == 0) { // stop cycling at head limit
 
                         break
@@ -505,9 +490,6 @@ export const calcShiftSpecs = ({
         (shiftinstruction == 'axistailward')?
             spanRowPtr + 1:
             -(spanRowPtr + 1)
-
-    // console.log('-- counted spanRowShift, spanAxisPixelShift\n',
-    //     spanRowShift, spanAxisPixelShift)
 
     // the following two values (axisReferenceRowShift & axisPixelShift), and no other calcs, 
     //     are carried forward in this function.
@@ -663,9 +645,6 @@ export const calcShiftSpecs = ({
     const listEndChangeCount = -listStartChangeCount - changeOfCradleContentCount
 
     // ---------------------[ 8. return required values ]-------------------
-
-    // console.log(' -- newAxisReferenceIndex, newAxisViewportPixelOffset, listStartChangeCount, listEndChangeCount\n',
-    //     newAxisReferenceIndex, newAxisViewportPixelOffset, listStartChangeCount, listEndChangeCount)
 
     return {
 

@@ -517,9 +517,6 @@ export default class ContentHandler {
         
         if (layout == 'variable') return
 
-        // console.log('==> applyStyling: scrollPos, axisViewportPixelOffset\n',
-        //     scrollPos, axisViewportPixelOffset)
-
         let topPos, leftPos // available for debug
         if (orientation == 'vertical') {
 
@@ -656,18 +653,11 @@ export default class ContentHandler {
 
         // ------------------------[ layout adjustments ]----------------------
 
-        // console.log('===> adjustScrollblockForVariability: postCradleRowCount, axisReferenceIndex, axisViewportOffset\n', 
-        //     postCradleRowCount, axisReferenceIndex, axisViewportOffset)
-
         interruptHandler.signals.pauseCradleIntersectionObserver = true
 
         const computedScrollblockLength = basePreAxisPixelLength + computedPostAxisPixelLength
         const blockScrollPos = basePreAxisPixelLength - axisViewportOffset
         const newAxisScrollblockOffset = blockScrollPos + axisViewportOffset // ie. basePreAxisPixelLength, but semantics
-
-        // console.log('+++ A. scrollPos, viewportHeight, combined, contentLength, newAxisScrollblockOffset + measuredTailLength\n',
-        //     viewportElement.scrollTop, viewportElement.offsetHeight,viewportElement.scrollTop + viewportElement.offsetHeight, viewportElement.scrollHeight,
-        //     newAxisScrollblockOffset + measuredTailLength)
 
         if (orientation == 'vertical') {
 
@@ -678,10 +668,6 @@ export default class ContentHandler {
             }
 
             axisElement.style.top = newAxisScrollblockOffset + 'px'
-
-            // console.log('+++ B. scrollPos, viewportHeight, combined, contentLength, newAxisScrollblockOffset + measuredTailLength\n',
-            //     viewportElement.scrollTop, viewportElement.offsetHeight,viewportElement.scrollTop + viewportElement.offsetHeight, viewportElement.scrollHeight,
-            //     newAxisScrollblockOffset + measuredTailLength)
 
         } else { // 'horizontal'
 
@@ -695,9 +681,6 @@ export default class ContentHandler {
 
         }
         // -----------------------[ scrollPos adjustment ]-------------------------
-
-        // console.log('-- forwardedBlockScrollPos, newAxisScrollblockOffset, computedScrollblockLength, blockScrollPos\n',
-        //     forwardedBlockScrollPos, newAxisScrollblockOffset, computedScrollblockLength, blockScrollPos)
 
         if (orientation == 'vertical') {
 
@@ -720,27 +703,6 @@ export default class ContentHandler {
             cradlePositionData.blockScrollPos = blockScrollPos
             viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
             scrollHandler.resetScrollData(blockScrollPos)
-
-            // edge case anomaly: returning from bottom of list sometimes results in diff between actual and targeted
-            //    ... presumably from resetting the content length
-            // this is a hacky workaround; adjust the length, and do it again
-            // const newBlockScrollPos = 
-            //     (orientation == 'vertical')?
-            //         viewportElement.scrollTop:
-            //         viewportElement.scrollLeft
-
-            // if (newBlockScrollPos != blockScrollPos) {
-            //     const diff = blockScrollPos - newBlockScrollPos
-
-            //     console.log(' -- blockScrollPos & length adjustment',diff)
-
-            //     if (orientation == 'vertical') {
-            //         scrollblockElement.style.height = (scrollblockElement.offsetHeight + diff) + 'px'
-            //     } else {
-            //         scrollblockElement.style.width = (scrollblockElement.offsetWidth + diff) + 'px'
-            //     }
-            //     viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-            // }
 
         } else { // for Safari iOS
 
@@ -765,21 +727,6 @@ export default class ContentHandler {
             }
 
         }
-
-        // console.log('+++ C. scrollPos, viewportHeight, combined, contentLength\n',
-        //     viewportElement.scrollTop, viewportElement.offsetHeight,viewportElement.scrollTop + viewportElement.offsetHeight, viewportElement.scrollHeight)
-
-        // console.log('-- newAxisScrollblockOffset, measuredTailLength, newAxisScrollblockOffset + measuredTailLength\n',
-        //     newAxisScrollblockOffset, measuredTailLength, newAxisScrollblockOffset + measuredTailLength)
-
-        // if ((blockScrollPos + computedScrollblockLength) > (newAxisScrollblockOffset + measuredTailLength)) {
-
-        //     scrollblockElement.style.height = (computedScrollblockLength) + 'px'
-
-        // }
-
-        // console.log('-- measuredTailLength, viewportElement.offsetHeight, viewportElement.scrollHeight, viewportElement.scrollTop\n',
-        //     measuredTailLength, viewportElement.offsetHeight, viewportElement.scrollHeight, viewportElement.scrollTop)
 
         // check for gotoIndex or resize overshoot
         if ((source == 'setcradle') && !postCradleRowCount) { 

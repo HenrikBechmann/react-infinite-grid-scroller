@@ -185,8 +185,6 @@ export default class ScrollHandler {
 
         }
 
-        // console.log('isScrolling',this.isScrolling, scrollPositionCurrent)
-
         if (!this.isScrolling) {
 
             this.isScrolling = true
