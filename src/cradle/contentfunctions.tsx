@@ -394,7 +394,6 @@ export const calcShiftSpecs = ({
 
     if (layout == 'variable') { // measure exising rows
 
-
         const referenceGridElement = // moving axis (and triggers) toward the reference grid element
             (shiftinstruction == 'axistailward')? // scrolling up or left
                 tailGridElement:
@@ -427,21 +426,26 @@ export const calcShiftSpecs = ({
 
         }
 
-        isListBoundary = (gridRowAggregateSpans.length == 0)
-
-        if (!(spanRowPtr == -1)) {
+        if (!(spanRowPtr == -1)) { // found measureed row for shift
             spanAxisPixelShift = 
                 (shiftinstruction == 'axistailward')?
                     gridRowAggregateSpans[spanRowPtr]: // move axis toward tail from viewport boundary (positive)
                     -gridRowAggregateSpans[spanRowPtr] // move axis toward head from viewport boundary (negative)
+        } else { // either in boundary, or shy of target
+
+            isListBoundary = (gridRowAggregateSpans.length == 0) // boundary at head of list
+
+            if (!isListBoundary) { // interim working result
+
+                inProcessRowPtr = gridRowAggregateSpans.length - 1 // base: failed measured row ptr
+                totalPixelShift = gridRowAggregateSpans[inProcessRowPtr] // set base of working overshoot
+
+            } 
+
         }
 
-        if (!isListBoundary) {
-
-            inProcessRowPtr = gridRowAggregateSpans.length - 1 // base: failed measured row ptr
-            totalPixelShift = gridRowAggregateSpans[inProcessRowPtr] // set base of working overshoot
-
-        }
+        console.log('-- variable calculation: spanRowPtr, spanAxisPixelShift, isListBoundary, inProcessRowPtr, totalPixelShift\n', 
+            spanRowPtr, spanAxisPixelShift, isListBoundary, inProcessRowPtr, totalPixelShift)
 
     } else { // layout == 'uniform'; use only defined lengths
 
@@ -452,7 +456,7 @@ export const calcShiftSpecs = ({
 
     }
 
-    if (spanRowPtr == -1 ) { // uniform layout; or overshoot of instantiated rows, continue with virtual rows
+    if (spanRowPtr == -1 ) { // uniform layout, or overshoot of instantiated rows; continue with virtual rows
 
         if (!isListBoundary) {
 
@@ -489,14 +493,14 @@ export const calcShiftSpecs = ({
 
         }
 
-        spanRowPtr = inProcessRowPtr
+        spanRowPtr = inProcessRowPtr - 1
 
     }
 
     const spanRowShift = // pick up row shift with or without overshoot
         (shiftinstruction == 'axistailward')?
-            spanRowPtr: // + 1:
-            -spanRowPtr // + 1)
+            spanRowPtr + 1:
+            -(spanRowPtr + 1)
 
     console.log('-- counted spanRowShift, spanAxisPixelShift\n',
         spanRowShift, spanAxisPixelShift)
