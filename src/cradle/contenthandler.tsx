@@ -671,7 +671,12 @@ export default class ContentHandler {
 
         if (orientation == 'vertical') {
 
-            scrollblockElement.style.height = (computedScrollblockLength) + 'px'
+            if (postCradleRowCount) {
+                scrollblockElement.style.height = (computedScrollblockLength) + 'px'
+            } else {
+                scrollblockElement.style.height = 'fit-content'
+            }
+
             axisElement.style.top = newAxisScrollblockOffset + 'px'
 
             // console.log('+++ B. scrollPos, viewportHeight, combined, contentLength, newAxisScrollblockOffset + measuredTailLength\n',
@@ -680,7 +685,12 @@ export default class ContentHandler {
 
         } else { // 'horizontal'
 
-            scrollblockElement.style.width = computedScrollblockLength + 'px'
+            if (postCradleRowCount) {
+                scrollblockElement.style.width = computedScrollblockLength + 'px'
+            } else {
+                scrollblockElement.style.width = 'fit-content'
+            }
+
             axisElement.style.left = newAxisScrollblockOffset + 'px'
 
         }
