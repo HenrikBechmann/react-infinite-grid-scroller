@@ -307,7 +307,7 @@ export const getShiftInstruction = ({
 
 // rowshift is at least 1 by the time this function is reached
 // ie. a shiftinstruction of 'axisheadward' or 'axistailward'
-export const calcContentShift = ({
+export const calcShiftSpecs = ({
 
     // direction of change
     shiftinstruction,
@@ -385,7 +385,7 @@ export const calcContentShift = ({
 
     let spanRowPtr
     let spanAxisPixelShift = 0 // in relation to viewport head boundary
-    let notionalRowPtr = 0
+    let inProcessRowPtr = 0
     let isListBoundary = false
     let totalPixelShift
 
@@ -438,8 +438,8 @@ export const calcContentShift = ({
 
         if (!isListBoundary) {
 
-            notionalRowPtr = gridRowAggregateSpans.length - 1 // base: failed measured row ptr
-            totalPixelShift = gridRowAggregateSpans[notionalRowPtr] // set base of working overshoot
+            inProcessRowPtr = gridRowAggregateSpans.length - 1 // base: failed measured row ptr
+            totalPixelShift = gridRowAggregateSpans[inProcessRowPtr] // set base of working overshoot
 
         }
 
@@ -447,7 +447,7 @@ export const calcContentShift = ({
 
         spanRowPtr = -1 // "not found", ie not applicable
 
-        notionalRowPtr = 0
+        inProcessRowPtr = 0
         totalPixelShift = 0
 
     }
@@ -461,7 +461,7 @@ export const calcContentShift = ({
                 do {
 
                     totalPixelShift += baseRowLength
-                    notionalRowPtr++
+                    inProcessRowPtr++
 
                 } while ((triggerViewportReferencePos + totalPixelShift) < 0) 
 
@@ -472,11 +472,11 @@ export const calcContentShift = ({
                 do {
 
                     totalPixelShift += baseRowLength
-                    notionalRowPtr++
+                    inProcessRowPtr++
 
-                    console.log('axisheadward: previousAxisRowOffset, notionalRowPtr\n',
-                        previousAxisRowOffset, notionalRowPtr)
-                    if ((previousAxisRowOffset - notionalRowPtr) == 0) { // stop cycling at head limit
+                    console.log('axisheadward: previousAxisRowOffset, inProcessRowPtr\n',
+                        previousAxisRowOffset, inProcessRowPtr)
+                    if ((previousAxisRowOffset - inProcessRowPtr) == 0) { // stop cycling at head limit
 
                         break
                     }
@@ -489,7 +489,7 @@ export const calcContentShift = ({
 
         }
 
-        spanRowPtr = notionalRowPtr
+        spanRowPtr = inProcessRowPtr
 
     }
 

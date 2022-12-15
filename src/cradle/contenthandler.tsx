@@ -33,7 +33,7 @@ import React from 'react'
 import { 
     getContentListRequirements,
     getShiftInstruction,
-    calcContentShift,
+    calcShiftSpecs,
     allocateContentList,
     deletePortals,
     getCellFrameComponentList, 
@@ -365,7 +365,7 @@ export default class ContentHandler {
             // pixels
             newAxisViewportPixelOffset, 
 
-        } = calcContentShift({
+        } = calcShiftSpecs({
 
             shiftinstruction,
             triggerViewportReferencePos,
