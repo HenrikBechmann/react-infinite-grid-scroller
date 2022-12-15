@@ -325,8 +325,6 @@ export const calcContentShift = ({
     cradleContent,
     cradleElements,
 
-    // layoutHandler,
-
 }) => {
 
     console.log('==> calcContentShift: shiftinstruction, triggerViewportReferencePos\n',
@@ -387,13 +385,15 @@ export const calcContentShift = ({
 
     let spanRowPtr
     let spanAxisPixelShift = 0 // in relation to viewport head boundary
-    let gridRowAggregateSpans
-    let gridRowLengths
     let notionalRowPtr = 0
     let isListBoundary = false
     let totalPixelShift
 
-    if (layout == 'variable') {
+    let gridRowAggregateSpans
+    let gridRowLengths
+
+    if (layout == 'variable') { // measure exising rows
+
 
         const referenceGridElement = // moving axis (and triggers) toward the reference grid element
             (shiftinstruction == 'axistailward')? // scrolling up or left
@@ -429,6 +429,13 @@ export const calcContentShift = ({
 
         isListBoundary = (gridRowAggregateSpans.length == 0)
 
+        if (!(spanRowPtr == -1)) {
+            spanAxisPixelShift = 
+                (shiftinstruction == 'axistailward')?
+                    gridRowAggregateSpans[spanRowPtr]: // move axis toward tail from viewport boundary (positive)
+                    -gridRowAggregateSpans[spanRowPtr] // move axis toward head from viewport boundary (negative)
+        }
+
         if (!isListBoundary) {
 
             notionalRowPtr = gridRowAggregateSpans.length - 1 // base: failed measured row ptr
@@ -436,12 +443,7 @@ export const calcContentShift = ({
 
         }
 
-        // if (layout == 'variable' && gridRowAggregateSpans.length == 0) { // must be list boundary
-
-        //     notionalRowPtr = -1 // "not found"
-        //     // spanAxisPixelShift = 0
-        // }
-    } else { // layout == 'uniform'
+    } else { // layout == 'uniform'; use only defined lengths
 
         spanRowPtr = -1 // "not found", ie not applicable
 
@@ -450,24 +452,9 @@ export const calcContentShift = ({
 
     }
 
-    if (spanRowPtr == -1 ) { // uniform layout, or overshoot of instantiated rows; continue with virtual rows
-
-        // if (layout == 'variable' && gridRowAggregateSpans.length == 0) { // must be list boundary
-
-            // notionalRowPtr = -1 // "not found"
-            // spanAxisPixelShift = 0
-
-        // } else { 
+    if (spanRowPtr == -1 ) { // uniform layout; or overshoot of instantiated rows, continue with virtual rows
 
         if (!isListBoundary) {
-
-            // if (layout == 'variable') {
-            //     notionalRowPtr = gridRowAggregateSpans.length - 1 // base: failed measured row ptr
-            //     totalPixelShift = gridRowAggregateSpans[notionalRowPtr] // set base of working overshoot
-            // } else {
-            //     notionalRowPtr = 0
-            //     totalPixelShift = 0
-            // }
 
             if (shiftinstruction == 'axistailward') { // scrolling up/left
 
@@ -490,10 +477,7 @@ export const calcContentShift = ({
                     console.log('axisheadward: previousAxisRowOffset, notionalRowPtr\n',
                         previousAxisRowOffset, notionalRowPtr)
                     if ((previousAxisRowOffset - notionalRowPtr) == 0) { // stop cycling at head limit
-                    //     // accommodate isFirstRowTriggerConfig exception in placing trigger lines
-                    //     // in first row after axis, rather than first row before axis
-                    //     notionalRowPtr -= 1
-                    //     totalPixelShift -= baseRowLength
+
                         break
                     }
 
@@ -506,17 +490,6 @@ export const calcContentShift = ({
         }
 
         spanRowPtr = notionalRowPtr
-
-    } else { // final values found in instantiated rows
-
-        // if (layout == 'variable') {
-            spanAxisPixelShift = 
-                (shiftinstruction == 'axistailward')?
-                    gridRowAggregateSpans[spanRowPtr]: // move axis toward tail from viewport boundary (positive)
-                    -gridRowAggregateSpans[spanRowPtr] // move axis toward head from viewport boundary (negative)
-        // } else {
-        //     spanAxisPixelShift = 0
-        // }
 
     }
 
@@ -539,6 +512,8 @@ export const calcContentShift = ({
     // this can only happen with oversized cellLength (ie > viewportLength)
     //     and only using measured length
     // axis must be no farther than 1 back of the last row end position
+
+    // TODO work gridRowLengths out of the following block
     if ((previousAxisRowOffset + axisReferenceRowShift) > listEndrowOffset) {
 
         axisReferenceRowShift -= 1
