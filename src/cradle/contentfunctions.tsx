@@ -379,10 +379,20 @@ export const calcContentShift = ({
         previousAxisRowOffset = Math.ceil(previousAxisReferenceIndex/crosscount)
 
     const listEndrowOffset = (listRowcount - 1)
+    const baseRowLength =
+        ((orientation == 'vertical')?
+            cellHeight:
+            cellWidth) 
+        + gap
+
     let spanRowPtr
     let spanAxisPixelShift = 0 // in relation to viewport head boundary
     let gridRowAggregateSpans
     let gridRowLengths
+    let notionalRowPtr = 0
+    let isListBoundary = false
+    let totalPixelShift
+
     if (layout == 'variable') {
 
         const referenceGridElement = // moving axis (and triggers) toward the reference grid element
@@ -417,35 +427,47 @@ export const calcContentShift = ({
 
         }
 
+        isListBoundary = (gridRowAggregateSpans.length == 0)
+
+        if (!isListBoundary) {
+
+            notionalRowPtr = gridRowAggregateSpans.length - 1 // base: failed measured row ptr
+            totalPixelShift = gridRowAggregateSpans[notionalRowPtr] // set base of working overshoot
+
+        }
+
+        // if (layout == 'variable' && gridRowAggregateSpans.length == 0) { // must be list boundary
+
+        //     notionalRowPtr = -1 // "not found"
+        //     // spanAxisPixelShift = 0
+        // }
     } else { // layout == 'uniform'
 
         spanRowPtr = -1 // "not found", ie not applicable
-    }
 
-    const baseRowLength =
-        ((orientation == 'vertical')?
-            cellHeight:
-            cellWidth) 
-        + gap
+        notionalRowPtr = 0
+        totalPixelShift = 0
+
+    }
 
     if (spanRowPtr == -1 ) { // uniform layout, or overshoot of instantiated rows; continue with virtual rows
 
-        let notionalRowPtr = 0
-        if (layout == 'variable' && gridRowAggregateSpans.length == 0) { // must be list boundary
+        // if (layout == 'variable' && gridRowAggregateSpans.length == 0) { // must be list boundary
 
-            notionalRowPtr = -1 // "not found"
+            // notionalRowPtr = -1 // "not found"
             // spanAxisPixelShift = 0
 
-        } else { 
+        // } else { 
 
-            let totalPixelShift
-            if (layout == 'variable') {
-                notionalRowPtr = gridRowAggregateSpans.length - 1 // base: failed measured row ptr
-                totalPixelShift = gridRowAggregateSpans[notionalRowPtr] // set base of working overshoot
-            } else {
-                notionalRowPtr = 0
-                totalPixelShift = 0
-            }
+        if (!isListBoundary) {
+
+            // if (layout == 'variable') {
+            //     notionalRowPtr = gridRowAggregateSpans.length - 1 // base: failed measured row ptr
+            //     totalPixelShift = gridRowAggregateSpans[notionalRowPtr] // set base of working overshoot
+            // } else {
+            //     notionalRowPtr = 0
+            //     totalPixelShift = 0
+            // }
 
             if (shiftinstruction == 'axistailward') { // scrolling up/left
 
@@ -487,14 +509,14 @@ export const calcContentShift = ({
 
     } else { // final values found in instantiated rows
 
-        if (layout == 'variable') {
+        // if (layout == 'variable') {
             spanAxisPixelShift = 
                 (shiftinstruction == 'axistailward')?
                     gridRowAggregateSpans[spanRowPtr]: // move axis toward tail from viewport boundary (positive)
                     -gridRowAggregateSpans[spanRowPtr] // move axis toward head from viewport boundary (negative)
-        } else {
-            spanAxisPixelShift = 0
-        }
+        // } else {
+        //     spanAxisPixelShift = 0
+        // }
 
     }
 
