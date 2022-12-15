@@ -74,7 +74,7 @@ export default class LayoutHandler {
     }
 
     public triggercellIndex
-    public triggercellIsInTail = false
+    public triggercellIsInTail // = false
 
     // cradlePositionData controls the relative positions of the scaffold elements
     public cradlePositionData = {
