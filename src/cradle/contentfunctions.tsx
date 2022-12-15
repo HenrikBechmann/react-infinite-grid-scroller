@@ -612,9 +612,9 @@ export const calcContentShift = ({
             newCradleReferenceRowOffset = 0
 
         }
-        if (newAxisReferenceRowOffset == 0) {
-            newAxisViewportPixelOffset = padding
-        }
+        // if (newAxisReferenceRowOffset == 0) {
+        //     newAxisViewportPixelOffset = padding
+        // }
 
         // --- end of list adjustment; case of in bounds of trailing runway
         const computedNextCradleEndrowOffset = 
@@ -661,8 +661,8 @@ export const calcContentShift = ({
 
     // ---------------------[ 8. return required values ]-------------------
 
-    console.log(' -- newAxisReferenceIndex, newAxisViewportPixelOffset',
-        newAxisReferenceIndex, newAxisViewportPixelOffset)
+    console.log(' -- newAxisReferenceIndex, newAxisViewportPixelOffset, listStartChangeCount, listEndChangeCount\n',
+        newAxisReferenceIndex, newAxisViewportPixelOffset, listStartChangeCount, listEndChangeCount)
 
     return {
 
