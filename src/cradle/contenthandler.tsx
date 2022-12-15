@@ -517,8 +517,8 @@ export default class ContentHandler {
         
         if (layout == 'variable') return
 
-        console.log('==> applyStyling: scrollPos, axisViewportPixelOffset\n',
-            scrollPos, axisViewportPixelOffset)
+        // console.log('==> applyStyling: scrollPos, axisViewportPixelOffset\n',
+        //     scrollPos, axisViewportPixelOffset)
 
         let topPos, leftPos // available for debug
         if (orientation == 'vertical') {

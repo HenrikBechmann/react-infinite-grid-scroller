@@ -327,8 +327,8 @@ export const calcShiftSpecs = ({
 
 }) => {
 
-    console.log('==> calcContentShift: shiftinstruction, triggerViewportReferencePos\n',
-        shiftinstruction, triggerViewportReferencePos)
+    // console.log('==> calcContentShift: shiftinstruction, triggerViewportReferencePos\n',
+    //     shiftinstruction, triggerViewportReferencePos)
 
     // ------------------------[ 1. initialize ]-----------------------
 
@@ -388,18 +388,17 @@ export const calcShiftSpecs = ({
     let inProcessRowPtr = 0
     let isListBoundary = false
     let totalPixelShift
+    let finalVariableRowLength // special case
 
-    let gridRowAggregateSpans
-    let gridRowLengths
-
-    if (layout == 'variable') { // measure exising rows
+    // measure exising rows for variable length cells
+    if (layout == 'variable') { 
 
         const referenceGridElement = // moving axis (and triggers) toward the reference grid element
             (shiftinstruction == 'axistailward')? // scrolling up or left
                 tailGridElement:
                 headGridElement
 
-        gridRowLengths = getGridRowLengths(referenceGridElement, orientation, crosscount, gap)
+        const gridRowLengths = getGridRowLengths(referenceGridElement, orientation, crosscount, gap)
 
         if (shiftinstruction == 'axisheadward') { // scrolling down or right; move triggerlines up or left
 
@@ -407,7 +406,7 @@ export const calcShiftSpecs = ({
 
         }
 
-        gridRowAggregateSpans = getGridRowAggregateSpans(gridRowLengths) // count pixels where available
+        const gridRowAggregateSpans = getGridRowAggregateSpans(gridRowLengths) // count pixels where available
 
         // ----------------------------[ 2. calculate base row shift ]--------------------------
 
@@ -439,13 +438,14 @@ export const calcShiftSpecs = ({
 
                 inProcessRowPtr = gridRowAggregateSpans.length - 1 // base: failed measured row ptr
                 totalPixelShift = gridRowAggregateSpans[inProcessRowPtr] // set base of working overshoot
+                finalVariableRowLength = gridRowLengths.at(-1) // for oversize cell adjustment below
 
             } 
 
         }
 
-        console.log('-- variable calculation: spanRowPtr, spanAxisPixelShift, isListBoundary, inProcessRowPtr, totalPixelShift\n', 
-            spanRowPtr, spanAxisPixelShift, isListBoundary, inProcessRowPtr, totalPixelShift)
+        // console.log('-- variable calculation: spanRowPtr, spanAxisPixelShift, isListBoundary, inProcessRowPtr, totalPixelShift\n', 
+        //     spanRowPtr, spanAxisPixelShift, isListBoundary, inProcessRowPtr, totalPixelShift)
 
     } else { // layout == 'uniform'; use only defined lengths
 
@@ -456,7 +456,8 @@ export const calcShiftSpecs = ({
 
     }
 
-    if (spanRowPtr == -1 ) { // uniform layout, or overshoot of instantiated rows; continue with virtual rows
+    // uniform layout, or overshoot of instantiated rows; continue with virtual base rows
+    if (spanRowPtr == -1 ) { 
 
         if (!isListBoundary) {
 
@@ -478,8 +479,9 @@ export const calcShiftSpecs = ({
                     totalPixelShift += baseRowLength
                     inProcessRowPtr++
 
-                    console.log('axisheadward: previousAxisRowOffset, inProcessRowPtr\n',
-                        previousAxisRowOffset, inProcessRowPtr)
+                    // console.log('axisheadward: previousAxisRowOffset, inProcessRowPtr\n',
+                    //     previousAxisRowOffset, inProcessRowPtr)
+
                     if ((previousAxisRowOffset - inProcessRowPtr) == 0) { // stop cycling at head limit
 
                         break
@@ -493,7 +495,9 @@ export const calcShiftSpecs = ({
 
         }
 
-        spanRowPtr = inProcessRowPtr - 1
+        // inProcessRowPtr is one greater than spanRowPtr with actual measurements above
+        // this makes them compativle for span conversion (next step)
+        spanRowPtr = inProcessRowPtr - 1 
 
     }
 
@@ -502,8 +506,8 @@ export const calcShiftSpecs = ({
             spanRowPtr + 1:
             -(spanRowPtr + 1)
 
-    console.log('-- counted spanRowShift, spanAxisPixelShift\n',
-        spanRowShift, spanAxisPixelShift)
+    // console.log('-- counted spanRowShift, spanAxisPixelShift\n',
+    //     spanRowShift, spanAxisPixelShift)
 
     // the following two values (axisReferenceRowShift & axisPixelShift), and no other calcs, 
     //     are carried forward in this function.
@@ -516,13 +520,11 @@ export const calcShiftSpecs = ({
     // this can only happen with oversized cellLength (ie > viewportLength)
     //     and only using measured length
     // axis must be no farther than 1 back of the last row end position
-
-    // TODO work gridRowLengths out of the following block
     if ((previousAxisRowOffset + axisReferenceRowShift) > listEndrowOffset) {
 
         axisReferenceRowShift -= 1
         if (layout == 'variable') {
-            axisPixelShift -= gridRowLengths.at(-1)
+            axisPixelShift -= finalVariableRowLength //gridRowLengths.at(-1)
         } else {
             axisPixelShift -= baseRowLength
         }
@@ -662,8 +664,8 @@ export const calcShiftSpecs = ({
 
     // ---------------------[ 8. return required values ]-------------------
 
-    console.log(' -- newAxisReferenceIndex, newAxisViewportPixelOffset, listStartChangeCount, listEndChangeCount\n',
-        newAxisReferenceIndex, newAxisViewportPixelOffset, listStartChangeCount, listEndChangeCount)
+    // console.log(' -- newAxisReferenceIndex, newAxisViewportPixelOffset, listStartChangeCount, listEndChangeCount\n',
+    //     newAxisReferenceIndex, newAxisViewportPixelOffset, listStartChangeCount, listEndChangeCount)
 
     return {
 
