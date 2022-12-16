@@ -32,7 +32,7 @@ import React from 'react'
 
 import { 
     getContentListRequirements,
-    getShiftInstruction,
+    // getShiftInstruction,
     calcShiftSpecs,
     allocateContentList,
     deletePortals,
@@ -661,23 +661,23 @@ export default class ContentHandler {
 
         if (orientation == 'vertical') {
 
+            axisElement.style.top = newAxisScrollblockOffset + 'px'
+
             if (postCradleRowCount) {
                 scrollblockElement.style.height = (computedScrollblockLength) + 'px'
             } else {
                 scrollblockElement.style.height = 'fit-content'
             }
 
-            axisElement.style.top = newAxisScrollblockOffset + 'px'
-
         } else { // 'horizontal'
+
+            axisElement.style.left = newAxisScrollblockOffset + 'px'
 
             if (postCradleRowCount) {
                 scrollblockElement.style.width = computedScrollblockLength + 'px'
             } else {
                 scrollblockElement.style.width = 'fit-content'
             }
-
-            axisElement.style.left = newAxisScrollblockOffset + 'px'
 
         }
         // -----------------------[ scrollPos adjustment ]-------------------------

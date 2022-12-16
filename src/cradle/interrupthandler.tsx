@@ -68,6 +68,8 @@ export default class InterruptHandler {
             const { 
 
                 triggerHistoryRef,
+                listsize,
+                crosscount,
 
             } = cradleInternalProperties
 
@@ -105,6 +107,18 @@ export default class InterruptHandler {
                     triggerHistoryRef,
 
                 })
+
+                if (shiftinstruction == 'axistailward') { // filter out oversize last row
+
+                    const lastListRowOffset = Math.ceil(listsize/crosscount) - 1
+
+                    const tailcontentlist = contentHandler.content.tailModelComponents
+                    const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0)
+                    const previousAxisRowOffset = Math.ceil(previousAxisReferenceIndex/crosscount)
+
+                    if (lastListRowOffset == previousAxisRowOffset) return
+
+                }
 
                 // none == nothing to do
                 if (shiftinstruction != 'none') { 
