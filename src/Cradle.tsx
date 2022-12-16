@@ -1256,9 +1256,13 @@ const Cradle = ({
 
             case 'adjustupdateforvariability': {
 
-                contentHandler.adjustScrollblockForVariability('updatecradle')
+                setTimeout(()=> { // allow more DOM update
 
-                setCradleState('finishupdateforvariability')
+                    contentHandler.adjustScrollblockForVariability('updatecradle')
+
+                    setCradleState('finishupdateforvariability')
+
+                },0)
 
                 break
 

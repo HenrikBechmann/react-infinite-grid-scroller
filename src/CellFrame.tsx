@@ -23,7 +23,7 @@
     be adjusted accordingly. Any other value that is returned is treated as an error, and presented
     as such to the user through the placeholder component.
 
-    getItem sends the index (logical position in the list) and a session itemID to the host, so that
+    getItem sends the index (logical index in the list) and a session itemID to the host, so that
     the host can sync its own tracking with the scroller.
 
     One CellFrame at a time is designated as the host of the two triggerLines with the isTriggerCell flag. 
@@ -67,7 +67,7 @@ const CellFrame = ({
     listsize, // for feedback in placeholder
     placeholder, // optionally provided by host
     itemID, // session itemID
-    index, // logical position in infinite list
+    index, // logical index in infinite list
     instanceID, // CellFrame session ID
     scrollerID, // scroller ID (for debugging)
     isTriggercell,

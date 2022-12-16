@@ -32,8 +32,8 @@ import React from 'react'
 
 import { 
     getContentListRequirements,
-    getShiftInstruction,
-    calcContentShift,
+    // getShiftInstruction,
+    calcShiftSpecs,
     allocateContentList,
     deletePortals,
     getCellFrameComponentList, 
@@ -279,7 +279,7 @@ export default class ContentHandler {
             axisElement.style.top = 'auto'
             axisElement.style.left = left + 'px'
 
-            headElement.style.paddingRight = 
+            headElement.style.padding = 
                 headcontentlist.length?
                     `${padding}px ${gap}px ${padding}px ${padding}px`:
                     `${padding}px 0px ${padding}px ${padding}px`
@@ -336,6 +336,8 @@ export default class ContentHandler {
                 viewportElement.scrollTop:
                 viewportElement.scrollLeft
 
+        // console.log('==> updateCradleContent: scrollPos', scrollPos, '============')
+
         // cradle scaffold and user cells
         const cradleElements = layoutHandler.elements
 
@@ -363,7 +365,7 @@ export default class ContentHandler {
             // pixels
             newAxisViewportPixelOffset, 
 
-        } = calcContentShift({
+        } = calcShiftSpecs({
 
             shiftinstruction,
             triggerViewportReferencePos,
@@ -385,11 +387,13 @@ export default class ContentHandler {
         const axisElement = cradleElements.axisRef.current
         const headElement = cradleElements.headRef.current
 
+        interruptHandler.triggerlinesIntersect.disconnect()
+
         // abandon option; nothing to do but reposition
         if (!isShift) { // can happen first row; oversized last row
     
             cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
-            this.applyStyling(
+            this.applyStyling(layout,
                 orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
                 axisElement, headElement, cradleContent.headModelComponents)
 
@@ -400,7 +404,7 @@ export default class ContentHandler {
         // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx, or at 'finishupdateforvariability'
         //    for variable content
-        interruptHandler.triggerlinesIntersect.disconnect()
+        // interruptHandler.triggerlinesIntersect.disconnect()
 
         // ----------------------------------[ 4. reconfigure cradle content ]--------------------------
 
@@ -496,7 +500,7 @@ export default class ContentHandler {
             }
         }
 
-        this.applyStyling(
+        this.applyStyling(layout,
             orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
             axisElement, headElement, headcontent)
 
@@ -506,10 +510,13 @@ export default class ContentHandler {
 
     }
 
-    applyStyling = (
+    // move the offset of the axis
+    private applyStyling = (layout,
         orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
         axisElement, headElement, headcontent) => {
         
+        if (layout == 'variable') return
+
         let topPos, leftPos // available for debug
         if (orientation == 'vertical') {
 
@@ -588,6 +595,7 @@ export default class ContentHandler {
 
             targetAxisReferenceIndex: axisReferenceIndex,
             targetAxisViewportPixelOffset: axisViewportOffset,
+            blockScrollPos:forwardedBlockScrollPos, 
 
         } = cradlePositionData
 
@@ -645,6 +653,8 @@ export default class ContentHandler {
 
         // ------------------------[ layout adjustments ]----------------------
 
+        interruptHandler.signals.pauseCradleIntersectionObserver = true
+
         const computedScrollblockLength = basePreAxisPixelLength + computedPostAxisPixelLength
         const blockScrollPos = basePreAxisPixelLength - axisViewportOffset
         const newAxisScrollblockOffset = blockScrollPos + axisViewportOffset // ie. basePreAxisPixelLength, but semantics
@@ -652,17 +662,41 @@ export default class ContentHandler {
         if (orientation == 'vertical') {
 
             axisElement.style.top = newAxisScrollblockOffset + 'px'
-            scrollblockElement.style.height = computedScrollblockLength + 'px'
+
+            if (postCradleRowCount) {
+                scrollblockElement.style.height = (computedScrollblockLength) + 'px'
+            } else {
+                scrollblockElement.style.height = 'fit-content'
+            }
 
         } else { // 'horizontal'
 
             axisElement.style.left = newAxisScrollblockOffset + 'px'
-            scrollblockElement.style.width = computedScrollblockLength + 'px'
+
+            if (postCradleRowCount) {
+                scrollblockElement.style.width = computedScrollblockLength + 'px'
+            } else {
+                scrollblockElement.style.width = 'fit-content'
+            }
 
         }
         // -----------------------[ scrollPos adjustment ]-------------------------
 
-        interruptHandler.signals.pauseCradleIntersectionObserver = true
+        if (orientation == 'vertical') {
+
+            headGridElement.style.padding = 
+                headRowCount?
+                    `${padding}px ${padding}px ${gap}px ${padding}px`:
+                    `${padding}px ${padding}px 0px ${padding}px`
+
+        } else {
+
+            headGridElement.style.padding = 
+                headRowCount?
+                    `${padding}px ${gap}px ${padding}px ${padding}px`:
+                    `${padding}px 0px ${padding}px ${padding}px`
+
+        }
 
         if (!isSafariIOS()) { // adjust blockScrollPos directly - most browsers including Safari desktop
 
@@ -670,28 +704,10 @@ export default class ContentHandler {
             viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
             scrollHandler.resetScrollData(blockScrollPos)
 
-            // edge case anomaly: returning from bottom of list sometimes results in diff between actual and targeted
-            //    ... presumably from resetting the content length
-            // this is a hacky workaround        
-            const newBlockScrollPos = 
-                (orientation == 'vertical')?
-                    viewportElement.scrollTop:
-                    viewportElement.scrollLeft
-
-            if (newBlockScrollPos != blockScrollPos) {
-                const diff = blockScrollPos - newBlockScrollPos
-                if (orientation == 'vertical') {
-                    scrollblockElement.style.height = (scrollblockElement.offsetHeight + diff) + 'px'
-                } else {
-                    scrollblockElement.style.width = (scrollblockElement.offsetWiith + diff) + 'px'
-                }
-                viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-            }
-
         } else { // for Safari iOS
 
             // temporarily adjust scrollblockElement offset; iOSonAfterScroll transfers shift to blockScrollPos
-            // direct change of scrollTop/ScrollLeft in Safari iOS is ignored by the browser momentum engine
+            // - direct change of scrollTop/ScrollLeft in Safari iOS is ignored by the browser momentum engine
 
             const startingScrollPos = 
                 (orientation == 'vertical')?

@@ -37,7 +37,7 @@ Therefore RIGS is best suited for modern browsers.
 
 ![Architecture](demo/Architecture.png)
 
-Notes: The `Cradle` is kept in view of the `Viewport`, such that the `axis` is always near the top or left of the `Viewport` (depending on vertical or horizontal orientation). There are two CSS grids in the `Cradle`, one on each side of the `axis`. As `CellFrame`s are added to or removed from the grids, the grid on the left expands toward or contracts away from the top or left of the `Scrollblock` (depending on orientation), and the grid on the right expands toward or contracts away from the bottom or right of the `Scrollblock`. 
+Notes: The `Cradle` is kept in view of the `Viewport`, such that the `axis` is always near the top or left of the `Viewport` (depending on vertical or horizontal orientation). There are two CSS grids in the `Cradle`, one on each side of the `axis`. As `CellFrame`s are added to or removed from the grids, the grid on the top or left expands toward or contracts away from the top or left of the `Scrollblock` (depending on orientation), and the grid on the bottom or right expands toward or contracts away from the bottom or right of the `Scrollblock`. 
 
 `CellFrame`s display individual user components. `CellFrame`s are created and destroyed on a rolling basis as the `Cradle` re-configures and moves around the `Scrollblock` to stay in view, but user components are maintained in the internal cache until they go out of scope. New `CellFrame`s fetch user components from the internal cache (portals in the React virtual DOM) or from the host through the user-supplied `getItem` function, as needed.
 
@@ -66,6 +66,8 @@ The scroller's highest level component, the `Viewport`, is a `div` with `positio
 Note that scroller-generated elements show a `data-type` attribute in browser inspectors (eg. 'viewport').
 
 User components loaded to `CellFrame`s are placed in a `data-type = 'contentenvelope'` `div`. In 'uniform' layout this has `position:absolute` and `inset:0`. In 'variable' layout it has `width:100%` and `max-height` = `cellHeight` for 'vertical' orientation, and `height:100%` and `max-width` = `cellWidth` for 'horizontal' orientation. In any case it has `overflow:hidden`.
+
+See the "Content Types" section of the [demodata.tsx](https://github.com/HenrikBechmann/rigs-demo/blob/master/src/demodata.tsx) module of the demo site for more code examples.
 
 # Animated GIF
 
@@ -138,7 +140,7 @@ styles = {
 }
 ~~~
 
-You may want to add `overscrollBehavior:'none'` to the viewport styles to prevent inadvertent reloading of your app in certain browsers when users scroll past the top of a vertical list.
+You may want to add `overscrollBehavior:'none'` to the top level viewport styles to prevent inadvertent reloading of your app in certain browsers when users scroll past the top of a vertical list.
 
 The scrolltracker is the small rectangular component that appears at the top left of the viewport when the list is being rapidly repositioned. The scrolltracker shows the user the current virtual index and total listsize during the repositioning process.
 
@@ -234,7 +236,7 @@ Details about the functions returned in an object by `functionsCallback`:
 
 Notes: cache management functions are provided to support drag-n-drop, sorting, and filtering operations. 
 
-Cache management functions operate on indexes and itemIDs in the cache, and generally ignore indexes and itemIDs that are not in the cache. 
+Cache management functions operate on indexes and itemIDs in the cache, and generally ignore indexes and itemIDs that are not in the cache. They synchronize `Cradle` cell content as appropriate.
 
 This is a sparse in-memory cache, and indexes in the cache are not guaranteed to be contiguous.
 
