@@ -342,8 +342,7 @@ export default class ContentHandler {
         const cradleElements = layoutHandler.elements
 
         const cradleContent = this.content,
-            modelcontentlist = cradleContent.cradleModelComponents || [],
-            tailcontentlist = cradleContent.tailModelComponents
+            modelcontentlist = cradleContent.cradleModelComponents || []
 
         const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
