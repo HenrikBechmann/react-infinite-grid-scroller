@@ -336,8 +336,6 @@ export default class ContentHandler {
                 viewportElement.scrollTop:
                 viewportElement.scrollLeft
 
-        // console.log('==> updateCradleContent: scrollPos', scrollPos, '============')
-
         // cradle scaffold and user cells
         const cradleElements = layoutHandler.elements
 
@@ -393,9 +391,13 @@ export default class ContentHandler {
         if (!isShift) { // can happen first row; oversized last row
     
             cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
-            this.applyStyling(layout,
-                orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
-                axisElement, headElement, cradleContent.headModelComponents)
+            this.applyStyling({
+                layout, orientation, padding, gap, cellHeight, cellWidth, 
+                crosscount, 
+                axisReferenceIndex, axisViewportPixelOffset, scrollPos, 
+                headcontent:cradleContent.headModelComponents,
+                axisElement, headElement
+            })
 
             return
 
@@ -482,27 +484,13 @@ export default class ContentHandler {
 
         if (isShift) cacheHandler.renderPortalLists()
 
-        // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
-        if (layout == 'uniform') {
-            const axisReferenceIndex = layoutHandler.transientUpdateAxisReferenceIndex 
-            const preAxisRows = Math.ceil(axisReferenceIndex/crosscount)
-            const baseCellLength = 
-                ((orientation == 'vertical')?
-                    cellHeight:
-                    cellWidth)
-                + gap
-
-            const testScrollPos = baseCellLength * preAxisRows + padding - axisViewportPixelOffset
-            const scrollDiff = testScrollPos - scrollPos
-
-            if (scrollDiff) {
-                axisViewportPixelOffset += scrollDiff
-            }
-        }
-
-        this.applyStyling(layout,
-            orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
-            axisElement, headElement, headcontent)
+        this.applyStyling({
+            layout, orientation, padding, gap, cellHeight, cellWidth, 
+            crosscount, 
+            axisReferenceIndex, axisViewportPixelOffset, scrollPos, 
+            headcontent,
+            axisElement, headElement
+        })
 
         // load new display data
         cradleContent.headDisplayComponents = cradleContent.headModelComponents
@@ -511,11 +499,32 @@ export default class ContentHandler {
     }
 
     // move the offset of the axis
-    private applyStyling = (layout,
-        orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
-        axisElement, headElement, headcontent) => {
+    private applyStyling = ({
+        layout, orientation, padding, gap, cellHeight, cellWidth, 
+        crosscount, 
+        axisReferenceIndex, axisViewportPixelOffset, scrollPos, 
+        headcontent,
+        axisElement, headElement
+    }) => {
         
         if (layout == 'variable') return
+
+        // --------------
+        // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
+        const preAxisRows = Math.ceil(axisReferenceIndex/crosscount)
+        const baseCellLength = 
+            ((orientation == 'vertical')?
+                cellHeight:
+                cellWidth)
+            + gap
+
+        const testScrollPos = (baseCellLength * preAxisRows) + padding - axisViewportPixelOffset
+        const scrollDiff = testScrollPos - scrollPos
+
+        if (scrollDiff) {
+            axisViewportPixelOffset += scrollDiff
+        }
+        // --------------
 
         let topPos, leftPos // available for debug
         if (orientation == 'vertical') {
@@ -663,21 +672,13 @@ export default class ContentHandler {
 
             axisElement.style.top = newAxisScrollblockOffset + 'px'
 
-            if (postCradleRowCount) {
-                scrollblockElement.style.height = (computedScrollblockLength) + 'px'
-            } else {
-                scrollblockElement.style.height = 'fit-content'
-            }
+            scrollblockElement.style.height = (computedScrollblockLength) + 'px'
 
         } else { // 'horizontal'
 
             axisElement.style.left = newAxisScrollblockOffset + 'px'
 
-            if (postCradleRowCount) {
-                scrollblockElement.style.width = computedScrollblockLength + 'px'
-            } else {
-                scrollblockElement.style.width = 'fit-content'
-            }
+            scrollblockElement.style.width = computedScrollblockLength + 'px'
 
         }
         // -----------------------[ scrollPos adjustment ]-------------------------
