@@ -391,10 +391,13 @@ export default class ContentHandler {
         if (!isShift) { // can happen first row; oversized last row
     
             cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
-            this.applyStyling(layout,
-                orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
-                axisElement, headElement, cradleContent.headModelComponents, 
-                crosscount, cellHeight, cellWidth, axisReferenceIndex)
+            this.applyStyling({
+                layout, orientation, padding, gap, cellHeight, cellWidth, 
+                crosscount, 
+                axisReferenceIndex, axisViewportPixelOffset, scrollPos, 
+                headcontent:cradleContent.headModelComponents,
+                axisElement, headElement
+            })
 
             return
 
@@ -481,10 +484,13 @@ export default class ContentHandler {
 
         if (isShift) cacheHandler.renderPortalLists()
 
-        this.applyStyling(layout,
-            orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
-            axisElement, headElement, headcontent, 
-            crosscount, cellHeight, cellWidth, axisReferenceIndex)
+        this.applyStyling({
+            layout, orientation, padding, gap, cellHeight, cellWidth, 
+            crosscount, 
+            axisReferenceIndex, axisViewportPixelOffset, scrollPos, 
+            headcontent,
+            axisElement, headElement
+        })
 
         // load new display data
         cradleContent.headDisplayComponents = cradleContent.headModelComponents
@@ -493,10 +499,13 @@ export default class ContentHandler {
     }
 
     // move the offset of the axis
-    private applyStyling = (layout,
-        orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
-        axisElement, headElement, headcontent, 
-        crosscount, cellHeight, cellWidth, axisReferenceIndex) => {
+    private applyStyling = ({
+        layout, orientation, padding, gap, cellHeight, cellWidth, 
+        crosscount, 
+        axisReferenceIndex, axisViewportPixelOffset, scrollPos, 
+        headcontent,
+        axisElement, headElement
+    }) => {
         
         if (layout == 'variable') return
 
