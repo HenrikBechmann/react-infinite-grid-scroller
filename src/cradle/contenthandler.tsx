@@ -672,21 +672,13 @@ export default class ContentHandler {
 
             axisElement.style.top = newAxisScrollblockOffset + 'px'
 
-            if (postCradleRowCount) {
-                scrollblockElement.style.height = (computedScrollblockLength) + 'px'
-            } else {
-                scrollblockElement.style.height = 'fit-content'
-            }
+            scrollblockElement.style.height = (computedScrollblockLength) + 'px'
 
         } else { // 'horizontal'
 
             axisElement.style.left = newAxisScrollblockOffset + 'px'
 
-            if (postCradleRowCount) {
-                scrollblockElement.style.width = computedScrollblockLength + 'px'
-            } else {
-                scrollblockElement.style.width = 'fit-content'
-            }
+            scrollblockElement.style.width = computedScrollblockLength + 'px'
 
         }
         // -----------------------[ scrollPos adjustment ]-------------------------
