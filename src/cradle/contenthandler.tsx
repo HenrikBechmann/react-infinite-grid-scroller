@@ -393,7 +393,8 @@ export default class ContentHandler {
             cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
             this.applyStyling(layout,
                 orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
-                axisElement, headElement, cradleContent.headModelComponents)
+                axisElement, headElement, cradleContent.headModelComponents, 
+                layoutHandler, crosscount, cellHeight, cellWidth)
 
             return
 
@@ -480,27 +481,10 @@ export default class ContentHandler {
 
         if (isShift) cacheHandler.renderPortalLists()
 
-        // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
-        if (layout == 'uniform') {
-            const axisReferenceIndex = layoutHandler.transientUpdateAxisReferenceIndex 
-            const preAxisRows = Math.ceil(axisReferenceIndex/crosscount)
-            const baseCellLength = 
-                ((orientation == 'vertical')?
-                    cellHeight:
-                    cellWidth)
-                + gap
-
-            const testScrollPos = baseCellLength * preAxisRows + padding - axisViewportPixelOffset
-            const scrollDiff = testScrollPos - scrollPos
-
-            if (scrollDiff) {
-                axisViewportPixelOffset += scrollDiff
-            }
-        }
-
         this.applyStyling(layout,
             orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
-            axisElement, headElement, headcontent)
+            axisElement, headElement, headcontent, 
+            layoutHandler, crosscount, cellHeight, cellWidth)
 
         // load new display data
         cradleContent.headDisplayComponents = cradleContent.headModelComponents
@@ -511,9 +495,27 @@ export default class ContentHandler {
     // move the offset of the axis
     private applyStyling = (layout,
         orientation, padding, gap, scrollPos, axisViewportPixelOffset, 
-        axisElement, headElement, headcontent) => {
+        axisElement, headElement, headcontent, layoutHandler, crosscount, cellHeight, cellWidth) => {
         
         if (layout == 'variable') return
+
+        // --------------
+        // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
+        const axisReferenceIndex = layoutHandler.transientUpdateAxisReferenceIndex 
+        const preAxisRows = Math.ceil(axisReferenceIndex/crosscount)
+        const baseCellLength = 
+            ((orientation == 'vertical')?
+                cellHeight:
+                cellWidth)
+            + gap
+
+        const testScrollPos = (baseCellLength * preAxisRows) + padding - axisViewportPixelOffset
+        const scrollDiff = testScrollPos - scrollPos
+
+        if (scrollDiff) {
+            axisViewportPixelOffset += scrollDiff
+        }
+        // --------------
 
         let topPos, leftPos // available for debug
         if (orientation == 'vertical') {
