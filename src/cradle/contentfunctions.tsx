@@ -280,8 +280,8 @@ export const getShiftInstruction = ({
 
     const triggerViewportReferencePos = 
         (shiftinstruction == 'axistailward')? // block is scrolling up or left
-            triggerData.headOffset: // needs to move down or right toward tail
-            triggerData.tailOffset // needs to move up or left toward head
+            triggerData.tailOffset: // needs to move up or left toward head
+            triggerData.headOffset // needs to move down or right toward tail
 
 
     console.log('shiftinstruction, triggerViewportReferencePos, triggerData\n',
