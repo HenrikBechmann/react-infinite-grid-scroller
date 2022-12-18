@@ -186,8 +186,8 @@ export const getShiftInstruction = ({
 
     const viewportTriggerOffset = entrypos - rootpos
 
-    console.log('referencename, viewportTriggerOffset, span\n',
-        referencename, viewportTriggerOffset, span)
+    // console.log('referencename, viewportTriggerOffset, span\n',
+    //     referencename, viewportTriggerOffset, span)
 
     if (referencename == 'headtrigger') {
 
@@ -284,8 +284,8 @@ export const getShiftInstruction = ({
             triggerData.headOffset // needs to move down or right toward tail
 
 
-    console.log('shiftinstruction, triggerViewportReferencePos, triggerData\n',
-        shiftinstruction, triggerViewportReferencePos, triggerData)
+    // console.log('shiftinstruction, triggerViewportReferencePos, triggerData\n',
+    //     shiftinstruction, triggerViewportReferencePos, triggerData)
 
     return [shiftinstruction, triggerViewportReferencePos]
 
@@ -441,8 +441,8 @@ export const calcShiftSpecs = ({
 
         }
 
-        console.log('spanRowPtr, spanAxisPixelShift, gridRowAggregateSpans, gridRowLengths\n',
-            spanRowPtr, spanAxisPixelShift, gridRowAggregateSpans, gridRowLengths)
+        console.log('triggerViewportReferencePos, spanRowPtr, spanAxisPixelShift, gridRowAggregateSpans, gridRowLengths\n',
+            triggerViewportReferencePos, spanRowPtr, spanAxisPixelShift, gridRowAggregateSpans, gridRowLengths)
 
     } else { // layout == 'uniform'; use only defined lengths
 
