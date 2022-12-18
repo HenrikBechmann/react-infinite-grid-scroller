@@ -186,6 +186,9 @@ export const getShiftInstruction = ({
 
     const viewportTriggerOffset = entrypos - rootpos
 
+    console.log('referencename, viewportTriggerOffset, span\n',
+        referencename, viewportTriggerOffset, span)
+
     if (referencename == 'headtrigger') {
 
         triggerData.headOffset = viewportTriggerOffset
@@ -193,8 +196,8 @@ export const getShiftInstruction = ({
 
     } else { // tailtrigger
 
-        triggerData.tailOffset = viewportTriggerOffset
         triggerData.headOffset = viewportTriggerOffset - span
+        triggerData.tailOffset = viewportTriggerOffset
 
     }
 
@@ -237,17 +240,11 @@ export const getShiftInstruction = ({
         }
     }
 
-    const triggerViewportReferencePos = 
-        (shiftinstruction == 'axistailward')? // block is scrolling up or left
-            triggerData.headOffset: // needs to move down or right toward tail
-            triggerData.tailOffset // needs to move up or left toward head
-
-
     if (shiftinstruction) { // will be 'none'
 
         triggerHistory.previousReferenceName = null
 
-        return [shiftinstruction, triggerViewportReferencePos]
+        return [shiftinstruction, 0]//triggerViewportReferencePos]
 
     }
 
@@ -280,6 +277,15 @@ export const getShiftInstruction = ({
         }
 
     }
+
+    const triggerViewportReferencePos = 
+        (shiftinstruction == 'axistailward')? // block is scrolling up or left
+            triggerData.headOffset: // needs to move down or right toward tail
+            triggerData.tailOffset // needs to move up or left toward head
+
+
+    console.log('shiftinstruction, triggerViewportReferencePos, triggerData\n',
+        shiftinstruction, triggerViewportReferencePos, triggerData)
 
     return [shiftinstruction, triggerViewportReferencePos]
 
@@ -435,6 +441,9 @@ export const calcShiftSpecs = ({
 
         }
 
+        console.log('spanRowPtr, spanAxisPixelShift, gridRowAggregateSpans, gridRowLengths\n',
+            spanRowPtr, spanAxisPixelShift, gridRowAggregateSpans, gridRowLengths)
+
     } else { // layout == 'uniform'; use only defined lengths
 
         spanRowPtr = -1 // "not found", ie not applicable
@@ -490,6 +499,8 @@ export const calcShiftSpecs = ({
         (shiftinstruction == 'axistailward')?
             spanRowPtr + 1:
             -(spanRowPtr + 1)
+
+    console.log('spanRowShift',spanRowShift)
 
     // the following two values (axisReferenceRowShift & axisPixelShift), and no other calcs, 
     //     are carried forward in this function.
