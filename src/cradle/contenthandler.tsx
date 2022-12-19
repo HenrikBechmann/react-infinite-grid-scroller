@@ -377,6 +377,9 @@ export default class ContentHandler {
 
         })
 
+        // console.log('-- updateCradleContent: shiftinstruction, axisItemShift\n', 
+        //     shiftinstruction, axisItemShift)
+
         let axisViewportPixelOffset = newAxisViewportPixelOffset
 
         const { cradlePositionData } = layoutHandler
@@ -385,6 +388,9 @@ export default class ContentHandler {
         const axisElement = cradleElements.axisRef.current
         const headElement = cradleElements.headRef.current
 
+        // the triggerlines will be moved, so disconnect them from their observer.
+        // they are reconnected with 'renderupdatedcontent' state in cradle.tsx, or at 'finishupdateforvariability'
+        //    for variable content
         interruptHandler.triggerlinesIntersect.disconnect()
 
         // abandon option; nothing to do but reposition
@@ -402,11 +408,6 @@ export default class ContentHandler {
             return
 
         }
-
-        // the triggerlines will be moved, so disconnect them from their observer.
-        // they are reconnected with 'renderupdatedcontent' state in cradle.tsx, or at 'finishupdateforvariability'
-        //    for variable content
-        // interruptHandler.triggerlinesIntersect.disconnect()
 
         // ----------------------------------[ 4. reconfigure cradle content ]--------------------------
 

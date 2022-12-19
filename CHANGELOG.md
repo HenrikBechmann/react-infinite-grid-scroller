@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0-RC-1 December 16, 2022
+
+Release candidate 1. Several cross-browser issues were identified and resolved.
+
+RIGS now appears to be functional and stable. Feature freeze for version 1.0.0 is in effect.
+
 ## 1.0.0-Beta-4 November 24, 2022
 
 Many issues were identified and resolved, thanks mostly to testing with the demo site.
