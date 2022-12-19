@@ -19,6 +19,8 @@ import React from 'react'
 
 import CellFrame from '../CellFrame'
 
+import { isSafariIOS } from '../InfiniteGridScroller'
+
 // ======================[ for setCradleContent ]===========================
 
 export const getContentListRequirements = ({ // called from setCradleContent only
@@ -208,10 +210,10 @@ export const getShiftInstruction = ({
     // since triggers are moved and can share the 0 (zero) offset, an infinite loop can occur
     // between the head and tail triggers. The following short-circuits that.
     // the range (>= -1 && <= 1) is used to accommodate browsers using fractional pixels
-    // if (((triggerData.headOffset > -1) && (triggerData.headOffset < 1)) || 
-    //     ((triggerData.tailOffset > -1) && (triggerData.tailOffset < 1))) {
+    if (!isSafariIOS() && (((triggerData.headOffset > -1) && (triggerData.headOffset < 1)) || 
+        ((triggerData.tailOffset > -1) && (triggerData.tailOffset < 1)))) {
 
-    if (triggerData.headOffset == 0 || triggerData.tailOffset == 0) {
+    // if (triggerData.headOffset == 0 || triggerData.tailOffset == 0) {
         // some browsers do an infinite loop with the same previousReferenceName;
         // usually alternates
         if (triggerHistory.previousReferenceName) {
@@ -220,9 +222,9 @@ export const getShiftInstruction = ({
             
         } else {
 
-            // if ((triggerData.headOffset > -1) && (triggerData.headOffset < 1)) {
+            if ((triggerData.headOffset > -1) && (triggerData.headOffset < 1)) {
 
-            if (triggerData.headOffset == 0) {
+            // if (triggerData.headOffset == 0) {
 
                 triggerHistory.previousReferenceName = 'headtrigger'
 
