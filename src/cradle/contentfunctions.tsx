@@ -205,24 +205,30 @@ export const getShiftInstruction = ({
 
     let shiftinstruction
     
-    const triggerHistory = triggerHistoryRef.current
+    const triggerHistory = triggerHistoryRef.current;
+
+    // (triggerHistory.previousReferenceName) && console.log('triggerHistory.previousReferenceName',
+    //     triggerHistory.previousReferenceName)
 
     // since triggers are moved and can share the 0 (zero) offset, an infinite loop can occur
     // between the head and tail triggers. The following short-circuits that.
-    // the range (>= -1 && <= 1) is used to accommodate browsers using fractional pixels
-    if (!isSafariIOS() && (((triggerData.headOffset > -1) && (triggerData.headOffset < 1)) || 
-        ((triggerData.tailOffset > -1) && (triggerData.tailOffset < 1)))) {
+    // Obviously needs work to generalize...
+    if ((isSafariIOS() && (triggerData.headOffset == 0 || triggerData.tailOffset == 0)) ||
+        (!isSafariIOS() && (((triggerData.headOffset >= -1) && (triggerData.headOffset <= 1)) || 
+        ((triggerData.tailOffset >= -1) && (triggerData.tailOffset <= 1))))) {
 
     // if (triggerData.headOffset == 0 || triggerData.tailOffset == 0) {
         // some browsers do an infinite loop with the same previousReferenceName;
         // usually alternates
         if (triggerHistory.previousReferenceName) {
 
+            triggerHistory.previousReferenceName = null
+
             shiftinstruction = 'none'
             
         } else {
 
-            if ((triggerData.headOffset > -1) && (triggerData.headOffset < 1)) {
+            if ((triggerData.headOffset >= -1) && (triggerData.headOffset <= 1)) {
 
             // if (triggerData.headOffset == 0) {
 
@@ -246,8 +252,6 @@ export const getShiftInstruction = ({
     }
 
     if (shiftinstruction) { // will be 'none'
-
-        triggerHistory.previousReferenceName = null
 
         // console.log('+++ short circuiting with', shiftinstruction)
 
