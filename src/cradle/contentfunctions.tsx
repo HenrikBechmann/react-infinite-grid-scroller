@@ -159,17 +159,17 @@ export const getShiftInstruction = ({
 
     const intersectrootpos = 
         (orientation == 'vertical')?
-            // Math.trunc(entry.rootBounds.y):
-            // Math.trunc(entry.rootBounds.x)
-            entry.rootBounds.y:
-            entry.rootBounds.x
+            Math.trunc(entry.rootBounds.y):
+            Math.trunc(entry.rootBounds.x)
+            // entry.rootBounds.y:
+            // entry.rootBounds.x
 
     const boundingrootpos =
         (orientation == 'vertical')?
-            // Math.trunc(viewportBoundingRect.y):
-            // Math.trunc(viewportBoundingRect.x)
-            viewportBoundingRect.y:
-            viewportBoundingRect.x
+            Math.trunc(viewportBoundingRect.y):
+            Math.trunc(viewportBoundingRect.x)
+            // viewportBoundingRect.y:
+            // viewportBoundingRect.x
 
     // this selection is redundant, but documents what's going on
     const rootpos = 
@@ -179,10 +179,10 @@ export const getShiftInstruction = ({
 
     const entrypos = 
         (orientation == 'vertical')?
-            // Math.trunc(entry.boundingClientRect.y):
-            // Math.trunc(entry.boundingClientRect.x)
-            entry.boundingClientRect.y:
-            entry.boundingClientRect.x
+            Math.trunc(entry.boundingClientRect.y):
+            Math.trunc(entry.boundingClientRect.x)
+            // entry.boundingClientRect.y:
+            // entry.boundingClientRect.x
 
     const viewportTriggerOffset = entrypos - rootpos
 
@@ -208,9 +208,10 @@ export const getShiftInstruction = ({
     // since triggers are moved and can share the 0 (zero) offset, an infinite loop can occur
     // between the head and tail triggers. The following short-circuits that.
     // the range (>= -1 && <= 1) is used to accommodate browsers using fractional pixels
-    if (((triggerData.headOffset > -1) && (triggerData.headOffset < 1)) || 
-        ((triggerData.tailOffset > -1) && (triggerData.tailOffset < 1))) {
+    // if (((triggerData.headOffset > -1) && (triggerData.headOffset < 1)) || 
+    //     ((triggerData.tailOffset > -1) && (triggerData.tailOffset < 1))) {
 
+    if (triggerData.headOffset == 0 || triggerData.tailOffset == 0) {
         // some browsers do an infinite loop with the same previousReferenceName;
         // usually alternates
         if (triggerHistory.previousReferenceName) {
@@ -219,7 +220,9 @@ export const getShiftInstruction = ({
             
         } else {
 
-            if ((triggerData.headOffset > -1) && (triggerData.headOffset < 1)) {
+            // if ((triggerData.headOffset > -1) && (triggerData.headOffset < 1)) {
+
+            if (triggerData.headOffset == 0) {
 
                 triggerHistory.previousReferenceName = 'headtrigger'
 
@@ -244,7 +247,7 @@ export const getShiftInstruction = ({
 
         triggerHistory.previousReferenceName = null
 
-        console.log('+++ short circuiting with', shiftinstruction)
+        // console.log('+++ short circuiting with', shiftinstruction)
 
         return [shiftinstruction, 0]//triggerViewportReferencePos]
 
@@ -286,8 +289,8 @@ export const getShiftInstruction = ({
             triggerData.headOffset // needs to move down or right toward tail
 
 
-    console.log('==> getShiftInstruction: shiftinstruction, triggerViewportReferencePos, triggerData\n',
-        shiftinstruction, triggerViewportReferencePos, triggerData)
+    // console.log('==> getShiftInstruction: shiftinstruction, triggerViewportReferencePos, triggerData\n',
+    //     shiftinstruction, triggerViewportReferencePos, triggerData)
 
     return [shiftinstruction, triggerViewportReferencePos]
 
@@ -443,8 +446,8 @@ export const calcShiftSpecs = ({
 
         }
 
-        console.log('==> calcShiftSpecs: triggerViewportReferencePos, spanRowPtr, spanAxisPixelShift, gridRowAggregateSpans, gridRowLengths\n',
-            triggerViewportReferencePos, spanRowPtr, spanAxisPixelShift, gridRowAggregateSpans, gridRowLengths)
+        // console.log('==> calcShiftSpecs: triggerViewportReferencePos, spanRowPtr, spanAxisPixelShift, gridRowAggregateSpans, gridRowLengths\n',
+        //     triggerViewportReferencePos, spanRowPtr, spanAxisPixelShift, gridRowAggregateSpans, gridRowLengths)
 
     } else { // layout == 'uniform'; use only defined lengths
 
@@ -502,7 +505,7 @@ export const calcShiftSpecs = ({
             spanRowPtr + 1:
             -(spanRowPtr + 1)
 
-    console.log('-- spanRowShift',spanRowShift)
+    // console.log('-- spanRowShift',spanRowShift)
 
     // the following two values (axisReferenceRowShift & axisPixelShift), and no other calcs, 
     //     are carried forward in this function.

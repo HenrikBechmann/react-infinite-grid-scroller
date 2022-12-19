@@ -377,8 +377,8 @@ export default class ContentHandler {
 
         })
 
-        console.log('-- updateCradleContent: shiftinstruction, axisItemShift\n', 
-            shiftinstruction, axisItemShift)
+        // console.log('-- updateCradleContent: shiftinstruction, axisItemShift\n', 
+        //     shiftinstruction, axisItemShift)
 
         let axisViewportPixelOffset = newAxisViewportPixelOffset
 
