@@ -1,6 +1,6 @@
 {
   "name": "react-infinite-grid-scroller",
-  "version": "1.0.0-Beta-4.10",
+  "version": "1.0.0-Beta-4.11",
   "description": "Heavy-duty vertical or horizontal infinite scroller",
   "main": "index.js",
   "scripts": {
