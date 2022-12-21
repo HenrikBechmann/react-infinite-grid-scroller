@@ -467,7 +467,6 @@ const Cradle = ({
     from the user.
 */
     
-
     const restoreScrollPos = () => {
 
         const { cradlePositionData } = layoutHandler
