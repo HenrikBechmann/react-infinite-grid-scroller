@@ -188,9 +188,6 @@ export const getShiftInstruction = ({
 
     const viewportTriggerOffset = entrypos - rootpos
 
-    // console.log('==> getShiftInstruction: referencename, viewportTriggerOffset, span\n',
-    //     referencename, viewportTriggerOffset, span)
-
     if (referencename == 'headtrigger') {
 
         triggerData.headOffset = viewportTriggerOffset
@@ -207,9 +204,6 @@ export const getShiftInstruction = ({
     
     const triggerHistory = triggerHistoryRef.current;
 
-    // (triggerHistory.previousReferenceName) && console.log('triggerHistory.previousReferenceName',
-    //     triggerHistory.previousReferenceName)
-
     // since triggers are moved and can share the 0 (zero) offset, an infinite loop can occur
     // between the head and tail triggers. The following short-circuits that.
     // Obviously needs work to generalize...
@@ -217,7 +211,6 @@ export const getShiftInstruction = ({
         (!isSafariIOS() && (((triggerData.headOffset >= -1) && (triggerData.headOffset <= 1)) || 
         ((triggerData.tailOffset >= -1) && (triggerData.tailOffset <= 1))))) {
 
-    // if (triggerData.headOffset == 0 || triggerData.tailOffset == 0) {
         // some browsers do an infinite loop with the same previousReferenceName;
         // usually alternates
         if (triggerHistory.previousReferenceName) {
@@ -252,8 +245,6 @@ export const getShiftInstruction = ({
     }
 
     if (shiftinstruction) { // will be 'none'
-
-        // console.log('+++ short circuiting with', shiftinstruction)
 
         return [shiftinstruction, 0]//triggerViewportReferencePos]
 
@@ -294,9 +285,6 @@ export const getShiftInstruction = ({
             triggerData.tailOffset: // needs to move up or left toward head
             triggerData.headOffset // needs to move down or right toward tail
 
-
-    // console.log('==> getShiftInstruction: shiftinstruction, triggerViewportReferencePos, triggerData\n',
-    //     shiftinstruction, triggerViewportReferencePos, triggerData)
 
     return [shiftinstruction, triggerViewportReferencePos]
 
@@ -452,9 +440,6 @@ export const calcShiftSpecs = ({
 
         }
 
-        // console.log('==> calcShiftSpecs: triggerViewportReferencePos, spanRowPtr, spanAxisPixelShift, gridRowAggregateSpans, gridRowLengths\n',
-        //     triggerViewportReferencePos, spanRowPtr, spanAxisPixelShift, gridRowAggregateSpans, gridRowLengths)
-
     } else { // layout == 'uniform'; use only defined lengths
 
         spanRowPtr = -1 // "not found", ie not applicable
@@ -510,8 +495,6 @@ export const calcShiftSpecs = ({
         (shiftinstruction == 'axistailward')?
             spanRowPtr + 1:
             -(spanRowPtr + 1)
-
-    // console.log('-- spanRowShift',spanRowShift)
 
     // the following two values (axisReferenceRowShift & axisPixelShift), and no other calcs, 
     //     are carried forward in this function.
