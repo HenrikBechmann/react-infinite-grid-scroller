@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0-a January 2, 2020
+
+No change, just updated the version number in the README file.
+
+## 1.0.0 January 2, 2020
+
+No change, just upgraded the utility to production release status
+
 ## 1.0.0-RC-1 December 16, 2022
 
 Release candidate 1. Several cross-browser issues were identified and resolved.
