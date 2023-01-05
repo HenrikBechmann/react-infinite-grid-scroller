@@ -119,9 +119,10 @@ const InfiniteGridScroller = (props) => {
 
     } = props
 
+    let isMinimalPropsFail = false
     if (!(cellWidth && cellHeight && startingListSize && getItem )) {
         console.log('RIGS: cellWidth, cellHeight, startingListSize and getItem are required')
-        return null
+        isMinimalPropsFail = true
     }
 
     // ---------------------[ Data setup ]----------------------
@@ -197,7 +198,6 @@ const InfiniteGridScroller = (props) => {
     if (problems) {
         console.error('Error: invalid number - compare originalValues and verifiedValues', 
             originalValues, verifiedValues)
-        return <div>error: see console.</div>
     }
 
     // enums
@@ -327,6 +327,10 @@ const InfiniteGridScroller = (props) => {
 
     // --------------------[ Render ]---------------------
 
+    if (problems || isMinimalPropsFail) {
+        return <div>error: see console.</div>        
+    }
+
     // component calls are deferred by scrollerState to give cacheHandler a chance to initialize
     return <ErrorBoundary
         FallbackComponent= { ErrorFallback }
@@ -348,7 +352,7 @@ const InfiniteGridScroller = (props) => {
 
         >
         
-            <Scrollblock
+            {listsize && <Scrollblock
 
                 gridSpecs = { gridSpecsRef.current }
                 styles = { stylesRef.current }
@@ -383,7 +387,7 @@ const InfiniteGridScroller = (props) => {
                     scrollerID = { scrollerID }
 
                 />
-            </Scrollblock>
+            </Scrollblock>}
         </Viewport>}
         {(scrollerState != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
             <PortalMasterCache cacheProps = {cacheHandlerRef.current.cacheProps} />
