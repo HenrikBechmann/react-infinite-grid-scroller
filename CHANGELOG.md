@@ -1,10 +1,14 @@
 # Changelog
 
-## 1.0.0-a January 2, 2020
+## 1.0.1 January 5, 2022
+
+Moved three pre-emptive function component error returns to location after all hooks.
+
+## 1.0.0-a January 2, 2022
 
 No change, just updated the version number in the README file.
 
-## 1.0.0 January 2, 2020
+## 1.0.0 January 2, 2022
 
 No change, just upgraded the utility to production release status
 
