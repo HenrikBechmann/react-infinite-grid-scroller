@@ -119,8 +119,6 @@ const Cradle = ({
 
     }) => {
 
-    // if (listsize == 0) return null // nothing to do
-
     // ========================[ DATA SETUP ]========================
 
     // unpack gridSpecs
@@ -444,7 +442,7 @@ const Cradle = ({
     const { // cacheHandler already available
         interruptHandler,
         scrollHandler,
-        stateHandler,
+        // stateHandler, // not used
         contentHandler,
         layoutHandler,
         serviceHandler,

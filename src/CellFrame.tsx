@@ -35,7 +35,6 @@ import React, {
     useEffect, 
     useLayoutEffect, 
     useState, 
-    useCallback, 
     useMemo, 
     useContext 
 } from 'react'
@@ -130,7 +129,6 @@ const CellFrame = ({
     // the session itemID to use; could be updated by parent
     const itemIDRef = useRef(null)
     itemIDRef.current = itemID
-    const latestItemIDRef = useRef(null)
     const cellFrameDataRef = useRef(null)
     cellFrameDataRef.current = {
         itemID,
@@ -278,6 +276,8 @@ const CellFrame = ({
 
                 setFrameState('preparing') // delay paint while working
                 
+                break
+
             }
 
             case 'getusercontent': {
@@ -465,7 +465,7 @@ export default CellFrame
 const getFrameStyles = 
     (orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, styles) => {
 
-    let styleset = {...styles,position:'relative', overflow:'visible'}
+    const styleset = {...styles,position:'relative', overflow:'visible'}
 
     if (orientation === 'vertical') {
 
@@ -521,7 +521,7 @@ const getContentHolderStyles = (layout,orientation,cellMinWidth, cellMinHeight )
     } else { // variable
         styles.inset = null
         styles.position = null
-        if (orientation = 'vertical') {
+        if (orientation == 'vertical') {
             styles.width = '100%'
             styles.height = null
             styles.minWidth = null

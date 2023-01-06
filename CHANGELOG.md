@@ -1,8 +1,13 @@
 # Changelog
 
+## 1.0.2 January 6, 2022
+
+Integrated multiple suggestions from a linter, including one bug fix ("=" s/b "==").
+Allow startingListSize of 0.
+
 ## 1.0.1 January 5, 2022
 
-Moved three pre-emptive function component error returns to location after all hooks.
+Moved two pre-emptive function component error returns to location after all hooks. Avoided third pre-emptive return by calling Cradle conditionally on listsize > 0.
 
 ## 1.0.0-a January 2, 2022
 

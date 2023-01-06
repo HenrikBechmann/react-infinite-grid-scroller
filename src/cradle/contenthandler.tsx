@@ -109,10 +109,10 @@ export default class ContentHandler {
             padding, 
             cellHeight,
             cellWidth,
-            cache,
-            scrollerID,
+            // cache,
+            // scrollerID,
             styles,
-            layout,
+            // layout,
             placeholderMessages,
         } = cradleInheritedProperties
 
@@ -202,7 +202,7 @@ export default class ContentHandler {
         // ----------------------[ 3. get and config content ]----------------------
         
         // returns content constrained by cradleRowcount
-        const [newcontentlist,deleteditems] = getCellFrameComponentList({
+        const [newcontentlist]/*,deleteditems]*/ = getCellFrameComponentList({
             
             cacheHandler,            
             cradleInheritedProperties,
@@ -328,7 +328,7 @@ export default class ContentHandler {
 
         const { 
             crosscount,
-            listsize,
+            // listsize,
         } = cradleInternalProperties
 
         const scrollPos = 
@@ -350,7 +350,7 @@ export default class ContentHandler {
         const {
 
             // by index
-            newCradleReferenceIndex,
+            // newCradleReferenceIndex,
             cradleReferenceItemShift:cradleItemShift, 
             newAxisReferenceIndex:axisReferenceIndex, 
             axisReferenceItemShift:axisItemShift, 
@@ -377,11 +377,11 @@ export default class ContentHandler {
 
         })
 
-        let axisViewportPixelOffset = newAxisViewportPixelOffset
+        const axisViewportPixelOffset = newAxisViewportPixelOffset
 
         const { cradlePositionData } = layoutHandler
 
-        let isShift = !((axisItemShift == 0) && (cradleItemShift == 0))
+        const isShift = !((axisItemShift == 0) && (cradleItemShift == 0))
         const axisElement = cradleElements.axisRef.current
         const headElement = cradleElements.headRef.current
 
@@ -467,7 +467,7 @@ export default class ContentHandler {
 
         if (serviceHandler.callbacks.referenceIndexCallback) {
 
-            let cstate = stateHandler.cradleStateRef.current
+            const cstate = stateHandler.cradleStateRef.current
 
             serviceHandler.callbacks.referenceIndexCallback(
 
@@ -602,7 +602,7 @@ export default class ContentHandler {
 
             targetAxisReferenceIndex: axisReferenceIndex,
             targetAxisViewportPixelOffset: axisViewportOffset,
-            blockScrollPos:forwardedBlockScrollPos, 
+            // blockScrollPos:forwardedBlockScrollPos, 
 
         } = cradlePositionData
 
@@ -817,7 +817,7 @@ export default class ContentHandler {
     public clearCradle = () => {
 
         const cradleContent = this.content
-        const { cacheHandler } = this.cradleParameters.handlersRef.current
+        // const { cacheHandler } = this.cradleParameters.handlersRef.current
 
         cradleContent.cradleModelComponents = []
 
@@ -885,7 +885,7 @@ export default class ContentHandler {
         if (changeList.length == 0) return
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
-        const { indexToItemIDMap, metadataMap } = cacheHandler.cacheProps
+        const { indexToItemIDMap } = cacheHandler.cacheProps
 
         const { cradleModelComponents } = this.content
 

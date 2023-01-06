@@ -15,7 +15,6 @@ import React, {
     useLayoutEffect, 
     useMemo, 
     useCallback, 
-    useContext
 
 } from 'react'
 
@@ -31,7 +30,7 @@ const Viewport = ({
     gridSpecs,
     styles,
     scrollerID,
-    scrollerProperties,
+    // scrollerProperties,
     VIEWPORT_RESIZE_TIMEOUT,
     
 }) => {
@@ -41,11 +40,11 @@ const Viewport = ({
     const {
 
         orientation,
-        gap,
-        padding,
-        cellHeight,
-        cellWidth,
-        layout,
+        // gap,
+        // padding,
+        // cellHeight,
+        // cellWidth,
+        // layout,
 
     } = gridSpecs
 

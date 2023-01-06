@@ -119,7 +119,7 @@ export class CacheHandler {
             current:null
         }
 
-        const promise = new Promise((resolve, reject) => {
+        const promise = new Promise((resolve) => {
             resolvefunc.current = resolve
         })
 
@@ -711,7 +711,7 @@ export class CacheHandler {
         let indexesToProcessList, // for either insert or remove
             indexesToReplaceList = [], // for insert the range being inserted
             indexesToRemoveList = [], // for remove - end of list; the list is shrinking
-            indexesOfItemsToRemoveList= [], // for remove - within the range of indexes being removed
+            indexesOfItemsToRemoveList = [], // for remove - within the range of indexes being removed
             itemsToRemoveList = [] // for remove, derived from the previous
 
         // get indexesToProcessList
@@ -891,8 +891,7 @@ export class CacheHandler {
         const { layout, cellHeight, cellWidth, orientation } = 
             this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        const portalNode = createPortalNode(
-                index, itemID, layout, orientation, cellHeight, cellWidth)
+        const portalNode = createPortalNode(index, itemID)
 
         const partitionID = await this.findPartitionWithRoom()
 
@@ -969,7 +968,7 @@ export class CacheHandler {
                 content = usercontent
             }
 
-            const portalData = 
+            // const portalData = 
                 await this.createPortal(content, index, itemID, scrollerProperties, true) // true = isPreload
 
         } else {
@@ -1052,11 +1051,11 @@ export class CacheHandler {
 // with user content and container
 // see also some styles set in CellFrame
 
-const createPortalNode = (index, itemID, layout, orientation, cellHeight, cellWidth) => {
+const createPortalNode = (index, itemID) => {
 
-    let portalNode = createHtmlPortalNode()
+    const portalNode = createHtmlPortalNode()
 
-    let container = portalNode.element
+    const container = portalNode.element
     container.style.overflow = 'hidden'
 
     container.dataset.type = 'contentenvelope'
