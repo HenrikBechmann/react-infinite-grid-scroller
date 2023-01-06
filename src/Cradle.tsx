@@ -119,8 +119,6 @@ const Cradle = ({
 
     }) => {
 
-    // if (listsize == 0) return null // nothing to do
-
     // ========================[ DATA SETUP ]========================
 
     // unpack gridSpecs

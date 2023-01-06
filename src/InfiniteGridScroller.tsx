@@ -120,8 +120,8 @@ const InfiniteGridScroller = (props) => {
     } = props
 
     let isMinimalPropsFail = false
-    if (!(cellWidth && cellHeight && startingListSize && getItem )) {
-        console.log('RIGS: cellWidth, cellHeight, startingListSize and getItem are required')
+    if (!(cellWidth && cellHeight && getItem )) {
+        console.log('RIGS: cellWidth, cellHeight, and getItem are required')
         isMinimalPropsFail = true
     }
 
