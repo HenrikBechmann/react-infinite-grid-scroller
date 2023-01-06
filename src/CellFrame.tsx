@@ -274,7 +274,7 @@ const CellFrame = ({
 
             case 'working': {
 
-                setFrameState('preparing') // delay paint while working
+                setFrameState('getusercontent') // delay paint while working
                 
                 break
 
