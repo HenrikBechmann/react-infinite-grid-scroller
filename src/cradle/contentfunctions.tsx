@@ -350,7 +350,7 @@ export const calcShiftSpecs = ({
 
         cradleModelComponents:cradlecontentlist, 
         tailModelComponents:tailcontentlist,
-        headModelComponents:headcontentlist
+        // headModelComponents:headcontentlist
 
     } = cradleContent
 
@@ -550,7 +550,7 @@ export const calcShiftSpecs = ({
 
     // base values
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
-    let newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowShift
+    const newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowShift
 
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
@@ -653,7 +653,7 @@ export const calcShiftSpecs = ({
 
     return {
 
-        newCradleReferenceIndex, 
+        // newCradleReferenceIndex, 
         cradleReferenceItemShift, 
         newAxisReferenceIndex, 
         axisReferenceItemShift, 

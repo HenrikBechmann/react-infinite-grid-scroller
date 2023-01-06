@@ -22,7 +22,7 @@ export default class ScrollHandler {
 
     private _isIOSscrolling = false
 
-    public iOSonScroll = (e) => {
+    public iOSonScroll = () => {
 
         const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
 
@@ -206,7 +206,7 @@ export default class ScrollHandler {
         const {stateHandler} = this.cradleParameters.handlersRef.current
         const cradleState = stateHandler.cradleStateRef.current
 
-        const { contentHandler, serviceHandler } = this.cradleParameters.handlersRef.current
+        // const { contentHandler, serviceHandler } = this.cradleParameters.handlersRef.current
 
         if (!ViewportContextProperties.isResizing) {
 
@@ -234,11 +234,11 @@ export default class ScrollHandler {
 
         this.isScrolling = false
 
-        const {stateHandler, contentHandler, serviceHandler, interruptHandler} = 
+        const { stateHandler, contentHandler, serviceHandler } = 
             this.cradleParameters.handlersRef.current
 
-        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
-            cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
+        // const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
+        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         const cradleState = stateHandler.cradleStateRef.current
 
@@ -275,7 +275,7 @@ export default class ScrollHandler {
 
         }
 
-        const { cache, layout } = cradleInheritedProperties
+        const { cache } = cradleInheritedProperties
 
         if (cache == 'keepload') {
             contentHandler.pareCacheToMax()

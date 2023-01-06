@@ -9,7 +9,7 @@
     The default placeholder can be replaced by a placeholder provided by the host.
 */
 
-import React, {useRef, useMemo} from 'react'
+import React, {useMemo} from 'react'
 
 const Placeholder = ({
     index, 

@@ -303,7 +303,7 @@ export default class ServiceHandler {
             itemsToReplaceSet.add(obj.itemID)
         })
 
-        const itemsToReplaceList = Array.from(itemsToReplaceSet)
+        // const itemsToReplaceList = Array.from(itemsToReplaceSet)
 
         workingChangeMap.forEach((itemID, index) =>{
 
@@ -355,7 +355,7 @@ export default class ServiceHandler {
 
             const itemIDCountMap = new Map()
 
-            changeIndexToItemIDMap.forEach((itemID, index) => {
+            changeIndexToItemIDMap.forEach((itemID) => {
 
                 if (!itemIDCountMap.has(itemID)) {
 
@@ -702,7 +702,7 @@ export default class ServiceHandler {
 
         if (increment == +1) contentHandler.createNewItemIDs(replaceList)
 
-        const { content } = contentHandler
+        // const { content } = contentHandler
 
         stateHandler.setCradleState('applycellframechanges')
 

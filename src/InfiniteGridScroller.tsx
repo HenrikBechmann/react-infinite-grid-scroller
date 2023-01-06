@@ -58,7 +58,7 @@ import Scrollblock from './Scrollblock'
 import Cradle from './Cradle'
 
 // loaded here to minimize redundant renders in Cradle
-import { CacheHandler, CachePartition, PortalMasterCache } from './cradle/cachehandler'
+import { CacheHandler, PortalMasterCache } from './cradle/cachehandler'
 
 // -------------------[ global session ID generator ]----------------
 
@@ -120,8 +120,8 @@ const InfiniteGridScroller = (props) => {
     } = props
 
     let isMinimalPropsFail = false
-    if (!(cellWidth && cellHeight && startingListSize && getItem )) {
-        console.log('RIGS: cellWidth, cellHeight, startingListSize and getItem are required')
+    if (!(cellWidth && cellHeight && getItem )) {
+        console.log('RIGS: cellWidth, cellHeight, and getItem are required')
         isMinimalPropsFail = true
     }
 
@@ -346,7 +346,7 @@ const InfiniteGridScroller = (props) => {
 
             gridSpecs = { gridSpecsRef.current }
             styles = { stylesRef.current }
-            scrollerProperties = { scrollerProperties }
+            // scrollerProperties = { scrollerProperties }
             scrollerID = { scrollerID }
             VIEWPORT_RESIZE_TIMEOUT = { VIEWPORT_RESIZE_TIMEOUT }
 
@@ -405,8 +405,7 @@ const cacherootstyle = {display:'none'}// as React.CSSProperties // static, out 
 function compareProps (obj1,obj2) {
     if (!obj1 || !obj2) return false
     const keys = Object.keys(obj1)
-    let same
-    for (let key of keys) {
+    for (const key of keys) {
         if (!Object.is(obj1[key],obj2[key])) {
             return false
         }

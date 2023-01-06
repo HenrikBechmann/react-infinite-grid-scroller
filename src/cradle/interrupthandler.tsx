@@ -156,7 +156,7 @@ export default class InterruptHandler {
         }
 
         for (let i = 0; i < entries.length; i++ ) {
-            let entry = entries[i]
+            const entry = entries[i]
             if (entry.target.dataset.type == 'head') {
                 this.isHeadCradleInView = 
                     (entry.isIntersecting || 
@@ -197,9 +197,9 @@ export default class InterruptHandler {
                 const { 
 
                     scrollerID, 
-                    layout, orientation, 
-                    padding, gap,
-                    cellHeight, cellWidth,
+                    layout, // orientation, 
+                    // padding, gap,
+                    // cellHeight, cellWidth,
 
                 } = this.cradleParameters.cradleInheritedPropertiesRef.current
                 if (!viewportElement) {
@@ -207,12 +207,11 @@ export default class InterruptHandler {
                         scrollerID,ViewportContextProperties)
                     return
                 }
-                const { listRowcount, crosscount } = this.cradleParameters.cradleInternalPropertiesRef.current
 
                 // update dimensions with cradle intersection. See also dimension update in viewport.tsx for resize
                 // and getViewportDimensions in Cradle for width/height
                 const rect = viewportElement.getBoundingClientRect()
-                const {top, right, bottom, left} = rect
+                const { top, right, bottom, left } = rect
                 const width = right - left, height = bottom - top
 
                 // update for scrolltracker
