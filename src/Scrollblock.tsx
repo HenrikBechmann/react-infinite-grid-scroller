@@ -28,7 +28,6 @@ const Scrollblock = ({
         padding,
         cellHeight,
         cellWidth,
-        layout,
         
     } = gridSpecs
 
@@ -166,7 +165,7 @@ const calcBaseScrollblockLength = ({
 const updateScrollblockStyles = (
     orientation, stylesRef, baseScrollblocklengthRef, cellWidth, cellHeight, padding) => {
 
-    let localstyles = {...stylesRef.current} // new object
+    const localstyles = {...stylesRef.current} // new object
     let height, width, minHeight, minWidth
     if (orientation == 'vertical') {
         height = baseScrollblocklengthRef.current + 'px'

@@ -12,9 +12,9 @@ import React, {useRef} from 'react'
 
 const ScrollTracker = ({ top, left, offset, listsize, styles }) => {
 
-    let trackdata = `${offset + 1}/${listsize}`
+    const trackdata = `${offset + 1}/${listsize}`
 
-    let styleRef = useRef({
+    const styleRef = useRef({
         top: top + 'px',
         left: left + 'px',
         position:'fixed',

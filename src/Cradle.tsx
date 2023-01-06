@@ -444,7 +444,7 @@ const Cradle = ({
     const { // cacheHandler already available
         interruptHandler,
         scrollHandler,
-        stateHandler,
+        // stateHandler, // not used
         contentHandler,
         layoutHandler,
         serviceHandler,
