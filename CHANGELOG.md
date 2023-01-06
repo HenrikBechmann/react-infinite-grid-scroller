@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.03 January 6, 2022
+
+Fix regression in CellFrame
+
 ## 1.0.2 January 6, 2022
 
 Integrated multiple suggestions from a linter, including one bug fix ("=" s/b "==").
