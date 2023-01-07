@@ -11,7 +11,7 @@ Allow startingListSize of 0.
 
 ## 1.0.1 January 5, 2022
 
-Moved two pre-emptive function component error returns to location after all hooks. Avoided third pre-emptive return by calling Scrollblock conditionally on listsize > 0.
+Moved two pre-emptive function component error returns in InfiniteGridScroller to location after all hooks. Avoided third pre-emptive return by calling Scrollblock conditionally on listsize > 0.
 
 ## 1.0.0-a January 2, 2022
 
