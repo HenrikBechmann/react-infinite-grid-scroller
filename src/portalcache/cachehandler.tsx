@@ -42,8 +42,10 @@ import React, {useState, useEffect, useRef, useCallback} from 'react'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
+import CachePartition from './CachePartition'
+
 // the cache itself is maintained in the root infinitegridscroller component
-export class CacheHandler {
+export default class CacheHandler {
 
     constructor(scrollerID, setListsize, listsizeRef, CACHE_PARTITION_SIZE) {
         this.cacheProps.scrollerID = scrollerID // for debug
@@ -1065,108 +1067,3 @@ const createPortalNode = (index, itemID) => {
     return portalNode
 
 }     
-
-// ========================[ Utility components ]==============================
-
-// portal list component for rapid relisting of updates, using external callback for set state
-export const CachePartition = ({ cacheProps, partitionID, callback }) => {
-
-    const [portalListCounter, setPortalListCounter] = useState(0)
-
-    const [partitionState, setPartitionState] = useState('setup')
-
-    const counterRef = useRef(portalListCounter)
-
-    const isMountedRef = useRef(true)
-
-    const portalArrayRef = useRef(null)
-
-    const partitionMetadata = cacheProps.partitionMetadataMap.get(partitionID)
-
-    const forceUpdate = useCallback((portalRenderList) => {
-
-        portalArrayRef.current = portalRenderList
-
-        isMountedRef.current && setPortalListCounter(++counterRef.current) // force render
-
-    },[])
-
-    useEffect(()=>{
-
-        isMountedRef.current = true
-
-        partitionMetadata.forceUpdate = forceUpdate
-
-        callback()
-
-        return () => {
-
-            isMountedRef.current = false
-
-        }
-
-    },[]) 
-
-    useEffect(()=>{
-
-        switch (partitionState) {
-            case 'setup': {
-                setPartitionState('ready')
-                break
-            }
-        }
-
-    },[partitionState])
-
-    return <div key = {partitionID} data-type = 'cachepartition' data-partitionid = {partitionID}>
-        {portalArrayRef.current}
-    </div>
-
-}
-
-export const PortalCache = ({ cacheProps }) => {
-
-    const [portalCacheCounter, setPortalCacheCounter] = useState(0)
-    const counterRef = useRef(portalCacheCounter)
-
-    const [masterState, setMasterState] = useState('setup')
-
-    const isMountedRef = useRef(true)
-
-    const partitionArrayRef = useRef(null)
-
-    const partitionRepoForceUpdate = useCallback((partitionRenderList) => {
-
-        partitionArrayRef.current = partitionRenderList
-
-        isMountedRef.current && setPortalCacheCounter(++counterRef.current) // force render
-
-    },[])
-
-    useEffect(()=>{
-
-        isMountedRef.current = true
-
-        cacheProps.partitionRepoForceUpdate = partitionRepoForceUpdate
-
-        return () => {
-
-            isMountedRef.current = false
-
-        }
-
-    },[]) 
-
-    useEffect(()=>{
-
-        switch (masterState) {
-            case 'setup': {
-                setMasterState('ready')
-            }
-        }
-
-    },[masterState])
-
-    return <div data-type = 'portal-master'>{partitionArrayRef.current}</div>
-
-}
