@@ -1124,7 +1124,7 @@ export const CachePartition = ({ cacheProps, partitionID, callback }) => {
 
 }
 
-export const PortalMasterCache = ({ cacheProps }) => {
+export const PortalCache = ({ cacheProps }) => {
 
     const [portalCacheCounter, setPortalCacheCounter] = useState(0)
     const counterRef = useRef(portalCacheCounter)
