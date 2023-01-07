@@ -1,5 +1,5 @@
 // scrollhandler.tsx
-// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     This module holds the response to scrolling. It also triggers an onAfterScroll event (after a timeout)
