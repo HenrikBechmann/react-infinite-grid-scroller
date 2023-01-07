@@ -58,7 +58,7 @@ import Scrollblock from './Scrollblock'
 import Cradle from './Cradle'
 
 // loaded here to minimize redundant renders in Cradle
-import { CacheHandler, PortalCache } from './cradle/cachehandler'
+import { CacheHandler, PortalCache } from './portalcache/cachehandler'
 
 // -------------------[ global session ID generator ]----------------
 
