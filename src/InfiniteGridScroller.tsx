@@ -290,12 +290,16 @@ const InfiniteGridScroller = (props) => {
 
     // -------------------------[ Initialization ]-------------------------------
 
+    const getCacheAPI = (cacheHandler) => {
+        cacheHandlerRef.current = cacheHandler
+    }
+
     useEffect (() => {
 
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
             scrollerSessionIDRef.current = globalScrollerID++
-            cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, setListsize, listsizeRef, 
-                CACHE_PARTITION_SIZE)
+            // cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, setListsize, listsizeRef, 
+            //     CACHE_PARTITION_SIZE)
         }
 
     },[]);
@@ -391,8 +395,13 @@ const InfiniteGridScroller = (props) => {
             </Scrollblock>}
         </Viewport>}
         {(scrollerState != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
-            <PortalCache cacheProps = {cacheHandlerRef.current.cacheProps} />
-        </div>}
+            <PortalCache 
+                scrollerSessionIDRef = { scrollerSessionIDRef }
+                setListsize = { setListsize } 
+                listsizeRef = { listsizeRef } 
+                getCacheAPI = { getCacheAPI } 
+                CACHE_PARTITION_SIZE = { CACHE_PARTITION_SIZE } />
+        </div>} 
     </ErrorBoundary>
 }
 

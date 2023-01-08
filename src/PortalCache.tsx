@@ -3,7 +3,23 @@
 
 import React, {FC, useState, useEffect, useRef, useCallback} from 'react'
 
-const PortalCache:FC<any> = ({ cacheProps }) => {
+import CacheHandler from './portalcache/cachehandler'
+
+const PortalCache:FC<any> = ({scrollerSessionIDRef, setListsize, listsizeRef, getCacheAPI, CACHE_PARTITION_SIZE }) => {
+
+
+    useEffect(() => {
+
+        const cacheHandler = new CacheHandler(scrollerSessionIDRef.current, setListsize, listsizeRef, 
+            CACHE_PARTITION_SIZE)
+
+        cacheHandlerRef.current = cacheHandler
+
+        getCacheAPI(cacheHandler)
+
+    },[])
+
+    const cacheHandlerRef = useRef(null)
 
     const [portalCacheCounter, setPortalCacheCounter] = useState(0)
     const counterRef = useRef(portalCacheCounter)
@@ -26,7 +42,7 @@ const PortalCache:FC<any> = ({ cacheProps }) => {
 
         isMountedRef.current = true
 
-        cacheProps.partitionRepoForceUpdate = partitionRepoForceUpdate
+        cacheHandlerRef.current.cacheProps.partitionRepoForceUpdate = partitionRepoForceUpdate
 
         return () => {
 
