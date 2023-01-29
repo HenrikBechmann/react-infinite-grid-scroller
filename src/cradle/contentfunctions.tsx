@@ -5,9 +5,9 @@
     This module supports the contenthandler module. The functions in this module perform
     the detailed calculations and processes required by the contenthandler.
 
-    getContentListRequirements is called by the contenthandler's setCradleContent function.
+    calculateContentListRequirements is called by the contenthandler's setCradleContent function.
 
-    getShiftInstruction and calcContentShift are called by contentHandler's updateCradleContent
+    calculateShiftInstruction and calcContentShift are called by contentHandler's updateCradleContent
     function. 
     
     getCellFrameComponentList, allocateContentList, and deletePortals functions are shared by both. 
@@ -23,7 +23,7 @@ import { isSafariIOS } from '../InfiniteGridScroller'
 
 // ======================[ for setCradleContent ]===========================
 
-export const getContentListRequirements = ({ // called from setCradleContent only
+export const calculateContentListRequirements = ({ // called from setCradleContent only
 
         // index
         targetAxisReferenceIndex, // from user, or from pivot
@@ -115,21 +115,21 @@ export const getContentListRequirements = ({ // called from setCradleContent onl
     cradle motion can be detected. Motion is most often caused by scrolling, but
     can also occur with change of size of cradle content rows.
 
-    getShiftInstruction determines whether the axis should be moved toward the head or tail
+    calculateShiftInstruction determines whether the axis should be moved toward the head or tail
         to restore the straddling position of the two trigger lines. Lots of relative motion.
 
-    'axisheadward' (scrolling down or right) means moving the axis up or left, adjacent items down
+    'moveaxisheadward' (scrolling down or right) means moving the axis up or left, adjacent items down
          or right to the tail, dropping trailing tail items, and adding leading head items as necessary
          to maintain number of cradle rows of content constant.
 
-    'axistailward' (scrolling up or left) means moving the axis down or right, adjacent items up
+    'moveaxistailward' (scrolling up or left) means moving the axis down or right, adjacent items up
          or left to the head, dropping trailing head items, and adding leading tail items as necessary
          to maintain number of cradle rows of content constant.
 
     'none' means no shift is required
 */
 
-export const getShiftInstruction = ({
+export const calculateShiftInstruction = ({
 
     orientation,
     triggerlineEntries,
@@ -254,7 +254,7 @@ export const getShiftInstruction = ({
 
         if (triggerData.headOffset <= 0) {
 
-            shiftinstruction = 'axistailward'
+            shiftinstruction = 'moveaxistailward'
 
         } else {
 
@@ -266,11 +266,11 @@ export const getShiftInstruction = ({
 
         if (triggerData.tailOffset <= 0) {
 
-            shiftinstruction = 'axistailward'
+            shiftinstruction = 'moveaxistailward'
 
         } else if (triggerData.headOffset >= 0) {
 
-            shiftinstruction = 'axisheadward'
+            shiftinstruction = 'moveaxisheadward'
 
         } else {
 
@@ -281,7 +281,7 @@ export const getShiftInstruction = ({
     }
 
     const triggerViewportReferencePos = 
-        (shiftinstruction == 'axistailward')? // block is scrolling up or left
+        (shiftinstruction == 'moveaxistailward')? // block is scrolling up or left
             triggerData.tailOffset: // needs to move up or left toward head
             triggerData.headOffset // needs to move down or right toward tail
 
@@ -305,8 +305,8 @@ export const getShiftInstruction = ({
 */
 
 // rowshift is at least 1 by the time this function is reached
-// ie. a shiftinstruction of 'axisheadward' or 'axistailward'
-export const calcShiftSpecs = ({
+// ie. a shiftinstruction of 'moveaxisheadward' or 'moveaxistailward'
+export const calculateShiftSpecs = ({
 
     // direction of change
     shiftinstruction,
@@ -379,24 +379,24 @@ export const calcShiftSpecs = ({
             cellWidth) 
         + gap
 
-    let spanRowPtr
-    let spanAxisPixelShift = 0 // in relation to viewport head boundary
-    let inProcessRowPtr = 0
-    let isListBoundary = false
-    let totalPixelShift
-    let finalVariableRowLength // special case
+    let spanRowPtr,
+     spanAxisPixelShift = 0, // in relation to viewport head boundary
+     inProcessRowPtr = 0,
+     isListBoundary = false,
+     totalPixelShift,
+     finalVariableRowLength // special case
 
     // measure exising rows for variable length cells
     if (layout == 'variable') { 
 
         const referenceGridElement = // moving axis (and triggers) toward the reference grid element
-            (shiftinstruction == 'axistailward')? // scrolling up or left
+            (shiftinstruction == 'moveaxistailward')? // scrolling up or left
                 tailGridElement:
                 headGridElement
 
         const gridRowLengths = getGridRowLengths(referenceGridElement, orientation, crosscount, gap)
 
-        if (shiftinstruction == 'axisheadward') { // scrolling down or right; move triggerlines up or left
+        if (shiftinstruction == 'moveaxisheadward') { // scrolling down or right; move triggerlines up or left
 
             gridRowLengths.reverse() // head grid row lengths listed from axis toward head
 
@@ -407,13 +407,13 @@ export const calcShiftSpecs = ({
         // ----------------------------[ 2. calculate base row shift ]--------------------------
 
         // first try to find position based on known (instantiated) rows
-        if (shiftinstruction == 'axistailward') { // scroll up
+        if (shiftinstruction == 'moveaxistailward') { // scroll up
 
             // tail trigger needs to move down or right until position relative to viewport top or left is positive
             spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
                 (triggerViewportReferencePos + aggregatespan) >= 0 )
         
-        } else { // 'axisheadward', scrolldown
+        } else { // 'moveaxisheadward', scrolldown
 
             // head trigger needs to move up or left until position relative to viewport top or left is negative
             spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
@@ -423,7 +423,7 @@ export const calcShiftSpecs = ({
 
         if (!(spanRowPtr == -1)) { // found measureed row for shift
             spanAxisPixelShift = 
-                (shiftinstruction == 'axistailward')?
+                (shiftinstruction == 'moveaxistailward')?
                     gridRowAggregateSpans[spanRowPtr]: // move axis toward tail from viewport boundary (positive)
                     -gridRowAggregateSpans[spanRowPtr] // move axis toward head from viewport boundary (negative)
         } else { // either in boundary, or shy of target
@@ -454,7 +454,7 @@ export const calcShiftSpecs = ({
 
         if (!isListBoundary) {
 
-            if (shiftinstruction == 'axistailward') { // scrolling up/left
+            if (shiftinstruction == 'moveaxistailward') { // scrolling up/left
 
                 do {
 
@@ -465,7 +465,7 @@ export const calcShiftSpecs = ({
 
                 spanAxisPixelShift = totalPixelShift
 
-            } else { // axisheadward; scrolling down/right
+            } else { // moveaxisheadward; scrolling down/right
 
                 do {
 
@@ -492,7 +492,7 @@ export const calcShiftSpecs = ({
     }
 
     const spanRowShift = // pick up row shift with or without overshoot
-        (shiftinstruction == 'axistailward')?
+        (shiftinstruction == 'moveaxistailward')?
             spanRowPtr + 1:
             -(spanRowPtr + 1)
 
@@ -555,7 +555,7 @@ export const calcShiftSpecs = ({
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
 
-    if (shiftinstruction == 'axistailward') { // scrolling up/left
+    if (shiftinstruction == 'moveaxistailward') { // scrolling up/left
 
         // a. if scrolling the block headward near the start of the list, new cradle row offset and
         // cradle row shift count has to be adjusted to accommodate the leading runway
@@ -587,7 +587,7 @@ export const calcShiftSpecs = ({
 
         }
 
-    } else { // shiftinstruction == 'axisheadward'; scrolling down/right
+    } else { // shiftinstruction == 'moveaxisheadward'; scrolling down/right
 
         // c. if scrolling the block down or right (toward revealing head of list), as the cradlerowoffset 
         // hits 0, cradle changes have to be adjusted to prevent shortening of cradle content

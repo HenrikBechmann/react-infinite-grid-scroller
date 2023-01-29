@@ -31,9 +31,8 @@
 import React from 'react'
 
 import { 
-    getContentListRequirements,
-    // getShiftInstruction,
-    calcShiftSpecs,
+    calculateContentListRequirements,
+    calculateShiftSpecs,
     allocateContentList,
     deletePortals,
     getCellFrameComponentList, 
@@ -161,7 +160,7 @@ export default class ContentHandler {
             // target scrollPos by pixels
             targetScrollblockViewportPixelOffset:scrollblockViewportPixelOffset,
 
-        } = getContentListRequirements({
+        } = calculateContentListRequirements({
 
                 // pixel
                 baseRowLength,
@@ -363,7 +362,7 @@ export default class ContentHandler {
             // pixels
             newAxisViewportPixelOffset, 
 
-        } = calcShiftSpecs({
+        } = calculateShiftSpecs({
 
             shiftinstruction,
             triggerViewportReferencePos,
