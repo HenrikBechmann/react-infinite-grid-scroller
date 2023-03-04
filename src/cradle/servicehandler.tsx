@@ -550,17 +550,22 @@ export default class ServiceHandler {
     // returns list of processed indexes
     public moveIndex = (toindex, fromindex, highrange = null) => {
 
-
         const isToindexInvalid = (!isInteger(toindex) || !minValue(toindex, 0))
         const isFromindexInvalid = (!isInteger(fromindex) || !minValue(fromindex, 0))
         let isHighrangeInvalid = false
-        if ((!isBlank(highrange)) && (!isFromindexInvalid)) {
-            isHighrangeInvalid = !minValue(highrange,fromindex)
+
+        if ((!isFromindexInvalid)) {
+            if (!isBlank(highrange)) {
+                isHighrangeInvalid = !minValue(highrange, fromindex)
+            } else {
+                highrange = fromindex
+            }
         }
+
 
         toindex = +toindex
         fromindex = +fromindex
-        highrange = highrange ?? fromindex
+        // highrange = highrange ?? fromindex
         highrange = +highrange
 
         if (isToindexInvalid || isFromindexInvalid || isHighrangeInvalid) {
@@ -636,12 +641,17 @@ export default class ServiceHandler {
 
         const isIndexInvalid = (!isInteger(index) || !minValue(index, 0))
         let isHighrangeInvalid = false
-        if ((!isBlank(rangehighindex)) && (!isIndexInvalid)) {
-            isHighrangeInvalid = !minValue(rangehighindex, index)
+
+        if ((!isIndexInvalid)) {
+            if (!isBlank(rangehighindex)) {
+                isHighrangeInvalid = !minValue(rangehighindex, index)
+            } else {
+                rangehighindex = index
+            }
         }
 
         index = +index
-        rangehighindex = rangehighindex ?? index
+
         rangehighindex = +rangehighindex
 
         if (isIndexInvalid || isHighrangeInvalid) {
@@ -659,12 +669,16 @@ export default class ServiceHandler {
 
         const isIndexInvalid = (!isInteger(index) || !minValue(index, 0))
         let isHighrangeInvalid = false
-        if ((!isBlank(rangehighindex)) && (!isIndexInvalid)) {
-            isHighrangeInvalid = !minValue(rangehighindex, index)
+
+        if ((!isIndexInvalid)) {
+            if (!isBlank(rangehighindex)) {
+                isHighrangeInvalid = !minValue(rangehighindex, index)
+            } else {
+                rangehighindex = index
+            }
         }
 
         index = +index
-        rangehighindex = rangehighindex ?? index
         rangehighindex = +rangehighindex
 
         if (isIndexInvalid || isHighrangeInvalid) {
@@ -681,9 +695,6 @@ export default class ServiceHandler {
     // shared logic. Returns lists of items changed, and items replaced (new items for insert)
     // this operation changes the listsize
     private insertRemoveIndex = (index, rangehighindex, increment) => {
-
-        index = index ?? 0
-        rangehighindex = rangehighindex ?? index
 
         index = Math.max(0,index)
         rangehighindex = Math.max(rangehighindex, index)
