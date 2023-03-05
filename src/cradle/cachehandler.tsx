@@ -744,12 +744,13 @@ export class CacheHandler {
 
         }
 
+        // TODO: adjust inCradleLowPtr for bottom range of move/remove
+
         const inCradleLowPtr = indexesToProcessList.findIndex(value => {
             return (value >= cradleIndexSpan[0] && value <= cradleIndexSpan[1])
         })
 
         const reverseIndexesToProcessList = Array.from(indexesToProcessList).reverse()
-        // reverseIndexesToProcessList.reverse()
         let inCradleHighPtr = reverseIndexesToProcessList.findIndex(value => {
             return (value <= cradleIndexSpan[1] && value >= cradleIndexSpan[0])
         })
@@ -757,10 +758,22 @@ export class CacheHandler {
             inCradleHighPtr = indexesToProcessList.length - (inCradleHighPtr +1)
         }
 
-        console.log('indexesToProcessList, inCradleLowPtr, inCradleHighPtr, cradleIndexSpan',
+        console.log('==> cacheHandler.insertRemoveIndex: indexesToProcessList, inCradleLowPtr, inCradleHighPtr, cradleIndexSpan',
             indexesToProcessList, inCradleLowPtr, inCradleHighPtr, cradleIndexSpan)
 
-        const indexesInCradleList = []
+        let cradleIndexesInProcessList
+
+        if (inCradleLowPtr == -1 && inCradleHighPtr == -1) {
+            cradleIndexesInProcessList = indexesToProcessList.slice() // Array.from(indexesToProcessList)
+        } else if (inCradleLowPtr == -1) {
+            cradleIndexesInProcessList = indexesToProcessList.slice(0,inCradleHighPtr + 1)
+        } else if (inCradleHighPtr == -1) {
+            cradleIndexesInProcessList = indexesToProcessList.slice(inCradleLowPtr)
+        } else { // both pointers found
+            cradleIndexesInProcessList = indexesToProcessList.slice(inCradleLowPtr,inCradleHighPtr + 1)
+        }
+
+        console.log('cradleIndexesInProcessList', cradleIndexesInProcessList)
 
         const portalItemHoldForDeleteList = [] // hold portals for deletion until after after cradle synch
 
