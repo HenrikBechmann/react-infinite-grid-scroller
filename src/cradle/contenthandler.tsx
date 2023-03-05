@@ -844,6 +844,15 @@ export default class ContentHandler {
 
     }
 
+    get indexSpan() {
+
+        const { cradleModelComponents } = this.content
+        const lowIndex =  cradleModelComponents[0].props.index
+        const highIndex = lowIndex + (cradleModelComponents.length - 1)
+        return [lowIndex, highIndex]
+
+    }
+
     // called from service handler's remapIndexes, as last step
     public reconcileCellFrames(modifiedIndexesList) {
 

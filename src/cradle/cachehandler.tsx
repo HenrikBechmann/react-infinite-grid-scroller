@@ -631,19 +631,19 @@ export class CacheHandler {
     }
 
     // insert or remove indexes: much of this deals with the fact that the cache is sparse.
-    insertRemoveIndex(index, highrange, increment, listsize) { // increment is +1 or -1
+    insertRemoveIndex(index, highrange, increment, listsize, cradleIndexSpan) { // increment is +1 or -1
 
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
         // ---------- define range parameters ---------------
 
         // high range is the highest index number of the insert/remove operation
-        let highrangeindex = highrange ?? 0
+        const highrangeindex = highrange
 
-        highrangeindex = 
-            (highrangeindex > index)?
-                highrangeindex:
-                index
+        // highrangeindex = 
+        //     (highrangeindex > index)?
+        //         highrangeindex:
+        //         index
 
         const emptyreturn = [[],[],0]
         if (increment == -1) {
@@ -658,44 +658,50 @@ export class CacheHandler {
 
         }
 
-        // rangecount is the absolute number in the insert/remove range - contiguous
+        // rangecount is the absolute number in the insert/remove range -- contiguous
         const rangecount = highrangeindex - index + 1
 
         // range increment adds sign to rangecount to indicate add/remove
         const rangeincrement = rangecount * increment
 
         // highPtr, lowPtr, shrinktoPtr within orderedIndexList.
-        const orderedIndexList = Array.from(indexToItemIDMap.keys())
-        orderedIndexList.sort((a,b)=>a-b)
+        const orderedIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b)
+        // orderedIndexList.sort((a,b)=>a-b)
 
         // ---------- define boundaries within ordered cache index list ------------
         // Ptr = index into array, as opposed to index of virtual list
 
         // shrinkptr is the location of the bottom of the shrink range for removals
         let shrinktoIndex = null
-        let shrinktoPtr = - 1
+        let shrinktoPtr = -1
         
-        if (increment == - 1) {
+        if (increment == -1) { // list shrinkage requested
             
+            // identify bottom of shrinkage
             shrinktoIndex = orderedIndexList.at(-1) + (rangeincrement)
 
+            // adjust for top of adjustment range
             shrinktoIndex = Math.max(highrangeindex + (rangeincrement), shrinktoIndex)
 
+            // adjust for list lize
             shrinktoIndex = Math.min(listsize - 1,shrinktoIndex) 
 
+            // find the first item in cache that is in range
             shrinktoPtr = orderedIndexList.findIndex(value => value >= shrinktoIndex)
 
         }
 
         // lowPtr and highPtr must be within low and high range
+        // lowPtr...
         const lowPtr = orderedIndexList.findIndex(value => {
 
             return (value >= index) && (value <= highrangeindex)
 
         })
 
-        const reverseIndexList = Array.from(orderedIndexList)
-        reverseIndexList.reverse()
+        // highPtr...
+        const reverseIndexList = Array.from(orderedIndexList).reverse()
+        // reverseIndexList.reverse()
         let highPtr = reverseIndexList.findIndex(value=> {
 
             return value <= highrangeindex
@@ -709,10 +715,11 @@ export class CacheHandler {
         // ----------- list indexes to process, replace, and remove, and items to remove --------
 
         let indexesToProcessList, // for either insert or remove
-            indexesToReplaceList = [], // for insert the range being inserted
+            indexesToReplaceList = [], // for insert, the range being inserted
             indexesToRemoveList = [], // for remove - end of list; the list is shrinking
             indexesOfItemsToRemoveList = [], // for remove - within the range of indexes being removed
-            itemsToRemoveList = [] // for remove, derived from the previous
+            itemsToRemoveList = [], // for remove, derived from the previous
+            missingCradleIndexList = []
 
         // get indexesToProcessList
         if ((lowPtr == -1) && (highPtr == -1)) { // core scope is out of view
@@ -736,6 +743,24 @@ export class CacheHandler {
             }
 
         }
+
+        const inCradleLowPtr = indexesToProcessList.findIndex(value => {
+            return (value >= cradleIndexSpan[0] && value <= cradleIndexSpan[1])
+        })
+
+        const reverseIndexesToProcessList = Array.from(indexesToProcessList).reverse()
+        // reverseIndexesToProcessList.reverse()
+        let inCradleHighPtr = reverseIndexesToProcessList.findIndex(value => {
+            return (value <= cradleIndexSpan[1] && value >= cradleIndexSpan[0])
+        })
+        if (inCradleHighPtr > -1) {
+            inCradleHighPtr = indexesToProcessList.length - (inCradleHighPtr +1)
+        }
+
+        console.log('indexesToProcessList, inCradleLowPtr, inCradleHighPtr, cradleIndexSpan',
+            indexesToProcessList, inCradleLowPtr, inCradleHighPtr, cradleIndexSpan)
+
+        const indexesInCradleList = []
 
         const portalItemHoldForDeleteList = [] // hold portals for deletion until after after cradle synch
 

@@ -704,16 +704,18 @@ export default class ServiceHandler {
 
         const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
 
+        const cradleIndexSpan = contentHandler.indexSpan
+
         const [changeList, replaceList, rangeincrement, portalItemHoldForDeleteList] = 
-            cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize)
+            cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize, cradleIndexSpan)
 
         cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList
+
+        console.log('changeList',changeList)
 
         contentHandler.changeCradleItemIDs(changeList)
 
         if (increment == +1) contentHandler.createNewItemIDs(replaceList)
-
-        // const { content } = contentHandler
 
         stateHandler.setCradleState('applycellframechanges')
 
