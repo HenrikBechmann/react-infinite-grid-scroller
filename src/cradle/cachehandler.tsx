@@ -744,9 +744,7 @@ export class CacheHandler {
 
         }
 
-        // TODO: adjust inCradleLowPtr for bottom range of move/remove
-
-        const inCradleLowPtr = indexesToProcessList.findIndex(value => {
+        let inCradleLowPtr = indexesToProcessList.findIndex(value => {
             return (value >= cradleIndexSpan[0] && value <= cradleIndexSpan[1])
         })
 
@@ -758,13 +756,27 @@ export class CacheHandler {
             inCradleHighPtr = indexesToProcessList.length - (inCradleHighPtr +1)
         }
 
+        let lowCradleProcessIndex = cradleIndexSpan[0]
+
+        if (inCradleLowPtr != -1) {
+
+            const refLowIndex = indexesToProcessList[inCradleLowPtr]
+            // adjust higher if necessary
+            lowCradleProcessIndex = Math.max(refLowIndex, index)
+            // adjust lower if necessary
+            if (shrinktoPtr != -1) lowCradleProcessIndex = Math.min(lowCradleProcessIndex, shrinktoIndex)
+            // make sure within cradle span
+            lowCradleProcessIndex = Math.max(lowCradleProcessIndex, cradleIndexSpan[0])
+
+        }
+
         console.log('==> cacheHandler.insertRemoveIndex: indexesToProcessList, inCradleLowPtr, inCradleHighPtr, cradleIndexSpan',
             indexesToProcessList, inCradleLowPtr, inCradleHighPtr, cradleIndexSpan)
 
         let cradleIndexesInProcessList
 
         if (inCradleLowPtr == -1 && inCradleHighPtr == -1) {
-            cradleIndexesInProcessList = indexesToProcessList.slice() // Array.from(indexesToProcessList)
+            cradleIndexesInProcessList = indexesToProcessList.slice()
         } else if (inCradleLowPtr == -1) {
             cradleIndexesInProcessList = indexesToProcessList.slice(0,inCradleHighPtr + 1)
         } else if (inCradleHighPtr == -1) {
@@ -773,7 +785,7 @@ export class CacheHandler {
             cradleIndexesInProcessList = indexesToProcessList.slice(inCradleLowPtr,inCradleHighPtr + 1)
         }
 
-        console.log('cradleIndexesInProcessList', cradleIndexesInProcessList)
+        console.log('lowCradleProcessIndex, cradleIndexesInProcessList', lowCradleProcessIndex, cradleIndexesInProcessList)
 
         const portalItemHoldForDeleteList = [] // hold portals for deletion until after after cradle synch
 
