@@ -640,11 +640,6 @@ export class CacheHandler {
         // high range is the highest index number of the insert/remove operation
         const highrangeindex = highrange
 
-        // highrangeindex = 
-        //     (highrangeindex > index)?
-        //         highrangeindex:
-        //         index
-
         const emptyreturn = [[],[],0]
         if (increment == -1) {
 
@@ -712,7 +707,7 @@ export class CacheHandler {
             if (highPtr < lowPtr) highPtr = -1
         }
 
-        // ----------- list indexes to process, replace, and remove, and items to remove --------
+        // ----------- list indexes to process, replace, and remove --------
 
         let indexesToProcessList, // for either insert or remove
             indexesToReplaceList = [], // for insert, the range being inserted
@@ -744,19 +739,23 @@ export class CacheHandler {
 
         }
 
+        // ------------- list cache items in the cradle, and identify missing cradle items ------------
+
+        const [lowCradleIndex, highCradleIndex] = cradleIndexSpan
+
         let inCradleLowPtr = indexesToProcessList.findIndex(value => {
-            return (value >= cradleIndexSpan[0] && value <= cradleIndexSpan[1])
+            return (value >= lowCradleIndex && value <= highCradleIndex)
         })
 
         const reverseIndexesToProcessList = Array.from(indexesToProcessList).reverse()
         let inCradleHighPtr = reverseIndexesToProcessList.findIndex(value => {
-            return (value <= cradleIndexSpan[1] && value >= cradleIndexSpan[0])
+            return (value <= highCradleIndex && value >= lowCradleIndex)
         })
         if (inCradleHighPtr > -1) {
             inCradleHighPtr = indexesToProcessList.length - (inCradleHighPtr +1)
         }
 
-        let lowCradleProcessIndex = cradleIndexSpan[0]
+        let lowCradleProcessIndex = lowCradleIndex
 
         if (inCradleLowPtr != -1) {
 
@@ -766,7 +765,7 @@ export class CacheHandler {
             // adjust lower if necessary
             if (shrinktoPtr != -1) lowCradleProcessIndex = Math.min(lowCradleProcessIndex, shrinktoIndex)
             // make sure within cradle span
-            lowCradleProcessIndex = Math.max(lowCradleProcessIndex, cradleIndexSpan[0])
+            lowCradleProcessIndex = Math.max(lowCradleProcessIndex, lowCradleIndex)
 
         }
 
@@ -786,6 +785,20 @@ export class CacheHandler {
         }
 
         console.log('lowCradleProcessIndex, cradleIndexesInProcessList', lowCradleProcessIndex, cradleIndexesInProcessList)
+
+        for (let i = lowCradleProcessIndex;i<=highCradleIndex;i++) {
+
+            if (!cradleIndexesInProcessList.includes(i)) {
+
+                missingCradleIndexList.push(i)
+
+            }
+
+        }
+
+        console.log('missingCradleIndexList',missingCradleIndexList)
+
+        // ----------- list items to remove -----------
 
         const portalItemHoldForDeleteList = [] // hold portals for deletion until after after cradle synch
 
@@ -889,6 +902,12 @@ export class CacheHandler {
             }
 
         }
+
+        missingCradleIndexList.forEach((idx) => {
+            indexesToReplaceList.push(idx + rangeincrement)
+        })
+
+        console.log('indexesToReplaceList',indexesToReplaceList)
 
         // --------------- returns ---------------
 

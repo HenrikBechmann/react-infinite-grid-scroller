@@ -167,6 +167,8 @@ const CellFrame = ({
     // refresh content if itemID changes
     useLayoutEffect(()=>{
 
+        console.log('CellFrame getting user content',itemID)
+
         if (isMountedRef.current) setFrameState('getusercontent')
 
     },[itemID])

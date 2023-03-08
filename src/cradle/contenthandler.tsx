@@ -923,6 +923,8 @@ export default class ContentHandler {
     // supports insertRemoveIndex
     public createNewItemIDs(newList) {
 
+        console.log('contentHandler.createNewItemIDs: newList', newList)
+
         const { cacheHandler } = this.cradleParameters.handlersRef.current
         const { cradleModelComponents } = this.content
 
@@ -934,6 +936,9 @@ export default class ContentHandler {
             if (ptr != -1) {
 
                 const newItemID = cacheHandler.getNewItemID()
+
+                console.log('getting new itemID for index, newItemID',index, newItemID)
+
                 array[i] = React.cloneElement(component, {itemID:newItemID})
 
             }
