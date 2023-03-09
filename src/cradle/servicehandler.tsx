@@ -711,7 +711,8 @@ export default class ServiceHandler {
 
         cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList
 
-        console.log('changeList',changeList)
+        console.log('changeList, replaceList, portalItemHoldForDeleteList',
+            changeList, replaceList, portalItemHoldForDeleteList)
 
         contentHandler.changeCradleItemIDs(changeList)
 

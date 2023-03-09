@@ -167,7 +167,9 @@ const CellFrame = ({
     // refresh content if itemID changes
     useLayoutEffect(()=>{
 
-        console.log('CellFrame getting user content',itemID)
+        if (frameStateRef.current == 'setup') return
+
+        console.log('CellFrame calling NEW user content: index, itemID',index,itemID)
 
         if (isMountedRef.current) setFrameState('getusercontent')
 
@@ -299,6 +301,8 @@ const CellFrame = ({
 
                     if (isMountedRef.current) {
 
+                        console.log('retreiving content from cache: itemID, index', itemID, index)
+
                         // get cache data
                         portalMetadataRef.current = cacheHandler.getPortalMetadata(itemID)
                         // get OutPortal node
@@ -315,7 +319,7 @@ const CellFrame = ({
 
                     messageRef.current = placeholderMessagesRef.current.loading
 
-                    // setFrameState('fetching')
+                    console.log('fetching new content: itemID, index', itemID, index)
 
                     // reserve space in the cache
                     cacheHandler.registerRequestedPortal(index)
