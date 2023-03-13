@@ -769,8 +769,8 @@ export class CacheHandler {
 
         }
 
-        console.log('==> cacheHandler.insertRemoveIndex: indexesToProcessList, inCradleLowPtr, inCradleHighPtr, cradleIndexSpan',
-            indexesToProcessList, inCradleLowPtr, inCradleHighPtr, cradleIndexSpan)
+        console.log('==> cacheHandler.insertRemoveIndex: cradleIndexSpan, inCradleLowPtr, inCradleHighPtr, indexesToProcessList',
+            cradleIndexSpan, inCradleLowPtr, inCradleHighPtr, indexesToProcessList )
 
         let cradleIndexesInProcessList
 
@@ -979,6 +979,8 @@ export class CacheHandler {
             component,
             partitionID,
         }
+
+        console.log('==>createPortal: index, itemID', index, itemID)
 
         this.cacheProps.metadataMap.set(itemID, portalMetadata)
         this.cacheProps.indexToItemIDMap.set(index, itemID)

@@ -711,7 +711,7 @@ export default class ServiceHandler {
 
         cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList
 
-        console.log('changeList, replaceList, portalItemHoldForDeleteList',
+        console.log('==> changeList, replaceList, portalItemHoldForDeleteList',
             changeList, replaceList, portalItemHoldForDeleteList)
 
         contentHandler.changeCradleItemIDs(changeList)
@@ -722,6 +722,8 @@ export default class ServiceHandler {
 
         const changecount = rangeincrement // semantics
         const newlistsize = listsize + changecount 
+
+        console.log('changing list size: listsize, changecount, newlistsize',listsize, changecount, newlistsize)
 
         this.setListsize(newlistsize)
 

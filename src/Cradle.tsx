@@ -182,7 +182,7 @@ const Cradle = ({
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) {
-        // console.log('==> cradleState','-'+scrollerID+'-', cradleState)
+        console.log('==> cradleState','-'+scrollerID+'-', cradleState)
         // console.log('-- index',~'+scrollerProperties?.cellFrameDataRef.current.index+'~')
     // }
 
@@ -782,12 +782,14 @@ const Cradle = ({
 
         if (isCachedRef.current) return
 
+        console.log('reconfiguring with listsize', listsize)
+
         interruptHandler.pauseInterrupts()
 
         setCradleState('reconfigure')
 
     },[
-        listsize,
+        // listsize, // TODO: commented out for debug only!!
         cellHeight,
         cellWidth,
         gap,
@@ -1290,6 +1292,8 @@ const Cradle = ({
                 if (portalItemHoldForDeleteList && portalItemHoldForDeleteList.length) {
 
                     for (const item of portalItemHoldForDeleteList) {
+
+                        console.log('==> Cradle.applycellframechanges removing itemID from cache', item.itemID)
 
                         cacheHandler.removePartitionPortal(item.partitionID, item.itemID)
                         

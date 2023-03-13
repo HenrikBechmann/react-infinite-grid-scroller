@@ -938,6 +938,7 @@ export default class ContentHandler {
                 const newItemID = cacheHandler.getNewItemID()
 
                 console.log('getting new itemID for index, newItemID',index, newItemID)
+                console.log('component key', component.key)
 
                 array[i] = React.cloneElement(component, {itemID:newItemID})
 
