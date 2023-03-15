@@ -633,18 +633,23 @@ export class CacheHandler {
     // insert or remove indexes: much of this deals with the fact that the cache is sparse.
     insertRemoveIndex(index, highrange, increment, listsize, cradleIndexSpan) { // increment is +1 or -1
 
+        // cache data
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
         // ---------- define range parameters ---------------
 
         // high range is the highest index number of the insert/remove operation
-        const highrangeindex = highrange
+        let highrangeindex = highrange
 
-        const emptyreturn = [[],[],0]
+        const emptyreturn = [[],[],0,[]] // no action return value if needed
+
         if (increment == -1) {
 
             // removal must be entirely within scope of the list
-            if (highrangeindex > (listsize - 1)) return emptyreturn
+            if (highrangeindex > (listsize - 1)) {
+                highrangeindex = (listsize - 1)
+                if (highrangeindex < index) return emptyreturn
+            }
 
         } else {
 
@@ -660,82 +665,78 @@ export class CacheHandler {
         const rangeincrement = rangecount * increment
 
         // highPtr, lowPtr, shrinktoPtr within orderedIndexList.
-        const orderedIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b)
-        // orderedIndexList.sort((a,b)=>a-b)
+        const orderedCacheIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b) // ascending order
 
         // ---------- define boundaries within ordered cache index list ------------
         // Ptr = index into array, as opposed to index of virtual list
 
         // shrinkptr is the location of the bottom of the shrink range for removals
-        let shrinktoIndex = null
-        let shrinktoPtr = -1
+        let targetShiftIndex = null
+        let targetShiftPtr = -1
         
         if (increment == -1) { // list shrinkage requested
             
-            // identify bottom of shrinkage
-            shrinktoIndex = orderedIndexList.at(-1) + (rangeincrement)
+            targetShiftIndex = index
 
-            // adjust for top of adjustment range
-            shrinktoIndex = Math.max(highrangeindex + (rangeincrement), shrinktoIndex)
+        } else {
 
-            // adjust for list lize
-            shrinktoIndex = Math.min(listsize - 1,shrinktoIndex) 
-
-            // find the first item in cache that is in range
-            shrinktoPtr = orderedIndexList.findIndex(value => value >= shrinktoIndex)
+            targetShiftIndex = index + rangeincrement
 
         }
 
-        // lowPtr and highPtr must be within low and high range
-        // lowPtr...
-        const lowPtr = orderedIndexList.findIndex(value => {
+        // find the first item in cache that is in range
+        targetShiftPtr = orderedCacheIndexList.findIndex(value => value >= targetShiftIndex)
+
+        // lowRangePtr and highRangePtr must be within low and high range
+        // lowRangePtr...
+        const lowRangePtr = orderedCacheIndexList.findIndex(value => {
 
             return (value >= index) && (value <= highrangeindex)
 
         })
 
-        // highPtr...
-        const reverseIndexList = Array.from(orderedIndexList).reverse()
-        // reverseIndexList.reverse()
-        let highPtr = reverseIndexList.findIndex(value=> {
+        // highRangePtr...
+        const reverseIndexList = Array.from(orderedCacheIndexList).reverse()
+        let highRangePtr = reverseIndexList.findIndex(value=> {
 
             return value <= highrangeindex
 
         })
-        if (highPtr != -1) {
-            highPtr = (orderedIndexList.length - 1) - highPtr
-            if (highPtr < lowPtr) highPtr = -1
+        // take inverse of highRangePtr for non-reverse sort
+        if (highRangePtr != -1) {
+            highRangePtr = (orderedCacheIndexList.length - 1) - highRangePtr
+            if (highRangePtr < lowRangePtr) highRangePtr = -1
         }
 
         // ----------- list indexes to process, replace, and remove --------
 
-        let indexesToProcessList, // for either insert or remove
+        let cacheRangeIndexesList, // for either insert or remove
+            cacheToShiftIndexesList, // for either insert or remove
+            cacheScopeIndexesList, // both range and shift
             indexesToReplaceList = [], // for insert, the range being inserted
-            indexesToRemoveList = [], // for remove - end of list; the list is shrinking
-            indexesOfItemsToRemoveList = [], // for remove - within the range of indexes being removed
+            indexesToRemoveList = [], // for remove, the range being removed
             itemsToRemoveList = [], // for remove, derived from the previous
-            missingCradleIndexList = []
+            missingCradleIndexList = [] // for failed-to-load cellFrame content
 
-        // get indexesToProcessList
-        if ((lowPtr == -1) && (highPtr == -1)) { // core scope is out of view
+        // get indexesToShiftList
+        if (lowRangePtr == -1) { // core scope is out of view
 
-            indexesToProcessList = []
+            cacheRangeIndexesList = []
+            cacheToShiftIndexesList = []
+            cacheScopeIndexesList = []
 
-        } else { // core scope is partially or fully in view; lowPtr is available
+        } else if (highRangePtr == -1) { // core scope is partially in view; lowPtr is available
 
-            if (increment == 1) {
+            // all items above lowRangePtr must have indexes reset
+            cacheRangeIndexesList = orderedCacheIndexList.slice(lowRangePtr)
+            cacheToShiftIndexesList = []
+            cacheScopeIndexesList = orderedCacheIndexList.slice(lowRangePtr)
 
-                indexesToProcessList = orderedIndexList.slice(lowPtr)
+        } else { // range fully in view
 
-            } else if (highPtr == -1) { // increment == -1; lowPtr is available
-
-                indexesToProcessList = []
-
-            } else { // increment == -1; lowPtr and highPtr are available
-
-                indexesToProcessList = orderedIndexList.slice(highPtr + 1)
-
-            }
+            cacheRangeIndexesList = orderedCacheIndexList.slice(lowRangePtr, highRangePtr + 1)
+            cacheToShiftIndexesList = orderedCacheIndexList.slice(highRangePtr + 1)
+            cacheScopeIndexesList = orderedCacheIndexList.slice(lowRangePtr)
 
         }
 
@@ -743,52 +744,52 @@ export class CacheHandler {
 
         const [lowCradleIndex, highCradleIndex] = cradleIndexSpan
 
-        let inCradleLowPtr = indexesToProcessList.findIndex(value => {
+        let inCradleLowPtr = cacheScopeIndexesList.findIndex(value => {
             return (value >= lowCradleIndex && value <= highCradleIndex)
         })
 
-        const reverseIndexesToProcessList = Array.from(indexesToProcessList).reverse()
-        let inCradleHighPtr = reverseIndexesToProcessList.findIndex(value => {
+        const reverseCacheScopeIndexesList = Array.from(cacheScopeIndexesList).reverse()
+        let inCradleHighPtr = reverseCacheScopeIndexesList.findIndex(value => {
             return (value <= highCradleIndex && value >= lowCradleIndex)
         })
         if (inCradleHighPtr > -1) {
-            inCradleHighPtr = indexesToProcessList.length - (inCradleHighPtr +1)
+            inCradleHighPtr = cacheScopeIndexesList.length - (inCradleHighPtr +1)
         }
 
         let lowCradleProcessIndex = lowCradleIndex
 
         if (inCradleLowPtr != -1) {
 
-            const refLowIndex = indexesToProcessList[inCradleLowPtr]
+            const refLowIndex = cacheScopeIndexesList[inCradleLowPtr]
             // adjust higher if necessary
             lowCradleProcessIndex = Math.max(refLowIndex, index)
             // adjust lower if necessary
-            if (shrinktoPtr != -1) lowCradleProcessIndex = Math.min(lowCradleProcessIndex, shrinktoIndex)
+            if (targetShiftPtr != -1) lowCradleProcessIndex = Math.min(lowCradleProcessIndex, targetShiftIndex)
             // make sure within cradle span
             lowCradleProcessIndex = Math.max(lowCradleProcessIndex, lowCradleIndex)
 
         }
 
-        console.log('==> cacheHandler.insertRemoveIndex: cradleIndexSpan, inCradleLowPtr, inCradleHighPtr, indexesToProcessList',
-            cradleIndexSpan, inCradleLowPtr, inCradleHighPtr, indexesToProcessList )
+        console.log('==> 1. cacheHandler.insertRemoveIndex: cradleIndexSpan, inCradleLowPtr, inCradleHighPtr, cacheRangeIndexesList, cacheToShiftIndexesList, cacheScopeIndexesList',
+            cradleIndexSpan, inCradleLowPtr, inCradleHighPtr, cacheRangeIndexesList, cacheToShiftIndexesList, cacheScopeIndexesList)
 
-        let cradleIndexesInProcessList
+        let cradleIndexesToProcessList
 
         if (inCradleLowPtr == -1 && inCradleHighPtr == -1) {
-            cradleIndexesInProcessList = indexesToProcessList.slice()
+            cradleIndexesToProcessList = cacheRangeIndexesList.slice()
         } else if (inCradleLowPtr == -1) {
-            cradleIndexesInProcessList = indexesToProcessList.slice(0,inCradleHighPtr + 1)
+            cradleIndexesToProcessList = cacheRangeIndexesList.slice(0,inCradleHighPtr + 1)
         } else if (inCradleHighPtr == -1) {
-            cradleIndexesInProcessList = indexesToProcessList.slice(inCradleLowPtr)
+            cradleIndexesToProcessList = cacheRangeIndexesList.slice(inCradleLowPtr)
         } else { // both pointers found
-            cradleIndexesInProcessList = indexesToProcessList.slice(inCradleLowPtr,inCradleHighPtr + 1)
+            cradleIndexesToProcessList = cacheRangeIndexesList.slice(inCradleLowPtr,inCradleHighPtr + 1)
         }
 
-        console.log('lowCradleProcessIndex, cradleIndexesInProcessList', lowCradleProcessIndex, cradleIndexesInProcessList)
+        console.log('2. lowCradleProcessIndex, cradleIndexesToProcessList', lowCradleProcessIndex, cradleIndexesToProcessList)
 
         for (let i = lowCradleProcessIndex;i<=highCradleIndex;i++) {
 
-            if (!cradleIndexesInProcessList.includes(i)) {
+            if (!cradleIndexesToProcessList.includes(i)) {
 
                 missingCradleIndexList.push(i)
 
@@ -796,7 +797,7 @@ export class CacheHandler {
 
         }
 
-        console.log('missingCradleIndexList',missingCradleIndexList)
+        console.log('3. missingCradleIndexList',missingCradleIndexList)
 
         // ----------- list items to remove -----------
 
@@ -804,49 +805,14 @@ export class CacheHandler {
 
         if (increment == 1) {
 
-            // get indexesToReplaceList
-            if ((lowPtr == -1) && (highPtr == -1)) { // core scope is out of view
-
-                indexesToReplaceList = []
-
-            } else if (highPtr == -1) {
-
-                indexesToReplaceList = orderedIndexList.slice(lowPtr)
-
-            } else {
-
-                indexesToReplaceList = orderedIndexList.slice(lowPtr, highPtr + 1)
-            }
+            indexesToReplaceList = cacheRangeIndexesList
 
         } else {
 
-            // get indexesToRemoveList
-            if (shrinktoPtr == -1) { // core scope is out of view
-
-                indexesToRemoveList = []
-
-            } else {
-
-                indexesToRemoveList = orderedIndexList.slice(shrinktoPtr + 1)
-            }
-
-            // get indexesOfItemsToRemoveList
-            if ((lowPtr == -1) && (highPtr == -1)) { // core scope is out of view
-
-                indexesOfItemsToRemoveList = []
-
-            } else if (highPtr == -1) {
-
-                indexesOfItemsToRemoveList = orderedIndexList.slice(lowPtr)
-
-            } else {
-
-                indexesOfItemsToRemoveList = orderedIndexList.slice(lowPtr, highPtr + 1)
-
-            }
+            indexesToRemoveList = cacheRangeIndexesList
 
             // get itemsToRemoveList
-            for (const index of indexesOfItemsToRemoveList) {
+            for (const index of indexesToRemoveList) {
 
                 itemsToRemoveList.push(indexToItemIDMap.get(index))
 
@@ -854,10 +820,12 @@ export class CacheHandler {
 
         }
 
+        console.log('4. indexesToReplaceList, indexesToRemoveList',indexesToReplaceList, indexesToRemoveList)
+
         // ----------- conduct cache operations ----------
 
         // increment higher from top of list to preserve lower values for subsequent increment
-        if (increment == 1) indexesToProcessList.reverse() 
+        if (increment == 1) cacheRangeIndexesList.reverse() 
 
         const indexesModifiedList = []
 
@@ -873,7 +841,7 @@ export class CacheHandler {
 
         }
 
-        indexesToProcessList.forEach(processIndex)
+        cacheRangeIndexesList.forEach(processIndex)
 
         // delete remaining indexes and items now duplicates
 
@@ -903,11 +871,15 @@ export class CacheHandler {
 
         }
 
+        console.log('5. indexesToReplaceList before missingCradleIndexList addition',[...indexesToReplaceList])
+
+        const replaceOffset = (increment == 1)? rangeincrement:0
+
         missingCradleIndexList.forEach((idx) => {
-            indexesToReplaceList.push(idx + rangeincrement)
+            indexesToReplaceList.push(idx + replaceOffset)
         })
 
-        console.log('indexesToReplaceList',indexesToReplaceList)
+        console.log('6. final indexesToReplaceList',indexesToReplaceList)
 
         // --------------- returns ---------------
 
