@@ -714,8 +714,8 @@ export class CacheHandler {
             cacheToShiftIndexesList, // for either insert or remove
             cacheScopeIndexesList, // both range and shift
             indexesToReplaceList = [], // for insert, the range being inserted
-            indexesToRemoveList = [], // for remove, the range being removed
-            itemsToRemoveList = [], // for remove, derived from the previous
+            cacheIndexesToRemoveList = [], // for remove, the range being removed
+            cacheItemsToRemoveList = [], // for remove, derived from the previous
             missingCradleIndexList = [] // for failed-to-load cellFrame content
 
         // get indexesToShiftList
@@ -764,7 +764,7 @@ export class CacheHandler {
             // adjust higher if necessary
             lowCradleProcessIndex = Math.max(refLowIndex, index)
             // adjust lower if necessary
-            if (targetShiftPtr != -1) lowCradleProcessIndex = Math.min(lowCradleProcessIndex, targetShiftIndex)
+            // if (targetShiftPtr != -1) lowCradleProcessIndex = Math.min(lowCradleProcessIndex, targetShiftIndex)
             // make sure within cradle span
             lowCradleProcessIndex = Math.max(lowCradleProcessIndex, lowCradleIndex)
 
@@ -776,13 +776,13 @@ export class CacheHandler {
         let cradleIndexesToProcessList
 
         if (inCradleLowPtr == -1 && inCradleHighPtr == -1) {
-            cradleIndexesToProcessList = cacheRangeIndexesList.slice()
+            cradleIndexesToProcessList = cacheScopeIndexesList.slice()
         } else if (inCradleLowPtr == -1) {
-            cradleIndexesToProcessList = cacheRangeIndexesList.slice(0,inCradleHighPtr + 1)
+            cradleIndexesToProcessList = cacheScopeIndexesList.slice(0,inCradleHighPtr + 1)
         } else if (inCradleHighPtr == -1) {
-            cradleIndexesToProcessList = cacheRangeIndexesList.slice(inCradleLowPtr)
+            cradleIndexesToProcessList = cacheScopeIndexesList.slice(inCradleLowPtr)
         } else { // both pointers found
-            cradleIndexesToProcessList = cacheRangeIndexesList.slice(inCradleLowPtr,inCradleHighPtr + 1)
+            cradleIndexesToProcessList = cacheScopeIndexesList.slice(inCradleLowPtr,inCradleHighPtr + 1)
         }
 
         console.log('2. lowCradleProcessIndex, cradleIndexesToProcessList', lowCradleProcessIndex, cradleIndexesToProcessList)
@@ -809,18 +809,18 @@ export class CacheHandler {
 
         } else {
 
-            indexesToRemoveList = cacheRangeIndexesList
+            cacheIndexesToRemoveList = cacheRangeIndexesList
 
-            // get itemsToRemoveList
-            for (const index of indexesToRemoveList) {
+            // get cacheItemsToRemoveList
+            for (const index of cacheIndexesToRemoveList) {
 
-                itemsToRemoveList.push(indexToItemIDMap.get(index))
+                cacheItemsToRemoveList.push(indexToItemIDMap.get(index))
 
             }
 
         }
 
-        console.log('4. indexesToReplaceList, indexesToRemoveList',indexesToReplaceList, indexesToRemoveList)
+        console.log('4. indexesToReplaceList, cacheIndexesToRemoveList',indexesToReplaceList, cacheIndexesToRemoveList)
 
         // ----------- conduct cache operations ----------
 
@@ -855,13 +855,13 @@ export class CacheHandler {
 
         } else {
 
-            for (const index of indexesToRemoveList) {
+            for (const index of cacheIndexesToRemoveList) {
 
                 indexToItemIDMap.delete(index)
 
             }
 
-            for (const itemID of itemsToRemoveList) {
+            for (const itemID of cacheItemsToRemoveList) {
 
                 const { partitionID } = metadataMap.get(itemID)
                 portalItemHoldForDeleteList.push({itemID, partitionID})
@@ -873,8 +873,8 @@ export class CacheHandler {
 
         console.log('5. indexesToReplaceList before missingCradleIndexList addition',[...indexesToReplaceList])
 
+        // TODO: review!!
         const replaceOffset = (increment == 1)? rangeincrement:0
-
         missingCradleIndexList.forEach((idx) => {
             indexesToReplaceList.push(idx + replaceOffset)
         })
