@@ -802,7 +802,7 @@ export class CacheHandler {
 
         console.log('6. cradleMissingScopeIndexesList',cradleMissingScopeIndexesList)
 
-        // ----------- list items to remove -----------
+        // ----------- list cache items to remove -----------
 
         const portalItemHoldForDeleteList = [] // hold portals for deletion until after after cradle synch
 
