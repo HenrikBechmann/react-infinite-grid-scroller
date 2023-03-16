@@ -757,12 +757,12 @@ export class CacheHandler {
         const [lowCradleIndex, highCradleIndex] = cradleIndexSpan
 
         let inCradleLowScopePtr = cacheScopeIndexesList.findIndex(value => {
-            return (value >= lowCradleIndex && value <= highCradleIndex)
+            return (value >= lowCradleIndex)
         })
 
         const reverseCacheScopeIndexesList = Array.from(cacheScopeIndexesList).reverse()
         let inCradleHighScopePtr = reverseCacheScopeIndexesList.findIndex(value => {
-            return (value <= highCradleIndex && value >= lowCradleIndex)
+            return (value <= highCradleIndex)
         })
         // invert the inCradleHighScopePtr
         if (inCradleHighScopePtr > -1) {
