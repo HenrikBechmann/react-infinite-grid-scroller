@@ -708,14 +708,14 @@ export class CacheHandler {
         // inputs
         let cacheRangeIndexesList, // for either insert or remove
             cacheToShiftIndexesList, // for either insert or remove
-            cacheScopeIndexesList // combined range and shift
+            cacheScopeIndexesList, // combined range and shift
+            cradleScopeIndexesList,
+            cradleMissingScopeIndexesList = [] // for failed-to-load cellFrame content
 
         // outputs
         let indexesToReplaceList = [], // for insert, the range being inserted
             cacheIndexesToRemoveList = [], // for remove, the range being removed
-            cacheItemsToRemoveList = [], // for remove, derived from the previous
-            missingCradleIndexList = [], // for failed-to-load cellFrame content
-            cradleIndexesToProcessList
+            cacheItemsToRemoveList = [] // for remove, derived from the previous
 
 
 
@@ -781,26 +781,26 @@ export class CacheHandler {
             lowCradleIndex, highCradleIndex, inCradleLowScopePtr, inCradleHighScopePtr, lowCradleScopeIndex)
 
         if (inCradleLowScopePtr == -1) {
-            cradleIndexesToProcessList = []
+            cradleScopeIndexesList = []
         } else if (inCradleHighScopePtr == -1) { // inCradleLowScopePtr exists 
-            cradleIndexesToProcessList = cacheScopeIndexesList.slice(inCradleLowScopePtr)
+            cradleScopeIndexesList = cacheScopeIndexesList.slice(inCradleLowScopePtr)
         } else { // both pointers found
-            cradleIndexesToProcessList = cacheScopeIndexesList.slice(inCradleLowScopePtr,inCradleHighScopePtr + 1)
+            cradleScopeIndexesList = cacheScopeIndexesList.slice(inCradleLowScopePtr,inCradleHighScopePtr + 1)
         }
 
-        console.log('5. cradleIndexesToProcessList', cradleIndexesToProcessList)
+        console.log('5. cradleScopeIndexesList', cradleScopeIndexesList)
 
         for (let i = lowCradleScopeIndex;i<=highCradleIndex;i++) {
 
-            if (!cradleIndexesToProcessList.includes(i)) {
+            if (!cradleScopeIndexesList.includes(i)) {
 
-                missingCradleIndexList.push(i)
+                cradleMissingScopeIndexesList.push(i)
 
             }
 
         }
 
-        console.log('6. missingCradleIndexList',missingCradleIndexList)
+        console.log('6. cradleMissingScopeIndexesList',cradleMissingScopeIndexesList)
 
         // ----------- list items to remove -----------
 
@@ -874,11 +874,11 @@ export class CacheHandler {
 
         }
 
-        console.log('indexesToReplaceList before missingCradleIndexList addition',[...indexesToReplaceList])
+        console.log('indexesToReplaceList before cradleMissingScopeIndexesList addition',[...indexesToReplaceList])
 
         // TODO: review!!
         const replaceOffset = (isInserting)? rangeincrement:0
-        missingCradleIndexList.forEach((idx) => {
+        cradleMissingScopeIndexesList.forEach((idx) => {
             indexesToReplaceList.push(idx + replaceOffset)
         })
 
