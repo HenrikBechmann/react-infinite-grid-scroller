@@ -756,36 +756,36 @@ export class CacheHandler {
 
         const [lowCradleIndex, highCradleIndex] = cradleIndexSpan
 
-        let inCradleLowScopePtr = cacheScopeIndexesList.findIndex(value => {
+        let inScopeLowCradleIndexPtr = cacheScopeIndexesList.findIndex(value => {
             return (value >= lowCradleIndex)
         })
 
         const reverseCacheScopeIndexesList = Array.from(cacheScopeIndexesList).reverse()
-        let inCradleHighScopePtr = reverseCacheScopeIndexesList.findIndex(value => {
+        let inScopeHighCradleIndexPtr = reverseCacheScopeIndexesList.findIndex(value => {
             return (value <= highCradleIndex)
         })
-        // invert the inCradleHighScopePtr
-        if (inCradleHighScopePtr > -1) {
-            inCradleHighScopePtr = cacheScopeIndexesList.length - (inCradleHighScopePtr +1)
+        // invert the inScopeHighCradleIndexPtr
+        if (inScopeHighCradleIndexPtr > -1) {
+            inScopeHighCradleIndexPtr = cacheScopeIndexesList.length - (inScopeHighCradleIndexPtr +1)
         }
 
         let lowCradleScopeIndex = null
 
-        if (inCradleLowScopePtr != -1) {
+        if (inScopeLowCradleIndexPtr != -1) {
 
-            lowCradleScopeIndex = cacheScopeIndexesList[inCradleLowScopePtr]
+            lowCradleScopeIndex = cacheScopeIndexesList[inScopeLowCradleIndexPtr]
 
         }
 
-        console.log('4. lowCradleIndex, highCradleIndex, inCradleLowScopePtr, inCradleHighScopePtr, lowCradleScopeIndex',
-            lowCradleIndex, highCradleIndex, inCradleLowScopePtr, inCradleHighScopePtr, lowCradleScopeIndex)
+        console.log('4. lowCradleIndex, highCradleIndex, inScopeLowCradleIndexPtr, inScopeHighCradleIndexPtr, lowCradleScopeIndex',
+            lowCradleIndex, highCradleIndex, inScopeLowCradleIndexPtr, inScopeHighCradleIndexPtr, lowCradleScopeIndex)
 
-        if (inCradleLowScopePtr == -1) {
+        if (inScopeLowCradleIndexPtr == -1) {
             cradleScopeIndexesList = []
-        } else if (inCradleHighScopePtr == -1) { // inCradleLowScopePtr exists 
-            cradleScopeIndexesList = cacheScopeIndexesList.slice(inCradleLowScopePtr)
+        } else if (inScopeHighCradleIndexPtr == -1) { // inScopeLowCradleIndexPtr exists 
+            cradleScopeIndexesList = cacheScopeIndexesList.slice(inScopeLowCradleIndexPtr)
         } else { // both pointers found
-            cradleScopeIndexesList = cacheScopeIndexesList.slice(inCradleLowScopePtr,inCradleHighScopePtr + 1)
+            cradleScopeIndexesList = cacheScopeIndexesList.slice(inScopeLowCradleIndexPtr,inScopeHighCradleIndexPtr + 1)
         }
 
         console.log('5. cradleScopeIndexesList', cradleScopeIndexesList)
