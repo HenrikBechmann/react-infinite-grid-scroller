@@ -780,17 +780,15 @@ export class CacheHandler {
         console.log('4. lowCradleIndex, highCradleIndex, inCradleLowScopePtr, inCradleHighScopePtr, lowCradleScopeIndex',
             lowCradleIndex, highCradleIndex, inCradleLowScopePtr, inCradleHighScopePtr, lowCradleScopeIndex)
 
-        if (inCradleLowScopePtr == -1 && inCradleHighScopePtr == -1) {
-            cradleIndexesToProcessList = cacheScopeIndexesList.slice()
-        } else if (inCradleLowScopePtr == -1) {
-            cradleIndexesToProcessList = cacheScopeIndexesList.slice(0,inCradleHighScopePtr + 1)
-        } else if (inCradleHighScopePtr == -1) {
+        if (inCradleLowScopePtr == -1) {
+            cradleIndexesToProcessList = []
+        } else if (inCradleHighScopePtr == -1) { // inCradleLowScopePtr exists 
             cradleIndexesToProcessList = cacheScopeIndexesList.slice(inCradleLowScopePtr)
         } else { // both pointers found
             cradleIndexesToProcessList = cacheScopeIndexesList.slice(inCradleLowScopePtr,inCradleHighScopePtr + 1)
         }
 
-        console.log('lowCradleScopeIndex, cradleIndexesToProcessList', lowCradleScopeIndex, cradleIndexesToProcessList)
+        console.log('5. cradleIndexesToProcessList', cradleIndexesToProcessList)
 
         for (let i = lowCradleScopeIndex;i<=highCradleIndex;i++) {
 
@@ -802,7 +800,7 @@ export class CacheHandler {
 
         }
 
-        console.log('missingCradleIndexList',missingCradleIndexList)
+        console.log('6. missingCradleIndexList',missingCradleIndexList)
 
         // ----------- list items to remove -----------
 
