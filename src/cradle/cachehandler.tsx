@@ -498,6 +498,8 @@ export class CacheHandler {
 
     // ==========================[ SERVICE SUPPORT ]=========================
 
+    // --------------------------[ move indexes ]-------------------------------
+
     // move is coerced by servicehandler to be within current list bounds
     moveIndex(toindex, fromindex, fromhighindex ) {
 
@@ -630,116 +632,123 @@ export class CacheHandler {
 
     }
 
+    // ----------------------------[ insert/remove indexes ]------------------------------
+
     // insert or remove indexes: much of this deals with the fact that the cache is sparse.
     insertRemoveIndex(index, highrange, increment, listsize, cradleIndexSpan) { // increment is +1 or -1
+
+        const isInserting = (increment == 1)
+        const isRemoving = (increment == -1)
+
+        const emptyreturn = [[],[],0,[]] // no action return value if needed
 
         // cache data
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
         // ---------- define range parameters ---------------
 
-        // high range is the highest index number of the insert/remove operation
+        // high range is the highest index number of the insert/remove range
         let highrangeindex = highrange
+        let lowrangeindex = index
 
-        const emptyreturn = [[],[],0,[]] // no action return value if needed
-
-        if (increment == -1) {
+        if (isRemoving) {
 
             // removal must be entirely within scope of the list
             if (highrangeindex > (listsize - 1)) {
                 highrangeindex = (listsize - 1)
-                if (highrangeindex < index) return emptyreturn
+                if (highrangeindex < lowrangeindex) return emptyreturn
             }
 
-        } else {
+        } else { // isInserting
 
-            // addition can at most start at the next index above the current list
-            if (index > listsize) return emptyreturn
+            // addition can at most start at the next lowrangeindex above the current list; aka append
+            if (lowrangeindex > listsize) return emptyreturn
 
         }
 
         // rangecount is the absolute number in the insert/remove range -- contiguous
-        const rangecount = highrangeindex - index + 1
+        const rangecount = highrangeindex - lowrangeindex + 1
 
         // range increment adds sign to rangecount to indicate add/remove
         const rangeincrement = rangecount * increment
 
-        // highPtr, lowPtr, shrinktoPtr within orderedIndexList.
+        console.log('==> 1. cacheHandler.insertRemoveIndex: lowrangeindex, highrangeindex, rangecount, rangeincrement',
+            lowrangeindex, highrangeindex, rangecount, rangeincrement)
+        // ---------- define range boundaries within ordered cache index list ------------
+
         const orderedCacheIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b) // ascending order
 
-        // ---------- define boundaries within ordered cache index list ------------
-        // Ptr = index into array, as opposed to index of virtual list
+        // lowCacheRangePtr and highCacheRangePtr must be within low and high range
 
-        // shrinkptr is the location of the bottom of the shrink range for removals
-        let targetShiftIndex = null
-        let targetShiftPtr = -1
-        
-        if (increment == -1) { // list shrinkage requested
-            
-            targetShiftIndex = index
+        // lowCacheRangePtr...
+        const lowCacheRangePtr = orderedCacheIndexList.findIndex(value => {
 
-        } else {
-
-            targetShiftIndex = index + rangeincrement
-
-        }
-
-        // find the first item in cache that is in range
-        targetShiftPtr = orderedCacheIndexList.findIndex(value => value >= targetShiftIndex)
-
-        // lowRangePtr and highRangePtr must be within low and high range
-        // lowRangePtr...
-        const lowRangePtr = orderedCacheIndexList.findIndex(value => {
-
-            return (value >= index) && (value <= highrangeindex)
+            return (value >= lowrangeindex) && (value <= highrangeindex)
 
         })
 
-        // highRangePtr...
+        // highCacheRangePtr...
         const reverseIndexList = Array.from(orderedCacheIndexList).reverse()
-        let highRangePtr = reverseIndexList.findIndex(value=> {
+        let highCacheRangePtr = reverseIndexList.findIndex(value=> {
 
             return value <= highrangeindex
 
         })
-        // take inverse of highRangePtr for non-reverse sort
-        if (highRangePtr != -1) {
-            highRangePtr = (orderedCacheIndexList.length - 1) - highRangePtr
-            if (highRangePtr < lowRangePtr) highRangePtr = -1
+        // take inverse of highCacheRangePtr for non-reverse sort
+        if (highCacheRangePtr != -1) {
+            highCacheRangePtr = (orderedCacheIndexList.length - 1) - highCacheRangePtr
+            if (highCacheRangePtr < lowCacheRangePtr) highCacheRangePtr = -1
         }
 
-        // ----------- list indexes to process, replace, and remove --------
+        console.log('2. lowCacheRangePtr, highCacheRangePtr, orderedCacheIndexList',
+            lowCacheRangePtr, highCacheRangePtr, orderedCacheIndexList)
 
+        // ----------- isolate index lists to shift, replace, and remove ----------
+
+        // inputs
         let cacheRangeIndexesList, // for either insert or remove
             cacheToShiftIndexesList, // for either insert or remove
-            cacheScopeIndexesList, // both range and shift
-            indexesToReplaceList = [], // for insert, the range being inserted
+            cacheScopeIndexesList // combined range and shift
+
+        // outputs
+        let indexesToReplaceList = [], // for insert, the range being inserted
             cacheIndexesToRemoveList = [], // for remove, the range being removed
             cacheItemsToRemoveList = [], // for remove, derived from the previous
             missingCradleIndexList = [] // for failed-to-load cellFrame content
 
-        // get indexesToShiftList
-        if (lowRangePtr == -1) { // core scope is out of view
+
+        // get inputs
+        if (lowCacheRangePtr == -1) { // core scope is out of view
 
             cacheRangeIndexesList = []
             cacheToShiftIndexesList = []
             cacheScopeIndexesList = []
 
-        } else if (highRangePtr == -1) { // core scope is partially in view; lowPtr is available
+        } else if (highCacheRangePtr == -1) { // core scope is partially in view; lowPtr is available
 
-            // all items above lowRangePtr must have indexes reset
-            cacheRangeIndexesList = orderedCacheIndexList.slice(lowRangePtr)
-            cacheToShiftIndexesList = []
-            cacheScopeIndexesList = orderedCacheIndexList.slice(lowRangePtr)
+            // all items above lowCacheRangePtr must have indexes reset
+            cacheRangeIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr)
+            if (isInserting) {
+                cacheToShiftIndexesList = cacheRangeIndexesList
+            } else {
+                cacheToShiftIndexesList = []
+            }
+            cacheScopeIndexesList = cacheRangeIndexesList
 
         } else { // range fully in view
 
-            cacheRangeIndexesList = orderedCacheIndexList.slice(lowRangePtr, highRangePtr + 1)
-            cacheToShiftIndexesList = orderedCacheIndexList.slice(highRangePtr + 1)
-            cacheScopeIndexesList = orderedCacheIndexList.slice(lowRangePtr)
+            cacheRangeIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr, highCacheRangePtr + 1)
+            if (isInserting) {
+                cacheToShiftIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr)
+            } else {
+                cacheToShiftIndexesList = orderedCacheIndexList.slice(highCacheRangePtr + 1)
+            }
+            cacheScopeIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr)
 
         }
 
+        console.log('3. cacheRangeIndexesList, cacheToShiftIndexesList, cacheScopeIndexesList',
+            cacheRangeIndexesList, cacheToShiftIndexesList, cacheScopeIndexesList)
         // ------------- list cache items in the cradle, and identify missing cradle items ------------
 
         const [lowCradleIndex, highCradleIndex] = cradleIndexSpan
@@ -762,7 +771,7 @@ export class CacheHandler {
 
             const refLowIndex = cacheScopeIndexesList[inCradleLowPtr]
             // adjust higher if necessary
-            lowCradleProcessIndex = Math.max(refLowIndex, index)
+            lowCradleProcessIndex = Math.max(refLowIndex, lowrangeindex)
             // adjust lower if necessary
             // if (targetShiftPtr != -1) lowCradleProcessIndex = Math.min(lowCradleProcessIndex, targetShiftIndex)
             // make sure within cradle span
@@ -770,7 +779,7 @@ export class CacheHandler {
 
         }
 
-        console.log('==> 1. cacheHandler.insertRemoveIndex: cradleIndexSpan, inCradleLowPtr, inCradleHighPtr, cacheRangeIndexesList, cacheToShiftIndexesList, cacheScopeIndexesList',
+        console.log('cradleIndexSpan, inCradleLowPtr, inCradleHighPtr, cacheRangeIndexesList, cacheToShiftIndexesList, cacheScopeIndexesList',
             cradleIndexSpan, inCradleLowPtr, inCradleHighPtr, cacheRangeIndexesList, cacheToShiftIndexesList, cacheScopeIndexesList)
 
         let cradleIndexesToProcessList
@@ -785,7 +794,7 @@ export class CacheHandler {
             cradleIndexesToProcessList = cacheScopeIndexesList.slice(inCradleLowPtr,inCradleHighPtr + 1)
         }
 
-        console.log('2. lowCradleProcessIndex, cradleIndexesToProcessList', lowCradleProcessIndex, cradleIndexesToProcessList)
+        console.log('lowCradleProcessIndex, cradleIndexesToProcessList', lowCradleProcessIndex, cradleIndexesToProcessList)
 
         for (let i = lowCradleProcessIndex;i<=highCradleIndex;i++) {
 
@@ -797,17 +806,17 @@ export class CacheHandler {
 
         }
 
-        console.log('3. missingCradleIndexList',missingCradleIndexList)
+        console.log('missingCradleIndexList',missingCradleIndexList)
 
         // ----------- list items to remove -----------
 
         const portalItemHoldForDeleteList = [] // hold portals for deletion until after after cradle synch
 
-        if (increment == 1) {
+        if (isInserting) {
 
             indexesToReplaceList = cacheRangeIndexesList
 
-        } else {
+        } else { // isRemoving
 
             cacheIndexesToRemoveList = cacheRangeIndexesList
 
@@ -820,12 +829,12 @@ export class CacheHandler {
 
         }
 
-        console.log('4. indexesToReplaceList, cacheIndexesToRemoveList',indexesToReplaceList, cacheIndexesToRemoveList)
+        console.log('indexesToReplaceList, cacheIndexesToRemoveList',indexesToReplaceList, cacheIndexesToRemoveList)
 
         // ----------- conduct cache operations ----------
 
         // increment higher from top of list to preserve lower values for subsequent increment
-        if (increment == 1) cacheRangeIndexesList.reverse() 
+        if (isInserting) cacheRangeIndexesList.reverse() 
 
         const indexesModifiedList = []
 
@@ -845,7 +854,7 @@ export class CacheHandler {
 
         // delete remaining indexes and items now duplicates
 
-        if (increment == 1) {
+        if (isInserting) {
 
             for (const index of indexesToReplaceList) {
                 
@@ -871,15 +880,15 @@ export class CacheHandler {
 
         }
 
-        console.log('5. indexesToReplaceList before missingCradleIndexList addition',[...indexesToReplaceList])
+        console.log('indexesToReplaceList before missingCradleIndexList addition',[...indexesToReplaceList])
 
         // TODO: review!!
-        const replaceOffset = (increment == 1)? rangeincrement:0
+        const replaceOffset = (isInserting)? rangeincrement:0
         missingCradleIndexList.forEach((idx) => {
             indexesToReplaceList.push(idx + replaceOffset)
         })
 
-        console.log('6. final indexesToReplaceList',indexesToReplaceList)
+        console.log('final indexesToReplaceList',indexesToReplaceList)
 
         // --------------- returns ---------------
 
