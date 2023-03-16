@@ -714,7 +714,9 @@ export class CacheHandler {
         let indexesToReplaceList = [], // for insert, the range being inserted
             cacheIndexesToRemoveList = [], // for remove, the range being removed
             cacheItemsToRemoveList = [], // for remove, derived from the previous
-            missingCradleIndexList = [] // for failed-to-load cellFrame content
+            missingCradleIndexList = [], // for failed-to-load cellFrame content
+            cradleIndexesToProcessList
+
 
 
         // get inputs
@@ -749,54 +751,48 @@ export class CacheHandler {
 
         console.log('3. cacheRangeIndexesList, cacheToShiftIndexesList, cacheScopeIndexesList',
             cacheRangeIndexesList, cacheToShiftIndexesList, cacheScopeIndexesList)
-        // ------------- list cache items in the cradle, and identify missing cradle items ------------
+
+        // ------------- list cache scope items in the cradle, and identify any missing cradle items ------------
 
         const [lowCradleIndex, highCradleIndex] = cradleIndexSpan
 
-        let inCradleLowPtr = cacheScopeIndexesList.findIndex(value => {
+        let inCradleLowScopePtr = cacheScopeIndexesList.findIndex(value => {
             return (value >= lowCradleIndex && value <= highCradleIndex)
         })
 
         const reverseCacheScopeIndexesList = Array.from(cacheScopeIndexesList).reverse()
-        let inCradleHighPtr = reverseCacheScopeIndexesList.findIndex(value => {
+        let inCradleHighScopePtr = reverseCacheScopeIndexesList.findIndex(value => {
             return (value <= highCradleIndex && value >= lowCradleIndex)
         })
-        if (inCradleHighPtr > -1) {
-            inCradleHighPtr = cacheScopeIndexesList.length - (inCradleHighPtr +1)
+        // invert the inCradleHighScopePtr
+        if (inCradleHighScopePtr > -1) {
+            inCradleHighScopePtr = cacheScopeIndexesList.length - (inCradleHighScopePtr +1)
         }
 
-        let lowCradleProcessIndex = lowCradleIndex
+        let lowCradleScopeIndex = null
 
-        if (inCradleLowPtr != -1) {
+        if (inCradleLowScopePtr != -1) {
 
-            const refLowIndex = cacheScopeIndexesList[inCradleLowPtr]
-            // adjust higher if necessary
-            lowCradleProcessIndex = Math.max(refLowIndex, lowrangeindex)
-            // adjust lower if necessary
-            // if (targetShiftPtr != -1) lowCradleProcessIndex = Math.min(lowCradleProcessIndex, targetShiftIndex)
-            // make sure within cradle span
-            lowCradleProcessIndex = Math.max(lowCradleProcessIndex, lowCradleIndex)
+            lowCradleScopeIndex = cacheScopeIndexesList[inCradleLowScopePtr]
 
         }
 
-        console.log('cradleIndexSpan, inCradleLowPtr, inCradleHighPtr, cacheRangeIndexesList, cacheToShiftIndexesList, cacheScopeIndexesList',
-            cradleIndexSpan, inCradleLowPtr, inCradleHighPtr, cacheRangeIndexesList, cacheToShiftIndexesList, cacheScopeIndexesList)
+        console.log('4. lowCradleIndex, highCradleIndex, inCradleLowScopePtr, inCradleHighScopePtr, lowCradleScopeIndex',
+            lowCradleIndex, highCradleIndex, inCradleLowScopePtr, inCradleHighScopePtr, lowCradleScopeIndex)
 
-        let cradleIndexesToProcessList
-
-        if (inCradleLowPtr == -1 && inCradleHighPtr == -1) {
+        if (inCradleLowScopePtr == -1 && inCradleHighScopePtr == -1) {
             cradleIndexesToProcessList = cacheScopeIndexesList.slice()
-        } else if (inCradleLowPtr == -1) {
-            cradleIndexesToProcessList = cacheScopeIndexesList.slice(0,inCradleHighPtr + 1)
-        } else if (inCradleHighPtr == -1) {
-            cradleIndexesToProcessList = cacheScopeIndexesList.slice(inCradleLowPtr)
+        } else if (inCradleLowScopePtr == -1) {
+            cradleIndexesToProcessList = cacheScopeIndexesList.slice(0,inCradleHighScopePtr + 1)
+        } else if (inCradleHighScopePtr == -1) {
+            cradleIndexesToProcessList = cacheScopeIndexesList.slice(inCradleLowScopePtr)
         } else { // both pointers found
-            cradleIndexesToProcessList = cacheScopeIndexesList.slice(inCradleLowPtr,inCradleHighPtr + 1)
+            cradleIndexesToProcessList = cacheScopeIndexesList.slice(inCradleLowScopePtr,inCradleHighScopePtr + 1)
         }
 
-        console.log('lowCradleProcessIndex, cradleIndexesToProcessList', lowCradleProcessIndex, cradleIndexesToProcessList)
+        console.log('lowCradleScopeIndex, cradleIndexesToProcessList', lowCradleScopeIndex, cradleIndexesToProcessList)
 
-        for (let i = lowCradleProcessIndex;i<=highCradleIndex;i++) {
+        for (let i = lowCradleScopeIndex;i<=highCradleIndex;i++) {
 
             if (!cradleIndexesToProcessList.includes(i)) {
 
