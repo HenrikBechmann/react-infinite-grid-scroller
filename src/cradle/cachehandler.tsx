@@ -846,6 +846,9 @@ export class CacheHandler {
 
         cacheToShiftIndexesList.forEach(processIndex)
 
+        // TODO: check for cradleshift if range index is lower than first cradle span index
+        // TODO: check cradleSpan to make sure there are items for all cellFrames
+
         // delete remaining indexes and items now duplicates
 
         if (isInserting) {
