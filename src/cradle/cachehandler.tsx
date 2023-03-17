@@ -713,7 +713,8 @@ export class CacheHandler {
             cradleMissingScopeIndexesList = [] // for failed-to-load cellFrame content
 
         // outputs
-        let cacheIndexesToReplaceList = [], // for insert, the range being inserted
+        // for insert, the range being inserted; for remove, any tail cradle items abandoned
+        let cacheIndexesToReplaceList = [], 
             cacheIndexesToRemoveList = [], // for remove, the range being removed
             cacheItemsToRemoveList = [] // for remove, derived from the previous
 
@@ -832,7 +833,7 @@ export class CacheHandler {
 
         const indexesModifiedList = []
 
-        // modify index-to-itemid map, and metadata map
+        // modify index-to-itemid map, and metadata map, for index shifts
         const processIndex = index => {
 
             const itemID = indexToItemIDMap.get(index)
@@ -844,7 +845,7 @@ export class CacheHandler {
 
         }
 
-        cacheRangeIndexesList.forEach(processIndex)
+        cacheToShiftIndexesList.forEach(processIndex)
 
         // delete remaining indexes and items now duplicates
 
@@ -858,12 +859,6 @@ export class CacheHandler {
 
         } else { // isRemoving
 
-            for (const index of cacheIndexesToRemoveList) {
-
-                indexToItemIDMap.delete(index)
-
-            }
-
             for (const itemID of cacheItemsToRemoveList) {
 
                 const { partitionID } = metadataMap.get(itemID)
@@ -874,7 +869,8 @@ export class CacheHandler {
 
         }
 
-        // TODO: review!!
+        console.log('8. indexesModifiedList, portalItemHoldForDeleteList',indexesModifiedList, portalItemHoldForDeleteList)
+
         const replaceOffset = (isInserting)? rangeincrement:0
         cradleMissingScopeIndexesList.forEach((idx) => {
             cacheIndexesToReplaceList.push(idx + replaceOffset)
