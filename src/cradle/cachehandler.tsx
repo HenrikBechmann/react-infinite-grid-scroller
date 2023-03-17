@@ -713,7 +713,7 @@ export class CacheHandler {
             cradleMissingScopeIndexesList = [] // for failed-to-load cellFrame content
 
         // outputs
-        let indexesToReplaceList = [], // for insert, the range being inserted
+        let cacheIndexesToReplaceList = [], // for insert, the range being inserted
             cacheIndexesToRemoveList = [], // for remove, the range being removed
             cacheItemsToRemoveList = [] // for remove, derived from the previous
 
@@ -802,13 +802,13 @@ export class CacheHandler {
 
         console.log('6. cradleMissingScopeIndexesList',cradleMissingScopeIndexesList)
 
-        // ----------- list cache items to remove -----------
+        // ----------- list cache items to replace or remove -----------
 
         const portalItemHoldForDeleteList = [] // hold portals for deletion until after after cradle synch
 
         if (isInserting) {
 
-            indexesToReplaceList = cacheRangeIndexesList
+            cacheIndexesToReplaceList = cacheRangeIndexesList
 
         } else { // isRemoving
 
@@ -823,7 +823,7 @@ export class CacheHandler {
 
         }
 
-        console.log('indexesToReplaceList, cacheIndexesToRemoveList',indexesToReplaceList, cacheIndexesToRemoveList)
+        console.log('7. cacheIndexesToReplaceList, cacheIndexesToRemoveList',cacheIndexesToReplaceList, cacheIndexesToRemoveList)
 
         // ----------- conduct cache operations ----------
 
@@ -850,7 +850,7 @@ export class CacheHandler {
 
         if (isInserting) {
 
-            for (const index of indexesToReplaceList) {
+            for (const index of cacheIndexesToReplaceList) {
                 
                 indexToItemIDMap.delete(index)
 
@@ -874,20 +874,20 @@ export class CacheHandler {
 
         }
 
-        console.log('indexesToReplaceList before cradleMissingScopeIndexesList addition',[...indexesToReplaceList])
+        console.log('cacheIndexesToReplaceList before cradleMissingScopeIndexesList addition',[...cacheIndexesToReplaceList])
 
         // TODO: review!!
         const replaceOffset = (isInserting)? rangeincrement:0
         cradleMissingScopeIndexesList.forEach((idx) => {
-            indexesToReplaceList.push(idx + replaceOffset)
+            cacheIndexesToReplaceList.push(idx + replaceOffset)
         })
 
-        console.log('final indexesToReplaceList',indexesToReplaceList)
+        console.log('final cacheIndexesToReplaceList',cacheIndexesToReplaceList)
 
         // --------------- returns ---------------
 
         // return values for caller to send to contenthandler for cradle synchronization
-        return [indexesModifiedList, indexesToReplaceList, rangeincrement, portalItemHoldForDeleteList]
+        return [indexesModifiedList, cacheIndexesToReplaceList, rangeincrement, portalItemHoldForDeleteList]
 
     }
 
