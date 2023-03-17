@@ -856,7 +856,7 @@ export class CacheHandler {
 
             }
 
-        } else {
+        } else { // isRemoving
 
             for (const index of cacheIndexesToRemoveList) {
 
@@ -874,15 +874,11 @@ export class CacheHandler {
 
         }
 
-        console.log('cacheIndexesToReplaceList before cradleMissingScopeIndexesList addition',[...cacheIndexesToReplaceList])
-
         // TODO: review!!
         const replaceOffset = (isInserting)? rangeincrement:0
         cradleMissingScopeIndexesList.forEach((idx) => {
             cacheIndexesToReplaceList.push(idx + replaceOffset)
         })
-
-        console.log('final cacheIndexesToReplaceList',cacheIndexesToReplaceList)
 
         // --------------- returns ---------------
 
