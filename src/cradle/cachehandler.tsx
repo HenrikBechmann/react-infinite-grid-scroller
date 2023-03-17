@@ -718,8 +718,6 @@ export class CacheHandler {
             cacheIndexesToRemoveList = [], // for remove, the range being removed
             cacheItemsToRemoveList = [] // for remove, derived from the previous
 
-
-
         // get inputs
         if (lowCacheRangePtr == -1) { // core scope is out of view
 
@@ -807,6 +805,7 @@ export class CacheHandler {
 
         const portalItemHoldForDeleteList = [] // hold portals for deletion until after after cradle synch
 
+        // TODO: do cacheIndexesToReplaceList for abandoned Cradle items for remove!
         if (isInserting) {
 
             cacheIndexesToReplaceList = cacheRangeIndexesList
