@@ -711,8 +711,8 @@ export default class ServiceHandler {
 
         cacheHandler.portalPartitionItemHoldForDeleteList = portalPartitionItemHoldForDeleteList
 
-        console.log('==> shiftedList, replaceList, portalPartitionItemHoldForDeleteList',
-            shiftedList, replaceList, portalPartitionItemHoldForDeleteList)
+        console.log('==> servicehandler.insertRemoveIndex: rangeincrement, shiftedList, replaceList, portalPartitionItemHoldForDeleteList',
+            rangeincrement, shiftedList, replaceList, portalPartitionItemHoldForDeleteList)
 
         contentHandler.changeCradleItemIDs(shiftedList)
 

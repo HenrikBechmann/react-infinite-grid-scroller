@@ -788,15 +788,19 @@ export class CacheHandler {
         // ----------- conduct cache operations; capture list of shifted indexes ----------
 
         // increment higher from top of list to preserve lower values for subsequent increment
-        if (isInserting) cacheRangeIndexesList.reverse() 
+        if (isInserting) cacheToShiftIndexesList.reverse() 
 
         const cacheNewIndexesShiftedList = []
+
+        console.log('indexToItemIDMap',indexToItemIDMap)
 
         // modify index-to-itemid map, and metadata map, for index shifts
         const processIndex = index => {
 
             const itemID = indexToItemIDMap.get(index)
             const newIndex = index + rangeincrement
+
+            console.log('index, itemID, newIndex',index, itemID, newIndex)
 
             indexToItemIDMap.set(newIndex, itemID)
             metadataMap.get(itemID).index = newIndex
