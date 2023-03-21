@@ -889,11 +889,11 @@ export default class ContentHandler {
     }
 
     // supports moveIndex and insertRemoveIndex
-    public changeCradleItemIDs(shiftedList) {
+    public updateCradleItemIDs(updateIndexList) {
 
-        if (shiftedList.length == 0) return
+        if (updateIndexList.length == 0) return
 
-        console.log('==> contenthandler.changeCradleItemIDs: shiftedList', shiftedList)
+        console.log('==> contenthandler.updateCradleItemIDs: shiftedList', updateIndexList)
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
         const { indexToItemIDMap } = cacheHandler.cacheProps
@@ -904,7 +904,7 @@ export default class ContentHandler {
 
             const index = component.props.index
 
-            const ptr = shiftedList.indexOf(index)
+            const ptr = updateIndexList.indexOf(index)
 
             console.log('index, ptr', index, ptr)
 
@@ -915,6 +915,7 @@ export default class ContentHandler {
                 console.log('itemID', itemID)
 
                 array[i] = React.cloneElement(component, {itemID})
+                
             }
 
         }

@@ -627,7 +627,7 @@ export default class ServiceHandler {
 
         if (processedIndexList.length) {
 
-            contentHandler.changeCradleItemIDs(processedIndexList)
+            contentHandler.updateCradleItemIDs(processedIndexList)
 
             stateHandler.setCradleState('applycellframechanges')
             
@@ -714,7 +714,7 @@ export default class ServiceHandler {
         console.log('==> servicehandler.insertRemoveIndex: rangeincrement, shiftedList, replaceList, portalPartitionItemHoldForDeleteList',
             rangeincrement, shiftedList, replaceList, portalPartitionItemHoldForDeleteList)
 
-        contentHandler.changeCradleItemIDs(shiftedList)
+        contentHandler.updateCradleItemIDs(shiftedList)
 
         if (increment == +1) contentHandler.createNewItemIDs(replaceList)
 

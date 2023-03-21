@@ -711,14 +711,14 @@ export class CacheHandler {
         // cache inputs
         let cacheRangeIndexesList, // for either insert or remove
             cacheToShiftIndexesList, // for either insert or remove
-            cacheScopeIndexesList // combined range and shift
+            // cacheScopeIndexesList // combined range and shift
 
         // get inputs
         if (lowCacheRangePtr == -1) { // core scope is out of view
 
             cacheRangeIndexesList = []
             cacheToShiftIndexesList = []
-            cacheScopeIndexesList = []
+            // cacheScopeIndexesList = []
 
         } else if (highCacheRangePtr == -1) { // core scope is partially in view; lowPtr is available
 
@@ -735,7 +735,7 @@ export class CacheHandler {
 
             }
 
-            cacheScopeIndexesList = cacheRangeIndexesList
+            // cacheScopeIndexesList = cacheRangeIndexesList
 
         } else { // range fully in view
 
@@ -751,12 +751,12 @@ export class CacheHandler {
 
             }
 
-            cacheScopeIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr)
+            // cacheScopeIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr)
 
         }
 
-        console.log('3. cacheRangeIndexesList, cacheToShiftIndexesList, cacheScopeIndexesList',
-            cacheRangeIndexesList, cacheToShiftIndexesList, cacheScopeIndexesList)
+        console.log('3. cacheRangeIndexesList, cacheToShiftIndexesList',// cacheScopeIndexesList',
+            cacheRangeIndexesList, cacheToShiftIndexesList) //, cacheScopeIndexesList)
 
         // ----------- list cache items to replace or remove -----------
 
@@ -790,7 +790,7 @@ export class CacheHandler {
         // increment higher from top of list to preserve lower values for subsequent increment
         if (isInserting) cacheToShiftIndexesList.reverse() 
 
-        const cacheNewIndexesShiftedList = []
+        const cacheIndexesAfterShiftedList = []
 
         console.log('indexToItemIDMap',indexToItemIDMap)
 
@@ -804,7 +804,7 @@ export class CacheHandler {
 
             indexToItemIDMap.set(newIndex, itemID)
             metadataMap.get(itemID).index = newIndex
-            cacheNewIndexesShiftedList.push(newIndex)
+            cacheIndexesAfterShiftedList.push(newIndex)
 
         }
 
@@ -834,12 +834,13 @@ export class CacheHandler {
 
         }
 
-        console.log('5. cacheNewIndexesShiftedList, portalPartitionItemHoldForDeleteList',cacheNewIndexesShiftedList, portalPartitionItemHoldForDeleteList)
+        console.log('5. cacheIndexesAfterShiftedList, portalPartitionItemHoldForDeleteList',
+            cacheIndexesAfterShiftedList, portalPartitionItemHoldForDeleteList)
 
         // --------------- returns ---------------
 
         // return values for caller to send to contenthandler for cradle synchronization
-        return [rangeincrement, cacheNewIndexesShiftedList, cacheIndexesToReplaceList, portalPartitionItemHoldForDeleteList]
+        return [rangeincrement, cacheIndexesAfterShiftedList, cacheIndexesToReplaceList, portalPartitionItemHoldForDeleteList]
 
     }
 
