@@ -82,7 +82,7 @@ export class CacheHandler {
 
     CACHE_PARTITION_SIZE
 
-    portalItemHoldForDeleteList // array of {itemID,partitionID}
+    portalPartitionItemHoldForDeleteList // array of {itemID,partitionID}
 
     listsizeRef
 
@@ -635,7 +635,7 @@ export class CacheHandler {
     // ----------------------------[ insert/remove indexes ]------------------------------
 
     // insert or remove indexes: much of this deals with the fact that the cache is sparse.
-    insertRemoveIndex(index, highrange, increment, listsize, cradleIndexSpan) { // increment is +1 or -1
+    insertRemoveIndex(index, highrange, increment, listsize ) {//, cradleIndexSpan) { // increment is +1 or -1
 
         const isInserting = (increment == 1)
         const isRemoving = (increment == -1)
@@ -645,7 +645,7 @@ export class CacheHandler {
         // cache data
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
-        // ---------- define range parameters ---------------
+        // ---------- define contiguous range parameters ---------------
 
         // high range is the highest index number of the insert/remove range
         let highrangeindex = highrange
@@ -655,8 +655,10 @@ export class CacheHandler {
 
             // removal must be entirely within scope of the list
             if (highrangeindex > (listsize - 1)) {
+
                 highrangeindex = (listsize - 1)
                 if (highrangeindex < lowrangeindex) return emptyreturn
+
             }
 
         } else { // isInserting
@@ -666,7 +668,7 @@ export class CacheHandler {
 
         }
 
-        // rangecount is the absolute number in the insert/remove range -- contiguous
+        // rangecount is the absolute number in the insert/remove contiguous range
         const rangecount = highrangeindex - lowrangeindex + 1
 
         // range increment adds sign to rangecount to indicate add/remove
@@ -674,11 +676,10 @@ export class CacheHandler {
 
         console.log('==> 1. cacheHandler.insertRemoveIndex: lowrangeindex, highrangeindex, rangecount, rangeincrement',
             lowrangeindex, highrangeindex, rangecount, rangeincrement)
+
         // ---------- define range boundaries within ordered cache index list ------------
 
         const orderedCacheIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b) // ascending order
-
-        // lowCacheRangePtr and highCacheRangePtr must be within low and high range
 
         // lowCacheRangePtr...
         const lowCacheRangePtr = orderedCacheIndexList.findIndex(value => {
@@ -696,27 +697,21 @@ export class CacheHandler {
         })
         // take inverse of highCacheRangePtr for non-reverse sort
         if (highCacheRangePtr != -1) {
+
             highCacheRangePtr = (orderedCacheIndexList.length - 1) - highCacheRangePtr
             if (highCacheRangePtr < lowCacheRangePtr) highCacheRangePtr = -1
+
         }
 
         console.log('2. lowCacheRangePtr, highCacheRangePtr, orderedCacheIndexList',
             lowCacheRangePtr, highCacheRangePtr, orderedCacheIndexList)
 
-        // ----------- isolate index lists to shift, replace, and remove ----------
+        // ----------- isolate index range list, shift list, and scope (combined) list ----------
 
-        // inputs
+        // cache inputs
         let cacheRangeIndexesList, // for either insert or remove
             cacheToShiftIndexesList, // for either insert or remove
-            cacheScopeIndexesList, // combined range and shift
-            cradleScopeIndexesList,
-            cradleMissingScopeIndexesList = [] // for failed-to-load cellFrame content
-
-        // outputs
-        // for insert, the range being inserted; for remove, any tail cradle items abandoned
-        let cacheIndexesToReplaceList = [], 
-            cacheIndexesToRemoveList = [], // for remove, the range being removed
-            cacheItemsToRemoveList = [] // for remove, derived from the previous
+            cacheScopeIndexesList // combined range and shift
 
         // get inputs
         if (lowCacheRangePtr == -1) { // core scope is out of view
@@ -729,21 +724,33 @@ export class CacheHandler {
 
             // all items above lowCacheRangePtr must have indexes reset
             cacheRangeIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr)
+
             if (isInserting) {
+
                 cacheToShiftIndexesList = cacheRangeIndexesList
+
             } else {
+
                 cacheToShiftIndexesList = []
+
             }
+
             cacheScopeIndexesList = cacheRangeIndexesList
 
         } else { // range fully in view
 
             cacheRangeIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr, highCacheRangePtr + 1)
+
             if (isInserting) {
+
                 cacheToShiftIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr)
+
             } else {
+
                 cacheToShiftIndexesList = orderedCacheIndexList.slice(highCacheRangePtr + 1)
+
             }
+
             cacheScopeIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr)
 
         }
@@ -751,61 +758,14 @@ export class CacheHandler {
         console.log('3. cacheRangeIndexesList, cacheToShiftIndexesList, cacheScopeIndexesList',
             cacheRangeIndexesList, cacheToShiftIndexesList, cacheScopeIndexesList)
 
-        // ------------- list cache scope items in the cradle, and identify any missing cradle items ------------
-
-        const [lowCradleIndex, highCradleIndex] = cradleIndexSpan
-
-        let inScopeLowCradleIndexPtr = cacheScopeIndexesList.findIndex(value => {
-            return (value >= lowCradleIndex)
-        })
-
-        const reverseCacheScopeIndexesList = Array.from(cacheScopeIndexesList).reverse()
-        let inScopeHighCradleIndexPtr = reverseCacheScopeIndexesList.findIndex(value => {
-            return (value <= highCradleIndex)
-        })
-        // invert the inScopeHighCradleIndexPtr
-        if (inScopeHighCradleIndexPtr > -1) {
-            inScopeHighCradleIndexPtr = cacheScopeIndexesList.length - (inScopeHighCradleIndexPtr +1)
-        }
-
-        let lowCradleScopeIndex = null
-
-        if (inScopeLowCradleIndexPtr != -1) {
-
-            lowCradleScopeIndex = cacheScopeIndexesList[inScopeLowCradleIndexPtr]
-
-        }
-
-        console.log('4. lowCradleIndex, highCradleIndex, inScopeLowCradleIndexPtr, inScopeHighCradleIndexPtr, lowCradleScopeIndex',
-            lowCradleIndex, highCradleIndex, inScopeLowCradleIndexPtr, inScopeHighCradleIndexPtr, lowCradleScopeIndex)
-
-        if (inScopeLowCradleIndexPtr == -1) {
-            cradleScopeIndexesList = []
-        } else if (inScopeHighCradleIndexPtr == -1) { // inScopeLowCradleIndexPtr exists 
-            cradleScopeIndexesList = cacheScopeIndexesList.slice(inScopeLowCradleIndexPtr)
-        } else { // both pointers found
-            cradleScopeIndexesList = cacheScopeIndexesList.slice(inScopeLowCradleIndexPtr,inScopeHighCradleIndexPtr + 1)
-        }
-
-        console.log('5. cradleScopeIndexesList', cradleScopeIndexesList)
-
-        for (let i = lowCradleScopeIndex;i<=highCradleIndex;i++) {
-
-            if (!cradleScopeIndexesList.includes(i)) {
-
-                cradleMissingScopeIndexesList.push(i)
-
-            }
-
-        }
-
-        console.log('6. cradleMissingScopeIndexesList',cradleMissingScopeIndexesList)
-
         // ----------- list cache items to replace or remove -----------
 
-        const portalItemHoldForDeleteList = [] // hold portals for deletion until after after cradle synch
+        // cache outputs
+        // for insert, the range being inserted; for remove, any tail cradle items abandoned
+        let cacheIndexesToReplaceList = [], 
+            cacheIndexesToRemoveList = [], // for remove, the range being removed
+            cacheItemsToRemoveList = [] // for remove, derived from the previous
 
-        // TODO: do cacheIndexesToReplaceList for abandoned Cradle items for remove!
         if (isInserting) {
 
             cacheIndexesToReplaceList = cacheRangeIndexesList
@@ -823,14 +783,14 @@ export class CacheHandler {
 
         }
 
-        console.log('7. cacheIndexesToReplaceList, cacheIndexesToRemoveList',cacheIndexesToReplaceList, cacheIndexesToRemoveList)
+        console.log('4. cacheIndexesToReplaceList, cacheIndexesToRemoveList',cacheIndexesToReplaceList, cacheIndexesToRemoveList)
 
-        // ----------- conduct cache operations ----------
+        // ----------- conduct cache operations; capture list of shifted indexes ----------
 
         // increment higher from top of list to preserve lower values for subsequent increment
         if (isInserting) cacheRangeIndexesList.reverse() 
 
-        const indexesModifiedList = []
+        const cacheNewIndexesShiftedList = []
 
         // modify index-to-itemid map, and metadata map, for index shifts
         const processIndex = index => {
@@ -840,16 +800,15 @@ export class CacheHandler {
 
             indexToItemIDMap.set(newIndex, itemID)
             metadataMap.get(itemID).index = newIndex
-            indexesModifiedList.push(newIndex)
+            cacheNewIndexesShiftedList.push(newIndex)
 
         }
 
         cacheToShiftIndexesList.forEach(processIndex)
 
-        // TODO: check for cradleshift if range index is lower than first cradle span index
-        // TODO: check cradleSpan to make sure there are items for all cellFrames
-
         // delete remaining indexes and items now duplicates
+
+        const portalPartitionItemHoldForDeleteList = [] // hold portals for deletion until after after cradle synch
 
         if (isInserting) {
 
@@ -864,26 +823,92 @@ export class CacheHandler {
             for (const itemID of cacheItemsToRemoveList) {
 
                 const { partitionID } = metadataMap.get(itemID)
-                portalItemHoldForDeleteList.push({itemID, partitionID})
+                portalPartitionItemHoldForDeleteList.push({itemID, partitionID})
                 metadataMap.delete(itemID)
 
             }
 
         }
 
-        console.log('8. indexesModifiedList, portalItemHoldForDeleteList',indexesModifiedList, portalItemHoldForDeleteList)
-
-        const replaceOffset = (isInserting)? rangeincrement:0
-        cradleMissingScopeIndexesList.forEach((idx) => {
-            cacheIndexesToReplaceList.push(idx + replaceOffset)
-        })
+        console.log('5. cacheNewIndexesShiftedList, portalPartitionItemHoldForDeleteList',cacheNewIndexesShiftedList, portalPartitionItemHoldForDeleteList)
 
         // --------------- returns ---------------
 
         // return values for caller to send to contenthandler for cradle synchronization
-        return [indexesModifiedList, cacheIndexesToReplaceList, rangeincrement, portalItemHoldForDeleteList]
+        return [rangeincrement, cacheNewIndexesShiftedList, cacheIndexesToReplaceList, portalPartitionItemHoldForDeleteList]
 
     }
+
+        // // ------------- cradle: list cache scope items in the cradle, and identify any missing cradle items ------------
+
+        // // cradle inputs
+        // let cradleScopeIndexesList,
+        //     cradleMissingScopeIndexesList = [] // for failed-to-load cellFrame content
+
+        // const [lowCradleIndex, highCradleIndex] = cradleIndexSpan
+
+        // let inScopeLowCradleIndexPtr = cacheScopeIndexesList.findIndex(value => {
+        //     return (value >= lowCradleIndex)
+        // })
+
+        // const reverseCacheScopeIndexesList = Array.from(cacheScopeIndexesList).reverse()
+        // let inScopeHighCradleIndexPtr = reverseCacheScopeIndexesList.findIndex(value => {
+        //     return (value <= highCradleIndex)
+        // })
+        // // invert the inScopeHighCradleIndexPtr
+        // if (inScopeHighCradleIndexPtr > -1) {
+        //     inScopeHighCradleIndexPtr = cacheScopeIndexesList.length - (inScopeHighCradleIndexPtr +1)
+        // }
+
+        // let lowCradleScopeIndex = null
+
+        // if (inScopeLowCradleIndexPtr != -1) {
+
+        //     lowCradleScopeIndex = cacheScopeIndexesList[inScopeLowCradleIndexPtr]
+
+        // }
+
+        // console.log('4. lowCradleIndex, highCradleIndex, inScopeLowCradleIndexPtr, inScopeHighCradleIndexPtr, lowCradleScopeIndex',
+        //     lowCradleIndex, highCradleIndex, inScopeLowCradleIndexPtr, inScopeHighCradleIndexPtr, lowCradleScopeIndex)
+
+        // if (inScopeLowCradleIndexPtr == -1) {
+
+        //     cradleScopeIndexesList = []
+
+        // } else if (inScopeHighCradleIndexPtr == -1) { // inScopeLowCradleIndexPtr exists 
+
+        //     cradleScopeIndexesList = cacheScopeIndexesList.slice(inScopeLowCradleIndexPtr)
+
+        // } else { // both pointers found
+
+        //     cradleScopeIndexesList = cacheScopeIndexesList.slice(inScopeLowCradleIndexPtr,inScopeHighCradleIndexPtr + 1)
+
+        // }
+
+        // console.log('5. cradleScopeIndexesList', cradleScopeIndexesList)
+
+        // for (let i = lowCradleScopeIndex;i<=highCradleIndex;i++) {
+
+        //     if (!cradleScopeIndexesList.includes(i)) {
+
+        //         cradleMissingScopeIndexesList.push(i)
+
+        //     }
+
+        // }
+
+        // console.log('6. cradleMissingScopeIndexesList',cradleMissingScopeIndexesList)
+
+        // TODO: do cacheIndexesToReplaceList for abandoned Cradle items for remove!
+
+        // const replaceOffset = (isInserting)? rangeincrement:0
+        // cradleMissingScopeIndexesList.forEach((idx) => {
+        //     cacheIndexesToReplaceList.push(idx + replaceOffset)
+        // })
+
+        // TODO: check for cradleshift if range index is lower than first cradle span index
+        // TODO: check cradleSpan to make sure there are items for all cellFrames
+        // check for itemID and index change in same useLayoutEffect
 
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 

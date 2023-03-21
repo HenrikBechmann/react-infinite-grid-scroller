@@ -1287,11 +1287,11 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
-                const { portalItemHoldForDeleteList } = cacheHandler
+                const { portalPartitionItemHoldForDeleteList } = cacheHandler
 
-                if (portalItemHoldForDeleteList && portalItemHoldForDeleteList.length) {
+                if (portalPartitionItemHoldForDeleteList && portalPartitionItemHoldForDeleteList.length) {
 
-                    for (const item of portalItemHoldForDeleteList) {
+                    for (const item of portalPartitionItemHoldForDeleteList) {
 
                         console.log('==> Cradle.applycellframechanges removing itemID from cache', item.itemID)
 

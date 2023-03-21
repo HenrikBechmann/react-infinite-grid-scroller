@@ -466,7 +466,7 @@ export default class ServiceHandler {
         const deletedItemIDToIndexMap = new Map() // index => itemID; orphaned index
         const deletedIndexToItemIDMap = new Map()
 
-        const portalItemHoldForDeleteList = [] // hold deleted portals for deletion until after cradle synch
+        const portalPartitionItemHoldForDeleteList = [] // hold deleted portals for deletion until after cradle synch
 
         originalMap.forEach((originalItemID, originalItemIDIndex) => {
 
@@ -477,7 +477,7 @@ export default class ServiceHandler {
                 deletedItemIDToIndexMap.set(originalItemID, originalItemIDIndex)
 
                 const { partitionID } = metadataMap.get(originalItemID)
-                portalItemHoldForDeleteList.push({itemID:originalItemID, partitionID})
+                portalPartitionItemHoldForDeleteList.push({itemID:originalItemID, partitionID})
                 metadataMap.delete(originalItemID)
 
             } else { // remapped, check for orphaned index
@@ -525,7 +525,7 @@ export default class ServiceHandler {
 
         modifiedIndexList = modifiedIndexList.concat(indexesToReplaceItemIDList)
 
-        cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList.concat(partitionItemsToReplaceList)
+        cacheHandler.portalPartitionItemHoldForDeleteList = portalPartitionItemHoldForDeleteList.concat(partitionItemsToReplaceList)
 
         stateHandler.setCradleState('applycellframechanges')
 
@@ -706,15 +706,15 @@ export default class ServiceHandler {
 
         const cradleIndexSpan = contentHandler.indexSpan
 
-        const [changeList, replaceList, rangeincrement, portalItemHoldForDeleteList] = 
-            cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize, cradleIndexSpan)
+        const [rangeincrement, shiftedList, replaceList, portalPartitionItemHoldForDeleteList] = 
+            cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize) //, cradleIndexSpan)
 
-        cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList
+        cacheHandler.portalPartitionItemHoldForDeleteList = portalPartitionItemHoldForDeleteList
 
-        console.log('==> changeList, replaceList, portalItemHoldForDeleteList',
-            changeList, replaceList, portalItemHoldForDeleteList)
+        console.log('==> shiftedList, replaceList, portalPartitionItemHoldForDeleteList',
+            shiftedList, replaceList, portalPartitionItemHoldForDeleteList)
 
-        contentHandler.changeCradleItemIDs(changeList)
+        contentHandler.changeCradleItemIDs(shiftedList)
 
         if (increment == +1) contentHandler.createNewItemIDs(replaceList)
 
@@ -727,7 +727,9 @@ export default class ServiceHandler {
 
         this.setListsize(newlistsize)
 
-        return [changeList, replaceList]
+        const replacedList = replaceList // semantics
+
+        return [shiftedList, replacedList]
 
     }
 
