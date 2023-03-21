@@ -888,8 +888,8 @@ export default class ContentHandler {
 
     }
 
-    // supports moveIndex and insertRemoveIndex
-    public updateCradleItemIDs(updateIndexList) {
+    // supports moveIndex and insertRemoveIndex, updates contiguous items from updateOffset or start of cradle
+    public updateCradleItemIDs(updateIndexList, startIndex = null) {
 
         if (updateIndexList.length == 0) return
 
@@ -904,18 +904,39 @@ export default class ContentHandler {
 
             const index = component.props.index
 
+            if (startIndex !== null && index < startIndex) return
+
+            const itemID = indexToItemIDMap.get(index)
+
+            if (itemID === undefined) {
+
+                console.log('getting newItemID for missing update itemID', index)
+                const newItemID = cacheHandler.getNewItemID()
+                array[i] = React.cloneElement(component, {itemID:newItemID})
+                return
+
+            }
+
+            const oldItemID = component.props.itemID
+
             const ptr = updateIndexList.indexOf(index)
 
             console.log('index, ptr', index, ptr)
 
             if (ptr != -1) {
 
-                const itemID = indexToItemIDMap.get(index)
+                if (itemID == oldItemID) return
 
-                console.log('itemID', itemID)
+                console.log('changed itemID', itemID)
 
                 array[i] = React.cloneElement(component, {itemID})
-                
+
+            } else {
+
+                console.log('getting newItemID for missing update index', index)
+                const newItemID = cacheHandler.getNewItemID()
+                array[i] = React.cloneElement(component, {itemID:newItemID})
+
             }
 
         }

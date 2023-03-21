@@ -706,15 +706,15 @@ export default class ServiceHandler {
 
         const cradleIndexSpan = contentHandler.indexSpan
 
-        const [rangeincrement, shiftedList, replaceList, portalPartitionItemHoldForDeleteList] = 
+        const [rangeincrement, shiftedStartIndex, shiftedList, replaceList, portalPartitionItemHoldForDeleteList] = 
             cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize) //, cradleIndexSpan)
 
         cacheHandler.portalPartitionItemHoldForDeleteList = portalPartitionItemHoldForDeleteList
 
-        console.log('==> servicehandler.insertRemoveIndex: rangeincrement, shiftedList, replaceList, portalPartitionItemHoldForDeleteList',
-            rangeincrement, shiftedList, replaceList, portalPartitionItemHoldForDeleteList)
+        console.log('==> servicehandler.insertRemoveIndex: rangeincrement, shiftedStartIndex, shiftedList, replaceList, portalPartitionItemHoldForDeleteList',
+            rangeincrement, shiftedStartIndex, shiftedList, replaceList, portalPartitionItemHoldForDeleteList)
 
-        contentHandler.updateCradleItemIDs(shiftedList)
+        contentHandler.updateCradleItemIDs(shiftedList, shiftedStartIndex)
 
         if (increment == +1) contentHandler.createNewItemIDs(replaceList)
 

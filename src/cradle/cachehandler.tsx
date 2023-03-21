@@ -674,6 +674,13 @@ export class CacheHandler {
         // range increment adds sign to rangecount to indicate add/remove
         const rangeincrement = rangecount * increment
 
+        let shiftedStartIndex
+        if (isInserting) {
+            shiftedStartIndex = highrangeindex + 1
+        } else { // isRemoving
+            shiftedStartIndex = lowrangeindex
+        }
+
         console.log('==> 1. cacheHandler.insertRemoveIndex: lowrangeindex, highrangeindex, rangecount, rangeincrement',
             lowrangeindex, highrangeindex, rangecount, rangeincrement)
 
@@ -710,15 +717,13 @@ export class CacheHandler {
 
         // cache inputs
         let cacheRangeIndexesList, // for either insert or remove
-            cacheToShiftIndexesList, // for either insert or remove
-            // cacheScopeIndexesList // combined range and shift
+            cacheToShiftIndexesList // for either insert or remove
 
         // get inputs
         if (lowCacheRangePtr == -1) { // core scope is out of view
 
             cacheRangeIndexesList = []
             cacheToShiftIndexesList = []
-            // cacheScopeIndexesList = []
 
         } else if (highCacheRangePtr == -1) { // core scope is partially in view; lowPtr is available
 
@@ -735,8 +740,6 @@ export class CacheHandler {
 
             }
 
-            // cacheScopeIndexesList = cacheRangeIndexesList
-
         } else { // range fully in view
 
             cacheRangeIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr, highCacheRangePtr + 1)
@@ -750,8 +753,6 @@ export class CacheHandler {
                 cacheToShiftIndexesList = orderedCacheIndexList.slice(highCacheRangePtr + 1)
 
             }
-
-            // cacheScopeIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr)
 
         }
 
@@ -840,7 +841,7 @@ export class CacheHandler {
         // --------------- returns ---------------
 
         // return values for caller to send to contenthandler for cradle synchronization
-        return [rangeincrement, cacheIndexesAfterShiftedList, cacheIndexesToReplaceList, portalPartitionItemHoldForDeleteList]
+        return [rangeincrement, shiftedStartIndex, cacheIndexesAfterShiftedList, cacheIndexesToReplaceList, portalPartitionItemHoldForDeleteList]
 
     }
 
