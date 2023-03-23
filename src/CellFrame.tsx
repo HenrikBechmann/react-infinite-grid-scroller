@@ -160,7 +160,7 @@ const CellFrame = ({
 
             cancelidlecallback(requestIdleCallbackIdRef.current)
 
-            cacheHandler.removeRequestedPortal(index)
+            cacheHandler.unregisterPendingPortal(index)
 
         }
 
@@ -324,7 +324,7 @@ const CellFrame = ({
                     console.log('fetching new content: index, itemID, instanceID', index, itemID, instanceID)
 
                     // reserve space in the cache
-                    cacheHandler.registerRequestedPortal(index)
+                    cacheHandler.registerPendingPortal(index)
 
                     // enqueue the fetch
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{

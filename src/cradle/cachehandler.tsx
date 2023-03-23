@@ -635,21 +635,22 @@ export class CacheHandler {
     // ----------------------------[ insert/remove indexes ]------------------------------
 
     // insert or remove indexes: much of this deals with the fact that the cache is sparse.
-    insertRemoveIndex(index, highrange, increment, listsize ) {//, cradleIndexSpan) { // increment is +1 or -1
+    insertRemoveIndex(index, highrange, increment, listsize ) { // increment is +1 or -1
 
+        // clarity
         const isInserting = (increment == 1)
         const isRemoving = (increment == -1)
 
-        const emptyreturn = [[],[],0,[]] // no action return value if needed
+        const emptyreturn = [null, null, [],[],[]] // no action return value
 
-        // cache data
+        // cache data to modify
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
-        // ---------- define contiguous range parameters ---------------
+        // ---------- define contiguous range parameters; add sentinels ---------------
 
         // high range is the highest index number of the insert/remove range
         let highrangeindex = highrange
-        let lowrangeindex = index
+        const lowrangeindex = index // semantics - name symmetry
 
         if (isRemoving) {
 
@@ -845,88 +846,17 @@ export class CacheHandler {
 
     }
 
-        // // ------------- cradle: list cache scope items in the cradle, and identify any missing cradle items ------------
-
-        // // cradle inputs
-        // let cradleScopeIndexesList,
-        //     cradleMissingScopeIndexesList = [] // for failed-to-load cellFrame content
-
-        // const [lowCradleIndex, highCradleIndex] = cradleIndexSpan
-
-        // let inScopeLowCradleIndexPtr = cacheScopeIndexesList.findIndex(value => {
-        //     return (value >= lowCradleIndex)
-        // })
-
-        // const reverseCacheScopeIndexesList = Array.from(cacheScopeIndexesList).reverse()
-        // let inScopeHighCradleIndexPtr = reverseCacheScopeIndexesList.findIndex(value => {
-        //     return (value <= highCradleIndex)
-        // })
-        // // invert the inScopeHighCradleIndexPtr
-        // if (inScopeHighCradleIndexPtr > -1) {
-        //     inScopeHighCradleIndexPtr = cacheScopeIndexesList.length - (inScopeHighCradleIndexPtr +1)
-        // }
-
-        // let lowCradleScopeIndex = null
-
-        // if (inScopeLowCradleIndexPtr != -1) {
-
-        //     lowCradleScopeIndex = cacheScopeIndexesList[inScopeLowCradleIndexPtr]
-
-        // }
-
-        // console.log('4. lowCradleIndex, highCradleIndex, inScopeLowCradleIndexPtr, inScopeHighCradleIndexPtr, lowCradleScopeIndex',
-        //     lowCradleIndex, highCradleIndex, inScopeLowCradleIndexPtr, inScopeHighCradleIndexPtr, lowCradleScopeIndex)
-
-        // if (inScopeLowCradleIndexPtr == -1) {
-
-        //     cradleScopeIndexesList = []
-
-        // } else if (inScopeHighCradleIndexPtr == -1) { // inScopeLowCradleIndexPtr exists 
-
-        //     cradleScopeIndexesList = cacheScopeIndexesList.slice(inScopeLowCradleIndexPtr)
-
-        // } else { // both pointers found
-
-        //     cradleScopeIndexesList = cacheScopeIndexesList.slice(inScopeLowCradleIndexPtr,inScopeHighCradleIndexPtr + 1)
-
-        // }
-
-        // console.log('5. cradleScopeIndexesList', cradleScopeIndexesList)
-
-        // for (let i = lowCradleScopeIndex;i<=highCradleIndex;i++) {
-
-        //     if (!cradleScopeIndexesList.includes(i)) {
-
-        //         cradleMissingScopeIndexesList.push(i)
-
-        //     }
-
-        // }
-
-        // console.log('6. cradleMissingScopeIndexesList',cradleMissingScopeIndexesList)
-
-        // TODO: do cacheIndexesToReplaceList for abandoned Cradle items for remove!
-
-        // const replaceOffset = (isInserting)? rangeincrement:0
-        // cradleMissingScopeIndexesList.forEach((idx) => {
-        //     cacheIndexesToReplaceList.push(idx + replaceOffset)
-        // })
-
-        // TODO: check for cradleshift if range index is lower than first cradle span index
-        // TODO: check cradleSpan to make sure there are items for all cellFrames
-        // check for itemID and index change in same useLayoutEffect
-
     // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
 
     // used for size calculation in pareCacheToMax
     // registers indexes when requested but before retrieved and entered into cache
-    registerRequestedPortal(index) {
+    registerPendingPortal(index) {
 
         this.cacheProps.requestedSet.add(index)
 
     }
 
-    removeRequestedPortal(index) {
+    unregisterPendingPortal(index) {
 
         this.cacheProps.requestedSet.delete(index)
 
@@ -955,7 +885,7 @@ export class CacheHandler {
      // create new portal
     async createPortal(component, index, itemID, scrollerProperties, isPreload = false) {
 
-        this.removeRequestedPortal(index)
+        this.unregisterPendingPortal(index)
 
         const { layout, cellHeight, cellWidth, orientation } = 
             this.cradleParameters.cradleInheritedPropertiesRef.current
