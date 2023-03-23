@@ -864,7 +864,7 @@ export default class ContentHandler {
 
         const { indexToItemIDMap } = cacheHandler.cacheProps
 
-        function processComponent (component, i, array ) {
+        function processComponentFn (component, i, array ) {
             const { index, itemID } = component.props
             if (modifiedIndexesList.includes(index)) {
 
@@ -881,26 +881,26 @@ export default class ContentHandler {
             }
         }
 
-        cradleModelComponents.forEach(processComponent)
+        cradleModelComponents.forEach(processComponentFn)
 
         this.content.headModelComponents = cradleModelComponents.slice(0,this.content.headModelComponents.length)
         this.content.tailModelComponents = cradleModelComponents.slice(this.content.headModelComponents.length)
 
     }
 
-    // supports moveIndex and insertRemoveIndex, updates contiguous items from updateOffset or start of cradle
+    // supports moveIndex and insertRemoveIndex, updates contiguous items from startIndex or start of cradle
     public updateCradleItemIDs(updateIndexList, startIndex = null) {
 
         if (updateIndexList.length == 0) return
 
-        console.log('==> contenthandler.updateCradleItemIDs: shiftedList', updateIndexList)
+        console.log('==> contenthandler.updateCradleItemIDs: updateIndexList', updateIndexList)
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
         const { indexToItemIDMap } = cacheHandler.cacheProps
 
         const { cradleModelComponents } = this.content
 
-        function processcomponent(component, i, array) {
+        function processcomponentFn(component, i, array) {
 
             const index = component.props.index
 
@@ -941,7 +941,7 @@ export default class ContentHandler {
 
         }
 
-        cradleModelComponents.forEach(processcomponent)
+        cradleModelComponents.forEach(processcomponentFn)
 
         this.content.headModelComponents = cradleModelComponents.slice(0,this.content.headModelComponents.length)
         this.content.tailModelComponents = cradleModelComponents.slice(this.content.headModelComponents.length)
@@ -956,7 +956,7 @@ export default class ContentHandler {
         const { cacheHandler } = this.cradleParameters.handlersRef.current
         const { cradleModelComponents } = this.content
 
-        function processcomponent(component, i, array) {
+        function processcomponentFn(component, i, array) {
 
             const index = component.props.index
             const ptr = newList.indexOf(index)
@@ -974,7 +974,7 @@ export default class ContentHandler {
 
         }
 
-        cradleModelComponents.forEach(processcomponent)
+        cradleModelComponents.forEach(processcomponentFn)
 
         this.content.headModelComponents = cradleModelComponents.slice(0,this.content.headModelComponents.length)
         this.content.tailModelComponents = cradleModelComponents.slice(this.content.headModelComponents.length)

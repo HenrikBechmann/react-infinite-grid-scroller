@@ -709,8 +709,9 @@ export default class ServiceHandler {
         const [rangeincrement, shiftedStartIndex, shiftedList, replaceList, portalPartitionItemsForDeleteList] = 
             cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize) //, cradleIndexSpan)
 
-        if (rangeincrement === null) return [[],[]]
+        if (rangeincrement === null) return [[],[]] // no action
 
+        // partitionItems to delete with applycellframechanges
         cacheHandler.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList
 
         console.log('==> servicehandler.insertRemoveIndex: rangeincrement, shiftedStartIndex, shiftedList, replaceList, portalPartitionItemsForDeleteList',

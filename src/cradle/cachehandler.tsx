@@ -542,13 +542,13 @@ export class CacheHandler {
         }
 
         const processtomoveMap = new Map()
-        const capturemoveindex = (index) => {
+        const capturemoveindexFn = (index) => {
 
             processtomoveMap.set(index, indexToItemIDMap.get(index))
 
         }
 
-        processtomoveList.forEach(capturemoveindex)
+        processtomoveList.forEach(capturemoveindexFn)
 
         // ------------- get list of indexes to shift out of the way ---------------
         
@@ -592,7 +592,7 @@ export class CacheHandler {
 
         const processedshiftList = []
 
-        const processshiftindex = (index) => {
+        const processshiftindexFn = (index) => {
 
             const itemID = indexToItemIDMap.get(index)
 
@@ -607,12 +607,12 @@ export class CacheHandler {
 
         }
 
-        processtoshiftList.forEach(processshiftindex)
+        processtoshiftList.forEach(processshiftindexFn)
 
         // ------------ replace shifted index space with moved indexes ----------
 
         const processedmoveList = []
-        const processmoveindex = (itemID, index) => {
+        const processmoveindexFn = (itemID, index) => {
             const newIndex = index + movedirectionalincrement // swap
 
             indexToItemIDMap.set(newIndex, itemID)
@@ -621,7 +621,7 @@ export class CacheHandler {
 
         }
 
-        processtomoveMap.forEach(processmoveindex)
+        processtomoveMap.forEach(processmoveindexFn)
 
         // -----------return list of processed indexes to caller --------
         // for synchrnization with cradle cellFrames
