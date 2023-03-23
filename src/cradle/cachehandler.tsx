@@ -82,7 +82,7 @@ export class CacheHandler {
 
     CACHE_PARTITION_SIZE
 
-    portalPartitionItemHoldForDeleteList // array of {itemID,partitionID}
+    portalPartitionItemsForDeleteList // array of {itemID,partitionID}
 
     listsizeRef
 
@@ -682,8 +682,8 @@ export class CacheHandler {
             shiftedStartIndex = lowrangeindex
         }
 
-        console.log('==> 1. cacheHandler.insertRemoveIndex: lowrangeindex, highrangeindex, rangecount, rangeincrement',
-            lowrangeindex, highrangeindex, rangecount, rangeincrement)
+        console.log('==> 1. cacheHandler.insertRemoveIndex: lowrangeindex, highrangeindex, rangecount, rangeincrement, shiftedStartIndex',
+            lowrangeindex, highrangeindex, rangecount, rangeincrement, shiftedStartIndex)
 
         // ---------- define range boundaries within ordered cache index list ------------
 
@@ -700,7 +700,7 @@ export class CacheHandler {
         const reverseIndexList = Array.from(orderedCacheIndexList).reverse()
         let highCacheRangePtr = reverseIndexList.findIndex(value=> {
 
-            return value <= highrangeindex
+            return (value <= highrangeindex) && (value >= lowrangeindex)
 
         })
         // take inverse of highCacheRangePtr for non-reverse sort
@@ -714,7 +714,7 @@ export class CacheHandler {
         console.log('2. lowCacheRangePtr, highCacheRangePtr, orderedCacheIndexList',
             lowCacheRangePtr, highCacheRangePtr, orderedCacheIndexList)
 
-        // ----------- isolate index range list, shift list, and scope (combined) list ----------
+        // ----------- isolate index range list and shift list ------------
 
         // cache inputs
         let cacheRangeIndexesList, // for either insert or remove
@@ -726,14 +726,14 @@ export class CacheHandler {
             cacheRangeIndexesList = []
             cacheToShiftIndexesList = []
 
-        } else if (highCacheRangePtr == -1) { // core scope is partially in view; lowPtr is available
+        } else if (highCacheRangePtr == -1) { // core scope is partially in view; lowCacheRangePtr is available
 
             // all items above lowCacheRangePtr must have indexes reset
             cacheRangeIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr)
 
             if (isInserting) {
 
-                cacheToShiftIndexesList = cacheRangeIndexesList
+                cacheToShiftIndexesList = cacheRangeIndexesList.slice()
 
             } else {
 
@@ -764,7 +764,7 @@ export class CacheHandler {
 
         // cache outputs
         // for insert, the range being inserted; for remove, any tail cradle items abandoned
-        let cacheIndexesToReplaceList = [], 
+        let cacheIndexesToReplaceList = [], // for insert, the range being inserted
             cacheIndexesToRemoveList = [], // for remove, the range being removed
             cacheItemsToRemoveList = [] // for remove, derived from the previous
 
@@ -794,15 +794,11 @@ export class CacheHandler {
 
         const cacheIndexesAfterShiftedList = []
 
-        console.log('indexToItemIDMap',indexToItemIDMap)
-
         // modify index-to-itemid map, and metadata map, for index shifts
-        const processIndex = index => {
+        const processIndexFn = index => {
 
             const itemID = indexToItemIDMap.get(index)
             const newIndex = index + rangeincrement
-
-            console.log('index, itemID, newIndex',index, itemID, newIndex)
 
             indexToItemIDMap.set(newIndex, itemID)
             metadataMap.get(itemID).index = newIndex
@@ -810,11 +806,11 @@ export class CacheHandler {
 
         }
 
-        cacheToShiftIndexesList.forEach(processIndex)
+        cacheToShiftIndexesList.forEach(processIndexFn)
 
         // delete remaining indexes and items now duplicates
 
-        const portalPartitionItemHoldForDeleteList = [] // hold portals for deletion until after after cradle synch
+        const portalPartitionItemsForDeleteList = [] // hold portals for deletion until after after cradle synch
 
         if (isInserting) {
 
@@ -829,20 +825,20 @@ export class CacheHandler {
             for (const itemID of cacheItemsToRemoveList) {
 
                 const { partitionID } = metadataMap.get(itemID)
-                portalPartitionItemHoldForDeleteList.push({itemID, partitionID})
+                portalPartitionItemsForDeleteList.push({itemID, partitionID})
                 metadataMap.delete(itemID)
 
             }
 
         }
 
-        console.log('5. cacheIndexesAfterShiftedList, portalPartitionItemHoldForDeleteList',
-            cacheIndexesAfterShiftedList, portalPartitionItemHoldForDeleteList)
+        console.log('5. cacheIndexesAfterShiftedList, portalPartitionItemsForDeleteList',
+            cacheIndexesAfterShiftedList, portalPartitionItemsForDeleteList)
 
         // --------------- returns ---------------
 
         // return values for caller to send to contenthandler for cradle synchronization
-        return [rangeincrement, shiftedStartIndex, cacheIndexesAfterShiftedList, cacheIndexesToReplaceList, portalPartitionItemHoldForDeleteList]
+        return [rangeincrement, shiftedStartIndex, cacheIndexesAfterShiftedList, cacheIndexesToReplaceList, portalPartitionItemsForDeleteList]
 
     }
 
