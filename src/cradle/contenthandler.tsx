@@ -888,19 +888,19 @@ export default class ContentHandler {
 
     }
 
-    // supports moveIndex and insertRemoveIndex, updates contiguous items from startIndex or start of cradle
+    // supports moveIndex and insertRemoveIndex, updates cradle contiguous items from startIndex or start of cradle
     public updateCradleItemIDs(updateIndexList, startIndex = null) {
 
         if (updateIndexList.length == 0) return
 
-        console.log('==> contenthandler.updateCradleItemIDs: updateIndexList', updateIndexList)
+        console.log('==> contenthandler.updateCradleItemIDs: updateIndexList, startIndex', updateIndexList, startIndex)
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
         const { indexToItemIDMap } = cacheHandler.cacheProps
 
         const { cradleModelComponents } = this.content
 
-        function processcomponentFn(component, i, array) {
+        function processcomponentFn(component, i, componentarray) {
 
             const index = component.props.index
 
@@ -912,7 +912,7 @@ export default class ContentHandler {
 
                 console.log('getting newItemID for missing update itemID', index)
                 const newItemID = cacheHandler.getNewItemID()
-                array[i] = React.cloneElement(component, {itemID:newItemID})
+                componentarray[i] = React.cloneElement(component, {itemID:newItemID})
                 return
 
             }
@@ -929,22 +929,19 @@ export default class ContentHandler {
 
                 console.log('changed itemID', itemID)
 
-                array[i] = React.cloneElement(component, {itemID})
+                componentarray[i] = React.cloneElement(component, {itemID})
 
             } else {
 
                 console.log('getting newItemID for missing update index', index)
                 const newItemID = cacheHandler.getNewItemID()
-                array[i] = React.cloneElement(component, {itemID:newItemID})
+                componentarray[i] = React.cloneElement(component, {itemID:newItemID})
 
             }
 
         }
 
         cradleModelComponents.forEach(processcomponentFn)
-
-        this.content.headModelComponents = cradleModelComponents.slice(0,this.content.headModelComponents.length)
-        this.content.tailModelComponents = cradleModelComponents.slice(this.content.headModelComponents.length)
 
     }
 
@@ -975,9 +972,6 @@ export default class ContentHandler {
         }
 
         cradleModelComponents.forEach(processcomponentFn)
-
-        this.content.headModelComponents = cradleModelComponents.slice(0,this.content.headModelComponents.length)
-        this.content.tailModelComponents = cradleModelComponents.slice(this.content.headModelComponents.length)
 
     }
 

@@ -629,6 +629,11 @@ export default class ServiceHandler {
 
             contentHandler.updateCradleItemIDs(processedIndexList)
 
+            const { content } = contentHandler
+
+            content.headModelComponents = content.cradleModelComponents.slice(0,content.headModelComponents.length)
+            content.tailModelComponents = content.cradleModelComponents.slice(content.headModelComponents.length)
+
             stateHandler.setCradleState('applycellframechanges')
             
         }
@@ -720,6 +725,11 @@ export default class ServiceHandler {
         contentHandler.updateCradleItemIDs(shiftedList, shiftedStartIndex)
 
         if (increment == +1) contentHandler.createNewItemIDs(replaceList)
+
+        const { content } = contentHandler
+
+        content.headModelComponents = content.cradleModelComponents.slice(0,content.headModelComponents.length)
+        content.tailModelComponents = content.cradleModelComponents.slice(content.headModelComponents.length)
 
         stateHandler.setCradleState('applycellframechanges')
 
