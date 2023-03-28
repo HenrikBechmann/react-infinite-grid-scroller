@@ -832,13 +832,15 @@ export class CacheHandler {
 
         }
 
+        if (isInserting) cacheIndexesAfterShiftedList.reverse() // return to ascending order
+
         console.log('5. cacheIndexesAfterShiftedList, portalPartitionItemsForDeleteList',
             cacheIndexesAfterShiftedList, portalPartitionItemsForDeleteList)
 
         // --------------- returns ---------------
 
         // return values for caller to send to contenthandler for cradle synchronization
-        return [rangeincrement, shiftedStartIndex, cacheIndexesAfterShiftedList, cacheIndexesToReplaceList, portalPartitionItemsForDeleteList]
+        return [rangeincrement, cacheIndexesAfterShiftedList, cacheIndexesToReplaceList, portalPartitionItemsForDeleteList]
 
     }
 

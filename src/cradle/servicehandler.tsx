@@ -709,9 +709,9 @@ export default class ServiceHandler {
 
         const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
 
-        const cradleIndexSpan = contentHandler.indexSpan
+        // const cradleIndexSpan = contentHandler.indexSpan
 
-        const [rangeincrement, shiftedStartIndex, shiftedList, replaceList, portalPartitionItemsForDeleteList] = 
+        const [rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList] = 
             cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize) //, cradleIndexSpan)
 
         if (rangeincrement === null) return [[],[]] // no action
@@ -719,10 +719,10 @@ export default class ServiceHandler {
         // partitionItems to delete with applycellframechanges
         cacheHandler.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList
 
-        console.log('==> servicehandler.insertRemoveIndex: rangeincrement, shiftedStartIndex, shiftedList, replaceList, portalPartitionItemsForDeleteList',
-            rangeincrement, shiftedStartIndex, shiftedList, replaceList, portalPartitionItemsForDeleteList)
+        console.log('==> servicehandler.insertRemoveIndex: rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList',
+            rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList)
 
-        contentHandler.updateCradleItemIDs(shiftedList, shiftedStartIndex)
+        contentHandler.updateCradleItemIDs(shiftedList)
 
         if (increment == +1) contentHandler.createNewItemIDs(replaceList)
 

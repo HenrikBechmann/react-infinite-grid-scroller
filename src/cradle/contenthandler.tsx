@@ -889,11 +889,24 @@ export default class ContentHandler {
     }
 
     // supports moveIndex and insertRemoveIndex, updates cradle contiguous items from startIndex or start of cradle
-    public updateCradleItemIDs(updateIndexList, startIndex = null) {
+    public updateCradleItemIDs(updatedIndexList) {
 
-        if (updateIndexList.length == 0) return
+        if (updatedIndexList.length == 0) return
 
-        console.log('==> contenthandler.updateCradleItemIDs: updateIndexList, startIndex', updateIndexList, startIndex)
+        const startIndex = updatedIndexList[0]
+
+        const [lowSpan, highSpan] = this.indexSpan
+
+        let firstIndex = startIndex
+
+        if (firstIndex > highSpan) return
+
+        if (firstIndex < lowSpan) firstIndex = lowSpan
+
+        const lowPtr = firstIndex - lowSpan
+
+        console.log('==> contenthandler.updateCradleItemIDs: updateIndexList, firstIndex, lowSpan, lowPtr', 
+            updatedIndexList, firstIndex, lowSpan, lowPtr)
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
         const { indexToItemIDMap } = cacheHandler.cacheProps
@@ -919,7 +932,7 @@ export default class ContentHandler {
 
             const oldItemID = component.props.itemID
 
-            const ptr = updateIndexList.indexOf(index)
+            const ptr = updatedIndexList.indexOf(index)
 
             console.log('index, ptr', index, ptr)
 
@@ -941,7 +954,11 @@ export default class ContentHandler {
 
         }
 
-        cradleModelComponents.forEach(processcomponentFn)
+        for (let ptr = lowPtr; ptr <= highSpan; ptr++) {
+            processcomponentFn(cradleModelComponents[ptr], ptr, cradleModelComponents)
+        }
+
+        // cradleModelComponents.forEach(processcomponentFn)
 
     }
 
