@@ -905,8 +905,8 @@ export default class ContentHandler {
 
         const lowPtr = firstIndex - lowSpan
 
-        console.log('==> contenthandler.updateCradleItemIDs: updateIndexList, firstIndex, lowSpan, lowPtr', 
-            updatedIndexList, firstIndex, lowSpan, lowPtr)
+        // console.log('==> contenthandler.updateCradleItemIDs: updateIndexList, firstIndex, lowSpan, lowPtr', 
+        //     updatedIndexList, firstIndex, lowSpan, lowPtr)
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
         const { indexToItemIDMap } = cacheHandler.cacheProps
@@ -917,13 +917,13 @@ export default class ContentHandler {
 
             const index = component.props.index
 
-            if (startIndex !== null && index < startIndex) return
+            // if (startIndex !== null && index < startIndex) return
 
             const itemID = indexToItemIDMap.get(index)
 
             if (itemID === undefined) {
 
-                console.log('getting newItemID for missing update itemID', index)
+                // console.log('getting newItemID for missing update itemID', index)
                 const newItemID = cacheHandler.getNewItemID()
                 componentarray[i] = React.cloneElement(component, {itemID:newItemID})
                 return
@@ -934,19 +934,19 @@ export default class ContentHandler {
 
             const ptr = updatedIndexList.indexOf(index)
 
-            console.log('index, ptr', index, ptr)
+            // console.log('index, ptr', index, ptr)
 
             if (ptr != -1) {
 
                 if (itemID == oldItemID) return
 
-                console.log('changed itemID', itemID)
+                // console.log('changed itemID', itemID)
 
                 componentarray[i] = React.cloneElement(component, {itemID})
 
             } else {
 
-                console.log('getting newItemID for missing update index', index)
+                // console.log('getting newItemID for missing update index', index)
                 const newItemID = cacheHandler.getNewItemID()
                 componentarray[i] = React.cloneElement(component, {itemID:newItemID})
 
@@ -965,30 +965,53 @@ export default class ContentHandler {
     // supports insertRemoveIndex
     public createNewItemIDs(newList) {
 
-        console.log('==> contentHandler.createNewItemIDs: newList', newList)
+        if (!newList.length) return
+
+        // console.log('==> contentHandler.createNewItemIDs: newList', newList)
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
         const { cradleModelComponents } = this.content
 
-        function processcomponentFn(component, i, array) {
+        const [lowSpan, highSpan] = this.indexSpan
 
-            const index = component.props.index
-            const ptr = newList.indexOf(index)
+        // function processcomponentFn(component, i, array) {
 
-            if (ptr != -1) {
+        //     const index = component.props.index
+        //     const ptr = newList.indexOf(index)
 
-                const newItemID = cacheHandler.getNewItemID()
+        //     if (ptr != -1) {
 
-                console.log('getting new itemID for index, newItemID',index, newItemID)
-                console.log('component key', component.key)
+        //         const newItemID = cacheHandler.getNewItemID()
 
-                array[i] = React.cloneElement(component, {itemID:newItemID})
+        //         console.log('getting new itemID for index, newItemID',index, newItemID)
+        //         console.log('component key', component.key)
 
-            }
+        //         array[i] = React.cloneElement(component, {itemID:newItemID})
+
+        //     }
+
+        // }
+
+        function processcomponentFn(newlistindex, newlistptr) {
+
+            if (newlistindex < lowSpan || newlistindex > highSpan) return // defensive
+
+            const cradlePtr = newlistindex - lowSpan
+
+            const component = cradleModelComponents[cradlePtr]
+
+            const newItemID = cacheHandler.getNewItemID()
+
+            // console.log('getting new itemID for newlistindex, newItemID',newlistindex, newItemID)
+            // console.log('component key', component.key)
+
+            cradleModelComponents[cradlePtr] = React.cloneElement(component, {itemID:newItemID})
 
         }
 
-        cradleModelComponents.forEach(processcomponentFn)
+        // cradleModelComponents.forEach(processcomponentFn)
+
+        newList.forEach(processcomponentFn)
 
     }
 

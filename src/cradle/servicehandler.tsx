@@ -719,8 +719,8 @@ export default class ServiceHandler {
         // partitionItems to delete with applycellframechanges
         cacheHandler.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList
 
-        console.log('==> servicehandler.insertRemoveIndex: rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList',
-            rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList)
+        // console.log('==> servicehandler.insertRemoveIndex: rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList',
+        //     rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList)
 
         contentHandler.updateCradleItemIDs(shiftedList)
 
@@ -738,6 +738,7 @@ export default class ServiceHandler {
 
         console.log('changing list size: listsize, changecount, newlistsize',listsize, changecount, newlistsize)
 
+        // TODO wait for pending updates to complete, if newlistsize encroaches on cradle
         this.setListsize(newlistsize)
 
         const replacedList = replaceList // semantics

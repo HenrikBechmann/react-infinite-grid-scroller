@@ -156,7 +156,7 @@ const CellFrame = ({
 
         return () => {
 
-            console.log('unmounting index, instanceID', index, instanceID)
+            // console.log('unmounting index, instanceID', index, instanceID)
 
             cancelidlecallback(requestIdleCallbackIdRef.current)
 
@@ -171,7 +171,7 @@ const CellFrame = ({
 
         if (frameStateRef.current == 'setup') return
 
-        console.log('CellFrame calling for NEW user content: index, itemID',index,itemID)
+        // console.log('CellFrame calling for NEW user content: index, itemID',index,itemID)
 
         if (isMountedRef.current) setFrameState('getusercontent')
 
@@ -303,7 +303,7 @@ const CellFrame = ({
 
                     if (isMountedRef.current) {
 
-                        console.log('retreiving content from cache: index, itemID', index, itemID)
+                        // console.log('retreiving content from cache: index, itemID', index, itemID)
 
                         // get cache data
                         portalMetadataRef.current = cacheHandler.getPortalMetadata(itemID)
@@ -321,7 +321,7 @@ const CellFrame = ({
 
                     messageRef.current = placeholderMessagesRef.current.loading
 
-                    console.log('fetching new content: index, itemID, instanceID', index, itemID, instanceID)
+                    // console.log('fetching new content: index, itemID, instanceID', index, itemID, instanceID)
 
                     // reserve space in the cache
                     cacheHandler.registerPendingPortal(index)
@@ -333,7 +333,7 @@ const CellFrame = ({
                         // process the fetch
                         try {
 
-                            console.log('getItem: index, itemID', index, itemID)
+                            // console.log('getItem: index, itemID', index, itemID)
 
                             usercontent = await getItem(index, itemID)
 

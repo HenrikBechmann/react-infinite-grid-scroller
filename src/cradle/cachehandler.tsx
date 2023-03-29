@@ -682,8 +682,8 @@ export class CacheHandler {
             shiftedStartIndex = lowrangeindex
         }
 
-        console.log('==> 1. cacheHandler.insertRemoveIndex: lowrangeindex, highrangeindex, rangecount, rangeincrement, shiftedStartIndex',
-            lowrangeindex, highrangeindex, rangecount, rangeincrement, shiftedStartIndex)
+        // console.log('==> 1. cacheHandler.insertRemoveIndex: lowrangeindex, highrangeindex, rangecount, rangeincrement, shiftedStartIndex',
+        //     lowrangeindex, highrangeindex, rangecount, rangeincrement, shiftedStartIndex)
 
         // ---------- define range boundaries within ordered cache index list ------------
 
@@ -711,8 +711,8 @@ export class CacheHandler {
 
         }
 
-        console.log('2. lowCacheRangePtr, highCacheRangePtr, orderedCacheIndexList',
-            lowCacheRangePtr, highCacheRangePtr, orderedCacheIndexList)
+        // console.log('2. lowCacheRangePtr, highCacheRangePtr, orderedCacheIndexList',
+        //     lowCacheRangePtr, highCacheRangePtr, orderedCacheIndexList)
 
         // ----------- isolate index range list and shift list ------------
 
@@ -757,8 +757,8 @@ export class CacheHandler {
 
         }
 
-        console.log('3. cacheRangeIndexesList, cacheToShiftIndexesList',// cacheScopeIndexesList',
-            cacheRangeIndexesList, cacheToShiftIndexesList) //, cacheScopeIndexesList)
+        // console.log('3. cacheRangeIndexesList, cacheToShiftIndexesList',// cacheScopeIndexesList',
+        //     cacheRangeIndexesList, cacheToShiftIndexesList) //, cacheScopeIndexesList)
 
         // ----------- list cache items to replace or remove -----------
 
@@ -785,7 +785,7 @@ export class CacheHandler {
 
         }
 
-        console.log('4. cacheIndexesToReplaceList, cacheIndexesToRemoveList',cacheIndexesToReplaceList, cacheIndexesToRemoveList)
+        // console.log('4. cacheIndexesToReplaceList, cacheIndexesToRemoveList',cacheIndexesToReplaceList, cacheIndexesToRemoveList)
 
         // ----------- conduct cache operations; capture list of shifted indexes ----------
 
@@ -834,8 +834,8 @@ export class CacheHandler {
 
         if (isInserting) cacheIndexesAfterShiftedList.reverse() // return to ascending order
 
-        console.log('5. cacheIndexesAfterShiftedList, portalPartitionItemsForDeleteList',
-            cacheIndexesAfterShiftedList, portalPartitionItemsForDeleteList)
+        // console.log('5. cacheIndexesAfterShiftedList, portalPartitionItemsForDeleteList',
+        //     cacheIndexesAfterShiftedList, portalPartitionItemsForDeleteList)
 
         // --------------- returns ---------------
 
@@ -908,7 +908,7 @@ export class CacheHandler {
             partitionID,
         }
 
-        console.log('==>createPortal: index, itemID', index, itemID)
+        // console.log('==>createPortal: index, itemID', index, itemID)
 
         this.cacheProps.metadataMap.set(itemID, portalMetadata)
         this.cacheProps.indexToItemIDMap.set(index, itemID)
