@@ -992,7 +992,7 @@ export default class ContentHandler {
 
         // }
 
-        function processcomponentFn(newlistindex, newlistptr) {
+        function processcomponentFn(newlistindex) {
 
             if (newlistindex < lowSpan || newlistindex > highSpan) return // defensive
 
