@@ -550,6 +550,8 @@ export default class ServiceHandler {
     // returns list of processed indexes
     public moveIndex = (toindex, fromindex, highrange = null) => {
 
+        // ------------ confirm validity of arguments -------------
+
         const isToindexInvalid = (!isInteger(toindex) || !minValue(toindex, 0))
         const isFromindexInvalid = (!isInteger(fromindex) || !minValue(fromindex, 0))
         let isHighrangeInvalid = false
@@ -565,7 +567,6 @@ export default class ServiceHandler {
 
         toindex = +toindex
         fromindex = +fromindex
-        // highrange = highrange ?? fromindex
         highrange = +highrange
 
         if (isToindexInvalid || isFromindexInvalid || isHighrangeInvalid) {
@@ -581,21 +582,21 @@ export default class ServiceHandler {
         const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
 
         // keep within current list size
-        const listbound = listsize - 1
+        const listhighindex = listsize - 1
 
         toindex = 
-            (toindex > listbound)?
-                listbound:
+            (toindex > listhighindex + 1)?
+                listhighindex:
                 toindex
 
         fromindex = 
-            (fromindex > listbound)?
-                listbound:
+            (fromindex > listhighindex)?
+                listhighindex:
                 fromindex
 
         highrange = 
-            (highrange > listbound)?
-                listbound:
+            (highrange > listhighindex)?
+                listhighindex:
                 highrange
 
         // highrange must be >= fromindex
@@ -604,18 +605,11 @@ export default class ServiceHandler {
                 highrange:
                 fromindex
 
-        const rangeincrement = highrange - fromindex + 1
-        const moveincrement = toindex - fromindex
+        const fromhighrange = highrange // semantics
 
         // ---------- constrain parameters --------------
 
         if (fromindex == toindex) return [] // nothing to do
-
-        // move must be in list bounds
-        if (moveincrement > 0) { // move up
-            const targettop = toindex + (rangeincrement - 1)
-            if (targettop > listbound) return [] // out of bounds
-        }
 
         // ----------- perform cache and cradle operations -----------
 
@@ -623,11 +617,11 @@ export default class ServiceHandler {
             this.cradleParameters.handlersRef.current
 
         const processedIndexList = 
-            cacheHandler.moveIndex(toindex, fromindex, highrange)
+            cacheHandler.moveIndex(toindex, fromindex, fromhighrange)
 
         if (processedIndexList.length) {
 
-            contentHandler.updateCradleItemIDs(processedIndexList)
+            contentHandler.synchronizeCradleItemIDs(processedIndexList)
 
             const { content } = contentHandler
 
@@ -722,7 +716,7 @@ export default class ServiceHandler {
         // console.log('==> servicehandler.insertRemoveIndex: rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList',
         //     rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList)
 
-        contentHandler.updateCradleItemIDs(shiftedList)
+        contentHandler.synchronizeCradleItemIDs(shiftedList)
 
         if (increment == +1) contentHandler.createNewItemIDs(replaceList)
 

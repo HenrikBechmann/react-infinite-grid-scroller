@@ -889,7 +889,7 @@ export default class ContentHandler {
     }
 
     // supports moveIndex and insertRemoveIndex, updates cradle contiguous items from startIndex or start of cradle
-    public updateCradleItemIDs(updatedIndexList) {
+    public synchronizeCradleItemIDs(updatedIndexList) {
 
         if (updatedIndexList.length == 0) return
 
@@ -905,7 +905,7 @@ export default class ContentHandler {
 
         const lowPtr = firstIndex - lowSpan
 
-        // console.log('==> contenthandler.updateCradleItemIDs: updateIndexList, firstIndex, lowSpan, lowPtr', 
+        // console.log('==> contenthandler.synchronizeCradleItemIDs: updateIndexList, firstIndex, lowSpan, lowPtr', 
         //     updatedIndexList, firstIndex, lowSpan, lowPtr)
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
