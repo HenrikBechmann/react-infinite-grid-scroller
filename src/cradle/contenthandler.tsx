@@ -904,7 +904,6 @@ export default class ContentHandler {
         if (firstIndex < lowSpan) firstIndex = lowSpan
 
         const lowPtr = firstIndex - lowSpan
-
         // console.log('==> contenthandler.synchronizeCradleItemIDs: updateIndexList, firstIndex, lowSpan, lowPtr', 
         //     updatedIndexList, firstIndex, lowSpan, lowPtr)
 
@@ -913,7 +912,14 @@ export default class ContentHandler {
 
         const { cradleModelComponents } = this.content
 
+        const highPtr = cradleModelComponents.length - 1
+
+        console.log('==>synchronizeCradleItemIDs: lowSpan, highSpan, cradleModelComponents',lowSpan, highSpan, cradleModelComponents)
+
         function processcomponentFn(component, i, componentarray) {
+
+            console.log('processcomponentFn: i',
+                i, componentarray)
 
             const index = component.props.index
 
@@ -954,7 +960,7 @@ export default class ContentHandler {
 
         }
 
-        for (let ptr = lowPtr; ptr <= highSpan; ptr++) {
+        for (let ptr = lowPtr; ptr <= highPtr; ptr++) {
             processcomponentFn(cradleModelComponents[ptr], ptr, cradleModelComponents)
         }
 

@@ -501,43 +501,59 @@ export class CacheHandler {
     // --------------------------[ move indexes ]-------------------------------
 
     // move is coerced by servicehandler to be within current list bounds
-    moveIndex(toindex, fromlowindex, fromhighindex ) {
+    moveIndex(tolowindex, fromlowindex, fromhighindex ) {
 
         const {indexToItemIDMap,metadataMap} = this.cacheProps
 
         // ----------- define parameters ---------------
 
         const moveblockspan = fromhighindex - fromlowindex + 1,
-            moveshiftincrement = toindex - fromlowindex,
-            tohighindex = toindex + (moveblockspan - 1)
+            moveshiftincrement = tolowindex - fromlowindex,
+            tohighindex = tolowindex + (moveblockspan - 1)
 
         const displacedirection = 
             (moveshiftincrement > 0)? // move up in list
                 -1: // shift down, make room for shiftingindex above
                 1   // shift up, make room for shiftingindex below
 
+        console.log('==> cacheHandler.moveIndex: \n\
+fromlowindex, fromhighindex, tolowindex, tohighindex, moveblockspan, moveshiftincrement\n',
+            fromlowindex, fromhighindex, tolowindex, tohighindex, moveblockspan, moveshiftincrement)
+
+        // ------------ find bounds of from and to blocks in cache -------------
+
         const orderedindexlist = Array.from(indexToItemIDMap.keys())
         orderedindexlist.sort((a,b)=>a-b)
+        const reverseorderedindexlist = orderedindexlist.slice().reverse()
 
-        const toindexptr = orderedindexlist.findIndex(value => value >= toindex),
-            tohighindexptr = orderedindexlist.findIndex(value => value >= tohighindex),
-            fromindexptr = orderedindexlist.findIndex(value => value >= fromlowindex),
-            fromhighindexptr = orderedindexlist.findIndex(value => value >= fromhighindex)
+        const tolowindexptr = orderedindexlist.findIndex(value => value >= tolowindex),
+            fromlowindexptr = orderedindexlist.findIndex(value => value >= fromlowindex)
+
+        let tohighindexptr = reverseorderedindexlist.findIndex(value => value <= tohighindex),
+            fromhighindexptr = reverseorderedindexlist.findIndex(value => value <= fromhighindex)
+
+        // get required inverse
+        const cachecount = orderedindexlist.length
+        if (tohighindexptr != -1) tohighindexptr = (cachecount -1) - tohighindexptr
+        if (fromhighindexptr != -1) fromhighindexptr = (cachecount -1) - fromhighindexptr
+
+        console.log('fromlowindexptr, fromhighindexptr, tolowindexptr, tohighindexptr, orderedindexlist\n',
+            fromlowindexptr, fromhighindexptr, tolowindexptr, tohighindexptr, orderedindexlist)
 
         // ---------------- capture index data to move ----------------
 
         let processtomoveList
-        if ((fromindexptr == -1) && (fromhighindexptr == -1)) { // scope is out of view
+        if ((fromlowindexptr == -1) && (fromhighindexptr == -1)) { // scope is out of view
 
             processtomoveList = []
 
         } else if (fromhighindexptr == -1) { // scope is partially in view
 
-            processtomoveList = orderedindexlist.slice(fromindexptr)
+            processtomoveList = orderedindexlist.slice(fromlowindexptr)
 
         } else { // scope is entirely in view
 
-            processtomoveList = orderedindexlist.slice(fromindexptr, fromhighindexptr + 1)
+            processtomoveList = orderedindexlist.slice(fromlowindexptr, fromhighindexptr + 1)
 
         }
 
@@ -555,17 +571,17 @@ export class CacheHandler {
         let processtoshiftList
         if (displacedirection == 1) { // block is moving down, shift is up; toindex < fromindex
 
-            if ((toindexptr == -1) && (fromindexptr == -1)) {
+            if ((tolowindexptr == -1) && (fromlowindexptr == -1)) {
 
                 processtoshiftList = []
 
-            } else if (fromindexptr == -1) {
+            } else if (fromlowindexptr == -1) {
 
-                processtoshiftList = orderedindexlist.slice(toindexptr)
+                processtoshiftList = orderedindexlist.slice(tolowindexptr)
 
             } else {
 
-                processtoshiftList = orderedindexlist.slice(toindexptr, fromindexptr)
+                processtoshiftList = orderedindexlist.slice(tolowindexptr, fromlowindexptr)
 
             }
 
