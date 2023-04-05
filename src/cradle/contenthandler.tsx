@@ -889,7 +889,7 @@ export default class ContentHandler {
     }
 
     // supports moveIndex and insertRemoveIndex, updates cradle contiguous items from startIndex or start of cradle
-    public synchronizeCradleItemIDs(updatedIndexList) {
+    public synchronizeCradleItemIDsToCache(updatedIndexList) {
 
         if (updatedIndexList.length == 0) return
 
@@ -904,7 +904,7 @@ export default class ContentHandler {
         if (firstIndex < lowSpan) firstIndex = lowSpan
 
         const lowPtr = firstIndex - lowSpan
-        // console.log('==> contenthandler.synchronizeCradleItemIDs: updateIndexList, firstIndex, lowSpan, lowPtr', 
+        // console.log('==> contenthandler.synchronizeCradleItemIDsToCache: updateIndexList, firstIndex, lowSpan, lowPtr', 
         //     updatedIndexList, firstIndex, lowSpan, lowPtr)
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
@@ -914,12 +914,11 @@ export default class ContentHandler {
 
         const highPtr = cradleModelComponents.length - 1
 
-        console.log('==>synchronizeCradleItemIDs: lowSpan, highSpan, cradleModelComponents',lowSpan, highSpan, cradleModelComponents)
+        console.log('==>synchronizeCradleItemIDsToCache: lowSpan, highSpan, cradleModelComponents',lowSpan, highSpan, cradleModelComponents)
 
         function processcomponentFn(component, i, componentarray) {
 
-            console.log('processcomponentFn: i',
-                i, componentarray)
+            console.log('processcomponentFn: i', i)
 
             const index = component.props.index
 

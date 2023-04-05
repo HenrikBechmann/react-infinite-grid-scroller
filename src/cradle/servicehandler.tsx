@@ -548,80 +548,83 @@ export default class ServiceHandler {
 
     // move must be entirely within list bounds
     // returns list of processed indexes
-    public moveIndex = (toindex, fromindex, highrange = null) => {
+    public moveIndex = (tolowindex, fromlowindex, fromhighindex = null) => {
 
         // ------------ confirm validity of arguments -------------
 
-        const isToindexInvalid = (!isInteger(toindex) || !minValue(toindex, 0))
-        const isFromindexInvalid = (!isInteger(fromindex) || !minValue(fromindex, 0))
+        const isToindexInvalid = (!isInteger(tolowindex) || !minValue(tolowindex, 0))
+        const isFromindexInvalid = (!isInteger(fromlowindex) || !minValue(fromlowindex, 0))
         let isHighrangeInvalid = false
 
         if ((!isFromindexInvalid)) {
-            if (!isBlank(highrange)) {
-                isHighrangeInvalid = !minValue(highrange, fromindex)
+            if (!isBlank(fromhighindex)) {
+                isHighrangeInvalid = !minValue(fromhighindex, fromlowindex)
             } else {
-                highrange = fromindex
+                fromhighindex = fromlowindex
             }
         }
 
 
-        toindex = +toindex
-        fromindex = +fromindex
-        highrange = +highrange
+        tolowindex = +tolowindex
+        fromlowindex = +fromlowindex
+        fromhighindex = +fromhighindex
 
+        // TODO return error array instead
         if (isToindexInvalid || isFromindexInvalid || isHighrangeInvalid) {
-            console.log('RIGS ERROR moveIndex(toindex, fromindex, highrange)')
-            isToindexInvalid && console.log(toindex, errorMessages.moveTo)
-            isFromindexInvalid && console.log(fromindex, errorMessages.moveFrom)
-            isHighrangeInvalid && console.log(highrange, errorMessages.moveRange)
-            return null
+            console.log('RIGS ERROR moveIndex(toindex, fromindex, fromhighrange)')
+            isToindexInvalid && console.log(tolowindex, errorMessages.moveTo)
+            isFromindexInvalid && console.log(fromlowindex, errorMessages.moveFrom)
+            isHighrangeInvalid && console.log(fromhighindex, errorMessages.moveRange)
+            return []
         }
 
-        // ------------- define parameters ---------------
+        tolowindex = Math.max(0,tolowindex)
+        fromlowindex = Math.max(0,fromlowindex)
+        fromhighindex = Math.max(0,fromhighindex)
+
+        const fromspan = fromhighindex - fromlowindex + 1
+
+        let tohighindex = tolowindex + fromspan - 1
+
+        // ------------- coerce parameters to list bounds ---------------
 
         const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
 
         // keep within current list size
         const listhighindex = listsize - 1
 
-        toindex = 
-            (toindex > listhighindex + 1)?
-                listhighindex:
-                toindex
+        if (tohighindex > listhighindex) {
 
-        fromindex = 
-            (fromindex > listhighindex)?
-                listhighindex:
-                fromindex
+            const diff = tohighindex - listhighindex
+            tohighindex = Math.max(0,tohighindex - diff)
+            tolowindex = Math.max(0,tolowindex - diff)
 
-        highrange = 
-            (highrange > listhighindex)?
-                listhighindex:
-                highrange
+        }
 
-        // highrange must be >= fromindex
-        highrange = 
-            (highrange >= fromindex)?
-                highrange:
-                fromindex
+        if (fromhighindex > listhighindex) {
 
-        const fromhighrange = highrange // semantics
+            const diff = fromhighindex - listhighindex
+            fromhighindex = Math.max(0,fromhighindex - diff)
+            fromlowindex = Math.max(0,fromlowindex - diff)
+
+        }
 
         // ---------- constrain parameters --------------
 
-        if (fromindex == toindex) return [] // nothing to do
+        // nothing to do; no displacement
+        if (fromlowindex == tolowindex) return [] 
 
         // ----------- perform cache and cradle operations -----------
 
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
 
-        const processedIndexList = 
-            cacheHandler.moveIndex(toindex, fromindex, fromhighrange)
+        const processedIndexList = // both displaced and moved indexes
+            cacheHandler.moveIndex(tolowindex, fromlowindex, fromhighindex)
 
         if (processedIndexList.length) {
 
-            contentHandler.synchronizeCradleItemIDs(processedIndexList)
+            contentHandler.synchronizeCradleItemIDsToCache(processedIndexList)
 
             const { content } = contentHandler
 
@@ -716,7 +719,7 @@ export default class ServiceHandler {
         // console.log('==> servicehandler.insertRemoveIndex: rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList',
         //     rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList)
 
-        contentHandler.synchronizeCradleItemIDs(shiftedList)
+        contentHandler.synchronizeCradleItemIDsToCache(shiftedList)
 
         if (increment == +1) contentHandler.createNewItemIDs(replaceList)
 
