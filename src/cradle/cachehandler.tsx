@@ -507,18 +507,18 @@ export class CacheHandler {
 
         // ----------- define parameters ---------------
 
-        const moveblockspan = fromhighindex - fromlowindex + 1,
-            moveshiftincrement = tolowindex - fromlowindex,
-            tohighindex = tolowindex + (moveblockspan - 1)
+        const moveblocksize = fromhighindex - fromlowindex + 1,
+            movedisplaceincrement = tolowindex - fromlowindex,
+            tohighindex = tolowindex + (moveblocksize - 1)
 
-        const displacedirection = 
-            (moveshiftincrement > 0)? // move up in list
-                -1: // shift down, make room for shiftingindex above
-                1   // shift up, make room for shiftingindex below
+        const movedirection = 
+            (movedisplaceincrement > 0)? // move block up in list
+                'up': // shift down, make room for shiftingindex above
+                'down'   // shift up, make room for shiftingindex below
 
         console.log('==> cacheHandler.moveIndex: \n\
-fromlowindex, fromhighindex, tolowindex, tohighindex, moveblockspan, moveshiftincrement\n',
-            fromlowindex, fromhighindex, tolowindex, tohighindex, moveblockspan, moveshiftincrement)
+fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, movedisplaceincrement, movedirection\n',
+            fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, movedisplaceincrement, movedirection)
 
         // ------------ find bounds of from and to blocks in cache -------------
 
@@ -569,7 +569,7 @@ fromlowindex, fromhighindex, tolowindex, tohighindex, moveblockspan, moveshiftin
         // ------------- get list of indexes to shift out of the way ---------------
         
         let processtoshiftList
-        if (displacedirection == 1) { // block is moving down, shift is up; toindex < fromindex
+        if (movedirection == 'down') { // block is moving down, shift is up; toindex < fromindex
 
             if ((tolowindexptr == -1) && (fromlowindexptr == -1)) {
 
@@ -602,7 +602,7 @@ fromlowindex, fromhighindex, tolowindex, tohighindex, moveblockspan, moveshiftin
             }
         }
 
-        if (displacedirection == 1) processtoshiftList.reverse()
+        if (movedirection == 'down') processtoshiftList.reverse()
 
         // -------------- move indexes out of the way --------------
 
@@ -613,9 +613,9 @@ fromlowindex, fromhighindex, tolowindex, tohighindex, moveblockspan, moveshiftin
             const itemID = indexToItemIDMap.get(index)
 
             const newIndex = 
-                (displacedirection == -1)?
-                    index - moveblockspan:
-                    index + moveblockspan
+                (movedirection == 'up')?
+                    index - moveblocksize:
+                    index + moveblocksize
 
             indexToItemIDMap.set(newIndex,itemID)
             metadataMap.get(itemID).index = newIndex
@@ -629,7 +629,7 @@ fromlowindex, fromhighindex, tolowindex, tohighindex, moveblockspan, moveshiftin
 
         const processedmoveList = []
         const processmoveindexFn = (itemID, index) => {
-            const newIndex = index + moveshiftincrement // swap
+            const newIndex = index + movedisplaceincrement // swap
 
             indexToItemIDMap.set(newIndex, itemID)
             metadataMap.get(itemID).index = newIndex
