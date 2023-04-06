@@ -644,7 +644,7 @@ fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, moveincreme
         // -----------return list of processed indexes to caller --------
         // for synchrnization with cradle cellFrames
 
-        const processedIndexes = [...processeddisplaceList,...processedmoveList]
+        const processedIndexes = [...processeddisplaceList,...processedmoveList].sort((a,b)=>a-b)
 
         return processedIndexes
 

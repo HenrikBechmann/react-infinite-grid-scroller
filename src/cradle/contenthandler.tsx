@@ -894,6 +894,8 @@ export default class ContentHandler {
         if (updatedIndexList.length == 0) return
 
         const startIndex = updatedIndexList[0]
+        const endIndex = updatedIndexList.at(-1)
+        const updatedSpan = endIndex - startIndex + 1
 
         const [lowSpan, highSpan] = this.indexSpan
 
@@ -912,9 +914,10 @@ export default class ContentHandler {
 
         const { cradleModelComponents } = this.content
 
-        const highPtr = cradleModelComponents.length - 1
+        const highPtr = Math.min(cradleModelComponents.length - 1,lowPtr + updatedSpan - 1)
 
-        console.log('==>synchronizeCradleItemIDsToCache: lowSpan, highSpan, cradleModelComponents',lowSpan, highSpan, cradleModelComponents)
+        console.log('==>synchronizeCradleItemIDsToCache: lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents',
+            lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents)
 
         function processcomponentFn(component, i, componentarray) {
 
