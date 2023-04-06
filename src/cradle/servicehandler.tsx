@@ -527,7 +527,7 @@ export default class ServiceHandler {
 
         cacheHandler.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList.concat(partitionItemsToReplaceList)
 
-        stateHandler.setCradleState('applycellframechanges')
+        stateHandler.setCradleState('applyremapchanges')
 
         // ---------- returns for user information --------------------
 
@@ -631,7 +631,7 @@ export default class ServiceHandler {
             content.headModelComponents = content.cradleModelComponents.slice(0,content.headModelComponents.length)
             content.tailModelComponents = content.cradleModelComponents.slice(content.headModelComponents.length)
 
-            stateHandler.setCradleState('applycellframechanges')
+            stateHandler.setCradleState('applymovechanges')
             
         }
 
@@ -728,7 +728,7 @@ export default class ServiceHandler {
         content.headModelComponents = content.cradleModelComponents.slice(0,content.headModelComponents.length)
         content.tailModelComponents = content.cradleModelComponents.slice(content.headModelComponents.length)
 
-        stateHandler.setCradleState('applycellframechanges')
+        stateHandler.setCradleState('applyinsertremovechanges')
 
         const changecount = rangeincrement // semantics
         const newlistsize = listsize + changecount 

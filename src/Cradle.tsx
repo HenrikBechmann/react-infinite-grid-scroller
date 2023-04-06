@@ -782,14 +782,13 @@ const Cradle = ({
 
         if (isCachedRef.current) return
 
-        console.log('reconfiguring with listsize', listsize)
+        // console.log('reconfiguring with listsize', listsize)
 
         interruptHandler.pauseInterrupts()
 
         setCradleState('reconfigure')
 
     },[
-        // listsize, // TODO: commented out for debug only!!
         cellHeight,
         cellWidth,
         gap,
@@ -797,6 +796,22 @@ const Cradle = ({
         triggerlineOffset,
         layout,
         runwaySize,
+    ])
+
+    useEffect(()=>{
+
+        if (cradleStateRef.current == 'setup') return
+
+        if (isCachedRef.current) return
+
+        console.log('reconfiguring with listsize', listsize)
+
+        interruptHandler.pauseInterrupts()
+
+        setCradleState('reconfigure')
+
+    },[
+        listsize, 
     ])
 
     // a new getItem function implies the need to reload
@@ -1282,7 +1297,9 @@ const Cradle = ({
             // ----------------[ user requests ]-------------
 
             // support for various host service requests; syncs cradle content with cache changes
-            case 'applycellframechanges': { // user intervention
+            case 'applyremapchanges':
+            case 'applyinsertremovechanges':
+            case 'applymovechanges': {
 
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
