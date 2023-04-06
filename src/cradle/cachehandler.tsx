@@ -508,22 +508,22 @@ export class CacheHandler {
         // ----------- define parameters ---------------
 
         const moveblocksize = fromhighindex - fromlowindex + 1,
-            movedisplaceincrement = tolowindex - fromlowindex,
+            moveincrement = tolowindex - fromlowindex,
             tohighindex = tolowindex + (moveblocksize - 1)
 
         const movedirection = 
-            (movedisplaceincrement > 0)? // move block up in list
+            (moveincrement > 0)? // move block up in list
                 'up': // shift down, make room for shiftingindex above
                 'down'   // shift up, make room for shiftingindex below
 
         console.log('==> cacheHandler.moveIndex: \n\
-fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, movedisplaceincrement, movedirection\n',
-            fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, movedisplaceincrement, movedirection)
+fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, moveincrement, movedirection\n',
+            fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, moveincrement, movedirection)
 
         // ------------ find bounds of from and to blocks in cache -------------
 
-        const orderedindexlist = Array.from(indexToItemIDMap.keys())
-        orderedindexlist.sort((a,b)=>a-b)
+        const orderedindexlist = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b)
+
         const reverseorderedindexlist = orderedindexlist.slice().reverse()
 
         const tolowindexptr = orderedindexlist.findIndex(value => value >= tolowindex),
@@ -533,27 +533,29 @@ fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, movedisplac
             fromhighindexptr = reverseorderedindexlist.findIndex(value => value <= fromhighindex)
 
         // get required inverse
-        const cachecount = orderedindexlist.length
-        if (tohighindexptr != -1) tohighindexptr = (cachecount -1) - tohighindexptr
-        if (fromhighindexptr != -1) fromhighindexptr = (cachecount -1) - fromhighindexptr
+        {
+            const cachelistcount = orderedindexlist.length
+            if (tohighindexptr != -1) tohighindexptr = (cachelistcount -1) - tohighindexptr
+            if (fromhighindexptr != -1) fromhighindexptr = (cachelistcount -1) - fromhighindexptr
+        }
 
         console.log('fromlowindexptr, fromhighindexptr, tolowindexptr, tohighindexptr, orderedindexlist\n',
             fromlowindexptr, fromhighindexptr, tolowindexptr, tohighindexptr, orderedindexlist)
 
         // ---------------- capture index data to move ----------------
 
-        let processtomoveList
+        let listtoprocessformove
         if ((fromlowindexptr == -1) && (fromhighindexptr == -1)) { // scope is out of view
 
-            processtomoveList = []
+            listtoprocessformove = []
 
         } else if (fromhighindexptr == -1) { // scope is partially in view
 
-            processtomoveList = orderedindexlist.slice(fromlowindexptr)
+            listtoprocessformove = orderedindexlist.slice(fromlowindexptr)
 
         } else { // scope is entirely in view
 
-            processtomoveList = orderedindexlist.slice(fromlowindexptr, fromhighindexptr + 1)
+            listtoprocessformove = orderedindexlist.slice(fromlowindexptr, fromhighindexptr + 1)
 
         }
 
@@ -564,24 +566,24 @@ fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, movedisplac
 
         }
 
-        processtomoveList.forEach(capturemoveindexFn)
+        listtoprocessformove.forEach(capturemoveindexFn)
 
         // ------------- get list of indexes to shift out of the way ---------------
         
-        let processtoshiftList
+        let listtoprocessfordisplace
         if (movedirection == 'down') { // block is moving down, shift is up; toindex < fromindex
 
             if ((tolowindexptr == -1) && (fromlowindexptr == -1)) {
 
-                processtoshiftList = []
+                listtoprocessfordisplace = []
 
             } else if (fromlowindexptr == -1) {
 
-                processtoshiftList = orderedindexlist.slice(tolowindexptr)
+                listtoprocessfordisplace = orderedindexlist.slice(tolowindexptr)
 
             } else {
 
-                processtoshiftList = orderedindexlist.slice(tolowindexptr, fromlowindexptr)
+                listtoprocessfordisplace = orderedindexlist.slice(tolowindexptr, fromlowindexptr)
 
             }
 
@@ -589,26 +591,26 @@ fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, movedisplac
 
             if (tohighindexptr == -1 && fromhighindexptr == -1) {
 
-                processtoshiftList = []
+                listtoprocessfordisplace = []
 
             } else if (tohighindexptr == -1) {
 
-                processtoshiftList = orderedindexlist.slice(fromhighindexptr + 1)
+                listtoprocessfordisplace = orderedindexlist.slice(fromhighindexptr + 1)
 
             } else {
 
-                processtoshiftList = orderedindexlist.slice(fromhighindexptr + 1, tohighindexptr + 1)
+                listtoprocessfordisplace = orderedindexlist.slice(fromhighindexptr + 1, tohighindexptr + 1)
 
             }
         }
 
-        if (movedirection == 'down') processtoshiftList.reverse()
+        if (movedirection == 'down') listtoprocessfordisplace.reverse()
 
         // -------------- move indexes out of the way --------------
 
-        const processedshiftList = []
+        const processeddisplaceList = []
 
-        const processshiftindexFn = (index) => {
+        const processsdisplaceindexFn = (index) => {
 
             const itemID = indexToItemIDMap.get(index)
 
@@ -619,17 +621,17 @@ fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, movedisplac
 
             indexToItemIDMap.set(newIndex,itemID)
             metadataMap.get(itemID).index = newIndex
-            processedshiftList.push(newIndex)
+            processeddisplaceList.push(newIndex)
 
         }
 
-        processtoshiftList.forEach(processshiftindexFn)
+        listtoprocessfordisplace.forEach(processsdisplaceindexFn)
 
         // ------------ replace shifted index space with moved indexes ----------
 
         const processedmoveList = []
         const processmoveindexFn = (itemID, index) => {
-            const newIndex = index + movedisplaceincrement // swap
+            const newIndex = index + moveincrement // swap
 
             indexToItemIDMap.set(newIndex, itemID)
             metadataMap.get(itemID).index = newIndex
@@ -642,7 +644,7 @@ fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, movedisplac
         // -----------return list of processed indexes to caller --------
         // for synchrnization with cradle cellFrames
 
-        const processedIndexes = [...processedshiftList,...processedmoveList]
+        const processedIndexes = [...processeddisplaceList,...processedmoveList]
 
         return processedIndexes
 
