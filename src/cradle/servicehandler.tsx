@@ -725,18 +725,30 @@ export default class ServiceHandler {
 
         const { content } = contentHandler
 
-        content.headModelComponents = content.cradleModelComponents.slice(0,content.headModelComponents.length)
-        content.tailModelComponents = content.cradleModelComponents.slice(content.headModelComponents.length)
+        const requestedSet = cacheHandler.cacheProps.requestedSet
 
-        stateHandler.setCradleState('applyinsertremovechanges')
+        // wait until new cache entries are assembled
+        const timeout = setInterval(() => {
 
-        const changecount = rangeincrement // semantics
-        const newlistsize = listsize + changecount 
+            if(!requestedSet.size) { // finished collexting new cache entries
 
-        console.log('changing list size: listsize, changecount, newlistsize',listsize, changecount, newlistsize)
+                clearInterval(timeout); 
 
-        // TODO wait for pending updates to complete, if newlistsize encroaches on cradle
-        this.setListsize(newlistsize)
+                content.headModelComponents = content.cradleModelComponents.slice(0,content.headModelComponents.length)
+                content.tailModelComponents = content.cradleModelComponents.slice(content.headModelComponents.length)
+
+                stateHandler.setCradleState('applyinsertremovechanges')
+
+                const changecount = rangeincrement // semantics
+                const newlistsize = listsize + changecount 
+
+                console.log('changing list size: listsize, changecount, newlistsize',listsize, changecount, newlistsize)
+
+                // TODO wait for pending updates to complete, if newlistsize encroaches on cradle
+                this.setListsize(newlistsize)
+
+            }
+        }, 100)
 
         const replacedList = replaceList // semantics
 

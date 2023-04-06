@@ -804,11 +804,15 @@ const Cradle = ({
 
         if (isCachedRef.current) return
 
+        const [lowIndex,highIndex] = contentHandler.indexSpan
+
+        if (highIndex < (listsize - 1)) return // change is beyond cradle
+
         console.log('reconfiguring with listsize', listsize)
 
         interruptHandler.pauseInterrupts()
 
-        setCradleState('reconfigure')
+        setCradleState('reconfigureforlistsize')
 
     },[
         listsize, 
@@ -1076,6 +1080,7 @@ const Cradle = ({
             case 'finishviewportresize':
             case 'pivot':
             case 'reconfigure':
+            case 'reconfigureforlistsize':
             case 'reload': {
 
                 if (isCachedRef.current) {
