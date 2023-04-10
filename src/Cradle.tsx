@@ -813,8 +813,8 @@ const Cradle = ({
         const [lowIndex,highIndex] = contentHandler.indexSpan
         const measuredCradleItemCount = highIndex - lowIndex + 1
 
-        console.log('viewportRowcount, crosscount, runwaySize, measuredCradleItemCount, calculatedCradleItemcount, highIndex, listsize, cradleInternalPropertiesRef, cradleInheritedPropertiesRef',
-            viewportRowcount, crosscount, runwaySize, measuredCradleItemCount, calculatedCradleItemcount, highIndex, listsize, cradleInternalPropertiesRef, cradleInheritedPropertiesRef)
+        // console.log('viewportRowcount, crosscount, runwaySize, measuredCradleItemCount, calculatedCradleItemcount, highIndex, listsize, cradleInternalPropertiesRef, cradleInheritedPropertiesRef',
+        //     viewportRowcount, crosscount, runwaySize, measuredCradleItemCount, calculatedCradleItemcount, highIndex, listsize, cradleInternalPropertiesRef, cradleInheritedPropertiesRef)
 
         if ((measuredCradleItemCount < calculatedCradleItemcount) || 
             !(highIndex < (listsize - 1))) { // change is not beyond cradle
