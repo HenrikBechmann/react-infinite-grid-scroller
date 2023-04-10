@@ -366,6 +366,7 @@ const Cradle = ({
         // ...rest
         cache, cacheMax,
         startingIndex, 
+        runwaySize,
         getItem, 
         placeholder, placeholderMessages, usePlaceholder,
         triggerlineOffset,
@@ -804,15 +805,25 @@ const Cradle = ({
 
         if (isCachedRef.current) return
 
+        const { viewportRowcount, crosscount } = cradleInternalPropertiesRef.current
+        const { runwaySize } =  cradleInheritedPropertiesRef.current
+        const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
+        const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
+
         const [lowIndex,highIndex] = contentHandler.indexSpan
+        const measuredCradleItemCount = highIndex - lowIndex + 1
 
-        if (highIndex < (listsize - 1)) return // change is beyond cradle
+        console.log('viewportRowcount, crosscount, runwaySize, measuredCradleItemCount, calculatedCradleItemcount, highIndex, listsize, cradleInternalPropertiesRef, cradleInheritedPropertiesRef',
+            viewportRowcount, crosscount, runwaySize, measuredCradleItemCount, calculatedCradleItemcount, highIndex, listsize, cradleInternalPropertiesRef, cradleInheritedPropertiesRef)
 
-        console.log('reconfiguring with listsize', listsize)
+        if ((measuredCradleItemCount < calculatedCradleItemcount) || 
+            !(highIndex < (listsize - 1))) { // change is not beyond cradle
 
-        interruptHandler.pauseInterrupts()
+            interruptHandler.pauseInterrupts()
 
-        setCradleState('reconfigureforlistsize')
+            setCradleState('reconfigureforlistsize')
+
+        }
 
     },[
         listsize, 
