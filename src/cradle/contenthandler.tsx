@@ -916,12 +916,12 @@ export default class ContentHandler {
 
         const highPtr = Math.min(cradleModelComponents.length - 1,lowPtr + updatedSpan - 1)
 
-        console.log('==>synchronizeCradleItemIDsToCache: lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents',
-            lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents)
+        // console.log('==>synchronizeCradleItemIDsToCache: lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents',
+        //     lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents)
 
         function processcomponentFn(component, i, componentarray) {
 
-            console.log('processcomponentFn: i', i)
+            // console.log('processcomponentFn: i', i)
 
             const index = component.props.index
 

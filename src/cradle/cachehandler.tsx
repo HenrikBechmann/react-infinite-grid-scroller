@@ -516,9 +516,9 @@ export class CacheHandler {
                 'up': // shift down, make room for shiftingindex above
                 'down'   // shift up, make room for shiftingindex below
 
-        console.log('==> cacheHandler.moveIndex: \n\
-fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, moveincrement, movedirection\n',
-            fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, moveincrement, movedirection)
+//         console.log('==> cacheHandler.moveIndex: \n\
+// fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, moveincrement, movedirection\n',
+//             fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, moveincrement, movedirection)
 
         // ------------ find bounds of from and to blocks in cache -------------
 
@@ -539,8 +539,8 @@ fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, moveincreme
             if (fromhighindexptr != -1) fromhighindexptr = (cachelistcount -1) - fromhighindexptr
         }
 
-        console.log('fromlowindexptr, fromhighindexptr, tolowindexptr, tohighindexptr, orderedindexlist\n',
-            fromlowindexptr, fromhighindexptr, tolowindexptr, tohighindexptr, orderedindexlist)
+        // console.log('fromlowindexptr, fromhighindexptr, tolowindexptr, tohighindexptr, orderedindexlist\n',
+        //     fromlowindexptr, fromhighindexptr, tolowindexptr, tohighindexptr, orderedindexlist)
 
         // ---------------- capture index data to move ----------------
 
