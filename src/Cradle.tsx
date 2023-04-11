@@ -819,6 +819,8 @@ const Cradle = ({
         if ((measuredCradleItemCount < calculatedCradleItemcount) || 
             !(highIndex < (listsize - 1))) { // change is not beyond cradle
 
+            console.log('reconfiguring list size',listsize)
+
             interruptHandler.pauseInterrupts()
 
             setCradleState('reconfigureforlistsize')
