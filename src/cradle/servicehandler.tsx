@@ -730,8 +730,6 @@ export default class ServiceHandler {
         // wait until new cache entries are assembled
         const timeout = setInterval(() => {
 
-            console.log('inside setInterval',requestedSet)
-
             if(!requestedSet.size) { // finished collecting new cache entries
 
                 clearInterval(timeout); 

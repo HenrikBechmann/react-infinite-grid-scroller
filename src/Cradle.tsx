@@ -1328,7 +1328,7 @@ const Cradle = ({
 
                     for (const item of portalPartitionItemsForDeleteList) {
 
-                        console.log('==> Cradle.applycellframechanges removing itemID from cache', item.itemID)
+                        // console.log('==> Cradle.applycellframechanges removing itemID from cache', item.itemID)
 
                         cacheHandler.removePartitionPortal(item.partitionID, item.itemID)
                         
