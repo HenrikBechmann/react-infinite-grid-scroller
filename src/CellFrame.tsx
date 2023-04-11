@@ -395,6 +395,8 @@ const CellFrame = ({
 
                             } else { // null or undefined; handle non-component value
 
+                                cacheHandler.unregisterPendingPortal(index) // create portal failed
+
                                 if (usercontent === null) {
 
                                     // truncate listsize at this index
