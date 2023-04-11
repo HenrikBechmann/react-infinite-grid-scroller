@@ -816,10 +816,10 @@ const Cradle = ({
         // console.log('viewportRowcount, crosscount, runwaySize, measuredCradleItemCount, calculatedCradleItemcount, highIndex, listsize, cradleInternalPropertiesRef, cradleInheritedPropertiesRef',
         //     viewportRowcount, crosscount, runwaySize, measuredCradleItemCount, calculatedCradleItemcount, highIndex, listsize, cradleInternalPropertiesRef, cradleInheritedPropertiesRef)
 
-        if ((measuredCradleItemCount < calculatedCradleItemcount) || 
+        if ((measuredCradleItemCount < calculatedCradleItemcount) || // sub-viewport visible listcount
             !(highIndex < (listsize - 1))) { // change is not beyond cradle
 
-            console.log('reconfiguring list size',listsize)
+            console.log('reconfiguring for list size',listsize)
 
             interruptHandler.pauseInterrupts()
 
