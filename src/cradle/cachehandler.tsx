@@ -879,6 +879,17 @@ export class CacheHandler {
 
             }
 
+            // abandoned indexes from remove process
+            const indexesToDeleteList = cacheToShiftIndexesList.filter(
+                index => !cacheIndexesAfterShiftedList.includes(index))
+
+            console.log('indexesToDeleteList',indexesToDeleteList)
+            for (const index of indexesToDeleteList) {
+
+                indexToItemIDMap.delete(index)
+
+            }
+
         }
 
         if (isInserting) cacheIndexesAfterShiftedList.reverse() // return to ascending order

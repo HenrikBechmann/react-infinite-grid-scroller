@@ -914,7 +914,7 @@ export default class ContentHandler {
 
         const { cradleModelComponents } = this.content
 
-        const highPtr = Math.min(cradleModelComponents.length - 1,lowPtr + updatedSpan - 1)
+        const highPtr = cradleModelComponents.length - 1 // Math.min(cradleModelComponents.length - 1,lowPtr + updatedSpan - 1)
 
         console.log('==>synchronizeCradleItemIDsToCache: lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents',
             lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents)
