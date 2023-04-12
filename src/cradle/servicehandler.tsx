@@ -716,8 +716,8 @@ export default class ServiceHandler {
         // partitionItems to delete with applycellframechanges
         cacheHandler.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList
 
-        // console.log('==> servicehandler.insertRemoveIndex: rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList',
-        //     rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList)
+        console.log('==> servicehandler.insertRemoveIndex: rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList',
+            rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList)
 
         contentHandler.synchronizeCradleItemIDsToCache(shiftedList)
 

@@ -668,7 +668,7 @@ export class CacheHandler {
 
         // high range is the highest index number of the insert/remove range
         let highrangeindex = highrange
-        const lowrangeindex = index // semantics - name symmetry
+        let lowrangeindex = index // semantics - name symmetry
 
         if (isRemoving) {
 
@@ -683,7 +683,15 @@ export class CacheHandler {
         } else { // isInserting
 
             // addition can at most start at the next lowrangeindex above the current list; aka append
-            if (lowrangeindex > listsize) return emptyreturn
+            if (lowrangeindex > listsize) {
+
+                const diff = lowrangeindex - listsize
+                lowrangeindex -= diff
+                highrangeindex -= diff
+
+                // return emptyreturn
+
+            }
 
         }
 
@@ -693,30 +701,37 @@ export class CacheHandler {
         // range increment adds sign to rangecount to indicate add/remove
         const rangeincrement = rangecount * increment
 
-        let shiftedStartIndex
+        let toShiftStartIndex // start of indexes to shift up (insert) or down (remove)
         if (isInserting) {
-            shiftedStartIndex = highrangeindex + 1
+            toShiftStartIndex = lowrangeindex
         } else { // isRemoving
-            shiftedStartIndex = lowrangeindex
+            toShiftStartIndex = highrangeindex + 1
         }
 
-        // console.log('==> 1. cacheHandler.insertRemoveIndex: lowrangeindex, highrangeindex, rangecount, rangeincrement, shiftedStartIndex',
-        //     lowrangeindex, highrangeindex, rangecount, rangeincrement, shiftedStartIndex)
+        console.log('==> 1. cacheHandler.insertRemoveIndex: lowrangeindex, highrangeindex, rangecount, rangeincrement, toShiftStartIndex',
+            lowrangeindex, highrangeindex, rangecount, rangeincrement, toShiftStartIndex)
 
         // ---------- define range boundaries within ordered cache index list ------------
 
         const orderedCacheIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b) // ascending order
 
-        // lowCacheRangePtr...
+        // obtain starptr for indexes to shift
+        const toShiftStartCachePtr = orderedCacheIndexList.findIndex(value => {
+
+            return (value >= toShiftStartIndex)
+
+        })
+
+        // obtain lowCacheRangePtr...
         const lowCacheRangePtr = orderedCacheIndexList.findIndex(value => {
 
             return (value >= lowrangeindex) && (value <= highrangeindex)
 
         })
 
-        // highCacheRangePtr...
-        const reverseIndexList = Array.from(orderedCacheIndexList).reverse()
-        let highCacheRangePtr = reverseIndexList.findIndex(value=> {
+        // obtain highCacheRangePtr...
+        const reverseCacheIndexList = Array.from(orderedCacheIndexList).reverse()
+        let highCacheRangePtr = reverseCacheIndexList.findIndex(value=> {
 
             return (value <= highrangeindex) && (value >= lowrangeindex)
 
@@ -729,8 +744,8 @@ export class CacheHandler {
 
         }
 
-        // console.log('2. lowCacheRangePtr, highCacheRangePtr, orderedCacheIndexList',
-        //     lowCacheRangePtr, highCacheRangePtr, orderedCacheIndexList)
+        console.log('2. lowCacheRangePtr, highCacheRangePtr, toShiftStartCachePtr, orderedCacheIndexList',
+            lowCacheRangePtr, highCacheRangePtr, toShiftStartCachePtr, orderedCacheIndexList)
 
         // ----------- isolate index range list and shift list ------------
 
@@ -755,7 +770,15 @@ export class CacheHandler {
 
             } else {
 
-                cacheToShiftIndexesList = []
+                if (toShiftStartCachePtr == -1) {
+
+                    cacheToShiftIndexesList = []
+
+                } else {
+
+                    cacheToShiftIndexesList = orderedCacheIndexList.slice(toShiftStartCachePtr)
+                    
+                }
 
             }
 
@@ -765,18 +788,26 @@ export class CacheHandler {
 
             if (isInserting) {
 
-                cacheToShiftIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr)
+                cacheToShiftIndexesList = orderedCacheIndexList.slice(toShiftStartCachePtr)
 
             } else {
 
-                cacheToShiftIndexesList = orderedCacheIndexList.slice(highCacheRangePtr + 1)
+                if (toShiftStartCachePtr == -1) {
+
+                    cacheToShiftIndexesList = []
+
+                } else {
+
+                    cacheToShiftIndexesList = orderedCacheIndexList.slice(toShiftStartCachePtr)
+
+                }
 
             }
 
         }
 
-        // console.log('3. cacheRangeIndexesList, cacheToShiftIndexesList',// cacheScopeIndexesList',
-        //     cacheRangeIndexesList, cacheToShiftIndexesList) //, cacheScopeIndexesList)
+        console.log('3. cacheRangeIndexesList, cacheToShiftIndexesList',// cacheScopeIndexesList',
+            cacheRangeIndexesList, cacheToShiftIndexesList) //, cacheScopeIndexesList)
 
         // ----------- list cache items to replace or remove -----------
 
@@ -803,7 +834,7 @@ export class CacheHandler {
 
         }
 
-        // console.log('4. cacheIndexesToReplaceList, cacheIndexesToRemoveList',cacheIndexesToReplaceList, cacheIndexesToRemoveList)
+        console.log('4. cacheIndexesToReplaceList, cacheIndexesToRemoveList',cacheIndexesToReplaceList, cacheIndexesToRemoveList)
 
         // ----------- conduct cache operations; capture list of shifted indexes ----------
 
@@ -852,8 +883,8 @@ export class CacheHandler {
 
         if (isInserting) cacheIndexesAfterShiftedList.reverse() // return to ascending order
 
-        // console.log('5. cacheIndexesAfterShiftedList, portalPartitionItemsForDeleteList',
-        //     cacheIndexesAfterShiftedList, portalPartitionItemsForDeleteList)
+        console.log('5. cacheIndexesAfterShiftedList, portalPartitionItemsForDeleteList',
+            cacheIndexesAfterShiftedList, portalPartitionItemsForDeleteList)
 
         // --------------- returns ---------------
 
