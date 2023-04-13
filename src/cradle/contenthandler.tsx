@@ -906,8 +906,8 @@ export default class ContentHandler {
         if (firstIndex < lowSpan) firstIndex = lowSpan
 
         const lowPtr = firstIndex - lowSpan
-        console.log('==> contenthandler.synchronizeCradleItemIDsToCache: updateIndexList, firstIndex, lowSpan, lowPtr', 
-            updatedIndexList, firstIndex, lowSpan, lowPtr)
+        // console.log('==> contenthandler.synchronizeCradleItemIDsToCache: updateIndexList, firstIndex, lowSpan, lowPtr', 
+        //     updatedIndexList, firstIndex, lowSpan, lowPtr)
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
         const { indexToItemIDMap } = cacheHandler.cacheProps
@@ -918,12 +918,12 @@ export default class ContentHandler {
             cradleModelComponents.length - 1:
             Math.min(cradleModelComponents.length - 1,lowPtr + updatedSpan - 1)
 
-        console.log('==>synchronizeCradleItemIDsToCache: lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents',
-            lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents)
+        // console.log('==>synchronizeCradleItemIDsToCache: lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents',
+        //     lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents)
 
         function processcomponentFn(component, i, componentarray) {
 
-            console.log('processcomponentFn: i', i)
+            // console.log('processcomponentFn: i', i)
 
             const index = component.props.index
 
@@ -933,7 +933,7 @@ export default class ContentHandler {
 
             if (itemID === undefined) {
 
-                console.log('getting newItemID for missing update itemID', index)
+                // console.log('getting newItemID for missing update itemID', index)
                 const newItemID = cacheHandler.getNewItemID()
                 componentarray[i] = React.cloneElement(component, {itemID:newItemID})
                 return
@@ -944,19 +944,19 @@ export default class ContentHandler {
 
             const ptr = updatedIndexList.indexOf(index)
 
-            console.log('index, ptr', index, ptr)
+            // console.log('index, ptr', index, ptr)
 
             if (ptr != -1) {
 
                 if (itemID == oldItemID) return
 
-                console.log('changed itemID', itemID)
+                // console.log('changed itemID', itemID)
 
                 componentarray[i] = React.cloneElement(component, {itemID})
 
             } else {
 
-                console.log('getting newItemID for missing update index', index)
+                // console.log('getting newItemID for missing update index', index)
                 const newItemID = cacheHandler.getNewItemID()
                 componentarray[i] = React.cloneElement(component, {itemID:newItemID})
 
