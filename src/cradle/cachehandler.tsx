@@ -1073,6 +1073,8 @@ export class CacheHandler {
         const { removePartitionPortal } = this
 
         const deleteList = []
+
+        console.log('index, indexToItemIDMap, metadataMap',index, indexToItemIDMap, metadataMap)
         for (const index of indexArray) {
 
             const itemID = indexToItemIDMap.get(index)

@@ -694,6 +694,8 @@ export default class ServiceHandler {
 
     }
 
+    newlistsize
+
     // shared logic. Returns lists of items changed, and items replaced (new items for insert)
     // this operation changes the listsize
     private insertRemoveIndex = (index, rangehighindex, increment) => {
@@ -737,15 +739,10 @@ export default class ServiceHandler {
                 content.headModelComponents = content.cradleModelComponents.slice(0,content.headModelComponents.length)
                 content.tailModelComponents = content.cradleModelComponents.slice(content.headModelComponents.length)
 
-                stateHandler.setCradleState('applyinsertremovechanges')
-
                 const changecount = rangeincrement // semantics
-                const newlistsize = listsize + changecount 
+                this.newlistsize = listsize + changecount 
 
-                console.log('changing list size: listsize, changecount, newlistsize',listsize, changecount, newlistsize)
-
-                // TODO wait for pending updates to complete, if newlistsize encroaches on cradle
-                this.setListsize(newlistsize)
+                stateHandler.setCradleState('applyinsertremovechanges')
 
             }
         }, 100)

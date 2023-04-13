@@ -825,6 +825,10 @@ const Cradle = ({
 
             setCradleState('reconfigureforlistsize')
 
+        } else {
+
+            setCradleState('ready')
+
         }
 
     },[
@@ -1315,8 +1319,8 @@ const Cradle = ({
             // ----------------[ user requests ]-------------
 
             // support for various host service requests; syncs cradle content with cache changes
-            case 'applyremapchanges':
             case 'applyinsertremovechanges':
+            case 'applyremapchanges':
             case 'applymovechanges': {
 
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
@@ -1337,7 +1341,28 @@ const Cradle = ({
 
                 }
 
-                setCradleState('ready')
+                if (cradleState == 'applyinsertremovechanges') {
+
+                    setCradleState('changelistsizeafterinsertremove')
+
+                } else {
+
+                    setCradleState('ready')
+
+                }
+
+                break
+            }
+
+            case 'changelistsizeafterinsertremove': {
+
+                const newlistsize = serviceHandler.newlistsize
+                serviceHandler.newlistsize = null
+
+                console.log('changing list size: listsize, newlistsize',listsize, newlistsize)
+
+                // TODO wait for pending updates to complete, if newlistsize encroaches on cradle
+                serviceHandler.setListsize(newlistsize)
 
                 break
             }
