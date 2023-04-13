@@ -842,12 +842,18 @@ export class CacheHandler {
         if (isInserting) cacheToShiftIndexesList.reverse() 
 
         const cacheIndexesAfterShiftedList = []
+        const cacheIndexesTransferredSet = new Set()
 
         // modify index-to-itemid map, and metadata map, for index shifts
         const processIndexFn = index => {
 
             const itemID = indexToItemIDMap.get(index)
             const newIndex = index + rangeincrement
+
+            if (isRemoving) {
+                cacheIndexesTransferredSet.add(index)
+                cacheIndexesTransferredSet.delete(newIndex)
+            }
 
             indexToItemIDMap.set(newIndex, itemID)
             metadataMap.get(itemID).index = newIndex
@@ -880,11 +886,11 @@ export class CacheHandler {
             }
 
             // abandoned indexes from remove process
-            const indexesToDeleteList = cacheToShiftIndexesList.filter(
-                index => !cacheIndexesAfterShiftedList.includes(index))
+            const orphanedIndexesTransferredList = Array.from(cacheIndexesTransferredSet)
 
-            console.log('indexesToDeleteList',indexesToDeleteList)
-            for (const index of indexesToDeleteList) {
+            console.log('orphanedIndexesTransferredList',orphanedIndexesTransferredList)
+
+            for (const index of orphanedIndexesTransferredList) {
 
                 indexToItemIDMap.delete(index)
 

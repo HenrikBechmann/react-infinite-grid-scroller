@@ -889,7 +889,7 @@ export default class ContentHandler {
     }
 
     // supports moveIndex and insertRemoveIndex, updates cradle contiguous items from startIndex or start of cradle
-    public synchronizeCradleItemIDsToCache(updatedIndexList) {
+    public synchronizeCradleItemIDsToCache(updatedIndexList, isInsertRemove = 0) { // 0 = move
 
         if (updatedIndexList.length == 0) return
 
@@ -914,7 +914,9 @@ export default class ContentHandler {
 
         const { cradleModelComponents } = this.content
 
-        const highPtr = cradleModelComponents.length - 1 // Math.min(cradleModelComponents.length - 1,lowPtr + updatedSpan - 1)
+        const highPtr = isInsertRemove?
+            cradleModelComponents.length - 1:
+            Math.min(cradleModelComponents.length - 1,lowPtr + updatedSpan - 1)
 
         console.log('==>synchronizeCradleItemIDsToCache: lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents',
             lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents)

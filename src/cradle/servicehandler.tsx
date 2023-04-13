@@ -719,7 +719,7 @@ export default class ServiceHandler {
         console.log('==> servicehandler.insertRemoveIndex: rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList',
             rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList)
 
-        contentHandler.synchronizeCradleItemIDsToCache(shiftedList)
+        contentHandler.synchronizeCradleItemIDsToCache(shiftedList, increment) // non-zero communications isInsertRemove
 
         if (increment == +1) contentHandler.createNewItemIDs(replaceList)
 
