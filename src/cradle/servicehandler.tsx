@@ -710,7 +710,7 @@ export default class ServiceHandler {
 
         // const cradleIndexSpan = contentHandler.indexSpan
 
-        const [rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList] = 
+        const [rangeincrement, shiftedList, removedList, replaceList, portalPartitionItemsForDeleteList] = 
             cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize) //, cradleIndexSpan)
 
         if (rangeincrement === null) return [[],[]] // no action
@@ -749,7 +749,7 @@ export default class ServiceHandler {
 
         const replacedList = replaceList // semantics
 
-        return [shiftedList, replacedList]
+        return [shiftedList, replacedList, removedList]
 
     }
 
