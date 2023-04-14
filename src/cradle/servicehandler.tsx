@@ -713,7 +713,12 @@ export default class ServiceHandler {
         const [rangeincrement, shiftedList, removedList, replaceList, portalPartitionItemsForDeleteList] = 
             cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize) //, cradleIndexSpan)
 
-        if (rangeincrement === null) return [[],[]] // no action
+        if (rangeincrement === null) return [[],[],[]] // no action
+
+        const changecount = rangeincrement // semantics
+        const newlistsize = this.newlistsize = listsize + changecount
+
+        const replaceCradle = (contentHandler.indexSpan[1] >= (newlistsize - 1))
 
         // partitionItems to delete with applycellframechanges
         cacheHandler.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList
@@ -721,31 +726,37 @@ export default class ServiceHandler {
         // console.log('==> servicehandler.insertRemoveIndex: rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList',
         //     rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList)
 
-        contentHandler.synchronizeCradleItemIDsToCache(shiftedList, increment) // non-zero communications isInsertRemove
+        if (!replaceCradle) {
 
-        if (increment == +1) contentHandler.createNewItemIDs(replaceList)
+            contentHandler.synchronizeCradleItemIDsToCache(shiftedList, increment) // non-zero communications isInsertRemove
 
-        const { content } = contentHandler
+            if (increment == +1) contentHandler.createNewItemIDs(replaceList)
 
-        const requestedSet = cacheHandler.cacheProps.requestedSet
+            const { content } = contentHandler
 
-        // wait until new cache entries are assembled
-        const timeout = setInterval(() => {
+            const requestedSet = cacheHandler.cacheProps.requestedSet
 
-            if(!requestedSet.size) { // finished collecting new cache entries
+            // wait until new cache entries are assembled
+            const timeout = setInterval(() => {
 
-                clearInterval(timeout); 
+                if(!requestedSet.size) { // finished collecting new cache entries
 
-                content.headModelComponents = content.cradleModelComponents.slice(0,content.headModelComponents.length)
-                content.tailModelComponents = content.cradleModelComponents.slice(content.headModelComponents.length)
+                    clearInterval(timeout); 
 
-                const changecount = rangeincrement // semantics
-                this.newlistsize = listsize + changecount 
+                    content.headModelComponents = content.cradleModelComponents.slice(0,content.headModelComponents.length)
+                    content.tailModelComponents = content.cradleModelComponents.slice(content.headModelComponents.length)
 
-                stateHandler.setCradleState('applyinsertremovechanges')
+                    stateHandler.setCradleState('applyinsertremovechanges')
 
-            }
-        }, 100)
+                }
+            }, 100)
+
+        } else { // cradle is reset
+
+            stateHandler.setCradleState('channelcradleresetafterinsertremove')
+            // stateHandler.setCradleState('changelistsizeafterinsertremove')
+
+        }
 
         const replacedList = replaceList // semantics
 
