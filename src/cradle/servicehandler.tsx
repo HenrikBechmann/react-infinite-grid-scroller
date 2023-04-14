@@ -706,7 +706,10 @@ export default class ServiceHandler {
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
 
-        const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
+        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
+
+        const { listsize } = cradleInternalProperties
 
         // const cradleIndexSpan = contentHandler.indexSpan
 
@@ -718,7 +721,16 @@ export default class ServiceHandler {
         const changecount = rangeincrement // semantics
         const newlistsize = this.newlistsize = listsize + changecount
 
-        const replaceCradle = (contentHandler.indexSpan[1] >= (newlistsize - 1))
+        const { viewportRowcount, crosscount } = cradleInternalProperties
+        const { runwaySize } =  cradleInheritedProperties
+        const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
+        const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
+
+        const [lowIndex,highIndex] = contentHandler.indexSpan
+        const measuredCradleItemCount = highIndex - lowIndex + 1
+
+        const replaceCradle = ((measuredCradleItemCount < calculatedCradleItemcount) || 
+            (contentHandler.indexSpan[1] >= (newlistsize - 1)))
 
         // partitionItems to delete with applycellframechanges
         cacheHandler.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList

@@ -805,19 +805,19 @@ const Cradle = ({
 
         if (isCachedRef.current) return
 
-        // const { viewportRowcount, crosscount } = cradleInternalPropertiesRef.current
-        // const { runwaySize } =  cradleInheritedPropertiesRef.current
-        // const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
-        // const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
+        const { viewportRowcount, crosscount } = cradleInternalPropertiesRef.current
+        const { runwaySize } =  cradleInheritedPropertiesRef.current
+        const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
+        const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
 
         const [lowIndex,highIndex] = contentHandler.indexSpan
-        // const measuredCradleItemCount = highIndex - lowIndex + 1
+        const measuredCradleItemCount = highIndex - lowIndex + 1
 
         // console.log('viewportRowcount, crosscount, runwaySize, measuredCradleItemCount, calculatedCradleItemcount, highIndex, listsize, cradleInternalPropertiesRef, cradleInheritedPropertiesRef',
         //     viewportRowcount, crosscount, runwaySize, measuredCradleItemCount, calculatedCradleItemcount, highIndex, listsize, cradleInternalPropertiesRef, cradleInheritedPropertiesRef)
 
-        // if ((measuredCradleItemCount < calculatedCradleItemcount) || // sub-viewport visible listcount
-        if (highIndex >= (listsize - 1)) { // change is not beyond cradle
+        if ((measuredCradleItemCount < calculatedCradleItemcount) || // sub-viewport visible listcount
+            (highIndex >= (listsize - 1))) { // change is not beyond cradle
 
             console.log('reconfiguring for list size',listsize)
 
@@ -1336,24 +1336,6 @@ const Cradle = ({
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
                 applyPortalPartitionItemsForDeleteList(cacheHandler)
-
-                // const { portalPartitionItemsForDeleteList } = cacheHandler
-
-                // if (portalPartitionItemsForDeleteList && portalPartitionItemsForDeleteList.length) {
-
-                //     for (const item of portalPartitionItemsForDeleteList) {
-
-                //         // console.log('==> Cradle.applycellframechanges removing itemID from cache', item.itemID)
-
-                //         cacheHandler.removePartitionPortal(item.partitionID, item.itemID)
-                        
-                //     }
-
-                //     cacheHandler.portalPartitionItemsForDeleteList = []                    
-
-                //     cacheHandler.renderPortalLists()
-
-                // }
 
                 if (cradleState == 'applyinsertremovechanges') {
 
