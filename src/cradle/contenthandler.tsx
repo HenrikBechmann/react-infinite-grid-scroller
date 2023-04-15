@@ -889,15 +889,28 @@ export default class ContentHandler {
     }
 
     // supports moveIndex and insertRemoveIndex, updates cradle contiguous items from startIndex or start of cradle
-    public synchronizeCradleItemIDsToCache(updatedIndexList, isInsertRemove = 0) { // 0 = move
-
-        if (updatedIndexList.length == 0) return
-
-        const startIndex = updatedIndexList[0]
-        const endIndex = updatedIndexList.at(-1)
-        const updatedSpan = endIndex - startIndex + 1
+    public synchronizeCradleItemIDsToCache(updatedIndexList, isInsertRemove = 0, startSyncIndex = null) { // 0 = move
 
         const [lowSpan, highSpan] = this.indexSpan
+
+        let startIndex, endIndex
+        if (isInsertRemove) {
+
+            if (startSyncIndex > highSpan) return
+
+            startIndex = startSyncIndex
+            endIndex = highSpan
+
+        } else { // move
+
+            if (updatedIndexList.length == 0) return
+
+            startIndex = updatedIndexList[0]
+            endIndex = updatedIndexList.at(-1)
+
+        }
+
+        const updatedSpan = endIndex - startIndex + 1
 
         let firstIndex = startIndex
 
@@ -929,36 +942,38 @@ export default class ContentHandler {
 
             // if (startIndex !== null && index < startIndex) return
 
-            const itemID = indexToItemIDMap.get(index)
+            const cacheItemID = indexToItemIDMap.get(index)
 
-            if (itemID === undefined) {
+            if (cacheItemID === undefined) {
 
-                // console.log('getting newItemID for missing update itemID', index)
                 const newItemID = cacheHandler.getNewItemID()
+                console.log('getting newItemID for missing update: index, newItemID', index, newItemID)
                 componentarray[i] = React.cloneElement(component, {itemID:newItemID})
                 return
 
-            }
-
-            const oldItemID = component.props.itemID
-
-            const ptr = updatedIndexList.indexOf(index)
-
-            // console.log('index, ptr', index, ptr)
-
-            if (ptr != -1) {
-
-                if (itemID == oldItemID) return
-
-                // console.log('changed itemID', itemID)
-
-                componentarray[i] = React.cloneElement(component, {itemID})
-
             } else {
 
-                // console.log('getting newItemID for missing update index', index)
-                const newItemID = cacheHandler.getNewItemID()
-                componentarray[i] = React.cloneElement(component, {itemID:newItemID})
+                const cradleItemID = component.props.itemID
+
+                const ptr = updatedIndexList.indexOf(index)
+
+                // console.log('index, ptr', index, ptr)
+
+                if (ptr != -1) {
+
+                    if (cacheItemID == cradleItemID) return
+
+                    // console.log('changed itemID', itemID)
+
+                    componentarray[i] = React.cloneElement(component, {cacheItemID})
+
+                } else {
+
+                    // console.log('getting newItemID for missing update index', index)
+                    const newItemID = cacheHandler.getNewItemID()
+                    componentarray[i] = React.cloneElement(component, {itemID:newItemID})
+
+                }
 
             }
 

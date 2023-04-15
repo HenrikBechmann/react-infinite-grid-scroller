@@ -740,7 +740,9 @@ export default class ServiceHandler {
 
         if (!replaceCradle) {
 
-            contentHandler.synchronizeCradleItemIDsToCache(shiftedList, increment) // non-zero communications isInsertRemove
+            const startSyncIndex = Math.min(index, index + increment)
+
+            contentHandler.synchronizeCradleItemIDsToCache(shiftedList, increment, startSyncIndex) // non-zero communications isInsertRemove
 
             if (increment == +1) contentHandler.createNewItemIDs(replaceList)
 
@@ -763,7 +765,7 @@ export default class ServiceHandler {
                 }
             }, 100)
 
-        } else { // cradle is reset
+        } else { // cradle to be reset
 
             stateHandler.setCradleState('channelcradleresetafterinsertremove')
             // stateHandler.setCradleState('changelistsizeafterinsertremove')
