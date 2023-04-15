@@ -664,6 +664,9 @@ export class CacheHandler {
         // cache data to modify
         const { indexToItemIDMap, metadataMap } = this.cacheProps
 
+        console.log('0. insertRemoveIndex => opening indexToItemIDMap, metadataMap',
+            new Map(indexToItemIDMap), new Map(metadataMap))
+
         // ---------- define contiguous range parameters; add sentinels ---------------
 
         // high range is the highest index number of the insert/remove range
@@ -712,8 +715,8 @@ export class CacheHandler {
             toShiftStartIndex = highrangeindex + 1
         }
 
-        // console.log('==> 1. cacheHandler.insertRemoveIndex: lowrangeindex, highrangeindex, rangecount, rangeincrement, startChangeIndex, toShiftStartIndex',
-        //     lowrangeindex, highrangeindex, rangecount, rangeincrement, startChangeIndex, toShiftStartIndex)
+        console.log('==> 1. cacheHandler.insertRemoveIndex: lowrangeindex, highrangeindex, rangecount, rangeincrement, startChangeIndex, toShiftStartIndex',
+            lowrangeindex, highrangeindex, rangecount, rangeincrement, startChangeIndex, toShiftStartIndex)
 
         // ---------- define range boundaries within ordered cache index list ------------
 
@@ -748,8 +751,8 @@ export class CacheHandler {
 
         }
 
-        // console.log('2. lowCacheRangePtr, highCacheRangePtr, toShiftStartCachePtr, orderedCacheIndexList',
-        //     lowCacheRangePtr, highCacheRangePtr, toShiftStartCachePtr, orderedCacheIndexList)
+        console.log('2. lowCacheRangePtr, highCacheRangePtr, toShiftStartCachePtr, orderedCacheIndexList',
+            lowCacheRangePtr, highCacheRangePtr, toShiftStartCachePtr, orderedCacheIndexList)
 
         // ----------- isolate index range list and shift list ------------
 
@@ -810,8 +813,8 @@ export class CacheHandler {
 
         }
 
-        // console.log('3. cacheRangeIndexesList, cacheToShiftIndexesList',// cacheScopeIndexesList',
-        //     cacheRangeIndexesList, cacheToShiftIndexesList) //, cacheScopeIndexesList)
+        console.log('3. cacheRangeIndexesList, cacheToShiftIndexesList',// cacheScopeIndexesList',
+            cacheRangeIndexesList, cacheToShiftIndexesList) //, cacheScopeIndexesList)
 
         // ----------- list cache items to replace or remove -----------
 
@@ -833,13 +836,14 @@ export class CacheHandler {
             for (const index of cacheIndexesToRemoveList) {
 
                 cacheItemsToRemoveList.push(indexToItemIDMap.get(index))
+                indexToItemIDMap.delete(index)
 
             }
 
         }
 
-        // console.log('4. cacheIndexesToReplaceList, cacheIndexesToRemoveList',
-        //     cacheIndexesToReplaceList, cacheIndexesToRemoveList)
+        console.log('4. cacheIndexesToReplaceList, cacheIndexesToRemoveList, cacheItemsToRemoveList, indexToItemIDMap',
+            cacheIndexesToReplaceList, cacheIndexesToRemoveList, cacheItemsToRemoveList, new Map(indexToItemIDMap))
 
         // ----------- conduct cache operations; capture list of shifted indexes ----------
 
@@ -860,6 +864,8 @@ export class CacheHandler {
                 cacheIndexesTransferredSet.delete(newIndex)
             }
 
+            console.log('adding newIndex', newIndex)
+
             indexToItemIDMap.set(newIndex, itemID)
             metadataMap.get(itemID).index = newIndex
             cacheIndexesShiftedList.push(newIndex)
@@ -867,6 +873,8 @@ export class CacheHandler {
         }
 
         cacheToShiftIndexesList.forEach(processIndexFn)
+
+        console.log('4a. copy of indexToItemIDMap after plain shift',new Map(indexToItemIDMap))
 
         // delete remaining indexes and items now duplicates
 
@@ -894,13 +902,7 @@ export class CacheHandler {
             // abandoned indexes from remove process
             const orphanedIndexesTransferredList = Array.from(cacheIndexesTransferredSet)
 
-            // console.log('orphanedIndexesTransferredList',orphanedIndexesTransferredList)
-
-            for (const index of cacheIndexesToRemoveList) {
-
-                indexToItemIDMap.delete(index)
-
-            }
+            console.log('orphanedIndexesTransferredList',orphanedIndexesTransferredList)
 
             for (const index of orphanedIndexesTransferredList) {
 
@@ -912,10 +914,12 @@ export class CacheHandler {
 
         }
 
+        console.log('4b. copy of indexToItemIDMap after deletions',new Map(indexToItemIDMap))
+
         if (isInserting) cacheIndexesShiftedList.reverse() // return to ascending order
 
-        // console.log('5. startChangeIndex, cacheIndexesAfterShiftedList, portalPartitionItemsForDeleteList',
-        //     startChangeIndex, cacheIndexesShiftedList, portalPartitionItemsForDeleteList)
+        console.log('5. startChangeIndex, cacheIndexesShiftedList, portalPartitionItemsForDeleteList',
+            startChangeIndex, cacheIndexesShiftedList, portalPartitionItemsForDeleteList)
 
         // --------------- returns ---------------
 

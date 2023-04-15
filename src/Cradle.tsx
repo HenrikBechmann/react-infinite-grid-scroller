@@ -827,6 +827,8 @@ const Cradle = ({
 
         } else {
 
+            console.log('calling ready in response to listsize', listsize)
+
             setCradleState('ready')
 
         }
