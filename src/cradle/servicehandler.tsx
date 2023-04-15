@@ -713,7 +713,7 @@ export default class ServiceHandler {
 
         // const cradleIndexSpan = contentHandler.indexSpan
 
-        const [rangeincrement, shiftedList, removedList, replaceList, portalPartitionItemsForDeleteList] = 
+        const [startChangeIndex, rangeincrement, shiftedList, removedList, replaceList, portalPartitionItemsForDeleteList] = 
             cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize) //, cradleIndexSpan)
 
         if (rangeincrement === null) return [[],[],[]] // no action
@@ -740,9 +740,7 @@ export default class ServiceHandler {
 
         if (!replaceCradle) {
 
-            const startSyncIndex = Math.min(index, index + increment)
-
-            contentHandler.synchronizeCradleItemIDsToCache(shiftedList, increment, startSyncIndex) // non-zero communications isInsertRemove
+            contentHandler.synchronizeCradleItemIDsToCache(shiftedList, increment, startChangeIndex) // non-zero communications isInsertRemove
 
             if (increment == +1) contentHandler.createNewItemIDs(replaceList)
 

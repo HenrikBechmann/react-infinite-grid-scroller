@@ -889,16 +889,19 @@ export default class ContentHandler {
     }
 
     // supports moveIndex and insertRemoveIndex, updates cradle contiguous items from startIndex or start of cradle
-    public synchronizeCradleItemIDsToCache(updatedIndexList, isInsertRemove = 0, startSyncIndex = null) { // 0 = move
+    public synchronizeCradleItemIDsToCache(updatedIndexList, isInsertRemove = 0, startChangeIndex = null) { // 0 = move
+
+        // console.log('==> synchronizeCradleItemIDsToCache: updatedIndexList, isInsertRemove, startChangeIndex',
+        //     updatedIndexList, isInsertRemove, startChangeIndex)
 
         const [lowSpan, highSpan] = this.indexSpan
 
         let startIndex, endIndex
         if (isInsertRemove) {
 
-            if (startSyncIndex > highSpan) return
+            if (startChangeIndex > highSpan) return
 
-            startIndex = startSyncIndex
+            startIndex = startChangeIndex
             endIndex = highSpan
 
         } else { // move
@@ -947,7 +950,7 @@ export default class ContentHandler {
             if (cacheItemID === undefined) {
 
                 const newItemID = cacheHandler.getNewItemID()
-                console.log('getting newItemID for missing update: index, newItemID', index, newItemID)
+                // console.log('sync -> getting newItemID for missing update: index, newItemID', index, newItemID)
                 componentarray[i] = React.cloneElement(component, {itemID:newItemID})
                 return
 
@@ -1025,7 +1028,7 @@ export default class ContentHandler {
 
             const newItemID = cacheHandler.getNewItemID()
 
-            // console.log('getting new itemID for newlistindex, newItemID',newlistindex, newItemID)
+            // console.log('createNewItemID -> getting new itemID for newlistindex, newItemID',newlistindex, newItemID)
             // console.log('component key', component.key)
 
             cradleModelComponents[cradlePtr] = React.cloneElement(component, {itemID:newItemID})
