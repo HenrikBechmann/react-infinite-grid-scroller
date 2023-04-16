@@ -696,7 +696,7 @@ export default class ServiceHandler {
 
     newlistsize
 
-    // shared logic for insert and remove. Returns lists of items shifted, replaced, and removed
+    // shared logic for insert and remove. Returns lists of indexes shifted, replaced, and removed
     // this operation changes the listsize
     private insertRemoveIndex = (index, rangehighindex, increment) => {
 
