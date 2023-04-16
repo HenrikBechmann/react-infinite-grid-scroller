@@ -1,5 +1,5 @@
 // CellFrame.tsx
-// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     The role of CellFrame is to fetch user content from the cache, or from the host (using getItem).
