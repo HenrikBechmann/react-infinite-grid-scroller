@@ -888,12 +888,19 @@ export default class ContentHandler {
 
     }
 
-    // supports moveIndex and insertRemoveIndex, updates cradle contiguous items from startIndex or start of cradle
+    // supports moveIndex and insertRemoveIndex, updates cradle contiguous items from startChangeIndex or start of cradle
     public synchronizeCradleItemIDsToCache(updatedIndexList, isInsertRemove = 0, startChangeIndex = null) { // 0 = move
 
         // console.log('==> synchronizeCradleItemIDsToCache: updatedIndexList, isInsertRemove, startChangeIndex',
         //     updatedIndexList, isInsertRemove, startChangeIndex)
 
+        // asssemble resources
+        const { cacheHandler } = this.cradleParameters.handlersRef.current
+        const { indexToItemIDMap } = cacheHandler.cacheProps
+
+        const { cradleModelComponents } = this.content
+
+        // assemble parameters
         const [lowSpan, highSpan] = this.indexSpan
 
         let startIndex, endIndex
@@ -925,11 +932,6 @@ export default class ContentHandler {
         // console.log('==> contenthandler.synchronizeCradleItemIDsToCache: updateIndexList, firstIndex, lowSpan, lowPtr', 
         //     updatedIndexList, firstIndex, lowSpan, lowPtr)
 
-        const { cacheHandler } = this.cradleParameters.handlersRef.current
-        const { indexToItemIDMap } = cacheHandler.cacheProps
-
-        const { cradleModelComponents } = this.content
-
         const highPtr = isInsertRemove?
             cradleModelComponents.length - 1:
             Math.min(cradleModelComponents.length - 1,lowPtr + updatedSpan - 1)
@@ -937,7 +939,8 @@ export default class ContentHandler {
         // console.log('==>synchronizeCradleItemIDsToCache: lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents',
         //     lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents)
 
-        function processcomponentFn(component, i, componentarray) {
+        // function to update individual cradle components to cache changes
+        function processcomponentFn(component, componentptr, componentarray) {
 
             // console.log('processcomponentFn: i', i)
 
@@ -947,34 +950,35 @@ export default class ContentHandler {
 
             const cacheItemID = indexToItemIDMap.get(index)
 
+            // if cache has no component for cradle item, then get one
             if (cacheItemID === undefined) {
 
                 const newItemID = cacheHandler.getNewItemID()
                 // console.log('sync -> setting newItemID for missing update: index, newItemID', index, newItemID)
-                componentarray[i] = React.cloneElement(component, {itemID:newItemID})
+                componentarray[componentptr] = React.cloneElement(component, {itemID:newItemID})
                 return
 
-            } else {
+            } else { // match cache itemID to cradle component itemID
 
                 const cradleItemID = component.props.itemID
 
-                const ptr = updatedIndexList.indexOf(index)
+                const updateptr = updatedIndexList.indexOf(index) // TODO verify need for updatelist
 
                 // console.log('index, ptr', index, ptr)
 
-                if (ptr != -1) {
+                if (updateptr != -1) { // update list confirms there is a cache item for this index
 
                     if (cacheItemID == cradleItemID) return
 
                     // console.log('setting cradleItemID to cacheItemID', cradleItemID, cacheItemID)
 
-                    componentarray[i] = React.cloneElement(component, {itemID:cacheItemID})
+                    componentarray[componentptr] = React.cloneElement(component, {itemID:cacheItemID})
 
                 } else {
 
                     // console.log('getting newItemID for missing update: index, newItemID', index)
                     const newItemID = cacheHandler.getNewItemID()
-                    componentarray[i] = React.cloneElement(component, {itemID:newItemID})
+                    componentarray[componentptr] = React.cloneElement(component, {itemID:newItemID})
 
                 }
 
