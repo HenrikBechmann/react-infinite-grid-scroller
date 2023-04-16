@@ -696,28 +696,34 @@ export default class ServiceHandler {
 
     newlistsize
 
-    // shared logic. Returns lists of items changed, and items replaced (new items for insert)
+    // shared logic for insert and remove. Returns lists of items shifted, replaced, and removed
     // this operation changes the listsize
     private insertRemoveIndex = (index, rangehighindex, increment) => {
 
+        // basic assertions
         index = Math.max(0,index)
         rangehighindex = Math.max(rangehighindex, index)
 
+        // assemble resources
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
 
         const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
 
+        // process cache
         const { listsize } = cradleInternalProperties
-
-        // const cradleIndexSpan = contentHandler.indexSpan
-
         const [startChangeIndex, rangeincrement, shiftedList, removedList, replaceList, portalPartitionItemsForDeleteList] = 
             cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize) //, cradleIndexSpan)
 
         if (rangeincrement === null) return [[],[],[]] // no action
 
+        // partitionItems to delete with followup state changes - must happen after cradle update
+        cacheHandler.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList
+
+        // ------------- synchronize cradle to cache changes -------------
+
+        // determine if cradle must be reset or simply adjusted
         const changecount = rangeincrement // semantics
         const newlistsize = this.newlistsize = listsize + changecount
 
@@ -729,16 +735,13 @@ export default class ServiceHandler {
         const [lowIndex,highIndex] = contentHandler.indexSpan
         const measuredCradleItemCount = highIndex - lowIndex + 1
 
-        const replaceCradle = ((measuredCradleItemCount < calculatedCradleItemcount) || 
+        const resetCradle = ((measuredCradleItemCount < calculatedCradleItemcount) || 
             (contentHandler.indexSpan[1] >= (newlistsize - 1)))
-
-        // partitionItems to delete with applycellframechanges
-        cacheHandler.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList
 
         // console.log('==> servicehandler.insertRemoveIndex: rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList',
         //     rangeincrement, shiftedList, replaceList, portalPartitionItemsForDeleteList)
 
-        if (!replaceCradle) {
+        if (!resetCradle) { // synchronize cradle contents to changes
 
             contentHandler.synchronizeCradleItemIDsToCache(shiftedList, increment, startChangeIndex) // non-zero communications isInsertRemove
 
@@ -748,10 +751,7 @@ export default class ServiceHandler {
 
             const requestedSet = cacheHandler.cacheProps.requestedSet
 
-            // wait until new cache entries are assembled
-            const timeout = setInterval(() => {
-
-                // console.log('requestedSet.size',requestedSet.size)
+            const timeout = setInterval(() => { // wait until changed cache entries update the cradle
 
                 if(!requestedSet.size) { // finished collecting new cache entries
 
@@ -765,16 +765,15 @@ export default class ServiceHandler {
                 }
             }, 100)
 
-        } else { // cradle to be reset
+        } else { // cradle to be completely reset if listsize change encroaches on cradle
 
             stateHandler.setCradleState('channelcradleresetafterinsertremove')
-            // stateHandler.setCradleState('changelistsizeafterinsertremove')
 
         }
 
         const replacedList = replaceList // semantics
 
-        return [shiftedList, replacedList, removedList]
+        return [shiftedList, replacedList, removedList] // inform caller
 
     }
 
