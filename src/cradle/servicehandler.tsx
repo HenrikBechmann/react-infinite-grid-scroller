@@ -742,7 +742,7 @@ export default class ServiceHandler {
 
             contentHandler.synchronizeCradleItemIDsToCache(shiftedList, increment, startChangeIndex) // non-zero communications isInsertRemove
 
-            if (increment == +1) contentHandler.createNewItemIDs(replaceList)
+            // if (increment == +1) contentHandler.createNewItemIDs(replaceList)
 
             const { content } = contentHandler
 
@@ -750,6 +750,8 @@ export default class ServiceHandler {
 
             // wait until new cache entries are assembled
             const timeout = setInterval(() => {
+
+                // console.log('requestedSet.size',requestedSet.size)
 
                 if(!requestedSet.size) { // finished collecting new cache entries
 

@@ -891,8 +891,8 @@ export default class ContentHandler {
     // supports moveIndex and insertRemoveIndex, updates cradle contiguous items from startIndex or start of cradle
     public synchronizeCradleItemIDsToCache(updatedIndexList, isInsertRemove = 0, startChangeIndex = null) { // 0 = move
 
-        console.log('==> synchronizeCradleItemIDsToCache: updatedIndexList, isInsertRemove, startChangeIndex',
-            updatedIndexList, isInsertRemove, startChangeIndex)
+        // console.log('==> synchronizeCradleItemIDsToCache: updatedIndexList, isInsertRemove, startChangeIndex',
+        //     updatedIndexList, isInsertRemove, startChangeIndex)
 
         const [lowSpan, highSpan] = this.indexSpan
 
@@ -922,8 +922,8 @@ export default class ContentHandler {
         if (firstIndex < lowSpan) firstIndex = lowSpan
 
         const lowPtr = firstIndex - lowSpan
-        console.log('==> contenthandler.synchronizeCradleItemIDsToCache: updateIndexList, firstIndex, lowSpan, lowPtr', 
-            updatedIndexList, firstIndex, lowSpan, lowPtr)
+        // console.log('==> contenthandler.synchronizeCradleItemIDsToCache: updateIndexList, firstIndex, lowSpan, lowPtr', 
+        //     updatedIndexList, firstIndex, lowSpan, lowPtr)
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
         const { indexToItemIDMap } = cacheHandler.cacheProps
@@ -934,8 +934,8 @@ export default class ContentHandler {
             cradleModelComponents.length - 1:
             Math.min(cradleModelComponents.length - 1,lowPtr + updatedSpan - 1)
 
-        console.log('==>synchronizeCradleItemIDsToCache: lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents',
-            lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents)
+        // console.log('==>synchronizeCradleItemIDsToCache: lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents',
+        //     lowSpan, highSpan, lowPtr, highPtr, cradleModelComponents)
 
         function processcomponentFn(component, i, componentarray) {
 
@@ -950,7 +950,7 @@ export default class ContentHandler {
             if (cacheItemID === undefined) {
 
                 const newItemID = cacheHandler.getNewItemID()
-                console.log('sync -> getting newItemID for missing update: index, newItemID', index, newItemID)
+                // console.log('sync -> setting newItemID for missing update: index, newItemID', index, newItemID)
                 componentarray[i] = React.cloneElement(component, {itemID:newItemID})
                 return
 
@@ -960,19 +960,19 @@ export default class ContentHandler {
 
                 const ptr = updatedIndexList.indexOf(index)
 
-                console.log('index, ptr', index, ptr)
+                // console.log('index, ptr', index, ptr)
 
                 if (ptr != -1) {
 
                     if (cacheItemID == cradleItemID) return
 
-                    console.log('changed cradleItemID to cacheItemID', cradleItemID, cacheItemID)
+                    // console.log('setting cradleItemID to cacheItemID', cradleItemID, cacheItemID)
 
-                    componentarray[i] = React.cloneElement(component, {cacheItemID})
+                    componentarray[i] = React.cloneElement(component, {itemID:cacheItemID})
 
                 } else {
 
-                    console.log('getting newItemID for missing update: index, newItemID', index)
+                    // console.log('getting newItemID for missing update: index, newItemID', index)
                     const newItemID = cacheHandler.getNewItemID()
                     componentarray[i] = React.cloneElement(component, {itemID:newItemID})
 
@@ -993,7 +993,7 @@ export default class ContentHandler {
 
         if (!newList.length) return
 
-        console.log('==> contentHandler.createNewItemIDs: newList', newList)
+        // console.log('==> contentHandler.createNewItemIDs: newList', newList)
 
         const { cacheHandler } = this.cradleParameters.handlersRef.current
         const { cradleModelComponents } = this.content
