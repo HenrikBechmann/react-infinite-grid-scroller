@@ -661,8 +661,9 @@ export class CacheHandler {
 
         const emptyreturn = [null, null, [],[],[], []] // no action return value
 
-        // cache data to modify
+        // cache resources
         const { indexToItemIDMap, metadataMap } = this.cacheProps
+        const orderedCacheIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b) // ascending order
 
         // console.log('0. insertRemoveIndex => opening indexToItemIDMap, metadataMap',
         //     new Map(indexToItemIDMap), new Map(metadataMap))
@@ -719,8 +720,6 @@ export class CacheHandler {
         //     lowrangeindex, highrangeindex, rangecount, rangeincrement, startChangeIndex, toShiftStartIndex)
 
         // ---------- define range boundaries within ordered cache index list ------------
-
-        const orderedCacheIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b) // ascending order
 
         // obtain starptr for indexes to shift
         const toShiftStartCachePtr = orderedCacheIndexList.findIndex(value => {
@@ -816,7 +815,7 @@ export class CacheHandler {
         // console.log('3. cacheRangeIndexesList, cacheToShiftIndexesList',// cacheScopeIndexesList',
         //     cacheRangeIndexesList, cacheToShiftIndexesList) //, cacheScopeIndexesList)
 
-        // ----------- list cache items to replace or remove -----------
+        // ----------- list cache indexes and items to replace or remove -----------
 
         // cache outputs
         // for insert, the range being inserted; for remove, any tail cradle items abandoned
@@ -850,10 +849,10 @@ export class CacheHandler {
         // increment higher from top of list to preserve lower values for subsequent increment
         if (isInserting) cacheToShiftIndexesList.reverse() 
 
-        const cacheIndexesShiftedList = []
-        const cacheIndexesTransferredSet = new Set()
+        const cacheIndexesShiftedList = [] // track shifted indexes
+        const cacheIndexesTransferredSet = new Set() // obtain list of orphaned indexes
 
-        // modify index-to-itemid map, and metadata map, for index shifts
+        // function modify index-to-itemid map, and metadata map, for index shifts
         const processIndexFn = index => {
 
             const itemID = indexToItemIDMap.get(index)
@@ -872,11 +871,12 @@ export class CacheHandler {
 
         }
 
+        // walk through items to shift
         cacheToShiftIndexesList.forEach(processIndexFn)
 
         // console.log('4a. copy of indexToItemIDMap after plain shift',new Map(indexToItemIDMap))
 
-        // delete remaining indexes and items now duplicates
+        // delete remaining indexes and items now duplicates; track portal data to remove after cradle updated
 
         const portalPartitionItemsForDeleteList = [] // hold portals for deletion until after after cradle synch
         let cacheIndexesRemovedList = []
