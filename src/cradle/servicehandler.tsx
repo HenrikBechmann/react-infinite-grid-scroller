@@ -704,14 +704,15 @@ export default class ServiceHandler {
         index = Math.max(0,index)
         rangehighindex = Math.max(rangehighindex, index)
 
-        // assemble resources
+        // ---------------- assemble resources --------------------
+
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
 
         const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        // process cache
+        // ------------------- process cache ----------------
         const { listsize } = cradleInternalProperties
         const [startChangeIndex, rangeincrement, shiftedList, removedList, replaceList, portalPartitionItemsForDeleteList] = 
             cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize) //, cradleIndexSpan)
@@ -726,6 +727,8 @@ export default class ServiceHandler {
         // determine if cradle must be reset or simply adjusted
         const changecount = rangeincrement // semantics
         const newlistsize = this.newlistsize = listsize + changecount
+
+        // console.log('listsize, changecount, newlistsize',listsize, changecount, newlistsize)
 
         const { viewportRowcount, crosscount } = cradleInternalProperties
         const { runwaySize } =  cradleInheritedProperties

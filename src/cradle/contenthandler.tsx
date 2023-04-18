@@ -119,7 +119,10 @@ export default class ContentHandler {
         const {crosscount, listsize, listRowcount} = cradleInternalProperties
 
         let workingRequestAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
+        // console.log('workingRequestAxisReferenceIndex,requestedAxisReferenceIndex,listsize',
+        //     workingRequestAxisReferenceIndex,requestedAxisReferenceIndex,listsize)
         workingRequestAxisReferenceIndex -= (workingRequestAxisReferenceIndex % crosscount)
+        // console.log('adjusted workingRequestAxisReferenceIndex',workingRequestAxisReferenceIndex)
 
         // reposition at row boundary
         if ([
