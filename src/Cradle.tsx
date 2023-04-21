@@ -94,6 +94,7 @@ const Cradle = ({
         // basics
         runwaySize, 
         listsize, 
+        updateListsize,
         startingIndex, 
         getItem, 
         placeholder, 
@@ -402,6 +403,7 @@ const Cradle = ({
         viewportRowcount,
         listRowcount,
         listsize,
+        updateListsize,
         runwayRowcount,
 
         // the following values are maintained elsewhere
@@ -664,6 +666,7 @@ const Cradle = ({
 
             }
 
+            contentHandler.updateListsize(maxListsize)
             cacheHandler.changeCacheListsize(maxListsize, 
                 dListCallback,
                 changeListsizeCallback)

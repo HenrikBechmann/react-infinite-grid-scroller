@@ -174,7 +174,7 @@ export default class ServiceHandler {
 
         }
 
-        const { cacheHandler, stateHandler } = this.cradleParameters.handlersRef.current
+        const { cacheHandler, contentHandler, stateHandler } = this.cradleParameters.handlersRef.current
 
         const { deleteListCallback, changeListsizeCallback } = this.callbacks
 
@@ -191,6 +191,7 @@ export default class ServiceHandler {
 
         }
 
+        contentHandler.updateListsize(newlistsize)
         cacheHandler.changeCacheListsize(newlistsize, 
             dListCallback,
             changeListsizeCallback

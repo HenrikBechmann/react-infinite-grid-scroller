@@ -293,7 +293,7 @@ const InfiniteGridScroller = (props) => {
 
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
             scrollerSessionIDRef.current = globalScrollerID++
-            cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, updateListsize, listsizeRef, 
+            cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, listsizeRef, 
                 CACHE_PARTITION_SIZE)
         }
 
@@ -365,6 +365,7 @@ const InfiniteGridScroller = (props) => {
                     gridSpecs = { gridSpecsRef.current }
                     styles = { stylesRef.current }
                     listsize = { listsize }
+                    updateListsize = { updateListsize }
                     cache = { cache }
                     cacheMax = { cacheMax }
                     userCallbacks = { callbacksRef.current }

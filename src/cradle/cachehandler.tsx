@@ -45,9 +45,9 @@ import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 // the cache itself is maintained in the root infinitegridscroller component
 export class CacheHandler {
 
-    constructor(scrollerID, updateListsize, listsizeRef, CACHE_PARTITION_SIZE) {
+    constructor(scrollerID, listsizeRef, CACHE_PARTITION_SIZE) {
         this.cacheProps.scrollerID = scrollerID // for debug
-        this.updateListsize = updateListsize // passed from InfiniteGridScroller.updateListsize(listsize)
+        // this.updateListsize = updateListsize // passed from InfiniteGridScroller.updateListsize(listsize)
         this.listsizeRef = listsizeRef // current list size
 
         this.CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE
@@ -88,7 +88,7 @@ export class CacheHandler {
 
     // updateListsize(listsize) causes an InfiniteGridScroller useState update
     // of the listsize throughout
-    updateListsize // function passed from InfiniteGridScroller
+    // updateListsize // function passed from InfiniteGridScroller
 
     // ===========================[ CACHE PARTITION MANAGEMENT ]===============================
 
@@ -264,7 +264,7 @@ export class CacheHandler {
     // called from Cradle.nullItemSetMaxListsize, and serviceHandler.setListsize
     changeCacheListsize = (newlistsize, deleteListCallback, changeListsizeCallback) => {
 
-        this.updateListsize(newlistsize)
+        // this.updateListsize(newlistsize)
 
         // match cache to newlistsize
         const portalIndexMap = this.cacheProps.indexToItemIDMap

@@ -74,6 +74,21 @@ export default class ContentHandler {
 
     // reset the cradle with new content, including allocation between head and tail parts of the cradle
     // - called only from the Cradle state handler
+    public updateListsize = (newlistsize) => {
+
+        // if (newlistsize == 0) {
+
+        //     const cradleContent = this.content        
+
+        //     this.clearCradle()
+        //     cradleContent.headDisplayComponents = []
+        //     cradleContent.tailDisplayComponents = []
+
+        // }
+
+        this.cradleParameters.cradleInternalPropertiesRef.current.updateListsize(newlistsize)
+
+    }
 
     public setCradleContent = ( cradleState ) => { // cradleState influences some behaviour
 
