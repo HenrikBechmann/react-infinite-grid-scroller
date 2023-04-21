@@ -664,7 +664,7 @@ const Cradle = ({
 
             }
 
-            cacheHandler.changeListsize(maxListsize, 
+            cacheHandler.changeCacheListsize(maxListsize, 
                 dListCallback,
                 changeListsizeCallback)
 
@@ -1363,6 +1363,7 @@ const Cradle = ({
 
                 setCradleState('ready')
 
+                // service handler called because this is a followon of a user intervention
                 serviceHandler.setListsize(newlistsize)
 
                 break

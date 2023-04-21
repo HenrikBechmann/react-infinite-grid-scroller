@@ -191,7 +191,7 @@ export default class ServiceHandler {
 
         }
 
-        cacheHandler.changeListsize(newlistsize, 
+        cacheHandler.changeCacheListsize(newlistsize, 
             dListCallback,
             changeListsizeCallback
         )
