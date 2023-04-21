@@ -197,6 +197,9 @@ export default class ServiceHandler {
             changeListsizeCallback
         )
 
+        cacheHandler.renderPortalLists()
+
+
         if ((cache == 'preload') && (newlistsize > currentlistsize)) {
             stateHandler.setCradleState('startpreload')
         }

@@ -76,15 +76,15 @@ export default class ContentHandler {
     // - called only from the Cradle state handler
     public updateListsize = (newlistsize) => {
 
-        // if (newlistsize == 0) {
+        if (newlistsize == 0) {
 
-        //     const cradleContent = this.content        
+            const cradleContent = this.content        
 
-        //     this.clearCradle()
-        //     cradleContent.headDisplayComponents = []
-        //     cradleContent.tailDisplayComponents = []
+            this.clearCradle()
+            cradleContent.headDisplayComponents = []
+            cradleContent.tailDisplayComponents = []
 
-        // }
+        }
 
         this.cradleParameters.cradleInternalPropertiesRef.current.updateListsize(newlistsize)
 

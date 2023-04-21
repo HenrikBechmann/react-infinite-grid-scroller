@@ -273,11 +273,15 @@ export class CacheHandler {
 
         const highestindex = mapkeysList.at(-1)
 
+        console.log('==> changeCacheListsize: highestindex, newlistsize', highestindex, newlistsize)
+
         if (highestindex > (newlistsize -1)) { // pare the cache
 
             const parelist = mapkeysList.filter((index)=>{
                 return index > (newlistsize -1)
             })
+
+            console.log('parelist',parelist)
 
             this.deletePortal(parelist, deleteListCallback)
 
@@ -1093,7 +1097,7 @@ export class CacheHandler {
 
         const deleteList = []
 
-        // console.log('index, indexToItemIDMap, metadataMap',index, indexToItemIDMap, metadataMap)
+        console.log('==>deletePortal: indexArray, indexToItemIDMap, metadataMap',indexArray, indexToItemIDMap, metadataMap)
         for (const index of indexArray) {
 
             const itemID = indexToItemIDMap.get(index)
@@ -1103,13 +1107,17 @@ export class CacheHandler {
             deleteList.push({index,itemID})
             const { partitionID } = metadataMap.get(itemID)
 
+            // console.log('removePartitionPortal: partitionID,itemID', partitionID,itemID)
+
             removePartitionPortal(partitionID,itemID)
 
             metadataMap.delete(itemID)
             indexToItemIDMap.delete(index)
 
         }
-        
+
+        // this.renderPortalLists()
+
         deleteListCallback && deleteListCallback(deleteList)
 
     }
