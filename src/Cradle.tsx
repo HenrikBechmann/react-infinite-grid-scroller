@@ -1395,7 +1395,7 @@ const Cradle = ({
 
             for (const item of portalPartitionItemsForDeleteList) {
 
-                console.log('==> Cradle.applyPortalPartitionItemsForDeleteList removing itemID from cache: item.partitionID, item.itemID',item.partitionID, item.itemID)
+                // console.log('==> Cradle.applyPortalPartitionItemsForDeleteList removing itemID from cache: item.partitionID, item.itemID',item.partitionID, item.itemID)
 
                 cacheHandler.removePartitionPortal(item.partitionID, item.itemID)
                 
