@@ -813,14 +813,29 @@ const Cradle = ({
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
         const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
 
-        const [lowIndex,highIndex] = contentHandler.indexSpan
-        const measuredCradleItemCount = highIndex - lowIndex + 1
+        const indexSpan = contentHandler.indexSpan
+        const [lowIndex,highIndex] = indexSpan
+
+        let measuredCradleItemCount
+        let changeIsWithinCradle
+
+        if (indexSpan.length == 0) {
+
+            measuredCradleItemCount = 0
+            changeIsWithinCradle = true
+
+        } else {
+
+            measuredCradleItemCount = highIndex - lowIndex + 1
+            changeIsWithinCradle = (highIndex >= (listsize - 1))
+            
+        }
 
         // console.log('viewportRowcount, crosscount, runwaySize, measuredCradleItemCount, calculatedCradleItemcount, highIndex, listsize, cradleInternalPropertiesRef, cradleInheritedPropertiesRef',
         //     viewportRowcount, crosscount, runwaySize, measuredCradleItemCount, calculatedCradleItemcount, highIndex, listsize, cradleInternalPropertiesRef, cradleInheritedPropertiesRef)
 
         if ((measuredCradleItemCount < calculatedCradleItemcount) || // sub-viewport visible listcount
-            (highIndex >= (listsize - 1))) { // change is not beyond cradle
+            changeIsWithinCradle) { // change is not beyond cradle
 
             // console.log('reconfiguring for list size',listsize)
 
@@ -1086,7 +1101,7 @@ const Cradle = ({
             // -------------------[ setCradleContent ]------------------
 
             /*
-                the following 11 cradle states all resolve with
+                the following 12 cradle states all resolve with
                 a chain starting with setCradleContent, 
                 continuing with 'preparerender', and ending with
                 'restoreinterrupts', with a detour for variable layout 
@@ -1131,8 +1146,10 @@ const Cradle = ({
                     cacheHandler.clearCache()
                 }
 
+                const { listsize } = cradleInternalPropertiesRef.current
+                // console.log('listsize!!', listsize)
                 // set data
-                contentHandler.setCradleContent( cradleState )
+                if (listsize) contentHandler.setCradleContent( cradleState )
 
                 if (cradleState != 'finishpreload') {
 

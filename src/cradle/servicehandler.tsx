@@ -165,6 +165,8 @@ export default class ServiceHandler {
 
         const isInvalid = (!isInteger(newlistsize) || !minValue(newlistsize, 0))
 
+        // console.log('==>setListsize: newlistsize', newlistsize, isInvalid)
+
         newlistsize = +newlistsize
 
         if (isInvalid) {
@@ -179,6 +181,9 @@ export default class ServiceHandler {
         const { deleteListCallback, changeListsizeCallback } = this.callbacks
 
         const { listsize:currentlistsize } = this.cradleParameters.cradleInternalPropertiesRef.current
+
+        // console.log('currentlistsize', currentlistsize)
+
         const { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         let dListCallback
@@ -704,6 +709,8 @@ export default class ServiceHandler {
     // this operation changes the listsize
     private insertRemoveIndex = (index, rangehighindex, increment) => {
 
+        // console.log('==>insertRemoveIndex: index, rangehighindex, increment', index, rangehighindex, increment)
+
         // basic assertions
         index = Math.max(0,index)
         rangehighindex = Math.max(rangehighindex, index)
@@ -718,6 +725,15 @@ export default class ServiceHandler {
 
         // ------------------- process cache ----------------
         const { listsize } = cradleInternalProperties
+        // console.log('listsize',listsize)
+        if (listsize == 0) {
+            if (increment > 0) {
+                // console.log('==>insertRemoveIndex: index, rangehighindex', index, rangehighindex)
+                this.setListsize(rangehighindex - index + 1)
+            }
+            return
+        }
+
         const [startChangeIndex, rangeincrement, shiftedList, removedList, replaceList, portalPartitionItemsForDeleteList] = 
             cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize) //, cradleIndexSpan)
 
@@ -739,8 +755,9 @@ export default class ServiceHandler {
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
         const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
 
-        const [lowIndex,highIndex] = contentHandler.indexSpan
-        const measuredCradleItemCount = highIndex - lowIndex + 1
+        const indexSpan = contentHandler.indexSpan
+        const [lowIndex,highIndex] = indexSpan
+        const measuredCradleItemCount = (indexSpan.length == 0)?0:highIndex - lowIndex + 1
 
         const resetCradle = ((measuredCradleItemCount < calculatedCradleItemcount) || 
             (contentHandler.indexSpan[1] >= (newlistsize - 1)))

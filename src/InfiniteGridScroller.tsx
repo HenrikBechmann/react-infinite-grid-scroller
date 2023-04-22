@@ -352,7 +352,7 @@ const InfiniteGridScroller = (props) => {
 
         >
         
-            {!!listsize && <Scrollblock
+            {<Scrollblock
 
                 gridSpecs = { gridSpecsRef.current }
                 styles = { stylesRef.current }

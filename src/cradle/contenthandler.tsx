@@ -865,6 +865,9 @@ export default class ContentHandler {
     get indexSpan() {
 
         const { cradleModelComponents } = this.content
+        
+        if (cradleModelComponents.length == 0) return []
+
         const lowIndex =  cradleModelComponents[0].props.index
         const highIndex = lowIndex + (cradleModelComponents.length - 1)
         return [lowIndex, highIndex]
@@ -919,7 +922,11 @@ export default class ContentHandler {
         const { cradleModelComponents } = this.content
 
         // assemble parameters
-        const [lowSpan, highSpan] = this.indexSpan
+        const indexSpan = this.indexSpan
+
+        if (indexSpan.length == 0) return // defensive; shouldn't be here
+
+        const [lowSpan,highSpan] = indexSpan
 
         let startIndex, endIndex
         if (isInsertRemove) {
@@ -1020,7 +1027,10 @@ export default class ContentHandler {
         const { cacheHandler } = this.cradleParameters.handlersRef.current
         const { cradleModelComponents } = this.content
 
-        const [lowSpan, highSpan] = this.indexSpan
+        const indexSpan = this.indexSpan
+        if (indexSpan.length == 0) return // defensive
+
+        const [lowSpan, highSpan] = indexSpan
 
         function processcomponentFn(newlistindex) {
 
