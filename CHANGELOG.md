@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.04 April 22, 2023
+
+Refactor index insert, remove, and move
+
+A couple of corrections to list resize
+
 ## 1.03 January 6, 2022
 
 Fix regression in CellFrame
