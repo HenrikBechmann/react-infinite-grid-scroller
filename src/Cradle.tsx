@@ -183,7 +183,7 @@ const Cradle = ({
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) {
-        console.log('--> cradleState','-'+scrollerID+'-', cradleState)
+        // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
         // console.log('-- index',~'+scrollerProperties?.cellFrameDataRef.current.index+'~')
     // }
 
@@ -786,8 +786,6 @@ const Cradle = ({
 
         if (isCachedRef.current) return
 
-        // console.log('reconfiguring with listsize', listsize)
-
         interruptHandler.pauseInterrupts()
 
         setCradleState('reconfigure')
@@ -831,21 +829,14 @@ const Cradle = ({
             
         }
 
-        // console.log('viewportRowcount, crosscount, runwaySize, measuredCradleItemCount, calculatedCradleItemcount, highIndex, listsize, cradleInternalPropertiesRef, cradleInheritedPropertiesRef',
-        //     viewportRowcount, crosscount, runwaySize, measuredCradleItemCount, calculatedCradleItemcount, highIndex, listsize, cradleInternalPropertiesRef, cradleInheritedPropertiesRef)
-
         if ((measuredCradleItemCount < calculatedCradleItemcount) || // sub-viewport visible listcount
             changeIsWithinCradle) { // change is not beyond cradle
-
-            // console.log('reconfiguring for list size',listsize)
 
             interruptHandler.pauseInterrupts()
 
             setCradleState('reconfigureforlistsize')
 
         } else {
-
-            // console.log('calling ready in response to listsize', listsize)
 
             setCradleState('ready')
 
@@ -1147,7 +1138,6 @@ const Cradle = ({
                 }
 
                 const { listsize } = cradleInternalPropertiesRef.current
-                // console.log('listsize!!', listsize)
                 // set data
                 if (listsize) contentHandler.setCradleContent( cradleState )
 
@@ -1377,10 +1367,6 @@ const Cradle = ({
                 const newlistsize = serviceHandler.newlistsize
                 serviceHandler.newlistsize = null
 
-                // console.log('changing list size: listsize, newlistsize',listsize, newlistsize)
-
-                // TODO wait for pending updates to complete, if newlistsize encroaches on cradle
-
                 setCradleState('ready')
 
                 // service handler called because this is a followon of a user intervention
@@ -1411,8 +1397,6 @@ const Cradle = ({
         if (portalPartitionItemsForDeleteList && portalPartitionItemsForDeleteList.length) {
 
             for (const item of portalPartitionItemsForDeleteList) {
-
-                // console.log('==> Cradle.applyPortalPartitionItemsForDeleteList removing itemID from cache: item.partitionID, item.itemID',item.partitionID, item.itemID)
 
                 cacheHandler.removePartitionPortal(item.partitionID, item.itemID)
                 

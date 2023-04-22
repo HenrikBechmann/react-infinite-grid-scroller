@@ -273,15 +273,11 @@ export class CacheHandler {
 
         const highestindex = mapkeysList.at(-1)
 
-        // console.log('==> changeCacheListsize: highestindex, newlistsize', highestindex, newlistsize)
-
         if (highestindex > (newlistsize -1)) { // pare the cache
 
             const parelist = mapkeysList.filter((index)=>{
                 return index > (newlistsize -1)
             })
-
-            // console.log('parelist',parelist)
 
             this.deletePortal(parelist, deleteListCallback)
 
@@ -521,10 +517,6 @@ export class CacheHandler {
                 'up': // shift down, make room for shiftingindex above
                 'down'   // shift up, make room for shiftingindex below
 
-//         console.log('==> cacheHandler.moveIndex: \n\
-// fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, moveincrement, movedirection\n',
-//             fromlowindex, fromhighindex, tolowindex, tohighindex, moveblocksize, moveincrement, movedirection)
-
         // ------------ find bounds of from and to blocks in cache -------------
 
         const orderedindexlist = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b)
@@ -543,9 +535,6 @@ export class CacheHandler {
             if (tohighindexptr != -1) tohighindexptr = (cachelistcount -1) - tohighindexptr
             if (fromhighindexptr != -1) fromhighindexptr = (cachelistcount -1) - fromhighindexptr
         }
-
-        // console.log('fromlowindexptr, fromhighindexptr, tolowindexptr, tohighindexptr, orderedindexlist\n',
-        //     fromlowindexptr, fromhighindexptr, tolowindexptr, tohighindexptr, orderedindexlist)
 
         // ---------------- capture index data to move ----------------
 
@@ -670,9 +659,6 @@ export class CacheHandler {
         const { indexToItemIDMap, metadataMap } = this.cacheProps
         const orderedCacheIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b) // ascending order
 
-        // console.log('0. insertRemoveIndex => opening indexToItemIDMap, metadataMap',
-        //     new Map(indexToItemIDMap), new Map(metadataMap))
-
         // ---------- define contiguous range parameters; add sentinels ---------------
 
         // high range is the highest index number of the insert/remove range
@@ -721,9 +707,6 @@ export class CacheHandler {
             toShiftStartIndex = highrangeindex + 1
         }
 
-        // console.log('==> 1. cacheHandler.insertRemoveIndex: lowrangeindex, highrangeindex, rangecount, rangeincrement, startChangeIndex, toShiftStartIndex',
-        //     lowrangeindex, highrangeindex, rangecount, rangeincrement, startChangeIndex, toShiftStartIndex)
-
         // ---------- define range boundaries within ordered cache index list ------------
 
         // obtain starptr for indexes to shift
@@ -754,9 +737,6 @@ export class CacheHandler {
             if (highCacheRangePtr < lowCacheRangePtr) highCacheRangePtr = -1
 
         }
-
-        // console.log('2. lowCacheRangePtr, highCacheRangePtr, toShiftStartCachePtr, orderedCacheIndexList',
-        //     lowCacheRangePtr, highCacheRangePtr, toShiftStartCachePtr, orderedCacheIndexList)
 
         // ----------- isolate index range list and shift list ------------
 
@@ -817,9 +797,6 @@ export class CacheHandler {
 
         }
 
-        // console.log('3. cacheRangeIndexesList, cacheToShiftIndexesList',// cacheScopeIndexesList',
-        //     cacheRangeIndexesList, cacheToShiftIndexesList) //, cacheScopeIndexesList)
-
         // ----------- list cache indexes and items to replace or remove -----------
 
         // cache outputs
@@ -846,9 +823,6 @@ export class CacheHandler {
 
         }
 
-        // console.log('4. cacheIndexesToReplaceList, cacheIndexesToRemoveList, cacheItemsToRemoveList, indexToItemIDMap',
-        //     cacheIndexesToReplaceList, cacheIndexesToRemoveList, cacheItemsToRemoveList, new Map(indexToItemIDMap))
-
         // ----------- conduct cache operations; capture list of shifted indexes ----------
 
         // increment higher from top of list to preserve lower values for subsequent increment
@@ -868,8 +842,6 @@ export class CacheHandler {
                 cacheIndexesTransferredSet.delete(newIndex)
             }
 
-            // console.log('adding newIndex', newIndex)
-
             indexToItemIDMap.set(newIndex, itemID)
             metadataMap.get(itemID).index = newIndex
             cacheIndexesShiftedList.push(newIndex)
@@ -878,8 +850,6 @@ export class CacheHandler {
 
         // walk through items to shift
         cacheToShiftIndexesList.forEach(processIndexFn)
-
-        // console.log('4a. copy of indexToItemIDMap after plain shift',new Map(indexToItemIDMap))
 
         // delete remaining indexes and items now duplicates; track portal data to remove after cradle updated
 
@@ -907,8 +877,6 @@ export class CacheHandler {
             // abandoned indexes from remove process
             const orphanedIndexesTransferredList = Array.from(cacheIndexesTransferredSet)
 
-            // console.log('orphanedIndexesTransferredList',orphanedIndexesTransferredList)
-
             for (const index of orphanedIndexesTransferredList) {
 
                 indexToItemIDMap.delete(index)
@@ -919,12 +887,7 @@ export class CacheHandler {
 
         }
 
-        // console.log('4b. copy of indexToItemIDMap after deletions',new Map(indexToItemIDMap))
-
         if (isInserting) cacheIndexesShiftedList.reverse() // return to ascending order
-
-        // console.log('5. startChangeIndex, cacheIndexesShiftedList, portalPartitionItemsForDeleteList',
-        //     startChangeIndex, cacheIndexesShiftedList, portalPartitionItemsForDeleteList)
 
         // --------------- returns ---------------
 
@@ -996,8 +959,6 @@ export class CacheHandler {
             component,
             partitionID,
         }
-
-        // console.log('==>createPortal: index, itemID', index, itemID)
 
         this.cacheProps.metadataMap.set(itemID, portalMetadata)
         this.cacheProps.indexToItemIDMap.set(index, itemID)
@@ -1097,7 +1058,6 @@ export class CacheHandler {
 
         const deleteList = []
 
-        // console.log('==>deletePortal: indexArray, indexToItemIDMap, metadataMap',indexArray, indexToItemIDMap, metadataMap)
         for (const index of indexArray) {
 
             const itemID = indexToItemIDMap.get(index)
@@ -1106,8 +1066,6 @@ export class CacheHandler {
 
             deleteList.push({index,itemID})
             const { partitionID } = metadataMap.get(itemID)
-
-            // console.log('removePartitionPortal: partitionID,itemID', partitionID,itemID)
 
             removePartitionPortal(partitionID,itemID)
 

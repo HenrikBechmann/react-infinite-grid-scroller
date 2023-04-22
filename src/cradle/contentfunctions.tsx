@@ -555,12 +555,6 @@ export const calcShiftSpecs = ({
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
 
-    // console.log('==> calcShiftSpecs: shiftinstruction', shiftinstruction)
-    // console.log('- newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift', 
-    //     newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift)
-    // console.log('- newAxisReferenceRowOffset, previousAxisRowOffset, axisReferenceRowShift',
-    //     newAxisReferenceRowOffset, previousAxisRowOffset, axisReferenceRowShift)
-
     if (shiftinstruction == 'axistailward') { // scrolling up/left
 
         // a. if scrolling the block headward near the start of the list, new cradle row offset and
@@ -640,8 +634,7 @@ export const calcShiftSpecs = ({
 
     let newCradleContentCount = cradleRowcount * crosscount // base count
     const includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount) >= listRowcount)
-    // console.log('newCradleContentCount, newCradleReferenceRowOffset, includesLastRow, cradleRowcount, listRowcount',
-    //     newCradleContentCount, newCradleReferenceRowOffset, includesLastRow, cradleRowcount, listRowcount)
+
     if (includesLastRow) {
         const partialspaces = listsize % crosscount
         const itemsShortfall = 
@@ -650,8 +643,6 @@ export const calcShiftSpecs = ({
                 crosscount - partialspaces
         newCradleContentCount -= itemsShortfall
     }
-    // console.log('adjusted newCradleContentCount', newCradleContentCount)
-
     // create head and tail change counts
     const changeOfCradleContentCount = cradlecontentlist.length - newCradleContentCount
 
