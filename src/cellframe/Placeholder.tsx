@@ -1,5 +1,5 @@
 // Placeholder.tsx
-// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     The role of the default PlaceHolder is to hold the content display until the host content

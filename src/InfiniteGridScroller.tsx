@@ -1,5 +1,5 @@
 // InfiniteGridScroller.tsx
-// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     react-infinite-grid-scroller = RIGS
@@ -293,14 +293,14 @@ const InfiniteGridScroller = (props) => {
 
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
             scrollerSessionIDRef.current = globalScrollerID++
-            cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, setListsize, listsizeRef, 
+            cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, listsizeRef, 
                 CACHE_PARTITION_SIZE)
         }
 
     },[]);
 
     // called when getItem returns null, or direct call from user (see serviceHandler)
-    const setListsize = useCallback((listsize) =>{
+    const updateListsize = useCallback((listsize) =>{
 
         if (listsize == listsizeRef.current) return
 
@@ -352,7 +352,7 @@ const InfiniteGridScroller = (props) => {
 
         >
         
-            {listsize && <Scrollblock
+            {<Scrollblock
 
                 gridSpecs = { gridSpecsRef.current }
                 styles = { stylesRef.current }
@@ -365,6 +365,7 @@ const InfiniteGridScroller = (props) => {
                     gridSpecs = { gridSpecsRef.current }
                     styles = { stylesRef.current }
                     listsize = { listsize }
+                    updateListsize = { updateListsize }
                     cache = { cache }
                     cacheMax = { cacheMax }
                     userCallbacks = { callbacksRef.current }

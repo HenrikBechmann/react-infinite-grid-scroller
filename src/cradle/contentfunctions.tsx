@@ -1,5 +1,5 @@
 // contentfunctions.tsx
-// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     This module supports the contenthandler module. The functions in this module perform
@@ -618,7 +618,7 @@ export const calcShiftSpecs = ({
         if (tailrowdiff > 0) {
 
             cradleReferenceRowshift += tailrowdiff
-            newCradleReferenceRowOffset -= tailrowdiff
+            newCradleReferenceRowOffset += tailrowdiff
 
         }
 
@@ -634,6 +634,7 @@ export const calcShiftSpecs = ({
 
     let newCradleContentCount = cradleRowcount * crosscount // base count
     const includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount) >= listRowcount)
+
     if (includesLastRow) {
         const partialspaces = listsize % crosscount
         const itemsShortfall = 
@@ -642,7 +643,6 @@ export const calcShiftSpecs = ({
                 crosscount - partialspaces
         newCradleContentCount -= itemsShortfall
     }
-
     // create head and tail change counts
     const changeOfCradleContentCount = cradlecontentlist.length - newCradleContentCount
 
