@@ -158,7 +158,7 @@ const CellFrame = ({
 
             cancelidlecallback(requestIdleCallbackIdRef.current)
 
-            cacheHandler.removeRequestedPortal(index)
+            cacheHandler.unregisterPendingPortal(index)
 
         }
 
@@ -166,6 +166,8 @@ const CellFrame = ({
 
     // refresh content if itemID changes
     useLayoutEffect(()=>{
+
+        if (frameStateRef.current == 'setup') return
 
         if (isMountedRef.current) setFrameState('getusercontent')
 
@@ -313,10 +315,8 @@ const CellFrame = ({
 
                     messageRef.current = placeholderMessagesRef.current.loading
 
-                    // setFrameState('fetching')
-
                     // reserve space in the cache
-                    cacheHandler.registerRequestedPortal(index)
+                    cacheHandler.registerPendingPortal(index)
 
                     // enqueue the fetch
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
@@ -384,6 +384,8 @@ const CellFrame = ({
                                 isMountedRef.current && setFrameState('inserting')
 
                             } else { // null or undefined; handle non-component value
+
+                                cacheHandler.unregisterPendingPortal(index) // create portal failed
 
                                 if (usercontent === null) {
 

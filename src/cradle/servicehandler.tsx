@@ -174,11 +174,12 @@ export default class ServiceHandler {
 
         }
 
-        const { cacheHandler, stateHandler } = this.cradleParameters.handlersRef.current
+        const { cacheHandler, contentHandler, stateHandler } = this.cradleParameters.handlersRef.current
 
         const { deleteListCallback, changeListsizeCallback } = this.callbacks
 
         const { listsize:currentlistsize } = this.cradleParameters.cradleInternalPropertiesRef.current
+
         const { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         let dListCallback
@@ -191,10 +192,14 @@ export default class ServiceHandler {
 
         }
 
-        cacheHandler.changeListsize(newlistsize, 
+        contentHandler.updateListsize(newlistsize)
+        cacheHandler.changeCacheListsize(newlistsize, 
             dListCallback,
             changeListsizeCallback
         )
+
+        cacheHandler.renderPortalLists()
+
 
         if ((cache == 'preload') && (newlistsize > currentlistsize)) {
             stateHandler.setCradleState('startpreload')
@@ -466,7 +471,7 @@ export default class ServiceHandler {
         const deletedItemIDToIndexMap = new Map() // index => itemID; orphaned index
         const deletedIndexToItemIDMap = new Map()
 
-        const portalItemHoldForDeleteList = [] // hold deleted portals for deletion until after cradle synch
+        const portalPartitionItemsForDeleteList = [] // hold deleted portals for deletion until after cradle synch
 
         originalMap.forEach((originalItemID, originalItemIDIndex) => {
 
@@ -477,7 +482,7 @@ export default class ServiceHandler {
                 deletedItemIDToIndexMap.set(originalItemID, originalItemIDIndex)
 
                 const { partitionID } = metadataMap.get(originalItemID)
-                portalItemHoldForDeleteList.push({itemID:originalItemID, partitionID})
+                portalPartitionItemsForDeleteList.push({itemID:originalItemID, partitionID})
                 metadataMap.delete(originalItemID)
 
             } else { // remapped, check for orphaned index
@@ -525,9 +530,9 @@ export default class ServiceHandler {
 
         modifiedIndexList = modifiedIndexList.concat(indexesToReplaceItemIDList)
 
-        cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList.concat(partitionItemsToReplaceList)
+        cacheHandler.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList.concat(partitionItemsToReplaceList)
 
-        stateHandler.setCradleState('applycellframechanges')
+        stateHandler.setCradleState('applyremapchanges')
 
         // ---------- returns for user information --------------------
 
@@ -548,83 +553,90 @@ export default class ServiceHandler {
 
     // move must be entirely within list bounds
     // returns list of processed indexes
-    public moveIndex = (toindex, fromindex, highrange = null) => {
+    public moveIndex = (tolowindex, fromlowindex, fromhighindex = null) => {
 
+        // ------------ confirm validity of arguments -------------
 
-        const isToindexInvalid = (!isInteger(toindex) || !minValue(toindex, 0))
-        const isFromindexInvalid = (!isInteger(fromindex) || !minValue(fromindex, 0))
+        const isToindexInvalid = (!isInteger(tolowindex) || !minValue(tolowindex, 0))
+        const isFromindexInvalid = (!isInteger(fromlowindex) || !minValue(fromlowindex, 0))
         let isHighrangeInvalid = false
-        if ((!isBlank(highrange)) && (!isFromindexInvalid)) {
-            isHighrangeInvalid = !minValue(highrange,fromindex)
+
+        if ((!isFromindexInvalid)) {
+            if (!isBlank(fromhighindex)) {
+                isHighrangeInvalid = !minValue(fromhighindex, fromlowindex)
+            } else {
+                fromhighindex = fromlowindex
+            }
         }
 
-        toindex = +toindex
-        fromindex = +fromindex
-        highrange = highrange ?? fromindex
-        highrange = +highrange
 
+        tolowindex = +tolowindex
+        fromlowindex = +fromlowindex
+        fromhighindex = +fromhighindex
+
+        // TODO return error array instead
         if (isToindexInvalid || isFromindexInvalid || isHighrangeInvalid) {
-            console.log('RIGS ERROR moveIndex(toindex, fromindex, highrange)')
-            isToindexInvalid && console.log(toindex, errorMessages.moveTo)
-            isFromindexInvalid && console.log(fromindex, errorMessages.moveFrom)
-            isHighrangeInvalid && console.log(highrange, errorMessages.moveRange)
-            return null
+            console.log('RIGS ERROR moveIndex(toindex, fromindex, fromhighrange)')
+            isToindexInvalid && console.log(tolowindex, errorMessages.moveTo)
+            isFromindexInvalid && console.log(fromlowindex, errorMessages.moveFrom)
+            isHighrangeInvalid && console.log(fromhighindex, errorMessages.moveRange)
+            return []
         }
 
-        // ------------- define parameters ---------------
+        tolowindex = Math.max(0,tolowindex)
+        fromlowindex = Math.max(0,fromlowindex)
+        fromhighindex = Math.max(0,fromhighindex)
+
+        const fromspan = fromhighindex - fromlowindex + 1
+
+        let tohighindex = tolowindex + fromspan - 1
+
+        // ------------- coerce parameters to list bounds ---------------
 
         const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
 
         // keep within current list size
-        const listbound = listsize - 1
+        const listhighindex = listsize - 1
 
-        toindex = 
-            (toindex > listbound)?
-                listbound:
-                toindex
+        if (tohighindex > listhighindex) {
 
-        fromindex = 
-            (fromindex > listbound)?
-                listbound:
-                fromindex
+            const diff = tohighindex - listhighindex
+            tohighindex = Math.max(0,tohighindex - diff)
+            tolowindex = Math.max(0,tolowindex - diff)
 
-        highrange = 
-            (highrange > listbound)?
-                listbound:
-                highrange
+        }
 
-        // highrange must be >= fromindex
-        highrange = 
-            (highrange >= fromindex)?
-                highrange:
-                fromindex
+        if (fromhighindex > listhighindex) {
 
-        const rangeincrement = highrange - fromindex + 1
-        const moveincrement = toindex - fromindex
+            const diff = fromhighindex - listhighindex
+            fromhighindex = Math.max(0,fromhighindex - diff)
+            fromlowindex = Math.max(0,fromlowindex - diff)
+
+        }
 
         // ---------- constrain parameters --------------
 
-        if (fromindex == toindex) return [] // nothing to do
-
-        // move must be in list bounds
-        if (moveincrement > 0) { // move up
-            const targettop = toindex + (rangeincrement - 1)
-            if (targettop > listbound) return [] // out of bounds
-        }
+        // nothing to do; no displacement
+        if (fromlowindex == tolowindex) return [] 
 
         // ----------- perform cache and cradle operations -----------
 
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
 
-        const processedIndexList = 
-            cacheHandler.moveIndex(toindex, fromindex, highrange)
+        const processedIndexList = // both displaced and moved indexes
+            cacheHandler.moveIndex(tolowindex, fromlowindex, fromhighindex)
 
         if (processedIndexList.length) {
 
-            contentHandler.changeCradleItemIDs(processedIndexList)
+            contentHandler.synchronizeCradleItemIDsToCache(processedIndexList)
 
-            stateHandler.setCradleState('applycellframechanges')
+            const { content } = contentHandler
+
+            content.headModelComponents = content.cradleModelComponents.slice(0,content.headModelComponents.length)
+            content.tailModelComponents = content.cradleModelComponents.slice(content.headModelComponents.length)
+
+            stateHandler.setCradleState('applymovechanges')
             
         }
 
@@ -636,12 +648,17 @@ export default class ServiceHandler {
 
         const isIndexInvalid = (!isInteger(index) || !minValue(index, 0))
         let isHighrangeInvalid = false
-        if ((!isBlank(rangehighindex)) && (!isIndexInvalid)) {
-            isHighrangeInvalid = !minValue(rangehighindex, index)
+
+        if ((!isIndexInvalid)) {
+            if (!isBlank(rangehighindex)) {
+                isHighrangeInvalid = !minValue(rangehighindex, index)
+            } else {
+                rangehighindex = index
+            }
         }
 
         index = +index
-        rangehighindex = rangehighindex ?? index
+
         rangehighindex = +rangehighindex
 
         if (isIndexInvalid || isHighrangeInvalid) {
@@ -659,12 +676,16 @@ export default class ServiceHandler {
 
         const isIndexInvalid = (!isInteger(index) || !minValue(index, 0))
         let isHighrangeInvalid = false
-        if ((!isBlank(rangehighindex)) && (!isIndexInvalid)) {
-            isHighrangeInvalid = !minValue(rangehighindex, index)
+
+        if ((!isIndexInvalid)) {
+            if (!isBlank(rangehighindex)) {
+                isHighrangeInvalid = !minValue(rangehighindex, index)
+            } else {
+                rangehighindex = index
+            }
         }
 
         index = +index
-        rangehighindex = rangehighindex ?? index
         rangehighindex = +rangehighindex
 
         if (isIndexInvalid || isHighrangeInvalid) {
@@ -678,40 +699,94 @@ export default class ServiceHandler {
 
     }
 
-    // shared logic. Returns lists of items changed, and items replaced (new items for insert)
+    newlistsize
+
+    // shared logic for insert and remove. Returns lists of indexes shifted, replaced, and removed
     // this operation changes the listsize
     private insertRemoveIndex = (index, rangehighindex, increment) => {
 
-        index = index ?? 0
-        rangehighindex = rangehighindex ?? index
-
+        // basic assertions
         index = Math.max(0,index)
         rangehighindex = Math.max(rangehighindex, index)
+
+        // ---------------- assemble resources --------------------
 
         const { cacheHandler, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
 
-        const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
+        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        const [changeList, replaceList, rangeincrement, portalItemHoldForDeleteList] = 
-            cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize)
+        // ------------------- process cache ----------------
+        const { listsize } = cradleInternalProperties
+        if (listsize == 0) {
+            if (increment > 0) {
 
-        cacheHandler.portalItemHoldForDeleteList = portalItemHoldForDeleteList
+                return this.setListsize(rangehighindex - index + 1)
 
-        contentHandler.changeCradleItemIDs(changeList)
+            }
+            return [[],[],[]]
+        }
 
-        if (increment == +1) contentHandler.createNewItemIDs(replaceList)
+        const [startChangeIndex, rangeincrement, shiftedList, removedList, replaceList, portalPartitionItemsForDeleteList] = 
+            cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize) //, cradleIndexSpan)
 
-        // const { content } = contentHandler
+        if (rangeincrement === null) return [[],[],[]] // no action
 
-        stateHandler.setCradleState('applycellframechanges')
+        // partitionItems to delete with followup state changes - must happen after cradle update
+        cacheHandler.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList
 
+        // ------------- synchronize cradle to cache changes -------------
+
+        // determine if cradle must be reset or simply adjusted
         const changecount = rangeincrement // semantics
-        const newlistsize = listsize + changecount 
+        const newlistsize = this.newlistsize = listsize + changecount
 
-        this.setListsize(newlistsize)
+        const { viewportRowcount, crosscount } = cradleInternalProperties
+        const { runwaySize } =  cradleInheritedProperties
+        const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
+        const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
 
-        return [changeList, replaceList]
+        const indexSpan = contentHandler.indexSpan
+        const [lowIndex,highIndex] = indexSpan
+        const measuredCradleItemCount = (indexSpan.length == 0)?0:highIndex - lowIndex + 1
+
+        const resetCradle = ((measuredCradleItemCount < calculatedCradleItemcount) || 
+            (contentHandler.indexSpan[1] >= (newlistsize - 1)))
+
+        if (!resetCradle) { // synchronize cradle contents to changes
+
+            contentHandler.synchronizeCradleItemIDsToCache(shiftedList, increment, startChangeIndex) // non-zero communications isInsertRemove
+
+            // if (increment == +1) contentHandler.createNewItemIDs(replaceList)
+
+            const { content } = contentHandler
+
+            const requestedSet = cacheHandler.cacheProps.requestedSet
+
+            const timeout = setInterval(() => { // wait until changed cache entries update the cradle
+
+                if(!requestedSet.size) { // finished collecting new cache entries
+
+                    clearInterval(timeout); 
+
+                    content.headModelComponents = content.cradleModelComponents.slice(0,content.headModelComponents.length)
+                    content.tailModelComponents = content.cradleModelComponents.slice(content.headModelComponents.length)
+
+                    stateHandler.setCradleState('applyinsertremovechanges')
+
+                }
+            }, 100)
+
+        } else { // cradle to be completely reset if listsize change encroaches on cradle
+
+            stateHandler.setCradleState('channelcradleresetafterinsertremove')
+
+        }
+
+        const replacedList = replaceList // semantics
+
+        return [shiftedList, replacedList, removedList] // inform caller
 
     }
 

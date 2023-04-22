@@ -47,9 +47,9 @@ import CachePartition from './CachePartition'
 // the cache itself is maintained in the root infinitegridscroller component
 export default class CacheHandler {
 
-    constructor(scrollerID, setListsize, listsizeRef, CACHE_PARTITION_SIZE) {
+    constructor(scrollerID, listsizeRef, CACHE_PARTITION_SIZE) {
         this.cacheProps.scrollerID = scrollerID // for debug
-        this.setListsize = setListsize // passed from InfiniteGridScroller.setListsize(listsize)
+        // this.updateListsize = updateListsize // passed from InfiniteGridScroller.updateListsize(listsize)
         this.listsizeRef = listsizeRef // current list size
 
         this.CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE
@@ -84,13 +84,13 @@ export default class CacheHandler {
 
     CACHE_PARTITION_SIZE
 
-    portalItemHoldForDeleteList // array of {itemID,partitionID}
+    portalPartitionItemsForDeleteList // array of {itemID,partitionID}
 
     listsizeRef
 
-    // setListsize(listsize) causes an InfiniteGridScroller useState update
+    // updateListsize(listsize) causes an InfiniteGridScroller useState update
     // of the listsize throughout
-    setListsize // function passed from InfiniteGridScroller
+    // updateListsize // function passed from InfiniteGridScroller
 
     // ===========================[ CACHE PARTITION MANAGEMENT ]===============================
 
@@ -263,9 +263,10 @@ export default class CacheHandler {
 
     // ----------------------------[ basic operations ]--------------------------
 
-    changeListsize = (newlistsize, deleteListCallback, changeListsizeCallback) => {
+    // called from Cradle.nullItemSetMaxListsize, and serviceHandler.setListsize
+    changeCacheListsize = (newlistsize, deleteListCallback, changeListsizeCallback) => {
 
-        this.setListsize(newlistsize)
+        // this.updateListsize(newlistsize)
 
         // match cache to newlistsize
         const portalIndexMap = this.cacheProps.indexToItemIDMap
@@ -500,72 +501,85 @@ export default class CacheHandler {
 
     // ==========================[ SERVICE SUPPORT ]=========================
 
+    // --------------------------[ move indexes ]-------------------------------
+
     // move is coerced by servicehandler to be within current list bounds
-    moveIndex(toindex, fromindex, fromhighindex ) {
+    moveIndex(tolowindex, fromlowindex, fromhighindex ) {
 
         const {indexToItemIDMap,metadataMap} = this.cacheProps
 
         // ----------- define parameters ---------------
 
-        const rangeabsoluteincrement = fromhighindex - fromindex + 1,
-            movedirectionalincrement = toindex - fromindex,
-            tohighindex = toindex + (rangeabsoluteincrement - 1)
+        const moveblocksize = fromhighindex - fromlowindex + 1,
+            moveincrement = tolowindex - fromlowindex,
+            tohighindex = tolowindex + (moveblocksize - 1)
 
-        const shiftdirection = 
-            (movedirectionalincrement > 0)? // move up in list
-                -1: // shift down, make room for shiftingindex above
-                1   // shift up, make room for shiftingindex below
+        const movedirection = 
+            (moveincrement > 0)? // move block up in list
+                'up': // shift down, make room for shiftingindex above
+                'down'   // shift up, make room for shiftingindex below
 
-        const orderedindexlist = Array.from(indexToItemIDMap.keys())
-        orderedindexlist.sort((a,b)=>a-b)
+        // ------------ find bounds of from and to blocks in cache -------------
 
-        const toindexptr = orderedindexlist.findIndex(value => value >= toindex),
-            tohighindexptr = orderedindexlist.findIndex(value => value >= tohighindex),
-            fromindexptr = orderedindexlist.findIndex(value => value >= fromindex),
-            fromhighindexptr = orderedindexlist.findIndex(value => value >= fromhighindex)
+        const orderedindexlist = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b)
+
+        const reverseorderedindexlist = orderedindexlist.slice().reverse()
+
+        const tolowindexptr = orderedindexlist.findIndex(value => value >= tolowindex),
+            fromlowindexptr = orderedindexlist.findIndex(value => value >= fromlowindex)
+
+        let tohighindexptr = reverseorderedindexlist.findIndex(value => value <= tohighindex),
+            fromhighindexptr = reverseorderedindexlist.findIndex(value => value <= fromhighindex)
+
+        // get required inverse
+        {
+            const cachelistcount = orderedindexlist.length
+            if (tohighindexptr != -1) tohighindexptr = (cachelistcount -1) - tohighindexptr
+            if (fromhighindexptr != -1) fromhighindexptr = (cachelistcount -1) - fromhighindexptr
+        }
 
         // ---------------- capture index data to move ----------------
 
-        let processtomoveList
-        if ((fromindexptr == -1) && (fromhighindexptr == -1)) { // scope is out of view
+        let listtoprocessformove
+        if ((fromlowindexptr == -1) && (fromhighindexptr == -1)) { // scope is out of view
 
-            processtomoveList = []
+            listtoprocessformove = []
 
         } else if (fromhighindexptr == -1) { // scope is partially in view
 
-            processtomoveList = orderedindexlist.slice(fromindexptr)
+            listtoprocessformove = orderedindexlist.slice(fromlowindexptr)
 
         } else { // scope is entirely in view
 
-            processtomoveList = orderedindexlist.slice(fromindexptr, fromhighindexptr + 1)
+            listtoprocessformove = orderedindexlist.slice(fromlowindexptr, fromhighindexptr + 1)
 
         }
 
         const processtomoveMap = new Map()
-        const capturemoveindex = (index) => {
+        const capturemoveindexFn = (index) => {
 
             processtomoveMap.set(index, indexToItemIDMap.get(index))
 
         }
 
-        processtomoveList.forEach(capturemoveindex)
+        listtoprocessformove.forEach(capturemoveindexFn)
 
         // ------------- get list of indexes to shift out of the way ---------------
         
-        let processtoshiftList
-        if (shiftdirection == 1) { // block is moving down, shift is up; toindex < fromindex
+        let listtoprocessfordisplace
+        if (movedirection == 'down') { // block is moving down, shift is up; toindex < fromindex
 
-            if ((toindexptr == -1) && (fromindexptr == -1)) {
+            if ((tolowindexptr == -1) && (fromlowindexptr == -1)) {
 
-                processtoshiftList = []
+                listtoprocessfordisplace = []
 
-            } else if (fromindexptr == -1) {
+            } else if (fromlowindexptr == -1) {
 
-                processtoshiftList = orderedindexlist.slice(toindexptr)
+                listtoprocessfordisplace = orderedindexlist.slice(tolowindexptr)
 
             } else {
 
-                processtoshiftList = orderedindexlist.slice(toindexptr, fromindexptr)
+                listtoprocessfordisplace = orderedindexlist.slice(tolowindexptr, fromlowindexptr)
 
             }
 
@@ -573,47 +587,47 @@ export default class CacheHandler {
 
             if (tohighindexptr == -1 && fromhighindexptr == -1) {
 
-                processtoshiftList = []
+                listtoprocessfordisplace = []
 
             } else if (tohighindexptr == -1) {
 
-                processtoshiftList = orderedindexlist.slice(fromhighindexptr + 1)
+                listtoprocessfordisplace = orderedindexlist.slice(fromhighindexptr + 1)
 
             } else {
 
-                processtoshiftList = orderedindexlist.slice(fromhighindexptr + 1, tohighindexptr + 1)
+                listtoprocessfordisplace = orderedindexlist.slice(fromhighindexptr + 1, tohighindexptr + 1)
 
             }
         }
 
-        if (shiftdirection == 1) processtoshiftList.reverse()
+        if (movedirection == 'down') listtoprocessfordisplace.reverse()
 
         // -------------- move indexes out of the way --------------
 
-        const processedshiftList = []
+        const processeddisplaceList = []
 
-        const processshiftindex = (index) => {
+        const processsdisplaceindexFn = (index) => {
 
             const itemID = indexToItemIDMap.get(index)
 
             const newIndex = 
-                (shiftdirection == -1)?
-                    index - rangeabsoluteincrement:
-                    index + rangeabsoluteincrement
+                (movedirection == 'up')?
+                    index - moveblocksize:
+                    index + moveblocksize
 
             indexToItemIDMap.set(newIndex,itemID)
             metadataMap.get(itemID).index = newIndex
-            processedshiftList.push(newIndex)
+            processeddisplaceList.push(newIndex)
 
         }
 
-        processtoshiftList.forEach(processshiftindex)
+        listtoprocessfordisplace.forEach(processsdisplaceindexFn)
 
         // ------------ replace shifted index space with moved indexes ----------
 
         const processedmoveList = []
-        const processmoveindex = (itemID, index) => {
-            const newIndex = index + movedirectionalincrement // swap
+        const processmoveindexFn = (itemID, index) => {
+            const newIndex = index + moveincrement // swap
 
             indexToItemIDMap.set(newIndex, itemID)
             metadataMap.get(itemID).index = newIndex
@@ -621,231 +635,266 @@ export default class CacheHandler {
 
         }
 
-        processtomoveMap.forEach(processmoveindex)
+        processtomoveMap.forEach(processmoveindexFn)
 
         // -----------return list of processed indexes to caller --------
         // for synchrnization with cradle cellFrames
 
-        const processedIndexes = [...processedshiftList,...processedmoveList]
+        const processedIndexes = [...processeddisplaceList,...processedmoveList].sort((a,b)=>a-b)
 
         return processedIndexes
 
     }
 
+    // ----------------------------[ insert/remove indexes ]------------------------------
+
     // insert or remove indexes: much of this deals with the fact that the cache is sparse.
-    insertRemoveIndex(index, highrange, increment, listsize) { // increment is +1 or -1
+    insertRemoveIndex(index, highrange, increment, listsize ) { // increment is +1 or -1
 
+        // clarity
+        const isInserting = (increment == 1)
+        const isRemoving = (increment == -1)
+
+        const emptyreturn = [null, null, [],[],[], []] // no action return value
+
+        // cache resources
         const { indexToItemIDMap, metadataMap } = this.cacheProps
+        const orderedCacheIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b) // ascending order
 
-        // ---------- define range parameters ---------------
+        // ---------- define contiguous range parameters; add sentinels ---------------
 
-        // high range is the highest index number of the insert/remove operation
-        let highrangeindex = highrange ?? 0
+        // high range is the highest index number of the insert/remove range
+        let highrangeindex = highrange
+        let lowrangeindex = index // semantics - name symmetry
 
-        highrangeindex = 
-            (highrangeindex > index)?
-                highrangeindex:
-                index
-
-        const emptyreturn = [[],[],0]
-        if (increment == -1) {
+        if (isRemoving) {
 
             // removal must be entirely within scope of the list
-            if (highrangeindex > (listsize - 1)) return emptyreturn
+            if (highrangeindex > (listsize - 1)) {
 
-        } else {
+                highrangeindex = (listsize - 1)
+                if (highrangeindex < lowrangeindex) return emptyreturn
 
-            // addition can at most start at the next index above the current list
-            if (index > listsize) return emptyreturn
+            }
+
+        } else { // isInserting
+
+            // addition can at most start at the next lowrangeindex above the current list; aka append
+            if (lowrangeindex > listsize) {
+
+                const diff = lowrangeindex - listsize
+                lowrangeindex -= diff
+                highrangeindex -= diff
+
+                // return emptyreturn
+
+            }
 
         }
 
-        // rangecount is the absolute number in the insert/remove range - contiguous
-        const rangecount = highrangeindex - index + 1
+        // rangecount is the absolute number in the insert/remove contiguous range
+        const rangecount = highrangeindex - lowrangeindex + 1
 
         // range increment adds sign to rangecount to indicate add/remove
         const rangeincrement = rangecount * increment
+        const startChangeIndex = 
+            (increment == 1)?
+                lowrangeindex:
+                highrangeindex + (rangeincrement + 1)
 
-        // highPtr, lowPtr, shrinktoPtr within orderedIndexList.
-        const orderedIndexList = Array.from(indexToItemIDMap.keys())
-        orderedIndexList.sort((a,b)=>a-b)
-
-        // ---------- define boundaries within ordered cache index list ------------
-        // Ptr = index into array, as opposed to index of virtual list
-
-        // shrinkptr is the location of the bottom of the shrink range for removals
-        let shrinktoIndex = null
-        let shrinktoPtr = - 1
-        
-        if (increment == - 1) {
-            
-            shrinktoIndex = orderedIndexList.at(-1) + (rangeincrement)
-
-            shrinktoIndex = Math.max(highrangeindex + (rangeincrement), shrinktoIndex)
-
-            shrinktoIndex = Math.min(listsize - 1,shrinktoIndex) 
-
-            shrinktoPtr = orderedIndexList.findIndex(value => value >= shrinktoIndex)
-
+        let toShiftStartIndex // start of indexes to shift up (insert) or down (remove)
+        if (isInserting) {
+            toShiftStartIndex = lowrangeindex
+        } else { // isRemoving
+            toShiftStartIndex = highrangeindex + 1
         }
 
-        // lowPtr and highPtr must be within low and high range
-        const lowPtr = orderedIndexList.findIndex(value => {
+        // ---------- define range boundaries within ordered cache index list ------------
 
-            return (value >= index) && (value <= highrangeindex)
+        // obtain starptr for indexes to shift
+        const toShiftStartCachePtr = orderedCacheIndexList.findIndex(value => {
+
+            return (value >= toShiftStartIndex)
 
         })
 
-        const reverseIndexList = Array.from(orderedIndexList)
-        reverseIndexList.reverse()
-        let highPtr = reverseIndexList.findIndex(value=> {
+        // obtain lowCacheRangePtr...
+        const lowCacheRangePtr = orderedCacheIndexList.findIndex(value => {
 
-            return value <= highrangeindex
+            return (value >= lowrangeindex) && (value <= highrangeindex)
 
         })
-        if (highPtr != -1) {
-            highPtr = (orderedIndexList.length - 1) - highPtr
-            if (highPtr < lowPtr) highPtr = -1
-        }
 
-        // ----------- list indexes to process, replace, and remove, and items to remove --------
+        // obtain highCacheRangePtr...
+        const reverseCacheIndexList = Array.from(orderedCacheIndexList).reverse()
+        let highCacheRangePtr = reverseCacheIndexList.findIndex(value=> {
 
-        let indexesToProcessList, // for either insert or remove
-            indexesToReplaceList = [], // for insert the range being inserted
-            indexesToRemoveList = [], // for remove - end of list; the list is shrinking
-            indexesOfItemsToRemoveList = [], // for remove - within the range of indexes being removed
-            itemsToRemoveList = [] // for remove, derived from the previous
+            return (value <= highrangeindex) && (value >= lowrangeindex)
 
-        // get indexesToProcessList
-        if ((lowPtr == -1) && (highPtr == -1)) { // core scope is out of view
+        })
+        // take inverse of highCacheRangePtr for non-reverse sort
+        if (highCacheRangePtr != -1) {
 
-            indexesToProcessList = []
-
-        } else { // core scope is partially or fully in view; lowPtr is available
-
-            if (increment == 1) {
-
-                indexesToProcessList = orderedIndexList.slice(lowPtr)
-
-            } else if (highPtr == -1) { // increment == -1; lowPtr is available
-
-                indexesToProcessList = []
-
-            } else { // increment == -1; lowPtr and highPtr are available
-
-                indexesToProcessList = orderedIndexList.slice(highPtr + 1)
-
-            }
+            highCacheRangePtr = (orderedCacheIndexList.length - 1) - highCacheRangePtr
+            if (highCacheRangePtr < lowCacheRangePtr) highCacheRangePtr = -1
 
         }
 
-        const portalItemHoldForDeleteList = [] // hold portals for deletion until after after cradle synch
+        // ----------- isolate index range list and shift list ------------
 
-        if (increment == 1) {
+        // cache inputs
+        let cacheRangeIndexesList, // for either insert or remove
+            cacheToShiftIndexesList // for either insert or remove
 
-            // get indexesToReplaceList
-            if ((lowPtr == -1) && (highPtr == -1)) { // core scope is out of view
+        // get inputs
+        if (lowCacheRangePtr == -1) { // core scope is out of view
 
-                indexesToReplaceList = []
+            cacheRangeIndexesList = []
+            cacheToShiftIndexesList = []
 
-            } else if (highPtr == -1) {
+        } else if (highCacheRangePtr == -1) { // core scope is partially in view; lowCacheRangePtr is available
 
-                indexesToReplaceList = orderedIndexList.slice(lowPtr)
+            // all items above lowCacheRangePtr must have indexes reset
+            cacheRangeIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr)
 
-            } else {
+            if (isInserting) {
 
-                indexesToReplaceList = orderedIndexList.slice(lowPtr, highPtr + 1)
-            }
-
-        } else {
-
-            // get indexesToRemoveList
-            if (shrinktoPtr == -1) { // core scope is out of view
-
-                indexesToRemoveList = []
+                cacheToShiftIndexesList = cacheRangeIndexesList.slice()
 
             } else {
 
-                indexesToRemoveList = orderedIndexList.slice(shrinktoPtr + 1)
+                if (toShiftStartCachePtr == -1) {
+
+                    cacheToShiftIndexesList = []
+
+                } else {
+
+                    cacheToShiftIndexesList = orderedCacheIndexList.slice(toShiftStartCachePtr)
+                    
+                }
+
             }
 
-            // get indexesOfItemsToRemoveList
-            if ((lowPtr == -1) && (highPtr == -1)) { // core scope is out of view
+        } else { // range fully in view
 
-                indexesOfItemsToRemoveList = []
+            cacheRangeIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr, highCacheRangePtr + 1)
 
-            } else if (highPtr == -1) {
+            if (isInserting) {
 
-                indexesOfItemsToRemoveList = orderedIndexList.slice(lowPtr)
+                cacheToShiftIndexesList = orderedCacheIndexList.slice(toShiftStartCachePtr)
 
             } else {
 
-                indexesOfItemsToRemoveList = orderedIndexList.slice(lowPtr, highPtr + 1)
+                if (toShiftStartCachePtr == -1) {
 
-            }
+                    cacheToShiftIndexesList = []
 
-            // get itemsToRemoveList
-            for (const index of indexesOfItemsToRemoveList) {
+                } else {
 
-                itemsToRemoveList.push(indexToItemIDMap.get(index))
+                    cacheToShiftIndexesList = orderedCacheIndexList.slice(toShiftStartCachePtr)
+
+                }
 
             }
 
         }
 
-        // ----------- conduct cache operations ----------
+        // ----------- list cache indexes and items to replace or remove -----------
+
+        // cache outputs
+        // for insert, the range being inserted; for remove, any tail cradle items abandoned
+        let cacheIndexesToReplaceList = [], // for insert, the range being inserted
+            cacheIndexesToRemoveList = [], // for remove, the range being removed
+            cacheItemsToRemoveList = [] // for remove, derived from the previous
+
+        if (isInserting) {
+
+            cacheIndexesToReplaceList = cacheRangeIndexesList
+
+        } else { // isRemoving
+
+            cacheIndexesToRemoveList = cacheRangeIndexesList
+
+            // get cacheItemsToRemoveList
+            for (const index of cacheIndexesToRemoveList) {
+
+                cacheItemsToRemoveList.push(indexToItemIDMap.get(index))
+                indexToItemIDMap.delete(index)
+
+            }
+
+        }
+
+        // ----------- conduct cache operations; capture list of shifted indexes ----------
 
         // increment higher from top of list to preserve lower values for subsequent increment
-        if (increment == 1) indexesToProcessList.reverse() 
+        if (isInserting) cacheToShiftIndexesList.reverse() 
 
-        const indexesModifiedList = []
+        const cacheIndexesShiftedList = [] // track shifted indexes
+        const cacheIndexesTransferredSet = new Set() // obtain list of orphaned indexes
 
-        // modify index-to-itemid map, and metadata map
-        const processIndex = index => {
+        // function modify index-to-itemid map, and metadata map, for index shifts
+        const processIndexFn = index => {
 
             const itemID = indexToItemIDMap.get(index)
             const newIndex = index + rangeincrement
 
+            if (isRemoving) {
+                cacheIndexesTransferredSet.add(index)
+                cacheIndexesTransferredSet.delete(newIndex)
+            }
+
             indexToItemIDMap.set(newIndex, itemID)
             metadataMap.get(itemID).index = newIndex
-            indexesModifiedList.push(newIndex)
+            cacheIndexesShiftedList.push(newIndex)
 
         }
 
-        indexesToProcessList.forEach(processIndex)
+        // walk through items to shift
+        cacheToShiftIndexesList.forEach(processIndexFn)
 
-        // delete remaining indexes and items now duplicates
+        // delete remaining indexes and items now duplicates; track portal data to remove after cradle updated
 
-        if (increment == 1) {
+        const portalPartitionItemsForDeleteList = [] // hold portals for deletion until after after cradle synch
+        let cacheIndexesRemovedList = []
 
-            for (const index of indexesToReplaceList) {
+        if (isInserting) {
+
+            for (const index of cacheIndexesToReplaceList) {
                 
                 indexToItemIDMap.delete(index)
 
             }
 
-        } else {
+        } else { // isRemoving
 
-            for (const index of indexesToRemoveList) {
+            for (const itemID of cacheItemsToRemoveList) {
+
+                const { partitionID } = metadataMap.get(itemID)
+                portalPartitionItemsForDeleteList.push({itemID, partitionID})
+                metadataMap.delete(itemID)
+
+            }
+
+            // abandoned indexes from remove process
+            const orphanedIndexesTransferredList = Array.from(cacheIndexesTransferredSet)
+
+            for (const index of orphanedIndexesTransferredList) {
 
                 indexToItemIDMap.delete(index)
 
             }
 
-            for (const itemID of itemsToRemoveList) {
-
-                const { partitionID } = metadataMap.get(itemID)
-                portalItemHoldForDeleteList.push({itemID, partitionID})
-                metadataMap.delete(itemID)
-
-            }
+            cacheIndexesRemovedList = cacheIndexesToRemoveList.concat(orphanedIndexesTransferredList)
 
         }
+
+        if (isInserting) cacheIndexesShiftedList.reverse() // return to ascending order
 
         // --------------- returns ---------------
 
         // return values for caller to send to contenthandler for cradle synchronization
-        return [indexesModifiedList, indexesToReplaceList, rangeincrement, portalItemHoldForDeleteList]
+        return [startChangeIndex, rangeincrement, cacheIndexesShiftedList, cacheIndexesRemovedList, cacheIndexesToReplaceList, portalPartitionItemsForDeleteList]
 
     }
 
@@ -853,13 +902,13 @@ export default class CacheHandler {
 
     // used for size calculation in pareCacheToMax
     // registers indexes when requested but before retrieved and entered into cache
-    registerRequestedPortal(index) {
+    registerPendingPortal(index) {
 
         this.cacheProps.requestedSet.add(index)
 
     }
 
-    removeRequestedPortal(index) {
+    unregisterPendingPortal(index) {
 
         this.cacheProps.requestedSet.delete(index)
 
@@ -888,7 +937,7 @@ export default class CacheHandler {
      // create new portal
     async createPortal(component, index, itemID, scrollerProperties, isPreload = false) {
 
-        this.removeRequestedPortal(index)
+        this.unregisterPendingPortal(index)
 
         const { layout, cellHeight, cellWidth, orientation } = 
             this.cradleParameters.cradleInheritedPropertiesRef.current
@@ -1010,6 +1059,7 @@ export default class CacheHandler {
         const { removePartitionPortal } = this
 
         const deleteList = []
+
         for (const index of indexArray) {
 
             const itemID = indexToItemIDMap.get(index)
@@ -1025,7 +1075,9 @@ export default class CacheHandler {
             indexToItemIDMap.delete(index)
 
         }
-        
+
+        // this.renderPortalLists()
+
         deleteListCallback && deleteListCallback(deleteList)
 
     }

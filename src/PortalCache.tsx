@@ -10,7 +10,7 @@ const PortalCache:FC<any> = ({scrollerSessionIDRef, setListsize, listsizeRef, ge
 
     useEffect(() => {
 
-        const cacheHandler = new CacheHandler(scrollerSessionIDRef.current, setListsize, listsizeRef, 
+        const cacheHandler = new CacheHandler(scrollerSessionIDRef.current, listsizeRef, 
             CACHE_PARTITION_SIZE)
 
         cacheHandlerRef.current = cacheHandler

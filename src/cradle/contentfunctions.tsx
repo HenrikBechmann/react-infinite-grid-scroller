@@ -618,7 +618,7 @@ export const calculateShiftSpecs = ({
         if (tailrowdiff > 0) {
 
             cradleReferenceRowshift += tailrowdiff
-            newCradleReferenceRowOffset -= tailrowdiff
+            newCradleReferenceRowOffset += tailrowdiff
 
         }
 
@@ -634,6 +634,7 @@ export const calculateShiftSpecs = ({
 
     let newCradleContentCount = cradleRowcount * crosscount // base count
     const includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount) >= listRowcount)
+
     if (includesLastRow) {
         const partialspaces = listsize % crosscount
         const itemsShortfall = 
@@ -642,7 +643,6 @@ export const calculateShiftSpecs = ({
                 crosscount - partialspaces
         newCradleContentCount -= itemsShortfall
     }
-
     // create head and tail change counts
     const changeOfCradleContentCount = cradlecontentlist.length - newCradleContentCount
 

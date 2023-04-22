@@ -305,7 +305,7 @@ const InfiniteGridScroller = (props) => {
     },[]);
 
     // called when getItem returns null, or direct call from user (see serviceHandler)
-    const setListsize = useCallback((listsize) =>{
+    const updateListsize = useCallback((listsize) =>{
 
         if (listsize == listsizeRef.current) return
 
@@ -357,7 +357,7 @@ const InfiniteGridScroller = (props) => {
 
         >
         
-            {listsize && <Scrollblock
+            {<Scrollblock
 
                 gridSpecs = { gridSpecsRef.current }
                 styles = { stylesRef.current }
@@ -370,6 +370,7 @@ const InfiniteGridScroller = (props) => {
                     gridSpecs = { gridSpecsRef.current }
                     styles = { stylesRef.current }
                     listsize = { listsize }
+                    updateListsize = { updateListsize }
                     cache = { cache }
                     cacheMax = { cacheMax }
                     userCallbacks = { callbacksRef.current }
@@ -397,7 +398,7 @@ const InfiniteGridScroller = (props) => {
         {(scrollerState != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
             <PortalCache 
                 scrollerSessionIDRef = { scrollerSessionIDRef }
-                setListsize = { setListsize } 
+                setListsize = { updateListsize } 
                 listsizeRef = { listsizeRef } 
                 getCacheAPI = { getCacheAPI } 
                 CACHE_PARTITION_SIZE = { CACHE_PARTITION_SIZE } />
