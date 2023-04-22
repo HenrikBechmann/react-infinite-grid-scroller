@@ -1,5 +1,5 @@
-// Cradle.tsx 
-// copyright (c) 2019-2022 Henrik Bechmann, Toronto, Licence: MIT
+// Cradle.tsx
+// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     The Cradle does the bulk of the work for the infinite grid scroller. It does so with the help of
@@ -94,6 +94,7 @@ const Cradle = ({
         // basics
         runwaySize, 
         listsize, 
+        updateListsize,
         startingIndex, 
         getItem, 
         placeholder, 
@@ -182,7 +183,7 @@ const Cradle = ({
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) {
-        // console.log('==> cradleState','-'+scrollerID+'-', cradleState)
+        // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
         // console.log('-- index',~'+scrollerProperties?.cellFrameDataRef.current.index+'~')
     // }
 
@@ -366,6 +367,7 @@ const Cradle = ({
         // ...rest
         cache, cacheMax,
         startingIndex, 
+        runwaySize,
         getItem, 
         placeholder, placeholderMessages, usePlaceholder,
         triggerlineOffset,
@@ -401,6 +403,7 @@ const Cradle = ({
         viewportRowcount,
         listRowcount,
         listsize,
+        updateListsize,
         runwayRowcount,
 
         // the following values are maintained elsewhere
@@ -663,7 +666,8 @@ const Cradle = ({
 
             }
 
-            cacheHandler.changeListsize(maxListsize, 
+            contentHandler.updateListsize(maxListsize)
+            cacheHandler.changeCacheListsize(maxListsize, 
                 dListCallback,
                 changeListsizeCallback)
 
@@ -787,7 +791,6 @@ const Cradle = ({
         setCradleState('reconfigure')
 
     },[
-        listsize,
         cellHeight,
         cellWidth,
         gap,
@@ -795,6 +798,52 @@ const Cradle = ({
         triggerlineOffset,
         layout,
         runwaySize,
+    ])
+
+    useEffect(()=>{
+
+        if (cradleStateRef.current == 'setup') return
+
+        if (isCachedRef.current) return
+
+        const { viewportRowcount, crosscount } = cradleInternalPropertiesRef.current
+        const { runwaySize } =  cradleInheritedPropertiesRef.current
+        const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
+        const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
+
+        const indexSpan = contentHandler.indexSpan
+        const [lowIndex,highIndex] = indexSpan
+
+        let measuredCradleItemCount
+        let changeIsWithinCradle
+
+        if (indexSpan.length == 0) {
+
+            measuredCradleItemCount = 0
+            changeIsWithinCradle = true
+
+        } else {
+
+            measuredCradleItemCount = highIndex - lowIndex + 1
+            changeIsWithinCradle = (highIndex >= (listsize - 1))
+            
+        }
+
+        if ((measuredCradleItemCount < calculatedCradleItemcount) || // sub-viewport visible listcount
+            changeIsWithinCradle) { // change is not beyond cradle
+
+            interruptHandler.pauseInterrupts()
+
+            setCradleState('reconfigureforlistsize')
+
+        } else {
+
+            setCradleState('ready')
+
+        }
+
+    },[
+        listsize, 
     ])
 
     // a new getItem function implies the need to reload
@@ -1043,7 +1092,7 @@ const Cradle = ({
             // -------------------[ setCradleContent ]------------------
 
             /*
-                the following 11 cradle states all resolve with
+                the following 12 cradle states all resolve with
                 a chain starting with setCradleContent, 
                 continuing with 'preparerender', and ending with
                 'restoreinterrupts', with a detour for variable layout 
@@ -1059,6 +1108,7 @@ const Cradle = ({
             case 'finishviewportresize':
             case 'pivot':
             case 'reconfigure':
+            case 'reconfigureforlistsize':
             case 'reload': {
 
                 if (isCachedRef.current) {
@@ -1087,8 +1137,9 @@ const Cradle = ({
                     cacheHandler.clearCache()
                 }
 
+                const { listsize } = cradleInternalPropertiesRef.current
                 // set data
-                contentHandler.setCradleContent( cradleState )
+                if (listsize) contentHandler.setCradleContent( cradleState )
 
                 if (cradleState != 'finishpreload') {
 
@@ -1279,26 +1330,47 @@ const Cradle = ({
 
             // ----------------[ user requests ]-------------
 
+            case 'channelcradleresetafterinsertremove': {
+
+                applyPortalPartitionItemsForDeleteList(cacheHandler)
+
+                setCradleState('changelistsizeafterinsertremove')
+
+                break
+            }
+
             // support for various host service requests; syncs cradle content with cache changes
-            case 'applycellframechanges': { // user intervention
+            case 'applyinsertremovechanges':
+            case 'applyremapchanges':
+            case 'applymovechanges': {
 
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
-                const { portalItemHoldForDeleteList } = cacheHandler
+                applyPortalPartitionItemsForDeleteList(cacheHandler)
 
-                if (portalItemHoldForDeleteList && portalItemHoldForDeleteList.length) {
+                if (cradleState == 'applyinsertremovechanges') {
 
-                    for (const item of portalItemHoldForDeleteList) {
+                    setCradleState('changelistsizeafterinsertremove')
 
-                        cacheHandler.removePartitionPortal(item.partitionID, item.itemID)
-                        
-                    }
-                    cacheHandler.renderPortalLists()
+                } else {
+
+                    setCradleState('ready')
 
                 }
 
+                break
+            }
+
+            case 'changelistsizeafterinsertremove': {
+
+                const newlistsize = serviceHandler.newlistsize
+                serviceHandler.newlistsize = null
+
                 setCradleState('ready')
+
+                // service handler called because this is a followon of a user intervention
+                serviceHandler.setListsize(newlistsize)
 
                 break
             }
@@ -1317,6 +1389,26 @@ const Cradle = ({
         }
 
     },[cradleState])
+
+    const applyPortalPartitionItemsForDeleteList = (cacheHandler) => {
+
+        const { portalPartitionItemsForDeleteList } = cacheHandler
+
+        if (portalPartitionItemsForDeleteList && portalPartitionItemsForDeleteList.length) {
+
+            for (const item of portalPartitionItemsForDeleteList) {
+
+                cacheHandler.removePartitionPortal(item.partitionID, item.itemID)
+                
+            }
+
+            cacheHandler.portalPartitionItemsForDeleteList = []                    
+
+            cacheHandler.renderPortalLists()
+
+        }
+
+    }
 
     // standard rendering states (3 states)
     useEffect(()=> { 

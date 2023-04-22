@@ -1,7 +1,7 @@
 # react-infinite-grid-scroller (RIGS)
 Heavy-duty vertical or horizontal infinite scroller
 
-[![npm](https://img.shields.io/badge/npm-1.0.3-brightgreen)](https://www.npmjs.com/package/react-infinite-grid-scroller) [![licence](https://img.shields.io/badge/licence-MIT-green)](LICENSE.md)
+[![npm](https://img.shields.io/badge/npm-1.0.4-brightgreen)](https://www.npmjs.com/package/react-infinite-grid-scroller) [![licence](https://img.shields.io/badge/licence-MIT-green)](LICENSE.md)
 
 # Key Features
 
@@ -229,8 +229,8 @@ Details about the functions returned in an object by `functionsCallback`:
 |getCacheItemMap|_none_|map: Map|snapshot of cache itemID (=key) to object (=value) map. Object = {index, component} where component = user component|
 |getCradleIndexMap|_none_|map: Map|snapshot of `Cradle` index (=key) to itemID (=value) map|
 |[_**CACHE MANAGEMENT**_]|
-|insertIndex|index:integer, rangehighindex = integer or null|changeList:array, replaceList:array|can insert a range of indexes. Displaced indexes, and higher indexes, are renumbered. Changes the list size; synchronizes the `Cradle`|
-|removeIndex|index:integer, rangehighindex = integer or null|changeList:array, replaceList:array|a range of indexes can be removed. Higher indexes are renumbered. Changes the list size; synchronizes to the `Cradle`|
+|insertIndex|index:integer, rangehighindex = integer or null|changeList:array, replaceList:array, removeList:array|can insert a range of indexes. Displaced indexes, and higher indexes, are renumbered. Changes the list size; synchronizes the `Cradle`|
+|removeIndex|index:integer, rangehighindex = integer or null|changeList:array, replaceList:array, removeList:array|a range of indexes can be removed. Higher indexes are renumbered. Changes the list size; synchronizes to the `Cradle`|
 |moveIndex|toindex:integer, fromindex:integer, fromhighrange = integer or null|processedIndexList:array|a range of indexes can be moved. Displaced and higher indexes are renumbered. Changes the list size; synchronizes to the `Cradle`|
 |remapIndexes|changeMap:Map|modifiedIndexList: array,<br />processedIndexList: array,<br />deletedIndexList: array,<br />indexesOfReplacedItemsList: array,<br />deletedOrphanedItemIDList: array,<br />deletedOrphanedIndexList: array,<br />errorEntriesMap: Map,<br />changeMap: Map (same as input parameter)|changeMap is index (=key) to itemID (=value) map. indexes or itemIDs not in the cache are ignored. indexes with values set to `null` are deleted. indexes with values set to `undefined` have their component items replaced. `itemID`s are assigned to the new indexes; synchronizes to the `Cradle`. List size is adjusted as necessary|
 
@@ -374,4 +374,4 @@ This code is Typescript, in a function component.
 
 # Licence
 
-[MIT](LICENSE.md) &copy; 2020-2022 [Henrik Bechmann](https://twitter.com/HenrikBechmann)
+[MIT](LICENSE.md) &copy; 2020-2023 [Henrik Bechmann](https://twitter.com/HenrikBechmann)
