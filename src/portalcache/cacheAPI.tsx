@@ -60,12 +60,17 @@ export default class CacheHandler {
 
     cacheProps = {
 
-        // item data
-        metadataMap:new Map(), // item => {index, component}
+        // ----- scrollerID-specific
+        scrollerID:null, // for debug
+
         indexToItemIDMap:new Map(),
 
         // some portals may have been requested by requestidlecallback, not yet created
         requestedSet:new Set(), // requestedSet of indexes (transitional)
+
+        // ----- cache-general
+        // item data
+        metadataMap:new Map(), // item => {index, component}
 
         // partition data
         partitionMetadataMap:new Map(),
@@ -77,7 +82,6 @@ export default class CacheHandler {
 
         partitionPtr:null, // active partition, for followup
 
-        scrollerID:null // for debug
     }
 
     cradleParameters
