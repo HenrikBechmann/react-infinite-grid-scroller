@@ -129,8 +129,8 @@ const CellFrame = ({
     // the session itemID to use; could be updated by parent
     const itemIDRef = useRef(null)
     itemIDRef.current = itemID
-    const cellFrameDataRef = useRef(null)
-    cellFrameDataRef.current = {
+    const cellFramePropertiesRef = useRef(null)
+    cellFramePropertiesRef.current = {
         itemID,
         index
     }
@@ -301,8 +301,10 @@ const CellFrame = ({
 
                         // get cache data
                         portalMetadataRef.current = cacheAPI.getPortalMetadata(itemID)
+                        // update cell and scroller properties ref in case of switch in either
+                        portalMetadataRef.current.scrollerProperties.cellFramePropertiesRef = cellFramePropertiesRef
+                        portalMetadataRef.current.scrollerProperties.scrollerPropertiesRef = scrollerPropertiesRef
                         // get OutPortal node
-                        portalMetadataRef.current.scrollerProperties.cellFrameDataRef = cellFrameDataRef
                         portalNodeRef.current = portalMetadataRef.current.portalNode
                         setContainerStyles(
                             portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
@@ -362,7 +364,7 @@ const CellFrame = ({
                                 // if usercontent is otherwise disallowed, let error handling deal with it.
                                 let content 
                                 const scrollerProperties = {
-                                    cellFrameDataRef,
+                                    cellFramePropertiesRef,
                                     scrollerPropertiesRef,
                                 }
                                 if (usercontent.props?.hasOwnProperty('scrollerProperties')) {

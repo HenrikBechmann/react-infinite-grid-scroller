@@ -26,7 +26,6 @@ const Viewport = ({
     gridSpecs,
     styles,
     scrollerID,
-    // scrollerProperties,
     VIEWPORT_RESIZE_TIMEOUT,
     
 }) => {

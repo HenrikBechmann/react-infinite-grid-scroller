@@ -32,7 +32,7 @@
         - your component is in cache when both width and height = 0
         - your component is out of cache when both width and height are back to normal
         - if you create an empty 'scrollerProperties' property for your component, CellFrame will
-            set it to an object containing scrollerPropertiesRef and cellFrameDataRef
+            set it to an object containing scrollerPropertiesRef and cellFramePropertiesRef
         - if your component does not scroll, there should be no issues.
 
     Note that in the following, scrollerID is provided as a paramter to some functions for debug purposes, but not used.

@@ -184,7 +184,7 @@ const Cradle = ({
 
     // if (!scrollerProperties) {
         // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
-        // console.log('-- index',~'+scrollerProperties?.cellFrameDataRef.current.index+'~')
+        // console.log('-- index',~'+scrollerProperties?.cellFramePropertiesRef.current.index+'~')
     // }
 
     // cradle scaffold element refs
@@ -391,6 +391,7 @@ const Cradle = ({
         cacheMax,
         startingIndex,
         crosscount,
+        scrollerID,
     }
 
     // configuration properties to share with handlers
