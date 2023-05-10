@@ -961,10 +961,13 @@ export default class CacheHandler {
             portalNode,
             index,
             itemID,
+            scrollerID:scrollerProperties.scrollerPropertiesRef.current.scrollerID,
             scrollerProperties,
             component,
             partitionID,
         }
+
+        // console.log('portalMetadata', portalMetadata)
 
         this.cacheProps.metadataMap.set(itemID, portalMetadata)
         this.cacheProps.indexToItemIDMap.set(index, itemID)
