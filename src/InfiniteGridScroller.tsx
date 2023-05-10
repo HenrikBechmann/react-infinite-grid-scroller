@@ -112,6 +112,7 @@ const InfiniteGridScroller = (props) => {
             // can contain functionsCallback, which provides access to internal scroller functions 
             //(mostly cache management)
         technical = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
+        dragdropProperties, // placeholder!
 
         // information for host cell content
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
