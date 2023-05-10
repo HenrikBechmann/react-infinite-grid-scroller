@@ -43,11 +43,10 @@ export const isSafariIOS = () => {
 // based on module template
 function ErrorFallback({error, resetErrorBoundary}) {
   return (
-    <div role="alert">
-      <p>Oops! Something went wrong inside react-infinite-grid-scroller.</p>
-      <p>Click to cancel the error and continue.</p>
-      <button onClick={ resetErrorBoundary }>Cancel error</button>
-      <pre>{error}</pre>
+    <div role="alert" style = {{margin:'3px'}}>
+      <p>Something went wrong inside react-infinite-grid-scroller. See the console for details.</p>
+      <p>Click to cancel the error and try to continue.</p>
+      <button style = {{border:'1px solid black', margin:'3px', padding:'3px'}} onClick={ resetErrorBoundary }>Cancel error</button>
     </div>
   )
 }
