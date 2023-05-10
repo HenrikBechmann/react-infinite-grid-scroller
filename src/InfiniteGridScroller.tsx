@@ -9,7 +9,7 @@
     Scrollblock in turn contains the Cradle - a component that contains CellFrames, which contain 
     displayed user content (items) or transitional placeholders. 
 
-    Host content is instantiated in a cache of React portals (via cacheHandler). Content is then 
+    Host content is instantiated in a cache of React portals (via cacheAPI). Content is then 
     portal'd to CellFrames. The cache can be configured to hold more items than the Cradle (limited by 
     device memory). Caching allows host content to maintain state.
 
@@ -58,7 +58,6 @@ import Cradle from './Cradle'
 
 // loaded here to minimize redundant renders in Cradle
 import PortalCache from './PortalCache'
-import CacheHandler from './portalcache/cachehandler'
 
 // -------------------[ global session ID generator ]----------------
 
@@ -289,16 +288,14 @@ const InfiniteGridScroller = (props) => {
 
     // -------------------------[ Initialization ]-------------------------------
 
-    const getCacheAPI = (cacheHandler) => {
-        cacheHandlerRef.current = cacheHandler
+    const getCacheAPI = (cacheAPI) => {
+        cacheHandlerRef.current = cacheAPI
     }
 
     useEffect (() => {
 
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
             scrollerSessionIDRef.current = globalScrollerID++
-            // cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, setListsize, listsizeRef, 
-            //     CACHE_PARTITION_SIZE)
         }
 
     },[]);
@@ -335,12 +332,12 @@ const InfiniteGridScroller = (props) => {
         return <div>error: see console.</div>        
     }
 
-    // component calls are deferred by scrollerState to give cacheHandler a chance to initialize
+    // component calls are deferred by scrollerState to give cacheAPI a chance to initialize
     return <ErrorBoundary
         FallbackComponent= { ErrorFallback }
         // elaboration TBD
-        onReset= { () => {}}
-        onError = {() => {}}
+        onReset = { () => {} }
+        onError = { () => {} }
         // onError = {(error: Error, info: {componentStack: string}) => {
         //     console.log('react-infinite-grid-scroller captured error', error)
         // }}
@@ -381,7 +378,7 @@ const InfiniteGridScroller = (props) => {
                     triggerlineOffset = { triggerlineOffset }
                     scrollerProperties = { scrollerProperties }
 
-                    cacheHandler = { cacheHandlerRef.current }
+                    cacheAPI = { cacheHandlerRef.current }
                     usePlaceholder = { usePlaceholder }
                     useScrollTracker = { useScrollTracker }
                     showAxis = { showAxis }

@@ -712,7 +712,7 @@ export const getCellFrameComponentList = ({
 
         cradleInheritedProperties,
         cradleInternalProperties,
-        cacheHandler,
+        cacheAPI,
         cradleContentCount,
         cradleReferenceIndex, 
         listStartChangeCount, 
@@ -747,7 +747,7 @@ export const getCellFrameComponentList = ({
                         cradleInheritedProperties,
                         cradleInternalProperties,
                         instanceIdCounterRef,
-                        cacheHandler,
+                        cacheAPI,
                         placeholderFrameStyles:styles.placeholderframe,
                         placeholderLinerStyles:styles.placeholderliner,
                         placeholderErrorFrameStyles:styles.placeholdererrorframe,
@@ -782,7 +782,7 @@ export const getCellFrameComponentList = ({
                         cradleInheritedProperties,
                         cradleInternalProperties,
                         instanceIdCounterRef,
-                        cacheHandler,
+                        cacheAPI,
                         placeholderFrameStyles:styles.placeholderframe,
                         placeholderLinerStyles:styles.placeholderliner,
                         placeholderErrorFrameStyles:styles.placeholdererrorframe,
@@ -871,7 +871,7 @@ export const allocateContentList = (
 
 }
 
-export const deletePortals = (cacheHandler, deleteList, deleteListCallback) => {
+export const deletePortals = (cacheAPI, deleteList, deleteListCallback) => {
 
     const dlist = deleteList.map((item)=>{
 
@@ -879,7 +879,7 @@ export const deletePortals = (cacheHandler, deleteList, deleteListCallback) => {
         
     })
 
-    cacheHandler.deletePortal(dlist, deleteListCallback)
+    cacheAPI.deletePortal(dlist, deleteListCallback)
 }
 
 // =====================[ internal, acquire item ]======================
@@ -889,7 +889,7 @@ const createCellFrame = ({
     cradleInheritedProperties,
     cradleInternalProperties,
     instanceIdCounterRef,
-    cacheHandler,
+    cacheAPI,
     placeholderFrameStyles,
     placeholderLinerStyles,
     placeholderErrorFrameStyles,
@@ -916,7 +916,7 @@ const createCellFrame = ({
     const { listsize } = cradleInternalProperties
 
     // get new or existing itemID
-    const itemID = cacheHandler.getNewOrExistingItemID(index)
+    const itemID = cacheAPI.getNewOrExistingItemID(index)
 
     return <CellFrame 
         key = { instanceID } 

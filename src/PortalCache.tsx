@@ -3,7 +3,7 @@
 
 import React, {FC, useState, useEffect, useRef, useCallback} from 'react'
 
-import CacheHandler from './portalcache/cachehandler'
+import CacheAPI from './portalcache/cacheAPI'
 
 const PortalCache:FC<any> = ({scrollerSessionIDRef, setListsize, listsizeRef, getCacheAPI, CACHE_PARTITION_SIZE }) => {
 
@@ -14,12 +14,12 @@ const PortalCache:FC<any> = ({scrollerSessionIDRef, setListsize, listsizeRef, ge
 
         if (cacheHandlerRef.current) return
 
-        const cacheHandler = new CacheHandler(scrollerSessionIDRef.current, listsizeRef, 
+        const cacheAPI = new CacheAPI(scrollerSessionIDRef.current, listsizeRef, 
             CACHE_PARTITION_SIZE)
 
-        cacheHandlerRef.current = cacheHandler
+        cacheHandlerRef.current = cacheAPI
 
-        getCacheAPI(cacheHandler)
+        getCacheAPI(cacheAPI)
 
     },[])
 

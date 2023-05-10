@@ -102,7 +102,7 @@ export default class ContentHandler {
 
         const {
 
-            cacheHandler,
+            cacheAPI,
             layoutHandler,
             serviceHandler,
             // interruptHandler,
@@ -218,7 +218,7 @@ export default class ContentHandler {
         // returns content constrained by cradleRowcount
         const [newcontentlist]/*,deleteditems]*/ = getCellFrameComponentList({
             
-            cacheHandler,            
+            cacheAPI,            
             cradleInheritedProperties,
             cradleInternalProperties,
             cradleContentCount,
@@ -317,7 +317,7 @@ export default class ContentHandler {
         // handler support
         const {
 
-            cacheHandler, 
+            cacheAPI, 
             layoutHandler, 
             stateHandler, 
             interruptHandler,
@@ -428,7 +428,7 @@ export default class ContentHandler {
         if (listStartChangeCount || listEndChangeCount) { // if either is non-0 then modify content
 
             [updatedContentList,deletedContentItems] = getCellFrameComponentList({
-                cacheHandler,
+                cacheAPI,
                 cradleInheritedProperties,
                 cradleInternalProperties,
                 cradleContentCount,
@@ -461,7 +461,7 @@ export default class ContentHandler {
 
             }
 
-            deletePortals(cacheHandler, deletedContentItems, dListCallback)
+            deletePortals(cacheAPI, deletedContentItems, dListCallback)
 
         }
 
@@ -494,7 +494,7 @@ export default class ContentHandler {
         cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
-        if (isShift) cacheHandler.renderPortalLists()
+        if (isShift) cacheAPI.renderPortalLists()
 
         this.applyStyling({
             layout, orientation, padding, gap, cellHeight, cellWidth, 
@@ -778,11 +778,11 @@ export default class ContentHandler {
 
         const { cacheMax, MAX_CACHE_OVER_RUN } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        const { cacheHandler } = this.cradleParameters.handlersRef.current
+        const { cacheAPI } = this.cradleParameters.handlersRef.current
 
         const modelComponentList = this.content.cradleModelComponents
  
-        if (cacheHandler.guardAgainstRunawayCaching(cacheMax, modelComponentList.length, MAX_CACHE_OVER_RUN )) {
+        if (cacheAPI.guardAgainstRunawayCaching(cacheMax, modelComponentList.length, MAX_CACHE_OVER_RUN )) {
 
             this.pareCacheToMax()
 
@@ -798,7 +798,7 @@ export default class ContentHandler {
         if (cache == 'keepload') {
 
             const cradleHandlers = this.cradleParameters.handlersRef.current
-            const { cacheHandler, serviceHandler } = cradleHandlers
+            const { cacheAPI, serviceHandler } = cradleHandlers
 
             const modelIndexList = this.getModelIndexList()
 
@@ -814,10 +814,10 @@ export default class ContentHandler {
 
             }
 
-            if (cacheHandler.pareCacheToMax(
+            if (cacheAPI.pareCacheToMax(
                 cradleInheritedProperties.cacheMax, modelIndexList, dListCallback, scrollerID)) {
             
-                cacheHandler.renderPortalLists()
+                cacheAPI.renderPortalLists()
                 
             }
                             
@@ -831,7 +831,7 @@ export default class ContentHandler {
     public clearCradle = () => {
 
         const cradleContent = this.content
-        // const { cacheHandler } = this.cradleParameters.handlersRef.current
+        // const { cacheAPI } = this.cradleParameters.handlersRef.current
 
         cradleContent.cradleModelComponents = []
 
@@ -877,9 +877,9 @@ export default class ContentHandler {
 
         const { cradleModelComponents } = this.content
 
-        const { cacheHandler } = this.cradleParameters.handlersRef.current
+        const { cacheAPI } = this.cradleParameters.handlersRef.current
 
-        const { indexToItemIDMap } = cacheHandler.cacheProps
+        const { indexToItemIDMap } = cacheAPI.cacheProps
 
         function processComponentFn (component, i, array ) {
             const { index, itemID } = component.props
@@ -888,7 +888,7 @@ export default class ContentHandler {
                 const newItemID = 
                     indexToItemIDMap.has(index)?
                         indexToItemIDMap.get(index):
-                        cacheHandler.getNewItemID()
+                        cacheAPI.getNewItemID()
 
                 if (newItemID != itemID) { // defensive; shouldn't happen
 
@@ -909,8 +909,8 @@ export default class ContentHandler {
     public synchronizeCradleItemIDsToCache(updatedIndexList, isInsertRemove = 0, startChangeIndex = null) { // 0 = move
 
         // asssemble resources
-        const { cacheHandler } = this.cradleParameters.handlersRef.current
-        const { indexToItemIDMap } = cacheHandler.cacheProps
+        const { cacheAPI } = this.cradleParameters.handlersRef.current
+        const { indexToItemIDMap } = cacheAPI.cacheProps
 
         const { cradleModelComponents } = this.content
 
@@ -962,7 +962,7 @@ export default class ContentHandler {
             // if cache has no component for cradle item, then get one
             if (cacheItemID === undefined) {
 
-                const newItemID = cacheHandler.getNewItemID()
+                const newItemID = cacheAPI.getNewItemID()
                 componentarray[componentptr] = React.cloneElement(component, {itemID:newItemID})
                 return
 
@@ -980,7 +980,7 @@ export default class ContentHandler {
 
                 } else {
 
-                    const newItemID = cacheHandler.getNewItemID()
+                    const newItemID = cacheAPI.getNewItemID()
                     componentarray[componentptr] = React.cloneElement(component, {itemID:newItemID})
 
                 }
@@ -1000,7 +1000,7 @@ export default class ContentHandler {
 
         if (!newList.length) return
 
-        const { cacheHandler } = this.cradleParameters.handlersRef.current
+        const { cacheAPI } = this.cradleParameters.handlersRef.current
         const { cradleModelComponents } = this.content
 
         const indexSpan = this.indexSpan
@@ -1016,7 +1016,7 @@ export default class ContentHandler {
 
             const component = cradleModelComponents[cradlePtr]
 
-            const newItemID = cacheHandler.getNewItemID()
+            const newItemID = cacheAPI.getNewItemID()
 
             cradleModelComponents[cradlePtr] = React.cloneElement(component, {itemID:newItemID})
 
