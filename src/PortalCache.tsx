@@ -10,7 +10,7 @@ const PortalCache:FC<any> = ({scrollerSessionIDRef, setListsize, listsizeRef, ge
 
     const cacheHandlerRef = useRef(null)
 
-    const initCacheHandler = () => {
+    useEffect(() => {
 
         if (cacheHandlerRef.current) return
 
@@ -21,9 +21,7 @@ const PortalCache:FC<any> = ({scrollerSessionIDRef, setListsize, listsizeRef, ge
 
         getCacheAPI(cacheHandler)
 
-    }
-
-    initCacheHandler()
+    },[])
 
     const [portalCacheCounter, setPortalCacheCounter] = useState(0)
     const counterRef = useRef(portalCacheCounter)

@@ -338,12 +338,12 @@ const InfiniteGridScroller = (props) => {
     // component calls are deferred by scrollerState to give cacheHandler a chance to initialize
     return <ErrorBoundary
         FallbackComponent= { ErrorFallback }
-        onReset= { () => {
-          // response tbd; there may not need to be one
-        }}
-        onError = {(error: Error, info: {componentStack: string}) => {
-            console.log('react-infinite-grid-scroller captured error', error)
-        }}
+        // elaboration TBD
+        onReset= { () => {}}
+        onError = {() => {}}
+        // onError = {(error: Error, info: {componentStack: string}) => {
+        //     console.log('react-infinite-grid-scroller captured error', error)
+        // }}
     >
 
         {(scrollerState != 'setup') && <Viewport
@@ -394,14 +394,14 @@ const InfiniteGridScroller = (props) => {
                 />
             </Scrollblock>}
         </Viewport>}
-        {(scrollerState != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
+        <div data-type = 'cacheroot' style = { cacherootstyle }>
             <PortalCache 
                 scrollerSessionIDRef = { scrollerSessionIDRef }
                 setListsize = { updateListsize } 
                 listsizeRef = { listsizeRef } 
                 getCacheAPI = { getCacheAPI } 
                 CACHE_PARTITION_SIZE = { CACHE_PARTITION_SIZE } />
-        </div>} 
+        </div>
     </ErrorBoundary>
 }
 
