@@ -1333,7 +1333,7 @@ const Cradle = ({
 
             case 'channelcradleresetafterinsertremove': {
 
-                applyPortalPartitionItemsForDeleteList(cacheAPI)
+                cacheAPI.applyPortalPartitionItemsForDeleteList()
 
                 setCradleState('changelistsizeafterinsertremove')
 
@@ -1348,7 +1348,7 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
-                applyPortalPartitionItemsForDeleteList(cacheAPI)
+                cacheAPI.applyPortalPartitionItemsForDeleteList()
 
                 if (cradleState == 'applyinsertremovechanges') {
 
@@ -1390,26 +1390,6 @@ const Cradle = ({
         }
 
     },[cradleState])
-
-    const applyPortalPartitionItemsForDeleteList = (cacheAPI) => {
-
-        const { portalPartitionItemsForDeleteList } = cacheAPI
-
-        if (portalPartitionItemsForDeleteList && portalPartitionItemsForDeleteList.length) {
-
-            for (const item of portalPartitionItemsForDeleteList) {
-
-                cacheAPI.removePartitionPortal(item.partitionID, item.itemID)
-                
-            }
-
-            cacheAPI.portalPartitionItemsForDeleteList = []                    
-
-            cacheAPI.renderPortalLists()
-
-        }
-
-    }
 
     // standard rendering states (3 states)
     useEffect(()=> { 

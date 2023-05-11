@@ -324,9 +324,14 @@ const InfiniteGridScroller = (props) => {
 
         switch (scrollerState) {
             case 'setup':
+                // replace cacheAPI with facade which includes hidden scrollerID
                 cacheAPIRef.current = cacheAPIRef.current.registerScroller(scrollerSessionIDRef.current, listsizeRef)
             case 'setlistsize':
                 setScrollerState('ready')
+        }
+
+        return () => {
+            cacheAPIRef.current.unRegisterScroller(scrollerSessionIDRef.current)
         }
 
     },[scrollerState])

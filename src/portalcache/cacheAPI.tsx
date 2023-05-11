@@ -116,10 +116,12 @@ export default class CacheAPI {
             }
         )
 
+        return this.getFacade(scrollerID)
+
+    }
+
+    private getFacade = (scrollerID) => {
         return this
-
-        // TODO return a facade that adds scrollerID parameter
-
     }
 
     unRegisterScroller = (scrollerID) => {
@@ -144,7 +146,7 @@ export default class CacheAPI {
 
     }
 
-    addPartition = () => {
+    private addPartition = () => {
 
         const partitionID = this.globalPartitionID++
         this.cacheProps.partitionMetadataMap.set(partitionID,
@@ -184,7 +186,7 @@ export default class CacheAPI {
 
     }
 
-    async findPartitionWithRoom() {
+    private async findPartitionWithRoom() {
 
         const { CACHE_PARTITION_SIZE } = this
 
@@ -230,7 +232,7 @@ export default class CacheAPI {
 
     }
 
-    addPartitionPortal = (partitionID, itemID, portal) => {
+    private addPartitionPortal = (partitionID, itemID, portal) => {
 
         const partitionMetadata = this.cacheProps.partitionMetadataMap.get(partitionID)
 
@@ -240,7 +242,7 @@ export default class CacheAPI {
 
     }
 
-    removePartitionPortal = (partitionID, itemID) => {
+    private removePartitionPortal = (partitionID, itemID) => {
 
         const partitionMetadata = this.cacheProps.partitionMetadataMap.get(partitionID)
 
@@ -251,7 +253,7 @@ export default class CacheAPI {
 
     }
 
-    renderPartition = (partitionID) => {
+    private renderPartition = (partitionID) => {
 
         const partitionMetadata = this.cacheProps.partitionMetadataMap.get(partitionID)
 
@@ -1118,6 +1120,26 @@ export default class CacheAPI {
         }
 
         deleteListCallback && deleteListCallback(deleteList)
+
+    }
+
+    applyPortalPartitionItemsForDeleteList = () => {
+
+        const { portalPartitionItemsForDeleteList } = this
+
+        if (portalPartitionItemsForDeleteList && portalPartitionItemsForDeleteList.length) {
+
+            for (const item of portalPartitionItemsForDeleteList) {
+
+                this.removePartitionPortal(item.partitionID, item.itemID)
+                
+            }
+
+            this.portalPartitionItemsForDeleteList = []                    
+
+            this.renderPortalLists()
+
+        }
 
     }
 
