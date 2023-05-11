@@ -100,19 +100,25 @@ export default class CacheAPI {
         return this.cacheProps.scrollerDataMap.get(scrollerID)
     }
 
-    registerScroller = (scrollerID, listsizeRef, cradleParameters) => {
+    registerScroller = (scrollerID, listsizeRef) => { //, cradleParameters) => {
+
+        console.log('registering scrollerID, listsizeRef',scrollerID, listsizeRef)
 
         this.cacheProps.scrollerDataMap.set(scrollerID, 
             {
                 indexToItemIDMap: new Map(), 
                 itemSet: new Set(),
                 properties:{
-                    cradleParameters,
+                    cradleParameters:null,
                     portalPartitionItemsForDeleteList:null,
                     listsizeRef,
                 }
             }
         )
+
+        return this
+
+        // TODO return a facade that adds scrollerID parameter
 
     }
 

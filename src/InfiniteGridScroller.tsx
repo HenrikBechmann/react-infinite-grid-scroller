@@ -324,6 +324,7 @@ const InfiniteGridScroller = (props) => {
 
         switch (scrollerState) {
             case 'setup':
+                cacheAPIRef.current = cacheAPIRef.current.registerScroller(scrollerSessionIDRef.current, listsizeRef)
             case 'setlistsize':
                 setScrollerState('ready')
         }
