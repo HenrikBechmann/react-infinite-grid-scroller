@@ -879,7 +879,7 @@ export const deletePortals = (cacheAPI, deleteList, deleteListCallback) => {
         
     })
 
-    cacheAPI.deletePortal(dlist, deleteListCallback)
+    cacheAPI.deletePortalByIndex(dlist, deleteListCallback)
 }
 
 // =====================[ internal, acquire item ]======================

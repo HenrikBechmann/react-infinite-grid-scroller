@@ -112,6 +112,7 @@ const InfiniteGridScroller = (props) => {
             // can contain functionsCallback, which provides access to internal scroller functions 
             //(mostly cache management)
         technical = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
+        cacheAPI = null,
         dragdropProperties, // placeholder!
 
         // information for host cell content
@@ -266,7 +267,7 @@ const InfiniteGridScroller = (props) => {
     const scrollerID = scrollerSessionIDRef.current
 
     // for children
-    const cacheHandlerRef = useRef(null)
+    const cacheAPIRef = useRef(cacheAPI)
 
     const listsizeRef = useRef(startingListSize)
 
@@ -290,8 +291,10 @@ const InfiniteGridScroller = (props) => {
     // -------------------------[ Initialization ]-------------------------------
 
     const getCacheAPI = (cacheAPI) => {
-        cacheHandlerRef.current = cacheAPI
+        cacheAPIRef.current = cacheAPI
     }
+
+    const useLocalCache = !cacheAPI
 
     useEffect (() => {
 
@@ -378,7 +381,7 @@ const InfiniteGridScroller = (props) => {
                     triggerlineOffset = { triggerlineOffset }
                     scrollerProperties = { scrollerProperties }
 
-                    cacheAPI = { cacheHandlerRef.current }
+                    cacheAPI = { cacheAPIRef.current }
                     usePlaceholder = { usePlaceholder }
                     useScrollTracker = { useScrollTracker }
                     showAxis = { showAxis }
@@ -391,14 +394,14 @@ const InfiniteGridScroller = (props) => {
                 />
             </Scrollblock>}
         </Viewport>}
-        <div data-type = 'cacheroot' style = { cacherootstyle }>
+        {useLocalCache && <div data-type = 'cacheroot' style = { cacherootstyle }>
             <PortalCache 
                 scrollerSessionIDRef = { scrollerSessionIDRef }
                 setListsize = { updateListsize } 
                 listsizeRef = { listsizeRef } 
                 getCacheAPI = { getCacheAPI } 
                 CACHE_PARTITION_SIZE = { CACHE_PARTITION_SIZE } />
-        </div>
+        </div>}
     </ErrorBoundary>
 }
 

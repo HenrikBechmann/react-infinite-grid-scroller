@@ -8,16 +8,16 @@ import CacheAPI from './portalcache/cacheAPI'
 const PortalCache:FC<any> = ({scrollerSessionIDRef, setListsize, listsizeRef, getCacheAPI, CACHE_PARTITION_SIZE }) => {
 
 
-    const cacheHandlerRef = useRef(null)
+    const cacheAPIRef = useRef(null)
 
     useEffect(() => {
 
-        if (cacheHandlerRef.current) return
+        if (cacheAPIRef.current) return
 
         const cacheAPI = new CacheAPI(scrollerSessionIDRef.current, listsizeRef, 
             CACHE_PARTITION_SIZE)
 
-        cacheHandlerRef.current = cacheAPI
+        cacheAPIRef.current = cacheAPI
 
         getCacheAPI(cacheAPI)
 
@@ -44,7 +44,7 @@ const PortalCache:FC<any> = ({scrollerSessionIDRef, setListsize, listsizeRef, ge
 
         isMountedRef.current = true
 
-        cacheHandlerRef.current.cacheProps.partitionRepoForceUpdate = partitionRepoForceUpdate
+        cacheAPIRef.current.cacheProps.partitionRepoForceUpdate = partitionRepoForceUpdate
 
         return () => {
 

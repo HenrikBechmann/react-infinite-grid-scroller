@@ -45,7 +45,7 @@ import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 import CachePartition from './CachePartition'
 
 // the cache itself is maintained in the root infinitegridscroller component
-export default class CacheHandler {
+export default class CacheAPI {
 
     constructor(scrollerID, listsizeRef, CACHE_PARTITION_SIZE) {
         this.cacheProps.scrollerID = scrollerID // for debug
@@ -62,6 +62,8 @@ export default class CacheHandler {
 
         // ----- scrollerID-specific
         scrollerID:null, // for debug
+
+        scrollerDataMap: new Map(),
 
         indexToItemIDMap:new Map(),
 
@@ -91,6 +93,34 @@ export default class CacheHandler {
     portalPartitionItemsForDeleteList // array of {itemID,partitionID}
 
     listsizeRef
+
+    // ===========================[ Scroller Registration & Maintenance ]===============================
+
+    scrollerData = (scrollerID) => {
+        return this.cacheProps.scrollerDataMap.get(scrollerID)
+    }
+
+    registerScroller = (scrollerID, listsizeRef, cradleParameters) => {
+
+        this.cacheProps.scrollerDataMap.set(scrollerID, 
+            {
+                indexToItemIDMap: new Map(), 
+                itemSet: new Set(),
+                properties:{
+                    cradleParameters,
+                    portalPartitionItemsForDeleteList:null,
+                    listsizeRef,
+                }
+            }
+        )
+
+    }
+
+    unRegisterScroller = (scrollerID) => {
+
+        this.cacheProps.scrollerDataMap.delete(scrollerID)
+
+    }
 
     // updateListsize(listsize) causes an InfiniteGridScroller useState update
     // of the listsize throughout
@@ -247,7 +277,7 @@ export default class CacheHandler {
 
     }
 
-    clearCache = () => {
+    clearCache = () => { // TODO take scrollerID as argument
 
         // clear base data
         this.cacheProps.metadataMap.clear()
@@ -270,8 +300,6 @@ export default class CacheHandler {
     // called from Cradle.nullItemSetMaxListsize, and serviceHandler.setListsize
     changeCacheListsize = (newlistsize, deleteListCallback, changeListsizeCallback) => {
 
-        // this.updateListsize(newlistsize)
-
         // match cache to newlistsize
         const portalIndexMap = this.cacheProps.indexToItemIDMap
         const mapkeysList = Array.from(portalIndexMap.keys())
@@ -285,7 +313,7 @@ export default class CacheHandler {
                 return index > (newlistsize -1)
             })
 
-            this.deletePortal(parelist, deleteListCallback)
+            this.deletePortalByIndex(parelist, deleteListCallback)
 
         }
 
@@ -303,7 +331,7 @@ export default class CacheHandler {
 
         if (delkeys.length) {
 
-            this.deletePortal(delkeys, deleteListCallback)
+            this.deletePortalByIndex(delkeys, deleteListCallback)
             return true
 
         } else {
@@ -359,7 +387,7 @@ export default class CacheHandler {
 
         const delList = [...headlist,...taillist]
 
-        this.deletePortal(delList, deleteListCallback)
+        this.deletePortalByIndex(delList, deleteListCallback)
 
         return true
 
@@ -1051,7 +1079,7 @@ export default class CacheHandler {
 
     // delete a portal list item
     // accepts an array of indexes
-    deletePortal(index, deleteListCallback) {
+    deletePortalByIndex(index, deleteListCallback) {
 
         const indexArray = 
             (!Array.isArray(index))?
@@ -1082,8 +1110,6 @@ export default class CacheHandler {
             indexToItemIDMap.delete(index)
 
         }
-
-        // this.renderPortalLists()
 
         deleteListCallback && deleteListCallback(deleteList)
 
