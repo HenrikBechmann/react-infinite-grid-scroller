@@ -1553,6 +1553,8 @@ const getCradleHandlers = (cradleParameters) => {
 
     const { cacheAPI } = cradleParameters.cradleInheritedPropertiesRef.current
 
+    console.log('setting cacheAPI cradleParameters',cacheAPI)
+
     cacheAPI.cradleParameters = cradleParameters
 
     return {

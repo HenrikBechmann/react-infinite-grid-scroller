@@ -44,7 +44,9 @@ const PortalCache:FC<any> = ({scrollerSessionIDRef, setListsize, listsizeRef, ge
 
         isMountedRef.current = true
 
-        cacheAPIRef.current.cacheProps.partitionRepoForceUpdate = partitionRepoForceUpdate
+        // cacheAPIRef.current.cacheProps.partitionRepoForceUpdate = partitionRepoForceUpdate
+        cacheAPIRef.current.partitionRepoForceUpdate = partitionRepoForceUpdate
+        console.log('PortalCache: cacheAPIRef',cacheAPIRef)
 
         return () => {
 

@@ -879,7 +879,8 @@ export default class ContentHandler {
 
         const { cacheAPI } = this.cradleParameters.handlersRef.current
 
-        const { indexToItemIDMap } = cacheAPI.cacheProps
+        // const { indexToItemIDMap } = cacheAPI.cacheProps
+        const { indexToItemIDMap } = cacheAPI
 
         function processComponentFn (component, i, array ) {
             const { index, itemID } = component.props
@@ -910,7 +911,8 @@ export default class ContentHandler {
 
         // asssemble resources
         const { cacheAPI } = this.cradleParameters.handlersRef.current
-        const { indexToItemIDMap } = cacheAPI.cacheProps
+        // const { indexToItemIDMap } = cacheAPI.cacheProps
+        const { indexToItemIDMap } = cacheAPI
 
         const { cradleModelComponents } = this.content
 

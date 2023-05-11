@@ -259,7 +259,8 @@ export default class ServiceHandler {
             metadataMap, // itemID to component data, including index
             indexToItemIDMap // index to itemID
 
-        } = cacheAPI.cacheProps 
+        // } = cacheAPI.cacheProps 
+        } = cacheAPI 
 
         const indexesToDeleteList = []
         const indexesToReplaceItemIDList = []
@@ -762,7 +763,8 @@ export default class ServiceHandler {
 
             const { content } = contentHandler
 
-            const requestedSet = cacheAPI.cacheProps.requestedSet
+            // const requestedSet = cacheAPI.cacheProps.requestedSet
+            const requestedSet = cacheAPI.requestedSet
 
             const timeout = setInterval(() => { // wait until changed cache entries update the cradle
 

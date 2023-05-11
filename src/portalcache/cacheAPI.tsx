@@ -58,7 +58,7 @@ export default class CacheAPI {
     private globalItemID = 0
     private globalPartitionID = 0
 
-    cacheProps = {
+    private cacheProps = {
 
         // ----- scrollerID-specific
         scrollerID:null, // for debug
@@ -86,22 +86,22 @@ export default class CacheAPI {
 
     }
 
-    cradleParameters
+    private cradleParameters
 
     CACHE_PARTITION_SIZE
 
-    portalPartitionItemsForDeleteList // array of {itemID,partitionID}
+    private portalPartitionItemsForDeleteList // array of {itemID,partitionID}
 
     listsizeRef
 
     // ===========================[ Scroller Registration & Maintenance ]===============================
 
     // ??
-    scrollerData = (scrollerID) => {
-        return this.cacheProps.scrollerDataMap.get(scrollerID)
-    }
+    // scrollerData = (scrollerID) => {
+    //     return this.cacheProps.scrollerDataMap.get(scrollerID)
+    // }
 
-    registerScroller = (scrollerID, listsizeRef) => { //, cradleParameters) => {
+    private registerScroller = (scrollerID, listsizeRef) => { //, cradleParameters) => {
 
         // console.log('registering scrollerID, listsizeRef',scrollerID, listsizeRef)
 
@@ -121,16 +121,44 @@ export default class CacheAPI {
 
     }
 
-    private set partitionRepoForceUpdate (fn) {
-        this.cacheProps.partitionRepoForceUpdate = fn
-    }
+    // private set partitionRepoForceUpdate (fn) {
+    //     this.cacheProps.partitionRepoForceUpdate = fn
+    // }
+
+    // private set cradleParms(parms) {
+    //     console.log('inside set cradleParms')
+    //     this.cradleParameters = parms
+    // }
+
+    // private set portalPartitionItemsForDelete(list) {
+    //     this.portalPartitionItemsForDeleteList = list
+    // }
 
     private getFacade = (scrollerID) => {
         const facade = {
             indexToItemIDMap:this.cacheProps.indexToItemIDMap,
             metadataMap:this.cacheProps.metadataMap,
             requestedSet:this.cacheProps.requestedSet,
-            partitionRepoForceUpdate:this.partitionRepoForceUpdate,
+            set partitionRepoForceUpdate(fn) {
+                console.log('calling setPartitionRepoForceUpdate with fn',fn)
+                this.setPartitionRepoForceUpdate(fn)
+            },
+            setPartitionRepoForceUpdate:(fn) => {
+                console.log('setting partitionRepoForceUpdate to fn',fn)
+                this.cacheProps.partitionRepoForceUpdate = fn
+            },
+            set cradleParameters(parms){
+                this.setCradleParameters(parms)
+            },
+            setCradleParameters:(parms) => {
+                this.cradleParameters = parms
+            },
+            set portalPartitionItemsForDeleteList(list) {
+                this.setPortalPartitionItemsForDeleteList(list)
+            },
+            setPortalPartitionItemsForDeleteList:(list) => {
+                this.portalPartitionItemsForDeleteList = list
+            },
             registerScroller:(scrollerID, listsizeRef) => {
                 return this.registerScroller(scrollerID, listsizeRef)
             },
@@ -205,10 +233,10 @@ export default class CacheAPI {
             }
         }
 
-        return this
+        return facade // this
     }
 
-    unRegisterScroller = (scrollerID) => {
+    private unRegisterScroller = (scrollerID) => {
 
         this.cacheProps.scrollerDataMap.delete(scrollerID)
 
