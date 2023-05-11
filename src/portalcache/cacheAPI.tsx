@@ -55,8 +55,8 @@ export default class CacheAPI {
         this.CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE
     }
 
-    globalItemID = 0
-    globalPartitionID = 0
+    private globalItemID = 0
+    private globalPartitionID = 0
 
     cacheProps = {
 
@@ -96,13 +96,14 @@ export default class CacheAPI {
 
     // ===========================[ Scroller Registration & Maintenance ]===============================
 
+    // ??
     scrollerData = (scrollerID) => {
         return this.cacheProps.scrollerDataMap.get(scrollerID)
     }
 
     registerScroller = (scrollerID, listsizeRef) => { //, cradleParameters) => {
 
-        console.log('registering scrollerID, listsizeRef',scrollerID, listsizeRef)
+        // console.log('registering scrollerID, listsizeRef',scrollerID, listsizeRef)
 
         this.cacheProps.scrollerDataMap.set(scrollerID, 
             {
@@ -120,7 +121,90 @@ export default class CacheAPI {
 
     }
 
+    private set partitionRepoForceUpdate (fn) {
+        this.cacheProps.partitionRepoForceUpdate = fn
+    }
+
     private getFacade = (scrollerID) => {
+        const facade = {
+            indexToItemIDMap:this.cacheProps.indexToItemIDMap,
+            metadataMap:this.cacheProps.metadataMap,
+            requestedSet:this.cacheProps.requestedSet,
+            partitionRepoForceUpdate:this.partitionRepoForceUpdate,
+            registerScroller:(scrollerID, listsizeRef) => {
+                return this.registerScroller(scrollerID, listsizeRef)
+            },
+            unRegisterScroller:() => {
+                return this.unRegisterScroller(scrollerID)
+            },
+            renderPartitionRepo:() => {
+                return this.renderPartitionRepo()
+            },
+            renderPortalLists:() => {
+                return this.renderPortalLists()
+            },
+            clearCache:() => {
+                return this.clearCache()
+            },
+            changeCacheListsize:(newlistsize, deleteListCallback, changeListsizeCallback) => {
+                return this.changeCacheListsize(newlistsize, deleteListCallback, changeListsizeCallback)
+            },
+            matchCacheToCradle:(cradleIndexList, deleteListCallback) => {
+                return this.matchCacheToCradle(cradleIndexList, deleteListCallback)
+            },
+            pareCacheToMax:(cacheMax, cradleIndexList, deleteListCallback, scrollerID = undefined) => {
+                return this.pareCacheToMax(cacheMax, cradleIndexList, deleteListCallback, scrollerID = undefined)
+            },
+            guardAgainstRunawayCaching:(cacheMax, cradleListLength, MAX_CACHE_OVER_RUN) => {
+                return this.guardAgainstRunawayCaching(cacheMax, cradleListLength, MAX_CACHE_OVER_RUN)
+            },
+            preload:(finalCallback, nullItemSetMaxListsize, scrollerID) => {
+                return this.preload(finalCallback, nullItemSetMaxListsize, scrollerID)
+            },
+            getCacheIndexMap:() => {
+                return this.getCacheIndexMap()
+            },
+            getCradleIndexMap:(cradleIndexList) => {
+                return this.getCradleIndexMap(cradleIndexList)
+            },
+            getCacheItemMap:() => {
+                return this.getCacheItemMap()
+            },
+            moveIndex:(tolowindex, fromlowindex, fromhighindex ) => {
+                return this.moveIndex(tolowindex, fromlowindex, fromhighindex)
+            },
+            insertRemoveIndex:(index, highrange, increment, listsize ) => {
+                return this.insertRemoveIndex(index, highrange, increment, listsize )
+            },
+            registerPendingPortal:(index) => {
+                return this.registerPendingPortal(index)
+            },
+            unregisterPendingPortal:(index) => {
+                return this.unregisterPendingPortal(index)
+            },
+            getNewItemID:() => {
+                return this.getNewItemID()
+            },
+            getNewOrExistingItemID:(index) => {
+                return this.getNewOrExistingItemID(index)
+            },
+            createPortal:(component, index, itemID, scrollerProperties, isPreload = false) => {
+                return this.createPortal(component, index, itemID, scrollerProperties, isPreload = false)
+            },
+            deletePortalByIndex:(index, deleteListCallback) => {
+                return this.deletePortalByIndex(index, deleteListCallback)
+            },
+            applyPortalPartitionItemsForDeleteList:() => {
+                return this.applyPortalPartitionItemsForDeleteList()
+            },
+            hasPortal:(itemID) => {
+                return this.hasPortal(itemID)
+            },
+            getPortalMetadata:(itemID) => {
+                return this.getPortalMetadata(itemID)
+            }
+        }
+
         return this
     }
 
@@ -426,7 +510,7 @@ export default class CacheAPI {
 
     // --------------------------------[ preload ]--------------------------------
 
-    preload(finalCallback, nullItemSetMaxListsize, scrollerID) {
+    preload = (finalCallback, nullItemSetMaxListsize, scrollerID) => {
 
         const { cradleParameters } = this
 
