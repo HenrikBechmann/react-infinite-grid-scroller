@@ -61,8 +61,6 @@ export default class CacheAPI {
 
     private partitionProps = {
 
-        // indexToItemIDMap:new Map(),
-
         partitionMetadataMap:new Map(),
         partitionMap: new Map(),
         partitionRenderList:null,
