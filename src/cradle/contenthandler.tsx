@@ -815,7 +815,7 @@ export default class ContentHandler {
             }
 
             if (cacheAPI.pareCacheToMax(
-                cradleInheritedProperties.cacheMax, modelIndexList, dListCallback, scrollerID)) {
+                cradleInheritedProperties.cacheMax, modelIndexList, dListCallback)) {
             
                 cacheAPI.renderPortalLists()
                 

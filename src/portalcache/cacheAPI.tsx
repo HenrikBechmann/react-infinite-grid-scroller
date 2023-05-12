@@ -35,7 +35,6 @@
             set it to an object containing scrollerPropertiesRef and cellFramePropertiesRef
         - if your component does not scroll, there should be no issues.
 
-    Note that in the following, scrollerID is provided as a paramter to some functions for debug purposes, but not used.
 */
 
 import React, {useState, useEffect, useRef, useCallback} from 'react'
@@ -121,6 +120,8 @@ export default class CacheAPI {
 
     private getFacade = (scrollerID) => {
         const facade = {
+
+            // get and set data
             indexToItemIDMap:this.cacheProps.indexToItemIDMap,
             metadataMap:this.cacheProps.metadataMap,
             requestedSet:this.cacheProps.requestedSet,
@@ -142,6 +143,8 @@ export default class CacheAPI {
             setPortalPartitionItemsForDeleteList:(list) => {
                 this.portalPartitionItemsForDeleteList = list
             },
+
+            // methods
             getInstance:() => {
                 return this.getInstance()
             }, 
@@ -155,58 +158,58 @@ export default class CacheAPI {
                 return this.renderPortalLists()
             },
             clearCache:() => {
-                return this.clearCache()
+                return this.clearCache(scrollerID)
             },
             changeCacheListsize:(newlistsize, deleteListCallback, changeListsizeCallback) => {
-                return this.changeCacheListsize(newlistsize, deleteListCallback, changeListsizeCallback)
+                return this.changeCacheListsize(scrollerID, newlistsize, deleteListCallback, changeListsizeCallback)
             },
             matchCacheToCradle:(cradleIndexList, deleteListCallback) => {
-                return this.matchCacheToCradle(cradleIndexList, deleteListCallback)
+                return this.matchCacheToCradle(scrollerID, cradleIndexList, deleteListCallback)
             },
-            pareCacheToMax:(cacheMax, cradleIndexList, deleteListCallback, scrollerID = undefined) => {
-                return this.pareCacheToMax(cacheMax, cradleIndexList, deleteListCallback, scrollerID = undefined)
+            pareCacheToMax:(cacheMax, cradleIndexList, deleteListCallback) => {
+                return this.pareCacheToMax(scrollerID, cacheMax, cradleIndexList, deleteListCallback)
             },
             guardAgainstRunawayCaching:(cacheMax, cradleListLength, MAX_CACHE_OVER_RUN) => {
-                return this.guardAgainstRunawayCaching(cacheMax, cradleListLength, MAX_CACHE_OVER_RUN)
+                return this.guardAgainstRunawayCaching(scrollerID, cacheMax, cradleListLength, MAX_CACHE_OVER_RUN)
             },
-            preload:(finalCallback, nullItemSetMaxListsize, scrollerID) => {
-                return this.preload(finalCallback, nullItemSetMaxListsize, scrollerID)
+            preload:(finalCallback, nullItemSetMaxListsize) => {
+                return this.preload(scrollerID, finalCallback, nullItemSetMaxListsize)
             },
             getCacheIndexMap:() => {
-                return this.getCacheIndexMap()
+                return this.getCacheIndexMap(scrollerID)
             },
             getCradleIndexMap:(cradleIndexList) => {
-                return this.getCradleIndexMap(cradleIndexList)
+                return this.getCradleIndexMap(scrollerID, cradleIndexList)
             },
             getCacheItemMap:() => {
-                return this.getCacheItemMap()
+                return this.getCacheItemMap(scrollerID)
             },
             moveIndex:(tolowindex, fromlowindex, fromhighindex ) => {
-                return this.moveIndex(tolowindex, fromlowindex, fromhighindex)
+                return this.moveIndex(scrollerID, tolowindex, fromlowindex, fromhighindex)
             },
             insertRemoveIndex:(index, highrange, increment, listsize ) => {
-                return this.insertRemoveIndex(index, highrange, increment, listsize )
+                return this.insertRemoveIndex(scrollerID, index, highrange, increment, listsize )
             },
             registerPendingPortal:(index) => {
-                return this.registerPendingPortal(index)
+                return this.registerPendingPortal(scrollerID, index)
             },
             unregisterPendingPortal:(index) => {
-                return this.unregisterPendingPortal(index)
+                return this.unregisterPendingPortal(scrollerID, index)
             },
             getNewItemID:() => {
                 return this.getNewItemID()
             },
             getNewOrExistingItemID:(index) => {
-                return this.getNewOrExistingItemID(index)
+                return this.getNewOrExistingItemID(scrollerID, index)
             },
             createPortal:(component, index, itemID, scrollerProperties, isPreload = false) => {
-                return this.createPortal(component, index, itemID, scrollerProperties, isPreload = false)
+                return this.createPortal(scrollerID, component, index, itemID, scrollerProperties, isPreload = false)
             },
             deletePortalByIndex:(index, deleteListCallback) => {
-                return this.deletePortalByIndex(index, deleteListCallback)
+                return this.deletePortalByIndex(scrollerID, index, deleteListCallback)
             },
             applyPortalPartitionItemsForDeleteList:() => {
-                return this.applyPortalPartitionItemsForDeleteList()
+                return this.applyPortalPartitionItemsForDeleteList(scrollerID)
             },
             hasPortal:(itemID) => {
                 return this.hasPortal(itemID)
@@ -380,7 +383,7 @@ export default class CacheAPI {
 
     }
 
-    private clearCache = () => { // TODO take scrollerID as argument
+    private clearCache = (scrollerID) => {
 
         // clear base data
         this.cacheProps.metadataMap.clear()
@@ -401,7 +404,7 @@ export default class CacheAPI {
     // ----------------------------[ basic operations ]--------------------------
 
     // called from Cradle.nullItemSetMaxListsize, and serviceHandler.setListsize
-    private changeCacheListsize = (newlistsize, deleteListCallback, changeListsizeCallback) => {
+    private changeCacheListsize = (scrollerID, newlistsize, deleteListCallback, changeListsizeCallback) => {
 
         // match cache to newlistsize
         const portalIndexMap = this.cacheProps.indexToItemIDMap
@@ -416,7 +419,7 @@ export default class CacheAPI {
                 return index > (newlistsize -1)
             })
 
-            this.deletePortalByIndex(parelist, deleteListCallback)
+            this.deletePortalByIndex(scrollerID, parelist, deleteListCallback)
 
         }
 
@@ -426,7 +429,7 @@ export default class CacheAPI {
 
     // ----------------------[ cache size limit enforceent ]------------------
 
-    private matchCacheToCradle = (cradleIndexList, deleteListCallback) => {
+    private matchCacheToCradle = (scrollerID, cradleIndexList, deleteListCallback) => {
 
         const mapkeys = Array.from(this.cacheProps.indexToItemIDMap.keys())
 
@@ -434,7 +437,7 @@ export default class CacheAPI {
 
         if (delkeys.length) {
 
-            this.deletePortalByIndex(delkeys, deleteListCallback)
+            this.deletePortalByIndex(scrollerID, delkeys, deleteListCallback)
             return true
 
         } else {
@@ -445,7 +448,7 @@ export default class CacheAPI {
 
     }
 
-    private pareCacheToMax = (cacheMax, cradleIndexList, deleteListCallback, scrollerID = undefined) => {
+    private pareCacheToMax = (scrollerID, cacheMax, cradleIndexList, deleteListCallback) => {
 
         const modelLength = cradleIndexList.length
 
@@ -490,13 +493,13 @@ export default class CacheAPI {
 
         const delList = [...headlist,...taillist]
 
-        this.deletePortalByIndex(delList, deleteListCallback)
+        this.deletePortalByIndex(scrollerID, delList, deleteListCallback)
 
         return true
 
     }
 
-    private guardAgainstRunawayCaching = (cacheMax, cradleListLength, MAX_CACHE_OVER_RUN) => {
+    private guardAgainstRunawayCaching = (scrollerID, cacheMax, cradleListLength, MAX_CACHE_OVER_RUN) => {
 
         if (!cacheMax) return false
 
@@ -521,7 +524,7 @@ export default class CacheAPI {
 
     // --------------------------------[ preload ]--------------------------------
 
-    private preload = (finalCallback, nullItemSetMaxListsize, scrollerID) => {
+    private preload = (scrollerID, finalCallback, nullItemSetMaxListsize) => {
 
         const { cradleParameters } = this
 
@@ -566,12 +569,12 @@ export default class CacheAPI {
                 if (!indexToItemIDMap.has(index)) {
 
                     const promise = this.preloadItem(
+                        scrollerID,
                         index, 
                         getItem, 
                         scrollerPropertiesRef,
                         itemExceptionCallback,
-                        maxListsizeInterrupt,
-                        scrollerID
+                        maxListsizeInterrupt
                     )
                     promises.push(promise)
 
@@ -592,13 +595,13 @@ export default class CacheAPI {
 
     // =========================[ SNAPSHOTS ]=========================
 
-    private getCacheIndexMap() {
+    private getCacheIndexMap(scrollerID) {
 
         return new Map(this.cacheProps.indexToItemIDMap)
 
     }
 
-    private getCradleIndexMap(cradleIndexList) {
+    private getCradleIndexMap(scrollerID, cradleIndexList) {
 
         const cradleMap = new Map(),
             { indexToItemIDMap } = this.cacheProps
@@ -613,7 +616,7 @@ export default class CacheAPI {
 
     }
 
-    private getCacheItemMap() {
+    private getCacheItemMap(scrollerID) {
 
         const cachelist = new Map()
 
@@ -639,7 +642,7 @@ export default class CacheAPI {
     // --------------------------[ move indexes ]-------------------------------
 
     // move is coerced by servicehandler to be within current list bounds
-    private moveIndex(tolowindex, fromlowindex, fromhighindex ) {
+    private moveIndex(scrollerID, tolowindex, fromlowindex, fromhighindex ) {
 
         const {indexToItemIDMap,metadataMap} = this.cacheProps
 
@@ -784,7 +787,7 @@ export default class CacheAPI {
     // ----------------------------[ insert/remove indexes ]------------------------------
 
     // insert or remove indexes: much of this deals with the fact that the cache is sparse.
-    private insertRemoveIndex(index, highrange, increment, listsize ) { // increment is +1 or -1
+    private insertRemoveIndex(scrollerID, index, highrange, increment, listsize ) { // increment is +1 or -1
 
         // clarity
         const isInserting = (increment == 1)
@@ -1037,13 +1040,13 @@ export default class CacheAPI {
 
     // used for size calculation in pareCacheToMax
     // registers indexes when requested but before retrieved and entered into cache
-    private registerPendingPortal(index) {
+    private registerPendingPortal(scrollerID, index) {
 
         this.cacheProps.requestedSet.add(index)
 
     }
 
-    private unregisterPendingPortal(index) {
+    private unregisterPendingPortal(scrollerID, index) {
 
         this.cacheProps.requestedSet.delete(index)
 
@@ -1056,7 +1059,7 @@ export default class CacheAPI {
     }
 
     // get new or existing itemID for contentfunctions.createCellFrame
-    private getNewOrExistingItemID(index) {
+    private getNewOrExistingItemID(scrollerID, index) {
 
         const { indexToItemIDMap } = this.cacheProps
 
@@ -1070,9 +1073,9 @@ export default class CacheAPI {
     }
 
      // create new portal
-    private async createPortal(component, index, itemID, scrollerProperties, isPreload = false) {
+    private async createPortal(scrollerID, component, index, itemID, scrollerProperties, isPreload = false) {
 
-        this.unregisterPendingPortal(index)
+        this.unregisterPendingPortal(scrollerID, index)
 
         const { layout, cellHeight, cellWidth, orientation } = 
             this.cradleParameters.cradleInheritedPropertiesRef.current
@@ -1092,7 +1095,7 @@ export default class CacheAPI {
             portalNode,
             index,
             itemID,
-            scrollerID:scrollerProperties.scrollerPropertiesRef.current.scrollerID,
+            scrollerID, //:scrollerProperties.scrollerPropertiesRef.current.scrollerID,
             scrollerProperties,
             component,
             partitionID,
@@ -1111,12 +1114,12 @@ export default class CacheAPI {
 
     // used for preloading new item
     private async preloadItem(
+        scrollerID,
         index, 
         getItem, 
         scrollerPropertiesRef, 
         itemExceptionCallback,
-        maxListsizeInterrupt,
-        scrollerID
+        maxListsizeInterrupt
     ) {
 
         const itemID = this.getNewItemID()
@@ -1158,7 +1161,7 @@ export default class CacheAPI {
             }
 
             // const portalData = 
-                await this.createPortal(content, index, itemID, scrollerProperties, true) // true = isPreload
+                await this.createPortal(scrollerID,content, index, itemID, scrollerProperties, true) // true = isPreload
 
         } else {
 
@@ -1182,7 +1185,7 @@ export default class CacheAPI {
 
     // delete a portal list item
     // accepts an array of indexes
-    private deletePortalByIndex(index, deleteListCallback) {
+    private deletePortalByIndex(scrollerID, index, deleteListCallback) {
 
         const indexArray = 
             (!Array.isArray(index))?
@@ -1218,7 +1221,7 @@ export default class CacheAPI {
 
     }
 
-    private applyPortalPartitionItemsForDeleteList = () => {
+    private applyPortalPartitionItemsForDeleteList = (scrollerID) => {
 
         const { portalPartitionItemsForDeleteList } = this
 

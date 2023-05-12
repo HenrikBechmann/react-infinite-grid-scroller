@@ -708,7 +708,7 @@ const Cradle = ({
 
                 const { cacheMax } = cradleParameters.cradleInheritedPropertiesRef.current
 
-                if (cacheAPI.pareCacheToMax(cacheMax, modelIndexList, dListCallback, scrollerID)) {
+                if (cacheAPI.pareCacheToMax(cacheMax, modelIndexList, dListCallback)) {
 
                     cacheAPI.renderPortalLists()
                     
@@ -1024,7 +1024,7 @@ const Cradle = ({
 
                     }
 
-                    if (cacheAPI.pareCacheToMax(cacheMax, modelIndexList, dListCallback, scrollerID)) {
+                    if (cacheAPI.pareCacheToMax(cacheMax, modelIndexList, dListCallback)) {
 
                         cacheAPI.renderPortalLists()
 
@@ -1042,7 +1042,7 @@ const Cradle = ({
 
                 }
 
-                cacheAPI.preload(finalCallback, nullItemSetMaxListsize, scrollerID)
+                cacheAPI.preload(finalCallback, nullItemSetMaxListsize)
 
                 break
             }
