@@ -340,7 +340,7 @@ const InfiniteGridScroller = (props) => {
         }
 
         return () => {
-            cacheAPIRef.current.unRegisterScroller(scrollerSessionIDRef.current)
+            cacheAPIRef.current.unRegisterScroller()
         }
 
     },[scrollerState])
