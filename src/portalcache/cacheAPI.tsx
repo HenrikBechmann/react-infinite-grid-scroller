@@ -55,24 +55,15 @@ export default class CacheAPI {
     private globalItemID = 0
     private globalPartitionID = 0
 
-    private metadataMap = new Map()
+    private itemMetadataMap = new Map()
 
     private scrollerDataMap = new Map()
 
     private partitionProps = {
 
-        // ----- scrollerID-specific
-
         indexToItemIDMap:new Map(),
 
-        // some portals may have been requested by requestidlecallback, not yet created
-        requestedSet:new Set(), // requestedSet of indexes (transitional)
-
-        // ----- cache-general
-        // item data
-        // partition data
         partitionMetadataMap:new Map(),
-        // for rendering partitions...
         partitionMap: new Map(),
         partitionRenderList:null,
         partitionRepoForceUpdate:null,
@@ -97,8 +88,10 @@ export default class CacheAPI {
             {
                 cradleParameters:null,
                 indexToItemIDMap: new Map(), 
+                // some portals may have been requested by requestidlecallback, not yet created
+                requestedSet:new Set(),
                 portalPartitionItemsForDeleteList:null,
-                itemSet: new Set(),
+                itemSet: new Set(), // for scrollerID limited operations
             }
         )
 
@@ -116,12 +109,12 @@ export default class CacheAPI {
             getIndexToItemIDMap:() => {
                 return  this.partitionProps.indexToItemIDMap
             },
-            metadataMap:this.metadataMap,
+            itemMetadataMap:this.itemMetadataMap,
             get requestedSet() {
                 return this.getRequestedSet()
             },
             getRequestedSet:() => {
-                return this.partitionProps.requestedSet
+                return this.scrollerDataMap.get(scrollerID).requestedSet
             },
             set partitionRepoForceUpdate(fn) {
                 this.setPartitionRepoForceUpdate(fn)
@@ -384,9 +377,10 @@ export default class CacheAPI {
     private clearCache = (scrollerID) => {
 
         // clear base data
-        this.metadataMap.clear()
+        this.itemMetadataMap.clear() // TODO clear for scrollerID
+
         this.partitionProps.indexToItemIDMap.clear()
-        this.partitionProps.requestedSet.clear()
+        this.scrollerDataMap.get(scrollerID).requestedSet.clear()
         // clear cache partitions
         this.partitionProps.partitionMetadataMap.clear()
         this.partitionProps.partitionMap.clear()
@@ -456,7 +450,7 @@ export default class CacheAPI {
         const max = Math.max(modelLength, cacheMax)
 
         const portalIndexMap = this.partitionProps.indexToItemIDMap,
-            requestedSet = this.partitionProps.requestedSet
+            requestedSet = this.scrollerDataMap.get(scrollerID).requestedSet
 
         if ((portalIndexMap.size + requestedSet.size) <= max) return false
 
@@ -502,9 +496,10 @@ export default class CacheAPI {
         if (!cacheMax) return false
 
         const {
-            indexToItemIDMap,
-            requestedSet 
+            indexToItemIDMap
         } = this.partitionProps
+
+        const { requestedSet } = this.scrollerDataMap.get(scrollerID)
 
         const max = Math.max(cradleListLength, cacheMax)
 
@@ -618,7 +613,7 @@ export default class CacheAPI {
 
         const cachelist = new Map()
 
-        for (const [key, value] of this.metadataMap) {
+        for (const [key, value] of this.itemMetadataMap) {
             const {
                 index,
                 component,
@@ -643,7 +638,7 @@ export default class CacheAPI {
     private moveIndex(scrollerID, tolowindex, fromlowindex, fromhighindex ) {
 
         const {indexToItemIDMap} = this.partitionProps
-        const { metadataMap } = this
+        const { itemMetadataMap } = this
 
         // ----------- define parameters ---------------
 
@@ -753,7 +748,7 @@ export default class CacheAPI {
                     index + moveblocksize
 
             indexToItemIDMap.set(newIndex,itemID)
-            metadataMap.get(itemID).index = newIndex
+            itemMetadataMap.get(itemID).index = newIndex
             processeddisplaceList.push(newIndex)
 
         }
@@ -767,7 +762,7 @@ export default class CacheAPI {
             const newIndex = index + moveincrement // swap
 
             indexToItemIDMap.set(newIndex, itemID)
-            metadataMap.get(itemID).index = newIndex
+            itemMetadataMap.get(itemID).index = newIndex
             processedmoveList.push(newIndex)
 
         }
@@ -796,7 +791,7 @@ export default class CacheAPI {
 
         // cache resources
         const { indexToItemIDMap } = this.partitionProps
-        const { metadataMap } = this
+        const { itemMetadataMap } = this
         const orderedCacheIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b) // ascending order
 
         // ---------- define contiguous range parameters; add sentinels ---------------
@@ -983,7 +978,7 @@ export default class CacheAPI {
             }
 
             indexToItemIDMap.set(newIndex, itemID)
-            metadataMap.get(itemID).index = newIndex
+            itemMetadataMap.get(itemID).index = newIndex
             cacheIndexesShiftedList.push(newIndex)
 
         }
@@ -1008,9 +1003,9 @@ export default class CacheAPI {
 
             for (const itemID of cacheItemsToRemoveList) {
 
-                const { partitionID } = metadataMap.get(itemID)
+                const { partitionID } = itemMetadataMap.get(itemID)
                 portalPartitionItemsForDeleteList.push({itemID, partitionID})
-                metadataMap.delete(itemID)
+                itemMetadataMap.delete(itemID)
 
             }
 
@@ -1042,13 +1037,13 @@ export default class CacheAPI {
     // registers indexes when requested but before retrieved and entered into cache
     private registerPendingPortal(scrollerID, index) {
 
-        this.partitionProps.requestedSet.add(index)
+        this.scrollerDataMap.get(scrollerID).requestedSet.add(index)
 
     }
 
     private unregisterPendingPortal(scrollerID, index) {
 
-        this.partitionProps.requestedSet.delete(index)
+        this.scrollerDataMap.get(scrollerID).requestedSet.delete(index)
 
     }
 
@@ -1103,7 +1098,7 @@ export default class CacheAPI {
 
         // console.log('portalMetadata', portalMetadata)
 
-        this.metadataMap.set(itemID, portalMetadata)
+        this.itemMetadataMap.set(itemID, portalMetadata)
         this.partitionProps.indexToItemIDMap.set(index, itemID)
 
         if (!isPreload) this.renderPortalLists()
@@ -1194,7 +1189,7 @@ export default class CacheAPI {
 
         const { indexToItemIDMap } = this.partitionProps
 
-        const { metadataMap } = this
+        const { itemMetadataMap } = this
 
         const { removePartitionPortal } = this
 
@@ -1207,11 +1202,11 @@ export default class CacheAPI {
             if (itemID === undefined) continue // async mismatch
 
             deleteList.push({index,itemID})
-            const { partitionID } = metadataMap.get(itemID)
+            const { partitionID } = itemMetadataMap.get(itemID)
 
             removePartitionPortal(partitionID,itemID)
 
-            metadataMap.delete(itemID)
+            itemMetadataMap.delete(itemID)
             indexToItemIDMap.delete(index)
 
         }
@@ -1243,14 +1238,14 @@ export default class CacheAPI {
     // query existence of a portal list item
     private hasPortal(itemID) {
 
-        return this.metadataMap.has(itemID)
+        return this.itemMetadataMap.has(itemID)
 
     }
 
     private getPortalMetadata(itemID) {
 
         if (this.hasPortal(itemID)) {
-            return this.metadataMap.get(itemID)
+            return this.itemMetadataMap.get(itemID)
         }
 
     }

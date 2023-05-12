@@ -256,10 +256,9 @@ export default class ServiceHandler {
 
         const { 
 
-            metadataMap, // itemID to component data, including index
+            itemMetadataMap, // itemID to component data, including index
             indexToItemIDMap // index to itemID
 
-        // } = cacheAPI.cacheProps 
         } = cacheAPI 
 
         const indexesToDeleteList = []
@@ -282,7 +281,7 @@ export default class ServiceHandler {
 
                     if (!(cacheItemID === undefined)) { // ignore non-existent indexes
 
-                        const { partitionID } = metadataMap.get(cacheItemID)
+                        const { partitionID } = itemMetadataMap.get(cacheItemID)
 
                         partitionItemsToReplaceList.push({partitionID, itemID:cacheItemID})
                     }
@@ -335,7 +334,7 @@ export default class ServiceHandler {
 
                     errorEntriesMap.set(index, `target itemID ${itemID} has not changed`)
 
-                } else if (!metadataMap.has(itemID) || itemsToReplaceSet.has(itemID)) {
+                } else if (!itemMetadataMap.has(itemID) || itemsToReplaceSet.has(itemID)) {
 
                     errorEntriesMap.set(index, `target itemID ${itemID} not in cache, or has been removed`)
 
@@ -416,7 +415,7 @@ export default class ServiceHandler {
         changeIndexToItemIDMap.forEach((itemID, index)=>{
 
             originalMap.set(index,indexToItemIDMap.get(index)) // index to be mapped
-            originalMap.set(metadataMap.get(itemID).index,itemID) // target itemID
+            originalMap.set(itemMetadataMap.get(itemID).index,itemID) // target itemID
 
         })
 
@@ -454,7 +453,7 @@ export default class ServiceHandler {
         changeIndexToItemIDMap.forEach((itemID,index) => {
 
             indexToItemIDMap.set(index,itemID) // modiication applied, part 1
-            const itemdata = metadataMap.get(itemID)
+            const itemdata = itemMetadataMap.get(itemID)
 
             itemdata.index = index // modification applied, part 2
 
@@ -476,15 +475,15 @@ export default class ServiceHandler {
 
         originalMap.forEach((originalItemID, originalItemIDIndex) => {
 
-            const finalItemIDIndex = metadataMap.get(originalItemID).index
+            const finalItemIDIndex = itemMetadataMap.get(originalItemID).index
 
             if (originalItemIDIndex == finalItemIDIndex) { // not remapped, therefore orphaned
 
                 deletedItemIDToIndexMap.set(originalItemID, originalItemIDIndex)
 
-                const { partitionID } = metadataMap.get(originalItemID)
+                const { partitionID } = itemMetadataMap.get(originalItemID)
                 portalPartitionItemsForDeleteList.push({itemID:originalItemID, partitionID})
-                metadataMap.delete(originalItemID)
+                itemMetadataMap.delete(originalItemID)
 
             } else { // remapped, check for orphaned index
 
