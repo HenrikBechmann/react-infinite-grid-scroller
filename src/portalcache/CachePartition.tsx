@@ -3,7 +3,7 @@
 
 import React, {useState, useEffect, useRef, useCallback} from 'react'
 
-const CachePartition = ({ cacheProps, partitionID, callback }) => {
+const CachePartition = ({ partitionProps, partitionID, callback }) => {
 
     const [portalListCounter, setPortalListCounter] = useState(0)
 
@@ -15,7 +15,7 @@ const CachePartition = ({ cacheProps, partitionID, callback }) => {
 
     const portalArrayRef = useRef(null)
 
-    const partitionMetadata = cacheProps.partitionMetadataMap.get(partitionID)
+    const partitionMetadata = partitionProps.partitionMetadataMap.get(partitionID)
 
     const forceUpdate = useCallback((portalRenderList) => {
 
