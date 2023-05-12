@@ -37,6 +37,14 @@
 
 */
 
+/*
+
+    TODO
+    - maintain scrollerID itemSet
+    - modify clear cache for scroller selection
+
+*/
+
 import React, {useState, useEffect, useRef, useCallback} from 'react'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
