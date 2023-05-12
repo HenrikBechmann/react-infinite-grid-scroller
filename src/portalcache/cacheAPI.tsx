@@ -61,7 +61,7 @@ export default class CacheAPI {
 
     private partitionProps = {
 
-        indexToItemIDMap:new Map(),
+        // indexToItemIDMap:new Map(),
 
         partitionMetadataMap:new Map(),
         partitionMap: new Map(),
@@ -107,7 +107,7 @@ export default class CacheAPI {
                 return this.getIndexToItemIDMap()
             },
             getIndexToItemIDMap:() => {
-                return  this.partitionProps.indexToItemIDMap
+                return  this.scrollerDataMap.get(scrollerID).indexToItemIDMap
             },
             itemMetadataMap:this.itemMetadataMap,
             get requestedSet() {
@@ -379,7 +379,7 @@ export default class CacheAPI {
         // clear base data
         this.itemMetadataMap.clear() // TODO clear for scrollerID
 
-        this.partitionProps.indexToItemIDMap.clear()
+        this.scrollerDataMap.get(scrollerID).indexToItemIDMap.clear()
         this.scrollerDataMap.get(scrollerID).requestedSet.clear()
         // clear cache partitions
         this.partitionProps.partitionMetadataMap.clear()
@@ -399,7 +399,7 @@ export default class CacheAPI {
     private changeCacheListsize = (scrollerID, newlistsize, deleteListCallback, changeListsizeCallback) => {
 
         // match cache to newlistsize
-        const portalIndexMap = this.partitionProps.indexToItemIDMap
+        const portalIndexMap:Map<number,number> = this.scrollerDataMap.get(scrollerID).indexToItemIDMap
         const mapkeysList = Array.from(portalIndexMap.keys())
         mapkeysList.sort((a,b) => a - b)
 
@@ -423,7 +423,7 @@ export default class CacheAPI {
 
     private matchCacheToCradle = (scrollerID, cradleIndexList, deleteListCallback) => {
 
-        const mapkeys = Array.from(this.partitionProps.indexToItemIDMap.keys())
+        const mapkeys = Array.from(this.scrollerDataMap.get(scrollerID).indexToItemIDMap.keys())
 
         const delkeys = mapkeys.filter(key => !cradleIndexList.includes(key))
 
@@ -449,8 +449,8 @@ export default class CacheAPI {
 
         const max = Math.max(modelLength, cacheMax)
 
-        const portalIndexMap = this.partitionProps.indexToItemIDMap,
-            requestedSet = this.scrollerDataMap.get(scrollerID).requestedSet
+        const portalIndexMap:Map<number, number> = this.scrollerDataMap.get(scrollerID).indexToItemIDMap,
+            requestedSet:Set<number> = this.scrollerDataMap.get(scrollerID).requestedSet
 
         if ((portalIndexMap.size + requestedSet.size) <= max) return false
 
@@ -495,11 +495,7 @@ export default class CacheAPI {
 
         if (!cacheMax) return false
 
-        const {
-            indexToItemIDMap
-        } = this.partitionProps
-
-        const { requestedSet } = this.scrollerDataMap.get(scrollerID)
+        const { indexToItemIDMap, requestedSet } = this.scrollerDataMap.get(scrollerID)
 
         const max = Math.max(cradleListLength, cacheMax)
 
@@ -552,7 +548,7 @@ export default class CacheAPI {
 
         if (stateHandler.isMountedRef.current) {
             
-            const indexToItemIDMap = this.partitionProps.indexToItemIDMap
+            const indexToItemIDMap = this.scrollerDataMap.get(scrollerID).indexToItemIDMap
 
             const { preloadIndexCallback, itemExceptionCallback } = serviceHandler.callbacks
 
@@ -590,14 +586,14 @@ export default class CacheAPI {
 
     private getCacheIndexMap(scrollerID) {
 
-        return new Map(this.partitionProps.indexToItemIDMap)
+        return new Map(this.scrollerDataMap.get(scrollerID).indexToItemIDMap)
 
     }
 
     private getCradleIndexMap(scrollerID, cradleIndexList) {
 
         const cradleMap = new Map(),
-            { indexToItemIDMap } = this.partitionProps
+            { indexToItemIDMap } = this.scrollerDataMap.get(scrollerID)
 
         for (const index of cradleIndexList) {
 
@@ -637,7 +633,7 @@ export default class CacheAPI {
     // move is coerced by servicehandler to be within current list bounds
     private moveIndex(scrollerID, tolowindex, fromlowindex, fromhighindex ) {
 
-        const {indexToItemIDMap} = this.partitionProps
+        const indexToItemIDMap:Map<number, number> = this.scrollerDataMap.get(scrollerID).indexToItemIDMap
         const { itemMetadataMap } = this
 
         // ----------- define parameters ---------------
@@ -790,7 +786,7 @@ export default class CacheAPI {
         const emptyreturn = [null, null, [],[],[], []] // no action return value
 
         // cache resources
-        const { indexToItemIDMap } = this.partitionProps
+        const indexToItemIDMap:Map<number, number>  = this.scrollerDataMap.get(scrollerID).indexToItemIDMap
         const { itemMetadataMap } = this
         const orderedCacheIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b) // ascending order
 
@@ -964,7 +960,7 @@ export default class CacheAPI {
         if (isInserting) cacheToShiftIndexesList.reverse() 
 
         const cacheIndexesShiftedList = [] // track shifted indexes
-        const cacheIndexesTransferredSet = new Set() // obtain list of orphaned indexes
+        const cacheIndexesTransferredSet:Set<number> = new Set() // obtain list of orphaned indexes
 
         // function modify index-to-itemid map, and metadata map, for index shifts
         const processIndexFn = index => {
@@ -1056,7 +1052,7 @@ export default class CacheAPI {
     // get new or existing itemID for contentfunctions.createCellFrame
     private getNewOrExistingItemID(scrollerID, index) {
 
-        const { indexToItemIDMap } = this.partitionProps
+        const { indexToItemIDMap } = this.scrollerDataMap.get(scrollerID)
 
         const itemID = 
             (indexToItemIDMap.has(index))?
@@ -1099,7 +1095,7 @@ export default class CacheAPI {
         // console.log('portalMetadata', portalMetadata)
 
         this.itemMetadataMap.set(itemID, portalMetadata)
-        this.partitionProps.indexToItemIDMap.set(index, itemID)
+        this.scrollerDataMap.get(scrollerID).indexToItemIDMap.set(index, itemID)
 
         if (!isPreload) this.renderPortalLists()
 
@@ -1187,7 +1183,7 @@ export default class CacheAPI {
                 [index]:
                 index
 
-        const { indexToItemIDMap } = this.partitionProps
+        const { indexToItemIDMap } = this.scrollerDataMap.get(scrollerID)
 
         const { itemMetadataMap } = this
 
