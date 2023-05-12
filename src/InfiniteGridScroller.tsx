@@ -268,6 +268,7 @@ const InfiniteGridScroller = (props) => {
 
     // for children
     const cacheAPIRef = useRef(cacheAPI)
+    const updateFunctionRef = useRef(null)
 
     const listsizeRef = useRef(startingListSize)
 
@@ -292,6 +293,10 @@ const InfiniteGridScroller = (props) => {
 
     const getCacheAPI = (cacheAPI) => {
         cacheAPIRef.current = cacheAPI
+    }
+
+    const getUpdateFunction = (fn) => {
+        updateFunctionRef.current = fn
     }
 
     const useLocalCache = !cacheAPI
@@ -323,11 +328,15 @@ const InfiniteGridScroller = (props) => {
     useEffect(() => {
 
         switch (scrollerState) {
+
             case 'setup':
                 // replace cacheAPI with facade which includes hidden scrollerID
                 cacheAPIRef.current = cacheAPIRef.current.registerScroller(scrollerSessionIDRef.current, listsizeRef)
+                cacheAPIRef.current.partitionRepoForceUpdate = updateFunctionRef.current
+
             case 'setlistsize':
                 setScrollerState('ready')
+
         }
 
         return () => {
@@ -406,6 +415,7 @@ const InfiniteGridScroller = (props) => {
                 setListsize = { updateListsize } 
                 listsizeRef = { listsizeRef } 
                 getCacheAPI = { getCacheAPI } 
+                getUpdateFunction = { getUpdateFunction }
                 CACHE_PARTITION_SIZE = { CACHE_PARTITION_SIZE } />
         </div>}
     </ErrorBoundary>

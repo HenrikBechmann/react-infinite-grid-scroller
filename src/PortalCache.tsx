@@ -5,30 +5,10 @@ import React, {FC, useState, useEffect, useRef, useCallback} from 'react'
 
 import CacheAPI from './portalcache/cacheAPI'
 
-const PortalCache:FC<any> = ({scrollerSessionIDRef, setListsize, listsizeRef, getCacheAPI, CACHE_PARTITION_SIZE }) => {
+const PortalCache:FC<any> = ({scrollerSessionIDRef, setListsize, listsizeRef, getCacheAPI, getUpdateFunction, CACHE_PARTITION_SIZE }) => {
 
 
     const cacheAPIRef = useRef(null)
-
-    useEffect(() => {
-
-        if (cacheAPIRef.current) return
-
-        const cacheAPI = new CacheAPI(scrollerSessionIDRef.current, listsizeRef, 
-            CACHE_PARTITION_SIZE)
-
-        cacheAPIRef.current = cacheAPI
-
-        getCacheAPI(cacheAPI)
-
-    },[])
-
-    const [portalCacheCounter, setPortalCacheCounter] = useState(0)
-    const counterRef = useRef(portalCacheCounter)
-
-    const [masterState, setMasterState] = useState('setup')
-
-    const isMountedRef = useRef(true)
 
     const partitionArrayRef = useRef(null)
 
@@ -40,13 +20,34 @@ const PortalCache:FC<any> = ({scrollerSessionIDRef, setListsize, listsizeRef, ge
 
     },[])
 
+    useEffect(() => {
+
+        if (cacheAPIRef.current) return
+
+        const cacheAPI = new CacheAPI(scrollerSessionIDRef.current, listsizeRef, 
+            CACHE_PARTITION_SIZE)
+
+        cacheAPIRef.current = cacheAPI
+
+        getCacheAPI(cacheAPI)
+        getUpdateFunction(partitionRepoForceUpdate)
+
+    },[])
+
+    const [portalCacheCounter, setPortalCacheCounter] = useState(0)
+    const counterRef = useRef(portalCacheCounter)
+
+    const [masterState, setMasterState] = useState('setup')
+
+    const isMountedRef = useRef(true)
+
     useEffect(()=>{
 
         isMountedRef.current = true
 
         // cacheAPIRef.current.cacheProps.partitionRepoForceUpdate = partitionRepoForceUpdate
-        cacheAPIRef.current.partitionRepoForceUpdate = partitionRepoForceUpdate
-        console.log('PortalCache: cacheAPIRef',cacheAPIRef)
+        // cacheAPIRef.current.partitionRepoForceUpdate = partitionRepoForceUpdate
+        // console.log('PortalCache: cacheAPIRef',cacheAPIRef)
 
         return () => {
 

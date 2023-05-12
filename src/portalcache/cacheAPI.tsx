@@ -96,14 +96,12 @@ export default class CacheAPI {
 
     // ===========================[ Scroller Registration & Maintenance ]===============================
 
-    // ??
-    // scrollerData = (scrollerID) => {
-    //     return this.cacheProps.scrollerDataMap.get(scrollerID)
-    // }
+    private getInstance = () => {
+        return this
+    }
 
-    private registerScroller = (scrollerID, listsizeRef) => { //, cradleParameters) => {
-
-        // console.log('registering scrollerID, listsizeRef',scrollerID, listsizeRef)
+    // the only member accessed directly. All other access is through the facade
+    registerScroller(scrollerID, listsizeRef) { //, cradleParameters) => {
 
         this.cacheProps.scrollerDataMap.set(scrollerID, 
             {
@@ -121,30 +119,15 @@ export default class CacheAPI {
 
     }
 
-    // private set partitionRepoForceUpdate (fn) {
-    //     this.cacheProps.partitionRepoForceUpdate = fn
-    // }
-
-    // private set cradleParms(parms) {
-    //     console.log('inside set cradleParms')
-    //     this.cradleParameters = parms
-    // }
-
-    // private set portalPartitionItemsForDelete(list) {
-    //     this.portalPartitionItemsForDeleteList = list
-    // }
-
     private getFacade = (scrollerID) => {
         const facade = {
             indexToItemIDMap:this.cacheProps.indexToItemIDMap,
             metadataMap:this.cacheProps.metadataMap,
             requestedSet:this.cacheProps.requestedSet,
             set partitionRepoForceUpdate(fn) {
-                console.log('calling setPartitionRepoForceUpdate with fn',fn)
                 this.setPartitionRepoForceUpdate(fn)
             },
             setPartitionRepoForceUpdate:(fn) => {
-                console.log('setting partitionRepoForceUpdate to fn',fn)
                 this.cacheProps.partitionRepoForceUpdate = fn
             },
             set cradleParameters(parms){
@@ -159,9 +142,9 @@ export default class CacheAPI {
             setPortalPartitionItemsForDeleteList:(list) => {
                 this.portalPartitionItemsForDeleteList = list
             },
-            registerScroller:(scrollerID, listsizeRef) => {
-                return this.registerScroller(scrollerID, listsizeRef)
-            },
+            getInstance:() => {
+                return this.getInstance()
+            }, 
             unRegisterScroller:() => {
                 return this.unRegisterScroller(scrollerID)
             },
@@ -233,7 +216,7 @@ export default class CacheAPI {
             }
         }
 
-        return facade // this
+        return facade
     }
 
     private unRegisterScroller = (scrollerID) => {
@@ -250,7 +233,7 @@ export default class CacheAPI {
 
     // partitions are added but not removed
 
-    renderPartitionRepo = () => {
+    private renderPartitionRepo = () => {
 
         this.cacheProps.partitionRenderList = Array.from(this.cacheProps.partitionMap.values())
 
@@ -379,7 +362,7 @@ export default class CacheAPI {
     }
 
     // set state of the CachePartition component of the scroller to trigger render
-    renderPortalLists = () => {
+    private renderPortalLists = () => {
 
         const { partitionModifiedSet } = this.cacheProps
 
@@ -397,7 +380,7 @@ export default class CacheAPI {
 
     }
 
-    clearCache = () => { // TODO take scrollerID as argument
+    private clearCache = () => { // TODO take scrollerID as argument
 
         // clear base data
         this.cacheProps.metadataMap.clear()
@@ -418,7 +401,7 @@ export default class CacheAPI {
     // ----------------------------[ basic operations ]--------------------------
 
     // called from Cradle.nullItemSetMaxListsize, and serviceHandler.setListsize
-    changeCacheListsize = (newlistsize, deleteListCallback, changeListsizeCallback) => {
+    private changeCacheListsize = (newlistsize, deleteListCallback, changeListsizeCallback) => {
 
         // match cache to newlistsize
         const portalIndexMap = this.cacheProps.indexToItemIDMap
@@ -443,7 +426,7 @@ export default class CacheAPI {
 
     // ----------------------[ cache size limit enforceent ]------------------
 
-    matchCacheToCradle = (cradleIndexList, deleteListCallback) => {
+    private matchCacheToCradle = (cradleIndexList, deleteListCallback) => {
 
         const mapkeys = Array.from(this.cacheProps.indexToItemIDMap.keys())
 
@@ -462,7 +445,7 @@ export default class CacheAPI {
 
     }
 
-    pareCacheToMax = (cacheMax, cradleIndexList, deleteListCallback, scrollerID = undefined) => {
+    private pareCacheToMax = (cacheMax, cradleIndexList, deleteListCallback, scrollerID = undefined) => {
 
         const modelLength = cradleIndexList.length
 
@@ -513,7 +496,7 @@ export default class CacheAPI {
 
     }
 
-    guardAgainstRunawayCaching = (cacheMax, cradleListLength, MAX_CACHE_OVER_RUN) => {
+    private guardAgainstRunawayCaching = (cacheMax, cradleListLength, MAX_CACHE_OVER_RUN) => {
 
         if (!cacheMax) return false
 
@@ -538,7 +521,7 @@ export default class CacheAPI {
 
     // --------------------------------[ preload ]--------------------------------
 
-    preload = (finalCallback, nullItemSetMaxListsize, scrollerID) => {
+    private preload = (finalCallback, nullItemSetMaxListsize, scrollerID) => {
 
         const { cradleParameters } = this
 
@@ -609,13 +592,13 @@ export default class CacheAPI {
 
     // =========================[ SNAPSHOTS ]=========================
 
-    getCacheIndexMap() {
+    private getCacheIndexMap() {
 
         return new Map(this.cacheProps.indexToItemIDMap)
 
     }
 
-    getCradleIndexMap(cradleIndexList) {
+    private getCradleIndexMap(cradleIndexList) {
 
         const cradleMap = new Map(),
             { indexToItemIDMap } = this.cacheProps
@@ -630,7 +613,7 @@ export default class CacheAPI {
 
     }
 
-    getCacheItemMap() {
+    private getCacheItemMap() {
 
         const cachelist = new Map()
 
@@ -656,7 +639,7 @@ export default class CacheAPI {
     // --------------------------[ move indexes ]-------------------------------
 
     // move is coerced by servicehandler to be within current list bounds
-    moveIndex(tolowindex, fromlowindex, fromhighindex ) {
+    private moveIndex(tolowindex, fromlowindex, fromhighindex ) {
 
         const {indexToItemIDMap,metadataMap} = this.cacheProps
 
@@ -801,7 +784,7 @@ export default class CacheAPI {
     // ----------------------------[ insert/remove indexes ]------------------------------
 
     // insert or remove indexes: much of this deals with the fact that the cache is sparse.
-    insertRemoveIndex(index, highrange, increment, listsize ) { // increment is +1 or -1
+    private insertRemoveIndex(index, highrange, increment, listsize ) { // increment is +1 or -1
 
         // clarity
         const isInserting = (increment == 1)
@@ -1054,26 +1037,26 @@ export default class CacheAPI {
 
     // used for size calculation in pareCacheToMax
     // registers indexes when requested but before retrieved and entered into cache
-    registerPendingPortal(index) {
+    private registerPendingPortal(index) {
 
         this.cacheProps.requestedSet.add(index)
 
     }
 
-    unregisterPendingPortal(index) {
+    private unregisterPendingPortal(index) {
 
         this.cacheProps.requestedSet.delete(index)
 
     }
 
-    getNewItemID() {
+    private getNewItemID() {
 
         return this.globalItemID++
 
     }
 
     // get new or existing itemID for contentfunctions.createCellFrame
-    getNewOrExistingItemID(index) {
+    private getNewOrExistingItemID(index) {
 
         const { indexToItemIDMap } = this.cacheProps
 
@@ -1087,7 +1070,7 @@ export default class CacheAPI {
     }
 
      // create new portal
-    async createPortal(component, index, itemID, scrollerProperties, isPreload = false) {
+    private async createPortal(component, index, itemID, scrollerProperties, isPreload = false) {
 
         this.unregisterPendingPortal(index)
 
@@ -1199,7 +1182,7 @@ export default class CacheAPI {
 
     // delete a portal list item
     // accepts an array of indexes
-    deletePortalByIndex(index, deleteListCallback) {
+    private deletePortalByIndex(index, deleteListCallback) {
 
         const indexArray = 
             (!Array.isArray(index))?
@@ -1235,7 +1218,7 @@ export default class CacheAPI {
 
     }
 
-    applyPortalPartitionItemsForDeleteList = () => {
+    private applyPortalPartitionItemsForDeleteList = () => {
 
         const { portalPartitionItemsForDeleteList } = this
 
@@ -1256,13 +1239,13 @@ export default class CacheAPI {
     }
 
     // query existence of a portal list item
-    hasPortal(itemID) {
+    private hasPortal(itemID) {
 
         return this.cacheProps.metadataMap.has(itemID)
 
     }
 
-    getPortalMetadata(itemID) {
+    private getPortalMetadata(itemID) {
 
         if (this.hasPortal(itemID)) {
             return this.cacheProps.metadataMap.get(itemID)
