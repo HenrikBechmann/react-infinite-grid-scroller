@@ -122,9 +122,19 @@ export default class CacheAPI {
         const facade = {
 
             // get and set data
-            indexToItemIDMap:this.cacheProps.indexToItemIDMap,
+            get indexToItemIDMap() {
+                return this.getIndexToItemIDMap()
+            },
+            getIndexToItemIDMap:() => {
+                return  this.cacheProps.indexToItemIDMap
+            },
             metadataMap:this.cacheProps.metadataMap,
-            requestedSet:this.cacheProps.requestedSet,
+            get requestedSet() {
+                return this.getRequestedSet()
+            },
+            getRequestedSet:() => {
+                return this.cacheProps.requestedSet
+            },
             set partitionRepoForceUpdate(fn) {
                 this.setPartitionRepoForceUpdate(fn)
             },
