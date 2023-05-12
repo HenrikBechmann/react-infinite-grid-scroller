@@ -84,8 +84,6 @@ export default class CacheAPI {
 
     private CACHE_PARTITION_SIZE
 
-    private portalPartitionItemsForDeleteList // array of {itemID,partitionID}
-
     // ===========================[ Scroller Registration & Maintenance ]===============================
 
     private getInstance = () => {
@@ -141,7 +139,7 @@ export default class CacheAPI {
                 this.setPortalPartitionItemsForDeleteList(list)
             },
             setPortalPartitionItemsForDeleteList:(list) => {
-                this.portalPartitionItemsForDeleteList = list
+                this.scrollerDataMap.get(scrollerID).portalPartitionItemsForDeleteList = list
             },
 
             // methods
@@ -1224,7 +1222,7 @@ export default class CacheAPI {
 
     private applyPortalPartitionItemsForDeleteList = (scrollerID) => {
 
-        const { portalPartitionItemsForDeleteList } = this
+        const { portalPartitionItemsForDeleteList } = this.scrollerDataMap.get(scrollerID)
 
         if (portalPartitionItemsForDeleteList && portalPartitionItemsForDeleteList.length) {
 
@@ -1234,7 +1232,7 @@ export default class CacheAPI {
                 
             }
 
-            this.portalPartitionItemsForDeleteList = []                    
+            this.scrollerDataMap.get(scrollerID).portalPartitionItemsForDeleteList = []                    
 
             this.renderPortalLists()
 
