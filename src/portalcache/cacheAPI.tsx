@@ -46,10 +46,10 @@ import CachePartition from './CachePartition'
 // the cache itself is maintained in the root infinitegridscroller component
 export default class CacheAPI {
 
-    constructor(scrollerID, listsizeRef, CACHE_PARTITION_SIZE) {
-        this.cacheProps.scrollerID = scrollerID // for debug
+    constructor(CACHE_PARTITION_SIZE) {
+        // this.cacheProps.scrollerID = scrollerID // for debug
         // this.updateListsize = updateListsize // passed from InfiniteGridScroller.updateListsize(listsize)
-        this.listsizeRef = listsizeRef // current list size
+        // this.listsizeRef = listsizeRef // current list size
 
         this.CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE
     }
@@ -60,7 +60,7 @@ export default class CacheAPI {
     private cacheProps = {
 
         // ----- scrollerID-specific
-        scrollerID:null, // for debug
+        // scrollerID:null, // for debug
 
         scrollerDataMap: new Map(),
 
@@ -91,7 +91,7 @@ export default class CacheAPI {
 
     private portalPartitionItemsForDeleteList // array of {itemID,partitionID}
 
-    listsizeRef
+    // listsizeRef
 
     // ===========================[ Scroller Registration & Maintenance ]===============================
 

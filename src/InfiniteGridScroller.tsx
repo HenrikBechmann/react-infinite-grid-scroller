@@ -46,7 +46,12 @@ function ErrorFallback({error, resetErrorBoundary}) {
     <div role="alert" style = {{margin:'3px'}}>
       <p>Something went wrong inside react-infinite-grid-scroller. See the console for details.</p>
       <p>Click to cancel the error and try to continue.</p>
-      <button style = {{border:'1px solid black', margin:'3px', padding:'3px'}} onClick={ resetErrorBoundary }>Cancel error</button>
+      <button 
+          style = {{border:'1px solid black', margin:'3px', padding:'3px'}} 
+          onClick = { resetErrorBoundary }
+      >
+          Cancel error
+      </button>
     </div>
   )
 }
@@ -411,12 +416,11 @@ const InfiniteGridScroller = (props) => {
         </Viewport>}
         {useLocalCache && <div data-type = 'cacheroot' style = { cacherootstyle }>
             <PortalCache 
-                scrollerSessionIDRef = { scrollerSessionIDRef }
-                setListsize = { updateListsize } 
-                listsizeRef = { listsizeRef } 
+
                 getCacheAPI = { getCacheAPI } 
                 getUpdateFunction = { getUpdateFunction }
                 CACHE_PARTITION_SIZE = { CACHE_PARTITION_SIZE } />
+
         </div>}
     </ErrorBoundary>
 }
