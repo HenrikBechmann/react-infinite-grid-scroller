@@ -221,7 +221,6 @@ export default class CacheAPI {
 
     private unRegisterScroller = (scrollerID) => {
 
-        console.log('unregistering scroller',scrollerID)
         this.cacheProps.scrollerDataMap.delete(scrollerID)
 
     }
