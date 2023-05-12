@@ -306,6 +306,8 @@ const InfiniteGridScroller = (props) => {
 
     const useLocalCache = !cacheAPI
 
+    const isMountedRef = useRef(true)
+
     useEffect (() => {
 
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
@@ -330,13 +332,23 @@ const InfiniteGridScroller = (props) => {
 
     // ---------------------[ State handling ]------------------------
 
+    useEffect(()=>{
+
+        isMountedRef.current = true
+
+        return () => {
+            isMountedRef.current = false
+        }
+
+    },[])
+
     useEffect(() => {
 
         switch (scrollerState) {
 
             case 'setup':
                 // replace cacheAPI with facade which includes hidden scrollerID
-                cacheAPIRef.current = cacheAPIRef.current.registerScroller(scrollerSessionIDRef.current, listsizeRef)
+                cacheAPIRef.current = cacheAPIRef.current.registerScroller(scrollerSessionIDRef.current)
                 cacheAPIRef.current.partitionRepoForceUpdate = updateFunctionRef.current
 
             case 'setlistsize':
@@ -345,7 +357,9 @@ const InfiniteGridScroller = (props) => {
         }
 
         return () => {
-            cacheAPIRef.current.unRegisterScroller()
+            if (!isMountedRef.current) {
+                cacheAPIRef.current.unRegisterScroller()
+            }
         }
 
     },[scrollerState])

@@ -84,8 +84,6 @@ export default class CacheAPI {
 
     private CACHE_PARTITION_SIZE
 
-    private cradleParameters
-
     private portalPartitionItemsForDeleteList // array of {itemID,partitionID}
 
     // ===========================[ Scroller Registration & Maintenance ]===============================
@@ -95,17 +93,14 @@ export default class CacheAPI {
     }
 
     // the only member accessed directly. All other access is through the facade
-    registerScroller(scrollerID, listsizeRef) {
+    registerScroller(scrollerID) {
 
         this.scrollerDataMap.set(scrollerID, 
             {
+                cradleParameters:null,
                 indexToItemIDMap: new Map(), 
+                portalPartitionItemsForDeleteList:null,
                 itemSet: new Set(),
-                properties:{
-                    cradleParameters:null,
-                    portalPartitionItemsForDeleteList:null,
-                    listsizeRef,
-                }
             }
         )
 
@@ -140,7 +135,7 @@ export default class CacheAPI {
                 this.setCradleParameters(parms)
             },
             setCradleParameters:(parms) => {
-                this.cradleParameters = parms
+                this.scrollerDataMap.get(scrollerID).cradleParameters = parms
             },
             set portalPartitionItemsForDeleteList(list) {
                 this.setPortalPartitionItemsForDeleteList(list)
@@ -531,7 +526,7 @@ export default class CacheAPI {
 
     private preload = (scrollerID, finalCallback, nullItemSetMaxListsize) => {
 
-        const { cradleParameters } = this
+        const { cradleParameters } = this.scrollerDataMap.get(scrollerID)
 
         const { scrollerPropertiesRef } = cradleParameters
 
@@ -1085,7 +1080,7 @@ export default class CacheAPI {
         this.unregisterPendingPortal(scrollerID, index)
 
         const { layout, cellHeight, cellWidth, orientation } = 
-            this.cradleParameters.cradleInheritedPropertiesRef.current
+            this.scrollerDataMap.get(scrollerID).cradleParameters.cradleInheritedPropertiesRef.current
 
         const portalNode = createPortalNode(index, itemID)
 
