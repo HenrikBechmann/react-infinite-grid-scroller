@@ -42,6 +42,7 @@
     TODO
 
     - modify clear cache for scroller selection
+    - getCacheItemMap for scrollerID
 
 */
 
