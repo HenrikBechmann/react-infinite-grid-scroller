@@ -40,7 +40,10 @@
 /*
 
     TODO
-    - maintain scrollerID itemSet
+    - maintain scrollerID itemSet; 
+        - for external changes, use deleteItemMetadata(itemID)
+        - for internal changes, add and delete to itemSet with every chanve to itemMetadataMap
+
     - modify clear cache for scroller selection
 
 */
@@ -95,9 +98,9 @@ export default class CacheAPI {
                 cradleParameters:null,
                 indexToItemIDMap: new Map(), 
                 // some portals may have been requested by requestidlecallback, not yet created
+                itemSet: new Set(), // for scrollerID limited operations
                 requestedSet:new Set(),
                 portalPartitionItemsForDeleteList:null,
-                itemSet: new Set(), // for scrollerID limited operations
             }
         )
 
@@ -114,6 +117,12 @@ export default class CacheAPI {
             },
             getIndexToItemIDMap:() => {
                 return  this.scrollerDataMap.get(scrollerID).indexToItemIDMap
+            },
+            get itemSet() {
+                return this.getItemSet()
+            },
+            getItemSet:() => {
+                return  this.scrollerDataMap.get(scrollerID).itemSet
             },
             itemMetadataMap:this.itemMetadataMap,
             get requestedSet() {
@@ -222,6 +231,7 @@ export default class CacheAPI {
     private unRegisterScroller = (scrollerID) => {
 
         this.scrollerDataMap.delete(scrollerID)
+        // TODO remove scroller items from portal cache (using clear cache)
 
     }
 
