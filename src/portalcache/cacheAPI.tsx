@@ -622,14 +622,18 @@ export default class CacheAPI {
     private getCacheItemMap(scrollerID) {
 
         const cachelist = new Map()
+        const { itemSet } = this.scrollerDataMap.get(scrollerID)
+        const { itemMetadataMap } = this
 
-        for (const [key, value] of this.itemMetadataMap) {
+        // for (const [key, value] of this.itemMetadataMap) {
+        for (const itemID of itemSet) {
+            const metadata = itemMetadataMap.get(itemID)
             const {
                 index,
                 component,
-            } = value
+            } = metadata
 
-            cachelist.set(key,{
+            cachelist.set(itemID,{
                 index,
                 component,
             })
