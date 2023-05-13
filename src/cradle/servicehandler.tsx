@@ -257,7 +257,8 @@ export default class ServiceHandler {
         const { 
 
             itemMetadataMap, // itemID to component data, including index
-            indexToItemIDMap // index to itemID
+            indexToItemIDMap, // index to itemID
+            itemSet,
 
         } = cacheAPI 
 
@@ -484,6 +485,7 @@ export default class ServiceHandler {
                 const { partitionID } = itemMetadataMap.get(originalItemID)
                 portalPartitionItemsForDeleteList.push({itemID:originalItemID, partitionID})
                 itemMetadataMap.delete(originalItemID)
+                itemSet.delete(originalItemID)
 
             } else { // remapped, check for orphaned index
 

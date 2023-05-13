@@ -40,9 +40,6 @@
 /*
 
     TODO
-    - maintain scrollerID itemSet; 
-        - for external changes, use deleteItemMetadata(itemID)
-        - for internal changes, add and delete to itemSet with every chanve to itemMetadataMap
 
     - modify clear cache for scroller selection
 
@@ -805,6 +802,7 @@ export default class CacheAPI {
         const indexToItemIDMap:Map<number, number>  = this.scrollerDataMap.get(scrollerID).indexToItemIDMap
         const { itemMetadataMap } = this
         const orderedCacheIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b) // ascending order
+        const itemSet = this.scrollerDataMap.get(scrollerID).itemSet
 
         // ---------- define contiguous range parameters; add sentinels ---------------
 
@@ -1018,6 +1016,7 @@ export default class CacheAPI {
                 const { partitionID } = itemMetadataMap.get(itemID)
                 portalPartitionItemsForDeleteList.push({itemID, partitionID})
                 itemMetadataMap.delete(itemID)
+                itemSet.delete(itemID)
 
             }
 
@@ -1111,6 +1110,7 @@ export default class CacheAPI {
         // console.log('portalMetadata', portalMetadata)
 
         this.itemMetadataMap.set(itemID, portalMetadata)
+        this.scrollerDataMap.get(scrollerID).itemSet.add(itemID)
         this.scrollerDataMap.get(scrollerID).indexToItemIDMap.set(index, itemID)
 
         if (!isPreload) this.renderPortalLists()
@@ -1199,7 +1199,7 @@ export default class CacheAPI {
                 [index]:
                 index
 
-        const { indexToItemIDMap } = this.scrollerDataMap.get(scrollerID)
+        const { indexToItemIDMap, itemSet } = this.scrollerDataMap.get(scrollerID)
 
         const { itemMetadataMap } = this
 
@@ -1219,6 +1219,7 @@ export default class CacheAPI {
             removePartitionPortal(partitionID,itemID)
 
             itemMetadataMap.delete(itemID)
+            itemSet.delete(itemID)
             indexToItemIDMap.delete(index)
 
         }
