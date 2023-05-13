@@ -42,7 +42,6 @@
     TODO
 
     - modify clear cache for scroller selection
-    - getCacheItemMap for scrollerID
 
 */
 
@@ -390,18 +389,36 @@ export default class CacheAPI {
 
     private clearCache = (scrollerID) => {
 
-        // clear base data
-        this.itemMetadataMap.clear() // TODO clear for scrollerID
+        const { scrollerDataMap, itemMetadataMap } = this
+        const datamap = scrollerDataMap.get(scrollerID)
+        const {indexToItemIDMap, itemSet, requestedSet} = datamap
 
-        this.scrollerDataMap.get(scrollerID).indexToItemIDMap.clear()
-        this.scrollerDataMap.get(scrollerID).requestedSet.clear()
-        // clear cache partitions
-        this.partitionProps.partitionMetadataMap.clear()
-        this.partitionProps.partitionMap.clear()
-        this.partitionProps.partitionRenderList = []
-        this.partitionProps.partitionModifiedSet.clear()
-        this.partitionProps.partitionPtr = null
-        this.partitionProps.partitionRepoForceUpdate(null)
+        if (scrollerDataMap.size == 1) {
+
+            // clear base data
+            itemMetadataMap.clear()
+
+            // clear cache partitions
+            this.partitionProps.partitionMetadataMap.clear()
+            this.partitionProps.partitionMap.clear()
+            this.partitionProps.partitionRenderList = []
+            this.partitionProps.partitionModifiedSet.clear()
+            this.partitionProps.partitionPtr = null
+            this.partitionProps.partitionRepoForceUpdate(null)
+
+        } else {
+
+            itemSet.forEach((itemID) => {
+                const { partitionID } = itemMetadataMap.get(itemID)
+                this.removePartitionPortal(partitionID,itemID)
+            })
+            this.renderPortalLists()
+
+        }
+
+        indexToItemIDMap.clear()
+        itemSet.clear()
+        requestedSet.clear()
 
     }
 
