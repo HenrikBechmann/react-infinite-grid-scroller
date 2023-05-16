@@ -83,10 +83,6 @@ export default class CacheAPI {
 
     // ===========================[ Scroller Registration & Maintenance ]===============================
 
-    private getInstance = () => {
-        return this
-    }
-
     // the only member accessed directly. All other access is through the facade
     registerScroller(scrollerID) {
 
@@ -146,11 +142,14 @@ export default class CacheAPI {
             setPortalPartitionItemsForDeleteList:(list) => {
                 this.scrollerDataMap.get(scrollerID).portalPartitionItemsForDeleteList = list
             },
-
-            // methods
-            getInstance:() => {
+            get instance() {
                 return this.getInstance()
             }, 
+            getInstance:() => {
+                return this
+            },
+
+            // methods
             unRegisterScroller:() => {
                 return this.unRegisterScroller(scrollerID)
             },
@@ -1123,7 +1122,7 @@ export default class CacheAPI {
             portalNode,
             index,
             itemID,
-            scrollerID, //:scrollerProperties.scrollerPropertiesRef.current.scrollerID,
+            scrollerID,
             scrollerProperties,
             component,
             partitionID,
