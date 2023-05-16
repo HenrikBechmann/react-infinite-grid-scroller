@@ -367,14 +367,17 @@ const CellFrame = ({
                                     cellFramePropertiesRef,
                                     scrollerPropertiesRef,
                                 }
+                                let addinCount = 0
                                 const addinProps:{scrollerProperties?:Object, cacheAPI?:Function} = {}
                                 if (usercontent.props?.hasOwnProperty('scrollerProperties')) {
                                     addinProps.scrollerProperties = scrollerProperties
+                                    addinCount++
                                 }
                                 if (usercontent.props?.hasOwnProperty('cacheAPI')) {
                                     addinProps.cacheAPI = cacheAPI.instance
+                                    addinCount++
                                 }
-                                if (Object.keys(addinProps).length) {
+                                if (addinCount) {
                                     content = React.cloneElement(usercontent, addinProps)
                                 } else {
                                     content = usercontent
