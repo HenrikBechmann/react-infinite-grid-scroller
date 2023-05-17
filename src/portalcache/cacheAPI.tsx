@@ -1075,7 +1075,11 @@ export default class CacheAPI {
 
     private unregisterPendingPortal(scrollerID, index) {
 
-        this.scrollerDataMap.get(scrollerID).requestedSet.delete(index)
+        const scrollerDataMap = this.scrollerDataMap.get(scrollerID)
+
+        if (scrollerDataMap) { // otherwise scroller has been deleted
+            scrollerDataMap.requestedSet.delete(index)
+        }
 
     }
 
