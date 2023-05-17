@@ -153,8 +153,9 @@ export default class CacheAPI {
             },
 
             // methods
-            unRegisterScroller:() => {
-                return this.unRegisterScroller(scrollerID)
+            unRegisterScroller:(itemSet) => {
+                // console.log('cacheAPI: facade unRegisterScroller: itemSet', itemSet)
+                return this.unRegisterScroller(scrollerID, itemSet)
             },
             renderPartitionRepo:() => {
                 return this.renderPartitionRepo()
@@ -227,10 +228,16 @@ export default class CacheAPI {
         return facade
     }
 
-    private unRegisterScroller = (scrollerID) => {
+    private unRegisterScroller = (scrollerID, itemSet) => {
+
+        // console.log('cacheAPI.unRegisterScroller:scrollerID, itemSet',scrollerID, itemSet)
 
         this.scrollerDataMap.delete(scrollerID)
-        // TODO remove scroller items from portal cache (using clear cache)
+        itemSet.forEach((itemID) => {
+            const { partitionID } = this.itemMetadataMap.get(itemID)
+            this.removePartitionPortal(partitionID,itemID)
+        })
+        this.renderPortalLists()
 
     }
 

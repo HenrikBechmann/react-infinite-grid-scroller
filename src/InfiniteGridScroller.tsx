@@ -345,6 +345,8 @@ const InfiniteGridScroller = (props) => {
 
     },[])
 
+    const itemSetRef = useRef(null)
+
     useEffect(() => {
 
         switch (scrollerState) {
@@ -352,8 +354,8 @@ const InfiniteGridScroller = (props) => {
             case 'setup':
                 // replace cacheAPI with facade which includes hidden scrollerID
                 cacheAPIRef.current = cacheAPIRef.current.registerScroller(scrollerSessionIDRef.current)
-                // cacheAPIRef.current.partitionRepoForceUpdate = updateFunctionRef.current
-                // console.log('InfiniteGridScroller:updateFunctionRef.current in setup',updateFunctionRef.current)
+                itemSetRef.current = cacheAPIRef.current.itemSet
+                // console.log('InfiniteGridScroller:itemSetRef',itemSetRef)
                 if (updateFunctionRef.current) {
                     // console.log('InfiniteGridScroller:setting partitionRepoForceUpdate to updateFunctionRef.current', updateFunctionRef.current)
                     cacheAPIRef.current.partitionRepoForceUpdate = updateFunctionRef.current
@@ -365,9 +367,13 @@ const InfiniteGridScroller = (props) => {
         }
 
         return () => {
+
+            // console.log('itemSet, isMountedRef.current',itemSetRef, isMountedRef.current)
             if (!isMountedRef.current) {
-                cacheAPIRef.current.unRegisterScroller()
+                // console.log('InfiniteGridScroller:unmount - itemSetRef',itemSetRef)
+                cacheAPIRef.current.unRegisterScroller(itemSetRef.current)
             }
+
         }
 
     },[scrollerState])
