@@ -232,6 +232,7 @@ const InfiniteGridScroller = (props) => {
 
     // state
     const [scrollerState, setScrollerState] = useState('setup') // setup, setlistsize, ready
+    // console.log('InfiniteGridScroller:scrollerState', scrollerState)
     // system
     const stylesRef = useRef(styles)
     const callbacksRef = useRef(callbacks)
@@ -273,6 +274,7 @@ const InfiniteGridScroller = (props) => {
 
     // for children
     const cacheAPIRef = useRef(cacheAPI)
+    // console.log('InfiniteGridScroller:cacheAPIRef for scrollerID', cacheAPIRef, scrollerID)
     const updateFunctionRef = useRef(null)
 
     const listsizeRef = useRef(startingListSize)
@@ -301,6 +303,7 @@ const InfiniteGridScroller = (props) => {
     }
 
     const getUpdateFunction = (fn) => {
+        // console.log('InfiniteGridScroller:setting getUpdateFunction', scrollerSessionIDRef.current, fn)
         updateFunctionRef.current = fn
     }
 
@@ -349,7 +352,12 @@ const InfiniteGridScroller = (props) => {
             case 'setup':
                 // replace cacheAPI with facade which includes hidden scrollerID
                 cacheAPIRef.current = cacheAPIRef.current.registerScroller(scrollerSessionIDRef.current)
-                cacheAPIRef.current.partitionRepoForceUpdate = updateFunctionRef.current
+                // cacheAPIRef.current.partitionRepoForceUpdate = updateFunctionRef.current
+                // console.log('InfiniteGridScroller:updateFunctionRef.current in setup',updateFunctionRef.current)
+                if (updateFunctionRef.current) {
+                    // console.log('InfiniteGridScroller:setting partitionRepoForceUpdate to updateFunctionRef.current', updateFunctionRef.current)
+                    cacheAPIRef.current.partitionRepoForceUpdate = updateFunctionRef.current
+                }
 
             case 'setlistsize':
                 setScrollerState('ready')

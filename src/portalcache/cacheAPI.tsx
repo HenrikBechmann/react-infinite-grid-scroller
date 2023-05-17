@@ -86,6 +86,7 @@ export default class CacheAPI {
     // the only member accessed directly. All other access is through the facade
     registerScroller(scrollerID) {
 
+        // console.log('cacheAPI:registering scrollerID', scrollerID)
         this.scrollerDataMap.set(scrollerID, 
             {
                 cradleParameters:null,
@@ -102,6 +103,7 @@ export default class CacheAPI {
     }
 
     private getFacade = (scrollerID) => {
+        // console.log('cacheAPI: getting facade for ', scrollerID)
         const facade = {
 
             // get and set data
@@ -128,6 +130,7 @@ export default class CacheAPI {
                 this.setPartitionRepoForceUpdate(fn)
             },
             setPartitionRepoForceUpdate:(fn) => {
+                // console.log('cacheAPI.setPartitionRepoForceUpdate: fn', fn)
                 this.partitionProps.partitionRepoForceUpdate = fn
             },
             set cradleParameters(parms){
