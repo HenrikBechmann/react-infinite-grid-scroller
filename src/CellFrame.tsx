@@ -374,7 +374,6 @@ const CellFrame = ({
                                     addinCount++
                                 }
                                 if (usercontent.props?.hasOwnProperty('cacheAPI')) {
-                                    // console.log('adding cacheAPI', scrollerID)
                                     addinProps.cacheAPI = cacheAPI.instance
                                     addinCount++
                                 }

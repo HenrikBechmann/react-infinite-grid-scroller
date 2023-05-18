@@ -86,7 +86,6 @@ export default class CacheAPI {
     // the only member accessed directly. All other access is through the facade
     registerScroller(scrollerID) {
 
-        // console.log('cacheAPI:registering scrollerID', scrollerID)
         this.scrollerDataMap.set(scrollerID, 
             {
                 cradleParameters:null,
@@ -103,7 +102,6 @@ export default class CacheAPI {
     }
 
     private getFacade = (scrollerID) => {
-        // console.log('cacheAPI: getting facade for ', scrollerID)
         const facade = {
 
             // get and set data
@@ -130,7 +128,6 @@ export default class CacheAPI {
                 this.setPartitionRepoForceUpdate(fn)
             },
             setPartitionRepoForceUpdate:(fn) => {
-                // console.log('cacheAPI.setPartitionRepoForceUpdate: fn', fn)
                 this.partitionProps.partitionRepoForceUpdate = fn
             },
             set cradleParameters(parms){
@@ -154,7 +151,6 @@ export default class CacheAPI {
 
             // methods
             unRegisterScroller:(itemSet) => {
-                // console.log('cacheAPI: facade unRegisterScroller: itemSet', itemSet)
                 return this.unRegisterScroller(scrollerID, itemSet)
             },
             renderPartitionRepo:() => {
@@ -229,8 +225,6 @@ export default class CacheAPI {
     }
 
     private unRegisterScroller = (scrollerID, itemSet) => {
-
-        // console.log('cacheAPI.unRegisterScroller:scrollerID, itemSet',scrollerID, itemSet)
 
         this.scrollerDataMap.delete(scrollerID)
         itemSet.forEach((itemID) => {
@@ -1142,8 +1136,6 @@ export default class CacheAPI {
             component,
             partitionID,
         }
-
-        // console.log('portalMetadata', portalMetadata)
 
         this.itemMetadataMap.set(itemID, portalMetadata)
         this.scrollerDataMap.get(scrollerID).itemSet.add(itemID)
