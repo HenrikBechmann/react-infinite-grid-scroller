@@ -11,7 +11,7 @@
     viewportResizing interrupts are handled by viewport
 */
 
-import { getShiftInstruction} from './contentfunctions'
+import { calculateShiftInstruction} from './contentfunctions'
 
 export default class InterruptHandler {
 
@@ -94,7 +94,7 @@ export default class InterruptHandler {
 
                 const viewportBoundingRect = viewportElement.getBoundingClientRect()
 
-                const [shiftinstruction, triggerViewportReferencePos] = getShiftInstruction({
+                const [shiftinstruction, triggerViewportReferencePos] = calculateShiftInstruction({
                     scrollerID: cradleInheritedProperties.scrollerID,
                     orientation,
                     triggerlineEntries:entries,
@@ -108,7 +108,7 @@ export default class InterruptHandler {
 
                 })
 
-                if (shiftinstruction == 'axistailward') { // filter out oversize last row
+                if (shiftinstruction == 'moveaxistailward') { // filter out oversize last row
 
                     const lastListRowOffset = Math.ceil(listsize/crosscount) - 1
 
