@@ -32,42 +32,44 @@
         - your component is in cache when both width and height = 0
         - your component is out of cache when both width and height are back to normal
         - if you create an empty 'scrollerProperties' property for your component, CellFrame will
-            set it to an object containing scrollerPropertiesRef and cellFrameDataRef
+            set it to an object containing scrollerPropertiesRef and cellFramePropertiesRef
         - if your component does not scroll, there should be no issues.
 
-    Note that in the following, scrollerID is provided as a paramter to some functions for debug purposes, but not used.
+*/
+
+/*
+
+    TODO
+
+    - modify clear cache for scroller selection
+
 */
 
 import React, {useState, useEffect, useRef, useCallback} from 'react'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
-// the cache itself is maintained in the root infinitegridscroller component
-export class CacheHandler {
+import CachePartition from './CachePartition'
 
-    constructor(scrollerID, listsizeRef, CACHE_PARTITION_SIZE) {
-        this.cacheProps.scrollerID = scrollerID // for debug
-        // this.updateListsize = updateListsize // passed from InfiniteGridScroller.updateListsize(listsize)
-        this.listsizeRef = listsizeRef // current list size
+// the cache itself is maintained in the root infinitegridscroller component
+export default class CacheAPI {
+
+    constructor(CACHE_PARTITION_SIZE) {
 
         this.CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE
+
     }
 
-    globalItemID = 0
-    globalPartitionID = 0
+    private globalItemID = 0
+    private globalPartitionID = 0
 
-    cacheProps = {
+    private itemMetadataMap = new Map()
 
-        // item data
-        metadataMap:new Map(), // item => {index, component}
-        indexToItemIDMap:new Map(),
+    private scrollerDataMap = new Map()
 
-        // some portals may have been requested by requestidlecallback, not yet created
-        requestedSet:new Set(), // requestedSet of indexes (transitional)
+    private partitionProps = {
 
-        // partition data
         partitionMetadataMap:new Map(),
-        // for rendering partitions...
         partitionMap: new Map(),
         partitionRenderList:null,
         partitionRepoForceUpdate:null,
@@ -75,16 +77,164 @@ export class CacheHandler {
 
         partitionPtr:null, // active partition, for followup
 
-        scrollerID:null // for debug
     }
 
-    cradleParameters
+    private CACHE_PARTITION_SIZE
 
-    CACHE_PARTITION_SIZE
+    // ===========================[ Scroller Registration & Maintenance ]===============================
 
-    portalPartitionItemsForDeleteList // array of {itemID,partitionID}
+    // the only member accessed directly. All other access is through the facade
+    registerScroller(scrollerID) {
 
-    listsizeRef
+        this.scrollerDataMap.set(scrollerID, 
+            {
+                cradleParameters:null,
+                indexToItemIDMap: new Map(), 
+                // some portals may have been requested by requestidlecallback, not yet created
+                itemSet: new Set(), // for scrollerID limited operations
+                requestedSet:new Set(),
+                portalPartitionItemsForDeleteList:null,
+            }
+        )
+
+        return this.getFacade(scrollerID)
+
+    }
+
+    private getFacade = (scrollerID) => {
+        const facade = {
+
+            // get and set data
+            get indexToItemIDMap() {
+                return this.getIndexToItemIDMap()
+            },
+            getIndexToItemIDMap:() => {
+                return  this.scrollerDataMap.get(scrollerID).indexToItemIDMap
+            },
+            get itemSet() {
+                return this.getItemSet()
+            },
+            getItemSet:() => {
+                return  this.scrollerDataMap.get(scrollerID).itemSet
+            },
+            itemMetadataMap:this.itemMetadataMap,
+            get requestedSet() {
+                return this.getRequestedSet()
+            },
+            getRequestedSet:() => {
+                return this.scrollerDataMap.get(scrollerID).requestedSet
+            },
+            set partitionRepoForceUpdate(fn) {
+                this.setPartitionRepoForceUpdate(fn)
+            },
+            setPartitionRepoForceUpdate:(fn) => {
+                this.partitionProps.partitionRepoForceUpdate = fn
+            },
+            set cradleParameters(parms){
+                this.setCradleParameters(parms)
+            },
+            setCradleParameters:(parms) => {
+                this.scrollerDataMap.get(scrollerID).cradleParameters = parms
+            },
+            set portalPartitionItemsForDeleteList(list) {
+                this.setPortalPartitionItemsForDeleteList(list)
+            },
+            setPortalPartitionItemsForDeleteList:(list) => {
+                this.scrollerDataMap.get(scrollerID).portalPartitionItemsForDeleteList = list
+            },
+            get instance() {
+                return this.getInstance()
+            }, 
+            getInstance:() => {
+                return this
+            },
+
+            // methods
+            unRegisterScroller:(itemSet) => {
+                return this.unRegisterScroller(scrollerID, itemSet)
+            },
+            renderPartitionRepo:() => {
+                return this.renderPartitionRepo()
+            },
+            renderPortalLists:() => {
+                return this.renderPortalLists()
+            },
+            clearCache:() => {
+                return this.clearCache(scrollerID)
+            },
+            changeCacheListsize:(newlistsize, deleteListCallback, changeListsizeCallback) => {
+                return this.changeCacheListsize(scrollerID, newlistsize, deleteListCallback, changeListsizeCallback)
+            },
+            matchCacheToCradle:(cradleIndexList, deleteListCallback) => {
+                return this.matchCacheToCradle(scrollerID, cradleIndexList, deleteListCallback)
+            },
+            pareCacheToMax:(cacheMax, cradleIndexList, deleteListCallback) => {
+                return this.pareCacheToMax(scrollerID, cacheMax, cradleIndexList, deleteListCallback)
+            },
+            guardAgainstRunawayCaching:(cacheMax, cradleListLength, MAX_CACHE_OVER_RUN) => {
+                return this.guardAgainstRunawayCaching(scrollerID, cacheMax, cradleListLength, MAX_CACHE_OVER_RUN)
+            },
+            preload:(finalCallback, nullItemSetMaxListsize) => {
+                return this.preload(scrollerID, finalCallback, nullItemSetMaxListsize)
+            },
+            getCacheIndexMap:() => {
+                return this.getCacheIndexMap(scrollerID)
+            },
+            getCradleIndexMap:(cradleIndexList) => {
+                return this.getCradleIndexMap(scrollerID, cradleIndexList)
+            },
+            getCacheItemMap:() => {
+                return this.getCacheItemMap(scrollerID)
+            },
+            moveIndex:(tolowindex, fromlowindex, fromhighindex ) => {
+                return this.moveIndex(scrollerID, tolowindex, fromlowindex, fromhighindex)
+            },
+            insertRemoveIndex:(index, highrange, increment, listsize ) => {
+                return this.insertRemoveIndex(scrollerID, index, highrange, increment, listsize )
+            },
+            registerPendingPortal:(index) => {
+                return this.registerPendingPortal(scrollerID, index)
+            },
+            unregisterPendingPortal:(index) => {
+                return this.unregisterPendingPortal(scrollerID, index)
+            },
+            getNewItemID:() => {
+                return this.getNewItemID()
+            },
+            getNewOrExistingItemID:(index) => {
+                return this.getNewOrExistingItemID(scrollerID, index)
+            },
+            createPortal:(component, index, itemID, scrollerProperties, isPreload = false) => {
+                return this.createPortal(scrollerID, component, index, itemID, scrollerProperties, isPreload = false)
+            },
+            deletePortalByIndex:(index, deleteListCallback) => {
+                return this.deletePortalByIndex(scrollerID, index, deleteListCallback)
+            },
+            applyPortalPartitionItemsForDeleteList:() => {
+                return this.applyPortalPartitionItemsForDeleteList(scrollerID)
+            },
+            hasPortal:(itemID) => {
+                return this.hasPortal(itemID)
+            },
+            getPortalMetadata:(itemID) => {
+                return this.getPortalMetadata(itemID)
+            }
+        }
+
+        return facade
+    }
+
+    private unRegisterScroller = (scrollerID, itemSet) => {
+
+        this.scrollerDataMap.delete(scrollerID)
+        itemSet.forEach((itemID) => {
+            const { partitionID } = this.itemMetadataMap.get(itemID)
+            this.removePartitionPortal(partitionID,itemID)
+            this.itemMetadataMap.delete(itemID)
+        })
+        this.renderPortalLists()
+
+    }
 
     // updateListsize(listsize) causes an InfiniteGridScroller useState update
     // of the listsize throughout
@@ -94,18 +244,18 @@ export class CacheHandler {
 
     // partitions are added but not removed
 
-    renderPartitionRepo = () => {
+    private renderPartitionRepo = () => {
 
-        this.cacheProps.partitionRenderList = Array.from(this.cacheProps.partitionMap.values())
+        this.partitionProps.partitionRenderList = Array.from(this.partitionProps.partitionMap.values())
 
-        this.cacheProps.partitionRepoForceUpdate(this.cacheProps.partitionRenderList)
+        this.partitionProps.partitionRepoForceUpdate(this.partitionProps.partitionRenderList)
 
     }
 
-    addPartition = () => {
+    private addPartition = () => {
 
         const partitionID = this.globalPartitionID++
-        this.cacheProps.partitionMetadataMap.set(partitionID,
+        this.partitionProps.partitionMetadataMap.set(partitionID,
             {
                 portalMap:new Map(), 
                 mapcount:0, // portalMap update can be async, so mapcount is used
@@ -129,10 +279,10 @@ export class CacheHandler {
             
         }
 
-        this.cacheProps.partitionMap.set(partitionID,
+        this.partitionProps.partitionMap.set(partitionID,
             <CachePartition 
                 key = {partitionID} 
-                cacheProps = {this.cacheProps} 
+                partitionProps = {this.partitionProps} 
                 partitionID = {partitionID} 
                 callback = { callback } />)
 
@@ -142,12 +292,12 @@ export class CacheHandler {
 
     }
 
-    async findPartitionWithRoom() {
+    private async findPartitionWithRoom() {
 
         const { CACHE_PARTITION_SIZE } = this
 
-        const { partitionMetadataMap } = this.cacheProps
-        let { partitionPtr } = this.cacheProps
+        const { partitionMetadataMap } = this.partitionProps
+        let { partitionPtr } = this.partitionProps
 
         let partitionMetadata
         if (partitionPtr !== null) {
@@ -182,36 +332,36 @@ export class CacheHandler {
 
         }
 
-        this.cacheProps.partitionPtr = partitionPtr
+        this.partitionProps.partitionPtr = partitionPtr
 
         return partitionPtr
 
     }
 
-    addPartitionPortal = (partitionID, itemID, portal) => {
+    private addPartitionPortal = (partitionID, itemID, portal) => {
 
-        const partitionMetadata = this.cacheProps.partitionMetadataMap.get(partitionID)
+        const partitionMetadata = this.partitionProps.partitionMetadataMap.get(partitionID)
 
         partitionMetadata.portalMap.set(itemID,portal)
 
-        this.cacheProps.partitionModifiedSet.add(partitionID)
+        this.partitionProps.partitionModifiedSet.add(partitionID)
 
     }
 
-    removePartitionPortal = (partitionID, itemID) => {
+    private removePartitionPortal = (partitionID, itemID) => {
 
-        const partitionMetadata = this.cacheProps.partitionMetadataMap.get(partitionID)
+        const partitionMetadata = this.partitionProps.partitionMetadataMap.get(partitionID)
 
         partitionMetadata.portalMap.delete(itemID)
         partitionMetadata.mapcount -= 1 
 
-        this.cacheProps.partitionModifiedSet.add(partitionID)
+        this.partitionProps.partitionModifiedSet.add(partitionID)
 
     }
 
-    renderPartition = (partitionID) => {
+    private renderPartition = (partitionID) => {
 
-        const partitionMetadata = this.cacheProps.partitionMetadataMap.get(partitionID)
+        const partitionMetadata = this.partitionProps.partitionMetadataMap.get(partitionID)
 
         if (!partitionMetadata) return
 
@@ -223,9 +373,9 @@ export class CacheHandler {
     }
 
     // set state of the CachePartition component of the scroller to trigger render
-    renderPortalLists = () => {
+    private renderPortalLists = () => {
 
-        const { partitionModifiedSet } = this.cacheProps
+        const { partitionModifiedSet } = this.partitionProps
 
         if (partitionModifiedSet.size) {
 
@@ -235,25 +385,44 @@ export class CacheHandler {
 
             })            
 
-            this.cacheProps.partitionModifiedSet.clear()
+            this.partitionProps.partitionModifiedSet.clear()
 
         }
 
     }
 
-    clearCache = () => {
+    private clearCache = (scrollerID) => {
 
-        // clear base data
-        this.cacheProps.metadataMap.clear()
-        this.cacheProps.indexToItemIDMap.clear()
-        this.cacheProps.requestedSet.clear()
-        // clear cache partitions
-        this.cacheProps.partitionMetadataMap.clear()
-        this.cacheProps.partitionMap.clear()
-        this.cacheProps.partitionRenderList = []
-        this.cacheProps.partitionModifiedSet.clear()
-        this.cacheProps.partitionPtr = null
-        this.cacheProps.partitionRepoForceUpdate(null)
+        const { scrollerDataMap, itemMetadataMap } = this
+        const datamap = scrollerDataMap.get(scrollerID)
+        const {indexToItemIDMap, itemSet, requestedSet} = datamap
+
+        if (scrollerDataMap.size == 1) {
+
+            // clear base data
+            itemMetadataMap.clear()
+
+            // clear cache partitions
+            this.partitionProps.partitionMetadataMap.clear()
+            this.partitionProps.partitionMap.clear()
+            this.partitionProps.partitionRenderList = []
+            this.partitionProps.partitionModifiedSet.clear()
+            this.partitionProps.partitionPtr = null
+            this.partitionProps.partitionRepoForceUpdate(null)
+
+        } else {
+
+            itemSet.forEach((itemID) => {
+                const { partitionID } = itemMetadataMap.get(itemID)
+                this.removePartitionPortal(partitionID,itemID)
+            })
+            this.renderPortalLists()
+
+        }
+
+        indexToItemIDMap.clear()
+        itemSet.clear()
+        requestedSet.clear()
 
     }
 
@@ -262,12 +431,10 @@ export class CacheHandler {
     // ----------------------------[ basic operations ]--------------------------
 
     // called from Cradle.nullItemSetMaxListsize, and serviceHandler.setListsize
-    changeCacheListsize = (newlistsize, deleteListCallback, changeListsizeCallback) => {
-
-        // this.updateListsize(newlistsize)
+    private changeCacheListsize = (scrollerID, newlistsize, deleteListCallback, changeListsizeCallback) => {
 
         // match cache to newlistsize
-        const portalIndexMap = this.cacheProps.indexToItemIDMap
+        const portalIndexMap:Map<number,number> = this.scrollerDataMap.get(scrollerID).indexToItemIDMap
         const mapkeysList = Array.from(portalIndexMap.keys())
         mapkeysList.sort((a,b) => a - b)
 
@@ -279,7 +446,7 @@ export class CacheHandler {
                 return index > (newlistsize -1)
             })
 
-            this.deletePortal(parelist, deleteListCallback)
+            this.deletePortalByIndex(scrollerID, parelist, deleteListCallback)
 
         }
 
@@ -289,15 +456,15 @@ export class CacheHandler {
 
     // ----------------------[ cache size limit enforceent ]------------------
 
-    matchCacheToCradle = (cradleIndexList, deleteListCallback) => {
+    private matchCacheToCradle = (scrollerID, cradleIndexList, deleteListCallback) => {
 
-        const mapkeys = Array.from(this.cacheProps.indexToItemIDMap.keys())
+        const mapkeys = Array.from(this.scrollerDataMap.get(scrollerID).indexToItemIDMap.keys())
 
         const delkeys = mapkeys.filter(key => !cradleIndexList.includes(key))
 
         if (delkeys.length) {
 
-            this.deletePortal(delkeys, deleteListCallback)
+            this.deletePortalByIndex(scrollerID, delkeys, deleteListCallback)
             return true
 
         } else {
@@ -308,7 +475,7 @@ export class CacheHandler {
 
     }
 
-    pareCacheToMax = (cacheMax, cradleIndexList, deleteListCallback, scrollerID = undefined) => {
+    private pareCacheToMax = (scrollerID, cacheMax, cradleIndexList, deleteListCallback) => {
 
         const modelLength = cradleIndexList.length
 
@@ -317,8 +484,8 @@ export class CacheHandler {
 
         const max = Math.max(modelLength, cacheMax)
 
-        const portalIndexMap = this.cacheProps.indexToItemIDMap,
-            requestedSet = this.cacheProps.requestedSet
+        const portalIndexMap:Map<number, number> = this.scrollerDataMap.get(scrollerID).indexToItemIDMap,
+            requestedSet:Set<number> = this.scrollerDataMap.get(scrollerID).requestedSet
 
         if ((portalIndexMap.size + requestedSet.size) <= max) return false
 
@@ -353,20 +520,17 @@ export class CacheHandler {
 
         const delList = [...headlist,...taillist]
 
-        this.deletePortal(delList, deleteListCallback)
+        this.deletePortalByIndex(scrollerID, delList, deleteListCallback)
 
         return true
 
     }
 
-    guardAgainstRunawayCaching = (cacheMax, cradleListLength, MAX_CACHE_OVER_RUN) => {
+    private guardAgainstRunawayCaching = (scrollerID, cacheMax, cradleListLength, MAX_CACHE_OVER_RUN) => {
 
         if (!cacheMax) return false
 
-        const {
-            indexToItemIDMap,
-            requestedSet 
-        } = this.cacheProps
+        const { indexToItemIDMap, requestedSet } = this.scrollerDataMap.get(scrollerID)
 
         const max = Math.max(cradleListLength, cacheMax)
 
@@ -384,9 +548,9 @@ export class CacheHandler {
 
     // --------------------------------[ preload ]--------------------------------
 
-    preload(finalCallback, nullItemSetMaxListsize, scrollerID) {
+    private preload = (scrollerID, finalCallback, nullItemSetMaxListsize) => {
 
-        const { cradleParameters } = this
+        const { cradleParameters } = this.scrollerDataMap.get(scrollerID)
 
         const { scrollerPropertiesRef } = cradleParameters
 
@@ -419,7 +583,7 @@ export class CacheHandler {
 
         if (stateHandler.isMountedRef.current) {
             
-            const indexToItemIDMap = this.cacheProps.indexToItemIDMap
+            const indexToItemIDMap = this.scrollerDataMap.get(scrollerID).indexToItemIDMap
 
             const { preloadIndexCallback, itemExceptionCallback } = serviceHandler.callbacks
 
@@ -429,12 +593,12 @@ export class CacheHandler {
                 if (!indexToItemIDMap.has(index)) {
 
                     const promise = this.preloadItem(
+                        scrollerID,
                         index, 
                         getItem, 
                         scrollerPropertiesRef,
                         itemExceptionCallback,
-                        maxListsizeInterrupt,
-                        scrollerID
+                        maxListsizeInterrupt
                     )
                     promises.push(promise)
 
@@ -455,16 +619,16 @@ export class CacheHandler {
 
     // =========================[ SNAPSHOTS ]=========================
 
-    getCacheIndexMap() {
+    private getCacheIndexMap(scrollerID) {
 
-        return new Map(this.cacheProps.indexToItemIDMap)
+        return new Map(this.scrollerDataMap.get(scrollerID).indexToItemIDMap)
 
     }
 
-    getCradleIndexMap(cradleIndexList) {
+    private getCradleIndexMap(scrollerID, cradleIndexList) {
 
         const cradleMap = new Map(),
-            { indexToItemIDMap } = this.cacheProps
+            { indexToItemIDMap } = this.scrollerDataMap.get(scrollerID)
 
         for (const index of cradleIndexList) {
 
@@ -476,17 +640,21 @@ export class CacheHandler {
 
     }
 
-    getCacheItemMap() {
+    private getCacheItemMap(scrollerID) {
 
         const cachelist = new Map()
+        const { itemSet } = this.scrollerDataMap.get(scrollerID)
+        const { itemMetadataMap } = this
 
-        for (const [key, value] of this.cacheProps.metadataMap) {
+        // for (const [key, value] of this.itemMetadataMap) {
+        for (const itemID of itemSet) {
+            const metadata = itemMetadataMap.get(itemID)
             const {
                 index,
                 component,
-            } = value
+            } = metadata
 
-            cachelist.set(key,{
+            cachelist.set(itemID,{
                 index,
                 component,
             })
@@ -502,9 +670,10 @@ export class CacheHandler {
     // --------------------------[ move indexes ]-------------------------------
 
     // move is coerced by servicehandler to be within current list bounds
-    moveIndex(tolowindex, fromlowindex, fromhighindex ) {
+    private moveIndex(scrollerID, tolowindex, fromlowindex, fromhighindex ) {
 
-        const {indexToItemIDMap,metadataMap} = this.cacheProps
+        const indexToItemIDMap:Map<number, number> = this.scrollerDataMap.get(scrollerID).indexToItemIDMap
+        const { itemMetadataMap } = this
 
         // ----------- define parameters ---------------
 
@@ -614,7 +783,7 @@ export class CacheHandler {
                     index + moveblocksize
 
             indexToItemIDMap.set(newIndex,itemID)
-            metadataMap.get(itemID).index = newIndex
+            itemMetadataMap.get(itemID).index = newIndex
             processeddisplaceList.push(newIndex)
 
         }
@@ -628,7 +797,7 @@ export class CacheHandler {
             const newIndex = index + moveincrement // swap
 
             indexToItemIDMap.set(newIndex, itemID)
-            metadataMap.get(itemID).index = newIndex
+            itemMetadataMap.get(itemID).index = newIndex
             processedmoveList.push(newIndex)
 
         }
@@ -647,7 +816,7 @@ export class CacheHandler {
     // ----------------------------[ insert/remove indexes ]------------------------------
 
     // insert or remove indexes: much of this deals with the fact that the cache is sparse.
-    insertRemoveIndex(index, highrange, increment, listsize ) { // increment is +1 or -1
+    private insertRemoveIndex(scrollerID, index, highrange, increment, listsize ) { // increment is +1 or -1
 
         // clarity
         const isInserting = (increment == 1)
@@ -656,8 +825,10 @@ export class CacheHandler {
         const emptyreturn = [null, null, [],[],[], []] // no action return value
 
         // cache resources
-        const { indexToItemIDMap, metadataMap } = this.cacheProps
+        const indexToItemIDMap:Map<number, number>  = this.scrollerDataMap.get(scrollerID).indexToItemIDMap
+        const { itemMetadataMap } = this
         const orderedCacheIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b) // ascending order
+        const itemSet = this.scrollerDataMap.get(scrollerID).itemSet
 
         // ---------- define contiguous range parameters; add sentinels ---------------
 
@@ -829,7 +1000,7 @@ export class CacheHandler {
         if (isInserting) cacheToShiftIndexesList.reverse() 
 
         const cacheIndexesShiftedList = [] // track shifted indexes
-        const cacheIndexesTransferredSet = new Set() // obtain list of orphaned indexes
+        const cacheIndexesTransferredSet:Set<number> = new Set() // obtain list of orphaned indexes
 
         // function modify index-to-itemid map, and metadata map, for index shifts
         const processIndexFn = index => {
@@ -843,7 +1014,7 @@ export class CacheHandler {
             }
 
             indexToItemIDMap.set(newIndex, itemID)
-            metadataMap.get(itemID).index = newIndex
+            itemMetadataMap.get(itemID).index = newIndex
             cacheIndexesShiftedList.push(newIndex)
 
         }
@@ -868,9 +1039,10 @@ export class CacheHandler {
 
             for (const itemID of cacheItemsToRemoveList) {
 
-                const { partitionID } = metadataMap.get(itemID)
+                const { partitionID } = itemMetadataMap.get(itemID)
                 portalPartitionItemsForDeleteList.push({itemID, partitionID})
-                metadataMap.delete(itemID)
+                itemMetadataMap.delete(itemID)
+                itemSet.delete(itemID)
 
             }
 
@@ -900,28 +1072,32 @@ export class CacheHandler {
 
     // used for size calculation in pareCacheToMax
     // registers indexes when requested but before retrieved and entered into cache
-    registerPendingPortal(index) {
+    private registerPendingPortal(scrollerID, index) {
 
-        this.cacheProps.requestedSet.add(index)
-
-    }
-
-    unregisterPendingPortal(index) {
-
-        this.cacheProps.requestedSet.delete(index)
+        this.scrollerDataMap.get(scrollerID).requestedSet.add(index)
 
     }
 
-    getNewItemID() {
+    private unregisterPendingPortal(scrollerID, index) {
+
+        const scrollerDataMap = this.scrollerDataMap.get(scrollerID)
+
+        if (scrollerDataMap) { // otherwise scroller has been deleted
+            scrollerDataMap.requestedSet.delete(index)
+        }
+
+    }
+
+    private getNewItemID() {
 
         return this.globalItemID++
 
     }
 
     // get new or existing itemID for contentfunctions.createCellFrame
-    getNewOrExistingItemID(index) {
+    private getNewOrExistingItemID(scrollerID, index) {
 
-        const { indexToItemIDMap } = this.cacheProps
+        const { indexToItemIDMap } = this.scrollerDataMap.get(scrollerID)
 
         const itemID = 
             (indexToItemIDMap.has(index))?
@@ -933,12 +1109,12 @@ export class CacheHandler {
     }
 
      // create new portal
-    async createPortal(component, index, itemID, scrollerProperties, isPreload = false) {
+    private async createPortal(scrollerID, component, index, itemID, scrollerProperties, isPreload = false) {
 
-        this.unregisterPendingPortal(index)
+        this.unregisterPendingPortal(scrollerID, index)
 
         const { layout, cellHeight, cellWidth, orientation } = 
-            this.cradleParameters.cradleInheritedPropertiesRef.current
+            this.scrollerDataMap.get(scrollerID).cradleParameters.cradleInheritedPropertiesRef.current
 
         const portalNode = createPortalNode(index, itemID)
 
@@ -955,13 +1131,15 @@ export class CacheHandler {
             portalNode,
             index,
             itemID,
+            scrollerID,
             scrollerProperties,
             component,
             partitionID,
         }
 
-        this.cacheProps.metadataMap.set(itemID, portalMetadata)
-        this.cacheProps.indexToItemIDMap.set(index, itemID)
+        this.itemMetadataMap.set(itemID, portalMetadata)
+        this.scrollerDataMap.get(scrollerID).itemSet.add(itemID)
+        this.scrollerDataMap.get(scrollerID).indexToItemIDMap.set(index, itemID)
 
         if (!isPreload) this.renderPortalLists()
 
@@ -971,12 +1149,12 @@ export class CacheHandler {
 
     // used for preloading new item
     private async preloadItem(
+        scrollerID,
         index, 
         getItem, 
         scrollerPropertiesRef, 
         itemExceptionCallback,
-        maxListsizeInterrupt,
-        scrollerID
+        maxListsizeInterrupt
     ) {
 
         const itemID = this.getNewItemID()
@@ -1018,7 +1196,7 @@ export class CacheHandler {
             }
 
             // const portalData = 
-                await this.createPortal(content, index, itemID, scrollerProperties, true) // true = isPreload
+                await this.createPortal(scrollerID,content, index, itemID, scrollerProperties, true) // true = isPreload
 
         } else {
 
@@ -1042,17 +1220,16 @@ export class CacheHandler {
 
     // delete a portal list item
     // accepts an array of indexes
-    deletePortal(index, deleteListCallback) {
+    private deletePortalByIndex(scrollerID, index, deleteListCallback) {
 
         const indexArray = 
             (!Array.isArray(index))?
                 [index]:
                 index
 
-        const { 
-            metadataMap,
-            indexToItemIDMap 
-        } = this.cacheProps
+        const { indexToItemIDMap, itemSet } = this.scrollerDataMap.get(scrollerID)
+
+        const { itemMetadataMap } = this
 
         const { removePartitionPortal } = this
 
@@ -1065,32 +1242,51 @@ export class CacheHandler {
             if (itemID === undefined) continue // async mismatch
 
             deleteList.push({index,itemID})
-            const { partitionID } = metadataMap.get(itemID)
+            const { partitionID } = itemMetadataMap.get(itemID)
 
             removePartitionPortal(partitionID,itemID)
 
-            metadataMap.delete(itemID)
+            itemMetadataMap.delete(itemID)
+            itemSet.delete(itemID)
             indexToItemIDMap.delete(index)
 
         }
-
-        // this.renderPortalLists()
 
         deleteListCallback && deleteListCallback(deleteList)
 
     }
 
-    // query existence of a portal list item
-    hasPortal(itemID) {
+    private applyPortalPartitionItemsForDeleteList = (scrollerID) => {
 
-        return this.cacheProps.metadataMap.has(itemID)
+        const { portalPartitionItemsForDeleteList } = this.scrollerDataMap.get(scrollerID)
+
+        if (portalPartitionItemsForDeleteList && portalPartitionItemsForDeleteList.length) {
+
+            for (const item of portalPartitionItemsForDeleteList) {
+
+                this.removePartitionPortal(item.partitionID, item.itemID)
+                
+            }
+
+            this.scrollerDataMap.get(scrollerID).portalPartitionItemsForDeleteList = []                    
+
+            this.renderPortalLists()
+
+        }
 
     }
 
-    getPortalMetadata(itemID) {
+    // query existence of a portal list item
+    private hasPortal(itemID) {
+
+        return this.itemMetadataMap.has(itemID)
+
+    }
+
+    private getPortalMetadata(itemID) {
 
         if (this.hasPortal(itemID)) {
-            return this.cacheProps.metadataMap.get(itemID)
+            return this.itemMetadataMap.get(itemID)
         }
 
     }
@@ -1117,108 +1313,3 @@ const createPortalNode = (index, itemID) => {
     return portalNode
 
 }     
-
-// ========================[ Utility components ]==============================
-
-// portal list component for rapid relisting of updates, using external callback for set state
-export const CachePartition = ({ cacheProps, partitionID, callback }) => {
-
-    const [portalListCounter, setPortalListCounter] = useState(0)
-
-    const [partitionState, setPartitionState] = useState('setup')
-
-    const counterRef = useRef(portalListCounter)
-
-    const isMountedRef = useRef(true)
-
-    const portalArrayRef = useRef(null)
-
-    const partitionMetadata = cacheProps.partitionMetadataMap.get(partitionID)
-
-    const forceUpdate = useCallback((portalRenderList) => {
-
-        portalArrayRef.current = portalRenderList
-
-        isMountedRef.current && setPortalListCounter(++counterRef.current) // force render
-
-    },[])
-
-    useEffect(()=>{
-
-        isMountedRef.current = true
-
-        partitionMetadata.forceUpdate = forceUpdate
-
-        callback()
-
-        return () => {
-
-            isMountedRef.current = false
-
-        }
-
-    },[]) 
-
-    useEffect(()=>{
-
-        switch (partitionState) {
-            case 'setup': {
-                setPartitionState('ready')
-                break
-            }
-        }
-
-    },[partitionState])
-
-    return <div key = {partitionID} data-type = 'cachepartition' data-partitionid = {partitionID}>
-        {portalArrayRef.current}
-    </div>
-
-}
-
-export const PortalMasterCache = ({ cacheProps }) => {
-
-    const [portalCacheCounter, setPortalCacheCounter] = useState(0)
-    const counterRef = useRef(portalCacheCounter)
-
-    const [masterState, setMasterState] = useState('setup')
-
-    const isMountedRef = useRef(true)
-
-    const partitionArrayRef = useRef(null)
-
-    const partitionRepoForceUpdate = useCallback((partitionRenderList) => {
-
-        partitionArrayRef.current = partitionRenderList
-
-        isMountedRef.current && setPortalCacheCounter(++counterRef.current) // force render
-
-    },[])
-
-    useEffect(()=>{
-
-        isMountedRef.current = true
-
-        cacheProps.partitionRepoForceUpdate = partitionRepoForceUpdate
-
-        return () => {
-
-            isMountedRef.current = false
-
-        }
-
-    },[]) 
-
-    useEffect(()=>{
-
-        switch (masterState) {
-            case 'setup': {
-                setMasterState('ready')
-            }
-        }
-
-    },[masterState])
-
-    return <div data-type = 'portal-master'>{partitionArrayRef.current}</div>
-
-}

@@ -81,7 +81,7 @@ import LayoutHandler from './cradle/layouthandler'
 import InterruptHandler from './cradle/interrupthandler'
 import ServiceHandler from './cradle/servicehandler'
 import StylesHandler from './cradle/styleshandler'
-// cacheHandler is imported as a property; instantiated at the root
+// cacheAPI is imported as a property; instantiated at the root
 
 import { isSafariIOS } from './InfiniteGridScroller'
 
@@ -107,7 +107,7 @@ const Cradle = ({
         // for debugging
         scrollerID,
         // for handler list
-        cacheHandler,
+        cacheAPI,
         // system
         usePlaceholder,
         useScrollTracker,
@@ -184,7 +184,7 @@ const Cradle = ({
 
     // if (!scrollerProperties) {
         // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
-        // console.log('-- index',~'+scrollerProperties?.cellFrameDataRef.current.index+'~')
+        // console.log('-- index',~'+scrollerProperties?.cellFramePropertiesRef.current.index+'~')
     // }
 
     // cradle scaffold element refs
@@ -373,7 +373,7 @@ const Cradle = ({
         triggerlineOffset,
         scrollerID,
         // objects
-        userCallbacks, styles, cacheHandler,
+        userCallbacks, styles, cacheAPI,
         // control values
         ONAFTERSCROLL_TIMEOUT, MAX_CACHE_OVER_RUN, 
         scrollerProperties,
@@ -391,6 +391,7 @@ const Cradle = ({
         cacheMax,
         startingIndex,
         crosscount,
+        scrollerID,
     }
 
     // configuration properties to share with handlers
@@ -442,7 +443,7 @@ const Cradle = ({
     }
 
     // make handlers directly available to cradle code below
-    const { // cacheHandler already available
+    const { // cacheAPI already available
         interruptHandler,
         scrollHandler,
         // stateHandler, // not used
@@ -667,7 +668,7 @@ const Cradle = ({
             }
 
             contentHandler.updateListsize(maxListsize)
-            cacheHandler.changeCacheListsize(maxListsize, 
+            cacheAPI.changeCacheListsize(maxListsize, 
                 dListCallback,
                 changeListsizeCallback)
 
@@ -705,11 +706,11 @@ const Cradle = ({
 
                 }
 
-                const cacheMax = cradleParameters.cradleInheritedPropertiesRef.current.cacheMax
+                const { cacheMax } = cradleParameters.cradleInheritedPropertiesRef.current
 
-                if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, dListCallback, scrollerID)) {
+                if (cacheAPI.pareCacheToMax(cacheMax, modelIndexList, dListCallback)) {
 
-                    cacheHandler.renderPortalLists()
+                    cacheAPI.renderPortalLists()
                     
                 }
 
@@ -734,9 +735,9 @@ const Cradle = ({
 
                 }
 
-                if (cacheHandler.matchCacheToCradle(modelIndexList, dListCallback)) {
+                if (cacheAPI.matchCacheToCradle(modelIndexList, dListCallback)) {
 
-                    cacheHandler.renderPortalLists()
+                    cacheAPI.renderPortalLists()
 
                 }
 
@@ -1023,9 +1024,9 @@ const Cradle = ({
 
                     }
 
-                    if (cacheHandler.pareCacheToMax(cacheMax, modelIndexList, dListCallback, scrollerID)) {
+                    if (cacheAPI.pareCacheToMax(cacheMax, modelIndexList, dListCallback)) {
 
-                        cacheHandler.renderPortalLists()
+                        cacheAPI.renderPortalLists()
 
                     }
 
@@ -1041,7 +1042,7 @@ const Cradle = ({
 
                 }
 
-                cacheHandler.preload(finalCallback, nullItemSetMaxListsize, scrollerID)
+                cacheAPI.preload(finalCallback, nullItemSetMaxListsize)
 
                 break
             }
@@ -1134,7 +1135,7 @@ const Cradle = ({
                 }
 
                 if (cradleState == 'reload') {
-                    cacheHandler.clearCache()
+                    cacheAPI.clearCache()
                 }
 
                 const { listsize } = cradleInternalPropertiesRef.current
@@ -1165,9 +1166,9 @@ const Cradle = ({
 
                     }
 
-                    if (cacheHandler.matchCacheToCradle(modelIndexList, dListCallback)) {
+                    if (cacheAPI.matchCacheToCradle(modelIndexList, dListCallback)) {
                         
-                        cacheHandler.renderPortalLists()
+                        cacheAPI.renderPortalLists()
 
                     }
                 }
@@ -1332,7 +1333,7 @@ const Cradle = ({
 
             case 'channelcradleresetafterinsertremove': {
 
-                applyPortalPartitionItemsForDeleteList(cacheHandler)
+                cacheAPI.applyPortalPartitionItemsForDeleteList()
 
                 setCradleState('changelistsizeafterinsertremove')
 
@@ -1347,7 +1348,7 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents
                 cradleContent.tailDisplayComponents = cradleContent.tailModelComponents
 
-                applyPortalPartitionItemsForDeleteList(cacheHandler)
+                cacheAPI.applyPortalPartitionItemsForDeleteList()
 
                 if (cradleState == 'applyinsertremovechanges') {
 
@@ -1380,7 +1381,7 @@ const Cradle = ({
                 contentHandler.clearCradle()
                 cradleContent.headDisplayComponents = []
                 cradleContent.tailDisplayComponents = []
-                cacheHandler.clearCache()
+                cacheAPI.clearCache()
                 setCradleState('ready')
 
                 break
@@ -1389,26 +1390,6 @@ const Cradle = ({
         }
 
     },[cradleState])
-
-    const applyPortalPartitionItemsForDeleteList = (cacheHandler) => {
-
-        const { portalPartitionItemsForDeleteList } = cacheHandler
-
-        if (portalPartitionItemsForDeleteList && portalPartitionItemsForDeleteList.length) {
-
-            for (const item of portalPartitionItemsForDeleteList) {
-
-                cacheHandler.removePartitionPortal(item.partitionID, item.itemID)
-                
-            }
-
-            cacheHandler.portalPartitionItemsForDeleteList = []                    
-
-            cacheHandler.renderPortalLists()
-
-        }
-
-    }
 
     // standard rendering states (3 states)
     useEffect(()=> { 
@@ -1495,7 +1476,7 @@ const Cradle = ({
 
     const contextvalueRef = useRef({
         scrollerPropertiesRef, 
-        cacheHandler, 
+        cacheAPI, 
         nullItemSetMaxListsize,
         itemExceptionCallback:serviceHandler.callbacks.itemExceptionCallback,
         IDLECALLBACK_TIMEOUT,
@@ -1570,13 +1551,13 @@ const getCradleHandlers = (cradleParameters) => {
 
     const createHandler = handler => new handler(cradleParameters)
 
-    const { cacheHandler } = cradleParameters.cradleInheritedPropertiesRef.current
+    const { cacheAPI } = cradleParameters.cradleInheritedPropertiesRef.current
 
-    cacheHandler.cradleParameters = cradleParameters
+    cacheAPI.cradleParameters = cradleParameters
 
     return {
 
-        cacheHandler,
+        cacheAPI,
         interruptHandler:createHandler(InterruptHandler),
         scrollHandler:createHandler(ScrollHandler),
         stateHandler:createHandler(StateHandler),

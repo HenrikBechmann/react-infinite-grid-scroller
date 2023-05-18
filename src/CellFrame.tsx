@@ -91,7 +91,7 @@ const CellFrame = ({
     const cradleContext = useContext(CradleContext)
 
     const { 
-        cacheHandler, 
+        cacheAPI, 
         scrollerPropertiesRef, // for the user content, if requested
         nullItemSetMaxListsize, // for internal notification of end-of-list
         itemExceptionCallback, // for notification to host of error
@@ -129,8 +129,8 @@ const CellFrame = ({
     // the session itemID to use; could be updated by parent
     const itemIDRef = useRef(null)
     itemIDRef.current = itemID
-    const cellFrameDataRef = useRef(null)
-    cellFrameDataRef.current = {
+    const cellFramePropertiesRef = useRef(null)
+    cellFramePropertiesRef.current = {
         itemID,
         index
     }
@@ -158,7 +158,7 @@ const CellFrame = ({
 
             cancelidlecallback(requestIdleCallbackIdRef.current)
 
-            cacheHandler.unregisterPendingPortal(index)
+            cacheAPI.unregisterPendingPortal(index)
 
         }
 
@@ -285,7 +285,7 @@ const CellFrame = ({
             case 'getusercontent': {
 
                 const itemID = itemIDRef.current
-                const cached = cacheHandler.hasPortal(itemID)
+                const cached = cacheAPI.hasPortal(itemID)
                 const {
                     layout,
                     orientation,
@@ -300,9 +300,11 @@ const CellFrame = ({
                     if (isMountedRef.current) {
 
                         // get cache data
-                        portalMetadataRef.current = cacheHandler.getPortalMetadata(itemID)
+                        portalMetadataRef.current = cacheAPI.getPortalMetadata(itemID)
+                        // update cell and scroller properties ref in case of switch in either
+                        portalMetadataRef.current.scrollerProperties.cellFramePropertiesRef = cellFramePropertiesRef
+                        portalMetadataRef.current.scrollerProperties.scrollerPropertiesRef = scrollerPropertiesRef
                         // get OutPortal node
-                        portalMetadataRef.current.scrollerProperties.cellFrameDataRef = cellFrameDataRef
                         portalNodeRef.current = portalMetadataRef.current.portalNode
                         setContainerStyles(
                             portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
@@ -316,7 +318,7 @@ const CellFrame = ({
                     messageRef.current = placeholderMessagesRef.current.loading
 
                     // reserve space in the cache
-                    cacheHandler.registerPendingPortal(index)
+                    cacheAPI.registerPendingPortal(index)
 
                     // enqueue the fetch
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
@@ -362,20 +364,26 @@ const CellFrame = ({
                                 // if usercontent is otherwise disallowed, let error handling deal with it.
                                 let content 
                                 const scrollerProperties = {
-                                    cellFrameDataRef,
+                                    cellFramePropertiesRef,
                                     scrollerPropertiesRef,
                                 }
+                                let addinCount = 0
+                                const addinProps:{scrollerProperties?:Object, cacheAPI?:Function} = {}
                                 if (usercontent.props?.hasOwnProperty('scrollerProperties')) {
-                                    content = React.cloneElement(usercontent, 
-                                        {
-                                            scrollerProperties,
-                                        }
-                                    )
+                                    addinProps.scrollerProperties = scrollerProperties
+                                    addinCount++
+                                }
+                                if (usercontent.props?.hasOwnProperty('cacheAPI')) {
+                                    addinProps.cacheAPI = cacheAPI.instance
+                                    addinCount++
+                                }
+                                if (addinCount) {
+                                    content = React.cloneElement(usercontent, addinProps)
                                 } else {
                                     content = usercontent
                                 }
 
-                                portalMetadataRef.current = await cacheHandler.createPortal(content, index, itemID, scrollerProperties)
+                                portalMetadataRef.current = await cacheAPI.createPortal(content, index, itemID, scrollerProperties)
 
                                 portalNodeRef.current = portalMetadataRef.current.portalNode
                                 setContainerStyles(
@@ -385,7 +393,7 @@ const CellFrame = ({
 
                             } else { // null or undefined; handle non-component value
 
-                                cacheHandler.unregisterPendingPortal(index) // create portal failed
+                                cacheAPI.unregisterPendingPortal(index) // create portal failed
 
                                 if (usercontent === null) {
 
