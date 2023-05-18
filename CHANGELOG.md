@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.05 May 18, 2023
+
+Internal refactors:
+- promote PortalCache component to top tier
+- introduce experimental capability to share cache among multiple scrollers (this currently has no operational effect)
+
 ## 1.04 April 22, 2023
 
 Refactor index insert, remove, and move
