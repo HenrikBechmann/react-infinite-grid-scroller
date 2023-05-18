@@ -26,7 +26,7 @@
     
     The functions listed are defined in this module.
 
-    There are important supporting functions for these in cacheHandler and contentHandler. stateHandler is
+    There are important supporting functions for these in cacheAPI and contentHandler. stateHandler is
     often invoked by service functions to change Cradle state upon servicing requests.
 */
 
@@ -174,7 +174,7 @@ export default class ServiceHandler {
 
         }
 
-        const { cacheHandler, contentHandler, stateHandler } = this.cradleParameters.handlersRef.current
+        const { cacheAPI, contentHandler, stateHandler } = this.cradleParameters.handlersRef.current
 
         const { deleteListCallback, changeListsizeCallback } = this.callbacks
 
@@ -193,12 +193,12 @@ export default class ServiceHandler {
         }
 
         contentHandler.updateListsize(newlistsize)
-        cacheHandler.changeCacheListsize(newlistsize, 
+        cacheAPI.changeCacheListsize(newlistsize, 
             dListCallback,
             changeListsizeCallback
         )
 
-        cacheHandler.renderPortalLists()
+        cacheAPI.renderPortalLists()
 
 
         if ((cache == 'preload') && (newlistsize > currentlistsize)) {
@@ -211,26 +211,26 @@ export default class ServiceHandler {
 
     public getCacheIndexMap = () => {
 
-        const { cacheHandler } = this.cradleParameters.handlersRef.current
+        const { cacheAPI } = this.cradleParameters.handlersRef.current
 
-        return cacheHandler.getCacheIndexMap()
+        return cacheAPI.getCacheIndexMap()
 
     }
 
     public getCacheItemMap = () => {
 
-        const { cacheHandler } = this.cradleParameters.handlersRef.current
+        const { cacheAPI } = this.cradleParameters.handlersRef.current
 
-        return cacheHandler.getCacheItemMap()
+        return cacheAPI.getCacheItemMap()
 
     }
 
     public getCradleIndexMap = () => {
 
-        const { cacheHandler, contentHandler } = this.cradleParameters.handlersRef.current
+        const { cacheAPI, contentHandler } = this.cradleParameters.handlersRef.current
 
         const modelIndexList = contentHandler.getModelIndexList()
-        return cacheHandler.getCradleIndexMap(modelIndexList)
+        return cacheAPI.getCradleIndexMap(modelIndexList)
     }
 
     // =================[ CACHE MANAGEMENT REQUESTS ]==================
@@ -251,15 +251,16 @@ export default class ServiceHandler {
 
         if (changeMap.size == 0) return [] // nothing to do
 
-        const { cacheHandler, contentHandler, stateHandler } = 
+        const { cacheAPI, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
 
         const { 
 
-            metadataMap, // itemID to component data, including index
-            indexToItemIDMap // index to itemID
+            itemMetadataMap, // itemID to component data, including index
+            indexToItemIDMap, // index to itemID
+            itemSet,
 
-        } = cacheHandler.cacheProps 
+        } = cacheAPI 
 
         const indexesToDeleteList = []
         const indexesToReplaceItemIDList = []
@@ -281,7 +282,7 @@ export default class ServiceHandler {
 
                     if (!(cacheItemID === undefined)) { // ignore non-existent indexes
 
-                        const { partitionID } = metadataMap.get(cacheItemID)
+                        const { partitionID } = itemMetadataMap.get(cacheItemID)
 
                         partitionItemsToReplaceList.push({partitionID, itemID:cacheItemID})
                     }
@@ -334,7 +335,7 @@ export default class ServiceHandler {
 
                     errorEntriesMap.set(index, `target itemID ${itemID} has not changed`)
 
-                } else if (!metadataMap.has(itemID) || itemsToReplaceSet.has(itemID)) {
+                } else if (!itemMetadataMap.has(itemID) || itemsToReplaceSet.has(itemID)) {
 
                     errorEntriesMap.set(index, `target itemID ${itemID} not in cache, or has been removed`)
 
@@ -415,7 +416,7 @@ export default class ServiceHandler {
         changeIndexToItemIDMap.forEach((itemID, index)=>{
 
             originalMap.set(index,indexToItemIDMap.get(index)) // index to be mapped
-            originalMap.set(metadataMap.get(itemID).index,itemID) // target itemID
+            originalMap.set(itemMetadataMap.get(itemID).index,itemID) // target itemID
 
         })
 
@@ -453,7 +454,7 @@ export default class ServiceHandler {
         changeIndexToItemIDMap.forEach((itemID,index) => {
 
             indexToItemIDMap.set(index,itemID) // modiication applied, part 1
-            const itemdata = metadataMap.get(itemID)
+            const itemdata = itemMetadataMap.get(itemID)
 
             itemdata.index = index // modification applied, part 2
 
@@ -475,15 +476,16 @@ export default class ServiceHandler {
 
         originalMap.forEach((originalItemID, originalItemIDIndex) => {
 
-            const finalItemIDIndex = metadataMap.get(originalItemID).index
+            const finalItemIDIndex = itemMetadataMap.get(originalItemID).index
 
             if (originalItemIDIndex == finalItemIDIndex) { // not remapped, therefore orphaned
 
                 deletedItemIDToIndexMap.set(originalItemID, originalItemIDIndex)
 
-                const { partitionID } = metadataMap.get(originalItemID)
+                const { partitionID } = itemMetadataMap.get(originalItemID)
                 portalPartitionItemsForDeleteList.push({itemID:originalItemID, partitionID})
-                metadataMap.delete(originalItemID)
+                itemMetadataMap.delete(originalItemID)
+                itemSet.delete(originalItemID)
 
             } else { // remapped, check for orphaned index
 
@@ -503,8 +505,8 @@ export default class ServiceHandler {
         })
 
         // refresh the changed cache
-        // cacheHandler.cacheProps.partitionModified = true
-        // cacheHandler.renderPortalLists()
+        // cacheAPI.cacheProps.partitionModified = true
+        // cacheAPI.renderPortalLists()
 
         // ------------- apply changes to extant cellFrames ------------
 
@@ -530,7 +532,7 @@ export default class ServiceHandler {
 
         modifiedIndexList = modifiedIndexList.concat(indexesToReplaceItemIDList)
 
-        cacheHandler.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList.concat(partitionItemsToReplaceList)
+        cacheAPI.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList.concat(partitionItemsToReplaceList)
 
         stateHandler.setCradleState('applyremapchanges')
 
@@ -621,11 +623,11 @@ export default class ServiceHandler {
 
         // ----------- perform cache and cradle operations -----------
 
-        const { cacheHandler, contentHandler, stateHandler } = 
+        const { cacheAPI, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
 
         const processedIndexList = // both displaced and moved indexes
-            cacheHandler.moveIndex(tolowindex, fromlowindex, fromhighindex)
+            cacheAPI.moveIndex(tolowindex, fromlowindex, fromhighindex)
 
         if (processedIndexList.length) {
 
@@ -711,7 +713,7 @@ export default class ServiceHandler {
 
         // ---------------- assemble resources --------------------
 
-        const { cacheHandler, contentHandler, stateHandler } = 
+        const { cacheAPI, contentHandler, stateHandler } = 
             this.cradleParameters.handlersRef.current
 
         const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
@@ -729,12 +731,12 @@ export default class ServiceHandler {
         }
 
         const [startChangeIndex, rangeincrement, shiftedList, removedList, replaceList, portalPartitionItemsForDeleteList] = 
-            cacheHandler.insertRemoveIndex(index, rangehighindex, increment, listsize) //, cradleIndexSpan)
+            cacheAPI.insertRemoveIndex(index, rangehighindex, increment, listsize) //, cradleIndexSpan)
 
         if (rangeincrement === null) return [[],[],[]] // no action
 
         // partitionItems to delete with followup state changes - must happen after cradle update
-        cacheHandler.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList
+        cacheAPI.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList
 
         // ------------- synchronize cradle to cache changes -------------
 
@@ -762,7 +764,8 @@ export default class ServiceHandler {
 
             const { content } = contentHandler
 
-            const requestedSet = cacheHandler.cacheProps.requestedSet
+            // const requestedSet = cacheAPI.cacheProps.requestedSet
+            const requestedSet = cacheAPI.requestedSet
 
             const timeout = setInterval(() => { // wait until changed cache entries update the cradle
 

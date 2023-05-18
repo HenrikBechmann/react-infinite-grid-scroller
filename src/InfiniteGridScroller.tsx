@@ -9,7 +9,7 @@
     Scrollblock in turn contains the Cradle - a component that contains CellFrames, which contain 
     displayed user content (items) or transitional placeholders. 
 
-    Host content is instantiated in a cache of React portals (via cacheHandler). Content is then 
+    Host content is instantiated in a cache of React portals (via cacheAPI). Content is then 
     portal'd to CellFrames. The cache can be configured to hold more items than the Cradle (limited by 
     device memory). Caching allows host content to maintain state.
 
@@ -43,11 +43,15 @@ export const isSafariIOS = () => {
 // based on module template
 function ErrorFallback({error, resetErrorBoundary}) {
   return (
-    <div role="alert">
-      <p>Oops! Something went wrong inside react-infinite-grid-scroller.</p>
-      <p>Click to cancel the error and continue.</p>
-      <button onClick={ resetErrorBoundary }>Cancel error</button>
-      <pre>{error}</pre>
+    <div role="alert" style = {{margin:'3px'}}>
+      <p>Something went wrong inside react-infinite-grid-scroller. See the console for details.</p>
+      <p>Click to cancel the error and try to continue.</p>
+      <button 
+          style = {{border:'1px solid black', margin:'3px', padding:'3px'}} 
+          onClick = { resetErrorBoundary }
+      >
+          Cancel error
+      </button>
     </div>
   )
 }
@@ -58,7 +62,7 @@ import Scrollblock from './Scrollblock'
 import Cradle from './Cradle'
 
 // loaded here to minimize redundant renders in Cradle
-import { CacheHandler, PortalMasterCache } from './cradle/cachehandler'
+import PortalCache from './PortalCache'
 
 // -------------------[ global session ID generator ]----------------
 
@@ -113,6 +117,8 @@ const InfiniteGridScroller = (props) => {
             // can contain functionsCallback, which provides access to internal scroller functions 
             //(mostly cache management)
         technical = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
+        cacheAPI = null,
+        dragdropProperties, // placeholder!
 
         // information for host cell content
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
@@ -226,6 +232,7 @@ const InfiniteGridScroller = (props) => {
 
     // state
     const [scrollerState, setScrollerState] = useState('setup') // setup, setlistsize, ready
+
     // system
     const stylesRef = useRef(styles)
     const callbacksRef = useRef(callbacks)
@@ -266,7 +273,9 @@ const InfiniteGridScroller = (props) => {
     const scrollerID = scrollerSessionIDRef.current
 
     // for children
-    const cacheHandlerRef = useRef(null)
+    const cacheAPIRef = useRef(cacheAPI)
+
+    const updateFunctionRef = useRef(null)
 
     const listsizeRef = useRef(startingListSize)
 
@@ -289,12 +298,26 @@ const InfiniteGridScroller = (props) => {
 
     // -------------------------[ Initialization ]-------------------------------
 
+    const getCacheAPI = (cacheAPI) => {
+
+        cacheAPIRef.current = cacheAPI
+
+    }
+
+    const getUpdateFunction = (fn) => {
+
+        updateFunctionRef.current = fn
+
+    }
+
+    const useLocalCache = !cacheAPI
+
+    const isMountedRef = useRef(true)
+
     useEffect (() => {
 
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
             scrollerSessionIDRef.current = globalScrollerID++
-            cacheHandlerRef.current = new CacheHandler(scrollerSessionIDRef.current, listsizeRef, 
-                CACHE_PARTITION_SIZE)
         }
 
     },[]);
@@ -315,12 +338,46 @@ const InfiniteGridScroller = (props) => {
 
     // ---------------------[ State handling ]------------------------
 
+    useEffect(()=>{
+
+        isMountedRef.current = true
+
+        return () => {
+            isMountedRef.current = false
+        }
+
+    },[])
+
+    const itemSetRef = useRef(null)
+
     useEffect(() => {
 
         switch (scrollerState) {
+
             case 'setup':
+                // replace cacheAPI with facade which includes hidden scrollerID
+                cacheAPIRef.current = cacheAPIRef.current.registerScroller(scrollerSessionIDRef.current)
+                itemSetRef.current = cacheAPIRef.current.itemSet // for unmount unRegisterScroller
+
+                if (updateFunctionRef.current) { // obtained from PortalCache
+
+                    cacheAPIRef.current.partitionRepoForceUpdate = updateFunctionRef.current
+
+                }
+
             case 'setlistsize':
                 setScrollerState('ready')
+
+        }
+
+        return () => {
+
+            if (!isMountedRef.current) { // double call possible - a React anomaly
+
+                cacheAPIRef.current.unRegisterScroller(itemSetRef.current)
+
+            }
+
         }
 
     },[scrollerState])
@@ -331,22 +388,21 @@ const InfiniteGridScroller = (props) => {
         return <div>error: see console.</div>        
     }
 
-    // component calls are deferred by scrollerState to give cacheHandler a chance to initialize
+    // component calls are deferred by scrollerState to give cacheAPI a chance to initialize
     return <ErrorBoundary
         FallbackComponent= { ErrorFallback }
-        onReset= { () => {
-          // response tbd; there may not need to be one
-        }}
-        onError = {(error: Error, info: {componentStack: string}) => {
-            console.log('react-infinite-grid-scroller captured error', error)
-        }}
+        // elaboration TBD
+        onReset = { () => {} }
+        onError = { () => {} }
+        // onError = {(error: Error, info: {componentStack: string}) => {
+        //     console.log('react-infinite-grid-scroller captured error', error)
+        // }}
     >
 
         {(scrollerState != 'setup') && <Viewport
 
             gridSpecs = { gridSpecsRef.current }
             styles = { stylesRef.current }
-            // scrollerProperties = { scrollerProperties }
             scrollerID = { scrollerID }
             VIEWPORT_RESIZE_TIMEOUT = { VIEWPORT_RESIZE_TIMEOUT }
 
@@ -377,7 +433,7 @@ const InfiniteGridScroller = (props) => {
                     triggerlineOffset = { triggerlineOffset }
                     scrollerProperties = { scrollerProperties }
 
-                    cacheHandler = { cacheHandlerRef.current }
+                    cacheAPI = { cacheAPIRef.current }
                     usePlaceholder = { usePlaceholder }
                     useScrollTracker = { useScrollTracker }
                     showAxis = { showAxis }
@@ -390,8 +446,13 @@ const InfiniteGridScroller = (props) => {
                 />
             </Scrollblock>}
         </Viewport>}
-        {(scrollerState != 'setup') && <div data-type = 'cacheroot' style = { cacherootstyle }>
-            <PortalMasterCache cacheProps = {cacheHandlerRef.current.cacheProps} />
+        {useLocalCache && <div data-type = 'cacheroot' style = { cacherootstyle }>
+            <PortalCache 
+
+                getCacheAPI = { getCacheAPI } 
+                getUpdateFunction = { getUpdateFunction }
+                CACHE_PARTITION_SIZE = { CACHE_PARTITION_SIZE } />
+
         </div>}
     </ErrorBoundary>
 }
