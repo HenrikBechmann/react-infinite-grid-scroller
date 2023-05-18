@@ -354,9 +354,9 @@ const InfiniteGridScroller = (props) => {
             case 'setup':
                 // replace cacheAPI with facade which includes hidden scrollerID
                 cacheAPIRef.current = cacheAPIRef.current.registerScroller(scrollerSessionIDRef.current)
-                itemSetRef.current = cacheAPIRef.current.itemSet
+                itemSetRef.current = cacheAPIRef.current.itemSet // for unmount unRegisterScroller
                 // console.log('InfiniteGridScroller:itemSetRef',itemSetRef)
-                if (updateFunctionRef.current) {
+                if (updateFunctionRef.current) { // obtained from PortalCache
                     // console.log('InfiniteGridScroller:setting partitionRepoForceUpdate to updateFunctionRef.current', updateFunctionRef.current)
                     cacheAPIRef.current.partitionRepoForceUpdate = updateFunctionRef.current
                 }
@@ -369,7 +369,7 @@ const InfiniteGridScroller = (props) => {
         return () => {
 
             // console.log('itemSet, isMountedRef.current',itemSetRef, isMountedRef.current)
-            if (!isMountedRef.current) {
+            if (!isMountedRef.current) { // double call possible - a React anomaly
                 // console.log('InfiniteGridScroller:unmount - itemSetRef',itemSetRef)
                 cacheAPIRef.current.unRegisterScroller(itemSetRef.current)
             }
