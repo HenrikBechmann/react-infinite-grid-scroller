@@ -236,6 +236,7 @@ export default class CacheAPI {
         itemSet.forEach((itemID) => {
             const { partitionID } = this.itemMetadataMap.get(itemID)
             this.removePartitionPortal(partitionID,itemID)
+            this.itemMetadataMap.delete(itemID)
         })
         this.renderPortalLists()
 
