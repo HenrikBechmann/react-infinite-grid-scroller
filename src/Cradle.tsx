@@ -93,7 +93,7 @@ const Cradle = ({
         gridSpecs,
         // basics
         runwaySize, 
-        listsize, 
+        // listsize, 
         vlistProps,
         updateVListProps,
         startingIndex, 
@@ -120,6 +120,8 @@ const Cradle = ({
         scrollerProperties,
 
     }) => {
+
+    const listsize = vlistProps.size
 
     // ========================[ DATA SETUP ]========================
 

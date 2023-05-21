@@ -482,7 +482,7 @@ const InfiniteGridScroller = (props) => {
 
                 gridSpecs = { gridSpecsRef.current }
                 styles = { stylesRef.current }
-                listsize = { listsize }
+                // listsize = { listsize }
                 vlistProps = {vlistPropsRef.current}
                 scrollerID = { scrollerID }
                 
@@ -491,7 +491,7 @@ const InfiniteGridScroller = (props) => {
 
                     gridSpecs = { gridSpecsRef.current }
                     styles = { stylesRef.current }
-                    listsize = { listsize }
+                    // listsize = { listsize }
                     vlistProps = {vlistPropsRef.current}
                     updateVListProps = { updateVListProps }
                     cache = { cache }
