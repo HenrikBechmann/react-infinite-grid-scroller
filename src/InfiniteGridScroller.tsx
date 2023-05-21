@@ -334,7 +334,7 @@ const InfiniteGridScroller = (props) => {
         vlistPropsRef.current = vlistProps
     }
 
-    console.log('listsize, listrange, vlistProps', listsize, listrange, vlistProps)
+    // console.log('listsize, listrange, vlistProps', listsize, listrange, vlistProps)
 
     // tests for React with Object.is for changed properties; avoid re-renders with no change
     if (!compareProps(gridSpecs, gridSpecsRef.current)) {
