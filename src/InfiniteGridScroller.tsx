@@ -80,6 +80,8 @@ let globalScrollerID = 0
 
 const InfiniteGridScroller = (props) => {
 
+    // state
+    const [scrollerState, setScrollerState] = useState('setup') // setup, setlistprops, ready
 
     // ------------------[ normalize properties ]--------------------
 
@@ -91,7 +93,7 @@ const InfiniteGridScroller = (props) => {
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
             // max for variable layout
         startingListSize = 0, // the starging number of items in the virtual list. can be changed
-        startingListRange = [-25,24],
+        startingListRange = null, // [-25,24],
         getItem, // required. function provided by host - parameters set by system are index number
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
@@ -215,6 +217,35 @@ const InfiniteGridScroller = (props) => {
             originalValues, verifiedValues)
     }
 
+    // rationalize startingListsize and startingListRange
+    if (!problems && scrollerState == 'setup') {
+
+        let goodrange = true
+        if (!startingListRange || !Array.isArray(startingListRange) || !(startingListRange.length == 2)) {
+            goodrange = false
+        }
+        if (goodrange) {
+            let [lowrange,highrange] = startingListRange
+            lowrange = +lowrange
+            highrange = +highrange
+            if (isNaN(lowrange) || isNaN(highrange)) {
+                goodrange = false
+            } else if (lowrange > highrange) {
+                goodrange = false
+            }
+            if (goodrange) {
+                startingListSize = highrange - lowrange + 1
+            }
+        }
+        if (!goodrange) {
+            if (startingListSize) {
+                startingListRange = [0,startingListSize - 1]
+            } else {
+                startingListRange = null
+            }
+        }
+    }
+
     // enums
     if (!['horizontal','vertical'].includes(orientation)) { 
         orientation = 'vertical'
@@ -238,9 +269,6 @@ const InfiniteGridScroller = (props) => {
     }
 
     const gridSpecsRef = useRef(gridSpecs)
-
-    // state
-    const [scrollerState, setScrollerState] = useState('setup') // setup, setlistprops, ready
 
     // system
     const stylesRef = useRef(styles)
@@ -291,7 +319,7 @@ const InfiniteGridScroller = (props) => {
 
     const listsize = listsizeRef.current
     const listrange = listRangeRef.current
-    const [lowlistrange, highlistrange] = listrange
+    const [lowlistrange, highlistrange] = listrange // ranges undefined if listrange is null
 
     const vlistProps = {
         size:listsize,
@@ -299,6 +327,8 @@ const InfiniteGridScroller = (props) => {
         lowrange:lowlistrange,
         highrange:highlistrange,
     }
+
+    console.log('listsize, listrange, vlistProps', listsize, listrange, vlistProps)
 
     // tests for React with Object.is for changed properties; avoid re-renders with no change
     if (!compareProps(gridSpecs, gridSpecsRef.current)) {
