@@ -328,6 +328,12 @@ const InfiniteGridScroller = (props) => {
         highrange:highlistrange,
     }
 
+    const vlistPropsRef = useRef(vlistProps)
+
+    if (!compareProps(vlistProps, vlistPropsRef.current)) {
+        vlistPropsRef.current = vlistProps
+    }
+
     console.log('listsize, listrange, vlistProps', listsize, listrange, vlistProps)
 
     // tests for React with Object.is for changed properties; avoid re-renders with no change
@@ -374,24 +380,27 @@ const InfiniteGridScroller = (props) => {
     // called when getItem returns null, or direct call from user (see serviceHandler)
     const updateVListProps = useCallback((listsizearg) =>{
 
-        let listsize, lowrange, highrange
+        let listsize, lowrange, highrange, listrange
         const [prevlowrange, prevhighrange] = listRangeRef.current
         if (Array.isArray(listsizearg)) {
             [lowrange,highrange] = listsizearg
-            listRangeRef.current = listsizearg
             listsize = highrange - lowrange + 1
+            listrange = listsizearg
         } else {
             listsize = listsizearg;
             [lowrange,highrange] = listRangeRef.current
-            listRangeRef.current = [lowrange,lowrange + listsize - 1]
+            listrange = [lowrange,lowrange + listsize - 1]
         }
 
         if (listsize == listsizeRef.current && lowrange === prevlowrange && highrange === prevhighrange) return
 
         listsizeRef.current = listsize
+        listRangeRef.current = listrange
 
         // inform the user
-        callbacksRef.current.newListsize && callbacksRef.current.newListsize(listsize)
+        callbacksRef.current.newListsize && 
+            listsizeRef.current != listsize &&
+            callbacksRef.current.newListsize(listsize)
 
         setScrollerState('setlistprops')
 
@@ -474,6 +483,7 @@ const InfiniteGridScroller = (props) => {
                 gridSpecs = { gridSpecsRef.current }
                 styles = { stylesRef.current }
                 listsize = { listsize }
+                vlistProps = {vlistPropsRef.current}
                 scrollerID = { scrollerID }
                 
             >
@@ -482,6 +492,7 @@ const InfiniteGridScroller = (props) => {
                     gridSpecs = { gridSpecsRef.current }
                     styles = { stylesRef.current }
                     listsize = { listsize }
+                    vlistProps = {vlistPropsRef.current}
                     updateVListProps = { updateVListProps }
                     cache = { cache }
                     cacheMax = { cacheMax }

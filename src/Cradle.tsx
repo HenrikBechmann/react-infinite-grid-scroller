@@ -94,6 +94,7 @@ const Cradle = ({
         // basics
         runwaySize, 
         listsize, 
+        vlistProps,
         updateVListProps,
         startingIndex, 
         getItem, 
