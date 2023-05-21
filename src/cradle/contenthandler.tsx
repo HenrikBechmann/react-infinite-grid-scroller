@@ -73,7 +73,7 @@ export default class ContentHandler {
 
     // reset the cradle with new content, including allocation between head and tail parts of the cradle
     // - called only from the Cradle state handler
-    public updateListsize = (newlistsize) => {
+    public updateVListProps = (newlistsize) => {
 
         if (newlistsize == 0) {
 
@@ -85,7 +85,7 @@ export default class ContentHandler {
 
         }
 
-        this.cradleParameters.cradleInternalPropertiesRef.current.updateListsize(newlistsize)
+        this.cradleParameters.cradleInternalPropertiesRef.current.updateVListProps(newlistsize)
 
     }
 

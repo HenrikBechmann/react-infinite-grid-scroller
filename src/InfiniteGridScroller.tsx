@@ -28,6 +28,14 @@
     containing block should be styles accordingly.
 */
 
+/*
+
+TODO:
+
+- add startingListRange property (2 part array); setListRange API function
+
+*/
+
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 
 // defensive
@@ -83,6 +91,7 @@ const InfiniteGridScroller = (props) => {
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
             // max for variable layout
         startingListSize = 0, // the starging number of items in the virtual list. can be changed
+        startingListRange = [-25,24],
         getItem, // required. function provided by host - parameters set by system are index number
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
@@ -231,7 +240,7 @@ const InfiniteGridScroller = (props) => {
     const gridSpecsRef = useRef(gridSpecs)
 
     // state
-    const [scrollerState, setScrollerState] = useState('setup') // setup, setlistsize, ready
+    const [scrollerState, setScrollerState] = useState('setup') // setup, setlistprops, ready
 
     // system
     const stylesRef = useRef(styles)
@@ -278,8 +287,18 @@ const InfiniteGridScroller = (props) => {
     const updateFunctionRef = useRef(null)
 
     const listsizeRef = useRef(startingListSize)
+    const listRangeRef = useRef(startingListRange)
 
     const listsize = listsizeRef.current
+    const listrange = listRangeRef.current
+    const [lowlistrange, highlistrange] = listrange
+
+    const vlistProps = {
+        size:listsize,
+        range:listrange,
+        lowrange:lowlistrange,
+        highrange:highlistrange,
+    }
 
     // tests for React with Object.is for changed properties; avoid re-renders with no change
     if (!compareProps(gridSpecs, gridSpecsRef.current)) {
@@ -323,16 +342,28 @@ const InfiniteGridScroller = (props) => {
     },[]);
 
     // called when getItem returns null, or direct call from user (see serviceHandler)
-    const updateListsize = useCallback((listsize) =>{
+    const updateVListProps = useCallback((listsizearg) =>{
 
-        if (listsize == listsizeRef.current) return
+        let listsize, lowrange, highrange
+        const [prevlowrange, prevhighrange] = listRangeRef.current
+        if (Array.isArray(listsizearg)) {
+            [lowrange,highrange] = listsizearg
+            listRangeRef.current = listsizearg
+            listsize = highrange - lowrange + 1
+        } else {
+            listsize = listsizearg;
+            [lowrange,highrange] = listRangeRef.current
+            listRangeRef.current = [lowrange,lowrange + listsize - 1]
+        }
+
+        if (listsize == listsizeRef.current && lowrange === prevlowrange && highrange === prevhighrange) return
 
         listsizeRef.current = listsize
 
         // inform the user
         callbacksRef.current.newListsize && callbacksRef.current.newListsize(listsize)
 
-        setScrollerState('setlistsize')
+        setScrollerState('setlistprops')
 
     },[])
 
@@ -365,7 +396,7 @@ const InfiniteGridScroller = (props) => {
 
                 }
 
-            case 'setlistsize':
+            case 'setlistprops':
                 setScrollerState('ready')
 
         }
@@ -421,7 +452,7 @@ const InfiniteGridScroller = (props) => {
                     gridSpecs = { gridSpecsRef.current }
                     styles = { stylesRef.current }
                     listsize = { listsize }
-                    updateListsize = { updateListsize }
+                    updateVListProps = { updateVListProps }
                     cache = { cache }
                     cacheMax = { cacheMax }
                     userCallbacks = { callbacksRef.current }

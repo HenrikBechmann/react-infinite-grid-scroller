@@ -192,7 +192,7 @@ export default class ServiceHandler {
 
         }
 
-        contentHandler.updateListsize(newlistsize)
+        contentHandler.updateVListProps(newlistsize)
         cacheAPI.changeCacheListsize(newlistsize, 
             dListCallback,
             changeListsizeCallback
