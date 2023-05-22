@@ -121,7 +121,7 @@ const Cradle = ({
 
     }) => {
 
-    // const listsize = virtualListProperties.size
+    const listsize = virtualListProperties.size
 
     // ========================[ DATA SETUP ]========================
 
@@ -292,7 +292,7 @@ const Cradle = ({
         const viewportRowcount = Math.ceil(viewportLength/baseRowLength)
 
         // const listRowcount = Math.ceil(listsize/crosscount)
-        const listRowcount = Math.ceil(virtualListProperties.size/crosscount)
+        const listRowcount = Math.ceil(listsize/crosscount)
 
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
 
@@ -312,9 +312,9 @@ const Cradle = ({
         }
 
         let itemcount = cradleRowcount * crosscount
-        if (itemcount > virtualListProperties.size) {
+        if (itemcount > listsize) {
 
-            itemcount = virtualListProperties.size
+            itemcount = listsize
             cradleRowcount = Math.ceil(itemcount/crosscount)
 
         }
@@ -337,7 +337,7 @@ const Cradle = ({
         viewportheight, 
         viewportwidth,
 
-        virtualListProperties,
+        listsize,
         runwaySize,
         crosscount,
         layout,
@@ -830,7 +830,7 @@ const Cradle = ({
         } else {
 
             measuredCradleItemCount = highIndex - lowIndex + 1
-            changeIsWithinCradle = (highIndex >= (virtualListProperties.highrange))
+            changeIsWithinCradle = (highIndex >= (cradleInternalPropertiesRef.current.virtualListProperties.highrange))
             
         }
 
@@ -848,7 +848,7 @@ const Cradle = ({
         }
 
     },[
-        virtualListProperties, 
+        listsize,
     ])
 
     // a new getItem function implies the need to reload
@@ -1436,7 +1436,7 @@ const Cradle = ({
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
             scrollAxisReferenceIndex,
-            listsize:virtualListProperties.size,
+            listsize,
             styles,
         }
         return trackerargs
@@ -1445,7 +1445,7 @@ const Cradle = ({
             cradleState, 
             viewportDimensions, 
             scrollAxisReferenceIndex, 
-            virtualListProperties,
+            listsize,
             styles,
             useScrollTracker,
         ]

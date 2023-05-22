@@ -51,10 +51,15 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     } = cradleInternalProperties
 
     const listsize = virtualListProperties.size
-    
-    // align axis reference to first row item
-    targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex,listsize - 1)
-    targetAxisReferenceIndex -= (targetAxisReferenceIndex % crosscount)
+    const { lowrange, highrange } = virtualListProperties
+    const baseoffset = 
+        (lowrange < 0)?
+             crosscount - Math.abs(lowrange % crosscount):
+             lowrange % crosscount
+
+    // align axis reference to last row item
+    targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex, highrange) // listsize - 1)
+    targetAxisReferenceIndex -= Math.abs(targetAxisReferenceIndex % crosscount)
 
     // derive target row
     let targetAxisRowOffset = Math.ceil(targetAxisReferenceIndex/crosscount)
