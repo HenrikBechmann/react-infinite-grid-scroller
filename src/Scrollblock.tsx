@@ -16,7 +16,7 @@ import { ViewportContext } from './Viewport'
 const Scrollblock = ({
     children,
     // listsize,
-    vlistProps,
+    virtualListProperties,
     gridSpecs, 
     styles,
     scrollerID,
@@ -32,7 +32,7 @@ const Scrollblock = ({
         
     } = gridSpecs
 
-    const listsize = vlistProps.size
+    const listsize = virtualListProperties.size
 
     // -------------------------[ context and state ]-------------------------
 

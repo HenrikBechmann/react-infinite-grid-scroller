@@ -559,7 +559,7 @@ export default class CacheAPI {
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
 
         const { getItem, cacheMax } = cradleInheritedProperties,
-            listsize = cradleInternalProperties.vlistProps.size
+            listsize = cradleInternalProperties.virtualListProperties.size
 
         const promises = []
 

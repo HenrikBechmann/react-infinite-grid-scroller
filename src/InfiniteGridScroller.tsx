@@ -321,20 +321,20 @@ const InfiniteGridScroller = (props) => {
     const listrange = listRangeRef.current
     const [lowlistrange, highlistrange] = listrange // ranges undefined if listrange is null
 
-    const vlistProps = {
+    const virtualListProperties = {
         size:listsize,
         range:listrange,
         lowrange:lowlistrange,
         highrange:highlistrange,
     }
 
-    const vlistPropsRef = useRef(vlistProps)
+    const vlistPropsRef = useRef(virtualListProperties)
 
-    if (!compareProps(vlistProps, vlistPropsRef.current)) {
-        vlistPropsRef.current = vlistProps
+    if (!compareProps(virtualListProperties, vlistPropsRef.current)) {
+        vlistPropsRef.current = virtualListProperties
     }
 
-    // console.log('listsize, listrange, vlistProps', listsize, listrange, vlistProps)
+    // console.log('listsize, listrange, virtualListProperties', listsize, listrange, virtualListProperties)
 
     // tests for React with Object.is for changed properties; avoid re-renders with no change
     if (!compareProps(gridSpecs, gridSpecsRef.current)) {
@@ -483,7 +483,7 @@ const InfiniteGridScroller = (props) => {
                 gridSpecs = { gridSpecsRef.current }
                 styles = { stylesRef.current }
                 // listsize = { listsize }
-                vlistProps = {vlistPropsRef.current}
+                virtualListProperties = {vlistPropsRef.current}
                 scrollerID = { scrollerID }
                 
             >
@@ -492,7 +492,7 @@ const InfiniteGridScroller = (props) => {
                     gridSpecs = { gridSpecsRef.current }
                     styles = { stylesRef.current }
                     // listsize = { listsize }
-                    vlistProps = {vlistPropsRef.current}
+                    virtualListProperties = {vlistPropsRef.current}
                     updateVListProps = { updateVListProps }
                     cache = { cache }
                     cacheMax = { cacheMax }
