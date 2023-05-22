@@ -43,9 +43,7 @@ export default class LayoutHandler {
             // padding
         } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        const {
-            listsize,
-        } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const listsize = this.cradleParameters.cradleInternalPropertiesRef.current.vlistProps.size
 
         this.cradlePositionData.targetAxisReferenceIndex = 
             (Math.min(startingIndex,(listsize - 1)) || 0)

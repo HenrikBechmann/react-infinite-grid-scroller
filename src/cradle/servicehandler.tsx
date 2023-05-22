@@ -178,7 +178,7 @@ export default class ServiceHandler {
 
         const { deleteListCallback, changeListsizeCallback } = this.callbacks
 
-        const { listsize:currentlistsize } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const currentlistsize = this.cradleParameters.cradleInternalPropertiesRef.current.vlistProps.size
 
         const { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
@@ -595,7 +595,7 @@ export default class ServiceHandler {
 
         // ------------- coerce parameters to list bounds ---------------
 
-        const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const listsize = this.cradleParameters.cradleInternalPropertiesRef.current.vlistProps.size
 
         // keep within current list size
         const listhighindex = listsize - 1
@@ -720,7 +720,7 @@ export default class ServiceHandler {
         const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         // ------------------- process cache ----------------
-        const { listsize } = cradleInternalProperties
+        const listsize = cradleInternalProperties.vlistProps.size
         if (listsize == 0) {
             if (increment > 0) {
 

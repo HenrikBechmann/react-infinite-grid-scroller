@@ -130,7 +130,9 @@ export default class ContentHandler {
             placeholderMessages,
         } = cradleInheritedProperties
 
-        const {crosscount, listsize, listRowcount} = cradleInternalProperties
+        const {crosscount, vlistProps, listRowcount} = cradleInternalProperties
+
+        const listsize = vlistProps.size
 
         let workingRequestAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
         workingRequestAxisReferenceIndex -= (workingRequestAxisReferenceIndex % crosscount)

@@ -121,7 +121,7 @@ const Cradle = ({
 
     }) => {
 
-    const listsize = vlistProps.size
+    // const listsize = vlistProps.size
 
     // ========================[ DATA SETUP ]========================
 
@@ -291,7 +291,8 @@ const Cradle = ({
 
         const viewportRowcount = Math.ceil(viewportLength/baseRowLength)
 
-        const listRowcount = Math.ceil(listsize/crosscount)
+        // const listRowcount = Math.ceil(listsize/crosscount)
+        const listRowcount = Math.ceil(vlistProps.size/crosscount)
 
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
 
@@ -311,9 +312,9 @@ const Cradle = ({
         }
 
         let itemcount = cradleRowcount * crosscount
-        if (itemcount > listsize) {
+        if (itemcount > vlistProps.size) {
 
-            itemcount = listsize
+            itemcount = vlistProps.size
             cradleRowcount = Math.ceil(itemcount/crosscount)
 
         }
@@ -336,7 +337,7 @@ const Cradle = ({
         viewportheight, 
         viewportwidth,
 
-        listsize,
+        vlistProps,
         runwaySize,
         crosscount,
         layout,
@@ -388,7 +389,7 @@ const Cradle = ({
     scrollerPropertiesRef.current = {
         orientation, gap, padding, layout,
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
-        listsize,
+        vlistProps,
         runwayRowcount,
         cache,
         cacheMax,
@@ -406,7 +407,7 @@ const Cradle = ({
         cradleRowcount,
         viewportRowcount,
         listRowcount,
-        listsize,
+        vlistProps,
         updateVListProps,
         runwayRowcount,
 
@@ -654,7 +655,7 @@ const Cradle = ({
     // inernal callback: the new list size will always be less than current listsize
     // invoked if getItem returns null
     const nullItemSetMaxListsize = useCallback((maxListsize) => {
-        const listsize = cradleInternalPropertiesRef.current.listsize
+        const listsize = cradleInternalPropertiesRef.current.vlistProps.size
 
         if (maxListsize < listsize) {
 
@@ -829,7 +830,7 @@ const Cradle = ({
         } else {
 
             measuredCradleItemCount = highIndex - lowIndex + 1
-            changeIsWithinCradle = (highIndex >= (listsize - 1))
+            changeIsWithinCradle = (highIndex >= (vlistProps.highrange))
             
         }
 
@@ -847,7 +848,7 @@ const Cradle = ({
         }
 
     },[
-        listsize, 
+        vlistProps, 
     ])
 
     // a new getItem function implies the need to reload
@@ -1141,7 +1142,7 @@ const Cradle = ({
                     cacheAPI.clearCache()
                 }
 
-                const { listsize } = cradleInternalPropertiesRef.current
+                const listsize = cradleInternalPropertiesRef.current.vlistProps.size
                 // set data
                 if (listsize) contentHandler.setCradleContent( cradleState )
 
@@ -1435,7 +1436,7 @@ const Cradle = ({
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
             scrollAxisReferenceIndex,
-            listsize,
+            listsize:vlistProps.size,
             styles,
         }
         return trackerargs
@@ -1444,7 +1445,7 @@ const Cradle = ({
             cradleState, 
             viewportDimensions, 
             scrollAxisReferenceIndex, 
-            listsize,
+            vlistProps,
             styles,
             useScrollTracker,
         ]

@@ -46,9 +46,11 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
         cradleRowcount,
         runwayRowcount,
         listRowcount,
-        listsize,
+        vlistProps,
 
     } = cradleInternalProperties
+
+    const listsize = vlistProps.size
     
     // align axis reference to first row item
     targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex,listsize - 1)
@@ -359,12 +361,14 @@ export const calculateShiftSpecs = ({
 
         crosscount,
         cradleRowcount,
-        listsize,
+        vlistProps,
         listRowcount,
         viewportRowcount,
         runwayRowcount,
 
     } = cradleInternalProperties
+
+    const listsize = vlistProps.size
 
     const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0),
         previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)
@@ -913,7 +917,7 @@ const createCellFrame = ({
 
     } = cradleInheritedProperties
 
-    const { listsize } = cradleInternalProperties
+    const listsize = cradleInternalProperties.vlistProps.size
 
     // get new or existing itemID
     const itemID = cacheAPI.getNewOrExistingItemID(index)
