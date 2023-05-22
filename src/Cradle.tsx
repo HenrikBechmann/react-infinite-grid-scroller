@@ -357,7 +357,7 @@ const Cradle = ({
     virtualListProperties.baseoffet = baseoffset
     virtualListProperties.endoffset = endoffset
     virtualListProperties.crosscount = crosscount
-    virtualListProperties.listRowcount = listRowcount
+    virtualListProperties.rowcount = listRowcount
 
 
     // ----------------------[ callbacks ]----------------------------
