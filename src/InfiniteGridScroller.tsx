@@ -326,6 +326,10 @@ const InfiniteGridScroller = (props) => {
         range:listrange,
         lowrange:lowlistrange,
         highrange:highlistrange,
+        baseoffset:null,
+        endoffset:null,
+        crosscount:null,
+        rowcount:null,
     }
 
     const virtualListPropertiesRef = useRef(virtualListProperties)
