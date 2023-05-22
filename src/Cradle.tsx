@@ -121,6 +121,8 @@ const Cradle = ({
 
     }) => {
 
+    const virtualListPropertiesRef = useRef(null)
+    virtualListPropertiesRef.current = virtualListProperties
     const listsize = virtualListProperties.size
 
     // ========================[ DATA SETUP ]========================
@@ -235,6 +237,15 @@ const Cradle = ({
 
         const crosscount = Math.floor(viewportcrosslengthforcalc/cellcrosslengthforcalc)
 
+        const virtualListProperties = virtualListPropertiesRef.current
+        const { lowrange, highrange } = virtualListProperties
+        const baseoffset = crosscount - Math.abs(lowrange % crosscount)
+        const endoffset = Math.abs(highrange % crosscount)
+
+        virtualListProperties.baseoffet = baseoffset
+        virtualListProperties.endoffset = endoffset
+        virtualListProperties.crosscount = crosscount
+
         return crosscount
 
     },[
@@ -293,6 +304,8 @@ const Cradle = ({
 
         // const listRowcount = Math.ceil(listsize/crosscount)
         const listRowcount = Math.ceil(listsize/crosscount)
+
+        virtualListPropertiesRef.current.listRowcount = listRowcount
 
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
 
