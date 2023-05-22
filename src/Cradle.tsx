@@ -94,7 +94,7 @@ const Cradle = ({
         // basics
         runwaySize, 
         // listsize, 
-        virtualListProperties,
+        virtualListSpecs,
         updateVListProps,
         startingIndex, 
         getItem, 
@@ -121,7 +121,7 @@ const Cradle = ({
 
     }) => {
 
-    const listsize = virtualListProperties.size
+    const listsize = virtualListSpecs.size
 
     // ========================[ DATA SETUP ]========================
 
@@ -343,7 +343,7 @@ const Cradle = ({
         layout,
     ])
 
-    const {lowrange, highrange} = virtualListProperties
+    const {lowrange, highrange} = virtualListSpecs
 
     const [baseoffset, endoffset] = useMemo(()=> {
 
@@ -354,11 +354,7 @@ const Cradle = ({
 
     },[crosscount, lowrange, highrange])
 
-    virtualListProperties.baseoffet = baseoffset
-    virtualListProperties.endoffset = endoffset
-    virtualListProperties.crosscount = crosscount
-    virtualListProperties.rowcount = listRowcount
-
+    const virtualListProperties = {...virtualListSpecs,baseoffset,endoffset,crosscount,rowcount:listRowcount}
 
     // ----------------------[ callbacks ]----------------------------
 

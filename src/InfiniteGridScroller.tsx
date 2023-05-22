@@ -321,17 +321,17 @@ const InfiniteGridScroller = (props) => {
     const listrange = listRangeRef.current
     const [lowlistrange, highlistrange] = listrange // ranges undefined if listrange is null
 
-    const virtualListProperties = {
+    const virtualListSpecs = {
         size:listsize,
         range:listrange,
         lowrange:lowlistrange,
         highrange:highlistrange,
     }
 
-    const virtualListPropertiesRef = useRef(virtualListProperties)
+    const virtualListSpecsRef = useRef(virtualListSpecs)
 
-    if (!compareProps(virtualListProperties, virtualListPropertiesRef.current)) {
-        virtualListPropertiesRef.current = virtualListProperties
+    if (!compareProps(virtualListSpecs, virtualListSpecsRef.current)) {
+        virtualListSpecsRef.current = virtualListSpecs
     }
 
     // console.log('listsize, listrange, virtualListProperties', listsize, listrange, virtualListProperties)
@@ -483,7 +483,7 @@ const InfiniteGridScroller = (props) => {
                 gridSpecs = { gridSpecsRef.current }
                 styles = { stylesRef.current }
                 // listsize = { listsize }
-                virtualListProperties = {virtualListPropertiesRef.current}
+                virtualListSpecs = {virtualListSpecsRef.current}
                 scrollerID = { scrollerID }
                 
             >
@@ -492,7 +492,7 @@ const InfiniteGridScroller = (props) => {
                     gridSpecs = { gridSpecsRef.current }
                     styles = { stylesRef.current }
                     // listsize = { listsize }
-                    virtualListProperties = {virtualListPropertiesRef.current}
+                    virtualListSpecs = {virtualListSpecsRef.current}
                     updateVListProps = { updateVListProps }
                     cache = { cache }
                     cacheMax = { cacheMax }
