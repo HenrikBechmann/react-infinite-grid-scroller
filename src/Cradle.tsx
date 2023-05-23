@@ -349,15 +349,25 @@ const Cradle = ({
 
         let baseoffset = Math.abs(lowrange) % crosscount
 
-        const endadjustment = 
+        const endadjustment = // 1
             (highrange < 0)?
-                0:
+                -1:
                 1
         let endoffset = (Math.abs(highrange) + endadjustment) % crosscount
-        endoffset =
-            (endoffset == 0)? 
-            0:
-            crosscount - endoffset
+
+        if (lowrange < 0) {
+            baseoffset =
+                (baseoffset == 0)? 
+                0:
+                crosscount - baseoffset
+        }
+
+        if (highrange >= 0) {
+            endoffset =
+                (endoffset == 0)? 
+                0:
+                crosscount - endoffset
+        }
 
         console.log('lowrange, highrange, crosscount, baseoffset, endoffset',
             lowrange, highrange, crosscount, baseoffset, endoffset)
