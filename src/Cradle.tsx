@@ -348,18 +348,13 @@ const Cradle = ({
     const [baserowblanks, endrowblanks] = useMemo(()=> {
 
         // add position adjustment for 0
-        const baseadjustment = 0
-            // (lowrange < 0)?
-            //     0:
-            //     1
-
         const endadjustment =
             (highrange < 0)?
                 -1:
                 1
 
         // get initial figuree
-        let baserowblanks = (Math.abs(lowrange) + baseadjustment) % crosscount
+        let baserowblanks = Math.abs(lowrange) % crosscount
 
         let endrowblanks = (Math.abs(highrange) + endadjustment) % crosscount
 
