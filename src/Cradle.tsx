@@ -345,38 +345,47 @@ const Cradle = ({
 
     const {lowrange, highrange} = virtualListSpecs
 
-    const [baseoffset, endoffset] = useMemo(()=> {
+    const [baserowblanks, endrowblanks] = useMemo(()=> {
 
-        let baseoffset = Math.abs(lowrange) % crosscount
+        // add position adjustment for 0
+        const baseadjustment = 0
+            // (lowrange < 0)?
+            //     0:
+            //     1
 
-        const endadjustment = // 1
+        const endadjustment =
             (highrange < 0)?
                 -1:
                 1
-        let endoffset = (Math.abs(highrange) + endadjustment) % crosscount
 
+        // get initial figuree
+        let baserowblanks = (Math.abs(lowrange) + baseadjustment) % crosscount
+
+        let endrowblanks = (Math.abs(highrange) + endadjustment) % crosscount
+
+        // take inverse depending on direction
         if (lowrange < 0) {
-            baseoffset =
-                (baseoffset == 0)? 
+            baserowblanks =
+                (baserowblanks == 0)? 
                 0:
-                crosscount - baseoffset
+                crosscount - baserowblanks
         }
 
         if (highrange >= 0) {
-            endoffset =
-                (endoffset == 0)? 
+            endrowblanks =
+                (endrowblanks == 0)? 
                 0:
-                crosscount - endoffset
+                crosscount - endrowblanks
         }
 
-        console.log('lowrange, highrange, crosscount, baseoffset, endoffset',
-            lowrange, highrange, crosscount, baseoffset, endoffset)
+        console.log('lowrange, highrange, crosscount, baserowblanks, endrowblanks',
+            lowrange, highrange, crosscount, baserowblanks, endrowblanks)
 
-        return [baseoffset, endoffset]
+        return [baserowblanks, endrowblanks]
 
     },[crosscount, lowrange, highrange])
 
-    const virtualListProperties = {...virtualListSpecs,baseoffset,endoffset,crosscount,rowcount:listRowcount}
+    const virtualListProperties = {...virtualListSpecs,baserowblanks,endrowblanks,crosscount,rowcount:listRowcount}
 
     // ----------------------[ callbacks ]----------------------------
 
