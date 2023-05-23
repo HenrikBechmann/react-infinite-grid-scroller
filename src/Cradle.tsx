@@ -347,8 +347,20 @@ const Cradle = ({
 
     const [baseoffset, endoffset] = useMemo(()=> {
 
-        const baseoffset = crosscount - Math.abs(lowrange % crosscount)
-        const endoffset = Math.abs(highrange % crosscount)
+        let baseoffset = Math.abs(lowrange) % crosscount
+
+        const endadjustment = 
+            (highrange < 0)?
+                0:
+                1
+        let endoffset = (Math.abs(highrange) + endadjustment) % crosscount
+        endoffset =
+            (endoffset == 0)? 
+            0:
+            crosscount - endoffset
+
+        console.log('lowrange, highrange, crosscount, baseoffset, endoffset',
+            lowrange, highrange, crosscount, baseoffset, endoffset)
 
         return [baseoffset, endoffset]
 
