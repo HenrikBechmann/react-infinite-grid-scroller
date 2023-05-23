@@ -363,10 +363,10 @@ export default class ScrollHandler {
         const viewportElement = ViewportContextProperties.elementRef.current,
             scrollblockElement = viewportElement.firstChild
 
-        const { crosscount, virtualListProperties } = cradleConfig,
+        const { crosscount, virtualListProps } = cradleConfig,
             { orientation } = cradleProps
 
-        const listsize = virtualListProperties.size
+        const listsize = virtualListProps.size
 
         let scrollPos, cellLength, scrollblockOffset
         if (orientation == 'vertical') {

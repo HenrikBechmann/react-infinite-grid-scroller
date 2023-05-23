@@ -353,9 +353,8 @@ const Cradle = ({
                 -1:
                 1
 
-        // get initial figuree
+        // get initial values
         let baserowblanks = Math.abs(lowrange) % crosscount
-
         let endrowblanks = (Math.abs(highrange) + endadjustment) % crosscount
 
         // take inverse depending on direction
@@ -380,7 +379,9 @@ const Cradle = ({
 
     },[crosscount, lowrange, highrange])
 
-    const virtualListProperties = {...virtualListSpecs,baserowblanks,endrowblanks,crosscount,rowcount:listRowcount}
+    const virtualListProps = {...virtualListSpecs,baserowblanks,endrowblanks,crosscount,rowcount:listRowcount}
+
+    console.log('virtualListProps',virtualListProps)
 
     // ----------------------[ callbacks ]----------------------------
 
@@ -428,7 +429,7 @@ const Cradle = ({
     scrollerPropertiesRef.current = {
         orientation, gap, padding, layout,
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
-        virtualListProperties,
+        virtualListProps,
         runwayRowcount,
         cache,
         cacheMax,
@@ -446,7 +447,7 @@ const Cradle = ({
         cradleRowcount,
         viewportRowcount,
         listRowcount,
-        virtualListProperties,
+        virtualListProps,
         updateVListProps,
         runwayRowcount,
 
@@ -694,7 +695,7 @@ const Cradle = ({
     // inernal callback: the new list size will always be less than current listsize
     // invoked if getItem returns null
     const nullItemSetMaxListsize = useCallback((maxListsize) => {
-        const listsize = cradleInternalPropertiesRef.current.virtualListProperties.size
+        const listsize = cradleInternalPropertiesRef.current.virtualListProps.size
 
         if (maxListsize < listsize) {
 
@@ -869,7 +870,7 @@ const Cradle = ({
         } else {
 
             measuredCradleItemCount = highIndex - lowIndex + 1
-            changeIsWithinCradle = (highIndex >= (cradleInternalPropertiesRef.current.virtualListProperties.highrange))
+            changeIsWithinCradle = (highIndex >= (cradleInternalPropertiesRef.current.virtualListProps.highrange))
             
         }
 
@@ -1181,7 +1182,7 @@ const Cradle = ({
                     cacheAPI.clearCache()
                 }
 
-                const listsize = cradleInternalPropertiesRef.current.virtualListProperties.size
+                const listsize = cradleInternalPropertiesRef.current.virtualListProps.size
                 // set data
                 if (listsize) contentHandler.setCradleContent( cradleState )
 
