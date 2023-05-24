@@ -42,16 +42,15 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     const {
 
-        crosscount,
+        // crosscount,
         cradleRowcount,
         runwayRowcount,
-        listRowcount,
+        // listRowcount,
         virtualListProps,
 
     } = cradleInternalProperties
 
-    const listsize = virtualListProps.size
-    const { lowindex, highindex } = virtualListProps
+    const { lowindex, highindex, size:listsize, crosscount, rowcount:listRowcount } = virtualListProps
 
     // align axis reference to last row item
     targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex, highindex) // listsize - 1)
@@ -360,16 +359,16 @@ export const calculateShiftSpecs = ({
     // more config data
     const { 
 
-        crosscount,
+        // crosscount,
         cradleRowcount,
         virtualListProps,
-        listRowcount,
+        // listRowcount,
         viewportRowcount,
         runwayRowcount,
 
     } = cradleInternalProperties
 
-    const listsize = virtualListProps.size
+    const { crosscount, rowcount:listRowcount, size:listsize } = virtualListProps
 
     const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0),
         previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)

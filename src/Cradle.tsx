@@ -446,10 +446,10 @@ const Cradle = ({
     cradleInternalPropertiesRef.current = {
 
         // updated values
-        crosscount,
+        // crosscount,
         cradleRowcount,
         viewportRowcount,
-        listRowcount,
+        // listRowcount,
         virtualListProps,
         updateVirtualListSpecs,
         runwayRowcount,
