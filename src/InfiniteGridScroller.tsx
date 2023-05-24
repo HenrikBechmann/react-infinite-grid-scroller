@@ -93,8 +93,8 @@ const InfiniteGridScroller = (props) => {
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
             // max for variable layout
         startingListSize = 0, // the starging number of items in the virtual list. can be changed
-        // startingListRange = null,
-        startingListRange = [-25,25],
+        startingListRange = null,
+        // startingListRange = [-25,25],
         getItem, // required. function provided by host - parameters set by system are index number
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
