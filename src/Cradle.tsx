@@ -247,6 +247,43 @@ const Cradle = ({
         viewportwidth,
     ])
 
+    const {lowindex, highindex} = virtualListSpecs
+
+    const [baserowblanks, endrowblanks] = useMemo(()=> {
+
+        // add position adjustment for 0
+        const endadjustment =
+            (highindex < 0)?
+                -1:
+                1
+
+        // get initial values
+        let baserowblanks = Math.abs(lowindex) % crosscount
+        let endrowblanks = (Math.abs(highindex) + endadjustment) % crosscount
+
+        // take inverse depending on direction
+        if (lowindex < 0) {
+            baserowblanks =
+                (baserowblanks == 0)? 
+                0:
+                crosscount - baserowblanks
+        }
+
+        if (highindex >= 0) {
+            endrowblanks =
+                (endrowblanks == 0)? 
+                0:
+                crosscount - endrowblanks
+        }
+
+        // console.log('lowrange, highrange, crosscount, baserowblanks, endrowblanks',
+        //     lowrange, highrange, crosscount, baserowblanks, endrowblanks)
+
+        return [baserowblanks, endrowblanks]
+
+    },[crosscount, lowindex, highindex])
+
+
     // various row counts
     const [
         cradleRowcount, 
@@ -292,7 +329,7 @@ const Cradle = ({
         const viewportRowcount = Math.ceil(viewportLength/baseRowLength)
 
         // const listRowcount = Math.ceil(listsize/crosscount)
-        const listRowcount = Math.ceil(listsize/crosscount)
+        const listRowcount = Math.ceil((listsize + baserowblanks + endrowblanks)/crosscount)
 
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
 
@@ -338,46 +375,12 @@ const Cradle = ({
         viewportwidth,
 
         listsize,
+        baserowblanks, 
+        endrowblanks,
         runwaySize,
         crosscount,
         layout,
     ])
-
-    const {lowindex, highindex} = virtualListSpecs
-
-    const [baserowblanks, endrowblanks] = useMemo(()=> {
-
-        // add position adjustment for 0
-        const endadjustment =
-            (highindex < 0)?
-                -1:
-                1
-
-        // get initial values
-        let baserowblanks = Math.abs(lowindex) % crosscount
-        let endrowblanks = (Math.abs(highindex) + endadjustment) % crosscount
-
-        // take inverse depending on direction
-        if (lowindex < 0) {
-            baserowblanks =
-                (baserowblanks == 0)? 
-                0:
-                crosscount - baserowblanks
-        }
-
-        if (highindex >= 0) {
-            endrowblanks =
-                (endrowblanks == 0)? 
-                0:
-                crosscount - endrowblanks
-        }
-
-        // console.log('lowrange, highrange, crosscount, baserowblanks, endrowblanks',
-        //     lowrange, highrange, crosscount, baserowblanks, endrowblanks)
-
-        return [baserowblanks, endrowblanks]
-
-    },[crosscount, lowindex, highindex])
 
     const virtualListProps = {...virtualListSpecs,baserowblanks,endrowblanks,crosscount,rowcount:listRowcount}
 
