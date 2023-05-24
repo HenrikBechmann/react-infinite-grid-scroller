@@ -94,7 +94,7 @@ const InfiniteGridScroller = (props) => {
             // max for variable layout
         startingListSize = 0, // the starging number of items in the virtual list. can be changed
         // startingListRange = null,
-        startingListRange = [-5,-1],
+        startingListRange = [-25,25],
         getItem, // required. function provided by host - parameters set by system are index number
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
@@ -226,16 +226,16 @@ const InfiniteGridScroller = (props) => {
             goodrange = false
         }
         if (goodrange) {
-            let [lowrange,highrange] = startingListRange
-            lowrange = +lowrange
-            highrange = +highrange
-            if (isNaN(lowrange) || isNaN(highrange)) {
+            let [lowindex,highindex] = startingListRange
+            lowindex = +lowindex
+            highindex = +highindex
+            if (isNaN(lowindex) || isNaN(highindex)) {
                 goodrange = false
-            } else if (lowrange > highrange) {
+            } else if (lowindex > highindex) {
                 goodrange = false
             }
             if (goodrange) {
-                startingListSize = highrange - lowrange + 1
+                startingListSize = highindex - lowindex + 1
             }
         }
         if (!goodrange) {
@@ -325,8 +325,8 @@ const InfiniteGridScroller = (props) => {
     const virtualListSpecs = {
         size:listsize,
         range:listrange,
-        lowrange:lowlistrange,
-        highrange:highlistrange,
+        lowindex:lowlistrange,
+        highindex:highlistrange,
     }
 
     const virtualListSpecsRef = useRef(virtualListSpecs)
@@ -381,19 +381,19 @@ const InfiniteGridScroller = (props) => {
     // called when getItem returns null, or direct call from user (see serviceHandler)
     const updateVListProps = useCallback((listsizearg) =>{
 
-        let listsize, lowrange, highrange, listrange
+        let listsize, lowindex, highindex, listrange
         const [prevlowrange, prevhighrange] = listRangeRef.current
         if (Array.isArray(listsizearg)) {
-            [lowrange,highrange] = listsizearg
-            listsize = highrange - lowrange + 1
+            [lowindex,highindex] = listsizearg
+            listsize = highindex - lowindex + 1
             listrange = listsizearg
         } else {
             listsize = listsizearg;
-            [lowrange,highrange] = listRangeRef.current
-            listrange = [lowrange,lowrange + listsize - 1]
+            [lowindex,highindex] = listRangeRef.current
+            listrange = [lowindex,lowindex + listsize - 1]
         }
 
-        if (listsize == listsizeRef.current && lowrange === prevlowrange && highrange === prevhighrange) return
+        if (listsize == listsizeRef.current && lowindex === prevlowrange && highindex === prevhighrange) return
 
         listsizeRef.current = listsize
         listRangeRef.current = listrange

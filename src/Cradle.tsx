@@ -343,45 +343,45 @@ const Cradle = ({
         layout,
     ])
 
-    const {lowrange, highrange} = virtualListSpecs
+    const {lowindex, highindex} = virtualListSpecs
 
     const [baserowblanks, endrowblanks] = useMemo(()=> {
 
         // add position adjustment for 0
         const endadjustment =
-            (highrange < 0)?
+            (highindex < 0)?
                 -1:
                 1
 
         // get initial values
-        let baserowblanks = Math.abs(lowrange) % crosscount
-        let endrowblanks = (Math.abs(highrange) + endadjustment) % crosscount
+        let baserowblanks = Math.abs(lowindex) % crosscount
+        let endrowblanks = (Math.abs(highindex) + endadjustment) % crosscount
 
         // take inverse depending on direction
-        if (lowrange < 0) {
+        if (lowindex < 0) {
             baserowblanks =
                 (baserowblanks == 0)? 
                 0:
                 crosscount - baserowblanks
         }
 
-        if (highrange >= 0) {
+        if (highindex >= 0) {
             endrowblanks =
                 (endrowblanks == 0)? 
                 0:
                 crosscount - endrowblanks
         }
 
-        console.log('lowrange, highrange, crosscount, baserowblanks, endrowblanks',
-            lowrange, highrange, crosscount, baserowblanks, endrowblanks)
+        // console.log('lowrange, highrange, crosscount, baserowblanks, endrowblanks',
+        //     lowrange, highrange, crosscount, baserowblanks, endrowblanks)
 
         return [baserowblanks, endrowblanks]
 
-    },[crosscount, lowrange, highrange])
+    },[crosscount, lowindex, highindex])
 
     const virtualListProps = {...virtualListSpecs,baserowblanks,endrowblanks,crosscount,rowcount:listRowcount}
 
-    console.log('virtualListProps',virtualListProps)
+    // console.log('virtualListProps',virtualListProps)
 
     // ----------------------[ callbacks ]----------------------------
 
