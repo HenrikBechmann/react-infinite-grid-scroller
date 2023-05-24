@@ -152,9 +152,9 @@ export default class LayoutHandler {
         } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         const {
-            listRowcount,
+            rowcount:listRowcount,
             crosscount,
-        } = this.cradleParameters.cradleInternalPropertiesRef.current
+        } = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps
 
         const { 
 

@@ -95,7 +95,7 @@ const Cradle = ({
         runwaySize, 
         // listsize, 
         virtualListSpecs,
-        updateVListProps,
+        updateVirtualListSpecs,
         startingIndex, 
         getItem, 
         placeholder, 
@@ -451,7 +451,7 @@ const Cradle = ({
         viewportRowcount,
         listRowcount,
         virtualListProps,
-        updateVListProps,
+        updateVirtualListSpecs,
         runwayRowcount,
 
         // the following values are maintained elsewhere
@@ -714,7 +714,7 @@ const Cradle = ({
 
             }
 
-            contentHandler.updateVListProps(maxListsize)
+            contentHandler.updateVirtualListSpecs(maxListsize)
             cacheAPI.changeCacheListsize(maxListsize, 
                 dListCallback,
                 changeListsizeCallback)
@@ -854,7 +854,8 @@ const Cradle = ({
 
         if (isCachedRef.current) return
 
-        const { viewportRowcount, crosscount } = cradleInternalPropertiesRef.current
+        const { viewportRowcount } = cradleInternalPropertiesRef.current
+        const { crosscount } = cradleInternalPropertiesRef.current.virtualListProps
         const { runwaySize } =  cradleInheritedPropertiesRef.current
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
         const calculatedCradleItemcount = calculatedCradleRowcount * crosscount

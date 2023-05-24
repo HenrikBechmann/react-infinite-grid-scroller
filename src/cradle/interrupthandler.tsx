@@ -69,11 +69,10 @@ export default class InterruptHandler {
 
                 triggerHistoryRef,
                 virtualListProps,
-                crosscount,
 
             } = cradleInternalProperties
 
-            const listsize = virtualListProps.size
+            const { crosscount, size:listsize } = virtualListProps
 
             const scrollPos = 
                 (orientation == 'vertical')?

@@ -73,7 +73,7 @@ export default class ContentHandler {
 
     // reset the cradle with new content, including allocation between head and tail parts of the cradle
     // - called only from the Cradle state handler
-    public updateVListProps = (newlistsize) => {
+    public updateVirtualListSpecs = (newlistsize) => {
 
         if (newlistsize == 0) {
 
@@ -85,7 +85,7 @@ export default class ContentHandler {
 
         }
 
-        this.cradleParameters.cradleInternalPropertiesRef.current.updateVListProps(newlistsize)
+        this.cradleParameters.cradleInternalPropertiesRef.current.updateVirtualListSpecs(newlistsize)
 
     }
 
@@ -130,9 +130,9 @@ export default class ContentHandler {
             placeholderMessages,
         } = cradleInheritedProperties
 
-        const {crosscount, virtualListProps, listRowcount} = cradleInternalProperties
+        const {virtualListProps} = cradleInternalProperties
 
-        const listsize = virtualListProps.size
+        const {crosscount, size:listsize, rowcount:listRowcount } = virtualListProps
 
         let workingRequestAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
         workingRequestAxisReferenceIndex -= (workingRequestAxisReferenceIndex % crosscount)
@@ -345,7 +345,7 @@ export default class ContentHandler {
         const { 
             crosscount,
             // listsize,
-        } = cradleInternalProperties
+        } = cradleInternalProperties.virtualListProps
 
         const scrollPos = 
             (orientation == 'vertical')?
@@ -635,9 +635,9 @@ export default class ContentHandler {
         const { 
 
             crosscount, 
-            listRowcount 
+            rowcount:listRowcount 
 
-        } = cradleInternalProperties
+        } = cradleInternalProperties.virtualListProps
 
         // ------------------------[ precursor calculations ]------------------------
 

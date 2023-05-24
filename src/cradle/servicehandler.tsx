@@ -192,7 +192,7 @@ export default class ServiceHandler {
 
         }
 
-        contentHandler.updateVListProps(newlistsize)
+        contentHandler.updateVirtualListSpecs(newlistsize)
         cacheAPI.changeCacheListsize(newlistsize, 
             dListCallback,
             changeListsizeCallback
@@ -744,7 +744,8 @@ export default class ServiceHandler {
         const changecount = rangeincrement // semantics
         const newlistsize = this.newlistsize = listsize + changecount
 
-        const { viewportRowcount, crosscount } = cradleInternalProperties
+        const { viewportRowcount } = cradleInternalProperties
+        const { crosscount } = cradleInternalProperties.virtualListProps
         const { runwaySize } =  cradleInheritedProperties
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
         const calculatedCradleItemcount = calculatedCradleRowcount * crosscount

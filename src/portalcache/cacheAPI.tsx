@@ -236,9 +236,9 @@ export default class CacheAPI {
 
     }
 
-    // updateVListProps(listsize) causes an InfiniteGridScroller useState update
+    // updateVirtualListSpecs(listsize) causes an InfiniteGridScroller useState update
     // of the listsize throughout
-    // updateVListProps // function passed from InfiniteGridScroller
+    // updateVirtualListSpecs // function passed from InfiniteGridScroller
 
     // ===========================[ CACHE PARTITION MANAGEMENT ]===============================
 
