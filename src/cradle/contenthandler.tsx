@@ -85,7 +85,7 @@ export default class ContentHandler {
 
         }
 
-        this.cradleParameters.cradleInternalPropertiesRef.current.updateVirtualListSpecs(newlistsize)
+        this.cradleParameters.cradleInternalPropertiesRef.current.setVirtualListSpecs(newlistsize)
 
     }
 

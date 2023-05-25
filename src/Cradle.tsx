@@ -95,7 +95,7 @@ const Cradle = ({
         runwaySize, 
         // listsize, 
         virtualListSpecs,
-        updateVirtualListSpecs,
+        setVirtualListSpecs,
         startingIndex, 
         getItem, 
         placeholder, 
@@ -451,7 +451,7 @@ const Cradle = ({
         viewportRowcount,
         // listRowcount,
         virtualListProps,
-        updateVirtualListSpecs,
+        setVirtualListSpecs,
         runwayRowcount,
 
         // the following values are maintained elsewhere

@@ -379,7 +379,7 @@ const InfiniteGridScroller = (props) => {
     },[]);
 
     // called when getItem returns null, or direct call from user (see serviceHandler)
-    const updateVirtualListSpecs = useCallback((listsizearg) =>{
+    const setVirtualListSpecs = useCallback((listsizearg) =>{
 
         let listsize, lowindex, highindex, listrange
         const [prevlowrange, prevhighrange] = listRangeRef.current
@@ -494,7 +494,7 @@ const InfiniteGridScroller = (props) => {
                     styles = { stylesRef.current }
                     // listsize = { listsize }
                     virtualListSpecs = {virtualListSpecsRef.current}
-                    updateVirtualListSpecs = { updateVirtualListSpecs }
+                    setVirtualListSpecs = { setVirtualListSpecs }
                     cache = { cache }
                     cacheMax = { cacheMax }
                     userCallbacks = { callbacksRef.current }
