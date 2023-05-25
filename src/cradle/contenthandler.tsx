@@ -130,10 +130,11 @@ export default class ContentHandler {
             placeholderMessages,
         } = cradleInheritedProperties
 
-        const {virtualListProps} = cradleInternalProperties
+        const { virtualListProps } = cradleInternalProperties
 
-        const {crosscount, size:listsize, rowcount:listRowcount } = virtualListProps
+        const { crosscount, size:listsize, rowcount:listRowcount } = virtualListProps
 
+        // TODO rationalize this for list range
         let workingRequestAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
         workingRequestAxisReferenceIndex -= (workingRequestAxisReferenceIndex % crosscount)
 
