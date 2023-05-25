@@ -751,8 +751,8 @@ export default class ServiceHandler {
         const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
 
         const indexSpan = contentHandler.indexSpan
-        const [lowIndex,highIndex] = indexSpan
-        const measuredCradleItemCount = (indexSpan.length == 0)?0:highIndex - lowIndex + 1
+        const [lowCradleIndex,highCradleIndex] = indexSpan
+        const measuredCradleItemCount = (indexSpan.length == 0)?0:highCradleIndex - lowCradleIndex + 1
 
         const resetCradle = ((measuredCradleItemCount < calculatedCradleItemcount) || 
             (contentHandler.indexSpan[1] >= (newlistsize - 1)))

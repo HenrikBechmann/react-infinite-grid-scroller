@@ -861,7 +861,7 @@ const Cradle = ({
         const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
 
         const indexSpan = contentHandler.indexSpan
-        const [lowIndex,highIndex] = indexSpan
+        const [lowCradleIndex,highCradleIndex] = indexSpan
 
         let measuredCradleItemCount
         let changeIsWithinCradle
@@ -873,8 +873,8 @@ const Cradle = ({
 
         } else {
 
-            measuredCradleItemCount = highIndex - lowIndex + 1
-            changeIsWithinCradle = (highIndex >= (cradleInternalPropertiesRef.current.virtualListProps.highrange))
+            measuredCradleItemCount = highCradleIndex - lowCradleIndex + 1
+            changeIsWithinCradle = (highCradleIndex >= (cradleInternalPropertiesRef.current.virtualListProps.highrange))
             
         }
 
