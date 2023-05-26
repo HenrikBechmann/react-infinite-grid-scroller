@@ -63,7 +63,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     targetAxisReferenceIndex -= Math.abs((baserowblanks + targetAxisReferenceIndex) % crosscount)
 
     // derive target row
-    let targetAxisRowOffset = Math.ceil((baserowblanks + targetAxisReferenceIndex)/crosscount)
+    let targetAxisRowOffset = Math.ceil(targetAxisReferenceIndex/crosscount)
 
     // update will compensate if this is too high
     const maxAxisRowOffset = Math.max(0,listRowcount - 1)
@@ -375,7 +375,12 @@ export const calculateShiftSpecs = ({
 
     } = cradleInternalProperties
 
-    const { crosscount, rowcount:listRowcount, size:listsize } = virtualListProps
+    const { 
+        crosscount, 
+        rowcount:listRowcount, 
+        size:listsize,
+        baserowblanks,
+    } = virtualListProps
 
     const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0),
         previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)
