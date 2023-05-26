@@ -42,22 +42,28 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     const {
 
-        // crosscount,
         cradleRowcount,
         runwayRowcount,
-        // listRowcount,
         virtualListProps,
 
     } = cradleInternalProperties
 
-    const { lowindex, highindex, size:listsize, crosscount, rowcount:listRowcount } = virtualListProps
+    const { 
+        // lowindex:listlowindex, 
+        highindex:listhighindex, 
+        // size:listsize, 
+        crosscount, 
+        rowcount:listRowcount,
+        baserowblanks,
+        endrowblanks,
+    } = virtualListProps
 
     // align axis reference to last row item
-    targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex, highindex) // listsize - 1)
-    targetAxisReferenceIndex -= Math.abs(targetAxisReferenceIndex % crosscount)
+    targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex, listhighindex)
+    targetAxisReferenceIndex -= Math.abs((baserowblanks + targetAxisReferenceIndex) % crosscount)
 
     // derive target row
-    let targetAxisRowOffset = Math.ceil(targetAxisReferenceIndex/crosscount)
+    let targetAxisRowOffset = Math.ceil((baserowblanks + targetAxisReferenceIndex)/crosscount)
 
     // update will compensate if this is too high
     const maxAxisRowOffset = Math.max(0,listRowcount - 1)
@@ -88,9 +94,10 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     let newCradleContentCount = cradleRowcount * crosscount
     if (targetCradleEndRowOffset == listEndRowOffset) {
-        const endRowRemainderCount = listsize % crosscount
-        if (endRowRemainderCount) {
-            newCradleContentCount -= (crosscount - endRowRemainderCount)
+        // const endRowRemainderCount = listsize % crosscount
+        // if (endRowRemainderCount) {
+        if (endrowblanks) {
+            newCradleContentCount -= (crosscount - endrowblanks)// endRowRemainderCount)
         }
     }
 
