@@ -132,11 +132,18 @@ export default class ContentHandler {
 
         const { virtualListProps } = cradleInternalProperties
 
-        const { crosscount, size:listsize, rowcount:listRowcount } = virtualListProps
+        const { 
+            // lowindex:listlowindex, 
+            // highindex:listhighindex, 
+            size:listsize, 
+            crosscount, 
+            rowcount:listRowcount,
+            baserowblanks,
+            // endrowblanks,
+        } = virtualListProps
 
-        // TODO rationalize this for list range
         let workingRequestAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
-        workingRequestAxisReferenceIndex -= (workingRequestAxisReferenceIndex % crosscount)
+        workingRequestAxisReferenceIndex -= (baserowblanks + workingRequestAxisReferenceIndex % crosscount)
 
         // reposition at row boundary
         if ([
