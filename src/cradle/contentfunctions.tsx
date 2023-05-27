@@ -7,7 +7,7 @@
 
     calculateContentListRequirements is called by the contenthandler's setCradleContent function.
 
-    calculateShiftInstruction and calcContentShift are called by contentHandler's updateCradleContent
+    generateShiftInstruction and calcContentShift are called by contentHandler's updateCradleContent
     function. 
     
     getCellFrameComponentList, allocateContentList, and deletePortals functions are shared by both. 
@@ -97,7 +97,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
         // const endRowRemainderCount = listsize % crosscount
         // if (endRowRemainderCount) {
         if (endrowblanks) {
-            newCradleContentCount -= (crosscount - endrowblanks)// endRowRemainderCount)
+            newCradleContentCount -= endrowblanks// endRowRemainderCount)
         }
     }
 
@@ -124,7 +124,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     cradle motion can be detected. Motion is most often caused by scrolling, but
     can also occur with change of size of cradle content rows.
 
-    calculateShiftInstruction determines whether the axis should be moved toward the head or tail
+    generateShiftInstruction determines whether the axis should be moved toward the head or tail
         to restore the straddling position of the two trigger lines. Lots of relative motion.
 
     'moveaxisheadward' (scrolling down or right) means moving the axis up or left, adjacent items down
@@ -138,7 +138,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     'none' means no shift is required
 */
 
-export const calculateShiftInstruction = ({
+export const generateShiftInstruction = ({
 
     orientation,
     triggerlineEntries,
@@ -366,20 +366,21 @@ export const calculateShiftSpecs = ({
     // more config data
     const { 
 
-        // crosscount,
         cradleRowcount,
-        virtualListProps,
-        // listRowcount,
         viewportRowcount,
         runwayRowcount,
+        virtualListProps,
 
     } = cradleInternalProperties
 
-    const { 
+    const {
+
         crosscount, 
         rowcount:listRowcount, 
         size:listsize,
         baserowblanks,
+        endrowblanks,
+        
     } = virtualListProps
 
     const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0),
@@ -652,12 +653,12 @@ export const calculateShiftSpecs = ({
     const includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount) >= listRowcount)
 
     if (includesLastRow) {
-        const partialspaces = listsize % crosscount
-        const itemsShortfall = 
-            (partialspaces == 0)?
-                0:
-                crosscount - partialspaces
-        newCradleContentCount -= itemsShortfall
+        // const partialspaces = listsize % crosscount
+        // const itemsShortfall = 
+        //     (partialspaces == 0)?
+        //         0:
+        //         crosscount - partialspaces
+        newCradleContentCount -= endrowblanks //itemsShortfall
     }
     // create head and tail change counts
     const changeOfCradleContentCount = cradlecontentlist.length - newCradleContentCount
