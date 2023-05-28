@@ -263,6 +263,8 @@ export default class ContentHandler {
     
         })
 
+        // console.log('SET cradleContentProps',cradleContentProps)
+
         cradleContent.cradleModelComponents = newcontentlist
         cradleContent.headModelComponents = headcontentlist
         cradleContent.tailModelComponents = tailcontentlist
@@ -477,6 +479,8 @@ export default class ContentHandler {
                 cradleContentProps.SOL = true
                 cradleContentProps.EOL = true
             }
+
+            // console.log('UPDATE cradleContentProps',cradleContentProps)
 
         } else {
 
