@@ -744,10 +744,11 @@ export default class ServiceHandler {
         const changecount = rangeincrement // semantics
         const newlistsize = this.newlistsize = listsize + changecount
 
-        const { viewportRowcount } = cradleInternalProperties
+        // const { viewportRowcount } = cradleInternalProperties
         const { cradleContentProps, virtualListProps } = cradleInternalProperties
         // const { crosscount } = cradleInternalProperties.virtualListProps
-        const { crosscount } = cradleInternalProperties.virtualListProps
+        const { viewportRowcount } = cradleContentProps
+        const { crosscount } = virtualListProps
         // const { runwaySize } =  cradleInheritedProperties
         const { lowindex:lowCradleIndex, highindex:highCradleIndex, size:cradleSize, runwayRowcount:runwaySize } = cradleContentProps
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)

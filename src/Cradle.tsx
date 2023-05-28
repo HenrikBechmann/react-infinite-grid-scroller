@@ -464,14 +464,15 @@ const Cradle = ({
 
         // updated values
         // crosscount,
-        cradleRowcount,
-        viewportRowcount,
+        // cradleRowcount,
+        // viewportRowcount,
         // listRowcount,
         virtualListProps,
         setVirtualListSpecs,
-        runwayRowcount,
+        // runwayRowcount,
 
         cradleContentProps:cradleContentPropsRef.current,
+        
         // the following values are maintained elsewhere
         isMountedRef,
         cradleElementsRef,
@@ -874,7 +875,7 @@ const Cradle = ({
 
         const { virtualListProps, cradleContentProps } = cradleInternalPropertiesRef.current
         const { viewportRowcount, lowindex:lowCradleIndex, highindex:highCradleIndex, size:cradleCount } = cradleContentProps
-        const { highindex:listhighrange } = viewportRowcount
+        const { highindex:listhighrange } = virtualListProps
 
         const { crosscount } = cradleInternalPropertiesRef.current.virtualListProps
         const { runwaySize } =  cradleInheritedPropertiesRef.current
