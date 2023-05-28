@@ -42,11 +42,19 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     const {
 
-        cradleRowcount,
-        runwayRowcount,
+        cradleContentProps,
+        // cradleRowcount,
+        // runwayRowcount,
         virtualListProps,
 
     } = cradleInternalProperties
+
+    const {
+
+        cradleRowcount,
+        runwayRowcount,
+
+    } = cradleContentProps
 
     const { 
         // lowindex:listlowindex, 
@@ -366,12 +374,21 @@ export const calculateShiftSpecs = ({
     // more config data
     const { 
 
-        cradleRowcount,
-        viewportRowcount,
-        runwayRowcount,
+        // cradleRowcount,
+        // viewportRowcount,
+        // runwayRowcount,
+        cradleContentProps,
         virtualListProps,
 
     } = cradleInternalProperties
+
+    const { 
+
+        cradleRowcount,
+        viewportRowcount,
+        runwayRowcount,
+
+    } = cradleContentProps
 
     const {
 

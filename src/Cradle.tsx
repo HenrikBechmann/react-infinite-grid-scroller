@@ -394,7 +394,7 @@ const Cradle = ({
         EOL:false, // end of list
         lowindex:null,
         highindex:null,
-        size:null,
+        size:0,
      })
 
      const cradleContentProps = cradleContentPropsRef.current
@@ -449,6 +449,7 @@ const Cradle = ({
         orientation, gap, padding, layout,
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         virtualListProps,
+        cradleContentProps,
         runwayRowcount,
         cache,
         cacheMax,
@@ -871,20 +872,23 @@ const Cradle = ({
 
         if (isCachedRef.current) return
 
-        const { viewportRowcount } = cradleInternalPropertiesRef.current
+        const { virtualListProps, cradleContentProps } = cradleInternalPropertiesRef.current
+        const { viewportRowcount, lowindex:lowCradleIndex, highindex:highCradleIndex, size:cradleCount } = cradleContentProps
+        const { highindex:listhighrange } = viewportRowcount
 
         const { crosscount } = cradleInternalPropertiesRef.current.virtualListProps
         const { runwaySize } =  cradleInheritedPropertiesRef.current
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
         const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
 
-        const indexSpan = contentHandler.indexSpan
-        const [lowCradleIndex,highCradleIndex] = indexSpan
+        // const indexSpan = contentHandler.indexSpan
+        // const [lowCradleIndex,highCradleIndex] = indexSpan
 
         let measuredCradleItemCount
         let changeIsWithinCradle
 
-        if (indexSpan.length == 0) {
+        // if (indexSpan.length == 0) {
+        if (cradleCount == 0) {
 
             measuredCradleItemCount = 0
             changeIsWithinCradle = true
@@ -892,7 +896,7 @@ const Cradle = ({
         } else {
 
             measuredCradleItemCount = highCradleIndex - lowCradleIndex + 1
-            changeIsWithinCradle = (highCradleIndex >= (cradleInternalPropertiesRef.current.virtualListProps.highrange))
+            changeIsWithinCradle = (highCradleIndex >= listhighrange) // (cradleInternalPropertiesRef.current.virtualListProps.highrange))
             
         }
 

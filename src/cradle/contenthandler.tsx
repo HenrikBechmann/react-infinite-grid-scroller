@@ -243,10 +243,17 @@ export default class ContentHandler {
         })
 
         cradleContentProps.size = newcontentlist.length
-        cradleContentProps.lowindex = newcontentlist[0].props.index
-        cradleContentProps.highindex = cradleContentProps.lowindex + cradleContentProps.size - 1
-        cradleContentProps.SOL = (virtualListProps.lowindex == cradleContentProps.lowindex)
-        cradleContentProps.EOL = (virtualListProps.highindex == cradleContentProps.highindex)
+        if (cradleContentProps.size) {
+            cradleContentProps.lowindex = newcontentlist[0].props.index
+            cradleContentProps.highindex = cradleContentProps.lowindex + cradleContentProps.size - 1
+            cradleContentProps.SOL = (virtualListProps.lowindex == cradleContentProps.lowindex)
+            cradleContentProps.EOL = (virtualListProps.highindex == cradleContentProps.highindex)
+        } else {
+            cradleContentProps.lowindex = null
+            cradleContentProps.highindex = null
+            cradleContentProps.SOL = true
+            cradleContentProps.EOL = true
+        }
 
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
@@ -459,10 +466,17 @@ export default class ContentHandler {
 
             const { virtualListProps, cradleContentProps } = cradleInternalProperties
             cradleContentProps.size = updatedContentList.length
-            cradleContentProps.lowindex = updatedContentList[0].props.index
-            cradleContentProps.highindex = cradleContentProps.lowindex + cradleContentProps.size - 1
-            cradleContentProps.SOL = (virtualListProps.lowindex == cradleContentProps.lowindex)
-            cradleContentProps.EOL = (virtualListProps.highindex == cradleContentProps.highindex)
+            if (cradleContentProps.size) {
+                cradleContentProps.lowindex = updatedContentList[0].props.index
+                cradleContentProps.highindex = cradleContentProps.lowindex + cradleContentProps.size - 1
+                cradleContentProps.SOL = (virtualListProps.lowindex == cradleContentProps.lowindex)
+                cradleContentProps.EOL = (virtualListProps.highindex == cradleContentProps.highindex)
+            } else {
+                cradleContentProps.lowindex = null
+                cradleContentProps.highindex = null
+                cradleContentProps.SOL = true
+                cradleContentProps.EOL = true
+            }
 
         } else {
 
