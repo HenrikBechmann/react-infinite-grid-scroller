@@ -130,7 +130,7 @@ export default class ContentHandler {
             placeholderMessages,
         } = cradleInheritedProperties
 
-        const { virtualListProps } = cradleInternalProperties
+        const { virtualListProps, cradleContentProps } = cradleInternalProperties
 
         const { 
             // lowindex:listlowindex, 
@@ -226,7 +226,7 @@ export default class ContentHandler {
         // ----------------------[ 3. get and config content ]----------------------
         
         // returns content constrained by cradleRowcount
-        const [newcontentlist]/*,deleteditems]*/ = getCellFrameComponentList({
+        const [newcontentlist] = getCellFrameComponentList({
             
             cacheAPI,            
             cradleInheritedProperties,
@@ -241,6 +241,12 @@ export default class ContentHandler {
             placeholderMessages,
 
         })
+
+        cradleContentProps.size = newcontentlist.length
+        cradleContentProps.lowindex = newcontentlist[0].props.index
+        cradleContentProps.highindex = cradleContentProps.lowindex + cradleContentProps.size - 1
+        cradleContentProps.SOL = (virtualListProps.lowindex == cradleContentProps.lowindex)
+        cradleContentProps.EOL = (virtualListProps.highindex == cradleContentProps.highindex)
 
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
@@ -450,6 +456,13 @@ export default class ContentHandler {
                 styles,
                 placeholderMessages,
             })
+
+            const { virtualListProps, cradleContentProps } = cradleInternalProperties
+            cradleContentProps.size = updatedContentList.length
+            cradleContentProps.lowindex = updatedContentList[0].props.index
+            cradleContentProps.highindex = cradleContentProps.lowindex + cradleContentProps.size - 1
+            cradleContentProps.SOL = (virtualListProps.lowindex == cradleContentProps.lowindex)
+            cradleContentProps.EOL = (virtualListProps.highindex == cradleContentProps.highindex)
 
         } else {
 

@@ -386,6 +386,22 @@ const Cradle = ({
 
     // console.log('virtualListProps',virtualListProps)
 
+    const cradleContentPropsRef = useRef({
+        cradleRowcount,
+        viewportRowcount,
+        runwayRowcount,
+        SOL:false, // start of list
+        EOL:false, // end of list
+        lowindex:null,
+        highindex:null,
+        size:null,
+     })
+
+     const cradleContentProps = cradleContentPropsRef.current
+     cradleContentProps.cradleRowcount = cradleRowcount
+     cradleContentProps.viewportRowcount = viewportRowcount
+     cradleContentProps.runwayRowcount = runwayRowcount
+
     // ----------------------[ callbacks ]----------------------------
 
     // host callbacks, upacked by serviceHandler
@@ -454,6 +470,7 @@ const Cradle = ({
         setVirtualListSpecs,
         runwayRowcount,
 
+        cradleContentProps:cradleContentPropsRef.current,
         // the following values are maintained elsewhere
         isMountedRef,
         cradleElementsRef,
@@ -855,6 +872,7 @@ const Cradle = ({
         if (isCachedRef.current) return
 
         const { viewportRowcount } = cradleInternalPropertiesRef.current
+
         const { crosscount } = cradleInternalPropertiesRef.current.virtualListProps
         const { runwaySize } =  cradleInheritedPropertiesRef.current
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
