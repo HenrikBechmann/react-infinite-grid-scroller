@@ -745,17 +745,22 @@ export default class ServiceHandler {
         const newlistsize = this.newlistsize = listsize + changecount
 
         const { viewportRowcount } = cradleInternalProperties
+        const { cradleContentProps, virtualListProps } = cradleInternalProperties
+        // const { crosscount } = cradleInternalProperties.virtualListProps
         const { crosscount } = cradleInternalProperties.virtualListProps
-        const { runwaySize } =  cradleInheritedProperties
+        // const { runwaySize } =  cradleInheritedProperties
+        const { lowindex:lowCradleIndex, highindex:highCradleIndex, size:cradleSize, runwayRowcount:runwaySize } = cradleContentProps
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
         const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
 
-        const indexSpan = contentHandler.indexSpan
-        const [lowCradleIndex,highCradleIndex] = indexSpan
-        const measuredCradleItemCount = (indexSpan.length == 0)?0:highCradleIndex - lowCradleIndex + 1
+        // const indexSpan = contentHandler.indexSpan
+        // const [lowCradleIndex,highCradleIndex] = indexSpan
+        // const measuredCradleItemCount = (indexSpan.length == 0)?0:highCradleIndex - lowCradleIndex + 1
+        const measuredCradleItemCount = (cradleSize == 0)?0:highCradleIndex - lowCradleIndex + 1
 
         const resetCradle = ((measuredCradleItemCount < calculatedCradleItemcount) || 
-            (contentHandler.indexSpan[1] >= (newlistsize - 1)))
+            // (contentHandler.indexSpan[1] >= (newlistsize - 1)))
+            (highCradleIndex >= (newlistsize - 1)))
 
         if (!resetCradle) { // synchronize cradle contents to changes
 

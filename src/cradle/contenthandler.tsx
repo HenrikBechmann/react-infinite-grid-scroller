@@ -895,17 +895,17 @@ export default class ContentHandler {
 
     }
 
-    get indexSpan() {
+    // get indexSpan() {
 
-        const { cradleModelComponents } = this.content
+    //     const { cradleModelComponents } = this.content
         
-        if (cradleModelComponents.length == 0) return []
+    //     if (cradleModelComponents.length == 0) return []
 
-        const lowIndex =  cradleModelComponents[0].props.index
-        const highIndex = lowIndex + (cradleModelComponents.length - 1)
-        return [lowIndex, highIndex]
+    //     const lowIndex =  cradleModelComponents[0].props.index
+    //     const highIndex = lowIndex + (cradleModelComponents.length - 1)
+    //     return [lowIndex, highIndex]
 
-    }
+    // }
 
     // called from service handler's remapIndexes, as last step
     public reconcileCellFrames(modifiedIndexesList) {
@@ -953,12 +953,18 @@ export default class ContentHandler {
 
         const { cradleModelComponents } = this.content
 
+        const { cradleContentProps } = this.cradleParameters.cradleInheritedPropertiesRef.current
+
         // assemble parameters
-        const indexSpan = this.indexSpan
+        // const indexSpan = this.indexSpan
 
-        if (indexSpan.length == 0) return // defensive; shouldn't be here
+        // if (indexSpan.length == 0) return // defensive; shouldn't be here
 
-        const [lowSpan,highSpan] = indexSpan
+        // const [lowSpan,highSpan] = indexSpan
+
+        if (cradleContentProps.size == 0) return
+
+        const { lowindex:lowSpan, highindex:highSpan } = cradleContentProps
 
         let startIndex, endIndex
         if (isInsertRemove) {
@@ -1042,10 +1048,16 @@ export default class ContentHandler {
         const { cacheAPI } = this.cradleParameters.handlersRef.current
         const { cradleModelComponents } = this.content
 
-        const indexSpan = this.indexSpan
-        if (indexSpan.length == 0) return // defensive
+        const { cradleContentProps } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        const [lowSpan, highSpan] = indexSpan
+        // const indexSpan = this.indexSpan
+        // if (indexSpan.length == 0) return // defensive
+
+        // const [lowSpan, highSpan] = indexSpan
+
+        if (cradleContentProps.size == 0) return
+
+        const { lowindex:lowSpan, highindex:highSpan } = cradleContentProps
 
         function processcomponentFn(newlistindex) {
 
