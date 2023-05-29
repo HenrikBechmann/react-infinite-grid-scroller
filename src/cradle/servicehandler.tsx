@@ -155,7 +155,7 @@ export default class ServiceHandler {
 
         signals.pauseScrollingEffects = true
 
-        layoutHandler.cradlePositionData.targetAxisReferenceIndex = index
+        layoutHandler.cradlePositionData.targetAxisReferencePosition = index
 
         stateHandler.setCradleState('scrollto')
 

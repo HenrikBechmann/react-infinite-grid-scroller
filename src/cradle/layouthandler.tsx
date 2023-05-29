@@ -9,7 +9,7 @@
     The structural elements are the axis, head (grid), tail (grid), 
         and the head and tail triggerlines
     The key control values are the blockScrollPos & blockXScrollPos (scrollTop or scrollLeft), the block scroll
-        property ("scrollTop" or "scrollLeft"), the targetAxisReferenceIndex (first index of the
+        property ("scrollTop" or "scrollLeft"), the targetAxisReferencePosition (first index of the
         tail block), and the targetAxisViewportPixelOffset (pixels offset from the edge of the 
         viewport)
 */
@@ -45,7 +45,7 @@ export default class LayoutHandler {
 
         const listsize = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.size
 
-        this.cradlePositionData.targetAxisReferenceIndex = 
+        this.cradlePositionData.targetAxisReferencePosition = 
             (Math.min(startingIndex,(listsize - 1)) || 0)
 
         this.cradlePositionData.targetAxisViewportPixelOffset = 0
@@ -102,18 +102,18 @@ export default class LayoutHandler {
         blockXScrollProperty: null,
 
         /*
-            targetAxisReferenceIndex is set by
+            targetAxisReferencePosition is set by
                 - setCradleContent
                 - updateCradleContent
                 - layoutHandler (initialization)
                 - scrollHandler (during and after scroll)
                 - host scrollToIndex call
 
-            targetAxisReferenceIndex is used by
+            targetAxisReferencePosition is used by
                 - scrollTrackerArgs in cradle module
                 - requestedAxisReferenceIndex in setCradleContent
         */
-        targetAxisReferenceIndex:null,
+        targetAxisReferencePosition:null,
 
         /*
             targetAxisViewportPixelOffset is set by
@@ -187,7 +187,7 @@ export default class LayoutHandler {
         }
 
         const { cradlePositionData } = layoutHandler
-        const axisReference = cradlePositionData.targetAxisReferenceIndex
+        const axisReference = cradlePositionData.targetAxisReferencePosition
         const rowOffset = Math.ceil(axisReference/crosscount)
         const calculatedBlockScrollPos = 
             (rowOffset * cellLength) + padding

@@ -28,7 +28,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
         // index
         targetAxisReferenceIndex, // from user, or from pivot
         // pixels
-        baseRowLength,
+        baseRowPixelLength,
         targetAxisViewportPixelOffset,
         // resources
         cradleInheritedProperties,
@@ -56,22 +56,29 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     } = cradleContentProps
 
-    const { 
-        // lowindex:listlowindex, 
+    const {
+
+        lowindex:listlowindex, 
         highindex:listhighindex, 
         // size:listsize, 
         crosscount, 
         rowcount:listRowcount,
         baserowblanks,
         endrowblanks,
+
     } = virtualListProps
+
+    console.log('INITIAL targetAxisReferenceIndex, baserowblanks',targetAxisReferenceIndex, baserowblanks)
 
     // align axis reference to last row item
     targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex, listhighindex)
     targetAxisReferenceIndex -= Math.abs((baserowblanks + targetAxisReferenceIndex) % crosscount)
+    targetAxisReferenceIndex = Math.max(targetAxisReferenceIndex, listlowindex)
 
     // derive target row
     let targetAxisRowOffset = Math.ceil(targetAxisReferenceIndex/crosscount)
+
+    console.log('REVISED targetAxisReferenceIndex, targetAxisRowOffset',targetAxisReferenceIndex, targetAxisRowOffset)
 
     // update will compensate if this is too high
     const maxAxisRowOffset = Math.max(0,listRowcount - 1)
@@ -112,7 +119,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     // --------------------[ calc css positioning ]-----------------------
 
     const targetScrollblockViewportPixelOffset = 
-        (targetAxisRowOffset * baseRowLength) + padding - targetAxisViewportPixelOffset
+        (targetAxisRowOffset * baseRowPixelLength) + padding - targetAxisViewportPixelOffset
 
     // ----------------------[ return required values ]---------------------
 

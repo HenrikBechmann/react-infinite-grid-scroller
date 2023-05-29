@@ -113,7 +113,7 @@ export default class ContentHandler {
         const { cradlePositionData } = layoutHandler
         const viewportElement = ViewportContextProperties.elementRef.current
 
-        const requestedAxisReferenceIndex = cradlePositionData.targetAxisReferenceIndex
+        const requestedAxisReferencePosition = cradlePositionData.targetAxisReferencePosition
 
         let { targetAxisViewportPixelOffset } = cradlePositionData
 
@@ -133,7 +133,7 @@ export default class ContentHandler {
         const { virtualListProps, cradleContentProps } = cradleInternalProperties
 
         const { 
-            // lowindex:listlowindex, 
+            lowindex:listlowindex, 
             // highindex:listhighindex, 
             size:listsize, 
             crosscount, 
@@ -142,8 +142,11 @@ export default class ContentHandler {
             // endrowblanks,
         } = virtualListProps
 
-        let workingRequestAxisReferenceIndex = Math.min(requestedAxisReferenceIndex,listsize - 1)
-        workingRequestAxisReferenceIndex -= (baserowblanks + workingRequestAxisReferenceIndex % crosscount)
+        let workingRequestAxisReferenceIndex = Math.min(requestedAxisReferencePosition,listsize - 1)
+        workingRequestAxisReferenceIndex -= (workingRequestAxisReferenceIndex % crosscount)
+        workingRequestAxisReferenceIndex += listlowindex
+
+        console.log('workingRequestAxisReferenceIndex',workingRequestAxisReferenceIndex)
 
         // reposition at row boundary
         if ([
@@ -166,13 +169,13 @@ export default class ContentHandler {
 
         // ----------------------[ 2. get content requirements ]----------------------
 
-        const baseRowLength = 
+        const baseRowPixelLength = 
             ((orientation == 'vertical')?
                 cellHeight:
                 cellWidth)
             + gap
 
-        // note that targetAxisReferenceIndex replaces requestedAxisReferenceIndex here
+        // note that targetAxisReferencePosition replaces requestedAxisReferenceIndex here
         const {
 
             // by index
@@ -188,7 +191,7 @@ export default class ContentHandler {
         } = calculateContentListRequirements({
 
                 // pixel
-                baseRowLength,
+                baseRowPixelLength,
                 targetAxisViewportPixelOffset,
 
                 // index
@@ -200,10 +203,13 @@ export default class ContentHandler {
 
             })
 
+        console.log('from calculateContentListRequirements: targetCradleReferenceIndex, targetAxisReferenceIndex',
+            targetCradleReferenceIndex, targetAxisReferenceIndex)
+
         // reset scrollblock Offset and length
         const scrollblockElement = viewportElement.firstChild
 
-        const baselength = (listRowcount * baseRowLength) - gap // final cell has no trailing gap
+        const baselength = (listRowcount * baseRowPixelLength) - gap // final cell has no trailing gap
             + (padding * 2) // leading and trailing padding
 
         if (cradleState == 'pivot') {
@@ -255,6 +261,27 @@ export default class ContentHandler {
             cradleContentProps.EOL = true
         }
 
+        let gridstart
+        console.log('virtualListProps, cradleContentProps, newcontentlist',virtualListProps, cradleContentProps, newcontentlist)
+        if (cradleContentProps.SOL && virtualListProps.baserowblanks) {
+            gridstart = `${virtualListProps.baserowblanks + 1}`
+        } else {
+            gridstart = 'unset'
+        }
+
+        const firstcomponent = newcontentlist[0]
+        const styleobject = firstcomponent.props.style
+        console.log('styleobject',styleobject)
+        let revisedstyle
+        if (orientation == 'vertical') {
+            revisedstyle = {...styleobject,gridColumnStart:gridstart}
+        } else {
+            revisedstyle = {...styleobject,gridRowStart:gridstart}
+        }
+        const revisedcomponent = React.cloneElement(firstcomponent,{style:revisedstyle})
+        newcontentlist[0] = revisedcomponent
+        console.log('revisedstyle,revisedcomponent',revisedstyle,revisedcomponent)
+
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
             contentlist:newcontentlist,
@@ -269,7 +296,7 @@ export default class ContentHandler {
         cradleContent.headModelComponents = headcontentlist
         cradleContent.tailModelComponents = tailcontentlist
 
-        cradlePositionData.targetAxisReferenceIndex = targetAxisReferenceIndex
+        cradlePositionData.targetAxisReferencePosition = targetAxisReferenceIndex - listlowindex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
         if (serviceHandler.callbacks.referenceIndexCallback) {
@@ -278,7 +305,7 @@ export default class ContentHandler {
 
             serviceHandler.callbacks.referenceIndexCallback(
 
-                cradlePositionData.targetAxisReferenceIndex,'setCradleContent', cstate)
+                cradlePositionData.targetAxisReferencePosition,'setCradleContent', cstate)
         
         }
 
@@ -532,7 +559,7 @@ export default class ContentHandler {
 
         // -------------------------------[ 6. css changes ]-------------------------
 
-        cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
+        cradlePositionData.targetAxisReferencePosition = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
         if (isShift) cacheAPI.renderPortalLists()
@@ -655,7 +682,7 @@ export default class ContentHandler {
         // current configurations...
         const { 
 
-            targetAxisReferenceIndex: axisReferenceIndex,
+            targetAxisReferencePosition: axisReferenceIndex,
             targetAxisViewportPixelOffset: axisViewportOffset,
             // blockScrollPos:forwardedBlockScrollPos, 
 

@@ -3,7 +3,7 @@
 
 /*
     This module holds the response to scrolling. It also triggers an onAfterScroll event (after a timeout)
-    It's main job is to maintain records of scrollPos, targetAxisReferenceIndex, and 
+    It's main job is to maintain records of scrollPos, targetAxisReferencePosition, and 
         targetAxisViewportPixelOffset
 */
 
@@ -399,7 +399,7 @@ export default class ScrollHandler {
 
         const { cradlePositionData } = this.cradleParameters.handlersRef.current.layoutHandler
 
-        cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
+        cradlePositionData.targetAxisReferencePosition = axisReferenceIndex
         cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
 
     }
