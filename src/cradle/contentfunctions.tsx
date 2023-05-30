@@ -98,11 +98,16 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     const listEndRowOffset = (listRowcount - 1) + rangerowshift
 
+    console.log('targetCradleRowOffset, targetCradleEndRowOffset, listEndRowOffset, cradleRowcount',
+        targetCradleRowOffset, targetCradleEndRowOffset, listEndRowOffset,cradleRowcount)
+
     if (targetCradleEndRowOffset > (listEndRowOffset)) {
         const diff = (targetCradleEndRowOffset - listEndRowOffset)
         targetCradleRowOffset -= diff
         targetCradleEndRowOffset -= diff
     }
+
+    console.log('revised targetCradleEndRowOffset',targetCradleEndRowOffset)
 
     let targetCradleReferenceIndex = targetCradleRowOffset * crosscount
     targetCradleReferenceIndex = Math.max(targetCradleReferenceIndex,listlowindex)
@@ -117,6 +122,13 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
             newCradleContentCount -= endrowblanks// endRowRemainderCount)
         }
     }
+    if (targetCradleRowOffset == rangerowshift) { // first row
+        if (baserowblanks) {
+            newCradleContentCount -= baserowblanks
+        }
+    }
+
+    console.log('newCradleContentCount', newCradleContentCount)
 
     // --------------------[ calc css positioning ]-----------------------
 
@@ -406,6 +418,7 @@ export const calculateShiftSpecs = ({
         size:listsize,
         baserowblanks,
         endrowblanks,
+        rowshift:rangerowshift,
         
     } = virtualListProps
 
@@ -676,7 +689,9 @@ export const calculateShiftSpecs = ({
     const axisReferenceItemShift = axisReferenceRowShift * crosscount
 
     let newCradleContentCount = cradleRowcount * crosscount // base count
-    const includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount) >= listRowcount)
+    const includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount - rangerowshift) >= listRowcount)
+
+    console.log('includesLastRow',includesLastRow)
 
     if (includesLastRow) {
         // const partialspaces = listsize % crosscount

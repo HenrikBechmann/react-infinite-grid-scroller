@@ -335,6 +335,9 @@ const Cradle = ({
 
         let cradleRowcount = Math.min(listRowcount, calculatedCradleRowcount)
 
+        console.log('Cradle:listRowcount, calculatedCradleRowcount, cradleRowcount', 
+            listRowcount, calculatedCradleRowcount, cradleRowcount)
+
         let runwayRowcount
         if (calculatedCradleRowcount >= cradleRowcount) {
 
@@ -352,9 +355,11 @@ const Cradle = ({
         if (itemcount > listsize) {
 
             itemcount = listsize
-            cradleRowcount = Math.ceil(itemcount/crosscount)
+            cradleRowcount = Math.ceil((itemcount + baserowblanks + endrowblanks)/crosscount)
 
         }
+
+        console.log('revised cradleRowCount',cradleRowcount)
 
         return [
             cradleRowcount, 
