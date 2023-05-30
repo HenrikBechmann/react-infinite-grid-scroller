@@ -76,6 +76,7 @@ const CellFrame = ({
     placeholderErrorLinerStyles,
     placeholderMessages,
     usePlaceholder,
+    gridstartstyle,
 }) => {
 
     const coreConfigRef = useRef(null)
@@ -246,19 +247,23 @@ const CellFrame = ({
     // set styles
     useEffect(()=>{
 
-        const newStyles = getFrameStyles(
+        let newFrameStyles = getFrameStyles(
             orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, stylesRef.current)
+
+        if (gridstartstyle) {
+            newFrameStyles = {...newFrameStyles,...gridstartstyle}
+        }
         
         const newHolderStyles = getContentHolderStyles(layout, orientation, cellMinWidth, cellMinHeight)
 
         if (isMountedRef.current) {
 
-            stylesRef.current = newStyles
+            stylesRef.current = newFrameStyles
             holderStylesRef.current = newHolderStyles
 
         }
 
-    },[orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout]) 
+    },[orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, gridstartstyle]) 
 
     const portalNodeRef = useRef(null)
 

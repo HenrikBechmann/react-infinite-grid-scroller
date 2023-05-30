@@ -103,7 +103,8 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
         targetCradleEndRowOffset -= diff
     }
 
-    const targetCradleReferenceIndex = targetCradleRowOffset * crosscount
+    let targetCradleReferenceIndex = targetCradleRowOffset * crosscount
+    targetCradleReferenceIndex = Math.max(targetCradleReferenceIndex,listlowindex)
 
     // ---------------------[ calc cradle content count ]---------------------
 
@@ -981,6 +982,7 @@ const createCellFrame = ({
         placeholderErrorFrameStyles = { placeholderErrorFrameStyles }
         placeholderErrorLinerStyles = { placeholderErrorLinerStyles }
         placeholderMessages = { placeholderMessages }
+        gridstartstyle = {null}
     />
 
 }

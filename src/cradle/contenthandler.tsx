@@ -292,17 +292,17 @@ export default class ContentHandler {
         }
 
         const firstcomponent = newcontentlist[0]
-        const styleobject = firstcomponent.props.style
-        console.log('styleobject',styleobject)
-        let revisedstyle
+        // const styleobject = firstcomponent.props.style
+        // console.log('styleobject',styleobject)
+        let gridstartstyle
         if (orientation == 'vertical') {
-            revisedstyle = {...styleobject,gridColumnStart:gridstart}
+            gridstartstyle = {gridColumnStart:gridstart}
         } else {
-            revisedstyle = {...styleobject,gridRowStart:gridstart}
+            gridstartstyle = {gridRowStart:gridstart}
         }
-        const revisedcomponent = React.cloneElement(firstcomponent,{style:revisedstyle})
+        const revisedcomponent = React.cloneElement(firstcomponent,{gridstartstyle})
         newcontentlist[0] = revisedcomponent
-        console.log('revisedstyle,revisedcomponent',revisedstyle,revisedcomponent)
+        console.log('revisedstyle,revisedcomponent',gridstartstyle,revisedcomponent)
 
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
