@@ -382,7 +382,21 @@ const Cradle = ({
         layout,
     ])
 
-    const virtualListProps = {...virtualListSpecs,baserowblanks,endrowblanks,crosscount,rowcount:listRowcount}
+    const rangerowshift = useMemo(() => {
+        return Math.floor(lowindex/crosscount)
+    },[crosscount,lowindex])
+
+    const virtualListProps = 
+        {
+
+            ...virtualListSpecs,
+            baserowblanks,
+            endrowblanks,
+            crosscount,
+            rowcount:listRowcount,
+            rowshift:rangerowshift,
+
+        }
 
     // console.log('virtualListProps',virtualListProps)
 

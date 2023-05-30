@@ -65,6 +65,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
         rowcount:listRowcount,
         baserowblanks,
         endrowblanks,
+        rowshift:rangerowshift,
 
     } = virtualListProps
 
@@ -81,7 +82,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     console.log('REVISED targetAxisReferenceIndex, targetAxisRowOffset',targetAxisReferenceIndex, targetAxisRowOffset)
 
     // update will compensate if this is too high
-    const maxAxisRowOffset = Math.max(0,listRowcount - 1)
+    const maxAxisRowOffset = Math.max(0,listRowcount - 1) - rangerowshift
     if (targetAxisRowOffset > maxAxisRowOffset) {
         targetAxisRowOffset = maxAxisRowOffset
         targetAxisReferenceIndex = targetAxisRowOffset * crosscount
@@ -90,12 +91,12 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
 
     // leading edge
-    let targetCradleRowOffset = Math.max(0,targetAxisRowOffset - runwayRowcount)
+    let targetCradleRowOffset = Math.max(rangerowshift,targetAxisRowOffset - runwayRowcount)
 
     // trailing edge
     let targetCradleEndRowOffset = targetCradleRowOffset + (cradleRowcount - 1)
 
-    const listEndRowOffset = (listRowcount - 1)
+    const listEndRowOffset = (listRowcount - 1) + rangerowshift
 
     if (targetCradleEndRowOffset > (listEndRowOffset)) {
         const diff = (targetCradleEndRowOffset - listEndRowOffset)
