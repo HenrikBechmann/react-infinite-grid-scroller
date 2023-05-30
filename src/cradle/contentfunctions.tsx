@@ -69,7 +69,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     } = virtualListProps
 
-    console.log('INITIAL targetAxisReferenceIndex, baserowblanks',targetAxisReferenceIndex, baserowblanks)
+    // console.log('INITIAL targetAxisReferenceIndex, baserowblanks',targetAxisReferenceIndex, baserowblanks)
 
     // align axis reference to last row item
     targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex, listhighindex)
@@ -77,9 +77,13 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     targetAxisReferenceIndex = Math.max(targetAxisReferenceIndex, listlowindex)
 
     // derive target row
-    let targetAxisRowOffset = Math.ceil(targetAxisReferenceIndex/crosscount)
+    let targetAxisRowOffset = 
+        (targetAxisReferenceIndex < 0)?
+            Math.ceil(targetAxisReferenceIndex/crosscount):
+            Math.floor(targetAxisReferenceIndex/crosscount)
 
-    console.log('REVISED targetAxisReferenceIndex, targetAxisRowOffset',targetAxisReferenceIndex, targetAxisRowOffset)
+    // console.log('REVISED targetAxisReferenceIndex, targetAxisRowOffset, rangerowshift',
+    //     targetAxisReferenceIndex, targetAxisRowOffset, rangerowshift)
 
     // update will compensate if this is too high
     const maxAxisRowOffset = Math.max(0,listRowcount - 1) - rangerowshift
@@ -98,8 +102,8 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     const listEndRowOffset = (listRowcount - 1) + rangerowshift
 
-    console.log('targetCradleRowOffset, targetCradleEndRowOffset, listEndRowOffset, cradleRowcount',
-        targetCradleRowOffset, targetCradleEndRowOffset, listEndRowOffset,cradleRowcount)
+    // console.log('targetCradleRowOffset, targetCradleEndRowOffset, listEndRowOffset, cradleRowcount',
+    //     targetCradleRowOffset, targetCradleEndRowOffset, listEndRowOffset,cradleRowcount)
 
     if (targetCradleEndRowOffset > (listEndRowOffset)) {
         const diff = (targetCradleEndRowOffset - listEndRowOffset)
@@ -107,7 +111,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
         targetCradleEndRowOffset -= diff
     }
 
-    console.log('revised targetCradleEndRowOffset',targetCradleEndRowOffset)
+    // console.log('revised targetCradleEndRowOffset',targetCradleEndRowOffset)
 
     let targetCradleReferenceIndex = targetCradleRowOffset * crosscount
     targetCradleReferenceIndex = Math.max(targetCradleReferenceIndex,listlowindex)
@@ -128,7 +132,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
         }
     }
 
-    console.log('newCradleContentCount', newCradleContentCount)
+    // console.log('newCradleContentCount', newCradleContentCount)
 
     // --------------------[ calc css positioning ]-----------------------
 

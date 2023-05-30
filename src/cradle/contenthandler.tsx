@@ -168,7 +168,7 @@ export default class ContentHandler {
         workingRequestAxisReferenceIndex -= (workingRequestAxisReferenceIndex % crosscount)
         workingRequestAxisReferenceIndex += listlowindex
 
-        console.log('workingRequestAxisReferenceIndex',workingRequestAxisReferenceIndex)
+        // console.log('workingRequestAxisReferenceIndex',workingRequestAxisReferenceIndex)
 
         // reposition at row boundary
         if ([
@@ -225,8 +225,8 @@ export default class ContentHandler {
 
             })
 
-        console.log('from calculateContentListRequirements: targetCradleReferenceIndex, targetAxisReferenceIndex',
-            targetCradleReferenceIndex, targetAxisReferenceIndex)
+        // console.log('from calculateContentListRequirements: targetCradleReferenceIndex, targetAxisReferenceIndex',
+        //     targetCradleReferenceIndex, targetAxisReferenceIndex)
 
         // reset scrollblock Offset and length
         const scrollblockElement = viewportElement.firstChild
@@ -284,7 +284,7 @@ export default class ContentHandler {
         }
 
         let gridstart
-        console.log('virtualListProps, cradleContentProps, newcontentlist',virtualListProps, cradleContentProps, newcontentlist)
+        // console.log('virtualListProps, cradleContentProps, newcontentlist',virtualListProps, cradleContentProps, newcontentlist)
         if (cradleContentProps.SOL && virtualListProps.baserowblanks) {
             gridstart = `${virtualListProps.baserowblanks + 1}`
         } else {
@@ -302,7 +302,7 @@ export default class ContentHandler {
         }
         const revisedcomponent = React.cloneElement(firstcomponent,{gridstartstyle})
         newcontentlist[0] = revisedcomponent
-        console.log('revisedstyle,revisedcomponent',gridstartstyle,revisedcomponent)
+        // console.log('revisedstyle,revisedcomponent',gridstartstyle,revisedcomponent)
 
         const [headcontentlist, tailcontentlist] = allocateContentList({
 

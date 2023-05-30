@@ -335,8 +335,8 @@ const Cradle = ({
 
         let cradleRowcount = Math.min(listRowcount, calculatedCradleRowcount)
 
-        console.log('Cradle:listRowcount, calculatedCradleRowcount, cradleRowcount', 
-            listRowcount, calculatedCradleRowcount, cradleRowcount)
+        // console.log('Cradle:listRowcount, calculatedCradleRowcount, cradleRowcount', 
+        //     listRowcount, calculatedCradleRowcount, cradleRowcount)
 
         let runwayRowcount
         if (calculatedCradleRowcount >= cradleRowcount) {
@@ -359,7 +359,7 @@ const Cradle = ({
 
         }
 
-        console.log('revised cradleRowCount',cradleRowcount)
+        // console.log('revised cradleRowCount',cradleRowcount)
 
         return [
             cradleRowcount, 
