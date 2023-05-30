@@ -95,52 +95,74 @@ export default class ContentHandler {
 
         const { cradleParameters } = this
 
-        const ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current,
+        const
+
+            ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current,
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
             cradleHandlers = cradleParameters.handlersRef.current
 
-        const {
-
-            cacheAPI,
-            layoutHandler,
-            serviceHandler,
-            // interruptHandler,
-            scrollHandler,
-
-        } = cradleHandlers
-
-        const { cradlePositionData } = layoutHandler
         const viewportElement = ViewportContextProperties.elementRef.current
 
-        const requestedAxisReferencePosition = cradlePositionData.targetAxisReferencePosition
+        const 
 
-        let { targetAxisViewportPixelOffset } = cradlePositionData
+            {
 
-        const {
-            orientation, 
-            gap, 
-            padding, 
-            cellHeight,
-            cellWidth,
-            // cache,
-            // scrollerID,
-            styles,
-            // layout,
-            placeholderMessages,
-        } = cradleInheritedProperties
+                cacheAPI,
+                layoutHandler,
+                serviceHandler,
+                // interruptHandler,
+                scrollHandler,
 
-        const { virtualListProps, cradleContentProps } = cradleInternalProperties
+            } = cradleHandlers,
 
-        const { 
-            lowindex:listlowindex, 
-            // highindex:listhighindex, 
-            size:listsize, 
-            crosscount, 
-            rowcount:listRowcount,
-            baserowblanks,
-            // endrowblanks,
-        } = virtualListProps
+            { 
+            
+                cradlePositionData 
+
+            } = layoutHandler,
+
+            {
+
+                targetAxisReferencePosition:requestedAxisReferencePosition
+
+            } = cradlePositionData,
+
+            {
+
+                orientation, 
+                gap, 
+                padding, 
+                cellHeight,
+                cellWidth,
+                // cache,
+                // scrollerID,
+                styles,
+                // layout,
+                placeholderMessages,
+
+            } = cradleInheritedProperties,
+
+            { 
+
+                virtualListProps, 
+                cradleContentProps 
+
+            } = cradleInternalProperties,
+
+            {
+
+                lowindex:listlowindex, 
+                // highindex:listhighindex, 
+                size:listsize, 
+                crosscount, 
+                rowcount:listRowcount,
+                baserowblanks,
+                // endrowblanks,
+
+            } = virtualListProps
+
+        let { targetAxisViewportPixelOffset } =  cradlePositionData
 
         let workingRequestAxisReferenceIndex = Math.min(requestedAxisReferencePosition,listsize - 1)
         workingRequestAxisReferenceIndex -= (workingRequestAxisReferenceIndex % crosscount)
