@@ -473,10 +473,6 @@ export default class ContentHandler {
 
             } = virtualListProps,
 
-            {
-
-            } = cradleContentProps
-
         // new vars
         const scrollPos = 
             (orientation == 'vertical')?
