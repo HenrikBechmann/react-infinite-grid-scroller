@@ -98,9 +98,9 @@ export default class ContentHandler {
         const
 
             ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current,
+            cradleHandlers = cradleParameters.handlersRef.current,
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
-            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
-            cradleHandlers = cradleParameters.handlersRef.current
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
 
         const viewportElement = ViewportContextProperties.elementRef.current
 
@@ -162,15 +162,14 @@ export default class ContentHandler {
 
         let { targetAxisViewportPixelOffset } =  cradlePositionData
 
-        // normalize data
+        // ----------------------[ 2. normalize data ]--------------------------
 
-        // TODO - review
         // in bounds
-        let workingRequestAxisReferenceIndex = Math.min(requestedAxisReferencePosition,listsize - 1)
+        let workingAxisReferencePosition = Math.min(requestedAxisReferencePosition,listsize - 1)
         // in row lead position
-        workingRequestAxisReferenceIndex -= (workingRequestAxisReferenceIndex % crosscount)
+        workingAxisReferencePosition -= (workingAxisReferencePosition % crosscount)
         // shifted by virtual list low range
-        workingRequestAxisReferenceIndex += listlowindex
+        const workingAxisReferenceIndex  = workingAxisReferencePosition + listlowindex
 
         // console.log('workingRequestAxisReferenceIndex',workingRequestAxisReferenceIndex)
 
@@ -184,7 +183,7 @@ export default class ContentHandler {
         ].includes(cradleState)) {
 
             targetAxisViewportPixelOffset = 
-                (workingRequestAxisReferenceIndex == 0)?
+                (workingAxisReferenceIndex == 0)?
                     padding:
                     gap // default
 
@@ -192,7 +191,7 @@ export default class ContentHandler {
 
         const workingContentList = []
 
-        // ----------------------[ 2. get content requirements ]----------------------
+        // ----------------------[ 3. get content requirements ]----------------------
 
         const baseRowPixelLength = 
             ((orientation == 'vertical')?
@@ -220,7 +219,7 @@ export default class ContentHandler {
                 targetAxisViewportPixelOffset,
 
                 // index
-                targetAxisReferenceIndex:workingRequestAxisReferenceIndex,
+                targetAxisReferenceIndex:workingAxisReferenceIndex,
 
                 // resources
                 cradleInheritedProperties,
@@ -231,41 +230,9 @@ export default class ContentHandler {
         // console.log('from calculateContentListRequirements: targetCradleReferenceIndex, targetAxisReferenceIndex',
         //     targetCradleReferenceIndex, targetAxisReferenceIndex)
 
-        // reset scrollblock Offset and length
-        const scrollblockElement = viewportElement.firstChild
-
-        const baselength = (listRowcount * baseRowPixelLength) - gap // final cell has no trailing gap
-            + (padding * 2) // leading and trailing padding
-
-        if (cradleState == 'pivot') {
-
-            if (orientation == 'vertical') {
-
-                scrollblockElement.style.left = null
-
-            } else {
-
-                scrollblockElement.style.top = null
-
-            }
-
-        }
-
-        if (orientation == 'vertical') {
-
-            scrollblockElement.style.top = null
-            scrollblockElement.style.height = baselength + 'px'
-
-        } else {
-
-            scrollblockElement.style.left = null
-            scrollblockElement.style.width = baselength + 'px'
-
-        }
-
         const axisViewportPixelOffset = targetAxisViewportPixelOffset // semantics
 
-        // ----------------------[ 3. get and config content ]----------------------
+        // ----------------------[ 4. get and config content ]----------------------
         
         // returns content constrained by cradleRowcount
         const [newcontentlist] = getCellFrameComponentList({
@@ -312,8 +279,7 @@ export default class ContentHandler {
         }
 
         const firstcomponent = newcontentlist[0]
-        // const styleobject = firstcomponent.props.style
-        // console.log('styleobject',styleobject)
+
         let gridstartstyle
         if (orientation == 'vertical') {
             gridstartstyle = {gridColumnStart:gridstart}
@@ -322,7 +288,7 @@ export default class ContentHandler {
         }
         const revisedcomponent = React.cloneElement(firstcomponent,{gridstartstyle})
         newcontentlist[0] = revisedcomponent
-        // console.log('revisedstyle,revisedcomponent',gridstartstyle,revisedcomponent)
+        // console.log('gridstartstyle,revisedcomponent',gridstartstyle,revisedcomponent)
 
         const [headcontentlist, tailcontentlist] = allocateContentList({
 
@@ -351,7 +317,39 @@ export default class ContentHandler {
         
         }
 
-        //  ----------------------[ 4. set CSS ]-----------------------
+        //  ----------------------[ 5. set CSS ]-----------------------
+
+        // reset scrollblock Offset and length
+        const scrollblockElement = viewportElement.firstChild
+
+        const baselength = (listRowcount * baseRowPixelLength) - gap // final cell has no trailing gap
+            + (padding * 2) // leading and trailing padding
+
+        if (cradleState == 'pivot') {
+
+            if (orientation == 'vertical') {
+
+                scrollblockElement.style.left = null
+
+            } else {
+
+                scrollblockElement.style.top = null
+
+            }
+
+        }
+
+        if (orientation == 'vertical') {
+
+            scrollblockElement.style.top = null
+            scrollblockElement.style.height = baselength + 'px'
+
+        } else {
+
+            scrollblockElement.style.left = null
+            scrollblockElement.style.width = baselength + 'px'
+
+        }
 
         cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset 
         // avoid bogus call to updateCradleContent
