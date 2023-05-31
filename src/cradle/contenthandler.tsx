@@ -415,7 +415,6 @@ export default class ContentHandler {
             } = this
 
         const 
-
             viewportElement = cradleParameters.ViewportContextPropertiesRef.current.elementRef.current,
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
@@ -494,7 +493,6 @@ export default class ContentHandler {
         const {
 
             // by index
-            // newCradleReferenceIndex,
             cradleReferenceItemShift: cradleItemShift, 
             newAxisReferenceIndex: axisReferenceIndex, 
             axisReferenceItemShift: axisItemShift, 
