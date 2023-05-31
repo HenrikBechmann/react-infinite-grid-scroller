@@ -111,7 +111,6 @@ export default class ContentHandler {
                 cacheAPI,
                 layoutHandler,
                 serviceHandler,
-                // interruptHandler,
                 scrollHandler,
 
             } = cradleHandlers,
@@ -135,10 +134,7 @@ export default class ContentHandler {
                 padding, 
                 cellHeight,
                 cellWidth,
-                // cache,
-                // scrollerID,
                 styles,
-                // layout,
                 placeholderMessages,
 
             } = cradleInheritedProperties,
@@ -162,10 +158,18 @@ export default class ContentHandler {
 
             } = virtualListProps
 
+        const cradleContent = this.content
+
         let { targetAxisViewportPixelOffset } =  cradlePositionData
 
+        // normalize data
+
+        // TODO - review
+        // in bounds
         let workingRequestAxisReferenceIndex = Math.min(requestedAxisReferencePosition,listsize - 1)
+        // in row lead position
         workingRequestAxisReferenceIndex -= (workingRequestAxisReferenceIndex % crosscount)
+        // shifted by virtual list low range
         workingRequestAxisReferenceIndex += listlowindex
 
         // console.log('workingRequestAxisReferenceIndex',workingRequestAxisReferenceIndex)
@@ -187,7 +191,6 @@ export default class ContentHandler {
         }
 
         const workingContentList = []
-        const cradleContent = this.content
 
         // ----------------------[ 2. get content requirements ]----------------------
 
@@ -235,18 +238,29 @@ export default class ContentHandler {
             + (padding * 2) // leading and trailing padding
 
         if (cradleState == 'pivot') {
+
             if (orientation == 'vertical') {
+
                 scrollblockElement.style.left = null
+
             } else {
+
                 scrollblockElement.style.top = null
+
             }
+
         }
+
         if (orientation == 'vertical') {
+
             scrollblockElement.style.top = null
             scrollblockElement.style.height = baselength + 'px'
+
         } else {
+
             scrollblockElement.style.left = null
             scrollblockElement.style.width = baselength + 'px'
+
         }
 
         const axisViewportPixelOffset = targetAxisViewportPixelOffset // semantics
@@ -270,19 +284,25 @@ export default class ContentHandler {
 
         })
 
+        // update cradleContentProps from newcontentlise
         cradleContentProps.size = newcontentlist.length
         if (cradleContentProps.size) {
+
             cradleContentProps.lowindex = newcontentlist[0].props.index
             cradleContentProps.highindex = cradleContentProps.lowindex + cradleContentProps.size - 1
             cradleContentProps.SOL = (virtualListProps.lowindex == cradleContentProps.lowindex)
             cradleContentProps.EOL = (virtualListProps.highindex == cradleContentProps.highindex)
+
         } else {
+
             cradleContentProps.lowindex = null
             cradleContentProps.highindex = null
-            cradleContentProps.SOL = true
+            cradleContentProps.SOL = true // TODO harmonize across app
             cradleContentProps.EOL = true
+
         }
 
+        // set or cancel first row offset if within cradle
         let gridstart
         // console.log('virtualListProps, cradleContentProps, newcontentlist',virtualListProps, cradleContentProps, newcontentlist)
         if (cradleContentProps.SOL && virtualListProps.baserowblanks) {
