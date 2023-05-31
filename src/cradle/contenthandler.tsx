@@ -471,7 +471,7 @@ export default class ContentHandler {
                 crosscount,
                 // listsize,
 
-            } = virtualListProps,
+            } = virtualListProps
 
         // new vars
         const scrollPos = 
