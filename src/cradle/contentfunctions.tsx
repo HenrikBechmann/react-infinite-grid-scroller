@@ -288,7 +288,7 @@ export const generateShiftInstruction = ({
 
     if (shiftinstruction) { // will be 'none'
 
-        return [shiftinstruction, 0]//triggerViewportReferencePos]
+        return [shiftinstruction, 0]//triggerViewportReferencePixelPos]
 
     }
 
@@ -322,13 +322,13 @@ export const generateShiftInstruction = ({
 
     }
 
-    const triggerViewportReferencePos = 
+    const triggerViewportReferencePixelPos = 
         (shiftinstruction == 'moveaxistailward')? // block is scrolling up or left
             triggerData.tailOffset: // needs to move up or left toward head
             triggerData.headOffset // needs to move down or right toward tail
 
 
-    return [shiftinstruction, triggerViewportReferencePos]
+    return [shiftinstruction, triggerViewportReferencePixelPos]
 
 }
 
@@ -352,7 +352,7 @@ export const calculateShiftSpecs = ({
 
     // direction of change
     shiftinstruction,
-    triggerViewportReferencePos,
+    triggerViewportReferencePixelPos,
 
     // positional
     scrollPos,
@@ -471,13 +471,13 @@ export const calculateShiftSpecs = ({
 
             // tail trigger needs to move down or right until position relative to viewport top or left is positive
             spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
-                (triggerViewportReferencePos + aggregatespan) >= 0 )
+                (triggerViewportReferencePixelPos + aggregatespan) >= 0 )
         
         } else { // 'moveaxisheadward', scrolldown
 
             // head trigger needs to move up or left until position relative to viewport top or left is negative
             spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
-                (triggerViewportReferencePos - aggregatespan) <= 0)
+                (triggerViewportReferencePixelPos - aggregatespan) <= 0)
 
         }
 
@@ -521,7 +521,7 @@ export const calculateShiftSpecs = ({
                     totalPixelShift += baseRowLength
                     inProcessRowPtr++
 
-                } while ((triggerViewportReferencePos + totalPixelShift) < 0) 
+                } while ((triggerViewportReferencePixelPos + totalPixelShift) < 0) 
 
                 spanAxisPixelShift = totalPixelShift
 
@@ -537,7 +537,7 @@ export const calculateShiftSpecs = ({
                         break
                     }
 
-                } while ((triggerViewportReferencePos - totalPixelShift) > 0)
+                } while ((triggerViewportReferencePixelPos - totalPixelShift) > 0)
 
                 spanAxisPixelShift = -totalPixelShift
 

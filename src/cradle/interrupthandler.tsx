@@ -95,7 +95,7 @@ export default class InterruptHandler {
 
                 const viewportBoundingRect = viewportElement.getBoundingClientRect()
 
-                const [shiftinstruction, triggerViewportReferencePos] = generateShiftInstruction({
+                const [shiftinstruction, triggerViewportReferencePixelPos] = generateShiftInstruction({
                     scrollerID: cradleInheritedProperties.scrollerID,
                     orientation,
                     triggerlineEntries:entries,
@@ -125,7 +125,7 @@ export default class InterruptHandler {
                 if (shiftinstruction != 'none') { 
 
                     this.shiftinstruction = shiftinstruction
-                    this.triggerViewportReferencePos = triggerViewportReferencePos
+                    this.triggerViewportReferencePixelPos = triggerViewportReferencePixelPos
 
                     stateHandler.setCradleState('renderupdatedcontent')
 
@@ -137,7 +137,7 @@ export default class InterruptHandler {
 
     // data transfer to updateCradleContent triggered by closing axisTriggerlinesObserverCallback setCradleState call
     shiftinstruction
-    triggerViewportReferencePos
+    triggerViewportReferencePixelPos
 
     private cradleIntersectionObserverCallback = (entries) => {
 

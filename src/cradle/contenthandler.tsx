@@ -406,49 +406,87 @@ export default class ContentHandler {
 
         // ----------------------[ 1. initialize ]-------------------------
 
-        // handler support
-        const {
-
-            cacheAPI, 
-            layoutHandler, 
-            stateHandler, 
-            interruptHandler,
-            serviceHandler,
+        const 
+            { 
             
-        } = this.cradleParameters.handlersRef.current
+                cradleParameters,
+                content:cradleContent,
 
-        const {shiftinstruction, triggerViewportReferencePos} = interruptHandler
+            } = this
 
-        const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
+        const 
 
-        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current,
-            cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
+            viewportElement = cradleParameters.ViewportContextPropertiesRef.current.elementRef.current,
+            cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+            cradleHandlers = cradleParameters.handlersRef.current
+
+        const 
+            {
+
+                cacheAPI, 
+                layoutHandler, 
+                stateHandler, 
+                interruptHandler,
+                serviceHandler,
+                
+            } = cradleHandlers,
+
+            { 
+
+                shiftinstruction, 
+                triggerViewportReferencePixelPos // trigger CellFrame
+
+            } = interruptHandler,
+
+            { 
+            
+                elements: cradleElements,
+                cradlePositionData
+
+            } = layoutHandler,
         
-        const { 
-            orientation, 
-            cache,
-            styles,
-            placeholderMessages,
-            layout, cellHeight, cellWidth, padding, gap
-        } = cradleInheritedProperties
+            { 
 
-        const { 
-            crosscount,
-            // listsize,
-        } = cradleInternalProperties.virtualListProps
+                orientation, 
+                cache,
+                styles,
+                placeholderMessages,
+                layout, 
+                cellHeight, 
+                cellWidth, 
+                padding, 
+                gap
 
+            } = cradleInheritedProperties,
+
+            {
+
+                virtualListProps,
+                cradleContentProps,
+
+            } = cradleInternalProperties,
+
+            { 
+
+                crosscount,
+                // listsize,
+
+            } = virtualListProps,
+
+            {
+
+            } = cradleContentProps
+
+        // new vars
         const scrollPos = 
             (orientation == 'vertical')?
                 viewportElement.scrollTop:
                 viewportElement.scrollLeft
 
-        // cradle scaffold and user cells
-        const cradleElements = layoutHandler.elements
+        const modelcontentlist = cradleContent.cradleModelComponents || []
 
-        const cradleContent = this.content,
-            modelcontentlist = cradleContent.cradleModelComponents || []
-
-        const oldCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
+        const previousCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
@@ -457,12 +495,12 @@ export default class ContentHandler {
 
             // by index
             // newCradleReferenceIndex,
-            cradleReferenceItemShift:cradleItemShift, 
-            newAxisReferenceIndex:axisReferenceIndex, 
-            axisReferenceItemShift:axisItemShift, 
+            cradleReferenceItemShift: cradleItemShift, 
+            newAxisReferenceIndex: axisReferenceIndex, 
+            axisReferenceItemShift: axisItemShift, 
 
             // counts
-            newCradleContentCount:cradleContentCount,
+            newCradleContentCount: cradleContentCount,
             listStartChangeCount,
             listEndChangeCount,
 
@@ -472,9 +510,9 @@ export default class ContentHandler {
         } = calculateShiftSpecs({
 
             shiftinstruction,
-            triggerViewportReferencePos,
+            triggerViewportReferencePixelPos,
             scrollPos,
-            scrollblockElement:viewportElement.firstChild,
+            scrollblockElement: viewportElement.firstChild,
 
             cradleInheritedProperties,
             cradleInternalProperties,
@@ -484,8 +522,6 @@ export default class ContentHandler {
         })
 
         const axisViewportPixelOffset = newAxisViewportPixelOffset
-
-        const { cradlePositionData } = layoutHandler
 
         const isShift = !((axisItemShift == 0) && (cradleItemShift == 0))
         const axisElement = cradleElements.axisRef.current
@@ -519,7 +555,7 @@ export default class ContentHandler {
 
         if (listStartChangeCount || listEndChangeCount) { // if either is non-0 then modify content
 
-            [updatedContentList,deletedContentItems] = getCellFrameComponentList({
+            [ updatedContentList, deletedContentItems ] = getCellFrameComponentList({
                 cacheAPI,
                 cradleInheritedProperties,
                 cradleInternalProperties,
@@ -527,24 +563,27 @@ export default class ContentHandler {
                 workingContentList:modelcontentlist,
                 listStartChangeCount,
                 listEndChangeCount,
-                cradleReferenceIndex:oldCradleReferenceIndex,
+                cradleReferenceIndex:previousCradleReferenceIndex,
                 instanceIdCounterRef:this.instanceIdCounterRef,
                 styles,
                 placeholderMessages,
             })
 
-            const { virtualListProps, cradleContentProps } = cradleInternalProperties
             cradleContentProps.size = updatedContentList.length
             if (cradleContentProps.size) {
+
                 cradleContentProps.lowindex = updatedContentList[0].props.index
                 cradleContentProps.highindex = cradleContentProps.lowindex + cradleContentProps.size - 1
                 cradleContentProps.SOL = (virtualListProps.lowindex == cradleContentProps.lowindex)
                 cradleContentProps.EOL = (virtualListProps.highindex == cradleContentProps.highindex)
+
             } else {
+
                 cradleContentProps.lowindex = null
                 cradleContentProps.highindex = null
                 cradleContentProps.SOL = true
                 cradleContentProps.EOL = true
+
             }
 
             // console.log('UPDATE cradleContentProps',cradleContentProps)

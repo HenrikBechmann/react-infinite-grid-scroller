@@ -45,6 +45,7 @@ export default class LayoutHandler {
 
         const listsize = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.size
 
+        // TODO: recalculate
         this.cradlePositionData.targetAxisReferencePosition = 
             (Math.min(startingIndex,(listsize - 1)) || 0)
 
