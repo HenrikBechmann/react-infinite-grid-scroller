@@ -418,14 +418,20 @@ export const calculateShiftSpecs = ({
         } = virtualListProps
 
     // normalize
-    const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0),
-        previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)
+    const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0)
+    const previousCradleRowOffset = 
+        (previousCradleReferenceIndex < 0)?
+            Math.floor(previousCradleReferenceIndex/crosscount):
+            Math.ceil(previousCradleReferenceIndex/crosscount)
 
     const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0)
     
-    const previousAxisRowOffset = Math.ceil(previousAxisReferenceIndex/crosscount)
+    const previousAxisRowOffset = 
+        (previousAxisReferenceIndex < 0)?
+            Math.floor(previousAxisReferenceIndex/crosscount):
+            Math.ceil(previousAxisReferenceIndex/crosscount)
 
-    const listEndrowOffset = (listRowcount - 1)
+    const listEndrowOffset = (listRowcount - 1) + rangerowshift
     const baseRowLength =
         ((orientation == 'vertical')?
             cellHeight:
@@ -571,7 +577,7 @@ export const calculateShiftSpecs = ({
 
     }
 
-    // -----------[ 3. calculate current viewport axis offset ]-------------------
+    // -----------[ 3. calculate current viewport axis pixel offset ]-------------------
     // gaps beyond rendered rows can be caused by rapid scrolling
 
     const scrollblockAxisPixelOffset = 
@@ -579,7 +585,7 @@ export const calculateShiftSpecs = ({
             axisElement.offsetTop:
             axisElement.offsetLeft
 
-    const scrollblockOffset = // to capture current top/left adjustment to viewport for variable layout
+    const scrollblockPixelOffset = // to capture current top/left adjustment to viewport for variable layout
         (orientation == 'vertical')?
             scrollblockElement.offsetTop:
             scrollblockElement.offsetLeft
@@ -588,7 +594,7 @@ export const calculateShiftSpecs = ({
     //     and positive for scroll block tailward
     // the pixel distance between the viewport frame and the axis, toward the head
     const currentViewportAxisPixelOffset = 
-        scrollblockAxisPixelOffset + scrollblockOffset - scrollPos
+        scrollblockAxisPixelOffset + scrollblockPixelOffset - scrollPos
 
     // -------------[ 4. calculate new axis pixel position ]------------------
 
@@ -688,7 +694,7 @@ export const calculateShiftSpecs = ({
     let newCradleContentCount = cradleRowcount * crosscount // base count
     const includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount - rangerowshift) >= listRowcount)
 
-    console.log('includesLastRow',includesLastRow)
+    // console.log('includesLastRow',includesLastRow)
 
     if (includesLastRow) {
         // const partialspaces = listsize % crosscount
