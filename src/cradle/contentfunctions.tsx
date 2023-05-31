@@ -360,7 +360,8 @@ export const calculateShiftSpecs = ({
 
     // property repos
     cradleInheritedProperties,
-    cradleInternalProperties,
+    cradleContentProps,
+    virtualListProps,
 
     // cradle repos
     cradleContent,
@@ -370,67 +371,59 @@ export const calculateShiftSpecs = ({
 
     // ------------------------[ 1. initialize ]-----------------------
 
-    // configuration data
-    const { 
-
-        gap,
-        padding,
-        orientation,
-        cellHeight,
-        cellWidth,
-        layout,
-
-    } = cradleInheritedProperties
-
     // cradle elements
-    const axisElement = cradleElements.axisRef.current,
+    const 
+        axisElement = cradleElements.axisRef.current,
         headGridElement = cradleElements.headRef.current,
         tailGridElement = cradleElements.tailRef.current
 
-    // cradle contents
-    const {
+    // configuration data
+    const 
+        { 
 
-        cradleModelComponents:cradlecontentlist, 
-        tailModelComponents:tailcontentlist,
-        // headModelComponents:headcontentlist
+            gap,
+            padding,
+            orientation,
+            cellHeight,
+            cellWidth,
+            layout,
 
-    } = cradleContent
+        } = cradleInheritedProperties,
 
-    // more config data
-    const { 
+        // cradle contents
+        {
 
-        // cradleRowcount,
-        // viewportRowcount,
-        // runwayRowcount,
-        cradleContentProps,
-        virtualListProps,
+            cradleModelComponents:cradlecontentlist, 
+            tailModelComponents:tailcontentlist,
 
-    } = cradleInternalProperties
+        } = cradleContent,
 
-    const { 
+        { 
 
-        cradleRowcount,
-        viewportRowcount,
-        runwayRowcount,
+            cradleRowcount,
+            viewportRowcount,
+            runwayRowcount,
 
-    } = cradleContentProps
+        } = cradleContentProps,
 
-    const {
+        {
 
-        crosscount, 
-        rowcount:listRowcount, 
-        size:listsize,
-        baserowblanks,
-        endrowblanks,
-        rowshift:rangerowshift,
-        
-    } = virtualListProps
+            crosscount, 
+            rowcount:listRowcount, 
+            size:listsize,
+            baserowblanks,
+            endrowblanks,
+            rowshift:rangerowshift,
+            
+        } = virtualListProps
 
+    // normalize
     const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0),
         previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)
 
-    const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0),
-        previousAxisRowOffset = Math.ceil(previousAxisReferenceIndex/crosscount)
+    const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0)
+    
+    const previousAxisRowOffset = Math.ceil(previousAxisReferenceIndex/crosscount)
 
     const listEndrowOffset = (listRowcount - 1)
     const baseRowLength =
@@ -440,11 +433,13 @@ export const calculateShiftSpecs = ({
         + gap
 
     let spanRowPtr,
-     spanAxisPixelShift = 0, // in relation to viewport head boundary
-     inProcessRowPtr = 0,
-     isListBoundary = false,
-     totalPixelShift,
-     finalVariableRowLength // special case
+        spanAxisPixelShift = 0, // in relation to viewport head boundary
+        inProcessRowPtr = 0,
+        isListBoundary = false,
+        totalPixelShift,
+        finalVariableRowLength // special case
+
+    // ----------------------------[ 2. calculate base row shift ]--------------------------
 
     // measure exising rows for variable length cells
     if (layout == 'variable') { 
@@ -463,8 +458,6 @@ export const calculateShiftSpecs = ({
         }
 
         const gridRowAggregateSpans = getGridRowAggregateSpans(gridRowLengths) // count pixels where available
-
-        // ----------------------------[ 2. calculate base row shift ]--------------------------
 
         // first try to find position based on known (instantiated) rows
         if (shiftinstruction == 'moveaxistailward') { // scroll up
@@ -581,7 +574,7 @@ export const calculateShiftSpecs = ({
     // -----------[ 3. calculate current viewport axis offset ]-------------------
     // gaps beyond rendered rows can be caused by rapid scrolling
 
-    const scrollblockAxisOffset = 
+    const scrollblockAxisPixelOffset = 
         (orientation == 'vertical')?
             axisElement.offsetTop:
             axisElement.offsetLeft
@@ -594,12 +587,12 @@ export const calculateShiftSpecs = ({
     // currentViewportAxisOffset will be negative (above viewport edge) for scroll block headward 
     //     and positive for scroll block tailward
     // the pixel distance between the viewport frame and the axis, toward the head
-    const currentViewportAxisOffset = 
-        scrollblockAxisOffset + scrollblockOffset - scrollPos
+    const currentViewportAxisPixelOffset = 
+        scrollblockAxisPixelOffset + scrollblockOffset - scrollPos
 
     // -------------[ 4. calculate new axis pixel position ]------------------
 
-    let newAxisViewportPixelOffset = currentViewportAxisOffset + axisPixelShift
+    let newAxisViewportPixelOffset = currentViewportAxisPixelOffset + axisPixelShift
 
     // Note: sections 5, 6 and 7 deal entirely with row calculations; no pixels
 

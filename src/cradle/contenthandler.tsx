@@ -469,7 +469,6 @@ export default class ContentHandler {
             { 
 
                 crosscount,
-                // listsize,
 
             } = virtualListProps
 
@@ -509,7 +508,8 @@ export default class ContentHandler {
             scrollblockElement: viewportElement.firstChild,
 
             cradleInheritedProperties,
-            cradleInternalProperties,
+            cradleContentProps,
+            virtualListProps,
             cradleContent,
             cradleElements,
 
@@ -608,7 +608,7 @@ export default class ContentHandler {
 
         // ----------------------------------[ 5. allocate cradle content ]--------------------------
 
-        const [headcontent, tailcontent] = allocateContentList(
+        const [ headcontent, tailcontent ] = allocateContentList(
             {
                 contentlist:updatedContentList,
                 axisReferenceIndex,
