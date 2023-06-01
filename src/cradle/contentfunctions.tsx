@@ -569,7 +569,7 @@ export const calculateShiftSpecs = ({
             foundGridSpanRowShiftIncrement + 1:
             -(foundGridSpanRowShiftIncrement + 1)
 
-    console.log('==>> shiftinstruction, gridSpanRowShift\n',
+    console.log('shiftinstruction, gridSpanRowShift\n',
         shiftinstruction, gridSpanRowShift )
 
     // the following two values (axisReferenceRowShift & axisPixelShift), and no other calcs, 
@@ -587,7 +587,7 @@ export const calculateShiftSpecs = ({
 
         axisReferenceRowShift -= 1
         if (layout == 'variable') {
-            axisPixelShift -= finalVariableRowLength //gridRowLengths.at(-1)
+            axisPixelShift -= finalVariableRowLength
         } else {
             axisPixelShift -= baseRowPixelLength
         }
@@ -628,8 +628,8 @@ export const calculateShiftSpecs = ({
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
     const newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowShift
 
-    console.log('newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift, \
-        newAxisReferenceRowOffset, previousAxisRowOffset, axisReferenceRowShift',
+    console.log('==>> newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift,\n',
+        'newAxisReferenceRowOffset, previousAxisRowOffset, axisReferenceRowShift\n',
         newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift,'\n',
         newAxisReferenceRowOffset, previousAxisRowOffset, axisReferenceRowShift)
 
