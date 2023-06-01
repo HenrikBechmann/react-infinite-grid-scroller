@@ -628,7 +628,7 @@ export const calculateShiftSpecs = ({
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
     const newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowShift
 
-    console.log('==>> newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift,\n',
+    console.log('newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift,\n',
         'newAxisReferenceRowOffset, previousAxisRowOffset, axisReferenceRowShift\n',
         newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift,'\n',
         newAxisReferenceRowOffset, previousAxisRowOffset, axisReferenceRowShift)
@@ -683,7 +683,7 @@ export const calculateShiftSpecs = ({
             newCradleReferenceRowOffset = 0
 
         }
-        if (layout == 'variable' && newAxisReferenceRowOffset == 0) {
+        if (layout == 'variable' && newAxisReferenceRowOffset == rangerowshift) {
             newAxisViewportPixelOffset = padding
         }
 
@@ -704,6 +704,9 @@ export const calculateShiftSpecs = ({
         }
 
     }
+
+    console.log('==>> shiftinstruction, newCradleReferenceRowOffset, cradleReferenceRowshift\n',
+        shiftinstruction, newCradleReferenceRowOffset, cradleReferenceRowshift)
 
     // ----------------------[ 7. map rows to item references ]----------------------
 
