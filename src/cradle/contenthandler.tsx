@@ -538,6 +538,8 @@ listEndChangeCount,'\n',
 newAxisViewportPixelOffset
 )
 
+        return
+
         const axisViewportPixelOffset = newAxisViewportPixelOffset
 
         const isShift = !((axisItemShift == 0) && (cradleItemShift == 0))

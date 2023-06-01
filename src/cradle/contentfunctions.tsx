@@ -432,84 +432,96 @@ export const calculateShiftSpecs = ({
             Math.ceil(previousAxisReferenceIndex/crosscount)
 
     const listEndrowOffset = (listRowcount - 1) + rangerowshift
-    const baseRowLength =
+
+    console.log('previousCradleReferenceIndex, previousCradleRowOffset, previousAxisReferenceIndex, previousAxisRowOffset, listEndrowOffset\n',
+        previousCradleReferenceIndex, previousCradleRowOffset, previousAxisReferenceIndex, previousAxisRowOffset, listEndrowOffset)
+
+    const baseRowPixelLength =
         ((orientation == 'vertical')?
             cellHeight:
             cellWidth) 
         + gap
 
-    let spanRowPtr,
-        spanAxisPixelShift = 0, // in relation to viewport head boundary
-        inProcessRowPtr = 0,
+    let foundGridSpanRowShiftIncrement,
+        gridSpanAxisPixelShift = 0, // in relation to viewport head boundary
+        byPixelMeasureGridRowShiftCount = 0,
         isListBoundary = false,
         totalPixelShift,
         finalVariableRowLength // special case
 
     // ----------------------------[ 2. calculate base row shift ]--------------------------
 
-    // measure exising rows for variable length cells
+    // measure exising variable rows for pixel length
     if (layout == 'variable') { 
 
-        const referenceGridElement = // moving axis (and triggers) toward the reference grid element
+        const engagedGridElement = // moving axis (and triggers) toward the reference grid element
             (shiftinstruction == 'moveaxistailward')? // scrolling up or left
                 tailGridElement:
                 headGridElement
 
-        const gridRowLengths = getGridRowLengths(referenceGridElement, orientation, crosscount, gap)
+        const gridRowPixelLengthsList = getGridRowLengths(engagedGridElement, orientation, crosscount, gap)
 
         if (shiftinstruction == 'moveaxisheadward') { // scrolling down or right; move triggerlines up or left
 
-            gridRowLengths.reverse() // head grid row lengths listed from axis toward head
+            gridRowPixelLengthsList.reverse() // head grid row lengths listed from axis toward head
 
         }
 
-        const gridRowAggregateSpans = getGridRowAggregateSpans(gridRowLengths) // count pixels where available
+        const gridRowCumulativePixelLengthsList = getGridRowAggregateSpans(gridRowPixelLengthsList) // count pixels where available
 
         // first try to find position based on known (instantiated) rows
         if (shiftinstruction == 'moveaxistailward') { // scroll up
 
             // tail trigger needs to move down or right until position relative to viewport top or left is positive
-            spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
-                (triggerViewportReferencePixelPos + aggregatespan) >= 0 )
+            foundGridSpanRowShiftIncrement = gridRowCumulativePixelLengthsList.findIndex((cumulativepixellength) => 
+                (triggerViewportReferencePixelPos + cumulativepixellength) >= 0 )
         
         } else { // 'moveaxisheadward', scrolldown
 
             // head trigger needs to move up or left until position relative to viewport top or left is negative
-            spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
-                (triggerViewportReferencePixelPos - aggregatespan) <= 0)
+            foundGridSpanRowShiftIncrement = gridRowCumulativePixelLengthsList.findIndex((cumulativepixellength) => 
+                (triggerViewportReferencePixelPos - cumulativepixellength) <= 0)
 
         }
 
-        if (!(spanRowPtr == -1)) { // found measureed row for shift
-            spanAxisPixelShift = 
-                (shiftinstruction == 'moveaxistailward')?
-                    gridRowAggregateSpans[spanRowPtr]: // move axis toward tail from viewport boundary (positive)
-                    -gridRowAggregateSpans[spanRowPtr] // move axis toward head from viewport boundary (negative)
-        } else { // either in boundary, or shy of target
+        if (foundGridSpanRowShiftIncrement != -1) { // found measureed row for shift
 
-            isListBoundary = (gridRowAggregateSpans.length == 0) // boundary at head of list
+            gridSpanAxisPixelShift = 
+                (shiftinstruction == 'moveaxistailward')?
+                    gridRowCumulativePixelLengthsList[foundGridSpanRowShiftIncrement]: // move axis toward tail from viewport boundary (positive)
+                    -gridRowCumulativePixelLengthsList[foundGridSpanRowShiftIncrement] // move axis toward head from viewport boundary (negative)
+
+        } else { // no foundGridSpanRowShiftIncrement; either in boundary, or shy of target
+
+            isListBoundary = (gridRowCumulativePixelLengthsList.length == 0) // boundary at head of list
 
             if (!isListBoundary) { // interim working result
 
-                inProcessRowPtr = gridRowAggregateSpans.length - 1 // base: failed measured row ptr
-                totalPixelShift = gridRowAggregateSpans[inProcessRowPtr] // set base of working overshoot
-                finalVariableRowLength = gridRowLengths.at(-1) // for oversize cell adjustment below
+                byPixelMeasureGridRowShiftCount = gridRowCumulativePixelLengthsList.length - 1 // base: failed measured row ptr
+                totalPixelShift = gridRowCumulativePixelLengthsList[byPixelMeasureGridRowShiftCount] // set base of working overshoot
+                finalVariableRowLength = gridRowPixelLengthsList.at(-1) // for oversize cell adjustment below
 
-            } 
+            } else { // else if isListBoundary row and pixel shifts remain at default of 0 each
+
+                byPixelMeasureGridRowShiftCount = 0
+                totalPixelShift = 0
+
+            }
 
         }
 
     } else { // layout == 'uniform'; use only defined lengths
 
-        spanRowPtr = -1 // "not found", ie not applicable
+        foundGridSpanRowShiftIncrement = -1 // "not found", ie not applicable
 
-        inProcessRowPtr = 0
+        // these are the defaults
+        byPixelMeasureGridRowShiftCount = 0
         totalPixelShift = 0
 
     }
 
     // uniform layout, or overshoot of instantiated rows; continue with virtual base rows
-    if (spanRowPtr == -1 ) { 
+    if (foundGridSpanRowShiftIncrement == -1 ) { 
 
         if (!isListBoundary) {
 
@@ -517,51 +529,56 @@ export const calculateShiftSpecs = ({
 
                 do {
 
-                    totalPixelShift += baseRowLength
-                    inProcessRowPtr++
+                    totalPixelShift += baseRowPixelLength
+                    byPixelMeasureGridRowShiftCount++
 
                 } while ((triggerViewportReferencePixelPos + totalPixelShift) < 0) 
 
-                spanAxisPixelShift = totalPixelShift
+                gridSpanAxisPixelShift = totalPixelShift
 
             } else { // moveaxisheadward; scrolling down/right
 
                 do {
 
-                    totalPixelShift += baseRowLength
-                    inProcessRowPtr++
+                    totalPixelShift += baseRowPixelLength
+                    byPixelMeasureGridRowShiftCount++
 
-                    if ((previousAxisRowOffset - rangerowshift - inProcessRowPtr) == 0) { // stop cycling at head limit
+                    if ((previousAxisRowOffset - rangerowshift - byPixelMeasureGridRowShiftCount) == 0) { // stop cycling at head limit
 
                         break
                     }
 
                 } while ((triggerViewportReferencePixelPos - totalPixelShift) > 0)
 
-                spanAxisPixelShift = -totalPixelShift
+                gridSpanAxisPixelShift = -totalPixelShift
 
             }
 
         }
 
-        // inProcessRowPtr is one greater than spanRowPtr with actual measurements above
-        // this makes them compativle for span conversion (next step)
-        spanRowPtr = inProcessRowPtr - 1 + rangerowshift
+        // byPixelMeasureGridRowCount is one greater than foundGridSpanRowIncrement with actual measurements above
+        // this -1 makes them compatible for span conversion (next step)
+        foundGridSpanRowShiftIncrement = byPixelMeasureGridRowShiftCount - 1
+        // console.log('first foundGridSpanRowIncrement, byPixelMeasureGridRowShiftCount\n', 
+        //     foundGridSpanRowShiftIncrement, byPixelMeasureGridRowShiftCount)
 
     }
 
-    const spanRowShift = // pick up row shift with or without overshoot
+    const gridSpanRowShift = // pick up row shift with or without overshoot
         (shiftinstruction == 'moveaxistailward')?
-            spanRowPtr + 1:
-            -(spanRowPtr + 1)
+            foundGridSpanRowShiftIncrement + 1:
+            -(foundGridSpanRowShiftIncrement + 1)
+
+    console.log('==>> shiftinstruction, gridSpanRowShift\n',
+        shiftinstruction, gridSpanRowShift )
 
     // the following two values (axisReferenceRowShift & axisPixelShift), and no other calcs, 
     //     are carried forward in this function.
     // for axisReferenceRowshift:
     // negative for moving rows out of head into tail;
     // positive for moving rows out of tail into head
-    let axisReferenceRowShift = spanRowShift,
-        axisPixelShift = spanAxisPixelShift 
+    let axisReferenceRowShift = gridSpanRowShift,
+        axisPixelShift = gridSpanAxisPixelShift 
 
     // this can only happen with oversized cellLength (ie > viewportLength)
     //     and only using measured length
@@ -572,7 +589,7 @@ export const calculateShiftSpecs = ({
         if (layout == 'variable') {
             axisPixelShift -= finalVariableRowLength //gridRowLengths.at(-1)
         } else {
-            axisPixelShift -= baseRowLength
+            axisPixelShift -= baseRowPixelLength
         }
 
     }
@@ -611,6 +628,11 @@ export const calculateShiftSpecs = ({
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
     const newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowShift
 
+    console.log('newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift, \
+        newAxisReferenceRowOffset, previousAxisRowOffset, axisReferenceRowShift',
+        newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift,'\n',
+        newAxisReferenceRowOffset, previousAxisRowOffset, axisReferenceRowShift)
+
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
 
@@ -625,7 +647,7 @@ export const calculateShiftSpecs = ({
 
         // --- start of list adjustment
         const targetCradleReferenceRowOffset = 
-            Math.max(0, (newAxisReferenceRowOffset - runwayRowcount - 1)) // extra row for visibility
+            Math.max(rangerowshift, (newAxisReferenceRowOffset - runwayRowcount - 1)) // extra row for visibility
 
         const headrowDiff = newCradleReferenceRowOffset - targetCradleReferenceRowOffset
         if (headrowDiff > 0) {
