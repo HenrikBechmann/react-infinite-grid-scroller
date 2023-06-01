@@ -515,6 +515,29 @@ export default class ContentHandler {
 
         })
 
+        console.log(
+`
+cradleReferenceItemShift: cradleItemShift, 
+newAxisReferenceIndex: axisReferenceIndex, 
+axisReferenceItemShift: axisItemShift, 
+
+// counts
+newCradleContentCount: cradleContentCount,
+listStartChangeCount,
+listEndChangeCount,
+
+// pixels
+newAxisViewportPixelOffset, 
+`,
+cradleItemShift, 
+axisReferenceIndex, 
+axisItemShift,'\n', 
+cradleContentCount,
+listStartChangeCount,
+listEndChangeCount,'\n',
+newAxisViewportPixelOffset
+)
+
         const axisViewportPixelOffset = newAxisViewportPixelOffset
 
         const isShift = !((axisItemShift == 0) && (cradleItemShift == 0))

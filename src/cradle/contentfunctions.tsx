@@ -531,7 +531,7 @@ export const calculateShiftSpecs = ({
                     totalPixelShift += baseRowLength
                     inProcessRowPtr++
 
-                    if ((previousAxisRowOffset - inProcessRowPtr) == 0) { // stop cycling at head limit
+                    if ((previousAxisRowOffset - rangerowshift - inProcessRowPtr) == 0) { // stop cycling at head limit
 
                         break
                     }
@@ -546,7 +546,7 @@ export const calculateShiftSpecs = ({
 
         // inProcessRowPtr is one greater than spanRowPtr with actual measurements above
         // this makes them compativle for span conversion (next step)
-        spanRowPtr = inProcessRowPtr - 1 
+        spanRowPtr = inProcessRowPtr - 1 + rangerowshift
 
     }
 
