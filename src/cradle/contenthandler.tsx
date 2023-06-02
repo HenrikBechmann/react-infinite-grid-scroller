@@ -517,28 +517,28 @@ export default class ContentHandler {
 
         })
 
-        console.log(
-`
-cradleReferenceItemShift: cradleItemShift, 
-newAxisReferenceIndex: axisReferenceIndex, 
-axisReferenceItemShift: axisItemShift, 
+//         console.log(
+// `
+// cradleReferenceItemShift: cradleItemShift, 
+// newAxisReferenceIndex: axisReferenceIndex, 
+// axisReferenceItemShift: axisItemShift, 
 
-// counts
-newCradleContentCount: cradleContentCount,
-listStartChangeCount,
-listEndChangeCount,
+// // counts
+// newCradleContentCount: cradleContentCount,
+// listStartChangeCount,
+// listEndChangeCount,
 
-// pixels
-newAxisViewportPixelOffset, 
-`,
-cradleItemShift, 
-axisReferenceIndex, 
-axisItemShift,'\n', 
-cradleContentCount,
-listStartChangeCount,
-listEndChangeCount,'\n',
-newAxisViewportPixelOffset
-)
+// // pixels
+// newAxisViewportPixelOffset, 
+// `,
+// cradleItemShift, 
+// axisReferenceIndex, 
+// axisItemShift,'\n', 
+// cradleContentCount,
+// listStartChangeCount,
+// listEndChangeCount,'\n',
+// newAxisViewportPixelOffset
+// )
 
         const axisViewportPixelOffset = newAxisViewportPixelOffset
 
@@ -689,7 +689,7 @@ newAxisViewportPixelOffset
 
         if (isShift) cacheAPI.renderPortalLists()
 
-        console.log('calling applyStyling:axisViewportPixelOffset',axisViewportPixelOffset)
+        // console.log('calling applyStyling:axisViewportPixelOffset',axisViewportPixelOffset)
 
         this.applyStyling({
             layout, orientation, padding, gap, cellHeight, cellWidth, 
@@ -714,7 +714,7 @@ newAxisViewportPixelOffset
         axisElement, headElement, listlowindex
     }) => {
         
-        console.log('applyStyling: axisReferenceIndex, axisViewportPixelOffset', axisReferenceIndex, axisViewportPixelOffset)
+        // console.log('applyStyling: axisReferenceIndex, axisViewportPixelOffset', axisReferenceIndex, axisViewportPixelOffset)
 
         if (layout == 'variable') return // there's a separate routine for variable adjustments and css
 
@@ -745,8 +745,8 @@ newAxisViewportPixelOffset
 
             topPos = scrollPos + axisViewportPixelOffset
 
-            console.log('topPos, preAxisRows, testScrollPos, scrollPos, scrollDiff, axisViewportPixelOffset\n', 
-                topPos, preAxisRows, testScrollPos, scrollPos, scrollDiff, axisViewportPixelOffset)
+            // console.log('topPos, preAxisRows, testScrollPos, scrollPos, scrollDiff, axisViewportPixelOffset\n', 
+            //     topPos, preAxisRows, testScrollPos, scrollPos, scrollDiff, axisViewportPixelOffset)
 
             axisElement.style.top = topPos + 'px'
             axisElement.style.left = 'auto'
