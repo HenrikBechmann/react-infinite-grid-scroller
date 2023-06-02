@@ -327,6 +327,8 @@ export const generateShiftInstruction = ({
             triggerData.tailOffset: // needs to move up or left toward head
             triggerData.headOffset // needs to move down or right toward tail
 
+    console.log('generateShiftInstruction: shiftinstruction, triggerViewportReferencePixelPos\n',
+        shiftinstruction, triggerViewportReferencePixelPos)
 
     return [shiftinstruction, triggerViewportReferencePixelPos]
 

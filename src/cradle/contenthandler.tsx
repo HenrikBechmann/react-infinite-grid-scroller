@@ -517,28 +517,28 @@ export default class ContentHandler {
 
         })
 
-//         console.log(
-// `
-// cradleReferenceItemShift: cradleItemShift, 
-// newAxisReferenceIndex: axisReferenceIndex, 
-// axisReferenceItemShift: axisItemShift, 
+        console.log(
+`
+cradleReferenceItemShift: cradleItemShift, 
+newAxisReferenceIndex: axisReferenceIndex, 
+axisReferenceItemShift: axisItemShift, 
 
-// // counts
-// newCradleContentCount: cradleContentCount,
-// listStartChangeCount,
-// listEndChangeCount,
+// counts
+newCradleContentCount: cradleContentCount,
+listStartChangeCount,
+listEndChangeCount,
 
-// // pixels
-// newAxisViewportPixelOffset, 
-// `,
-// cradleItemShift, 
-// axisReferenceIndex, 
-// axisItemShift,'\n', 
-// cradleContentCount,
-// listStartChangeCount,
-// listEndChangeCount,'\n',
-// newAxisViewportPixelOffset
-// )
+// pixels
+newAxisViewportPixelOffset, 
+`,
+cradleItemShift, 
+axisReferenceIndex, 
+axisItemShift,'\n', 
+cradleContentCount,
+listStartChangeCount,
+listEndChangeCount,'\n',
+newAxisViewportPixelOffset
+)
 
         const axisViewportPixelOffset = newAxisViewportPixelOffset
 
