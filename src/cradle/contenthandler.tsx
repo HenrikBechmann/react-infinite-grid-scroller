@@ -295,6 +295,7 @@ export default class ContentHandler {
             contentlist:newcontentlist,
             axisReferenceIndex:targetAxisReferenceIndex,
             layoutHandler,
+            // listlowindex,
     
         })
 
@@ -469,6 +470,7 @@ export default class ContentHandler {
             { 
 
                 crosscount,
+                lowindex:listlowindex,
 
             } = virtualListProps
 
@@ -515,30 +517,28 @@ export default class ContentHandler {
 
         })
 
-        console.log(
-`
-cradleReferenceItemShift: cradleItemShift, 
-newAxisReferenceIndex: axisReferenceIndex, 
-axisReferenceItemShift: axisItemShift, 
+//         console.log(
+// `
+// cradleReferenceItemShift: cradleItemShift, 
+// newAxisReferenceIndex: axisReferenceIndex, 
+// axisReferenceItemShift: axisItemShift, 
 
-// counts
-newCradleContentCount: cradleContentCount,
-listStartChangeCount,
-listEndChangeCount,
+// // counts
+// newCradleContentCount: cradleContentCount,
+// listStartChangeCount,
+// listEndChangeCount,
 
-// pixels
-newAxisViewportPixelOffset, 
-`,
-cradleItemShift, 
-axisReferenceIndex, 
-axisItemShift,'\n', 
-cradleContentCount,
-listStartChangeCount,
-listEndChangeCount,'\n',
-newAxisViewportPixelOffset
-)
-
-        return
+// // pixels
+// newAxisViewportPixelOffset, 
+// `,
+// cradleItemShift, 
+// axisReferenceIndex, 
+// axisItemShift,'\n', 
+// cradleContentCount,
+// listStartChangeCount,
+// listEndChangeCount,'\n',
+// newAxisViewportPixelOffset
+// )
 
         const axisViewportPixelOffset = newAxisViewportPixelOffset
 
@@ -588,6 +588,8 @@ newAxisViewportPixelOffset
                 placeholderMessages,
             })
 
+            console.log('updatedContentList, deletedContentItems',updatedContentList, deletedContentItems)
+
             cradleContentProps.size = updatedContentList.length
             if (cradleContentProps.size) {
 
@@ -604,6 +606,26 @@ newAxisViewportPixelOffset
                 cradleContentProps.EOL = true
 
             }
+
+            let gridstart
+            // console.log('virtualListProps, cradleContentProps, newcontentlist',virtualListProps, cradleContentProps, newcontentlist)
+            if (cradleContentProps.SOL && virtualListProps.baserowblanks) {
+                gridstart = `${virtualListProps.baserowblanks + 1}`
+            } else {
+                gridstart = 'unset'
+            }
+
+            const firstcomponent = updatedContentList[0]
+
+            let gridstartstyle
+            if (orientation == 'vertical') {
+                gridstartstyle = {gridColumnStart:gridstart}
+            } else {
+                gridstartstyle = {gridRowStart:gridstart}
+            }
+            const revisedcomponent = React.cloneElement(firstcomponent,{gridstartstyle})
+            updatedContentList[0] = revisedcomponent
+            // console.log('gridstartstyle,revisedcomponent',gridstartstyle,revisedcomponent)
 
             // console.log('UPDATE cradleContentProps',cradleContentProps)
 
@@ -638,8 +660,13 @@ newAxisViewportPixelOffset
                 contentlist:updatedContentList,
                 axisReferenceIndex,
                 layoutHandler,
+                // listlowindex,
             }
         )
+
+        // console.log('==>> headcontent, tailcontent',headcontent, tailcontent)
+
+        // return
 
         cradleContent.cradleModelComponents = updatedContentList
         cradleContent.headModelComponents = headcontent
@@ -657,7 +684,7 @@ newAxisViewportPixelOffset
 
         // -------------------------------[ 6. css changes ]-------------------------
 
-        cradlePositionData.targetAxisReferencePosition = axisReferenceIndex
+        cradlePositionData.targetAxisReferencePosition = axisReferenceIndex - listlowindex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
         if (isShift) cacheAPI.renderPortalLists()
@@ -685,11 +712,16 @@ newAxisViewportPixelOffset
         axisElement, headElement
     }) => {
         
-        if (layout == 'variable') return
+        console.log('applyStyling: axisReferenceIndex, axisViewportPixelOffset', axisReferenceIndex, axisViewportPixelOffset)
+
+        if (layout == 'variable') return // there's a separate routine for variable adjustments and css
 
         // --------------
         // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
-        const preAxisRows = Math.ceil(axisReferenceIndex/crosscount)
+        const preAxisRows = 
+            (axisReferenceIndex < 0)?
+                Math.floor(axisReferenceIndex/crosscount):
+                Math.ceil(axisReferenceIndex/crosscount)
         const baseCellLength = 
             ((orientation == 'vertical')?
                 cellHeight:
