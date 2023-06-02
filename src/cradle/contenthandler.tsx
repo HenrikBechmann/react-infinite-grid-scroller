@@ -560,7 +560,7 @@ newAxisViewportPixelOffset
                 crosscount, 
                 axisReferenceIndex, axisViewportPixelOffset, scrollPos, 
                 headcontent:cradleContent.headModelComponents,
-                axisElement, headElement
+                axisElement, headElement, listlowindex,
             })
 
             return
@@ -689,12 +689,14 @@ newAxisViewportPixelOffset
 
         if (isShift) cacheAPI.renderPortalLists()
 
+        console.log('calling applyStyling:axisViewportPixelOffset',axisViewportPixelOffset)
+
         this.applyStyling({
             layout, orientation, padding, gap, cellHeight, cellWidth, 
             crosscount, 
             axisReferenceIndex, axisViewportPixelOffset, scrollPos, 
             headcontent,
-            axisElement, headElement
+            axisElement, headElement, listlowindex
         })
 
         // load new display data
@@ -709,7 +711,7 @@ newAxisViewportPixelOffset
         crosscount, 
         axisReferenceIndex, axisViewportPixelOffset, scrollPos, 
         headcontent,
-        axisElement, headElement
+        axisElement, headElement, listlowindex
     }) => {
         
         console.log('applyStyling: axisReferenceIndex, axisViewportPixelOffset', axisReferenceIndex, axisViewportPixelOffset)
@@ -718,10 +720,12 @@ newAxisViewportPixelOffset
 
         // --------------
         // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
-        const preAxisRows = 
+        const preAxisRows = Math.abs(
             (axisReferenceIndex < 0)?
-                Math.floor(axisReferenceIndex/crosscount):
-                Math.ceil(axisReferenceIndex/crosscount)
+                Math.floor((axisReferenceIndex + listlowindex)/crosscount):
+                Math.ceil((axisReferenceIndex - listlowindex)/crosscount)
+        )
+    
         const baseCellLength = 
             ((orientation == 'vertical')?
                 cellHeight:
@@ -740,6 +744,9 @@ newAxisViewportPixelOffset
         if (orientation == 'vertical') {
 
             topPos = scrollPos + axisViewportPixelOffset
+
+            console.log('topPos, preAxisRows, testScrollPos, scrollPos, scrollDiff, axisViewportPixelOffset\n', 
+                topPos, preAxisRows, testScrollPos, scrollPos, scrollDiff, axisViewportPixelOffset)
 
             axisElement.style.top = topPos + 'px'
             axisElement.style.left = 'auto'

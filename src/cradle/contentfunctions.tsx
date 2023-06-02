@@ -327,8 +327,8 @@ export const generateShiftInstruction = ({
             triggerData.tailOffset: // needs to move up or left toward head
             triggerData.headOffset // needs to move down or right toward tail
 
-    console.log('generateShiftInstruction: shiftinstruction, triggerViewportReferencePixelPos\n',
-        shiftinstruction, triggerViewportReferencePixelPos)
+    console.log('generateShiftInstruction: shiftinstruction, triggerViewportReferencePixelPos, triggerData\n',
+        shiftinstruction, triggerViewportReferencePixelPos, triggerData)
 
     return [shiftinstruction, triggerViewportReferencePixelPos]
 
@@ -946,6 +946,8 @@ export const allocateContentList = (
         if ((triggercellIndex >= offsetindex) && (triggercellIndex <= highindex)) {
             const triggercellPtr = triggercellIndex - offsetindex
             const triggercellComponent = contentlist[triggercellPtr]
+            console.log('clearing trigger cell: triggercellPtr, triggercellIndex, offsetindex, triggercellComponent',
+                triggercellPtr, triggercellIndex, offsetindex, triggercellComponent)
             if (triggercellComponent) { // otherwise has been asynchronously cleared
                 contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:false})
             }
