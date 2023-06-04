@@ -272,7 +272,7 @@ export default class ContentHandler {
 
         }
 
-        console.log('setCradleContent: virtualListProps, cradleContentProps',virtualListProps, cradleContentProps)
+        // console.log('setCradleContent: virtualListProps, cradleContentProps',virtualListProps, cradleContentProps)
 
         // set or cancel first row offset if within cradle
         let gridstart
