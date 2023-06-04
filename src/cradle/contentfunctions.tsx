@@ -82,8 +82,8 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
             Math.floor(targetAxisReferenceIndex/crosscount):
             Math.ceil(targetAxisReferenceIndex/crosscount)
 
-    console.log('REVISED targetAxisReferenceIndex, targetAxisAnchorRowOffset, rangerowshift',
-        targetAxisReferenceIndex, targetAxisAnchorRowOffset, rangerowshift)
+    // console.log('REVISED targetAxisReferenceIndex, targetAxisAnchorRowOffset, rangerowshift',
+    //     targetAxisReferenceIndex, targetAxisAnchorRowOffset, rangerowshift)
 
     // update will compensate if this is too high
     const maxAxisRowOffset = Math.max(0,listRowcount - 1) - rangerowshift
@@ -141,8 +141,8 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     // ----------------------[ return required values ]---------------------
 
-    console.log('==>> calculateContentListRequirements: targetScrollblockViewportPixelOffset, targetAxisAnchorRowOffset, baseRowPixelLength, padding, targetAxisViewportPixelOffset',
-        targetScrollblockViewportPixelOffset, targetAxisAnchorRowOffset, baseRowPixelLength, padding, targetAxisViewportPixelOffset)
+    // console.log('==>> calculateContentListRequirements: targetScrollblockViewportPixelOffset, targetAxisAnchorRowOffset, baseRowPixelLength, padding, targetAxisViewportPixelOffset',
+    //     targetScrollblockViewportPixelOffset, targetAxisAnchorRowOffset, baseRowPixelLength, padding, targetAxisViewportPixelOffset)
 
     return {
         targetCradleReferenceIndex, 
@@ -330,8 +330,8 @@ export const generateShiftInstruction = ({
             triggerData.tailOffset: // needs to move up or left toward head
             triggerData.headOffset // needs to move down or right toward tail
 
-    console.log('generateShiftInstruction: shiftinstruction, triggerViewportReferencePixelPos, triggerData\n',
-        shiftinstruction, triggerViewportReferencePixelPos, triggerData)
+    // console.log('generateShiftInstruction: shiftinstruction, triggerViewportReferencePixelPos, triggerData\n',
+    //     shiftinstruction, triggerViewportReferencePixelPos, triggerData)
 
     return [shiftinstruction, triggerViewportReferencePixelPos]
 
@@ -941,16 +941,16 @@ export const allocateContentList = (
             true:
             false
 
-    console.log('------------------------\n',
-        'allocateContentList: targetTriggercellIndex, axisReferenceIndex, layoutHandler.triggercellIsInTail\n',
-        targetTriggercellIndex, axisReferenceIndex, layoutHandler.triggercellIsInTail)
+    // console.log('------------------------\n',
+    //     'allocateContentList: targetTriggercellIndex, axisReferenceIndex, layoutHandler.triggercellIsInTail\n',
+    //     targetTriggercellIndex, axisReferenceIndex, layoutHandler.triggercellIsInTail)
 
     if ((triggercellIndex !== undefined) && (lowcontentindex !== undefined)) { //&& 
         if ((triggercellIndex >= lowcontentindex) && (triggercellIndex <= highcontentindex)) {
             const triggercellPtr = triggercellIndex - lowcontentindex
             const triggercellComponent = contentlist[triggercellPtr]
-            console.log('clearing trigger cell: triggercellPtr, triggercellIndex, lowcontentindex, triggercellComponent',
-                triggercellPtr, triggercellIndex, lowcontentindex, triggercellComponent)
+            // console.log('clearing trigger cell: triggercellPtr, triggercellIndex, lowcontentindex, triggercellComponent',
+            //     triggercellPtr, triggercellIndex, lowcontentindex, triggercellComponent)
             if (triggercellComponent) { // otherwise has been asynchronously cleared
                 contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:false})
             }
