@@ -137,9 +137,12 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     // --------------------[ calc css positioning ]-----------------------
 
     const targetScrollblockViewportPixelOffset = 
-        (targetAxisRowOffset * baseRowPixelLength) + padding - targetAxisViewportPixelOffset
+        ((targetAxisRowOffset - rangerowshift) * baseRowPixelLength) + padding - targetAxisViewportPixelOffset
 
     // ----------------------[ return required values ]---------------------
+
+    // console.log('==>> calculateContentListRequirements: targetScrollblockViewportPixelOffset, targetAxisRowOffset, baseRowPixelLength, padding, targetAxisViewportPixelOffset',
+    //     targetScrollblockViewportPixelOffset, targetAxisRowOffset, baseRowPixelLength, padding, targetAxisViewportPixelOffset)
 
     return {
         targetCradleReferenceIndex, 

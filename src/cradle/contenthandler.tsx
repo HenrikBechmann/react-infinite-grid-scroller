@@ -171,7 +171,7 @@ export default class ContentHandler {
         // shifted by virtual list low range
         const workingAxisReferenceIndex  = workingAxisReferencePosition + listlowindex
 
-        // console.log('workingRequestAxisReferenceIndex',workingRequestAxisReferenceIndex)
+        // console.log('workingRequestAxisReferenceIndex',workingAxisReferenceIndex)
 
         // reposition at row boundary
         if ([
@@ -227,13 +227,16 @@ export default class ContentHandler {
 
             })
 
-        // console.log('from calculateContentListRequirements: targetCradleReferenceIndex, targetAxisReferenceIndex',
-        //     targetCradleReferenceIndex, targetAxisReferenceIndex)
+        // console.log('from calculateContentListRequirements: targetCradleReferenceIndex, targetAxisReferenceIndex, scrollblockViewportPixelOffset',
+        //     targetCradleReferenceIndex, targetAxisReferenceIndex, scrollblockViewportPixelOffset)
 
         const axisViewportPixelOffset = targetAxisViewportPixelOffset // semantics
 
         // ----------------------[ 4. get and config content ]----------------------
         
+        // console.log('setCradleContent: getCellFrameComponentList args - cradleContentCount, targetCradleReferenceIndex',
+        //     cradleContentCount, targetCradleReferenceIndex)
+
         // returns content constrained by cradleRowcount
         const [newcontentlist] = getCellFrameComponentList({
             
@@ -271,7 +274,10 @@ export default class ContentHandler {
 
         // set or cancel first row offset if within cradle
         let gridstart
-        // console.log('virtualListProps, cradleContentProps, newcontentlist',virtualListProps, cradleContentProps, newcontentlist)
+
+        // console.log('virtualListProps, cradleContentProps, newcontentlist',
+        //     virtualListProps, cradleContentProps, newcontentlist)
+
         if (cradleContentProps.SOL && virtualListProps.baserowblanks) {
             gridstart = `${virtualListProps.baserowblanks + 1}`
         } else {
@@ -288,6 +294,7 @@ export default class ContentHandler {
         }
         const revisedcomponent = React.cloneElement(firstcomponent,{gridstartstyle})
         newcontentlist[0] = revisedcomponent
+
         // console.log('gridstartstyle,revisedcomponent',gridstartstyle,revisedcomponent)
 
         const [headcontentlist, tailcontentlist] = allocateContentList({
@@ -298,6 +305,9 @@ export default class ContentHandler {
             // listlowindex,
     
         })
+
+        // console.log('SET targetAxisReferenceIndex, headcontentlist, tailcontentlist',
+        //     targetAxisReferenceIndex, headcontentlist, tailcontentlist)
 
         // console.log('SET cradleContentProps',cradleContentProps)
 
@@ -323,7 +333,7 @@ export default class ContentHandler {
         // reset scrollblock Offset and length
         const scrollblockElement = viewportElement.firstChild
 
-        const baselength = (listRowcount * baseRowPixelLength) - gap // final cell has no trailing gap
+        const blockbaselength = (listRowcount * baseRowPixelLength) - gap // final cell has no trailing gap
             + (padding * 2) // leading and trailing padding
 
         if (cradleState == 'pivot') {
@@ -343,12 +353,12 @@ export default class ContentHandler {
         if (orientation == 'vertical') {
 
             scrollblockElement.style.top = null
-            scrollblockElement.style.height = baselength + 'px'
+            scrollblockElement.style.height = blockbaselength + 'px'
 
         } else {
 
             scrollblockElement.style.left = null
-            scrollblockElement.style.width = baselength + 'px'
+            scrollblockElement.style.width = blockbaselength + 'px'
 
         }
 
@@ -366,6 +376,9 @@ export default class ContentHandler {
 
         const axisScrollblockPixelOffset = 
             scrollblockViewportPixelOffset + axisViewportPixelOffset
+
+        // console.log('blockbaselength, axisScrollblockPixelOffset, scrollblockViewportPixelOffset, axisViewportPixelOffset',
+        //     blockbaselength, axisScrollblockPixelOffset, scrollblockViewportPixelOffset, axisViewportPixelOffset)
 
         if (orientation == 'vertical') {
 
