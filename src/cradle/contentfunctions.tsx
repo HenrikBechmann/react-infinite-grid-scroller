@@ -72,8 +72,9 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     // console.log('INITIAL targetAxisReferenceIndex, baserowblanks',targetAxisReferenceIndex, baserowblanks)
 
     // align axis reference to last row item
+    targetAxisReferenceIndex -= Math.abs(targetAxisReferenceIndex % crosscount)
     targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex, listhighindex)
-    targetAxisReferenceIndex -= Math.abs((baserowblanks + targetAxisReferenceIndex) % crosscount)
+    // targetAxisReferenceIndex -= Math.abs((baserowblanks + targetAxisReferenceIndex) % crosscount)
     targetAxisReferenceIndex = Math.max(targetAxisReferenceIndex, listlowindex)
 
     // derive target row
@@ -113,7 +114,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     // console.log('revised targetCradleEndRowOffset',targetCradleEndRowOffset)
 
-    let targetCradleReferenceIndex = targetCradleRowOffset * crosscount
+    let targetCradleReferenceIndex = (targetCradleRowOffset * crosscount) // - baserowblanks
     targetCradleReferenceIndex = Math.max(targetCradleReferenceIndex,listlowindex)
 
     // ---------------------[ calc cradle content count ]---------------------
@@ -716,7 +717,8 @@ export const calculateShiftSpecs = ({
 
     // ----------------------[ 7. map rows to item references ]----------------------
 
-    const newCradleReferenceIndex = (newCradleReferenceRowOffset * crosscount) + baserowblanks
+    let newCradleReferenceIndex = (newCradleReferenceRowOffset * crosscount) // + baserowblanks
+    newCradleReferenceIndex = Math.max(listlowindex,newCradleReferenceIndex)
     const cradleReferenceItemShift = newCradleReferenceIndex - previousCradleReferenceIndex
 
     const newAxisReferenceIndex = Math.max(listlowindex, newAxisReferenceRowOffset * crosscount)

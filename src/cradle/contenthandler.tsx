@@ -272,6 +272,8 @@ export default class ContentHandler {
 
         }
 
+        console.log('setCradleContent: virtualListProps, cradleContentProps',virtualListProps, cradleContentProps)
+
         // set or cancel first row offset if within cradle
         let gridstart
 
@@ -601,7 +603,7 @@ export default class ContentHandler {
                 placeholderMessages,
             })
 
-            console.log('updatedContentList, deletedContentItems',updatedContentList, deletedContentItems)
+            // console.log('updatedContentList, deletedContentItems',updatedContentList, deletedContentItems)
 
             cradleContentProps.size = updatedContentList.length
             if (cradleContentProps.size) {
