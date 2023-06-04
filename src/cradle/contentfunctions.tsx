@@ -79,11 +79,11 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     // derive target row
     let targetAxisRowOffset = 
         (targetAxisReferenceIndex < 0)?
-            Math.ceil(targetAxisReferenceIndex/crosscount):
-            Math.floor(targetAxisReferenceIndex/crosscount)
+            Math.floor(targetAxisReferenceIndex/crosscount):
+            Math.ceil(targetAxisReferenceIndex/crosscount)
 
-    // console.log('REVISED targetAxisReferenceIndex, targetAxisRowOffset, rangerowshift',
-    //     targetAxisReferenceIndex, targetAxisRowOffset, rangerowshift)
+    console.log('REVISED targetAxisReferenceIndex, targetAxisRowOffset, rangerowshift',
+        targetAxisReferenceIndex, targetAxisRowOffset, rangerowshift)
 
     // update will compensate if this is too high
     const maxAxisRowOffset = Math.max(0,listRowcount - 1) - rangerowshift
@@ -141,8 +141,8 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     // ----------------------[ return required values ]---------------------
 
-    // console.log('==>> calculateContentListRequirements: targetScrollblockViewportPixelOffset, targetAxisRowOffset, baseRowPixelLength, padding, targetAxisViewportPixelOffset',
-    //     targetScrollblockViewportPixelOffset, targetAxisRowOffset, baseRowPixelLength, padding, targetAxisViewportPixelOffset)
+    console.log('==>> calculateContentListRequirements: targetScrollblockViewportPixelOffset, targetAxisRowOffset, baseRowPixelLength, padding, targetAxisViewportPixelOffset',
+        targetScrollblockViewportPixelOffset, targetAxisRowOffset, baseRowPixelLength, padding, targetAxisViewportPixelOffset)
 
     return {
         targetCradleReferenceIndex, 
@@ -330,8 +330,8 @@ export const generateShiftInstruction = ({
             triggerData.tailOffset: // needs to move up or left toward head
             triggerData.headOffset // needs to move down or right toward tail
 
-    // console.log('generateShiftInstruction: shiftinstruction, triggerViewportReferencePixelPos, triggerData\n',
-    //     shiftinstruction, triggerViewportReferencePixelPos, triggerData)
+    console.log('generateShiftInstruction: shiftinstruction, triggerViewportReferencePixelPos, triggerData\n',
+        shiftinstruction, triggerViewportReferencePixelPos, triggerData)
 
     return [shiftinstruction, triggerViewportReferencePixelPos]
 
@@ -923,10 +923,10 @@ export const allocateContentList = (
 
     const { triggercellIndex } = layoutHandler
 
-    const offsetindex = contentlist[0]?.props.index,
-        highindex = offsetindex + contentlist.length
+    const lowcontentindex = contentlist[0]?.props.index,
+        highcontentindex = lowcontentindex + contentlist.length
 
-    const headitemcount = (axisReferenceIndex - offsetindex)
+    const headitemcount = (axisReferenceIndex - lowcontentindex)
 
     const targetTriggercellIndex = 
         (headitemcount == 0)?
@@ -941,26 +941,26 @@ export const allocateContentList = (
             true:
             false
 
-    // console.log('------------------------\n',
-    //     'allocateContentList: targetTriggercellIndex, axisReferenceIndex, layoutHandler.triggercellIsInTail\n',
-    //     targetTriggercellIndex, axisReferenceIndex, layoutHandler.triggercellIsInTail)
+    console.log('------------------------\n',
+        'allocateContentList: targetTriggercellIndex, axisReferenceIndex, layoutHandler.triggercellIsInTail\n',
+        targetTriggercellIndex, axisReferenceIndex, layoutHandler.triggercellIsInTail)
 
-    if ((triggercellIndex !== undefined) && (offsetindex !== undefined)) { //&& 
-        if ((triggercellIndex >= offsetindex) && (triggercellIndex <= highindex)) {
-            const triggercellPtr = triggercellIndex - offsetindex
+    if ((triggercellIndex !== undefined) && (lowcontentindex !== undefined)) { //&& 
+        if ((triggercellIndex >= lowcontentindex) && (triggercellIndex <= highcontentindex)) {
+            const triggercellPtr = triggercellIndex - lowcontentindex
             const triggercellComponent = contentlist[triggercellPtr]
-            // console.log('clearing trigger cell: triggercellPtr, triggercellIndex, offsetindex, triggercellComponent',
-                // triggercellPtr, triggercellIndex, offsetindex, triggercellComponent)
+            console.log('clearing trigger cell: triggercellPtr, triggercellIndex, lowcontentindex, triggercellComponent',
+                triggercellPtr, triggercellIndex, lowcontentindex, triggercellComponent)
             if (triggercellComponent) { // otherwise has been asynchronously cleared
                 contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:false})
             }
         }
     }
 
-    const triggercellPtr = targetTriggercellIndex - offsetindex
+    const triggercellPtr = targetTriggercellIndex - lowcontentindex
 
     // console.log('- triggercellPtr, headitemcount, targetTriggercellIndex, offsetindex\n', 
-    //     triggercellPtr, headitemcount, targetTriggercellIndex, offsetindex)
+    //     triggercellPtr, headitemcount, targetTriggercellIndex, lowcontentindex)
 
     const triggercellComponent = contentlist[triggercellPtr]
     if (triggercellComponent) {
@@ -971,8 +971,8 @@ export const allocateContentList = (
     } else { // defensive; shouldn't happen
 
         console.log('FAILURE TO REGISTER TRIGGERCELL:')
-        console.log('axisReferenceIndex, triggercellIndex, offsetindex, highindex, headitemcount, targetTriggercellIndex',
-            axisReferenceIndex, triggercellIndex, offsetindex, highindex, headitemcount, targetTriggercellIndex)
+        console.log('axisReferenceIndex, triggercellIndex, lowcontentindex, highcontentindex, headitemcount, targetTriggercellIndex',
+            axisReferenceIndex, triggercellIndex, lowcontentindex, highcontentindex, headitemcount, targetTriggercellIndex)
         console.log('triggercellPtr, triggercellComponent, triggercellComponent?.props.isTriggecell, contentlist\n', 
             triggercellPtr, triggercellComponent, triggercellComponent?.props.isTriggecell, 
                 {...contentlist})

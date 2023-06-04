@@ -530,28 +530,28 @@ export default class ContentHandler {
 
         })
 
-//         console.log(
-// `
-// cradleReferenceItemShift: cradleItemShift, 
-// newAxisReferenceIndex: axisReferenceIndex, 
-// axisReferenceItemShift: axisItemShift, 
+        console.log(
+`
+cradleReferenceItemShift: cradleItemShift, 
+newAxisReferenceIndex: axisReferenceIndex, 
+axisReferenceItemShift: axisItemShift, 
 
-// // counts
-// newCradleContentCount: cradleContentCount,
-// listStartChangeCount,
-// listEndChangeCount,
+// counts
+newCradleContentCount: cradleContentCount,
+listStartChangeCount,
+listEndChangeCount,
 
-// // pixels
-// newAxisViewportPixelOffset, 
-// `,
-// cradleItemShift, 
-// axisReferenceIndex, 
-// axisItemShift,'\n', 
-// cradleContentCount,
-// listStartChangeCount,
-// listEndChangeCount,'\n',
-// newAxisViewportPixelOffset
-// )
+// pixels
+newAxisViewportPixelOffset, 
+`,
+cradleItemShift, 
+axisReferenceIndex, 
+axisItemShift,'\n', 
+cradleContentCount,
+listStartChangeCount,
+listEndChangeCount,'\n',
+newAxisViewportPixelOffset
+)
 
         const axisViewportPixelOffset = newAxisViewportPixelOffset
 
@@ -727,17 +727,14 @@ export default class ContentHandler {
         axisElement, headElement, listlowindex
     }) => {
         
-        // console.log('applyStyling: axisReferenceIndex, axisViewportPixelOffset', axisReferenceIndex, axisViewportPixelOffset)
+        console.log('applyStyling: axisReferenceIndex, axisViewportPixelOffset, listlowindex', 
+            axisReferenceIndex, axisViewportPixelOffset, listlowindex)
 
         if (layout == 'variable') return // there's a separate routine for variable adjustments and css
 
         // --------------
         // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
-        const preAxisRows = Math.abs(
-            (axisReferenceIndex < 0)?
-                Math.floor((axisReferenceIndex + listlowindex)/crosscount):
-                Math.ceil((axisReferenceIndex - listlowindex)/crosscount)
-        )
+        const preAxisVirtualRows = Math.abs( Math.ceil( ( axisReferenceIndex - listlowindex)/crosscount ) )
     
         const baseCellLength = 
             ((orientation == 'vertical')?
@@ -745,7 +742,7 @@ export default class ContentHandler {
                 cellWidth)
             + gap
 
-        const testScrollPos = (baseCellLength * preAxisRows) + padding - axisViewportPixelOffset
+        const testScrollPos = (baseCellLength * preAxisVirtualRows) + padding - axisViewportPixelOffset
         const scrollDiff = testScrollPos - scrollPos
 
         if (scrollDiff) {
@@ -753,15 +750,15 @@ export default class ContentHandler {
         }
         // --------------
 
-        let topPos, leftPos // available for debug
+        let topAxisPos, leftAxisPos // available for debug
         if (orientation == 'vertical') {
 
-            topPos = scrollPos + axisViewportPixelOffset
+            topAxisPos = scrollPos + axisViewportPixelOffset
 
-            // console.log('topPos, preAxisRows, testScrollPos, scrollPos, scrollDiff, axisViewportPixelOffset\n', 
-            //     topPos, preAxisRows, testScrollPos, scrollPos, scrollDiff, axisViewportPixelOffset)
+            console.log('topAxisPos, baseCellLength, preAxisVirtualRows, testScrollPos, scrollPos, scrollDiff, axisViewportPixelOffset\n', 
+                topAxisPos, baseCellLength, preAxisVirtualRows, testScrollPos, scrollPos, scrollDiff, axisViewportPixelOffset)
 
-            axisElement.style.top = topPos + 'px'
+            axisElement.style.top = topAxisPos + 'px'
             axisElement.style.left = 'auto'
             
             headElement.style.padding = 
@@ -771,10 +768,10 @@ export default class ContentHandler {
 
         } else { // 'horizontal'
 
-            leftPos = scrollPos + axisViewportPixelOffset
+            leftAxisPos = scrollPos + axisViewportPixelOffset
 
             axisElement.style.top = 'auto'
-            axisElement.style.left = leftPos + 'px'
+            axisElement.style.left = leftAxisPos + 'px'
 
             headElement.style.padding = 
                 headcontent.length?
