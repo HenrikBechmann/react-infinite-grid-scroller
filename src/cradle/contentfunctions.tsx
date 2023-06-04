@@ -77,25 +77,25 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     targetAxisReferenceIndex = Math.max(targetAxisReferenceIndex, listlowindex)
 
     // derive target row
-    let targetAxisRowOffset = 
+    let targetAxisAnchorRowOffset = 
         (targetAxisReferenceIndex < 0)?
             Math.floor(targetAxisReferenceIndex/crosscount):
             Math.ceil(targetAxisReferenceIndex/crosscount)
 
-    console.log('REVISED targetAxisReferenceIndex, targetAxisRowOffset, rangerowshift',
-        targetAxisReferenceIndex, targetAxisRowOffset, rangerowshift)
+    console.log('REVISED targetAxisReferenceIndex, targetAxisAnchorRowOffset, rangerowshift',
+        targetAxisReferenceIndex, targetAxisAnchorRowOffset, rangerowshift)
 
     // update will compensate if this is too high
     const maxAxisRowOffset = Math.max(0,listRowcount - 1) - rangerowshift
-    if (targetAxisRowOffset > maxAxisRowOffset) {
-        targetAxisRowOffset = maxAxisRowOffset
-        targetAxisReferenceIndex = targetAxisRowOffset * crosscount
+    if (targetAxisAnchorRowOffset > maxAxisRowOffset) {
+        targetAxisAnchorRowOffset = maxAxisRowOffset
+        targetAxisReferenceIndex = targetAxisAnchorRowOffset * crosscount
     }
 
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
 
     // leading edge
-    let targetCradleRowOffset = Math.max(rangerowshift,targetAxisRowOffset - runwayRowcount)
+    let targetCradleRowOffset = Math.max(rangerowshift,targetAxisAnchorRowOffset - runwayRowcount)
 
     // trailing edge
     let targetCradleEndRowOffset = targetCradleRowOffset + (cradleRowcount - 1)
@@ -137,12 +137,12 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     // --------------------[ calc css positioning ]-----------------------
 
     const targetScrollblockViewportPixelOffset = 
-        ((targetAxisRowOffset - rangerowshift) * baseRowPixelLength) + padding - targetAxisViewportPixelOffset
+        ((targetAxisAnchorRowOffset - rangerowshift) * baseRowPixelLength) + padding - targetAxisViewportPixelOffset
 
     // ----------------------[ return required values ]---------------------
 
-    console.log('==>> calculateContentListRequirements: targetScrollblockViewportPixelOffset, targetAxisRowOffset, baseRowPixelLength, padding, targetAxisViewportPixelOffset',
-        targetScrollblockViewportPixelOffset, targetAxisRowOffset, baseRowPixelLength, padding, targetAxisViewportPixelOffset)
+    console.log('==>> calculateContentListRequirements: targetScrollblockViewportPixelOffset, targetAxisAnchorRowOffset, baseRowPixelLength, padding, targetAxisViewportPixelOffset',
+        targetScrollblockViewportPixelOffset, targetAxisAnchorRowOffset, baseRowPixelLength, padding, targetAxisViewportPixelOffset)
 
     return {
         targetCradleReferenceIndex, 

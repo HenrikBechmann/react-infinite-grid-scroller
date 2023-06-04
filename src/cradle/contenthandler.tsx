@@ -734,7 +734,7 @@ newAxisViewportPixelOffset
 
         // --------------
         // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
-        const preAxisVirtualRows = Math.abs( Math.ceil( ( axisReferenceIndex - listlowindex)/crosscount ) )
+        const preAxisVirtualRows = Math.ceil( ( axisReferenceIndex - listlowindex )/crosscount )
     
         const baseCellLength = 
             ((orientation == 'vertical')?
