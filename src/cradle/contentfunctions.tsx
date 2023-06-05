@@ -684,10 +684,11 @@ export const calculateShiftSpecs = ({
         // accomodate the trailing runway
 
         // --- start of list adjustment
-        if (newCradleReferenceRowOffset < 0) {
+        if (newCradleReferenceRowOffset < rangerowshift) {
 
+            const diff = rangerowshift - newCradleReferenceRowOffset
             cradleReferenceRowshift -= newCradleReferenceRowOffset
-            newCradleReferenceRowOffset = 0
+            newCradleReferenceRowOffset = rangerowshift
 
         }
         if (layout == 'variable' && newAxisReferenceRowOffset == rangerowshift) {
