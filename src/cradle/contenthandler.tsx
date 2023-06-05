@@ -729,10 +729,11 @@ export default class ContentHandler {
         axisElement, headElement, listlowindex
     }) => {
         
-        // console.log('applyStyling: axisReferenceIndex, axisViewportPixelOffset, listlowindex', 
+        // console.log('==>> applyStyling: axisReferenceIndex, axisViewportPixelOffset, listlowindex', 
         //     axisReferenceIndex, axisViewportPixelOffset, listlowindex)
 
         if (layout == 'variable') return // there's a separate routine for variable adjustments and css
+
 
         // --------------
         // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
@@ -750,7 +751,6 @@ export default class ContentHandler {
         if (scrollDiff) {
             axisViewportPixelOffset += scrollDiff
         }
-        // --------------
 
         let topAxisPos, leftAxisPos // available for debug
         if (orientation == 'vertical') {
@@ -880,17 +880,28 @@ export default class ContentHandler {
         const headRowCount = Math.ceil(headGridElement.childNodes.length/crosscount),
             tailRowCount = Math.ceil(tailGridElement.childNodes.length/crosscount)
 
+        // console.log('------------------\n','headRowCount, headGridElement.childNodes.length, tailRowCount, axisReferenceIndex\n',
+        //     headRowCount, headGridElement.childNodes.length, tailRowCount, axisReferenceIndex )
+
         // reference rows - cradle first/last; axis; list end
-        const axisReferenceRow = 
-            (axisReferenceIndex < 0)?
-                Math.floor(axisReferenceIndex/crosscount):
-                Math.ceil(axisReferenceIndex/crosscount),
+        const axisReferenceRow = Math.floor(axisReferenceIndex/crosscount)
+            // (axisReferenceIndex < 0)?
+            //     Math.floor(axisReferenceIndex/crosscount):
+            //     Math.ceil(axisReferenceIndex/crosscount)
+
+        const
             cradleReferenceRow = axisReferenceRow - headRowCount,
             cradleLastRow = axisReferenceRow + (tailRowCount - 1),
             listLastRow = listRowcount - 1 + listrowshift
 
+        // console.log('axisReferenceRow, cradleReferenceRow, headRowCount\n',
+        //     axisReferenceRow, cradleReferenceRow, headRowCount)
+
         const preCradleRowCount = cradleReferenceRow - listrowshift,
             postCradleRowCount = listLastRow - cradleLastRow
+
+        // console.log('preCradleRowCount, cradleReferenceRow, listrowshift\n',
+        //     preCradleRowCount, cradleReferenceRow, listrowshift)
 
         // base pixel values
         const baseCellLength = 
@@ -918,6 +929,9 @@ export default class ContentHandler {
         const computedScrollblockLength = basePreAxisPixelLength + computedPostAxisPixelLength
         const blockScrollPos = basePreAxisPixelLength - axisViewportPixelOffset
         const newAxisScrollblockOffset = blockScrollPos + axisViewportPixelOffset // ie. basePreAxisPixelLength, but semantics
+
+        // console.log('newAxisScrollblockOffset, blockScrollPos, axisViewportPixelOffset\n',
+        //     newAxisScrollblockOffset, blockScrollPos, axisViewportPixelOffset)
 
         if (orientation == 'vertical') {
 
