@@ -806,38 +806,44 @@ export default class ContentHandler {
         // ----------------------[ setup base values and references ]------------------------
 
         // resources...
-        const { cradleParameters } = this,
+        const
+            { cradleParameters } = this,
             cradleHandlers = cradleParameters.handlersRef.current,
             ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current,
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
-            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
 
-        const { layoutHandler, scrollHandler, interruptHandler } = cradleHandlers
+        {
 
-        const { 
+            layoutHandler, 
+            scrollHandler, 
+            interruptHandler 
+
+        } = cradleHandlers,
+
+        { 
 
             elements: cradleElements, 
             cradlePositionData 
 
-        } = layoutHandler
-
-        // element references...
-        const viewportElement = ViewportContextProperties.elementRef.current,
-            scrollblockElement = viewportElement.firstChild,
-            headGridElement = cradleElements.headRef.current,
-            tailGridElement = cradleElements.tailRef.current,
-            axisElement = cradleElements.axisRef.current
+        } = layoutHandler,
 
         // current configurations...
-        const { 
+        { 
 
-            targetAxisReferencePosition: axisReferenceIndex,
+            targetAxisReferencePosition: axisReferencePosition,
             targetAxisViewportPixelOffset: axisViewportOffset,
-            // blockScrollPos:forwardedBlockScrollPos, 
 
-        } = cradlePositionData
+        } = cradlePositionData,
 
-        const {
+        // element references...
+        viewportElement = ViewportContextProperties.elementRef.current,
+        scrollblockElement = viewportElement.firstChild,
+        headGridElement = cradleElements.headRef.current,
+        tailGridElement = cradleElements.tailRef.current,
+        axisElement = cradleElements.axisRef.current,
+
+        {
 
             orientation, 
             gap, 
@@ -845,30 +851,44 @@ export default class ContentHandler {
             cellHeight,
             cellWidth,
 
-        } = cradleInheritedProperties
+        } = cradleInheritedProperties,
 
-        const { 
+        {
+
+            virtualListProps,
+            cradleContentProps,
+
+        } = cradleInternalProperties,
+
+        { 
 
             crosscount, 
-            rowcount:listRowcount 
+            rowcount:listRowcount,
+            lowindex:listlowindex,
+            rowshift:listrowshift,
 
-        } = cradleInternalProperties.virtualListProps
+
+        } = virtualListProps
 
         // ------------------------[ precursor calculations ]------------------------
 
+        const axisReferenceIndex = axisReferencePosition + listlowindex
         // rowcounts and row offsets for positioning
         // listRowcount taken from internal properties above
         const headRowCount = Math.ceil(headGridElement.childNodes.length/crosscount),
             tailRowCount = Math.ceil(tailGridElement.childNodes.length/crosscount)
 
         // reference rows - cradle first/last; axis; list end
-        const axisReferenceRow = Math.ceil(axisReferenceIndex/crosscount),
+        const axisReferenceRow = 
+            (axisReferenceIndex < 0)?
+                Math.floor(axisReferenceIndex/crosscount):
+                Math.ceil(axisReferenceIndex/crosscount),
             cradleReferenceRow = axisReferenceRow - headRowCount,
             cradleLastRow = axisReferenceRow + (tailRowCount - 1),
-            listLastRow = listRowcount - 1
+            listLastRow = listRowcount - 1 + listrowshift
 
-        const preCradleRowCount = cradleReferenceRow,
-            postCradleRowCount = listLastRow - cradleLastRow
+        const preCradleRowCount = cradleReferenceRow - listrowshift,
+            postCradleRowCount = listLastRow - cradleLastRow - listrowshift
 
         // base pixel values
         const baseCellLength = 
