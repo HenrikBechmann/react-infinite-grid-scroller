@@ -803,6 +803,8 @@ export default class ContentHandler {
 
     public adjustScrollblockForVariability = (source) => {
 
+        // console.log('adjustScrollblockForVariability: source',source)
+
         // ----------------------[ setup base values and references ]------------------------
 
         // resources...
@@ -832,7 +834,7 @@ export default class ContentHandler {
         { 
 
             targetAxisReferencePosition: axisReferencePosition,
-            targetAxisViewportPixelOffset: axisViewportOffset,
+            targetAxisViewportPixelOffset: axisViewportPixelOffset,
 
         } = cradlePositionData,
 
@@ -870,7 +872,7 @@ export default class ContentHandler {
 
         } = virtualListProps
 
-        // ------------------------[ precursor calculations ]------------------------
+        // ------------------------[ calculations ]------------------------
 
         const axisReferenceIndex = axisReferencePosition + listlowindex
         // rowcounts and row offsets for positioning
@@ -888,7 +890,7 @@ export default class ContentHandler {
             listLastRow = listRowcount - 1 + listrowshift
 
         const preCradleRowCount = cradleReferenceRow - listrowshift,
-            postCradleRowCount = listLastRow - cradleLastRow - listrowshift
+            postCradleRowCount = listLastRow - cradleLastRow
 
         // base pixel values
         const baseCellLength = 
@@ -897,14 +899,14 @@ export default class ContentHandler {
                 cellWidth
             ) + gap
 
-        const measuredTailLength = 
+        const measuredTailPixelLength = 
             (orientation == 'vertical')?
                 tailGridElement.offsetHeight:
                 tailGridElement.offsetWidth
 
         const basePostCradlePixelLength = postCradleRowCount * baseCellLength
 
-        const computedPostAxisPixelLength = basePostCradlePixelLength + measuredTailLength
+        const computedPostAxisPixelLength = basePostCradlePixelLength + measuredTailPixelLength
 
         // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
         const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding
@@ -914,8 +916,8 @@ export default class ContentHandler {
         interruptHandler.signals.pauseCradleIntersectionObserver = true
 
         const computedScrollblockLength = basePreAxisPixelLength + computedPostAxisPixelLength
-        const blockScrollPos = basePreAxisPixelLength - axisViewportOffset
-        const newAxisScrollblockOffset = blockScrollPos + axisViewportOffset // ie. basePreAxisPixelLength, but semantics
+        const blockScrollPos = basePreAxisPixelLength - axisViewportPixelOffset
+        const newAxisScrollblockOffset = blockScrollPos + axisViewportPixelOffset // ie. basePreAxisPixelLength, but semantics
 
         if (orientation == 'vertical') {
 
@@ -981,13 +983,16 @@ export default class ContentHandler {
         // check for gotoIndex or resize overshoot
         if ((source == 'setcradle') && !postCradleRowCount) { 
 
-            const viewportLength = 
+            const viewportPixelLength = 
                 (orientation == 'vertical')?
                     viewportElement.offsetHeight:
                     viewportElement.offsetWidth
 
             const alignedEndPosDiff = 
-                axisViewportOffset + measuredTailLength - viewportLength
+                axisViewportPixelOffset + measuredTailPixelLength - viewportPixelLength
+
+            // console.log('source, alignedEndPosDiff, axisViewportPixelOffset, measuredTailPixelLength, viewportPixelLength\n',
+            //     source, alignedEndPosDiff, axisViewportPixelOffset, measuredTailPixelLength, viewportPixelLength)
 
             if (alignedEndPosDiff < 0) { // fill the bottom of the viewport using scrollBy
 
