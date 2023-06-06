@@ -175,7 +175,9 @@ export default class ContentHandler {
         // in row lead position
         workingAxisReferenceIndex -=
             workingAxisReferenceIndex < 0? 
-                (crosscount - Math.abs(workingAxisReferenceIndex % crosscount)):
+                (workingAxisReferenceIndex % crosscount)?
+                    (crosscount - Math.abs(workingAxisReferenceIndex % crosscount)):
+                    0:
                 workingAxisReferenceIndex % crosscount
 
         console.log('second calc: workingAxisReferenceIndex, crosscount',
