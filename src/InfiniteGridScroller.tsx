@@ -94,7 +94,7 @@ const InfiniteGridScroller = (props) => {
             // max for variable layout
         startingListSize = 0, // the starging number of items in the virtual list. can be changed
         // startingListRange = null,
-        startingListRange = [5,100],
+        startingListRange = [-1043, -998],
         getItem, // required. function provided by host - parameters set by system are index number
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
