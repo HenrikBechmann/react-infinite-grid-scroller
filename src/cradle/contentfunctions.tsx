@@ -36,6 +36,8 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     }) => {
 
+    console.log('==>> calculateContentListRequirements:1. targetAxisReferenceIndex\n',targetAxisReferenceIndex)
+
     const { 
         padding,
     } = cradleInheritedProperties
@@ -72,15 +74,19 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex, listhighindex)
     targetAxisReferenceIndex = Math.max(targetAxisReferenceIndex, listlowindex)
 
+    console.log('2. targetAxisReferenceIndex\n',targetAxisReferenceIndex)
+
     // derive target row
     let targetAxisAnchorRowOffset = Math.floor(targetAxisReferenceIndex/crosscount)
 
     // update will compensate if this is too high
-    const maxAxisRowOffset = Math.max(0,listRowcount - 1) - rangerowshift
+    const maxAxisRowOffset = Math.max(0,listRowcount - 1) + rangerowshift
     if (targetAxisAnchorRowOffset > maxAxisRowOffset) {
         targetAxisAnchorRowOffset = maxAxisRowOffset
         targetAxisReferenceIndex = targetAxisAnchorRowOffset * crosscount
     }
+
+    console.log('3. targetAxisReferenceIndex\n',targetAxisReferenceIndex)
 
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
 
@@ -98,7 +104,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
         targetCradleEndRowOffset -= diff
     }
 
-    let targetCradleReferenceIndex = (targetCradleRowOffset * crosscount) // - baserowblanks
+    let targetCradleReferenceIndex = (targetCradleRowOffset * crosscount) // + baserowblanks
     targetCradleReferenceIndex = Math.max(targetCradleReferenceIndex,listlowindex)
 
     // ---------------------[ calc cradle content count ]---------------------
@@ -121,6 +127,9 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
         ((targetAxisAnchorRowOffset - rangerowshift) * baseRowPixelLength) + padding - targetAxisViewportPixelOffset
 
     // ----------------------[ return required values ]---------------------
+
+    console.log('4.targetCradleReferenceIndex, targetAxisReferenceIndex, newCradleContentCount\n',
+        targetCradleReferenceIndex, targetAxisReferenceIndex, newCradleContentCount)
 
     return {
         targetCradleReferenceIndex, 
@@ -900,7 +909,7 @@ export const allocateContentList = (
     } else { // defensive; shouldn't happen
 
         console.log('FAILURE TO REGISTER TRIGGERCELL:')
-        console.log('axisReferenceIndex, triggercellIndex, lowcontentindex, highcontentindex, headitemcount, targetTriggercellIndex',
+        console.log('axisReferenceIndex, triggercellIndex, lowcontentindex, highcontentindex, headitemcount, targetTriggercellIndex\n',
             axisReferenceIndex, triggercellIndex, lowcontentindex, highcontentindex, headitemcount, targetTriggercellIndex)
         console.log('triggercellPtr, triggercellComponent, triggercellComponent?.props.isTriggecell, contentlist\n', 
             triggercellPtr, triggercellComponent, triggercellComponent?.props.isTriggecell, 

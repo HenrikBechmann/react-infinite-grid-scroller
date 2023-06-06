@@ -166,12 +166,17 @@ export default class ContentHandler {
 
         // in bounds
         let workingAxisReferencePosition = Math.min(requestedAxisReferencePosition,listsize - 1)
-        // in row lead position
-        workingAxisReferencePosition -= (workingAxisReferencePosition % crosscount)
         // shifted by virtual list low range
-        const workingAxisReferenceIndex  = workingAxisReferencePosition + listlowindex
+        let workingAxisReferenceIndex  = workingAxisReferencePosition + listlowindex
 
-        // console.log('workingRequestAxisReferenceIndex',workingAxisReferenceIndex)
+        console.log('first calc: workingAxisReferenceIndex, workingAxisReferencePosition, listlowindex, workingAxisReferenceIndex % crosscount, crosscount\n', 
+            workingAxisReferenceIndex, workingAxisReferencePosition, listlowindex, workingAxisReferenceIndex % crosscount, crosscount)
+
+        // in row lead position
+        workingAxisReferenceIndex -= (workingAxisReferenceIndex % crosscount)
+
+        console.log('second calc: workingAxisReferenceIndex, crosscount',
+            workingAxisReferenceIndex, crosscount)
 
         // reposition at row boundary
         if ([
@@ -227,8 +232,8 @@ export default class ContentHandler {
 
             })
 
-        // console.log('from calculateContentListRequirements: targetCradleReferenceIndex, targetAxisReferenceIndex, scrollblockViewportPixelOffset',
-        //     targetCradleReferenceIndex, targetAxisReferenceIndex, scrollblockViewportPixelOffset)
+        console.log('from calculateContentListRequirements: targetCradleReferenceIndex, targetAxisReferenceIndex, scrollblockViewportPixelOffset\n',
+            targetCradleReferenceIndex, targetAxisReferenceIndex, scrollblockViewportPixelOffset)
 
         const axisViewportPixelOffset = targetAxisViewportPixelOffset // semantics
 
@@ -696,6 +701,8 @@ export default class ContentHandler {
                 axisReferenceIndex,'updateCradleContent', cstate)
         
         }
+
+        console.log('updateCradleContent: axisReferenceIndex', axisReferenceIndex)
 
         // -------------------------------[ 6. css changes ]-------------------------
 
