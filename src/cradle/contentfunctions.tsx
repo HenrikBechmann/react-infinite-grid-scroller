@@ -43,8 +43,6 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     const {
 
         cradleContentProps,
-        // cradleRowcount,
-        // runwayRowcount,
         virtualListProps,
 
     } = cradleInternalProperties
@@ -69,22 +67,13 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     } = virtualListProps
 
-    // console.log('INITIAL targetAxisReferenceIndex, baserowblanks',targetAxisReferenceIndex, baserowblanks)
-
     // align axis reference to last row item
     targetAxisReferenceIndex -= Math.abs(targetAxisReferenceIndex % crosscount)
     targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex, listhighindex)
-    // targetAxisReferenceIndex -= Math.abs((baserowblanks + targetAxisReferenceIndex) % crosscount)
     targetAxisReferenceIndex = Math.max(targetAxisReferenceIndex, listlowindex)
 
     // derive target row
     let targetAxisAnchorRowOffset = Math.floor(targetAxisReferenceIndex/crosscount)
-        // (targetAxisReferenceIndex < 0)?
-        //     Math.floor(targetAxisReferenceIndex/crosscount):
-        //     Math.ceil(targetAxisReferenceIndex/crosscount)
-
-    // console.log('REVISED targetAxisReferenceIndex, targetAxisAnchorRowOffset, rangerowshift',
-    //     targetAxisReferenceIndex, targetAxisAnchorRowOffset, rangerowshift)
 
     // update will compensate if this is too high
     const maxAxisRowOffset = Math.max(0,listRowcount - 1) - rangerowshift
@@ -103,16 +92,11 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     const listEndRowOffset = (listRowcount - 1) + rangerowshift
 
-    // console.log('targetCradleRowOffset, targetCradleEndRowOffset, listEndRowOffset, cradleRowcount',
-    //     targetCradleRowOffset, targetCradleEndRowOffset, listEndRowOffset,cradleRowcount)
-
     if (targetCradleEndRowOffset > (listEndRowOffset)) {
         const diff = (targetCradleEndRowOffset - listEndRowOffset)
         targetCradleRowOffset -= diff
         targetCradleEndRowOffset -= diff
     }
-
-    // console.log('revised targetCradleEndRowOffset',targetCradleEndRowOffset)
 
     let targetCradleReferenceIndex = (targetCradleRowOffset * crosscount) // - baserowblanks
     targetCradleReferenceIndex = Math.max(targetCradleReferenceIndex,listlowindex)
@@ -121,8 +105,6 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     let newCradleContentCount = cradleRowcount * crosscount
     if (targetCradleEndRowOffset == listEndRowOffset) {
-        // const endRowRemainderCount = listsize % crosscount
-        // if (endRowRemainderCount) {
         if (endrowblanks) {
             newCradleContentCount -= endrowblanks// endRowRemainderCount)
         }
@@ -133,20 +115,12 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
         }
     }
 
-    // console.log('newCradleContentCount', newCradleContentCount)
-
     // --------------------[ calc css positioning ]-----------------------
 
     const targetScrollblockViewportPixelOffset = 
         ((targetAxisAnchorRowOffset - rangerowshift) * baseRowPixelLength) + padding - targetAxisViewportPixelOffset
 
     // ----------------------[ return required values ]---------------------
-
-    // console.log('==>> calculateContentListRequirements: targetScrollblockViewportPixelOffset = (targetAxisAnchorRowOffset - rangerowshift) * baseRowPixelLength) + padding - targetAxisViewportPixelOffset\n',
-    //     targetScrollblockViewportPixelOffset, targetAxisAnchorRowOffset, rangerowshift, baseRowPixelLength, padding, targetAxisViewportPixelOffset)
-
-    // console.log('targetCradleReferenceIndex, targetAxisReferenceIndex, newCradleContentCount\n',
-    //     targetCradleReferenceIndex, targetAxisReferenceIndex, newCradleContentCount)
 
     return {
         targetCradleReferenceIndex, 
@@ -212,15 +186,11 @@ export const generateShiftInstruction = ({
         (orientation == 'vertical')?
             Math.trunc(entry.rootBounds.y):
             Math.trunc(entry.rootBounds.x)
-            // entry.rootBounds.y:
-            // entry.rootBounds.x
 
     const boundingrootpos =
         (orientation == 'vertical')?
             Math.trunc(viewportBoundingRect.y):
             Math.trunc(viewportBoundingRect.x)
-            // viewportBoundingRect.y:
-            // viewportBoundingRect.x
 
     // this selection is redundant, but documents what's going on
     const rootpos = 
@@ -232,8 +202,6 @@ export const generateShiftInstruction = ({
         (orientation == 'vertical')?
             Math.trunc(entry.boundingClientRect.y):
             Math.trunc(entry.boundingClientRect.x)
-            // entry.boundingClientRect.y:
-            // entry.boundingClientRect.x
 
     const viewportTriggerOffset = entrypos - rootpos
 
@@ -332,9 +300,6 @@ export const generateShiftInstruction = ({
             triggerData.tailOffset: // needs to move up or left toward head
             triggerData.headOffset // needs to move down or right toward tail
 
-    // console.log('-->> generateShiftInstruction: shiftinstruction, triggerViewportReferencePixelPos, triggerData\n',
-    //     shiftinstruction, triggerViewportReferencePixelPos, triggerData)
-
     return [shiftinstruction, triggerViewportReferencePixelPos]
 
 }
@@ -428,21 +393,12 @@ export const calculateShiftSpecs = ({
     // normalize
     const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0)
     const previousCradleRowOffset = Math.floor(previousCradleReferenceIndex/crosscount)
-        // (previousCradleReferenceIndex < 0)?
-        //     Math.floor(previousCradleReferenceIndex/crosscount):
-        //     Math.ceil(previousCradleReferenceIndex/crosscount)
 
     const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0)
     
     const previousAxisRowOffset = Math.floor(previousAxisReferenceIndex/crosscount)
-        // (previousAxisReferenceIndex < 0)?
-        //     Math.floor(previousAxisReferenceIndex/crosscount):
-        //     Math.ceil(previousAxisReferenceIndex/crosscount)
 
     const listEndrowOffset = (listRowcount - 1) + rangerowshift
-
-    // console.log('previousCradleReferenceIndex, previousCradleRowOffset, previousAxisReferenceIndex, previousAxisRowOffset, listEndrowOffset\n',
-    //     previousCradleReferenceIndex, previousCradleRowOffset, previousAxisReferenceIndex, previousAxisRowOffset, listEndrowOffset)
 
     const baseRowPixelLength =
         ((orientation == 'vertical')?
@@ -491,8 +447,6 @@ export const calculateShiftSpecs = ({
                 (triggerViewportReferencePixelPos - cumulativepixellength) <= 0)
 
         }
-
-        // console.log('==>> calculateShiftSpecs:variable foundGridSpanRowShiftIncrement', foundGridSpanRowShiftIncrement)
 
         if (foundGridSpanRowShiftIncrement != -1) { // found measureed row for shift
 
@@ -569,8 +523,6 @@ export const calculateShiftSpecs = ({
         // byPixelMeasureGridRowCount is one greater than foundGridSpanRowIncrement with actual measurements above
         // this -1 makes them compatible for span conversion (next step)
         foundGridSpanRowShiftIncrement = byPixelMeasureGridRowShiftCount - 1
-        // console.log('first foundGridSpanRowIncrement, byPixelMeasureGridRowShiftCount\n', 
-        //     foundGridSpanRowShiftIncrement, byPixelMeasureGridRowShiftCount)
 
     }
 
@@ -579,9 +531,6 @@ export const calculateShiftSpecs = ({
             foundGridSpanRowShiftIncrement + 1:
             -(foundGridSpanRowShiftIncrement + 1)
 
-    // console.log('-----------------\n','previousAxisReferenceIndex, shiftinstruction, gridSpanRowShift\n',
-    //     previousAxisReferenceIndex, shiftinstruction, gridSpanRowShift )
-
     // the following two values (axisReferenceRowShift & axisPixelShift), and no other calcs, 
     //     are carried forward in this function.
     // for axisReferenceRowshift:
@@ -589,8 +538,6 @@ export const calculateShiftSpecs = ({
     // positive for moving rows out of tail into head
     let axisReferenceRowShift = gridSpanRowShift,
         axisPixelShift = gridSpanAxisPixelShift 
-
-    // console.log('axisReferenceRowShift', axisReferenceRowShift)
 
     // this can only happen with oversized cellLength (ie > viewportLength)
     //     and only using measured length
@@ -629,9 +576,6 @@ export const calculateShiftSpecs = ({
 
     let newAxisViewportPixelOffset = currentViewportAxisPixelOffset + axisPixelShift
 
-    // console.log('+++newAxisViewportPixelOffset = currentViewportAxisPixelOffset + axisPixelShift\n',
-    //     newAxisViewportPixelOffset, currentViewportAxisPixelOffset, axisPixelShift)
-
     // Note: sections 5, 6 and 7 deal entirely with row calculations; no pixels
 
     // ------------[ 5. calc new cradle and axis reference row offsets ]-------------
@@ -642,14 +586,6 @@ export const calculateShiftSpecs = ({
     // base values
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
     const newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowShift
-
-    // console.log('newAxisReferenceRowOffset, previousAxisRowOffset, axisReferenceRowShift\n',
-    //     newAxisReferenceRowOffset, previousAxisRowOffset, axisReferenceRowShift)
-
-    // console.log('newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift,\n',
-    //     'newAxisReferenceRowOffset, previousAxisRowOffset, axisReferenceRowShift\n',
-    //     newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift,'\n',
-    //     newAxisReferenceRowOffset, previousAxisRowOffset, axisReferenceRowShift)
 
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
@@ -724,9 +660,6 @@ export const calculateShiftSpecs = ({
 
     }
 
-    // console.log('shiftinstruction, newCradleReferenceRowOffset, cradleReferenceRowshift\n',
-    //     shiftinstruction, newCradleReferenceRowOffset, cradleReferenceRowshift)
-
     // ----------------------[ 7. map rows to item references ]----------------------
 
     let newCradleReferenceIndex = (newCradleReferenceRowOffset * crosscount) // + baserowblanks
@@ -736,15 +669,10 @@ export const calculateShiftSpecs = ({
     const newAxisReferenceIndex = Math.max(listlowindex, newAxisReferenceRowOffset * crosscount)
     const axisReferenceItemShift = newAxisReferenceIndex - previousAxisReferenceIndex
 
-    // console.log('!!!! newAxisReferenceIndex = Math.max(listlowindex, newAxisReferenceRowOffset * crosscount)\n',
-    //     newAxisReferenceIndex, listlowindex, newAxisReferenceRowOffset, crosscount)
-
     let newCradleContentCount = cradleRowcount * crosscount // base count
 
     const includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount - rangerowshift) >= listRowcount)
     const includesFirstRow = (newCradleReferenceRowOffset == rangerowshift)
-
-    // console.log('includesLastRow, includesFirstRow',includesLastRow, includesFirstRow)
 
     if (includesLastRow) {
 
@@ -758,9 +686,6 @@ export const calculateShiftSpecs = ({
 
     }
 
-    // console.log('newCradleReferenceIndex, cradleReferenceItemShift, newAxisReferenceIndex, axisReferenceItemShift\n',
-    //     newCradleReferenceIndex, cradleReferenceItemShift, newAxisReferenceIndex, axisReferenceItemShift)
-
     // create head and tail change counts
     const changeOfCradleContentCount = cradlecontentlist.length - newCradleContentCount
 
@@ -768,9 +693,6 @@ export const calculateShiftSpecs = ({
     const listEndChangeCount = -listStartChangeCount - changeOfCradleContentCount
 
     // ---------------------[ 8. return required values ]-------------------
-
-    // console.log('cradleReferenceItemShift, newAxisReferenceIndex, axisReferenceItemShift, newAxisViewportPixelOffset\n',
-    //     cradleReferenceItemShift, newAxisReferenceIndex, axisReferenceItemShift, newAxisViewportPixelOffset)
 
     return {
 
@@ -936,7 +858,6 @@ export const allocateContentList = (
         contentlist, // of cradle, in items (React components)
         axisReferenceIndex, // first tail item
         layoutHandler,
-        // listlowindex,
 
     }
 ) => {
@@ -958,19 +879,10 @@ export const allocateContentList = (
             true:
             false
 
-    // console.log('==>> targetTriggercellIndex, axisReferenceIndex, lowcontentindex, headitemcount, layoutHandler.triggercellIsInTail\n',
-    //     targetTriggercellIndex, axisReferenceIndex, lowcontentindex, headitemcount, layoutHandler.triggercellIsInTail)
-
-    // console.log('------------------------\n',
-    //     'allocateContentList: targetTriggercellIndex, axisReferenceIndex, layoutHandler.triggercellIsInTail\n',
-    //     targetTriggercellIndex, axisReferenceIndex, layoutHandler.triggercellIsInTail)
-
     if ((triggercellIndex !== undefined) && (lowcontentindex !== undefined)) { //&& 
         if ((triggercellIndex >= lowcontentindex) && (triggercellIndex <= highcontentindex)) {
             const triggercellPtr = triggercellIndex - lowcontentindex
             const triggercellComponent = contentlist[triggercellPtr]
-            // console.log('clearing trigger cell: triggercellPtr, triggercellIndex, lowcontentindex, triggercellComponent',
-            //     triggercellPtr, triggercellIndex, lowcontentindex, triggercellComponent)
             if (triggercellComponent) { // otherwise has been asynchronously cleared
                 contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:false})
             }
@@ -978,9 +890,6 @@ export const allocateContentList = (
     }
 
     const triggercellPtr = targetTriggercellIndex - lowcontentindex
-
-    // console.log('- triggercellPtr, headitemcount, targetTriggercellIndex, offsetindex\n', 
-    //     triggercellPtr, headitemcount, targetTriggercellIndex, lowcontentindex)
 
     const triggercellComponent = contentlist[triggercellPtr]
     if (triggercellComponent) {
