@@ -173,7 +173,10 @@ export default class ContentHandler {
             workingAxisReferenceIndex, workingAxisReferencePosition, listlowindex, workingAxisReferenceIndex % crosscount, crosscount)
 
         // in row lead position
-        workingAxisReferenceIndex -= (workingAxisReferenceIndex % crosscount)
+        workingAxisReferenceIndex -=
+            workingAxisReferenceIndex < 0? 
+                (crosscount - Math.abs(workingAxisReferenceIndex % crosscount)):
+                workingAxisReferenceIndex % crosscount
 
         console.log('second calc: workingAxisReferenceIndex, crosscount',
             workingAxisReferenceIndex, crosscount)
