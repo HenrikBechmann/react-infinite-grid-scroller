@@ -69,8 +69,8 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     } = virtualListProps
 
-    // align axis reference to last row item
-    targetAxisReferenceIndex -= Math.abs(targetAxisReferenceIndex % crosscount)
+    // align axis reference to list scope
+    // targetAxisReferenceIndex -= Math.abs(targetAxisReferenceIndex % crosscount)
     targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex, listhighindex)
     targetAxisReferenceIndex = Math.max(targetAxisReferenceIndex, listlowindex)
 
@@ -80,13 +80,13 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     let targetAxisAnchorRowOffset = Math.floor(targetAxisReferenceIndex/crosscount)
 
     // update will compensate if this is too high
-    const maxAxisRowOffset = Math.max(0,listRowcount - 1) + rangerowshift
-    if (targetAxisAnchorRowOffset > maxAxisRowOffset) {
-        targetAxisAnchorRowOffset = maxAxisRowOffset
-        targetAxisReferenceIndex = targetAxisAnchorRowOffset * crosscount
-    }
+    // const maxAxisRowOffset = Math.max(0,listRowcount - 1) + rangerowshift
+    // if (targetAxisAnchorRowOffset > maxAxisRowOffset) {
+    //     targetAxisAnchorRowOffset = maxAxisRowOffset
+    //     targetAxisReferenceIndex = targetAxisAnchorRowOffset * crosscount
+    // }
 
-    console.log('3. targetAxisReferenceIndex\n',targetAxisReferenceIndex)
+    // console.log('3. targetAxisReferenceIndex\n',targetAxisReferenceIndex)
 
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
 

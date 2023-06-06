@@ -169,10 +169,10 @@ export default class ContentHandler {
         // shifted by virtual list low range
         let workingAxisReferenceIndex  = workingAxisReferencePosition + listlowindex
 
-        console.log('first calc: workingAxisReferenceIndex, workingAxisReferencePosition, listlowindex, workingAxisReferenceIndex % crosscount, crosscount\n', 
-            workingAxisReferenceIndex, workingAxisReferencePosition, listlowindex, workingAxisReferenceIndex % crosscount, crosscount)
+        // console.log('first calc: workingAxisReferenceIndex, workingAxisReferencePosition, listlowindex, workingAxisReferenceIndex % crosscount, crosscount\n', 
+        //     workingAxisReferenceIndex, workingAxisReferencePosition, listlowindex, workingAxisReferenceIndex % crosscount, crosscount)
 
-        // in row lead position
+        // calculate axis reference base index
         workingAxisReferenceIndex -=
             workingAxisReferenceIndex < 0? 
                 (workingAxisReferenceIndex % crosscount)?
@@ -180,8 +180,8 @@ export default class ContentHandler {
                     0:
                 workingAxisReferenceIndex % crosscount
 
-        console.log('second calc: workingAxisReferenceIndex, crosscount',
-            workingAxisReferenceIndex, crosscount)
+        // console.log('second calc: workingAxisReferenceIndex, crosscount',
+        //     workingAxisReferenceIndex, crosscount)
 
         // reposition at row boundary
         if ([
