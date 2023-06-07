@@ -36,7 +36,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     }) => {
 
-    console.log('==>> calculateContentListRequirements:1. targetAxisReferenceIndex\n',targetAxisReferenceIndex)
+    // console.log('==>> calculateContentListRequirements:1. targetAxisReferenceIndex\n',targetAxisReferenceIndex)
 
     const { 
         padding,
@@ -74,7 +74,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex, listhighindex)
     targetAxisReferenceIndex = Math.max(targetAxisReferenceIndex, listlowindex)
 
-    console.log('2. targetAxisReferenceIndex\n',targetAxisReferenceIndex)
+    // console.log('2. targetAxisReferenceIndex\n',targetAxisReferenceIndex)
 
     // derive target row
     let targetAxisAnchorRowOffset = Math.floor(targetAxisReferenceIndex/crosscount)
@@ -128,8 +128,8 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     // ----------------------[ return required values ]---------------------
 
-    console.log('4.targetCradleReferenceIndex, targetAxisReferenceIndex, newCradleContentCount\n',
-        targetCradleReferenceIndex, targetAxisReferenceIndex, newCradleContentCount)
+    // console.log('4.targetCradleReferenceIndex, targetAxisReferenceIndex, newCradleContentCount\n',
+    //     targetCradleReferenceIndex, targetAxisReferenceIndex, newCradleContentCount)
 
     return {
         targetCradleReferenceIndex, 
