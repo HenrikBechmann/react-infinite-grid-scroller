@@ -596,6 +596,9 @@ export const calculateShiftSpecs = ({
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
     const newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowShift
 
+    // console.log('1. newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift\n',
+    //     newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift)
+
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
 
@@ -643,7 +646,7 @@ export const calculateShiftSpecs = ({
         if (newCradleReferenceRowOffset < rangerowshift) {
 
             const diff = rangerowshift - newCradleReferenceRowOffset
-            cradleReferenceRowshift -= newCradleReferenceRowOffset
+            cradleReferenceRowshift -= diff
             newCradleReferenceRowOffset = rangerowshift
 
         }

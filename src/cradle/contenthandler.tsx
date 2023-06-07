@@ -237,8 +237,8 @@ export default class ContentHandler {
 
             })
 
-        console.log('from calculateContentListRequirements: targetCradleReferenceIndex, targetAxisReferenceIndex, scrollblockViewportPixelOffset\n',
-            targetCradleReferenceIndex, targetAxisReferenceIndex, scrollblockViewportPixelOffset)
+        // console.log('from calculateContentListRequirements: targetCradleReferenceIndex, targetAxisReferenceIndex, scrollblockViewportPixelOffset\n',
+        //     targetCradleReferenceIndex, targetAxisReferenceIndex, scrollblockViewportPixelOffset)
 
         const axisViewportPixelOffset = targetAxisViewportPixelOffset // semantics
 
@@ -707,7 +707,7 @@ export default class ContentHandler {
         
         }
 
-        console.log('updateCradleContent: axisReferenceIndex', axisReferenceIndex)
+        // console.log('updateCradleContent: axisReferenceIndex', axisReferenceIndex)
 
         // -------------------------------[ 6. css changes ]-------------------------
 
