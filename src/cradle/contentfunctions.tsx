@@ -309,6 +309,9 @@ export const generateShiftInstruction = ({
             triggerData.tailOffset: // needs to move up or left toward head
             triggerData.headOffset // needs to move down or right toward tail
 
+    console.log('shiftinstruction, triggerViewportReferencePixelPos\n', 
+        shiftinstruction, triggerViewportReferencePixelPos)
+
     return [shiftinstruction, triggerViewportReferencePixelPos]
 
 }
@@ -625,7 +628,10 @@ export const calculateShiftSpecs = ({
 
         // --- end of list adjustment: case of being in bounds of trailing runway (end of list)
         const targetCradleEndrowOffset = newCradleReferenceRowOffset + (cradleRowcount - 1)
-        const tailrowdiff = Math.max(0,targetCradleEndrowOffset - listEndrowOffset)
+        const tailrowdiff = targetCradleEndrowOffset - listEndrowOffset
+
+        // console.log('tailrowdiff = targetCradleEndrowOffset - listEndrowOffset, virtualListProps\n',
+        //     tailrowdiff, targetCradleEndrowOffset, listEndrowOffset, virtualListProps)
 
         if (tailrowdiff > 0) {
 
@@ -658,10 +664,10 @@ export const calculateShiftSpecs = ({
         const computedNextCradleEndrowOffset = 
             (previousCradleRowOffset + (cradleRowcount -1) + cradleReferenceRowshift)
 
-        const targetCradleEndrowOffset = Math.min(listEndrowOffset, 
-            (newAxisReferenceRowOffset + (viewportRowcount - 1) + (runwayRowcount - 1)))
+        const targetCradleEndrowOffset = 
+            (newAxisReferenceRowOffset + (viewportRowcount - 1) + (runwayRowcount - 1))
 
-        const tailrowdiff = Math.max(0, targetCradleEndrowOffset - computedNextCradleEndrowOffset)
+        const tailrowdiff = targetCradleEndrowOffset - computedNextCradleEndrowOffset
 
         if (tailrowdiff > 0) {
 
@@ -684,17 +690,21 @@ export const calculateShiftSpecs = ({
     let newCradleContentCount = cradleRowcount * crosscount // base count
 
     const includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount - rangerowshift) >= listRowcount)
+
+    console.log('includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount - rangerowshift) >= listRowcount)\n',
+        includesLastRow, newCradleReferenceRowOffset, cradleRowcount, rangerowshift, listRowcount)
+
     const includesFirstRow = (newCradleReferenceRowOffset == rangerowshift)
 
     if (includesLastRow) {
 
-        newCradleContentCount -= endrowblanks //itemsShortfall
+        newCradleContentCount -= endrowblanks
 
     }
 
     if (includesFirstRow) {
 
-        newCradleContentCount -= baserowblanks //itemsShortfall
+        newCradleContentCount -= baserowblanks
 
     }
 
@@ -703,6 +713,9 @@ export const calculateShiftSpecs = ({
 
     const listStartChangeCount = -(cradleReferenceItemShift)
     const listEndChangeCount = -listStartChangeCount - changeOfCradleContentCount
+
+    console.log('listStartChangeCount, listEndChangeCount, cradleReferenceItemShift, changeOfCradleContentCount\n',
+        listStartChangeCount, listEndChangeCount, cradleReferenceItemShift, changeOfCradleContentCount)
 
     // ---------------------[ 8. return required values ]-------------------
 
