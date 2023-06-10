@@ -309,8 +309,8 @@ export const generateShiftInstruction = ({
             triggerData.tailOffset: // needs to move up or left toward head
             triggerData.headOffset // needs to move down or right toward tail
 
-    console.log('shiftinstruction, triggerViewportReferencePixelPos\n', 
-        shiftinstruction, triggerViewportReferencePixelPos)
+    // console.log('shiftinstruction, triggerViewportReferencePixelPos, triggerData\n', 
+    //     shiftinstruction, triggerViewportReferencePixelPos, triggerData)
 
     return [shiftinstruction, triggerViewportReferencePixelPos]
 
@@ -691,8 +691,8 @@ export const calculateShiftSpecs = ({
 
     const includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount - rangerowshift) >= listRowcount)
 
-    console.log('includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount - rangerowshift) >= listRowcount)\n',
-        includesLastRow, newCradleReferenceRowOffset, cradleRowcount, rangerowshift, listRowcount)
+    // console.log('includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount - rangerowshift) >= listRowcount)\n',
+    //     includesLastRow, newCradleReferenceRowOffset, cradleRowcount, rangerowshift, listRowcount)
 
     const includesFirstRow = (newCradleReferenceRowOffset == rangerowshift)
 
@@ -714,8 +714,8 @@ export const calculateShiftSpecs = ({
     const listStartChangeCount = -(cradleReferenceItemShift)
     const listEndChangeCount = -listStartChangeCount - changeOfCradleContentCount
 
-    console.log('listStartChangeCount, listEndChangeCount, cradleReferenceItemShift, changeOfCradleContentCount\n',
-        listStartChangeCount, listEndChangeCount, cradleReferenceItemShift, changeOfCradleContentCount)
+    // console.log('listStartChangeCount, listEndChangeCount, cradleReferenceItemShift, changeOfCradleContentCount\n',
+    //     listStartChangeCount, listEndChangeCount, cradleReferenceItemShift, changeOfCradleContentCount)
 
     // ---------------------[ 8. return required values ]-------------------
 

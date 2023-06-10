@@ -91,6 +91,10 @@ export default class InterruptHandler {
 
             // for browser top or bottom bounce
             // fractional pixels can cause this to fail, hence Math.floor)
+
+            // console.log('==>> axisTriggerlinesObserverCallback: scrollPos, viewportLength, contentLength, Math.floor(scrollPos + viewportLength)\n',
+            //     scrollPos, viewportLength, contentLength, Math.floor(scrollPos + viewportLength))
+
             if ( (scrollPos >= 0) || (Math.floor(scrollPos + viewportLength) <= contentLength)) { 
 
                 const viewportBoundingRect = viewportElement.getBoundingClientRect()
@@ -116,6 +120,9 @@ export default class InterruptHandler {
                     const tailcontentlist = contentHandler.content.tailModelComponents
                     const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0)
                     const previousAxisRowOffset = Math.ceil(previousAxisReferenceIndex/crosscount)
+
+                    console.log('lastListRowOffset, previousAxisRowOffset\n',
+                        lastListRowOffset, previousAxisRowOffset)
 
                     if (lastListRowOffset == previousAxisRowOffset) return
 
