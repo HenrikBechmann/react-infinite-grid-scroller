@@ -65,14 +65,21 @@ export default class InterruptHandler {
 
             } = cradleInheritedProperties
 
-            const { 
+            const 
+            { 
 
                 triggerHistoryRef,
                 virtualListProps,
 
-            } = cradleInternalProperties
+            } = cradleInternalProperties,
 
-            const { crosscount, size:listsize } = virtualListProps
+            { 
+            
+                crosscount, 
+                size:listsize,
+                rowshift,
+
+            } = virtualListProps
 
             const scrollPos = 
                 (orientation == 'vertical')?
@@ -115,14 +122,14 @@ export default class InterruptHandler {
 
                 if (shiftinstruction == 'moveaxistailward') { // filter out oversize last row
 
-                    const lastListRowOffset = Math.ceil(listsize/crosscount) - 1
+                    const lastListRowOffset = Math.ceil(listsize/crosscount) - 1 + rowshift
 
                     const tailcontentlist = contentHandler.content.tailModelComponents
                     const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0)
                     const previousAxisRowOffset = Math.ceil(previousAxisReferenceIndex/crosscount)
 
-                    console.log('lastListRowOffset, previousAxisRowOffset\n',
-                        lastListRowOffset, previousAxisRowOffset)
+                    // console.log('lastListRowOffset, previousAxisRowOffset\n',
+                    //     lastListRowOffset, previousAxisRowOffset)
 
                     if (lastListRowOffset == previousAxisRowOffset) return
 
