@@ -942,24 +942,24 @@ export default class ContentHandler {
 
         interruptHandler.signals.pauseCradleIntersectionObserver = true
 
-        const computedScrollblockLength = basePreAxisPixelLength + computedPostAxisPixelLength
+        const computedScrollblockPixelLength = basePreAxisPixelLength + computedPostAxisPixelLength
         const blockScrollPos = basePreAxisPixelLength - axisViewportPixelOffset
-        const newAxisScrollblockOffset = blockScrollPos + axisViewportPixelOffset // ie. basePreAxisPixelLength, but semantics
+        const newAxisScrollblockPixelOffset = blockScrollPos + axisViewportPixelOffset // ie. basePreAxisPixelLength, but semantics
 
         // console.log('newAxisScrollblockOffset, blockScrollPos, axisViewportPixelOffset\n',
         //     newAxisScrollblockOffset, blockScrollPos, axisViewportPixelOffset)
 
         if (orientation == 'vertical') {
 
-            axisElement.style.top = newAxisScrollblockOffset + 'px'
+            axisElement.style.top = newAxisScrollblockPixelOffset + 'px'
 
-            scrollblockElement.style.height = (computedScrollblockLength) + 'px'
+            scrollblockElement.style.height = (computedScrollblockPixelLength) + 'px'
 
         } else { // 'horizontal'
 
-            axisElement.style.left = newAxisScrollblockOffset + 'px'
+            axisElement.style.left = newAxisScrollblockPixelOffset + 'px'
 
-            scrollblockElement.style.width = computedScrollblockLength + 'px'
+            scrollblockElement.style.width = computedScrollblockPixelLength + 'px'
 
         }
         // -----------------------[ scrollPos adjustment ]-------------------------
