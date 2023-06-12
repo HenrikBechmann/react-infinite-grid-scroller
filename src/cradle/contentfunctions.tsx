@@ -599,8 +599,8 @@ export const calculateShiftSpecs = ({
     let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
     const newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowShift
 
-    console.log('A. newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift\n',
-        newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift)
+    // console.log('A. newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift\n',
+    //     newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift)
 
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
@@ -650,8 +650,8 @@ export const calculateShiftSpecs = ({
 
         // --- start of list adjustment
 
-        console.log('1. newCradleReferenceRowOffset < rangerowshift\n',
-            newCradleReferenceRowOffset, rangerowshift)
+        // console.log('1. newCradleReferenceRowOffset < rangerowshift\n',
+        //     newCradleReferenceRowOffset, rangerowshift)
 
         if (newCradleReferenceRowOffset < rangerowshift) {
 
@@ -661,42 +661,45 @@ export const calculateShiftSpecs = ({
 
         }
 
-        console.log('2. newCradleReferenceRowOffset\n',
-            newCradleReferenceRowOffset)
+        // console.log('2. newCradleReferenceRowOffset\n',
+        //     newCradleReferenceRowOffset)
 
-        if (layout == 'variable' && newAxisReferenceRowOffset == rangerowshift) {
+        if (layout == 'variable' && newAxisReferenceRowOffset == rangerowshift) { // start of list
             newAxisViewportPixelOffset = padding
         }
 
         // --- end of list adjustment; case of in bounds of trailing runway
+
         const computedNextCradleEndrowOffset = 
             (previousCradleRowOffset + (cradleRowcount -1) + cradleReferenceRowshift)
 
-        console.log('computedNextCradleEndrowOffset = (previousCradleRowOffset + (cradleRowcount -1) + cradleReferenceRowshift)\n',
-            computedNextCradleEndrowOffset, previousCradleRowOffset, cradleRowcount, cradleReferenceRowshift)
+        // console.log('computedNextCradleEndrowOffset = (previousCradleRowOffset + (cradleRowcount -1) + cradleReferenceRowshift)\n',
+        //     computedNextCradleEndrowOffset, previousCradleRowOffset, cradleRowcount, cradleReferenceRowshift)
 
         const targetCradleEndrowOffset = 
             newAxisReferenceRowOffset + (viewportRowcount - 1) + (runwayRowcount - 1)
 
-        console.log('targetCradleEndrowOffset = newAxisReferenceRowOffset + (viewportRowcount - 1) + (runwayRowcount - 1)\n',
-            targetCradleEndrowOffset, listEndrowOffset, newAxisReferenceRowOffset, viewportRowcount, runwayRowcount)
+        // console.log('targetCradleEndrowOffset = newAxisReferenceRowOffset + (viewportRowcount - 1) + (runwayRowcount - 1)\n',
+        //     targetCradleEndrowOffset, listEndrowOffset, newAxisReferenceRowOffset, viewportRowcount, runwayRowcount)
 
         // const tailrowdiff = targetCradleEndrowOffset - computedNextCradleEndrowOffset
 
-        const tailrowdiff = computedNextCradleEndrowOffset - targetCradleEndrowOffset
+        let tailrowdiff =  computedNextCradleEndrowOffset - targetCradleEndrowOffset
 
-        console.log('tailrowdiff = computedNextCradleEndrowOffset - targetCradleEndrowOffset\n',
-            tailrowdiff, computedNextCradleEndrowOffset, targetCradleEndrowOffset)
+        // console.log('tailrowdiff = computedNextCradleEndrowOffset - targetCradleEndrowOffset\n',
+        //     tailrowdiff, computedNextCradleEndrowOffset, targetCradleEndrowOffset)
 
-        if (tailrowdiff > 0) {
+        if (tailrowdiff < 0) {
+
+            tailrowdiff = Math.max(tailrowdiff, cradleReferenceRowshift)
 
             cradleReferenceRowshift -= tailrowdiff
             newCradleReferenceRowOffset -= tailrowdiff
 
         }
 
-        console.log('3. newCradleReferenceRowOffset, rangerowshift\n',
-            newCradleReferenceRowOffset, rangerowshift)
+        // console.log('3. newCradleReferenceRowOffset, rangerowshift\n',
+        //     newCradleReferenceRowOffset, rangerowshift)
 
     }
 
@@ -740,8 +743,8 @@ export const calculateShiftSpecs = ({
 
     // ---------------------[ 8. return required values ]-------------------
 
-    console.log('-->> newCradleReferenceIndex, newAxisReferenceIndex\n',
-        newCradleReferenceIndex, newAxisReferenceIndex)
+    // console.log('-->> newCradleReferenceIndex, newAxisReferenceIndex\n',
+    //     newCradleReferenceIndex, newAxisReferenceIndex)
 
     return {
 
