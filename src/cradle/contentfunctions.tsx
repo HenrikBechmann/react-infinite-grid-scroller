@@ -70,52 +70,44 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     } = virtualListProps
 
     // align axis reference to list scope
-    // targetAxisReferenceIndex -= Math.abs(targetAxisReferenceIndex % crosscount)
     targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex, listhighindex)
     targetAxisReferenceIndex = Math.max(targetAxisReferenceIndex, listlowindex)
 
     // console.log('2. targetAxisReferenceIndex\n',targetAxisReferenceIndex)
 
     // derive target row
-    let targetAxisAnchorRowOffset = Math.floor(targetAxisReferenceIndex/crosscount)
-
-    // update will compensate if this is too high
-    // const maxAxisRowOffset = Math.max(0,listRowcount - 1) + rangerowshift
-    // if (targetAxisAnchorRowOffset > maxAxisRowOffset) {
-    //     targetAxisAnchorRowOffset = maxAxisRowOffset
-    //     targetAxisReferenceIndex = targetAxisAnchorRowOffset * crosscount
-    // }
+    let targetAxisReferenceRow = Math.floor(targetAxisReferenceIndex/crosscount)
 
     // console.log('3. targetAxisReferenceIndex\n',targetAxisReferenceIndex)
 
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
 
     // leading edge
-    let targetCradleRowOffset = Math.max(rangerowshift,targetAxisAnchorRowOffset - runwayRowcount)
+    let targetCradleReferenceRow = Math.max(rangerowshift,targetAxisReferenceRow - runwayRowcount)
 
     // trailing edge
-    let targetCradleEndRowOffset = targetCradleRowOffset + (cradleRowcount - 1)
+    let targetCradleEndRow = targetCradleReferenceRow + (cradleRowcount - 1)
 
     const listEndRowOffset = (listRowcount - 1) + rangerowshift
 
-    if (targetCradleEndRowOffset > (listEndRowOffset)) {
-        const diff = (targetCradleEndRowOffset - listEndRowOffset)
-        targetCradleRowOffset -= diff
-        targetCradleEndRowOffset -= diff
+    if (targetCradleEndRow > (listEndRowOffset)) {
+        const diff = (targetCradleEndRow - listEndRowOffset)
+        targetCradleReferenceRow -= diff
+        targetCradleEndRow -= diff
     }
 
-    let targetCradleReferenceIndex = (targetCradleRowOffset * crosscount) // + baserowblanks
+    let targetCradleReferenceIndex = (targetCradleReferenceRow * crosscount)
     targetCradleReferenceIndex = Math.max(targetCradleReferenceIndex,listlowindex)
 
     // ---------------------[ calc cradle content count ]---------------------
 
     let newCradleContentCount = cradleRowcount * crosscount
-    if (targetCradleEndRowOffset == listEndRowOffset) {
+    if (targetCradleEndRow == listEndRowOffset) {
         if (endrowblanks) {
             newCradleContentCount -= endrowblanks// endRowRemainderCount)
         }
     }
-    if (targetCradleRowOffset == rangerowshift) { // first row
+    if (targetCradleReferenceRow == rangerowshift) { // first row
         if (baserowblanks) {
             newCradleContentCount -= baserowblanks
         }
@@ -124,7 +116,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     // --------------------[ calc css positioning ]-----------------------
 
     const targetScrollblockViewportPixelOffset = 
-        ((targetAxisAnchorRowOffset - rangerowshift) * baseRowPixelLength) + padding - targetAxisViewportPixelOffset
+        ((targetAxisReferenceRow - rangerowshift) * baseRowPixelLength) + padding - targetAxisViewportPixelOffset
 
     // ----------------------[ return required values ]---------------------
 
@@ -361,8 +353,8 @@ export const calculateShiftSpecs = ({
         headGridElement = cradleElements.headRef.current,
         tailGridElement = cradleElements.tailRef.current
 
-    // configuration data
     const 
+        // configuration data
         { 
 
             gap,
@@ -404,13 +396,13 @@ export const calculateShiftSpecs = ({
 
     // normalize
     const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0)
-    const previousCradleRowOffset = Math.floor(previousCradleReferenceIndex/crosscount)
+    const previousCradleReferenceRow = Math.floor(previousCradleReferenceIndex/crosscount)
 
     const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0)
     
-    const previousAxisRowOffset = Math.floor(previousAxisReferenceIndex/crosscount)
+    const previousAxisReferenceRow = Math.floor(previousAxisReferenceIndex/crosscount)
 
-    const listEndrowOffset = (listRowcount - 1) + rangerowshift
+    const listEndRow = (listRowcount - 1) + rangerowshift
 
     const baseRowPixelLength =
         ((orientation == 'vertical')?
@@ -519,7 +511,7 @@ export const calculateShiftSpecs = ({
                     totalPixelShift += baseRowPixelLength
                     byPixelMeasureGridRowShiftCount++
 
-                    if ((previousAxisRowOffset - rangerowshift - byPixelMeasureGridRowShiftCount) == 0) { // stop cycling at head limit
+                    if ((previousAxisReferenceRow - rangerowshift - byPixelMeasureGridRowShiftCount) == 0) { // stop cycling at head limit
 
                         break
                     }
@@ -554,7 +546,7 @@ export const calculateShiftSpecs = ({
     // this can only happen with oversized cellLength (ie > viewportLength)
     //     and only using measured length
     // axis must be no farther than 1 back of the last row end position
-    if ((previousAxisRowOffset + axisReferenceRowShift) > listEndrowOffset) {
+    if ((previousAxisReferenceRow + axisReferenceRowShift) > listEndRow) {
 
         axisReferenceRowShift -= 1
         if (layout == 'variable') {
@@ -596,8 +588,8 @@ export const calculateShiftSpecs = ({
     let cradleReferenceRowshift = axisReferenceRowShift
 
     // base values
-    let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
-    const newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowShift
+    let newCradleReferenceRow = previousCradleReferenceRow + cradleReferenceRowshift
+    const newAxisReferenceRow = previousAxisReferenceRow + axisReferenceRowShift
 
     // console.log('A. newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift\n',
     //     newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift)
@@ -615,20 +607,20 @@ export const calculateShiftSpecs = ({
         // shortening of cradle content.
 
         // --- start of list adjustment
-        const targetCradleReferenceRowOffset = 
-            Math.max(rangerowshift, (newAxisReferenceRowOffset - runwayRowcount - 1)) // extra row for visibility
+        const targetCradleReferenceRow = 
+            Math.max(rangerowshift, (newAxisReferenceRow - runwayRowcount - 1)) // extra row for visibility
 
-        const headrowDiff = newCradleReferenceRowOffset - targetCradleReferenceRowOffset
+        const headrowDiff = newCradleReferenceRow - targetCradleReferenceRow
         if (headrowDiff > 0) {
 
-            newCradleReferenceRowOffset -= headrowDiff
+            newCradleReferenceRow -= headrowDiff
             cradleReferenceRowshift -= headrowDiff
 
         }
 
         // --- end of list adjustment: case of being in bounds of trailing runway (end of list)
-        const targetCradleEndrowOffset = newCradleReferenceRowOffset + (cradleRowcount - 1)
-        const tailrowdiff = targetCradleEndrowOffset - listEndrowOffset
+        const targetCradleEndrow = newCradleReferenceRow + (cradleRowcount - 1)
+        const tailrowdiff = targetCradleEndrow - listEndRow
 
         // console.log('tailrowdiff = targetCradleEndrowOffset - listEndrowOffset, virtualListProps\n',
         //     tailrowdiff, targetCradleEndrowOffset, listEndrowOffset, virtualListProps)
@@ -636,7 +628,7 @@ export const calculateShiftSpecs = ({
         if (tailrowdiff > 0) {
 
             cradleReferenceRowshift -= tailrowdiff
-            newCradleReferenceRowOffset -= tailrowdiff
+            newCradleReferenceRow -= tailrowdiff
 
         }
 
@@ -653,38 +645,38 @@ export const calculateShiftSpecs = ({
         // console.log('1. newCradleReferenceRowOffset < rangerowshift\n',
         //     newCradleReferenceRowOffset, rangerowshift)
 
-        if (newCradleReferenceRowOffset < rangerowshift) {
+        if (newCradleReferenceRow < rangerowshift) {
 
-            const diff = rangerowshift - newCradleReferenceRowOffset
+            const diff = rangerowshift - newCradleReferenceRow
             cradleReferenceRowshift += diff
-            newCradleReferenceRowOffset += diff
+            newCradleReferenceRow += diff
 
         }
 
         // console.log('2. newCradleReferenceRowOffset\n',
         //     newCradleReferenceRowOffset)
 
-        if (layout == 'variable' && newAxisReferenceRowOffset == rangerowshift) { // start of list
+        if (layout == 'variable' && newAxisReferenceRow == rangerowshift) { // start of list
             newAxisViewportPixelOffset = padding
         }
 
         // --- end of list adjustment; case of in bounds of trailing runway
 
-        const computedNextCradleEndrowOffset = 
-            (previousCradleRowOffset + (cradleRowcount -1) + cradleReferenceRowshift)
+        const computedNextCradleEndRow = 
+            (previousCradleReferenceRow + (cradleRowcount -1) + cradleReferenceRowshift)
 
         // console.log('computedNextCradleEndrowOffset = (previousCradleRowOffset + (cradleRowcount -1) + cradleReferenceRowshift)\n',
         //     computedNextCradleEndrowOffset, previousCradleRowOffset, cradleRowcount, cradleReferenceRowshift)
 
-        const targetCradleEndrowOffset = 
-            newAxisReferenceRowOffset + (viewportRowcount - 1) + (runwayRowcount - 1)
+        const targetCradleEndRow = 
+            newAxisReferenceRow + (viewportRowcount - 1) + (runwayRowcount - 1)
 
         // console.log('targetCradleEndrowOffset = newAxisReferenceRowOffset + (viewportRowcount - 1) + (runwayRowcount - 1)\n',
         //     targetCradleEndrowOffset, listEndrowOffset, newAxisReferenceRowOffset, viewportRowcount, runwayRowcount)
 
         // const tailrowdiff = targetCradleEndrowOffset - computedNextCradleEndrowOffset
 
-        let tailrowdiff =  computedNextCradleEndrowOffset - targetCradleEndrowOffset
+        let tailrowdiff =  computedNextCradleEndRow - targetCradleEndRow
 
         // console.log('tailrowdiff = computedNextCradleEndrowOffset - targetCradleEndrowOffset\n',
         //     tailrowdiff, computedNextCradleEndrowOffset, targetCradleEndrowOffset)
@@ -694,7 +686,7 @@ export const calculateShiftSpecs = ({
             tailrowdiff = Math.max(tailrowdiff, cradleReferenceRowshift)
 
             cradleReferenceRowshift -= tailrowdiff
-            newCradleReferenceRowOffset -= tailrowdiff
+            newCradleReferenceRow -= tailrowdiff
 
         }
 
@@ -705,20 +697,20 @@ export const calculateShiftSpecs = ({
 
     // ----------------------[ 7. map rows to item references ]----------------------
 
-    const newCradleReferenceIndex = Math.max(listlowindex, newCradleReferenceRowOffset * crosscount)
+    const newCradleReferenceIndex = Math.max(listlowindex, newCradleReferenceRow * crosscount)
     const cradleReferenceItemShift = newCradleReferenceIndex - previousCradleReferenceIndex
 
-    const newAxisReferenceIndex = Math.max(listlowindex, newAxisReferenceRowOffset * crosscount)
+    const newAxisReferenceIndex = Math.max(listlowindex, newAxisReferenceRow * crosscount)
     const axisReferenceItemShift = newAxisReferenceIndex - previousAxisReferenceIndex
 
     let newCradleContentCount = cradleRowcount * crosscount // base count
 
-    const includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount - rangerowshift) >= listRowcount)
+    const includesLastRow = ((newCradleReferenceRow + cradleRowcount - rangerowshift) >= listRowcount)
 
     // console.log('includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount - rangerowshift) >= listRowcount)\n',
     //     includesLastRow, newCradleReferenceRowOffset, cradleRowcount, rangerowshift, listRowcount)
 
-    const includesFirstRow = (newCradleReferenceRowOffset == rangerowshift)
+    const includesFirstRow = (newCradleReferenceRow == rangerowshift)
 
     if (includesLastRow) {
 

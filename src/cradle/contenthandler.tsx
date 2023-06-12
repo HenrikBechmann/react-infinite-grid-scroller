@@ -142,7 +142,7 @@ export default class ContentHandler {
             { 
 
                 virtualListProps, 
-                cradleContentProps 
+                cradleContentProps,
 
             } = cradleInternalProperties,
 
