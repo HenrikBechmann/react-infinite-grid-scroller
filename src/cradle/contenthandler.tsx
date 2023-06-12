@@ -511,6 +511,8 @@ export default class ContentHandler {
 
         const previousCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
+        // console.log('==>> shift instruction', shiftinstruction)
+
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         // cradle properties
@@ -580,31 +582,6 @@ export default class ContentHandler {
 
         // abandon option; nothing to do but reposition
         if (!isShift) { // can happen first row; oversized last row
-
-            console.log('exiting with NOT isShift')
-
-        console.log(
-`
-cradleReferenceItemShift: cradleItemShift, 
-newAxisReferenceIndex: axisReferenceIndex, 
-axisReferenceItemShift: axisItemShift, 
-
-// counts
-newCradleContentCount: cradleContentCount,
-listStartChangeCount,
-listEndChangeCount,
-
-// pixels
-newAxisViewportPixelOffset, 
-`,
-cradleItemShift, 
-axisReferenceIndex, 
-axisItemShift,'\n', 
-cradleContentCount,
-listStartChangeCount,
-listEndChangeCount,'\n',
-newAxisViewportPixelOffset
-)
     
             cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
             this.applyStyling({
