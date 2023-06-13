@@ -258,7 +258,7 @@ These properties would rarely be changed.
 
 ### `scrollerProperties` object
 
-Cell components can get access to current RIGS properties, by requesting the scrollerProperties object.
+Cell components can get access to dynamically updated parent RIGS properties, by requesting the scrollerProperties object.
 
 The `scrollerProperties` object is requested by user components by initializing a `scrollerProperties` component property to `null`. The property is then recognized by RIGS and set to the scrollerProperties object by the system on loading of the component to a CellFrame.
 
