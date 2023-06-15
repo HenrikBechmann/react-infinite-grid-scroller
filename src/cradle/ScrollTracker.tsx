@@ -10,9 +10,9 @@
 
 import React, {useRef} from 'react'
 
-const ScrollTracker = ({ top, left, offset, listsize, styles }) => {
+const ScrollTracker = ({ top, left, offset, index, listsize, styles }) => {
 
-    const trackdata = `${offset + 1}/${listsize}`
+    const trackdata = `${index} (${offset + 1}/${listsize})`
 
     const styleRef = useRef({
         top: top + 'px',

@@ -387,19 +387,19 @@ export default class ScrollHandler {
             axisPixelOffset = 0
         }
 
-        const axisRowIndex = Math.ceil((scrollPos - cradleSpecs.padding)/cellLength)
+        const axisRowPosition = Math.ceil((scrollPos - cradleSpecs.padding)/cellLength)
 
-        let axisReferenceIndex = axisRowIndex * crosscount
-        axisReferenceIndex = Math.min(axisReferenceIndex,listsize - 1)
+        let axisReferencePosition = axisRowPosition * crosscount
+        axisReferencePosition = Math.min(axisReferencePosition,listsize - 1)
 
-        const diff = axisReferenceIndex % crosscount
-        axisReferenceIndex -= diff
+        const diff = axisReferencePosition % crosscount
+        axisReferencePosition -= diff
 
-        if (axisReferenceIndex == 0) axisPixelOffset = 0 // defensive
+        if (axisReferencePosition == 0) axisPixelOffset = 0 // defensive
 
         const { cradlePositionData } = this.cradleParameters.handlersRef.current.layoutHandler
 
-        cradlePositionData.targetAxisReferencePosition = axisReferenceIndex
+        cradlePositionData.targetAxisReferencePosition = axisReferencePosition
         cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
 
     }

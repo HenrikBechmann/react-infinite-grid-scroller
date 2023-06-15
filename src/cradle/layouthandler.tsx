@@ -188,10 +188,10 @@ export default class LayoutHandler {
         }
 
         const { cradlePositionData } = layoutHandler
-        const axisReference = cradlePositionData.targetAxisReferencePosition
-        const rowOffset = Math.ceil(axisReference/crosscount)
+        const axisReferencePosition = cradlePositionData.targetAxisReferencePosition
+        const rowReferencePosition = Math.ceil(axisReferencePosition/crosscount)
         const calculatedBlockScrollPos = 
-            (rowOffset * cellLength) + padding
+            (rowReferencePosition * cellLength) + padding
 
 
         if (isSafariIOS()) { // scrollPos overwritten by Safari iOS momentum engine

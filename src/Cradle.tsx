@@ -1505,13 +1505,14 @@ const Cradle = ({
 
     // ==========================[ RENDER ]===========================
 
-    const scrollAxisReferenceIndex = layoutHandler.cradlePositionData.targetAxisReferencePosition
+    const scrollAxisReferencePosition = layoutHandler.cradlePositionData.targetAxisReferencePosition
+    const scrollAxisReferenceIndex = scrollAxisReferencePosition + lowindex
     const scrollIndexRef = useRef(scrollAxisReferenceIndex)
     const scrollTrackerArgs = useMemo(() => {
         if (!['repositioningContinuation','repositioningRender','finishreposition'].includes(cradleState)) {
             return null
         }
-        if (scrollAxisReferenceIndex != scrollIndexRef.current) {
+        if (scrollAxisReferencePosition != scrollIndexRef.current) {
             scrollIndexRef.current = scrollAxisReferenceIndex
             const { repositioningIndexCallback } = serviceHandler.callbacks
             repositioningIndexCallback && repositioningIndexCallback(scrollAxisReferenceIndex);
@@ -1522,6 +1523,7 @@ const Cradle = ({
             top:viewportDimensions.top + 3,
             left:viewportDimensions.left + 3,
             scrollAxisReferenceIndex,
+            scrollAxisReferencePosition,
             listsize,
             styles,
         }
@@ -1530,7 +1532,8 @@ const Cradle = ({
         [
             cradleState, 
             viewportDimensions, 
-            scrollAxisReferenceIndex, 
+            scrollAxisReferenceIndex,
+            scrollAxisReferencePosition, 
             listsize,
             styles,
             useScrollTracker,
@@ -1581,7 +1584,8 @@ const Cradle = ({
             useScrollTracker?<ScrollTracker 
                 top = { scrollTrackerArgs.top } 
                 left = { scrollTrackerArgs.left } 
-                offset = { scrollTrackerArgs.scrollAxisReferenceIndex } 
+                offset = { scrollTrackerArgs.scrollAxisReferencePosition } 
+                index = { scrollTrackerArgs.scrollAxisReferencePosition }
                 listsize = { scrollTrackerArgs.listsize }
                 styles = { scrollTrackerArgs.styles }
             />:null:
