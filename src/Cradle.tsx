@@ -1507,13 +1507,13 @@ const Cradle = ({
 
     const scrollAxisReferencePosition = layoutHandler.cradlePositionData.targetAxisReferencePosition
     const scrollAxisReferenceIndex = scrollAxisReferencePosition + lowindex
-    const scrollIndexRef = useRef(scrollAxisReferenceIndex)
+    const scrollIndexRef = useRef(scrollAxisReferencePosition)
     const scrollTrackerArgs = useMemo(() => {
         if (!['repositioningContinuation','repositioningRender','finishreposition'].includes(cradleState)) {
             return null
         }
         if (scrollAxisReferencePosition != scrollIndexRef.current) {
-            scrollIndexRef.current = scrollAxisReferenceIndex
+            scrollIndexRef.current = scrollAxisReferencePosition
             const { repositioningIndexCallback } = serviceHandler.callbacks
             repositioningIndexCallback && repositioningIndexCallback(scrollAxisReferenceIndex);
         }
@@ -1585,7 +1585,7 @@ const Cradle = ({
                 top = { scrollTrackerArgs.top } 
                 left = { scrollTrackerArgs.left } 
                 offset = { scrollTrackerArgs.scrollAxisReferencePosition } 
-                index = { scrollTrackerArgs.scrollAxisReferencePosition }
+                index = { scrollTrackerArgs.scrollAxisReferenceIndex }
                 listsize = { scrollTrackerArgs.listsize }
                 styles = { scrollTrackerArgs.styles }
             />:null:
