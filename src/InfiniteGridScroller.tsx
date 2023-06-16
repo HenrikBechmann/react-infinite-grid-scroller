@@ -375,16 +375,8 @@ const InfiniteGridScroller = (props) => {
         isMountedRef.current = true
 
         return () => {
+
             isMountedRef.current = false
-        }
-
-        return () => {
-
-            if (!isMountedRef.current) { // double call possible - a React anomaly
-
-                cacheAPIRef.current.unRegisterScroller(itemSetRef.current)
-
-            }
 
         }
 
@@ -448,6 +440,16 @@ const InfiniteGridScroller = (props) => {
 
             case 'setlistprops':
                 setScrollerState('ready')
+
+        }
+
+        return () => {
+
+            if (!isMountedRef.current) {
+
+                cacheAPIRef.current.unRegisterScroller(itemSetRef.current)
+
+            }
 
         }
 

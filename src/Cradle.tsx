@@ -121,6 +121,11 @@ const Cradle = ({
 
     }) => {
 
+
+    useEffect(()=>{
+
+    },[])
+
     const listsize = virtualListSpecs.size
 
     // ========================[ DATA SETUP ]========================
@@ -1201,6 +1206,8 @@ const Cradle = ({
             case 'reconfigure':
             case 'reconfigureforlistsize':
             case 'reload': {
+
+                if (!isMountedRef.current) return
 
                 if (isCachedRef.current) {
                     setCradleState('cached')

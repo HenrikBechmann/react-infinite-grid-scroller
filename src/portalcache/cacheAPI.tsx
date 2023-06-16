@@ -81,6 +81,10 @@ export default class CacheAPI {
 
     private CACHE_PARTITION_SIZE
 
+    // private measureMemory(source) {
+    //   console.log('performance',source, performance['memory']['usedJSHeapSize'])
+    // }
+
     // ===========================[ Scroller Registration & Maintenance ]===============================
 
     // the only member accessed directly. All other access is through the facade
@@ -96,6 +100,8 @@ export default class CacheAPI {
                 portalPartitionItemsForDeleteList:null,
             }
         )
+
+        // this.measureMemory('REGISTER')
 
         return this.getFacade(scrollerID)
 
@@ -226,13 +232,20 @@ export default class CacheAPI {
 
     private unRegisterScroller = (scrollerID, itemSet) => {
 
-        this.scrollerDataMap.delete(scrollerID)
+        const scrollerDataMap = this.scrollerDataMap
+
+        if ( scrollerDataMap.size == 1 ) return
+
+        // console.log('unregister scrollerID, itemSet',scrollerID, itemSet)
+
+        scrollerDataMap.delete(scrollerID)
         itemSet.forEach((itemID) => {
             const { partitionID } = this.itemMetadataMap.get(itemID)
             this.removePartitionPortal(partitionID,itemID)
             this.itemMetadataMap.delete(itemID)
         })
         this.renderPortalLists()
+        // this.measureMemory('UNREGISTER')
 
     }
 

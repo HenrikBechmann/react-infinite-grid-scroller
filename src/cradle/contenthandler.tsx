@@ -298,6 +298,8 @@ export default class ContentHandler {
 
         const firstcomponent = newcontentlist[0]
 
+        if (!firstcomponent) return
+
         let gridstartstyle
         if (orientation == 'vertical') {
             gridstartstyle = {gridColumnStart:gridstart}
