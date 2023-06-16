@@ -388,11 +388,15 @@ const CellFrame = ({
                                     content = usercontent
                                 }
 
-                                portalMetadataRef.current = await cacheAPI.createPortal(content, index, itemID, scrollerProperties)
+                                const retval = portalMetadataRef.current = await cacheAPI.createPortal(content, index, itemID, scrollerProperties)
 
-                                portalNodeRef.current = portalMetadataRef.current.portalNode
-                                setContainerStyles(
-                                    portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
+                                if (retval) {
+                                
+                                    portalNodeRef.current = portalMetadataRef.current.portalNode
+                                    setContainerStyles(
+                                        portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
+
+                                }
 
                                 isMountedRef.current && setFrameState('inserting')
 

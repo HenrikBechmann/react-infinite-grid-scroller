@@ -1109,6 +1109,10 @@ export default class CacheAPI {
 
         this.unregisterPendingPortal(scrollerID, index)
 
+        const scrollerDataMap = this.scrollerDataMap.get(scrollerID)
+
+        if (!scrollerDataMap) return null
+
         const { layout, cellHeight, cellWidth, orientation } = 
             this.scrollerDataMap.get(scrollerID).cradleParameters.cradleInheritedPropertiesRef.current
 
@@ -1134,8 +1138,8 @@ export default class CacheAPI {
         }
 
         this.itemMetadataMap.set(itemID, portalMetadata)
-        this.scrollerDataMap.get(scrollerID).itemSet.add(itemID)
-        this.scrollerDataMap.get(scrollerID).indexToItemIDMap.set(index, itemID)
+        scrollerDataMap.itemSet.add(itemID)
+        scrollerDataMap.indexToItemIDMap.set(index, itemID)
 
         if (!isPreload) this.renderPortalLists()
 
