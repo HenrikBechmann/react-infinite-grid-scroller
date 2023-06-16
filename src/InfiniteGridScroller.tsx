@@ -370,6 +370,26 @@ const InfiniteGridScroller = (props) => {
 
     const isMountedRef = useRef(true)
 
+    useEffect(()=>{
+
+        isMountedRef.current = true
+
+        return () => {
+            isMountedRef.current = false
+        }
+
+        return () => {
+
+            if (!isMountedRef.current) { // double call possible - a React anomaly
+
+                cacheAPIRef.current.unRegisterScroller(itemSetRef.current)
+
+            }
+
+        }
+
+    },[])
+
     useEffect (() => {
 
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
@@ -409,16 +429,6 @@ const InfiniteGridScroller = (props) => {
 
     // ---------------------[ State handling ]------------------------
 
-    useEffect(()=>{
-
-        isMountedRef.current = true
-
-        return () => {
-            isMountedRef.current = false
-        }
-
-    },[])
-
     const itemSetRef = useRef(null)
 
     useEffect(() => {
@@ -438,16 +448,6 @@ const InfiniteGridScroller = (props) => {
 
             case 'setlistprops':
                 setScrollerState('ready')
-
-        }
-
-        return () => {
-
-            if (!isMountedRef.current) { // double call possible - a React anomaly
-
-                cacheAPIRef.current.unRegisterScroller(itemSetRef.current)
-
-            }
 
         }
 
