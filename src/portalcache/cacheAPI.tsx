@@ -234,7 +234,7 @@ export default class CacheAPI {
 
         const scrollerDataMap = this.scrollerDataMap
 
-        if ( scrollerDataMap.size == 1 ) return
+        if ( scrollerDataMap.size == 1 ) return // already getting dismantled; avoid conflict
 
         // console.log('unregister scrollerID, itemSet',scrollerID, itemSet)
 
