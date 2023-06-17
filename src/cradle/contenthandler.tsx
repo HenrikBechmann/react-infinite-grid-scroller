@@ -136,6 +136,7 @@ export default class ContentHandler {
                 cellWidth,
                 styles,
                 placeholderMessages,
+                scrollerID, // debug
 
             } = cradleInheritedProperties,
 
@@ -157,6 +158,8 @@ export default class ContentHandler {
                 // endrowblanks,
 
             } = virtualListProps
+
+        scrollerID == 1 && console.log('setCradleContent: opening cradlePositionData', {...cradlePositionData})
 
         const cradleContent = this.content
 
@@ -332,6 +335,8 @@ export default class ContentHandler {
         cradlePositionData.targetAxisReferencePosition = targetAxisReferenceIndex - listlowindex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
+        scrollerID == 1 && console.log('setCradleContent: closing cradlePositionData', {...cradlePositionData})
+
         if (serviceHandler.callbacks.referenceIndexCallback) {
 
             const cstate = cradleState
@@ -378,6 +383,10 @@ export default class ContentHandler {
 
         cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset 
         // avoid bogus call to updateCradleContent
+
+        scrollerID == 1 && console.log('setCradleContent.resetScrollData: scrollblockViewportPixelOffset\n', 
+            scrollblockViewportPixelOffset)
+
         scrollHandler.resetScrollData(scrollblockViewportPixelOffset) 
 
         viewportElement[cradlePositionData.blockScrollProperty] =
@@ -485,7 +494,8 @@ export default class ContentHandler {
                 cellHeight, 
                 cellWidth, 
                 padding, 
-                gap
+                gap,
+                scrollerID, // debug
 
             } = cradleInheritedProperties,
 
@@ -502,6 +512,8 @@ export default class ContentHandler {
                 lowindex:listlowindex,
 
             } = virtualListProps
+
+        // if (interruptHandler.signals.repositioningRequired) return
 
         // new vars
         const scrollPos = 
@@ -719,6 +731,8 @@ export default class ContentHandler {
 
         cradlePositionData.targetAxisReferencePosition = axisReferenceIndex - listlowindex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
+
+        scrollerID == 1 && console.log('updateCradleContent: shiftinstruction, ending cradlePositionData', shiftinstruction, {...cradlePositionData})
 
         if (isShift) cacheAPI.renderPortalLists()
 

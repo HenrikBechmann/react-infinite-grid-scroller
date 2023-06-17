@@ -145,7 +145,12 @@ export default class ScrollHandler {
 
     public onScroll = (e) => {
 
-        const { scrollerID, ONAFTERSCROLL_TIMEOUT } = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const { 
+
+            scrollerID, // debug
+            ONAFTERSCROLL_TIMEOUT 
+
+        } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
         // const viewportElement = ViewportContextProperties.elementRef.current
@@ -211,6 +216,9 @@ export default class ScrollHandler {
         if (!ViewportContextProperties.isResizing) {
 
             if ((cradleState == 'repositioningRender') || (cradleState == 'repositioningContinuation')) {
+            // if (['repositioningContinuation','repositioningRender','finishreposition'].includes(cradleState)) {
+
+                scrollerID == 1 && console.log('onScroll.calcImpliedRepositioningData: cradleState', cradleState)
 
                 this.calcImpliedRepositioningData('onScroll')
                 if (cradleState == 'repositioningRender') stateHandler.setCradleState('repositioningContinuation')
@@ -381,6 +389,9 @@ export default class ScrollHandler {
             scrollblockOffset = scrollblockElement.offsetLeft
 
         }
+
+        // console.log('running calcImpliedRepositioningData: source, scrollPos, scrollblockOffset\n',
+        //     source, scrollPos, scrollblockOffset)
 
         let axisPixelOffset = cellLength - ((scrollPos + scrollblockOffset) % cellLength)
         if (axisPixelOffset == (cellLength + cradleSpecs.padding)) {

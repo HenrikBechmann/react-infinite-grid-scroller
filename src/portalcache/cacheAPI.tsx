@@ -232,7 +232,7 @@ export default class CacheAPI {
 
     private unRegisterScroller = (scrollerID, itemSet) => {
 
-        const scrollerDataMap = this.scrollerDataMap
+        const { scrollerDataMap, itemMetadataMap } = this
 
         if ( scrollerDataMap.size == 1 ) return // already getting dismantled; avoid conflict
 
@@ -240,9 +240,9 @@ export default class CacheAPI {
 
         scrollerDataMap.delete(scrollerID)
         itemSet.forEach((itemID) => {
-            const { partitionID } = this.itemMetadataMap.get(itemID)
+            const { partitionID } = itemMetadataMap.get(itemID)
             this.removePartitionPortal(partitionID,itemID)
-            this.itemMetadataMap.delete(itemID)
+            itemMetadataMap.delete(itemID)
         })
         this.renderPortalLists()
         // this.measureMemory('UNREGISTER')

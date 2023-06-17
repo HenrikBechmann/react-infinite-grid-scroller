@@ -363,6 +363,7 @@ export const calculateShiftSpecs = ({
             cellHeight,
             cellWidth,
             layout,
+            scrollerID, // debug
 
         } = cradleInheritedProperties,
 
@@ -394,13 +395,20 @@ export const calculateShiftSpecs = ({
             
         } = virtualListProps
 
+    // scrollerID == 1 && console.log('vitrualListProps', virtualListProps)
+
     // normalize
     const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0)
     const previousCradleReferenceRow = Math.floor(previousCradleReferenceIndex/crosscount)
 
     const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0)
-    
     const previousAxisReferenceRow = Math.floor(previousAxisReferenceIndex/crosscount)
+
+    // scrollerID == 1 && console.log('previousCradleReferenceRow = Math.floor(previousCradleReferenceIndex/crosscount)\n',
+    //     previousCradleReferenceRow, previousCradleReferenceIndex, crosscount)
+
+    // scrollerID == 1 && console.log('previousAxisReferenceRow = Math.floor(previousAxisReferenceIndex/crosscount)\n',
+    //     previousAxisReferenceRow, previousAxisReferenceIndex, crosscount)
 
     const listEndRow = (listRowcount - 1) + rangerowshift
 
@@ -591,8 +599,12 @@ export const calculateShiftSpecs = ({
     let newCradleReferenceRow = previousCradleReferenceRow + cradleReferenceRowshift
     const newAxisReferenceRow = previousAxisReferenceRow + axisReferenceRowShift
 
-    // console.log('A. newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift\n',
-    //     newCradleReferenceRowOffset, previousCradleRowOffset, cradleReferenceRowshift)
+
+    // scrollerID == 1 && console.log('A-1. newCradleReferenceRow = previousCradleReferenceRow + cradleReferenceRowshift\n',
+    //     newCradleReferenceRow, previousCradleReferenceRow, cradleReferenceRowshift)
+
+    // scrollerID == 1 && console.log('A-2. newAxisReferenceRow = previousAxisReferenceRow + axisReferenceRowShift\n',
+    //     newAxisReferenceRow, previousAxisReferenceRow, axisReferenceRowShift)
 
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows

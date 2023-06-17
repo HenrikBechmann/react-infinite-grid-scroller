@@ -191,7 +191,7 @@ const Cradle = ({
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) {
-    //     console.log('--> cradleState','-'+scrollerID+'-', cradleState)
+        // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
         // console.log('-- index','~'+scrollerProperties?.cellFramePropertiesRef.current.index+'~')
     // }
 
@@ -239,6 +239,8 @@ const Cradle = ({
             Math.min(cellcrosslength,viewportcrosslengthforcalc) // result cannot be less than 1
 
         const crosscount = Math.floor(viewportcrosslengthforcalc/cellcrosslengthforcalc)
+
+        // console.log('calculated crosscount', crosscount)
 
         return crosscount
 
@@ -1171,6 +1173,8 @@ const Cradle = ({
                 signals.pauseCradleIntersectionObserver = true
                 signals.repositioningRequired = false // because now underway
 
+                scrollerID == 1 && console.log('Cradle: startreposition, scrollHandler.isScrolling', scrollHandler.isScrolling)
+
                 if (scrollHandler.isScrolling) {
 
                     setCradleState('repositioningRender') // toggles with repositioningContinuation
@@ -1233,6 +1237,10 @@ const Cradle = ({
 
                 if (cradleState == 'reload') {
                     cacheAPI.clearCache()
+                }
+
+                if (cradleState == 'finishreposition') {
+                    scrollHandler.calcImpliedRepositioningData('onScroll')
                 }
 
                 const listsize = cradleInternalPropertiesRef.current.virtualListProps.size
