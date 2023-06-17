@@ -1207,7 +1207,7 @@ const Cradle = ({
             case 'reconfigureforlistsize':
             case 'reload': {
 
-                if (!isMountedRef.current) return
+                if (!isMountedRef.current) return // possible async latency with nested scrollers
 
                 if (isCachedRef.current) {
                     setCradleState('cached')

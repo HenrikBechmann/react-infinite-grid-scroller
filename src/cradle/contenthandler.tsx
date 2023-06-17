@@ -298,7 +298,7 @@ export default class ContentHandler {
 
         const firstcomponent = newcontentlist[0]
 
-        if (!firstcomponent) return
+        if (!firstcomponent) return // possible child dismounts with nested scrollers
 
         let gridstartstyle
         if (orientation == 'vertical') {
