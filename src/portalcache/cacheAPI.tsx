@@ -82,7 +82,7 @@ export default class CacheAPI {
     private CACHE_PARTITION_SIZE
 
     // private measureMemory(source) {
-    //   console.log('performance',source, performance['memory']['usedJSHeapSize'])
+    //   console.log('usedJSHeapSize',source, performance['memory']['usedJSHeapSize'])
     // }
 
     // ===========================[ Scroller Registration & Maintenance ]===============================
