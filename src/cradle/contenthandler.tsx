@@ -159,7 +159,7 @@ export default class ContentHandler {
 
             } = virtualListProps
 
-        scrollerID == 1 && console.log('setCradleContent: opening cradlePositionData', {...cradlePositionData})
+        // scrollerID == 1 && console.log('setCradleContent: opening cradlePositionData', {...cradlePositionData})
 
         const cradleContent = this.content
 
@@ -335,7 +335,7 @@ export default class ContentHandler {
         cradlePositionData.targetAxisReferencePosition = targetAxisReferenceIndex - listlowindex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
-        scrollerID == 1 && console.log('setCradleContent: closing cradlePositionData', {...cradlePositionData})
+        // scrollerID == 1 && console.log('setCradleContent: closing cradlePositionData', {...cradlePositionData})
 
         if (serviceHandler.callbacks.referenceIndexCallback) {
 
@@ -384,8 +384,8 @@ export default class ContentHandler {
         cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset 
         // avoid bogus call to updateCradleContent
 
-        scrollerID == 1 && console.log('setCradleContent.resetScrollData: scrollblockViewportPixelOffset\n', 
-            scrollblockViewportPixelOffset)
+        // scrollerID == 1 && console.log('setCradleContent.resetScrollData: scrollblockViewportPixelOffset\n', 
+            // scrollblockViewportPixelOffset)
 
         scrollHandler.resetScrollData(scrollblockViewportPixelOffset) 
 
@@ -732,7 +732,7 @@ export default class ContentHandler {
         cradlePositionData.targetAxisReferencePosition = axisReferenceIndex - listlowindex
         cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
 
-        scrollerID == 1 && console.log('updateCradleContent: shiftinstruction, ending cradlePositionData', shiftinstruction, {...cradlePositionData})
+        // scrollerID == 1 && console.log('updateCradleContent: shiftinstruction, ending cradlePositionData', shiftinstruction, {...cradlePositionData})
 
         if (isShift) cacheAPI.renderPortalLists()
 

@@ -243,7 +243,7 @@ export default class InterruptHandler {
                 }
                 this.signals.pauseTriggerlinesObserver = true
 
-                console.log('cradleIntersectionObserverCallback: starting reposition')
+                // console.log('cradleIntersectionObserverCallback: starting reposition')
 
                 if (stateHandler.isMountedRef.current) stateHandler.setCradleState('startreposition')
 

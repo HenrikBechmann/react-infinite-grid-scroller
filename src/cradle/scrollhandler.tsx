@@ -218,7 +218,7 @@ export default class ScrollHandler {
             if ((cradleState == 'repositioningRender') || (cradleState == 'repositioningContinuation')) {
             // if (['repositioningContinuation','repositioningRender','finishreposition'].includes(cradleState)) {
 
-                scrollerID == 1 && console.log('onScroll.calcImpliedRepositioningData: cradleState', cradleState)
+                // scrollerID == 1 && console.log('onScroll.calcImpliedRepositioningData: cradleState', cradleState)
 
                 this.calcImpliedRepositioningData('onScroll')
                 if (cradleState == 'repositioningRender') stateHandler.setCradleState('repositioningContinuation')

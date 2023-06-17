@@ -1173,7 +1173,7 @@ const Cradle = ({
                 signals.pauseCradleIntersectionObserver = true
                 signals.repositioningRequired = false // because now underway
 
-                scrollerID == 1 && console.log('Cradle: startreposition, scrollHandler.isScrolling', scrollHandler.isScrolling)
+                // scrollerID == 1 && console.log('Cradle: startreposition, scrollHandler.isScrolling', scrollHandler.isScrolling)
 
                 if (scrollHandler.isScrolling) {
 
