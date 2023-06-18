@@ -191,7 +191,7 @@ const Cradle = ({
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) {
-        // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
+        scrollerID == 1 && console.log('--> cradleState','-'+scrollerID+'-', cradleState)
         // console.log('-- index','~'+scrollerProperties?.cellFramePropertiesRef.current.index+'~')
     // }
 
@@ -1596,14 +1596,14 @@ const Cradle = ({
     return <CradleContext.Provider value = { contextvalueRef.current }>
 
         {(['repositioningContinuation','repositioningRender'].includes(cradleState))?
-            useScrollTracker?<ScrollTracker 
+            (useScrollTracker?<ScrollTracker 
                 top = { scrollTrackerArgs.top } 
                 left = { scrollTrackerArgs.left } 
                 offset = { scrollTrackerArgs.scrollAxisReferencePosition } 
                 index = { scrollTrackerArgs.scrollAxisReferenceIndex }
                 listsize = { scrollTrackerArgs.listsize }
                 styles = { scrollTrackerArgs.styles }
-            />:null:
+            />:null):
             <div 
                 data-type = 'cradle-axis'
                 style = { cradleAxisStyle } 

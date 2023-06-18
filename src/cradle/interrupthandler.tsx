@@ -167,33 +167,47 @@ export default class InterruptHandler {
 
         if (signals.pauseCradleIntersectionObserver) {
 
+            this.isHeadCradleInView = this.isTailCradleInView = true // experimental
+
             return
+
         }
+
+        const { 
+
+            scrollerID, 
+            layout 
+
+        } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         for (let i = 0; i < entries.length; i++ ) {
             const entry = entries[i]
             if (entry.target.dataset.type == 'head') {
-                this.isHeadCradleInView = 
-                    (entry.isIntersecting || 
+                this.isHeadCradleInView = (
+                    entry.isIntersecting || 
                         ((entry.rootBounds.width == 0) && (entry.rootBounds.height == 0)) // reparenting
                 )
+                scrollerID == 1 && console.log('setting headInView, entrycount, isIntersecting\n', 
+                    this.isHeadCradleInView, entries.length, entry.isIntersecting)
             } else {
-                this.isTailCradleInView = 
-                    (entry.isIntersecting  || 
+                this.isTailCradleInView = (
+                    entry.isIntersecting  || 
                         ((entry.rootBounds.width == 0) && (entry.rootBounds.height == 0)) // reparenting
                 )
+                scrollerID == 1 && console.log('setting tailInView, entrycount, isIntersecting\n',
+                    this.isTailCradleInView, entries.length, entry.isIntersecting)
             }
         }
 
-        this.signals.repositioningRequired = (!this.isHeadCradleInView && !this.isTailCradleInView)
+        this.signals.repositioningRequired = (!(this.isHeadCradleInView) && !(this.isTailCradleInView))
 
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
 
         if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway
         {
 
-            this.isHeadCradleInView = true
-            this.isTailCradleInView = true
+            this.isHeadCradleInView = this.isTailCradleInView = true
+
             const cradleState = stateHandler.cradleStateRef.current
 
             if (
@@ -209,16 +223,16 @@ export default class InterruptHandler {
                 
                 const viewportElement = ViewportContextProperties.elementRef.current
 
-                const { 
+                // const { 
 
-                    scrollerID, 
-                    layout, // orientation, 
-                    // padding, gap,
-                    // cellHeight, cellWidth,
+                //     scrollerID, 
+                //     layout, // orientation, 
+                //     // padding, gap,
+                //     // cellHeight, cellWidth,
 
-                } = this.cradleParameters.cradleInheritedPropertiesRef.current
-                if (!viewportElement) {
-                    console.log('SYSTEM: viewport element not set in cradleIntersectionObserverCallback',
+                // } = this.cradleParameters.cradleInheritedPropertiesRef.current
+                if (!viewportElement) { // defensive; shouldn't happen
+                    console.log('SYSTEM: viewport element not set in cradleIntersectionObserverCallback (scrollerID)',
                         scrollerID,ViewportContextProperties)
                     return
                 }
@@ -243,9 +257,15 @@ export default class InterruptHandler {
                 }
                 this.signals.pauseTriggerlinesObserver = true
 
-                // console.log('cradleIntersectionObserverCallback: starting reposition')
+                scrollerID == 1 && console.log('==>> cradleIntersectionObserverCallback: starting reposition, entries.length, scrollTop\n',
+                    entries.length, viewportElement.scrollTop)
 
-                if (stateHandler.isMountedRef.current) stateHandler.setCradleState('startreposition')
+                if (stateHandler.isMountedRef.current) {
+
+                    // setTimeout(() => { // experimental
+                        stateHandler.setCradleState('startreposition')
+                    // },100)
+                }
 
             } else {
 

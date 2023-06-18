@@ -221,7 +221,8 @@ export default class ScrollHandler {
                 // scrollerID == 1 && console.log('onScroll.calcImpliedRepositioningData: cradleState', cradleState)
 
                 this.calcImpliedRepositioningData('onScroll')
-                if (cradleState == 'repositioningRender') stateHandler.setCradleState('repositioningContinuation')
+                // EXPERIMENTALLY REMOVE TOGGLE TO AVOID CRASH WITH HIGH PAINT USAGE
+                // if (cradleState == 'repositioningRender') stateHandler.setCradleState('repositioningContinuation')
 
             }
 
