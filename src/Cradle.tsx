@@ -191,7 +191,7 @@ const Cradle = ({
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) {
-        scrollerID == 1 && console.log('--> cradleState','-'+scrollerID+'-', cradleState)
+        // scrollerID == 1 && console.log('--> cradleState','-'+scrollerID+'-', cradleState)
         // console.log('-- index','~'+scrollerProperties?.cellFramePropertiesRef.current.index+'~')
     // }
 

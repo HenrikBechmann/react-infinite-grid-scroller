@@ -187,15 +187,15 @@ export default class InterruptHandler {
                     entry.isIntersecting || 
                         ((entry.rootBounds.width == 0) && (entry.rootBounds.height == 0)) // reparenting
                 )
-                scrollerID == 1 && console.log('setting headInView, entrycount, isIntersecting\n', 
-                    this.isHeadCradleInView, entries.length, entry.isIntersecting)
+                // scrollerID == 1 && console.log('setting headInView, entrycount, isIntersecting\n', 
+                //     this.isHeadCradleInView, entries.length, entry.isIntersecting)
             } else {
                 this.isTailCradleInView = (
                     entry.isIntersecting  || 
                         ((entry.rootBounds.width == 0) && (entry.rootBounds.height == 0)) // reparenting
                 )
-                scrollerID == 1 && console.log('setting tailInView, entrycount, isIntersecting\n',
-                    this.isTailCradleInView, entries.length, entry.isIntersecting)
+                // scrollerID == 1 && console.log('setting tailInView, entrycount, isIntersecting\n',
+                //     this.isTailCradleInView, entries.length, entry.isIntersecting)
             }
         }
 
@@ -257,8 +257,8 @@ export default class InterruptHandler {
                 }
                 this.signals.pauseTriggerlinesObserver = true
 
-                scrollerID == 1 && console.log('==>> cradleIntersectionObserverCallback: starting reposition, entries.length, scrollTop\n',
-                    entries.length, viewportElement.scrollTop)
+                // scrollerID == 1 && console.log('==>> cradleIntersectionObserverCallback: starting reposition, entries.length, scrollTop\n',
+                //     entries.length, viewportElement.scrollTop)
 
                 if (stateHandler.isMountedRef.current) {
 
