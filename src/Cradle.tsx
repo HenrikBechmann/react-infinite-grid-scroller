@@ -1240,7 +1240,9 @@ const Cradle = ({
                 }
 
                 if (cradleState == 'finishreposition') {
+
                     scrollHandler.calcImpliedRepositioningData('onScroll')
+                    
                 }
 
                 const listsize = cradleInternalPropertiesRef.current.virtualListProps.size

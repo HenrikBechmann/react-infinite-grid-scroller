@@ -215,7 +215,7 @@ export default class ScrollHandler {
 
         if (!ViewportContextProperties.isResizing) {
 
-            if ((cradleState == 'repositioningRender') { // || (cradleState == 'repositioningContinuation')) {
+            if (cradleState == 'repositioningRender') { // || (cradleState == 'repositioningContinuation')) {
 
                 // scrollerID == 1 && console.log('onScroll.calcImpliedRepositioningData: cradleState', cradleState)
 
@@ -361,7 +361,7 @@ export default class ScrollHandler {
     }
 
     // TODO update scrollTracker is in use
-    public calcImpliedRepositioningData = (source) => {
+    public calcImpliedRepositioningData = (source) => { // source for debug
 
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
             cradleSpecs = this.cradleParameters.cradleInheritedPropertiesRef.current,
