@@ -216,13 +216,10 @@ export default class ScrollHandler {
         if (!ViewportContextProperties.isResizing) {
 
             if ((cradleState == 'repositioningRender') || (cradleState == 'repositioningContinuation')) {
-            // if (['repositioningContinuation','repositioningRender','finishreposition'].includes(cradleState)) {
 
                 // scrollerID == 1 && console.log('onScroll.calcImpliedRepositioningData: cradleState', cradleState)
 
                 this.calcImpliedRepositioningData('onScroll')
-                // EXPERIMENTALLY REMOVE TOGGLE TO AVOID CRASH WITH HIGH PAINT USAGE
-                // if (cradleState == 'repositioningRender') stateHandler.setCradleState('repositioningContinuation')
 
             }
 
