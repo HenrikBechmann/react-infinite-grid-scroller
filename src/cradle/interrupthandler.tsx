@@ -223,14 +223,6 @@ export default class InterruptHandler {
                 
                 const viewportElement = ViewportContextProperties.elementRef.current
 
-                // const { 
-
-                //     scrollerID, 
-                //     layout, // orientation, 
-                //     // padding, gap,
-                //     // cellHeight, cellWidth,
-
-                // } = this.cradleParameters.cradleInheritedPropertiesRef.current
                 if (!viewportElement) { // defensive; shouldn't happen
                     console.log('SYSTEM: viewport element not set in cradleIntersectionObserverCallback (scrollerID)',
                         scrollerID,ViewportContextProperties)
@@ -262,9 +254,8 @@ export default class InterruptHandler {
 
                 if (stateHandler.isMountedRef.current) {
 
-                    // setTimeout(() => { // experimental
-                        stateHandler.setCradleState('startreposition')
-                    // },100)
+                    stateHandler.setCradleState('startreposition')
+
                 }
 
             } else {
