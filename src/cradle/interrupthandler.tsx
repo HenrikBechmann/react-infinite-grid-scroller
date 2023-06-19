@@ -212,7 +212,7 @@ export default class InterruptHandler {
 
             if (
 
-                    !['repositioningRender','repositioningContinuation','finishreposition',
+                    !['repositioningRender','finishreposition',//'repositioningContinuation','finishreposition',
                         'renderupdatedcontent','finishupdatedcontent',
                         'finishviewportresize'].includes(cradleState) &&
 

@@ -1506,9 +1506,9 @@ const Cradle = ({
             case 'repositioningRender': // no-op
                 break
 
-            case 'repositioningContinuation': // set from onScroll
-                setCradleState('repositioningRender')
-                break
+            // case 'repositioningContinuation': // set from onScroll
+            //     setCradleState('repositioningRender')
+            //     break
 
             case 'ready': // no-op
 
