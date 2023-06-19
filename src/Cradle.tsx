@@ -1523,38 +1523,6 @@ const Cradle = ({
     const scrollAxisReferencePosition = layoutHandler.cradlePositionData.targetAxisReferencePosition
     const scrollAxisReferenceIndex = scrollAxisReferencePosition + lowindex
     const scrollIndexRef = useRef(scrollAxisReferencePosition)
-    const scrollTrackerArgs = useMemo(() => {
-        if (!['repositioningContinuation','repositioningRender','finishreposition'].includes(cradleState)) {
-            return null
-        }
-        if (scrollAxisReferencePosition != scrollIndexRef.current) {
-            scrollIndexRef.current = scrollAxisReferencePosition
-            const { repositioningIndexCallback } = serviceHandler.callbacks
-            repositioningIndexCallback && repositioningIndexCallback(scrollAxisReferenceIndex);
-        }
-        
-        if (!useScrollTracker) return null
-        const trackerargs = {
-            top:viewportDimensions.top + 3,
-            left:viewportDimensions.left + 3,
-            scrollAxisReferenceIndex,
-            scrollAxisReferencePosition,
-            listsize,
-            styles,
-        }
-        return trackerargs
-    },
-        [
-            cradleState, 
-            viewportDimensions, 
-            scrollAxisReferenceIndex,
-            scrollAxisReferencePosition, 
-            listsize,
-            styles,
-            useScrollTracker,
-        ]
-    )
-
     const cradleContent = contentHandler.content
 
     const triggercellTriggerlinesRef = useRef(null)
@@ -1595,59 +1563,49 @@ const Cradle = ({
     // display the cradle components, the ScrollTracker, or null
     return <CradleContext.Provider value = { contextvalueRef.current }>
 
-        {(['repositioningContinuation','repositioningRender'].includes(cradleState))?
-            (useScrollTracker?<ScrollTracker 
-                top = { scrollTrackerArgs.top } 
-                left = { scrollTrackerArgs.left } 
-                offset = { scrollTrackerArgs.scrollAxisReferencePosition } 
-                index = { scrollTrackerArgs.scrollAxisReferenceIndex }
-                listsize = { scrollTrackerArgs.listsize }
-                styles = { scrollTrackerArgs.styles }
-            />:null):
+        <div 
+            data-type = 'cradle-axis'
+            style = { cradleAxisStyle } 
+            ref = { axisCradleElementRef }
+        >
+            { showAxis? // for debug
+                <div 
+                    data-type = 'cradle-divider' 
+                    style = { cradleDividerStyle }
+                >
+                </div>:
+                null
+            }
             <div 
-                data-type = 'cradle-axis'
-                style = { cradleAxisStyle } 
-                ref = { axisCradleElementRef }
+            
+                data-type = 'head'
+                ref = { headCradleElementRef }
+                style = { cradleHeadStyle }
+            
             >
-                { showAxis? // for debug
-                    <div 
-                        data-type = 'cradle-divider' 
-                        style = { cradleDividerStyle }
-                    >
-                    </div>:
+            
+                {(cradleState != 'setup')?
+                    cradleContent.headDisplayComponents:
                     null
                 }
-                <div 
-                
-                    data-type = 'head'
-                    ref = { headCradleElementRef }
-                    style = { cradleHeadStyle }
-                
-                >
-                
-                    {(cradleState != 'setup')?
-                        cradleContent.headDisplayComponents:
-                        null
-                    }
-                
-                </div>
-                <div 
-                
-                    data-type = 'tail'
-                    ref = { tailCradleElementRef } 
-                    style = { cradleTailStyle }
-                
-                >
-                
-                    {(cradleState != 'setup')?
-                        cradleContent.tailDisplayComponents:
-                        null
-                    }
-                
-                </div>
+            
             </div>
-        }
-
+            <div 
+            
+                data-type = 'tail'
+                ref = { tailCradleElementRef } 
+                style = { cradleTailStyle }
+            
+            >
+            
+                {(cradleState != 'setup')?
+                    cradleContent.tailDisplayComponents:
+                    null
+                }
+            
+            </div>
+        </div>
+        
     </CradleContext.Provider>
 
 } // Cradle

@@ -7,6 +7,50 @@
     If Viewport is resized, it notifies the Cradle to reconfigure.
 */
 
+    // const scrollTrackerArgs = useMemo(() => {
+    //     if (!['repositioningContinuation','repositioningRender','finishreposition'].includes(cradleState)) {
+    //         return null
+    //     }
+    //     if (scrollAxisReferencePosition != scrollIndexRef.current) {
+    //         scrollIndexRef.current = scrollAxisReferencePosition
+    //         const { repositioningIndexCallback } = serviceHandler.callbacks
+    //         repositioningIndexCallback && repositioningIndexCallback(scrollAxisReferenceIndex);
+    //     }
+        
+    //     if (!useScrollTracker) return null
+    //     const trackerargs = {
+    //         top:viewportDimensions.top + 3,
+    //         left:viewportDimensions.left + 3,
+    //         scrollAxisReferenceIndex,
+    //         scrollAxisReferencePosition,
+    //         listsize,
+    //         styles,
+    //     }
+    //     return trackerargs
+    // },
+    //     [
+    //         cradleState, 
+    //         viewportDimensions, 
+    //         scrollAxisReferenceIndex,
+    //         scrollAxisReferencePosition, 
+    //         listsize,
+    //         styles,
+    //         useScrollTracker,
+    //     ]
+    // )
+
+
+
+        // {(['repositioningContinuation','repositioningRender'].includes(cradleState))?
+        //     (useScrollTracker?<ScrollTracker 
+        //         top = { scrollTrackerArgs.top } 
+        //         left = { scrollTrackerArgs.left } 
+        //         offset = { scrollTrackerArgs.scrollAxisReferencePosition } 
+        //         index = { scrollTrackerArgs.scrollAxisReferenceIndex }
+        //         listsize = { scrollTrackerArgs.listsize }
+        //         styles = { scrollTrackerArgs.styles }
+        //     />:null):
+
 import React, {
 
     useState, 
