@@ -478,6 +478,7 @@ const InfiniteGridScroller = (props) => {
             styles = { stylesRef.current }
             scrollerID = { scrollerID }
             VIEWPORT_RESIZE_TIMEOUT = { VIEWPORT_RESIZE_TIMEOUT }
+            useScrollTracker = { useScrollTracker }
 
         >
         

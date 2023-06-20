@@ -8,11 +8,11 @@
     ScrollTracker can be suppressed by the host (in favour of the host's own location feedback)
 */
 
-import React, {useRef} from 'react'
+import React, {useRef, useCallback} from 'react'
 
 const ScrollTracker = ({ top, left, offset, index, listsize, styles }) => {
 
-    const trackdata = `${index} (${offset + 1}/${listsize})`
+    const tracktext = `${index} (${offset + 1}/${listsize})`
 
     const styleRef = useRef({
         top: top + 'px',
@@ -27,7 +27,7 @@ const ScrollTracker = ({ top, left, offset, index, listsize, styles }) => {
         ...styles
     })
 
-    return <div data-name = 'scrolltracker' style = {styleRef.current} >{trackdata}</div>
+    return <div data-name = 'scrolltracker' style = {styleRef.current} >{tracktext}</div>
 }
 
 export default ScrollTracker

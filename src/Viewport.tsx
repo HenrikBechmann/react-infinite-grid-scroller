@@ -74,6 +74,7 @@ const Viewport = ({
     styles,
     scrollerID,
     VIEWPORT_RESIZE_TIMEOUT,
+    useScrollTracker,
     
 }) => {
 
@@ -261,15 +262,6 @@ const Viewport = ({
     // ----------------------[ render ]--------------------------------
 
     return <ViewportContext.Provider value = { ViewportContextPropertiesRef.current }>
-        <ScrollTracker 
-            top = { 3 } 
-            left = { 3 } 
-
-            offset = { 0 } 
-            index = { 1 }
-            listsize = { 5 }
-            styles = { styles.scrolltracker }
-        />
         <div 
             data-type = 'viewport'
             data-scrollerid = { scrollerID }
@@ -278,6 +270,15 @@ const Viewport = ({
         >
             { (viewportState != 'setup') && children }
         </div>
+        {useScrollTracker && <ScrollTracker 
+            top = { 3 } 
+            left = { 3 } 
+
+            offset = { 0 } 
+            index = { 1 }
+            listsize = { 5 }
+            styles = { styles.scrolltracker }
+        />}
     </ViewportContext.Provider>
     
 } // Viewport
