@@ -271,12 +271,7 @@ const Viewport = ({
             { (viewportState != 'setup') && children }
         </div>
         {useScrollTracker && <ScrollTracker 
-            top = { 3 } 
-            left = { 3 } 
-
-            offset = { 0 } 
-            index = { 1 }
-            listsize = { 5 }
+            API = {null}
             styles = { styles.scrolltracker }
         />}
     </ViewportContext.Provider>

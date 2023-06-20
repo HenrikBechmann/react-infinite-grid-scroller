@@ -8,15 +8,19 @@
     ScrollTracker can be suppressed by the host (in favour of the host's own location feedback)
 */
 
-import React, {useRef, useCallback} from 'react'
+import React, { useRef, useCallback, useEffect, useState } from 'react'
 
-const ScrollTracker = ({ top, left, offset, index, listsize, styles }) => {
+const ScrollTracker = ({ API, styles }) => {
 
-    const tracktext = `${index} (${offset + 1}/${listsize})`
+    const [index, setIndex] = useState(null)
+    const lowindexRef = useRef(null)
+    const listsizeRef = useRef(null)
 
-    const styleRef = useRef({
-        top: top + 'px',
-        left: left + 'px',
+    const tracktext = `${index} (${index - lowindexRef.current + 1}/${listsizeRef.current})`
+
+    const stylesRef = useRef({
+        top: '3px',
+        left: '3px',
         position:'absolute',
         zIndex:3,
         backgroundColor:'white',
@@ -24,10 +28,44 @@ const ScrollTracker = ({ top, left, offset, index, listsize, styles }) => {
         borderRadius:'10px',
         fontSize:'smaller',
         padding:'3px',
+        visibility:'invisible',
         ...styles
     })
 
-    return <div data-name = 'scrolltracker' style = {styleRef.current} >{tracktext}</div>
+    useEffect(()=>{
+
+        API = {
+
+            beginReposition,
+            updateReposition,
+            finishReposition,
+
+        }
+
+    },[])
+
+    const beginReposition = useCallback((index, lowindex, listsize)=> {
+
+        setIndex(index)
+        lowindexRef.current = lowindex
+        listsizeRef.current = listsize
+        stylesRef.current = {...stylesRef.current,visibility:'visible'}
+
+    },[])
+
+    const updateReposition = useCallback((index)=>{
+
+        setIndex(index)
+
+    },[])
+
+    const finishReposition = useCallback(() => {
+
+        stylesRef.current = {...stylesRef.current,visibility:'invisible'}
+
+    },[])
+
+    return <div data-name = 'scrolltracker' style = {stylesRef.current} >{tracktext}</div>
 }
 
 export default ScrollTracker
