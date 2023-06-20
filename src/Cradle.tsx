@@ -1562,6 +1562,7 @@ const Cradle = ({
     // display the cradle components, the ScrollTracker, or null
     return <CradleContext.Provider value = { contextvalueRef.current }>
 
+        {(cradleState == 'repositioningRender')?null:
         <div 
             data-type = 'cradle-axis'
             style = { cradleAxisStyle } 
@@ -1603,7 +1604,7 @@ const Cradle = ({
                 }
             
             </div>
-        </div>
+        </div>}
         
     </CradleContext.Provider>
 
