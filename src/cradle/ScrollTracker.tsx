@@ -10,7 +10,7 @@
 
 import React, { useRef, useCallback, useEffect, useState } from 'react'
 
-const ScrollTracker = ({ API, styles }) => {
+const ScrollTracker = ({ scrollTrackerAPIRef, styles }) => {
 
     const [index, setIndex] = useState(null)
     const lowindexRef = useRef(null)
@@ -34,7 +34,7 @@ const ScrollTracker = ({ API, styles }) => {
 
     useEffect(()=>{
 
-        API = {
+        scrollTrackerAPIRef.current = {
 
             beginReposition,
             updateReposition,

@@ -100,12 +100,17 @@ const Viewport = ({
 
     const viewportElementRef = useRef(null)
 
+    const scrollTrackerAPIRef = useRef(null)
+
     // ViewportContextPropertiesRef is passed as a resizing interrupt (through context) to children
     const ViewportContextPropertiesRef = useRef(
         {
+
             isResizing:false, 
             viewportDimensions:null,
-            elementRef:null
+            elementRef:null,
+            scrollTrackerAPIRef,
+
         }
     )
 
@@ -271,7 +276,7 @@ const Viewport = ({
             { (viewportState != 'setup') && children }
         </div>
         {useScrollTracker && <ScrollTracker 
-            API = {null}
+            scrollTrackerAPIRef = {scrollTrackerAPIRef}
             styles = { styles.scrolltracker }
         />}
     </ViewportContext.Provider>
