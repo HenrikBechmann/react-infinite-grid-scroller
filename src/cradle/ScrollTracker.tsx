@@ -13,6 +13,8 @@ import React, { useRef, useCallback, useEffect, useState } from 'react'
 const ScrollTracker = ({ scrollTrackerAPIRef, styles }) => {
 
     const [index, setIndex] = useState(null)
+    const indexRef = useRef(null)
+    indexRef.current = index
     const lowindexRef = useRef(null)
     const listsizeRef = useRef(null)
 
@@ -28,7 +30,7 @@ const ScrollTracker = ({ scrollTrackerAPIRef, styles }) => {
         borderRadius:'10px',
         fontSize:'smaller',
         padding:'3px',
-        visibility:'invisible',
+        visibility:'hidden',
         ...styles
     })
 
@@ -55,13 +57,13 @@ const ScrollTracker = ({ scrollTrackerAPIRef, styles }) => {
 
     const updateReposition = useCallback((index)=>{
 
-        setIndex(index)
+        indexRef.current != index && setIndex(index)
 
     },[])
 
     const finishReposition = useCallback(() => {
 
-        stylesRef.current = {...stylesRef.current,visibility:'invisible'}
+        stylesRef.current = {...stylesRef.current,visibility:'hidden'}
 
     },[])
 
