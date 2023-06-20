@@ -70,9 +70,6 @@ import React, {
 
 import { ViewportContext } from './Viewport'
 
-// popup position tracker for repositioning
-import ScrollTracker from './cradle/ScrollTracker'
-
 // support code; process handlers
 import ScrollHandler from './cradle/scrollhandler'
 import StateHandler from './cradle/statehandler'

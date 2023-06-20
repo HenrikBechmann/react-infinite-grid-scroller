@@ -62,6 +62,9 @@ import React, {
 
 } from 'react'
 
+// popup position tracker for repositioning
+import ScrollTracker from './cradle/ScrollTracker'
+
 export const ViewportContext = React.createContext(null) // for children
 
 const Viewport = ({
@@ -201,6 +204,22 @@ const Viewport = ({
 
     },[styles.viewport])
 
+    const divtrackerstyleRef = useRef(null)
+
+    // initialize with inherited styles
+    divtrackerstyleRef.current = useMemo(() => {
+
+        return {
+
+            // ...styles.viewport,
+            position:'absolute',
+            top:0,
+            left:0
+            
+        }
+
+    },[styles.viewport])
+
     // update ViewportContextPropertiesRef; add viewport dimensions
     ViewportContextPropertiesRef.current = useMemo(() => {
 
@@ -242,6 +261,15 @@ const Viewport = ({
     // ----------------------[ render ]--------------------------------
 
     return <ViewportContext.Provider value = { ViewportContextPropertiesRef.current }>
+        <ScrollTracker 
+            top = { 3 } 
+            left = { 3 } 
+
+            offset = { 0 } 
+            index = { 1 }
+            listsize = { 5 }
+            styles = { styles.scrolltracker }
+        />
         <div 
             data-type = 'viewport'
             data-scrollerid = { scrollerID }

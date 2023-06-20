@@ -17,14 +17,14 @@ const ScrollTracker = ({ top, left, offset, index, listsize, styles }) => {
     const styleRef = useRef({
         top: top + 'px',
         left: left + 'px',
-        position:'fixed',
+        position:'absolute',
         zIndex:3,
         backgroundColor:'white',
         border: '1px solid gray',
         borderRadius:'10px',
         fontSize:'smaller',
         padding:'3px',
-        ...styles.scrolltracker
+        ...styles
     })
 
     return <div data-name = 'scrolltracker' style = {styleRef.current} >{trackdata}</div>
