@@ -46,24 +46,29 @@ const ScrollTracker = ({ scrollTrackerAPIRef, styles }) => {
 
     },[])
 
-    const beginReposition = useCallback((index, lowindex, listsize)=> {
+    const beginReposition = useCallback((position, lowindex, listsize)=> {
 
-        setIndex(index)
+        // console.log('position, lowindex, listsize', position, lowindex, listsize)
+
+        setIndex(position + lowindex)
         lowindexRef.current = lowindex
         listsizeRef.current = listsize
         stylesRef.current = {...stylesRef.current,visibility:'visible'}
 
     },[])
 
-    const updateReposition = useCallback((index)=>{
+    const updateReposition = useCallback((position)=>{
 
-        indexRef.current != index && setIndex(index)
+        const currentindex = position + lowindexRef.current;
+
+        (indexRef.current != currentindex) && setIndex(currentindex)
 
     },[])
 
     const finishReposition = useCallback(() => {
 
         stylesRef.current = {...stylesRef.current,visibility:'hidden'}
+        setIndex(null)
 
     },[])
 

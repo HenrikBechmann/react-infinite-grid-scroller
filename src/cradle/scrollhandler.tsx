@@ -412,6 +412,8 @@ export default class ScrollHandler {
         cradlePositionData.targetAxisReferencePosition = axisReferencePosition
         cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
 
+        source == 'onScroll' && ViewportContextProperties.scrollTrackerAPIRef.current.updateReposition(axisReferencePosition)
+
     }
 
 }

@@ -1174,6 +1174,13 @@ const Cradle = ({
 
                 if (scrollHandler.isScrolling) {
 
+                    const {lowindex, size:listsize } = cradleInternalPropertiesRef.current.virtualListProps
+
+                    ViewportContextPropertiesRef.current.scrollTrackerAPIRef.current.beginReposition(
+                        layoutHandler.cradlePositionData.targetAxisReferencePosition, 
+                        lowindex, listsize
+                    )
+
                     setCradleState('repositioningRender') // toggles with repositioningContinuation
 
                 } else {
@@ -1238,7 +1245,8 @@ const Cradle = ({
 
                 if (cradleState == 'finishreposition') {
 
-                    scrollHandler.calcImpliedRepositioningData('onScroll')
+                    ViewportContextPropertiesRef.current.scrollTrackerAPIRef.current.finishReposition()
+                    scrollHandler.calcImpliedRepositioningData('finishreposition')
                     
                 }
 
