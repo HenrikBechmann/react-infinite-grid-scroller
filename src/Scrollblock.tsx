@@ -56,7 +56,17 @@ const Scrollblock = ({
 
     const [divlinerstyle,saveDivlinerstyle] = useState(divlinerstyleRef.current) // to trigger render
 
-    const { width, height } = ViewportContextProperties.viewportDimensions
+    const getViewportDimensions = () => {
+        const viewportElement = ViewportContextProperties.elementRef.current
+        return {
+            width:viewportElement.offsetWidth,
+            height:viewportElement.offsetHeight
+        }
+    }
+
+    const { height,width } = getViewportDimensions() // viewportDimensions
+
+    // const { width, height } = ViewportContextProperties.viewportDimensions
     
     // reconfigure
     useLayoutEffect(() => {

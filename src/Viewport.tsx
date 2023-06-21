@@ -7,50 +7,6 @@
     If Viewport is resized, it notifies the Cradle to reconfigure.
 */
 
-    // const scrollTrackerArgs = useMemo(() => {
-    //     if (!['repositioningContinuation','repositioningRender','finishreposition'].includes(cradleState)) {
-    //         return null
-    //     }
-    //     if (scrollAxisReferencePosition != scrollIndexRef.current) {
-    //         scrollIndexRef.current = scrollAxisReferencePosition
-    //         const { repositioningIndexCallback } = serviceHandler.callbacks
-    //         repositioningIndexCallback && repositioningIndexCallback(scrollAxisReferenceIndex);
-    //     }
-        
-    //     if (!useScrollTracker) return null
-    //     const trackerargs = {
-    //         top:viewportDimensions.top + 3,
-    //         left:viewportDimensions.left + 3,
-    //         scrollAxisReferenceIndex,
-    //         scrollAxisReferencePosition,
-    //         listsize,
-    //         styles,
-    //     }
-    //     return trackerargs
-    // },
-    //     [
-    //         cradleState, 
-    //         viewportDimensions, 
-    //         scrollAxisReferenceIndex,
-    //         scrollAxisReferencePosition, 
-    //         listsize,
-    //         styles,
-    //         useScrollTracker,
-    //     ]
-    // )
-
-
-
-        // {(['repositioningContinuation','repositioningRender'].includes(cradleState))?
-        //     (useScrollTracker?<ScrollTracker 
-        //         top = { scrollTrackerArgs.top } 
-        //         left = { scrollTrackerArgs.left } 
-        //         offset = { scrollTrackerArgs.scrollAxisReferencePosition } 
-        //         index = { scrollTrackerArgs.scrollAxisReferenceIndex }
-        //         listsize = { scrollTrackerArgs.listsize }
-        //         styles = { scrollTrackerArgs.styles }
-        //     />:null):
-
 import React, {
 
     useState, 
@@ -83,11 +39,6 @@ const Viewport = ({
     const {
 
         orientation,
-        // gap,
-        // padding,
-        // cellHeight,
-        // cellWidth,
-        // layout,
 
     } = gridSpecs
 
@@ -107,7 +58,7 @@ const Viewport = ({
         {
 
             isResizing:false, 
-            viewportDimensions:null,
+            // viewportDimensions:null,
             elementRef:null,
             scrollTrackerAPIRef,
 
@@ -231,14 +182,14 @@ const Viewport = ({
 
         if (viewportState == 'setup') return ViewportContextPropertiesRef.current
 
-        const {top, right, bottom, left} = viewportElementRef.current.getBoundingClientRect()
-        const width = (right - left)
-        const height = (bottom - top)
+        // const {top, right, bottom, left} = viewportElementRef.current.getBoundingClientRect()
+        // const width = (right - left)
+        // const height = (bottom - top)
 
         // this is a dimension update procedure for resize. 
         // See also interrupthandler.tsx cradleIntersectionObserverCallback for cradle intersection update
         const localViewportData = {
-            viewportDimensions:{top,right, bottom, left, width, height},
+            // viewportDimensions:{top,right, bottom, left, width, height},
             elementRef:viewportElementRef,
             isResizing:isResizingRef.current,
         }

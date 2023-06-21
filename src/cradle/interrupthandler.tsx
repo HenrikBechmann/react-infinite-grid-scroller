@@ -231,12 +231,12 @@ export default class InterruptHandler {
 
                 // update dimensions with cradle intersection. See also dimension update in viewport.tsx for resize
                 // and getViewportDimensions in Cradle for width/height
-                const rect = viewportElement.getBoundingClientRect()
-                const { top, right, bottom, left } = rect
-                const width = right - left, height = bottom - top
+                // const rect = viewportElement.getBoundingClientRect()
+                // const { top, right, bottom, left } = rect
+                // const width = right - left, height = bottom - top
 
                 // update for scrolltracker
-                ViewportContextProperties.viewportDimensions = {top, right, bottom, left, width, height} 
+                // ViewportContextProperties.viewportDimensions = {top, right, bottom, left, width, height} 
 
                 const { repositioningFlagCallback } = serviceHandler.callbacks
                 repositioningFlagCallback && repositioningFlagCallback(true)

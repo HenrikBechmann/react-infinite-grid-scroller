@@ -168,7 +168,7 @@ const Cradle = ({
     }
 
     // two sources; could use some reconciliation
-    const { viewportDimensions } = ViewportContextProperties // for scrollTracker
+    // const { viewportDimensions } = ViewportContextProperties // for scrollTracker
     const { height:viewportheight,width:viewportwidth } = getViewportDimensions() // viewportDimensions
 
     // cache test
