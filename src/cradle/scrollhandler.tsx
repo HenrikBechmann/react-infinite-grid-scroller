@@ -215,7 +215,7 @@ export default class ScrollHandler {
 
         if (!ViewportContextProperties.isResizing) {
 
-            if (cradleState == 'repositioningRender') { // || (cradleState == 'repositioningContinuation')) {
+            if (cradleState == 'repositioningRender') {
 
                 // scrollerID == 1 && console.log('onScroll.calcImpliedRepositioningData: cradleState', cradleState)
 
@@ -410,9 +410,9 @@ export default class ScrollHandler {
         const { cradlePositionData } = this.cradleParameters.handlersRef.current.layoutHandler
 
         cradlePositionData.targetAxisReferencePosition = axisReferencePosition
-        cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
+        cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset;
 
-        source == 'onScroll' && ViewportContextProperties.scrollTrackerAPIRef.current.updateReposition(axisReferencePosition)
+        (source == 'onScroll') && ViewportContextProperties.scrollTrackerAPIRef.current.updateReposition(axisReferencePosition)
 
     }
 
