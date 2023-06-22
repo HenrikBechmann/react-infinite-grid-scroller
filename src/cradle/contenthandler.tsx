@@ -196,7 +196,7 @@ export default class ContentHandler {
         ].includes(cradleState)) {
 
             targetAxisViewportPixelOffset = 
-                (workingAxisReferenceIndex == 0)?
+                (workingAxisReferenceIndex == listlowindex)?
                     padding:
                     gap // default
 
