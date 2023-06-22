@@ -150,12 +150,31 @@ export default class ServiceHandler {
 
         }
 
-        const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
-        const { layoutHandler, stateHandler} = this.cradleParameters.handlersRef.current
+        const 
+
+            { cradleParameters } = this,
+
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+
+            { virtualListProps } = cradleInternalProperties,
+
+            handlers = cradleParameters.handlersRef.current,
+
+            {
+
+                interruptHandler,
+                layoutHandler,
+                stateHandler
+
+            } = handlers,
+
+            { signals } = interruptHandler,
+
+            { lowindex } = virtualListProps
 
         signals.pauseScrollingEffects = true
 
-        layoutHandler.cradlePositionData.targetAxisReferencePosition = index
+        layoutHandler.cradlePositionData.targetAxisReferencePosition = index - lowindex
 
         stateHandler.setCradleState('scrollto')
 

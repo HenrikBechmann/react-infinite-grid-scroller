@@ -93,18 +93,16 @@ export default class ContentHandler {
 
         // ------------------------------[ 1. initialize ]---------------------------
 
-        const { cradleParameters } = this
+        const 
 
-        const
+            { cradleParameters } = this,
 
             ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current,
             cradleHandlers = cradleParameters.handlersRef.current,
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
-            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
 
-        const viewportElement = ViewportContextProperties.elementRef.current
-
-        const 
+            viewportElement = ViewportContextProperties.elementRef.current,
 
             {
 
@@ -169,6 +167,7 @@ export default class ContentHandler {
 
         // in bounds
         let workingAxisReferencePosition = Math.min(requestedAxisReferencePosition,listsize - 1)
+        workingAxisReferencePosition = Math.max(workingAxisReferencePosition, 0)
         // shifted by virtual list low range
         let workingAxisReferenceIndex  = workingAxisReferencePosition + listlowindex
 
