@@ -445,14 +445,22 @@ export default class CacheAPI {
         // match cache to newlistsize
         const portalIndexMap:Map<number,number> = this.scrollerDataMap.get(scrollerID).indexToItemIDMap
         const mapkeysList = Array.from(portalIndexMap.keys())
-        mapkeysList.sort((a,b) => a - b)
+
+        mapkeysList.sort((a,b) => a - b) // ascending
+
+        const { cradleParameters } = this.scrollerDataMap.get(scrollerID)
+
+        const { virtualListProps } = cradleParameters.cradleInternalPropertiesRef.current
+
+        const { lowindex } = virtualListProps
 
         const highestindex = mapkeysList.at(-1)
 
-        if (highestindex > (newlistsize -1)) { // pare the cache
+        if (highestindex > ((newlistsize + lowindex) -1)) { // pare the cache
 
             const parelist = mapkeysList.filter((index)=>{
-                return index > (newlistsize -1)
+                const comparehighindex = newlistsize + lowindex - 1
+                return index > (comparehighindex)
             })
 
             this.deletePortalByIndex(scrollerID, parelist, deleteListCallback)

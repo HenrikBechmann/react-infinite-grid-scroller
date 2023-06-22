@@ -390,22 +390,28 @@ const InfiniteGridScroller = (props) => {
 
     },[]);
 
+    const setVirtualListRange = useCallback((listrange) =>{
+
+        const [lowrange, highrange] = listrange
+        const listsize = highrange - lowrange + 1
+
+        listsizeRef.current = listsize
+        listRangeRef.current = listrange
+
+        // inform the user
+        callbacksRef.current.newListsize && 
+            listsizeRef.current != listsize &&
+            callbacksRef.current.newListsize(listsize)
+
+        setScrollerState('setlistprops')
+
+    },[])
+
     // called when getItem returns null, or direct call from user (see serviceHandler)
-    const setVirtualListSpecs = useCallback((listsizearg) =>{
+    const setVirtualListSize = useCallback((listsize) =>{
 
-        let listsize, lowindex, highindex, listrange
-        const [prevlowrange, prevhighrange] = listRangeRef.current
-        if (Array.isArray(listsizearg)) {
-            [lowindex,highindex] = listsizearg
-            listsize = highindex - lowindex + 1
-            listrange = listsizearg
-        } else {
-            listsize = listsizearg;
-            [lowindex,highindex] = listRangeRef.current
-            listrange = [lowindex,lowindex + listsize - 1]
-        }
-
-        if (listsize == listsizeRef.current && lowindex === prevlowrange && highindex === prevhighrange) return
+        const [lowindex,highindex] = listRangeRef.current
+        const listrange = [lowindex,lowindex + listsize - 1]
 
         listsizeRef.current = listsize
         listRangeRef.current = listrange
@@ -462,17 +468,17 @@ const InfiniteGridScroller = (props) => {
     }
 
     // component calls are deferred by scrollerState to give cacheAPI a chance to initialize
-    // return <ErrorBoundary
-    //     FallbackComponent= { ErrorFallback }
-    //     // elaboration TBD
-    //     onReset = { () => {} }
-    //     onError = { () => {} }
-    //     // onError = {(error: Error, info: {componentStack: string}) => {
-    //     //     console.log('react-infinite-grid-scroller captured error', error)
-    //     // }}
-    // >
+    return <ErrorBoundary
+        FallbackComponent= { ErrorFallback }
+        // elaboration TBD
+        onReset = { () => {} }
+        onError = { () => {} }
+        // onError = {(error: Error, info: {componentStack: string}) => {
+        //     console.log('react-infinite-grid-scroller captured error', error)
+        // }}
+    >
 
-    return <>{(scrollerState != 'setup') && <Viewport
+        {(scrollerState != 'setup') && <Viewport
 
             gridSpecs = { gridSpecsRef.current }
             styles = { stylesRef.current }
@@ -497,7 +503,8 @@ const InfiniteGridScroller = (props) => {
                     styles = { stylesRef.current }
                     // listsize = { listsize }
                     virtualListSpecs = {virtualListSpecsRef.current}
-                    setVirtualListSpecs = { setVirtualListSpecs }
+                    setVirtualListSize = { setVirtualListSize }
+                    setVirtualListRange = { setVirtualListRange }
                     cache = { cache }
                     cacheMax = { cacheMax }
                     userCallbacks = { callbacksRef.current }
@@ -532,8 +539,7 @@ const InfiniteGridScroller = (props) => {
 
         </div>}
         </div>
-        </>
-    // </ErrorBoundary>
+    </ErrorBoundary>
 }
 
 export default InfiniteGridScroller

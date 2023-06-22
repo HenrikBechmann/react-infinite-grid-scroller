@@ -190,9 +190,9 @@ export default class ServiceHandler {
 
     public setListsize = (newlistsize) => {
 
-        const isInvalid = (!isInteger(newlistsize) || !minValue(newlistsize, 0))
-
         newlistsize = +newlistsize
+
+        const isInvalid = (!isInteger(newlistsize) || !minValue(newlistsize, 0))
 
         if (isInvalid) {
 
@@ -201,13 +201,25 @@ export default class ServiceHandler {
 
         }
 
-        const { cacheAPI, contentHandler, stateHandler } = this.cradleParameters.handlersRef.current
+        const 
+            { 
 
-        const { deleteListCallback, changeListsizeCallback } = this.callbacks
+                cacheAPI, 
+                contentHandler, 
+                stateHandler 
 
-        const currentlistsize = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.size
+            } = this.cradleParameters.handlersRef.current,
 
-        const { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
+            { 
+
+                deleteListCallback, 
+                changeListsizeCallback 
+
+            } = this.callbacks,
+
+            currentlistsize = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.size,
+
+            { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         let dListCallback
         if (deleteListCallback) {
@@ -219,17 +231,22 @@ export default class ServiceHandler {
 
         }
 
-        contentHandler.updateVirtualListSpecs(newlistsize)
+        contentHandler.updateVirtualListSize(newlistsize)
+
         cacheAPI.changeCacheListsize(newlistsize, 
+
             dListCallback,
             changeListsizeCallback
+
         )
 
         cacheAPI.renderPortalLists()
 
 
         if ((cache == 'preload') && (newlistsize > currentlistsize)) {
+
             stateHandler.setCradleState('startpreload')
+
         }
 
     }

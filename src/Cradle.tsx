@@ -92,7 +92,8 @@ const Cradle = ({
         runwaySize, 
         // listsize, 
         virtualListSpecs,
-        setVirtualListSpecs,
+        setVirtualListSize,
+        setVirtualListRange,
         startingIndex, 
         getItem, 
         placeholder, 
@@ -491,7 +492,8 @@ const Cradle = ({
         // viewportRowcount,
         // listRowcount,
         virtualListProps,
-        setVirtualListSpecs,
+        setVirtualListSize,
+        setVirtualListRange,
         // runwayRowcount,
 
         cradleContentProps:cradleContentPropsRef.current,
@@ -756,7 +758,7 @@ const Cradle = ({
 
             }
 
-            contentHandler.updateVirtualListSpecs(maxListsize)
+            contentHandler.updateVirtualListSize(maxListsize)
             cacheAPI.changeCacheListsize(maxListsize, 
                 dListCallback,
                 changeListsizeCallback)

@@ -73,7 +73,7 @@ export default class ContentHandler {
 
     // reset the cradle with new content, including allocation between head and tail parts of the cradle
     // - called only from the Cradle state handler
-    public updateVirtualListSpecs = (newlistsize) => {
+    public updateVirtualListSize = (newlistsize) => {
 
         if (newlistsize == 0) {
 
@@ -85,7 +85,27 @@ export default class ContentHandler {
 
         }
 
-        this.cradleParameters.cradleInternalPropertiesRef.current.setVirtualListSpecs(newlistsize)
+        this.cradleParameters.cradleInternalPropertiesRef.current.setVirtualListSize(newlistsize)
+
+    }
+
+    public updateVirtualListRange = (newlistrange) => {
+
+        const [lowindex, highindex] = newlistrange
+
+        const newlistsize = highindex - lowindex + 1
+
+        if (newlistsize == 0) {
+
+            const cradleContent = this.content        
+
+            this.clearCradle()
+            cradleContent.headDisplayComponents = []
+            cradleContent.tailDisplayComponents = []
+
+        }
+
+        this.cradleParameters.cradleInternalPropertiesRef.current.setVirtualListRange(newlistrange)
 
     }
 
