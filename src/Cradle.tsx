@@ -251,7 +251,7 @@ const Cradle = ({
         viewportwidth,
     ])
 
-    const {lowindex, highindex} = virtualListSpecs
+    const { lowindex, highindex } = virtualListSpecs
 
     const [baserowblanks, endrowblanks] = useMemo(()=> {
 

@@ -23,14 +23,17 @@ export default class LayoutHandler {
         this.cradleParameters = cradleParameters
 
         const {
+
             axisRef, 
             headRef, 
             tailRef,
             triggercellTriggerlineHeadRef,
             triggercellTriggerlineTailRef,
+
         } = cradleParameters.cradleInternalPropertiesRef.current.cradleElementsRef.current
         
         this.elements = {
+
             axisRef,
             headRef,
             tailRef,
@@ -38,16 +41,32 @@ export default class LayoutHandler {
             triggercellTriggerlineTailRef,
         }
 
-        const {
+        let {
+
             startingIndex, 
             // padding
         } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        const listsize = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.size
+        const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
+
+        const { 
+
+            size:listsize,
+            lowindex,
+            highindex,
+
+        } = virtualListProps
+
+        startingIndex = Math.max(startingIndex, lowindex)
+        startingIndex = Math.min(startingIndex, highindex)
+
+        // const listsize = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.size
+
+        this.cradlePositionData.targetAxisReferencePosition = startingIndex - lowindex
 
         // TODO: recalculate
-        this.cradlePositionData.targetAxisReferencePosition = 
-            (Math.min(startingIndex,(listsize - 1)) || 0)
+        // this.cradlePositionData.targetAxisReferencePosition = 
+        //     (Math.min(startingIndex,(listsize - 1)) || 0)
 
         this.cradlePositionData.targetAxisViewportPixelOffset = 0
 
