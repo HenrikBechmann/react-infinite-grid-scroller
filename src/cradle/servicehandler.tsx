@@ -30,6 +30,12 @@
     often invoked by service functions to change Cradle state upon servicing requests.
 */
 
+/*
+
+TODO: add setListRange
+
+*/
+
 const isBlank = (value:any) => {
     const testvalue = value ?? ''
     return testvalue === ''
@@ -93,7 +99,9 @@ export default class ServiceHandler {
        this.cradleParameters = cradleParameters
 
        // doing this explicitly here for documentation
-       const {
+       const 
+
+       {
            referenceIndexCallback, // (index, location, cradleState)
            preloadIndexCallback, // (index)
            deleteListCallback, // (reason, deleteList)
@@ -102,9 +110,9 @@ export default class ServiceHandler {
            repositioningFlagCallback, // (flag) // boolean
            repositioningIndexCallback,
            
-       } = cradleParameters.externalCallbacksRef.current
+       } = cradleParameters.externalCallbacksRef.current,
 
-       const callbacks = {
+       callbacks = {
            referenceIndexCallback,
            preloadIndexCallback,
            deleteListCallback,
