@@ -148,15 +148,15 @@ const Cradle = ({
     ViewportContextPropertiesRef.current = ViewportContextProperties // for closures
 
     // flags
-    const isMountedRef = useRef(true)
-    const isCachedRef = useRef(false)
-    const wasCachedRef = useRef(false)
-    const hasBeenRenderedRef = useRef(false)
-
-    // trigger control
-    const triggerHistoryRef = useRef({
-        previousReferenceName:null,
-    })
+    const 
+        isMountedRef = useRef(true),
+        isCachedRef = useRef(false),
+        wasCachedRef = useRef(false),
+        hasBeenRenderedRef = useRef(false),
+        // trigger control
+        triggerHistoryRef = useRef({
+            previousReferenceName:null,
+        })
 
     //  viewport dimensions and cached state
     const getViewportDimensions = () => {
@@ -193,22 +193,22 @@ const Cradle = ({
     // }
 
     // cradle scaffold element refs
-    const headCradleElementRef = useRef(null)
-    const tailCradleElementRef = useRef(null)
-    const axisCradleElementRef = useRef(null)
-    const triggercellTriggerlineHeadElementRef = useRef(null)
-    const triggercellTriggerlineTailElementRef = useRef(null)
-
-    // layout bundle
-    const cradleElementsRef = useRef(
-        {
-            headRef:headCradleElementRef, 
-            tailRef:tailCradleElementRef, 
-            axisRef:axisCradleElementRef,
-            triggercellTriggerlineHeadRef:triggercellTriggerlineHeadElementRef,
-            triggercellTriggerlineTailRef:triggercellTriggerlineTailElementRef,
-        }
-    )
+    const 
+        headCradleElementRef = useRef(null),
+        tailCradleElementRef = useRef(null),
+        axisCradleElementRef = useRef(null),
+        triggercellTriggerlineHeadElementRef = useRef(null),
+        triggercellTriggerlineTailElementRef = useRef(null),
+        // layout bundle
+        cradleElementsRef = useRef(
+            {
+                headRef:headCradleElementRef, 
+                tailRef:tailCradleElementRef, 
+                axisRef:axisCradleElementRef,
+                triggercellTriggerlineHeadRef:triggercellTriggerlineHeadElementRef,
+                triggercellTriggerlineTailRef:triggercellTriggerlineTailElementRef,
+            }
+        )
 
     // ------------------------[ calculated properties ]------------------------
     // configuration calculations
