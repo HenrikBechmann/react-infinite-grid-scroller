@@ -548,10 +548,6 @@ export default class ServiceHandler {
             }
         })
 
-        // refresh the changed cache
-        // cacheAPI.cacheProps.partitionModified = true
-        // cacheAPI.renderPortalLists()
-
         // ------------- apply changes to extant cellFrames ------------
 
         // these are used to reconcile cradle cellFrames, and also for return information
@@ -798,20 +794,15 @@ export default class ServiceHandler {
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
         const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
 
-        // const indexSpan = contentHandler.indexSpan
-        // const [lowCradleIndex,highCradleIndex] = indexSpan
-        // const measuredCradleItemCount = (indexSpan.length == 0)?0:highCradleIndex - lowCradleIndex + 1
         const measuredCradleItemCount = (cradleSize == 0)?0:highCradleIndex - lowCradleIndex + 1
 
         const resetCradle = ((measuredCradleItemCount < calculatedCradleItemcount) || 
-            // (contentHandler.indexSpan[1] >= (newlistsize - 1)))
+
             (highCradleIndex >= (newlistsize - 1)))
 
         if (!resetCradle) { // synchronize cradle contents to changes
 
             contentHandler.synchronizeCradleItemIDsToCache(shiftedList, increment, startChangeIndex) // non-zero communications isInsertRemove
-
-            // if (increment == +1) contentHandler.createNewItemIDs(replaceList)
 
             const { content } = contentHandler
 

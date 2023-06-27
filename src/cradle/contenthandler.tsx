@@ -1165,18 +1165,6 @@ export default class ContentHandler {
 
     }
 
-    // get indexSpan() {
-
-    //     const { cradleModelComponents } = this.content
-        
-    //     if (cradleModelComponents.length == 0) return []
-
-    //     const lowIndex =  cradleModelComponents[0].props.index
-    //     const highIndex = lowIndex + (cradleModelComponents.length - 1)
-    //     return [lowIndex, highIndex]
-
-    // }
-
     // called from service handler's remapIndexes, as last step
     public reconcileCellFrames(modifiedIndexesList) {
 
@@ -1186,7 +1174,6 @@ export default class ContentHandler {
 
         const { cacheAPI } = this.cradleParameters.handlersRef.current
 
-        // const { indexToItemIDMap } = cacheAPI.cacheProps
         const { indexToItemIDMap } = cacheAPI
 
         function processComponentFn (component, i, array ) {
@@ -1224,13 +1211,6 @@ export default class ContentHandler {
         const { cradleModelComponents } = this.content
 
         const { cradleContentProps } = this.cradleParameters.cradleInheritedPropertiesRef.current
-
-        // assemble parameters
-        // const indexSpan = this.indexSpan
-
-        // if (indexSpan.length == 0) return // defensive; shouldn't be here
-
-        // const [lowSpan,highSpan] = indexSpan
 
         if (cradleContentProps.size == 0) return
 
@@ -1310,7 +1290,7 @@ export default class ContentHandler {
 
     }
 
-    // supports insertRemoveIndex
+    // supports remapIndexes
     public createNewItemIDs(newList) {
 
         if (!newList.length) return
@@ -1318,12 +1298,7 @@ export default class ContentHandler {
         const { cacheAPI } = this.cradleParameters.handlersRef.current
         const { cradleModelComponents } = this.content
 
-        const { cradleContentProps } = this.cradleParameters.cradleInheritedPropertiesRef.current
-
-        // const indexSpan = this.indexSpan
-        // if (indexSpan.length == 0) return // defensive
-
-        // const [lowSpan, highSpan] = indexSpan
+        const { cradleContentProps } = this.cradleParameters.cradleInternalPropertiesRef.current
 
         if (cradleContentProps.size == 0) return
 
@@ -1342,8 +1317,6 @@ export default class ContentHandler {
             cradleModelComponents[cradlePtr] = React.cloneElement(component, {itemID:newItemID})
 
         }
-
-        // cradleModelComponents.forEach(processcomponentFn)
 
         newList.forEach(processcomponentFn)
 
