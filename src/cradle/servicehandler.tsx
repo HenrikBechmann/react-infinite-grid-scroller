@@ -597,10 +597,20 @@ export default class ServiceHandler {
     // returns list of processed indexes
     public moveIndex = (tolowindex, fromlowindex, fromhighindex = null) => {
 
+        const 
+
+            { cradleParameters } = this,
+
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+
+            { virtualListProps } = cradleInternalProperties,
+
+            { lowindex:listlowindex } = virtualListProps
+
         // ------------ confirm validity of arguments -------------
 
-        const isToindexInvalid = (!isInteger(tolowindex) || !minValue(tolowindex, 0))
-        const isFromindexInvalid = (!isInteger(fromlowindex) || !minValue(fromlowindex, 0))
+        const isToindexInvalid = (!isInteger(tolowindex) || !minValue(tolowindex, listlowindex))
+        const isFromindexInvalid = (!isInteger(fromlowindex) || !minValue(fromlowindex, listlowindex))
         let isHighrangeInvalid = false
 
         if ((!isFromindexInvalid)) {
@@ -625,9 +635,9 @@ export default class ServiceHandler {
             return []
         }
 
-        tolowindex = Math.max(0,tolowindex)
-        fromlowindex = Math.max(0,fromlowindex)
-        fromhighindex = Math.max(0,fromhighindex)
+        tolowindex = Math.max(listlowindex,tolowindex)
+        fromlowindex = Math.max(listlowindex,fromlowindex)
+        fromhighindex = Math.max(listlowindex,fromhighindex)
 
         const fromspan = fromhighindex - fromlowindex + 1
 
@@ -643,16 +653,16 @@ export default class ServiceHandler {
         if (tohighindex > listhighindex) {
 
             const diff = tohighindex - listhighindex
-            tohighindex = Math.max(0,tohighindex - diff)
-            tolowindex = Math.max(0,tolowindex - diff)
+            tohighindex = Math.max(listlowindex,tohighindex - diff)
+            tolowindex = Math.max(listlowindex,tolowindex - diff)
 
         }
 
         if (fromhighindex > listhighindex) {
 
             const diff = fromhighindex - listhighindex
-            fromhighindex = Math.max(0,fromhighindex - diff)
-            fromlowindex = Math.max(0,fromlowindex - diff)
+            fromhighindex = Math.max(listlowindex,fromhighindex - diff)
+            fromlowindex = Math.max(listlowindex,fromlowindex - diff)
 
         }
 

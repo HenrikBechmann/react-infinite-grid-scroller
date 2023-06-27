@@ -1210,7 +1210,7 @@ export default class ContentHandler {
 
         const { cradleModelComponents } = this.content
 
-        const { cradleContentProps } = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const { cradleContentProps } = this.cradleParameters.cradleInternalPropertiesRef.current
 
         if (cradleContentProps.size == 0) return
 
