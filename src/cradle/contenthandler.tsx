@@ -1165,41 +1165,6 @@ export default class ContentHandler {
 
     }
 
-    // called from service handler's remapIndexes, as last step
-    public reconcileCellFrames(modifiedIndexesList) {
-
-        if (!modifiedIndexesList.length) return
-
-        const { cradleModelComponents } = this.content
-
-        const { cacheAPI } = this.cradleParameters.handlersRef.current
-
-        const { indexToItemIDMap } = cacheAPI
-
-        function processComponentFn (component, i, array ) {
-            const { index, itemID } = component.props
-            if (modifiedIndexesList.includes(index)) {
-
-                const newItemID = 
-                    indexToItemIDMap.has(index)?
-                        indexToItemIDMap.get(index):
-                        cacheAPI.getNewItemID()
-
-                if (newItemID != itemID) { // defensive; shouldn't happen
-
-                    array[i] = React.cloneElement(component, {itemID:newItemID})
-
-                }
-            }
-        }
-
-        cradleModelComponents.forEach(processComponentFn)
-
-        this.content.headModelComponents = cradleModelComponents.slice(0,this.content.headModelComponents.length)
-        this.content.tailModelComponents = cradleModelComponents.slice(this.content.headModelComponents.length)
-
-    }
-
     // supports moveIndex and insertRemoveIndex, updates cradle contiguous items from startChangeIndex or start of cradle
     public synchronizeCradleItemIDsToCache(updatedIndexList, isInsertRemove = 0, startChangeIndex = null) { // 0 = move
 
@@ -1319,6 +1284,41 @@ export default class ContentHandler {
         }
 
         newList.forEach(processcomponentFn)
+
+    }
+
+    // called from service handler's remapIndexes, as last step
+    public reconcileCellFrames(modifiedIndexesList) {
+
+        if (!modifiedIndexesList.length) return
+
+        const { cradleModelComponents } = this.content
+
+        const { cacheAPI } = this.cradleParameters.handlersRef.current
+
+        const { indexToItemIDMap } = cacheAPI
+
+        function processComponentFn (component, i, array ) {
+            const { index, itemID } = component.props
+            if (modifiedIndexesList.includes(index)) {
+
+                const newItemID = 
+                    indexToItemIDMap.has(index)?
+                        indexToItemIDMap.get(index):
+                        cacheAPI.getNewItemID()
+
+                if (newItemID != itemID) { // defensive; shouldn't happen
+
+                    array[i] = React.cloneElement(component, {itemID:newItemID})
+
+                }
+            }
+        }
+
+        cradleModelComponents.forEach(processComponentFn)
+
+        this.content.headModelComponents = cradleModelComponents.slice(0,this.content.headModelComponents.length)
+        this.content.tailModelComponents = cradleModelComponents.slice(this.content.headModelComponents.length)
 
     }
 

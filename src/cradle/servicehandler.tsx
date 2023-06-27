@@ -698,7 +698,17 @@ export default class ServiceHandler {
 
     public insertIndex = (index, rangehighindex = null) => {
 
-        const isIndexInvalid = (!isInteger(index) || !minValue(index, 0))
+        const 
+
+            { cradleParameters } = this,
+
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+
+            { virtualListProps } = cradleInternalProperties,
+
+            { lowindex:listlowindex } = virtualListProps
+
+        const isIndexInvalid = (!isInteger(index) || !minValue(index, listlowindex))
         let isHighrangeInvalid = false
 
         if ((!isIndexInvalid)) {
@@ -726,7 +736,17 @@ export default class ServiceHandler {
 
     public removeIndex = (index, rangehighindex = null) => {
 
-        const isIndexInvalid = (!isInteger(index) || !minValue(index, 0))
+        const 
+
+            { cradleParameters } = this,
+
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+
+            { virtualListProps } = cradleInternalProperties,
+
+            { lowindex:listlowindex } = virtualListProps
+
+        const isIndexInvalid = (!isInteger(index) || !minValue(index, listlowindex))
         let isHighrangeInvalid = false
 
         if ((!isIndexInvalid)) {
@@ -757,20 +777,51 @@ export default class ServiceHandler {
     // this operation changes the listsize
     private insertRemoveIndex = (index, rangehighindex, increment) => {
 
+        const 
+
+            { cradleParameters } = this,
+
+            { 
+                
+                cacheAPI, 
+                contentHandler, 
+                stateHandler, 
+            
+            } = this.cradleParameters.handlersRef.current,
+
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+
+            { 
+            
+                cradleContentProps, 
+                virtualListProps,
+
+            } = cradleInternalProperties,
+
+            { 
+            
+                lowindex:listlowindex, 
+                crosscount, 
+                size:listsize,
+
+            } = virtualListProps,
+
+            { 
+            
+                lowindex:lowCradleIndex, 
+                highindex:highCradleIndex, 
+                size:cradleSize, 
+                runwayRowcount:runwaySize,
+                viewportRowcount,
+            
+            } = cradleContentProps
+
         // basic assertions
-        index = Math.max(0,index)
+        index = Math.max(listlowindex,index)
         rangehighindex = Math.max(rangehighindex, index)
 
-        // ---------------- assemble resources --------------------
-
-        const { cacheAPI, contentHandler, stateHandler } = 
-            this.cradleParameters.handlersRef.current
-
-        const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
-        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
-
         // ------------------- process cache ----------------
-        const listsize = cradleInternalProperties.virtualListProps.size
+
         if (listsize == 0) {
             if (increment > 0) {
 
@@ -791,24 +842,17 @@ export default class ServiceHandler {
         // ------------- synchronize cradle to cache changes -------------
 
         // determine if cradle must be reset or simply adjusted
-        const changecount = rangeincrement // semantics
-        const newlistsize = this.newlistsize = listsize + changecount
+        const 
+            changecount = rangeincrement, // semantics
+            newlistsize = this.newlistsize = listsize + changecount,
 
-        // const { viewportRowcount } = cradleInternalProperties
-        const { cradleContentProps, virtualListProps } = cradleInternalProperties
-        // const { crosscount } = cradleInternalProperties.virtualListProps
-        const { viewportRowcount } = cradleContentProps
-        const { crosscount } = virtualListProps
-        // const { runwaySize } =  cradleInheritedProperties
-        const { lowindex:lowCradleIndex, highindex:highCradleIndex, size:cradleSize, runwayRowcount:runwaySize } = cradleContentProps
-        const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
-        const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
+            calculatedCradleRowcount = viewportRowcount + (runwaySize * 2),
+            calculatedCradleItemcount = calculatedCradleRowcount * crosscount,
 
-        const measuredCradleItemCount = (cradleSize == 0)?0:highCradleIndex - lowCradleIndex + 1
+            measuredCradleItemCount = (cradleSize == 0)?0:highCradleIndex - lowCradleIndex + 1,
 
-        const resetCradle = ((measuredCradleItemCount < calculatedCradleItemcount) || 
-
-            (highCradleIndex >= (newlistsize - 1)))
+            resetCradle = ((measuredCradleItemCount < calculatedCradleItemcount) || 
+                (highCradleIndex >= (newlistsize - 1)))
 
         if (!resetCradle) { // synchronize cradle contents to changes
 
