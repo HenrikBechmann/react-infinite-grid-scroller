@@ -188,7 +188,7 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // if (!scrollerProperties) {
+    // if (!scrollerProperties) { // root scroller
         // scrollerID == 1 && console.log('--> cradleState','-'+scrollerID+'-', cradleState)
         // console.log('-- index','~'+scrollerProperties?.cellFramePropertiesRef.current.index+'~')
     // }
@@ -393,7 +393,9 @@ const Cradle = ({
     ])
 
     const rangerowshift = useMemo(() => {
+
         return Math.floor(lowindex/crosscount)
+
     },[crosscount,lowindex])
 
     const virtualListProps = 
@@ -641,6 +643,7 @@ const Cradle = ({
             getCacheIndexMap, 
             getCacheItemMap,
             getCradleIndexMap,
+            getPropertiesSnapshot,
 
             remapIndexes,
             moveIndex,

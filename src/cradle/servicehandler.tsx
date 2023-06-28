@@ -277,6 +277,17 @@ export default class ServiceHandler {
         return cacheAPI.getCradleIndexMap(modelIndexList)
     }
 
+    public getPropertiesSnapshot = () => {
+
+        const props = {...this.cradleParameters.scrollerPropertiesRef.current}
+        
+        props.virtualListProps = {...props.virtualListProps}
+        props.cradleContentProps = {...props.cradleContentProps}
+
+        return props
+
+    }
+
     // =================[ CACHE MANAGEMENT REQUESTS ]==================
 
     public clearCache = () => {
