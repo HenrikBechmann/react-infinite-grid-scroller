@@ -229,6 +229,7 @@ Details about the functions returned in an object by `functionsCallback`:
 |getCacheIndexMap|_none_|map: Map|snapshot of cache index (=key) to itemID (=value) map|
 |getCacheItemMap|_none_|map: Map|snapshot of cache itemID (=key) to object (=value) map. Object = {index, component} where component = user component|
 |getCradleIndexMap|_none_|map: Map|snapshot of `Cradle` index (=key) to itemID (=value) map|
+|getPropertiesSnapshot|_none_|object|copy of `scrollerPropertiesRef.current` from scrollerProperties object. See below.|
 |[_**CACHE MANAGEMENT**_]|
 |insertIndex|index:integer, rangehighindex = integer or null|changeList:array, replaceList:array, removeList:array|can insert a range of indexes. Displaced indexes, and higher indexes, are renumbered. Changes the list size; synchronizes the `Cradle`|
 |removeIndex|index:integer, rangehighindex = integer or null|changeList:array, replaceList:array, removeList:array|a range of indexes can be removed. Higher indexes are renumbered. Changes the list size; synchronizes to the `Cradle`|
