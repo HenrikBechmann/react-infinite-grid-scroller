@@ -662,6 +662,8 @@ const Cradle = ({
             getCacheIndexMap,
             getCacheItemMap,
             getCradleIndexMap,
+            getPropertiesSnapshot,
+
             remapIndexes,
             moveIndex,
             insertIndex,
