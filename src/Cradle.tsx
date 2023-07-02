@@ -480,7 +480,7 @@ const Cradle = ({
         cache,
         cacheMax,
         startingIndex,
-        crosscount,
+        // crosscount,
         scrollerID,
     }
 

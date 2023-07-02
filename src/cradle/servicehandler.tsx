@@ -13,6 +13,9 @@
         scrollToIndex, 
         reload, 
         setListsize,
+        setListrange,
+        appendIndexCount,
+        prependIndexCount,
         clearCache, 
 
         getCacheIndexMap, 
