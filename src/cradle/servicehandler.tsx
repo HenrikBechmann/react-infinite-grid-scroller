@@ -12,8 +12,9 @@
 
         scrollToIndex, 
         reload, 
-        setListsize,
-        setListrange,
+        setListsize, *deprectated* for proper camel case
+        setListSize,
+        setListRange,
         appendIndexCount,
         prependIndexCount,
         clearCache, 
