@@ -287,9 +287,37 @@ The `scrollerPropertiesRef.current` object contains the following properties, wh
 
 _orientation, gap, padding, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, cache, cacheMax, startingIndex_
 
-It also contains the _crosscount_ property, which is calculated interrnally, and the following properties, which may have been altered from the source values by the scroller:
+It also contains _runwayRowcount_, which may have been altered from the source value by the scroller.
 
-_runwayRowcount, listsize_
+Finally, it contains two objects with bundled properties: _virtualListProps_ and _cradleContentProps_.
+
+_virtualListProps_ is an object with the following properties:
+```
+{
+   size, // the length (number of virtual cells) of the virtual list
+   range, // a two-part array [lowindex,highindex]
+   lowindex, // the virtual list low index
+   highindex, // the virtual list high index
+   baserowblanks, // cell offset count in the first row
+   endrowblanks, // blank cells at the end of the last row
+   crosscount, // number of cells perpendicular to the orientation
+   rowcount, // number of rows in virtual list
+   rowshift, // row shift from zero to accommodate lowindex
+}
+```
+_cradleContentProps_ is an object with the following properties:
+```
+{
+   cradleRowcount, // number of rows in the cradle (including any blank cells)
+   viewportRowcount, // number of rows that can be shown in the viewport
+   runwayRowcount, // extra leading and trailing cell rows beyond the viewport boundary
+   SOL, // true or false, start of virtual list in the cradle
+   EOL, // true or false, end of virtual list in the cradle
+   lowindex, // of cells in the cradle
+   highindex, // of cells in the cradle
+   size, // count of cells in the cradle
+}
+```
 
 # Restoring scroll positions coming out of cache
 
