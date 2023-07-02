@@ -311,8 +311,8 @@ _cradleContentProps_ is an object with the following properties:
    cradleRowcount, // number of rows in the cradle (including any blank cells)
    viewportRowcount, // number of rows that can be shown in the viewport
    runwayRowcount, // extra leading and trailing cell rows beyond the viewport boundary
-   SOL, // true or false, start of virtual list in the cradle
-   EOL, // true or false, end of virtual list in the cradle
+   SOL, // true or false, at start of virtual list in the cradle
+   EOL, // true or false, at end of virtual list in the cradle
    lowindex, // of cells in the cradle
    highindex, // of cells in the cradle
    size, // count of cells in the cradle
