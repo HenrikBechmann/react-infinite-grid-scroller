@@ -81,15 +81,15 @@ const maxValue = (value:any, maxValue:any) => {
 }
 
 const errorMessages = {
-    scrollToIndex:'integer: required, greater than or equal to 0',
+    scrollToIndex:'integer: required, greater than or equal to low index',
     setListsize:'integer: required, greater than or equal to 0',
-    insertFrom:'insertFrom - integer: required, greater than or equal to 0',
+    insertFrom:'insertFrom - integer: required, greater than or equal to low index',
     insertRange:'insertRange - blank, or integer greater than or equal to the "from" index',
-    removeFrom:'removeFrom - integer: required, greater than or equal to 0',
+    removeFrom:'removeFrom - integer: required, greater than or equal to low index',
     removeRange:'removeRange - blank, or integer greater than or equal to the "from" index',
-    moveFrom:'moveFrom - integer: required, greater than or equal to 0',
+    moveFrom:'moveFrom - integer: required, greater than or equal to low index',
     moveRange:'moveRange - blank, or integer greater than or equal to the "from" index',
-    moveTo:'moveTo - integer: required, greater than or equal to 0',
+    moveTo:'moveTo - integer: required, greater than or equal to low index',
 }
 
 export default class ServiceHandler {
@@ -147,7 +147,18 @@ export default class ServiceHandler {
 
     public scrollToIndex = (index) => {
 
-        const isInvalid = (!isInteger(index) || !minValue(index, 0))
+
+        const 
+
+            { cradleParameters } = this,
+
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+
+            { virtualListProps } = cradleInternalProperties,
+
+            { lowindex } = virtualListProps
+
+        const isInvalid = (!isInteger(index) || !minValue(index, lowindex))
 
         index = +index
 
@@ -158,13 +169,7 @@ export default class ServiceHandler {
 
         }
 
-        const 
-
-            { cradleParameters } = this,
-
-            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
-
-            { virtualListProps } = cradleInternalProperties,
+        const
 
             handlers = cradleParameters.handlersRef.current,
 
@@ -176,9 +181,7 @@ export default class ServiceHandler {
 
             } = handlers,
 
-            { signals } = interruptHandler,
-
-            { lowindex } = virtualListProps
+            { signals } = interruptHandler
 
         signals.pauseScrollingEffects = true
 
