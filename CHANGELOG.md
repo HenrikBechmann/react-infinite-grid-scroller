@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0 July xx, 2023
+
+Braking change:
+- changeListSizeCallback replaces changeListsizeCallback (note the camel case)
+
 ## 1.0.5 May 18, 2023
 
 Internal refactors:
