@@ -637,7 +637,8 @@ const Cradle = ({
 
             scrollToIndex, 
             reload, 
-            setListsize,
+            setListsize, // deprecated
+            setListSize,
             clearCache, 
 
             getCacheIndexMap, 
@@ -656,7 +657,8 @@ const Cradle = ({
 
             scrollToIndex,
             reload,
-            setListsize,
+            setListsize, // deprecated
+            setListSize,
             clearCache,
             
             getCacheIndexMap,
@@ -1490,7 +1492,7 @@ const Cradle = ({
                 setCradleState('ready')
 
                 // service handler called because this is a followon of a user intervention
-                serviceHandler.setListsize(newlistsize)
+                serviceHandler.setListSize(newlistsize)
 
                 break
             }

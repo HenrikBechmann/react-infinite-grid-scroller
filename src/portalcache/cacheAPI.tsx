@@ -439,7 +439,7 @@ export default class CacheAPI {
 
     // ----------------------------[ basic operations ]--------------------------
 
-    // called from Cradle.nullItemSetMaxListsize, and serviceHandler.setListsize
+    // called from Cradle.nullItemSetMaxListsize, and serviceHandler.setListSize
     private changeCacheListsize = (scrollerID, newlistsize, deleteListCallback, changeListsizeCallback) => {
 
         // match cache to newlistsize

@@ -86,7 +86,8 @@ const maxValue = (value:any, maxValue:any) => {
 
 const errorMessages = {
     scrollToIndex:'integer: required, greater than or equal to low index',
-    setListsize:'integer: required, greater than or equal to 0',
+    setListSize:'integer: required, greater than or equal to 0',
+    // setListsize:'integer: required, greater than or equal to 0',
     insertFrom:'insertFrom - integer: required, greater than or equal to low index',
     insertRange:'insertRange - blank, or integer greater than or equal to the "from" index',
     removeFrom:'removeFrom - integer: required, greater than or equal to low index',
@@ -195,7 +196,11 @@ export default class ServiceHandler {
 
     }
 
-    public setListsize = (newlistsize) => {
+    public setListsize = (newlistsize) => { // *deprecated* (for camel case)
+        this.setListSize(newlistsize)
+    }
+
+    public setListSize = (newlistsize) => {
 
         newlistsize = +newlistsize
 
@@ -203,7 +208,7 @@ export default class ServiceHandler {
 
         if (isInvalid) {
 
-            console.log('RIGS ERROR setListsize(newlistsize)', newlistsize, errorMessages.setListsize)
+            console.log('RIGS ERROR setListSize(newlistsize)', newlistsize, errorMessages.setListSize)
             return
 
         }
@@ -843,7 +848,7 @@ export default class ServiceHandler {
         if (listsize == 0) {
             if (increment > 0) {
 
-                return this.setListsize(rangehighindex - index + 1)
+                return this.setListSize(rangehighindex - index + 1)
 
             }
             return [[],[],[]]
