@@ -22,6 +22,7 @@
         getCacheIndexMap, 
         getCacheItemMap,
         getCradleIndexMap,
+        getPropertiesSnapshot,
 
         insertIndex,
         removeIndex,
@@ -87,7 +88,7 @@ const maxValue = (value:any, maxValue:any) => {
 const errorMessages = {
     scrollToIndex:'integer: required, greater than or equal to low index',
     setListSize:'integer: required, greater than or equal to 0',
-    // setListsize:'integer: required, greater than or equal to 0',
+    setListRange:'array[lowindex,highindex]: required, both integers, highindex greater than or equal to lowindex',
     insertFrom:'insertFrom - integer: required, greater than or equal to low index',
     insertRange:'insertRange - blank, or integer greater than or equal to the "from" index',
     removeFrom:'removeFrom - integer: required, greater than or equal to low index',
@@ -110,7 +111,8 @@ export default class ServiceHandler {
            referenceIndexCallback, // (index, location, cradleState)
            preloadIndexCallback, // (index)
            deleteListCallback, // (reason, deleteList)
-           changeListsizeCallback, // (newlistsize)
+           changeListSizeCallback, // (newlistsize)
+           changeListRangeCallback,
            itemExceptionCallback, // (index, itemID, returnvalue, location, error)
            repositioningFlagCallback, // (flag) // boolean
            repositioningIndexCallback,
@@ -121,7 +123,8 @@ export default class ServiceHandler {
            referenceIndexCallback,
            preloadIndexCallback,
            deleteListCallback,
-           changeListsizeCallback,
+           changeListSizeCallback,
+           changeListRangeCallback,
            itemExceptionCallback,
            repositioningFlagCallback,
            repositioningIndexCallback
@@ -225,7 +228,7 @@ export default class ServiceHandler {
             { 
 
                 deleteListCallback, 
-                changeListsizeCallback 
+                changeListSizeCallback 
 
             } = this.callbacks,
 
@@ -245,10 +248,10 @@ export default class ServiceHandler {
 
         contentHandler.updateVirtualListSize(newlistsize)
 
-        cacheAPI.changeCacheListsize(newlistsize, 
+        cacheAPI.changeCacheListSize(newlistsize, 
 
             dListCallback,
-            changeListsizeCallback
+            changeListSizeCallback
 
         )
 
@@ -256,6 +259,72 @@ export default class ServiceHandler {
 
 
         if ((cache == 'preload') && (newlistsize > currentlistsize)) {
+
+            stateHandler.setCradleState('startpreload')
+
+        }
+
+    }
+
+    public setListRange = (newlistrange) => {
+
+        let [lowindex,highindex] = newlistrange
+
+        lowindex = +lowindex
+        highindex = +highindex
+
+        const isInvalid = (!isInteger(lowindex) || !isInteger(highindex) || !minValue(lowindex, highindex))
+
+        if (isInvalid) {
+
+            console.log('RIGS ERROR setListRange(newlistrange)', newlistrange, errorMessages.setListRange)
+            return
+
+        }
+
+        const 
+            { 
+
+                cacheAPI, 
+                contentHandler, 
+                stateHandler 
+
+            } = this.cradleParameters.handlersRef.current,
+
+            { 
+
+                deleteListCallback, 
+                changeListSizeCallback 
+
+            } = this.callbacks,
+
+            currentlistrange = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.range,
+
+            { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
+
+        let dListCallback
+        if (deleteListCallback) {
+            dListCallback = (deleteList) => {
+
+                deleteListCallback('change list range intervention',deleteList)
+
+            }
+
+        }
+
+        contentHandler.updateVirtualListRange(newlistrange)
+
+        cacheAPI.changeCacheListRange(newlistrange, 
+
+            dListCallback,
+            changeListSizeCallback
+
+        )
+
+        cacheAPI.renderPortalLists()
+
+
+        if ((cache == 'preload') && (newlistrange[0] < currentlistrange[0] || newlistrange[1] > currentlistrange[1])) {
 
             stateHandler.setCradleState('startpreload')
 

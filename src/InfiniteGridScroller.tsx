@@ -399,9 +399,9 @@ const InfiniteGridScroller = (props) => {
         listRangeRef.current = listrange
 
         // inform the user
-        callbacksRef.current.newListsize && 
-            listsizeRef.current != listsize &&
-            callbacksRef.current.newListsize(listsize)
+        callbacksRef.current.changeListRangeCallback && 
+            listsizeRef.current != listrange &&
+            callbacksRef.current.changeListRangeCallback(listrange)
 
         setScrollerState('setlistprops')
 
@@ -417,9 +417,9 @@ const InfiniteGridScroller = (props) => {
         listRangeRef.current = listrange
 
         // inform the user
-        callbacksRef.current.newListsize && 
+        callbacksRef.current.changeListRangeCallback && 
             listsizeRef.current != listsize &&
-            callbacksRef.current.newListsize(listsize)
+            callbacksRef.current.changeListSizeCallback(listsize)
 
         setScrollerState('setlistprops')
 

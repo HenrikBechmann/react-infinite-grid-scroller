@@ -753,7 +753,7 @@ const Cradle = ({
 
         if (maxListsize < listsize) {
 
-            const { deleteListCallback, changeListsizeCallback } = serviceHandler.callbacks
+            const { deleteListCallback, changeListSizeCallback } = serviceHandler.callbacks
 
             let dListCallback
             if (deleteListCallback) {
@@ -766,9 +766,9 @@ const Cradle = ({
             }
 
             contentHandler.updateVirtualListSize(maxListsize)
-            cacheAPI.changeCacheListsize(maxListsize, 
+            cacheAPI.changeCacheListSize(maxListsize, 
                 dListCallback,
-                changeListsizeCallback)
+                changeListSizeCallback)
 
         }
     },[])

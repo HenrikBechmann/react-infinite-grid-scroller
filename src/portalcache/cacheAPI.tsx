@@ -168,8 +168,11 @@ export default class CacheAPI {
             clearCache:() => {
                 return this.clearCache(scrollerID)
             },
-            changeCacheListsize:(newlistsize, deleteListCallback, changeListsizeCallback) => {
-                return this.changeCacheListsize(scrollerID, newlistsize, deleteListCallback, changeListsizeCallback)
+            changeCacheListSize:(newlistsize, deleteListCallback, changeListSizeCallback) => {
+                return this.changeCacheListSize(scrollerID, newlistsize, deleteListCallback, changeListSizeCallback)
+            },
+            changeCacheListRenge:(newlistrange, deleteListCallback, changeListRangeCallback) => {
+                return this.changeCacheListRange(scrollerID, newlistrange, deleteListCallback, changeListRangeCallback)
             },
             matchCacheToCradle:(cradleIndexList, deleteListCallback) => {
                 return this.matchCacheToCradle(scrollerID, cradleIndexList, deleteListCallback)
@@ -440,7 +443,7 @@ export default class CacheAPI {
     // ----------------------------[ basic operations ]--------------------------
 
     // called from Cradle.nullItemSetMaxListsize, and serviceHandler.setListSize
-    private changeCacheListsize = (scrollerID, newlistsize, deleteListCallback, changeListsizeCallback) => {
+    private changeCacheListSize = (scrollerID, newlistsize, deleteListCallback, changeListSizeCallback) => {
 
         // match cache to newlistsize
         const portalIndexMap:Map<number,number> = this.scrollerDataMap.get(scrollerID).indexToItemIDMap
@@ -467,10 +470,40 @@ export default class CacheAPI {
 
         }
 
-        changeListsizeCallback && changeListsizeCallback(newlistsize)
+        changeListSizeCallback && changeListSizeCallback(newlistsize)
 
     }
 
+    private changeCacheListRange = (scrollerID, newlistrange, deleteListCallback, changeListRangeCallback) => {
+
+        // match cache to newlistsize
+        const portalIndexMap:Map<number,number> = this.scrollerDataMap.get(scrollerID).indexToItemIDMap
+        const mapkeysList = Array.from(portalIndexMap.keys())
+
+        mapkeysList.sort((a,b) => a - b) // ascending
+
+        const { cradleParameters } = this.scrollerDataMap.get(scrollerID)
+
+        const { virtualListProps } = cradleParameters.cradleInternalPropertiesRef.current
+
+        const { lowindex } = virtualListProps
+
+        const highestindex = mapkeysList.at(-1)
+
+        if (highestindex > ((newlistrange + lowindex) -1)) { // pare the cache
+
+            const parelist = mapkeysList.filter((index)=>{
+                const comparehighindex = newlistrange + lowindex - 1
+                return index > (comparehighindex)
+            })
+
+            this.deletePortalByIndex(scrollerID, parelist, deleteListCallback)
+
+        }
+
+        changeListRangeCallback && changeListRangeCallback(newlistrange)
+
+    }
     // ----------------------[ cache size limit enforceent ]------------------
 
     private matchCacheToCradle = (scrollerID, cradleIndexList, deleteListCallback) => {
