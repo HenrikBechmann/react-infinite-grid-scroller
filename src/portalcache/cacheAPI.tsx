@@ -486,15 +486,28 @@ export default class CacheAPI {
 
         const { virtualListProps } = cradleParameters.cradleInternalPropertiesRef.current
 
-        const { lowindex } = virtualListProps
+        const { lowcurrentindex, highcurrentindex } = virtualListProps
+        const [ lownewindex, highnewindex ] = newlistrange
 
         const highestindex = mapkeysList.at(-1)
+        const lowestindex = mapkeysList.at(0)
 
-        if (highestindex > ((newlistrange + lowindex) -1)) { // pare the cache
+        if (highestindex > highnewindex) { // pare the cache
 
+            const compareindex = highnewindex
             const parelist = mapkeysList.filter((index)=>{
-                const comparehighindex = newlistrange + lowindex - 1
-                return index > (comparehighindex)
+                return index > (compareindex)
+            })
+
+            this.deletePortalByIndex(scrollerID, parelist, deleteListCallback)
+
+        }
+
+        if (lowestindex < lownewindex) { // pare the cache
+
+            const compareindex = lownewindex
+            const parelist = mapkeysList.filter((index)=>{
+                return index < (compareindex)
             })
 
             this.deletePortalByIndex(scrollerID, parelist, deleteListCallback)
