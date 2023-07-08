@@ -57,25 +57,25 @@ const isInteger = (value:any) => {
 
 }
 
-const minValue = (compareValue:any, minValue:any) => {
+const compareValueMinValue = (compareValue:any, compareValueMinValue:any) => {
 
-    if (!isInteger(compareValue) || !isInteger(minValue)) return false
+    if (!isInteger(compareValue) || !isInteger(compareValueMinValue)) return false
 
     const testvalue = +compareValue
-    const testMinValue = +minValue
+    const testcompareValueMinValue = +compareValueMinValue
 
-    return testvalue >= testMinValue
+    return testvalue >= testcompareValueMinValue
 
 }
 
-const maxValue = (compareValue:any, maxValue:any) => {
+const compareValueMaxValue = (compareValue:any, compareValueMaxValue:any) => {
 
-    if (!isInteger(compareValue) || !isInteger(maxValue)) return false
+    if (!isInteger(compareValue) || !isInteger(compareValueMaxValue)) return false
 
     const testvalue = +compareValue
-    const testMaxValue = +maxValue
+    const testcompareValueMaxValue = +compareValueMaxValue
 
-    return testvalue <= testMaxValue
+    return testvalue <= testcompareValueMaxValue
 
 }
 
@@ -160,7 +160,7 @@ export default class ServiceHandler {
 
             { lowindex } = virtualListProps
 
-        const isInvalid = (!isInteger(index) || !minValue(index, lowindex))
+        const isInvalid = (!isInteger(index) || !compareValueMinValue(index, lowindex))
 
         index = +index
 
@@ -201,7 +201,7 @@ export default class ServiceHandler {
 
         newlistsize = +newlistsize
 
-        const isInvalid = (!isInteger(newlistsize) || !minValue(newlistsize, 0))
+        const isInvalid = (!isInteger(newlistsize) || !compareValueMinValue(newlistsize, 0))
 
         if (isInvalid) {
 
@@ -267,7 +267,7 @@ export default class ServiceHandler {
         lowindex = +lowindex
         highindex = +highindex
 
-        const isInvalid = ((!isInteger(lowindex)) || (!isInteger(highindex)) || (!minValue(highindex, lowindex)))
+        const isInvalid = ((!isInteger(lowindex)) || (!isInteger(highindex)) || (!compareValueMinValue(highindex, lowindex)))
 
         if (isInvalid) {
 
@@ -697,13 +697,13 @@ export default class ServiceHandler {
 
         // ------------ confirm validity of arguments -------------
 
-        const isToindexInvalid = (!isInteger(tolowindex) || !minValue(tolowindex, listlowindex))
-        const isFromindexInvalid = (!isInteger(fromlowindex) || !minValue(fromlowindex, listlowindex))
+        const isToindexInvalid = (!isInteger(tolowindex) || !compareValueMinValue(tolowindex, listlowindex))
+        const isFromindexInvalid = (!isInteger(fromlowindex) || !compareValueMinValue(fromlowindex, listlowindex))
         let isHighrangeInvalid = false
 
         if ((!isFromindexInvalid)) {
             if (!isBlank(fromhighindex)) {
-                isHighrangeInvalid = !minValue(fromhighindex, fromlowindex)
+                isHighrangeInvalid = !compareValueMinValue(fromhighindex, fromlowindex)
             } else {
                 fromhighindex = fromlowindex
             }
@@ -796,12 +796,12 @@ export default class ServiceHandler {
 
             { lowindex:listlowindex } = virtualListProps
 
-        const isIndexInvalid = (!isInteger(index) || !minValue(index, listlowindex))
+        const isIndexInvalid = (!isInteger(index) || !compareValueMinValue(index, listlowindex))
         let isHighrangeInvalid = false
 
         if ((!isIndexInvalid)) {
             if (!isBlank(rangehighindex)) {
-                isHighrangeInvalid = !minValue(rangehighindex, index)
+                isHighrangeInvalid = !compareValueMinValue(rangehighindex, index)
             } else {
                 rangehighindex = index
             }
@@ -834,12 +834,12 @@ export default class ServiceHandler {
 
             { lowindex:listlowindex } = virtualListProps
 
-        const isIndexInvalid = (!isInteger(index) || !minValue(index, listlowindex))
+        const isIndexInvalid = (!isInteger(index) || !compareValueMinValue(index, listlowindex))
         let isHighrangeInvalid = false
 
         if ((!isIndexInvalid)) {
             if (!isBlank(rangehighindex)) {
-                isHighrangeInvalid = !minValue(rangehighindex, index)
+                isHighrangeInvalid = !compareValueMinValue(rangehighindex, index)
             } else {
                 rangehighindex = index
             }
