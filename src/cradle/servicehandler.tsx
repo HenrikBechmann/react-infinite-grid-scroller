@@ -35,12 +35,6 @@
     often invoked by service functions to change Cradle state upon servicing requests.
 */
 
-/*
-
-TODO: add setListRange
-
-*/
-
 const isBlank = (value:any) => {
     const testvalue = value ?? ''
     return testvalue === ''
@@ -63,22 +57,22 @@ const isInteger = (value:any) => {
 
 }
 
-const minValue = (value:any, minValue:any) => {
+const minValue = (compareValue:any, minValue:any) => {
 
-    if (!isInteger(value) || !isInteger(minValue)) return false
+    if (!isInteger(compareValue) || !isInteger(minValue)) return false
 
-    const testvalue = +value
+    const testvalue = +compareValue
     const testMinValue = +minValue
 
     return testvalue >= testMinValue
 
 }
 
-const maxValue = (value:any, maxValue:any) => {
+const maxValue = (compareValue:any, maxValue:any) => {
 
-    if (!isInteger(value) || !isInteger(maxValue)) return false
+    if (!isInteger(compareValue) || !isInteger(maxValue)) return false
 
-    const testvalue = +value
+    const testvalue = +compareValue
     const testMaxValue = +maxValue
 
     return testvalue <= testMaxValue
@@ -273,7 +267,7 @@ export default class ServiceHandler {
         lowindex = +lowindex
         highindex = +highindex
 
-        const isInvalid = (!isInteger(lowindex) || !isInteger(highindex) || !minValue(lowindex, highindex))
+        const isInvalid = ((!isInteger(lowindex)) || (!isInteger(highindex)) || (!minValue(highindex, lowindex)))
 
         if (isInvalid) {
 
@@ -281,6 +275,8 @@ export default class ServiceHandler {
             return
 
         }
+
+        newlistrange = [lowindex,highindex]
 
         const 
             { 

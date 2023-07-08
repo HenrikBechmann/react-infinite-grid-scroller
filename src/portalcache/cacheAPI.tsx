@@ -171,7 +171,7 @@ export default class CacheAPI {
             changeCacheListSize:(newlistsize, deleteListCallback, changeListSizeCallback) => {
                 return this.changeCacheListSize(scrollerID, newlistsize, deleteListCallback, changeListSizeCallback)
             },
-            changeCacheListRenge:(newlistrange, deleteListCallback, changeListRangeCallback) => {
+            changeCacheListRange:(newlistrange, deleteListCallback, changeListRangeCallback) => {
                 return this.changeCacheListRange(scrollerID, newlistrange, deleteListCallback, changeListRangeCallback)
             },
             matchCacheToCradle:(cradleIndexList, deleteListCallback) => {

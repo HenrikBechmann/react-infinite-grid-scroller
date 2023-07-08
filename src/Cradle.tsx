@@ -639,6 +639,7 @@ const Cradle = ({
             reload, 
             setListsize, // deprecated
             setListSize,
+            setListRange,
             clearCache, 
 
             getCacheIndexMap, 
@@ -659,6 +660,7 @@ const Cradle = ({
             reload,
             setListsize, // deprecated
             setListSize,
+            setListRange,
             clearCache,
             
             getCacheIndexMap,
