@@ -91,9 +91,38 @@ export default class ContentHandler {
 
     public updateVirtualListRange = (newlistrange) => {
 
-        const [lowindex, highindex] = newlistrange
+        const
+            { cradleParameters } = this,
 
-        const newlistsize = highindex - lowindex + 1
+            cradleHandlers = cradleParameters.handlersRef.current,
+
+            {
+                layoutHandler,
+
+            } = cradleHandlers,
+
+            { 
+            
+                cradlePositionData,
+
+            } = layoutHandler,
+
+            {
+
+                setVirtualListRange,
+                virtualListProps,
+
+            } = this.cradleParameters.cradleInternalPropertiesRef.current
+
+        const [previouslowindex] = virtualListProps.range
+
+        const [newlowindex, newhighindex] = newlistrange
+
+        const lowindexchange = newlowindex - previouslowindex
+
+        cradlePositionData.targetAxisReferencePosition -= lowindexchange
+
+        const newlistsize = newhighindex - newlowindex + 1
 
         if (newlistsize == 0) {
 
@@ -105,7 +134,7 @@ export default class ContentHandler {
 
         }
 
-        this.cradleParameters.cradleInternalPropertiesRef.current.setVirtualListRange(newlistrange)
+        setVirtualListRange(newlistrange)
 
     }
 
@@ -177,8 +206,8 @@ export default class ContentHandler {
 
             } = virtualListProps
 
-        /*scrollerID == 1 &&*/ console.log('setCradleContent: opening cradlePositionData, virtualListProps', 
-            {...cradlePositionData}, {...virtualListProps})
+        // /*scrollerID == 1 &&*/ console.log('setCradleContent: opening cradlePositionData, virtualListProps', 
+        //     {...cradlePositionData}, {...virtualListProps})
 
         const cradleContent = this.content
 

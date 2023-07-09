@@ -186,10 +186,10 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    if (!scrollerProperties) { // root scroller
-        console.log('--> cradleState','-'+scrollerID+'-', cradleState)
+    // if (!scrollerProperties) { // root scroller
+    //     console.log('--> cradleState','-'+scrollerID+'-', cradleState)
         // console.log('-- index','~'+scrollerProperties?.cellFramePropertiesRef.current.index+'~')
-    }
+    // }
 
     // cradle scaffold element refs
     const 
