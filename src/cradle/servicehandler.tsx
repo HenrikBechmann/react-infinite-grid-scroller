@@ -149,7 +149,6 @@ export default class ServiceHandler {
 
     public scrollToIndex = (index) => {
 
-
         const 
 
             { cradleParameters } = this,
@@ -194,7 +193,9 @@ export default class ServiceHandler {
     }
 
     public setListsize = (newlistsize) => { // *deprecated* (for camel case)
+
         this.setListSize(newlistsize)
+        
     }
 
     public setListSize = (newlistsize) => {

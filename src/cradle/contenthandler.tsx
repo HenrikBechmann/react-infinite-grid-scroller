@@ -141,7 +141,7 @@ export default class ContentHandler {
 
             {
 
-                targetAxisReferencePosition:requestedAxisReferencePosition
+                targetAxisReferencePosition:requestedAxisReferencePosition,
 
             } = cradlePositionData,
 
@@ -177,7 +177,8 @@ export default class ContentHandler {
 
             } = virtualListProps
 
-        // scrollerID == 1 && console.log('setCradleContent: opening cradlePositionData', {...cradlePositionData})
+        /*scrollerID == 1 &&*/ console.log('setCradleContent: opening cradlePositionData, virtualListProps', 
+            {...cradlePositionData}, {...virtualListProps})
 
         const cradleContent = this.content
 

@@ -168,8 +168,6 @@ const Cradle = ({
         }
     }
 
-    // two sources; could use some reconciliation
-    // const { viewportDimensions } = ViewportContextProperties // for scrollTracker
     const { height:viewportheight,width:viewportwidth } = getViewportDimensions() // viewportDimensions
 
     // cache test
@@ -188,10 +186,10 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // if (!scrollerProperties) { // root scroller
-        // scrollerID == 1 && console.log('--> cradleState','-'+scrollerID+'-', cradleState)
+    if (!scrollerProperties) { // root scroller
+        console.log('--> cradleState','-'+scrollerID+'-', cradleState)
         // console.log('-- index','~'+scrollerProperties?.cellFramePropertiesRef.current.index+'~')
-    // }
+    }
 
     // cradle scaffold element refs
     const 
@@ -438,7 +436,8 @@ const Cradle = ({
             repositioningIndexCallback:userCallbacks?.repositioningIndexCallback,
             preloadIndexCallback:userCallbacks?.preloadIndexCallback,
             deleteListCallback:userCallbacks?.deleteListCallback,
-            changeListsizeCallback:userCallbacks?.changeListsizeCallback,
+            changeListSizeCallback:userCallbacks?.changeListSizeCallback,
+            changeListRangeCallback:userCallbacks?.changeListRangeCallback,
             itemExceptionCallback:userCallbacks?.itemExceptionCallback,
         }
     )
@@ -901,28 +900,54 @@ const Cradle = ({
         runwaySize,
     ])
 
-    useEffect(()=>{
+    useEffect(()=>{ // change of list range
 
         if (cradleStateRef.current == 'setup') return
 
-        if (isCachedRef.current) return
+        if (isCachedRef.current) return // TODO: ??
 
-        const { virtualListProps, cradleContentProps } = cradleInternalPropertiesRef.current
-        const { viewportRowcount, lowindex:lowCradleIndex, highindex:highCradleIndex, size:cradleCount } = cradleContentProps
-        const { highindex:listhighrange } = virtualListProps
+        const 
+            { 
+                
+                virtualListProps, 
+                cradleContentProps 
 
-        const { crosscount } = cradleInternalPropertiesRef.current.virtualListProps
-        const { runwaySize } =  cradleInheritedPropertiesRef.current
+            } = cradleInternalPropertiesRef.current,
+
+            { 
+                
+                viewportRowcount, 
+                lowindex:lowCradleIndex, 
+                highindex:highCradleIndex, 
+                size:cradleCount 
+
+            } = cradleContentProps,
+
+            { 
+
+                lowindex:listlowrange,
+                highindex:listhighrange 
+
+            } = virtualListProps,
+
+            { 
+
+                crosscount 
+
+            } = cradleInternalPropertiesRef.current.virtualListProps,
+
+            { 
+
+                runwaySize 
+
+            } =  cradleInheritedPropertiesRef.current
+
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
         const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
-
-        // const indexSpan = contentHandler.indexSpan
-        // const [lowCradleIndex,highCradleIndex] = indexSpan
 
         let measuredCradleItemCount
         let changeIsWithinCradle
 
-        // if (indexSpan.length == 0) {
         if (cradleCount == 0) {
 
             measuredCradleItemCount = 0
@@ -931,7 +956,7 @@ const Cradle = ({
         } else {
 
             measuredCradleItemCount = highCradleIndex - lowCradleIndex + 1
-            changeIsWithinCradle = (highCradleIndex >= listhighrange) // (cradleInternalPropertiesRef.current.virtualListProps.highrange))
+            changeIsWithinCradle = (highCradleIndex >= listhighrange)
             
         }
 
@@ -940,7 +965,7 @@ const Cradle = ({
 
             interruptHandler.pauseInterrupts()
 
-            setCradleState('reconfigureforlistsize')
+            setCradleState('reconfigureforlistrange')
 
         } else {
 
@@ -949,7 +974,8 @@ const Cradle = ({
         }
 
     },[
-        listsize,
+        virtualListProps.lowindex,
+        virtualListProps.highindex,
     ])
 
     // a new getItem function implies the need to reload
@@ -1223,7 +1249,7 @@ const Cradle = ({
             case 'finishviewportresize':
             case 'pivot':
             case 'reconfigure':
-            case 'reconfigureforlistsize':
+            case 'reconfigureforlistrange':
             case 'reload': {
 
                 if (!isMountedRef.current) return // possible async latency with nested scrollers
