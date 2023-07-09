@@ -57,25 +57,25 @@ const isInteger = (value:any) => {
 
 }
 
-const compareValueMinValue = (compareValue:any, compareValueMinValue:any) => {
+const compareValueMinValue = (compareValue:any, minValue:any) => {
 
-    if (!isInteger(compareValue) || !isInteger(compareValueMinValue)) return false
+    if (!isInteger(compareValue) || !isInteger(minValue)) return false
 
     const testvalue = +compareValue
-    const testcompareValueMinValue = +compareValueMinValue
+    const testMinValue = +minValue
 
-    return testvalue >= testcompareValueMinValue
+    return testvalue >= testMinValue
 
 }
 
-const compareValueMaxValue = (compareValue:any, compareValueMaxValue:any) => {
+const compareValueMaxValue = (compareValue:any, maxValue:any) => {
 
-    if (!isInteger(compareValue) || !isInteger(compareValueMaxValue)) return false
+    if (!isInteger(compareValue) || !isInteger(maxValue)) return false
 
     const testvalue = +compareValue
-    const testcompareValueMaxValue = +compareValueMaxValue
+    const testMaxValue = +maxValue
 
-    return testvalue <= testcompareValueMaxValue
+    return testvalue <= testMaxValue
 
 }
 
