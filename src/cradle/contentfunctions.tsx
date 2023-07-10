@@ -38,36 +38,39 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     // console.log('==>> calculateContentListRequirements:1. targetAxisReferenceIndex\n',targetAxisReferenceIndex)
 
-    const { 
-        padding,
-    } = cradleInheritedProperties
+    const 
+        { 
 
-    const {
+            padding,
 
-        cradleContentProps,
-        virtualListProps,
+        } = cradleInheritedProperties,
 
-    } = cradleInternalProperties
+        {
 
-    const {
+            cradleContentProps,
+            virtualListProps,
 
-        cradleRowcount,
-        runwayRowcount,
+        } = cradleInternalProperties,
 
-    } = cradleContentProps
+        {
 
-    const {
+            cradleRowcount,
+            runwayRowcount,
 
-        lowindex:listlowindex, 
-        highindex:listhighindex, 
-        // size:listsize, 
-        crosscount, 
-        rowcount:listRowcount,
-        baserowblanks,
-        endrowblanks,
-        rowshift:rangerowshift,
+        } = cradleContentProps,
 
-    } = virtualListProps
+        {
+
+            lowindex:listlowindex, 
+            highindex:listhighindex, 
+            // size:listsize, 
+            crosscount, 
+            rowcount:listRowcount,
+            baserowblanks,
+            endrowblanks,
+            rowshift:rangerowshift,
+
+        } = virtualListProps
 
     // align axis reference to list scope
     targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex, listhighindex)
@@ -178,9 +181,12 @@ export const generateShiftInstruction = ({
     }
 
     // most recent; either triggerline will do
-    const entry = triggerlineEntries[triggerlineEntries.length - 1] //.at(-1) at not available in iOS 15
-    const referencename = entry.target.dataset.type
-    entry.referencename = referencename
+    const 
+        entry = triggerlineEntries[triggerlineEntries.length - 1], //.at(-1) at not available in iOS 15
+        referencename = entry.target.dataset.type
+
+    entry.referencename = referencename // for debug
+
     const span = triggerlineSpan
 
     const intersectrootpos = 
@@ -351,9 +357,8 @@ export const calculateShiftSpecs = ({
     const 
         axisElement = cradleElements.axisRef.current,
         headGridElement = cradleElements.headRef.current,
-        tailGridElement = cradleElements.tailRef.current
+        tailGridElement = cradleElements.tailRef.current,
 
-    const 
         // configuration data
         { 
 
@@ -418,7 +423,8 @@ export const calculateShiftSpecs = ({
             cellWidth) 
         + gap
 
-    let foundGridSpanRowShiftIncrement,
+    let 
+        foundGridSpanRowShiftIncrement,
         gridSpanAxisPixelShift = 0, // in relation to viewport head boundary
         byPixelMeasureGridRowShiftCount = 0,
         isListBoundary = false,
@@ -820,6 +826,7 @@ export const getCellFrameComponentList = ({
         instanceIdCounterRef,
         styles,
         placeholderMessages,
+
     }) => {
 
     const localContentlist = [...contentlist]
@@ -830,8 +837,10 @@ export const getCellFrameComponentList = ({
     let deletedtailitems = [], deletedheaditems = []
 
     if (listStartChangeCount >= 0) { // acquire new items
+
         let referenceIndex = cradleReferenceIndex
         let changeCount = listStartChangeCount
+        
         if (listStartChangeCount > cradleContentCount) {
             referenceIndex = cradleReferenceIndex - (listStartChangeCount - cradleContentCount)
             changeCount = cradleContentCount

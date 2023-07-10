@@ -1514,8 +1514,8 @@ const Cradle = ({
 
             case 'changelistsizeafterinsertremove': {
 
-                const newlistsize = serviceHandler.newlistsize
-                serviceHandler.newlistsize = null
+                const newlistsize = serviceHandler.newListSize
+                serviceHandler.newListSize = null
 
                 setCradleState('ready')
 

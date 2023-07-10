@@ -860,7 +860,7 @@ export default class ServiceHandler {
 
     }
 
-    newlistsize
+    public newListSize // accessed by changelistsizeafterinsertremove event from Cradle
 
     // shared logic for insert and remove. Returns lists of indexes shifted, replaced, and removed
     // this operation changes the listsize
@@ -933,7 +933,7 @@ export default class ServiceHandler {
         // determine if cradle must be reset or simply adjusted
         const 
             changecount = rangeincrement, // semantics
-            newlistsize = this.newlistsize = listsize + changecount,
+            newlistsize = this.newListSize = listsize + changecount,
 
             calculatedCradleRowcount = viewportRowcount + (runwaySize * 2),
             calculatedCradleItemcount = calculatedCradleRowcount * crosscount,

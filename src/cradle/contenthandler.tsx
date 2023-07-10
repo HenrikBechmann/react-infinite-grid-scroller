@@ -500,15 +500,13 @@ export default class ContentHandler {
                 cradleParameters,
                 content:cradleContent,
 
-            } = this
+            } = this,
 
-        const 
             viewportElement = cradleParameters.ViewportContextPropertiesRef.current.elementRef.current,
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
-            cradleHandlers = cradleParameters.handlersRef.current
+            cradleHandlers = cradleParameters.handlersRef.current,
 
-        const 
             {
 
                 cacheAPI, 
@@ -966,9 +964,6 @@ export default class ContentHandler {
 
         // reference rows - cradle first/last; axis; list end
         const axisReferenceRow = Math.floor(axisReferenceIndex/crosscount)
-            // (axisReferenceIndex < 0)?
-            //     Math.floor(axisReferenceIndex/crosscount):
-            //     Math.ceil(axisReferenceIndex/crosscount)
 
         const
             cradleReferenceRow = axisReferenceRow - headRowCount,
@@ -1195,7 +1190,8 @@ export default class ContentHandler {
 
     }
 
-    // supports moveIndex and insertRemoveIndex, updates cradle contiguous items from startChangeIndex or start of cradle
+    // supports moveIndex and insertRemoveIndex, 
+    // updates cradle contiguous items from startChangeIndex or start of cradle
     public synchronizeCradleItemIDsToCache(updatedIndexList, isInsertRemove = 0, startChangeIndex = null) { // 0 = move
 
         // asssemble resources
