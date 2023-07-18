@@ -34,6 +34,8 @@ const Scrollblock = ({
 
     const listsize = virtualListSpecs.size
 
+    console.log('Scrollblock: listsize', listsize)
+
     // -------------------------[ context and state ]-------------------------
 
     const ViewportContextProperties = useContext(ViewportContext)

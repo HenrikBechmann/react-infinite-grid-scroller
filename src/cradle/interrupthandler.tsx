@@ -206,6 +206,9 @@ export default class InterruptHandler {
         if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway
         {
 
+            console.log('interrupthandler.cradleIntersectionObserverCallback: this.isHeadCradleInView, this.isTailCradleInView', 
+                this.isHeadCradleInView, this.isTailCradleInView, entries)
+
             this.isHeadCradleInView = this.isTailCradleInView = true
 
             const cradleState = stateHandler.cradleStateRef.current

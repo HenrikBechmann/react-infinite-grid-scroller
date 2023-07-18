@@ -28,14 +28,6 @@
     containing block should be styles accordingly.
 */
 
-/*
-
-TODO:
-
-- add startingListRange property (2 part array); setListRange API function
-
-*/
-
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 
 // defensive

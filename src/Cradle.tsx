@@ -639,6 +639,8 @@ const Cradle = ({
             setListsize, // deprecated
             setListSize,
             setListRange,
+            prependIndexCount,
+            appendIndexCount,
             clearCache, 
 
             getCacheIndexMap, 
@@ -660,6 +662,8 @@ const Cradle = ({
             setListsize, // deprecated
             setListSize,
             setListRange,
+            prependIndexCount,
+            appendIndexCount,
             clearCache,
             
             getCacheIndexMap,

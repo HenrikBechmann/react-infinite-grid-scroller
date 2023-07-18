@@ -15,8 +15,8 @@
         setListsize, *deprectated* for proper camel case
         setListSize,
         setListRange,
-        appendIndexCount,
         prependIndexCount,
+        appendIndexCount,
         clearCache, 
 
         getCacheIndexMap, 
@@ -259,6 +259,31 @@ export default class ServiceHandler {
 
         }
 
+    }
+
+    public appendIndexCount = (appendCount) => {
+        appendCount = +appendCount
+        const isInvalid = ((!isInteger(appendCount)) || (!compareValueMinValue(appendCount, 0)))
+        if (isInvalid) {
+            console.log('RIGS ERROR, appendIndexCount must be an integer >= 0')
+            return
+        }
+        const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const [lowindex, highindex] = virtualListProps.range
+        this.setListRange([lowindex,highindex + appendCount])
+    }
+
+    public prependIndexCount = (prependCount) => {
+        prependCount = +prependCount
+        const isInvalid = ((!isInteger(prependCount)) || (!compareValueMinValue(prependCount, 0)))
+        if (isInvalid) {
+            console.log('RIGS ERROR, prependIndexCount must be an integer >= 0')
+            return
+        }
+        const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const [lowindex, highindex] = virtualListProps.range
+        const newlistrange = [lowindex - prependCount,highindex]
+        this.setListRange(newlistrange)
     }
 
     public setListRange = (newlistrange) => {
