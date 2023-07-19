@@ -34,11 +34,11 @@ const Scrollblock = ({
 
     const listsize = virtualListSpecs.size
 
-    console.log('Scrollblock: listsize', listsize)
-
     // -------------------------[ context and state ]-------------------------
 
     const ViewportContextProperties = useContext(ViewportContext)
+
+    const [blockState,saveBlockState] = useState('setup') // to trigger render
 
     // -----------------------------------[ data heap ]-------------------------
 
@@ -55,8 +55,6 @@ const Scrollblock = ({
     }, [])
 
     const divlinerstyleRef = useRef(linerStyle)
-
-    const [divlinerstyle,saveDivlinerstyle] = useState(divlinerstyleRef.current) // to trigger render
 
     const getViewportDimensions = () => {
         const viewportElement = ViewportContextProperties.elementRef.current
@@ -94,7 +92,7 @@ const Scrollblock = ({
                 cellHeight,
                 padding
             )
-        saveDivlinerstyle(divlinerstyleRef.current)
+        saveBlockState('configupdated')
 
     },[
         orientation,
@@ -116,6 +114,17 @@ const Scrollblock = ({
 
         },[]
     )
+
+    useLayoutEffect(()=>{
+
+        switch (blockState) {
+            case 'setup':
+            case 'configupdated': {
+                saveBlockState('ready')
+            }
+        }
+
+    },[blockState])
 
     return <div data-type = 'scrollblock' style={divlinerstyleRef.current}>{children}</div>
 
