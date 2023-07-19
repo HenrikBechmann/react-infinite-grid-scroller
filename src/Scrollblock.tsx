@@ -32,7 +32,7 @@ const Scrollblock = ({
         
     } = gridSpecs
 
-    const listsize = virtualListSpecs.size
+    const { size:listsize } = virtualListSpecs
 
     // -------------------------[ context and state ]-------------------------
 

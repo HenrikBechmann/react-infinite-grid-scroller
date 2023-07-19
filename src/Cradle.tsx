@@ -187,7 +187,7 @@ const Cradle = ({
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) { // root scroller
-    //     console.log('--> cradleState','-'+scrollerID+'-', cradleState)
+        // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
         // console.log('-- index','~'+scrollerProperties?.cellFramePropertiesRef.current.index+'~')
     // }
 
@@ -910,72 +910,76 @@ const Cradle = ({
 
         if (isCachedRef.current) return // TODO: ??
 
-        const 
-            { 
+        setCradleState('reconfigureforlistrange')
+
+        return
+
+        // const 
+        //     { 
                 
-                virtualListProps, 
-                cradleContentProps 
+        //         virtualListProps, 
+        //         cradleContentProps 
 
-            } = cradleInternalPropertiesRef.current,
+        //     } = cradleInternalPropertiesRef.current,
 
-            { 
+        //     { 
                 
-                viewportRowcount, 
-                lowindex:lowCradleIndex, 
-                highindex:highCradleIndex, 
-                size:cradleCount 
+        //         viewportRowcount, 
+        //         lowindex:lowCradleIndex, 
+        //         highindex:highCradleIndex, 
+        //         size:cradleCount 
 
-            } = cradleContentProps,
+        //     } = cradleContentProps,
 
-            { 
+        //     { 
 
-                lowindex:listlowrange,
-                highindex:listhighrange 
+        //         lowindex:listlowrange,
+        //         highindex:listhighrange 
 
-            } = virtualListProps,
+        //     } = virtualListProps,
 
-            { 
+        //     { 
 
-                crosscount 
+        //         crosscount 
 
-            } = cradleInternalPropertiesRef.current.virtualListProps,
+        //     } = cradleInternalPropertiesRef.current.virtualListProps,
 
-            { 
+        //     { 
 
-                runwaySize 
+        //         runwaySize 
 
-            } =  cradleInheritedPropertiesRef.current
+        //     } =  cradleInheritedPropertiesRef.current
 
-        const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
-        const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
+        // const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
+        // const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
 
-        let measuredCradleItemCount
-        let changeIsWithinCradle
+        // let measuredCradleItemCount
+        // let changeIsWithinCradle
 
-        if (cradleCount == 0) {
+        // if (cradleCount == 0) {
 
-            measuredCradleItemCount = 0
-            changeIsWithinCradle = true
+        //     measuredCradleItemCount = 0
+        //     changeIsWithinCradle = true
 
-        } else {
+        // } else {
 
-            measuredCradleItemCount = highCradleIndex - lowCradleIndex + 1
-            changeIsWithinCradle = (highCradleIndex >= listhighrange)
+        //     measuredCradleItemCount = highCradleIndex - lowCradleIndex + 1
+        //     changeIsWithinCradle = (highCradleIndex >= listhighrange)
             
-        }
+        // }
 
-        if ((measuredCradleItemCount < calculatedCradleItemcount) || // sub-viewport visible listcount
-            changeIsWithinCradle) { // change is not beyond cradle
+        // if ((measuredCradleItemCount < calculatedCradleItemcount) || // sub-viewport visible listcount
+        //     changeIsWithinCradle) { // change is not beyond cradle
 
-            interruptHandler.pauseInterrupts()
+        //     interruptHandler.pauseInterrupts()
 
-            setCradleState('reconfigureforlistrange')
+        //     setCradleState('reconfigureforlistrange')
 
-        } else {
+        // } else {
 
-            setCradleState('ready')
+        //     setCradleState('ready')
 
-        }
+        // }
 
     },[
         virtualListProps.lowindex,

@@ -122,7 +122,7 @@ export default class ContentHandler {
 
         cradlePositionData.targetAxisReferencePosition -= lowindexchange
 
-        console.log('cradlePositionData.targetAxisReferencePosition',cradlePositionData.targetAxisReferencePosition)
+        // console.log('cradlePositionData.targetAxisReferencePosition',cradlePositionData.targetAxisReferencePosition)
 
         const newlistsize = newhighindex - newlowindex + 1
 
