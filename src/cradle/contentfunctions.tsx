@@ -36,8 +36,6 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     }) => {
 
-    // console.log('==>> calculateContentListRequirements:1. targetAxisReferenceIndex\n',targetAxisReferenceIndex)
-
     const 
         { 
 
@@ -76,12 +74,8 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex, listhighindex)
     targetAxisReferenceIndex = Math.max(targetAxisReferenceIndex, listlowindex)
 
-    // console.log('2. targetAxisReferenceIndex\n',targetAxisReferenceIndex)
-
     // derive target row
     let targetAxisReferenceRow = Math.floor(targetAxisReferenceIndex/crosscount)
-
-    // console.log('3. targetAxisReferenceIndex\n',targetAxisReferenceIndex)
 
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
 
@@ -122,9 +116,6 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
         ((targetAxisReferenceRow - rangerowshift) * baseRowPixelLength) + padding - targetAxisViewportPixelOffset
 
     // ----------------------[ return required values ]---------------------
-
-    // console.log('4.targetCradleReferenceIndex, targetAxisReferenceIndex, newCradleContentCount\n',
-    //     targetCradleReferenceIndex, targetAxisReferenceIndex, newCradleContentCount)
 
     return {
         targetCradleReferenceIndex, 
@@ -307,9 +298,6 @@ export const generateShiftInstruction = ({
             triggerData.tailOffset: // needs to move up or left toward head
             triggerData.headOffset // needs to move down or right toward tail
 
-    // console.log('shiftinstruction, triggerViewportReferencePixelPos, triggerData\n', 
-    //     shiftinstruction, triggerViewportReferencePixelPos, triggerData)
-
     return [shiftinstruction, triggerViewportReferencePixelPos]
 
 }
@@ -400,20 +388,12 @@ export const calculateShiftSpecs = ({
             
         } = virtualListProps
 
-    // scrollerID == 1 && console.log('vitrualListProps', virtualListProps)
-
     // normalize
     const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0)
     const previousCradleReferenceRow = Math.floor(previousCradleReferenceIndex/crosscount)
 
     const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0)
     const previousAxisReferenceRow = Math.floor(previousAxisReferenceIndex/crosscount)
-
-    // scrollerID == 1 && console.log('previousCradleReferenceRow = Math.floor(previousCradleReferenceIndex/crosscount)\n',
-    //     previousCradleReferenceRow, previousCradleReferenceIndex, crosscount)
-
-    // scrollerID == 1 && console.log('previousAxisReferenceRow = Math.floor(previousAxisReferenceIndex/crosscount)\n',
-    //     previousAxisReferenceRow, previousAxisReferenceIndex, crosscount)
 
     const listEndRow = (listRowcount - 1) + rangerowshift
 
@@ -606,12 +586,6 @@ export const calculateShiftSpecs = ({
     const newAxisReferenceRow = previousAxisReferenceRow + axisReferenceRowShift
 
 
-    // scrollerID == 1 && console.log('A-1. newCradleReferenceRow = previousCradleReferenceRow + cradleReferenceRowshift\n',
-    //     newCradleReferenceRow, previousCradleReferenceRow, cradleReferenceRowshift)
-
-    // scrollerID == 1 && console.log('A-2. newAxisReferenceRow = previousAxisReferenceRow + axisReferenceRowShift\n',
-    //     newAxisReferenceRow, previousAxisReferenceRow, axisReferenceRowShift)
-
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
 
@@ -640,9 +614,6 @@ export const calculateShiftSpecs = ({
         const targetCradleEndrow = newCradleReferenceRow + (cradleRowcount - 1)
         const tailrowdiff = targetCradleEndrow - listEndRow
 
-        // console.log('tailrowdiff = targetCradleEndrowOffset - listEndrowOffset, virtualListProps\n',
-        //     tailrowdiff, targetCradleEndrowOffset, listEndrowOffset, virtualListProps)
-
         if (tailrowdiff > 0) {
 
             cradleReferenceRowshift -= tailrowdiff
@@ -660,9 +631,6 @@ export const calculateShiftSpecs = ({
 
         // --- start of list adjustment
 
-        // console.log('1. newCradleReferenceRowOffset < rangerowshift\n',
-        //     newCradleReferenceRowOffset, rangerowshift)
-
         if (newCradleReferenceRow < rangerowshift) {
 
             const diff = rangerowshift - newCradleReferenceRow
@@ -670,9 +638,6 @@ export const calculateShiftSpecs = ({
             newCradleReferenceRow += diff
 
         }
-
-        // console.log('2. newCradleReferenceRowOffset\n',
-        //     newCradleReferenceRowOffset)
 
         if (layout == 'variable' && newAxisReferenceRow == rangerowshift) { // start of list
             newAxisViewportPixelOffset = padding
@@ -683,21 +648,10 @@ export const calculateShiftSpecs = ({
         const computedNextCradleEndRow = 
             (previousCradleReferenceRow + (cradleRowcount -1) + cradleReferenceRowshift)
 
-        // console.log('computedNextCradleEndrowOffset = (previousCradleRowOffset + (cradleRowcount -1) + cradleReferenceRowshift)\n',
-        //     computedNextCradleEndrowOffset, previousCradleRowOffset, cradleRowcount, cradleReferenceRowshift)
-
         const targetCradleEndRow = 
             newAxisReferenceRow + (viewportRowcount - 1) + (runwayRowcount - 1)
 
-        // console.log('targetCradleEndrowOffset = newAxisReferenceRowOffset + (viewportRowcount - 1) + (runwayRowcount - 1)\n',
-        //     targetCradleEndrowOffset, listEndrowOffset, newAxisReferenceRowOffset, viewportRowcount, runwayRowcount)
-
-        // const tailrowdiff = targetCradleEndrowOffset - computedNextCradleEndrowOffset
-
         let tailrowdiff =  computedNextCradleEndRow - targetCradleEndRow
-
-        // console.log('tailrowdiff = computedNextCradleEndrowOffset - targetCradleEndrowOffset\n',
-        //     tailrowdiff, computedNextCradleEndrowOffset, targetCradleEndrowOffset)
 
         if (tailrowdiff < 0) {
 
@@ -707,9 +661,6 @@ export const calculateShiftSpecs = ({
             newCradleReferenceRow -= tailrowdiff
 
         }
-
-        // console.log('3. newCradleReferenceRowOffset, rangerowshift\n',
-        //     newCradleReferenceRowOffset, rangerowshift)
 
     }
 
@@ -724,9 +675,6 @@ export const calculateShiftSpecs = ({
     let newCradleContentCount = cradleRowcount * crosscount // base count
 
     const includesLastRow = ((newCradleReferenceRow + cradleRowcount - rangerowshift) >= listRowcount)
-
-    // console.log('includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount - rangerowshift) >= listRowcount)\n',
-    //     includesLastRow, newCradleReferenceRowOffset, cradleRowcount, rangerowshift, listRowcount)
 
     const includesFirstRow = (newCradleReferenceRow == rangerowshift)
 
@@ -748,13 +696,7 @@ export const calculateShiftSpecs = ({
     const listStartChangeCount = -(cradleReferenceItemShift)
     const listEndChangeCount = -listStartChangeCount - changeOfCradleContentCount
 
-    // console.log('listStartChangeCount, listEndChangeCount, cradleReferenceItemShift, changeOfCradleContentCount\n',
-    //     listStartChangeCount, listEndChangeCount, cradleReferenceItemShift, changeOfCradleContentCount)
-
     // ---------------------[ 8. return required values ]-------------------
-
-    // console.log('-->> newCradleReferenceIndex, newAxisReferenceIndex\n',
-    //     newCradleReferenceIndex, newAxisReferenceIndex)
 
     return {
 

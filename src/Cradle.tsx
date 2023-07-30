@@ -236,8 +236,6 @@ const Cradle = ({
 
         const crosscount = Math.floor(viewportcrosslengthforcalc/cellcrosslengthforcalc)
 
-        // console.log('calculated crosscount', crosscount)
-
         return crosscount
 
     },[
@@ -278,9 +276,6 @@ const Cradle = ({
                 0:
                 crosscount - endrowblanks
         }
-
-        // console.log('lowrange, highrange, crosscount, baserowblanks, endrowblanks',
-        //     lowrange, highrange, crosscount, baserowblanks, endrowblanks)
 
         return [baserowblanks, endrowblanks]
 
@@ -338,9 +333,6 @@ const Cradle = ({
 
         let cradleRowcount = Math.min(listRowcount, calculatedCradleRowcount)
 
-        // console.log('Cradle:listRowcount, calculatedCradleRowcount, cradleRowcount', 
-        //     listRowcount, calculatedCradleRowcount, cradleRowcount)
-
         let runwayRowcount
         if (calculatedCradleRowcount >= cradleRowcount) {
 
@@ -361,8 +353,6 @@ const Cradle = ({
             cradleRowcount = Math.ceil((itemcount + baserowblanks + endrowblanks)/crosscount)
 
         }
-
-        // console.log('revised cradleRowCount',cradleRowcount)
 
         return [
             cradleRowcount, 
@@ -407,8 +397,6 @@ const Cradle = ({
             rowshift:rangerowshift,
 
         }
-
-    // console.log('virtualListProps',virtualListProps)
 
     const cradleContentPropsRef = useRef({
         cradleRowcount,
@@ -1214,8 +1202,6 @@ const Cradle = ({
                 // avoid recursive cradle intersection interrupts
                 signals.pauseCradleIntersectionObserver = true
                 signals.repositioningRequired = false // because now underway
-
-                // scrollerID == 1 && console.log('Cradle: startreposition, scrollHandler.isScrolling', scrollHandler.isScrolling)
 
                 if (scrollHandler.isScrolling) {
 

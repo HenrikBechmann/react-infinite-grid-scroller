@@ -217,8 +217,6 @@ export default class ScrollHandler {
 
             if (cradleState == 'repositioningRender') {
 
-                // scrollerID == 1 && console.log('onScroll.calcImpliedRepositioningData: cradleState', cradleState)
-
                 this.calcImpliedRepositioningData('onScroll')
 
             }
@@ -388,9 +386,6 @@ export default class ScrollHandler {
             scrollblockOffset = scrollblockElement.offsetLeft
 
         }
-
-        // console.log('running calcImpliedRepositioningData: source, scrollPos, scrollblockOffset\n',
-        //     source, scrollPos, scrollblockOffset)
 
         let axisPixelOffset = cellLength - ((scrollPos + scrollblockOffset) % cellLength)
         if (axisPixelOffset == (cellLength + cradleSpecs.padding)) {

@@ -239,8 +239,6 @@ export default class CacheAPI {
 
         if ( scrollerDataMap.size == 1 ) return // already getting dismantled; avoid conflict
 
-        // console.log('unregister scrollerID, itemSet',scrollerID, itemSet)
-
         scrollerDataMap.delete(scrollerID)
         itemSet.forEach((itemID) => {
             const { partitionID } = itemMetadataMap.get(itemID)

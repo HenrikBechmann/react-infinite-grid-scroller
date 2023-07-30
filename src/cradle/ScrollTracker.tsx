@@ -48,8 +48,6 @@ const ScrollTracker = ({ scrollTrackerAPIRef, styles }) => {
 
     const beginReposition = useCallback((position, lowindex, listsize)=> {
 
-        // console.log('position, lowindex, listsize', position, lowindex, listsize)
-
         setIndex(position + lowindex)
         lowindexRef.current = lowindex
         listsizeRef.current = listsize
