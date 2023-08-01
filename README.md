@@ -52,11 +52,13 @@ import Scroller from 'react-infinite-grid-scroller'
 
 // ...
 
+const lowindex = -50, highindex = 50 // random range values
+
 <div style = { containerstyle }>
   <Scroller 
       cellHeight = { cellHeight }
       cellWidth = { cellWidth }
-      startingListSize = { startingListSize } // this constitutes a virtual 0-based array
+      startingListRange = { [lowindex, highindex] } // this constitutes the virtual list
       getItem = { getItem } // a function called by RIGS to obtain a specified user component by index number
   />
 </div>
