@@ -64,10 +64,6 @@ export default class LayoutHandler {
 
         this.cradlePositionData.targetAxisReferencePosition = startingIndex - lowindex
 
-        // TODO: recalculate
-        // this.cradlePositionData.targetAxisReferencePosition = 
-        //     (Math.min(startingIndex,(listsize - 1)) || 0)
-
         this.cradlePositionData.targetAxisViewportPixelOffset = 0
 
     }
