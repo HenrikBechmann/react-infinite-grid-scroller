@@ -2,7 +2,7 @@
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    The role of viewport is to provide viewport data to its children (scrollblock and cradle) through the
+    The role of viewport is to provide viewport data to its children (Scrollblock and Cradle) through the
     ViewportContext object, and act as the visible screen portal of the list being shown.
     If Viewport is resized, it notifies the Cradle to reconfigure.
 */
@@ -177,19 +177,12 @@ const Viewport = ({
 
     },[styles.viewport])
 
-    // update ViewportContextPropertiesRef; add viewport dimensions
+    // update ViewportContextPropertiesRef
     ViewportContextPropertiesRef.current = useMemo(() => {
 
         if (viewportState == 'setup') return ViewportContextPropertiesRef.current
 
-        // const {top, right, bottom, left} = viewportElementRef.current.getBoundingClientRect()
-        // const width = (right - left)
-        // const height = (bottom - top)
-
-        // this is a dimension update procedure for resize. 
-        // See also interrupthandler.tsx cradleIntersectionObserverCallback for cradle intersection update
         const localViewportData = {
-            // viewportDimensions:{top,right, bottom, left, width, height},
             elementRef:viewportElementRef,
             isResizing:isResizingRef.current,
         }
