@@ -225,7 +225,7 @@ Details about the functions returned in an object by `functionsCallback`:
 |---|---|---|---|
 |[_**OPERATIONS**_]|
 |scrollToIndex|index:integer|_void_|places the requested index item at the top visible row or left visible column of the scroller, depending on orientation|
-|setListsize|index:integer|_void_|changes the list size|
+|setListsize|index:integer|_void_|changes the list size, by adjusting the list range high index. Favour use of `setListRange` instead|
 |setListRange|two part array [lowindex, highindex], or null for empty virtual list|_void_|lowindex must be <= highindex; lowindex and highindex can be positive or negative integers|
 |prependIndexCount|integer|_void_|the number of indexes to expand the start of the virtual list|
 |appendIndexCount|integer|_void_|the number of indexes to expand the end of the virtual list|
