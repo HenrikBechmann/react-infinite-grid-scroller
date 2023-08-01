@@ -2,6 +2,12 @@
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
+
+    TODO: startingListRange set to null, in absence of startingListSoze, sets list size to 0
+
+*/
+
+/*
     react-infinite-grid-scroller = RIGS
 
     The job of InfiniteGridScroller is to pass parameters to dependents.
