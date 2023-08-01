@@ -8,7 +8,7 @@ Breaking change:
 Other changes:
 - `startingListRange` RIGS property optionally takes an array of two numbers, being the `lowindex` and `highindex` of the virtual list. `lowindex` must be <= `highindex`, but both can be positive or negative integers. Supercedes `startingListSize` if present.
 - `setListsize` is deprecated, replaced by `setListSize` (note camel case)
-- new API calls: setListRange, prependIndexCount, appendIndexCount, getPropertiesSnapshot
+- new API calls: setListRange, prependIndexCount, appendIndexCount, getPropertiesSnapshot. See documentation.
 
 ## 1.0.5 May 18, 2023
 
