@@ -92,7 +92,7 @@ const Scrollblock = ({
                 cellHeight,
                 padding
             )
-        saveBlockState('configupdated')
+        saveBlockState('updated')
 
     },[
         orientation,
@@ -119,7 +119,7 @@ const Scrollblock = ({
 
         switch (blockState) {
             case 'setup':
-            case 'configupdated': {
+            case 'updated': {
                 saveBlockState('ready')
             }
         }
