@@ -37,14 +37,6 @@
 
 */
 
-/*
-
-    TODO
-
-    - modify clear cache for scroller selection
-
-*/
-
 import React, {useState, useEffect, useRef, useCallback} from 'react'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
@@ -107,6 +99,7 @@ export default class CacheAPI {
 
     }
 
+    // a facade is used to accommodate access by multiple RIGS scrollers
     private getFacade = (scrollerID) => {
         const facade = {
 
