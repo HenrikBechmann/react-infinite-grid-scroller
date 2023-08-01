@@ -303,7 +303,7 @@ export const generateShiftInstruction = ({
 }
 
 /*
-    The basic goal of calcContentShoft is to determine the number and direction of rows to shift between
+    The basic goal of calculateShiftSpecs is to determine the number and direction of rows to shift between
     the head and tail grids (which determines the new location of the axis), and also to
     calculate the rolling addition and deletion of cradle content to accommodate the changes.
 
