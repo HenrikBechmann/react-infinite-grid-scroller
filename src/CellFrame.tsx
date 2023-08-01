@@ -477,7 +477,6 @@ const CellFrame = ({
     </div>
 
 } // CellFrame
-//(frameState != 'setup') && 
 export default CellFrame
 
 // utilities
