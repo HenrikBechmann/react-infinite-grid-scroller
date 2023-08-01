@@ -90,7 +90,8 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 |[_**REQUIRED**_]|
 |cellHeight|integer: number of pixels for cell height|required. Applied to `height` for 'uniform' layout, 'vertical' orientation. Applied to `max-height` for 'variable' layout, 'vertical' orientation. Approximate, used for `fr` (fractional allocation) for 'horizontal' orientation |
 |cellWidth|integer: number of pixels for cell width|required. Applied to `width` for 'uniform' layout, 'horizontal' orientation. Applied to `max-width` for 'variable' layout, 'horizontal' orientation. Approximate, used for `fr` (fractional allocation) for 'vertical' orientation|
-|startingListSize|integer: the starting number of items in the virtual list|required. Can be modified at runtime. Constitutes a 0-based virtual array|
+|startingListSize|integer: the starting number of items in the virtual list|required. Can be modified at runtime. Constitutes a 0-based virtual array (Internally creates a starting range of [0,startingListSize - 1]. Ignored in the presence of `startingListRange`|
+|startingListRange|two part arry [lowindex, highindex]|lowindex must be <= highindex; both can be positive or negative integers|
 |getItem|host-provided function. Parameters: `index` (integer, 0 based), and session `itemID` (integer) for tracking and matching. Arguments provided by system|required. Must return a React component or promise of a component (`React.isValidElement`), or `undefined` = unavailable, or `null` = end-of-list|
 |[_**SCROLLER OPTIONS**_]|
 |orientation|string: 'vertical' (default) or 'horizontal'|direction of scroll|
@@ -225,6 +226,9 @@ Details about the functions returned in an object by `functionsCallback`:
 |[_**OPERATIONS**_]|
 |scrollToIndex|index:integer|_void_|places the requested index item at the top visible row or left visible column of the scroller, depending on orientation|
 |setListsize|index:integer|_void_|changes the list size|
+|setListRange|two part array [lowindex, highindsex]|_void_|lowindex must be <= highindex; lowindex and highindex can be positive or negative integers|
+|prependIndexCount|integer|_void_|the number of indexes to expand the start of the virtual list|
+|appendIndexCount|integer|_void_|the number of indexes to expand the end of the virtual list|
 |reload|_none_|_void_|clears the cache and reloads the `Cradle` at its current position in the virtual list|
 |clearCache|_none_|_void_|clears the cache and the `Cradle` (leaving nothing to display)|
 |[_**SNAPSHOTS**_]|
