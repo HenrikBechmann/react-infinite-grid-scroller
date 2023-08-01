@@ -192,6 +192,7 @@ export default class ServiceHandler {
 
     }
 
+    // deprecated (camel case)
     public setListsize = (newlistsize) => { // *deprecated* (for camel case)
 
         this.setListSize(newlistsize)
