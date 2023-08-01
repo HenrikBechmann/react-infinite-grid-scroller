@@ -6,7 +6,7 @@ Breaking change:
 - `changeListSizeCallback` replaces changeListsizeCallback (note the camel case)
 
 Other changes:
-- `startingListRange` RIGS attribute optionally takes an array of two numbers, being the `lowindex` and `highindex` of the virtual list. `lowindex` must be <= `highindex`, but both can be positive of negative integers. Supercedes `startingListSize` if present.
+- `startingListRange` RIGS property optionally takes an array of two numbers, being the `lowindex` and `highindex` of the virtual list. `lowindex` must be <= `highindex`, but both can be positive of negative integers. Supercedes `startingListSize` if present.
 
 ## 1.0.5 May 18, 2023
 
