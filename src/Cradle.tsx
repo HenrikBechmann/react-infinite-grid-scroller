@@ -5,11 +5,11 @@
     The Cradle does the bulk of the work for the infinite grid scroller. It does so with the help of
     eight process handlers (class instances), and one main sub-component - the CellFrame.
 
-    Cradle's main responsibility is to manage the ~30 state changes of the system.
+    Cradle's main responsibility is to manage the ~35 state changes of the system.
 
     The illusion of infinite content is maintained by synchronizing changes in cradle content with the
     Cradle location inside the Scrollblock, such that as the Scrollblock is moved, the cradle moves 
-    oppositely to stay visible within the viewport.
+    oppositely to stay visible within the Viewport.
 
     The Scrollblock is sized to approximate the list being viewed, so as to have a scroll thumb size 
     and position which realistically reflects the size of the list being shown.
@@ -17,16 +17,19 @@
     The position of the cradle is controlled by an 'axis' which is a 0px height/width div
     (along the medial - ScrollBlock can be vertical or horizontal). The purpose of the axis is to 
     act as a 'fold', above which cradle content expands 'headwards' (up or left) in the Cradle, and 
-    below which the cradle content expands 'tailwards' (doen or right). The Cradle content is held in 
+    below which the cradle content expands 'tailwards' (down or right). The Cradle content is held in 
     two CSS grids (children of the axis): one above or left (the 'head' grid), and one below or right, 
     of the position of the axis (the 'tail' grid).
 
     The axis is kept near the leading (headward) edge of the visible cell rows of the Viewport
 
     Technically, there are several key reference points tracked by the Cradle. These are:
-        - axisReferenceIndex is the virtual index of the item controlling the location of the axis.
+        - targetAxisReferencePosition is the virtual 0-based position of the item controlling the location 
+          of the axis.
+        - The axisReferenceIndex is inferred from the targetAxisReferencePosition, by adding the virtual index 
+            range low index to the targetAxisReferencePosition.
             The axisReferenceIndex is also used to allocate items above (lower index value) and below 
-            (same or higher index value) the axis fold. The axisRefernceIndex is the first item in the 
+            (same or higher index value) the axis fold. The axisReferenceIndex is the first item in the 
             tail section of the Cradle.
         - (cradleReferenceIndex is inferred from the axisReferenceIndex, and is the virtual index of 
             the item defining the leading bound of the cradle content. The cradleReferenceIndex is usually 
@@ -50,7 +53,7 @@
     Cradle changes are activated by interrupts:
     - scrolling
     - resizing of the viewport
-    - observer callbacks:
+    - IntersectionObserver callbacks:
         - cradle/viewport intersection for repositioning when the cradle races out of scope
         - two 'triggerline'/viewport intersections which trigger rolling of content
             - rolling content triggers re-allocation of content between cradle head and tail grids
@@ -124,7 +127,13 @@ const Cradle = ({
 
     },[])
 
-    const listsize = virtualListSpecs.size
+    const { 
+
+        size:listsize,
+        lowindex, 
+        highindex 
+
+    } = virtualListSpecs
 
     // ========================[ DATA SETUP ]========================
 
@@ -172,9 +181,9 @@ const Cradle = ({
 
     // cache test
     // zero width and height means the component must be in portal (cache) state
-    const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) 
-
-    const isCacheChange = (isInPortal != isCachedRef.current)
+    const 
+        isInPortal = ((viewportwidth == 0) && (viewportheight == 0)),
+        isCacheChange = (isInPortal != isCachedRef.current)
 
     if (isCacheChange) {
         wasCachedRef.current = isCachedRef.current
@@ -248,9 +257,7 @@ const Cradle = ({
         viewportwidth,
     ])
 
-    const { lowindex, highindex } = virtualListSpecs
-
-    const [baserowblanks, endrowblanks] = useMemo(()=> {
+    const [ baserowblanks, endrowblanks ] = useMemo(()=> {
 
         // add position adjustment for 0
         const endadjustment =
@@ -284,10 +291,12 @@ const Cradle = ({
 
     // various row counts
     const [
+
         cradleRowcount, 
         viewportRowcount,
         listRowcount,
         runwayRowcount,
+
     ] = useMemo(()=> {
 
         const viewportLength = 
@@ -476,14 +485,9 @@ const Cradle = ({
     cradleInternalPropertiesRef.current = {
 
         // updated values
-        // crosscount,
-        // cradleRowcount,
-        // viewportRowcount,
-        // listRowcount,
         virtualListProps,
         setVirtualListSize,
         setVirtualListRange,
-        // runwayRowcount,
 
         cradleContentProps:cradleContentPropsRef.current,
         
@@ -900,75 +904,6 @@ const Cradle = ({
 
         setCradleState('reconfigureforlistrange')
 
-        return
-
-        // const 
-        //     { 
-                
-        //         virtualListProps, 
-        //         cradleContentProps 
-
-        //     } = cradleInternalPropertiesRef.current,
-
-        //     { 
-                
-        //         viewportRowcount, 
-        //         lowindex:lowCradleIndex, 
-        //         highindex:highCradleIndex, 
-        //         size:cradleCount 
-
-        //     } = cradleContentProps,
-
-        //     { 
-
-        //         lowindex:listlowrange,
-        //         highindex:listhighrange 
-
-        //     } = virtualListProps,
-
-        //     { 
-
-        //         crosscount 
-
-        //     } = cradleInternalPropertiesRef.current.virtualListProps,
-
-        //     { 
-
-        //         runwaySize 
-
-        //     } =  cradleInheritedPropertiesRef.current
-
-        // const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
-        // const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
-
-        // let measuredCradleItemCount
-        // let changeIsWithinCradle
-
-        // if (cradleCount == 0) {
-
-        //     measuredCradleItemCount = 0
-        //     changeIsWithinCradle = true
-
-        // } else {
-
-        //     measuredCradleItemCount = highCradleIndex - lowCradleIndex + 1
-        //     changeIsWithinCradle = (highCradleIndex >= listhighrange)
-            
-        // }
-
-        // if ((measuredCradleItemCount < calculatedCradleItemcount) || // sub-viewport visible listcount
-        //     changeIsWithinCradle) { // change is not beyond cradle
-
-        //     interruptHandler.pauseInterrupts()
-
-        //     setCradleState('reconfigureforlistrange')
-
-        // } else {
-
-        //     setCradleState('ready')
-
-        // }
-
     },[
         virtualListProps.lowindex,
         virtualListProps.highindex,
@@ -1104,7 +1039,7 @@ const Cradle = ({
 
     // =====================[ STATE MANAGEMENT ]==========================
 
-    // this is the core state engine (about 30 states), using named states
+    // this is the core state engine (about 32 states), using named states
     // useLayoutEffect for suppressing flashes
     useLayoutEffect(()=>{
 
@@ -1534,7 +1469,7 @@ const Cradle = ({
 
     },[cradleState])
 
-    // standard rendering states (3 states)
+    // standard rendering states (2 states)
     useEffect(()=> { 
 
         switch (cradleState) {
@@ -1543,10 +1478,6 @@ const Cradle = ({
             // repositioning renders
             case 'repositioningRender': // no-op
                 break
-
-            // case 'repositioningContinuation': // set from onScroll
-            //     setCradleState('repositioningRender')
-            //     break
 
             case 'ready': // no-op
 
