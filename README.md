@@ -226,7 +226,7 @@ Details about the functions returned in an object by `functionsCallback`:
 |[_**OPERATIONS**_]|
 |scrollToIndex|index:integer|_void_|places the requested index item at the top visible row or left visible column of the scroller, depending on orientation|
 |setListsize|index:integer|_void_|changes the list size|
-|setListRange|two part array [lowindex, highindsex]|_void_|lowindex must be <= highindex; lowindex and highindex can be positive or negative integers|
+|setListRange|two part array [lowindex, highindex]|_void_|lowindex must be <= highindex; lowindex and highindex can be positive or negative integers|
 |prependIndexCount|integer|_void_|the number of indexes to expand the start of the virtual list|
 |appendIndexCount|integer|_void_|the number of indexes to expand the end of the virtual list|
 |reload|_none_|_void_|clears the cache and reloads the `Cradle` at its current position in the virtual list|
