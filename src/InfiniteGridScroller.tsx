@@ -13,7 +13,7 @@
     portal'd to CellFrames. The cache can be configured to hold more items than the Cradle (limited by 
     device memory). Caching allows host content to maintain state.
 
-    Scrollblock represents the entirety of the list (and is sized accordingly). It is the object that is scrolled.
+    Scrollblock represents the entirety of the list (and is sized accordingly). It is the component that is scrolled.
 
     Cradle contains the list items, and is 'virtualized' -- it appears as though it scrolls through a filled 
     scrollblock, but in fact it is only slightly larger than the viewport. Content is rotated in and out of the 
@@ -24,8 +24,8 @@
     Overall the InfiniteGridScroller as a package manages the asynchronous interactions of the 
     components of the mechanism. Most of the work occurs in the Cradle component.
 
-    The Rigs liner (the top level Viewport element) is set with 'display:absolute' and 'inset:0', so the user 
-    containing block should be styles accordingly.
+    The RIGS liner (the top level Viewport element) is set with 'display:absolute' and 'inset:0', so the user 
+    containing block should be styled accordingly.
 */
 
 import React, { useEffect, useState, useCallback, useRef } from 'react'
@@ -86,7 +86,7 @@ const InfiniteGridScroller = (props) => {
             // max for variable layout
         startingListSize = 0, // the starging number of items in the virtual list. can be changed
         // startingListRange = null,
-        startingListRange = [-350,243],
+        startingListRange = [-350,243], // supercedes startingListSize if present
         getItem, // required. function provided by host - parameters set by system are index number
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
@@ -102,7 +102,7 @@ const InfiniteGridScroller = (props) => {
         // scroller specs:
         runwaySize = 3, // the number of rows outside the view of each side of the viewport 
             // -- gives time to assemble cellFrames before display
-        startingIndex = 0, // the 0-based starting index of the list, when first loaded
+        startingIndex = 0, // the starting index of the list, when first loaded
 
         // system specs:
         cache = 'cradle', // "preload", "keepload" or "cradle"
@@ -229,8 +229,7 @@ const InfiniteGridScroller = (props) => {
             if (goodrange) {
                 startingListSize = highindex - lowindex + 1
             }
-        }
-        if (!goodrange) {
+        } else {
             if (startingListSize) {
                 startingListRange = [0,startingListSize - 1]
             } else {
