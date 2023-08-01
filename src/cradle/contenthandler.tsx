@@ -67,9 +67,9 @@ export default class ContentHandler {
        current:0
 
     }
-    // Three main public methods - setCradleContent, updateCradleContent, and adjustScrollblockForVariability
 
-    // ==========================[ SET CONTENT ]===========================
+    // =============================[ UPDATE VIRTUAL LIST SIZE OR RANGE ]==========================
+    // these are utilities
 
     // reset the cradle with new content, including allocation between head and tail parts of the cradle
     // - called only from the Cradle state handler
@@ -137,6 +137,10 @@ export default class ContentHandler {
         setVirtualListRange(newlistrange)
 
     }
+
+    // Three main public methods - setCradleContent, updateCradleContent, and adjustScrollblockForVariability
+
+    // ==========================[ SET CONTENT ]===========================
 
     public setCradleContent = ( cradleState ) => { // cradleState influences some behaviour
 
