@@ -1,5 +1,12 @@
-// CellFrame.tsx
+// PortalCache.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+
+/*
+    The role of PortalCache is to hold the React portals in a cache.
+    The portals are actually held in an extendible series of CachePartition components, as controlled by cacheAPI.
+    Portals only exist in the React virtual DOM.
+    The cache can be shared among InfiniteGridScroller components.
+*/
 
 import React, {FC, useState, useEffect, useRef, useCallback} from 'react'
 
