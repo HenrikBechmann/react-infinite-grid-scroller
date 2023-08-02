@@ -91,7 +91,7 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 |cellHeight|integer: number of pixels for cell height|required. Applied to `height` for 'uniform' layout, 'vertical' orientation. Applied to `max-height` for 'variable' layout, 'vertical' orientation. Approximate, used for `fr` (fractional allocation) for 'horizontal' orientation |
 |cellWidth|integer: number of pixels for cell width|required. Applied to `width` for 'uniform' layout, 'horizontal' orientation. Applied to `max-width` for 'variable' layout, 'horizontal' orientation. Approximate, used for `fr` (fractional allocation) for 'vertical' orientation|
 |startingListSize|integer: the starting number of items in the virtual list|required. Can be modified at runtime. Constitutes a 0-based virtual array (Internally creates a starting range of [0,startingListSize - 1]. Ignored in the presence of `startingListRange` array|
-|startingListRange|two part array [lowindex, highindex], or null for empty list|lowindex must be <= highindex; both can be positive or negative integers. `null` instead of array creates empty virtual list in the absence of startingListSize|
+|startingListRange|two part array [lowindex, highindex], or empty array []|lowindex must be <= highindex; both can be positive or negative integers. [] (empty array) creates an empty virtual list|
 |getItem|host-provided function. Parameters: `index` (integer, 0 based), and session `itemID` (integer) for tracking and matching. Arguments provided by system|required. Must return a React component or promise of a component (`React.isValidElement`), or `undefined` = unavailable, or `null` = end-of-list|
 |[_**SCROLLER OPTIONS**_]|
 |orientation|string: 'vertical' (default) or 'horizontal'|direction of scroll|
@@ -226,7 +226,7 @@ Details about the functions returned in an object by `functionsCallback`:
 |[_**OPERATIONS**_]|
 |scrollToIndex|index:integer|_void_|places the requested index item at the top visible row or left visible column of the scroller, depending on orientation|
 |setListsize|index:integer|_void_|changes the list size, by adjusting the list range high index. Favour use of `setListRange` instead|
-|setListRange|two part array [lowindex, highindex], or null for empty virtual list|_void_|lowindex must be <= highindex; lowindex and highindex can be positive or negative integers|
+|setListRange|two part array [lowindex, highindex], or [] (empty array)|_void_|lowindex must be <= highindex; lowindex and highindex can be positive or negative integers. [] (empty array) creates an empty virtual list|
 |prependIndexCount|integer|_void_|the number of indexes to expand the start of the virtual list|
 |appendIndexCount|integer|_void_|the number of indexes to expand the end of the virtual list|
 |reload|_none_|_void_|clears the cache and reloads the `Cradle` at its current position in the virtual list|
