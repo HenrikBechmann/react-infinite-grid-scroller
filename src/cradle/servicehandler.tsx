@@ -289,12 +289,26 @@ export default class ServiceHandler {
 
     public setListRange = (newlistrange) => {
 
-        let [lowindex,highindex] = newlistrange
+        let isInvalid = !Array.isArray(newlistrange)
 
-        lowindex = +lowindex
-        highindex = +highindex
+        if (!isInvalid) {
 
-        const isInvalid = ((!isInteger(lowindex)) || (!isInteger(highindex)) || (!compareValueMinValue(highindex, lowindex)))
+            isInvalid = !(newlistrange.length == 0 || newlistrange.length == 2)
+
+            if (!isInvalid && (newlistrange.length == 2)) {
+
+                let [lowindex,highindex] = newlistrange
+
+                lowindex = +lowindex
+                highindex = +highindex
+
+                isInvalid = ((!isInteger(lowindex)) || (!isInteger(highindex)) || (!compareValueMinValue(highindex, lowindex)))
+
+                if (!isInvalid) newlistrange = [lowindex,highindex]
+
+            }
+
+        }
 
         if (isInvalid) {
 
@@ -302,8 +316,6 @@ export default class ServiceHandler {
             return
 
         }
-
-        newlistrange = [lowindex,highindex]
 
         const 
             { 
@@ -347,7 +359,9 @@ export default class ServiceHandler {
         cacheAPI.renderPortalLists()
 
 
-        if ((cache == 'preload') && (newlistrange[0] < currentlistrange[0] || newlistrange[1] > currentlistrange[1])) {
+        if ((cache == 'preload') && 
+            (newlistrange.length == 2) &&
+            (newlistrange[0] < currentlistrange[0] || newlistrange[1] > currentlistrange[1])) {
 
             stateHandler.setCradleState('startpreload')
 

@@ -3,7 +3,7 @@
 
 /*
 
-    TODO: startingListRange set to null, in absence of startingListSoze, sets list size to 0
+    TODO: startingListRange set to [] creates empty virtual list
 
 */
 
@@ -220,26 +220,34 @@ const InfiniteGridScroller = (props) => {
     if (!problems && scrollerState == 'setup') {
 
         let goodrange = true
-        if (!startingListRange || !Array.isArray(startingListRange) || !(startingListRange.length == 2)) {
+        if (!startingListRange || 
+            !Array.isArray(startingListRange) || 
+            !((startingListRange.length == 2) || (startingListRange.length == 0))) {
             goodrange = false
         }
         if (goodrange) {
-            let [lowindex,highindex] = startingListRange
-            lowindex = +lowindex
-            highindex = +highindex
-            if (isNaN(lowindex) || isNaN(highindex)) {
-                goodrange = false
-            } else if (lowindex > highindex) {
-                goodrange = false
+            if (startingListRange.length == 0) {
+                startingListSize = 0
+            } else {
+                let [lowindex,highindex] = startingListRange
+                lowindex = +lowindex
+                highindex = +highindex
+                if (isNaN(lowindex) || isNaN(highindex)) {
+                    goodrange = false
+                } else if (lowindex > highindex) {
+                    goodrange = false
+                }
+                if (goodrange) {
+                    startingListSize = highindex - lowindex + 1
+                }
             }
-            if (goodrange) {
-                startingListSize = highindex - lowindex + 1
-            }
-        } else {
-            if (startingListSize) {
+        }
+        if (!goodrange) {
+            if (startingListSize && (!isNaN(startingListSize))) {
                 startingListRange = [0,startingListSize - 1]
             } else {
-                startingListRange = null
+                startingListRange = []
+                startingListSize = 0
             }
         }
     }
@@ -387,8 +395,13 @@ const InfiniteGridScroller = (props) => {
 
     const setVirtualListRange = useCallback((listrange) =>{
 
-        const [lowrange, highrange] = listrange
-        const listsize = highrange - lowrange + 1
+        let listsize
+        if (listrange.length == 0) {
+            listsize = 0
+        } else {
+            const [lowrange, highrange] = listrange
+            listsize = highrange - lowrange + 1
+        }
 
         listsizeRef.current = listsize
         listRangeRef.current = listrange
@@ -405,8 +418,17 @@ const InfiniteGridScroller = (props) => {
     // called when getItem returns null, or direct call from user (see serviceHandler)
     const setVirtualListSize = useCallback((listsize) =>{
 
-        const [lowindex,highindex] = listRangeRef.current
-        const listrange = [lowindex,lowindex + listsize - 1]
+        let listrange = listRangeRef.current
+        if (listsize == 0) {
+            listrange = []
+        } else {
+            if (listrange.length == 0) {
+                listrange = [0,listsize - 1]
+            } else {
+                const [lowindex,highindex] = listRangeRef.current
+                listrange = [lowindex,lowindex + listsize - 1]
+            }
+        }
 
         listsizeRef.current = listsize
         listRangeRef.current = listrange
