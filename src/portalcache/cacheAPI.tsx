@@ -436,6 +436,11 @@ export default class CacheAPI {
     // called from Cradle.nullItemSetMaxListsize, and serviceHandler.setListSize
     private changeCacheListSize = (scrollerID, newlistsize, deleteListCallback, changeListSizeCallback) => {
 
+        if (newlistsize.length == 0) {
+            this.clearCache(scrollerID) 
+            return
+        }
+
         // match cache to newlistsize
         const portalIndexMap:Map<number,number> = this.scrollerDataMap.get(scrollerID).indexToItemIDMap
         const mapkeysList = Array.from(portalIndexMap.keys())
@@ -467,6 +472,11 @@ export default class CacheAPI {
 
     private changeCacheListRange = (scrollerID, newlistrange, deleteListCallback, changeListRangeCallback) => {
 
+
+        if (newlistrange.length == 0) {
+            this.clearCache(scrollerID) 
+            return
+        }
         // match cache to newlistsize
         const portalIndexMap:Map<number,number> = this.scrollerDataMap.get(scrollerID).indexToItemIDMap
         const mapkeysList = Array.from(portalIndexMap.keys())

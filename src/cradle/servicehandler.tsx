@@ -157,7 +157,9 @@ export default class ServiceHandler {
 
             { virtualListProps } = cradleInternalProperties,
 
-            { lowindex } = virtualListProps
+            { lowindex, size } = virtualListProps
+
+        if (!size) return
 
         const isInvalid = (!isInteger(index) || !compareValueMinValue(index, lowindex))
 
@@ -270,8 +272,21 @@ export default class ServiceHandler {
             return
         }
         const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
-        const [lowindex, highindex] = virtualListProps.range
-        this.setListRange([lowindex,highindex + appendCount])
+        const [lowindex, highindex, size] = virtualListProps.range
+
+        let newlistrange
+        if (size) {
+
+            newlistrange = [lowindex,highindex + appendCount] 
+
+        } else {
+
+            newlistrange = [0,appendCount - 1]
+
+        }
+
+        this.setListRange(newlistrange)
+
     }
 
     public prependIndexCount = (prependCount) => {
@@ -282,8 +297,19 @@ export default class ServiceHandler {
             return
         }
         const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
-        const [lowindex, highindex] = virtualListProps.range
-        const newlistrange = [lowindex - prependCount,highindex]
+        const [lowindex, highindex, size] = virtualListProps.range
+
+        let newlistrange
+        if (size) {
+
+            newlistrange = [lowindex - prependCount,highindex]
+
+        } else {
+
+            newlistrange = [prependCount - 1,0]
+
+        }
+
         this.setListRange(newlistrange)
     }
 
@@ -734,7 +760,9 @@ export default class ServiceHandler {
 
             { virtualListProps } = cradleInternalProperties,
 
-            { lowindex:listlowindex } = virtualListProps
+            { lowindex:listlowindex, size } = virtualListProps
+
+        if (!size) return
 
         // ------------ confirm validity of arguments -------------
 
@@ -835,9 +863,20 @@ export default class ServiceHandler {
 
             { virtualListProps } = cradleInternalProperties,
 
-            { lowindex:listlowindex } = virtualListProps
+            { lowindex:listlowindex, size } = virtualListProps
 
-        const isIndexInvalid = (!isInteger(index) || !compareValueMinValue(index, listlowindex))
+        let isIndexInvalid = !isInteger(index)
+
+        if (!isIndexInvalid) {
+
+            if (size) {
+                isIndexInvalid = !compareValueMinValue(index, listlowindex)
+            } else {
+                isIndexInvalid = (index !=0)
+            }
+
+        }
+
         let isHighrangeInvalid = false
 
         if ((!isIndexInvalid)) {
@@ -873,7 +912,9 @@ export default class ServiceHandler {
 
             { virtualListProps } = cradleInternalProperties,
 
-            { lowindex:listlowindex } = virtualListProps
+            { lowindex:listlowindex, size } = virtualListProps
+
+        if (!size) return
 
         const isIndexInvalid = (!isInteger(index) || !compareValueMinValue(index, listlowindex))
         let isHighrangeInvalid = false
@@ -952,6 +993,7 @@ export default class ServiceHandler {
         // ------------------- process cache ----------------
 
         if (listsize == 0) {
+            
             if (increment > 0) {
 
                 return this.setListSize(rangehighindex - index + 1)

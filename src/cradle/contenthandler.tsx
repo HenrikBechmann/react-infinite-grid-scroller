@@ -114,15 +114,25 @@ export default class ContentHandler {
 
             } = this.cradleParameters.cradleInternalPropertiesRef.current
 
-        const [previouslowindex] = virtualListProps.range
+        let newlistsize
+        if (newlistrange.length == 0) {
 
-        const [newlowindex, newhighindex] = newlistrange
+            newlistsize = 0
+            cradlePositionData.targetAxisReferencePosition = 0
 
-        const lowindexchange = newlowindex - previouslowindex
+        } else {
 
-        cradlePositionData.targetAxisReferencePosition -= lowindexchange
+            const [previouslowindex] = virtualListProps.range
 
-        const newlistsize = newhighindex - newlowindex + 1
+            const [newlowindex, newhighindex] = newlistrange
+
+            const lowindexchange = newlowindex - previouslowindex
+
+            cradlePositionData.targetAxisReferencePosition -= lowindexchange
+
+            newlistsize = newhighindex - newlowindex + 1
+
+        }
 
         if (newlistsize == 0) {
 

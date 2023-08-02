@@ -57,12 +57,17 @@ export default class LayoutHandler {
 
         } = virtualListProps
 
-        startingIndex = Math.max(startingIndex, lowindex)
-        startingIndex = Math.min(startingIndex, highindex)
+        if (listsize) {
 
-        // const listsize = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.size
+            startingIndex = Math.max(startingIndex, lowindex)
+            startingIndex = Math.min(startingIndex, highindex)
 
-        this.cradlePositionData.targetAxisReferencePosition = startingIndex - lowindex
+            this.cradlePositionData.targetAxisReferencePosition = startingIndex - lowindex
+
+        } else {
+
+            this.cradlePositionData.targetAxisReferencePosition = 0
+        }
 
         this.cradlePositionData.targetAxisViewportPixelOffset = 0
 
