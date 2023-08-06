@@ -15,7 +15,6 @@ import { ViewportContext } from './Viewport'
 
 const Scrollblock = ({
     children,
-    // listsize,
     virtualListSpecs,
     gridSpecs, 
     styles,

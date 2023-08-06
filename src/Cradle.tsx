@@ -93,7 +93,6 @@ const Cradle = ({
         gridSpecs,
         // basics
         runwaySize, 
-        // listsize, 
         virtualListSpecs,
         setVirtualListSize,
         setVirtualListRange,
@@ -335,7 +334,6 @@ const Cradle = ({
 
         const viewportRowcount = Math.ceil(viewportLength/baseRowLength)
 
-        // const listRowcount = Math.ceil(listsize/crosscount)
         const listRowcount = Math.ceil((listsize + baserowblanks + endrowblanks)/crosscount)
 
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)

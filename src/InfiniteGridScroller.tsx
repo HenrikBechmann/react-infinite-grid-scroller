@@ -2,12 +2,6 @@
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-
-    TODO: startingListRange set to [] creates empty virtual list
-
-*/
-
-/*
     react-infinite-grid-scroller = RIGS
 
     The job of InfiniteGridScroller is to pass parameters to dependents.
@@ -91,8 +85,7 @@ const InfiniteGridScroller = (props) => {
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
             // max for variable layout
         startingListSize = 0, // the starging number of items in the virtual list. can be changed
-        // startingListRange = null,
-        startingListRange = [-350,243], // supercedes startingListSize if present
+        startingListRange = [], // supercedes startingListSize if present
         getItem, // required. function provided by host - parameters set by system are index number
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
@@ -509,7 +502,6 @@ const InfiniteGridScroller = (props) => {
 
                 gridSpecs = { gridSpecsRef.current }
                 styles = { stylesRef.current }
-                // listsize = { listsize }
                 virtualListSpecs = {virtualListSpecsRef.current}
                 scrollerID = { scrollerID }
                 
@@ -518,7 +510,6 @@ const InfiniteGridScroller = (props) => {
 
                     gridSpecs = { gridSpecsRef.current }
                     styles = { stylesRef.current }
-                    // listsize = { listsize }
                     virtualListSpecs = {virtualListSpecsRef.current}
                     setVirtualListSize = { setVirtualListSize }
                     setVirtualListRange = { setVirtualListRange }
