@@ -75,7 +75,9 @@ export default class ContentHandler {
     // - called only from the Cradle state handler
     public updateVirtualListSize = (newlistsize) => {
 
-        const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
+        const { cradleParameters } = this
+        const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
+        const cradleHandlers = cradleParameters.handlersRef.current
 
         const { 
 
@@ -86,7 +88,10 @@ export default class ContentHandler {
 
         if (newlistsize == 0) {
 
-            const cradleContent = this.content        
+            const 
+                cradleContent = this.content,
+                { layoutHandler } = cradleHandlers,
+                { cradlePositionData } = layoutHandler
 
             this.clearCradle()
             cradleContent.headDisplayComponents = []
@@ -100,6 +105,9 @@ export default class ContentHandler {
                     size:0 
                 }
             )
+
+            cradlePositionData.targetAxisReferencePosition = 0
+            cradlePositionData.targetAxisViewportPixelOffset = 0
 
         }
 
@@ -119,12 +127,6 @@ export default class ContentHandler {
 
             } = cradleHandlers,
 
-            { 
-            
-                cradlePositionData,
-
-            } = layoutHandler,
-
             {
 
                 setVirtualListRange,
@@ -136,8 +138,15 @@ export default class ContentHandler {
         let newlistsize
         if (newlistrange.length == 0) {
 
+            const { 
+            
+                cradlePositionData,
+
+            } = layoutHandler,
+
             newlistsize = 0
             cradlePositionData.targetAxisReferencePosition = 0
+            cradlePositionData.targetAxisViewportPixelOffset = 0
 
         } else {
 
@@ -145,9 +154,9 @@ export default class ContentHandler {
 
             const [newlowindex, newhighindex] = newlistrange
 
-            const lowindexchange = newlowindex - previouslowindex
+            // const lowindexchange = newlowindex - previouslowindex
 
-            cradlePositionData.targetAxisReferencePosition -= lowindexchange
+            // cradlePositionData.targetAxisReferencePosition -= lowindexchange
 
             newlistsize = newhighindex - newlowindex + 1
 
@@ -294,7 +303,6 @@ export default class ContentHandler {
                 cellWidth)
             + gap
 
-        // note that targetAxisReferencePosition replaces requestedAxisReferenceIndex here
         const {
 
             // by index
