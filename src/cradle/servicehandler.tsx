@@ -352,7 +352,8 @@ export default class ServiceHandler {
             return
         }
         const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
-        const [lowindex, highindex, size] = virtualListProps.range
+        const [lowindex, highindex] = virtualListProps.range
+        const { size } = virtualListProps
 
         let newlistrange
         if (size) {
@@ -377,7 +378,8 @@ export default class ServiceHandler {
             return
         }
         const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
-        const [lowindex, highindex, size] = virtualListProps.range
+        const [lowindex, highindex] = virtualListProps.range
+        const { size } = virtualListProps
 
         let newlistrange
         if (size) {
@@ -386,7 +388,7 @@ export default class ServiceHandler {
 
         } else {
 
-            newlistrange = [prependCount - 1,0]
+            newlistrange = [-prependCount + 1,0]
 
         }
 
