@@ -245,7 +245,6 @@ export default class ServiceHandler {
         }
 
         contentHandler.updateVirtualListSize(newlistsize)
-
         cacheAPI.changeCacheListSize(newlistsize, 
 
             dListCallback,
@@ -262,55 +261,6 @@ export default class ServiceHandler {
 
         }
 
-    }
-
-    public appendIndexCount = (appendCount) => {
-        appendCount = +appendCount
-        const isInvalid = ((!isInteger(appendCount)) || (!compareValueMinValue(appendCount, 0)))
-        if (isInvalid) {
-            console.log('RIGS ERROR, appendIndexCount must be an integer >= 0')
-            return
-        }
-        const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
-        const [lowindex, highindex, size] = virtualListProps.range
-
-        let newlistrange
-        if (size) {
-
-            newlistrange = [lowindex,highindex + appendCount] 
-
-        } else {
-
-            newlistrange = [0,appendCount - 1]
-
-        }
-
-        this.setListRange(newlistrange)
-
-    }
-
-    public prependIndexCount = (prependCount) => {
-        prependCount = +prependCount
-        const isInvalid = ((!isInteger(prependCount)) || (!compareValueMinValue(prependCount, 0)))
-        if (isInvalid) {
-            console.log('RIGS ERROR, prependIndexCount must be an integer >= 0')
-            return
-        }
-        const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
-        const [lowindex, highindex, size] = virtualListProps.range
-
-        let newlistrange
-        if (size) {
-
-            newlistrange = [lowindex - prependCount,highindex]
-
-        } else {
-
-            newlistrange = [prependCount - 1,0]
-
-        }
-
-        this.setListRange(newlistrange)
     }
 
     public setListRange = (newlistrange) => {
@@ -374,7 +324,6 @@ export default class ServiceHandler {
         }
 
         contentHandler.updateVirtualListRange(newlistrange)
-
         cacheAPI.changeCacheListRange(newlistrange, 
 
             dListCallback,
@@ -393,6 +342,55 @@ export default class ServiceHandler {
 
         }
 
+    }
+
+    public appendIndexCount = (appendCount) => {
+        appendCount = +appendCount
+        const isInvalid = ((!isInteger(appendCount)) || (!compareValueMinValue(appendCount, 0)))
+        if (isInvalid) {
+            console.log('RIGS ERROR, appendIndexCount must be an integer >= 0')
+            return
+        }
+        const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const [lowindex, highindex, size] = virtualListProps.range
+
+        let newlistrange
+        if (size) {
+
+            newlistrange = [lowindex,highindex + appendCount] 
+
+        } else {
+
+            newlistrange = [0,appendCount - 1]
+
+        }
+
+        this.setListRange(newlistrange)
+
+    }
+
+    public prependIndexCount = (prependCount) => {
+        prependCount = +prependCount
+        const isInvalid = ((!isInteger(prependCount)) || (!compareValueMinValue(prependCount, 0)))
+        if (isInvalid) {
+            console.log('RIGS ERROR, prependIndexCount must be an integer >= 0')
+            return
+        }
+        const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const [lowindex, highindex, size] = virtualListProps.range
+
+        let newlistrange
+        if (size) {
+
+            newlistrange = [lowindex - prependCount,highindex]
+
+        } else {
+
+            newlistrange = [prependCount - 1,0]
+
+        }
+
+        this.setListRange(newlistrange)
     }
 
     // ======================[ GET SNAPSHOTS ]========================

@@ -346,8 +346,6 @@ const Cradle = ({
 
         let cradleRowcount = Math.min(listRowcount, calculatedCradleRowcount)
 
-        console.log('calculatedCradleRowcount, cradleRowcount',calculatedCradleRowcount, cradleRowcount)
-
         let runwayRowcount
         if (cradleRowcount == calculatedCradleRowcount) {
 
@@ -358,7 +356,6 @@ const Cradle = ({
             const diff = (calculatedCradleRowcount - cradleRowcount)
             runwayRowcount = runwaySize - Math.floor(diff/2)
             runwayRowcount = Math.max(0,runwayRowcount)
-            console.log('diff, runwayRowcount, runwaySize',diff, runwayRowcount, runwaySize)
 
         }
 
