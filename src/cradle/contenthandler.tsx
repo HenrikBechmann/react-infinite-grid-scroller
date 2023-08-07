@@ -347,12 +347,16 @@ export default class ContentHandler {
         cradleContentProps.size = newcontentlist.length
         if (cradleContentProps.size) {
 
+            const 
+                lowindex = newcontentlist[0].props.index,
+                highindex = lowindex + cradleContentProps.size - 1
+
             Object.assign(cradleContentProps,
             {
-                lowindex:newcontentlist[0].props.index,
-                highindex:cradleContentProps.lowindex + cradleContentProps.size - 1,
-                SOL:(virtualListProps.lowindex == cradleContentProps.lowindex),
-                EOL:(virtualListProps.highindex == cradleContentProps.highindex),
+                lowindex,
+                highindex,
+                SOL:(virtualListProps.lowindex == lowindex),
+                EOL:(virtualListProps.highindex == highindex),
             })
 
         } else {
@@ -669,12 +673,16 @@ export default class ContentHandler {
 
             if (cradleContentProps.size) {
 
+                const 
+                    lowindex = updatedContentList[0].props.index,
+                    highindex = lowindex + cradleContentProps.size - 1
+
                 Object.assign(cradleContentProps,
                 {
-                    lowindex:updatedContentList[0].props.index,
-                    highindex:cradleContentProps.lowindex + cradleContentProps.size - 1,
-                    SOL:(virtualListProps.lowindex == cradleContentProps.lowindex),
-                    EOL:(virtualListProps.highindex == cradleContentProps.highindex),
+                    lowindex,
+                    highindex,
+                    SOL:(virtualListProps.lowindex == lowindex),
+                    EOL:(virtualListProps.highindex == highindex),
                 })
 
             } else {
