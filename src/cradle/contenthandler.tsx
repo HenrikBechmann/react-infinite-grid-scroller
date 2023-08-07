@@ -347,24 +347,31 @@ export default class ContentHandler {
         cradleContentProps.size = newcontentlist.length
         if (cradleContentProps.size) {
 
-            cradleContentProps.lowindex = newcontentlist[0].props.index
-            cradleContentProps.highindex = cradleContentProps.lowindex + cradleContentProps.size - 1
-            cradleContentProps.SOL = (virtualListProps.lowindex == cradleContentProps.lowindex)
-            cradleContentProps.EOL = (virtualListProps.highindex == cradleContentProps.highindex)
+            Object.assign(cradleContentProps,
+            {
+                lowindex:newcontentlist[0].props.index,
+                highindex:cradleContentProps.lowindex + cradleContentProps.size - 1,
+                SOL:(virtualListProps.lowindex == cradleContentProps.lowindex),
+                EOL:(virtualListProps.highindex == cradleContentProps.highindex),
+            })
 
         } else {
 
-            cradleContentProps.lowindex = null
-            cradleContentProps.highindex = null
-            cradleContentProps.SOL = true // TODO harmonize across app
-            cradleContentProps.EOL = true
+            Object.assign(cradleContentProps,
+            {
+                lowindex:undefined,
+                highindex:undefined,
+                SOL:undefined,
+                EOL:undefined,
+            })
 
         }
 
         // set or cancel first row offset if within cradle
         let gridstart
-
-        if (cradleContentProps.SOL && virtualListProps.baserowblanks) {
+        if (cradleContentProps.SOL === true && 
+            !(virtualListProps.baserowblanks === undefined || 
+            virtualListProps.baserowblanks === 0)) {
             gridstart = `${virtualListProps.baserowblanks + 1}`
         } else {
             gridstart = 'unset'
@@ -659,24 +666,33 @@ export default class ContentHandler {
             })
 
             cradleContentProps.size = updatedContentList.length
+
             if (cradleContentProps.size) {
 
-                cradleContentProps.lowindex = updatedContentList[0].props.index
-                cradleContentProps.highindex = cradleContentProps.lowindex + cradleContentProps.size - 1
-                cradleContentProps.SOL = (virtualListProps.lowindex == cradleContentProps.lowindex)
-                cradleContentProps.EOL = (virtualListProps.highindex == cradleContentProps.highindex)
+                Object.assign(cradleContentProps,
+                {
+                    lowindex:updatedContentList[0].props.index,
+                    highindex:cradleContentProps.lowindex + cradleContentProps.size - 1,
+                    SOL:(virtualListProps.lowindex == cradleContentProps.lowindex),
+                    EOL:(virtualListProps.highindex == cradleContentProps.highindex),
+                })
 
             } else {
 
-                cradleContentProps.lowindex = null
-                cradleContentProps.highindex = null
-                cradleContentProps.SOL = true
-                cradleContentProps.EOL = true
+                Object.assign(cradleContentProps,
+                {
+                    lowindex:undefined,
+                    highindex:undefined,
+                    SOL:undefined,
+                    EOL:undefined,
+                })
 
             }
 
             let gridstart
-            if (cradleContentProps.SOL && virtualListProps.baserowblanks) {
+            if (cradleContentProps.SOL === true && 
+                !(virtualListProps.baserowblanks === undefined || 
+                virtualListProps.baserowblanks === 0)) {
                 gridstart = `${virtualListProps.baserowblanks + 1}`
             } else {
                 gridstart = 'unset'

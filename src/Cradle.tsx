@@ -428,9 +428,13 @@ const Cradle = ({
      })
 
      const cradleContentProps = cradleContentPropsRef.current
-     cradleContentProps.cradleRowcount = cradleRowcount
-     cradleContentProps.viewportRowcount = viewportRowcount
-     cradleContentProps.runwayRowcount = runwayRowcount
+     Object.assign(cradleContentProps, 
+         {
+             cradleRowcount:cradleRowcount,
+             viewportRowcount:viewportRowcount,
+             runwayRowcount:runwayRowcount,
+         }
+     )
 
     // ----------------------[ callbacks ]----------------------------
 
