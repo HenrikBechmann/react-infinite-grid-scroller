@@ -130,7 +130,7 @@ const Cradle = ({
 
         size:listsize,
         lowindex, 
-        highindex 
+        highindex,
 
     } = virtualListSpecs
 
@@ -258,6 +258,9 @@ const Cradle = ({
 
     const [ baserowblanks, endrowblanks ] = useMemo(()=> {
 
+        if (listsize == 0) {
+            return [undefined, undefined]
+        }
         // add position adjustment for 0
         const endadjustment =
             (highindex < 0)?
@@ -285,7 +288,7 @@ const Cradle = ({
 
         return [baserowblanks, endrowblanks]
 
-    },[crosscount, lowindex, highindex])
+    },[crosscount, listsize, lowindex, highindex])
 
 
     // various row counts
@@ -334,22 +337,28 @@ const Cradle = ({
 
         const viewportRowcount = Math.ceil(viewportLength/baseRowLength)
 
-        const listRowcount = Math.ceil((listsize + baserowblanks + endrowblanks)/crosscount)
+        const listRowcount = 
+            listsize == 0?
+            0:
+            Math.ceil((listsize + baserowblanks + endrowblanks)/crosscount)
 
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
 
         let cradleRowcount = Math.min(listRowcount, calculatedCradleRowcount)
 
+        console.log('calculatedCradleRowcount, cradleRowcount',calculatedCradleRowcount, cradleRowcount)
+
         let runwayRowcount
-        if (calculatedCradleRowcount >= cradleRowcount) {
+        if (cradleRowcount == calculatedCradleRowcount) {
 
             runwayRowcount = runwaySize
 
-        } else {
+        } else { // cradleRowcount is less than calculatedCradleRowCount
 
-            const diff = (cradleRowcount - calculatedCradleRowcount)
-            runwayRowcount -= Math.floor(diff/2)
+            const diff = (calculatedCradleRowcount - cradleRowcount)
+            runwayRowcount = runwaySize - Math.floor(diff/2)
             runwayRowcount = Math.max(0,runwayRowcount)
+            console.log('diff, runwayRowcount, runwaySize',diff, runwayRowcount, runwaySize)
 
         }
 
@@ -389,9 +398,11 @@ const Cradle = ({
 
     const rangerowshift = useMemo(() => {
 
-        return Math.floor(lowindex/crosscount)
+        return listsize == 0?
+            undefined:
+            Math.floor(lowindex/crosscount)
 
-    },[crosscount,lowindex])
+    },[crosscount,lowindex, listsize])
 
     const virtualListProps = 
         {
@@ -409,10 +420,10 @@ const Cradle = ({
         cradleRowcount,
         viewportRowcount,
         runwayRowcount,
-        SOL:false, // start of list
-        EOL:false, // end of list
-        lowindex:null,
-        highindex:null,
+        SOL:undefined, // start of list
+        EOL:undefined, // end of list
+        lowindex:undefined,
+        highindex:undefined,
         size:0,
      })
 
@@ -470,7 +481,7 @@ const Cradle = ({
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         virtualListProps,
         cradleContentProps,
-        runwayRowcount,
+        // runwayRowcount,
         cache,
         cacheMax,
         startingIndex,
