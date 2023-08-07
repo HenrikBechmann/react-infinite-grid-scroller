@@ -481,11 +481,9 @@ const Cradle = ({
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         virtualListProps,
         cradleContentProps,
-        // runwayRowcount,
         cache,
         cacheMax,
         startingIndex,
-        // crosscount,
         scrollerID,
     }
 

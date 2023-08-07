@@ -75,6 +75,15 @@ export default class ContentHandler {
     // - called only from the Cradle state handler
     public updateVirtualListSize = (newlistsize) => {
 
+        const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
+
+        const { 
+
+            cradleContentProps,
+            setVirtualListSize,
+
+        } = cradleInternalProperties
+
         if (newlistsize == 0) {
 
             const cradleContent = this.content        
@@ -82,10 +91,19 @@ export default class ContentHandler {
             this.clearCradle()
             cradleContent.headDisplayComponents = []
             cradleContent.tailDisplayComponents = []
+            Object.assign(cradleContentProps, 
+                {
+                    SOL:undefined, 
+                    EOL:undefined,
+                    highindex:undefined, 
+                    lowindex:undefined, 
+                    size:0 
+                }
+            )
 
         }
 
-        this.cradleParameters.cradleInternalPropertiesRef.current.setVirtualListSize(newlistsize)
+        setVirtualListSize(newlistsize)
 
     }
 
@@ -111,6 +129,7 @@ export default class ContentHandler {
 
                 setVirtualListRange,
                 virtualListProps,
+                cradleContentProps,
 
             } = this.cradleParameters.cradleInternalPropertiesRef.current
 
@@ -141,6 +160,15 @@ export default class ContentHandler {
             this.clearCradle()
             cradleContent.headDisplayComponents = []
             cradleContent.tailDisplayComponents = []
+            Object.assign(cradleContentProps, 
+                {
+                    SOL:undefined, 
+                    EOL:undefined,
+                    highindex:undefined, 
+                    lowindex:undefined, 
+                    size:0 
+                }
+            )
 
         }
 
