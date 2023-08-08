@@ -133,16 +133,16 @@ export default class ContentHandler {
                 virtualListProps,
                 cradleContentProps,
 
-            } = this.cradleParameters.cradleInternalPropertiesRef.current
+            } = this.cradleParameters.cradleInternalPropertiesRef.current,
 
-        let newlistsize
-        if (newlistrange.length == 0) {
-
-            const { 
+            { 
             
                 cradlePositionData,
 
-            } = layoutHandler,
+            } = layoutHandler
+
+        let newlistsize
+        if (newlistrange.length == 0) {
 
             newlistsize = 0
             cradlePositionData.targetAxisReferencePosition = 0
@@ -150,13 +150,17 @@ export default class ContentHandler {
 
         } else {
 
-            const [previouslowindex] = virtualListProps.range
-
             const [newlowindex, newhighindex] = newlistrange
 
-            // const lowindexchange = newlowindex - previouslowindex
+            if (virtualListProps.range.length) {
 
-            // cradlePositionData.targetAxisReferencePosition -= lowindexchange
+                const {lowindex:previouslowindex} = virtualListProps
+
+                const lowindexchange = newlowindex - previouslowindex
+
+                cradlePositionData.targetAxisReferencePosition -= lowindexchange
+
+            }
 
             newlistsize = newhighindex - newlowindex + 1
 

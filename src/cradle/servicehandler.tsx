@@ -344,6 +344,31 @@ export default class ServiceHandler {
 
     }
 
+    public prependIndexCount = (prependCount) => {
+        prependCount = +prependCount
+        const isInvalid = ((!isInteger(prependCount)) || (!compareValueMinValue(prependCount, 0)))
+        if (isInvalid) {
+            console.log('RIGS ERROR, prependIndexCount must be an integer >= 0')
+            return
+        }
+        const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const [lowindex, highindex] = virtualListProps.range
+        const { size } = virtualListProps
+
+        let newlistrange
+        if (size) {
+
+            newlistrange = [lowindex - prependCount,highindex]
+
+        } else {
+
+            newlistrange = [-prependCount + 1,0]
+
+        }
+
+        this.setListRange(newlistrange)
+    }
+
     public appendIndexCount = (appendCount) => {
         appendCount = +appendCount
         const isInvalid = ((!isInteger(appendCount)) || (!compareValueMinValue(appendCount, 0)))
@@ -368,31 +393,6 @@ export default class ServiceHandler {
 
         this.setListRange(newlistrange)
 
-    }
-
-    public prependIndexCount = (prependCount) => {
-        prependCount = +prependCount
-        const isInvalid = ((!isInteger(prependCount)) || (!compareValueMinValue(prependCount, 0)))
-        if (isInvalid) {
-            console.log('RIGS ERROR, prependIndexCount must be an integer >= 0')
-            return
-        }
-        const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
-        const [lowindex, highindex] = virtualListProps.range
-        const { size } = virtualListProps
-
-        let newlistrange
-        if (size) {
-
-            newlistrange = [lowindex - prependCount,highindex]
-
-        } else {
-
-            newlistrange = [-prependCount + 1,0]
-
-        }
-
-        this.setListRange(newlistrange)
     }
 
     // ======================[ GET SNAPSHOTS ]========================
