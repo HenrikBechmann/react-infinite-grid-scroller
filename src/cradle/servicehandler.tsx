@@ -987,7 +987,9 @@ export default class ServiceHandler {
             } = cradleContentProps
 
         // basic assertions
-        index = Math.max(listlowindex,index)
+        if (listsize) index = Math.max(listlowindex,index)
+
+        if (!rangehighindex) rangehighindex = index
         rangehighindex = Math.max(rangehighindex, index)
 
         // ------------------- process cache ----------------
@@ -996,6 +998,8 @@ export default class ServiceHandler {
             
             if (increment > 0) {
 
+                console.log('rangehighindex, index',rangehighindex, index)
+
                 return this.setListSize(rangehighindex - index + 1)
 
             }
@@ -1003,7 +1007,7 @@ export default class ServiceHandler {
         }
 
         const [startChangeIndex, rangeincrement, shiftedList, removedList, replaceList, portalPartitionItemsForDeleteList] = 
-            cacheAPI.insertRemoveIndex(index, rangehighindex, increment, listsize) //, cradleIndexSpan)
+            cacheAPI.insertRemoveIndex(index, rangehighindex, increment, listsize)
 
         if (rangeincrement === null) return [[],[],[]] // no action
 

@@ -919,8 +919,6 @@ export default class CacheAPI {
                 lowrangeindex -= diff
                 highrangeindex -= diff
 
-                // return emptyreturn
-
             }
 
         }
