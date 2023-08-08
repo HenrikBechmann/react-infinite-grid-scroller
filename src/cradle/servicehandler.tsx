@@ -57,7 +57,7 @@ const isInteger = (value:any) => {
 
 }
 
-const compareValueMinValue = (compareValue:any, minValue:any) => {
+const isValueGreaterThanOrEqualToMinValue = (compareValue:any, minValue:any) => {
 
     if (!isInteger(compareValue) || !isInteger(minValue)) return false
 
@@ -68,7 +68,7 @@ const compareValueMinValue = (compareValue:any, minValue:any) => {
 
 }
 
-const compareValueMaxValue = (compareValue:any, maxValue:any) => {
+const isValueLessThanToOrEqualToMaxValue = (compareValue:any, maxValue:any) => {
 
     if (!isInteger(compareValue) || !isInteger(maxValue)) return false
 
@@ -161,7 +161,7 @@ export default class ServiceHandler {
 
         if (!size) return
 
-        const isInvalid = (!isInteger(index) || !compareValueMinValue(index, lowindex))
+        const isInvalid = (!isInteger(index) || !isValueGreaterThanOrEqualToMinValue(index, lowindex))
 
         index = +index
 
@@ -205,7 +205,7 @@ export default class ServiceHandler {
 
         newlistsize = +newlistsize
 
-        const isInvalid = (!isInteger(newlistsize) || !compareValueMinValue(newlistsize, 0))
+        const isInvalid = (!isInteger(newlistsize) || !isValueGreaterThanOrEqualToMinValue(newlistsize, 0))
 
         if (isInvalid) {
 
@@ -278,7 +278,7 @@ export default class ServiceHandler {
                 lowindex = +lowindex
                 highindex = +highindex
 
-                isInvalid = ((!isInteger(lowindex)) || (!isInteger(highindex)) || (!compareValueMinValue(highindex, lowindex)))
+                isInvalid = ((!isInteger(lowindex)) || (!isInteger(highindex)) || (!isValueGreaterThanOrEqualToMinValue(highindex, lowindex)))
 
                 if (!isInvalid) newlistrange = [lowindex,highindex]
 
@@ -346,7 +346,7 @@ export default class ServiceHandler {
 
     public prependIndexCount = (prependCount) => {
         prependCount = +prependCount
-        const isInvalid = ((!isInteger(prependCount)) || (!compareValueMinValue(prependCount, 0)))
+        const isInvalid = ((!isInteger(prependCount)) || (!isValueGreaterThanOrEqualToMinValue(prependCount, 0)))
         if (isInvalid) {
             console.log('RIGS ERROR, prependIndexCount must be an integer >= 0')
             return
@@ -371,7 +371,7 @@ export default class ServiceHandler {
 
     public appendIndexCount = (appendCount) => {
         appendCount = +appendCount
-        const isInvalid = ((!isInteger(appendCount)) || (!compareValueMinValue(appendCount, 0)))
+        const isInvalid = ((!isInteger(appendCount)) || (!isValueGreaterThanOrEqualToMinValue(appendCount, 0)))
         if (isInvalid) {
             console.log('RIGS ERROR, appendIndexCount must be an integer >= 0')
             return
@@ -766,13 +766,13 @@ export default class ServiceHandler {
 
         // ------------ confirm validity of arguments -------------
 
-        const isToindexInvalid = (!isInteger(tolowindex) || !compareValueMinValue(tolowindex, listlowindex))
-        const isFromindexInvalid = (!isInteger(fromlowindex) || !compareValueMinValue(fromlowindex, listlowindex))
+        const isToindexInvalid = (!isInteger(tolowindex) || !isValueGreaterThanOrEqualToMinValue(tolowindex, listlowindex))
+        const isFromindexInvalid = (!isInteger(fromlowindex) || !isValueGreaterThanOrEqualToMinValue(fromlowindex, listlowindex))
         let isHighrangeInvalid = false
 
         if ((!isFromindexInvalid)) {
             if (!isBlank(fromhighindex)) {
-                isHighrangeInvalid = !compareValueMinValue(fromhighindex, fromlowindex)
+                isHighrangeInvalid = !isValueGreaterThanOrEqualToMinValue(fromhighindex, fromlowindex)
             } else {
                 fromhighindex = fromlowindex
             }
@@ -870,7 +870,7 @@ export default class ServiceHandler {
         if (!isIndexInvalid) {
 
             if (size) {
-                isIndexInvalid = !compareValueMinValue(index, listlowindex)
+                isIndexInvalid = !isValueGreaterThanOrEqualToMinValue(index, listlowindex)
             } else {
                 isIndexInvalid = (index !=0)
             }
@@ -881,7 +881,7 @@ export default class ServiceHandler {
 
         if ((!isIndexInvalid)) {
             if (!isBlank(rangehighindex)) {
-                isHighrangeInvalid = !compareValueMinValue(rangehighindex, index)
+                isHighrangeInvalid = !isValueGreaterThanOrEqualToMinValue(rangehighindex, index)
             } else {
                 rangehighindex = index
             }
@@ -916,12 +916,12 @@ export default class ServiceHandler {
 
         if (!size) return
 
-        const isIndexInvalid = (!isInteger(index) || !compareValueMinValue(index, listlowindex))
+        const isIndexInvalid = (!isInteger(index) || !isValueGreaterThanOrEqualToMinValue(index, listlowindex))
         let isHighrangeInvalid = false
 
         if ((!isIndexInvalid)) {
             if (!isBlank(rangehighindex)) {
-                isHighrangeInvalid = !compareValueMinValue(rangehighindex, index)
+                isHighrangeInvalid = !isValueGreaterThanOrEqualToMinValue(rangehighindex, index)
             } else {
                 rangehighindex = index
             }
