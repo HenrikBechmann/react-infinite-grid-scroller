@@ -37,7 +37,7 @@ const Scrollblock = ({
 
     const ViewportContextProperties = useContext(ViewportContext)
 
-    const [blockState,saveBlockState] = useState('setup') // to trigger render
+    const [blockState,setBlockState] = useState('setup') // to trigger render
 
     // -----------------------------------[ data heap ]-------------------------
 
@@ -91,7 +91,7 @@ const Scrollblock = ({
                 cellHeight,
                 padding
             )
-        saveBlockState('updated')
+        setBlockState('update')
 
     },[
         orientation,
@@ -118,8 +118,8 @@ const Scrollblock = ({
 
         switch (blockState) {
             case 'setup':
-            case 'updated': {
-                saveBlockState('ready')
+            case 'update': {
+                setBlockState('ready')
             }
         }
 
