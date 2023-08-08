@@ -913,8 +913,8 @@ const Cradle = ({
         setCradleState('reconfigureforlistrange')
 
     },[
-        virtualListProps.lowindex,
-        virtualListProps.highindex,
+        lowindex,
+        highindex,
     ])
 
     // a new getItem function implies the need to reload
@@ -1150,7 +1150,7 @@ const Cradle = ({
 
                     const {lowindex, size:listsize } = cradleInternalPropertiesRef.current.virtualListProps
 
-                    ViewportContextPropertiesRef.current.scrollTrackerAPIRef.current.beginReposition(
+                    ViewportContextPropertiesRef.current.scrollTrackerAPIRef.current.startReposition(
                         layoutHandler.cradlePositionData.targetAxisReferencePosition, 
                         lowindex, listsize
                     )

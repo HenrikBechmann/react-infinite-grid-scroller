@@ -38,7 +38,7 @@ const ScrollTracker = ({ scrollTrackerAPIRef, styles }) => {
 
         scrollTrackerAPIRef.current = {
 
-            beginReposition,
+            startReposition,
             updateReposition,
             finishReposition,
 
@@ -46,7 +46,7 @@ const ScrollTracker = ({ scrollTrackerAPIRef, styles }) => {
 
     },[])
 
-    const beginReposition = useCallback((position, lowindex, listsize)=> {
+    const startReposition = useCallback((position, lowindex, listsize)=> {
 
         setIndex(position + lowindex)
         lowindexRef.current = lowindex
