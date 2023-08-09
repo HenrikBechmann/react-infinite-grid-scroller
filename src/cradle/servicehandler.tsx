@@ -872,7 +872,7 @@ export default class ServiceHandler {
             if (size) {
                 isIndexInvalid = !isValueGreaterThanOrEqualToMinValue(index, listlowindex)
             } else {
-                isIndexInvalid = (index !=0)
+                isIndexInvalid = false
             }
 
         }
@@ -989,8 +989,8 @@ export default class ServiceHandler {
         // basic assertions
         if (listsize) index = Math.max(listlowindex,index)
 
-        if (!rangehighindex) rangehighindex = index
-        rangehighindex = Math.max(rangehighindex, index)
+        // if (!rangehighindex) rangehighindex = index
+        // rangehighindex = Math.max(rangehighindex, index)
 
         // ------------------- process cache ----------------
 
@@ -998,12 +998,20 @@ export default class ServiceHandler {
             
             if (increment > 0) {
 
-                console.log('rangehighindex, index',rangehighindex, index)
+                this.setListRange([index,rangehighindex])
 
-                return this.setListSize(rangehighindex - index + 1)
+                const replaceList = []
 
+                for (let i = index; i<=rangehighindex; i++) {
+                    replaceList.push(i)
+                }
+
+                return [[],replaceList,[]]
+
+            } else {
+    
+                return [[],[],[]]
             }
-            return [[],[],[]]
         }
 
         const [startChangeIndex, rangeincrement, shiftedList, removedList, replaceList, portalPartitionItemsForDeleteList] = 
