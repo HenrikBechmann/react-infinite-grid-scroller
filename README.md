@@ -273,14 +273,14 @@ the scrollerProperties object contains three properties:
 
 ~~~typescript
 {
-  cellFrameDataRef,
+  cellFramePropertiesRef,
   scrollerPropertiesRef
 }
 ~~~
 
 Each of these is a _reference_ object, with values found in `propertyRef.current`.
 
-The `cellFrameDataRef.current` object contains two properties:
+The `cellFramePropertiesRef.current` object contains two properties:
 
 ~~~typescript
 {
