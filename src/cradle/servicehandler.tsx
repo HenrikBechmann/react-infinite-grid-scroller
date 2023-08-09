@@ -234,7 +234,7 @@ export default class ServiceHandler {
             { 
 
                 deleteListCallback, 
-                changeListSizeCallback 
+                // changeListSizeCallback 
 
             } = this.callbacks,
 
@@ -255,8 +255,8 @@ export default class ServiceHandler {
         contentHandler.updateVirtualListSize(newlistsize)
         cacheAPI.changeCacheListSize(newlistsize, 
 
-            dListCallback,
-            changeListSizeCallback
+            dListCallback //,
+            // changeListSizeCallback
 
         )
 
@@ -313,7 +313,7 @@ export default class ServiceHandler {
             { 
 
                 deleteListCallback, 
-                changeListSizeCallback 
+                // changeListSizeCallback 
 
             } = this.callbacks,
 
@@ -334,8 +334,8 @@ export default class ServiceHandler {
         contentHandler.updateVirtualListRange(newlistrange)
         cacheAPI.changeCacheListRange(newlistrange, 
 
-            dListCallback,
-            changeListSizeCallback
+            dListCallback //,
+            // changeListSizeCallback
 
         )
 

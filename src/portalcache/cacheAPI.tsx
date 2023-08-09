@@ -161,11 +161,11 @@ export default class CacheAPI {
             clearCache:() => {
                 return this.clearCache(scrollerID)
             },
-            changeCacheListSize:(newlistsize, deleteListCallback, changeListSizeCallback) => {
-                return this.changeCacheListSize(scrollerID, newlistsize, deleteListCallback, changeListSizeCallback)
+            changeCacheListSize:(newlistsize, deleteListCallback) => { //, changeListSizeCallback) => {
+                return this.changeCacheListSize(scrollerID, newlistsize, deleteListCallback) //, changeListSizeCallback)
             },
-            changeCacheListRange:(newlistrange, deleteListCallback, changeListRangeCallback) => {
-                return this.changeCacheListRange(scrollerID, newlistrange, deleteListCallback, changeListRangeCallback)
+            changeCacheListRange:(newlistrange, deleteListCallback) => { //, changeListRangeCallback) => {
+                return this.changeCacheListRange(scrollerID, newlistrange, deleteListCallback) //, changeListRangeCallback)
             },
             matchCacheToCradle:(cradleIndexList, deleteListCallback) => {
                 return this.matchCacheToCradle(scrollerID, cradleIndexList, deleteListCallback)
@@ -434,7 +434,7 @@ export default class CacheAPI {
     // ----------------------------[ basic operations ]--------------------------
 
     // called from Cradle.nullItemSetMaxListsize, and serviceHandler.setListSize
-    private changeCacheListSize = (scrollerID, newlistsize, deleteListCallback, changeListSizeCallback) => {
+    private changeCacheListSize = (scrollerID, newlistsize, deleteListCallback) => { //, changeListSizeCallback) => {
 
         if (newlistsize.length == 0) {
             this.clearCache(scrollerID) 
@@ -466,11 +466,11 @@ export default class CacheAPI {
 
         }
 
-        changeListSizeCallback && changeListSizeCallback(newlistsize)
+        // changeListSizeCallback && changeListSizeCallback(newlistsize)
 
     }
 
-    private changeCacheListRange = (scrollerID, newlistrange, deleteListCallback, changeListRangeCallback) => {
+    private changeCacheListRange = (scrollerID, newlistrange, deleteListCallback) => { //, changeListRangeCallback) => {
 
 
         if (newlistrange.length == 0) {
@@ -515,7 +515,7 @@ export default class CacheAPI {
 
         }
 
-        changeListRangeCallback && changeListRangeCallback(newlistrange)
+        // changeListRangeCallback && changeListRangeCallback(newlistrange)
 
     }
     // ----------------------[ cache size limit enforceent ]------------------
@@ -623,7 +623,7 @@ export default class CacheAPI {
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
 
         const { getItem, cacheMax } = cradleInheritedProperties,
-            listsize = cradleInternalProperties.virtualListProperties.size
+            {size:listsize, lowindex, highindex} = cradleInternalProperties.virtualListProps
 
         const promises = []
 
@@ -651,7 +651,7 @@ export default class CacheAPI {
 
             const { preloadIndexCallback, itemExceptionCallback } = serviceHandler.callbacks
 
-            for (let index = 0; index < preloadsize; index++) {
+            for (let index = lowindex; index <= highindex; index++) {
 
                 preloadIndexCallback && preloadIndexCallback(index)
                 if (!indexToItemIDMap.has(index)) {
@@ -1254,6 +1254,7 @@ export default class CacheAPI {
             let content 
             const scrollerProperties = {
                 scrollerPropertiesRef,
+                cellFramePropertiesRef:{current:undefined}
             }
             if (usercontent.props.hasOwnProperty('scrollerProperties')) {
                 content = React.cloneElement(usercontent, {scrollerProperties})
