@@ -161,7 +161,15 @@ export default class ServiceHandler {
 
         if (!size) return
 
-        const isInvalid = (!isInteger(index) || !isValueGreaterThanOrEqualToMinValue(index, lowindex))
+        const isInvalid = (!isInteger(index)) //|| 
+
+        if (!isInvalid) {
+
+            if (!isValueGreaterThanOrEqualToMinValue(index, lowindex)) {
+                index = lowindex
+            }
+
+        }
 
         index = +index
 
