@@ -161,11 +161,11 @@ export default class CacheAPI {
             clearCache:() => {
                 return this.clearCache(scrollerID)
             },
-            changeCacheListSize:(newlistsize, deleteListCallback) => { //, changeListSizeCallback) => {
-                return this.changeCacheListSize(scrollerID, newlistsize, deleteListCallback) //, changeListSizeCallback)
+            changeCacheListSize:(newlistsize, deleteListCallback) => {
+                return this.changeCacheListSize(scrollerID, newlistsize, deleteListCallback) 
             },
-            changeCacheListRange:(newlistrange, deleteListCallback) => { //, changeListRangeCallback) => {
-                return this.changeCacheListRange(scrollerID, newlistrange, deleteListCallback) //, changeListRangeCallback)
+            changeCacheListRange:(newlistrange, deleteListCallback) => { 
+                return this.changeCacheListRange(scrollerID, newlistrange, deleteListCallback)
             },
             matchCacheToCradle:(cradleIndexList, deleteListCallback) => {
                 return this.matchCacheToCradle(scrollerID, cradleIndexList, deleteListCallback)
@@ -434,7 +434,7 @@ export default class CacheAPI {
     // ----------------------------[ basic operations ]--------------------------
 
     // called from Cradle.nullItemSetMaxListsize, and serviceHandler.setListSize
-    private changeCacheListSize = (scrollerID, newlistsize, deleteListCallback) => { //, changeListSizeCallback) => {
+    private changeCacheListSize = (scrollerID, newlistsize, deleteListCallback) => {
 
         if (newlistsize.length == 0) {
             this.clearCache(scrollerID) 
@@ -466,11 +466,9 @@ export default class CacheAPI {
 
         }
 
-        // changeListSizeCallback && changeListSizeCallback(newlistsize)
-
     }
 
-    private changeCacheListRange = (scrollerID, newlistrange, deleteListCallback) => { //, changeListRangeCallback) => {
+    private changeCacheListRange = (scrollerID, newlistrange, deleteListCallback) => { 
 
 
         if (newlistrange.length == 0) {
@@ -514,8 +512,6 @@ export default class CacheAPI {
             this.deletePortalByIndex(scrollerID, parelist, deleteListCallback)
 
         }
-
-        // changeListRangeCallback && changeListRangeCallback(newlistrange)
 
     }
     // ----------------------[ cache size limit enforceent ]------------------
