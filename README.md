@@ -280,7 +280,7 @@ the scrollerProperties object contains three properties:
 
 Each of these is a _reference_ object, with values found in `propertyRef.current`.
 
-The `cellFramePropertiesRef.current` object contains two properties:
+The `cellFramePropertiesRef.current` object is instantiated only when a component is instantiated in the cradle. It contains two properties:
 
 ~~~typescript
 {
