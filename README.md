@@ -91,7 +91,7 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 |cellHeight:integer| number of pixels for cell height|required. Applied to `height` for 'uniform' layout, 'vertical' orientation. Applied to `max-height` for 'variable' layout, 'vertical' orientation. Approximate, used for `fr` (fractional allocation) for 'horizontal' orientation |
 |cellWidth:integer| number of pixels for cell width|required. Applied to `width` for 'uniform' layout, 'horizontal' orientation. Applied to `max-width` for 'variable' layout, 'horizontal' orientation. Approximate, used for `fr` (fractional allocation) for 'vertical' orientation|
 |startingListSize:integer| the starting number of items in the virtual list|required. Can be modified at runtime. Constitutes a 0-based virtual array (Internally creates a starting range of [0,startingListSize - 1]. Ignored in the presence of `startingListRange` array|
-|startingListRange:[lowindex, highindex] \|\| []|two part array , or empty array []|lowindex must be <= highindex; both can be positive or negative integers. [] (empty array) creates an empty virtual list|
+|startingListRange:[lowindex, highindex] \| []|two part array , or empty array []|lowindex must be <= highindex; both can be positive or negative integers. [] (empty array) creates an empty virtual list|
 |getItem:Function|host-provided function. Parameters: `index` (integer, 0 based), and session `itemID` (integer) for tracking and matching. Arguments provided by system|required. Must return a React component or promise of a component (`React.isValidElement`), or `undefined` = unavailable, or `null` = end-of-list|
 |[_**SCROLLER OPTIONS**_]|
 |orientation:string| 'vertical' (default) or 'horizontal'|direction of scroll|
@@ -203,7 +203,7 @@ scrollerFunctionsRef.current.scrollToIndex(targetIndex)
 ~~~
 Details about the callbacks:
 
-|callback|parameters:datatypes|notes|
+|callback function|parameters:datatypes|notes|
 |---|---|---|
 |[_**GET FUNCTIONS**_]|
 |functionsCallback|functions: object|the object returned contains `Cradle` functions that the host can call directly. This is the API. `functionsCallback` is called once at startup. See below for details|
