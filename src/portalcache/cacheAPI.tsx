@@ -1250,7 +1250,7 @@ export default class CacheAPI {
             let content 
             const scrollerProperties = {
                 scrollerPropertiesRef,
-                cellFramePropertiesRef:{current:undefined}
+                cellFramePropertiesRef:{current:{index,itemID}}
             }
             if (usercontent.props.hasOwnProperty('scrollerProperties')) {
                 content = React.cloneElement(usercontent, {scrollerProperties})
