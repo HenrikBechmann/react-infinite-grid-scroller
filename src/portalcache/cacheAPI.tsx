@@ -73,8 +73,8 @@ export default class CacheAPI {
 
     private CACHE_PARTITION_SIZE
 
-    // private measureMemory(source) {
-    //   console.log('usedJSHeapSize',source, performance['memory']['usedJSHeapSize'])
+    // public measureMemory(source, scrollerID) {
+    //   console.log('usedJSHeapSize','-'+scrollerID+'-',source, performance['memory']['usedJSHeapSize'])
     // }
 
     // ===========================[ Scroller Registration & Maintenance ]===============================
@@ -93,7 +93,7 @@ export default class CacheAPI {
             }
         )
 
-        // this.measureMemory('REGISTER')
+        // this.measureMemory('REGISTER', scrollerID)
 
         return this.getFacade(scrollerID)
 
@@ -103,6 +103,9 @@ export default class CacheAPI {
     private getFacade = (scrollerID) => {
         const facade = {
 
+            // measureMemory:(source) => {
+            //     this.measureMemory(source, scrollerID)
+            // },
             // get and set data
             get indexToItemIDMap() {
                 return this.getIndexToItemIDMap()
@@ -239,7 +242,7 @@ export default class CacheAPI {
             itemMetadataMap.delete(itemID)
         })
         this.renderPortalLists()
-        // this.measureMemory('UNREGISTER')
+        // this.measureMemory('UNREGISTER', scrollerID)
 
     }
 

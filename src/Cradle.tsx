@@ -195,7 +195,7 @@ const Cradle = ({
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) { // root scroller
-        // console.log('--> cradleState, orientation','-'+scrollerID+'-', cradleState, orientation)
+        console.log('--> cradleState','-'+scrollerID+'-', cradleState)
         // console.log('-- index','~'+scrollerProperties?.cellFramePropertiesRef.current.index+'~')
         // console.log('-- itemID','+'+scrollerProperties?.cellFramePropertiesRef.current.itemID+'+')
     // }
@@ -949,17 +949,21 @@ const Cradle = ({
 
         }
 
+        interruptHandler.pauseInterrupts()
+        // interruptHandler.triggerlinesIntersect.disconnect()
+        
         if (isCachedRef.current) {
-            interruptHandler.pauseInterrupts() // suppress triggerline callbacks; will render for first render from cache
+            // cacheAPI.measureMemory('pivot cached')
+            // interruptHandler.pauseInterrupts() // suppress triggerline callbacks; will render for first render from cache
             hasBeenRenderedRef.current = false
             return
         }
 
+        // cacheAPI.measureMemory('pivot')
+
         const { layout, gap } = cradleInheritedPropertiesRef.current
         const { cradlePositionData } = layoutHandler
 
-        interruptHandler.pauseInterrupts()
-        
         if (layout == 'uniform') {
 
             const { 
@@ -1193,6 +1197,9 @@ const Cradle = ({
 
                 if (!isMountedRef.current) return // possible async latency with nested scrollers
 
+                interruptHandler.triggerlinesIntersect.disconnect()
+                interruptHandler.cradleIntersect.disconnect()
+
                 if (isCachedRef.current) {
                     setCradleState('cached')
                     break
@@ -1205,8 +1212,8 @@ const Cradle = ({
 
                 const { layout } = cradleInheritedPropertiesRef.current
 
-                interruptHandler.triggerlinesIntersect.disconnect()
-                interruptHandler.cradleIntersect.disconnect()
+                // interruptHandler.triggerlinesIntersect.disconnect()
+                // interruptHandler.cradleIntersect.disconnect()
 
                 if (layout == 'variable') { // restore base config to scrollblock
 
@@ -1301,10 +1308,10 @@ const Cradle = ({
 
             }
 
-            // ----------------------[ followup from updateCradleContent ]------------
+            // ----------------------[ followup from axisTriggerlinesObserverCallback ]------------
             // scroll effects
 
-            // renderupdatedcontent is called from updateCradleContent. 
+            // renderupdatedcontent is called from interruptHandler.axisTriggerlinesObserverCallback. 
             // it is required to integrate changed DOM configurations before 'ready' is displayed
             case 'renderupdatedcontent': { // cycle for DOM update
 
@@ -1325,6 +1332,8 @@ const Cradle = ({
                     contentHandler.guardAgainstRunawayCaching()
 
                 }
+
+                // cacheAPI.measureMemory('finish update')
 
                 const { layout } = cradleInheritedPropertiesRef.current
                 if (layout == 'uniform') {
