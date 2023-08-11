@@ -121,11 +121,6 @@ const Cradle = ({
 
     }) => {
 
-
-    useEffect(()=>{
-
-    },[])
-
     const { 
 
         size:listsize,
@@ -910,6 +905,8 @@ const Cradle = ({
         if (cradleStateRef.current == 'setup') return
 
         if (isCachedRef.current) return // TODO: ??
+
+        interruptHandler.pauseInterrupts()
 
         setCradleState('reconfigureforlistrange')
 
