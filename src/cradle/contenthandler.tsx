@@ -270,6 +270,7 @@ export default class ContentHandler {
         // in bounds
         let workingAxisReferencePosition = Math.min(requestedAxisReferencePosition,listsize - 1)
         workingAxisReferencePosition = Math.max(workingAxisReferencePosition, 0)
+
         // shifted by virtual list low range
         let workingAxisReferenceIndex  = workingAxisReferencePosition + listlowindex
 

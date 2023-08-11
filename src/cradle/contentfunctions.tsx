@@ -906,7 +906,7 @@ export const allocateContentList = (
 
     } else { // defensive; shouldn't happen
 
-        console.log('FAILURE TO REGISTER TRIGGERCELL:')
+        console.log('FAILURE TO REGISTER TRIGGERCELL:scrollerID','-'+layoutHandler.scrollerID+'-')
         console.log('axisReferenceIndex, triggercellIndex, lowcontentindex, highcontentindex, headitemcount, targetTriggercellIndex\n',
             axisReferenceIndex, triggercellIndex, lowcontentindex, highcontentindex, headitemcount, targetTriggercellIndex)
         console.log('triggercellPtr, triggercellComponent, triggercellComponent?.props.isTriggecell, contentlist\n', 

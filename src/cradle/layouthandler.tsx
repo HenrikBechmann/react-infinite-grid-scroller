@@ -73,6 +73,10 @@ export default class LayoutHandler {
 
     }
 
+    public get scrollerID() { // for debug
+        return this.cradleParameters.cradleInheritedPropertiesRef.current.scrollerID
+    }
+
     private cradleParameters
 
     public get triggerlineSpan() {

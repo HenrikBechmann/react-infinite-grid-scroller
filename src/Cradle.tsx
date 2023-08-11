@@ -195,8 +195,9 @@ const Cradle = ({
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) { // root scroller
-        // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
+        // console.log('--> cradleState, orientation','-'+scrollerID+'-', cradleState, orientation)
         // console.log('-- index','~'+scrollerProperties?.cellFramePropertiesRef.current.index+'~')
+        // console.log('-- itemID','+'+scrollerProperties?.cellFramePropertiesRef.current.itemID+'+')
     // }
 
     // cradle scaffold element refs
@@ -949,12 +950,15 @@ const Cradle = ({
         }
 
         if (isCachedRef.current) {
+            interruptHandler.pauseInterrupts() // suppress triggerline callbacks; will render for first render from cache
             hasBeenRenderedRef.current = false
             return
         }
 
         const { layout, gap } = cradleInheritedPropertiesRef.current
         const { cradlePositionData } = layoutHandler
+
+        interruptHandler.pauseInterrupts()
         
         if (layout == 'uniform') {
 
@@ -990,8 +994,6 @@ const Cradle = ({
             cradlePositionData.targetAxisViewportPixelOffset = gap
 
         }
-
-        interruptHandler.pauseInterrupts()
 
         setCradleState('pivot')
 
