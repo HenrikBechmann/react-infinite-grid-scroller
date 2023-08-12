@@ -34,8 +34,6 @@ export default class InterruptHandler {
 
         }
 
-        const testrootbounds = entries[0].rootBounds
-
         const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
 
         const viewportBoundingRect = viewportElement.getBoundingClientRect()
@@ -46,20 +44,17 @@ export default class InterruptHandler {
 
         }
 
-        // if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
-
-        //     return
-
-        // }
-
         const {
+
             contentHandler,
             stateHandler,
             scrollHandler,
             layoutHandler,
+
         } = this.cradleParameters.handlersRef.current
 
         if (stateHandler.isMountedRef.current) {
+
             const { scrollData } = scrollHandler
 
             scrollData.previousupdate = scrollData.currentupdate
@@ -110,9 +105,10 @@ export default class InterruptHandler {
 
             if ( (scrollPos >= 0) || (Math.floor(scrollPos + viewportLength) <= contentLength)) { 
 
-                const viewportBoundingRect = viewportElement.getBoundingClientRect()
+                // const viewportBoundingRect = viewportElement.getBoundingClientRect()
 
                 const [shiftinstruction, triggerViewportReferencePixelPos] = generateShiftInstruction({
+
                     scrollerID: cradleInheritedProperties.scrollerID,
                     orientation,
                     triggerlineEntries:entries,
@@ -227,15 +223,6 @@ export default class InterruptHandler {
                         scrollerID,ViewportContextProperties)
                     return
                 }
-
-                // update dimensions with cradle intersection. See also dimension update in viewport.tsx for resize
-                // and getViewportDimensions in Cradle for width/height
-                // const rect = viewportElement.getBoundingClientRect()
-                // const { top, right, bottom, left } = rect
-                // const width = right - left, height = bottom - top
-
-                // update for scrolltracker
-                // ViewportContextProperties.viewportDimensions = {top, right, bottom, left, width, height} 
 
                 const { repositioningFlagCallback } = serviceHandler.callbacks
                 repositioningFlagCallback && repositioningFlagCallback(true)
