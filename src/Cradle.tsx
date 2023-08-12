@@ -184,16 +184,13 @@ const Cradle = ({
         isCachedRef.current = isInPortal
     }
 
-    console.log('isInPortal, isCacheChange, isCachedRef.current, wasCachedRef.current',
-        isInPortal, isCacheChange, isCachedRef.current, wasCachedRef.current)
-
     // cradle state
     const [cradleState, setCradleState] = useState('setup')
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) { // root scroller
-        console.log('--> cradleState','-'+scrollerID+'-', cradleState)
+        // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
         // console.log('-- index','~'+scrollerProperties?.cellFramePropertiesRef.current.index+'~')
         // console.log('-- itemID','+'+scrollerProperties?.cellFramePropertiesRef.current.itemID+'+')
     // }
@@ -586,13 +583,10 @@ const Cradle = ({
     // change state for entering or leaving cache
     useEffect(()=>{
 
-        console.log('evaluate cache change: cradleState, isCachedRef.current, wasCachedRef.current',
-            '-'+scrollerID+'-',cradleStateRef.current, isCachedRef.current, wasCachedRef.current)
         if (cradleStateRef.current == 'setup') return // nothing to do
 
         if (isCachedRef.current && !wasCachedRef.current) { // into cache
 
-            console.log('calling setCradleState(cached)')
             setCradleState('cached')
 
         } else if (!isCachedRef.current && wasCachedRef.current) { // out of cache
@@ -601,12 +595,10 @@ const Cradle = ({
 
             if (hasBeenRenderedRef.current) {
 
-                console.log('calling setCradleState(rerenderfromcache)')
                 setCradleState('rerenderfromcache')
 
             } else {
 
-                console.log('calling setCradleState(firstrenderfromcache)')
                 setCradleState('firstrenderfromcache')
 
             }
@@ -896,7 +888,6 @@ const Cradle = ({
 
         interruptHandler.pauseInterrupts()
 
-        console.log('calling setCradleState(reconfigure)')
         setCradleState('reconfigure')
 
     },[
@@ -917,7 +908,6 @@ const Cradle = ({
 
         interruptHandler.pauseInterrupts()
 
-        console.log('calling setCradleState(reconfigureforlistrange)')
         setCradleState('reconfigureforlistrange')
 
     },[
@@ -1007,7 +997,6 @@ const Cradle = ({
 
         }
 
-        console.log('calling setCradleState(pivot)')
         setCradleState('pivot')
 
     },[orientation])
@@ -1066,8 +1055,6 @@ const Cradle = ({
     // useLayoutEffect for suppressing flashes
     useLayoutEffect(()=>{
 
-
-        console.log('processing cradleState','-'+scrollerID+'-',cradleState)
         switch (cradleState) {
 
             // --------------[ precursors to setCradleContent ]---------------
@@ -1140,12 +1127,10 @@ const Cradle = ({
 
                     if (hasBeenRenderedRef.current) {
 
-                        console.log('calling setCradleState(rerenderfromcache)')
                         setCradleState('rerenderfromcache')
 
                     } else {
 
-                        console.log('calling setCradleState(firstrenderfromcache)')
                         setCradleState('firstrenderfromcache')
 
                     }
@@ -1214,7 +1199,6 @@ const Cradle = ({
                 // interruptHandler.cradleIntersect.disconnect()
 
                 if (isCachedRef.current) {
-                    console.log('calling setCradleState(cached)')
                     setCradleState('cached')
                     break
                 }
@@ -1289,12 +1273,10 @@ const Cradle = ({
                 // update virtual DOM
                 if (layout == 'uniform') {
     
-                    console.log('calling setCradleState(preparerender)')
                     setCradleState('preparerender')
 
                 } else {
 
-                    console.log('calling setCradleState(refreshDOMsetforvariability)')
                     setCradleState('refreshDOMsetforvariability')
 
                 }
@@ -1309,7 +1291,6 @@ const Cradle = ({
                 interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.cradleIntersect.connectElements()
 
-                console.log('calling setCradleState(restoreinterrupts)')
                 setCradleState('restoreinterrupts') // to restore interrupts
 
                 break
@@ -1319,7 +1300,6 @@ const Cradle = ({
 
                 interruptHandler.restoreInterrupts()
 
-                console.log('calling setCradleState(ready)')
                 setCradleState('ready')
 
                 break 
@@ -1337,7 +1317,6 @@ const Cradle = ({
 
                 contentHandler.updateCradleContent()
 
-                console.log('calling setCradleState(finishupdatedcontent)')
                 setCradleState('finishupdatedcontent')
 
                 break
@@ -1361,14 +1340,10 @@ const Cradle = ({
 
                     interruptHandler.triggerlinesIntersect.connectElements()
 
-                    // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
-                    // setCradleState('reconnectupdatedcontent')
-                    console.log('calling setCradleState(ready)')
                     setCradleState('ready')
 
                 } else { // 'variable' content requiring reconfiguration
 
-                    console.log('calling setCradleState(refreshDOMupdateforvariability)')
                     setCradleState('refreshDOMupdateforvariability')
 
                 }
@@ -1380,7 +1355,6 @@ const Cradle = ({
 
             case 'refreshDOMsetforvariability': {
 
-                console.log('calling setCradleState(preparesetforvariability)')
                 setCradleState('preparesetforvariability')
 
                 break
@@ -1395,7 +1369,6 @@ const Cradle = ({
 
                         contentHandler.adjustScrollblockForVariability('setcradle')
 
-                        console.log('calling setCradleState(finishsetforvariability)')
                         setCradleState('finishsetforvariability')
                         
                     }
@@ -1408,7 +1381,6 @@ const Cradle = ({
 
             case 'finishsetforvariability': {
 
-                console.log('calling setCradleState(preparerender)')
                 setCradleState('preparerender')
                 
                 break
@@ -1420,7 +1392,6 @@ const Cradle = ({
 
                 // extra cycle to allow for DOM synchronizion with grid changes
 
-                console.log('calling setCradleState(adjustupdateforvariability)')
                 setCradleState('adjustupdateforvariability')
 
                 break
@@ -1433,7 +1404,6 @@ const Cradle = ({
 
                     contentHandler.adjustScrollblockForVariability('updatecradle')
 
-                    console.log('calling setCradleState(finishupdateforvariability)')
                     setCradleState('finishupdateforvariability')
 
                 },0)
@@ -1448,7 +1418,6 @@ const Cradle = ({
                 interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.signals.pauseCradleIntersectionObserver = false
 
-                console.log('calling setCradleState(ready)')
                 setCradleState('ready')
 
                 break
@@ -1461,7 +1430,6 @@ const Cradle = ({
 
                 cacheAPI.applyPortalPartitionItemsForDeleteList()
 
-                console.log('calling setCradleState(changelistsizeafterinsertremove)')
                 setCradleState('changelistsizeafterinsertremove')
 
                 break
@@ -1479,12 +1447,10 @@ const Cradle = ({
 
                 if (cradleState == 'applyinsertremovechanges') {
 
-                    console.log('calling setCradleState(changelistsizeafterinsertremove)')
                     setCradleState('changelistsizeafterinsertremove')
 
                 } else {
 
-                    console.log('calling setCradleState(ready)')
                     setCradleState('ready')
 
                 }
@@ -1497,7 +1463,6 @@ const Cradle = ({
                 const newlistsize = serviceHandler.newListSize
                 serviceHandler.newListSize = null
 
-                console.log('calling setCradleState(ready)')
                 setCradleState('ready')
 
                 // service handler called because this is a followon of a user intervention
@@ -1512,7 +1477,6 @@ const Cradle = ({
                 cradleContent.headDisplayComponents = []
                 cradleContent.tailDisplayComponents = []
                 cacheAPI.clearCache()
-                console.log('calling setCradleState(ready)')
                 setCradleState('ready')
 
                 break
