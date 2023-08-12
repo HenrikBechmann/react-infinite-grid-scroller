@@ -102,6 +102,7 @@ export default class ContentHandler {
                     EOL:undefined,
                     highindex:undefined, 
                     lowindex:undefined, 
+                    axisReferenceIndex:undefined,
                     size:0 
                 }
             )
@@ -179,6 +180,7 @@ export default class ContentHandler {
                     EOL:undefined,
                     highindex:undefined, 
                     lowindex:undefined, 
+                    axisReferenceIndex:undefined,
                     size:0 
                 }
             )
@@ -356,7 +358,7 @@ export default class ContentHandler {
 
         })
 
-        // update cradleContentProps from newcontentlise
+        // update cradleContentProps from newcontentlist
         cradleContentProps.size = newcontentlist.length
         if (cradleContentProps.size) {
 
@@ -368,6 +370,7 @@ export default class ContentHandler {
             {
                 lowindex,
                 highindex,
+                axisReferenceIndex:targetAxisReferenceIndex,
                 SOL:(virtualListProps.lowindex == lowindex),
                 EOL:(virtualListProps.highindex == highindex),
             })
@@ -378,6 +381,7 @@ export default class ContentHandler {
             {
                 lowindex:undefined,
                 highindex:undefined,
+                axisReferenceIndex:undefined,
                 SOL:undefined,
                 EOL:undefined,
             })
@@ -694,6 +698,7 @@ export default class ContentHandler {
                 {
                     lowindex,
                     highindex,
+                    axisReferenceIndex,
                     SOL:(virtualListProps.lowindex == lowindex),
                     EOL:(virtualListProps.highindex == highindex),
                 })
@@ -704,6 +709,7 @@ export default class ContentHandler {
                 {
                     lowindex:undefined,
                     highindex:undefined,
+                    axisReferenceIndex:undefined,
                     SOL:undefined,
                     EOL:undefined,
                 })
