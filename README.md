@@ -321,6 +321,7 @@ _cradleContentProps_ is an object with the following properties:
    EOL, // true or false, at end of virtual list in the cradle
    lowindex, // of cells in the cradle
    highindex, // of cells in the cradle
+   axisReferenceIndex, // the first index of the tail grid
    size, // count of cells in the cradle
 }
 ```
