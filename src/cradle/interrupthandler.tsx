@@ -35,11 +35,22 @@ export default class InterruptHandler {
         }
 
         const testrootbounds = entries[0].rootBounds
-        if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
+
+        const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
+
+        const viewportBoundingRect = viewportElement.getBoundingClientRect()
+
+        if (viewportBoundingRect.width == 0 && viewportBoundingRect.height == 0) { // reparenting or pivoting
 
             return
 
         }
+
+        // if ((testrootbounds.width == 0) && (testrootbounds.height == 0)) { // reparenting
+
+        //     return
+
+        // }
 
         const {
             contentHandler,
@@ -53,8 +64,6 @@ export default class InterruptHandler {
 
             scrollData.previousupdate = scrollData.currentupdate
             scrollData.currentupdate = scrollData.current
-
-            const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
 
             const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current,
                 cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
