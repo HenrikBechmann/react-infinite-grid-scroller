@@ -293,7 +293,7 @@ The `scrollerPropertiesRef.current` object contains the following properties, wh
 
 _orientation, gap, padding, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, cache, cacheMax, startingIndex_
 
-It also contains _runwayRowcount_, which may have been altered from the source value by the scroller.
+It also contains _scrollerID_, the session number of the current scroller, for debug purposes.
 
 Finally, it contains two objects with bundled properties: _virtualListProps_ and _cradleContentProps_.
 
@@ -316,7 +316,7 @@ _cradleContentProps_ is an object with the following properties:
 {
    cradleRowcount, // number of rows in the cradle (including any blank cells)
    viewportRowcount, // number of rows that can be shown in the viewport
-   runwayRowcount, // extra leading and trailing cell rows beyond the viewport boundary
+   runwayRowcount, // calculated current extra leading and trailing cell rows beyond the viewport boundary
    SOL, // true or false, at start of virtual list in the cradle
    EOL, // true or false, at end of virtual list in the cradle
    lowindex, // of cells in the cradle
