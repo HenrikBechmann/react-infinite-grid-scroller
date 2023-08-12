@@ -739,6 +739,7 @@ export default class ContentHandler {
         } else {
 
             updatedContentList = modelcontentlist
+            Object.assign(cradleContentProps, { axisReferenceIndex })
 
         }
 
