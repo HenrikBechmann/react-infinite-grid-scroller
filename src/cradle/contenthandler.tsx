@@ -429,7 +429,7 @@ export default class ContentHandler {
 
             serviceHandler.callbacks.referenceIndexCallback(
 
-                cradlePositionData.targetAxisReferencePosition,'setCradleContent', cstate)
+                targetAxisReferenceIndex,'setCradleContent', cstate)
         
         }
 
