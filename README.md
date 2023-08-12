@@ -293,7 +293,7 @@ The `scrollerPropertiesRef.current` object contains the following properties, wh
 
 _orientation, gap, padding, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, cache, cacheMax, startingIndex_
 
-It also contains _scrollerID_, the session number of the current scroller, for debug purposes.
+It also contains _scrollerID_, the internal session id (integer) of the current scroller, for debug purposes.
 
 Finally, it contains two objects with bundled properties: _virtualListProps_ and _cradleContentProps_.
 
