@@ -7,7 +7,7 @@
 
     calculateContentListRequirements is called by the contenthandler's setCradleContent function.
 
-    calculateShiftInstruction and calcContentShift are called by contentHandler's updateCradleContent
+    generateShiftInstruction and calcContentShift are called by contentHandler's updateCradleContent
     function. 
     
     getCellFrameComponentList, allocateContentList, and deletePortals functions are shared by both. 
@@ -28,7 +28,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
         // index
         targetAxisReferenceIndex, // from user, or from pivot
         // pixels
-        baseRowLength,
+        baseRowPixelLength,
         targetAxisViewportPixelOffset,
         // resources
         cradleInheritedProperties,
@@ -36,66 +36,84 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     }) => {
 
-    const { 
-        padding,
-    } = cradleInheritedProperties
+    const 
+        { 
 
-    const {
+            padding,
 
-        crosscount,
-        cradleRowcount,
-        runwayRowcount,
-        listRowcount,
-        listsize,
+        } = cradleInheritedProperties,
 
-    } = cradleInternalProperties
-    
-    // align axis reference to first row item
-    targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex,listsize - 1)
-    targetAxisReferenceIndex -= (targetAxisReferenceIndex % crosscount)
+        {
+
+            cradleContentProps,
+            virtualListProps,
+
+        } = cradleInternalProperties,
+
+        {
+
+            cradleRowcount,
+            runwayRowcount,
+
+        } = cradleContentProps,
+
+        {
+
+            lowindex:listlowindex, 
+            highindex:listhighindex, 
+            // size:listsize, 
+            crosscount, 
+            rowcount:listRowcount,
+            baserowblanks,
+            endrowblanks,
+            rowshift:rangerowshift,
+
+        } = virtualListProps
+
+    // align axis reference to list scope
+    targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex, listhighindex)
+    targetAxisReferenceIndex = Math.max(targetAxisReferenceIndex, listlowindex)
 
     // derive target row
-    let targetAxisRowOffset = Math.ceil(targetAxisReferenceIndex/crosscount)
-
-    // update will compensate if this is too high
-    const maxAxisRowOffset = Math.max(0,listRowcount - 1)
-    if (targetAxisRowOffset > maxAxisRowOffset) {
-        targetAxisRowOffset = maxAxisRowOffset
-        targetAxisReferenceIndex = targetAxisRowOffset * crosscount
-    }
+    let targetAxisReferenceRow = Math.floor(targetAxisReferenceIndex/crosscount)
 
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
 
     // leading edge
-    let targetCradleRowOffset = Math.max(0,targetAxisRowOffset - runwayRowcount)
+    let targetCradleReferenceRow = Math.max(rangerowshift,targetAxisReferenceRow - runwayRowcount)
 
     // trailing edge
-    let targetCradleEndRowOffset = targetCradleRowOffset + (cradleRowcount - 1)
+    let targetCradleEndRow = targetCradleReferenceRow + (cradleRowcount - 1)
 
-    const listEndRowOffset = (listRowcount - 1)
+    const listEndRowOffset = (listRowcount - 1) + rangerowshift
 
-    if (targetCradleEndRowOffset > (listEndRowOffset)) {
-        const diff = (targetCradleEndRowOffset - listEndRowOffset)
-        targetCradleRowOffset -= diff
-        targetCradleEndRowOffset -= diff
+    if (targetCradleEndRow > (listEndRowOffset)) {
+        const diff = (targetCradleEndRow - listEndRowOffset)
+        targetCradleReferenceRow -= diff
+        targetCradleEndRow -= diff
     }
 
-    const targetCradleReferenceIndex = targetCradleRowOffset * crosscount
+    let targetCradleReferenceIndex = (targetCradleReferenceRow * crosscount)
+    targetCradleReferenceIndex = Math.max(targetCradleReferenceIndex,listlowindex)
 
     // ---------------------[ calc cradle content count ]---------------------
 
     let newCradleContentCount = cradleRowcount * crosscount
-    if (targetCradleEndRowOffset == listEndRowOffset) {
-        const endRowRemainderCount = listsize % crosscount
-        if (endRowRemainderCount) {
-            newCradleContentCount -= (crosscount - endRowRemainderCount)
+    if (targetCradleEndRow == listEndRowOffset) {
+        if (endrowblanks) {
+            newCradleContentCount -= endrowblanks// endRowRemainderCount)
+        }
+    }
+    if (targetCradleReferenceRow == rangerowshift) { // first row
+        if (baserowblanks) {
+            newCradleContentCount -= baserowblanks
         }
     }
 
     // --------------------[ calc css positioning ]-----------------------
 
     const targetScrollblockViewportPixelOffset = 
-        (targetAxisRowOffset * baseRowLength) + padding - targetAxisViewportPixelOffset
+        ((targetAxisReferenceRow - rangerowshift) * baseRowPixelLength) + padding - targetAxisViewportPixelOffset
 
     // ----------------------[ return required values ]---------------------
 
@@ -115,7 +133,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     cradle motion can be detected. Motion is most often caused by scrolling, but
     can also occur with change of size of cradle content rows.
 
-    calculateShiftInstruction determines whether the axis should be moved toward the head or tail
+    generateShiftInstruction determines whether the axis should be moved toward the head or tail
         to restore the straddling position of the two trigger lines. Lots of relative motion.
 
     'moveaxisheadward' (scrolling down or right) means moving the axis up or left, adjacent items down
@@ -129,7 +147,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     'none' means no shift is required
 */
 
-export const calculateShiftInstruction = ({
+export const generateShiftInstruction = ({
 
     orientation,
     triggerlineEntries,
@@ -154,24 +172,23 @@ export const calculateShiftInstruction = ({
     }
 
     // most recent; either triggerline will do
-    const entry = triggerlineEntries[triggerlineEntries.length - 1] //.at(-1) at not available in iOS 15
-    const referencename = entry.target.dataset.type
-    entry.referencename = referencename
+    const 
+        entry = triggerlineEntries[triggerlineEntries.length - 1], //.at(-1) at not available in iOS 15
+        referencename = entry.target.dataset.type
+
+    entry.referencename = referencename // for debug
+
     const span = triggerlineSpan
 
     const intersectrootpos = 
         (orientation == 'vertical')?
             Math.trunc(entry.rootBounds.y):
             Math.trunc(entry.rootBounds.x)
-            // entry.rootBounds.y:
-            // entry.rootBounds.x
 
     const boundingrootpos =
         (orientation == 'vertical')?
             Math.trunc(viewportBoundingRect.y):
             Math.trunc(viewportBoundingRect.x)
-            // viewportBoundingRect.y:
-            // viewportBoundingRect.x
 
     // this selection is redundant, but documents what's going on
     const rootpos = 
@@ -183,8 +200,6 @@ export const calculateShiftInstruction = ({
         (orientation == 'vertical')?
             Math.trunc(entry.boundingClientRect.y):
             Math.trunc(entry.boundingClientRect.x)
-            // entry.boundingClientRect.y:
-            // entry.boundingClientRect.x
 
     const viewportTriggerOffset = entrypos - rootpos
 
@@ -223,8 +238,6 @@ export const calculateShiftInstruction = ({
 
             if ((triggerData.headOffset >= -1) && (triggerData.headOffset <= 1)) {
 
-            // if (triggerData.headOffset == 0) {
-
                 triggerHistory.previousReferenceName = 'headtrigger'
 
             } else {
@@ -246,7 +259,7 @@ export const calculateShiftInstruction = ({
 
     if (shiftinstruction) { // will be 'none'
 
-        return [shiftinstruction, 0]//triggerViewportReferencePos]
+        return [shiftinstruction, 0]
 
     }
 
@@ -280,18 +293,17 @@ export const calculateShiftInstruction = ({
 
     }
 
-    const triggerViewportReferencePos = 
+    const triggerViewportReferencePixelPos = 
         (shiftinstruction == 'moveaxistailward')? // block is scrolling up or left
             triggerData.tailOffset: // needs to move up or left toward head
             triggerData.headOffset // needs to move down or right toward tail
 
-
-    return [shiftinstruction, triggerViewportReferencePos]
+    return [shiftinstruction, triggerViewportReferencePixelPos]
 
 }
 
 /*
-    The basic goal of calcContentShoft is to determine the number and direction of rows to shift between
+    The basic goal of calculateShiftSpecs is to determine the number and direction of rows to shift between
     the head and tail grids (which determines the new location of the axis), and also to
     calculate the rolling addition and deletion of cradle content to accommodate the changes.
 
@@ -310,7 +322,7 @@ export const calculateShiftSpecs = ({
 
     // direction of change
     shiftinstruction,
-    triggerViewportReferencePos,
+    triggerViewportReferencePixelPos,
 
     // positional
     scrollPos,
@@ -318,7 +330,8 @@ export const calculateShiftSpecs = ({
 
     // property repos
     cradleInheritedProperties,
-    cradleInternalProperties,
+    cradleContentProps,
+    virtualListProps,
 
     // cradle repos
     cradleContent,
@@ -328,129 +341,149 @@ export const calculateShiftSpecs = ({
 
     // ------------------------[ 1. initialize ]-----------------------
 
-    // configuration data
-    const { 
-
-        gap,
-        padding,
-        orientation,
-        cellHeight,
-        cellWidth,
-        layout,
-
-    } = cradleInheritedProperties
-
     // cradle elements
-    const axisElement = cradleElements.axisRef.current,
+    const 
+        axisElement = cradleElements.axisRef.current,
         headGridElement = cradleElements.headRef.current,
-        tailGridElement = cradleElements.tailRef.current
+        tailGridElement = cradleElements.tailRef.current,
 
-    // cradle contents
-    const {
+        // configuration data
+        { 
 
-        cradleModelComponents:cradlecontentlist, 
-        tailModelComponents:tailcontentlist,
-        // headModelComponents:headcontentlist
+            gap,
+            padding,
+            orientation,
+            cellHeight,
+            cellWidth,
+            layout,
+            scrollerID, // debug
 
-    } = cradleContent
+        } = cradleInheritedProperties,
 
-    // more config data
-    const { 
+        // cradle contents
+        {
 
-        crosscount,
-        cradleRowcount,
-        listsize,
-        listRowcount,
-        viewportRowcount,
-        runwayRowcount,
+            cradleModelComponents:cradlecontentlist, 
+            tailModelComponents:tailcontentlist,
 
-    } = cradleInternalProperties
+        } = cradleContent,
 
-    const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0),
-        previousCradleRowOffset = Math.ceil(previousCradleReferenceIndex/crosscount)
+        { 
 
-    const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0),
-        previousAxisRowOffset = Math.ceil(previousAxisReferenceIndex/crosscount)
+            cradleRowcount,
+            viewportRowcount,
+            runwayRowcount,
 
-    const listEndrowOffset = (listRowcount - 1)
-    const baseRowLength =
+        } = cradleContentProps,
+
+        {
+
+            crosscount, 
+            rowcount:listRowcount, 
+            size:listsize,
+            lowindex:listlowindex,
+            baserowblanks,
+            endrowblanks,
+            rowshift:rangerowshift,
+            
+        } = virtualListProps
+
+    // normalize
+    const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0)
+    const previousCradleReferenceRow = Math.floor(previousCradleReferenceIndex/crosscount)
+
+    const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0)
+    const previousAxisReferenceRow = Math.floor(previousAxisReferenceIndex/crosscount)
+
+    const listEndRow = (listRowcount - 1) + rangerowshift
+
+    const baseRowPixelLength =
         ((orientation == 'vertical')?
             cellHeight:
             cellWidth) 
         + gap
 
-    let spanRowPtr,
-     spanAxisPixelShift = 0, // in relation to viewport head boundary
-     inProcessRowPtr = 0,
-     isListBoundary = false,
-     totalPixelShift,
-     finalVariableRowLength // special case
+    let 
+        foundGridSpanRowShiftIncrement,
+        gridSpanAxisPixelShift = 0, // in relation to viewport head boundary
+        byPixelMeasureGridRowShiftCount = 0,
+        isListBoundary = false,
+        totalPixelShift,
+        finalVariableRowLength // special case
 
-    // measure exising rows for variable length cells
+    // ----------------------------[ 2. calculate base row shift ]--------------------------
+
+    // measure exising variable rows for pixel length
     if (layout == 'variable') { 
 
-        const referenceGridElement = // moving axis (and triggers) toward the reference grid element
+        const engagedGridElement = // moving axis (and triggers) toward the reference grid element
             (shiftinstruction == 'moveaxistailward')? // scrolling up or left
                 tailGridElement:
                 headGridElement
 
-        const gridRowLengths = getGridRowLengths(referenceGridElement, orientation, crosscount, gap)
+        const gridRowPixelLengthsList = getGridRowLengths(engagedGridElement, orientation, crosscount, gap)
 
         if (shiftinstruction == 'moveaxisheadward') { // scrolling down or right; move triggerlines up or left
 
-            gridRowLengths.reverse() // head grid row lengths listed from axis toward head
+            gridRowPixelLengthsList.reverse() // head grid row lengths listed from axis toward head
 
         }
 
-        const gridRowAggregateSpans = getGridRowAggregateSpans(gridRowLengths) // count pixels where available
-
-        // ----------------------------[ 2. calculate base row shift ]--------------------------
+        const gridRowCumulativePixelLengthsList = getGridRowAggregateSpans(gridRowPixelLengthsList) // count pixels where available
 
         // first try to find position based on known (instantiated) rows
         if (shiftinstruction == 'moveaxistailward') { // scroll up
 
             // tail trigger needs to move down or right until position relative to viewport top or left is positive
-            spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
-                (triggerViewportReferencePos + aggregatespan) >= 0 )
+            foundGridSpanRowShiftIncrement = gridRowCumulativePixelLengthsList.findIndex((cumulativepixellength) => 
+                (triggerViewportReferencePixelPos + cumulativepixellength) >= 0 )
         
         } else { // 'moveaxisheadward', scrolldown
 
             // head trigger needs to move up or left until position relative to viewport top or left is negative
-            spanRowPtr = gridRowAggregateSpans.findIndex((aggregatespan) => 
-                (triggerViewportReferencePos - aggregatespan) <= 0)
+            foundGridSpanRowShiftIncrement = gridRowCumulativePixelLengthsList.findIndex((cumulativepixellength) => 
+                (triggerViewportReferencePixelPos - cumulativepixellength) <= 0)
 
         }
 
-        if (!(spanRowPtr == -1)) { // found measureed row for shift
-            spanAxisPixelShift = 
-                (shiftinstruction == 'moveaxistailward')?
-                    gridRowAggregateSpans[spanRowPtr]: // move axis toward tail from viewport boundary (positive)
-                    -gridRowAggregateSpans[spanRowPtr] // move axis toward head from viewport boundary (negative)
-        } else { // either in boundary, or shy of target
+        if (foundGridSpanRowShiftIncrement != -1) { // found measureed row for shift
 
-            isListBoundary = (gridRowAggregateSpans.length == 0) // boundary at head of list
+            gridSpanAxisPixelShift = 
+                (shiftinstruction == 'moveaxistailward')?
+                    gridRowCumulativePixelLengthsList[foundGridSpanRowShiftIncrement]: // move axis toward tail from viewport boundary (positive)
+                    -gridRowCumulativePixelLengthsList[foundGridSpanRowShiftIncrement] // move axis toward head from viewport boundary (negative)
+
+        } else { // no foundGridSpanRowShiftIncrement; either in boundary, or shy of target
+
+            isListBoundary = (gridRowCumulativePixelLengthsList.length == 0) // boundary at head of list
 
             if (!isListBoundary) { // interim working result
 
-                inProcessRowPtr = gridRowAggregateSpans.length - 1 // base: failed measured row ptr
-                totalPixelShift = gridRowAggregateSpans[inProcessRowPtr] // set base of working overshoot
-                finalVariableRowLength = gridRowLengths.at(-1) // for oversize cell adjustment below
+                byPixelMeasureGridRowShiftCount = gridRowCumulativePixelLengthsList.length - 1 // base: failed measured row ptr
+                totalPixelShift = gridRowCumulativePixelLengthsList[byPixelMeasureGridRowShiftCount] // set base of working overshoot
+                finalVariableRowLength = gridRowPixelLengthsList.at(-1) // for oversize cell adjustment below
 
-            } 
+            } else { // else if isListBoundary row and pixel shifts remain at default of 0 each
+
+                byPixelMeasureGridRowShiftCount = 0
+                totalPixelShift = 0
+
+            }
 
         }
 
     } else { // layout == 'uniform'; use only defined lengths
 
-        spanRowPtr = -1 // "not found", ie not applicable
+        foundGridSpanRowShiftIncrement = -1 // "not found", ie not applicable
 
-        inProcessRowPtr = 0
+        // these are the defaults
+        byPixelMeasureGridRowShiftCount = 0
         totalPixelShift = 0
 
     }
 
     // uniform layout, or overshoot of instantiated rows; continue with virtual base rows
-    if (spanRowPtr == -1 ) { 
+    if (foundGridSpanRowShiftIncrement == -1 ) { 
 
         if (!isListBoundary) {
 
@@ -458,75 +491,75 @@ export const calculateShiftSpecs = ({
 
                 do {
 
-                    totalPixelShift += baseRowLength
-                    inProcessRowPtr++
+                    totalPixelShift += baseRowPixelLength
+                    byPixelMeasureGridRowShiftCount++
 
-                } while ((triggerViewportReferencePos + totalPixelShift) < 0) 
+                } while ((triggerViewportReferencePixelPos + totalPixelShift) < 0) 
 
-                spanAxisPixelShift = totalPixelShift
+                gridSpanAxisPixelShift = totalPixelShift
 
             } else { // moveaxisheadward; scrolling down/right
 
                 do {
 
-                    totalPixelShift += baseRowLength
-                    inProcessRowPtr++
+                    totalPixelShift += baseRowPixelLength
+                    byPixelMeasureGridRowShiftCount++
 
-                    if ((previousAxisRowOffset - inProcessRowPtr) == 0) { // stop cycling at head limit
+                    if ((previousAxisReferenceRow - rangerowshift - byPixelMeasureGridRowShiftCount) == 0) { // stop cycling at head limit
 
                         break
                     }
 
-                } while ((triggerViewportReferencePos - totalPixelShift) > 0)
+                } while ((triggerViewportReferencePixelPos - totalPixelShift) > 0)
 
-                spanAxisPixelShift = -totalPixelShift
+                gridSpanAxisPixelShift = -totalPixelShift
 
             }
 
         }
 
-        // inProcessRowPtr is one greater than spanRowPtr with actual measurements above
-        // this makes them compativle for span conversion (next step)
-        spanRowPtr = inProcessRowPtr - 1 
+        // byPixelMeasureGridRowCount is one greater than foundGridSpanRowIncrement with actual measurements above
+        // this -1 makes them compatible for span conversion (next step)
+        foundGridSpanRowShiftIncrement = byPixelMeasureGridRowShiftCount - 1
 
     }
 
-    const spanRowShift = // pick up row shift with or without overshoot
+    const gridSpanRowShift = // pick up row shift with or without overshoot
         (shiftinstruction == 'moveaxistailward')?
-            spanRowPtr + 1:
-            -(spanRowPtr + 1)
+            foundGridSpanRowShiftIncrement + 1:
+            -(foundGridSpanRowShiftIncrement + 1)
 
     // the following two values (axisReferenceRowShift & axisPixelShift), and no other calcs, 
     //     are carried forward in this function.
     // for axisReferenceRowshift:
     // negative for moving rows out of head into tail;
     // positive for moving rows out of tail into head
-    let axisReferenceRowShift = spanRowShift,
-        axisPixelShift = spanAxisPixelShift 
+    let axisReferenceRowShift = gridSpanRowShift,
+        axisPixelShift = gridSpanAxisPixelShift 
 
     // this can only happen with oversized cellLength (ie > viewportLength)
     //     and only using measured length
     // axis must be no farther than 1 back of the last row end position
-    if ((previousAxisRowOffset + axisReferenceRowShift) > listEndrowOffset) {
+    if ((previousAxisReferenceRow + axisReferenceRowShift) > listEndRow) {
 
         axisReferenceRowShift -= 1
         if (layout == 'variable') {
-            axisPixelShift -= finalVariableRowLength //gridRowLengths.at(-1)
+            axisPixelShift -= finalVariableRowLength
         } else {
-            axisPixelShift -= baseRowLength
+            axisPixelShift -= baseRowPixelLength
         }
 
     }
 
-    // -----------[ 3. calculate current viewport axis offset ]-------------------
+    // -----------[ 3. calculate current viewport axis pixel offset ]-------------------
     // gaps beyond rendered rows can be caused by rapid scrolling
 
-    const scrollblockAxisOffset = 
+    const scrollblockAxisPixelOffset = 
         (orientation == 'vertical')?
             axisElement.offsetTop:
             axisElement.offsetLeft
 
-    const scrollblockOffset = // to capture current top/left adjustment to viewport for variable layout
+    const scrollblockPixelOffset = // to capture current top/left adjustment to viewport for variable layout
         (orientation == 'vertical')?
             scrollblockElement.offsetTop:
             scrollblockElement.offsetLeft
@@ -534,12 +567,12 @@ export const calculateShiftSpecs = ({
     // currentViewportAxisOffset will be negative (above viewport edge) for scroll block headward 
     //     and positive for scroll block tailward
     // the pixel distance between the viewport frame and the axis, toward the head
-    const currentViewportAxisOffset = 
-        scrollblockAxisOffset + scrollblockOffset - scrollPos
+    const currentViewportAxisPixelOffset = 
+        scrollblockAxisPixelOffset + scrollblockPixelOffset - scrollPos
 
     // -------------[ 4. calculate new axis pixel position ]------------------
 
-    let newAxisViewportPixelOffset = currentViewportAxisOffset + axisPixelShift
+    let newAxisViewportPixelOffset = currentViewportAxisPixelOffset + axisPixelShift
 
     // Note: sections 5, 6 and 7 deal entirely with row calculations; no pixels
 
@@ -549,8 +582,9 @@ export const calculateShiftSpecs = ({
     let cradleReferenceRowshift = axisReferenceRowShift
 
     // base values
-    let newCradleReferenceRowOffset = previousCradleRowOffset + cradleReferenceRowshift
-    const newAxisReferenceRowOffset = previousAxisRowOffset + axisReferenceRowShift
+    let newCradleReferenceRow = previousCradleReferenceRow + cradleReferenceRowshift
+    const newAxisReferenceRow = previousAxisReferenceRow + axisReferenceRowShift
+
 
     // --------[ 6. adjust cradle contents for start and end of list ]-------
     // ...to maintain constant number of cradle rows
@@ -565,25 +599,25 @@ export const calculateShiftSpecs = ({
         // shortening of cradle content.
 
         // --- start of list adjustment
-        const targetCradleReferenceRowOffset = 
-            Math.max(0, (newAxisReferenceRowOffset - runwayRowcount - 1)) // extra row for visibility
+        const targetCradleReferenceRow = 
+            Math.max(rangerowshift, (newAxisReferenceRow - runwayRowcount - 1)) // extra row for visibility
 
-        const headrowDiff = newCradleReferenceRowOffset - targetCradleReferenceRowOffset
+        const headrowDiff = newCradleReferenceRow - targetCradleReferenceRow
         if (headrowDiff > 0) {
 
-            newCradleReferenceRowOffset -= headrowDiff
+            newCradleReferenceRow -= headrowDiff
             cradleReferenceRowshift -= headrowDiff
 
         }
 
         // --- end of list adjustment: case of being in bounds of trailing runway (end of list)
-        const targetCradleEndrowOffset = newCradleReferenceRowOffset + (cradleRowcount - 1)
-        const tailrowdiff = Math.max(0,targetCradleEndrowOffset - listEndrowOffset)
+        const targetCradleEndrow = newCradleReferenceRow + (cradleRowcount - 1)
+        const tailrowdiff = targetCradleEndrow - listEndRow
 
         if (tailrowdiff > 0) {
 
             cradleReferenceRowshift -= tailrowdiff
-            newCradleReferenceRowOffset -= tailrowdiff
+            newCradleReferenceRow -= tailrowdiff
 
         }
 
@@ -596,29 +630,35 @@ export const calculateShiftSpecs = ({
         // accomodate the trailing runway
 
         // --- start of list adjustment
-        if (newCradleReferenceRowOffset < 0) {
 
-            cradleReferenceRowshift -= newCradleReferenceRowOffset
-            newCradleReferenceRowOffset = 0
+        if (newCradleReferenceRow < rangerowshift) {
+
+            const diff = rangerowshift - newCradleReferenceRow
+            cradleReferenceRowshift += diff
+            newCradleReferenceRow += diff
 
         }
-        if (layout == 'variable' && newAxisReferenceRowOffset == 0) {
+
+        if (layout == 'variable' && newAxisReferenceRow == rangerowshift) { // start of list
             newAxisViewportPixelOffset = padding
         }
 
         // --- end of list adjustment; case of in bounds of trailing runway
-        const computedNextCradleEndrowOffset = 
-            (previousCradleRowOffset + (cradleRowcount -1) + cradleReferenceRowshift)
 
-        const targetCradleEndrowOffset = Math.min(listEndrowOffset, 
-            (newAxisReferenceRowOffset + (viewportRowcount - 1) + (runwayRowcount - 1)))
+        const computedNextCradleEndRow = 
+            (previousCradleReferenceRow + (cradleRowcount -1) + cradleReferenceRowshift)
 
-        const tailrowdiff = Math.max(0, targetCradleEndrowOffset - computedNextCradleEndrowOffset)
+        const targetCradleEndRow = 
+            newAxisReferenceRow + (viewportRowcount - 1) + (runwayRowcount - 1)
 
-        if (tailrowdiff > 0) {
+        let tailrowdiff =  computedNextCradleEndRow - targetCradleEndRow
 
-            cradleReferenceRowshift += tailrowdiff
-            newCradleReferenceRowOffset += tailrowdiff
+        if (tailrowdiff < 0) {
+
+            tailrowdiff = Math.max(tailrowdiff, cradleReferenceRowshift)
+
+            cradleReferenceRowshift -= tailrowdiff
+            newCradleReferenceRow -= tailrowdiff
 
         }
 
@@ -626,23 +666,30 @@ export const calculateShiftSpecs = ({
 
     // ----------------------[ 7. map rows to item references ]----------------------
 
-    const newCradleReferenceIndex = (newCradleReferenceRowOffset * crosscount)
-    const cradleReferenceItemShift = (cradleReferenceRowshift * crosscount)
+    const newCradleReferenceIndex = Math.max(listlowindex, newCradleReferenceRow * crosscount)
+    const cradleReferenceItemShift = newCradleReferenceIndex - previousCradleReferenceIndex
 
-    const newAxisReferenceIndex = newAxisReferenceRowOffset * crosscount
-    const axisReferenceItemShift = axisReferenceRowShift * crosscount
+    const newAxisReferenceIndex = Math.max(listlowindex, newAxisReferenceRow * crosscount)
+    const axisReferenceItemShift = newAxisReferenceIndex - previousAxisReferenceIndex
 
     let newCradleContentCount = cradleRowcount * crosscount // base count
-    const includesLastRow = ((newCradleReferenceRowOffset + cradleRowcount) >= listRowcount)
+
+    const includesLastRow = ((newCradleReferenceRow + cradleRowcount - rangerowshift) >= listRowcount)
+
+    const includesFirstRow = (newCradleReferenceRow == rangerowshift)
 
     if (includesLastRow) {
-        const partialspaces = listsize % crosscount
-        const itemsShortfall = 
-            (partialspaces == 0)?
-                0:
-                crosscount - partialspaces
-        newCradleContentCount -= itemsShortfall
+
+        newCradleContentCount -= endrowblanks
+
     }
+
+    if (includesFirstRow) {
+
+        newCradleContentCount -= baserowblanks
+
+    }
+
     // create head and tail change counts
     const changeOfCradleContentCount = cradlecontentlist.length - newCradleContentCount
 
@@ -721,6 +768,7 @@ export const getCellFrameComponentList = ({
         instanceIdCounterRef,
         styles,
         placeholderMessages,
+
     }) => {
 
     const localContentlist = [...contentlist]
@@ -731,8 +779,10 @@ export const getCellFrameComponentList = ({
     let deletedtailitems = [], deletedheaditems = []
 
     if (listStartChangeCount >= 0) { // acquire new items
+
         let referenceIndex = cradleReferenceIndex
         let changeCount = listStartChangeCount
+        
         if (listStartChangeCount > cradleContentCount) {
             referenceIndex = cradleReferenceIndex - (listStartChangeCount - cradleContentCount)
             changeCount = cradleContentCount
@@ -821,10 +871,10 @@ export const allocateContentList = (
 
     const { triggercellIndex } = layoutHandler
 
-    const offsetindex = contentlist[0]?.props.index,
-        highindex = offsetindex + contentlist.length
+    const lowcontentindex = contentlist[0]?.props.index,
+        highcontentindex = lowcontentindex + contentlist.length
 
-    const headitemcount = (axisReferenceIndex - offsetindex)
+    const headitemcount = (axisReferenceIndex - lowcontentindex)
 
     const targetTriggercellIndex = 
         (headitemcount == 0)?
@@ -836,9 +886,9 @@ export const allocateContentList = (
             true:
             false
 
-    if ((triggercellIndex !== undefined) && (offsetindex !== undefined)) { //&& 
-        if ((triggercellIndex >= offsetindex) && (triggercellIndex <= highindex)) {
-            const triggercellPtr = triggercellIndex - offsetindex
+    if ((triggercellIndex !== undefined) && (lowcontentindex !== undefined)) { //&& 
+        if ((triggercellIndex >= lowcontentindex) && (triggercellIndex <= highcontentindex)) {
+            const triggercellPtr = triggercellIndex - lowcontentindex
             const triggercellComponent = contentlist[triggercellPtr]
             if (triggercellComponent) { // otherwise has been asynchronously cleared
                 contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:false})
@@ -846,7 +896,8 @@ export const allocateContentList = (
         }
     }
 
-    const triggercellPtr = targetTriggercellIndex - offsetindex
+    const triggercellPtr = targetTriggercellIndex - lowcontentindex
+
     const triggercellComponent = contentlist[triggercellPtr]
     if (triggercellComponent) {
 
@@ -855,9 +906,9 @@ export const allocateContentList = (
 
     } else { // defensive; shouldn't happen
 
-        console.log('FAILURE TO REGISTER TRIGGERCELL:')
-        console.log('axisReferenceIndex, triggercellIndex, offsetindex, highindex, headitemcount, targetTriggercellIndex',
-            axisReferenceIndex, triggercellIndex, offsetindex, highindex, headitemcount, targetTriggercellIndex)
+        console.log('FAILURE TO REGISTER TRIGGERCELL:scrollerID','-'+layoutHandler.scrollerID+'-')
+        console.log('axisReferenceIndex, triggercellIndex, lowcontentindex, highcontentindex, headitemcount, targetTriggercellIndex\n',
+            axisReferenceIndex, triggercellIndex, lowcontentindex, highcontentindex, headitemcount, targetTriggercellIndex)
         console.log('triggercellPtr, triggercellComponent, triggercellComponent?.props.isTriggecell, contentlist\n', 
             triggercellPtr, triggercellComponent, triggercellComponent?.props.isTriggecell, 
                 {...contentlist})
@@ -913,7 +964,7 @@ const createCellFrame = ({
 
     } = cradleInheritedProperties
 
-    const { listsize } = cradleInternalProperties
+    const listsize = cradleInternalProperties.virtualListProps.size
 
     // get new or existing itemID
     const itemID = cacheAPI.getNewOrExistingItemID(index)
@@ -940,6 +991,7 @@ const createCellFrame = ({
         placeholderErrorFrameStyles = { placeholderErrorFrameStyles }
         placeholderErrorLinerStyles = { placeholderErrorLinerStyles }
         placeholderMessages = { placeholderMessages }
+        gridstartstyle = {null}
     />
 
 }

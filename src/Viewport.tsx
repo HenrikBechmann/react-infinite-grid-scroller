@@ -2,7 +2,7 @@
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    The role of viewport is to provide viewport data to its children (scrollblock and cradle) through the
+    The role of viewport is to provide viewport data to its children (Scrollblock and Cradle) through the
     ViewportContext object, and act as the visible screen portal of the list being shown.
     If Viewport is resized, it notifies the Cradle to reconfigure.
 */
@@ -18,6 +18,9 @@ import React, {
 
 } from 'react'
 
+// popup position tracker for repositioning
+import ScrollTracker from './cradle/ScrollTracker'
+
 export const ViewportContext = React.createContext(null) // for children
 
 const Viewport = ({
@@ -27,6 +30,7 @@ const Viewport = ({
     styles,
     scrollerID,
     VIEWPORT_RESIZE_TIMEOUT,
+    useScrollTracker,
     
 }) => {
 
@@ -35,11 +39,6 @@ const Viewport = ({
     const {
 
         orientation,
-        // gap,
-        // padding,
-        // cellHeight,
-        // cellWidth,
-        // layout,
 
     } = gridSpecs
 
@@ -52,12 +51,17 @@ const Viewport = ({
 
     const viewportElementRef = useRef(null)
 
+    const scrollTrackerAPIRef = useRef(null)
+
     // ViewportContextPropertiesRef is passed as a resizing interrupt (through context) to children
     const ViewportContextPropertiesRef = useRef(
         {
+
             isResizing:false, 
-            viewportDimensions:null,
-            elementRef:null
+            // viewportDimensions:null,
+            elementRef:null,
+            scrollTrackerAPIRef,
+
         }
     )
 
@@ -156,19 +160,28 @@ const Viewport = ({
 
     },[styles.viewport])
 
-    // update ViewportContextPropertiesRef; add viewport dimensions
+    const divtrackerstyleRef = useRef(null)
+
+    // initialize with inherited styles
+    divtrackerstyleRef.current = useMemo(() => {
+
+        return {
+
+            // ...styles.viewport,
+            position:'absolute',
+            top:0,
+            left:0
+            
+        }
+
+    },[styles.viewport])
+
+    // update ViewportContextPropertiesRef
     ViewportContextPropertiesRef.current = useMemo(() => {
 
         if (viewportState == 'setup') return ViewportContextPropertiesRef.current
 
-        const {top, right, bottom, left} = viewportElementRef.current.getBoundingClientRect()
-        const width = (right - left)
-        const height = (bottom - top)
-
-        // this is a dimension update procedure for resize. 
-        // See also interrupthandler.tsx cradleIntersectionObserverCallback for cradle intersection update
         const localViewportData = {
-            viewportDimensions:{top,right, bottom, left, width, height},
             elementRef:viewportElementRef,
             isResizing:isResizingRef.current,
         }
@@ -205,6 +218,10 @@ const Viewport = ({
         >
             { (viewportState != 'setup') && children }
         </div>
+        {useScrollTracker && <ScrollTracker 
+            scrollTrackerAPIRef = {scrollTrackerAPIRef}
+            styles = { styles.scrolltracker }
+        />}
     </ViewportContext.Provider>
     
 } // Viewport

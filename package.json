@@ -1,7 +1,7 @@
 {
   "name": "react-infinite-grid-scroller",
-  "version": "1.0.5",
-  "description": "Heavy-duty vertical or horizontal infinite scroller",
+  "version": "1.1.0",
+  "description": "infinite vertical or horizontal scroll using css grid layout",
   "main": "index.js",
   "scripts": {
     "dev": "webpack --mode=development --devtool 'eval-source-map' --config webpack.config.js",
@@ -41,8 +41,7 @@
   "dependencies": {
     "react-error-boundary": "^4.0.4",
     "react-reverse-portal": "^2.0.1",
-    "requestidlecallback": "^0.3.0",
-    "wepack-cli": "^0.0.1-security"
+    "requestidlecallback": "^0.3.0"
   },
   "peerDependencies": {
     "react": "^18.0.0",
@@ -58,8 +57,8 @@
     "@types/node": "^20.1.1",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.48.0",
-    "@typescript-eslint/parser": "^5.48.0",
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/parser": "^6.3.0",
     "babel-loader": "^9.1.0",
     "eslint": "^8.31.0",
     "eslint-plugin-react": "^7.31.11",
@@ -68,7 +67,8 @@
     "typescript": "^5.0.4",
     "webpack": "^5.61.0",
     "webpack-cli": "^5.0.1",
-    "webpack-sources": "^3.2.1"
+    "webpack-sources": "^3.2.1",
+    "wepack-cli": "^0.0.1-security"
   },
   "directories": {
     "lib": "lib"

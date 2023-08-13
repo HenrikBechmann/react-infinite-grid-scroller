@@ -2,7 +2,7 @@
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    This module provides the Cradle component with one key function: getCradleStyles.
+    This module provides the Cradle component with one key public function: getCradleStyles.
     It returns an array of style objects for
         headstyles,
         tailstyles,
