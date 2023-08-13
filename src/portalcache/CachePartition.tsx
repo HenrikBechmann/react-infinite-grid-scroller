@@ -1,4 +1,4 @@
-// CellFrame.tsx
+// CachePartition.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 import React, {useState, useEffect, useRef, useCallback} from 'react'

@@ -3,7 +3,7 @@
 
 /*
     This module holds the response to scrolling. It also triggers an onAfterScroll event (after a timeout)
-    It's main job is to maintain records of scrollPos, targetAxisReferenceIndex, and 
+    It's main job is to maintain records of scrollPos, targetAxisReferencePosition, and 
         targetAxisViewportPixelOffset
 */
 
@@ -145,7 +145,12 @@ export default class ScrollHandler {
 
     public onScroll = (e) => {
 
-        const { scrollerID, ONAFTERSCROLL_TIMEOUT } = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const { 
+
+            scrollerID, // debug
+            ONAFTERSCROLL_TIMEOUT 
+
+        } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
         // const viewportElement = ViewportContextProperties.elementRef.current
@@ -210,10 +215,9 @@ export default class ScrollHandler {
 
         if (!ViewportContextProperties.isResizing) {
 
-            if ((cradleState == 'repositioningRender') || (cradleState == 'repositioningContinuation')) {
+            if (cradleState == 'repositioningRender') {
 
                 this.calcImpliedRepositioningData('onScroll')
-                if (cradleState == 'repositioningRender') stateHandler.setCradleState('repositioningContinuation')
 
             }
 
@@ -245,7 +249,7 @@ export default class ScrollHandler {
         switch (cradleState) {
 
             case 'repositioningRender': 
-            case 'repositioningContinuation':
+            // case 'repositioningContinuation':
             {
 
                 this.updateBlockScrollPos()
@@ -289,7 +293,7 @@ export default class ScrollHandler {
         const { stateHandler, layoutHandler } 
             = this.cradleParameters.handlersRef.current
 
-        const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current,
+        const cradleSpecs = this.cradleParameters.cradleInheritedPropertiesRef.current,
             ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
 
         if (!stateHandler.isMountedRef.current) return
@@ -301,7 +305,7 @@ export default class ScrollHandler {
             scrollblockElement = viewportElement.firstChild
 
         let axisViewportPixelOffset
-        if (cradleProps.orientation == 'vertical') {
+        if (cradleSpecs.orientation == 'vertical') {
 
             axisViewportPixelOffset = 
                 axisElement.offsetTop + scrollblockElement.offsetTop - viewportElement.scrollTop
@@ -329,7 +333,7 @@ export default class ScrollHandler {
     // called from updateReferenceData
     private updateBlockScrollPos = () => {
 
-        const cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const cradleSpecs = this.cradleParameters.cradleInheritedPropertiesRef.current
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
         const {layoutHandler} = this.cradleParameters.handlersRef.current
         const { cradlePositionData } = layoutHandler
@@ -338,7 +342,7 @@ export default class ScrollHandler {
 
         if (!((viewportElement.clientWidth == 0)  && (viewportElement.clientHeight == 0))) {// in cache
 
-            if (cradleProps.orientation == 'vertical') {
+            if (cradleSpecs.orientation == 'vertical') {
 
                 cradlePositionData.blockScrollPos = viewportElement.scrollTop
                 cradlePositionData.blockXScrollPos = viewportElement.scrollLeft
@@ -354,52 +358,56 @@ export default class ScrollHandler {
 
     }
 
-    public calcImpliedRepositioningData = (source) => {
+    // TODO update scrollTracker is in use
+    public calcImpliedRepositioningData = (source) => { // source for debug
 
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
-            cradleProps = this.cradleParameters.cradleInheritedPropertiesRef.current,
-            cradleConfig = this.cradleParameters.cradleInternalPropertiesRef.current
+            cradleSpecs = this.cradleParameters.cradleInheritedPropertiesRef.current,
+            { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
 
         const viewportElement = ViewportContextProperties.elementRef.current,
             scrollblockElement = viewportElement.firstChild
 
-        const { crosscount, listsize } = cradleConfig,
-            { orientation } = cradleProps
+        const { orientation } = cradleSpecs
+
+        const { crosscount, size:listsize } = virtualListProps
 
         let scrollPos, cellLength, scrollblockOffset
         if (orientation == 'vertical') {
 
             scrollPos = viewportElement.scrollTop
-            cellLength = cradleProps.cellHeight + cradleProps.gap
+            cellLength = cradleSpecs.cellHeight + cradleSpecs.gap
             scrollblockOffset = scrollblockElement.offsetTop
 
         } else {
 
             scrollPos = viewportElement.scrollLeft
-            cellLength = cradleProps.cellWidth + cradleProps.gap
+            cellLength = cradleSpecs.cellWidth + cradleSpecs.gap
             scrollblockOffset = scrollblockElement.offsetLeft
 
         }
 
         let axisPixelOffset = cellLength - ((scrollPos + scrollblockOffset) % cellLength)
-        if (axisPixelOffset == (cellLength + cradleProps.padding)) {
+        if (axisPixelOffset == (cellLength + cradleSpecs.padding)) {
             axisPixelOffset = 0
         }
 
-        const axisRowIndex = Math.ceil((scrollPos - cradleProps.padding)/cellLength)
+        const axisRowPosition = Math.ceil((scrollPos - cradleSpecs.padding)/cellLength)
 
-        let axisReferenceIndex = axisRowIndex * crosscount
-        axisReferenceIndex = Math.min(axisReferenceIndex,listsize - 1)
+        let axisReferencePosition = axisRowPosition * crosscount
+        axisReferencePosition = Math.min(axisReferencePosition,listsize - 1)
 
-        const diff = axisReferenceIndex % crosscount
-        axisReferenceIndex -= diff
+        const diff = axisReferencePosition % crosscount
+        axisReferencePosition -= diff
 
-        if (axisReferenceIndex == 0) axisPixelOffset = 0 // defensive
+        if (axisReferencePosition == 0) axisPixelOffset = 0 // defensive
 
         const { cradlePositionData } = this.cradleParameters.handlersRef.current.layoutHandler
 
-        cradlePositionData.targetAxisReferenceIndex = axisReferenceIndex
-        cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset
+        cradlePositionData.targetAxisReferencePosition = axisReferencePosition
+        cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset;
+
+        (source == 'onScroll') && ViewportContextProperties.scrollTrackerAPIRef.current.updateReposition(axisReferencePosition)
 
     }
 

@@ -13,7 +13,7 @@
     portal'd to CellFrames. The cache can be configured to hold more items than the Cradle (limited by 
     device memory). Caching allows host content to maintain state.
 
-    Scrollblock represents the entirety of the list (and is sized accordingly). It is the object that is scrolled.
+    Scrollblock represents the entirety of the list (and is sized accordingly). It is the component that is scrolled.
 
     Cradle contains the list items, and is 'virtualized' -- it appears as though it scrolls through a filled 
     scrollblock, but in fact it is only slightly larger than the viewport. Content is rotated in and out of the 
@@ -24,8 +24,8 @@
     Overall the InfiniteGridScroller as a package manages the asynchronous interactions of the 
     components of the mechanism. Most of the work occurs in the Cradle component.
 
-    The Rigs liner (the top level Viewport element) is set with 'display:absolute' and 'inset:0', so the user 
-    containing block should be styles accordingly.
+    The RIGS liner (the top level Viewport element) is set with 'display:absolute' and 'inset:0', so the user 
+    containing block should be styled accordingly.
 */
 
 import React, { useEffect, useState, useCallback, useRef } from 'react'
@@ -72,6 +72,8 @@ let globalScrollerID = 0
 
 const InfiniteGridScroller = (props) => {
 
+    // state
+    const [scrollerState, setScrollerState] = useState('setup') // setup, setlistprops, ready
 
     // ------------------[ normalize properties ]--------------------
 
@@ -83,6 +85,7 @@ const InfiniteGridScroller = (props) => {
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
             // max for variable layout
         startingListSize = 0, // the starging number of items in the virtual list. can be changed
+        startingListRange = [], // supercedes startingListSize if present
         getItem, // required. function provided by host - parameters set by system are index number
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
@@ -98,7 +101,7 @@ const InfiniteGridScroller = (props) => {
         // scroller specs:
         runwaySize = 3, // the number of rows outside the view of each side of the viewport 
             // -- gives time to assemble cellFrames before display
-        startingIndex = 0, // the 0-based starting index of the list, when first loaded
+        startingIndex = 0, // the starting index of the list, when first loaded
 
         // system specs:
         cache = 'cradle', // "preload", "keepload" or "cradle"
@@ -206,6 +209,42 @@ const InfiniteGridScroller = (props) => {
             originalValues, verifiedValues)
     }
 
+    // rationalize startingListsize and startingListRange
+    if (!problems && scrollerState == 'setup') {
+
+        let goodrange = true
+        if (!startingListRange || 
+            !Array.isArray(startingListRange) || 
+            !((startingListRange.length == 2) || (startingListRange.length == 0))) {
+            goodrange = false
+        }
+        if (goodrange) {
+            if (startingListRange.length == 0) {
+                startingListSize = 0
+            } else {
+                let [lowindex,highindex] = startingListRange
+                lowindex = +lowindex
+                highindex = +highindex
+                if (isNaN(lowindex) || isNaN(highindex)) {
+                    goodrange = false
+                } else if (lowindex > highindex) {
+                    goodrange = false
+                }
+                if (goodrange) {
+                    startingListSize = highindex - lowindex + 1
+                }
+            }
+        }
+        if (!goodrange) {
+            if (startingListSize && (!isNaN(startingListSize))) {
+                startingListRange = [0,startingListSize - 1]
+            } else {
+                startingListRange = []
+                startingListSize = 0
+            }
+        }
+    }
+
     // enums
     if (!['horizontal','vertical'].includes(orientation)) { 
         orientation = 'vertical'
@@ -229,9 +268,6 @@ const InfiniteGridScroller = (props) => {
     }
 
     const gridSpecsRef = useRef(gridSpecs)
-
-    // state
-    const [scrollerState, setScrollerState] = useState('setup') // setup, setlistsize, ready
 
     // system
     const stylesRef = useRef(styles)
@@ -278,8 +314,24 @@ const InfiniteGridScroller = (props) => {
     const updateFunctionRef = useRef(null)
 
     const listsizeRef = useRef(startingListSize)
+    const listRangeRef = useRef(startingListRange)
 
     const listsize = listsizeRef.current
+    const listrange = listRangeRef.current
+    const [lowlistrange, highlistrange] = listrange // ranges undefined if listrange length is 0
+
+    const virtualListSpecs = {
+        size:listsize,
+        range:listrange,
+        lowindex:lowlistrange,
+        highindex:highlistrange,
+    }
+
+    const virtualListSpecsRef = useRef(virtualListSpecs)
+
+    if (!compareProps(virtualListSpecs, virtualListSpecsRef.current)) {
+        virtualListSpecsRef.current = virtualListSpecs
+    }
 
     // tests for React with Object.is for changed properties; avoid re-renders with no change
     if (!compareProps(gridSpecs, gridSpecsRef.current)) {
@@ -314,6 +366,18 @@ const InfiniteGridScroller = (props) => {
 
     const isMountedRef = useRef(true)
 
+    useEffect(()=>{
+
+        isMountedRef.current = true
+
+        return () => {
+
+            isMountedRef.current = false
+
+        }
+
+    },[])
+
     useEffect (() => {
 
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
@@ -322,31 +386,54 @@ const InfiniteGridScroller = (props) => {
 
     },[]);
 
-    // called when getItem returns null, or direct call from user (see serviceHandler)
-    const updateListsize = useCallback((listsize) =>{
+    const setVirtualListRange = useCallback((listrange) =>{
 
-        if (listsize == listsizeRef.current) return
+        let listsize
+        if (listrange.length == 0) {
+            listsize = 0
+        } else {
+            const [lowrange, highrange] = listrange
+            listsize = highrange - lowrange + 1
+        }
 
         listsizeRef.current = listsize
+        listRangeRef.current = listrange
 
         // inform the user
-        callbacksRef.current.newListsize && callbacksRef.current.newListsize(listsize)
+        callbacksRef.current.changeListRangeCallback && 
+            callbacksRef.current.changeListRangeCallback(listrange)
 
-        setScrollerState('setlistsize')
+        setScrollerState('setlistprops')
+
+    },[])
+
+    // called when getItem returns null, or direct call from user (see serviceHandler)
+    const setVirtualListSize = useCallback((listsize) =>{
+
+        let listrange = listRangeRef.current
+        if (listsize == 0) {
+            listrange = []
+        } else {
+            if (listrange.length == 0) {
+                listrange = [0,listsize - 1]
+            } else {
+                const [lowindex,highindex] = listRangeRef.current
+                listrange = [lowindex,lowindex + listsize - 1]
+            }
+        }
+
+        listsizeRef.current = listsize
+        listRangeRef.current = listrange
+
+        // inform the user
+        callbacksRef.current.changeListSizeCallback && 
+            callbacksRef.current.changeListSizeCallback(listsize)
+
+        setScrollerState('setlistprops')
 
     },[])
 
     // ---------------------[ State handling ]------------------------
-
-    useEffect(()=>{
-
-        isMountedRef.current = true
-
-        return () => {
-            isMountedRef.current = false
-        }
-
-    },[])
 
     const itemSetRef = useRef(null)
 
@@ -365,14 +452,14 @@ const InfiniteGridScroller = (props) => {
 
                 }
 
-            case 'setlistsize':
+            case 'setlistprops':
                 setScrollerState('ready')
 
         }
 
         return () => {
 
-            if (!isMountedRef.current) { // double call possible - a React anomaly
+            if (!isMountedRef.current) {
 
                 cacheAPIRef.current.unRegisterScroller(itemSetRef.current)
 
@@ -405,6 +492,7 @@ const InfiniteGridScroller = (props) => {
             styles = { stylesRef.current }
             scrollerID = { scrollerID }
             VIEWPORT_RESIZE_TIMEOUT = { VIEWPORT_RESIZE_TIMEOUT }
+            useScrollTracker = { useScrollTracker }
 
         >
         
@@ -412,7 +500,7 @@ const InfiniteGridScroller = (props) => {
 
                 gridSpecs = { gridSpecsRef.current }
                 styles = { stylesRef.current }
-                listsize = { listsize }
+                virtualListSpecs = {virtualListSpecsRef.current}
                 scrollerID = { scrollerID }
                 
             >
@@ -420,8 +508,9 @@ const InfiniteGridScroller = (props) => {
 
                     gridSpecs = { gridSpecsRef.current }
                     styles = { stylesRef.current }
-                    listsize = { listsize }
-                    updateListsize = { updateListsize }
+                    virtualListSpecs = {virtualListSpecsRef.current}
+                    setVirtualListSize = { setVirtualListSize }
+                    setVirtualListRange = { setVirtualListRange }
                     cache = { cache }
                     cacheMax = { cacheMax }
                     userCallbacks = { callbacksRef.current }
@@ -446,6 +535,7 @@ const InfiniteGridScroller = (props) => {
                 />
             </Scrollblock>}
         </Viewport>}
+        <div>
         {useLocalCache && <div data-type = 'cacheroot' style = { cacherootstyle }>
             <PortalCache 
 
@@ -454,6 +544,7 @@ const InfiniteGridScroller = (props) => {
                 CACHE_PARTITION_SIZE = { CACHE_PARTITION_SIZE } />
 
         </div>}
+        </div>
     </ErrorBoundary>
 }
 
