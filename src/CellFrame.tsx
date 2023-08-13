@@ -76,6 +76,7 @@ const CellFrame = ({
     placeholderErrorLinerStyles,
     placeholderMessages,
     usePlaceholder,
+    gridstartstyle,
 }) => {
 
     const coreConfigRef = useRef(null)
@@ -246,19 +247,23 @@ const CellFrame = ({
     // set styles
     useEffect(()=>{
 
-        const newStyles = getFrameStyles(
+        let newFrameStyles = getFrameStyles(
             orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, stylesRef.current)
+
+        if (gridstartstyle) {
+            newFrameStyles = {...newFrameStyles,...gridstartstyle}
+        }
         
         const newHolderStyles = getContentHolderStyles(layout, orientation, cellMinWidth, cellMinHeight)
 
         if (isMountedRef.current) {
 
-            stylesRef.current = newStyles
+            stylesRef.current = newFrameStyles
             holderStylesRef.current = newHolderStyles
 
         }
 
-    },[orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout]) 
+    },[orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, gridstartstyle]) 
 
     const portalNodeRef = useRef(null)
 
@@ -383,11 +388,15 @@ const CellFrame = ({
                                     content = usercontent
                                 }
 
-                                portalMetadataRef.current = await cacheAPI.createPortal(content, index, itemID, scrollerProperties)
+                                const retval = portalMetadataRef.current = await cacheAPI.createPortal(content, index, itemID, scrollerProperties)
 
-                                portalNodeRef.current = portalMetadataRef.current.portalNode
-                                setContainerStyles(
-                                    portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
+                                if (retval) {
+                                
+                                    portalNodeRef.current = portalMetadataRef.current.portalNode
+                                    setContainerStyles(
+                                        portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
+
+                                }
 
                                 isMountedRef.current && setFrameState('inserting')
 
@@ -468,7 +477,6 @@ const CellFrame = ({
     </div>
 
 } // CellFrame
-//(frameState != 'setup') && 
 export default CellFrame
 
 // utilities
@@ -546,7 +554,7 @@ const getContentHolderStyles = (layout,orientation,cellMinWidth, cellMinHeight )
     return styles
 }
 
-// see also some base styles set in cachehandler
+// see also some base styles set in cacheAPI
 const setContainerStyles = (container, layout, orientation, cellWidth, cellHeight) => {
 
     container.style.overflow = 'hidden'

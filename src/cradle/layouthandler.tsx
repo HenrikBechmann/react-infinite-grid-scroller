@@ -9,7 +9,7 @@
     The structural elements are the axis, head (grid), tail (grid), 
         and the head and tail triggerlines
     The key control values are the blockScrollPos & blockXScrollPos (scrollTop or scrollLeft), the block scroll
-        property ("scrollTop" or "scrollLeft"), the targetAxisReferenceIndex (first index of the
+        property ("scrollTop" or "scrollLeft"), the targetAxisReferencePosition (first index of the
         tail block), and the targetAxisViewportPixelOffset (pixels offset from the edge of the 
         viewport)
 */
@@ -23,14 +23,17 @@ export default class LayoutHandler {
         this.cradleParameters = cradleParameters
 
         const {
+
             axisRef, 
             headRef, 
             tailRef,
             triggercellTriggerlineHeadRef,
             triggercellTriggerlineTailRef,
+
         } = cradleParameters.cradleInternalPropertiesRef.current.cradleElementsRef.current
         
         this.elements = {
+
             axisRef,
             headRef,
             tailRef,
@@ -38,20 +41,40 @@ export default class LayoutHandler {
             triggercellTriggerlineTailRef,
         }
 
-        const {
+        let {
+
             startingIndex, 
             // padding
         } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        const {
-            listsize,
-        } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
 
-        this.cradlePositionData.targetAxisReferenceIndex = 
-            (Math.min(startingIndex,(listsize - 1)) || 0)
+        const { 
+
+            size:listsize,
+            lowindex,
+            highindex,
+
+        } = virtualListProps
+
+        if (listsize) {
+
+            startingIndex = Math.max(startingIndex, lowindex)
+            startingIndex = Math.min(startingIndex, highindex)
+
+            this.cradlePositionData.targetAxisReferencePosition = startingIndex - lowindex
+
+        } else {
+
+            this.cradlePositionData.targetAxisReferencePosition = 0
+        }
 
         this.cradlePositionData.targetAxisViewportPixelOffset = 0
 
+    }
+
+    public get scrollerID() { // for debug
+        return this.cradleParameters.cradleInheritedPropertiesRef.current.scrollerID
     }
 
     private cradleParameters
@@ -104,18 +127,18 @@ export default class LayoutHandler {
         blockXScrollProperty: null,
 
         /*
-            targetAxisReferenceIndex is set by
+            targetAxisReferencePosition is set by
                 - setCradleContent
                 - updateCradleContent
                 - layoutHandler (initialization)
                 - scrollHandler (during and after scroll)
                 - host scrollToIndex call
 
-            targetAxisReferenceIndex is used by
+            targetAxisReferencePosition is used by
                 - scrollTrackerArgs in cradle module
                 - requestedAxisReferenceIndex in setCradleContent
         */
-        targetAxisReferenceIndex:null,
+        targetAxisReferencePosition:null,
 
         /*
             targetAxisViewportPixelOffset is set by
@@ -154,9 +177,9 @@ export default class LayoutHandler {
         } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         const {
-            listRowcount,
+            rowcount:listRowcount,
             crosscount,
-        } = this.cradleParameters.cradleInternalPropertiesRef.current
+        } = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps
 
         const { 
 
@@ -189,10 +212,10 @@ export default class LayoutHandler {
         }
 
         const { cradlePositionData } = layoutHandler
-        const axisReference = cradlePositionData.targetAxisReferenceIndex
-        const rowOffset = Math.ceil(axisReference/crosscount)
+        const axisReferencePosition = cradlePositionData.targetAxisReferencePosition
+        const rowReferencePosition = Math.ceil(axisReferencePosition/crosscount)
         const calculatedBlockScrollPos = 
-            (rowOffset * cellLength) + padding
+            (rowReferencePosition * cellLength) + padding
 
 
         if (isSafariIOS()) { // scrollPos overwritten by Safari iOS momentum engine

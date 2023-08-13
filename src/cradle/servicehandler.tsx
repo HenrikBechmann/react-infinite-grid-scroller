@@ -12,12 +12,17 @@
 
         scrollToIndex, 
         reload, 
-        setListsize,
+        setListsize, *deprectated* for proper camel case
+        setListSize,
+        setListRange,
+        prependIndexCount,
+        appendIndexCount,
         clearCache, 
 
         getCacheIndexMap, 
         getCacheItemMap,
         getCradleIndexMap,
+        getPropertiesSnapshot,
 
         insertIndex,
         removeIndex,
@@ -52,22 +57,22 @@ const isInteger = (value:any) => {
 
 }
 
-const minValue = (value:any, minValue:any) => {
+const isValueGreaterThanOrEqualToMinValue = (compareValue:any, minValue:any) => {
 
-    if (!isInteger(value) || !isInteger(minValue)) return false
+    if (!isInteger(compareValue) || !isInteger(minValue)) return false
 
-    const testvalue = +value
+    const testvalue = +compareValue
     const testMinValue = +minValue
 
     return testvalue >= testMinValue
 
 }
 
-const maxValue = (value:any, maxValue:any) => {
+const isValueLessThanToOrEqualToMaxValue = (compareValue:any, maxValue:any) => {
 
-    if (!isInteger(value) || !isInteger(maxValue)) return false
+    if (!isInteger(compareValue) || !isInteger(maxValue)) return false
 
-    const testvalue = +value
+    const testvalue = +compareValue
     const testMaxValue = +maxValue
 
     return testvalue <= testMaxValue
@@ -75,15 +80,16 @@ const maxValue = (value:any, maxValue:any) => {
 }
 
 const errorMessages = {
-    scrollToIndex:'integer: required, greater than or equal to 0',
-    setListsize:'integer: required, greater than or equal to 0',
-    insertFrom:'insertFrom - integer: required, greater than or equal to 0',
+    scrollToIndex:'integer: required, greater than or equal to low index',
+    setListSize:'integer: required, greater than or equal to 0',
+    setListRange:'array[lowindex,highindex]: required, both integers, highindex greater than or equal to lowindex',
+    insertFrom:'insertFrom - integer: required, greater than or equal to low index',
     insertRange:'insertRange - blank, or integer greater than or equal to the "from" index',
-    removeFrom:'removeFrom - integer: required, greater than or equal to 0',
+    removeFrom:'removeFrom - integer: required, greater than or equal to low index',
     removeRange:'removeRange - blank, or integer greater than or equal to the "from" index',
-    moveFrom:'moveFrom - integer: required, greater than or equal to 0',
+    moveFrom:'moveFrom - integer: required, greater than or equal to low index',
     moveRange:'moveRange - blank, or integer greater than or equal to the "from" index',
-    moveTo:'moveTo - integer: required, greater than or equal to 0',
+    moveTo:'moveTo - integer: required, greater than or equal to low index',
 }
 
 export default class ServiceHandler {
@@ -93,22 +99,26 @@ export default class ServiceHandler {
        this.cradleParameters = cradleParameters
 
        // doing this explicitly here for documentation
-       const {
+       const 
+
+       {
            referenceIndexCallback, // (index, location, cradleState)
            preloadIndexCallback, // (index)
            deleteListCallback, // (reason, deleteList)
-           changeListsizeCallback, // (newlistsize)
+           changeListSizeCallback, // (newlistsize)
+           changeListRangeCallback,
            itemExceptionCallback, // (index, itemID, returnvalue, location, error)
            repositioningFlagCallback, // (flag) // boolean
            repositioningIndexCallback,
            
-       } = cradleParameters.externalCallbacksRef.current
+       } = cradleParameters.externalCallbacksRef.current,
 
-       const callbacks = {
+       callbacks = {
            referenceIndexCallback,
            preloadIndexCallback,
            deleteListCallback,
-           changeListsizeCallback,
+           changeListSizeCallback,
+           changeListRangeCallback,
            itemExceptionCallback,
            repositioningFlagCallback,
            repositioningIndexCallback
@@ -139,7 +149,27 @@ export default class ServiceHandler {
 
     public scrollToIndex = (index) => {
 
-        const isInvalid = (!isInteger(index) || !minValue(index, 0))
+        const 
+
+            { cradleParameters } = this,
+
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+
+            { virtualListProps } = cradleInternalProperties,
+
+            { lowindex, size } = virtualListProps
+
+        if (!size) return
+
+        const isInvalid = (!isInteger(index)) //|| 
+
+        if (!isInvalid) {
+
+            if (!isValueGreaterThanOrEqualToMinValue(index, lowindex)) {
+                index = lowindex
+            }
+
+        }
 
         index = +index
 
@@ -150,37 +180,66 @@ export default class ServiceHandler {
 
         }
 
-        const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
-        const { layoutHandler, stateHandler} = this.cradleParameters.handlersRef.current
+        const
+
+            handlers = cradleParameters.handlersRef.current,
+
+            {
+
+                interruptHandler,
+                layoutHandler,
+                stateHandler
+
+            } = handlers,
+
+            { signals } = interruptHandler
 
         signals.pauseScrollingEffects = true
 
-        layoutHandler.cradlePositionData.targetAxisReferenceIndex = index
+        layoutHandler.cradlePositionData.targetAxisReferencePosition = index - lowindex
 
         stateHandler.setCradleState('scrollto')
 
     }
 
-    public setListsize = (newlistsize) => {
+    // deprecated (camel case)
+    public setListsize = (newlistsize) => { // *deprecated* (for camel case)
 
-        const isInvalid = (!isInteger(newlistsize) || !minValue(newlistsize, 0))
+        this.setListSize(newlistsize)
+        
+    }
+
+    public setListSize = (newlistsize) => {
 
         newlistsize = +newlistsize
 
+        const isInvalid = (!isInteger(newlistsize) || !isValueGreaterThanOrEqualToMinValue(newlistsize, 0))
+
         if (isInvalid) {
 
-            console.log('RIGS ERROR setListsize(newlistsize)', newlistsize, errorMessages.setListsize)
+            console.log('RIGS ERROR setListSize(newlistsize)', newlistsize, errorMessages.setListSize)
             return
 
         }
 
-        const { cacheAPI, contentHandler, stateHandler } = this.cradleParameters.handlersRef.current
+        const 
+            { 
 
-        const { deleteListCallback, changeListsizeCallback } = this.callbacks
+                cacheAPI, 
+                contentHandler, 
+                stateHandler 
 
-        const { listsize:currentlistsize } = this.cradleParameters.cradleInternalPropertiesRef.current
+            } = this.cradleParameters.handlersRef.current,
 
-        const { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
+            { 
+
+                deleteListCallback, 
+
+            } = this.callbacks,
+
+            currentlistsize = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.size,
+
+            { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         let dListCallback
         if (deleteListCallback) {
@@ -192,18 +251,142 @@ export default class ServiceHandler {
 
         }
 
-        contentHandler.updateListsize(newlistsize)
-        cacheAPI.changeCacheListsize(newlistsize, 
-            dListCallback,
-            changeListsizeCallback
-        )
+        contentHandler.updateVirtualListSize(newlistsize)
+        cacheAPI.changeCacheListSize(newlistsize, dListCallback)
+
+        cacheAPI.renderPortalLists()
+
+        if ((cache == 'preload') && (newlistsize > currentlistsize)) {
+
+            stateHandler.setCradleState('startpreload')
+
+        }
+
+    }
+
+    public setListRange = (newlistrange) => {
+
+        let isInvalid = !Array.isArray(newlistrange)
+
+        if (!isInvalid) {
+
+            isInvalid = !(newlistrange.length == 0 || newlistrange.length == 2)
+
+            if (!isInvalid && (newlistrange.length == 2)) {
+
+                let [lowindex,highindex] = newlistrange
+
+                lowindex = +lowindex
+                highindex = +highindex
+
+                isInvalid = ((!isInteger(lowindex)) || (!isInteger(highindex)) || (!isValueGreaterThanOrEqualToMinValue(highindex, lowindex)))
+
+                if (!isInvalid) newlistrange = [lowindex,highindex]
+
+            }
+
+        }
+
+        if (isInvalid) {
+
+            console.log('RIGS ERROR setListRange(newlistrange)', newlistrange, errorMessages.setListRange)
+            return
+
+        }
+
+        const 
+            { 
+
+                cacheAPI, 
+                contentHandler, 
+                stateHandler 
+
+            } = this.cradleParameters.handlersRef.current,
+
+            { 
+
+                deleteListCallback, 
+
+            } = this.callbacks,
+
+            currentlistrange = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.range,
+
+            { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
+
+        let dListCallback
+        if (deleteListCallback) {
+            dListCallback = (deleteList) => {
+
+                deleteListCallback('change list range intervention',deleteList)
+
+            }
+
+        }
+
+        contentHandler.updateVirtualListRange(newlistrange)
+        cacheAPI.changeCacheListRange(newlistrange, dListCallback)
 
         cacheAPI.renderPortalLists()
 
 
-        if ((cache == 'preload') && (newlistsize > currentlistsize)) {
+        if ((cache == 'preload') && 
+            (newlistrange.length == 2) &&
+            (newlistrange[0] < currentlistrange[0] || newlistrange[1] > currentlistrange[1])) {
+
             stateHandler.setCradleState('startpreload')
+
         }
+
+    }
+
+    public prependIndexCount = (prependCount) => {
+        prependCount = +prependCount
+        const isInvalid = ((!isInteger(prependCount)) || (!isValueGreaterThanOrEqualToMinValue(prependCount, 0)))
+        if (isInvalid) {
+            console.log('RIGS ERROR, prependIndexCount must be an integer >= 0')
+            return
+        }
+        const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const [lowindex, highindex] = virtualListProps.range
+        const { size } = virtualListProps
+
+        let newlistrange
+        if (size) {
+
+            newlistrange = [lowindex - prependCount,highindex]
+
+        } else {
+
+            newlistrange = [-prependCount + 1,0]
+
+        }
+
+        this.setListRange(newlistrange)
+    }
+
+    public appendIndexCount = (appendCount) => {
+        appendCount = +appendCount
+        const isInvalid = ((!isInteger(appendCount)) || (!isValueGreaterThanOrEqualToMinValue(appendCount, 0)))
+        if (isInvalid) {
+            console.log('RIGS ERROR, appendIndexCount must be an integer >= 0')
+            return
+        }
+        const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const [lowindex, highindex] = virtualListProps.range
+        const { size } = virtualListProps
+
+        let newlistrange
+        if (size) {
+
+            newlistrange = [lowindex,highindex + appendCount] 
+
+        } else {
+
+            newlistrange = [0,appendCount - 1]
+
+        }
+
+        this.setListRange(newlistrange)
 
     }
 
@@ -231,6 +414,17 @@ export default class ServiceHandler {
 
         const modelIndexList = contentHandler.getModelIndexList()
         return cacheAPI.getCradleIndexMap(modelIndexList)
+    }
+
+    public getPropertiesSnapshot = () => {
+
+        const props = {...this.cradleParameters.scrollerPropertiesRef.current}
+        
+        props.virtualListProps = {...props.virtualListProps}
+        props.cradleContentProps = {...props.cradleContentProps}
+
+        return props
+
     }
 
     // =================[ CACHE MANAGEMENT REQUESTS ]==================
@@ -504,10 +698,6 @@ export default class ServiceHandler {
             }
         })
 
-        // refresh the changed cache
-        // cacheAPI.cacheProps.partitionModified = true
-        // cacheAPI.renderPortalLists()
-
         // ------------- apply changes to extant cellFrames ------------
 
         // these are used to reconcile cradle cellFrames, and also for return information
@@ -557,15 +747,27 @@ export default class ServiceHandler {
     // returns list of processed indexes
     public moveIndex = (tolowindex, fromlowindex, fromhighindex = null) => {
 
+        const 
+
+            { cradleParameters } = this,
+
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+
+            { virtualListProps } = cradleInternalProperties,
+
+            { lowindex:listlowindex, size } = virtualListProps
+
+        if (!size) return
+
         // ------------ confirm validity of arguments -------------
 
-        const isToindexInvalid = (!isInteger(tolowindex) || !minValue(tolowindex, 0))
-        const isFromindexInvalid = (!isInteger(fromlowindex) || !minValue(fromlowindex, 0))
+        const isToindexInvalid = (!isInteger(tolowindex) || !isValueGreaterThanOrEqualToMinValue(tolowindex, listlowindex))
+        const isFromindexInvalid = (!isInteger(fromlowindex) || !isValueGreaterThanOrEqualToMinValue(fromlowindex, listlowindex))
         let isHighrangeInvalid = false
 
         if ((!isFromindexInvalid)) {
             if (!isBlank(fromhighindex)) {
-                isHighrangeInvalid = !minValue(fromhighindex, fromlowindex)
+                isHighrangeInvalid = !isValueGreaterThanOrEqualToMinValue(fromhighindex, fromlowindex)
             } else {
                 fromhighindex = fromlowindex
             }
@@ -585,9 +787,9 @@ export default class ServiceHandler {
             return []
         }
 
-        tolowindex = Math.max(0,tolowindex)
-        fromlowindex = Math.max(0,fromlowindex)
-        fromhighindex = Math.max(0,fromhighindex)
+        tolowindex = Math.max(listlowindex,tolowindex)
+        fromlowindex = Math.max(listlowindex,fromlowindex)
+        fromhighindex = Math.max(listlowindex,fromhighindex)
 
         const fromspan = fromhighindex - fromlowindex + 1
 
@@ -595,7 +797,7 @@ export default class ServiceHandler {
 
         // ------------- coerce parameters to list bounds ---------------
 
-        const { listsize } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const listsize = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.size
 
         // keep within current list size
         const listhighindex = listsize - 1
@@ -603,16 +805,16 @@ export default class ServiceHandler {
         if (tohighindex > listhighindex) {
 
             const diff = tohighindex - listhighindex
-            tohighindex = Math.max(0,tohighindex - diff)
-            tolowindex = Math.max(0,tolowindex - diff)
+            tohighindex = Math.max(listlowindex,tohighindex - diff)
+            tolowindex = Math.max(listlowindex,tolowindex - diff)
 
         }
 
         if (fromhighindex > listhighindex) {
 
             const diff = fromhighindex - listhighindex
-            fromhighindex = Math.max(0,fromhighindex - diff)
-            fromlowindex = Math.max(0,fromlowindex - diff)
+            fromhighindex = Math.max(listlowindex,fromhighindex - diff)
+            fromlowindex = Math.max(listlowindex,fromlowindex - diff)
 
         }
 
@@ -648,12 +850,33 @@ export default class ServiceHandler {
 
     public insertIndex = (index, rangehighindex = null) => {
 
-        const isIndexInvalid = (!isInteger(index) || !minValue(index, 0))
+        const 
+
+            { cradleParameters } = this,
+
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+
+            { virtualListProps } = cradleInternalProperties,
+
+            { lowindex:listlowindex, size } = virtualListProps
+
+        let isIndexInvalid = !isInteger(index)
+
+        if (!isIndexInvalid) {
+
+            if (size) {
+                isIndexInvalid = !isValueGreaterThanOrEqualToMinValue(index, listlowindex)
+            } else {
+                isIndexInvalid = false
+            }
+
+        }
+
         let isHighrangeInvalid = false
 
         if ((!isIndexInvalid)) {
             if (!isBlank(rangehighindex)) {
-                isHighrangeInvalid = !minValue(rangehighindex, index)
+                isHighrangeInvalid = !isValueGreaterThanOrEqualToMinValue(rangehighindex, index)
             } else {
                 rangehighindex = index
             }
@@ -676,12 +899,24 @@ export default class ServiceHandler {
 
     public removeIndex = (index, rangehighindex = null) => {
 
-        const isIndexInvalid = (!isInteger(index) || !minValue(index, 0))
+        const 
+
+            { cradleParameters } = this,
+
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+
+            { virtualListProps } = cradleInternalProperties,
+
+            { lowindex:listlowindex, size } = virtualListProps
+
+        if (!size) return
+
+        const isIndexInvalid = (!isInteger(index) || !isValueGreaterThanOrEqualToMinValue(index, listlowindex))
         let isHighrangeInvalid = false
 
         if ((!isIndexInvalid)) {
             if (!isBlank(rangehighindex)) {
-                isHighrangeInvalid = !minValue(rangehighindex, index)
+                isHighrangeInvalid = !isValueGreaterThanOrEqualToMinValue(rangehighindex, index)
             } else {
                 rangehighindex = index
             }
@@ -701,37 +936,81 @@ export default class ServiceHandler {
 
     }
 
-    newlistsize
+    public newListSize // accessed by changelistsizeafterinsertremove event from Cradle
 
     // shared logic for insert and remove. Returns lists of indexes shifted, replaced, and removed
     // this operation changes the listsize
     private insertRemoveIndex = (index, rangehighindex, increment) => {
 
+        const 
+
+            { cradleParameters } = this,
+
+            { 
+                
+                cacheAPI, 
+                contentHandler, 
+                stateHandler, 
+            
+            } = this.cradleParameters.handlersRef.current,
+
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+
+            { 
+            
+                cradleContentProps, 
+                virtualListProps,
+
+            } = cradleInternalProperties,
+
+            { 
+            
+                lowindex:listlowindex, 
+                crosscount, 
+                size:listsize,
+
+            } = virtualListProps,
+
+            { 
+            
+                lowindex:lowCradleIndex, 
+                highindex:highCradleIndex, 
+                size:cradleSize, 
+                runwayRowcount:runwaySize,
+                viewportRowcount,
+            
+            } = cradleContentProps
+
         // basic assertions
-        index = Math.max(0,index)
-        rangehighindex = Math.max(rangehighindex, index)
+        if (listsize) index = Math.max(listlowindex,index)
 
-        // ---------------- assemble resources --------------------
-
-        const { cacheAPI, contentHandler, stateHandler } = 
-            this.cradleParameters.handlersRef.current
-
-        const cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
-        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
+        // if (!rangehighindex) rangehighindex = index
+        // rangehighindex = Math.max(rangehighindex, index)
 
         // ------------------- process cache ----------------
-        const { listsize } = cradleInternalProperties
+
         if (listsize == 0) {
+            
             if (increment > 0) {
 
-                return this.setListsize(rangehighindex - index + 1)
+                this.setListRange([index,rangehighindex])
 
+                const replaceList = []
+
+                for (let i = index; i<=rangehighindex; i++) {
+                    replaceList.push(i)
+                }
+
+                return [[],replaceList,[]]
+
+            } else {
+    
+                return [[],[],[]]
             }
-            return [[],[],[]]
         }
 
         const [startChangeIndex, rangeincrement, shiftedList, removedList, replaceList, portalPartitionItemsForDeleteList] = 
-            cacheAPI.insertRemoveIndex(index, rangehighindex, increment, listsize) //, cradleIndexSpan)
+            cacheAPI.insertRemoveIndex(index, rangehighindex, increment, listsize)
 
         if (rangeincrement === null) return [[],[],[]] // no action
 
@@ -741,26 +1020,21 @@ export default class ServiceHandler {
         // ------------- synchronize cradle to cache changes -------------
 
         // determine if cradle must be reset or simply adjusted
-        const changecount = rangeincrement // semantics
-        const newlistsize = this.newlistsize = listsize + changecount
+        const 
+            changecount = rangeincrement, // semantics
+            newlistsize = this.newListSize = listsize + changecount,
 
-        const { viewportRowcount, crosscount } = cradleInternalProperties
-        const { runwaySize } =  cradleInheritedProperties
-        const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
-        const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
+            calculatedCradleRowcount = viewportRowcount + (runwaySize * 2),
+            calculatedCradleItemcount = calculatedCradleRowcount * crosscount,
 
-        const indexSpan = contentHandler.indexSpan
-        const [lowIndex,highIndex] = indexSpan
-        const measuredCradleItemCount = (indexSpan.length == 0)?0:highIndex - lowIndex + 1
+            measuredCradleItemCount = (cradleSize == 0)?0:highCradleIndex - lowCradleIndex + 1,
 
-        const resetCradle = ((measuredCradleItemCount < calculatedCradleItemcount) || 
-            (contentHandler.indexSpan[1] >= (newlistsize - 1)))
+            resetCradle = ((measuredCradleItemCount < calculatedCradleItemcount) || 
+                (highCradleIndex >= (newlistsize - 1)))
 
         if (!resetCradle) { // synchronize cradle contents to changes
 
             contentHandler.synchronizeCradleItemIDsToCache(shiftedList, increment, startChangeIndex) // non-zero communications isInsertRemove
-
-            // if (increment == +1) contentHandler.createNewItemIDs(replaceList)
 
             const { content } = contentHandler
 

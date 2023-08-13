@@ -5,11 +5,11 @@
     The Cradle does the bulk of the work for the infinite grid scroller. It does so with the help of
     eight process handlers (class instances), and one main sub-component - the CellFrame.
 
-    Cradle's main responsibility is to manage the ~30 state changes of the system.
+    Cradle's main responsibility is to manage the ~35 state changes of the system.
 
     The illusion of infinite content is maintained by synchronizing changes in cradle content with the
     Cradle location inside the Scrollblock, such that as the Scrollblock is moved, the cradle moves 
-    oppositely to stay visible within the viewport.
+    oppositely to stay visible within the Viewport.
 
     The Scrollblock is sized to approximate the list being viewed, so as to have a scroll thumb size 
     and position which realistically reflects the size of the list being shown.
@@ -17,16 +17,19 @@
     The position of the cradle is controlled by an 'axis' which is a 0px height/width div
     (along the medial - ScrollBlock can be vertical or horizontal). The purpose of the axis is to 
     act as a 'fold', above which cradle content expands 'headwards' (up or left) in the Cradle, and 
-    below which the cradle content expands 'tailwards' (doen or right). The Cradle content is held in 
+    below which the cradle content expands 'tailwards' (down or right). The Cradle content is held in 
     two CSS grids (children of the axis): one above or left (the 'head' grid), and one below or right, 
     of the position of the axis (the 'tail' grid).
 
     The axis is kept near the leading (headward) edge of the visible cell rows of the Viewport
 
     Technically, there are several key reference points tracked by the Cradle. These are:
-        - axisReferenceIndex is the virtual index of the item controlling the location of the axis.
+        - targetAxisReferencePosition is the virtual 0-based position of the item controlling the location 
+          of the axis.
+        - The axisReferenceIndex is inferred from the targetAxisReferencePosition, by adding the virtual index 
+            range low index to the targetAxisReferencePosition.
             The axisReferenceIndex is also used to allocate items above (lower index value) and below 
-            (same or higher index value) the axis fold. The axisRefernceIndex is the first item in the 
+            (same or higher index value) the axis fold. The axisReferenceIndex is the first item in the 
             tail section of the Cradle.
         - (cradleReferenceIndex is inferred from the axisReferenceIndex, and is the virtual index of 
             the item defining the leading bound of the cradle content. The cradleReferenceIndex is usually 
@@ -50,7 +53,7 @@
     Cradle changes are activated by interrupts:
     - scrolling
     - resizing of the viewport
-    - observer callbacks:
+    - IntersectionObserver callbacks:
         - cradle/viewport intersection for repositioning when the cradle races out of scope
         - two 'triggerline'/viewport intersections which trigger rolling of content
             - rolling content triggers re-allocation of content between cradle head and tail grids
@@ -69,9 +72,6 @@ import React, {
 } from 'react'
 
 import { ViewportContext } from './Viewport'
-
-// popup position tracker for repositioning
-import ScrollTracker from './cradle/ScrollTracker'
 
 // support code; process handlers
 import ScrollHandler from './cradle/scrollhandler'
@@ -93,8 +93,9 @@ const Cradle = ({
         gridSpecs,
         // basics
         runwaySize, 
-        listsize, 
-        updateListsize,
+        virtualListSpecs,
+        setVirtualListSize,
+        setVirtualListRange,
         startingIndex, 
         getItem, 
         placeholder, 
@@ -120,6 +121,14 @@ const Cradle = ({
 
     }) => {
 
+    const { 
+
+        size:listsize,
+        lowindex, 
+        highindex,
+
+    } = virtualListSpecs
+
     // ========================[ DATA SETUP ]========================
 
     // unpack gridSpecs
@@ -143,15 +152,15 @@ const Cradle = ({
     ViewportContextPropertiesRef.current = ViewportContextProperties // for closures
 
     // flags
-    const isMountedRef = useRef(true)
-    const isCachedRef = useRef(false)
-    const wasCachedRef = useRef(false)
-    const hasBeenRenderedRef = useRef(false)
-
-    // trigger control
-    const triggerHistoryRef = useRef({
-        previousReferenceName:null,
-    })
+    const 
+        isMountedRef = useRef(true),
+        isCachedRef = useRef(false),
+        wasCachedRef = useRef(false),
+        hasBeenRenderedRef = useRef(false),
+        // trigger control
+        triggerHistoryRef = useRef({
+            previousReferenceName:null,
+        })
 
     //  viewport dimensions and cached state
     const getViewportDimensions = () => {
@@ -162,15 +171,13 @@ const Cradle = ({
         }
     }
 
-    // two sources; could use some reconciliation
-    const { viewportDimensions } = ViewportContextProperties // for scrollTracker
     const { height:viewportheight,width:viewportwidth } = getViewportDimensions() // viewportDimensions
 
     // cache test
     // zero width and height means the component must be in portal (cache) state
-    const isInPortal = ((viewportwidth == 0) && (viewportheight == 0)) 
-
-    const isCacheChange = (isInPortal != isCachedRef.current)
+    const 
+        isInPortal = ((viewportwidth == 0) && (viewportheight == 0)),
+        isCacheChange = (isInPortal != isCachedRef.current)
 
     if (isCacheChange) {
         wasCachedRef.current = isCachedRef.current
@@ -182,28 +189,29 @@ const Cradle = ({
     const cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // if (!scrollerProperties) {
+    // if (!scrollerProperties) { // root scroller
         // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
-        // console.log('-- index',~'+scrollerProperties?.cellFramePropertiesRef.current.index+'~')
+        // console.log('-- index','~'+scrollerProperties?.cellFramePropertiesRef.current.index+'~')
+        // console.log('-- itemID','+'+scrollerProperties?.cellFramePropertiesRef.current.itemID+'+')
     // }
 
     // cradle scaffold element refs
-    const headCradleElementRef = useRef(null)
-    const tailCradleElementRef = useRef(null)
-    const axisCradleElementRef = useRef(null)
-    const triggercellTriggerlineHeadElementRef = useRef(null)
-    const triggercellTriggerlineTailElementRef = useRef(null)
-
-    // layout bundle
-    const cradleElementsRef = useRef(
-        {
-            headRef:headCradleElementRef, 
-            tailRef:tailCradleElementRef, 
-            axisRef:axisCradleElementRef,
-            triggercellTriggerlineHeadRef:triggercellTriggerlineHeadElementRef,
-            triggercellTriggerlineTailRef:triggercellTriggerlineTailElementRef,
-        }
-    )
+    const 
+        headCradleElementRef = useRef(null),
+        tailCradleElementRef = useRef(null),
+        axisCradleElementRef = useRef(null),
+        triggercellTriggerlineHeadElementRef = useRef(null),
+        triggercellTriggerlineTailElementRef = useRef(null),
+        // layout bundle
+        cradleElementsRef = useRef(
+            {
+                headRef:headCradleElementRef, 
+                tailRef:tailCradleElementRef, 
+                axisRef:axisCradleElementRef,
+                triggercellTriggerlineHeadRef:triggercellTriggerlineHeadElementRef,
+                triggercellTriggerlineTailRef:triggercellTriggerlineTailElementRef,
+            }
+        )
 
     // ------------------------[ calculated properties ]------------------------
     // configuration calculations
@@ -244,12 +252,49 @@ const Cradle = ({
         viewportwidth,
     ])
 
+    const [ baserowblanks, endrowblanks ] = useMemo(()=> {
+
+        if (listsize == 0) {
+            return [undefined, undefined]
+        }
+        // add position adjustment for 0
+        const endadjustment =
+            (highindex < 0)?
+                -1:
+                1
+
+        // get initial values
+        let baserowblanks = Math.abs(lowindex) % crosscount
+        let endrowblanks = (Math.abs(highindex) + endadjustment) % crosscount
+
+        // take inverse depending on direction
+        if (lowindex < 0) {
+            baserowblanks =
+                (baserowblanks == 0)? 
+                0:
+                crosscount - baserowblanks
+        }
+
+        if (highindex >= 0) {
+            endrowblanks =
+                (endrowblanks == 0)? 
+                0:
+                crosscount - endrowblanks
+        }
+
+        return [baserowblanks, endrowblanks]
+
+    },[crosscount, listsize, lowindex, highindex])
+
+
     // various row counts
     const [
+
         cradleRowcount, 
         viewportRowcount,
         listRowcount,
         runwayRowcount,
+
     ] = useMemo(()=> {
 
         const viewportLength = 
@@ -288,21 +333,24 @@ const Cradle = ({
 
         const viewportRowcount = Math.ceil(viewportLength/baseRowLength)
 
-        const listRowcount = Math.ceil(listsize/crosscount)
+        const listRowcount = 
+            listsize == 0?
+            0:
+            Math.ceil((listsize + baserowblanks + endrowblanks)/crosscount)
 
         const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
 
         let cradleRowcount = Math.min(listRowcount, calculatedCradleRowcount)
 
         let runwayRowcount
-        if (calculatedCradleRowcount >= cradleRowcount) {
+        if (cradleRowcount == calculatedCradleRowcount) {
 
             runwayRowcount = runwaySize
 
-        } else {
+        } else { // cradleRowcount is less than calculatedCradleRowCount
 
-            const diff = (cradleRowcount - calculatedCradleRowcount)
-            runwayRowcount -= Math.floor(diff/2)
+            const diff = (calculatedCradleRowcount - cradleRowcount)
+            runwayRowcount = runwaySize - Math.floor(diff/2)
             runwayRowcount = Math.max(0,runwayRowcount)
 
         }
@@ -311,7 +359,7 @@ const Cradle = ({
         if (itemcount > listsize) {
 
             itemcount = listsize
-            cradleRowcount = Math.ceil(itemcount/crosscount)
+            cradleRowcount = Math.ceil((itemcount + baserowblanks + endrowblanks)/crosscount)
 
         }
 
@@ -334,10 +382,52 @@ const Cradle = ({
         viewportwidth,
 
         listsize,
+        baserowblanks, 
+        endrowblanks,
         runwaySize,
         crosscount,
         layout,
     ])
+
+    const rangerowshift = useMemo(() => {
+
+        return listsize == 0?
+            undefined:
+            Math.floor(lowindex/crosscount)
+
+    },[crosscount,lowindex, listsize])
+
+    const virtualListProps = 
+        {
+
+            ...virtualListSpecs,
+            baserowblanks,
+            endrowblanks,
+            crosscount,
+            rowcount:listRowcount,
+            rowshift:rangerowshift,
+
+        }
+
+    const cradleContentPropsRef = useRef({
+        cradleRowcount,
+        viewportRowcount,
+        runwayRowcount,
+        SOL:undefined, // start of list
+        EOL:undefined, // end of list
+        lowindex:undefined,
+        highindex:undefined,
+        size:0,
+     })
+
+     const cradleContentProps = cradleContentPropsRef.current
+     Object.assign(cradleContentProps, 
+         {
+             cradleRowcount:cradleRowcount,
+             viewportRowcount:viewportRowcount,
+             runwayRowcount:runwayRowcount,
+         }
+     )
 
     // ----------------------[ callbacks ]----------------------------
 
@@ -349,7 +439,8 @@ const Cradle = ({
             repositioningIndexCallback:userCallbacks?.repositioningIndexCallback,
             preloadIndexCallback:userCallbacks?.preloadIndexCallback,
             deleteListCallback:userCallbacks?.deleteListCallback,
-            changeListsizeCallback:userCallbacks?.changeListsizeCallback,
+            changeListSizeCallback:userCallbacks?.changeListSizeCallback,
+            changeListRangeCallback:userCallbacks?.changeListRangeCallback,
             itemExceptionCallback:userCallbacks?.itemExceptionCallback,
         }
     )
@@ -385,12 +476,11 @@ const Cradle = ({
     scrollerPropertiesRef.current = {
         orientation, gap, padding, layout,
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
-        listsize,
-        runwayRowcount,
+        virtualListProps,
+        cradleContentProps,
         cache,
         cacheMax,
         startingIndex,
-        crosscount,
         scrollerID,
     }
 
@@ -399,14 +489,12 @@ const Cradle = ({
     cradleInternalPropertiesRef.current = {
 
         // updated values
-        crosscount,
-        cradleRowcount,
-        viewportRowcount,
-        listRowcount,
-        listsize,
-        updateListsize,
-        runwayRowcount,
+        virtualListProps,
+        setVirtualListSize,
+        setVirtualListRange,
 
+        cradleContentProps:cradleContentPropsRef.current,
+        
         // the following values are maintained elsewhere
         isMountedRef,
         cradleElementsRef,
@@ -544,12 +632,17 @@ const Cradle = ({
 
             scrollToIndex, 
             reload, 
-            setListsize,
+            setListsize, // deprecated
+            setListSize,
+            setListRange,
+            prependIndexCount,
+            appendIndexCount,
             clearCache, 
 
             getCacheIndexMap, 
             getCacheItemMap,
             getCradleIndexMap,
+            getPropertiesSnapshot,
 
             remapIndexes,
             moveIndex,
@@ -562,12 +655,18 @@ const Cradle = ({
 
             scrollToIndex,
             reload,
-            setListsize,
+            setListsize, // deprecated
+            setListSize,
+            setListRange,
+            prependIndexCount,
+            appendIndexCount,
             clearCache,
             
             getCacheIndexMap,
             getCacheItemMap,
             getCradleIndexMap,
+            getPropertiesSnapshot,
+
             remapIndexes,
             moveIndex,
             insertIndex,
@@ -651,11 +750,11 @@ const Cradle = ({
     // inernal callback: the new list size will always be less than current listsize
     // invoked if getItem returns null
     const nullItemSetMaxListsize = useCallback((maxListsize) => {
-        const listsize = cradleInternalPropertiesRef.current.listsize
+        const listsize = cradleInternalPropertiesRef.current.virtualListProps.size
 
         if (maxListsize < listsize) {
 
-            const { deleteListCallback, changeListsizeCallback } = serviceHandler.callbacks
+            const { deleteListCallback, changeListSizeCallback } = serviceHandler.callbacks
 
             let dListCallback
             if (deleteListCallback) {
@@ -667,10 +766,10 @@ const Cradle = ({
 
             }
 
-            contentHandler.updateListsize(maxListsize)
-            cacheAPI.changeCacheListsize(maxListsize, 
+            contentHandler.updateVirtualListSize(maxListsize)
+            cacheAPI.changeCacheListSize(maxListsize, 
                 dListCallback,
-                changeListsizeCallback)
+                changeListSizeCallback)
 
         }
     },[])
@@ -801,50 +900,19 @@ const Cradle = ({
         runwaySize,
     ])
 
-    useEffect(()=>{
+    useEffect(()=>{ // change of list range
 
         if (cradleStateRef.current == 'setup') return
 
-        if (isCachedRef.current) return
+        if (isCachedRef.current) return // TODO: ??
 
-        const { viewportRowcount, crosscount } = cradleInternalPropertiesRef.current
-        const { runwaySize } =  cradleInheritedPropertiesRef.current
-        const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
-        const calculatedCradleItemcount = calculatedCradleRowcount * crosscount
+        interruptHandler.pauseInterrupts()
 
-        const indexSpan = contentHandler.indexSpan
-        const [lowIndex,highIndex] = indexSpan
-
-        let measuredCradleItemCount
-        let changeIsWithinCradle
-
-        if (indexSpan.length == 0) {
-
-            measuredCradleItemCount = 0
-            changeIsWithinCradle = true
-
-        } else {
-
-            measuredCradleItemCount = highIndex - lowIndex + 1
-            changeIsWithinCradle = (highIndex >= (listsize - 1))
-            
-        }
-
-        if ((measuredCradleItemCount < calculatedCradleItemcount) || // sub-viewport visible listcount
-            changeIsWithinCradle) { // change is not beyond cradle
-
-            interruptHandler.pauseInterrupts()
-
-            setCradleState('reconfigureforlistsize')
-
-        } else {
-
-            setCradleState('ready')
-
-        }
+        setCradleState('reconfigureforlistrange')
 
     },[
-        listsize, 
+        lowindex,
+        highindex,
     ])
 
     // a new getItem function implies the need to reload
@@ -878,14 +946,22 @@ const Cradle = ({
 
         }
 
+        interruptHandler.pauseInterrupts()
+        // interruptHandler.triggerlinesIntersect.disconnect()
+        
         if (isCachedRef.current) {
+            // cacheAPI.measureMemory('pivot cached')
+            // interruptHandler.pauseInterrupts() // suppress triggerline callbacks; will render for first render from cache
+            // setCradleState('cached')
             hasBeenRenderedRef.current = false
             return
         }
 
+        // cacheAPI.measureMemory('pivot')
+
         const { layout, gap } = cradleInheritedPropertiesRef.current
         const { cradlePositionData } = layoutHandler
-        
+
         if (layout == 'uniform') {
 
             const { 
@@ -920,8 +996,6 @@ const Cradle = ({
             cradlePositionData.targetAxisViewportPixelOffset = gap
 
         }
-
-        interruptHandler.pauseInterrupts()
 
         setCradleState('pivot')
 
@@ -977,7 +1051,7 @@ const Cradle = ({
 
     // =====================[ STATE MANAGEMENT ]==========================
 
-    // this is the core state engine (about 30 states), using named states
+    // this is the core state engine (about 32 states), using named states
     // useLayoutEffect for suppressing flashes
     useLayoutEffect(()=>{
 
@@ -1078,6 +1152,13 @@ const Cradle = ({
 
                 if (scrollHandler.isScrolling) {
 
+                    const {lowindex, size:listsize } = cradleInternalPropertiesRef.current.virtualListProps
+
+                    ViewportContextPropertiesRef.current.scrollTrackerAPIRef.current.startReposition(
+                        layoutHandler.cradlePositionData.targetAxisReferencePosition, 
+                        lowindex, listsize
+                    )
+
                     setCradleState('repositioningRender') // toggles with repositioningContinuation
 
                 } else {
@@ -1109,8 +1190,13 @@ const Cradle = ({
             case 'finishviewportresize':
             case 'pivot':
             case 'reconfigure':
-            case 'reconfigureforlistsize':
+            case 'reconfigureforlistrange':
             case 'reload': {
+
+                if (!isMountedRef.current) return // possible async latency with nested scrollers
+
+                // interruptHandler.triggerlinesIntersect.disconnect()
+                // interruptHandler.cradleIntersect.disconnect()
 
                 if (isCachedRef.current) {
                     setCradleState('cached')
@@ -1138,7 +1224,14 @@ const Cradle = ({
                     cacheAPI.clearCache()
                 }
 
-                const { listsize } = cradleInternalPropertiesRef.current
+                if (cradleState == 'finishreposition') {
+
+                    ViewportContextPropertiesRef.current.scrollTrackerAPIRef.current.finishReposition()
+                    scrollHandler.calcImpliedRepositioningData('finishreposition')
+                    
+                }
+
+                const listsize = cradleInternalPropertiesRef.current.virtualListProps.size
                 // set data
                 if (listsize) contentHandler.setCradleContent( cradleState )
 
@@ -1213,12 +1306,14 @@ const Cradle = ({
 
             }
 
-            // ----------------------[ followup from updateCradleContent ]------------
+            // ----------------------[ followup from axisTriggerlinesObserverCallback ]------------
             // scroll effects
 
-            // renderupdatedcontent is called from updateCradleContent. 
+            // renderupdatedcontent is called from interruptHandler.axisTriggerlinesObserverCallback. 
             // it is required to integrate changed DOM configurations before 'ready' is displayed
             case 'renderupdatedcontent': { // cycle for DOM update
+
+                // if (isCachedRef.current) return // DEBUG!!
 
                 contentHandler.updateCradleContent()
 
@@ -1238,13 +1333,13 @@ const Cradle = ({
 
                 }
 
+                // cacheAPI.measureMemory('finish update')
+
                 const { layout } = cradleInheritedPropertiesRef.current
                 if (layout == 'uniform') {
 
                     interruptHandler.triggerlinesIntersect.connectElements()
 
-                    // re-activate triggers; triggerlines will have been assigned to a new triggerCell by now.
-                    // setCradleState('reconnectupdatedcontent')
                     setCradleState('ready')
 
                 } else { // 'variable' content requiring reconfiguration
@@ -1365,13 +1460,13 @@ const Cradle = ({
 
             case 'changelistsizeafterinsertremove': {
 
-                const newlistsize = serviceHandler.newlistsize
-                serviceHandler.newlistsize = null
+                const newlistsize = serviceHandler.newListSize
+                serviceHandler.newListSize = null
 
                 setCradleState('ready')
 
                 // service handler called because this is a followon of a user intervention
-                serviceHandler.setListsize(newlistsize)
+                serviceHandler.setListSize(newlistsize)
 
                 break
             }
@@ -1391,7 +1486,7 @@ const Cradle = ({
 
     },[cradleState])
 
-    // standard rendering states (3 states)
+    // standard rendering states (2 states)
     useEffect(()=> { 
 
         switch (cradleState) {
@@ -1399,10 +1494,6 @@ const Cradle = ({
             // repositioningRender and repositioningContinuation are toggled to generate continuous 
             // repositioning renders
             case 'repositioningRender': // no-op
-                break
-
-            case 'repositioningContinuation': // set from onScroll
-                setCradleState('repositioningRender')
                 break
 
             case 'ready': // no-op
@@ -1415,38 +1506,9 @@ const Cradle = ({
 
     // ==========================[ RENDER ]===========================
 
-    const scrollAxisReferenceIndex = layoutHandler.cradlePositionData.targetAxisReferenceIndex
-    const scrollIndexRef = useRef(scrollAxisReferenceIndex)
-    const scrollTrackerArgs = useMemo(() => {
-        if (!['repositioningContinuation','repositioningRender','finishreposition'].includes(cradleState)) {
-            return null
-        }
-        if (scrollAxisReferenceIndex != scrollIndexRef.current) {
-            scrollIndexRef.current = scrollAxisReferenceIndex
-            const { repositioningIndexCallback } = serviceHandler.callbacks
-            repositioningIndexCallback && repositioningIndexCallback(scrollAxisReferenceIndex);
-        }
-        
-        if (!useScrollTracker) return null
-        const trackerargs = {
-            top:viewportDimensions.top + 3,
-            left:viewportDimensions.left + 3,
-            scrollAxisReferenceIndex,
-            listsize,
-            styles,
-        }
-        return trackerargs
-    },
-        [
-            cradleState, 
-            viewportDimensions, 
-            scrollAxisReferenceIndex, 
-            listsize,
-            styles,
-            useScrollTracker,
-        ]
-    )
-
+    const scrollAxisReferencePosition = layoutHandler.cradlePositionData.targetAxisReferencePosition
+    const scrollAxisReferenceIndex = scrollAxisReferencePosition + lowindex
+    const scrollIndexRef = useRef(scrollAxisReferencePosition)
     const cradleContent = contentHandler.content
 
     const triggercellTriggerlinesRef = useRef(null)
@@ -1487,58 +1549,50 @@ const Cradle = ({
     // display the cradle components, the ScrollTracker, or null
     return <CradleContext.Provider value = { contextvalueRef.current }>
 
-        {(['repositioningContinuation','repositioningRender'].includes(cradleState))?
-            useScrollTracker?<ScrollTracker 
-                top = { scrollTrackerArgs.top } 
-                left = { scrollTrackerArgs.left } 
-                offset = { scrollTrackerArgs.scrollAxisReferenceIndex } 
-                listsize = { scrollTrackerArgs.listsize }
-                styles = { scrollTrackerArgs.styles }
-            />:null:
+        {(cradleState == 'repositioningRender')?null:
+        <div 
+            data-type = 'cradle-axis'
+            style = { cradleAxisStyle } 
+            ref = { axisCradleElementRef }
+        >
+            { showAxis? // for debug
+                <div 
+                    data-type = 'cradle-divider' 
+                    style = { cradleDividerStyle }
+                >
+                </div>:
+                null
+            }
             <div 
-                data-type = 'cradle-axis'
-                style = { cradleAxisStyle } 
-                ref = { axisCradleElementRef }
+            
+                data-type = 'head'
+                ref = { headCradleElementRef }
+                style = { cradleHeadStyle }
+            
             >
-                { showAxis? // for debug
-                    <div 
-                        data-type = 'cradle-divider' 
-                        style = { cradleDividerStyle }
-                    >
-                    </div>:
+            
+                {(cradleState != 'setup')?
+                    cradleContent.headDisplayComponents:
                     null
                 }
-                <div 
-                
-                    data-type = 'head'
-                    ref = { headCradleElementRef }
-                    style = { cradleHeadStyle }
-                
-                >
-                
-                    {(cradleState != 'setup')?
-                        cradleContent.headDisplayComponents:
-                        null
-                    }
-                
-                </div>
-                <div 
-                
-                    data-type = 'tail'
-                    ref = { tailCradleElementRef } 
-                    style = { cradleTailStyle }
-                
-                >
-                
-                    {(cradleState != 'setup')?
-                        cradleContent.tailDisplayComponents:
-                        null
-                    }
-                
-                </div>
+            
             </div>
-        }
-
+            <div 
+            
+                data-type = 'tail'
+                ref = { tailCradleElementRef } 
+                style = { cradleTailStyle }
+            
+            >
+            
+                {(cradleState != 'setup')?
+                    cradleContent.tailDisplayComponents:
+                    null
+                }
+            
+            </div>
+        </div>}
+        
     </CradleContext.Provider>
 
 } // Cradle

@@ -1,4 +1,4 @@
-// scrolltracker.tsx
+// ScrollTracker.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
@@ -8,26 +8,69 @@
     ScrollTracker can be suppressed by the host (in favour of the host's own location feedback)
 */
 
-import React, {useRef} from 'react'
+import React, { useRef, useCallback, useEffect, useState } from 'react'
 
-const ScrollTracker = ({ top, left, offset, listsize, styles }) => {
+const ScrollTracker = ({ scrollTrackerAPIRef, styles }) => {
 
-    const trackdata = `${offset + 1}/${listsize}`
+    const [index, setIndex] = useState(null)
+    const indexRef = useRef(null)
+    indexRef.current = index
+    const lowindexRef = useRef(null)
+    const listsizeRef = useRef(null)
 
-    const styleRef = useRef({
-        top: top + 'px',
-        left: left + 'px',
-        position:'fixed',
+    const tracktext = `${index} (${index - lowindexRef.current + 1}/${listsizeRef.current})`
+
+    const stylesRef = useRef({
+        top: '3px',
+        left: '3px',
+        position:'absolute',
         zIndex:3,
         backgroundColor:'white',
         border: '1px solid gray',
         borderRadius:'10px',
         fontSize:'smaller',
         padding:'3px',
-        ...styles.scrolltracker
+        visibility:'hidden',
+        ...styles
     })
 
-    return <div data-name = 'scrolltracker' style = {styleRef.current} >{trackdata}</div>
+    useEffect(()=>{
+
+        scrollTrackerAPIRef.current = {
+
+            startReposition,
+            updateReposition,
+            finishReposition,
+
+        }
+
+    },[])
+
+    const startReposition = useCallback((position, lowindex, listsize)=> {
+
+        setIndex(position + lowindex)
+        lowindexRef.current = lowindex
+        listsizeRef.current = listsize
+        stylesRef.current = {...stylesRef.current,visibility:'visible'}
+
+    },[])
+
+    const updateReposition = useCallback((position)=>{
+
+        const currentindex = position + lowindexRef.current;
+
+        (indexRef.current != currentindex) && setIndex(currentindex)
+
+    },[])
+
+    const finishReposition = useCallback(() => {
+
+        stylesRef.current = {...stylesRef.current,visibility:'hidden'}
+        setIndex(null)
+
+    },[])
+
+    return <div data-name = 'scrolltracker' style = {stylesRef.current} >{tracktext}</div>
 }
 
 export default ScrollTracker
