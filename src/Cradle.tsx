@@ -1506,43 +1506,9 @@ const Cradle = ({
 
     // ==========================[ RENDER ]===========================
 
-<<<<<<< HEAD
-    const scrollAxisReferenceIndex = layoutHandler.cradlePositionData.targetAxisReferenceIndex
-    const scrollIndexRef = useRef(scrollAxisReferenceIndex)
-    const scrollTrackerArgs = useMemo(() => {
-        if (!['repositioningContinuation','repositioningRender','finishreposition'].includes(cradleState)) {
-            return null
-        }
-        if (scrollAxisReferenceIndex != scrollIndexRef.current) {
-            scrollIndexRef.current = scrollAxisReferenceIndex
-            const { repositioningIndexCallback } = serviceHandler.callbacks
-            repositioningIndexCallback && repositioningIndexCallback(scrollAxisReferenceIndex);
-        }
-        if (!useScrollTracker) return null
-        const trackerargs = {
-            top:viewportDimensions.top + 3,
-            left:viewportDimensions.left + 3,
-            scrollAxisReferenceIndex,
-            listsize,
-            styles,
-        }
-        return trackerargs
-    },
-        [
-            cradleState, 
-            viewportDimensions, 
-            scrollAxisReferenceIndex, 
-            listsize,
-            styles,
-            useScrollTracker,
-        ]
-    )
-
-=======
     const scrollAxisReferencePosition = layoutHandler.cradlePositionData.targetAxisReferencePosition
     const scrollAxisReferenceIndex = scrollAxisReferencePosition + lowindex
     const scrollIndexRef = useRef(scrollAxisReferencePosition)
->>>>>>> staging
     const cradleContent = contentHandler.content
 
     const triggercellTriggerlinesRef = useRef(null)
