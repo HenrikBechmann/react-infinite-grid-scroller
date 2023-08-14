@@ -202,6 +202,153 @@ export default class ServiceHandler {
 
     }
 
+    public scrollToPixel = (pixel, behavior = 'smooth') => {
+
+        if (!['smooth','instant','auto'].includes(behavior)) {
+            behavior = 'smooth'
+        }
+
+        if (!(isInteger(pixel) && isValueGreaterThanOrEqualToMinValue(pixel,0))) {
+
+            return
+
+        }
+
+        pixel = +pixel
+
+        const
+
+            { cradleParameters } = this,
+
+            viewportElement = cradleParameters.ViewportContextPropertiesRef.current.elementRef.current,
+
+            scrollblockElement = viewportElement.firstChild,
+
+            cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
+
+            { orientation } = cradleInheritedProperties,
+
+            scrollblockLength = 
+                orientation == 'vertical'?
+                    scrollblockElement.offsetHeight:
+                    scrollblockElement.offsetWidth,
+
+            viewportLength = 
+                orientation == 'vertical'?
+                    viewportElement.offsetHeight:
+                    viewportElement.offsetWidth,
+
+            pixeltarget = Math.max(Math.min(pixel, scrollblockLength - viewportLength),0)
+
+        let top, left
+
+        if (orientation == 'vertical') {
+
+            top = pixeltarget
+            left = viewportElement.scrollLeft
+
+        } else {
+
+            left = pixeltarget
+            top = viewportElement.scrollTop
+        }
+
+        const options = {
+            top:top,
+            left:left,
+            behavior:behavior,
+        }
+
+        viewportElement.scroll(options)
+
+    }
+
+    public scrollByPixel = (pixel, behavior = 'smooth') => {
+
+        if (!['smooth','instant','auto'].includes(behavior)) {
+            behavior = 'smooth'
+        }
+
+        if (!isInteger(pixel)) {
+
+            return
+
+        }
+
+        pixel = +pixel
+
+        if (pixel == 0) return // nothing to do
+
+        const
+
+            { cradleParameters } = this,
+
+            viewportElement = cradleParameters.ViewportContextPropertiesRef.current.elementRef.current,
+
+            scrollblockElement = viewportElement.firstChild,
+
+            cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
+
+            { orientation } = cradleInheritedProperties,
+
+            scrollblockLength = 
+                orientation == 'vertical'?
+                    scrollblockElement.offsetHeight:
+                    scrollblockElement.offsetWidth,
+
+            viewportLength = 
+                orientation == 'vertical'?
+                    viewportElement.offsetHeight:
+                    viewportElement.offsetWidth,
+
+            scrollOffset = 
+                orientation == 'vertical'?
+                    viewportElement.scrollTop:
+                    viewportElement.scrollLeft
+
+        let pixelmovement, pixelmax
+        if (pixel > 0) {
+
+            pixelmovement = Math.min(pixel, scrollOffset)
+
+        } else {
+
+            pixelmax = Math.min(-pixel + scrollOffset, scrollblockLength - viewportLength)
+            if (-pixel + scrollOffset > pixelmax) {
+
+                pixelmovement = pixel + ((-pixel + scrollOffset) - pixelmax)
+
+            } else {
+
+                pixelmovement = pixel
+
+            }
+
+        }
+
+        let top, left
+
+        if (orientation == 'vertical') {
+
+            top = pixelmovement
+            left = viewportElement.scrollLeft
+
+        } else {
+
+            left = pixelmovement
+            top = viewportElement.scrollTop
+        }
+
+        const options = {
+            top:top,
+            left:left,
+            behavior:behavior,
+        }
+
+        viewportElement.scrollBy(options)
+        
+    }
+
     // deprecated (camel case)
     public setListsize = (newlistsize) => { // *deprecated* (for camel case)
 
