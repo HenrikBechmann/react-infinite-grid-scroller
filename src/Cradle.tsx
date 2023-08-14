@@ -631,6 +631,8 @@ const Cradle = ({
         const {
 
             scrollToIndex, 
+            scrollToPixel,
+            scrollByPixel,
             reload, 
             setListsize, // deprecated
             setListSize,
@@ -654,6 +656,8 @@ const Cradle = ({
         const functions = {
 
             scrollToIndex,
+            scrollToPixel,
+            scrollByPixel,
             reload,
             setListsize, // deprecated
             setListSize,
