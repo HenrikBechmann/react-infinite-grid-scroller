@@ -1506,9 +1506,9 @@ const Cradle = ({
 
     // ==========================[ RENDER ]===========================
 
-    const scrollAxisReferencePosition = layoutHandler.cradlePositionData.targetAxisReferencePosition
-    const scrollAxisReferenceIndex = scrollAxisReferencePosition + lowindex
-    const scrollIndexRef = useRef(scrollAxisReferencePosition)
+    // const scrollAxisReferencePosition = layoutHandler.cradlePositionData.targetAxisReferencePosition
+    // const scrollAxisReferenceIndex = scrollAxisReferencePosition + lowindex
+    // const scrollIndexRef = useRef(scrollAxisReferencePosition)
     const cradleContent = contentHandler.content
 
     const triggercellTriggerlinesRef = useRef(null)
