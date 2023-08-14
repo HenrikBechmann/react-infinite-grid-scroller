@@ -11,6 +11,8 @@
     The function calls avaiable to the host are:
 
         scrollToIndex, 
+        scrollToPixel,
+        scrollByPixel,
         reload, 
         setListsize, *deprectated* for proper camel case
         setListSize,
