@@ -7,6 +7,8 @@
         targetAxisViewportPixelOffset
 */
 
+import { isSafariIOS } from '../InfiniteGridScroller'
+
 export default class ScrollHandler {
 
     constructor(cradleParameters) {

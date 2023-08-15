@@ -33,13 +33,14 @@ import React, { useEffect, useState, useCallback, useRef } from 'react'
 // defensive
 import { ErrorBoundary } from 'react-error-boundary' // www.npmjs.com/package/react-error-boundary
 
-// export const isSafariIOS = () => {
-    // const
-    //     is_ios = /iP(ad|od|hone)/i.test(window.navigator.userAgent),
-    //     is_safari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)
-    // return ( is_ios && is_safari ) 
-//     return true
-// }
+const isSafariIOSFn = () => {
+    const
+        is_ios = /iP(ad|od|hone)/i.test(window.navigator.userAgent),
+        is_safari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)
+    return ( is_ios && is_safari ) 
+}
+
+export const isSafariIOS = isSafariIOSFn()
 
 // based on module template
 function ErrorFallback({error, resetErrorBoundary}) {
