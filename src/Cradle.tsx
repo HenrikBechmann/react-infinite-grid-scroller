@@ -83,7 +83,7 @@ import ServiceHandler from './cradle/servicehandler'
 import StylesHandler from './cradle/styleshandler'
 // cacheAPI is imported as a property; instantiated at the root
 
-import { isSafariIOS } from './InfiniteGridScroller'
+// import { isSafariIOS } from './InfiniteGridScroller'
 
 // for children
 export const CradleContext = React.createContext(null)
@@ -567,8 +567,28 @@ const Cradle = ({
 
             const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
-            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-            viewportElement[cradlePositionData.blockXScrollProperty] = blockXScrollPos
+            const scrollTop = viewportElement.scrollTop
+            const scrollLeft = viewportElement.scrollLeft
+
+            let scrollOptions
+            if (cradlePositionData.blockScrollProperty == 'scrollTop') {
+                scrollOptions = {
+                    top:blockScrollPos,
+                    left:blockXScrollPos,
+                    behavior:'instant',
+                }
+            } else {
+                scrollOptions = {
+                    left:blockScrollPos,
+                    top:blockXScrollPos,
+                    behavior:'instant',
+                }            
+            }
+
+            viewportElement.scroll(scrollOptions)
+
+            // viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+            // viewportElement[cradlePositionData.blockXScrollProperty] = blockXScrollPos
 
         }
 
@@ -702,7 +722,8 @@ const Cradle = ({
 
         const { layout } = cradleInheritedPropertiesRef.current
 
-        if (!isSafariIOS() || (layout == 'uniform')) return
+        // if (!isSafariIOS() || (layout == 'uniform')) return
+        if (layout == 'uniform') return
 
         const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
         viewportElement.addEventListener('scroll',scrollHandler.iOSonScroll)

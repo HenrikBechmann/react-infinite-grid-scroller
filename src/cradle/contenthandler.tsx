@@ -39,7 +39,7 @@ import {
 
 } from './contentfunctions'
 
-import { isSafariIOS } from '../InfiniteGridScroller'
+// import { isSafariIOS } from '../InfiniteGridScroller'
 
 export default class ContentHandler {
 
@@ -476,8 +476,28 @@ export default class ContentHandler {
 
         scrollHandler.resetScrollData(scrollblockViewportPixelOffset) 
 
-        viewportElement[cradlePositionData.blockScrollProperty] =
-            cradlePositionData.blockScrollPos 
+        const scrollTop = viewportElement.scrollTop
+        const scrollLeft = viewportElement.scrollLeft
+
+        let scrollOptions
+        if (cradlePositionData.blockScrollProperty == 'scrollTop') {
+            scrollOptions = {
+                top:cradlePositionData.blockScrollPos,
+                left:scrollLeft,
+                behavior:'instant',
+            }
+        } else {
+            scrollOptions = {
+                left:cradlePositionData.blockScrollPos,
+                top:scrollTop,
+                behavior:'instant',
+            }            
+        }
+
+        // viewportElement[cradlePositionData.blockScrollProperty] =
+        //     cradlePositionData.blockScrollPos 
+
+        viewportElement.scroll(scrollOptions)
 
         const cradleElements = layoutHandler.elements
 
@@ -1028,13 +1048,13 @@ export default class ContentHandler {
 
         }
 
-        if (!isSafariIOS()) { // adjust blockScrollPos directly - most browsers including Safari desktop
+        // if (!isSafariIOS()) { // adjust blockScrollPos directly - most browsers including Safari desktop
 
-            cradlePositionData.blockScrollPos = blockScrollPos
-            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-            scrollHandler.resetScrollData(blockScrollPos)
+        //     cradlePositionData.blockScrollPos = blockScrollPos
+        //     viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+        //     scrollHandler.resetScrollData(blockScrollPos)
 
-        } else { // for Safari iOS
+        // } else { // for Safari iOS
 
             // temporarily adjust scrollblockElement offset; iOSonAfterScroll transfers shift to blockScrollPos
             // - direct change of scrollTop/ScrollLeft in Safari iOS is ignored by the browser momentum engine
@@ -1056,7 +1076,7 @@ export default class ContentHandler {
 
             }
 
-        }
+        // }
 
         // check for gotoIndex or resize overshoot
         if ((source == 'setcradle') && !postCradleRowCount) { 

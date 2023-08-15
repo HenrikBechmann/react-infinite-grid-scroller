@@ -14,7 +14,7 @@
         viewport)
 */
 
-import { isSafariIOS } from '../InfiniteGridScroller'
+// import { isSafariIOS } from '../InfiniteGridScroller'
 
 export default class LayoutHandler { 
 
@@ -172,7 +172,7 @@ export default class LayoutHandler {
             gap,
             cellHeight,
             cellWidth,
-            // layout 
+            layout 
 
         } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
@@ -218,7 +218,8 @@ export default class LayoutHandler {
             (rowReferencePosition * cellLength) + padding
 
 
-        if (isSafariIOS()) { // scrollPos overwritten by Safari iOS momentum engine
+        if (layout == 'variable') { // scrollPos overwritten by Safari iOS momentum engine
+        // if (isSafariIOS()) { // scrollPos overwritten by Safari iOS momentum engine
 
             const originalScrollPos = 
                 (orientation == 'vertical')?
@@ -240,7 +241,30 @@ export default class LayoutHandler {
 
         } else {
 
-            viewportElement[cradlePositionData.blockScrollProperty] = calculatedBlockScrollPos
+            const scrollTop = viewportElement.scrollTop
+            const scrollLeft = viewportElement.scrollLeft
+
+            let scrollOptions
+            if (cradlePositionData.blockScrollProperty == 'scrollTop') {
+                scrollOptions = {
+                    top:cradlePositionData.blockScrollPos,
+                    left:scrollLeft,
+                    behavior:'instant',
+                }
+            } else {
+                scrollOptions = {
+                    left:cradlePositionData.blockScrollPos,
+                    top:scrollTop,
+                    behavior:'instant',
+                }            
+            }
+
+            // viewportElement[cradlePositionData.blockScrollProperty] =
+            //     cradlePositionData.blockScrollPos 
+
+            viewportElement.scroll(scrollOptions)
+
+            // viewportElement[cradlePositionData.blockScrollProperty] = calculatedBlockScrollPos
 
         }
         cradlePositionData.blockScrollPos = calculatedBlockScrollPos
