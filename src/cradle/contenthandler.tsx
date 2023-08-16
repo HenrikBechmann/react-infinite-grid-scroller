@@ -494,9 +494,6 @@ export default class ContentHandler {
             }            
         }
 
-        // viewportElement[cradlePositionData.blockScrollProperty] =
-        //     cradlePositionData.blockScrollPos 
-
         viewportElement.scroll(scrollOptions)
 
         const cradleElements = layoutHandler.elements
@@ -612,8 +609,6 @@ export default class ContentHandler {
                 lowindex:listlowindex,
 
             } = virtualListProps
-
-        // if (interruptHandler.signals.repositioningRequired) return
 
         // new vars
         const scrollPos = 
@@ -838,7 +833,6 @@ export default class ContentHandler {
         
         if (layout == 'variable') return // there's a separate routine for variable adjustments and css
 
-
         // --------------
         // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
         const preAxisVirtualRows = Math.ceil( ( axisReferenceIndex - listlowindex )/crosscount )
@@ -1048,34 +1042,23 @@ export default class ContentHandler {
 
         }
 
-        // if (!isSafariIOS()) { // adjust blockScrollPos directly - most browsers including Safari desktop
+        // temporarily adjust scrollblockElement offset; onAfterScrollForVariable transfers shift to blockScrollPos
+        const startingScrollPos = 
+            (orientation == 'vertical')?
+                viewportElement.scrollTop:
+                viewportElement.scrollLeft
 
-        //     cradlePositionData.blockScrollPos = blockScrollPos
-        //     viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-        //     scrollHandler.resetScrollData(blockScrollPos)
+        const scrollDiff = blockScrollPos - startingScrollPos
 
-        // } else { // for Safari iOS
+        if (orientation == 'vertical') {
 
-            // temporarily adjust scrollblockElement offset; onAfterScrollForVariable transfers shift to blockScrollPos
+            scrollblockElement.style.top = -scrollDiff + 'px'
 
-            const startingScrollPos = 
-                (orientation == 'vertical')?
-                    viewportElement.scrollTop:
-                    viewportElement.scrollLeft
+        } else {
 
-            const scrollDiff = blockScrollPos - startingScrollPos
+            scrollblockElement.style.left = -scrollDiff + 'px'
 
-            if (orientation == 'vertical') {
-
-                scrollblockElement.style.top = -scrollDiff + 'px'
-
-            } else {
-
-                scrollblockElement.style.left = -scrollDiff + 'px'
-
-            }
-
-        // }
+        }
 
         // check for gotoIndex or resize overshoot
         if ((source == 'setcradle') && !postCradleRowCount) { 
