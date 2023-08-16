@@ -17,12 +17,12 @@ export default class ScrollHandler {
 
     }
 
-    private _iOSscrolltimerid
-    private _iOSsetTimeoutTimerid
+    private _scrollforvariabletimerid
+    private _iOSsetTimeoutTimerid // special case for iOS initial scroll delay
 
-    private _onIOSonAfterScrollTimeout
+    private _onAfterScrollForVariableTimeout
 
-    private _isIOSscrolling = false
+    private _isScrollingForVariable = false
 
     public onScrollForVariable = () => {
 
@@ -34,23 +34,23 @@ export default class ScrollHandler {
 
         }
 
-        if (!this._isIOSscrolling) {
+        if (!this._isScrollingForVariable) {
 
-            this._isIOSscrolling = true
+            this._isScrollingForVariable = true
 
             if (isSafariIOS) {
-                this._onIOSonAfterScrollTimeout = 1000 // iOS sometimes likes to pause before commencing scrolling
+                this._onAfterScrollForVariableTimeout = 1000 // iOS sometimes likes to pause before commencing scrolling
 
                 clearTimeout(this._iOSsetTimeoutTimerid)
-                // clearTimeout(this._onIOSonAfterScrollTimeout)
+                // clearTimeout(this._onAfterScrollForVariableTimeout)
 
                 this._iOSsetTimeoutTimerid = setTimeout(()=>{
-                    this._onIOSonAfterScrollTimeout = 250 // back to more responsive once underway
+                    this._onAfterScrollForVariableTimeout = 250 // back to more responsive once underway
                 },900)
 
             } else {
 
-                this._onIOSonAfterScrollTimeout = 250
+                this._onAfterScrollForVariableTimeout = 250
 
             }
 
@@ -80,7 +80,7 @@ export default class ScrollHandler {
 
         }
 
-        clearTimeout(this._iOSscrolltimerid)
+        clearTimeout(this._scrollforvariabletimerid)
 
         if ((( blockScrollPos - scrollblockOffset) < 0) || // overshoot start
             (scrollblockLength < (blockScrollPos - scrollblockOffset + viewportLength))) { // overshoot end
@@ -89,18 +89,18 @@ export default class ScrollHandler {
 
         } else {
 
-            this._iOSscrolltimerid = setTimeout(() => {
+            this._scrollforvariabletimerid = setTimeout(() => {
 
                 this.onAfterScrollForVariable() // deferred halt and adjust
 
-            },this._onIOSonAfterScrollTimeout)
+            },this._onAfterScrollForVariableTimeout)
 
         }
     }
 
     private onAfterScrollForVariable = () => {
 
-        this._isIOSscrolling = false
+        this._isScrollingForVariable = false
 
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
         const viewportElement = ViewportContextProperties.elementRef.current
