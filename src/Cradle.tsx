@@ -718,30 +718,6 @@ const Cradle = ({
 
     },[])
 
-    // iOS Safari requires special handling - it ignores assignments to scrollLeft/scrollTop during scrolling
-    useEffect(() => {
-
-        const { layout } = cradleInheritedPropertiesRef.current
-
-        const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
-
-        // if (!isSafariIOS() || (layout == 'uniform')) return
-        if (layout == 'uniform') {
-            viewportElement.removeEventListener('scroll',scrollHandler.iOSonScroll)
-            return
-        }
-
-        viewportElement.addEventListener('scroll',scrollHandler.iOSonScroll)
-
-        return () => {
-
-            viewportElement && 
-                viewportElement.removeEventListener('scroll',scrollHandler.iOSonScroll)
-
-        }
-
-    },[layout])
-
     // observer support
     /*
         There are two interection observers: one for the two cradle grids, and another for triggerlines; 
@@ -803,6 +779,29 @@ const Cradle = ({
 
         }
     },[])
+
+    // iOS Safari requires special handling - it ignores assignments to scrollLeft/scrollTop during scrolling
+    useEffect(() => {
+
+        const { layout } = cradleInheritedPropertiesRef.current
+
+        const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
+
+        if (layout == 'uniform') {
+            viewportElement.removeEventListener('scroll',scrollHandler.onScrollForVariable)
+            return
+        }
+
+        viewportElement.addEventListener('scroll',scrollHandler.onScrollForVariable)
+
+        return () => {
+
+            viewportElement && 
+                viewportElement.removeEventListener('scroll',scrollHandler.onScrollForVariable)
+
+        }
+
+    },[layout])
 
     // caching change
     useEffect(()=> {

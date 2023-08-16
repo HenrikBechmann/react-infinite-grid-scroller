@@ -24,7 +24,7 @@ export default class ScrollHandler {
 
     private _isIOSscrolling = false
 
-    public iOSonScroll = () => {
+    public onScrollForVariable = () => {
 
         const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
 
@@ -85,20 +85,20 @@ export default class ScrollHandler {
         if ((( blockScrollPos - scrollblockOffset) < 0) || // overshoot start
             (scrollblockLength < (blockScrollPos - scrollblockOffset + viewportLength))) { // overshoot end
 
-            this.iOSonAfterScroll() // immediate halt and adjust
+            this.onAfterScrollForVariable() // immediate halt and adjust
 
         } else {
 
             this._iOSscrolltimerid = setTimeout(() => {
 
-                this.iOSonAfterScroll() // deferred halt and adjust
+                this.onAfterScrollForVariable() // deferred halt and adjust
 
             },this._onIOSonAfterScrollTimeout)
 
         }
     }
 
-    private iOSonAfterScroll = () => {
+    private onAfterScrollForVariable = () => {
 
         this._isIOSscrolling = false
 
@@ -259,7 +259,6 @@ export default class ScrollHandler {
         switch (cradleState) {
 
             case 'repositioningRender': 
-            // case 'repositioningContinuation':
             {
 
                 this.updateBlockScrollPos()

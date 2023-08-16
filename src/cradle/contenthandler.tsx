@@ -1056,8 +1056,7 @@ export default class ContentHandler {
 
         // } else { // for Safari iOS
 
-            // temporarily adjust scrollblockElement offset; iOSonAfterScroll transfers shift to blockScrollPos
-            // - direct change of scrollTop/ScrollLeft in Safari iOS is ignored by the browser momentum engine
+            // temporarily adjust scrollblockElement offset; onAfterScrollForVariable transfers shift to blockScrollPos
 
             const startingScrollPos = 
                 (orientation == 'vertical')?
