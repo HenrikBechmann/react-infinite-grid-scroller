@@ -38,23 +38,29 @@ export default class ScrollHandler {
 
             this._isIOSscrolling = true
 
-            this._onIOSonAfterScrollTimeout = 1000 // iOS sometimes likes to pause before commencing scrolling
+            if (isSafariIOS) {
+                this._onIOSonAfterScrollTimeout = 1000 // iOS sometimes likes to pause before commencing scrolling
 
-            clearTimeout(this._onIOSonAfterScrollTimeout)
+                clearTimeout(this._iOSsetTimeoutTimerid)
+                // clearTimeout(this._onIOSonAfterScrollTimeout)
 
-            this._iOSsetTimeoutTimerid = setTimeout(()=>{
-                this._onIOSonAfterScrollTimeout = 250 // back to more responsive once underway
-            },900)
+                this._iOSsetTimeoutTimerid = setTimeout(()=>{
+                    this._onIOSonAfterScrollTimeout = 250 // back to more responsive once underway
+                },900)
+
+            } else {
+
+                this._onIOSonAfterScrollTimeout = 250
+
+            }
 
         }
 
-        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
-        const viewportElement = ViewportContextProperties.elementRef.current
-
-        clearTimeout(this._iOSscrolltimerid)
-
-        const orientation = this.cradleParameters.cradleInheritedPropertiesRef.current.orientation
-        const scrollblockElement = viewportElement.firstChild
+        const 
+            ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
+            viewportElement = ViewportContextProperties.elementRef.current,
+            scrollblockElement = viewportElement.firstChild,
+            orientation = this.cradleParameters.cradleInheritedPropertiesRef.current.orientation
 
         let scrollblockLength, viewportLength, blockScrollPos, scrollblockOffset
         
@@ -73,6 +79,8 @@ export default class ScrollHandler {
             scrollblockOffset = scrollblockElement.offsetLeft
 
         }
+
+        clearTimeout(this._iOSscrolltimerid)
 
         if ((( blockScrollPos - scrollblockOffset) < 0) || // overshoot start
             (scrollblockLength < (blockScrollPos - scrollblockOffset + viewportLength))) { // overshoot end

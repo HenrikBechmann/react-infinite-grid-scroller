@@ -368,6 +368,7 @@ const Cradle = ({
             viewportRowcount, 
             listRowcount,
             runwayRowcount,
+            layout,
         ]
 
     },[
@@ -722,10 +723,14 @@ const Cradle = ({
 
         const { layout } = cradleInheritedPropertiesRef.current
 
-        // if (!isSafariIOS() || (layout == 'uniform')) return
-        if (layout == 'uniform') return
-
         const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
+
+        // if (!isSafariIOS() || (layout == 'uniform')) return
+        if (layout == 'uniform') {
+            viewportElement.removeEventListener('scroll',scrollHandler.iOSonScroll)
+            return
+        }
+
         viewportElement.addEventListener('scroll',scrollHandler.iOSonScroll)
 
         return () => {
@@ -735,7 +740,7 @@ const Cradle = ({
 
         }
 
-    },[])
+    },[layout])
 
     // observer support
     /*
@@ -1024,7 +1029,7 @@ const Cradle = ({
 
         setCradleState('pivot')
 
-    },[orientation])
+    },[orientation, layout]) // TODO: check for side-effects of layout-only change
 
     // =====================[ STYLES ]===========================
 
