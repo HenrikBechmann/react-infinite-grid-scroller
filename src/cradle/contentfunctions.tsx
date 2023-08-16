@@ -19,14 +19,7 @@ import React from 'react'
 
 import CellFrame from '../CellFrame'
 
-// import { isSafariIOS } from '../InfiniteGridScroller'
-
-const isSafariIOS2 = () => {
-    const
-        is_ios = /iP(ad|od|hone)/i.test(window.navigator.userAgent),
-        is_safari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)
-    return ( is_ios && is_safari ) 
-}
+import { isSafariIOS } from '../InfiniteGridScroller'
 
 // ======================[ for setCradleContent ]===========================
 
@@ -229,8 +222,8 @@ export const generateShiftInstruction = ({
     // since triggers are moved and can share the 0 (zero) offset, an infinite loop can occur
     // between the head and tail triggers. The following short-circuits that.
     // Obviously needs work to generalize...
-    if ((isSafariIOS2() && (triggerData.headOffset == 0 || triggerData.tailOffset == 0)) ||
-        (!isSafariIOS2() && (((triggerData.headOffset >= -1) && (triggerData.headOffset <= 1)) || 
+    if ((isSafariIOS && (triggerData.headOffset == 0 || triggerData.tailOffset == 0)) ||
+        (!isSafariIOS && (((triggerData.headOffset >= -1) && (triggerData.headOffset <= 1)) || 
         ((triggerData.tailOffset >= -1) && (triggerData.tailOffset <= 1))))) {
 
         // some browsers do an infinite loop with the same previousReferenceName;
