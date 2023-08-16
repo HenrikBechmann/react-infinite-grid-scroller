@@ -308,43 +308,46 @@ export default class ServiceHandler {
                     viewportElement.scrollTop:
                     viewportElement.scrollLeft
 
-        let pixelmovement, pixelmax
-        if (pixel > 0) {
+        // console.log('scrollblockLength, viewportLength, scrollOffset\n',
+        //     scrollblockLength, viewportLength, scrollOffset)
 
-            pixelmovement = Math.min(pixel, scrollOffset)
+        let pixelmovement, 
+            pixelmax, pixelovershoot, 
+            pixelundershoot
 
-        } else {
+        if (pixel > 0) { // scroll down (increase scrollOffset)
 
-            pixelmax = Math.min(-pixel + scrollOffset, scrollblockLength - viewportLength)
-            if (-pixel + scrollOffset > pixelmax) {
+            pixelmax = scrollblockLength - viewportLength
+            pixelovershoot = Math.max((pixel + scrollOffset) - pixelmax,0)
+            pixelmovement = pixel - pixelovershoot
 
-                pixelmovement = pixel + ((-pixel + scrollOffset) - pixelmax)
+        } else { // scroll up (decrease scrollOffset)
 
-            } else {
-
-                pixelmovement = pixel
-
-            }
+            pixelundershoot = Math.min(pixel + scrollOffset,0)
+            pixelmovement = pixel - pixelundershoot
 
         }
+
+        // console.log('pixelmovement :: pixelmax, pixelovershoot :: pixelundershoot\n',
+        //     pixelmovement, pixelmax, pixelovershoot, pixelundershoot)
 
         let top, left
 
         if (orientation == 'vertical') {
 
             top = pixelmovement
-            left = viewportElement.scrollLeft
+            left = 0
 
         } else {
 
             left = pixelmovement
-            top = viewportElement.scrollTop
+            top = 0
         }
 
         const options = {
-            top:top,
-            left:left,
-            behavior:behavior,
+            top,
+            left,
+            behavior,
         }
 
         viewportElement.scrollBy(options)
