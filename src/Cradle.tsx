@@ -780,7 +780,7 @@ const Cradle = ({
         }
     },[])
 
-    // iOS Safari requires special handling - it ignores assignments to scrollLeft/scrollTop during scrolling
+    // variable content requires special handling
     useEffect(() => {
 
         const { layout } = cradleInheritedPropertiesRef.current
@@ -1535,9 +1535,6 @@ const Cradle = ({
 
     // ==========================[ RENDER ]===========================
 
-    // const scrollAxisReferencePosition = layoutHandler.cradlePositionData.targetAxisReferencePosition
-    // const scrollAxisReferenceIndex = scrollAxisReferencePosition + lowindex
-    // const scrollIndexRef = useRef(scrollAxisReferencePosition)
     const cradleContent = contentHandler.content
 
     const triggercellTriggerlinesRef = useRef(null)

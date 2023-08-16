@@ -102,35 +102,52 @@ export default class ScrollHandler {
 
         this._isScrollingForVariable = false
 
-        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
-        const viewportElement = ViewportContextProperties.elementRef.current
-        const scrollblockElement = viewportElement.firstChild
+        const 
+            ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
+            viewportElement = ViewportContextProperties.elementRef.current,
+            scrollblockElement = viewportElement.firstChild,
 
-        const orientation = this.cradleParameters.cradleInheritedPropertiesRef.current.orientation
+            orientation = this.cradleParameters.cradleInheritedPropertiesRef.current.orientation,
 
-        const scrollblockOffset = 
-            (orientation == 'vertical')?
-                scrollblockElement.offsetTop:
-                scrollblockElement.offsetLeft
+            scrollblockOffset = 
+                (orientation == 'vertical')?
+                    scrollblockElement.offsetTop:
+                    scrollblockElement.offsetLeft,
 
-        const blockScrollPos =
-            (orientation == 'vertical')?
-                viewportElement.scrollTop:
-                viewportElement.scrollLeft
+            blockScrollPos =
+                (orientation == 'vertical')?
+                    viewportElement.scrollTop:
+                    viewportElement.scrollLeft,
+
+            scrollTop = viewportElement.scrollTop,
+            scrollLeft = viewportElement.scrollLeft
 
         viewportElement.style.overflow = 'hidden'
 
+        let scrollOptions
         if (orientation == 'vertical') {
 
-            viewportElement.scrollTop = blockScrollPos - scrollblockOffset
+            scrollOptions = {
+                top:blockScrollPos - scrollblockOffset,
+                left:scrollLeft,
+                behavior:'instant'
+            }
+
             scrollblockElement.style.top = null
 
         } else { // orientation == horizontal
 
-            viewportElement.scrollLeft = blockScrollPos - scrollblockOffset
+            scrollOptions = {
+                top:scrollTop,
+                left:blockScrollPos - scrollblockOffset,
+                behavior:'instant'
+            }
+
             scrollblockElement.style.left = null
 
         }
+
+        viewportElement.scroll(scrollOptions)
 
         viewportElement.style.overflow = 'scroll'
 
@@ -163,7 +180,6 @@ export default class ScrollHandler {
         } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
-        // const viewportElement = ViewportContextProperties.elementRef.current
 
         const viewportElement = e.currentTarget
 
