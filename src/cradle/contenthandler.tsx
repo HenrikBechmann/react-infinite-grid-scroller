@@ -49,6 +49,8 @@ export default class ContentHandler {
 
    }
 
+   private gridResizeObserver
+
    public content = {
 
       cradleModelComponents: null,
@@ -970,6 +972,11 @@ export default class ContentHandler {
 
             } = virtualListProps
 
+        if (scrollHandler.isScrolling && this.gridResizeObserver) {
+            this.gridResizeObserver.disconnect()
+            this.gridResizeObserver = undefined
+        }
+
         // ------------------------[ calculations ]------------------------
 
         const 
@@ -1067,40 +1074,92 @@ export default class ContentHandler {
         }
 
         // check for gotoIndex or resize overshoot
-        // if ((source == 'setcradle') && !postCradleRowCount) { 
+        if ((source == 'setcradle') && !postCradleRowCount) { 
 
-        //     const viewportPixelLength = 
-        //         (orientation == 'vertical')?
-        //             viewportElement.offsetHeight:
-        //             viewportElement.offsetWidth
+            const tailGridElement = cradleElements.tailRef.current
 
-        //     const alignedEndPosDiff = 
-        //         axisViewportPixelOffset + measuredTailPixelLength - viewportPixelLength
+            this.gridResizeObserver = new ResizeObserver(this.resizeObserverCallback)
 
-        //     if (alignedEndPosDiff < 0) { // fill the bottom of the viewport using scrollBy
+            this.gridResizeObserver.observe(tailGridElement)
 
-        //         const scrollByY = 
-        //             (orientation == 'vertical')?
-        //                 alignedEndPosDiff:
-        //                 0
+        }
 
-        //         const scrollByX =
-        //             (orientation == 'vertical')?
-        //                 0:
-        //                 alignedEndPosDiff
+    }
 
-        //         const options = {
-        //             top:scrollByY,
-        //             left:scrollByX,
-        //             behavior:'instant'
-        //         }
+    private resizeTimeoutID
 
-        //         viewportElement.scrollBy( options )
+    private resizeObserverCallback = (entries) => {
 
-        //     }
+        clearTimeout(this.resizeTimeoutID)
 
-        // }
+        this.resizeTimeoutID = setTimeout(() => {
 
+            clearTimeout(this.resizeTimeoutID)
+
+            const
+                { cradleParameters } = this,
+                cradleHandlers = cradleParameters.handlersRef.current,
+                ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current,
+                { serviceHandler } = cradleHandlers,
+                viewportElement = ViewportContextProperties.elementRef.current,
+                scrollblockElement = viewportElement.firstChild,
+                cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
+
+                { orientation } = cradleInheritedProperties,
+
+                scrollblockLength = 
+                    orientation == 'vertical'?
+                        scrollblockElement.offsetHeight:
+                        scrollblockElement.offsetWidth,
+
+                scrollblockOffset = 
+                    orientation == 'vertical'?
+                        scrollblockElement.offsetTop:
+                        scrollblockElement.offsetLeft,
+
+                viewportLength = 
+                    orientation == 'vertical'?
+                        viewportElement.offsetHeight:
+                        viewportElement.offsetWidth,
+
+                scrollTop = viewportElement.scrollTop,
+                scrollLeft = viewportElement.scrollLeft
+
+            if (scrollblockOffset) {
+                if (orientation == 'vertical') {
+                    scrollblockElement.style.top = 0
+                } else {
+                    scrollblockElement.style.left = 0
+                }
+            }
+
+            let options
+            if (orientation == 'vertical') {
+
+                options = {
+                    top:scrollblockLength - viewportLength,
+                    left:scrollLeft,
+                    behavior:'smooth'
+                }
+
+            } else {
+
+                options = {
+                    top:scrollTop,
+                    left:scrollblockLength - viewportLength,
+                    behavior:'smooth'
+                }
+
+            }
+
+            viewportElement.scroll(options)
+
+            if (this.gridResizeObserver) {
+                this.gridResizeObserver.disconnect()
+                this.gridResizeObserver = null
+            }
+
+        }, 500)
     }
 
     // ========================= [ INTERNAL CONTENT MANAGEMENT SERVICES ]=====================
