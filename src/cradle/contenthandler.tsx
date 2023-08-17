@@ -852,8 +852,10 @@ export default class ContentHandler {
         if (scrollDiff) {
             axisViewportPixelOffset += scrollDiff
         }
+        // ---------
 
-        let topAxisPos, leftAxisPos // available for debug
+        // move the axis to accomodate change of content
+        let topAxisPos, leftAxisPos
         if (orientation == 'vertical') {
 
             topAxisPos = scrollPos + axisViewportPixelOffset
@@ -890,7 +892,8 @@ export default class ContentHandler {
     the length of the Scrollblock is shortened by the amount the measured tail length differs from the 
         base tail length
 
-    Called for variable layout only. All DOM elements should have been rendered at this point
+    Called for variable layout only. All DOM elements should have (ideally) been rendered at this point,
+        but the function deals with what it finds
     sets CSS: scrollblockElement top and height (or left and width), and axisElement top (or left)
     to get closer to natural proportions
 */
@@ -901,68 +904,71 @@ export default class ContentHandler {
 
         // resources...
         const
-        { cradleParameters } = this,
+            // acquire repositories
+            { cradleParameters } = this,
             cradleHandlers = cradleParameters.handlersRef.current,
             ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current,
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
 
-        {
+            {
 
-            layoutHandler, 
-            scrollHandler, 
-            interruptHandler 
+                layoutHandler, 
+                scrollHandler, 
+                interruptHandler 
 
-        } = cradleHandlers,
+            } = cradleHandlers,
 
-        { 
+            // extract resources from repositories
+            { 
 
-            elements: cradleElements, 
-            cradlePositionData 
+                elements: cradleElements, 
+                cradlePositionData 
 
-        } = layoutHandler,
+            } = layoutHandler,
 
-        // current configurations...
-        { 
+            // current configurations...
+            { 
 
-            targetAxisReferencePosition: axisReferencePosition,
-            targetAxisViewportPixelOffset: axisViewportPixelOffset,
+                targetAxisReferencePosition: axisReferencePosition,
+                targetAxisViewportPixelOffset: axisViewportPixelOffset,
 
-        } = cradlePositionData,
+            } = cradlePositionData,
 
-        // element references...
-        viewportElement = ViewportContextProperties.elementRef.current,
-        scrollblockElement = viewportElement.firstChild,
-        headGridElement = cradleElements.headRef.current,
-        tailGridElement = cradleElements.tailRef.current,
-        axisElement = cradleElements.axisRef.current,
+            // element references...
+            viewportElement = ViewportContextProperties.elementRef.current,
+            scrollblockElement = viewportElement.firstChild,
+            headGridElement = cradleElements.headRef.current,
+            tailGridElement = cradleElements.tailRef.current,
+            axisElement = cradleElements.axisRef.current,
 
-        {
+            // configuration
+            {
 
-            orientation, 
-            gap, 
-            padding, 
-            cellHeight,
-            cellWidth,
+                orientation, 
+                gap, 
+                padding, 
+                cellHeight,
+                cellWidth,
 
-        } = cradleInheritedProperties,
+            } = cradleInheritedProperties,
 
-        {
+            {
 
-            virtualListProps,
-            cradleContentProps,
+                virtualListProps,
+                cradleContentProps,
 
-        } = cradleInternalProperties,
+            } = cradleInternalProperties,
 
-        { 
+            { 
 
-            crosscount, 
-            rowcount:listRowcount,
-            lowindex:listlowindex,
-            rowshift:listrowshift,
+                crosscount, 
+                rowcount:listRowcount,
+                lowindex:listlowindex,
+                rowshift:listrowshift,
 
 
-        } = virtualListProps
+            } = virtualListProps
 
         // ------------------------[ calculations ]------------------------
 
@@ -1061,39 +1067,39 @@ export default class ContentHandler {
         }
 
         // check for gotoIndex or resize overshoot
-        if ((source == 'setcradle') && !postCradleRowCount) { 
+        // if ((source == 'setcradle') && !postCradleRowCount) { 
 
-            const viewportPixelLength = 
-                (orientation == 'vertical')?
-                    viewportElement.offsetHeight:
-                    viewportElement.offsetWidth
+        //     const viewportPixelLength = 
+        //         (orientation == 'vertical')?
+        //             viewportElement.offsetHeight:
+        //             viewportElement.offsetWidth
 
-            const alignedEndPosDiff = 
-                axisViewportPixelOffset + measuredTailPixelLength - viewportPixelLength
+        //     const alignedEndPosDiff = 
+        //         axisViewportPixelOffset + measuredTailPixelLength - viewportPixelLength
 
-            if (alignedEndPosDiff < 0) { // fill the bottom of the viewport using scrollBy
+        //     if (alignedEndPosDiff < 0) { // fill the bottom of the viewport using scrollBy
 
-                const scrollByY = 
-                    (orientation == 'vertical')?
-                        alignedEndPosDiff:
-                        0
+        //         const scrollByY = 
+        //             (orientation == 'vertical')?
+        //                 alignedEndPosDiff:
+        //                 0
 
-                const scrollByX =
-                    (orientation == 'vertical')?
-                        0:
-                        alignedEndPosDiff
+        //         const scrollByX =
+        //             (orientation == 'vertical')?
+        //                 0:
+        //                 alignedEndPosDiff
 
-                const options = {
-                    top:scrollByY,
-                    left:scrollByX,
-                    behavior:'instant'
-                }
+        //         const options = {
+        //             top:scrollByY,
+        //             left:scrollByX,
+        //             behavior:'instant'
+        //         }
 
-                viewportElement.scrollBy( options )
+        //         viewportElement.scrollBy( options )
 
-            }
+        //     }
 
-        }
+        // }
 
     }
 
