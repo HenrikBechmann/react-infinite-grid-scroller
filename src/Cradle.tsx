@@ -781,27 +781,27 @@ const Cradle = ({
     },[])
 
     // variable content requires special handling
-    useEffect(() => {
+    // useEffect(() => {
 
-        const { layout } = cradleInheritedPropertiesRef.current
+    //     const { layout } = cradleInheritedPropertiesRef.current
 
-        const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
+    //     const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
-        if (layout == 'uniform') {
-            viewportElement.removeEventListener('scroll',scrollHandler.onScrollForVariable)
-            return
-        }
+    //     if (layout == 'uniform') {
+    //         viewportElement.removeEventListener('scroll',scrollHandler.onScrollForVariable)
+    //         return
+    //     }
 
-        viewportElement.addEventListener('scroll',scrollHandler.onScrollForVariable)
+    //     viewportElement.addEventListener('scroll',scrollHandler.onScrollForVariable)
 
-        return () => {
+    //     return () => {
 
-            viewportElement && 
-                viewportElement.removeEventListener('scroll',scrollHandler.onScrollForVariable)
+    //         viewportElement && 
+    //             viewportElement.removeEventListener('scroll',scrollHandler.onScrollForVariable)
 
-        }
+    //     }
 
-    },[layout])
+    // },[layout])
 
     // caching change
     useEffect(()=> {

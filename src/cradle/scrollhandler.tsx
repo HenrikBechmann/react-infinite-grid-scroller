@@ -21,82 +21,83 @@ export default class ScrollHandler {
     private _iOSsetTimeoutTimerid // special case for iOS initial scroll delay
 
     private _onAfterScrollForVariableTimeout
+    private _onAfterScrollTimeout
 
     private _isScrollingForVariable = false
 
-    public onScrollForVariable = () => {
+    // public onScrollForVariable = () => {
 
-        const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
+    //     const { signals } = this.cradleParameters.handlersRef.current.interruptHandler
 
-        if (signals.pauseScrollingEffects) {
+    //     if (signals.pauseScrollingEffects) {
 
-            return
+    //         return
 
-        }
+    //     }
 
-        if (!this._isScrollingForVariable) {
+    //     if (!this._isScrollingForVariable) {
 
-            this._isScrollingForVariable = true
+    //         this._isScrollingForVariable = true
 
-            if (isSafariIOS) {
-                this._onAfterScrollForVariableTimeout = 1000 // iOS sometimes likes to pause before commencing scrolling
+    //         if (isSafariIOS) {
+    //             this._onAfterScrollForVariableTimeout = 1000 // iOS sometimes likes to pause before commencing scrolling
 
-                clearTimeout(this._iOSsetTimeoutTimerid)
-                // clearTimeout(this._onAfterScrollForVariableTimeout)
+    //             clearTimeout(this._iOSsetTimeoutTimerid)
+    //             // clearTimeout(this._onAfterScrollForVariableTimeout)
 
-                this._iOSsetTimeoutTimerid = setTimeout(()=>{
-                    this._onAfterScrollForVariableTimeout = 250 // back to more responsive once underway
-                },900)
+    //             this._iOSsetTimeoutTimerid = setTimeout(()=>{
+    //                 this._onAfterScrollForVariableTimeout = 250 // back to more responsive once underway
+    //             },900)
 
-            } else {
+    //         } else {
 
-                this._onAfterScrollForVariableTimeout = 250
+    //             this._onAfterScrollForVariableTimeout = 250
 
-            }
+    //         }
 
-        }
+    //     }
 
-        const 
-            ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
-            viewportElement = ViewportContextProperties.elementRef.current,
-            scrollblockElement = viewportElement.firstChild,
-            orientation = this.cradleParameters.cradleInheritedPropertiesRef.current.orientation
+    //     const 
+    //         ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
+    //         viewportElement = ViewportContextProperties.elementRef.current,
+    //         scrollblockElement = viewportElement.firstChild,
+    //         orientation = this.cradleParameters.cradleInheritedPropertiesRef.current.orientation
 
-        let scrollblockLength, viewportLength, blockScrollPos, scrollblockOffset
+    //     let scrollblockLength, viewportLength, blockScrollPos, scrollblockOffset
         
-        if (orientation == 'vertical') {
+    //     if (orientation == 'vertical') {
 
-            scrollblockLength = viewportElement.scrollHeight
-            viewportLength =  viewportElement.offsetHeight
-            blockScrollPos = viewportElement.scrollTop
-            scrollblockOffset = scrollblockElement.offsetTop
+    //         scrollblockLength = viewportElement.scrollHeight
+    //         viewportLength =  viewportElement.offsetHeight
+    //         blockScrollPos = viewportElement.scrollTop
+    //         scrollblockOffset = scrollblockElement.offsetTop
 
-        } else {
+    //     } else {
 
-            scrollblockLength = viewportElement.scrollWidth
-            viewportLength =  viewportElement.offsetWidth
-            blockScrollPos = viewportElement.scrollLeft
-            scrollblockOffset = scrollblockElement.offsetLeft
+    //         scrollblockLength = viewportElement.scrollWidth
+    //         viewportLength =  viewportElement.offsetWidth
+    //         blockScrollPos = viewportElement.scrollLeft
+    //         scrollblockOffset = scrollblockElement.offsetLeft
 
-        }
+    //     }
 
-        clearTimeout(this._scrollforvariabletimerid)
+    //     clearTimeout(this._scrollforvariabletimerid)
 
-        if ((( blockScrollPos - scrollblockOffset) < 0) || // overshoot start
-            (scrollblockLength < (blockScrollPos - scrollblockOffset + viewportLength))) { // overshoot end
+    //     if ((( blockScrollPos - scrollblockOffset) < 0) || // overshoot start
+    //         (scrollblockLength < (blockScrollPos - scrollblockOffset + viewportLength))) { // overshoot end
 
-            this.onAfterScrollForVariable() // immediate halt and adjust
+    //         this.onAfterScrollForVariable() // immediate halt and adjust
 
-        } else {
+    //     } else {
 
-            this._scrollforvariabletimerid = setTimeout(() => {
+    //         this._scrollforvariabletimerid = setTimeout(() => {
 
-                this.onAfterScrollForVariable() // deferred halt and adjust
+    //             this.onAfterScrollForVariable() // deferred halt and adjust
 
-            },this._onAfterScrollForVariableTimeout)
+    //         },this._onAfterScrollForVariableTimeout)
 
-        }
-    }
+    //     }
+    // }
 
     private onAfterScrollForVariable = () => {
 
@@ -172,27 +173,31 @@ export default class ScrollHandler {
 
     public onScroll = (e) => {
 
-        const { 
+        const 
+            { 
 
-            scrollerID, // debug
-            ONAFTERSCROLL_TIMEOUT 
+                scrollerID, // debug
+                ONAFTERSCROLL_TIMEOUT,
+                layout
 
-        } = this.cradleParameters.cradleInheritedPropertiesRef.current
+            } = this.cradleParameters.cradleInheritedPropertiesRef.current,
 
-        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
+            ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
 
-        const viewportElement = e.currentTarget
+            viewportElement = e.currentTarget,
+            scrollblockElement = viewportElement.firstChild,
 
-        const orientation = this.cradleParameters.cradleInheritedPropertiesRef.current.orientation
-        const scrollPositionCurrent = 
-            (orientation == 'vertical')?
-                viewportElement.scrollTop:
-                viewportElement.scrollLeft
+            { orientation } = this.cradleParameters.cradleInheritedPropertiesRef.current,
+            
+            scrollPositionCurrent = 
+                (orientation == 'vertical')?
+                    viewportElement.scrollTop:
+                    viewportElement.scrollLeft,
 
-        const scrollXPositionCurrent = 
-            (orientation == 'horizontal')?
-                viewportElement.scrollTop:
-                viewportElement.scrollLeft
+            scrollXPositionCurrent = 
+                (orientation == 'horizontal')?
+                    viewportElement.scrollTop:
+                    viewportElement.scrollLeft
 
         clearTimeout(this._scrolltimerid)
 
@@ -219,13 +224,47 @@ export default class ScrollHandler {
         if (!this.isScrolling) {
 
             this.isScrolling = true
+
+            if (isSafariIOS) {
+                this._onAfterScrollTimeout = 1000 // iOS sometimes likes to pause before commencing scrolling
+
+                clearTimeout(this._iOSsetTimeoutTimerid)
+
+                this._iOSsetTimeoutTimerid = setTimeout(()=>{
+
+                    this._onAfterScrollTimeout = ONAFTERSCROLL_TIMEOUT // back to more responsive once underway
+
+                },900)
+
+            } else {
+
+                this._onAfterScrollTimeout = ONAFTERSCROLL_TIMEOUT
+
+            }
+
             this.scrollData.start = scrollPositionCurrent
             this.scrollData.currentupdate = scrollPositionCurrent
 
         }
 
-        const { layoutHandler } = this.cradleParameters.handlersRef.current
-        const { cradlePositionData } = layoutHandler
+        // if (!this.isScrolling) {
+
+        //     this.isScrolling = true
+        //     this.scrollData.start = scrollPositionCurrent
+        //     this.scrollData.currentupdate = scrollPositionCurrent
+
+        // }
+
+        const 
+            { 
+                layoutHandler,
+                stateHandler
+            } = this.cradleParameters.handlersRef.current,
+
+            { cradlePositionData } = layoutHandler,
+
+            cradleState = stateHandler.cradleStateRef.current
+
 
         // keep up to date in case of reparenting interrupt
         cradlePositionData.blockScrollPos = scrollPositionCurrent
@@ -233,11 +272,6 @@ export default class ScrollHandler {
 
         this.scrollData.previous = this.scrollData.current
         this.scrollData.current = scrollPositionCurrent
-
-        const {stateHandler} = this.cradleParameters.handlersRef.current
-        const cradleState = stateHandler.cradleStateRef.current
-
-        // const { contentHandler, serviceHandler } = this.cradleParameters.handlersRef.current
 
         if (!ViewportContextProperties.isResizing) {
 
@@ -253,7 +287,46 @@ export default class ScrollHandler {
 
             this.onAfterScroll()
 
-        },ONAFTERSCROLL_TIMEOUT)
+        },this._onAfterScrollTimeout)
+
+        if (layout == 'variable') {
+
+            let scrollblockLength, viewportLength, blockScrollPos, scrollblockOffset
+
+            if (orientation == 'vertical') {
+
+                scrollblockLength = viewportElement.scrollHeight
+                viewportLength =  viewportElement.offsetHeight
+                blockScrollPos = viewportElement.scrollTop
+                scrollblockOffset = scrollblockElement.offsetTop
+
+            } else {
+
+                scrollblockLength = viewportElement.scrollWidth
+                viewportLength =  viewportElement.offsetWidth
+                blockScrollPos = viewportElement.scrollLeft
+                scrollblockOffset = scrollblockElement.offsetLeft
+
+            }
+
+            clearTimeout(this._scrollforvariabletimerid)
+
+            if ((( blockScrollPos - scrollblockOffset) < 0) || // overshoot start
+                (scrollblockLength < (blockScrollPos - scrollblockOffset + viewportLength))) { // overshoot end
+
+                this.onAfterScrollForVariable() // immediate halt and adjust
+
+            } else {
+
+                this._scrollforvariabletimerid = setTimeout(() => {
+
+                    this.onAfterScrollForVariable() // deferred halt and adjust
+
+                },this._onAfterScrollTimeout)
+
+            }
+
+        }
 
         return false
 
