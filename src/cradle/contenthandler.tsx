@@ -900,6 +900,8 @@ export default class ContentHandler {
     to get closer to natural proportions
 */
 
+    private latestAxisReferenceIndex
+
     public adjustScrollblockForVariability = (source) => {
 
         // ----------------------[ setup base values and references ]------------------------
@@ -972,9 +974,11 @@ export default class ContentHandler {
 
             } = virtualListProps
 
+        // cancel end of list reconciliation if scrolling re-starts
         if (scrollHandler.isScrolling && this.gridResizeObserver) {
             this.gridResizeObserver.disconnect()
             this.gridResizeObserver = undefined
+            clearTimeout(this.resizeTimeoutID)
         }
 
         // ------------------------[ calculations ]------------------------
@@ -1014,6 +1018,8 @@ export default class ContentHandler {
 
             // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
             basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding
+
+        this.latestAxisReferenceIndex = axisReferenceIndex
 
         // ------------------------[ layout adjustments ]----------------------
 
@@ -1094,7 +1100,7 @@ export default class ContentHandler {
 
         this.resizeTimeoutID = setTimeout(() => {
 
-            clearTimeout(this.resizeTimeoutID)
+            clearTimeout(this.resizeTimeoutID) // run once
 
             const
                 { cradleParameters } = this,
@@ -1123,36 +1129,45 @@ export default class ContentHandler {
                         viewportElement.offsetWidth,
 
                 scrollTop = viewportElement.scrollTop,
-                scrollLeft = viewportElement.scrollLeft
+                scrollLeft = viewportElement.scrollLeft,
 
-            if (scrollblockOffset) {
+                viewportScrollPos = 
+                    orientation == 'vertical'?
+                        viewportElement.scrollTop:
+                        viewportElement.scrollLeft
+
+            // check for overshoot
+            if ((scrollblockLength + scrollblockOffset - viewportScrollPos) < viewportLength) { // overshoot
+
+                if (scrollblockOffset) {
+                    if (orientation == 'vertical') {
+                        scrollblockElement.style.top = 0
+                    } else {
+                        scrollblockElement.style.left = 0
+                    }
+                }
+
+                let options
                 if (orientation == 'vertical') {
-                    scrollblockElement.style.top = 0
+
+                    options = {
+                        top:scrollblockLength - viewportLength,
+                        left:scrollLeft,
+                        behavior:'smooth'
+                    }
+
                 } else {
-                    scrollblockElement.style.left = 0
+
+                    options = {
+                        top:scrollTop,
+                        left:scrollblockLength - viewportLength,
+                        behavior:'smooth'
+                    }
+
                 }
+
+                viewportElement.scroll(options)
             }
-
-            let options
-            if (orientation == 'vertical') {
-
-                options = {
-                    top:scrollblockLength - viewportLength,
-                    left:scrollLeft,
-                    behavior:'smooth'
-                }
-
-            } else {
-
-                options = {
-                    top:scrollTop,
-                    left:scrollblockLength - viewportLength,
-                    behavior:'smooth'
-                }
-
-            }
-
-            viewportElement.scroll(options)
 
             if (this.gridResizeObserver) {
                 this.gridResizeObserver.disconnect()
