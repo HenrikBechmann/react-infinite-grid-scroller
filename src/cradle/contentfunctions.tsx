@@ -164,45 +164,47 @@ export const generateShiftInstruction = ({
 
 }) => {
 
-    const triggerData = {
-        headOffset:null,
-        tailOffset:null,
-        span:triggerlineSpan,
-        isFirstRowTriggerConfig
-    }
-
-    // most recent; either triggerline will do
     const 
+        triggerData = {
+            headOffset:null,
+            tailOffset:null,
+            span:triggerlineSpan,
+            isFirstRowTriggerConfig
+        },
+
+        // most recent; either triggerline will do
         entry = triggerlineEntries[triggerlineEntries.length - 1], //.at(-1) at not available in iOS 15
-        referencename = entry.target.dataset.type
+        referencename = entry.target.dataset.type,
+
+        span = triggerlineSpan,
+
+        intersectrootpos = 
+            (orientation == 'vertical')?
+                Math.trunc(entry.rootBounds.y):
+                Math.trunc(entry.rootBounds.x),
+
+        boundingrootpos =
+            (orientation == 'vertical')?
+                Math.trunc(viewportBoundingRect.y):
+                Math.trunc(viewportBoundingRect.x),
+
+        // this selection is redundant, but documents what's going on
+        rootpos = 
+            (intersectrootpos == boundingrootpos)?
+            intersectrootpos:
+            boundingrootpos, // we're in Safari, zoomed
+
+        entrypos = 
+            (orientation == 'vertical')?
+                Math.trunc(entry.boundingClientRect.y):
+                Math.trunc(entry.boundingClientRect.x),
+
+        viewportTriggerOffset = entrypos - rootpos,
+
+        triggerHistory = triggerHistoryRef.current
 
     entry.referencename = referencename // for debug
-
-    const span = triggerlineSpan
-
-    const intersectrootpos = 
-        (orientation == 'vertical')?
-            Math.trunc(entry.rootBounds.y):
-            Math.trunc(entry.rootBounds.x)
-
-    const boundingrootpos =
-        (orientation == 'vertical')?
-            Math.trunc(viewportBoundingRect.y):
-            Math.trunc(viewportBoundingRect.x)
-
-    // this selection is redundant, but documents what's going on
-    const rootpos = 
-        (intersectrootpos == boundingrootpos)?
-        intersectrootpos:
-        boundingrootpos // we're in Safari, zoomed
-
-    const entrypos = 
-        (orientation == 'vertical')?
-            Math.trunc(entry.boundingClientRect.y):
-            Math.trunc(entry.boundingClientRect.x)
-
-    const viewportTriggerOffset = entrypos - rootpos
-
+    // set triggerData
     if (referencename == 'headtrigger') {
 
         triggerData.headOffset = viewportTriggerOffset
@@ -215,10 +217,9 @@ export const generateShiftInstruction = ({
 
     }
 
+    // calculate shift instruction
     let shiftinstruction
     
-    const triggerHistory = triggerHistoryRef.current;
-
     // since triggers are moved and can share the 0 (zero) offset, an infinite loop can occur
     // between the head and tail triggers. The following short-circuits that.
     // Obviously needs work to generalize...
@@ -386,22 +387,22 @@ export const calculateShiftSpecs = ({
             endrowblanks,
             rowshift:rangerowshift,
             
-        } = virtualListProps
+        } = virtualListProps,
 
-    // normalize
-    const previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0)
-    const previousCradleReferenceRow = Math.floor(previousCradleReferenceIndex/crosscount)
+        // normalize
+        previousCradleReferenceIndex = (cradlecontentlist[0]?.props.index || 0),
+        previousCradleReferenceRow = Math.floor(previousCradleReferenceIndex/crosscount),
 
-    const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0)
-    const previousAxisReferenceRow = Math.floor(previousAxisReferenceIndex/crosscount)
+        previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0),
+        previousAxisReferenceRow = Math.floor(previousAxisReferenceIndex/crosscount),
 
-    const listEndRow = (listRowcount - 1) + rangerowshift
+        listEndRow = (listRowcount - 1) + rangerowshift,
 
-    const baseRowPixelLength =
-        ((orientation == 'vertical')?
-            cellHeight:
-            cellWidth) 
-        + gap
+        baseRowPixelLength =
+            ((orientation == 'vertical')?
+                cellHeight:
+                cellWidth) 
+            + gap
 
     let 
         foundGridSpanRowShiftIncrement,
@@ -666,17 +667,18 @@ export const calculateShiftSpecs = ({
 
     // ----------------------[ 7. map rows to item references ]----------------------
 
-    const newCradleReferenceIndex = Math.max(listlowindex, newCradleReferenceRow * crosscount)
-    const cradleReferenceItemShift = newCradleReferenceIndex - previousCradleReferenceIndex
+    const 
+        newCradleReferenceIndex = Math.max(listlowindex, newCradleReferenceRow * crosscount),
+        cradleReferenceItemShift = newCradleReferenceIndex - previousCradleReferenceIndex,
 
-    const newAxisReferenceIndex = Math.max(listlowindex, newAxisReferenceRow * crosscount)
-    const axisReferenceItemShift = newAxisReferenceIndex - previousAxisReferenceIndex
+        newAxisReferenceIndex = Math.max(listlowindex, newAxisReferenceRow * crosscount),
+        axisReferenceItemShift = newAxisReferenceIndex - previousAxisReferenceIndex,
+
+        includesLastRow = ((newCradleReferenceRow + cradleRowcount - rangerowshift) >= listRowcount),
+
+        includesFirstRow = (newCradleReferenceRow == rangerowshift)
 
     let newCradleContentCount = cradleRowcount * crosscount // base count
-
-    const includesLastRow = ((newCradleReferenceRow + cradleRowcount - rangerowshift) >= listRowcount)
-
-    const includesFirstRow = (newCradleReferenceRow == rangerowshift)
 
     if (includesLastRow) {
 
@@ -691,10 +693,11 @@ export const calculateShiftSpecs = ({
     }
 
     // create head and tail change counts
-    const changeOfCradleContentCount = cradlecontentlist.length - newCradleContentCount
+    const 
+        changeOfCradleContentCount = cradlecontentlist.length - newCradleContentCount,
 
-    const listStartChangeCount = -(cradleReferenceItemShift)
-    const listEndChangeCount = -listStartChangeCount - changeOfCradleContentCount
+        listStartChangeCount = -(cradleReferenceItemShift),
+        listEndChangeCount = -listStartChangeCount - changeOfCradleContentCount
 
     // ---------------------[ 8. return required values ]-------------------
 
