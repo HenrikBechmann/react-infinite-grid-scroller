@@ -156,7 +156,6 @@ const Viewport = ({
             overflow:'scroll',//'auto', 'scroll' for iOS Safari
             WebkitOverflowScrolling: 'touch',// for iOS Safari
             overflowAnchor:'none', // crucial!
-            
         }
 
     },[styles.viewport])

@@ -1,7 +1,7 @@
 # react-infinite-grid-scroller (RIGS)
-Vertical or horizontal infinite scroller using simple css grid layout
+Heavy-duty vertical or horizontal infinite scroller
 
-[![npm](https://img.shields.io/badge/npm-1.0.0--Beta--2-brightgreen)](https://www.npmjs.com/package/react-infinite-grid-scroller) [![licence](https://img.shields.io/badge/licence-MIT-green)](LICENSE.md)
+[![npm](https://img.shields.io/badge/npm-1.2.0-brightgreen)](https://www.npmjs.com/package/react-infinite-grid-scroller) [![licence](https://img.shields.io/badge/licence-MIT-green)](LICENSE.md)
 
 # Key Features
 
@@ -9,13 +9,17 @@ Vertical or horizontal infinite scroller using simple css grid layout
 - designed for both "heavy" and "light" cell content (React components)
 - supports both uniform and variable cell lengths (for both vertical and horizontal)
 - single or multiple rows or columns
-- dynamically variable virtual list size
+- dynamically variable virtual list size; prepend or append
 - limited sparse in-memory cache, to preserve content state, with an API
 - repositioning mode when rapidly scrolling (such as by using the scroll thumb)
 - dynamic pivot (horizontal/vertical back and forth) while maintaining position in list
 - automatic reconfiguration with viewport resize
 - dynamic recalibration with async content refresh
 - supports nested RIGS scrollers
+
+# Demo Site
+
+See the [demo site](https://henrikbechmann.github.io/rigs-demo/).
 
 # Key Technologies
 
@@ -33,7 +37,7 @@ Therefore RIGS is best suited for modern browsers.
 
 ![Architecture](demo/Architecture.png)
 
-Notes: The `Cradle` is kept in view of the `Viewport`, such that the `axis` is always near the top or left of the `Viewport` (depending on vertical or horizontal orientation). There are two CSS grids in the `Cradle`, one on each side of the `axis`. As `CellFrame`s are added to or removed from the grids, the grid on the left expands toward or contracts away from the top or left of the `Scrollblock` (depending on orientation), and the grid on the right expands toward or contracts away from the bottom or right of the `Scrollblock`. 
+Notes: The `Cradle` is kept in view of the `Viewport`, such that the `axis` is always near the top or left of the `Viewport` (depending on vertical or horizontal orientation). There are two CSS grids in the `Cradle`, one on each side of the `axis`. As `CellFrame`s are added to or removed from the grids, the grid on the top or left expands toward or contracts away from the top or left of the `Scrollblock` (depending on orientation), and the grid on the bottom or right expands toward or contracts away from the bottom or right of the `Scrollblock`. 
 
 `CellFrame`s display individual user components. `CellFrame`s are created and destroyed on a rolling basis as the `Cradle` re-configures and moves around the `Scrollblock` to stay in view, but user components are maintained in the internal cache until they go out of scope. New `CellFrame`s fetch user components from the internal cache (portals in the React virtual DOM) or from the host through the user-supplied `getItem` function, as needed.
 
@@ -48,11 +52,13 @@ import Scroller from 'react-infinite-grid-scroller'
 
 // ...
 
+const lowindex = -50, highindex = 50 // random range values
+
 <div style = { containerstyle }>
   <Scroller 
       cellHeight = { cellHeight }
       cellWidth = { cellWidth }
-      estimatedListSize = { estimatedListSize } // this constitutes a virtual 0-based array
+      startingListRange = { [lowindex, highindex] } // this constitutes the virtual list
       getItem = { getItem } // a function called by RIGS to obtain a specified user component by index number
   />
 </div>
@@ -63,44 +69,55 @@ Note that scroller-generated elements show a `data-type` attribute in browser in
 
 User components loaded to `CellFrame`s are placed in a `data-type = 'contentenvelope'` `div`. In 'uniform' layout this has `position:absolute` and `inset:0`. In 'variable' layout it has `width:100%` and `max-height` = `cellHeight` for 'vertical' orientation, and `height:100%` and `max-width` = `cellWidth` for 'horizontal' orientation. In any case it has `overflow:hidden`.
 
+See the "Content Types" section of the [demodata.tsx](https://github.com/HenrikBechmann/rigs-demo/blob/master/src/demodata.tsx) module of the demo site for more code examples.
+
 # Animated GIF
 
-This is a random screenshare, showing async content update while still scrolling, dynamic pivot, and nested scrollers.
+This is a random screenshare, showing nested scrollers in a resized browser (33% normal).
 
-![video](demo/RIGSDemo.gif)
+![animation](demo/RIGSDemo.gif)
+
+# Compatible browsers
+
+RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
+
+![chrome](demo/chromelogo.png) ![edge](demo/edgelogo.png) ![firefox](demo/firefoxlogo.png) ![safari](demo/safarilogo.png)
 
 # Scroller properties
 
 | property | value | notes |
 |---|---|---|
 |[_**REQUIRED**_]|
-|cellHeight|integer: number of pixels for cell height|required. Applied to `height` for 'uniform' layout, 'vertical' orientation. Applied to `max-height` for 'variable' layout, 'vertical' orientation. Approximate, used for `fr` (fractional allocation) for 'horizontal' orientation |
-|cellWidth|integer: number of pixels for cell width|required. Applied to `width` for 'uniform' layout, 'horizontal' orientation. Applied to `max-width` for 'variable' layout, 'horizontal' orientation. Approximate, used for `fr` (fractional allocation) for 'vertical' orientation|
-|estimatedListSize|integer: the estimated number of items in the virtual list|required. Can be modified at runtime. Constitutes a 0-based virtual array|
-|getItem|host-provided function. Parameters: `index` (integer, 0 based), and session `itemID` (integer) for tracking and matching. Arguments provided by system|required. Must return a React component or promise of a component (`React.isValidElement`), or `undefined` = unavailable, or `null` = end-of-list|
+|cellHeight:integer| number of pixels for cell height|required. Applied to `height` for 'uniform' layout, 'vertical' orientation. Applied to `max-height` for 'variable' layout, 'vertical' orientation. Approximate, used for `fr` (fractional allocation) for 'horizontal' orientation |
+|cellWidth:integer| number of pixels for cell width|required. Applied to `width` for 'uniform' layout, 'horizontal' orientation. Applied to `max-width` for 'variable' layout, 'horizontal' orientation. Approximate, used for `fr` (fractional allocation) for 'vertical' orientation|
+|startingListSize:integer| the starting number of items in the virtual list|required. Can be modified at runtime. Constitutes a 0-based virtual array (Internally creates a starting range of [0,startingListSize - 1]. Ignored in the presence of `startingListRange` array|
+|startingListRange:[lowindex, highindex] \| []|two part array , or empty array []|lowindex must be <= highindex; both can be positive or negative integers. [] (empty array) creates an empty virtual list|
+|getItem(index:integer,itemID:integer):<br />React.FC \| Promise \| undefined \| null|host-provided function. session `itemID` (integer) is for tracking and matching. Arguments provided by system|required. Must return a React component or promise of a component (`React.isValidElement`), or `undefined` = unavailable, or `null` = end-of-list|
 |[_**SCROLLER OPTIONS**_]|
-|orientation|string: 'vertical' (default) or 'horizontal'|direction of scroll|
-|layout|string: 'uniform' (default) or 'variable'|specifies handling of the height or width of cells, depending on orientation. 'uniform' is fixed cellHeight/cellWidth. 'variable' is constrained by cellHeight/cellWidth (maximum) and cellMinHeight/cellMinWidth (minimum)|
-|startingIndex|integer: starting index when the scroller first loads|default = 0|
-|padding|integer: number of pixels padding the `Cradle`| default = 0|
+|orientation:string| 'vertical' (default) or 'horizontal'|direction of scroll|
+|layout:string| 'uniform' (default) or 'variable'|specifies handling of the height or width of cells, depending on orientation. 'uniform' is fixed cellHeight/cellWidth. 'variable' is constrained by cellHeight/cellWidth (maximum) and cellMinHeight/cellMinWidth (minimum)|
+|startingIndex:integer| starting index when the scroller first loads|default = 0|
+|padding:integer| number of pixels padding the `Cradle`| default = 0|
 |[_**MORE CELL OPTIONS**_]|
-|gap|integer: number of pixels between cells|there is no gap at start or end of rows or columns; default = 0|
-|cellMinHeight|integer: default = 25, minimum = 25, maximum = cellHeight|used for 'variable' layout with 'vertical' orientation. Applied to `min-height`|
-|cellMinWidth|integer: default = 25, minimum = 25, maximum = cellWidth|used for 'variable' layout with 'horizontal' orientation. Applied to `min-width`|
+|gap:integer| number of pixels between cells|there is no gap at start or end of rows or columns; default = 0|
+|cellMinHeight:integer| default = 25, minimum = 25, maximum = cellHeight|used for 'variable' layout with 'vertical' orientation. Applied to `min-height`|
+|cellMinWidth:integer| default = 25, minimum = 25, maximum = cellWidth|used for 'variable' layout with 'horizontal' orientation. Applied to `min-width`|
 |[_**SYSTEM SETTINGS**_]|
-|runwaySize|integer: number of rows in the `Cradle` just out of view at head and tail of list|default = 1. minimum = 1. Gives time to assemble cellFrames before display
-|cache|string: 'cradle' (default), 'keepload', 'preload'|'cradle' matches the cache to the contents of the `Cradle`. 'keepload' keeps user components in the cache as loaded, up to `cacheMax` (and always `Cradle` user components). 'preload' loads user components up to `cacheMax`, then adjusts cache such that `Cradle` user components are always in the cache|
-|cacheMax|integer: at minimum (maintained by system) the number of user components in the `Cradle`|allows optimization of cache size for memory limits and performance|
-|useScrollTracker|boolean: default = `true`|allows suppression of system feedback on position within list while in reposition mode, if the host wants to provide alternative feedback based on data from callbacks |
-|placeholder|a lightweight React component for `cellFrame`s to load while waiting for the intended `cellFrame` components|optional (replaces default placeholder). parameters are index, listsize, message, error. Arguments set by system|
-|usePlaceholder|boolean: default = true|allows suppression of use of default or custom placeholder. Placeholders show messages to the user while user components are fetched, and report errors|
-|[_**OBJECTS**_]|
-|styles|object: collection of styles for scroller components|optional. These should be "passive" styles like backgroundColor. See below for details|
-|callbacks|object: collection of functions for feedback, and interactions with scroller components|optional. See below for details|
-|technical|object: collection of values used to control system behaviour|use with caution. optional. See below for details|
-|scrollerProperties|requested by user components by being set to null by user, instantiated with an object by system|required for nested RIGS; available for all user components. Contains key scroller settings. See below for details|
+|runwaySize:integer| number of rows in the `Cradle` just out of view at head and tail of list|default = 1. minimum = 1. Gives time to assemble cellFrames before display
+|cache:string| 'cradle' (default), 'keepload', 'preload'|'cradle' matches the cache to the contents of the `Cradle`. 'keepload' keeps user components in the cache as loaded, up to `cacheMax` (and always `Cradle` user components). 'preload' loads user components up to `cacheMax`, then adjusts cache such that `Cradle` user components are always in the cache|
+|cacheMax:integer| at minimum (maintained by system) the number of user components in the `Cradle`|allows optimization of cache size for memory limits and performance|
+|useScrollTracker:boolean| default = `true`|allows suppression of system feedback on position within list while in reposition mode, if the host wants to provide alternative feedback based on data from callbacks |
+|placeholder:React.FC|a lightweight React component for `cellFrame`s to load while waiting for the intended `cellFrame` components|optional (replaces default placeholder). parameters are index, listsize, message, error. Arguments set by system|
+|usePlaceholder:boolean| default = true|allows suppression of use of default or custom placeholder. Placeholders show messages to the user while user components are fetched, and report errors|
+|cacheAPI:null|requested by user components by being set to null by user; instantiated with a class instance by system|Experimental. If present, parent scroller instantiates the property with its cacheAPI instance, which causes any child scroller given the property to share the parent scroller cache. This currently has no operational effect|
+|[_**OBJECT PROPERTIES**_]|
+|styles:Object| collection of styles for scroller components|optional. These should be "passive" styles like backgroundColor. See below for details|
+|placeholderMessages:Object| messages presented by the placeholder|optional, to replace default messages. See below for details|
+|callbacks:Object| collection of functions for feedback, and interactions with scroller components|optional. See below for details|
+|technical:Object| collection of values used to control system behaviour|use with caution. optional. See below for details|
+|scrollerProperties:null|requested by user components by being set to null by user; instantiated with an object by system|required for nested RIGS; available for all user components. Contains key scroller settings. See below for details|
 
-Notes: For explicit cache management capability, a unique session **`itemID`** (integer) is assigned to a user component as soon as it enters the cache. The `itemID` is retired as soon as the user component is removed from the cache. If the same component is re-introduced to the cache, it is assigned a new session-unique `itemID`. 
+Notes: For explicit cache management capability, a unique session `itemID` (integer) is assigned to a user component as soon as it enters the cache. The `itemID` is retired as soon as the user component is removed from the cache. If the same component is re-introduced into the cache, it is assigned a new session-unique `itemID`. 
 
 The `itemID` for a user component is given to the host with the `getItem` call to obtain the component, so that the host can track the user component in the cache. If the user component is assigned to a new `index` number (see the **returned function object** cache management section below) the host will still be able to track the user component with the `itemID`. 
 
@@ -122,14 +139,30 @@ styles = {
   scrolltracker: {},
   placeholderframe: {},
   placeholderliner: {},
+  placeholdererrorframe: {},
+  placeholdererrorliner: {},
 }
 ~~~
 
-You may want to add `overscrollBehavior:'none'` to the viewport styles to prevent inadvertent reloading of your app in certain browsers when users scroll past the top of a vertical list.
+You may want to add `overscrollBehavior:'none'` to the top level viewport styles to prevent inadvertent reloading of your app in certain browsers when users scroll past the top of a vertical list.
 
-The scrolltracker is the small rectangular component that appears at the top left of the viewport when the list is being rapidly repositioned. The scrolltracker shows the user the current virtual index and total listsize during the repositioning process.
+The scrolltracker is the small rectangular component that appears at the top left of the viewport when the list is being rapidly repositioned. The scrolltracker shows the user the current virtual position (index + 1) and total listsize during the repositioning process.
 
 The placeholder styles are applied only to the default placeholder.
+
+### `placeholderMessages` object
+
+Replace any of the default messages used by the placeholder.
+
+~~~typescript
+const placeholderMessages = {
+    loading:'(loading...)',
+    retrieving:'(retrieving from cache)',
+    null:'end of list', // is returned with itemExceptionCallback
+    undefined:'host returned "undefined"', // displayed, and returned with itemExceptionCallback
+    invalid:'invalid React element', // displayed, and returned with itemExceptionCallback
+}
+~~~
 
 ### `callbacks` object
 
@@ -147,7 +180,7 @@ callbacks: {
      itemExceptionCallback, // (index, itemID, returnvalue, location, error) - details about failed getItem calls
 
      // operations tracking, called when triggered
-     changeListsizeCallback, // (newlistsize) - triggered when the listsize changes for any reason
+     changeListSizeCallback, // (newlistsize) - triggered when the listsize changes for any reason
      deleteListCallback, // (reason, deleteList) - data about which items have been deleted from the cache
      repositioningFlagCallback, // (flag) - notification of start (true) or end (false) of rapid repositioning
      
@@ -170,44 +203,50 @@ scrollerFunctionsRef.current.scrollToIndex(targetIndex)
 ~~~
 Details about the callbacks:
 
-|callback|parameters:datatypes|notes|
-|---|---|---|
+|callback function(parameters:datatypes)|notes|
+|---|---|
 |[_**GET FUNCTIONS**_]|
-|functionsCallback|functions: object|the object returned contains `Cradle` functions that the host can call directly. This is the API. `functionsCallback` is called once at startup. See below for details|
+|functionsCallback(functions: object)|the object returned contains `Cradle` functions that the host can call directly. This is the API. `functionsCallback` is called once at startup. See below for details|
 |[_**TRACK INDEXES**_]|
-|referenceIndexCallback|index: integer, location: string, cradleState: string|location can be 'setCradleContent', 'updateCradleContent'. Keeps the host up to date on the index number adjacent to the `Cradle` axis, and the state change that triggered the update|
-|repositioningIndexCallback|index: integer|the current index during repositioning. Useful for feedback to user when host sets `useScrollTracker` property to false|
-|preloadIndexCallback|index: integer|during a preload operation, this stream gives the index number being preloaded|
-|itemExceptionCallback|index: integer, itemID: integer, returnvalue: any, location: string, error: Error|triggered whenever getItem does not return a valid React component|
+|referenceIndexCallback(index: integer, location: string, cradleState: string)|location can be 'setCradleContent', 'updateCradleContent'. Keeps the host up to date on the index number adjacent to the `Cradle` axis, and the state change that triggered the update|
+|repositioningIndexCallback(index: integer)|the current index during repositioning. Useful for feedback to user when host sets `useScrollTracker` property to false|
+|preloadIndexCallback(index: integer)|during a preload operation, this stream gives the index number being preloaded|
+|itemExceptionCallback(index: integer, itemID: integer, returnvalue: any, location: string, error: Error)|triggered whenever getItem does not return a valid React component|
 |[_**TRACK OPERATIONS**_]|
-|changeListsizeCallback|newlistsize: integer|notification of a change of list size. Could be from getItem returning null indicating end-of-list, or an API call that results in change of list size|
-|deleteListCallback|reason: string, deleteList: array|gives an array of indexes that have been deleted from the cache, and text of the reason|
-|repositioningFlagCallback|flag: boolean| called with `true` when repositioning starts, and `false` when repositioning ends. Useful for feedback to user when host sets `useScrollTracker` property to false|
+|changeListsizeCallback(newlistsize: integer)|notification of a change of list size. Could be from getItem returning null indicating end-of-list, or an API call that results in change of list size|
+|deleteListCallback(reason: string, deleteList: array)|gives an array of indexes that have been deleted from the cache, and text of the reason|
+|repositioningFlagCallback(flag: boolean)| called with `true` when repositioning starts, and `false` when repositioning ends. Useful for feedback to user when host sets `useScrollTracker` property to false|
 
-### returned `functions` object
+### returned API `functions` object
 
 Details about the functions returned in an object by `functionsCallback`:
 
-|function|parameters: datatypes|return value: datatype|notes|
-|---|---|---|---|
+|function(parameters: datatypes):return value: datatype|notes|
+|---|---|
 |[_**OPERATIONS**_]|
-|scrollToIndex|index:integer|_void_|places the requested index item at the top visible row or left visible column of the scroller, depending on orientation|
-|setListsize|index:integer|_void_|changes the list size|
-|reload|_none_|_void_|clears the cache and reloads the `Cradle` at its current position in the virtual list|
-|clearCache|_none_|_void_|clears the cache and the `Cradle` (leaving nothing to display)|
+|scrollToIndex(index:integer):_void_|places the requested index item at the top visible row or left visible column of the scroller, depending on orientation|
+|scrollToPixel(pixel:integer[,behavior:string = 'smooth']):void|scrolls the scroller to the provided pixel, along the current orientation. `behavior` = 'smooth' \| 'instant' \| 'auto'; default = 'smooth'. `pixel` must be >=0 |
+|scrollByPixel(pixel:integer[,behavior:string = 'smooth']):void|scrolls the scroller up or down by the number of provided pixels, along the current orientation. `behavior` = 'smooth' \| 'instant' \| 'auto'; default = 'smooth'. `pixel` can be positive (scroll down) or negative (scroll up) |
+|setListsize(index:integer):_void_|changes the list size, by adjusting the list range high index. Favour use of `setListRange` instead|
+|setListRange(array [lowindex, highindex] \| []):_void_|lowindex must be <= highindex; lowindex and highindex can be positive or negative integers. [] (empty array) creates an empty virtual list|
+|prependIndexCount(count:integer):_void_|the number of indexes to expand the start of the virtual list|
+|appendIndexCount(count:integer):_void_|the number of indexes to expand the end of the virtual list|
 |[_**SNAPSHOTS**_]|
-|getCacheIndexMap|_none_|map: Map|snapshot of cache index (=key) to itemID (=value) map|
-|getCacheItemMap|_none_|map: Map|snapshot of cache itemID (=key) to object (=value) map. Object = {index, component} where component = user component|
-|getCradleIndexMap|_none_|map: Map|snapshot of `Cradle` index (=key) to itemID (=value) map|
+|getCacheIndexMap():Map|snapshot of cache index (=key) to itemID (=value) map|
+|getCacheItemMap():Map|snapshot of cache itemID (=key) to object (=value) map. Object = {index, component} where component = user component|
+|getCradleIndexMap(): Map|snapshot of `Cradle` index (=key) to itemID (=value) map|
+|getPropertiesSnapshot():object|copy of `scrollerPropertiesRef.current` from scrollerProperties object. See below.|
 |[_**CACHE MANAGEMENT**_]|
-|insertIndex|index:integer, rangehighindex = null:integer or null|changeList:array, replaceList:array|can insert a range of indexes. Displaced indexes, and higher indexes, are renumbered. Changes the list size; synchronizes the `Cradle`|
-|removeIndex|index:integer, rangehighindex = null:integer or null|changeList:array, replaceList:array|a range of indexes can be removed. Higher indexes are renumbered. Changes the list size; synchronizes to the `Cradle`|
-|moveIndex|toindex:integer, fromindex:integer, fromhighrange = null:integer or null|processedIndexList:array|a range of indexes can be moved. Displaced and higher indexes are renumbered. Changes the list size; synchronizes to the `Cradle`|
-|remapIndexes|changeMap:Map|modifiedIndexList:array, processedIndexList:array, deletedIndexList:array, deletedOrphanedItemIDList:array, deletedOrphanedIndexList:array, errorEntriesMap:Map, <br />changeMap:Map (same as input parameter)|changeMap is index (=key) to itemID (=value) map. indexes or itemIDs not in the cache are ignored. indexes with values set to `null` or `undefined` are deleted. `itemID`s are assigned to the new indexes; synchronizes to the `Cradle`. List size is adjusted as necessary|
+|insertIndex(index:integer, rangehighindex: integer \| null):array[changeList:array, replaceList:array, removeList:array]|can insert a range of indexes. Displaced indexes, and higher indexes, are renumbered; virtual list lowindex remains the same. Changes the list size by increasing virtual list highindex; synchronizes the `Cradle`|
+|removeIndex(index:integer, rangehighindex:integer \| null):array[changeList:array, replaceList:array, removeList:array]|a range of indexes can be removed. Higher indexes are renumbered; virtual list lowindex remains the same. Changes the list size by decreasing virtual list highindex; synchronizes to the `Cradle`|
+|moveIndex(toindex:integer, fromindex:integer, fromhighrange: integer \| null):array[processedIndexList:array]|a range of indexes can be moved. Displaced and higher indexes are renumbered. Changes the list size; synchronizes to the `Cradle`|
+|remapIndexes(changeMap:Map):array[<br />modifiedIndexList: array,<br />processedIndexList: array,<br />deletedIndexList: array,<br />indexesOfReplacedItemsList: array,<br />deletedOrphanedItemIDList: array,<br />deletedOrphanedIndexList: array,<br />errorEntriesMap: Map,<br />changeMap: Map] |(return changeMap is the same as input parameter). changeMap is index (=key) to itemID (=value) map. indexes or itemIDs not in the cache are ignored. indexes with values set to `null` are deleted. indexes with values set to `undefined` have their component items replaced. `itemID`s are assigned to the new indexes; synchronizes to the `Cradle`. List size is adjusted as necessary|
+|reload():_void_|clears the cache and reloads the `Cradle` at its current position in the virtual list|
+|clearCache():_void_|clears the cache and the `Cradle` (leaving nothing to display)|
 
 Notes: cache management functions are provided to support drag-n-drop, sorting, and filtering operations. 
 
-Cache management functions operate on indexes and itemIDs in the cache, and generally ignore indexes and itemIDs that are not in the cache. 
+Cache management functions operate on indexes and itemIDs in the cache, and generally ignore indexes and itemIDs that are not in the cache. They synchronize `Cradle` cell content as appropriate.
 
 This is a sparse in-memory cache, and indexes in the cache are not guaranteed to be contiguous.
 
@@ -215,37 +254,35 @@ This is a sparse in-memory cache, and indexes in the cache are not guaranteed to
 
 These properties would rarely be changed.
 
-|property|value|notes|
-|---|---|---|
-|showAxis |boolean, default = false |axis can be made visible for debug|
-|triggerlineOffset|integer, default = 10| distance from cell head or tail for content shifts above/below axis|
-|VIEWPORT_RESIZE_TIMEOUT|integer, default = 250|milliseconds before the Viewport resizing state is cleared|
-|SCROLL_TIMEOUT_FOR_ONAFTERSCROLL|integer, default = 100|milliseconds after last scroll event before onAfter scroll event is fired|
-|IDLECALLBACK_TIMEOUT|integer, default = 4000|milliseconds timeout for requestIdleCallback|
-|TIMEOUT_FOR_VARIABLE_MEASUREMENTS|integer, default = 100|milliseconds to allow setCradleContent changes to render before being measured for 'variable' layout|
-|MAX_CACHE_OVER_RUN|number, default = 1.5|max streaming cache size over-run (while scrolling) as ratio to cacheMax|
+|property:datatype = default|notes|
+|---|---|
+|showAxis:boolean = false |axis can be made visible for debug|
+|triggerlineOffset:integer = 10| distance from cell head or tail for content shifts above/below axis|
+|VIEWPORT_RESIZE_TIMEOUT:integer = 250|milliseconds before the Viewport resizing state is cleared|
+|ONAFTERSCROLL_TIMEOUT:integer = 100|milliseconds after last scroll event before onAfter scroll event is fired|
+|IDLECALLBACK_TIMEOUT:integer = 175|milliseconds timeout for requestIdleCallback|
+|VARIABLE_MEASUREMENTS_TIMEOUT:integer = 250|milliseconds to allow setCradleContent changes to render before being measured for 'variable' layout|
+|CACHE_PARTITION_SIZE:integer = 30|the cache is partitioned for performance reasons|
+|MAX_CACHE_OVER_RUN:number = 1.5|max streaming cache size over-run (while scrolling) as ratio to cacheMax|
 
 ### `scrollerProperties` object
 
-the `scrollerProperties` object is requested by user components by initializing a `scrollerProperties` component property to `null`. The property is then instantiated with an object by the system on loading of the component to a CellFrame.
+Cell components can get access to dynamically updated parent RIGS properties, by requesting the scrollerProperties object.
 
-Nested RIGS require this property (to be informed when portal reparenting is taking place).
+The `scrollerProperties` object is requested by user components by initializing a `scrollerProperties` component property to `null`. The property is then recognized by RIGS and set to the scrollerProperties object by the system on loading of the component to a CellFrame.
 
 the scrollerProperties object contains three properties:
 
 ~~~typescript
 {
-  isReparentingRef,
-  cellFrameDataRef,
+  cellFramePropertiesRef,
   scrollerPropertiesRef
 }
 ~~~
 
 Each of these is a _reference_ object, with values found in `propertyRef.current`.
 
-The `isParentingRef.current` property is boolean, where `true` indicates that the component is being 'reparented' (moved from portal cache to a rendered cell). If your component depends on this, then set it back to `false` once you've taken the `true` reading.
-
-The `cellFrameDataRef.current` object contains two properties:
+The `cellFramePropertiesRef.current` object is instantiated only when a component is instantiated in the cradle. It contains two properties:
 
 ~~~typescript
 {
@@ -258,10 +295,122 @@ The `scrollerPropertiesRef.current` object contains the following properties, wh
 
 _orientation, gap, padding, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, cache, cacheMax, startingIndex_
 
-It also contains the following property, which may have been slightly altered from the original `runwaySize` value by the scroller:
+It also contains _scrollerID_, the internal session id (integer) of the current scroller, for debug purposes.
 
-_runwayRowcount_
+Finally, it contains two objects with bundled properties: _virtualListProps_ and _cradleContentProps_.
+
+_virtualListProps_ is an object with the following properties:
+```
+{
+   size, // the length (number of virtual cells) of the virtual list
+   range, // a two-part array [lowindex,highindex]
+   lowindex, // the virtual list low index
+   highindex, // the virtual list high index
+   baserowblanks, // cell offset count in the first row
+   endrowblanks, // blank cells at the end of the last row
+   crosscount, // number of cells perpendicular to the orientation
+   rowcount, // number of rows in virtual list
+   rowshift, // row shift from zero to accommodate lowindex
+}
+```
+_cradleContentProps_ is an object with the following properties:
+```
+{
+   cradleRowcount, // number of rows in the cradle (including any blank cells)
+   viewportRowcount, // number of full rows that can be shown in the viewport
+   runwayRowcount, // calculated current extra leading and trailing cell rows beyond the viewport boundary
+   SOL, // true or false, at start of virtual list in the cradle
+   EOL, // true or false, at end of virtual list in the cradle
+   lowindex, // of cells in the cradle
+   highindex, // of cells in the cradle
+   axisReferenceIndex, // the first index of the tail grid
+   size, // count of cells in the cradle
+}
+```
+
+# Restoring scroll positions coming out of cache
+
+This is only of concern if your cell components support scrolling.
+
+RIGS loads components into a cache (React portals), and into `Cradle` cells from there. Moreover RIGS moves components from one side of the (hidden) axis to the other through the cache during scrolling. Plus caching can be extended (by RIGS property settings) beyond the `Cradle`. So going into and out of cache happens a lot for components. While in cache, the component elements have their `scrollTop`, `scrollLeft`, `width`, and `height` values set to 0 by browsers. `width` and `height` values are restored by browsers when moved back into the visible DOM area, but scroll positions have to be manually restored.
+
+Here is one way of restoring scroll positions. Basically, save scroll positions on an ongoing basis, detect going into cache when `width` and `height` values are both zero, and detect coming out of cache when `width` and `height` are no longer zero. When coming out of cache, restore the saved scroll positions.
+
+This code is Typescript, in a function component.
+
+~~~typescript
+    // ------------------------[ handle scroll position recovery ]---------------------
+
+    // define required data repo
+    const scrollerElementRef = useRef<any>(null),
+        scrollPositionsRef = useRef({scrollTop:0, scrollLeft:0}),
+        wasCachedRef = useRef(false)
+
+    // define the scroll event handler - save scroll positions
+    const scrollerEventHandler = (event:React.UIEvent<HTMLElement>) => {
+
+        const scrollerElement = event.currentTarget
+
+        // save scroll positions if the scroller element is not cached
+        if (!(!scrollerElement.offsetHeight && !scrollerElement.offsetWidth)) {
+
+            const scrollPositions = scrollPositionsRef.current
+
+            scrollPositions.scrollTop = scrollerElement.scrollTop
+            scrollPositions.scrollLeft = scrollerElement.scrollLeft
+
+        }
+
+    }
+
+    // register the scroll event handler
+    useEffect( () => {
+
+        const scrollerElement = scrollerElementRef.current
+
+        scrollerElement.addEventListener('scroll', scrollerEventHandler)
+
+        // unmount
+        return () => {
+            scrollerElement.removeEventListener('scroll', scrollerEventHandler)
+        }
+
+    },[])
+
+    // define the cache sentinel - restore scroll positions
+    const cacheSentinel = () => {
+        const scrollerElement = scrollerElementRef.current
+
+        if (!scrollerElement) return // first iteration
+
+        const isCached = (!scrollerElement.offsetWidth && !scrollerElement.offsetHeight) // zero values == cached
+
+        if (isCached != wasCachedRef.current) { // there's been a change
+
+            wasCachedRef.current = isCached
+
+            if (!isCached) { // restore scroll positions
+
+                const {scrollTop, scrollLeft} = scrollPositionsRef.current
+
+                scrollerElement.scrollTop = scrollTop
+                scrollerElement.scrollLeft = scrollLeft
+
+            }
+
+        }
+
+    }
+
+    // run the cache sentinel on every iteration
+    cacheSentinel()
+
+    // register the scroller element through the ref attribute
+    return <div ref = {scrollerElementRef} style = {scrollerstyles}>
+        {scrollercontent}
+    </div>
+~~~
 
 # Licence
 
-[MIT](LICENSE.md) &copy; 2020-2022 [Henrik Bechmann](https://twitter.com/HenrikBechmann)
+[MIT](LICENSE.md) &copy; 2020-2023 [Henrik Bechmann](https://twitter.com/HenrikBechmann)

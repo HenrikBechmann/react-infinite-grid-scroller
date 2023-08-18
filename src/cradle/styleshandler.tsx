@@ -146,7 +146,7 @@ export default class StylesHandler {
             position: 'absolute',
             display: 'grid',
             gridGap: gap + 'px',
-            padding: padding + 'px',
+            // padding: padding + 'px',
             boxSizing:'border-box',
             bottom,
             left,
