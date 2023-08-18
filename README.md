@@ -229,8 +229,6 @@ Details about the functions returned in an object by `functionsCallback`:
 |setListRange(array [lowindex, highindex] \| []):_void_|lowindex must be <= highindex; lowindex and highindex can be positive or negative integers. [] (empty array) creates an empty virtual list|
 |prependIndexCount(count:integer):_void_|the number of indexes to expand the start of the virtual list|
 |appendIndexCount(count:integer):_void_|the number of indexes to expand the end of the virtual list|
-|reload():_void_|clears the cache and reloads the `Cradle` at its current position in the virtual list|
-|clearCache():_void_|clears the cache and the `Cradle` (leaving nothing to display)|
 |[_**SNAPSHOTS**_]|
 |getCacheIndexMap():Map|snapshot of cache index (=key) to itemID (=value) map|
 |getCacheItemMap():Map|snapshot of cache itemID (=key) to object (=value) map. Object = {index, component} where component = user component|
@@ -241,6 +239,8 @@ Details about the functions returned in an object by `functionsCallback`:
 |removeIndex(index:integer, rangehighindex:integer \| null):array[changeList:array, replaceList:array, removeList:array]|a range of indexes can be removed. Higher indexes are renumbered; virtual list lowindex remains the same. Changes the list size by decreasing virtual list highindex; synchronizes to the `Cradle`|
 |moveIndex(toindex:integer, fromindex:integer, fromhighrange: integer \| null):array[processedIndexList:array]|a range of indexes can be moved. Displaced and higher indexes are renumbered. Changes the list size; synchronizes to the `Cradle`|
 |remapIndexes(changeMap:Map):array[<br />modifiedIndexList: array,<br />processedIndexList: array,<br />deletedIndexList: array,<br />indexesOfReplacedItemsList: array,<br />deletedOrphanedItemIDList: array,<br />deletedOrphanedIndexList: array,<br />errorEntriesMap: Map,<br />changeMap: Map] |(return changeMap is the same as input parameter). changeMap is index (=key) to itemID (=value) map. indexes or itemIDs not in the cache are ignored. indexes with values set to `null` are deleted. indexes with values set to `undefined` have their component items replaced. `itemID`s are assigned to the new indexes; synchronizes to the `Cradle`. List size is adjusted as necessary|
+|reload():_void_|clears the cache and reloads the `Cradle` at its current position in the virtual list|
+|clearCache():_void_|clears the cache and the `Cradle` (leaving nothing to display)|
 
 Notes: cache management functions are provided to support drag-n-drop, sorting, and filtering operations. 
 
