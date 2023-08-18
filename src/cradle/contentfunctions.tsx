@@ -232,6 +232,7 @@ export const generateShiftInstruction = ({
     
     // since triggers are moved and can share the 0 (zero) offset, an infinite loop can occur
     // between the head and tail triggers. The following short-circuits that.
+    
     // Identify case of trigger at border
     if (
             (isSafariIOS && // either trigger offset is exactly 0
