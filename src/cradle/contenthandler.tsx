@@ -39,7 +39,7 @@ import {
 
 } from './contentfunctions'
 
-import { isSafariIOS } from '../InfiniteGridScroller'
+// import { isSafariIOS } from '../InfiniteGridScroller'
 
 export default class ContentHandler {
 
@@ -48,6 +48,8 @@ export default class ContentHandler {
       this.cradleParameters = cradleParameters
 
    }
+
+   private gridResizeObserver
 
    public content = {
 
@@ -258,7 +260,7 @@ export default class ContentHandler {
                 size:listsize, 
                 crosscount, 
                 rowcount:listRowcount,
-                baserowblanks,
+                // baserowblanks,
                 // endrowblanks,
 
             } = virtualListProps
@@ -476,16 +478,35 @@ export default class ContentHandler {
 
         scrollHandler.resetScrollData(scrollblockViewportPixelOffset) 
 
-        viewportElement[cradlePositionData.blockScrollProperty] =
-            cradlePositionData.blockScrollPos 
+        const 
+            scrollTop = viewportElement.scrollTop,
+            scrollLeft = viewportElement.scrollLeft
 
-        const cradleElements = layoutHandler.elements
+        let scrollOptions
+        if (cradlePositionData.blockScrollProperty == 'scrollTop') {
+            scrollOptions = {
+                top:cradlePositionData.blockScrollPos,
+                left:scrollLeft,
+                behavior:'instant',
+            }
+        } else {
+            scrollOptions = {
+                left:cradlePositionData.blockScrollPos,
+                top:scrollTop,
+                behavior:'instant',
+            }            
+        }
 
-        const axisElement = cradleElements.axisRef.current,
-            headElement = cradleElements.headRef.current
+        viewportElement.scroll(scrollOptions)
 
-        const axisScrollblockPixelOffset = 
-            scrollblockViewportPixelOffset + axisViewportPixelOffset
+        const 
+            cradleElements = layoutHandler.elements,
+
+            axisElement = cradleElements.axisRef.current,
+            headElement = cradleElements.headRef.current,
+
+            axisScrollblockPixelOffset = 
+                scrollblockViewportPixelOffset + axisViewportPixelOffset
 
         if (orientation == 'vertical') {
 
@@ -591,19 +612,17 @@ export default class ContentHandler {
                 crosscount,
                 lowindex:listlowindex,
 
-            } = virtualListProps
+            } = virtualListProps,
 
-        // if (interruptHandler.signals.repositioningRequired) return
+            // new vars
+            scrollPos = 
+                (orientation == 'vertical')?
+                    viewportElement.scrollTop:
+                    viewportElement.scrollLeft,
 
-        // new vars
-        const scrollPos = 
-            (orientation == 'vertical')?
-                viewportElement.scrollTop:
-                viewportElement.scrollLeft
+            modelcontentlist = cradleContent.cradleModelComponents || [],
 
-        const modelcontentlist = cradleContent.cradleModelComponents || []
-
-        const previousCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
+            previousCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
@@ -638,11 +657,12 @@ export default class ContentHandler {
 
         })
 
-        const axisViewportPixelOffset = newAxisViewportPixelOffset
+        const 
+            axisViewportPixelOffset = newAxisViewportPixelOffset,
 
-        const isShift = !((axisItemShift == 0) && (cradleItemShift == 0))
-        const axisElement = cradleElements.axisRef.current
-        const headElement = cradleElements.headRef.current
+            isShift = !((axisItemShift == 0) && (cradleItemShift == 0)),
+            axisElement = cradleElements.axisRef.current,
+            headElement = cradleElements.headRef.current
 
         // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx, or at 'finishupdateforvariability'
@@ -818,7 +838,6 @@ export default class ContentHandler {
         
         if (layout == 'variable') return // there's a separate routine for variable adjustments and css
 
-
         // --------------
         // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
         const preAxisVirtualRows = Math.ceil( ( axisReferenceIndex - listlowindex )/crosscount )
@@ -835,8 +854,10 @@ export default class ContentHandler {
         if (scrollDiff) {
             axisViewportPixelOffset += scrollDiff
         }
+        // ---------
 
-        let topAxisPos, leftAxisPos // available for debug
+        // move the axis to accomodate change of content
+        let topAxisPos, leftAxisPos
         if (orientation == 'vertical') {
 
             topAxisPos = scrollPos + axisViewportPixelOffset
@@ -870,17 +891,16 @@ export default class ContentHandler {
     blockScrollPos is the amount the scrollBlock is scrolled to reveal the centre of the Cradle
         at the edge of the Viewport
     
-    newAxisScrollblockOffset is the exact offset of blockScrollPos, plus the axisViewportOffset
-    
-    axisViewportOffset is the amount the axis is ahead of the Viewport edge
-    
     the length of the Scrollblock is shortened by the amount the measured tail length differs from the 
         base tail length
 
-    Called for variable layout only. All DOM elements should have been rendered at this point
+    Called for variable layout only. All DOM elements should have (ideally) been rendered at this point,
+        but the function deals with what it finds
     sets CSS: scrollblockElement top and height (or left and width), and axisElement top (or left)
-    to get closer to natural proportions to minimize janky scroll thumb
+    to get closer to natural proportions
 */
+
+    private latestAxisReferenceIndex
 
     public adjustScrollblockForVariability = (source) => {
 
@@ -888,114 +908,127 @@ export default class ContentHandler {
 
         // resources...
         const
+            // acquire repositories
             { cradleParameters } = this,
             cradleHandlers = cradleParameters.handlersRef.current,
             ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current,
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
 
-        {
+            {
 
-            layoutHandler, 
-            scrollHandler, 
-            interruptHandler 
+                layoutHandler, 
+                scrollHandler, 
+                interruptHandler 
 
-        } = cradleHandlers,
+            } = cradleHandlers,
 
-        { 
+            // extract resources from repositories
+            { 
 
-            elements: cradleElements, 
-            cradlePositionData 
+                elements: cradleElements, 
+                cradlePositionData 
 
-        } = layoutHandler,
+            } = layoutHandler,
 
-        // current configurations...
-        { 
+            // current configurations...
+            { 
 
-            targetAxisReferencePosition: axisReferencePosition,
-            targetAxisViewportPixelOffset: axisViewportPixelOffset,
+                targetAxisReferencePosition: axisReferencePosition,
+                targetAxisViewportPixelOffset: axisViewportPixelOffset,
 
-        } = cradlePositionData,
+            } = cradlePositionData,
 
-        // element references...
-        viewportElement = ViewportContextProperties.elementRef.current,
-        scrollblockElement = viewportElement.firstChild,
-        headGridElement = cradleElements.headRef.current,
-        tailGridElement = cradleElements.tailRef.current,
-        axisElement = cradleElements.axisRef.current,
+            // element references...
+            viewportElement = ViewportContextProperties.elementRef.current,
+            scrollblockElement = viewportElement.firstChild,
+            headGridElement = cradleElements.headRef.current,
+            tailGridElement = cradleElements.tailRef.current,
+            axisElement = cradleElements.axisRef.current,
 
-        {
+            // configuration
+            {
 
-            orientation, 
-            gap, 
-            padding, 
-            cellHeight,
-            cellWidth,
+                orientation, 
+                gap, 
+                padding, 
+                cellHeight,
+                cellWidth,
 
-        } = cradleInheritedProperties,
+            } = cradleInheritedProperties,
 
-        {
+            {
 
-            virtualListProps,
-            cradleContentProps,
+                virtualListProps,
+                // cradleContentProps,
 
-        } = cradleInternalProperties,
+            } = cradleInternalProperties,
 
-        { 
+            { 
 
-            crosscount, 
-            rowcount:listRowcount,
-            lowindex:listlowindex,
-            rowshift:listrowshift,
+                crosscount, 
+                rowcount:listRowcount,
+                lowindex:listlowindex,
+                rowshift:listrowshift,
 
 
-        } = virtualListProps
+            } = virtualListProps
+
+        // cancel end of list reconciliation if scrolling re-starts
+        if (scrollHandler.isScrolling && this.gridResizeObserver) {
+            this.gridResizeObserver.disconnect()
+            this.gridResizeObserver = undefined
+            clearTimeout(this.resizeTimeoutID)
+        }
 
         // ------------------------[ calculations ]------------------------
 
-        const axisReferenceIndex = axisReferencePosition + listlowindex
-        // rowcounts and row offsets for positioning
-        // listRowcount taken from internal properties above
-        const headRowCount = Math.ceil(headGridElement.childNodes.length/crosscount),
-            tailRowCount = Math.ceil(tailGridElement.childNodes.length/crosscount)
+        const 
+            axisReferenceIndex = axisReferencePosition + listlowindex,
+            // rowcounts and row offsets for positioning
+            // listRowcount taken from internal properties above
+            headRowCount = Math.ceil(headGridElement.childNodes.length/crosscount),
+            tailRowCount = Math.ceil(tailGridElement.childNodes.length/crosscount),
 
-        // reference rows - cradle first/last; axis; list end
-        const axisReferenceRow = Math.floor(axisReferenceIndex/crosscount)
+            // reference rows - cradle first/last; axis; list end
+            axisReferenceRow = Math.floor(axisReferenceIndex/crosscount),
 
-        const
             cradleReferenceRow = axisReferenceRow - headRowCount,
             cradleLastRow = axisReferenceRow + (tailRowCount - 1),
-            listLastRow = listRowcount - 1 + listrowshift
+            listLastRow = listRowcount - 1 + listrowshift,
 
-        const preCradleRowCount = cradleReferenceRow - listrowshift,
-            postCradleRowCount = listLastRow - cradleLastRow
+            preCradleRowCount = cradleReferenceRow - listrowshift,
+            postCradleRowCount = listLastRow - cradleLastRow,
 
-        // base pixel values
-        const baseCellLength = 
-            ((orientation == 'vertical')?
-                cellHeight:
-                cellWidth
-            ) + gap
+            // base pixel values
+            baseCellLength = 
+                ((orientation == 'vertical')?
+                    cellHeight:
+                    cellWidth
+                ) + gap,
 
-        const measuredTailPixelLength = 
-            (orientation == 'vertical')?
-                tailGridElement.offsetHeight:
-                tailGridElement.offsetWidth
+            measuredTailPixelLength = 
+                (orientation == 'vertical')?
+                    tailGridElement.offsetHeight:
+                    tailGridElement.offsetWidth,
 
-        const basePostCradlePixelLength = postCradleRowCount * baseCellLength
+            basePostCradlePixelLength = postCradleRowCount * baseCellLength,
 
-        const computedPostAxisPixelLength = basePostCradlePixelLength + measuredTailPixelLength
+            computedPostAxisPixelLength = basePostCradlePixelLength + measuredTailPixelLength,
 
-        // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
-        const basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding
+            // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
+            basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding
+
+        this.latestAxisReferenceIndex = axisReferenceIndex
 
         // ------------------------[ layout adjustments ]----------------------
 
         interruptHandler.signals.pauseCradleIntersectionObserver = true
 
-        const computedScrollblockPixelLength = basePreAxisPixelLength + computedPostAxisPixelLength
-        const blockScrollPos = basePreAxisPixelLength - axisViewportPixelOffset
-        const newAxisScrollblockPixelOffset = blockScrollPos + axisViewportPixelOffset // ie. basePreAxisPixelLength, but semantics
+        const 
+            computedScrollblockPixelLength = basePreAxisPixelLength + computedPostAxisPixelLength,
+            blockScrollPos = basePreAxisPixelLength - axisViewportPixelOffset,
+            newAxisScrollblockPixelOffset = blockScrollPos + axisViewportPixelOffset // ie. basePreAxisPixelLength, but semantics
 
         if (orientation == 'vertical') {
 
@@ -1028,65 +1061,120 @@ export default class ContentHandler {
 
         }
 
-        if (!isSafariIOS()) { // adjust blockScrollPos directly - most browsers including Safari desktop
+        // temporarily adjust scrollblockElement offset; onAfterScrollForVariable transfers shift to blockScrollPos
+        const startingScrollPos = 
+            (orientation == 'vertical')?
+                viewportElement.scrollTop:
+                viewportElement.scrollLeft
 
-            cradlePositionData.blockScrollPos = blockScrollPos
-            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-            scrollHandler.resetScrollData(blockScrollPos)
+        const scrollDiff = blockScrollPos - startingScrollPos
 
-        } else { // for Safari iOS
+        if (orientation == 'vertical') {
 
-            // temporarily adjust scrollblockElement offset; iOSonAfterScroll transfers shift to blockScrollPos
-            // - direct change of scrollTop/ScrollLeft in Safari iOS is ignored by the browser momentum engine
+            scrollblockElement.style.top = -scrollDiff + 'px'
 
-            const startingScrollPos = 
-                (orientation == 'vertical')?
-                    viewportElement.scrollTop:
-                    viewportElement.scrollLeft
+        } else {
 
-            const scrollDiff = blockScrollPos - startingScrollPos
-
-            if (orientation == 'vertical') {
-
-                scrollblockElement.style.top = -scrollDiff + 'px'
-
-            } else {
-
-                scrollblockElement.style.left = -scrollDiff + 'px'
-
-            }
+            scrollblockElement.style.left = -scrollDiff + 'px'
 
         }
 
         // check for gotoIndex or resize overshoot
         if ((source == 'setcradle') && !postCradleRowCount) { 
 
-            const viewportPixelLength = 
-                (orientation == 'vertical')?
-                    viewportElement.offsetHeight:
-                    viewportElement.offsetWidth
+            const tailGridElement = cradleElements.tailRef.current
 
-            const alignedEndPosDiff = 
-                axisViewportPixelOffset + measuredTailPixelLength - viewportPixelLength
+            this.gridResizeObserver = new ResizeObserver(this.resizeObserverCallback)
 
-            if (alignedEndPosDiff < 0) { // fill the bottom of the viewport using scrollBy
-
-                const scrollByY = 
-                    (orientation == 'vertical')?
-                        alignedEndPosDiff:
-                        0
-
-                const scrollByX =
-                    (orientation == 'vertical')?
-                        0:
-                        alignedEndPosDiff
-
-                viewportElement.scrollBy(scrollByX, scrollByY)
-
-            }
+            this.gridResizeObserver.observe(tailGridElement)
 
         }
 
+    }
+
+    private resizeTimeoutID
+
+    private resizeObserverCallback = () => {
+
+        clearTimeout(this.resizeTimeoutID)
+
+        this.resizeTimeoutID = setTimeout(() => {
+
+            clearTimeout(this.resizeTimeoutID) // run once
+
+            const
+                { cradleParameters } = this,
+                // cradleHandlers = cradleParameters.handlersRef.current,
+                ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current,
+                // { serviceHandler } = cradleHandlers,
+                viewportElement = ViewportContextProperties.elementRef.current,
+                scrollblockElement = viewportElement.firstChild,
+                cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
+
+                { orientation } = cradleInheritedProperties,
+
+                scrollblockLength = 
+                    orientation == 'vertical'?
+                        scrollblockElement.offsetHeight:
+                        scrollblockElement.offsetWidth,
+
+                scrollblockOffset = 
+                    orientation == 'vertical'?
+                        scrollblockElement.offsetTop:
+                        scrollblockElement.offsetLeft,
+
+                viewportLength = 
+                    orientation == 'vertical'?
+                        viewportElement.offsetHeight:
+                        viewportElement.offsetWidth,
+
+                scrollTop = viewportElement.scrollTop,
+                scrollLeft = viewportElement.scrollLeft,
+
+                viewportScrollPos = 
+                    orientation == 'vertical'?
+                        viewportElement.scrollTop:
+                        viewportElement.scrollLeft
+
+            // check for overshoot
+            if ((scrollblockLength + scrollblockOffset - viewportScrollPos) < viewportLength) { // overshoot
+
+                if (scrollblockOffset) {
+                    if (orientation == 'vertical') {
+                        scrollblockElement.style.top = 0
+                    } else {
+                        scrollblockElement.style.left = 0
+                    }
+                }
+
+                let options
+                if (orientation == 'vertical') {
+
+                    options = {
+                        top:scrollblockLength - viewportLength,
+                        left:scrollLeft,
+                        behavior:'smooth'
+                    }
+
+                } else {
+
+                    options = {
+                        top:scrollTop,
+                        left:scrollblockLength - viewportLength,
+                        behavior:'smooth'
+                    }
+
+                }
+
+                viewportElement.scroll(options)
+            }
+
+            if (this.gridResizeObserver) {
+                this.gridResizeObserver.disconnect()
+                this.gridResizeObserver = null
+            }
+
+        }, 500)
     }
 
     // ========================= [ INTERNAL CONTENT MANAGEMENT SERVICES ]=====================
